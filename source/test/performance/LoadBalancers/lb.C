@@ -1353,7 +1353,9 @@ void generatePrebalanceBySinusoidalFront(
 
       sinusoidal_front_tagger.computeFrontsData(
          0 /* distance data */,
+         0 /* uval data */,
          tag_data.get(),
+         tag_data->getGhostBox(),
          tag_buffer,
          patch_geom->getXLower(),
          patch_geom->getDx(),

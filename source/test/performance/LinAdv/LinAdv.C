@@ -487,107 +487,10 @@ void LinAdv::initializeDataOnPatch(
 
       TBOX_ASSERT(uval);
 
-      hier::IntVector ghost_cells(uval->getGhostCellWidth());
-
-      const hier::Index ifirst = patch.getBox().lower();
-      const hier::Index ilast = patch.getBox().upper();
-
-      if ((d_data_problem_int == SPHERE)) {
-
-         if (d_dim == tbox::Dimension(2)) {
-            SAMRAI_F77_FUNC(initsphere2d, INITSPHERE2D) (d_data_problem_int, dx, xlo,
-               xhi,
-               ifirst(0), ilast(0),
-               ifirst(1), ilast(1),
-               ghost_cells(0),
-               ghost_cells(1),
-
-               uval->getPointer(),
-               d_uval_inside,
-               d_uval_outside,
-               d_center, d_radius);
-         } else if (d_dim == tbox::Dimension(3)) {
-            SAMRAI_F77_FUNC(initsphere3d, INITSPHERE3D) (d_data_problem_int, dx, xlo,
-               xhi,
-               ifirst(0), ilast(0),
-               ifirst(1), ilast(1),
-               ifirst(2), ilast(2),
-               ghost_cells(0),
-               ghost_cells(1),
-               ghost_cells(2),
-
-               uval->getPointer(),
-               d_uval_inside,
-               d_uval_outside,
-               d_center, d_radius);
-         }
-
-      } else if (d_data_problem_int == SINE_CONSTANT_X ||
-                 d_data_problem_int == SINE_CONSTANT_Y ||
-                 d_data_problem_int == SINE_CONSTANT_Z) {
-
-         const double* domain_xlo = d_grid_geometry->getXLower();
-
-         if (d_dim == tbox::Dimension(2)) {
-            SAMRAI_F77_FUNC(linadvinitsine2d, LINADVINITSINE2D) (d_data_problem_int,
-               dx, xlo,
-               domain_xlo,
-               ifirst(0), ilast(0),
-               ifirst(1), ilast(1),
-               ghost_cells(0),
-               ghost_cells(1),
-               uval->getPointer(),
-               d_number_of_intervals,
-               d_front_position.getPointer(),
-               d_interval_uval.getPointer(),
-               d_amplitude,
-               d_period);
-         } else if (d_dim == tbox::Dimension(3)) {
-            SAMRAI_F77_FUNC(linadvinitsine3d, LINADVINITSINE3D) (d_data_problem_int,
-               dx, xlo,
-               domain_xlo,
-               ifirst(0), ilast(0),
-               ifirst(1), ilast(1),
-               ifirst(2), ilast(2),
-               ghost_cells(0),
-               ghost_cells(1),
-               ghost_cells(2),
-               uval->getPointer(),
-               d_number_of_intervals,
-               d_front_position.getPointer(),
-               d_interval_uval.getPointer(),
-               d_amplitude,
-               d_period);
-         }
-
-      } else {
-
-         if (d_dim == tbox::Dimension(2)) {
-            SAMRAI_F77_FUNC(linadvinit2d, LINADVINIT2D) (d_data_problem_int, dx, xlo,
-               xhi,
-               ifirst(0), ilast(0),
-               ifirst(1), ilast(1),
-               ghost_cells(0),
-               ghost_cells(1),
-               uval->getPointer(),
-               d_number_of_intervals,
-               d_front_position.getPointer(),
-               d_interval_uval.getPointer());
-         } else if (d_dim == tbox::Dimension(3)) {
-            SAMRAI_F77_FUNC(linadvinit3d, LINADVINIT3D) (d_data_problem_int, dx, xlo,
-               xhi,
-               ifirst(0), ilast(0),
-               ifirst(1), ilast(1),
-               ifirst(2), ilast(2),
-               ghost_cells(0),
-               ghost_cells(1),
-               ghost_cells(2),
-               uval->getPointer(),
-               d_number_of_intervals,
-               d_front_position.getPointer(),
-               d_interval_uval.getPointer());
-         }
-      }
+      d_analytical_tagger->computePatchData(
+         patch,
+         data_time,
+         0, uval.get(), 0);
 
       t_init_first_time->stop();
    }
@@ -1603,99 +1506,32 @@ void LinAdv::setPhysicalBoundaryConditions(
    TBOX_ASSERT(uval);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
 
-   if (d_dim == tbox::Dimension(2)) {
+   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      BOOST_CAST_TAG);
+   const double* dx = pgeom->getDx();
+   const double* xlo = pgeom->getXLower();
 
-      /*
-       * Set boundary conditions for cells corresponding to patch edges.
-       */
-      appu::CartesianBoundaryUtilities2::
-      fillEdgeBoundaryData("uval", uval,
-         patch,
-         ghost_width_to_fill,
-         d_scalar_bdry_edge_conds,
-         d_bdry_edge_uval);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#if CHECK_BDRY_DATA
-      checkBoundaryData(Bdry::EDGE2D, patch, ghost_width_to_fill,
-         d_scalar_bdry_edge_conds);
-#endif
-#endif
+   for ( int codim=1; codim<=patch.getDim().getValue(); ++codim ) {
 
-      /*
-       *  Set boundary conditions for cells corresponding to patch nodes.
-       */
+      const tbox::Array<hier::BoundaryBox> &boundary_boxes =
+         pgeom->getCodimensionBoundaries(codim);
 
-      appu::CartesianBoundaryUtilities2::
-      fillNodeBoundaryData("uval", uval,
-         patch,
-         ghost_width_to_fill,
-         d_scalar_bdry_node_conds,
-         d_bdry_edge_uval);
+      for ( int bn=0; bn<boundary_boxes.size(); ++bn ) {
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-#if CHECK_BDRY_DATA
-      checkBoundaryData(Bdry::NODE2D, patch, ghost_width_to_fill,
-         d_scalar_bdry_node_conds);
-#endif
-#endif
+         const hier::Box fill_box =
+            pgeom->getBoundaryFillBox(boundary_boxes[bn],
+                                      patch.getBox(),
+                                      ghost_width_to_fill);
 
-   } // d_dim == tbox::Dimension(2)
+         d_analytical_tagger->computeFrontsData(
+            0, uval.get(), 0,
+            fill_box, hier::IntVector::getZero(d_dim), xlo, dx, fill_time );
 
-   if (d_dim == tbox::Dimension(3)) {
+      }
 
-      /*
-       *  Set boundary conditions for cells corresponding to patch faces.
-       */
-
-      appu::CartesianBoundaryUtilities3::
-      fillFaceBoundaryData("uval", uval,
-         patch,
-         ghost_width_to_fill,
-         d_scalar_bdry_face_conds,
-         d_bdry_face_uval);
-#ifdef DEBUG_CHECK_ASSERTIONS
-#if CHECK_BDRY_DATA
-      checkBoundaryData(Bdry::FACE3D, patch, ghost_width_to_fill,
-         d_scalar_bdry_face_conds);
-#endif
-#endif
-
-      /*
-       *  Set boundary conditions for cells corresponding to patch edges.
-       */
-
-      appu::CartesianBoundaryUtilities3::
-      fillEdgeBoundaryData("uval", uval,
-         patch,
-         ghost_width_to_fill,
-         d_scalar_bdry_edge_conds,
-         d_bdry_face_uval);
-#ifdef DEBUG_CHECK_ASSERTIONS
-#if CHECK_BDRY_DATA
-      checkBoundaryData(Bdry::EDGE3D, patch, ghost_width_to_fill,
-         d_scalar_bdry_edge_conds);
-#endif
-#endif
-
-      /*
-       *  Set boundary conditions for cells corresponding to patch nodes.
-       */
-
-      appu::CartesianBoundaryUtilities3::
-      fillNodeBoundaryData("uval", uval,
-         patch,
-         ghost_width_to_fill,
-         d_scalar_bdry_node_conds,
-         d_bdry_face_uval);
-#ifdef DEBUG_CHECK_ASSERTIONS
-#if CHECK_BDRY_DATA
-      checkBoundaryData(Bdry::NODE3D, patch, ghost_width_to_fill,
-         d_scalar_bdry_node_conds);
-#endif
-#endif
-
-   } // d_dim == tbox::Dimension(3)
+   }
 
 }
 
@@ -1929,6 +1765,7 @@ void LinAdv::tagGradientDetectorCells(
       t_analytical_tag->start();
       d_analytical_tagger->computePatchData(patch,
          regrid_time,
+         0,
          0,
          tags.get());
       t_analytical_tag->stop();

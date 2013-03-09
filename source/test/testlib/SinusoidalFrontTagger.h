@@ -118,7 +118,6 @@ public:
    setTime(
       double time);
 
-public:
    /*!
     * @brief Deallocate internally managed patch data on level.
     */
@@ -171,6 +170,7 @@ public:
       const hier::Patch& patch,
       const double time,
       pdat::NodeData<double>* dist_data,
+      pdat::CellData<double>* uval_data,
       pdat::CellData<int>* tag_data) const;
 
    /*!
@@ -182,7 +182,9 @@ public:
     */
    void computeFrontsData(
       pdat::NodeData<double>* dist_data,
+      pdat::CellData<double>* uval_data,
       pdat::CellData<int>* tag_data,
+      const hier::Box &fill_box,
       const hier::IntVector &buffer,
       const double xlo[],
       const double dx[],
@@ -198,7 +200,7 @@ private:
 
    /*!
     * @brief PatchHierarchy for use in implementations of some
-    * abstract interfaces that do not specify a hierarch.
+    * abstract interfaces that do not specify a hierarchy.
     */
    boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
@@ -265,6 +267,7 @@ private:
    boost::shared_ptr<tbox::Timer> t_setup;
    boost::shared_ptr<tbox::Timer> t_node_pos;
    boost::shared_ptr<tbox::Timer> t_distance;
+   boost::shared_ptr<tbox::Timer> t_uval;
    boost::shared_ptr<tbox::Timer> t_tag_cells;
    boost::shared_ptr<tbox::Timer> t_copy;
 

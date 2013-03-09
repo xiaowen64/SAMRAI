@@ -115,6 +115,8 @@ SinusoidalFrontTagger::SinusoidalFrontTagger(
       getTimer("apps::SinusoidalFrontTagger::node_pos");
    t_distance = tbox::TimerManager::getManager()->
       getTimer("apps::SinusoidalFrontTagger::distance");
+   t_uval = tbox::TimerManager::getManager()->
+      getTimer("apps::SinusoidalFrontTagger::uval");
    t_tag_cells = tbox::TimerManager::getManager()->
       getTimer("apps::SinusoidalFrontTagger::tag_cells");
    t_copy = tbox::TimerManager::getManager()->
@@ -211,7 +213,7 @@ void SinusoidalFrontTagger::initializePatchData(
          TBOX_ASSERT(dist_data);
          TBOX_ASSERT(tag_data);
          computePatchData(patch, init_data_time,
-            dist_data.get(), tag_data.get());
+                          dist_data.get(), 0, tag_data.get());
       }
    }
 }
@@ -272,6 +274,7 @@ void SinusoidalFrontTagger::applyGradientDetector(
          // Compute tag data for patch.
          computePatchData(patch,
             error_data_time,
+            0,
             0,
             tag_cell_data_.get());
       }
@@ -363,21 +366,23 @@ void SinusoidalFrontTagger::computeLevelData(
                                                 hier::PatchData>(patch.getPatchData(tag_id));
       }
       computePatchData(patch, time,
-         dist_data.get(),
-         tag_data.get());
+                       dist_data.get(),
+                       0,
+                       tag_data.get());
    }
 }
 
 
 
 /*
- * Compute the solution data for a patch.
+ * Compute various data for a patch.
  */
 
 void SinusoidalFrontTagger::computePatchData(
    const hier::Patch& patch,
    const double time,
    pdat::NodeData<double>* dist_data,
+   pdat::CellData<double>* uval_data,
    pdat::CellData<int>* tag_data) const
 {
 
@@ -420,34 +425,50 @@ void SinusoidalFrontTagger::computePatchData(
    buffer *= ratio;
 
    t_setup->stop();
- 
-   computeFrontsData( dist_data, tag_data, buffer, xlo, dx, time );
+
+   /*
+    * Determine the max ghost data we need to compute.
+    */
+   hier::Box fill_box = patch.getBox();
+   if ( tag_data ) fill_box += tag_data->getGhostBox();
+   if ( uval_data ) fill_box += uval_data->getGhostBox();
+   if ( dist_data ) fill_box += dist_data->getGhostBox();
+
+   computeFrontsData( dist_data, uval_data, tag_data,
+                      fill_box, buffer, xlo, dx, time );
 }
 
 
 
 /*
- * Compute the various data due to the fronts.
+ * Compute various data due to the fronts.
  */
 void SinusoidalFrontTagger::computeFrontsData(
    pdat::NodeData<double>* dist_data,
+   pdat::CellData<double>* uval_data,
    pdat::CellData<int>* tag_data,
+   const hier::Box &fill_box,
    const hier::IntVector &tag_buffer,
    const double xlo[],
    const double dx[],
    const double time ) const
 {
-   TBOX_ASSERT(dist_data != 0 || tag_data != 0);
- 
-   const tbox::Dimension &dim(tag_buffer.getDim());
-
+   TBOX_ASSERT(dist_data != 0 || uval_data != 0 || tag_data != 0);
    if ( dist_data != 0 && tag_data != 0 ) {
       TBOX_ASSERT( dist_data->getBox().isSpatiallyEqual(tag_data->getBox()) );
    }
+   if ( dist_data != 0 && uval_data != 0 ) {
+      TBOX_ASSERT( dist_data->getBox().isSpatiallyEqual(uval_data->getBox()) );
+   }
+   if ( tag_data != 0 && uval_data != 0 ) {
+      TBOX_ASSERT( tag_data->getBox().isSpatiallyEqual(uval_data->getBox()) );
+   }
 
-   hier::Box pbox(dim);
+   hier::Box pbox(d_dim);
    if (tag_data != 0) {
       pbox = tag_data->getBox();
+   } else if (uval_data != 0) {
+      pbox = uval_data->getBox();
    } else {
       pbox = dist_data->getBox();
    }
@@ -456,19 +477,30 @@ void SinusoidalFrontTagger::computeFrontsData(
     * Initialize node x-distances from front.
     */
 
-   t_node_pos->start();
-
    double wave_number[SAMRAI::MAX_DIM_VAL];
    for (int idim = 0; idim < d_dim.getValue(); ++idim) {
       wave_number[idim] = 2 * 3.141592654 / d_period[idim];
    }
 
-   hier::Box front_box = pbox;
+   /*
+    * Compute box to contain the nodes' front position.  The box
+    * should be big enough for computing data in fill_box.
+    * Squash the front box to a single i-plane because front position
+    * is indepenent of i.
+    */
+   hier::Box front_box = fill_box;
    front_box.grow(tag_buffer);
    front_box.growUpper(hier::IntVector(d_dim, 1));
-   // Squash front_box to a single plane.
    front_box.upper(0) = front_box.lower(0) = pbox.lower(0);
+
    const int ifront = front_box.lower(0);
+
+   /*
+    * Compute front_x: the front's x-coordinates, as a function of j-
+    * and k- indices.
+    */
+   t_node_pos->start();
+
    pdat::ArrayData<double> front_x(front_box, 1);
    pdat::ArrayData<int>::iterator aiend(front_x.getBox(), false);
    for ( pdat::ArrayData<int>::iterator ai(front_x.getBox(), true);
@@ -480,50 +512,54 @@ void SinusoidalFrontTagger::computeFrontsData(
       y = xlo[1] + dx[1]*(index(1) - pbox.lower()[1]);
       siny = sin(wave_number[1] * (y + d_init_disp[1] - d_velocity[1] * time));
 
-      if ( dim.getValue() > 2 ) {
-         z = xlo[2] + dx[2]*(index(2) - front_box.lower()[2]);
+      if ( d_dim.getValue() > 2 ) {
+         z = xlo[2] + dx[2]*(index(2) - pbox.lower()[2]);
          sinz = sin(wave_number[2] * (z + d_init_disp[2] - d_velocity[2] * time));
       }
 
-      front_x(index,0) = d_amplitude * siny * sinz + d_init_disp[0];
-      // tbox::plog << "front_x" << index << " = " << front_x(index,0) << std::endl;
+      front_x(index,0) = d_velocity[0]*time + d_init_disp[0] +
+         d_amplitude * siny * sinz;
                                                                                    }
    t_node_pos->stop();
+
 
    if (tag_data != 0) {
 
       t_setup->start();
 
       /*
-       * We need at least tag_buffer ghost cells to compute
-       * the tags, but the data may not have as many ghost cells.
-       * So we create temporary patch data with the required
-       * tag_buffer for computing tag values.  (We could give the real
-       * data the required ghost cells, but that may affect the
-       * regridding algorithm I'm testing.)
+       * We need at least tag_buffer ghost cells outside fill_box to
+       * compute the that come from buffering tags outside fill_box.
+       * Create temporary patch data with the required tag_buffer for
+       * computing tag values.  (We could give the real data the
+       * required ghost cells, but that may affect the regridding
+       * algorithm I'm testing.)
        */
-      pdat::CellData<int> tmp_tag(pbox, 1, tag_buffer);
+      pdat::CellData<int> tmp_tag(fill_box, 1, tag_buffer);
 
       t_setup->stop();
 
       /*
        * Initialize tmp_tag to zero then tag specific cells.
        */
-      tmp_tag.fill(0);
+      hier::Box tag_fill_box = tmp_tag.getGhostBox() * fill_box;
+      tmp_tag.fill(0, tag_fill_box);
       hier::BlockId blk0(0);
-      pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(tmp_tag.getGhostBox()));
-      for ( pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(tmp_tag.getGhostBox()));
+      pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(tag_fill_box));
+      for ( pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(tag_fill_box));
             ci != ciend; ++ci ) {
 
          const pdat::CellIndex &cell_index = *ci;
          const hier::Box cell_box(cell_index, cell_index, blk0);
 
-#if 0
-         int node_orientation = 0;
-#endif
+         /*
+          * Compute the cell's min and max (signed) distance from
+          * front, which are the min/max of its corners from the
+          * front.  If the min and max have different signs, then the
+          * cell overlaps the front surface and are tagged.
+          */
          double min_distance_to_front =  tbox::MathUtilities<double>::getMax();
          double max_distance_to_front = -tbox::MathUtilities<double>::getMax();
-         // tbox::plog << "initial distances to front: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
          pdat::NodeIterator niend(pdat::NodeGeometry::end(cell_box));
          for ( pdat::NodeIterator ni(pdat::NodeGeometry::begin(cell_box));
                ni != niend; ++ni ) {
@@ -537,27 +573,8 @@ void SinusoidalFrontTagger::computeFrontsData(
             double distance_to_front = node_x - front_x(front_index,0);
             min_distance_to_front = tbox::MathUtilities<double>::Min(min_distance_to_front, distance_to_front);
             max_distance_to_front = tbox::MathUtilities<double>::Max(max_distance_to_front, distance_to_front);
-            // tbox::plog << "cell_index = " << cell_index << "   node_index = " << node_index << "   node_x = " << node_x << "   front_index = " << front_index << "   front_x = " << front_x(front_index,0) << "   distance to front(" << node_x << ") = " << distance_to_front << std::endl;
 
-#if 0
-            while ( distance_to_front > 0.5*d_period[0] ) distance_to_front -= d_period[0];
-            while ( distance_to_front < -0.5*d_period[0] ) distance_to_front += d_period[0];
-            // tbox::plog << "distance_to_front adjusted = " << distance_to_front << std::endl;
-            int distance_sign = distance_to_front < 0 ? -1 : 1;
-            if ( node_orientation == 0 ) {
-               node_orientation = distance_sign;
-            }
-            else {
-               if ( distance_sign != node_orientation ) {
-                  // This cell has nodes on both sides of the front.  Tag it and the tag_buffer around it.
-                  hier::Box cell_and_buffer(cell_index, cell_index);
-                  cell_and_buffer.grow(tag_buffer);
-                  tmp_tag.fill(1,cell_and_buffer);
-               }
-            }
-#endif
          }
-         // tbox::plog << "distances to front: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
          while ( min_distance_to_front < -0.5*d_period[0] ) {
             min_distance_to_front += d_period[0];
             max_distance_to_front += d_period[0];
@@ -566,7 +583,6 @@ void SinusoidalFrontTagger::computeFrontsData(
             min_distance_to_front -= d_period[0];
             max_distance_to_front -= d_period[0];
          }
-         // tbox::plog << "shifted ..........: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
          if ( min_distance_to_front < 0 && max_distance_to_front > 0 ) {
             // This cell has nodes on both sides of the front.  Tag it and the tag_buffer around it.
             hier::Box cell_and_buffer(cell_index, cell_index, blk0);
@@ -584,22 +600,62 @@ void SinusoidalFrontTagger::computeFrontsData(
 
 
    /*
+    * Initialize U-value data.
+    * The exact value of U increases by 1 across each front.
+    */
+   if (uval_data != 0) {
+      t_uval->start();
+
+      pdat::CellData<double> &uval(*uval_data);
+      hier::Box uval_fill_box = uval.getGhostBox() * fill_box;
+      uval.fill(0.0, uval_fill_box);
+      const pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(uval_fill_box));
+      for ( pdat::CellData<double>::iterator ci=pdat::CellGeometry::begin(uval_fill_box);
+            ci != ciend; ++ci) {
+         const pdat::CellIndex& cindex = *ci;
+         pdat::CellIndex squashed_cindex = cindex;
+         squashed_cindex(0) = front_box.lower(0);
+         double cellx = xlo[0] + dx[0]*(cindex(0) - pbox.lower(0) + 0.5);
+         // Approximate cell's distance to front as average of its node distances.
+         double dist_from_front = 0.0;
+         if (d_dim == tbox::Dimension(2)) {
+            dist_from_front = cellx - 0.5*(
+               front_x(pdat::NodeIndex(squashed_cindex,pdat::NodeIndex::LowerLeft),0) +
+               front_x(pdat::NodeIndex(squashed_cindex,pdat::NodeIndex::UpperLeft),0) );
+         } else if (d_dim == tbox::Dimension(3)) {
+            dist_from_front = cellx - 0.25*(
+               front_x(pdat::NodeIndex(squashed_cindex,pdat::NodeIndex::LLL),0) +
+               front_x(pdat::NodeIndex(squashed_cindex,pdat::NodeIndex::LUL),0) +
+               front_x(pdat::NodeIndex(squashed_cindex,pdat::NodeIndex::LLU),0) +
+               front_x(pdat::NodeIndex(squashed_cindex,pdat::NodeIndex::LUU),0) );
+         }
+         while ( dist_from_front > 0 ) {
+            dist_from_front -= d_period[0];
+            uval(cindex) += 1.0;
+         }
+      }
+
+      t_uval->stop();
+   }
+
+
+   /*
     * Initialize distance data.
     */
    if (dist_data != 0) {
       t_distance->start();
 
-      pdat::NodeData<double> &dist_to_front(*dist_data);
-      pdat::NodeData<double>::iterator ni(pdat::NodeGeometry::begin(dist_to_front.getGhostBox()));
-      pdat::NodeData<double>::iterator niend(pdat::NodeGeometry::end(dist_to_front.getGhostBox()));
+      pdat::NodeData<double> &dist(*dist_data);
+      hier::Box dist_fill_box = dist.getGhostBox() * fill_box;
+      pdat::NodeData<double>::iterator ni(pdat::NodeGeometry::begin(dist_fill_box));
+      pdat::NodeData<double>::iterator niend(pdat::NodeGeometry::end(dist_fill_box));
       for ( ; ni != niend; ++ni) {
          const pdat::NodeIndex& index = *ni;
          pdat::NodeIndex front_index(index);
          front_index(0) = ifront;
-         dist_to_front(index) = xlo[0] + (index(0) - pbox.lower(0)) * dx[0]
+         dist(index) = xlo[0] + (index(0) - pbox.lower(0)) * dx[0]
             - front_x(front_index,0);
       }
-      // dist_to_front.print(dist_to_front.getBox(),0,plog);
 
       t_distance->stop();
    }
@@ -645,7 +701,7 @@ bool SinusoidalFrontTagger::packDerivedDataIntoDoubleBuffer(
    if (variable_name == "Distance to front") {
       pdat::NodeData<double> dist_data(patch.getBox(), 1, hier::IntVector(d_dim,
                                           0));
-      computePatchData(patch, d_time, &dist_data, 0);
+      computePatchData(patch, d_time, &dist_data, 0, 0);
       pdat::NodeData<double>::iterator ciend(pdat::NodeGeometry::end(patch.getBox()));
       for (pdat::NodeData<double>::iterator ci(pdat::NodeGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {
@@ -653,7 +709,7 @@ bool SinusoidalFrontTagger::packDerivedDataIntoDoubleBuffer(
       }
    } else if (variable_name == "Tag value") {
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
-      computePatchData(patch, d_time, 0, &tag_data);
+      computePatchData(patch, d_time, 0, 0, &tag_data);
       pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
       for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {

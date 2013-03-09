@@ -11,7 +11,7 @@
 Main {
   dim = 2
   check_dlbg_in_main = FALSE
-  base_name = "front2d"
+  base_name = "front.2d"
   log_all = TRUE
   plot_step = 1
   log_hierarchy = TRUE
