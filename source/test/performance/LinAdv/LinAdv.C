@@ -155,8 +155,6 @@ LinAdv::LinAdv(
     * Defaults for problem type and initial data.
     */
 
-   int k;
-
    /*
     * Initialize object with data read from given input/restart databases.
     */
@@ -317,9 +315,6 @@ void LinAdv::initializeDataOnPatch(
          patch.getPatchGeometry(),
          BOOST_CAST_TAG);
       TBOX_ASSERT(pgeom);
-      const double* dx = pgeom->getDx();
-      const double* xlo = pgeom->getXLower();
-      const double* xhi = pgeom->getXUpper();
 
       boost::shared_ptr<pdat::CellData<double> > uval(
          patch.getPatchData(d_uval, getDataContext()),
@@ -1731,7 +1726,7 @@ bool LinAdv::packDerivedDataIntoDoubleBuffer(
 void LinAdv::printClassData(
    ostream& os) const
 {
-   int j, k;
+   int j;
 
    os << "\nLinAdv::printClassData..." << endl;
    os << "LinAdv: this = " << (LinAdv *)this << endl;
