@@ -3051,10 +3051,13 @@ GriddingAlgorithm::findRefinementBoxes(
             *new_box_level,
             new_to_tag);
          if (d_print_steps) {
-            tbox::plog
-            << "GriddingAlgorithm::findRefinementBoxes applying overflow nesting map."
-            << std::endl;
-            tbox::plog << "Overflow nesting map:\n" << unnested_to_nested->format("", 3);
+            tbox::plog << "GriddingAlgorithm::findRefinementBoxes applying overflow nesting map.\n"
+                       << "Overflow nesting map:\n" << unnested_to_nested->format("MAP: ", 3)
+                       << "Before overflow nesting enforcement:\n"
+                       << "tag:\n" << tag_to_new->getBase().format("T: ")
+                       << "new:\n" << tag_to_new->getHead().format("N: ")
+                       << "tag--->new:\n" << tag_to_new->format("TN: ")
+                       << "new--->tag:\n" << tag_to_new->getTranspose().format("NT: ");
          }
          t_use_overflow_map->start();
          t_modify_connector->start();
@@ -3068,9 +3071,12 @@ GriddingAlgorithm::findRefinementBoxes(
             t_limit_overflow->stop();
          }
          if (d_print_steps) {
-            tbox::plog
-            << "GriddingAlgorithm::findRefinementBoxes finished applying overflow nesting map."
-            << std::endl;
+            tbox::plog << "GriddingAlgorithm::findRefinementBoxes finished applying overflow nesting map.\n"
+                       << "After overflow nesting enforcement:\n"
+                       << "tag:\n" << tag_to_new->getBase().format("T: ")
+                       << "new:\n" << tag_to_new->getHead().format("N: ")
+                       << "tag--->new:\n" << tag_to_new->format("TN: ")
+                       << "new--->tag:\n" << tag_to_new->getTranspose().format("NT: ");
          }
 
          if (d_check_overflow_nesting) {
@@ -3150,7 +3156,7 @@ GriddingAlgorithm::findRefinementBoxes(
             d_oca);
          if (d_print_steps) {
             tbox::plog << "GriddingAlgorithm::findRefinementBoxes applying proper nesting map.\n"
-                       << "Proper nesting map:\n" << unnested_to_nested->format("", 3);
+                       << "Proper nesting map:\n" << unnested_to_nested->format("MAP: ", 3);
          }
          t_use_nesting_map->start();
          t_modify_connector->start();
@@ -3825,6 +3831,17 @@ GriddingAlgorithm::computeProperNestingData(
          self_connector,
          hier::IntVector(dim, -d_hierarchy->getProperNestingBuffer(ln)),
          d_hierarchy->getGridGeometry()->getDomainSearchTree());
+
+      /*
+       * Change to_nesting_complement from a mapping to an overlap Connector
+       * by adding trivial edges normally omitted from mapping Connectors.
+       */
+      const hier::BoxContainer &tag_level_boxes = self_connector.getBase().getBoxes();
+      for ( hier::BoxContainer::const_iterator bi=tag_level_boxes.begin(); bi!=tag_level_boxes.end(); ++bi ) {
+         if ( !to_nesting_complement->hasNeighborSet(bi->getBoxId()) ) {
+            to_nesting_complement->insertLocalNeighbor(*bi, bi->getBoxId());
+         }
+      }
 
       d_to_nesting_complement[ln] =
          boost::static_pointer_cast<hier::Connector, hier::MappingConnector>(

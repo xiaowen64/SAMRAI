@@ -1041,7 +1041,7 @@ Connector::recursivePrint(
       << " (" << getLocalNumberOfNeighborSets() << " with neighbor lists)\n"
    ;
    if (detail_depth > 0) {
-      os << border << "Bboxes with neighbors:\n";
+      os << border << "Boxes with neighbors:\n";
       for (ConstNeighborhoodIterator ei = begin(); ei != end(); ++ei) {
          const BoxId& box_id = *ei;
          BoxContainer::const_iterator ni = getBase().getBox(box_id);
