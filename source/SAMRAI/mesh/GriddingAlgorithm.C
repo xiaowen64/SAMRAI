@@ -3132,7 +3132,7 @@ GriddingAlgorithm::findRefinementBoxes(
             tag_to_new->removePeriodicRelationships();
             tag_to_new->getTranspose().removePeriodicRelationships();
          }
-         t_fix_zero_width_clustering->stop();
+         t_fix_zero_width_clustering->barrierAndStop();
       }
 
 
