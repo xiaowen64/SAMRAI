@@ -101,6 +101,10 @@ TileClustering::findBoxesContainingTags(
       min_box,
       max_gcw);
 
+   if (d_barrier_and_time) {
+      t_find_boxes_containing_tags->barrierAndStart();
+   }
+
    const hier::IntVector &zero_vector = hier::IntVector::getZero(tag_level->getDim());
 
    for (hier::BoxContainer::const_iterator bb_itr = bound_boxes.begin();
@@ -129,7 +133,6 @@ TileClustering::findBoxesContainingTags(
    tbox::SAMRAI_MPI mpi(tag_level->getBoxLevel()->getMPI());
 
    if (d_barrier_and_time) {
-      t_find_boxes_containing_tags->barrierAndStart();
       t_cluster->start();
    }
 
@@ -206,7 +209,7 @@ TileClustering::findBoxesContainingTags(
    new_box_level->finalize();
 
    if (d_barrier_and_time) {
-      t_cluster->stop();
+      t_cluster->barrierAndStop();
    }
 
 
@@ -216,12 +219,12 @@ TileClustering::findBoxesContainingTags(
     * the logging flag from having an undue side effect on performance.
     */
    if (d_barrier_and_time) {
-      t_global_reductions->start();
+      t_global_reductions->barrierAndStart();
    }
    new_box_level->getGlobalNumberOfBoxes();
    new_box_level->getGlobalNumberOfCells();
    if (d_barrier_and_time) {
-      t_global_reductions->stop();
+      t_global_reductions->barrierAndStop();
    }
    for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
         bi != bound_boxes.end(); ++bi) {
@@ -271,7 +274,7 @@ TileClustering::findBoxesContainingTags(
    }
 
    if (d_barrier_and_time) {
-      t_find_boxes_containing_tags->stop();
+      t_find_boxes_containing_tags->barrierAndStop();
    }
 }
 
