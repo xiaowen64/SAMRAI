@@ -3116,6 +3116,7 @@ GriddingAlgorithm::findRefinementBoxes(
        * yet, so remove them.
        */
       if ( tag_to_new->getConnectorWidth() != d_tag_to_cluster_width[tag_ln] ) {
+         t_fix_zero_width_clustering->barrierAndStart();
          const hier::Connector &tag_to_tag =
             tag_box_level.getPersistentOverlapConnectors().findConnectorWithTranspose(
                tag_box_level, d_tag_to_cluster_width[tag_ln], d_tag_to_cluster_width[tag_ln] );
@@ -3131,6 +3132,7 @@ GriddingAlgorithm::findRefinementBoxes(
             tag_to_new->removePeriodicRelationships();
             tag_to_new->getTranspose().removePeriodicRelationships();
          }
+         t_fix_zero_width_clustering->stop();
       }
 
 
@@ -4809,6 +4811,8 @@ GriddingAlgorithm::allocateTimers()
       getTimer("mesh::GriddingAlgorithm::findRefinementBoxes()");
    t_find_boxes_containing_tags = tbox::TimerManager::getManager()->
       getTimer("mesh::GriddingAlgorithm::find_boxes_containing_tags");
+   t_fix_zero_width_clustering = tbox::TimerManager::getManager()->
+      getTimer("mesh::GriddingAlgorithm::fix_zero_width_clustering");
    t_compute_proper_nesting_data = tbox::TimerManager::getManager()->
       getTimer("mesh::GriddingAlgorithm::computeProperNestingData()");
    t_enforce_nesting = tbox::TimerManager::getManager()->

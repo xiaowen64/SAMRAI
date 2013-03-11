@@ -1440,6 +1440,7 @@ private:
    boost::shared_ptr<tbox::Timer> t_bridge_new_to_finer;
    boost::shared_ptr<tbox::Timer> t_bridge_new_to_old;
    boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
+   boost::shared_ptr<tbox::Timer> t_fix_zero_width_clustering;
    boost::shared_ptr<tbox::Timer> t_enforce_nesting;
    boost::shared_ptr<tbox::Timer> t_compute_proper_nesting_data;
    boost::shared_ptr<tbox::Timer> t_make_nesting_map;
