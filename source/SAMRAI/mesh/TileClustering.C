@@ -139,7 +139,7 @@ TileClustering::findBoxesContainingTags(
    const hier::BoxContainer &local_tag_boxes = tag_box_level.getBoxes();
    local_tag_boxes.makeTree();
 
-   // Generate new_box_level and Connectors here!
+   // Generate new_box_level and Connectors
    for ( hier::PatchLevel::iterator pi=tag_level->begin();
          pi!=tag_level->end(); ++pi ) {
 

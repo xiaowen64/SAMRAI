@@ -373,9 +373,11 @@ OverlapConnectorAlgorithm::findOverlaps(
    const BoxLevel& globalized_head,
    const bool ignore_self_overlap) const
 {
+   d_object_timers->t_find_overlaps_rbbt->start();
    connector.findOverlaps_rbbt(globalized_head,
       ignore_self_overlap,
       d_sanity_check_method_postconditions);
+   d_object_timers->t_find_overlaps_rbbt->stop();
 }
 
 /*
