@@ -484,8 +484,14 @@ int main(
                "mesh::TilePartitioner",
                input_db->getDatabase("TilePartitioner")));
 
+         boost::shared_ptr<mesh::TilePartitioner> tile_load_balancer0(
+            new mesh::TilePartitioner(
+               dim,
+               "mesh::TilePartitioner0",
+               input_db->getDatabase("TilePartitioner")));
+
          load_balancer = tile_load_balancer;
-         load_balancer0 = tile_load_balancer;
+         load_balancer0 = tile_load_balancer0;
       }
 
 
