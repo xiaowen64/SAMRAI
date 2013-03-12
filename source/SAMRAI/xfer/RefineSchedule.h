@@ -1192,6 +1192,7 @@ private:
    /*!
     * @name Timer objects for performance measurement.
     */
+   static boost::shared_ptr<tbox::Timer> t_refine_schedule;
    static boost::shared_ptr<tbox::Timer> t_fill_data;
    static boost::shared_ptr<tbox::Timer> t_recursive_fill;
    static boost::shared_ptr<tbox::Timer> t_refine_scratch_data;

@@ -3276,11 +3276,9 @@ GriddingAlgorithm::renumberBoxes(
       sort_by_corners,
       sequentialize_global_indices);
 
-   t_modify_connector->start();
    mca.modify(tag_to_new,
       *sorting_map,
       &new_box_level);
-   t_modify_connector->stop();
 
    t_sort_nodes->stop();
 }
@@ -3493,11 +3491,9 @@ GriddingAlgorithm::extendBoxesToDomainBoundary(
          before_box.getBoxId());
    }
 
-   t_modify_connector->start();
    d_mca.modify(tag_to_new,
       before_to_after,
       &new_box_level);
-   t_modify_connector->stop();
 
    t_extend_to_domain_boundary->barrierAndStop();
 }
@@ -3548,11 +3544,9 @@ GriddingAlgorithm::enforceOverflowNesting(
                  << "new--->tag:\n" << tag_to_new.getTranspose().format("NT: ");
    }
    t_use_overflow_map->start();
-   t_modify_connector->start();
    d_mca.modify(tag_to_new,
                 *unnested_to_nested,
                 &new_box_level);
-   t_modify_connector->stop();
    t_use_overflow_map->stop();
    if (d_print_steps) {
       tbox::plog << "GriddingAlgorithm::findRefinementBoxes finished applying overflow nesting map.\n"
@@ -4140,11 +4134,9 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
     * Use the mapping Connector.
     */
 
-   t_modify_connector->start();
    d_mca.modify(tag_to_new,
       new_to_grown,
       &new_box_level);
-   t_modify_connector->stop();
 }
 
 void
@@ -4871,8 +4863,6 @@ GriddingAlgorithm::allocateTimers()
       getTimer("mesh::GriddingAlgorithm::bridge_new_to_finer");
    t_bridge_new_to_old = tbox::TimerManager::getManager()->
       getTimer("mesh::GriddingAlgorithm::bridge_new_to_old");
-   t_modify_connector = tbox::TimerManager::getManager()->
-      getTimer("mesh::GriddingAlgorithm::modify_connector");
    t_make_domain = tbox::TimerManager::getManager()->
       getTimer("mesh::GriddingAlgorithm::makeCoarsestLevel()_make_domain");
    t_make_new = tbox::TimerManager::getManager()->

@@ -499,6 +499,7 @@ private:
    /*!
     * @name Timer objects for performance measurement.
     */
+   static boost::shared_ptr<tbox::Timer> t_coarsen_schedule;
    static boost::shared_ptr<tbox::Timer> t_coarsen_data;
    static boost::shared_ptr<tbox::Timer> t_gen_sched_n_squared;
    static boost::shared_ptr<tbox::Timer> t_gen_sched_dlbg;
