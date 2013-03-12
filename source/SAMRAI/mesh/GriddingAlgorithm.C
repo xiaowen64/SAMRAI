@@ -3023,89 +3023,7 @@ GriddingAlgorithm::findRefinementBoxes(
       }
 
 
-      { // Limit overflow.
-
-         if (d_print_steps) {
-            tbox::plog
-            << "GriddingAlgorithm::findRefinementBoxes: enforcing overflow nesting\n";
-         }
-
-         if (d_barrier_and_time) {
-            t_limit_overflow->barrierAndStart();
-         }
-         /*
-          * Do not allow the new box_level to overflow the tag box_level.
-          * If we want to allow the overflow, we have to add the
-          * overflow ammount to width of tag->new.  Such additions
-          * may make the ABR algorithm slower, because more
-          * non-contributing processors would have to be included
-          * in the contributing group (unless ABR keep track of
-          * the non-contributing processors and don't seek tag
-          * histogram from them).
-          */
-         boost::shared_ptr<hier::BoxLevel> nested_box_level;
-         boost::shared_ptr<hier::MappingConnector> unnested_to_nested;
-         makeOverflowNestingMap(
-            nested_box_level,
-            unnested_to_nested,
-            *new_box_level,
-            new_to_tag);
-         if (d_print_steps) {
-            tbox::plog << "GriddingAlgorithm::findRefinementBoxes applying overflow nesting map.\n"
-                       << "Overflow nesting map:\n" << unnested_to_nested->format("MAP: ", 3)
-                       << "Before overflow nesting enforcement:\n"
-                       << "tag:\n" << tag_to_new->getBase().format("T: ")
-                       << "new:\n" << tag_to_new->getHead().format("N: ")
-                       << "tag--->new:\n" << tag_to_new->format("TN: ")
-                       << "new--->tag:\n" << tag_to_new->getTranspose().format("NT: ");
-         }
-         t_use_overflow_map->start();
-         t_modify_connector->start();
-         hier::MappingConnectorAlgorithm mca;
-         d_mca.modify(*tag_to_new,
-            *unnested_to_nested,
-            new_box_level.get());
-         t_modify_connector->stop();
-         t_use_overflow_map->stop();
-         if (d_barrier_and_time) {
-            t_limit_overflow->stop();
-         }
-         if (d_print_steps) {
-            tbox::plog << "GriddingAlgorithm::findRefinementBoxes finished applying overflow nesting map.\n"
-                       << "After overflow nesting enforcement:\n"
-                       << "tag:\n" << tag_to_new->getBase().format("T: ")
-                       << "new:\n" << tag_to_new->getHead().format("N: ")
-                       << "tag--->new:\n" << tag_to_new->format("TN: ")
-                       << "new--->tag:\n" << tag_to_new->getTranspose().format("NT: ");
-         }
-
-         if (d_check_overflow_nesting) {
-            if (d_print_steps) {
-               tbox::plog << "GriddingAlgorithm::findRefinementBoxes checking overflow."
-                          << std::endl;
-            }
-            bool locally_nested = false;
-            bool nested = dlbg_edge_utils.baseNestsInHead(
-                  &locally_nested,
-                  *new_box_level,
-                  tag_box_level,
-                  hier::IntVector::getZero(dim),
-                  hier::IntVector::getZero(dim),
-                  hier::IntVector::getZero(dim),
-                  &d_hierarchy->getGridGeometry()->getDomainSearchTree());
-            if (!nested) {
-               TBOX_ERROR(
-                  "Failed overflow nesting: new box_level does not nest in tagged box_level.\n"
-                  << "Local nestedness = " << locally_nested << std::endl
-                  << "tag_box_level:\n" << tag_box_level.format("", 2)
-                  << "new_box_level:\n" << new_box_level->format("", 2)
-                  << "tag_to_new:\n" << tag_to_new->format("", 2)
-                  << "new_to_tag:\n" << new_to_tag.format("", 2)
-                  << std::endl);
-            }
-         }
-
-      }
+      enforceOverflowNesting( *new_box_level, *tag_to_new );
 
 
       /*
@@ -3137,130 +3055,15 @@ GriddingAlgorithm::findRefinementBoxes(
 
 
       if (d_enforce_proper_nesting) {
-
-         if (d_print_steps) {
-            tbox::plog
-            << "GriddingAlgorithm::findRefinementBoxes: enforcing proper nesting\n";
-         }
-         if (d_barrier_and_time) {
-            t_enforce_nesting->barrierAndStart();
-         }
-
-         boost::shared_ptr<hier::MappingConnector> unnested_to_nested;
-         boost::shared_ptr<hier::BoxLevel> nested_box_level;
-
-         makeProperNestingMap(
-            nested_box_level,
-            unnested_to_nested,
-            *new_box_level,
-            tag_to_new->getTranspose(),
-            new_ln,
-            d_oca);
-         if (d_print_steps) {
-            tbox::plog << "GriddingAlgorithm::findRefinementBoxes applying proper nesting map.\n"
-                       << "Proper nesting map:\n" << unnested_to_nested->format("MAP: ", 3);
-         }
-         t_use_nesting_map->start();
-         t_modify_connector->start();
-         const hier::MappingConnectorAlgorithm mca;
-         tbox::plog << "Before:\n"
-                    << "tag:\n" << tag_to_new->getBase().format("T: ")
-                    << "new:\n" << tag_to_new->getHead().format("H: ")
-                    << "tag--->new:\n" << tag_to_new->format("TN: ")
-                    << "new--->tag:\n" << tag_to_new->getTranspose().format("NT: ");
-         d_mca.modify(*tag_to_new,
-            *unnested_to_nested,
-            new_box_level.get());
-         tbox::plog << "After:\n"
-                    << "tag:\n" << tag_to_new->getBase().format("T: ")
-                    << "new:\n" << tag_to_new->getHead().format("H: ")
-                    << "tag--->new:\n" << tag_to_new->format("TN: ")
-                    << "new--->tag:\n" << tag_to_new->getTranspose().format("NT: ");
-         t_modify_connector->stop();
-         t_use_nesting_map->stop();
-
-         if (d_barrier_and_time) {
-            t_enforce_nesting->stop();
-         }
-
-         if (tag_ln == d_base_ln && d_check_proper_nesting) {
-            /*
-             * Tag level will be regridded when we exit the current
-             * recursion if tag_ln is not d_base_ln, so do not check
-             * proper nesting in that case.
-             *
-             * Check that the new box_level nest in the tag
-             * level (tag_ln).
-             */
-            hier::IntVector required_nesting(dim);
-            if (tag_ln > 0) {
-               required_nesting =
-                  hier::IntVector(dim, d_hierarchy->getProperNestingBuffer(tag_ln));
-            } else {
-               required_nesting =
-                  d_hierarchy->getPatchDescriptor()->getMaxGhostWidth(dim);
-            }
-            bool locally_nests = false;
-            const bool new_nests_in_tag =
-               dlbg_edge_utils.baseNestsInHead(
-                  &locally_nests,
-                  *new_box_level,
-                  tag_box_level,
-                  required_nesting,
-                  hier::IntVector::getZero(dim),
-                  hier::IntVector::getZero(dim),
-                  &d_hierarchy->getGridGeometry()->getPeriodicDomainSearchTree());
-            if (!new_nests_in_tag) {
-               tbox::perr << "GriddingAlgorithm: new BoxLevel\n"
-                          << "at ln=" << new_ln
-                          << " does not properly nest in\n"
-                          << "tag level at tag_ln=" << tag_ln
-                          << " by the required nesting buffer of "
-                          << required_nesting
-                          << ".\nLocal nestingness: " << locally_nests
-                          << ".\nWriting BoxLevels out to log file."
-                          << std::endl;
-               tbox::plog
-               << "Proper nesting violation with new BoxLevel of\n"
-               << new_box_level->format("N->", 2)
-               << "Proper nesting violation with tag BoxLevel of\n"
-               << tag_box_level.format("T->", 2);
-               boost::shared_ptr<hier::BoxLevel> external;
-               boost::shared_ptr<hier::Connector> tmp_new_to_tag;
-               d_oca.findOverlaps(tmp_new_to_tag,
-                  *new_box_level,
-                  tag_box_level,
-                  required_nesting);
-               tbox::plog << "tmp_new_to_tag:\n" << tmp_new_to_tag->format("NT->", 3);
-               boost::shared_ptr<hier::MappingConnector> new_to_external;
-               dlbg_edge_utils.computeExternalParts(
-                  external,
-                  new_to_external,
-                  *tmp_new_to_tag,
-                  -required_nesting,
-                  d_hierarchy->getGridGeometry()->getDomainSearchTree());
-               tbox::plog << "External parts:\n" << new_to_external->format("NE->", 3);
-               TBOX_ERROR(
-                  "Internal library error: Failed to produce proper nesting."
-                  << std::endl);
-            }
-         }
+         enforceProperNesting( *new_box_level, *tag_to_new, tag_ln );
       }
 
       if (d_extend_to_domain_boundary) {
-
-         if (d_print_steps) {
-            tbox::plog
-            << "GriddingAlgorithm::findRefinementBoxes: extending nodes\n";
-         }
-
-         t_extend_to_domain_boundary->barrierAndStart();
          extendBoxesToDomainBoundary(
             *new_box_level,
             *tag_to_new,
             level->getPhysicalDomainArray(),
             extend_ghosts_in_tag_space);
-         t_extend_to_domain_boundary->stop();
       }
 
       bool allow_patches_smaller_than_minimum_size_to_prevent_overlaps =
@@ -3390,7 +3193,7 @@ GriddingAlgorithm::findRefinementBoxes(
 
       if (d_sequentialize_patch_indices) {
          if (d_print_steps) {
-            tbox::plog << "GriddingAlgorithm begin sorting nodes." << std::endl;
+            tbox::plog << "GriddingAlgorithm begin sorting boxes." << std::endl;
          }
          renumberBoxes(*new_box_level,
             *tag_to_new,
@@ -3398,7 +3201,7 @@ GriddingAlgorithm::findRefinementBoxes(
             true,
             d_mca);
          if (d_print_steps) {
-            tbox::plog << "GriddingAlgorithm end sorting nodes." << std::endl;
+            tbox::plog << "GriddingAlgorithm end sorting boxes." << std::endl;
          }
       }
 
@@ -3510,6 +3313,124 @@ GriddingAlgorithm::refineNewBoxLevel(
    tag_to_new.refineLocalNeighbors(ratio);
 }
 
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+
+void
+GriddingAlgorithm::enforceProperNesting(
+   hier::BoxLevel& new_box_level,
+   hier::Connector& tag_to_new,
+   int tag_ln) const
+{
+   if (d_barrier_and_time) {
+      t_enforce_proper_nesting->barrierAndStart();
+   }
+
+   if (d_print_steps) {
+      tbox::plog
+         << "GriddingAlgorithm::findRefinementBoxes: enforcing proper nesting\n";
+   }
+
+   const int new_ln = tag_ln + 1;
+
+   boost::shared_ptr<hier::MappingConnector> unnested_to_nested;
+   boost::shared_ptr<hier::BoxLevel> nested_box_level;
+
+   makeProperNestingMap(
+      nested_box_level,
+      unnested_to_nested,
+      new_box_level,
+      tag_to_new.getTranspose(),
+      new_ln,
+      d_oca);
+
+   if (d_print_steps) {
+      tbox::plog << "GriddingAlgorithm::findRefinementBoxes applying proper nesting map.\n"
+                 << "Proper nesting map:\n" << unnested_to_nested->format("MAP: ", 3);
+   }
+
+   t_use_nesting_map->start();
+   d_mca.modify(tag_to_new,
+                *unnested_to_nested,
+                &new_box_level);
+   t_use_nesting_map->stop();
+
+
+   if (tag_ln == d_base_ln && d_check_proper_nesting) {
+      /*
+       * Tag level will be regridded when we exit the current
+       * recursion if tag_ln is not d_base_ln, so do not check
+       * proper nesting in that case.
+       *
+       * Check that the new box_level nest in the tag
+       * level (tag_ln).
+       */
+      hier::IntVector required_nesting(d_hierarchy->getDim());
+      if (tag_ln > 0) {
+         required_nesting =
+            hier::IntVector(d_hierarchy->getDim(), d_hierarchy->getProperNestingBuffer(tag_ln));
+      } else {
+         required_nesting =
+            d_hierarchy->getPatchDescriptor()->getMaxGhostWidth(d_hierarchy->getDim());
+      }
+      bool locally_nests = false;
+      const hier::BoxLevelConnectorUtils dlbg_edge_utils;
+      const bool new_nests_in_tag =
+         dlbg_edge_utils.baseNestsInHead(
+            &locally_nests,
+            new_box_level,
+            tag_to_new.getBase(),
+            required_nesting,
+            hier::IntVector::getZero(d_hierarchy->getDim()),
+            hier::IntVector::getZero(d_hierarchy->getDim()),
+            &d_hierarchy->getGridGeometry()->getPeriodicDomainSearchTree());
+      if (!new_nests_in_tag) {
+         tbox::perr << "GriddingAlgorithm: new BoxLevel\n"
+                    << "at ln=" << new_ln
+                    << " does not properly nest in\n"
+                    << "tag level at tag_ln=" << tag_ln
+                    << " by the required nesting buffer of "
+                    << required_nesting
+                    << ".\nLocal nestingness: " << locally_nests
+                    << ".\nWriting BoxLevels out to log file."
+                    << std::endl;
+         tbox::plog
+            << "Proper nesting violation with new BoxLevel of\n"
+            << new_box_level.format("N->", 2)
+            << "Proper nesting violation with tag BoxLevel of\n"
+            << tag_to_new.getBase().format("T->", 2);
+         boost::shared_ptr<hier::BoxLevel> external;
+         boost::shared_ptr<hier::Connector> tmp_new_to_tag;
+         d_oca.findOverlaps(tmp_new_to_tag,
+                            new_box_level,
+                            tag_to_new.getBase(),
+                            required_nesting);
+         tbox::plog << "tmp_new_to_tag:\n" << tmp_new_to_tag->format("NT->", 3);
+         boost::shared_ptr<hier::MappingConnector> new_to_external;
+         dlbg_edge_utils.computeExternalParts(
+            external,
+            new_to_external,
+            *tmp_new_to_tag,
+            -required_nesting,
+            d_hierarchy->getGridGeometry()->getDomainSearchTree());
+         tbox::plog << "External parts:\n" << new_to_external->format("NE->", 3);
+         TBOX_ERROR(
+            "Internal library error: Failed to produce proper nesting."
+            << std::endl);
+      }
+   }
+
+   if (d_barrier_and_time) {
+      t_enforce_proper_nesting->barrierAndStop();
+   }
+   return;
+}
+
 /*
  *************************************************************************
  * Extend Boxes to domain boundary if they are too close.
@@ -3524,6 +3445,14 @@ GriddingAlgorithm::extendBoxesToDomainBoundary(
    const hier::IntVector& extend_ghosts) const
 {
    TBOX_ASSERT(tag_to_new.hasTranspose());
+
+   t_extend_to_domain_boundary->barrierAndStart();
+
+   if (d_print_steps) {
+      tbox::plog
+         << "GriddingAlgorithm::findRefinementBoxes: extending boxes to boundary\n";
+   }
+
 
    tbox::SAMRAI_MPI mpi(new_box_level.getMPI());
 
@@ -3570,6 +3499,101 @@ GriddingAlgorithm::extendBoxesToDomainBoundary(
       &new_box_level);
    t_modify_connector->stop();
 
+   t_extend_to_domain_boundary->barrierAndStop();
+}
+
+
+
+/*
+ *************************************************************************
+ * Enforce overflow nesting by removing new cells that are outside the
+ * tag level.
+ *************************************************************************
+ */
+
+void
+GriddingAlgorithm::enforceOverflowNesting(
+   hier::BoxLevel& new_box_level,
+   hier::Connector& tag_to_new) const
+{
+   if (d_barrier_and_time) {
+      t_enforce_overflow_nesting->barrierAndStart();
+   }
+
+   if (d_print_steps) {
+      tbox::plog
+         << "GriddingAlgorithm::findRefinementBoxes: enforcing overflow nesting\n";
+   }
+
+   /*
+    * Do not allow the new box_level to overflow the tag box_level.
+    * If we want to allow the overflow, we have to add the overflow
+    * ammount to width of tag->new.  Such additions may make
+    * clustering slower.
+    */
+   boost::shared_ptr<hier::BoxLevel> nested_box_level;
+   boost::shared_ptr<hier::MappingConnector> unnested_to_nested;
+   makeOverflowNestingMap(
+      nested_box_level,
+      unnested_to_nested,
+      new_box_level,
+      tag_to_new.getTranspose());
+   if (d_print_steps) {
+      tbox::plog << "GriddingAlgorithm::findRefinementBoxes applying overflow nesting map.\n"
+                 << "Overflow nesting map:\n" << unnested_to_nested->format("MAP: ", 3)
+                 << "Before overflow nesting enforcement:\n"
+                 << "tag:\n" << tag_to_new.getBase().format("T: ")
+                 << "new:\n" << tag_to_new.getHead().format("N: ")
+                 << "tag--->new:\n" << tag_to_new.format("TN: ")
+                 << "new--->tag:\n" << tag_to_new.getTranspose().format("NT: ");
+   }
+   t_use_overflow_map->start();
+   t_modify_connector->start();
+   d_mca.modify(tag_to_new,
+                *unnested_to_nested,
+                &new_box_level);
+   t_modify_connector->stop();
+   t_use_overflow_map->stop();
+   if (d_print_steps) {
+      tbox::plog << "GriddingAlgorithm::findRefinementBoxes finished applying overflow nesting map.\n"
+                 << "After overflow nesting enforcement:\n"
+                 << "tag:\n" << tag_to_new.getBase().format("T: ")
+                 << "new:\n" << tag_to_new.getHead().format("N: ")
+                 << "tag--->new:\n" << tag_to_new.format("TN: ")
+                 << "new--->tag:\n" << tag_to_new.getTranspose().format("NT: ");
+   }
+
+   if (d_check_overflow_nesting) {
+      if (d_print_steps) {
+         tbox::plog << "GriddingAlgorithm::findRefinementBoxes checking overflow."
+                    << std::endl;
+      }
+      bool locally_nested = false;
+      const hier::BoxLevelConnectorUtils dlbg_edge_utils;
+      bool nested = dlbg_edge_utils.baseNestsInHead(
+         &locally_nested,
+         new_box_level,
+         tag_to_new.getBase(),
+         hier::IntVector::getZero(d_hierarchy->getDim()),
+         hier::IntVector::getZero(d_hierarchy->getDim()),
+         hier::IntVector::getZero(d_hierarchy->getDim()),
+         &d_hierarchy->getGridGeometry()->getDomainSearchTree());
+      if (!nested) {
+         TBOX_ERROR(
+            "Failed overflow nesting: new box_level does not nest in tagged box_level.\n"
+            << "Local nestedness = " << locally_nested << std::endl
+            << "tag_box_level:\n" << tag_to_new.getBase().format("", 2)
+            << "new_box_level:\n" << new_box_level.format("", 2)
+            << "tag_to_new:\n" << tag_to_new.format("", 2)
+            << "new_to_tag:\n" << tag_to_new.getTranspose().format("", 2)
+            << std::endl);
+      }
+   }
+
+   if (d_barrier_and_time) {
+      t_enforce_overflow_nesting->barrierAndStop();
+   }
+   return;
 }
 
 /*
@@ -4815,8 +4839,8 @@ GriddingAlgorithm::allocateTimers()
       getTimer("mesh::GriddingAlgorithm::fix_zero_width_clustering");
    t_compute_proper_nesting_data = tbox::TimerManager::getManager()->
       getTimer("mesh::GriddingAlgorithm::computeProperNestingData()");
-   t_enforce_nesting = tbox::TimerManager::getManager()->
-      getTimer("mesh::GriddingAlgorithm::enforce_nesting");
+   t_enforce_proper_nesting = tbox::TimerManager::getManager()->
+      getTimer("mesh::GriddingAlgorithm::enforceProperNesting()");
    t_make_nesting_map = tbox::TimerManager::getManager()->
       getTimer("mesh::GriddingAlgorithm::makeProperNestingMap()");
    t_use_nesting_map = tbox::TimerManager::getManager()->
@@ -4830,7 +4854,7 @@ GriddingAlgorithm::allocateTimers()
    t_compute_nesting_violator = tbox::TimerManager::getManager()->
       getTimer("mesh::GriddingAlgorithm::computeNestingViolator()");
    t_extend_to_domain_boundary = tbox::TimerManager::getManager()->
-      getTimer("mesh::GriddingAlgorithm::extend_to_domain_boundary");
+      getTimer("mesh::GriddingAlgorithm::extendBoxesToDomainBoundary()");
    t_extend_within_domain = tbox::TimerManager::getManager()->
       getTimer("mesh::GriddingAlgorithm::extend_within_domain");
    t_grow_boxes_within_domain = tbox::TimerManager::getManager()->
@@ -4857,8 +4881,8 @@ GriddingAlgorithm::allocateTimers()
       getTimer("mesh::GriddingAlgorithm::process_error");
    t_reset_hier = tbox::TimerManager::getManager()->
       getTimer("mesh::GriddingAlgorithm::reset_hierarchy_config");
-   t_limit_overflow = tbox::TimerManager::getManager()->
-      getTimer("mesh::GriddingAlgorithm::limit_overflow");
+   t_enforce_overflow_nesting = tbox::TimerManager::getManager()->
+      getTimer("mesh::GriddingAlgorithm::enforceOverflowNesting()");
 }
 
 }
