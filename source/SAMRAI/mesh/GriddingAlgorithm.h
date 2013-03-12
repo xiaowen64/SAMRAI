@@ -751,6 +751,22 @@ private:
       const bool interior_only,
       const hier::IntVector& fill_box_growth) const;
 
+
+   /*!
+    * @brief Enforce proper nesting.
+    *
+    * @param[in/out] new_box_level
+    *
+    * @param[in,out] tag_to_new
+    *
+    * @param[in] tag_ln
+    */
+   void
+   enforceProperNesting(
+      hier::BoxLevel& new_box_level,
+      hier::Connector& tag_to_new,
+      int tag_ln) const;
+
    /*!
     * @brief Make a map that, when applied to an improperly nested
     * BoxLevel, removes the nonnesting parts.
@@ -782,6 +798,19 @@ private:
       const hier::Connector& tag_to_unnested,
       const int unnested_ln,
       const hier::OverlapConnectorAlgorithm &oca) const;
+
+
+   /*!
+    * @brief Enforce overflow nesting.
+    *
+    * @param[in/out] new_box_level
+    *
+    * @param[in,out] tag_to_new
+    */
+   void
+   enforceOverflowNesting(
+      hier::BoxLevel& new_box_level,
+      hier::Connector& tag_to_new) const;
 
    /*!
     * @brief Make a map that, when applied to a BoxLevel that
@@ -1440,7 +1469,8 @@ private:
    boost::shared_ptr<tbox::Timer> t_bridge_new_to_finer;
    boost::shared_ptr<tbox::Timer> t_bridge_new_to_old;
    boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
-   boost::shared_ptr<tbox::Timer> t_enforce_nesting;
+   boost::shared_ptr<tbox::Timer> t_fix_zero_width_clustering;
+   boost::shared_ptr<tbox::Timer> t_enforce_proper_nesting;
    boost::shared_ptr<tbox::Timer> t_compute_proper_nesting_data;
    boost::shared_ptr<tbox::Timer> t_make_nesting_map;
    boost::shared_ptr<tbox::Timer> t_use_nesting_map;
@@ -1456,7 +1486,7 @@ private:
    boost::shared_ptr<tbox::Timer> t_make_domain;
    boost::shared_ptr<tbox::Timer> t_make_new;
    boost::shared_ptr<tbox::Timer> t_process_error;
-   boost::shared_ptr<tbox::Timer> t_limit_overflow;
+   boost::shared_ptr<tbox::Timer> t_enforce_overflow_nesting;
    boost::shared_ptr<tbox::Timer> t_reset_hier;
 
 #ifdef GA_RECORD_STATS
