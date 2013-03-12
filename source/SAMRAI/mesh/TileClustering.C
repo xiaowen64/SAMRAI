@@ -93,6 +93,7 @@ TileClustering::findBoxesContainingTags(
    NULL_USE(efficiency_tol);
    NULL_USE(combine_tol);
    NULL_USE(min_box);
+   NULL_USE(max_gcw);
 
    TBOX_ASSERT(!bound_boxes.isEmpty());
    TBOX_ASSERT_OBJDIM_EQUALITY4(
@@ -125,8 +126,6 @@ TileClustering::findBoxesContainingTags(
       *tag_level->getBoxLevel(),
       zero_vector);
    tag_to_new->setTranspose(new_to_tag, true);
-
-   tbox::SAMRAI_MPI mpi(tag_level->getBoxLevel()->getMPI());
 
    if (d_barrier_and_time) {
       t_find_boxes_containing_tags->barrierAndStart();
