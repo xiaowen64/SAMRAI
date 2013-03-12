@@ -2998,7 +2998,6 @@ GriddingAlgorithm::findRefinementBoxes(
          getCombineEfficiency(tag_ln),
          d_tag_to_cluster_width[tag_ln]);
    }
-   hier::Connector& new_to_tag = tag_to_new->getTranspose();
    t_find_boxes_containing_tags->stop();
 
    if (new_box_level && new_box_level->getGlobalNumberOfBoxes() > 0) {
@@ -3013,7 +3012,7 @@ GriddingAlgorithm::findRefinementBoxes(
             <<
             "GriddingAlgorithm::findRefinementBoxes: checking new-->tag from findBoxesContainingTags\n";
          }
-         TBOX_ASSERT(new_to_tag.checkOverlapCorrectness(false, true, true) == 0);
+         TBOX_ASSERT(tag_to_new->getTranspose().checkOverlapCorrectness(false, true, true) == 0);
          if (d_print_steps) {
             tbox::plog
             <<
