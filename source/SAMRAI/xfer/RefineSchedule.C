@@ -1758,7 +1758,9 @@ RefineSchedule::fillData(
    double fill_time,
    bool do_physical_boundary_fill) const
 {
-   t_fill_data->start();
+   if ( s_barrier_and_time ) {
+      t_fill_data->barrierAndStart();
+   }
 
    /*
     * Set the refine items and time for all transactions.  These items will
@@ -1815,7 +1817,9 @@ RefineSchedule::fillData(
 
    d_transaction_factory->unsetRefineItems();
 
-   t_fill_data->stop();
+   if ( s_barrier_and_time ) {
+      t_fill_data->stop();
+   }
 }
 
 /*
