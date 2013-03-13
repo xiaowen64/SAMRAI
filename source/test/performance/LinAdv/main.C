@@ -689,6 +689,17 @@ int main(
          tbox::plog << "\n\nLoad balancing results:\n";
          tree_load_balancer->printStatistics(tbox::plog);
       }
+      else if ( load_balancer_type == "TilePartitioner" ) {
+         /*
+          * Output load balancing results for TilePartitioner.
+          */
+         boost::shared_ptr<mesh::TilePartitioner> tile_partitioner(
+            BOOST_CAST<mesh::TilePartitioner, mesh::LoadBalanceStrategy>(
+               load_balancer));
+         TBOX_ASSERT(tile_partitioner);
+         tbox::plog << "\n\nLoad balancing results:\n";
+         tile_partitioner->printStatistics(tbox::plog);
+      }
 
       /*
        * Output box search results.
