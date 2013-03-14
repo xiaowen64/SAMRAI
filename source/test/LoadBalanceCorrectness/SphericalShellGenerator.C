@@ -167,11 +167,14 @@ void SphericalShellGenerator::setTags(
 
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          patch->getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(tag_data_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(patch_geom);
+      TBOX_ASSERT(tag_data);
 
       tagShells( *tag_data, *patch_geom, d_buffer_shrink_distance[tag_ln] );
 
@@ -210,7 +213,7 @@ void SphericalShellGenerator::setDomain(
       // xhi[d] = xlo[d] + linear_scale_factor*(xhi[d]-xlo[d]);
       tmp_intvec(d) = static_cast<int>(0.5 + tmp_intvec(d)*linear_scale_factor);
    }
-   tmp_intvec -= hier::IntVector::getOne(dim);
+   tmp_intvec -= hier::IntVector::getOne(domain_box.getDim());
    tbox::plog << "SphericalShellGenerator::setDomain changing domain from "
               << domain_box << " to ";
    domain_box.upper() = domain_box.lower() + tmp_intvec;
@@ -327,7 +330,8 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
 
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          patch.getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(patch_geom);
 
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
       tagShells(tag_data, *patch_geom, d_buffer_shrink_distance[patch.getPatchLevelNumber()]);

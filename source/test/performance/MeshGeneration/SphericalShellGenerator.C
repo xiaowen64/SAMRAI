@@ -23,8 +23,6 @@
 
 #include <iomanip>
 
-#include <cmath>
-
 using namespace SAMRAI;
 
 
@@ -42,6 +40,9 @@ SphericalShellGenerator::SphericalShellGenerator(
    tbox::Array<double> velocity;
    tbox::Array<double> period;
 
+   for ( int i=0; i<SAMRAI::MAX_DIM_VAL; ++i ) {
+      d_center[i] = 0.0;
+   }
 
    if (database) {
 
@@ -64,11 +65,6 @@ SphericalShellGenerator::SphericalShellGenerator(
          tmpa = database->getDoubleArray("center");
          for ( int d=0; d<d_dim.getValue(); ++d ) {
             d_center[d] = tmpa[d];
-         }
-      }
-      else {
-         for (int d = 0; d < d_dim.getValue(); ++d) {
-            d_center[d] = 0.0;
          }
       }
 
@@ -206,10 +202,9 @@ void SphericalShellGenerator::setDomain(
       TBOX_ERROR("SphericalShellGenerator only supports single-box domains.");
    }
 
-   hier::BoxContainer::const_iterator ii = domain.begin();
-   hier::Box domain_box = *ii;
-   hier::IntVector tmp_intvec = ii->numberCells();
-   const tbox::Dimension &dim = domain.begin()->getDim();
+   hier::Box domain_box = domain.front();
+   hier::IntVector tmp_intvec = domain_box.numberCells();
+   const tbox::Dimension &dim = domain_box.getDim();
 
    double scale_factor = static_cast<double>(mpi.getSize()) / autoscale_base_nprocs;
    double linear_scale_factor = pow( scale_factor, 1.0/dim.getValue() );
@@ -223,6 +218,8 @@ void SphericalShellGenerator::setDomain(
               << domain_box << " to ";
    domain_box.upper() = domain_box.lower() + tmp_intvec;
    tbox::plog << domain_box << '\n';
+
+   domain.clear();
    domain.pushBack(domain_box);
 
 }

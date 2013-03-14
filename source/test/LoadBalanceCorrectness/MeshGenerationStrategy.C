@@ -39,7 +39,8 @@ void MeshGenerationStrategy::setTagsByShrinkingLevel(
 
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
       hierarchy->getGridGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(grid_geometry);
 
    const int tag_val = 1;
 
@@ -78,7 +79,6 @@ void MeshGenerationStrategy::setTagsByShrinkingLevel(
                               Ltag_to_tagfootprint,
                               Ltag_to_Ltag,
                               -shrink_width );
-   tbox::plog << "tagfootprint:\n" << tagfootprint->format("tagfootprint: ", 2);
    tbox::plog << "Ltag_to_tagfootprint:\n" << Ltag_to_tagfootprint->format("Ltag->tagfootprint: ", 2);
 
 
@@ -88,7 +88,8 @@ void MeshGenerationStrategy::setTagsByShrinkingLevel(
       boost::shared_ptr<hier::Patch> patch = *pi;
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(tag_data_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(tag_data);
 
       tag_data->getArrayData().fillAll(0);
 

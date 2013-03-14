@@ -51,7 +51,7 @@ public:
    virtual ~MeshGenerationStrategy() {};
 
    /*!
-    * @brief Set tas on the tag level.
+    * @brief Set tag on the tag level.
     *
     * @param [o] exact_tagging Set to true if the implementation wants
     * the clustering to match the tags exactly.  Exact clustering

@@ -78,8 +78,7 @@ void MeshGenerationStrategy::setTagsByShrinkingLevel(
    blcu.computeInternalParts( tagfootprint,
                               Ltag_to_tagfootprint,
                               Ltag_to_Ltag,
-                              -shrink_width,
-                              grid_geometry->getDomainSearchTree() );
+                              -shrink_width );
    tbox::plog << "Ltag_to_tagfootprint:\n" << Ltag_to_tagfootprint->format("Ltag->tagfootprint: ", 2);
 
 
@@ -95,6 +94,11 @@ void MeshGenerationStrategy::setTagsByShrinkingLevel(
       tag_data->getArrayData().fillAll(0);
 
       if ( !Ltag_to_tagfootprint->hasNeighborSet(patch->getBox().getBoxId()) ) {
+         /*
+          * Ltag_to_tagfootprint is a mapping Connector, so missing
+          * neighbor set means the box has itself as its only
+          * neighbor.
+          */
          tag_data->getArrayData().fillAll(1);
       }
       else {

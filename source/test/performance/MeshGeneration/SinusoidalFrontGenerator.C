@@ -387,8 +387,7 @@ void SinusoidalFrontGenerator::computeFrontsData(
       double max_distance_to_front = -tbox::MathUtilities<double>::getMax();
       // tbox::plog << "initial distances to front: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
       pdat::NodeIterator niend(pdat::NodeGeometry::end(cell_box));
-      for ( pdat::NodeIterator ni(pdat::NodeGeometry::begin(cell_box));
-            ni != niend; ++ni ) {
+      for ( pdat::NodeIterator ni(pdat::NodeGeometry::begin(cell_box)); ni != niend; ++ni ) {
 
          const pdat::NodeIndex &node_index = *ni;
          hier::Index front_index = node_index;
