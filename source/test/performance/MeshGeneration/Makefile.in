@@ -26,7 +26,7 @@ CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
 
 TEST_NPROCS = @TEST_NPROCS@
 
-CXX_OBJS      = mg.o MeshGenerationStrategy.o SinusoidalFrontGenerator.o SphericalShellGenerator.o
+CXX_OBJS      = mg.o
 
 INPUTS2D =	test_inputs/small_sphere.2d.treelb.input	\
 		test_inputs/small_front.2d.treelb.input		\
