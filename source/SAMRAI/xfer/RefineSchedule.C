@@ -55,6 +55,7 @@ bool RefineSchedule::s_extra_debug = false;
 bool RefineSchedule::s_barrier_and_time = false;
 bool RefineSchedule::s_read_static_input = false;
 
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_refine_schedule;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_data;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_recursive_fill;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_refine_scratch_data;
@@ -133,6 +134,10 @@ RefineSchedule::RefineSchedule(
 #endif
 
    getFromInput();
+
+   if ( s_barrier_and_time ) {
+      t_refine_schedule->barrierAndStart();
+   }
 
    if ( d_dst_level->getGridGeometry()->getNumberOfBlockSingularities() > 0 &&
         !d_singularity_patch_strategy ) {
@@ -242,6 +247,9 @@ RefineSchedule::RefineSchedule(
          *d_coarse_interp_encon_to_unfilled_encon);
    }
 
+   if ( s_barrier_and_time ) {
+      t_refine_schedule->barrierAndStop();
+   }
 }
 
 /*
@@ -309,6 +317,10 @@ RefineSchedule::RefineSchedule(
 #endif
 
    getFromInput();
+
+   if ( s_barrier_and_time ) {
+      t_refine_schedule->barrierAndStart();
+   }
 
    const tbox::Dimension& dim(dst_level->getDim());
 
@@ -461,6 +473,10 @@ RefineSchedule::RefineSchedule(
          *d_coarse_interp_encon_to_unfilled_encon);
    }
 
+
+   if ( s_barrier_and_time ) {
+      t_refine_schedule->barrierAndStop();
+   }
 }
 
 /*
@@ -515,6 +531,8 @@ RefineSchedule::RefineSchedule(
       TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *hierarchy);
    }
 #endif
+
+   // Don't time this constructor because it's recursive.
 
    getFromInput();
 
@@ -1740,7 +1758,9 @@ RefineSchedule::fillData(
    double fill_time,
    bool do_physical_boundary_fill) const
 {
-   t_fill_data->start();
+   if ( s_barrier_and_time ) {
+      t_fill_data->barrierAndStart();
+   }
 
    /*
     * Set the refine items and time for all transactions.  These items will
@@ -1797,7 +1817,9 @@ RefineSchedule::fillData(
 
    d_transaction_factory->unsetRefineItems();
 
-   t_fill_data->stop();
+   if ( s_barrier_and_time ) {
+      t_fill_data->stop();
+   }
 }
 
 /*
@@ -4330,6 +4352,8 @@ RefineSchedule::printClassData(
 void
 RefineSchedule::initializeCallback()
 {
+   t_refine_schedule = tbox::TimerManager::getManager()->
+      getTimer("xfer::RefineSchedule::RefineSchedule()");
    t_fill_data = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::fillData()");
    t_recursive_fill = tbox::TimerManager::getManager()->

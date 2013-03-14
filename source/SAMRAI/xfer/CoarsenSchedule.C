@@ -43,10 +43,10 @@ std::string CoarsenSchedule::s_schedule_generation_method = "DLBG";
 bool CoarsenSchedule::s_extra_debug = false;
 bool CoarsenSchedule::s_read_static_input = false;
 
+boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarsen_schedule;
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarsen_data;
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_gen_sched_n_squared;
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_gen_sched_dlbg;
-boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_invert_edges;
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarse_data_fill;
 
 tbox::StartupShutdownManager::Handler
@@ -550,10 +550,8 @@ CoarsenSchedule::generateScheduleDLBG()
     * make the coarse shifts zero.
     */
    FullNeighborhoodSet temp_eto_coarse_bycoarse;
-   t_invert_edges->start();
    restructureNeighborhoodSetsByDstNodes(temp_eto_coarse_bycoarse,
       d_coarse_to_temp->getTranspose());
-   t_invert_edges->stop();
 
    for (FullNeighborhoodSet::const_iterator ei = temp_eto_coarse_bycoarse.begin();
         ei != temp_eto_coarse_bycoarse.end(); ++ei) {
@@ -1207,14 +1205,14 @@ CoarsenSchedule::printClassData(
 void
 CoarsenSchedule::initializeCallback()
 {
+   t_coarsen_schedule = tbox::TimerManager::getManager()->
+      getTimer("xfer::CoarsenSchedule::CoarsenSchedule()");
    t_coarsen_data = tbox::TimerManager::getManager()->
       getTimer("xfer::CoarsenSchedule::coarsenData()");
    t_gen_sched_n_squared = tbox::TimerManager::getManager()->
       getTimer("xfer::CoarsenSchedule::generateScheduleNSquared()");
    t_gen_sched_dlbg = tbox::TimerManager::getManager()->
       getTimer("xfer::CoarsenSchedule::generateScheduleDLBG()");
-   t_invert_edges = tbox::TimerManager::getManager()->
-      getTimer("xfer::CoarsenSchedule::generate...()_invert_edges");
    t_coarse_data_fill = tbox::TimerManager::getManager()->
       getTimer("xfer::CoarsenSchedule::coarse_data_fill");
 }
@@ -1231,10 +1229,11 @@ CoarsenSchedule::initializeCallback()
 void
 CoarsenSchedule::finalizeCallback()
 {
+   t_coarsen_schedule.reset();
    t_coarsen_data.reset();
    t_gen_sched_n_squared.reset();
    t_gen_sched_dlbg.reset();
-   t_invert_edges.reset();
+   t_coarse_data_fill.reset();
 }
 
 }

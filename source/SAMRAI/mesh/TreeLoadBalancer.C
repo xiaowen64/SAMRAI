@@ -13,7 +13,6 @@
 
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"

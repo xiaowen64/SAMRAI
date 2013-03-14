@@ -1482,7 +1482,6 @@ private:
    boost::shared_ptr<tbox::Timer> t_extend_within_domain;
    boost::shared_ptr<tbox::Timer> t_grow_boxes_within_domain;
    boost::shared_ptr<tbox::Timer> t_sort_nodes;
-   boost::shared_ptr<tbox::Timer> t_modify_connector;
    boost::shared_ptr<tbox::Timer> t_make_domain;
    boost::shared_ptr<tbox::Timer> t_make_new;
    boost::shared_ptr<tbox::Timer> t_process_error;
