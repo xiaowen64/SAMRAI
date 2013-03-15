@@ -75,16 +75,22 @@ Database::putBool(
  */
 
 void
-Database::putBoolArray(
+Database::putBoolVector(
    const std::string& key,
-   const Array<bool>& data)
+   const std::vector<bool>& data)
 {
    TBOX_ASSERT(!key.empty());
 
-   if (data.getSize() > 0) {
-      putBoolArray(key, data.getPointer(), data.getSize());
+   if (data.size() > 0) {
+      int nbools = static_cast<int>(data.size());
+      bool* bool_array = new bool[nbools];
+      for (int i = 0; i < nbools; ++i) {
+         bool_array[i] = data[i];
+      }
+      putBoolArray(key, bool_array, nbools);
+      delete [] bool_array;
    } else {
-      TBOX_ERROR("Database::putBoolArray() error in database "
+      TBOX_ERROR("Database::putBoolVector() error in database "
          << getName()
          << "\n    Attempt to put zero-length array with key = "
          << key << std::endl);
@@ -125,9 +131,8 @@ Database::getBoolWithDefault(
    TBOX_ASSERT(!key.empty());
 
    if (keyExists(key)) {
-      Array<bool> local_bool = getBoolArray(key);
-      bool* locptr = local_bool.getPointer();
-      return locptr == 0 ? defaultvalue : *locptr;
+      std::vector<bool> local_bool = getBoolVector(key);
+      return local_bool.empty() ? defaultvalue : local_bool[0];
    } else {
       return defaultvalue;
    }
@@ -141,11 +146,11 @@ Database::getBoolArray(
 {
    TBOX_ASSERT(!key.empty());
 
-   Array<bool> tmp = getBoolArray(key);
-   const int tsize = tmp.getSize();
+   std::vector<bool> tmp = getBoolVector(key);
+   const int tsize = static_cast<int>(tmp.size());
 
    if (nelements != tsize) {
-      TBOX_ERROR("Database::getBoolArray() error in database "
+      TBOX_ERROR("Database::getBoolVector() error in database "
          << getName()
          << "\n    Incorrect array size = " << nelements
          << " given for key = " << key
@@ -180,24 +185,24 @@ Database::putDatabaseBox(
 /*
  *************************************************************************
  *
- * Create a box array entry in the database with the specified key name.
+ * Create a box vector entry in the database with the specified key name.
  *
  *************************************************************************
  */
 
 void
-Database::putDatabaseBoxArray(
+Database::putDatabaseBoxVector(
    const std::string& key,
-   const Array<DatabaseBox>& data)
+   const std::vector<DatabaseBox>& data)
 {
    TBOX_ASSERT(!key.empty());
 
-   if (data.getSize() > 0) {
-      putDatabaseBoxArray(key, data.getPointer(), data.getSize());
+   if (data.size() > 0) {
+      putDatabaseBoxArray(key, &data[0], static_cast<int>(data.size()));
    } else {
-      TBOX_ERROR("Database::putDatabaseBoxArray() error in database "
+      TBOX_ERROR("Database::putDatabaseBoxVector() error in database "
          << getName()
-         << "\n    Attempt to put zero-length array with key = "
+         << "\n    Attempt to put zero-length vector with key = "
          << key << std::endl);
    }
 }
@@ -244,9 +249,8 @@ Database::getDatabaseBoxWithDefault(
    TBOX_ASSERT(!key.empty());
 
    if (keyExists(key)) {
-      Array<DatabaseBox> local_box = getDatabaseBoxArray(key);
-      DatabaseBox* locptr = local_box.getPointer();
-      return locptr == 0 ? defaultvalue : *locptr;
+      std::vector<DatabaseBox> local_box = getDatabaseBoxVector(key);
+      return local_box.empty() ? defaultvalue : local_box[0];
    } else {
       return defaultvalue;
    }
@@ -261,8 +265,8 @@ Database::getDatabaseBoxArray(
 {
    TBOX_ASSERT(!key.empty());
 
-   Array<DatabaseBox> tmp = getDatabaseBoxArray(key);
-   const int tsize = tmp.getSize();
+   std::vector<DatabaseBox> tmp = getDatabaseBoxVector(key);
+   const int tsize = static_cast<int>(tmp.size());
 
    if (nelements != tsize) {
       TBOX_ERROR("Database::getDatabaseBoxArray() error in database "
@@ -304,23 +308,23 @@ Database::putChar(
 /*
  *************************************************************************
  *
- * Create a char array entry in the database with the specified
+ * Create a char vector entry in the database with the specified
  * key name.
  *
  *************************************************************************
  */
 
 void
-Database::putCharArray(
+Database::putCharVector(
    const std::string& key,
-   const Array<char>& data)
+   const std::vector<char>& data)
 {
    TBOX_ASSERT(!key.empty());
 
-   if (data.getSize() > 0) {
-      putCharArray(key, data.getPointer(), data.getSize());
+   if (data.size() > 0) {
+      putCharArray(key, &data[0], static_cast<int>(data.size()));
    } else {
-      TBOX_ERROR("Database::putCharArray() error in database "
+      TBOX_ERROR("Database::putCharVector() error in database "
          << getName()
          << "\n    Attempt to put zero-length array with key = "
          << key << std::endl);
@@ -369,9 +373,8 @@ Database::getCharWithDefault(
    TBOX_ASSERT(!key.empty());
 
    if (keyExists(key)) {
-      Array<char> local_char = getCharArray(key);
-      char* locptr = local_char.getPointer();
-      return locptr == 0 ? defaultvalue : *locptr;
+      std::vector<char> local_char = getCharVector(key);
+      return local_char.empty() ? defaultvalue : local_char[0];
    } else {
       return defaultvalue;
    }
@@ -386,8 +389,8 @@ Database::getCharArray(
 {
    TBOX_ASSERT(!key.empty());
 
-   Array<char> tmp = getCharArray(key);
-   const int tsize = tmp.getSize();
+   std::vector<char> tmp = getCharVector(key);
+   const int tsize = static_cast<int>(tmp.size());
 
    if (nelements != tsize) {
       TBOX_ERROR("Database::getCharArray() error in database "
@@ -428,23 +431,23 @@ Database::putComplex(
 /*
  *************************************************************************
  *
- * Create a complex array entry in the database with the specified
+ * Create a complex vector entry in the database with the specified
  * key name.
  *
  *************************************************************************
  */
 
 void
-Database::putComplexArray(
+Database::putComplexVector(
    const std::string& key,
-   const Array<dcomplex>& data)
+   const std::vector<dcomplex>& data)
 {
    TBOX_ASSERT(!key.empty());
 
-   if (data.getSize() > 0) {
-      putComplexArray(key, data.getPointer(), data.getSize());
+   if (data.size() > 0) {
+      putComplexArray(key, &data[0], static_cast<int>(data.size()));
    } else {
-      TBOX_ERROR("Database::putComplexArray() error in database "
+      TBOX_ERROR("Database::putComplexVector() error in database "
          << getName()
          << "\n    Attempt to put zero-length array with key = "
          << key << std::endl);
@@ -495,10 +498,9 @@ Database::getComplexWithDefault(
    dcomplex retval = defaultvalue;
 
    if (keyExists(key)) {
-      Array<dcomplex> local_dcomplex = getComplexArray(key);
-      dcomplex* locptr = local_dcomplex.getPointer();
-      if (locptr != 0) {
-         retval = *locptr;
+      std::vector<dcomplex> local_dcomplex = getComplexVector(key);
+      if (!local_dcomplex.empty()) {
+         retval = local_dcomplex[0];
       }
    }
    return retval;
@@ -512,8 +514,8 @@ Database::getComplexArray(
 {
    TBOX_ASSERT(!key.empty());
 
-   Array<dcomplex> tmp = getComplexArray(key);
-   const int tsize = tmp.getSize();
+   std::vector<dcomplex> tmp = getComplexVector(key);
+   const int tsize = static_cast<int>(tmp.size());
 
    if (nelements != tsize) {
       TBOX_ERROR("Database::getComplexArray() error in database "
@@ -554,23 +556,23 @@ Database::putFloat(
 /*
  *************************************************************************
  *
- * Create a float array entry in the database with the specified
+ * Create a float vector entry in the database with the specified
  * key name.
  *
  *************************************************************************
  */
 
 void
-Database::putFloatArray(
+Database::putFloatVector(
    const std::string& key,
-   const Array<float>& data)
+   const std::vector<float>& data)
 {
    TBOX_ASSERT(!key.empty());
 
-   if (data.getSize() > 0) {
-      putFloatArray(key, data.getPointer(), data.getSize());
+   if (data.size() > 0) {
+      putFloatArray(key, &data[0], static_cast<int>(data.size()));
    } else {
-      TBOX_ERROR("Database::putFloatArray() error in database "
+      TBOX_ERROR("Database::putFloatVector() error in database "
          << getName()
          << "\n    Attempt to put zero-length array with key = "
          << key << std::endl);
@@ -620,9 +622,8 @@ Database::getFloatWithDefault(
    TBOX_ASSERT(!key.empty());
 
    if (keyExists(key)) {
-      Array<float> local_float = getFloatArray(key);
-      float* locptr = local_float.getPointer();
-      return locptr == 0 ? defaultvalue : *locptr;
+      std::vector<float> local_float = getFloatVector(key);
+      return local_float.empty() ? defaultvalue : local_float[0];
    } else {
       return defaultvalue;
    }
@@ -637,8 +638,8 @@ Database::getFloatArray(
 {
    TBOX_ASSERT(!key.empty());
 
-   Array<float> tmp = getFloatArray(key);
-   const int tsize = tmp.getSize();
+   std::vector<float> tmp = getFloatVector(key);
+   const int tsize = static_cast<int>(tmp.size());
 
    if (nelements != tsize) {
       TBOX_ERROR("Database::getFloatArray() error in database "
@@ -679,23 +680,23 @@ Database::putDouble(
 /*
  *************************************************************************
  *
- * Create a double array entry in the database with the specified
+ * Create a double vector entry in the database with the specified
  * key name.
  *
  *************************************************************************
  */
 
 void
-Database::putDoubleArray(
+Database::putDoubleVector(
    const std::string& key,
-   const Array<double>& data)
+   const std::vector<double>& data)
 {
    TBOX_ASSERT(!key.empty());
 
-   if (data.getSize() > 0) {
-      putDoubleArray(key, data.getPointer(), data.getSize());
+   if (data.size() > 0) {
+      putDoubleArray(key, &data[0], static_cast<int>(data.size()));
    } else {
-      TBOX_ERROR("Database::putDoubleArray() error in database "
+      TBOX_ERROR("Database::putDoubleVector() error in database "
          << getName()
          << "\n    Attempt to put zero-length array with key = "
          << key << std::endl);
@@ -744,9 +745,8 @@ Database::getDoubleWithDefault(
    TBOX_ASSERT(!key.empty());
 
    if (keyExists(key)) {
-      Array<double> local_double = getDoubleArray(key);
-      double* locptr = local_double.getPointer();
-      return locptr == 0 ? defaultvalue : *locptr;
+      std::vector<double> local_double = getDoubleVector(key);
+      return local_double.empty() ? defaultvalue : local_double[0];
    } else {
       return defaultvalue;
    }
@@ -760,8 +760,8 @@ Database::getDoubleArray(
 {
    TBOX_ASSERT(!key.empty());
 
-   Array<double> tmp = getDoubleArray(key);
-   const int tsize = tmp.getSize();
+   std::vector<double> tmp = getDoubleVector(key);
+   const int tsize = static_cast<int>(tmp.size());
 
    if (nelements != tsize) {
       TBOX_ERROR("Database::getDoubleArray() error in database "
@@ -809,16 +809,16 @@ Database::putInteger(
  */
 
 void
-Database::putIntegerArray(
+Database::putIntegerVector(
    const std::string& key,
-   const Array<int>& data)
+   const std::vector<int>& data)
 {
    TBOX_ASSERT(!key.empty());
 
-   if (data.getSize() > 0) {
-      putIntegerArray(key, data.getPointer(), data.getSize());
+   if (data.size() > 0) {
+      putIntegerArray(key, &data[0], static_cast<int>(data.size()));
    } else {
-      TBOX_ERROR("Database::putIntegerArray() error in database "
+      TBOX_ERROR("Database::putIntegerVector() error in database "
          << getName()
          << "\n    Attempt to put zero-length array with key = "
          << key << std::endl);
@@ -867,9 +867,8 @@ Database::getIntegerWithDefault(
    TBOX_ASSERT(!key.empty());
 
    if (keyExists(key)) {
-      Array<int> local_int = getIntegerArray(key);
-      int* locptr = local_int.getPointer();
-      return locptr == 0 ? defaultvalue : *locptr;
+      std::vector<int> local_int = getIntegerVector(key);
+      return local_int.empty() ? defaultvalue : local_int[0];
    } else {
       return defaultvalue;
    }
@@ -884,8 +883,8 @@ Database::getIntegerArray(
 {
    TBOX_ASSERT(!key.empty());
 
-   Array<int> tmp = getIntegerArray(key);
-   const int tsize = tmp.getSize();
+   std::vector<int> tmp = getIntegerVector(key);
+   const int tsize = static_cast<int>(tmp.size());
 
    if (nelements != tsize) {
       TBOX_ERROR("Database::getIntegerArray() error in database "
@@ -926,23 +925,23 @@ Database::putString(
 /*
  *************************************************************************
  *
- * Create a string array entry in the database with the specified
+ * Create a string vector entry in the database with the specified
  * key name.
  *
  *************************************************************************
  */
 
 void
-Database::putStringArray(
+Database::putStringVector(
    const std::string& key,
-   const Array<std::string>& data)
+   const std::vector<std::string>& data)
 {
    TBOX_ASSERT(!key.empty());
 
-   if (data.getSize() > 0) {
-      putStringArray(key, data.getPointer(), data.getSize());
+   if (data.size() > 0) {
+      putStringArray(key, &data[0], static_cast<int>(data.size()));
    } else {
-      TBOX_ERROR("Database::putStringArray() error in database "
+      TBOX_ERROR("Database::putStringVector() error in database "
          << getName()
          << "\n    Attempt to put zero-length array with key = "
          << key << std::endl);
@@ -991,9 +990,8 @@ Database::getStringWithDefault(
    TBOX_ASSERT(!key.empty());
 
    if (keyExists(key)) {
-      Array<std::string> local_string = getStringArray(key);
-      std::string* locptr = local_string.getPointer();
-      return locptr == 0 ? defaultvalue : *locptr;
+      std::vector<std::string> local_string = getStringVector(key);
+      return local_string.empty() ? defaultvalue : local_string[0];
    } else {
       return defaultvalue;
    }
@@ -1008,8 +1006,8 @@ Database::getStringArray(
 {
    TBOX_ASSERT(!key.empty());
 
-   Array<std::string> tmp = getStringArray(key);
-   const int tsize = tmp.getSize();
+   std::vector<std::string> tmp = getStringVector(key);
+   const int tsize = static_cast<int>(tmp.size());
 
    if (nelements != tsize) {
       TBOX_ERROR("Database::getStringArray() error in database "

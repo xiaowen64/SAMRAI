@@ -25,6 +25,7 @@
 #include "SAMRAI/tbox/SAMRAIManager.h"
 
 #include "boost/shared_ptr.hpp"
+#include <vector>
 
 using namespace SAMRAI;
 using namespace std;
@@ -153,14 +154,14 @@ int main(
          box1_correct[i] = box0_correct;
       }
 
-      tbox::Array<int> i1 = smart_array_db->getIntegerArray("i1");
-      tbox::Array<float> f1 = smart_array_db->getFloatArray("f1");
-      tbox::Array<double> d1 = smart_array_db->getDoubleArray("d1");
-      tbox::Array<bool> b1 = smart_array_db->getBoolArray("b1");
-      tbox::Array<dcomplex> c1 = smart_array_db->getComplexArray("c1");
-      tbox::Array<std::string> s1 = smart_array_db->getStringArray("s1");
-      tbox::Array<tbox::DatabaseBox> box1 = smart_array_db->getDatabaseBoxArray(
-            "box1");
+      std::vector<int> i1 = smart_array_db->getIntegerVector("i1");
+      std::vector<float> f1 = smart_array_db->getFloatVector("f1");
+      std::vector<double> d1 = smart_array_db->getDoubleVector("d1");
+      std::vector<bool> b1 = smart_array_db->getBoolVector("b1");
+      std::vector<dcomplex> c1 = smart_array_db->getComplexVector("c1");
+      std::vector<std::string> s1 = smart_array_db->getStringVector("s1");
+      std::vector<tbox::DatabaseBox> box1 =
+         smart_array_db->getDatabaseBoxVector("box1");
 
       for (int i = 0; i < nsize; i++) {
          if (i1[i] != i1_correct[i]) {

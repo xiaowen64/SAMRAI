@@ -121,7 +121,7 @@ HierarchyDataOpsManager::getOperationsDouble(
       if (get_unique) {
          ops.reset(new HierarchyCellDataOpsReal<double>(hierarchy));
       } else {
-         const int n = d_cell_ops_double.getSize();
+         const int n = static_cast<int>(d_cell_ops_double.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_cell_ops_double[i]->getPatchHierarchy()) continue;
@@ -131,7 +131,7 @@ HierarchyDataOpsManager::getOperationsDouble(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchyCellDataOpsReal<double>(hierarchy));
-            d_cell_ops_double.resizeArray(n + 1);
+            d_cell_ops_double.resize(n + 1);
             d_cell_ops_double[n] = ops;
          }
       }
@@ -141,7 +141,7 @@ HierarchyDataOpsManager::getOperationsDouble(
       if (get_unique) {
          ops.reset(new HierarchyFaceDataOpsReal<double>(hierarchy));
       } else {
-         const int n = d_face_ops_double.getSize();
+         const int n = static_cast<int>(d_face_ops_double.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_face_ops_double[i]->getPatchHierarchy()) continue;
@@ -151,7 +151,7 @@ HierarchyDataOpsManager::getOperationsDouble(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchyFaceDataOpsReal<double>(hierarchy));
-            d_face_ops_double.resizeArray(n + 1);
+            d_face_ops_double.resize(n + 1);
             d_face_ops_double[n] = ops;
          }
       }
@@ -161,7 +161,7 @@ HierarchyDataOpsManager::getOperationsDouble(
       if (get_unique) {
          ops.reset(new HierarchyNodeDataOpsReal<double>(hierarchy));
       } else {
-         const int n = d_node_ops_double.getSize();
+         const int n = static_cast<int>(d_node_ops_double.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_node_ops_double[i]->getPatchHierarchy()) continue;
@@ -171,7 +171,7 @@ HierarchyDataOpsManager::getOperationsDouble(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchyNodeDataOpsReal<double>(hierarchy));
-            d_node_ops_double.resizeArray(n + 1);
+            d_node_ops_double.resize(n + 1);
             d_node_ops_double[n] = ops;
          }
       }
@@ -181,7 +181,7 @@ HierarchyDataOpsManager::getOperationsDouble(
       if (get_unique) {
          ops.reset(new HierarchySideDataOpsReal<double>(hierarchy));
       } else {
-         const int n = d_side_ops_double.getSize();
+         const int n = static_cast<int>(d_side_ops_double.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_side_ops_double[i]->getPatchHierarchy()) continue;
@@ -191,7 +191,7 @@ HierarchyDataOpsManager::getOperationsDouble(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchySideDataOpsReal<double>(hierarchy));
-            d_side_ops_double.resizeArray(n + 1);
+            d_side_ops_double.resize(n + 1);
             d_side_ops_double[n] = ops;
          }
       }
@@ -201,7 +201,7 @@ HierarchyDataOpsManager::getOperationsDouble(
       if (get_unique) {
          ops.reset(new HierarchyEdgeDataOpsReal<double>(hierarchy));
       } else {
-         const int n = d_edge_ops_double.getSize();
+         const int n = static_cast<int>(d_edge_ops_double.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_edge_ops_double[i]->getPatchHierarchy()) continue;
@@ -211,7 +211,7 @@ HierarchyDataOpsManager::getOperationsDouble(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchyEdgeDataOpsReal<double>(hierarchy));
-            d_edge_ops_double.resizeArray(n + 1);
+            d_edge_ops_double.resize(n + 1);
             d_edge_ops_double[n] = ops;
          }
       }
@@ -271,7 +271,7 @@ HierarchyDataOpsManager::getOperationsFloat(
       if (get_unique) {
          ops.reset(new HierarchyCellDataOpsReal<float>(hierarchy));
       } else {
-         const int n = d_cell_ops_float.getSize();
+         const int n = static_cast<int>(d_cell_ops_float.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_cell_ops_float[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -280,7 +280,7 @@ HierarchyDataOpsManager::getOperationsFloat(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchyCellDataOpsReal<float>(hierarchy));
-            d_cell_ops_float.resizeArray(n + 1);
+            d_cell_ops_float.resize(n + 1);
             d_cell_ops_float[n] = ops;
          }
       }
@@ -290,7 +290,7 @@ HierarchyDataOpsManager::getOperationsFloat(
       if (get_unique) {
          ops.reset(new HierarchyFaceDataOpsReal<float>(hierarchy));
       } else {
-         const int n = d_face_ops_float.getSize();
+         const int n = static_cast<int>(d_face_ops_float.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_face_ops_float[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -299,7 +299,7 @@ HierarchyDataOpsManager::getOperationsFloat(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchyFaceDataOpsReal<float>(hierarchy));
-            d_face_ops_float.resizeArray(n + 1);
+            d_face_ops_float.resize(n + 1);
             d_face_ops_float[n] = ops;
          }
       }
@@ -309,7 +309,7 @@ HierarchyDataOpsManager::getOperationsFloat(
       if (get_unique) {
          ops.reset(new HierarchyNodeDataOpsReal<float>(hierarchy));
       } else {
-         const int n = d_node_ops_float.getSize();
+         const int n = static_cast<int>(d_node_ops_float.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_node_ops_float[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -318,7 +318,7 @@ HierarchyDataOpsManager::getOperationsFloat(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchyNodeDataOpsReal<float>(hierarchy));
-            d_node_ops_float.resizeArray(n + 1);
+            d_node_ops_float.resize(n + 1);
             d_node_ops_float[n] = ops;
          }
       }
@@ -328,7 +328,7 @@ HierarchyDataOpsManager::getOperationsFloat(
       if (get_unique) {
          ops.reset(new HierarchySideDataOpsReal<float>(hierarchy));
       } else {
-         const int n = d_side_ops_float.getSize();
+         const int n = static_cast<int>(d_side_ops_float.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_side_ops_float[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -337,7 +337,7 @@ HierarchyDataOpsManager::getOperationsFloat(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchySideDataOpsReal<float>(hierarchy));
-            d_side_ops_float.resizeArray(n + 1);
+            d_side_ops_float.resize(n + 1);
             d_side_ops_float[n] = ops;
          }
       }
@@ -347,7 +347,7 @@ HierarchyDataOpsManager::getOperationsFloat(
       if (get_unique) {
          ops.reset(new HierarchyEdgeDataOpsReal<float>(hierarchy));
       } else {
-         const int n = d_edge_ops_float.getSize();
+         const int n = static_cast<int>(d_edge_ops_float.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_edge_ops_float[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -356,7 +356,7 @@ HierarchyDataOpsManager::getOperationsFloat(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchyEdgeDataOpsReal<float>(hierarchy));
-            d_edge_ops_float.resizeArray(n + 1);
+            d_edge_ops_float.resize(n + 1);
             d_edge_ops_float[n] = ops;
          }
       }
@@ -416,7 +416,7 @@ HierarchyDataOpsManager::getOperationsComplex(
       if (get_unique) {
          ops.reset(new HierarchyCellDataOpsComplex(hierarchy));
       } else {
-         const int n = d_cell_ops_double.getSize();
+         const int n = static_cast<int>(d_cell_ops_complex.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_cell_ops_complex[i]->getPatchHierarchy()) continue;
@@ -426,7 +426,7 @@ HierarchyDataOpsManager::getOperationsComplex(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchyCellDataOpsComplex(hierarchy));
-            d_cell_ops_complex.resizeArray(n + 1);
+            d_cell_ops_complex.resize(n + 1);
             d_cell_ops_complex[n] = ops;
          }
       }
@@ -436,7 +436,7 @@ HierarchyDataOpsManager::getOperationsComplex(
       if (get_unique) {
          ops.reset(new HierarchyFaceDataOpsComplex(hierarchy));
       } else {
-         const int n = d_face_ops_complex.getSize();
+         const int n = static_cast<int>(d_face_ops_complex.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_face_ops_complex[i]->getPatchHierarchy()) continue;
@@ -446,7 +446,7 @@ HierarchyDataOpsManager::getOperationsComplex(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchyFaceDataOpsComplex(hierarchy));
-            d_face_ops_complex.resizeArray(n + 1);
+            d_face_ops_complex.resize(n + 1);
             d_face_ops_complex[n] = ops;
          }
       }
@@ -456,7 +456,7 @@ HierarchyDataOpsManager::getOperationsComplex(
       if (get_unique) {
          ops.reset(new HierarchyNodeDataOpsComplex(hierarchy));
       } else {
-         const int n = d_node_ops_complex.getSize();
+         const int n = static_cast<int>(d_node_ops_complex.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_node_ops_complex[i]->getPatchHierarchy()) continue;
@@ -466,7 +466,7 @@ HierarchyDataOpsManager::getOperationsComplex(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchyNodeDataOpsComplex(hierarchy));
-            d_node_ops_complex.resizeArray(n + 1);
+            d_node_ops_complex.resize(n + 1);
             d_node_ops_complex[n] = ops;
          }
       }
@@ -476,7 +476,7 @@ HierarchyDataOpsManager::getOperationsComplex(
       if (get_unique) {
          ops.reset(new HierarchySideDataOpsComplex(hierarchy));
       } else {
-         const int n = d_side_ops_complex.getSize();
+         const int n = static_cast<int>(d_side_ops_complex.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_side_ops_complex[i]->getPatchHierarchy()) continue;
@@ -486,7 +486,7 @@ HierarchyDataOpsManager::getOperationsComplex(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchySideDataOpsComplex(hierarchy));
-            d_side_ops_complex.resizeArray(n + 1);
+            d_side_ops_complex.resize(n + 1);
             d_side_ops_complex[n] = ops;
          }
       }
@@ -496,7 +496,7 @@ HierarchyDataOpsManager::getOperationsComplex(
       if (get_unique) {
          ops.reset(new HierarchyEdgeDataOpsComplex(hierarchy));
       } else {
-         const int n = d_edge_ops_complex.getSize();
+         const int n = static_cast<int>(d_edge_ops_complex.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_edge_ops_complex[i]->getPatchHierarchy()) continue;
@@ -506,7 +506,7 @@ HierarchyDataOpsManager::getOperationsComplex(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchyEdgeDataOpsComplex(hierarchy));
-            d_edge_ops_complex.resizeArray(n + 1);
+            d_edge_ops_complex.resize(n + 1);
             d_edge_ops_complex[n] = ops;
          }
       }
@@ -566,7 +566,7 @@ HierarchyDataOpsManager::getOperationsInteger(
       if (get_unique) {
          ops.reset(new HierarchyCellDataOpsInteger(hierarchy));
       } else {
-         const int n = d_cell_ops_int.getSize();
+         const int n = static_cast<int>(d_cell_ops_int.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_cell_ops_int[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -575,7 +575,7 @@ HierarchyDataOpsManager::getOperationsInteger(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchyCellDataOpsInteger(hierarchy));
-            d_cell_ops_int.resizeArray(n + 1);
+            d_cell_ops_int.resize(n + 1);
             d_cell_ops_int[n] = ops;
          }
       }
@@ -585,7 +585,7 @@ HierarchyDataOpsManager::getOperationsInteger(
       if (get_unique) {
          ops.reset(new HierarchyFaceDataOpsInteger(hierarchy));
       } else {
-         const int n = d_face_ops_int.getSize();
+         const int n = static_cast<int>(d_face_ops_int.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_face_ops_int[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -594,7 +594,7 @@ HierarchyDataOpsManager::getOperationsInteger(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchyFaceDataOpsInteger(hierarchy));
-            d_face_ops_int.resizeArray(n + 1);
+            d_face_ops_int.resize(n + 1);
             d_face_ops_int[n] = ops;
          }
       }
@@ -604,7 +604,7 @@ HierarchyDataOpsManager::getOperationsInteger(
       if (get_unique) {
          ops.reset(new HierarchyNodeDataOpsInteger(hierarchy));
       } else {
-         const int n = d_node_ops_int.getSize();
+         const int n = static_cast<int>(d_node_ops_int.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_node_ops_int[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -613,7 +613,7 @@ HierarchyDataOpsManager::getOperationsInteger(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchyNodeDataOpsInteger(hierarchy));
-            d_node_ops_int.resizeArray(n + 1);
+            d_node_ops_int.resize(n + 1);
             d_node_ops_int[n] = ops;
          }
       }
@@ -623,7 +623,7 @@ HierarchyDataOpsManager::getOperationsInteger(
       if (get_unique) {
          ops.reset(new HierarchySideDataOpsInteger(hierarchy));
       } else {
-         const int n = d_side_ops_int.getSize();
+         const int n = static_cast<int>(d_side_ops_int.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_side_ops_int[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -632,7 +632,7 @@ HierarchyDataOpsManager::getOperationsInteger(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchySideDataOpsInteger(hierarchy));
-            d_side_ops_int.resizeArray(n + 1);
+            d_side_ops_int.resize(n + 1);
             d_side_ops_int[n] = ops;
          }
       }
@@ -642,7 +642,7 @@ HierarchyDataOpsManager::getOperationsInteger(
       if (get_unique) {
          ops.reset(new HierarchyEdgeDataOpsInteger(hierarchy));
       } else {
-         const int n = d_edge_ops_int.getSize();
+         const int n = static_cast<int>(d_edge_ops_int.size());
          for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_edge_ops_int[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -651,7 +651,7 @@ HierarchyDataOpsManager::getOperationsInteger(
          if (!ops) {
             // No compatible operator has been found.
             ops.reset(new HierarchyEdgeDataOpsInteger(hierarchy));
-            d_edge_ops_int.resizeArray(n + 1);
+            d_edge_ops_int.resize(n + 1);
             d_edge_ops_int[n] = ops;
          }
       }

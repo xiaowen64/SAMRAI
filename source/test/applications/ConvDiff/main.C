@@ -59,6 +59,8 @@ using namespace std;
 
 #include "boost/shared_ptr.hpp"
 
+#include <vector>
+
 using namespace SAMRAI;
 using namespace algs;
 
@@ -406,7 +408,7 @@ int main(
       *
       ****************************************************************/
 
-      tbox::Array<int>
+      std::vector<int>
       tag_buffer_array(patch_hierarchy->getMaxNumberOfLevels());
       for (int il = 0; il < patch_hierarchy->getMaxNumberOfLevels(); il++) {
          tag_buffer_array[il] = main_restart_data->getTagBuffer();
@@ -415,8 +417,8 @@ int main(
                     << endl;
       }
 
-      tbox::Array<double>
-      regrid_start_time(patch_hierarchy->getMaxNumberOfLevels());
+      std::vector<double> regrid_start_time(
+         patch_hierarchy->getMaxNumberOfLevels());
 
       double loop_time = main_restart_data->getLoopTime();
       int loop_cycle = main_restart_data->getIterationNumber();

@@ -535,7 +535,7 @@ SideData<TYPE>::packWithRotation(
          const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
          const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
-         tbox::Array<TYPE> buffer(size);
+         std::vector<TYPE> buffer(size);
 
          hier::Box side_rotatebox(SideGeometry::toSideBox(rotatebox, i));
 
@@ -564,7 +564,7 @@ SideData<TYPE>::packWithRotation(
                }
             }
          }
-         stream.pack(buffer.getPointer(), size);
+         stream.pack(&buffer[0], size);
       }
    }
 }

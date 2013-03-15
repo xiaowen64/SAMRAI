@@ -21,6 +21,7 @@
 
 #include "boost/shared_ptr.hpp"
 #include <map>
+#include <vector>
 
 namespace SAMRAI {
 namespace hier {
@@ -533,7 +534,7 @@ public:
     * @return A const reference to the box array that defines
     * the extent of the index space on the level.
     */
-   const tbox::Array<BoxContainer>&
+   const std::vector<BoxContainer>&
    getPhysicalDomainArray() const
    {
       return d_physical_domain;
@@ -1166,7 +1167,7 @@ private:
    /*
     * Extent of the index space.
     */
-   tbox::Array<BoxContainer> d_physical_domain;
+   std::vector<BoxContainer> d_physical_domain;
 
    /*
     * The ratio to coarser level applies only when the level resides

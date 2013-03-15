@@ -77,14 +77,15 @@ CoarsenClasses::insertEquivalenceClassItem(
       int eq_index = getEquivalenceClassIndex(data, descriptor);
 
       if (eq_index < 0) {
-         eq_index = d_equivalence_class_indices.size();
-         d_equivalence_class_indices.resizeArray(eq_index + 1);
+         eq_index = static_cast<int>(d_equivalence_class_indices.size());
+         d_equivalence_class_indices.resize(eq_index + 1);
       }
 
       data.d_class_index = eq_index;
 
-      if (d_num_coarsen_items >= d_coarsen_classes_data_items.size()) {
-         d_coarsen_classes_data_items.resizeArray(
+      if (d_num_coarsen_items >=
+          static_cast<int>(d_coarsen_classes_data_items.size())) {
+         d_coarsen_classes_data_items.resize(
             d_num_coarsen_items + s_default_coarsen_item_array_size,
             Data(data.d_gcw_to_coarsen.getDim()));
       }
@@ -295,7 +296,7 @@ CoarsenClasses::printClassData(
 {
    stream << "CoarsenClasses::printClassData()\n";
    stream << "--------------------------------------\n";
-   for (int i = 0; i < (int)d_equivalence_class_indices.size(); i++) {
+   for (int i = 0; i < static_cast<int>(d_equivalence_class_indices.size()); i++) {
       stream << "EQUIVALENCE CLASS # " << i << std::endl;
       int j = 0;
       const std::list<int>& indices = d_equivalence_class_indices[i];

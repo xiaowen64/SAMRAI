@@ -91,9 +91,9 @@ public:
       const std::string& key);
 
    /**
-    * Return an empty Array<string>.
+    * Return an empty std::vector<string>.
     */
-   virtual Array<std::string>
+   virtual std::vector<std::string>
    getAllKeys();
 
    /**
@@ -148,10 +148,10 @@ public:
       const int nelements);
 
    /**
-    * Returns an empty Array<bool>.
+    * Returns an empty std::vector<bool>.
     */
-   virtual Array<bool>
-   getBoolArray(
+   virtual std::vector<bool>
+   getBoolVector(
       const std::string& key);
 
    /**
@@ -171,10 +171,10 @@ public:
       const int nelements);
 
    /**
-    * Returns an empty Array<box>.
+    * Returns an empty std::vector<box>.
     */
-   virtual Array<DatabaseBox>
-   getDatabaseBoxArray(
+   virtual std::vector<DatabaseBox>
+   getDatabaseBoxVector(
       const std::string& key);
 
    /**
@@ -194,10 +194,10 @@ public:
       const int nelements);
 
    /**
-    * Returns an empty Array<char>.
+    * Returns an empty std::vector<char>.
     */
-   virtual Array<char>
-   getCharArray(
+   virtual std::vector<char>
+   getCharVector(
       const std::string& key);
 
    /**
@@ -217,10 +217,10 @@ public:
       const int nelements);
 
    /**
-    * Returns an empty Array<dcomplex>.
+    * Returns an empty std::vector<dcomplex>.
     */
-   virtual Array<dcomplex>
-   getComplexArray(
+   virtual std::vector<dcomplex>
+   getComplexVector(
       const std::string& key);
 
    /**
@@ -240,10 +240,10 @@ public:
       const int nelements);
 
    /**
-    * Returns an empty Array<double>.
+    * Returns an empty std::vector<double>.
     */
-   virtual Array<double>
-   getDoubleArray(
+   virtual std::vector<double>
+   getDoubleVector(
       const std::string& key);
 
    /**
@@ -263,10 +263,10 @@ public:
       const int nelements);
 
    /**
-    * Returns an empty Array<float>.
+    * Returns an empty std::vector<float>.
     */
-   virtual Array<float>
-   getFloatArray(
+   virtual std::vector<float>
+   getFloatVector(
       const std::string& key);
 
    /**
@@ -286,10 +286,10 @@ public:
       const int nelements);
 
    /**
-    * Returns an empty Array<int>.
+    * Returns an empty std::vector<int>.
     */
-   virtual Array<int>
-   getIntegerArray(
+   virtual std::vector<int>
+   getIntegerVector(
       const std::string& key);
 
    /**
@@ -309,10 +309,10 @@ public:
       const int nelements);
 
    /**
-    * Returns an empty Array<std::string>.
+    * Returns an empty std::vector<std::string>.
     */
-   virtual Array<std::string>
-   getStringArray(
+   virtual std::vector<std::string>
+   getStringVector(
       const std::string& key);
 
    /**
@@ -332,6 +332,7 @@ public:
    using Database::getBoolArray;
    using Database::putDatabaseBoxArray;
    using Database::getDatabaseBoxArray;
+   using Database::getDatabaseBoxVector;
    using Database::putCharArray;
    using Database::getCharArray;
    using Database::putComplexArray;

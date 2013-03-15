@@ -41,9 +41,9 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
    TBOX_ASSERT(variable_db != NULL);
 #endif
 
-   tbox::Array<double> init_disp;
-   tbox::Array<double> velocity;
-   tbox::Array<double> period;
+   std::vector<double> init_disp;
+   std::vector<double> velocity;
+   std::vector<double> period;
 
 
    // Parameters set by database, with defaults.
@@ -54,16 +54,13 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
       sft_db = database->getDatabaseWithDefault("SinusoidalFrontGenerator", sft_db);
 
       if (database->isDouble("period")) {
-         period =
-            database->getDoubleArray("period");
+         period = database->getDoubleVector("period");
       }
       if (database->isDouble("init_disp")) {
-         init_disp =
-            database->getDoubleArray("init_disp");
+         init_disp = database->getDoubleVector("init_disp");
       }
       if (database->isDouble("velocity")) {
-         velocity =
-            database->getDoubleArray("velocity");
+         velocity = database->getDoubleVector("velocity");
       }
       d_amplitude =
          database->getDoubleWithDefault("amplitude",
@@ -83,11 +80,11 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
          const std::string bnameln = bname + lnstr;
          const std::string snameln = sname + lnstr;
 
-         tbox::Array<double> tmpa;
+         std::vector<double> tmpa;
 
          if ( database->isDouble(bnameln) ) {
-            tmpa = database->getDoubleArray(bnameln);
-            if ( tmpa.getSize() != dim.getValue() ) {
+            tmpa = database->getDoubleVector(bnameln);
+            if ( static_cast<int>(tmpa.size()) != dim.getValue() ) {
                TBOX_ERROR(bnameln << " input parameter must have " << dim << " values");
             }
             d_buffer_shrink.push_back('b');
@@ -97,8 +94,8 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
             if ( !tmpa.empty() ) {
                TBOX_ERROR("Cannot specify both " << bnameln << " and " << snameln);
             }
-            tmpa = database->getDoubleArray(snameln);
-            if ( tmpa.getSize() != dim.getValue() ) {
+            tmpa = database->getDoubleVector(snameln);
+            if ( static_cast<int>(tmpa.size()) != dim.getValue() ) {
                TBOX_ERROR(snameln << " input parameter must have " << dim << " values");
             }
             d_buffer_shrink.push_back('s');
@@ -107,8 +104,8 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
          if ( !tmpa.empty() ) {
             d_buffer_shrink_distance.resize(d_buffer_shrink_distance.size() + 1);
             d_buffer_shrink_distance.back().insert( d_buffer_shrink_distance.back().end(),
-                                                    tmpa.getPointer(),
-                                                    tmpa.getPointer()+tmpa.size() );
+                                                    &tmpa[0],
+                                                    &tmpa[0]+static_cast<int>(tmpa.size()) );
          }
          else {
             break;
@@ -124,9 +121,12 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
    }
 
    for (int idim = 0; idim < d_dim.getValue(); ++idim) {
-      d_init_disp[idim] = idim < init_disp.size() ? init_disp[idim] : 0.0;
-      d_velocity[idim] = idim < velocity.size() ? velocity[idim] : 0.0;
-      d_period[idim] = idim < period.size() ? period[idim] : 1.0e20;
+      d_init_disp[idim] =
+         idim < static_cast<int>(init_disp.size()) ? init_disp[idim] : 0.0;
+      d_velocity[idim] =
+         idim < static_cast<int>(velocity.size()) ? velocity[idim] : 0.0;
+      d_period[idim] =
+         idim < static_cast<int>(period.size()) ? period[idim] : 1.0e20;
    }
 
    t_setup = tbox::TimerManager::getManager()->

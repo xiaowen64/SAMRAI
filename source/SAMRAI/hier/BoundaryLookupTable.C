@@ -48,7 +48,7 @@ BoundaryLookupTable::BoundaryLookupTable(
    const tbox::Dimension& dim):
    d_dim(dim)
 {
-   if (d_table[0].isNull()) {
+   if (d_table[0].empty()) {
       const int dim_val = d_dim.getValue();
       int factrl[SAMRAI::MAX_DIM_VAL + 1];
       factrl[0] = 1;
@@ -56,25 +56,24 @@ BoundaryLookupTable::BoundaryLookupTable(
          factrl[i] = i * factrl[i - 1];
       }
 
-      d_ncomb.resizeArray(dim_val);
-      d_max_li.resizeArray(dim_val);
+      d_ncomb.resize(dim_val);
+      d_max_li.resize(dim_val);
       for (int codim = 1; codim <= dim_val; codim++) {
          int cdm1 = codim - 1;
          d_ncomb[cdm1] = factrl[dim_val]
             / (factrl[codim] * factrl[dim_val - codim]);
 
-         tbox::Array<int> work;
-         work.resizeArray(codim * d_ncomb[cdm1]);
+         std::vector<int> work(codim * d_ncomb[cdm1]);
 
          int recursive_work[SAMRAI::MAX_DIM_VAL];
          int recursive_work_lvl = 0;
          int* recursive_work_ptr;
-         buildTable(work.getPointer(), recursive_work,
+         buildTable(&work[0], recursive_work,
             recursive_work_lvl, recursive_work_ptr, codim, 1);
 
-         d_table[cdm1].resizeArray(d_ncomb[cdm1]);
+         d_table[cdm1].resize(d_ncomb[cdm1]);
          for (int j = 0; j < d_ncomb[cdm1]; j++) {
-            d_table[cdm1][j].resizeArray(codim);
+            d_table[cdm1][j].resize(codim);
             for (int k = 0; k < codim; k++) {
                d_table[cdm1][j][k] = work[j * codim + k] - 1;
             }
@@ -141,16 +140,16 @@ void
 BoundaryLookupTable::buildBoundaryDirectionVectors()
 {
 
-   d_bdry_dirs.resizeArray(d_dim.getValue());
+   d_bdry_dirs.resize(d_dim.getValue());
 
    for (int i = 0; i < d_dim.getValue(); i++) {
-      d_bdry_dirs[i].resizeArray(d_max_li[i], IntVector::getZero(d_dim));
+      d_bdry_dirs[i].resize(d_max_li[i], IntVector::getZero(d_dim));
       int codim = i + 1;
 
       for (int loc = 0; loc < d_max_li[i]; loc++) {
-         const tbox::Array<int>& dirs = getDirections(loc, codim);
+         const std::vector<int>& dirs = getDirections(loc, codim);
 
-         for (int d = 0; d < dirs.size(); d++) {
+         for (int d = 0; d < static_cast<int>(dirs.size()); d++) {
 
             if (isUpper(loc, codim, d)) {
 

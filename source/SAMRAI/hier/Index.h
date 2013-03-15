@@ -68,7 +68,7 @@ public:
     *        from the integer tbox::Array i of size n.
     */
    explicit Index(
-      const tbox::Array<int>& i);
+      const std::vector<int>& i);
 
    /**
     * @brief The copy constructor creates an index equal to the argument.

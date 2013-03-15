@@ -19,6 +19,8 @@
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <vector>
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -104,10 +106,10 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
 
    for (int d = 0; d < dim.getValue(); d++) {
 
-      tbox::Array<hier::BoundaryBox> bbox =
+      const std::vector<hier::BoundaryBox>& bbox =
          pgeom->getCodimensionBoundaries(d + 1);
 
-      for (int b = 0; b < bbox.size(); b++) {
+      for (int b = 0; b < static_cast<int>(bbox.size()); b++) {
          if (!bbox[b].getIsMultiblockSingularity()) {
             hier::Box fill_box = pgeom->getBoundaryFillBox(bbox[b],
                   patch.getBox(),

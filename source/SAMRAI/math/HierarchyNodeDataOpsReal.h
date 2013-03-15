@@ -634,7 +634,7 @@ private:
    boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
-   tbox::Array<tbox::Array<hier::BoxContainer> > d_nonoverlapping_node_boxes;
+   std::vector<std::vector<hier::BoxContainer> > d_nonoverlapping_node_boxes;
 
    PatchNodeDataOpsReal<TYPE> d_patch_ops;
 

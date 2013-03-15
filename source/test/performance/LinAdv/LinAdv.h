@@ -27,6 +27,7 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include <string>
+#include <vector>
 using namespace std;
 #define included_String
 #include "SAMRAI/hier/VariableContext.h"
@@ -370,7 +371,7 @@ private:
       boost::shared_ptr<tbox::Database> db,
       const string& db_name,
       int array_indx,
-      tbox::Array<double>& uval);
+      std::vector<double>& uval);
 
    /*
     * Three-dimensional flux computation routines corresponding to
@@ -451,28 +452,28 @@ private:
    /*
     * Arrays of face (3d) or edge (2d) boundary values for DIRICHLET case.
     */
-   tbox::Array<double> d_bdry_edge_uval; // 2D only.
-   tbox::Array<double> d_bdry_face_uval; // 3D only.
+   std::vector<double> d_bdry_edge_uval; // 2D only.
+   std::vector<double> d_bdry_face_uval; // 3D only.
 
    /*
     * Refinement criteria parameters for gradient detector and
     * Richardson extrapolation.
     */
-   tbox::Array<string> d_refinement_criteria;
-   tbox::Array<double> d_dev_tol;
-   tbox::Array<double> d_dev;
-   tbox::Array<double> d_dev_time_max;
-   tbox::Array<double> d_dev_time_min;
-   tbox::Array<double> d_grad_tol;
-   tbox::Array<double> d_grad_time_max;
-   tbox::Array<double> d_grad_time_min;
-   tbox::Array<double> d_shock_onset;
-   tbox::Array<double> d_shock_tol;
-   tbox::Array<double> d_shock_time_max;
-   tbox::Array<double> d_shock_time_min;
-   tbox::Array<double> d_rich_tol;
-   tbox::Array<double> d_rich_time_max;
-   tbox::Array<double> d_rich_time_min;
+   std::vector<string> d_refinement_criteria;
+   std::vector<double> d_dev_tol;
+   std::vector<double> d_dev;
+   std::vector<double> d_dev_time_max;
+   std::vector<double> d_dev_time_min;
+   std::vector<double> d_grad_tol;
+   std::vector<double> d_grad_time_max;
+   std::vector<double> d_grad_time_min;
+   std::vector<double> d_shock_onset;
+   std::vector<double> d_shock_tol;
+   std::vector<double> d_shock_time_max;
+   std::vector<double> d_shock_time_min;
+   std::vector<double> d_rich_tol;
+   std::vector<double> d_rich_time_max;
+   std::vector<double> d_rich_time_min;
 
    boost::shared_ptr<tbox::Timer> t_analytical_tag;
    boost::shared_ptr<tbox::Timer> t_init;

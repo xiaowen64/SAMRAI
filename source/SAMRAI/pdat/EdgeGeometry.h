@@ -22,6 +22,8 @@
 
 #include "boost/shared_ptr.hpp"
 
+#include <vector>
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -146,7 +148,7 @@ public:
     */
    void
    computeDestinationBoxes(
-      tbox::Array<hier::BoxContainer>& dst_boxes,
+      std::vector<hier::BoxContainer>& dst_boxes,
       const EdgeGeometry& src_geometry,
       const hier::Box& src_mask,
       const hier::Box& fill_box,

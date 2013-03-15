@@ -84,7 +84,7 @@ HierarchyFaceDataOpsComplex::resetLevels(
    d_finest_level = finest_level;
 
    for (int d = 0; d < dimVal; d++) {
-      d_nonoverlapping_face_boxes[d].resizeArray(d_finest_level + 1);
+      d_nonoverlapping_face_boxes[d].resize(d_finest_level + 1);
    }
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
@@ -759,7 +759,7 @@ HierarchyFaceDataOpsComplex::numberOfEntries(
          const int npatches = level->getNumberOfPatches();
 #ifdef DEBUG_CHECK_ASSERTIONS
          for (int nd = 0; nd < dimVal; nd++) {
-            TBOX_ASSERT(npatches == d_nonoverlapping_face_boxes[nd][ln].getSize());
+            TBOX_ASSERT(npatches == static_cast<int>(d_nonoverlapping_face_boxes[nd][ln].size()));
          }
 #endif
          for (int il = 0; il < npatches; il++) {

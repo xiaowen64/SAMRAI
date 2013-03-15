@@ -21,6 +21,7 @@
 #include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <list>
+#include <vector>
 
 namespace SAMRAI {
 namespace xfer {
@@ -132,7 +133,7 @@ public:
    int
    getNumberOfEquivalenceClasses() const
    {
-      return d_equivalence_class_indices.size();
+      return static_cast<int>(d_equivalence_class_indices.size());
    }
 
    /*!
@@ -376,7 +377,7 @@ public:
    int
    getRefineItemArraySize() const
    {
-      return d_refine_classes_data_items.size();
+      return static_cast<int>(d_refine_classes_data_items.size());
    }
 
    /*!
@@ -393,8 +394,8 @@ public:
    increaseRefineItemArraySize(
       const int size)
    {
-      if (size > d_refine_classes_data_items.size()) {
-         d_refine_classes_data_items.resizeArray(size);
+      if (size > static_cast<int>(d_refine_classes_data_items.size())) {
+         d_refine_classes_data_items.resize(size);
       }
    }
 
@@ -471,7 +472,7 @@ private:
    /*!
     * The array of refine items.
     */
-   tbox::Array<Data> d_refine_classes_data_items;
+   std::vector<Data> d_refine_classes_data_items;
 
    /*!
     * The array managing equivalence classes.  Each element of the array
@@ -479,7 +480,7 @@ private:
     * which items are part of an equivalence class.  The integers index into
     * the array d_refine_classes_data_items.
     */
-   tbox::Array<std::list<int> > d_equivalence_class_indices;
+   std::vector<std::list<int> > d_equivalence_class_indices;
 
    /*!
     * The number of refine items that have been registered.

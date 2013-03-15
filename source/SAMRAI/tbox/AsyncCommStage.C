@@ -374,8 +374,8 @@ AsyncCommStage::advanceSome()
    }
 #endif
 
-   Array<int> index(static_cast<int>(d_member_to_req[d_members.size()]));
-   Array<SAMRAI_MPI::Status> stat(
+   std::vector<int> index(static_cast<int>(d_member_to_req[d_members.size()]));
+   std::vector<SAMRAI_MPI::Status> stat(
       static_cast<int>(d_member_to_req[d_members.size()]));
 
    size_t n_member_completed = 0;
@@ -389,8 +389,8 @@ AsyncCommStage::advanceSome()
             static_cast<int>(d_member_to_req[d_members.size()]),
             &d_req[0],
             &n_req_completed,
-            index.getPointer(),
-            stat.getPointer());
+            &index[0],
+            &stat[0]);
       if (d_communication_timer) d_communication_timer->stop();
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (n_req_completed <= 0) {

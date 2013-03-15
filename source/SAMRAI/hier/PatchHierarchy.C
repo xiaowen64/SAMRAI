@@ -218,14 +218,14 @@ PatchHierarchy::getFromInput(
             }
          }
 
-         tbox::Array<int> proper_nesting_buffer(1, 1);
+         std::vector<int> proper_nesting_buffer(1, 1);
          if (input_db->isInteger("proper_nesting_buffer")) {
-            proper_nesting_buffer = input_db->getIntegerArray(
+            proper_nesting_buffer = input_db->getIntegerVector(
                "proper_nesting_buffer");
          }
          d_proper_nesting_buffer.clear();
          for (int ln = 0; ln < d_max_levels - 1; ++ln) {
-            if (ln < proper_nesting_buffer.size()) {
+            if (ln < static_cast<int>(proper_nesting_buffer.size())) {
                d_proper_nesting_buffer.push_back(proper_nesting_buffer[ln]);
             } else {
                d_proper_nesting_buffer.push_back(d_proper_nesting_buffer[ln - 1]);
@@ -364,15 +364,15 @@ PatchHierarchy::getFromInput(
          }
 
          if (input_db->keyExists("proper_nesting_buffer")) {
-            tbox::Array<int> proper_nesting_buffer(1, 1);
-            proper_nesting_buffer = input_db->getIntegerArray(
+            std::vector<int> proper_nesting_buffer(1, 1);
+            proper_nesting_buffer = input_db->getIntegerVector(
                "proper_nesting_buffer");
             for (int ln = 0; ln < d_max_levels - 1; ++ln) {
                int val;
-               if (ln < proper_nesting_buffer.size()) {
+               if (ln < static_cast<int>(proper_nesting_buffer.size())) {
                   val = proper_nesting_buffer[ln];
                } else {
-                  val = proper_nesting_buffer[proper_nesting_buffer.size()-1];
+                  val = proper_nesting_buffer[static_cast<int>(proper_nesting_buffer.size())-1];
                }
                if (val != d_proper_nesting_buffer[ln]) {
                   TBOX_WARNING("PatchHierarchy::getFromInput warning...\n"
@@ -803,7 +803,7 @@ PatchHierarchy::makeNewPatchLevel(
 
    if (ln >= d_number_levels) {
       d_number_levels = ln + 1;
-      d_patch_levels.resizeArray(d_number_levels);
+      d_patch_levels.resize(d_number_levels);
    }
 
    d_patch_levels[ln] = d_patch_level_factory->allocate(
@@ -870,7 +870,7 @@ PatchHierarchy::makeNewPatchLevel(
 
    if (ln >= d_number_levels) {
       d_number_levels = ln + 1;
-      d_patch_levels.resizeArray(d_number_levels);
+      d_patch_levels.resize(d_number_levels);
    }
 
    d_patch_levels[ln] = d_patch_level_factory->allocate(
@@ -1005,9 +1005,8 @@ PatchHierarchy::putToRestart(
    }
 
    if (d_max_levels > 1) {
-      restart_db->putIntegerArray("proper_nesting_buffer",
-         &d_proper_nesting_buffer[0],
-         static_cast<int>(d_proper_nesting_buffer.size()));
+      restart_db->putIntegerVector("proper_nesting_buffer",
+         d_proper_nesting_buffer);
    }
 
    restart_db->putBool("allow_patches_smaller_than_ghostwidth",
@@ -1037,9 +1036,7 @@ PatchHierarchy::putToRestart(
      boost::shared_ptr<tbox::Database> level_database(
          restart_db->putDatabase(level_names[i]));
 
-      d_patch_levels[i]->putToRestart(
-         level_database,
-         patchdata_write_table);
+      d_patch_levels[i]->putToRestart(level_database, patchdata_write_table);
    }
 }
 
@@ -1126,9 +1123,8 @@ PatchHierarchy::getFromRestart()
 
    d_proper_nesting_buffer.resize(d_max_levels - 1, 0);
    if (d_max_levels > 1) {
-      database->getIntegerArray("proper_nesting_buffer",
-         &d_proper_nesting_buffer[0],
-         d_max_levels - 1);
+      d_proper_nesting_buffer =
+         database->getIntegerVector("proper_nesting_buffer");
    }
 
    d_allow_patches_smaller_than_ghostwidth = database->getBool(
@@ -1184,7 +1180,7 @@ PatchHierarchy::initializeHierarchy()
    const ComponentSelector& component_selector =
       VariableDatabase::getDatabase()->getPatchDataRestartTable();
 
-   d_patch_levels.resizeArray(d_number_levels);
+   d_patch_levels.resize(d_number_levels);
    for (int i = 0; i < d_number_levels; i++) {
       std::string level_name = "level_" + tbox::Utilities::levelToString(i);
 

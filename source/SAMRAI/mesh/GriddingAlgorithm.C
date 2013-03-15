@@ -51,8 +51,8 @@ const int GriddingAlgorithm::ALGS_GRIDDING_ALGORITHM_VERSION = 3;
  *************************************************************************
  */
 
-tbox::Array<int> * GriddingAlgorithm::s_tag_indx = 0;
-tbox::Array<int> * GriddingAlgorithm::s_buf_tag_indx = 0;
+std::vector<int> * GriddingAlgorithm::s_tag_indx = 0;
+std::vector<int> * GriddingAlgorithm::s_buf_tag_indx = 0;
 
 tbox::StartupShutdownManager::Handler
 GriddingAlgorithm::s_startup_shutdown_handler(
@@ -197,8 +197,8 @@ GriddingAlgorithm::GriddingAlgorithm(
       d_buf_tag_indx,
       boost::shared_ptr<hier::RefineOperator>());
 
-   d_efficiency_tolerance.resizeArray(d_hierarchy->getMaxNumberOfLevels());
-   d_combine_efficiency.resizeArray(d_hierarchy->getMaxNumberOfLevels());
+   d_efficiency_tolerance.resize(d_hierarchy->getMaxNumberOfLevels());
+   d_combine_efficiency.resize(d_hierarchy->getMaxNumberOfLevels());
 
    for (int ln = 0; ln < d_hierarchy->getMaxNumberOfLevels(); ln++) {
       d_efficiency_tolerance[ln] = 0.8e0;
@@ -219,7 +219,7 @@ GriddingAlgorithm::GriddingAlgorithm(
    getFromInput(input_db, is_from_restart);
 
    if (d_hierarchy->getMaxNumberOfLevels() > 1) {
-      tbox::Array<hier::IntVector> ratio_to_coarser(d_hierarchy->getMaxNumberOfLevels(),
+      std::vector<hier::IntVector> ratio_to_coarser(d_hierarchy->getMaxNumberOfLevels(),
                                                     hier::IntVector::getOne(dim));
       for (int ln = 0; ln < d_hierarchy->getMaxNumberOfLevels(); ++ln) {
          ratio_to_coarser[ln] = d_hierarchy->getRatioToCoarserLevel(ln);
@@ -237,7 +237,7 @@ GriddingAlgorithm::GriddingAlgorithm(
       }
    }
 
-   d_bdry_sched_tags.resizeArray(d_hierarchy->getMaxNumberOfLevels());
+   d_bdry_sched_tags.resize(d_hierarchy->getMaxNumberOfLevels());
 
    warnIfDomainTooSmallInPeriodicDir();
 
@@ -245,9 +245,9 @@ GriddingAlgorithm::GriddingAlgorithm(
 
 #ifdef GA_RECORD_STATS
 
-   d_boxes_stat.resizeArray(d_hierarchy->getMaxNumberOfLevels());
-   d_cells_stat.resizeArray(d_hierarchy->getMaxNumberOfLevels());
-   d_timestamp_stat.resizeArray(d_hierarchy->getMaxNumberOfLevels());
+   d_boxes_stat.resize(d_hierarchy->getMaxNumberOfLevels());
+   d_cells_stat.resize(d_hierarchy->getMaxNumberOfLevels());
+   d_timestamp_stat.resize(d_hierarchy->getMaxNumberOfLevels());
 
    for (int ln = 0; ln < d_hierarchy->getMaxNumberOfLevels(); ++ln) {
       std::string ln_text = tbox::Utilities::intToString(ln, 2);
@@ -990,18 +990,19 @@ GriddingAlgorithm::makeFinerLevel(
 void
 GriddingAlgorithm::regridAllFinerLevels(
    const int level_number,
-   const tbox::Array<int>& tag_buffer,
+   const std::vector<int>& tag_buffer,
    const int cycle,
    const double level_time,
-   const tbox::Array<double> regrid_start_time,
+   const std::vector<double>& regrid_start_time,
    const bool level_is_coarsest_sync_level)
 {
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(d_hierarchy->getPatchLevel(level_number));
-   TBOX_ASSERT(tag_buffer.getSize() >= level_number + 1);
+   TBOX_ASSERT(static_cast<int>(tag_buffer.size()) >= level_number + 1);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int i = 0; i < tag_buffer.getSize(); i++) {
+   int array_size = static_cast<int>(tag_buffer.size());
+   for (int i = 0; i < array_size; i++) {
       TBOX_ASSERT(tag_buffer[i] >= 0);
    }
 #endif
@@ -1038,7 +1039,7 @@ GriddingAlgorithm::regridAllFinerLevels(
             if (d_hierarchy->levelCanBeRefined(ln)) {
                bool initial_time = false;
                double level_regrid_start_time = 0.;
-               if (regrid_start_time.getSize() < ln + 1) {
+               if (static_cast<int>(regrid_start_time.size()) < ln + 1) {
                   TBOX_ERROR("GriddingAlgorithm::regridAllFinerLevels()...\n"
                      << "no regrid_start_time specified for level " << ln
                      << "." <<std::endl);
@@ -1160,17 +1161,18 @@ GriddingAlgorithm::regridFinerLevel(
    const int regrid_cycle,
    const int finest_level_not_regridded,
    const bool level_is_coarsest_sync_level,
-   const tbox::Array<int>& tag_buffer,
-   const tbox::Array<double>& regrid_start_time)
+   const std::vector<int>& tag_buffer,
+   const std::vector<double>& regrid_start_time)
 {
    TBOX_ASSERT((tag_ln >= 0)
       && (tag_ln <= d_hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(d_hierarchy->getPatchLevel(tag_ln));
    TBOX_ASSERT(finest_level_not_regridded >= 0
       && finest_level_not_regridded <= tag_ln);
-   TBOX_ASSERT(tag_buffer.getSize() >= tag_ln + 1);
+   TBOX_ASSERT(static_cast<int>(tag_buffer.size()) >= tag_ln + 1);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int i = 0; i < tag_buffer.getSize(); i++) {
+   int array_size = static_cast<int>(tag_buffer.size());
+   for (int i = 0; i < array_size; i++) {
       TBOX_ASSERT(tag_buffer[i] >= 0);
    }
 #endif
@@ -1390,7 +1392,7 @@ void
 GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
    const int tag_ln,
    const bool level_is_coarsest_sync_level,
-   const tbox::Array<double>& regrid_start_time,
+   const std::vector<double>& regrid_start_time,
    const double regrid_time,
    const int regrid_cycle)
 {
@@ -1458,7 +1460,7 @@ GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
    bool initial_time = false;
    double level_regrid_start_time = 0.;
    if (d_tag_init_strategy->usesTimeIntegration(regrid_cycle, regrid_time)) {
-      if (regrid_start_time.getSize() < tag_ln + 1) {
+      if (static_cast<int>(regrid_start_time.size()) < tag_ln + 1) {
          TBOX_ERROR("GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid()...\n"
             << "no regrid_start_time specified for level " << tag_ln
             << "." <<std::endl);
@@ -1503,7 +1505,7 @@ void
 GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
    boost::shared_ptr<hier::Connector>& tag_to_finer,
    const int tag_ln,
-   const tbox::Array<int>& tag_buffer)
+   const std::vector<int>& tag_buffer)
 {
    if (d_print_steps) {
       tbox::plog
@@ -3438,7 +3440,7 @@ void
 GriddingAlgorithm::extendBoxesToDomainBoundary(
    hier::BoxLevel& new_box_level,
    hier::Connector& tag_to_new,
-   const tbox::Array<hier::BoxContainer>& physical_domain_array,
+   const std::vector<hier::BoxContainer>& physical_domain_array,
    const hier::IntVector& extend_ghosts) const
 {
    TBOX_ASSERT(tag_to_new.hasTranspose());
@@ -4350,12 +4352,12 @@ GriddingAlgorithm::printClassData(
    int ln;
 
    os << "d_efficiency_tolerance..." << std::endl;
-   for (ln = 0; ln < d_efficiency_tolerance.getSize(); ln++) {
+   for (ln = 0; ln < static_cast<int>(d_efficiency_tolerance.size()); ln++) {
       os << "    d_efficiency_tolerance[" << ln << "] = "
          << d_efficiency_tolerance[ln] << std::endl;
    }
    os << "d_combine_efficiency..." << std::endl;
-   for (ln = 0; ln < d_combine_efficiency.getSize(); ln++) {
+   for (ln = 0; ln < static_cast<int>(d_combine_efficiency.size()); ln++) {
       os << "    d_combine_efficiency[" << ln << "] = "
          << d_combine_efficiency[ln] << std::endl;
    }
@@ -4384,8 +4386,8 @@ GriddingAlgorithm::putToRestart(
    restart_db->putBool("DEV_print_steps", d_print_steps);
    restart_db->putBool("DEV_log_metadata_statistics", d_log_metadata_statistics);
 
-   restart_db->putDoubleArray("efficiency_tolerance", d_efficiency_tolerance);
-   restart_db->putDoubleArray("combine_efficiency", d_combine_efficiency);
+   restart_db->putDoubleVector("efficiency_tolerance", d_efficiency_tolerance);
+   restart_db->putDoubleVector("combine_efficiency", d_combine_efficiency);
 
    restart_db->putChar("check_nonrefined_tags", d_check_nonrefined_tags);
    restart_db->putChar("check_overlapping_patches",
@@ -4440,13 +4442,14 @@ GriddingAlgorithm::getFromInput(
           */
 
          if (input_db->keyExists("efficiency_tolerance")) {
-            tbox::Array<double> efficiency_tolerance;
-            efficiency_tolerance =
-               input_db->getDoubleArray("efficiency_tolerance");
+            std::vector<double> efficiency_tolerance =
+               input_db->getDoubleVector("efficiency_tolerance");
 
+            int efficiency_tolerance_size =
+               static_cast<int>(efficiency_tolerance.size());
             int ln;
             for (ln = 0;
-                 ln < efficiency_tolerance.getSize() && ln < d_hierarchy->getMaxNumberOfLevels();
+                 ln < efficiency_tolerance_size && ln < d_hierarchy->getMaxNumberOfLevels();
                  ++ln) {
                if (!((efficiency_tolerance[ln] > 0.0e0) &&
                      (efficiency_tolerance[ln] < 1.0e0))) {
@@ -4465,13 +4468,14 @@ GriddingAlgorithm::getFromInput(
           */
 
          if (input_db->keyExists("combine_efficiency")) {
-            tbox::Array<double> combine_efficiency;
-            combine_efficiency =
-               input_db->getDoubleArray("combine_efficiency");
+            std::vector<double> combine_efficiency =
+               input_db->getDoubleVector("combine_efficiency");
 
+            int combine_efficiency_size =
+               static_cast<int>(combine_efficiency.size());
             int ln;
             for (ln = 0;
-                 ln < combine_efficiency.getSize() && ln < d_hierarchy->getMaxNumberOfLevels();
+                 ln < combine_efficiency_size && ln < d_hierarchy->getMaxNumberOfLevels();
                  ++ln) {
                if (!((combine_efficiency[ln] > 0.0e0) &&
                      (combine_efficiency[ln] < 1.0e0))) {
@@ -4555,12 +4559,14 @@ GriddingAlgorithm::getFromInput(
           */
 
          if (input_db->keyExists("efficiency_tolerance")) {
-            tbox::Array<double> efficiency_tolerance =
-               input_db->getDoubleArray("efficiency_tolerance");
+            std::vector<double> efficiency_tolerance =
+               input_db->getDoubleVector("efficiency_tolerance");
 
+            int efficiency_tolerance_size =
+               static_cast<int>(efficiency_tolerance.size());
             int ln;
             for (ln = 0;
-                 ln < efficiency_tolerance.getSize() && ln < d_hierarchy->getMaxNumberOfLevels();
+                 ln < efficiency_tolerance_size && ln < d_hierarchy->getMaxNumberOfLevels();
                  ++ln) {
                if ((efficiency_tolerance[ln] <= 0.0e0) ||
                    (efficiency_tolerance[ln] >= 1.0e0)) {
@@ -4582,12 +4588,14 @@ GriddingAlgorithm::getFromInput(
           */
 
          if (input_db->keyExists("combine_efficiency")) {
-            tbox::Array<double> combine_efficiency =
-               input_db->getDoubleArray("combine_efficiency");
+            std::vector<double> combine_efficiency =
+               input_db->getDoubleVector("combine_efficiency");
 
+            int combine_efficiency_size =
+               static_cast<int>(combine_efficiency.size());
             int ln;
             for (ln = 0;
-                 ln < combine_efficiency.getSize() && ln < d_hierarchy->getMaxNumberOfLevels();
+                 ln < combine_efficiency_size && ln < d_hierarchy->getMaxNumberOfLevels();
                  ++ln) {
                if ((combine_efficiency[ln] <= 0.0e0) ||
                    (combine_efficiency[ln] >= 1.0e0)) {
@@ -4716,8 +4724,8 @@ GriddingAlgorithm::getFromRestart()
    d_print_steps = db->getBool("DEV_print_steps");
    d_log_metadata_statistics = db->getBool("DEV_log_metadata_statistics");
 
-   d_efficiency_tolerance = db->getDoubleArray("efficiency_tolerance");
-   d_combine_efficiency = db->getDoubleArray("combine_efficiency");
+   d_efficiency_tolerance = db->getDoubleVector("efficiency_tolerance");
+   d_combine_efficiency = db->getDoubleVector("combine_efficiency");
 
    d_check_nonrefined_tags = db->getChar("check_nonrefined_tags");
    d_check_overlapping_patches = db->getChar("check_overlapping_patches");

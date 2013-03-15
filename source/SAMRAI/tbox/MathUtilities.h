@@ -16,6 +16,8 @@
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Complex.h"
 
+#include <vector>
+
 namespace SAMRAI {
 namespace tbox {
 
@@ -92,13 +94,13 @@ public:
       const TYPE& value);
 
    /*!
-    * @brief Set array entries to value given by getSignalingNaN().
+    * @brief Set vector entries to value given by getSignalingNaN().
     *
-    * @param array SAMRAI array to set
+    * @param vector SAMRAI array to set
     */
    static void
-   setArrayToSignalingNaN(
-      Array<TYPE>& array);
+   setVectorToSignalingNaN(
+      std::vector<TYPE>& vector);
 
    /*!
     * @brief Set array entries to value given by getSignalingNaN().
@@ -141,13 +143,13 @@ public:
    getMax();
 
    /*!
-    * @brief Set array entries to value given by getMax().
+    * @brief Set vector entries to value given by getMax().
     *
-    * @param array SAMRAI array to set
+    * @param vector SAMRAI array to set
     */
    static void
-   setArrayToMax(
-      Array<TYPE>& array);
+   setVectorToMax(
+      std::vector<TYPE>& vector);
 
    /*!
     * @brief Set array entries to value given by getMax().
@@ -172,13 +174,13 @@ public:
    getMin();
 
    /*!
-    * @brief Set array entries to value given by getMin().
+    * @brief Set vector entries to value given by getMin().
     *
-    * @param array SAMRAI array to set
+    * @param vector SAMRAI array to set
     */
    static void
-   setArrayToMin(
-      Array<TYPE>& array);
+   setVectorToMin(
+      std::vector<TYPE>& vector);
 
    /*!
     * @brief Set array entries to value given by getMin().
@@ -204,13 +206,13 @@ public:
    getEpsilon();
 
    /*!
-    * @brief Set array entries to value given by getEpsilon().
+    * @brief Set vector entries to value given by getEpsilon().
     *
-    * @param array SAMRAI array to set
+    * @param vector SAMRAI array to set
     */
    static void
-   setArrayToEpsilon(
-      Array<TYPE>& array);
+   setVectorToEpsilon(
+      std::vector<TYPE>& vector);
 
    /*!
     * @brief Set array entries to value given by getEpsilon().

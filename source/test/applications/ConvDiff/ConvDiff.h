@@ -32,6 +32,7 @@ using namespace std;
 #include "SAMRAI/appu/VisItDataWriter.h"
 
 #include "boost/shared_ptr.hpp"
+#include <vector>
 
 /**
  * The ConvDiff class provides numerical routines for a sample problem
@@ -317,7 +318,7 @@ private:
       boost::shared_ptr<tbox::Database> db,
       const string& db_name,
       int array_indx,
-      tbox::Array<double>& uval);
+      std::vector<double>& uval);
 
    /*
     * Private member function to check correctness of boundary data.
@@ -327,7 +328,7 @@ private:
       int btype,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
-      const tbox::Array<int>& scalar_bconds) const;
+      const std::vector<int>& scalar_bconds) const;
 
    /*
     * Object name used for error/warning reporting and as a label
@@ -403,9 +404,9 @@ private:
     *
     * Input file values are read into these arrays.
     */
-   tbox::Array<int> d_scalar_bdry_edge_conds;
-   tbox::Array<int> d_scalar_bdry_node_conds;
-   tbox::Array<int> d_scalar_bdry_face_conds; // 3D use only.
+   std::vector<int> d_scalar_bdry_edge_conds;
+   std::vector<int> d_scalar_bdry_node_conds;
+   std::vector<int> d_scalar_bdry_face_conds; // 3D use only.
 
    /*
     * Boundary condition cases for scalar and vector (i.e., depth > 1)
@@ -419,8 +420,8 @@ private:
    /*
     * Arrays of face (3d) or edge (2d) boundary values for DIRICHLET case.
     */
-   tbox::Array<double> d_bdry_edge_val; // 2D use only.
-   tbox::Array<double> d_bdry_face_val; // 3D use only.
+   std::vector<double> d_bdry_edge_val; // 2D use only.
+   std::vector<double> d_bdry_face_val; // 3D use only.
 
 };
 

@@ -715,18 +715,9 @@ BoxNeighborhoodCollection::putToRestart(
          ++counter;
       }
 
-      restart_db->putIntegerArray(
-         "owners",
-         &owners[0],
-         num_neighborhoods);
-      restart_db->putIntegerArray(
-         "local_indices",
-         &local_indices[0],
-         num_neighborhoods);
-      restart_db->putIntegerArray(
-         "periodic_ids",
-         &periodic_ids[0],
-         num_neighborhoods);
+      restart_db->putIntegerVector("owners", owners);
+      restart_db->putIntegerVector("local_indices", local_indices);
+      restart_db->putIntegerVector("periodic_ids", periodic_ids);
       const std::string set_db_string("set_for_local_id_");
 
       for (ConstIterator ei = begin(); ei != end(); ++ei) {
@@ -736,7 +727,7 @@ BoxNeighborhoodCollection::putToRestart(
             + tbox::Utilities::processorToString(mbid.getOwnerRank())
             + tbox::Utilities::patchToString(mbid.getLocalId().getValue())
             + tbox::Utilities::intToString(mbid.getPeriodicId().getPeriodicValue());
-	 boost::shared_ptr<tbox::Database> nbr_db =
+         boost::shared_ptr<tbox::Database> nbr_db =
             restart_db->putDatabase(set_name);
 
          const int mbs_size = numNeighbors(ei);
@@ -749,7 +740,7 @@ BoxNeighborhoodCollection::putToRestart(
             std::vector<int> block_ids(mbs_size);
             std::vector<int> periodic_ids(mbs_size);
 
-            tbox::Array<tbox::DatabaseBox> db_box_array(mbs_size);
+            std::vector<tbox::DatabaseBox> db_box_array(mbs_size);
 
             counter = 0;
 
@@ -763,26 +754,11 @@ BoxNeighborhoodCollection::putToRestart(
                ++counter;
             }
 
-            nbr_db->putIntegerArray(
-               "local_indices",
-               &local_ids[0],
-               mbs_size);
-            nbr_db->putIntegerArray(
-               "ranks",
-               &ranks[0],
-               mbs_size);
-            nbr_db->putIntegerArray(
-               "block_ids",
-               &block_ids[0],
-               mbs_size);
-            nbr_db->putIntegerArray(
-               "periodic_ids",
-               &periodic_ids[0],
-               mbs_size);
-            nbr_db->putDatabaseBoxArray(
-               "boxes",
-               &db_box_array[0],
-               mbs_size);
+            nbr_db->putIntegerVector("local_indices", local_ids);
+            nbr_db->putIntegerVector("ranks", ranks);
+            nbr_db->putIntegerVector("block_ids", block_ids);
+            nbr_db->putIntegerVector("periodic_ids", periodic_ids);
+            nbr_db->putDatabaseBoxVector("boxes", db_box_array);
          }
       }
    }
@@ -802,21 +778,12 @@ BoxNeighborhoodCollection::getFromRestart(
    const unsigned int number_of_sets = restart_db.getInteger("number_of_sets");
    if (number_of_sets > 0) {
 
-      std::vector<int> owners(number_of_sets);
-      std::vector<int> local_indices(number_of_sets);
-      std::vector<int> periodic_ids(number_of_sets);
-      restart_db.getIntegerArray(
-         "owners",
-         &owners[0],
-         number_of_sets);
-      restart_db.getIntegerArray(
-         "local_indices",
-         &local_indices[0],
-         number_of_sets);
-      restart_db.getIntegerArray(
-         "periodic_ids",
-         &periodic_ids[0],
-         number_of_sets);
+      std::vector<int> owners =
+         restart_db.getIntegerVector("owners");
+      std::vector<int> local_indices =
+         restart_db.getIntegerVector("local_indices");
+      std::vector<int> periodic_ids =
+         restart_db.getIntegerVector("periodic_ids");
 
       const std::string set_db_string("set_for_local_id_");
 
@@ -836,32 +803,17 @@ BoxNeighborhoodCollection::getFromRestart(
             nbr_db->getInteger("mapped_box_set_size");
          Iterator base_box_loc = insert(box_id).first;
          if (mbs_size > 0) {
-            std::vector<int> local_ids(mbs_size);
-            std::vector<int> ranks(mbs_size);
-            std::vector<int> block_ids(mbs_size);
-            std::vector<int> periodic_ids(mbs_size);
-            tbox::Array<tbox::DatabaseBox> db_box_array(mbs_size);
 
-            nbr_db->getIntegerArray(
-               "local_indices",
-               &local_ids[0],
-               mbs_size);
-            nbr_db->getIntegerArray(
-               "ranks",
-               &ranks[0],
-               mbs_size);
-            nbr_db->getIntegerArray(
-               "block_ids",
-               &block_ids[0],
-               mbs_size);
-            nbr_db->getIntegerArray(
-               "periodic_ids",
-               &periodic_ids[0],
-               mbs_size);
-            nbr_db->getDatabaseBoxArray(
-               "boxes",
-               &db_box_array[0],
-               mbs_size);
+            std::vector<int> local_ids =
+               nbr_db->getIntegerVector("local_indices");
+            std::vector<int> ranks =
+               nbr_db->getIntegerVector("ranks");
+            std::vector<int> block_ids =
+               nbr_db->getIntegerVector("block_ids");
+            std::vector<int> periodic_ids =
+               nbr_db->getIntegerVector("periodic_ids");
+            std::vector<tbox::DatabaseBox> db_box_array =
+               nbr_db->getDatabaseBoxVector("boxes");
 
             for (unsigned int i = 0; i < mbs_size; ++i) {
                Box nbr(db_box_array[i]);

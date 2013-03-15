@@ -955,7 +955,7 @@ private:
       double ideal_load,
       double low_load,
       double high_load,
-      const tbox::Array<tbox::Array<bool> >& bad_cuts ) const;
+      const std::vector<std::vector<bool> >& bad_cuts ) const;
 
    bool
    breakOffLoad_cubic(
@@ -966,7 +966,7 @@ private:
       double ideal_load,
       double low_load,
       double high_load,
-      const tbox::Array<tbox::Array<bool> >& bad_cuts ) const;
+      const std::vector<std::vector<bool> >& bad_cuts ) const;
 
    void
    burstBox(
@@ -982,7 +982,7 @@ private:
       int level_number) const
    {
       TBOX_ASSERT(level_number >= 0);
-      return (level_number < d_workload_data_id.getSize() ?
+      return (level_number < static_cast<int>(d_workload_data_id.size()) ?
          d_workload_data_id[level_number] :
          d_master_workload_data_id);
    }
@@ -1172,7 +1172,7 @@ private:
     * Values for workload estimate data, workload factor, and bin pack method
     * used on individual levels when specified as such.
     */
-   tbox::Array<int> d_workload_data_id;
+   std::vector<int> d_workload_data_id;
 
    int d_master_workload_data_id;
 

@@ -41,9 +41,9 @@ SinusoidalFrontTagger::SinusoidalFrontTagger(
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
    TBOX_ASSERT(variable_db != 0);
 
-   tbox::Array<double> init_disp;
-   tbox::Array<double> velocity;
-   tbox::Array<double> period;
+   std::vector<double> init_disp;
+   std::vector<double> velocity;
+   std::vector<double> period;
 
    if (database != 0) {
       d_allocate_data =
@@ -57,23 +57,20 @@ SinusoidalFrontTagger::SinusoidalFrontTagger(
          std::string name("buffer_space_");
          name = name + tbox::Utilities::intToString(ln);
          if (database->isDouble(name)) {
-            d_buffer_space.resizeArray(d_dim.getValue() * (ln + 1));
+            d_buffer_space.resize(d_dim.getValue() * (ln + 1));
             database->getDoubleArray(name, &d_buffer_space[d_dim.getValue() * ln], d_dim.getValue());
          } else {
             break;
          }
       }
       if (database->isDouble("period")) {
-         period =
-            database->getDoubleArray("period");
+         period = database->getDoubleVector("period");
       }
       if (database->isDouble("init_disp")) {
-         init_disp =
-            database->getDoubleArray("init_disp");
+         init_disp = database->getDoubleVector("init_disp");
       }
       if (database->isDouble("velocity")) {
-         velocity =
-            database->getDoubleArray("velocity");
+         velocity = database->getDoubleVector("velocity");
       }
       d_amplitude =
          database->getDoubleWithDefault("amplitude",
@@ -89,9 +86,12 @@ SinusoidalFrontTagger::SinusoidalFrontTagger(
    }
 
    for (int idim = 0; idim < d_dim.getValue(); ++idim) {
-      d_init_disp[idim] = idim < init_disp.size() ? init_disp[idim] : 0.0;
-      d_velocity[idim] = idim < velocity.size() ? velocity[idim] : 0.0;
-      d_period[idim] = idim < period.size() ? period[idim] : 1.0e20;
+      d_init_disp[idim] =
+         idim < static_cast<int>(init_disp.size()) ? init_disp[idim] : 0.0;
+      d_velocity[idim] =
+         idim < static_cast<int>(velocity.size()) ? velocity[idim] : 0.0;
+      d_period[idim] =
+         idim < static_cast<int>(period.size()) ? period[idim] : 1.0e20;
    }
 
    const std::string context_name = d_name + std::string(":context");
@@ -733,7 +733,7 @@ void SinusoidalFrontTagger::setTime(
 
 const double *SinusoidalFrontTagger::getBufferSpace( int ln ) const
 {
-   if ( d_buffer_space.size() > ln*d_dim.getValue() ) {
+   if ( static_cast<int>(d_buffer_space.size()) > ln*d_dim.getValue() ) {
       return &d_buffer_space[ln*d_dim.getValue()];
    }
    return 0;

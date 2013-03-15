@@ -20,6 +20,8 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/pdat/CellData.h"
 
+#include <vector>
+
 using namespace SAMRAI;
 
 class MblkGeometry
@@ -157,14 +159,14 @@ private:
    //
    // Cartesian inputs
    //
-   tbox::Array<tbox::Array<double> > d_cart_xlo;
-   tbox::Array<tbox::Array<double> > d_cart_xhi;
+   std::vector<std::vector<double> > d_cart_xlo;
+   std::vector<std::vector<double> > d_cart_xhi;
 
    //
    // Wedge inputs
    //
-   tbox::Array<double> d_wedge_rmin;
-   tbox::Array<double> d_wedge_rmax;
+   std::vector<double> d_wedge_rmin;
+   std::vector<double> d_wedge_rmax;
    double d_wedge_thmin;
    double d_wedge_thmax;
    double d_wedge_zmin;
@@ -207,7 +209,7 @@ private:
    //
    // Refine boxes for different blocks/levels
    //
-   tbox::Array<tbox::Array<hier::BoxContainer> > d_refine_boxes;
+   std::vector<std::vector<hier::BoxContainer> > d_refine_boxes;
 
 };
 

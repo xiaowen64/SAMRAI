@@ -23,6 +23,7 @@
 #include <string>
 #include <iostream>
 #include <list>
+#include <vector>
 
 namespace SAMRAI {
 namespace hier {
@@ -248,8 +249,8 @@ private:
       const PatchDescriptor&);                  // not implemented
 
    int d_max_number_registered_components;
-   tbox::Array<std::string> d_names;
-   tbox::Array<boost::shared_ptr<PatchDataFactory> > d_factories;
+   std::vector<std::string> d_names;
+   std::vector<boost::shared_ptr<PatchDataFactory> > d_factories;
    std::list<int> d_free_indices;
 
    /*!

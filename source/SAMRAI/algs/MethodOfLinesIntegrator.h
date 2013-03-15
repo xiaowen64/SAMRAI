@@ -34,6 +34,7 @@
 #include <iostream>
 #include <string>
 #include <list>
+#include <vector>
 
 namespace SAMRAI {
 namespace algs {
@@ -89,7 +90,7 @@ namespace algs {
  *   </tr>
  *   <tr>
  *      <td>alpha_1</td>
- *      <td>Array<double></td>
+ *      <td>array of doubles</td>
  *      <td>[1.0, 0.75, 2.0/3.0]</td>
  *      <td>any doubles but no more than 3 of them</td>
  *      <td>opt</td>
@@ -97,7 +98,7 @@ namespace algs {
  *   </tr>
  *   <tr>
  *      <td>alpha_2</td>
- *      <td>Array<double></td>
+ *      <td>array of doubles</td>
  *      <td>[0.0, 0.25, 2.0/3.0]</td>
  *      <td>any doubles but no more than 3 of them</td>
  *      <td>opt</td>
@@ -105,7 +106,7 @@ namespace algs {
  *   </tr>
  *   <tr>
  *      <td>beta</td>
- *      <td>Array<double></td>
+ *      <td>array of doubles</td>
  *      <td>[1.0, 0.25, 2.0/3.0]</td>
  *      <td>any doubles but no more than 3 of them</td>
  *      <td>opt</td>
@@ -404,9 +405,9 @@ private:
     * updating solution during multi-step process.
     */
    int d_order;
-   tbox::Array<double> d_alpha_1;
-   tbox::Array<double> d_alpha_2;
-   tbox::Array<double> d_beta;
+   std::vector<double> d_alpha_1;
+   std::vector<double> d_alpha_2;
+   std::vector<double> d_beta;
 
    /*
     * A pointer to the method of lines patch model that will perform
@@ -428,7 +429,7 @@ private:
     * data at specified time.
     */
    boost::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_advance;
-   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_advance;
+   std::vector<boost::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_advance;
 
    /*
     * Algorithm for transferring data from coarse patch to fine patch
@@ -447,7 +448,7 @@ private:
     * fine to coarse grid.
     */
    boost::shared_ptr<xfer::CoarsenAlgorithm> d_coarsen_algorithm;
-   tbox::Array<boost::shared_ptr<xfer::CoarsenSchedule> > d_coarsen_schedule;
+   std::vector<boost::shared_ptr<xfer::CoarsenSchedule> > d_coarsen_schedule;
 
    /*
     * This algorithm has two variable contexts.  The current context is the

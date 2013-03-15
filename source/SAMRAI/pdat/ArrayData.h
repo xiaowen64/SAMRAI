@@ -25,6 +25,7 @@
 #include "SAMRAI/tbox/MessageStream.h"
 
 #include <typeinfo>
+#include <vector>
 
 namespace SAMRAI {
 namespace pdat {
@@ -669,7 +670,7 @@ private:
    int d_depth;
    int d_offset;
    hier::Box d_box;
-   tbox::Array<TYPE> d_array;
+   std::vector<TYPE> d_array;
 };
 
 }

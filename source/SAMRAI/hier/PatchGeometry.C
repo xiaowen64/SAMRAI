@@ -108,7 +108,7 @@ PatchGeometry::getBoundaryFillBox(
    blut = BoundaryLookupTable::getLookupTable(d_dim);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   const tbox::Array<int>& location_index_max = blut->getMaxLocationIndices();
+   const std::vector<int>& location_index_max = blut->getMaxLocationIndices();
 #endif
    TBOX_ASSERT(bdry_type > 0);
    TBOX_ASSERT(bdry_type <= d_dim.getValue());
@@ -126,7 +126,7 @@ PatchGeometry::getBoundaryFillBox(
 
             // Get the directions involved in this boundary type from the
             // lookup table.
-            const tbox::Array<int>& dir =
+            const std::vector<int>& dir =
                blut->getDirections(location_index, codim);
 
             // For each direction, identify this as an upper or lower boundary.
@@ -149,28 +149,27 @@ PatchGeometry::getBoundaryFillBox(
 
 void
 PatchGeometry::setCodimensionBoundaries(
-   const tbox::Array<BoundaryBox>& bdry_boxes,
+   const std::vector<BoundaryBox>& bdry_boxes,
    int codim)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int i = 0; i < bdry_boxes.size(); i++) {
+   for (int i = 0; i < static_cast<int>(bdry_boxes.size()); i++) {
       TBOX_ASSERT(bdry_boxes[i].getBoundaryType() == codim);
    }
 #endif
    TBOX_ASSERT(codim <= d_dim.getValue());
    TBOX_ASSERT(codim > 0);
 
-   d_patch_boundaries[codim - 1].resizeArray(bdry_boxes.size(),
-      BoundaryBox(d_dim));
+   d_patch_boundaries[codim - 1].resize(bdry_boxes.size(), BoundaryBox(d_dim));
 
-   for (int b = 0; b < bdry_boxes.size(); b++) {
+   for (int b = 0; b < static_cast<int>(bdry_boxes.size()); b++) {
       d_patch_boundaries[codim - 1][b] = bdry_boxes[b];
    }
 }
 
 void
 PatchGeometry::setBoundaryBoxesOnPatch(
-   const tbox::Array<tbox::Array<BoundaryBox> > bdry)
+   const std::vector<std::vector<BoundaryBox> >& bdry)
 {
    for (int i = 0; i < d_dim.getValue(); i++) {
       setCodimensionBoundaries(bdry[i], i + 1);
@@ -187,7 +186,7 @@ PatchGeometry::printClassData(
           << d_has_regular_boundary << std::endl;
    stream << "Boundary boxes for patch..." << std::endl;
    for (int d = 0; d < d_dim.getValue(); d++) {
-      const int n = d_patch_boundaries[d].getSize();
+      const int n = static_cast<int>(d_patch_boundaries[d].size());
       stream << "Boundary box array " << d << " has " << n << " boxes"
              << std::endl;
       for (int i = 0; i < n; i++) {

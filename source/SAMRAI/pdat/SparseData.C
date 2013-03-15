@@ -785,8 +785,8 @@ SparseData<BOX_GEOMETRY>::getFromRestart(
             restart_db->getDatabase(index_keyword));
 
          // unpack the index
-         tbox::Array<int> index_array =
-            item_db->getIntegerArray(index_keyword);
+         std::vector<int> index_array =
+            item_db->getIntegerVector(index_keyword);
          hier::Index index(d_dim);
          for (int j = 0; j < d_dim.getValue(); ++j) {
             index(j) = index_array[j];
@@ -919,7 +919,7 @@ SparseData<BOX_GEOMETRY>::putToRestart(
 
       // First deal with the Index
       const hier::Index& index = index_iter->first;
-      tbox::Array<int> index_array(d_dim.getValue());
+      std::vector<int> index_array(d_dim.getValue());
       for (int i = 0; i < d_dim.getValue(); ++i) {
          index_array[i] = index(i);
       }
@@ -927,7 +927,7 @@ SparseData<BOX_GEOMETRY>::putToRestart(
       boost::shared_ptr<tbox::Database> item_db(
          restart_db->putDatabase(index_keyword));
 
-      item_db->putIntegerArray(index_keyword, index_array);
+      item_db->putIntegerVector(index_keyword, index_array);
 
       // Next get the node and record the double attribute data
       typename SparseData<BOX_GEOMETRY>::AttributeIterator attributes(

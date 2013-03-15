@@ -95,8 +95,8 @@ void OuterfaceDataTest::readTestInput(
 
    boost::shared_ptr<tbox::Database> var_data(
       db->getDatabase("VariableData"));
-   tbox::Array<string> var_keys = var_data->getAllKeys();
-   int nkeys = var_keys.getSize();
+   std::vector<string> var_keys = var_data->getAllKeys();
+   int nkeys = static_cast<int>(var_keys.size());
 
    d_use_fine_value_at_interface.resizeArray(nkeys);
 

@@ -130,8 +130,8 @@ Statistician::~Statistician()
 {
    if (d_restart_database_instance) delete d_restart_database_instance;
 
-   d_proc_statistics.resizeArray(0);
-   d_patch_statistics.resizeArray(0);
+   d_proc_statistics.resize(0);
+   d_patch_statistics.resize(0);
 
    d_num_proc_stats = 0;
    d_num_patch_stats = 0;
@@ -380,9 +380,9 @@ Statistician::getGlobalProcStatSequenceLength(
       }
 
       TBOX_ASSERT(proc_stat_id >= 0 &&
-         proc_stat_id < d_global_proc_stat_data.getSize());
+         proc_stat_id < static_cast<int>(d_global_proc_stat_data.size()));
 
-      seq_len = d_global_proc_stat_data[proc_stat_id].getSize();
+      seq_len = static_cast<int>(d_global_proc_stat_data[proc_stat_id].size());
    }
 
    return seq_len;
@@ -414,9 +414,9 @@ Statistician::getGlobalProcStatValue(
       }
 
       TBOX_ASSERT(proc_stat_id >= 0 &&
-         proc_stat_id < d_global_proc_stat_data.getSize());
+         proc_stat_id < static_cast<int>(d_global_proc_stat_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_proc_stat_data[proc_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_proc_stat_data[proc_stat_id].size()));
       TBOX_ASSERT(proc_num < mpi.getSize());
 
       val = d_global_proc_stat_data[proc_stat_id][seq_num][proc_num];
@@ -443,9 +443,9 @@ Statistician::getGlobalProcStatSum(
       }
 
       TBOX_ASSERT(proc_stat_id >= 0 &&
-         proc_stat_id < d_global_proc_stat_sum.getSize());
+         proc_stat_id < static_cast<int>(d_global_proc_stat_sum.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_proc_stat_sum[proc_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_proc_stat_sum[proc_stat_id].size()));
 
       sum = d_global_proc_stat_sum[proc_stat_id][seq_num];
    }
@@ -471,9 +471,9 @@ Statistician::getGlobalProcStatMax(
       }
 
       TBOX_ASSERT(proc_stat_id >= 0 &&
-         proc_stat_id < d_global_proc_stat_max.getSize());
+         proc_stat_id < static_cast<int>(d_global_proc_stat_max.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_proc_stat_max[proc_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_proc_stat_max[proc_stat_id].size()));
 
       pmax = d_global_proc_stat_max[proc_stat_id][seq_num];
    }
@@ -499,9 +499,9 @@ Statistician::getGlobalProcStatMaxProcessorId(
       }
 
       TBOX_ASSERT(proc_stat_id >= 0 &&
-         proc_stat_id < d_global_proc_stat_imax.getSize());
+         proc_stat_id < static_cast<int>(d_global_proc_stat_imax.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_proc_stat_imax[proc_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_proc_stat_imax[proc_stat_id].size()));
 
       id = d_global_proc_stat_imax[proc_stat_id][seq_num];
 
@@ -528,9 +528,9 @@ Statistician::getGlobalProcStatMin(
       }
 
       TBOX_ASSERT(proc_stat_id >= 0 &&
-         proc_stat_id < d_global_proc_stat_min.getSize());
+         proc_stat_id < static_cast<int>(d_global_proc_stat_min.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_proc_stat_min[proc_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_proc_stat_min[proc_stat_id].size()));
 
       pmin = d_global_proc_stat_min[proc_stat_id][seq_num];
    }
@@ -556,9 +556,9 @@ Statistician::getGlobalProcStatMinProcessorId(
       }
 
       TBOX_ASSERT(proc_stat_id >= 0 &&
-         proc_stat_id < d_global_proc_stat_imin.getSize());
+         proc_stat_id < static_cast<int>(d_global_proc_stat_imin.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_proc_stat_imin[proc_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_proc_stat_imin[proc_stat_id].size()));
 
       id = d_global_proc_stat_imin[proc_stat_id][seq_num];
    }
@@ -598,10 +598,10 @@ Statistician::printGlobalProcStatData(
          << d_proc_statistics[proc_stat_id]->getName() << std::endl;
 
       int nnodes = mpi.getSize();
-      const Array<Array<double> >& sdata =
+      const std::vector<std::vector<double> >& sdata =
          d_global_proc_stat_data[proc_stat_id];
 
-      for (int ipsl = 0; ipsl < sdata.getSize(); ipsl++) {
+      for (int ipsl = 0; ipsl < static_cast<int>(sdata.size()); ipsl++) {
          os << "      Seq # " << ipsl << std::endl;
          os << "         proc : value" << std::endl;
          for (int ip = 0; ip < nnodes; ip++) {
@@ -676,9 +676,9 @@ Statistician::printGlobalProcStatDataFormatted(
       /*
        * Now print values.
        */
-      const Array<Array<double> >& sdata =
+      const std::vector<std::vector<double> >& sdata =
          d_global_proc_stat_data[proc_stat_id];
-      for (s = 0; s < sdata.getSize(); s++) {
+      for (s = 0; s < static_cast<int>(sdata.size()); s++) {
          os << s << "\t";
          for (n = 0; n < nnodes; n++) {
             /*
@@ -749,9 +749,9 @@ Statistician::printGlobalProcStatDataFormatted(
       /*
        * Now print values.
        */
-      const Array<Array<double> >& sdata =
+      const std::vector<std::vector<double> >& sdata =
          d_global_proc_stat_data[proc_stat_id];
-      for (s = 0; s < sdata.getSize(); s++) {
+      for (s = 0; s < static_cast<int>(sdata.size()); s++) {
          os << s << "\t";
          /*
           * Write out data only if data entry is NOT an "empty"
@@ -811,9 +811,9 @@ Statistician::getGlobalPatchStatSequenceLength(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_data.size()));
 
-      seq_len = d_global_patch_stat_data[patch_stat_id].getSize();
+      seq_len = static_cast<int>(d_global_patch_stat_data[patch_stat_id].size());
    }
 
    return seq_len;
@@ -845,12 +845,12 @@ Statistician::getGlobalPatchStatNumberPatches(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size()));
 
       num_patches =
-         d_global_patch_stat_data[patch_stat_id][seq_num].getSize();
+         static_cast<int>(d_global_patch_stat_data[patch_stat_id][seq_num].size());
    }
 
    return num_patches;
@@ -882,12 +882,11 @@ Statistician::getGlobalPatchStatPatchMapping(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_mapping.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_mapping.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_mapping[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_mapping[patch_stat_id].size()));
       TBOX_ASSERT(patch_num >= 0 &&
-         patch_num < d_global_patch_stat_mapping[patch_stat_id][seq_num].
-         getSize());
+         patch_num < static_cast<int>(d_global_patch_stat_mapping[patch_stat_id][seq_num].size()));
 
       mapping =
          d_global_patch_stat_mapping[patch_stat_id][seq_num][patch_num];
@@ -921,12 +920,11 @@ Statistician::getGlobalPatchStatValue(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size()));
       TBOX_ASSERT(patch_num >= 0 &&
-         patch_num < d_global_patch_stat_data[patch_stat_id][seq_num].
-         getSize());
+         patch_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id][seq_num].size()));
       val = d_global_patch_stat_data[patch_stat_id][seq_num][patch_num];
    }
 
@@ -958,12 +956,12 @@ Statistician::getGlobalPatchStatSum(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size()));
 
-      int num_patches = d_global_patch_stat_data[patch_stat_id][seq_num].
-         getSize();
+      int num_patches =
+         static_cast<int>(d_global_patch_stat_data[patch_stat_id][seq_num].size());
 
       for (int np = 0; np < num_patches; np++) {
          sum += d_global_patch_stat_data[patch_stat_id][seq_num][np];
@@ -997,12 +995,12 @@ Statistician::getGlobalPatchStatMax(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size()));
 
-      int num_patches = d_global_patch_stat_data[patch_stat_id][seq_num].
-         getSize();
+      int num_patches =
+         static_cast<int>(d_global_patch_stat_data[patch_stat_id][seq_num].size());
       double val = pmax;
       for (int np = 0; np < num_patches; np++) {
          val = d_global_patch_stat_data[patch_stat_id][seq_num][np];
@@ -1038,12 +1036,12 @@ Statistician::getGlobalPatchStatMaxPatchId(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size()));
 
-      int num_patches = d_global_patch_stat_data[patch_stat_id][seq_num].
-         getSize();
+      int num_patches =
+         static_cast<int>(d_global_patch_stat_data[patch_stat_id][seq_num].size());
       double val = pmax;
       for (int np = 0; np < num_patches; np++) {
          val = d_global_patch_stat_data[patch_stat_id][seq_num][np];
@@ -1081,12 +1079,12 @@ Statistician::getGlobalPatchStatMin(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size()));
 
-      int num_patches = d_global_patch_stat_data[patch_stat_id][seq_num].
-         getSize();
+      int num_patches =
+         static_cast<int>(d_global_patch_stat_data[patch_stat_id][seq_num].size());
       double val = pmin;
       for (int np = 0; np < num_patches; np++) {
          val = d_global_patch_stat_data[patch_stat_id][seq_num][np];
@@ -1122,12 +1120,12 @@ Statistician::getGlobalPatchStatMinPatchId(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size()));
 
-      int num_patches = d_global_patch_stat_data[patch_stat_id][seq_num].
-         getSize();
+      int num_patches =
+         static_cast<int>(d_global_patch_stat_data[patch_stat_id][seq_num].size());
       double val = pmin;
       for (int np = 0; np < num_patches; np++) {
          val = d_global_patch_stat_data[patch_stat_id][seq_num][np];
@@ -1167,11 +1165,11 @@ Statistician::getGlobalPatchStatProcessorSum(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_proc_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size()));
       TBOX_ASSERT(processor_id >= 0 &&
          processor_id < mpi.getSize());
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
+        seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size()));
       sum =
          d_global_patch_stat_proc_data[patch_stat_id][seq_num][processor_id];
    }
@@ -1203,9 +1201,9 @@ Statistician::getGlobalPatchStatProcessorSumMax(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_proc_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size()));
 
       double val = pmax;
       for (int np = 0; np < mpi.getSize(); np++) {
@@ -1242,9 +1240,9 @@ Statistician::getGlobalPatchStatProcessorSumMaxId(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_proc_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size()));
 
       double val = pmax;
       for (int np = 0; np < mpi.getSize(); np++) {
@@ -1282,9 +1280,9 @@ Statistician::getGlobalPatchStatProcessorSumMin(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_proc_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size()));
 
       double val = pmin;
 
@@ -1322,9 +1320,9 @@ Statistician::getGlobalPatchStatProcessorSumMinId(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_proc_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size()));
 
       double val = pmin;
       for (int np = 0; np < mpi.getSize(); np++) {
@@ -1362,9 +1360,9 @@ Statistician::getGlobalPatchStatNumberPatchesOnProc(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size()));
       TBOX_ASSERT(proc_id >= 0 && proc_id < mpi.getSize());
 
       num_patches =
@@ -1399,16 +1397,15 @@ Statistician::getGlobalPatchStatMaxPatchesPerProc(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_proc_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size()));
 
       int val = pmax;
-      Array<int> patches_per_proc;
-      patches_per_proc.resizeArray(mpi.getSize());
+      std::vector<int> patches_per_proc(mpi.getSize());
 
-      int num_patches = d_global_patch_stat_data[patch_stat_id][seq_num].
-         getSize();
+      int num_patches =
+         static_cast<int>(d_global_patch_stat_data[patch_stat_id][seq_num].size());
 
       int np, p;
       for (np = 0; np < mpi.getSize(); np++) {
@@ -1454,16 +1451,15 @@ Statistician::getGlobalPatchStatMaxPatchesPerProcId(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_proc_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size()));
 
       int val = pmax;
-      Array<int> patches_per_proc;
-      patches_per_proc.resizeArray(mpi.getSize());
+      std::vector<int> patches_per_proc(mpi.getSize());
 
-      int num_patches = d_global_patch_stat_data[patch_stat_id][seq_num].
-         getSize();
+      int num_patches =
+         static_cast<int>(d_global_patch_stat_data[patch_stat_id][seq_num].size());
 
       int np, p;
       for (np = 0; np < mpi.getSize(); np++) {
@@ -1511,20 +1507,19 @@ Statistician::getGlobalPatchStatMinPatchesPerProc(
             << "stats data BEFORE this metho." << std::endl);
       }
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_proc_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size()));
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size()));
 
       int val = pmin;
-      Array<int> patches_per_proc;
-      patches_per_proc.resizeArray(mpi.getSize());
+      std::vector<int> patches_per_proc(mpi.getSize());
 
-      int num_patches = d_global_patch_stat_data[patch_stat_id][seq_num].
-         getSize();
+      int num_patches =
+         static_cast<int>(d_global_patch_stat_data[patch_stat_id][seq_num].size());
 
       int np, p;
       for (np = 0; np < mpi.getSize(); np++) {
@@ -1572,16 +1567,15 @@ Statistician::getGlobalPatchStatMinPatchesPerProcId(
       }
 
       TBOX_ASSERT(patch_stat_id >= 0 &&
-         patch_stat_id < d_global_patch_stat_proc_data.getSize());
+         patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size()));
       TBOX_ASSERT(seq_num >= 0 &&
-         seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
+         seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size()));
 
       int val = pmin;
-      Array<int> patches_per_proc;
-      patches_per_proc.resizeArray(mpi.getSize());
+      std::vector<int> patches_per_proc(mpi.getSize());
 
-      int num_patches = d_global_patch_stat_data[patch_stat_id][seq_num].
-         getSize();
+      int num_patches =
+         static_cast<int>(d_global_patch_stat_data[patch_stat_id][seq_num].size());
 
       int np, p;
       for (np = 0; np < mpi.getSize(); np++) {
@@ -1636,14 +1630,14 @@ Statistician::printGlobalPatchStatData(
       os << "\n   " << patch_stat_id << ":    "
          << d_patch_statistics[patch_stat_id]->getName() << std::endl;
 
-      const Array<Array<double> >& sdata =
+      const std::vector<std::vector<double> >& sdata =
          d_global_patch_stat_data[patch_stat_id];
-      const Array<Array<int> >& spmap =
+      const std::vector<std::vector<int> >& spmap =
          d_global_patch_stat_mapping[patch_stat_id];
-      for (int ipsl = 0; ipsl < sdata.getSize(); ipsl++) {
+      for (int ipsl = 0; ipsl < static_cast<int>(sdata.size()); ipsl++) {
          os << "      Seq # " << ipsl << std::endl;
          os << "         patch[proc]: value" << std::endl;
-         for (int ip = 0; ip < sdata[ipsl].getSize(); ip++) {
+         for (int ip = 0; ip < static_cast<int>(sdata[ipsl].size()); ip++) {
             /*
              * Write out data only if data entry is NOT an "empty"
              * entry, defined by the Statistic::s_empty_seq_tag_entry
@@ -1699,10 +1693,10 @@ Statistician::printGlobalPatchStatDataFormatted(
       /*
        * Print tab-separated table header
        */
-      const Array<Array<double> >& sdata =
+      const std::vector<std::vector<double> >& sdata =
          d_global_patch_stat_data[patch_stat_id];
-      for (s = 0; s < sdata.getSize(); s++) {
-         int np_at_s = sdata[s].getSize();
+      for (s = 0; s < static_cast<int>(sdata.size()); s++) {
+         int np_at_s = static_cast<int>(sdata[s].size());
          npatches = (np_at_s > npatches ? np_at_s : npatches);
       }
 
@@ -1723,9 +1717,9 @@ Statistician::printGlobalPatchStatDataFormatted(
       /*
        * Now print values.
        */
-      for (s = 0; s < sdata.getSize(); s++) {
+      for (s = 0; s < static_cast<int>(sdata.size()); s++) {
          os << s << "\t";
-         for (n = 0; n < sdata[s].getSize(); n++) {
+         for (n = 0; n < static_cast<int>(sdata[s].size()); n++) {
             /*
              * Write out data only if data entry is NOT an "empty"
              * entry, defined by the Statistic::s_empty_seq_tag_entry
@@ -1760,12 +1754,12 @@ Statistician::finalize(
    int nnodes = mpi.getSize();
    int my_rank = mpi.getRank();
 
-   d_global_proc_stat_data.resizeArray(0);
-   d_global_patch_stat_data.resizeArray(0);
-   d_global_patch_stat_proc_data.resizeArray(0);
-   d_global_patch_stat_mapping.resizeArray(0);
+   d_global_proc_stat_data.resize(0);
+   d_global_patch_stat_data.resize(0);
+   d_global_patch_stat_proc_data.resize(0);
+   d_global_patch_stat_mapping.resize(0);
 
-   Array<int> total_patches;
+   std::vector<int> total_patches;
    checkStatsForConsistency(total_patches);
 
    reduceGlobalStatistics();
@@ -1786,49 +1780,46 @@ Statistician::finalize(
        * These are only needed on processor 0 but we construct them on
        * all processors to avoid compiler warnings.
        */
-      Array<boost::shared_ptr<Statistic> >* global_proc_stats =
+      std::vector<boost::shared_ptr<Statistic> >* global_proc_stats =
          d_num_proc_stats > 0
-         ? new Array<boost::shared_ptr<Statistic> >[d_num_proc_stats]
+	? new std::vector<boost::shared_ptr<Statistic> >[d_num_proc_stats]
          : 0;
-      Array<boost::shared_ptr<Statistic> >* global_patch_stats =
+      std::vector<boost::shared_ptr<Statistic> >* global_patch_stats =
          d_num_patch_stats > 0
-         ? new Array<boost::shared_ptr<Statistic> >[d_num_patch_stats]
+	? new std::vector<boost::shared_ptr<Statistic> >[d_num_patch_stats]
          : 0;
 
       if (my_rank == 0) {
 
-         d_global_proc_stat_data.resizeArray(d_num_proc_stats);
+         d_global_proc_stat_data.resize(d_num_proc_stats);
          for (is = 0; is < d_num_proc_stats; is++) {
 
             seq_len = d_proc_statistics[is]->getStatSequenceLength();
-            d_global_proc_stat_data[is].resizeArray(seq_len);
+            d_global_proc_stat_data[is].resize(seq_len);
 
             for (ip = 0; ip < seq_len; ip++) {
-               d_global_proc_stat_data[is][ip].resizeArray(nnodes);
+               d_global_proc_stat_data[is][ip].resize(nnodes);
             }
 
          }
 
-         d_global_patch_stat_data.resizeArray(d_num_patch_stats);
-         d_global_patch_stat_mapping.resizeArray(d_num_patch_stats);
-         d_global_patch_stat_proc_data.resizeArray(d_num_patch_stats);
+         d_global_patch_stat_data.resize(d_num_patch_stats);
+         d_global_patch_stat_mapping.resize(d_num_patch_stats);
+         d_global_patch_stat_proc_data.resize(d_num_patch_stats);
 
          ipsl = 0;
          for (is = 0; is < d_num_patch_stats; is++) {
 
             seq_len = d_patch_statistics[is]->getStatSequenceLength();
-            d_global_patch_stat_data[is].resizeArray(seq_len);
-            d_global_patch_stat_mapping[is].resizeArray(seq_len);
-            d_global_patch_stat_proc_data[is].resizeArray(seq_len);
+            d_global_patch_stat_data[is].resize(seq_len);
+            d_global_patch_stat_mapping[is].resize(seq_len);
+            d_global_patch_stat_proc_data[is].resize(seq_len);
 
             for (ip = 0; ip < seq_len; ip++) {
                int npatches = total_patches[ipsl];
-               d_global_patch_stat_data[is][ip].
-               resizeArray(npatches);
-               d_global_patch_stat_mapping[is][ip].
-               resizeArray(npatches);
-               d_global_patch_stat_proc_data[is][ip].
-               resizeArray(nnodes);
+               d_global_patch_stat_data[is][ip].resize(npatches);
+               d_global_patch_stat_mapping[is][ip].resize(npatches);
+               d_global_patch_stat_proc_data[is][ip].resize(nnodes);
                ipsl++;
             }
 
@@ -1859,7 +1850,7 @@ Statistician::finalize(
                for (is = 0; is < d_num_proc_stats; is++) {
                   const std::string& sname = d_proc_statistics[is]->getName();
                   const std::string& stype = d_proc_statistics[is]->getType();
-                  global_proc_stats[is].resizeArray(nnodes);
+                  global_proc_stats[is].resize(nnodes);
                   for (ip = 1; ip < nnodes; ip++) {
                      global_proc_stats[is][ip].reset(
                         new Statistic(sname, stype, is));
@@ -1898,7 +1889,7 @@ Statistician::finalize(
                for (is = 0; is < d_num_patch_stats; is++) {
                   const std::string& sname = d_patch_statistics[is]->getName();
                   const std::string& stype = d_patch_statistics[is]->getType();
-                  global_patch_stats[is].resizeArray(nnodes);
+                  global_patch_stats[is].resize(nnodes);
                   for (ip = 1; ip < nnodes; ip++) {
                      global_patch_stats[is][ip].reset(
                         new Statistic(sname, stype, is));
@@ -1941,7 +1932,7 @@ Statistician::finalize(
 
          for (is = 0; is < d_num_proc_stats; is++) {
 
-            Array<Array<double> >& sdata =
+            std::vector<std::vector<double> >& sdata =
                d_global_proc_stat_data[is];
 
             for (ip = 0; ip < nnodes; ip++) {
@@ -1960,9 +1951,9 @@ Statistician::finalize(
 
          for (is = 0; is < d_num_patch_stats; is++) {
 
-            Array<Array<double> >& sdata =
+            std::vector<std::vector<double> >& sdata =
                d_global_patch_stat_data[is];
-            Array<Array<int> >& spmap =
+            std::vector<std::vector<int> >& spmap =
                d_global_patch_stat_mapping[is];
 
             for (ip = 0; ip < nnodes; ip++) {
@@ -1996,16 +1987,16 @@ Statistician::finalize(
 
          for (is = 0; is < d_num_patch_stats; is++) {
 
-            const Array<Array<double> >& pdata =
+            const std::vector<std::vector<double> >& pdata =
                d_global_patch_stat_data[is];
 
-            for (int s = 0; s < pdata.getSize(); s++) {
+            for (int s = 0; s < static_cast<int>(pdata.size()); s++) {
 
                for (ip = 0; ip < nnodes; ip++) {
                   d_global_patch_stat_proc_data[is][s][ip] = 0.;
                }
 
-               for (int p = 0; p < pdata[s].getSize(); p++) {
+               for (int p = 0; p < static_cast<int>(pdata[s].size()); p++) {
                   ip = d_global_patch_stat_mapping[is][s][p];
                   d_global_patch_stat_proc_data[is][s][ip] +=
                      d_global_patch_stat_data[is][s][p];
@@ -2075,16 +2066,16 @@ Statistician::reduceGlobalStatistics()
          &imin_proc_stat_values[0]);
    }
 
-   d_global_proc_stat_sum.setNull();
-   d_global_proc_stat_sum.resizeArray(d_num_proc_stats);
-   d_global_proc_stat_max.setNull();
-   d_global_proc_stat_max.resizeArray(d_num_proc_stats);
-   d_global_proc_stat_min.setNull();
-   d_global_proc_stat_min.resizeArray(d_num_proc_stats);
-   d_global_proc_stat_imax.setNull();
-   d_global_proc_stat_imax.resizeArray(d_num_proc_stats);
-   d_global_proc_stat_imin.setNull();
-   d_global_proc_stat_imin.resizeArray(d_num_proc_stats);
+   d_global_proc_stat_sum.clear();
+   d_global_proc_stat_sum.resize(d_num_proc_stats);
+   d_global_proc_stat_max.clear();
+   d_global_proc_stat_max.resize(d_num_proc_stats);
+   d_global_proc_stat_min.clear();
+   d_global_proc_stat_min.resize(d_num_proc_stats);
+   d_global_proc_stat_imax.clear();
+   d_global_proc_stat_imax.resize(d_num_proc_stats);
+   d_global_proc_stat_imin.clear();
+   d_global_proc_stat_imin.resize(d_num_proc_stats);
 
    size_t isum(0);
    size_t imax(0);
@@ -2093,28 +2084,28 @@ Statistician::reduceGlobalStatistics()
       const Statistic& stat(*d_proc_statistics[istat]);
       if (stat.getStatSequenceLength() != 0) {
 
-         d_global_proc_stat_sum[istat].resizeArray(stat.getStatSequenceLength());
-         memcpy(d_global_proc_stat_sum[istat].getPointer(),
+         d_global_proc_stat_sum[istat].resize(stat.getStatSequenceLength());
+         memcpy(&d_global_proc_stat_sum[istat][0],
             &sum_proc_stat_values[isum],
             sizeof(double) * stat.getStatSequenceLength());
          isum += stat.getStatSequenceLength();
 
-         d_global_proc_stat_max[istat].resizeArray(stat.getStatSequenceLength());
-         d_global_proc_stat_imax[istat].resizeArray(stat.getStatSequenceLength());
-         memcpy(d_global_proc_stat_max[istat].getPointer(),
+         d_global_proc_stat_max[istat].resize(stat.getStatSequenceLength());
+         d_global_proc_stat_imax[istat].resize(stat.getStatSequenceLength());
+         memcpy(&d_global_proc_stat_max[istat][0],
             &max_proc_stat_values[imax],
             sizeof(double) * stat.getStatSequenceLength());
-         memcpy(d_global_proc_stat_imax[istat].getPointer(),
+         memcpy(&d_global_proc_stat_imax[istat][0],
             &imax_proc_stat_values[imax],
             sizeof(int) * stat.getStatSequenceLength());
          imax += stat.getStatSequenceLength();
 
-         d_global_proc_stat_min[istat].resizeArray(stat.getStatSequenceLength());
-         d_global_proc_stat_imin[istat].resizeArray(stat.getStatSequenceLength());
-         memcpy(d_global_proc_stat_min[istat].getPointer(),
+         d_global_proc_stat_min[istat].resize(stat.getStatSequenceLength());
+         d_global_proc_stat_imin[istat].resize(stat.getStatSequenceLength());
+         memcpy(&d_global_proc_stat_min[istat][0],
             &min_proc_stat_values[imin],
             sizeof(double) * stat.getStatSequenceLength());
-         memcpy(d_global_proc_stat_imin[istat].getPointer(),
+         memcpy(&d_global_proc_stat_imin[istat][0],
             &imin_proc_stat_values[imin],
             sizeof(int) * stat.getStatSequenceLength());
          imin += stat.getStatSequenceLength();
@@ -2141,9 +2132,9 @@ Statistician::reduceGlobalStatistics()
 
 void
 Statistician::checkStatsForConsistency(
-   Array<int>& total_patches)
+   std::vector<int>& total_patches)
 {
-   TBOX_ASSERT(total_patches.getSize() == 0);
+   TBOX_ASSERT(total_patches.size() == 0);
 
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
@@ -2248,7 +2239,7 @@ Statistician::checkStatsForConsistency(
     * for each patch statitic.
     */
 
-   total_patches.resizeArray(n_patch_stat_seq_items);
+   total_patches.resize(n_patch_stat_seq_items);
    if (d_num_patch_stats > 0) {
       int ipsl = 0;
       for (is = 0; is < d_num_patch_stats; is++) {
@@ -2261,10 +2252,10 @@ Statistician::checkStatsForConsistency(
       }
 
       if (mpi.getSize() > 1) {
-         std::vector<int> total_patches1(total_patches.getPointer(),
-                                         total_patches.getPointer() + total_patches.size());
+         std::vector<int> total_patches1(&total_patches[0],
+                                         &total_patches[0] + n_patch_stat_seq_items);
          mpi.Allreduce(&total_patches1[0], &total_patches[0],
-            total_patches.size(), MPI_INT, MPI_SUM);
+            n_patch_stat_seq_items, MPI_INT, MPI_SUM);
       }
 
    }
@@ -2611,8 +2602,8 @@ void StatisticRestartDatabase::putToRestart(
     * Store the name of each stat in the string arrays
     * "proc_stat_names" and "patch_stat_names".
     */
-   Array<std::string> proc_stat_names(number_of_procstats);
-   Array<std::string> patch_stat_names(number_of_patchstats);
+   std::vector<std::string> proc_stat_names(number_of_procstats);
+   std::vector<std::string> patch_stat_names(number_of_patchstats);
 
    /*
     * Write procstat and patchstats to database.
@@ -2640,11 +2631,11 @@ void StatisticRestartDatabase::putToRestart(
     * which to read the stat info.
     */
    if (number_of_procstats > 0) {
-      restart_db->putStringArray("proc_stat_names", proc_stat_names);
+      restart_db->putStringVector("proc_stat_names", proc_stat_names);
    }
 
    if (number_of_patchstats > 0) {
-      restart_db->putStringArray("patch_stat_names", patch_stat_names);
+      restart_db->putStringVector("patch_stat_names", patch_stat_names);
    }
 }
 
@@ -2674,13 +2665,13 @@ void StatisticRestartDatabase::getFromRestart()
    /*
     * Read in the list of sub-database names.
     */
-   Array<std::string> proc_stat_names;
+   std::vector<std::string> proc_stat_names;
    if (number_of_procstats > 0) {
-      proc_stat_names = db->getStringArray("proc_stat_names");
+      proc_stat_names = db->getStringVector("proc_stat_names");
    }
-   Array<std::string> patch_stat_names;
+   std::vector<std::string> patch_stat_names;
    if (number_of_patchstats > 0) {
-      patch_stat_names = db->getStringArray("patch_stat_names");
+      patch_stat_names = db->getStringVector("patch_stat_names");
    }
 
    /*

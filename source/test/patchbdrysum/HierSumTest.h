@@ -34,6 +34,7 @@
 #include "SAMRAI/appu/VisItDataWriter.h"\
 
 #include "boost/shared_ptr.hpp"
+#include <vector>
 
 using namespace std;
 using namespace SAMRAI;
@@ -270,9 +271,9 @@ private:
    void
    setBoundaryConditions(
       Patch& patch,
-      const tbox::Array<BoundaryBox>& node_bdry,
-      const tbox::Array<BoundaryBox>& edge_bdry,
-      const tbox::Array<BoundaryBox>& face_bdry,
+      const std::vector<BoundaryBox>& node_bdry,
+      const std::vector<BoundaryBox>& edge_bdry,
+      const std::vector<BoundaryBox>& face_bdry,
       const int cell_data_id);
 
    /*

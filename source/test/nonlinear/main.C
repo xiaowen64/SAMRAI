@@ -61,6 +61,8 @@ using namespace std;
 
 #include "boost/shared_ptr.hpp"
 
+#include <vector>
+
 using namespace SAMRAI;
 
 /*!
@@ -407,21 +409,22 @@ int main(
        * Tag buffers are passed to the gridding algorithm for buffering
        * tagged cells before new levels are created.
        */
-      tbox::Array<int> tag_buffer(patch_hierarchy->getMaxNumberOfLevels());
+      std::vector<int> tag_buffer(patch_hierarchy->getMaxNumberOfLevels());
       for (int ln = 0; ln < patch_hierarchy->getMaxNumberOfLevels(); ln++) {
          tag_buffer[ln] = 0;
       }
       if (main_db->keyExists("tag_buffer")) {
-         tbox::Array<int> input_tags = main_db->getIntegerArray("tag_buffer");
-         if (input_tags.getSize() > 0) {
+         std::vector<int> input_tags = main_db->getIntegerVector("tag_buffer");
+         if (input_tags.size() > 0) {
             for (int ln0 = 0; ln0 < patch_hierarchy->getMaxNumberOfLevels();
                  ln0++) {
-               if (input_tags.getSize() > ln0) {
+               if (static_cast<int>(input_tags.size()) > ln0) {
                   tag_buffer[ln0] = ((input_tags[ln0] > 0) ?
                                      input_tags[ln0] : 0);
                } else {
-                  tag_buffer[ln0] = ((input_tags[input_tags.getSize() - 1] > 0)
-                                     ? input_tags[input_tags.getSize() - 1] : 0);
+                  int input_tags_size = static_cast<int>(input_tags.size());
+                  tag_buffer[ln0] = ((input_tags[input_tags_size - 1] > 0)
+                                     ? input_tags[input_tags_size - 1] : 0);
                }
             }
          }

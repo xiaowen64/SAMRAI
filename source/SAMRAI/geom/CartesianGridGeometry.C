@@ -609,7 +609,7 @@ CartesianGridGeometry::getFromInput(
    else if (input_db) {
       bool read_on_restart =
          input_db->getBoolWithDefault("read_on_restart", false);
-      int num_keys = input_db->getAllKeys().getSize();
+      int num_keys = static_cast<int>(input_db->getAllKeys().size());
       if (num_keys > 0 && read_on_restart) {
          TBOX_WARNING(
             "CartesianGridGeometry::getFromInput() warning...\n"

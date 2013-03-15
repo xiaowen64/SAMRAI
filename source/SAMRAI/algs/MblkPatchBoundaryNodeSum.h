@@ -28,6 +28,7 @@
 
 #include "boost/shared_ptr.hpp"
 #include <string>
+#include <vector>
 
 namespace SAMRAI {
 namespace algs {
@@ -181,8 +182,8 @@ private:
    void
    copyNodeToOuternodeOnLevel(
       const boost::shared_ptr<hier::PatchLevel>& level,
-      const tbox::Array<int>& node_data_id,
-      const tbox::Array<int>& onode_data_id) const;
+      const std::vector<int>& node_data_id,
+      const std::vector<int>& onode_data_id) const;
 
    /*
     * Private member function to copy outernode data to node data
@@ -191,8 +192,8 @@ private:
    void
    copyOuternodeToNodeOnLevel(
       const boost::shared_ptr<hier::PatchLevel>& level,
-      const tbox::Array<int>& onode_data_id,
-      const tbox::Array<int>& node_data_id) const;
+      const std::vector<int>& onode_data_id,
+      const std::vector<int>& node_data_id) const;
 
    /*
     * Static members for managing shared temporary data among multiple
@@ -200,8 +201,8 @@ private:
     */
    static int s_instance_counter;
    // These arrays are indexed [data depth][number of variables with depth]
-   static tbox::Array<tbox::Array<int> > s_onode_src_id_array;
-   static tbox::Array<tbox::Array<int> > s_onode_dst_id_array;
+   static std::vector<std::vector<int> > s_onode_src_id_array;
+   static std::vector<std::vector<int> > s_onode_dst_id_array;
 
    enum PATCH_BDRY_NODE_SUM_DATA_ID { ID_UNDEFINED = -1 };
 
@@ -211,23 +212,23 @@ private:
    int d_num_reg_sum;
 
    // These arrays are indexed [variable registration sequence number]
-   tbox::Array<int> d_user_node_data_id;
-   tbox::Array<int> d_user_node_depth;
+   std::vector<int> d_user_node_data_id;
+   std::vector<int> d_user_node_depth;
 
    // These arrays are indexed [data depth]
-   tbox::Array<int> d_num_registered_data_by_depth;
+   std::vector<int> d_num_registered_data_by_depth;
 
    /*
     * Node-centered variables and patch data indices used as internal work
     * quantities.
     */
    // These arrays are indexed [variable registration sequence number]
-   tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_onode_src_variable;
-   tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_onode_dst_variable;
+   std::vector<boost::shared_ptr<hier::Variable> > d_tmp_onode_src_variable;
+   std::vector<boost::shared_ptr<hier::Variable> > d_tmp_onode_dst_variable;
 
    // These arrays are indexed [variable registration sequence number]
-   tbox::Array<int> d_onode_src_id;
-   tbox::Array<int> d_onode_dst_id;
+   std::vector<int> d_onode_src_id;
+   std::vector<int> d_onode_dst_id;
 
    /*
     * Sets of indices for temporary variables to expedite
@@ -247,7 +248,7 @@ private:
 
    boost::shared_ptr<xfer::RefineTransactionFactory> d_sum_transaction_factory;
 
-   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> >
+   std::vector<boost::shared_ptr<xfer::RefineSchedule> >
    d_single_level_sum_schedule;
 
 };

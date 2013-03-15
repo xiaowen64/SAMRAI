@@ -126,7 +126,7 @@ namespace mesh {
  *   </tr>
  *   <tr>
  *     <td>max_workload_factor</td>
- *     <td>Array<double></td>
+ *     <td>array of doubles</td>
  *     <td>none</td>
  *     <td>0.0 <= all values</td>
  *     <td>opt</td>
@@ -134,7 +134,7 @@ namespace mesh {
  *   </tr>
  *   <tr>
  *     <td>workload_tolerance</td>
- *     <td>Array<double></td>
+ *     <td>array of doubles</td>
  *     <td>none</td>
  *     <td>0.0 <= all values < 1.0</td>
  *     <td>opt</td>
@@ -515,7 +515,7 @@ private:
    void
    chopUniformSingleBox(
       hier::BoxContainer& out_boxes,
-      tbox::Array<double>& out_workloads,
+      std::vector<double>& out_workloads,
       const hier::Box& in_box,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
@@ -530,7 +530,7 @@ private:
    void
    chopBoxesWithUniformWorkload(
       hier::BoxContainer& out_boxes,
-      tbox::Array<double>& out_workloads,
+      std::vector<double>& out_workloads,
       const hier::BoxContainer& in_boxes,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int level_number,
@@ -547,7 +547,7 @@ private:
    void
    chopBoxesWithNonuniformWorkload(
       hier::BoxContainer& out_boxes,
-      tbox::Array<double>& out_workloads,
+      std::vector<double>& out_workloads,
       const hier::BoxContainer& in_boxes,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int level_number,
@@ -567,7 +567,7 @@ private:
    binPackBoxes(
       hier::BoxContainer& boxes,
       hier::ProcessorMapping& mapping,
-      tbox::Array<double>& workloads,
+      std::vector<double>& workloads,
       const std::string& bin_pack_method) const;
 
    /*!
@@ -580,14 +580,14 @@ private:
     * If all processors input arrays have zero length, an error
     * is thrown.
     *
-    * @pre box_list_in.size() == weights_in.getSize()
+    * @pre box_list_in.size() == weights_in.size()
     */
    void
    exchangeBoxContainersAndWeightArrays(
       const hier::BoxContainer& box_list_in,
-      const tbox::Array<double>& weights_in,
+      const std::vector<double>& weights_in,
       hier::BoxContainer& box_list_out,
-      tbox::Array<double>& weights_out,
+      std::vector<double>& weights_out,
       const tbox::SAMRAI_MPI& mpi) const;
 
    /*
@@ -598,7 +598,7 @@ private:
       int level_number) const
    {
       TBOX_ASSERT(level_number >= 0);
-      return (level_number < d_workload_data_id.getSize() ?
+      return (level_number < static_cast<int>(d_workload_data_id.size()) ?
               d_workload_data_id[level_number] :
               d_master_workload_data_id);
    }
@@ -608,7 +608,7 @@ private:
       int level_number) const
    {
       TBOX_ASSERT(level_number >= 0);
-      return (level_number < d_max_workload_factor.getSize() ?
+      return (level_number < static_cast<int>(d_max_workload_factor.size()) ?
               d_max_workload_factor[level_number] :
               d_master_max_workload_factor);
    }
@@ -618,7 +618,7 @@ private:
       int level_number) const
    {
       TBOX_ASSERT(level_number >= 0);
-      return (level_number < d_workload_tolerance.getSize() ?
+      return (level_number < static_cast<int>(d_workload_tolerance.size()) ?
               d_workload_tolerance[level_number] :
               d_master_workload_tolerance);
    }
@@ -628,7 +628,7 @@ private:
       int level_number) const
    {
       TBOX_ASSERT(level_number >= 0);
-      return (level_number < d_bin_pack_method.getSize() ?
+      return (level_number < static_cast<int>(d_bin_pack_method.size()) ?
               d_bin_pack_method[level_number] :
               d_master_bin_pack_method);
    }
@@ -684,10 +684,10 @@ private:
     * Values for workload estimate data, workload factor, and bin pack method
     * used on individual levels when specified as such.
     */
-   tbox::Array<int> d_workload_data_id;
-   tbox::Array<double> d_max_workload_factor;
-   tbox::Array<double> d_workload_tolerance;
-   tbox::Array<std::string> d_bin_pack_method;
+   std::vector<int> d_workload_data_id;
+   std::vector<double> d_max_workload_factor;
+   std::vector<double> d_workload_tolerance;
+   std::vector<std::string> d_bin_pack_method;
 
    bool d_opt_for_single_box;
 

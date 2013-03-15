@@ -319,7 +319,7 @@ int main(
             /*
              * SideOverlap test 
              */
-            tbox::Array<hier::BoxContainer> dst_side_boxes(dim2.getValue());
+            std::vector<hier::BoxContainer> dst_side_boxes(dim2.getValue());
             for (int normal = 0; normal < dim2.getValue(); normal++) {
 
                for (hier::BoxContainer::iterator di = dst_boxes.begin();
@@ -365,7 +365,7 @@ int main(
             /*
              * FaceOverlap test 
              */
-            tbox::Array<hier::BoxContainer> dst_face_boxes(dim2.getValue());
+            std::vector<hier::BoxContainer> dst_face_boxes(dim2.getValue());
             for (int normal = 0; normal < dim2.getValue(); normal++) {
 
                for (hier::BoxContainer::iterator di = dst_boxes.begin();
@@ -411,7 +411,7 @@ int main(
             /*
              * EdgeOverlap test 
              */
-            tbox::Array<hier::BoxContainer> dst_edge_boxes(dim2.getValue());
+            std::vector<hier::BoxContainer> dst_edge_boxes(dim2.getValue());
             for (int axis = 0; axis < dim2.getValue(); axis++) {
 
                for (hier::BoxContainer::iterator di = dst_boxes.begin();
@@ -553,7 +553,7 @@ int main(
             /*
              * SideOverlap test 
              */
-            tbox::Array<hier::BoxContainer> dst_side_boxes(dim3.getValue());
+            std::vector<hier::BoxContainer> dst_side_boxes(dim3.getValue());
             for (int normal = 0; normal < dim3.getValue(); normal++) {
 
                for (hier::BoxContainer::iterator di = dst_boxes.begin();
@@ -599,7 +599,7 @@ int main(
             /*
              * FaceOverlap test 
              */
-            tbox::Array<hier::BoxContainer> dst_face_boxes(dim3.getValue());
+            std::vector<hier::BoxContainer> dst_face_boxes(dim3.getValue());
             for (int normal = 0; normal < dim3.getValue(); normal++) {
 
                for (hier::BoxContainer::iterator di = dst_boxes.begin();
@@ -645,7 +645,7 @@ int main(
             /*
              * EdgeOverlap test 
              */
-            tbox::Array<hier::BoxContainer> dst_edge_boxes(dim3.getValue());
+            std::vector<hier::BoxContainer> dst_edge_boxes(dim3.getValue());
             for (int axis = 0; axis < dim3.getValue(); axis++) {
 
                for (hier::BoxContainer::iterator di = dst_boxes.begin();

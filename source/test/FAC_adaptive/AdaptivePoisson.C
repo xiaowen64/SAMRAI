@@ -559,9 +559,9 @@ int AdaptivePoisson::registerVariablesWithPlotter(
       1.0,
       "CELL");
 
-   tbox::Array<string> expression_keys(1);
-   tbox::Array<string> expressions(1);
-   tbox::Array<string> expression_types(1);
+   std::vector<string> expression_keys(1);
+   std::vector<string> expressions(1);
+   std::vector<string> expression_types(1);
 
    {
       expression_keys[0] = "Error";

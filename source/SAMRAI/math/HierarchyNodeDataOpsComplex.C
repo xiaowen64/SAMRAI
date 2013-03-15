@@ -81,7 +81,7 @@ HierarchyNodeDataOpsComplex::resetLevels(
    d_coarsest_level = coarsest_level;
    d_finest_level = finest_level;
 
-   d_nonoverlapping_node_boxes.resizeArray(d_finest_level + 1);
+   d_nonoverlapping_node_boxes.resize(d_finest_level + 1);
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -751,7 +751,8 @@ HierarchyNodeDataOpsComplex::numberOfEntries(
             d_hierarchy->getPatchLevel(ln));
          const int npatches = level->getNumberOfPatches();
 
-         TBOX_ASSERT(npatches == d_nonoverlapping_node_boxes[ln].getSize());
+         TBOX_ASSERT(npatches ==
+                     static_cast<int>(d_nonoverlapping_node_boxes[ln].size()));
 
          for (int il = 0; il < npatches; il++) {
             hier::BoxContainer::const_iterator lb =

@@ -317,7 +317,7 @@ EdgeData<TYPE>::copyWithRotation(
             const int depth = ((getDepth() < src.getDepth()) ?
                                getDepth() : src.getDepth());
 
-	    hier::Box::iterator ciend(copybox.end());
+            hier::Box::iterator ciend(copybox.end());
             for (hier::Box::iterator ci(copybox.begin()); ci != ciend; ++ci) {
 
                EdgeIndex dst_index(*ci, 0, 0);
@@ -466,7 +466,7 @@ EdgeData<TYPE>::packWithRotation(
       const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
       const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
-      tbox::Array<TYPE> buffer(size);
+      std::vector<TYPE> buffer(size);
 
       hier::Box edge_rotatebox(EdgeGeometry::toEdgeBox(rotatebox, i));
 
@@ -495,7 +495,7 @@ EdgeData<TYPE>::packWithRotation(
             }
          }
       }
-      stream.pack(buffer.getPointer(), size);
+      stream.pack(&buffer[0], size);
    }
 }
 

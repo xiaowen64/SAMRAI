@@ -671,7 +671,7 @@ private:
     * The convergence factor stack is reset for each solve
     * and contains the convergence factors for each FAC cycle.
     */
-   tbox::Array<double> d_convergence_factor;
+   std::vector<double> d_convergence_factor;
    /*!
     * The average convergence factor computed from the current
     * values in d_convergence_factor.
@@ -688,7 +688,7 @@ private:
     * @brief Objects facilitating operations over a specific range
     * of levels.
     */
-   tbox::Array<boost::shared_ptr<math::HierarchyDataOpsReal<double> > >
+   std::vector<boost::shared_ptr<math::HierarchyDataOpsReal<double> > >
    d_controlled_level_ops;
 
    /*!

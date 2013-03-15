@@ -16,6 +16,8 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/Array.h"
 
+#include <vector>
+
 namespace SAMRAI {
 namespace hier {
 
@@ -76,13 +78,13 @@ public:
     * @param loc   integer location index of boundary region
     * @param codim integer codimension of boundary region
     *
-    * @return  const reference to integer array of length codim
+    * @return  const reference to integer vector of length codim
     *          containing the active directions for this boundary case.
     *
     * @pre (codim > 0) && (codim <= getDim().getValue())
     * @pre (loc >= 0) && (loc < getMaxLocationIndex(codim - 1))
     */
-   const tbox::Array<int>&
+   const std::vector<int>&
    getDirections(
       int loc,
       int codim) const
@@ -102,11 +104,11 @@ public:
     * patch has 6 possible locations for codimension 1 (faces), 12 for
     * codimension 2 (edges), and 8 for codimension 3 (nodes).
     *
-    * @return integer array of length dim, each entry of which indicates
+    * @return integer vector of length dim, each entry of which indicates
     *         the maximum number of boundary locations for each
     *         codimension
     */
-   const tbox::Array<int>&
+   const std::vector<int>&
    getMaxLocationIndices() const
    {
       return d_max_li;
@@ -201,11 +203,11 @@ public:
     * neither, and 1 indicates upper.
     *
     * @param codim  codimension
-    * @return       Array of IntVectors, one element for each valid location
+    * @return       Vector of IntVectors, one element for each valid location
     *
     * @pre (codim > 0) && (codim <= getDim().getValue())
     */
-   const tbox::Array<IntVector>&
+   const std::vector<IntVector>&
    getBoundaryDirections(
       int codim) const
    {
@@ -295,28 +297,27 @@ private:
    const tbox::Dimension d_dim;
 
    /*!
-    * @brief Array used to store the number of combinations for
+    * @brief Vector used to store the number of combinations for
     * each codimension.
     */
-   tbox::Array<int> d_ncomb;
+   std::vector<int> d_ncomb;
 
    /*!
-    * @brief Array used to store the number of possible location indices
+    * @brief Vector used to store the number of possible location indices
     * for each codimension.
     */
-   tbox::Array<int> d_max_li;
+   std::vector<int> d_max_li;
 
    /*!
     * @brief Data member used to store the lookup table.
     */
-   tbox::Array<tbox::Array<int> >
-      d_table[SAMRAI::MAX_DIM_VAL];
+   std::vector<std::vector<int> > d_table[SAMRAI::MAX_DIM_VAL];
 
    /*!
-    * @brief Array to hold information about possible directions for each
+    * @brief Vector to hold information about possible directions for each
     * codimension.
     */
-   tbox::Array<tbox::Array<IntVector> > d_bdry_dirs;
+   std::vector<std::vector<IntVector> > d_bdry_dirs;
 
    static tbox::StartupShutdownManager::Handler
       s_finalize_handler;

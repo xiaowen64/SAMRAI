@@ -71,7 +71,7 @@ namespace solv {
  *   </tr>
  *   <tr>
  *     <td>boundary_N</td>
- *     <td>Array<string></td>
+ *     <td>array of strings</td>
  *     <td>none</td>
  *     <td>"value", "gval"; "slope", "gval"; "coefficients", "aVal", "bVal"</td>
  *     <td>req</td>

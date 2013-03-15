@@ -193,7 +193,7 @@ namespace mesh {
  *   </tr>
  *   <tr>
  *     <td>efficiency_tolerance</td>
- *     <td>Array<double></td>
+ *     <td>array of doubles</td>
  *     <td>0.8 for each level</td>
  *     <td>all values > 0.0 && < 1.0</td>
  *     <td>opt</td>
@@ -201,7 +201,7 @@ namespace mesh {
  *   </tr>
  *   <tr>
  *     <td>combine_efficiency</td>
- *     <td>Array<double></td>
+ *     <td>array of doubles</td>
  *     <td>0.8 for each level</td>
  *     <td>all values > 0.0 && < 1.0</td>
  *     <td>opt</td>
@@ -429,16 +429,16 @@ public:
     * @pre (level_number >= 0) &&
     *      (level_number <= d_hierarchy->getFinestLevelNumber())
     * @pre d_hierarchy->getPatchLevel(level_number)
-    * @pre tag_buffer.getSize() >= level_number + 1
+    * @pre tag_buffer.size() >= level_number + 1
     * @pre for each member, tb, of tag_buffer, tb >= 0
     */
    void
    regridAllFinerLevels(
       const int level_number,
-      const tbox::Array<int>& tag_buffer,
+      const std::vector<int>& tag_buffer,
       const int cycle,
       const double level_time,
-      tbox::Array<double> regrid_start_time = tbox::Array<double>(),
+      const std::vector<double>& regrid_start_time = std::vector<double>(),
       const bool level_is_coarsest_to_sync = true);
 
    /*!
@@ -507,7 +507,7 @@ public:
    {
       TBOX_ASSERT((level_number >= 0) &&
                   (level_number < d_hierarchy->getMaxNumberOfLevels()));
-      int size = d_efficiency_tolerance.getSize();
+      int size = static_cast<int>(d_efficiency_tolerance.size());
       return (level_number < size) ?
          d_efficiency_tolerance[level_number] :
          d_efficiency_tolerance[size - 1];
@@ -548,7 +548,7 @@ public:
    {
       TBOX_ASSERT((level_number >= 0) &&
                   (level_number < d_hierarchy->getMaxNumberOfLevels()));
-      int size = d_combine_efficiency.getSize();
+      int size = static_cast<int>(d_combine_efficiency.size());
       return (level_number < size) ?
          d_combine_efficiency[level_number] :
          d_combine_efficiency[size - 1];
@@ -640,7 +640,7 @@ private:
     * @pre d_hierarchy->getPatchLevel(level_number)
     * @pre (finest_level_not_regridded >= 0) &&
     *      (finest_level_not_regridded <= level_number)
-    * @pre tag_buffer.getSize() >= level_number + 1
+    * @pre tag_buffer.size() >= level_number + 1
     * @pre for each member, tb, of tag_buffer, tb >= 0
     */
    void
@@ -650,8 +650,8 @@ private:
       const int regrid_cycle,
       const int finest_level_not_regridded,
       const bool level_is_coarsest_to_sync,
-      const tbox::Array<int>& tag_buffer,
-      const tbox::Array<double>& regrid_start_time = tbox::Array<double>(0));
+      const std::vector<int>& tag_buffer,
+      const std::vector<double>& regrid_start_time = std::vector<double>(0));
 
    /*!
     * @brief Tagging stuff before recursive regrid, called from regridFinerLevel.
@@ -660,7 +660,7 @@ private:
    regridFinerLevel_doTaggingBeforeRecursiveRegrid(
       const int tag_ln,
       const bool level_is_coarsest_sync_level,
-      const tbox::Array<double>& regrid_start_time,
+      const std::vector<double>& regrid_start_time,
       const double regrid_time,
       const int regrid_cycle);
 
@@ -675,7 +675,7 @@ private:
    regridFinerLevel_doTaggingAfterRecursiveRegrid(
       boost::shared_ptr<hier::Connector>& tag_to_finer,
       const int tag_ln,
-      const tbox::Array<int>& tag_buffer);
+      const std::vector<int>& tag_buffer);
 
    /*!
     * @brief Given the metadata describing the new level, this method
@@ -875,7 +875,7 @@ private:
     *
     * @param[in,out] tag_to_new
     *
-    * @param[in] physical_domain_array  Array holding domain for each block
+    * @param[in] physical_domain_array  Vector holding domain for each block
     *
     * @param[in] extend_ghosts Extend the boxes to the boundary if
     * they less than extend_ghosts cells from the boundary.
@@ -886,7 +886,7 @@ private:
    extendBoxesToDomainBoundary(
       hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
-      const tbox::Array<hier::BoxContainer>& physical_domain_array,
+      const std::vector<hier::BoxContainer>& physical_domain_array,
       const hier::IntVector& extend_ghosts) const;
 
    /*!
@@ -1199,10 +1199,10 @@ private:
    static void
    startupCallback()
    {
-      s_tag_indx = new tbox::Array<int>(
+      s_tag_indx = new std::vector<int>(
          SAMRAI::MAX_DIM_VAL,
          -1);
-      s_buf_tag_indx = new tbox::Array<int>(
+      s_buf_tag_indx = new std::vector<int>(
          SAMRAI::MAX_DIM_VAL,
          -1);
    }
@@ -1261,8 +1261,8 @@ private:
     * Static members for managing shared tag data among multiple
     * GriddingAlgorithm objects.
     */
-   static tbox::Array<int> * s_tag_indx;
-   static tbox::Array<int> * s_buf_tag_indx;
+   static std::vector<int> * s_tag_indx;
+   static std::vector<int> * s_buf_tag_indx;
 
    hier::IntVector d_buf_tag_ghosts;
 
@@ -1305,7 +1305,7 @@ private:
    int d_buf_tag_indx;
 
    boost::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_tags;
-   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_tags;
+   std::vector<boost::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_tags;
 
    /*
     * True and false integer tag values set in constructor and used to
@@ -1330,14 +1330,14 @@ private:
     *
     * See input parameter efficiency_tolerance.
     */
-   tbox::Array<double> d_efficiency_tolerance;
+   std::vector<double> d_efficiency_tolerance;
 
    /*
     * @brief Combine efficiency during clustering.
     *
     * See input parameter combine_efficiency.
     */
-   tbox::Array<double> d_combine_efficiency;
+   std::vector<double> d_combine_efficiency;
 
    /*!
     * @brief Connector widths to use when clustering.
@@ -1492,9 +1492,9 @@ private:
    /*
     * Statistics on number of cells and patches generated.
     */
-   tbox::Array<boost::shared_ptr<tbox::Statistic> > d_boxes_stat;
-   tbox::Array<boost::shared_ptr<tbox::Statistic> > d_cells_stat;
-   tbox::Array<boost::shared_ptr<tbox::Statistic> > d_timestamp_stat;
+   std::vector<boost::shared_ptr<tbox::Statistic> > d_boxes_stat;
+   std::vector<boost::shared_ptr<tbox::Statistic> > d_cells_stat;
+   std::vector<boost::shared_ptr<tbox::Statistic> > d_timestamp_stat;
 #endif
 
    // The following are not yet implemented:

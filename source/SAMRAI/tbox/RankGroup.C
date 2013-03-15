@@ -85,7 +85,7 @@ RankGroup::RankGroup(
  */
 
 RankGroup::RankGroup(
-   const Array<int>& rank_group,
+   const std::vector<int>& rank_group,
    const SAMRAI_MPI& samrai_mpi):
    d_min(-1),
    d_max(-1),
@@ -99,13 +99,13 @@ RankGroup::RankGroup(
    samrai_mpi.Comm_size(&nodes);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(rank_group.size() <= nodes);
+   TBOX_ASSERT(static_cast<int>(rank_group.size()) <= nodes);
 
    /*
     * Check that each entry in the array has a unique value and is increasing
     * order
     */
-   for (int i = 0; i < rank_group.size(); i++) {
+   for (int i = 0; i < static_cast<int>(rank_group.size()); i++) {
       TBOX_ASSERT(rank_group[i] >= 0);
       TBOX_ASSERT(rank_group[i] < nodes);
       if (i > 0) {
@@ -117,8 +117,8 @@ RankGroup::RankGroup(
    /*
     * If array is the full set of ranks, then switch to "using_all" mode.
     */
-   if (rank_group.size() == nodes) {
-      d_ranks.resizeArray(0);
+   if (static_cast<int>(rank_group.size()) == nodes) {
+      d_ranks.resize(0);
       d_storage = USING_ALL;
    }
 }
@@ -154,7 +154,7 @@ RankGroup::isMember(
       case USING_ARRAY:
       {
          int lo = 0;
-         int hi = d_ranks.size() - 1;
+         int hi = static_cast<int>(d_ranks.size()) - 1;
          while (!is_member && hi >= lo) {
             int i = (lo + hi) / 2;
             if (rank < d_ranks[i]) {
@@ -199,7 +199,7 @@ RankGroup::size() const
          break;
 
       case USING_ARRAY:
-         size = d_ranks.size();
+         size = static_cast<int>(d_ranks.size());
          break;
 
       case USING_MIN_MAX:
@@ -279,7 +279,7 @@ RankGroup::getMapIndex(
       case USING_ARRAY:
       {
          int lo = 0;
-         int hi = d_ranks.size() - 1;
+         int hi = static_cast<int>(d_ranks.size()) - 1;
          while (hi >= lo) {
             int i = (lo + hi) / 2;
             if (rank < d_ranks[i]) {

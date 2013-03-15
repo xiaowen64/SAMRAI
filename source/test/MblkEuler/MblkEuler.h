@@ -22,6 +22,7 @@
 #include "SAMRAI/appu/VisItDataWriter.h"
 
 #include <string>
+#include <vector>
 using namespace std;
 #define included_String
 
@@ -258,7 +259,7 @@ private:
       int btype,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
-      const tbox::Array<int>& scalar_bconds) const;
+      const std::vector<int>& scalar_bconds) const;
 
    /*
     * The object name is used for error/warning reporting and also as a
@@ -285,7 +286,7 @@ private:
    bool d_use_nonuniform_workload;
 
    //
-   // =========================== State and Variable definitions (private) ============================
+   // =============== State and Variable definitions (private) ================
    //
 
    //
@@ -311,7 +312,7 @@ private:
    int d_xyz_id;
 
    //
-   // ======================================= Initial Conditions (private) ============================
+   // =========================== Initial Conditions (private) ================
    //
 
    /// center of the sphere or revolution origin
@@ -321,18 +322,18 @@ private:
    double d_axis[SAMRAI::MAX_DIM_VAL];
 
    /// revolution radius and pos on axis of radius
-   tbox::Array<tbox::Array<double> > d_rev_rad;
-   tbox::Array<tbox::Array<double> > d_rev_axis;
+   std::vector<std::vector<double> > d_rev_rad;
+   std::vector<std::vector<double> > d_rev_axis;
 
    ///
    /// Rayleigh Taylor Shock tube experiments
    ///
    double d_dt_ampl;
-   tbox::Array<double> d_amn;
-   tbox::Array<double> d_m_mode;
-   tbox::Array<double> d_n_mode;
-   tbox::Array<double> d_phiy;
-   tbox::Array<double> d_phiz;
+   std::vector<double> d_amn;
+   std::vector<double> d_m_mode;
+   std::vector<double> d_n_mode;
+   std::vector<double> d_phiy;
+   std::vector<double> d_phiz;
 
    ///
    /// input for all the geometries
@@ -361,13 +362,13 @@ private:
    // region initialization inputs
    //
    int d_number_of_regions;
-   tbox::Array<double> d_front_position;
+   std::vector<double> d_front_position;
 
    //
    // array of initial conditions and their names [region][state]
    //
-   tbox::Array<tbox::Array<double> > d_state_ic;
-   tbox::Array<string> d_state_names;
+   std::vector<std::vector<double> > d_state_ic;
+   std::vector<string> d_state_names;
 
    //
    // This class stores geometry information used for constructing the
@@ -378,29 +379,30 @@ private:
    /// the bound on the index space for the current block
    int d_dom_current_bounds[6];
 
-   /// the number of boxes needed to describe the index space for the current block
+   /// the number of boxes needed to describe the index space
+   /// for the current block
    int d_dom_current_nboxes;
 
    /// the blocks bounding the current patch
    int d_dom_local_blocks[6];
 
    //
-   // ======================================= Refinement Data (private) ============================
+   // ====================== Refinement Data (private) =======================
    //
 
-   tbox::Array<string> d_refinement_criteria;
+   std::vector<string> d_refinement_criteria;
 
    /// history variable gradient tagging tolerance
-   tbox::Array<tbox::Array<double> > d_state_grad_tol;
-   tbox::Array<string> d_state_grad_names;
-   tbox::Array<int> d_state_grad_id;
+   std::vector<std::vector<double> > d_state_grad_tol;
+   std::vector<string> d_state_grad_names;
+   std::vector<int> d_state_grad_id;
 
    //
-   // ======================================= Boundary Conditions (private) ============================
+   // ==================== Boundary Conditions (private) ======================
    //
 
    /// factors for the boundary conditions
-   tbox::Array<int> d_wall_factors;
+   std::vector<int> d_wall_factors;
 
    //
    // Operators to be used with GridGeometry

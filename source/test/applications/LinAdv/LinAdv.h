@@ -32,6 +32,7 @@
 
 #include "boost/shared_ptr.hpp"
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -388,7 +389,7 @@ private:
       boost::shared_ptr<tbox::Database> db,
       const string& db_name,
       int array_indx,
-      tbox::Array<double>& uval);
+      std::vector<double>& uval);
 
    /*
     * Private member function to check correctness of boundary data.
@@ -398,7 +399,7 @@ private:
       int btype,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
-      const tbox::Array<int>& scalar_bconds) const;
+      const std::vector<int>& scalar_bconds) const;
 
    /*
     * Three-dimensional flux computation routines corresponding to
@@ -492,8 +493,8 @@ private:
     * Input for FRONT problem
     */
    int d_number_of_intervals;
-   tbox::Array<double> d_front_position;
-   tbox::Array<double> d_interval_uval;
+   std::vector<double> d_front_position;
+   std::vector<double> d_interval_uval;
 
    /*
     * Boundary condition cases and boundary values.
@@ -502,9 +503,9 @@ private:
     *
     * Input file values are read into these arrays.
     */
-   tbox::Array<int> d_scalar_bdry_edge_conds;
-   tbox::Array<int> d_scalar_bdry_node_conds;
-   tbox::Array<int> d_scalar_bdry_face_conds; // only for (dim == tbox::Dimension(3))
+   std::vector<int> d_scalar_bdry_edge_conds;
+   std::vector<int> d_scalar_bdry_node_conds;
+   std::vector<int> d_scalar_bdry_face_conds; // only for (dim == tbox::Dimension(3))
 
    /*
     * Boundary condition cases for scalar and vector (i.e., depth > 1)
@@ -518,8 +519,8 @@ private:
    /*
     * Arrays of face (3d) or edge (2d) boundary values for DIRICHLET case.
     */
-   tbox::Array<double> d_bdry_edge_uval; // only for (dim == tbox::Dimension(2))
-   tbox::Array<double> d_bdry_face_uval; // only for (dim == tbox::Dimension(3))
+   std::vector<double> d_bdry_edge_uval; // only for (dim == tbox::Dimension(2))
+   std::vector<double> d_bdry_face_uval; // only for (dim == tbox::Dimension(3))
 
    /*
     * Input for Sine problem initialization
@@ -531,21 +532,21 @@ private:
     * Refinement criteria parameters for gradient detector and
     * Richardson extrapolation.
     */
-   tbox::Array<string> d_refinement_criteria;
-   tbox::Array<double> d_dev_tol;
-   tbox::Array<double> d_dev;
-   tbox::Array<double> d_dev_time_max;
-   tbox::Array<double> d_dev_time_min;
-   tbox::Array<double> d_grad_tol;
-   tbox::Array<double> d_grad_time_max;
-   tbox::Array<double> d_grad_time_min;
-   tbox::Array<double> d_shock_onset;
-   tbox::Array<double> d_shock_tol;
-   tbox::Array<double> d_shock_time_max;
-   tbox::Array<double> d_shock_time_min;
-   tbox::Array<double> d_rich_tol;
-   tbox::Array<double> d_rich_time_max;
-   tbox::Array<double> d_rich_time_min;
+   std::vector<string> d_refinement_criteria;
+   std::vector<double> d_dev_tol;
+   std::vector<double> d_dev;
+   std::vector<double> d_dev_time_max;
+   std::vector<double> d_dev_time_min;
+   std::vector<double> d_grad_tol;
+   std::vector<double> d_grad_time_max;
+   std::vector<double> d_grad_time_min;
+   std::vector<double> d_shock_onset;
+   std::vector<double> d_shock_tol;
+   std::vector<double> d_shock_time_max;
+   std::vector<double> d_shock_time_min;
+   std::vector<double> d_rich_tol;
+   std::vector<double> d_rich_time_max;
+   std::vector<double> d_rich_time_min;
 
 };
 

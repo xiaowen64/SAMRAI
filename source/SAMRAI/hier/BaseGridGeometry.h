@@ -569,7 +569,7 @@ public:
       const PatchLevel& level,
       const IntVector& periodic_shift,
       const IntVector& ghost_width,
-      const tbox::Array<BoxContainer>& domain,
+      const std::vector<BoxContainer>& domain,
       bool do_all_patches = false) const;
 
    /*!
@@ -1361,7 +1361,7 @@ private:
     * Boolean array telling for each block whether the domain of that block
     * can be represented by a single box.
     */
-   tbox::Array<bool> d_domain_is_single_box;
+   std::vector<bool> d_domain_is_single_box;
 
    /*!
     * @brief BoxContainer representation of the physical domain, including
@@ -1396,27 +1396,27 @@ private:
     * @brief Associated with each block is a list of Neighbors that
     * it shares a block boundary with.
     */
-   tbox::Array<std::list<Neighbor> > d_block_neighbors;
+   std::vector<std::list<Neighbor> > d_block_neighbors;
 
    /*!
     * @brief An array of BoxContainers defining the singularities of a multiblock
     * domain.  Each BoxContainer element defines the singularities that a single
     * block touches.
     */
-   tbox::Array<BoxContainer> d_singularity;
+   std::vector<BoxContainer> d_singularity;
 
    /*!
     * @brief An array of singularity indices of a multiblock
     * domain.  d_singularity_indices[bn] is a list of singularity indices
     * touched by block bn.
     */
-   tbox::Array<std::vector<int> > d_singularity_indices;
+   std::vector<std::vector<int> > d_singularity_indices;
 
    /*!
     * @brief Tell whether each block touches a reduced-connectivity
     * singularity.
     */
-   tbox::Array<bool> d_reduced_connect;
+   std::vector<bool> d_reduced_connect;
 
    /*!
     * @brief Tell whether there is enhanced connectivity anywhere in the

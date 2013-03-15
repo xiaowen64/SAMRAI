@@ -175,8 +175,10 @@ Euler::Euler(
     * Defaults for problem type and initial data
     */
 
-   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_center, d_dim.getValue());
-   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_velocity_inside, d_dim.getValue());
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_center,
+      d_dim.getValue());
+   tbox::MathUtilities<double>::setArrayToSignalingNaN(d_velocity_inside,
+      d_dim.getValue());
    tbox::MathUtilities<double>::setArrayToSignalingNaN(d_velocity_outside,
       d_dim.getValue());
 
@@ -186,18 +188,18 @@ Euler::Euler(
     */
 
    if (d_dim == tbox::Dimension(2)) {
-      d_master_bdry_edge_conds.resizeArray(NUM_2D_EDGES);
-      d_scalar_bdry_edge_conds.resizeArray(NUM_2D_EDGES);
-      d_vector_bdry_edge_conds.resizeArray(NUM_2D_EDGES);
+      d_master_bdry_edge_conds.resize(NUM_2D_EDGES);
+      d_scalar_bdry_edge_conds.resize(NUM_2D_EDGES);
+      d_vector_bdry_edge_conds.resize(NUM_2D_EDGES);
       for (int ei = 0; ei < NUM_2D_EDGES; ei++) {
          d_master_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_vector_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
       }
 
-      d_master_bdry_node_conds.resizeArray(NUM_2D_NODES);
-      d_scalar_bdry_node_conds.resizeArray(NUM_2D_NODES);
-      d_vector_bdry_node_conds.resizeArray(NUM_2D_NODES);
+      d_master_bdry_node_conds.resize(NUM_2D_NODES);
+      d_scalar_bdry_node_conds.resize(NUM_2D_NODES);
+      d_vector_bdry_node_conds.resize(NUM_2D_NODES);
       d_node_bdry_edge.resizeArray(NUM_2D_NODES);
 
       for (int ni = 0; ni < NUM_2D_NODES; ni++) {
@@ -207,26 +209,26 @@ Euler::Euler(
          d_node_bdry_edge[ni] = BOGUS_BDRY_DATA;
       }
 
-      d_bdry_edge_density.resizeArray(NUM_2D_EDGES);
-      d_bdry_edge_velocity.resizeArray(NUM_2D_EDGES * d_dim.getValue());
-      d_bdry_edge_pressure.resizeArray(NUM_2D_EDGES);
-      tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_edge_density);
-      tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_edge_velocity);
-      tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_edge_pressure);
+      d_bdry_edge_density.resize(NUM_2D_EDGES);
+      d_bdry_edge_velocity.resize(NUM_2D_EDGES * d_dim.getValue());
+      d_bdry_edge_pressure.resize(NUM_2D_EDGES);
+      tbox::MathUtilities<double>::setVectorToSignalingNaN(d_bdry_edge_density);
+      tbox::MathUtilities<double>::setVectorToSignalingNaN(d_bdry_edge_velocity);
+      tbox::MathUtilities<double>::setVectorToSignalingNaN(d_bdry_edge_pressure);
    }
    if (d_dim == tbox::Dimension(3)) {
-      d_master_bdry_face_conds.resizeArray(NUM_3D_FACES);
-      d_scalar_bdry_face_conds.resizeArray(NUM_3D_FACES);
-      d_vector_bdry_face_conds.resizeArray(NUM_3D_FACES);
+      d_master_bdry_face_conds.resize(NUM_3D_FACES);
+      d_scalar_bdry_face_conds.resize(NUM_3D_FACES);
+      d_vector_bdry_face_conds.resize(NUM_3D_FACES);
       for (int fi = 0; fi < NUM_3D_FACES; fi++) {
          d_master_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
          d_scalar_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
          d_vector_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
       }
 
-      d_master_bdry_edge_conds.resizeArray(NUM_3D_EDGES);
-      d_scalar_bdry_edge_conds.resizeArray(NUM_3D_EDGES);
-      d_vector_bdry_edge_conds.resizeArray(NUM_3D_EDGES);
+      d_master_bdry_edge_conds.resize(NUM_3D_EDGES);
+      d_scalar_bdry_edge_conds.resize(NUM_3D_EDGES);
+      d_vector_bdry_edge_conds.resize(NUM_3D_EDGES);
       d_edge_bdry_face.resizeArray(NUM_3D_EDGES);
       for (int ei = 0; ei < NUM_3D_EDGES; ei++) {
          d_master_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
@@ -235,9 +237,9 @@ Euler::Euler(
          d_edge_bdry_face[ei] = BOGUS_BDRY_DATA;
       }
 
-      d_master_bdry_node_conds.resizeArray(NUM_3D_NODES);
-      d_scalar_bdry_node_conds.resizeArray(NUM_3D_NODES);
-      d_vector_bdry_node_conds.resizeArray(NUM_3D_NODES);
+      d_master_bdry_node_conds.resize(NUM_3D_NODES);
+      d_scalar_bdry_node_conds.resize(NUM_3D_NODES);
+      d_vector_bdry_node_conds.resize(NUM_3D_NODES);
       d_node_bdry_face.resizeArray(NUM_3D_NODES);
 
       for (int ni = 0; ni < NUM_3D_NODES; ni++) {
@@ -247,12 +249,12 @@ Euler::Euler(
          d_node_bdry_face[ni] = BOGUS_BDRY_DATA;
       }
 
-      d_bdry_face_density.resizeArray(NUM_3D_FACES);
-      d_bdry_face_velocity.resizeArray(NUM_3D_FACES * d_dim.getValue());
-      d_bdry_face_pressure.resizeArray(NUM_3D_FACES);
-      tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_face_density);
-      tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_face_velocity);
-      tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_face_pressure);
+      d_bdry_face_density.resize(NUM_3D_FACES);
+      d_bdry_face_velocity.resize(NUM_3D_FACES * d_dim.getValue());
+      d_bdry_face_pressure.resize(NUM_3D_FACES);
+      tbox::MathUtilities<double>::setVectorToSignalingNaN(d_bdry_face_density);
+      tbox::MathUtilities<double>::setVectorToSignalingNaN(d_bdry_face_velocity);
+      tbox::MathUtilities<double>::setVectorToSignalingNaN(d_bdry_face_pressure);
    }
 
    /*
@@ -653,10 +655,10 @@ void Euler::initializeDataOnPatch(
                velocity->getPointer(),
                pressure->getPointer(),
                d_number_of_intervals,
-               d_front_position.getPointer(),
-               d_interval_density.getPointer(),
-               d_interval_velocity.getPointer(),
-               d_interval_pressure.getPointer());
+               &d_front_position[0],
+               &d_interval_density[0],
+               &d_interval_velocity[0],
+               &d_interval_pressure[0]);
          } else if (d_dim == tbox::Dimension(3)) {
             SAMRAI_F77_FUNC(eulerinit3d, EULERINIT3D) (d_data_problem_int,
                dx, xlo, xhi,
@@ -671,10 +673,10 @@ void Euler::initializeDataOnPatch(
                velocity->getPointer(),
                pressure->getPointer(),
                d_number_of_intervals,
-               d_front_position.getPointer(),
-               d_interval_density.getPointer(),
-               d_interval_velocity.getPointer(),
-               d_interval_pressure.getPointer());
+               &d_front_position[0],
+               &d_interval_density[0],
+               &d_interval_velocity[0],
+               &d_interval_pressure[0]);
          }
 
       }
@@ -2161,8 +2163,8 @@ void Euler::setPhysicalBoundaryConditions(
        *       so that the right edge of the domain gets (out)FLOW conditions
        *       whereas the right edge at the step gets REFLECT condtions (from input),
        */
-      tbox::Array<int> tmp_edge_scalar_bcond(NUM_2D_EDGES);
-      tbox::Array<int> tmp_edge_vector_bcond(NUM_2D_EDGES);
+      std::vector<int> tmp_edge_scalar_bcond(NUM_2D_EDGES);
+      std::vector<int> tmp_edge_vector_bcond(NUM_2D_EDGES);
       for (int i = 0; i < NUM_2D_EDGES; i++) {
          tmp_edge_scalar_bcond[i] = d_scalar_bdry_edge_conds[i];
          tmp_edge_vector_bcond[i] = d_vector_bdry_edge_conds[i];
@@ -2431,7 +2433,8 @@ void Euler::tagGradientDetectorCells(
     * specified time interval.  If so, apply appropriate tagging for
     * the level.
     */
-   for (int ncrit = 0; ncrit < d_refinement_criteria.getSize(); ncrit++) {
+   for (int ncrit = 0;
+        ncrit < static_cast<int>(d_refinement_criteria.size()); ncrit++) {
 
       string ref = d_refinement_criteria[ncrit];
       boost::shared_ptr<pdat::CellData<double> > var;
@@ -2444,19 +2447,19 @@ void Euler::tagGradientDetectorCells(
       if (ref == "DENSITY_DEVIATION") {
          var = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_density, getDataContext()));
-         size = d_density_dev_tol.getSize();
+         size = static_cast<int>(d_density_dev_tol.size());
          tol = ((error_level_number < size)
                 ? d_density_dev_tol[error_level_number]
                 : d_density_dev_tol[size - 1]);
-         size = d_density_dev.getSize();
+         size = static_cast<int>(d_density_dev.size());
          dev = ((error_level_number < size)
                 ? d_density_dev[error_level_number]
                 : d_density_dev[size - 1]);
-         size = d_density_dev_time_min.getSize();
+         size = static_cast<int>(d_density_dev_time_min.size());
          double time_min = ((error_level_number < size)
                             ? d_density_dev_time_min[error_level_number]
                             : d_density_dev_time_min[size - 1]);
-         size = d_density_dev_time_max.getSize();
+         size = static_cast<int>(d_density_dev_time_max.size());
          double time_max = ((error_level_number < size)
                             ? d_density_dev_time_max[error_level_number]
                             : d_density_dev_time_max[size - 1]);
@@ -2465,15 +2468,15 @@ void Euler::tagGradientDetectorCells(
       else if (ref == "DENSITY_GRADIENT") {
          var = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_density, getDataContext()));
-         size = d_density_grad_tol.getSize();
+         size = static_cast<int>(d_density_grad_tol.size());
          tol = ((error_level_number < size)
                 ? d_density_grad_tol[error_level_number]
                 : d_density_grad_tol[size - 1]);
-         size = d_density_grad_time_min.getSize();
+         size = static_cast<int>(d_density_grad_time_min.size());
          double time_min = ((error_level_number < size)
                             ? d_density_grad_time_min[error_level_number]
                             : d_density_grad_time_min[size - 1]);
-         size = d_density_grad_time_max.getSize();
+         size = static_cast<int>(d_density_grad_time_max.size());
          double time_max = ((error_level_number < size)
                             ? d_density_grad_time_max[error_level_number]
                             : d_density_grad_time_max[size - 1]);
@@ -2482,19 +2485,19 @@ void Euler::tagGradientDetectorCells(
       else if (ref == "DENSITY_SHOCK") {
          var = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_density, getDataContext()));
-         size = d_density_shock_tol.getSize();
+         size = static_cast<int>(d_density_shock_tol.size());
          tol = ((error_level_number < size)
                 ? d_density_shock_tol[error_level_number]
                 : d_density_shock_tol[size - 1]);
-         size = d_density_shock_onset.getSize();
+         size = static_cast<int>(d_density_shock_onset.size());
          onset = ((error_level_number < size)
                   ? d_density_shock_onset[error_level_number]
                   : d_density_shock_onset[size - 1]);
-         size = d_density_shock_time_min.getSize();
+         size = static_cast<int>(d_density_shock_time_min.size());
          double time_min = ((error_level_number < size)
                             ? d_density_shock_time_min[error_level_number]
                             : d_density_shock_time_min[size - 1]);
-         size = d_density_shock_time_max.getSize();
+         size = static_cast<int>(d_density_shock_time_max.size());
          double time_max = ((error_level_number < size)
                             ? d_density_shock_time_max[error_level_number]
                             : d_density_shock_time_max[size - 1]);
@@ -2503,19 +2506,19 @@ void Euler::tagGradientDetectorCells(
       else if (ref == "PRESSURE_DEVIATION") {
          var = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_pressure, getDataContext()));
-         size = d_pressure_dev_tol.getSize();
+         size = static_cast<int>(d_pressure_dev_tol.size());
          tol = ((error_level_number < size)
                 ? d_pressure_dev_tol[error_level_number]
                 : d_pressure_dev_tol[size - 1]);
-         size = d_pressure_dev.getSize();
+         size = static_cast<int>(d_pressure_dev.size());
          dev = ((error_level_number < size)
                 ? d_pressure_dev[error_level_number]
                 : d_pressure_dev[size - 1]);
-         size = d_pressure_dev_time_min.getSize();
+         size = static_cast<int>(d_pressure_dev_time_min.size());
          double time_min = ((error_level_number < size)
                             ? d_pressure_dev_time_min[error_level_number]
                             : d_pressure_dev_time_min[size - 1]);
-         size = d_pressure_dev_time_max.getSize();
+         size = static_cast<int>(d_pressure_dev_time_max.size());
          double time_max = ((error_level_number < size)
                             ? d_pressure_dev_time_max[error_level_number]
                             : d_pressure_dev_time_max[size - 1]);
@@ -2524,15 +2527,15 @@ void Euler::tagGradientDetectorCells(
       else if (ref == "PRESSURE_GRADIENT") {
          var = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_pressure, getDataContext()));
-         size = d_pressure_grad_tol.getSize();
+         size = static_cast<int>(d_pressure_grad_tol.size());
          tol = ((error_level_number < size)
                 ? d_pressure_grad_tol[error_level_number]
                 : d_pressure_grad_tol[size - 1]);
-         size = d_pressure_grad_time_min.getSize();
+         size = static_cast<int>(d_pressure_grad_time_min.size());
          double time_min = ((error_level_number < size)
                             ? d_pressure_grad_time_min[error_level_number]
                             : d_pressure_grad_time_min[size - 1]);
-         size = d_pressure_grad_time_max.getSize();
+         size = static_cast<int>(d_pressure_grad_time_max.size());
          double time_max = ((error_level_number < size)
                             ? d_pressure_grad_time_max[error_level_number]
                             : d_pressure_grad_time_max[size - 1]);
@@ -2541,19 +2544,19 @@ void Euler::tagGradientDetectorCells(
       else if (ref == "PRESSURE_SHOCK") {
          var = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_pressure, getDataContext()));
-         size = d_pressure_shock_tol.getSize();
+         size = static_cast<int>(d_pressure_shock_tol.size());
          tol = ((error_level_number < size)
                 ? d_pressure_shock_tol[error_level_number]
                 : d_pressure_shock_tol[size - 1]);
-         size = d_pressure_shock_onset.getSize();
+         size = static_cast<int>(d_pressure_shock_onset.size());
          onset = ((error_level_number < size)
                   ? d_pressure_shock_onset[error_level_number]
                   : d_pressure_shock_onset[size - 1]);
-         size = d_pressure_shock_time_min.getSize();
+         size = static_cast<int>(d_pressure_shock_time_min.size());
          double time_min = ((error_level_number < size)
                             ? d_pressure_shock_time_min[error_level_number]
                             : d_pressure_shock_time_min[size - 1]);
-         size = d_pressure_shock_time_max.getSize();
+         size = static_cast<int>(d_pressure_shock_time_max.size());
          double time_max = ((error_level_number < size)
                             ? d_pressure_shock_time_max[error_level_number]
                             : d_pressure_shock_time_max[size - 1]);
@@ -2722,7 +2725,8 @@ void Euler::tagRichardsonExtrapolationCells(
     * specified time interval.  If so, apply appropriate tagging for
     * the level.
     */
-   for (int ncrit = 0; ncrit < d_refinement_criteria.getSize(); ncrit++) {
+   for (int ncrit = 0;
+        ncrit < static_cast<int>(d_refinement_criteria.size()); ncrit++) {
 
       string ref = d_refinement_criteria[ncrit];
       boost::shared_ptr<pdat::CellData<double> > coarsened_fine_var;
@@ -2738,15 +2742,15 @@ void Euler::tagRichardsonExtrapolationCells(
          advanced_coarse_var =
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_density, advanced_coarse));
-         size = d_density_rich_tol.getSize();
+         size = static_cast<int>(d_density_rich_tol.size());
          tol = ((error_level_number < size)
                 ? d_density_rich_tol[error_level_number]
                 : d_density_rich_tol[size - 1]);
-         size = d_density_rich_time_min.getSize();
+         size = static_cast<int>(d_density_rich_time_min.size());
          double time_min = ((error_level_number < size)
                             ? d_density_rich_time_min[error_level_number]
                             : d_density_rich_time_min[size - 1]);
-         size = d_density_rich_time_max.getSize();
+         size = static_cast<int>(d_density_rich_time_max.size());
          double time_max = ((error_level_number < size)
                             ? d_density_rich_time_max[error_level_number]
                             : d_density_rich_time_max[size - 1]);
@@ -2759,15 +2763,15 @@ void Euler::tagRichardsonExtrapolationCells(
          advanced_coarse_var =
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_pressure, advanced_coarse));
-         size = d_pressure_rich_tol.getSize();
+         size = static_cast<int>(d_pressure_rich_tol.size());
          tol = ((error_level_number < size)
                 ? d_pressure_rich_tol[error_level_number]
                 : d_pressure_rich_tol[size - 1]);
-         size = d_pressure_rich_time_min.getSize();
+         size = static_cast<int>(d_pressure_rich_time_min.size());
          double time_min = ((error_level_number < size)
                             ? d_pressure_rich_time_min[error_level_number]
                             : d_pressure_rich_time_min[size - 1]);
-         size = d_pressure_rich_time_max.getSize();
+         size = static_cast<int>(d_pressure_rich_time_max.size());
          double time_max = ((error_level_number < size)
                             ? d_pressure_rich_time_max[error_level_number]
                             : d_pressure_rich_time_max[size - 1]);
@@ -3217,7 +3221,7 @@ void Euler::printClassData(
    os << "   Boundary condition data " << endl;
 
    if (d_dim == tbox::Dimension(2)) {
-      for (j = 0; j < d_master_bdry_edge_conds.getSize(); j++) {
+      for (j = 0; j < static_cast<int>(d_master_bdry_edge_conds.size()); j++) {
          os << "\n       d_master_bdry_edge_conds[" << j << "] = "
             << d_master_bdry_edge_conds[j] << endl;
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
@@ -3235,7 +3239,7 @@ void Euler::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < d_master_bdry_node_conds.getSize(); j++) {
+      for (j = 0; j < static_cast<int>(d_master_bdry_node_conds.size()); j++) {
          os << "\n       d_master_bdry_node_conds[" << j << "] = "
             << d_master_bdry_node_conds[j] << endl;
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
@@ -3247,7 +3251,7 @@ void Euler::printClassData(
       }
    }
    if (d_dim == tbox::Dimension(3)) {
-      for (j = 0; j < d_master_bdry_face_conds.getSize(); j++) {
+      for (j = 0; j < static_cast<int>(d_master_bdry_face_conds.size()); j++) {
          os << "\n       d_master_bdry_face_conds[" << j << "] = "
             << d_master_bdry_face_conds[j] << endl;
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
@@ -3266,7 +3270,7 @@ void Euler::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < d_master_bdry_edge_conds.getSize(); j++) {
+      for (j = 0; j < static_cast<int>(d_master_bdry_edge_conds.size()); j++) {
          os << "\n       d_master_bdry_edge_conds[" << j << "] = "
             << d_master_bdry_edge_conds[j] << endl;
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
@@ -3277,7 +3281,7 @@ void Euler::printClassData(
             << d_edge_bdry_face[j] << endl;
       }
       os << endl;
-      for (j = 0; j < d_master_bdry_node_conds.getSize(); j++) {
+      for (j = 0; j < static_cast<int>(d_master_bdry_node_conds.size()); j++) {
          os << "\n       d_master_bdry_node_conds[" << j << "] = "
             << d_master_bdry_node_conds[j] << endl;
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
@@ -3291,148 +3295,148 @@ void Euler::printClassData(
 
    os << "   Refinement criteria parameters " << endl;
 
-   for (j = 0; j < d_refinement_criteria.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_refinement_criteria.size()); j++) {
       os << "       d_refinement_criteria[" << j << "] = "
          << d_refinement_criteria[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_density_dev_tol.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_density_dev_tol.size()); j++) {
       os << "       d_density_dev_tol[" << j << "] = "
          << d_density_dev_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_density_dev.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_density_dev.size()); j++) {
       os << "       d_density_dev[" << j << "] = "
          << d_density_dev[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_density_dev_time_max.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_density_dev_time_max.size()); j++) {
       os << "       d_density_dev_time_max[" << j << "] = "
          << d_density_dev_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_density_dev_time_min.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_density_dev_time_min.size()); j++) {
       os << "       d_density_dev_time_min[" << j << "] = "
          << d_density_dev_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_density_grad_tol.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_density_grad_tol.size()); j++) {
       os << "       d_density_grad_tol[" << j << "] = "
          << d_density_grad_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_density_grad_time_max.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_density_grad_time_max.size()); j++) {
       os << "       d_density_grad_time_max[" << j << "] = "
          << d_density_grad_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_density_grad_time_min.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_density_grad_time_min.size()); j++) {
       os << "       d_density_grad_time_min[" << j << "] = "
          << d_density_grad_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_density_shock_onset.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_density_shock_onset.size()); j++) {
       os << "       d_density_shock_onset[" << j << "] = "
          << d_density_shock_onset[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_density_shock_tol.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_density_shock_tol.size()); j++) {
       os << "       d_density_shock_tol[" << j << "] = "
          << d_density_shock_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_density_shock_time_max.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_density_shock_time_max.size()); j++) {
       os << "       d_density_shock_time_max[" << j << "] = "
          << d_density_shock_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_density_shock_time_min.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_density_shock_time_min.size()); j++) {
       os << "       d_density_shock_time_min[" << j << "] = "
          << d_density_shock_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_density_rich_tol.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_density_rich_tol.size()); j++) {
       os << "       d_density_rich_tol[" << j << "] = "
          << d_density_rich_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_density_rich_time_max.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_density_rich_time_max.size()); j++) {
       os << "       d_density_rich_time_max[" << j << "] = "
          << d_density_rich_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_density_rich_time_min.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_density_rich_time_min.size()); j++) {
       os << "       d_density_rich_time_min[" << j << "] = "
          << d_density_rich_time_min[j] << endl;
    }
    os << endl;
 
-   for (j = 0; j < d_pressure_dev_tol.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_pressure_dev_tol.size()); j++) {
       os << "       d_pressure_dev_tol[" << j << "] = "
          << d_pressure_dev_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_pressure_dev.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_pressure_dev.size()); j++) {
       os << "       d_pressure_dev[" << j << "] = "
          << d_pressure_dev[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_pressure_dev_time_max.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_pressure_dev_time_max.size()); j++) {
       os << "       d_pressure_dev_time_max[" << j << "] = "
          << d_pressure_dev_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_pressure_dev_time_min.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_pressure_dev_time_min.size()); j++) {
       os << "       d_pressure_dev_time_min[" << j << "] = "
          << d_pressure_dev_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_pressure_grad_tol.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_pressure_grad_tol.size()); j++) {
       os << "       d_pressure_grad_tol[" << j << "] = "
          << d_pressure_grad_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_pressure_grad_time_max.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_pressure_grad_time_max.size()); j++) {
       os << "       d_pressure_grad_time_max[" << j << "] = "
          << d_pressure_grad_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_pressure_grad_time_min.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_pressure_grad_time_min.size()); j++) {
       os << "       d_pressure_grad_time_min[" << j << "] = "
          << d_pressure_grad_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_pressure_shock_onset.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_pressure_shock_onset.size()); j++) {
       os << "       d_pressure_shock_onset[" << j << "] = "
          << d_pressure_shock_onset[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_pressure_shock_tol.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_pressure_shock_tol.size()); j++) {
       os << "       d_pressure_shock_tol[" << j << "] = "
          << d_pressure_shock_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_pressure_shock_time_max.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_pressure_shock_time_max.size()); j++) {
       os << "       d_pressure_shock_time_max[" << j << "] = "
          << d_pressure_shock_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_pressure_shock_time_min.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_pressure_shock_time_min.size()); j++) {
       os << "       d_pressure_shock_time_min[" << j << "] = "
          << d_pressure_shock_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_pressure_rich_tol.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_pressure_rich_tol.size()); j++) {
       os << "       d_pressure_rich_tol[" << j << "] = "
          << d_pressure_rich_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_pressure_rich_time_max.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_pressure_rich_time_max.size()); j++) {
       os << "       d_pressure_rich_time_max[" << j << "] = "
          << d_pressure_rich_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_pressure_rich_time_min.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_pressure_rich_time_min.size()); j++) {
       os << "       d_pressure_rich_time_min[" << j << "] = "
          << d_pressure_rich_time_min[j] << endl;
    }
@@ -3523,12 +3527,11 @@ void Euler::getFromInput(
    if (input_db->keyExists("Refinement_data")) {
       boost::shared_ptr<tbox::Database> refine_db(
          input_db->getDatabase("Refinement_data"));
-      tbox::Array<string> refinement_keys = refine_db->getAllKeys();
-      int num_keys = refinement_keys.getSize();
+      std::vector<string> refinement_keys = refine_db->getAllKeys();
+      int num_keys = static_cast<int>(refinement_keys.size());
 
       if (refine_db->keyExists("refine_criteria")) {
-         d_refinement_criteria =
-            refine_db->getStringArray("refine_criteria");
+         d_refinement_criteria = refine_db->getStringVector("refine_criteria");
       } else {
          TBOX_WARNING(
             d_object_name << ": "
@@ -3536,10 +3539,10 @@ void Euler::getFromInput(
                           << " RefinementData. No refinement will occur." << endl);
       }
 
-      tbox::Array<string> ref_keys_defined(num_keys);
+      std::vector<string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
       boost::shared_ptr<tbox::Database> error_db;
-      for (int i = 0; i < refinement_keys.getSize(); i++) {
+      for (int i = 0; i < num_keys; i++) {
 
          string error_key = refinement_keys[i];
          error_db.reset();
@@ -3568,8 +3571,7 @@ void Euler::getFromInput(
             if (error_db && error_key == "DENSITY_DEVIATION") {
 
                if (error_db->keyExists("dev_tol")) {
-                  d_density_dev_tol =
-                     error_db->getDoubleArray("dev_tol");
+                  d_density_dev_tol = error_db->getDoubleVector("dev_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3578,8 +3580,7 @@ void Euler::getFromInput(
                }
 
                if (error_db->keyExists("density_dev")) {
-                  d_density_dev =
-                     error_db->getDoubleArray("density_dev");
+                  d_density_dev = error_db->getDoubleVector("density_dev");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3589,18 +3590,18 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("time_max")) {
                   d_density_dev_time_max =
-                     error_db->getDoubleArray("time_max");
+                     error_db->getDoubleVector("time_max");
                } else {
-                  d_density_dev_time_max.resizeArray(1);
+                  d_density_dev_time_max.resize(1);
                   d_density_dev_time_max[0] =
                      tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")) {
                   d_density_dev_time_min =
-                     error_db->getDoubleArray("time_min");
+                     error_db->getDoubleVector("time_min");
                } else {
-                  d_density_dev_time_min.resizeArray(1);
+                  d_density_dev_time_min.resize(1);
                   d_density_dev_time_min[0] = 0.;
                }
 
@@ -3610,7 +3611,7 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("grad_tol")) {
                   d_density_grad_tol =
-                     error_db->getDoubleArray("grad_tol");
+                     error_db->getDoubleVector("grad_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3620,18 +3621,18 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("time_max")) {
                   d_density_grad_time_max =
-                     error_db->getDoubleArray("time_max");
+                     error_db->getDoubleVector("time_max");
                } else {
-                  d_density_grad_time_max.resizeArray(1);
+                  d_density_grad_time_max.resize(1);
                   d_density_grad_time_max[0] =
                      tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")) {
                   d_density_grad_time_min =
-                     error_db->getDoubleArray("time_min");
+                     error_db->getDoubleVector("time_min");
                } else {
-                  d_density_grad_time_min.resizeArray(1);
+                  d_density_grad_time_min.resize(1);
                   d_density_grad_time_min[0] = 0.;
                }
 
@@ -3641,7 +3642,7 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("shock_onset")) {
                   d_density_shock_onset =
-                     error_db->getDoubleArray("shock_onset");
+                     error_db->getDoubleVector("shock_onset");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3651,7 +3652,7 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("shock_tol")) {
                   d_density_shock_tol =
-                     error_db->getDoubleArray("shock_tol");
+                     error_db->getDoubleVector("shock_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3661,18 +3662,18 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("time_max")) {
                   d_density_shock_time_max =
-                     error_db->getDoubleArray("time_max");
+                     error_db->getDoubleVector("time_max");
                } else {
-                  d_density_shock_time_max.resizeArray(1);
+                  d_density_shock_time_max.resize(1);
                   d_density_shock_time_max[0] =
                      tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")) {
                   d_density_shock_time_min =
-                     error_db->getDoubleArray("time_min");
+                     error_db->getDoubleVector("time_min");
                } else {
-                  d_density_shock_time_min.resizeArray(1);
+                  d_density_shock_time_min.resize(1);
                   d_density_shock_time_min[0] = 0.;
                }
 
@@ -3682,7 +3683,7 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("rich_tol")) {
                   d_density_rich_tol =
-                     error_db->getDoubleArray("rich_tol");
+                     error_db->getDoubleVector("rich_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3692,18 +3693,18 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("time_max")) {
                   d_density_rich_time_max =
-                     error_db->getDoubleArray("time_max");
+                     error_db->getDoubleVector("time_max");
                } else {
-                  d_density_rich_time_max.resizeArray(1);
+                  d_density_rich_time_max.resize(1);
                   d_density_rich_time_max[0] =
                      tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")) {
                   d_density_rich_time_min =
-                     error_db->getDoubleArray("time_min");
+                     error_db->getDoubleVector("time_min");
                } else {
-                  d_density_rich_time_min.resizeArray(1);
+                  d_density_rich_time_min.resize(1);
                   d_density_rich_time_min[0] = 0.;
                }
 
@@ -3713,7 +3714,7 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("dev_tol")) {
                   d_pressure_dev_tol =
-                     error_db->getDoubleArray("dev_tol");
+                     error_db->getDoubleVector("dev_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3723,7 +3724,7 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("pressure_dev")) {
                   d_pressure_dev =
-                     error_db->getDoubleArray("pressure_dev");
+                     error_db->getDoubleVector("pressure_dev");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3733,18 +3734,18 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("time_max")) {
                   d_pressure_dev_time_max =
-                     error_db->getDoubleArray("time_max");
+                     error_db->getDoubleVector("time_max");
                } else {
-                  d_pressure_dev_time_max.resizeArray(1);
+                  d_pressure_dev_time_max.resize(1);
                   d_pressure_dev_time_max[0] =
                      tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")) {
                   d_pressure_dev_time_min =
-                     error_db->getDoubleArray("time_min");
+                     error_db->getDoubleVector("time_min");
                } else {
-                  d_pressure_dev_time_min.resizeArray(1);
+                  d_pressure_dev_time_min.resize(1);
                   d_pressure_dev_time_min[0] = 0.;
                }
 
@@ -3754,7 +3755,7 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("grad_tol")) {
                   d_pressure_grad_tol =
-                     error_db->getDoubleArray("grad_tol");
+                     error_db->getDoubleVector("grad_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3764,18 +3765,18 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("time_max")) {
                   d_pressure_grad_time_max =
-                     error_db->getDoubleArray("time_max");
+                     error_db->getDoubleVector("time_max");
                } else {
-                  d_pressure_grad_time_max.resizeArray(1);
+                  d_pressure_grad_time_max.resize(1);
                   d_pressure_grad_time_max[0] =
                      tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")) {
                   d_pressure_grad_time_min =
-                     error_db->getDoubleArray("time_min");
+                     error_db->getDoubleVector("time_min");
                } else {
-                  d_pressure_grad_time_min.resizeArray(1);
+                  d_pressure_grad_time_min.resize(1);
                   d_pressure_grad_time_min[0] = 0.;
                }
 
@@ -3785,7 +3786,7 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("shock_onset")) {
                   d_pressure_shock_onset =
-                     error_db->getDoubleArray("shock_onset");
+                     error_db->getDoubleVector("shock_onset");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3795,7 +3796,7 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("shock_tol")) {
                   d_pressure_shock_tol =
-                     error_db->getDoubleArray("shock_tol");
+                     error_db->getDoubleVector("shock_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3805,18 +3806,18 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("time_max")) {
                   d_pressure_shock_time_max =
-                     error_db->getDoubleArray("time_max");
+                     error_db->getDoubleVector("time_max");
                } else {
-                  d_pressure_shock_time_max.resizeArray(1);
+                  d_pressure_shock_time_max.resize(1);
                   d_pressure_shock_time_max[0] =
                      tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")) {
                   d_pressure_shock_time_min =
-                     error_db->getDoubleArray("time_min");
+                     error_db->getDoubleVector("time_min");
                } else {
-                  d_pressure_shock_time_min.resizeArray(1);
+                  d_pressure_shock_time_min.resize(1);
                   d_pressure_shock_time_min[0] = 0.;
                }
 
@@ -3826,7 +3827,7 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("rich_tol")) {
                   d_pressure_rich_tol =
-                     error_db->getDoubleArray("rich_tol");
+                     error_db->getDoubleVector("rich_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -3836,18 +3837,18 @@ void Euler::getFromInput(
 
                if (error_db->keyExists("time_max")) {
                   d_pressure_rich_time_max =
-                     error_db->getDoubleArray("time_max");
+                     error_db->getDoubleVector("time_max");
                } else {
-                  d_pressure_rich_time_max.resizeArray(1);
+                  d_pressure_rich_time_max.resize(1);
                   d_pressure_rich_time_max[0] =
                      tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")) {
                   d_pressure_rich_time_min =
-                     error_db->getDoubleArray("time_min");
+                     error_db->getDoubleVector("time_min");
                } else {
-                  d_pressure_rich_time_min.resizeArray(1);
+                  d_pressure_rich_time_min.resize(1);
                   d_pressure_rich_time_min[0] = 0.;
                }
 
@@ -3860,7 +3861,8 @@ void Euler::getFromInput(
       /*
        * Check that input is found for each string identifier in key list.
        */
-      for (int k0 = 0; k0 < d_refinement_criteria.getSize(); k0++) {
+      for (int k0 = 0;
+           k0 < static_cast<int>(d_refinement_criteria.size()); k0++) {
          string use_key = d_refinement_criteria[k0];
          bool key_found = false;
          for (int k1 = 0; k1 < def_key_cnt; k1++) {
@@ -3986,10 +3988,10 @@ void Euler::getFromInput(
             idir = 2;
          }
 
-         tbox::Array<string> init_data_keys = init_data_db->getAllKeys();
+         std::vector<string> init_data_keys = init_data_db->getAllKeys();
 
          if (init_data_db->keyExists("front_position")) {
-            d_front_position = init_data_db->getDoubleArray("front_position");
+            d_front_position = init_data_db->getDoubleVector("front_position");
          } else {
             TBOX_ERROR(d_object_name << ": "
                                      << "`front_position' input required for "
@@ -3997,16 +3999,16 @@ void Euler::getFromInput(
          }
 
          d_number_of_intervals =
-            tbox::MathUtilities<int>::Min(d_front_position.getSize() + 1,
-               init_data_keys.getSize() - 1);
+            tbox::MathUtilities<int>::Min(static_cast<int>(d_front_position.size()) + 1,
+               static_cast<int>(init_data_keys.size()) - 1);
 
-         d_front_position.resizeArray(d_front_position.getSize() + 1);
-         d_front_position[d_front_position.getSize() - 1] =
+         d_front_position.resize(static_cast<int>(d_front_position.size()) + 1);
+         d_front_position[static_cast<int>(d_front_position.size()) - 1] =
             d_grid_geometry->getXUpper()[idir];
 
-         d_interval_density.resizeArray(d_number_of_intervals);
-         d_interval_velocity.resizeArray(d_number_of_intervals * d_dim.getValue());
-         d_interval_pressure.resizeArray(d_number_of_intervals);
+         d_interval_density.resize(d_number_of_intervals);
+         d_interval_velocity.resize(d_number_of_intervals * d_dim.getValue());
+         d_interval_pressure.resize(d_number_of_intervals);
 
          int i = 0;
          int nkey = 0;
@@ -4014,7 +4016,7 @@ void Euler::getFromInput(
 
          while (!found_interval_data
                 && (i < d_number_of_intervals)
-                && (nkey < init_data_keys.getSize())) {
+                && (nkey < static_cast<int>(init_data_keys.size()))) {
 
             if (!(init_data_keys[nkey] == "front_position")) {
 
@@ -4145,117 +4147,116 @@ void Euler::putToRestart(
        (d_data_problem == "STEP")) {
       restart_db->putInteger("d_number_of_intervals", d_number_of_intervals);
       if (d_number_of_intervals > 0) {
-         restart_db->putDoubleArray("d_front_position", d_front_position);
-         restart_db->putDoubleArray("d_interval_density", d_interval_density);
-         restart_db->putDoubleArray("d_interval_velocity",
-            d_interval_velocity);
-         restart_db->putDoubleArray("d_interval_pressure",
-            d_interval_pressure);
+         restart_db->putDoubleVector("d_front_position", d_front_position);
+         restart_db->putDoubleVector("d_interval_density", d_interval_density);
+         restart_db->putDoubleVector("d_interval_velocity", d_interval_velocity);
+         restart_db->putDoubleVector("d_interval_pressure", d_interval_pressure);
       }
    }
 
-   restart_db->putIntegerArray("d_master_bdry_edge_conds",
+   restart_db->putIntegerVector("d_master_bdry_edge_conds",
       d_master_bdry_edge_conds);
-   restart_db->putIntegerArray("d_master_bdry_node_conds",
+   restart_db->putIntegerVector("d_master_bdry_node_conds",
       d_master_bdry_node_conds);
 
    if (d_dim == tbox::Dimension(2)) {
-      restart_db->putDoubleArray("d_bdry_edge_density", d_bdry_edge_density);
-      restart_db->putDoubleArray("d_bdry_edge_velocity", d_bdry_edge_velocity);
-      restart_db->putDoubleArray("d_bdry_edge_pressure", d_bdry_edge_pressure);
+      restart_db->putDoubleVector("d_bdry_edge_density", d_bdry_edge_density);
+      restart_db->putDoubleVector("d_bdry_edge_velocity", d_bdry_edge_velocity);
+      restart_db->putDoubleVector("d_bdry_edge_pressure", d_bdry_edge_pressure);
    }
    if (d_dim == tbox::Dimension(3)) {
-      restart_db->putIntegerArray("d_master_bdry_face_conds",
+      restart_db->putIntegerVector("d_master_bdry_face_conds",
          d_master_bdry_face_conds);
 
-      restart_db->putDoubleArray("d_bdry_face_density", d_bdry_face_density);
-      restart_db->putDoubleArray("d_bdry_face_velocity", d_bdry_face_velocity);
-      restart_db->putDoubleArray("d_bdry_face_pressure", d_bdry_face_pressure);
+      restart_db->putDoubleVector("d_bdry_face_density", d_bdry_face_density);
+      restart_db->putDoubleVector("d_bdry_face_velocity", d_bdry_face_velocity);
+      restart_db->putDoubleVector("d_bdry_face_pressure", d_bdry_face_pressure);
    }
 
-   if (d_refinement_criteria.getSize() > 0) {
-      restart_db->putStringArray("d_refinement_criteria", d_refinement_criteria);
+   if (d_refinement_criteria.size() > 0) {
+      restart_db->putStringVector("d_refinement_criteria",
+         d_refinement_criteria);
    }
-   for (int i = 0; i < d_refinement_criteria.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); i++) {
 
       if (d_refinement_criteria[i] == "DENSITY_DEVIATION") {
 
-         restart_db->putDoubleArray("d_density_dev_tol",
+         restart_db->putDoubleVector("d_density_dev_tol",
             d_density_dev_tol);
-         restart_db->putDoubleArray("d_density_dev",
+         restart_db->putDoubleVector("d_density_dev",
             d_density_dev);
-         restart_db->putDoubleArray("d_density_dev_time_max",
+         restart_db->putDoubleVector("d_density_dev_time_max",
             d_density_dev_time_max);
-         restart_db->putDoubleArray("d_density_dev_time_min",
+         restart_db->putDoubleVector("d_density_dev_time_min",
             d_density_dev_time_min);
 
       } else if (d_refinement_criteria[i] == "DENSITY_GRADIENT") {
 
-         restart_db->putDoubleArray("d_density_grad_tol",
+         restart_db->putDoubleVector("d_density_grad_tol",
             d_density_grad_tol);
-         restart_db->putDoubleArray("d_density_grad_time_max",
+         restart_db->putDoubleVector("d_density_grad_time_max",
             d_density_grad_time_max);
-         restart_db->putDoubleArray("d_density_grad_time_min",
+         restart_db->putDoubleVector("d_density_grad_time_min",
             d_density_grad_time_min);
 
       } else if (d_refinement_criteria[i] == "DENSITY_SHOCK") {
 
-         restart_db->putDoubleArray("d_density_shock_onset",
+         restart_db->putDoubleVector("d_density_shock_onset",
             d_density_shock_onset);
-         restart_db->putDoubleArray("d_density_shock_tol",
+         restart_db->putDoubleVector("d_density_shock_tol",
             d_density_shock_tol);
-         restart_db->putDoubleArray("d_density_shock_time_max",
+         restart_db->putDoubleVector("d_density_shock_time_max",
             d_density_shock_time_max);
-         restart_db->putDoubleArray("d_density_shock_time_min",
+         restart_db->putDoubleVector("d_density_shock_time_min",
             d_density_shock_time_min);
 
       } else if (d_refinement_criteria[i] == "DENSITY_RICHARDSON") {
 
-         restart_db->putDoubleArray("d_density_rich_tol",
+         restart_db->putDoubleVector("d_density_rich_tol",
             d_density_rich_tol);
-         restart_db->putDoubleArray("d_density_rich_time_max",
+         restart_db->putDoubleVector("d_density_rich_time_max",
             d_density_rich_time_max);
-         restart_db->putDoubleArray("d_density_rich_time_min",
+         restart_db->putDoubleVector("d_density_rich_time_min",
             d_density_rich_time_min);
 
       } else if (d_refinement_criteria[i] == "PRESSURE_DEVIATION") {
 
-         restart_db->putDoubleArray("d_pressure_dev_tol",
+         restart_db->putDoubleVector("d_pressure_dev_tol",
             d_pressure_dev_tol);
-         restart_db->putDoubleArray("d_pressure_dev",
+         restart_db->putDoubleVector("d_pressure_dev",
             d_pressure_dev);
-         restart_db->putDoubleArray("d_pressure_dev_time_max",
+         restart_db->putDoubleVector("d_pressure_dev_time_max",
             d_pressure_dev_time_max);
-         restart_db->putDoubleArray("d_pressure_dev_time_min",
+         restart_db->putDoubleVector("d_pressure_dev_time_min",
             d_pressure_dev_time_min);
 
       } else if (d_refinement_criteria[i] == "PRESSURE_GRADIENT") {
 
-         restart_db->putDoubleArray("d_pressure_grad_tol",
+         restart_db->putDoubleVector("d_pressure_grad_tol",
             d_pressure_grad_tol);
-         restart_db->putDoubleArray("d_pressure_grad_time_max",
+         restart_db->putDoubleVector("d_pressure_grad_time_max",
             d_pressure_grad_time_max);
-         restart_db->putDoubleArray("d_pressure_grad_time_min",
+         restart_db->putDoubleVector("d_pressure_grad_time_min",
             d_pressure_grad_time_min);
 
       } else if (d_refinement_criteria[i] == "PRESSURE_SHOCK") {
 
-         restart_db->putDoubleArray("d_pressure_shock_onset",
+         restart_db->putDoubleVector("d_pressure_shock_onset",
             d_pressure_shock_onset);
-         restart_db->putDoubleArray("d_pressure_shock_tol",
+         restart_db->putDoubleVector("d_pressure_shock_tol",
             d_pressure_shock_tol);
-         restart_db->putDoubleArray("d_pressure_shock_time_max",
+         restart_db->putDoubleVector("d_pressure_shock_time_max",
             d_pressure_shock_time_max);
-         restart_db->putDoubleArray("d_pressure_shock_time_min",
+         restart_db->putDoubleVector("d_pressure_shock_time_min",
             d_pressure_shock_time_min);
 
       } else if (d_refinement_criteria[i] == "PRESSURE_RICHARDSON") {
 
-         restart_db->putDoubleArray("d_pressure_rich_tol",
+         restart_db->putDoubleVector("d_pressure_rich_tol",
             d_pressure_rich_tol);
-         restart_db->putDoubleArray("d_pressure_rich_time_max",
+         restart_db->putDoubleVector("d_pressure_rich_time_max",
             d_pressure_rich_time_max);
-         restart_db->putDoubleArray("d_pressure_rich_time_min",
+         restart_db->putDoubleVector("d_pressure_rich_time_min",
             d_pressure_rich_time_min);
       }
 
@@ -4326,114 +4327,114 @@ void Euler::getFromRestart()
        (d_data_problem == "STEP")) {
       d_number_of_intervals = db->getInteger("d_number_of_intervals");
       if (d_number_of_intervals > 0) {
-         d_front_position = db->getDoubleArray("d_front_position");
-         d_interval_density = db->getDoubleArray("d_interval_density");
-         d_interval_velocity = db->getDoubleArray("d_interval_velocity");
-         d_interval_pressure = db->getDoubleArray("d_interval_pressure");
+         d_interval_density = db->getDoubleVector("d_interval_density");
+         d_interval_velocity = db->getDoubleVector("d_interval_velocity");
+         d_interval_pressure = db->getDoubleVector("d_interval_pressure");
       }
    }
 
-   d_master_bdry_edge_conds = db->getIntegerArray("d_master_bdry_edge_conds");
-   d_master_bdry_node_conds = db->getIntegerArray("d_master_bdry_node_conds");
+   d_master_bdry_edge_conds = db->getIntegerVector("d_master_bdry_edge_conds");
+   d_master_bdry_node_conds = db->getIntegerVector("d_master_bdry_node_conds");
 
    if (d_dim == tbox::Dimension(2)) {
-      d_bdry_edge_density = db->getDoubleArray("d_bdry_edge_density");
-      d_bdry_edge_velocity = db->getDoubleArray("d_bdry_edge_velocity");
-      d_bdry_edge_pressure = db->getDoubleArray("d_bdry_edge_pressure");
+      d_bdry_edge_density = db->getDoubleVector("d_bdry_edge_density");
+      d_bdry_edge_velocity = db->getDoubleVector("d_bdry_edge_velocity");
+      d_bdry_edge_pressure = db->getDoubleVector("d_bdry_edge_pressure");
    }
    if (d_dim == tbox::Dimension(3)) {
-      d_master_bdry_face_conds = db->getIntegerArray("d_master_bdry_face_conds");
+      d_master_bdry_face_conds =
+         db->getIntegerVector("d_master_bdry_face_conds");
 
-      d_bdry_face_density = db->getDoubleArray("d_bdry_face_density");
-      d_bdry_face_velocity = db->getDoubleArray("d_bdry_face_velocity");
-      d_bdry_face_pressure = db->getDoubleArray("d_bdry_face_pressure");
+      d_bdry_face_density = db->getDoubleVector("d_bdry_face_density");
+      d_bdry_face_velocity = db->getDoubleVector("d_bdry_face_velocity");
+      d_bdry_face_pressure = db->getDoubleVector("d_bdry_face_pressure");
    }
 
    if (db->keyExists("d_refinement_criteria")) {
-      d_refinement_criteria = db->getStringArray("d_refinement_criteria");
+      d_refinement_criteria = db->getStringVector("d_refinement_criteria");
    }
 
-   for (int i = 0; i < d_refinement_criteria.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); i++) {
 
       if (d_refinement_criteria[i] == "DENSITY_DEVIATION") {
 
          d_density_dev_tol =
-            db->getDoubleArray("d_density_dev_tol");
+            db->getDoubleVector("d_density_dev_tol");
          d_density_dev =
-            db->getDoubleArray("d_density_dev");
+            db->getDoubleVector("d_density_dev");
          d_density_dev_time_max =
-            db->getDoubleArray("d_density_dev_time_max");
+            db->getDoubleVector("d_density_dev_time_max");
          d_density_dev_time_min =
-            db->getDoubleArray("d_density_dev_time_min");
+            db->getDoubleVector("d_density_dev_time_min");
 
       } else if (d_refinement_criteria[i] == "DENSITY_GRADIENT") {
 
          d_density_grad_tol =
-            db->getDoubleArray("d_density_grad_tol");
+            db->getDoubleVector("d_density_grad_tol");
          d_density_grad_time_max =
-            db->getDoubleArray("d_density_grad_time_max");
+            db->getDoubleVector("d_density_grad_time_max");
          d_density_grad_time_min =
-            db->getDoubleArray("d_density_grad_time_min");
+            db->getDoubleVector("d_density_grad_time_min");
 
       } else if (d_refinement_criteria[i] == "DENSITY_SHOCK") {
 
          d_density_shock_onset =
-            db->getDoubleArray("d_density_shock_onset");
+            db->getDoubleVector("d_density_shock_onset");
          d_density_shock_tol =
-            db->getDoubleArray("d_density_shock_tol");
+            db->getDoubleVector("d_density_shock_tol");
          d_density_shock_time_max =
-            db->getDoubleArray("d_density_shock_time_max");
+            db->getDoubleVector("d_density_shock_time_max");
          d_density_shock_time_min =
-            db->getDoubleArray("d_density_shock_time_min");
+            db->getDoubleVector("d_density_shock_time_min");
 
       } else if (d_refinement_criteria[i] == "DENSITY_RICHARDSON") {
 
          d_density_rich_tol =
-            db->getDoubleArray("d_density_rich_tol");
+            db->getDoubleVector("d_density_rich_tol");
          d_density_rich_time_max =
-            db->getDoubleArray("d_density_rich_time_max");
+            db->getDoubleVector("d_density_rich_time_max");
          d_density_rich_time_min =
-            db->getDoubleArray("d_density_rich_time_min");
+            db->getDoubleVector("d_density_rich_time_min");
 
       } else if (d_refinement_criteria[i] == "PRESSURE_DEVIATION") {
 
          d_pressure_dev_tol =
-            db->getDoubleArray("d_pressure_dev_tol");
+            db->getDoubleVector("d_pressure_dev_tol");
          d_pressure_dev =
-            db->getDoubleArray("d_pressure_dev");
+            db->getDoubleVector("d_pressure_dev");
          d_pressure_dev_time_max =
-            db->getDoubleArray("d_pressure_dev_time_max");
+            db->getDoubleVector("d_pressure_dev_time_max");
          d_pressure_dev_time_min =
-            db->getDoubleArray("d_pressure_dev_time_min");
+            db->getDoubleVector("d_pressure_dev_time_min");
 
       } else if (d_refinement_criteria[i] == "PRESSURE_GRADIENT") {
 
          d_pressure_grad_tol =
-            db->getDoubleArray("d_pressure_grad_tol");
+            db->getDoubleVector("d_pressure_grad_tol");
          d_pressure_grad_time_max =
-            db->getDoubleArray("d_pressure_grad_time_max");
+            db->getDoubleVector("d_pressure_grad_time_max");
          d_pressure_grad_time_min =
-            db->getDoubleArray("d_pressure_grad_time_min");
+            db->getDoubleVector("d_pressure_grad_time_min");
 
       } else if (d_refinement_criteria[i] == "PRESSURE_SHOCK") {
 
          d_pressure_shock_onset =
-            db->getDoubleArray("d_pressure_shock_onset");
+            db->getDoubleVector("d_pressure_shock_onset");
          d_pressure_shock_tol =
-            db->getDoubleArray("d_pressure_shock_tol");
+            db->getDoubleVector("d_pressure_shock_tol");
          d_pressure_shock_time_max =
-            db->getDoubleArray("d_pressure_shock_time_max");
+            db->getDoubleVector("d_pressure_shock_time_max");
          d_pressure_shock_time_min =
-            db->getDoubleArray("d_pressure_shock_time_min");
+            db->getDoubleVector("d_pressure_shock_time_min");
 
       } else if (d_refinement_criteria[i] == "PRESSURE_RICHARDSON") {
 
          d_pressure_rich_tol =
-            db->getDoubleArray("d_pressure_rich_tol");
+            db->getDoubleVector("d_pressure_rich_tol");
          d_pressure_rich_time_max =
-            db->getDoubleArray("d_pressure_rich_time_max");
+            db->getDoubleVector("d_pressure_rich_time_max");
          d_pressure_rich_time_min =
-            db->getDoubleArray("d_pressure_rich_time_min");
+            db->getDoubleVector("d_pressure_rich_time_min");
 
       }
 
@@ -4489,16 +4490,16 @@ void Euler::readStateDataEntry(
    boost::shared_ptr<tbox::Database> db,
    const string& db_name,
    int array_indx,
-   tbox::Array<double>& density,
-   tbox::Array<double>& velocity,
-   tbox::Array<double>& pressure)
+   std::vector<double>& density,
+   std::vector<double>& velocity,
+   std::vector<double>& pressure)
 {
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
    TBOX_ASSERT(array_indx >= 0);
-   TBOX_ASSERT(density.getSize() > array_indx);
-   TBOX_ASSERT(velocity.getSize() > array_indx * d_dim.getValue());
-   TBOX_ASSERT(pressure.getSize() > array_indx);
+   TBOX_ASSERT(static_cast<int>(density.size()) > array_indx);
+   TBOX_ASSERT(static_cast<int>(velocity.size()) > array_indx * d_dim.getValue());
+   TBOX_ASSERT(static_cast<int>(pressure.size()) > array_indx);
 
    if (db->keyExists("density")) {
       density[array_indx] = db->getDouble("density");
@@ -4508,9 +4509,8 @@ void Euler::readStateDataEntry(
                                << " input database. " << endl);
    }
    if (db->keyExists("velocity")) {
-      tbox::Array<double> tmp_vel(0);
-      tmp_vel = db->getDoubleArray("velocity");
-      if (tmp_vel.getSize() < d_dim.getValue()) {
+      std::vector<double> tmp_vel = db->getDoubleVector("velocity");
+      if (static_cast<int>(tmp_vel.size()) < d_dim.getValue()) {
          TBOX_ERROR(d_object_name << ": "
                                   << "Insufficient number `velocity' values"
                                   << " given in " << db_name
@@ -4546,8 +4546,8 @@ void Euler::checkBoundaryData(
    int btype,
    const hier::Patch& patch,
    const hier::IntVector& ghost_width_to_check,
-   const tbox::Array<int>& scalar_bconds,
-   const tbox::Array<int>& vector_bconds) const
+   const std::vector<int>& scalar_bconds,
+   const std::vector<int>& vector_bconds) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim == tbox::Dimension(2)) {
@@ -4562,12 +4562,12 @@ void Euler::checkBoundaryData(
       patch.getPatchGeometry(),
       BOOST_CAST_TAG);
    TBOX_ASSERT(pgeom);
-   const tbox::Array<hier::BoundaryBox> bdry_boxes =
+   const std::vector<hier::BoundaryBox>& bdry_boxes =
       pgeom->getCodimensionBoundaries(btype);
 
    hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
 
-   for (int i = 0; i < bdry_boxes.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(bdry_boxes.size()); i++) {
       hier::BoundaryBox bbox = bdry_boxes[i];
       TBOX_ASSERT(bbox.getBoundaryType() == btype);
       int bloc = bbox.getLocationIndex();
@@ -4577,14 +4577,18 @@ void Euler::checkBoundaryData(
       int refbdryloc = 0;
       if (d_dim == tbox::Dimension(2)) {
          if (btype == Bdry::EDGE2D) {
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_EDGES);
-            TBOX_ASSERT(vector_bconds.getSize() == NUM_2D_EDGES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
+                        NUM_2D_EDGES);
+            TBOX_ASSERT(static_cast<int>(vector_bconds.size()) ==
+                        NUM_2D_EDGES);
             bscalarcase = scalar_bconds[bloc];
             bvelocitycase = vector_bconds[bloc];
             refbdryloc = bloc;
          } else { // btype == Bdry::NODE2D
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_NODES);
-            TBOX_ASSERT(vector_bconds.getSize() == NUM_2D_NODES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
+                        NUM_2D_NODES);
+            TBOX_ASSERT(static_cast<int>(vector_bconds.size()) ==
+                        NUM_2D_NODES);
             bscalarcase = scalar_bconds[bloc];
             bvelocitycase = vector_bconds[bloc];
             refbdryloc = d_node_bdry_edge[bloc];
@@ -4592,20 +4596,26 @@ void Euler::checkBoundaryData(
       }
       if (d_dim == tbox::Dimension(3)) {
          if (btype == Bdry::FACE3D) {
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_FACES);
-            TBOX_ASSERT(vector_bconds.getSize() == NUM_3D_FACES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
+                        NUM_3D_FACES);
+            TBOX_ASSERT(static_cast<int>(vector_bconds.size()) ==
+                        NUM_3D_FACES);
             bscalarcase = scalar_bconds[bloc];
             bvelocitycase = vector_bconds[bloc];
             refbdryloc = bloc;
          } else if (btype == Bdry::EDGE3D) {
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_EDGES);
-            TBOX_ASSERT(vector_bconds.getSize() == NUM_3D_EDGES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
+                        NUM_3D_EDGES);
+            TBOX_ASSERT(static_cast<int>(vector_bconds.size()) ==
+                        NUM_3D_EDGES);
             bscalarcase = scalar_bconds[bloc];
             bvelocitycase = vector_bconds[bloc];
             refbdryloc = d_edge_bdry_face[bloc];
          } else { // btype == Bdry::NODE3D
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_NODES);
-            TBOX_ASSERT(vector_bconds.getSize() == NUM_3D_NODES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
+                        NUM_3D_NODES);
+            TBOX_ASSERT(static_cast<int>(vector_bconds.size()) ==
+                        NUM_3D_NODES);
             bscalarcase = scalar_bconds[bloc];
             bvelocitycase = vector_bconds[bloc];
             refbdryloc = d_node_bdry_face[bloc];

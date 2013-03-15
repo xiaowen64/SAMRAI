@@ -19,6 +19,8 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
+#include <vector>
+
 #define POLY3(i, j, k, imin, jmin, kmin, nx, nxny) \
    ((i - imin) + (j - jmin) * (nx) + (k - kmin) * (nxny))
 
@@ -397,7 +399,9 @@ void MblkGeometry::getFromInput(
       for (ln = 0; ln < max_ln; ln++) {
          sprintf(block_name, "refine_boxes_%d_%d", nb, ln);
          if (db->keyExists(block_name)) {
-            d_refine_boxes[nb][ln] = db->getDatabaseBoxArray(block_name);
+            std::vector<tbox::DatabaseBox> db_box_vector =
+               db->getDatabaseBoxVector(block_name);
+            d_refine_boxes[nb][ln] = db_box_vector;
          } else {
             TBOX_ERROR(
                d_object_name << ": input entry `"

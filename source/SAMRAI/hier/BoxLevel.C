@@ -1469,8 +1469,9 @@ BoxLevel::putToRestart(
    restart_db->putInteger("d_nproc", d_mpi.getSize());
    restart_db->putInteger("d_rank", d_mpi.getRank());
    restart_db->putInteger("dim", d_ratio.getDim().getValue());
-   restart_db->putIntegerArray(
-      "d_ratio", &d_ratio[0], d_ratio.getDim().getValue());
+   restart_db->putIntegerArray("d_ratio",
+      &d_ratio[0],
+      d_ratio.getDim().getValue());
    getBoxes().putToRestart(restart_db->putDatabase("mapped_boxes"));
 }
 

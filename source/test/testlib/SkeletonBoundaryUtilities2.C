@@ -17,6 +17,8 @@
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <vector>
+
 /*
  *************************************************************************
  *
@@ -88,9 +90,9 @@ bool SkeletonBoundaryUtilities2::s_fortran_constants_stuffed = false;
  * Arguments are:
  *    bdry_strategy .... object that reads DIRICHLET or NEUMANN data
  *    input_db ......... input database containing all boundary data
- *    edge_conds ....... array into which integer boundary conditions
+ *    edge_conds ....... vector into which integer boundary conditions
  *                       for edges are read
- *    node_conds ....... array into which integer boundary conditions
+ *    node_conds ....... vector into which integer boundary conditions
  *                       for nodes are read
  *    periodic ......... integer vector specifying which coordinate
  *                       directions are periodic (value returned from
@@ -100,14 +102,14 @@ bool SkeletonBoundaryUtilities2::s_fortran_constants_stuffed = false;
 void SkeletonBoundaryUtilities2::getFromInput(
    BoundaryUtilityStrategy* bdry_strategy,
    const boost::shared_ptr<tbox::Database>& input_db,
-   tbox::Array<int>& edge_conds,
-   tbox::Array<int>& node_conds,
+   std::vector<int>& edge_conds,
+   std::vector<int>& node_conds,
    const hier::IntVector& periodic)
 {
    TBOX_ASSERT(bdry_strategy != 0);
    TBOX_ASSERT(input_db);
-   TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
-   TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
+   TBOX_ASSERT(static_cast<int>(edge_conds.size()) == NUM_2D_EDGES);
+   TBOX_ASSERT(static_cast<int>(node_conds.size()) == NUM_2D_NODES);
 
    if (!s_fortran_constants_stuffed) {
       stuff2dBdryFortConst();
@@ -133,8 +135,8 @@ void SkeletonBoundaryUtilities2::getFromInput(
  *    vardata .............. cell-centered patch data object to check
  *    patch ................ patch on which data object lives
  *    ghost_width_to_fill .. width of ghost region to fill
- *    bdry_edge_conds ...... array of boundary conditions for patch edges
- *    bdry_edge_values ..... array of boundary values for edges
+ *    bdry_edge_conds ...... vector of boundary conditions for patch edges
+ *    bdry_edge_values ..... vector of boundary values for edges
  *                           (this must be consistent with boundary
  *                           condition types)
  */
@@ -144,14 +146,15 @@ void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
    boost::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
-   const tbox::Array<int>& bdry_edge_conds,
-   const tbox::Array<double>& bdry_edge_values)
+   const std::vector<int>& bdry_edge_conds,
+   const std::vector<double>& bdry_edge_values)
 {
    NULL_USE(varname);
 
    TBOX_ASSERT(vardata);
-   TBOX_ASSERT(bdry_edge_conds.getSize() == NUM_2D_EDGES);
-   TBOX_ASSERT(bdry_edge_values.getSize() == NUM_2D_EDGES * (vardata->getDepth()));
+   TBOX_ASSERT(static_cast<int>(bdry_edge_conds.size()) == NUM_2D_EDGES);
+   TBOX_ASSERT(static_cast<int>(bdry_edge_values.size()) ==
+               NUM_2D_EDGES * (vardata->getDepth()));
 
    if (!s_fortran_constants_stuffed) {
       stuff2dBdryFortConst();
@@ -169,9 +172,9 @@ void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
    hier::IntVector gcw_to_fill = hier::IntVector::min(ghost_cells,
          ghost_fill_width);
 
-   const tbox::Array<hier::BoundaryBox>& edge_bdry =
+   const std::vector<hier::BoundaryBox>& edge_bdry =
       pgeom->getCodimensionBoundaries(Bdry::EDGE2D);
-   for (int i = 0; i < edge_bdry.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(edge_bdry.size()); i++) {
       TBOX_ASSERT(edge_bdry[i].getBoundaryType() == Bdry::EDGE2D);
 
       int bedge_loc = edge_bdry[i].getLocationIndex();
@@ -192,7 +195,7 @@ void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
             ghost_cells(0), ghost_cells(1),
             bedge_loc,
             bdry_edge_conds[bedge_loc],
-            bdry_edge_values.getPointer(),
+            &bdry_edge_values[0],
             vardata->getPointer(),
             vardata->getDepth());
       }
@@ -209,8 +212,8 @@ void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
  *    vardata .............. cell-centered patch data object to check
  *    patch ................ patch on which data object lives
  *    ghost_width_to_fill .. width of ghost region to fill
- *    bdry_node_conds ...... array of boundary conditions for patch nodes
- *    bdry_edge_values ..... array of boundary values for edges
+ *    bdry_node_conds ...... vector of boundary conditions for patch nodes
+ *    bdry_edge_values ..... vector of boundary values for edges
  *                           (this must be consistent with boundary
  *                           condition types)
  */
@@ -220,14 +223,15 @@ void SkeletonBoundaryUtilities2::fillNodeBoundaryData(
    boost::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
-   const tbox::Array<int>& bdry_node_conds,
-   const tbox::Array<double>& bdry_edge_values)
+   const std::vector<int>& bdry_node_conds,
+   const std::vector<double>& bdry_edge_values)
 {
    NULL_USE(varname);
 
    TBOX_ASSERT(vardata);
-   TBOX_ASSERT(bdry_node_conds.getSize() == NUM_2D_NODES);
-   TBOX_ASSERT(bdry_edge_values.getSize() == NUM_2D_EDGES * (vardata->getDepth()));
+   TBOX_ASSERT(static_cast<int>(bdry_node_conds.size()) == NUM_2D_NODES);
+   TBOX_ASSERT(static_cast<int>(bdry_edge_values.size()) ==
+               NUM_2D_EDGES * (vardata->getDepth()));
 
    if (!s_fortran_constants_stuffed) {
       stuff2dBdryFortConst();
@@ -245,10 +249,10 @@ void SkeletonBoundaryUtilities2::fillNodeBoundaryData(
    hier::IntVector gcw_to_fill = hier::IntVector::min(ghost_cells,
          ghost_fill_width);
 
-   const tbox::Array<hier::BoundaryBox>& node_bdry =
+   const std::vector<hier::BoundaryBox>& node_bdry =
       pgeom->getCodimensionBoundaries(Bdry::NODE2D);
 
-   for (int i = 0; i < node_bdry.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(node_bdry.size()); i++) {
       TBOX_ASSERT(node_bdry[i].getBoundaryType() == Bdry::NODE2D);
 
       int bnode_loc = node_bdry[i].getLocationIndex();
@@ -269,7 +273,7 @@ void SkeletonBoundaryUtilities2::fillNodeBoundaryData(
             ghost_cells(0), ghost_cells(1),
             bnode_loc,
             bdry_node_conds[bnode_loc],
-            bdry_edge_values.getPointer(),
+            &bdry_edge_values[0],
             vardata->getPointer(),
             vardata->getDepth());
       }
@@ -506,12 +510,12 @@ int SkeletonBoundaryUtilities2::checkBdryData(
 void SkeletonBoundaryUtilities2::read2dBdryEdges(
    BoundaryUtilityStrategy* bdry_strategy,
    boost::shared_ptr<tbox::Database> input_db,
-   tbox::Array<int>& edge_conds,
+   std::vector<int>& edge_conds,
    const hier::IntVector& periodic)
 {
    TBOX_ASSERT(bdry_strategy != 0);
    TBOX_ASSERT(input_db);
-   TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
+   TBOX_ASSERT(static_cast<int>(edge_conds.size()) == NUM_2D_EDGES);
 
    int num_per_dirs = 0;
    for (int id = 0; id < 2; id++) {
@@ -598,13 +602,13 @@ void SkeletonBoundaryUtilities2::read2dBdryEdges(
 
 void SkeletonBoundaryUtilities2::read2dBdryNodes(
    boost::shared_ptr<tbox::Database> input_db,
-   const tbox::Array<int>& edge_conds,
-   tbox::Array<int>& node_conds,
+   const std::vector<int>& edge_conds,
+   std::vector<int>& node_conds,
    const hier::IntVector& periodic)
 {
    TBOX_ASSERT(input_db);
-   TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
-   TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
+   TBOX_ASSERT(static_cast<int>(edge_conds.size()) == NUM_2D_EDGES);
+   TBOX_ASSERT(static_cast<int>(node_conds.size()) == NUM_2D_NODES);
 
    int num_per_dirs = 0;
    for (int id = 0; id < 2; id++) {

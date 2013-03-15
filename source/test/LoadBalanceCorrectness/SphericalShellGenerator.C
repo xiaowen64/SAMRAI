@@ -48,21 +48,20 @@ SphericalShellGenerator::SphericalShellGenerator(
 
       if (database->isDouble("radii")) {
 
-         d_radii = database->getDoubleArray("radii");
+         d_radii = database->getDoubleVector("radii");
 
-         if ( d_radii.size()%2 != 0 ) {
+         if ( static_cast<int>(d_radii.size())%2 != 0 ) {
             d_radii.push_back(tbox::MathUtilities<double>::getMax());
          }
 
          tbox::plog << "SphericalShellGenerator radii:\n";
-         for ( int i=0; i<d_radii.size(); ++i ) {
+         for ( int i=0; i<static_cast<int>(d_radii.size()); ++i ) {
             tbox::plog << "\tradii[" << i << "] = " << d_radii[i] << '\n';
          }
       }
 
       if (database->isDouble("center")) {
-         tbox::Array<double> tmpa;
-         tmpa = database->getDoubleArray("center");
+         std::vector<double> tmpa = database->getDoubleVector("center");
          for ( int d=0; d<d_dim.getValue(); ++d ) {
             d_center[d] = tmpa[d];
          }
@@ -82,11 +81,11 @@ SphericalShellGenerator::SphericalShellGenerator(
          const std::string bnameln = bname + lnstr;
          const std::string snameln = sname + lnstr;
 
-         tbox::Array<double> tmpa;
+         std::vector<double> tmpa;
 
          if ( database->isDouble(bnameln) ) {
-            tmpa = database->getDoubleArray(bnameln);
-            if ( tmpa.getSize() != dim.getValue() ) {
+            tmpa = database->getDoubleVector(bnameln);
+            if ( static_cast<int>(tmpa.size()) != dim.getValue() ) {
                TBOX_ERROR(bnameln << " input parameter must have " << dim << " values");
             }
             d_buffer_shrink.push_back('b');
@@ -96,8 +95,8 @@ SphericalShellGenerator::SphericalShellGenerator(
             if ( !tmpa.empty() ) {
                TBOX_ERROR("Cannot specify both " << bnameln << " and " << snameln);
             }
-            tmpa = database->getDoubleArray(snameln);
-            if ( tmpa.getSize() != dim.getValue() ) {
+            tmpa = database->getDoubleVector(snameln);
+            if ( static_cast<int>(tmpa.size()) != dim.getValue() ) {
                TBOX_ERROR(snameln << " input parameter must have " << dim << " values");
             }
             d_buffer_shrink.push_back('s');
@@ -106,8 +105,8 @@ SphericalShellGenerator::SphericalShellGenerator(
          if ( !tmpa.empty() ) {
             d_buffer_shrink_distance.resize(d_buffer_shrink_distance.size() + 1);
             d_buffer_shrink_distance.back().insert( d_buffer_shrink_distance.back().end(),
-                                                    tmpa.getPointer(),
-                                                    tmpa.getPointer()+tmpa.size() );
+                                                    &tmpa[0],
+                                                    &tmpa[0]+static_cast<int>(tmpa.size()) );
          }
          else {
             break;

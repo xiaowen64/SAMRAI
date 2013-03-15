@@ -877,8 +877,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
     * Add the constructed coarsened level to the array of maintained
     * coarsened levels for Richardson extrapolation.
     */
-   if (d_rich_extrap_coarsened_levels.getSize() < level_number + 1) {
-      d_rich_extrap_coarsened_levels.resizeArray(level_number + 1);
+   if (static_cast<int>(d_rich_extrap_coarsened_levels.size()) < level_number + 1) {
+      d_rich_extrap_coarsened_levels.resize(level_number + 1);
    }
 
    d_rich_extrap_coarsened_levels[level_number] = coarsened_level;
@@ -940,7 +940,7 @@ StandardTagAndInitialize::coarsestLevelBoxesOK(
 
 void
 StandardTagAndInitialize::checkCoarsenRatios(
-   const tbox::Array<hier::IntVector>& ratio_to_coarser)
+   const std::vector<hier::IntVector>& ratio_to_coarser)
 {
    if (everUsesRichardsonExtrapolation()) {
       const tbox::Dimension& dim = ratio_to_coarser[1].getDim();
@@ -965,7 +965,7 @@ StandardTagAndInitialize::checkCoarsenRatios(
        * level are between the supported 2 or 3, and that the error coarsen
        * ratios are constant over the hierarchy.
        */
-      for (int ln = 1; ln < ratio_to_coarser.getSize(); ln++) {
+      for (int ln = 1; ln < static_cast<int>(ratio_to_coarser.size()); ln++) {
 
          for (int d = 0; d < dim.getValue(); d++) {
             int gcd = GCD(error_coarsen_ratio, ratio_to_coarser[ln](d));
@@ -1226,8 +1226,8 @@ StandardTagAndInitialize::getFromInput(
          this_tag_crit.d_tagging_method = tagging_method;
          if (tagging_method == "REFINE_BOXES") {
             d_ever_uses_refine_boxes = true;
-            tbox::Array<std::string> level_keys = input_db->getAllKeys();
-            int n_level_keys = level_keys.getSize();
+            std::vector<std::string> level_keys = input_db->getAllKeys();
+            int n_level_keys = static_cast<int>(level_keys.size());
             if (n_level_keys <= 1) {
                TBOX_ERROR(
                   getObjectName() << "::getFromInput \n"
@@ -1248,8 +1248,8 @@ StandardTagAndInitialize::getFromInput(
                int level = atoi(level_keys[k].substr(6).c_str());
                boost::shared_ptr<tbox::Database> level_db(
                   input_db->getDatabase(level_keys[k]));
-               tbox::Array<std::string> block_keys = level_db->getAllKeys();
-               int n_block_keys = block_keys.getSize();
+               std::vector<std::string> block_keys = level_db->getAllKeys();
+               int n_block_keys = static_cast<int>(block_keys.size());
                if (n_block_keys <= 0) {
                   TBOX_ERROR(
                      getObjectName() << "::getFromInput \n"
@@ -1257,8 +1257,9 @@ StandardTagAndInitialize::getFromInput(
                                      << std::endl);
                }
                if ((n_block_keys == 1) && (block_keys[0] == "boxes")) {
-                  hier::BoxContainer boxes(
-                     level_db->getDatabaseBoxArray("boxes"));
+                  std::vector<tbox::DatabaseBox> db_box_vector =
+                     level_db->getDatabaseBoxVector("boxes");
+                  hier::BoxContainer boxes(db_box_vector);
                   for (hier::BoxContainer::iterator b = boxes.begin();
                        b != boxes.end(); ++b) {
                      b->setBlockId(hier::BlockId(0));
@@ -1276,8 +1277,9 @@ StandardTagAndInitialize::getFromInput(
                      int block = atoi(block_keys[l].substr(6).c_str());
                      boost::shared_ptr<tbox::Database> block_db(
                         level_db->getDatabase(block_keys[l]));
-                     hier::BoxContainer boxes(
-                        block_db->getDatabaseBoxArray("boxes"));
+                     std::vector<tbox::DatabaseBox> db_box_vector =
+                        block_db->getDatabaseBoxVector("boxes");
+                     hier::BoxContainer boxes(db_box_vector);
                      for (hier::BoxContainer::iterator b = boxes.begin();
                           b != boxes.end(); ++b) {
                         b->setBlockId(hier::BlockId(block));
@@ -1312,7 +1314,7 @@ StandardTagAndInitialize::getFromInput(
 
          // Read the set of criteria for each cycle or time having tagging
          // criteria.
-         int n_at_commands = input_db->getAllKeys().getSize();
+         int n_at_commands = static_cast<int>(input_db->getAllKeys().size());
          for (int i = 0; i < n_at_commands; ++i) {
             std::string at_name = "at_" + tbox::Utilities::intToString(i);
             if (!input_db->keyExists(at_name)) {
@@ -1359,7 +1361,7 @@ StandardTagAndInitialize::getFromInput(
             /*
              * Read info common to cycle and time tagging criteria.
              */
-            int n_tag_keys = at_db->getAllKeys().getSize() - 1;
+            int n_tag_keys = static_cast<int>(at_db->getAllKeys().size()) - 1;
             if (n_tag_keys <= 0) {
                TBOX_ERROR(
                   getObjectName() << "::getFromInput \n"
@@ -1396,8 +1398,8 @@ StandardTagAndInitialize::getFromInput(
                // need to be read.
                if (tagging_method == "REFINE_BOXES") {
                   d_ever_uses_refine_boxes = true;
-                  tbox::Array<std::string> level_keys = input_db->getAllKeys();
-                  int n_level_keys = level_keys.getSize();
+                  std::vector<std::string> level_keys = input_db->getAllKeys();
+                  int n_level_keys = static_cast<int>(level_keys.size());
                   if (n_level_keys <= 1) {
                      TBOX_ERROR(
                         getObjectName() << "::getFromInput \n"
@@ -1420,9 +1422,9 @@ StandardTagAndInitialize::getFromInput(
                      int level = atoi(level_keys[k].substr(6).c_str());
                      boost::shared_ptr<tbox::Database> level_db(
                         this_tag_db->getDatabase(level_keys[k]));
-                     tbox::Array<std::string> block_keys =
+                     std::vector<std::string> block_keys =
                         level_db->getAllKeys();
-                     int n_block_keys = block_keys.getSize();
+                     int n_block_keys = static_cast<int>(block_keys.size());
                      if (n_block_keys <= 0) {
                         TBOX_ERROR(
                            getObjectName() << "::getFromInput \n"
@@ -1430,8 +1432,9 @@ StandardTagAndInitialize::getFromInput(
                                            << std::endl);
                      }
                      if ((n_block_keys == 1) && (block_keys[0] == "boxes")) {
-                        hier::BoxContainer boxes(
-                           level_db->getDatabaseBoxArray("boxes"));
+                        std::vector<tbox::DatabaseBox> db_box_vector =
+                           level_db->getDatabaseBoxVector("boxes");
+                        hier::BoxContainer boxes(db_box_vector);
                         for (hier::BoxContainer::iterator b = boxes.begin();
                              b != boxes.end(); ++b) {
                            b->setBlockId(hier::BlockId(0));
@@ -1449,8 +1452,9 @@ StandardTagAndInitialize::getFromInput(
                            int block = atoi(block_keys[l].substr(6).c_str());
                            boost::shared_ptr<tbox::Database> block_db(
                               level_db->getDatabase(block_keys[l]));
-                           hier::BoxContainer boxes(
-                              block_db->getDatabaseBoxArray("boxes"));
+                           std::vector<tbox::DatabaseBox> db_box_vector =
+                              block_db->getDatabaseBoxVector("boxes");
+                           hier::BoxContainer boxes(db_box_vector);
                            for (hier::BoxContainer::iterator b = boxes.begin();
                                 b != boxes.end(); ++b) {
                               b->setBlockId(hier::BlockId(block));
@@ -1589,7 +1593,7 @@ StandardTagAndInitialize::getUserSuppliedRefineBoxes(
     * determined refine boxes with their requested set.
     */
    bool use_reset = false;
-   if (d_refine_boxes_reset.getSize() > level_num) {
+   if (static_cast<int>(d_refine_boxes_reset.size()) > level_num) {
       if (d_refine_boxes_reset[level_num]) {
          use_reset = true;
          refine_boxes = d_reset_refine_boxes[level_num];
@@ -1632,11 +1636,11 @@ StandardTagAndInitialize::resetRefineBoxes(
 {
    TBOX_ASSERT(level_num >= 0);
 
-   int i = d_reset_refine_boxes.getSize();
+   int i = static_cast<int>(d_reset_refine_boxes.size());
    if (i <= level_num) {
-      d_reset_refine_boxes.resizeArray(level_num + 1);
-      d_refine_boxes_reset.resizeArray(level_num + 1);
-      for ( ; i < d_reset_refine_boxes.getSize(); ++i) {
+      d_reset_refine_boxes.resize(level_num + 1);
+      d_refine_boxes_reset.resize(level_num + 1);
+      for ( ; i < static_cast<int>(d_reset_refine_boxes.size()); ++i) {
          d_refine_boxes_reset[i] = false;
       }
    }

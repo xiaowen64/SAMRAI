@@ -66,6 +66,7 @@
 
 #include "boost/shared_ptr.hpp"
 #include <string>
+#include <vector>
 
 using namespace SAMRAI;
 using namespace xfer;
@@ -590,13 +591,13 @@ private:
     */
    RefineAlgorithm d_fill_new_level;
    RefineAlgorithm d_soln_fill;
-   tbox::Array<boost::shared_ptr<RefineSchedule> > d_soln_fill_schedule;
+   std::vector<boost::shared_ptr<RefineSchedule> > d_soln_fill_schedule;
    CoarsenAlgorithm d_flux_coarsen;
-   tbox::Array<boost::shared_ptr<CoarsenSchedule> > d_flux_coarsen_schedule;
+   std::vector<boost::shared_ptr<CoarsenSchedule> > d_flux_coarsen_schedule;
    CoarsenAlgorithm d_soln_coarsen;
-   tbox::Array<boost::shared_ptr<CoarsenSchedule> > d_soln_coarsen_schedule;
+   std::vector<boost::shared_ptr<CoarsenSchedule> > d_soln_coarsen_schedule;
    CoarsenAlgorithm d_scratch_soln_coarsen;
-   tbox::Array<boost::shared_ptr<CoarsenSchedule> > d_scratch_soln_coarsen_schedule;
+   std::vector<boost::shared_ptr<CoarsenSchedule> > d_scratch_soln_coarsen_schedule;
 
    boost::shared_ptr<RefineOperator> d_soln_refine_op;
    boost::shared_ptr<CoarsenOperator> d_soln_coarsen_op;

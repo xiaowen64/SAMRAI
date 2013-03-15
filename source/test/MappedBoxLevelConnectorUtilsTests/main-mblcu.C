@@ -51,7 +51,7 @@ shrinkBoxLevel(
    boost::shared_ptr<hier::BoxLevel>& small_box_level,
    const hier::BoxLevel& big_box_level,
    const hier::IntVector& shrinkage,
-   const tbox::Array<int>& unshrunken_blocks);
+   const std::vector<int>& unshrunken_blocks);
 
 /*
  * Refine a BoxLevel by the given ratio.
@@ -198,18 +198,18 @@ int main(
       /*
        * Empty blocks are blocks not to have any Boxes.
        */
-      tbox::Array<int> empty_blocks;
+      std::vector<int> empty_blocks;
       if (main_db->isInteger("empty_blocks")) {
-         empty_blocks = main_db->getIntegerArray("empty_blocks");
+         empty_blocks = main_db->getIntegerVector("empty_blocks");
       }
 
       /*
        * Unshrunken blocks are blocks in which the small BoxLevel
        * has the same index space as the big BoxLevel.
        */
-      tbox::Array<int> unshrunken_blocks;
+      std::vector<int> unshrunken_blocks;
       if (main_db->isInteger("unshrunken_blocks")) {
-         unshrunken_blocks = main_db->getIntegerArray("unshrunken_blocks");
+         unshrunken_blocks = main_db->getIntegerVector("unshrunken_blocks");
       }
 
       plog << "Input database after initialization..." << std::endl;
@@ -264,8 +264,9 @@ int main(
                one_vector,
                block_id);
 
-            hier::BoxContainer exclude_boxes;
-            exclude_boxes = main_db->getDatabaseBoxArray(exclude_boxes_name);
+            std::vector<tbox::DatabaseBox> db_box_vector =
+               main_db->getDatabaseBoxVector(exclude_boxes_name);
+            hier::BoxContainer exclude_boxes(db_box_vector);
             for (hier::BoxContainer::iterator itr = exclude_boxes.begin();
                  itr != exclude_boxes.end(); ++itr) {
                itr->setBlockId(block_id);
@@ -319,7 +320,9 @@ int main(
        */
       if (main_db->isInteger("big_refinement_ratio")) {
          hier::IntVector big_refinement_ratio(dim);
-         main_db->getIntegerArray("big_refinement_ratio", &big_refinement_ratio[0], dim.getValue());
+         main_db->getIntegerArray("big_refinement_ratio",
+            &big_refinement_ratio[0],
+            dim.getValue());
          refineBoxLevel(big_box_level, big_refinement_ratio);
       }
 
@@ -339,11 +342,15 @@ int main(
        */
       hier::IntVector max_box_size(dim, tbox::MathUtilities<int>::getMax());
       if (main_db->isInteger("max_box_size")) {
-         main_db->getIntegerArray("max_box_size", &max_box_size[0], dim.getValue());
+         main_db->getIntegerArray("max_box_size",
+            &max_box_size[0],
+            dim.getValue());
       }
       hier::IntVector min_box_size(dim, 2);
       if (main_db->isInteger("min_box_size")) {
-         main_db->getIntegerArray("min_box_size", &min_box_size[0], dim.getValue());
+         main_db->getIntegerArray("min_box_size",
+            &min_box_size[0],
+            dim.getValue());
       }
       partitionBoxes(*small_box_level, small_domain_level,
                      max_box_size, min_box_size);
@@ -728,7 +735,7 @@ void shrinkBoxLevel(
    boost::shared_ptr<hier::BoxLevel>& small_box_level,
    const hier::BoxLevel& big_box_level,
    const hier::IntVector& shrinkage,
-   const tbox::Array<int>& unshrunken_blocks)
+   const std::vector<int>& unshrunken_blocks)
 {
    const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry(
       big_box_level.getGridGeometry());
@@ -849,13 +856,13 @@ void shrinkBoxLevel(
       const hier::Box& box = *bi;
 
       int ix;
-      for (ix = 0; ix < unshrunken_blocks.size(); ++ix) {
+      for (ix = 0; ix < static_cast<int>(unshrunken_blocks.size()); ++ix) {
          if (box.getBlockId() == unshrunken_blocks[ix]) {
             break;
          }
       }
 
-      if (ix < unshrunken_blocks.size()) {
+      if (ix < static_cast<int>(unshrunken_blocks.size())) {
          /*
           * This block should be excluded from shrinking.
           */

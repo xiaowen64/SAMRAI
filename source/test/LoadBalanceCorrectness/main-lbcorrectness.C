@@ -293,14 +293,14 @@ int main(
        * Whether to perform certain steps in mesh generation.
        */
 
-      tbox::Array<bool> enforce_nesting(1, true);
+      std::vector<bool> enforce_nesting(1, true);
       if ( main_db->isBool("enforce_nesting") ) {
-         enforce_nesting = main_db->getBoolArray("enforce_nesting");
+         enforce_nesting = main_db->getBoolVector("enforce_nesting");
       }
 
-      tbox::Array<bool> load_balance(1, true);
+      std::vector<bool> load_balance(1, true);
       if ( main_db->isBool("load_balance") ) {
-         load_balance = main_db->getBoolArray("load_balance");
+         load_balance = main_db->getBoolVector("load_balance");
       }
 
 
@@ -324,7 +324,9 @@ int main(
        * Set up the domain from input.
        */
 
-      hier::BoxContainer input_boxes(main_db->getDatabaseBoxArray("domain_boxes"));
+      std::vector<tbox::DatabaseBox> db_box_vector =
+         main_db->getDatabaseBoxVector("domain_boxes");
+      hier::BoxContainer input_boxes(db_box_vector);
       input_boxes.begin();
 
       hier::BoxContainer domain_boxes;
@@ -342,10 +344,10 @@ int main(
          xhi[i] = 1.0;
       }
       if (main_db->isDouble("xlo")) {
-         main_db->getDoubleArray("xlo", &xlo[0], dim.getValue());
+         xlo = main_db->getDoubleVector("xlo");
       }
       if (main_db->isDouble("xhi")) {
-         main_db->getDoubleArray("xhi", &xhi[0], dim.getValue());
+         xhi = main_db->getDoubleVector("xhi");
       }
 
 
@@ -428,11 +430,11 @@ int main(
 
       mesh_gen->resetHierarchyConfiguration(hierarchy, 0, 1);
 
-      enforce_nesting.resizeArray( hierarchy->getMaxNumberOfLevels(),
-                                   bool(enforce_nesting.back()) );
+      enforce_nesting.resize( hierarchy->getMaxNumberOfLevels(),
+                              bool(enforce_nesting.back()) );
 
-      load_balance.resizeArray( hierarchy->getMaxNumberOfLevels(),
-                                bool(load_balance.back()) );
+      load_balance.resize( hierarchy->getMaxNumberOfLevels(),
+                           bool(load_balance.back()) );
 
 
       const int max_levels = hierarchy->getMaxNumberOfLevels();

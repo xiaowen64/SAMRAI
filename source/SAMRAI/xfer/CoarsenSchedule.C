@@ -28,6 +28,8 @@
 #include "SAMRAI/xfer/CoarsenCopyTransaction.h"
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
 
+#include <vector>
+
 namespace SAMRAI {
 namespace xfer {
 
@@ -841,7 +843,7 @@ CoarsenSchedule::constructScheduleTransactions(
    }
 
    const int num_coarsen_items = d_coarsen_classes->getNumberOfCoarsenItems();
-   tbox::Array<boost::shared_ptr<tbox::Transaction> > transactions(
+   std::vector<boost::shared_ptr<tbox::Transaction> > transactions(
       num_coarsen_items);
 
    for (int nc = 0; nc < num_equiv_classes; nc++) {

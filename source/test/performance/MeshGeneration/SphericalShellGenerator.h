@@ -169,7 +169,7 @@ private:
    /*!
     * @brief Radii of shells.
     */
-   tbox::Array<double> d_radii;
+   std::vector<double> d_radii;
 
    /*
     * @brief Whether to generate tags by buffering around the shells

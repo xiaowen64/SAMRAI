@@ -552,8 +552,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
 
          // Test #18c:
          for (int id = 1; id <= d_dim.getValue(); id++) {
-            if ((init_patch_geom->getCodimensionBoundaries(id)).getSize() !=
-                (test_patch_geom->getCodimensionBoundaries(id)).getSize()) {
+            if ((init_patch_geom->getCodimensionBoundaries(id)).size() !=
+                (test_patch_geom->getCodimensionBoundaries(id)).size()) {
                fail_count++;
                tbox::perr << "FAILED: - Test #18c: for level number " << ln
                           << " number of codimension " << id

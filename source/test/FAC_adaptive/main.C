@@ -46,6 +46,8 @@
 
 #include "boost/shared_ptr.hpp"
 
+#include <vector>
+
 using namespace SAMRAI;
 
 int main(
@@ -348,8 +350,8 @@ int main(
             ++adaption_number;
             tbox::plog << "Adaption number " << adaption_number << "\n";
 
-            tbox::Array<int> tag_buffer(patch_hierarchy->getMaxNumberOfLevels());
-            for (ln = 0; ln < tag_buffer.getSize(); ++ln) {
+            std::vector<int> tag_buffer(patch_hierarchy->getMaxNumberOfLevels());
+            for (ln = 0; ln < static_cast<int>(tag_buffer.size()); ++ln) {
                tag_buffer[ln] = 1;
             }
             gridding_algorithm->regridAllFinerLevels(

@@ -92,7 +92,7 @@ namespace geom {
  *   </tr>
  *   <tr>
  *     <td>domain_boxes_N</td>
- *     <td>Array<DatabaseBox></td>
+ *     <td>array of DatabaseBoxes</td>
  *     <td>none</td>
  *     <td>all Boxes must be non-empty</td>
  *     <td>req</td>

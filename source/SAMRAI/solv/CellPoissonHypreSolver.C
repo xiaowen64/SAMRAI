@@ -879,9 +879,9 @@ CellPoissonHypreSolver::setMatrixCoefficients(
        * and rhs contribution (k0).
        */
       {
-         const tbox::Array<hier::BoundaryBox>& surface_boxes =
+         const std::vector<hier::BoundaryBox>& surface_boxes =
             pg->getCodimensionBoundaries(1);
-         const int n_bdry_boxes = surface_boxes.getSize();
+         const int n_bdry_boxes = static_cast<int>(surface_boxes.size());
          for (int n = 0; n < n_bdry_boxes; ++n) {
 
             const hier::BoundaryBox& boundary_box = surface_boxes[n];
@@ -933,17 +933,14 @@ CellPoissonHypreSolver::setMatrixCoefficients(
           * There are potentially coarse-fine boundaries to deal with.
           */
 
-         tbox::Array<hier::BoundaryBox> surface_boxes;
+         std::vector<hier::BoundaryBox> empty_vector(0,
+            hier::BoundaryBox(d_dim));
+         const std::vector<hier::BoundaryBox>& surface_boxes =
+            d_dim == tbox::Dimension(2) ? d_cf_boundary->getEdgeBoundaries(pi->getGlobalId()) :
+            (d_dim == tbox::Dimension(3) ? d_cf_boundary->getFaceBoundaries(pi->getGlobalId()) : empty_vector);
 
-         if (d_dim == tbox::Dimension(2)) {
-            surface_boxes =
-               d_cf_boundary->getEdgeBoundaries(pi->getGlobalId());
-         } else if (d_dim == tbox::Dimension(3)) {
-            surface_boxes =
-               d_cf_boundary->getFaceBoundaries(pi->getGlobalId());
-         }
+         const int n_bdry_boxes = static_cast<int>(surface_boxes.size());
 
-         const int n_bdry_boxes = surface_boxes.getSize();
          for (int n = 0; n < n_bdry_boxes; ++n) {
 
             const hier::BoundaryBox& boundary_box = surface_boxes[n];
@@ -1068,7 +1065,7 @@ CellPoissonHypreSolver::setMatrixCoefficients(
 void
 CellPoissonHypreSolver::add_gAk0_toRhs(
    const hier::Patch& patch,
-   const tbox::Array<hier::BoundaryBox>& bdry_boxes,
+   const std::vector<hier::BoundaryBox>& bdry_boxes,
    const RobinBcCoefStrategy* robin_bc_coef,
    pdat::CellData<double>& rhs)
 {
@@ -1087,7 +1084,7 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
 
    TBOX_ASSERT(Ak0);
 
-   const int n_bdry_boxes = bdry_boxes.getSize();
+   const int n_bdry_boxes = static_cast<int>(bdry_boxes.size());
    for (int n = 0; n < n_bdry_boxes; ++n) {
 
       const hier::BoundaryBox& boundary_box = bdry_boxes[n];

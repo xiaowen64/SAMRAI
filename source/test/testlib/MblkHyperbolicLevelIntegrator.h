@@ -360,7 +360,7 @@ public:
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
-      const tbox::Array<double>& old_times);
+      const std::vector<double>& old_times);
 
    /**
     * This overloaded version of standardLevelSynchronization implements

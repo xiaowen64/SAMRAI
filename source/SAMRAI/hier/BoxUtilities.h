@@ -19,6 +19,7 @@
 #include "SAMRAI/tbox/Array.h"
 
 #include <list>
+#include <vector>
 
 namespace SAMRAI {
 namespace hier {
@@ -249,7 +250,7 @@ struct BoxUtilities {
     *       box which is to be chopped
     *
     *    - \b cut_points (input)
-    *       cut_points is an array of integer lists, each of which
+    *       cut_points is a vector of integer lists, each of which
     *       indicates the indices where the box will be cut in one of
     *       the coordinate directions
     *
@@ -266,13 +267,13 @@ struct BoxUtilities {
     *      operations are performed.  Thus, any boxes on the list when
     *      the function is called will be lost.
     *
-    * @pre cut_points.getSize() == box.getDim().getValue()
+    * @pre cut_points.size() == box.getDim().getValue()
     */
    static void
    chopBox(
       BoxContainer& boxes,
       const Box& box,
-      const tbox::Array<std::list<int> > cut_points);
+      const std::vector<std::list<int> >& cut_points);
 
    /**
     * Extend the box in the list to domain boundary as needed so that
@@ -419,7 +420,7 @@ struct BoxUtilities {
     * Arguments:
     *
     *    - \b cut_points (output)
-    *       array of list of cut points for the box
+    *       vector of list of cut points for the box
     *
     *    - \b box (input)
     *       box to be cut
@@ -443,7 +444,7 @@ struct BoxUtilities {
     */
    static bool
    findBestCutPointsGivenMax(
-      tbox::Array<std::list<int> >& cut_points,
+      std::vector<std::list<int> >& cut_points,
       const Box& box,
       const IntVector& max_size,
       const IntVector& min_size,
@@ -511,7 +512,7 @@ struct BoxUtilities {
     * Arguments:
     *
     *    - \b cut_points (output)
-    *       array of list of cut points for the box
+    *       vector of list of cut points for the box
     *
     *    - \b box (input)
     *       box to be cut
@@ -541,7 +542,7 @@ struct BoxUtilities {
     */
    static bool
    findBestCutPointsGivenNumber(
-      tbox::Array<std::list<int> >& cut_points,
+      std::vector<std::list<int> >& cut_points,
       const Box& box,
       const IntVector& number_boxes,
       const IntVector& min_size,
@@ -693,12 +694,12 @@ struct BoxUtilities {
     *        See class header for description.
     *
     * @pre !box.empty()
-    * @pre bad_cuts.getSize() == box.getDim().getValue()
+    * @pre bad_cuts.size() == box.getDim().getValue()
     * @pre bad_interval >= IntVector::getZero(box.getDim())
     */
    static void
    findBadCutPoints(
-      tbox::Array<tbox::Array<bool> >& bad_cuts,
+      std::vector<std::vector<bool> >& bad_cuts,
       const Box& box,
       const BoxContainer& physical_boxes,
       const IntVector& bad_interval);
@@ -716,7 +717,7 @@ struct BoxUtilities {
     *       coordinate direction to be checked for bad cut points
     *
     *    - \b bad_cuts (output)
-    *        boolean arrays whose entries indicates whether
+    *        boolean vector whose entries indicates whether
     *        a potential cut point is bad.
     *
     *    - \b box (input)
@@ -735,7 +736,7 @@ struct BoxUtilities {
    static void
    findBadCutPointsForDirection(
       const int dir,
-      tbox::Array<bool>& bad_cuts,
+      std::vector<bool>& bad_cuts,
       const Box& box,
       const BoxContainer& physical_boxes,
       const IntVector& bad_interval);
@@ -777,17 +778,17 @@ struct BoxUtilities {
     *
     * @pre (box.getDim() == min_size.getDim()) &&
     *      (box.getDim() == cut_factor.getDim())
-    * @pre cuts.getSize() == box.getDim().getValue()
-    * @pre bad_cuts.getSize() == box.getDim().getValue()
+    * @pre cuts.size() == box.getDim().getValue()
+    * @pre bad_cuts.size() == box.getDim().getValue()
     * @pre !box.empty()
     * @pre min_size > IntVector::getZero(box.getDim())
     * @pre cut_factor > IntVector::getZero(box.getDim())
-    * @pre for the ith array in bad_cuts, array.getSize() == box.numberCells(i)
+    * @pre for the ith array in bad_cuts, array.size() == box.numberCells(i)
     */
    static void
    fixBadCutPoints(
-      tbox::Array<std::list<int> >& cuts,
-      const tbox::Array<tbox::Array<bool> >& bad_cuts,
+      std::vector<std::list<int> >& cuts,
+      const std::vector<std::vector<bool> >& bad_cuts,
       const Box& box,
       const IntVector& min_size,
       const IntVector& cut_factor);
@@ -823,7 +824,7 @@ struct BoxUtilities {
     *    - \b cut_factor (input)
     *       See class header for description.
     *
-    * @pre bad_cuts.getSize() == box.numberCells(dir)
+    * @pre bad_cuts.size() == box.numberCells(dir)
     * @pre !box.empty()
     * @pre min_size > 0
     * @pre cut_factor > 0
@@ -832,7 +833,7 @@ struct BoxUtilities {
    fixBadCutPointsForDirection(
       const int dir,
       std::list<int>& cuts,
-      const tbox::Array<bool>& bad_cuts,
+      const std::vector<bool>& bad_cuts,
       const Box& box,
       const int min_size,
       const int cut_factor);
@@ -846,14 +847,14 @@ struct BoxUtilities {
     *
     * @pre box.getDim() == border.getDim()
     * @pre (0 <= id) && (id < box.getDim().getValue())
-    * @pre bad_cuts.getSize() == box.numberCells(id)
+    * @pre bad_cuts.size() == box.numberCells(id)
     * @pre bad_interval >= 0
     *
     */
    static void
    findBadCutPointsForBorderAndDirection(
       const int id,
-      tbox::Array<bool>& bad_cuts,
+      std::vector<bool>& bad_cuts,
       const Box& box,
       const Box& border,
       const int bad_interval);
@@ -884,7 +885,7 @@ struct BoxUtilities {
     */
    static void
    makeNonOverlappingBoxContainers(
-      tbox::Array<BoxContainer>& box_list_array,
+      std::vector<BoxContainer>& box_list_array,
       const BoxContainer& boxes);
 
 };

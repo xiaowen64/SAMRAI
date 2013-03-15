@@ -144,7 +144,7 @@ VisItDataWriter::VisItDataWriter(
    d_my_rank_in_file_cluster = VISIT_UNDEFINED_INDEX;
    d_number_files_this_file_cluster = VISIT_UNDEFINED_INDEX;
 
-   d_scaling_ratios.resizeArray(1, hier::IntVector::getOne(dim));
+   d_scaling_ratios.resize(1, hier::IntVector::getOne(dim));
 
    d_number_visit_variables = 0;
    d_number_visit_variables_plus_depth = 0;
@@ -315,7 +315,7 @@ VisItDataWriter::registerDerivedPlotQuantity(
        * user would like to choose a scale factor, use the
        * "registerSingleNodeCoordinate()" method.
        */
-      plotitem.d_coord_scale_factor.resizeArray(d_dim.getValue(), 1.0);
+      plotitem.d_coord_scale_factor.resize(d_dim.getValue(), 1.0);
    }
 
    if (variable_mix_type == "MIXED") {
@@ -472,8 +472,9 @@ VisItDataWriter::resetLevelPlotQuantity(
                << variable_name
                << "\n     ***Exiting" << std::endl);
          }
-         if (level_number >= ipi->d_level_patch_data_index.getSize()) {
-            ipi->d_level_patch_data_index.resizeArray(level_number + 1);
+         if (level_number >=
+             static_cast<int>(ipi->d_level_patch_data_index.size())) {
+            ipi->d_level_patch_data_index.resize(level_number + 1);
          }
          ipi->d_level_patch_data_index[level_number] = patch_data_index;
          ipi->d_start_depth_index = start_depth_index;
@@ -606,7 +607,7 @@ VisItDataWriter::registerNodeCoordinates(
     * user would like to choose a scale factor, use the
     * "registerSingleNodeCoordinate()" method.
     */
-   plotitem.d_coord_scale_factor.resizeArray(d_dim.getValue(), 1.0);
+   plotitem.d_coord_scale_factor.resize(d_dim.getValue(), 1.0);
 
    d_number_visit_variables++;
    d_number_visit_variables_plus_depth += plotitem.d_depth;
@@ -717,7 +718,7 @@ VisItDataWriter::registerSingleNodeCoordinate(
          plotitem.d_visit_var_name[i] = var_name + temp_buf;
       }
 
-      plotitem.d_coord_scale_factor.resizeArray(d_dim.getValue());
+      plotitem.d_coord_scale_factor.resize(d_dim.getValue());
       plotitem.d_coord_scale_factor[coordinate_number] = scale_factor;
       d_number_visit_variables++;
       d_number_visit_variables_plus_depth += plotitem.d_depth;
@@ -733,7 +734,7 @@ VisItDataWriter::registerSingleNodeCoordinate(
 
             ipi->d_var_type = VISIT_VECTOR;
             ipi->d_depth = d_dim.getValue();
-            ipi->d_visit_var_name.resizeArray(d_dim.getValue());
+            ipi->d_visit_var_name.resize(d_dim.getValue());
 
             std::string var_name = "Coords";
             char temp_buf[VISIT_NAME_BUFSIZE];
@@ -759,14 +760,14 @@ VisItDataWriter::registerSingleNodeCoordinate(
 
 void
 VisItDataWriter::registerMaterialNames(
-   const tbox::Array<std::string>& material_names)
+   const std::vector<std::string>& material_names)
 {
-   TBOX_ASSERT(material_names.getSize() > 0);
+   TBOX_ASSERT(material_names.size() > 0);
 
    /*
     * Check if we have already tried to register materials.
     */
-   if (d_materials_names.getSize() > 0) {
+   if (d_materials_names.size() > 0) {
       TBOX_ERROR("VisItDataWriter::registerMaterialNames"
          << "\n    This method has been called more than once."
          << "\n    The material names may not change during the"
@@ -777,8 +778,8 @@ VisItDataWriter::registerMaterialNames(
     * Register each of the material names as a plot item with material
     * characteristics.
     */
-   int num_materials = material_names.getSize();
-   d_materials_names.resizeArray(num_materials);
+   int num_materials = static_cast<int>(material_names.size());
+   d_materials_names.resize(num_materials);
    for (int i = 0; i < num_materials; i++) {
       if (material_names[i].empty()) {
          TBOX_ERROR("VisItDataWriter::registerMaterialNames"
@@ -829,14 +830,14 @@ VisItDataWriter::registerMaterialNames(
 
 void
 VisItDataWriter::registerSparseMaterialNames(
-   const tbox::Array<std::string>& material_names)
+   const std::vector<std::string>& material_names)
 {
-   TBOX_ASSERT(material_names.getSize() > 0);
+  TBOX_ASSERT(material_names.size() > 0);
 
    /*
     * Check if we have already tried to register materials.
     */
-   if (d_materials_names.getSize() > 0) {
+   if (d_materials_names.size() > 0) {
       TBOX_ERROR("VisItDataWriter::registerSparseMaterialNames"
          << "\n    This method has been called more than once."
          << "\n    The material names may not change during the"
@@ -847,8 +848,8 @@ VisItDataWriter::registerSparseMaterialNames(
     * Register each of the material names as a plot item with material
     * characteristics.
     */
-   int num_materials = material_names.getSize();
-   d_materials_names.resizeArray(num_materials);
+   int num_materials = static_cast<int>(material_names.size());
+   d_materials_names.resize(num_materials);
    for (int i = 0; i < num_materials; i++) {
       if (material_names[i].empty()) {
          TBOX_ERROR("VisItDataWriter::registerMaterialNames"
@@ -903,15 +904,15 @@ VisItDataWriter::registerSparseMaterialNames(
 void
 VisItDataWriter::registerSpeciesNames(
    const std::string& material_name,
-   const tbox::Array<std::string>& species_names)
+   const std::vector<std::string>& species_names)
 {
    TBOX_ASSERT(!material_name.empty());
-   TBOX_ASSERT(species_names.getSize() > 0);
+   TBOX_ASSERT(species_names.size() > 0);
 
    /*
     * Be sure we have already registered materials.
     */
-   if (d_materials_names.getSize() == 0) {
+   if (d_materials_names.size() == 0) {
       TBOX_ERROR("VisItDataWriter::registerSpeciesNames"
          << "\n    No materials have yet been registered."
          << "\n    Be sure the 'registerMaterialNames()'"
@@ -940,7 +941,7 @@ VisItDataWriter::registerSpeciesNames(
         ipi != d_plot_items.end(); ipi++) {
       if ((ipi->d_material_name == material_name) &&
           ipi->d_isa_material) {
-         if (ipi->d_species_names.getSize() > 0) {
+         if (ipi->d_species_names.size() > 0) {
             TBOX_ERROR("VisItDataWriter::registerSpeciesNames"
                << "\n    material name = " << material_name
                << "\n    registerSpeciesNames has already been"
@@ -954,13 +955,13 @@ VisItDataWriter::registerSpeciesNames(
 
    TBOX_ASSERT(material_item != 0);
 
-   d_number_species += species_names.getSize();
+   d_number_species += static_cast<int>(species_names.size());
    material_item->d_species_names = species_names;
 
    /*
     * Create a plot variable for each species of the material.
     */
-   for (int i = 0; i < species_names.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(species_names.size()); i++) {
 
       if (species_names[i].empty()) {
          TBOX_ERROR("VisItDataWriter::registerSpeciesNames"
@@ -1012,18 +1013,18 @@ VisItDataWriter::registerSpeciesNames(
  */
 void
 VisItDataWriter::registerVisItExpressions(
-   const tbox::Array<std::string>& expression_keys,
-   const tbox::Array<std::string>& expressions,
-   const tbox::Array<std::string>& expression_types)
+   const std::vector<std::string>& expression_keys,
+   const std::vector<std::string>& expressions,
+   const std::vector<std::string>& expression_types)
 {
    if ((expressions.size() > 0) &&
        (expressions.size() == expression_keys.size()) &&
        (expressions.size() == expression_types.size())) {
-      int num_current_exp = d_visit_expressions.size();
-      d_visit_expressions.resizeArray(num_current_exp + expressions.size());
-      d_visit_expression_keys.resizeArray(num_current_exp + expressions.size());
-      d_visit_expression_types.resizeArray(num_current_exp + expressions.size());
-      for (int i = 0; i < expressions.size(); ++i) {
+      int num_current_exp = static_cast<int>(d_visit_expressions.size());
+      d_visit_expressions.resize(num_current_exp + expressions.size());
+      d_visit_expression_keys.resize(num_current_exp + expressions.size());
+      d_visit_expression_types.resize(num_current_exp + expressions.size());
+      for (int i = 0; i < static_cast<int>(expressions.size()); ++i) {
          d_visit_expressions[num_current_exp + i] = expressions[i];
          d_visit_expression_keys[num_current_exp + i] = expression_keys[i];
          d_visit_expression_types[num_current_exp + i] = expression_types[i];
@@ -1079,7 +1080,7 @@ VisItDataWriter::initializePlotItem(
     * Check to make sure we have not exceeded max allowed components.
     */
    int num_old_components = d_number_visit_variables_plus_depth
-      + d_materials_names.getSize() // number materials
+      + static_cast<int>(d_materials_names.size()) // number materials
       + d_number_species;
 
    int new_num_components = num_old_components + plotitem.d_depth;
@@ -1235,10 +1236,9 @@ VisItDataWriter::initializePlotItem(
     * Set the patch data index.
     */
    plotitem.d_patch_data_index = patch_data_index;
-   plotitem.d_level_patch_data_index.resizeArray(d_number_levels,
-      patch_data_index);
+   plotitem.d_level_patch_data_index.resize(d_number_levels, patch_data_index);
 
-   plotitem.d_visit_var_name.resizeArray(plotitem.d_depth);
+   plotitem.d_visit_var_name.resize(plotitem.d_depth);
    char temp_buf[VISIT_NAME_BUFSIZE];
    for (int i = 0; i < plotitem.d_depth; i++) {
       if (plotitem.d_depth == 1) {
@@ -1391,8 +1391,7 @@ VisItDataWriter::writePlotData(
    }
    d_time_step_number = time_step_number;
 
-   if ((d_materials_names.getSize() > 0) &&
-       (d_materials_writer == 0)) {
+   if ((d_materials_names.size() > 0) && (d_materials_writer == 0)) {
       TBOX_ERROR("VisItDataWriter::writePlotData"
          << "\n    data writer with name " << d_object_name
          << "\n    setMaterialsDataWriter() has not been called,"
@@ -1402,8 +1401,8 @@ VisItDataWriter::writePlotData(
 
    d_number_levels = hierarchy->getNumberOfLevels();
 
-   if (d_number_levels > d_scaling_ratios.getSize()) {
-      d_scaling_ratios.resizeArray(d_number_levels, hier::IntVector(d_dim));
+   if (d_number_levels > static_cast<int>(d_scaling_ratios.size())) {
+      d_scaling_ratios.resize(d_number_levels, hier::IntVector(d_dim));
    }
 
    for (int ln = 1; ln <= hierarchy->getFinestLevelNumber(); ln++) {
@@ -1418,7 +1417,7 @@ VisItDataWriter::writePlotData(
    }
 
    int num_items_to_plot = d_number_visit_variables_plus_depth
-      + d_materials_names.getSize() // number of materials
+      + static_cast<int>(d_materials_names.size()) // number of materials
       + d_number_species;
 
    if (num_items_to_plot == 0) {
@@ -1497,7 +1496,7 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
        * level, and local patch number.
        */
       int num_items_to_plot = d_number_visit_variables_plus_depth
-         + d_materials_names.getSize() // number materials
+         + static_cast<int>(d_materials_names.size()) // number materials
          + d_number_species;
 
       int num_components = max_number_local_patches * num_items_to_plot;
@@ -1616,7 +1615,7 @@ VisItDataWriter::writeHDFFiles(
       }
    }
 
-   d_processor_in_file_cluster_number.resizeArray(num_procs);
+   d_processor_in_file_cluster_number.resize(num_procs);
    for (int i = 0; i < num_procs; i++) {
       d_processor_in_file_cluster_number[i] = i / d_file_cluster_size;
    }
@@ -1788,7 +1787,7 @@ VisItDataWriter::writeVisItVariablesToHDFFile(
             ln,
             *patch);
 
-         if (d_materials_names.getSize() > 0) {
+         if (d_materials_names.size() > 0) {
             d_var_id_ctr = curr_var_id_ctr;
             packMaterialsData(patch_HDFGroup,
                hierarchy,
@@ -1888,7 +1887,7 @@ VisItDataWriter::packRegularAndDerivedData(
                    * not, just use the original registered data id.
                    */
                   patch_data_id = ipi->d_patch_data_index;
-                  if (ipi->d_level_patch_data_index.getSize() >
+                  if (static_cast<int>(ipi->d_level_patch_data_index.size()) >
                       level_number) {
                      patch_data_id =
                         ipi->d_level_patch_data_index[level_number];
@@ -2332,14 +2331,10 @@ VisItDataWriter::packMaterialsData(
                      dummy_pdata_id);
 
                   vname = "mix_zones";
-                  materials_HDFGroup->putIntegerArray(vname,
-                     &mix_zones[0],
-                     static_cast<int>(mix_mat.size()));
+                  materials_HDFGroup->putIntegerVector(vname, mix_zones);
 
                   vname = "mix_mat";
-                  materials_HDFGroup->putIntegerArray(vname,
-                     &mix_mat[0],
-                     static_cast<int>(mix_mat.size()));
+                  materials_HDFGroup->putIntegerVector(vname, mix_mat);
 
                   // allocate buffer for volume fraction data
                   float* fmix_data_buffer;
@@ -2357,9 +2352,7 @@ VisItDataWriter::packMaterialsData(
                      static_cast<int>(mix_mat.size()));
 
                   vname = "next_mat";
-                  materials_HDFGroup->putIntegerArray(vname,
-                     &next_mat[0],
-                     static_cast<int>(mix_mat.size()));
+                  materials_HDFGroup->putIntegerVector(vname, next_mat);
                   // cleanup buffer
                   delete[] fmix_data_buffer;
                }
@@ -2376,7 +2369,7 @@ VisItDataWriter::packMaterialsData(
                   materials_HDFGroup->putDatabase(mname);
 
                // create "species" HDF database for material name
-               if (ipi->d_species_names.getSize() > 0) {
+               if (ipi->d_species_names.size() > 0) {
                   ipi->d_species_HDFGroup =
                      material_name_HDFGroup->putDatabase("species");
                }
@@ -2863,14 +2856,13 @@ VisItDataWriter::writeSummaryToHDFFile(
       basic_HDFGroup->putInteger(key_string, num_levels);
 
       key_string = "number_patches_at_level";
-      tbox::Array<int> num_patches_per_level(num_levels);
+      std::vector<int> num_patches_per_level(num_levels);
       for (ln = coarsest_plot_level; ln <= finest_plot_level; ln++) {
          num_patches_per_level[ln] =
             hierarchy->getPatchLevel(ln)->getGlobalNumberOfPatches();
          tot_number_of_patches += num_patches_per_level[ln];
       }
-      basic_HDFGroup->putIntegerArray(key_string,
-         num_patches_per_level);
+      basic_HDFGroup->putIntegerVector(key_string, num_patches_per_level);
 
       key_string = "number_global_patches";
       basic_HDFGroup->putInteger(key_string, tot_number_of_patches);
@@ -2918,13 +2910,13 @@ VisItDataWriter::writeSummaryToHDFFile(
       key_string = "number_visit_variables";
       basic_HDFGroup->putInteger(key_string, d_number_visit_variables);
 
-      tbox::Array<std::string> var_names(d_number_visit_variables);
-      tbox::Array<int> var_centering(d_number_visit_variables);
-      tbox::Array<double> var_scale_factors(d_number_visit_variables);
-      tbox::Array<int> var_depths(d_number_visit_variables);
+      std::vector<std::string> var_names(d_number_visit_variables);
+      std::vector<int> var_centering(d_number_visit_variables);
+      std::vector<double> var_scale_factors(d_number_visit_variables);
+      std::vector<int> var_depths(d_number_visit_variables);
 
       // SGS propose adding array indicating clean/mixed
-      tbox::Array<int> var_material_state_variable(d_number_visit_variables);
+      std::vector<int> var_material_state_variable(d_number_visit_variables);
 
       int* var_ghosts = new int[d_number_visit_variables * VISIT_FIXED_DIM];
       for (i = 0; i < d_number_visit_variables * VISIT_FIXED_DIM; i++) {
@@ -2965,26 +2957,23 @@ VisItDataWriter::writeSummaryToHDFFile(
       }
 
       key_string = "var_names";
-      basic_HDFGroup->putStringArray(key_string,
-         var_names);
+      basic_HDFGroup->putStringVector(key_string, var_names);
 
       key_string = "var_cell_centered";
-      basic_HDFGroup->putIntegerArray(key_string,
-         var_centering);
+      basic_HDFGroup->putIntegerVector(key_string, var_centering);
 
       key_string = "scaling";
-      basic_HDFGroup->putDoubleArray(key_string,
-         var_scale_factors);
+      basic_HDFGroup->putDoubleVector(key_string, var_scale_factors);
 
       // VCHANGE VisIt needs to read this array so it will
       //         know which variables have mixed material data.
       // SGS
       key_string = "material_state_variable";
-      basic_HDFGroup->putIntegerArray(key_string,
+      basic_HDFGroup->putIntegerVector(key_string,
          var_material_state_variable);
 
       if (d_grid_type == VISIT_DEFORMED) {
-         tbox::Array<double> coord_scaling(VISIT_FIXED_DIM);
+         std::vector<double> coord_scaling(VISIT_FIXED_DIM);
          for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
               ipi != d_plot_items.end(); ipi++) {
             if (ipi->d_is_deformed_coords) {
@@ -2997,13 +2986,11 @@ VisItDataWriter::writeSummaryToHDFFile(
             }
          }
          key_string = "deformed_coordinate_scaling";
-         basic_HDFGroup->putDoubleArray(key_string,
-            coord_scaling);
+         basic_HDFGroup->putDoubleVector(key_string, coord_scaling);
       }
 
       key_string = "var_number_components";
-      basic_HDFGroup->putIntegerArray(key_string,
-         var_depths);
+      basic_HDFGroup->putIntegerVector(key_string, var_depths);
 
       key_string = "var_number_ghosts";
       HDFputIntegerArray2D(key_string,
@@ -3025,11 +3012,11 @@ VisItDataWriter::writeSummaryToHDFFile(
          std::string expression_keys("expression_keys");
          std::string expressions("expressions");
          std::string expression_types("expression_types");
-         expression_HDFGroup->putStringArray(expression_keys,
+         expression_HDFGroup->putStringVector(expression_keys,
             d_visit_expression_keys);
-         expression_HDFGroup->putStringArray(expressions,
+         expression_HDFGroup->putStringVector(expressions,
             d_visit_expressions);
-         expression_HDFGroup->putStringArray(expression_types,
+         expression_HDFGroup->putStringVector(expression_types,
             d_visit_expression_types);
       }
 
@@ -3067,14 +3054,13 @@ VisItDataWriter::writeSummaryToHDFFile(
        *  - material names
        *  - species names
        */
-      if (d_materials_names.getSize() > 0) {
+      if (d_materials_names.size() > 0) {
          sprintf(temp_buf, "materials");
          boost::shared_ptr<tbox::Database> materials_HDFGroup(
             summary_HDFFilePointer->putDatabase(std::string(temp_buf)));
 
          key_string = "material_names";
-         materials_HDFGroup->putStringArray(key_string,
-            d_materials_names);
+         materials_HDFGroup->putStringVector(key_string, d_materials_names);
 
          int mat_ghosts[VISIT_FIXED_DIM];
          for (i = 0; i < VISIT_FIXED_DIM; i++) mat_ghosts[i] = 0;
@@ -3095,15 +3081,14 @@ VisItDataWriter::writeSummaryToHDFFile(
          boost::shared_ptr<tbox::Database> species_HDFGroup(
             materials_HDFGroup->putDatabase(std::string(temp_buf)));
 
-         for (i = 0; i < d_materials_names.getSize(); i++) {
+         for (i = 0; i < static_cast<int>(d_materials_names.size()); i++) {
             key_string = d_materials_names[i];
             for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
                  ipi != d_plot_items.end(); ipi++) {
                if ((ipi->d_material_name == d_materials_names[i]) &&
                    ipi->d_isa_material) {
-                  if (ipi->d_species_names.getSize() > 0) {
-                     species_HDFGroup->putStringArray(
-                        key_string,
+                  if (ipi->d_species_names.size() > 0) {
+                     species_HDFGroup->putStringVector(key_string,
                         ipi->d_species_names);
                   }
                }
@@ -3204,7 +3189,7 @@ VisItDataWriter::writeSummaryToHDFFile(
       for (ln = coarsest_plot_level; ln <= finest_plot_level; ln++) {
          boost::shared_ptr<hier::PatchLevel> patch_level(
             hierarchy->getPatchLevel(ln));
-         tbox::Array<int> proc_mapping =
+         const std::vector<int>& proc_mapping =
             patch_level->getProcessorMapping().getProcessorMapping();
 
          for (pn = 0; pn < patch_level->getGlobalNumberOfPatches(); pn++) {
@@ -3379,7 +3364,7 @@ VisItDataWriter::writeSummaryToHDFFile(
                   extents_material_name_group_id);
 
                // species group
-               if (ipi->d_species_names.getSize() > 0) {
+               if (ipi->d_species_names.size() > 0) {
                   ipi->d_extents_species_HDFGroup =
                      extents_material_name_HDFGroup->putDatabase("species");
                }
@@ -3499,7 +3484,7 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
    }
 
    int num_items_to_plot = d_number_visit_variables_plus_depth
-      + d_materials_names.getSize() // number materials
+      + static_cast<int>(d_materials_names.size()) // number materials
       + d_number_species;
 
    int message_size = max_number_local_patches
@@ -3564,10 +3549,10 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
          item_ctr = 0;
 
          for (ln = coarsest_plot_level; ln <= finest_plot_level; ln++) {
-            tbox::Array<int> proc_mapping =
+            const std::vector<int>& proc_mapping =
                hierarchy->getPatchLevel(ln)->getProcessorMapping().getProcessorMapping();
 
-            int npatches_on_level = proc_mapping.getSize();
+            int npatches_on_level = static_cast<int>(proc_mapping.size());
             for (pn = 0; pn < npatches_on_level; pn++) {
                if (proc_mapping[pn] == sending_proc) {
                   int global_patch_id =
@@ -4730,7 +4715,7 @@ VisItDataWriter::dumpItem(
    os << "d_materials_writer ptr: " << plotitem.d_materials_writer << "\n";
    if (plotitem.d_isa_material) {
       os << "  Species for this material: " << "\n";
-      for (i = 0; i < plotitem.d_species_names.getSize(); i++) {
+      for (i = 0; i < static_cast<int>(plotitem.d_species_names.size()); i++) {
          os << "   species[" << i << "]: "
             << plotitem.d_species_names[i] << "\n";
       }

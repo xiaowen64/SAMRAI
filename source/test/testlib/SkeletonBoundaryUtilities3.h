@@ -23,6 +23,7 @@
 
 #include "boost/shared_ptr.hpp"
 #include <string>
+#include <vector>
 
 using namespace std;
 using namespace SAMRAI;
@@ -145,12 +146,12 @@ public:
     * @param bdry_strategy user-defined object that reads DIRICHLET or NEUMANN
     *                      conditions
     * @param input_db      input database containing all boundary data
-    * @param face_conds    array into which integer face boundary condition types
-    *                      are read
-    * @param edge_conds    array into which integer edge boundary condition types
-    *                      are read
-    * @param node_conds    array into which integer node boundary condition types
-    *                      are read
+    * @param face_conds    vector into which integer face boundary condition
+    *                      types are read
+    * @param edge_conds    vector into which integer edge boundary condition
+    *                      types are read
+    * @param node_conds    vector into which integer node boundary condition
+    *                      types are read
     * @param periodic      integer vector specifying which coordinate
     *                      directions are periodic (e.g., value returned from
     *                      GridGeometry2::getPeriodicShift())
@@ -159,9 +160,9 @@ public:
    getFromInput(
       appu::BoundaryUtilityStrategy* bdry_strategy,
       const boost::shared_ptr<tbox::Database>& input_db,
-      tbox::Array<int>& face_conds,
-      tbox::Array<int>& edge_conds,
-      tbox::Array<int>& node_conds,
+      std::vector<int>& face_conds,
+      std::vector<int>& edge_conds,
+      std::vector<int>& node_conds,
       const hier::IntVector& periodic);
 
    /*!
@@ -175,8 +176,9 @@ public:
     * @param vardata             Cell-centered patch data object to fill.
     * @param patch               hier::Patch on which data object lives.
     * @param ghost_width_to_fill Width of ghost region to fill.
-    * @param bdry_face_conds     tbox::Array of boundary condition types for patch faces.
-    * @param bdry_face_values    tbox::Array of boundary values for patch faces.
+    * @param bdry_face_conds     std::vector of boundary condition types for
+    *                            patch faces.
+    * @param bdry_face_values    std::vector of boundary values for patch faces.
     */
    static void
    fillFaceBoundaryData(
@@ -184,8 +186,8 @@ public:
       boost::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
-      const tbox::Array<int>& bdry_face_conds,
-      const tbox::Array<double>& bdry_face_values);
+      const std::vector<int>& bdry_face_conds,
+      const std::vector<double>& bdry_face_values);
 
    /*!
     * Function to fill 3d edge boundary values for a patch.
@@ -198,8 +200,9 @@ public:
     * @param vardata             Cell-centered patch data object to fill.
     * @param patch               hier::Patch on which data object lives.
     * @param ghost_width_to_fill Width of ghost region to fill.
-    * @param bdry_edge_conds     tbox::Array of boundary condition types for patch edges.
-    * @param bdry_face_values    tbox::Array of boundary values for patch faces.
+    * @param bdry_edge_conds     std::vector of boundary condition types for
+    *                            patch edges.
+    * @param bdry_face_values    std::vector of boundary values for patch faces.
     */
    static void
    fillEdgeBoundaryData(
@@ -207,8 +210,8 @@ public:
       boost::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
-      const tbox::Array<int>& bdry_edge_conds,
-      const tbox::Array<double>& bdry_face_values);
+      const std::vector<int>& bdry_edge_conds,
+      const std::vector<double>& bdry_face_values);
 
    /*!
     * Function to fill 3d node boundary values for a patch.
@@ -221,8 +224,9 @@ public:
     * @param vardata             Cell-centered patch data object to fill.
     * @param patch               hier::Patch on which data object lives.
     * @param ghost_width_to_fill Width of ghost region to fill.
-    * @param bdry_node_conds     tbox::Array of boundary condition types for patch nodes.
-    * @param bdry_face_values    tbox::Array of boundary values for patch faces.
+    * @param bdry_node_conds     std::vector of boundary condition types for
+    *                            patch nodes.
+    * @param bdry_face_values    std::vector of boundary values for patch faces.
     */
    static void
    fillNodeBoundaryData(
@@ -230,8 +234,8 @@ public:
       boost::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
-      const tbox::Array<int>& bdry_node_conds,
-      const tbox::Array<double>& bdry_face_values);
+      const std::vector<int>& bdry_node_conds,
+      const std::vector<double>& bdry_face_values);
 
    /*!
     * Function that returns the integer face boundary location
@@ -309,21 +313,21 @@ private:
    read3dBdryFaces(
       appu::BoundaryUtilityStrategy* bdry_strategy,
       boost::shared_ptr<tbox::Database> input_db,
-      tbox::Array<int>& face_conds,
+      std::vector<int>& face_conds,
       const hier::IntVector& periodic);
 
    static void
    read3dBdryEdges(
       boost::shared_ptr<tbox::Database> input_db,
-      const tbox::Array<int>& face_conds,
-      tbox::Array<int>& edge_conds,
+      const std::vector<int>& face_conds,
+      std::vector<int>& edge_conds,
       const hier::IntVector& periodic);
 
    static void
    read3dBdryNodes(
       boost::shared_ptr<tbox::Database> input_db,
-      const tbox::Array<int>& face_conds,
-      tbox::Array<int>& node_conds,
+      const std::vector<int>& face_conds,
+      std::vector<int>& node_conds,
       const hier::IntVector& periodic);
 
    static void

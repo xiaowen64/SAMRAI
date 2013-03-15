@@ -540,7 +540,7 @@ private:
     */
    void
    privateBridge_discoverAndSend(
-      std::map<int, std::vector<int> > neighbor_removal_mesg,
+      std::map<int, std::vector<int> >& neighbor_removal_mesg,
       Connector& west_to_east,
       Connector* east_to_west,
       std::set<int>& incoming_ranks,

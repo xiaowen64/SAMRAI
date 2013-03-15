@@ -405,7 +405,7 @@ private:
    friend class BoxLevel;
    //@}
 
-   typedef tbox::Array<boost::shared_ptr<Connector> > ConVect;
+   typedef std::vector<boost::shared_ptr<Connector> > ConVect;
 
    /*!
     * @brief Persistent overlap Connectors incident from me.

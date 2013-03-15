@@ -21,6 +21,7 @@
 #include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <list>
+#include <vector>
 
 namespace SAMRAI {
 namespace xfer {
@@ -126,7 +127,7 @@ private:
    int
    getNumberOfEquivalenceClasses() const
    {
-      return d_equivalence_class_indices.size();
+      return static_cast<int>(d_equivalence_class_indices.size());
    }
 
    /*!
@@ -361,7 +362,7 @@ private:
    int
    getCoarsenItemArraySize() const
    {
-      return d_coarsen_classes_data_items.size();
+      return static_cast<int>(d_coarsen_classes_data_items.size());
    }
 
    /*!
@@ -380,8 +381,8 @@ private:
       const int size,
       const tbox::Dimension& dim)
    {
-      if (size > d_coarsen_classes_data_items.size()) {
-         d_coarsen_classes_data_items.resizeArray(size, Data(dim));
+      if (size > static_cast<int>(d_coarsen_classes_data_items.size())) {
+         d_coarsen_classes_data_items.resize(size, Data(dim));
       }
    }
 
@@ -459,7 +460,7 @@ private:
    /*!
     * The array of coarsen items.
     */
-   tbox::Array<CoarsenClasses::Data> d_coarsen_classes_data_items;
+   std::vector<CoarsenClasses::Data> d_coarsen_classes_data_items;
 
    /*!
     * The array managing equivalence classes.  Each element of the array
@@ -467,7 +468,7 @@ private:
     * which items are part of an equivalence class.  The integers index into
     * the array d_coarsen_classes_data_items.
     */
-   tbox::Array<std::list<int> > d_equivalence_class_indices;
+   std::vector<std::list<int> > d_equivalence_class_indices;
 
    /*!
     * The number of coarsen items that have been registered.

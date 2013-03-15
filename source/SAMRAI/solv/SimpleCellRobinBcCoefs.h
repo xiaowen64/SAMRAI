@@ -20,6 +20,7 @@
 
 #include "boost/shared_ptr.hpp"
 #include <map>
+#include <vector>
 
 namespace SAMRAI {
 namespace solv {
@@ -344,7 +345,7 @@ private:
     * array.  For the position of a particular box, see
     * d_dirichlet_data_position.
     */
-   tbox::Array<boost::shared_ptr<pdat::ArrayData<double> > > d_dirichlet_data;
+   std::vector<boost::shared_ptr<pdat::ArrayData<double> > > d_dirichlet_data;
    /*!
     * @brief Position of cached boundary boxes of ghost cell data.
     *

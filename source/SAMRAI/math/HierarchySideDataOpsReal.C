@@ -87,7 +87,7 @@ HierarchySideDataOpsReal<TYPE>::resetLevels(
    d_finest_level = finest_level;
 
    for (int d = 0; d < dimVal; d++) {
-      d_nonoverlapping_side_boxes[d].resizeArray(d_finest_level + 1);
+      d_nonoverlapping_side_boxes[d].resize(d_finest_level + 1);
    }
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
@@ -783,7 +783,7 @@ HierarchySideDataOpsReal<TYPE>::numberOfEntries(
          const int npatches = level->getNumberOfPatches();
 #ifdef DEBUG_CHECK_ASSERTIONS
          for (int dc = 0; dc < dimVal; dc++) {
-            TBOX_ASSERT(npatches == d_nonoverlapping_side_boxes[dc][ln].getSize());
+            TBOX_ASSERT(npatches == static_cast<int>(d_nonoverlapping_side_boxes[dc][ln].size()));
          }
 #endif
          for (int il = 0; il < npatches; il++) {

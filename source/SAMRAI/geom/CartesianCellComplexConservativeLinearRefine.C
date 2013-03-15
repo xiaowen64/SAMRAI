@@ -172,7 +172,7 @@ CartesianCellComplexConservativeLinearRefine::refine(
    const hier::Index ilastf = fine_box.upper();
 
    const hier::IntVector tmp_ghosts(dim, 0);
-   tbox::Array<dcomplex> diff0(cgbox.numberCells(0) + 1);
+   std::vector<dcomplex> diff0(cgbox.numberCells(0) + 1);
    pdat::CellData<dcomplex> slope0(cgbox, 1, tmp_ghosts);
 
    for (int d = 0; d < fdata->getDepth(); d++) {
@@ -187,9 +187,9 @@ CartesianCellComplexConservativeLinearRefine::refine(
             fgeom->getDx(),
             cdata->getPointer(d),
             fdata->getPointer(d),
-            diff0.getPointer(), slope0.getPointer());
+            &diff0[0], slope0.getPointer());
       } else if ((dim == tbox::Dimension(2))) {
-         tbox::Array<dcomplex> diff1(cgbox.numberCells(1) + 1);
+         std::vector<dcomplex> diff1(cgbox.numberCells(1) + 1);
          pdat::CellData<dcomplex> slope1(cgbox, 1, tmp_ghosts);
 
          SAMRAI_F77_FUNC(cartclinrefcellcplx2d, CARTCLINREFCELLCPLX2D) (ifirstc(0),
@@ -202,13 +202,13 @@ CartesianCellComplexConservativeLinearRefine::refine(
             fgeom->getDx(),
             cdata->getPointer(d),
             fdata->getPointer(d),
-            diff0.getPointer(), slope0.getPointer(),
-            diff1.getPointer(), slope1.getPointer());
+            &diff0[0], slope0.getPointer(),
+            &diff1[0], slope1.getPointer());
       } else if ((dim == tbox::Dimension(3))) {
-         tbox::Array<dcomplex> diff1(cgbox.numberCells(1) + 1);
+         std::vector<dcomplex> diff1(cgbox.numberCells(1) + 1);
          pdat::CellData<dcomplex> slope1(cgbox, 1, tmp_ghosts);
 
-         tbox::Array<dcomplex> diff2(cgbox.numberCells(2) + 1);
+         std::vector<dcomplex> diff2(cgbox.numberCells(2) + 1);
          pdat::CellData<dcomplex> slope2(cgbox, 1, tmp_ghosts);
 
          SAMRAI_F77_FUNC(cartclinrefcellcplx3d, CARTCLINREFCELLCPLX3D) (ifirstc(0),
@@ -225,9 +225,9 @@ CartesianCellComplexConservativeLinearRefine::refine(
             fgeom->getDx(),
             cdata->getPointer(d),
             fdata->getPointer(d),
-            diff0.getPointer(), slope0.getPointer(),
-            diff1.getPointer(), slope1.getPointer(),
-            diff2.getPointer(), slope2.getPointer());
+            &diff0[0], slope0.getPointer(),
+            &diff1[0], slope1.getPointer(),
+            &diff2[0], slope2.getPointer());
       } else {
          TBOX_ERROR("CartesianCellComplexConservativeLinearRefine error...\n"
             << "dim > 3 not supported." << std::endl);
