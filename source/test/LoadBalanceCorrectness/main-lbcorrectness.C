@@ -30,7 +30,6 @@
 #include "SAMRAI/mesh/TilePartitioner.h"
 #include "SAMRAI/mesh/TileClustering.h"
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
-#include "SAMRAI/mesh/TilePartitioner.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
 
