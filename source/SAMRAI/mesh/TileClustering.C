@@ -57,6 +57,10 @@ TileClustering::getFromInput(
             d_dim.getValue());
       }
 
+      d_coalesce_boxes =
+         input_db->getBoolWithDefault("coalesce_boxes",
+            d_coalesce_boxes);
+
       d_barrier_and_time =
          input_db->getBoolWithDefault("DEV_barrier_and_time",
             d_barrier_and_time);
@@ -206,6 +210,70 @@ TileClustering::findBoxesContainingTags(
    }
 
    new_box_level->finalize();
+
+
+   if ( d_coalesce_boxes ) {
+
+      /*
+       * Try to coalesce the boxes in new_box_level.
+       */
+      hier::BoxContainer new_boxes(new_box_level->getBoxes());
+      new_boxes.unorder();
+      new_boxes.coalesce();
+      if ( new_boxes.size() != new_box_level->getLocalNumberOfBoxes() ) {
+
+         /*
+          * Coalesce changed the new boxes, so rebuild new_box_level and
+          * Connectors.
+          */
+         new_box_level->initialize( new_box_level->getRefinementRatio(),
+                                    new_box_level->getGridGeometry(),
+                                    new_box_level->getMPI() );
+         tag_to_new.reset( new hier::Connector( tag_box_level,
+                                                *new_box_level,
+                                                zero_vector ) );
+         new_to_tag = new hier::Connector( *new_box_level,
+                                           tag_box_level,
+                                           zero_vector );
+         tag_to_new->setTranspose(new_to_tag, true);
+
+         const hier::BoxContainer &tag_boxes = tag_box_level.getBoxes();
+         tag_boxes.makeTree( tag_box_level.getGridGeometry().get() );
+
+         /*
+          * Assign ids to coalesced boxes, add to BoxLevel and add
+          * new--->tag edges.
+          */
+         hier::LocalId last_used_id(-1);
+         int rank = new_box_level->getMPI().getRank();
+         for ( hier::BoxContainer::iterator bi=new_boxes.begin();
+               bi!=new_boxes.end(); ++bi ) {
+            bi->setId(hier::BoxId(++last_used_id,rank));
+            new_box_level->addBox(*bi);
+
+            hier::BoxContainer tmp_overlap_boxes;
+            tag_boxes.findOverlapBoxes(tmp_overlap_boxes, *bi);
+
+            new_to_tag->insertNeighbors( tmp_overlap_boxes, bi->getBoxId() );
+         }
+         new_box_level->finalize();
+
+         /*
+          * Add tag--->new edges.
+          */
+         new_boxes.makeTree( new_box_level->getGridGeometry().get() );
+         for ( hier::BoxContainer::const_iterator bi=tag_boxes.begin();
+               bi!=tag_boxes.end(); ++bi ) {
+
+            hier::BoxContainer tmp_overlap_boxes;
+            new_boxes.findOverlapBoxes(tmp_overlap_boxes, *bi);
+
+            tag_to_new->insertNeighbors( tmp_overlap_boxes, bi->getBoxId() );
+         }
+
+      }
+
+   }
 
    if (d_barrier_and_time) {
       t_cluster->barrierAndStop();
