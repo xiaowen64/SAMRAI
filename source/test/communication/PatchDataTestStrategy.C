@@ -15,6 +15,8 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <vector>
+
 namespace SAMRAI {
 
 using namespace std;
@@ -65,8 +67,8 @@ void PatchDataTestStrategy::readVariableInput(
 {
    TBOX_ASSERT(db);
 
-   tbox::Array<string> var_keys = db->getAllKeys();
-   int nkeys = var_keys.getSize();
+   std::vector<string> var_keys = db->getAllKeys();
+   int nkeys = static_cast<int>(var_keys.size());
 
    d_variable_src_name.resizeArray(nkeys);
    d_variable_dst_name.resizeArray(nkeys);
@@ -131,12 +133,14 @@ void PatchDataTestStrategy::readRefinementInput(
 {
    TBOX_ASSERT(db);
 
-   tbox::Array<string> box_keys = db->getAllKeys();
-   int nkeys = box_keys.getSize();
+   std::vector<string> box_keys = db->getAllKeys();
+   int nkeys = static_cast<int>(box_keys.size());
 
    d_refine_level_boxes.resizeArray(nkeys);
    for (int i = 0; i < nkeys; i++) {
-      d_refine_level_boxes[i] = db->getDatabaseBoxArray(box_keys[i]);
+      std::vector<tbox::DatabaseBox> db_box_vector =
+         db->getDatabaseBoxVector(box_keys[i]);
+      d_refine_level_boxes[i] = db_box_vector;
    }
 
 }

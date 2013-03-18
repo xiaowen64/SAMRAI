@@ -76,7 +76,7 @@ LocationIndexRobinBcCoefs::getFromInput(
       if (input_db->isString(name)) {
          d_a_map[i] = 1.0;
          d_g_map[i] = 0.0;
-         tbox::Array<std::string> specs = input_db->getStringArray(name);
+         std::vector<std::string> specs = input_db->getStringVector(name);
          if (specs[0] == "value") {
             d_a_map[i] = 1.0;
             d_b_map[i] = 0.0;

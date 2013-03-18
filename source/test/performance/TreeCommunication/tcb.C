@@ -848,11 +848,12 @@ int testTreeLB(
    Database &test_db )
 {
 
-   Array<int> down_message_dependency = test_db.getIntegerArray("down_message_dependency");
-   const int dl = down_message_dependency.size();
+   std::vector<int> down_message_dependency =
+      test_db.getIntegerVector("down_message_dependency");
+   const int dl = static_cast<int>(down_message_dependency.size());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for ( int i=0; i<down_message_dependency.size(); ++i ) {
+   for ( int i=0; i < dl; ++i ) {
       TBOX_ASSERT( down_message_dependency[i] >= 0 &&
                    down_message_dependency[i] < 3 );
    }

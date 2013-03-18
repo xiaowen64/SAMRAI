@@ -463,7 +463,7 @@ PatchLevel::setRefinedPatchLevel(
    d_local_number_patches = coarse_level->getLocalNumberOfPatches();
    d_number_blocks = coarse_level->d_number_blocks;
 
-   d_physical_domain.resizeArray(d_number_blocks);
+   d_physical_domain.resize(d_number_blocks);
    for (int nb = 0; nb < d_number_blocks; nb++) {
       d_physical_domain[nb] = coarse_level->d_physical_domain[nb];
       d_physical_domain[nb].refine(refine_ratio);
@@ -641,7 +641,7 @@ PatchLevel::setCoarsenedPatchLevel(
    d_local_number_patches = fine_level->getNumberOfPatches();
    d_number_blocks = fine_level->d_number_blocks;
 
-   d_physical_domain.resizeArray(d_number_blocks);
+   d_physical_domain.resize(d_number_blocks);
    for (int nb = 0; nb < d_number_blocks; nb++) {
       d_physical_domain[nb] = fine_level->d_physical_domain[nb];
       d_physical_domain[nb].coarsen(coarsen_ratio);
@@ -762,7 +762,9 @@ PatchLevel::getFromRestart(
    }
 
    if (restart_db->keyExists("d_boxes")) {
-      d_boxes = restart_db->getDatabaseBoxArray("d_boxes");
+      std::vector<tbox::DatabaseBox> db_box_vector =
+         restart_db->getDatabaseBoxVector("d_boxes");
+      d_boxes = db_box_vector;
    }
 
    int* temp_ratio = &d_ratio_to_level_zero[0];
@@ -773,11 +775,13 @@ PatchLevel::getFromRestart(
 
    d_number_blocks = restart_db->getInteger("d_number_blocks");
 
-   d_physical_domain.resizeArray(d_number_blocks);
+   d_physical_domain.resize(d_number_blocks);
    for (int nb = 0; nb < d_number_blocks; nb++) {
       std::string domain_name = "d_physical_domain_"
          + tbox::Utilities::blockToString(nb);
-      d_physical_domain[nb] = restart_db->getDatabaseBoxArray(domain_name);
+      std::vector<tbox::DatabaseBox> db_box_vector =
+         restart_db->getDatabaseBoxVector(domain_name);
+      d_physical_domain[nb] = db_box_vector;
       for (BoxContainer::iterator bi = d_physical_domain[nb].begin();
            bi != d_physical_domain[nb].end(); ++bi) {
          bi->setBlockId(BlockId(nb));
@@ -866,9 +870,9 @@ PatchLevel::putToRestart(
    // This appears to be used in the RedistributedRestartUtility.
    restart_db->putBool("d_is_patch_level", true);
 
-   tbox::Array<tbox::DatabaseBox> temp_boxes = d_boxes;
-   if (temp_boxes.getSize() > 0) {
-      restart_db->putDatabaseBoxArray("d_boxes", temp_boxes);
+   std::vector<tbox::DatabaseBox> temp_boxes = d_boxes;
+   if (temp_boxes.size() > 0) {
+      restart_db->putDatabaseBoxVector("d_boxes", temp_boxes);
    }
 
    const int* temp_ratio_to_level_zero = &d_ratio_to_level_zero[0];
@@ -878,10 +882,10 @@ PatchLevel::putToRestart(
    restart_db->putInteger("d_number_blocks", d_number_blocks);
 
    for (int nb = 0; nb < d_number_blocks; nb++) {
-      tbox::Array<tbox::DatabaseBox> temp_domain = d_physical_domain[nb];
+      std::vector<tbox::DatabaseBox> temp_domain = d_physical_domain[nb];
       std::string domain_name = "d_physical_domain_"
          + tbox::Utilities::blockToString(nb);
-      restart_db->putDatabaseBoxArray(domain_name, temp_domain);
+      restart_db->putDatabaseBoxVector(domain_name, temp_domain);
    }
    restart_db->putInteger("d_level_number", d_level_number);
    restart_db->putInteger("d_next_coarser_level_number",

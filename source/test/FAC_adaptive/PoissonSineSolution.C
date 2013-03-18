@@ -64,15 +64,15 @@ void PoissonSineSolution::setFromDatabase(
    std::istringstream ist(istr);
    ist >> d_exact;
    if (database.isBool("neumann_locations")) {
-      tbox::Array<bool> neumann_locations =
-         database.getBoolArray("neumann_locations");
-      if (neumann_locations.getSize() > 2 * d_dim.getValue()) {
+      std::vector<bool> neumann_locations =
+         database.getBoolVector("neumann_locations");
+      if (static_cast<int>(neumann_locations.size()) > 2 * d_dim.getValue()) {
          TBOX_ERROR(
             "'neumann_locations' should have at most " << 2 * d_dim.getValue()
                                                        << " entries in " << d_dim << "D.\n");
       }
       int i;
-      for (i = 0; i < neumann_locations.getSize(); ++i) {
+      for (i = 0; i < static_cast<int>(neumann_locations.size()); ++i) {
          d_neumann_location[i] = neumann_locations[i];
       }
    }

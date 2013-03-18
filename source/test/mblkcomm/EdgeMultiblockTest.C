@@ -17,6 +17,8 @@
 
 #include "MultiblockTester.h"
 
+#include <vector>
+
 using namespace SAMRAI;
 
 EdgeMultiblockTest::EdgeMultiblockTest(
@@ -159,23 +161,20 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
 
    boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
-   const tbox::Array<hier::BoundaryBox> node_bdry =
+   const std::vector<hier::BoundaryBox>& node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
-   const int num_node_bdry_boxes = node_bdry.getSize();
+   const int num_node_bdry_boxes = static_cast<int>(node_bdry.size());
 
-   tbox::Array<hier::BoundaryBox> edge_bdry;
-   int num_edge_bdry_boxes = 0;
-   if (d_dim > tbox::Dimension(1)) {
-      edge_bdry = pgeom->getCodimensionBoundaries(d_dim.getValue() - 1);
-      num_edge_bdry_boxes = edge_bdry.getSize();
-   }
+   std::vector<hier::BoundaryBox> empty_vector(0, hier::BoundaryBox(d_dim));
+   const std::vector<hier::BoundaryBox>& edge_bdry =
+      d_dim > tbox::Dimension(1) ?
+         pgeom->getCodimensionBoundaries(d_dim.getValue() - 1) : empty_vector;
+   const int num_edge_bdry_boxes = static_cast<int>(edge_bdry.size());
 
-   tbox::Array<hier::BoundaryBox> face_bdry;
-   int num_face_bdry_boxes = 0;
-   if (d_dim == tbox::Dimension(3)) {
-      face_bdry = pgeom->getCodimensionBoundaries(d_dim.getValue() - 2);
-      num_face_bdry_boxes = face_bdry.getSize();
-   }
+   const std::vector<hier::BoundaryBox>& face_bdry =
+      d_dim == tbox::Dimension(3) ?
+         pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
+   const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
@@ -336,8 +335,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
       int depth = edge_data->getDepth();
 
       for (int axis = 0; axis < d_dim.getValue(); axis++) {
-         hier::Box pbox =
-            pdat::EdgeGeometry::toEdgeBox(patch.getBox(), axis);
+         hier::Box pbox = pdat::EdgeGeometry::toEdgeBox(patch.getBox(), axis);
 
          hier::Index plower(pbox.lower());
          hier::Index pupper(pbox.upper());
@@ -683,10 +681,10 @@ bool EdgeMultiblockTest::verifyResults(
       boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
       for (int b = 0; b < d_dim.getValue(); b++) {
-         tbox::Array<hier::BoundaryBox> bdry =
+         const std::vector<hier::BoundaryBox>& bdry =
             pgeom->getCodimensionBoundaries(b + 1);
 
-         for (int k = 0; k < bdry.size(); k++) {
+         for (int k = 0; k < static_cast<int>(bdry.size()); k++) {
             hier::Box fill_box = pgeom->getBoundaryFillBox(bdry[k],
                   patch.getBox(),
                   tgcw);

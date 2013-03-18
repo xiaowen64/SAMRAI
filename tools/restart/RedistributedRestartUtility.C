@@ -125,8 +125,8 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
 
       nodes_buf = "/nodes." + tbox::Utilities::nodeToString(total_input_files);
 
-      tbox::Array<string> input_keys(0);
-      tbox::Array<string> test_keys(0);
+      std::vector<string> input_keys(0);
+      std::vector<string> test_keys(0);
       int num_keys = 0;
 
       int input_files_per_proc = total_input_files / nprocs;
@@ -168,10 +168,10 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
          //Get the array of input keys.
          if (i == 0) {
             input_keys = input_dbs[i]->getAllKeys();
-            num_keys = input_keys.size();
+            num_keys = static_cast<int>(input_keys.size());
          } else {
             test_keys = input_dbs[i]->getAllKeys();
-            if (test_keys.size() != num_keys) {
+            if (static_cast<int>(test_keys.size()) != num_keys) {
                TBOX_ERROR("Input files contain differing number of keys");
             }
          }
@@ -353,9 +353,9 @@ void RedistributedRestartUtility::readAndWriteRestartData(
             child_out_dbs[i] = output_dbs[i]->putDatabase(key);
          }
 
-         tbox::Array<string> child_keys = db->getAllKeys();
+         std::vector<string> child_keys = db->getAllKeys();
 
-         for (int j = 0; j < child_keys.size(); j++) {
+         for (int j = 0; j < static_cast<int>(child_keys.size()); j++) {
             readAndWriteRestartData(child_out_dbs,
                child_in_dbs,
                child_keys[j],
@@ -368,88 +368,73 @@ void RedistributedRestartUtility::readAndWriteRestartData(
       }
    } else if (input_dbs[0]->isInteger(key)) {
 
-      tbox::Array<int> int_array(0);
-
-      int_array = input_dbs[0]->getIntegerArray(key);
+      std::vector<int> int_array = input_dbs[0]->getIntegerVector(key);
 
       for (int i = 0; i < output_dbs.size(); i++) {
-         output_dbs[i]->putIntegerArray(key, int_array);
+         output_dbs[i]->putIntegerVector(key, int_array);
       }
 
    } else if (input_dbs[0]->isDouble(key)) {
 
-      tbox::Array<double> double_array(0);
-
-      double_array = input_dbs[0]->getDoubleArray(key);
+      std::vector<double> double_array = input_dbs[0]->getDoubleVector(key);
 
       for (int i = 0; i < output_dbs.size(); i++) {
-         output_dbs[i]->putDoubleArray(key, double_array);
+         output_dbs[i]->putDoubleVector(key, double_array);
       }
 
    } else if (input_dbs[0]->isBool(key)) {
 
-      tbox::Array<bool> bool_array(0);
-
-      bool_array = input_dbs[0]->getBoolArray(key);
+      std::vector<bool> bool_array = input_dbs[0]->getBoolVector(key);
 
       if (key == "d_write_edges_for_restart") {
-         for (int j = 0; j < bool_array.size(); j++) {
+         for (int j = 0; j < static_cast<int>(bool_array.size()); j++) {
             bool_array[j] = false;
          }
       }
 
       for (int i = 0; i < output_dbs.size(); i++) {
-         output_dbs[i]->putBoolArray(key, bool_array);
+         output_dbs[i]->putBoolVector(key, bool_array);
       }
 
    } else if (input_dbs[0]->isDatabaseBox(key)) {
 
-      tbox::Array<tbox::DatabaseBox> box_array(0);
-
-      box_array = input_dbs[0]->getDatabaseBoxArray(key);
+      std::vector<tbox::DatabaseBox> box_array =
+         input_dbs[0]->getDatabaseBoxVector(key);
 
       for (int i = 0; i < output_dbs.size(); i++) {
-         output_dbs[i]->putDatabaseBoxArray(key, box_array);
+         output_dbs[i]->putDatabaseBoxVector(key, box_array);
       }
 
    } else if (input_dbs[0]->isString(key)) {
 
-      tbox::Array<string> string_array(0);
-
-      string_array = input_dbs[0]->getStringArray(key);
+      std::vector<string> string_array = input_dbs[0]->getStringVector(key);
 
       for (int i = 0; i < output_dbs.size(); i++) {
-         output_dbs[i]->putStringArray(key, string_array);
+         output_dbs[i]->putStringVector(key, string_array);
       }
 
    } else if (input_dbs[0]->isComplex(key)) {
 
-      tbox::Array<dcomplex> complex_array(0);
-
-      complex_array = input_dbs[0]->getComplexArray(key);
+      std::vector<dcomplex> complex_array = input_dbs[0]->getComplexVector(key);
 
       for (int i = 0; i < output_dbs.size(); i++) {
-         output_dbs[i]->putComplexArray(key, complex_array);
+         output_dbs[i]->putComplexVector(key, complex_array);
       }
 
    } else if (input_dbs[0]->isChar(key)) {
 
-      tbox::Array<char> char_array(0);
-
-      char_array = input_dbs[0]->getCharArray(key);
+      std::vector<char> char_array = input_dbs[0]->getCharVector(key);
 
       for (int i = 0; i < output_dbs.size(); i++) {
-         output_dbs[i]->putCharArray(key, char_array);
+         output_dbs[i]->putCharVector(key, char_array);
       }
 
    } else if (input_dbs[0]->isFloat(key)) {
 
-      tbox::Array<float> float_array(0);
-
-      float_array = input_dbs[0]->getFloatArray(key);
+      std::vector<float> float_array = input_dbs[0]->getFloatVector(key);
 
       for (int i = 0; i < output_dbs.size(); i++) {
-         output_dbs[i]->putFloatArray(key, float_array);
+         output_dbs[i]->putFloatVector(key, float_array);
       }
 
    } else {
@@ -492,27 +477,27 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
    //Read in data that is global to every processor
    bool is_patch_level = level_in_dbs[0]->getBool("d_is_patch_level");
    int version = level_in_dbs[0]->getInteger("HIER_PATCH_LEVEL_VERSION");
-   tbox::Array<tbox::DatabaseBox> box_array(0);
+   std::vector<tbox::DatabaseBox> box_array(0);
    if (level_in_dbs[0]->keyExists("d_boxes")) {
-      level_in_dbs[0]->getDatabaseBoxArray("d_boxes");
+      level_in_dbs[0]->getDatabaseBoxVector("d_boxes");
    }
 
-   tbox::Array<int> ratio_to_zero =
-      level_in_dbs[0]->getIntegerArray("d_ratio_to_level_zero");
+   std::vector<int> ratio_to_zero =
+      level_in_dbs[0]->getIntegerVector("d_ratio_to_level_zero");
    int number_blocks = level_in_dbs[0]->getInteger("d_number_blocks");
-   tbox::Array<tbox::Array<tbox::DatabaseBox> > physical_domain(number_blocks);
+   std::vector<std::vector<tbox::DatabaseBox> > physical_domain(number_blocks);
    for (int nb = 0; nb < number_blocks; nb++) {
       std::string domain_name = "d_physical_domain_"
          + tbox::Utilities::blockToString(nb);
       physical_domain[nb] =
-         level_in_dbs[0]->getDatabaseBoxArray(domain_name);
+         level_in_dbs[0]->getDatabaseBoxVector(domain_name);
    }
    int level_number = level_in_dbs[0]->getInteger("d_level_number");
    int next_coarser_level =
       level_in_dbs[0]->getInteger("d_next_coarser_level_number");
    bool in_hierarchy = level_in_dbs[0]->getBool("d_in_hierarchy");
-   tbox::Array<int> ratio_to_coarser =
-      level_in_dbs[0]->getIntegerArray("d_ratio_to_coarser_level");
+   std::vector<int> ratio_to_coarser =
+      level_in_dbs[0]->getIntegerVector("d_ratio_to_coarser_level");
 
    const int out_size = level_out_dbs.size();
 
@@ -521,22 +506,22 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
       level_out_dbs[i]->putBool("d_is_patch_level", is_patch_level);
       level_out_dbs[i]->putInteger("HIER_PATCH_LEVEL_VERSION", version);
       if (box_array.size() > 0) {
-         level_out_dbs[i]->putDatabaseBoxArray("d_boxes", box_array);
+         level_out_dbs[i]->putDatabaseBoxVector("d_boxes", box_array);
       }
-      level_out_dbs[i]->putIntegerArray("d_ratio_to_level_zero",
+      level_out_dbs[i]->putIntegerVector("d_ratio_to_level_zero",
          ratio_to_zero);
       level_out_dbs[i]->putInteger("d_number_blocks", number_blocks);
       for (int nb = 0; nb < number_blocks; nb++) {
          std::string domain_name = "d_physical_domain_"
             + tbox::Utilities::blockToString(nb);
-         level_out_dbs[i]->putDatabaseBoxArray(domain_name,
+         level_out_dbs[i]->putDatabaseBoxVector(domain_name,
             physical_domain[nb]);
       }
       level_out_dbs[i]->putInteger("d_level_number", level_number);
       level_out_dbs[i]->putInteger("d_next_coarser_level_number",
          next_coarser_level);
       level_out_dbs[i]->putBool("d_in_hierarchy", in_hierarchy);
-      level_out_dbs[i]->putIntegerArray("d_ratio_to_coarser_level",
+      level_out_dbs[i]->putIntegerVector("d_ratio_to_coarser_level",
          ratio_to_coarser);
 
    }
@@ -559,18 +544,18 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
       boost::shared_ptr<tbox::Database> mapped_boxes_db =
          mbl_database->getDatabase("mapped_boxes");
 
-      tbox::Array<int> local_indices(0);
+      std::vector<int> local_indices(0);
       if (mapped_boxes_db->keyExists("local_indices")) {
-         local_indices = mapped_boxes_db->getIntegerArray("local_indices");
+         local_indices = mapped_boxes_db->getIntegerVector("local_indices");
       }
-      tbox::Array<int> block_ids(0);
+      std::vector<int> block_ids(0);
       if (mapped_boxes_db->keyExists("block_ids")) {
-         block_ids = mapped_boxes_db->getIntegerArray("block_ids");
+         block_ids = mapped_boxes_db->getIntegerVector("block_ids");
       }
 
       //This list will contain all of the patch numbers that came from a
       //single processor.
-      int mbs_size = local_indices.size();
+      int mbs_size = static_cast<int>(local_indices.size());
       std::list<int> input_local_patch_nums;
       std::list<int> input_local_block_ids;
       std::list<int> output_local_patch_nums;
@@ -737,7 +722,7 @@ void RedistributedRestartUtility::readAndWritePatchRestartData(
    const int output_proc)
 {
    //Get the keys in the patch input database.
-   tbox::Array<string> keys = patch_in_db->getAllKeys();
+   std::vector<string> keys = patch_in_db->getAllKeys();
 
    //Place the database on arrays of length 1.
    tbox::Array<boost::shared_ptr<tbox::Database> > in_db_array(1);
@@ -748,7 +733,7 @@ void RedistributedRestartUtility::readAndWritePatchRestartData(
 
    //Call recursive function to read and write the data associated with each
    //key.
-   for (int i = 0; i < keys.size(); i++) {
+   for (int i = 0; i < static_cast<int>(keys.size()); i++) {
       if (keys[i] == "d_patch_owner") {
          patch_out_db->putInteger(keys[i], output_proc);
       } else {
@@ -790,13 +775,13 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    bool is_mapped_box_level = level_in_dbs[0]->getBool("d_is_mapped_box_level");
    int version = level_in_dbs[0]->getInteger("HIER_MAPPED_BOX_LEVEL_VERSION");
    int dim = level_in_dbs[0]->getInteger("dim");
-   tbox::Array<int> ratio = level_in_dbs[0]->getIntegerArray("d_ratio");
+   std::vector<int> ratio = level_in_dbs[0]->getIntegerVector("d_ratio");
 
    for (int i = 0; i < out_size; i++) {
       level_out_dbs[i]->putBool("d_is_mapped_box_level", is_mapped_box_level);
       level_out_dbs[i]->putInteger("HIER_MAPPED_BOX_LEVEL_VERSION", version);
       level_out_dbs[i]->putInteger("dim", dim);
-      level_out_dbs[i]->putIntegerArray("d_ratio", ratio);
+      level_out_dbs[i]->putIntegerVector("d_ratio", ratio);
 
       level_out_dbs[i]->putInteger("d_nproc", total_output_files);
       level_out_dbs[i]->putInteger("d_rank", num_files_written + i);
@@ -808,8 +793,8 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
       new std::vector<int>[out_size];
    std::vector<int>* out_block_ids = new std::vector<int>[out_size];
 
-   tbox::Array<tbox::DatabaseBox>* out_box_array =
-      new tbox::Array<tbox::DatabaseBox>[out_size];
+   std::vector<tbox::DatabaseBox>* out_box_array =
+      new std::vector<tbox::DatabaseBox>[out_size];
 
    int out_vec_size = 0;
    tbox::Array<int> out_mbs_size(out_size, 0);
@@ -828,27 +813,27 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
 
       int mbs_size = mapped_boxes_in_db->getInteger("mapped_box_set_size");
 
-      tbox::Array<int> local_indices;
-      tbox::Array<int> ranks;
-      tbox::Array<int> periodic_ids;
-      tbox::Array<int> block_ids;
-      tbox::Array<tbox::DatabaseBox> boxes;
+      std::vector<int> local_indices;
+      std::vector<int> ranks;
+      std::vector<int> periodic_ids;
+      std::vector<int> block_ids;
+      std::vector<tbox::DatabaseBox> boxes;
 
       if (mapped_boxes_in_db->keyExists("local_indices")) {
-         local_indices = mapped_boxes_in_db->getIntegerArray("local_indices");
+         local_indices = mapped_boxes_in_db->getIntegerVector("local_indices");
       }
       if (mapped_boxes_in_db->keyExists("ranks")) {
-         ranks = mapped_boxes_in_db->getIntegerArray("ranks");
+         ranks = mapped_boxes_in_db->getIntegerVector("ranks");
       }
       if (mapped_boxes_in_db->keyExists("periodic_ids")) {
          periodic_ids =
-            mapped_boxes_in_db->getIntegerArray("periodic_ids");
+            mapped_boxes_in_db->getIntegerVector("periodic_ids");
       }
       if (mapped_boxes_in_db->keyExists("block_ids")) {
-         block_ids = mapped_boxes_in_db->getIntegerArray("block_ids");
+         block_ids = mapped_boxes_in_db->getIntegerVector("block_ids");
       }
       if (mapped_boxes_in_db->keyExists("boxes")) {
-         boxes = mapped_boxes_in_db->getDatabaseBoxArray("boxes");
+         boxes = mapped_boxes_in_db->getDatabaseBoxVector("boxes");
       }
 
       if (out_size == 1) {
@@ -940,7 +925,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
             out_periodic_ids[j].reserve(out_vec_size);
             out_block_ids[j].reserve(out_vec_size);
 
-            out_box_array[j].resizeArray(out_vec_size);
+            out_box_array[j].reserve(out_vec_size);
             for (int k = 0; k < mbs_size; k++) {
                if (output_ids[k] == j) {
                   int output_rank = num_files_written + output_ids[k];
@@ -948,7 +933,8 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
                   out_ranks[j].push_back(output_rank);
                   out_periodic_ids[j].push_back(periodic_ids[k]);
                   out_block_ids[j].push_back(block_ids[k]);
-                  out_box_array[j][out_mbs_size[j]++] = boxes[k];
+                  out_box_array[j].push_back(boxes[k]);
+                  ++out_mbs_size[j];
                }
             }
          }
@@ -959,27 +945,20 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
       boost::shared_ptr<tbox::Database> mapped_boxes_out_db =
          level_out_dbs[j]->putDatabase("mapped_boxes");
 
-      mapped_boxes_out_db->
-      putInteger("HIER_BOX_CONTAINER_VERSION", version);
-      mapped_boxes_out_db->
-      putInteger("mapped_box_set_size", out_mbs_size[j]);
+      mapped_boxes_out_db->putInteger("HIER_BOX_CONTAINER_VERSION", version);
+      mapped_boxes_out_db->putInteger("mapped_box_set_size", out_mbs_size[j]);
 
       if (out_mbs_size[j]) {
-         mapped_boxes_out_db->putIntegerArray("local_indices",
-            &out_local_indices[j][0],
-            out_mbs_size[j]);
-         mapped_boxes_out_db->putIntegerArray("periodic_ids",
-            &out_periodic_ids[j][0],
-            out_mbs_size[j]);
-         mapped_boxes_out_db->putIntegerArray("block_ids",
-            &out_block_ids[j][0],
-            out_mbs_size[j]);
-         mapped_boxes_out_db->putIntegerArray("ranks",
-            &out_ranks[j][0],
-            out_mbs_size[j]);
-         mapped_boxes_out_db->putDatabaseBoxArray("boxes",
-            &out_box_array[j][0],
-            out_mbs_size[j]);
+         mapped_boxes_out_db->putIntegerVector("local_indices",
+            out_local_indices[j]);
+         mapped_boxes_out_db->putIntegerVector("periodic_ids",
+            out_periodic_ids[j]);
+         mapped_boxes_out_db->putIntegerVector("block_ids",
+            out_block_ids[j]);
+         mapped_boxes_out_db->putIntegerVector("ranks",
+            out_ranks[j]);
+         mapped_boxes_out_db->putDatabaseBoxVector("boxes",
+            out_box_array[j]);
 
       }
    }
@@ -998,7 +977,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
  *       out_ranks.reserve(mbs_size);
  *       out_periodic_ids.reserve(mbs_size);
  *
- *       tbox::Array<tbox::DatabaseBox> out_box_array(mbs_size);
+ *       std::vector<tbox::DatabaseBox> out_box_array(mbs_size);
  *
  *       int out_mbs_size = 0;
  *       for (int k = 0; k < mbs_size; k++) {
@@ -1026,18 +1005,12 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
  *          putInteger("mapped_box_set_size", out_mbs_size);
  *
  *       if (out_mbs_size) {
- *          mapped_boxes_out_db->
- *             putIntegerArray("local_indices",
- *                             &out_local_indices[0],
- *                             out_mbs_size);
- *          mapped_boxes_out_db->
- *             putIntegerArray("periodic_ids",
- *                             &out_periodic_ids[0],
- *                             out_mbs_size);
- *          mapped_boxes_out_db->
- *             putIntegerArray("ranks", &out_ranks[0], out_mbs_size);
- *          mapped_boxes_out_db->
- *             putDatabaseBoxArray("boxes", &out_box_array[0], out_mbs_size);
+ *          mapped_boxes_out_db->putIntegerVector("local_indices",
+ *             out_local_indices);
+ *          mapped_boxes_out_db->putIntegerVector("periodic_ids"
+ *             out_periodic_ids);
+ *          mapped_boxes_out_db->putIntegerVector("ranks", out_ranks);
+ *          mapped_boxes_out_db->putDatabaseBoxVector("boxes", out_box_array);
  *
  *       }
  *    }

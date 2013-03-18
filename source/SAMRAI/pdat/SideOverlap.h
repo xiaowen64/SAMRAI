@@ -42,7 +42,7 @@ public:
     * in the generation of communication schedules.
     */
    SideOverlap(
-      const tbox::Array<hier::BoxContainer>& boxes,
+      const std::vector<hier::BoxContainer>& boxes,
       const hier::Transformation& Transformation);
 
    /**
@@ -105,7 +105,7 @@ public:
 private:
    bool d_is_overlap_empty;
    hier::Transformation d_transformation;
-   tbox::Array<hier::BoxContainer> d_dst_boxes;
+   std::vector<hier::BoxContainer> d_dst_boxes;
 
 };
 

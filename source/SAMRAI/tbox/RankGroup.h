@@ -18,6 +18,8 @@
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 
+#include <vector>
+
 namespace SAMRAI {
 namespace tbox {
 
@@ -72,16 +74,16 @@ public:
 
    /*!
     * This constructor creates a RankGroup consisting of ranks corresponding
-    * to the integers in the array.  Each member of the array must be >= 0,
+    * to the integers in the vector.  Each member of the vector must be >= 0,
     * less than the total number of available processors, and unique within
-    * the array.  Due to the use of an array for storage, RankGroups
+    * the vector.  Due to the use of an vector for storage, RankGroups
     * created with this constructor should be expected to be less efficient
     * than those created with the above min/max constructor.
     *
     * @pre !rank_group.empty()
     */
    explicit RankGroup(
-      const Array<int>& rank_group,
+      const std::vector<int>& rank_group,
       const SAMRAI_MPI& samrai_mpi =
          SAMRAI_MPI(SAMRAI_MPI::getSAMRAIWorld()));
 
@@ -114,7 +116,7 @@ public:
       TBOX_ASSERT(min >= 0);
       TBOX_ASSERT(min <= max);
       d_storage = USING_MIN_MAX;
-      d_ranks.resizeArray(0);
+      d_ranks.resize(0);
       d_min = min;
       d_max = max;
    }
@@ -161,7 +163,7 @@ private:
    int d_min;
    int d_max;
 
-   Array<int> d_ranks;
+   std::vector<int> d_ranks;
 
    StorageType d_storage;
 

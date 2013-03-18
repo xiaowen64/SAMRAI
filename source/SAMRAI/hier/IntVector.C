@@ -57,8 +57,8 @@ IntVector::IntVector(
 }
 
 IntVector::IntVector(
-   const tbox::Array<int>& a):
-   d_dim(static_cast<unsigned short>(a.getSize()))
+   const std::vector<int>& a):
+   d_dim(static_cast<unsigned short>(a.size()))
 {
    for (int i = 0; i < d_dim.getValue(); ++i) {
       d_vector[i] = a[i];

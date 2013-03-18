@@ -74,6 +74,8 @@ using namespace std;
 
 #include "boost/shared_ptr.hpp"
 
+#include <vector>
+
 using namespace SAMRAI;
 using namespace tbox;
 using namespace hier;
@@ -491,7 +493,7 @@ private:
       boost::shared_ptr<Database> db,
       const string& db_name,
       int array_indx,
-      Array<double>& uval);
+      std::vector<double>& uval);
 
    /*
     * Object name used for error/warning reporting and as a label
@@ -575,9 +577,9 @@ private:
     *
     * Input file values are read into these arrays.
     */
-   Array<int> d_scalar_bdry_edge_conds;
-   Array<int> d_scalar_bdry_node_conds;
-   Array<int> d_scalar_bdry_face_conds; // Only used for 3D.
+   std::vector<int> d_scalar_bdry_edge_conds;
+   std::vector<int> d_scalar_bdry_node_conds;
+   std::vector<int> d_scalar_bdry_face_conds; // Only used for 3D.
 
    /*
     * Boundary condition cases for scalar and vector (i.e., depth > 1)
@@ -591,8 +593,8 @@ private:
    /*
     * Arrays of face (3d) or edge (2d) boundary values for DIRICHLET case.
     */
-   Array<double> d_bdry_edge_val; // Only used for 2D
-   Array<double> d_bdry_face_val; // Only used for 3D
+   std::vector<double> d_bdry_edge_val; // Only used for 2D
+   std::vector<double> d_bdry_face_val; // Only used for 3D
 
 };
 #endif // HAVE_SUNDIALS

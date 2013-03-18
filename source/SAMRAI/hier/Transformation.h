@@ -21,6 +21,7 @@
 #include "SAMRAI/tbox/Dimension.h"
 
 #include <string>
+#include <vector>
 
 namespace SAMRAI {
 namespace hier {
@@ -240,12 +241,12 @@ public:
     * @param[in] rotation_string
     * @param[in] dim
     *
-    * @pre rotation_string.getSize() == dim.getValue()
+    * @pre rotation_string.size() == dim.getValue()
     * @pre (dim.getValue() == 2) || (dim.getValue() == 3)
     */
    static RotationIdentifier
    getRotationIdentifier(
-      const tbox::Array<std::string>& rotation_string,
+      const std::vector<std::string>& rotation_string,
       const tbox::Dimension& dim);
 
    /*!

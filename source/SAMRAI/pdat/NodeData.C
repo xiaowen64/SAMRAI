@@ -411,7 +411,7 @@ NodeData<TYPE>::packWithRotation(
    const int depth = getDepth();
 
    const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
-   tbox::Array<TYPE> buffer(size);
+   std::vector<TYPE> buffer(size);
 
    int i = 0;
    for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
@@ -436,7 +436,7 @@ NodeData<TYPE>::packWithRotation(
       }
    }
 
-   stream.pack(buffer.getPointer(), size);
+   stream.pack(&buffer[0], size);
 }
 
 template<class TYPE>

@@ -22,6 +22,7 @@
 #include <iostream>
 #include <list>
 #include <set>
+#include <vector>
 
 
 namespace SAMRAI {
@@ -592,7 +593,7 @@ public:
     * @param[in] other
     */
    explicit BoxContainer(
-      const tbox::Array<tbox::DatabaseBox>& other);
+      const std::vector<tbox::DatabaseBox>& other);
 
    /*!
     * @brief Constructor that copies only Boxes having the given BlockId
@@ -631,7 +632,7 @@ public:
     */
    BoxContainer&
    operator = (
-      const tbox::Array<tbox::DatabaseBox>& rhs);
+      const std::vector<tbox::DatabaseBox>& rhs);
 
    /*!
     * @brief The destructor releases all storage.
@@ -1709,9 +1710,9 @@ public:
       tbox::Database& restart_db);
 
    /*!
-    * @brief Conversion from BoxContainer to tbox::Array<tbox::DatabaseBox>.
+    * @brief Conversion from BoxContainer to std::vector<tbox::DatabaseBox>.
     */
-   operator tbox::Array<tbox::DatabaseBox>() const;
+   operator std::vector<tbox::DatabaseBox>() const;
 
    /*!
     * @brief Print each box in the container to the specified output stream.

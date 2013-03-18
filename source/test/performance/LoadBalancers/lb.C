@@ -307,7 +307,9 @@ int main(
        * Set up the domain from input.
        */
 
-      hier::BoxContainer domain_boxes(main_db->getDatabaseBoxArray("domain_boxes"));
+      std::vector<tbox::DatabaseBox> db_box_vector =
+         main_db->getDatabaseBoxVector("domain_boxes");
+      hier::BoxContainer domain_boxes(db_box_vector);
 
       for (hier::BoxContainer::iterator itr = domain_boxes.begin();
            itr != domain_boxes.end(); ++itr) {
@@ -321,10 +323,10 @@ int main(
          xhi[i] = 1.0;
       }
       if (main_db->isDouble("xlo")) {
-         main_db->getDoubleArray("xlo", &xlo[0], dim.getValue());
+         xlo = main_db->getDoubleVector("xlo");
       }
       if (main_db->isDouble("xhi")) {
-         main_db->getDoubleArray("xhi", &xhi[0], dim.getValue());
+         xhi = main_db->getDoubleVector("xhi");
       }
 
       /*
@@ -442,18 +444,24 @@ int main(
          hier::IntVector(dim, 1), grid_geometry));
 
       {
-         hier::BoxContainer L0_boxes(
-            main_db->isDatabase("L0_boxes") ?
-            main_db->getDatabaseBoxArray("L0_boxes") : domain_boxes );
+         boost::shared_ptr<hier::BoxContainer> L0_boxes;
+         if (main_db->isDatabase("L0_boxes")) {
+            std::vector<tbox::DatabaseBox> db_box_vector =
+               main_db->getDatabaseBoxVector("L0_boxes");
+            L0_boxes.reset(new hier::BoxContainer(db_box_vector));
+         }
+         else {
+            L0_boxes.reset(new hier::BoxContainer(domain_boxes));
+         }
          const int boxes_per_proc =
-            (L0_boxes.size() + L0->getMPI().getSize() - 1) /
+            (L0_boxes->size() + L0->getMPI().getSize() - 1) /
             L0->getMPI().getSize();
          const int my_boxes_start = L0->getMPI().getRank()
             * boxes_per_proc;
          const int my_boxes_stop =
             tbox::MathUtilities<int>::Min(my_boxes_start + boxes_per_proc,
-               L0_boxes.size());
-         hier::BoxContainer::iterator L0_boxes_itr = L0_boxes.begin();
+               L0_boxes->size());
+         hier::BoxContainer::iterator L0_boxes_itr = L0_boxes->begin();
          for (int i = 0; i < my_boxes_start; ++i) {
             ++L0_boxes_itr;
          }
@@ -944,7 +952,7 @@ void generatePrebalanceByUserShells(
     * Starting at shell origin, tag cells with centroids
     * at radii[0]<r<radii[1], radii[2]<r<radii[3], and so on.
     */
-   tbox::Array<double> radii;
+   std::vector<double> radii;
    double efficiency_tol = 0.75;
    double combine_tol = 0.75;
 
@@ -957,13 +965,13 @@ void generatePrebalanceByUserShells(
             efficiency_tol);
       combine_tol = database->getDoubleWithDefault("combine_tol", combine_tol);
       if (database->isDouble("r0")) {
-         database->getDoubleArray("r0", &r0[0], dim.getValue());
+         r0 = database->getDoubleVector("r0");
       }
       if (database->isDouble("radii")) {
-         radii = database->getDoubleArray("radii");
+         radii = database->getDoubleVector("radii");
       }
       abr_db = database->getDatabaseWithDefault("BergerRigoutsos", abr_db);
-      TBOX_ASSERT(radii.size() % 2 == 0);
+      TBOX_ASSERT(static_cast<int>(radii.size()) % 2 == 0);
    }
 
    const int tag_val = 1;
@@ -1013,7 +1021,7 @@ void generatePrebalanceByUserShells(
             rr += r[d] * r[d];
          }
          rr = sqrt(rr);
-         for (int i = 0; i < radii.size(); i += 2) {
+         for (int i = 0; i < static_cast<int>(radii.size()); i += 2) {
             if (radii[i] < rr && rr < radii[i + 1]) {
                (node_tag_data)(idx) = tag_val;
                break;
@@ -1432,10 +1440,12 @@ void generatePrebalanceByUserBoxes(
 
    const tbox::Dimension& dim(hierarchy->getDim());
 
-   hier::BoxContainer prebalance_boxes(database->getDatabaseBoxArray("prebalance_boxes"));
-   tbox::Array<int> initial_owners(1);
+   std::vector<tbox::DatabaseBox> db_box_vector =
+      database->getDatabaseBoxVector("prebalance_boxes");
+   hier::BoxContainer prebalance_boxes(db_box_vector);
+   std::vector<int> initial_owners(1);
    initial_owners[0] = 0;
-   initial_owners = database->getIntegerArray("initial_owners");
+   initial_owners = database->getIntegerVector("initial_owners");
 
    L1.reset(new hier::BoxLevel(hier::IntVector(dim, 1),
       hierarchy->getGridGeometry(),
@@ -1443,7 +1453,7 @@ void generatePrebalanceByUserBoxes(
    hier::BoxContainer::iterator prebalance_boxes_itr =
       prebalance_boxes.begin();
    for (int i = 0; i < prebalance_boxes.size(); ++i, ++prebalance_boxes_itr) {
-      const int owner = i % initial_owners.size();
+      const int owner = i % static_cast<int>(initial_owners.size());
       if (owner == L1->getMPI().getRank()) {
          prebalance_boxes_itr->setBlockId(hier::BlockId(0));
          L1->addBox(hier::Box(*prebalance_boxes_itr, hier::LocalId(i), owner));

@@ -27,6 +27,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 
 #include "boost/shared_ptr.hpp"
+#include <vector>
 
 namespace SAMRAI {
 namespace hier {
@@ -542,7 +543,7 @@ public:
    int
    numPatchData() const
    {
-      return d_patch_data.size();
+      return static_cast<int>(d_patch_data.size());
    }
 
 private:
@@ -569,7 +570,7 @@ private:
 
    boost::shared_ptr<PatchGeometry> d_patch_geometry;
 
-   tbox::Array<boost::shared_ptr<PatchData> > d_patch_data;
+   std::vector<boost::shared_ptr<PatchData> > d_patch_data;
 
    int d_patch_level_number;
 

@@ -28,6 +28,7 @@
 
 #include "boost/shared_ptr.hpp"
 #include <string>
+#include <vector>
 
 using namespace std;
 using namespace SAMRAI;
@@ -169,8 +170,8 @@ private:
     */
    tbox::Array<string> d_variable_name;
    tbox::Array<int> d_variable_depth;
-   tbox::Array<hier::IntVector> d_variable_num_ghosts;
-   tbox::Array<tbox::Array<double> > d_variable_interior_values;
+   std::vector<hier::IntVector> d_variable_num_ghosts;
+   std::vector<std::vector<double> > d_variable_interior_values;
 
    /*
     * Items used to manage variables and data in test program.
@@ -182,23 +183,23 @@ private:
    /*
     * Arrays of information read from input file for boundary conditions
     */
-   tbox::Array<int> d_master_bdry_edge_conds;
-   tbox::Array<int> d_scalar_bdry_edge_conds;
-   tbox::Array<int> d_vector_bdry_edge_conds;
+   std::vector<int> d_master_bdry_edge_conds;
+   std::vector<int> d_scalar_bdry_edge_conds;
+   std::vector<int> d_vector_bdry_edge_conds;
 
-   tbox::Array<int> d_master_bdry_node_conds;
-   tbox::Array<int> d_scalar_bdry_node_conds;
-   tbox::Array<int> d_vector_bdry_node_conds;
+   std::vector<int> d_master_bdry_node_conds;
+   std::vector<int> d_scalar_bdry_node_conds;
+   std::vector<int> d_vector_bdry_node_conds;
 
-   tbox::Array<int> d_master_bdry_face_conds; // Used only in 3D
-   tbox::Array<int> d_scalar_bdry_face_conds; // Used only in 3D
-   tbox::Array<int> d_vector_bdry_face_conds; // Used only in 3D
+   std::vector<int> d_master_bdry_face_conds; // Used only in 3D
+   std::vector<int> d_scalar_bdry_face_conds; // Used only in 3D
+   std::vector<int> d_vector_bdry_face_conds; // Used only in 3D
 
    tbox::Array<int> d_node_bdry_edge; // Used only in 2D
    tbox::Array<int> d_edge_bdry_face; // Used only in 3D
    tbox::Array<int> d_node_bdry_face; // Used only in 3D
 
-   tbox::Array<tbox::Array<double> > d_variable_bc_values;
+   std::vector<std::vector<double> > d_variable_bc_values;
 
    int d_fail_count;
 

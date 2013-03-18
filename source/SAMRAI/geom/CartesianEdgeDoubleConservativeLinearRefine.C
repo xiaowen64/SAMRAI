@@ -199,7 +199,7 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
          const hier::Index ilastf = fine_box.upper();
 
          const hier::IntVector tmp_ghosts(dim, 0);
-         tbox::Array<double> diff0(cgbox.numberCells(0) + 2);
+         std::vector<double> diff0(cgbox.numberCells(0) + 2);
          pdat::EdgeData<double> slope0(cgbox, 1, tmp_ghosts);
 
          for (int d = 0; d < fdata->getDepth(); d++) {
@@ -214,9 +214,9 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
                   fgeom->getDx(),
                   cdata->getPointer(0, d),
                   fdata->getPointer(0, d),
-                  diff0.getPointer(), slope0.getPointer(0));
+                  &diff0[0], slope0.getPointer(0));
             } else if ((dim == tbox::Dimension(2))) {
-               tbox::Array<double> diff1(cgbox.numberCells(1) + 2);
+               std::vector<double> diff1(cgbox.numberCells(1) + 2);
                pdat::EdgeData<double> slope1(cgbox, 1, tmp_ghosts);
 
                if (axis == 0) {
@@ -230,8 +230,8 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
                      fgeom->getDx(),
                      cdata->getPointer(0, d),
                      fdata->getPointer(0, d),
-                     diff0.getPointer(), slope0.getPointer(0),
-                     diff1.getPointer(), slope1.getPointer(0));
+                     &diff0[0], slope0.getPointer(0),
+                     &diff1[0], slope1.getPointer(0));
                } else if (axis == 1) {
                   SAMRAI_F77_FUNC(cartclinrefedgedoub2d1, CARTCLINREFEDGEDOUB2D1) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
@@ -243,14 +243,14 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
                      fgeom->getDx(),
                      cdata->getPointer(1, d),
                      fdata->getPointer(1, d),
-                     diff1.getPointer(), slope1.getPointer(1),
-                     diff0.getPointer(), slope0.getPointer(1));
+                     &diff1[0], slope1.getPointer(1),
+                     &diff0[0], slope0.getPointer(1));
                }
             } else if ((dim == tbox::Dimension(3))) {
-               tbox::Array<double> diff1(cgbox.numberCells(1) + 2);
+               std::vector<double> diff1(cgbox.numberCells(1) + 2);
                pdat::EdgeData<double> slope1(cgbox, 1, tmp_ghosts);
 
-               tbox::Array<double> diff2(cgbox.numberCells(2) + 2);
+               std::vector<double> diff2(cgbox.numberCells(2) + 2);
                pdat::EdgeData<double> slope2(cgbox, 1, tmp_ghosts);
 
                if (axis == 0) {
@@ -268,9 +268,9 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
                      fgeom->getDx(),
                      cdata->getPointer(0, d),
                      fdata->getPointer(0, d),
-                     diff0.getPointer(), slope0.getPointer(0),
-                     diff1.getPointer(), slope1.getPointer(0),
-                     diff2.getPointer(), slope2.getPointer(0));
+                     &diff0[0], slope0.getPointer(0),
+                     &diff1[0], slope1.getPointer(0),
+                     &diff2[0], slope2.getPointer(0));
                } else if (axis == 1) {
                   SAMRAI_F77_FUNC(cartclinrefedgedoub3d1, CARTCLINREFEDGEDOUB3D1) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
@@ -286,9 +286,9 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
                      fgeom->getDx(),
                      cdata->getPointer(1, d),
                      fdata->getPointer(1, d),
-                     diff1.getPointer(), slope1.getPointer(1),
-                     diff2.getPointer(), slope2.getPointer(1),
-                     diff0.getPointer(), slope0.getPointer(1));
+                     &diff1[0], slope1.getPointer(1),
+                     &diff2[0], slope2.getPointer(1),
+                     &diff0[0], slope0.getPointer(1));
                } else if (axis == 2) {
                   SAMRAI_F77_FUNC(cartclinrefedgedoub3d2, CARTCLINREFEDGEDOUB3D2) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
@@ -304,9 +304,9 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
                      fgeom->getDx(),
                      cdata->getPointer(2, d),
                      fdata->getPointer(2, d),
-                     diff2.getPointer(), slope2.getPointer(2),
-                     diff0.getPointer(), slope0.getPointer(2),
-                     diff1.getPointer(), slope1.getPointer(2));
+                     &diff2[0], slope2.getPointer(2),
+                     &diff0[0], slope0.getPointer(2),
+                     &diff1[0], slope1.getPointer(2));
                }
             } else {
                TBOX_ERROR(

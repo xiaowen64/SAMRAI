@@ -57,7 +57,7 @@ public:
     * Dimension inferred from array size.
     */
    explicit IntVector(
-      const tbox::Array<int>& a);
+      const std::vector<int>& a);
 
    /**
     * @brief Construct a n-dimensional integer vector with

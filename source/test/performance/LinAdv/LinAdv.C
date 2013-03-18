@@ -498,12 +498,12 @@ void LinAdv::computeFluxesOnPatch(
          }
 
 // Face-centered temporary arrays
-         tbox::Array<double> ttedgslp(2 * FACEG + 1 + Mcells);
-         tbox::Array<double> ttraclft(2 * FACEG + 1 + Mcells);
-         tbox::Array<double> ttracrgt(2 * FACEG + 1 + Mcells);
+         std::vector<double> ttedgslp(2 * FACEG + 1 + Mcells);
+         std::vector<double> ttraclft(2 * FACEG + 1 + Mcells);
+         std::vector<double> ttracrgt(2 * FACEG + 1 + Mcells);
 
 // Cell-centered temporary arrays
-         tbox::Array<double> ttcelslp(2 * CELLG + Mcells);
+         std::vector<double> ttcelslp(2 * CELLG + Mcells);
 
 /*
  *  Apply characteristic tracing to compute initial estimate of
@@ -519,10 +519,10 @@ void LinAdv::computeFluxesOnPatch(
                uval->getPointer(),
                traced_left.getPointer(0),
                traced_right.getPointer(0),
-               ttcelslp.getPointer(),
-               ttedgslp.getPointer(),
-               ttraclft.getPointer(),
-               ttracrgt.getPointer());
+               &ttcelslp[0],
+               &ttedgslp[0],
+               &ttraclft[0],
+               &ttracrgt[0]);
          }
 
          if (d_dim == tbox::Dimension(2)) {
@@ -532,10 +532,10 @@ void LinAdv::computeFluxesOnPatch(
                uval->getPointer(),
                traced_left.getPointer(1),
                traced_right.getPointer(1),
-               ttcelslp.getPointer(),
-               ttedgslp.getPointer(),
-               ttraclft.getPointer(),
-               ttracrgt.getPointer());
+               &ttcelslp[0],
+               &ttedgslp[0],
+               &ttraclft[0],
+               &ttracrgt[0]);
          }
 
       }  // if (d_godunov_order > 1) ...
@@ -676,12 +676,12 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
       }
 
       // Face-centered temporary arrays
-      tbox::Array<double> ttedgslp(2 * FACEG + 1 + Mcells);
-      tbox::Array<double> ttraclft(2 * FACEG + 1 + Mcells);
-      tbox::Array<double> ttracrgt(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttedgslp(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttraclft(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttracrgt(2 * FACEG + 1 + Mcells);
 
       // Cell-centered temporary arrays
-      tbox::Array<double> ttcelslp(2 * CELLG + Mcells);
+      std::vector<double> ttcelslp(2 * CELLG + Mcells);
 
       /*
        *  Apply characteristic tracing to compute initial estimate of
@@ -697,10 +697,10 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
          uval->getPointer(),
          traced_left.getPointer(0),
          traced_right.getPointer(0),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
 
       SAMRAI_F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
          ifirst(0), ilast(0),
@@ -710,10 +710,10 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
          uval->getPointer(),
          traced_left.getPointer(1),
          traced_right.getPointer(1),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
 
       SAMRAI_F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
          ifirst(0), ilast(0),
@@ -723,10 +723,10 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
          uval->getPointer(),
          traced_left.getPointer(2),
          traced_right.getPointer(2),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
    }
 
    /*
@@ -994,12 +994,12 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
       }
 
       // Face-centered temporary arrays
-      tbox::Array<double> ttedgslp(2 * FACEG + 1 + Mcells);
-      tbox::Array<double> ttraclft(2 * FACEG + 1 + Mcells);
-      tbox::Array<double> ttracrgt(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttedgslp(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttraclft(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttracrgt(2 * FACEG + 1 + Mcells);
 
       // Cell-centered temporary arrays
-      tbox::Array<double> ttcelslp(2 * CELLG + Mcells);
+      std::vector<double> ttcelslp(2 * CELLG + Mcells);
 
       /*
        *  Apply characteristic tracing to update traces w^L and
@@ -1015,10 +1015,10 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
          uval->getPointer(),
          traced_left.getPointer(0),
          traced_right.getPointer(0),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
 
       SAMRAI_F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
          ifirst(0), ilast(0), ifirst(1), ilast(1),
@@ -1027,10 +1027,10 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
          uval->getPointer(),
          traced_left.getPointer(1),
          traced_right.getPointer(1),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
 
       SAMRAI_F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
          ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
@@ -1038,10 +1038,10 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
          uval->getPointer(),
          traced_left.getPointer(2),
          traced_right.getPointer(2),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
 
    } //  if (d_godunov_order > 1) ...
 
@@ -1218,10 +1218,10 @@ void LinAdv::setPhysicalBoundaryConditions(
 
    for ( int codim=1; codim<=patch.getDim().getValue(); ++codim ) {
 
-      const tbox::Array<hier::BoundaryBox> &boundary_boxes =
+      const std::vector<hier::BoundaryBox> &boundary_boxes =
          pgeom->getCodimensionBoundaries(codim);
 
-      for ( int bn=0; bn<boundary_boxes.size(); ++bn ) {
+      for ( int bn=0; bn<static_cast<int>(boundary_boxes.size()); ++bn ) {
 
          const hier::Box fill_box =
             pgeom->getBoundaryFillBox(boundary_boxes[bn],
@@ -1276,7 +1276,8 @@ void LinAdv::tagRichardsonExtrapolationCells(
     * specified time interval.  If so, apply appropriate tagging for
     * the level.
     */
-   for (int ncrit = 0; ncrit < d_refinement_criteria.getSize(); ncrit++) {
+   for (int ncrit = 0;
+        ncrit < static_cast<int>(d_refinement_criteria.size()); ncrit++) {
 
       string ref = d_refinement_criteria[ncrit];
       boost::shared_ptr<pdat::CellData<double> > coarsened_fine_var;
@@ -1292,15 +1293,15 @@ void LinAdv::tagRichardsonExtrapolationCells(
          advanced_coarse_var =
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_uval, advanced_coarse));
-         size = d_rich_tol.getSize();
+         size = static_cast<int>(d_rich_tol.size());
          tol = ((error_level_number < size)
                 ? d_rich_tol[error_level_number]
                 : d_rich_tol[size - 1]);
-         size = d_rich_time_min.getSize();
+         size = static_cast<int>(d_rich_time_min.size());
          double time_min = ((error_level_number < size)
                             ? d_rich_time_min[error_level_number]
                             : d_rich_time_min[size - 1]);
-         size = d_rich_time_max.getSize();
+         size = static_cast<int>(d_rich_time_max.size());
          double time_max = ((error_level_number < size)
                             ? d_rich_time_max[error_level_number]
                             : d_rich_time_max[size - 1]);
@@ -1482,7 +1483,8 @@ void LinAdv::tagGradientDetectorCells(
        * specified time interval.  If so, apply appropriate tagging for
        * the level.
        */
-      for (int ncrit = 0; ncrit < d_refinement_criteria.getSize(); ncrit++) {
+      for (int ncrit = 0;
+           ncrit < static_cast<int>(d_refinement_criteria.size()); ncrit++) {
 
          string ref = d_refinement_criteria[ncrit];
          boost::shared_ptr<pdat::CellData<double> > var(
@@ -1500,19 +1502,19 @@ void LinAdv::tagGradientDetectorCells(
          bool time_allowed = false;
 
          if (ref == "UVAL_DEVIATION") {
-            size = d_dev_tol.getSize();
+            size = static_cast<int>(d_dev_tol.size());
             tol = ((error_level_number < size)
                    ? d_dev_tol[error_level_number]
                    : d_dev_tol[size - 1]);
-            size = d_dev.getSize();
+            size = static_cast<int>(d_dev.size());
             double dev = ((error_level_number < size)
                           ? d_dev[error_level_number]
                           : d_dev[size - 1]);
-            size = d_dev_time_min.getSize();
+            size = static_cast<int>(d_dev_time_min.size());
             double time_min = ((error_level_number < size)
                                ? d_dev_time_min[error_level_number]
                                : d_dev_time_min[size - 1]);
-            size = d_dev_time_max.getSize();
+            size = static_cast<int>(d_dev_time_max.size());
             double time_max = ((error_level_number < size)
                                ? d_dev_time_max[error_level_number]
                                : d_dev_time_max[size - 1]);
@@ -1545,15 +1547,15 @@ void LinAdv::tagGradientDetectorCells(
          }
 
          if (ref == "UVAL_GRADIENT") {
-            size = d_grad_tol.getSize();
+            size = static_cast<int>(d_grad_tol.size());
             tol = ((error_level_number < size)
                    ? d_grad_tol[error_level_number]
                    : d_grad_tol[size - 1]);
-            size = d_grad_time_min.getSize();
+            size = static_cast<int>(d_grad_time_min.size());
             double time_min = ((error_level_number < size)
                                ? d_grad_time_min[error_level_number]
                                : d_grad_time_min[size - 1]);
-            size = d_grad_time_max.getSize();
+            size = static_cast<int>(d_grad_time_max.size());
             double time_max = ((error_level_number < size)
                                ? d_grad_time_max[error_level_number]
                                : d_grad_time_max[size - 1]);
@@ -1589,19 +1591,19 @@ void LinAdv::tagGradientDetectorCells(
          }
 
          if (ref == "UVAL_SHOCK") {
-            size = d_shock_tol.getSize();
+            size = static_cast<int>(d_shock_tol.size());
             tol = ((error_level_number < size)
                    ? d_shock_tol[error_level_number]
                    : d_shock_tol[size - 1]);
-            size = d_shock_onset.getSize();
+            size = static_cast<int>(d_shock_onset.size());
             onset = ((error_level_number < size)
                      ? d_shock_onset[error_level_number]
                      : d_shock_onset[size - 1]);
-            size = d_shock_time_min.getSize();
+            size = static_cast<int>(d_shock_time_min.size());
             double time_min = ((error_level_number < size)
                                ? d_shock_time_min[error_level_number]
                                : d_shock_time_min[size - 1]);
-            size = d_shock_time_max.getSize();
+            size = static_cast<int>(d_shock_time_max.size());
             double time_max = ((error_level_number < size)
                                ? d_shock_time_max[error_level_number]
                                : d_shock_time_max[size - 1]);
@@ -1746,76 +1748,76 @@ void LinAdv::printClassData(
 
    os << "   Refinement criteria parameters " << endl;
 
-   for (j = 0; j < d_refinement_criteria.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_refinement_criteria.size()); j++) {
       os << "       d_refinement_criteria[" << j << "] = "
          << d_refinement_criteria[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_dev_tol.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_dev_tol.size()); j++) {
       os << "       d_dev_tol[" << j << "] = "
          << d_dev_tol[j] << endl;
    }
-   for (j = 0; j < d_dev.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_dev.size()); j++) {
       os << "       d_dev[" << j << "] = "
          << d_dev[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_dev_time_max.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_dev_time_max.size()); j++) {
       os << "       d_dev_time_max[" << j << "] = "
          << d_dev_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_dev_time_min.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_dev_time_min.size()); j++) {
       os << "       d_dev_time_min[" << j << "] = "
          << d_dev_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_grad_tol.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_grad_tol.size()); j++) {
       os << "       d_grad_tol[" << j << "] = "
          << d_grad_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_grad_time_max.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_grad_time_max.size()); j++) {
       os << "       d_grad_time_max[" << j << "] = "
          << d_grad_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_grad_time_min.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_grad_time_min.size()); j++) {
       os << "       d_grad_time_min[" << j << "] = "
          << d_grad_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_shock_onset.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_onset.size()); j++) {
       os << "       d_shock_onset[" << j << "] = "
          << d_shock_onset[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_shock_tol.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_tol.size()); j++) {
       os << "       d_shock_tol[" << j << "] = "
          << d_shock_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_shock_time_max.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_time_max.size()); j++) {
       os << "       d_shock_time_max[" << j << "] = "
          << d_shock_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_shock_time_min.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_time_min.size()); j++) {
       os << "       d_shock_time_min[" << j << "] = "
          << d_shock_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_rich_tol.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_rich_tol.size()); j++) {
       os << "       d_rich_tol[" << j << "] = "
          << d_rich_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_rich_time_max.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_rich_time_max.size()); j++) {
       os << "       d_rich_time_max[" << j << "] = "
          << d_rich_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < d_rich_time_min.getSize(); j++) {
+   for (j = 0; j < static_cast<int>(d_rich_time_min.size()); j++) {
       os << "       d_rich_time_min[" << j << "] = "
          << d_rich_time_min[j] << endl;
    }
@@ -1892,12 +1894,12 @@ void LinAdv::getFromInput(
    if (input_db->keyExists("Refinement_data")) {
       boost::shared_ptr<tbox::Database> refine_db(
          input_db->getDatabase("Refinement_data"));
-      tbox::Array<string> refinement_keys = refine_db->getAllKeys();
-      int num_keys = refinement_keys.getSize();
+      std::vector<string> refinement_keys = refine_db->getAllKeys();
+      int num_keys = static_cast<int>(refinement_keys.size());
 
       if (refine_db->keyExists("refine_criteria")) {
          d_refinement_criteria =
-            refine_db->getStringArray("refine_criteria");
+            refine_db->getStringVector("refine_criteria");
       } else {
          TBOX_WARNING(
             d_object_name << ": "
@@ -1905,10 +1907,10 @@ void LinAdv::getFromInput(
                           << " RefinementData. No refinement will occur." << endl);
       }
 
-      tbox::Array<string> ref_keys_defined(num_keys);
+      std::vector<string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
       boost::shared_ptr<tbox::Database> error_db;
-      for (int i = 0; i < refinement_keys.getSize(); i++) {
+      for (int i = 0; i < num_keys; i++) {
 
          string error_key = refinement_keys[i];
          error_db.reset();
@@ -1933,8 +1935,7 @@ void LinAdv::getFromInput(
             if (error_db && error_key == "UVAL_DEVIATION") {
 
                if (error_db->keyExists("dev_tol")) {
-                  d_dev_tol =
-                     error_db->getDoubleArray("dev_tol");
+                  d_dev_tol = error_db->getDoubleVector("dev_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -1943,8 +1944,7 @@ void LinAdv::getFromInput(
                }
 
                if (error_db->keyExists("uval_dev")) {
-                  d_dev =
-                     error_db->getDoubleArray("uval_dev");
+                  d_dev = error_db->getDoubleVector("uval_dev");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -1953,18 +1953,16 @@ void LinAdv::getFromInput(
                }
 
                if (error_db->keyExists("time_max")) {
-                  d_dev_time_max =
-                     error_db->getDoubleArray("time_max");
+                  d_dev_time_max = error_db->getDoubleVector("time_max");
                } else {
-                  d_dev_time_max.resizeArray(1);
+                  d_dev_time_max.resize(1);
                   d_dev_time_max[0] = tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")) {
-                  d_dev_time_min =
-                     error_db->getDoubleArray("time_min");
+                  d_dev_time_min = error_db->getDoubleVector("time_min");
                } else {
-                  d_dev_time_min.resizeArray(1);
+                  d_dev_time_min.resize(1);
                   d_dev_time_min[0] = 0.;
                }
 
@@ -1973,8 +1971,7 @@ void LinAdv::getFromInput(
             if (error_db && error_key == "UVAL_GRADIENT") {
 
                if (error_db->keyExists("grad_tol")) {
-                  d_grad_tol =
-                     error_db->getDoubleArray("grad_tol");
+                  d_grad_tol = error_db->getDoubleVector("grad_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -1983,18 +1980,16 @@ void LinAdv::getFromInput(
                }
 
                if (error_db->keyExists("time_max")) {
-                  d_grad_time_max =
-                     error_db->getDoubleArray("time_max");
+                  d_grad_time_max = error_db->getDoubleVector("time_max");
                } else {
-                  d_grad_time_max.resizeArray(1);
+                  d_grad_time_max.resize(1);
                   d_grad_time_max[0] = tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")) {
-                  d_grad_time_min =
-                     error_db->getDoubleArray("time_min");
+                  d_grad_time_min = error_db->getDoubleVector("time_min");
                } else {
-                  d_grad_time_min.resizeArray(1);
+                  d_grad_time_min.resize(1);
                   d_grad_time_min[0] = 0.;
                }
 
@@ -2003,8 +1998,7 @@ void LinAdv::getFromInput(
             if (error_db && error_key == "UVAL_SHOCK") {
 
                if (error_db->keyExists("shock_onset")) {
-                  d_shock_onset =
-                     error_db->getDoubleArray("shock_onset");
+                  d_shock_onset = error_db->getDoubleVector("shock_onset");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -2013,8 +2007,7 @@ void LinAdv::getFromInput(
                }
 
                if (error_db->keyExists("shock_tol")) {
-                  d_shock_tol =
-                     error_db->getDoubleArray("shock_tol");
+                  d_shock_tol = error_db->getDoubleVector("shock_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -2023,18 +2016,16 @@ void LinAdv::getFromInput(
                }
 
                if (error_db->keyExists("time_max")) {
-                  d_shock_time_max =
-                     error_db->getDoubleArray("time_max");
+                  d_shock_time_max = error_db->getDoubleVector("time_max");
                } else {
-                  d_shock_time_max.resizeArray(1);
+                  d_shock_time_max.resize(1);
                   d_shock_time_max[0] = tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")) {
-                  d_shock_time_min =
-                     error_db->getDoubleArray("time_min");
+                  d_shock_time_min = error_db->getDoubleVector("time_min");
                } else {
-                  d_shock_time_min.resizeArray(1);
+                  d_shock_time_min.resize(1);
                   d_shock_time_min[0] = 0.;
                }
 
@@ -2043,8 +2034,7 @@ void LinAdv::getFromInput(
             if (error_db && error_key == "UVAL_RICHARDSON") {
 
                if (error_db->keyExists("rich_tol")) {
-                  d_rich_tol =
-                     error_db->getDoubleArray("rich_tol");
+                  d_rich_tol = error_db->getDoubleVector("rich_tol");
                } else {
                   TBOX_ERROR(
                      d_object_name << ": "
@@ -2053,18 +2043,16 @@ void LinAdv::getFromInput(
                }
 
                if (error_db->keyExists("time_max")) {
-                  d_rich_time_max =
-                     error_db->getDoubleArray("time_max");
+                  d_rich_time_max = error_db->getDoubleVector("time_max");
                } else {
-                  d_rich_time_max.resizeArray(1);
+                  d_rich_time_max.resize(1);
                   d_rich_time_max[0] = tbox::MathUtilities<double>::getMax();
                }
 
                if (error_db->keyExists("time_min")) {
-                  d_rich_time_min =
-                     error_db->getDoubleArray("time_min");
+                  d_rich_time_min = error_db->getDoubleVector("time_min");
                } else {
-                  d_rich_time_min.resizeArray(1);
+                  d_rich_time_min.resize(1);
                   d_rich_time_min[0] = 0.;
                }
 
@@ -2077,7 +2065,8 @@ void LinAdv::getFromInput(
       /*
        * Check that input is found for each string identifier in key list.
        */
-      for (int k0 = 0; k0 < d_refinement_criteria.getSize(); k0++) {
+      for (int k0 = 0;
+           k0 < static_cast<int>(d_refinement_criteria.size()); k0++) {
          string use_key = d_refinement_criteria[k0];
          bool key_found = false;
          for (int k1 = 0; k1 < def_key_cnt; k1++) {
@@ -2130,30 +2119,30 @@ void LinAdv::putToRestart(
       &d_fluxghosts[0],
       d_dim.getValue());
 
-   if (d_refinement_criteria.getSize() > 0) {
-      restart_db->putStringArray("d_refinement_criteria",
+   if (d_refinement_criteria.size() > 0) {
+      restart_db->putStringVector("d_refinement_criteria",
          d_refinement_criteria);
    }
-   for (int i = 0; i < d_refinement_criteria.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); i++) {
 
       if (d_refinement_criteria[i] == "UVAL_DEVIATION") {
-         restart_db->putDoubleArray("d_dev_tol", d_dev_tol);
-         restart_db->putDoubleArray("d_dev", d_dev);
-         restart_db->putDoubleArray("d_dev_time_max", d_dev_time_max);
-         restart_db->putDoubleArray("d_dev_time_min", d_dev_time_min);
+         restart_db->putDoubleVector("d_dev_tol", d_dev_tol);
+         restart_db->putDoubleVector("d_dev", d_dev);
+         restart_db->putDoubleVector("d_dev_time_max", d_dev_time_max);
+         restart_db->putDoubleVector("d_dev_time_min", d_dev_time_min);
       } else if (d_refinement_criteria[i] == "UVAL_GRADIENT") {
-         restart_db->putDoubleArray("d_grad_tol", d_grad_tol);
-         restart_db->putDoubleArray("d_grad_time_max", d_grad_time_max);
-         restart_db->putDoubleArray("d_grad_time_min", d_grad_time_min);
+         restart_db->putDoubleVector("d_grad_tol", d_grad_tol);
+         restart_db->putDoubleVector("d_grad_time_max", d_grad_time_max);
+         restart_db->putDoubleVector("d_grad_time_min", d_grad_time_min);
       } else if (d_refinement_criteria[i] == "UVAL_SHOCK") {
-         restart_db->putDoubleArray("d_shock_onset", d_shock_onset);
-         restart_db->putDoubleArray("d_shock_tol", d_shock_tol);
-         restart_db->putDoubleArray("d_shock_time_max", d_shock_time_max);
-         restart_db->putDoubleArray("d_shock_time_min", d_shock_time_min);
+         restart_db->putDoubleVector("d_shock_onset", d_shock_onset);
+         restart_db->putDoubleVector("d_shock_tol", d_shock_tol);
+         restart_db->putDoubleVector("d_shock_time_max", d_shock_time_max);
+         restart_db->putDoubleVector("d_shock_time_min", d_shock_time_min);
       } else if (d_refinement_criteria[i] == "UVAL_RICHARDSON") {
-         restart_db->putDoubleArray("d_rich_tol", d_rich_tol);
-         restart_db->putDoubleArray("d_rich_time_max", d_rich_time_max);
-         restart_db->putDoubleArray("d_rich_time_min", d_rich_time_min);
+         restart_db->putDoubleVector("d_rich_tol", d_rich_tol);
+         restart_db->putDoubleVector("d_rich_time_max", d_rich_time_max);
+         restart_db->putDoubleVector("d_rich_time_min", d_rich_time_min);
       }
 
    }
@@ -2206,27 +2195,27 @@ void LinAdv::getFromRestart()
    }
 
    if (db->keyExists("d_refinement_criteria")) {
-      d_refinement_criteria = db->getStringArray("d_refinement_criteria");
+      d_refinement_criteria = db->getStringVector("d_refinement_criteria");
    }
-   for (int i = 0; i < d_refinement_criteria.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); i++) {
 
       if (d_refinement_criteria[i] == "UVAL_DEVIATION") {
-         d_dev_tol = db->getDoubleArray("d_dev_tol");
-         d_dev_time_max = db->getDoubleArray("d_dev_time_max");
-         d_dev_time_min = db->getDoubleArray("d_dev_time_min");
+         d_dev_tol = db->getDoubleVector("d_dev_tol");
+         d_dev_time_max = db->getDoubleVector("d_dev_time_max");
+         d_dev_time_min = db->getDoubleVector("d_dev_time_min");
       } else if (d_refinement_criteria[i] == "UVAL_GRADIENT") {
-         d_grad_tol = db->getDoubleArray("d_grad_tol");
-         d_grad_time_max = db->getDoubleArray("d_grad_time_max");
-         d_grad_time_min = db->getDoubleArray("d_grad_time_min");
+         d_grad_tol = db->getDoubleVector("d_grad_tol");
+         d_grad_time_max = db->getDoubleVector("d_grad_time_max");
+         d_grad_time_min = db->getDoubleVector("d_grad_time_min");
       } else if (d_refinement_criteria[i] == "UVAL_SHOCK") {
-         d_shock_onset = db->getDoubleArray("d_shock_onset");
-         d_shock_tol = db->getDoubleArray("d_shock_tol");
-         d_shock_time_max = db->getDoubleArray("d_shock_time_max");
-         d_shock_time_min = db->getDoubleArray("d_shock_time_min");
+         d_shock_onset = db->getDoubleVector("d_shock_onset");
+         d_shock_tol = db->getDoubleVector("d_shock_tol");
+         d_shock_time_max = db->getDoubleVector("d_shock_time_max");
+         d_shock_time_min = db->getDoubleVector("d_shock_time_min");
       } else if (d_refinement_criteria[i] == "UVAL_RICHARDSON") {
-         d_rich_tol = db->getDoubleArray("d_rich_tol");
-         d_rich_time_max = db->getDoubleArray("d_rich_time_max");
-         d_rich_time_min = db->getDoubleArray("d_rich_time_min");
+         d_rich_tol = db->getDoubleVector("d_rich_tol");
+         d_rich_time_max = db->getDoubleVector("d_rich_time_max");
+         d_rich_time_min = db->getDoubleVector("d_rich_time_min");
       }
 
    }
@@ -2238,12 +2227,12 @@ void LinAdv::readStateDataEntry(
    boost::shared_ptr<tbox::Database> db,
    const string& db_name,
    int array_indx,
-   tbox::Array<double>& uval)
+   std::vector<double>& uval)
 {
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
    TBOX_ASSERT(array_indx >= 0);
-   TBOX_ASSERT(uval.getSize() > array_indx);
+   TBOX_ASSERT(static_cast<int>(uval.size()) > array_indx);
 
    if (db->keyExists("uval")) {
       uval[array_indx] = db->getDouble("uval");

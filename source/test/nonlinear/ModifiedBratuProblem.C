@@ -36,6 +36,7 @@ using namespace SAMRAI;
 #include <math.h>
 
 #include <float.h>
+#include <vector>
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/BoundaryBox.h"
@@ -983,11 +984,10 @@ void ModifiedBratuProblem::resetHierarchyConfiguration(
    }
 #endif
 
-   d_flux_coarsen_schedule.resizeArray(hierarchy->getNumberOfLevels());
-   d_soln_fill_schedule.resizeArray(hierarchy->getNumberOfLevels());
-   d_soln_coarsen_schedule.resizeArray(hierarchy->getNumberOfLevels());
-   d_scratch_soln_coarsen_schedule.resizeArray(
-      hierarchy->getNumberOfLevels());
+   d_flux_coarsen_schedule.resize(hierarchy->getNumberOfLevels());
+   d_soln_fill_schedule.resize(hierarchy->getNumberOfLevels());
+   d_soln_coarsen_schedule.resize(hierarchy->getNumberOfLevels());
+   d_scratch_soln_coarsen_schedule.resize(hierarchy->getNumberOfLevels());
 
    int ln;
    /*
@@ -1362,23 +1362,23 @@ void ModifiedBratuProblem::evaluateBratuFunction(
                flux->getPointer(1),
                flux->getPointer(2));
          }
-         const tbox::Array<hier::BoundaryBox> bdry_faces =
+         const std::vector<hier::BoundaryBox>& bdry_faces =
             patch_geom->getCodimensionBoundaries(1);
 #if 0
          if (d_dim == tbox::Dimension(1)) {
-            const tbox::Array<hier::BoundaryBox> bdry_faces =
+            const std::vector<hier::BoundaryBox>& bdry_faces =
                patch_geom->getNodeBoundaries();
          }
          else if (d_dim == tbox::Dimension(2)) {
-            const tbox::Array<hier::BoundaryBox> bdry_faces =
+            const std::vector<hier::BoundaryBox>& bdry_faces =
                patch_geom->getEdgeBoundaries();
          }
          else if (d_dim == tbox::Dimension(3)) {
-            const tbox::Array<hier::BoundaryBox> bdry_faces =
+            const std::vector<hier::BoundaryBox>& bdry_faces =
                patch_geom->getFaceBoundaries();
          }
 #endif
-         for (int i = 0; i < bdry_faces.getSize(); i++) {
+         for (int i = 0; i < static_cast<int>(bdry_faces.size()); i++) {
 
             hier::Box bbox = bdry_faces[i].getBox();
             const hier::Index ibeg = bbox.lower();
@@ -1843,23 +1843,23 @@ ModifiedBratuProblem::jacobianTimesVector(
           * boundaries, and the fluxes at these locations have to be modified.
           */
 
-         const tbox::Array<hier::BoundaryBox> bdry_faces =
+         const std::vector<hier::BoundaryBox>& bdry_faces =
             patch_geom->getCodimensionBoundaries(1);
 #if 0
          if (d_dim == tbox::Dimension(1)) {
-            const tbox::Array<hier::BoundaryBox> bdry_faces =
+            const std::vector<hier::BoundaryBox>& bdry_faces =
                patch_geom->getNodeBoundaries();
          }
          else if (d_dim == tbox::Dimension(2)) {
-            const tbox::Array<hier::BoundaryBox> bdry_faces =
+            const std::vector<hier::BoundaryBox>& bdry_faces =
                patch_geom->getEdgeBoundaries();
          }
          else if (d_dim == tbox::Dimension(3)) {
-            const tbox::Array<hier::BoundaryBox> bdry_faces =
+            const std::vector<hier::BoundaryBox>& bdry_faces =
                patch_geom->getFaceBoundaries();
          }
 #endif
-         for (int i = 0; i < bdry_faces.getSize(); i++) {
+         for (int i = 0; i < static_cast<int>(bdry_faces.size()); i++) {
 
             hier::Box bbox = bdry_faces[i].getBox();
             const hier::Index ibeg = bbox.lower();
@@ -2641,19 +2641,19 @@ void ModifiedBratuProblem::setPhysicalBoundaryConditions(
       patch.getPatchGeometry(),
       BOOST_CAST_TAG);
    TBOX_ASSERT(patch_geom);
-   const tbox::Array<hier::BoundaryBox> boundary =
+   const std::vector<hier::BoundaryBox>& boundary =
       patch_geom->getCodimensionBoundaries(1);
 #if 0
    if (d_dim == tbox::Dimension(1)) {
-      const tbox::Array<hier::BoundaryBox> boundary =
+      const std::vector<hier::BoundaryBox>& boundary =
          patch_geom->getNodeBoundaries();
    }
    else if (d_dim == tbox::Dimension(2)) {
-      const tbox::Array<hier::BoundaryBox> boundary =
+      const std::vector<hier::BoundaryBox>& boundary =
          patch_geom->getEdgeBoundaries();
    }
    else if (d_dim == tbox::Dimension(3)) {
-      const tbox::Array<hier::BoundaryBox> boundary =
+      const std::vector<hier::BoundaryBox>& boundary =
          patch_geom->getFaceBoundaries();
    }
 #endif
@@ -2664,7 +2664,7 @@ void ModifiedBratuProblem::setPhysicalBoundaryConditions(
     */
 
    int face;
-   for (int i = 0; i < boundary.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(boundary.size()); i++) {
       hier::Box bbox = hier::Box(boundary[i].getBox());
       face = boundary[i].getLocationIndex();
       if (d_dim == tbox::Dimension(1)) {
@@ -2855,9 +2855,9 @@ void ModifiedBratuProblem::getLevelEdges(
       patch->getPatchGeometry(),
       BOOST_CAST_TAG);
    TBOX_ASSERT(geometry);
-   tbox::Array<hier::BoundaryBox> boundary_boxes =
+   const std::vector<hier::BoundaryBox>& boundary_boxes =
       geometry->getCodimensionBoundaries(1);
-   for (int i = 0; i < boundary_boxes.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(boundary_boxes.size()); i++) {
       boxes.removeIntersections(boundary_boxes[i].getBox());
    }
 

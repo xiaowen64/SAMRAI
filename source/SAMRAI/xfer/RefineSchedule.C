@@ -152,7 +152,7 @@ RefineSchedule::RefineSchedule(
    setRefineItems(refine_classes);
    initialCheckRefineClassItems();
 
-   d_domain_is_one_box.resizeArray(
+   d_domain_is_one_box.resize(
       d_dst_level->getGridGeometry()->getNumberBlocks(), false);
 
    d_coarse_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
@@ -337,7 +337,7 @@ RefineSchedule::RefineSchedule(
    setRefineItems(refine_classes);
    initialCheckRefineClassItems();
 
-   d_domain_is_one_box.resizeArray(
+   d_domain_is_one_box.resize(
       dst_level->getGridGeometry()->getNumberBlocks(), false);
 
    /*
@@ -1208,9 +1208,9 @@ RefineSchedule::setupCoarseInterpBoxLevel(
       }
    }
 
-   tbox::Array<hier::BoxContainer> coarser_physical_domain(nblocks);
-   tbox::Array<hier::BoxContainer> coarser_shear_domain(nblocks);
-   tbox::Array<bool> do_coarse_shearing(nblocks);
+   std::vector<hier::BoxContainer> coarser_physical_domain(nblocks);
+   std::vector<hier::BoxContainer> coarser_shear_domain(nblocks);
+   std::vector<bool> do_coarse_shearing(nblocks);
    for (int b = 0; b < nblocks; b++) {
       grid_geometry->computePhysicalDomain(
          coarser_physical_domain[b],
@@ -2060,11 +2060,12 @@ RefineSchedule::fillSingularityBoundaries(
                   boost::shared_ptr<hier::PatchGeometry> pgeom(
                      patch->getPatchGeometry());
 
-                  tbox::Array<hier::BoundaryBox> nboxes =
+                  const std::vector<hier::BoundaryBox>& nboxes =
                      pgeom->getNodeBoundaries();
 
-                  if (nboxes.getSize()) {
-                     for (int bb = 0; bb < nboxes.getSize(); bb++) {
+                  if (nboxes.size()) {
+                     for (int bb = 0;
+                          bb < static_cast<int>(nboxes.size()); bb++) {
                         hier::Box intersection((nboxes[bb].getBox())
                                                * singularity);
                         if (!(intersection.empty())) {
@@ -2086,11 +2087,12 @@ RefineSchedule::fillSingularityBoundaries(
                   }
 
                   if (dim == tbox::Dimension(3)) {
-                     tbox::Array<hier::BoundaryBox> eboxes =
+                     const std::vector<hier::BoundaryBox>& eboxes =
                         pgeom->getEdgeBoundaries();
 
-                     if (eboxes.getSize()) {
-                        for (int bb = 0; bb < eboxes.getSize(); bb++) {
+                     if (eboxes.size()) {
+                        for (int bb = 0;
+                             bb < static_cast<int>(eboxes.size()); bb++) {
                            hier::Box intersection(
                               (eboxes[bb].getBox()) * singularity);
                            if (!(intersection.empty())) {
@@ -2206,7 +2208,7 @@ RefineSchedule::refineScratchData(
    const boost::shared_ptr<hier::PatchLevel>& coarse_level,
    const hier::Connector& coarse_to_fine,
    const hier::Connector& coarse_to_unfilled,
-   const std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >&
+   const std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >&
    overlaps) const
 {
    t_refine_scratch_data->start();
@@ -2214,7 +2216,7 @@ RefineSchedule::refineScratchData(
    const hier::IntVector ratio(fine_level->getRatioToLevelZero()
                                / coarse_level->getRatioToLevelZero());
 
-   std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >::const_iterator
+   std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >::const_iterator
    overlap_iter(overlaps.begin());
 
    /*
@@ -2301,7 +2303,7 @@ RefineSchedule::refineScratchData(
  */
 void
 RefineSchedule::computeRefineOverlaps(
-   std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
+   std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
    const boost::shared_ptr<hier::PatchLevel>& fine_level,
    const boost::shared_ptr<hier::PatchLevel>& coarse_level,
    const hier::Connector& coarse_to_fine,
@@ -2365,7 +2367,7 @@ RefineSchedule::computeRefineOverlaps(
        * cell widths since the fill boxes are generated using the
        * maximum ghost cell width.
        */
-      tbox::Array<boost::shared_ptr<hier::BoxOverlap> > refine_overlaps(
+      std::vector<boost::shared_ptr<hier::BoxOverlap> > refine_overlaps(
          num_equiv_classes);
       for (int ne = 0; ne < num_equiv_classes; ne++) {
 
@@ -3427,7 +3429,6 @@ RefineSchedule::communicateFillBoxes(
        * - dst_box_id's LocalId
        * - number of fill neighbors
        * - fill neighbors (could just send box and save 2 ints)
-       * Also, create BoxVector object for local use.
        */
       tmp_mesg.clear();
       tmp_mesg.reserve(3 + dst_to_fill.numLocalNeighbors(dst_box_id) * hier::Box::commBufferSize(dim));
@@ -3726,9 +3727,9 @@ RefineSchedule::constructScheduleTransactions(
       }
    }
 
-   if (d_overlaps.getSize() < max_overlap_array_size) {
-      d_overlaps.setNull();
-      d_overlaps.resizeArray(max_overlap_array_size);
+   if (static_cast<int>(d_overlaps.size()) < max_overlap_array_size) {
+      d_overlaps.clear();
+      d_overlaps.resize(max_overlap_array_size);
    }
 
    boost::shared_ptr<hier::PatchDescriptor> dst_patch_descriptor(

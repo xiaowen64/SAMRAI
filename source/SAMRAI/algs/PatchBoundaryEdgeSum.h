@@ -22,6 +22,7 @@
 
 #include "boost/shared_ptr.hpp"
 #include <string>
+#include <vector>
 
 namespace SAMRAI {
 namespace algs {
@@ -185,8 +186,8 @@ private:
     */
    static int s_instance_counter;
    // These arrays are indexed [data depth][number of variables with depth]
-   static tbox::Array<tbox::Array<int> > s_oedge_src_id_array;
-   static tbox::Array<tbox::Array<int> > s_oedge_dst_id_array;
+   static std::vector<std::vector<int> > s_oedge_src_id_array;
+   static std::vector<std::vector<int> > s_oedge_dst_id_array;
 
    enum PATCH_BDRY_EDGE_SUM_DATA_ID { ID_UNDEFINED = -1 };
 
@@ -196,23 +197,23 @@ private:
    int d_num_reg_sum;
 
    // These arrays are indexed [variable registration sequence number]
-   tbox::Array<int> d_user_edge_data_id;
-   tbox::Array<int> d_user_edge_depth;
+   std::vector<int> d_user_edge_data_id;
+   std::vector<int> d_user_edge_depth;
 
    // These arrays are indexed [data depth]
-   tbox::Array<int> d_num_registered_data_by_depth;
+   std::vector<int> d_num_registered_data_by_depth;
 
    /*
     * Edge-centered variables and patch data indices used as internal work
     * quantities.
     */
    // These arrays are indexed [variable registration sequence number]
-   tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_oedge_src_variable;
-   tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_oedge_dst_variable;
+   std::vector<boost::shared_ptr<hier::Variable> > d_tmp_oedge_src_variable;
+   std::vector<boost::shared_ptr<hier::Variable> > d_tmp_oedge_dst_variable;
 
    // These arrays are indexed [variable registration sequence number]
-   tbox::Array<int> d_oedge_src_id;
-   tbox::Array<int> d_oedge_dst_id;
+   std::vector<int> d_oedge_src_id;
+   std::vector<int> d_oedge_dst_id;
 
    /*
     * Sets of indices for temporary variables to expedite allocation and

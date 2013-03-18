@@ -45,20 +45,20 @@ ProcessorMapping::ProcessorMapping(
    const ProcessorMapping& mapping):
    d_my_rank(-1),
    d_nodes(-1),
-   d_mapping(mapping.d_mapping.getSize()),
+   d_mapping(mapping.d_mapping.size()),
    d_local_id_count(-1)
 {
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    d_my_rank = mpi.getRank();
    d_nodes = mpi.getSize();
-   const int n = d_mapping.getSize();
+   const int n = static_cast<int>(d_mapping.size());
    for (int i = 0; i < n; i++) {
       d_mapping[i] = mapping.d_mapping[i];
    }
 }
 
 ProcessorMapping::ProcessorMapping(
-   const tbox::Array<int>& mapping):
+   const std::vector<int>& mapping):
    d_my_rank(-1),
    d_nodes(-1),
    d_local_id_count(-1)
@@ -77,7 +77,7 @@ void
 ProcessorMapping::setMappingSize(
    const int n)
 {
-   d_mapping.resizeArray(n);
+   d_mapping.resize(n);
 
    for (int i = 0; i < n; i++) {
       d_mapping[i] = 0;
@@ -87,11 +87,11 @@ ProcessorMapping::setMappingSize(
 
 void
 ProcessorMapping::setProcessorMapping(
-   const tbox::Array<int>& mapping)
+   const std::vector<int>& mapping)
 {
-   d_mapping.resizeArray(mapping.getSize());
+   d_mapping.resize(mapping.size());
 
-   for (int i = 0; i < d_mapping.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_mapping.size()); i++) {
       //  (mapping[i] % d_nodes) keeps patches from being assigned
       //  non-existent processors.
       setProcessorAssignment(i, mapping[i] % d_nodes);
@@ -110,7 +110,7 @@ ProcessorMapping::computeLocalIndices() const
     * first, count the number of local indices,
     * so we can set the array size.
     */
-   const int n = d_mapping.getSize();
+   const int n = static_cast<int>(d_mapping.size());
    d_local_id_count = 0;
 
    for (int i = 0; i < n; i++) {
@@ -122,7 +122,7 @@ ProcessorMapping::computeLocalIndices() const
    /*
     * second, resize the array and fill in the data
     */
-   d_local_indices.resizeArray(d_local_id_count);
+   d_local_indices.resize(d_local_id_count);
    int idx = 0;
    for (int i = 0; i < n; i++) {
       if (d_mapping[i] == d_my_rank) {

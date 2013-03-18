@@ -40,7 +40,6 @@ using namespace tbox;
  *************************************************************************
  */
 
-typedef std::vector<hier::Box> NodeVec;
 typedef std::vector<hier::Box> BoxVec;
 
 /*

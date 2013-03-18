@@ -46,8 +46,8 @@ math::PatchCellDataNormOpsReal<double> BalanceUtilities::s_norm_ops;
 
 void
 BalanceUtilities::privateHeapify(
-   tbox::Array<int>& permutation,
-   tbox::Array<double>& workload,
+   std::vector<int>& permutation,
+   std::vector<double>& workload,
    const int index,
    const int heap_size)
 {
@@ -72,8 +72,8 @@ BalanceUtilities::privateHeapify(
 
 void
 BalanceUtilities::privateHeapify(
-   tbox::Array<int>& permutation,
-   tbox::Array<SpatialKey>& spatial_keys,
+   std::vector<int>& permutation,
+   std::vector<SpatialKey>& spatial_keys,
    const int index,
    const int heap_size)
 {
@@ -108,7 +108,7 @@ void
 BalanceUtilities::privateRecursiveProcAssign(
    const int wt_index_lo,
    const int wt_index_hi,
-   tbox::Array<double>& weights,
+   std::vector<double>& weights,
    const int proc_index_lo,
    const int proc_index_hi,
    hier::ProcessorMapping& mapping,
@@ -202,7 +202,7 @@ BalanceUtilities::privateRecursiveProcAssign(
 void
 BalanceUtilities::privatePrimeFactorization(
    const int N,
-   tbox::Array<int>& p)
+   std::vector<int>& p)
 {
    /*
     * Input: N
@@ -216,7 +216,7 @@ BalanceUtilities::privatePrimeFactorization(
    int n = N;
    int q;
    int r;
-   if (p.getSize() < 1) p.resizeArray(1);
+   if (p.size() < 1) p.resize(1);
    p[0] = 1;
 
    //  NOTE: d must hold the list of prime numbers up to sqrt(n).  We
@@ -244,7 +244,7 @@ BalanceUtilities::privatePrimeFactorization(
          // Step 5 - factor found. Increase t by 1, set p[t] = d[k], n = q.
 
          t++;
-         p.resizeArray(t + 1);
+         p.resize(t + 1);
          p[t] = d[k];
          n = q;
 
@@ -261,7 +261,7 @@ BalanceUtilities::privatePrimeFactorization(
             // Step 7 - n is prime.  Increment t by 1, set p[t] = n, and terminate.
 
             t++;
-            p.resizeArray(t + 1);
+            p.resize(t + 1);
             p[t] = n;
             break;
          }
@@ -274,25 +274,25 @@ BalanceUtilities::privatePrimeFactorization(
 
 void
 BalanceUtilities::privateResetPrimesArray(
-   tbox::Array<int>& p)
+   std::vector<int>& p)
 {
    // keep a copy of the original p in array "temp"
-   tbox::Array<int> temp;
-   temp.resizeArray(p.getSize());
+   std::vector<int> temp;
+   temp.resize(static_cast<int>(p.size()));
    int i;
-   for (i = 0; i < p.getSize(); i++) temp[i] = p[i];
+   for (i = 0; i < static_cast<int>(p.size()); i++) temp[i] = p[i];
 
    // resize p to only keep values > 1
    int newsize = 0;
-   for (i = 0; i < p.getSize(); i++) {
+   for (i = 0; i < static_cast<int>(p.size()); i++) {
       if (p[i] > 1) newsize++;
    }
 
-   p.resizeArray(newsize);
+   p.resize(newsize);
    newsize = 0;
 
    // set values in the new p array
-   for (i = 0; i < temp.getSize(); i++) {
+   for (i = 0; i < static_cast<int>(temp.size()); i++) {
       if (temp[i] > 1) {
          p[newsize] = temp[i];
          newsize++;
@@ -331,7 +331,7 @@ BalanceUtilities::privateBadCutPointsExist(
 
 void
 BalanceUtilities::privateInitializeBadCutPointsForBox(
-   tbox::Array<tbox::Array<bool> >& bad_cut_points,
+   std::vector<std::vector<bool> >& bad_cut_points,
    hier::Box& box,
    bool bad_domain_boundaries_exist,
    const hier::IntVector& bad_interval,
@@ -364,8 +364,8 @@ BalanceUtilities::privateInitializeBadCutPointsForBox(
 
       for (id = 0; id < dim.getValue(); id++) {
          const int ncells = box.numberCells(id);
-         bad_cut_points[id].resizeArray(ncells);
-         tbox::Array<bool>& arr_ref = bad_cut_points[id];
+         bad_cut_points[id].resize(ncells);
+         std::vector<bool>& arr_ref = bad_cut_points[id];
          for (ic = 0; ic < ncells; ic++) {
             arr_ref[ic] = false;
          }
@@ -406,7 +406,7 @@ BalanceUtilities::privateFindBestCutDimension(
    const hier::Box& in_box,
    const hier::IntVector& min_size,
    const hier::IntVector& cut_factor,
-   tbox::Array<tbox::Array<bool> >& bad_cut_points)
+   std::vector<std::vector<bool> >& bad_cut_points)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(in_box, min_size, cut_factor);
 
@@ -449,7 +449,7 @@ BalanceUtilities::privateFindBestCutDimension(
           * coordinate direction.
           */
 
-         tbox::Array<bool>& bad_cuts_for_dir = bad_cut_points[cutdim];
+         std::vector<bool>& bad_cuts_for_dir = bad_cut_points[cutdim];
 
          for (i = 0; i < mincut; i++) {
             bad_cuts_for_dir[i] = true;
@@ -502,8 +502,8 @@ BalanceUtilities::privateFindCutPoint(
    double ideal_workload,
    int mincut,
    int numcells,
-   const tbox::Array<double>& work_in_slice,
-   const tbox::Array<bool>& bad_cut_points)
+   const std::vector<double>& work_in_slice,
+   const std::vector<bool>& bad_cut_points)
 {
 
    int cut_index = 0;
@@ -587,13 +587,13 @@ BalanceUtilities::privateFindCutPoint(
 void
 BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
    hier::Box& box_lo,
-   tbox::Array<tbox::Array<bool> >& bad_cut_points_for_boxlo,
+   std::vector<std::vector<bool> >& bad_cut_points_for_boxlo,
    hier::Box& box_hi,
-   tbox::Array<tbox::Array<bool> >& bad_cut_points_for_boxhi,
+   std::vector<std::vector<bool> >& bad_cut_points_for_boxhi,
    const hier::Box& in_box,
    int cutdim,
    int cut_index,
-   const tbox::Array<tbox::Array<bool> >& bad_cut_points)
+   const std::vector<std::vector<bool> >& bad_cut_points)
 {
 
    TBOX_ASSERT_OBJDIM_EQUALITY3(box_lo, box_hi, in_box);
@@ -609,20 +609,20 @@ BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
    int i;
    for (int id = 0; id < dim.getValue(); id++) {
 
-      const tbox::Array<bool>& arr_ref_in = bad_cut_points[id];
+      const std::vector<bool>& arr_ref_in = bad_cut_points[id];
 
       const int ncellslo = box_lo.numberCells(id);
       const int ncellshi = box_hi.numberCells(id);
 
-      bad_cut_points_for_boxlo[id].resizeArray(ncellslo);
-      bad_cut_points_for_boxhi[id].resizeArray(ncellshi);
+      bad_cut_points_for_boxlo[id].resize(ncellslo);
+      bad_cut_points_for_boxhi[id].resize(ncellshi);
 
-      tbox::Array<bool>& arr_ref_cutlo = bad_cut_points_for_boxlo[id];
+      std::vector<bool>& arr_ref_cutlo = bad_cut_points_for_boxlo[id];
       for (i = 0; i < ncellslo; i++) {
          arr_ref_cutlo[i] = arr_ref_in[i];
       }
 
-      tbox::Array<bool>& arr_ref_cuthi = bad_cut_points_for_boxhi[id];
+      std::vector<bool>& arr_ref_cuthi = bad_cut_points_for_boxhi[id];
 
       if (id == cutdim) {
          int mark = box_lo.numberCells(cutdim);
@@ -660,7 +660,7 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
    const double workload_tolerance,
    const hier::IntVector& min_size,
    const hier::IntVector& cut_factor,
-   tbox::Array<tbox::Array<bool> >& bad_cut_points)
+   std::vector<std::vector<bool> >& bad_cut_points)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(in_box, min_size, cut_factor);
 
@@ -702,7 +702,7 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
             }
          }
 
-         tbox::Array<double> work_in_slices(numcells);
+         std::vector<double> work_in_slices(numcells);
          for (i = 0; i < numcells; i++) {
             work_in_slices[i] = work_in_single_slice;
          }
@@ -724,8 +724,8 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
          hier::Box box_lo(dim);
          hier::Box box_hi(dim);
 
-         tbox::Array<tbox::Array<bool> > bad_cut_points_for_boxlo(dim.getValue());
-         tbox::Array<tbox::Array<bool> > bad_cut_points_for_boxhi(dim.getValue());
+         std::vector<std::vector<bool> > bad_cut_points_for_boxlo(dim.getValue());
+         std::vector<std::vector<bool> > bad_cut_points_for_boxhi(dim.getValue());
 
          privateCutBoxesAndSetBadCutPoints(box_lo,
             bad_cut_points_for_boxlo,
@@ -798,7 +798,7 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
    const double workload_tolerance,
    const hier::IntVector& min_size,
    const hier::IntVector& cut_factor,
-   tbox::Array<tbox::Array<bool> >& bad_cut_points)
+   std::vector<std::vector<bool> >& bad_cut_points)
 {
    TBOX_ASSERT(patch);
    TBOX_ASSERT_OBJDIM_EQUALITY4(*patch, in_box, min_size, cut_factor);
@@ -837,7 +837,7 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
          hier::Box slice_box = in_box;
          slice_box.upper(cut_dim) = slice_box.lower(cut_dim);
 
-         tbox::Array<double> work_in_slices(numcells);
+         std::vector<double> work_in_slices(numcells);
          for (i = 0; i < numcells; i++) {
             work_in_slices[i] =
                BalanceUtilities::computeNonUniformWorkload(patch,
@@ -865,8 +865,8 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
          hier::Box box_lo(dim);
          hier::Box box_hi(dim);
 
-         tbox::Array<tbox::Array<bool> > bad_cut_points_for_boxlo(dim.getValue());
-         tbox::Array<tbox::Array<bool> > bad_cut_points_for_boxhi(dim.getValue());
+         std::vector<std::vector<bool> > bad_cut_points_for_boxlo(dim.getValue());
+         std::vector<std::vector<bool> > bad_cut_points_for_boxhi(dim.getValue());
 
          privateCutBoxesAndSetBadCutPoints(box_lo,
             bad_cut_points_for_boxlo,
@@ -965,7 +965,7 @@ BalanceUtilities::computeNonUniformWorkload(
 double
 BalanceUtilities::binPack(
    hier::ProcessorMapping& mapping,
-   tbox::Array<double>& weights,
+   std::vector<double>& weights,
    const int nproc)
 {
    TBOX_ASSERT(nproc > 0);
@@ -974,7 +974,7 @@ BalanceUtilities::binPack(
     * Create the mapping array, find the average workload, and zero weights
     */
 
-   const int nboxes = weights.getSize();
+   const int nboxes = static_cast<int>(weights.size());
    mapping.setMappingSize(nboxes);
 
    double avg_work = 0.0;
@@ -984,7 +984,7 @@ BalanceUtilities::binPack(
    }
    avg_work /= nproc;
 
-   tbox::Array<double> work(nproc);
+   std::vector<double> work(nproc);
    for (int p = 0; p < nproc; p++) {
       work[p] = 0.0;
    }
@@ -1045,12 +1045,12 @@ BalanceUtilities::binPack(
 double
 BalanceUtilities::spatialBinPack(
    hier::ProcessorMapping& mapping,
-   tbox::Array<double>& weights,
+   std::vector<double>& weights,
    hier::BoxContainer& boxes,
    const int nproc)
 {
    TBOX_ASSERT(nproc > 0);
-   TBOX_ASSERT(weights.getSize() == boxes.size());
+   TBOX_ASSERT(static_cast<int>(weights.size()) == boxes.size());
 
    const int nboxes = boxes.size();
 
@@ -1065,7 +1065,7 @@ BalanceUtilities::spatialBinPack(
    }
 
    /* construct array of spatialKeys */
-   tbox::Array<SpatialKey> spatial_keys(nboxes);
+   std::vector<SpatialKey> spatial_keys(nboxes);
    int i = 0;
 
    if (nboxes > 0) {
@@ -1096,7 +1096,7 @@ BalanceUtilities::spatialBinPack(
     * Sort boxes according to their spatial keys using a heapsort.
     */
 
-   tbox::Array<int> permutation(nboxes);
+   std::vector<int> permutation(nboxes);
 
    for (i = 0; i < nboxes; i++) {
       permutation[i] = i;
@@ -1118,8 +1118,8 @@ BalanceUtilities::spatialBinPack(
    if (nboxes > 0) {
       const tbox::Dimension& dim = boxes.front().getDim();
 
-      tbox::Array<hier::Box> unsorted_boxes(nboxes, hier::Box(dim));
-      tbox::Array<double> unsorted_weights(nboxes);
+      std::vector<hier::Box> unsorted_boxes(nboxes, hier::Box(dim));
+      std::vector<double> unsorted_weights(nboxes);
 
       i = 0;
       for (hier::BoxContainer::iterator itr = boxes.begin();
@@ -1142,7 +1142,7 @@ BalanceUtilities::spatialBinPack(
        * Verify that the spatial keys are sorted in non-decreasing order
        */
 
-      tbox::Array<SpatialKey> unsorted_keys(nboxes);
+      std::vector<SpatialKey> unsorted_keys(nboxes);
       for (i = 0; i < nboxes; i++) {
          unsorted_keys[i] = spatial_keys[i];
       }
@@ -1183,7 +1183,7 @@ BalanceUtilities::spatialBinPack(
    }
 
    /* compute work load for each processor */
-   tbox::Array<double> work(nproc);
+   std::vector<double> work(nproc);
    for (i = 0; i < nproc; i++) {
       work[i] = 0.0;
    }
@@ -1264,7 +1264,7 @@ BalanceUtilities::recursiveBisectionUniform(
 
       } else {
 
-         tbox::Array<tbox::Array<bool> > bad_cut_points(dim.getValue());
+         std::vector<std::vector<bool> > bad_cut_points(dim.getValue());
 
          privateInitializeBadCutPointsForBox(bad_cut_points,
             box2chop,
@@ -1352,7 +1352,7 @@ BalanceUtilities::recursiveBisectionNonuniform(
 
       } else {
 
-         tbox::Array<tbox::Array<bool> > bad_cut_points(dim.getValue());
+         std::vector<std::vector<bool> > bad_cut_points(dim.getValue());
 
          privateInitializeBadCutPointsForBox(bad_cut_points,
             box2chop,
@@ -1423,7 +1423,7 @@ BalanceUtilities::computeDomainDependentProcessorLayout(
     *  - set proc_dist[] = 1 in each direction
     *  - set pnew[] (recomputed set of primes) initially to p
     */
-   tbox::Array<int> p;
+   std::vector<int> p;
    privatePrimeFactorization(num_procs, p);
 
    hier::IntVector d = box.numberCells();
@@ -1431,9 +1431,9 @@ BalanceUtilities::computeDomainDependentProcessorLayout(
       proc_dist(i) = 1;
    }
 
-   tbox::Array<int> pnew;
-   pnew.resizeArray(p.getSize());
-   for (i = 0; i < p.getSize(); i++) {
+   std::vector<int> pnew;
+   pnew.resize(static_cast<int>(p.size()));
+   for (i = 0; i < static_cast<int>(p.size()); i++) {
       pnew[i] = p[i];
    }
    privateResetPrimesArray(pnew);
@@ -1448,10 +1448,10 @@ BalanceUtilities::computeDomainDependentProcessorLayout(
     */
    int counter = 0;
    while ((proc_dist.getProduct() < num_procs) &&
-          (pnew.getSize() > 0) && (counter < num_procs)) {
+          (pnew.size() > 0) && (counter < num_procs)) {
 
       //  Loop over prime factors - largest to smallest
-      for (int k = pnew.getSize() - 1; k >= 0; k--) {
+      for (int k = static_cast<int>(pnew.size()) - 1; k >= 0; k--) {
 
          //  determine i - direction in which d is largest
          i = 0;
@@ -1541,7 +1541,7 @@ BalanceUtilities::computeDomainIndependentProcessorLayout(
     *  - set pnew[] (recomputed set of primes) initially to p
     */
 
-   tbox::Array<int> p;
+   std::vector<int> p;
    privatePrimeFactorization(num_procs, p);
 
    hier::IntVector d = box.numberCells();
@@ -1549,9 +1549,9 @@ BalanceUtilities::computeDomainIndependentProcessorLayout(
       proc_dist(i) = 1;
    }
 
-   tbox::Array<int> pnew;
-   pnew.resizeArray(p.getSize());
-   for (i = 0; i < p.getSize(); i++) pnew[i] = p[i];
+   std::vector<int> pnew;
+   pnew.resize(static_cast<int>(p.size()));
+   for (i = 0; i < static_cast<int>(p.size()); i++) pnew[i] = p[i];
    privateResetPrimesArray(pnew);
 
    /*
@@ -1559,8 +1559,7 @@ BalanceUtilities::computeDomainIndependentProcessorLayout(
     *              factors until # processors is reached
     *              or we have run out of prime factors.
     */
-   while ((proc_dist.getProduct() < num_procs) &&
-          (pnew.getSize() > 0)) {
+   while ((proc_dist.getProduct() < num_procs) && (pnew.size() > 0)) {
 
       //  determine i - direction in which d is largest
       i = 0;
@@ -1570,7 +1569,7 @@ BalanceUtilities::computeDomainIndependentProcessorLayout(
       }
 
       // Set proc_dist(i) to the largest prime factor
-      int k = pnew.getSize() - 1;
+      int k = static_cast<int>(pnew.size()) - 1;
       d[i] = d[i] / pnew[k];
       proc_dist[i] = proc_dist[i] * pnew[k];
 
@@ -1609,16 +1608,16 @@ BalanceUtilities::computeDomainIndependentProcessorLayout(
 void
 BalanceUtilities::sortDescendingBoxWorkloads(
    hier::BoxContainer& boxes,
-   tbox::Array<double>& workload)
+   std::vector<double>& workload)
 {
-   TBOX_ASSERT(boxes.size() == workload.getSize());
+   TBOX_ASSERT(boxes.size() == static_cast<int>(workload.size()));
 
    /*
     * Create the permutation array that represents indices in sorted order
     */
 
-   const int nboxes = workload.getSize();
-   tbox::Array<int> permutation(nboxes);
+   const int nboxes = static_cast<int>(workload.size());
+   std::vector<int> permutation(nboxes);
 
    for (int i = 0; i < nboxes; i++) {
       permutation[i] = i;
@@ -1644,8 +1643,8 @@ BalanceUtilities::sortDescendingBoxWorkloads(
    if (nboxes > 0) {
       const tbox::Dimension& dim(boxes.front().getDim());
 
-      tbox::Array<hier::Box> unsorted_boxes(nboxes, hier::Box(dim));
-      tbox::Array<double> unsorted_workload(nboxes);
+      std::vector<hier::Box> unsorted_boxes(nboxes, hier::Box(dim));
+      std::vector<double> unsorted_workload(nboxes);
 
       int l = 0;
       for (hier::BoxContainer::iterator itr = boxes.begin();
@@ -1699,7 +1698,7 @@ BalanceUtilities::computeLoadBalanceEfficiency(
    const hier::ProcessorMapping& mapping = level->getProcessorMapping();
 
    const int nprocs = mpi.getSize();
-   tbox::Array<double> work(nprocs);
+   std::vector<double> work(nprocs);
 
    for (i = 0; i < nprocs; i++) {
       work[i] = 0.0;
@@ -1731,7 +1730,7 @@ BalanceUtilities::computeLoadBalanceEfficiency(
    }
 
    if (mpi.getSize() > 1) {
-      mpi.AllReduce(work.getPointer(), 1, MPI_SUM);
+      mpi.AllReduce(&work[0], 1, MPI_SUM);
    }
 
    double max_work = 0.0;

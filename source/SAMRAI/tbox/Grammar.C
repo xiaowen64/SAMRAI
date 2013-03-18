@@ -1651,68 +1651,68 @@ yyreduce:
 
       switch (list->d_array_type) {
          case KEY_BOOL: {
-            Array<bool> data(n);
+            std::vector<bool> data(n);
             for (int i = n-1; i >= 0; i--) {
                data[i] = list->d_bool;
                list = list->d_next;
             }
-            Parser::getParser()->getScope()->putBoolArray(*(yyvsp[(1) - (4)].u_keyword), data);
+            Parser::getParser()->getScope()->putBoolVector(*(yyvsp[(1) - (4)].u_keyword), data);
             break;
          }
          case KEY_BOX: {
-            Array<DatabaseBox> data(n);
+            std::vector<DatabaseBox> data(n);
             for (int i = n-1; i >= 0; i--) {
                data[i] = list->d_box;
                list = list->d_next;
             }
-            Parser::getParser()->getScope()->putDatabaseBoxArray(*(yyvsp[(1) - (4)].u_keyword), data);
+            Parser::getParser()->getScope()->putDatabaseBoxVector(*(yyvsp[(1) - (4)].u_keyword), data);
             break;
          }
          case KEY_CHAR: {
-            Array<char> data(n);
+            std::vector<char> data(n);
             for (int i = n-1; i >= 0; i--) {
                data[i] = list->d_char;
                list = list->d_next;
             }
-            Parser::getParser()->getScope()->putCharArray(*(yyvsp[(1) - (4)].u_keyword), data);
+            Parser::getParser()->getScope()->putCharVector(*(yyvsp[(1) - (4)].u_keyword), data);
             break;
          }
          case KEY_COMPLEX: {
-            Array<dcomplex> data(n);
+            std::vector<dcomplex> data(n);
             for (int i = n-1; i >= 0; i--) {
                to_complex(list);
                data[i] = list->d_complex;
                list = list->d_next;
             }
-            Parser::getParser()->getScope()->putComplexArray(*(yyvsp[(1) - (4)].u_keyword), data);
+            Parser::getParser()->getScope()->putComplexVector(*(yyvsp[(1) - (4)].u_keyword), data);
             break;
          }
          case KEY_DOUBLE: {
-            Array<double> data(n);
+            std::vector<double> data(n);
             for (int i = n-1; i >= 0; i--) {
                to_double(list);
                data[i] = list->d_double;
                list = list->d_next;
             }
-            Parser::getParser()->getScope()->putDoubleArray(*(yyvsp[(1) - (4)].u_keyword), data);
+            Parser::getParser()->getScope()->putDoubleVector(*(yyvsp[(1) - (4)].u_keyword), data);
             break;
          }
          case KEY_INTEGER: {
-            Array<int> data(n);
+            std::vector<int> data(n);
             for (int i = n-1; i >= 0; i--) {
                data[i] = list->d_integer;
                list = list->d_next;
             }
-            Parser::getParser()->getScope()->putIntegerArray(*(yyvsp[(1) - (4)].u_keyword), data);
+            Parser::getParser()->getScope()->putIntegerVector(*(yyvsp[(1) - (4)].u_keyword), data);
             break;
          }
          case KEY_STRING: {
-            Array<string> data(n);
+            std::vector<string> data(n);
             for (int i = n-1; i >= 0; i--) {
                data[i] = list->d_string;
                list = list->d_next;
             }
-            Parser::getParser()->getScope()->putStringArray(*(yyvsp[(1) - (4)].u_keyword), data);
+            Parser::getParser()->getScope()->putStringVector(*(yyvsp[(1) - (4)].u_keyword), data);
             break;
          }
          default:
@@ -2108,7 +2108,7 @@ yyreduce:
          Parser::getParser()->error("Box dimension too large (> 3)");
       } else {
          const int n = (yyvsp[(2) - (5)].u_keydata)->d_array_size;
-	 const Dimension dim(static_cast<unsigned short>(n));
+	 const tbox::Dimension dim(static_cast<unsigned short>(n));
          (yyval.u_keydata)->d_box.setDim(dim);
 
          KeyData* list_lower = (yyvsp[(2) - (5)].u_keydata);
@@ -2899,37 +2899,37 @@ static KeyData* lookup_variable(
       tmp += "]'' out of range";
       parser->error(tmp);
    } else if (db->isInteger(key)) {
-      result->d_integer    = db->getIntegerArray(key)[index];
+      result->d_integer    = db->getIntegerVector(key)[index];
       result->d_node_type  = KEY_INTEGER;
       result->d_array_type = KEY_INTEGER;
 
    } else if (db->isDouble(key)) {
-      result->d_double     = db->getDoubleArray(key)[index];
+      result->d_double     = db->getDoubleVector(key)[index];
       result->d_node_type  = KEY_DOUBLE;
       result->d_array_type = KEY_DOUBLE;
 
    } else if (db->isComplex(key)) {
-      result->d_complex    = db->getComplexArray(key)[index];
+      result->d_complex    = db->getComplexVector(key)[index];
       result->d_node_type  = KEY_COMPLEX;
       result->d_array_type = KEY_COMPLEX;
 
    } else if (db->isBool(key)) {
-      result->d_bool       = db->getBoolArray(key)[index];
+      result->d_bool       = db->getBoolVector(key)[index];
       result->d_node_type  = KEY_BOOL;
       result->d_array_type = KEY_BOOL;
 
    } else if (db->isDatabaseBox(key)) {
-      result->d_box        = db->getDatabaseBoxArray(key)[index];
+      result->d_box        = db->getDatabaseBoxVector(key)[index];
       result->d_node_type  = KEY_BOX;
       result->d_array_type = KEY_BOX;
 
    } else if (db->isChar(key)) {
-      result->d_char       = db->getCharArray(key)[index];
+      result->d_char       = db->getCharVector(key)[index];
       result->d_node_type  = KEY_CHAR;
       result->d_array_type = KEY_CHAR;
 
    } else if (db->isString(key)) {
-      result->d_string     = db->getStringArray(key)[index];
+      result->d_string     = db->getStringVector(key)[index];
       result->d_node_type  = KEY_STRING;
       result->d_array_type = KEY_STRING;
 

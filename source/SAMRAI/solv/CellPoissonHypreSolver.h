@@ -44,6 +44,7 @@
 
 #include "boost/shared_ptr.hpp"
 #include <string>
+#include <vector>
 
 namespace SAMRAI {
 namespace solv {
@@ -499,7 +500,7 @@ private:
    void
    add_gAk0_toRhs(
       const hier::Patch& patch,
-      const tbox::Array<hier::BoundaryBox>& bdry_boxes,
+      const std::vector<hier::BoundaryBox>& bdry_boxes,
       const RobinBcCoefStrategy* robin_bc_coef,
       pdat::CellData<double>& rhs);
 

@@ -507,7 +507,7 @@ FaceData<TYPE>::packWithRotation(
       const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
       const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
-      tbox::Array<TYPE> buffer(size);
+      std::vector<TYPE> buffer(size);
 
       hier::Box face_rotatebox(FaceGeometry::toFaceBox(rotatebox, i));
 
@@ -536,7 +536,7 @@ FaceData<TYPE>::packWithRotation(
             }
          }
       }
-      stream.pack(buffer.getPointer(), size);
+      stream.pack(&buffer[0], size);
    }
 }
 

@@ -189,7 +189,8 @@ public:
     *
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_state &&
-    *       (proc_stat_id >= 0) && (proc_stat_id < d_global_proc_stat_data.getSize()))
+    *       (proc_stat_id >= 0) &&
+    *       (proc_stat_id < static_cast<int>(d_global_proc_stat_data.size())))
     */
    int
    getGlobalProcStatSequenceLength(
@@ -206,9 +207,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_state &&
     *       (proc_stat_id >= 0) &&
-    *       (proc_stat_id < d_global_proc_stat_data.getSize()) &&
+    *       (proc_stat_id < static_cast<int>(d_global_proc_stat_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_proc_stat_data[proc_stat_id].getSize()) &&
+    *       (seq_num < static_cast<int>(d_global_proc_stat_data[proc_stat_id].size())) &&
     *       (proc_num < SAMRAI_MPI::getSAMRAIWorld().getSize()))
     */
    double
@@ -228,9 +229,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize &&
     *       (proc_stat_id >= 0) &&
-    *       (proc_stat_id < d_global_proc_stat_sum.getSize()) &&
+    *       (proc_stat_id < static_cast<int>(d_global_proc_stat_sum.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_proc_stat_sum[proc_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_proc_stat_sum[proc_stat_id].size())))
     */
    double
    getGlobalProcStatSum(
@@ -248,9 +249,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize &&
     *       (proc_stat_id >= 0) &&
-    *       (proc_stat_id < d_global_proc_stat_max.getSize()) &&
+    *       (proc_stat_id < static_cast<int>(d_global_proc_stat_max.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_proc_stat_max[proc_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_proc_stat_max[proc_stat_id].size())))
     */
    double
    getGlobalProcStatMax(
@@ -265,9 +266,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize &&
     *       (proc_stat_id >= 0) &&
-    *       (proc_stat_id < d_global_proc_stat_imax.getSize()) &&
+    *       (proc_stat_id < static_cast<int>(d_global_proc_stat_imax.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_proc_stat_imax[proc_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_proc_stat_imax[proc_stat_id].size())))
     */
    int
    getGlobalProcStatMaxProcessorId(
@@ -285,9 +286,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize &&
     *       (proc_stat_id >= 0) &&
-    *       (proc_stat_id < d_global_proc_stat_min.getSize()) &&
+    *       (proc_stat_id < static_cast<int>(d_global_proc_stat_min.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_proc_stat_min[proc_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_proc_stat_min[proc_stat_id].size())))
     */
    double
    getGlobalProcStatMin(
@@ -302,9 +303,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize &&
     *       (proc_stat_id >= 0) &&
-    *       (proc_stat_id < d_global_proc_stat_imin.getSize()) &&
+    *       (proc_stat_id < static_cast<int>(d_global_proc_stat_imin.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_proc_stat_imin[proc_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_proc_stat_imin[proc_stat_id].size())))
     */
    int
    getGlobalProcStatMinProcessorId(
@@ -377,7 +378,7 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_data.getSize()))
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_data.size())))
     */
    int
    getGlobalPatchStatSequenceLength(
@@ -394,9 +395,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size())))
     */
    int
    getGlobalPatchStatNumberPatches(
@@ -416,11 +417,11 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_mapping.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_mapping.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_mapping[patch_stat_id].getSize()) &&
+    *       (seq_num < static_cast<int>(d_global_patch_stat_mapping[patch_stat_id].size())) &&
     *       (patch_num >= 0) &&
-    *       (patch_num < d_global_patch_stat_mapping[patch_stat_id][seq_num].getSize()))
+    *       (patch_num < static_cast<int>(d_global_patch_stat_mapping[patch_stat_id][seq_num].size())))
     */
    int
    getGlobalPatchStatPatchMapping(
@@ -441,11 +442,11 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()) &&
+    *       (seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size())) &&
     *       (patch_num >= 0) &&
-    *       (patch_num < d_global_patch_stat_data[patch_stat_id][seq_num].getSize()))
+    *       (patch_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id][seq_num].size())))
     */
    double
    getGlobalPatchStatValue(
@@ -464,9 +465,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size())))
     */
    double
    getGlobalPatchStatSum(
@@ -484,9 +485,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size())))
     */
    double
    getGlobalPatchStatMax(
@@ -501,9 +502,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size())))
     */
    int
    getGlobalPatchStatMaxPatchId(
@@ -521,9 +522,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size())))
     */
    double
    getGlobalPatchStatMin(
@@ -538,9 +539,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size())))
     */
    int
    getGlobalPatchStatMinPatchId(
@@ -555,11 +556,11 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size())) &&
     *       (processor_id >= 0) &&
     *       (processor_id < SAMRAI_MPI::getSAMRAIWorld().getSize()) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size())))
     */
    double
    getGlobalPatchStatProcessorSum(
@@ -578,9 +579,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size())))
     */
    double
    getGlobalPatchStatProcessorSumMax(
@@ -597,9 +598,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size())))
     */
    int
    getGlobalPatchStatProcessorSumMaxId(
@@ -616,9 +617,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size())))
     */
    double
    getGlobalPatchStatProcessorSumMin(
@@ -635,9 +636,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size())))
     */
    int
    getGlobalPatchStatProcessorSumMinId(
@@ -651,9 +652,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()) &&
+    *       (seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size())) &&
     *       (proc_id >= 0 && proc_id < SAMRAI_MPI::getSAMRAIWorld().getSize()))
     */
    int
@@ -669,9 +670,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size())))
     */
    int
    getGlobalPatchStatMaxPatchesPerProc(
@@ -685,9 +686,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size())))
     */
    int
    getGlobalPatchStatMaxPatchesPerProcId(
@@ -701,13 +702,13 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()) &&
+    *       (seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size())) &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_patch_stat_data[patch_stat_id].size())))
     */
    int
    getGlobalPatchStatMinPatchesPerProc(
@@ -721,9 +722,9 @@ public:
     * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
     *      (!d_must_call_finalize && d_has_gathered_stats &&
     *       (patch_stat_id >= 0) &&
-    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (patch_stat_id < static_cast<int>(d_global_patch_stat_proc_data.size())) &&
     *       (seq_num >= 0) &&
-    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
+    *       (seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size())))
     */
    int
    getGlobalPatchStatMinPatchesPerProcId(
@@ -876,13 +877,13 @@ protected:
 
    /**
     * During finalize() check statistic information on all processors
-    * for consistency before generating arrays of data.
+    * for consistency before generating vectors of data.
     *
-    * @pre total_patches.getSize() == 0
+    * @pre total_patches.size() == 0
     */
    void
    checkStatsForConsistency(
-      Array<int>& total_patches);
+      std::vector<int>& total_patches);
 
    /**
     * Return true if a processor statistic whose name matches the
@@ -920,26 +921,26 @@ private:
     * Gets the current maximum number of statistics.
     *
     * If trying to use more statistics than this value
-    * the arrays should be resized.
+    * the vectors should be resized.
     */
    int
    getMaximumNumberOfStatistics()
    {
-      return d_proc_statistics.getSize();
+      return static_cast<int>(d_proc_statistics.size());
    }
 
    /*
     * Set the maximum number of statistics.
     *
-    * This will grow the internal arrays used to store values.
+    * This will grow the internal vectors used to store values.
     */
    void
    setMaximumNumberOfStatistics(
       const int size)
    {
-      if (size > d_proc_statistics.getSize()) {
-         d_proc_statistics.resizeArray(size);
-         d_patch_statistics.resizeArray(size);
+      if (size > static_cast<int>(d_proc_statistics.size())) {
+         d_proc_statistics.resize(size);
+         d_patch_statistics.resize(size);
       }
    }
 
@@ -990,47 +991,46 @@ private:
    StatisticRestartDatabase* d_restart_database_instance;
 
    /*
-    * Count of statistics registered with the statistician and arrays of
+    * Count of statistics registered with the statistician and vectors of
     * pointers to those statistics.
     */
    int d_num_proc_stats;
-   Array<boost::shared_ptr<Statistic> > d_proc_statistics;
+   std::vector<boost::shared_ptr<Statistic> > d_proc_statistics;
    int d_num_patch_stats;
-   Array<boost::shared_ptr<Statistic> > d_patch_statistics;
+   std::vector<boost::shared_ptr<Statistic> > d_patch_statistics;
 
    /*
-    * Arrays of global statistic data assembled by the finalize() function.
+    * Vectors of global statistic data assembled by the finalize() function.
     *
     * Global processor stat data is assembled as
-    *    array(stat id, seq id, proc id) = proc stat value.
+    *    vector(stat id, seq id, proc id) = proc stat value.
     *
     * Global patch stat data is assembled as
-    *    array(stat_id, seq id, global patch id) = patch stat value.
+    *    vector(stat_id, seq id, global patch id) = patch stat value.
     *
     * Global patch stat processor data is assembled as
-    *    array(stat_id, seq id, global proc id) = patch stats summed on
+    *    vector(stat_id, seq id, global proc id) = patch stats summed on
     *    different processors.
     *
     * The map of patches to processors is assembled as
-    *    array(stat_id, seq id, global patch id) = proc number.
+    *    vector(stat_id, seq id, global patch id) = proc number.
     */
    bool d_must_call_finalize;
    bool d_has_gathered_stats;
 
-   Array<Array<Array<double> > > d_global_proc_stat_data;
+   std::vector<std::vector<std::vector<double> > > d_global_proc_stat_data;
 
-   Array<Array<Array<double> > > d_global_patch_stat_data;
-   Array<Array<Array<double> > >
-   d_global_patch_stat_proc_data;
-   Array<Array<Array<int> > > d_global_patch_stat_mapping;
+   std::vector<std::vector<std::vector<double> > > d_global_patch_stat_data;
+   std::vector<std::vector<std::vector<double> > > d_global_patch_stat_proc_data;
+   std::vector<std::vector<std::vector<int> > > d_global_patch_stat_mapping;
 
    /*!
-    * @brief Array of max-reduced processor stat data.
+    * @brief Vector of max-reduced processor stat data.
     *
     * d_global_proc_stat_max[i][j] is the max over all processors of
     * the stat id (i) and sequence id (j).
     */
-   Array<Array<double> > d_global_proc_stat_max;
+   std::vector<std::vector<double> > d_global_proc_stat_max;
 
    /*!
     * @brief Processor owning the max value of processor stat data.
@@ -1038,15 +1038,15 @@ private:
     * d_global_proc_stat_imax[i][j] is the process corresponding to
     * d_global_proc_stat_max[i][j].
     */
-   Array<Array<int> > d_global_proc_stat_imax;
+   std::vector<std::vector<int> > d_global_proc_stat_imax;
 
    /*!
-    * @brief Array of min-reduced processor stat data.
+    * @brief Vector of min-reduced processor stat data.
     *
     * d_global_proc_stat_min[i][j] is the min over all processors of
     * the stat id (i) and sequence id (j).
     */
-   Array<Array<double> > d_global_proc_stat_min;
+   std::vector<std::vector<double> > d_global_proc_stat_min;
 
    /*!
     * @brief Processor owning the min value of processor stat data.
@@ -1054,18 +1054,18 @@ private:
     * d_global_proc_stat_imin[i][j] is the process corresponding to
     * d_global_proc_stat_max[i][j].
     */
-   Array<Array<int> > d_global_proc_stat_imin;
+   std::vector<std::vector<int> > d_global_proc_stat_imin;
 
    /*!
-    * @brief Array of sum-reduced processor stat data.
+    * @brief Vector of sum-reduced processor stat data.
     *
     * d_global_proc_stat_sum[i][j] is the sum over all processors of
     * the stat id (i) and sequence id (j).
     */
-   Array<Array<double> > d_global_proc_stat_sum;
+   std::vector<std::vector<double> > d_global_proc_stat_sum;
 
    /*
-    * Internal value used to set and grow arrays for storing
+    * Internal value used to set and grow vectors for storing
     * statistics.
     */
    static const int DEFAULT_NUMBER_OF_TIMERS_INCREMENT;

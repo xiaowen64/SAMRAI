@@ -35,6 +35,7 @@
 #include "boost/make_shared.hpp"
 #include <map>
 #include <stdlib.h>
+#include <vector>
 
 #define HIER_GRID_GEOMETRY_VERSION (3)
 
@@ -140,8 +141,8 @@ BaseGridGeometry::BaseGridGeometry(
       itr->setId(box_id);
    }
    d_number_blocks = static_cast<int>(block_numbers.size());
-   d_reduced_connect.resizeArray(d_number_blocks, false);
-   d_block_neighbors.resizeArray(d_number_blocks);
+   d_reduced_connect.resize(d_number_blocks, false);
+   d_block_neighbors.resize(d_number_blocks);
 
    setPhysicalDomain(domain, d_number_blocks);
 
@@ -175,8 +176,8 @@ BaseGridGeometry::BaseGridGeometry(
       itr->setId(box_id);
    }
    d_number_blocks = static_cast<int>(block_numbers.size());
-   d_reduced_connect.resizeArray(d_number_blocks, false);
-   d_block_neighbors.resizeArray(d_number_blocks);
+   d_reduced_connect.resize(d_number_blocks, false);
+   d_block_neighbors.resize(d_number_blocks);
 
    setPhysicalDomain(domain, d_number_blocks);
 
@@ -212,7 +213,7 @@ BaseGridGeometry::computeBoundaryBoxesOnLevel(
    const PatchLevel& level,
    const IntVector& periodic_shift,
    const IntVector& ghost_width,
-   const tbox::Array<BoxContainer>& domain,
+   const std::vector<BoxContainer>& domain,
    bool do_all_patches) const
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(d_dim,
@@ -273,7 +274,8 @@ BaseGridGeometry::computeBoundaryBoxesOnLevel(
          for (int j = 0; j < d_dim.getValue(); j++) {
             iter = (boundaries.find(patch_id));
             TBOX_ASSERT(iter != boundaries.end());
-            for (int k = 0; k < ((*iter).second)[j].getSize(); k++) {
+            for (int k = 0;
+                 k < static_cast<int>(((*iter).second)[j].size()); k++) {
                TBOX_ASSERT(checkBoundaryBox(((*iter).second)[j][k], *patch,
                      domain[block_num], num_per_dirs, ghost_width));
             }
@@ -505,7 +507,7 @@ BaseGridGeometry::setBoundaryBoxes(
    t_set_boundary_boxes->start();
    std::map<BoxId, PatchBoundaries> boundaries;
 
-   tbox::Array<BoxContainer> domain(level.getPhysicalDomainArray());
+   const std::vector<BoxContainer>& domain(level.getPhysicalDomainArray());
 
    IntVector ghost_width(
       level.getPatchDescriptor()->getMaxGhostWidth(d_dim));
@@ -531,7 +533,7 @@ BaseGridGeometry::setBoundaryBoxes(
    for (std::map<BoxId, PatchBoundaries>::const_iterator mi = boundaries.begin();
         mi != boundaries.end(); ++mi) {
       boost::shared_ptr<Patch> patch(level.getPatch((*mi).first));
-      patch->getPatchGeometry()->setBoundaryBoxesOnPatch((*mi).second.getArrays());
+      patch->getPatchGeometry()->setBoundaryBoxesOnPatch((*mi).second.getVectors());
    }
 
    t_set_boundary_boxes->stop();
@@ -621,10 +623,10 @@ BaseGridGeometry::getFromRestart()
 
    d_number_blocks = db->getInteger("num_blocks");
 
-   d_singularity.resizeArray(d_number_blocks);
-   d_singularity_indices.resizeArray(d_number_blocks);
-   d_reduced_connect.resizeArray(d_number_blocks);
-   d_block_neighbors.resizeArray(d_number_blocks);
+   d_singularity.resize(d_number_blocks);
+   d_singularity_indices.resize(d_number_blocks);
+   d_reduced_connect.resize(d_number_blocks);
+   d_block_neighbors.resize(d_number_blocks);
 
    std::string domain_name;
    BoxContainer domain;
@@ -633,7 +635,9 @@ BaseGridGeometry::getFromRestart()
 
    for (int b = 0; b < d_number_blocks; b++) {
       domain_name = "domain_boxes_" + tbox::Utilities::intToString(b);
-      BoxContainer block_domain_boxes(db->getDatabaseBoxArray(domain_name));
+      std::vector<tbox::DatabaseBox> db_box_vector =
+         db->getDatabaseBoxVector(domain_name);
+      BoxContainer block_domain_boxes(db_box_vector);
 
       for (BoxContainer::iterator itr = block_domain_boxes.begin();
            itr != block_domain_boxes.end(); ++itr) {
@@ -656,10 +660,8 @@ BaseGridGeometry::getFromRestart()
             db->getDatabase(singularity_indices_db_name);
          int num_singularity_indices =
             singularity_indices_db->getInteger("num_singularity_indices");
-         d_singularity_indices[b].reserve(num_singularity_indices);
-         singularity_indices_db->getIntegerArray("singularity_indices",
-            &d_singularity_indices[b][0],
-            num_singularity_indices);
+         d_singularity_indices[b] =
+            singularity_indices_db->getIntegerVector("singularity_indices");
          for (int sing_index = 0;
               sing_index < num_singularity_indices; ++sing_index) {
             if (d_singularity_indices[b][sing_index] > d_number_of_block_singularities) {
@@ -761,7 +763,9 @@ BaseGridGeometry::getFromInput(
 
          BoxContainer block_domain_boxes; 
          if (input_db->keyExists(domain_name)) {
-            block_domain_boxes = input_db->getDatabaseBoxArray(domain_name);
+            std::vector<tbox::DatabaseBox> db_box_vector =
+               input_db->getDatabaseBoxVector(domain_name);
+            block_domain_boxes = db_box_vector;
             if (block_domain_boxes.isEmpty()) {
                TBOX_ERROR(
                   getObjectName() << ":  "
@@ -770,7 +774,9 @@ BaseGridGeometry::getFromInput(
             }
          } else if (b == 0 && d_number_blocks == 1 &&
                     input_db->keyExists("domain_boxes")) {
-            block_domain_boxes = input_db->getDatabaseBoxArray("domain_boxes");
+            std::vector<tbox::DatabaseBox> db_box_vector =
+               input_db->getDatabaseBoxVector("domain_boxes");
+            block_domain_boxes = db_box_vector;
             if (block_domain_boxes.isEmpty()) {
                TBOX_ERROR(
                   getObjectName() << ":  "
@@ -817,7 +823,7 @@ BaseGridGeometry::getFromInput(
    else if (input_db) {
       bool read_on_restart =
          input_db->getBoolWithDefault("read_on_restart", false);
-      int num_keys = input_db->getAllKeys().getSize();
+      int num_keys = static_cast<int>(input_db->getAllKeys().size());
       if (num_keys > 0 && read_on_restart) {
          TBOX_WARNING(
             "BaseGridGeometry::getFromInput() warning...\n"
@@ -854,9 +860,9 @@ BaseGridGeometry::putToRestart(
          "domain_boxes_" + tbox::Utilities::intToString(b);
 
       BoxContainer block_phys_domain(getPhysicalDomain(), BlockId(b));
-      tbox::Array<tbox::DatabaseBox> temp_box_array = block_phys_domain;
+      std::vector<tbox::DatabaseBox> temp_box_vector = block_phys_domain;
 
-      restart_db->putDatabaseBoxArray(domain_name, temp_box_array);
+      restart_db->putDatabaseBoxVector(domain_name, temp_box_vector);
 
       if (d_number_blocks > 1) {
 
@@ -872,9 +878,8 @@ BaseGridGeometry::putToRestart(
             restart_db->putDatabase(singularity_indices_db_name);
          singularity_indices_db->putInteger("num_singularity_indices",
             static_cast<int>(d_singularity_indices[b].size()));
-         singularity_indices_db->putIntegerArray("singularity_indices",
-            &d_singularity_indices[b][0],
-            static_cast<int>(d_singularity_indices[b].size()));
+         singularity_indices_db->putIntegerVector("singularity_indices",
+            d_singularity_indices[b]);
 
          std::string reduced_connect_name =
             "reduced_connect_" + tbox::Utilities::intToString(b);
@@ -957,7 +962,7 @@ BaseGridGeometry::computeShiftsForBox(
       BoundaryLookupTable* blut =
          BoundaryLookupTable::getLookupTable(d_dim);
 
-      const tbox::Array<int>& location_index_max =
+      const std::vector<int>& location_index_max =
          blut->getMaxLocationIndices();
 
       for (int d = 0; d < num_periodic_dirs; d++) {
@@ -966,10 +971,10 @@ BaseGridGeometry::computeShiftsForBox(
 
          for (int loc = 0; loc < location_index_max[d]; loc++) {
 
-            const tbox::Array<int>& dirs = blut->getDirections(loc, codim);
+            const std::vector<int>& dirs = blut->getDirections(loc, codim);
 
             bool need_to_test = true;
-            for (int k = 0; k < dirs.size(); k++) {
+            for (int k = 0; k < static_cast<int>(dirs.size()); k++) {
                if (periodic_shift(dirs[k]) == 0) {
                   need_to_test = false;
                   break;
@@ -981,7 +986,7 @@ BaseGridGeometry::computeShiftsForBox(
                Box border(box);
                IntVector border_shift(d_dim, 0);
 
-               tbox::Array<bool> is_upper(codim);
+               std::vector<bool> is_upper(codim);
                for (int j = 0; j < codim; j++) {
                   if (blut->isUpper(loc, codim, j)) {
                      border.lower(dirs[j]) = box.upper(dirs[j]);
@@ -1092,7 +1097,7 @@ BaseGridGeometry::getBoundaryBoxes(
 
    if (num_per_dirs == d_dim.getValue()) {
       for (int k = 0; k < d_dim.getValue(); k++) {
-         patch_boundaries[k].resizeArray(0, BoundaryBox(d_dim));
+         patch_boundaries[k].resize(0, BoundaryBox(d_dim));
       }
 
    } else {
@@ -1112,30 +1117,26 @@ BaseGridGeometry::getBoundaryBoxes(
       BoundaryLookupTable* blut =
          BoundaryLookupTable::getLookupTable(d_dim);
 
-      const tbox::Array<int>& location_index_max =
+      const std::vector<int>& location_index_max =
          blut->getMaxLocationIndices();
-      tbox::Array<BoxContainer> codim_boxlist(d_dim.getValue());
+      std::vector<BoxContainer> codim_boxlist(d_dim.getValue());
 
       for (int d = 0; d < d_dim.getValue() - num_per_dirs; d++) {
 
          int codim = d + 1;
 
-         patch_boundaries[d].resizeArray(location_index_max[d],
+         patch_boundaries[d].resize(location_index_max[d],
             BoundaryBox(d_dim));
          int bdry_array_size = location_index_max[d];
          int num_bboxes = 0;
 
          for (int loc = 0; loc < location_index_max[d]; loc++) {
-            const tbox::Array<int>& dirs = blut->getDirections(loc, codim);
+            const std::vector<int>& dirs = blut->getDirections(loc, codim);
 
-            tbox::Array<bool> periodic_dir(codim);
             bool all_is_per = true;
             for (int p = 0; p < codim; p++) {
                if (periodic_shift(dirs[p]) == 0) {
-                  periodic_dir[p] = false;
                   all_is_per = false;
-               } else {
-                  periodic_dir[p] = true;
                }
             }
 
@@ -1205,10 +1206,11 @@ BaseGridGeometry::getBoundaryBoxes(
                   for (BoxContainer::iterator bl = border_list.begin();
                        bl != border_list.end(); ++bl) {
                      if (num_bboxes == bdry_array_size) {
-                        patch_boundaries[d].resizeArray(
+                        patch_boundaries[d].resize(
                            bdry_array_size + location_index_max[d],
                            BoundaryBox(d_dim));
-                        bdry_array_size = patch_boundaries[d].size();
+                        bdry_array_size =
+                           static_cast<int>(patch_boundaries[d].size());
                      }
 
                      BoundaryBox boundary_box(*bl, codim, loc);
@@ -1223,7 +1225,7 @@ BaseGridGeometry::getBoundaryBoxes(
             }
 
             if (loc + 1 == location_index_max[d]) {
-               patch_boundaries[d].resizeArray(num_bboxes,
+               patch_boundaries[d].resize(num_bboxes,
                   BoundaryBox(d_dim));
             }
          }
@@ -1483,7 +1485,7 @@ BaseGridGeometry::setPhysicalDomain(
 
    d_physical_domain.clear();
 
-   d_domain_is_single_box.resizeArray(number_blocks);
+   d_domain_is_single_box.resize(number_blocks);
    d_number_blocks = number_blocks;
    LocalId local_id(0);
 
@@ -1851,10 +1853,10 @@ BaseGridGeometry::readBlockDataFromInput(
 {
    TBOX_ASSERT(input_db);
 
-   d_singularity.resizeArray(d_number_blocks);
-   d_singularity_indices.resizeArray(d_number_blocks);
-   d_reduced_connect.resizeArray(d_number_blocks);
-   d_block_neighbors.resizeArray(d_number_blocks);
+   d_singularity.resize(d_number_blocks);
+   d_singularity_indices.resize(d_number_blocks);
+   d_reduced_connect.resize(d_number_blocks);
+   d_block_neighbors.resize(d_number_blocks);
 
    std::string sing_name;
    std::string neighbor_name;
@@ -1876,9 +1878,9 @@ BaseGridGeometry::readBlockDataFromInput(
       boost::shared_ptr<tbox::Database> sing_db(
          input_db->getDatabase(sing_name));
 
-      tbox::Array<int> blocks = sing_db->getIntegerArray("blocks");
+      std::vector<int> blocks = sing_db->getIntegerVector("blocks");
 
-      for (int i = 0; i < blocks.size(); i++) {
+      for (int i = 0; i < static_cast<int>(blocks.size()); i++) {
 
          const int block_number = blocks[i];
 
@@ -1917,14 +1919,14 @@ BaseGridGeometry::readBlockDataFromInput(
       if (d_dim.getValue() == 1) {
          rotation_b_to_a = Transformation::NO_ROTATE;
       } else {
-         tbox::Array<std::string> rstr =
-            pair_db->getStringArray("rotation_b_to_a");
+         std::vector<std::string> rstr =
+            pair_db->getStringVector("rotation_b_to_a");
          rotation_b_to_a = Transformation::getRotationIdentifier(rstr, d_dim);
 
-         tbox::Array<int> b_array =
-            pair_db->getIntegerArray("point_in_b_space");
-         tbox::Array<int> a_array =
-            pair_db->getIntegerArray("point_in_a_space");
+         std::vector<int> b_array =
+            pair_db->getIntegerVector("point_in_b_space");
+         std::vector<int> a_array =
+            pair_db->getIntegerVector("point_in_a_space");
 
          Index b_index(d_dim);
          Index a_index(d_dim);
@@ -2264,14 +2266,14 @@ BaseGridGeometry::adjustBoundaryBoxesOnPatch(
          gcw,
          IntVector::getZero(d_dim));
 
-      tbox::Array<BoundaryBox> codim_boundaries[SAMRAI::MAX_DIM_VAL];
+      std::vector<BoundaryBox> codim_boundaries[SAMRAI::MAX_DIM_VAL];
       std::list<int> boundaries_in_sing[SAMRAI::MAX_DIM_VAL];
       for (int codim = 2; codim <= d_dim.getValue(); codim++) {
 
          codim_boundaries[codim - 1] =
             patch.getPatchGeometry()->getCodimensionBoundaries(codim);
 
-         int num_boxes = codim_boundaries[codim - 1].size();
+         int num_boxes = static_cast<int>(codim_boundaries[codim - 1].size());
 
          for (int n = 0; n < num_boxes; n++) {
             Box border_box(codim_boundaries[codim - 1][n].getBox());
@@ -2285,10 +2287,10 @@ BaseGridGeometry::adjustBoundaryBoxesOnPatch(
 
       for (int i = 0; i < d_dim.getValue(); i++) {
          if (!boundaries_in_sing[i].empty()) {
-            int old_size = boundaries[i].size();
+            int old_size = static_cast<int>(boundaries[i].size());
             int new_size =
                old_size + static_cast<int>(boundaries_in_sing[i].size());
-            boundaries[i].resizeArray(new_size, BoundaryBox(d_dim));
+            boundaries[i].resize(new_size, BoundaryBox(d_dim));
             int nb = 0;
             for (std::list<int>::iterator b = boundaries_in_sing[i].begin();
                  b != boundaries_in_sing[i].end(); b++) {

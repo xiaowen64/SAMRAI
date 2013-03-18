@@ -128,10 +128,10 @@ BoxContainer::BoxContainer(
  */
 
 BoxContainer::BoxContainer(
-   const tbox::Array<tbox::DatabaseBox>& other):
+   const std::vector<tbox::DatabaseBox>& other):
    d_ordered(false)
 {
-   const int n = other.size();
+   const int n = static_cast<int>(other.size());
    for (int j = 0; j < n; j++) {
       pushBack(Box(other[j]));
    }
@@ -167,11 +167,11 @@ BoxContainer::operator = (
 
 BoxContainer&
 BoxContainer::operator = (
-   const tbox::Array<tbox::DatabaseBox>& rhs)
+   const std::vector<tbox::DatabaseBox>& rhs)
 {
    clear();
 
-   const int n = rhs.size();
+   const int n = static_cast<int>(rhs.size());
    for (int j = 0; j < n; j++) {
       pushBack(Box(rhs[j]));
    }
@@ -1204,21 +1204,20 @@ BoxContainer::intersectBoxes(
 /*
  *************************************************************************
  *
- * Type conversion from a BoxContainer to an Array of
- * tbox::DatabaseBoxes.
+ * Type conversion from a BoxContainer to a vector of tbox::DatabaseBoxes.
  *
  *************************************************************************
  */
-BoxContainer::operator tbox::Array<tbox::DatabaseBox>() const
+BoxContainer::operator std::vector<tbox::DatabaseBox>() const
 {
-   tbox::Array<tbox::DatabaseBox> new_Array(size());
+   std::vector<tbox::DatabaseBox> new_vector(size());
 
    int j = 0;
    for (const_iterator i = begin(); i != end(); ++i) {
-      new_Array[j++] = (tbox::DatabaseBox)(*i);
+      new_vector[j++] = (tbox::DatabaseBox)(*i);
    }
 
-   return new_Array;
+   return new_vector;
 }
 
 /*
@@ -1638,7 +1637,7 @@ BoxContainer::putToRestart(
       block_ids.reserve(mbs_size);
       periodic_ids.reserve(mbs_size);
 
-      tbox::Array<tbox::DatabaseBox> db_box_array(mbs_size);
+      std::vector<tbox::DatabaseBox> db_box_array(mbs_size);
 
       int counter = -1;
       for (BoxContainer::const_iterator ni = begin(); ni != end(); ++ni) {
@@ -1649,11 +1648,11 @@ BoxContainer::putToRestart(
          db_box_array[++counter] = *ni;
       }
 
-      restart_db->putIntegerArray("local_indices", &local_ids[0], mbs_size);
-      restart_db->putIntegerArray("ranks", &ranks[0], mbs_size);
-      restart_db->putIntegerArray("block_ids", &block_ids[0], mbs_size);
-      restart_db->putIntegerArray("periodic_ids", &periodic_ids[0], mbs_size);
-      restart_db->putDatabaseBoxArray("boxes", &db_box_array[0], mbs_size);
+      restart_db->putIntegerVector("local_indices", local_ids);
+      restart_db->putIntegerVector("ranks", ranks);
+      restart_db->putIntegerVector("block_ids", block_ids);
+      restart_db->putIntegerVector("periodic_ids", periodic_ids);
+      restart_db->putDatabaseBoxVector("boxes", db_box_array);
    }
 }
 
@@ -1676,22 +1675,17 @@ BoxContainer::getFromRestart(
 
    const unsigned int mbs_size = restart_db.getInteger("mapped_box_set_size");
    if (mbs_size > 0) {
-      std::vector<int> local_ids(mbs_size);
-      std::vector<int> ranks(mbs_size);
-      std::vector<int> block_ids(mbs_size);
-      std::vector<int> periodic_ids(mbs_size);
-      tbox::Array<tbox::DatabaseBox> db_box_array(mbs_size);
+      std::vector<int> local_ids =
+         restart_db.getIntegerVector("local_indices");
+      std::vector<int> ranks =
+         restart_db.getIntegerVector("ranks");
+      std::vector<int> block_ids =
+         restart_db.getIntegerVector("block_ids");
+      std::vector<int> periodic_ids =
+         restart_db.getIntegerVector("periodic_ids");
 
-      restart_db.getIntegerArray(
-         "local_indices", &local_ids[0], mbs_size);
-      restart_db.getIntegerArray(
-         "ranks", &ranks[0], mbs_size);
-      restart_db.getIntegerArray(
-         "block_ids", &block_ids[0], mbs_size);
-      restart_db.getIntegerArray(
-         "periodic_ids", &periodic_ids[0], mbs_size);
-      restart_db.getDatabaseBoxArray(
-         "boxes", &db_box_array[0], mbs_size);
+      std::vector<tbox::DatabaseBox> db_box_array =
+         restart_db.getDatabaseBoxVector("boxes");
 
       for (unsigned int i = 0; i < mbs_size; ++i) {
          Box array_box(db_box_array[i]);

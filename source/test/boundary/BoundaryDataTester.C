@@ -282,8 +282,8 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
 {
    TBOX_ASSERT(db);
 
-   tbox::Array<string> var_keys = db->getAllKeys();
-   int nkeys = var_keys.getSize();
+   std::vector<string> var_keys = db->getAllKeys();
+   int nkeys = static_cast<int>(var_keys.size());
 
    int var_cnt = 0;
    for (int i = 0; i < nkeys; i++) {
@@ -294,8 +294,8 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
 
    d_variable_name.resizeArray(var_cnt);
    d_variable_depth.resizeArray(var_cnt);
-   d_variable_num_ghosts.resizeArray(var_cnt, hier::IntVector(d_dim, 1));
-   d_variable_interior_values.resizeArray(var_cnt);
+   d_variable_num_ghosts.resize(var_cnt, hier::IntVector(d_dim, 1));
+   d_variable_interior_values.resize(var_cnt);
 
    for (int i = 0; i < nkeys; i++) {
 
@@ -323,10 +323,8 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
          }
 
          if (var_db->keyExists("interior_values")) {
-            d_variable_interior_values[i].resizeArray(d_variable_depth[i]);
-            var_db->getDoubleArray("interior_values",
-               d_variable_interior_values[i].getPointer(),
-               d_variable_depth[i]);
+            d_variable_interior_values[i] =
+               var_db->getDoubleVector("interior_values");
          } else {
             TBOX_ERROR(
                d_object_name << ": "
@@ -373,18 +371,18 @@ void BoundaryDataTester::setBoundaryDataDefaults()
     */
 
    if (d_dim == tbox::Dimension(2)) {
-      d_master_bdry_edge_conds.resizeArray(NUM_2D_EDGES);
-      d_scalar_bdry_edge_conds.resizeArray(NUM_2D_EDGES);
-      d_vector_bdry_edge_conds.resizeArray(NUM_2D_EDGES);
+      d_master_bdry_edge_conds.resize(NUM_2D_EDGES);
+      d_scalar_bdry_edge_conds.resize(NUM_2D_EDGES);
+      d_vector_bdry_edge_conds.resize(NUM_2D_EDGES);
       for (int ei = 0; ei < NUM_2D_EDGES; ei++) {
          d_master_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_vector_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
       }
 
-      d_master_bdry_node_conds.resizeArray(NUM_2D_NODES);
-      d_scalar_bdry_node_conds.resizeArray(NUM_2D_NODES);
-      d_vector_bdry_node_conds.resizeArray(NUM_2D_NODES);
+      d_master_bdry_node_conds.resize(NUM_2D_NODES);
+      d_scalar_bdry_node_conds.resize(NUM_2D_NODES);
+      d_vector_bdry_node_conds.resize(NUM_2D_NODES);
       d_node_bdry_edge.resizeArray(NUM_2D_NODES);
 
       for (int ni = 0; ni < NUM_2D_NODES; ni++) {
@@ -396,18 +394,18 @@ void BoundaryDataTester::setBoundaryDataDefaults()
    }
 
    if (d_dim == tbox::Dimension(3)) {
-      d_master_bdry_face_conds.resizeArray(NUM_3D_FACES);
-      d_scalar_bdry_face_conds.resizeArray(NUM_3D_FACES);
-      d_vector_bdry_face_conds.resizeArray(NUM_3D_FACES);
+      d_master_bdry_face_conds.resize(NUM_3D_FACES);
+      d_scalar_bdry_face_conds.resize(NUM_3D_FACES);
+      d_vector_bdry_face_conds.resize(NUM_3D_FACES);
       for (int fi = 0; fi < NUM_3D_FACES; fi++) {
          d_master_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
          d_scalar_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
          d_vector_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
       }
 
-      d_master_bdry_edge_conds.resizeArray(NUM_3D_EDGES);
-      d_scalar_bdry_edge_conds.resizeArray(NUM_3D_EDGES);
-      d_vector_bdry_edge_conds.resizeArray(NUM_3D_EDGES);
+      d_master_bdry_edge_conds.resize(NUM_3D_EDGES);
+      d_scalar_bdry_edge_conds.resize(NUM_3D_EDGES);
+      d_vector_bdry_edge_conds.resize(NUM_3D_EDGES);
       d_edge_bdry_face.resizeArray(NUM_3D_EDGES);
       for (int ei = 0; ei < NUM_3D_EDGES; ei++) {
          d_master_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
@@ -416,9 +414,9 @@ void BoundaryDataTester::setBoundaryDataDefaults()
          d_edge_bdry_face[ei] = BOGUS_BDRY_DATA;
       }
 
-      d_master_bdry_node_conds.resizeArray(NUM_3D_NODES);
-      d_scalar_bdry_node_conds.resizeArray(NUM_3D_NODES);
-      d_vector_bdry_node_conds.resizeArray(NUM_3D_NODES);
+      d_master_bdry_node_conds.resize(NUM_3D_NODES);
+      d_scalar_bdry_node_conds.resize(NUM_3D_NODES);
+      d_vector_bdry_node_conds.resize(NUM_3D_NODES);
       d_node_bdry_face.resizeArray(NUM_3D_NODES);
 
       for (int ni = 0; ni < NUM_3D_NODES; ni++) {
@@ -429,17 +427,15 @@ void BoundaryDataTester::setBoundaryDataDefaults()
       }
    }
 
-   d_variable_bc_values.resizeArray(d_variable_name.getSize());
+   d_variable_bc_values.resize(d_variable_name.getSize());
    for (int iv = 0; iv < d_variable_name.getSize(); iv++) {
       if (d_dim == tbox::Dimension(2)) {
-         d_variable_bc_values[iv].resizeArray(NUM_2D_EDGES
-            * d_variable_depth[iv]);
+         d_variable_bc_values[iv].resize(NUM_2D_EDGES * d_variable_depth[iv]);
       }
       if (d_dim == tbox::Dimension(3)) {
-         d_variable_bc_values[iv].resizeArray(NUM_3D_FACES
-            * d_variable_depth[iv]);
+         d_variable_bc_values[iv].resize(NUM_3D_FACES * d_variable_depth[iv]);
       }
-      tbox::MathUtilities<double>::setArrayToSignalingNaN(
+      tbox::MathUtilities<double>::setVectorToSignalingNaN(
          d_variable_bc_values[iv]);
    }
 
@@ -476,26 +472,27 @@ void BoundaryDataTester::readBoundaryDataStateEntry(
 {
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
-   TBOX_ASSERT(d_variable_bc_values.getSize() == d_variable_name.getSize());
+   TBOX_ASSERT(static_cast<int>(d_variable_bc_values.size()) ==
+               d_variable_name.getSize());
 
    for (int iv = 0; iv < d_variable_name.getSize(); iv++) {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (d_dim == tbox::Dimension(2)) {
-         TBOX_ASSERT(d_variable_bc_values[iv].getSize() ==
+         TBOX_ASSERT(static_cast<int>(d_variable_bc_values[iv].size()) ==
             NUM_2D_EDGES * d_variable_depth[iv]);
       }
       if (d_dim == tbox::Dimension(3)) {
-         TBOX_ASSERT(d_variable_bc_values[iv].getSize() ==
+         TBOX_ASSERT(static_cast<int>(d_variable_bc_values[iv].size()) ==
             NUM_3D_FACES * d_variable_depth[iv]);
       }
 #endif
 
       if (db->keyExists(d_variable_name[iv])) {
          int depth = d_variable_depth[iv];
-         tbox::Array<double> tmp_val(0);
-         tmp_val = db->getDoubleArray(d_variable_name[iv]);
-         if (tmp_val.getSize() < depth) {
+         std::vector<double> tmp_val =
+            db->getDoubleVector(d_variable_name[iv]);
+         if (static_cast<int>(tmp_val.size()) < depth) {
             TBOX_ERROR(d_object_name << ": "
                                      << "Insufficient number of "
                                      << d_variable_name[iv] << " values given in "
@@ -686,10 +683,10 @@ void BoundaryDataTester::checkBoundaryData(
       patch.getPatchGeometry(),
       BOOST_CAST_TAG);
    TBOX_ASSERT(pgeom);
-   const tbox::Array<hier::BoundaryBox> bdry_boxes =
+   const std::vector<hier::BoundaryBox>& bdry_boxes =
       pgeom->getCodimensionBoundaries(btype);
 
-   for (int i = 0; i < bdry_boxes.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(bdry_boxes.size()); i++) {
       hier::BoundaryBox bbox = bdry_boxes[i];
       TBOX_ASSERT(bbox.getBoundaryType() == btype);
       int bloc = bbox.getLocationIndex();
@@ -854,7 +851,7 @@ void BoundaryDataTester::checkBoundaryData(
 
       }   // for (int iv = 0; iv < d_variables.getSize(); iv++)
 
-   }  // for (int i = 0; i < bdry_boxes.getSize(); i++ )
+   }  // for (int i = 0; i < static_cast<int>(bdry_boxes.size()); i++ )
 
 }
 
@@ -899,7 +896,7 @@ void BoundaryDataTester::printClassData(
    os << "\n   Boundary condition data... " << endl;
 
    if (d_dim == tbox::Dimension(2)) {
-      for (j = 0; j < d_master_bdry_edge_conds.getSize(); j++) {
+      for (j = 0; j < static_cast<int>(d_master_bdry_edge_conds.size()); j++) {
          os << "\n       d_master_bdry_edge_conds[" << j << "] = "
             << d_master_bdry_edge_conds[j] << endl;
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
@@ -920,7 +917,7 @@ void BoundaryDataTester::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < d_master_bdry_node_conds.getSize(); j++) {
+      for (j = 0; j < static_cast<int>(d_master_bdry_node_conds.size()); j++) {
          os << "\n       d_master_bdry_node_conds[" << j << "] = "
             << d_master_bdry_node_conds[j] << endl;
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
@@ -932,7 +929,7 @@ void BoundaryDataTester::printClassData(
       }
    }
    if (d_dim == tbox::Dimension(3)) {
-      for (j = 0; j < d_master_bdry_face_conds.getSize(); j++) {
+      for (j = 0; j < static_cast<int>(d_master_bdry_face_conds.size()); j++) {
          os << "\n       d_master_bdry_face_conds[" << j << "] = "
             << d_master_bdry_face_conds[j] << endl;
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
@@ -953,7 +950,7 @@ void BoundaryDataTester::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < d_master_bdry_edge_conds.getSize(); j++) {
+      for (j = 0; j < static_cast<int>(d_master_bdry_edge_conds.size()); j++) {
          os << "\n       d_master_bdry_edge_conds[" << j << "] = "
             << d_master_bdry_edge_conds[j] << endl;
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
@@ -964,7 +961,7 @@ void BoundaryDataTester::printClassData(
             << d_edge_bdry_face[j] << endl;
       }
       os << endl;
-      for (j = 0; j < d_master_bdry_node_conds.getSize(); j++) {
+      for (j = 0; j < static_cast<int>(d_master_bdry_node_conds.size()); j++) {
          os << "\n       d_master_bdry_node_conds[" << j << "] = "
             << d_master_bdry_node_conds[j] << endl;
          os << "       d_scalar_bdry_node_conds[" << j << "] = "

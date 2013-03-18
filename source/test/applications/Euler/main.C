@@ -180,7 +180,7 @@ dumpMatlabData1dPencil(
    const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int pencil_direction,
    const bool default_pencil,
-   const tbox::Array<int>& pencil_index,
+   const std::vector<int>& pencil_index,
    Euler* euler_model);
 
 int main(
@@ -310,7 +310,7 @@ int main(
       string matlab_dump_dirname;
       int matlab_dump_interval = 0;
       int matlab_pencil_direction = 0;
-      tbox::Array<int> matlab_pencil_index(dim.getValue() - 1);
+      std::vector<int> matlab_pencil_index(dim.getValue() - 1);
       bool matlab_default_pencil = true;
       for (int id = 0; id < dim.getValue() - 1; id++) {
          matlab_pencil_index[id] = 0;
@@ -332,11 +332,11 @@ int main(
          }
          if (main_db->keyExists("matlab_pencil_index")) {
             matlab_default_pencil = false;
-            matlab_pencil_index = main_db->getIntegerArray(
-                  "matlab_pencil_index");
-            if (matlab_pencil_index.getSize() != dim.getValue() - 1) {
+            matlab_pencil_index =
+               main_db->getIntegerVector("matlab_pencil_index");
+            if (static_cast<int>(matlab_pencil_index.size()) != dim.getValue() - 1) {
                TBOX_ERROR("`matlab_pencil_index' has "
-                  << matlab_pencil_index.getSize() << " values in input. "
+                  << matlab_pencil_index.size() << " values in input. "
                   << dim.getValue() - 1 << " values must be specified when default"
                   << " is overridden.");
             }
@@ -712,7 +712,7 @@ static void dumpMatlabData1dPencil(
    const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int pencil_direction,
    const bool default_pencil,
-   const tbox::Array<int>& pencil_index,
+   const std::vector<int>& pencil_index,
    Euler* euler_model)
 {
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());

@@ -212,7 +212,9 @@ int main(
        */
       hier::IntVector max_box_size(dim, tbox::MathUtilities<int>::getMax());
       if (main_db->isInteger("max_box_size")) {
-         main_db->getIntegerArray("max_box_size", &max_box_size[0], dim.getValue());
+         main_db->getIntegerArray("max_box_size",
+            &max_box_size[0],
+            dim.getValue());
       }
       breakUpBoxes(box_level, max_box_size);
 
@@ -255,7 +257,9 @@ int main(
        */
       hier::IntVector connector_width(dim, 1);
       if (main_db->isInteger("connector_width")) {
-         main_db->getIntegerArray("connector_width", &connector_width[0], dim.getValue());
+         main_db->getIntegerArray("connector_width",
+            &connector_width[0],
+            dim.getValue());
       }
 
       hier::Connector connector(

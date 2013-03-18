@@ -146,10 +146,10 @@ Transformation::getInverseTransformation() const
 
 Transformation::RotationIdentifier
 Transformation::getRotationIdentifier(
-   const tbox::Array<std::string>& rotation_string,
+   const std::vector<std::string>& rotation_string,
    const tbox::Dimension& dim)
 {
-   TBOX_ASSERT(rotation_string.getSize() == dim.getValue());
+   TBOX_ASSERT(static_cast<int>(rotation_string.size()) == dim.getValue());
 
    RotationIdentifier id = NO_ROTATE;
    bool is_error = false;

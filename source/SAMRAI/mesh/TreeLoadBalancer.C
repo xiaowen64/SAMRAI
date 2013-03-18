@@ -162,18 +162,17 @@ TreeLoadBalancer::setWorkloadPatchDataIndex(
    TBOX_ASSERT(datafact);
 
    if (level_number >= 0) {
-      int asize = d_workload_data_id.getSize();
+      int asize = static_cast<int>(d_workload_data_id.size());
       if (asize < level_number + 1) {
-         d_workload_data_id.resizeArray(level_number + 1);
+         d_workload_data_id.resize(level_number + 1);
          for (int i = asize; i < level_number - 1; i++) {
-            d_workload_data_id[i] =
-               d_master_workload_data_id;
+            d_workload_data_id[i] = d_master_workload_data_id;
          }
          d_workload_data_id[level_number] = data_id;
       }
    } else {
       d_master_workload_data_id = data_id;
-      for (int ln = 0; ln < d_workload_data_id.getSize(); ln++) {
+      for (int ln = 0; ln < static_cast<int>(d_workload_data_id.size()); ln++) {
          d_workload_data_id[ln] = d_master_workload_data_id;
       }
    }
@@ -3223,7 +3222,7 @@ TreeLoadBalancer::breakOffLoad(
     * we precompute bad_cuts here to provide to
     * methods that actually use the information.
     */
-   tbox::Array<tbox::Array<bool> > bad_cuts(d_dim.getValue());
+   std::vector<std::vector<bool> > bad_cuts(d_dim.getValue());
    t_find_bad_cuts->start();
    hier::BoxUtilities::findBadCutPoints(bad_cuts,
       box,
@@ -3838,7 +3837,7 @@ TreeLoadBalancer::printClassData(
    int ln;
 
    os << "d_workload_data_id..." << std::endl;
-   for (ln = 0; ln < d_workload_data_id.getSize(); ln++) {
+   for (ln = 0; ln < static_cast<int>(d_workload_data_id.size()); ln++) {
       os << "    d_workload_data_id[" << ln << "] = "
          << d_workload_data_id[ln] << std::endl;
    }
@@ -3985,7 +3984,7 @@ TreeLoadBalancer::breakOffLoad_planar(
    double ideal_brk_load,
    double low_load,
    double high_load,
-   const tbox::Array<tbox::Array<bool> >& bad_cuts ) const
+   const std::vector<std::vector<bool> >& bad_cuts ) const
 {
 
    const tbox::Dimension dim(d_dim);
@@ -4041,7 +4040,7 @@ TreeLoadBalancer::breakOffLoad_planar(
 
       const int brk_area = box_vol / box_dims(brk_dir);
 
-      const tbox::Array<bool>& bad = bad_cuts[brk_dir];
+      const std::vector<bool>& bad = bad_cuts[brk_dir];
 
       const double ideal_cut_length = double(ideal_brk_load)/brk_area;
 
@@ -4228,7 +4227,7 @@ TreeLoadBalancer::breakOffLoad_cubic(
    double ideal_brk_load,
    double low_load,
    double high_load,
-   const tbox::Array<tbox::Array<bool> >& bad_cuts ) const
+   const std::vector<std::vector<bool> >& bad_cuts ) const
 {
 
    const hier::IntVector box_dims(box.numberCells());
@@ -4734,7 +4733,7 @@ TreeLoadBalancer::prebalanceBoxLevel(
          box_recv[i].beginRecv();
       }
       int num_completed_recvs = 0;
-      tbox::Array<bool> completed(num_recvs, false);
+      std::vector<bool> completed(num_recvs, false);
       while (num_completed_recvs < num_recvs) {
          for (int i = 0; i < num_recvs; i++) {
             if (!completed[i] && box_recv[i].checkRecv()) {

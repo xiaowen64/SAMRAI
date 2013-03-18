@@ -870,14 +870,14 @@ void HierSumTest::initializeLevelData(
          patch->getPatchGeometry(),
          BOOST_CAST_TAG);
       TBOX_ASSERT(patch_geom);
-      const tbox::Array<BoundaryBox> node_bdry =
+      const std::vector<BoundaryBox>& node_bdry =
          patch_geom->getCodimensionBoundaries(d_dim.getValue());
-      const tbox::Array<BoundaryBox> edge_bdry =
+      const std::vector<BoundaryBox>& edge_bdry =
          patch_geom->getCodimensionBoundaries(d_dim.getValue() - 1);
-      tbox::Array<BoundaryBox> face_bdry;
-      if (d_dim == tbox::Dimension(3)) {
-         face_bdry = patch_geom->getCodimensionBoundaries(1);
-      }
+      std::vector<BoundaryBox> empty_vector(0, BoundaryBox(d_dim));
+      const std::vector<BoundaryBox>& face_bdry =
+         d_dim == tbox::Dimension(3) ?
+            patch_geom->getCodimensionBoundaries(1) : empty_vector;
       // node cell values
       setBoundaryConditions(*patch,
          node_bdry,
@@ -948,14 +948,14 @@ void HierSumTest::initializeLevelData(
          Box pbox = patch->getBox();
          const GlobalId global_id = patch->getGlobalId();
 
-         const tbox::Array<BoundaryBox> node_bdry =
+         const std::vector<BoundaryBox>& node_bdry =
             cfbdry.getNodeBoundaries(global_id);
-         const tbox::Array<BoundaryBox> edge_bdry =
+         const std::vector<BoundaryBox>& edge_bdry =
             cfbdry.getEdgeBoundaries(global_id);
-         tbox::Array<BoundaryBox> face_bdry;
-         if (d_dim == tbox::Dimension(3)) {
-            face_bdry = cfbdry.getFaceBoundaries(global_id);
-         }
+         std::vector<BoundaryBox> empty_vector(0, BoundaryBox(d_dim));
+         const std::vector<BoundaryBox>& face_bdry =
+            d_dim == tbox::Dimension(3) ?
+               cfbdry.getFaceBoundaries(global_id) : empty_vector;
 
          setBoundaryConditions(*patch,
             node_bdry,
@@ -1011,14 +1011,14 @@ HierSumTest::applyGradientDetector(
 void
 HierSumTest::setBoundaryConditions(
    Patch& patch,
-   const tbox::Array<BoundaryBox>& node_bdry,
-   const tbox::Array<BoundaryBox>& edge_bdry,
-   const tbox::Array<BoundaryBox>& face_bdry,
+   const std::vector<BoundaryBox>& node_bdry,
+   const std::vector<BoundaryBox>& edge_bdry,
+   const std::vector<BoundaryBox>& face_bdry,
    const int cell_data_id)
 {
-   const int num_node_bdry_boxes = node_bdry.getSize();
-   const int num_edge_bdry_boxes = edge_bdry.getSize();
-   const int num_face_bdry_boxes = face_bdry.getSize();
+   const int num_node_bdry_boxes = static_cast<int>(node_bdry.size());
+   const int num_edge_bdry_boxes = static_cast<int>(edge_bdry.size());
+   const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
    const boost::shared_ptr<CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
@@ -1214,16 +1214,15 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
     * Get node and edge boundary boxes.
     */
 
-   const tbox::Array<BoundaryBox> edge_bdry =
+   const std::vector<BoundaryBox>& edge_bdry =
       patch_geom->getCodimensionBoundaries(d_dim.getValue() - 1);
-   const int num_edge_bdry_boxes = edge_bdry.getSize();
+   const int num_edge_bdry_boxes = static_cast<int>(edge_bdry.size());
 
-   tbox::Array<BoundaryBox> face_bdry;
-   int num_face_bdry_boxes = 0;
-   if (d_dim == tbox::Dimension(3)) {
-      face_bdry = patch_geom->getCodimensionBoundaries(1);
-      num_face_bdry_boxes = face_bdry.getSize();
-   }
+   std::vector<BoundaryBox> empty_vector(0, BoundaryBox(d_dim));
+   const std::vector<BoundaryBox>& face_bdry =
+      d_dim == tbox::Dimension(3) ?
+         patch_geom->getCodimensionBoundaries(1) : empty_vector;
+   const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
    /*
     * boost::shared_ptr to data in ghost regions.
@@ -1390,16 +1389,16 @@ HierSumTest::getFromInput(
    /*
     * Set number of ghosts for node and edge data.
     */
-   tbox::Array<int> tmp_array;
+   std::vector<int> tmp_array;
    if (input_db->keyExists("node_ghosts")) {
-      tmp_array = input_db->getIntegerArray("node_ghosts");
-      if (tmp_array.getSize() != d_dim.getValue()) {
+      tmp_array = input_db->getIntegerVector("node_ghosts");
+      if (static_cast<int>(tmp_array.size()) != d_dim.getValue()) {
          TBOX_ERROR("HierSumTest::getFromInput()"
             << "invalid 'node_ghosts' entry - must be integer"
             << "array of size d_dim" << endl);
       }
    } else {
-      tmp_array.resizeArray(d_dim.getValue());
+      tmp_array.resize(d_dim.getValue());
       for (int i = 0; i < d_dim.getValue(); i++) {
          tmp_array[i] = 0;
       }
@@ -1410,14 +1409,14 @@ HierSumTest::getFromInput(
    }
 
    if (input_db->keyExists("edge_ghosts")) {
-      tmp_array = input_db->getIntegerArray("edge_ghosts");
-      if (tmp_array.getSize() != d_dim.getValue()) {
+      tmp_array = input_db->getIntegerVector("edge_ghosts");
+      if (static_cast<int>(tmp_array.size()) != d_dim.getValue()) {
          TBOX_ERROR("HierSumTest::getFromInput()"
             << "invalid 'edge_ghosts' entry - must be integer"
             << "array of size d_dim" << endl);
       }
    } else {
-      tmp_array.resizeArray(d_dim.getValue());
+      tmp_array.resize(d_dim.getValue());
       for (int i = 0; i < d_dim.getValue(); i++) {
          tmp_array[i] = 0;
       }

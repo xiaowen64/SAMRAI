@@ -1221,7 +1221,7 @@ MblkHyperbolicLevelIntegrator::standardLevelSynchronization(
    const double sync_time,
    const double old_time)
 {
-   tbox::Array<double> old_times(finest_level - coarsest_level + 1);
+   std::vector<double> old_times(finest_level - coarsest_level + 1);
    for (int i = coarsest_level; i <= finest_level; i++) {
       old_times[i] = old_time;
    }
@@ -1235,13 +1235,13 @@ MblkHyperbolicLevelIntegrator::standardLevelSynchronization(
    const int coarsest_level,
    const int finest_level,
    const double sync_time,
-   const tbox::Array<double>& old_times)
+   const std::vector<double>& old_times)
 {
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((coarsest_level >= 0)
       && (coarsest_level < finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
-   TBOX_ASSERT(old_times.getSize() >= finest_level);
+   TBOX_ASSERT(static_cast<int>(old_times.size()) >= finest_level);
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int ln = coarsest_level; ln < finest_level; ln++) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln));

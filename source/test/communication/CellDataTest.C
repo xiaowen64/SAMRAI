@@ -23,6 +23,8 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/tbox/Database.h"
 
+#include <vector>
+
 namespace SAMRAI {
 
 using namespace std;
@@ -457,21 +459,20 @@ void CellDataTest::setPhysicalBoundaryConditions(
       BOOST_CAST_TAG);
    TBOX_ASSERT(pgeom);
 
-   const tbox::Array<hier::BoundaryBox> node_bdry =
+   const std::vector<hier::BoundaryBox>& node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
-   const int num_node_bdry_boxes = node_bdry.getSize();
+   const int num_node_bdry_boxes = static_cast<int>(node_bdry.size());
 
-   tbox::Array<hier::BoundaryBox> edge_bdry;
-   if (d_dim > tbox::Dimension(1)) {
-      edge_bdry = pgeom->getCodimensionBoundaries(d_dim.getValue() - 1);
-   }
-   const int num_edge_bdry_boxes = d_dim > tbox::Dimension(1) ? edge_bdry.getSize() : -1;
+   std::vector<hier::BoundaryBox> empty_vector(0, hier::BoundaryBox(d_dim));
+   const std::vector<hier::BoundaryBox>& edge_bdry =
+      d_dim > tbox::Dimension(1) ?
+         pgeom->getCodimensionBoundaries(d_dim.getValue() - 1) : empty_vector;
+   const int num_edge_bdry_boxes = static_cast<int>(edge_bdry.size());
 
-   tbox::Array<hier::BoundaryBox> face_bdry;
-   if (d_dim == tbox::Dimension(3)) {
-      face_bdry = pgeom->getCodimensionBoundaries(d_dim.getValue() - 2);
-   }
-   const int num_face_bdry_boxes = d_dim == tbox::Dimension(3) ? face_bdry.getSize() : -1;
+   const std::vector<hier::BoundaryBox>& face_bdry =
+      d_dim == tbox::Dimension(3) ?
+         pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
+   const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 

@@ -33,6 +33,7 @@
 
 #include "boost/shared_ptr.hpp"
 #include <list>
+#include <vector>
 
 #define HLI_RECORD_STATS
 // #undef DGA_RECORD_STATS
@@ -386,7 +387,7 @@ public:
     * @pre hierarchy
     * @pre (coarsest_level >= 0) && (coarsest_level < finest_level) &&
     *      (finest_level <= hierarchy->getFinestLevelNumber())
-    * @pre old_times.getSize() >= finest_level
+    * @pre old_times.size() >= finest_level
     * @pre for each i in [coarsest_level, finest_level) hierarchy->getPatchLevel(i) && sync_time >= old_times[i]
     * @pre hierarchy->getPatchLevel(finest_level)
     */
@@ -396,7 +397,7 @@ public:
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
-      const tbox::Array<double>& old_times);
+      const std::vector<double>& old_times);
 
    /**
     * This overloaded version of standardLevelSynchronization implements
@@ -944,7 +945,7 @@ private:
     * will be filled with CURRENT_VAR values.
     */
    boost::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_advance;
-   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_advance;
+   std::vector<boost::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_advance;
 
    /*
     * The "advance new" schedule can be used twice during a time integration
@@ -962,7 +963,7 @@ private:
     * accompanying HyperbolicLevelIntegrator::advanceLevel.
     */
    boost::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_advance_new;
-   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> >
+   std::vector<boost::shared_ptr<xfer::RefineSchedule> >
    d_bdry_sched_advance_new;
 
    /*
@@ -1109,9 +1110,9 @@ private:
    /*
     * Statistics on number of cells and patches generated.
     */
-   static tbox::Array<boost::shared_ptr<tbox::Statistic> > s_boxes_stat;
-   static tbox::Array<boost::shared_ptr<tbox::Statistic> > s_cells_stat;
-   static tbox::Array<boost::shared_ptr<tbox::Statistic> > s_timestamp_stat;
+   static std::vector<boost::shared_ptr<tbox::Statistic> > s_boxes_stat;
+   static std::vector<boost::shared_ptr<tbox::Statistic> > s_cells_stat;
+   static std::vector<boost::shared_ptr<tbox::Statistic> > s_timestamp_stat;
 #endif
 
    /*!

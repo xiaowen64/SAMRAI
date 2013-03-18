@@ -96,8 +96,8 @@ Patch::allocatePatchData(
 
    TBOX_ASSERT((id >= 0) && (id < ncomponents));
 
-   if (ncomponents > d_patch_data.getSize()) {
-      d_patch_data.resizeArray(ncomponents);
+   if (ncomponents > static_cast<int>(d_patch_data.size())) {
+      d_patch_data.resize(ncomponents);
    }
 
    if (!checkAllocated(id)) {
@@ -113,8 +113,8 @@ Patch::allocatePatchData(
    const double time)
 {
    const int ncomponents = d_descriptor->getMaxNumberRegisteredComponents();
-   if (ncomponents > d_patch_data.getSize()) {
-      d_patch_data.resizeArray(ncomponents);
+   if (ncomponents > static_cast<int>(d_patch_data.size())) {
+      d_patch_data.resize(ncomponents);
    }
 
    for (int i = 0; i < ncomponents; i++) {
@@ -140,7 +140,7 @@ void
 Patch::deallocatePatchData(
    const ComponentSelector& components)
 {
-   const int ncomponents = d_patch_data.getSize();
+   const int ncomponents = static_cast<int>(d_patch_data.size());
    for (int i = 0; i < ncomponents; i++) {
       if (components.isSet(i)) {
          d_patch_data[i].reset();
@@ -161,7 +161,7 @@ Patch::setTime(
    const double timestamp,
    const ComponentSelector& components)
 {
-   const int ncomponents = d_patch_data.getSize();
+   const int ncomponents = static_cast<int>(d_patch_data.size());
    for (int i = 0; i < ncomponents; i++) {
       if (components.isSet(i) && d_patch_data[i]) {
          d_patch_data[i]->setTime(timestamp);
@@ -173,7 +173,7 @@ void
 Patch::setTime(
    const double timestamp)
 {
-   const int ncomponents = d_patch_data.getSize();
+   const int ncomponents = static_cast<int>(d_patch_data.size());
    for (int i = 0; i < ncomponents; i++) {
       if (d_patch_data[i]) {
          d_patch_data[i]->setTime(timestamp);
@@ -216,17 +216,17 @@ Patch::getFromRestart(
    d_patch_level_number = restart_db->getInteger("d_patch_level_number");
    d_patch_in_hierarchy = restart_db->getBool("d_patch_in_hierarchy");
 
-   d_patch_data.resizeArray(d_descriptor->getMaxNumberRegisteredComponents());
+   d_patch_data.resize(d_descriptor->getMaxNumberRegisteredComponents());
 
    int namelist_count = restart_db->getInteger("patch_data_namelist_count");
-   tbox::Array<std::string> patch_data_namelist;
+   std::vector<std::string> patch_data_namelist;
    if (namelist_count) {
-      patch_data_namelist = restart_db->getStringArray("patch_data_namelist");
+      patch_data_namelist = restart_db->getStringVector("patch_data_namelist");
    }
 
    ComponentSelector local_selector(component_selector);
 
-   for (int i = 0; i < patch_data_namelist.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(patch_data_namelist.size()); i++) {
       std::string& patch_data_name = patch_data_namelist[i];
       int patch_data_index;
 
@@ -296,16 +296,16 @@ Patch::putToRestart(
    restart_db->putBool("d_patch_in_hierarchy", d_patch_in_hierarchy);
 
    int namelist_count = 0;
-   for (i = 0; i < d_patch_data.getSize(); i++) {
+   for (i = 0; i < static_cast<int>(d_patch_data.size()); i++) {
       if (patchdata_write_table.isSet(i) && checkAllocated(i)) {
          namelist_count++;
       }
    }
 
    std::string patch_data_name;
-   tbox::Array<std::string> patch_data_namelist(namelist_count);
+   std::vector<std::string> patch_data_namelist(namelist_count);
    namelist_count = 0;
-   for (i = 0; i < d_patch_data.getSize(); i++) {
+   for (i = 0; i < static_cast<int>(d_patch_data.size()); i++) {
       if (patchdata_write_table.isSet(i) && checkAllocated(i)) {
          patch_data_namelist[namelist_count++] =
             patch_data_name = d_descriptor->mapIndexToName(i);
@@ -317,7 +317,7 @@ Patch::putToRestart(
 
    restart_db->putInteger("patch_data_namelist_count", namelist_count);
    if (namelist_count > 0) {
-      restart_db->putStringArray("patch_data_namelist", patch_data_namelist);
+      restart_db->putStringVector("patch_data_namelist", patch_data_namelist);
    }
 }
 
@@ -356,15 +356,15 @@ operator << (
    std::ostream& s,
    const Patch& patch)
 {
+   const int ncomponents = static_cast<int>(patch.d_patch_data.size());
    s << "Patch::box = "
    << patch.d_box << std::endl << std::flush;
    s << "Patch::patch_level_number = " << patch.d_patch_level_number
    << std::endl << std::flush;
    s << "Patch::patch_in_hierarchy = " << patch.d_patch_in_hierarchy
    << std::endl << std::flush;
-   s << "Patch::number_components = " << patch.d_patch_data.getSize()
+   s << "Patch::number_components = " << ncomponents
    << std::endl << std::flush;
-   const int ncomponents = patch.d_patch_data.getSize();
    for (int i = 0; i < ncomponents; i++) {
       s << "Component(" << i << ")=";
       if (!patch.d_patch_data[i]) {

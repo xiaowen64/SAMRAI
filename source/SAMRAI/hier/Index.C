@@ -78,7 +78,7 @@ Index::Index(
 }
 
 Index::Index(
-   const tbox::Array<int>& a):
+   const std::vector<int>& a):
    IntVector(a)
 {
 }

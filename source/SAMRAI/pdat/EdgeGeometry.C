@@ -100,7 +100,7 @@ EdgeGeometry::calculateOverlap(
 
 void
 EdgeGeometry::computeDestinationBoxes(
-   tbox::Array<hier::BoxContainer>& dst_boxes,
+   std::vector<hier::BoxContainer>& dst_boxes,
    const EdgeGeometry& src_geometry,
    const hier::Box& src_mask,
    const hier::Box& fill_box,
@@ -218,7 +218,7 @@ EdgeGeometry::doOverlap(
 {
    const tbox::Dimension& dim(src_mask.getDim());
 
-   tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
+   std::vector<hier::BoxContainer> dst_boxes(dim.getValue());
 
    dst_geometry.computeDestinationBoxes(dst_boxes,
       src_geometry,
@@ -244,7 +244,7 @@ EdgeGeometry::setUpOverlap(
    const hier::Transformation& transformation) const
 {
    const tbox::Dimension& dim(transformation.getOffset().getDim());
-   tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
+   std::vector<hier::BoxContainer> dst_boxes(dim.getValue());
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {

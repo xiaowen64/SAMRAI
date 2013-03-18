@@ -484,7 +484,7 @@ private:
       const boost::shared_ptr<hier::PatchLevel>& coarse_level,
       const hier::Connector& coarse_to_fine,
       const hier::Connector& coarse_to_unfilled,
-      const std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >&
+      const std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >&
       overlaps) const;
 
    /*!
@@ -493,7 +493,7 @@ private:
     */
    void
    computeRefineOverlaps(
-      std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
+      std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
       const boost::shared_ptr<hier::PatchLevel>& fine_level,
       const boost::shared_ptr<hier::PatchLevel>& coarse_level,
       const hier::Connector& coarse_to_fine,
@@ -968,7 +968,7 @@ private:
     * @brief Boolean flag indicating whether physical domain
     * can be represented as a single box region.
     */
-   tbox::Array<bool> d_domain_is_one_box;
+   std::vector<bool> d_domain_is_one_box;
 
    /*!
     * @brief Number of non-zero entries in periodic shift vector.
@@ -1083,14 +1083,14 @@ private:
    /*!
     * @brief Stores the BoxOverlaps needed by refineScratchData()
     */
-   std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >
+   std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >
    d_refine_overlaps;
 
    /*!
     * @brief Stores the BoxOverlaps needed by refineScratchData() for
     * unfilled boxes at enhanced connectivity
     */
-   std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >
+   std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >
    d_encon_refine_overlaps;
 
    /*!
@@ -1130,7 +1130,7 @@ private:
     *
     * The size of the array is controlled by d_max_fill_boxes.
     */
-   tbox::Array<boost::shared_ptr<hier::BoxOverlap> > d_overlaps;
+   std::vector<boost::shared_ptr<hier::BoxOverlap> > d_overlaps;
 
    /*!
     * @brief Source mask boxes used in construction of transactions.

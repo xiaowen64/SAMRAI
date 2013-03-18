@@ -21,6 +21,8 @@
 
 #include "boost/shared_ptr.hpp"
 
+#include <vector>
+
 namespace SAMRAI {
 namespace algs {
 
@@ -211,7 +213,7 @@ public:
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
-      const tbox::Array<double>& old_times) = 0;
+      const std::vector<double>& old_times) = 0;
 
    /**
     * Synchronize specified levels after regridding has occurred or during

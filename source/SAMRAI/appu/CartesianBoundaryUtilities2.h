@@ -24,6 +24,7 @@
 
 #include "boost/shared_ptr.hpp"
 #include <string>
+#include <vector>
 
 namespace SAMRAI {
 namespace appu {
@@ -127,15 +128,15 @@ public:
     * @pre input_db
     * @pre periodic.getDim() == tbox::Dimension(2)
     * @pre bdry_strategy != 0
-    * @pre edge_conds.getSize() == NUM_2D_EDGES
-    * @pre node_conds.getSize() == NUM_2D_NODES
+    * @pre edge_conds.size() == NUM_2D_EDGES
+    * @pre node_conds.size() == NUM_2D_NODES
     */
    static void
    getFromInput(
       BoundaryUtilityStrategy* bdry_strategy,
       const boost::shared_ptr<tbox::Database>& input_db,
-      tbox::Array<int>& edge_conds,
-      tbox::Array<int>& node_conds,
+      std::vector<int>& edge_conds,
+      std::vector<int>& node_conds,
       const hier::IntVector& periodic);
 
    /*!
@@ -156,8 +157,8 @@ public:
     *
     * @pre !varname.empty());
     * @pre vardata
-    * @pre bdry_edge_conds.getSize() == NUM_2D_EDGES
-    * @pre bdry_edge_values.getSize() == NUM_2D_EDGES * (vardata->getDepth())
+    * @pre bdry_edge_conds.size() == NUM_2D_EDGES
+    * @pre bdry_edge_values.size() == NUM_2D_EDGES * (vardata->getDepth())
     * @pre ghost_fill_width.getDim() == tbox::Dimension(2)
     * @pre (vardata->getDim() == patch.getDim()) &&
     *      (vardata->getDim() == ghost_fill_width.getDim())
@@ -168,8 +169,8 @@ public:
       const boost::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
-      const tbox::Array<int>& bdry_edge_conds,
-      const tbox::Array<double>& bdry_edge_values);
+      const std::vector<int>& bdry_edge_conds,
+      const std::vector<double>& bdry_edge_values);
 
    /*!
     * Function to fill 2d node boundary values for a patch.
@@ -189,8 +190,8 @@ public:
     *
     * @pre !varname.empty()
     * @pre vardata
-    * @pre bdry_node_conds.getSize() == NUM_2D_NODES
-    * @pre bdry_edge_values.getSize() == NUM_2D_EDGES * (vardata->getDepth())
+    * @pre bdry_node_conds.size() == NUM_2D_NODES
+    * @pre bdry_edge_values.size() == NUM_2D_EDGES * (vardata->getDepth())
     * @pre ghost_fill_width.getDim() == tbox::Dimension(2)
     * @pre (vardata->getDim() == patch.getDim()) &&
     *      (vardata->getDim() == ghost_fill_width.getDim())
@@ -201,8 +202,8 @@ public:
       const boost::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
-      const tbox::Array<int>& bdry_node_conds,
-      const tbox::Array<double>& bdry_edge_values);
+      const std::vector<int>& bdry_node_conds,
+      const std::vector<double>& bdry_edge_values);
 
    /*!
     * Function that returns the integer edge boundary location
@@ -291,14 +292,14 @@ private:
    read2dBdryEdges(
       BoundaryUtilityStrategy* bdry_strategy,
       const boost::shared_ptr<tbox::Database>& input_db,
-      tbox::Array<int>& edge_conds,
+      std::vector<int>& edge_conds,
       const hier::IntVector& periodic);
 
    static void
    read2dBdryNodes(
       const boost::shared_ptr<tbox::Database>& input_db,
-      const tbox::Array<int>& edge_conds,
-      tbox::Array<int>& node_conds,
+      const std::vector<int>& edge_conds,
+      std::vector<int>& node_conds,
       const hier::IntVector& periodic);
 
    static void

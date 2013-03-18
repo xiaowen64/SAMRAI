@@ -21,6 +21,7 @@
 
 #include "boost/shared_ptr.hpp"
 #include <iostream>
+#include <vector>
 
 namespace SAMRAI {
 namespace math {
@@ -505,7 +506,7 @@ private:
    boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
-   tbox::Array<tbox::Array<hier::BoxContainer> >
+   std::vector<std::vector<hier::BoxContainer> >
       d_nonoverlapping_edge_boxes[SAMRAI::MAX_DIM_VAL];
 
    PatchEdgeDataOpsComplex d_patch_ops;

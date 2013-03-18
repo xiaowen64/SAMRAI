@@ -262,7 +262,7 @@ protected:
    /**
     * Return const reference to list of processor records.
     */
-   const Array<Statistic::ProcStat>&
+   const std::vector<Statistic::ProcStat>&
    getProcStatSeqArray() const
    {
       return d_proc_array;
@@ -271,7 +271,7 @@ protected:
    /**
     * Return const reference to list of patch records.
     */
-   const Array<Statistic::PatchStat>&
+   const std::vector<Statistic::PatchStat>&
    getPatchStatSeqArray() const
    {
       return d_patch_array;
@@ -318,12 +318,12 @@ private:
    int d_stat_type;            // see STATISTIC_RECORD_TYPE above.
 
    /*
-    * Arrays of records.  Note that one of these will always be empty.
+    * Vectors of records.  Note that one of these will always be empty.
     * Integer sequence length refers to length of list corresponding
     * to stat type.
     */
-   Array<Statistic::ProcStat> d_proc_array;
-   Array<Statistic::PatchStat> d_patch_array;
+   std::vector<Statistic::ProcStat> d_proc_array;
+   std::vector<Statistic::PatchStat> d_patch_array;
 
    /*
     * Sequence and patch counters (NOTE: patch counter use for patch stats

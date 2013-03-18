@@ -27,6 +27,7 @@
 #include "SAMRAI/tbox/Timer.h"
 
 #include "boost/shared_ptr.hpp"
+#include <vector>
 
 using namespace SAMRAI;
 
@@ -241,7 +242,7 @@ private:
     *
     * d_buffer_space[ln*d_dim + d] is the buffer size for level ln in direction d.
     */
-   tbox::Array<double> d_buffer_space;
+   std::vector<double> d_buffer_space;
 
    boost::shared_ptr<hier::VariableContext> d_context;
 

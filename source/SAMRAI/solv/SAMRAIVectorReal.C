@@ -121,12 +121,12 @@ SAMRAIVectorReal<TYPE>::~SAMRAIVectorReal()
 
    d_number_components = 0;
 
-   d_component_variable.resizeArray(0);
-   d_component_data_id.resizeArray(0);
-   d_component_operations.resizeArray(0);
-   d_control_volume_data_id.resizeArray(0);
+   d_component_variable.resize(0);
+   d_component_data_id.resize(0);
+   d_component_operations.resize(0);
+   d_control_volume_data_id.resize(0);
 
-   d_variableid_2_vectorcomponent_map.resizeArray(0);
+   d_variableid_2_vectorcomponent_map.resize(0);
 
    if (SAMRAIVectorReal<TYPE>::s_instance_counter[dim.getValue() - 1] == 0) {
       if (SAMRAIVectorReal<TYPE>::s_cell_ops[dim.getValue() - 1]) {
@@ -250,12 +250,12 @@ SAMRAIVectorReal<TYPE>::freeVectorComponents()
    // reset variable state
    d_number_components = 0;
 
-   d_component_variable.resizeArray(0);
-   d_component_data_id.resizeArray(0);
-   d_component_operations.resizeArray(0);
-   d_control_volume_data_id.resizeArray(0);
+   d_component_variable.resize(0);
+   d_component_data_id.resize(0);
+   d_component_operations.resize(0);
+   d_control_volume_data_id.resize(0);
 
-   d_variableid_2_vectorcomponent_map.resizeArray(0);
+   d_variableid_2_vectorcomponent_map.resize(0);
 }
 
 /*
@@ -311,10 +311,10 @@ SAMRAIVectorReal<TYPE>::addComponent(
 
    d_number_components++;
 
-   d_component_variable.resizeArray(d_number_components);
-   d_component_data_id.resizeArray(d_number_components);
-   d_component_operations.resizeArray(d_number_components);
-   d_control_volume_data_id.resizeArray(d_number_components);
+   d_component_variable.resize(d_number_components);
+   d_component_data_id.resize(d_number_components);
+   d_component_operations.resize(d_number_components);
+   d_control_volume_data_id.resize(d_number_components);
 
    hier::VariableDatabase::getDatabase()->registerPatchDataIndex(var,
       comp_data_id);
@@ -418,10 +418,10 @@ SAMRAIVectorReal<TYPE>::setNumberOfComponents(
 {
    d_number_components = num_comp;
 
-   d_component_variable.resizeArray(d_number_components);
-   d_component_data_id.resizeArray(d_number_components);
-   d_component_operations.resizeArray(d_number_components);
-   d_control_volume_data_id.resizeArray(d_number_components);
+   d_component_variable.resize(d_number_components);
+   d_component_data_id.resize(d_number_components);
+   d_component_operations.resize(d_number_components);
+   d_control_volume_data_id.resize(d_number_components);
 }
 
 template<class TYPE>
@@ -515,12 +515,12 @@ SAMRAIVectorReal<TYPE>::setComponent(
 
    int var_id = var->getInstanceIdentifier();
 
-   int oldsize = d_variableid_2_vectorcomponent_map.getSize();
+   int oldsize = static_cast<int>(d_variableid_2_vectorcomponent_map.size());
    int newsize = var_id + 1;
    if (oldsize < newsize) {
       newsize = tbox::MathUtilities<int>::Max(
             oldsize + DESCRIPTOR_ID_ARRAY_SCRATCH_SPACE, newsize);
-      d_variableid_2_vectorcomponent_map.resizeArray(newsize);
+      d_variableid_2_vectorcomponent_map.resize(newsize);
       for (int i = oldsize; i < newsize; i++) {
          d_variableid_2_vectorcomponent_map[i] = -1;
       }

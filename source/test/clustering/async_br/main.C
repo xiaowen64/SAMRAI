@@ -55,6 +55,8 @@
 
 #include "boost/shared_ptr.hpp"
 
+#include <vector>
+
 using namespace SAMRAI;
 
 int main(
@@ -359,8 +361,10 @@ int main(
       /*
        * Adapt the grid.
        */
-      tbox::Array<int> tag_buffer(10);
-      for (int i = 0; i < tag_buffer.size(); ++i) tag_buffer[i] = 1;
+      std::vector<int> tag_buffer(10);
+      for (int i = 0; i < static_cast<int>(tag_buffer.size()); ++i) {
+         tag_buffer[i] = 1;
+      }
 
       for (int istep = 0; istep < num_steps; ++istep) {
 
@@ -370,9 +374,10 @@ int main(
          abrtest.computeHierarchyData(*patch_hierarchy,
             double(istep + 1));
 
-         tbox::Array<double> regrid_start_time(patch_hierarchy->getMaxNumberOfLevels());
-         for (int i = 0; i < regrid_start_time.size(); ++i)
+         std::vector<double> regrid_start_time(patch_hierarchy->getMaxNumberOfLevels());
+         for (int i = 0; i < static_cast<int>(regrid_start_time.size()); ++i) {
             regrid_start_time[i] = istep;
+         }
 
          gridding_algorithm->regridAllFinerLevels(
             0,

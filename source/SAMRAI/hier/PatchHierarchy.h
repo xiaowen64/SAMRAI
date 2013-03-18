@@ -28,6 +28,7 @@
 
 #include "boost/shared_ptr.hpp"
 #include <string>
+#include <vector>
 
 namespace SAMRAI {
 namespace hier {
@@ -1140,7 +1141,7 @@ private:
    /*!
     * @brief Array of pointers to PatchLevels that make up the hierarchy
     */
-   tbox::Array<boost::shared_ptr<PatchLevel> > d_patch_levels;
+   std::vector<boost::shared_ptr<PatchLevel> > d_patch_levels;
 
    /*!
     * @brief BaseGridGeometry that was used to construct the hierarchy

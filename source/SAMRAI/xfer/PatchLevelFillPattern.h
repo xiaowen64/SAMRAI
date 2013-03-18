@@ -38,7 +38,6 @@ namespace xfer {
 class PatchLevelFillPattern
 {
 public:
-   typedef std::vector<hier::Box> BoxVector;
    typedef hier::BoxNeighborhoodCollection FillSet;
 
    /*!

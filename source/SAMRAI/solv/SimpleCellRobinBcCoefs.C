@@ -71,7 +71,7 @@ SimpleCellRobinBcCoefs::setHierarchy(
    d_hierarchy = hierarchy;
    d_ln_min = ln_min;
    d_ln_max = ln_max;
-   d_dirichlet_data.setNull();
+   d_dirichlet_data.clear();
    d_dirichlet_data_pos.clear();
 
    if (d_ln_min == -1) {
@@ -301,12 +301,12 @@ SimpleCellRobinBcCoefs::setBcCoefs(
 
          TBOX_ASSERT(pg);
 
-         const tbox::Array<hier::BoundaryBox>& codim1_boxes =
+         const std::vector<hier::BoundaryBox>& codim1_boxes =
             pg->getCodimensionBoundaries(1);
          /*
           * Search for cached boundary box containing current boundary box.
           */
-         for (bn = 0; bn < codim1_boxes.getSize(); ++bn) {
+         for (bn = 0; bn < static_cast<int>(codim1_boxes.size()); ++bn) {
             const hier::BoundaryBox& cdb = codim1_boxes[bn];
             if (bdry_box.getLocationIndex() == cdb.getLocationIndex()
                 && bdry_box.getBox().lower() >= cdb.getBox().lower()
@@ -314,7 +314,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
                 ) break;
          }
 #ifdef DEBUG_CHECK_ASSERTIONS
-         if (bn == codim1_boxes.getSize()) {
+         if (bn == static_cast<int>(codim1_boxes.size())) {
             TBOX_ERROR(
                d_object_name << " cannot find cached Dirichlet data.\n"
                              << "This is most likely caused by not calling\n"
@@ -420,12 +420,12 @@ SimpleCellRobinBcCoefs::setBcCoefs(
 
          TBOX_ASSERT(pg);
 
-         const tbox::Array<hier::BoundaryBox>& codim1_boxes =
+         const std::vector<hier::BoundaryBox>& codim1_boxes =
             pg->getCodimensionBoundaries(1);
          /*
           * Search for cached boundary box containing current boundary box.
           */
-         for (bn = 0; bn < codim1_boxes.getSize(); ++bn) {
+         for (bn = 0; bn < static_cast<int>(codim1_boxes.size()); ++bn) {
             const hier::BoundaryBox& cdb = codim1_boxes[bn];
             if (bdry_box.getLocationIndex() == cdb.getLocationIndex()
                 && bdry_box.getBox().lower() >= cdb.getBox().lower()
@@ -433,7 +433,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
                 ) break;
          }
 #ifdef DEBUG_CHECK_ASSERTIONS
-         if (bn == codim1_boxes.getSize()) {
+         if (bn == static_cast<int>(codim1_boxes.size())) {
             TBOX_ERROR(
                d_object_name << " cannot find cached Dirichlet data.\n"
                              << "This is most likely caused by not calling\n"
@@ -525,7 +525,7 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
                        << "caching boundary ghost cell data.\n");
    }
 #endif
-   d_dirichlet_data.setNull();
+   d_dirichlet_data.clear();
    d_dirichlet_data_pos.clear();
    int ln, bn, position, n_reqd_boxes = 0;
    d_dirichlet_data_pos.resize(d_ln_max + 1);
@@ -543,13 +543,13 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
 
          TBOX_ASSERT(pg);
 
-         const tbox::Array<hier::BoundaryBox>& codim1_boxes =
+         const std::vector<hier::BoundaryBox>& codim1_boxes =
             pg->getCodimensionBoundaries(1);
          d_dirichlet_data_pos[ln][box_id] = n_reqd_boxes;
-         n_reqd_boxes += codim1_boxes.getSize();
+         n_reqd_boxes += static_cast<int>(codim1_boxes.size());
       }
    }
-   d_dirichlet_data.resizeArray(n_reqd_boxes);
+   d_dirichlet_data.resize(n_reqd_boxes);
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
       hier::PatchLevel& level = (hier::PatchLevel &)
          * d_hierarchy->getPatchLevel(ln);
@@ -568,9 +568,9 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
          TBOX_ASSERT(cell_data);
          TBOX_ASSERT(pg);
 
-         const tbox::Array<hier::BoundaryBox>& codim1_boxes =
+         const std::vector<hier::BoundaryBox>& codim1_boxes =
             pg->getCodimensionBoundaries(1);
-         for (bn = 0; bn < codim1_boxes.getSize(); ++bn) {
+         for (bn = 0; bn < static_cast<int>(codim1_boxes.size()); ++bn) {
             const hier::BoundaryBox& bdry_box = codim1_boxes[bn];
             position = d_dirichlet_data_pos[ln][box_id] + bn;
             hier::Box databox = makeSideBoundaryBox(bdry_box);
@@ -625,9 +625,9 @@ SimpleCellRobinBcCoefs::restoreDirichletData(
          TBOX_ASSERT(cell_data);
          TBOX_ASSERT(pg);
 
-         const tbox::Array<hier::BoundaryBox>& codim1_boxes =
+         const std::vector<hier::BoundaryBox>& codim1_boxes =
             pg->getCodimensionBoundaries(1);
-         for (bn = 0; bn < codim1_boxes.getSize(); ++bn) {
+         for (bn = 0; bn < static_cast<int>(codim1_boxes.size()); ++bn) {
             const hier::BoundaryBox& bdry_box = codim1_boxes[bn];
             position = d_dirichlet_data_pos[ln][box_id] + bn;
             pdat::ArrayData<double>& array_data = *d_dirichlet_data[position];

@@ -908,8 +908,8 @@ IndexData<TYPE, BOX_GEOMETRY>::getFromRestart(
          boost::shared_ptr<tbox::Database> item_db(
             restart_db->getDatabase(index_keyword));
 
-         tbox::Array<int> index_array =
-            item_db->getIntegerArray(index_keyword);
+         std::vector<int> index_array =
+            item_db->getIntegerVector(index_keyword);
          hier::Index index(d_dim);
          for (int j = 0; j < d_dim.getValue(); j++) {
             index(j) = index_array[j];
@@ -958,7 +958,7 @@ IndexData<TYPE, BOX_GEOMETRY>::putToRestart(
             item_count,
             6);
       hier::Index index = s.getNode().d_index;
-      tbox::Array<int> index_array(d_dim.getValue());
+      std::vector<int> index_array(d_dim.getValue());
       for (int i = 0; i < d_dim.getValue(); i++) {
          index_array[i] = index(i);
       }
@@ -966,7 +966,9 @@ IndexData<TYPE, BOX_GEOMETRY>::putToRestart(
       boost::shared_ptr<tbox::Database> item_db(
          restart_db->putDatabase(index_keyword));
 
-      item_db->putIntegerArray(index_keyword, index_array);
+      item_db->putIntegerArray(index_keyword,
+         &index_array[0],
+         static_cast<int>(index_array.size()));
 
       TYPE* item = getItem(index);
 

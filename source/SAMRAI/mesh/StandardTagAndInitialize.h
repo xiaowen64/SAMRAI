@@ -18,6 +18,8 @@
 
 #include "boost/shared_ptr.hpp"
 
+#include <vector>
+
 namespace SAMRAI {
 namespace mesh {
 
@@ -273,7 +275,7 @@ public:
     */
    void
    checkCoarsenRatios(
-      const tbox::Array<hier::IntVector>& ratio_to_coarser);
+      const std::vector<hier::IntVector>& ratio_to_coarser);
 
    /*!
     * Pass the request to initialize the data on a new level in the
@@ -550,7 +552,7 @@ private:
     * tbox::Array of patch levels containing coarsened versions of the patch
     * levels, for use with Richardson extrapolation.
     */
-   tbox::Array<boost::shared_ptr<hier::PatchLevel> > d_rich_extrap_coarsened_levels;
+   std::vector<boost::shared_ptr<hier::PatchLevel> > d_rich_extrap_coarsened_levels;
 
    StandardTagAndInitializeConnectorWidthRequestor d_staicwri;
 
@@ -560,8 +562,8 @@ private:
     * have been reset while the box array specifies the new set of refine
     * boxes for the level.
     */
-   tbox::Array<bool> d_refine_boxes_reset;
-   tbox::Array<hier::BoxContainer> d_reset_refine_boxes;
+   std::vector<bool> d_refine_boxes_reset;
+   std::vector<hier::BoxContainer> d_reset_refine_boxes;
 
    struct TagCriteria
    {

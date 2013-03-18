@@ -113,10 +113,10 @@ private:
    bool d_output_correct;   // output  result?
    int d_test_iter_num;     // iteration number to check result.
 
-   tbox::Array<double> d_correct_result;  // array to hold correct values
+   std::vector<double> d_correct_result;  // array to hold correct values
 
    //!@brief Time steps at which to checkHierarchyBoxes().
-   tbox::Array<int> d_test_patch_boxes_at_steps;
+   std::vector<int> d_test_patch_boxes_at_steps;
    //!@brief checkHierarchyBoxes() at d_test_patch_boxes_at_steps[d_test_patch_boxes_step_count].
    int d_test_patch_boxes_step_count;
    //!@brief File containing "correct" results used by checkHierarchyBoxes().

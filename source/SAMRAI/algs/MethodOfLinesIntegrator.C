@@ -62,15 +62,15 @@ MethodOfLinesIntegrator::MethodOfLinesIntegrator(
    /*
     * Set default to third-order SSP Runge-Kutta method.
     */
-   d_alpha_1.resizeArray(d_order);
+   d_alpha_1.resize(d_order);
    d_alpha_1[0] = 1.0;
    d_alpha_1[1] = 0.75;
    d_alpha_1[2] = 1.0 / 3.0;
-   d_alpha_2.resizeArray(d_order);
+   d_alpha_2.resize(d_order);
    d_alpha_2[0] = 0.0;
    d_alpha_2[1] = 0.25;
    d_alpha_2[2] = 2.0 / 3.0;
-   d_beta.resizeArray(d_order);
+   d_beta.resize(d_order);
    d_beta[0] = 1.0;
    d_beta[1] = 0.25;
    d_beta[2] = 2.0 / 3.0;
@@ -574,8 +574,8 @@ MethodOfLinesIntegrator::resetHierarchyConfiguration(
    int finest_hiera_level = hierarchy->getFinestLevelNumber();
 
    //  If we have added or removed a level, resize the schedule arrays
-   d_bdry_sched_advance.resizeArray(finest_hiera_level + 1);
-   d_coarsen_schedule.resizeArray(finest_hiera_level + 1);
+   d_bdry_sched_advance.resize(finest_hiera_level + 1);
+   d_coarsen_schedule.resize(finest_hiera_level + 1);
 
    //  Build coarsen and refine communication schedules.
    for (int ln = coarsest_level; ln <= finest_hiera_level; ln++) {
@@ -677,9 +677,9 @@ MethodOfLinesIntegrator::putToRestart(
    restart_db->putInteger("ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION",
       ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION);
 
-   restart_db->putDoubleArray("alpha_1", d_alpha_1);
-   restart_db->putDoubleArray("alpha_2", d_alpha_2);
-   restart_db->putDoubleArray("beta", d_beta);
+   restart_db->putDoubleVector("alpha_1", d_alpha_1);
+   restart_db->putDoubleVector("alpha_2", d_alpha_2);
+   restart_db->putDoubleVector("beta", d_beta);
 }
 
 /*
@@ -709,7 +709,7 @@ MethodOfLinesIntegrator::getFromInput(
                TBOX_ERROR("MethodOfLinesIntegrator::getFromInput() error...\n"
                   << "number of alpha_1 entries must be <=3." << std::endl);
             }
-            d_alpha_1 = input_db->getDoubleArray("alpha_1");
+            d_alpha_1 = input_db->getDoubleVector("alpha_1");
          }
 
          if (input_db->keyExists("alpha_2")) {
@@ -718,7 +718,7 @@ MethodOfLinesIntegrator::getFromInput(
                TBOX_ERROR("MethodOfLinesIntegrator::getFromInput() error...\n"
                   << "number of alpha_2 entries must be <=3." << std::endl);
             }
-            d_alpha_2 = input_db->getDoubleArray("alpha_2");
+            d_alpha_2 = input_db->getDoubleVector("alpha_2");
          }
 
          if (input_db->keyExists("beta")) {
@@ -727,18 +727,18 @@ MethodOfLinesIntegrator::getFromInput(
                TBOX_ERROR("MethodOfLinesIntegrator::getFromInput() error...\n"
                   << "number of beta entries must be <=3." << std::endl);
             }
-            d_beta = input_db->getDoubleArray("beta");
+            d_beta = input_db->getDoubleVector("beta");
          }
 
-         if (d_alpha_1.getSize() != d_alpha_2.getSize() ||
-             d_alpha_2.getSize() != d_beta.getSize()) {
+         if (d_alpha_1.size() != d_alpha_2.size() ||
+             d_alpha_2.size() != d_beta.size()) {
             TBOX_ERROR(
                d_object_name << ":  "
                              << "The number of alpha_1, alpha_2, and beta "
                              << "values specified in input is not consistent");
          }
 
-         d_order = d_alpha_1.getSize();
+         d_order = static_cast<int>(d_alpha_1.size());
       }
    }
 }
@@ -776,12 +776,12 @@ MethodOfLinesIntegrator::getFromRestart()
                        << std::endl);
    }
 
-   d_alpha_1 = restart_db->getDoubleArray("alpha_1");
-   d_alpha_2 = restart_db->getDoubleArray("alpha_2");
-   d_beta = restart_db->getDoubleArray("beta");
+   d_alpha_1 = restart_db->getDoubleVector("alpha_1");
+   d_alpha_2 = restart_db->getDoubleVector("alpha_2");
+   d_beta = restart_db->getDoubleVector("beta");
 
-   if (d_alpha_1.getSize() != d_alpha_2.getSize() ||
-       d_alpha_2.getSize() != d_beta.getSize()) {
+   if (d_alpha_1.size() != d_alpha_2.size() ||
+       d_alpha_2.size() != d_beta.size()) {
       TBOX_ERROR(
          d_object_name << ":  "
                        << "The number of alpha_1, alpha_2, and beta values "
@@ -789,7 +789,7 @@ MethodOfLinesIntegrator::getFromRestart()
                        << std::endl);
    }
 
-   d_order = d_alpha_1.getSize();
+   d_order = static_cast<int>(d_alpha_1.size());
 
 }
 

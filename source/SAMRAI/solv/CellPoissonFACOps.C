@@ -887,7 +887,7 @@ CellPoissonFACOps::initializeOperatorState(
     * Initialize the coarse-fine boundary description for the
     * hierarchy.
     */
-   d_cf_boundary.resizeArray(d_hierarchy->getNumberOfLevels());
+   d_cf_boundary.resize(d_hierarchy->getNumberOfLevels());
 
    hier::IntVector max_gcw(d_dim, 1);
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
@@ -989,12 +989,12 @@ CellPoissonFACOps::initializeOperatorState(
     * There is no need to delete the old schedules first
     * because we have deallocated the solver state above.
     */
-   d_prolongation_refine_schedules.resizeArray(d_ln_max + 1);
-   d_ghostfill_refine_schedules.resizeArray(d_ln_max + 1);
-   d_ghostfill_nocoarse_refine_schedules.resizeArray(d_ln_max + 1);
-   d_urestriction_coarsen_schedules.resizeArray(d_ln_max + 1);
-   d_rrestriction_coarsen_schedules.resizeArray(d_ln_max + 1);
-   d_flux_coarsen_schedules.resizeArray(d_ln_max + 1);
+   d_prolongation_refine_schedules.resize(d_ln_max + 1);
+   d_ghostfill_refine_schedules.resize(d_ln_max + 1);
+   d_ghostfill_nocoarse_refine_schedules.resize(d_ln_max + 1);
+   d_urestriction_coarsen_schedules.resize(d_ln_max + 1);
+   d_rrestriction_coarsen_schedules.resize(d_ln_max + 1);
+   d_flux_coarsen_schedules.resize(d_ln_max + 1);
 
    d_prolongation_refine_algorithm.reset(
       new xfer::RefineAlgorithm());
@@ -1127,7 +1127,7 @@ CellPoissonFACOps::deallocateOperatorState()
          d_hierarchy->getPatchLevel(ln)->
          deallocatePatchData(d_oflux_scratch_id);
       }
-      d_cf_boundary.resizeArray(0);
+      d_cf_boundary.resize(0);
 #ifdef HAVE_HYPRE
       d_hypre_solver->deallocateSolverState();
 #endif
@@ -1136,22 +1136,22 @@ CellPoissonFACOps::deallocateOperatorState()
       d_ln_max = -1;
 
       d_prolongation_refine_algorithm.reset();
-      d_prolongation_refine_schedules.setNull();
+      d_prolongation_refine_schedules.clear();
 
       d_urestriction_coarsen_algorithm.reset();
-      d_urestriction_coarsen_schedules.setNull();
+      d_urestriction_coarsen_schedules.clear();
 
       d_rrestriction_coarsen_algorithm.reset();
-      d_rrestriction_coarsen_schedules.setNull();
+      d_rrestriction_coarsen_schedules.clear();
 
       d_flux_coarsen_algorithm.reset();
-      d_flux_coarsen_schedules.setNull();
+      d_flux_coarsen_schedules.clear();
 
       d_ghostfill_refine_algorithm.reset();
-      d_ghostfill_refine_schedules.setNull();
+      d_ghostfill_refine_schedules.clear();
 
       d_ghostfill_nocoarse_refine_algorithm.reset();
-      d_ghostfill_nocoarse_refine_schedules.setNull();
+      d_ghostfill_nocoarse_refine_schedules.clear();
 
    }
 }
@@ -1546,9 +1546,9 @@ CellPoissonFACOps::ewingFixFlux(
    const hier::Index& plower = patch_box.lower();
    const hier::Index& pupper = patch_box.upper();
 
-   const tbox::Array<hier::BoundaryBox>& bboxes =
+   const std::vector<hier::BoundaryBox>& bboxes =
       d_cf_boundary[patch_ln]->getBoundaries(id, 1);
-   int bn, nboxes = bboxes.getSize();
+   int bn, nboxes = static_cast<int>(bboxes.size());
 
    if (d_poisson_spec.dIsVariable()) {
 
