@@ -21,7 +21,7 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
-NUM_TESTS = 17
+NUM_TESTS = 29
 CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
 
 TEST_NPROCS = @TEST_NPROCS@
@@ -36,7 +36,14 @@ INPUTS2D =	test_inputs/small_sphere.2d.treelb.input	\
 		test_inputs/core2shell.2d.caplb.input		\
 		test_inputs/rootcycles.2d.treelb.input		\
 		test_inputs/mincutsize_a.2d.treelb.input	\
-		test_inputs/mincutsize_b.2d.treelb.input
+		test_inputs/mincutsize_b.2d.treelb.input	\
+		test_inputs/front.2d.caplb.input	\
+		test_inputs/front.2d.tilelb.input	\
+		test_inputs/front.2d.treelb.input	\
+		test_inputs/lss.2d.caplb.input	\
+		test_inputs/lss.2d.tilelb.input	\
+		test_inputs/lss.2d.treelb.input
+
 
 INPUTS3D =	test_inputs/small_sphere.3d.treelb.input	\
 		test_inputs/small_front.3d.treelb.input		\
@@ -45,7 +52,13 @@ INPUTS3D =	test_inputs/small_sphere.3d.treelb.input	\
 		performance_inputs/core2shell.3d.treelb.input	\
 		performance_inputs/single_sphere.3d.caplb.input	\
 		performance_inputs/single_sphere.3d.treelb.input	\
-		performance_inputs/mincutsize_b.3d.treelb.input
+		performance_inputs/mincutsize_b.3d.treelb.input	\
+		test_inputs/front.3d.caplb.input	\
+		test_inputs/front.3d.tilelb.input	\
+		test_inputs/front.3d.treelb.input	\
+		test_inputs/lss.3d.caplb.input	\
+		test_inputs/lss.3d.tilelb.input	\
+		test_inputs/lss.3d.treelb.input
 
 main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)
 	$(MAKE) testlib

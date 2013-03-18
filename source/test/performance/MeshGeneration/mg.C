@@ -26,6 +26,8 @@
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/mesh/TilePartitioner.h"
+#include "SAMRAI/mesh/TileClustering.h"
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
@@ -90,6 +92,12 @@ void outputPostbalance(
    const hier::BoxLevel &ref,
    const hier::IntVector &post_width,
    const std::string &border );
+
+boost::shared_ptr<mesh::BoxGeneratorStrategy>
+createBoxGenerator(
+   const boost::shared_ptr<tbox::Database> &input_db,
+   const std::string &bg_type,
+   const tbox::Dimension &dim );
 
 boost::shared_ptr<mesh::LoadBalanceStrategy>
 createLoadBalancer(
@@ -340,9 +348,13 @@ int main(
       /*
        * Clustering algorithm.
        */
-      mesh::BergerRigoutsos abr(
-         dim,
-         main_db->getDatabaseWithDefault("BergerRigoutsos", boost::shared_ptr<tbox::Database>()) );
+
+      std::string box_generator_type =
+         main_db->getStringWithDefault("box_generator_type", "BergerRigoutsos");
+
+      boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator =
+         createBoxGenerator( input_db, box_generator_type, dim );
+
       double efficiency_tol = main_db->getDoubleWithDefault("efficiency_tol", 0.7);
       double combine_tol = main_db->getDoubleWithDefault("combine_tol", 0.7);
 
@@ -350,6 +362,7 @@ int main(
        * Create hierarchy.
        */
 
+      tbox::plog << "Building domain with boxes " << domain_boxes.format() << std::endl;
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             "GridGeometry",
@@ -558,9 +571,8 @@ int main(
           * Cluster.
           */
          tbox::pout << "\tClustering..." << std::endl;
-         abr.useDuplicateMPI(L0->getMPI());
          tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
-         abr.findBoxesContainingTags(
+         box_generator->findBoxesContainingTags(
             L1,
             L0_to_L1,
             hierarchy->getPatchLevel(coarser_ln),
@@ -691,9 +703,8 @@ int main(
           * Cluster.
           */
          tbox::pout << "\tClustering..." << std::endl;
-         abr.useDuplicateMPI(L0->getMPI());
          tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
-         abr.findBoxesContainingTags(
+         box_generator->findBoxesContainingTags(
             L2,
             L1_to_L2,
             hierarchy->getPatchLevel(coarser_ln),
@@ -1095,7 +1106,8 @@ createLoadBalancer(
 
    if (lb_type == "TreeLoadBalancer") {
 
-      boost::shared_ptr<tbox::RankTreeStrategy> rank_tree = getRankTree(*input_db, rank_tree_type);
+      boost::shared_ptr<tbox::RankTreeStrategy> rank_tree = getRankTree(*input_db,
+                                                                        rank_tree_type);
 
       boost::shared_ptr<mesh::TreeLoadBalancer>
          tree_lb(new mesh::TreeLoadBalancer(
@@ -1106,6 +1118,16 @@ createLoadBalancer(
       tree_lb->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
       tree_lb->setCommGraphWriter(comm_graph_writer);
       return tree_lb;
+
+   } else if (lb_type == "TilePartitioner") {
+
+      boost::shared_ptr<mesh::TilePartitioner>
+         tile_lb(new mesh::TilePartitioner(
+            dim,
+            std::string("mesh::TilePartitioner") + tbox::Utilities::intToString(ln),
+            input_db->getDatabaseWithDefault("TilePartitioner",
+                                             boost::shared_ptr<tbox::Database>())));
+      return tile_lb;
 
    } else if (lb_type == "ChopAndPackLoadBalancer") {
 
@@ -1126,6 +1148,47 @@ createLoadBalancer(
    }
 
    return boost::shared_ptr<mesh::LoadBalanceStrategy>();
+}
+
+
+
+boost::shared_ptr<mesh::BoxGeneratorStrategy>
+createBoxGenerator(
+   const boost::shared_ptr<tbox::Database> &input_db,
+   const std::string &bg_type,
+   const tbox::Dimension &dim )
+{
+
+   if (bg_type == "BergerRigoutsos") {
+
+      boost::shared_ptr<mesh::BergerRigoutsos>
+      berger_rigoutsos(
+         new mesh::BergerRigoutsos(
+            dim,
+            input_db->getDatabaseWithDefault("BergerRigoutsos", boost::shared_ptr<tbox::Database>()) ) );
+      berger_rigoutsos->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+      return berger_rigoutsos;
+
+   } else if (bg_type == "TileClustering") {
+
+      boost::shared_ptr<mesh::TileClustering>
+      tiled(
+         new mesh::TileClustering(
+            dim,
+            input_db->getDatabaseWithDefault("TileClustering", boost::shared_ptr<tbox::Database>()) ) );
+
+      return tiled;
+
+   }
+   else {
+      TBOX_ERROR(
+         "Missing or box generator specification in Main database.\n"
+         << "Specify load_balancer_type = STRING, where STRING can be\n"
+         << "\"BergerRigoutsos\" or \"TileClustering\".");
+   }
+
+   return boost::shared_ptr<mesh::BoxGeneratorStrategy>();
 }
 
 
