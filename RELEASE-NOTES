@@ -97,6 +97,9 @@ descriptions of items in the following list are provided below.
 8) The input to mesh::StandardTagAndInitialize for REFINE_BOXES tagging
    criteria has been modified to support multiblock.
 
+9) Use of class Array has been replaced throughout the library and tests with
+   std::vector.
+
 *****************************************************************************
 
 -----------------------------------------------------------------------------
@@ -218,6 +221,16 @@ descriptions of items in the following list are provided below.
    new syntax.
 
    Any input files using REFINE_BOXES will need to be modified.
+
+9) Class Array is essentially a vector in which the storage is reference
+   counted and may be shared.  The reference counter was not thread safe
+   however and there was no use anywhere in the library in which the contents
+   of the Array were actually shared.  Therefore all use of Array in the
+   library and tests have been converted to std::vector.  A few interfaces have
+   changed and will require client code to use std::vector for arguments which
+   had been Arrays.  Class Array is still part of the distribution.  However,
+   we suggest that users begin to migrate their codes to use std::vector as in
+   some future release Array will likely be removed.
 
 =============================================================================
 =============================================================================
