@@ -86,9 +86,9 @@ void NodeMultiblockTest::registerVariables(
 {
    TBOX_ASSERT(commtest != 0);
 
-   int nvars = d_variable_src_name.getSize();
+   int nvars = static_cast<int>(d_variable_src_name.size());
 
-   d_variables.resizeArray(nvars);
+   d_variables.resize(nvars);
 
    for (int i = 0; i < nvars; i++) {
       d_variables[i].reset(
@@ -121,7 +121,7 @@ void NodeMultiblockTest::initializeDataOnPatch(
        || ((d_refine_option == "INTERIOR_FROM_COARSER_LEVEL")
            && (level_number < d_finest_level_number))) {
 
-      for (int i = 0; i < d_variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
          boost::shared_ptr<pdat::NodeData<double> > node_data(
             patch.getPatchData(d_variables[i], getDataContext()),
@@ -175,7 +175,7 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
          pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
    const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
-   for (int i = 0; i < d_variables.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
       boost::shared_ptr<pdat::NodeData<double> > node_data(
          patch.getPatchData(d_variables[i], getDataContext()),
@@ -313,7 +313,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
    const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
       grid_geometry->getNeighbors(patch_blk_id);
 
-   for (int i = 0; i < d_variables.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
       boost::shared_ptr<pdat::NodeData<double> > node_data(
          patch.getPatchData(d_variables[i], getDataContext()),
@@ -503,7 +503,7 @@ bool NodeMultiblockTest::verifyResults(
    tbox::plog << "Patch box = " << patch.getBox() << endl;
 
    hier::IntVector tgcw(d_dim, 0);
-   for (int i = 0; i < d_variables.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
       tgcw.max(patch.getPatchData(d_variables[i], getDataContext())->
          getGhostCellWidth());
    }
@@ -527,7 +527,7 @@ bool NodeMultiblockTest::verifyResults(
 
    bool test_failed = false;
 
-   for (int i = 0; i < d_variables.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
       double correct = (double)block_id.getBlockValue();
 

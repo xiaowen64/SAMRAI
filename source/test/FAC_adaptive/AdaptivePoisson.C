@@ -717,8 +717,8 @@ int AdaptivePoisson::computeError(
    const hier::PatchHierarchy& hierarchy,
    double* l2norm,
    double* linorm,
-   tbox::Array<double>& l2norms,
-   tbox::Array<double>& linorms) const
+   std::vector<double>& l2norms,
+   std::vector<double>& linorms) const
 {
 
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
@@ -735,7 +735,7 @@ int AdaptivePoisson::computeError(
     * parallel overhead.
     */
    const int nlevels = hierarchy.getNumberOfLevels();
-   tbox::Array<double> wtsums(2 * nlevels);
+   std::vector<double> wtsums(2 * nlevels);
    for (ln = nlevels - 1; ln >= 0; --ln) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy.getPatchLevel(ln));
 
@@ -833,10 +833,10 @@ int AdaptivePoisson::computeError(
        * in one shot, saving some parallel overhead.
        */
       if (mpi.getSize() > 1) {
-         mpi.AllReduce(wtsums.getPointer(), 2 * nlevels, MPI_SUM);
+         mpi.AllReduce(&wtsums[0], 2 * nlevels, MPI_SUM);
       }
       if (mpi.getSize() > 1) {
-         mpi.AllReduce(linorms.getPointer(), nlevels, MPI_SUM);
+         mpi.AllReduce(&linorms[0], nlevels, MPI_SUM);
       }
    }
 

@@ -345,7 +345,7 @@ private:
       int btype,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
-      const tbox::Array<int>& scalar_bconds) const;
+      const std::vector<int>& scalar_bconds) const;
 
    /*
     * Three-dimensional flux computation routines corresponding to
@@ -464,9 +464,9 @@ private:
     * variables.  These are post-processed input values and are passed
     * to the boundary routines.
     */
-   tbox::Array<int> d_node_bdry_edge; // 2D only
-   tbox::Array<int> d_edge_bdry_face; // 3D only
-   tbox::Array<int> d_node_bdry_face; // 3D only
+   std::vector<int> d_node_bdry_edge; // 2D only
+   std::vector<int> d_edge_bdry_face; // 3D only
+   std::vector<int> d_node_bdry_face; // 3D only
 
    /*
     * Vectors of face (3d) or edge (2d) boundary values for DIRICHLET case.

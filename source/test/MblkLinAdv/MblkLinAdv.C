@@ -187,7 +187,7 @@ MblkLinAdv::MblkLinAdv(
       }
 
       d_scalar_bdry_node_conds.resize(NUM_2D_NODES);
-      d_node_bdry_edge.resizeArray(NUM_2D_NODES);
+      d_node_bdry_edge.resize(NUM_2D_NODES);
 
       for (int ni = 0; ni < NUM_2D_NODES; ni++) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
@@ -204,14 +204,14 @@ MblkLinAdv::MblkLinAdv(
       }
 
       d_scalar_bdry_edge_conds.resize(NUM_3D_EDGES);
-      d_edge_bdry_face.resizeArray(NUM_3D_EDGES);
+      d_edge_bdry_face.resize(NUM_3D_EDGES);
       for (int ei = 0; ei < NUM_3D_EDGES; ei++) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_edge_bdry_face[ei] = BOGUS_BDRY_DATA;
       }
 
       d_scalar_bdry_node_conds.resize(NUM_3D_NODES);
-      d_node_bdry_face.resizeArray(NUM_3D_NODES);
+      d_node_bdry_face.resize(NUM_3D_NODES);
 
       for (int ni = 0; ni < NUM_3D_NODES; ni++) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
@@ -2293,7 +2293,7 @@ void MblkLinAdv::getFromInput(
                           << " RefinementData. No refinement will occur." << endl);
       }
 
-      tbox::Array<string> ref_keys_defined(num_keys);
+      std::vector<string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
       boost::shared_ptr<tbox::Database> error_db;
       for (int i = 0; i < num_keys; i++) {
@@ -2931,7 +2931,7 @@ void MblkLinAdv::checkBoundaryData(
    int btype,
    const hier::Patch& patch,
    const hier::IntVector& ghost_width_to_check,
-   const tbox::Array<int>& scalar_bconds) const
+   const std::vector<int>& scalar_bconds) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim == tbox::Dimension(2)) {
@@ -2960,26 +2960,26 @@ void MblkLinAdv::checkBoundaryData(
       int bscalarcase = 0, refbdryloc = 0;
       if (d_dim == tbox::Dimension(2)) {
          if (btype == Bdry::EDGE2D) {
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_EDGES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) == NUM_2D_EDGES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else { // btype == Bdry::NODE2D
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_NODES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) == NUM_2D_NODES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_edge[bloc];
          }
       }
       else if (d_dim == tbox::Dimension(3)) {
          if (btype == Bdry::FACE3D) {
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_FACES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) == NUM_3D_FACES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else if (btype == Bdry::EDGE3D) {
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_EDGES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) == NUM_3D_EDGES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_edge_bdry_face[bloc];
          } else { // btype == Bdry::NODE3D
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_NODES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) == NUM_3D_NODES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_face[bloc];
          }

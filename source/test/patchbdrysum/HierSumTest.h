@@ -323,7 +323,7 @@ private:
     * Node and edge sum utilities.
     */
    boost::shared_ptr<PatchBoundaryNodeSum> d_node_sum_util;
-   Array<boost::shared_ptr<PatchBoundaryEdgeSum> > d_edge_sum_util;
+   std::vector<boost::shared_ptr<PatchBoundaryEdgeSum> > d_edge_sum_util;
 
    /*
     * Flag to tell whether to check data before communication.  Usually,

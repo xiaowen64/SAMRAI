@@ -431,7 +431,7 @@ public:
     */
    void
    getCounters(
-      Array<int>& counters);
+      std::vector<int>& counters);
 
    /**
     * Writes state of CVODEModel object to the specified restart database.
@@ -586,9 +586,9 @@ private:
     * variables.  These are post-processed input values and are passed
     * to the boundary routines.
     */
-   Array<int> d_node_bdry_edge; // Only used for 2D.
-   Array<int> d_edge_bdry_face; // Only used for 3D.
-   Array<int> d_node_bdry_face; // Only used for 3D.
+   std::vector<int> d_node_bdry_edge; // Only used for 2D.
+   std::vector<int> d_edge_bdry_face; // Only used for 3D.
+   std::vector<int> d_node_bdry_face; // Only used for 3D.
 
    /*
     * Arrays of face (3d) or edge (2d) boundary values for DIRICHLET case.

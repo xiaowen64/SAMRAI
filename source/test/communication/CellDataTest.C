@@ -123,9 +123,9 @@ void CellDataTest::registerVariables(
 {
    TBOX_ASSERT(commtest != 0);
 
-   int nvars = d_variable_src_name.getSize();
+   int nvars = static_cast<int>(d_variable_src_name.size());
 
-   d_variables.resizeArray(nvars);
+   d_variables.resize(nvars);
 
    for (int i = 0; i < nvars; i++) {
       d_variables[i].reset(
@@ -365,7 +365,7 @@ void CellDataTest::initializeDataOnPatch(
 
    if (d_do_refine) {
 
-      for (int i = 0; i < d_variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
          boost::shared_ptr<pdat::CellData<double> > cell_data(
             patch.getPatchData(d_variables[i], getDataContext()),
@@ -384,7 +384,7 @@ void CellDataTest::initializeDataOnPatch(
 
    } else if (d_do_coarsen) {
 
-      for (int i = 0; i < d_variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
          boost::shared_ptr<pdat::CellData<double> > cell_data(
             patch.getPatchData(d_variables[i], getDataContext()),
@@ -474,7 +474,7 @@ void CellDataTest::setPhysicalBoundaryConditions(
          pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
    const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
-   for (int i = 0; i < d_variables.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
       boost::shared_ptr<pdat::CellData<double> > cell_data(
          patch.getPatchData(d_variables[i], getDataContext()),
@@ -567,7 +567,7 @@ bool CellDataTest::verifyResults(
       tbox::plog << "Patch box = " << patch.getBox() << endl;
 
       hier::IntVector tgcw(periodic_shift.getDim(), 0);
-      for (int i = 0; i < d_variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
          tgcw.max(patch.getPatchData(d_variables[i], getDataContext())->
             getGhostCellWidth());
       }
@@ -593,7 +593,7 @@ bool CellDataTest::verifyResults(
          }
       }
 
-      for (int i = 0; i < d_variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
          boost::shared_ptr<pdat::CellData<double> > cell_data(
             patch.getPatchData(d_variables[i], getDataContext()),

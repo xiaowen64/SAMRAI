@@ -258,7 +258,7 @@ void MultiblockTester::createRefineSchedule(
 
    if (d_do_refine) {
 
-      d_refine_schedule.resizeArray(
+      d_refine_schedule.resize(
          d_patch_hierarchy->getFinestLevelNumber() + 1);
       d_refine_schedule[level_number].reset();
 

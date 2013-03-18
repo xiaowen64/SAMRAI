@@ -204,8 +204,8 @@ public:
       /*! hierarchy */ const hier::PatchHierarchy& hierarchy,
       /*! L2 norm */ double* l2norm,
       /*! L-inf norm */ double* linorm,
-      /*! L2 norm on each level */ tbox::Array<double>& l2norms,
-      /*! L-inf norm on each level */ tbox::Array<double>& linorms) const;
+      /*! L2 norm on each level */ std::vector<double>& l2norms,
+      /*! L-inf norm on each level */ std::vector<double>& linorms) const;
 
    /*!
     * @brief Compute error estimator (for adaption or plotting).

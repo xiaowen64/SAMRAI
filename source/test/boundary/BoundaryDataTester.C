@@ -87,7 +87,7 @@ void BoundaryDataTester::setPhysicalBoundaryConditions(
               << endl;
    tbox::plog << "ghost_width_to_fill = " << ghost_width_to_fill << endl;
 
-   for (int iv = 0; iv < d_variables.getSize(); iv++) {
+   for (int iv = 0; iv < static_cast<int>(d_variables.size()); iv++) {
 
       boost::shared_ptr<pdat::CellData<double> > cvdata(
          patch.getPatchData(d_variables[iv], d_variable_context),
@@ -190,7 +190,7 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
         ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
-      for (int iv = 0; iv < d_variables.getSize(); iv++) {
+      for (int iv = 0; iv < static_cast<int>(d_variables.size()); iv++) {
          boost::shared_ptr<pdat::CellData<double> > cvdata(
             patch->getPatchData(d_variables[iv], d_variable_context),
             BOOST_CAST_TAG);
@@ -205,7 +205,7 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
         ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
-      for (int iv = 0; iv < d_variables.getSize(); iv++) {
+      for (int iv = 0; iv < static_cast<int>(d_variables.size()); iv++) {
          boost::shared_ptr<pdat::CellData<double> > cvdata(
             patch->getPatchData(d_variables[iv], d_variable_context),
             BOOST_CAST_TAG);
@@ -250,7 +250,7 @@ int BoundaryDataTester::runBoundaryTest(
 
    xfer::RefineAlgorithm boundary_fill;
 
-   for (int iv = 0; iv < d_variables.getSize(); iv++) {
+   for (int iv = 0; iv < static_cast<int>(d_variables.size()); iv++) {
       int datid =
          variable_db->mapVariableAndContextToIndex(d_variables[iv],
             d_variable_context);
@@ -292,8 +292,8 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
       }
    }
 
-   d_variable_name.resizeArray(var_cnt);
-   d_variable_depth.resizeArray(var_cnt);
+   d_variable_name.resize(var_cnt);
+   d_variable_depth.resize(var_cnt);
    d_variable_num_ghosts.resize(var_cnt, hier::IntVector(d_dim, 1));
    d_variable_interior_values.resize(var_cnt);
 
@@ -338,9 +338,9 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
 
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 
-   d_variables.resizeArray(d_variable_name.getSize());
+   d_variables.resize(d_variable_name.size());
 
-   for (int iv = 0; iv < d_variable_name.getSize(); iv++) {
+   for (int iv = 0; iv < static_cast<int>(d_variable_name.size()); iv++) {
       d_variables[iv].reset(
          new pdat::CellVariable<double>(d_dim, d_variable_name[iv],
                                         d_variable_depth[iv]));
@@ -383,7 +383,7 @@ void BoundaryDataTester::setBoundaryDataDefaults()
       d_master_bdry_node_conds.resize(NUM_2D_NODES);
       d_scalar_bdry_node_conds.resize(NUM_2D_NODES);
       d_vector_bdry_node_conds.resize(NUM_2D_NODES);
-      d_node_bdry_edge.resizeArray(NUM_2D_NODES);
+      d_node_bdry_edge.resize(NUM_2D_NODES);
 
       for (int ni = 0; ni < NUM_2D_NODES; ni++) {
          d_master_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
@@ -406,7 +406,7 @@ void BoundaryDataTester::setBoundaryDataDefaults()
       d_master_bdry_edge_conds.resize(NUM_3D_EDGES);
       d_scalar_bdry_edge_conds.resize(NUM_3D_EDGES);
       d_vector_bdry_edge_conds.resize(NUM_3D_EDGES);
-      d_edge_bdry_face.resizeArray(NUM_3D_EDGES);
+      d_edge_bdry_face.resize(NUM_3D_EDGES);
       for (int ei = 0; ei < NUM_3D_EDGES; ei++) {
          d_master_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
@@ -417,7 +417,7 @@ void BoundaryDataTester::setBoundaryDataDefaults()
       d_master_bdry_node_conds.resize(NUM_3D_NODES);
       d_scalar_bdry_node_conds.resize(NUM_3D_NODES);
       d_vector_bdry_node_conds.resize(NUM_3D_NODES);
-      d_node_bdry_face.resizeArray(NUM_3D_NODES);
+      d_node_bdry_face.resize(NUM_3D_NODES);
 
       for (int ni = 0; ni < NUM_3D_NODES; ni++) {
          d_master_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
@@ -427,8 +427,8 @@ void BoundaryDataTester::setBoundaryDataDefaults()
       }
    }
 
-   d_variable_bc_values.resize(d_variable_name.getSize());
-   for (int iv = 0; iv < d_variable_name.getSize(); iv++) {
+   d_variable_bc_values.resize(d_variable_name.size());
+   for (int iv = 0; iv < static_cast<int>(d_variable_name.size()); iv++) {
       if (d_dim == tbox::Dimension(2)) {
          d_variable_bc_values[iv].resize(NUM_2D_EDGES * d_variable_depth[iv]);
       }
@@ -472,10 +472,9 @@ void BoundaryDataTester::readBoundaryDataStateEntry(
 {
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
-   TBOX_ASSERT(static_cast<int>(d_variable_bc_values.size()) ==
-               d_variable_name.getSize());
+   TBOX_ASSERT(d_variable_bc_values.size() == d_variable_name.size());
 
-   for (int iv = 0; iv < d_variable_name.getSize(); iv++) {
+   for (int iv = 0; iv < static_cast<int>(d_variable_name.size()); iv++) {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (d_dim == tbox::Dimension(2)) {
@@ -691,7 +690,7 @@ void BoundaryDataTester::checkBoundaryData(
       TBOX_ASSERT(bbox.getBoundaryType() == btype);
       int bloc = bbox.getLocationIndex();
 
-      for (int iv = 0; iv < d_variables.getSize(); iv++) {
+      for (int iv = 0; iv < static_cast<int>(d_variables.size()); iv++) {
          boost::shared_ptr<pdat::CellData<double> > cvdata(
             patch.getPatchData(d_variables[iv], d_variable_context),
             BOOST_CAST_TAG);
@@ -849,7 +848,7 @@ void BoundaryDataTester::checkBoundaryData(
 
          }  // else
 
-      }   // for (int iv = 0; iv < d_variables.getSize(); iv++)
+      }   // for (int iv = 0; iv < static_cast<int>(d_variables.size()); iv++)
 
    }  // for (int i = 0; i < static_cast<int>(bdry_boxes.size()); i++ )
 
@@ -881,7 +880,7 @@ void BoundaryDataTester::printClassData(
    }
 
    os << "\nVariables ...\n" << endl;
-   for (i = 0; i < d_variable_name.getSize(); i++) {
+   for (i = 0; i < static_cast<int>(d_variable_name.size()); i++) {
       os << "Variable " << i << endl;
       os << "   name       = " << d_variable_name[i] << endl;
       os << "   depth      = " << d_variable_depth[i] << endl;
@@ -905,7 +904,7 @@ void BoundaryDataTester::printClassData(
             << d_vector_bdry_edge_conds[j] << endl;
          if (d_master_bdry_edge_conds[j] == BdryCond::DIRICHLET ||
              d_master_bdry_edge_conds[j] == BdryCond::NEUMANN) {
-            for (i = 0; i < d_variable_name.getSize(); i++) {
+            for (i = 0; i < static_cast<int>(d_variable_name.size()); i++) {
                os << d_variable_name[i] << " bdry edge value[" << j << "] = "
                   << d_variable_bc_values[i][j * d_variable_depth[i]];
                for (int id = 1; id < d_variable_depth[i]; id++) {
@@ -938,7 +937,7 @@ void BoundaryDataTester::printClassData(
             << d_vector_bdry_face_conds[j] << endl;
          if (d_master_bdry_face_conds[j] == BdryCond::DIRICHLET ||
              d_master_bdry_face_conds[j] == BdryCond::NEUMANN) {
-            for (i = 0; i < d_variable_name.getSize(); i++) {
+            for (i = 0; i < static_cast<int>(d_variable_name.size()); i++) {
                os << d_variable_name[i] << " bdry edge value[" << j << "] = "
                   << d_variable_bc_values[i][j * d_variable_depth[i]];
                for (int id = 1; id < d_variable_depth[i]; id++) {

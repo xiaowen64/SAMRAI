@@ -163,7 +163,7 @@ private:
     */
    boost::shared_ptr<geom::CartesianGridGeometry> d_cart_grid_geometry;
 
-   tbox::Array<bool> d_use_fine_value_at_interface;
+   std::vector<bool> d_use_fine_value_at_interface;
 
    double d_Acoef;
    double d_Bcoef;
@@ -175,8 +175,8 @@ private:
    std::string d_refine_option;
    int d_finest_level_number;
 
-   tbox::Array<boost::shared_ptr<hier::Variable> > d_variables_src;
-   tbox::Array<boost::shared_ptr<hier::Variable> > d_variables_dst;
+   std::vector<boost::shared_ptr<hier::Variable> > d_variables_src;
+   std::vector<boost::shared_ptr<hier::Variable> > d_variables_dst;
 
 };
 

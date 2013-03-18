@@ -170,7 +170,7 @@ CVODEModel::CVODEModel(
       }
 
       d_scalar_bdry_node_conds.resize(NUM_2D_NODES);
-      d_node_bdry_edge.resizeArray(NUM_2D_NODES);
+      d_node_bdry_edge.resize(NUM_2D_NODES);
 
       for (int ni = 0; ni < NUM_2D_NODES; ni++) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
@@ -187,14 +187,14 @@ CVODEModel::CVODEModel(
       }
 
       d_scalar_bdry_edge_conds.resize(NUM_3D_EDGES);
-      d_edge_bdry_face.resizeArray(NUM_3D_EDGES);
+      d_edge_bdry_face.resize(NUM_3D_EDGES);
       for (int ei = 0; ei < NUM_3D_EDGES; ei++) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_edge_bdry_face[ei] = BOGUS_BDRY_DATA;
       }
 
       d_scalar_bdry_node_conds.resize(NUM_3D_NODES);
-      d_node_bdry_face.resizeArray(NUM_3D_NODES);
+      d_node_bdry_face.resize(NUM_3D_NODES);
 
       for (int ni = 0; ni < NUM_3D_NODES; ni++) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
@@ -1291,9 +1291,9 @@ CVODEModel::setInitialConditions(
  */
 void
 CVODEModel::getCounters(
-   Array<int>& counters)
+   std::vector<int>& counters)
 {
-   counters.resizeArray(3);
+   counters.resize(3);
    counters[0] = d_number_rhs_eval;
    counters[1] = d_number_precond_setup;
    counters[2] = d_number_precond_solve;

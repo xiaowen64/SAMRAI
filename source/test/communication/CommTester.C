@@ -78,9 +78,9 @@ CommTester::CommTester(
    }
 
    d_patch_data_components.clrAllFlags();
-   d_fill_source_schedule.resizeArray(0);
-   d_refine_schedule.resizeArray(0);
-   d_coarsen_schedule.resizeArray(0);
+   d_fill_source_schedule.resize(0);
+   d_refine_schedule.resize(0);
+   d_coarsen_schedule.resize(0);
 
    d_source =
       hier::VariableDatabase::getDatabase()->getContext("SOURCE");
@@ -267,9 +267,9 @@ void CommTester::createRefineSchedule(
 
    if (d_do_refine) {
 
-      d_fill_source_schedule.resizeArray(d_patch_hierarchy->getNumberOfLevels());
+      d_fill_source_schedule.resize(d_patch_hierarchy->getNumberOfLevels());
       d_fill_source_schedule[level_number].reset();
-      d_refine_schedule.resizeArray(d_patch_hierarchy->getNumberOfLevels());
+      d_refine_schedule.resize(d_patch_hierarchy->getNumberOfLevels());
       d_refine_schedule[level_number].reset();
 
       const hier::Connector& peer_cnect =
@@ -335,7 +335,7 @@ void CommTester::createCoarsenSchedule(
 
    if (d_do_coarsen && (level_number > 0)) {
 
-      d_coarsen_schedule.resizeArray(d_patch_hierarchy->getNumberOfLevels());
+      d_coarsen_schedule.resize(d_patch_hierarchy->getNumberOfLevels());
       d_coarsen_schedule[level_number].reset();
 
       boost::shared_ptr<hier::PatchLevel> level(
@@ -380,7 +380,7 @@ void CommTester::performRefineOperations(
 {
    if (d_do_refine) {
       if (d_fill_source_schedule[level_number] &&
-          level_number < d_fill_source_schedule.size() - 1) {
+          level_number < static_cast<int>(d_fill_source_schedule.size()) - 1) {
          d_data_test_strategy->setDataContext(d_source);
          d_fill_source_schedule[level_number]->fillData(d_fake_time);
       }

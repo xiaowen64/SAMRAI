@@ -348,7 +348,6 @@ bool SingleLevelTestCase(
    const int num_nodes = mpi.getSize();
    const int num_boxes = level_boxes.size();
    hier::LocalId local_id(0);
-   tbox::Array<int> local_indices(mpi.getSize(), 0);
    hier::BoxContainer::iterator level_boxes_itr = level_boxes.begin();
    for (int i = 0; i < num_boxes; ++i, ++level_boxes_itr) {
 

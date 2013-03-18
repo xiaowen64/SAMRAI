@@ -36,10 +36,6 @@ SphericalShellGenerator::SphericalShellGenerator(
    d_hierarchy(),
    d_radii(0)
 {
-   tbox::Array<double> init_disp;
-   tbox::Array<double> velocity;
-   tbox::Array<double> period;
-
    for ( int i=0; i<SAMRAI::MAX_DIM_VAL; ++i ) {
       d_center[i] = 0.0;
    }

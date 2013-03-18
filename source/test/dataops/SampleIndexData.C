@@ -164,8 +164,8 @@ void SampleIndexData::getFromRestart(
 //template class pdat::IndexDataNode<SampleIndexData, pdat::CellGeometry>;
 //template class pdat::IndexIterator<SampleIndexData, pdat::CellGeometry>;
 //template class pdat::IndexVariable<SampleIndexData, pdat::CellGeometry>;
-//template class tbox::Array<SampleIndexData>;
-//template class tbox::Array<pdat::IndexDataNode<SampleIndexData,
+//template class std::vector<SampleIndexData>;
+//template class std::vector<pdat::IndexDataNode<SampleIndexData,
 //                                               pdat::CellGeometry> >;
 //template class boost::shared_ptr<pdat::IndexData<SampleIndexData,
 //                                                 pdat::CellGeometry> >;

@@ -227,12 +227,12 @@ private:
     *
     * d_buffer_space[ln*d_dim + d] is the buffer size for level ln in direction d.
     */
-   tbox::Array<double> d_buffer_space;
+   std::vector<double> d_buffer_space;
 
    /*!
     * @brief Shrink distance, for generating L2 by shrinking.
     */
-   tbox::Array<double> d_shrink_distance;
+   std::vector<double> d_shrink_distance;
 #endif
 
    boost::shared_ptr<tbox::Timer> t_setup;

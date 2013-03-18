@@ -512,8 +512,8 @@ HierSumTest::setupOuteredgeSum(
    const boost::shared_ptr<PatchHierarchy> hierarchy,
    const int level_num)
 {
-   if (level_num >= d_edge_sum_util.getSize()) {
-      d_edge_sum_util.resizeArray(level_num + 1);
+   if (level_num >= static_cast<int>(d_edge_sum_util.size())) {
+      d_edge_sum_util.resize(level_num + 1);
    }
 
    d_edge_sum_util[level_num].reset(
@@ -533,7 +533,7 @@ void
 HierSumTest::doOuteredgeSum(
    const int level_num)
 {
-   TBOX_ASSERT(level_num < d_edge_sum_util.getSize());
+   TBOX_ASSERT(level_num < static_cast<int>(d_edge_sum_util.size()));
    TBOX_ASSERT(d_edge_sum_util[level_num]);
 
    d_edge_sum_util[level_num]->computeSum();

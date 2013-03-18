@@ -351,9 +351,9 @@ private:
 
    bool d_is_reset;
 
-   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> > d_fill_source_schedule;
-   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> > d_refine_schedule;
-   tbox::Array<boost::shared_ptr<xfer::CoarsenSchedule> > d_coarsen_schedule;
+   std::vector<boost::shared_ptr<xfer::RefineSchedule> > d_fill_source_schedule;
+   std::vector<boost::shared_ptr<xfer::RefineSchedule> > d_refine_schedule;
+   std::vector<boost::shared_ptr<xfer::CoarsenSchedule> > d_coarsen_schedule;
 
 };
 

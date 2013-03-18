@@ -298,8 +298,8 @@ int main(
          string initial_u = main_db->getStringWithDefault("initial_u", "0.0");
          adaptive_poisson.solvePoisson(patch_hierarchy,
             adaption_number ? string() : initial_u);
-         tbox::Array<double> l2norms(patch_hierarchy->getNumberOfLevels());
-         tbox::Array<double> linorms(patch_hierarchy->getNumberOfLevels());
+         std::vector<double> l2norms(patch_hierarchy->getNumberOfLevels());
+         std::vector<double> linorms(patch_hierarchy->getNumberOfLevels());
          adaptive_poisson.computeError(*patch_hierarchy,
             &l2norm,
             &linorm,

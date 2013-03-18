@@ -232,20 +232,20 @@ public:
 protected:
    const tbox::Dimension d_dim;
    /*
-    * Arrays of information read from input file describing test variables
+    * Vectors of information read from input file describing test variables
     */
-   tbox::Array<std::string> d_variable_src_name;
-   tbox::Array<std::string> d_variable_dst_name;
-   tbox::Array<int> d_variable_depth;
-   tbox::Array<hier::IntVector> d_variable_src_ghosts;
-   tbox::Array<hier::IntVector> d_variable_dst_ghosts;
-   tbox::Array<std::string> d_variable_coarsen_op;
-   tbox::Array<std::string> d_variable_refine_op;
+   std::vector<std::string> d_variable_src_name;
+   std::vector<std::string> d_variable_dst_name;
+   std::vector<int> d_variable_depth;
+   std::vector<hier::IntVector> d_variable_src_ghosts;
+   std::vector<hier::IntVector> d_variable_dst_ghosts;
+   std::vector<std::string> d_variable_coarsen_op;
+   std::vector<std::string> d_variable_refine_op;
 
    /*
-    * Arrays of information read from input file describing test variables
+    * Vectors of information read from input file describing test variables
     */
-   tbox::Array<hier::BoxContainer> d_refine_level_boxes;
+   std::vector<hier::BoxContainer> d_refine_level_boxes;
 
 private:
    boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;

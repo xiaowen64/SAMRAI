@@ -395,8 +395,8 @@ MblkHyperbolicLevelIntegrator::resetHierarchyConfiguration(
 
    int finest_hiera_level = hierarchy->getFinestLevelNumber();
 
-   d_mblk_bdry_sched_advance.resizeArray(finest_hiera_level + 1);
-   d_mblk_bdry_sched_advance_new.resizeArray(finest_hiera_level + 1);
+   d_mblk_bdry_sched_advance.resize(finest_hiera_level + 1);
+   d_mblk_bdry_sched_advance_new.resize(finest_hiera_level + 1);
 
    for (int ln = coarsest_level; ln <= finest_hiera_level; ln++) {
       boost::shared_ptr<hier::PatchLevel> mblk_level(

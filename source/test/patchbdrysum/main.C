@@ -282,7 +282,7 @@ int main(
 
       double loop_time = 0.;
       int loop_cycle = 0;
-      tbox::Array<int> tag_buffer_array(patch_hierarchy->getMaxNumberOfLevels());
+      std::vector<int> tag_buffer_array(patch_hierarchy->getMaxNumberOfLevels());
       for (int il = 0; il < patch_hierarchy->getMaxNumberOfLevels(); il++) {
          tag_buffer_array[il] = 1;
       }

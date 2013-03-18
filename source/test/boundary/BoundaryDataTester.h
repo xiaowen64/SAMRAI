@@ -166,22 +166,22 @@ private:
    boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
 
    /*
-    * Arrays of information read from input file describing test variables
+    * Vectors of information read from input file describing test variables
     */
-   tbox::Array<string> d_variable_name;
-   tbox::Array<int> d_variable_depth;
+   std::vector<string> d_variable_name;
+   std::vector<int> d_variable_depth;
    std::vector<hier::IntVector> d_variable_num_ghosts;
    std::vector<std::vector<double> > d_variable_interior_values;
 
    /*
     * Items used to manage variables and data in test program.
     */
-   tbox::Array<boost::shared_ptr<hier::Variable> > d_variables;
+   std::vector<boost::shared_ptr<hier::Variable> > d_variables;
    boost::shared_ptr<hier::VariableContext> d_variable_context;
    hier::ComponentSelector d_patch_data_components;
 
    /*
-    * Arrays of information read from input file for boundary conditions
+    * Vectors of information read from input file for boundary conditions
     */
    std::vector<int> d_master_bdry_edge_conds;
    std::vector<int> d_scalar_bdry_edge_conds;
@@ -195,9 +195,9 @@ private:
    std::vector<int> d_scalar_bdry_face_conds; // Used only in 3D
    std::vector<int> d_vector_bdry_face_conds; // Used only in 3D
 
-   tbox::Array<int> d_node_bdry_edge; // Used only in 2D
-   tbox::Array<int> d_edge_bdry_face; // Used only in 3D
-   tbox::Array<int> d_node_bdry_face; // Used only in 3D
+   std::vector<int> d_node_bdry_edge; // Used only in 2D
+   std::vector<int> d_edge_bdry_face; // Used only in 3D
+   std::vector<int> d_node_bdry_face; // Used only in 3D
 
    std::vector<std::vector<double> > d_variable_bc_values;
 

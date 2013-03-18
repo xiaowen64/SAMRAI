@@ -181,8 +181,8 @@ private:
    std::string d_refine_option;
    int d_finest_level_number;
 
-   tbox::Array<boost::shared_ptr<hier::Variable> > d_variables_src;
-   tbox::Array<boost::shared_ptr<hier::Variable> > d_variables_dst;
+   std::vector<boost::shared_ptr<hier::Variable> > d_variables_src;
+   std::vector<boost::shared_ptr<hier::Variable> > d_variables_dst;
 
 };
 

@@ -268,7 +268,7 @@ int main(
        */
       gridding_algorithm->makeCoarsestLevel(init_time);
 
-      tbox::Array<int> tag_buffer_array(hierarchy->getMaxNumberOfLevels());
+      std::vector<int> tag_buffer_array(hierarchy->getMaxNumberOfLevels());
       for (int il = 0; il < hierarchy->getMaxNumberOfLevels(); il++) {
          tag_buffer_array[il] = 1;
       }
@@ -385,10 +385,10 @@ int main(
       * Start time-stepping.
       **************************************************************************/
 
-      tbox::Array<double> time(num_print_intervals);
-      tbox::Array<double> maxnorm(num_print_intervals);
-      tbox::Array<double> l1norm(num_print_intervals);
-      tbox::Array<double> l2norm(num_print_intervals);
+      std::vector<double> time(num_print_intervals);
+      std::vector<double> maxnorm(num_print_intervals);
+      std::vector<double> l1norm(num_print_intervals);
+      std::vector<double> l2norm(num_print_intervals);
 
       double final_time = init_time;
       int interval;
@@ -460,7 +460,7 @@ int main(
       /*
        * Write CVODEModel stats
        */
-      tbox::Array<int> counters;
+      std::vector<int> counters;
       cvode_model->getCounters(counters);
 
 #if (TESTING == 1)

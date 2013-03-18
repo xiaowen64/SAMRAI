@@ -101,7 +101,7 @@ private:
 
    tbox::Dimension d_dim;
  
-   tbox::Array<tbox::Array<double> > d_dx;
+   std::vector<std::vector<double> > d_dx;
 
 };
 

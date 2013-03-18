@@ -473,7 +473,7 @@ MblkLinAdv::MblkLinAdv(
       }
 
       d_scalar_bdry_node_conds.resize(NUM_2D_NODES);
-      d_node_bdry_edge.resizeArray(NUM_2D_NODES);
+      d_node_bdry_edge.resize(NUM_2D_NODES);
 
       for (int ni = 0; ni < NUM_2D_NODES; ni++) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
@@ -490,14 +490,14 @@ MblkLinAdv::MblkLinAdv(
       }
 
       d_scalar_bdry_edge_conds.resize(NUM_3D_EDGES);
-      d_edge_bdry_face.resizeArray(NUM_3D_EDGES);
+      d_edge_bdry_face.resize(NUM_3D_EDGES);
       for (int ei = 0; ei < NUM_3D_EDGES; ei++) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_edge_bdry_face[ei] = BOGUS_BDRY_DATA;
       }
 
       d_scalar_bdry_node_conds.resize(NUM_3D_NODES);
-      d_node_bdry_face.resizeArray(NUM_3D_NODES);
+      d_node_bdry_face.resize(NUM_3D_NODES);
 
       for (int ni = 0; ni < NUM_3D_NODES; ni++) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
@@ -1042,12 +1042,12 @@ void MblkLinAdv::computeFluxesOnPatch(
          }
 
 // Face-centered temporary arrays
-         tbox::Array<double> ttedgslp(2 * FACEG + 1 + Mcells);
-         tbox::Array<double> ttraclft(2 * FACEG + 1 + Mcells);
-         tbox::Array<double> ttracrgt(2 * FACEG + 1 + Mcells);
+         std::vector<double> ttedgslp(2 * FACEG + 1 + Mcells);
+         std::vector<double> ttraclft(2 * FACEG + 1 + Mcells);
+         std::vector<double> ttracrgt(2 * FACEG + 1 + Mcells);
 
 // Cell-centered temporary arrays
-         tbox::Array<double> ttcelslp(2 * CELLG + Mcells);
+         std::vector<double> ttcelslp(2 * CELLG + Mcells);
 
 /*
  *  Apply characteristic tracing to compute initial estimate of
@@ -1063,10 +1063,10 @@ void MblkLinAdv::computeFluxesOnPatch(
                uval->getPointer(),
                traced_left.getPointer(0),
                traced_right.getPointer(0),
-               ttcelslp.getPointer(),
-               ttedgslp.getPointer(),
-               ttraclft.getPointer(),
-               ttracrgt.getPointer());
+               &ttcelslp[0],
+               &ttedgslp[0],
+               &ttraclft[0],
+               &ttracrgt[0]);
 
             SAMRAI_F77_FUNC(chartracing2d1, CHARTRACING2D1) (dt,
                ifirst(0), ilast(0), ifirst(1), ilast(1),
@@ -1074,10 +1074,10 @@ void MblkLinAdv::computeFluxesOnPatch(
                uval->getPointer(),
                traced_left.getPointer(1),
                traced_right.getPointer(1),
-               ttcelslp.getPointer(),
-               ttedgslp.getPointer(),
-               ttraclft.getPointer(),
-               ttracrgt.getPointer());
+               &ttcelslp[0],
+               &ttedgslp[0],
+               &ttraclft[0],
+               &ttracrgt[0]);
          }
 
       }  // if (d_godunov_order > 1) ...
@@ -1223,12 +1223,12 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport1(
       }
 
       // Face-centered temporary arrays
-      tbox::Array<double> ttedgslp(2 * FACEG + 1 + Mcells);
-      tbox::Array<double> ttraclft(2 * FACEG + 1 + Mcells);
-      tbox::Array<double> ttracrgt(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttedgslp(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttraclft(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttracrgt(2 * FACEG + 1 + Mcells);
 
       // Cell-centered temporary arrays
-      tbox::Array<double> ttcelslp(2 * CELLG + Mcells);
+      std::vector<double> ttcelslp(2 * CELLG + Mcells);
 
       /*
        *  Apply characteristic tracing to compute initial estimate of
@@ -1244,10 +1244,10 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport1(
          uval->getPointer(),
          traced_left.getPointer(0),
          traced_right.getPointer(0),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
 
       SAMRAI_F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
          ifirst(0), ilast(0),
@@ -1257,10 +1257,10 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport1(
          uval->getPointer(),
          traced_left.getPointer(1),
          traced_right.getPointer(1),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
 
       SAMRAI_F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
          ifirst(0), ilast(0),
@@ -1270,10 +1270,10 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport1(
          uval->getPointer(),
          traced_left.getPointer(2),
          traced_right.getPointer(2),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
    }
 
    /*
@@ -1547,12 +1547,12 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport2(
       }
 
       // Face-centered temporary arrays
-      tbox::Array<double> ttedgslp(2 * FACEG + 1 + Mcells);
-      tbox::Array<double> ttraclft(2 * FACEG + 1 + Mcells);
-      tbox::Array<double> ttracrgt(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttedgslp(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttraclft(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttracrgt(2 * FACEG + 1 + Mcells);
 
       // Cell-centered temporary arrays
-      tbox::Array<double> ttcelslp(2 * CELLG + Mcells);
+      std::vector<double> ttcelslp(2 * CELLG + Mcells);
 
       /*
        *  Apply characteristic tracing to update traces w^L and
@@ -1568,10 +1568,10 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport2(
          uval->getPointer(),
          traced_left.getPointer(0),
          traced_right.getPointer(0),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
 
       SAMRAI_F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
          ifirst(0), ilast(0), ifirst(1), ilast(1),
@@ -1580,10 +1580,10 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport2(
          uval->getPointer(),
          traced_left.getPointer(1),
          traced_right.getPointer(1),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
 
       SAMRAI_F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
          ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
@@ -1591,10 +1591,10 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport2(
          uval->getPointer(),
          traced_left.getPointer(2),
          traced_right.getPointer(2),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
 
    } //  if (d_godunov_order > 1) ...
 
@@ -3141,7 +3141,7 @@ void MblkLinAdv::checkBoundaryData(
    int btype,
    const hier::Patch& patch,
    const hier::IntVector& ghost_width_to_check,
-   const tbox::Array<int>& scalar_bconds) const
+   const std::vector<int>& scalar_bconds) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim == tbox::Dimension(2)) {
@@ -3170,26 +3170,26 @@ void MblkLinAdv::checkBoundaryData(
       int bscalarcase = 0, refbdryloc = 0;
       if (d_dim == tbox::Dimension(2)) {
          if (btype == Bdry::EDGE2D) {
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_EDGES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) == NUM_2D_EDGES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else { // btype == Bdry::NODE2D
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_NODES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) == NUM_2D_NODES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_edge[bloc];
          }
       }
       if (d_dim == tbox::Dimension(3)) {
          if (btype == Bdry::FACE3D) {
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_FACES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) == NUM_3D_FACES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else if (btype == Bdry::EDGE3D) {
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_EDGES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) == NUM_3D_EDGES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_edge_bdry_face[bloc];
          } else { // btype == Bdry::NODE3D
-            TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_NODES);
+            TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) == NUM_3D_NODES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_face[bloc];
          }

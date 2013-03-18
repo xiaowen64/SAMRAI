@@ -470,7 +470,7 @@ static int createAndTestDLBG(
 
    int ln;
 
-   tbox::Array<boost::shared_ptr<BoxLevel> > box_levels(
+   std::vector<boost::shared_ptr<BoxLevel> > box_levels(
       patch_hierarchy.getNumberOfLevels());
 
    /*

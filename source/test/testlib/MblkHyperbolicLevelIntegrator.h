@@ -857,7 +857,7 @@ private:
     * will be filled with CURRENT_VAR values.
     */
    boost::shared_ptr<xfer::RefineAlgorithm> d_mblk_bdry_fill_advance;
-   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> >
+   std::vector<boost::shared_ptr<xfer::RefineSchedule> >
       d_mblk_bdry_sched_advance;
 
    /*
@@ -876,7 +876,7 @@ private:
     * accompanying MblkHyperbolicLevelIntegrator::advanceLevel.
     */
    boost::shared_ptr<xfer::RefineAlgorithm> d_mblk_bdry_fill_advance_new;
-   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> >
+   std::vector<boost::shared_ptr<xfer::RefineSchedule> >
       d_mblk_bdry_sched_advance_new;
 
    /*
