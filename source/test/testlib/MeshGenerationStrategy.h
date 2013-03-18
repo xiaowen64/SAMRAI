@@ -51,7 +51,11 @@ public:
    virtual ~MeshGenerationStrategy() {};
 
    /*!
-    * @brief Set tas on the tag level.
+    * @brief Set tag on the tag level.
+    *
+    * @param [o] exact_tagging Set to true if the implementation wants
+    * the clustering to match the tags exactly.  Exact clustering
+    * match means using clustering efficiency of 1.0.
     */
    virtual void setTags(
       bool &exact_tagging,
@@ -66,10 +70,6 @@ public:
     * Some implementations may choose the strategy of setting tags by
     * shrinking the tag level.  Those implementations may delegate
     * that job to this method.
-    *
-    * @param [o] exact_tagging Set to true of the clustering should
-    * match the tags exactly, e.g., the tags are generated from and
-    * look like boxes.
     */
    virtual void setTagsByShrinkingLevel(
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,

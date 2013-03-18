@@ -27,8 +27,7 @@ NUM_TESTS = 18
 
 TEST_NPROCS = @TEST_NPROCS@
 
-CXX_OBJS      = main-lbcorrectness.o	\
-		MeshGenerationStrategy.o SinusoidalFrontGenerator.o SphericalShellGenerator.o
+CXX_OBJS      = main-lbcorrectness.o
 
 INPUTS2D = box.2d.treelb.input box.2d.tilelb.input box.2d.caplb.input lss.2d.caplb.input lss.2d.treelb.input lss.2d.tilelb.input front.2d.caplb.input front.2d.treelb.input front.2d.tilelb.input
 INPUTS3D = box.3d.treelb.input box.3d.tilelb.input box.3d.caplb.input lss.3d.caplb.input lss.3d.treelb.input lss.3d.tilelb.input front.3d.caplb.input front.3d.treelb.input front.3d.tilelb.input

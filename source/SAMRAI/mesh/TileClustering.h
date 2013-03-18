@@ -36,6 +36,10 @@ namespace mesh {
  *   - \b box_size
  *   Box size in the index space of the tag level.
  *
+ *   - \b coalesce_boxes
+ *   Whether to coalesce boxes after clustering.  This can lead to
+ *   clusters that are bigger than specified tile size.
+ *
  * <b> Details: </b> <br>
  * <table>
  *   <tr>
@@ -51,6 +55,14 @@ namespace mesh {
  *     <td>int[]</td>
  *     <td>all values are 8</td>
  *     <td>????????</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>coalesce_boxes</td>
+ *     <td>bool</td>
+ *     <td>false</td>
+ *     <td>false/true</td>
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
@@ -134,6 +146,12 @@ private:
 
    //! @brief Box size constraint.
    hier::IntVector d_box_size;
+
+   /*!
+    * @brief Whether to coalesce tiled-boxes after clustering to
+    * create boxes bigger than tile size.
+    */
+   bool d_coalesce_boxes;
 
    //@{
    //! @name Diagnostics and performance evaluation

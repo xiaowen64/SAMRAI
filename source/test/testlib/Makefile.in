@@ -29,7 +29,10 @@ CXX_OBJS      = AutoTester.o \
 		SkeletonBoundaryUtilities2.o \
 		SkeletonBoundaryUtilities3.o \
 		SkeletonCellDoubleConservativeLinearRefine.o \
-		SkeletonCellDoubleWeightedAverage.o
+		SkeletonCellDoubleWeightedAverage.o	\
+		MeshGenerationStrategy.o	\
+		SinusoidalFrontGenerator.o	\
+		SphericalShellGenerator.o
 
 F_OBJS      = skelbdry2d.o skelbdry3d.o upfluxsum2d.o upfluxsum3d.o
 
