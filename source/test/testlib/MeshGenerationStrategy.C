@@ -69,10 +69,9 @@ void MeshGenerationStrategy::setTagsByShrinkingLevel(
 
    boost::shared_ptr<hier::BoxLevel> tagfootprint;
    boost::shared_ptr<hier::MappingConnector> Ltag_to_tagfootprint;
-   const hier::Connector &Ltag_to_Ltag =
-      Ltag.getPersistentOverlapConnectors().findOrCreateConnector(
-         Ltag,
-         shrink_width );
+   const hier::Connector &Ltag_to_Ltag = Ltag.findConnector(Ltag,
+      shrink_width,
+      hier::CONNECTOR_CREATE);
 
    hier::BoxLevelConnectorUtils blcu;
    blcu.computeInternalParts( tagfootprint,

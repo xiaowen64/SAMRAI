@@ -528,9 +528,7 @@ GriddingAlgorithm::makeCoarsestLevel(
        * Add computed Connectors to new level's collection of
        * persistent overlap Connectors.
        */
-      new_box_level->getPersistentOverlapConnectors().cacheConnector(
-         *new_box_level,
-         new_to_new);
+      new_box_level->cacheConnector(new_to_new);
 
       d_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(
          *d_hierarchy->getPatchLevel(ln));
@@ -561,9 +559,7 @@ GriddingAlgorithm::makeCoarsestLevel(
        * scalable anyway, because the domain is usually owned by just
        * one processor.
        */
-      old_level->getBoxLevel()->getPersistentOverlapConnectors().
-      createConnectorWithTranspose(
-         *new_box_level,
+      old_level->getBoxLevel()->createConnectorWithTranspose(*new_box_level,
          d_hierarchy->getRequiredConnectorWidth(0, 0, true),
          d_hierarchy->getRequiredConnectorWidth(0, 0, true));
 
@@ -933,14 +929,9 @@ GriddingAlgorithm::makeFinerLevel(
 
          d_hierarchy->makeNewPatchLevel(new_ln, new_box_level);
 
-         new_box_level->getPersistentOverlapConnectors().cacheConnector(
-            *new_box_level,
-            new_to_new);
+         new_box_level->cacheConnector(new_to_new);
 
-         tag_level->getBoxLevel()->getPersistentOverlapConnectors().
-         cacheConnector(
-            *new_box_level,
-            tag_to_new);
+         tag_level->cacheConnector(tag_to_new);
 
          d_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(
             *d_hierarchy->getPatchLevel(new_ln));
@@ -1435,7 +1426,11 @@ GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
          d_true_tag,
          tag_level,
          d_tag_indx,
-         d_hierarchy->getConnector(tag_ln, tag_ln + 1),
+         d_hierarchy->getPatchLevel(tag_ln)->findConnector(
+            *d_hierarchy->getPatchLevel(tag_ln + 1),
+            d_hierarchy->getRequiredConnectorWidth(tag_ln, tag_ln + 1, true),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            false),
          true,
          zero_vec);
    }
@@ -1574,9 +1569,19 @@ GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
       }
 
       const hier::Connector& tag_to_old =
-         d_hierarchy->getConnectorWithTranspose(tag_ln, new_ln);
+         d_hierarchy->getPatchLevel(tag_ln)->findConnectorWithTranspose(
+            *d_hierarchy->getPatchLevel(new_ln),
+            d_hierarchy->getRequiredConnectorWidth(tag_ln, new_ln, true),
+            d_hierarchy->getRequiredConnectorWidth(new_ln, tag_ln),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            false);
       const hier::Connector& old_to_finer =
-         d_hierarchy->getConnectorWithTranspose(new_ln, new_ln + 1);
+         d_hierarchy->getPatchLevel(new_ln)->findConnectorWithTranspose(
+            *d_hierarchy->getPatchLevel(new_ln + 1),
+            d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln + 1, true),
+            d_hierarchy->getRequiredConnectorWidth(new_ln + 1, new_ln),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            false);
       d_oca.bridge(
          tag_to_finer,
          tag_to_old,
@@ -1600,7 +1605,11 @@ GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
          dummy_finer_box_level,
          tag_to_finer->getTranspose(),
          d_hierarchy->getGridGeometry()->getDomainSearchTree(),
-         d_hierarchy->getConnector(tag_ln, tag_ln));
+         d_hierarchy->getPatchLevel(tag_ln)->findConnector(
+            *d_hierarchy->getPatchLevel(tag_ln),
+            d_hierarchy->getRequiredConnectorWidth(tag_ln, tag_ln, true),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            false));
 
       fillTagsFromBoxLevel(
          d_true_tag,
@@ -1707,7 +1716,13 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    if (d_hierarchy->finerLevelExists(tag_ln)) {
 
       old_box_level = d_hierarchy->getBoxLevel(new_ln);
-      old_to_tag = &d_hierarchy->getConnectorWithTranspose(new_ln, tag_ln);
+      old_to_tag =
+         &d_hierarchy->getPatchLevel(new_ln)->findConnectorWithTranspose(
+            *d_hierarchy->getPatchLevel(tag_ln),
+            d_hierarchy->getRequiredConnectorWidth(new_ln, tag_ln, true),
+            d_hierarchy->getRequiredConnectorWidth(tag_ln, new_ln),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            false);
 
       old_fine_level = d_hierarchy->getPatchLevel(new_ln);
       d_hierarchy->removePatchLevel(new_ln);
@@ -1788,13 +1803,8 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    /*
     * Cache Connectors for new level.
     */
-   new_box_level->getPersistentOverlapConnectors().cacheConnector(
-      *new_box_level,
-      new_to_new);
-   tag_level->getBoxLevel()->getPersistentOverlapConnectors().
-   cacheConnector(
-      *new_box_level,
-      tag_to_new);
+   new_box_level->cacheConnector(new_to_new);
+   tag_level->cacheConnector(tag_to_new);
 
    if (d_hierarchy->levelExists(new_ln + 1)) {
       /*
@@ -1833,9 +1843,7 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
       boost::shared_ptr<hier::PatchLevel> finer_level(
          d_hierarchy->getPatchLevel(new_ln + 1));
 
-      new_box_level->getPersistentOverlapConnectors().cacheConnector(
-         *finer_level->getBoxLevel(),
-         new_to_finer);
+      new_box_level->cacheConnector(new_to_finer);
    }
 
    if (old_box_level) {
@@ -1852,17 +1860,19 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
       d_oca.bridgeWithNesting(
          old_to_new,
          *old_to_tag,
-         d_hierarchy->getConnectorWithTranspose(tag_ln, tag_ln + 1),
+         d_hierarchy->getPatchLevel(tag_ln)->findConnectorWithTranspose(
+            *d_hierarchy->getPatchLevel(tag_ln + 1),
+            d_hierarchy->getRequiredConnectorWidth(tag_ln, tag_ln + 1, true),
+            d_hierarchy->getRequiredConnectorWidth(tag_ln + 1, tag_ln),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            false),
          zero_vector,
          zero_vector,
          d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln, true),
          true);
       t_bridge_new_to_old->stop();
 
-      old_fine_level->getBoxLevel()->getPersistentOverlapConnectors().
-      cacheConnector(
-         *new_box_level,
-         old_to_new);
+      old_fine_level->cacheConnector(old_to_new);
 
    }
 
@@ -2346,7 +2356,11 @@ GriddingAlgorithm::checkNonrefinedTags(
    boost::shared_ptr<hier::BoxLevel> violator;
    boost::shared_ptr<hier::MappingConnector> tag_to_violator;
    const hier::Connector& tag_box_level_to_self =
-      d_hierarchy->getConnector(tag_ln, tag_ln);
+      d_hierarchy->getPatchLevel(tag_ln)->findConnector(
+         *d_hierarchy->getPatchLevel(tag_ln),
+         d_hierarchy->getRequiredConnectorWidth(tag_ln, tag_ln, true),
+         hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+         false);
    computeNestingViolator(
       violator,
       tag_to_violator,
@@ -3037,8 +3051,11 @@ GriddingAlgorithm::findRefinementBoxes(
       if ( tag_to_new->getConnectorWidth() != d_tag_to_cluster_width[tag_ln] ) {
          t_fix_zero_width_clustering->barrierAndStart();
          const hier::Connector &tag_to_tag =
-            tag_box_level.getPersistentOverlapConnectors().findConnectorWithTranspose(
-               tag_box_level, d_tag_to_cluster_width[tag_ln], d_tag_to_cluster_width[tag_ln] );
+            tag_box_level.findConnectorWithTranspose(
+               tag_box_level,
+               d_tag_to_cluster_width[tag_ln],
+               d_tag_to_cluster_width[tag_ln],
+               hier::CONNECTOR_IMPLICIT_CREATION_RULE);
          d_oca.bridgeWithNesting(
             tag_to_new,
             tag_to_tag,
@@ -3211,7 +3228,11 @@ GriddingAlgorithm::findRefinementBoxes(
        * incident on those nodes.
        */
       const hier::Connector& tag_to_tag =
-         d_hierarchy->getConnector(tag_ln, tag_ln);
+         d_hierarchy->getPatchLevel(tag_ln)->findConnector(
+            *d_hierarchy->getPatchLevel(tag_ln),
+            d_hierarchy->getRequiredConnectorWidth(tag_ln, tag_ln, true),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            false);
       if (d_print_steps) {
          tbox::plog << "GriddingAlgorithm begin adding periodic images."
                     << std::endl;
@@ -3839,7 +3860,11 @@ GriddingAlgorithm::computeProperNestingData(
        * shrunken by d_proper_nesting_buffer[d_base_ln].
        */
       const hier::Connector& self_connector =
-         d_hierarchy->getConnector(ln, ln);
+         d_hierarchy->getPatchLevel(ln)->findConnector(
+            *d_hierarchy->getPatchLevel(ln),
+            d_hierarchy->getRequiredConnectorWidth(ln, ln, true),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            false);
 
       // This assert shoud pass due to GriddingAlgorithmConnectorWidthRequestor.
       TBOX_ASSERT( self_connector.getConnectorWidth() >=
@@ -3977,7 +4002,12 @@ GriddingAlgorithm::computeProperNestingData(
        */
       oca.bridge(
          d_to_nesting_complement[ln],
-         d_hierarchy->getConnectorWithTranspose(ln, ln - 1),
+         d_hierarchy->getPatchLevel(ln)->findConnectorWithTranspose(
+            *d_hierarchy->getPatchLevel(ln - 1),
+            d_hierarchy->getRequiredConnectorWidth(ln, ln - 1, true),
+            d_hierarchy->getRequiredConnectorWidth(ln - 1, ln),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            false),
          lnm1_to_ln_complement,
          d_hierarchy->getRequiredConnectorWidth(ln - 1, ln, true),
          true);
@@ -4759,29 +4789,42 @@ GriddingAlgorithm::logMetadataStatistics(
    bool log_coarse_connector) const
 {
    const std::string name("L" + tbox::Utilities::levelToString(ln));
-   const hier::BoxLevel &level = *d_hierarchy->getPatchLevel(ln)->getBoxLevel();
-   hier::PersistentOverlapConnectors &poc = level.getPersistentOverlapConnectors();
-   const hier::IntVector &one_vector = hier::IntVector::getOne(d_hierarchy->getDim());
+   const boost::shared_ptr<hier::PatchLevel> level =
+      d_hierarchy->getPatchLevel(ln);
+   const hier::BoxLevel& box_level = *level->getBoxLevel();
+   const hier::IntVector &one_vector =
+      hier::IntVector::getOne(d_hierarchy->getDim());
 
-   tbox::plog << "GriddingAlgorithm::" << caller_name << " added " << name << ":\n"
-              << level.format("\t",0)
+   tbox::plog << "GriddingAlgorithm::" << caller_name << " added "
+              << name << ":\n"
+              << box_level.format("\t",0)
               << name << " statistics:\n"
-              << level.formatStatistics("\t");
+              << box_level.formatStatistics("\t");
 
-   const hier::Connector &peer_conn = poc.findOrCreateConnector(level, one_vector, true);
+   const hier::Connector &peer_conn = level->findConnector(*level,
+      one_vector,
+      hier::CONNECTOR_CREATE,
+      true);
    tbox::plog << "Peer connector:\n" << peer_conn.format("\t",0)
-              << "Peer connector statistics:\n" << peer_conn.formatStatistics("\t");
+              << "Peer connector statistics:\n"
+              << peer_conn.formatStatistics("\t");
 
    if ( log_fine_connector ) {
-      const hier::BoxLevel &fine_level = *d_hierarchy->getPatchLevel(ln+1)->getBoxLevel();
-      const hier::Connector &fine_conn = poc.findOrCreateConnector(fine_level, one_vector, true);
+      const hier::Connector &fine_conn =
+         level->findConnector(*d_hierarchy->getPatchLevel(ln+1),
+            one_vector,
+            hier::CONNECTOR_CREATE,
+            true);
       tbox::plog << "Fine connector:\n" << fine_conn.format("\t",0)
                  << "Fine connector statistics:\n" << fine_conn.formatStatistics("\t");
    }
 
    if ( log_coarse_connector ) {
-      const hier::BoxLevel &crse_level = *d_hierarchy->getPatchLevel(ln-1)->getBoxLevel();
-      const hier::Connector &crse_conn = poc.findOrCreateConnector(crse_level, one_vector, true);
+      const hier::Connector &crse_conn =
+         level->findConnector(*d_hierarchy->getPatchLevel(ln-1),
+            one_vector,
+            hier::CONNECTOR_CREATE,
+            true);
       tbox::plog << "Coarse connector:\n" << crse_conn.format("\t",0)
                  << "Coarse connector statistics:\n" << crse_conn.formatStatistics("\t");
    }

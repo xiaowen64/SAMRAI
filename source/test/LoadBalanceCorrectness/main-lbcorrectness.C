@@ -1158,9 +1158,10 @@ void outputPostcluster(
          ref.getRefinementRatio(),
          ref_to_cluster_width);
 
-   const hier::Connector &cluster_to_ref =
-      cluster.getPersistentOverlapConnectors().findOrCreateConnector(
-         ref, ref_to_cluster_width, true );
+   const hier::Connector &cluster_to_ref = cluster.findConnector(ref,
+      ref_to_cluster_width,
+      hier::CONNECTOR_CREATE,
+      true);
 
    cluster.cacheGlobalReducedData();
    cluster_to_ref.cacheGlobalReducedData();
@@ -1205,9 +1206,10 @@ void outputPrebalance(
          pre.getRefinementRatio(),
          pre_width);
 
-   const hier::Connector &pre_to_pre =
-      pre.getPersistentOverlapConnectors().findOrCreateConnector(
-         pre, pre_width, true );
+   const hier::Connector &pre_to_pre = pre.findConnector(pre,
+      pre_width,
+      hier::CONNECTOR_CREATE,
+      true);
 
    tbox::plog << "\n\n"
               << border << "Prebalance summary:\n"
@@ -1249,17 +1251,20 @@ void outputPostbalance(
          post.getRefinementRatio(),
          post_width);
 
-   const hier::Connector &post_to_post =
-      post.getPersistentOverlapConnectors().findOrCreateConnector(
-         post, post_width, true );
+   const hier::Connector &post_to_post = post.findConnector(post,
+      post_width,
+      hier::CONNECTOR_CREATE,
+      true);
 
-   const hier::Connector &post_to_ref =
-      post.getPersistentOverlapConnectors().findOrCreateConnector(
-         ref, post_width, true );
+   const hier::Connector &post_to_ref = post.findConnector(ref,
+      post_width,
+      hier::CONNECTOR_CREATE,
+      true);
 
-   const hier::Connector &ref_to_post =
-      ref.getPersistentOverlapConnectors().findOrCreateConnector(
-         post, ref_width, true );
+   const hier::Connector &ref_to_post = ref.findConnector(post,
+      ref_width,
+      hier::CONNECTOR_CREATE,
+      true);
 
    tbox::plog << "\n\n"
               << border << "Postbalance summary:\n"
@@ -1548,7 +1553,10 @@ void enforceNesting(
    hier::BoxLevelConnectorUtils blcu;
    blcu.computeInternalParts( L1nested,
                               L1_to_L1nested,
-                              L1.getPersistentOverlapConnectors().findOrCreateConnectorWithTranspose(L0, nesting_width, nesting_width_transpose),
+                              L1.findConnectorWithTranspose(L0,
+                                 nesting_width,
+                                 nesting_width_transpose,
+                                 hier::CONNECTOR_CREATE),
                               -nesting_width,
                               hierarchy->getGridGeometry()->getDomainSearchTree() );
    hier::MappingConnectorAlgorithm mca;

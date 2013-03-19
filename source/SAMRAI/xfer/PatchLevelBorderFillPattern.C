@@ -80,8 +80,10 @@ PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
    }
 
    const hier::Connector& dst_to_dst =
-      dst_box_level.getPersistentOverlapConnectors().findConnector(
-         dst_box_level, dst_to_dst_width, true);
+      dst_box_level.findConnector(dst_box_level,
+         dst_to_dst_width,
+         hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+         true);
 
    /*
     * To get the level border, grow each patch box and remove

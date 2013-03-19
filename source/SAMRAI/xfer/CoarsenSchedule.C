@@ -349,11 +349,10 @@ CoarsenSchedule::generateTemporaryLevel()
                                         min_gcw);
 
    const Connector& coarse_to_fine =
-      d_crse_level->getBoxLevel()->getPersistentOverlapConnectors().
-         findConnectorWithTranspose(
-            *d_fine_level->getBoxLevel(),
+      d_crse_level->findConnectorWithTranspose(*d_fine_level,
             transpose_width,
             min_gcw,
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
             true);
 
    /*

@@ -166,16 +166,14 @@ RefineSchedule::RefineSchedule(
 
    hier::IntVector min_connector_width = getMinConnectorWidth();
 
-   d_dst_to_src =
-      &d_dst_level->getBoxLevel()->getPersistentOverlapConnectors().
-         findConnectorWithTranspose(
-            *d_src_level->getBoxLevel(),
-            min_connector_width,
-            hier::Connector::convertHeadWidthToBase(
-               d_src_level->getBoxLevel()->getRefinementRatio(),
-               d_dst_level->getBoxLevel()->getRefinementRatio(),
-               min_connector_width),
-            true);
+   d_dst_to_src = &d_dst_level->findConnectorWithTranspose(*d_src_level,
+      min_connector_width,
+      hier::Connector::convertHeadWidthToBase(
+         d_src_level->getBoxLevel()->getRefinementRatio(),
+         d_dst_level->getBoxLevel()->getRefinementRatio(),
+         min_connector_width),
+      hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+      true);
    hier::Connector& src_to_dst = d_dst_to_src->getTranspose();
 
    TBOX_ASSERT(d_dst_to_src->getBase() == *d_dst_level->getBoxLevel());
@@ -401,13 +399,11 @@ RefineSchedule::RefineSchedule(
            d_src_level->getBoxLevel()->getRefinementRatio(),
            dst_level->getBoxLevel()->getRefinementRatio(),
            min_connector_width);
-      d_dst_to_src =
-         &dst_level->getBoxLevel()->getPersistentOverlapConnectors().
-            findConnectorWithTranspose(
-               *d_src_level->getBoxLevel(),
-               min_connector_width,
-               transpose_min_connector_width,
-               true);
+      d_dst_to_src = &dst_level->findConnectorWithTranspose(*d_src_level,
+         min_connector_width,
+         transpose_min_connector_width,
+         hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+         true);
 
       TBOX_ASSERT(d_dst_to_src->getBase() == *dst_level->getBoxLevel());
       TBOX_ASSERT(d_dst_to_src->getTranspose().getHead() == *dst_level->getBoxLevel());
@@ -1128,10 +1124,10 @@ RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
    t_shear->start();
 
    const hier::Connector& unfilled_to_periodic_domain(
-      d_unfilled_box_level->getPersistentOverlapConnectors().
-      findOrCreateConnector(
+      d_unfilled_box_level->findConnector(
          hierarchy->getDomainBoxLevel(),
-         dst_to_unfilled.getConnectorWidth()));
+         dst_to_unfilled.getConnectorWidth(),
+         hier::CONNECTOR_CREATE));
 
    boost::shared_ptr<hier::MappingConnector> unfilled_to_sheared;
    boost::shared_ptr<hier::BoxLevel> sheared_box_level;
@@ -1427,25 +1423,23 @@ RefineSchedule::createCoarseInterpPatchLevel(
     * and having cached src<==>hiercoarse.
     *
     * An unscalable alternative of last resort would be to have the
-    * PersistentOverlapConnector compute the missing
+    * PersistentOverlapConnectors compute the missing
     * dst<==>hiercoarse.  This is not implemented but could be in the
     * future.
     */
 
    bool has_cached_connectors =
-      dst_level->getBoxLevel()->getPersistentOverlapConnectors().
-      hasConnector(hiercoarse_box_level, dst_to_hiercoarse_width);
+      dst_level->hasConnector(*hiercoarse_level, dst_to_hiercoarse_width);
    has_cached_connectors = has_cached_connectors &&
-      hiercoarse_box_level.getPersistentOverlapConnectors().
-      hasConnector(*dst_level->getBoxLevel(), hiercoarse_to_dst_width);
+      hiercoarse_level->hasConnector(*dst_level, hiercoarse_to_dst_width);
 
    if ( has_cached_connectors ) {
 
-      dst_to_hiercoarse = &dst_level->getBoxLevel()->
-         getPersistentOverlapConnectors().
-         findConnectorWithTranspose(hiercoarse_box_level,
+      dst_to_hiercoarse =
+         &dst_level->findConnectorWithTranspose(*hiercoarse_level,
             dst_to_hiercoarse_width,
             hiercoarse_to_dst_width,
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
             true);
 
    }
@@ -1492,11 +1486,11 @@ RefineSchedule::createCoarseInterpPatchLevel(
       }
 
       const hier::Connector& src_to_hiercoarse =
-         d_src_level->getBoxLevel()->getPersistentOverlapConnectors().
-         findConnectorWithTranspose(
-            hiercoarse_box_level,
+         d_src_level->findConnectorWithTranspose(
+            *hiercoarse_level,
             src_to_hiercoarse_width,
             hiercoarse_to_src_width,
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
             true);
 
       const hier::IntVector& src_to_dst_width =
@@ -1531,11 +1525,11 @@ RefineSchedule::createCoarseInterpPatchLevel(
          hier::IntVector connector_width(dst_to_src_width);
          connector_width.max(hier::IntVector::getOne(dim));
          const hier::Connector& found_dst_to_src =
-            dst_box_level.getPersistentOverlapConnectors().
-            findConnectorWithTranspose(
+            dst_box_level.findConnectorWithTranspose(
                src_box_level,
                connector_width,
                transpose_connector_width,
+               hier::CONNECTOR_IMPLICIT_CREATION_RULE,
                true);
 
          if (s_barrier_and_time) {
@@ -1610,11 +1604,10 @@ RefineSchedule::createCoarseInterpPatchLevel(
       hiercoarse_to_coarse_interp.removePeriodicRelationships();
 
       const hier::Connector& hiercoarse_to_hiercoarse =
-         hiercoarse_level->getBoxLevel()->
-         getPersistentOverlapConnectors().
-         findConnector(*hiercoarse_level->getBoxLevel(),
-                       hiercoarse_to_dst.getConnectorWidth(),
-                       true);
+         hiercoarse_level->findConnector(*hiercoarse_level,
+            hiercoarse_to_dst.getConnectorWidth(),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            true);
       edge_utils.addPeriodicImagesAndRelationships(
          *coarse_interp_box_level,
          *coarse_interp_to_hiercoarse,
@@ -3329,12 +3322,11 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
 
    if (d_src_level) {
       const hier::Connector& dst_to_src =
-         d_dst_level->getBoxLevel()->getPersistentOverlapConnectors().
-            findConnectorWithTranspose(
-               *d_src_level->getBoxLevel(),
-               hier::IntVector::getOne(dim),
-               hier::IntVector::getOne(dim),
-               true);
+         d_dst_level->findConnectorWithTranspose(*d_src_level,
+            hier::IntVector::getOne(dim),
+            hier::IntVector::getOne(dim),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            true);
 
       // d_dst_to_encon only needs its transpose set temporarily as the
       // transpose is only used in this call to bridge.  We do not want to

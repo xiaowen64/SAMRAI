@@ -523,8 +523,10 @@ int main(
 
          outputMetadataL0(
             *L0,
-            L0->getPersistentOverlapConnectors().
-            findOrCreateConnector( *L0, ghost_cell_width, true ) );
+            L0->findConnector(*L0,
+               ghost_cell_width,
+               hier::CONNECTOR_CREATE,
+               true));
       }
 
 
@@ -1148,10 +1150,9 @@ void generatePrebalanceByShrinkingLevel(
 
    boost::shared_ptr<hier::BoxLevel> L1tags;
    boost::shared_ptr<hier::MappingConnector> L1_to_L1tags;
-   const hier::Connector &L1_to_L1 =
-      L1->getPersistentOverlapConnectors().findOrCreateConnector(
-         *L1,
-         shrink_width );
+   const hier::Connector &L1_to_L1 = L1->findConnector(*L1,
+      shrink_width,
+      hier::CONNECTOR_CREATE);
 
    hier::BoxLevelConnectorUtils blcu;
    blcu.computeInternalParts( L1tags,

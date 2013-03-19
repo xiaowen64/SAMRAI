@@ -753,29 +753,27 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
          level_number);
 
    const hier::Connector& level_to_level =
-      patch_level->getBoxLevel()->getPersistentOverlapConnectors().
-      findConnector(
-         *patch_level->getBoxLevel(),
-         level_to_level_width);
+      patch_level->findConnector(*patch_level,
+         level_to_level_width,
+         hier::CONNECTOR_IMPLICIT_CREATION_RULE);
 
-   hier::Connector tmp_coarsened(level_to_level);
-   tmp_coarsened.setBase(*patch_level->getBoxLevel());
-   tmp_coarsened.setHead(*coarsened_level->getBoxLevel(), true);
-   tmp_coarsened.coarsenLocalNeighbors(coarsen_ratio);
-   tmp_coarsened.setTranspose(0, false);
+   boost::shared_ptr<hier::Connector> tmp_coarsened(
+      boost::make_shared<hier::Connector>(level_to_level));
+   tmp_coarsened->setBase(*coarsened_level->getBoxLevel());
+   tmp_coarsened->setHead(*coarsened_level->getBoxLevel());
+   tmp_coarsened->setWidth(
+      hier::IntVector::ceilingDivide(level_to_level_width, coarsen_ratio), true);
+   tmp_coarsened->coarsenLocalNeighbors(coarsen_ratio);
+   tmp_coarsened->setTranspose(0, false);
 
    boost::shared_ptr<hier::Connector> level_to_coarsened(
-      boost::make_shared<hier::Connector>(tmp_coarsened));
+      boost::make_shared<hier::Connector>(*tmp_coarsened));
    level_to_coarsened->setBase(*patch_level->getBoxLevel());
    level_to_coarsened->setHead(*coarsened_level->getBoxLevel());
    level_to_coarsened->setWidth(level_to_level_width, true);
    level_to_coarsened->setTranspose(0, false);
 
-   coarsened_level->getBoxLevel()->getPersistentOverlapConnectors().
-   createConnector(
-      *coarsened_level->getBoxLevel(),
-      hier::IntVector::ceilingDivide(level_to_level_width, coarsen_ratio),
-      tmp_coarsened);
+   coarsened_level->cacheConnector(tmp_coarsened);
 
    if (level_number > 0) {
       /*
@@ -786,13 +784,12 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
       boost::shared_ptr<hier::PatchLevel> coarser_level(
          hierarchy->getPatchLevel(level_number - 1));
       const hier::Connector& coarser_to_level =
-         coarser_level->getBoxLevel()->getPersistentOverlapConnectors().
-         findConnectorWithTranspose(
-            *patch_level->getBoxLevel(),
+         coarser_level->findConnectorWithTranspose(*patch_level,
             hierarchy->getRequiredConnectorWidth(
                level_number - 1, level_number, true),
             hierarchy->getRequiredConnectorWidth(
-               level_number, level_number - 1, true));
+               level_number, level_number - 1, true),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE);
 
       // level_to_coarsened only needs its transpose set temporarily for this
       // call to bridge.  When it is cached later we don't want to also cache
@@ -811,16 +808,11 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
          coarser_to_level,
          *level_to_coarsened,
          true);
-      coarser_level->getBoxLevel()->getPersistentOverlapConnectors().
-      cacheConnector(
-         *coarsened_level->getBoxLevel(),
-         coarser_to_coarsened);
+      coarser_level->cacheConnector(coarser_to_coarsened);
 
       level_to_coarsened->setTranspose(0, false);
    }
-   patch_level->getBoxLevel()->getPersistentOverlapConnectors().cacheConnector(
-      *coarsened_level->getBoxLevel(),
-      level_to_coarsened);
+   patch_level->cacheConnector(level_to_coarsened);
 
    bool before_advance = true;
    d_tag_strategy->coarsenDataForRichardsonExtrapolation(hierarchy,

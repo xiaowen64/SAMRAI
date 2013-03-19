@@ -430,10 +430,9 @@ bool SingleLevelTestCase(
    }
 
    // Cache Connector required for the schedule generation.
-   level->getBoxLevel()->getPersistentOverlapConnectors().
-   findOrCreateConnector(
-      *(level->getBoxLevel()),
-      hier::IntVector(dim, 2));
+   level->findConnector(*level,
+      hier::IntVector(dim, 2),
+      hier::CONNECTOR_CREATE);
 
    // Create and run comm schedule
    refine_alg.createSchedule(level)->fillData(0.0, false);

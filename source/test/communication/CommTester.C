@@ -273,9 +273,18 @@ void CommTester::createRefineSchedule(
       d_refine_schedule[level_number].reset();
 
       const hier::Connector& peer_cnect =
-         d_patch_hierarchy->getConnector(level_number, level_number);
+         d_patch_hierarchy->getPatchLevel(level_number)->findConnector(
+            *d_patch_hierarchy->getPatchLevel(level_number),
+            d_patch_hierarchy->getRequiredConnectorWidth(level_number, level_number, true),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            false);
       const hier::Connector* cnect_to_coarser = level_number > 0 ?
-         &d_patch_hierarchy->getConnectorWithTranspose(level_number, level_number - 1) : 0;
+         &d_patch_hierarchy->getPatchLevel(level_number)->findConnectorWithTranspose(
+            *d_patch_hierarchy->getPatchLevel(level_number - 1),
+            d_patch_hierarchy->getRequiredConnectorWidth(level_number, level_number - 1, true),
+            d_patch_hierarchy->getRequiredConnectorWidth(level_number - 1, level_number),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            false) : 0;
 
       if (0) {
          // These are expensive checks.
@@ -668,7 +677,7 @@ void CommTester::setupHierarchy(
    for (int ln = 0; ln < d_patch_hierarchy->getNumberOfLevels(); ++ln) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_patch_hierarchy->getPatchLevel(ln));
-      level->getBoxLevel()->getPersistentOverlapConnectors().clear();
+      level->getBoxLevel()->clearPersistentOverlapConnectors();
    }
 
    if (0) {

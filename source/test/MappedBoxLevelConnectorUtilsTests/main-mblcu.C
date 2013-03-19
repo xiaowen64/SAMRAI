@@ -379,8 +379,7 @@ int main(
        */
 
       const hier::Connector& small_to_big(
-         small_box_level->getPersistentOverlapConnectors().createConnectorWithTranspose(
-            big_box_level,
+         small_box_level->createConnectorWithTranspose(big_box_level,
             shrinkage,
             shrinkage));
       small_to_big.cacheGlobalReducedData();
@@ -745,9 +744,7 @@ void shrinkBoxLevel(
    const hier::BoxContainer& big_boxes(big_box_level.getBoxes());
 
    const hier::Connector& big_to_big(
-      big_box_level.getPersistentOverlapConnectors().createConnector(
-         big_box_level,
-         shrinkage));
+         big_box_level.createConnector(big_box_level, shrinkage));
 
    hier::BoxContainer visible_boxes(big_boxes);
    for (hier::Connector::ConstNeighborhoodIterator mi = big_to_big.begin();

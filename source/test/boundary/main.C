@@ -183,10 +183,7 @@ int main(
       // Add Connector required for schedule construction.
       boost::shared_ptr<hier::PatchLevel> level0(
          patch_hierarchy->getPatchLevel(0));
-      level0->getBoxLevel()->getPersistentOverlapConnectors().
-      createConnector(
-         *level0->getBoxLevel(),
-         hier::IntVector(dim, 2));
+      level0->createConnector(*level0, hier::IntVector(dim, 2));
 
       /*
        * Allocate data on hierarchy and set variable data on patch interiors
