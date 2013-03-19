@@ -86,11 +86,16 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    }
 
    /*
-    * Set the processor group (for the root node).
+    * Set the processor group.
     */
-   d_group.resize(d_common->d_mpi_object.getSize(), BAD_INTEGER);
-   for (unsigned int i = 0; i < d_group.size(); ++i) {
-      d_group[i] = i;
+   if ( d_common->d_cluster_locally ) {
+      d_group.insert( d_group.begin(), d_common->d_mpi_object.getRank() );
+   }
+   else {
+      d_group.resize(d_common->d_mpi_object.getSize(), BAD_INTEGER);
+      for (unsigned int i = 0; i < d_group.size(); ++i) {
+         d_group[i] = i;
+      }
    }
 
    if (d_common->d_log_node_history) {
@@ -103,8 +108,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
 
 /*
  *******************************************************************
- * Construct non-root node of the tree.  This is private!
- * Public constructors are only for root nodes.
+ * Construct non-root node of the tree.
  *******************************************************************
  */
 BergerRigoutsosNode::BergerRigoutsosNode(

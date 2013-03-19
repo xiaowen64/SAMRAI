@@ -63,6 +63,9 @@ BergerRigoutsos::BergerRigoutsos(
    d_compute_relationships(2),
    d_sort_output_nodes(false),
    d_build_zero_width_connector(false),
+   d_tag_coarsen_ratio(dim, 1),
+   d_cluster_locally(false),
+   d_cluster_tiles(false),
    d_relaunch_queue(),
    d_comm_stage(),
    d_min_box_size_from_cutting(dim, 0),
@@ -146,8 +149,18 @@ BergerRigoutsos::getFromInput(
             &d_min_box_size_from_cutting[0],
             d_dim.getValue());
       }
+      if (input_db->isInteger("DEV_tag_coarsen_ratio")) {
+         input_db->getIntegerArray("DEV_tag_coarsen_ratio",
+            &d_tag_coarsen_ratio[0],
+            d_dim.getValue());
+      }
       d_build_zero_width_connector =
          input_db->getBoolWithDefault("DEV_build_zero_width_connector", d_build_zero_width_connector);
+      d_cluster_tiles =
+         input_db->getBoolWithDefault("DEV_cluster_tiles", d_cluster_tiles);
+      d_cluster_locally =
+         input_db->getBoolWithDefault("DEV_cluster_locally", d_cluster_locally);
+
       d_log_do_loop =
          input_db->getBoolWithDefault("DEV_log_do_loop", false);
       d_log_node_history =
@@ -317,8 +330,122 @@ BergerRigoutsos::findBoxesContainingTags(
    }
 #endif
 
+   /*
+    * Alter set-up for tile cluster mode.
+    */
+   if ( d_cluster_tiles ) {
+      if ( !(d_tag_coarsen_ratio > hier::IntVector::getZero(d_dim)) ) {
+         TBOX_ERROR("BergerRigoutsos: You have to specify non-zero tag_coarsen_ratio\n"
+                    <<"when enabling cluster_tiles\n");
+      }
+      d_tag_level = boost::make_shared<hier::PatchLevel>(d_dim);
+      d_tag_level->setCoarsenedPatchLevel(tag_level, d_tag_coarsen_ratio);
+      d_tag_level->allocatePatchData( d_tag_data_index, tag_level->begin()->getPatchData(d_tag_data_index)->getTime() );
+
+      for ( hier::PatchLevel::iterator pi=tag_level->begin(); pi!=tag_level->end(); ++pi ) {
+
+         const boost::shared_ptr<hier::Patch> &patch = *pi;
+         const boost::shared_ptr<hier::Patch> &coarsened_patch = d_tag_level->getPatch(patch->getGlobalId());
+         boost::shared_ptr<pdat::CellData<int> > tag_data( patch->getPatchData(d_tag_data_index), BOOST_CAST_TAG);
+         boost::shared_ptr<pdat::CellData<int> > coarsened_tag_data( coarsened_patch->getPatchData(d_tag_data_index), BOOST_CAST_TAG);
+         coarsenTagData(*coarsened_tag_data, *tag_data);
+
+      }
+
+      d_efficiency_tol = 1.0;
+      d_combine_tol = 1.0;
+
+tbox::plog << "BergerRigoutsos::findBoxesContainingTags: set to cluster tiles of size " << d_tag_coarsen_ratio << "\n";
+   }
+
 
    clusterAndComputeRelationships();
+
+assert( d_tag_to_new->isTransposeOf( d_tag_to_new->getTranspose() ) );
+
+   if ( !(d_tag_coarsen_ratio == hier::IntVector::getOne(d_dim)) ) {
+      /*
+       * We clustered in the coarsened resolution.  Now put everything
+       * back into tag_level's resolution.
+       */
+      const hier::BoxLevel &tag_box_level = *tag_level->getBoxLevel();
+      const size_t number_of_coarse_new_cells = d_new_box_level->getLocalNumberOfCells();
+      const hier::IntVector old_width = d_tag_to_new->getConnectorWidth();
+      const hier::IntVector old_transpose_width = d_tag_to_new->getTranspose().getConnectorWidth();
+      boost::shared_ptr<hier::BoxLevel> refined_new_box_level(
+         new hier::BoxLevel(
+            tag_level->getRatioToLevelZero(),
+            tag_level->getGridGeometry(),
+            tag_level->getBoxLevel()->getMPI()) );
+      d_new_box_level->refineBoxes(
+         *refined_new_box_level,
+         d_tag_coarsen_ratio,
+         tag_level->getBoxLevel()->getRefinementRatio() );
+assert( d_tag_to_new->isTransposeOf( d_tag_to_new->getTranspose() ) );
+tbox::plog << tag_level->getBoxLevel()->format("TL: ", 1)
+           << d_tag_level->getBoxLevel()->format( "CTL: ", 1)
+           << d_new_box_level->format( "NEW: ", 1)
+           << refined_new_box_level->format( "REFINED: ", 1)
+           << std::endl;
+tbox::plog << "before refinement:\n"
+           << "tag--->new:\n" << d_tag_to_new->format("",2)
+           << "new--->tag:\n" << d_tag_to_new->getTranspose().format("",2)
+           << std::endl;
+      d_new_box_level = refined_new_box_level;
+
+      d_tag_to_new->setBase(*tag_level->getBoxLevel());
+      d_tag_to_new->setHead(*d_new_box_level);
+      d_tag_to_new->refineLocalNeighbors(d_tag_coarsen_ratio);
+      d_tag_to_new->setWidth( old_width*d_tag_coarsen_ratio );
+      d_tag_to_new->finalizeContext();
+
+      hier::Connector &new_to_tag = d_tag_to_new->getTranspose();
+      hier::Connector *tmp_new_to_tag = new hier::Connector(d_dim);
+      tmp_new_to_tag->setBase(*d_new_box_level);
+      tmp_new_to_tag->setHead(*tag_level->getBoxLevel());
+      tmp_new_to_tag->setWidth( old_transpose_width*d_tag_coarsen_ratio );
+      tmp_new_to_tag->finalizeContext();
+      // d_tag_to_new->getTranspose().refineLocalNeighbors(d_tag_coarsen_ratio);
+      for ( hier::Connector::NeighborhoodIterator nhi=new_to_tag.begin();
+            nhi!=new_to_tag.end(); ++nhi ) {
+         const hier::BoxId &new_box_id = *nhi;
+         for ( hier::Connector::NeighborIterator ni=new_to_tag.begin(nhi);
+               ni!=new_to_tag.end(nhi); /* incremented in loop */ ) {
+            hier::Box current_neighbor = *ni;
+            const hier::Box &tag_neighbor = *tag_box_level.getBox(current_neighbor.getBoxId());
+            ++ni;
+            // new_to_tag.eraseNeighbor(current_neighbor, new_box_id);
+// tbox::plog << "after erasing neighbor " << current_neighbor << " of box " << new_box_id << ":\n" << "new--->tag:\n" << new_to_tag.format("",2) << std::endl;
+            // new_to_tag.insertLocalNeighbor( tag_neighbor, new_box_id );
+            tmp_new_to_tag->insertLocalNeighbor( tag_neighbor, new_box_id );
+// tbox::plog << "after inserting neighbor " << tag_neighbor << " of box " << new_box_id << ":\n" << "new--->tag:\n" << new_to_tag.format("",2) << std::endl;
+         }
+      }
+      d_tag_to_new->setTranspose(tmp_new_to_tag, true);
+
+tbox::plog << "after refinement:\n"
+           << "tag--->new:\n" << d_tag_to_new->format("",2)
+           << "new--->tag:\n" << d_tag_to_new->getTranspose().format("",2)
+           << std::endl;
+assert( d_tag_to_new->isTransposeOf( d_tag_to_new->getTranspose() ) );
+
+      {
+         hier::BoxLevelConnectorUtils blcu;
+         boost::shared_ptr<hier::BoxLevel> sheared_new_box_level;
+         boost::shared_ptr<hier::MappingConnector> new_to_sheared;
+         blcu.computeInternalParts( sheared_new_box_level,
+                                    new_to_sheared,
+                                    d_tag_to_new->getTranspose(),
+                                    hier::IntVector::getZero(d_dim) );
+tbox::plog << "sheared:\n" << sheared_new_box_level->format()
+           << "shear mapping:\n" << new_to_sheared->format();
+         hier::MappingConnectorAlgorithm mca;
+         mca.modify( *d_tag_to_new,
+                     *new_to_sheared,
+                     d_new_box_level.get(),
+                     sheared_new_box_level.get() );
+      }
+   }
 
 
    if (d_sort_output_nodes == true) {
@@ -769,6 +896,33 @@ BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
 
    d_object_timers->t_share_new_relationships->stop();
 
+}
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+BergerRigoutsos::coarsenTagData(pdat::CellData<int> &coarsened_tag_data,
+                                const pdat::CellData<int> &tag_data) const
+{
+   coarsened_tag_data.fill(0, 0);
+
+   pdat::CellIterator finecend(pdat::CellGeometry::end(tag_data.getBox()));
+   for ( pdat::CellIterator fineci(pdat::CellGeometry::begin(tag_data.getBox()));
+         fineci!=finecend; ++fineci ) {
+
+      if ( tag_data(*fineci) == d_tag_val ) {
+         pdat::CellIndex coarseci =
+            pdat::CellIndex( *fineci / d_tag_coarsen_ratio );
+         coarsened_tag_data(coarseci) = d_tag_val;
+      }
+
+   }
+
+   return;
 }
 
 
