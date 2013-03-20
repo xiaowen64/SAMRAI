@@ -629,7 +629,7 @@ private:
     *
     * @see useDuplicateMPI().
     */
-   tbox::SAMRAI_MPI d_mpi_object;
+   tbox::SAMRAI_MPI d_mpi;
    //! @brief Upperbound of valid tags.
    int d_tag_upper_bound;
    //! @brief Smallest unclaimed MPI tag in pool given to local process.

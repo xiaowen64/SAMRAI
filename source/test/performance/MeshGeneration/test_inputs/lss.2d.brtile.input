@@ -19,7 +19,7 @@ Main {
 
    write_visit = TRUE
 
-   log_all_nodes = FALSE
+   log_all_nodes = TRUE
 
    // Domain definition
    domain_boxes = [(0,0),(47,47)]
