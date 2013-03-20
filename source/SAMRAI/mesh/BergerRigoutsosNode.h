@@ -452,7 +452,7 @@ private:
       int rank = -1) const
    {
       if (rank < 0) {
-         rank = d_common->d_mpi_object.getRank();
+         rank = d_common->d_mpi.getRank();
       }
       for (size_t i = 0; i < group.size(); ++i) {
          if (rank == group[i]) {
