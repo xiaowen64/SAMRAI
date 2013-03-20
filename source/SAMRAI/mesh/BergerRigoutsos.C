@@ -392,7 +392,7 @@ tbox::plog << "BergerRigoutsos::findBoxesContainingTags: set to cluster tiles of
 
 assert( d_tag_to_new->isTransposeOf( d_tag_to_new->getTranspose() ) );
 
-   if ( !(d_tag_coarsen_ratio == hier::IntVector::getOne(d_dim)) ) {
+   if ( d_cluster_tiles ) {
       /*
        * We clustered in the coarsened resolution.  Now put everything
        * back into tag_level's resolution.
