@@ -1843,9 +1843,9 @@ StandardTagAndInitialize::setCurrentTaggingCriteria(
       // in tagging criteria.
       bool old_use_cycle_criteria = d_use_cycle_criteria;
       bool old_use_time_criteria = d_use_time_criteria;
-      std::set<CycleTagCriteria>::iterator old_cur_cycle_criteria =
+      std::set<CycleTagCriteria, cycle_tag_criteria_less>::iterator old_cur_cycle_criteria =
          d_cur_cycle_criteria;
-      std::set<TimeTagCriteria>::iterator old_cur_time_criteria =
+      std::set<TimeTagCriteria, time_tag_criteria_less>::iterator old_cur_time_criteria =
          d_cur_time_criteria;
       bool old_use_re = false;
       bool old_use_gd = false;
@@ -1886,7 +1886,7 @@ StandardTagAndInitialize::setCurrentTaggingCriteria(
          // Find the cycle criteria for the supplied cycle, if any.
          for (; d_cur_cycle_criteria != d_cycle_criteria.end();
               ++d_cur_cycle_criteria) {
-            std::set<CycleTagCriteria>::iterator next_cycle_criteria =
+            std::set<CycleTagCriteria, cycle_tag_criteria_less>::iterator next_cycle_criteria =
                d_cur_cycle_criteria;
             ++next_cycle_criteria;
             if (next_cycle_criteria == d_cycle_criteria.end()) {
@@ -1918,7 +1918,7 @@ StandardTagAndInitialize::setCurrentTaggingCriteria(
          // Find the time criteria for the supplied time, if any.
          for (; d_cur_time_criteria != d_time_criteria.end();
               ++d_cur_time_criteria) {
-            std::set<TimeTagCriteria>::iterator next_time_criteria =
+            std::set<TimeTagCriteria, time_tag_criteria_less>::iterator next_time_criteria =
                d_cur_time_criteria;
             ++next_time_criteria;
             if (next_time_criteria == d_time_criteria.end()) {

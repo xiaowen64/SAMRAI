@@ -762,7 +762,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    assert(level_in_dbs.size() == 1 || output_dbs.size() == 1);
 #endif
 
-   const int out_size = output_dbs.size();
+   const int out_size = static_cast<int>(output_dbs.size());
 
    //Create an array of level output databases
    std::vector<boost::shared_ptr<tbox::Database> > level_out_dbs(out_size);

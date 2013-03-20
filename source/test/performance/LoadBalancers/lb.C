@@ -463,7 +463,9 @@ int main(
                L0_boxes->size());
          hier::BoxContainer::iterator L0_boxes_itr = L0_boxes->begin();
          for (int i = 0; i < my_boxes_start; ++i) {
-            ++L0_boxes_itr;
+            if (L0_boxes_itr != L0_boxes->end()) {
+               ++L0_boxes_itr;
+            }
          }
          for (int i = my_boxes_start; i < my_boxes_stop; ++i, ++L0_boxes_itr) {
             L0->addBox(*L0_boxes_itr, hier::BlockId::zero());

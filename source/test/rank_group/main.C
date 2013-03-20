@@ -321,7 +321,9 @@ int main(
                anchor_boxes.size());
          hier::BoxContainer::iterator anchor_boxes_itr = anchor_boxes.begin();
          for (int i = 0; i < my_boxes_start; ++i) {
-            ++anchor_boxes_itr;
+            if (anchor_boxes_itr != anchor_boxes.end()) {
+               ++anchor_boxes_itr;
+            }
          }
          for (int i = my_boxes_start; i < my_boxes_stop; ++i, ++anchor_boxes_itr) {
             anchor_box_level->addBox(*anchor_boxes_itr, hier::BlockId::zero());
