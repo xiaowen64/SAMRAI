@@ -73,8 +73,8 @@ Main {
 
 
 TileClustering {
-  box_size = 12, 12
-  coalesce_boxes = FALSE
+  box_size = 4, 4
+  coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
 }
@@ -84,9 +84,10 @@ BergerRigoutsos {
   sort_output_nodes = TRUE
   DEV_build_zero_width_connector = TRUE
   DEV_cluster_tiles = TRUE
-  DEV_tag_coarsen_ratio = 9, 9
-  DEV_log_node_history = FALSE
-  DEV_log_cluster_summary = FALSE
+  DEV_tag_coarsen_ratio = 4, 4
+  DEV_inflection_cut_threshold_ar = 4.0
+  DEV_log_node_history = TRUE
+  DEV_log_cluster_summary = TRUE
   DEV_log_cluster = FALSE
   // DEV_owner_mode = "SINGLE_OWNER"
   // DEV_algo_advance_mode = "SYNCHRONOUS"
@@ -94,7 +95,7 @@ BergerRigoutsos {
 
 
 TilePartitioner {
-  box_size = 9, 9
+  box_size = 12, 12
 
   TreeLoadBalancer {
     // Debugging options
@@ -150,7 +151,7 @@ PatchHierarchy {
    smallest_patch_size {
       level_0 = 6, 6
       level_1 = 6, 6
-      level_2 = 15, 15
+      level_2 = 12, 12
       // all finer levels will use same values as level_0...
    }
    ratio_to_coarser {
@@ -162,5 +163,5 @@ PatchHierarchy {
 
    allow_patches_smaller_than_ghostwidth = TRUE
    allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
-   proper_nesting_buffer = 9, 9
+   proper_nesting_buffer = 12, 12
 }

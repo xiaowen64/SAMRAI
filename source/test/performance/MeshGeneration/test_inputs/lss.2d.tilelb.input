@@ -19,15 +19,15 @@ Main {
 
    write_visit = TRUE
 
-   log_all_nodes = FALSE
+   log_all_nodes = TRUE
 
    // Domain definition
-   domain_boxes = [(0,0),(49,49)]
+   domain_boxes = [(0,0),(47,47)]
    x_lo = 0.0, 0.0
    x_up = 1.0, 1.0
 
    // Whether to enforce nesting.
-   enforce_nesting = TRUE, TRUE, FALSE
+   enforce_nesting = TRUE, TRUE, TRUE
 
    // Base nprocs for automatic scaling.
    autoscale_base_nprocs = 1
@@ -73,7 +73,7 @@ Main {
 
 
 TileClustering {
-  box_size = 10, 10
+  box_size = 4, 4
   coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
@@ -82,6 +82,9 @@ TileClustering {
 
 BergerRigoutsos {
   sort_output_nodes = TRUE
+  DEV_build_zero_width_connector = TRUE
+  DEV_cluster_tiles = TRUE
+  DEV_tag_coarsen_ratio = 4, 4
   DEV_log_node_history = FALSE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
@@ -91,7 +94,7 @@ BergerRigoutsos {
 
 
 TilePartitioner {
-  box_size = 10, 10
+  box_size = 12, 12
 
   TreeLoadBalancer {
     // Debugging options
@@ -145,7 +148,7 @@ PatchHierarchy {
       // all finer levels will use same values as level_0...
    }
    smallest_patch_size {
-      level_0 = 12, 12
+      level_0 = 6, 6
       level_1 = 6, 6
       level_2 = 15, 15
       // all finer levels will use same values as level_0...
@@ -159,5 +162,5 @@ PatchHierarchy {
 
    allow_patches_smaller_than_ghostwidth = TRUE
    allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
-   proper_nesting_buffer = 10, 10
+   proper_nesting_buffer = 12, 12
 }

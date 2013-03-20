@@ -352,7 +352,7 @@ BergerRigoutsos::findBoxesContainingTags(
    /*
     * Alter set-up for tile cluster mode:
     * - Coarsen tags
-    * - Prevent overrefinement
+    * - Prevent overrefinement (new tiles without any tags in them)
     * - Build zero-width Connectors
     * - Cluster locally
     */
@@ -360,6 +360,10 @@ BergerRigoutsos::findBoxesContainingTags(
       if ( !(d_tag_coarsen_ratio > hier::IntVector::getZero(d_dim)) ) {
          TBOX_ERROR("BergerRigoutsos: You have to specify non-zero tag_coarsen_ratio\n"
                     <<"when enabling cluster_tiles\n");
+      }
+      if ( !(d_tag_coarsen_ratio >= d_min_box) ) {
+         TBOX_ERROR("BergerRigoutsos: tag_coarsen_ratio (" << d_tag_coarsen_ratio
+                    << ") cannot be smaller than min_box (" << min_box << "\n");
       }
       d_tag_level = boost::make_shared<hier::PatchLevel>(d_dim);
       d_tag_level->setCoarsenedPatchLevel(tag_level, d_tag_coarsen_ratio);
@@ -375,6 +379,8 @@ BergerRigoutsos::findBoxesContainingTags(
 
       }
 
+      d_root_boxes.coarsen(d_tag_coarsen_ratio);
+      d_min_box = hier::IntVector::getOne(d_dim);
       d_efficiency_tol = 1.0;
       d_combine_tol = 1.0;
 
@@ -405,15 +411,8 @@ assert( d_tag_to_new->isTransposeOf( d_tag_to_new->getTranspose() ) );
          d_tag_coarsen_ratio,
          tag_level->getBoxLevel()->getRefinementRatio() );
 assert( d_tag_to_new->isTransposeOf( d_tag_to_new->getTranspose() ) );
-tbox::plog << tag_level->getBoxLevel()->format("TL: ", 1)
-           << d_tag_level->getBoxLevel()->format( "CTL: ", 1)
-           << d_new_box_level->format( "NEW: ", 1)
-           << refined_new_box_level->format( "REFINED: ", 1)
-           << std::endl;
-tbox::plog << "before refinement:\n"
-           << "tag--->new:\n" << d_tag_to_new->format("",2)
-           << "new--->tag:\n" << d_tag_to_new->getTranspose().format("",2)
-           << std::endl;
+// tbox::plog << tag_level->getBoxLevel()->format("TL: ", 1) << d_tag_level->getBoxLevel()->format( "CTL: ", 1) << d_new_box_level->format( "NEW: ", 1) << refined_new_box_level->format( "REFINED: ", 1) << std::endl;
+// tbox::plog << "before refinement:\n" << "tag--->new:\n" << d_tag_to_new->format("",2) << "new--->tag:\n" << d_tag_to_new->getTranspose().format("",2) << std::endl;
       d_new_box_level = refined_new_box_level;
 
       d_tag_to_new->setBase(*tag_level->getBoxLevel());
@@ -447,10 +446,7 @@ tbox::plog << "before refinement:\n"
       }
       d_tag_to_new->setTranspose(tmp_new_to_tag, true);
 
-tbox::plog << "after refinement:\n"
-           << "tag--->new:\n" << d_tag_to_new->format("",2)
-           << "new--->tag:\n" << d_tag_to_new->getTranspose().format("",2)
-           << std::endl;
+// tbox::plog << "after refinement:\n" << "tag--->new:\n" << d_tag_to_new->format("",2) << "new--->tag:\n" << d_tag_to_new->getTranspose().format("",2) << std::endl;
 assert( d_tag_to_new->isTransposeOf( d_tag_to_new->getTranspose() ) );
 
       {
@@ -461,8 +457,7 @@ assert( d_tag_to_new->isTransposeOf( d_tag_to_new->getTranspose() ) );
                                     new_to_sheared,
                                     d_tag_to_new->getTranspose(),
                                     hier::IntVector::getZero(d_dim) );
-tbox::plog << "sheared:\n" << sheared_new_box_level->format()
-           << "shear mapping:\n" << new_to_sheared->format();
+// tbox::plog << "sheared:\n" << sheared_new_box_level->format() << "shear mapping:\n" << new_to_sheared->format();
          hier::MappingConnectorAlgorithm mca;
          mca.modify( *d_tag_to_new,
                      *new_to_sheared,
