@@ -12,7 +12,6 @@
 
 #ifdef HAVE_HDF5
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/HDFDatabase.h"
 
 #include <string>

@@ -17,7 +17,6 @@
 #include "SAMRAI/hier/BlockId.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Index.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Dimension.h"
 
 #include <string>

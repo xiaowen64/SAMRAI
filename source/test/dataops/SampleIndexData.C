@@ -149,7 +149,6 @@ void SampleIndexData::getFromRestart(
  */
 
 //#include "SampleIndexData.h"
-//#include "SAMRAI/tbox/Array.C"
 //#include "SAMRAI/pdat/IndexData.C"
 //#include "SAMRAI/pdat/IndexDataFactory.C"
 //#include "SAMRAI/pdat/IndexVariable.C"

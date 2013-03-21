@@ -17,7 +17,6 @@
 #include "SAMRAI/math/HierarchyDataOpsReal.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/Variable.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include "boost/shared_ptr.hpp"

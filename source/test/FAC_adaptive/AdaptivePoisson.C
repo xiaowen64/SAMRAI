@@ -16,7 +16,6 @@
 #include "AdaptivePoisson.h"
 #include "SAMRAI/solv/CellPoissonFACOps.h"
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/Database.h"

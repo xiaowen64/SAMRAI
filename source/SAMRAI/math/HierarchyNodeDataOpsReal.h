@@ -17,7 +17,6 @@
 #include "SAMRAI/math/PatchNodeDataOpsReal.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/tbox/Array.h"
 
 #include "boost/shared_ptr.hpp"
 #include <iostream>

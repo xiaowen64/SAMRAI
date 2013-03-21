@@ -12,7 +12,6 @@
 
 #if defined(HAVE_SUNDIALS) && defined(HAVE_HYPRE)
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellData.h"

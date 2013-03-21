@@ -34,7 +34,6 @@ using namespace std;
 #include <math.h>
 #include <float.h>
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/hier/BoundaryBox.h"

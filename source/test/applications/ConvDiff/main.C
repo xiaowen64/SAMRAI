@@ -24,7 +24,6 @@ using namespace std;
 
 // Headers for basic SAMRAI objects
 #include "SAMRAI/tbox/SAMRAIManager.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/pdat/CellData.h"

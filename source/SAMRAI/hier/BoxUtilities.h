@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/Array.h"
 
 #include <list>
 #include <vector>

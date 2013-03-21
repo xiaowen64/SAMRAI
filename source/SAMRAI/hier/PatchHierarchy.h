@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/BaseGridGeometry.h"

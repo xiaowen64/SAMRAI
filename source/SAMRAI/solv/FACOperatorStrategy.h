@@ -13,7 +13,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
-#include "SAMRAI/tbox/Array.h"
 
 #include "boost/shared_ptr.hpp"
 

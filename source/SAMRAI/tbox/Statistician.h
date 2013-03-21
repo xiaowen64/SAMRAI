@@ -12,7 +12,6 @@
 #define included_tbox_Statistician
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Statistic.h"

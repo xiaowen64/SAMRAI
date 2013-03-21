@@ -20,7 +20,6 @@
 /*
  * Headers for basic SAMRAI objects used in this code.
  */
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/InputManager.h"

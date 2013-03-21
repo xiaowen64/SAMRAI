@@ -38,7 +38,6 @@ using namespace SAMRAI;
 #include <float.h>
 #include <vector>
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellData.h"

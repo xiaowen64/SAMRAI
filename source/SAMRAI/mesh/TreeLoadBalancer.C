@@ -21,7 +21,6 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellDataFactory.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/CenteredRankTree.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/MathUtilities.h"

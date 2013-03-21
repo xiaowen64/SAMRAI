@@ -12,7 +12,6 @@
 
 //#include <stdlib.h>
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Complex.h"

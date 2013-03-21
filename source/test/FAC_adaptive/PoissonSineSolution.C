@@ -16,7 +16,6 @@
 #include STL_SSTREAM_HEADER_FILE
 
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
-#include "SAMRAI/tbox/Array.h"
 
 using namespace SAMRAI;
 

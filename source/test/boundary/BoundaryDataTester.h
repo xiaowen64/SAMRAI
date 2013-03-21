@@ -24,7 +24,6 @@
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Array.h"
 
 #include "boost/shared_ptr.hpp"
 #include <string>

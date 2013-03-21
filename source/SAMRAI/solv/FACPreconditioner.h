@@ -16,7 +16,6 @@
 #include "SAMRAI/math/HierarchyDataOpsReal.h"
 #include "SAMRAI/solv/FACOperatorStrategy.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <algorithm>

@@ -24,7 +24,6 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/Schedule.h"
 #include "SAMRAI/tbox/Timer.h"
-#include "SAMRAI/tbox/Array.h"
 
 #include "boost/shared_ptr.hpp"
 #include <iostream>
