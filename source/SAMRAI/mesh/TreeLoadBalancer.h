@@ -1185,13 +1185,6 @@ private:
    double d_flexible_load_tol;
 
    /*!
-    * @brief Additional minimum box size restriction.
-    *
-    * See input parameter "min_load_fraction_per_box".
-    */
-   double d_min_load_fraction_per_box;
-
-   /*!
     * @brief Weighting factor for penalizing imbalance.
     *
     * @see combinedBreakingPenalty().
