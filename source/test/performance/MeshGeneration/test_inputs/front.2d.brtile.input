@@ -8,23 +8,24 @@
  *
  ************************************************************************/
 
-// Mesh configuration: Lump with 2 shells.
+// Mesh configuration: Sinusoidal front.
 
 Main {
    dim = 2
 
-   base_name = "lss.2d.treelb"
+   base_name = "front.2d.brtile"
    baseline_dirname = "test_inputs"
    baseline_action = "COMPARE" // "GENERATE" or "COMPARE"
 
    write_visit = TRUE
 
-   log_all_nodes = TRUE
+   log_all_nodes = FALSE
 
    // Domain definition
-   domain_boxes = [(0,0),(47,47)]
-   x_lo = 0.0, 0.0
-   x_up = 1.0, 1.0
+   domain_boxes = [(0,0),(99,49)]
+   // domain_boxes = [(0,0),(49,24)]
+   xlo = 0.0, 0.0
+   xhi = 2.0, 1.0
 
    // Whether to enforce nesting.
    enforce_nesting = TRUE, TRUE, FALSE
@@ -36,10 +37,10 @@ Main {
    box_generator_type = "BergerRigoutsos"
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer, TilePartitioner
-   load_balancer_type = "TreeLoadBalancer"
+   load_balancer_type = "TilePartitioner"
 
    // Whether to load balance (one value for each level).
-   load_balance = TRUE, TRUE, TRUE
+   load_balance = TRUE, TRUE
 
    efficiency_tol = 0.75
    combine_tol = 0.75
@@ -49,32 +50,31 @@ Main {
    */
    ghost_cell_width = 4, 4
 
-   mesh_generator_name = "SphericalShellGenerator"
+   mesh_generator_name = "SinusoidalFrontGenerator"
 
-   SphericalShellGenerator {
+   SinusoidalFrontGenerator {
       /*
-        Specify unbalanced layer by tagging a set of concentric shells,
-        centered at (0,0), with shell i having inner radius radii[2*i]
-        and outer radius radii[(2*i)+1].  Note that making shells too thin
-        can lead to discontinuous tagging.
+        Define a set of sinusoidal fronts oriented in perpendicular to the x-axis.
       */
-      radii = 0.0, 0.35,    0.60, 0.65,    0.95, 0.97
+      init_disp = 1.0, 1.0
+      period = 2.0, 4.0
+      amplitude = 0.5
 
-      // Tag L0 by buffering and l1 by buffering.
-      buffer_distance_0 = 0.04, 0.04
-      buffer_distance_1 = 0.00, 0.00
+      // Tag L0 by buffering and L1 by buffering.
+      buffer_distance_0 = 0.07, 0.07
+      buffer_distance_1 = 0.02, 0.02
 
       // Tag L0 by buffering and l1 by shrinking.
-      // shrink_distance_0 = 0.20, 0.20
-      // shrink_distance_1 = 0.20, 0.20
+      // buffer_distance_0 = 0.02, 0.02
+      // shrink_distance_1 = 0.06, 0.06
    }
 
 }
 
 
 TileClustering {
-  box_size = 4, 4
-  coalesce_boxes = TRUE
+  box_size = 10, 10
+  coalesce_boxes = FALSE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
 }
@@ -83,11 +83,10 @@ TileClustering {
 BergerRigoutsos {
   sort_output_nodes = TRUE
   DEV_build_zero_width_connector = TRUE
-  DEV_cluster_locally = FALSE
-  DEV_cluster_tiles = FALSE
-  DEV_min_box_size_from_cutting = 7, 7
-  // DEV_tag_coarsen_ratio = 4, 4
-  DEV_inflection_cut_threshold_ar = 4.0
+  DEV_cluster_tiles = TRUE
+  DEV_tag_coarsen_ratio = 10, 10
+  DEV_inflection_cut_threshold_ar = 0.0
+  // DEV_min_box_size_from_cutting = 7, 7
   DEV_log_node_history = TRUE
   DEV_log_cluster_summary = TRUE
   DEV_log_cluster = FALSE
@@ -97,7 +96,7 @@ BergerRigoutsos {
 
 
 TilePartitioner {
-  box_size = 12, 12
+  box_size = 30, 30
 
   TreeLoadBalancer {
     // Debugging options
@@ -113,8 +112,6 @@ TilePartitioner {
 
 
 TreeLoadBalancer {
-  // flexible_load_tolerance = 0.03
-  // min_load_fraction_per_box = 0.0
   DEV_report_load_balance = TRUE // Reported in main
   DEV_balance_penalty_wt = 1.0
   DEV_surface_penalty_wt = 1.0
@@ -167,5 +164,5 @@ PatchHierarchy {
 
    allow_patches_smaller_than_ghostwidth = TRUE
    allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
-   proper_nesting_buffer = 1, 1
+   proper_nesting_buffer = 10, 10
 }

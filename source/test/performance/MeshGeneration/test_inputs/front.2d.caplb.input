@@ -28,7 +28,7 @@ Main {
    xhi = 2.0, 1.0
 
    // Whether to enforce nesting.
-   enforce_nesting = TRUE, TRUE, TRUE
+   enforce_nesting = TRUE, TRUE, FALSE
 
    // Base nprocs for automatic scaling.
    autoscale_base_nprocs = 1
@@ -42,8 +42,8 @@ Main {
    // Whether to load balance (one value for each level).
    load_balance = TRUE, TRUE
 
-   efficiency_tol = 0.85
-   combine_tol = 0.85
+   efficiency_tol = 0.75
+   combine_tol = 0.75
 
    /*
      Specify ghost-cell-width between anchor and unbalanced.
@@ -82,8 +82,13 @@ TileClustering {
 
 BergerRigoutsos {
   sort_output_nodes = TRUE
-  DEV_log_node_history = FALSE
-  DEV_log_cluster_summary = FALSE
+  DEV_build_zero_width_connector = TRUE
+  DEV_cluster_tiles = FALSE
+  // DEV_tag_coarsen_ratio = 4, 4
+  DEV_inflection_cut_threshold_ar = 4.0
+  DEV_min_box_size_from_cutting = 4, 4
+  DEV_log_node_history = TRUE
+  DEV_log_cluster_summary = TRUE
   DEV_log_cluster = FALSE
   // DEV_owner_mode = "SINGLE_OWNER"
   // DEV_algo_advance_mode = "SYNCHRONOUS"

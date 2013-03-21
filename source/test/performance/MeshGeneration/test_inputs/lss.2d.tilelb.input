@@ -19,7 +19,7 @@ Main {
 
    write_visit = TRUE
 
-   log_all_nodes = TRUE
+   log_all_nodes = FALSE
 
    // Domain definition
    domain_boxes = [(0,0),(47,47)]
@@ -41,8 +41,8 @@ Main {
    // Whether to load balance (one value for each level).
    load_balance = TRUE, TRUE
 
-   efficiency_tol = 0.85
-   combine_tol = 0.85
+   efficiency_tol = 0.75
+   combine_tol = 0.75
 
    /*
      Specify ghost-cell-width between anchor and unbalanced.
@@ -73,7 +73,7 @@ Main {
 
 
 TileClustering {
-  box_size = 4, 4
+  box_size = 10, 10
   coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
@@ -94,7 +94,7 @@ BergerRigoutsos {
 
 
 TilePartitioner {
-  box_size = 12, 12
+  box_size = 30, 30
 
   TreeLoadBalancer {
     // Debugging options
@@ -162,5 +162,5 @@ PatchHierarchy {
 
    allow_patches_smaller_than_ghostwidth = TRUE
    allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
-   proper_nesting_buffer = 12, 12
+   proper_nesting_buffer = 10, 10
 }

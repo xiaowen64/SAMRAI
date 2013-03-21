@@ -13,7 +13,7 @@
 Main {
    dim = 2
 
-   base_name = "lss.2d.treelb"
+   base_name = "lss.2d.brlocal"
    baseline_dirname = "test_inputs"
    baseline_action = "COMPARE" // "GENERATE" or "COMPARE"
 
@@ -83,7 +83,7 @@ TileClustering {
 BergerRigoutsos {
   sort_output_nodes = TRUE
   DEV_build_zero_width_connector = TRUE
-  DEV_cluster_locally = FALSE
+  DEV_cluster_locally = TRUE
   DEV_cluster_tiles = FALSE
   DEV_min_box_size_from_cutting = 7, 7
   // DEV_tag_coarsen_ratio = 4, 4
