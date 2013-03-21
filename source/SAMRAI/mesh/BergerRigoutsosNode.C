@@ -1401,7 +1401,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
     * If d_box cannot be split without violating min_size, it should
     * be accepted.
     *
-    * If cut_margin is negative in all directions, we cannot cut d_box
+    * If cut_margin is negative in any direction, we cannot cut d_box
     * across that direction without violating min_box.
     */
    hier::IntVector min_size = d_common->d_min_box;
