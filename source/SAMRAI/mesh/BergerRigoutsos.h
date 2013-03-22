@@ -176,7 +176,10 @@ class BergerRigoutsosNode;
  * clustering only and set up zero-width Connectors.
  *
  * @internal DEV_cluster_locally (false): Whether to cluster locally
- * (disregard remote tags).
+ * (disregard remote tags).  A side-effect of local clustering is that
+ * the cluster extents can be different depending on how the tag level
+ * is partitioned, so they can be different for different numbers of
+ * processes.
  *
  */
 class BergerRigoutsos:public BoxGeneratorStrategy
