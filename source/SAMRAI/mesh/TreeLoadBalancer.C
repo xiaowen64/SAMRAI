@@ -86,7 +86,6 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_comm_graph_writer(),
    d_master_workload_data_id(d_default_data_id),
    d_flexible_load_tol(0.0),
-   d_min_load_fraction_per_box(0.03),
    d_balance_penalty_wt(1.0),
    d_surface_penalty_wt(1.0),
    d_slender_penalty_wt(1.0),
@@ -403,29 +402,6 @@ TreeLoadBalancer::loadBalanceBoxLevel(
 
 
    /*
-    * Add additional minimum box size restriction based on
-    * d_min_load_fraction_per_box: Should be no smaller than a cubic
-    * box that satisfies this work load.
-    */
-   if ( d_min_load_fraction_per_box > 0.0 ) {
-      const hier::IntVector tmp_vec(d_min_size);
-
-      int box_size_for_min_load_restriction =
-         static_cast<int>(pow(d_global_avg_load*d_min_load_fraction_per_box,
-                              1.0/d_dim.getValue())+ 0.5);
-      d_min_size.max( hier::IntVector( d_dim, box_size_for_min_load_restriction ) );
-      d_min_size.ceilingDivide(cut_factor);
-      d_min_size *= cut_factor;
-      d_min_load = d_min_size.getProduct();
-
-      if (d_print_steps) {
-         tbox::plog << "min_load_fraction_per_box changed min_size from " << tmp_vec;
-         tbox::plog << " to " << d_min_size << '\n';
-      }
-   }
-
-
-   /*
     * Compute how many root cycles to use based on severity of imbalance
     * using formula d_max_cycle_spread_ratio^number_of_cycles >= fanout_size.
     */
@@ -555,15 +531,6 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       }
 
    }
-
-
-   /*
-    * Undo effects of min_load_fraction_per_box on d_min_size.  We do
-    * not want that constraint during the remaining load balance
-    * steps.
-    */
-   d_min_size = min_size;
-   d_min_load = d_min_size.getProduct();
 
 
    /*
@@ -3892,16 +3859,6 @@ TreeLoadBalancer::getFromInput(
       d_flexible_load_tol =
          input_db->getDoubleWithDefault("flexible_load_tolerance",
             d_flexible_load_tol);
-
-      d_min_load_fraction_per_box =
-         input_db->getDoubleWithDefault("min_load_fraction_per_box",
-            d_min_load_fraction_per_box);
-      if ( d_min_load_fraction_per_box < 0 ||
-           d_min_load_fraction_per_box >= 1.0 ) {
-         TBOX_ERROR("TreeLoadBalancer::getFromInput: min_load_fraction_per_box value of "
-                    << d_min_load_fraction_per_box
-                    << " is out of range.  It should be >= 0 and < 1 and on the order of 0.01.");
-      }
 
       d_balance_penalty_wt =
          input_db->getDoubleWithDefault("DEV_balance_penalty_wt", 1.0);

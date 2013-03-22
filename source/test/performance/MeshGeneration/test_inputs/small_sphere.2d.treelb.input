@@ -80,8 +80,6 @@ Main {
 TreeLoadBalancer {
   DEV_report_load_balance = FALSE // Reported in main
   flexible_load_tolerance = 0.00
-  min_load_fraction_per_box = 0.03
-
   // Debugging options
   DEV_check_map = FALSE
   DEV_check_connectivity = FALSE

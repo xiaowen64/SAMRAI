@@ -8,12 +8,12 @@
  *
  ************************************************************************/
 
-// Mesh configuration: Single box
+// Mesh configuration: Lump with 2 shells.
 
 Main {
-   dim = 3
+   dim = 2
 
-   base_name = "box.3d.tilelb"
+   base_name = "lss.2d.brlocal"
    baseline_dirname = "test_inputs"
    baseline_action = "COMPARE" // "GENERATE" or "COMPARE"
 
@@ -22,32 +22,32 @@ Main {
    log_all_nodes = TRUE
 
    // Domain definition
-   domain_boxes = [(0,0,0),(31,31,31)]
-   xlo = 0.0, 0.0, 0.0
-   xhi = 1.0, 1.0, 1.0
+   domain_boxes = [(0,0),(47,47)]
+   x_lo = 0.0, 0.0
+   x_up = 1.0, 1.0
 
    // Whether to enforce nesting.
-   enforce_nesting = TRUE, FALSE, FALSE
+   enforce_nesting = TRUE, TRUE, FALSE
 
    // Base nprocs for automatic scaling.
-   autoscale_base_nprocs = 4
+   autoscale_base_nprocs = 1
 
    // Box generator types: BergerRigoutsos, TileClustering
-   box_generator_type = "TileClustering"
+   box_generator_type = "BergerRigoutsos"
 
    // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer, TilePartitioner
-   load_balancer_type = "TilePartitioner"
+   load_balancer_type = "TreeLoadBalancer"
 
    // Whether to load balance (one value for each level).
    load_balance = TRUE, TRUE, TRUE
 
-   efficiency_tol = 0.85
-   combine_tol = 0.85
+   efficiency_tol = 0.75
+   combine_tol = 0.75
 
    /*
      Specify ghost-cell-width between anchor and unbalanced.
    */
-   ghost_cell_width = 4, 4, 4
+   ghost_cell_width = 4, 4
 
    mesh_generator_name = "SphericalShellGenerator"
 
@@ -58,22 +58,23 @@ Main {
         and outer radius radii[(2*i)+1].  Note that making shells too thin
         can lead to discontinuous tagging.
       */
-      // radii = 0.0, 0.35,    0.70, 0.75,    1.15, 1.17
+      radii = 0.0, 0.35,    0.60, 0.65,    0.95, 0.97
 
       // Tag L0 by buffering and l1 by buffering.
-      // buffer_distance_0 = 0.04, 0.04, 0.04
-      // buffer_distance_1 = 0.00, 0.00, 0.00
+      buffer_distance_0 = 0.04, 0.04
+      buffer_distance_1 = 0.00, 0.00
 
       // Tag L0 by buffering and l1 by shrinking.
-      shrink_distance_0 = 0.20, 0.20, 0.20
-      shrink_distance_1 = 0.20, 0.20, 0.20
+      // shrink_distance_0 = 0.20, 0.20
+      // shrink_distance_1 = 0.20, 0.20
    }
 
 }
 
 
 TileClustering {
-  box_size = 4, 4, 4
+  box_size = 4, 4
+  coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
 }
@@ -81,8 +82,14 @@ TileClustering {
 
 BergerRigoutsos {
   sort_output_nodes = TRUE
-  DEV_log_node_history = FALSE
-  DEV_log_cluster_summary = FALSE
+  DEV_build_zero_width_connector = TRUE
+  DEV_cluster_locally = TRUE
+  DEV_cluster_tiles = FALSE
+  DEV_min_box_size_from_cutting = 7, 7
+  // DEV_tag_coarsen_ratio = 4, 4
+  DEV_inflection_cut_threshold_ar = 4.0
+  DEV_log_node_history = TRUE
+  DEV_log_cluster_summary = TRUE
   DEV_log_cluster = FALSE
   // DEV_owner_mode = "SINGLE_OWNER"
   // DEV_algo_advance_mode = "SYNCHRONOUS"
@@ -90,14 +97,14 @@ BergerRigoutsos {
 
 
 TilePartitioner {
-  box_size = 8, 8, 8
+  box_size = 12, 12
 
   TreeLoadBalancer {
     // Debugging options
     DEV_check_map = TRUE
     DEV_check_connectivity = FALSE
-    DEV_print_steps = TRUE
-    DEV_print_swap_steps = FALSE
+    DEV_print_steps = FALSE
+    DEV_print_swap_steps = TRUE
     DEV_print_break_steps = TRUE
     DEV_print_edge_steps = FALSE
     DEV_summarize_map = TRUE
@@ -106,6 +113,7 @@ TilePartitioner {
 
 
 TreeLoadBalancer {
+  // flexible_load_tolerance = 0.03
   DEV_report_load_balance = TRUE // Reported in main
   DEV_balance_penalty_wt = 1.0
   DEV_surface_penalty_wt = 1.0
@@ -139,23 +147,24 @@ PatchHierarchy {
    max_levels = 3
 
    largest_patch_size {
-      level_0 = -1, -1, -1
-      // level_0 = 20, 20, 20
+      level_0 = -1,-1
+      // level_0 = 20,20
       // all finer levels will use same values as level_0...
    }
    smallest_patch_size {
-      level_0 = 6, 6, 6
-      level_1 = 6, 6, 6
-      level_2 = 6, 6, 6
+      level_0 = 6, 6
+      level_1 = 6, 6
+      level_2 = 12, 12
       // all finer levels will use same values as level_0...
    }
    ratio_to_coarser {
-      level_1            = 2, 2, 2
-      level_2            = 2, 2, 2
+      level_1            = 3, 3
+      level_2            = 3, 3
+      level_3            = 3, 3
       //  etc.
    }
 
    allow_patches_smaller_than_ghostwidth = TRUE
    allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
-   proper_nesting_buffer = 4, 4, 4
+   proper_nesting_buffer = 1, 1
 }

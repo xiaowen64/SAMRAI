@@ -91,7 +91,6 @@ Main {
 
 TreeLoadBalancer {
   DEV_report_load_balance = FALSE // Reported in main
-  min_load_fraction_per_box = 0.03
   DEV_balance_penalty_wt = 1.0
   DEV_surface_penalty_wt = 1.0
   DEV_slender_penalty_wt = 1.0
