@@ -41,8 +41,8 @@ Main {
    // Whether to load balance (one value for each level).
    load_balance = TRUE, TRUE
 
-   efficiency_tol = 0.85
-   combine_tol = 0.85
+   efficiency_tol = 0.75
+   combine_tol = 0.75
 
    /*
      Specify ghost-cell-width between anchor and unbalanced.

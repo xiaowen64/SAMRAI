@@ -735,11 +735,12 @@ BergerRigoutsosNode::runChildren_check()
       return false;
    }
 
+   const double combine_reduction =
+      double(d_lft_child->d_box.size() + d_rht_child->d_box.size()) / d_box.size();
    if (d_lft_child->boxAccepted() &&
        d_rht_child->boxAccepted() &&
        d_box.numberCells() <= d_common->d_max_box_size &&
-       (d_lft_child->d_box.size() + d_rht_child->d_box.size() >=
-        d_common->d_combine_tol * d_box.size())) {
+       ( combine_reduction >= d_common->d_combine_tol )) {
 
       // Discard childrens' graph nodes in favor of recombination.
 
@@ -748,6 +749,7 @@ BergerRigoutsosNode::runChildren_check()
       if (d_common->d_log_node_history) {
          d_common->writeCounters();
          tbox::plog << "Recombine " << d_generation << ':' << d_pos
+                    << " insufficient reduction of " << combine_reduction
                     << "  " << d_accepted_box
                     << " <= " << d_lft_child->d_accepted_box
                     << " + " << d_rht_child->d_accepted_box
@@ -1401,7 +1403,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
     * If d_box cannot be split without violating min_size, it should
     * be accepted.
     *
-    * If cut_margin is negative in all directions, we cannot cut d_box
+    * If cut_margin is negative in any direction, we cannot cut d_box
     * across that direction without violating min_box.
     */
    hier::IntVector min_size = d_common->d_min_box;

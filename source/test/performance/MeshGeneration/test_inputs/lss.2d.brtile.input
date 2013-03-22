@@ -19,7 +19,7 @@ Main {
 
    write_visit = TRUE
 
-   log_all_nodes = TRUE
+   log_all_nodes = FALSE
 
    // Domain definition
    domain_boxes = [(0,0),(47,47)]
@@ -163,5 +163,5 @@ PatchHierarchy {
 
    allow_patches_smaller_than_ghostwidth = TRUE
    allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
-   proper_nesting_buffer = 12, 12
+   proper_nesting_buffer = 4, 4
 }
