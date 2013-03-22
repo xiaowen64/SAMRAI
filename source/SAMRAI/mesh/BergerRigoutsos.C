@@ -398,7 +398,6 @@ assert( d_tag_to_new->isTransposeOf( d_tag_to_new->getTranspose() ) );
        * back into tag_level's resolution.
        */
       const hier::BoxLevel &tag_box_level = *tag_level->getBoxLevel();
-      const size_t number_of_coarse_new_cells = d_new_box_level->getLocalNumberOfCells();
       const hier::IntVector old_width = d_tag_to_new->getConnectorWidth();
       const hier::IntVector old_transpose_width = d_tag_to_new->getTranspose().getConnectorWidth();
       boost::shared_ptr<hier::BoxLevel> refined_new_box_level(

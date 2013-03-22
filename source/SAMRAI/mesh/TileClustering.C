@@ -220,7 +220,7 @@ TileClustering::findBoxesContainingTags(
       hier::BoxContainer new_boxes(new_box_level->getBoxes());
       new_boxes.unorder();
       new_boxes.coalesce();
-      if ( new_boxes.size() != new_box_level->getLocalNumberOfBoxes() ) {
+      if ( new_boxes.size() != size_t(new_box_level->getLocalNumberOfBoxes()) ) {
 
          /*
           * Coalesce changed the new boxes, so rebuild new_box_level and
