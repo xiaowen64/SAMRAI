@@ -230,6 +230,7 @@ BoxContainer::insert(
 
    if (!d_ordered && isEmpty()) {
       order();
+      position.d_set_iter = d_set.begin();
    }
 
    if (!d_ordered) {
