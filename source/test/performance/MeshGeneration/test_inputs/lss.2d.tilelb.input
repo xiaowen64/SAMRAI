@@ -39,7 +39,7 @@ Main {
    load_balancer_type = "TilePartitioner"
 
    // Whether to load balance (one value for each level).
-   load_balance = TRUE, TRUE
+   load_balance = TRUE, TRUE, TRUE
 
    efficiency_tol = 0.75
    combine_tol = 0.75
@@ -73,7 +73,7 @@ Main {
 
 
 TileClustering {
-  box_size = 4, 4
+  box_size = 7, 7
   coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
@@ -82,9 +82,12 @@ TileClustering {
 
 BergerRigoutsos {
   sort_output_nodes = TRUE
+  DEV_min_box_size_from_cutting = 7, 7
   DEV_build_zero_width_connector = TRUE
-  DEV_cluster_tiles = TRUE
-  DEV_tag_coarsen_ratio = 4, 4
+  DEV_cluster_locally = FALSE
+  DEV_cluster_tiles = FALSE
+  DEV_tag_coarsen_ratio = 1, 1
+  DEV_inflection_cut_threshold_ar = 4.0
   DEV_log_node_history = FALSE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
@@ -94,7 +97,7 @@ BergerRigoutsos {
 
 
 TilePartitioner {
-  box_size = 12, 12
+  box_size = 21, 21
 
   TreeLoadBalancer {
     // Debugging options
@@ -110,6 +113,7 @@ TilePartitioner {
 
 
 TreeLoadBalancer {
+  flexible_load_tolerance = 0.03
   DEV_report_load_balance = TRUE // Reported in main
   DEV_balance_penalty_wt = 1.0
   DEV_surface_penalty_wt = 1.0
@@ -150,7 +154,7 @@ PatchHierarchy {
    smallest_patch_size {
       level_0 = 6, 6
       level_1 = 6, 6
-      level_2 = 15, 15
+      level_2 = 12, 12
       // all finer levels will use same values as level_0...
    }
    ratio_to_coarser {
@@ -162,5 +166,5 @@ PatchHierarchy {
 
    allow_patches_smaller_than_ghostwidth = TRUE
    allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
-   proper_nesting_buffer = 12, 12
+   proper_nesting_buffer = 7, 7
 }

@@ -19,7 +19,7 @@ Main {
 
    write_visit = TRUE
 
-   log_all_nodes = TRUE
+   log_all_nodes = FALSE
 
    // Domain definition
    domain_boxes = [(0,0),(47,47)]
@@ -27,7 +27,7 @@ Main {
    x_up = 1.0, 1.0
 
    // Whether to enforce nesting.
-   enforce_nesting = TRUE, TRUE, FALSE
+   enforce_nesting = TRUE, TRUE, TRUE
 
    // Base nprocs for automatic scaling.
    autoscale_base_nprocs = 1
@@ -73,7 +73,7 @@ Main {
 
 
 TileClustering {
-  box_size = 4, 4
+  box_size = 7, 7
   coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
@@ -82,14 +82,14 @@ TileClustering {
 
 BergerRigoutsos {
   sort_output_nodes = TRUE
+  DEV_min_box_size_from_cutting = 7, 7
   DEV_build_zero_width_connector = TRUE
   DEV_cluster_locally = TRUE
   DEV_cluster_tiles = FALSE
-  DEV_min_box_size_from_cutting = 7, 7
-  // DEV_tag_coarsen_ratio = 4, 4
+  DEV_tag_coarsen_ratio = 1, 1
   DEV_inflection_cut_threshold_ar = 4.0
-  DEV_log_node_history = TRUE
-  DEV_log_cluster_summary = TRUE
+  DEV_log_node_history = FALSE
+  DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
   // DEV_owner_mode = "SINGLE_OWNER"
   // DEV_algo_advance_mode = "SYNCHRONOUS"
@@ -97,7 +97,7 @@ BergerRigoutsos {
 
 
 TilePartitioner {
-  box_size = 12, 12
+  box_size = 21, 21
 
   TreeLoadBalancer {
     // Debugging options
@@ -113,7 +113,7 @@ TilePartitioner {
 
 
 TreeLoadBalancer {
-  // flexible_load_tolerance = 0.03
+  flexible_load_tolerance = 0.03
   DEV_report_load_balance = TRUE // Reported in main
   DEV_balance_penalty_wt = 1.0
   DEV_surface_penalty_wt = 1.0

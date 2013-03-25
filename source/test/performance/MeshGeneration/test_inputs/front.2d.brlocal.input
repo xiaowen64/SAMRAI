@@ -73,7 +73,7 @@ Main {
 
 
 TileClustering {
-  box_size = 10, 10
+  box_size = 7, 7
   coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
@@ -97,7 +97,7 @@ BergerRigoutsos {
 
 
 TilePartitioner {
-  box_size = 20, 20
+  box_size = 21, 21
 
   TreeLoadBalancer {
     // Debugging options
@@ -113,6 +113,7 @@ TilePartitioner {
 
 
 TreeLoadBalancer {
+  flexible_load_tolerance = 0.03
   DEV_report_load_balance = TRUE // Reported in main
   DEV_balance_penalty_wt = 1.0
   DEV_surface_penalty_wt = 1.0
@@ -152,8 +153,8 @@ PatchHierarchy {
    }
    smallest_patch_size {
       level_0 = 12, 12
-      level_1 = 6, 6
-      level_2 = 6, 6
+      level_1 = 12, 12
+      level_2 = 12, 12
       // all finer levels will use same values as level_0...
    }
    ratio_to_coarser {
