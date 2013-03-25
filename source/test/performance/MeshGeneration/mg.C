@@ -495,9 +495,8 @@ int main(
 
          outputPrebalance( *L0, domain_box_level, ghost_cell_width, "L0: " );
 
-         tbox::pout << "\tPartitioning..." << std::endl;
-
          if ( load_balance[0] ) {
+            tbox::pout << "\tPartitioning..." << std::endl;
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             lb0->loadBalanceBoxLevel(
                *L0,
@@ -608,8 +607,6 @@ int main(
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb1
             = createLoadBalancer( input_db, load_balancer_type, rank_tree_type, 1 , dim);
 
-         tbox::pout << "\tPartitioning..." << std::endl;
-
          outputPrebalance( *L1, *L0, required_connector_width, "L1: " );
 
          tbox::plog << "\n\tL1 prebalance loads:\n";
@@ -617,9 +614,8 @@ int main(
             (double)L1->getLocalNumberOfCells(),
             L1->getMPI());
 
-         tbox::pout << "\tPartitioning..." << std::endl;
-
          if ( load_balance[1] ) {
+            tbox::pout << "\tPartitioning..." << std::endl;
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             lb1->loadBalanceBoxLevel(
                *L1,
@@ -741,8 +737,6 @@ int main(
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb2
             = createLoadBalancer( input_db, load_balancer_type, rank_tree_type, 2 , dim);
 
-         tbox::pout << "\tPartitioning..." << std::endl;
-
          outputPrebalance( *L2, L1, required_connector_width, "L2: " );
 
          tbox::plog << "\n\tL2 prebalance loads:\n";
@@ -750,9 +744,8 @@ int main(
             (double)L2->getLocalNumberOfCells(),
             L2->getMPI());
 
-         tbox::pout << "\tPartitioning..." << std::endl;
-
          if ( load_balance[2] ) {
+            tbox::pout << "\tPartitioning..." << std::endl;
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             lb2->loadBalanceBoxLevel(
                *L2,
