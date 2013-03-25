@@ -15,7 +15,7 @@ VPATH	      =	@srcdir@
 OBJECT        = ../../../..
 
 # For classes that are non-dimensional.
-OBJS= 	appu_ebdry2d.o appu_ebdry3d.o appu_cpdat2buf2d.o\
+OBJS= 	appu_cpdat2buf2d.o\
 	appu_cpdat2buf3d.o\
 	appu_cartbdry2d.o \
 	appu_cartbdry3d.o 
