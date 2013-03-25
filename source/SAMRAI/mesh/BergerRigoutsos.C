@@ -392,7 +392,8 @@ tbox::plog << "BergerRigoutsos::findBoxesContainingTags: set to cluster tiles of
 
 assert( d_tag_to_new->isTransposeOf( d_tag_to_new->getTranspose() ) );
 
-   if ( d_cluster_tiles ) {
+   if ( d_cluster_tiles &&
+        d_tag_coarsen_ratio != hier::IntVector::getOne(d_dim) ) {
       /*
        * We clustered in the coarsened resolution.  Now put everything
        * back into tag_level's resolution.
@@ -447,24 +448,34 @@ assert( d_tag_to_new->isTransposeOf( d_tag_to_new->getTranspose() ) );
 
 // tbox::plog << "after refinement:\n" << "tag--->new:\n" << d_tag_to_new->format("",2) << "new--->tag:\n" << d_tag_to_new->getTranspose().format("",2) << std::endl;
 assert( d_tag_to_new->isTransposeOf( d_tag_to_new->getTranspose() ) );
-
-      {
-         hier::BoxLevelConnectorUtils blcu;
-         boost::shared_ptr<hier::BoxLevel> sheared_new_box_level;
-         boost::shared_ptr<hier::MappingConnector> new_to_sheared;
-         blcu.computeInternalParts( sheared_new_box_level,
-                                    new_to_sheared,
-                                    d_tag_to_new->getTranspose(),
-                                    hier::IntVector::getZero(d_dim) );
-// tbox::plog << "sheared:\n" << sheared_new_box_level->format() << "shear mapping:\n" << new_to_sheared->format();
-         hier::MappingConnectorAlgorithm mca;
-         mca.modify( *d_tag_to_new,
-                     *new_to_sheared,
-                     d_new_box_level.get(),
-                     sheared_new_box_level.get() );
-      }
    }
 
+
+   /*
+    * Shearing off parts of the cluster outside the local tag level
+    * is needed in two situations.
+    *
+    * After clustering locally, because parts outside local tag level
+    * may overlap with remote clusters.
+    *
+    * After clustering coarsened tags, coarsened cells may lie partly
+    * outside outside the domain.
+    */
+   if ( d_cluster_locally ||
+        d_tag_coarsen_ratio != hier::IntVector::getOne(d_dim) ) {
+      hier::BoxLevelConnectorUtils blcu;
+      boost::shared_ptr<hier::BoxLevel> sheared_new_box_level;
+      boost::shared_ptr<hier::MappingConnector> new_to_sheared;
+      blcu.computeInternalParts( sheared_new_box_level,
+                                 new_to_sheared,
+                                 d_tag_to_new->getTranspose(),
+                                 hier::IntVector::getZero(d_dim) );
+      hier::MappingConnectorAlgorithm mca;
+      mca.modify( *d_tag_to_new,
+                  *new_to_sheared,
+                  d_new_box_level.get(),
+                  sheared_new_box_level.get() );
+   }
 
    if (d_sort_output_nodes == true) {
       /*
