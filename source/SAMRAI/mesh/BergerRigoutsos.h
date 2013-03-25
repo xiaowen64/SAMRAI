@@ -168,12 +168,13 @@ class BergerRigoutsosNode;
  * has some consequences for performance, but whether it is a net gain
  * or loss has not been generally established.
  *
- * @internal DEV_tag_coarsen_ratio (1):
- * Coarsen tags by this ratio, cluster, then refine the resulting cluster.
- *
  * @internal DEV_cluster_tiles (false): Whether to cluster into
  * tiles.  If true, use tag_coarsen_ratio for tile size, use local
  * clustering only and set up zero-width Connectors.
+ *
+ * @internal DEV_tag_coarsen_ratio (1):
+ * Used only when DEV_cluster_tiles is true.
+ * Coarsen tags by this ratio, cluster, then refine the resulting cluster.
  *
  * @internal DEV_cluster_locally (false): Whether to cluster locally
  * (disregard remote tags).  A side-effect of local clustering is that

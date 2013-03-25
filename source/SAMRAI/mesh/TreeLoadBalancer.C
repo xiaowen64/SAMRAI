@@ -612,7 +612,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       }
       if (errs != 0) {
          TBOX_ERROR(
-            "Errors in load balance mapping found."
+            "Errors in load balance mapping found.\n"
             << "anchor_box_level:\n" << anchor_to_balance.getBase().format("", 2)
             << "balance_box_level:\n" << balance_box_level.format("", 2)
             << "anchor_to_balance:\n" << anchor_to_balance.format("", 2)

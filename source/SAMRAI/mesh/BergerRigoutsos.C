@@ -172,9 +172,9 @@ BergerRigoutsos::getFromInput(
          tbox::plog << "BergerRigoutsos: Setting up for clustering tiles:\n"
                     << "Possibly overriding inputs for efficiency thrsholds,\n"
                     << "building zero-width Connectors and clustering locally.\n";
-         if ( !(d_tag_coarsen_ratio > hier::IntVector::getOne(d_tag_coarsen_ratio.getDim())) ) {
+         if ( !(d_tag_coarsen_ratio > hier::IntVector::getZero(d_tag_coarsen_ratio.getDim())) ) {
             TBOX_ERROR("BergerRigoutsos: When clustering tiles, the tag_coarsen_ratio\n"
-                       <<"must be greater than one.");
+                       <<"must be positive.");
          }
          d_build_zero_width_connector = true;
          d_cluster_locally = true;
@@ -358,7 +358,7 @@ BergerRigoutsos::findBoxesContainingTags(
     */
    if ( d_cluster_tiles ) {
       if ( !(d_tag_coarsen_ratio > hier::IntVector::getZero(d_dim)) ) {
-         TBOX_ERROR("BergerRigoutsos: You have to specify non-zero tag_coarsen_ratio\n"
+         TBOX_ERROR("BergerRigoutsos: You have to specify positive tag_coarsen_ratio\n"
                     <<"when enabling cluster_tiles\n");
       }
       if ( !(d_tag_coarsen_ratio >= d_min_box) ) {
