@@ -4013,23 +4013,25 @@ TreeLoadBalancer::breakOffLoad_planar(
        * hi/lo: should we round the break plane to the high or low side.
        *
        * plane refers to the index of the mesh line where the cut is.
+       *
+       * offset refers to a cut plane index relative to the box's lower corner.
        */
 
       // Ideal cut planes, not necessarily coincident with a grid line.
-      const double ideal_upper_cut_plane = box.upper()(brk_dir) + 1 - ideal_cut_length;
-      const double ideal_lower_cut_plane = box.lower()(brk_dir) + ideal_cut_length;
+      const double ideal_upper_cut_offset = box.numberCells(brk_dir) - ideal_cut_length;
+      const double ideal_lower_cut_offset = ideal_cut_length;
 
       // Compute valid cut planes on high and low sides of upper cut plane.
-      int lo_upper_cut_plane = int(ideal_upper_cut_plane);
-      int hi_upper_cut_plane = int(ideal_upper_cut_plane) + 1;
+      int lo_upper_cut_plane = box.lower()(brk_dir) + int(ideal_upper_cut_offset);
+      int hi_upper_cut_plane = box.lower()(brk_dir) + int(ideal_upper_cut_offset) + 1;
       lo_upper_cut_plane = ROUND_TO_LO(lo_upper_cut_plane, d_cut_factor(brk_dir));
       hi_upper_cut_plane = ROUND_TO_HI(hi_upper_cut_plane, d_cut_factor(brk_dir));
       while ( lo_upper_cut_plane > box.lower()(brk_dir)   && bad[lo_upper_cut_plane-box.lower()(brk_dir)] ) { lo_upper_cut_plane -= d_cut_factor(brk_dir); }
       while ( hi_upper_cut_plane < box.upper()(brk_dir)+1 && bad[hi_upper_cut_plane-box.lower()(brk_dir)] ) { hi_upper_cut_plane += d_cut_factor(brk_dir); }
 
       // Compute valid cut planes on high and low sides of lower cut plane.
-      int lo_lower_cut_plane = int(ideal_lower_cut_plane);
-      int hi_lower_cut_plane = int(ideal_lower_cut_plane) + 1;
+      int lo_lower_cut_plane = box.lower()(brk_dir) + int(ideal_lower_cut_offset);
+      int hi_lower_cut_plane = box.lower()(brk_dir) + int(ideal_lower_cut_offset) + 1;
       lo_lower_cut_plane = ROUND_TO_LO(lo_lower_cut_plane, d_cut_factor(brk_dir));
       hi_lower_cut_plane = ROUND_TO_HI(hi_lower_cut_plane, d_cut_factor(brk_dir));
       while ( lo_lower_cut_plane > box.lower()(brk_dir)   && bad[lo_lower_cut_plane-box.lower()(brk_dir)] ) { lo_lower_cut_plane -= d_cut_factor(brk_dir); }
