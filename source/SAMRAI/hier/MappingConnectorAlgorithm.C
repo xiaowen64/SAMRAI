@@ -126,8 +126,8 @@ MappingConnectorAlgorithm::modify(
    }
 
    /*
-    * Ensure that Connectors incident to and from old agree on
-    * what the old box_level is.
+    * Ensure that head and base BoxLevels in argument agree with each
+    * other and that transpose Connectors are really transposes.
     */
    const Connector& anchor_to_old = anchor_to_mapped;
 
@@ -157,35 +157,29 @@ MappingConnectorAlgorithm::modify(
             << "old_to_anchor is FROM " << &old_to_anchor->getBase() << "\n");
       }
    }
-   /*
-    * Ensure that head and base box_levels in argument agree with
-    * head and base in the object.
-    */
    if (&anchor_to_old.getBase() != &old_to_anchor->getHead()) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
-         << "Given Connectors to and from base of modify do not refer\n"
-         << "to the base of the modify in:\n"
+         << "Given Connectors to and from anchor of modify do not refer\n"
+         << "to the same BoxLevel:\n"
          << "anchor_to_old is FROM " << &anchor_to_old.getBase() << "\n"
          << "old_to_anchor is  TO  " << &old_to_anchor->getHead() << "\n");
    }
    if (new_to_old && (&old_to_new.getHead() != &new_to_old->getBase())) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
-         << "Given Connectors to and from head of modify do not refer\n"
-         << "to the head of the modify in MappingConnectorAlgorithm::modify:\n"
-         << "new_to_old is FROM " << &new_to_old->getBase()
-         << "\n"
-         << "old_to_new is  TO  " << &old_to_new.getHead()
-         << "\n");
+         << "Given Connectors to and from new of modify do not refer\n"
+         << "to the same BoxLevel:\n"
+         << "new_to_old is FROM " << &new_to_old->getBase() << "\n"
+         << "old_to_new is  TO  " << &old_to_new.getHead() << "\n");
    }
    if (!anchor_to_old.isTransposeOf(*old_to_anchor)) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
-         << "Given Connectors between base and old of modify\n"
+         << "Given Connectors between anchor and old of modify\n"
          << "are not transposes of each other.\n"
          << "See MappingConnectorAlgorithm::isTransposeOf().\n");
    }
    if (new_to_old && !new_to_old->isTransposeOf(old_to_new)) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
-         << "Given Connectors between head and old of modify\n"
+         << "Given Connectors between new and old of modify\n"
          << "are not transposes of each other.\n"
          << "See MappingConnectorAlgorithm::isTransposeOf().\n");
    }
