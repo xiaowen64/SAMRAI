@@ -77,6 +77,7 @@ TileClustering {
   coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
+  DEV_print_steps = TRUE
 }
 
 
@@ -165,5 +166,5 @@ PatchHierarchy {
 
    allow_patches_smaller_than_ghostwidth = TRUE
    allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
-   proper_nesting_buffer = 12, 12, 12
+   proper_nesting_buffer = 4, 4, 4
 }
