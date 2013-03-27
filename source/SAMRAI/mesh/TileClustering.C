@@ -34,7 +34,8 @@ TileClustering::TileClustering(
    d_dim(dim),
    d_box_size(hier::IntVector(d_dim, 8)),
    d_log_cluster_summary(false),
-   d_barrier_and_time(false)
+   d_barrier_and_time(false),
+   d_print_steps(false)
 {
    getFromInput(input_db);
    setTimers();
@@ -72,6 +73,10 @@ TileClustering::getFromInput(
       d_log_cluster_summary =
          input_db->getBoolWithDefault("DEV_log_cluster_summary",
             d_log_cluster_summary);
+
+      d_print_steps =
+         input_db->getBoolWithDefault("DEV_print_steps",
+            d_print_steps);
    }
 }
 
@@ -220,6 +225,12 @@ TileClustering::findBoxesContainingTags(
       hier::BoxContainer new_boxes(new_box_level->getBoxes());
       new_boxes.unorder();
       new_boxes.coalesce();
+
+      if ( d_print_steps ) {
+         tbox::plog << "TileClustering coalesced " << new_box_level->getLocalNumberOfBoxes()
+                    << " new boxes into " << new_boxes.size() << "\n";
+      }
+
       if ( new_boxes.size() != size_t(new_box_level->getLocalNumberOfBoxes()) ) {
 
          /*
@@ -364,16 +375,26 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
                               hier::IntVector::getZero(tag_data.getDim())));
    coarsened_tag_data->fill(0, 0);
 
+   size_t tag_count = 0;
+   size_t coarse_tag_count = 0;
    pdat::CellIterator finecend(pdat::CellGeometry::end(tag_data.getBox()));
    for ( pdat::CellIterator fineci(pdat::CellGeometry::begin(tag_data.getBox()));
          fineci!=finecend; ++fineci ) {
 
       if ( tag_data(*fineci) == tag_val ) {
-         pdat::CellIndex coarseci =
-            pdat::CellIndex( *fineci / d_box_size );
+         pdat::CellIndex coarseci = pdat::CellIndex( *fineci / d_box_size );
+
+         coarse_tag_count += ( (*coarsened_tag_data)(coarseci) != tag_val );
+         ++tag_count;
+
          (*coarsened_tag_data)(coarseci) = tag_val;
       }
 
+   }
+   if (d_print_steps) {
+      tbox::plog << "TileClustering coarsened box " << tag_data.getBox()
+                 << " (" << tag_count << " tags) to " << coarsened_box
+                 << " (" << coarse_tag_count << " tags).\n";
    }
 
    return coarsened_tag_data;
