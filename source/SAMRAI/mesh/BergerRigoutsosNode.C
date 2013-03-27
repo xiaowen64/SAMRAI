@@ -68,6 +68,10 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_generation(1),
    d_n_cont(0)
 {
+   if ( box.empty() ) {
+      TBOX_ERROR("BergerRigoutsosNode: Library error: constructing\n"
+                 <<"root node with an empty box.");
+   }
 
    d_common->incNumNodesConstructed();
    d_common->incNumNodesExisting();

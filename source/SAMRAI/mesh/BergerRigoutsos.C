@@ -322,6 +322,7 @@ BergerRigoutsos::findBoxesContainingTags(
    d_tag_level = tag_level;
    d_root_boxes = bound_boxes;
 
+   const hier::BoxLevel &tag_box_level = *tag_level->getBoxLevel();
 
    /*
     * If d_mpi has not been set, then user wants to do use the
@@ -388,6 +389,17 @@ tbox::plog << "BergerRigoutsos::findBoxesContainingTags: set to cluster tiles of
    }
 
 
+   /*
+    * If clustering locally, shrink the bounding boxes to fit the
+    * local tag patches.
+    */
+   if ( d_cluster_locally ) {
+      for ( hier::BoxContainer::iterator bi=d_root_boxes.begin(); bi!=d_root_boxes.end(); ++bi ) {
+         *bi *= tag_box_level.getLocalBoundingBox( bi->getBlockId().getBlockValue() );
+      }
+   }
+
+
    clusterAndComputeRelationships();
 
 assert( d_tag_to_new->isTransposeOf( d_tag_to_new->getTranspose() ) );
@@ -398,7 +410,6 @@ assert( d_tag_to_new->isTransposeOf( d_tag_to_new->getTranspose() ) );
        * We clustered in the coarsened resolution.  Now put everything
        * back into tag_level's resolution.
        */
-      const hier::BoxLevel &tag_box_level = *tag_level->getBoxLevel();
       const hier::IntVector old_width = d_tag_to_new->getConnectorWidth();
       const hier::IntVector old_transpose_width = d_tag_to_new->getTranspose().getConnectorWidth();
       boost::shared_ptr<hier::BoxLevel> refined_new_box_level(
@@ -670,6 +681,7 @@ BergerRigoutsos::clusterAndComputeRelationships()
       std::list< boost::shared_ptr<BergerRigoutsosNode> > block_nodes_to_delete;
       for (hier::BoxContainer::const_iterator rb = d_root_boxes.begin();
            rb != d_root_boxes.end(); ++rb) {
+         if ( rb->empty() ) continue;
 
          // TODO: can build block_box in the node instead of here!
          const hier::Box block_box(*rb,
