@@ -36,12 +36,6 @@ SampleIndexData.o:	$(SAMRAI)/source/test/dataops/SampleIndexData.C
 indx_dataops:		indx_dataops.o  SampleIndexData.o $(LIBSAMRAIDEPEND) 
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) indx_dataops.o SampleIndexData.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
 
-node_hierops:		node_hierops.o  $(LIBSAMRAIDEPEND) 
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) node_hierops.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
-
-cell_hierops:		cell_hierops.o  $(LIBSAMRAIDEPEND) 
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) cell_hierops.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
-
 cell_patchtest:		cell_patchtest.o  $(LIBSAMRAIDEPEND) 
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) cell_patchtest.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
 
@@ -85,8 +79,6 @@ TARGETS2D=	cell_patchtest \
 		node_hiertest \
 		side_hiertest \
 		edge_hiertest \
-		cell_hierops \
-		node_hierops \
 		indx_dataops
 
 ifneq (,$(findstring complex, $(SAMRAI_LIBRARY_TARGETS)))
@@ -136,13 +128,7 @@ libdefault:	cell_patchtest \
 		node_hiertest \
 		side_hiertest \
 		edge_hiertest \
-		cell_hierops \
-		node_hierops \
 		indx_dataops
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_hierops 2; \
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_hierops 3; \
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./node_hierops 2; \
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./node_hierops 3; \
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./indx_dataops 2; \
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./indx_dataops 3; \
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_hiertest 2; \
@@ -178,7 +164,7 @@ clean-check:
 		$(SAMCLEAN)
 
 clean:		clean-check
-		$(RM) *_hiertest* *_cplxtest* *_patchtest* *_hierops* *_dataops*
+		$(RM) *_hiertest* *_cplxtest* *_patchtest* *_dataops*
 
 
 include $(SRCDIR)/Makefile.depend

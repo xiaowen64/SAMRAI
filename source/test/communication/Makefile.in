@@ -39,7 +39,6 @@ CXX_OBJS      = \
 	OuterfaceDataTest.o \
 	OuternodeDataTest.o \
 	OutersideDataTest.o \
-	Pointer-CommTester.o \
 	SideDataTest.o
 
 main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)

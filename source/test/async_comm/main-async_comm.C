@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Test program for asynchromous communication classes
+ * Description:   Test program for asynchronous communication classes
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"

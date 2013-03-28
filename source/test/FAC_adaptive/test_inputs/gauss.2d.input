@@ -8,6 +8,9 @@
  *
  ************************************************************************/
 
+// Refer to allneumann2d.input for full description of all input parameters
+// specific to this problem.
+
 Main {
   dim = 2
   base_name = "gauss2d"
@@ -41,16 +44,6 @@ AdaptivePoisson {
     GaussianFcnControl_1 = "{ lambda=-50 cx=0.0 cy=0.5 }"
     GaussianFcnControl_2 = "{ lambda=-25 cx=0.5 cy=0.0 }"
   }
-  sine_solution {
-    SinusoidFcnControl = "{ nx=1.0 px=0.0 ny=1.0 py=0.0 }"
-  }
-  gaussian_solution {
-    GaussianFcnControl = "{ lambda=-1000 amp=1 cx=0.5 cy=0.5 }"
-  }
-  polynomial_solution {
-    QuarticFcnControl = "{ 6=1 8=-1 9=-1 12=1 }" // Pernice's problem
-  }
-  // finest_plot_level = 0
   adaption_threshold = .0010
 }
 

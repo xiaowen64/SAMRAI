@@ -32,7 +32,6 @@ CXX_OBJS      = MultiblockTester.o \
 	EdgeMultiblockTest.o \
 	FaceMultiblockTest.o \
 	NodeMultiblockTest.o \
-	Pointer-MultiblockTester.o \
 	SideMultiblockTest.o
 
 

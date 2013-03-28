@@ -4,7 +4,8 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   SampleIndexData example demonstrating IndexData type.
+ * Description:   Example user defined index data type used in indx_dataops
+ *                test.
  *
  ************************************************************************/
 

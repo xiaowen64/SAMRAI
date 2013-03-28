@@ -21,8 +21,7 @@ include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA= -DDISPLAY -DNDIM=$(PDIM)  -DTESTING=1
 
-CXX_OBJS      = main.o ModifiedBratuProblem.o  \
-	tbox_Pointer-CellPoissonFACSolver-NDIM.o tbox_Pointer-ModifiedBratuProblem.o
+CXX_OBJS      = main.o ModifiedBratuProblem.o
 F_OBJS      =	\
 	FACjacobian1d.o bcFluxCopy1d.o bcFluxFix1d.o bratufunc1d.o \
 	err1d.o evalBratu1d.o evalDiffusionCoef1d.o evalExponential1d.o evalF1d.o \

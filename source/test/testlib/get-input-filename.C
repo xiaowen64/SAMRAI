@@ -4,13 +4,11 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Utility for getting the input file name.
+ * Description:   Utility for getting input file name.
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
 #include <string>
-
-// using namespace std;
 
 #include "get-input-filename.h"
 

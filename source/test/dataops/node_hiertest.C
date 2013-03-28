@@ -1214,14 +1214,16 @@ int main(
       node_ops.reset();
       nwgt_ops.reset();
 
-      tbox::pout << "\nPASSED:  node hiertest" << std::endl;
+      if (num_failures == 0) {
+         tbox::pout << "\nPASSED:  node hiertest" << std::endl;
+      }
    }
 
    tbox::SAMRAIManager::shutdown();
    tbox::SAMRAIManager::finalize();
    tbox::SAMRAI_MPI::finalize();
 
-   return 0;
+   return num_failures;
 }
 
 /*
@@ -1244,8 +1246,8 @@ doubleDataSameAsValue(
            ip != level->end(); ++ip) {
          patch = *ip;
          boost::shared_ptr<pdat::NodeData<double> > nvdata(
-               patch->getPatchData(desc_id),
-               BOOST_CAST_TAG);
+            patch->getPatchData(desc_id),
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(nvdata);
 

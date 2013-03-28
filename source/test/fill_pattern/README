@@ -4,17 +4,16 @@
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
 ## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
-## Description:   Unit test of InputDatabase class.
+## Description:   Unit test of SAMRAI fill patterns.
 ##
 #########################################################################
 
-This is a unit test of SAMRAI's InputDatabase class.  The files included in
-this directory are as follows:
+This is a unit test of SAMRAI's fill patterns. The files included in this
+directory are as follows:
+ 
+   main-fill-patern.C  -  unit tester
 
-   inputdb.C                  -  unit tester
-   test_inputs/inputdb.input  -  test input file
-
-
+ 
 COMPILATION AND EXECUTION
 -------------------------
    Compilation:
@@ -22,19 +21,8 @@ COMPILATION AND EXECUTION
 
    Execution:
       serial:
-         ./main test_inputs/inputdb.input
+         ./main
       parallel:
          Parallel execution is platform dependent.  This example demonstrates
          execution via mpirun.
-         mpirun -np <nprocs> [mpirun options] ./main inputdb.input
-
-
-OUTPUT
-------
-   Input Database is dumped to inputdb.log.
-
-
-INPUT PARAMETERS
-----------------
-Refer to test_inputs/inputdb.input for a full description of all input
-parameters specific to this problem.
+         mpirun -np <nprocs> [mpirun options] ./main

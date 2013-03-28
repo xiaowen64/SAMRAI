@@ -24,7 +24,7 @@ include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA= -I$(TESTINCLUDE) -DTESTING=1
 
-CXX_OBJS      = main.o ABRTest.o get-input-filename.o
+CXX_OBJS      = main.o ABRTest.o
 
 main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) $(TESTLIB)
 	$(MAKE) testlib

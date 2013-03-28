@@ -26,7 +26,6 @@ NUM_TESTS = 4
 TEST_NPROCS = @TEST_NPROCS@
 
 CXX_OBJS      = HierarchyTester.o \
-		tbox_Pointer-HierarchyTester.o \
 		main.o
 
 main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) 

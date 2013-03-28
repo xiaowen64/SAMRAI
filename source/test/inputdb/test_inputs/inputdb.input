@@ -4,59 +4,96 @@
  * information, see COPYRIGHT and COPYING.LESSER. 
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Input file for SAMRAI input database test driver. 
+ * Description:   Input file for inputdb unit test.
  *
  ************************************************************************/
 
-/*
- * This sample input file checks input conditions.  All entries should
- * be valid.
- */
-
 GlobalInputs {
+   // If FALSE, when an error is encountered in serial exit(-1) will be called
+   // instead of SAMRAI_MPI::abort().
    call_abort_in_serial_instead_of_exit = FALSE
 }
 
 PrimitiveTypes {
-   i0  = 1              // integer
-   f0  = 1.0            // float
-   d0  = 1.0            // double
-   b0  = TRUE           // bool
-   c0  = (1.0,1.0)      // complex
-   s0  = "a string"     // string
-   box0 = [(0,0),(9,9)] // box
+   // Value to test reading of single integer.
+   i0  = 1
+
+   // Value to test reading of single float.
+   f0  = 1.0
+
+   // Value to test reading of single double.
+   d0  = 1.0
+
+   // Value to test reading of single bool.
+   b0  = TRUE
+
+   // Value to test reading of single dcomplex.
+   c0  = (1.0,1.0)
+
+   // Value to test reading of single string.
+   s0  = "a string"
+
+   // Value to test reading of single DatabaseBox.
+   box0 = [(0,0),(9,9)]
 }
 
 SmartArrays {
-   i1  = 1, 1, 1, 1, 1  
-   f1  = 1.0, 1.0, 1.0, 1.0, 1.0  
-   d1  = 1.0, 1.0, 1.0, 1.0, 1.0  
-   b1  = TRUE, TRUE, TRUE, TRUE, TRUE         
+   // Value to test reading of a vector of integers.
+   i1  = 1, 1, 1, 1, 1
+
+   // Value to test reading of a vector of floats.
+   f1  = 1.0, 1.0, 1.0, 1.0, 1.0
+
+   // Value to test reading of a vector of doubles.
+   d1  = 1.0, 1.0, 1.0, 1.0, 1.0
+
+   // Value to test reading of a vector of bools.
+   b1  = TRUE, TRUE, TRUE, TRUE, TRUE
+
+   // Value to test reading of a vector of dcomplexes.
    c1  = (1.0,1.0), (1.0,1.0), (1.0,1.0), (1.0,1.0), (1.0,1.0)
+
+   // Value to test reading of a vector of strings.
    s1  = "a string", "a string", "a string", "a string", "a string"
-   box1 = [(0,0),(9,9)], 
-          [(0,0),(9,9)],  
-          [(0,0),(9,9)],  
-          [(0,0),(9,9)], 
-          [(0,0),(9,9)] 
+
+   // Value to test reading of a vector of DatabaseBoxes.
+   box1 = [(0,0),(9,9)],
+          [(0,0),(9,9)],
+          [(0,0),(9,9)],
+          [(0,0),(9,9)],
+          [(0,0),(9,9)]
 }
 
 BasicArrays {
-   i2  = 1, 1, 1, 1, 1  
-   f2  = 1.0, 1.0, 1.0, 1.0, 1.0  
-   d2  = 1.0, 1.0, 1.0, 1.0, 1.0  
-   b2  = TRUE, TRUE, TRUE, TRUE, TRUE         
+   // Value to test reading of an int*.
+   i2  = 1, 1, 1, 1, 1
+
+   // Value to test reading of a float*.
+   f2  = 1.0, 1.0, 1.0, 1.0, 1.0
+
+   // Value to test reading of a double*.
+   d2  = 1.0, 1.0, 1.0, 1.0, 1.0
+
+   // Value to test reading of a bool*.
+   b2  = TRUE, TRUE, TRUE, TRUE, TRUE
+
+   // Value to test reading of a dcomplex*.
    c2  = (1.0,1.0), (1.0,1.0), (1.0,1.0), (1.0,1.0), (1.0,1.0)
+
+   // Value to test reading of a string*.
    s2  = "a string", "a string", "a string", "a string", "a string"
-   box2 = [(0,0),(9,9)], 
-          [(0,0),(9,9)],  
-          [(0,0),(9,9)],  
-          [(0,0),(9,9)], 
-          [(0,0),(9,9)] 
+
+   // Value to test reading of a DatabaseBox*.
+   box2 = [(0,0),(9,9)],
+          [(0,0),(9,9)],
+          [(0,0),(9,9)],
+          [(0,0),(9,9)],
+          [(0,0),(9,9)]
 }
 
 WithDefaultTypes {
-
+   // Keep empty to test reading single values of different types with a
+   // default value.
 }
 
 /*

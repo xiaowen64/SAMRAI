@@ -151,122 +151,8 @@ endif
 
 ${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
 
-FILE_2=cell_hierops.o
+FILE_2=cell_hiertest.o
 DEPENDS_2:=\
-	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.h		\
-	$(INCLUDE_SAM)/SAMRAI/geom/CartesianPatchGeometry.h		\
-	$(INCLUDE_SAM)/SAMRAI/geom/GridGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSingleBlockIterator.h	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchHierarchy.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevelFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PersistentOverlapConnectors.h	\
-	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.h	\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyCellDataOpsComplex.h	\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyCellDataOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsComplex.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataBasicOps.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataMiscellaneousOpsReal.h	\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsComplex.h	\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsComplex.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h cell_hierops.C
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_2 +=\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyCellDataOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataBasicOps.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataMiscellaneousOpsReal.C	\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.C				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
-
-${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
-
-FILE_3=cell_hiertest.o
-DEPENDS_3:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.h		\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianPatchGeometry.h		\
@@ -352,7 +238,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h cell_hiertest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_3 +=\
+DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
@@ -372,10 +258,10 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
+${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
 
-FILE_4=cell_patchtest.o
-DEPENDS_4:=\
+FILE_3=cell_patchtest.o
+DEPENDS_3:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.h		\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianPatchGeometry.h		\
@@ -457,7 +343,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h cell_patchtest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_4 +=\
+DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
@@ -475,10 +361,10 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
+${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
 
-FILE_5=edge_cplxtest.o
-DEPENDS_5:=\
+FILE_4=edge_cplxtest.o
+DEPENDS_4:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.h		\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianPatchGeometry.h		\
@@ -573,7 +459,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h edge_cplxtest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_5 +=\
+DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
@@ -595,10 +481,10 @@ DEPENDS_5 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
+${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
 
-FILE_6=edge_hiertest.o
-DEPENDS_6:=\
+FILE_5=edge_hiertest.o
+DEPENDS_5:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.h		\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianPatchGeometry.h		\
@@ -693,7 +579,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h edge_hiertest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_6 +=\
+DEPENDS_5 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
@@ -715,10 +601,10 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
+${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
 
-FILE_7=face_cplxtest.o
-DEPENDS_7:=\
+FILE_6=face_cplxtest.o
+DEPENDS_6:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.h		\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianPatchGeometry.h		\
@@ -813,7 +699,7 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h face_cplxtest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_7 +=\
+DEPENDS_6 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
@@ -835,10 +721,10 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_7:X.o=${NDIM}.o}: ${DEPENDS_7}
+${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
 
-FILE_8=face_hiertest.o
-DEPENDS_8:=\
+FILE_7=face_hiertest.o
+DEPENDS_7:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.h		\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianPatchGeometry.h		\
@@ -933,7 +819,7 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h face_hiertest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_8 +=\
+DEPENDS_7 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
@@ -955,10 +841,10 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_8:X.o=${NDIM}.o}: ${DEPENDS_8}
+${FILE_7:X.o=${NDIM}.o}: ${DEPENDS_7}
 
-FILE_9=indx_dataops.o
-DEPENDS_9:=\
+FILE_8=indx_dataops.o
+DEPENDS_8:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.h		\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianPatchGeometry.h		\
@@ -1031,17 +917,17 @@ DEPENDS_9:=\
 	indx_dataops.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_9 +=\
+DEPENDS_8 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/IndexData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/IndexDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/IndexVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_9:X.o=${NDIM}.o}: ${DEPENDS_9}
+${FILE_8:X.o=${NDIM}.o}: ${DEPENDS_8}
 
-FILE_10=node_cplxtest.o
-DEPENDS_10:=\
+FILE_9=node_cplxtest.o
+DEPENDS_9:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.h		\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianPatchGeometry.h		\
@@ -1136,7 +1022,7 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h node_cplxtest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_10 +=\
+DEPENDS_9 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
@@ -1158,130 +1044,10 @@ DEPENDS_10 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}
+${FILE_9:X.o=${NDIM}.o}: ${DEPENDS_9}
 
-FILE_11=node_hierops.o
-DEPENDS_11:=\
-	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.h		\
-	$(INCLUDE_SAM)/SAMRAI/geom/CartesianPatchGeometry.h		\
-	$(INCLUDE_SAM)/SAMRAI/geom/GridGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSingleBlockIterator.h	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchHierarchy.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevelFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PersistentOverlapConnectors.h	\
-	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.h	\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsComplex.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsComplex.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyNodeDataOpsComplex.h	\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyNodeDataOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataBasicOps.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataMiscellaneousOpsReal.h	\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataNormOpsComplex.h	\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataNormOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataOpsComplex.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeDataFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIndex.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeData.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.h		\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h node_hierops.C
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_11 +=\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyNodeDataOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataBasicOps.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataMiscellaneousOpsReal.C	\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataNormOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchNodeDataOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeDataFactory.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeVariable.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeData.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
-
-${FILE_11:X.o=${NDIM}.o}: ${DEPENDS_11}
-
-FILE_12=node_hiertest.o
-DEPENDS_12:=\
+FILE_10=node_hiertest.o
+DEPENDS_10:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.h		\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianPatchGeometry.h		\
@@ -1376,7 +1142,7 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h node_hiertest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_12 +=\
+DEPENDS_10 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
@@ -1398,10 +1164,10 @@ DEPENDS_12 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_12:X.o=${NDIM}.o}: ${DEPENDS_12}
+${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}
 
-FILE_13=side_cplxtest.o
-DEPENDS_13:=\
+FILE_11=side_cplxtest.o
+DEPENDS_11:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.h		\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianPatchGeometry.h		\
@@ -1496,7 +1262,7 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h side_cplxtest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_13 +=\
+DEPENDS_11 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
@@ -1518,10 +1284,10 @@ DEPENDS_13 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_13:X.o=${NDIM}.o}: ${DEPENDS_13}
+${FILE_11:X.o=${NDIM}.o}: ${DEPENDS_11}
 
-FILE_14=side_hiertest.o
-DEPENDS_14:=\
+FILE_12=side_hiertest.o
+DEPENDS_12:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.h		\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianPatchGeometry.h		\
@@ -1616,7 +1382,7 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h side_hiertest.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_14 +=\
+DEPENDS_12 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
@@ -1638,5 +1404,5 @@ DEPENDS_14 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_14:X.o=${NDIM}.o}: ${DEPENDS_14}
+${FILE_12:X.o=${NDIM}.o}: ${DEPENDS_12}
 

@@ -366,8 +366,6 @@ private:
 
    double d_adaption_threshold;
 
-   int d_finest_plot_level;
-
    //@{
 private:
    /*!

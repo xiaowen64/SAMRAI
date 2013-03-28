@@ -205,8 +205,7 @@ DEPENDS_0:=\
 	AdaptivePoisson.C AdaptivePoisson.h GaussianFcn.h		\
 	PoissonGaussianDiffcoefSolution.h PoissonGaussianSolution.h	\
 	PoissonMultigaussianSolution.h PoissonPolynomialSolution.h	\
-	PoissonSineSolution.h QuarticFcn.h SinusoidFcn.h patchFcns.h	\
-	printObject.h
+	PoissonSineSolution.h QuarticFcn.h SinusoidFcn.h patchFcns.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
@@ -896,20 +895,8 @@ endif
 
 ${FILE_8:X.o=${NDIM}.o}: ${DEPENDS_8}
 
-FILE_9=get-input-filename.o
+FILE_9=main.o
 DEPENDS_9:=\
-	$(OBJECT)/include/SAMRAI/SAMRAI_config.h get-input-filename.C	\
-	get-input-filename.h
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_9 +=\
-	
-endif
-
-${FILE_9:X.o=${NDIM}.o}: ${DEPENDS_9}
-
-FILE_10=main.o
-DEPENDS_10:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisDerivedDataStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisItDataWriter.h			\
@@ -1123,11 +1110,10 @@ DEPENDS_10:=\
 	AdaptivePoisson.h GaussianFcn.h					\
 	PoissonGaussianDiffcoefSolution.h PoissonGaussianSolution.h	\
 	PoissonMultigaussianSolution.h PoissonPolynomialSolution.h	\
-	PoissonSineSolution.h QuarticFcn.h SinusoidFcn.h		\
-	get-input-filename.h main.C printObject.h
+	PoissonSineSolution.h QuarticFcn.h SinusoidFcn.h main.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_10 +=\
+DEPENDS_9 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
@@ -1190,10 +1176,10 @@ DEPENDS_10 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}
+${FILE_9:X.o=${NDIM}.o}: ${DEPENDS_9}
 
-FILE_11=patchFcns.o
-DEPENDS_11:=\
+FILE_10=patchFcns.o
+DEPENDS_10:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianPatchGeometry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -1257,7 +1243,7 @@ DEPENDS_11:=\
 	SinusoidFcn.h patchFcns.C setArrayData.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_11 +=\
+DEPENDS_10 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataAccess.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1269,90 +1255,10 @@ DEPENDS_11 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
-${FILE_11:X.o=${NDIM}.o}: ${DEPENDS_11}
+${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}
 
-FILE_12=printObject.o
-DEPENDS_12:=\
-	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSingleBlockIterator.h	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchHierarchy.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevelFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PersistentOverlapConnectors.h	\
-	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MDA_Access.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h printObject.C		\
-	printObject.h
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_12 +=\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
-
-${FILE_12:X.o=${NDIM}.o}: ${DEPENDS_12}
-
-FILE_13=setArrayData.o
-DEPENDS_13:=\
+FILE_11=setArrayData.o
+DEPENDS_11:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/MDA_Access.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
@@ -1363,9 +1269,9 @@ DEPENDS_13:=\
 	SinusoidFcn.h setArrayData.C setArrayData.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_13 +=\
+DEPENDS_11 +=\
 	
 endif
 
-${FILE_13:X.o=${NDIM}.o}: ${DEPENDS_13}
+${FILE_11:X.o=${NDIM}.o}: ${DEPENDS_11}
 

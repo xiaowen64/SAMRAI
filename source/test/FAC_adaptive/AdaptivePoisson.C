@@ -9,7 +9,6 @@
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "printObject.h"
 #include "SAMRAI/pdat/MDA_Access.h"
 #include "SAMRAI/pdat/ArrayDataAccess.h"
 #include "patchFcns.h"
@@ -97,7 +96,6 @@ AdaptivePoisson::AdaptivePoisson(
    d_robin_refine_patch(d_dim, object_name + "Refine patch implementation"),
    d_physical_bc_coef(0),
    d_adaption_threshold(0.5),
-   d_finest_plot_level(9999999),
    d_finest_dbg_plot_ln(database.getIntegerWithDefault("finest_dbg_plot_ln", 99))
 {
 
@@ -172,10 +170,6 @@ AdaptivePoisson::AdaptivePoisson(
             );
    }
 
-   d_finest_plot_level =
-      database.getIntegerWithDefault("finest_plot_level",
-         d_finest_plot_level);
-
    /*
     * Experiment with algorithm choices in solv::FACPreconditioner.
     */
@@ -225,10 +219,8 @@ AdaptivePoisson::AdaptivePoisson(
    d_problem_name =
       database.getStringWithDefault("problem_name", d_problem_name);
    if (d_problem_name != "sine"
-       && d_problem_name != "sine-neumann"
        && d_problem_name != "gauss"
        && d_problem_name != "multigauss"
-       && d_problem_name != "pernice"
        && d_problem_name != "poly"
        && d_problem_name != "gauss-coef"
        ) {
@@ -558,9 +550,9 @@ int AdaptivePoisson::registerVariablesWithPlotter(
       1.0,
       "CELL");
 
-   std::vector<string> expression_keys(1);
-   std::vector<string> expressions(1);
-   std::vector<string> expression_types(1);
+   std::vector<std::string> expression_keys(1);
+   std::vector<std::string> expressions(1);
+   std::vector<std::string> expression_types(1);
 
    {
       expression_keys[0] = "Error";

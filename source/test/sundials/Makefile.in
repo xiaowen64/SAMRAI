@@ -21,7 +21,7 @@ include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA= -DDISPLAY -DNDIM=$(PDIM) -DTESTING=1
 
-CXX_OBJS      = main.o CVODEModel.o tbox_Pointer-CVODEModel.o
+CXX_OBJS      = main.o CVODEModel.o
 F_OBJS        = FACjacobian2d.o FACjacobian3d.o 
 
 NUM_TESTS = 4

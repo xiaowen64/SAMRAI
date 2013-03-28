@@ -8,6 +8,9 @@
  *
  ************************************************************************/
 
+// Refer to allneumann2d.input for full description of all input parameters
+// specific to this problem.
+
 Main {
   dim = 3
   base_name = "default3d"
@@ -35,12 +38,10 @@ hypre_solver {
 
 AdaptivePoisson {
   problem_name = "multigauss"
-    // finest_dbg_plot_ln = 0
   multigaussian_solution {
     GaussianFcnControl_0 = "{ lambda=-50 cx=0.5 cy=0.5 cz=0.0 }"
     GaussianFcnControl_1 = "{ lambda=-20 cx=0.0 cy=0.0 cz=1.0 }"
   }
-  // finest_plot_level = 0
   adaption_threshold = .0200
 }
 

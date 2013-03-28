@@ -28,7 +28,7 @@ NUM_TESTS = 3
 
 TEST_NPROCS = @TEST_NPROCS@
 
-CXX_OBJS      = main.o DLBGTest.o get-input-filename.o
+CXX_OBJS      = main.o DLBGTest.o
 
 main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) $(TESTLIB)
 	$(MAKE) testlib

@@ -1205,3 +1205,15 @@ endif
 
 ${FILE_11:X.o=${NDIM}.o}: ${DEPENDS_11}
 
+FILE_12=get-input-filename.o
+DEPENDS_12:=\
+	$(OBJECT)/include/SAMRAI/SAMRAI_config.h get-input-filename.C	\
+	get-input-filename.h
+
+ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
+DEPENDS_12 +=\
+	
+endif
+
+${FILE_12:X.o=${NDIM}.o}: ${DEPENDS_12}
+

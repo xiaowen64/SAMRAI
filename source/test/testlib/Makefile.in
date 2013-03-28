@@ -32,7 +32,8 @@ CXX_OBJS      = AutoTester.o \
 		SkeletonCellDoubleWeightedAverage.o	\
 		MeshGenerationStrategy.o	\
 		SinusoidalFrontGenerator.o	\
-		SphericalShellGenerator.o
+		SphericalShellGenerator.o \
+		get-input-filename.o
 
 F_OBJS      = skelbdry2d.o skelbdry3d.o upfluxsum2d.o upfluxsum3d.o
 
