@@ -99,6 +99,7 @@ TilePartitioner {
   box_size = 12, 12, 12
 
   TreeLoadBalancer {
+    DEV_allow_box_breaking = TRUE
     // Debugging options
     DEV_check_map = FALSE
     DEV_check_connectivity = FALSE

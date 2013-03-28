@@ -77,6 +77,7 @@ TileClustering {
   coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
+  DEV_print_steps = FALSE
 }
 
 
@@ -98,8 +99,11 @@ BergerRigoutsos {
 
 TilePartitioner {
   box_size = 12, 12, 12
+  DEV_print_steps = FALSE
 
   TreeLoadBalancer {
+    flexible_load_tolerance = 0.03
+    DEV_allow_box_breaking = TRUE
     // Debugging options
     DEV_check_map = FALSE
     DEV_check_connectivity = FALSE
@@ -160,6 +164,7 @@ PatchHierarchy {
    ratio_to_coarser {
       level_1            = 3, 3, 3
       level_2            = 3, 3, 3
+      level_3            = 3, 3, 3
       //  etc.
    }
 

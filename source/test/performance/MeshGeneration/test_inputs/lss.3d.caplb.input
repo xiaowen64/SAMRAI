@@ -101,6 +101,7 @@ TilePartitioner {
 
   TreeLoadBalancer {
     flexible_load_tolerance = 0.03
+    DEV_allow_box_breaking = TRUE
     // Debugging options
     DEV_check_map = FALSE
     DEV_check_connectivity = FALSE
