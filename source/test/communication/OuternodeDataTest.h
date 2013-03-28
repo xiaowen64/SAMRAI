@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
@@ -181,8 +180,8 @@ private:
    std::string d_refine_option;
    int d_finest_level_number;
 
-   tbox::Array<boost::shared_ptr<hier::Variable> > d_variables_src;
-   tbox::Array<boost::shared_ptr<hier::Variable> > d_variables_dst;
+   std::vector<boost::shared_ptr<hier::Variable> > d_variables_src;
+   std::vector<boost::shared_ptr<hier::Variable> > d_variables_dst;
 
 };
 

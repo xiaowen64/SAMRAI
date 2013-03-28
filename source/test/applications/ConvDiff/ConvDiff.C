@@ -35,7 +35,6 @@ using namespace std;
 
 #include <float.h>
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellData.h"
@@ -151,7 +150,7 @@ ConvDiff::ConvDiff(
       }
 
       d_scalar_bdry_node_conds.resize(NUM_2D_NODES);
-      d_node_bdry_edge.resizeArray(NUM_2D_NODES);
+      d_node_bdry_edge.resize(NUM_2D_NODES);
 
       for (int ni = 0; ni < NUM_2D_NODES; ni++) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
@@ -168,14 +167,14 @@ ConvDiff::ConvDiff(
       }
 
       d_scalar_bdry_edge_conds.resize(NUM_3D_EDGES);
-      d_edge_bdry_face.resizeArray(NUM_3D_EDGES);
+      d_edge_bdry_face.resize(NUM_3D_EDGES);
       for (int ei = 0; ei < NUM_3D_EDGES; ei++) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_edge_bdry_face[ei] = BOGUS_BDRY_DATA;
       }
 
       d_scalar_bdry_node_conds.resize(NUM_3D_NODES);
-      d_node_bdry_face.resizeArray(NUM_3D_NODES);
+      d_node_bdry_face.resize(NUM_3D_NODES);
 
       for (int ni = 0; ni < NUM_3D_NODES; ni++) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;

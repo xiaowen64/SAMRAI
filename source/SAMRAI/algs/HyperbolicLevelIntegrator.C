@@ -596,11 +596,11 @@ HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
          level_number,
          level_number, true);
 
-   coarse_level->getBoxLevel()->getPersistentOverlapConnectors().
-   findOrCreateConnectorWithTranspose(
-      *hier_level->getBoxLevel(),
+   coarse_level->findConnectorWithTranspose(
+      *hier_level,
       hier::IntVector::ceilingDivide(peer_connector_width, coarsen_ratio),
-      peer_connector_width);
+      peer_connector_width,
+      hier::CONNECTOR_CREATE);
 #endif
 
    if (before_advance) {

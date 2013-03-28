@@ -413,12 +413,12 @@ private:
     * variables.  These are post-processed input values and are passed
     * to the boundary routines.
     */
-   tbox::Array<int> d_node_bdry_edge; // 2D use only.
-   tbox::Array<int> d_edge_bdry_face; // 3D use only.
-   tbox::Array<int> d_node_bdry_face; // 3D use only.
+   std::vector<int> d_node_bdry_edge; // 2D use only.
+   std::vector<int> d_edge_bdry_face; // 3D use only.
+   std::vector<int> d_node_bdry_face; // 3D use only.
 
    /*
-    * Arrays of face (3d) or edge (2d) boundary values for DIRICHLET case.
+    * Vectors of face (3d) or edge (2d) boundary values for DIRICHLET case.
     */
    std::vector<double> d_bdry_edge_val; // 2D use only.
    std::vector<double> d_bdry_face_val; // 3D use only.

@@ -191,6 +191,10 @@ insure++.suppress USER_ERROR { qsort lite_SC_string_sort lite_PD_ls PJ_ls db_pdb
 # SILO is xstating a file during creation; assume it knows what it is doing to handle file not found.
 insure++.suppress RETURN_FAILURE { __xstat64() DBCreateReal() * }
 
+#WJA 3/18/13
+#stl_bvector copies data into uninitialized memory which is OK
+insure++.suppress READ_UNINIT_MEM(read) at stl_bvector.h
+
 ##############################################################################
 # Suppress warnings in SAMRAI
 # 	These should all include documentation on why it is valid to

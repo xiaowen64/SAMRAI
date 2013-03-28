@@ -12,7 +12,6 @@
 #define included_hier_ProcessorMapping
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <vector>

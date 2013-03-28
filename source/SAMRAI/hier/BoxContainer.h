@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <iostream>
@@ -105,6 +104,11 @@ public:
       friend class BoxContainerIterator;
 
    public:
+      typedef std::bidirectional_iterator_tag iterator_category;
+      typedef const Box value_type;
+      typedef ptrdiff_t difference_type;
+      typedef const Box* pointer;
+      typedef const Box& reference;
 
       /*!
        * @brief Copy constructor.
@@ -131,9 +135,13 @@ public:
          const BoxContainerConstIterator& rhs)
       {
          if (this != &rhs) {
-            d_list_iter = rhs.d_list_iter;
-            d_set_iter = rhs.d_set_iter;
             d_ordered = rhs.d_ordered;
+            if (d_ordered) {
+               d_set_iter = rhs.d_set_iter;
+            }
+            else {
+               d_list_iter = rhs.d_list_iter;
+            }
          }
          return *this;
       }
@@ -295,7 +303,7 @@ public:
       /*
        * Underlying iterator to be used when ordered.
        */
-      std::set<Box*>::const_iterator d_set_iter;
+      std::set<Box*, Box::id_less>::const_iterator d_set_iter;
 
       bool d_ordered;
    };
@@ -317,6 +325,11 @@ public:
       friend class BoxContainerConstIterator;
 
    public:
+      typedef std::bidirectional_iterator_tag iterator_category;
+      typedef Box value_type;
+      typedef ptrdiff_t difference_type;
+      typedef Box* pointer;
+      typedef Box& reference;
 
       /*!
        * @brief Copy constructor.
@@ -336,9 +349,13 @@ public:
          const BoxContainerIterator& rhs)
       {
          if (this != &rhs) {
-            d_list_iter = rhs.d_list_iter;
-            d_set_iter = rhs.d_set_iter;
             d_ordered = rhs.d_ordered;
+            if (d_ordered) {
+               d_set_iter = rhs.d_set_iter;
+            }
+            else {
+               d_list_iter = rhs.d_list_iter;
+            }
          }
          return *this;
       }
@@ -519,7 +536,7 @@ public:
       /*
        * Underlying iterator to be used when ordered.
        */
-      std::set<Box*>::iterator d_set_iter;
+      std::set<Box*, Box::id_less>::iterator d_set_iter;
 
       bool d_ordered;
 
@@ -1530,7 +1547,7 @@ public:
     *                  its BoxId is compared to members of this container. 
     *
     * @pre isOrdered()
-    */  
+    */
    iterator
    find(
       const Box& box) const

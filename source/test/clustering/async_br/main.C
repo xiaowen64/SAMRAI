@@ -25,7 +25,6 @@
  * Headers for basic SAMRAI objects used in this code.
  */
 #include "SAMRAI/tbox/SAMRAIManager.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -181,13 +180,6 @@ int main(
       }
       tbox::plog << "Running on " << mpi.getSize()
                  << " processes.\n";
-
-      /*
-       * Choose which BR implementation to use.
-       */
-      char which_br = 'o';
-      which_br = main_db->getCharWithDefault("which_br", which_br);
-      tbox::plog << "which_br is " << which_br << endl;
 
       int plot_step = main_db->getIntegerWithDefault("plot_step", 0);
 

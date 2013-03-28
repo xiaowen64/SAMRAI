@@ -135,12 +135,12 @@ private:
    /*
     * Data members specific to this cell data test.
     */
-//   tbox::Array<boost::shared_ptr<hier::BaseGridGeometry> > d_skel_grid_geometry;
+//   std::vector<boost::shared_ptr<hier::BaseGridGeometry> > d_skel_grid_geometry;
 
    string d_refine_option;
    int d_finest_level_number;
 
-   tbox::Array<boost::shared_ptr<hier::Variable> > d_variables;
+   std::vector<boost::shared_ptr<hier::Variable> > d_variables;
 
 };
 

@@ -18,7 +18,6 @@
  * Headers for basic SAMRAI objects used in this code.
  */
 #include "SAMRAI/tbox/SAMRAIManager.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/InputManager.h"
@@ -470,7 +469,7 @@ static int createAndTestDLBG(
 
    int ln;
 
-   tbox::Array<boost::shared_ptr<BoxLevel> > box_levels(
+   std::vector<boost::shared_ptr<BoxLevel> > box_levels(
       patch_hierarchy.getNumberOfLevels());
 
    /*

@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
@@ -182,8 +181,8 @@ private:
    /*
     * Data members specific to this side data test.
     */
-   tbox::Array<hier::IntVector> d_test_direction;
-   tbox::Array<bool> d_use_fine_value_at_interface;
+   std::vector<hier::IntVector> d_test_direction;
+   std::vector<bool> d_use_fine_value_at_interface;
 
    double d_Acoef;
    double d_Bcoef;
@@ -195,7 +194,7 @@ private:
    std::string d_refine_option;
    int d_finest_level_number;
 
-   tbox::Array<boost::shared_ptr<hier::Variable> > d_variables;
+   std::vector<boost::shared_ptr<hier::Variable> > d_variables;
 
 };
 

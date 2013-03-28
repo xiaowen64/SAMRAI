@@ -55,25 +55,3 @@ endif
 
 ${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
 
-FILE_4=appu_ebdry2d.o
-DEPENDS_4:=\
-	$(OBJECT)/include/SAMRAI/SAMRAI_config.h appu_ebdry2d.f
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_4 +=\
-	
-endif
-
-${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
-
-FILE_5=appu_ebdry3d.o
-DEPENDS_5:=\
-	$(OBJECT)/include/SAMRAI/SAMRAI_config.h appu_ebdry3d.f
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_5 +=\
-	
-endif
-
-${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
-

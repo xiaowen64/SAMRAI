@@ -32,7 +32,6 @@ using namespace std;
 #include <math.h>
 #include <float.h>
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
@@ -164,7 +163,7 @@ LinAdv::LinAdv(
       }
 
       d_scalar_bdry_node_conds.resize(NUM_2D_NODES);
-      d_node_bdry_edge.resizeArray(NUM_2D_NODES);
+      d_node_bdry_edge.resize(NUM_2D_NODES);
 
       for (int ni = 0; ni < NUM_2D_NODES; ni++) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
@@ -181,14 +180,14 @@ LinAdv::LinAdv(
       }
 
       d_scalar_bdry_edge_conds.resize(NUM_3D_EDGES);
-      d_edge_bdry_face.resizeArray(NUM_3D_EDGES);
+      d_edge_bdry_face.resize(NUM_3D_EDGES);
       for (int ei = 0; ei < NUM_3D_EDGES; ei++) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_edge_bdry_face[ei] = BOGUS_BDRY_DATA;
       }
 
       d_scalar_bdry_node_conds.resize(NUM_3D_NODES);
-      d_node_bdry_face.resizeArray(NUM_3D_NODES);
+      d_node_bdry_face.resize(NUM_3D_NODES);
 
       for (int ni = 0; ni < NUM_3D_NODES; ni++) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
@@ -729,12 +728,12 @@ void LinAdv::computeFluxesOnPatch(
          }
 
 // Face-centered temporary arrays
-         tbox::Array<double> ttedgslp(2 * FACEG + 1 + Mcells);
-         tbox::Array<double> ttraclft(2 * FACEG + 1 + Mcells);
-         tbox::Array<double> ttracrgt(2 * FACEG + 1 + Mcells);
+         std::vector<double> ttedgslp(2 * FACEG + 1 + Mcells);
+         std::vector<double> ttraclft(2 * FACEG + 1 + Mcells);
+         std::vector<double> ttracrgt(2 * FACEG + 1 + Mcells);
 
 // Cell-centered temporary arrays
-         tbox::Array<double> ttcelslp(2 * CELLG + Mcells);
+         std::vector<double> ttcelslp(2 * CELLG + Mcells);
 
 /*
  *  Apply characteristic tracing to compute initial estimate of
@@ -750,10 +749,10 @@ void LinAdv::computeFluxesOnPatch(
                uval->getPointer(),
                traced_left.getPointer(0),
                traced_right.getPointer(0),
-               ttcelslp.getPointer(),
-               ttedgslp.getPointer(),
-               ttraclft.getPointer(),
-               ttracrgt.getPointer());
+               &ttcelslp[0],
+               &ttedgslp[0],
+               &ttraclft[0],
+               &ttracrgt[0]);
 
             SAMRAI_F77_FUNC(chartracing2d1, CHARTRACING2D1) (dt,
                ifirst(0), ilast(0), ifirst(1), ilast(1),
@@ -761,10 +760,10 @@ void LinAdv::computeFluxesOnPatch(
                uval->getPointer(),
                traced_left.getPointer(1),
                traced_right.getPointer(1),
-               ttcelslp.getPointer(),
-               ttedgslp.getPointer(),
-               ttraclft.getPointer(),
-               ttracrgt.getPointer());
+               &ttcelslp[0],
+               &ttedgslp[0],
+               &ttraclft[0],
+               &ttracrgt[0]);
          }
 
       }  // if (d_godunov_order > 1) ...
@@ -907,12 +906,12 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
       }
 
       // Face-centered temporary arrays
-      tbox::Array<double> ttedgslp(2 * FACEG + 1 + Mcells);
-      tbox::Array<double> ttraclft(2 * FACEG + 1 + Mcells);
-      tbox::Array<double> ttracrgt(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttedgslp(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttraclft(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttracrgt(2 * FACEG + 1 + Mcells);
 
       // Cell-centered temporary arrays
-      tbox::Array<double> ttcelslp(2 * CELLG + Mcells);
+      std::vector<double> ttcelslp(2 * CELLG + Mcells);
 
       /*
        *  Apply characteristic tracing to compute initial estimate of
@@ -928,10 +927,10 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
          uval->getPointer(),
          traced_left.getPointer(0),
          traced_right.getPointer(0),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
 
       SAMRAI_F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
          ifirst(0), ilast(0),
@@ -941,10 +940,10 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
          uval->getPointer(),
          traced_left.getPointer(1),
          traced_right.getPointer(1),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
 
       SAMRAI_F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
          ifirst(0), ilast(0),
@@ -954,10 +953,10 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
          uval->getPointer(),
          traced_left.getPointer(2),
          traced_right.getPointer(2),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
    }
 
    /*
@@ -1229,12 +1228,12 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
       }
 
       // Face-centered temporary arrays
-      tbox::Array<double> ttedgslp(2 * FACEG + 1 + Mcells);
-      tbox::Array<double> ttraclft(2 * FACEG + 1 + Mcells);
-      tbox::Array<double> ttracrgt(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttedgslp(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttraclft(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttracrgt(2 * FACEG + 1 + Mcells);
 
       // Cell-centered temporary arrays
-      tbox::Array<double> ttcelslp(2 * CELLG + Mcells);
+      std::vector<double> ttcelslp(2 * CELLG + Mcells);
 
       /*
        *  Apply characteristic tracing to update traces w^L and
@@ -1250,10 +1249,10 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
          uval->getPointer(),
          traced_left.getPointer(0),
          traced_right.getPointer(0),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
 
       SAMRAI_F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
          ifirst(0), ilast(0), ifirst(1), ilast(1),
@@ -1262,10 +1261,10 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
          uval->getPointer(),
          traced_left.getPointer(1),
          traced_right.getPointer(1),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
 
       SAMRAI_F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
          ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
@@ -1273,10 +1272,10 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
          uval->getPointer(),
          traced_left.getPointer(2),
          traced_right.getPointer(2),
-         ttcelslp.getPointer(),
-         ttedgslp.getPointer(),
-         ttraclft.getPointer(),
-         ttracrgt.getPointer());
+         &ttcelslp[0],
+         &ttedgslp[0],
+         &ttraclft[0],
+         &ttracrgt[0]);
 
    } //  if (d_godunov_order > 1) ...
 
@@ -2350,7 +2349,7 @@ void LinAdv::getFromInput(
                           << " RefinementData. No refinement will occur." << endl);
       }
 
-      tbox::Array<string> ref_keys_defined(num_keys);
+      std::vector<string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
       boost::shared_ptr<tbox::Database> error_db;
       for (int i = 0; i < num_keys; i++) {

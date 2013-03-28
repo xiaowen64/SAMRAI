@@ -297,7 +297,6 @@ int main(
          viz_dump_interval = main_db->getInteger("viz_dump_interval");
       }
 
-      Array<string> viz_writer(1);
       const string viz_dump_dirname = main_db->getStringWithDefault(
             "viz_dump_dirname", base_name + ".visit");
       int visit_number_procs_per_file = 1;

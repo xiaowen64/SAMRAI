@@ -61,7 +61,6 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/MessageStream.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 
 #include "boost/shared_ptr.hpp"

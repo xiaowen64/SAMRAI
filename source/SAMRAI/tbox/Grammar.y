@@ -19,7 +19,6 @@ typedef ostringstream ostrstream;
 #endif
 
 #include "SAMRAI/tbox/Dimension.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Parser.h"

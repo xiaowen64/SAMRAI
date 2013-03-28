@@ -230,6 +230,7 @@ BoxContainer::insert(
 
    if (!d_ordered && isEmpty()) {
       order();
+      position.d_set_iter = d_set.begin();
    }
 
    if (!d_ordered) {
@@ -318,7 +319,7 @@ BoxContainer::insert (
       d_tree.reset();
    }
 
-   for (std::set<Box*>::const_iterator set_iter = first.d_set_iter;
+   for (std::set<Box*, Box::id_less>::const_iterator set_iter = first.d_set_iter;
         set_iter != last.d_set_iter; ++set_iter) {
 
       TBOX_ASSERT((**set_iter).getBoxId().isValid());
@@ -739,7 +740,9 @@ BoxContainer::boxesIntersect() const
       }
       ++tryMe;
       whatAboutMe = tryMe;
-      ++whatAboutMe;
+      if (whatAboutMe != end()) {
+         ++whatAboutMe;
+      }
    }
    return intersections;
 }
@@ -1902,11 +1905,15 @@ BoxContainer::BoxContainerIterator::BoxContainerIterator(
 }
 
 BoxContainer::BoxContainerIterator::BoxContainerIterator(
-   const BoxContainerIterator& other):
-   d_list_iter(other.d_list_iter),
-   d_set_iter(other.d_set_iter),
-   d_ordered(other.d_ordered)
+   const BoxContainerIterator& other)
 {
+   d_ordered = other.d_ordered;
+   if (d_ordered) {
+      d_set_iter = other.d_set_iter;
+   }
+   else {
+      d_list_iter = other.d_list_iter;
+   }
 }
 
 BoxContainer::BoxContainerIterator::BoxContainerIterator():
@@ -1930,19 +1937,27 @@ BoxContainer::BoxContainerConstIterator::BoxContainerConstIterator(
 }
 
 BoxContainer::BoxContainerConstIterator::BoxContainerConstIterator(
-   const BoxContainerConstIterator& other):
-   d_list_iter(other.d_list_iter),
-   d_set_iter(other.d_set_iter),
-   d_ordered(other.d_ordered)
+   const BoxContainerConstIterator& other)
 {
+   d_ordered = other.d_ordered;
+   if (d_ordered) {
+      d_set_iter = other.d_set_iter;
+   }
+   else {
+      d_list_iter = other.d_list_iter;
+   }
 }
 
 BoxContainer::BoxContainerConstIterator::BoxContainerConstIterator(
-   const BoxContainerIterator& other):
-   d_list_iter(other.d_list_iter),
-   d_set_iter(other.d_set_iter),
-   d_ordered(other.d_ordered)
+   const BoxContainerIterator& other)
 {
+   d_ordered = other.d_ordered;
+   if (d_ordered) {
+      d_set_iter = other.d_set_iter;
+   }
+   else {
+      d_list_iter = other.d_list_iter;
+   }
 }
 
 BoxContainer::BoxContainerConstIterator::~BoxContainerConstIterator()

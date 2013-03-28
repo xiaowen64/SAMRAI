@@ -40,7 +40,6 @@
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -735,7 +734,7 @@ static void dumpMatlabData1dPencil(
    if (dim > tbox::Dimension(1)) {
       int indx = 0;
       int id = 0;
-      tbox::Array<int> tmp(dim.getValue() - 1);
+      std::vector<int> tmp(dim.getValue() - 1);
       for (id = 0; id < dim.getValue() - 1; id++) {
          tmp[id] = pencil_index[id];
       }
@@ -759,7 +758,7 @@ static void dumpMatlabData1dPencil(
       }
    }
 
-   tbox::Array<hier::BoxContainer> outboxes(nlevels);
+   std::vector<hier::BoxContainer> outboxes(nlevels);
 
    for (int l1 = 0; l1 < nlevels; l1++) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(l1));

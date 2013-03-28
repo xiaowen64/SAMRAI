@@ -13,8 +13,6 @@
 
 #include "SAMRAI/pdat/IndexVariable.h"
 #include "SAMRAI/pdat/IndexVariable.C"
-#include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/Array.C"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/TimerManager.h"

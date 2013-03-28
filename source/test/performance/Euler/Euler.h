@@ -31,7 +31,6 @@
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/MessageStream.h"
-#include "SAMRAI/tbox/Array.h"
 
 
 #include "boost/shared_ptr.hpp"
@@ -583,9 +582,9 @@ private:
    std::vector<int> d_scalar_bdry_face_conds; // Used in 3D only.
    std::vector<int> d_vector_bdry_face_conds; // Used in 3D only.
 
-   tbox::Array<int> d_node_bdry_edge; // Used in 2D only.
-   tbox::Array<int> d_edge_bdry_face; // Used in 3D only.
-   tbox::Array<int> d_node_bdry_face; // Used in 3D only.
+   std::vector<int> d_node_bdry_edge; // Used in 2D only.
+   std::vector<int> d_edge_bdry_face; // Used in 3D only.
+   std::vector<int> d_node_bdry_face; // Used in 3D only.
 
    /*
     * Arrays of face (3d) or edge (2d) boundary values for DIRICHLET case.

@@ -79,6 +79,7 @@ public:
     */
    typedef BoxNeighborhoodCollection::NeighborIterator NeighborIterator;
 
+
    /*!
     * @brief Creates an uninitialized Connector object in the
     * distributed state.

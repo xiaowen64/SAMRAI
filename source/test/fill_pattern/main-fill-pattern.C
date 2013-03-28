@@ -348,7 +348,6 @@ bool SingleLevelTestCase(
    const int num_nodes = mpi.getSize();
    const int num_boxes = level_boxes.size();
    hier::LocalId local_id(0);
-   tbox::Array<int> local_indices(mpi.getSize(), 0);
    hier::BoxContainer::iterator level_boxes_itr = level_boxes.begin();
    for (int i = 0; i < num_boxes; ++i, ++level_boxes_itr) {
 
@@ -431,10 +430,9 @@ bool SingleLevelTestCase(
    }
 
    // Cache Connector required for the schedule generation.
-   level->getBoxLevel()->getPersistentOverlapConnectors().
-   findOrCreateConnector(
-      *(level->getBoxLevel()),
-      hier::IntVector(dim, 2));
+   level->findConnector(*level,
+      hier::IntVector(dim, 2),
+      hier::CONNECTOR_CREATE);
 
    // Create and run comm schedule
    refine_alg.createSchedule(level)->fillData(0.0, false);

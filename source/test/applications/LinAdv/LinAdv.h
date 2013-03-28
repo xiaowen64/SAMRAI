@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/appu/BoundaryUtilityStrategy.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
@@ -512,12 +511,12 @@ private:
     * variables.  These are post-processed input values and are passed
     * to the boundary routines.
     */
-   tbox::Array<int> d_node_bdry_edge; // only for (dim == tbox::Dimension(2))
-   tbox::Array<int> d_edge_bdry_face; // only for (dim == tbox::Dimension(3))
-   tbox::Array<int> d_node_bdry_face; // only for (dim == tbox::Dimension(3))
+   std::vector<int> d_node_bdry_edge; // only for (dim == tbox::Dimension(2))
+   std::vector<int> d_edge_bdry_face; // only for (dim == tbox::Dimension(3))
+   std::vector<int> d_node_bdry_face; // only for (dim == tbox::Dimension(3))
 
    /*
-    * Arrays of face (3d) or edge (2d) boundary values for DIRICHLET case.
+    * Vectors of face (3d) or edge (2d) boundary values for DIRICHLET case.
     */
    std::vector<double> d_bdry_edge_uval; // only for (dim == tbox::Dimension(2))
    std::vector<double> d_bdry_face_uval; // only for (dim == tbox::Dimension(3))

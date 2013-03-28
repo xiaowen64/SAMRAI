@@ -878,6 +878,184 @@ public:
    }
 
    /*!
+    * @brief Find an overlap Connector with the given PatchLevel's BoxLevel as
+    * its head and minimum Connector width.  If the specified Connector is not
+    * found, take the specified action.
+    *
+    * If multiple Connectors fit the criteria, the one with the
+    * smallest ghost cell width (based on the algebraic sum of the
+    * components) is selected.
+    *
+    * @param[in] head Find the overlap Connector with this PatchLevel's
+    *      BoxLevel as the head.
+    * @param[in] min_connector_width Find the overlap Connector satisfying
+    *      this minimum Connector width.
+    * @param[in] not_found_action Action to take if Connector is not found.
+    * @param[in] exact_width_only If true, reject Connectors that do not
+    *      match the requested width exactly.
+    *
+    * @return The Connector which matches the search criterion.
+    *
+    * @pre getBoxLevel()->isInitialized()
+    * @pre head.getBoxLevel()->isInitialized()
+    */
+   const Connector&
+   findConnector(
+      const PatchLevel& head,
+      const IntVector& min_connector_width,
+      ConnectorNotFoundAction not_found_action,
+      bool exact_width_only = false) const
+   {
+      return getBoxLevel()->findConnector(*head.getBoxLevel(),
+         min_connector_width,
+         not_found_action,
+         exact_width_only);
+   }
+
+   /*!
+    * @brief Find an overlap Connector with its transpose with the given
+    * PatchLevel's BoxLevel as its head and minimum Connector widths.  If the
+    * specified Connector is not found, take the specified action.
+    *
+    * If multiple Connectors fit the criteria, the one with the
+    * smallest ghost cell width (based on the algebraic sum of the
+    * components) is selected.
+    *
+    * @param[in] head Find the overlap Connector with this PatchLevel's
+    *      BoxLevel as the head.
+    * @param[in] min_connector_width Find the overlap Connector satisfying
+    *      this minimum Connector width.
+    * @param[in] transpose_min_connector_width Find the transpose overlap
+    *      Connector satisfying this minimum Connector width.
+    * @param[in] not_found_action Action to take if Connector is not found.
+    * @param[in] exact_width_only If true, reject Connectors that do not
+    *      match the requested width exactly.
+    *
+    * @return The Connector which matches the search criterion.
+    *
+    * @pre getBoxLevel()->isInitialized()
+    * @pre head.getBoxLevel()->isInitialized()
+    */
+   const Connector&
+   findConnectorWithTranspose(
+      const PatchLevel& head,
+      const IntVector& min_connector_width,
+      const IntVector& transpose_min_connector_width,
+      ConnectorNotFoundAction not_found_action,
+      bool exact_width_only = false) const
+   {
+      return getBoxLevel()->findConnectorWithTranspose(*head.getBoxLevel(),
+         min_connector_width,
+         transpose_min_connector_width,
+         not_found_action,
+         exact_width_only);
+   }
+
+   /*!
+    * @brief Create an overlap Connector, computing relationships by
+    * globalizing data.
+    *
+    * The base will be this PatchLevel's BoxLevel.
+    * Find Connector relationships using a (non-scalable) global search.
+    *
+    * @see hier::Connector
+    * @see hier::Connector::initialize()
+    *
+    * @param[in] head This PatchLevel's BoxLevel will be the head.
+    * @param[in] connector_width
+    *
+    * @return A const reference to the newly created overlap Connector.
+    *
+    * @pre getBoxLevel()->isInitialized()
+    * @pre head.getBoxLevel()->isInitialized()
+    */
+   const Connector&
+   createConnector(
+      const PatchLevel& head,
+      const IntVector& connector_width) const
+   {
+      return getBoxLevel()->createConnector(*head.getBoxLevel(),
+         connector_width);
+   }
+
+   /*!
+    * @brief Create an overlap Connector with its transpose, computing
+    * relationships by globalizing data.
+    *
+    * The base will be this PatchLevel's BoxLevel.
+    * Find Connector relationships using a (non-scalable) global search.
+    *
+    * @see hier::Connector
+    * @see hier::Connector::initialize()
+    *
+    * @param[in] head This PatchLevel's BoxLevel will be the head.
+    * @param[in] connector_width
+    * @param[in] transpose_connector_width
+    *
+    * @return A const reference to the newly created overlap Connector.
+    *
+    * @pre getBoxLevel()->isInitialized()
+    * @pre head.getBoxLevel()->isInitialized()
+    */
+   const Connector&
+   createConnectorWithTranspose(
+      const PatchLevel& head,
+      const IntVector& connector_width,
+      const IntVector& transpose_connector_width) const
+   {
+      return getBoxLevel()->createConnectorWithTranspose(*head.getBoxLevel(),
+         connector_width,
+         transpose_connector_width);
+   }
+
+   /*!
+    * @brief Cache the supplied overlap Connector and its transpose
+    * if it exists.
+    *
+    * @param[in] connector
+    *
+    * @pre connector
+    * @pre getBoxLevel()->isInitialized()
+    * @pre getBoxLevel() == connector->getBase()
+    */
+   void
+   cacheConnector(
+      boost::shared_ptr<Connector>& connector) const
+   {
+      return getBoxLevel()->cacheConnector(connector);
+   }
+
+   /*!
+    * @brief Returns whether the object has overlap Connectors with the given
+    * PatchLevel's BoxLevel as the head and minimum Connector width.
+    *
+    * TODO:  does the following comment mean that this must be called
+    * before the call to findConnector?
+    *
+    * If this returns true, the Connector fitting the specification
+    * exists and findConnector() will not throw an assertion.
+    *
+    * @param[in] head Find the overlap Connector with this PatchLevel's
+    *      BoxLevel as the head.
+    * @param[in] min_connector_width Find the overlap Connector satisfying
+    *      this minimum ghost cell width.
+    * @param[in] exact_width_only If true, reject Connectors that do not
+    *      match the requested width exactly.
+    *
+    * @return True if a Connector is found, otherwise false.
+    */
+   bool
+   hasConnector(
+      const PatchLevel& head,
+      const IntVector& min_connector_width,
+      bool exact_width_only = false) const
+   {
+      return getBoxLevel()->hasConnector(*head.getBoxLevel(),
+         min_connector_width,
+         exact_width_only);
+   }
+
+   /*!
     * @brief Use the PatchLevel restart database to set the state of the
     * PatchLevel and to create all patches on the local processor.
     *

@@ -8,6 +8,9 @@
  *
  ************************************************************************/
 
+// Refer to front.2d.input for full description of all input parameters
+// specific to this problem.
+
 Main {
   dim = 2
   check_dlbg_in_main = FALSE

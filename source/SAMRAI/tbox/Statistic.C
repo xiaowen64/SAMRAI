@@ -10,7 +10,6 @@
 
 #include "SAMRAI/tbox/Statistic.h"
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/Utilities.h"

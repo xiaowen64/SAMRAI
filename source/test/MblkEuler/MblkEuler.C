@@ -2899,7 +2899,7 @@ void MblkEuler::getFromInput(
       //
 //      int llen = d_number_of_regions*d_nState;
 //     //double *tmp = new double[llen];
-//    tbox::Array<double> tmp(llen);
+//    std::vector<double> tmp(llen);
 //   for ( int ii = 0 ; ii < llen ; ii++ ) {
 //       tmp[ii] = FLT_MAX;
 //     }

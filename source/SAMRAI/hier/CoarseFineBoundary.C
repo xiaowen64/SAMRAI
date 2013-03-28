@@ -62,16 +62,13 @@ CoarseFineBoundary::CoarseFineBoundary(
    const PatchLevel& level = *hierarchy.getPatchLevel(level_num);
    IntVector connector_width(max_ghost_width);
    connector_width.max(IntVector::getOne(d_dim));
-   const Connector& level_to_level =
-      level.getBoxLevel()->getPersistentOverlapConnectors().
-      findOrCreateConnector(
-         *level.getBoxLevel(),
-         connector_width);
+   const Connector& level_to_level = level.findConnector(level,
+      connector_width,
+      CONNECTOR_CREATE);
    const Connector& level_to_domain =
-      level.getBoxLevel()->getPersistentOverlapConnectors().
-      findOrCreateConnector(
-         hierarchy.getDomainBoxLevel(),
-         connector_width);
+      level.getBoxLevel()->findConnector(hierarchy.getDomainBoxLevel(),
+         connector_width,
+         CONNECTOR_CREATE);
 
    if (hierarchy.getGridGeometry()->getNumberBlocks() == 1) {
       computeFromLevel(

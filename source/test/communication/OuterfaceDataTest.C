@@ -54,7 +54,7 @@ OuterfaceDataTest::OuterfaceDataTest(
 
    d_refine_option = refine_option;
 
-   d_use_fine_value_at_interface.resizeArray(0);
+   d_use_fine_value_at_interface.resize(0);
 
    d_Acoef = 0.0;
    d_Bcoef = 0.0;
@@ -98,7 +98,7 @@ void OuterfaceDataTest::readTestInput(
    std::vector<string> var_keys = var_data->getAllKeys();
    int nkeys = static_cast<int>(var_keys.size());
 
-   d_use_fine_value_at_interface.resizeArray(nkeys);
+   d_use_fine_value_at_interface.resize(nkeys);
 
    for (int i = 0; i < nkeys; i++) {
       boost::shared_ptr<tbox::Database> var_db(
@@ -147,10 +147,10 @@ void OuterfaceDataTest::registerVariables(
 
    const tbox::Dimension dim(d_dim);
 
-   int nvars = d_variable_src_name.getSize();
+   int nvars = static_cast<int>(d_variable_src_name.size());
 
-   d_variables_src.resizeArray(nvars);
-   d_variables_dst.resizeArray(nvars);
+   d_variables_src.resize(nvars);
+   d_variables_dst.resize(nvars);
 
    for (int i = 0; i < nvars; i++) {
       d_variables_src[i].reset(
@@ -195,12 +195,12 @@ void OuterfaceDataTest::initializeDataOnPatch(
    hier::VariableDatabase* variable_db =
       hier::VariableDatabase::getDatabase();
    variable_db->printClassData();
-   tbox::Array<boost::shared_ptr<hier::Variable> >& variables(
+   std::vector<boost::shared_ptr<hier::Variable> >& variables(
       src_or_dst == 's' ? d_variables_src : d_variables_dst);
 
    if (d_do_refine) {
 
-      for (int i = 0; i < variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(variables.size()); i++) {
 
          boost::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
@@ -227,7 +227,7 @@ void OuterfaceDataTest::initializeDataOnPatch(
 
    } else if (d_do_coarsen) {
 
-      for (int i = 0; i < variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(variables.size()); i++) {
 
          boost::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
@@ -488,7 +488,7 @@ bool OuterfaceDataTest::verifyResults(
       tbox::plog << "Patch box = " << patch.getBox() << endl;
 
       hier::IntVector tgcw(d_dim, 0);
-      for (int i = 0; i < d_variables_dst.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); i++) {
          tgcw.max(patch.getPatchData(d_variables_dst[i], getDataContext())->
             getGhostCellWidth());
       }
@@ -506,7 +506,7 @@ bool OuterfaceDataTest::verifyResults(
          setLinearData(solution, tbox, patch); //, hierarchy, level_number);
       }
 
-      for (int i = 0; i < d_variables_dst.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); i++) {
 
          boost::shared_ptr<pdat::FaceData<double> > face_data(
             patch.getPatchData(d_variables_dst[i], getDataContext()),

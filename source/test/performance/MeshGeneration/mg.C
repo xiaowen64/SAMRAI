@@ -73,25 +73,25 @@ void
 refineHead(
    hier::BoxLevel& head,
    hier::Connector& ref_to_head,
-   const hier::IntVector &refinement_ratio );
+   const hier::IntVector &refinement_ratio);
 
 void outputPostcluster(
    const hier::BoxLevel &cluster,
    const hier::BoxLevel &ref,
    const hier::IntVector &ref_to_cluster_width,
-   const std::string &border );
+   const std::string &border);
 
 void outputPrebalance(
    const hier::BoxLevel &pre,
    const hier::BoxLevel &ref,
    const hier::IntVector &pre_width,
-   const std::string &border );
+   const std::string &border);
 
 void outputPostbalance(
    const hier::BoxLevel &post,
    const hier::BoxLevel &ref,
    const hier::IntVector &post_width,
-   const std::string &border );
+   const std::string &border);
 
 boost::shared_ptr<mesh::BoxGeneratorStrategy>
 createBoxGenerator(
@@ -105,12 +105,12 @@ createLoadBalancer(
    const std::string &lb_type,
    const std::string &rank_tree_type,
    int ln,
-   const tbox::Dimension &dim );
+   const tbox::Dimension &dim);
 
 boost::shared_ptr<RankTreeStrategy>
 getRankTree(
    Database &input_db,
-   const std::string &rank_tree_type );
+   const std::string &rank_tree_type);
 
 static boost::shared_ptr<tbox::CommGraphWriter> comm_graph_writer;
 size_t num_records_written = 0;
@@ -461,7 +461,9 @@ int main(
                L0_boxes.size());
          hier::BoxContainer::iterator L0_boxes_itr = L0_boxes.begin();
          for (int i = 0; i < my_boxes_start; ++i) {
-            ++L0_boxes_itr;
+            if (L0_boxes_itr != L0_boxes.end()) {
+               ++L0_boxes_itr;
+            }
          }
          for (int i = my_boxes_start; i < my_boxes_stop; ++i, L0_boxes_itr++) {
             L0->addBox(*L0_boxes_itr, hier::BlockId::zero());
@@ -902,9 +904,10 @@ void outputPostcluster(
          ref.getRefinementRatio(),
          ref_to_cluster_width);
 
-   const hier::Connector &cluster_to_ref =
-      cluster.getPersistentOverlapConnectors().findOrCreateConnector(
-         ref, ref_to_cluster_width, true );
+   const hier::Connector &cluster_to_ref = cluster.findConnector(ref,
+      ref_to_cluster_width,
+      hier::CONNECTOR_CREATE,
+      true);
 
    cluster.cacheGlobalReducedData();
    cluster_to_ref.cacheGlobalReducedData();
@@ -949,9 +952,10 @@ void outputPrebalance(
          pre.getRefinementRatio(),
          pre_width);
 
-   const hier::Connector &pre_to_pre =
-      pre.getPersistentOverlapConnectors().findOrCreateConnector(
-         pre, pre_width, true );
+   const hier::Connector &pre_to_pre = pre.findConnector(pre,
+      pre_width,
+      hier::CONNECTOR_CREATE,
+      true);
 
    tbox::plog << "\n\n"
               << border << "Prebalance summary:\n"
@@ -993,13 +997,16 @@ void outputPostbalance(
          post.getRefinementRatio(),
          post_width);
 
-   const hier::Connector &post_to_post =
-      post.getPersistentOverlapConnectors().findOrCreateConnector(
-         post, post_width, true );
+   const hier::Connector &post_to_post = post.findConnector(post,
+      post_width,
+      hier::CONNECTOR_CREATE,
+      true);
 
-   const hier::Connector &post_to_ref =
-      post.getPersistentOverlapConnectors().findOrCreateConnectorWithTranspose(
-         ref, post_width, ref_width, true );
+   const hier::Connector &post_to_ref = post.findConnectorWithTranspose(ref,
+      post_width,
+      ref_width,
+      hier::CONNECTOR_CREATE,
+      true);
 
    const hier::Connector &ref_to_post = post_to_ref.getTranspose();
 
@@ -1290,7 +1297,10 @@ void enforceNesting(
    hier::BoxLevelConnectorUtils blcu;
    blcu.computeInternalParts( L1nested,
                               L1_to_L1nested,
-                              L1.getPersistentOverlapConnectors().findOrCreateConnectorWithTranspose(L0, nesting_width, nesting_width_transpose),
+                              L1.findConnectorWithTranspose(L0,
+                                 nesting_width,
+                                 nesting_width_transpose,
+                                 hier::CONNECTOR_CREATE),
                               -nesting_width,
                               hierarchy->getGridGeometry()->getDomainSearchTree() );
    hier::MappingConnectorAlgorithm mca;

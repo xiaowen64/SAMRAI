@@ -234,7 +234,7 @@ int main(
 
    // file_mapping will have size equal to the lesser value of
    // num_input_files and num_output_files.
-   tbox::Array<tbox::Array<int> > file_mapping;
+   std::vector<std::vector<int> > file_mapping;
    int smaller, larger;
    if (num_output_files > num_input_files) {
       smaller = num_input_files;
@@ -260,7 +260,7 @@ int main(
    if (rank < extra_files) {
       ++my_file_mapping_size;
    }
-   file_mapping.resizeArray(my_file_mapping_size);
+   file_mapping.resize(my_file_mapping_size);
 
    int file_counter = 0;
 
@@ -273,7 +273,7 @@ int main(
       for (int j = 0; j < this_file_mapping_size; j++) {
          if (remainder > 0) {
             if (i == rank) {
-               file_mapping[j].resizeArray(file_ratio + 1);
+               file_mapping[j].resize(file_ratio + 1);
                for (int k = 0; k <= file_ratio; k++) {
                   file_mapping[j][k] = file_counter + k;
                }
@@ -282,7 +282,7 @@ int main(
             --remainder;
          } else {
             if (i == rank) {
-               file_mapping[j].resizeArray(file_ratio);
+               file_mapping[j].resize(file_ratio);
                for (int k = 0; k < file_ratio; k++) {
                   file_mapping[j][k] = file_counter + k;
                }

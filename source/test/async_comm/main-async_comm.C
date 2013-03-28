@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Test program for asynchromous communication classes
+ * Description:   Test program for asynchronous communication classes
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
@@ -198,11 +198,11 @@ int main(
          plog << "\n\n\n***************** Beginning Cycle Number "
               << count << " *******************\n\n";
 
-         Array<Array<int> > group_ids(num_groups);
-         Array<int> owners(num_groups);
-         Array<int> active_flags(num_groups);
+         std::vector<std::vector<int> > group_ids(num_groups);
+         std::vector<int> owners(num_groups);
+         std::vector<int> active_flags(num_groups);
 
-         Array<int> active_groups(num_groups);
+         std::vector<int> active_groups(num_groups);
          int num_active_groups = 0;
 
          /*
@@ -216,7 +216,7 @@ int main(
          for (int n = 0; n < num_groups; ++n) {
 
             int gsize = (mpi.getSize() + n) / (n + 1);
-            group_ids[n].resizeArray(gsize);
+            group_ids[n].resize(gsize);
             active_flags[n] = false;
             for (int i = 0; i < gsize; ++i) {
                group_ids[n][i] = i * (n + 1);
@@ -231,7 +231,7 @@ int main(
             owners[n] = group_ids[n][gsize / 2];
 
          }
-         active_groups.resizeArray(num_active_groups);
+         active_groups.resize(num_active_groups);
 
          /*
           * Write out group data.
@@ -247,7 +247,7 @@ int main(
                  << std::setw(4) << owners[n]
                  << (active_flags[n] ? '*' : ' ')
                  << (owners[n] == rank ? '*' : ' ') << ':';
-            for (int i = 0; i < group_ids[n].size(); ++i) {
+            for (int i = 0; i < static_cast<int>(group_ids[n].size()); ++i) {
                plog << "  " << group_ids[n][i];
             }
             plog << '\n';
@@ -265,14 +265,14 @@ int main(
           * Compute the correct sum for comparison.
           */
 
-         Array<int> sum(num_active_groups);
-         Array<int> correct_sum(num_active_groups);
+         std::vector<int> sum(num_active_groups);
+         std::vector<int> correct_sum(num_active_groups);
 
          for (ai = 0; ai < num_active_groups; ++ai) {
             sum[ai] = 1 + rank;
             correct_sum[ai] = 0;
-            Array<int>& g = group_ids[active_groups[ai]];
-            for (int j = 0; j < g.size(); ++j) {
+            std::vector<int>& g = group_ids[active_groups[ai]];
+            for (int j = 0; j < static_cast<int>(g.size()); ++j) {
                correct_sum[ai] += 1 + g[j];
             }
          }
@@ -281,8 +281,8 @@ int main(
           * Initialize data for broadcast test.
           * Broadcast data is 1001 + the group index.
           */
-         Array<int> bcdata(num_active_groups);
-         Array<int> correct_bcdata(num_active_groups);
+         std::vector<int> bcdata(num_active_groups);
+         std::vector<int> correct_bcdata(num_active_groups);
          for (ai = 0; ai < num_active_groups; ++ai) {
             gi = active_groups[ai];
             bcdata[ai] = rank == owners[gi] ? 1001 + gi : -1;
@@ -301,8 +301,8 @@ int main(
             comm_groups[ai].initialize(num_children,
                &comm_stage);
             comm_groups[ai].setGroupAndRootRank(isolated_mpi,
-               group_ids[gi].getPointer(),
-               group_ids[gi].size(),
+               &group_ids[gi][0],
+               static_cast<int>(group_ids[gi].size()),
                owners[gi]);
             comm_groups[ai].setMPITag(1000000 * count + gi);
             comm_groups[ai].setUseBlockingSendToParent(false);

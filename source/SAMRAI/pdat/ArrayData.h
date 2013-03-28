@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/MemoryUtilities.h"

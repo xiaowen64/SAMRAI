@@ -4,7 +4,8 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   SampleIndexData example demonstrating IndexData type.
+ * Description:   Example user defined index data type used in indx_dataops
+ *                test.
  *
  ************************************************************************/
 
@@ -149,7 +150,6 @@ void SampleIndexData::getFromRestart(
  */
 
 //#include "SampleIndexData.h"
-//#include "SAMRAI/tbox/Array.C"
 //#include "SAMRAI/pdat/IndexData.C"
 //#include "SAMRAI/pdat/IndexDataFactory.C"
 //#include "SAMRAI/pdat/IndexVariable.C"
@@ -164,8 +164,8 @@ void SampleIndexData::getFromRestart(
 //template class pdat::IndexDataNode<SampleIndexData, pdat::CellGeometry>;
 //template class pdat::IndexIterator<SampleIndexData, pdat::CellGeometry>;
 //template class pdat::IndexVariable<SampleIndexData, pdat::CellGeometry>;
-//template class tbox::Array<SampleIndexData>;
-//template class tbox::Array<pdat::IndexDataNode<SampleIndexData,
+//template class std::vector<SampleIndexData>;
+//template class std::vector<pdat::IndexDataNode<SampleIndexData,
 //                                               pdat::CellGeometry> >;
 //template class boost::shared_ptr<pdat::IndexData<SampleIndexData,
 //                                                 pdat::CellGeometry> >;

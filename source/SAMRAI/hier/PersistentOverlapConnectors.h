@@ -18,6 +18,19 @@
 namespace SAMRAI {
 namespace hier {
 
+/*!
+ * @brief Action to take when Connectors between BoxLevels are not found.
+ */
+enum ConnectorNotFoundAction
+{
+   CONNECTOR_ERROR,                 // If the Connector is not found then error
+   CONNECTOR_CREATE,                // If the Connector is not found silently
+                                    // create it
+   CONNECTOR_IMPLICIT_CREATION_RULE // If the Connector is not found take
+                                    // action specified by
+                                    // s_implicit_connector_creation_rule
+};
+
 class Connector;
 class BoxLevel;
 
@@ -67,21 +80,19 @@ class BoxLevel;
  *   </tr>
  * </table>
  *
- * @note Creating overlap Connectors by global search is not scalable.
- * Nevertheless, the default is "WARN", so that application
- * development need not worry about missing overlap Connectors.  To
- * selectively enable automatic Connector generation, set this to
- * "ERROR" and use findOrCreateConnector() instead of findConnector()
- * where you are unsure if the Connector has been created.
+ * @note Creating overlap Connectors by global search is not scalable
+ * Nevertheless, the default for implicit_connector_creation_rule is "WARN",
+ * so that application development need not worry about missing overlap
+ * Connectors.  To selectively enable automatic Connector generation, set this
+ * input paramter to "ERROR" and call findConnector() with "CREATE" where you
+ * are unsure if the Connector has been created.
  *
  * @see findConnector()
- * @see findOrCreateConnector()
  * @see hier::Connector
  */
 class PersistentOverlapConnectors
 {
-
-public:
+private:
    /*!
     * @brief Deletes all Connectors to and from this object
     */
@@ -136,48 +147,23 @@ public:
       const IntVector& transpose_connector_width);
 
    /*!
-    * @brief Create an overlap Connector using externally
-    * computed relationships.
+    * @brief Cache the supplied overlap Connector and its transpose
+    * if it exists.
     *
-    * Create the Connector initialized with the arguments.
-    * The base will be the BoxLevel that owns this object.
-    *
-    * @see hier::Connector
-    * @see hier::Connector::initialize()
-    *
-    * @param[in] head
-    * @param[in] connector_width
-    * @param[in] relationships
-    *
-    * @pre myBoxLevel().isInitialized()
-    * @pre head.isInitialized()
-    */
-   const Connector&
-   createConnector(
-      const BoxLevel& head,
-      const IntVector& connector_width,
-      const Connector& relationships);
-
-   /*!
-    * @brief Cache the supplied overlap Connector.
-    *
-    * The head will be the supplied head and the base will be the
-    * BoxLevel that owns this object.
-    *
-    * @param[in] head
     * @param[in] connector
     *
-    * @pre myBoxLevel().isInitialized()
     * @pre connector
+    * @pre myBoxLevel().isInitialized()
+    * @pre myBoxLevel() == connector->getBase()
     */
    void
    cacheConnector(
-      const BoxLevel& head,
       boost::shared_ptr<Connector>& connector);
 
    /*!
     * @brief Find an overlap Connector with the given head and minimum
-    * Connector width.
+    * Connector width.  If the specified Connector is not found, take the
+    * specified action.
     *
     * If multiple Connectors fit the criteria, the one with the
     * smallest ghost cell width (based on the algebraic sum of the
@@ -187,15 +173,19 @@ public:
     * arbitrary and should be re-examined.
     *
     * @par Assertions
-    * If no Connector fits the criteria and @c
-    * implicit_connector_creation_rule is "ERROR", an assertion is
-    * thrown.  To automatically create the Connector instead, use
-    * findOrCreateConnector() or set @c
-    * implicit_connector_creation_rule to "WARN" or "SILENT".
+    * If no Connector fits the criteria and not_found_action == ERROR, an
+    * unrecoverable error will be generated.  If not_found_action == CREATE,
+    * the Connector will be generated using an unscalable algorithm.  If
+    * not_found_action == IMPLICIT_CREATION_RULE, the behavior will be
+    * determined by the @c implicit_connector_creation_rule input parameter.
+    * If it is "ERROR", an unrecoverable error will be generated.  If it is
+    * "WARN" or "SILENT" the Connector will be generated using an unscalable
+    * algorithm and either a warning will be generated or not.
     *
     * @param[in] head Find the overlap Connector with this specified head.
     * @param[in] min_connector_width Find the overlap Connector satisfying
     *      this minimum Connector width.
+    * @param[in] not_found_action Action to take if Connector is not found.
     * @param[in] exact_width_only If true, reject Connectors that do not
     *      match the requested width exactly.
     *
@@ -208,11 +198,13 @@ public:
    findConnector(
       const BoxLevel& head,
       const IntVector& min_connector_width,
+      ConnectorNotFoundAction not_found_action,
       bool exact_width_only = false);
 
    /*!
     * @brief Find an overlap Connector with its transpose with the given head
-    * and minimum Connector widths.
+    * and minimum Connector widths.  If the specified Connector is not found,
+    * take the specified action.
     *
     * If multiple Connectors fit the criteria, the one with the
     * smallest ghost cell width (based on the algebraic sum of the
@@ -222,17 +214,21 @@ public:
     * arbitrary and should be re-examined.
     *
     * @par Assertions
-    * If no Connector fits the criteria and @c
-    * implicit_connector_creation_rule is "ERROR", an assertion is
-    * thrown.  To automatically create the Connector instead, use
-    * findOrCreateConnector() or set @c
-    * implicit_connector_creation_rule to "WARN" or "SILENT".
+    * If no Connector fits the criteria and not_found_action == ERROR, an
+    * unrecoverable error will be generated.  If not_found_action == CREATE,
+    * the Connector will be generated using an unscalable algorithm.  If
+    * not_found_action == IMPLICIT_CREATION_RULE, the behavior will be
+    * determined by the @c implicit_connector_creation_rule input parameter.
+    * If it is "ERROR", an unrecoverable error will be generated.  If it is
+    * "WARN" or "SILENT" the Connector will be generated using an unscalable
+    * algorithm and either a warning will be generated or not.
     *
     * @param[in] head Find the overlap Connector with this specified head.
     * @param[in] min_connector_width Find the overlap Connector satisfying
     *      this minimum Connector width.
     * @param[in] transpose_min_connector_width Find the transpose overlap
     *      Connector satisfying this minimum Connector width.
+    * @param[in] not_found_action Action to take if Connector is not found.
     * @param[in] exact_width_only If true, reject Connectors that do not
     *      match the requested width exactly.
     *
@@ -246,67 +242,7 @@ public:
       const BoxLevel& head,
       const IntVector& min_connector_width,
       const IntVector& transpose_min_connector_width,
-      bool exact_width_only = false);
-
-   /*!
-    * @brief Find or create an overlap Connectors with the
-    * given head and minimum Connector width.
-    *
-    * If multiple Connectors fit the criteria, the one with the
-    * smallest ghost cell width (based on the algebraic sum of the
-    * components) is selected.
-    *
-    * TODO: The criterion for selecting a
-    * single Connector is arbitrary and should be re-examined.
-    *
-    * If no Connector fits the criteria, a new one is created using
-    * global search for edges.
-    *
-    * @param[in] head Find the overlap Connector with this specified head.
-    * @param[in] min_connector_width Find the overlap Connector satisfying
-    *      this minimum ghost cell width.
-    * @param[in] exact_width_only If true, reject Connectors that do not
-    *      match the requested width exactly.
-    *
-    * @pre myBoxLevel().isInitialized()
-    * @pre head.isInitialized()
-    */
-   const Connector&
-   findOrCreateConnector(
-      const BoxLevel& head,
-      const IntVector& min_connector_width,
-      bool exact_width_only = false);
-
-   /*!
-    * @brief Find or create an overlap Connectors with its transpose with the
-    * given head and minimum Connector widths.
-    *
-    * If multiple Connectors fit the criteria, the one with the
-    * smallest ghost cell width (based on the algebraic sum of the
-    * components) is selected.
-    *
-    * TODO: The criterion for selecting a
-    * single Connector is arbitrary and should be re-examined.
-    *
-    * If no Connector fits the criteria, a new one is created using
-    * global search for edges.
-    *
-    * @param[in] head Find the overlap Connector with this specified head.
-    * @param[in] min_connector_width Find the overlap Connector satisfying
-    *      this minimum ghost cell width.
-    * @param[in] transpose_min_connector_width Find the transpose overlap
-    *      Connector satisfying this minimum ghost cell width.
-    * @param[in] exact_width_only If true, reject Connectors that do not
-    *      match the requested width exactly.
-    *
-    * @pre myBoxLevel().isInitialized()
-    * @pre head.isInitialized()
-    */
-   const Connector&
-   findOrCreateConnectorWithTranspose(
-      const BoxLevel& head,
-      const IntVector& min_connector_width,
-      const IntVector& transpose_min_connector_width,
+      ConnectorNotFoundAction not_found_action,
       bool exact_width_only = false);
 
    /*!
@@ -346,7 +282,6 @@ public:
       return d_my_box_level;
    }
 
-private:
    // Unimplemented default constructor.
    PersistentOverlapConnectors();
 
@@ -369,29 +304,20 @@ private:
    getFromInput();
 
    /*
-    * Private method used by different public versions of findConnector.
+    * Method which does work of findConnector and findConnectorWithTranspose.
     */
    boost::shared_ptr<Connector>
-   privateFindConnector(
+   doFindConnectorWork(
       const BoxLevel& head,
       const IntVector& min_connector_width,
+      ConnectorNotFoundAction not_found_action,
       bool exact_width_only);
 
    /*
-    * Private method used by different public versions of
-    * findOrCreateConnector.
-    */
-   boost::shared_ptr<Connector>
-   privateFindOrCreateConnector(
-      const BoxLevel& head,
-      const IntVector& min_connector_width,
-      bool exact_width_only);
-
-   /*
-    * Private method used by cacheConnector.
+    * Method which does work of cacheConnector.
     */
    void
-   privateCacheConnector(
+   doCacheConnectorWork(
       const BoxLevel& head,
       boost::shared_ptr<Connector>& connector);
 

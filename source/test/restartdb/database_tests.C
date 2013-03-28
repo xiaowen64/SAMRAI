@@ -306,36 +306,36 @@ void testDatabaseContents(
     * Set array values to test database.
     */
 
-   tbox::Array<dcomplex> arraydb_dcomplexArray(3);
+   std::vector<dcomplex> arraydb_dcomplexArray(3);
    arraydb_dcomplexArray[0] = arraydb_dcomplexArray0;
    arraydb_dcomplexArray[1] = arraydb_dcomplexArray1;
    arraydb_dcomplexArray[2] = arraydb_dcomplexArray2;
 
-   tbox::Array<bool> arraydb_boolArray(3);
+   std::vector<bool> arraydb_boolArray(3);
    arraydb_boolArray[0] = arraydb_boolArray0;
    arraydb_boolArray[1] = arraydb_boolArray1;
    arraydb_boolArray[2] = arraydb_boolArray2;
 
-   tbox::Array<int> arraydb_intArray(5);
+   std::vector<int> arraydb_intArray(5);
    arraydb_intArray[0] = arraydb_intArray0;
    arraydb_intArray[1] = arraydb_intArray1;
    arraydb_intArray[2] = arraydb_intArray2;
    arraydb_intArray[3] = arraydb_intArray3;
    arraydb_intArray[4] = arraydb_intArray4;
 
-   tbox::Array<string> arraydb_stringArray(3);
+   std::vector<string> arraydb_stringArray(3);
    arraydb_stringArray[0] = arraydb_stringArray0;
    arraydb_stringArray[1] = arraydb_stringArray1;
    arraydb_stringArray[2] = arraydb_stringArray2;
 
-   tbox::Array<float> arraydb_floatArray(5);
+   std::vector<float> arraydb_floatArray(5);
    arraydb_floatArray[0] = arraydb_floatArray0;
    arraydb_floatArray[1] = arraydb_floatArray1;
    arraydb_floatArray[2] = arraydb_floatArray2;
    arraydb_floatArray[3] = arraydb_floatArray3;
    arraydb_floatArray[4] = arraydb_floatArray4;
 
-   tbox::Array<double> arraydb_doubleArray(6);
+   std::vector<double> arraydb_doubleArray(6);
    arraydb_doubleArray[0] = arraydb_doubleArray0;
    arraydb_doubleArray[1] = arraydb_doubleArray1;
    arraydb_doubleArray[2] = arraydb_doubleArray2;
@@ -343,7 +343,7 @@ void testDatabaseContents(
    arraydb_doubleArray[4] = arraydb_doubleArray4;
    arraydb_doubleArray[5] = arraydb_doubleArray5;
 
-   tbox::Array<char> arraydb_charArray(2);
+   std::vector<char> arraydb_charArray(2);
    arraydb_charArray[0] = arraydb_charArray0;
    arraydb_charArray[1] = arraydb_charArray1;
 
@@ -357,12 +357,11 @@ void testDatabaseContents(
    std::vector<dcomplex> tarraydb_dcomplexArray =
       arraydb->getComplexVector("ComplexArray");
    tsize = static_cast<int>(tarraydb_dcomplexArray.size());
-   if (tsize != arraydb_dcomplexArray.getSize()) {
+   if (tsize != static_cast<int>(arraydb_dcomplexArray.size())) {
       tbox::perr << "FAILED: - Test #4a-" << tag
                  << ": `Array Entries' database"
                  << "\n   Returned `ComplexArray' size = " << tsize
-                 << "  , Expected = " << arraydb_dcomplexArray.getSize()
-                 << endl;
+                 << "  , Expected = " << arraydb_dcomplexArray.size() << endl;
       ++number_of_failures;
    }
    for (i = 0; i < tsize; i++) {
@@ -376,11 +375,11 @@ void testDatabaseContents(
    }
    std::vector<bool> tarraydb_boolArray = arraydb->getBoolVector("BoolArray");
    tsize = static_cast<int>(tarraydb_boolArray.size());
-   if (tsize != arraydb_boolArray.getSize()) {
+   if (tsize != static_cast<int>(arraydb_boolArray.size())) {
       tbox::perr << "FAILED: - Test #4c-" << tag
                  << ": `Array Entries' database"
                  << "\n   Returned `BoolArray' size = " << tsize
-                 << "  , Expected = " << arraydb_boolArray.getSize() << endl;
+                 << "  , Expected = " << arraydb_boolArray.size() << endl;
       ++number_of_failures;
    }
    for (i = 0; i < tsize; i++) {
@@ -395,11 +394,11 @@ void testDatabaseContents(
    }
    std::vector<int> tarraydb_intArray = arraydb->getIntegerVector("IntArray");
    tsize = static_cast<int>(tarraydb_intArray.size());
-   if (tsize != arraydb_intArray.getSize()) {
+   if (tsize != static_cast<int>(arraydb_intArray.size())) {
       tbox::perr << "FAILED: - Test #4e-" << tag
                  << ": `Array Entries' database"
                  << "\n   Returned `IntArray' size = " << tsize
-                 << "  , Expected = " << arraydb_intArray.getSize() << endl;
+                 << "  , Expected = " << arraydb_intArray.size() << endl;
       ++number_of_failures;
    }
    for (i = 0; i < tsize; i++) {
@@ -413,7 +412,7 @@ void testDatabaseContents(
    std::vector<string> tarraydb_stringArray =
       arraydb->getStringVector("StringArray");
    tsize = static_cast<int>(tarraydb_stringArray.size());
-   if (tsize != arraydb_stringArray.getSize()) {
+   if (tsize != static_cast<int>(arraydb_stringArray.size())) {
       tbox::perr << "FAILED: - Test #4g-" << tag
                  << ": `Array Entries' database"
                  << "\n   Returned `StringArray' size = " << tsize
@@ -431,11 +430,11 @@ void testDatabaseContents(
    std::vector<float> tarraydb_floatArray =
       arraydb->getFloatVector("FloatArray");
    tsize = static_cast<int>(tarraydb_floatArray.size());
-   if (tsize != arraydb_floatArray.getSize()) {
+   if (tsize != static_cast<int>(arraydb_floatArray.size())) {
       tbox::perr << "FAILED: - Test #4i-" << tag
                  << ": `Array Entries' database"
                  << "\n   Returned `FloatArray' size = " << tsize
-                 << "  , Expected = " << arraydb_floatArray.getSize() << endl;
+                 << "  , Expected = " << arraydb_floatArray.size() << endl;
       ++number_of_failures;
    }
    for (i = 0; i < tsize; i++) {
@@ -451,11 +450,11 @@ void testDatabaseContents(
    std::vector<double> tarraydb_doubleArray =
       arraydb->getDoubleVector("DoubleArray");
    tsize = static_cast<int>(tarraydb_doubleArray.size());
-   if (tsize != arraydb_doubleArray.getSize()) {
+   if (tsize != static_cast<int>(arraydb_doubleArray.size())) {
       tbox::perr << "FAILED: - Test #4k.b-" << tag
                  << ": `Array Entries' database"
                  << "\n   Returned `DoubleArray' size = " << tsize
-                 << "  , Expected = " << arraydb_doubleArray.getSize() << endl;
+                 << "  , Expected = " << arraydb_doubleArray.size() << endl;
       ++number_of_failures;
    }
    for (i = 0; i < tsize; i++) {
@@ -469,11 +468,11 @@ void testDatabaseContents(
    }
    std::vector<char> tarraydb_charArray = arraydb->getCharVector("CharArray");
    tsize = static_cast<int>(tarraydb_charArray.size());
-   if (tsize != arraydb_charArray.getSize()) {
+   if (tsize != static_cast<int>(arraydb_charArray.size())) {
       tbox::perr << "FAILED: - Test #4m-" << tag
                  << ": `Array Entries' database"
                  << "\n   Returned `CharArray' size = " << tsize
-                 << "  , Expected = " << arraydb_charArray.getSize() << endl;
+                 << "  , Expected = " << arraydb_charArray.size() << endl;
       ++number_of_failures;
    }
    for (i = 0; i < tsize; i++) {
@@ -656,7 +655,7 @@ void testDatabaseContents(
    int actual_size;
 
    tsize = arraydb->getArraySize("ComplexArray");
-   actual_size = arraydb_dcomplexArray.getSize();
+   actual_size = static_cast<int>(arraydb_dcomplexArray.size());
    if (tsize != actual_size) {
       tbox::perr << "FAILED: - Test #7a-" << tag
                  << ": `getArraySize'"
@@ -666,7 +665,7 @@ void testDatabaseContents(
    }
 
    tsize = arraydb->getArraySize("BoolArray");
-   actual_size = arraydb_boolArray.getSize();
+   actual_size = static_cast<int>(arraydb_boolArray.size());
    if (tsize != actual_size) {
       tbox::perr << "FAILED: - Test #7b-" << tag
                  << ": `getArraySize'"
@@ -676,7 +675,7 @@ void testDatabaseContents(
    }
 
    tsize = arraydb->getArraySize("IntArray");
-   actual_size = arraydb_intArray.getSize();
+   actual_size = static_cast<int>(arraydb_intArray.size());
    if (tsize != actual_size) {
       tbox::perr << "FAILED: - Test #7c-" << tag
                  << ": `getArraySize'"
@@ -686,7 +685,7 @@ void testDatabaseContents(
    }
 
    tsize = arraydb->getArraySize("StringArray");
-   actual_size = arraydb_stringArray.getSize();
+   actual_size = static_cast<int>(arraydb_stringArray.size());
    if (tsize != actual_size) {
       tbox::perr << "FAILED: - Test #7d-" << tag
                  << ": `getArraySize'"
@@ -696,7 +695,7 @@ void testDatabaseContents(
    }
 
    tsize = arraydb->getArraySize("FloatArray");
-   actual_size = arraydb_floatArray.getSize();
+   actual_size = static_cast<int>(arraydb_floatArray.size());
    if (tsize != actual_size) {
       tbox::perr << "FAILED: - Test #7e-" << tag
                  << ": `getArraySize'"
@@ -706,7 +705,7 @@ void testDatabaseContents(
    }
 
    tsize = arraydb->getArraySize("DoubleArray");
-   actual_size = arraydb_doubleArray.getSize();
+   actual_size = static_cast<int>(arraydb_doubleArray.size());
    if (tsize != actual_size) {
       tbox::perr << "FAILED: - Test #7f-" << tag
                  << ": `getArraySize'"
@@ -716,7 +715,7 @@ void testDatabaseContents(
    }
 
    tsize = arraydb->getArraySize("CharArray");
-   actual_size = arraydb_charArray.getSize();
+   actual_size = static_cast<int>(arraydb_charArray.size());
    if (tsize != actual_size) {
       tbox::perr << "FAILED: - Test #7g-" << tag
                  << ": `getArraySize'"

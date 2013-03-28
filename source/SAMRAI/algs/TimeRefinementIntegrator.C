@@ -1622,7 +1622,7 @@ TimeRefinementIntegrator::getFromInput(
 
       if (input_db->keyExists("tag_buffer")) {
          d_tag_buffer = input_db->getIntegerVector("tag_buffer");
-         if (d_tag_buffer.size() <
+         if (static_cast<int>(d_tag_buffer.size()) <
              (d_patch_hierarchy->getMaxNumberOfLevels() - 1)) {
             int tsize = static_cast<int>(d_tag_buffer.size());
             d_tag_buffer.resize(
@@ -1702,7 +1702,7 @@ TimeRefinementIntegrator::getFromInput(
 
          if (input_db->keyExists("tag_buffer")) {
             d_tag_buffer = input_db->getIntegerVector("tag_buffer");
-            if (d_tag_buffer.size() <
+            if (static_cast<int>(d_tag_buffer.size()) <
                 (d_patch_hierarchy->getMaxNumberOfLevels() - 1)) {
                int tsize = static_cast<int>(d_tag_buffer.size());
                d_tag_buffer.resize(

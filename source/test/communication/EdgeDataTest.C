@@ -62,7 +62,7 @@ EdgeDataTest::EdgeDataTest(
 
    d_refine_option = refine_option;
 
-   d_use_fine_value_at_interface.resizeArray(0);
+   d_use_fine_value_at_interface.resize(0);
 
    d_Acoef = 0.0;
    d_Bcoef = 0.0;
@@ -134,7 +134,7 @@ void EdgeDataTest::readTestInput(
    std::vector<string> var_keys = var_data->getAllKeys();
    int nkeys = static_cast<int>(var_keys.size());
 
-   d_use_fine_value_at_interface.resizeArray(nkeys);
+   d_use_fine_value_at_interface.resize(nkeys);
 
    for (int i = 0; i < nkeys; i++) {
       boost::shared_ptr<tbox::Database> var_db(
@@ -156,9 +156,9 @@ void EdgeDataTest::registerVariables(
 {
    TBOX_ASSERT(commtest != 0);
 
-   int nvars = d_variable_src_name.getSize();
+   int nvars = static_cast<int>(d_variable_src_name.size());
 
-   d_variables.resizeArray(nvars);
+   d_variables.resize(nvars);
 
    for (int i = 0; i < nvars; i++) {
       d_variables[i].reset(
@@ -391,7 +391,7 @@ void EdgeDataTest::initializeDataOnPatch(
 
    if (d_do_refine) {
 
-      for (int i = 0; i < d_variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
          boost::shared_ptr<pdat::EdgeData<double> > edge_data(
             patch.getPatchData(d_variables[i], getDataContext()),
@@ -406,7 +406,7 @@ void EdgeDataTest::initializeDataOnPatch(
 
    } else if (d_do_coarsen) {
 
-      for (int i = 0; i < d_variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
          boost::shared_ptr<pdat::EdgeData<double> > edge_data(
             patch.getPatchData(d_variables[i], getDataContext()),
@@ -576,7 +576,7 @@ bool EdgeDataTest::verifyResults(
       tbox::plog << "Patch box = " << patch.getBox() << endl;
 
       hier::IntVector tgcw(d_dim, 0);
-      for (int i = 0; i < d_variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
          tgcw.max(patch.getPatchData(d_variables[i], getDataContext())->
             getGhostCellWidth());
       }
@@ -593,7 +593,7 @@ bool EdgeDataTest::verifyResults(
             patch, hierarchy, level_number);
       }
 
-      for (int i = 0; i < d_variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
          boost::shared_ptr<pdat::EdgeData<double> > edge_data(
             patch.getPatchData(d_variables[i], getDataContext()),
@@ -790,7 +790,7 @@ void EdgeDataTest::setPhysicalBoundaryConditions(
          pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
    const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
-   for (int i = 0; i < d_variables.getSize(); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
       boost::shared_ptr<pdat::EdgeData<double> > edge_data(
          patch.getPatchData(d_variables[i], getDataContext()),

@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
 #include "SAMRAI/pdat/CellVariable.h"

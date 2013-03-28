@@ -12,7 +12,6 @@
 #define included_algs_TimeRefinementLevelStrategy
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"

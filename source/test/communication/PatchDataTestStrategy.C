@@ -41,13 +41,13 @@ PatchDataTestStrategy::PatchDataTestStrategy(
    const tbox::Dimension& dim):
    d_dim(dim)
 {
-   d_variable_src_name.resizeArray(0);
-   d_variable_dst_name.resizeArray(0);
-   d_variable_depth.resizeArray(0);
-   d_variable_src_ghosts.resizeArray(0, hier::IntVector(d_dim));
-   d_variable_dst_ghosts.resizeArray(0, hier::IntVector(d_dim));
-   d_variable_coarsen_op.resizeArray(0);
-   d_variable_refine_op.resizeArray(0);
+   d_variable_src_name.resize(0);
+   d_variable_dst_name.resize(0);
+   d_variable_depth.resize(0);
+   d_variable_src_ghosts.resize(0, hier::IntVector(d_dim));
+   d_variable_dst_ghosts.resize(0, hier::IntVector(d_dim));
+   d_variable_coarsen_op.resize(0);
+   d_variable_refine_op.resize(0);
 }
 
 PatchDataTestStrategy::~PatchDataTestStrategy()
@@ -70,13 +70,13 @@ void PatchDataTestStrategy::readVariableInput(
    std::vector<string> var_keys = db->getAllKeys();
    int nkeys = static_cast<int>(var_keys.size());
 
-   d_variable_src_name.resizeArray(nkeys);
-   d_variable_dst_name.resizeArray(nkeys);
-   d_variable_depth.resizeArray(nkeys);
-   d_variable_src_ghosts.resizeArray(nkeys, hier::IntVector(d_dim, 0));
-   d_variable_dst_ghosts.resizeArray(nkeys, hier::IntVector(d_dim, 0));
-   d_variable_coarsen_op.resizeArray(nkeys);
-   d_variable_refine_op.resizeArray(nkeys);
+   d_variable_src_name.resize(nkeys);
+   d_variable_dst_name.resize(nkeys);
+   d_variable_depth.resize(nkeys);
+   d_variable_src_ghosts.resize(nkeys, hier::IntVector(d_dim, 0));
+   d_variable_dst_ghosts.resize(nkeys, hier::IntVector(d_dim, 0));
+   d_variable_coarsen_op.resize(nkeys);
+   d_variable_refine_op.resize(nkeys);
 
    for (int i = 0; i < nkeys; i++) {
 
@@ -136,7 +136,7 @@ void PatchDataTestStrategy::readRefinementInput(
    std::vector<string> box_keys = db->getAllKeys();
    int nkeys = static_cast<int>(box_keys.size());
 
-   d_refine_level_boxes.resizeArray(nkeys);
+   d_refine_level_boxes.resize(nkeys);
    for (int i = 0; i < nkeys; i++) {
       std::vector<tbox::DatabaseBox> db_box_vector =
          db->getDatabaseBoxVector(box_keys[i]);

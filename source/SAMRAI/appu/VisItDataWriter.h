@@ -28,7 +28,6 @@
 #include "SAMRAI/tbox/IOStream.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/HDFDatabase.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Database.h"
 

@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/BoxLevel.h"
-#include "SAMRAI/tbox/Array.h"
 
 #include "boost/shared_ptr.hpp"
 

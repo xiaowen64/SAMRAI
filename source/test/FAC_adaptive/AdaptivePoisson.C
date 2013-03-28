@@ -9,14 +9,12 @@
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "printObject.h"
 #include "SAMRAI/pdat/MDA_Access.h"
 #include "SAMRAI/pdat/ArrayDataAccess.h"
 #include "patchFcns.h"
 #include "AdaptivePoisson.h"
 #include "SAMRAI/solv/CellPoissonFACOps.h"
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/Database.h"
@@ -98,7 +96,6 @@ AdaptivePoisson::AdaptivePoisson(
    d_robin_refine_patch(d_dim, object_name + "Refine patch implementation"),
    d_physical_bc_coef(0),
    d_adaption_threshold(0.5),
-   d_finest_plot_level(9999999),
    d_finest_dbg_plot_ln(database.getIntegerWithDefault("finest_dbg_plot_ln", 99))
 {
 
@@ -173,10 +170,6 @@ AdaptivePoisson::AdaptivePoisson(
             );
    }
 
-   d_finest_plot_level =
-      database.getIntegerWithDefault("finest_plot_level",
-         d_finest_plot_level);
-
    /*
     * Experiment with algorithm choices in solv::FACPreconditioner.
     */
@@ -226,10 +219,8 @@ AdaptivePoisson::AdaptivePoisson(
    d_problem_name =
       database.getStringWithDefault("problem_name", d_problem_name);
    if (d_problem_name != "sine"
-       && d_problem_name != "sine-neumann"
        && d_problem_name != "gauss"
        && d_problem_name != "multigauss"
-       && d_problem_name != "pernice"
        && d_problem_name != "poly"
        && d_problem_name != "gauss-coef"
        ) {
@@ -559,9 +550,9 @@ int AdaptivePoisson::registerVariablesWithPlotter(
       1.0,
       "CELL");
 
-   std::vector<string> expression_keys(1);
-   std::vector<string> expressions(1);
-   std::vector<string> expression_types(1);
+   std::vector<std::string> expression_keys(1);
+   std::vector<std::string> expressions(1);
+   std::vector<std::string> expression_types(1);
 
    {
       expression_keys[0] = "Error";
@@ -717,8 +708,8 @@ int AdaptivePoisson::computeError(
    const hier::PatchHierarchy& hierarchy,
    double* l2norm,
    double* linorm,
-   tbox::Array<double>& l2norms,
-   tbox::Array<double>& linorms) const
+   std::vector<double>& l2norms,
+   std::vector<double>& linorms) const
 {
 
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
@@ -735,7 +726,7 @@ int AdaptivePoisson::computeError(
     * parallel overhead.
     */
    const int nlevels = hierarchy.getNumberOfLevels();
-   tbox::Array<double> wtsums(2 * nlevels);
+   std::vector<double> wtsums(2 * nlevels);
    for (ln = nlevels - 1; ln >= 0; --ln) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy.getPatchLevel(ln));
 
@@ -833,10 +824,10 @@ int AdaptivePoisson::computeError(
        * in one shot, saving some parallel overhead.
        */
       if (mpi.getSize() > 1) {
-         mpi.AllReduce(wtsums.getPointer(), 2 * nlevels, MPI_SUM);
+         mpi.AllReduce(&wtsums[0], 2 * nlevels, MPI_SUM);
       }
       if (mpi.getSize() > 1) {
-         mpi.AllReduce(linorms.getPointer(), nlevels, MPI_SUM);
+         mpi.AllReduce(&linorms[0], nlevels, MPI_SUM);
       }
    }
 

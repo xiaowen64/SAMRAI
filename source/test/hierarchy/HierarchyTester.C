@@ -381,14 +381,16 @@ int HierarchyTester::runHierarchyTestAndVerify()
          init_connector_width = test_connector_width * d_ratio;
       }
       const Connector& init_connector =
-         init_level->getBoxLevel()->getPersistentOverlapConnectors().findOrCreateConnector(
+         init_level->getBoxLevel()->findConnector(
             d_initial_patch_hierarchy->getDomainBoxLevel(),
             init_connector_width,
+            hier::CONNECTOR_CREATE,
             true /* exact width only */);
       const Connector& test_connector =
-         test_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
+         test_level->getBoxLevel()->findConnector(
             d_test_patch_hierarchy->getDomainBoxLevel(),
             test_connector_width,
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
             true /* exact width only */);
 
       for (hier::PatchLevel::iterator ip(test_level->begin());

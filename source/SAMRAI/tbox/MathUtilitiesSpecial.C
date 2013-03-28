@@ -23,6 +23,7 @@
 #include <stdlib.h>
 
 #include "SAMRAI/tbox/Complex.h"
+#include "Utilities.h"
 
 /*
  * The following lines setup assertion handling headers on the Sun.  If we

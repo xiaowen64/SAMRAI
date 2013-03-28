@@ -1646,7 +1646,9 @@ BoxUtilities::fixBadCutPointsForDirection(
 
                } else {
                   cutlo++;
-                  cuthi--;
+                  if (cuthi != cuts.begin()) {
+                     cuthi--;
+                  }
                }
 
             } else {

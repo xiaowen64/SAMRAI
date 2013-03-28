@@ -12,7 +12,6 @@
 
 //#include <stdlib.h>
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Complex.h"
@@ -136,13 +135,13 @@ int main(
       boost::shared_ptr<tbox::Database> smart_array_db(
          input_db->getDatabase("SmartArrays"));
 
-      tbox::Array<int> i1_correct(5);
-      tbox::Array<float> f1_correct(5);
-      tbox::Array<double> d1_correct(5);
-      tbox::Array<bool> b1_correct(5);
-      tbox::Array<dcomplex> c1_correct(5);
-      tbox::Array<std::string> s1_correct(5);
-      tbox::Array<tbox::DatabaseBox> box1_correct(5);
+      std::vector<int> i1_correct(5);
+      std::vector<float> f1_correct(5);
+      std::vector<double> d1_correct(5);
+      std::vector<bool> b1_correct(5);
+      std::vector<dcomplex> c1_correct(5);
+      std::vector<std::string> s1_correct(5);
+      std::vector<tbox::DatabaseBox> box1_correct(5);
 
       for (int i = 0; i < nsize; i++) {
          i1_correct[i] = i0_correct;

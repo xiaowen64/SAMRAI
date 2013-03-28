@@ -556,6 +556,12 @@ class BoxNeighborhoodCollection
          friend class BoxNeighborhoodCollection;
 
          public:
+            typedef std::forward_iterator_tag iterator_category;
+            typedef Box value_type;
+            typedef ptrdiff_t difference_type;
+            typedef Box* pointer;
+            typedef Box& reference;
+
             // Constructors
 
             /*!

@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/BaseGridGeometry.h"
@@ -22,6 +21,7 @@
 #include "SAMRAI/hier/PatchFactory.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/PatchLevelFactory.h"
+#include "SAMRAI/hier/PersistentOverlapConnectors.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -227,7 +227,7 @@ public:
     * or if the code building the hierarchy does not provide Connectors
     * of sufficient widths, SAMRAI will still work but will not scale
     * well.  The mechanism for generating missing Connectors as needed
-    * is in the class PersistentOverlapConnector.
+    * is in the class PersistentOverlapConnectors.
     *
     * The user of a PatchHierarchy object registers implementations of
     * this strategy class with the PatchHierarchy.  See
@@ -576,49 +576,6 @@ public:
       return d_patch_levels[level]->getBoxLevel();
    }
 
-   /*!
-    * @brief Get the connector between two levels
-    *
-    * Get const access to the Connector between the two BoxLevels in the
-    * hierarchy with the given level numbers.
-    *
-    * @return Connector between the two BoxLevels with the given level numbers.
-    *
-    * @param[in]  base_ln The base level indicating one end of the
-    *             connector.
-    * @param[in]  head_ln The head level indicating the other end of
-    *             the connector.
-    *
-    * @pre (base_ln >= 0) && (base_ln < getNumberOfLevels())
-    * @pre (head_ln >= 0) && (head_ln < getNumberOfLevels())
-    */
-   const Connector&
-   getConnector(
-      const int base_ln,
-      const int head_ln) const;
-
-   /*!
-    * @brief Get the connector along with its transpose between two levels
-    *
-    * Get const access to the Connector and its transpose between two given
-    * BoxLevel numbers in the hierarchy.
-    *
-    * @return Connector containing transpose between the two given level
-    * numbers.
-    *
-    * @param[in]  base_ln The base level indicating one end of the
-    *             connector.
-    * @param[in]  head_ln The head level indicating the other end of
-    *             the connector.
-    *
-    * @pre (base_ln >= 0) && (base_ln < getNumberOfLevels())
-    * @pre (head_ln >= 0) && (head_ln < getNumberOfLevels())
-    */
-   const Connector&
-   getConnectorWithTranspose(
-      const int base_ln,
-      const int head_ln) const;
-
    //@{
 
    //! @name Connector width coordination between hierarchy builders and users.
@@ -667,6 +624,7 @@ public:
     *
     * @pre (head_ln >= 0) && (head_ln < getMaxNumberOfLevels())
     * @pre (base_ln >= 0) && (base_ln < getMaxNumberOfLevels())
+    * @pre abs(base_ln - head_ln) <= 1
     */
    IntVector
    getRequiredConnectorWidth(

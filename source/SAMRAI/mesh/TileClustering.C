@@ -231,7 +231,7 @@ TileClustering::findBoxesContainingTags(
                     << " new boxes into " << new_boxes.size() << "\n";
       }
 
-      if ( new_boxes.size() != size_t(new_box_level->getLocalNumberOfBoxes()) ) {
+      if ( new_boxes.size() != static_cast<int>(new_box_level->getLocalNumberOfBoxes()) ) {
 
          /*
           * Coalesce changed the new boxes, so rebuild new_box_level and

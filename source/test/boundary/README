@@ -4,18 +4,19 @@
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
 ## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
-## Description:   Boundary Utilities example
+## Description:   Boundary Utilities unit test
 ##
 #########################################################################
 
-This example demonstrates use of simple boundary utilities to implement
-and test basic boundary conditions in a SAMRAI application. 
-The files included in this directory are as follows:
+This test demonstrates use of simple boundary utilities to implement and unit
+test basic boundary conditions in a SAMRAI application.  The files included in
+this directory are as follows:
  
-          main.C                      -  example main program
-          BoundaryDataTester.[Ch]     -  example user routines for boundary data
-          test_inputs/*.input         -  various 2d and 3d input files
+   main.C                   -  unit tester
+   BoundaryDataTester.[Ch]  -  example user routines for boundary data
+   test_inputs/*.input      -  various 2d and 3d input files
  
+
 COMPILATION AND EXECUTION
 -------------------------
    Compilation:
@@ -48,92 +49,7 @@ given input file; i.e., ./main test_inputs/dirichlet.2d.input produces a log
 file named basic2d-dirichlet.log.
 
 
-INPUTS:
-------------
-
-Each input file contains 3 sections used to describe the test and to
-initialize the various object involved inthe test.
-
-The "Main" section includes the log file name, and describes how the 
-domain should be chopped into patches when it is a parallelepiped
-(in 3d or a rectangle in 2d).  For example in 2d this might look like:
-
-Main {
-    log_file_name    = "basic2d-flow.log"
-    num_domain_boxes = 2 , 1
-}
-
-The "CartesianGridGeometry" section describes the physical coordinates
-of the domain and the periodic directions (if any).  For example in 2d 
-this might look like:
-
-CartesianGridGeometry {
-   domain_boxes = [ (0,0) , (7,3) ]
-   x_lo         = 0.e0 , 0.e0   // lower end of computational domain.
-   x_up         = 1.e0 , 0.5e0  // upper end of computational domain.
-   periodic_dimension = 0, 0
-}
-
-The "BoundaryDataTester" section describes the variables and their
-attributes in the test problem.  Applicable boundary information is
-described in a subdatabase called "Boundary_data".  For example in 2d
-this might look like:
-
-BoundaryDataTester {
-
-   //
-   // Variable information is read in by the BoundaryDataTester object
-   // Each variable has its own sub-database which must contain the proper
-   // variable information.  The name of each sub-database for a variable
-   // is arbitrary.  But the names must be distinct.  Also the names of the
-   // individual variables must be distinct.
-   //
-   //    Required input:  name
-   //                     interior_values    (# of values must = depth)
-   //    Optional input:  depth              (default = 1)
-   //                     num_ghosts         (default = 1,1)
-   //
-
-   variable_1 {
-      name            = "var1"
-      depth           = 1
-      num_ghosts      = 2 , 2
-      interior_values = 1.0
-   }
-
-   variable_2 {
-      name            = "var2"
-      depth           = 2
-      num_ghosts      = 1 , 1
-      interior_values = 2.0 , 3.0
-   }
-
-   //
-   // Boundary conditioninformation is read in by the BoundaryDataTester object
-   // Each boundary type and location has its own sub-database which must be
-   // named properly and contain valid boundary information.
-   //
-   // Valid boundary_condition entries for edges in 2d are:
-   //     "FLOW", "SYMMETRIC", "DIRICHLET"
-   //
-   // Valid boundary_condition entries for nodes in 2d are:
-   //     "*FLOW", "*SYMMETRIC", "*DIRICHLET"
-   // Here, "*" may be either "X" or "Y".  The condition given for a node
-   // must match that of the appropriate adjacent edge.  This is enforced
-   // for consistency.  Note that when a REFLECT edge condition is given
-   // and the other adjacent edge has either a FLOW or REFLECT condition,
-   // the resulting node boundary values will be the same regardless of
-   // which edge is used.
-   //
-   // Boundary data must be given for each edge and node in a non-periodic
-   // direction.  Any input values given for periodic directions will be
-   // ignored.
-   //
-   //
-   Boundary_data {
-
-      // see the various test input files for more details....
-
-   }
-
-}
+INPUT PARAMETERS
+----------------
+Refer to test_inputs/dirichlet.2d.input for a full description of all input
+parameters specific to this problem.

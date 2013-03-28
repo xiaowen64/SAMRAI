@@ -97,6 +97,11 @@ descriptions of items in the following list are provided below.
 8) The input to mesh::StandardTagAndInitialize for REFINE_BOXES tagging
    criteria has been modified to support multiblock.
 
+9) Use of class Array has been replaced throughout the library and tests with
+   std::vector.
+
+10) Access to stored Connectors has been changed.
+
 *****************************************************************************
 
 -----------------------------------------------------------------------------
@@ -218,6 +223,40 @@ descriptions of items in the following list are provided below.
    new syntax.
 
    Any input files using REFINE_BOXES will need to be modified.
+
+9) Class Array is essentially a vector in which the storage is reference
+   counted and may be shared.  The reference counter was not thread safe
+   however and there was no use anywhere in the library in which the contents
+   of the Array were actually shared.  Therefore all use of Array in the
+   library and tests have been converted to std::vector.  A few interfaces have
+   changed and will require client code to use std::vector for arguments which
+   had been Arrays.  Class Array is still part of the distribution.  However,
+   we suggest that users begin to migrate their codes to use std::vector as in
+   some future release Array will likely be removed.
+
+10) In the past, in order to access persistent Connectors it was necessary to
+    to chase pointers until one obtained a PersistentOverlapConnectors object.
+    Now, the accessors (findConnector, findConnectorWithTranspose,
+    createConnector, createConnectorWithTranspose, cacheConnector, and
+    hasConnector) have been exported to classes BoxLevel and PatchLevel so
+    that Connectors are accessed directly from instances of these classes.  In
+    addition, BoxLevel::getPersistentOverlapConnectors() is now private and
+    there is now no public interface to class PersistentOverlapConnectors as
+    this class is purely an implementation detail and should not be visible to
+    client code.  Hence, client code will need to be changed (simplified) to
+    use the new Connector accessors in BoxLevel and PatchLevel.
+
+    In addition to these changes, client code now specifies an action to take
+    when a requested Connector is not found.  The 3 actions are
+    hier::CONNECTOR_ERROR, hier::CONNECTOR_CREATE,
+    and hier::CONNECTOR_IMPLICIT_CREATION_RULE.  This allows for more explicit
+    and greater control of the action to take when a Connector is not found.
+    One implication of this change is that findOrCreateConnector has been
+    eliminated.  It's functionality is equivalent to findConnector called with
+    hier::CREATE_CONNECTOR.  Clients may use
+    hier::CONNECTOR_IMPLICIT_CREATION_RULE in calls to findConnector while
+    developing their application and later change these when their application
+    has actually stored these Connectors.
 
 =============================================================================
 =============================================================================

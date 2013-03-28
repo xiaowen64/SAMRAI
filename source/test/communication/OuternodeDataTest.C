@@ -132,10 +132,10 @@ void OuternodeDataTest::registerVariables(
 {
    TBOX_ASSERT(commtest != 0);
 
-   int nvars = d_variable_src_name.getSize();
+   int nvars = static_cast<int>(d_variable_src_name.size());
 
-   d_variables_src.resizeArray(nvars);
-   d_variables_dst.resizeArray(nvars);
+   d_variables_src.resize(nvars);
+   d_variables_dst.resize(nvars);
 
    for (int i = 0; i < nvars; i++) {
       d_variables_src[i].reset(
@@ -287,12 +287,12 @@ void OuternodeDataTest::initializeDataOnPatch(
    NULL_USE(level_number);
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
    variable_db->printClassData();
-   tbox::Array<boost::shared_ptr<hier::Variable> >& variables(
+   std::vector<boost::shared_ptr<hier::Variable> >& variables(
       src_or_dst == 's' ? d_variables_src : d_variables_dst);
 
    if (d_do_refine) {
 
-      for (int i = 0; i < variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(variables.size()); i++) {
 
          boost::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
@@ -318,7 +318,7 @@ void OuternodeDataTest::initializeDataOnPatch(
 
    } else if (d_do_coarsen) {
 
-      for (int i = 0; i < variables.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(variables.size()); i++) {
 
          boost::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
@@ -426,7 +426,7 @@ bool OuternodeDataTest::verifyResults(
       tbox::plog << "Patch box = " << patch.getBox() << endl;
 
       hier::IntVector tgcw(d_dim, 0);
-      for (int i = 0; i < d_variables_dst.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); i++) {
          tgcw.max(patch.getPatchData(d_variables_dst[i], getDataContext())->
             getGhostCellWidth());
       }
@@ -445,7 +445,7 @@ bool OuternodeDataTest::verifyResults(
             patch);                 //, hierarchy, level_number);
       }
 
-      for (int i = 0; i < d_variables_dst.getSize(); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); i++) {
 
          boost::shared_ptr<pdat::NodeData<double> > node_data(
             patch.getPatchData(d_variables_dst[i], getDataContext()),

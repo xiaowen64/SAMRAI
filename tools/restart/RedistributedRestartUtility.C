@@ -32,7 +32,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
    const string& input_dirname,
    const int total_input_files,
    const int total_output_files,
-   const tbox::Array<tbox::Array<int> >& file_mapping,
+   const std::vector<std::vector<int> >& file_mapping,
    const int restore_num)
 {
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
@@ -55,15 +55,15 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
          }
       }
    }
-   int num_iterations = file_mapping.size();
+   int num_iterations = static_cast<int>(file_mapping.size());
 
    for (int icount = 0; icount < num_iterations; icount++) {
 
       //We are writing to one file or reading only one file
       int num_files_to_read = (total_input_files < total_output_files) ?
-         1 : file_mapping[icount].size();
+         1 : static_cast<int>(file_mapping[icount].size());
       int num_files_to_write = (total_input_files < total_output_files) ?
-         file_mapping[icount].size() : 1;
+         static_cast<int>(file_mapping[icount].size()) : 1;
 
       string restore_buf;
       string nodes_buf;
@@ -80,7 +80,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
       }
 
       //Mount the output files on an array of output databases
-      tbox::Array<boost::shared_ptr<tbox::Database> >
+      std::vector<boost::shared_ptr<tbox::Database> >
       output_dbs(num_files_to_write);
 
       string proc_buf;
@@ -120,7 +120,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
       }
 
       //Mount the input files on an array of input databases.
-      tbox::Array<boost::shared_ptr<tbox::Database> >
+      std::vector<boost::shared_ptr<tbox::Database> >
       input_dbs(num_files_to_read);
 
       nodes_buf = "/nodes." + tbox::Utilities::nodeToString(total_input_files);
@@ -209,10 +209,10 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
  */
 
 void RedistributedRestartUtility::readAndWriteRestartData(
-   tbox::Array<boost::shared_ptr<tbox::Database> >& output_dbs,
-   const tbox::Array<boost::shared_ptr<tbox::Database> >& input_dbs,
+   std::vector<boost::shared_ptr<tbox::Database> >& output_dbs,
+   const std::vector<boost::shared_ptr<tbox::Database> >& input_dbs,
    const string& key,
-   const tbox::Array<tbox::Array<int> >* file_mapping,  // = NULL
+   const std::vector<std::vector<int> >* file_mapping,  // = NULL
    const int num_files_written, // = -1,
    const int which_file_mapping, // = -1
    const int total_input_files, // = -1,
@@ -247,19 +247,19 @@ void RedistributedRestartUtility::readAndWriteRestartData(
          //Here we are handling the input database(s) for a PatchLevel.
 
          //Create array of level input databases.
-         tbox::Array<boost::shared_ptr<tbox::Database> > level_in_dbs;
-         level_in_dbs.resizeArray(input_dbs.size());
+         std::vector<boost::shared_ptr<tbox::Database> > level_in_dbs(
+            input_dbs.size());
 
-         for (int i = 0; i < input_dbs.size(); i++) {
+         for (int i = 0; i < static_cast<int>(input_dbs.size()); i++) {
             level_in_dbs[i] = input_dbs[i]->getDatabase(key);
          }
 
          //input_proc_nums is an array that contains all of the processor
          //numbers that created the input databases that are currently
          //being processed.
-         tbox::Array<int> input_proc_nums;
+         std::vector<int> input_proc_nums;
          if (total_input_files < total_output_files) {
-            input_proc_nums.resizeArray(1);
+            input_proc_nums.resize(1);
             int output_files_per_proc = total_output_files / nprocs;
             int extra_output_files = total_output_files % nprocs;
             int input_proc_num =
@@ -289,19 +289,19 @@ void RedistributedRestartUtility::readAndWriteRestartData(
                  db->getBool("d_is_mapped_box_level")) {
 
          //Create array of level input databases.
-         tbox::Array<boost::shared_ptr<tbox::Database> > level_in_dbs;
-         level_in_dbs.resizeArray(input_dbs.size());
+         std::vector<boost::shared_ptr<tbox::Database> > level_in_dbs(
+            input_dbs.size());
 
-         for (int i = 0; i < input_dbs.size(); i++) {
+         for (int i = 0; i < static_cast<int>(input_dbs.size()); i++) {
             level_in_dbs[i] = input_dbs[i]->getDatabase(key);
          }
 
          //input_proc_nums is an array that contains all of the processor
          //numbers that created the input databases that are currently
          //being processed.
-         tbox::Array<int> input_proc_nums;
+         std::vector<int> input_proc_nums;
          if (total_input_files < total_output_files) {
-            input_proc_nums.resizeArray(1);
+            input_proc_nums.resize(1);
             int output_files_per_proc = total_output_files / nprocs;
             int extra_output_files = total_output_files % nprocs;
             int input_proc_num =
@@ -339,17 +339,17 @@ void RedistributedRestartUtility::readAndWriteRestartData(
          //for input_dbs and output_dbs, and then call readAndWriteRestartData
          //recursively.
 
-         tbox::Array<boost::shared_ptr<tbox::Database> > child_in_dbs;
-         child_in_dbs.resizeArray(input_dbs.size());
+         std::vector<boost::shared_ptr<tbox::Database> > child_in_dbs(
+            input_dbs.size());
 
-         for (int i = 0; i < input_dbs.size(); i++) {
+         for (int i = 0; i < static_cast<int>(input_dbs.size()); i++) {
             child_in_dbs[i] = input_dbs[i]->getDatabase(key);
          }
 
-         tbox::Array<boost::shared_ptr<tbox::Database> > child_out_dbs;
-         child_out_dbs.resizeArray(output_dbs.size());
+         std::vector<boost::shared_ptr<tbox::Database> > child_out_dbs(
+            output_dbs.size());
 
-         for (int i = 0; i < output_dbs.size(); i++) {
+         for (int i = 0; i < static_cast<int>(output_dbs.size()); i++) {
             child_out_dbs[i] = output_dbs[i]->putDatabase(key);
          }
 
@@ -370,7 +370,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
 
       std::vector<int> int_array = input_dbs[0]->getIntegerVector(key);
 
-      for (int i = 0; i < output_dbs.size(); i++) {
+      for (int i = 0; i < static_cast<int>(output_dbs.size()); i++) {
          output_dbs[i]->putIntegerVector(key, int_array);
       }
 
@@ -378,7 +378,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
 
       std::vector<double> double_array = input_dbs[0]->getDoubleVector(key);
 
-      for (int i = 0; i < output_dbs.size(); i++) {
+      for (int i = 0; i < static_cast<int>(output_dbs.size()); i++) {
          output_dbs[i]->putDoubleVector(key, double_array);
       }
 
@@ -392,7 +392,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
          }
       }
 
-      for (int i = 0; i < output_dbs.size(); i++) {
+      for (int i = 0; i < static_cast<int>(output_dbs.size()); i++) {
          output_dbs[i]->putBoolVector(key, bool_array);
       }
 
@@ -401,7 +401,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
       std::vector<tbox::DatabaseBox> box_array =
          input_dbs[0]->getDatabaseBoxVector(key);
 
-      for (int i = 0; i < output_dbs.size(); i++) {
+      for (int i = 0; i < static_cast<int>(output_dbs.size()); i++) {
          output_dbs[i]->putDatabaseBoxVector(key, box_array);
       }
 
@@ -409,7 +409,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
 
       std::vector<string> string_array = input_dbs[0]->getStringVector(key);
 
-      for (int i = 0; i < output_dbs.size(); i++) {
+      for (int i = 0; i < static_cast<int>(output_dbs.size()); i++) {
          output_dbs[i]->putStringVector(key, string_array);
       }
 
@@ -417,7 +417,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
 
       std::vector<dcomplex> complex_array = input_dbs[0]->getComplexVector(key);
 
-      for (int i = 0; i < output_dbs.size(); i++) {
+      for (int i = 0; i < static_cast<int>(output_dbs.size()); i++) {
          output_dbs[i]->putComplexVector(key, complex_array);
       }
 
@@ -425,7 +425,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
 
       std::vector<char> char_array = input_dbs[0]->getCharVector(key);
 
-      for (int i = 0; i < output_dbs.size(); i++) {
+      for (int i = 0; i < static_cast<int>(output_dbs.size()); i++) {
          output_dbs[i]->putCharVector(key, char_array);
       }
 
@@ -433,7 +433,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
 
       std::vector<float> float_array = input_dbs[0]->getFloatVector(key);
 
-      for (int i = 0; i < output_dbs.size(); i++) {
+      for (int i = 0; i < static_cast<int>(output_dbs.size()); i++) {
          output_dbs[i]->putFloatVector(key, float_array);
       }
 
@@ -453,11 +453,11 @@ void RedistributedRestartUtility::readAndWriteRestartData(
  */
 
 void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
-   tbox::Array<boost::shared_ptr<tbox::Database> >& output_dbs,
-   const tbox::Array<boost::shared_ptr<tbox::Database> >& level_in_dbs,
+   std::vector<boost::shared_ptr<tbox::Database> >& output_dbs,
+   const std::vector<boost::shared_ptr<tbox::Database> >& level_in_dbs,
    const string& key,
    const int num_files_written,
-   const tbox::Array<int>& input_proc_nums,
+   const std::vector<int>& input_proc_nums,
    const int total_output_files)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -467,10 +467,10 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
 #endif
 
    //Create an array of level output databases
-   tbox::Array<boost::shared_ptr<tbox::Database> > level_out_dbs;
-   level_out_dbs.resizeArray(output_dbs.size());
+   std::vector<boost::shared_ptr<tbox::Database> > level_out_dbs(
+      output_dbs.size());
 
-   for (int i = 0; i < output_dbs.size(); i++) {
+   for (int i = 0; i < static_cast<int>(output_dbs.size()); i++) {
       level_out_dbs[i] = output_dbs[i]->putDatabase(key);
    }
 
@@ -499,7 +499,7 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
    std::vector<int> ratio_to_coarser =
       level_in_dbs[0]->getIntegerVector("d_ratio_to_coarser_level");
 
-   const int out_size = level_out_dbs.size();
+   const int out_size = static_cast<int>(level_out_dbs.size());
 
    //Write out global data.
    for (int i = 0; i < out_size; i++) {
@@ -526,7 +526,7 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
 
    }
 
-   tbox::Array<boost::shared_ptr<tbox::Database> >
+   std::vector<boost::shared_ptr<tbox::Database> >
    mapped_box_level_dbs_in(input_proc_nums.size());
 
    std::list<int> local_indices_used;
@@ -534,7 +534,7 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
 
    //Each iteration of this loop processes the patches from one input
    //database.
-   for (int i = 0; i < input_proc_nums.size(); i++) {
+   for (int i = 0; i < static_cast<int>(input_proc_nums.size()); i++) {
 
       boost::shared_ptr<tbox::Database> mbl_database =
          level_in_dbs[i]->getDatabase("mapped_box_level");
@@ -656,7 +656,7 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
          min_local_indices = 0;
       }
 
-      tbox::Array<int> output_dist_cutoff(out_size);
+      std::vector<int> output_dist_cutoff(out_size);
       for (int j = 0; j < out_size; j++) {
          output_dist_cutoff[j] = min_local_indices + j
             * (indices_range / out_size);
@@ -725,8 +725,8 @@ void RedistributedRestartUtility::readAndWritePatchRestartData(
    std::vector<string> keys = patch_in_db->getAllKeys();
 
    //Place the database on arrays of length 1.
-   tbox::Array<boost::shared_ptr<tbox::Database> > in_db_array(1);
-   tbox::Array<boost::shared_ptr<tbox::Database> > out_db_array(1);
+   std::vector<boost::shared_ptr<tbox::Database> > in_db_array(1);
+   std::vector<boost::shared_ptr<tbox::Database> > out_db_array(1);
 
    in_db_array[0] = patch_in_db;
    out_db_array[0] = patch_out_db;
@@ -749,11 +749,11 @@ void RedistributedRestartUtility::readAndWritePatchRestartData(
  */
 
 void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
-   tbox::Array<boost::shared_ptr<tbox::Database> >& output_dbs,
-   const tbox::Array<boost::shared_ptr<tbox::Database> >& level_in_dbs,
+   std::vector<boost::shared_ptr<tbox::Database> >& output_dbs,
+   const std::vector<boost::shared_ptr<tbox::Database> >& level_in_dbs,
    const string& key,
    const int num_files_written,
-   const tbox::Array<int>& input_proc_nums,
+   const std::vector<int>& input_proc_nums,
    const int total_output_files)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -762,11 +762,10 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    assert(level_in_dbs.size() == 1 || output_dbs.size() == 1);
 #endif
 
-   const int out_size = output_dbs.size();
+   const int out_size = static_cast<int>(output_dbs.size());
 
    //Create an array of level output databases
-   tbox::Array<boost::shared_ptr<tbox::Database> > level_out_dbs;
-   level_out_dbs.resizeArray(out_size);
+   std::vector<boost::shared_ptr<tbox::Database> > level_out_dbs(out_size);
 
    for (int i = 0; i < out_size; i++) {
       level_out_dbs[i] = output_dbs[i]->putDatabase(key);
@@ -797,7 +796,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
       new std::vector<tbox::DatabaseBox>[out_size];
 
    int out_vec_size = 0;
-   tbox::Array<int> out_mbs_size(out_size, 0);
+   std::vector<int> out_mbs_size(out_size, 0);
 
    std::list<int> local_indices_used;
    int max_index_used = 0;
@@ -806,7 +805,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    //database.
    version = level_in_dbs[0]->getDatabase("mapped_boxes")->getInteger(
       "HIER_BOX_CONTAINER_VERSION");
-   for (int i = 0; i < input_proc_nums.size(); i++) {
+   for (int i = 0; i < static_cast<int>(input_proc_nums.size()); i++) {
 
       boost::shared_ptr<tbox::Database> mapped_boxes_in_db =
          level_in_dbs[i]->getDatabase("mapped_boxes");
@@ -899,7 +898,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
 
       int indices_range = max_local_indices - min_local_indices;
 
-      tbox::Array<int> output_dist_cutoff(out_size);
+      std::vector<int> output_dist_cutoff(out_size);
       for (int j = 0; j < out_size; j++) {
          output_dist_cutoff[j] = min_local_indices + j
             * (indices_range / out_size);
@@ -908,7 +907,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
       if (mbs_size > 0) {
          out_vec_size += mbs_size;
 
-         tbox::Array<int> output_ids(mbs_size);
+         std::vector<int> output_ids(mbs_size);
 
          for (int k = 0; k < mbs_size; k++) {
             output_ids[k] = 0;

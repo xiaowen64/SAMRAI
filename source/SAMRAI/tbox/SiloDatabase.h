@@ -21,7 +21,6 @@
 #ifdef HAVE_SILO
 
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"

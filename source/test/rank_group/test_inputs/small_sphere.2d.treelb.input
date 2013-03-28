@@ -8,62 +8,55 @@
  *
  ************************************************************************/
 
-
+// Refer to rect.2d.treelb.input for full description of all input parameters
+// specific to this problem.
 
 Main {
+   // Dimension of problem.
    dim = 2
 
+   // Base name of log file.
    base_name = "small_sphere.2d.treelb"
+
+   // If true all processes generate log files.  Otherwise only process 0 does.
    log_all_nodes = FALSE
 
-   // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
+   // Load balancer choice.  One of TreeLoadBalancer, ChopAndPackLoadBalancer.
    load_balancer_type = "TreeLoadBalancer"
 
-   /*
-     Specify domain as a box array in the reference index space.
-   */
+   // Specify domain as a box array in the reference index space.
    domain_boxes = [(0,0),(49,49)]
 
-   /*
-     Specify anchor layer as a box array in the reference index space.
-     The anchor layer will be partitioned but its partitioning is not
-     used in the performance test.
-
-     If omitted, the anchor layer is the same as the domain.
-   */
+   // Specify anchor layer as a box array in the reference index space.
+   // The anchor layer will be partitioned but its partitioning is not
+   // used in the performance test.
    anchor_boxes = [(0,0),(49,49)]
 
-   /*
-     Specify ghost-cell-width between anchor and unbalanced.
-   */
+   // Specify ghost-cell-width between anchor and unbalanced.
    ghost_cell_width = 4, 4
 
-   /*
-     Specify the min patch size.
-   */
+   // Specify the min patch size.
    min_size = 4, 4
 
+   // Box generation method.  One of PrebalanceByUserBoxes,
+   // PrebalanceByUserShells.
    box_gen_method = "PrebalanceByUserShells"
 
-   PrebalanceByUserBoxes {
-      /*
-        Specify unbalanced layer as a box array in the reference index space.
-
-        initial_owners are the ranks of the owners of all the initial balance boxes.
-        By default, processor 0 owns all the initial balance boxes.
-      */
-      balance_boxes = [(10,10),(89,89)]
-      initial_owners = 0
-   }
-
    PrebalanceByUserShells {
-      /*
-        Specify unbalanced layer by tagging a set of concentric shells.
-      */
+      // Specify unbalanced layer by tagging a set of concentric shells.
+      // Starting at r0, tag cells with centroids at radii[n] < r < radii[n+1].
       r0 = 0, 0 // 0.5, 0.5
       radii = 0.0, 0.6, 0.75, 0.85, 0.99, 1.0
+
+      // Efficiency tolerance of Berger Rigoutsos algorithm.  Refer to
+      // mesh::BergerRigoutsos for details.
       efficiency_tol = 0.80
+
+      // Combine tolerance of Berger Rigoutsos algorithm.  Refer to
+      // mesh::BergerRigoutsos for details.
       combine_tol = 0.90
+
+      // Refer to mesh::BergerRigoutsos for input.
       BergerRigoutsos {
          DEV_log_node_history = FALSE
          DEV_log_cluster_summary = TRUE

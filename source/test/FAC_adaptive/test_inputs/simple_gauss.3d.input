@@ -8,6 +8,9 @@
  *
  ************************************************************************/
 
+// Refer to allneumann2d.input for full description of all input parameters
+// specific to this problem.
+
 Main {
   dim = 3
   base_name = "simple-gauss3d"
