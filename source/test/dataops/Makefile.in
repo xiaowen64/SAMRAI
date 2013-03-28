@@ -22,7 +22,7 @@ include $(OBJECT)/config/Makefile.config
 CPPFLAGS_EXTRA	= -DDISPLAY -DNDIM=$(PDIM)  -DTESTING=1
 
 ifneq (,$(findstring libdcomplex, $(SAMRAI_LIBRARY_TARGETS)))
-  NUM_TESTS = 28
+  NUM_TESTS = 24
 else
   NUM_TESTS = 18
 endif
