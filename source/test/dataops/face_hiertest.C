@@ -260,7 +260,7 @@ int main(
             const double* dx = pgeom->getDx();
             double face_vol = dx[0];
             for (int i = 1; i < dim.getValue(); ++i) {
-	      face_vol *= dx[i];
+               face_vol *= dx[i];
             }
             boost::shared_ptr<pdat::FaceData<double> >data(
                   patch->getPatchData(fwgt_id),
@@ -860,8 +860,8 @@ int main(
          fdata = BOOST_CAST<pdat::FaceData<double>,
                             hier::PatchData>(patch->getPatchData(fvindx[2]));
          TBOX_ASSERT(fdata);
-	 hier::Index index0(dim, 2);
-	 hier::Index index1(dim, 3);
+         hier::Index index0(dim, 2);
+         hier::Index index1(dim, 3);
          index1(0) = 5;
          if (patch->getBox().contains(index0)) {
             (*fdata)(pdat::FaceIndex(index0, pdat::FaceIndex::Y,
@@ -882,8 +882,8 @@ int main(
          fdata = BOOST_CAST<pdat::FaceData<double>,
                             hier::PatchData>(patch->getPatchData(fvindx[2]));
          TBOX_ASSERT(fdata);
-	 hier::Index idx0(dim, 2);
-	 hier::Index idx1(dim, 3);
+         hier::Index idx0(dim, 2);
+         hier::Index idx1(dim, 3);
          idx1(0) = 5;
          pdat::FaceIndex index0(idx0,
                                 pdat::FaceIndex::Y,

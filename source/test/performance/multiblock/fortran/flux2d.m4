@@ -164,7 +164,7 @@ c     write(6,*) "flux0"
 c     do  ic1=ifirst1,ilast1
 c       do  ic0=ifirst0,ilast0+1
 c         write(6,*) "ic0,flux0= ",ic0,ic1,
-c    &			flux0(ic0,ic1,1),flux0(ic0,ic1,2),
+c    &                  flux0(ic0,ic1,1),flux0(ic0,ic1,2),
 c    &                  flux0(ic0,ic1,3),flux0(ic0,ic1,4)
 c         call flush(6)
 c       enddo
@@ -173,7 +173,7 @@ c     write(6,*) "flux1"
 c     do  ic1=ifirst1,ilast1
 c       do  ic0=ifirst0,ilast0+1
 c         write(6,*) "ic0,flux1= ",ic0,ic1,
-c    &			flux1(ic0,ic1,1),flux1(ic0,ic1,2),
+c    &                  flux1(ic0,ic1,1),flux1(ic0,ic1,2),
 c    &                  flux1(ic0,ic1,3),flux1(ic0,ic1,4)
 c         call flush(6)
 c       enddo

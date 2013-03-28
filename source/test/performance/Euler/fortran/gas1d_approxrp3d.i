@@ -38,7 +38,7 @@ c     ******************************************************************
          return
       endif
  
-	
+
       gp1g2i=half*(eosgam+one)/eosgam
       gp1o2gm1=half*(eosgam+one)/(eosgam-one)
       clsqp=eosgam*wleft(1)*max(smallr,wleft(3))

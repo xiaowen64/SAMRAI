@@ -62,7 +62,7 @@ c     REAL ttvlft(NEQU),ttvrgt(NEQU)
 c     write(6,*) "In fluxcorrec2d()"
       if (FLUXG.lt.1) then
          write(6,*) "flux ghosts < 1!"
-	 stop
+         stop
       endif
 c    
       gam_min_one = gamma - one
@@ -145,7 +145,7 @@ c     REAL ttvlft(NEQU),ttvrgt(NEQU)
 c
       if (FLUXG.lt.1) then
          write(6,*) "flux ghosts < 1!"
-	 stop
+         stop
       endif
      
 c     ******************************************************************
@@ -216,7 +216,7 @@ c variables for hllc scheme
 c
       if (FLUXG.lt.1) then
          write(6,*) "flux ghosts < 1!"
-	stop
+         stop
       endif
 c
 c***********************************************************************

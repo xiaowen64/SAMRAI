@@ -240,7 +240,7 @@ int main(
             // iterate over the "SampleIndexData" index data stored on the patch
             // and dump the integer stored on it.
             int currData = counter - 1;
-	    pdat::IndexData<SampleIndexData, pdat::CellGeometry>::iterator idend(*sample, false);
+            pdat::IndexData<SampleIndexData, pdat::CellGeometry>::iterator idend(*sample, false);
             for (pdat::IndexData<SampleIndexData,
                                  pdat::CellGeometry>::iterator id(*sample, true);
                  id != idend;
