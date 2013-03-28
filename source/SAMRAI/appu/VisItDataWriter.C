@@ -1623,7 +1623,13 @@ VisItDataWriter::writeHDFFiles(
    sprintf(temp_buf, "%05d", d_time_step_number);
    d_current_dump_directory_name = "visit_dump.";
    d_current_dump_directory_name += temp_buf;
-   dump_dirname = d_top_level_directory_name + "/";
+   if (!d_top_level_directory_name.empty() &&
+       d_top_level_directory_name[d_top_level_directory_name.length()-1] == '/') {
+      dump_dirname = d_top_level_directory_name;
+   }
+   else {
+      dump_dirname = d_top_level_directory_name + "/";
+   }
    dump_dirname = dump_dirname + d_current_dump_directory_name;
    tbox::Utilities::recursiveMkdir(dump_dirname);
 
@@ -3415,7 +3421,14 @@ VisItDataWriter::writeSummaryToHDFFile(
        * Add this dump entry to dumps.visit file
        */
       if (d_time_step_number == 0) s_summary_file_opened = false;
-      std::string path = d_top_level_directory_name + "/dumps.visit";
+      std::string path;
+      if (!d_top_level_directory_name.empty() &&
+          d_top_level_directory_name[d_top_level_directory_name.length()-1] == '/') {
+         path = d_top_level_directory_name + "dumps.visit";
+      }
+      else {
+         path = d_top_level_directory_name + "/dumps.visit";
+      }
       std::string file = d_current_dump_directory_name + "/"
          + d_summary_filename;
 
