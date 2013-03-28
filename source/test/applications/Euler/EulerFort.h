@@ -250,7 +250,7 @@ void SAMRAI_F77_FUNC(consdiff3d, CONSDIFF3D) (
    const double&,
    double *, double *, double *);
 
-void SAMRAI_F77_FUNC(onethirdstate, onethirdstate) (
+void SAMRAI_F77_FUNC(onethirdstate, ONETHIRDSTATE) (
    const double&, const double *, const int&,
    const int&, const int&, const int&, const int&, const int&, const int&,
    const double&,
@@ -258,7 +258,7 @@ void SAMRAI_F77_FUNC(onethirdstate, onethirdstate) (
    const double *, const double *, const double *,
    double *);
 
-void SAMRAI_F77_FUNC(fluxthird, fluxthird) (
+void SAMRAI_F77_FUNC(fluxthird, FLUXTHIRD) (
    const double&, const double *, const int&,
    const int&, const int&, const int&, const int&, const int&, const int&,
    const double&,
@@ -266,7 +266,7 @@ void SAMRAI_F77_FUNC(fluxthird, fluxthird) (
    const double *, const double *, const double *, const double *,
    double *, double *, double *);
 
-void SAMRAI_F77_FUNC(fluxcorrecjt, fluxcorrecjt) (
+void SAMRAI_F77_FUNC(fluxcorrecjt, FLUXCORRECJT) (
    const double&, const double *, const int&,
    const int&, const int&, const int&, const int&, const int&, const int&,
    const double&,
@@ -275,7 +275,7 @@ void SAMRAI_F77_FUNC(fluxcorrecjt, fluxcorrecjt) (
    double *, double *, double *,
    double *, double *, double *);
 
-void SAMRAI_F77_FUNC(conservlinint2d, conservlinint2d) (
+void SAMRAI_F77_FUNC(conservlinint2d, CONSERVLININT2D) (
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -290,7 +290,7 @@ void SAMRAI_F77_FUNC(conservlinint2d, conservlinint2d) (
    double *, double *,
    double *, double *, double *, double *);
 
-void SAMRAI_F77_FUNC(conservavg2d, conservavg2d) (
+void SAMRAI_F77_FUNC(conservavg2d, CONSERVAVG2D) (
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -300,7 +300,7 @@ void SAMRAI_F77_FUNC(conservavg2d, conservavg2d) (
    const double *, const double *,
    double *, double *,
    double *);
-void SAMRAI_F77_FUNC(conservlinint3d, conservlinint3d) (
+void SAMRAI_F77_FUNC(conservlinint3d, CONSERVLININT3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -319,7 +319,7 @@ void SAMRAI_F77_FUNC(conservlinint3d, conservlinint3d) (
    double *, double *, double *,
    double *, double *, double *, double *, double *, double *);
 
-void SAMRAI_F77_FUNC(conservavg3d, conservavg3d) (
+void SAMRAI_F77_FUNC(conservavg3d, CONSERVAVG3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -334,7 +334,7 @@ void SAMRAI_F77_FUNC(conservavg3d, conservavg3d) (
    double *, double *,
    double *);
 
-void SAMRAI_F77_FUNC(detectgrad2d, detectgrad2d) (
+void SAMRAI_F77_FUNC(detectgrad2d, DETECTGRAD2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&,
@@ -345,7 +345,7 @@ void SAMRAI_F77_FUNC(detectgrad2d, detectgrad2d) (
    const double *,
    int *, int *);
 
-void SAMRAI_F77_FUNC(detectgrad3d, detectgrad3d) (
+void SAMRAI_F77_FUNC(detectgrad3d, DETECTGRAD3D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -358,7 +358,7 @@ void SAMRAI_F77_FUNC(detectgrad3d, detectgrad3d) (
    const double *,
    int *, int *);
 
-void SAMRAI_F77_FUNC(detectshock2d, detectshock2d) (
+void SAMRAI_F77_FUNC(detectshock2d, DETECTSHOCK2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&,
@@ -369,7 +369,7 @@ void SAMRAI_F77_FUNC(detectshock2d, detectshock2d) (
    const double *,
    int *, int *);
 
-void SAMRAI_F77_FUNC(detectshock3d, detectshock3d) (
+void SAMRAI_F77_FUNC(detectshock3d, DETECTSHOCK3D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -382,7 +382,7 @@ void SAMRAI_F77_FUNC(detectshock3d, detectshock3d) (
    const double *,
    int *, int *);
 
-void SAMRAI_F77_FUNC(stufprobc, stufprobc) (
+void SAMRAI_F77_FUNC(stufprobc, STUFPROBC) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&,

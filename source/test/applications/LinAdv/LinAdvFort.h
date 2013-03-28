@@ -179,7 +179,7 @@ void SAMRAI_F77_FUNC(chartracing3d2, CHARTRACING3D2) (
    double *, double *,
    double *, double *);
 
-void SAMRAI_F77_FUNC(fluxcalculation2d, FLUXCALCULATION2d) (
+void SAMRAI_F77_FUNC(fluxcalculation2d, FLUXCALCULATION2D) (
    const double&, const int&, const int&,
    const double *,
    const int&, const int&,
@@ -189,7 +189,7 @@ void SAMRAI_F77_FUNC(fluxcalculation2d, FLUXCALCULATION2d) (
    double *, double *, double *,
    double *, double *, double *);
 
-void SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (
+void SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (
    const double&, const int&, const int&,
    const int&,
    const double *,
