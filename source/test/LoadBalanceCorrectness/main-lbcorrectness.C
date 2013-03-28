@@ -798,6 +798,7 @@ int main(
          if ( load_balance[1] ) {
             tbox::pout << "\tPartitioning..." << std::endl;
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
+            // TODO: Fix this bug: should not coarsen patch sizes, since we are working in the fine resolution.  This will change regression results.
             lb1->loadBalanceBoxLevel(
                *L1,
                L1_to_L0,
@@ -987,6 +988,7 @@ int main(
          if ( load_balance[2] ) {
             tbox::pout << "\tPartitioning..." << std::endl;
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
+            // TODO: Fix this bug: should not coarsen patch sizes, since we are working in the fine resolution.  This will change regression results.
             lb2->loadBalanceBoxLevel(
                *L2,
                L2_to_L1,
