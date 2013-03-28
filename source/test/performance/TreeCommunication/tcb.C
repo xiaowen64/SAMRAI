@@ -10,7 +10,10 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include <iomanip>
+
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 
 
 #include "SAMRAI/tbox/AsyncCommPeer.h"
