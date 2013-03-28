@@ -259,14 +259,13 @@ void SphericalShellGenerator::tagShells(
    }
 
    /*
-    * Compute tags on the nodes.  Tag node if it falls within one of
-    * the shells.
+    * Compute radii of the nodes.  Tag cell if it has nodes farther than
+    * the inner shell radius and nodes closer than the shell outer radius.
     */
-   pdat::NodeData<double> node_tag_data(pbox, 1, tag_data.getGhostCellWidth()+buffer_cells);
-   node_tag_data.getArrayData().fillAll(0);
+   pdat::NodeData<double> node_radius_data(pbox, 1, tag_data.getGhostCellWidth()+buffer_cells);
 
-   pdat::NodeData<int>::iterator niend(pdat::NodeGeometry::end(node_tag_data.getGhostBox()));
-   for (pdat::NodeData<int>::iterator ni(pdat::NodeGeometry::begin(node_tag_data.getGhostBox()));
+   pdat::NodeData<int>::iterator niend(pdat::NodeGeometry::end(node_radius_data.getGhostBox()));
+   for (pdat::NodeData<int>::iterator ni(pdat::NodeGeometry::begin(node_radius_data.getGhostBox()));
         ni != niend; ++ni) {
       const pdat::NodeIndex& idx = *ni;
       double r[SAMRAI::MAX_DIM_VAL];
@@ -276,18 +275,9 @@ void SphericalShellGenerator::tagShells(
          rr += r[d] * r[d];
       }
       rr = sqrt(rr);
-      for (int i = 0; i < static_cast<int>(d_radii.size()); i += 2) {
-         if (d_radii[i] <= rr && rr < d_radii[i + 1]) {
-            node_tag_data(idx) = tag_val;
-            break;
-         }
-      }
+      node_radius_data(idx) = rr;
    }
 
-   /*
-    * Initialize tag_data to zero then tag specific cells.
-    * Tag cell if any node in its buffered neighborhood is tagged.
-    */
    tag_data.getArrayData().fillAll(0);
 
    pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(tag_data.getGhostBox()));
@@ -298,9 +288,15 @@ void SphericalShellGenerator::tagShells(
       hier::Box check_box(cid,cid, block_id);
       check_box.grow(buffer_cells);
       pdat::NodeIterator node_itr_end(pdat::NodeGeometry::end(check_box));
+      double min_node_radius = 1e20;
+      double max_node_radius = 0;
       for ( pdat::NodeIterator node_itr(pdat::NodeGeometry::begin(check_box));
             node_itr != node_itr_end; ++node_itr ) {
-         if ( node_tag_data(*node_itr) == tag_val ) {
+         min_node_radius = tbox::MathUtilities<double>::Min(min_node_radius, node_radius_data(*node_itr));
+         max_node_radius = tbox::MathUtilities<double>::Max(min_node_radius, node_radius_data(*node_itr));
+      }
+      for (int i = 0; i < static_cast<int>(d_radii.size()); i += 2) {
+         if (d_radii[i] <= max_node_radius && min_node_radius < d_radii[i + 1]) {
             tag_data(cid) = tag_val;
             break;
          }
