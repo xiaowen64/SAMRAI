@@ -253,7 +253,7 @@ descriptions of items in the following list are provided below.
     and greater control of the action to take when a Connector is not found.
     One implication of this change is that findOrCreateConnector has been
     eliminated.  It's functionality is equivalent to findConnector called with
-    hier::CREATE_CONNECTOR.  Clients may use
+    hier::CONNECTOR_CREATE.  Clients may use
     hier::CONNECTOR_IMPLICIT_CREATION_RULE in calls to findConnector while
     developing their application and later change these when their application
     has actually stored these Connectors.
