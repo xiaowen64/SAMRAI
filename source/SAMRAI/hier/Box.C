@@ -952,9 +952,20 @@ Box::rotate(
    if (rotation_ident == Transformation::NO_ROTATE)
       return;
 
-   TBOX_ASSERT(getDim().getValue() == 2 || getDim().getValue() == 3);
+   TBOX_ASSERT(getDim().getValue() == 1 || getDim().getValue() == 2 ||
+               getDim().getValue() == 3);
 
-   if (getDim().getValue() == 2) {
+   if (getDim().getValue() == 1) {
+      int rotation_number = static_cast<int>(rotation_ident);
+      if (rotation_number > 1) {
+         TBOX_ERROR("Box::rotate invalid 1D RotationIdentifier.");
+      }
+      Index tmp_lo(d_lo);
+      Index tmp_hi(d_hi);
+      d_lo(0) = -tmp_hi(0) - 1;
+      d_hi(0) = -tmp_lo(0) - 1;
+   }
+   else if (getDim().getValue() == 2) {
       int rotation_number = static_cast<int>(rotation_ident);
       if (rotation_number > 3) {
          TBOX_ERROR("Box::rotate invalid 2D RotationIdentifier.");

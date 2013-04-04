@@ -154,7 +154,19 @@ Transformation::getRotationIdentifier(
    RotationIdentifier id = NO_ROTATE;
    bool is_error = false;
 
-   if (dim.getValue() == 2) {
+   if (dim.getValue() == 1) {
+      if (rotation_string[0] == "I_UP") {
+         id = IUP; //0;
+      } else if (rotation_string[0] == "I_DOWN") {
+         id = IDOWN; //1;
+      } else {
+         is_error = true;
+      }
+      if (is_error) {
+         TBOX_ERROR("Rotation_input " << rotation_string[0]
+            << " is invalid.\n");
+      }
+   } else if (dim.getValue() == 2) {
       if (rotation_string[0] == "I_UP") {
          if (rotation_string[1] == "J_UP") {
             id = IUP_JUP; //0;
@@ -179,6 +191,8 @@ Transformation::getRotationIdentifier(
          } else {
             is_error = true;
          }
+      } else {
+         is_error = true;
       }
       if (is_error) {
          TBOX_ERROR("Transformation::getRotationIdentifier "
@@ -369,7 +383,7 @@ Transformation::getRotationIdentifier(
       }
    } else {
       TBOX_ERROR(
-         "Transformation::getRotationIdentifier : DIM = 1 or > 3 not implemented");
+         "Transformation::getRotationIdentifier : DIM > 3 not implemented");
    }
 
    return id;
@@ -390,7 +404,9 @@ Transformation::getReverseRotationIdentifier(
 {
    RotationIdentifier reverse_id = (RotationIdentifier)0;
 
-   if (dim.getValue() == 2) {
+   if (dim.getValue() == 1) {
+      reverse_id = rotation;
+   } else if (dim.getValue() == 2) {
       reverse_id = (RotationIdentifier)((4 - (int)rotation) % 4);
    } else if (dim.getValue() == 3) {
       switch (rotation) {
@@ -501,7 +517,7 @@ Transformation::getReverseRotationIdentifier(
       }
    } else {
       TBOX_ERROR(
-         "Transformation::getReverseRotationIdentifier : DIM = 1 or > 3 not implemented");
+         "Transformation::getReverseRotationIdentifier : DIM > 3 not implemented");
    }
 
    return reverse_id;
@@ -525,7 +541,18 @@ Transformation::calculateReverseShift(
 
    const tbox::Dimension& dim(back_shift.getDim());
 
-   if (dim.getValue() == 2) {
+   if (dim.getValue() == 1) {
+      if (rotation == IUP) {
+         back_shift = -shift;
+      }
+      else if (rotation == IDOWN) {
+         back_shift = shift;
+      }
+      else {
+         TBOX_ERROR("Transformation::calculateReverseShift error...\n"
+            << " Invalid RotationIdentifier value given" << std::endl);
+      }
+   } else if (dim.getValue() == 2) {
 
       if (rotation == IUP_JUP) {
          back_shift = -shift;
@@ -647,7 +674,7 @@ Transformation::calculateReverseShift(
             << " Invalid RotationIdentifier value given" << std::endl);
       }
    } else {
-      TBOX_ERROR("Transformation::calculateReverseShift : DIM = 1 or > 3 not implemented");
+      TBOX_ERROR("Transformation::calculateReverseShift : DIM > 3 not implemented");
    }
 }
 
@@ -665,7 +692,14 @@ Transformation::rotateIndex(
    const tbox::Dimension& dim,
    const RotationIdentifier rotation)
 {
-   if (dim.getValue() == 2) {
+   if (dim.getValue() == 1) {
+      if (rotation == IUP) {
+         return;
+      }
+      else if (rotation == IDOWN) {
+         index[0] = -index[0] - 1;
+      }
+   } else if (dim.getValue() == 2) {
       int num_rotations = (int)rotation;
 
       for (int j = 0; j < num_rotations; j++) {
@@ -742,7 +776,7 @@ Transformation::rotateIndex(
          rotateAboutAxis(dim, index, 0, 1);
       }
    } else {
-      TBOX_ERROR("Transformation::rotateIndex : DIM = 1 or > 3 not implemented");
+      TBOX_ERROR("Transformation::rotateIndex : DIM > 3 not implemented");
    }
 
 }
