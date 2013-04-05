@@ -244,7 +244,7 @@ Main {
 
 
    // Explicit name of log file.  Default is base_name + ".log"
-   log_filname = "test.2d.log"
+   log_filename = "test.2d.log"
 
 
    // If true all nodes will log to individual files

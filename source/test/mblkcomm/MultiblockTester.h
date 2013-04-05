@@ -20,9 +20,6 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/ComponentSelector.h"
-#include "SAMRAI/xfer/CoarsenAlgorithm.h"
-#include "SAMRAI/xfer/CoarsenPatchStrategy.h"
-#include "SAMRAI/xfer/CoarsenSchedule.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
@@ -49,7 +46,7 @@ class PatchMultiblockTestStrategy;
 
 /**
  * Class MultiblockTester serves as a tool to test data communication operations
- * in SAMRAI, such as coarsening, refining, and filling ghost cells.
+ * in SAMRAI, such as refining and filling ghost cells.
  *
  * The functions in this class called from main() are:
  * \begin{enumerate}
@@ -57,16 +54,12 @@ class PatchMultiblockTestStrategy;
  *                            creates patch hierarchy and sets initial data.
  *    - [createRefineSchedule(...)] creates communication schedule for
  *                                      refining data to given level.
- *    - [createCoarsenSchedule(...)] creates communication schedule for
- *                                       coarsening data to given level.
  *    - [performRefineOperations(...)] refines data to given level.
- *    - [performCoarsenOperations(...)] coarsens data to given level.
  * \end{enumerate}
  */
 
 class MultiblockTester:
    public mesh::StandardTagAndInitStrategy,
-   public xfer::CoarsenPatchStrategy,
    public xfer::RefinePatchStrategy,
    public xfer::SingularityPatchStrategy
 {
@@ -80,8 +73,6 @@ public:
       boost::shared_ptr<tbox::Database>& main_input_db,
       boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       PatchMultiblockTestStrategy* strategy,
-      bool do_refine = true,
-      bool do_coarsen = false,
       const string& refine_option = "INTERIOR_FROM_SAME_LEVEL");
 
    /**
@@ -137,28 +128,11 @@ public:
       const int level_number);
 
    /**
-    * Create communication schedule for coarsening data to given level.
-    */
-   void
-   createCoarsenSchedule(
-      const int level_number);
-   void
-   resetCoarsenSchedule(
-      const int level_number);
-
-   /**
     * Refine data to specified level (or perform interpatch communication
     * on that level).
     */
    void
    performRefineOperations(
-      const int level_number);
-
-   /**
-    * Coarsen data to specified level.
-    */
-   void
-   performCoarsenOperations(
       const int level_number);
 
    /**
@@ -200,8 +174,8 @@ public:
 
    /**
     * These routines pass off physicial boundary and pre/postprocess
-    * coarsen/refine operations to patch data test object.  They are
-    * pure virtual in RefinePatchStrategy and CoarsenPatchStrategy.
+    * refine operations to patch data test object.  They are
+    * pure virtual in RefinePatchStrateg.
     */
    void
    setPhysicalBoundaryConditions(
@@ -236,23 +210,6 @@ public:
       hier::Patch& fine,
       const hier::Patch& coarse,
       const hier::Box& fine_box,
-      const hier::IntVector& ratio);
-
-   hier::IntVector
-   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const;
-
-   void
-   preprocessCoarsen(
-      hier::Patch& coarse,
-      const hier::Patch& fine,
-      const hier::Box& coarse_box,
-      const hier::IntVector& ratio);
-
-   void
-   postprocessCoarsen(
-      hier::Patch& coarse,
-      const hier::Patch& fine,
-      const hier::Box& coarse_box,
       const hier::IntVector& ratio);
 
    double getLevelDt(
@@ -294,12 +251,6 @@ private:
     * Object supplying operatins for particular patch data test.
     */
    PatchMultiblockTestStrategy* d_data_test_strategy;
-
-   /*
-    * Booleans to indicate whether refine or coarsen is operation to test.
-    */
-   bool d_do_refine;
-   bool d_do_coarsen;
 
    /*
     * String name for refine option; ; i.e., source of interior patch
@@ -344,22 +295,13 @@ private:
     */
    hier::ComponentSelector d_patch_data_components;
 
-   /*
-    * Coarsen algorithm and schedules for testing communication
-    * among levels in the patch hierarchy.
-    */
-
-   boost::shared_ptr<xfer::CoarsenAlgorithm> d_coarsen_algorithm;
-
    xfer::RefineAlgorithm d_reset_refine_algorithm;
-   xfer::CoarsenAlgorithm d_reset_coarsen_algorithm;
 
    boost::shared_ptr<xfer::RefineAlgorithm> d_mblk_refine_alg;
 
    bool d_is_reset;
 
    std::vector<boost::shared_ptr<xfer::RefineSchedule> > d_refine_schedule;
-   std::vector<boost::shared_ptr<xfer::CoarsenSchedule> > d_coarsen_schedule;
 
 };
 

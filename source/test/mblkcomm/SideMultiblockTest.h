@@ -35,8 +35,6 @@ public:
       const string& object_name,
       const tbox::Dimension& dim,
       boost::shared_ptr<tbox::Database> main_input_db,
-      bool do_refine,
-      bool do_coarsen,
       const string& refine_option);
 
    /**
@@ -46,7 +44,7 @@ public:
 
    /**
     * User-supplied boundary conditions.  Note that we do not implement
-    * user-defined coarsen and refine operations.
+    * user-defined refine operations.
     */
    void
    setPhysicalBoundaryConditions(
@@ -67,7 +65,7 @@ public:
     * This function is called from the MultiblockTester constructor.  Its
     * purpose is to register variables used in the patch data test
     * and appropriate communication parameters (ghost cell widths,
-    * coarsen/refine operations) with the MultiblockTester object, which
+    * refine operations) with the MultiblockTester object, which
     * manages the variable storage.
     */
    void

@@ -8,6 +8,9 @@
  *
  ************************************************************************/
 
+// Refer to cell.2d.input for full description of all input parameters
+// specific to this problem.
+
 Main {
     dim = 3
 //
@@ -19,7 +22,7 @@ Main {
 //
 // Testing information, including number of times to perform schedule
 // creation and communication processes, name of particular patch data
-// test, and refine and coarsen test information
+// test
 //    
     ntimes_run = 1  // default is 1
 
@@ -31,21 +34,6 @@ Main {
 //  test_to_run = "FaceMultiblockTest"
 //  test_to_run = "NodeMultiblockTest"
 //  test_to_run = "SideMultiblockTest"
-//  test_to_run = "MultiVariableDataTest"
-
-//  
-// Either refine test or coarsen test can be run, but not both.  This 
-// ensures proper validation of communicated data.  Default test is 
-// to refine refine data with interior patch data filled from same level.
-// If `do_refine' is true, then refine test will occur and coarsen test
-// will not.  Refine test also allows option of filling patch interiors 
-// from coarser levels.  Coarsen test has no options as coarse patch 
-// interiors will always be filled with coarsened data from finer level.
-//
-    do_refine = TRUE
-    refine_option = "INTERIOR_FROM_SAME_LEVEL"
- 
-    do_coarsen = FALSE
 }
 
 TimerManager {
@@ -73,7 +61,6 @@ EdgeMultiblockTest {
    //    Optional input:  depth              (default = 1)
    //                     src_ghosts         (default = 0,0,0)
    //                     dst_ghosts         (default = 0,0,0)
-   //                     coarsen_operator   (default = "NO_COARSEN")
    //                     refine_operator    (default = "NO_REFINE")
    //
    VariableData {
@@ -84,7 +71,6 @@ EdgeMultiblockTest {
          depth = 1
          src_ghosts = 0,0,0
          dst_ghosts = 1,1,0
-         coarsen_operator = "NO_COARSEN"
          refine_operator = "NO_REFINE"
       }
    }

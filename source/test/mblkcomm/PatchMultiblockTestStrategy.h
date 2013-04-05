@@ -46,7 +46,6 @@ using namespace SAMRAI;
  *    - \b  depth        optional variable depth (default = 1)
  *    - \b  src_ghosts   optional comm source ghost width (default = 0,0,0)
  *    - \b  dst_ghosts   optional comm dest ghost width (default = 0,0,0)
- *    - \b  coarsen_operator   opt. coarsen op name (default = "NO_COARSEN")
  *    - \b  refine_operator    opt. refine op name (default = "NO_REFINE")
  *
  *
@@ -83,13 +82,11 @@ using namespace SAMRAI;
  * The following virtual functions are given default non-operations in this
  * class so that concrete test subclass can either implement them to test
  * specific functionality or simply ignore.  They are pure virtual in the
- * coarsen and refine patch strategy classes:
+ * refine patch strategy class:
  * \begin{enumerate}
  *    - [setPhysicalBoundaryConditions(...)]
  *    - [preprocessRefine(...)]
  *    - [postprocessRefine(...)]
- *    - [preprocessCoarsen(...)]
- *    - [postprocessCoarsen(...)]
  * \end{enumerate}
  */
 
@@ -201,7 +198,7 @@ public:
 
    /**
     * Virtual functions in interface to user-supplied boundary conditions,
-    * coarsen and refine operations.
+    * and refine operations.
     */
    virtual void
    setPhysicalBoundaryConditions(
@@ -243,29 +240,11 @@ public:
       const hier::Box& fine_box,
       const hier::IntVector& ratio) const;
 
-   ///
-   virtual void
-   preprocessCoarsen(
-      hier::Patch& coarse,
-      const hier::Patch& fine,
-      const boost::shared_ptr<hier::VariableContext>& context,
-      const hier::Box& coarse_box,
-      const hier::IntVector& ratio) const;
-
-   ///
-   virtual void
-   postprocessCoarsen(
-      hier::Patch& coarse,
-      const hier::Patch& fine,
-      const boost::shared_ptr<hier::VariableContext>& context,
-      const hier::Box& coarse_box,
-      const hier::IntVector& ratio) const;
-
    /**
     * This function is called from the MultiblockTester constructor.  Its
     * purpose is to register variables used in the patch data test
     * and appropriate communication parameters (ghost cell widths,
-    * coarsen/refine operations) with the MultiblockTester object, which
+    * refine operations) with the MultiblockTester object, which
     * manages the variable storage.
     */
    virtual void
@@ -317,7 +296,6 @@ protected:
    std::vector<int> d_variable_depth;
    std::vector<hier::IntVector> d_variable_src_ghosts;
    std::vector<hier::IntVector> d_variable_dst_ghosts;
-   std::vector<string> d_variable_coarsen_op;
    std::vector<string> d_variable_refine_op;
 
    /*

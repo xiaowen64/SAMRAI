@@ -9,45 +9,32 @@
  ************************************************************************/
 
 Main {
-    dim = 2
-//
-// Log file information
-//
-    log_file_name  = "cell-test.log"
-    log_all_nodes  = TRUE
 
-//
-// Testing information, including number of times to perform schedule
-// creation and communication processes, name of particular patch data
-// test, and refine and coarsen test information
-//    
-    ntimes_run = 1  // default is 1
+   // Dimension of problem.  No default.
+   dim = 2
 
-//
-// Available tests are:
-// 
-    test_to_run = "CellMultiblockTest"
-//  test_to_run = "EdgeDataTest"
-//  test_to_run = "FaceDataTest"
-//  test_to_run = "NodeDataTest"
-//  test_to_run = "SideDataTest"
-//  test_to_run = "MultiVariableDataTest"
+   // name of log file.  Default is "mblkcomm.log".
+   log_file_name  = "cell-test.log"
 
-//  
-// Either refine test or coarsen test can be run, but not both.  This 
-// ensures proper validation of communicated data.  Default test is 
-// to refine refine data with interior patch data filled from same level.
-// If `do_refine' is true, then refine test will occur and coarsen test
-// will not.  Refine test also allows option of filling patch interiors 
-// from coarser levels.  Coarsen test has no options as coarse patch 
-// interiors will always be filled with coarsened data from finer level.
-//
-    do_refine = TRUE
-    refine_option = "INTERIOR_FROM_SAME_LEVEL"
- 
-    do_coarsen = FALSE
+   // If true all nodes will log to individual files
+   // If false only node 0 will log
+   // Default is FALSE.
+   log_all_nodes  = TRUE
+
+   // Testing information, including number of times to perform schedule
+   // creation and communication processes, name of particular patch data
+   // test, and refine and coarsen test information
+
+   // Number of times to create and run schedule.  Default is 1.
+   ntimes_run = 1
+
+   // Name of particular test to run.
+   // Choices are [Cell,Edge,Face,Node,Side]MultiblockTest
+   test_to_run = "CellMultiblockTest"
+
 }
 
+// Refer to tbox::TimerManager for input
 TimerManager {
     timer_list = "test::main::*"
 
@@ -63,17 +50,16 @@ TimerManager {
 
 CellMultiblockTest {
 
-   //
-   // The VariableData database is read in by the PatchDataTestStrategy
+   // The VariableData database is read in by the PatchMultiblockTestStrategy
    // base class.  Each sub-database must contain variable parameter data.
    // The name of the sub-databases for each variable is arbitrary.  But
    // the names must be distinct.  
    // 
-   //    Required input:  name
+   //    Required input:  src_name
+   //                     dst_name
    //    Optional input:  depth              (default = 1)
-   //                     src_ghosts         (default = 0,0,0)
-   //                     dst_ghosts         (default = 0,0,0)
-   //                     coarsen_operator   (default = "NO_COARSEN")
+   //                     src_ghosts         (default = 0,0)
+   //                     dst_ghosts         (default = 0,0)
    //                     refine_operator    (default = "NO_REFINE")
    //
    VariableData {
@@ -84,7 +70,6 @@ CellMultiblockTest {
          depth = 1
          src_ghosts = 0,0
          dst_ghosts = 1,1
-         coarsen_operator = "NO_COARSEN"
          refine_operator = "NO_REFINE"
       }
    }
@@ -94,6 +79,7 @@ CellMultiblockTest {
 
 }
 
+// Refer to hier::BaseGridGeometry and geom::GridGeometry for input
 BlockGridGeometry {
    num_blocks = 3
    domain_boxes_0 = [ (0,0) , (20,13) ]
@@ -139,7 +125,7 @@ BlockGridGeometry {
 
 }
 
-
+// Refer to hier::PatchHierarchy for input
 PatchHierarchy {
    max_levels              = 2 // Maximum number of levels in hierarchy.
    ratio_to_coarser {         // vector ratio to next coarser level
@@ -157,7 +143,7 @@ PatchHierarchy {
 }
 
 
-
+// Refer to mesh::GriddingAlgorithm for input
 GriddingAlgorithm {
 
    efficiency_tolerance     = 0.70e0   // min % of tag cells in new patch level
@@ -167,9 +153,11 @@ GriddingAlgorithm {
    sequentialize_patch_indices = TRUE
 }
 
+// Refer to mesh::TreeLoadBalancer for input
 TreeLoadBalancer {
 }
 
+// Refer to mesh::StandardTagAndInitialize for input
 StandardTaggingAndInitializer {
    tagging_method = "REFINE_BOXES"
    level_0 {

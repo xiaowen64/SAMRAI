@@ -8,6 +8,18 @@
 ##
 #########################################################################
 
+This README explains how to compile and run the Multiblock Linear Advection
+application.  The files in this directory are as follows:
+
+    main.C             -  application driver program
+    MblkLinAdv.[C,h]   -  C++ class containing routines specific to the
+                          Linear Advection example and which are called from
+                          SAMRAI AMR library routines
+    MblkGeometry.[C,h] -  Class managing the physical coordinate geometry
+                          of the problem.
+    SkeletonOutersideDoubleWeightedAverage.[C,h]
+                       -  A coarsening operator needed for this problem  
+
 This example is similar to the single-block AMR LinAdv sample application.
 This example has the following differences:
 
@@ -16,7 +28,7 @@ This example has the following differences:
    3. All numerical kernel operations (e.g. computeFluxesOnPatch()) are
       c-based rather than fortran
 
-The three test cases included are:
+The two test cases included are:
 
    1. wedge_1blk.3d  - single block mapped wedge grid 
    2. octant_3blk.3d - multi block (3 blocks) mapped octant grid 
@@ -39,3 +51,9 @@ COMPILATION AND EXECUTION
          Parallel execution is platform dependent.  This example demonstrates
          execution via mpirun.
          mpirun -np <nprocs> [mpirun options] ./main <input file>
+
+INPUT PARAMETERS
+----------------
+Refer to test_inputs/octant_3blk.3d.input for full description of all input
+parameters specific to this problem.
+

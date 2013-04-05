@@ -146,21 +146,33 @@ MappedBoxLevelConnectorUtilsTests:
    SAMRAI/source/test/MappedBoxLevelConnectorUtilsTests directory.
 
 mapped_box_set_iterators:
+   Tests the iterators that are used on a BoxContainer.
+
    All test source code is contained in the
    SAMRAI/source/test/mapped_box_set_iterators directory.
 
 MappingConnector:
+   Tests the modify method in MappingConnector.
+   
    All test source code is contained in the SAMRAI/source/test/MappingConnector
    directory.
 
 mblkcomm:
+   Performs tests of refine operations on multiblock configurations.
+ 
    All test source code is contained in the SAMRAI/source/test/mblkcomm
    directory.
 
 MblkEuler:
+   A test similar to the applications/Euler test but set up to work in
+   a multiblock configuration.
+
    Requires the testlib be built.
 
 MblkLinAdv:
+   A test similar to the applications/LinAdv test but set up to work in
+   a multiblock configuration.
+
    Requires the testlib be built.
 
 mblktree:
