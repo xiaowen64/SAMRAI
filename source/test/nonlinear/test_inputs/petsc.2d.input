@@ -7,6 +7,10 @@
  * Description:   Input file for 2D nonlinear solver example using PETSc. 
  *
  ************************************************************************/
+
+// Refer to test_inputs/kinsol.2d.input for description of the input parameters
+// specific to this test directory.
+
 // This is the input file for the 2D nonlinear solver example using PETSc.
 
 Main{

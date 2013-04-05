@@ -7,41 +7,60 @@
  * Description:   Input file for 2D nonlinear solver example using KINSOL. 
  *
  ************************************************************************/
-// This is the input file for the 2D nonlinear solver example using KINSOL.
+ // This is the input file for the 2D nonlinear solver example using KINSOL.
+
+   Main {
+      // General specifications.
+      base_name = "default"     // The base file name for output files.
+      nonlinear_solver_package = "KINSOL" // Name of the nonlinear
+         // solver package.  Can be "KINSOL" or "PETSc-SNES"
+   }
 
 Main{
+
+   // Dimension of problem.  No default.
    dim = 2
 
+   // Base name of log and viz files.  Default is "default".
    base_name = "2d.kinsol"
 
-// visualization dump parameters 
-   viz_dump_interval     = 1          // zero to turn off
+   // Frequency at which to dump viz output--zero to turn off
+   // Default is 0.
+   viz_dump_interval     = 1
+
+   // Directory in which to place viz output.
+   // No default, this must be specified here if dump interval is non-zero.
    viz_dump_dirname      = "2d.kinsol.visit"
+
+   // Number of processors that dump to one viz file.
+   // Default is 1.
    visit_number_procs_per_file = 1
 
-
-// regrid parameters
+   // Timestep interval for regridding.  If zero, there will be no regridding.
+   // Default is 0.
    regrid_interval       = 1         // zero to turn off
 
-// Options for nonlinear solver package are:
-//     "KINSOL" (default), or "PETSc-SNES"
+   // Options for nonlinear solver package are:
+   //    "KINSOL" (default), or "PETSc-SNES"
    nonlinear_solver_package = "KINSOL"
-   // nonlinear_solver_package = "PETSc-SNES"
 
 }
 
+// Refer to xfer::TimerManager for input
 TimerManager{
    maintain_exclusive_time = TRUE
    maintain_concurrent_time = TRUE
    timer_list               = "apps::main::*", "apps::usrFcns::*"
 }
 
+// Refer to geom::CartesianGridGeometry and its base classes for input
 CartesianGeometry{
    domain_boxes = [(0,0), (31,31)]
    x_lo         = 0.0e0, 0.0e0   
    x_up         = 1.0e0, 1.0e0
 }
 
+// Refer to hier::PatchHierarchy for input
 PatchHierarchy {
    max_levels = 8
    largest_patch_size {
@@ -70,12 +89,15 @@ PatchHierarchy {
    // TODO this should be removed when visit writer is updated
    sequentialize_patch_indices = TRUE
 }
+
+// Refer to mesh::GriddingAlgorithm for input
 GriddingAlgorithm{
 
    combine_efficiency = 0.75
    efficiency_tolerance = 0.75
 }
 
+// Refer to mesh::StandardTagAndInitialize for input
 StandardTagAndInitialize{
    tagging_method = "REFINE_BOXES"
 
@@ -112,17 +134,29 @@ StandardTagAndInitialize{
    //etc.
 }
 
+// Refer to mesh::TreeLoadBalancer for input
 LoadBalancer{
 }
 
+// The ModifiedBratuProblem class is the "user class" in this example.
+// It owns the solver and contains the code to set up the solver.
+// The inputs for ModifiedBratuProblem is simply the inputs for the
+// individual parts owned by the FACPoisson class.
 ModifiedBratuProblem{
-   timestep = 0.0625      // time increment used for all steps
+   // Time increment used for all steps. No default.
+   timestep = 0.0625
+
+   // Factor multiplying exponential term.  No default.
    lambda   = 6.0         // factor multiplying exponential term
 
-   max_precond_its = 35    // maximum iterations for preconditioner 
+   // Maximum iteration for preconditioner.  No default.
+   max_precond_its = 35
+
+   // Preconditioner convergence tolerance.  No default.
    precond_tol = 1.0e-2    // preconditioner convergence tolerance
 }
 
+// Refer to solv::KINSOL_SAMRAIContext for input
 KINSOLSolver{
     max_nonlinear_iterations = 20
     KINSOL_log_filename      = "nkLog.32x32.8"
@@ -138,6 +172,7 @@ KINSOLSolver{
     max_linear_solve_restarts = 6
 }
 
+// Refer to solv::SNES_SAMRAIContext for input
 SNESSolver{
     uses_preconditioner            = TRUE
     uses_explicit_jacobian         = TRUE
@@ -150,6 +185,7 @@ SNESSolver{
     forcing_term_strategy          = "EWCHOICE1"
 }
 
+// Refer to algs::ImplicitIntegrator for input
 ImplicitIntegrator{
     initial_time = 0.0
     final_time = 1.0

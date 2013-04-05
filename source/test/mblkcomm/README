@@ -30,7 +30,7 @@ COMPILATION AND EXECUTION
       parallel:
          Parallel execution is platform dependent.  This example demonstrates
          execution via mpirun.
-         mpirun -np <nprocs> [mpirun options] ./main <input_file
+         mpirun -np <nprocs> [mpirun options] ./main <input_file>
 
 
 INPUT PARAMETERS

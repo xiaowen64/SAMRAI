@@ -176,10 +176,14 @@ MblkLinAdv:
    Requires the testlib be built.
 
 mblktree:
+   Tests the tree-based box searching algorithms in multiblock configurations.
+
    All test source code is contained in the SAMRAI/source/test/mblktree
    directory.
 
 nonlinear:
+   Tests nonlinear solvers using the SAMRAI interfaces to KINSOL and PETSc.
+
    All test source code is contained in the SAMRAI/source/test/nonlinear
    directory.
 
