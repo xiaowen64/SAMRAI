@@ -9,13 +9,6 @@
  ************************************************************************/
  // This is the input file for the 2D nonlinear solver example using KINSOL.
 
-   Main {
-      // General specifications.
-      base_name = "default"     // The base file name for output files.
-      nonlinear_solver_package = "KINSOL" // Name of the nonlinear
-         // solver package.  Can be "KINSOL" or "PETSc-SNES"
-   }
-
 Main{
 
    // Dimension of problem.  No default.
