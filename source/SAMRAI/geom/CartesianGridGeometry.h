@@ -234,8 +234,7 @@ public:
    setGeometryDataOnPatch(
       hier::Patch& patch,
       const hier::IntVector& ratio_to_level_zero,
-      const TwoDimBool& touches_regular_bdry,
-      const TwoDimBool& touches_periodic_bdry) const;
+      const TwoDimBool& touches_regular_bdry) const;
 
    /**
     * Set data members for this CartesianGridGeometry object.

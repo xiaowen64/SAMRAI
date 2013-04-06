@@ -108,16 +108,14 @@ private:
    /**
     * The constructor for the patch geometry base class.
     *
-    * @pre (ratio_to_level_zero.getDim() == touches_regular_bdry.getDim()) &&
-    *      (ratio_to_level_zero.getDim() == touches_periodic_bdry.getDim())
+    * @pre (ratio_to_level_zero.getDim() == touches_regular_bdry.getDim())
     * @pre all components of ratio_to_level_zero must be nonzero and all
     *      components of ratio_to_level_zero not equal to 1 must have the same
     *      sign
     */
    PatchGeometry(
       const IntVector& ratio_to_level_zero,
-      const TwoDimBool& touches_regular_bdry,
-      const TwoDimBool& touches_periodic_bdry);
+      const TwoDimBool& touches_regular_bdry);
 
    /**
     * The virtual destructor for the patch geometry base class.

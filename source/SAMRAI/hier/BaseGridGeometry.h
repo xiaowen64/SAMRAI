@@ -169,8 +169,6 @@ public:
     * @param[in]   ratio_to_level_zero ratio to the coarsest level.
     * @param[in]   touches_regular_bdry Array storing which patches touch
     *              non-periodic boundaries.
-    * @param[in]   touches_periodic_bdry Array storing which patches touch
-    *              periodic boundaries.
     * @param[in]   defer_boundary_box_creation Flag to indicate if boundary
     *              boxes should be created
     *
@@ -191,7 +189,6 @@ public:
       PatchLevel& level,
       const IntVector& ratio_to_level_zero,
       const std::map<BoxId, TwoDimBool>& touches_regular_bdry,
-      const std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
       const bool defer_boundary_box_creation);
 
    /*!
@@ -497,13 +494,10 @@ public:
     * @param[in]        ratio_to_level_zero ratio to coarsest level
     * @param[in]        touches_regular_bdry Array storing which patches touch
     *                   non-periodic boundaries.
-    * @param[in]        touches_periodic_bdry Array storing which patches touch
-    *                   periodic boundaries.
     *
     * @pre (getDim() == patch.getDim()) && 
     *      (getDim() == ratio_to_level_zero.getDim()) &&
-    *      (getDim() == touches_regular_bdry.getDim()) &&
-    *      (getDim() == touches_periodic_bdry.getDim())
+    *      (getDim() == touches_regular_bdry.getDim())
     */
    /*
     * TODO:  See the second TODO item for the setGeometryOnPatches() method.
@@ -512,8 +506,7 @@ public:
    setGeometryDataOnPatch(
       Patch& patch,
       const IntVector& ratio_to_level_zero,
-      const TwoDimBool& touches_regular_bdry,
-      const TwoDimBool& touches_periodic_bdry) const;
+      const TwoDimBool& touches_regular_bdry) const;
 
    /*!
     * @brief Compute boundary boxes for each patch in patch level.

@@ -326,8 +326,7 @@ void
 CartesianGridGeometry::setGeometryDataOnPatch(
    hier::Patch& patch,
    const hier::IntVector& ratio_to_level_zero,
-   const TwoDimBool& touches_regular_bdry,
-   const TwoDimBool& touches_periodic_bdry) const
+   const TwoDimBool& touches_regular_bdry) const
 {
    const tbox::Dimension& dim(getDim());
 
@@ -385,7 +384,6 @@ CartesianGridGeometry::setGeometryDataOnPatch(
    boost::shared_ptr<CartesianPatchGeometry> geom(
       boost::make_shared<CartesianPatchGeometry>(ratio_to_level_zero,
          touches_regular_bdry,
-         touches_periodic_bdry,
          dx, x_lo, x_up));
 
    patch.setPatchGeometry(geom);

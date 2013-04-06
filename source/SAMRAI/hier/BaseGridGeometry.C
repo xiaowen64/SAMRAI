@@ -452,7 +452,6 @@ BaseGridGeometry::setGeometryOnPatches(
    PatchLevel& level,
    const IntVector& ratio_to_level_zero,
    const std::map<BoxId, TwoDimBool>& touches_regular_bdry,
-   const std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
    const bool defer_boundary_box_creation)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, level, ratio_to_level_zero);
@@ -479,8 +478,7 @@ BaseGridGeometry::setGeometryOnPatches(
    for (PatchLevel::iterator ip(level.begin()); ip != level.end(); ++ip) {
       const boost::shared_ptr<Patch>& patch = *ip;
       setGeometryDataOnPatch(*patch, ratio_to_level_zero,
-         (*touches_regular_bdry.find(ip->getBox().getBoxId())).second,
-         (*touches_periodic_bdry.find(ip->getBox().getBoxId())).second);
+         (*touches_regular_bdry.find(ip->getBox().getBoxId())).second);
    }
    t_set_geometry_data_on_patches->stop();
 
@@ -552,14 +550,13 @@ void
 BaseGridGeometry::setGeometryDataOnPatch(
    Patch& patch,
    const IntVector& ratio_to_level_zero,
-   const PatchGeometry::TwoDimBool& touches_regular_bdry,
-   const PatchGeometry::TwoDimBool& touches_periodic_bdry) const
+   const PatchGeometry::TwoDimBool& touches_regular_bdry) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    const tbox::Dimension& dim(getDim());
 
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(dim, patch, ratio_to_level_zero,
-      touches_regular_bdry, touches_periodic_bdry);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, patch, ratio_to_level_zero,
+      touches_regular_bdry);
 
    /*
     * All components of ratio must be nonzero.  Additionally,
@@ -582,8 +579,7 @@ BaseGridGeometry::setGeometryDataOnPatch(
    boost::shared_ptr<PatchGeometry> geometry(
       boost::make_shared<PatchGeometry>(
          ratio_to_level_zero,
-         touches_regular_bdry,
-         touches_periodic_bdry));
+         touches_regular_bdry));
 
    patch.setPatchGeometry(geometry);
 

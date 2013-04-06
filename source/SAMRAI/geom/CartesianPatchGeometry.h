@@ -51,7 +51,6 @@ public:
    CartesianPatchGeometry(
       const hier::IntVector& ratio_to_level_zero,
       const TwoDimBool& touches_regular_bdry,
-      const TwoDimBool& touches_periodic_bdry,
       const double * dx,
       const double * x_lo,
       const double * x_hi);

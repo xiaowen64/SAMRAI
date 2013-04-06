@@ -176,7 +176,6 @@ PatchLevel::PatchLevel(
       *this,
       d_ratio_to_level_zero,
       touches_regular_bdry,
-      touches_periodic_bdry,
       defer_boundary_box_creation);
    t_constructor_set_geometry->stop();
 
@@ -287,7 +286,6 @@ PatchLevel::PatchLevel(
       *this,
       d_ratio_to_level_zero,
       touches_regular_bdry,
-      touches_periodic_bdry,
       defer_boundary_box_creation);
    t_constructor_set_geometry->stop();
 
@@ -351,7 +349,6 @@ PatchLevel::PatchLevel(
       *this,
       d_ratio_to_level_zero,
       touches_regular_bdry,
-      touches_periodic_bdry,
       defer_boundary_box_creation);
    t_constructor_set_geometry->stop();
 
@@ -486,7 +483,6 @@ PatchLevel::setRefinedPatchLevel(
    }
 
    std::map<BoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
-   std::map<BoxId, PatchGeometry::TwoDimBool> touches_periodic_bdry;
 
    for (iterator ip(coarse_level->begin()); ip != coarse_level->end(); ip++) {
       boost::shared_ptr<PatchGeometry> coarse_pgeom((*ip)->getPatchGeometry());
@@ -498,16 +494,6 @@ PatchLevel::setRefinedPatchLevel(
       if (iter_touches_regular_bdry == touches_regular_bdry.end()) {
          iter_touches_regular_bdry = touches_regular_bdry.insert(
                iter_touches_regular_bdry,
-               std::pair<BoxId, PatchGeometry::TwoDimBool>(ip->getBox().getBoxId(),
-                  PatchGeometry::TwoDimBool(getDim())));
-      }
-
-      std::map<BoxId,
-               PatchGeometry::TwoDimBool>::iterator iter_touches_periodic_bdry(
-         touches_periodic_bdry.find(ip->getBox().getBoxId()));
-      if (iter_touches_periodic_bdry == touches_periodic_bdry.end()) {
-         iter_touches_periodic_bdry = touches_periodic_bdry.insert(
-               iter_touches_periodic_bdry,
                std::pair<BoxId, PatchGeometry::TwoDimBool>(ip->getBox().getBoxId(),
                   PatchGeometry::TwoDimBool(getDim())));
       }
@@ -527,7 +513,6 @@ PatchLevel::setRefinedPatchLevel(
       *this,
       d_ratio_to_level_zero,
       touches_regular_bdry,
-      touches_periodic_bdry,
       defer_boundary_box_creation);
 
    if (!defer_boundary_box_creation) {
@@ -666,7 +651,6 @@ PatchLevel::setCoarsenedPatchLevel(
    d_boundary_boxes_created = false;
 
    std::map<BoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
-   std::map<BoxId, PatchGeometry::TwoDimBool> touches_periodic_bdry;
 
    for (iterator ip(fine_level->begin()); ip != fine_level->end(); ip++) {
       boost::shared_ptr<PatchGeometry> fine_pgeom((*ip)->getPatchGeometry());
@@ -678,16 +662,6 @@ PatchLevel::setCoarsenedPatchLevel(
       if (iter_touches_regular_bdry == touches_regular_bdry.end()) {
          iter_touches_regular_bdry = touches_regular_bdry.insert(
                iter_touches_regular_bdry,
-               std::pair<BoxId, PatchGeometry::TwoDimBool>(ip->getBox().getBoxId(),
-                  PatchGeometry::TwoDimBool(getDim())));
-      }
-
-      std::map<BoxId,
-               PatchGeometry::TwoDimBool>::iterator iter_touches_periodic_bdry(
-         touches_periodic_bdry.find(ip->getBox().getBoxId()));
-      if (iter_touches_periodic_bdry == touches_periodic_bdry.end()) {
-         iter_touches_periodic_bdry = touches_periodic_bdry.insert(
-               iter_touches_periodic_bdry,
                std::pair<BoxId, PatchGeometry::TwoDimBool>(ip->getBox().getBoxId(),
                   PatchGeometry::TwoDimBool(getDim())));
       }
@@ -707,7 +681,6 @@ PatchLevel::setCoarsenedPatchLevel(
       *this,
       d_ratio_to_level_zero,
       touches_regular_bdry,
-      touches_periodic_bdry,
       defer_boundary_box_creation);
 
    if (!defer_boundary_box_creation) {
