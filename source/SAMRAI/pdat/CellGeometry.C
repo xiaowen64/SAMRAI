@@ -117,15 +117,11 @@ CellGeometry::computeDestinationBoxes(
 
    // Convert the boxes into cell space and compute the intersection
 
-   const hier::Box dst_cell(toCellBox(dst_ghost));
-   const hier::Box src_cell(toCellBox(src_box));
-   const hier::Box fill_cell(toCellBox(fill_box));
-   const hier::Box together(dst_cell * src_cell * fill_cell);
+   const hier::Box together(dst_ghost * src_box * fill_box);
 
    if (!together.empty()) {
       if (!overwrite_interior) {
-         const hier::Box int_cell(toCellBox(d_box));
-         dst_boxes.removeIntersections(together, int_cell);
+         dst_boxes.removeIntersections(together, d_box);
       } else {
          dst_boxes.pushBack(together);
       }

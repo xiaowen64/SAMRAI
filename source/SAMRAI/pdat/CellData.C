@@ -257,8 +257,7 @@ CellData<TYPE>::copyOnBox(
    const hier::Box& box)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, src, box);
-   const hier::Box cell_box = CellGeometry::toCellBox(box);
-   d_data->copy(src.getArrayData(), cell_box);
+   d_data->copy(src.getArrayData(), box);
 }
 
 template<class TYPE>
