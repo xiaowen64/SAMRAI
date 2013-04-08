@@ -104,6 +104,8 @@ descriptions of items in the following list are provided below.
 
 10) Access to stored Connectors has been changed.
 
+11) TreeLoadBalancer parameter affecting number of boxes generated has changed.
+
 *****************************************************************************
 
 -----------------------------------------------------------------------------
@@ -259,6 +261,11 @@ descriptions of items in the following list are provided below.
     hier::CONNECTOR_IMPLICIT_CREATION_RULE in calls to findConnector while
     developing their application and later change these when their application
     has actually stored these Connectors.
+
+11) TreeLoadBalancer parameter affecting number of boxes generated has changed.
+    TreeLoadBalancer's min_load_fraction_per_box has been removed.
+    If you get too many small boxes in the hierarchy, try increasing
+    TreeLoadBalancer's flexible_load_tolerance input parameter.
 
 =============================================================================
 =============================================================================
