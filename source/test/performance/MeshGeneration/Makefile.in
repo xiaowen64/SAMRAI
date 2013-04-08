@@ -61,12 +61,12 @@ INPUTS3D =	test_inputs/small_sphere.3d.treelb.input	\
 		test_inputs/lss.3d.treelb.input
 
 main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)
-	$(MAKE) testlib
+	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1 
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 
-testlib:
-	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
+# Prevents "No rule to make target" error.  Built in the rule for main.
+$(TESTLIB):
 
 
 check:
