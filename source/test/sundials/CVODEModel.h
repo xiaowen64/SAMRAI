@@ -539,8 +539,6 @@ private:
    bool d_level_solver_allocated;
    bool d_use_neumann_bcs;
 
-   int d_max_hypre_its;
-   double d_hypre_tol;
    double d_current_soln_time;
 #endif
 

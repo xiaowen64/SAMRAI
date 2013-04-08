@@ -139,8 +139,6 @@ CVODEModel::CVODEModel(
    /*
     * Set default values for preconditioner.
     */
-   d_max_hypre_its = 1;
-   d_hypre_tol = 1.0e-40;
    d_use_neumann_bcs = false;
 
    d_current_soln_time = 0.;
@@ -1348,10 +1346,6 @@ CVODEModel::getFromInput(
    }
 
 #ifdef USE_FAC_PRECONDITIONER
-   d_max_hypre_its =
-      input_db->getIntegerWithDefault("max_hypre_its", d_max_hypre_its);
-   d_hypre_tol =
-      input_db->getDoubleWithDefault("hypre_tol", d_hypre_tol);
    d_use_neumann_bcs =
       input_db->getBoolWithDefault("use_neumann_bcs", d_use_neumann_bcs);
    d_print_solver_info =

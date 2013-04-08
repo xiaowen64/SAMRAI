@@ -8,6 +8,11 @@
  *
  ************************************************************************/
 
+//See test_inputs/2lev_node.3d.input for descriptions of the input options
+//specific to this test.
+
+
+
 Main {
    dim = 2
 

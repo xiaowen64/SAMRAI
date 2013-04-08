@@ -32,12 +32,12 @@ COMPILATION AND EXECUTION
 
    Execution:
       For one of the following input files:
-         sample_inputs/box-3d.input
-         sample_inputs/room-2d.input
-         sample_inputs/room-3d.input
-         sample_inputs/sphere-2d-re.input
-         sample_inputs/step-2d-5levels.input
-         sample_inputs/step-2d.input
+         performance_inputs/box-3d.input
+         performance_inputs/room-2d.input
+         performance_inputs/room-3d.input
+         performance_inputs/sphere-2d-re.input
+         performance_inputs/step-2d-5levels.input
+         performance_inputs/step-2d.input
       serial:
          ./main <input file>
       parallel:
@@ -51,18 +51,18 @@ INPUT FILES:
 
    Six example input files are included with the Euler application:
 
-      sample_inputs/box-3d.input  ... exploding 3D sphere with large initial
+      performance_inputs/box-3d.input  ... exploding 3D sphere with large initial
                                      pressure differences inside a cube. 
-      sample_inputs/room-2d.input ... exploding 2D sphere with large pressure
+      performance_inputs/room-2d.input ... exploding 2D sphere with large pressure
                                      differences at time zero, in a room with 
                                      fixed boundaries. Room denoted with set of    
                                      boxes to define the computational region.
-      sample_inputs/room-3d.input ... 3d version of above.
-      sample_inputs/
+      performance_inputs/room-3d.input ... 3d version of above.
+      performance_inputs/
               sphere-2d-re.input ... exploding 2D sphere, using Richardson 
                                      extrapolation.
-      sample_inputs/step-2d.input ... 2d supersonic flow over a step.
-      sample_inputs/
+      performance_inputs/step-2d.input ... 2d supersonic flow over a step.
+      performance_inputs/
            step-2d-5levels.input ... as above but with 5 levels.
 
    The Euler application code is composed of various classes that implement
