@@ -36,6 +36,8 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
                 Significant bug fixes
 ----------------------------------------------------------------------------
 
+1) Box transformations have been fixed so that 1D Boxes transform properly.
+
      
 *****************************************************************************
 
@@ -52,7 +54,7 @@ descriptions of items in the following list are provided below.
    places where a Connector represents a mapping a MappingConnector is now
    used.
 
-2) Both Connctor and MappingConnector hold pointers to their transposes.  Hence
+2) Both Connector and MappingConnector hold pointers to their transposes.  Hence
    one Connector can now be used where 2--the Connector and its transpose--
    were previously required.
 
@@ -73,7 +75,7 @@ descriptions of items in the following list are provided below.
 This section contains a summary of changes to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
 
-1) SAMRAI now requires PETSc 3.2.0.
+1) If using PETSc, 3.2.0 is now required.
 
 2) All injection coarsening clases are now consistently named as injections.
 
