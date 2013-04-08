@@ -57,7 +57,8 @@ bool RefineSchedule::s_read_static_input = false;
 
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_refine_schedule;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_data;
-boost::shared_ptr<tbox::Timer> RefineSchedule::t_recursive_fill;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_data_nonrecursive;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_data_recursive;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_refine_scratch_data;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_finish_sched_const;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_finish_sched_const_recurse;
@@ -1755,6 +1756,8 @@ RefineSchedule::fillData(
       t_fill_data->barrierAndStart();
    }
 
+   t_fill_data_nonrecursive->start();
+
    /*
     * Set the refine items and time for all transactions.  These items will
     * be shared by all transaction objects in the communication schedule.
@@ -1782,9 +1785,11 @@ RefineSchedule::fillData(
     * same, and then fills physical boundaries.
     */
 
-   t_recursive_fill->start();
+   t_fill_data_nonrecursive->stop();
+   t_fill_data_recursive->start();
    recursiveFill(fill_time, do_physical_boundary_fill);
-   t_recursive_fill->stop();
+   t_fill_data_recursive->stop();
+   t_fill_data_nonrecursive->start();
 
    /*
     * Copy the scratch space of the destination level to the destination
@@ -1809,6 +1814,8 @@ RefineSchedule::fillData(
     */
 
    d_transaction_factory->unsetRefineItems();
+
+   t_fill_data_nonrecursive->stop();
 
    if ( s_barrier_and_time ) {
       t_fill_data->stop();
@@ -4349,8 +4356,10 @@ RefineSchedule::initializeCallback()
       getTimer("xfer::RefineSchedule::RefineSchedule()");
    t_fill_data = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::fillData()");
-   t_recursive_fill = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::recursive_fill");
+   t_fill_data_nonrecursive = tbox::TimerManager::getManager()->
+      getTimer("xfer::RefineSchedule::fillData()_nonrecursive");
+   t_fill_data_recursive = tbox::TimerManager::getManager()->
+      getTimer("xfer::RefineSchedule::fillData()_recursive");
    t_refine_scratch_data = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::refineScratchData()");
    t_finish_sched_const = tbox::TimerManager::getManager()->
@@ -4395,7 +4404,8 @@ void
 RefineSchedule::finalizeCallback()
 {
    t_fill_data.reset();
-   t_recursive_fill.reset();
+   t_fill_data_nonrecursive.reset();
+   t_fill_data_recursive.reset();
    t_refine_scratch_data.reset();
    t_finish_sched_const.reset();
    t_finish_sched_const_recurse.reset();
