@@ -163,7 +163,7 @@ PatchHierarchy {
 
 }
 
-See mesh::GriddingAlgorithm for input
+//See mesh::GriddingAlgorithm for input
 GriddingAlgorithm {
 
    efficiency_tolerance     = 0.70e0   // min % of tag cells in new patch level
@@ -172,7 +172,7 @@ GriddingAlgorithm {
 
 }
 
-See mesh::TreeLoadBalancer for input
+//See mesh::TreeLoadBalancer for input
 LoadBalancer {
 }
 
