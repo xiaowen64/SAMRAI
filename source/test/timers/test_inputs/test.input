@@ -32,6 +32,4 @@ TimerManager{
    print_concurrent         = TRUE
    print_timer_overhead     = TRUE
    print_threshold          = 0.0
-   timer_list               = "apps::main::*",
-                              "apps::Foo::*"
 }
