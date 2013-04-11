@@ -60,13 +60,9 @@ Main {
       period = 2.0, 4.0
       amplitude = 0.5
 
-      // Tag L0 by buffering and L1 by buffering.
+      // Buffer distances around the walls (one for each tag level).
       buffer_distance_0 = 0.07, 0.07
       buffer_distance_1 = 0.02, 0.02
-
-      // Tag L0 by buffering and l1 by shrinking.
-      // buffer_distance_0 = 0.02, 0.02
-      // shrink_distance_1 = 0.06, 0.06
    }
 
 }

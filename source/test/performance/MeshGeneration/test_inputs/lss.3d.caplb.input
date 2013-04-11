@@ -14,8 +14,6 @@ Main {
    dim = 3
 
    base_name = "lss.3d.caplb"
-   baseline_dirname = "test_inputs"
-   baseline_action = "COMPARE" // "GENERATE" or "COMPARE"
 
    write_visit = TRUE
 
@@ -44,11 +42,6 @@ Main {
    efficiency_tol = 0.85
    combine_tol = 0.85
 
-   /*
-     Specify ghost-cell-width between anchor and unbalanced.
-   */
-   ghost_cell_width = 4, 4, 4
-
    mesh_generator_name = "SphericalShellGenerator"
 
    SphericalShellGenerator {
@@ -60,13 +53,9 @@ Main {
       */
       radii = 0.0, 0.35,    0.70, 0.75,    1.15, 1.17
 
-      // Tag L0 by buffering and l1 by buffering.
+      // Buffer distances around the shells (one for each tag level).
       buffer_distance_0 = 0.04, 0.04, 0.04
       buffer_distance_1 = 0.00, 0.00, 0.00
-
-      // Tag L0 by buffering and l1 by shrinking.
-      // shrink_distance_0 = 0.20, 0.20, 0.20
-      // shrink_distance_1 = 0.20, 0.20, 0.20
    }
 
 }

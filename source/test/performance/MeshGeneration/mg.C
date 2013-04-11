@@ -260,17 +260,6 @@ int main(
       }
 
 
-
-      /*
-       * Parameters.  Some of these can be specified by input deck.
-       */
-      hier::IntVector ghost_cell_width(dim, 2);
-      if (main_db->isInteger("ghost_cell_width")) {
-         main_db->getIntegerArray("ghost_cell_width",
-            &ghost_cell_width[0],
-            dim.getValue());
-      }
-
       hier::IntVector bad_interval(dim, 1);
       hier::IntVector cut_factor(dim, 1);
 
@@ -495,7 +484,7 @@ int main(
             (double)L0->getLocalNumberOfCells(),
             L0->getMPI());
 
-         outputPrebalance( *L0, domain_box_level, ghost_cell_width, "L0: " );
+         outputPrebalance( *L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0,0), "L0: " );
 
          tbox::pout << "\tPartitioning..." << std::endl;
 
@@ -523,7 +512,7 @@ int main(
             (double)L0->getLocalNumberOfCells(),
             L0->getMPI());
 
-         outputPostbalance( *L0, domain_box_level, ghost_cell_width, "L0: " );
+         outputPostbalance( *L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0,0), "L0: " );
 
          if ( comm_graph_writer ) {
             tbox::plog << "\nCommunication Graph for balancing L0:\n";

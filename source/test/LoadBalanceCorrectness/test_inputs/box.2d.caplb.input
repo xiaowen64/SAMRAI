@@ -49,22 +49,10 @@ Main {
    */
    ghost_cell_width = 4, 4
 
-   mesh_generator_name = "SphericalShellGenerator"
+   mesh_generator_name = "ShrunkenLevelGenerator"
 
-   SphericalShellGenerator {
-      /*
-        Specify unbalanced layer by tagging a set of concentric shells,
-        centered at (0,0), with shell i having inner radius radii[2*i]
-        and outer radius radii[(2*i)+1].  Note that making shells too thin
-        can lead to discontinuous tagging.
-      */
-      // radii = 0.0, 0.35,    0.60, 0.65,    0.95, 0.97
-
-      // Tag L0 by buffering and l1 by buffering.
-      // buffer_distance_0 = 0.04, 0.04
-      // buffer_distance_1 = 0.00, 0.00
-
-      // Tag L0 by buffering and l1 by shrinking.
+   ShrunkenLevelGenerator {
+      domain_scale_method = 'r'
       shrink_distance_0 = 0.20, 0.20
       shrink_distance_1 = 0.20, 0.20
    }

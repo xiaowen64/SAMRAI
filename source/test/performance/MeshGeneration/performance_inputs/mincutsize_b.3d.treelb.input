@@ -43,8 +43,6 @@ Main {
    */
    autoscale_base_nprocs = 2
 
-   ghost_cell_width = 4, 4, 4
-
    efficiency_tol = 0.88
    combine_tol = 0.88
 
@@ -70,13 +68,9 @@ Main {
       */
       radii = 0.0, 0.25,    0.40, 0.45,    0.85, 0.87
 
-      // Tag L0 by buffering and l1 by buffering.
+      // Buffer distances around the shells (one for each tag level).
       buffer_distance_0 = 0.032, 0.032, 0.032
       buffer_distance_1 = 0.00, 0.00, 0.00
-
-      // Tag L0 by buffering and l1 by shrinking.
-      // buffer_distance_0 = 0.02, 0.02
-      // shrink_distance_1 = 0.06, 0.06
    }
 
 }

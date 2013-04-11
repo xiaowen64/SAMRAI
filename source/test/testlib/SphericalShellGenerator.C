@@ -69,7 +69,6 @@ SphericalShellGenerator::SphericalShellGenerator(
        */
       const std::string sname( "shrink_distance_" );
       const std::string bname( "buffer_distance_" );
-      std::string aname;
       for ( int ln=0; ; ++ln ) {
          const std::string lnstr( tbox::Utilities::intToString(ln) );
 
@@ -139,17 +138,6 @@ void SphericalShellGenerator::setTags(
    int tag_ln,
    int tag_data_id )
 {
-   if ( d_buffer_shrink[tag_ln] == 's' ) {
-      setTagsByShrinkingLevel(
-         hierarchy,
-         tag_ln,
-         tag_data_id,
-         hier::IntVector::getZero(d_dim),
-         &d_buffer_shrink_distance[1][0]);
-      exact_tagging = true;
-      return;
-   }
-
    const boost::shared_ptr<hier::PatchLevel> &tag_level(
       hierarchy->getPatchLevel(tag_ln));
 

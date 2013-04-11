@@ -63,21 +63,6 @@ public:
       int tag_ln,
       int tag_data_id) = 0;
 
-   /*!
-    * @brief Set tags by shrinking the level at its coarse-fine
-    * boundary.
-    *
-    * Some implementations may choose the strategy of setting tags by
-    * shrinking the tag level.  Those implementations may delegate
-    * that job to this method.
-    */
-   virtual void setTagsByShrinkingLevel(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      int tag_ln,
-      int tag_data_id,
-      const hier::IntVector &shrink_cells,
-      const double *shrink_distance );
-
    //@{ @name SAMRAI::mesh::StandardTagAndInitStrategy virtuals
 
 public:
@@ -191,7 +176,16 @@ public:
       const hier::Patch& patch,
       const hier::Box& region,
       const std::string& variable_name,
-      int depth_index) const = 0;
+      int depth_index) const
+      {
+         NULL_USE(buffer);
+         NULL_USE(patch);
+         NULL_USE(region);
+         NULL_USE(variable_name);
+         NULL_USE(depth_index);
+         TBOX_ERROR("Should not be here");
+         return false;
+      }
 
 private:
 

@@ -48,6 +48,7 @@
 #include "DerivedVisOwnerData.h"
 #include "SinusoidalFrontGenerator.h"
 #include "SphericalShellGenerator.h"
+#include "ShrunkenLevelGenerator.h"
 
 using namespace SAMRAI;
 using namespace tbox;
@@ -370,6 +371,14 @@ int main(
                "SphericalShellGenerator",
                dim,
                main_db->getDatabaseWithDefault("SphericalShellGenerator",
+                                               boost::shared_ptr<tbox::Database>())));
+      }
+      else if (mesh_generator_name == "ShrunkenLevelGenerator") {
+         mesh_gen.reset(
+            new ShrunkenLevelGenerator(
+               "ShrunkenLevelGenerator",
+               dim,
+               main_db->getDatabaseWithDefault("ShrunkenLevelGenerator",
                                                boost::shared_ptr<tbox::Database>())));
       }
       else {
