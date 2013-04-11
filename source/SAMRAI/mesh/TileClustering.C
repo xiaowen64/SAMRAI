@@ -141,12 +141,10 @@ TileClustering::findBoxesContainingTags(
       zero_vector);
    tag_to_new->setTranspose(new_to_tag, true);
 
-   if (d_barrier_and_time) {
-      t_cluster->start();
-   }
 
-   const hier::BoxContainer &local_tag_boxes = tag_box_level.getBoxes();
-   local_tag_boxes.makeTree();
+   t_cluster->start();
+
+   tag_box_level.getBoxes().makeTree();
 
    // Generate new_box_level and Connectors
    for ( hier::PatchLevel::iterator pi=tag_level->begin();
@@ -178,7 +176,7 @@ TileClustering::findBoxesContainingTags(
 
                /*
                 * new_box must nest inside local boxes.  If any part
-                * extends outside local_tag_boxes, its overlap with
+                * extends outside local tag boxes, its overlap with
                 * remote tag boxes might not be detected.  Remove
                 * those parts and insert the rest into new_box_level.
                 * A new_box overlapping non-local tag boxes can appear
@@ -190,7 +188,7 @@ TileClustering::findBoxesContainingTags(
                tmp_new_box.refine(d_box_size);
 
                hier::BoxContainer tmp_new_boxes(tmp_new_box);
-               tmp_new_boxes.intersectBoxes(local_tag_boxes);
+               tmp_new_boxes.intersectBoxes(tag_box_level.getBoxes());
                tmp_new_boxes.coalesce();
 
                for ( hier::BoxContainer::const_iterator bi=tmp_new_boxes.begin();
@@ -217,8 +215,12 @@ TileClustering::findBoxesContainingTags(
 
    new_box_level->finalize();
 
+   t_cluster->stop();
+
 
    if ( d_coalesce_boxes ) {
+
+      t_coalesce->start();
 
       /*
        * Try to coalesce the boxes in new_box_level.
@@ -285,10 +287,8 @@ TileClustering::findBoxesContainingTags(
 
       }
 
-   }
+      t_coalesce->stop();
 
-   if (d_barrier_and_time) {
-      t_cluster->barrierAndStop();
    }
 
 
@@ -411,7 +411,9 @@ TileClustering::setTimers()
    t_find_boxes_containing_tags = tbox::TimerManager::getManager()->
       getTimer("mesh::TileClustering::findBoxesContainingTags()");
    t_cluster = tbox::TimerManager::getManager()->
-      getTimer("mesh::TileClustering::cluster");
+      getTimer("mesh::TileClustering::findBoxesContainingTags()_cluster");
+   t_coalesce = tbox::TimerManager::getManager()->
+      getTimer("mesh::TileClustering::findBoxesContainingTags()_coalesce");
    t_global_reductions = tbox::TimerManager::getManager()->
       getTimer("mesh::TileClustering::global_reductions");
 }

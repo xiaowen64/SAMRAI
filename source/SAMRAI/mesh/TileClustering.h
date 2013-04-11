@@ -168,6 +168,7 @@ private:
    bool d_print_steps;
    boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
    boost::shared_ptr<tbox::Timer> t_cluster;
+   boost::shared_ptr<tbox::Timer> t_coalesce;
    boost::shared_ptr<tbox::Timer> t_global_reductions;
    //@}
 
