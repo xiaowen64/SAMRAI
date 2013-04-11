@@ -192,7 +192,6 @@ int main(
    tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    const int rank = mpi.getRank();
-   int fail_count = 0;
 
    /*
     * Process command line arguments.  For each run, the input
@@ -1116,7 +1115,10 @@ int main(
    plog << "Input database after running..." << std::endl;
    tbox::InputManager::getManager()->getInputDatabase()->printClassData(plog);
 
-   tbox::pout << "\nPASSED:  LoadBalanceCorrectness" << std::endl;
+
+   if (error_count == 0) {
+      tbox::pout << "\nPASSED:  LoadBalanceCorrectness" << std::endl;
+   }
 
    /*
     * Exit properly by shutting down services in correct order.
@@ -1129,7 +1131,7 @@ int main(
    SAMRAIManager::shutdown();
    SAMRAIManager::finalize();
 
-   if (fail_count == 0) {
+   if (error_count == 0) {
       SAMRAI_MPI::finalize();
    } else {
       std::cout << "Process " << std::setw(5) << rank << " aborting."
@@ -1138,7 +1140,7 @@ int main(
          __FILE__, __LINE__);
    }
 
-   return fail_count;
+   return error_count;
 }
 
 
