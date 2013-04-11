@@ -61,7 +61,7 @@ namespace mesh {
  *   <tr>
  *     <td>coalesce_boxes</td>
  *     <td>bool</td>
- *     <td>false</td>
+ *     <td>true</td>
  *     <td>false/true</td>
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>

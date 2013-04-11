@@ -33,6 +33,7 @@ TileClustering::TileClustering(
    const boost::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_box_size(hier::IntVector(d_dim, 8)),
+   d_coalesce_boxes(true),
    d_log_cluster_summary(false),
    d_barrier_and_time(false)
 {
