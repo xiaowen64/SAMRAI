@@ -312,10 +312,10 @@ TileClustering::findBoxesContainingTags(
 
    if (d_log_cluster) {
       tbox::plog << "TileClustering cluster log:\n"
-      << "\tNew box_level clustered by TileClustering:\n" << new_box_level->format("",
+      << "\tNew box_level clustered by TileClustering:\n" << new_box_level->format("\t",
          2)
-      << "\tTileClustering tag_to_new:\n" << tag_to_new->format("", 2)
-      << "\tTileClustering new_to_tag:\n" << new_to_tag->format("", 2);
+      << "\tTileClustering tag_to_new:\n" << tag_to_new->format("\t", 2)
+      << "\tTileClustering new_to_tag:\n" << new_to_tag->format("\t", 2);
    }
    if (d_log_cluster_summary) {
       /*
