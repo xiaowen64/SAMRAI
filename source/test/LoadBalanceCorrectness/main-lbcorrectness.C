@@ -193,7 +193,6 @@ int main(
    tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    const int rank = mpi.getRank();
-   int fail_count = 0;
 
    /*
     * Process command line arguments.  For each run, the input
@@ -596,7 +595,7 @@ int main(
             baseline_prebalance_L0->cacheGlobalReducedData();
 
             if (L0 != *baseline_prebalance_L0) {
-               tbox::perr << "LoadBalanceCorrectness test regression:\n"
+               tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
                           << "the prebalance BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
@@ -647,7 +646,7 @@ int main(
             baseline_postbalance_L0->cacheGlobalReducedData();
 
             if (L0 != *baseline_postbalance_L0) {
-               tbox::perr << "LoadBalanceCorrectness test regression:\n"
+               tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
                           << "the postbalance BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
@@ -794,7 +793,7 @@ int main(
             baseline_prebalance_L1->cacheGlobalReducedData();
 
             if (*L1 != *baseline_prebalance_L1) {
-               tbox::perr << "LoadBalanceCorrectness test regression:\n"
+               tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
                           << "the prebalance BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
@@ -837,7 +836,7 @@ int main(
             baseline_postbalance_L1->cacheGlobalReducedData();
 
             if (*L1 != *baseline_postbalance_L1) {
-               tbox::perr << "LoadBalanceCorrectness test regression:\n"
+               tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
                           << "the postbalance BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
@@ -983,7 +982,7 @@ int main(
             baseline_prebalance_L2->cacheGlobalReducedData();
 
             if (*L2 != *baseline_prebalance_L2) {
-               tbox::perr << "LoadBalanceCorrectness test regression:\n"
+               tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
                           << "the prebalance BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
@@ -1026,7 +1025,7 @@ int main(
             baseline_postbalance_L2->cacheGlobalReducedData();
 
             if (*L2 != *baseline_postbalance_L2) {
-               tbox::perr << "LoadBalanceCorrectness test regression:\n"
+               tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
                           << "the postbalance BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
@@ -1123,7 +1122,10 @@ int main(
    plog << "Input database after running..." << std::endl;
    tbox::InputManager::getManager()->getInputDatabase()->printClassData(plog);
 
-   tbox::pout << "\nPASSED:  LoadBalanceCorrectness" << std::endl;
+
+   if (error_count == 0) {
+      tbox::pout << "\nPASSED:  LoadBalanceCorrectness" << std::endl;
+   }
 
    /*
     * Exit properly by shutting down services in correct order.
@@ -1136,7 +1138,7 @@ int main(
    SAMRAIManager::shutdown();
    SAMRAIManager::finalize();
 
-   if (fail_count == 0) {
+   if (error_count == 0) {
       SAMRAI_MPI::finalize();
    } else {
       std::cout << "Process " << std::setw(5) << rank << " aborting."
@@ -1145,7 +1147,7 @@ int main(
          __FILE__, __LINE__);
    }
 
-   return fail_count;
+   return error_count;
 }
 
 
