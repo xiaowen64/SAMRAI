@@ -65,16 +65,13 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
 
       /*
        * Input parameters to determine whether to tag by buffering
-       * fronts or shrinking level, and by how much.
+       * fronts, and by how much.
        */
-      const std::string sname( "shrink_distance_" );
       const std::string bname( "buffer_distance_" );
       for ( int ln=0; ; ++ln ) {
          const std::string lnstr( tbox::Utilities::intToString(ln) );
 
-         // Look for buffer input first, then shrink input.
          const std::string bnameln = bname + lnstr;
-         const std::string snameln = sname + lnstr;
 
          std::vector<double> tmpa;
 
@@ -85,21 +82,11 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
             }
          }
 
-         if ( database->isDouble(snameln) ) {
-            if ( !tmpa.empty() ) {
-               TBOX_ERROR("Cannot specify both " << bnameln << " and " << snameln);
-            }
-            tmpa = database->getDoubleVector(snameln);
-            if ( static_cast<int>(tmpa.size()) != dim.getValue() ) {
-               TBOX_ERROR(snameln << " input parameter must have " << dim << " values");
-            }
-         }
-
          if ( !tmpa.empty() ) {
-            d_buffer_shrink_amount.resize(d_buffer_shrink_amount.size() + 1);
-            d_buffer_shrink_amount.back().insert( d_buffer_shrink_amount.back().end(),
-                                                    &tmpa[0],
-                                                    &tmpa[0]+static_cast<int>(tmpa.size()) );
+            d_buffer_distance.resize(d_buffer_distance.size() + 1);
+            d_buffer_distance.back().insert( d_buffer_distance.back().end(),
+                                             &tmpa[0],
+                                             &tmpa[0]+static_cast<int>(tmpa.size()) );
          }
          else {
             break;
@@ -171,7 +158,7 @@ void SinusoidalFrontGenerator::setTags(
       computeFrontsData(
          0 /* distance data */,
          tag_data.get(),
-         d_buffer_shrink_amount[tag_ln],
+         d_buffer_distance[tag_ln],
          patch_geom->getXLower(),
          patch_geom->getDx(),
          0.0 );
@@ -266,7 +253,7 @@ void SinusoidalFrontGenerator::computePatchData(
 
    const double* dx = patch_geom->getDx();
 
-   computeFrontsData( dist_data, tag_data, d_buffer_shrink_amount[patch.getPatchLevelNumber()], xlo, dx, time );
+   computeFrontsData( dist_data, tag_data, d_buffer_distance[patch.getPatchLevelNumber()], xlo, dx, time );
 }
 
 

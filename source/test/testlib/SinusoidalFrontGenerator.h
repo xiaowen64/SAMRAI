@@ -48,12 +48,6 @@ using namespace SAMRAI;
  * buffer_distance_0, buffer_distance_1, ...:
  * buffer_distance[ln] is the buffer distance when tagging ON
  * level ln.  We tag the fronts and buffer the tags by this amount.
- * If buffer_distance[ln] is not given, then tag by shrink_distance[ln].
- *
- * shrink_distance_0, shrink_distance_1, ...:
- * shrink_distance[ln] is the shink distance when tagging ON
- * level ln by shrinking the boundaries of level ln.
- * We use this method ONLY when buffer_distance[ln] is not given.
  */
 class SinusoidalFrontGenerator:
    public MeshGenerationStrategy
@@ -203,14 +197,9 @@ private:
    double d_amplitude;
 
    /*!
-    * @brief Buffer or shrink distances for generating tags.
-    *
-    * d_buffer_shrink determines how to generate tags on each level.
-    * If buffering on level ln, then d_buffer_shrink_amount[ln]
-    * means the buffer distances.  If shrinking on level ln, then it
-    * means the shrink distances.
+    * @brief Buffer distances for generating tags.
     */
-   std::vector<std::vector<double> >  d_buffer_shrink_amount;
+   std::vector<std::vector<double> >  d_buffer_distance;
 
    boost::shared_ptr<tbox::Timer> t_setup;
    boost::shared_ptr<tbox::Timer> t_node_pos;

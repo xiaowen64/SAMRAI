@@ -65,16 +65,13 @@ SphericalShellGenerator::SphericalShellGenerator(
 
       /*
        * Input parameters to determine whether to tag by buffering
-       * fronts or shrinking level, and by how much.
+       * fronts, and by how much.
        */
-      const std::string sname( "shrink_distance_" );
       const std::string bname( "buffer_distance_" );
       for ( int ln=0; ; ++ln ) {
          const std::string lnstr( tbox::Utilities::intToString(ln) );
 
-         // Look for buffer input first, then shrink input.
          const std::string bnameln = bname + lnstr;
-         const std::string snameln = sname + lnstr;
 
          std::vector<double> tmpa;
 
@@ -83,25 +80,13 @@ SphericalShellGenerator::SphericalShellGenerator(
             if ( static_cast<int>(tmpa.size()) != dim.getValue() ) {
                TBOX_ERROR(bnameln << " input parameter must have " << dim << " values");
             }
-            d_buffer_shrink.push_back('b');
-         }
-
-         if ( database->isDouble(snameln) ) {
-            if ( !tmpa.empty() ) {
-               TBOX_ERROR("Cannot specify both " << bnameln << " and " << snameln);
-            }
-            tmpa = database->getDoubleVector(snameln);
-            if ( static_cast<int>(tmpa.size()) != dim.getValue() ) {
-               TBOX_ERROR(snameln << " input parameter must have " << dim << " values");
-            }
-            d_buffer_shrink.push_back('s');
          }
 
          if ( !tmpa.empty() ) {
-            d_buffer_shrink_distance.resize(d_buffer_shrink_distance.size() + 1);
-            d_buffer_shrink_distance.back().insert( d_buffer_shrink_distance.back().end(),
-                                                    &tmpa[0],
-                                                    &tmpa[0]+static_cast<int>(tmpa.size()) );
+            d_buffer_distance.resize(d_buffer_distance.size() + 1);
+            d_buffer_distance.back().insert( d_buffer_distance.back().end(),
+                                             &tmpa[0],
+                                             &tmpa[0]+static_cast<int>(tmpa.size()) );
          }
          else {
             break;
@@ -109,12 +94,6 @@ SphericalShellGenerator::SphericalShellGenerator(
 
       }
 
-   }
-
-   if ( d_buffer_shrink.empty() ) {
-      TBOX_ERROR("SphericalShellGenerator: You must specify either\n"
-                 << "buffer_distance_# or shrink_distance_# for each level\n"
-                 << "you plan to use, except the finest level.");
    }
 
 }
@@ -159,7 +138,7 @@ void SphericalShellGenerator::setTags(
       TBOX_ASSERT(patch_geom);
       TBOX_ASSERT(tag_data);
 
-      tagShells( *tag_data, *patch_geom, d_buffer_shrink_distance[tag_ln] );
+      tagShells( *tag_data, *patch_geom, d_buffer_distance[tag_ln] );
 
    }
 
@@ -317,7 +296,7 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
       TBOX_ASSERT(patch_geom);
 
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
-      tagShells(tag_data, *patch_geom, d_buffer_shrink_distance[patch.getPatchLevelNumber()]);
+      tagShells(tag_data, *patch_geom, d_buffer_distance[patch.getPatchLevelNumber()]);
       pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
       for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {
