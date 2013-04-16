@@ -8,7 +8,7 @@
  *
  ************************************************************************/
 
-// Mesh configuration: Lump with 2 shells.
+// Mesh configuration: Sinusoidal front
 
 Main {
    dim = 3

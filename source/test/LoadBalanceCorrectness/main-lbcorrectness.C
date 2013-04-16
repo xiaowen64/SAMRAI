@@ -109,6 +109,7 @@ boost::shared_ptr<mesh::LoadBalanceStrategy>
 createLoadBalancer(
    const boost::shared_ptr<tbox::Database> &input_db,
    const std::string &lb_type,
+   const std::string &rank_tree_type,
    int ln,
    const tbox::Dimension &dim );
 
@@ -118,7 +119,9 @@ checkBalanceCorrectness(
    const hier::BoxLevel& postbalance);
 
 boost::shared_ptr<RankTreeStrategy>
-getRankTree( Database &input_db );
+getRankTree(
+   Database &input_db,
+   const std::string &rank_tree_type);
 
 /*!
  * @brief Implementation to tell PatchHierarchy about the request
@@ -303,15 +306,6 @@ int main(
       }
 
 
-
-      /*
-       * Parameters.  Some of these can be specified by input deck.
-       */
-      hier::IntVector ghost_cell_width(dim, 2);
-      if (main_db->isInteger("ghost_cell_width")) {
-         main_db->getIntegerArray("ghost_cell_width", &ghost_cell_width[0], dim.getValue());
-      }
-
       hier::IntVector bad_interval(dim, 1);
       hier::IntVector cut_factor(dim, 1);
 
@@ -471,6 +465,9 @@ int main(
       std::string load_balancer_type =
          main_db->getStringWithDefault("load_balancer_type", "TreeLoadBalancer");
 
+      std::string rank_tree_type =
+         main_db->getStringWithDefault("rank_tree_type", "CenteredRankTree");
+
 
       const bool write_comm_graph = main_db->getBoolWithDefault("write_comm_graph", false);
       if ( write_comm_graph ) {
@@ -570,14 +567,14 @@ int main(
          domain_to_L0->setTranspose(L0_to_domain.get(), false);
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb0 =
-            createLoadBalancer( input_db, load_balancer_type, 0, dim );
+            createLoadBalancer( input_db, load_balancer_type, rank_tree_type, 0, dim );
 
          tbox::plog << "\n\tL0 prebalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
             (double)L0.getLocalNumberOfCells(),
             L0.getMPI());
 
-         outputPrebalance( L0, domain_box_level, ghost_cell_width, "L0: " );
+         outputPrebalance( L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0,0), "L0: " );
 
          if (baseline_action == 'g') {
             boost::shared_ptr<tbox::Database> prebalance_L0_db =
@@ -669,7 +666,7 @@ int main(
             (double)L0.getLocalNumberOfCells(),
             L0.getMPI());
 
-         outputPostbalance( L0, domain_box_level, ghost_cell_width, "L0: " );
+         outputPostbalance( L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0,0), "L0: " );
 
          if ( comm_graph_writer ) {
             tbox::plog << "\nCommunication Graph for balancing L0:\n";
@@ -768,7 +765,7 @@ int main(
          }
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb1
-            = createLoadBalancer( input_db, load_balancer_type, 1 , dim);
+            = createLoadBalancer( input_db, load_balancer_type, rank_tree_type, 1 , dim);
 
          tbox::plog << "\n\tL1 prebalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
@@ -957,7 +954,7 @@ int main(
 
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb2
-            = createLoadBalancer( input_db, load_balancer_type, 2 , dim);
+            = createLoadBalancer( input_db, load_balancer_type, rank_tree_type, 2 , dim);
 
          tbox::plog << "\n\tL2 prebalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
@@ -1377,13 +1374,15 @@ boost::shared_ptr<mesh::LoadBalanceStrategy>
 createLoadBalancer(
    const boost::shared_ptr<tbox::Database> &input_db,
    const std::string &lb_type,
+   const std::string &rank_tree_type,
    int ln,
    const tbox::Dimension &dim )
 {
 
    if (lb_type == "TreeLoadBalancer") {
 
-      boost::shared_ptr<tbox::RankTreeStrategy> rank_tree = getRankTree(*input_db);
+      boost::shared_ptr<tbox::RankTreeStrategy> rank_tree = getRankTree(*input_db,
+                                                                        rank_tree_type);
 
       boost::shared_ptr<mesh::TreeLoadBalancer>
          tree_lb(new mesh::TreeLoadBalancer(
@@ -1475,15 +1474,15 @@ createBoxGenerator(
 * Get the RankTreeStrategy implementation for TreeLoadBalancer
 ****************************************************************************
 */
-boost::shared_ptr<RankTreeStrategy> getRankTree( Database &input_db )
+boost::shared_ptr<RankTreeStrategy> getRankTree(
+   Database &input_db,
+   const std::string &rank_tree_type )
 {
-   const std::string tree_type = input_db.getStringWithDefault(
-      "rank_tree_type", "CenteredRankTree" );
-   tbox::plog << "Rank tree type is " << tree_type << '\n';
+   tbox::plog << "Rank tree type is " << rank_tree_type << '\n';
 
    boost::shared_ptr<tbox::RankTreeStrategy> rank_tree;
 
-   if (tree_type == "BalancedDepthFirstTree") {
+   if (rank_tree_type == "BalancedDepthFirstTree") {
 
       BalancedDepthFirstTree *bdfs( new BalancedDepthFirstTree() );
 
@@ -1497,7 +1496,7 @@ boost::shared_ptr<RankTreeStrategy> getRankTree( Database &input_db )
 
    }
 
-   else if (tree_type == "CenteredRankTree") {
+   else if (rank_tree_type == "CenteredRankTree") {
 
       CenteredRankTree *crt( new tbox::CenteredRankTree() );
 
@@ -1511,7 +1510,7 @@ boost::shared_ptr<RankTreeStrategy> getRankTree( Database &input_db )
 
    }
 
-   else if (tree_type == "BreadthFirstRankTree") {
+   else if (rank_tree_type == "BreadthFirstRankTree") {
 
       BreadthFirstRankTree *dft( new tbox::BreadthFirstRankTree() );
 
@@ -1526,7 +1525,7 @@ boost::shared_ptr<RankTreeStrategy> getRankTree( Database &input_db )
    }
 
    else {
-      TBOX_ERROR("Unrecognized RankTreeStrategy " << tree_type);
+      TBOX_ERROR("Unrecognized RankTreeStrategy " << rank_tree_type);
    }
 
    return rank_tree;

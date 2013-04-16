@@ -4,11 +4,14 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Load balance correctness test input file.
+ * Description:   Input file for MeshGeneration tests.
  *
  ************************************************************************/
 
-// Mesh configuration: Sinusoidal front.
+// Mesh configuration: Sinusoidal front
+
+// Refer to lss.2d.treelb.input for full description of all input parameters
+// specific to this problem.
 
 Main {
    dim = 2
@@ -19,25 +22,18 @@ Main {
 
    log_all_nodes = FALSE
 
-   // Domain definition
    domain_boxes = [(0,0),(99,49)]
-   // domain_boxes = [(0,0),(49,24)]
    xlo = 0.0, 0.0
    xhi = 2.0, 1.0
 
-   // Whether to enforce nesting.
    enforce_nesting = TRUE, TRUE, TRUE
 
-   // Base nprocs for automatic scaling.
    autoscale_base_nprocs = 1
 
-   // Box generator types: BergerRigoutsos, TileClustering
    box_generator_type = "BergerRigoutsos"
 
-   // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer, TilePartitioner
    load_balancer_type = "ChopAndPackLoadBalancer"
 
-   // Whether to load balance (one value for each level).
    load_balance = TRUE, TRUE
 
    efficiency_tol = 0.85
@@ -46,14 +42,10 @@ Main {
    mesh_generator_name = "SinusoidalFrontGenerator"
 
    SinusoidalFrontGenerator {
-      /*
-        Define a set of sinusoidal fronts oriented in perpendicular to the x-axis.
-      */
       init_disp = 1.0, 1.0
       period = 2.0, 4.0
       amplitude = 0.5
 
-      // Buffer distances around the walls (one for each tag level).
       buffer_distance_0 = 0.07, 0.07
       buffer_distance_1 = 0.02, 0.02
    }

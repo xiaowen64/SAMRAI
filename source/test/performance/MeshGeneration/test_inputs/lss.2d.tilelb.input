@@ -4,11 +4,14 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Load balance correctness test input file.
+ * Description:   Input file for MeshGeneration tests.
  *
  ************************************************************************/
 
 // Mesh configuration: Lump with 2 shells.
+
+// Refer to lss.2d.treelb.input for full description of all input parameters
+// specific to this problem.
 
 Main {
    dim = 2
@@ -19,24 +22,18 @@ Main {
 
    log_all_nodes = FALSE
 
-   // Domain definition
    domain_boxes = [(0,0),(49,49)]
    x_lo = 0.0, 0.0
    x_up = 1.0, 1.0
 
-   // Whether to enforce nesting.
    enforce_nesting = TRUE, TRUE, FALSE
 
-   // Base nprocs for automatic scaling.
    autoscale_base_nprocs = 1
 
-   // Box generator types: BergerRigoutsos, TileClustering
    box_generator_type = "TileClustering"
 
-   // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer, TilePartitioner
    load_balancer_type = "TilePartitioner"
 
-   // Whether to load balance (one value for each level).
    load_balance = TRUE, TRUE
 
    efficiency_tol = 0.85
@@ -45,15 +42,8 @@ Main {
    mesh_generator_name = "SphericalShellGenerator"
 
    SphericalShellGenerator {
-      /*
-        Specify unbalanced layer by tagging a set of concentric shells,
-        centered at (0,0), with shell i having inner radius radii[2*i]
-        and outer radius radii[(2*i)+1].  Note that making shells too thin
-        can lead to discontinuous tagging.
-      */
       radii = 0.0, 0.35,    0.60, 0.65,    0.95, 0.97
 
-      // Buffer distances around the shells (one for each tag level).
       buffer_distance_0 = 0.04, 0.04
       buffer_distance_1 = 0.00, 0.00
    }

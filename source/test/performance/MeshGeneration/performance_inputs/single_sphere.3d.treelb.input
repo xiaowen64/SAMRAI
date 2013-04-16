@@ -4,11 +4,14 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Performance input file for TreeLoadBalancer
+ * Description:   Input file for MeshGeneration tests.
  *
  ************************************************************************/
 
+// Mesh configuration: Single sphere
 
+// Refer to lss.3d.treelb.input for full description of all input parameters
+// specific to this problem.
 
 Main {
    dim = 3
@@ -19,59 +22,40 @@ Main {
    enforce_nesting = FALSE
    load_balance = TRUE
 
-   // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer
    load_balancer_type = "TreeLoadBalancer"
 
-   // Tree type for TreeLoadBalancer: CenteredRankTree, BalancedDepthFirstTree, BreadthFirstTree
    rank_tree_type = "CenteredRankTree"
 
-   write_comm_graph = FALSE // Whether to write communication graph of TreeLoadBalancer.
+   write_comm_graph = FALSE
 
-   /*
-     Specify domain as a box array in the reference index space.
-   */
    domain_boxes = [(0,0,0),(9,9,9)]
-
-   /*
-     Specify physical domain box.
-   */
    xlo = 0.0, 0.0, 0.0
    xhi = 1.0, 1.0, 1.0
 
-   /*
-     Base nprocs for automatic scaling.
-   */
    autoscale_base_nprocs = 2
 
    efficiency_tol = 0.88
    combine_tol = 0.88
 
-   BergerRigoutsos {
-      DEV_inflection_cut_threshold_ar = 4
-      sort_output_nodes = TRUE
-      DEV_log_node_history = FALSE
-      DEV_log_cluster_summary = FALSE
-      DEV_log_cluster = FALSE
-      // DEV_owner_mode = "SINGLE_OWNER"
-      // DEV_algo_advance_mode = "SYNCHRONOUS"
-   }
-
    mesh_generator_name = "SphericalShellGenerator"
 
    SphericalShellGenerator {
-      /*
-        Specify unbalanced layer by tagging a set of concentric shells,
-        centered at (0,0,0), with shell i having inner radius radii[2*i]
-        and outer radius radii[(2*i)+1].  Note that making shells too thin
-        can lead to discontinuous tagging.
-      */
       radii = 0.0, 0.50
 
-      // Buffer distances around the shells (one for each tag level).
       buffer_distance_0 = 0.05, 0.05, 0.05
       buffer_distance_1 = 0.00, 0.00, 0.00
    }
 
+}
+
+BergerRigoutsos {
+   DEV_inflection_cut_threshold_ar = 4
+   sort_output_nodes = TRUE
+   DEV_log_node_history = FALSE
+   DEV_log_cluster_summary = FALSE
+   DEV_log_cluster = FALSE
+   // DEV_owner_mode = "SINGLE_OWNER"
+   // DEV_algo_advance_mode = "SYNCHRONOUS"
 }
 
 TreeLoadBalancer {

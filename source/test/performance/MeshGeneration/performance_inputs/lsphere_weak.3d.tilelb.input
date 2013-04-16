@@ -19,8 +19,8 @@ He probably used a min box size of 1x1x1.  He didn't say.
 That's unrealistic.  I'm using 3x3x3 (coarse resolution) min box size
 with 4x4x4 min box size for inflection cut.
 
-This set-up uses Berger-Rigoutsos, for contrast to tiling.
-*/
+This set-up uses tiling with size 16^3, similar to Luitjens, but we
+then coalesce our tiles.  */
 
 // Refer to lss.3d.treelb.input for full description of all input parameters
 // specific to this problem.
@@ -29,7 +29,7 @@ This set-up uses Berger-Rigoutsos, for contrast to tiling.
 Main {
    dim = 3
 
-   base_name = "lsphere_weak.3d.treelb"
+   base_name = "lsphere_weak.3d.tilelb"
 
    write_visit = TRUE
 
@@ -43,9 +43,9 @@ Main {
 
    autoscale_base_nprocs = 1
 
-   box_generator_type = "BergerRigoutsos"
+   box_generator_type = "TileClustering"
 
-   load_balancer_type = "TreeLoadBalancer"
+   load_balancer_type = "TilePartitioner"
 
    load_balance = TRUE, TRUE
 
@@ -169,5 +169,5 @@ PatchHierarchy {
 
    allow_patches_smaller_than_ghostwidth = TRUE
    allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
-   proper_nesting_buffer = 1, 1, 1
+   proper_nesting_buffer = 16, 16, 16
 }

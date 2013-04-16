@@ -4,61 +4,50 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Load balance correctness test input file.
+ * Description:   Input file for MeshGeneration tests.
  *
  ************************************************************************/
 
-// Mesh configuration: Sinusoidal front.
+// Mesh configuration: Sinusoidal front
+
+// Refer to lss.2d.treelb.input for full description of all input parameters
+// specific to this problem.
 
 Main {
-   // Dimension of problem.  No default.
    dim = 2
 
-   // Base name for output files.
    base_name = "front.2d.treelb"
 
-   // Whether to dump the hierarchy in a visit file.
    write_visit = TRUE
 
-   // Whether to log all nodes.
    log_all_nodes = FALSE
 
-   // Domain definition: box, lower and upper corners.
    domain_boxes = [(0,0),(99,49)]
    xlo = 0.0, 0.0
    xhi = 2.0, 1.0
 
-   // Whether to enforce nesting (one value for each level, but first value is ignored).
    enforce_nesting = TRUE, TRUE, TRUE
 
-   // Scale the domain size by number of processes divided by this value.
    autoscale_base_nprocs = 1
 
-   // Box generator types: BergerRigoutsos or TileClustering
    box_generator_type = "BergerRigoutsos"
 
-   // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer or TilePartitioner
    load_balancer_type = "TreeLoadBalancer"
 
-   // Whether to load balance (one value for each level).
+   rank_tree_type = "CenteredRankTree"
+
    load_balance = TRUE, TRUE
 
-   // Efficiency tolerance clustering parameter.
    efficiency_tol = 0.85
-   // Combine tolerance clustering parameter.
    combine_tol = 0.85
 
-   // Mesh generator name: SinusoidalFrontGenerator or SphericalShellGenerator.
    mesh_generator_name = "SinusoidalFrontGenerator"
 
-   // Refer to SinusoidalFrontGenerator for input.
    SinusoidalFrontGenerator {
-
       init_disp = 1.0, 1.0
       period = 2.0, 4.0
       amplitude = 0.5
 
-      // Buffer distances around the walls (one for each tag level).
       buffer_distance_0 = 0.07, 0.07
       buffer_distance_1 = 0.02, 0.02
    }
@@ -66,6 +55,7 @@ Main {
 }
 
 
+// Used if box_generator_type is TileClustering.  Refer to mesh::TileClustering for input.
 TileClustering {
   box_size = 10, 10
   coalesce_boxes = FALSE
@@ -74,6 +64,7 @@ TileClustering {
 }
 
 
+// Used if box_generator_type is BergerRigoutsos.  Refer to mesh::BergerRigoutsos for input.
 BergerRigoutsos {
   sort_output_nodes = TRUE
   DEV_log_node_history = FALSE
@@ -84,6 +75,7 @@ BergerRigoutsos {
 }
 
 
+// Used if load_balancer_type is TilePartitioner.  Refer to mesh::TilePartitioner for input.
 TilePartitioner {
   box_size = 10, 10
 
@@ -100,6 +92,7 @@ TilePartitioner {
 }
 
 
+// Used if load_balancer_type is TreeLoadBalancer.  Refer to mesh::TreeLoadBalancer for input.
 TreeLoadBalancer {
   DEV_report_load_balance = TRUE // Reported in main
   DEV_balance_penalty_wt = 1.0
@@ -117,6 +110,23 @@ TreeLoadBalancer {
   DEV_summarize_map = TRUE
 }
 
+// Used if rank_tree_type is CenteredRankTree.  Refer to tbox::CenteredRankTree for input.
+CenteredRankTree { // Parameters for BalancedDepthFirstTree in getRankTree()
+  make_first_rank_the_root = TRUE
+}
+
+// Used if rank_tree_type is BalancedDepthFirstTree.  Refer to tbox::CenteredRankTree for input.
+BalancedDepthFirstTree { // Parameters for BalancedDepthFirstTree in getRankTree()
+  do_left_leaf_switch = TRUE
+}
+
+// Used if rank_tree_type is BreadthFirstRankTree.  Refer to tbox::CenteredRankTree for input.
+BreadthFirstRankTree { // Parameters for CenteredRankTree in getRankTree()
+  tree_degree = 2
+}
+
+
+// Refer to tbox::TimerManager for input.
 TimerManager {
 //   print_exclusive      = TRUE
    print_summed           = TRUE
@@ -126,29 +136,24 @@ TimerManager {
 }
 
 
+// Refer to hier::PatchHierarchy for input.
 PatchHierarchy {
 
-   /*
-     Specify number of levels (1, 2 or 3 for this test).
-   */
+   // Specify number of levels (1, 2 or 3 for this test).
    max_levels = 3
 
    largest_patch_size {
       level_0 = -1,-1
-      // level_0 = 20,20
-      // all finer levels will use same values as level_0...
    }
    smallest_patch_size {
       level_0 = 12, 12
       level_1 = 6, 6
       level_2 = 15, 15
-      // all finer levels will use same values as level_0...
    }
    ratio_to_coarser {
       level_1            = 3, 3
       level_2            = 3, 3
       level_3            = 3, 3
-      //  etc.
    }
 
    allow_patches_smaller_than_ghostwidth = TRUE

@@ -20,6 +20,7 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/pdat/NodeData.h"
+#include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/ConnectorStatistics.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
@@ -45,6 +46,7 @@
 #include "DerivedVisOwnerData.h"
 #include "SinusoidalFrontGenerator.h"
 #include "SphericalShellGenerator.h"
+#include "ShrunkenLevelGenerator.h"
 
 using namespace SAMRAI;
 using namespace tbox;
@@ -79,19 +81,19 @@ void outputPostcluster(
    const hier::BoxLevel &cluster,
    const hier::BoxLevel &ref,
    const hier::IntVector &ref_to_cluster_width,
-   const std::string &border);
+   const std::string &border );
 
 void outputPrebalance(
    const hier::BoxLevel &pre,
    const hier::BoxLevel &ref,
    const hier::IntVector &pre_width,
-   const std::string &border);
+   const std::string &border );
 
 void outputPostbalance(
    const hier::BoxLevel &post,
    const hier::BoxLevel &ref,
    const hier::IntVector &post_width,
-   const std::string &border);
+   const std::string &border );
 
 boost::shared_ptr<mesh::BoxGeneratorStrategy>
 createBoxGenerator(
@@ -105,12 +107,46 @@ createLoadBalancer(
    const std::string &lb_type,
    const std::string &rank_tree_type,
    int ln,
-   const tbox::Dimension &dim);
+   const tbox::Dimension &dim );
 
 boost::shared_ptr<RankTreeStrategy>
 getRankTree(
    Database &input_db,
    const std::string &rank_tree_type);
+
+/*!
+ * @brief Implementation to tell PatchHierarchy about the request
+ * for Connector widths used in enforcing nesting.
+ *
+ * This is not essential, but we chose to go through the hierarchy to
+ * determine how big a Connector width to compute during the level
+ * generation.  This more closely resembles what real aplications do.
+ * This step is typically done in the mesh generator, and what we are
+ * writing here is essentially a mesh generator.
+ */
+class NestingLevelConnectorWidthRequestor :
+   public hier::PatchHierarchy::ConnectorWidthRequestorStrategy
+{
+public:
+   virtual void
+   computeRequiredConnectorWidths(
+      std::vector<hier::IntVector>& self_connector_widths,
+      std::vector<hier::IntVector>& fine_connector_widths,
+      const hier::PatchHierarchy& patch_hierarchy) const
+      {
+         self_connector_widths.clear();
+         self_connector_widths.reserve(patch_hierarchy.getMaxNumberOfLevels());
+         const hier::IntVector &one = hier::IntVector::getOne((patch_hierarchy.getDim()));
+         for ( int ln=0; ln<patch_hierarchy.getMaxNumberOfLevels(); ++ln ) {
+            self_connector_widths.push_back(
+               one * patch_hierarchy.getProperNestingBuffer(ln));
+         }
+         // fine_connector_widths is same, but doesn't need last level's.
+         fine_connector_widths = self_connector_widths;
+         fine_connector_widths.pop_back();
+      }
+};
+NestingLevelConnectorWidthRequestor nesting_level_connector_width_requestor;
 
 static boost::shared_ptr<tbox::CommGraphWriter> comm_graph_writer;
 size_t num_records_written = 0;
@@ -151,7 +187,6 @@ int main(
    tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    const int rank = mpi.getRank();
-   int fail_count = 0;
 
    /*
     * Process command line arguments.  For each run, the input
@@ -173,6 +208,8 @@ int main(
    if (argc > 2) {
       case_name = argv[2];
    }
+
+   int error_count = 0;
 
    {
       /*
@@ -316,6 +353,14 @@ int main(
                main_db->getDatabaseWithDefault("SphericalShellGenerator",
                                                boost::shared_ptr<tbox::Database>())));
       }
+      else if (mesh_generator_name == "ShrunkenLevelGenerator") {
+         mesh_gen.reset(
+            new ShrunkenLevelGenerator(
+               "ShrunkenLevelGenerator",
+               dim,
+               main_db->getDatabaseWithDefault("ShrunkenLevelGenerator",
+                                               boost::shared_ptr<tbox::Database>())));
+      }
       else {
          TBOX_ERROR("Unrecognized MeshGeneratorStrategy " << mesh_generator_name);
       }
@@ -368,6 +413,8 @@ int main(
             "Hierarchy",
             grid_geometry,
             input_db->getDatabase("PatchHierarchy") ));
+
+      hierarchy->registerConnectorWidthRequestor(nesting_level_connector_width_requestor);
 
       mesh_gen->resetHierarchyConfiguration(hierarchy, 0, 1);
 
@@ -849,7 +896,10 @@ int main(
    plog << "Input database after running..." << std::endl;
    tbox::InputManager::getManager()->getInputDatabase()->printClassData(plog);
 
-   tbox::pout << "\nPASSED:  MeshGeneration" << std::endl;
+
+   if (error_count == 0) {
+      tbox::pout << "\nPASSED:  MeshGeneration" << std::endl;
+   }
 
    /*
     * Exit properly by shutting down services in correct order.
@@ -862,7 +912,7 @@ int main(
    SAMRAIManager::shutdown();
    SAMRAIManager::finalize();
 
-   if (fail_count == 0) {
+   if (error_count == 0) {
       SAMRAI_MPI::finalize();
    } else {
       std::cout << "Process " << std::setw(5) << rank << " aborting."
@@ -871,7 +921,7 @@ int main(
          __FILE__, __LINE__);
    }
 
-   return fail_count;
+   return error_count;
 }
 
 
