@@ -400,6 +400,8 @@ Schedule::performLocalCopies()
  * operations are placed in d_completed_comm.  Process these first,
  * then check for next set of completed operations.  Repeat until all
  * operations are completed.
+ *
+ * Once a receive is completed, put it in a MessageStream for unpacking.
  *************************************************************************
  */
 void
@@ -419,12 +421,11 @@ Schedule::processCompletedCommunications()
 
          const int sender = completed_comm->getPeerRank();
 
-         // Copy message into stream.
          MessageStream incoming_stream(
             completed_comm->getRecvSize() * sizeof(char),
             MessageStream::Read,
-            completed_comm->getRecvData());
-         completed_comm->clearRecvData();
+            completed_comm->getRecvData(),
+            false /* don't use deep copy */ );
 
          d_object_timers->t_unpack_stream->start();
          for (Iterator recv = d_recv_sets[sender].begin();
@@ -432,6 +433,7 @@ Schedule::processCompletedCommunications()
             (*recv)->unpackStream(incoming_stream);
          }
          d_object_timers->t_unpack_stream->stop();
+         completed_comm->clearRecvData();
       } else {
          // No further action required for completed send.
       }
