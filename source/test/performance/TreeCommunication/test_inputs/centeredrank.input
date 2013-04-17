@@ -1,7 +1,23 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Description:   Code and input for benchmarking and experimentation with tree-based communication.
+ *
+ ************************************************************************/
+
+/*
+Benchmark for CenteredRankTree communication.
+*/
+
 Main {
 
+  // Base name for output files.
   base_name = "centeredrank"
 
+  // Whether to log all nodes.
   log_all_nodes = TRUE
 
 }
@@ -19,12 +35,12 @@ Test00 {
 
   tree_name = "CenteredRankTree" // BalancedDepthFirstTree || CenteredRankTree || ...
 
-  CenteredRankTree { // Parameters for CenteredRankTree in getTreeForTesting()
+  CenteredRankTree { // Parameters for tree of same name in getTreeForTesting()
     make_first_rank_the_root = TRUE
   }
 
   msg_length = 1024 // Message length (units of integer)
-  first_data_length = 1 // One int.  see AsyncCommPeer::limitFirstDataLength().
+  first_data_length = 1 // See AsyncCommPeer::limitFirstDataLength().
 
   verify_data = TRUE // Verify correctness of received data.
   processing_cost = 400, 0 // Simulated processing cost is 400 usec per message and 0 usec per item in message.
@@ -33,11 +49,11 @@ Test00 {
 
   mpi_tags = 1, 2 // Array of 2 ints, see AsyncCommPeer::setMPITag().
 
-  // Direction of message travel:
-  // "UP", "DOWN": Self-explanatory
+  // Pattern of message travel:
+  // "UP", "DOWN": Up or down the tree
   // "UP_THEN_DOWN", "DOWN_THEN_UP": Self-explanatory
   // "TreeLB": Simulation communication of TreeLoadBalancer
-  direction = "TreeLB"
+  message_pattern = "TreeLB"
 
   // Specify the dependency for the down-message, as a funcion of MPI rank:
   // 1: down message depends only on parent
@@ -59,12 +75,12 @@ Test01 {
 
   tree_name = "CenteredRankTree" // BalancedDepthFirstTree || CenteredRankTree || ...
 
-  CenteredRankTree { // Parameters for CenteredRankTree in getTreeForTesting()
+  CenteredRankTree { // Parameters for tree of same name in getTreeForTesting()
     make_first_rank_the_root = FALSE
   }
 
   msg_length = 1024 // Message length (units of integer)
-  first_data_length = 1 // One int.  see AsyncCommPeer::limitFirstDataLength().
+  first_data_length = 1 // See AsyncCommPeer::limitFirstDataLength().
 
   verify_data = TRUE // Verify correctness of received data.
   processing_cost = 400, 0 // Simulated processing cost is 400 usec per message and 0 usec per item in message.
@@ -73,11 +89,11 @@ Test01 {
 
   mpi_tags = 1, 2 // Array of 2 ints, see AsyncCommPeer::setMPITag().
 
-  // Direction of message travel:
-  // "UP", "DOWN": Self-explanatory
+  // Pattern of message travel:
+  // "UP", "DOWN": Up or down the tree
   // "UP_THEN_DOWN", "DOWN_THEN_UP": Self-explanatory
   // "TreeLB": Simulation communication of TreeLoadBalancer
-  direction = "TreeLB"
+  message_pattern = "TreeLB"
 
   // Specify the dependency for the down-message, as a funcion of MPI rank:
   // 1: down message depends only on parent
@@ -94,6 +110,7 @@ Test01 {
 
 
 
+// Refer to tbox::TimerManager for input.
 TimerManager {
 //   print_exclusive      = TRUE
    print_summed           = TRUE
