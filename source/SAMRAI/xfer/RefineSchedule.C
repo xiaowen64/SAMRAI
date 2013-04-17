@@ -156,8 +156,8 @@ RefineSchedule::RefineSchedule(
    d_domain_is_one_box.resize(
       d_dst_level->getGridGeometry()->getNumberBlocks(), false);
 
-   d_coarse_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
-   d_fine_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
+   d_coarse_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule_fill");
+   d_fine_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule_fill");
 
    /*
     * Initialize destination level, ghost cell widths,
@@ -718,7 +718,7 @@ RefineSchedule::finishScheduleConstruction(
 
    hier::BoxLevelConnectorUtils edge_utils;
    hier::OverlapConnectorAlgorithm oca;
-   oca.setTimerPrefix("xfer::RefineSchedule");
+   oca.setTimerPrefix("xfer::RefineSchedule_build");
 
    const hier::BoxLevel& dst_box_level = dst_to_fill.getBase();
    if (d_src_level) {
@@ -730,8 +730,8 @@ RefineSchedule::finishScheduleConstruction(
    d_coarse_priority_level_schedule.reset(new tbox::Schedule());
    d_fine_priority_level_schedule.reset(new tbox::Schedule());
 
-   d_coarse_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
-   d_fine_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
+   d_coarse_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule_fill");
+   d_fine_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule_fill");
 
    /*
     * Generate the schedule for filling the boxes in dst_to_fill.
@@ -1143,7 +1143,7 @@ RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
 
    t_modify_connector->start();
    hier::MappingConnectorAlgorithm mca;
-   mca.setTimerPrefix("xfer::RefineSchedule");
+   mca.setTimerPrefix("xfer::RefineSchedule_build");
    mca.modify(dst_to_unfilled,
       *unfilled_to_sheared,
       d_unfilled_box_level.get());
@@ -1370,7 +1370,7 @@ RefineSchedule::createCoarseInterpPatchLevel(
    const tbox::Dimension& dim(hierarchy->getDim());
 
    hier::OverlapConnectorAlgorithm oca;
-   oca.setTimerPrefix("xfer::RefineSchedule");
+   oca.setTimerPrefix("xfer::RefineSchedule_build");
    hier::BoxLevelConnectorUtils edge_utils;
 
    const boost::shared_ptr<hier::PatchLevel> hiercoarse_level(
@@ -1681,7 +1681,7 @@ RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
       << std::endl;
 
    hier::OverlapConnectorAlgorithm oca;
-   oca.setTimerPrefix("xfer::RefineSchedule");
+   oca.setTimerPrefix("xfer::RefineSchedule_build");
 
    /*
     * To work properly, we must ensure that
@@ -3347,7 +3347,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
       d_dst_to_encon->setTranspose(encon_to_dst, false);
 
       hier::OverlapConnectorAlgorithm oca;
-      oca.setTimerPrefix("xfer::RefineSchedule");
+      oca.setTimerPrefix("xfer::RefineSchedule_build");
 
       oca.bridge(
          d_encon_to_src,
