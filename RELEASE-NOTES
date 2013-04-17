@@ -106,6 +106,9 @@ descriptions of items in the following list are provided below.
 
 11) TreeLoadBalancer parameter affecting number of boxes generated has changed.
 
+12) Removed some unnecessary arguments from
+    PatchLevelFillPattern::computeFillBoxesAndNeighborhoodSets().
+
 *****************************************************************************
 
 -----------------------------------------------------------------------------
@@ -266,6 +269,15 @@ descriptions of items in the following list are provided below.
     TreeLoadBalancer's min_load_fraction_per_box has been removed.
     If you get too many small boxes in the hierarchy, try increasing
     TreeLoadBalancer's flexible_load_tolerance input parameter.
+
+12) The Connector arguments of
+    PatchLevelFillPattern::computeFillBoxesAndNeighborhoodSets() (a pure
+    virtual method) were removed.  In most concrete implementations of
+    PatchLevelFillPattern, these arguments were unneeded.  If a fill pattern
+    child class does need one of these Connectors, it can be retrieved
+    from the BoxLevel that is passed in.  See
+    PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets() for
+    and example of the usage to retrieve a Connector for this purpose.
 
 =============================================================================
 =============================================================================
