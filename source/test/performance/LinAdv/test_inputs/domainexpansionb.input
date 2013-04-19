@@ -10,11 +10,13 @@
  ************************************************************************/
 
 /*
-  domainexpansionb is similar to domainexpansiona, but it is aimed at
+  domainexpansionb is similar to domainexpansion, but it is aimed at
   cutting the number of cells/proc by 1/3, to about 19K cells/proc
   on the level 2 (finest level).  Cutting down the size makes the problem
   fit on ubgl better when running in coprocessor mode.  I did this by
   tuning the clustering parameters and changing the base resolution.
+
+  See domainexpansion.input for description of inputs
 */
 
 LinAdv {

@@ -9,6 +9,7 @@
  *
  ************************************************************************/
 
+//See test_inputs/domainexpansion.input for inputs
 
 LinAdv {
    advection_velocity = 2.0e0 , 0.55e0, 0.55e0

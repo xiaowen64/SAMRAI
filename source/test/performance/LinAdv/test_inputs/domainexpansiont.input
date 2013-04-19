@@ -9,6 +9,7 @@
  *
  ************************************************************************/
 
+// See domainexpansion.input for description of inputs
 
 LinAdv {
    advection_velocity = 2.0e0 , 0.55e0, 0.55e0
