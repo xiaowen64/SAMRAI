@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Main program for SAMRAI Linear Advection example problem.
+ * Description:   Multiblock performance tests.
  *
  ************************************************************************/
 

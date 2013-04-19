@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Test program for performance of tree search algorithm.
+ * Description:   Performance tests for tree searches.
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"

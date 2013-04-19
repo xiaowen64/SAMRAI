@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Test program for performance and quality of TreeLoadBalancer.
+ * Description:   Test for performance and quality of mesh generation.
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"

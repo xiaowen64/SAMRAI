@@ -4,22 +4,14 @@
 ## information, see COPYRIGHT and COPYING.LESSER.
 ##
 ## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
-## Description:   Test for performance and quality of mesh generation.
+## Description:   Code and input for benchmarking and experimentation with tree-based communication.
 ##
 #########################################################################
 
-Performance tests for mesh generation.
+Code and input for evaluating performance of tree communication classes.
 
-The two bottle-neck steps (clustering and partitioning) are tested here for:
-
-* run-time performance
-
-* quality of generated metadata
-
-We don't test all steps in mesh generation or remeshing here, just the
-most expensive steps.  These steps have the same characteristics
-whether generating the mesh or remeshing, so we omit remesh-specific
-steps.
+We test various combinations of tree arangements, message size and
+communication patterns.  See the individual input files for details.
 
 COMPILATION AND EXECUTION
 -------------------------
