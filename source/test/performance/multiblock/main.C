@@ -387,7 +387,8 @@ int main(
          new mesh::TreeLoadBalancer(
             dim,
             "TreeLoadBalancer",
-            input_db->getDatabase("TreeLoadBalancer")));
+            input_db->getDatabaseWithDefault("TreeLoadBalancer",
+                                             boost::shared_ptr<tbox::Database>())));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       boost::shared_ptr<mesh::GriddingAlgorithm> mblk_gridding_algorithm(
@@ -607,7 +608,7 @@ void setupHierarchy(
 
    char geom_name[32];
 
-   sprintf(geom_name, "BlockGeometry");
+   sprintf(geom_name, "GridGeometry");
    if (main_input_db->keyExists(geom_name)) {
       geometry.reset(
          new geom::GridGeometry(
