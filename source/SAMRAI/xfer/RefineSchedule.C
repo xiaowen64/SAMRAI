@@ -63,8 +63,6 @@ boost::shared_ptr<tbox::Timer> RefineSchedule::t_refine_scratch_data;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_finish_sched_const;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_finish_sched_const_recurse;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_gen_comm_sched;
-boost::shared_ptr<tbox::Timer> RefineSchedule::t_bridge_connector;
-boost::shared_ptr<tbox::Timer> RefineSchedule::t_modify_connector;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_shear;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_get_global_box_count;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_coarse_shear;
@@ -1141,13 +1139,11 @@ RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
       unfilled_to_periodic_domain,
       hier::IntVector::getZero(dim));
 
-   t_modify_connector->start();
    hier::MappingConnectorAlgorithm mca;
    mca.setTimerPrefix("xfer::RefineSchedule_build");
    mca.modify(dst_to_unfilled,
       *unfilled_to_sheared,
       d_unfilled_box_level.get());
-   t_modify_connector->stop();
    dst_to_unfilled.eraseEmptyNeighborSets();
 
    t_shear->stop();
@@ -4373,10 +4369,6 @@ RefineSchedule::initializeCallback()
       getTimer("xfer::RefineSchedule::finishScheduleConstruction()_recurse");
    t_gen_comm_sched = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::generateCommunicationSchedule()");
-   t_bridge_connector = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::bridge_connector");
-   t_modify_connector = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::modify_connector");
    t_shear = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::finish...()_shear");
    t_get_global_box_count = tbox::TimerManager::getManager()->
@@ -4415,8 +4407,6 @@ RefineSchedule::finalizeCallback()
    t_finish_sched_const.reset();
    t_finish_sched_const_recurse.reset();
    t_gen_comm_sched.reset();
-   t_bridge_connector.reset();
-   t_modify_connector.reset();
    t_shear.reset();
    t_get_global_box_count.reset();
    t_coarse_shear.reset();
