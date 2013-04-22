@@ -8,6 +8,21 @@
 ##
 #########################################################################
 
+This README explains how to compile and run the Multiblock Euler 
+application.  The files in this directory are as follows:
+
+    main.C               -  application driver program
+    MblkEuler.[C,h]      -  C++ class containing routines specific to the
+                            Euler example and which are called from
+                            SAMRAI AMR library routines
+    MblkGeometry.[C,h]   -  Class managing the physical coordinate geometry
+                            of the problem.
+    boundaryconditions.f -  Fortran implementation of some boundary
+                            conditions code
+    bccommon.f           -  Defines some fortran constants used in
+                            boundarycondistions.f
+    MblkEulerFort.h      -  Header file defining external fortran routines 
+
 This example is similar to the single-block Euler sample application.
 This example has the following differences:
 
@@ -36,3 +51,9 @@ COMPILATION AND EXECUTION
          Parallel execution is platform dependent.  This example demonstrates
          execution via mpirun.
          mpirun -np <nprocs> [mpirun options] ./main test_inputs/octant_3blk.3d.input
+
+INPUT PARAMETERS
+----------------
+Refer to test_inputs/octant_3blk.3d.input for full description of all input
+parameters specific to this problem.
+

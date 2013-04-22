@@ -4,7 +4,7 @@
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
 ## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
-## Description:   Test program for performance of load balancers. 
+## Description:   Test for performance and quality of mesh generation.
 ##
 #########################################################################
 
@@ -21,23 +21,14 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
-NUM_TESTS = 29
+NUM_TESTS = 17
 CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
 
 TEST_NPROCS = @TEST_NPROCS@
 
 CXX_OBJS      = mg.o
 
-INPUTS2D =	test_inputs/small_sphere.2d.treelb.input	\
-		test_inputs/small_front.2d.treelb.input		\
-		test_inputs/single_sphere.2d.treelb.input	\
-		test_inputs/single_sphere.2d.caplb.input	\
-		test_inputs/core2shell.2d.treelb.input		\
-		test_inputs/core2shell.2d.caplb.input		\
-		test_inputs/rootcycles.2d.treelb.input		\
-		test_inputs/mincutsize_a.2d.treelb.input	\
-		test_inputs/mincutsize_b.2d.treelb.input	\
-		test_inputs/front.2d.caplb.input	\
+INPUTS2D =	test_inputs/front.2d.caplb.input	\
 		test_inputs/front.2d.tilelb.input	\
 		test_inputs/front.2d.treelb.input	\
 		test_inputs/lss.2d.caplb.input	\
@@ -45,14 +36,11 @@ INPUTS2D =	test_inputs/small_sphere.2d.treelb.input	\
 		test_inputs/lss.2d.treelb.input
 
 
-INPUTS3D =	test_inputs/small_sphere.3d.treelb.input	\
-		test_inputs/small_front.3d.treelb.input		\
-		test_inputs/spreadby10.3d.treelb.input		\
-		performance_inputs/core2shell.3d.caplb.input	\
-		performance_inputs/core2shell.3d.treelb.input	\
+INPUTS3D =	test_inputs/spreadby10.3d.treelb.input		\
 		performance_inputs/single_sphere.3d.caplb.input	\
 		performance_inputs/single_sphere.3d.treelb.input	\
-		performance_inputs/mincutsize_b.3d.treelb.input	\
+		performance_inputs/lsphere_weak.3d.treelb.input	\
+		performance_inputs/lsphere_weak.3d.tilelb.input	\
 		test_inputs/front.3d.caplb.input	\
 		test_inputs/front.3d.tilelb.input	\
 		test_inputs/front.3d.treelb.input	\
@@ -61,12 +49,12 @@ INPUTS3D =	test_inputs/small_sphere.3d.treelb.input	\
 		test_inputs/lss.3d.treelb.input
 
 main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)
-	$(MAKE) testlib
+	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1 
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 
-testlib:
-	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
+# Prevents "No rule to make target" error.  Built in the rule for main.
+$(TESTLIB):
 
 
 check:
@@ -96,16 +84,10 @@ checktest:
 examples:
 
 perf:	main
-		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/core2shell.3d.caplb.input;
-		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/core2shell.3d.treelb.input;
-		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/deep_front.3d.treelb.input;
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/domexlike.caplb.input;
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/domexlike.treelb.input;
 		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/lsphere_weak.3d.treelb.input;
-		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/mild_front.3d.treelb.input;
-		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/mincutsize_b.3d.treelb.input;
-		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/mincutsize_c.3d.treelb.input;
-		$(OBJECT)/config/serpa-run 4 ./main performance_inputs/shallow_front.3d.treelb.input;
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/lsphere_weak.3d.tilelb.input;
 		$(OBJECT)/config/serpa-run 2,4 ./main performance_inputs/single_sphere.3d.caplb.input;
 		$(OBJECT)/config/serpa-run 2,4 ./main performance_inputs/single_sphere.3d.treelb.input;
 

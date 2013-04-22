@@ -8,6 +8,8 @@
  *
  ************************************************************************/
 
+//See cvode_dir.2d.input for documentation of input specific to this test. 
+
 Main {
 
    dim                      = 3
@@ -40,8 +42,6 @@ Main {
 CVODEModel {
    initial_value         = 0.0
 
-   max_hypre_its         = 1
-   hypre_tol             = 1.e-40
    use_neumann_bcs      = FALSE
    print_solver_info    = FALSE
 

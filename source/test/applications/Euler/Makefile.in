@@ -36,12 +36,12 @@ F_OBJS      = \
 		trace3d.o trace1d3d.o fluxcorner3d.o
 
 main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND) $(TESTLIB)
-	$(MAKE) testlib
+	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1 
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) $(TESTLIB)	\
 	$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main
 
-testlib:
-	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
+# Prevents "No rule to make target" error.  Built in the rule for main.
+$(TESTLIB):
 
 check:
 		$(MAKE) check2d

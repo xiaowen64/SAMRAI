@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Test program for performance of tree search algorithm.
+ * Description:   Performance tests for tree searches.
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
@@ -130,9 +130,6 @@ int main(
       plog << "Input database after initialization..." << std::endl;
       input_db->printClassData(plog);
 
-      const std::string box_gen_method =
-         main_db->getStringWithDefault("box_gen_method", "UNIFORM");
-
       tbox::TimerManager * tm(tbox::TimerManager::getManager());
       const std::string dim_str(tbox::Utilities::intToString(dim.getValue()));
       boost::shared_ptr<tbox::Timer> t_build_tree(
@@ -146,13 +143,9 @@ int main(
        * Generate the boxes.
        */
       BoxVec boxes;
-      if (box_gen_method == "UNIFORM") {
-         generateBoxesUniform(dim,
-            boxes,
-            main_db->getDatabase("UniformBoxGen"));
-      } else {
-         TBOX_ERROR("Unsupported box_gen_method: " << box_gen_method);
-      }
+      generateBoxesUniform(dim,
+                           boxes,
+                           main_db->getDatabase("UniformBoxGen"));
       tbox::plog << "\n\n\nGenerated boxes (" << boxes.size() << "):\n";
       for (size_t i = 0; i < boxes.size(); ++i) {
          tbox::plog << '\t' << i << '\t' << boxes[i] << '\n';
@@ -206,6 +199,9 @@ int main(
             bounding_box.upper() (shift_dir) += shift_distance;
          }
 
+         if ( mpi.getRank() == 0 ) {
+            tbox::pout << "Repetition " << iscale << std::endl;
+         }
          tbox::plog << "Repetition " << iscale << " has "
                     << boxes.size() << " boxes bounded by "
                     << bounding_box << std::endl;
@@ -267,7 +263,7 @@ int main(
          t_search_tree_for_set->stop();
 
          hier::BoxContainer ordered_overlap;
-         ordered_overlap.order(); 
+         ordered_overlap.order();
          t_search_tree_for_vec->start();
          for (BoxVec::iterator bi = grown_boxes.begin();
               bi != grown_boxes.end();
@@ -280,6 +276,9 @@ int main(
          /*
           * Output normalized timer to plog.
           */
+         tbox::plog << "Timers for repetition " << iscale
+                    << " (normalized by " << node_count << " nodes):\n";
+         tbox::plog.precision(8);
          tbox::plog << t_build_tree->getName() << " = "
                     << t_build_tree->getTotalWallclockTime()
          / static_cast<double>(node_count)

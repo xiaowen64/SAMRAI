@@ -28,21 +28,14 @@ namespace hier {
 
 PatchGeometry::PatchGeometry(
    const IntVector& ratio_to_level_zero,
-   const TwoDimBool& touches_regular_bdry,
-   const TwoDimBool& touches_periodic_bdry):
+   const TwoDimBool& touches_regular_bdry):
    d_dim(ratio_to_level_zero.getDim()),
    d_ratio_to_level_zero(ratio_to_level_zero),
    d_patch_boundaries(ratio_to_level_zero.getDim()),
    d_touches_regular_bdry(ratio_to_level_zero.getDim())
 
 {
-#ifndef DEBUG_CHECK_ASSERTIONS
-   NULL_USE(touches_periodic_bdry);
-#endif
-
-   TBOX_ASSERT_OBJDIM_EQUALITY3(ratio_to_level_zero,
-      touches_regular_bdry,
-      touches_periodic_bdry);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(ratio_to_level_zero, touches_regular_bdry);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
 

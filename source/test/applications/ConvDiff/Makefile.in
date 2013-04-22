@@ -34,12 +34,12 @@ F77_OBJS      = compute_rhs2d.o init2d.o rkstep2d.o tag_cells2d.o \
 
 
 main:	$(CXX_OBJS) $(F77_OBJS) $(LIBSAMRAIDEPEND) $(TESTLIB)
-	$(MAKE) testlib
+	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1 
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F77_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main
 
-testlib:
-	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
+# Prevents "No rule to make target" error.  Built in the rule for main.
+$(TESTLIB):
 
 check:
 	$(MAKE) check2d

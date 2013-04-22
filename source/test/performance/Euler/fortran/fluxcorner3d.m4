@@ -42,7 +42,7 @@ c     REAL ttvlft(NEQU),ttvrgt(NEQU)
 c
       if (FLUXG.lt.1) then
          write(6,*) "flux ghosts < 1!"
-	stop
+         stop
       endif
      
 c     ******************************************************************
@@ -107,7 +107,7 @@ c
 c
       if (FLUXG.lt.1) then
          write(6,*) "flux ghosts < 1!"
-	stop
+         stop
       endif
 c
 c***********************************************************************
@@ -187,7 +187,7 @@ c     REAL ttvlft(NEQU),ttvrgt(NEQU)
 c
       if (FLUXG.lt.1) then
          write(6,*) "flux ghosts < 1!"
-	stop
+         stop
       endif
      
 c     ******************************************************************

@@ -65,17 +65,13 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
 
       /*
        * Input parameters to determine whether to tag by buffering
-       * fronts or shrinking level, and by how much.
+       * fronts, and by how much.
        */
-      const std::string sname( "shrink_distance_" );
       const std::string bname( "buffer_distance_" );
-      std::string aname;
       for ( int ln=0; ; ++ln ) {
          const std::string lnstr( tbox::Utilities::intToString(ln) );
 
-         // Look for buffer input first, then shrink input.
          const std::string bnameln = bname + lnstr;
-         const std::string snameln = sname + lnstr;
 
          std::vector<double> tmpa;
 
@@ -84,37 +80,19 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
             if ( static_cast<int>(tmpa.size()) != dim.getValue() ) {
                TBOX_ERROR(bnameln << " input parameter must have " << dim << " values");
             }
-            d_buffer_shrink.push_back('b');
-         }
-
-         if ( database->isDouble(snameln) ) {
-            if ( !tmpa.empty() ) {
-               TBOX_ERROR("Cannot specify both " << bnameln << " and " << snameln);
-            }
-            tmpa = database->getDoubleVector(snameln);
-            if ( static_cast<int>(tmpa.size()) != dim.getValue() ) {
-               TBOX_ERROR(snameln << " input parameter must have " << dim << " values");
-            }
-            d_buffer_shrink.push_back('s');
          }
 
          if ( !tmpa.empty() ) {
-            d_buffer_shrink_distance.resize(d_buffer_shrink_distance.size() + 1);
-            d_buffer_shrink_distance.back().insert( d_buffer_shrink_distance.back().end(),
-                                                    &tmpa[0],
-                                                    &tmpa[0]+static_cast<int>(tmpa.size()) );
+            d_buffer_distance.resize(d_buffer_distance.size() + 1);
+            d_buffer_distance.back().insert( d_buffer_distance.back().end(),
+                                             &tmpa[0],
+                                             &tmpa[0]+static_cast<int>(tmpa.size()) );
          }
          else {
             break;
          }
 
       }
-   }
-
-   if ( d_buffer_shrink.empty() ) {
-      TBOX_ERROR("SinusoidalFrontGenerator: You must specify either\n"
-                 << "buffer_distance_# or shrink_distance_# for each level\n"
-                 << "you plan to use, except the finest level.");
    }
 
    for (int idim = 0; idim < d_dim.getValue(); ++idim) {
@@ -157,17 +135,6 @@ void SinusoidalFrontGenerator::setTags(
    int tag_ln,
    int tag_data_id )
 {
-   if ( d_buffer_shrink[tag_ln] == 's' ) {
-      setTagsByShrinkingLevel(
-         hierarchy,
-         tag_ln,
-         tag_data_id,
-         hier::IntVector::getZero(d_dim),
-         &d_buffer_shrink_distance[1][0]);
-      exact_tagging = true;
-      return;
-   }
-
    const boost::shared_ptr<hier::PatchLevel> &tag_level(
       hierarchy->getPatchLevel(tag_ln));
 
@@ -191,7 +158,7 @@ void SinusoidalFrontGenerator::setTags(
       computeFrontsData(
          0 /* distance data */,
          tag_data.get(),
-         d_buffer_shrink_distance[tag_ln],
+         d_buffer_distance[tag_ln],
          patch_geom->getXLower(),
          patch_geom->getDx(),
          0.0 );
@@ -286,7 +253,7 @@ void SinusoidalFrontGenerator::computePatchData(
 
    const double* dx = patch_geom->getDx();
 
-   computeFrontsData( dist_data, tag_data, d_buffer_shrink_distance[patch.getPatchLevelNumber()], xlo, dx, time );
+   computeFrontsData( dist_data, tag_data, d_buffer_distance[patch.getPatchLevelNumber()], xlo, dx, time );
 }
 
 

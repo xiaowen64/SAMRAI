@@ -3,14 +3,17 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Test program for performance and quality of TreeLoadBalancer.
+ * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Description:   Code and input for benchmarking and experimentation with tree-based communication.
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
 
 #include <iomanip>
+
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 
 
 #include "SAMRAI/tbox/AsyncCommPeer.h"
@@ -88,7 +91,7 @@ int verifyReceivedData(
 
 struct CommonTestSwitches {
    std::string tree_name;
-   std::string direction;
+   std::string message_pattern;
    int msg_length;
    int first_data_length;
    int processing_cost[2];
@@ -99,7 +102,7 @@ struct CommonTestSwitches {
    int mpi_tags[2];
    CommonTestSwitches() :
       tree_name(),
-      direction(),
+      message_pattern(),
       msg_length(1024),
       first_data_length(1),
       randomize_processing_cost(false),
@@ -149,11 +152,11 @@ double my_usleep_calls_per_usec = 0;
 *     do_left_leaf_switch = TRUE
 *   }
 *
-*   // Direction of message travel:
-*   // "UP", "DOWN": Self-explanatory
+*   // Pattern of message travel:
+*   // "UP", "DOWN": Up or down the tree.
 *   // "UP_THEN_DOWN", "DOWN_THEN_UP": Self-explanatory
 *   // "TreeLB": Simulate the communication of the TreeLoadBalancer.
-*   direction = "DOWN"
+*   message_pattern = "DOWN"
 *
 *   msg_length = 1024 // Message length (units of integer)
 *   first_data_length = 1 // One int.  see AsyncCommPeer::limitFirstDataLength().
@@ -166,6 +169,16 @@ double my_usleep_calls_per_usec = 0;
 *   verify_data = TRUE // Verify correctness of received data.
 *
 *   mpi_tags = 1, 2 // Array of 2 ints, see AsyncCommPeer::setMPITag().
+*
+*   // Specify the dependency for the down-message, as a funcion of MPI rank:
+*   // 1: down message depends only on parent
+*   // 2: down message depends on grandparent
+*   // 0: there is no down message
+*   // First value is for rank 0, second is for rank 1, and so on.
+*   // The array is repeated for ranks higher than specifed.
+*   // (Rank r has dependency according to index r%L, where L is
+*   // the length of down_message_dependency.)
+*   down_message_dependency = 1, 2, 0, 1, 2, 0
 * }
 *
 ********************************************************************************
@@ -180,6 +193,12 @@ int main(
    return 0;
 #else
 
+   /*
+    * The switch --alter_mpi=<string> is an option to alter SAMRAI's
+    * MPI group.  It must be processed before starting SAMRAI because
+    * it affects SAMRAI's initial MPI.  Valid values for <string> and
+    * what they mean are seen in the if-else blocks below.
+    */
    std::string arg1(argv[1]);
    std::string arg1value;
    if ( arg1.find("--alter_mpi=", 0) < arg1.size() ) {
@@ -190,10 +209,7 @@ int main(
       }
    }
 
-   /*
-    * We have to start MPI first to we can generate a special
-    * communicator for SAMRAI.
-    */
+   // Start MPI first to we can generate a special communicator for SAMRAI.
    MPI_Init(&argc, &argv);
 
    MPI_Comm communicator = MPI_COMM_WORLD;
@@ -239,10 +255,10 @@ int main(
    SAMRAI_MPI::init(communicator);
    SAMRAIManager::initialize();
    SAMRAIManager::startup();
-   tbox::SAMRAI_MPI mpi(SAMRAI_MPI::getSAMRAIWorld());
+   tbox::SAMRAI_MPI samrai_mpi(SAMRAI_MPI::getSAMRAIWorld());
    tbox::SAMRAI_MPI world_mpi(MPI_COMM_WORLD);
 
-   const int rank = mpi.getRank();
+   const int rank = samrai_mpi.getRank();
    int fail_count = 0;
 
    /*
@@ -270,7 +286,7 @@ int main(
     * Randomize the random number generator to avoid funny looking
     * first random number.
     */
-   srand48(mpi.getRank()+10+mpi.getSize());
+   srand48(samrai_mpi.getRank()+10+samrai_mpi.getSize());
 
    int total_err_count = 0;
 
@@ -294,7 +310,9 @@ int main(
          TimerManager::createManager(input_db->getDatabase("TimerManager"));
       }
       /*
-       * Make TimerManager create timers so their orders match across processors.
+       * Create timers in the following orders so that they match
+       * across processors.  That means creating some timers that are
+       * not needed in the current scope.
        */
       TimerManager::getManager()->getTimer("apps::main::child_send");
       TimerManager::getManager()->getTimer("apps::main::child_recv");
@@ -325,15 +343,15 @@ int main(
          base_name = base_name + '-' + case_name;
       }
       base_name = base_name + '-' + tbox::Utilities::intToString(
-            mpi.getSize(),
+            samrai_mpi.getSize(),
             5);
       tbox::plog << "Added case name (" << case_name << ") and nprocs ("
-                 << mpi.getSize() << ") to base name -> '"
+                 << samrai_mpi.getSize() << ") to base name -> '"
                  << base_name << "'\n";
 
       if (!case_name.empty()) {
          tbox::plog << "Added case name (" << case_name << ") and nprocs ("
-                    << mpi.getSize() << ") to base name -> '"
+                    << samrai_mpi.getSize() << ") to base name -> '"
                     << base_name << "'\n";
       }
 
@@ -349,12 +367,12 @@ int main(
       } else {
          PIO::logOnlyNodeZero(log_file_name);
       }
-      plog << "This is SAMRAI process " << mpi.getRank() << " of " << mpi.getSize()
+      plog << "This is SAMRAI process " << samrai_mpi.getRank() << " of " << samrai_mpi.getSize()
            << " and world process " << world_mpi.getRank() << " of " << world_mpi.getSize() << std:: endl;
 
       calibrate_my_usleep();
 
-      if ( mpi.getCommunicator() != MPI_COMM_NULL ) {
+      if ( samrai_mpi.getCommunicator() != MPI_COMM_NULL ) {
          /*
           * Run each test as it is pulled out of input_db.
           */
@@ -384,7 +402,7 @@ int main(
             getCommonTestSwitchesFromDatabase( cts, *test_db );
 
             const boost::shared_ptr<RankTreeStrategy> rank_tree =
-               getTreeForTesting(cts.tree_name, *test_db, mpi);
+               getTreeForTesting(cts.tree_name, *test_db, samrai_mpi);
 
 
             // Write local part of tree to log.
@@ -402,20 +420,20 @@ int main(
 
             int test_err_count = 0;
 
-            if ( cts.direction == "UP" ) {
-               test_err_count = testUp( *rank_tree, mpi, cts, *test_db );
+            if ( cts.message_pattern == "UP" ) {
+               test_err_count = testUp( *rank_tree, samrai_mpi, cts, *test_db );
             }
-            else if ( cts.direction == "DOWN" ) {
-               test_err_count = testDown( *rank_tree, mpi, cts, *test_db );
+            else if ( cts.message_pattern == "DOWN" ) {
+               test_err_count = testDown( *rank_tree, samrai_mpi, cts, *test_db );
             }
-            else if ( cts.direction == "UP_THEN_DOWN" ) {
-               test_err_count = testUpThenDown( *rank_tree, mpi, cts, *test_db );
+            else if ( cts.message_pattern == "UP_THEN_DOWN" ) {
+               test_err_count = testUpThenDown( *rank_tree, samrai_mpi, cts, *test_db );
             }
-            else if ( cts.direction == "TreeLB" ) {
-               test_err_count = testTreeLB( *rank_tree, mpi, cts, *test_db );
+            else if ( cts.message_pattern == "TreeLB" ) {
+               test_err_count = testTreeLB( *rank_tree, samrai_mpi, cts, *test_db );
             }
             else {
-               TBOX_ERROR("Test direction '" << cts.direction << "' is not supported.");
+               TBOX_ERROR("Test message_pattern '" << cts.message_pattern << "' is not supported.");
             }
 
             total_err_count += test_err_count;
@@ -429,7 +447,7 @@ int main(
             }
 
 
-            comm_graph_writer.addRecord(mpi, int(0), size_t(1+rank_tree->getDegree()), size_t(1));
+            comm_graph_writer.addRecord(samrai_mpi, int(0), size_t(1+rank_tree->getDegree()), size_t(1));
 
             for ( unsigned int cn=0; cn<rank_tree->getDegree(); ++cn ) {
                comm_graph_writer.setEdgeInCurrentRecord(
@@ -464,8 +482,8 @@ int main(
 
          }
 
-         if ( mpi != SAMRAI_MPI::getSAMRAIWorld() ) {
-            mpi.freeCommunicator();
+         if ( samrai_mpi != SAMRAI_MPI::getSAMRAIWorld() ) {
+            samrai_mpi.freeCommunicator();
          }
 
          tbox::plog << "TreeCommunicationBenchmark completed " << test_number << " tests." << std::endl;
@@ -523,7 +541,7 @@ void getCommonTestSwitchesFromDatabase(
    Database &test_db )
 {
    cts.tree_name = test_db.getString("tree_name");
-   cts.direction = test_db.getString("direction");
+   cts.message_pattern = test_db.getString("message_pattern");
    cts.msg_length = test_db.getIntegerWithDefault("msg_length", 1);
    cts.first_data_length = test_db.getIntegerWithDefault("first_data_length", 1);
    cts.verify_data = test_db.getBoolWithDefault("verify_data", false);

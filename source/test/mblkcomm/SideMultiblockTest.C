@@ -26,14 +26,10 @@ SideMultiblockTest::SideMultiblockTest(
    const string& object_name,
    const tbox::Dimension& dim,
    boost::shared_ptr<tbox::Database> main_input_db,
-   bool do_refine,
-   bool do_coarsen,
    const string& refine_option):
    PatchMultiblockTestStrategy(dim),
    d_dim(dim)
 {
-   NULL_USE(do_refine);
-   NULL_USE(do_coarsen);
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());

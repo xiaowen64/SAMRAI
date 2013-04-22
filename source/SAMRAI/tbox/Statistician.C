@@ -1781,13 +1781,11 @@ Statistician::finalize(
        * all processors to avoid compiler warnings.
        */
       std::vector<boost::shared_ptr<Statistic> >* global_proc_stats =
-         d_num_proc_stats > 0
-	? new std::vector<boost::shared_ptr<Statistic> >[d_num_proc_stats]
-         : 0;
+         d_num_proc_stats > 0 ?
+         new std::vector<boost::shared_ptr<Statistic> >[d_num_proc_stats] : 0;
       std::vector<boost::shared_ptr<Statistic> >* global_patch_stats =
-         d_num_patch_stats > 0
-	? new std::vector<boost::shared_ptr<Statistic> >[d_num_patch_stats]
-         : 0;
+         d_num_patch_stats > 0 ?
+         new std::vector<boost::shared_ptr<Statistic> >[d_num_patch_stats] : 0;
 
       if (my_rank == 0) {
 

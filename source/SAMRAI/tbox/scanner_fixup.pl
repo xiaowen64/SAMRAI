@@ -15,6 +15,8 @@ while(<>) {
     s/.*Date:.*//;
     s/.*Header:.*//;
 
+    s/#include <unistd.h>/#ifdef HAVE_UNISTD_H\n#include <unistd.h>\n#endif/;
+
     # substitution to replace [yylval] with SAMRAI_[yylval]
     s/yylval/SAMRAI_yylval/g;
 

@@ -11,7 +11,7 @@
 This is a unit test of SAMRAI's fill patterns. The files included in this
 directory are as follows:
  
-   main-fill-patern.C  -  unit tester
+   main-fill-pattern.C  -  unit tester
 
  
 COMPILATION AND EXECUTION

@@ -8,6 +8,9 @@
  *
  ************************************************************************/
 
+// Refer to octant_3blk.3d.input for full description of all input parameters
+// specific to this problem.
+
 MblkGeometry {
    problem_type = "WEDGE"
 

@@ -49,7 +49,7 @@ c     write(6,*) "In fluxcorrec()"
       if (FLUXG.lt.1) then
          write(6,*) "flux ghosts < 1!"
 c         call flush(6)
-	stop
+         stop
       endif
 c     ******************************************************************
 c     * complete tracing at cell edges
@@ -182,7 +182,7 @@ c
       if (FLUXG.lt.1) then
          write(6,*) "flux ghosts < 1!" 
 c         call flush(6)
-	stop
+         stop
       endif
 c
 c***********************************************************************

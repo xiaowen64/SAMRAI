@@ -31,7 +31,7 @@ c
       do ic1=ifirst1,ilast1
         y = xlower(1) + dx(1)*(ic1-ifirst1+0.5)
         do ic0=ifirst0,ilast0
-	  x = xlower(0) + dx(0)*(ic0-ifirst0+0.5)
+          x = xlower(0) + dx(0)*(ic0-ifirst0+0.5)
           sinsin = sin(pi*x) * sin(pi*y)
           exact(ic0,ic1) = sinsin
           rhs(ic0,ic1) = -NDIM*pi*pi*sinsin

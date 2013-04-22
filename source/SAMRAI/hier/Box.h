@@ -1028,7 +1028,8 @@ public:
     *
     * @param rotation_ident
     *
-    * @pre (getDim().getValue() == 2) || (getDim().getValue() == 3)
+    * @pre (getDim().getValue() == 1) || (getDim().getValue() == 2) ||
+    *      (getDim().getValue() == 3)
     */
    void
    rotate(

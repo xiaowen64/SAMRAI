@@ -24,7 +24,10 @@
 #include <cstdlib>
 #include <string>
 #include <cstring>
+
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 
 #ifndef _MSC_VER
 #include <dirent.h>

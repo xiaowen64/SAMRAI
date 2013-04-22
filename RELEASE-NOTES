@@ -36,6 +36,8 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
                 Significant bug fixes
 ----------------------------------------------------------------------------
 
+1) Box transformations have been fixed so that 1D Boxes transform properly.
+
      
 *****************************************************************************
 
@@ -52,7 +54,7 @@ descriptions of items in the following list are provided below.
    places where a Connector represents a mapping a MappingConnector is now
    used.
 
-2) Both Connctor and MappingConnector hold pointers to their transposes.  Hence
+2) Both Connector and MappingConnector hold pointers to their transposes.  Hence
    one Connector can now be used where 2--the Connector and its transpose--
    were previously required.
 
@@ -73,7 +75,7 @@ descriptions of items in the following list are provided below.
 This section contains a summary of changes to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
 
-1) SAMRAI now requires PETSc 3.2.0.
+1) If using PETSc, 3.2.0 is now required.
 
 2) All injection coarsening clases are now consistently named as injections.
 
@@ -101,6 +103,11 @@ descriptions of items in the following list are provided below.
    std::vector.
 
 10) Access to stored Connectors has been changed.
+
+11) TreeLoadBalancer parameter affecting number of boxes generated has changed.
+
+12) Removed some unnecessary arguments from
+    PatchLevelFillPattern::computeFillBoxesAndNeighborhoodSets().
 
 *****************************************************************************
 
@@ -253,10 +260,24 @@ descriptions of items in the following list are provided below.
     and greater control of the action to take when a Connector is not found.
     One implication of this change is that findOrCreateConnector has been
     eliminated.  It's functionality is equivalent to findConnector called with
-    hier::CREATE_CONNECTOR.  Clients may use
+    hier::CONNECTOR_CREATE.  Clients may use
     hier::CONNECTOR_IMPLICIT_CREATION_RULE in calls to findConnector while
     developing their application and later change these when their application
     has actually stored these Connectors.
+
+11) TreeLoadBalancer parameter affecting number of boxes generated has changed.
+    TreeLoadBalancer's min_load_fraction_per_box has been removed.
+    If you get too many small boxes in the hierarchy, try increasing
+    TreeLoadBalancer's flexible_load_tolerance input parameter.
+
+12) The Connector arguments of
+    PatchLevelFillPattern::computeFillBoxesAndNeighborhoodSets() (a pure
+    virtual method) were removed.  In most concrete implementations of
+    PatchLevelFillPattern, these arguments were unneeded.  If a fill pattern
+    child class does need one of these Connectors, it can be retrieved
+    from the BoxLevel that is passed in.  See
+    PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets() for
+    and example of the usage to retrieve a Connector for this purpose.
 
 =============================================================================
 =============================================================================

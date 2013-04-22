@@ -287,14 +287,16 @@ RefineTimeTransaction::printClassData(
           << std::endl;
    stream << "   time interpolation box:  " << d_box << std::endl;
    stream << "   refine item id:          " << d_refine_item_id << std::endl;
-   stream << "   destination patch data id:  "
-          << s_refine_items[d_refine_item_id]->d_scratch << std::endl;
-   stream << "   source (old) patch data id: "
-          << s_refine_items[d_refine_item_id]->d_src_told << std::endl;
-   stream << "   source (new) patch data id: "
-          << s_refine_items[d_refine_item_id]->d_src_tnew << std::endl;
-   stream << "   time interpolation name id: "
-          << typeid(*s_refine_items[d_refine_item_id]->d_optime).name() << std::endl;
+   if (s_refine_items) {
+      stream << "   destination patch data id:  "
+             << s_refine_items[d_refine_item_id]->d_scratch << std::endl;
+      stream << "   source (old) patch data id: "
+             << s_refine_items[d_refine_item_id]->d_src_told << std::endl;
+      stream << "   source (new) patch data id: "
+             << s_refine_items[d_refine_item_id]->d_src_tnew << std::endl;
+      stream << "   time interpolation name id: "
+             << typeid(*s_refine_items[d_refine_item_id]->d_optime).name() << std::endl;
+   }
    stream << "   incoming bytes:          " << d_incoming_bytes << std::endl;
    stream << "   outgoing bytes:          " << d_outgoing_bytes << std::endl;
    stream << "   destination patch:           "

@@ -4,68 +4,50 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Load balance correctness test input file.
+ * Description:   Input file for MeshGeneration tests.
  *
  ************************************************************************/
 
-// Mesh configuration: Lump with 2 shells.
+// Mesh configuration: Sinusoidal front
+
+// Refer to lss.3d.treelb.input for full description of all input parameters
+// specific to this problem.
 
 Main {
    dim = 3
 
    base_name = "front.3d.caplb"
-   baseline_dirname = "test_inputs"
-   baseline_action = "COMPARE" // "GENERATE" or "COMPARE"
 
    write_visit = TRUE
 
    log_all_nodes = TRUE
 
-   // Domain definition
    domain_boxes = [(0,0,0),(11,5,5)]
    xlo = 0.0, 0.0, 0.0
    xhi = 2.0, 1.0, 1.0
 
-   // Whether to enforce nesting.
    enforce_nesting = TRUE, TRUE, TRUE
 
-   // Base nprocs for automatic scaling.
    autoscale_base_nprocs = 1
 
-   // Box generator types: BergerRigoutsos, TileClustering
    box_generator_type = "BergerRigoutsos"
 
-   // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer, TilePartitioner
    load_balancer_type = "ChopAndPackLoadBalancer"
 
-   // Whether to load balance (one value for each level).
    load_balance = TRUE, TRUE, TRUE
 
    efficiency_tol = 0.85
    combine_tol = 0.85
 
-   /*
-     Specify ghost-cell-width between anchor and unbalanced.
-   */
-   ghost_cell_width = 4, 4, 4
-
    mesh_generator_name = "SinusoidalFrontGenerator"
 
    SinusoidalFrontGenerator {
-      /*
-        Define a set of sinusoidal fronts oriented in perpendicular to the x-axis.
-      */
       init_disp = 1.0, 1.0, 1.0
       period = 2.0, 4.0, 4.0
       amplitude = 0.5
 
-      // Tag L0 by buffering and L1 by buffering.
       buffer_distance_0 = 0.09, 0.09, 0.09
       buffer_distance_1 = 0.02, 0.02, 0.02
-
-      // Tag L0 by buffering and l1 by shrinking.
-      // buffer_distance_0 = 0.02, 0.02, 0.02
-      // shrink_distance_1 = 0.06, 0.06, 0.06
    }
 
 }

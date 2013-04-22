@@ -39,15 +39,15 @@ using namespace SAMRAI;
  *
  * Inputs:
  *
+ * init_disp: Initial displacement of the front.
+ *
+ * period: Period of the front.
+ *
+ * amplitude: Amplitude of the front.
+ *
  * buffer_distance_0, buffer_distance_1, ...:
  * buffer_distance[ln] is the buffer distance when tagging ON
  * level ln.  We tag the fronts and buffer the tags by this amount.
- * If buffer_distance[ln] is not given, then tag by shrink_distance[ln].
- *
- * shrink_distance_0, shrink_distance_1, ...:
- * shrink_distance[ln] is the shink distance when tagging ON
- * level ln by shrinking the boundaries of level ln.
- * We use this method ONLY when buffer_distance[ln] is not given.
  */
 class SinusoidalFrontGenerator:
    public MeshGenerationStrategy
@@ -196,44 +196,10 @@ private:
     */
    double d_amplitude;
 
-   /*
-    * @brief Whether to generate tags by buffering around the fronts
-    * or by shrinking the tag level.
-    *
-    * 'b' means tag around the fronts and buffer the tags.  's' means
-    * tag by shrinking the tag level.  The amount of buffer or
-    * shinkage is given by d_buffer_shrink_distance.
-    */
-   std::vector<char> d_buffer_shrink;
-
    /*!
-    * @brief Buffer or shrink distances for generating tags.
-    *
-    * d_buffer_shrink determines how to generate tags on each level.
-    * If buffering on level ln, then d_buffer_shrink_distance[ln]
-    * means the buffer distances.  If shrinking on level ln, then it
-    * means the shrink distances.
+    * @brief Buffer distances for generating tags.
     */
-   std::vector<std::vector<double> >  d_buffer_shrink_distance;
-
-#if 0
-   /*!
-    * @brief Number of cells to tag around cells intersecting the front.
-    */
-   hier::IntVector d_buffer_cells;
-
-   /*!
-    * @brief Buffer size in physical space.
-    *
-    * d_buffer_space[ln*d_dim + d] is the buffer size for level ln in direction d.
-    */
-   std::vector<double> d_buffer_space;
-
-   /*!
-    * @brief Shrink distance, for generating L2 by shrinking.
-    */
-   std::vector<double> d_shrink_distance;
-#endif
+   std::vector<std::vector<double> >  d_buffer_distance;
 
    boost::shared_ptr<tbox::Timer> t_setup;
    boost::shared_ptr<tbox::Timer> t_node_pos;
@@ -243,4 +209,4 @@ private:
 
 };
 
-#endif  // included_ssup_SinusoidalFrontGenerator
+#endif  // included_SinusoidalFrontGenerator

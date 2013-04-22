@@ -47,12 +47,6 @@ using namespace SAMRAI;
  * buffer_distance_0, buffer_distance_1, ...:
  * buffer_distance[ln] is the buffer distance when tagging ON
  * level ln.  We tag the shells and buffer the tags by this amount.
- * If buffer_distance[ln] is not given, then tag by shrink_distance[ln].
- *
- * shrink_distance_0, shrink_distance_1, ...:
- * shrink_distance[ln] is the shink distance when tagging ON
- * level ln by shrinking the boundaries of level ln.
- * We use this method ONLY when buffer_distance[ln] is not given.
  */
 class SphericalShellGenerator:
    public MeshGenerationStrategy
@@ -171,25 +165,10 @@ private:
     */
    std::vector<double> d_radii;
 
-   /*
-    * @brief Whether to generate tags by buffering around the shells
-    * or by shrinking the tag level.
-    *
-    * 'b' means tag around the shells and buffer the tags.  's' means
-    * tag by shrinking the tag level.  The amount of buffer or
-    * shinkage is given by d_buffer_shrink_distance.
-    */
-   std::vector<char> d_buffer_shrink;
-
    /*!
-    * @brief Buffer or shrink distances for generating tags.
-    *
-    * d_buffer_shrink determines how to generate tags on each level.
-    * If buffering on level ln, then d_buffer_shrink_distance[ln]
-    * means the buffer distances.  If shrinking on level ln, then it
-    * means the shrink distances.
+    * @brief Buffer distances for generating tags.
     */
-   std::vector<std::vector<double> >  d_buffer_shrink_distance;
+   std::vector<std::vector<double> >  d_buffer_distance;
 
    /*!
     * @brief Whether to allocate data on the mesh.
@@ -198,4 +177,4 @@ private:
 
 };
 
-#endif  // included_ssup_SphericalShellGenerator
+#endif  // included_SphericalShellGenerator

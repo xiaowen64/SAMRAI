@@ -44,7 +44,6 @@ PatchMultiblockTestStrategy::PatchMultiblockTestStrategy(
    d_variable_depth.resize(0);
    d_variable_src_ghosts.resize(0, hier::IntVector(d_dim));
    d_variable_dst_ghosts.resize(0, hier::IntVector(d_dim));
-   d_variable_coarsen_op.resize(0);
    d_variable_refine_op.resize(0);
 }
 
@@ -73,7 +72,6 @@ void PatchMultiblockTestStrategy::readVariableInput(
    d_variable_depth.resize(nkeys);
    d_variable_src_ghosts.resize(nkeys, hier::IntVector(d_dim, 0));
    d_variable_dst_ghosts.resize(nkeys, hier::IntVector(d_dim, 0));
-   d_variable_coarsen_op.resize(nkeys);
    d_variable_refine_op.resize(nkeys);
 
    for (int i = 0; i < nkeys; i++) {
@@ -108,12 +106,6 @@ void PatchMultiblockTestStrategy::readVariableInput(
       if (var_db->keyExists("dst_ghosts")) {
          int* tmp_ghosts = &d_variable_dst_ghosts[i][0];
          var_db->getIntegerArray("dst_ghosts", tmp_ghosts, d_dim.getValue());
-      }
-
-      if (var_db->keyExists("coarsen_operator")) {
-         d_variable_coarsen_op[i] = var_db->getString("coarsen_operator");
-      } else {
-         d_variable_coarsen_op[i] = "NO_COARSEN";
       }
 
       if (var_db->keyExists("refine_operator")) {
@@ -180,7 +172,7 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
 /*
  *************************************************************************
  *
- * Blank physical boundary and pre/postprocess coarsen/refine operations
+ * Blank physical boundary and pre/postprocess 
  * so tester isn't required to implement them when not needed.
  *
  *************************************************************************
@@ -224,30 +216,3 @@ void PatchMultiblockTestStrategy::postprocessRefine(
    NULL_USE(ratio);
 }
 
-void PatchMultiblockTestStrategy::preprocessCoarsen(
-   hier::Patch& coarse,
-   const hier::Patch& fine,
-   const boost::shared_ptr<hier::VariableContext>& context,
-   const hier::Box& coarse_box,
-   const hier::IntVector& ratio) const
-{
-   NULL_USE(coarse);
-   NULL_USE(fine);
-   NULL_USE(context);
-   NULL_USE(coarse_box);
-   NULL_USE(ratio);
-}
-
-void PatchMultiblockTestStrategy::postprocessCoarsen(
-   hier::Patch& coarse,
-   const hier::Patch& fine,
-   const boost::shared_ptr<hier::VariableContext>& context,
-   const hier::Box& coarse_box,
-   const hier::IntVector& ratio) const
-{
-   NULL_USE(coarse);
-   NULL_USE(fine);
-   NULL_USE(context);
-   NULL_USE(coarse_box);
-   NULL_USE(ratio);
-}

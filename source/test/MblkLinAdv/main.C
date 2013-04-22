@@ -244,7 +244,7 @@ int main(
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
-      string log_file_name = "linadv.log";
+      string log_file_name = "MblkLinAdv.log";
       if (main_db->keyExists("log_file_name")) {
          log_file_name = main_db->getString("log_file_name");
       }

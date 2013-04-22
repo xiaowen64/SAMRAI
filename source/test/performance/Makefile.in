@@ -17,7 +17,7 @@ default: library
 
 include $(OBJECT)/config/Makefile.config
 
-SUBDIRS = treesearch multiblock TreeCommunication MeshGeneration LoadBalancers LinAdv Euler
+SUBDIRS = treesearch multiblock TreeCommunication MeshGeneration LinAdv Euler
 
 library:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done

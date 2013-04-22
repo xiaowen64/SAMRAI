@@ -274,4 +274,4 @@ private:
 
 };
 
-#endif  // included_ssup_SinusoidalFrontTagger
+#endif  // included_SinusoidalFrontTagger

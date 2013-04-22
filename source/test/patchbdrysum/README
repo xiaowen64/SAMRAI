@@ -60,3 +60,9 @@ COMPILATION AND EXECUTION
          Parallel execution is platform dependent.  This example demonstrates
          execution via mpirun.
          mpirun -np <nprocs> [mpirun options] ./main <input file>
+
+INPUT
+-----
+
+See test_inputs/2lev_node.3d.input for descriptions of the input options
+specific to this test.

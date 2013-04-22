@@ -306,7 +306,7 @@ c    &         if0,if1,velf(if0,if1,1)
 c          enddo
 c       enddo
 c        call flush(6)
-	stop
+        stop
       endif
 c
       return
@@ -376,7 +376,7 @@ c
 
          do ic1=ifirstc1,ilastc1
             do ic0=ifirstc0,ilastc0
-	       velc(ic0,ic1,id) = zero
+               velc(ic0,ic1,id) = zero
             enddo
          enddo
 

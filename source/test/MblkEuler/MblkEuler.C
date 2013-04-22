@@ -2760,21 +2760,18 @@ void MblkEuler::getFromInput(
    //
    // --------------- process the linear advection test ---------------------
    //
-   d_advection_test = 0;
+   d_advection_test = 1;
    d_advection_velocity[0] = d_advection_velocity[1] =
          d_advection_velocity[2] = FLT_MAX;
    d_advection_vel_type = 0;
-   if (db->keyExists("advection_test")) {
-      d_advection_test = db->getInteger("advection_test");
-      if (db->keyExists("advection_velocity")) {
-         db->getDoubleArray("advection_velocity",
-            d_advection_velocity, d_dim.getValue());
-         d_advection_vel_type = db->getInteger("advection_vel_type");
-      } else {
-         TBOX_ERROR(
-            d_object_name << ":  "
-                          << "Key data `advection_velocity' not found in input.");
-      }
+   if (db->keyExists("advection_velocity")) {
+      db->getDoubleArray("advection_velocity",
+         d_advection_velocity, d_dim.getValue());
+      d_advection_vel_type = db->getInteger("advection_vel_type");
+   } else {
+      TBOX_ERROR(
+         d_object_name << ":  "
+                       << "Key data `advection_velocity' not found in input.");
    }
 
    //

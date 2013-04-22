@@ -181,10 +181,12 @@ CoarsenCopyTransaction::printClassData(
    stream << "   source patch_rank:            " << d_src_patch_rank
           << std::endl;
    stream << "   coarsen item id:        " << d_coarsen_item_id << std::endl;
-   stream << "   destination patch data id: "
-          << s_coarsen_items[d_coarsen_item_id]->d_dst << std::endl;
-   stream << "   source patch data id:      "
-          << s_coarsen_items[d_coarsen_item_id]->d_src << std::endl;
+   if (s_coarsen_items) {
+      stream << "   destination patch data id: "
+             << s_coarsen_items[d_coarsen_item_id]->d_dst << std::endl;
+      stream << "   source patch data id:      "
+             << s_coarsen_items[d_coarsen_item_id]->d_src << std::endl;
+   }
    stream << "   incoming bytes:         " << d_incoming_bytes << std::endl;
    stream << "   outgoing bytes:         " << d_outgoing_bytes << std::endl;
    stream << "   destination patch:           "

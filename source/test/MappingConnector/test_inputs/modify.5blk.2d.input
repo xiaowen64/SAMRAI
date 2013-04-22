@@ -8,6 +8,9 @@
  *
  ************************************************************************/
 
+// See modify.3blk.2d.input for description of the input parameters specific
+// to this test.
+
 Main {
     dim = 2
 //

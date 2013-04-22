@@ -33,12 +33,12 @@ INPUTS2D = box.2d.treelb.input box.2d.tilelb.input box.2d.caplb.input lss.2d.cap
 INPUTS3D = box.3d.treelb.input box.3d.tilelb.input box.3d.caplb.input lss.3d.caplb.input lss.3d.treelb.input lss.3d.tilelb.input front.3d.caplb.input front.3d.treelb.input front.3d.tilelb.input
 
 main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)
-	$(MAKE) testlib
+	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1 
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 
-testlib:
-	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
+# Prevents "No rule to make target" error.  Built in the rule for main.
+$(TESTLIB):
 
 check:
 		$(MAKE) check2d

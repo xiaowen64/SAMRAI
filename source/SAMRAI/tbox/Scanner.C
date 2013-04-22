@@ -42,7 +42,9 @@
 #define YY_FLEX_MINOR_VERSION 5
 
 #include <stdio.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 
 
 /* cfront 1.2 defines "c_plusplus" instead of "__cplusplus" */
@@ -671,7 +673,7 @@ YY_MALLOC_DECL
 YY_DECL
 	{
 	register yy_state_type yy_current_state;
-	register char *yy_cp = 0, *yy_bp = 0;
+	register char *yy_cp = NULL, *yy_bp = NULL;
 	register int yy_act;
 
 

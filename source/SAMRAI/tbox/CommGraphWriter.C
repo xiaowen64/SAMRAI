@@ -159,7 +159,7 @@ void CommGraphWriter::writeGraphToTextStream(
    if ( record.d_mpi.getRank() == record.d_root_rank ) {
 
       os << "\nCommGraphWriter begin record number " << record_number << '\n';
-      os << "# proc	dir	remote	value	label\n";
+      os << "# proc" << '\t' << "dir" << '\t' << "remote" << '\t' << "value" << '\t' << "label\n";
 
       if ( !tmpbuf.empty() ) {
          tbox::MessageStream istr( tmpbuf.size(),

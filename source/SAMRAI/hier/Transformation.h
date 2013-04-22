@@ -63,6 +63,8 @@ public:
     */
    enum RotationIdentifier {
       NO_ROTATE = 0,
+      IUP = 0,
+      IDOWN = 1,
       IUP_JUP = 0,
       JUP_IDOWN = 1,
       IDOWN_JDOWN = 2,
@@ -241,7 +243,8 @@ public:
     * @param[in] dim
     *
     * @pre rotation_string.size() == dim.getValue()
-    * @pre (dim.getValue() == 2) || (dim.getValue() == 3)
+    * @pre (dim.getValue() == 1) || (dim.getValue() == 2) ||
+    *      (dim.getValue() == 3)
     */
    static RotationIdentifier
    getRotationIdentifier(
@@ -261,7 +264,8 @@ public:
     * @param[in] rotation Rotation for which the reverse rotation is sought
     * @param[in] dim      Dimension being used
     *
-    * @pre (dim.getValue() == 2) || (dim.getValue() == 3)
+    * @pre (dim.getValue() == 1) || (dim.getValue() == 2) ||
+    *      (dim.getValue() == 3)
     */
    static RotationIdentifier
    getReverseRotationIdentifier(
@@ -281,7 +285,8 @@ public:
     * @param[in] rotation
     *
     * @pre back_shift.getDim() == shift.getDim()
-    * @pre (dim.getValue() == 2) || (dim.getValue() == 3)
+    * @pre (dim.getValue() == 1) || (dim.getValue() == 2) ||
+    *      (dim.getValue() == 3)
     */
    static void
    calculateReverseShift(
@@ -290,20 +295,21 @@ public:
       const RotationIdentifier rotation);
 
    /*!
-    * @brief rotate an index from one index space to another
+    * @brief rotate a cell centered index from one index space to another
     *
     * The parameter index is an int pointer with points to an array of
-    * int data, length DIM.  It signifies an ijk location in an index
-    * space.  According to the rotation number, the location will be
+    * int data, length DIM.  It signifies an ijk location in a cell centered
+    * index space.  According to the rotation number, the location will be
     * rotated around the origin, with the new values overwriting the original
     * values in the array pointed to by index.
     *
-    * @param index array identifying a point in index space
+    * @param index array identifying a cell centered point in index space
     * @param dim Dimension of the index and the hierarchy where it is located
     * @param rotation    identifier of the rotation that will be applied
     *                        to index
     *
-    * @pre (dim.getValue() == 2) || (dim.getValue() == 3)
+    * @pre (dim.getValue() == 1) || (dim.getValue() == 2) ||
+    *      (dim.getValue() == 3)
     */
    static void
    rotateIndex(
@@ -312,13 +318,13 @@ public:
       const RotationIdentifier rotation);
 
    /*!
-    * @brief rotate an index from one index space to another
+    * @brief rotate a cell centered index from one index space to another
     *
-    * According to the rotation number, the location of the given Index will
-    * be rotated around the origin, overwriting the original value of the
-    * Index.
+    * According to the rotation number, the location of the given cell centered
+    * Index will be rotated around the origin, overwriting the original value
+    * of the Index.
     *
-    * @param index a point in index space
+    * @param index a cell centered point in index space
     * @param rotation    identifier of the rotation that will be applied
     *                        to index
     */
@@ -332,14 +338,14 @@ public:
 
 private:
    /*!
-    * @brief private routine to rotate an index around an axis
+    * @brief private routine to rotate a cell centered index around an axis
     *
-    * In 3D, rotation of an index about the origin is decomposed into a
-    * series of rotations about an axis.  This function performs one such
-    * rotation.
+    * In 3D, rotation of a cell centered index about the origin is decomposed
+    * into a series of rotations about an axis.  This function performs one
+    * such rotation.
     *
     * @param dim space associated rotation performed in
-    * @param index array identifying a point in index space
+    * @param index array identifying a cell centered point in index space
     * @param axis axis around which index will be rotated
     * @param num_rotations number of 90-degree rotations around the axis
     *

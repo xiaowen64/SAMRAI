@@ -146,28 +146,44 @@ MappedBoxLevelConnectorUtilsTests:
    SAMRAI/source/test/MappedBoxLevelConnectorUtilsTests directory.
 
 mapped_box_set_iterators:
+   Tests the iterators that are used on a BoxContainer.
+
    All test source code is contained in the
    SAMRAI/source/test/mapped_box_set_iterators directory.
 
 MappingConnector:
+   Tests the modify method in MappingConnector.
+   
    All test source code is contained in the SAMRAI/source/test/MappingConnector
    directory.
 
 mblkcomm:
+   Performs tests of refine operations on multiblock configurations.
+ 
    All test source code is contained in the SAMRAI/source/test/mblkcomm
    directory.
 
 MblkEuler:
+   A test similar to the applications/Euler test but set up to work in
+   a multiblock configuration.
+
    Requires the testlib be built.
 
 MblkLinAdv:
+   A test similar to the applications/LinAdv test but set up to work in
+   a multiblock configuration.
+
    Requires the testlib be built.
 
 mblktree:
+   Tests the tree-based box searching algorithms in multiblock configurations.
+
    All test source code is contained in the SAMRAI/source/test/mblktree
    directory.
 
 nonlinear:
+   Tests nonlinear solvers using the SAMRAI interfaces to KINSOL and PETSc.
+
    All test source code is contained in the SAMRAI/source/test/nonlinear
    directory.
 
@@ -175,7 +191,7 @@ patchbdrysum:
    A set of tests to check operations for summing node and edge data across
    shared points on the boundaries of patches in a SAMRAI patch hierarchy. 
 
-   All test source code is contained in the SAMRAI/examples/patchbdrysum
+   All test source code is contained in the SAMRAI/source/test/patchbdrysum
    directory.
 
 performance:
@@ -188,34 +204,47 @@ rank_group:
    directory.
 
 restartdb:
+   Tests the RestartManager and the HDFDatabase. 
+
    All test source code is contained in the SAMRAI/examples/restartdb
    directory.
 
 samrai_mpi:
-   All test source code is contained in the SAMRAI/examples/samrai_mpi
+   Tests configurations of SAMRAI_MPI wrapper class.
+ 
+   All test source code is contained in the SAMRAI/source/test/samrai_mpi
    directory.
 
 sparsedata:
-   All test source code is contained in the SAMRAI/examples/sparsedata
+   Unit tests for SparseData patch data type
+
+   All test source code is contained in the SAMRAI/source/test/sparsedata
    directory.
 
 sundials:
-   All test source code is contained in the SAMRAI/examples/sundials directory.
+   Test the intervace to sundials/CVODE.
+
+   All test source code is contained in the SAMRAI/source/test/sundials directory.
 
 testlib:
    Not a test itself but a collection of classes and methods common to multiple
    tests.  There are no associated tests.
 
 testtools:
+   Contains tools (scripts, etc.) used exclusively for running and verifying
+   tests.
 
 timers:
    Tests use of timers, verifying nested structure, input,
    parallel usage, and restart capability.
 
-   All test source code is contained in the SAMRAI/examples/timers directory.
+   All test source code is contained in the SAMRAI/source/test/timers directory.
 
 transformation:
-   All test source code is contained in the SAMRAI/examples/transformation
+   Tests the Transformation class in 2D and 3D for a variety of possible
+   usage patterns.
+
+   All test source code is contained in the SAMRAI/source/test/transformation
    directory.
 
 variables:
@@ -230,4 +259,4 @@ vector:
    and SAMRAI-Kinsol vector interfaces.  Tests use a specific
    grid hierarchy layout and can only be tested on 1 or 2 processors.
 
-   All test source code is contained in the SAMRAI/examples/vector directory.
+   All test source code is contained in the SAMRAI/source/test/vector directory.
