@@ -320,6 +320,29 @@ public:
       const hier::BoxOverlap& overlap);
 
    /*!
+    * @brief Add data from source to destination (i.e., this)
+    * patch data object on the given overlap.
+    *
+    * Currently, source data must be CellData of the same DIM and
+    * TYPE and the overlap must be an CellOverlap of the same DIM.
+    * If not, then an unrecoverable error results.
+    */
+   virtual void
+   sum(
+      const hier::PatchData& src,
+      const hier::BoxOverlap& overlap);
+
+   /*!
+    * @brief Unpack data from stream and add into this patch data object 
+    * over the specified box overlap region.  The overlap must be an
+    * CellOverlap of the same DIM.
+    */
+   virtual void
+   unpackStreamAndSum(
+      tbox::MessageStream& stream,
+      const hier::BoxOverlap& overlap);
+
+   /*!
     * @brief Fill all values at depth d with the value t.
     *
     * @pre (d >= 0) && (d < getDepth())
