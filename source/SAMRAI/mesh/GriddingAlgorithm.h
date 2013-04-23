@@ -554,6 +554,12 @@ public:
    }
 
    /*!
+    * @brief Return pointer to PatchHierarchy data member.
+    */
+   boost::shared_ptr<hier::PatchHierarchy>
+   getPatchHierarchy() const;
+
+   /*!
     * @brief Print all data members of the class instance to given output stream.
     */
    void
@@ -1161,13 +1167,22 @@ private:
    resetTagBufferingData(const int tag_buffer);
 
    /*!
-    * @brief Check for overlapping patches within a level.
+    * @brief Check for overlapping patches within a level when you
+    * have the self Connector for the level.
     *
     * @param[in] box_level_to_self
     */
    void
    checkOverlappingPatches(
       const hier::Connector& box_level_to_self) const;
+
+   /*!
+    * @brief Check for overlapping patches within the level when you
+    * do not have the self Connector for the level.
+    */
+   void
+   checkOverlappingPatches(
+      const hier::BoxLevel& box_level) const;
 
    /*!
     * @brief Warn if the domain is too small any periodic direction.
