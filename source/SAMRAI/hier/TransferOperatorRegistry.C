@@ -127,7 +127,6 @@ TransferOperatorRegistry::addTimeInterpolateOperator(
 
 boost::shared_ptr<CoarsenOperator>
 TransferOperatorRegistry::lookupCoarsenOperator(
-   BaseGridGeometry& grid_geometry,
    const boost::shared_ptr<Variable>& var,
    const std::string& op_name)
 {
@@ -141,7 +140,6 @@ TransferOperatorRegistry::lookupCoarsenOperator(
        (op_name.empty())) {
    }
    else {
-      grid_geometry.buildOperators();
 
       boost::unordered_map<std::string, boost::unordered_map<std::string,
          boost::shared_ptr<CoarsenOperator> > >::iterator coarsen_ops =
@@ -169,7 +167,6 @@ TransferOperatorRegistry::lookupCoarsenOperator(
 
 boost::shared_ptr<RefineOperator>
 TransferOperatorRegistry::lookupRefineOperator(
-   BaseGridGeometry& grid_geometry,
    const boost::shared_ptr<Variable>& var,
    const std::string& op_name)
 {
@@ -183,7 +180,6 @@ TransferOperatorRegistry::lookupRefineOperator(
        (op_name.empty())) {
    }
    else {
-      grid_geometry.buildOperators();
 
       boost::unordered_map<std::string, boost::unordered_map<std::string,
          boost::shared_ptr<RefineOperator> > >::iterator refine_ops =
@@ -211,7 +207,6 @@ TransferOperatorRegistry::lookupRefineOperator(
 
 boost::shared_ptr<TimeInterpolateOperator>
 TransferOperatorRegistry::lookupTimeInterpolateOperator(
-   BaseGridGeometry& grid_geometry,
    const boost::shared_ptr<Variable>& var,
    const std::string& op_name)
 {
@@ -224,7 +219,6 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
        (op_name.empty())) {
    }
    else {
-      grid_geometry.buildOperators();
 
       boost::unordered_map<std::string, boost::unordered_map<std::string,
          boost::shared_ptr<TimeInterpolateOperator> > >::iterator time_ops =

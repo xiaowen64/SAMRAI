@@ -445,7 +445,6 @@ public:
    IntVector
    getMaxTransferOpStencilWidth( const tbox::Dimension &dim )
    {
-      buildOperators();
       return d_transfer_operator_registry->getMaxTransferOpStencilWidth(dim);
    }
 
@@ -685,7 +684,7 @@ public:
       const std::string& op_name)
    {
       return d_transfer_operator_registry->lookupCoarsenOperator(
-         *this, var, op_name);
+         var, op_name);
    }
 
    /*!
@@ -706,7 +705,7 @@ public:
       const std::string& op_name)
    {
       return d_transfer_operator_registry->lookupRefineOperator(
-         *this, var, op_name);
+         var, op_name);
    }
 
    /*!
@@ -729,7 +728,7 @@ public:
          "STD_LINEAR_TIME_INTERPOLATE")
    {
       return d_transfer_operator_registry->lookupTimeInterpolateOperator(
-         *this, var, op_name);
+         var, op_name);
    }
 
    /*!

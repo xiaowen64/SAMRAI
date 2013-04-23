@@ -101,6 +101,7 @@ GridGeometry::GridGeometry(
    bool allow_multiblock):
    hier::BaseGridGeometry(dim, object_name, input_db, allow_multiblock)
 {
+   buildOperators();
 }
 
 /*
@@ -117,6 +118,7 @@ GridGeometry::GridGeometry(
    hier::BoxContainer& domain):
    hier::BaseGridGeometry(object_name, domain)
 {
+   buildOperators();
 }
 
 GridGeometry::GridGeometry(
@@ -125,6 +127,7 @@ GridGeometry::GridGeometry(
    const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg):
    hier::BaseGridGeometry(object_name, domain, op_reg)
 {
+   buildOperators();
 }
 
 /*
@@ -242,10 +245,6 @@ GridGeometry::makeRefinedGridGeometry(
 void
 GridGeometry::buildOperators()
 {
-   if (d_transfer_operator_registry->hasOperators()) {
-      return;
-   }
-
    // Coarsening Operators
    addCoarsenOperator(
       typeid(pdat::NodeVariable<dcomplex>).name(),

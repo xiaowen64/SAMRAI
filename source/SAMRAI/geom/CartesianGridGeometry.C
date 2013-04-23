@@ -118,6 +118,8 @@ CartesianGridGeometry::CartesianGridGeometry(
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
 
+   buildOperators();
+
    bool is_from_restart = tbox::RestartManager::getManager()->isFromRestart();
    if (is_from_restart) {
       getFromRestart();
@@ -139,6 +141,8 @@ CartesianGridGeometry::CartesianGridGeometry(
    TBOX_ASSERT(x_lo != 0);
    TBOX_ASSERT(x_up != 0);
 
+   buildOperators();
+
    setGeometryData(x_lo, x_up, domain);
 }
 
@@ -155,6 +159,8 @@ CartesianGridGeometry::CartesianGridGeometry(
    TBOX_ASSERT(domain.size() > 0);
    TBOX_ASSERT(x_lo != 0);
    TBOX_ASSERT(x_up != 0);
+
+   buildOperators();
 
    setGeometryData(x_lo, x_up, domain);
 }
@@ -393,12 +399,6 @@ CartesianGridGeometry::setGeometryDataOnPatch(
 void
 CartesianGridGeometry::buildOperators()
 {
-   if (d_transfer_operator_registry->hasOperators()) {
-      return;
-   }
-
-   GridGeometry::buildOperators();
-
    // CartesianGridGeometry specific Coarsening Operators
    addCoarsenOperator(
       typeid(pdat::CellVariable<dcomplex>).name(),
