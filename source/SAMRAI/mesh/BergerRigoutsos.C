@@ -240,9 +240,9 @@ BergerRigoutsos::findBoxesContainingTags(
                << "To ignore or issue error, see the input parameter\n"
                << "check_min_box_size.\n");
          }
-         if (bb_itr->empty()) {
-            TBOX_ERROR("BergerRigoutsos: empty bounding box not allowed.");
-         }
+      }
+      if (bb_itr->empty()) {
+         TBOX_ERROR("BergerRigoutsos: empty bounding box not allowed.");
       }
    }
 
@@ -251,13 +251,6 @@ BergerRigoutsos::findBoxesContainingTags(
       d_object_timers->t_barrier_before->start();
       mpi.Barrier();
       d_object_timers->t_barrier_before->stop();
-   }
-
-   for ( hier::BoxContainer::const_iterator bi=bound_boxes.begin();
-         bi!=bound_boxes.end(); ++bi ) {
-      if (bi->empty()) {
-         TBOX_ERROR("BergerRigoutsos: empty bounding box not allowed.");
-      }
    }
 
    d_object_timers->t_find_boxes_containing_tags->start();
