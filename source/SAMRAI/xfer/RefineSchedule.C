@@ -705,7 +705,9 @@ RefineSchedule::finishScheduleConstruction(
    bool use_time_interpolation,
    bool skip_generate_schedule)
 {
-   t_finish_sched_const->start();
+   if ( s_barrier_and_time ) {
+      t_finish_sched_const->barrierAndStart();
+   }
    TBOX_ASSERT(d_dst_to_src);
    TBOX_ASSERT(d_dst_to_src->hasTranspose());
    TBOX_ASSERT((next_coarser_ln == -1) || hierarchy);
