@@ -91,7 +91,6 @@ void OuterfaceDataTest::readTestInput(
     */
 
    readVariableInput(db->getDatabase("VariableData"));
-   readRefinementInput(db->getDatabase("RefinementData"));
 
    boost::shared_ptr<tbox::Database> var_data(
       db->getDatabase("VariableData"));

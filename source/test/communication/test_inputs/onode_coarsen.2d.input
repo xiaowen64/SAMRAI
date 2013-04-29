@@ -117,9 +117,6 @@ OuternodePatchDataTest {
 
    }
 
-   RefinementData {
-   }
-
 }
 
 CartesianGridGeometry {

@@ -130,8 +130,6 @@ NodePatchDataTest {
 
    }
 
-   RefinementData {}
-
 }
 
 CartesianGridGeometry {

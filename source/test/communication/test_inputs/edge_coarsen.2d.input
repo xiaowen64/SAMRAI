@@ -115,9 +115,6 @@ EdgePatchDataTest {
 
    }
 
-   RefinementData {
-   }
-
 }
 
 CartesianGridGeometry {

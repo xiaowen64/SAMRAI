@@ -121,8 +121,6 @@ SidePatchDataTest {
 
    }
 
-   RefinementData {}
-
 }
 
 CartesianGridGeometry {

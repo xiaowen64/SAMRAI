@@ -146,13 +146,6 @@ public:
       boost::shared_ptr<tbox::Database> db);
 
    /**
-    * Read arrays of refinement boxes from input database.
-    */
-   void
-   readRefinementInput(
-      boost::shared_ptr<tbox::Database> db);
-
-   /**
     * Virtual functions in interface to user-supplied boundary conditions,
     * coarsen and refine operations.
     */
@@ -240,11 +233,6 @@ protected:
    std::vector<hier::IntVector> d_variable_dst_ghosts;
    std::vector<std::string> d_variable_coarsen_op;
    std::vector<std::string> d_variable_refine_op;
-
-   /*
-    * Vectors of information read from input file describing test variables
-    */
-   std::vector<hier::BoxContainer> d_refine_level_boxes;
 
 private:
    boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;

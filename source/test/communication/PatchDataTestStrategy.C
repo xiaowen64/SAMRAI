@@ -128,23 +128,6 @@ void PatchDataTestStrategy::readVariableInput(
 
 }
 
-void PatchDataTestStrategy::readRefinementInput(
-   boost::shared_ptr<tbox::Database> db)
-{
-   TBOX_ASSERT(db);
-
-   std::vector<string> box_keys = db->getAllKeys();
-   int nkeys = static_cast<int>(box_keys.size());
-
-   d_refine_level_boxes.resize(nkeys);
-   for (int i = 0; i < nkeys; i++) {
-      std::vector<tbox::DatabaseBox> db_box_vector =
-         db->getDatabaseBoxVector(box_keys[i]);
-      d_refine_level_boxes[i] = db_box_vector;
-   }
-
-}
-
 /*
  *************************************************************************
  *
