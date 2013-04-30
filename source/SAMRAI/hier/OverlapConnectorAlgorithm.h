@@ -403,6 +403,23 @@ public:
       const IntVector& connector_width_limit) const;
 
    /*!
+    * @brief Set whether to barrier before potential major
+    * communication.
+    *
+    * This developer feature makes sure all processes start major
+    * operations at the same time so that timers do not include the
+    * time waiting for slower processes to get to the starting point.
+    *
+    * @param[in] do_barrier
+    */
+   void
+   setBarrierBeforeCommunication(
+      bool do_barrier)
+   {
+      d_barrier_before_communication = do_barrier;
+   }
+
+   /*!
     * @brief When @c do_check is true, turn on sanity checks for input
     * parameters.
     *
@@ -668,6 +685,7 @@ private:
 
    //@}
 
+   bool d_barrier_before_communication;
    bool d_sanity_check_method_preconditions;
    bool d_sanity_check_method_postconditions;
 

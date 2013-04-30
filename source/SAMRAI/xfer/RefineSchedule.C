@@ -1135,6 +1135,7 @@ RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
    boost::shared_ptr<hier::BoxLevel> sheared_box_level;
 
    hier::BoxLevelConnectorUtils edge_utils;
+   edge_utils.setTimerPrefix("xfer::RefineSchedule_build");
    edge_utils.computeInternalParts(
       sheared_box_level,
       unfilled_to_sheared,
@@ -1143,6 +1144,7 @@ RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
 
    hier::MappingConnectorAlgorithm mca;
    mca.setTimerPrefix("xfer::RefineSchedule_build");
+   mca.setBarrierBeforeCommunication(false); // Next modify needs not communicate.
    mca.modify(dst_to_unfilled,
       *unfilled_to_sheared,
       d_unfilled_box_level.get());

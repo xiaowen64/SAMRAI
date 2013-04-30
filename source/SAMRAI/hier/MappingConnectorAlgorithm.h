@@ -50,6 +50,23 @@ public:
    getFromInput();
 
    /*!
+    * @brief Set whether to barrier before potential major
+    * communication.
+    *
+    * This developer feature makes sure all processes start major
+    * operations at the same time so that timers do not include the
+    * time waiting for slower processes to get to the starting point.
+    *
+    * @param[in] do_barrier
+    */
+   void
+   setBarrierBeforeCommunication(
+      bool do_barrier)
+   {
+      d_barrier_before_communication = do_barrier;
+   }
+
+   /*!
     * @brief Set whether to run expensive sanity checks on input
     * parameters when at the beginning of certain methods.
     *
@@ -402,6 +419,7 @@ private:
 
    //@}
 
+   bool d_barrier_before_communication;
    bool d_sanity_check_inputs;
    bool d_sanity_check_outputs;
 

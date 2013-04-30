@@ -57,6 +57,7 @@ MappingConnectorAlgorithm::s_initialize_finalize_handler(
 
 MappingConnectorAlgorithm::MappingConnectorAlgorithm():
    d_object_timers(NULL),
+   d_barrier_before_communication(false),
    d_sanity_check_inputs(false),
    d_sanity_check_outputs(false)
 {
@@ -298,7 +299,10 @@ MappingConnectorAlgorithm::privateModify(
    BoxLevel* mutable_new,
    BoxLevel* mutable_old) const
 {
-   d_object_timers->t_modify->barrierAndStart();
+   if ( d_barrier_before_communication ) {
+      old_to_new.getBase().getMPI().Barrier();
+   }
+   d_object_timers->t_modify->start();
    d_object_timers->t_modify_misc->start();
 
    if (s_print_steps == 'y') {
