@@ -2103,8 +2103,8 @@ yyreduce:
 
       if ((yyvsp[(2) - (5)].u_keydata)->d_array_size != (yyvsp[(4) - (5)].u_keydata)->d_array_size) {
          Parser::getParser()->error("Box lower/upper dimension mismatch");
-      } else if ((yyvsp[(2) - (5)].u_keydata)->d_array_size > 3) {
-         Parser::getParser()->error("Box dimension too large (> 3)");
+      } else if ((yyvsp[(2) - (5)].u_keydata)->d_array_size > SAMRAI::MAX_DIM_VAL) {
+         Parser::getParser()->error("Box dimension too large (> SAMRAI::MAX_DIM_VAL)");
       } else {
          const int n = (yyvsp[(2) - (5)].u_keydata)->d_array_size;
 	 const tbox::Dimension dim(static_cast<unsigned short>(n));
