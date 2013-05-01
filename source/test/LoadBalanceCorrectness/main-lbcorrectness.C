@@ -604,9 +604,9 @@ int main(
             }
          }
 
-         const hier::BoxLevel L0before(L0);
 
          if ( load_balance[0] ) {
+            const hier::BoxLevel L0before(L0);
             tbox::pout << "\tPartitioning..." << std::endl;
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             lb0->loadBalanceBoxLevel(
@@ -619,13 +619,9 @@ int main(
                domain_box_level,
                bad_interval,
                cut_factor);
+            error_count += checkBalanceCorrectness(L0before, L0);
          }
 
-         /*
-          * Check for errors.
-          */
-         error_count +=
-            checkBalanceCorrectness(L0before, L0);
 
          if (baseline_action == 'g') {
             boost::shared_ptr<tbox::Database> postbalance_box_level_db =
@@ -802,7 +798,9 @@ int main(
             }
          }
 
+
          if ( load_balance[1] ) {
+            const hier::BoxLevel L1before(*L1);
             tbox::pout << "\tPartitioning..." << std::endl;
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             lb1->loadBalanceBoxLevel(
@@ -810,12 +808,14 @@ int main(
                L1_to_L0,
                hierarchy,
                1,
-               hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
-               hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
+               hierarchy->getSmallestPatchSize(1),
+               hierarchy->getLargestPatchSize(1),
                domain_box_level,
                bad_interval,
                cut_factor);
+            error_count += checkBalanceCorrectness(L1before, *L1);
          }
+
 
          if (baseline_action == 'g') {
             boost::shared_ptr<tbox::Database> postbalance_box_level_db =
@@ -991,7 +991,9 @@ int main(
             }
          }
 
+
          if ( load_balance[2] ) {
+            const hier::BoxLevel L2before(*L2);
             tbox::pout << "\tPartitioning..." << std::endl;
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             lb2->loadBalanceBoxLevel(
@@ -999,12 +1001,14 @@ int main(
                L2_to_L1,
                hierarchy,
                1,
-               hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
-               hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
+               hierarchy->getSmallestPatchSize(2),
+               hierarchy->getLargestPatchSize(2),
                domain_box_level,
                bad_interval,
                cut_factor);
+            error_count += checkBalanceCorrectness(L2before, *L2);
          }
+
 
          if (baseline_action == 'g') {
             boost::shared_ptr<tbox::Database> postbalance_box_level_db =

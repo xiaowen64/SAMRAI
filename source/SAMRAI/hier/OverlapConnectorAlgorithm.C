@@ -61,6 +61,8 @@ OverlapConnectorAlgorithm::s_initialize_finalize_handler(
  */
 
 OverlapConnectorAlgorithm::OverlapConnectorAlgorithm():
+   d_object_timers(NULL),
+   d_barrier_before_communication(false),
    d_sanity_check_method_preconditions(false),
    d_sanity_check_method_postconditions(false)
 {
@@ -394,6 +396,9 @@ OverlapConnectorAlgorithm::bridgeWithNesting(
    const IntVector& connector_width_limit,
    bool compute_transpose) const
 {
+   if ( d_barrier_before_communication ) {
+      west_to_cent.getBase().getMPI().Barrier();
+   }
    d_object_timers->t_bridge->start();
 
    TBOX_ASSERT(west_to_cent.hasTranspose());
@@ -461,6 +466,9 @@ OverlapConnectorAlgorithm::bridge(
    const IntVector& connector_width_limit,
    bool compute_transpose) const
 {
+   if ( d_barrier_before_communication ) {
+      west_to_cent.getBase().getMPI().Barrier();
+   }
    d_object_timers->t_bridge->start();
 
    TBOX_ASSERT(west_to_cent.hasTranspose());
@@ -528,6 +536,9 @@ OverlapConnectorAlgorithm::bridge(
    const Connector& cent_to_east,
    bool compute_transpose) const
 {
+   if ( d_barrier_before_communication ) {
+      west_to_cent.getBase().getMPI().Barrier();
+   }
    d_object_timers->t_bridge->start();
 
    TBOX_ASSERT(west_to_cent.hasTranspose());
@@ -595,6 +606,9 @@ OverlapConnectorAlgorithm::bridge(
    const Connector& cent_to_east,
    const IntVector& connector_width_limit) const
 {
+   if ( d_barrier_before_communication ) {
+      west_to_cent.getBase().getMPI().Barrier();
+   }
    d_object_timers->t_bridge->start();
 
    TBOX_ASSERT(west_to_cent.hasTranspose());

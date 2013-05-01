@@ -57,13 +57,12 @@ bool RefineSchedule::s_read_static_input = false;
 
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_refine_schedule;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_data;
-boost::shared_ptr<tbox::Timer> RefineSchedule::t_recursive_fill;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_data_nonrecursive;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_data_recursive;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_refine_scratch_data;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_finish_sched_const;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_finish_sched_const_recurse;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_gen_comm_sched;
-boost::shared_ptr<tbox::Timer> RefineSchedule::t_bridge_connector;
-boost::shared_ptr<tbox::Timer> RefineSchedule::t_modify_connector;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_shear;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_get_global_box_count;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_coarse_shear;
@@ -155,8 +154,8 @@ RefineSchedule::RefineSchedule(
    d_domain_is_one_box.resize(
       d_dst_level->getGridGeometry()->getNumberBlocks(), false);
 
-   d_coarse_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
-   d_fine_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
+   d_coarse_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule_fill");
+   d_fine_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule_fill");
 
    /*
     * Initialize destination level, ghost cell widths,
@@ -706,7 +705,9 @@ RefineSchedule::finishScheduleConstruction(
    bool use_time_interpolation,
    bool skip_generate_schedule)
 {
-   t_finish_sched_const->start();
+   if ( s_barrier_and_time ) {
+      t_finish_sched_const->barrierAndStart();
+   }
    TBOX_ASSERT(d_dst_to_src);
    TBOX_ASSERT(d_dst_to_src->hasTranspose());
    TBOX_ASSERT((next_coarser_ln == -1) || hierarchy);
@@ -717,6 +718,7 @@ RefineSchedule::finishScheduleConstruction(
 
    hier::BoxLevelConnectorUtils edge_utils;
    hier::OverlapConnectorAlgorithm oca;
+   oca.setTimerPrefix("xfer::RefineSchedule_build");
 
    const hier::BoxLevel& dst_box_level = dst_to_fill.getBase();
    if (d_src_level) {
@@ -728,8 +730,8 @@ RefineSchedule::finishScheduleConstruction(
    d_coarse_priority_level_schedule.reset(new tbox::Schedule());
    d_fine_priority_level_schedule.reset(new tbox::Schedule());
 
-   d_coarse_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
-   d_fine_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
+   d_coarse_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule_fill");
+   d_fine_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule_fill");
 
    /*
     * Generate the schedule for filling the boxes in dst_to_fill.
@@ -953,7 +955,9 @@ RefineSchedule::finishScheduleConstruction(
          coarse_schedule_refine_classes->insertEquivalenceClassItem(item);
       }
 
-      t_finish_sched_const->stop();
+      if ( t_finish_sched_const->isRunning() ) {
+         t_finish_sched_const->stop();
+      }
 
       d_coarse_interp_schedule.reset(new RefineSchedule(d_coarse_interp_level,
             hiercoarse_level,
@@ -967,7 +971,9 @@ RefineSchedule::finishScheduleConstruction(
             d_top_refine_schedule));
 
    } else {
-      t_finish_sched_const->stop();
+      if ( t_finish_sched_const->isRunning() ) {
+         t_finish_sched_const->stop();
+      }
    }
 
    if (need_to_fill_encon) {
@@ -1133,18 +1139,19 @@ RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
    boost::shared_ptr<hier::BoxLevel> sheared_box_level;
 
    hier::BoxLevelConnectorUtils edge_utils;
+   edge_utils.setTimerPrefix("xfer::RefineSchedule_build");
    edge_utils.computeInternalParts(
       sheared_box_level,
       unfilled_to_sheared,
       unfilled_to_periodic_domain,
       hier::IntVector::getZero(dim));
 
-   t_modify_connector->start();
    hier::MappingConnectorAlgorithm mca;
+   mca.setTimerPrefix("xfer::RefineSchedule_build");
+   mca.setBarrierBeforeCommunication(false); // Next modify needs not communicate.
    mca.modify(dst_to_unfilled,
       *unfilled_to_sheared,
       d_unfilled_box_level.get());
-   t_modify_connector->stop();
    dst_to_unfilled.eraseEmptyNeighborSets();
 
    t_shear->stop();
@@ -1367,6 +1374,7 @@ RefineSchedule::createCoarseInterpPatchLevel(
    const tbox::Dimension& dim(hierarchy->getDim());
 
    hier::OverlapConnectorAlgorithm oca;
+   oca.setTimerPrefix("xfer::RefineSchedule_build");
    hier::BoxLevelConnectorUtils edge_utils;
 
    const boost::shared_ptr<hier::PatchLevel> hiercoarse_level(
@@ -1677,6 +1685,7 @@ RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
       << std::endl;
 
    hier::OverlapConnectorAlgorithm oca;
+   oca.setTimerPrefix("xfer::RefineSchedule_build");
 
    /*
     * To work properly, we must ensure that
@@ -1755,6 +1764,8 @@ RefineSchedule::fillData(
       t_fill_data->barrierAndStart();
    }
 
+   t_fill_data_nonrecursive->start();
+
    /*
     * Set the refine items and time for all transactions.  These items will
     * be shared by all transaction objects in the communication schedule.
@@ -1782,9 +1793,11 @@ RefineSchedule::fillData(
     * same, and then fills physical boundaries.
     */
 
-   t_recursive_fill->start();
+   t_fill_data_nonrecursive->stop();
+   t_fill_data_recursive->start();
    recursiveFill(fill_time, do_physical_boundary_fill);
-   t_recursive_fill->stop();
+   t_fill_data_recursive->stop();
+   t_fill_data_nonrecursive->start();
 
    /*
     * Copy the scratch space of the destination level to the destination
@@ -1809,6 +1822,8 @@ RefineSchedule::fillData(
     */
 
    d_transaction_factory->unsetRefineItems();
+
+   t_fill_data_nonrecursive->stop();
 
    if ( s_barrier_and_time ) {
       t_fill_data->stop();
@@ -3336,6 +3351,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
       d_dst_to_encon->setTranspose(encon_to_dst, false);
 
       hier::OverlapConnectorAlgorithm oca;
+      oca.setTimerPrefix("xfer::RefineSchedule_build");
 
       oca.bridge(
          d_encon_to_src,
@@ -4349,8 +4365,10 @@ RefineSchedule::initializeCallback()
       getTimer("xfer::RefineSchedule::RefineSchedule()");
    t_fill_data = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::fillData()");
-   t_recursive_fill = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::recursive_fill");
+   t_fill_data_nonrecursive = tbox::TimerManager::getManager()->
+      getTimer("xfer::RefineSchedule::fillData()_nonrecursive");
+   t_fill_data_recursive = tbox::TimerManager::getManager()->
+      getTimer("xfer::RefineSchedule::fillData()_recursive");
    t_refine_scratch_data = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::refineScratchData()");
    t_finish_sched_const = tbox::TimerManager::getManager()->
@@ -4359,10 +4377,6 @@ RefineSchedule::initializeCallback()
       getTimer("xfer::RefineSchedule::finishScheduleConstruction()_recurse");
    t_gen_comm_sched = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::generateCommunicationSchedule()");
-   t_bridge_connector = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::bridge_connector");
-   t_modify_connector = tbox::TimerManager::getManager()->
-      getTimer("xfer::RefineSchedule::modify_connector");
    t_shear = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::finish...()_shear");
    t_get_global_box_count = tbox::TimerManager::getManager()->
@@ -4395,13 +4409,12 @@ void
 RefineSchedule::finalizeCallback()
 {
    t_fill_data.reset();
-   t_recursive_fill.reset();
+   t_fill_data_nonrecursive.reset();
+   t_fill_data_recursive.reset();
    t_refine_scratch_data.reset();
    t_finish_sched_const.reset();
    t_finish_sched_const_recurse.reset();
    t_gen_comm_sched.reset();
-   t_bridge_connector.reset();
-   t_modify_connector.reset();
    t_shear.reset();
    t_get_global_box_count.reset();
    t_coarse_shear.reset();

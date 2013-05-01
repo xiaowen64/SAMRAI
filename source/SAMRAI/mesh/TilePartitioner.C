@@ -256,6 +256,8 @@ TilePartitioner::getFromInput(
          d_internal_load_balancer = char(tolower(internal_load_balancer[0]));
       }
 
+      d_print_steps = database->getBoolWithDefault("DEV_print_steps", d_print_steps);
+
       d_report_load_balance = database->getBoolWithDefault(
          "DEV_report_load_balance",
          d_report_load_balance);

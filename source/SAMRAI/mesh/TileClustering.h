@@ -67,6 +67,12 @@ namespace mesh {
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
  * </table>
+ *
+ * @internal The following are developer inputs.
+ * Defaults are listed in parenthesis:
+ *
+ * @internal DEV_print_steps (FALSE)
+ * boolean
  */
 class TileClustering:public BoxGeneratorStrategy
 {
@@ -159,8 +165,10 @@ private:
    bool d_log_cluster_summary;
    bool d_log_cluster;
    bool d_barrier_and_time;
+   bool d_print_steps;
    boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
    boost::shared_ptr<tbox::Timer> t_cluster;
+   boost::shared_ptr<tbox::Timer> t_coalesce;
    boost::shared_ptr<tbox::Timer> t_global_reductions;
    //@}
 

@@ -70,7 +70,7 @@ BergerRigoutsos::BergerRigoutsos(
    d_relationship_messages(),
 
    // Communication parameters ...
-   d_mpi_object(MPI_COMM_NULL),
+   d_mpi(MPI_COMM_NULL),
    d_tag_upper_bound(-1),
    d_available_mpi_tag(-1),
 
@@ -108,12 +108,12 @@ BergerRigoutsos::BergerRigoutsos(
 
 BergerRigoutsos::~BergerRigoutsos()
 {
-   if (d_mpi_object.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
       // Free the private communicator (if SAMRAI_MPI has not been finalized).
       int flag;
       tbox::SAMRAI_MPI::Finalized(&flag);
       if (!flag) {
-         d_mpi_object.freeCommunicator();
+         d_mpi.freeCommunicator();
       }
    }
 }
@@ -285,12 +285,12 @@ BergerRigoutsos::findBoxesContainingTags(
 
 
    /*
-    * If d_mpi_object has not been set, then user wants to do use the
+    * If d_mpi has not been set, then user wants to do use the
     * MPI in tag_level (nothing special).  If it has been set, it is a
     * duplicate MPI, so don't change it.
     */
-   if ( d_mpi_object.getCommunicator() == MPI_COMM_NULL ) {
-      d_mpi_object = d_tag_level->getBoxLevel()->getMPI();
+   if ( d_mpi.getCommunicator() == MPI_COMM_NULL ) {
+      d_mpi = d_tag_level->getBoxLevel()->getMPI();
       setupMPIDependentData();
    }
 #if defined(DEBUG_CHECK_ASSERTIONS)
@@ -300,7 +300,7 @@ BergerRigoutsos::findBoxesContainingTags(
                     << "The communicator of the input tag BoxLevel ("
                     << d_tag_level->getBoxLevel()->getMPI().getCommunicator()
                     << " is not congruent with the MPI communicator ("
-                    << d_mpi_object.getCommunicator()
+                    << d_mpi.getCommunicator()
                     << " duplicated in the call to useDuplicateMPI().\n"
                     << "If you call useDuplicateMPI(), you are restricted\n"
                     << "to using SAMRAI_MPI objects that are congruent with\n"
@@ -400,12 +400,12 @@ BergerRigoutsos::findBoxesContainingTags(
    }
 
 
-   if ( d_mpi_object == d_tag_level->getBoxLevel()->getMPI() ) {
+   if ( d_mpi == d_tag_level->getBoxLevel()->getMPI() ) {
       /*
        * We have been using an external SAMRAI_MPI.
        * Reset it to avoid mistaking it for an internal one.
        */
-      d_mpi_object.setCommunicator(MPI_COMM_NULL);
+      d_mpi.setCommunicator(MPI_COMM_NULL);
    }
 
 
@@ -503,11 +503,16 @@ BergerRigoutsos::clusterAndComputeRelationships()
        * guarantee they would be.
        */
       hier::LocalId root_box_local_id(0);
+      int root_box_owner = 0;
       std::list< boost::shared_ptr<BergerRigoutsosNode> > block_nodes_to_delete;
       for (hier::BoxContainer::const_iterator rb = d_root_boxes.begin();
            rb != d_root_boxes.end(); ++rb) {
+         if ( rb->empty() ) continue;
 
-         const hier::Box block_box(*rb, root_box_local_id, 0);
+         // TODO: can build block_box in the node instead of here!
+         const hier::Box block_box(*rb,
+                                   root_box_local_id,
+                                   root_box_owner);
 
          BergerRigoutsosNode *block_node(
             new BergerRigoutsosNode( this, block_box ) );
@@ -593,7 +598,7 @@ BergerRigoutsos::clusterAndComputeRelationships()
 #endif
 
    // Barrier to separate clustering cost from relationship sharing cost.
-   d_mpi_object.Barrier();
+   d_mpi.Barrier();
 
    d_object_timers->t_cluster->stop();
 
@@ -642,7 +647,7 @@ BergerRigoutsos::clusterAndComputeRelationships()
 void
 BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
 {
-   tbox::SAMRAI_MPI mpi(d_mpi_object);
+   tbox::SAMRAI_MPI mpi(d_mpi);
    if (mpi.getSize() == 1) {
       return;
    }
@@ -684,7 +689,7 @@ BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
     * BergerRigoutsosNode::computeNewNeighborhoodSets(), which
     * populated the d_relationship_senders, did not remove it.
     */
-   d_relationship_senders.erase(d_mpi_object.getRank());
+   d_relationship_senders.erase(d_mpi.getRank());
 
    /*
     * Create set recved_from which is to contain ranks of
@@ -729,7 +734,7 @@ BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
       int consumed = 0;
       while (ptr < &buf[0] + buf.size()) {
          const hier::LocalId new_local_id(*(ptr++));
-         hier::BoxId box_id(new_local_id, d_mpi_object.getRank());
+         hier::BoxId box_id(new_local_id, d_mpi.getRank());
          int n_new_relationships = *(ptr++);
          TBOX_ASSERT(d_tag_to_new->getTranspose().hasNeighborSet(box_id));
          if (n_new_relationships > 0) {
@@ -877,13 +882,13 @@ BergerRigoutsos::useDuplicateMPI(
    TBOX_ASSERT( !d_tag_level ); // Setting MPI during clustering makes a mess.
 
    // If needed, free current private communicator.
-   if ( d_mpi_object.getCommunicator() != MPI_COMM_NULL ) {
-      d_mpi_object.freeCommunicator();
-      TBOX_ASSERT( d_mpi_object.getCommunicator() == MPI_COMM_NULL );
+   if ( d_mpi.getCommunicator() != MPI_COMM_NULL ) {
+      d_mpi.freeCommunicator();
+      TBOX_ASSERT( d_mpi.getCommunicator() == MPI_COMM_NULL );
    }
 
    if (mpi_object.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
-      d_mpi_object.dupCommunicator(mpi_object);
+      d_mpi.dupCommunicator(mpi_object);
    }
 
    setupMPIDependentData();
@@ -905,8 +910,8 @@ BergerRigoutsos::checkMPICongruency() const
 {
 
    if ( !tbox::SAMRAI_MPI::usingMPI() ||
-        ( d_mpi_object.getCommunicator() == MPI_COMM_NULL ) ||
-        ( d_mpi_object.getSize() == 1 &&
+        ( d_mpi.getCommunicator() == MPI_COMM_NULL ) ||
+        ( d_mpi.getSize() == 1 &&
           d_tag_level->getBoxLevel()->getMPI().getSize() == 1 ) ) {
       return true;
    }
@@ -922,14 +927,14 @@ BergerRigoutsos::checkMPICongruency() const
     * Make sure mpi_object is compatible with the BoxLevel
     * involved.
     */
-   tbox::SAMRAI_MPI mpi1(d_mpi_object);
+   tbox::SAMRAI_MPI mpi1(d_mpi);
    tbox::SAMRAI_MPI mpi2(d_tag_level->getBoxLevel()->getMPI());
    TBOX_ASSERT(mpi1.getSize() == mpi2.getSize());
    TBOX_ASSERT(mpi1.getRank() == mpi2.getRank());
    if (mpi1.getSize() > 1) {
       int compare_result;
       tbox::SAMRAI_MPI::Comm_compare(
-         d_mpi_object.getCommunicator(),
+         d_mpi.getCommunicator(),
          d_tag_level->getBoxLevel()->getMPI().getCommunicator(),
          &compare_result);
       is_congruent =
@@ -959,7 +964,7 @@ BergerRigoutsos::setupMPIDependentData()
        * some other communicators to get it.
        */
       int* tag_upper_bound_ptr, flag;
-      d_mpi_object.Attr_get(
+      d_mpi.Attr_get(
          MPI_TAG_UB,
          &tag_upper_bound_ptr,
          &flag);
@@ -986,7 +991,7 @@ BergerRigoutsos::setupMPIDependentData()
 
    // Divide the rest into tag pools divided among all processes.
    d_available_mpi_tag =
-      d_tag_upper_bound / d_mpi_object.getSize() * d_mpi_object.getRank();
+      d_tag_upper_bound / d_mpi.getSize() * d_mpi.getRank();
 
 }
 
@@ -1033,14 +1038,14 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
     * that there is no messages in transit, but it can find
     * messages that have arrived but not received.
     */
-   if (d_mpi_object.getCommunicator() != tbox::SAMRAI_MPI::commNull &&
-       d_mpi_object != d_tag_level->getBoxLevel()->getMPI() ) {
+   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull &&
+       d_mpi != d_tag_level->getBoxLevel()->getMPI() ) {
       int flag;
       tbox::SAMRAI_MPI::Status mpi_status;
-      int mpi_err = d_mpi_object.Iprobe(MPI_ANY_SOURCE,
-                                        MPI_ANY_TAG,
-                                        &flag,
-                                        &mpi_status);
+      int mpi_err = d_mpi.Iprobe(MPI_ANY_SOURCE,
+                                 MPI_ANY_TAG,
+                                 &flag,
+                                 &mpi_status);
       if (mpi_err != MPI_SUCCESS) {
          TBOX_ERROR("Error probing for possible lost messages." << std::endl);
       }

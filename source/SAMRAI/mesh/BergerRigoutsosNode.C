@@ -54,7 +54,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_parent(0),
    d_lft_child(0),
    d_rht_child(0),
-   d_box(box, box.getLocalId(), 0),
+   d_box(box),
    d_group(0),
    d_mpi_tag(-1),
    d_overlap(-1),
@@ -68,10 +68,14 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_generation(1),
    d_n_cont(0)
 {
+   if ( box.empty() ) {
+      TBOX_ERROR("BergerRigoutsosNode: Library error: constructing\n"
+                 <<"root node with an empty box.");
+   }
 
    d_common->incNumNodesConstructed();
    d_common->incNumNodesExisting();
-   if ( d_box.getOwnerRank() == d_common->d_mpi_object.getRank() ) {
+   if ( d_box.getOwnerRank() == d_common->d_mpi.getRank() ) {
       d_common->incNumNodesOwned();
    }
 
@@ -79,16 +83,16 @@ BergerRigoutsosNode::BergerRigoutsosNode(
       d_common->d_max_generation = d_generation;
    }
 
-   if (d_common->d_mpi_object.getRank() == 0) {
+   if (d_common->d_mpi.getRank() == 0) {
       claimMPITag();
    } else {
       d_mpi_tag = 0;
    }
 
    /*
-    * Set the processor group (for the root node).
+    * Set the processor group.
     */
-   d_group.resize(d_common->d_mpi_object.getSize(), BAD_INTEGER);
+   d_group.resize(d_common->d_mpi.getSize(), BAD_INTEGER);
    for (unsigned int i = 0; i < d_group.size(); ++i) {
       d_group[i] = i;
    }
@@ -103,8 +107,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
 
 /*
  *******************************************************************
- * Construct non-root node of the tree.  This is private!
- * Public constructors are only for root nodes.
+ * Construct non-root node of the tree.
  *******************************************************************
  */
 BergerRigoutsosNode::BergerRigoutsosNode(
@@ -282,7 +285,7 @@ BergerRigoutsosNode::continueAlgorithm()
                  << ".\n";
    }
 
-   if (d_parent == 0 || d_overlap > 0 || d_common->d_mpi_object.getRank() == d_box.getOwnerRank()) {
+   if (d_parent == 0 || d_overlap > 0 || d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
 
       TBOX_ASSERT(inGroup(d_group));
 
@@ -292,7 +295,7 @@ BergerRigoutsosNode::continueAlgorithm()
          &d_common->d_comm_stage,
          this);
       d_comm_group->setUseBlockingSendToParent(false);
-      d_comm_group->setGroupAndRootRank(d_common->d_mpi_object,
+      d_comm_group->setGroupAndRootRank(d_common->d_mpi,
                                         &d_group[0], static_cast<int>(d_group.size()), d_box.getOwnerRank());
       if (d_parent == 0) {
          /*
@@ -331,7 +334,7 @@ BergerRigoutsosNode::continueAlgorithm()
          d_common->decNumNodesCommWait();
       }
 
-      if (d_common->d_mpi_object.getRank() == d_box.getOwnerRank()) {
+      if (d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
          /*
           * The owner node saves the tag count.  Participant nodes get
           * tag count from broadcastAcceptability().  This data is just for
@@ -356,7 +359,7 @@ BergerRigoutsosNode::continueAlgorithm()
          }
       }
 
-      if (d_common->d_mpi_object.getRank() == d_box.getOwnerRank()) {
+      if (d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
          d_common->d_object_timers->t_local_tasks->start();
          computeMinimalBoundingBoxForTags();
          acceptOrSplitBox();
@@ -394,7 +397,7 @@ BergerRigoutsosNode::continueAlgorithm()
          d_common->decNumNodesCommWait();
       }
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (d_common->d_mpi_object.getRank() == d_box.getOwnerRank()) {
+      if (d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
          TBOX_ASSERT(d_box_acceptance == accepted_by_calculation ||
                      d_box_acceptance == rejected_by_calculation ||
                      d_box_acceptance == hasnotag_by_owner);
@@ -409,7 +412,7 @@ BergerRigoutsosNode::continueAlgorithm()
        * If this is the root node, d_num_tags is the total tag count
        * in all nodes.
        */
-      if (d_parent == 0 && d_common->d_mpi_object.getRank() != d_box.getOwnerRank()) {
+      if (d_parent == 0 && d_common->d_mpi.getRank() != d_box.getOwnerRank()) {
          d_common->d_num_tags_in_all_nodes += d_num_tags;
       }
 
@@ -442,7 +445,7 @@ BergerRigoutsosNode::continueAlgorithm()
             d_common->decNumNodesCommWait();
          }
 
-         if (d_common->d_mpi_object.getRank() == d_box.getOwnerRank()) {
+         if (d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
             d_common->d_object_timers->t_local_tasks->start();
             formChildGroups();
             d_common->d_object_timers->t_local_tasks->stop();
@@ -467,10 +470,10 @@ BergerRigoutsosNode::continueAlgorithm()
             d_common->decNumNodesCommWait();
          }
 
-         if (d_lft_child->d_box.getOwnerRank() == d_common->d_mpi_object.getRank()) {
+         if (d_lft_child->d_box.getOwnerRank() == d_common->d_mpi.getRank()) {
             d_common->incNumNodesOwned();
          }
-         if (d_rht_child->d_box.getOwnerRank() == d_common->d_mpi_object.getRank()) {
+         if (d_rht_child->d_box.getOwnerRank() == d_common->d_mpi.getRank()) {
             d_common->incNumNodesOwned();
          }
 
@@ -482,7 +485,7 @@ BergerRigoutsosNode::continueAlgorithm()
             goto RETURN;
          }
       } else if (boxAccepted()) {
-         if (d_common->d_mpi_object.getRank() == d_box.getOwnerRank()) {
+         if (d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
             ++(d_common->d_num_boxes_generated);
          }
       } else {
@@ -547,7 +550,7 @@ BergerRigoutsosNode::continueAlgorithm()
     *      is the difference between parent group size and this
     *      group size.
     */
-   if (d_overlap == 0 || d_common->d_mpi_object.getRank() == d_box.getOwnerRank()) {
+   if (d_overlap == 0 || d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
 
       if ((d_common->d_owner_mode != BergerRigoutsos::SINGLE_OWNER ||
            d_common->d_compute_relationships > 0) &&
@@ -569,7 +572,7 @@ BergerRigoutsosNode::continueAlgorithm()
                &d_common->d_comm_stage,
                this);
             d_comm_group->setUseBlockingSendToParent(false);
-            d_comm_group->setGroupAndRootIndex(d_common->d_mpi_object,
+            d_comm_group->setGroupAndRootIndex(d_common->d_mpi,
                                                &dropouts[0], static_cast<int>(dropouts.size()), 0);
             d_common->d_object_timers->t_local_tasks->stop();
          }
@@ -589,7 +592,7 @@ BergerRigoutsosNode::continueAlgorithm()
 
          d_common->decNumNodesCommWait();
 
-         if (d_common->d_log_node_history && d_common->d_mpi_object.getRank() != d_box.getOwnerRank()) {
+         if (d_common->d_log_node_history && d_common->d_mpi.getRank() != d_box.getOwnerRank()) {
             d_common->writeCounters();
             tbox::plog << "DO Recv " << d_generation << ':' << d_pos
                        << "  " << d_accepted_box
@@ -615,7 +618,7 @@ BergerRigoutsosNode::continueAlgorithm()
    // Adjust counters.
    d_common->decNumNodesActive();
    d_common->incNumNodesCompleted();
-   if (d_box.getOwnerRank() == d_common->d_mpi_object.getRank()) {
+   if (d_box.getOwnerRank() == d_common->d_mpi.getRank()) {
       d_common->decNumNodesOwned();
    }
    d_common->incNumContinues(d_n_cont);
@@ -731,11 +734,12 @@ BergerRigoutsosNode::runChildren_check()
       return false;
    }
 
+   const double combine_reduction =
+      double(d_lft_child->d_box.size() + d_rht_child->d_box.size()) / d_box.size();
    if (d_lft_child->boxAccepted() &&
        d_rht_child->boxAccepted() &&
        d_box.numberCells() <= d_common->d_max_box_size &&
-       (d_lft_child->d_box.size() + d_rht_child->d_box.size() >=
-        d_common->d_combine_tol * d_box.size())) {
+       ( combine_reduction >= d_common->d_combine_tol )) {
 
       // Discard childrens' graph nodes in favor of recombination.
 
@@ -744,6 +748,7 @@ BergerRigoutsosNode::runChildren_check()
       if (d_common->d_log_node_history) {
          d_common->writeCounters();
          tbox::plog << "Recombine " << d_generation << ':' << d_pos
+                    << " insufficient reduction of " << combine_reduction
                     << "  " << d_accepted_box
                     << " <= " << d_lft_child->d_accepted_box
                     << " + " << d_rht_child->d_accepted_box
@@ -751,19 +756,19 @@ BergerRigoutsosNode::runChildren_check()
                     << ".\n";
       }
 
-      if (d_lft_child->d_box.getOwnerRank() == d_common->d_mpi_object.getRank()) {
+      if (d_lft_child->d_box.getOwnerRank() == d_common->d_mpi.getRank()) {
          d_lft_child->eraseBox();
          d_lft_child->d_box_acceptance = rejected_by_recombination;
          --(d_common->d_num_boxes_generated);
       }
 
-      if (d_rht_child->d_box.getOwnerRank() == d_common->d_mpi_object.getRank()) {
+      if (d_rht_child->d_box.getOwnerRank() == d_common->d_mpi.getRank()) {
          d_rht_child->eraseBox();
          d_rht_child->d_box_acceptance = rejected_by_recombination;
          --(d_common->d_num_boxes_generated);
       }
 
-      if (d_box.getOwnerRank() == d_common->d_mpi_object.getRank()) {
+      if (d_box.getOwnerRank() == d_common->d_mpi.getRank()) {
          ++(d_common->d_num_boxes_generated);
       }
 
@@ -771,7 +776,7 @@ BergerRigoutsosNode::runChildren_check()
 
       // Accept childrens' results, discarding graph node.
 
-      if (d_box.getOwnerRank() == d_common->d_mpi_object.getRank()) {
+      if (d_box.getOwnerRank() == d_common->d_mpi.getRank()) {
          eraseBox();
       }
       if (d_common->d_compute_relationships > 0) {
@@ -826,7 +831,7 @@ BergerRigoutsosNode::reduceHistogram_start()
    }
    d_comm_group->setMPITag(d_mpi_tag + reduce_histogram_tag);
    const int hist_size = getHistogramBufferSize(d_box);
-   if (d_common->d_mpi_object.getRank() == d_box.getOwnerRank()) {
+   if (d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
       d_recv_msg.resize(hist_size, BAD_INTEGER);
       putHistogramToBuffer(&d_recv_msg[0]);
       d_comm_group->beginSumReduce(&d_recv_msg[0], hist_size);
@@ -844,7 +849,7 @@ BergerRigoutsosNode::reduceHistogram_check()
       return true;
    }
    d_comm_group->proceedToNextWait();
-   if (d_comm_group->isDone() && d_common->d_mpi_object.getRank() == d_box.getOwnerRank()) {
+   if (d_comm_group->isDone() && d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
       getHistogramFromBuffer(&d_recv_msg[0]);
    }
    return d_comm_group->isDone();
@@ -876,7 +881,7 @@ BergerRigoutsosNode::broadcastAcceptability_start()
       + 2                             // Children MPI tags
       ;
 
-   if (d_common->d_mpi_object.getRank() == d_box.getOwnerRank()) {
+   if (d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
       TBOX_ASSERT(d_box_acceptance == rejected_by_calculation ||
                   d_box_acceptance == accepted_by_calculation ||
                   (d_parent == 0 && d_box_acceptance == hasnotag_by_owner));
@@ -919,7 +924,7 @@ BergerRigoutsosNode::broadcastAcceptability_check()
       return true;
    }
    d_comm_group->checkBcast();
-   if (d_comm_group->isDone() && d_common->d_mpi_object.getRank() != d_box.getOwnerRank()) {
+   if (d_comm_group->isDone() && d_common->d_mpi.getRank() != d_box.getOwnerRank()) {
 
       int* ptr = &d_recv_msg[0];
 
@@ -1000,7 +1005,7 @@ BergerRigoutsosNode::gatherGroupingCriteria_start()
    }
    d_comm_group->setMPITag(d_mpi_tag + gather_grouping_criteria_tag);
 
-   if (d_common->d_mpi_object.getRank() == d_box.getOwnerRank()) {
+   if (d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
       d_recv_msg.resize(4 * d_group.size(), BAD_INTEGER);
       d_comm_group->beginGather(&d_recv_msg[0], 4);
    } else {
@@ -1027,7 +1032,7 @@ BergerRigoutsosNode::broadcastChildGroups_start()
     */
    d_comm_group->setMPITag(d_mpi_tag + bcast_child_groups_tag);
 
-   if (d_common->d_mpi_object.getRank() == d_box.getOwnerRank()) {
+   if (d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
 
       /*
        * When d_parent == 0, use d_comm_group's MPI collective call option.
@@ -1084,7 +1089,7 @@ BergerRigoutsosNode::broadcastChildGroups_check()
       return true;
    }
    d_comm_group->checkBcast();
-   if (d_comm_group->isDone() && d_common->d_mpi_object.getRank() != d_box.getOwnerRank()) {
+   if (d_comm_group->isDone() && d_common->d_mpi.getRank() != d_box.getOwnerRank()) {
 
       int* ptr = &d_recv_msg[0];
 
@@ -1122,7 +1127,7 @@ BergerRigoutsosNode::broadcastChildGroups_check()
 void
 BergerRigoutsosNode::broadcastToDropouts_start()
 {
-   TBOX_ASSERT(d_common->d_mpi_object.getRank() == d_box.getOwnerRank() || d_overlap == 0);
+   TBOX_ASSERT(d_common->d_mpi.getRank() == d_box.getOwnerRank() || d_overlap == 0);
    d_comm_group->setMPITag(d_mpi_tag + bcast_to_dropouts_tag);
 
    const int buffer_size = 1      // d_box_acceptance
@@ -1131,7 +1136,7 @@ BergerRigoutsosNode::broadcastToDropouts_start()
       ;
    d_send_msg.clear();
    d_recv_msg.clear();
-   if (d_common->d_mpi_object.getRank() == d_box.getOwnerRank()) {
+   if (d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
       d_send_msg.resize(buffer_size, BAD_INTEGER);
       d_send_msg[0] = d_box_acceptance;
       d_send_msg[1] = d_accepted_box.getLocalId().getValue();
@@ -1148,10 +1153,10 @@ BergerRigoutsosNode::broadcastToDropouts_start()
 bool
 BergerRigoutsosNode::broadcastToDropouts_check()
 {
-   TBOX_ASSERT(d_common->d_mpi_object.getRank() == d_box.getOwnerRank() || d_overlap == 0);
+   TBOX_ASSERT(d_common->d_mpi.getRank() == d_box.getOwnerRank() || d_overlap == 0);
    d_comm_group->checkBcast();
    if (d_comm_group->isDone()) {
-      if (d_common->d_mpi_object.getRank() != d_box.getOwnerRank()) {
+      if (d_common->d_mpi.getRank() != d_box.getOwnerRank()) {
          /*
           * We check for the case of the box having no tags,
           * to keeps things explicit and help detect bugs.
@@ -1327,7 +1332,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
 {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_box.getOwnerRank() != d_common->d_mpi_object.getRank()) {
+   if (d_box.getOwnerRank() != d_common->d_mpi.getRank()) {
       TBOX_ERROR("Only the owner can determine\n"
                  "whether to accept or split a box.\n");
    }
@@ -1397,7 +1402,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
     * If d_box cannot be split without violating min_size, it should
     * be accepted.
     *
-    * If cut_margin is negative in all directions, we cannot cut d_box
+    * If cut_margin is negative in any direction, we cannot cut d_box
     * across that direction without violating min_box.
     */
    hier::IntVector min_size = d_common->d_min_box;
@@ -1822,12 +1827,12 @@ BergerRigoutsosNode::cutAtInflection(
 void
 BergerRigoutsosNode::createBox()
 {
-   TBOX_ASSERT(d_common->d_mpi_object.getRank() == d_box.getOwnerRank());
+   TBOX_ASSERT(d_common->d_mpi.getRank() == d_box.getOwnerRank());
    hier::LocalId last_index =
       d_common->d_new_box_level->getBoxes().isEmpty() ? hier::LocalId(-1) :
       d_common->d_new_box_level->getBoxes().back().getLocalId();
 
-   hier::Box new_box(d_box, last_index + 1, d_common->d_mpi_object.getRank());
+   hier::Box new_box(d_box, last_index + 1, d_common->d_mpi.getRank());
    TBOX_ASSERT(new_box.getBlockId() == d_box.getBlockId());
    d_common->d_new_box_level->addBoxWithoutUpdate(new_box);
    d_box_iterator = d_common->d_new_box_level->getBox(new_box);
@@ -1846,7 +1851,7 @@ BergerRigoutsosNode::createBox()
 void
 BergerRigoutsosNode::eraseBox()
 {
-   if (d_common->d_mpi_object.getRank() == d_box.getOwnerRank()) {
+   if (d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
       d_common->d_new_box_level->eraseBoxWithoutUpdate(
          *d_box_iterator);
    }
@@ -1945,7 +1950,7 @@ BergerRigoutsosNode::formChildGroups()
    /*
     * Only owner process should be here.
     */
-   if (d_common->d_mpi_object.getRank() != d_box.getOwnerRank()) {
+   if (d_common->d_mpi.getRank() != d_box.getOwnerRank()) {
       TBOX_ERROR("Library error!" << std::endl);
    }
 #endif
@@ -1954,7 +1959,7 @@ BergerRigoutsosNode::formChildGroups()
    int* lft_overlap = &d_recv_msg[0];
    int* rht_overlap = &d_recv_msg[1];
 
-   const int imyself = findOwnerInGroup(d_common->d_mpi_object.getRank(), d_group);
+   const int imyself = findOwnerInGroup(d_common->d_mpi.getRank(), d_group);
    lft_overlap[imyself * 4] = d_lft_child->d_overlap;
    rht_overlap[imyself * 4] = d_rht_child->d_overlap;
 
@@ -2115,14 +2120,14 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
     * On the owner process, we store the neighbors of the new node.
     * This data is NOT required on other processes.
     */
-   bool on_owner_process = d_common->d_mpi_object.getRank() == d_box.getOwnerRank();
+   bool on_owner_process = d_common->d_mpi.getRank() == d_box.getOwnerRank();
    if (on_owner_process) {
       d_common->d_tag_to_new->getTranspose().makeEmptyLocalNeighborhood(d_accepted_box.getBoxId());
    }
 
    // Data to send to owner regarding new relationships found by local process.
    VectorOfInts* relationship_message = 0;
-   if (d_common->d_compute_relationships > 1 && d_common->d_mpi_object.getRank() != d_box.getOwnerRank()) {
+   if (d_common->d_compute_relationships > 1 && d_common->d_mpi.getRank() != d_box.getOwnerRank()) {
       /*
        * Will have to send to owner the relationships found locally for
        * d_accepted_box.
@@ -2192,7 +2197,7 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
    }
 
    if (d_common->d_compute_relationships > 1 &&
-       d_common->d_mpi_object.getRank() == d_box.getOwnerRank()) {
+       d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
       /*
        * If box was accepted, the owner should remember
        * which process will be sending relationship data.
@@ -2337,9 +2342,9 @@ BergerRigoutsosNode::claimMPITag()
    d_mpi_tag = d_common->d_available_mpi_tag;
    d_common->d_available_mpi_tag = d_mpi_tag + total_phase_tags;
    if (d_mpi_tag + total_phase_tags - 1 >
-       d_common->d_tag_upper_bound / (d_common->d_mpi_object.getSize()) * (d_common->d_mpi_object.getRank() + 1)) {
+       d_common->d_tag_upper_bound / (d_common->d_mpi.getSize()) * (d_common->d_mpi.getRank() + 1)) {
       /*
-       * Each process is alloted tag_upper_bound/(d_common->d_mpi_object.getSize())
+       * Each process is alloted tag_upper_bound/(d_common->d_mpi.getSize())
        * tag values.  If it needs more than this, it will encroach
        * on the tag pool of the next process and may lead to using
        * non-unique tags.
@@ -2348,10 +2353,10 @@ BergerRigoutsosNode::claimMPITag()
          << "messages are properly differentiated."
          << "\nd_mpi_tag = " << d_mpi_tag
          << "\ntag_upper_bound = " << d_common->d_tag_upper_bound
-         << "\nmber of nodes = " << d_common->d_mpi_object.getSize()
+         << "\nmber of nodes = " << d_common->d_mpi.getSize()
          << "\nmax tag required = " << d_mpi_tag + total_phase_tags - 1
          << "\nmax tag available = "
-         << d_common->d_tag_upper_bound / (d_common->d_mpi_object.getSize()) * (d_common->d_mpi_object.getRank() + 1)
+         << d_common->d_tag_upper_bound / (d_common->d_mpi.getSize()) * (d_common->d_mpi.getRank() + 1)
          << std::endl);
       /*
        * It is probably safe to recycle tags if we run out of MPI tags.
@@ -2417,7 +2422,7 @@ BergerRigoutsosNode::printNodeState(
    std::ostream& co) const
 {
    co << d_generation << ':' << d_pos << '=' << d_accepted_box
-      << "  o=" << d_box.getOwnerRank() << ',' << (d_common->d_mpi_object.getRank() == d_box.getOwnerRank())
+      << "  o=" << d_box.getOwnerRank() << ',' << (d_common->d_mpi.getRank() == d_box.getOwnerRank())
       << "  a=" << d_box_acceptance
       << "  w=" << d_wait_phase << '/' << bool(d_comm_group)
       << (d_comm_group ? d_comm_group->isDone() : true)

@@ -297,11 +297,7 @@ int main(
       }
 
 
-      hier::IntVector bad_interval(dim, 1);
-      hier::IntVector cut_factor(dim, 1);
-
       hier::OverlapConnectorAlgorithm oca;
-
 
 
       /*
@@ -533,9 +529,8 @@ int main(
 
          outputPrebalance( *L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0,0), "L0: " );
 
-         tbox::pout << "\tPartitioning..." << std::endl;
-
          if ( load_balance[0] ) {
+            tbox::pout << "\tPartitioning..." << std::endl;
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             lb0->loadBalanceBoxLevel(
                *L0,
@@ -545,8 +540,8 @@ int main(
                hierarchy->getSmallestPatchSize(0),
                hierarchy->getLargestPatchSize(0),
                domain_box_level,
-               bad_interval,
-               cut_factor);
+               hier::IntVector::getOne(dim),
+               hier::IntVector::getOne(dim));
          }
 
          sortNodes(*L0,
@@ -587,7 +582,7 @@ int main(
          /*
           * Step 2: Build L1.
           */
-         tbox::pout << "\n\n==================== Generating L1 ====================" << std::endl;
+         tbox::pout << "\n==================== Generating L1 ====================" << std::endl;
 
          const int coarser_ln = 0;
          const int finer_ln = coarser_ln + 1;
@@ -628,25 +623,34 @@ int main(
 
          outputPostcluster( *L1, *L0, required_connector_width, "L1: " );
 
+         if ( L1->getGlobalNumberOfBoxes() == 0 ) {
+            TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
+         }
+
          /*
           * Enforce nesting.
           */
-         if ( enforce_nesting[1] ) {
+         if ( enforce_nesting[finer_ln] ) {
             enforceNesting(
                *L1,
                *L0_to_L1,
                hierarchy,
                coarser_ln);
+
+            if ( L1->getGlobalNumberOfBoxes() == 0 ) {
+               TBOX_WARNING("Level " << finer_ln << " box generator has no box after proper nesting.");
+            }
          }
 
-         if ( L1->getGlobalNumberOfBoxes() == 0 ) {
-            TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
+         if ( hierarchy->getRatioToCoarserLevel(finer_ln) != zero_vec ) {
+            refineHead(
+               *L1,
+               *L0_to_L1,
+               hierarchy->getRatioToCoarserLevel(finer_ln) );
          }
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb1
-            = createLoadBalancer( input_db, load_balancer_type, rank_tree_type, 1 , dim);
-
-         tbox::pout << "\tPartitioning..." << std::endl;
+            = createLoadBalancer( input_db, load_balancer_type, rank_tree_type, finer_ln , dim);
 
          outputPrebalance( *L1, *L0, required_connector_width, "L1: " );
 
@@ -655,20 +659,19 @@ int main(
             (double)L1->getLocalNumberOfCells(),
             L1->getMPI());
 
-         tbox::pout << "\tPartitioning..." << std::endl;
-
-         if ( load_balance[1] ) {
+         if ( load_balance[finer_ln] ) {
+            tbox::pout << "\tPartitioning..." << std::endl;
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             lb1->loadBalanceBoxLevel(
                *L1,
                &L0_to_L1->getTranspose(),
                hierarchy,
-               1,
-               hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
-               hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
+               coarser_ln,
+               hierarchy->getSmallestPatchSize(finer_ln),
+               hierarchy->getLargestPatchSize(finer_ln),
                domain_box_level,
-               bad_interval,
-               cut_factor);
+               hierarchy->getRatioToCoarserLevel(finer_ln),
+               hierarchy->getRatioToCoarserLevel(finer_ln));
          }
 
          sortNodes(*L1,
@@ -691,13 +694,6 @@ int main(
             tbox::plog << "\n";
          }
 
-         if ( hierarchy->getRatioToCoarserLevel(1) != zero_vec ) {
-            refineHead(
-               *L1,
-               *L0_to_L1,
-               hierarchy->getRatioToCoarserLevel(1) );
-         }
-
          // Get the L1_to_L1 for edge statistics.
          oca.bridge(
             L1_to_L1,
@@ -705,7 +701,7 @@ int main(
             *L0_to_L1,
             false);
 
-         hierarchy->makeNewPatchLevel(1, L1);
+         hierarchy->makeNewPatchLevel(finer_ln, L1);
       }
 
       boost::shared_ptr<hier::Connector> L1_to_L2;
@@ -715,7 +711,7 @@ int main(
          /*
           * Step 3: Build L2.
           */
-         tbox::pout << "\n\n==================== Generating L2 ====================" << std::endl;
+         tbox::pout << "\n==================== Generating L2 ====================" << std::endl;
 
          const hier::BoxLevel &L1 = *hierarchy->getPatchLevel(1)->getBoxLevel();
 
@@ -760,26 +756,35 @@ int main(
 
          outputPostcluster( *L2, L1, required_connector_width, "L2: " );
 
+         if ( L2->getGlobalNumberOfBoxes() == 0 ) {
+            TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
+         }
+
          /*
           * Enforce nesting.
           */
-         if ( enforce_nesting[2] ) {
+         if ( enforce_nesting[finer_ln] ) {
             enforceNesting(
                *L2,
                *L1_to_L2,
                hierarchy,
                coarser_ln);
+
+            if ( L2->getGlobalNumberOfBoxes() == 0 ) {
+               TBOX_WARNING("Level " << finer_ln << " box generator has no box after proper nesting.");
+            }
          }
 
-         if ( L2->getGlobalNumberOfBoxes() == 0 ) {
-            TBOX_ERROR("Level " << finer_ln << " box generator resulted in no boxes.");
+         if ( hierarchy->getRatioToCoarserLevel(finer_ln) != zero_vec ) {
+            refineHead(
+               *L2,
+               *L1_to_L2,
+               hierarchy->getRatioToCoarserLevel(finer_ln) );
          }
 
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb2
-            = createLoadBalancer( input_db, load_balancer_type, rank_tree_type, 2 , dim);
-
-         tbox::pout << "\tPartitioning..." << std::endl;
+            = createLoadBalancer( input_db, load_balancer_type, rank_tree_type, finer_ln , dim);
 
          outputPrebalance( *L2, L1, required_connector_width, "L2: " );
 
@@ -788,20 +793,19 @@ int main(
             (double)L2->getLocalNumberOfCells(),
             L2->getMPI());
 
-         tbox::pout << "\tPartitioning..." << std::endl;
-
-         if ( load_balance[2] ) {
+         if ( load_balance[finer_ln] ) {
+            tbox::pout << "\tPartitioning..." << std::endl;
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             lb2->loadBalanceBoxLevel(
                *L2,
                &L1_to_L2->getTranspose(),
                hierarchy,
-               1,
-               hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
-               hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
+               coarser_ln,
+               hierarchy->getSmallestPatchSize(finer_ln),
+               hierarchy->getLargestPatchSize(finer_ln),
                domain_box_level,
-               bad_interval,
-               cut_factor);
+               hierarchy->getRatioToCoarserLevel(finer_ln),
+               hierarchy->getRatioToCoarserLevel(finer_ln));
          }
 
          sortNodes(*L2,
@@ -811,7 +815,7 @@ int main(
 
          outputPostbalance( *L2, L1, required_connector_width, "L2: " );
 
-         tbox::plog << "\n\tL2 postalance loads:\n";
+         tbox::plog << "\n\tL2 postbalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
             (double)L2->getLocalNumberOfCells(),
             L2->getMPI());
@@ -824,13 +828,6 @@ int main(
             tbox::plog << "\n\n";
          }
 
-         if ( hierarchy->getRatioToCoarserLevel(2) != zero_vec ) {
-            refineHead(
-               *L2,
-               *L1_to_L2,
-               hierarchy->getRatioToCoarserLevel(2) );
-         }
-
          // Get the L2_to_L2 for edge statistics.
          oca.bridge(
             L2_to_L2,
@@ -838,7 +835,7 @@ int main(
             *L1_to_L2,
             false);
 
-         hierarchy->makeNewPatchLevel(2, L2);
+         hierarchy->makeNewPatchLevel(finer_ln, L2);
       }
 
 

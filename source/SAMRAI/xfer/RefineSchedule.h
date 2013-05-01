@@ -1193,13 +1193,12 @@ private:
     */
    static boost::shared_ptr<tbox::Timer> t_refine_schedule;
    static boost::shared_ptr<tbox::Timer> t_fill_data;
-   static boost::shared_ptr<tbox::Timer> t_recursive_fill;
+   static boost::shared_ptr<tbox::Timer> t_fill_data_nonrecursive;
+   static boost::shared_ptr<tbox::Timer> t_fill_data_recursive;
    static boost::shared_ptr<tbox::Timer> t_refine_scratch_data;
    static boost::shared_ptr<tbox::Timer> t_finish_sched_const;
    static boost::shared_ptr<tbox::Timer> t_finish_sched_const_recurse;
    static boost::shared_ptr<tbox::Timer> t_gen_comm_sched;
-   static boost::shared_ptr<tbox::Timer> t_bridge_connector;
-   static boost::shared_ptr<tbox::Timer> t_modify_connector;
    static boost::shared_ptr<tbox::Timer> t_shear;
    static boost::shared_ptr<tbox::Timer> t_get_global_box_count;
    static boost::shared_ptr<tbox::Timer> t_coarse_shear;

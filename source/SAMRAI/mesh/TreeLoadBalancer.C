@@ -81,6 +81,7 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_mpi_is_dupe(false),
    d_max_cycle_spread_ratio(1000000),
+   d_allow_box_breaking(true),
    d_rank_tree(rank_tree ? rank_tree : boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::CenteredRankTree) ),
    d_comm_graph_writer(),
    d_master_workload_data_id(d_default_data_id),
@@ -611,7 +612,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       }
       if (errs != 0) {
          TBOX_ERROR(
-            "Errors in load balance mapping found."
+            "Errors in load balance mapping found.\n"
             << "anchor_box_level:\n" << anchor_to_balance.getBase().format("", 2)
             << "balance_box_level:\n" << balance_box_level.format("", 2)
             << "anchor_to_balance:\n" << anchor_to_balance.format("", 2)
@@ -1833,48 +1834,51 @@ TreeLoadBalancer::adjustLoad(
          break;
       }
 
-      /*
-       * Assuming that we did the best we could, swapping
-       * some BoxInTransit without breaking any, we now break up a Box
-       * in the overloaded side for partial transfer to the
-       * underloaded side.
-       */
-      LoadType brk_transfer = -adjustLoadByBreaking(
-         main_bin,
-         hold_bin,
-         next_available_index,
-         ideal_load,
-         low_load,
-         high_load );
-      actual_transfer += brk_transfer;
 
-      if (d_print_steps) {
-         double balance_penalty = computeBalancePenalty(
+      if ( d_allow_box_breaking ) {
+         /*
+          * Assuming that we did the best we could, swapping
+          * some BoxInTransit without breaking any, we now break up a Box
+          * in the overloaded side for partial transfer to the
+          * underloaded side.
+          */
+         LoadType brk_transfer = -adjustLoadByBreaking(
             main_bin,
             hold_bin,
-            (main_bin.getSumLoad() - ideal_load));
-         tbox::plog << "  Balance penalty after adjustLoadByBreaking = "
-                    << balance_penalty
-                    << ", needs " << (ideal_load-main_bin.getSumLoad())
-                    << " more with " << main_bin.size() << " main_bin and "
-                    << hold_bin.size() << " hold_bin Boxes remaining."
-                    << "\n  main_bin now has " << main_bin.getSumLoad()
-                    << " in " << main_bin.size() << " boxes."
-                    << std::endl;
-      }
-      if (brk_transfer == 0) {
-         /*
-          * If no box can be broken to improve the actual_transfer,
-          * there is nothing further we can do.  The swap phase, tried
-          * before the break phase, also generated no transfer, so
-          * there's no point trying again.  Break out now to save
-          * retrying the swap phase.
-          */
+            next_available_index,
+            ideal_load,
+            low_load,
+            high_load );
+         actual_transfer += brk_transfer;
+
          if (d_print_steps) {
-            tbox::plog << "  adjustLoad stopping due to unsuccessful break."
+            double balance_penalty = computeBalancePenalty(
+               main_bin,
+               hold_bin,
+               (main_bin.getSumLoad() - ideal_load));
+            tbox::plog << "  Balance penalty after adjustLoadByBreaking = "
+                       << balance_penalty
+                       << ", needs " << (ideal_load-main_bin.getSumLoad())
+                       << " more with " << main_bin.size() << " main_bin and "
+                       << hold_bin.size() << " hold_bin Boxes remaining."
+                       << "\n  main_bin now has " << main_bin.getSumLoad()
+                       << " in " << main_bin.size() << " boxes."
                        << std::endl;
          }
-         break;
+         if (brk_transfer == 0) {
+            /*
+             * If no box can be broken to improve the actual_transfer,
+             * there is nothing further we can do.  The swap phase, tried
+             * before the break phase, also generated no transfer, so
+             * there's no point trying again.  Break out now to save
+             * retrying the swap phase.
+             */
+            if (d_print_steps) {
+               tbox::plog << "  adjustLoad stopping due to unsuccessful break."
+                          << std::endl;
+            }
+            break;
+         }
       }
 
       /*
@@ -3865,6 +3869,10 @@ TreeLoadBalancer::getFromInput(
       d_flexible_load_tol =
          input_db->getDoubleWithDefault("flexible_load_tolerance",
             d_flexible_load_tol);
+
+      d_allow_box_breaking =
+         input_db->getBoolWithDefault("DEV_allow_box_breaking",
+                                      d_allow_box_breaking);
 
       d_balance_penalty_wt =
          input_db->getDoubleWithDefault("DEV_balance_penalty_wt", 1.0);

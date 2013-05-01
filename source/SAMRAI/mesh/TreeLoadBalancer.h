@@ -96,6 +96,14 @@ namespace mesh {
  *   </tr>
  * </table>
  *
+ * @internal The following are developer inputs.  Defaults listed
+ * in parenthesis:
+ *
+ * @internal DEV_allow_box_breaking (true)
+ * bool
+ * Whether to allow box-breaking.  Set to false when boxes have
+ * been pre-cut.
+ *
  * @see mesh::LoadBalanceStrategy
  */
 
@@ -1159,6 +1167,9 @@ private:
 
    //! @brief Max number of processes the a single process may spread its load onto per root cycle.
    int d_max_cycle_spread_ratio;
+
+   //! @brief Whether to allow box breaking.
+   bool d_allow_box_breaking;
 
    //! @brief How to arange a contiguous range of MPI ranks in a tree.
    const boost::shared_ptr<tbox::RankTreeStrategy> d_rank_tree;

@@ -36,8 +36,8 @@ Main {
 
    load_balance = TRUE, TRUE
 
-   efficiency_tol = 0.85
-   combine_tol = 0.85
+   efficiency_tol = 0.75
+   combine_tol = 0.75
 
    mesh_generator_name = "SinusoidalFrontGenerator"
 
@@ -54,7 +54,7 @@ Main {
 
 
 TileClustering {
-  box_size = 10, 10
+  box_size = 7, 7
   coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
@@ -63,8 +63,14 @@ TileClustering {
 
 BergerRigoutsos {
   sort_output_nodes = TRUE
-  DEV_log_node_history = FALSE
-  DEV_log_cluster_summary = FALSE
+  DEV_build_zero_width_connector = TRUE
+  DEV_cluster_locally = FALSE
+  DEV_cluster_tiles = FALSE
+  // DEV_tag_coarsen_ratio = 4, 4
+  DEV_inflection_cut_threshold_ar = 4.0
+  DEV_min_box_size_from_cutting = 7, 7
+  DEV_log_node_history = TRUE
+  DEV_log_cluster_summary = TRUE
   DEV_log_cluster = FALSE
   // DEV_owner_mode = "SINGLE_OWNER"
   // DEV_algo_advance_mode = "SYNCHRONOUS"
@@ -72,9 +78,10 @@ BergerRigoutsos {
 
 
 TilePartitioner {
-  box_size = 20, 20
+  box_size = 21, 21
 
   TreeLoadBalancer {
+    DEV_allow_box_breaking = TRUE
     // Debugging options
     DEV_check_map = TRUE
     DEV_check_connectivity = FALSE
@@ -88,6 +95,7 @@ TilePartitioner {
 
 
 TreeLoadBalancer {
+  flexible_load_tolerance = 0.03
   DEV_report_load_balance = TRUE // Reported in main
   DEV_balance_penalty_wt = 1.0
   DEV_surface_penalty_wt = 1.0
@@ -127,8 +135,8 @@ PatchHierarchy {
    }
    smallest_patch_size {
       level_0 = 12, 12
-      level_1 = 6, 6
-      level_2 = 15, 15
+      level_1 = 12, 12
+      level_2 = 12, 12
       // all finer levels will use same values as level_0...
    }
    ratio_to_coarser {
@@ -140,5 +148,5 @@ PatchHierarchy {
 
    allow_patches_smaller_than_ghostwidth = TRUE
    allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
-   proper_nesting_buffer = 1, 1
+   proper_nesting_buffer = 7, 7
 }
