@@ -955,7 +955,9 @@ RefineSchedule::finishScheduleConstruction(
          coarse_schedule_refine_classes->insertEquivalenceClassItem(item);
       }
 
-      t_finish_sched_const->stop();
+      if ( t_finish_sched_const->isRunning() ) {
+         t_finish_sched_const->stop();
+      }
 
       d_coarse_interp_schedule.reset(new RefineSchedule(d_coarse_interp_level,
             hiercoarse_level,
@@ -969,7 +971,9 @@ RefineSchedule::finishScheduleConstruction(
             d_top_refine_schedule));
 
    } else {
-      t_finish_sched_const->stop();
+      if ( t_finish_sched_const->isRunning() ) {
+         t_finish_sched_const->stop();
+      }
    }
 
    if (need_to_fill_encon) {
