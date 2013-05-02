@@ -96,11 +96,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
@@ -216,11 +211,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
@@ -338,11 +328,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
@@ -478,11 +463,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
@@ -598,11 +578,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
@@ -713,11 +688,6 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
@@ -831,11 +801,6 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	$(INCLUDE_SAM)/SAMRAI/xfer/BoxGeometryVariableFillPattern.h	\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
@@ -980,11 +945,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
-	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
