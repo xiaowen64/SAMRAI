@@ -15,9 +15,9 @@ VPATH	      =	@srcdir@
 OBJECT        = ../../../..
 
 # For classes that are non-dimensional.
-OBJS= 	 geom_cartcoarsen1d.o geom_cartcoarsen3d.o\
-	geom_cartrefine2d.o geom_cartcoarsen2d.o\
-	geom_cartrefine1d.o geom_cartrefine3d.o\
+OBJS= 	 geom_cartcoarsen1d.o geom_cartcoarsen2d.o geom_cartcoarsen3d.o \
+	 geom_cartcoarsen4d.o \
+	 geom_cartrefine1d.o geom_cartrefine2d.o geom_cartrefine3d.o
 
 
 default: library
