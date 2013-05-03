@@ -92,6 +92,21 @@ class BoxLevel;
  */
 class PersistentOverlapConnectors
 {
+
+public:
+
+   /*!
+    * @brief Set whether to create empty neighbor containers when a
+    * base Box has no neighbor.
+    *
+    * Setting a value of true means that all Connectors returned will
+    * have a neighbor container for each base box.  False means that
+    * base boxes with no neighbors will not have a neighbor container.
+    * The default is false.
+    */
+   static void
+   setCreateEmptyNeighborContainers( bool create_empty_neighbor_containers );
+
 private:
    /*!
     * @brief Deletes all Connectors to and from this object
@@ -321,6 +336,15 @@ private:
       const BoxLevel& head,
       boost::shared_ptr<Connector>& connector);
 
+   /*
+    * @brief Make sure all base boxes have a neighbor set or remove
+    * empty neighbor sets, depending on
+    * s_create_empty_neighbor_containers.
+    */
+   void
+   postprocessForEmptyNeighborContainers(
+      Connector& connector);
+
    //@}
 
    //@{
@@ -357,6 +381,12 @@ private:
     * @brief Whether to check overlap Connectors when they are accessed.
     */
    static char s_check_accessed_connectors;
+
+   /*!
+    * @brief Whether to create empty neighbor containers when a base
+    * Box has no neighbor.
+    */
+   static bool s_create_empty_neighbor_containers;
 
    /*!
     * @brief Whether to force Connector finding functions to create
