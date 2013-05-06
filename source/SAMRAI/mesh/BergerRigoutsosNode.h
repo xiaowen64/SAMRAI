@@ -309,7 +309,6 @@ private:
 
    //! @brief Compute new graph relationships touching local tag nodes.
    // @pre d_common->d_compute_relationships > 0
-   // @pre d_accepted_box.getLocalId() >= 0
    // @pre boxAccepted()
    // @pre d_box_acceptance != accepted_by_dropout_bcast
    // @pre (d_parent == 0) || (d_box.numberCells() >= d_common->d_min_box)
@@ -561,16 +560,6 @@ private:
     * @brief Number of tags in the candidate box.
     */
    int d_num_tags;
-
-   /*!
-    * @brief Distributed graph node corresponding to an accepted box.
-    *
-    * On the owner process, this belongs in a hier::BoxLevel
-    * object.  On contributor nodes, this is used to identify the
-    * Box assigned by the owner.  The Box is important for
-    * computing neighbor data.
-    */
-   hier::Box d_accepted_box;  // Try to use d_box for this.
 
    /*!
     * @brief Box iterator corresponding to an accepted box on
