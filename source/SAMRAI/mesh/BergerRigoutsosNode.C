@@ -893,7 +893,7 @@ BergerRigoutsosNode::broadcastAcceptability_start()
       if (!boxHasNoTag()) {
 assert( d_accepted_box.isIdEqual(d_box) );
 assert( d_accepted_box.isSpatiallyEqual(d_box) );
-         *(ptr++) = d_accepted_box.getLocalId().getValue();
+         *(ptr++) = d_box.getLocalId().getValue();
          ptr = putBoxToBuffer(d_box, ptr);
          if (boxRejected()) {
             ptr = putBoxToBuffer(d_lft_child->d_box, ptr);
@@ -1145,7 +1145,7 @@ BergerRigoutsosNode::broadcastToDropouts_start()
       d_send_msg[0] = d_box_acceptance;
 assert( d_accepted_box.isIdEqual(d_box) );
 assert( d_accepted_box.isSpatiallyEqual(d_box) );
-      d_send_msg[1] = d_accepted_box.getLocalId().getValue();
+      d_send_msg[1] = d_box.getLocalId().getValue();
       putBoxToBuffer(d_box, &d_send_msg[2]);
       d_comm_group->beginBcast(&d_send_msg[0],
                                buffer_size);
@@ -2139,7 +2139,7 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
    if (on_owner_process) {
 assert( d_accepted_box.isIdEqual(d_box) );
 assert( d_accepted_box.isSpatiallyEqual(d_box) );
-      d_common->d_tag_to_new->getTranspose().makeEmptyLocalNeighborhood(d_accepted_box.getBoxId());
+      d_common->d_tag_to_new->getTranspose().makeEmptyLocalNeighborhood(d_box.getBoxId());
    }
 
    // Data to send to owner regarding new relationships found by local process.
@@ -2147,7 +2147,7 @@ assert( d_accepted_box.isSpatiallyEqual(d_box) );
    if (d_common->d_compute_relationships > 1 && d_common->d_mpi.getRank() != d_box.getOwnerRank()) {
       /*
        * Will have to send to owner the relationships found locally for
-       * d_accepted_box.
+       * d_box.
        * Label the id of the new node and the (yet unknown) number
        * of relationship found for it.
        *
@@ -2160,7 +2160,7 @@ assert( d_accepted_box.isSpatiallyEqual(d_box) );
       relationship_message = &d_common->d_relationship_messages[d_box.getOwnerRank()];
 assert( d_accepted_box.isIdEqual(d_box) );
 assert( d_accepted_box.isSpatiallyEqual(d_box) );
-      relationship_message->insert(relationship_message->end(), d_accepted_box.getLocalId().getValue());
+      relationship_message->insert(relationship_message->end(), d_box.getLocalId().getValue());
       relationship_message->insert(relationship_message->end(), 0);
    }
 
@@ -2193,16 +2193,16 @@ assert( d_accepted_box.isSpatiallyEqual(d_box) );
 
       if (!intersection.empty()) {
 
-         // Add d_accepted_box as a neighbor of tag_box.
+         // Add d_box as a neighbor of tag_box.
 assert( d_accepted_box.isIdEqual(d_box) );
 assert( d_accepted_box.isSpatiallyEqual(d_box) );
-         d_common->d_tag_to_new->insertLocalNeighbor(d_accepted_box,
+         d_common->d_tag_to_new->insertLocalNeighbor(d_box,
                                                      tag_box.getBoxId());
 
          if (on_owner_process) {
-            // Owner adds tag_box as a neighbor of d_accepted_box.
+            // Owner adds tag_box as a neighbor of d_box.
             d_common->d_tag_to_new->getTranspose().insertLocalNeighbor(tag_box,
-                                                        d_accepted_box.getBoxId());
+                                                        d_box.getBoxId());
          }
 
          if (relationship_message != 0) {
