@@ -934,11 +934,14 @@ BergerRigoutsosNode::broadcastAcceptability_check()
       TBOX_ASSERT(boxAccepted() || boxRejected() ||
                   (boxHasNoTag() && d_parent == 0));
       if (!boxHasNoTag()) {
-         const hier::LocalId node_local_id(*(ptr++));
+         const hier::LocalId accepted_box_local_id(*(ptr++));
          ptr = getBoxFromBuffer(d_box, ptr);
-         d_accepted_box = hier::Box(d_box, node_local_id, d_box.getOwnerRank());
+         d_accepted_box = hier::Box(d_box, accepted_box_local_id, d_box.getOwnerRank());
+         d_box.initialize( d_box, accepted_box_local_id, d_box.getOwnerRank() ); // Reset local id.
          TBOX_ASSERT(d_accepted_box.getBlockId() == d_box.getBlockId());
          TBOX_ASSERT(d_accepted_box.getLocalId() >= 0);
+         TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
+         TBOX_ASSERT( d_accepted_box.isSpatiallyEqual(d_box) );
          /*
           * Do not check for min_box violation in root node.  That
           * check should be done outside of this class in order to
@@ -1169,7 +1172,7 @@ BergerRigoutsosNode::broadcastToDropouts_check()
 
          d_box_acceptance = intToBoxAcceptance((d_recv_msg[0] % 2)
                                                + rejected_by_dropout_bcast);
-         const hier::LocalId local_id(d_recv_msg[1]);
+         const hier::LocalId accepted_box_local_id(d_recv_msg[1]);
          getBoxFromBuffer(d_box, &d_recv_msg[2]);
          /*
           * Do not check for min_box violation in root node.  That
@@ -1177,8 +1180,11 @@ BergerRigoutsosNode::broadcastToDropouts_check()
           * have flexibility regarding how to handle it.
           */
          TBOX_ASSERT(d_parent == 0 || d_box.numberCells() >= d_common->d_min_box);
-         d_accepted_box = hier::Box(d_box, local_id, d_box.getOwnerRank());
+         d_accepted_box = hier::Box(d_box, accepted_box_local_id, d_box.getOwnerRank());
+         d_box.initialize( d_box, accepted_box_local_id, d_box.getOwnerRank() ); // Reset local id.
          TBOX_ASSERT(d_accepted_box.getBlockId() == d_box.getBlockId());
+         TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
+         TBOX_ASSERT( d_accepted_box.isSpatiallyEqual(d_box) );
       }
    }
    return d_comm_group->isDone();
@@ -1838,6 +1844,8 @@ BergerRigoutsosNode::createBox()
    d_box_iterator = d_common->d_new_box_level->getBox(new_box);
 
    d_accepted_box = *d_box_iterator;
+   TBOX_ASSERT( d_box_iterator->isSpatiallyEqual(d_box) );
+   d_box = *d_box_iterator;
 }
 
 /*
@@ -2097,6 +2105,8 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
    d_common->d_object_timers->t_compute_new_neighborhood_sets->start();
    TBOX_ASSERT(d_common->d_compute_relationships > 0);
    TBOX_ASSERT(d_accepted_box.getLocalId() >= 0);
+   TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
+   TBOX_ASSERT( d_accepted_box.isSpatiallyEqual(d_box) );
    TBOX_ASSERT(boxAccepted());
    TBOX_ASSERT(d_box_acceptance != accepted_by_dropout_bcast);
    /*
