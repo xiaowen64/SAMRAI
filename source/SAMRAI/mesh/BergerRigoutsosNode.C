@@ -164,7 +164,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
       tbox::plog << "Construct " << d_generation << ':' << d_pos
                  << ", child of "
                  << d_parent->d_generation << ':' << d_parent->d_pos
-                 << "   " << d_parent->d_accepted_box
+                 << "   " << d_parent->d_box
                  << ".\n";
    }
 }
@@ -200,7 +200,6 @@ BergerRigoutsosNode::~BergerRigoutsosNode()
    if (d_common->d_log_node_history) {
       d_common->writeCounters();
       tbox::plog << "Destruct " << d_generation << ':' << d_pos
-                 << "  " << d_accepted_box
                  << "  " << d_box
                  << ".\n";
    }
@@ -595,7 +594,7 @@ BergerRigoutsosNode::continueAlgorithm()
          if (d_common->d_log_node_history && d_common->d_mpi.getRank() != d_box.getOwnerRank()) {
             d_common->writeCounters();
             tbox::plog << "DO Recv " << d_generation << ':' << d_pos
-                       << "  " << d_accepted_box
+                       << "  " << d_box
                        << "  accept=" << d_box_acceptance
                        << ".\n";
          }
@@ -627,7 +626,7 @@ BergerRigoutsosNode::continueAlgorithm()
    if (d_common->d_log_node_history) {
       d_common->writeCounters();
       tbox::plog << "Complete " << d_generation << ':' << d_pos
-                 << "  " << d_accepted_box
+                 << "  " << d_box
                  << "  accept=" << d_box_acceptance
                  << ".\n";
    }
@@ -749,9 +748,9 @@ BergerRigoutsosNode::runChildren_check()
          d_common->writeCounters();
          tbox::plog << "Recombine " << d_generation << ':' << d_pos
                     << " insufficient reduction of " << combine_reduction
-                    << "  " << d_accepted_box
-                    << " <= " << d_lft_child->d_accepted_box
-                    << " + " << d_rht_child->d_accepted_box
+                    << "  " << d_box
+                    << " <= " << d_lft_child->d_box
+                    << " + " << d_rht_child->d_box
                     << "  " << "accept=" << d_box_acceptance
                     << ".\n";
       }
@@ -791,9 +790,9 @@ BergerRigoutsosNode::runChildren_check()
          if (d_common->d_log_node_history) {
             d_common->writeCounters();
             tbox::plog << "Discard " << d_generation << ':' << d_pos
-                       << "  " << d_accepted_box
-                       << " => " << d_lft_child->d_accepted_box
-                       << " + " << d_rht_child->d_accepted_box
+                       << "  " << d_box
+                       << " => " << d_lft_child->d_box
+                       << " + " << d_rht_child->d_box
                        << "  " << "accept=" << d_box_acceptance
                        << ".\n";
          }
@@ -981,7 +980,7 @@ BergerRigoutsosNode::broadcastAcceptability_check()
          if (d_common->d_log_node_history) {
             d_common->writeCounters();
             tbox::plog << "Rm Split " << d_generation << ':' << d_pos
-                       << "  " << d_accepted_box
+                       << "  " << d_box
                        << " => " << d_lft_child->d_box
                        << " + " << d_rht_child->d_box
                        << ".\n";
@@ -2431,7 +2430,7 @@ void
 BergerRigoutsosNode::printNodeState(
    std::ostream& co) const
 {
-   co << d_generation << ':' << d_pos << '=' << d_accepted_box
+   co << d_generation << ':' << d_pos << '=' << d_box
       << "  o=" << d_box.getOwnerRank() << ',' << (d_common->d_mpi.getRank() == d_box.getOwnerRank())
       << "  a=" << d_box_acceptance
       << "  w=" << d_wait_phase << '/' << bool(d_comm_group)
@@ -2439,11 +2438,11 @@ BergerRigoutsosNode::printNodeState(
       << "  t=" << d_num_tags;
    if (d_lft_child) {
       co << "  l=" << d_lft_child->d_generation << ':' << d_lft_child->d_pos
-         << '=' << d_lft_child->d_accepted_box;
+         << '=' << d_lft_child->d_box;
    }
    if (d_rht_child) {
       co << "  r=" << d_rht_child->d_generation << ':' << d_rht_child->d_pos
-         << '=' << d_rht_child->d_accepted_box;
+         << '=' << d_rht_child->d_box;
    }
 }
 
