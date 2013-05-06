@@ -59,7 +59,7 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    d_mpi_tag(-1),
    d_overlap(-1),
    d_box_acceptance(undetermined),
-   d_accepted_box(box.getDim()),
+   d_accepted_box(box),
    d_box_iterator(hier::BoxContainer().end()),
    d_wait_phase(to_be_launched),
    d_send_msg(),
@@ -283,9 +283,11 @@ BergerRigoutsosNode::continueAlgorithm()
                  << "  gsize=" << d_group.size()
                  << ".\n";
    }
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
 
    if (d_parent == 0 || d_overlap > 0 || d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
 
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
       TBOX_ASSERT(inGroup(d_group));
 
       // Set up communication group for operations in participating group.
@@ -296,6 +298,7 @@ BergerRigoutsosNode::continueAlgorithm()
       d_comm_group->setUseBlockingSendToParent(false);
       d_comm_group->setGroupAndRootRank(d_common->d_mpi,
                                         &d_group[0], static_cast<int>(d_group.size()), d_box.getOwnerRank());
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
       if (d_parent == 0) {
          /*
           * For the global group, MPI collective functions are presumably
@@ -309,10 +312,12 @@ BergerRigoutsosNode::continueAlgorithm()
           */
          d_comm_group->setUseMPICollectiveForFullGroups(true);
       }
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
 
       d_common->d_object_timers->t_local_tasks->start();
       makeLocalTagHistogram();
       d_common->d_object_timers->t_local_tasks->stop();
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
 
       if (d_group.size() > 1) {
          d_common->d_object_timers->t_reduce_histogram->start();
@@ -333,6 +338,7 @@ BergerRigoutsosNode::continueAlgorithm()
          d_common->decNumNodesCommWait();
       }
 
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
       if (d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
          /*
           * The owner node saves the tag count.  Participant nodes get
@@ -357,6 +363,7 @@ BergerRigoutsosNode::continueAlgorithm()
             d_common->d_num_tags_in_all_nodes += d_num_tags;
          }
       }
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
 
       if (d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
          d_common->d_object_timers->t_local_tasks->start();
@@ -376,6 +383,7 @@ BergerRigoutsosNode::continueAlgorithm()
             createBox();
          }
       }
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
 
       if (d_group.size() > 1) {
          d_common->d_object_timers->t_bcast_acceptability->start();
@@ -407,6 +415,7 @@ BergerRigoutsosNode::continueAlgorithm()
       }
 #endif
 
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
       /*
        * If this is the root node, d_num_tags is the total tag count
        * in all nodes.
@@ -414,9 +423,11 @@ BergerRigoutsosNode::continueAlgorithm()
       if (d_parent == 0 && d_common->d_mpi.getRank() != d_box.getOwnerRank()) {
          d_common->d_num_tags_in_all_nodes += d_num_tags;
       }
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
 
       if (boxRejected()) {
 
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
          /*
           * Compute children groups and owners without assuming
           * entire mesh structure is known locally.
@@ -425,6 +436,7 @@ BergerRigoutsosNode::continueAlgorithm()
          countOverlapWithLocalPatches();
          d_common->d_object_timers->t_local_tasks->stop();
 
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
          if (d_group.size() > 1) {
             d_common->d_object_timers->t_gather_grouping_criteria->start();
             gatherGroupingCriteria_start();
@@ -443,12 +455,16 @@ BergerRigoutsosNode::continueAlgorithm()
             }
             d_common->decNumNodesCommWait();
          }
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
 
          if (d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
             d_common->d_object_timers->t_local_tasks->start();
             formChildGroups();
             d_common->d_object_timers->t_local_tasks->stop();
          }
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
+TBOX_ASSERT( d_lft_child->d_accepted_box.isIdEqual(d_lft_child->d_box) );
+TBOX_ASSERT( d_rht_child->d_accepted_box.isIdEqual(d_rht_child->d_box) );
 
          if (d_group.size() > 1) {
             d_common->d_object_timers->t_bcast_child_groups->start();
@@ -461,6 +477,8 @@ BergerRigoutsosNode::continueAlgorithm()
                d_comm_group->completeCurrentOperation();
             }
             sub_completed = broadcastChildGroups_check();
+TBOX_ASSERT( d_lft_child->d_accepted_box.isIdEqual(d_lft_child->d_box) );
+TBOX_ASSERT( d_rht_child->d_accepted_box.isIdEqual(d_rht_child->d_box) );
             d_common->d_object_timers->t_bcast_child_groups->stop();
             if (!sub_completed) {
                d_wait_phase = bcast_child_groups;
@@ -468,6 +486,9 @@ BergerRigoutsosNode::continueAlgorithm()
             }
             d_common->decNumNodesCommWait();
          }
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
+TBOX_ASSERT( d_lft_child->d_accepted_box.isIdEqual(d_lft_child->d_box) );
+TBOX_ASSERT( d_rht_child->d_accepted_box.isIdEqual(d_rht_child->d_box) );
 
          if (d_lft_child->d_box.getOwnerRank() == d_common->d_mpi.getRank()) {
             d_common->incNumNodesOwned();
@@ -475,25 +496,37 @@ BergerRigoutsosNode::continueAlgorithm()
          if (d_rht_child->d_box.getOwnerRank() == d_common->d_mpi.getRank()) {
             d_common->incNumNodesOwned();
          }
+TBOX_ASSERT( d_lft_child->d_accepted_box.isIdEqual(d_lft_child->d_box) );
+TBOX_ASSERT( d_rht_child->d_accepted_box.isIdEqual(d_rht_child->d_box) );
 
          runChildren_start();
         RUN_CHILDREN:
+tbox::plog << d_box << "     " << d_accepted_box << std::endl;
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
          sub_completed = runChildren_check();
+tbox::plog << d_box << "     " << d_accepted_box << std::endl;
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
          if (!sub_completed) {
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
             d_wait_phase = run_children;
             goto RETURN;
          }
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
       } else if (boxAccepted()) {
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
          if (d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
             ++(d_common->d_num_boxes_generated);
          }
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
       } else {
          // Box has no tag.
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
       }
 
       // All done with communication within participating group.
       delete d_comm_group;
       d_comm_group = 0;
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
 
    } else {
       /*
@@ -501,7 +534,9 @@ BergerRigoutsosNode::continueAlgorithm()
        * this node.
        */
       TBOX_ASSERT(!inGroup(d_group));
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
    }
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
 
    if (d_parent == 0) {
       /*
@@ -516,6 +551,7 @@ BergerRigoutsosNode::continueAlgorithm()
          computeNewNeighborhoodSets();
       }
    }
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
 
    TBOX_ASSERT(d_lft_child == 0);
    TBOX_ASSERT(d_rht_child == 0);
@@ -549,8 +585,10 @@ BergerRigoutsosNode::continueAlgorithm()
     *      is the difference between parent group size and this
     *      group size.
     */
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
    if (d_overlap == 0 || d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
 
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
       if ((d_common->d_owner_mode != BergerRigoutsos::SINGLE_OWNER ||
            d_common->d_compute_relationships > 0) &&
           d_parent != 0 &&
@@ -576,6 +614,7 @@ BergerRigoutsosNode::continueAlgorithm()
             d_common->d_object_timers->t_local_tasks->stop();
          }
 
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
          broadcastToDropouts_start();
          d_common->incNumNodesCommWait();
         BCAST_TO_DROPOUTS:
@@ -698,6 +737,8 @@ BergerRigoutsosNode::runChildren_start()
 
    d_lft_child->d_wait_phase = to_be_launched;
    d_rht_child->d_wait_phase = to_be_launched;
+TBOX_ASSERT( d_lft_child->d_accepted_box.isIdEqual(d_lft_child->d_box) );
+TBOX_ASSERT( d_rht_child->d_accepted_box.isIdEqual(d_rht_child->d_box) );
 
    /*
     * Queue the children so they get executed.
@@ -735,6 +776,8 @@ BergerRigoutsosNode::runChildren_check()
 
    const double combine_reduction =
       double(d_lft_child->d_box.size() + d_rht_child->d_box.size()) / d_box.size();
+tbox::plog << d_box << "     " << d_accepted_box << std::endl;
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
    if (d_lft_child->boxAccepted() &&
        d_rht_child->boxAccepted() &&
        d_box.numberCells() <= d_common->d_max_box_size &&
@@ -744,6 +787,8 @@ BergerRigoutsosNode::runChildren_check()
 
       d_box_acceptance = accepted_by_recombination;
 
+tbox::plog << d_box << "     " << d_accepted_box << std::endl;
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
       if (d_common->d_log_node_history) {
          d_common->writeCounters();
          tbox::plog << "Recombine " << d_generation << ':' << d_pos
@@ -755,29 +800,41 @@ BergerRigoutsosNode::runChildren_check()
                     << ".\n";
       }
 
+tbox::plog << d_box << "     " << d_accepted_box << std::endl;
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
       if (d_lft_child->d_box.getOwnerRank() == d_common->d_mpi.getRank()) {
          d_lft_child->eraseBox();
          d_lft_child->d_box_acceptance = rejected_by_recombination;
          --(d_common->d_num_boxes_generated);
       }
 
+tbox::plog << d_box << "     " << d_accepted_box << std::endl;
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
       if (d_rht_child->d_box.getOwnerRank() == d_common->d_mpi.getRank()) {
          d_rht_child->eraseBox();
          d_rht_child->d_box_acceptance = rejected_by_recombination;
          --(d_common->d_num_boxes_generated);
       }
 
+tbox::plog << d_box << "     " << d_accepted_box << std::endl;
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
       if (d_box.getOwnerRank() == d_common->d_mpi.getRank()) {
          ++(d_common->d_num_boxes_generated);
       }
+tbox::plog << d_box << "     " << d_accepted_box << std::endl;
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
 
    } else {
 
       // Accept childrens' results, discarding graph node.
 
+tbox::plog << d_box << "     " << d_accepted_box << std::endl;
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
       if (d_box.getOwnerRank() == d_common->d_mpi.getRank()) {
          eraseBox();
       }
+tbox::plog << d_box << "     " << d_accepted_box << std::endl;
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
       if (d_common->d_compute_relationships > 0) {
          if (d_lft_child->boxAccepted() &&
              d_lft_child->d_box_acceptance != accepted_by_dropout_bcast) {
@@ -797,6 +854,8 @@ BergerRigoutsosNode::runChildren_check()
                        << ".\n";
          }
       }
+tbox::plog << d_box << "     " << d_accepted_box << std::endl;
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
 
    }
 
@@ -891,8 +950,8 @@ BergerRigoutsosNode::broadcastAcceptability_start()
          d_box_acceptance + 2 /* indicate remote decision */ :
          d_box_acceptance;
       if (!boxHasNoTag()) {
-assert( d_accepted_box.isIdEqual(d_box) );
-assert( d_accepted_box.isSpatiallyEqual(d_box) );
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
+TBOX_ASSERT( d_accepted_box.isSpatiallyEqual(d_box) );
          *(ptr++) = d_box.getLocalId().getValue();
          ptr = putBoxToBuffer(d_box, ptr);
          if (boxRejected()) {
@@ -967,6 +1026,8 @@ BergerRigoutsosNode::broadcastAcceptability_check()
          ptr = getBoxFromBuffer(d_rht_child->d_box, ptr);
          d_lft_child->d_box.setBlockId(d_box.getBlockId());
          d_rht_child->d_box.setBlockId(d_box.getBlockId());
+d_lft_child->d_accepted_box = d_lft_child->d_box;
+d_rht_child->d_accepted_box = d_rht_child->d_box;
 
          d_lft_child->d_mpi_tag = *(ptr++);
          d_rht_child->d_mpi_tag = *(ptr++);
@@ -1114,6 +1175,8 @@ BergerRigoutsosNode::broadcastChildGroups_check()
       d_rht_child->d_box.initialize( d_rht_child->d_box,
                                      d_rht_child->d_box.getLocalId(),
                                      rht_owner );
+d_lft_child->d_accepted_box = d_lft_child->d_box;
+d_rht_child->d_accepted_box = d_rht_child->d_box;
       TBOX_ASSERT(d_lft_child->d_box.getOwnerRank() >= 0);
       TBOX_ASSERT(d_lft_child->d_group.size() > 0);
       TBOX_ASSERT((d_lft_child->d_overlap > 0) ==
@@ -1143,8 +1206,8 @@ BergerRigoutsosNode::broadcastToDropouts_start()
    if (d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
       d_send_msg.resize(buffer_size, BAD_INTEGER);
       d_send_msg[0] = d_box_acceptance;
-assert( d_accepted_box.isIdEqual(d_box) );
-assert( d_accepted_box.isSpatiallyEqual(d_box) );
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
+TBOX_ASSERT( d_accepted_box.isSpatiallyEqual(d_box) );
       d_send_msg[1] = d_box.getLocalId().getValue();
       putBoxToBuffer(d_box, &d_send_msg[2]);
       d_comm_group->beginBcast(&d_send_msg[0],
@@ -1588,6 +1651,8 @@ BergerRigoutsosNode::acceptOrSplitBox()
 
       d_lft_child->d_box = hier::Box(box_lo, lft_hi, d_box.getBlockId());
       d_rht_child->d_box = hier::Box(rht_lo, box_hi, d_box.getBlockId());
+d_lft_child->d_accepted_box = d_lft_child->d_box;
+d_rht_child->d_accepted_box = d_rht_child->d_box;
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (d_box.numberCells() >= d_common->d_min_box) {
          TBOX_ASSERT(d_lft_child->d_box.numberCells() >= d_common->d_min_box);
@@ -1831,6 +1896,8 @@ BergerRigoutsosNode::cutAtInflection(
 *
 * Only the owner should create the box_level node this way.
 * Other processes build box_level node using data from owner.
+*
+* TODO: this should be renamed putBoxInBoxLevel.
 ********************************************************************
 */
 void
@@ -1849,8 +1916,8 @@ BergerRigoutsosNode::createBox()
    d_accepted_box = *d_box_iterator;
    TBOX_ASSERT( d_box_iterator->isSpatiallyEqual(d_box) );
    d_box = *d_box_iterator;
-assert( d_accepted_box.isIdEqual(d_box) );
-assert( d_accepted_box.isSpatiallyEqual(d_box) );
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
+TBOX_ASSERT( d_accepted_box.isSpatiallyEqual(d_box) );
 }
 
 /*
@@ -1870,7 +1937,7 @@ BergerRigoutsosNode::eraseBox()
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
    d_box_iterator = hier::BoxContainer().end();
-   d_accepted_box = hier::Box(d_common->getDim());
+// d_accepted_box = hier::Box(d_common->getDim());
 #endif
 }
 
@@ -1953,6 +2020,10 @@ BergerRigoutsosNode::formChildGroups()
       d_rht_child->d_box.initialize( d_rht_child->d_box,
                                      d_rht_child->d_box.getLocalId(),
                                      d_box.getOwnerRank() );
+d_lft_child->d_accepted_box = d_lft_child->d_box;
+d_rht_child->d_accepted_box = d_rht_child->d_box;
+TBOX_ASSERT( d_lft_child->d_accepted_box.isIdEqual(d_lft_child->d_box) );
+TBOX_ASSERT( d_rht_child->d_accepted_box.isIdEqual(d_rht_child->d_box) );
       return;
    }
 
@@ -2045,6 +2116,10 @@ BergerRigoutsosNode::formChildGroups()
    d_rht_child->d_box.initialize( d_rht_child->d_box,
                                   d_rht_child->d_box.getLocalId(),
                                   rht_owner );
+d_lft_child->d_accepted_box = d_lft_child->d_box;
+d_rht_child->d_accepted_box = d_rht_child->d_box;
+TBOX_ASSERT( d_lft_child->d_accepted_box.isIdEqual(d_lft_child->d_box) );
+TBOX_ASSERT( d_rht_child->d_accepted_box.isIdEqual(d_rht_child->d_box) );
 
    d_lft_child->d_group.resize(n_lft, BAD_INTEGER);
    d_rht_child->d_group.resize(n_rht, BAD_INTEGER);
@@ -2137,8 +2212,8 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
     */
    bool on_owner_process = d_common->d_mpi.getRank() == d_box.getOwnerRank();
    if (on_owner_process) {
-assert( d_accepted_box.isIdEqual(d_box) );
-assert( d_accepted_box.isSpatiallyEqual(d_box) );
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
+TBOX_ASSERT( d_accepted_box.isSpatiallyEqual(d_box) );
       d_common->d_tag_to_new->getTranspose().makeEmptyLocalNeighborhood(d_box.getBoxId());
    }
 
@@ -2158,8 +2233,8 @@ assert( d_accepted_box.isSpatiallyEqual(d_box) );
        * - index of nodes on the tagged level overlapping new node.
        */
       relationship_message = &d_common->d_relationship_messages[d_box.getOwnerRank()];
-assert( d_accepted_box.isIdEqual(d_box) );
-assert( d_accepted_box.isSpatiallyEqual(d_box) );
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
+TBOX_ASSERT( d_accepted_box.isSpatiallyEqual(d_box) );
       relationship_message->insert(relationship_message->end(), d_box.getLocalId().getValue());
       relationship_message->insert(relationship_message->end(), 0);
    }
@@ -2194,8 +2269,8 @@ assert( d_accepted_box.isSpatiallyEqual(d_box) );
       if (!intersection.empty()) {
 
          // Add d_box as a neighbor of tag_box.
-assert( d_accepted_box.isIdEqual(d_box) );
-assert( d_accepted_box.isSpatiallyEqual(d_box) );
+TBOX_ASSERT( d_accepted_box.isIdEqual(d_box) );
+TBOX_ASSERT( d_accepted_box.isSpatiallyEqual(d_box) );
          d_common->d_tag_to_new->insertLocalNeighbor(d_box,
                                                      tag_box.getBoxId());
 
