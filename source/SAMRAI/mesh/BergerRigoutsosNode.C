@@ -891,6 +891,8 @@ BergerRigoutsosNode::broadcastAcceptability_start()
          d_box_acceptance + 2 /* indicate remote decision */ :
          d_box_acceptance;
       if (!boxHasNoTag()) {
+assert( d_accepted_box.isIdEqual(d_box) );
+assert( d_accepted_box.isSpatiallyEqual(d_box) );
          *(ptr++) = d_accepted_box.getLocalId().getValue();
          ptr = putBoxToBuffer(d_box, ptr);
          if (boxRejected()) {
@@ -1141,6 +1143,8 @@ BergerRigoutsosNode::broadcastToDropouts_start()
    if (d_common->d_mpi.getRank() == d_box.getOwnerRank()) {
       d_send_msg.resize(buffer_size, BAD_INTEGER);
       d_send_msg[0] = d_box_acceptance;
+assert( d_accepted_box.isIdEqual(d_box) );
+assert( d_accepted_box.isSpatiallyEqual(d_box) );
       d_send_msg[1] = d_accepted_box.getLocalId().getValue();
       putBoxToBuffer(d_box, &d_send_msg[2]);
       d_comm_group->beginBcast(&d_send_msg[0],
@@ -1845,6 +1849,8 @@ BergerRigoutsosNode::createBox()
    d_accepted_box = *d_box_iterator;
    TBOX_ASSERT( d_box_iterator->isSpatiallyEqual(d_box) );
    d_box = *d_box_iterator;
+assert( d_accepted_box.isIdEqual(d_box) );
+assert( d_accepted_box.isSpatiallyEqual(d_box) );
 }
 
 /*
@@ -2131,6 +2137,8 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
     */
    bool on_owner_process = d_common->d_mpi.getRank() == d_box.getOwnerRank();
    if (on_owner_process) {
+assert( d_accepted_box.isIdEqual(d_box) );
+assert( d_accepted_box.isSpatiallyEqual(d_box) );
       d_common->d_tag_to_new->getTranspose().makeEmptyLocalNeighborhood(d_accepted_box.getBoxId());
    }
 
@@ -2150,6 +2158,8 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
        * - index of nodes on the tagged level overlapping new node.
        */
       relationship_message = &d_common->d_relationship_messages[d_box.getOwnerRank()];
+assert( d_accepted_box.isIdEqual(d_box) );
+assert( d_accepted_box.isSpatiallyEqual(d_box) );
       relationship_message->insert(relationship_message->end(), d_accepted_box.getLocalId().getValue());
       relationship_message->insert(relationship_message->end(), 0);
    }
@@ -2184,6 +2194,8 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
       if (!intersection.empty()) {
 
          // Add d_accepted_box as a neighbor of tag_box.
+assert( d_accepted_box.isIdEqual(d_box) );
+assert( d_accepted_box.isSpatiallyEqual(d_box) );
          d_common->d_tag_to_new->insertLocalNeighbor(d_accepted_box,
                                                      tag_box.getBoxId());
 
