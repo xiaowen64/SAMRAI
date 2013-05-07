@@ -52,10 +52,6 @@ Main {
    // Tree type for TreeLoadBalancer: CenteredRankTree, BalancedDepthFirstTree, or BreadthFirstTree.
    rank_tree_type = "CenteredRankTree"
 
-   // Clustering efficiencies similar to those of GriddingAlgorithm.
-   efficiency_tol = 0.85
-   combine_tol = 0.85
-
    // Mesh generator: SphericalShellGenerator, SinusoidalFrontGenerator, or ShrunkenLevelGenerator.
    mesh_generator_name = "SphericalShellGenerator"
 
@@ -81,6 +77,8 @@ TileClustering {
 // Used if box_generator_type is TileClustering.  Refer to mesh::TileClustering for input.
 BergerRigoutsos {
   sort_output_nodes = TRUE
+  efficiency_tolerance = 0.85
+  combine_efficiency = 0.85
   DEV_log_node_history = FALSE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE

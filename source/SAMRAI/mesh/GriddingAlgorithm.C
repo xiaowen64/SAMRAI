@@ -197,14 +197,6 @@ GriddingAlgorithm::GriddingAlgorithm(
       d_buf_tag_indx,
       boost::shared_ptr<hier::RefineOperator>());
 
-   d_efficiency_tolerance.resize(d_hierarchy->getMaxNumberOfLevels());
-   d_combine_efficiency.resize(d_hierarchy->getMaxNumberOfLevels());
-
-   for (int ln = 0; ln < d_hierarchy->getMaxNumberOfLevels(); ln++) {
-      d_efficiency_tolerance[ln] = 0.8e0;
-      d_combine_efficiency[ln] = 0.8e0;
-   }
-
    d_proper_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels());
    d_to_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels());
 
@@ -3033,8 +3025,6 @@ GriddingAlgorithm::findRefinementBoxes(
          tag_to_new,
          level, d_tag_indx, d_true_tag, bounding_container,
          smallest_box_to_refine,
-         getEfficiencyTolerance(tag_ln),
-         getCombineEfficiency(tag_ln),
          d_tag_to_cluster_width[tag_ln]);
    }
    t_find_boxes_containing_tags->stop();
@@ -4401,19 +4391,6 @@ GriddingAlgorithm::printClassData(
    os << "d_buf_tag_indx = " << d_buf_tag_indx << std::endl;
    os << "d_true_tag = " << d_true_tag << std::endl;
    os << "d_false_tag = " << d_false_tag << std::endl;
-
-   int ln;
-
-   os << "d_efficiency_tolerance..." << std::endl;
-   for (ln = 0; ln < static_cast<int>(d_efficiency_tolerance.size()); ln++) {
-      os << "    d_efficiency_tolerance[" << ln << "] = "
-         << d_efficiency_tolerance[ln] << std::endl;
-   }
-   os << "d_combine_efficiency..." << std::endl;
-   for (ln = 0; ln < static_cast<int>(d_combine_efficiency.size()); ln++) {
-      os << "    d_combine_efficiency[" << ln << "] = "
-         << d_combine_efficiency[ln] << std::endl;
-   }
 }
 
 /*
@@ -4438,9 +4415,6 @@ GriddingAlgorithm::putToRestart(
    restart_db->putBool("DEV_check_connectors", d_check_connectors);
    restart_db->putBool("DEV_print_steps", d_print_steps);
    restart_db->putBool("DEV_log_metadata_statistics", d_log_metadata_statistics);
-
-   restart_db->putDoubleVector("efficiency_tolerance", d_efficiency_tolerance);
-   restart_db->putDoubleVector("combine_efficiency", d_combine_efficiency);
 
    restart_db->putChar("check_nonrefined_tags", d_check_nonrefined_tags);
    restart_db->putChar("check_overlapping_patches",
@@ -4489,58 +4463,6 @@ GriddingAlgorithm::getFromInput(
             input_db->getBoolWithDefault("DEV_print_steps", false);
          d_log_metadata_statistics =
             input_db->getBoolWithDefault("DEV_log_metadata_statistics", false);
-
-         /*
-          * Read input for efficiency tolerance.
-          */
-
-         if (input_db->keyExists("efficiency_tolerance")) {
-            std::vector<double> efficiency_tolerance =
-               input_db->getDoubleVector("efficiency_tolerance");
-
-            int efficiency_tolerance_size =
-               static_cast<int>(efficiency_tolerance.size());
-            int ln;
-            for (ln = 0;
-                 ln < efficiency_tolerance_size && ln < d_hierarchy->getMaxNumberOfLevels();
-                 ++ln) {
-               if (!((efficiency_tolerance[ln] > 0.0e0) &&
-                     (efficiency_tolerance[ln] < 1.0e0))) {
-                  INPUT_RANGE_ERROR("efficiency_tolerance");
-               }
-               d_efficiency_tolerance[ln] = efficiency_tolerance[ln];
-            }
-            for ( ; ln < d_hierarchy->getMaxNumberOfLevels(); ++ln) {
-               d_efficiency_tolerance[ln] = efficiency_tolerance.back();
-            }
-
-         }
-
-         /*
-          * Read input for combine efficiency.
-          */
-
-         if (input_db->keyExists("combine_efficiency")) {
-            std::vector<double> combine_efficiency =
-               input_db->getDoubleVector("combine_efficiency");
-
-            int combine_efficiency_size =
-               static_cast<int>(combine_efficiency.size());
-            int ln;
-            for (ln = 0;
-                 ln < combine_efficiency_size && ln < d_hierarchy->getMaxNumberOfLevels();
-                 ++ln) {
-               if (!((combine_efficiency[ln] > 0.0e0) &&
-                     (combine_efficiency[ln] < 1.0e0))) {
-                  INPUT_RANGE_ERROR("combine_efficiency");
-               }
-               d_combine_efficiency[ln] = combine_efficiency[ln];
-            }
-            for ( ; ln < d_hierarchy->getMaxNumberOfLevels(); ++ln) {
-               d_combine_efficiency[ln] = combine_efficiency.back();
-            }
-
-         }
 
          std::string tmp_str;
 
@@ -4606,65 +4528,6 @@ GriddingAlgorithm::getFromInput(
          d_log_metadata_statistics =
             input_db->getBoolWithDefault("DEV_log_metadata_statistics",
                d_log_metadata_statistics);
-
-         /*
-          * Read input for efficiency tolerance.
-          */
-
-         if (input_db->keyExists("efficiency_tolerance")) {
-            std::vector<double> efficiency_tolerance =
-               input_db->getDoubleVector("efficiency_tolerance");
-
-            int efficiency_tolerance_size =
-               static_cast<int>(efficiency_tolerance.size());
-            int ln;
-            for (ln = 0;
-                 ln < efficiency_tolerance_size && ln < d_hierarchy->getMaxNumberOfLevels();
-                 ++ln) {
-               if ((efficiency_tolerance[ln] <= 0.0e0) ||
-                   (efficiency_tolerance[ln] >= 1.0e0)) {
-                  TBOX_ERROR(d_object_name << ":  "
-                                           << "Key data `efficiency_tolerance' has values"
-                                           << " out of range 0.0 < tol < 1.0."
-                                           << std::endl);
-               }
-               d_efficiency_tolerance[ln] = efficiency_tolerance[ln];
-            }
-            for ( ; ln < d_hierarchy->getMaxNumberOfLevels(); ++ln) {
-               d_efficiency_tolerance[ln] = efficiency_tolerance.back();
-            }
-
-         }
-
-         /*
-          * Read input for combine efficiency.
-          */
-
-         if (input_db->keyExists("combine_efficiency")) {
-            std::vector<double> combine_efficiency =
-               input_db->getDoubleVector("combine_efficiency");
-
-            int combine_efficiency_size =
-               static_cast<int>(combine_efficiency.size());
-            int ln;
-            for (ln = 0;
-                 ln < combine_efficiency_size && ln < d_hierarchy->getMaxNumberOfLevels();
-                 ++ln) {
-               if ((combine_efficiency[ln] <= 0.0e0) ||
-                   (combine_efficiency[ln] >= 1.0e0)) {
-                  TBOX_ERROR(
-                     d_object_name << ":  "
-                                   << "Key data `combine_efficiency' has values"
-                                   << " out of range 0.0 < tol < 1.0."
-                                   << std::endl);
-               }
-               d_combine_efficiency[ln] = combine_efficiency[ln];
-            }
-            for ( ; ln < d_hierarchy->getMaxNumberOfLevels(); ++ln) {
-               d_combine_efficiency[ln] = combine_efficiency.back();
-            }
-
-         }
 
          std::string tmp_str;
 
@@ -4776,9 +4639,6 @@ GriddingAlgorithm::getFromRestart()
    d_check_connectors = db->getBool("DEV_check_connectors");
    d_print_steps = db->getBool("DEV_print_steps");
    d_log_metadata_statistics = db->getBool("DEV_log_metadata_statistics");
-
-   d_efficiency_tolerance = db->getDoubleVector("efficiency_tolerance");
-   d_combine_efficiency = db->getDoubleVector("combine_efficiency");
 
    d_check_nonrefined_tags = db->getChar("check_nonrefined_tags");
    d_check_overlapping_patches = db->getChar("check_overlapping_patches");

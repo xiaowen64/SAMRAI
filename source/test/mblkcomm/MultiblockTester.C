@@ -522,7 +522,8 @@ void MultiblockTester::setupHierarchy(
    TBOX_ASSERT(main_input_db);
 
    boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
-      new mesh::BergerRigoutsos(d_dim));
+      new mesh::BergerRigoutsos(d_dim,
+                                main_input_db->getDatabase("BergerRigoutsos")));
 
    boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
       new mesh::TreeLoadBalancer(d_dim,

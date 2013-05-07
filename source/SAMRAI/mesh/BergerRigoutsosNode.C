@@ -736,7 +736,7 @@ BergerRigoutsosNode::runChildren_check()
    if (d_lft_child->boxAccepted() &&
        d_rht_child->boxAccepted() &&
        d_box.numberCells() <= d_common->d_max_box_size &&
-       ( combine_reduction >= d_common->d_combine_tol )) {
+       ( combine_reduction >= d_common->getCombineEfficiency(d_common->d_level_number) )) {
 
       // Discard childrens' graph nodes in favor of recombination.
 
@@ -1370,7 +1370,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
             d_common->d_max_tags_owned = num_tagged;
          }
 
-         if (efficiency >= d_common->d_efficiency_tol) {
+         if (efficiency >= d_common->getEfficiencyTolerance(d_common->d_level_number)) {
             d_box_acceptance = accepted_by_calculation;
             if (d_common->d_log_node_history) {
                d_common->writeCounters();

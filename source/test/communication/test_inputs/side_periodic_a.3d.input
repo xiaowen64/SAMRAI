@@ -159,12 +159,15 @@ PatchHierarchy {
    allow_patches_smaller_than_ghostwidth = FALSE
 }
 
+BergerRigoutsos {
+   efficiency_tolerance = 0.70
+   combine_efficiency = 0.85
+}
+
 GriddingAlgorithm {
    enforce_proper_nesting = TRUE
    DEV_extend_to_domain_boundary = TRUE
    // DEV_load_balance = FALSE
-   efficiency_tolerance = 0.70
-   combine_efficiency = 0.85
    check_nonrefined_tags = "IGNORE"
 }
 

@@ -59,6 +59,8 @@ ABRTest {
 
 // Refer to mesh::BergerRigoutsos for input
 BergerRigoutsos {
+   efficiency_tolerance = 0.70
+   combine_efficiency = 0.85
   // DEV_log_node_history = TRUE
   DEV_log_cluster_summary = TRUE
   // DEV_algo_advance_mode: "SYNCHRONOUS", "ADVANCE_SOME", "ROUND_ROBIN" or "ADVANCE_ANY"
@@ -135,9 +137,6 @@ PatchHierarchy {
 
 // Refer to mesh::GriddingAlgorithm for input
 GriddingAlgorithm {
-   efficiency_tolerance = 0.70
-   combine_efficiency = 0.85
-
    check_nonrefined_tags = "IGNORE"
    sequentialize_patch_indices = TRUE // For VisIt
    DEV_print_steps = TRUE

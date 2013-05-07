@@ -197,18 +197,16 @@ PatchHierarchy {
 
 // Refer to mesh::GriddingAlgorithm for input
 GriddingAlgorithm {
-
-   efficiency_tolerance   = 0.75e0     // min % of tag cells in new patch level
-   combine_efficiency     = 0.85e0     // chop box if sum of volumes of smaller
-                                       // boxes < efficiency * vol of large box
-
    allow_patches_smaller_than_ghostwidth = TRUE
    allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
 }
 
 // Refer to mesh::BergerRigoutsos for input
 BergerRigoutsos {
-  sort_output_nodes = TRUE // Makes results repeatable.
+   sort_output_nodes = TRUE // Makes results repeatable.
+   efficiency_tolerance   = 0.75e0     // min % of tag cells in new patch level
+   combine_efficiency     = 0.85e0     // chop box if sum of volumes of smaller
+                                       // boxes < efficiency * vol of large box
 }
 
 // Refer to algs::HyperbolicLevelIntegrator for input

@@ -386,7 +386,8 @@ int main(
             input_db->getDatabase("StandardTagAndInitialize")));
 
       boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
-         new mesh::BergerRigoutsos(dim));
+         new mesh::BergerRigoutsos(dim,
+         input_db->getDatabase("BergerRigoutsos")));
 
       boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(

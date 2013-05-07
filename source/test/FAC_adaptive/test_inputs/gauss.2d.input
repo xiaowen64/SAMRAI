@@ -59,6 +59,8 @@ StandardTagAndInitialize {
 }
 
 BergerRigoutsos {
+  efficiency_tolerance = 0.85
+  combine_efficiency = 0.85
   DEV_log_node_history = TRUE
   DEV_log_cluster_summary = TRUE
   DEV_log_cluster = TRUE
@@ -98,8 +100,6 @@ GriddingAlgorithm {
    enforce_proper_nesting = TRUE
    DEV_extend_to_domain_boundary = FALSE
    // DEV_load_balance = FALSE
-   efficiency_tolerance = 0.85
-   combine_efficiency = 0.85
    check_nonrefined_tags = "ERROR"
    check_overlapping_patches = "ERROR"
    sequentialize_patch_indices = TRUE

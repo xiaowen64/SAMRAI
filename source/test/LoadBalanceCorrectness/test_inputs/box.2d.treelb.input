@@ -40,9 +40,6 @@ Main {
 
    load_balancer_type = "TreeLoadBalancer"
 
-   efficiency_tol = 0.85
-   combine_tol = 0.85
-
    mesh_generator_name = "ShrunkenLevelGenerator"
 
    ShrunkenLevelGenerator {
@@ -63,6 +60,8 @@ TileClustering {
 
 BergerRigoutsos {
   sort_output_nodes = TRUE
+  efficiency_tolerance = 0.85
+  combine_efficiency = 0.85
   DEV_log_node_history = FALSE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
