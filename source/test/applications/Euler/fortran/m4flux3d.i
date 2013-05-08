@@ -256,7 +256,7 @@ c   correct the $1-direction with $2$3-fluxes
      &          (flux$4(ic$2+1,$6,k)-flux$4(ic$2,$6,k))/dx($2)+
      &          (flux$5(ic$3+1,$7,k)-flux$5(ic$3,$7,k))/dx($3))
              enddo
-  
+
              ttv(1)= trnsvers(1)
              ttv(2)= (trnsvers(2) - vel0*trnsvers(1))/rho
              ttv(3)= (trnsvers(3) - vel1*trnsvers(1))/rho
@@ -281,7 +281,7 @@ define(artificial_viscosity1,`dnl
            do ie$1=ifirst$1-(FLUXG-1),ilast$1+(FLUXG)
              maxeig =trrgt$1(ie$1,ic$2,ic$3,NEQU)-trlft$1(ie$1,ic$2,ic$3,NEQU)
              vcoef = tenth*abs(maxeig)
-   
+
              mom0L=trlft$1(ie$1,ic$2,ic$3,1)*trlft$1(ie$1,ic$2,ic$3,2)
              mom1L=trlft$1(ie$1,ic$2,ic$3,1)*trlft$1(ie$1,ic$2,ic$3,3)
              mom2L=trlft$1(ie$1,ic$2,ic$3,1)*trlft$1(ie$1,ic$2,ic$3,4)

@@ -18,25 +18,25 @@ c***********************************************************************
 include(FORTDIR/probparams.i)dnl
 include(FORTDIR/const.i)dnl
 c***********************************************************************
-c***********************************************************************     
+c***********************************************************************
 c input arrays:
       integer ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2
-      REAL dt 
+      REAL dt
       integer idir
 c variables in 1d axis indexed
 c
-      REAL 
+      REAL
      &     dx(0:NDIM-1)
-c variables in 2d cell indexed         
+c variables in 2d cell indexed
       REAL
      &     gamma,
      &     density(CELL3d(ifirst,ilast,CELLG)),
      &     velocity(CELL3d(ifirst,ilast,CELLG),0:NDIM-1),
      &     pressure(CELL3d(ifirst,ilast,CELLG)),
 c
-     &     flux0(FACE3d0(ifirst,ilast,FLUXG),NEQU), 
-     &     flux1(FACE3d1(ifirst,ilast,FLUXG),NEQU), 
-     &     flux2(FACE3d2(ifirst,ilast,FLUXG),NEQU), 
+     &     flux0(FACE3d0(ifirst,ilast,FLUXG),NEQU),
+     &     flux1(FACE3d1(ifirst,ilast,FLUXG),NEQU),
+     &     flux2(FACE3d2(ifirst,ilast,FLUXG),NEQU),
 c
      &     tracelft0(FACE3d0(ifirst,ilast,FACEG),NEQU),
      &     tracelft1(FACE3d1(ifirst,ilast,FACEG),NEQU),
@@ -52,11 +52,11 @@ c
      &     ttracergt1(FACE3d1(ifirst,ilast,FACEG),NEQU),
      &     ttracergt2(FACE3d2(ifirst,ilast,FACEG),NEQU)
 c
-c***********************************************************************     
+c***********************************************************************
 c
       integer ic0,ic1,ic2,k
       REAL trnsvers(NEQU)
-c     REAL ttvlft(NEQU),ttvrgt(NEQU)     
+c     REAL ttvlft(NEQU),ttvrgt(NEQU)
       REAL ttv(NEQU)
       REAL v2norm,rho,vel1,vel2,vel0,gam_min_one
 c     write(6,*) "In fluxcorrec2d()"
@@ -64,7 +64,7 @@ c     write(6,*) "In fluxcorrec2d()"
          write(6,*) "flux ghosts < 1!"
          stop
       endif
-c    
+c
       gam_min_one = gamma - one
 c
 c  "Forward" computation of transverse flux terms
@@ -90,7 +90,7 @@ c
       endif
 c
       return
-      end   
+      end
 c
 c***********************************************************************
 c***********************************************************************
@@ -108,26 +108,26 @@ c***********************************************************************
 include(FORTDIR/probparams.i)dnl
 include(FORTDIR/const.i)dnl
 c***********************************************************************
-c***********************************************************************     
+c***********************************************************************
 c input arrays:
       integer ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2
-      REAL dt 
+      REAL dt
 c variables in 1d axis indexed
 c
-      REAL 
+      REAL
      &     dx(0:NDIM-1)
-c variables in 2d cell indexed         
+c variables in 2d cell indexed
       REAL
      &     gamma,
      &     density(CELL3d(ifirst,ilast,CELLG)),
      &     velocity(CELL3d(ifirst,ilast,CELLG),0:NDIM-1),
      &     pressure(CELL3d(ifirst,ilast,CELLG)),
      &     fluxa0(FACE3d0(ifirst,ilast,FLUXG),NEQU),
-     &     fluxa1(FACE3d1(ifirst,ilast,FLUXG),NEQU), 
-     &     fluxa2(FACE3d2(ifirst,ilast,FLUXG),NEQU), 
+     &     fluxa1(FACE3d1(ifirst,ilast,FLUXG),NEQU),
+     &     fluxa2(FACE3d2(ifirst,ilast,FLUXG),NEQU),
      &     fluxb0(FACE3d0(ifirst,ilast,FLUXG),NEQU),
-     &     fluxb1(FACE3d1(ifirst,ilast,FLUXG),NEQU), 
-     &     fluxb2(FACE3d2(ifirst,ilast,FLUXG),NEQU), 
+     &     fluxb1(FACE3d1(ifirst,ilast,FLUXG),NEQU),
+     &     fluxb2(FACE3d2(ifirst,ilast,FLUXG),NEQU),
      &     tracelft0(FACE3d0(ifirst,ilast,FACEG),NEQU),
      &     tracergt0(FACE3d0(ifirst,ilast,FACEG),NEQU),
      &     tracelft1(FACE3d1(ifirst,ilast,FACEG),NEQU),
@@ -135,32 +135,32 @@ c variables in 2d cell indexed
      &     tracelft2(FACE3d2(ifirst,ilast,FACEG),NEQU),
      &     tracergt2(FACE3d2(ifirst,ilast,FACEG),NEQU)
 c
-c***********************************************************************     
+c***********************************************************************
 c
       integer ic0,ic1,ic2,k
       REAL trnsvers(NEQU)
-c     REAL ttvlft(NEQU),ttvrgt(NEQU)     
+c     REAL ttvlft(NEQU),ttvrgt(NEQU)
       REAL ttv(NEQU)
-      REAL v2norm,rho,vel1,vel2,vel0,gam_min_one 
+      REAL v2norm,rho,vel1,vel2,vel0,gam_min_one
 c
       if (FLUXG.lt.1) then
          write(6,*) "flux ghosts < 1!"
          stop
       endif
-     
+
 c     ******************************************************************
 c     * complete tracing at cell edges
 c     ******************************************************************
       gam_min_one = gamma - one
-c         
+c
 correc_flux3d(2,0,1,a0,a1,`ic1,ic2',`ic2,ic0')dnl
-c         
+c
 correc_flux3d(1,2,0,a2,b0,`ic0,ic1',`ic1,ic2')dnl
-c         
+c
 correc_flux3d(0,1,2,b1,b2,`ic2,ic0',`ic0,ic1')dnl
-c   
+c
       return
-      end   
+      end
 c
 c***********************************************************************
 c***********************************************************************
@@ -172,7 +172,7 @@ c***********************************************************************
      &  flux0,flux1,flux2,
      &  trlft0,trlft1,trlft2,
      &  trrgt0,trrgt1,trrgt2)
-     
+
 c***********************************************************************
       implicit none
 include(FORTDIR/probparams.i)dnl
@@ -182,17 +182,17 @@ c***********************************************************************
 c input arrays:
       integer ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2
       integer xcell0,xcell1,visco,rpchoice
-      REAL dt,dx(0:NDIM-1),gamma 
-c variables in 2d cell indexed         
+      REAL dt,dx(0:NDIM-1),gamma
+c variables in 2d cell indexed
       REAL
      &     density(CELL3d(ifirst,ilast,CELLG)),
      &     velocity(CELL3d(ifirst,ilast,CELLG),NDIM),
      &     pressure(CELL3d(ifirst,ilast,CELLG))
-c variables in 2d side indexed         
+c variables in 2d side indexed
       REAL
      &     flux0(FACE3d0(ifirst,ilast,FLUXG),NEQU),
-     &     flux1(FACE3d1(ifirst,ilast,FLUXG),NEQU), 
-     &     flux2(FACE3d2(ifirst,ilast,FLUXG),NEQU), 
+     &     flux1(FACE3d1(ifirst,ilast,FLUXG),NEQU),
+     &     flux2(FACE3d2(ifirst,ilast,FLUXG),NEQU),
      &     trlft0(FACE3d0(ifirst,ilast,FACEG),NEQU),
      &     trrgt0(FACE3d0(ifirst,ilast,FACEG),NEQU),
      &     trlft1(FACE3d1(ifirst,ilast,FACEG),NEQU),
@@ -200,7 +200,7 @@ c variables in 2d side indexed
      &     trlft2(FACE3d2(ifirst,ilast,FACEG),NEQU),
      &     trrgt2(FACE3d2(ifirst,ilast,FACEG),NEQU)
 c
-c***********************************************************************     
+c***********************************************************************
 c
       integer ic0,ic1,ic2,ie0,ie1,ie2,j
       REAL   stateL(NEQU),stateR(NEQU),
@@ -223,7 +223,7 @@ c***********************************************************************
 c solve riemann problems for conservative flux
 c  arguments: ( axis for RP, other axis, extra cells-direction)
 c***********************************************************************
-c      
+c
       gam_min_one = gamma-one
 
 c     write(6,*) "in fluxcalculation3d..."
@@ -254,11 +254,11 @@ artificial_viscosity1(2,0,1)dnl
 c
       endif
       return
-      end 
+      end
 c***********************************************************************
 c***********************************************************************
 c***********************************************************************
-  
+
       subroutine consdiff3d(
      &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
      &  dx,
@@ -283,7 +283,7 @@ c
       integer ic0,ic1,ic2,k
       REAL temp,v2norm,mom(NDIM),energy,
      &     gam_min_one
-      
+
 c***********************************************************************
 c update conserved to full time
 c note the permutation of indices in 2nd, 3rd coordinate directions
@@ -301,7 +301,7 @@ c***********************************************************************
      &                 velocity(ic0,ic1,ic2,3)**2)
              energy = pressure(ic0,ic1,ic2)/gam_min_one +
      &                        half*density(ic0,ic1,ic2)*v2norm
- 
+
              density(ic0,ic1,ic2) = density(ic0,ic1,ic2)
      &          -(flux0(ic0+1,ic1,ic2,1)-flux0(ic0,ic1,ic2,1))/dx(0)
      &          -(flux1(ic1+1,ic2,ic0,1)-flux1(ic1,ic2,ic0,1))/dx(1)
@@ -319,7 +319,7 @@ c***********************************************************************
      &        -(flux0(ic0+1,ic1,ic2,NEQU)-flux0(ic0,ic1,ic2,NEQU))/dx(0)
      &        -(flux1(ic1+1,ic2,ic0,NEQU)-flux1(ic1,ic2,ic0,NEQU))/dx(1)
      &        -(flux2(ic2+1,ic0,ic1,NEQU)-flux2(ic2,ic0,ic1,NEQU))/dx(2)
-c      
+c
              v2norm = (velocity(ic0,ic1,ic2,1)**2+
      &            velocity(ic0,ic1,ic2,2)**2+velocity(ic0,ic1,ic2,3)**2)
              temp = energy - half*density(ic0,ic1,ic2)*v2norm

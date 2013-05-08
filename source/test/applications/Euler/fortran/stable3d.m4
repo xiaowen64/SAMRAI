@@ -14,11 +14,11 @@ c+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       integer ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
      &  ngc0,ngc1,ngc2
 c
-      REAL  
+      REAL
      &  density(CELL3dVECG(ifirst,ilast,ngc)),
      &  velocity(CELL3dVECG(ifirst,ilast,ngc),0:NDIM-1),
      &  pressure(CELL3dVECG(ifirst,ilast,ngc))
-c    
+c
       integer ic0,ic1,ic2
       integer ighoslft(0:NDIM-1),ighosrgt(0:NDIM-1)
 
@@ -56,4 +56,4 @@ c      write(6,*) " dx(1),maxspeed(1)= ",dx(1),maxspeed(1)
 c      write(6,*) " dx(2),maxspeed(2)= ",dx(2),maxspeed(2)
 c      write(6,*) "        stabdt= ",stabdt
       return
-      end 
+      end
