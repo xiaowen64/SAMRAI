@@ -9,7 +9,9 @@ c     *  Approximate Riemann solver and exact Riemann solver have
 c     *  identical setup and post-process phases.
 c     ************************************************************
 
+!$OMP DO SCHEDULE(STATIC) REDUCTION(+:thread_w)
       do ic$3=ifirst$3-$6,ilast$3+$6
+         thread_w = thread_w + 1
          do ic$2=ifirst$2-$5,ilast$2+$5
            do ie$1=ifirst$1-(FLUXG-1),ilast$1+1+(FLUXG-1)
 
@@ -52,12 +54,18 @@ c          ************************************************************
            enddo
          enddo
       enddo
+!$OMP END DO
+!$OMP CRITICAL
+c     write(6,*) "Thread ", thread_i, "/", thread_c,
+c    c " did ", thread_w, " loops."
+!$OMP END CRITICAL
 
       elseif (rpchoice.eq.HLLC_RIEM_SOLVE) then
 c     ******************************************************************
 c     *  HLLC Riemann Solver
 c     ******************************************************************
 
+!$OMP DO SCHEDULE(STATIC) REDUCTION(+:thread_w)
       do ic$3=ifirst$3-$6,ilast$3+$6
          do ic$2=ifirst$2-$5,ilast$2+$5
             do ie$1=ifirst$1-(FLUXG-1),ilast$1+1+(FLUXG-1)
@@ -205,6 +213,11 @@ c        ************************************************************
             enddo
          enddo
       enddo
+!$OMP END DO
+!$OMP CRITICAL
+c     write(6,*) "Thread ", thread_i, "/", thread_c,
+c    c " did ", thread_w, " loops."
+!$OMP END CRITICAL
 
       endif
 ')dnl

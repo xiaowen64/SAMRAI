@@ -214,6 +214,10 @@ c variables for hllc scheme
       REAL mfL,mfR,star(NEQU),sL,sM,sR
       REAL w,omw,hat(NEQU+1),denom
 c
+c variables for threads
+      integer omp_get_thread_num, omp_get_num_threads
+      integer thread_c, thread_i, thread_w, thread_p
+
       if (FLUXG.lt.1) then
          write(6,*) "flux ghosts < 1!"
          stop
@@ -235,6 +239,24 @@ c     write(6,*) "gamma = ",gamma
 c     write(6,*) "rpchoice = ",rpchoice
 c     write(6,*) "gam_min_one = ",gam_min_one
 c     call flush(6)
+
+!$OMP PARALLEL DEFAULT(none)
+!$OMPc SHARED(density,velocity,pressure,flux0,flux1,flux2,
+!$OMPc        trlft0,trrgt0,trlft1,trrgt1,trlft2,trrgt2,
+!$OMPc        ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
+!$OMPc        xcell0,xcell1,rpchoice,fluxg,
+!$OMPc        gamma,gam_min_one,dt,visco,
+!$OMPc        APPROX_RIEM_SOLVE,EXACT_RIEM_SOLVE,HLLC_RIEM_SOLVE,
+!$OMPc        thread_w)
+!$OMPc PRIVATE(ic2,ic1,ic0,ie0,ie1,ie2,j,stateL,stateR,
+!$OMPc        vel,mom0,mom1,mom2,v2norm,Hent,
+!$OMPc        riemst,w,omw,hat,aLsq,aRsq,sL,sM,sR,mfL,mfR,flux,
+!$OMPc        keL,keR,diff,star,denom,
+!$OMPc        thread_i,thread_c)
+
+      thread_i = omp_get_thread_num()
+      thread_c = omp_get_num_threads()
+      thread_w = 0
 riemann_solve(0,1,2,`ic1,ic2',(xcell0+FLUXG-1),(xcell1+FLUXG-1))dnl
 
 c
@@ -242,6 +264,7 @@ riemann_solve(1,0,2,`ic2,ic0',(xcell0+FLUXG-1),(xcell1+FLUXG-1))dnl
 
 c
 riemann_solve(2,0,1,`ic0,ic1',(xcell0+FLUXG-1),(xcell1+FLUXG-1))dnl
+!$OMP END PARALLEL
 
       if (visco.eq.1) then
 c     write(6,*) "doing artificial viscosity"
@@ -284,12 +307,27 @@ c
       REAL temp,v2norm,mom(NDIM),energy,
      &     gam_min_one
 
+      integer thread_c, omp_get_num_threads
+      integer thread_n, omp_get_thread_num
+      integer chunk
+
 c***********************************************************************
 c update conserved to full time
 c note the permutation of indices in 2nd, 3rd coordinate directions
 c***********************************************************************
       gam_min_one = gamma - one
 
+      chunk = 100
+!$OMP PARALLEL SHARED(density,velocity,pressure,flux0,flux1,flux2,chunk,
+!$OMPc                fluxg)
+!$OMPc         PRIVATE(ic2,ic1,ic0,mom,v2norm,energy,temp,
+!$OMPc                 thread_c,thread_n)
+
+c     thread_n = omp_get_thread_num()
+c     thread_c = omp_get_num_threads()
+c     write(6,*) "Thread number = ", thread_n, ' / ', thread_c
+
+!$OMP DO SCHEDULE(DYNAMIC,chunk)
       do ic2=ifirst2,ilast2
          do ic1=ifirst1,ilast1
            do ic0=ifirst0,ilast0
@@ -328,6 +366,8 @@ c
            enddo
          enddo
       enddo
+!$OMP END DO NOWAIT
+!$OMP END PARALLEL
 c
       return
       end
