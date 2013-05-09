@@ -635,7 +635,7 @@ GriddingAlgorithm::makeFinerLevel(
 {
    if (d_print_steps) {
       tbox::plog
-      << "GriddingAlgorithm::makeFinerLevel entered with finest ln = "
+      << "GriddingAlgorithm::makeFinerLevel: entered with finest ln = "
       << d_hierarchy->getFinestLevelNumber() << "\n";
    }
 
@@ -1288,10 +1288,10 @@ GriddingAlgorithm::regridFinerLevel(
          if (d_print_steps) {
             if (new_box_level && new_box_level->isInitialized()) {
                tbox::plog
-               << "GriddingAlgorithm::regridFinerLevel got inititalized new_box_level\n";
+               << "GriddingAlgorithm::regridFinerLevel: got inititalized new_box_level\n";
             } else {
                tbox::plog
-               << "GriddingAlgorithm::regridFinerLevel got un-inititalized new_box_level\n";
+               << "GriddingAlgorithm::regridFinerLevel: got un-inititalized new_box_level\n";
             }
          }
 
@@ -1351,7 +1351,7 @@ GriddingAlgorithm::regridFinerLevel(
          if (d_log_metadata_statistics) {
             // Don't log the coarse Connector, if the coarse level will be updated.
             logMetadataStatistics("regridFinerLevel", new_ln, new_ln<d_hierarchy->getFinestLevelNumber(), tag_ln==d_base_ln);
-            tbox::plog << "GriddingAlgorithm::regridFinerLevel finished logging level stats." << std::endl;
+            tbox::plog << "GriddingAlgorithm::regridFinerLevel: finished logging level stats." << std::endl;
          }
 
       } else {
@@ -1454,7 +1454,7 @@ GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
    double level_regrid_start_time = 0.;
    if (d_tag_init_strategy->usesTimeIntegration(regrid_cycle, regrid_time)) {
       if (static_cast<int>(regrid_start_time.size()) < tag_ln + 1) {
-         TBOX_ERROR("GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid()...\n"
+         TBOX_ERROR("GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid:\n"
             << "no regrid_start_time specified for level " << tag_ln
             << "." <<std::endl);
       } else {
@@ -1754,7 +1754,7 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
 
          if (!finer_nests_in_new) {
 
-            tbox::perr << "GriddingAlgorithm: new box_level\n"
+            tbox::perr << "GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel: new box_level\n"
                        << "at ln=" << new_ln
                        << " does not properly nest\n"
                        << "existing finer box_level at ln="
@@ -2030,7 +2030,7 @@ GriddingAlgorithm::checkBoundaryProximityViolation(
          for (int d = 0; d < dim.getValue(); ++d) {
             if (leftover_size(d) != 0 && leftover_size(d) < extend_ghosts(d)) {
                ++nerr;
-               TBOX_WARNING("GriddingAlgorithm::makeFinerLevel:\n"
+               TBOX_WARNING("GriddingAlgorithm::checkBoundaryProximityViolation:\n"
                   << "User-specified box (refined) " << *bi
                   << " violates boundary proximity.\n"
                   << "In direction " << d << ", it is "
@@ -2163,7 +2163,7 @@ GriddingAlgorithm::checkNonnestingUserBoxes(
 
    if (violating_parts->getGlobalNumberOfBoxes() > 0) {
 
-      tbox::perr << "GriddingAlgorihtm: user-specified refinement boxes\n"
+      tbox::perr << "GriddingAlgorihtm::checkNonnestingUserBoxes: user-specified refinement boxes\n"
                  << "violates nesting requirement.  Diagnostics will be\n"
                  << "writen to log files." << std::endl;
       const std::string left_margin("ERR: ");
@@ -2213,7 +2213,7 @@ GriddingAlgorithm::checkBoundaryProximityViolation(
          new_box_level,
          extend_ghosts));
    if (nerr > 0 && d_check_boundary_proximity_violation == 'e') {
-      TBOX_ERROR("GriddingAlgorithm::makeFinerLevel: User error:\n"
+      TBOX_ERROR("GriddingAlgorithm::checkBoundaryProximityViolation: User error:\n"
          << "Making level " << tag_ln + 1 << ".\n"
          << "New boxes violate boundary proximity.\n"
          << "All boxes must be at least " << extend_ghosts
@@ -2953,7 +2953,7 @@ GriddingAlgorithm::findRefinementBoxes(
 
    if (d_print_steps) {
       tbox::plog
-      << "GriddingAlgorithm::findRefinementBoxes entered with tag_ln = "
+      << "GriddingAlgorithm::findRefinementBoxes: entered with tag_ln = "
       << tag_ln << "\n";
    }
 
@@ -3196,7 +3196,7 @@ GriddingAlgorithm::findRefinementBoxes(
          t_load_balance->stop();
 
          if (d_check_connectors) {
-            tbox::plog << "GriddingAlgorithm checking new-tag" << std::endl;
+            tbox::plog << "GriddingAlgorithm::findRefinementBoxes: checking new-tag" << std::endl;
             int errs = 0;
             if (tag_to_new->getTranspose().checkOverlapCorrectness(false, true, true)) {
                ++errs;
@@ -3224,7 +3224,7 @@ GriddingAlgorithm::findRefinementBoxes(
 
       if (d_sequentialize_patch_indices) {
          if (d_print_steps) {
-            tbox::plog << "GriddingAlgorithm begin sorting boxes." << std::endl;
+            tbox::plog << "GriddingAlgorithm::findRefinementBoxes: begin sorting boxes." << std::endl;
          }
          renumberBoxes(*new_box_level,
             *tag_to_new,
@@ -3232,7 +3232,7 @@ GriddingAlgorithm::findRefinementBoxes(
             true,
             d_mca);
          if (d_print_steps) {
-            tbox::plog << "GriddingAlgorithm end sorting boxes." << std::endl;
+            tbox::plog << "GriddingAlgorithm::findRefinementBoxes: end sorting boxes." << std::endl;
          }
       }
 
@@ -3247,7 +3247,7 @@ GriddingAlgorithm::findRefinementBoxes(
             hier::CONNECTOR_IMPLICIT_CREATION_RULE,
             false);
       if (d_print_steps) {
-         tbox::plog << "GriddingAlgorithm begin adding periodic images."
+         tbox::plog << "GriddingAlgorithm::findRefinementBoxes: begin adding periodic images."
                     << std::endl;
       }
       dlbg_edge_utils.addPeriodicImagesAndRelationships(
@@ -3256,7 +3256,7 @@ GriddingAlgorithm::findRefinementBoxes(
          d_hierarchy->getGridGeometry()->getDomainSearchTree(),
          tag_to_tag);
       if (d_print_steps) {
-         tbox::plog << "GriddingAlgorithm begin adding periodic images."
+         tbox::plog << "GriddingAlgorithm::findRefinementBoxes: begin adding periodic images."
                     << std::endl;
       }
 
@@ -3366,7 +3366,7 @@ GriddingAlgorithm::enforceProperNesting(
 
    if (d_print_steps) {
       tbox::plog
-         << "GriddingAlgorithm::findRefinementBoxes: enforcing proper nesting\n";
+         << "GriddingAlgorithm::enforceProperNesting: enforcing proper nesting\n";
    }
 
    const int new_ln = tag_ln + 1;
@@ -3383,7 +3383,7 @@ GriddingAlgorithm::enforceProperNesting(
       d_oca);
 
    if (d_print_steps) {
-      tbox::plog << "GriddingAlgorithm::findRefinementBoxes applying proper nesting map.\n"
+      tbox::plog << "GriddingAlgorithm::enforceProperNesting: applying proper nesting map.\n"
                  << "Proper nesting map:\n" << unnested_to_nested->format("MAP: ", 3);
    }
 
@@ -3423,7 +3423,7 @@ GriddingAlgorithm::enforceProperNesting(
             hier::IntVector::getZero(d_hierarchy->getDim()),
             &d_hierarchy->getGridGeometry()->getPeriodicDomainSearchTree());
       if (!new_nests_in_tag) {
-         tbox::perr << "GriddingAlgorithm: new BoxLevel\n"
+         tbox::perr << "GriddingAlgorithm""enforceProperNesting: new BoxLevel\n"
                     << "at ln=" << new_ln
                     << " does not properly nest in\n"
                     << "tag level at tag_ln=" << tag_ln
@@ -3483,7 +3483,7 @@ GriddingAlgorithm::extendBoxesToDomainBoundary(
 
    if (d_print_steps) {
       tbox::plog
-         << "GriddingAlgorithm::findRefinementBoxes: extending boxes to boundary\n";
+         << "GriddingAlgorithm::extendBoxesToDomainBoundary: extending boxes to boundary\n";
    }
 
 
@@ -3553,7 +3553,7 @@ GriddingAlgorithm::enforceOverflowNesting(
 
    if (d_print_steps) {
       tbox::plog
-         << "GriddingAlgorithm::findRefinementBoxes: enforcing overflow nesting\n";
+         << "GriddingAlgorithm::enforceOverflowNesting: enforcing overflow nesting\n";
    }
 
    /*
@@ -3570,7 +3570,7 @@ GriddingAlgorithm::enforceOverflowNesting(
       new_box_level,
       tag_to_new.getTranspose());
    if (d_print_steps) {
-      tbox::plog << "GriddingAlgorithm::findRefinementBoxes applying overflow nesting map.\n"
+      tbox::plog << "GriddingAlgorithm::enforceOverflowNesting: applying overflow nesting map.\n"
                  << "Overflow nesting map:\n" << unnested_to_nested->format("MAP: ", 3)
                  << "Before overflow nesting enforcement:\n"
                  << "tag:\n" << tag_to_new.getBase().format("T: ")
@@ -3584,7 +3584,7 @@ GriddingAlgorithm::enforceOverflowNesting(
                 &new_box_level);
    t_use_overflow_map->stop();
    if (d_print_steps) {
-      tbox::plog << "GriddingAlgorithm::findRefinementBoxes finished applying overflow nesting map.\n"
+      tbox::plog << "GriddingAlgorithm::enforceOverflowNesting: finished applying overflow nesting map.\n"
                  << "After overflow nesting enforcement:\n"
                  << "tag:\n" << tag_to_new.getBase().format("T: ")
                  << "new:\n" << tag_to_new.getHead().format("N: ")
@@ -3594,7 +3594,7 @@ GriddingAlgorithm::enforceOverflowNesting(
 
    if (d_check_overflow_nesting) {
       if (d_print_steps) {
-         tbox::plog << "GriddingAlgorithm::findRefinementBoxes checking overflow."
+         tbox::plog << "GriddingAlgorithm::enforceOverflowNesting: checking overflow."
                     << std::endl;
       }
       bool locally_nested = false;
@@ -4341,7 +4341,7 @@ GriddingAlgorithm::warnIfDomainTooSmallInPeriodicDir() const
          for (int d = 0; d < dim.getValue(); ++d) {
             if (periodic_shift(d) > 0 &&
                 domain_bounding_box_size(d) < smallest_patch_size(d)) {
-               TBOX_WARNING("GriddingAlgorithm: domain bounding box size\n"
+               TBOX_WARNING("GriddingAlgorithm::warnIfDomainTooSmallInPeriodicDir: domain bounding box size\n"
                   << domain_bounding_box_size << " is smaller\n"
                   << "than the smallest patch size "
                   << smallest_patch_size << " on level "
@@ -4537,7 +4537,7 @@ GriddingAlgorithm::getFromInput(
             if (d_check_nonrefined_tags != 'i' &&
                 d_check_nonrefined_tags != 'w' &&
                 d_check_nonrefined_tags != 'e') {
-               TBOX_ERROR("GriddingAlgorithm: input parameter check_nonrefined_tags\n"
+               TBOX_ERROR("GriddingAlgorithm::getFromInput: input parameter check_nonrefined_tags\n"
                   << "can only be \"IGNORE\", \"WARN\" or \"ERROR\""
                   << std::endl);
             }
@@ -4550,7 +4550,7 @@ GriddingAlgorithm::getFromInput(
                 d_check_overlapping_patches != 'w' &&
                 d_check_overlapping_patches != 'e') {
                TBOX_ERROR(
-                  "GriddingAlgorithm: input parameter check_overlapping_patches\n"
+                  "GriddingAlgorithm::getFromInput: input parameter check_overlapping_patches\n"
                   << "can only be \"IGNORE\", \"WARN\" or \"ERROR\""
                   << std::endl);
             }
@@ -4562,7 +4562,7 @@ GriddingAlgorithm::getFromInput(
             if (d_check_nonnesting_user_boxes != 'i' &&
                 d_check_nonnesting_user_boxes != 'w' &&
                 d_check_nonnesting_user_boxes != 'e') {
-               TBOX_ERROR("GriddingAlgorithm: input parameter check_nonnesting_user_boxes\n"
+               TBOX_ERROR("GriddingAlgorithm::getFromInput: input parameter check_nonnesting_user_boxes\n"
                   << "can only be \"IGNORE\", \"WARN\" or \"ERROR\""
                   << std::endl);
             }
@@ -4576,7 +4576,7 @@ GriddingAlgorithm::getFromInput(
             if (d_check_boundary_proximity_violation != 'i' &&
                 d_check_boundary_proximity_violation != 'w' &&
                 d_check_boundary_proximity_violation != 'e') {
-               TBOX_ERROR("GriddingAlgorithm: input parameter check_boundary_proximity_violation\n"
+               TBOX_ERROR("GriddingAlgorithm::getFromInput: input parameter check_boundary_proximity_violation\n"
                   << "can only be \"IGNORE\", \"WARN\" or \"ERROR\""
                   << std::endl);
             }
