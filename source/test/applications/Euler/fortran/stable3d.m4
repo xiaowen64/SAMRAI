@@ -22,6 +22,10 @@ c
       integer ic0,ic1,ic2
       integer ighoslft(0:NDIM-1),ighosrgt(0:NDIM-1)
 
+      integer thread_c, omp_get_num_threads
+      integer thread_n, omp_get_thread_num
+      integer chunk
+
       REAL maxspeed(0:NDIM-1),gamma,lambda
 c
       ighoslft(0) = ifirst0 - ngc0
@@ -35,6 +39,15 @@ c
       maxspeed(1)=zero
       maxspeed(2)=zero
 
+      chunk = 1000
+!$OMP PARALLEL SHARED(pressure,velocity,gamma,chunk)
+!$OMPc         PRIVATE(ic2,ic1,ic0,lambda, thread_c)
+
+c     thread_n = omp_get_thread_num()
+c     thread_c = omp_get_num_threads()
+c     write(6,*) "Thread number = ", thread_n, ' / ', thread_c
+
+!$OMP DO SCHEDULE(DYNAMIC,chunk)
       do  ic2=ighoslft(2),ighosrgt(2)
          do  ic1=ighoslft(1),ighosrgt(1)
             do  ic0=ighoslft(0),ighosrgt(0)
@@ -49,6 +62,9 @@ c
             enddo
          enddo
       enddo
+!$OMP END DO NOWAIT
+!$OMP END PARALLEL
+
       stabdt = min((dx(1)/maxspeed(1)),(dx(0)/maxspeed(0)))
       stabdt = min((dx(2)/maxspeed(2)),stabdt)
 c     write(6,*) " dx(0),maxspeed(0)= ",dx(0),maxspeed(0)
