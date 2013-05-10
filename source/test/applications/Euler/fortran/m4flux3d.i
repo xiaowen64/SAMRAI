@@ -9,9 +9,8 @@ c     *  Approximate Riemann solver and exact Riemann solver have
 c     *  identical setup and post-process phases.
 c     ************************************************************
 
-!$OMP DO SCHEDULE(STATIC) REDUCTION(+:thread_w)
+!$OMP DO SCHEDULE(STATIC)
       do ic$3=ifirst$3-$6,ilast$3+$6
-         thread_w = thread_w + 1
          do ic$2=ifirst$2-$5,ilast$2+$5
            do ie$1=ifirst$1-(FLUXG-1),ilast$1+1+(FLUXG-1)
 
@@ -55,17 +54,13 @@ c          ************************************************************
          enddo
       enddo
 !$OMP END DO
-!$OMP CRITICAL
-c     write(6,*) "Thread ", thread_i, "/", thread_c,
-c    c " did ", thread_w, " loops."
-!$OMP END CRITICAL
 
       elseif (rpchoice.eq.HLLC_RIEM_SOLVE) then
 c     ******************************************************************
 c     *  HLLC Riemann Solver
 c     ******************************************************************
 
-!$OMP DO SCHEDULE(STATIC) REDUCTION(+:thread_w)
+!$OMP DO SCHEDULE(STATIC)
       do ic$3=ifirst$3-$6,ilast$3+$6
          do ic$2=ifirst$2-$5,ilast$2+$5
             do ie$1=ifirst$1-(FLUXG-1),ilast$1+1+(FLUXG-1)
@@ -214,16 +209,12 @@ c        ************************************************************
          enddo
       enddo
 !$OMP END DO
-!$OMP CRITICAL
-c     write(6,*) "Thread ", thread_i, "/", thread_c,
-c    c " did ", thread_w, " loops."
-!$OMP END CRITICAL
 
       endif
 ')dnl
 define(correc_flux2d,`dnl
 c   correct the $1-direction with $3-fluxes
-!$OMP DO SCHEDULE(STATIC) REDUCTION(+:thread_w)
+!$OMP DO SCHEDULE(STATIC)
       do ic$5=ifirst$5-(FLUXG),ilast$5+(FLUXG)
          do ic$3=ifirst$3-(FLUXG-1),ilast$3+(FLUXG-1)
            do ic$1=ifirst$1-(FLUXG),ilast$1+(FLUXG)
@@ -255,14 +246,10 @@ c
          enddo
       enddo
 !$OMP END DO
-!$OMP CRITICAL
-c     write(6,*) "Thread ", thread_i, "/", thread_c,
-c    c " did ", thread_w, " loops."
-!$OMP END CRITICAL
 ')dnl
 define(correc_flux3d,`dnl
 c   correct the $1-direction with $2$3-fluxes
-!$OMP DO SCHEDULE(STATIC) REDUCTION(+:thread_w)
+!$OMP DO SCHEDULE(STATIC)
       do ic$1=ifirst$1-FLUXG,ilast$1+FLUXG
          do ic$3=ifirst$3-(FLUXG-1),ilast$3+(FLUXG-1)
            do ic$2=ifirst$2-(FLUXG-1),ilast$2+(FLUXG-1)
@@ -295,13 +282,9 @@ c   correct the $1-direction with $2$3-fluxes
          enddo
       enddo
 !$OMP END DO
-!$OMP CRITICAL
-c     write(6,*) "Thread ", thread_i, "/", thread_c,
-c    c " did ", thread_w, " loops."
-!$OMP END CRITICAL
 ')dnl
 define(artificial_viscosity1,`dnl
-!$OMP DO SCHEDULE(STATIC) REDUCTION(+:thread_w)
+!$OMP DO SCHEDULE(STATIC)
       do ic$3=ifirst$3-(FLUXG-1),ilast$3+(FLUXG-1)
          do ic$2=ifirst$2-(FLUXG-1),ilast$2+(FLUXG-1)
            do ie$1=ifirst$1-(FLUXG-1),ilast$1+(FLUXG)
@@ -335,14 +318,10 @@ define(artificial_viscosity1,`dnl
          enddo
       enddo
 !$OMP END DO
-!$OMP CRITICAL
-c     write(6,*) "Thread ", thread_i, "/", thread_c,
-c    c " did ", thread_w, " loops."
-!$OMP END CRITICAL
 ')dnl
 c
 define(artificial_viscosity2,`dnl
-!$OMP DO SCHEDULE(STATIC) REDUCTION(+:thread_w)
+!$OMP DO SCHEDULE(STATIC)
       do ic1=ifirst1,ilast1
         do ie0=ifirst0,ilast0+1
           maxeig =pressure(ie0,ic1)-pressure(ie0-1,ic1)
@@ -369,12 +348,8 @@ define(artificial_viscosity2,`dnl
         enddo
       enddo
 !$OMP END DO
-!$OMP CRITICAL
-c     write(6,*) "Thread ", thread_i, "/", thread_c,
-c    c " did ", thread_w, " loops."
-!$OMP END CRITICAL
 
-!$OMP DO SCHEDULE(STATIC) REDUCTION(+:thread_w)
+!$OMP DO SCHEDULE(STATIC)
       do ic0=ifirst0,ilast0
         do ie1=ifirst1,ilast1+1
           maxeig =pressure(ic0,ie1)-pressure(ic0-1,ie1)
@@ -400,9 +375,5 @@ c    c " did ", thread_w, " loops."
         enddo
       enddo
 !$OMP END DO
-!$OMP CRITICAL
-c     write(6,*) "Thread ", thread_i, "/", thread_c,
-c    c " did ", thread_w, " loops."
-!$OMP END CRITICAL
 ')dnl
 c
