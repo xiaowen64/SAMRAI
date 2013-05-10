@@ -59,6 +59,11 @@ c
 c     REAL ttvlft(NEQU),ttvrgt(NEQU)
       REAL ttv(NEQU)
       REAL v2norm,rho,vel1,vel2,vel0,gam_min_one
+c
+c variables for threads
+      integer omp_get_thread_num, omp_get_num_threads
+      integer thread_c, thread_i, thread_w, thread_p
+c
 c     write(6,*) "In fluxcorrec2d()"
       if (FLUXG.lt.1) then
          write(6,*) "flux ghosts < 1!"
@@ -66,6 +71,26 @@ c     write(6,*) "In fluxcorrec2d()"
       endif
 c
       gam_min_one = gamma - one
+
+!$OMP PARALLEL DEFAULT(none)
+!$OMPc SHARED(density,velocity,pressure,
+!$OMPc        flux0,flux1,flux2,
+!$OMPc        tracelft0,tracelft1,tracelft2,
+!$OMPc        tracergt0,tracergt1,tracergt2,
+!$OMPc        ttracelft0,ttracelft1,ttracelft2,
+!$OMPc        ttracergt0,ttracergt1,ttracergt2,
+!$OMPc        ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,fluxg,
+!$OMPc        idir,
+!$OMPc        gamma,gam_min_one,dt,dx,
+!$OMPc        thread_w)
+!$OMPc PRIVATE(ic2,ic1,ic0,
+!$OMPc        vel0,vel1,vel2,rho,trnsvers,v2norm,
+!$OMPc        ttv,
+!$OMPc        thread_i,thread_c)
+
+      thread_i = omp_get_thread_num()
+      thread_c = omp_get_num_threads()
+      thread_w = 0
 c
 c  "Forward" computation of transverse flux terms
 c
@@ -89,6 +114,7 @@ correc_flux2d(2,`ic0,ic1',1,`ic2,ic0',0)dnl
 c
       endif
 c
+!$OMP END PARALLEL
       return
       end
 c
@@ -143,6 +169,10 @@ c     REAL ttvlft(NEQU),ttvrgt(NEQU)
       REAL ttv(NEQU)
       REAL v2norm,rho,vel1,vel2,vel0,gam_min_one
 c
+c variables for threads
+      integer omp_get_thread_num, omp_get_num_threads
+      integer thread_c, thread_i, thread_w, thread_p
+c
       if (FLUXG.lt.1) then
          write(6,*) "flux ghosts < 1!"
          stop
@@ -152,6 +182,23 @@ c     ******************************************************************
 c     * complete tracing at cell edges
 c     ******************************************************************
       gam_min_one = gamma - one
+
+!$OMP PARALLEL DEFAULT(none)
+!$OMPc SHARED(density,velocity,pressure,
+!$OMPc        fluxa0,fluxa1,fluxa2,fluxb0,fluxb1,fluxb2,
+!$OMPc        tracelft0,tracelft1,tracelft2,
+!$OMPc        tracergt0,tracergt1,tracergt2,
+!$OMPc        ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,fluxg,
+!$OMPc        gamma,gam_min_one,dt,dx,
+!$OMPc        thread_w)
+!$OMPc PRIVATE(ic2,ic1,ic0,
+!$OMPc        vel0,vel1,vel2,rho,trnsvers,v2norm,
+!$OMPc        ttv,
+!$OMPc        thread_i,thread_c)
+
+      thread_i = omp_get_thread_num()
+      thread_c = omp_get_num_threads()
+      thread_w = 0
 c
 correc_flux3d(2,0,1,a0,a1,`ic1,ic2',`ic2,ic0')dnl
 c
@@ -159,6 +206,7 @@ correc_flux3d(1,2,0,a2,b0,`ic0,ic1',`ic1,ic2')dnl
 c
 correc_flux3d(0,1,2,b1,b2,`ic2,ic0',`ic0,ic1')dnl
 c
+!$OMP END PARALLEL
       return
       end
 c
@@ -252,6 +300,8 @@ c     call flush(6)
 !$OMPc        vel,mom0,mom1,mom2,v2norm,Hent,
 !$OMPc        riemst,w,omw,hat,aLsq,aRsq,sL,sM,sR,mfL,mfR,flux,
 !$OMPc        keL,keR,diff,star,denom,
+!$OMPc        maxeig, vcoef,vcorr,
+!$OMPc        mom0L,mom1L,mom2L,enerL,mom0R,mom1R,mom2R,enerR,
 !$OMPc        thread_i,thread_c)
 
       thread_i = omp_get_thread_num()
@@ -264,7 +314,6 @@ riemann_solve(1,0,2,`ic2,ic0',(xcell0+FLUXG-1),(xcell1+FLUXG-1))dnl
 
 c
 riemann_solve(2,0,1,`ic0,ic1',(xcell0+FLUXG-1),(xcell1+FLUXG-1))dnl
-!$OMP END PARALLEL
 
       if (visco.eq.1) then
 c     write(6,*) "doing artificial viscosity"
@@ -276,6 +325,7 @@ c
 artificial_viscosity1(2,0,1)dnl
 c
       endif
+!$OMP END PARALLEL
       return
       end
 c***********************************************************************
