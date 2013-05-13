@@ -81,15 +81,31 @@ c***********************************************************************
 c
 c***********************************************************************
 
+!$OMP PARALLEL DEFAULT(none)
+!$OMPc SHARED(density,velocity,pressure,
+!$OMPc        tracelft0,tracelft1,tracelft2,
+!$OMPc        tracergt0,tracergt1,tracergt2,
+!$OMPc        fluxriem0,fluxriem1,fluxriem2,
+!$OMPc        ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
+!$OMPc        CELLG,FLUXG,FACEG)
+!$OMPc PRIVATE(ic0,ic1,ic2,ie0,ie1,ie2)
+
+!$OMP DO SCHEDULE(DYNAMIC)
 trace_init(0,1,2,`ie0-1,ic1,ic2',`ie0,ic1,ic2')dnl
+!$OMP END DO
 
+!$OMP DO SCHEDULE(DYNAMIC)
 trace_init(1,2,0,`ic0,ie1-1,ic2',`ic0,ie1,ic2')dnl
+!$OMP END DO
 
+!$OMP DO SCHEDULE(DYNAMIC)
 trace_init(2,0,1,`ic0,ic1,ie2-1',`ic0,ic1,ie2')dnl
+!$OMP END DO
 
 c
 c     we initialize the flux to be 0
 
+!$OMP DO SCHEDULE(DYNAMIC)
       do ic2=ifirst2-FLUXG,ilast2+FLUXG
          do ic1=ifirst1-FLUXG,ilast1+FLUXG
            do ie0=ifirst0-FLUXG,ilast0+FLUXG+1
@@ -99,7 +115,9 @@ c     we initialize the flux to be 0
            enddo
          enddo
       enddo
+!$OMP END DO
 c
+!$OMP DO SCHEDULE(DYNAMIC)
       do ic2=ifirst2-FLUXG,ilast2+FLUXG
          do ic0=ifirst0-FLUXG,ilast0+FLUXG
             do ie1=ifirst1-FLUXG,ilast1+FLUXG+1
@@ -109,7 +127,9 @@ c
             enddo
          enddo
       enddo
+!$OMP END DO
 c
+!$OMP DO SCHEDULE(DYNAMIC)
       do ic1=ifirst1-FLUXG,ilast1+FLUXG
          do ic0=ifirst0-FLUXG,ilast0+FLUXG
             do ie2=ifirst2-FLUXG,ilast2+FLUXG+1
@@ -119,7 +139,9 @@ c
             enddo
          enddo
       enddo
+!$OMP END DO
 c
+!$OMP END PARALLEL
       return
       end 
 c
