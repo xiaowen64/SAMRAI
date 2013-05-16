@@ -59,6 +59,7 @@ c
 c     REAL ttvlft(NEQU),ttvrgt(NEQU)
       REAL ttv(NEQU)
       REAL v2norm,rho,vel1,vel2,vel0,gam_min_one
+      integer omp_get_num_threads
 c
 c     write(6,*) "In fluxcorrec2d()"
       if (FLUXG.lt.1) then
@@ -81,6 +82,8 @@ c
 !$OMPc PRIVATE(ic2,ic1,ic0,
 !$OMPc        vel0,vel1,vel2,rho,trnsvers,v2norm,
 !$OMPc        ttv)
+      write(6,*) "fluxcorrec2d thread count = ",
+     c omp_get_num_threads()
 c
 c  "Forward" computation of transverse flux terms
 c
@@ -159,6 +162,7 @@ c     REAL ttvlft(NEQU),ttvrgt(NEQU)
       REAL ttv(NEQU)
       REAL v2norm,rho,vel1,vel2,vel0,gam_min_one
 c
+      integer omp_get_num_threads
       if (FLUXG.lt.1) then
          write(6,*) "flux ghosts < 1!"
          stop
@@ -179,6 +183,8 @@ c     ******************************************************************
 !$OMPc PRIVATE(ic2,ic1,ic0,
 !$OMPc        vel0,vel1,vel2,rho,trnsvers,v2norm,
 !$OMPc        ttv)
+      write(6,*) "fluxcorrec3d thread count = ",
+     c omp_get_num_threads()
 c
 correc_flux3d(2,0,1,a0,a1,`ic1,ic2',`ic2,ic0')dnl
 c
@@ -241,6 +247,7 @@ c variables for hllc scheme
       REAL aLsq,aRsq,keL,keR,flux(NEQU),diff(NEQU)
       REAL mfL,mfR,star(NEQU),sL,sM,sR
       REAL w,omw,hat(NEQU+1),denom
+      integer omp_get_num_threads
 
       if (FLUXG.lt.1) then
          write(6,*) "flux ghosts < 1!"
@@ -277,6 +284,8 @@ c     call flush(6)
 !$OMPc        keL,keR,diff,star,denom,
 !$OMPc        maxeig, vcoef,vcorr,
 !$OMPc        mom0L,mom1L,mom2L,enerL,mom0R,mom1R,mom2R,enerR)
+      write(6,*) "fluxcalculation3d thread count = ",
+     c omp_get_num_threads()
 
 riemann_solve(0,1,2,`ic1,ic2',(xcell0+FLUXG-1),(xcell1+FLUXG-1))dnl
 
@@ -327,6 +336,7 @@ c
       integer ic0,ic1,ic2,k
       REAL temp,v2norm,mom(NDIM),energy,
      &     gam_min_one
+      integer omp_get_num_threads
 
 c***********************************************************************
 c update conserved to full time
@@ -337,6 +347,8 @@ c***********************************************************************
 !$OMP PARALLEL SHARED(density,velocity,pressure,flux0,flux1,flux2,
 !$OMPc                fluxg)
 !$OMPc         PRIVATE(ic2,ic1,ic0,mom,v2norm,energy,temp)
+      write(6,*) "consdiff3d thread count = ",
+     c omp_get_num_threads()
 
 !$OMP DO SCHEDULE(DYNAMIC)
       do ic2=ifirst2,ilast2
