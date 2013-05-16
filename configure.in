@@ -1052,6 +1052,16 @@ dnl fi
 dnl CASC_AC_LOG_VAR(fortran_LIBS fortran_LIB_PATH fortran_LIB_NAME LIB_PATH LIB_NAME, after getting fortran libs)
 
 
+CASC_AC_LOG_VAR(enable_openmp FLIBS FLIB_NAME LIB_NAME, Before F77 xlomp_ser removal)
+# If openmp is enabled, remove the -lxlomp_ser linker flag
+# or there will be multiple symbols.
+if test "x$enable_openmp" != xno; then
+  FLIBS="`echo $FLIBS | sed 's/ -lxlomp_ser//g'`"
+  FLIB_NAME="`echo $FLIB_NAME | sed 's/ -lxlomp_ser//g'`"
+  LIB_NAME="`echo $LIB_NAME | sed 's/ -lxlomp_ser//g'`"
+fi
+CASC_AC_LOG_VAR(FLIBS FLIB_NAME LIB_NAME, After F77 xlomp_ser removal)
+
 dnl
 dnl If the nsl library can be found, use it.
 dnl
