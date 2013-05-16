@@ -211,6 +211,15 @@ PatchHierarchy::getFromInput(
                            d_largest_patch_size[ln][i] >= d_smallest_patch_size[ln][i])) {
                         INPUT_RANGE_ERROR("largest_patch_size");
                      }
+                     /*
+                      * If largest patch size is input as negative, that means
+                      * no largest size restriction is desired. We store
+                      * an INT_MAX value in this case.
+                      */
+                     if (d_largest_patch_size[ln][i] < 0) {
+                        d_largest_patch_size[ln][i] =
+                           tbox::MathUtilities<int>::getMax();
+                     }
                   }
                } else {
                   d_largest_patch_size[ln] = d_largest_patch_size[ln - 1];
@@ -356,6 +365,16 @@ PatchHierarchy::getFromInput(
                            << "largest_patch_size must be >= smallest_patch_size."
                            <<std::endl);
                      }
+                     /*
+                      * If largest patch size is input as negative, that means
+                      * no largest size restriction is desired. We store
+                      * an INT_MAX value in this case.
+                      */
+                     if (d_largest_patch_size[ln][i] < 0) {
+                        d_largest_patch_size[ln][i] =
+                           tbox::MathUtilities<int>::getMax();
+                     }
+
                   }
                } else {
                   d_largest_patch_size[ln] = d_largest_patch_size[ln - 1];
