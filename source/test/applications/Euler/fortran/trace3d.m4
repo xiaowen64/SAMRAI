@@ -70,7 +70,6 @@ c input arrays:
      &     tracelft2(FACE3d2(ifirst,ilast,FACEG),NEQU),
      &     tracergt2(FACE3d2(ifirst,ilast,FACEG),NEQU)
       integer ic0,ic1,k,ie0,ie1,ic2,ie2
-      integer omp_get_num_threads
 c***********************************************************************
 c initialize left and right states at cell edges
 c (first-order upwind)
@@ -90,8 +89,6 @@ c***********************************************************************
 !$OMPc        ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
 !$OMPc        CELLG,FLUXG,FACEG)
 !$OMPc PRIVATE(ic0,ic1,ic2,ie0,ie1,ie2)
-      write(6,*) "inittraceflux3d thread count = ",
-     c omp_get_num_threads()
 
 !$OMP DO SCHEDULE(DYNAMIC)
 trace_init(0,1,2,`ie0-1,ic1,ic2',`ie0,ic1,ic2')dnl
