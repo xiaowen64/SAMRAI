@@ -50,7 +50,7 @@ c     thread_n = omp_get_thread_num()
 c     thread_c = omp_get_num_threads()
 c     write(6,*) "Thread number = ", thread_n, ' / ', thread_c
 
-!$OMP DO SCHEDULE(DYNAMIC,chunk)
+!$OMP DO SCHEDULE(DYNAMIC)
       do  ic2=ighoslft(2),ighosrgt(2)
          do  ic1=ighoslft(1),ighosrgt(1)
             do  ic0=ighoslft(0),ighosrgt(0)
