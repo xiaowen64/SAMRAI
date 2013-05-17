@@ -40,8 +40,11 @@ c
       maxspeed(2)=zero
 
       chunk = 1000
-!$OMP PARALLEL SHARED(pressure,velocity,gamma,chunk)
-!$OMPc         PRIVATE(ic2,ic1,ic0,lambda, thread_c)
+!$OMP PARALLEL DEFAULT(none)
+!$OMPc SHARED(density,pressure,velocity,gamma,
+!$OMPc        ighoslft,ighosrgt,chunk)
+!$OMPc PRIVATE(ic2,ic1,ic0,lambda, thread_c)
+!$OMPc REDUCTION(max:maxspeed)
 
 c     thread_n = omp_get_thread_num()
 c     thread_c = omp_get_num_threads()
@@ -62,7 +65,7 @@ c     write(6,*) "Thread number = ", thread_n, ' / ', thread_c
             enddo
          enddo
       enddo
-!$OMP END DO NOWAIT
+!$OMP END DO
 !$OMP END PARALLEL
 
       stabdt = min((dx(1)/maxspeed(1)),(dx(0)/maxspeed(0)))
