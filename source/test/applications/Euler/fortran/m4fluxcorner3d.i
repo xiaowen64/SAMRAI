@@ -79,6 +79,7 @@ c            else if (rpchoice.eq.HLLC_RIEM_SOLVE) then
 ')dnl
 define(correc_fluxjt,`dnl
 c   correct the $2-direction with $3-fluxes
+!$OMP DO SCHEDULE(DYNAMIC)
       do ic$3=ifirst$3-(FLUXG-1),ilast$3+(FLUXG-1)
         do ic$1=ifirst$1-(FLUXG-1),ilast$1+(FLUXG-1)
            ic$2=ifirst$2-FLUXG
@@ -155,8 +156,10 @@ c   correct the $2-direction with $3-fluxes
            enddo
          enddo
       enddo
+!$OMP END DO
 c
 c   correct the $3-direction with $2-fluxes
+!$OMP DO SCHEDULE(DYNAMIC)
       do ic$1=ifirst$1-(FLUXG-1),ilast$1+(FLUXG-1)
         do ic$2=ifirst$2-(FLUXG-1),ilast$2+(FLUXG-1)
            ic$3=ifirst$3-FLUXG
@@ -233,4 +236,5 @@ c   correct the $3-direction with $2-fluxes
            enddo
          enddo
       enddo
+!$OMP END DO
 ')dnl
