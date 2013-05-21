@@ -416,7 +416,7 @@ public:
     * @pre level_number >= 0 && ln < getMaxNumberOfLevels()
     * @pre new_box_level.getRefinementRatio() > IntVector::getZero(getDim())
     */
-   void
+   virtual void
    makeNewPatchLevel(
       const int level_number,
       const BoxLevel& new_box_level);
@@ -443,7 +443,7 @@ public:
     * @pre level_number >= 0 && ln < getMaxNumberOfLevels()
     * @pre new_box_level->getRefinementRatio() > IntVector::getZero(getDim())
     */
-   void
+   virtual void
    makeNewPatchLevel(
       const int level_number,
       const boost::shared_ptr<BoxLevel> new_box_level);
@@ -458,7 +458,7 @@ public:
     *
     * @pre (level >= 0) && (level < getNumberOfLevels())
     */
-   void
+   virtual void
    removePatchLevel(
       const int level);
 

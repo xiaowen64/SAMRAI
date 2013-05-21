@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -167,21 +166,6 @@ class BergerRigoutsosNode;
  * recompute the Connectors with the correct width.  Using this option
  * has some consequences for performance, but whether it is a net gain
  * or loss has not been generally established.
- *
- * @internal DEV_cluster_tiles (false): Whether to cluster into
- * tiles.  If true, use tag_coarsen_ratio for tile size, use local
- * clustering only and set up zero-width Connectors.
- *
- * @internal DEV_tag_coarsen_ratio (1):
- * Used only when DEV_cluster_tiles is true.
- * Coarsen tags by this ratio, cluster, then refine the resulting cluster.
- *
- * @internal DEV_cluster_locally (false): Whether to cluster locally
- * (disregard remote tags).  A side-effect of local clustering is that
- * the cluster extents can be different depending on how the tag level
- * is partitioned, so they can be different for different numbers of
- * processes.
- *
  */
 class BergerRigoutsos:public BoxGeneratorStrategy
 {
@@ -449,13 +433,6 @@ private:
    void
    assertNoMessageForPrivateCommunicator() const;
 
-   /*!
-    * Compute coarsened version of the given tag data.
-    */
-   void
-   coarsenTagData(pdat::CellData<int> &coarsened_tag_data,
-                  const pdat::CellData<int> &tag_data) const;
-
 
    //@{
    //! @name Counter methods.
@@ -576,21 +553,6 @@ private:
     * disregarding the width specified in findBoxesContainingTags().
     */
    bool d_build_zero_width_connector;
-
-   /*!
-    * @brief Amount to coarsen tags before clustering.
-    */
-   hier::IntVector d_tag_coarsen_ratio;
-
-   /*!
-    * @brief Whether to cluster locally (disregard remote tags).
-    */
-   bool d_cluster_locally;
-
-   /*!
-    * @brief Whether to cluster tiles.
-    */
-   bool d_cluster_tiles;
 
    /*!
     * @brief Queue on which to append jobs to be

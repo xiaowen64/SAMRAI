@@ -153,6 +153,13 @@ public:
    boost::shared_ptr<TagAndInitializeStrategy>
    getTagAndInitializeStrategy() const = 0;
 
+   /*!
+    * @brief Return pointer to PatchHierarchy data member.
+    */
+   virtual
+   boost::shared_ptr<hier::PatchHierarchy>
+   getPatchHierarchy() const = 0;
+
 };
 
 }

@@ -13,7 +13,12 @@ GlobalInputs {
 }
 
 Main {
+
+//
+// Problem dimensionality
+//
    dim = 2
+
 //
 // Log file information
 //
@@ -129,10 +134,9 @@ CellPatchDataTest {
 
    }
 
-   RefinementData {
-   }
-
 }
+
+// Domain description for entire problem
 
 CartesianGridGeometry {
    domain_boxes = [ (0,0) , (41,29) ],
@@ -142,6 +146,8 @@ CartesianGridGeometry {
    x_lo         = 0.e0 , 0.e0    // lower end of computational domain.
    x_up         = 1.e0 , 1.e0    // upper end of computational domain.
 }
+
+// Refer to hier::PatchHierarchy for input documentation
 
 PatchHierarchy {
    max_levels = 3
@@ -160,6 +166,8 @@ PatchHierarchy {
    allow_patches_smaller_than_ghostwidth = FALSE
 }
 
+// Refer to mesh::GriddingAlgorithm for input documentation
+
 GriddingAlgorithm {
    enforce_proper_nesting = TRUE
    DEV_extend_to_domain_boundary = TRUE
@@ -170,11 +178,17 @@ GriddingAlgorithm {
 }
 
 
+// Refer to mesh::TreeLoadBalancer for input
+
 TreeLoadBalancer {
 }
 
+// Refer to mesh::StandardTagAndInitialize for input.
+
 StandardTaggingAndInitializer {
    tagging_method = "REFINE_BOXES"
+
+   // These are the boxes that will be tagged on level 0 to create level 1
 
    level_0 {
       boxes = [ (0,16) , (11,19)  ],
@@ -184,6 +198,9 @@ StandardTaggingAndInitializer {
               [ (8,28) , (27,41)  ],
               [ (20,42) , (27,55) ]
    }
+
+   // These are the boxes that will be tagged on level 1 to create level 2
+
    level_1 {
       boxes = [ (36,16) , (51,27) ],
               [ (24,64) , (31,75) ],
@@ -191,9 +208,13 @@ StandardTaggingAndInitializer {
    }
 }
 
+// Extra debug/sanity checks could be turned on in the event of a problem.
+
 RefineSchedule {
    DEV_extra_debug = FALSE
 }
+
+// Turn on sanity checking of connectors
 
 PersistentOverlapConnectors {
    DEV_check_created_connectors = TRUE

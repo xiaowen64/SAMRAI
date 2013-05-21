@@ -583,8 +583,8 @@ P_BOX
 
       if ($2->d_array_size != $4->d_array_size) {
          Parser::getParser()->error("Box lower/upper dimension mismatch");
-      } else if ($2->d_array_size > 3) {
-         Parser::getParser()->error("Box dimension too large (> 3)");
+      } else if ($2->d_array_size > SAMRAI::MAX_DIM_VAL) {
+         Parser::getParser()->error("Box dimension too large (> SAMRAI::MAX_DIM_VAL)");
       } else {
          const int n = $2->d_array_size;
 	 const tbox::Dimension dim(static_cast<unsigned short>(n));

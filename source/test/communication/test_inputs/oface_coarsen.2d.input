@@ -121,9 +121,6 @@ OuterfacePatchDataTest {
 
    }
 
-   RefinementData {
-   }
-
 }
 
 CartesianGridGeometry {

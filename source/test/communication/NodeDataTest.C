@@ -116,7 +116,6 @@ void NodeDataTest::readTestInput(
     */
 
    readVariableInput(db->getDatabase("VariableData"));
-   readRefinementInput(db->getDatabase("RefinementData"));
 }
 
 void NodeDataTest::registerVariables(

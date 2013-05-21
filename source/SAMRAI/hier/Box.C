@@ -960,10 +960,12 @@ Box::rotate(
       if (rotation_number > 1) {
          TBOX_ERROR("Box::rotate invalid 1D RotationIdentifier.");
       }
-      Index tmp_lo(d_lo);
-      Index tmp_hi(d_hi);
-      d_lo(0) = -tmp_hi(0) - 1;
-      d_hi(0) = -tmp_lo(0) - 1;
+      if (rotation_number) {
+         Index tmp_lo(d_lo);
+         Index tmp_hi(d_hi);
+         d_lo(0) = -tmp_hi(0) - 1;
+         d_hi(0) = -tmp_lo(0) - 1;
+      }
    }
    else if (getDim().getValue() == 2) {
       int rotation_number = static_cast<int>(rotation_ident);

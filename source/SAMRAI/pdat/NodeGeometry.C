@@ -217,8 +217,22 @@ NodeGeometry::transform(
 
    const hier::Transformation::RotationIdentifier& rotation =
       transformation.getRotation();
-   if (dim.getValue() == 2) {
+   if (dim.getValue() == 1) {
       const int rotation_num = static_cast<int>(rotation);
+      if (rotation_num > 1) {
+         TBOX_ERROR("NodeGeometry::transform invalid 1D RotationIdentifier.");
+      }
+
+      if (rotation_num) {
+         NodeIndex tmp_index(index);
+         index(0) = -tmp_index(0);
+      }
+   }
+   else if (dim.getValue() == 2) {
+      const int rotation_num = static_cast<int>(rotation);
+      if (rotation_num > 3) {
+         TBOX_ERROR("NodeGeometry::transform invalid 2D RotationIdentifier.");
+      }
 
       if (rotation_num) {
          NodeIndex tmp_index(dim);

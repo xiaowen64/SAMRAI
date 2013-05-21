@@ -34,6 +34,7 @@ COMPILATION AND EXECUTION
       For one the following input files:
          test_inputs/domainexpansion.input
          test_inputs/domainexpansionb.input
+         test_inputs/domainexpansiont.input
          performance_inputs/domainexpansionc.input
       serial:
          ./main   <input file>

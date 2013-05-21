@@ -304,6 +304,12 @@ GriddingAlgorithm::getLoadBalanceStrategyZero() const
    return d_load_balancer0;
 }
 
+boost::shared_ptr<hier::PatchHierarchy>
+GriddingAlgorithm::getPatchHierarchy() const
+{
+   return d_hierarchy;
+}
+
 /*
  *************************************************************************
  *
@@ -2453,6 +2459,23 @@ void GriddingAlgorithm::resetTagBufferingData(const int tag_buffer)
       d_buf_tag_indx,
       d_buf_tag_indx,
       boost::shared_ptr<hier::RefineOperator>());
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void
+GriddingAlgorithm::checkOverlappingPatches(
+   const hier::BoxLevel& box_level) const
+{
+   hier::Connector box_level_to_self(
+      box_level,
+      box_level,
+      hier::IntVector::getZero(box_level.getDim()));
+   hier::OverlapConnectorAlgorithm oca;
+   oca.findOverlaps(box_level_to_self);
+   checkOverlappingPatches(box_level_to_self);
 }
 
 /*

@@ -11,13 +11,31 @@
 
 
 LinAdv {
-   advection_velocity = 2.0e0 , 0.01e0, 0.01e0
 
+   //  Problem specification parameters
+   //  advection_velocity -- (double array) velocity by which
+   //                        initial profile of uval is
+   //                        advected through the domain [0.0]
+   //  godunov_order -- (int) order of Godunov slopes (1, 2, or 4) [1]
+   //  corner transport scheme -- ("CORNER_TRANS_1" -or- "CORNER_TRANS_2"
+   //                   ["CORNER_TRANS_1"]
+   //  Flux corner transport options
+   //  CORNER_TRANS_1 is based on an extension of Colella's formulation.
+   //  CORNER_TRANS_2 is a formulation constructed by Trangenstein
+   //  data_problem  -- ("SPHERE_PROB", "PIECEWISE_CONST_[X,Y,Z]", or
+   //                   "SINE_CONST_[X,Y,Z]") specification of the
+   //                   problem to be solved [REQD]
+   //
+   advection_velocity = 2.0e0 , 0.01e0, 0.01e0
    godunov_order    = 4
    corner_transport = "CORNER_TRANSPORT_1"
-
    data_problem      = "SINE_CONSTANT_X"
 
+   //  Initial data  for "SPHERE_PROB" problem
+   //     radius -- (double) radius of sphere [REQD]
+   //     center -- (double array) location of sphere center [REQD]
+   //     uval_inside   -- (double) uval inside sphere [REQD]
+   //     uval_outside  -- (double) uval outside sphere [REQD]
    Initial_data {
       front_position    = 1.0
       interval_0 {
@@ -31,6 +49,62 @@ LinAdv {
 
    }
 
+   //  Refinement criteria
+   //  Data for tagging cells to refine for gradient detection and
+   //  Richardson extrapolation.  Options:
+   //     UVAL_DEVIATION, UVAL_GRADIENT, UVAL_SHOCK, UVAL_RICHARDSON
+   //     and combinations thereof...
+   //
+   //     UVAL_DEVIATION   -- tag around deviations in a specified uval
+   //     UVAL_GRADIENT    -- tag around gradients
+   //     UVAL_SHOCK       -- tag around discontinuous regions
+   //     UVAL_RICHARDSON  -- use Richardson extrapolation to tag
+   //                         around solution errors
+   //
+   // Refinement_data {
+   //   refine_criteria    -- (string array) contains one or more of the
+   //                         tagging options, specified above [REQD]
+   //   UVAL_DEVIATION {
+   //      uval_dev -- (double array) freestream uval, i.e. tag cells where   
+   //                  |uval - uval_dev] > dev_tol [REQD]
+   //      dev_tol  -- (double array) deviation tolerance [REQD]
+   //      time_min -- (double array) time on each level at which
+   //                  tagging using this criteria is started [0.]
+   //      time_max -- (double array) time on each level at which
+   //                  tagging is stopped [DBL_MAX]
+   //      NOTE:  For each of the above entries, if a level is NOT specified,
+   //             the value from the next coarser level is used.  The time_min
+   //             and time_max options may be used to control whether tagging
+   //             on a level is active (i.e. setting time_max=0 makes it
+   //             inactive).
+   //   }
+   //   UVAL_GRADIENT {
+   //      grad_tol -- (double array) gradient tolerance for each level [REQD]
+   //      time_min -- (double array) time on each level at which
+   //                  tagging using this criteria is started [0.]
+   //      time_max -- (double array) time on each level at which
+   //                  tagging is stopped [DBL_MAX]
+   //      (see NOTE under UVAL_DEVIATION above)
+   //   }
+   //   UVAL_SHOCK {
+   //      shock_onset -- (double array) onset tolerance for each level [REQD]
+   //      shock_tol -- (double array) gradient tolerance for each level [REQD]
+   //      time_min -- (double array) time on each level at which
+   //                  tagging using this criteria is started [0.]
+   //      time_max -- (double array) time on each level at which
+   //                  tagging is stopped [DBL_MAX]
+   //      (see NOTE under UVAL_DEVIATION above)
+   //   }
+   //   UVAL_RICHARDSON {
+   //      rich_tol -- (double array) Richardson extrapolation tolerance
+   //                  for each level [REQD]
+   //      time_min -- (double array) time on each level at which
+   //                  tagging using this criteria is started [0.]
+   //      time_max -- (double array) time on each level at which
+   //                  tagging is stopped [DBL_MAX]
+   //      (see NOTE under UVAL_DEVIATION above)
+   //   }
+   //
    Refinement_data {
       // refine_criteria = "UVAL_GRADIENT", "UVAL_SHOCK"
       refine_criteria = "UVAL_GRADIENT"
@@ -45,6 +119,8 @@ LinAdv {
       }
    }
 
+   // Boundary condition data following the format defined in
+   // appu::CartesianBoundaryUtility[2,3].  Refer to these classes for details.
    // valid boundary_condition values are "FLOW", "REFLECT", "DIRICHLET"
    Boundary_data {
       boundary_face_xlo {
@@ -132,6 +208,7 @@ LinAdv {
 
 }
 
+//See mesh::BergerRigoutsos for input.
 BergerRigoutsos {
    DEV_algo_advance_mode = "ADVANCE_SOME"
    DEV_owner_mode = "MOST_OVERLAP"
@@ -146,22 +223,45 @@ BergerRigoutsos {
 }
 
 Main {
+   //Dimension for the problem.  No default
    dim = 3
+
+   //Base name for loga and viz files. default is "unnamed"
    base_name    = "domex"
+
+   //TRUE to produce a log file on all nodes, FALSE to log only node 0.
+   //Default is FALSE
    log_all_nodes    = FALSE
 
+   //Choose the type of LoadBalancer.  Default is "TreeLoadBalancer"
    // load_balancer_type = "ChopAndPackLoadBalancer"
 
-// visualization dump parameters
-   viz_dump_interval     = 0          // zero to turn off
+   //Timestep interval to dump viz files.  No viz files will be produced
+   //when this value is 0.  Default is 0.
+   viz_dump_interval     = 0
 
-// restart dump parameters
-   restart_interval        = 0        // zero to turn off
+   //Name of directory for viz dumps.  Default is base_name + ".visit"
+   //viz_dump_dirname = "dump.visit"
 
+   //Timestep interval to dump restart files.  No restart files will be
+   //produced when this value is 0.  Default is 0.
+   restart_interval        = 0
+
+   //Name of directory for restart dumps.  No default, this entry is required
+   //when restart_interval is nonzero. 
+   //restart_write_dirname = "dump.restart"
+
+   //When TRUE, used ScaledInput entries from this file to scale up the
+   //size of the problem based on processor count.  Default is TRUE
    use_scaled_input = TRUE
+
+   //Turn on syncronized timestepping.  Only valid entry is "SYNCHRONIZED"
+   //If used, the TimeRefinementIntegrator will operation with synchronized
+   //timestepping on all levels.  Otherwise, time refinement will be used.
    // timestepping = "SYNCHRONIZED"
 }
 
+//See tbox::TimerManager for input
 TimerManager {
 //   print_exclusive      = TRUE
    print_summed           = TRUE
@@ -178,6 +278,7 @@ TimerManager {
                             "xfer::*::*"
 }
 
+//See hier::PatchHierarchy for input
 PatchHierarchy {
    max_levels = 3
    largest_patch_size {
@@ -207,6 +308,7 @@ PatchHierarchy {
    proper_nesting_buffer = 1, 1, 1
 }
 
+//See mesh::GriddingAlgorithm for input
 GriddingAlgorithm {
 
    combine_efficiency = 0.80
@@ -217,6 +319,7 @@ GriddingAlgorithm {
    DEV_print_steps = FALSE
 }
 
+//See SinusoidalFrontTagger for input
 SinusoidalFrontTagger {
    init_disp = 1.0, 1.0, 1.0
    period = 8.0, 4.0, 4.0
@@ -224,11 +327,12 @@ SinusoidalFrontTagger {
    amplitude = 0.5
 }
 
+//See mesh::StandardTagAndInitialize for input
 StandardTagAndInitialize {
    tagging_method = "GRADIENT_DETECTOR"
 }
 
-
+//See algs::TimeRefinementIntegrator for input
 TimeRefinementIntegrator {
    start_time            = 0.e0     // initial simulation time
    end_time              = 2.0      // final simulation time
@@ -239,12 +343,14 @@ TimeRefinementIntegrator {
    DEV_barrier_and_time        = TRUE
 }
 
+//See mesh::ChopAndPackLoadBalancer for input
 ChopAndPackLoadBalancer{
    bin_pack_method = "GREEDY"
    // bin_pack_method = "SPATIAL"
    ignore_level_box_union_is_single_box = TRUE
 }
 
+//See mesh::TreeLoadBalancer for input
 TreeLoadBalancer {
    DEV_report_load_balance = FALSE
    DEV_barrier_before = TRUE
@@ -259,6 +365,7 @@ TreeLoadBalancer {
    DEV_summarize_map = TRUE
 }
 
+//See algs::HyperbolicLevelIntegrator for input
 HyperbolicLevelIntegrator {
    cfl                      = 0.43
    cfl_init                 = 0.43
@@ -267,11 +374,13 @@ HyperbolicLevelIntegrator {
    DEV_distinguish_mpi_reduction_costs = TRUE
 }
 
+//See xfer::RefineSchedule for input
 RefineSchedule {
    DEV_barrier_and_time = TRUE
    DEV_extra_debug = FALSE
 }
 
+//See hier::PersistentOverlapConnectors for input
 PersistentOverlapConnectors {
    DEV_check_created_connectors = FALSE
    DEV_check_accessed_connectors = FALSE
@@ -280,6 +389,7 @@ PersistentOverlapConnectors {
 
 ////////////////////////////////////////////////////////////////////////
 // Specific databases for scaling tests.
+// See geom::CartesianGridGeometry and its base classes for input
 ////////////////////////////////////////////////////////////////////////
 
 ScaledInput1 {

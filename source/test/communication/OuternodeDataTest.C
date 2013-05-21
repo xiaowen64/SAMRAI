@@ -124,7 +124,6 @@ void OuternodeDataTest::readTestInput(
     */
 
    readVariableInput(db->getDatabase("VariableData"));
-   readRefinementInput(db->getDatabase("RefinementData"));
 }
 
 void OuternodeDataTest::registerVariables(

@@ -622,7 +622,7 @@ BoxContainer::rotate(
 
       const tbox::Dimension& dim = d_list.front().getDim();
       const BlockId& block_id = d_list.front().getBlockId();
-      if (dim.getValue() == 2 || dim.getValue() == 3) {
+      if (dim.getValue() == 1 || dim.getValue() == 2 || dim.getValue() == 3) {
          for (iterator i = begin(); i != end(); ++i) {
             if (i->getBlockId() != block_id) {
                TBOX_ERROR("BoxContainer::rotate() error ..."
@@ -636,7 +636,7 @@ BoxContainer::rotate(
          NULL_USE(rotation_ident);
 
          TBOX_ERROR("BoxContainer::rotate() error ..."
-            << "\n   Rotation only implemented for 2D and 3D " << std::endl);
+            << "\n   Rotation only implemented for 1D 2D and 3D " << std::endl);
       }
    }
 }

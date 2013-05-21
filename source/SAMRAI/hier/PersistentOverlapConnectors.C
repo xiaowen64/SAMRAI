@@ -23,6 +23,7 @@ namespace hier {
 
 char PersistentOverlapConnectors::s_check_created_connectors('\0');
 char PersistentOverlapConnectors::s_check_accessed_connectors('\0');
+bool PersistentOverlapConnectors::s_create_empty_neighbor_containers(false);
 char PersistentOverlapConnectors::s_implicit_connector_creation_rule('w');
 
 /*
@@ -124,6 +125,8 @@ PersistentOverlapConnectors::createConnector(
       d_my_box_level,
       head,
       connector_width);
+
+   postprocessForEmptyNeighborContainers(*new_connector);
 
    d_cons_from_me.push_back(new_connector);
    head.getPersistentOverlapConnectors().d_cons_to_me.push_back(new_connector);
@@ -480,11 +483,8 @@ PersistentOverlapConnectors::doFindConnectorWork(
          head,
          min_connector_width));
       oca.extractNeighbors(*new_connector, *found, min_connector_width);
-      /*
-       * Remove empty neighborhood sets.  They are not essential to an
-       * overlap Connector.
-       */
-      new_connector->eraseEmptyNeighborSets();
+
+      postprocessForEmptyNeighborContainers(*new_connector);
 
       d_cons_from_me.push_back(new_connector);
       head.getPersistentOverlapConnectors().d_cons_to_me.push_back(
@@ -536,6 +536,8 @@ PersistentOverlapConnectors::doCacheConnectorWork(
    connector->setBase(d_my_box_level);
    connector->setHead(head, true);
 
+   postprocessForEmptyNeighborContainers(*connector);
+
    if (s_check_created_connectors == 'y') {
       if (connector->checkOverlapCorrectness() != 0) {
          TBOX_ERROR("PersistentOverlapConnectors::cacheConnector errror:\n"
@@ -545,6 +547,40 @@ PersistentOverlapConnectors::doCacheConnectorWork(
 
    d_cons_from_me.push_back(connector);
    head.getPersistentOverlapConnectors().d_cons_to_me.push_back(connector);
+}
+
+/*
+ ************************************************************************
+ ************************************************************************
+ */
+void
+PersistentOverlapConnectors::setCreateEmptyNeighborContainers(
+   bool create_empty_neighbor_containers )
+{
+   s_create_empty_neighbor_containers = create_empty_neighbor_containers;
+}
+
+/*
+ ************************************************************************
+ ************************************************************************
+ */
+void
+PersistentOverlapConnectors::postprocessForEmptyNeighborContainers(
+   Connector& connector)
+{
+   if ( s_create_empty_neighbor_containers ) {
+      const BoxContainer &base_boxes = connector.getBase().getBoxes();
+      for ( BoxContainer::const_iterator bi=base_boxes.begin(); bi!=base_boxes.end(); ++bi ) {
+         connector.makeEmptyLocalNeighborhood(bi->getBoxId());
+      }
+   }
+   else {
+      /*
+       * Remove empty neighborhood sets.  They are not essential to an
+       * overlap Connector.
+       */
+      connector.eraseEmptyNeighborSets();
+   }
 }
 
 }

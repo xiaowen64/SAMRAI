@@ -667,6 +667,9 @@ int main(
 
       }
 
+      tbox::plog << "GriddingAlgorithm statistics:\n";
+      gridding_algorithm->printStatistics();
+
       /*
        * Output timer results.
        */

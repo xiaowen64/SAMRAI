@@ -92,14 +92,9 @@ BergerRigoutsosNode::BergerRigoutsosNode(
    /*
     * Set the processor group.
     */
-   if ( d_common->d_cluster_locally ) {
-      d_group.insert( d_group.begin(), d_common->d_mpi.getRank() );
-   }
-   else {
-      d_group.resize(d_common->d_mpi.getSize(), BAD_INTEGER);
-      for (unsigned int i = 0; i < d_group.size(); ++i) {
-         d_group[i] = i;
-      }
+   d_group.resize(d_common->d_mpi.getSize(), BAD_INTEGER);
+   for (unsigned int i = 0; i < d_group.size(); ++i) {
+      d_group[i] = i;
    }
 
    if (d_common->d_log_node_history) {

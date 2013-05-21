@@ -404,7 +404,9 @@ Transformation::getReverseRotationIdentifier(
 {
    RotationIdentifier reverse_id = (RotationIdentifier)0;
 
-   if (dim.getValue() == 1) {
+   if (rotation == NO_ROTATE) {
+      reverse_id = rotation;
+   } else if (dim.getValue() == 1) {
       reverse_id = rotation;
    } else if (dim.getValue() == 2) {
       reverse_id = (RotationIdentifier)((4 - (int)rotation) % 4);
@@ -517,7 +519,7 @@ Transformation::getReverseRotationIdentifier(
       }
    } else {
       TBOX_ERROR(
-         "Transformation::getReverseRotationIdentifier : DIM > 3 not implemented");
+         "Transformation::getReverseRotationIdentifier : DIM > 3 with rotation not implemented");
    }
 
    return reverse_id;
@@ -541,7 +543,9 @@ Transformation::calculateReverseShift(
 
    const tbox::Dimension& dim(back_shift.getDim());
 
-   if (dim.getValue() == 1) {
+   if (rotation == NO_ROTATE) {
+      back_shift = -shift;
+   } else if (dim.getValue() == 1) {
       if (rotation == IUP) {
          back_shift = -shift;
       }
@@ -674,7 +678,7 @@ Transformation::calculateReverseShift(
             << " Invalid RotationIdentifier value given" << std::endl);
       }
    } else {
-      TBOX_ERROR("Transformation::calculateReverseShift : DIM > 3 not implemented");
+      TBOX_ERROR("Transformation::calculateReverseShift : DIM > 3 with rotation not implemented");
    }
 }
 

@@ -954,6 +954,7 @@ PatchHierarchy::putToRestart(
 
    boost::shared_ptr<tbox::Database> self_connector_widths_db(
       restart_db->putDatabase("d_self_connector_widths"));
+   d_self_connector_widths.resize(d_max_levels, IntVector(d_dim, 1));
    for (int ln = 0; ln < d_max_levels; ++ln) {
       self_connector_widths_db->putIntegerArray(level_names[ln],
          &d_self_connector_widths[ln][0],
@@ -962,6 +963,7 @@ PatchHierarchy::putToRestart(
 
    boost::shared_ptr<tbox::Database> fine_connector_widths_db(
       restart_db->putDatabase("d_fine_connector_widths"));
+   d_fine_connector_widths.resize(d_max_levels - 1, IntVector(d_dim, 1));
    for (int ln = 0; ln < d_max_levels - 1; ++ln) {
       fine_connector_widths_db->putIntegerArray(level_names[ln],
          &d_fine_connector_widths[ln][0],

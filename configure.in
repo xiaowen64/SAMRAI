@@ -6,6 +6,8 @@ dnl Revision:    $LastChangedRevision$
 dnl Description: autoconfig configuration file
 dnl
 
+AC_PREREQ([2.69])dnl Required for the OpenMP macro
+
 AC_INIT(COPYRIGHT)
 AC_CONFIG_HEADER(include/SAMRAI/SAMRAI_config.h:config/SAMRAI_config.h.in)
 dnl
@@ -16,7 +18,7 @@ AH_TOP([
 #define INCLUDED_SAMRAI_CONFIG_H
 
 #define SAMRAI_VERSION_MAJOR 3
-#define SAMRAI_VERSION_MINOR 5
+#define SAMRAI_VERSION_MINOR 6
 #define SAMRAI_VERSION_PATCHLEVEL 0
 ])
 AH_BOTTOM([
@@ -761,6 +763,29 @@ AC_ARG_ENABLE([fortran-mangling-override],
 esac],
 AC_MSG_RESULT(no))
 
+
+dnl Configure for OpenMP.
+dnl This requires autoconf-2.69
+dnl
+AC_LANG_PUSH([C++])
+AC_OPENMP
+AC_LANG_POP([C++])
+dnl
+AC_LANG_PUSH([C])
+AC_OPENMP
+AC_LANG_POP([C])
+dnl
+AC_LANG_PUSH([Fortran 77])
+AC_OPENMP
+AC_LANG_POP([Fortran 77])
+dnl
+CASC_AC_LOG_VAR(OPENMP_CFLAGS OPENMP_CXXFLAGS OPENMP_FFLAGS)
+test -n "$OPENMP_CXXFLAGS" && CXX_FLAGS="$CXX_FLAGS $OPENMP_CXXFLAGS"
+test -n "$OPENMP_CFLAGS" && C_FLAGS="$C_FLAGS $OPENMP_CFLAGS"
+test -n "$OPENMP_FFLAGS" && F77_FLAGS="$F77_FLAGS $OPENMP_FFLAGS"
+CASC_AC_LOG_VAR(C_FLAGS CXX_FLAGS F77_FLAGS)
+
+
 dnl
 dnl Rename the F77_FUNC macros SAMRAI_F77_FUNC to avoid conflicts
 dnl with client code using a different version of AC_F77_WRAPPERS.
@@ -1026,6 +1051,16 @@ dnl   LIB_NAME="$fortran_LIB_NAME $LIB_NAME"
 dnl fi
 dnl CASC_AC_LOG_VAR(fortran_LIBS fortran_LIB_PATH fortran_LIB_NAME LIB_PATH LIB_NAME, after getting fortran libs)
 
+
+CASC_AC_LOG_VAR(enable_openmp FLIBS FLIB_NAME LIB_NAME, Before F77 xlomp_ser removal)
+# If openmp is enabled, remove the -lxlomp_ser linker flag
+# or there will be multiple symbols.
+if test "x$enable_openmp" != xno; then
+  FLIBS="`echo $FLIBS | sed 's/ -lxlomp_ser//g'`"
+  FLIB_NAME="`echo $FLIB_NAME | sed 's/ -lxlomp_ser//g'`"
+  LIB_NAME="`echo $LIB_NAME | sed 's/ -lxlomp_ser//g'`"
+fi
+CASC_AC_LOG_VAR(FLIBS FLIB_NAME LIB_NAME, After F77 xlomp_ser removal)
 
 dnl
 dnl If the nsl library can be found, use it.

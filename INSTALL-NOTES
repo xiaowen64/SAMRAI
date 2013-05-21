@@ -71,9 +71,10 @@ SAMRAI version numbers are of the form X.Y.Z, where X is the major release
 number, Y is the minor release number, and Z is the bug fix patch number.
 To unpack the distribution as described above, do:
 
-	(a) mkdir SAMRAI-vX.Y.Z (substitue appropriate version numbers)
+        (a) gunzip SAMRAI-vX.Y.Z.tar.gz
+	(b) mkdir SAMRAI-vX.Y.Z (substitue appropriate version numbers)
 	(b) cd SAMRAI-vX.Y.Z
-	(c) zcat ../SAMRAI-vX.Y.Z.tar | tar xfov -
+        (e) tar xvf ../SAMRAI-vX.Y.Z.tar
 
 You may need to use the GNU tar (often named gtar) due to name length
 problems with some of the native tar implementations.
