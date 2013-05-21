@@ -482,8 +482,15 @@ int main(
 
       const std::string baseline_dirname = main_db->getStringWithDefault("baseline_dirname",
             "test_inputs");
-      const std::string baseline_filename = baseline_dirname + "/" + base_name + ".baselinedb."
+      std::string baseline_filename = baseline_dirname;
+
+#if defined(__xlC__)
+      baseline_filename = baseline_filename + "/xlC/" + base_name + ".baselinedb."
          + tbox::Utilities::processorToString(mpi.getRank());
+#else
+      baseline_filename = baseline_filename + "/" + base_name + ".baselinedb."
+         + tbox::Utilities::processorToString(mpi.getRank());
+#endif
       tbox::HDFDatabase basline_db(baseline_filename);
 
       /*
