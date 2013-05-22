@@ -37,6 +37,10 @@
 
 #include "boost/make_shared.hpp"
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -2232,10 +2236,27 @@ RefineSchedule::refineScratchData(
     * destination patch and destination fill boxes.
     */
 
+#ifdef _OPENMP
+   assert( overlaps.size() == coarse_level->getLocalNumberOfPatches() );
+   std::vector<hier::PatchLevel::iterator> cv;
+   cv.reserve(coarse_level->getLocalNumberOfPatches());
+   for ( hier::PatchLevel::iterator crse_itr(coarse_level->begin());
+         crse_itr != coarse_level->end(); ++crse_itr ) {
+      cv.push_back(crse_itr);
+   }
+#pragma omp parallel shared(cv,ratio) private(overlap_iter)
+#pragma omp for schedule(dynamic)
+   for ( size_t i=0; i<cv.size(); ++i )
+#else
    for ( hier::PatchLevel::iterator crse_itr(coarse_level->begin());
          crse_itr != coarse_level->end(); ++crse_itr, ++overlap_iter )
+#endif
    {
+#ifdef _OPENMP
+      const hier::Box& crse_box = cv[i]->getBox();
+#else
       const hier::Box& crse_box = crse_itr->getBox();
+#endif
       hier::Connector::ConstNeighborhoodIterator dst_nabrs =
          coarse_to_fine.find(crse_box.getBoxId());
       hier::Connector::ConstNeighborIterator na =
@@ -2278,7 +2299,11 @@ RefineSchedule::refineScratchData(
          if (ref_item->d_oprefine) {
 
             boost::shared_ptr<hier::BoxOverlap> refine_overlap =
+#ifdef _OPENMP
+               (overlaps[i])[ref_item->d_class_index];
+#else
                (*overlap_iter)[ref_item->d_class_index];
+#endif
 
             const int scratch_id = ref_item->d_scratch;
 
