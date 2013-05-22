@@ -483,7 +483,7 @@ private:
       const boost::shared_ptr<hier::PatchLevel>& coarse_level,
       const hier::Connector& coarse_to_fine,
       const hier::Connector& coarse_to_unfilled,
-      const std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >&
+      const std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >&
       overlaps) const;
 
    /*!
@@ -492,7 +492,7 @@ private:
     */
    void
    computeRefineOverlaps(
-      std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
+      std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
       const boost::shared_ptr<hier::PatchLevel>& fine_level,
       const boost::shared_ptr<hier::PatchLevel>& coarse_level,
       const hier::Connector& coarse_to_fine,
@@ -1082,14 +1082,14 @@ private:
    /*!
     * @brief Stores the BoxOverlaps needed by refineScratchData()
     */
-   std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >
+   std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >
    d_refine_overlaps;
 
    /*!
     * @brief Stores the BoxOverlaps needed by refineScratchData() for
     * unfilled boxes at enhanced connectivity
     */
-   std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >
+   std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >
    d_encon_refine_overlaps;
 
    /*!
