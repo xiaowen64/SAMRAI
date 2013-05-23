@@ -13,6 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
+#include "SAMRAI/mesh/GraphLoadBalancer.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 #include "SAMRAI/tbox/Database.h"
@@ -180,8 +181,6 @@ public:
    void
    printStatistics(std::ostream& output_stream = tbox::plog) const;
 
-
-
 private:
 
    typedef double LoadType;
@@ -216,12 +215,14 @@ private:
 
    ChopAndPackLoadBalancer d_cap;
    TreeLoadBalancer d_tlb;
+   GraphLoadBalancer d_graphlb;
 
    /*
     * @brief Which internal load balancer to use.
     *
     * 'c' = ChopAndPackLoadBalancer
     * 't' = TreeLoadBalancer
+    * 'g' = GraphLoadBalancer
     */
    char d_internal_load_balancer;
 

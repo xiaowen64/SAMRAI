@@ -63,6 +63,9 @@
 /* BOOST headers are available to use */
 #undef HAVE_BOOST_HEADERS
 
+/* BOOST headers are available to use */
+#undef HAVE_PTSCOTCH
+
 /* HAVE_CMATH */
 #undef HAVE_CMATH
 

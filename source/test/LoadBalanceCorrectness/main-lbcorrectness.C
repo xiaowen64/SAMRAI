@@ -519,15 +519,25 @@ int main(
       plog << "Input database after initialization..." << std::endl;
       input_db->printClassData(plog);
 
-
-
+      bool do_test = true;
+#ifndef HAVE_PTSCOTCH
+      /*
+       * Skip GraphLoadBalancer test if PT-Scotch is not available.
+       */ 
+      if (load_balancer_type == "TilePartitioner") {
+         std::string graphstr = "graph";
+         if (base_name.find(graphstr) != std::string::npos) { 
+            do_test = false;
+         }
+      }
+#endif
       /*
        * Step 1: Build L0.
        */
       tbox::pout << "\n==================== Generating L0 ====================" << std::endl;
 
 
-      {
+      if (do_test) {
 
          hier::BoxLevel L0(hier::IntVector(dim, 1), grid_geometry);
 
@@ -681,8 +691,6 @@ int main(
          hierarchy->makeNewPatchLevel(0, L0);
       }
 
-      const hier::BoxLevel &L0 = *hierarchy->getPatchLevel(0)->getBoxLevel();
-
 
 
       hier::Connector * L1_to_L0;
@@ -691,7 +699,10 @@ int main(
 
 
 
-      if ( max_levels > 1 ) {
+      if ( do_test && max_levels > 1 ) {
+
+         const hier::BoxLevel &L0 = *hierarchy->getPatchLevel(0)->getBoxLevel();
+
          /*
           * Step 2: Build L1.
           */
@@ -881,7 +892,7 @@ int main(
       boost::shared_ptr<hier::Connector> L1_to_L2;
       boost::shared_ptr<hier::Connector> L2_to_L2;
 
-      if ( max_levels > 2 ) {
+      if ( do_test && max_levels > 2 ) {
          /*
           * Step 3: Build L2.
           */
@@ -1084,7 +1095,7 @@ int main(
 
       bool write_visit =
          main_db->getBoolWithDefault("write_visit", false);
-      if ( write_visit ) {
+      if ( do_test && write_visit ) {
 #ifdef HAVE_HDF5
 
          if ((dim == tbox::Dimension(2)) || (dim == tbox::Dimension(3))) {
