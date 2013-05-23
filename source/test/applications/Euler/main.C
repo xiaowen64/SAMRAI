@@ -294,10 +294,8 @@ int main(
       }
 
 #ifdef _OPENMP
-#pragma omp parallel
-#pragma omp master
       tbox::plog << "Compiled with OpenMP version " << _OPENMP
-                 << ".  Running with " << omp_get_num_threads() << " threads."
+                 << ".  Running with " << omp_get_max_threads() << " threads."
                  << std::endl;
 #else
       tbox::plog << "Compiled without OpenMP.\n";
