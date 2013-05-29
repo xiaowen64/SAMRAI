@@ -19,10 +19,13 @@ namespace SAMRAI {
 namespace hier {
 
 std::multimap<std::string, CoarsenOperator *> CoarsenOperator::s_lookup_table;
+#ifdef _OPENMP
+omp_lock_t CoarsenOperator::l_lookup_table;
+#endif
 
 tbox::StartupShutdownManager::Handler
 CoarsenOperator::s_finalize_handler(
-   0,
+   CoarsenOperator::initializeCallback,
    0,
    0,
    CoarsenOperator::finalizeCallback,
@@ -39,6 +42,22 @@ CoarsenOperator::~CoarsenOperator()
    removeFromLookupTable(d_name);
 }
 
+
+
+void
+CoarsenOperator::registerInLookupTable(
+   const std::string& name)
+{
+#ifdef _OPENMP
+   omp_set_lock(&l_lookup_table);
+#endif
+   s_lookup_table.insert(
+      std::pair<std::string, CoarsenOperator *>(name, this));
+#ifdef _OPENMP
+   omp_unset_lock(&l_lookup_table);
+#endif
+}
+
 void
 CoarsenOperator::removeFromLookupTable(
    const std::string& name)
@@ -48,6 +67,9 @@ CoarsenOperator::removeFromLookupTable(
     * in which case the table will have been cleared before the statics
     * are destroyed.
     */
+#ifdef _OPENMP
+   omp_set_lock(&l_lookup_table);
+#endif
    if (!s_lookup_table.empty()) {
       std::multimap<std::string, CoarsenOperator *>::iterator mi =
          s_lookup_table.find(name);
@@ -61,6 +83,9 @@ CoarsenOperator::removeFromLookupTable(
       mi->second = 0;
       s_lookup_table.erase(mi);
    }
+#ifdef _OPENMP
+   omp_unset_lock(&l_lookup_table);
+#endif
 }
 /*
  *************************************************************************
@@ -74,13 +99,44 @@ CoarsenOperator::getMaxCoarsenOpStencilWidth(
 {
    IntVector max_width(dim, 0);
 
+#ifdef _OPENMP
+   omp_set_lock(&l_lookup_table);
+#endif
    for (std::multimap<std::string, CoarsenOperator *>::const_iterator
         mi = s_lookup_table.begin(); mi != s_lookup_table.end(); ++mi) {
       const CoarsenOperator* op = mi->second;
       max_width.max(op->getStencilWidth(dim));
    }
+#ifdef _OPENMP
+   omp_unset_lock(&l_lookup_table);
+#endif
 
    return max_width;
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void
+   CoarsenOperator::initializeCallback()
+{
+#ifdef _OPENMP
+   omp_init_lock(&l_lookup_table);
+#endif
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void
+CoarsenOperator::finalizeCallback()
+{
+   s_lookup_table.clear();
+#ifdef _OPENMP
+   omp_destroy_lock(&l_lookup_table);
+#endif
 }
 
 }

@@ -21,6 +21,10 @@
 #include <string>
 #include <map>
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 namespace SAMRAI {
 namespace hier {
 
@@ -156,11 +160,7 @@ private:
     */
    void
    registerInLookupTable(
-      const std::string& name)
-   {
-      s_lookup_table.insert(
-         std::pair<std::string, RefineOperator *>(name, this));
-   }
+      const std::string& name);
 
    /*!
     * @brief Remove the operator with the given name.
@@ -171,17 +171,23 @@ private:
       const std::string& name);
 
    /*!
+    * @brief Method registered with ShutdownManager to initialize statics.
+    */
+   static void
+   initializeCallback();
+
+   /*!
     * @brief Method registered with ShutdownManager to cleanup statics.
     */
    static void
-   finalizeCallback()
-   {
-      s_lookup_table.clear();
-   }
+   finalizeCallback();
 
    const std::string d_name;
 
    static std::multimap<std::string, RefineOperator *> s_lookup_table;
+#ifdef _OPENMP
+   static omp_lock_t l_lookup_table;
+#endif
 
    static tbox::StartupShutdownManager::Handler
       s_finalize_handler;

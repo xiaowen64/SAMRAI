@@ -19,10 +19,13 @@ namespace SAMRAI {
 namespace hier {
 
 std::multimap<std::string, RefineOperator *> RefineOperator::s_lookup_table;
+#ifdef _OPENMP
+omp_lock_t RefineOperator::l_lookup_table;
+#endif
 
 tbox::StartupShutdownManager::Handler
 RefineOperator::s_finalize_handler(
-   0,
+   RefineOperator::initializeCallback,
    0,
    0,
    RefineOperator::finalizeCallback,
@@ -39,6 +42,22 @@ RefineOperator::~RefineOperator()
    removeFromLookupTable(d_name);
 }
 
+
+
+void
+RefineOperator::registerInLookupTable(
+   const std::string& name)
+{
+#ifdef _OPENMP
+   omp_set_lock(&l_lookup_table);
+#endif
+   s_lookup_table.insert(
+      std::pair<std::string, RefineOperator *>(name, this));
+#ifdef _OPENMP
+   omp_unset_lock(&l_lookup_table);
+#endif
+}
+
 void
 RefineOperator::removeFromLookupTable(
    const std::string& name)
@@ -48,6 +67,9 @@ RefineOperator::removeFromLookupTable(
     * in which case the table will have been cleared before the statics
     * are destroyed.
     */
+#ifdef _OPENMP
+   omp_set_lock(&l_lookup_table);
+#endif
    if (!s_lookup_table.empty()) {
       std::multimap<std::string, RefineOperator *>::iterator mi =
          s_lookup_table.find(name);
@@ -61,6 +83,9 @@ RefineOperator::removeFromLookupTable(
       mi->second = 0;
       s_lookup_table.erase(mi);
    }
+#ifdef _OPENMP
+   omp_unset_lock(&l_lookup_table);
+#endif
 }
 
 /*
@@ -75,13 +100,44 @@ RefineOperator::getMaxRefineOpStencilWidth(
 {
    IntVector max_width(dim, 0);
 
+#ifdef _OPENMP
+   omp_set_lock(&l_lookup_table);
+#endif
    for (std::multimap<std::string, RefineOperator *>::const_iterator
         mi = s_lookup_table.begin(); mi != s_lookup_table.end(); ++mi) {
       const RefineOperator* op = mi->second;
       max_width.max(op->getStencilWidth(dim));
    }
+#ifdef _OPENMP
+   omp_unset_lock(&l_lookup_table);
+#endif
 
    return max_width;
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void
+RefineOperator::initializeCallback()
+{
+#ifdef _OPENMP
+   omp_init_lock(&l_lookup_table);
+#endif
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void
+RefineOperator::finalizeCallback()
+{
+   s_lookup_table.clear();
+#ifdef _OPENMP
+   omp_destroy_lock(&l_lookup_table);
+#endif
 }
 
 }
