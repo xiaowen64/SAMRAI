@@ -367,6 +367,18 @@ public:
    }
 
    /*!
+    * @brief Get a patch using a random access index.
+    *
+    * The index specifies the position of the patch as would be
+    * encountered when iterating through the patches.
+    */
+   const boost::shared_ptr<Patch> &getPatch( size_t index ) const
+      {
+         TBOX_ASSERT( index < d_patch_vector.size() );
+         return d_patch_vector[index];
+      }
+
+   /*!
     * @brief Get the PatchDescriptor
     *
     * @return pointer to the patch descriptor for the hierarchy.
@@ -1120,9 +1132,13 @@ private:
 
    /*
     * @brief Container of distributed patches on level.
-    *
     */
    typedef std::map<BoxId, boost::shared_ptr<Patch> > PatchContainer;
+
+   /*
+    * @brief Vector of local patches on level.
+    */
+   typedef std::vector<boost::shared_ptr<Patch> > PatchVector;
 
 public:
    /*!
@@ -1378,6 +1394,13 @@ private:
     * Container for patches.
     */
    PatchContainer d_patches;
+
+   /*!
+    * @brief Vector holding the same patches in d_patches, in the same order.
+    *
+    * This allows random access to the patches.
+    */
+   PatchVector d_patch_vector;
 
    /*
     * Flag to indicate boundary boxes are created.
