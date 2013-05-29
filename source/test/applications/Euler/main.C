@@ -59,6 +59,10 @@ using namespace std;
 
 #include <sys/stat.h>
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 // Classes for autotesting.
 
 #if (TESTING == 1)
@@ -288,6 +292,16 @@ int main(
       } else {
          tbox::PIO::logOnlyNodeZero(log_filename);
       }
+
+#ifdef _OPENMP
+#pragma omp parallel
+#pragma omp master
+      tbox::plog << "Compiled with OpenMP version " << _OPENMP
+                 << ".  Running with " << omp_get_num_threads() << " threads."
+                 << std::endl;
+#else
+      tbox::plog << "Compiled without OpenMP.\n";
+#endif
 
       int viz_dump_interval = 0;
       if (main_db->keyExists("viz_dump_interval")) {

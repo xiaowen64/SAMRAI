@@ -37,6 +37,10 @@
 
 #include "boost/make_shared.hpp"
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -2216,7 +2220,7 @@ RefineSchedule::refineScratchData(
    const boost::shared_ptr<hier::PatchLevel>& coarse_level,
    const hier::Connector& coarse_to_fine,
    const hier::Connector& coarse_to_unfilled,
-   const std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >&
+   const std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >&
    overlaps) const
 {
    t_refine_scratch_data->start();
@@ -2224,7 +2228,7 @@ RefineSchedule::refineScratchData(
    const hier::IntVector ratio(fine_level->getRatioToLevelZero()
                                / coarse_level->getRatioToLevelZero());
 
-   std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >::const_iterator
+   std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >::const_iterator
    overlap_iter(overlaps.begin());
 
    /*
@@ -2232,10 +2236,27 @@ RefineSchedule::refineScratchData(
     * destination patch and destination fill boxes.
     */
 
+#ifdef _OPENMP
+   assert( overlaps.size() == coarse_level->getLocalNumberOfPatches() );
+   std::vector<hier::PatchLevel::iterator> cv;
+   cv.reserve(coarse_level->getLocalNumberOfPatches());
+   for ( hier::PatchLevel::iterator crse_itr(coarse_level->begin());
+         crse_itr != coarse_level->end(); ++crse_itr ) {
+      cv.push_back(crse_itr);
+   }
+#pragma omp parallel shared(cv,ratio) private(overlap_iter)
+#pragma omp for schedule(dynamic)
+   for ( size_t i=0; i<cv.size(); ++i )
+#else
    for ( hier::PatchLevel::iterator crse_itr(coarse_level->begin());
          crse_itr != coarse_level->end(); ++crse_itr, ++overlap_iter )
+#endif
    {
+#ifdef _OPENMP
+      const hier::Box& crse_box = cv[i]->getBox();
+#else
       const hier::Box& crse_box = crse_itr->getBox();
+#endif
       hier::Connector::ConstNeighborhoodIterator dst_nabrs =
          coarse_to_fine.find(crse_box.getBoxId());
       hier::Connector::ConstNeighborIterator na =
@@ -2277,8 +2298,12 @@ RefineSchedule::refineScratchData(
          const RefineClasses::Data * const ref_item = d_refine_items[iri];
          if (ref_item->d_oprefine) {
 
-            boost::shared_ptr<hier::BoxOverlap> refine_overlap(
-               (*overlap_iter)[ref_item->d_class_index]);
+            boost::shared_ptr<hier::BoxOverlap> refine_overlap =
+#ifdef _OPENMP
+               (overlaps[i])[ref_item->d_class_index];
+#else
+               (*overlap_iter)[ref_item->d_class_index];
+#endif
 
             const int scratch_id = ref_item->d_scratch;
 
@@ -2311,7 +2336,7 @@ RefineSchedule::refineScratchData(
  */
 void
 RefineSchedule::computeRefineOverlaps(
-   std::list<std::vector<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
+   std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
    const boost::shared_ptr<hier::PatchLevel>& fine_level,
    const boost::shared_ptr<hier::PatchLevel>& coarse_level,
    const hier::Connector& coarse_to_fine,
@@ -2327,6 +2352,9 @@ RefineSchedule::computeRefineOverlaps(
 
    const int num_equiv_classes =
       d_refine_classes->getNumberOfEquivalenceClasses();
+
+   TBOX_ASSERT( overlaps.empty() );
+   overlaps.reserve(coarse_level->getLocalNumberOfPatches());
 
    /*
     * Loop over all the coarse patches and find the corresponding
@@ -2375,8 +2403,9 @@ RefineSchedule::computeRefineOverlaps(
        * cell widths since the fill boxes are generated using the
        * maximum ghost cell width.
        */
-      std::vector<boost::shared_ptr<hier::BoxOverlap> > refine_overlaps(
-         num_equiv_classes);
+      overlaps.push_back(std::vector<boost::shared_ptr<hier::BoxOverlap> >(0));
+      std::vector<boost::shared_ptr<hier::BoxOverlap> > &refine_overlaps(overlaps.back());
+      refine_overlaps.resize(num_equiv_classes);
       for (int ne = 0; ne < num_equiv_classes; ne++) {
 
          const RefineClasses::Data& rep_item =
@@ -2410,7 +2439,6 @@ RefineSchedule::computeRefineOverlaps(
             }
          }
       }
-      overlaps.push_back(refine_overlaps);
    }
 }
 
