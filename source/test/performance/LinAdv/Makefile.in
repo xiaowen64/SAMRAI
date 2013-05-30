@@ -13,6 +13,7 @@ SRCDIR        = @srcdir@
 SUBDIR        = source/test/performance/LinAdv
 VPATH         = @top_srcdir@/$(SUBDIR)
 OBJECT        = ../../../..
+REPORT        = $(OBJECT)/report.xml
 TESTINCLUDE   = $(SAMRAI)/source/test/testlib
 TESTLIBDIR    = $(OBJECT)/source/test/testlib
 TESTLIB       = $(TESTLIBDIR)/libSAMRAI_test$(LIB_SUFFIX)
@@ -25,6 +26,7 @@ CPPFLAGS_EXTRA = -I$(TESTINCLUDE)  -DTESTING=0
 
 NUM_TESTS = 2
 TEST_NPROCS = @TEST_NPROCS@
+QUOTE = \"
 
 CXX_OBJS      = main.o LinAdv.o
 F_OBJS      = \
@@ -44,10 +46,19 @@ clean:
 		$(RM) *.f main
 
 check:	main
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main test_inputs/domainexpansion.input;
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-			./main test_inputs/domainexpansionb.input;
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"performance LinAdv\" name=$(QUOTE)domainexpansion $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/domainexpansion.input | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"performance LinAdv\" name=$(QUOTE)domainexpansionb $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/domainexpansionb.input | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done; \
+	rm -f foo
 
 checkcompile: main
 

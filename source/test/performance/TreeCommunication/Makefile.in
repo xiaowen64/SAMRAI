@@ -13,6 +13,7 @@ SRCDIR	      =	@srcdir@
 SUBDIR        = source/test/performance/TreeCommunication
 VPATH	      =	@srcdir@
 OBJECT        = ../../../..
+REPORT        = $(OBJECT)/report.xml
 
 CPPFLAGS_EXTRA= -DNDIM=$(PDIM)  -DTESTING=1
 
@@ -23,6 +24,7 @@ include $(OBJECT)/config/Makefile.config
 NUM_TESTS = 9
 
 TEST_NPROCS = @TEST_NPROCS@
+QUOTE = \"
 
 CXX_OBJS      = tcb.o
 
@@ -41,9 +43,15 @@ main: $(CXX_OBJS) $(LIBSAMRAI)
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 
 check:		main
-		for f in $(INPUTS); do	\
-			$(OBJECT)/config/serpa-run $(TEST_NPROCS) \ ./main "$$f";	\
-		done
+		@for f in $(INPUTS); do	\
+		  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+		    echo "    <testcase classname=\"performance TreeCommunication\" name=$(QUOTE)$$f $$p procs$(QUOTE)>" >> $(REPORT); \
+		    $(OBJECT)/config/serpa-run $$p ./main "$$f" | $(TEE) foo; \
+		    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+		    echo "    </testcase>" >> $(REPORT); \
+		  done \
+		done; \
+		rm -f foo
 
 checkcompile: main
 

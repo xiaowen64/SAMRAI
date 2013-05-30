@@ -14,6 +14,7 @@ SUBDIR        = source/test/MappedBoxLevelConnectorUtilsTests
 VPATH	      =	@srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
+REPORT        = $(OBJECT)/report.xml
 
 CPPFLAGS_EXTRA =  -DTESTING=1
 
@@ -24,6 +25,7 @@ include $(OBJECT)/config/Makefile.config
 NUM_TESTS = 17
 
 TEST_NPROCS = @TEST_NPROCS@
+QUOTE = \"
 
 main:	main-mblcu.o $(LIBSAMRAIDEPEND)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) main-mblcu.o $(LIBSAMRAI) $(LDLIBS) -o $@
@@ -34,14 +36,26 @@ check:		main
 	$(MAKE) check3d
 
 check2d:
-	for i in test_inputs/*.2d.input; do	\
-	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main $${i};	\
-	done
+	@for i in test_inputs/*.2d.input; do	\
+	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	    echo "    <testcase classname=\"MappedBoxLevelConnectorTests\" name=$(QUOTE)$$i $$p procs$(QUOTE)>" >> $(REPORT); \
+	    $(OBJECT)/config/serpa-run $$p ./main $${i} | $(TEE) foo; \
+	    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	    echo "    </testcase>" >> $(REPORT); \
+	  done \
+	done; \
+	rm -f foo
 
 check3d:
-	for i in test_inputs/*.3d.input; do	\
-	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main $${i};	\
-	done
+	@for i in test_inputs/*.3d.input; do	\
+	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	    echo "    <testcase classname=\"MappedBoxLevelConnectorTests\" name=$(QUOTE)$$i $$p procs$(QUOTE)>" >> $(REPORT); \
+	    $(OBJECT)/config/serpa-run $$p ./main $${i} | $(TEE) foo; \
+	    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	    echo "    </testcase>" >> $(REPORT); \
+	  done \
+	done; \
+	rm -f foo
 
 
 checkcompile: main

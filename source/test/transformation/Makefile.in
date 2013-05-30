@@ -14,6 +14,7 @@ SUBDIR        = source/test/transformation
 VPATH         = @srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
+REPORT        = $(OBJECT)/report.xml
 
 default: check
 
@@ -28,11 +29,18 @@ main:  main.o $(LIBSAMRAIDEPEND)
 NUM_TESTS = 1
 
 TEST_NPROCS = @TEST_NPROCS@
+QUOTE = \"
 
 checkcompile: main
 
 check:  checkcompile
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"transformation\" name=$(QUOTE)$$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done; \
+	rm -f foo
 
 check2d:
 	$(MAKE) check

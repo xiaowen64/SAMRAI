@@ -14,6 +14,7 @@ SUBDIR        = source/test/applications/Euler
 VPATH         = @srcdir@
 TESTTOOLS     = ../../testtools
 OBJECT        = ../../../..
+REPORT        = $(OBJECT)/report.xml
 TESTINCLUDE   = $(SAMRAI)/source/test/testlib
 TESTLIBDIR    = $(OBJECT)/source/test/testlib
 TESTLIB       = $(TESTLIBDIR)/libSAMRAI_test$(LIB_SUFFIX)
@@ -27,6 +28,7 @@ CPPFLAGS_EXTRA = -I$(TESTINCLUDE) -DTESTING=1
 NUM_TESTS = 12
 
 TEST_NPROCS = @TEST_NPROCS@
+QUOTE = \"
 
 CXX_OBJS      = main.o Euler.o
 F_OBJS      = \
@@ -48,20 +50,82 @@ check:
 		$(MAKE) check3d
 
 check2d:	main
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test.2d.input;
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test.2d.input test.2d.restart 5;
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test_sync.2d.input;
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test_sync.2d.input test_sync.2d.restart 5;
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test_restart.2d.input;
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test_restart.2d.input test_restart.2d.restart 5
+		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+		  echo "    <testcase classname=\"applications Euler\" name=$(QUOTE)2d $$p procs$(QUOTE)>" >> $(REPORT); \
+		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test.2d.input | $(TEE) foo; \
+		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+		  echo "    </testcase>" >> $(REPORT); \
+		done
+		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+		  echo "    <testcase classname=\"applications Euler\" name=$(QUOTE)2d restart $$p procs$(QUOTE)>" >> $(REPORT); \
+		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test.2d.input test.2d.restart 5 | $(TEE) foo; \
+		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+		  echo "    </testcase>" >> $(REPORT); \
+		done
+		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+		  echo "    <testcase classname=\"applications Euler\" name=$(QUOTE)2d sync $$p procs$(QUOTE)>" >> $(REPORT); \
+		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync.2d.input | $(TEE) foo; \
+		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+		  echo "    </testcase>" >> $(REPORT); \
+		done
+		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+		  echo "    <testcase classname=\"applications Euler\" name=$(QUOTE)2d sync restart $$p procs$(QUOTE)>" >> $(REPORT); \
+		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync.2d.input test_sync.2d.restart 5 | $(TEE) foo; \
+		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+		  echo "    </testcase>" >> $(REPORT); \
+		done
+		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+		  echo "    <testcase classname=\"applications Euler\" name=$(QUOTE)2d restart $$p procs$(QUOTE)>" >> $(REPORT); \
+		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_restart.2d.input | $(TEE) foo; \
+		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+		  echo "    </testcase>" >> $(REPORT); \
+		done
+		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+		  echo "    <testcase classname=\"applications Euler\" name=$(QUOTE)2d restart restart $$p procs$(QUOTE)>" >> $(REPORT); \
+		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_restart.2d.input test_restart.2d.restart 5 | $(TEE) foo; \
+		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+		  echo "    </testcase>" >> $(REPORT); \
+		done; \
+		rm -f foo
 
 check3d:	main
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test.3d.input;
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test.3d.input test.3d.restart 5;
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test_sync.3d.input;
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test_sync.3d.input test_sync.3d.restart 5;
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test_sync_restart.3d.input;
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test_sync_restart.3d.input test_sync_restart.3d.restart 5
+		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+		  echo "    <testcase classname=\"applications Euler\" name=$(QUOTE)3d $$p procs$(QUOTE)>" >> $(REPORT); \
+		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test.3d.input | $(TEE) foo; \
+		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+		  echo "    </testcase>" >> $(REPORT); \
+		done
+		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+		  echo "    <testcase classname=\"applications Euler\" name=$(QUOTE)3d restart $$p procs$(QUOTE)>" >> $(REPORT); \
+		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test.3d.input test.3d.restart 5 | $(TEE) foo; \
+		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+		  echo "    </testcase>" >> $(REPORT); \
+		done
+		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+		  echo "    <testcase classname=\"applications Euler\" name=$(QUOTE)3d sync $$p procs$(QUOTE)>" >> $(REPORT); \
+		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync.3d.input | $(TEE) foo; \
+		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+		  echo "    </testcase>" >> $(REPORT); \
+		done
+		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+		  echo "    <testcase classname=\"applications Euler\" name=$(QUOTE)3d sync restart $$p procs$(QUOTE)>" >> $(REPORT); \
+		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync.3d.input test_sync.3d.restart 5 | $(TEE) foo; \
+		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+		  echo "    </testcase>" >> $(REPORT); \
+		done
+		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+		  echo "    <testcase classname=\"applications Euler\" name=$(QUOTE)3d sync_restart $$p procs$(QUOTE)>" >> $(REPORT); \
+		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync_restart.3d.input | $(TEE) foo; \
+		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+		  echo "    </testcase>" >> $(REPORT); \
+		done
+		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+		  echo "    <testcase classname=\"applications Euler\" name=$(QUOTE)3d sync_restart restart $$p procs$(QUOTE)>" >> $(REPORT); \
+		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync_restart.3d.input test_sync_restart.3d.restart 5 | $(TEE) foo; \
+		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+		  echo "    </testcase>" >> $(REPORT); \
+		done; \
+		rm -f foo
 
 checkcompile: main
 

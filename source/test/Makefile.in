@@ -8,9 +8,10 @@
 ##
 #########################################################################
 
-SAMRAI         = @top_srcdir@
+SAMRAI        = @top_srcdir@
 SRCDIR        = @srcdir@
 OBJECT        = ../..
+REPORT        = $(OBJECT)/report.xml
 SUBDIR        = source/test
 
 SUBDIRS = \
@@ -60,7 +61,14 @@ include $(OBJECT)/config/Makefile.config
 library:
 
 check:
+	rm -f $(REPORT)
+	touch $(REPORT)
+	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" >> $(REPORT)
+	@echo "<testsuites>" >> $(REPORT)
+	@echo "  <testsuite name=\"smoke\">" >> $(REPORT)
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+	@echo "  </testsuite>" >> $(REPORT)
+	@echo "</testsuites>" >> $(REPORT)
 
 check2d:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
@@ -74,9 +82,16 @@ checkcompile:
 	@echo "Completed " $@ " in source/test at `date`"
 
 checktest:
+	rm -f $(REPORT)
+	touch $(REPORT)
+	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" >> $(REPORT)
+	@echo "<testsuites>" >> $(REPORT)
+	@echo "  <testsuite name=\"smoke\">" >> $(REPORT)
 	@echo "Starting " $@ " in source/test at `date`"
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 	@echo "Completed " $@ " in source/test at `date`"
+	@echo "  </testsuite>" >> $(REPORT)
+	@echo "</testsuites>" >> $(REPORT)
 
 examples:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
@@ -91,4 +106,5 @@ everything:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) perf); done
 
 clean:
+	rm -f $(REPORT)
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done

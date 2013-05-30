@@ -14,6 +14,7 @@ SUBDIR        = source/test/vector
 VPATH	      =	@srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
+REPORT        = $(OBJECT)/report.xml
 
 default: check
 
@@ -34,6 +35,7 @@ TEST_NPROCS = @TEST_NPROCS@
 ifeq ($(findstring 4, ${TEST_NPROCS}),4)
 TEST_NPROCS = 1,2
 endif
+QUOTE = \"
 
 check:
 		$(MAKE) check2d
@@ -42,8 +44,19 @@ check:
 check2d:
 
 check3d:	kvtest pvtest
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./kvtest
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./pvtest -skip_petscrc
+		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+		  echo "    <testcase classname=\"vector\" name=$(QUOTE)kvtest $$p procs$(QUOTE)>" >> $(REPORT); \
+		  $(OBJECT)/config/serpa-run $$p ./kvtest | $(TEE) foo; \
+		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+		  echo "    </testcase>" >> $(REPORT); \
+		done
+		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+		  echo "    <testcase classname=\"vector\" name=$(QUOTE)pvtest $$p procs$(QUOTE)>" >> $(REPORT); \
+		  $(OBJECT)/config/serpa-run $$p ./pvtest -skip_petscrc | $(TEE) foo; \
+		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+		  echo "    </testcase>" >> $(REPORT); \
+		done; \
+		rm -f foo
 
 checkcompile: kvtest pvtest
 

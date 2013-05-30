@@ -14,6 +14,7 @@ SUBDIR        = source/test/restartdb
 VPATH	      =	@srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
+REPORT        = $(OBJECT)/report.xml
 
 CPPFLAGS_EXTRA =  -DTESTING=1
 
@@ -24,6 +25,7 @@ include $(OBJECT)/config/Makefile.config
 NUM_TESTS = 5
 
 TEST_NPROCS = @TEST_NPROCS@
+QUOTE = \"
 
 testHDF5: mainHDF5.o database_tests.o $(LIBSAMRAIDEPEND)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) mainHDF5.o database_tests.o \
@@ -46,11 +48,37 @@ testMemory: mainMemory.o database_tests.o $(LIBSAMRAIDEPEND)
 	$(LIBSAMRAI) $(LDLIBS) -o testMemory
 
 check:	testHDF5 testHDF5AppFileOpen testSilo testSiloAppFileOpen testMemory
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./testHDF5
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./testHDF5AppFileOpen
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./testSilo
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./testSiloAppFileOpen
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./testMemory
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"restartdb\" name=$(QUOTE)HDF5 $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./testHDF5 | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"restartdb\" name=$(QUOTE)HDF5AppFilOpen $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./testHDF5AppFileOpen | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"restartdb\" name=$(QUOTE)Silo $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./testSilo | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"restartdb\" name=$(QUOTE)SiloAppFileOpen $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./testSiloAppFileOpen | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"restartdb\" name=$(QUOTE)Memory $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./testMemory | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done; \
+	rm -f foo
 
 check2d:
 	$(MAKE) check

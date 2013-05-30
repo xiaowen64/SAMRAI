@@ -13,6 +13,7 @@ SRCDIR	      =	@srcdir@
 SUBDIR        = source/test/rank_group
 VPATH	      =	@srcdir@
 OBJECT        = ../../..
+REPORT        = $(OBJECT)/report.xml
 
 CPPFLAGS_EXTRA= -DNDIM=$(PDIM)  -DTESTING=1
 
@@ -23,6 +24,7 @@ include $(OBJECT)/config/Makefile.config
 NUM_TESTS = 6
 
 TEST_NPROCS = @TEST_NPROCS@
+QUOTE = \"
 
 CXX_OBJS      = main.o
 
@@ -38,14 +40,26 @@ check:
 		$(MAKE) check3d
 
 check2d:	main
-		for f in $(INPUTS2D); do	\
-			$(OBJECT)/config/serpa-run $(TEST_NPROCS) \ ./main "test_inputs/$$f";	\
-		done
+		@for f in $(INPUTS2D); do	\
+		  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+		    echo "    <testcase classname=\"rank_group\" name=$(QUOTE)$$f $$p procs$(QUOTE)>" >> $(REPORT); \
+		    $(OBJECT)/config/serpa-run $$p ./main "test_inputs/$$f" | $(TEE) foo; \
+		    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+		    echo "    </testcase>" >> $(REPORT); \
+		  done \
+		done; \
+		rm -f foo
 
 check3d:	main
-		for f in $(INPUTS3D); do	\
-			$(OBJECT)/config/serpa-run $(TEST_NPROCS) \ ./main "test_inputs/$$f";	\
-		done
+		@for f in $(INPUTS3D); do	\
+		  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+		    echo "    <testcase classname=\"rank_group\" name=$(QUOTE)$$f $$p procs$(QUOTE)>" >> $(REPORT); \
+		    $(OBJECT)/config/serpa-run $$p ./main "test_inputs/$$f" | $(TEE) foo; \
+		    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+		    echo "    </testcase>" >> $(REPORT); \
+		  done \
+		done; \
+		rm -f foo
 
 checkcompile: main
 

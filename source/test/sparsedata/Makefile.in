@@ -14,6 +14,7 @@ SUBDIR        = source/test/sparsedata
 VPATH	      =	@srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
+REPORT        = $(OBJECT)/report.xml
 
 #
 # For these classes don't turn off implicit template instantiation.
@@ -29,6 +30,7 @@ CPPFLAGS_EXTRA= -DTESTING=1
 NUM_TESTS = 2
 
 TEST_NPROCS = @TEST_NPROCS@
+QUOTE = \"
 
 main: main.o SparseDataTester.o $(LIBSAMRAIDEPEND)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) main.o SparseDataTester.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
@@ -42,8 +44,19 @@ check:
 		$(MAKE) check2d
 
 check2d:	main sparse
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./sparse
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"sparsedata\" name=$(QUOTE)main $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"sparsedata\" name=$(QUOTE)sparse $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./sparse | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done; \
+	rm -f foo
 
 check3d:
 

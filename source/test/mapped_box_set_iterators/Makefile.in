@@ -14,6 +14,7 @@ SUBDIR        = source/test/mapped_box_set_iterators
 VPATH	      =	@srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
+REPORT        = $(OBJECT)/report.xml
 
 CPPFLAGS_EXTRA =  -DTESTING=1
 
@@ -24,13 +25,20 @@ include $(OBJECT)/config/Makefile.config
 NUM_TESTS = 1
 
 TEST_NPROCS = @TEST_NPROCS@
+QUOTE = \"
 
 main:	main-iterators.o $(LIBSAMRAIDEPEND)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) main-iterators.o $(LIBSAMRAI) $(LDLIBS) -o $@
 
 
 check:		main
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"mapped_box_set_iterators\" name=$(QUOTE)$$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done; \
+	rm -f foo
 
 check2d:
 	$(MAKE) check

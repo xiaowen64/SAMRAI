@@ -14,6 +14,7 @@ SUBDIR        = source/test/performance/Euler
 VPATH         = @srcdir@
 TESTTOOLS     = ../../testtools
 OBJECT        = ../../../..
+REPORT        = $(OBJECT)/report.xml
 
 default:	main
 

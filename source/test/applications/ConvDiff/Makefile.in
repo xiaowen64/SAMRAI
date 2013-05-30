@@ -14,6 +14,7 @@ SUBDIR        = source/test/applications/ConvDiff
 VPATH         = @srcdir@
 TESTTOOLS     = ../../testtools
 OBJECT        = ../../../..
+REPORT        = $(OBJECT)/report.xml
 TESTINCLUDE   = $(SAMRAI)/source/test/testlib
 TESTLIBDIR    = $(OBJECT)/source/test/testlib
 TESTLIB       = $(TESTLIBDIR)/libSAMRAI_test$(LIB_SUFFIX)
@@ -27,6 +28,7 @@ CPPFLAGS_EXTRA = -I$(TESTINCLUDE) -DTESTING=1
 NUM_TESTS = 2
 
 TEST_NPROCS = @TEST_NPROCS@
+QUOTE = \"
 
 CXX_OBJS      = main.o ConvDiff.o MainRestartData.o
 F77_OBJS      = compute_rhs2d.o init2d.o rkstep2d.o tag_cells2d.o \
@@ -46,10 +48,22 @@ check:
 	$(MAKE) check3d
 
 check2d:	main
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test.2d.input;
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"applications ConvDiff\" name=$(QUOTE)2d $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test.2d.input | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done; \
+	rm -f foo
 
 check3d:	main
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main test_inputs/test.3d.input;
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"applications ConvDiff\" name=$(QUOTE)3d $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test.3d.input | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done; \
+	rm -f foo
 
 checkcompile: main
 

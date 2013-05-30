@@ -14,6 +14,7 @@ SUBDIR        = source/test/MblkEuler
 VPATH         = @srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
+REPORT        = $(OBJECT)/report.xml
 TESTINCLUDE   = $(SAMRAI)/source/test/testlib
 TESTLIBDIR    = $(OBJECT)/source/test/testlib
 TESTLIB       = $(TESTLIBDIR)/libSAMRAI_test$(LIB_SUFFIX)
@@ -27,6 +28,7 @@ CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
 NUM_TESTS     = 1
 
 TEST_NPROCS   = @TEST_NPROCS@
+QUOTE = \"
 
 CXX_OBJS      = MblkGeometry.o main.o MblkEuler.o
 
@@ -45,9 +47,14 @@ check:
 
 check3d:	main
 	@for i in test_inputs/*.3d.input ; do	\
-	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-		./main $${i};	\
-	done
+	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	    echo "    <testcase classname=\"MblkEuler\" name=$(QUOTE)$$i $$p procs$(QUOTE)>" >> $(REPORT); \
+	    $(OBJECT)/config/serpa-run $$p ./main $${i} | $(TEE) foo; \
+	    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	    echo "    </testcase>" >> $(REPORT); \
+	  done \
+	done; \
+	rm -f foo
 
 checkcompile: main
 
