@@ -47,6 +47,7 @@ ParallelBuffer::ParallelBuffer()
    d_buffer = 0;
    d_buffer_size = 0;
    d_buffer_ptr = 0;
+   TBOX_omp_init_lock(l_buffer);
 }
 
 /*
@@ -63,6 +64,7 @@ ParallelBuffer::~ParallelBuffer()
    if (d_buffer) {
       delete[] d_buffer;
    }
+   TBOX_omp_destroy_lock(l_buffer);
 }
 
 /*
@@ -78,6 +80,7 @@ void
 ParallelBuffer::setActive(
    bool active)
 {
+   TBOX_omp_set_lock(l_buffer);
    if (!active && d_buffer) {
       delete[] d_buffer;
       d_buffer = 0;
@@ -85,6 +88,7 @@ ParallelBuffer::setActive(
       d_buffer_ptr = 0;
    }
    d_active = active;
+   TBOX_omp_unset_lock(l_buffer);
 }
 
 /*
@@ -104,6 +108,7 @@ ParallelBuffer::outputString(
 {
    if ((length > 0) && d_active) {
 
+      TBOX_omp_set_lock(l_buffer);
       /*
        * If we need to allocate the internal buffer, then do so
        */
@@ -149,6 +154,8 @@ ParallelBuffer::outputString(
             outputString(text.substr(ncopy), length - ncopy);
          }
       }
+
+      TBOX_omp_unset_lock(l_buffer);
    }
 }
 
@@ -158,6 +165,10 @@ ParallelBuffer::outputString(
  * Copy data from the text string into the internal output buffer.
  * If the internal buffer is not large enough to hold all of the string
  * data, then allocate a new internal buffer.
+ *
+ * This method is not thread-safe, but it is only called from
+ * outputString(), which prevents multiple thread access to the
+ * buffer.
  *
  *************************************************************************
  */
