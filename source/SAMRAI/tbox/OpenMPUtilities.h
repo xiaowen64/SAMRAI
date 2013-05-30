@@ -19,21 +19,21 @@
 
 #define TBOX_omp_lock_t omp_lock_t
 
-#define TBOX_omp_init_lock(L) omp_init_lock(&L)
-#define TBOX_omp_destroy_lock(L) omp_destroy_lock(&L)
+#define TBOX_omp_init_lock(LOCK_PTR) omp_init_lock(LOCK_PTR)
+#define TBOX_omp_destroy_lock(LOCK_PTR) omp_destroy_lock(LOCK_PTR)
 
-#define TBOX_omp_set_lock(L) omp_set_lock(&L)
-#define TBOX_omp_unset_lock(L) omp_unset_lock(&L)
+#define TBOX_omp_set_lock(LOCK_PTR) omp_set_lock(LOCK_PTR)
+#define TBOX_omp_unset_lock(LOCK_PTR) omp_unset_lock(LOCK_PTR)
 
 #else
 
 #define TBOX_omp_lock_t int
 
-#define TBOX_omp_init_lock(L)
-#define TBOX_omp_destroy_lock(L)
+#define TBOX_omp_init_lock(LOCK_PTR)
+#define TBOX_omp_destroy_lock(LOCK_PTR)
 
-#define TBOX_omp_set_lock(L)
-#define TBOX_omp_unset_lock(L)
+#define TBOX_omp_set_lock(LOCK_PTR)
+#define TBOX_omp_unset_lock(LOCK_PTR)
 
 #endif
 
