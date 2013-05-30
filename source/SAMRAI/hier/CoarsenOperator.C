@@ -15,13 +15,13 @@
 
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
+#include "SAMRAI/tbox/OpenMPUtilities.h"
+
 namespace SAMRAI {
 namespace hier {
 
 std::multimap<std::string, CoarsenOperator *> CoarsenOperator::s_lookup_table;
-#ifdef _OPENMP
-omp_lock_t CoarsenOperator::l_lookup_table;
-#endif
+TBOX_omp_lock_t CoarsenOperator::l_lookup_table;
 
 tbox::StartupShutdownManager::Handler
 CoarsenOperator::s_finalize_handler(
@@ -48,14 +48,10 @@ void
 CoarsenOperator::registerInLookupTable(
    const std::string& name)
 {
-#ifdef _OPENMP
-   omp_set_lock(&l_lookup_table);
-#endif
+   TBOX_omp_set_lock(l_lookup_table);
    s_lookup_table.insert(
       std::pair<std::string, CoarsenOperator *>(name, this));
-#ifdef _OPENMP
-   omp_unset_lock(&l_lookup_table);
-#endif
+   TBOX_omp_unset_lock(l_lookup_table);
 }
 
 void
@@ -67,9 +63,7 @@ CoarsenOperator::removeFromLookupTable(
     * in which case the table will have been cleared before the statics
     * are destroyed.
     */
-#ifdef _OPENMP
-   omp_set_lock(&l_lookup_table);
-#endif
+   TBOX_omp_set_lock(l_lookup_table);
    if (!s_lookup_table.empty()) {
       std::multimap<std::string, CoarsenOperator *>::iterator mi =
          s_lookup_table.find(name);
@@ -83,9 +77,7 @@ CoarsenOperator::removeFromLookupTable(
       mi->second = 0;
       s_lookup_table.erase(mi);
    }
-#ifdef _OPENMP
-   omp_unset_lock(&l_lookup_table);
-#endif
+   TBOX_omp_unset_lock(l_lookup_table);
 }
 /*
  *************************************************************************
@@ -99,17 +91,13 @@ CoarsenOperator::getMaxCoarsenOpStencilWidth(
 {
    IntVector max_width(dim, 0);
 
-#ifdef _OPENMP
-   omp_set_lock(&l_lookup_table);
-#endif
+   TBOX_omp_set_lock(l_lookup_table);
    for (std::multimap<std::string, CoarsenOperator *>::const_iterator
         mi = s_lookup_table.begin(); mi != s_lookup_table.end(); ++mi) {
       const CoarsenOperator* op = mi->second;
       max_width.max(op->getStencilWidth(dim));
    }
-#ifdef _OPENMP
-   omp_unset_lock(&l_lookup_table);
-#endif
+   TBOX_omp_unset_lock(l_lookup_table);
 
    return max_width;
 }
@@ -121,9 +109,7 @@ CoarsenOperator::getMaxCoarsenOpStencilWidth(
 void
    CoarsenOperator::initializeCallback()
 {
-#ifdef _OPENMP
-   omp_init_lock(&l_lookup_table);
-#endif
+   TBOX_omp_init_lock(l_lookup_table);
 }
 
 /*
@@ -134,9 +120,7 @@ void
 CoarsenOperator::finalizeCallback()
 {
    s_lookup_table.clear();
-#ifdef _OPENMP
-   omp_destroy_lock(&l_lookup_table);
-#endif
+   TBOX_omp_destroy_lock(l_lookup_table);
 }
 
 }

@@ -16,14 +16,11 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/Variable.h"
+#include "SAMRAI/tbox/OpenMPUtilities.h"
 
 #include "boost/shared_ptr.hpp"
 #include <string>
 #include <map>
-
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 
 namespace SAMRAI {
 namespace hier {
@@ -185,9 +182,7 @@ private:
    const std::string d_name;
 
    static std::multimap<std::string, CoarsenOperator *> s_lookup_table;
-#ifdef _OPENMP
-   static omp_lock_t l_lookup_table;
-#endif
+   static TBOX_omp_lock_t l_lookup_table;
 
    static tbox::StartupShutdownManager::Handler s_finalize_handler;
 
