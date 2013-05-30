@@ -66,6 +66,30 @@ class BergerRigoutsosNode;
  *       continue anyway. <br>
  *       \b "ERROR" - violations will cause an unrecoverable assertion.
  *
+ *    - \b    efficiency_tolerance
+ *       each value specifies the minimum fraction of tagged cells to total
+ *       cells in boxes used to construct patches on a new level.  If the ratio
+ *       is below the tolerance value, the box may be split into smaller boxes
+ *       and pieces removed until the ratio becomes greater than or equal to
+ *       the tolerance.  This tolerance helps users control the amount of extra
+ *       refined cells created (beyond those tagged explicitly) that is typical
+ *       in patch-based AMR computations.  The index of the value in the array
+ *       corresponds to the number of the level to which the tolerance value
+ *       applies.  If more values are given than the maximum number of levels
+ *       allowed in the hierarchy, extra values will be ignored.  If fewer
+ *       values are given, then the last value given will be used for each
+ *       level without a specified input value.  For example, if only a single
+ *       value is specified, then that value will be used on all levels.
+ *
+ *    - \b    combine_efficiency
+ *       each value serves as a threshold for the ratio of the total number of
+ *       cells in two boxes into which a box may be split and the number of
+ *       cells in the original box.  If that ratio is greater than the combine
+ *       efficiency, the box will not be split.  This tolerance helps users
+ *       avoids splitting up portions of the domain into into very small
+ *       patches which can increase the overhead of AMR operations.  Multiple
+ *       values in the array are handled similar to efficiency_tolerance.
+ *
  *
  * <b> Details: </b> <br>
  * <table>
@@ -98,6 +122,22 @@ class BergerRigoutsosNode;
  *     <td>string</td>
  *     <td>"WARN"</td>
  *     <td>"WARN", "IGNORE", "ERROR"</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>efficiency_tolerance</td>
+ *     <td>array of doubles</td>
+ *     <td>0.8 for each level</td>
+ *     <td>all values > 0.0 && < 1.0</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>combine_efficiency</td>
+ *     <td>array of doubles</td>
+ *     <td>0.8 for each level</td>
+ *     <td>all values > 0.0 && < 1.0</td>
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
@@ -196,14 +236,6 @@ public:
     * Each box will be at least as large as the given minimum
     * size and the tolerances will be met.
     *
-    * The efficiency tolerance is a threshold value for the percentage of
-    * tagged cells in each box.  If this percentage is below the tolerance,
-    * the box will continue to be split into smaller boxes.
-    *
-    * The combine tolerance is a threshold value for the sum of the volumes
-    * of two boxes into which a box may be potentially split.  If ratio of
-    * that sum and the volume of the original box, the box will not be split.
-    *
     * @pre !bound_boxes.isEmpty()
     * @pre (tag_level->getDim() == (*(bound_boxes.begin())).getDim()) &&
     *      (tag_level->getDim() == min_box.getDim()) &&
@@ -218,8 +250,6 @@ public:
       const int tag_val,
       const hier::BoxContainer& bound_boxes,
       const hier::IntVector& min_box,
-      const double efficiency_tol,
-      const double combine_tol,
       const hier::IntVector& tag_to_new_width);
 
    /*!
@@ -263,6 +293,95 @@ public:
    getObjectName() const
    {
       return "BergerRigoutsos";
+   }
+
+   /*!
+    * @brief Set efficiency tolerance for clustering tags on level.
+    *
+    * @param[in] efficiency_tolerance
+    * @param[in] level_number
+    *
+    * @pre level_number >= 0
+    * @pre (efficiency_tolerance >= 0) && (efficiency_tolerance <= 1.0)
+    */
+   void
+   setEfficiencyTolerance(
+      const double efficiency_tolerance,
+      const int level_number)
+   {
+      TBOX_ASSERT(level_number >= 0);
+      TBOX_ASSERT((efficiency_tolerance >= 0) &&
+                  (efficiency_tolerance <= 1.0));
+      int size = static_cast<int>(d_efficiency_tolerance.size());
+      if (level_number >= size) {
+         d_efficiency_tolerance.resize(level_number+1);
+         for (int i = size; i < level_number; ++i) {
+            d_efficiency_tolerance[i] = d_efficiency_tolerance[size-1];
+         }
+      }
+      d_efficiency_tolerance[level_number] = efficiency_tolerance;
+   }
+
+   /*!
+    * @brief Return efficiency tolerance for clustering tags on level.
+    *
+    * @return efficiency tolerance for clustering tags on level.
+    *
+    * @pre level_number >= 0
+    */
+   double
+   getEfficiencyTolerance(
+      const int level_number) const
+   {
+      TBOX_ASSERT(level_number >= 0);
+      int size = static_cast<int>(d_efficiency_tolerance.size());
+      return (level_number < size) ?
+         d_efficiency_tolerance[level_number] :
+         d_efficiency_tolerance[size - 1];
+   }
+
+   /*!
+    * @brief Set combine efficiency for clustering tags on level.
+    *
+    * @param[in] combine_efficiency
+    * @param[in] level_number
+    *
+    * @pre level_number >= 0
+    * @pre (combine_efficiency >= 0) && (combine_efficiency <= 1.0)
+    */
+   void
+   setCombineEfficiency(
+      const double combine_efficiency,
+      const int level_number)
+   {
+      TBOX_ASSERT(level_number >= 0);
+      TBOX_ASSERT((combine_efficiency >= 0) && (combine_efficiency <= 1.0));
+      int size = static_cast<int>(d_combine_efficiency.size());
+      if (level_number >= size) {
+         d_combine_efficiency.resize(level_number+1);
+         for (int i = size; i < level_number; ++i) {
+            d_combine_efficiency[i] = d_combine_efficiency[size-1];
+         }
+      }
+      d_combine_efficiency[level_number] = combine_efficiency;
+   }
+
+   /*!
+    * @brief Return combine efficiency for clustering tags on level.
+    *
+    * @return combine efficiency for clustering tags on level.
+    *
+    * @pre level_number >= 0
+    */
+   double
+   getCombineEfficiency(
+      const int level_number) const
+   {
+      TBOX_ASSERT(level_number >= 0);
+      int size = static_cast<int>(d_combine_efficiency.size());
+      return (level_number < size) ?
+         d_combine_efficiency[level_number] :
+         d_combine_efficiency[size - 1];
    }
 
 
@@ -499,9 +618,8 @@ private:
    //@name Parameters from clustering algorithm virtual interface
    int d_tag_data_index;
    int d_tag_val;
+   int d_level_number;
    hier::IntVector d_min_box;
-   double d_efficiency_tol;
-   double d_combine_tol;
    hier::IntVector d_tag_to_new_width;
    //@}
 
@@ -566,6 +684,20 @@ private:
     * disregarding the width specified in findBoxesContainingTags().
     */
    bool d_build_zero_width_connector;
+
+   /*!
+    * @brief Efficiency tolerance during clustering.
+    *
+    * See input parameter efficiency_tolerance.
+    */
+   std::vector<double> d_efficiency_tolerance;
+
+   /*
+    * @brief Combine efficiency during clustering.
+    *
+    * See input parameter combine_efficiency.
+    */
+   std::vector<double> d_combine_efficiency;
 
    /*!
     * @brief Queue on which to append jobs to be

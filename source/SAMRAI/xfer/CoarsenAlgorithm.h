@@ -326,11 +326,6 @@ private:
    operator = (
       const CoarsenAlgorithm&);                   // not implemented
 
-   //! @brief Shorthand typedef.
-   typedef hier::Box MBox;
-   //! @brief Shorthand typedef.
-   typedef hier::BoxLevel BoxLevel;
-
    /*!
     * @brief Dimension of the object.
     */

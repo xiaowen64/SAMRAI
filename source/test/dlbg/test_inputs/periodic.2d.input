@@ -52,6 +52,8 @@ BergerRigoutsos {
   DEV_owner_mode = "MOST_OVERLAP"
   // DEV_owner_mode = "SINGLE_OWNER"
   max_box_size = 40, 40
+  efficiency_tolerance = 0.80
+  combine_efficiency = 0.85
 }
 
 
@@ -123,8 +125,6 @@ GriddingAlgorithm {
    enforce_proper_nesting = TRUE
    DEV_extend_to_domain_boundary = FALSE
    // DEV_load_balance = FALSE
-   efficiency_tolerance = 0.80
-   combine_efficiency = 0.85
    check_nonrefined_tags = "WARN"
    check_overlapping_patches = "WARN"
    sequentialize_patch_indices = TRUE

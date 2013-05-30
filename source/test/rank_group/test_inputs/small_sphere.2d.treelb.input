@@ -48,16 +48,10 @@ Main {
       r0 = 0, 0 // 0.5, 0.5
       radii = 0.0, 0.6, 0.75, 0.85, 0.99, 1.0
 
-      // Efficiency tolerance of Berger Rigoutsos algorithm.  Refer to
-      // mesh::BergerRigoutsos for details.
-      efficiency_tol = 0.80
-
-      // Combine tolerance of Berger Rigoutsos algorithm.  Refer to
-      // mesh::BergerRigoutsos for details.
-      combine_tol = 0.90
-
       // Refer to mesh::BergerRigoutsos for input.
       BergerRigoutsos {
+         efficiency_tol = 0.80
+         combine_tol = 0.90
          DEV_log_node_history = FALSE
          DEV_log_cluster_summary = TRUE
          DEV_log_cluster = FALSE

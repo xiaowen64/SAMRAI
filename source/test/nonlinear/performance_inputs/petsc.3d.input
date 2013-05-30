@@ -71,9 +71,12 @@ PatchHierarchy {
    }
 }
 
-GriddingAlgorithm {
+BergerRigoutsos {
    combine_efficiency = 0.75
    efficiency_tolerance = 0.75
+}
+
+GriddingAlgorithm {
 }
 
 StandardTagAndInitialize{

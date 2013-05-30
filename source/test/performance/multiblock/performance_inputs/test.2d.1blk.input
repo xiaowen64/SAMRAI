@@ -143,6 +143,14 @@ TimerManager {
 }
 
 
+// Refer to input documentation for mesh::BergerRigoutsos class.
+BergerRigoutsos {
+   efficiency_tolerance    = 0.85e0   // min % of tag cells in new patch level
+   combine_efficiency      = 0.95e0   // chop box if sum of volumes of smaller
+                                      // boxes < efficiency * vol of large box
+}
+
+
 // Refer to input documentation for hier:GridGeometry class.
 GridGeometry {
    num_blocks = 1
@@ -173,10 +181,6 @@ PatchHierarchy {
 // Refer to input documentation for mesh::GriddingAlgorithm class.
 GriddingAlgorithm{
    sequentialize_patch_indices = TRUE
-
-   efficiency_tolerance    = 0.85e0   // min % of tag cells in new patch level
-   combine_efficiency      = 0.95e0   // chop box if sum of volumes of smaller
-                                      // boxes < efficiency * vol of large box
 }
 
 

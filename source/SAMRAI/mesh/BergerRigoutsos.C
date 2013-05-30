@@ -43,8 +43,6 @@ BergerRigoutsos::BergerRigoutsos(
    d_tag_data_index(-1),
    d_tag_val(1),
    d_min_box(dim),
-   d_efficiency_tol(0.80),
-   d_combine_tol(0.80),
    d_tag_to_new_width(dim, 1),
 
    d_tag_level(),
@@ -63,6 +61,8 @@ BergerRigoutsos::BergerRigoutsos(
    d_compute_relationships(2),
    d_sort_output_nodes(false),
    d_build_zero_width_connector(false),
+   d_efficiency_tolerance(1, 0.8),
+   d_combine_efficiency(1, 0.8),
    d_relaunch_queue(),
    d_comm_stage(),
    d_min_box_size_from_cutting(dim, 0),
@@ -171,6 +171,42 @@ BergerRigoutsos::getFromInput(
       d_sort_output_nodes =
          input_db->getBoolWithDefault("sort_output_nodes", false);
 
+      /*
+       * Read input for efficiency tolerance.
+       */
+
+      if (input_db->keyExists("efficiency_tolerance")) {
+         d_efficiency_tolerance =
+            input_db->getDoubleVector("efficiency_tolerance");
+
+         int efficiency_tolerance_size =
+            static_cast<int>(d_efficiency_tolerance.size());
+         for (int ln = 0; ln < efficiency_tolerance_size; ++ln) {
+            if (!((d_efficiency_tolerance[ln] > 0.0e0) &&
+                  (d_efficiency_tolerance[ln] < 1.0e0))) {
+               INPUT_RANGE_ERROR("efficiency_tolerance");
+            }
+         }
+      }
+
+      /*
+       * Read input for combine efficiency.
+       */
+
+      if (input_db->keyExists("combine_efficiency")) {
+         d_combine_efficiency =
+            input_db->getDoubleVector("combine_efficiency");
+
+         int combine_efficiency_size =
+            static_cast<int>(d_combine_efficiency.size());
+         for (int ln = 0; ln < combine_efficiency_size; ++ln) {
+            if (!((d_combine_efficiency[ln] > 0.0e0) &&
+                  (d_combine_efficiency[ln] < 1.0e0))) {
+               INPUT_RANGE_ERROR("combine_efficiency");
+            }
+         }
+      }
+
       std::string tmp_str;
 
       tmp_str =
@@ -212,8 +248,6 @@ BergerRigoutsos::findBoxesContainingTags(
    const int tag_val,
    const hier::BoxContainer& bound_boxes,
    const hier::IntVector& min_box,
-   const double efficiency_tol,
-   const double combine_tol,
    const hier::IntVector& tag_to_new_width)
 {
    TBOX_ASSERT(!bound_boxes.isEmpty());
@@ -275,8 +309,7 @@ BergerRigoutsos::findBoxesContainingTags(
    d_tag_data_index = tag_data_index;
    d_tag_val = tag_val;
    d_min_box = min_box;
-   d_efficiency_tol = efficiency_tol;
-   d_combine_tol = combine_tol;
+   d_level_number = tag_level->getLevelNumber();
 
    d_tag_to_new_width = d_build_zero_width_connector ?
       hier::IntVector::getZero(tag_to_new_width.getDim()) : tag_to_new_width;

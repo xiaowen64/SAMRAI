@@ -49,6 +49,10 @@ TilePartitioner::TilePartitioner(
          database ? database->getDatabaseWithDefault("TreeLoadBalancer",
                                                      boost::shared_ptr<tbox::Database>())
          : boost::shared_ptr<tbox::Database>()),
+   d_graphlb(dim, name + ":GraphLoadBalancer",
+         database ? database->getDatabaseWithDefault("GraphLoadBalancer",
+                                                     boost::shared_ptr<tbox::Database>())
+         : boost::shared_ptr<tbox::Database>()),
    d_internal_load_balancer('t'),
    d_box_size(dim),
    // Output control.
@@ -163,6 +167,19 @@ TilePartitioner::loadBalanceBoxLevel(
    hier::IntVector tile_cut_factor = d_box_size;
 
    switch (d_internal_load_balancer) {
+   case 'g':
+      d_graphlb.loadBalanceBoxLevel(
+         balance_box_level,
+         balance_to_anchor,
+         hierarchy,
+         level_number,
+         min_size,
+         max_size,
+         domain_box_level,
+         bad_interval,
+         tile_cut_factor,
+         rank_group);
+      break;
    case 't':
       d_tlb.loadBalanceBoxLevel(
          balance_box_level,
@@ -247,7 +264,8 @@ TilePartitioner::getFromInput(
             database->getString("internal_load_balancer");
 
          if ( internal_load_balancer != "ChopAndPackLoadBalancer" &&
-              internal_load_balancer != "TreeLoadBalancer" ) {
+              internal_load_balancer != "TreeLoadBalancer" &&
+              internal_load_balancer != "GraphLoadBalancer" ) {
             TBOX_ERROR("TilePartitioner::getFromInput error:\n"
                        <<"internal_load_balancer must be set to\n"
                        <<"\"ChopAndPackLoadBalancer\" or \"TreeLoadBalancer\".\n");

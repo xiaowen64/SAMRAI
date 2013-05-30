@@ -92,12 +92,15 @@ PatchHierarchy {
    allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
 }
 
+BergerRigoutsos {
+   efficiency_tolerance = 0.73
+   combine_efficiency = 0.73
+}
+
 GriddingAlgorithm {
    enforce_proper_nesting = TRUE
    DEV_extend_to_domain_boundary = TRUE
    // DEV_load_balance = FALSE
-   combine_efficiency = 0.73
-   efficiency_tolerance = 0.73
    check_nonrefined_tags = "IGNORE"
    sequentialize_patch_indices = TRUE
 }

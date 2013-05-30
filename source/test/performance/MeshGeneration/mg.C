@@ -389,9 +389,6 @@ int main(
       boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator =
          createBoxGenerator( input_db, box_generator_type, dim );
 
-      double efficiency_tol = main_db->getDoubleWithDefault("efficiency_tol", 0.7);
-      double combine_tol = main_db->getDoubleWithDefault("combine_tol", 0.7);
-
       /*
        * Create hierarchy.
        */
@@ -617,8 +614,6 @@ int main(
             1 /* tag_val */,
             hier::BoxContainer(L0->getGlobalBoundingBox(0)),
             min_size,
-            exact_tagging ? 1.0 : efficiency_tol,
-            exact_tagging ? 1.0 : combine_tol,
             required_connector_width);
 
          outputPostcluster( *L1, *L0, required_connector_width, "L1: " );
@@ -750,8 +745,6 @@ int main(
             1 /* tag_val */,
             hier::BoxContainer(L1.getGlobalBoundingBox(0)),
             min_size,
-            exact_tagging ? 1.0 : efficiency_tol,
-            exact_tagging ? 1.0 : combine_tol,
             required_connector_width);
 
          outputPostcluster( *L2, L1, required_connector_width, "L2: " );

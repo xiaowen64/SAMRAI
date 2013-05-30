@@ -69,7 +69,8 @@ generatePrebalanceByUserShells(
    const hier::IntVector& max_gcw,
    boost::shared_ptr<hier::BoxLevel>& balance_box_level,
    const boost::shared_ptr<hier::BoxLevel>& anchor_box_level,
-   boost::shared_ptr<hier::Connector>& anchor_to_balance);
+   boost::shared_ptr<hier::Connector>& anchor_to_balance,
+   int tag_level_number);
 
 void
 sortNodes(
@@ -203,7 +204,7 @@ int main(
       if (main_db->isInteger("min_size")) {
          main_db->getIntegerArray("min_size", &min_size[0], dimval);
       }
-      hier::IntVector max_size(dim, -1);
+      hier::IntVector max_size(dim, INT_MAX);
       if (main_db->isInteger("max_size")) {
          main_db->getIntegerArray("max_size", &max_size[0], dimval);
       }
@@ -415,7 +416,8 @@ int main(
                ghost_cell_width,
                balance_box_level,
                anchor_box_level,
-               anchor_to_balance);
+               anchor_to_balance,
+               0);
          } else {
             TBOX_ERROR("Bad box_gen_method: '" << box_gen_method << "'");
          }
@@ -613,7 +615,8 @@ void generatePrebalanceByUserShells(
    const hier::IntVector& max_gcw,
    boost::shared_ptr<hier::BoxLevel>& balance_box_level,
    const boost::shared_ptr<hier::BoxLevel>& anchor_box_level,
-   boost::shared_ptr<hier::Connector>& anchor_to_balance)
+   boost::shared_ptr<hier::Connector>& anchor_to_balance,
+   int tag_level_number)
 {
 
    const tbox::Dimension dim(hierarchy->getDim());
@@ -624,17 +627,12 @@ void generatePrebalanceByUserShells(
     * at radii[0]<r<radii[1], radii[2]<r<radii[3], and so on.
     */
    std::vector<double> radii;
-   double efficiency_tol = 0.75;
-   double combine_tol = 0.75;
 
    std::vector<double> r0(dimval);
    for (int d = 0; d < dimval; ++d) r0[d] = 0;
 
    boost::shared_ptr<tbox::Database> abr_db;
    if (database) {
-      efficiency_tol = database->getDoubleWithDefault("efficiency_tol",
-            efficiency_tol);
-      combine_tol = database->getDoubleWithDefault("combine_tol", combine_tol);
       if (database->isDouble("r0")) {
          r0 = database->getDoubleVector("r0");
       }
@@ -659,6 +657,7 @@ void generatePrebalanceByUserShells(
          anchor_box_level,
          grid_geometry,
          vdb->getPatchDescriptor()));
+   tag_level->setLevelNumber(tag_level_number);
 
    boost::shared_ptr<pdat::CellVariable<int> > tag_variable(
       new pdat::CellVariable<int>(dim, "TagVariable"));
@@ -715,8 +714,6 @@ void generatePrebalanceByUserShells(
       tag_val,
       hier::BoxContainer(anchor_box_level->getGlobalBoundingBox(0)),
       min_size,
-      efficiency_tol,
-      combine_tol,
       max_gcw);
 
    hier::Connector& balance_to_anchor = anchor_to_balance->getTranspose();

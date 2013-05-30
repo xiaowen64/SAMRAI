@@ -32,6 +32,8 @@ ABRTest {
 
 
 BergerRigoutsos {
+   combine_efficiency = 0.88
+   efficiency_tolerance = 0.88
   // DEV_log_node_history = TRUE
   DEV_log_cluster_summary = TRUE
   // DEV_algo_advance_mode = "SYNCHRONOUS", "ADVANCE_SOME", "ROUND_ROBIN" or "ADVANCE_ANY"
@@ -89,8 +91,6 @@ PatchHierarchy {
 }
 
 GriddingAlgorithm {
-   combine_efficiency = 0.88
-   efficiency_tolerance = 0.88
 }
 
 TimerManager{

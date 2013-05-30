@@ -38,9 +38,6 @@ Main {
 
    load_balance = TRUE, TRUE
 
-   efficiency_tol = 0.75
-   combine_tol = 0.75
-
    mesh_generator_name = "SinusoidalFrontGenerator"
 
    SinusoidalFrontGenerator {
@@ -67,6 +64,8 @@ TileClustering {
 // Used if box_generator_type is BergerRigoutsos.  Refer to mesh::BergerRigoutsos for input.
 BergerRigoutsos {
   sort_output_nodes = TRUE
+  efficiency_tolerance = 0.75
+  combine_efficiency = 0.75
   DEV_build_zero_width_connector = TRUE
   DEV_cluster_locally = FALSE
   DEV_cluster_tiles = FALSE
