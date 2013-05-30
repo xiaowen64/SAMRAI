@@ -672,9 +672,15 @@ GraphLoadBalancer::loadBalanceBoxLevel(
    }
 
 #else
-
-
-
+   NULL_USE(balance_box_level);
+   NULL_USE(balance_to_anchor);
+   NULL_USE(hierarchy);
+   NULL_USE(level_number);
+   NULL_USE(min_size);
+   NULL_USE(max_size);
+   NULL_USE(domain_box_level);
+   NULL_USE(bad_interval);
+   NULL_USE(cut_factor);
    TBOX_WARNING("SAMRAI configured without PT-Scotch library:  GraphLoadBalancer calls will do nothing");
 
 #endif
@@ -976,8 +982,8 @@ GraphLoadBalancer::setupAsyncCommObjects(
       }
    }
 
-   const int num_sends = send_procs.size();
-   const int num_recvs = recv_procs.size();
+   const int num_sends = static_cast<int>(send_procs.size());
+   const int num_recvs = static_cast<int>(recv_procs.size());
 
    if ( num_sends > 0 ) {
 

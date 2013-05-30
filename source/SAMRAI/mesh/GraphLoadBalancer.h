@@ -174,6 +174,7 @@ public:
    getLoadBalanceDependsOnPatchData(
       int level_number) const
    {
+      NULL_USE(level_number);
       return false;
    }
 
