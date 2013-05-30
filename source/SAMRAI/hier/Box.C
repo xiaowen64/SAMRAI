@@ -409,12 +409,10 @@ Box::index(
       remainder -= index[d] * stride;
 
       /* Compute the global index */
-      index[getDim().getValue()] += lower(d);
+      index[d] += lower(d);
    }
 
-   Index idx(index);
-
-   return idx;
+   return Index(index);
 }
 
 bool
