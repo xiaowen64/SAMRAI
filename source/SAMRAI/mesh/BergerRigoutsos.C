@@ -104,10 +104,13 @@ BergerRigoutsos::BergerRigoutsos(
 {
    getFromInput(input_db);
    setTimerPrefix(s_default_timer_prefix);
+
+   TBOX_omp_init_lock(&l_relaunch_queue);
 }
 
 BergerRigoutsos::~BergerRigoutsos()
 {
+   TBOX_omp_destroy_lock(&l_relaunch_queue);
    if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
       // Free the private communicator (if SAMRAI_MPI has not been finalized).
       int flag;

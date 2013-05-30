@@ -31,15 +31,12 @@
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/InputManager.h"
+#include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include "boost/make_shared.hpp"
-
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
