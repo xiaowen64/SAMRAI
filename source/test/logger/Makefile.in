@@ -68,10 +68,10 @@ check3d:
 checkcompile: userloggertest defaultloggertest
 
 checktest:
-	rm -f makecheck.logfile
+	$(RM) makecheck.logfile
 	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
 	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
-	rm -f makecheck.logfile
+	$(RM) makecheck.logfile
 
 examples:
 

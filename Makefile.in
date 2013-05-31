@@ -222,7 +222,7 @@ everything:
 	(cd source/test; $(MAKE) perf)
 
 memtest: 
-	rm -f ~/insure.out 
+	$(RM) ~/insure.out 
 	$(MAKE) checktest
 	@NUM_INSURE_RUNS=`grep "PROBLEM SUMMARY - by type" ~/insure.out| wc -l`;            \
 	NO_LEAKS=`grep "No leaks were found" ~/insure.out | wc -l`;                         \

@@ -61,7 +61,7 @@ include $(OBJECT)/config/Makefile.config
 library:
 
 check:
-	rm -f $(REPORT)
+	$(RM) $(REPORT)
 	touch $(REPORT)
 	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" >> $(REPORT)
 	@echo "<testsuites>" >> $(REPORT)
@@ -82,7 +82,7 @@ checkcompile:
 	@echo "Completed " $@ " in source/test at `date`"
 
 checktest:
-	rm -f $(REPORT)
+	$(RM) $(REPORT)
 	touch $(REPORT)
 	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" >> $(REPORT)
 	@echo "<testsuites>" >> $(REPORT)
@@ -106,5 +106,5 @@ everything:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) perf); done
 
 clean:
-	rm -f $(REPORT)
+	$(RM) $(REPORT)
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done

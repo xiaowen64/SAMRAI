@@ -45,7 +45,7 @@ check2d:	main
 	    echo "    </testcase>" >> $(REPORT); \
 	  done \
 	done; \
-	rm -f foo
+	$(RM) foo
 
 check3d:	main
 	@for i in test_inputs/*3d*.input ; do	\
@@ -56,15 +56,15 @@ check3d:	main
 	    echo "    </testcase>" >> $(REPORT); \
 	  done \
 	done; \
-	rm -f foo
+	$(RM) foo
 
 checkcompile: main
 
 checktest:
-	rm -f makecheck.logfile
+	$(RM) makecheck.logfile
 	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
 	$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
-	rm -f makecheck.logfile
+	$(RM) makecheck.logfile
 
 examples:
 
