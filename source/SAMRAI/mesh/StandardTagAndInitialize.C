@@ -2028,6 +2028,17 @@ StandardTagAndInitialize::setCurrentTaggingCriteria(
    }
 }
 
+void
+StandardTagAndInitialize::processLevelBeforeRemoval(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   int level_number,
+   const boost::shared_ptr<hier::PatchLevel>& old_level)
+{
+   d_tag_strategy->processLevelBeforeRemoval(hierarchy,
+      level_number,
+      old_level);
+}
+
 static int GCD(
    const int a,
    const int b)

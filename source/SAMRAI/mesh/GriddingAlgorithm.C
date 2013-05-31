@@ -409,7 +409,7 @@ GriddingAlgorithm::makeCoarsestLevel(
    }
 
 
-   hier::IntVector patch_cut_factor(dim, d_tag_init_strategy-> getErrorCoarsenRatio());
+   hier::IntVector patch_cut_factor(dim, d_tag_init_strategy->getErrorCoarsenRatio());
 
    /*
     * TODO: The code for generating the coarsest level's boxes is not
@@ -1363,6 +1363,10 @@ GriddingAlgorithm::regridFinerLevel(
 
          if (d_hierarchy->finerLevelExists(tag_ln)
              && remove_old_fine_level) {
+            d_tag_init_strategy->processLevelBeforeRemoval(
+               d_hierarchy,
+               tag_ln,
+               d_hierarchy->getPatchLevel(new_ln));
             d_hierarchy->removePatchLevel(new_ln);
          }
 

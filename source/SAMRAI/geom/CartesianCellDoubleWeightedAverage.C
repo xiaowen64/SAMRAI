@@ -59,7 +59,7 @@ void SAMRAI_F77_FUNC(cartwgtavgcelldoub3d, CARTWGTAVGCELLDOUB3D) (const int&,
    const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
-// in cartcoarsen3d.f:
+// in cartcoarsen4d.f:
 void SAMRAI_F77_FUNC(cartwgtavgcelldoub4d, CARTWGTAVGCELLDOUB4D) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
