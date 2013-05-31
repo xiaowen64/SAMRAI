@@ -100,7 +100,7 @@ everything:
 clean-check:
 	$(SAMCLEAN)
 
-clean:		clean-check
+clean:	clean-check
 	$(RM) *.f main
 	$(RM) test*restart viz_*
 
@@ -119,7 +119,7 @@ compute_rhs2d.o:	$(FORTRAN)/compute_rhs2d.m4
 	$(M4) $(M4DIRS) $(FORTRAN)/compute_rhs2d.m4 > compute_rhs2d.f
 	$(F77) $(FFLAGS) -c compute_rhs2d.f -o $@
 
-init2d.o:		$(FORTRAN)/init2d.m4
+init2d.o:	$(FORTRAN)/init2d.m4
 	$(M4) $(M4DIRS) $(FORTRAN)/init2d.m4 > init2d.f
 	$(F77) $(FFLAGS) -c init2d.f -o $@
 
@@ -136,7 +136,7 @@ compute_rhs3d.o:	$(FORTRAN)/compute_rhs3d.m4
 	$(M4) $(M4DIRS) $(FORTRAN)/compute_rhs3d.m4 > compute_rhs3d.f
 	$(F77) $(FFLAGS) -c compute_rhs3d.f -o $@
 
-init3d.o:		$(FORTRAN)/init3d.m4
+init3d.o:	$(FORTRAN)/init3d.m4
 	$(M4) $(M4DIRS) $(FORTRAN)/init3d.m4 > init3d.f
 	$(F77) $(FFLAGS) -c init3d.f -o $@
 

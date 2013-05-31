@@ -28,7 +28,7 @@ QUOTE = \"
 
 CXX_OBJS      = main.o
 
-main: $(CXX_OBJS) $(LIBSAMRAI)
+main:	$(CXX_OBJS) $(LIBSAMRAI)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 

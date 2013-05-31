@@ -28,7 +28,7 @@ TEST_NPROCS = @TEST_NPROCS@
 QUOTE = \"
 
 CXX_OBJS      = main.o FACPoisson.o
-F_OBJS      = facpoisson2d.o facpoisson3d.o
+F_OBJS        = facpoisson2d.o facpoisson3d.o
 
 main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) \
@@ -70,14 +70,12 @@ checktest:
 
 examples2d: main
 	@for i in example_inputs/*.2d.input ; do	\
-	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-		./main $${i};	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main $${i};	\
 	done
 
 examples3d: main
 	@for i in example_inputs/*.3d.input ; do	\
-	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-		./main $${i};	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main $${i};	\
 	done
 
 examples:
@@ -105,7 +103,7 @@ redo:
 include $(SRCDIR)/Makefile.depend
 
 FORTRAN       = $(SRCDIR)/fortran
-M4DIRS          = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
+M4DIRS        = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
 
 facpoisson2d.o:	$(FORTRAN)/facpoisson2d.m4
 	$(M4) $(M4DIRS) $(FORTRAN)/facpoisson2d.m4 > facpoisson2d.f

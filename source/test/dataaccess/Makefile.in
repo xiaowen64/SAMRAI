@@ -34,8 +34,8 @@ main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 
 check:
-		$(MAKE) check2d
-		$(MAKE) check3d
+	$(MAKE) check2d
+	$(MAKE) check3d
 
 check2d:	main
 	@for i in test_inputs/*2d*.input ; do	\
@@ -62,10 +62,10 @@ check3d:	main
 checkcompile: main
 
 checktest:
-		$(RM) makecheck.logfile
-		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
-		$(RM) makecheck.logfile
+	$(RM) makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
+	$(RM) makecheck.logfile
 
 examples:
 
@@ -78,9 +78,9 @@ everything:
 	$(MAKE) perf
 
 clean-check:
-		$(SAMCLEAN)
+	$(SAMCLEAN)
 
-clean:		clean-check
-		$(RM) *.f main
+clean:	clean-check
+	$(RM) *.f main
 
 include $(SRCDIR)/Makefile.depend

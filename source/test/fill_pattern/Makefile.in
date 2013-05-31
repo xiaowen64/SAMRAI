@@ -34,7 +34,7 @@ main:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 
 
-check:		main
+check:	main
 	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
 	  echo "    <testcase classname=\"fill_pattern\" name=$(QUOTE)$$p procs$(QUOTE)>" >> $(REPORT); \
 	  $(OBJECT)/config/serpa-run $$p ./main | $(TEE) foo; \
@@ -52,10 +52,10 @@ check3d:
 checkcompile: main
 
 checktest:
-		$(RM) makecheck.logfile
-		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
-		$(RM) makecheck.logfile
+	$(RM) makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
+	$(RM) makecheck.logfile
 
 examples:
 
@@ -68,7 +68,7 @@ everything:
 	$(MAKE) perf
 
 clean: 
-		$(SAMCLEAN)
-		$(RM) main
+	$(SAMCLEAN)
+	$(RM) main
 
 include $(SRCDIR)/Makefile.depend

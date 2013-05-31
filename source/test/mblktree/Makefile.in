@@ -36,7 +36,7 @@ main:	main-mbtree.o $(LIBSAMRAIDEPEND)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) main-mbtree.o $(LIBSAMRAI) $(LDLIBS) -o $@
 
 
-check:		main
+check:	main
 	$(MAKE) check2d
 	$(MAKE) check3d
 
@@ -85,10 +85,10 @@ check3d:
 checkcompile: main
 
 checktest:
-		$(RM) makecheck.logfile
-		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
-		$(RM) makecheck.logfile
+	$(RM) makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
+	$(RM) makecheck.logfile
 
 examples:
 
@@ -101,7 +101,7 @@ everything:
 	$(MAKE) perf
 
 clean:
-		$(SAMCLEAN)
-		$(RM) main
+	$(SAMCLEAN)
+	$(RM) main
 
 include $(SRCDIR)/Makefile.depend

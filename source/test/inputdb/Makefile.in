@@ -23,7 +23,7 @@ include $(OBJECT)/config/Makefile.config
 CPPFLAGS_EXTRA= -DNDIM=2  -DTESTING=1
 
 main:	inputdb.o $(LIBSAMRAIDEPEND)
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) inputdb.o $(LIBSAMRAI) $(LDLIBS) -o $@
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) inputdb.o $(LIBSAMRAI) $(LDLIBS) -o $@
 
 NUM_TESTS = 1
 
@@ -32,26 +32,26 @@ QUOTE = \"
 
 checkcompile: main
 
-check:		checkcompile
-		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-		  echo "    <testcase classname=\"inputdb\" name=$(QUOTE)$$p procs$(QUOTE)>" >> $(REPORT); \
-		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/inputdb.input | $(TEE) foo; \
-		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
-		  echo "    </testcase>" >> $(REPORT); \
-		done; \
-		$(RM) foo
+check:	checkcompile
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"inputdb\" name=$(QUOTE)$$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/inputdb.input | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done; \
+	$(RM) foo
 
 check2d:
-		$(MAKE) check
+	$(MAKE) check
 
 check3d:
-		$(MAKE) check
+	$(MAKE) check
 
 checktest:
-		$(RM) makecheck.logfile
-		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
-		$(RM) makecheck.logfile
+	$(RM) makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
+	$(RM) makecheck.logfile
 
 examples:
 
@@ -64,7 +64,7 @@ everything:
 	$(MAKE) perf
 
 clean:
-		$(SAMCLEAN)
-		$(RM) main
+	$(SAMCLEAN)
+	$(RM) main
 
 include $(SRCDIR)/Makefile.depend

@@ -31,7 +31,7 @@ main:	main-modify.o $(LIBSAMRAIDEPEND)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) main-modify.o $(LIBSAMRAI) $(LDLIBS) -o $@
 
 
-check:		main
+check:	main
 	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
 	  echo "    <testcase classname=\"MappingConnector\" name=$(QUOTE)3blks $$p procs$(QUOTE)>" >> $(REPORT); \
 	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/modify.3blk.2d.input | $(TEE) foo; \
@@ -55,10 +55,10 @@ check3d:
 checkcompile: main
 
 checktest:
-		$(RM) makecheck.logfile
-		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
-		$(RM) makecheck.logfile
+	$(RM) makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
+	$(RM) makecheck.logfile
 
 examples:
 
@@ -71,7 +71,7 @@ everything:
 	$(MAKE) perf
 
 clean:
-		$(SAMCLEAN)
-		$(RM) main
+	$(SAMCLEAN)
+	$(RM) main
 
 include $(SRCDIR)/Makefile.depend

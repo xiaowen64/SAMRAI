@@ -32,7 +32,7 @@ QUOTE = \"
 
 CXX_OBJS      = MblkGeometry.o main.o MblkEuler.o
 
-F_OBJS      = boundaryconditions.o
+F_OBJS        = boundaryconditions.o
 
 main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND) $(TESTLIB)
 	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1 

@@ -36,25 +36,25 @@ QUOTE = \"
 checkcompile: main
 
 check:
-		$(MAKE) check2d
-		$(MAKE) check3d
+	$(MAKE) check2d
+	$(MAKE) check3d
 
 check2d:	checkcompile
-		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-		  echo "    <testcase classname=\"variables\" name=$(QUOTE)$$p procs$(QUOTE)>" >> $(REPORT); \
-		  $(OBJECT)/config/serpa-run $$p ./main | $(TEE) foo; \
-		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
-		  echo "    </testcase>" >> $(REPORT); \
-		done; \
-		$(RM) foo
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"variables\" name=$(QUOTE)$$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done; \
+	$(RM) foo
 
 check3d:
 
 checktest:
-		$(RM) makecheck.logfile
-		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
-		$(RM) makecheck.logfile
+	$(RM) makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
+	$(RM) makecheck.logfile
 
 examples:
 
@@ -67,9 +67,9 @@ everything:
 	$(MAKE) perf
 
 clean-check:
-		$(SAMCLEAN)
+	$(SAMCLEAN)
 
-clean:		clean-check
-		$(RM) *.f main*
+clean:	clean-check
+	$(RM) *.f main*
 
 include $(SRCDIR)/Makefile.depend

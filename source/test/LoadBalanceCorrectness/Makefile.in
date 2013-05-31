@@ -43,38 +43,38 @@ main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)
 $(TESTLIB):
 
 check:
-		$(MAKE) check2d
-		$(MAKE) check3d
+	$(MAKE) check2d
+	$(MAKE) check3d
 
 check2d:	main
-		@for f in $(INPUTS2D); do	\
-		  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-		    echo "    <testcase classname=\"LoadBalanceCorrectness\" name=$(QUOTE)$$f $$p procs$(QUOTE)>" >> $(REPORT); \
-		    $(OBJECT)/config/serpa-run $$p ./main "test_inputs/$$f" | $(TEE) foo; \
-		    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
-		    echo "    </testcase>" >> $(REPORT); \
-		  done \
-		done; \
-		$(RM) foo
+	@for f in $(INPUTS2D); do	\
+	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	    echo "    <testcase classname=\"LoadBalanceCorrectness\" name=$(QUOTE)$$f $$p procs$(QUOTE)>" >> $(REPORT); \
+	    $(OBJECT)/config/serpa-run $$p ./main "test_inputs/$$f" | $(TEE) foo; \
+	    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	    echo "    </testcase>" >> $(REPORT); \
+	  done \
+	done; \
+	$(RM) foo
 
 check3d:	main
-		@for f in $(INPUTS3D); do	\
-		  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-		    echo "    <testcase classname=\"LoadBalanceCorrectness\" name=$(QUOTE)$$f $$p procs$(QUOTE)>" >> $(REPORT); \
-		    $(OBJECT)/config/serpa-run $$p ./main "test_inputs/$$f" | $(TEE) foo; \
-		    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
-		    echo "    </testcase>" >> $(REPORT); \
-		  done \
-		done; \
-		$(RM) foo
+	@for f in $(INPUTS3D); do	\
+	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	    echo "    <testcase classname=\"LoadBalanceCorrectness\" name=$(QUOTE)$$f $$p procs$(QUOTE)>" >> $(REPORT); \
+	    $(OBJECT)/config/serpa-run $$p ./main "test_inputs/$$f" | $(TEE) foo; \
+	    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	    echo "    </testcase>" >> $(REPORT); \
+	  done \
+	done; \
+	$(RM) foo
 
 checkcompile: main
 
 checktest:
-		$(RM) makecheck.logfile
-		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-		$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
-		$(RM) makecheck.logfile
+	$(RM) makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
+	$(RM) makecheck.logfile
 
 examples:
 
@@ -87,10 +87,10 @@ everything:
 	$(MAKE) perf
 
 clean-check:
-		$(SAMCLEAN)
+	$(SAMCLEAN)
 
 clean:
-		$(SAMCLEAN)
-		$(RM) *.f main *visit
+	$(SAMCLEAN)
+	$(RM) *.f main *visit
 
 include $(SRCDIR)/Makefile.depend

@@ -41,103 +41,101 @@ main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND) $(TESTLIB)
 $(TESTLIB):
 
 check:
-		$(MAKE) check2d
-		$(MAKE) check3d
+	$(MAKE) check2d
+	$(MAKE) check3d
 
 # WARNING: Checking of the redistribute routine is a bit of a problem since it
 #          needs only a single run  to have been done.  So remove the old
 #          stuff.
 check2d:	main
-		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-		  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d $$p procs$(QUOTE)>" >> $(REPORT); \
-		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test.2d.input | $(TEE) foo; \
-		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
-		  echo "    </testcase>" >> $(REPORT); \
-		done
-		$(RM) test.2d.restart/restore.000003/nodes.*1;
-		$(RM) test.2d.restart/restore.000003/nodes.*4;
-		$(OBJECT)/config/serpa-run 2 $(OBJECT)/tools/restart/restart-redistribute test.2d.restart test_restart_redistribute_2d 3 4;
-		@echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d restart redistribute 4 procs$(QUOTE)>" >> $(REPORT);
-		$(OBJECT)/config/serpa-run 4 ./main test_inputs/test.2d.input test_restart_redistribute_2d 3 | $(TEE) foo;
-		@if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi;
-		@echo "    </testcase>" >> $(REPORT);
-		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-		  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d restart $$p procs$(QUOTE)>" >> $(REPORT); \
-		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test.2d.input test.2d.restart 5 | $(TEE) foo; \
-		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
-		  echo "    </testcase>" >> $(REPORT); \
-		done
-		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-		  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d sync $$p procs$(QUOTE)>" >> $(REPORT); \
-		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync.2d.input | $(TEE) foo; \
-		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
-		  echo "    </testcase>" >> $(REPORT); \
-		done
-		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-		  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d sync restart $$p procs$(QUOTE)>" >> $(REPORT); \
-		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync.2d.input test_sync.2d.restart 5 | $(TEE) foo; \
-		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
-		  echo "    </testcase>" >> $(REPORT); \
-		done
-		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-		  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d sync_restart $$p procs$(QUOTE)>" >> $(REPORT); \
-		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync_restart.2d.input | $(TEE) foo; \
-		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
-		  echo "    </testcase>" >> $(REPORT); \
-		done
-		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-		  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d sync_restart restart $$p procs$(QUOTE)>" >> $(REPORT); \
-		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync_restart.2d.input test_sync_restart.2d.restart 5 | $(TEE) foo; \
-		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
-		  echo "    </testcase>" >> $(REPORT); \
-		done; \
-		$(RM) foo;
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test.2d.input | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done
+	$(RM) test.2d.restart/restore.000003/nodes.*1;
+	$(RM) test.2d.restart/restore.000003/nodes.*4;
+	$(OBJECT)/config/serpa-run 2 $(OBJECT)/tools/restart/restart-redistribute test.2d.restart test_restart_redistribute_2d 3 4;
+	@echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d restart redistribute 4 procs$(QUOTE)>" >> $(REPORT);
+	$(OBJECT)/config/serpa-run 4 ./main test_inputs/test.2d.input test_restart_redistribute_2d 3 | $(TEE) foo;
+	@if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi;
+	@echo "    </testcase>" >> $(REPORT);
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d restart $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test.2d.input test.2d.restart 5 | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d sync $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync.2d.input | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d sync restart $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync.2d.input test_sync.2d.restart 5 | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d sync_restart $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync_restart.2d.input | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d sync_restart restart $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync_restart.2d.input test_sync_restart.2d.restart 5 | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done; \
+	$(RM) foo;
 
 check3d:	main
-		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-		  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)3d $$p procs$(QUOTE)>" >> $(REPORT); \
-		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test.3d.input | $(TEE) foo; \
-		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
-		  echo "    </testcase>" >> $(REPORT); \
-		done
-		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-		  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)3d restart $$p procs$(QUOTE)>" >> $(REPORT); \
-		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test.3d.input test.3d.restart 5 | $(TEE) foo; \
-		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
-		  echo "    </testcase>" >> $(REPORT); \
-		done
-		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-		  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)3d sync $$p procs$(QUOTE)>" >> $(REPORT); \
-		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync.3d.input | $(TEE) foo; \
-		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
-		  echo "    </testcase>" >> $(REPORT); \
-		done
-		@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-		  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)3d sync restart $$p procs$(QUOTE)>" >> $(REPORT); \
-		  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync.3d.input test_sync.3d.restart 5 | $(TEE) foo; \
-		  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
-		  echo "    </testcase>" >> $(REPORT); \
-		done; \
-		$(RM) foo;
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)3d $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test.3d.input | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)3d restart $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test.3d.input test.3d.restart 5 | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)3d sync $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync.3d.input | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done
+	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)3d sync restart $$p procs$(QUOTE)>" >> $(REPORT); \
+	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync.3d.input test_sync.3d.restart 5 | $(TEE) foo; \
+	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	  echo "    </testcase>" >> $(REPORT); \
+	done; \
+	$(RM) foo;
 
 checkcompile: main
 
 checktest:
-		$(RM) makecheck.logfile
-		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 1 makecheck.logfile
-		$(RM) makecheck.logfile
+	$(RM) makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 1 makecheck.logfile
+	$(RM) makecheck.logfile
 
 examples2d:	main
 	@for i in example_inputs/*.2d.input ; do	\
-	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-		./main $${i};	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main $${i};	\
 	done
 
 examples3d:	main
 	@for i in example_inputs/*.3d.input ; do	\
-	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-		./main $${i};	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main $${i};	\
 	done
 
 examples:
@@ -153,12 +151,12 @@ everything:
 	$(MAKE) perf
 
 clean-check:
-		$(SAMCLEAN)
+	$(SAMCLEAN)
 
 clean:		clean-check
-		$(RM) *.f *main* 
-		$(RM) test*restart*
-		$(RM) viz*
+	$(RM) *.f *main* 
+	$(RM) test*restart*
+	$(RM) viz*
 
 include $(SRCDIR)/Makefile.depend
 
@@ -166,57 +164,56 @@ FORTRAN       = $(SRCDIR)/fortran/$(PDIM)d
 M4DIRS        = -DFORTDIR=$(SRCDIR)/fortran $(SAMRAI_M4_FLAGS)
 
 AutoTester.o:	$(AUTOTEST)/AutoTester.C
-		$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c  $(AUTOTEST)/AutoTester.C \
-		-o $@
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c  $(AUTOTEST)/AutoTester.C -o $@
 
 flux2d.o:	fortran/flux2d.m4
-		$(M4) $(M4DIRS) $(SRCDIR)/fortran/flux2d.m4 > flux2d.f
-		$(F77) $(FFLAGS) -c flux2d.f -o $@
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/flux2d.m4 > flux2d.f
+	$(F77) $(FFLAGS) -c flux2d.f -o $@
 
 flux3d.o:	fortran/flux3d.m4
-		$(M4) $(M4DIRS) $(SRCDIR)/fortran/flux3d.m4 > flux3d.f
-		$(F77) $(FFLAGS) -c flux3d.f -o $@
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/flux3d.m4 > flux3d.f
+	$(F77) $(FFLAGS) -c flux3d.f -o $@
 
 fluxcorner3d.o:	fortran/fluxcorner3d.m4
-		$(M4) $(M4DIRS) $(SRCDIR)/fortran/fluxcorner3d.m4 > fluxcorner3d.f
-		$(F77) $(FFLAGS) -c fluxcorner3d.f -o $@
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/fluxcorner3d.m4 > fluxcorner3d.f
+	$(F77) $(FFLAGS) -c fluxcorner3d.f -o $@
 
 grad2d.o:	fortran/grad2d.m4
-		$(M4) $(M4DIRS) $(SRCDIR)/fortran/grad2d.m4 > grad2d.f
-		$(F77) $(FFLAGS) -c grad2d.f -o $@
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/grad2d.m4 > grad2d.f
+	$(F77) $(FFLAGS) -c grad2d.f -o $@
 
 grad3d.o:	fortran/grad3d.m4
-		$(M4) $(M4DIRS) $(SRCDIR)/fortran/grad3d.m4 > grad3d.f
-		$(F77) $(FFLAGS) -c grad3d.f -o $@
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/grad3d.m4 > grad3d.f
+	$(F77) $(FFLAGS) -c grad3d.f -o $@
 
 init2d.o:	fortran/init2d.m4
-		$(M4) $(M4DIRS) $(SRCDIR)/fortran/init2d.m4 > init2d.f
-		$(F77) $(FFLAGS) -c init2d.f -o $@
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/init2d.m4 > init2d.f
+	$(F77) $(FFLAGS) -c init2d.f -o $@
 
 init3d.o:	fortran/init3d.m4
-		$(M4) $(M4DIRS) $(SRCDIR)/fortran/init3d.m4 > init3d.f
-		$(F77) $(FFLAGS) -c init3d.f -o $@
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/init3d.m4 > init3d.f
+	$(F77) $(FFLAGS) -c init3d.f -o $@
 
 stable2d.o:	fortran/stable2d.m4
-		$(M4) $(M4DIRS) $(SRCDIR)/fortran/stable2d.m4 > stable2d.f
-		$(F77) $(FFLAGS) -c stable2d.f -o $@
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/stable2d.m4 > stable2d.f
+	$(F77) $(FFLAGS) -c stable2d.f -o $@
 
 stable3d.o:	fortran/stable3d.m4
-		$(M4) $(M4DIRS) $(SRCDIR)/fortran/stable3d.m4 > stable3d.f
-		$(F77) $(FFLAGS) -c stable3d.f -o $@
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/stable3d.m4 > stable3d.f
+	$(F77) $(FFLAGS) -c stable3d.f -o $@
 
 stufprobc.o:	fortran/stufprobc.m4
-		$(M4) $(M4DIRS) $(SRCDIR)/fortran/stufprobc.m4 > stufprobc.f
-		$(F77) $(FFLAGS) -c stufprobc.f -o $@
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/stufprobc.m4 > stufprobc.f
+	$(F77) $(FFLAGS) -c stufprobc.f -o $@
 
 trace2d.o:	fortran/trace2d.m4
-		$(M4) $(M4DIRS) $(SRCDIR)/fortran/trace2d.m4 > trace2d.f
-		$(F77) $(FFLAGS) -c trace2d.f -o $@
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/trace2d.m4 > trace2d.f
+	$(F77) $(FFLAGS) -c trace2d.f -o $@
 
 trace3d.o:	fortran/trace3d.m4
-		$(M4) $(M4DIRS) $(SRCDIR)/fortran/trace3d.m4 > trace3d.f
-		$(F77) $(FFLAGS) -c trace3d.f -o $@
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/trace3d.m4 > trace3d.f
+	$(F77) $(FFLAGS) -c trace3d.f -o $@
 
 trace1d.o:	fortran/trace1d.m4
-		$(M4) $(M4DIRS) $(SRCDIR)/fortran/trace1d.m4 > trace1d.f
-		$(F77) $(FFLAGS) -c trace1d.f -o $@
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/trace1d.m4 > trace1d.f
+	$(F77) $(FFLAGS) -c trace1d.f -o $@

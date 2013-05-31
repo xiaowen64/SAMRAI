@@ -23,8 +23,7 @@ include $(OBJECT)/config/Makefile.config
 CPPFLAGS_EXTRA= -DTESTING=1
 
 main:  main.o $(LIBSAMRAIDEPEND)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) main.o \
-	       $(LIBSAMRAI) $(LDLIBS) -o main
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) main.o $(LIBSAMRAI) $(LDLIBS) -o main
 
 NUM_TESTS = 1
 

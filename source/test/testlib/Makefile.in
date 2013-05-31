@@ -44,7 +44,7 @@ libSAMRAI_test.a:   $(CXX_OBJS) $(F_OBJS)
 	rm -rf libSAMRAI_test$(LIB_SUFFIX)
 	echo $(CXX_OBJS) $(F_OBJS) | @XARGS@ @AR@ ru libSAMRAI_test$(LIB_SUFFIX);
 
-check:          library
+check:	library
 
 checkcompile:
 	$(MAKE) check
@@ -62,7 +62,7 @@ perf:
 
 everything:
 
-clean:		clean-check
+clean:	clean-check
 
 include $(SRCDIR)/Makefile.depend
 

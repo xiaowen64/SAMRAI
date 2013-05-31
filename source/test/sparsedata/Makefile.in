@@ -41,7 +41,7 @@ sparse: sparse_dataops.o $(LIBSAMRAIDEPEND)
 checkcompile: main sparse
 
 check:
-		$(MAKE) check2d
+	$(MAKE) check2d
 
 check2d:	main sparse
 	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
@@ -61,10 +61,10 @@ check2d:	main sparse
 check3d:
 
 checktest:
-		$(RM) makecheck.logfile
-		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-		$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
-		$(RM) makecheck.logfile
+	$(RM) makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
+	$(RM) makecheck.logfile
 
 examples:
 
