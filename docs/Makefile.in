@@ -14,6 +14,8 @@ top_builddir = ..
 subdir = docs
 VPATH = @srcdir@
 
+include $(top_builddir)/config/Makefile.config
+
 Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status --file=$(subdir)/$@
@@ -29,7 +31,7 @@ dox: Doxyfile doxygenBinaryWarning
 	cp @dox_output_dir@samrai.tag @dox_output_dir@samrai-dox/html/samrai.tag
 	@echo "Created documentation in @dox_output_dir@"
 redox:
-	rm -f dox && $(MAKE) dox
+	$(RM) dox && $(MAKE) dox
 
 devDoxyfile: $(srcdir)/devDoxyfile.in $(top_builddir)/config.status
 	cd $(top_builddir) \
@@ -42,7 +44,7 @@ devdox: devDoxyfile doxygenBinaryWarning
 	cp @dox_output_dir@samrai-dev.tag @dox_output_dir@samrai-devdox/html/samrai.tag
 	@echo "Created documentation in @dox_output_dir@"
 redevdox:
-	rm -f devdox && $(MAKE) devdox
+	$(RM) devdox && $(MAKE) devdox
 
 grey-dox-bg:
 	@cd @dox_output_dir@.
