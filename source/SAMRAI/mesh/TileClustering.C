@@ -229,12 +229,16 @@ TileClustering::findBoxesContainingTags(
       new_boxes.unorder();
       new_boxes.coalesce();
 
+      t_coalesce->stop();
+
       if ( d_print_steps ) {
          tbox::plog << "TileClustering coalesced " << new_box_level->getLocalNumberOfBoxes()
                     << " new boxes into " << new_boxes.size() << "\n";
       }
 
       if ( new_boxes.size() != static_cast<int>(new_box_level->getLocalNumberOfBoxes()) ) {
+
+         t_coalesce_adjustment->start();
 
          /*
           * Coalesce changed the new boxes, so rebuild new_box_level and
@@ -287,7 +291,7 @@ TileClustering::findBoxesContainingTags(
 
       }
 
-      t_coalesce->stop();
+      t_coalesce_adjustment->stop();
 
    }
 
@@ -414,6 +418,8 @@ TileClustering::setTimers()
       getTimer("mesh::TileClustering::findBoxesContainingTags()_cluster");
    t_coalesce = tbox::TimerManager::getManager()->
       getTimer("mesh::TileClustering::findBoxesContainingTags()_coalesce");
+   t_coalesce_adjustment = tbox::TimerManager::getManager()->
+      getTimer("mesh::TileClustering::findBoxesContainingTags()_coalesce_adjustment");
    t_global_reductions = tbox::TimerManager::getManager()->
       getTimer("mesh::TileClustering::global_reductions");
 }
