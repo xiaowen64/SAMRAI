@@ -1390,7 +1390,7 @@ StandardTagAndInitialize::getFromInput(
                // need to be read.
                if (tagging_method == "REFINE_BOXES") {
                   d_ever_uses_refine_boxes = true;
-                  std::vector<std::string> level_keys = input_db->getAllKeys();
+                  std::vector<std::string> level_keys = this_tag_db->getAllKeys();
                   int n_level_keys = static_cast<int>(level_keys.size());
                   if (n_level_keys <= 1) {
                      TBOX_ERROR(
