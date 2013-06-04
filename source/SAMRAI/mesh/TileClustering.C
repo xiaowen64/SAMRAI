@@ -16,6 +16,7 @@
 
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/pdat/CellData.h"
+#include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
@@ -152,7 +153,7 @@ tbox::plog << "There are " << tag_level->getLocalNumberOfPatches() << " tag patc
     * Generate new_box_level and Connectors
     */
 #pragma omp parallel if ( tag_level->getLocalNumberOfPatches() > 4*omp_get_max_threads() )
-tbox::plog << "Outer loop has " << OMP_omp_get_num_threads() << " threads." << std::endl;
+tbox::plog << "Outer loop has " << TBOX_omp_get_num_threads() << " threads." << std::endl;
 #pragma omp for schedule(dynamic)
    for ( size_t pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
 
@@ -178,7 +179,7 @@ tbox::plog << "Outer loop has " << OMP_omp_get_num_threads() << " threads." << s
 #pragma omp parallel
 #pragma omp for schedule(dynamic)
          for ( int coarse_offset=0; coarse_offset<num_coarse_cells; ++coarse_offset ) {
-if (coarse_offset==0) tbox::plog << "Inner loop has " << OMP_omp_get_num_threads() << " threads over " << num_coarse_cells << " coarse cells." << std::endl;
+if (coarse_offset==0) tbox::plog << "Inner loop has " << TBOX_omp_get_num_threads() << " threads over " << num_coarse_cells << " coarse cells." << std::endl;
             const pdat::CellIndex coarse_cell_index(coarsened_box.index(coarse_offset));
 
             /*
@@ -303,8 +304,8 @@ if (coarse_offset==0) tbox::plog << "Inner loop has " << OMP_omp_get_num_threads
           */
          hier::LocalId last_used_id(-1);
          int rank = new_box_level->getMPI().getRank();
-#pragma omp parallel
-#pragma omp for schedule(dynamic)
+// #pragma omp parallel
+// #pragma omp for schedule(dynamic)
          // for ( hier::BoxContainer::iterator bi=new_boxes.begin(); bi!=new_boxes.end(); ++bi ) {
          for ( size_t i=0; i<box_vector.size(); ++i ) {
             // bi->setId(hier::BoxId(++last_used_id,rank));
