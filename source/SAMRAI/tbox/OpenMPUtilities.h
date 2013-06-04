@@ -25,6 +25,9 @@
 #define TBOX_omp_set_lock(LOCK_PTR) omp_set_lock(LOCK_PTR)
 #define TBOX_omp_unset_lock(LOCK_PTR) omp_unset_lock(LOCK_PTR)
 
+#define TBOX_omp_get_num_threads() omp_get_num_threads()
+#define TBOX_omp_get_max_threads() omp_get_max_threads()
+
 #else
 
 #define TBOX_omp_lock_t int
@@ -34,6 +37,9 @@
 
 #define TBOX_omp_set_lock(LOCK_PTR)
 #define TBOX_omp_unset_lock(LOCK_PTR)
+
+#define TBOX_omp_get_num_threads() (1)
+#define TBOX_omp_get_max_threads() (1)
 
 #endif
 
