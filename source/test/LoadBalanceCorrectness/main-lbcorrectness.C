@@ -624,7 +624,7 @@ int main(
 
             if (L0 != *baseline_prebalance_L0) {
                tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
-                          << "the prebalance BoxLevel generated is different\n"
+                          << "the prebalance L0 BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
                           << "Writing the BoxLevels in log files.\n";
@@ -673,7 +673,7 @@ int main(
 
             if (L0 != *baseline_postbalance_L0) {
                tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
-                          << "the postbalance BoxLevel generated is different\n"
+                          << "the postbalance L0 BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
                           << "Writing the BoxLevels in log files.\n";
@@ -821,7 +821,7 @@ int main(
 
             if (*L1 != *baseline_prebalance_L1) {
                tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
-                          << "the prebalance BoxLevel generated is different\n"
+                          << "the prebalance L1 BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
                           << "Writing the BoxLevels in log files.\n";
@@ -870,7 +870,7 @@ int main(
 
             if (*L1 != *baseline_postbalance_L1) {
                tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
-                          << "the postbalance BoxLevel generated is different\n"
+                          << "the postbalance L1 BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
                           << "Writing the BoxLevels in log files.\n";
@@ -1016,7 +1016,7 @@ int main(
 
             if (*L2 != *baseline_prebalance_L2) {
                tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
-                          << "the prebalance BoxLevel generated is different\n"
+                          << "the prebalance L2 BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
                           << "Writing the BoxLevels in log files.\n";
@@ -1065,7 +1065,7 @@ int main(
 
             if (*L2 != *baseline_postbalance_L2) {
                tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
-                          << "the postbalance BoxLevel generated is different\n"
+                          << "the postbalance L2 BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
                           << "Writing the BoxLevels in log files.\n";
