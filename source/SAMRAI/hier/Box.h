@@ -227,9 +227,11 @@ public:
       const int owner_rank,
       const PeriodicId& periodic_id = PeriodicId::zero())
    {
-      d_lo = box.d_lo;
-      d_hi = box.d_hi;
-      d_block_id = box.d_block_id;
+      if ( &box != this ) {
+         d_lo = box.d_lo;
+         d_hi = box.d_hi;
+         d_block_id = box.d_block_id;
+      }
       if (!idLocked()) {
          d_id.initialize(local_id, owner_rank, periodic_id);
       } else {
