@@ -302,15 +302,12 @@ if (coarse_offset==0) tbox::plog << "Inner loop has " << TBOX_omp_get_num_thread
           * Assign ids to coalesced boxes, add to BoxLevel and add
           * new--->tag edges.
           */
-         hier::LocalId last_used_id(-1);
-         int rank = new_box_level->getMPI().getRank();
+         const int rank = new_box_level->getMPI().getRank();
 #pragma omp parallel
 #pragma omp for schedule(dynamic)
-         // for ( hier::BoxContainer::iterator bi=new_boxes.begin(); bi!=new_boxes.end(); ++bi ) {
          for ( size_t i=0; i<box_vector.size(); ++i ) {
-            // bi->setId(hier::BoxId(++last_used_id,rank));
+
             box_vector[i].setId(hier::BoxId(hier::LocalId(i),rank));
-            // new_box_level->addBox(*bi);
 
             hier::BoxContainer tmp_overlap_boxes;
             tag_boxes.findOverlapBoxes(tmp_overlap_boxes,
@@ -321,6 +318,7 @@ if (coarse_offset==0) tbox::plog << "Inner loop has " << TBOX_omp_get_num_thread
             new_box_level->addBox(box_vector[i]);
             new_to_tag->insertNeighbors( tmp_overlap_boxes, box_vector[i].getBoxId() );
             TBOX_omp_unset_lock(&l_outputs);
+
          }
          new_box_level->finalize();
 
@@ -330,6 +328,22 @@ if (coarse_offset==0) tbox::plog << "Inner loop has " << TBOX_omp_get_num_thread
          hier::BoxContainer new_boxes;
          for ( int i=0; i<box_vector.size(); ++i ) new_boxes.pushBack(box_vector[i]);
          new_boxes.makeTree( new_box_level->getGridGeometry().get() );
+         std::vector<hier::Box> real_box_vector, periodic_image_box_vector;
+         tag_boxes.separatePeriodicImages( real_box_vector, periodic_image_box_vector );
+#if 1
+         for ( size_t ib=0; ib<real_box_vector.size(); ++ib ) {
+
+            hier::BoxContainer tmp_overlap_boxes;
+            new_boxes.findOverlapBoxes(tmp_overlap_boxes,
+                                       real_box_vector[ib],
+                                       tag_box_level.getRefinementRatio() );
+
+            TBOX_omp_set_lock(&l_outputs);
+            tag_to_new->insertNeighbors( tmp_overlap_boxes,
+                                         real_box_vector[ib].getBoxId() );
+            TBOX_omp_unset_lock(&l_outputs);
+         }
+#else
          for ( hier::BoxContainer::const_iterator bi=tag_boxes.begin();
                bi!=tag_boxes.end(); ++bi ) {
 
@@ -340,6 +354,7 @@ if (coarse_offset==0) tbox::plog << "Inner loop has " << TBOX_omp_get_num_thread
 
             tag_to_new->insertNeighbors( tmp_overlap_boxes, bi->getBoxId() );
          }
+#endif
 
       }
 
