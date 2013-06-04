@@ -304,14 +304,13 @@ if (coarse_offset==0) tbox::plog << "Inner loop has " << TBOX_omp_get_num_thread
           */
          hier::LocalId last_used_id(-1);
          int rank = new_box_level->getMPI().getRank();
-// #pragma omp parallel
-// #pragma omp for schedule(dynamic)
+#pragma omp parallel
+#pragma omp for schedule(dynamic)
          // for ( hier::BoxContainer::iterator bi=new_boxes.begin(); bi!=new_boxes.end(); ++bi ) {
          for ( size_t i=0; i<box_vector.size(); ++i ) {
             // bi->setId(hier::BoxId(++last_used_id,rank));
             box_vector[i].setId(hier::BoxId(hier::LocalId(i),rank));
             // new_box_level->addBox(*bi);
-            new_box_level->addBox(box_vector[i]);
 
             hier::BoxContainer tmp_overlap_boxes;
             tag_boxes.findOverlapBoxes(tmp_overlap_boxes,
@@ -319,6 +318,7 @@ if (coarse_offset==0) tbox::plog << "Inner loop has " << TBOX_omp_get_num_thread
                                        tag_box_level.getRefinementRatio() );
 
             TBOX_omp_set_lock(&l_outputs);
+            new_box_level->addBox(box_vector[i]);
             new_to_tag->insertNeighbors( tmp_overlap_boxes, box_vector[i].getBoxId() );
             TBOX_omp_unset_lock(&l_outputs);
          }
