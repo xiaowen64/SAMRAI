@@ -18,6 +18,7 @@
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/pdat/CellData.h"
+#include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/Database.h"
 
 #include "boost/shared_ptr.hpp"
@@ -148,6 +149,11 @@ private:
     * create boxes bigger than tile size.
     */
    bool d_coalesce_boxes;
+
+   /*!
+    * @brief Thread locker for modifying clustering outputs with multi-threads.
+    */
+   TBOX_omp_lock_t l_outputs;
 
    //@{
    //! @name Diagnostics and performance evaluation

@@ -38,6 +38,7 @@ TileClustering::TileClustering(
    d_barrier_and_time(false),
    d_print_steps(false)
 {
+   TBOX_omp_init_lock(&l_outputs);
    getFromInput(input_db);
    setTimers();
    d_oca.setTimerPrefix("hier::TileClustering");
@@ -45,6 +46,7 @@ TileClustering::TileClustering(
 
 TileClustering::~TileClustering()
 {
+   TBOX_omp_destroy_lock(&l_outputs);
 }
 
 void
@@ -142,67 +144,96 @@ TileClustering::findBoxesContainingTags(
 
    tag_box_level.getBoxes().makeTree(tag_box_level.getGridGeometry().get());
 
-   // Generate new_box_level and Connectors
-   for ( hier::PatchLevel::iterator pi=tag_level->begin();
-         pi!=tag_level->end(); ++pi ) {
+   const int cells_per_tile = d_box_size.getProduct();
 
-      const hier::Box &patch_box = pi->getBox();
+tbox::plog << "There are " << tag_level->getLocalNumberOfPatches() << " tag patches." << std::endl;
+
+   /*
+    * Generate new_box_level and Connectors
+    */
+#pragma omp parallel if ( tag_level->getLocalNumberOfPatches() > 4*omp_get_max_threads() )
+tbox::plog << "Outer loop has " << OMP_omp_get_num_threads() << " threads." << std::endl;
+#pragma omp for schedule(dynamic)
+   for ( size_t pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
+
+      hier::Patch &patch = *tag_level->getPatch(pi);
+      const hier::Box &patch_box = patch.getBox();
       const hier::BlockId &block_id = patch_box.getBlockId();
 
       TBOX_ASSERT( bound_boxes.begin(block_id) != bound_boxes.end(block_id) );
       const hier::Box &bounding_box = *bound_boxes.begin(block_id);
 
-      if ( pi->getBox().intersects(bounding_box) ) {
+      if ( patch_box.intersects(bounding_box) ) {
 
          boost::shared_ptr<pdat::CellData<int> > tag_data(
-            pi->getPatchData(tag_data_index), boost::detail::dynamic_cast_tag());
+            patch.getPatchData(tag_data_index), boost::detail::dynamic_cast_tag());
 
-         boost::shared_ptr<pdat::CellData<int> > coarsened_tag_data =
-            makeCoarsenedTagData(*tag_data, tag_val);
+         hier::Box coarsened_box(tag_data->getBox());
+         coarsened_box.coarsen(d_box_size);
 
-         hier::Box coarsened_box = coarsened_tag_data->getBox();
+         size_t coarse_tag_count = 0;
 
-         pdat::CellIterator ccend(pdat::CellGeometry::end(coarsened_box));
-         for ( pdat::CellData<int>::iterator cci(pdat::CellGeometry::begin(coarsened_box));
-               cci!=ccend; ++cci ) {
+         const int num_coarse_cells = coarsened_box.size();
 
-            pdat::CellIndex cindex = *cci;
+#pragma omp parallel
+#pragma omp for schedule(dynamic)
+         for ( int coarse_offset=0; coarse_offset<num_coarse_cells; ++coarse_offset ) {
+if (coarse_offset==0) tbox::plog << "Inner loop has " << OMP_omp_get_num_threads() << " threads over " << num_coarse_cells << " coarse cells." << std::endl;
+            const pdat::CellIndex coarse_cell_index(coarsened_box.index(coarse_offset));
 
-            if ( (*coarsened_tag_data)(cindex) == tag_val ) {
+            /*
+             * Set the tile extent to cover the coarse cell.  It must
+             * nest inside local tag boxes.  If any part extends
+             * outside them, (1) the tile might overlap with remote
+             * clusters, (2) its overlap with remote tag boxes might
+             * not be detected and (3) it may extend outside the tag
+             * level.  Tiles extending past non-local tag boxes can
+             * appear if the tag level patch boundaries do not
+             * coincide with the tile cuts.
+             */
+            hier::Box tile_box(coarse_cell_index,coarse_cell_index,coarsened_box.getBlockId());
+            tile_box.refine(d_box_size);
+            tile_box *= tag_data->getBox();
 
-               /*
-                * new_box must nest inside local boxes.  If any part
-                * extends outside local tag boxes, its overlap with
-                * remote tag boxes might not be detected.  Remove
-                * those parts and insert the rest into new_box_level.
-                * A new_box overlapping non-local tag boxes can appear
-                * if the some tag level patch boundaries do not
-                * coincide with the tile cuts.
-                */
+            pdat::CellIterator finecend(pdat::CellGeometry::end(tile_box));
+            for ( pdat::CellIterator fineci(pdat::CellGeometry::begin(tile_box));
+                  fineci!=finecend; ++fineci ) {
+               if ( (*tag_data)(*fineci) == tag_val ) {
+                  // Make a cluster from tile_box.
+                  /*
+                   * Choose a LocalId that is independent of ordering so that
+                   * results are independent of multi-threading.
+                   */
+                  hier::LocalId local_id(patch_box.getLocalId()*1000000 +
+                                         coarse_offset);
 
-               hier::Box tmp_new_box(cindex, cindex, coarsened_box.getBlockId());
-               tmp_new_box.refine(d_box_size);
+                  tile_box.initialize( tile_box,
+                                       local_id,
+                                       new_box_level->getMPI().getRank() );
 
-               hier::Box new_box( tmp_new_box * patch_box,
-                                  new_box_level->getLastLocalId()+1,
-                                  new_box_level->getMPI().getRank() );
+                  TBOX_omp_set_lock(&l_outputs);
 
-               TBOX_ASSERT(!new_box.empty());
+                  new_box_level->addBoxWithoutUpdate(tile_box);
 
-               new_box_level->addBoxWithoutUpdate(new_box);
-               hier::BoxContainer::const_iterator new_box_iter =
-                  new_box_level->getBoxStrict(new_box);
+                  new_to_tag->insertLocalNeighbor( patch_box, tile_box.getBoxId() );
+                  tag_to_new->insertLocalNeighbor( tile_box, patch_box.getBoxId() );
 
-               new_to_tag->insertLocalNeighbor( patch_box, new_box_iter->getBoxId() );
-               tag_to_new->insertLocalNeighbor( *new_box_iter, patch_box.getBoxId() );
+                  ++coarse_tag_count;
 
-            }
+                  if (d_print_steps) {
+                     tbox::plog << "Tile Clustering generated cluster #" << coarse_tag_count << ": " << tile_box << '\n';
+                  }
 
-         }
+                  TBOX_omp_unset_lock(&l_outputs);
+                  break;
+               }
+            } // Loop through fine cells in the tile.
 
-      }
+         } // Loop through coarse cells (tiles).
 
-   }
+      } // Patch is in bounding box
+
+   } // Loop through tag level
 
    new_box_level->finalize();
 
@@ -216,13 +247,16 @@ TileClustering::findBoxesContainingTags(
       /*
        * Try to coalesce the boxes in new_box_level.
        */
-      hier::BoxContainer new_boxes;
+      // hier::BoxContainer new_boxes;
+      std::vector<hier::Box> box_vector;
       if (!new_box_level->getBoxes().isEmpty()) {
 
          hier::LocalId local_id(0);
 
-         int nblocks = new_box_level->getGridGeometry()->getNumberBlocks();
+         const int nblocks = new_box_level->getGridGeometry()->getNumberBlocks();
 
+#pragma omp parallel
+#pragma omp for schedule(dynamic)
          for (int b = 0; b < nblocks; ++b) {
             hier::BlockId block_id(b);
 
@@ -231,16 +265,19 @@ TileClustering::findBoxesContainingTags(
             if (!block_boxes.isEmpty()) {
                block_boxes.unorder();
                block_boxes.coalesce();
-               new_boxes.spliceBack(block_boxes);
+               TBOX_omp_set_lock(&l_outputs);
+               // new_boxes.spliceBack(block_boxes);
+               box_vector.insert(box_vector.end(), block_boxes.begin(), block_boxes.end() );
+               TBOX_omp_unset_lock(&l_outputs);
             }
          }
       }
       if ( d_print_steps ) {
          tbox::plog << "TileClustering coalesced " << new_box_level->getLocalNumberOfBoxes()
-                    << " new boxes into " << new_boxes.size() << "\n";
+                    << " new boxes into " << box_vector.size() << "\n";
       }
 
-      if ( new_boxes.size() != static_cast<int>(new_box_level->getLocalNumberOfBoxes()) ) {
+      if ( box_vector.size() != static_cast<int>(new_box_level->getLocalNumberOfBoxes()) ) {
 
          /*
           * Coalesce changed the new boxes, so rebuild new_box_level and
@@ -266,23 +303,31 @@ TileClustering::findBoxesContainingTags(
           */
          hier::LocalId last_used_id(-1);
          int rank = new_box_level->getMPI().getRank();
-         for ( hier::BoxContainer::iterator bi=new_boxes.begin();
-               bi!=new_boxes.end(); ++bi ) {
-            bi->setId(hier::BoxId(++last_used_id,rank));
-            new_box_level->addBox(*bi);
+#pragma omp parallel
+#pragma omp for schedule(dynamic)
+         // for ( hier::BoxContainer::iterator bi=new_boxes.begin(); bi!=new_boxes.end(); ++bi ) {
+         for ( size_t i=0; i<box_vector.size(); ++i ) {
+            // bi->setId(hier::BoxId(++last_used_id,rank));
+            box_vector[i].setId(hier::BoxId(hier::LocalId(i),rank));
+            // new_box_level->addBox(*bi);
+            new_box_level->addBox(box_vector[i]);
 
             hier::BoxContainer tmp_overlap_boxes;
             tag_boxes.findOverlapBoxes(tmp_overlap_boxes,
-                                       *bi,
+                                       box_vector[i],
                                        tag_box_level.getRefinementRatio() );
 
-            new_to_tag->insertNeighbors( tmp_overlap_boxes, bi->getBoxId() );
+            TBOX_omp_set_lock(&l_outputs);
+            new_to_tag->insertNeighbors( tmp_overlap_boxes, box_vector[i].getBoxId() );
+            TBOX_omp_unset_lock(&l_outputs);
          }
          new_box_level->finalize();
 
          /*
           * Add tag--->new edges.
           */
+         hier::BoxContainer new_boxes;
+         for ( int i=0; i<box_vector.size(); ++i ) new_boxes.pushBack(box_vector[i]);
          new_boxes.makeTree( new_box_level->getGridGeometry().get() );
          for ( hier::BoxContainer::const_iterator bi=tag_boxes.begin();
                bi!=tag_boxes.end(); ++bi ) {
@@ -386,6 +431,35 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
                               hier::IntVector::getZero(tag_data.getDim())));
    coarsened_tag_data->fill(0, 0);
 
+#if 1
+   size_t coarse_tag_count = 0;
+
+   const int num_coarse_cells = coarsened_box.size();
+#pragma omp parallel
+#pragma omp for schedule(dynamic)
+   for ( int offset=0; offset<num_coarse_cells; ++offset ) {
+      const pdat::CellIndex coarse_cell_index(coarsened_box.index(offset));
+
+      hier::Box fine_cells_box(coarse_cell_index,coarse_cell_index,coarsened_box.getBlockId());
+      fine_cells_box.refine(d_box_size);
+      fine_cells_box *= tag_data.getBox();
+
+      pdat::CellIterator finecend(pdat::CellGeometry::end(fine_cells_box));
+      for ( pdat::CellIterator fineci(pdat::CellGeometry::begin(fine_cells_box));
+            fineci!=finecend; ++fineci ) {
+         if ( tag_data(*fineci) == tag_val ) {
+            (*coarsened_tag_data)(coarse_cell_index) = tag_val;
+            ++coarse_tag_count;
+            break;
+         }
+      }
+   }
+   if (d_print_steps) {
+      tbox::plog << "TileClustering coarsened box " << tag_data.getBox()
+                 << " to " << coarsened_box
+                 << " (" << coarse_tag_count << " tags).\n";
+   }
+#else
    size_t tag_count = 0;
    size_t coarse_tag_count = 0;
    pdat::CellIterator finecend(pdat::CellGeometry::end(tag_data.getBox()));
@@ -407,6 +481,7 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
                  << " (" << tag_count << " tags) to " << coarsened_box
                  << " (" << coarse_tag_count << " tags).\n";
    }
+#endif
 
    return coarsened_tag_data;
 }
