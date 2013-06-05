@@ -107,6 +107,8 @@ public:
    operator == (
       const CellIterator& iterator) const
    {
+      TBOX_ASSERT(d_box.isSpatiallyEqual(iterator.d_box));
+      TBOX_ASSERT(d_box.isIdEqual(iterator.d_box));
       return d_index == iterator.d_index;
    }
 
@@ -117,6 +119,8 @@ public:
    operator != (
       const CellIterator& iterator) const
    {
+      TBOX_ASSERT(d_box.isSpatiallyEqual(iterator.d_box));
+      TBOX_ASSERT(d_box.isIdEqual(iterator.d_box));
       return d_index != iterator.d_index;
    }
 
