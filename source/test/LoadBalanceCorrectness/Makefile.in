@@ -13,6 +13,7 @@ SRCDIR	      =	@srcdir@
 SUBDIR        = source/test/LoadBalanceCorrectness
 VPATH	      =	@srcdir@
 OBJECT        = ../../..
+REPORT        = $(OBJECT)/report.xml
 TESTINCLUDE   = $(SAMRAI)/source/test/testlib
 TESTLIBDIR    = $(OBJECT)/source/test/testlib
 TESTLIB       = $(TESTLIBDIR)/libSAMRAI_test$(LIB_SUFFIX)
@@ -23,14 +24,15 @@ include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
 
-NUM_TESTS = 18
+NUM_TESTS = 24
 
 TEST_NPROCS = @TEST_NPROCS@
+QUOTE = \"
 
 CXX_OBJS      = main-lbcorrectness.o
 
-INPUTS2D = box.2d.treelb.input box.2d.tilelb.input box.2d.caplb.input lss.2d.caplb.input lss.2d.treelb.input lss.2d.tilelb.input front.2d.caplb.input front.2d.treelb.input front.2d.tilelb.input
-INPUTS3D = box.3d.treelb.input box.3d.tilelb.input box.3d.caplb.input lss.3d.caplb.input lss.3d.treelb.input lss.3d.tilelb.input front.3d.caplb.input front.3d.treelb.input front.3d.tilelb.input
+INPUTS2D = box.2d.treelb.input box.2d.tilelb.input box.2d.graphlb.input box.2d.caplb.input lss.2d.caplb.input lss.2d.treelb.input lss.2d.tilelb.input lss.2d.graphlb.input front.2d.caplb.input front.2d.treelb.input front.2d.tilelb.input front.2d.graphlb.input 
+INPUTS3D = box.3d.treelb.input box.3d.tilelb.input box.3d.graphlb.input box.3d.caplb.input lss.3d.caplb.input lss.3d.treelb.input lss.3d.tilelb.input lss.3d.graphlb.input front.3d.caplb.input front.3d.treelb.input front.3d.tilelb.input front.3d.graphlb.input 
 
 main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)
 	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1 
@@ -41,26 +43,38 @@ main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)
 $(TESTLIB):
 
 check:
-		$(MAKE) check2d
-		$(MAKE) check3d
+	$(MAKE) check2d
+	$(MAKE) check3d
 
 check2d:	main
-		for f in $(INPUTS2D); do	\
-			$(OBJECT)/config/serpa-run $(TEST_NPROCS) \ ./main "test_inputs/$$f";	\
-		done
+	@for f in $(INPUTS2D); do	\
+	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	    echo "    <testcase classname=\"LoadBalanceCorrectness\" name=$(QUOTE)$$f $$p procs$(QUOTE)>" >> $(REPORT); \
+	    $(OBJECT)/config/serpa-run $$p ./main "test_inputs/$$f" | $(TEE) foo; \
+	    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	    echo "    </testcase>" >> $(REPORT); \
+	  done \
+	done; \
+	$(RM) foo
 
 check3d:	main
-		for f in $(INPUTS3D); do	\
-			$(OBJECT)/config/serpa-run $(TEST_NPROCS) \ ./main "test_inputs/$$f";	\
-		done
+	@for f in $(INPUTS3D); do	\
+	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	    echo "    <testcase classname=\"LoadBalanceCorrectness\" name=$(QUOTE)$$f $$p procs$(QUOTE)>" >> $(REPORT); \
+	    $(OBJECT)/config/serpa-run $$p ./main "test_inputs/$$f" | $(TEE) foo; \
+	    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	    echo "    </testcase>" >> $(REPORT); \
+	  done \
+	done; \
+	$(RM) foo
 
 checkcompile: main
 
 checktest:
-		rm -f makecheck.logfile
-		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-		$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
-		rm -f makecheck.logfile
+	$(RM) makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
+	$(RM) makecheck.logfile
 
 examples:
 
@@ -73,10 +87,10 @@ everything:
 	$(MAKE) perf
 
 clean-check:
-		$(SAMCLEAN)
+	$(SAMCLEAN)
 
 clean:
-		$(SAMCLEAN)
-		$(RM) *.f main *visit
+	$(SAMCLEAN)
+	$(RM) *.f main *visit
 
 include $(SRCDIR)/Makefile.depend

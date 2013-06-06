@@ -66,13 +66,15 @@ PatchHierarchy {
       level_0 = 1 , 1 , 1
       // all finer levels will use same values as level_0...
    }
-} 
+}
 
-GriddingAlgorithm {
-
+BergerRigoutsos {
    efficiency_tolerance     = 0.70e0   // min % of tag cells in new patch level
    combine_efficiency       = 0.85e0   // chop box if sum of volumes of smaller
                                        // boxes < efficiency * vol of large box
+}
+
+GriddingAlgorithm {
 } 
 
 StandardTagAndInitialize{

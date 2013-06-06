@@ -158,6 +158,17 @@ StandardTagAndInitStrategy::resetDataToPreadvanceState(
       << "\nthis method." << std::endl);
 }
 
+void
+StandardTagAndInitStrategy::processLevelBeforeRemoval(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   int level_number,
+   const boost::shared_ptr<hier::PatchLevel>& old_level)
+{
+   NULL_USE(hierarchy);
+   NULL_USE(level_number);
+   NULL_USE(old_level);
+}
+
 }
 }
 #endif

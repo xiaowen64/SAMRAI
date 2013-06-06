@@ -678,11 +678,6 @@ private:
    operator = (
       const RefineAlgorithm&);                  // not implemented
 
-   //! @brief Shorthand typedef.
-   typedef hier::Box MBox;
-   //! @brief Shorthand typedef.
-   typedef hier::BoxLevel BoxLevel;
-
    /*!
     * RefineClasses object holds all of the registered refine items
     */

@@ -76,8 +76,6 @@ public:
       const int tag_val,
       const hier::BoxContainer& bound_boxes,
       const hier::IntVector& min_box,
-      const double efficiency_tol,
-      const double combine_tol,
       const hier::IntVector& tag_to_new_width) = 0;
 
 private:

@@ -95,30 +95,6 @@ namespace mesh {
  *
  *   - \b    check_proper_nesting
  *
- *   - \b    efficiency_tolerance
- *      each value specifies the minimum fraction of tagged cells to total
- *      cells in boxes used to construct patches on a new level.  If the ratio
- *      is below the tolerance value, the box may be split into smaller boxes
- *      and pieces removed until the ratio becomes greater than or equal to the
- *      tolerance.  This tolerance helps users control the amount of extra
- *      refined cells created (beyond those tagged explicitly) that is typical
- *      in patch-based AMR computations.  The index of the value in the array
- *      corresponds to the number of the level to which the tolerance value
- *      applies.  If more values are given than the maximum number of levels
- *      allowed in the hierarchy, extra values will be ignored.  If fewer
- *      values are given, then the last value given will be used for each level
- *      without a specified input value.  For example, if only a single value
- *      is specified, then that value will be used on all levels.
- *
- *   - \b    combine_efficiency
- *      each value serves as a threshold for the ratio of the total number of
- *      cells in two boxes into which a box may be split and the number of
- *      cells in the original box.  If that ratio is greater than the combine
- *      efficiency, the box will not be split.  This tolerance helps users
- *      avoids splitting up portions of the domain into into very small patches
- *      which can increase the overhead of AMR operations.  Multiple values in
- *      the array are handled similar to efficiency_tolerance.
- *
  *   - \b    check_nonrefined_tags
  *      controls how to resolve user-specified tags that violate proper
  *      nesting.  If a tag violates the nesting requirements, its location in
@@ -191,22 +167,6 @@ namespace mesh {
  *     <td>Parameter read from restart db may be overridden by input db</td>
  *   </tr>
  *   <tr>
- *     <td>efficiency_tolerance</td>
- *     <td>array of doubles</td>
- *     <td>0.8 for each level</td>
- *     <td>all values > 0.0 && < 1.0</td>
- *     <td>opt</td>
- *     <td>Parameter read from restart db may be overridden by input db</td>
- *   </tr>
- *   <tr>
- *     <td>combine_efficiency</td>
- *     <td>array of doubles</td>
- *     <td>0.8 for each level</td>
- *     <td>all values > 0.0 && < 1.0</td>
- *     <td>opt</td>
- *     <td>Parameter read from restart db may be overridden by input db</td>
- *   </tr>
- *   <tr>
  *     <td>check_nonrefined_tags</td>
  *     <td>string</td>
  *     <td>"WARN"</td>
@@ -251,16 +211,6 @@ namespace mesh {
  * All values read in from a restart database may be overriden by input
  * database values.  If no new input database value is given, the restart
  * database value is used.
- *
- * The following represents sample input data for a three-level problem:
- *
- * @code
- *   // Optional input: different efficiency tolerance for each coarser level
- *   efficiency_tolerance = 0.80e0, 0.85e0, 0.90e0
- *
- *   // Optional input: combine efficiency is same for all levels.
- *   combine_efficiency = 0.95e0
- * @endcode
  *
  * @see mesh::TagAndInitializeStrategy
  * @see mesh::LoadBalanceStrategy
@@ -469,89 +419,6 @@ public:
    virtual
    boost::shared_ptr<LoadBalanceStrategy>
    getLoadBalanceStrategyZero() const;
-
-   /*!
-    * @brief Set efficiency tolerance for clustering tags on level.
-    *
-    * @param[in] efficiency_tolerance
-    * @param[in] level_number
-    *
-    * @pre (level_number >= 0) &&
-    *      (level_number < d_hierarchy->getMaxNumberOfLevels())
-    * @pre (efficiency_tolerance >= 0) && (efficiency_tolerance <= 1.0)
-    */
-   void
-   setEfficiencyTolerance(
-      const double efficiency_tolerance,
-      const int level_number)
-   {
-      TBOX_ASSERT((level_number >= 0) &&
-                  (level_number < d_hierarchy->getMaxNumberOfLevels()));
-      TBOX_ASSERT((efficiency_tolerance >= 0) &&
-                  (efficiency_tolerance <= 1.0));
-      d_efficiency_tolerance[level_number] = efficiency_tolerance;
-   }
-
-   /*!
-    * @brief Return efficiency tolerance for clustering tags on level.
-    *
-    * @return efficiency tolerance for clustering tags on level.
-    *
-    * @pre (level_number >= 0) &&
-    *      (level_number < d_hierarchy->getMaxNumberOfLevels())
-    */
-   double
-   getEfficiencyTolerance(
-      const int level_number) const
-   {
-      TBOX_ASSERT((level_number >= 0) &&
-                  (level_number < d_hierarchy->getMaxNumberOfLevels()));
-      int size = static_cast<int>(d_efficiency_tolerance.size());
-      return (level_number < size) ?
-         d_efficiency_tolerance[level_number] :
-         d_efficiency_tolerance[size - 1];
-   }
-
-   /*!
-    * @brief Set combine efficiency for clustering tags on level.
-    *
-    * @param[in] combine_efficiency
-    * @param[in] level_number
-    *
-    * @pre (level_number >= 0) &&
-    *      (level_number < d_hierarchy->getMaxNumberOfLevels())
-    * @pre (combine_efficiency >= 0) && (combine_efficiency <= 1.0)
-    */
-   void
-   setCombineEfficiency(
-      const double combine_efficiency,
-      const int level_number)
-   {
-      TBOX_ASSERT((level_number >= 0) &&
-                  (level_number < d_hierarchy->getMaxNumberOfLevels()));
-      TBOX_ASSERT((combine_efficiency >= 0) && (combine_efficiency <= 1.0));
-      d_combine_efficiency[level_number] = combine_efficiency;
-   }
-
-   /*!
-    * @brief Return combine efficiency for clustering tags on level.
-    *
-    * @return combine efficiency for clustering tags on level.
-    *
-    * @pre (level_number >= 0) &&
-    *      (level_number < d_hierarchy->getMaxNumberOfLevels())
-    */
-   double
-   getCombineEfficiency(
-      const int level_number) const
-   {
-      TBOX_ASSERT((level_number >= 0) &&
-                  (level_number < d_hierarchy->getMaxNumberOfLevels()));
-      int size = static_cast<int>(d_combine_efficiency.size());
-      return (level_number < size) ?
-         d_combine_efficiency[level_number] :
-         d_combine_efficiency[size - 1];
-   }
 
    /*!
     * @brief Return pointer to PatchHierarchy data member.
@@ -1340,20 +1207,6 @@ private:
     * not being used.
     */
    int d_base_ln;
-
-   /*
-    * @brief Efficiency tolerance during clustering.
-    *
-    * See input parameter efficiency_tolerance.
-    */
-   std::vector<double> d_efficiency_tolerance;
-
-   /*
-    * @brief Combine efficiency during clustering.
-    *
-    * See input parameter combine_efficiency.
-    */
-   std::vector<double> d_combine_efficiency;
 
    /*!
     * @brief Connector widths to use when clustering.

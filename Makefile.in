@@ -18,8 +18,8 @@ OBJECT  = .
 include ./config/Makefile.config
 
 INCLUDE_SAM = @top_srcdir@/source/SAMRAI
-INSTALL	    = @INSTALL@
-INSTDIR	    = @INSTDIR@
+INSTALL     = @INSTALL@
+INSTDIR     = @INSTDIR@
 
 #
 # GNUMake script to reverse strings.  This is recursive.
@@ -148,35 +148,35 @@ install: library tools
 	$(INSTALL) -p -c -m 644 include/SAMRAI/SAMRAI_config.h $(INSTDIR)/include/SAMRAI/
 	@for i in $(SAMRAI_LIBRARIES); \
 	do \
-           $(INSTALL) -p -d -m 755 $(INSTDIR)/include/SAMRAI/$$i;                    \
-           for f in $(INCLUDE_SAM)/$$i/*.[hICi]; do                               \
-              $(INSTALL) -p -c -m 644 $$f $(INSTDIR)/include/SAMRAI/$$i;             \
-           done;                                                                  \
-           if test -d $(INCLUDE_SAM)/$$i/fortran; then                            \
-              for f in $(INCLUDE_SAM)/$$i/fortran/*.[i]; do		          \
-		if test -f $$f; then                                              \
-	           if ! test -d $(INSTDIR)/include/SAMRAI/$$i/fortran; then       \
-		      $(INSTALL) -d -m 755 $(INSTDIR)/include/SAMRAI/$$i/fortran; \
-	           fi;                                                            \
-	           $(INSTALL) -p -c -m 644 $$f $(INSTDIR)/include/SAMRAI/$$i/fortran;\
-		fi                                                                \
-	     done;                                                                \
-	   fi                                                           	  \
+	   $(INSTALL) -p -d -m 755 $(INSTDIR)/include/SAMRAI/$$i; \
+	   for f in $(INCLUDE_SAM)/$$i/*.[hICi]; do \
+	      $(INSTALL) -p -c -m 644 $$f $(INSTDIR)/include/SAMRAI/$$i; \
+	   done; \
+	   if test -d $(INCLUDE_SAM)/$$i/fortran; then \
+	      for f in $(INCLUDE_SAM)/$$i/fortran/*.[i]; do \
+		 if test -f $$f; then \
+		    if ! test -d $(INSTDIR)/include/SAMRAI/$$i/fortran; then \
+		       $(INSTALL) -d -m 755 $(INSTDIR)/include/SAMRAI/$$i/fortran; \
+		    fi; \
+		    $(INSTALL) -p -c -m 644 $$f $(INSTDIR)/include/SAMRAI/$$i/fortran; \
+		 fi \
+	      done; \
+	   fi \
 	done
-	@if test -f lib/libSAMRAI_tbox.a; then                           \
-		for i in lib/libSAMRAI*.a; do				\
-		   $(INSTALL) -p -c -m 644 $$i $(INSTDIR)/lib;             \
-		done                                                    \
-	fi 
-	@if test -f lib/libSAMRAI_tbox.so; then                          \
-		for i in lib/libSAMRAI*.so; do				\
-		   $(INSTALL) -p -c -m 644 $$i $(INSTDIR)/lib;             \
-		done                                                    \
+	@if test -f lib/libSAMRAI_tbox.a; then \
+	   for i in lib/libSAMRAI*.a; do \
+	      $(INSTALL) -p -c -m 644 $$i $(INSTDIR)/lib; \
+	   done \
 	fi
-	@if test -f bin/restart-redistribute; then                       \
-		for i in bin/*; do               			\
-		   $(INSTALL) -p -c -m 755 $$i $(INSTDIR)/bin;             \
-		done                                                    \
+	@if test -f lib/libSAMRAI_tbox.so; then \
+	   for i in lib/libSAMRAI*.so; do \
+	      $(INSTALL) -p -c -m 644 $$i $(INSTDIR)/lib; \
+	   done \
+	fi
+	@if test -f bin/restart-redistribute; then \
+	   for i in bin/*; do \
+	      $(INSTALL) -p -c -m 755 $$i $(INSTDIR)/bin; \
+	   done \
 	fi
 
 # Rebuild config.status if configure changed.
@@ -222,22 +222,22 @@ everything:
 	(cd source/test; $(MAKE) perf)
 
 memtest: 
-	rm -f ~/insure.out 
+	$(RM) ~/insure.out 
 	$(MAKE) checktest
-	@NUM_INSURE_RUNS=`grep "PROBLEM SUMMARY - by type" ~/insure.out| wc -l`;            \
-	NO_LEAKS=`grep "No leaks were found" ~/insure.out | wc -l`;                         \
-        NUM_INSURE_ERRORS=`grep TOTAL ~/insure.out | awk '{ sum += $$2}; END {print sum}'`; \
-	if test $$NO_LEAKS -ne $$NUM_INSURE_RUNS;                                           \
-	then                                                                                \
-	   echo "FAIL: Insure++ reported memory leaks";                                     \
-	else                                                                                \
-	   echo "PASSED: Insure++ reported no memory leaks";                                \
-	fi;                                                                                 \
-        if test "$$NUM_INSURE_ERRORS" -ne "0";                                              \
-	then                                                                                \
-	   echo "FAIL: Insure++ reported unexpected errors";                                \
-	else                                                                                \
-	   echo "PASSED: Insure++ reported no unexpected errors";                           \
+	@NUM_INSURE_RUNS=`grep "PROBLEM SUMMARY - by type" ~/insure.out| wc -l`; \
+	NO_LEAKS=`grep "No leaks were found" ~/insure.out | wc -l`; \
+	NUM_INSURE_ERRORS=`grep TOTAL ~/insure.out | awk '{ sum += $$2}; END {print sum}'`; \
+	if test $$NO_LEAKS -ne $$NUM_INSURE_RUNS; \
+	then \
+	   echo "FAIL: Insure++ reported memory leaks"; \
+	else \
+	   echo "PASSED: Insure++ reported no memory leaks"; \
+	fi; \
+        if test "$$NUM_INSURE_ERRORS" -ne "0"; \
+	then \
+	   echo "FAIL: Insure++ reported unexpected errors"; \
+	else \
+	   echo "PASSED: Insure++ reported no unexpected errors"; \
 	fi                                                                      
 
 # Update copies/links in the include directory
@@ -259,5 +259,5 @@ genfiles: update indent
 	@-(cd @top_srcdir@; \
 	for i in `find . -name genfiles.sh`; \
 	do \
-		(cd `dirname $$i` && ./genfiles.sh) \
+	   (cd `dirname $$i` && ./genfiles.sh) \
 	done)

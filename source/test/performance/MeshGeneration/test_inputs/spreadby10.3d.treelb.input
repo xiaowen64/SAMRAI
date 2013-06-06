@@ -40,9 +40,6 @@ Main {
 
    load_balance = TRUE, TRUE, TRUE
 
-   efficiency_tol = 0.88
-   combine_tol = 0.88
-
    mesh_generator_name = "SphericalShellGenerator"
 
    SphericalShellGenerator {
@@ -57,6 +54,11 @@ Main {
 
    write_comm_graph = TRUE // Whether to write communication graph of TreeLoadBalancer.
 
+}
+
+BergerRigoutsos {
+  efficiency_tolerance = 0.88
+  combine_efficiency = 0.88
 }
 
 TreeLoadBalancer {

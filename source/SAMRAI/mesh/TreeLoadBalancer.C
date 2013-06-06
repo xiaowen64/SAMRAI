@@ -539,7 +539,8 @@ TreeLoadBalancer::loadBalanceBoxLevel(
     * communications.
     */
 
-   if (max_size > hier::IntVector::getZero(d_dim)) {
+   hier::IntVector max_intvector(d_dim, tbox::MathUtilities<int>::getMax());
+   if (max_size != max_intvector) {
 
       t_constrain_size->start();
       if (balance_to_anchor) {

@@ -84,6 +84,43 @@ void SAMRAI_F77_FUNC(cartwgtavgfaceflot3d2, CARTWGTAVGFACEFLOT3D2) (const int&,
    const int&, const int&, const int&,
    const int *, const double *, const double *,
    const float *, float *);
+// in cartcoarsen4d.f:
+void SAMRAI_F77_FUNC(cartwgtavgfaceflot4d0, CARTWGTAVGFACEFLOT4D0) (const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int *, const double *, const double *,
+   const float *, float *);
+void SAMRAI_F77_FUNC(cartwgtavgfaceflot4d1, CARTWGTAVGFACEFLOT4D1) (const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int *, const double *, const double *,
+   const float *, float *);
+void SAMRAI_F77_FUNC(cartwgtavgfaceflot4d2, CARTWGTAVGFACEFLOT4D2) (const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int *, const double *, const double *,
+   const float *, float *);
+void SAMRAI_F77_FUNC(cartwgtavgfaceflot4d3, CARTWGTAVGFACEFLOT4D3) (const int&,
+   const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int&, const int&, const int&, const int&,
+   const int *, const double *, const double *,
+   const float *, float *);
 }
 
 namespace SAMRAI {
@@ -220,9 +257,58 @@ CartesianFaceFloatWeightedAverage::coarsen(
             cgeom->getDx(),
             fdata->getPointer(2, d),
             cdata->getPointer(2, d));
+      } else if ((dim == tbox::Dimension(4))) {
+         SAMRAI_F77_FUNC(cartwgtavgfaceflot4d0, CARTWGTAVGFACEFLOT4D0) (ifirstc(0),
+            ifirstc(1), ifirstc(2), ifirstc(3),
+            ilastc(0), ilastc(1), ilastc(2), ilastc(3),
+            filo(0), filo(1), filo(2), filo(3),
+            fihi(0), fihi(1), fihi(2), fihi(3),
+            cilo(0), cilo(1), cilo(2), cilo(3),
+            cihi(0), cihi(1), cihi(2), cihi(3),
+            &ratio[0],
+            fgeom->getDx(),
+            cgeom->getDx(),
+            fdata->getPointer(0, d),
+            cdata->getPointer(0, d));
+         SAMRAI_F77_FUNC(cartwgtavgfaceflot4d1, CARTWGTAVGFACEFLOT4D1) (ifirstc(0),
+            ifirstc(1), ifirstc(2), ifirstc(3),
+            ilastc(0), ilastc(1), ilastc(2), ilastc(3),
+            filo(0), filo(1), filo(2), filo(3),
+            fihi(0), fihi(1), fihi(2), fihi(3),
+            cilo(0), cilo(1), cilo(2), cilo(3),
+            cihi(0), cihi(1), cihi(2), cihi(3),
+            &ratio[0],
+            fgeom->getDx(),
+            cgeom->getDx(),
+            fdata->getPointer(1, d),
+            cdata->getPointer(1, d));
+         SAMRAI_F77_FUNC(cartwgtavgfaceflot4d2, CARTWGTAVGFACEFLOT4D2) (ifirstc(0),
+            ifirstc(1), ifirstc(2), ifirstc(3),
+            ilastc(0), ilastc(1), ilastc(2), ilastc(3),
+            filo(0), filo(1), filo(2), filo(3),
+            fihi(0), fihi(1), fihi(2), fihi(3),
+            cilo(0), cilo(1), cilo(2), cilo(3),
+            cihi(0), cihi(1), cihi(2), cihi(3),
+            &ratio[0],
+            fgeom->getDx(),
+            cgeom->getDx(),
+            fdata->getPointer(2, d),
+            cdata->getPointer(2, d));
+         SAMRAI_F77_FUNC(cartwgtavgfaceflot4d3, CARTWGTAVGFACEFLOT4D3) (ifirstc(0),
+            ifirstc(1), ifirstc(2), ifirstc(3),
+            ilastc(0), ilastc(1), ilastc(2), ilastc(3),
+            filo(0), filo(1), filo(2), filo(3),
+            fihi(0), fihi(1), fihi(2), fihi(3),
+            cilo(0), cilo(1), cilo(2), cilo(3),
+            cihi(0), cihi(1), cihi(2), cihi(3),
+            &ratio[0],
+            fgeom->getDx(),
+            cgeom->getDx(),
+            fdata->getPointer(3, d),
+            cdata->getPointer(3, d));
       } else {
          TBOX_ERROR("CartesianFaceFloatWeightedAverage error...\n"
-            << "dim > 3 not supported." << std::endl);
+            << "dim > 4 not supported." << std::endl);
       }
    }
 }

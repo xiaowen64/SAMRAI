@@ -2244,7 +2244,7 @@ RefineSchedule::refineScratchData(
          crse_itr != coarse_level->end(); ++crse_itr ) {
       cv.push_back(crse_itr);
    }
-#pragma omp parallel shared(cv,ratio) private(overlap_iter)
+#pragma omp parallel shared(cv) private(overlap_iter)
 #pragma omp for schedule(dynamic)
    for ( size_t i=0; i<cv.size(); ++i )
 #else
