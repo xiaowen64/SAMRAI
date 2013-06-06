@@ -594,7 +594,7 @@ GriddingAlgorithm::makeCoarsestLevel(
    }
 
    if (d_log_metadata_statistics) {
-      logMetadataStatistics("makeCoarsestLevel", 0, false, false);
+      logMetadataStatistics("makeCoarsestLevel", 0, 0, level_time, false, false);
    }
 
 #ifdef GA_RECORD_STATS
@@ -955,7 +955,7 @@ GriddingAlgorithm::makeFinerLevel(
          t_reset_hier->stop();
 
          if (d_log_metadata_statistics) {
-            logMetadataStatistics("makeFinerLevel", d_hierarchy->getFinestLevelNumber(), false, true);
+            logMetadataStatistics("makeFinerLevel", d_hierarchy->getFinestLevelNumber(), cycle, level_time, false, true);
          }
       }
 
@@ -1358,7 +1358,7 @@ GriddingAlgorithm::regridFinerLevel(
 
          if (d_log_metadata_statistics) {
             // Don't log the coarse Connector, if the coarse level will be updated.
-            logMetadataStatistics("regridFinerLevel", new_ln, new_ln<d_hierarchy->getFinestLevelNumber(), tag_ln==d_base_ln);
+            logMetadataStatistics("regridFinerLevel", new_ln, regrid_cycle, regrid_time, new_ln<d_hierarchy->getFinestLevelNumber(), tag_ln==d_base_ln);
             tbox::plog << "GriddingAlgorithm::regridFinerLevel finished logging level stats." << std::endl;
          }
 
@@ -4808,6 +4808,8 @@ void
 GriddingAlgorithm::logMetadataStatistics(
    const char *caller_name,
    int ln,
+   int cycle,
+   int level_time,
    bool log_fine_connector,
    bool log_coarse_connector) const
 {
@@ -4818,7 +4820,8 @@ GriddingAlgorithm::logMetadataStatistics(
    const hier::IntVector &one_vector =
       hier::IntVector::getOne(d_hierarchy->getDim());
 
-   tbox::plog << "GriddingAlgorithm::" << caller_name << " added "
+   tbox::plog << "GriddingAlgorithm::" << caller_name << ", at cycle " << cycle
+              << ", time " << level_time << ", added "
               << name << ":\n"
               << box_level.format("\t",0)
               << name << " statistics:\n"
