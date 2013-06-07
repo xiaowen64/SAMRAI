@@ -35,6 +35,7 @@ TileClustering::TileClustering(
    d_box_size(hier::IntVector(d_dim, 8)),
    d_coalesce_boxes(true),
    d_log_cluster_summary(false),
+   d_log_cluster(false),
    d_barrier_and_time(false),
    d_print_steps(false)
 {
