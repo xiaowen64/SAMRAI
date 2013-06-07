@@ -44,6 +44,25 @@ SideGeometry::SideGeometry(
    TBOX_ASSERT(directions.min() >= 0);
 }
 
+/*
+ *************************************************************************
+ *
+ * Create a side geometry object given the box and ghost cell width
+ *
+ *************************************************************************
+ */
+
+SideGeometry::SideGeometry(
+   const hier::Box& box,
+   const hier::IntVector& ghosts):
+   d_box(box),
+   d_ghosts(ghosts),
+   d_directions(hier::IntVector::getOne(ghosts.getDim()))
+{
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
+   TBOX_ASSERT(ghosts.min() >= 0);
+}
+
 SideGeometry::~SideGeometry()
 {
 }
