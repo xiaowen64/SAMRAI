@@ -1365,7 +1365,7 @@ GriddingAlgorithm::regridFinerLevel(
              && remove_old_fine_level) {
             d_tag_init_strategy->processLevelBeforeRemoval(
                d_hierarchy,
-               tag_ln,
+               new_ln,
                d_hierarchy->getPatchLevel(new_ln));
             d_hierarchy->removePatchLevel(new_ln);
          }
