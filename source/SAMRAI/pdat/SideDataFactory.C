@@ -56,7 +56,7 @@ SideDataFactory<TYPE>::SideDataFactory(
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
    d_fine_boundary_represents_var(fine_boundary_represents_var),
-   d_directions(hier::IntVector::getDim(ghosts.getDim()))
+   d_directions(hier::IntVector::getOne(ghosts.getDim()))
 {
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
