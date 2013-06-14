@@ -161,6 +161,8 @@ private:
    boost::shared_ptr<tbox::Timer> t_coalesce;
    boost::shared_ptr<tbox::Timer> t_coalesce_adjustment;
    boost::shared_ptr<tbox::Timer> t_global_reductions;
+   boost::shared_ptr<tbox::Timer> t_cluster_setup;
+   boost::shared_ptr<tbox::Timer> t_cluster_wrapup;
    //@}
 
 };

@@ -112,6 +112,8 @@ TileClustering::findBoxesContainingTags(
       t_find_boxes_containing_tags->barrierAndStart();
    }
 
+   t_cluster_setup->start();
+
    const hier::IntVector &zero_vector = hier::IntVector::getZero(tag_level->getDim());
 
    for (hier::BoxContainer::const_iterator bb_itr = bound_boxes.begin();
@@ -137,10 +139,11 @@ TileClustering::findBoxesContainingTags(
       zero_vector);
    tag_to_new->setTranspose(new_to_tag, true);
 
+   tag_box_level.getBoxes().makeTree(tag_box_level.getGridGeometry().get());
+
+   t_cluster_setup->stop();
 
    t_cluster->start();
-
-   tag_box_level.getBoxes().makeTree(tag_box_level.getGridGeometry().get());
 
    // Generate new_box_level and Connectors
    for ( hier::PatchLevel::iterator pi=tag_level->begin();
@@ -316,15 +319,20 @@ TileClustering::findBoxesContainingTags(
    if (d_barrier_and_time) {
       t_global_reductions->barrierAndStart();
    }
+
+   t_cluster_wrapup->start();
+
    new_box_level->getGlobalNumberOfBoxes();
    new_box_level->getGlobalNumberOfCells();
    if (d_barrier_and_time) {
       t_global_reductions->barrierAndStop();
    }
+#if 0
    for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
         bi != bound_boxes.end(); ++bi) {
       new_box_level->getGlobalBoundingBox(bi->getBlockId().getBlockValue());
    }
+#endif
 
    if (d_log_cluster) {
       tbox::plog << "TileClustering cluster log:\n"
@@ -367,6 +375,8 @@ TileClustering::findBoxesContainingTags(
                  << "\tTileClustering tag_to_new statistics:\n" << tag_to_new->formatStatistics("\t\t")
                  << "\n";
    }
+
+   t_cluster_wrapup->stop();
 
    if (d_barrier_and_time) {
       t_find_boxes_containing_tags->barrierAndStop();
@@ -432,6 +442,10 @@ TileClustering::setTimers()
       getTimer("mesh::TileClustering::findBoxesContainingTags()_coalesce");
    t_coalesce_adjustment = tbox::TimerManager::getManager()->
       getTimer("mesh::TileClustering::findBoxesContainingTags()_coalesce_adjustment");
+   t_cluster_setup = tbox::TimerManager::getManager()->
+      getTimer("mesh::TileClustering::findBoxesContainingTags()_setup");
+   t_cluster_wrapup = tbox::TimerManager::getManager()->
+      getTimer("mesh::TileClustering::findBoxesContainingTags()_wrapup");
    t_global_reductions = tbox::TimerManager::getManager()->
       getTimer("mesh::TileClustering::global_reductions");
 }
