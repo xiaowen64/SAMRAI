@@ -40,6 +40,7 @@ TileClustering::TileClustering(
    d_print_steps(false)
 {
    TBOX_omp_init_lock(&l_outputs);
+   TBOX_omp_init_lock(&l_interm);
    getFromInput(input_db);
    setTimers();
    d_oca.setTimerPrefix("hier::TileClustering");
@@ -48,6 +49,7 @@ TileClustering::TileClustering(
 TileClustering::~TileClustering()
 {
    TBOX_omp_destroy_lock(&l_outputs);
+   TBOX_omp_destroy_lock(&l_interm);
 }
 
 void
@@ -169,68 +171,23 @@ tbox::plog << "Outer loop has " << TBOX_omp_get_num_threads() << " threads." << 
          boost::shared_ptr<pdat::CellData<int> > tag_data(
             patch.getPatchData(tag_data_index), boost::detail::dynamic_cast_tag());
 
-         hier::Box coarsened_box(tag_data->getBox());
-         coarsened_box.coarsen(d_box_size);
+         hier::BoxContainer tiles;
+         int num_coarse_tags =
+            findTilesContainingTags( tiles, *tag_data, tag_val );
 
-         size_t coarse_tag_count = 0;
+         if (d_print_steps) {
+            tbox::plog << "Tile Clustering generated " << tiles.size()
+                       << " clusters from " << num_coarse_tags
+                       << " in patch " << patch.getBox().getBoxId() << '\n';
+         }
 
-         const int num_coarse_cells = coarsened_box.size();
-
-#pragma omp parallel
-#pragma omp for schedule(dynamic)
-         for ( int coarse_offset=0; coarse_offset<num_coarse_cells; ++coarse_offset ) {
-if (coarse_offset==0) tbox::plog << "Inner loop has " << TBOX_omp_get_num_threads() << " threads over " << num_coarse_cells << " coarse cells." << std::endl;
-            const pdat::CellIndex coarse_cell_index(coarsened_box.index(coarse_offset));
-
-            /*
-             * Set the tile extent to cover the coarse cell.  It must
-             * nest inside local tag boxes.  If any part extends
-             * outside them, (1) the tile might overlap with remote
-             * clusters, (2) its overlap with remote tag boxes might
-             * not be detected and (3) it may extend outside the tag
-             * level.  Tiles extending past non-local tag boxes can
-             * appear if the tag level patch boundaries do not
-             * coincide with the tile cuts.
-             */
-            hier::Box tile_box(coarse_cell_index,coarse_cell_index,coarsened_box.getBlockId());
-            tile_box.refine(d_box_size);
-            tile_box *= tag_data->getBox();
-
-            pdat::CellIterator finecend(pdat::CellGeometry::end(tile_box));
-            for ( pdat::CellIterator fineci(pdat::CellGeometry::begin(tile_box));
-                  fineci!=finecend; ++fineci ) {
-               if ( (*tag_data)(*fineci) == tag_val ) {
-                  // Make a cluster from tile_box.
-                  /*
-                   * Choose a LocalId that is independent of ordering so that
-                   * results are independent of multi-threading.
-                   */
-                  hier::LocalId local_id(patch_box.getLocalId()*1000000 +
-                                         coarse_offset);
-
-                  tile_box.initialize( tile_box,
-                                       local_id,
-                                       new_box_level->getMPI().getRank() );
-
-                  TBOX_omp_set_lock(&l_outputs);
-
-                  new_box_level->addBoxWithoutUpdate(tile_box);
-
-                  new_to_tag->insertLocalNeighbor( patch_box, tile_box.getBoxId() );
-                  tag_to_new->insertLocalNeighbor( tile_box, patch_box.getBoxId() );
-
-                  ++coarse_tag_count;
-
-                  if (d_print_steps) {
-                     tbox::plog << "Tile Clustering generated cluster #" << coarse_tag_count << ": " << tile_box << '\n';
-                  }
-
-                  TBOX_omp_unset_lock(&l_outputs);
-                  break;
-               }
-            } // Loop through fine cells in the tile.
-
-         } // Loop through coarse cells (tiles).
+         TBOX_omp_set_lock(&l_outputs);
+         for ( hier::BoxContainer::iterator bi=tiles.begin(); bi!=tiles.end(); ++bi ) {
+            new_box_level->addBoxWithoutUpdate(*bi);
+            new_to_tag->insertLocalNeighbor( patch_box, bi->getBoxId() );
+            tag_to_new->insertLocalNeighbor( *bi, patch_box.getBoxId() );
+         }
+         TBOX_omp_unset_lock(&l_outputs);
 
       } // Patch is in bounding box
 
@@ -426,6 +383,96 @@ if (coarse_offset==0) tbox::plog << "Inner loop has " << TBOX_omp_get_num_thread
    if (d_barrier_and_time) {
       t_find_boxes_containing_tags->barrierAndStop();
    }
+}
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+int
+TileClustering::findTilesContainingTags(
+   hier::BoxContainer &tiles,
+   const pdat::CellData<int> &tag_data,
+   int tag_val)
+{
+   tiles.clear();
+   tiles.unorder();
+
+   hier::Box coarsened_box(tag_data.getBox());
+   coarsened_box.coarsen(d_box_size);
+
+   const int num_coarse_cells = coarsened_box.size();
+
+   int num_coarse_tags = 0;
+
+#pragma omp parallel
+#pragma omp for schedule(dynamic)
+   for ( int coarse_offset=0; coarse_offset<num_coarse_cells; ++coarse_offset ) {
+      if (coarse_offset==0) tbox::plog << "Inner loop has " << TBOX_omp_get_num_threads() << " threads over " << num_coarse_cells << " coarse cells." << std::endl;
+      const pdat::CellIndex coarse_cell_index(coarsened_box.index(coarse_offset));
+
+      /*
+       * Set the tile extent to cover the coarse cell and intersect
+       * with tag box to make it nest in the tag box.  If any part
+       * extends outside local tag boxes, (1) the tile might
+       * overlap with remote clusters, (2) its overlap with remote
+       * tag boxes might not be detected and (3) it may extend
+       * outside the tag level.  Tiles extending past non-local tag
+       * boxes can appear if the tag level patch boundaries do not
+       * coincide with the tile cuts.
+       */
+      hier::Box tile_box(coarse_cell_index,coarse_cell_index,coarsened_box.getBlockId());
+      tile_box.refine(d_box_size);
+      tile_box *= tag_data.getBox();
+
+      /*
+       * Loop through fine cells in tile_box.  If any is tagged,
+       * tile_box will be used as a cluster.
+       */
+      pdat::CellIterator finecend(pdat::CellGeometry::end(tile_box));
+      for ( pdat::CellIterator fineci(pdat::CellGeometry::begin(tile_box));
+            fineci!=finecend; ++fineci ) {
+         if ( tag_data(*fineci) == tag_val ) {
+            // Make a cluster from tile_box.
+            ++num_coarse_tags;
+            /*
+             * Choose a LocalId that is independent of ordering so that
+             * results are independent of multi-threading.
+             */
+            hier::LocalId local_id(coarsened_box.getLocalId()*1000000 +
+                                   coarse_offset);
+
+            tile_box.initialize( tile_box,
+                                 local_id,
+                                 coarsened_box.getOwnerRank() );
+            TBOX_omp_set_lock(&l_interm);
+            tiles.pushBack(tile_box);
+            TBOX_omp_unset_lock(&l_interm);
+
+            break;
+         }
+
+      } // Loop through fine cells in the tile.
+
+   } // Loop through coarse cells (tiles).
+
+
+   if ( d_coalesce_boxes && tiles.size() > 1 ) {
+      hier::LocalId last_used_id = tiles.back().getLocalId();
+      // Coalesce the tiles in this patch and assign ids if they changed.
+      tiles.coalesce();
+      if ( tiles.size() != num_coarse_tags ) {
+         for ( hier::BoxContainer::iterator bi=tiles.begin(); bi!=tiles.end(); ++bi ) {
+            bi->setLocalId(++last_used_id);
+         }
+      }
+   }
+
+   tiles.order();
+
+   return num_coarse_tags;
 }
 
 
