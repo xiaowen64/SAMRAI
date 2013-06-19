@@ -255,9 +255,7 @@ int main(
       if (!case_name.empty()) {
          base_name = base_name + '-' + case_name;
       }
-      base_name = base_name + '-' + tbox::Utilities::intToString(
-            mpi.getSize(),
-            5);
+      base_name = base_name + '-' + tbox::Utilities::processorToString(mpi.getSize());
       tbox::plog << "Added case name (" << case_name << ") and nprocs ("
                  << mpi.getSize() << ") to base name -> '"
                  << base_name << "'\n";
