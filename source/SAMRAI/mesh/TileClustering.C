@@ -405,8 +405,6 @@ TileClustering::findTilesContainingTags(
 
    const int num_coarse_cells = coarsened_box.size();
 
-   int num_coarse_tags = 0;
-
 #pragma omp parallel
 #pragma omp for schedule(dynamic)
    for ( int coarse_offset=0; coarse_offset<num_coarse_cells; ++coarse_offset ) {
@@ -435,9 +433,8 @@ TileClustering::findTilesContainingTags(
       for ( pdat::CellIterator fineci(pdat::CellGeometry::begin(tile_box));
             fineci!=finecend; ++fineci ) {
          if ( tag_data(*fineci) == tag_val ) {
-            // Make a cluster from tile_box.
-            ++num_coarse_tags;
             /*
+             * Make a cluster from tile_box.
              * Choose a LocalId that is independent of ordering so that
              * results are independent of multi-threading.
              */
@@ -458,19 +455,24 @@ TileClustering::findTilesContainingTags(
 
    } // Loop through coarse cells (tiles).
 
+   const int num_coarse_tags = tiles.size();
+
+   tiles.order();
 
    if ( d_coalesce_boxes && tiles.size() > 1 ) {
       hier::LocalId last_used_id = tiles.back().getLocalId();
       // Coalesce the tiles in this patch and assign ids if they changed.
-      tiles.coalesce();
-      if ( tiles.size() != num_coarse_tags ) {
-         for ( hier::BoxContainer::iterator bi=tiles.begin(); bi!=tiles.end(); ++bi ) {
+      hier::BoxContainer unordered_tiles( tiles.begin(), tiles.end(), false );
+      unordered_tiles.coalesce();
+      if ( unordered_tiles.size() != num_coarse_tags ) {
+         tiles.clear();
+         tiles.order();
+         for ( hier::BoxContainer::iterator bi=unordered_tiles.begin(); bi!=unordered_tiles.end(); ++bi ) {
             bi->setLocalId(++last_used_id);
+            tiles.insert(*bi);
          }
       }
    }
-
-   tiles.order();
 
    return num_coarse_tags;
 }
