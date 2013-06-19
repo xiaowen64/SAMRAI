@@ -145,8 +145,6 @@ TileClustering::findBoxesContainingTags(
 
    t_cluster->start();
 
-   tag_box_level.getBoxes().makeTree(tag_box_level.getGridGeometry().get());
-
    const int cells_per_tile = d_box_size.getProduct();
 
 tbox::plog << "There are " << tag_level->getLocalNumberOfPatches() << " tag patches." << std::endl;
