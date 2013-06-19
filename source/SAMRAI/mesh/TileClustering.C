@@ -198,14 +198,14 @@ tbox::plog << "Outer loop has " << TBOX_omp_get_num_threads() << " threads." << 
 
    if ( d_coalesce_boxes ) {
 
-      t_coalesce->start();
-
       /*
        * Try to coalesce the boxes in new_box_level.
        */
       // hier::BoxContainer new_boxes;
       std::vector<hier::Box> box_vector;
       if (!new_box_level->getBoxes().isEmpty()) {
+
+         t_coalesce->start();
 
          hier::LocalId local_id(0);
 
@@ -227,6 +227,9 @@ tbox::plog << "Outer loop has " << TBOX_omp_get_num_threads() << " threads." << 
                TBOX_omp_unset_lock(&l_outputs);
             }
          }
+
+         t_coalesce->stop();
+
       }
       if ( d_print_steps ) {
          tbox::plog << "TileClustering coalesced " << new_box_level->getLocalNumberOfBoxes()
@@ -234,6 +237,8 @@ tbox::plog << "Outer loop has " << TBOX_omp_get_num_threads() << " threads." << 
       }
 
       if ( box_vector.size() != static_cast<int>(new_box_level->getLocalNumberOfBoxes()) ) {
+
+         t_coalesce_adjustment->start();
 
          /*
           * Coalesce changed the new boxes, so rebuild new_box_level and
@@ -311,9 +316,9 @@ tbox::plog << "Outer loop has " << TBOX_omp_get_num_threads() << " threads." << 
          }
 #endif
 
-      }
+         t_coalesce_adjustment->stop();
 
-      t_coalesce->stop();
+      }
 
    }
 
@@ -562,6 +567,8 @@ TileClustering::setTimers()
       getTimer("mesh::TileClustering::findBoxesContainingTags()_cluster");
    t_coalesce = tbox::TimerManager::getManager()->
       getTimer("mesh::TileClustering::findBoxesContainingTags()_coalesce");
+   t_coalesce_adjustment = tbox::TimerManager::getManager()->
+      getTimer("mesh::TileClustering::findBoxesContainingTags()_coalesce_adjustment");
    t_global_reductions = tbox::TimerManager::getManager()->
       getTimer("mesh::TileClustering::global_reductions");
 }
