@@ -145,15 +145,10 @@ TileClustering::findBoxesContainingTags(
 
    t_cluster->start();
 
-   const int cells_per_tile = d_box_size.getProduct();
-
-tbox::plog << "There are " << tag_level->getLocalNumberOfPatches() << " tag patches." << std::endl;
-
    /*
     * Generate new_box_level and Connectors
     */
 #pragma omp parallel if ( tag_level->getLocalNumberOfPatches() > 4*omp_get_max_threads() )
-tbox::plog << "Outer loop has " << TBOX_omp_get_num_threads() << " threads." << std::endl;
 #pragma omp for schedule(dynamic)
    for ( size_t pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
 
@@ -164,7 +159,7 @@ tbox::plog << "Outer loop has " << TBOX_omp_get_num_threads() << " threads." << 
       TBOX_ASSERT( bound_boxes.begin(block_id) != bound_boxes.end(block_id) );
       const hier::Box &bounding_box = *bound_boxes.begin(block_id);
 
-      if ( patch_box.intersects(bounding_box) ) {
+      if ( patch.getBox().intersects(bounding_box) ) {
 
          boost::shared_ptr<pdat::CellData<int> > tag_data(
             patch.getPatchData(tag_data_index), boost::detail::dynamic_cast_tag());
