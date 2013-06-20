@@ -281,6 +281,14 @@ int main(
          PIO::logOnlyNodeZero(log_file_name);
       }
 
+#ifdef _OPENMP
+      tbox::plog << "Compiled with OpenMP version " << _OPENMP
+                 << ".  Running with " << omp_get_max_threads() << " threads."
+                 << std::endl;
+#else
+      tbox::plog << "Compiled without OpenMP.\n";
+#endif
+
 
       /*
        * Whether to perform certain steps in mesh generation.
