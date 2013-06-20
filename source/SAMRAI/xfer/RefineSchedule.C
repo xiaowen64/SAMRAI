@@ -2230,7 +2230,7 @@ RefineSchedule::refineScratchData(
     * destination patch and destination fill boxes.
     */
 
-#pragma omp parallel shared(coarse_level,ratio)
+#pragma omp parallel shared(coarse_level)
 #pragma omp for schedule(dynamic)
    for ( size_t pi=0; pi<coarse_level->getLocalNumberOfPatches(); ++pi )
    {
