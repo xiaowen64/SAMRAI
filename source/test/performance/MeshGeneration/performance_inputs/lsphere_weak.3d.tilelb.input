@@ -35,7 +35,7 @@ Main {
 
    log_all_nodes = FALSE
 
-   domain_boxes = [(0,0,0),(31,31,16)]
+   domain_boxes = [(0,0,0),(31,31,15)]
    xlo = -0.5, -0.5, -0.0
    xhi =  0.5,  0.5,  0.5
 
