@@ -297,6 +297,13 @@ public:
       return d_block_id;
    }
 
+   //! @brief Set the LocalId.
+   void
+   setLocalId(const LocalId &local_id)
+   {
+      return d_id.initialize(local_id, d_id.getOwnerRank(), d_id.getPeriodicId());
+   }
+
    //! @brief Get the LocalId.
    const LocalId&
    getLocalId() const

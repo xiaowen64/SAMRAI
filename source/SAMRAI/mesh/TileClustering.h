@@ -136,6 +136,15 @@ private:
    makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
                         int tag_value) const;
 
+   /*!
+    * @brief Find tagged tiles in a single patch.
+    */
+   int
+   findTilesContainingTags(
+      hier::BoxContainer &tiles,
+      const pdat::CellData<int> &tag_data,
+      int tag_val);
+
    void setTimers();
 
    const tbox::Dimension d_dim;
