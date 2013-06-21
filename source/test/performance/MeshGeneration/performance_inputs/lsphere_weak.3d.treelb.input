@@ -31,7 +31,7 @@ Main {
 
    base_name = "lsphere_weak.3d.treelb"
 
-   write_visit = TRUE
+   write_visit = FALSE
 
    log_all_nodes = FALSE
 
