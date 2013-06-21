@@ -99,6 +99,7 @@ boost::shared_ptr<mesh::BoxGeneratorStrategy>
 createBoxGenerator(
    const boost::shared_ptr<tbox::Database> &input_db,
    const std::string &bg_type,
+   int ln,
    const tbox::Dimension &dim );
 
 boost::shared_ptr<mesh::LoadBalanceStrategy>
@@ -394,9 +395,6 @@ int main(
       std::string box_generator_type =
          main_db->getStringWithDefault("box_generator_type", "BergerRigoutsos");
 
-      boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator =
-         createBoxGenerator( input_db, box_generator_type, dim );
-
       /*
        * Create hierarchy.
        */
@@ -612,9 +610,11 @@ int main(
          /*
           * Cluster.
           */
+         boost::shared_ptr<mesh::BoxGeneratorStrategy> bg1 =
+            createBoxGenerator( input_db, box_generator_type, finer_ln, dim );
          tbox::pout << "\tClustering..." << std::endl;
          tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
-         box_generator->findBoxesContainingTags(
+         bg1->findBoxesContainingTags(
             L1,
             L0_to_L1,
             hierarchy->getPatchLevel(coarser_ln),
@@ -744,8 +744,10 @@ int main(
           * Cluster.
           */
          tbox::pout << "\tClustering..." << std::endl;
+         boost::shared_ptr<mesh::BoxGeneratorStrategy> bg2 =
+            createBoxGenerator( input_db, box_generator_type, finer_ln, dim );
          tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
-         box_generator->findBoxesContainingTags(
+         bg2->findBoxesContainingTags(
             L2,
             L1_to_L2,
             hierarchy->getPatchLevel(coarser_ln),
@@ -1204,6 +1206,7 @@ boost::shared_ptr<mesh::BoxGeneratorStrategy>
 createBoxGenerator(
    const boost::shared_ptr<tbox::Database> &input_db,
    const std::string &bg_type,
+   int ln,
    const tbox::Dimension &dim )
 {
 
@@ -1213,7 +1216,9 @@ createBoxGenerator(
       berger_rigoutsos(
          new mesh::BergerRigoutsos(
             dim,
-            input_db->getDatabaseWithDefault("BergerRigoutsos", boost::shared_ptr<tbox::Database>()) ) );
+            input_db->getDatabaseWithDefault(
+               std::string("BergerRigoutsos") + tbox::Utilities::intToString(ln),
+               boost::shared_ptr<tbox::Database>()) ) );
       berger_rigoutsos->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       return berger_rigoutsos;
@@ -1224,7 +1229,9 @@ createBoxGenerator(
       tiled(
          new mesh::TileClustering(
             dim,
-            input_db->getDatabaseWithDefault("TileClustering", boost::shared_ptr<tbox::Database>()) ) );
+            input_db->getDatabaseWithDefault(
+               std::string("TileClustering") + tbox::Utilities::intToString(ln),
+               boost::shared_ptr<tbox::Database>()) ) );
 
       return tiled;
 
