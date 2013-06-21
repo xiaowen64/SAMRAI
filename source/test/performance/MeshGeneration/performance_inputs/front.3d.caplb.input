@@ -61,6 +61,7 @@ BergerRigoutsos {
   sort_output_nodes = TRUE
   efficiency_tolerance = 0.85
   combine_efficiency = 0.85
+  DEV_build_zero_width_connector = TRUE
   DEV_log_node_history = FALSE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
