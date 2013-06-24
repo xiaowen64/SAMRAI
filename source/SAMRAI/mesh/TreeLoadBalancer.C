@@ -2744,8 +2744,6 @@ TreeLoadBalancer::adjustLoadBySwapping(
                     << high_transfer << ']' << std::endl;
       }
 
-      found_swap = false;
-
       LoadType swap_transfer;
       found_swap = swapLoadPair(
          main_bin,
