@@ -53,6 +53,7 @@ Main {
 TileClustering {
   box_size = 4, 4, 4
   coalesce_boxes = TRUE
+  DEV_barrier_and_time = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
 }
@@ -94,7 +95,7 @@ TilePartitioner {
 
 
 TreeLoadBalancer {
-  DEV_report_load_balance = TRUE // Reported in main
+  DEV_report_load_balance = FALSE // Reported in main
   DEV_balance_penalty_wt = 1.0
   DEV_surface_penalty_wt = 1.0
   DEV_slender_penalty_wt = 1.0
