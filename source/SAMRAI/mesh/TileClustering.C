@@ -332,12 +332,12 @@ TileClustering::findBoxesContainingTags(
     * Get some global parameters.  Do it before logging to prevent
     * the logging flag from having an undue side effect on performance.
     */
+
+   d_object_timers->t_cluster_wrapup->barrierAndStart();
+
    if (d_barrier_and_time) {
-      d_object_timers->t_global_reductions->barrierAndStart();
+      d_object_timers->t_global_reductions->start();
    }
-
-   d_object_timers->t_cluster_wrapup->start();
-
    new_box_level->getGlobalNumberOfBoxes();
    new_box_level->getGlobalNumberOfCells();
    if (d_barrier_and_time) {
