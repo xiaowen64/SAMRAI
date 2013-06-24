@@ -82,13 +82,14 @@ TilePartitioner {
   box_size = 12, 12, 12
 
   TreeLoadBalancer {
+    DEV_report_load_balance = FALSE // Reported in main
     DEV_allow_box_breaking = TRUE
     // Debugging options
     DEV_check_map = FALSE
     DEV_check_connectivity = FALSE
     DEV_print_steps = FALSE
     DEV_print_swap_steps = FALSE
-    DEV_print_break_steps = TRUE
+    DEV_print_break_steps = FALSE
     DEV_print_edge_steps = FALSE
     DEV_summarize_map = TRUE
   }
@@ -97,14 +98,12 @@ TilePartitioner {
 
 TreeLoadBalancer {
   DEV_report_load_balance = FALSE // Reported in main
-  DEV_balance_penalty_wt = 1.0
-  DEV_surface_penalty_wt = 1.0
-  DEV_slender_penalty_wt = 1.0
-  DEV_precut_penalty_wt = 1.0
+  max_cycle_spread_ratio = 1000000
+  flexible_load_tolerance = 0.05
 
   // Debugging options
-  DEV_check_map = TRUE
-  DEV_check_connectivity = TRUE
+  DEV_check_map = FALSE
+  DEV_check_connectivity = FALSE
   DEV_print_steps = FALSE
   DEV_print_swap_steps = FALSE
   DEV_print_break_steps = FALSE
