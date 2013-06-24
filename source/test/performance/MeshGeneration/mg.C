@@ -256,9 +256,7 @@ int main(
       if (!case_name.empty()) {
          base_name = base_name + '-' + case_name;
       }
-      base_name = base_name + '-' + tbox::Utilities::intToString(
-            mpi.getSize(),
-            5);
+      base_name = base_name + '-' + tbox::Utilities::nodeToString(mpi.getSize());
       tbox::plog << "Added case name (" << case_name << ") and nprocs ("
                  << mpi.getSize() << ") to base name -> '"
                  << base_name << "'\n";
@@ -624,6 +622,26 @@ int main(
             min_size,
             required_connector_width);
 
+         if ( L0_to_L1->getConnectorWidth() != required_connector_width ) {
+            const hier::Connector &L0_to_L0 =
+               L0->findConnectorWithTranspose(
+                  *L0,
+                  required_connector_width,
+                  required_connector_width,
+                  hier::CONNECTOR_IMPLICIT_CREATION_RULE);
+            hier::OverlapConnectorAlgorithm timed_oca;
+            timed_oca.setTimerPrefix("apps::fix_zero_width1");
+            tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
+            timed_oca.bridgeWithNesting(
+               L0_to_L1,
+               L0_to_L0,
+               hier::Connector(*L0_to_L1),
+               hier::IntVector::getZero(dim),
+               hier::IntVector::getZero(dim),
+               required_connector_width,
+               true);
+         }
+
          outputPostcluster( *L1, *L0, required_connector_width, "L1: " );
 
          if ( L1->getGlobalNumberOfBoxes() == 0 ) {
@@ -756,6 +774,26 @@ int main(
             hier::BoxContainer(L1.getGlobalBoundingBox(0)),
             min_size,
             required_connector_width);
+
+         if ( L1_to_L2->getConnectorWidth() != required_connector_width ) {
+            const hier::Connector &L1_to_L1 =
+               L1.findConnectorWithTranspose(
+                  L1,
+                  required_connector_width,
+                  required_connector_width,
+                  hier::CONNECTOR_IMPLICIT_CREATION_RULE);
+            hier::OverlapConnectorAlgorithm timed_oca;
+            timed_oca.setTimerPrefix("apps::fix_zero_width2");
+            tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
+            timed_oca.bridgeWithNesting(
+               L1_to_L2,
+               L1_to_L1,
+               hier::Connector(*L1_to_L2),
+               hier::IntVector::getZero(dim),
+               hier::IntVector::getZero(dim),
+               required_connector_width,
+               true);
+         }
 
          outputPostcluster( *L2, L1, required_connector_width, "L2: " );
 
