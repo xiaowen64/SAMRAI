@@ -241,6 +241,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -511,6 +512,7 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -657,6 +659,7 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -869,6 +872,7 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -1123,6 +1127,7 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -1408,6 +1413,7 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -1564,6 +1570,7 @@ DEPENDS_26:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -1786,6 +1793,7 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -2024,6 +2032,7 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -2309,6 +2318,7 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -2465,6 +2475,7 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -2687,6 +2698,7 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -3326,6 +3338,7 @@ DEPENDS_57:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -3610,6 +3623,7 @@ DEPENDS_61:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -3765,6 +3779,7 @@ DEPENDS_63:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -3987,6 +4002,7 @@ DEPENDS_67:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -4471,6 +4487,7 @@ DEPENDS_75:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -4758,6 +4775,7 @@ DEPENDS_79:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -4914,6 +4932,7 @@ DEPENDS_81:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -5113,6 +5132,7 @@ DEPENDS_84:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -5397,6 +5417,7 @@ DEPENDS_88:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -6170,6 +6191,7 @@ DEPENDS_100:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -6455,6 +6477,7 @@ DEPENDS_104:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -6611,6 +6634,7 @@ DEPENDS_106:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -6833,6 +6857,7 @@ DEPENDS_110:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\

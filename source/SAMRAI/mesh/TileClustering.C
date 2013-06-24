@@ -16,11 +16,15 @@
 
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/pdat/CellData.h"
+#include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
 namespace SAMRAI {
 namespace mesh {
+
+const std::string TileClustering::s_default_timer_prefix("mesh::TileClustering");
+std::map<std::string, TileClustering::TimerStruct> TileClustering::s_static_timers;
 
 /*
  ************************************************************************
@@ -38,13 +42,17 @@ TileClustering::TileClustering(
    d_barrier_and_time(false),
    d_print_steps(false)
 {
+   TBOX_omp_init_lock(&l_outputs);
+   TBOX_omp_init_lock(&l_interm);
    getFromInput(input_db);
-   setTimers();
-   d_oca.setTimerPrefix("hier::TileClustering");
+   setTimerPrefix(s_default_timer_prefix);
+   d_oca.setTimerPrefix(s_default_timer_prefix);
 }
 
 TileClustering::~TileClustering()
 {
+   TBOX_omp_destroy_lock(&l_outputs);
+   TBOX_omp_destroy_lock(&l_interm);
 }
 
 void
@@ -109,10 +117,10 @@ TileClustering::findBoxesContainingTags(
       max_gcw);
 
    if (d_barrier_and_time) {
-      t_find_boxes_containing_tags->barrierAndStart();
+      d_object_timers->t_find_boxes_containing_tags->barrierAndStart();
    }
 
-   t_cluster_setup->start();
+   d_object_timers->t_cluster_setup->start();
 
    const hier::IntVector &zero_vector = hier::IntVector::getZero(tag_level->getDim());
 
@@ -139,13 +147,17 @@ TileClustering::findBoxesContainingTags(
       zero_vector);
    tag_to_new->setTranspose(new_to_tag, true);
 
-   t_cluster_setup->stop();
+   tag_box_level.getBoxes().makeTree(tag_box_level.getGridGeometry().get());
 
-   t_cluster->start();
+   d_object_timers->t_cluster_setup->stop();
+
+   d_object_timers->t_cluster->start();
 
    /*
     * Generate new_box_level and Connectors
     */
+#pragma omp parallel if ( tag_level->getLocalNumberOfPatches() > 4*omp_get_max_threads() )
+#pragma omp for schedule(dynamic)
    for ( size_t pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
 
       hier::Patch &patch = *tag_level->getPatch(pi);
@@ -170,11 +182,13 @@ TileClustering::findBoxesContainingTags(
                        << " in patch " << patch.getBox().getBoxId() << '\n';
          }
 
+         TBOX_omp_set_lock(&l_outputs);
          for ( hier::BoxContainer::iterator bi=tiles.begin(); bi!=tiles.end(); ++bi ) {
             new_box_level->addBoxWithoutUpdate(*bi);
             new_to_tag->insertLocalNeighbor( patch_box, bi->getBoxId() );
             tag_to_new->insertLocalNeighbor( *bi, patch_box.getBoxId() );
          }
+         TBOX_omp_unset_lock(&l_outputs);
 
       } // Patch is in bounding box
 
@@ -182,7 +196,7 @@ TileClustering::findBoxesContainingTags(
 
    new_box_level->finalize();
 
-   t_cluster->stop();
+   d_object_timers->t_cluster->stop();
 
 
    if ( d_coalesce_boxes ) {
@@ -190,15 +204,18 @@ TileClustering::findBoxesContainingTags(
       /*
        * Try to coalesce the boxes in new_box_level.
        */
-      hier::BoxContainer new_boxes;
+      // hier::BoxContainer new_boxes;
+      std::vector<hier::Box> box_vector;
       if (!new_box_level->getBoxes().isEmpty()) {
 
-         t_coalesce->start();
+         d_object_timers->t_coalesce->start();
 
          hier::LocalId local_id(0);
 
          const int nblocks = new_box_level->getGridGeometry()->getNumberBlocks();
 
+#pragma omp parallel
+#pragma omp for schedule(dynamic)
          for (int b = 0; b < nblocks; ++b) {
             hier::BlockId block_id(b);
 
@@ -207,22 +224,25 @@ TileClustering::findBoxesContainingTags(
             if (!block_boxes.isEmpty()) {
                block_boxes.unorder();
                block_boxes.coalesce();
-               new_boxes.spliceBack(block_boxes);
+               TBOX_omp_set_lock(&l_outputs);
+               // new_boxes.spliceBack(block_boxes);
+               box_vector.insert(box_vector.end(), block_boxes.begin(), block_boxes.end() );
+               TBOX_omp_unset_lock(&l_outputs);
             }
          }
 
-         t_coalesce->stop();
+         d_object_timers->t_coalesce->stop();
 
       }
 
       if ( d_print_steps ) {
          tbox::plog << "TileClustering coalesced " << new_box_level->getLocalNumberOfBoxes()
-                    << " new boxes into " << new_boxes.size() << "\n";
+                    << " new boxes into " << box_vector.size() << "\n";
       }
 
-      if ( new_boxes.size() != static_cast<int>(new_box_level->getLocalNumberOfBoxes()) ) {
+      if ( box_vector.size() != static_cast<int>(new_box_level->getLocalNumberOfBoxes()) ) {
 
-         t_coalesce_adjustment->start();
+         d_object_timers->t_coalesce_adjustment->start();
 
          /*
           * Coalesce changed the new boxes, so rebuild new_box_level and
@@ -246,20 +266,22 @@ TileClustering::findBoxesContainingTags(
           * Assign ids to coalesced boxes, add to BoxLevel and add
           * new--->tag edges.
           */
-         hier::LocalId last_used_id(-1);
          const int rank = new_box_level->getMPI().getRank();
-         for ( hier::BoxContainer::iterator bi=new_boxes.begin();
-               bi!=new_boxes.end(); ++bi ) {
+#pragma omp parallel
+#pragma omp for schedule(dynamic)
+         for ( size_t i=0; i<box_vector.size(); ++i ) {
 
-            bi->setId(hier::BoxId(++last_used_id,rank));
+            box_vector[i].setId(hier::BoxId(hier::LocalId(i),rank));
 
             hier::BoxContainer tmp_overlap_boxes;
             tag_boxes.findOverlapBoxes(tmp_overlap_boxes,
-                                       *bi,
+                                       box_vector[i],
                                        tag_box_level.getRefinementRatio() );
 
-            new_box_level->addBox(*bi);
-            new_to_tag->insertNeighbors( tmp_overlap_boxes, bi->getBoxId() );
+            TBOX_omp_set_lock(&l_outputs);
+            new_box_level->addBox(box_vector[i]);
+            new_to_tag->insertNeighbors( tmp_overlap_boxes, box_vector[i].getBoxId() );
+            TBOX_omp_unset_lock(&l_outputs);
 
          }
          new_box_level->finalize();
@@ -267,7 +289,25 @@ TileClustering::findBoxesContainingTags(
          /*
           * Add tag--->new edges.
           */
+         hier::BoxContainer new_boxes;
+         for ( int i=0; i<box_vector.size(); ++i ) new_boxes.pushBack(box_vector[i]);
          new_boxes.makeTree( new_box_level->getGridGeometry().get() );
+         std::vector<hier::Box> real_box_vector, periodic_image_box_vector;
+         tag_boxes.separatePeriodicImages( real_box_vector, periodic_image_box_vector );
+#if 1
+         for ( size_t ib=0; ib<real_box_vector.size(); ++ib ) {
+
+            hier::BoxContainer tmp_overlap_boxes;
+            new_boxes.findOverlapBoxes(tmp_overlap_boxes,
+                                       real_box_vector[ib],
+                                       tag_box_level.getRefinementRatio() );
+
+            TBOX_omp_set_lock(&l_outputs);
+            tag_to_new->insertNeighbors( tmp_overlap_boxes,
+                                         real_box_vector[ib].getBoxId() );
+            TBOX_omp_unset_lock(&l_outputs);
+         }
+#else
          for ( hier::BoxContainer::const_iterator bi=tag_boxes.begin();
                bi!=tag_boxes.end(); ++bi ) {
 
@@ -278,8 +318,9 @@ TileClustering::findBoxesContainingTags(
 
             tag_to_new->insertNeighbors( tmp_overlap_boxes, bi->getBoxId() );
          }
+#endif
 
-         t_coalesce_adjustment->stop();
+         d_object_timers->t_coalesce_adjustment->stop();
 
       }
 
@@ -292,22 +333,16 @@ TileClustering::findBoxesContainingTags(
     * the logging flag from having an undue side effect on performance.
     */
    if (d_barrier_and_time) {
-      t_global_reductions->barrierAndStart();
+      d_object_timers->t_global_reductions->barrierAndStart();
    }
 
-   t_cluster_wrapup->start();
+   d_object_timers->t_cluster_wrapup->start();
 
    new_box_level->getGlobalNumberOfBoxes();
    new_box_level->getGlobalNumberOfCells();
    if (d_barrier_and_time) {
-      t_global_reductions->barrierAndStop();
+      d_object_timers->t_global_reductions->barrierAndStop();
    }
-#if 0
-   for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
-        bi != bound_boxes.end(); ++bi) {
-      new_box_level->getGlobalBoundingBox(bi->getBlockId().getBlockValue());
-   }
-#endif
 
    if (d_log_cluster) {
       tbox::plog << "TileClustering cluster log:\n"
@@ -351,10 +386,10 @@ TileClustering::findBoxesContainingTags(
                  << "\n";
    }
 
-   t_cluster_wrapup->stop();
+   d_object_timers->t_cluster_wrapup->stop();
 
    if (d_barrier_and_time) {
-      t_find_boxes_containing_tags->barrierAndStop();
+      d_object_timers->t_find_boxes_containing_tags->barrierAndStop();
    }
 }
 
@@ -378,7 +413,10 @@ TileClustering::findTilesContainingTags(
 
    const int num_coarse_cells = coarsened_box.size();
 
+#pragma omp parallel
+#pragma omp for schedule(dynamic)
    for ( int coarse_offset=0; coarse_offset<num_coarse_cells; ++coarse_offset ) {
+      if (coarse_offset==0) tbox::plog << "Inner loop has " << TBOX_omp_get_num_threads() << " threads over " << num_coarse_cells << " coarse cells." << std::endl;
       const pdat::CellIndex coarse_cell_index(coarsened_box.index(coarse_offset));
 
       /*
@@ -414,7 +452,9 @@ TileClustering::findTilesContainingTags(
             tile_box.initialize( tile_box,
                                  local_id,
                                  coarsened_box.getOwnerRank() );
+            TBOX_omp_set_lock(&l_interm);
             tiles.pushBack(tile_box);
+            TBOX_omp_unset_lock(&l_interm);
 
             break;
          }
@@ -464,6 +504,35 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
                               hier::IntVector::getZero(tag_data.getDim())));
    coarsened_tag_data->fill(0, 0);
 
+#if 1
+   size_t coarse_tag_count = 0;
+
+   const int num_coarse_cells = coarsened_box.size();
+#pragma omp parallel
+#pragma omp for schedule(dynamic)
+   for ( int offset=0; offset<num_coarse_cells; ++offset ) {
+      const pdat::CellIndex coarse_cell_index(coarsened_box.index(offset));
+
+      hier::Box fine_cells_box(coarse_cell_index,coarse_cell_index,coarsened_box.getBlockId());
+      fine_cells_box.refine(d_box_size);
+      fine_cells_box *= tag_data.getBox();
+
+      pdat::CellIterator finecend(pdat::CellGeometry::end(fine_cells_box));
+      for ( pdat::CellIterator fineci(pdat::CellGeometry::begin(fine_cells_box));
+            fineci!=finecend; ++fineci ) {
+         if ( tag_data(*fineci) == tag_val ) {
+            (*coarsened_tag_data)(coarse_cell_index) = tag_val;
+            ++coarse_tag_count;
+            break;
+         }
+      }
+   }
+   if (d_print_steps) {
+      tbox::plog << "TileClustering coarsened box " << tag_data.getBox()
+                 << " to " << coarsened_box
+                 << " (" << coarse_tag_count << " tags).\n";
+   }
+#else
    size_t tag_count = 0;
    size_t coarse_tag_count = 0;
    pdat::CellIterator finecend(pdat::CellGeometry::end(tag_data.getBox()));
@@ -485,31 +554,48 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
                  << " (" << tag_count << " tags) to " << coarsened_box
                  << " (" << coarse_tag_count << " tags).\n";
    }
+#endif
 
    return coarsened_tag_data;
 }
+
 
 /*
  ***********************************************************************
  ***********************************************************************
  */
 void
-TileClustering::setTimers()
+TileClustering::setTimerPrefix(
+   const std::string& timer_prefix)
 {
-   t_find_boxes_containing_tags = tbox::TimerManager::getManager()->
-      getTimer("mesh::TileClustering::findBoxesContainingTags()");
-   t_cluster = tbox::TimerManager::getManager()->
-      getTimer("mesh::TileClustering::findBoxesContainingTags()_cluster");
-   t_coalesce = tbox::TimerManager::getManager()->
-      getTimer("mesh::TileClustering::findBoxesContainingTags()_coalesce");
-   t_coalesce_adjustment = tbox::TimerManager::getManager()->
-      getTimer("mesh::TileClustering::findBoxesContainingTags()_coalesce_adjustment");
-   t_cluster_setup = tbox::TimerManager::getManager()->
-      getTimer("mesh::TileClustering::findBoxesContainingTags()_setup");
-   t_cluster_wrapup = tbox::TimerManager::getManager()->
-      getTimer("mesh::TileClustering::findBoxesContainingTags()_wrapup");
-   t_global_reductions = tbox::TimerManager::getManager()->
-      getTimer("mesh::TileClustering::global_reductions");
+   std::map<std::string, TimerStruct>::iterator ti(
+      s_static_timers.find(timer_prefix));
+
+   if (ti != s_static_timers.end()) {
+      d_object_timers = &(ti->second);
+   } else {
+
+      d_object_timers = &s_static_timers[timer_prefix];
+
+      tbox::TimerManager *tm = tbox::TimerManager::getManager();
+
+      d_object_timers->t_find_boxes_containing_tags = tm->getTimer(
+         timer_prefix + "::findBoxesContainingTags()");
+      d_object_timers->t_cluster = tm->getTimer(
+         timer_prefix + "::findBoxesContainingTags()_cluster");
+      d_object_timers->t_coalesce = tm->getTimer(
+         timer_prefix + "::findBoxesContainingTags()_coalesce");
+      d_object_timers->t_coalesce_adjustment = tm->getTimer(
+         timer_prefix + "::findBoxesContainingTags()_coalesce_adjustment");
+      d_object_timers->t_cluster_setup = tm->getTimer(
+         timer_prefix + "::findBoxesContainingTags()_setup");
+      d_object_timers->t_cluster_wrapup = tm->getTimer(
+         timer_prefix + "::findBoxesContainingTags()_wrapup");
+      d_object_timers->t_global_reductions = tm->getTimer(
+         timer_prefix + "::global_reductions");
+
+   }
+
 }
 
 }

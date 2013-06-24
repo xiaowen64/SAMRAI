@@ -1541,6 +1541,9 @@ t_post_load_distribution_barrier->stop();
       unbalanced_to_balanced,
       unassigned );
 
+   t_get_map->stop();
+
+
    if ( d_summarize_map ) {
       tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup unbalanced--->balanced map:\n"
                  << unbalanced_to_balanced.format("\t",0)
@@ -1593,10 +1596,8 @@ t_post_load_distribution_barrier->stop();
    }
 
 
-   t_get_map->stop();
-
    if (balance_to_anchor && balance_to_anchor->hasTranspose()) {
-      t_use_map->start();
+      t_use_map->barrierAndStart();
       hier::MappingConnectorAlgorithm mca;
       mca.setTimerPrefix(d_object_name);
       mca.modify(
@@ -1604,7 +1605,7 @@ t_post_load_distribution_barrier->stop();
          unbalanced_to_balanced,
          &balance_box_level,
          &balanced_box_level);
-      t_use_map->stop();
+      t_use_map->barrierAndStop();
    } else {
       hier::BoxLevel::swap(balance_box_level, balanced_box_level);
    }

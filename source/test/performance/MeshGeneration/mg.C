@@ -99,6 +99,7 @@ boost::shared_ptr<mesh::BoxGeneratorStrategy>
 createBoxGenerator(
    const boost::shared_ptr<tbox::Database> &input_db,
    const std::string &bg_type,
+   int ln,
    const tbox::Dimension &dim );
 
 boost::shared_ptr<mesh::LoadBalanceStrategy>
@@ -255,7 +256,7 @@ int main(
       if (!case_name.empty()) {
          base_name = base_name + '-' + case_name;
       }
-      base_name = base_name + '-' + tbox::Utilities::processorToString(mpi.getSize());
+      base_name = base_name + '-' + tbox::Utilities::nodeToString(mpi.getSize());
       tbox::plog << "Added case name (" << case_name << ") and nprocs ("
                  << mpi.getSize() << ") to base name -> '"
                  << base_name << "'\n";
@@ -278,6 +279,14 @@ int main(
       } else {
          PIO::logOnlyNodeZero(log_file_name);
       }
+
+#ifdef _OPENMP
+      tbox::plog << "Compiled with OpenMP version " << _OPENMP
+                 << ".  Running with " << omp_get_max_threads() << " threads."
+                 << std::endl;
+#else
+      tbox::plog << "Compiled without OpenMP.\n";
+#endif
 
 
       /*
@@ -383,9 +392,6 @@ int main(
 
       std::string box_generator_type =
          main_db->getStringWithDefault("box_generator_type", "BergerRigoutsos");
-
-      boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator =
-         createBoxGenerator( input_db, box_generator_type, dim );
 
       /*
        * Create hierarchy.
@@ -602,9 +608,11 @@ int main(
          /*
           * Cluster.
           */
+         boost::shared_ptr<mesh::BoxGeneratorStrategy> bg1 =
+            createBoxGenerator( input_db, box_generator_type, finer_ln, dim );
          tbox::pout << "\tClustering..." << std::endl;
          tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
-         box_generator->findBoxesContainingTags(
+         bg1->findBoxesContainingTags(
             L1,
             L0_to_L1,
             hierarchy->getPatchLevel(coarser_ln),
@@ -613,6 +621,26 @@ int main(
             hier::BoxContainer(L0->getGlobalBoundingBox(0)),
             min_size,
             required_connector_width);
+
+         if ( L0_to_L1->getConnectorWidth() != required_connector_width ) {
+            const hier::Connector &L0_to_L0 =
+               L0->findConnectorWithTranspose(
+                  *L0,
+                  required_connector_width,
+                  required_connector_width,
+                  hier::CONNECTOR_IMPLICIT_CREATION_RULE);
+            hier::OverlapConnectorAlgorithm timed_oca;
+            timed_oca.setTimerPrefix("apps::fix_zero_width1");
+            tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
+            timed_oca.bridgeWithNesting(
+               L0_to_L1,
+               L0_to_L0,
+               hier::Connector(*L0_to_L1),
+               hier::IntVector::getZero(dim),
+               hier::IntVector::getZero(dim),
+               required_connector_width,
+               true);
+         }
 
          outputPostcluster( *L1, *L0, required_connector_width, "L1: " );
 
@@ -734,8 +762,10 @@ int main(
           * Cluster.
           */
          tbox::pout << "\tClustering..." << std::endl;
+         boost::shared_ptr<mesh::BoxGeneratorStrategy> bg2 =
+            createBoxGenerator( input_db, box_generator_type, finer_ln, dim );
          tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
-         box_generator->findBoxesContainingTags(
+         bg2->findBoxesContainingTags(
             L2,
             L1_to_L2,
             hierarchy->getPatchLevel(coarser_ln),
@@ -744,6 +774,26 @@ int main(
             hier::BoxContainer(L1.getGlobalBoundingBox(0)),
             min_size,
             required_connector_width);
+
+         if ( L1_to_L2->getConnectorWidth() != required_connector_width ) {
+            const hier::Connector &L1_to_L1 =
+               L1.findConnectorWithTranspose(
+                  L1,
+                  required_connector_width,
+                  required_connector_width,
+                  hier::CONNECTOR_IMPLICIT_CREATION_RULE);
+            hier::OverlapConnectorAlgorithm timed_oca;
+            timed_oca.setTimerPrefix("apps::fix_zero_width2");
+            tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
+            timed_oca.bridgeWithNesting(
+               L1_to_L2,
+               L1_to_L1,
+               hier::Connector(*L1_to_L2),
+               hier::IntVector::getZero(dim),
+               hier::IntVector::getZero(dim),
+               required_connector_width,
+               true);
+         }
 
          outputPostcluster( *L2, L1, required_connector_width, "L2: " );
 
@@ -1194,8 +1244,10 @@ boost::shared_ptr<mesh::BoxGeneratorStrategy>
 createBoxGenerator(
    const boost::shared_ptr<tbox::Database> &input_db,
    const std::string &bg_type,
+   int ln,
    const tbox::Dimension &dim )
 {
+   boost::shared_ptr<tbox::Database> null_db;
 
    if (bg_type == "BergerRigoutsos") {
 
@@ -1203,20 +1255,26 @@ createBoxGenerator(
       berger_rigoutsos(
          new mesh::BergerRigoutsos(
             dim,
-            input_db->getDatabaseWithDefault("BergerRigoutsos", boost::shared_ptr<tbox::Database>()) ) );
+            input_db->getDatabaseWithDefault(
+               std::string("BergerRigoutsos"), null_db ) ) );
       berger_rigoutsos->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      berger_rigoutsos->setTimerPrefix(
+         std::string("mesh::BergerRigoutsos") + tbox::Utilities::intToString(ln));
 
       return berger_rigoutsos;
 
    } else if (bg_type == "TileClustering") {
 
       boost::shared_ptr<mesh::TileClustering>
-      tiled(
+      tile_clustering(
          new mesh::TileClustering(
             dim,
-            input_db->getDatabaseWithDefault("TileClustering", boost::shared_ptr<tbox::Database>()) ) );
+            input_db->getDatabaseWithDefault(
+               std::string("TileClustering"), null_db ) ) );
+      tile_clustering->setTimerPrefix(
+         std::string("mesh::TileClustering") + tbox::Utilities::intToString(ln));
 
-      return tiled;
+      return tile_clustering;
 
    }
    else {

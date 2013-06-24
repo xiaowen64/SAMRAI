@@ -31,15 +31,12 @@
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/InputManager.h"
+#include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include "boost/make_shared.hpp"
-
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -2228,35 +2225,17 @@ RefineSchedule::refineScratchData(
    const hier::IntVector ratio(fine_level->getRatioToLevelZero()
                                / coarse_level->getRatioToLevelZero());
 
-   std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >::const_iterator
-   overlap_iter(overlaps.begin());
-
    /*
     * Loop over all the coarse patches and find the corresponding
     * destination patch and destination fill boxes.
     */
 
-#ifdef _OPENMP
-   assert( overlaps.size() == coarse_level->getLocalNumberOfPatches() );
-   std::vector<hier::PatchLevel::iterator> cv;
-   cv.reserve(coarse_level->getLocalNumberOfPatches());
-   for ( hier::PatchLevel::iterator crse_itr(coarse_level->begin());
-         crse_itr != coarse_level->end(); ++crse_itr ) {
-      cv.push_back(crse_itr);
-   }
-#pragma omp parallel shared(cv) private(overlap_iter)
+#pragma omp parallel shared(coarse_level)
 #pragma omp for schedule(dynamic)
-   for ( size_t i=0; i<cv.size(); ++i )
-#else
-   for ( hier::PatchLevel::iterator crse_itr(coarse_level->begin());
-         crse_itr != coarse_level->end(); ++crse_itr, ++overlap_iter )
-#endif
+   for ( size_t pi=0; pi<coarse_level->getLocalNumberOfPatches(); ++pi )
    {
-#ifdef _OPENMP
-      const hier::Box& crse_box = cv[i]->getBox();
-#else
-      const hier::Box& crse_box = crse_itr->getBox();
-#endif
+      const hier::Box& crse_box = coarse_level->getPatch(pi)->getBox();
+
       hier::Connector::ConstNeighborhoodIterator dst_nabrs =
          coarse_to_fine.find(crse_box.getBoxId());
       hier::Connector::ConstNeighborIterator na =
@@ -2299,11 +2278,7 @@ RefineSchedule::refineScratchData(
          if (ref_item->d_oprefine) {
 
             boost::shared_ptr<hier::BoxOverlap> refine_overlap =
-#ifdef _OPENMP
-               (overlaps[i])[ref_item->d_class_index];
-#else
-               (*overlap_iter)[ref_item->d_class_index];
-#endif
+               (overlaps[pi])[ref_item->d_class_index];
 
             const int scratch_id = ref_item->d_scratch;
 

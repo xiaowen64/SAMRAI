@@ -98,7 +98,9 @@ BoxTree::BoxTree(
    s_max_sorted_box[d_dim.getValue() - 1] = tbox::MathUtilities<int>::Max(
          s_max_sorted_box[d_dim.getValue() - 1],
          static_cast<int>(boxes.size()));
+#ifndef _OPENMP
    t_build_tree[d_dim.getValue() - 1]->start();
+#endif
    min_number = (min_number < 1) ? 1 : min_number;
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -199,7 +201,9 @@ BoxTree::BoxTree(
          static_cast<unsigned int>(d_boxes.size());
    }
 
+#ifndef _OPENMP
    t_build_tree[d_dim.getValue() - 1]->stop();
+#endif
 }
 
 BoxTree::BoxTree(
@@ -215,12 +219,16 @@ BoxTree::BoxTree(
    s_max_sorted_box[d_dim.getValue() - 1] = tbox::MathUtilities<int>::Max(
          s_max_sorted_box[d_dim.getValue() - 1],
          static_cast<int>(boxes.size()));
+#ifndef _OPENMP
    t_build_tree[d_dim.getValue() - 1]->start();
+#endif
    min_number = (min_number < 1) ? 1 : min_number;
 
    privateGenerateTree(min_number);
 
+#ifndef _OPENMP
    t_build_tree[d_dim.getValue() - 1]->stop();
+#endif
 }
 
 
@@ -451,7 +459,9 @@ BoxTree::findOverlapBoxes(
    if (!recursive_call) {
       ++s_num_search[d_dim.getValue() - 1];
       num_found_box = static_cast<int>(overlap_boxes.size());
+#ifndef _OPENMP
       t_search[d_dim.getValue() - 1]->start();
+#endif
    }
 
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
@@ -481,7 +491,9 @@ BoxTree::findOverlapBoxes(
    }
 
    if (!recursive_call) {
+#ifndef _OPENMP
       t_search[d_dim.getValue() - 1]->stop();
+#endif
       num_found_box = static_cast<int>(overlap_boxes.size())
          - num_found_box;
       s_max_found_box[d_dim.getValue() - 1] =
@@ -506,7 +518,9 @@ BoxTree::findOverlapBoxes(
    if (!recursive_call) {
       ++s_num_search[d_dim.getValue() - 1];
       num_found_box = static_cast<int>(overlap_boxes.size());
+#ifndef _OPENMP
       t_search[d_dim.getValue() - 1]->start();
+#endif
    }
 
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
@@ -547,7 +561,9 @@ BoxTree::findOverlapBoxes(
 
 
    if (!recursive_call) {
+#ifndef _OPENMP
       t_search[d_dim.getValue() - 1]->stop();
+#endif
       num_found_box = static_cast<int>(overlap_boxes.size()) - num_found_box;
       s_max_found_box[d_dim.getValue() - 1] =
          tbox::MathUtilities<int>::Max(s_max_found_box[d_dim.getValue() - 1],

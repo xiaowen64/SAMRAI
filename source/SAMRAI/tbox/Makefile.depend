@@ -590,6 +590,7 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ParallelBuffer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -611,6 +612,7 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/ParallelBuffer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h ParallelBuffer.C

@@ -44,6 +44,10 @@ using namespace std;
 #include "MblkHyperbolicLevelIntegrator.h"
 #include "MblkEuler.h"
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 using namespace SAMRAI;
 
 void
@@ -103,6 +107,14 @@ int main(
    } else {
       tbox::PIO::logOnlyNodeZero(log_file_name);
    }
+
+#ifdef _OPENMP
+      tbox::plog << "Compiled with OpenMP version " << _OPENMP
+                 << ".  Running with " << omp_get_max_threads() << " threads."
+                 << std::endl;
+#else
+      tbox::plog << "Compiled without OpenMP.\n";
+#endif
 
    tbox::plog << "input_filename       = " << input_filename << endl;
    tbox::plog << "restart_read_dirname = " << restart_read_dirname << endl;

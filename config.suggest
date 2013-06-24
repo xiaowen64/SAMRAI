@@ -295,9 +295,9 @@ EOF
 
 casc_rh5_icc_x64) # CASC RedHat 5, Intel v12.0 compilers, x86_64
 cat <<-EOF
-	--with-CXX="/nfs/apps/intel/12.0.191/bin/icpc -Kc++ -gcc-name=/usr/bin/gcc"
-	--with-CC="/nfs/apps/intel/12.0.191/bin/icc -gcc-name=/usr/bin/gcc"
-	--with-F77=/nfs/apps/intel/12.0.191/bin/ifort
+	--with-CXX="/nfs/apps/intel/13.4.183/bin/icpc -Kc++ -gcc-name=/usr/bin/gcc"
+	--with-CC="/nfs/apps/intel/13.4.183/bin/icc -gcc-name=/usr/bin/gcc"
+	--with-F77=/nfs/apps/intel/13.4.183/bin/ifort
 	--with-extra-ld-flags="-shared-intel"
 	--enable-rpath=-Wl,-R
 	--with-hdf5=/usr/casc/samrai/apps/rh5/hdf5/1.8.5p1

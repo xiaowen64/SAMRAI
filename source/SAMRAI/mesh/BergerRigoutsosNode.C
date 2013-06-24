@@ -19,6 +19,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -33,9 +34,6 @@
 
 namespace SAMRAI {
 namespace mesh {
-
-const std::string BergerRigoutsos::s_default_timer_prefix("mesh::BergerRigoutsosNode");
-std::map<std::string, BergerRigoutsos::TimerStruct> BergerRigoutsos::s_static_timers;
 
 const int BergerRigoutsosNode::BAD_INTEGER = -9999999;
 
@@ -645,8 +643,8 @@ BergerRigoutsosNode::continueAlgorithm()
       TBOX_ASSERT(d_parent->d_wait_phase == run_children);
       // TBOX_ASSERT( ! inRelaunchQueue(d_parent) );
       TBOX_ASSERT(inRelaunchQueue(d_parent) == d_common->d_relaunch_queue.end());
-      // d_relaunch_queue.addItem(d_parent);
-      d_common->d_relaunch_queue.push_front(d_parent);
+      // d_common->d_relaunch_queue.push_front(d_parent);
+      d_common->prependQueue(d_parent);
       if (d_common->d_log_node_history) {
          d_common->writeCounters();
          tbox::plog << "Parent " << d_parent->d_generation << ':'
@@ -709,8 +707,9 @@ BergerRigoutsosNode::runChildren_start()
     * of the right to more closely match the
     * progression of the recursive BR (not essential).
     */
-   d_common->d_relaunch_queue.push_front(d_rht_child);
-   d_common->d_relaunch_queue.push_front(d_lft_child);
+   // d_common->d_relaunch_queue.push_front(d_rht_child);
+   // d_common->d_relaunch_queue.push_front(d_lft_child);
+   d_common->prependQueue(d_rht_child,d_lft_child);
 }
 
 

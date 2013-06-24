@@ -31,11 +31,11 @@ Main {
 
    base_name = "lsphere_weak.3d.treelb"
 
-   write_visit = TRUE
+   write_visit = FALSE
 
    log_all_nodes = FALSE
 
-   domain_boxes = [(0,0,0),(31,31,16)]
+   domain_boxes = [(0,0,0),(31,31,15)]
    xlo = -0.5, -0.5, -0.0
    xhi =  0.5,  0.5,  0.5
 
@@ -74,6 +74,7 @@ BergerRigoutsos {
    sort_output_nodes = TRUE
    efficiency_tolerance = 0.85
    combine_efficiency = 0.85
+   DEV_build_zero_width_connector = TRUE
    DEV_log_node_history = FALSE
    DEV_log_cluster_summary = TRUE
    DEV_log_cluster = FALSE
@@ -94,6 +95,7 @@ TreeLoadBalancer {
   DEV_print_swap_steps = FALSE
   DEV_print_break_steps = FALSE
   DEV_print_edge_steps = FALSE
+  DEV_summarize_map = TRUE
 }
 
 CenteredRankTree { // Parameters for BalancedDepthFirstTree in getRankTree()
@@ -135,7 +137,7 @@ TilePartitioner {
     DEV_check_connectivity = FALSE
     DEV_print_steps = FALSE
     DEV_print_swap_steps = FALSE
-    DEV_print_break_steps = TRUE
+    DEV_print_break_steps = FALSE
     DEV_print_edge_steps = FALSE
     DEV_summarize_map = TRUE
   }
