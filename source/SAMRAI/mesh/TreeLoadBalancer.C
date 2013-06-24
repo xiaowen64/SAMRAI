@@ -542,7 +542,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    hier::IntVector max_intvector(d_dim, tbox::MathUtilities<int>::getMax());
    if (max_size != max_intvector) {
 
-      t_constrain_size->start();
+      t_constrain_size->barrierAndStart();
       if (balance_to_anchor) {
          constrainMaxBoxSizes(
             balance_box_level,
@@ -2744,8 +2744,6 @@ TreeLoadBalancer::adjustLoadBySwapping(
                     << rem_transfer << " [" << low_transfer << ','
                     << high_transfer << ']' << std::endl;
       }
-
-      found_swap = false;
 
       LoadType swap_transfer;
       found_swap = swapLoadPair(

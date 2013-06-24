@@ -1069,6 +1069,8 @@ private:
    void logMetadataStatistics(
       const char *caller_name,
       int ln,
+      int cycle,
+      int level_time,
       bool log_fine_connector,
       bool log_coarse_connector) const;
 

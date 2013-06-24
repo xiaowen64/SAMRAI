@@ -409,7 +409,7 @@ GriddingAlgorithm::makeCoarsestLevel(
    }
 
 
-   hier::IntVector patch_cut_factor(dim, d_tag_init_strategy-> getErrorCoarsenRatio());
+   hier::IntVector patch_cut_factor(dim, d_tag_init_strategy->getErrorCoarsenRatio());
 
    /*
     * TODO: The code for generating the coarsest level's boxes is not
@@ -586,7 +586,7 @@ GriddingAlgorithm::makeCoarsestLevel(
    }
 
    if (d_log_metadata_statistics) {
-      logMetadataStatistics("makeCoarsestLevel", 0, false, false);
+      logMetadataStatistics("makeCoarsestLevel", 0, 0, level_time, false, false);
    }
 
 #ifdef GA_RECORD_STATS
@@ -947,7 +947,7 @@ GriddingAlgorithm::makeFinerLevel(
          t_reset_hier->stop();
 
          if (d_log_metadata_statistics) {
-            logMetadataStatistics("makeFinerLevel", d_hierarchy->getFinestLevelNumber(), false, true);
+            logMetadataStatistics("makeFinerLevel", d_hierarchy->getFinestLevelNumber(), cycle, level_time, false, true);
          }
       }
 
@@ -1350,8 +1350,7 @@ GriddingAlgorithm::regridFinerLevel(
 
          if (d_log_metadata_statistics) {
             // Don't log the coarse Connector, if the coarse level will be updated.
-            logMetadataStatistics("regridFinerLevel", new_ln, new_ln<d_hierarchy->getFinestLevelNumber(), tag_ln==d_base_ln);
-            tbox::plog << "GriddingAlgorithm::regridFinerLevel: finished logging level stats." << std::endl;
+            logMetadataStatistics("regridFinerLevel", new_ln, regrid_cycle, regrid_time, new_ln<d_hierarchy->getFinestLevelNumber(), tag_ln==d_base_ln);
          }
 
       } else {
@@ -1363,6 +1362,10 @@ GriddingAlgorithm::regridFinerLevel(
 
          if (d_hierarchy->finerLevelExists(tag_ln)
              && remove_old_fine_level) {
+            d_tag_init_strategy->processLevelBeforeRemoval(
+               d_hierarchy,
+               tag_ln,
+               d_hierarchy->getPatchLevel(new_ln));
             d_hierarchy->removePatchLevel(new_ln);
          }
 
@@ -4668,6 +4671,8 @@ void
 GriddingAlgorithm::logMetadataStatistics(
    const char *caller_name,
    int ln,
+   int cycle,
+   int level_time,
    bool log_fine_connector,
    bool log_coarse_connector) const
 {
@@ -4678,19 +4683,20 @@ GriddingAlgorithm::logMetadataStatistics(
    const hier::IntVector &one_vector =
       hier::IntVector::getOne(d_hierarchy->getDim());
 
-   tbox::plog << "GriddingAlgorithm::" << caller_name << " added "
+   tbox::plog << "GriddingAlgorithm metadata statistics from " << caller_name << ", at cycle " << cycle
+              << ", time " << level_time << ", added "
               << name << ":\n"
               << box_level.format("\t",0)
-              << name << " statistics:\n"
-              << box_level.formatStatistics("\t");
+              << '\t' << name << " statistics:\n"
+              << box_level.formatStatistics("\t\t");
 
    const hier::Connector &peer_conn = level->findConnector(*level,
       one_vector,
       hier::CONNECTOR_CREATE,
       true);
-   tbox::plog << "Peer connector:\n" << peer_conn.format("\t",0)
-              << "Peer connector statistics:\n"
-              << peer_conn.formatStatistics("\t");
+   tbox::plog << "\tPeer connector:\n" << peer_conn.format("\t\t",0)
+              << "\tPeer connector statistics:\n"
+              << peer_conn.formatStatistics("\t\t");
 
    if ( log_fine_connector ) {
       const hier::Connector &fine_conn =
@@ -4698,8 +4704,8 @@ GriddingAlgorithm::logMetadataStatistics(
             one_vector,
             hier::CONNECTOR_CREATE,
             true);
-      tbox::plog << "Fine connector:\n" << fine_conn.format("\t",0)
-                 << "Fine connector statistics:\n" << fine_conn.formatStatistics("\t");
+      tbox::plog << "\tFine connector:\n" << fine_conn.format("\t\t",0)
+                 << "\tFine connector statistics:\n" << fine_conn.formatStatistics("\t\t");
    }
 
    if ( log_coarse_connector ) {
@@ -4708,8 +4714,8 @@ GriddingAlgorithm::logMetadataStatistics(
             one_vector,
             hier::CONNECTOR_CREATE,
             true);
-      tbox::plog << "Coarse connector:\n" << crse_conn.format("\t",0)
-                 << "Coarse connector statistics:\n" << crse_conn.formatStatistics("\t");
+      tbox::plog << "\tCoarse connector:\n" << crse_conn.format("\t\t",0)
+                 << "\tCoarse connector statistics:\n" << crse_conn.formatStatistics("\t\t");
    }
 }
 

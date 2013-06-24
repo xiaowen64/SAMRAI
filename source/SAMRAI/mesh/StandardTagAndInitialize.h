@@ -490,6 +490,31 @@ public:
    turnOffRichardsonExtrapolation(
       double time);
 
+   /**
+    * In some cases user code may wish to process a PatchLevel before it is
+    * removed from the hierarchy.  For example, data may exist only on a given
+    * PatchLevel such as the finest level.  If that level were to be removed
+    * before this data is moved off of it then the data will be lost.  This
+    * method is a user defined callback used by GriddingAlgorithm when a
+    * PatchLevel is to be removed.  The callback performs any user actions on
+    * the level about to be removed.  It is implemented by classes derived from
+    * StandardTagAndInitStrategy.
+    *
+    * @param hierarchy The PatchHierarchy being modified.
+    * @param level_number The number of the PatchLevel in hierarchy about to be
+    *                     removed.
+    * @param old_level The level in hierarchy about to be removed.
+    *
+    * @see mesh::GriddingAlgorithm
+    * @see mesh::StandardTagAndInitStrategy
+    */
+   void
+   processLevelBeforeRemoval(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      int level_number,
+      const boost::shared_ptr<hier::PatchLevel>& old_level =
+         boost::shared_ptr<hier::PatchLevel>());
+
 private:
    /*
     * Apply preprocessing for Richardson extrapolation.

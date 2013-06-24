@@ -161,6 +161,12 @@ ConnectorStatistics::computeLocalConnectorStatistics( const Connector &connector
          else if ( coarsen_head ) {
             neighbor.coarsen(connector.getRatio());
          }
+         if ( neighbor.getBlockId() != base_box.getBlockId() ) {
+            base.getGridGeometry()->transformBox( neighbor,
+                                                  base.getRefinementRatio(),
+                                                  base_box.getBlockId(),
+                                                  neighbor.getBlockId() );
+         }
          neighbor *= base_box;
          const int size = neighbor.size();
 

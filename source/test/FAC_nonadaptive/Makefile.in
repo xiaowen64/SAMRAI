@@ -14,6 +14,7 @@ SUBDIR        = source/test/FAC_nonadaptive
 VPATH         = @srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
+REPORT        = $(OBJECT)/report.xml
 
 default:      check
 
@@ -24,9 +25,10 @@ CPPFLAGS_EXTRA= -DTESTING=0
 NUM_TESTS = 2
 
 TEST_NPROCS = @TEST_NPROCS@
+QUOTE = \"
 
 CXX_OBJS      = main.o FACPoisson.o
-F_OBJS      = facpoisson2d.o facpoisson3d.o
+F_OBJS        = facpoisson2d.o facpoisson3d.o
 
 main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) \
@@ -38,34 +40,42 @@ check:
 
 check2d:	main
 	@for i in test_inputs/*2d.input ; do	\
-	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-		./main $${i};	\
-	done
+	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	    echo "    <testcase classname=\"FAC_nonadaptive\" name=$(QUOTE)$$i $$p procs$(QUOTE)>" >> $(REPORT); \
+	    $(OBJECT)/config/serpa-run $$p ./main $${i} | $(TEE) foo; \
+	    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	    echo "    </testcase>" >> $(REPORT); \
+	  done \
+	done; \
+	$(RM) foo
 
 check3d:	main
 	@for i in test_inputs/*3d.input ; do	\
-	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-		./main $${i};	\
-	done
+	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	    echo "    <testcase classname=\"FAC_nonadaptive\" name=$(QUOTE)$$i $$p procs$(QUOTE)>" >> $(REPORT); \
+	    $(OBJECT)/config/serpa-run $$p ./main $${i} | $(TEE) foo; \
+	    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	    echo "    </testcase>" >> $(REPORT); \
+	  done \
+	done; \
+	$(RM) foo
 
 checkcompile: main
 
 checktest:
-	rm -f makecheck.logfile
+	$(RM) makecheck.logfile
 	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
 	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
-	rm -f makecheck.logfile
+	$(RM) makecheck.logfile
 
 examples2d: main
 	@for i in example_inputs/*.2d.input ; do	\
-	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-		./main $${i};	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main $${i};	\
 	done
 
 examples3d: main
 	@for i in example_inputs/*.3d.input ; do	\
-	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-		./main $${i};	\
+	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main $${i};	\
 	done
 
 examples:
@@ -93,7 +103,7 @@ redo:
 include $(SRCDIR)/Makefile.depend
 
 FORTRAN       = $(SRCDIR)/fortran
-M4DIRS          = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
+M4DIRS        = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
 
 facpoisson2d.o:	$(FORTRAN)/facpoisson2d.m4
 	$(M4) $(M4DIRS) $(FORTRAN)/facpoisson2d.m4 > facpoisson2d.f

@@ -13,6 +13,7 @@ SRCDIR	      =	@srcdir@
 SUBDIR        = source/test/performance/MeshGeneration
 VPATH	      =	@srcdir@
 OBJECT        = ../../../..
+REPORT        = $(OBJECT)/report.xml
 TESTINCLUDE   = $(SAMRAI)/source/test/testlib
 TESTLIBDIR    = $(OBJECT)/source/test/testlib
 TESTLIB       = $(TESTLIBDIR)/libSAMRAI_test$(LIB_SUFFIX)
@@ -25,6 +26,7 @@ NUM_TESTS = 20
 CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
 
 TEST_NPROCS = @TEST_NPROCS@
+QUOTE = \"
 
 CXX_OBJS      = mg.o
 
@@ -61,38 +63,50 @@ $(TESTLIB):
 
 
 check:
-		$(MAKE) check2d
-		$(MAKE) check3d
+	$(MAKE) check2d
+	$(MAKE) check3d
 
 check1d:	main
 
 check2d:	main
-		for f in $(INPUTS2D); do	\
-			$(OBJECT)/config/serpa-run $(TEST_NPROCS) \ ./main "$$f";	\
-		done
+	@for f in $(INPUTS2D); do	\
+	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	    echo "    <testcase classname=\"performance MeshGeneration\" name=$(QUOTE)$$f $$p procs$(QUOTE)>" >> $(REPORT); \
+	    $(OBJECT)/config/serpa-run $$p ./main "$$f" | $(TEE) foo; \
+	    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	    echo "    </testcase>" >> $(REPORT); \
+	  done \
+	done; \
+	$(RM) foo
 
 check3d:	main
-		for f in $(INPUTS3D); do	\
-			$(OBJECT)/config/serpa-run $(TEST_NPROCS) \ ./main "$$f";	\
-		done
+	@for f in $(INPUTS3D); do	\
+	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	    echo "    <testcase classname=\"performance MeshGeneration\" name=$(QUOTE)$$f $$p procs$(QUOTE)>" >> $(REPORT); \
+	    $(OBJECT)/config/serpa-run $$p ./main "$$f" | $(TEE) foo; \
+	    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	    echo "    </testcase>" >> $(REPORT); \
+	  done \
+	done; \
+	$(RM) foo
 
 checkcompile: main
 
 checktest:
-		rm -f makecheck.logfile
-		$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
-		$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
-		rm -f makecheck.logfile
+	$(RM) makecheck.logfile
+	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
+	$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
+	$(RM) makecheck.logfile
 
 examples:
 
 perf:	main
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/domexlike.caplb.input;
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/domexlike.treelb.input;
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/lsphere_weak.3d.treelb.input;
-		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/lsphere_weak.3d.tilelb.input;
-		$(OBJECT)/config/serpa-run 2,4 ./main performance_inputs/single_sphere.3d.caplb.input;
-		$(OBJECT)/config/serpa-run 2,4 ./main performance_inputs/single_sphere.3d.treelb.input;
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/domexlike.caplb.input;
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/domexlike.treelb.input;
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/lsphere_weak.3d.treelb.input;
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/lsphere_weak.3d.tilelb.input;
+	$(OBJECT)/config/serpa-run 2,4 ./main performance_inputs/single_sphere.3d.caplb.input;
+	$(OBJECT)/config/serpa-run 2,4 ./main performance_inputs/single_sphere.3d.treelb.input;
 
 everything:
 	$(MAKE) checkcompile
@@ -101,10 +115,10 @@ everything:
 	$(MAKE) perf
 
 clean-check:
-		$(SAMCLEAN)
+	$(SAMCLEAN)
 
 clean:
-		$(SAMCLEAN)
-		$(RM) *.f main *visit
+	$(SAMCLEAN)
+	$(RM) *.f main *visit
 
 include $(SRCDIR)/Makefile.depend

@@ -13,6 +13,7 @@ SRCDIR	      =	@srcdir@
 SUBDIR        = source/test/performance/treesearch
 VPATH	      =	@srcdir@
 OBJECT        = ../../../..
+REPORT        = $(OBJECT)/report.xml
 
 CPPFLAGS_EXTRA= -DNDIM=$(PDIM)  -DTESTING=1
 
@@ -23,10 +24,11 @@ include $(OBJECT)/config/Makefile.config
 NUM_TESTS = 2
 
 TEST_NPROCS = @TEST_NPROCS@
+QUOTE = \"
 
 CXX_OBJS      = main.o
 
-main: $(CXX_OBJS) $(LIBSAMRAI)
+main:	$(CXX_OBJS) $(LIBSAMRAI)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 
@@ -36,23 +38,33 @@ check:
 
 check2d:	main
 	@for i in test_inputs/*2d*.input ; do	\
-	 $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-		./main $${i};	\
-	done
+	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	    echo "    <testcase classname=\"performance treesearch\" name=$(QUOTE)$$i $$p procs$(QUOTE)>" >> $(REPORT); \
+	    $(OBJECT)/config/serpa-run $$p ./main $${i} | $(TEE) foo; \
+	    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	    echo "    </testcase>" >> $(REPORT); \
+	  done \
+	done; \
+	$(RM) foo
 
 check3d:	main
 	@for i in test_inputs/*3d*.input ; do	\
-	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
-		./main $${i};	\
-	done
+	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	    echo "    <testcase classname=\"performance treesearch\" name=$(QUOTE)$$i $$p procs$(QUOTE)>" >> $(REPORT); \
+	    $(OBJECT)/config/serpa-run $$p ./main $${i} | $(TEE) foo; \
+	    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	    echo "    </testcase>" >> $(REPORT); \
+	  done \
+	done; \
+	$(RM) foo
 
 checkcompile: main
 
 checktest:
-	rm -f makecheck.logfile
+	$(RM) makecheck.logfile
 	$(MAKE) check 2>&1 | $(TEE) makecheck.logfile
 	$(OBJECT)/source/test/testtools/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) 0 makecheck.logfile
-	rm -f makecheck.logfile
+	$(RM) makecheck.logfile
 
 examples:
 

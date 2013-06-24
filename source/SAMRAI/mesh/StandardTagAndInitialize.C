@@ -1390,7 +1390,7 @@ StandardTagAndInitialize::getFromInput(
                // need to be read.
                if (tagging_method == "REFINE_BOXES") {
                   d_ever_uses_refine_boxes = true;
-                  std::vector<std::string> level_keys = input_db->getAllKeys();
+                  std::vector<std::string> level_keys = this_tag_db->getAllKeys();
                   int n_level_keys = static_cast<int>(level_keys.size());
                   if (n_level_keys <= 1) {
                      TBOX_ERROR(
@@ -2026,6 +2026,17 @@ StandardTagAndInitialize::setCurrentTaggingCriteria(
          }
       }
    }
+}
+
+void
+StandardTagAndInitialize::processLevelBeforeRemoval(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   int level_number,
+   const boost::shared_ptr<hier::PatchLevel>& old_level)
+{
+   d_tag_strategy->processLevelBeforeRemoval(hierarchy,
+      level_number,
+      old_level);
 }
 
 static int GCD(

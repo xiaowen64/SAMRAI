@@ -169,7 +169,7 @@ define(EDGE4d3,`ifelse($3,`0',`SAMRAIEDGE4d0G3($1,$2)',`SAMRAIEDGE4d3($1,$2,$3)'
 define(FACE4d0,`ifelse($3,`0',`SAMRAIFACE4d0G($1,$2,0,1,2,3)',`SAMRAIFACE4d($1,$2,$3,0,1,2,3)')')dnl 
 define(FACE4d1,`ifelse($3,`0',`SAMRAIFACE4d0G($1,$2,1,2,3,0)',`SAMRAIFACE4d($1,$2,$3,1,2,3,0)')')dnl 
 define(FACE4d2,`ifelse($3,`0',`SAMRAIFACE4d0G($1,$2,2,3,0,1)',`SAMRAIFACE4d($1,$2,$3,2,3,0,1)')')dnl
-define(FACE4d3,`ifelse($3,`0',`SAMRAIFACE4d0G($1,$2,2,0,1,2)',`SAMRAIFACE4d($1,$2,$3,2,0,1,2)')')dnl
+define(FACE4d3,`ifelse($3,`0',`SAMRAIFACE4d0G($1,$2,3,0,1,2)',`SAMRAIFACE4d($1,$2,$3,3,0,1,2)')')dnl
 define(NODE4d,`ifelse($3,`0',`SAMRAINODE4d0G($1,$2,0,1,2,3)',`SAMRAINODE4d($1,$2,$3,0,1,2,3)')')dnl 
 define(OUTERFACE4d0,`ifelse($3,`0',`SAMRAIOUTERFACE4d0G($1,$2,1,2,3)',`SAMRAIOUTERFACE4d($1,$2,$3,1,2,3)')')dnl 
 define(OUTERFACE4d1,`ifelse($3,`0',`SAMRAIOUTERFACE4d0G($1,$2,2,3,0)',`SAMRAIOUTERFACE4d($1,$2,$3,2,3,0)')')dnl 
@@ -195,7 +195,7 @@ define(EDGE4d3VECG,`SAMRAIEDGE4d3VECG($1,$2,$3)')dnl
 define(FACE4d0VECG,`SAMRAIFACE4dVECG($1,$2,$3,0,1,2,3)')dnl 
 define(FACE4d1VECG,`SAMRAIFACE4dVECG($1,$2,$3,1,2,3,0)')dnl 
 define(FACE4d2VECG,`SAMRAIFACE4dVECG($1,$2,$3,2,3,0,1)')dnl 
-define(FACE4d3VECG,`SAMRAIFACE4dVECG($1,$2,$3,3,2,0,1)')dnl 
+define(FACE4d3VECG,`SAMRAIFACE4dVECG($1,$2,$3,3,0,1,2)')dnl 
 define(NODE4dVECG,`SAMRAINODE4dVECG($1,$2,$3,0,1,2,3)')dnl
 define(SIDE4d0VECG,`SAMRAISIDE4d0VECG($1,$2,$3)')dnl
 define(SIDE4d1VECG,`SAMRAISIDE4d1VECG($1,$2,$3)')dnl
