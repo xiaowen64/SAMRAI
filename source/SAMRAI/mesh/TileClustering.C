@@ -23,6 +23,9 @@
 namespace SAMRAI {
 namespace mesh {
 
+const std::string TileClustering::s_default_timer_prefix("mesh::TileClustering");
+std::map<std::string, TileClustering::TimerStruct> TileClustering::s_static_timers;
+
 /*
  ************************************************************************
  * Constructor stores parameters of options for ussing
@@ -42,8 +45,8 @@ TileClustering::TileClustering(
    TBOX_omp_init_lock(&l_outputs);
    TBOX_omp_init_lock(&l_interm);
    getFromInput(input_db);
-   setTimers();
-   d_oca.setTimerPrefix("hier::TileClustering");
+   setTimerPrefix(s_default_timer_prefix);
+   d_oca.setTimerPrefix(s_default_timer_prefix);
 }
 
 TileClustering::~TileClustering()
@@ -114,10 +117,10 @@ TileClustering::findBoxesContainingTags(
       max_gcw);
 
    if (d_barrier_and_time) {
-      t_find_boxes_containing_tags->barrierAndStart();
+      d_object_timers->t_find_boxes_containing_tags->barrierAndStart();
    }
 
-   t_cluster_setup->start();
+   d_object_timers->t_cluster_setup->start();
 
    const hier::IntVector &zero_vector = hier::IntVector::getZero(tag_level->getDim());
 
@@ -146,9 +149,9 @@ TileClustering::findBoxesContainingTags(
 
    tag_box_level.getBoxes().makeTree(tag_box_level.getGridGeometry().get());
 
-   t_cluster_setup->stop();
+   d_object_timers->t_cluster_setup->stop();
 
-   t_cluster->start();
+   d_object_timers->t_cluster->start();
 
    /*
     * Generate new_box_level and Connectors
@@ -193,7 +196,7 @@ TileClustering::findBoxesContainingTags(
 
    new_box_level->finalize();
 
-   t_cluster->stop();
+   d_object_timers->t_cluster->stop();
 
 
    if ( d_coalesce_boxes ) {
@@ -205,7 +208,7 @@ TileClustering::findBoxesContainingTags(
       std::vector<hier::Box> box_vector;
       if (!new_box_level->getBoxes().isEmpty()) {
 
-         t_coalesce->start();
+         d_object_timers->t_coalesce->start();
 
          hier::LocalId local_id(0);
 
@@ -228,7 +231,7 @@ TileClustering::findBoxesContainingTags(
             }
          }
 
-         t_coalesce->stop();
+         d_object_timers->t_coalesce->stop();
 
       }
 
@@ -239,7 +242,7 @@ TileClustering::findBoxesContainingTags(
 
       if ( box_vector.size() != static_cast<int>(new_box_level->getLocalNumberOfBoxes()) ) {
 
-         t_coalesce_adjustment->start();
+         d_object_timers->t_coalesce_adjustment->start();
 
          /*
           * Coalesce changed the new boxes, so rebuild new_box_level and
@@ -317,7 +320,7 @@ TileClustering::findBoxesContainingTags(
          }
 #endif
 
-         t_coalesce_adjustment->stop();
+         d_object_timers->t_coalesce_adjustment->stop();
 
       }
 
@@ -330,15 +333,15 @@ TileClustering::findBoxesContainingTags(
     * the logging flag from having an undue side effect on performance.
     */
    if (d_barrier_and_time) {
-      t_global_reductions->barrierAndStart();
+      d_object_timers->t_global_reductions->barrierAndStart();
    }
 
-   t_cluster_wrapup->start();
+   d_object_timers->t_cluster_wrapup->start();
 
    new_box_level->getGlobalNumberOfBoxes();
    new_box_level->getGlobalNumberOfCells();
    if (d_barrier_and_time) {
-      t_global_reductions->barrierAndStop();
+      d_object_timers->t_global_reductions->barrierAndStop();
    }
 
    if (d_log_cluster) {
@@ -383,10 +386,10 @@ TileClustering::findBoxesContainingTags(
                  << "\n";
    }
 
-   t_cluster_wrapup->stop();
+   d_object_timers->t_cluster_wrapup->stop();
 
    if (d_barrier_and_time) {
-      t_find_boxes_containing_tags->barrierAndStop();
+      d_object_timers->t_find_boxes_containing_tags->barrierAndStop();
    }
 }
 
@@ -556,27 +559,43 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
    return coarsened_tag_data;
 }
 
+
 /*
  ***********************************************************************
  ***********************************************************************
  */
 void
-TileClustering::setTimers()
+TileClustering::setTimerPrefix(
+   const std::string& timer_prefix)
 {
-   t_find_boxes_containing_tags = tbox::TimerManager::getManager()->
-      getTimer("mesh::TileClustering::findBoxesContainingTags()");
-   t_cluster = tbox::TimerManager::getManager()->
-      getTimer("mesh::TileClustering::findBoxesContainingTags()_cluster");
-   t_coalesce = tbox::TimerManager::getManager()->
-      getTimer("mesh::TileClustering::findBoxesContainingTags()_coalesce");
-   t_coalesce_adjustment = tbox::TimerManager::getManager()->
-      getTimer("mesh::TileClustering::findBoxesContainingTags()_coalesce_adjustment");
-   t_cluster_setup = tbox::TimerManager::getManager()->
-      getTimer("mesh::TileClustering::findBoxesContainingTags()_setup");
-   t_cluster_wrapup = tbox::TimerManager::getManager()->
-      getTimer("mesh::TileClustering::findBoxesContainingTags()_wrapup");
-   t_global_reductions = tbox::TimerManager::getManager()->
-      getTimer("mesh::TileClustering::global_reductions");
+   std::map<std::string, TimerStruct>::iterator ti(
+      s_static_timers.find(timer_prefix));
+
+   if (ti != s_static_timers.end()) {
+      d_object_timers = &(ti->second);
+   } else {
+
+      d_object_timers = &s_static_timers[timer_prefix];
+
+      tbox::TimerManager *tm = tbox::TimerManager::getManager();
+
+      d_object_timers->t_find_boxes_containing_tags = tm->getTimer(
+         timer_prefix + "::findBoxesContainingTags()");
+      d_object_timers->t_cluster = tm->getTimer(
+         timer_prefix + "::findBoxesContainingTags()_cluster");
+      d_object_timers->t_coalesce = tm->getTimer(
+         timer_prefix + "::findBoxesContainingTags()_coalesce");
+      d_object_timers->t_coalesce_adjustment = tm->getTimer(
+         timer_prefix + "::findBoxesContainingTags()_coalesce_adjustment");
+      d_object_timers->t_cluster_setup = tm->getTimer(
+         timer_prefix + "::findBoxesContainingTags()_setup");
+      d_object_timers->t_cluster_wrapup = tm->getTimer(
+         timer_prefix + "::findBoxesContainingTags()_wrapup");
+      d_object_timers->t_global_reductions = tm->getTimer(
+         timer_prefix + "::global_reductions");
+
+   }
+
 }
 
 }

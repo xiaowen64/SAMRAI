@@ -26,6 +26,9 @@
 namespace SAMRAI {
 namespace mesh {
 
+const std::string BergerRigoutsos::s_default_timer_prefix("mesh::BergerRigoutsosNode");
+std::map<std::string, BergerRigoutsos::TimerStruct> BergerRigoutsos::s_static_timers;
+
 
 /*
  ************************************************************************
@@ -1123,7 +1126,7 @@ BergerRigoutsos::setTimerPrefix(
       tbox::TimerManager *tm = tbox::TimerManager::getManager();
 
       d_object_timers->t_find_boxes_containing_tags = tm->
-         getTimer("mesh::BergerRigoutsos::findBoxesContainingTags()");
+         getTimer(timer_prefix + "::findBoxesContainingTags()");
 
       d_object_timers->t_cluster = tm->
          getTimer(timer_prefix + "::cluster");
@@ -1169,15 +1172,15 @@ BergerRigoutsos::setTimerPrefix(
 
       // Pre- and post-processing timers.
       d_object_timers->t_barrier_before = tm->
-         getTimer("mesh::BergerRigoutsos::barrier_before");
+         getTimer(timer_prefix + "::barrier_before");
       d_object_timers->t_barrier_after = tm->
-         getTimer("mesh::BergerRigoutsos::barrier_after");
+         getTimer(timer_prefix + "::barrier_after");
       d_object_timers->t_global_reductions = tm->
-         getTimer("mesh::BergerRigoutsos::global_reductions");
+         getTimer(timer_prefix + "::global_reductions");
       d_object_timers->t_sort_output_nodes = tm->
-         getTimer("mesh::BergerRigoutsos::sort_output_nodes");
+         getTimer(timer_prefix + "::sort_output_nodes");
       d_object_timers->t_logging = tm->
-         getTimer("mesh::BergerRigoutsos::logging");
+         getTimer(timer_prefix + "::logging");
    }
 
    d_comm_stage.setCommunicationWaitTimer(d_object_timers->t_MPI_wait);

@@ -114,6 +114,20 @@ public:
       const hier::IntVector& min_box,
       const hier::IntVector& max_gcw);
 
+   /*!
+    * @brief Setup names of timers.
+    *
+    * By default, timers are named
+    * "mesh::BergerRigoutsosNode::*", where the third field is
+    * the specific steps performed by the BergerRigoutsosNode.
+    * You can override the first two fields with this method.
+    * Conforming to the timer naming convention, timer_prefix should
+    * have the form "*::*".
+    */
+   void
+   setTimerPrefix(
+      const std::string& timer_prefix);
+
 protected:
    /*!
     * @brief Read parameters from input database.
@@ -176,13 +190,45 @@ private:
    bool d_log_cluster;
    bool d_barrier_and_time;
    bool d_print_steps;
-   boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
-   boost::shared_ptr<tbox::Timer> t_cluster;
-   boost::shared_ptr<tbox::Timer> t_coalesce;
-   boost::shared_ptr<tbox::Timer> t_coalesce_adjustment;
-   boost::shared_ptr<tbox::Timer> t_global_reductions;
-   boost::shared_ptr<tbox::Timer> t_cluster_setup;
-   boost::shared_ptr<tbox::Timer> t_cluster_wrapup;
+   //@}
+
+
+   //@{
+   //! @name Performance timer data for this class.
+
+   /*
+    * @brief Structure of timers used by this class.
+    *
+    * Each object can set its own timer names through
+    * setTimerPrefix().  This leads to many timer look-ups.  Because
+    * it is expensive to look up timers, this class caches the timers
+    * that has been looked up.  Each TimerStruct stores the timers
+    * corresponding to a prefix.
+    */
+   struct TimerStruct {
+      boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
+      boost::shared_ptr<tbox::Timer> t_cluster;
+      boost::shared_ptr<tbox::Timer> t_coalesce;
+      boost::shared_ptr<tbox::Timer> t_coalesce_adjustment;
+      boost::shared_ptr<tbox::Timer> t_global_reductions;
+      boost::shared_ptr<tbox::Timer> t_cluster_setup;
+      boost::shared_ptr<tbox::Timer> t_cluster_wrapup;
+   };
+
+   //! @brief Default prefix for Timers.
+   static const std::string s_default_timer_prefix;
+
+   /*!
+    * @brief Static container of timers that have been looked up.
+    */
+   static std::map<std::string, TimerStruct> s_static_timers;
+
+   /*!
+    * @brief Structure of timers in s_static_timers, matching this
+    * object's timer prefix.
+    */
+   TimerStruct* d_object_timers;
+
    //@}
 
 };

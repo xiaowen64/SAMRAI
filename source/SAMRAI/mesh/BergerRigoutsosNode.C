@@ -35,9 +35,6 @@
 namespace SAMRAI {
 namespace mesh {
 
-const std::string BergerRigoutsos::s_default_timer_prefix("mesh::BergerRigoutsosNode");
-std::map<std::string, BergerRigoutsos::TimerStruct> BergerRigoutsos::s_static_timers;
-
 const int BergerRigoutsosNode::BAD_INTEGER = -9999999;
 
 
