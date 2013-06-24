@@ -26,7 +26,7 @@
 namespace SAMRAI {
 namespace mesh {
 
-const std::string BergerRigoutsos::s_default_timer_prefix("mesh::BergerRigoutsosNode");
+const std::string BergerRigoutsos::s_default_timer_prefix("mesh::BergerRigoutsos");
 std::map<std::string, BergerRigoutsos::TimerStruct> BergerRigoutsos::s_static_timers;
 
 
@@ -335,7 +335,7 @@ BergerRigoutsos::findBoxesContainingTags(
 #if defined(DEBUG_CHECK_ASSERTIONS)
    else {
       if ( !checkMPICongruency() ) {
-         TBOX_ERROR("BergerRigoutsosNode::clusterAndComputeRelationships:\n"
+         TBOX_ERROR("BergerRigoutsos::findBoxesContainingTags():\n"
                     << "The communicator of the input tag BoxLevel ("
                     << d_tag_level->getBoxLevel()->getMPI().getCommunicator()
                     << " is not congruent with the MPI communicator ("
