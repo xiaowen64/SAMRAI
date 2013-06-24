@@ -1209,6 +1209,7 @@ createBoxGenerator(
    int ln,
    const tbox::Dimension &dim )
 {
+   boost::shared_ptr<tbox::Database> null_db;
 
    if (bg_type == "BergerRigoutsos") {
 
@@ -1217,23 +1218,25 @@ createBoxGenerator(
          new mesh::BergerRigoutsos(
             dim,
             input_db->getDatabaseWithDefault(
-               std::string("BergerRigoutsos") + tbox::Utilities::intToString(ln),
-               boost::shared_ptr<tbox::Database>()) ) );
+               std::string("BergerRigoutsos"), null_db ) ) );
       berger_rigoutsos->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      berger_rigoutsos->setTimerPrefix(
+         std::string("mesh::BergerRigoutsos") + tbox::Utilities::intToString(ln));
 
       return berger_rigoutsos;
 
    } else if (bg_type == "TileClustering") {
 
       boost::shared_ptr<mesh::TileClustering>
-      tiled(
+      tile_clustering(
          new mesh::TileClustering(
             dim,
             input_db->getDatabaseWithDefault(
-               std::string("TileClustering") + tbox::Utilities::intToString(ln),
-               boost::shared_ptr<tbox::Database>()) ) );
+               std::string("TileClustering"), null_db ) ) );
+      tile_clustering->setTimerPrefix(
+         std::string("mesh::TileClustering") + tbox::Utilities::intToString(ln));
 
-      return tiled;
+      return tile_clustering;
 
    }
    else {
