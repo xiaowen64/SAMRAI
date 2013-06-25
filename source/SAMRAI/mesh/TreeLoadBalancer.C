@@ -1030,7 +1030,7 @@ t_post_load_distribution_barrier->stop();
    /*
     * unassigned is a container of BoxInTransit that has been released by
     * a process and has not yet been assigned to another.  First, put
-    * excess local work (if any) in unassigned.  Imported
+    * all initial local work in unassigned.  Imported
     * BoxInTransits are placed here before determining whether to keep
     * them or send them to another part of the tree.
     */
@@ -3080,7 +3080,7 @@ TreeLoadBalancer::swapLoadPair(
    TransitSet::iterator idst = dst.end();
    actual_transfer = 0;
 
-   if ( evaluateBreak( hiside_acceptance_flags, 0, hiside_transfer,
+   if ( evaluateBreak( hiside_acceptance_flags, actual_transfer, hiside_transfer,
                        ideal_transfer, low_transfer, high_transfer ) ) {
       isrc = src_hiside;
       idst = dst_hiside;
