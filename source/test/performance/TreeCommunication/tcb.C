@@ -447,7 +447,7 @@ int main(
             }
 
 
-            comm_graph_writer.addRecord(samrai_mpi, int(0), size_t(1+rank_tree->getDegree()), size_t(1));
+            comm_graph_writer.addRecord(samrai_mpi, size_t(1+rank_tree->getDegree()), size_t(1));
 
             for ( unsigned int cn=0; cn<rank_tree->getDegree(); ++cn ) {
                comm_graph_writer.setEdgeInCurrentRecord(

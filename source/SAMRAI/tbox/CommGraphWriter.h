@@ -46,8 +46,6 @@ public:
     *
     * @param[in] mpi Where the graph data is distributed.
     *
-    * @param[in] root_rank Process responsible for writing the graph
-    *
     * @param[in] number_of_edges
     *
     * @param[in] number_of_node_values
@@ -56,7 +54,6 @@ public:
     */
    size_t addRecord(
       const SAMRAI_MPI &mpi,
-      int root_rank,
       size_t number_of_edges,
       size_t number_of_node_values );
 
@@ -124,11 +121,11 @@ private:
    struct Record {
       Record() : d_mpi(MPI_COMM_NULL) {}
       SAMRAI_MPI d_mpi;
-      int d_root_rank;
       std::vector<Edge> d_edges;
       std::vector<NodeValue> d_node_values;
    };
 
+   int d_root_rank;
    std::vector<Record> d_records;
 
 };
