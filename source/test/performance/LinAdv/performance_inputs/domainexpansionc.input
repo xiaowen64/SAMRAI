@@ -178,17 +178,19 @@ TreeLoadBalancer {
 
 TilePartitioner {
   box_size = 16,16,16
-  DEV_report_load_balance = FALSE
-  DEV_barrier_before = TRUE
-  DEV_barrier_after = TRUE
-  DEV_check_map = FALSE
-  DEV_check_connectivity = FALSE
-  DEV_print_steps = FALSE
-  DEV_print_swap_steps = FALSE
-  DEV_print_break_steps = FALSE
-  DEV_print_edge_steps = FALSE
-  DEV_slender_penalty_wt = 0.0
-  DEV_summarize_map = TRUE
+  TreeLoadBalancer {
+    flexible_load_tolerance = 0.05
+    DEV_report_load_balance = FALSE
+    DEV_allow_box_breaking = TRUE
+    // Debugging options
+    DEV_check_map = FALSE
+    DEV_check_connectivity = FALSE
+    DEV_print_steps = FALSE
+    DEV_print_swap_steps = FALSE
+    DEV_print_break_steps = FALSE
+    DEV_print_edge_steps = FALSE
+    DEV_summarize_map = TRUE
+  }
 }
 
 HyperbolicLevelIntegrator {
