@@ -1121,10 +1121,12 @@ t_post_load_distribution_barrier->stop();
                     << cindex << ':' << d_rank_tree->getChildRank(cindex) << ": "
                     << child_subtrees[cindex].d_work_traded.size() << " boxes ("
                     << child_subtrees[cindex].d_work_traded.getSumLoad() << " units):";
-         for ( TransitSet::const_iterator ni=child_subtrees[cindex].d_work_traded.begin();
-               ni!=child_subtrees[cindex].d_work_traded.end(); ++ni ) {
-            const BoxInTransit& box_in_transit = *ni;
-            tbox::plog << "  " << box_in_transit;
+         if ( child_subtrees[cindex].d_work_traded.size() < 10 ) {
+            for ( TransitSet::const_iterator ni=child_subtrees[cindex].d_work_traded.begin();
+                  ni!=child_subtrees[cindex].d_work_traded.end(); ++ni ) {
+               const BoxInTransit& box_in_transit = *ni;
+               tbox::plog << "  " << box_in_transit;
+            }
          }
          tbox::plog << std::endl;
       }
@@ -1213,9 +1215,11 @@ t_post_load_distribution_barrier->stop();
                           << " boxes (" << export_load_actual << " / ["
                           << export_load_low << ", " << export_load_high << "] "
                           << " units) to parent's export bin:";
-               for (TransitSet::const_iterator ni = my_subtree.d_work_traded.begin();
-                    ni!=my_subtree.d_work_traded.end(); ++ni) {
-                  tbox::plog << "  " << *ni;
+               if ( my_subtree.d_work_traded.size() < 10 ) {
+                  for (TransitSet::const_iterator ni = my_subtree.d_work_traded.begin();
+                       ni!=my_subtree.d_work_traded.end(); ++ni) {
+                     tbox::plog << "  " << *ni;
+                  }
                }
                tbox::plog << std::endl;
             }
@@ -1307,17 +1311,17 @@ t_post_load_distribution_barrier->stop();
       }
 
       if (d_print_steps) {
-         if (d_print_steps) {
-            tbox::plog << "Received from parent " << d_rank_tree->getParentRank() << ":"
-                       << my_subtree.d_work_traded.size() << " boxes ("
-                       << my_subtree.d_work_traded.getSumLoad() << " units):";
+         tbox::plog << "Received from parent " << d_rank_tree->getParentRank() << ":"
+                    << my_subtree.d_work_traded.size() << " boxes ("
+                    << my_subtree.d_work_traded.getSumLoad() << " units):";
+         if ( my_subtree.d_work_traded.size() < 10 ) {
             for ( TransitSet::const_iterator ni=my_subtree.d_work_traded.begin();
                   ni!=my_subtree.d_work_traded.end(); ++ni ) {
                const BoxInTransit& box_in_transit = *ni;
                tbox::plog << "  " << box_in_transit;
             }
-            tbox::plog << std::endl;
          }
+         tbox::plog << std::endl;
       }
 
       t_get_load_from_parent->stop();
@@ -1400,9 +1404,11 @@ t_post_load_distribution_barrier->stop();
                           << " units) to child "
                           << ichild << ':' << d_rank_tree->getChildRank(ichild)
                           << " for " << recip_subtree.d_num_procs << " procs:";
-               for (TransitSet::const_iterator ni = recip_subtree.d_work_traded.begin();
-                    ni != recip_subtree.d_work_traded.end(); ++ni) {
-                  tbox::plog << "  " << *ni;
+               if ( recip_subtree.d_work_traded.size() ) {
+                  for (TransitSet::const_iterator ni = recip_subtree.d_work_traded.begin();
+                       ni != recip_subtree.d_work_traded.end(); ++ni) {
+                     tbox::plog << "  " << *ni;
+                  }
                }
                tbox::plog << std::endl;
             }
@@ -1439,9 +1445,11 @@ t_post_load_distribution_barrier->stop();
                  << unassigned.getSumLoad() << " ("
                  << (unassigned.getSumLoad()/group_avg_load)
                  << ") units in " << unassigned.size() << " boxes:\n";
-      for ( TransitSet::const_iterator bi=unassigned.begin();
-            bi!=unassigned.end(); ++bi ) {
-         tbox::plog << "    " << *bi << std::endl;
+      if ( unassigned.size() < 10 ) {
+         for ( TransitSet::const_iterator bi=unassigned.begin();
+               bi!=unassigned.end(); ++bi ) {
+            tbox::plog << "    " << *bi << '\n';
+         }
       }
       tbox::plog << "Final local load is " << unassigned.getSumLoad()
                  << " (" << (unassigned.getSumLoad()/group_avg_load)
@@ -1793,11 +1801,15 @@ TreeLoadBalancer::adjustLoad(
     * were not there before, so we loop back to try swapping again.
     *
     * If a break phase does not break any Box (and does not generate
-    * more swap options), the loop will stop making changes.  We exit
+    * more swap options), the loop will stop making changes.  We break
     * the loop at that point (and whenever we get main_bin's load in
-    * the correct range).
+    * the correct range).  We also break out if there is no improvement,
+    * which can happen when the swp and break steps undo each other's
+    * work (due to round-off errors).
     */
    do {
+
+      const LoadType old_distance_to_ideal = ideal_load - main_bin.getSumLoad();
 
       /*
        * Try to balance load through swapping.
@@ -1881,6 +1893,14 @@ TreeLoadBalancer::adjustLoad(
             }
             break;
          }
+      }
+
+
+      LoadType improvement =
+         tbox::MathUtilities<double>::Abs( old_distance_to_ideal
+                                           - (ideal_load - main_bin.getSumLoad()) );
+      if ( improvement < 0.001*d_global_avg_load ) {
+         break;
       }
 
       /*
@@ -2813,12 +2833,16 @@ TreeLoadBalancer::swapLoadPair(
                  << " between " << src.size() << "-box src and "
                  << dst.size() << "-box dst." << std::endl;
       tbox::plog << "      src (" << src.size() << "):" << std::endl;
-      for (TransitSet::iterator si = src.begin(); si != src.end(); ++si) {
-         tbox::plog << "        " << *si << std::endl;
+      if ( src.size() < 10 ) {
+         for (TransitSet::iterator si = src.begin(); si != src.end(); ++si) {
+            tbox::plog << "        " << *si << std::endl;
+         }
       }
       tbox::plog << "      dst (" << dst.size() << "):" << std::endl;
-      for (TransitSet::iterator si = dst.begin(); si != dst.end(); ++si) {
-         tbox::plog << "        " << *si << std::endl;
+      if ( dst.size() < 10 ) {
+         for (TransitSet::iterator si = dst.begin(); si != dst.end(); ++si) {
+            tbox::plog << "        " << *si << std::endl;
+         }
       }
    }
 
