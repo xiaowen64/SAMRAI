@@ -416,7 +416,7 @@ TileClustering::findTilesContainingTags(
 #pragma omp parallel
 #pragma omp for schedule(dynamic)
    for ( int coarse_offset=0; coarse_offset<num_coarse_cells; ++coarse_offset ) {
-      if (coarse_offset==0) tbox::plog << "Inner loop has " << TBOX_omp_get_num_threads() << " threads over " << num_coarse_cells << " coarse cells." << std::endl;
+      // if (coarse_offset==0) tbox::plog << "Inner loop has " << TBOX_omp_get_num_threads() << " threads over " << num_coarse_cells << " coarse cells." << std::endl;
       const pdat::CellIndex coarse_cell_index(coarsened_box.index(coarse_offset));
 
       /*
