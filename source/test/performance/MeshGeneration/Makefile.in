@@ -102,8 +102,8 @@ perf:	main
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/domexlike.treelb.input;
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/lsphere_weak.3d.treelb.input;
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/lsphere_weak.3d.tilelb.input;
-	$(OBJECT)/config/serpa-run 2,4 ./main performance_inputs/single_sphere.3d.caplb.input;
-	$(OBJECT)/config/serpa-run 2,4 ./main performance_inputs/single_sphere.3d.treelb.input;
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/single_sphere.3d.caplb.input;
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/single_sphere.3d.treelb.input;
 
 everything:
 	$(MAKE) checkcompile
@@ -116,6 +116,6 @@ clean-check:
 
 clean:
 	$(SAMCLEAN)
-	$(RM) *.f main *visit
+	$(RM) *.f main *visit *.timing*
 
 include $(SRCDIR)/Makefile.depend

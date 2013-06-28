@@ -234,9 +234,10 @@ int main(
       boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       InputManager::getManager()->parseInputFile(input_filename, input_db);
 
-      if (input_db->isDatabase("TimerManager")) {
-         tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
-      }
+      tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
+      boost::shared_ptr<tbox::Timer> t_all =
+         tbox::TimerManager::getManager()->getTimer("appu::main::all");
+      t_all->start();
 
       boost::shared_ptr<tbox::Timer> t_vis_writing(
          tbox::TimerManager::getManager()->getTimer("apps::Main::vis_writing"));
@@ -269,19 +270,20 @@ int main(
        * Modify basename for this particular run.
        * Add the number of processes and the case name.
        */
+      string base_name_ext = base_name;
       if (!case_name.empty()) {
-         base_name = base_name + '-' + case_name;
+         base_name_ext = base_name_ext + '-' + case_name;
       }
-      base_name = base_name + '-' + tbox::Utilities::intToString(
+      base_name_ext = base_name_ext + '-' + tbox::Utilities::intToString(
             mpi.getSize(),
             5);
 
       /*
        * Logging.
        */
-      string log_filename = base_name + ".log";
+      string log_filename = base_name_ext + ".log";
       log_filename =
-         main_db->getStringWithDefault("log_filename", base_name + ".log");
+         main_db->getStringWithDefault("log_filename", base_name_ext + ".log");
 
       bool log_all_nodes = false;
       log_all_nodes =
@@ -298,7 +300,7 @@ int main(
       }
 
       const string viz_dump_dirname = main_db->getStringWithDefault(
-            "viz_dump_dirname", base_name + ".visit");
+            "viz_dump_dirname", base_name_ext + ".visit");
       int visit_number_procs_per_file = 1;
 
       const bool viz_dump_data = (viz_dump_interval > 0);
@@ -705,6 +707,16 @@ int main(
        */
       tbox::plog << "\n\nBox searching results:\n";
       hier::BoxTree::printStatistics(dim);
+
+      t_all->stop();
+      int size = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
+      if (tbox::SAMRAI_MPI::getSAMRAIWorld().getRank() == 0) {
+         string timing_file =
+            base_name + ".timing" + tbox::Utilities::intToString(size);
+         FILE* fp = fopen(timing_file.c_str(), "w");
+         fprintf(fp, "%f\n", t_all->getTotalWallclockTime());
+         fclose(fp);
+      }
 
       /*
        * At conclusion of simulation, deallocate objects.

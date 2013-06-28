@@ -240,6 +240,20 @@ int main(
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
+       * Setup the timer manager to trace timing statistics during execution
+       * of the code.  The list of timers is given in the TimerManager
+       * section of the input file.  Timing information is stored in the
+       * restart file.  Timers will automatically be initialized to their
+       * previous state if the run is restarted, unless they are explicitly
+       * reset using the TimerManager::resetAllTimers() routine.
+       */
+
+      tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
+      boost::shared_ptr<tbox::Timer> t_all =
+         tbox::TimerManager::getManager()->getTimer("appu::main::all");
+      t_all->start();
+
+      /*
        * Retrieve "Main" section of the input database.  First, read dump
        * information, which is used for writing plot files.  Second, if
        * proper restart information was given on command line, and the
@@ -256,22 +270,23 @@ int main(
        * Modify basename for this particular run.
        * Add the number of processes and the case name.
        */
+      string base_name_ext = base_name;
       if (!case_name.empty()) {
-         base_name = base_name + '-' + case_name;
+         base_name_ext = base_name_ext + '-' + case_name;
       }
-      base_name = base_name + '-' + tbox::Utilities::intToString(
+      base_name_ext = base_name_ext + '-' + tbox::Utilities::intToString(
             mpi.getSize(),
             5);
       tbox::pout << "Added case name (" << case_name << ") and nprocs ("
            << mpi.getSize() << ") to base name -> '"
-           << base_name << "'\n";
+           << base_name_ext << "'\n";
 
       /*
        * Logging.
        */
-      string log_filename = base_name + ".log";
+      string log_filename = base_name_ext + ".log";
       log_filename =
-         main_db->getStringWithDefault("log_filename", base_name + ".log");
+         main_db->getStringWithDefault("log_filename", base_name_ext + ".log");
 
       bool log_all_nodes = false;
       log_all_nodes =
@@ -287,12 +302,12 @@ int main(
          viz_dump_interval = main_db->getInteger("viz_dump_interval");
       }
 
-      string visit_dump_dirname = base_name + ".visit";
+      string visit_dump_dirname = base_name_ext + ".visit";
       bool uses_visit = false;
       int visit_number_procs_per_file = 1;
       if (viz_dump_interval > 0) {
          uses_visit = true;
-         string viz_dump_dirname = base_name;
+         string viz_dump_dirname = base_name_ext;
          if (main_db->keyExists("viz_dump_dirname")) {
             viz_dump_dirname = main_db->getString("viz_dump_dirname");
          }
@@ -359,17 +374,6 @@ int main(
          openRestartFile(restart_read_dirname, restore_num,
             mpi.getSize());
       }
-
-      /*
-       * Setup the timer manager to trace timing statistics during execution
-       * of the code.  The list of timers is given in the TimerManager
-       * section of the input file.  Timing information is stored in the
-       * restart file.  Timers will automatically be initialized to their
-       * previous state if the run is restarted, unless they are explicitly
-       * reset using the TimerManager::resetAllTimers() routine.
-       */
-
-      tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
 
       /*
        * Create major algorithm and data objects which comprise application.
@@ -660,6 +664,16 @@ int main(
        * Output timer results.
        */
       tbox::TimerManager::getManager()->print(tbox::plog);
+
+      t_all->stop();
+      int size = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
+      if (tbox::SAMRAI_MPI::getSAMRAIWorld().getRank() == 0) {
+         string timing_file =
+            base_name + ".timing" + tbox::Utilities::intToString(size);
+         FILE* fp = fopen(timing_file.c_str(), "w");
+         fprintf(fp, "%f\n", t_all->getTotalWallclockTime());
+         fclose(fp);
+      }
 
 #ifdef RECORD_STATS
       outputStats(*gridding_algorithm, *hyp_level_integrator);

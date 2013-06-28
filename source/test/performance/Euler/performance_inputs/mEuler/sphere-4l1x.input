@@ -160,7 +160,7 @@ BergerRigoutsos {
 // BaselineMain is used only by the baseline code.
 BaselineMain {
    dim = 3
-   base_name = "spbsl-4l1x"
+   base_name = "sphere-4l1x"
    log_all_nodes = TRUE
 
 // visualization dump parameters 
@@ -193,7 +193,7 @@ Main {
 
 TimerManager{
   // timer_list = "*::*::*"
-  timer_list = "hier::*::*", "mesh::*::*", "xfer::*::*", "algs::*::*", "apps::*::*"
+  timer_list = "hier::*::*", "mesh::*::*", "xfer::*::*", "algs::*::*", "apps::*::*", "appu::main::all"
   print_user = TRUE
   // print_timer_overhead = TRUE
   print_threshold = 0

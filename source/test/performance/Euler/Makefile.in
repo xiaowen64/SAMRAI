@@ -39,7 +39,7 @@ main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
 
 clean:
 	$(SAMCLEAN)
-	$(RM) *.f main
+	$(RM) *.f main *.timing*
 
 redo:
 	$(RM) main core *.ii *.int.c

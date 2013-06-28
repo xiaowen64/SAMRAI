@@ -178,7 +178,7 @@ BaselineMain {
 // Main is used only by the new code.
 Main {
    dim = 3
-   base_name = "spnew-4l8x"
+   base_name = "sphere-4l8x"
    log_all_nodes = TRUE
 
 // visualization dump parameters 
@@ -193,7 +193,7 @@ Main {
 
 TimerManager{
   // timer_list = "*::*::*"
-  timer_list = "hier::*::*", "mesh::*::*", "xfer::*::*", "algs::*::*", "apps::*::*"
+  timer_list = "hier::*::*", "mesh::*::*", "xfer::*::*", "algs::*::*", "apps::*::*", "appu::main::all"
   print_user = TRUE
   // print_timer_overhead = TRUE
   print_threshold = 0

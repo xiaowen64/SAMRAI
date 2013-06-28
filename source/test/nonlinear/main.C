@@ -249,6 +249,9 @@ int main(
        * section of the input file.
        */
       tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
+      boost::shared_ptr<tbox::Timer> t_all =
+         tbox::TimerManager::getManager()->getTimer("appu::main::all");
+      t_all->start();
 
       /*
        * Create major algorithm and data objects which comprise application.
@@ -629,6 +632,15 @@ int main(
       tbox::pout << "\nPASSED:  nonlinear" << endl;
 #endif
 
+      t_all->stop();
+      int size = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
+      if (tbox::SAMRAI_MPI::getSAMRAIWorld().getRank() == 0) {
+         string timing_file =
+            base_name + ".timing" + tbox::Utilities::intToString(size);
+         FILE* fp = fopen(timing_file.c_str(), "w");
+         fprintf(fp, "%f\n", t_all->getTotalWallclockTime());
+         fclose(fp);
+      }
    }
 
    tbox::SAMRAIManager::shutdown();

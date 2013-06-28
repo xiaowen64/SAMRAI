@@ -106,7 +106,7 @@ TimerManager {
    print_summed           = TRUE
    print_max              = TRUE
    print_threshold        = 0.
-   timer_list             = "hier::*::*", "mesh::*::*", "apps::*::*"
+   timer_list             = "hier::*::*", "mesh::*::*", "apps::*::*", "appu::main::all"
 }
 
 

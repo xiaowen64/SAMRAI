@@ -43,7 +43,7 @@ $(TESTLIB):
 
 clean:
 	$(SAMCLEAN)
-	$(RM) *.f main
+	$(RM) *.f main *.timing*
 
 check:	main
 	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \

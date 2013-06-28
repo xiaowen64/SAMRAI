@@ -81,7 +81,7 @@ clean-check:
 
 clean:
 	$(SAMCLEAN)
-	$(RM) *.f main viz*
+	$(RM) *.f main viz* *.timing*
 
 redo:
 	$(RM) main

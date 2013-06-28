@@ -160,6 +160,9 @@ int main(
    int argc,
    char* argv[])
 {
+   double wc_time = 0.0;
+   string base_name;
+
    /*
     * Initialize tbox::MPI and SAMRAI, enable logging, and process command line.
     */
@@ -209,6 +212,20 @@ int main(
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
+       * Setup the timer manager to trace timing statistics during execution
+       * of the code.  The list of timers is given in the tbox::TimerManager
+       * section of the input file.  Timing information is stored in the
+       * restart file.  Timers will automatically be initialized to their
+       * previous state if the run is restarted, unless they are explicitly
+       * reset using the tbox::TimerManager::resetAllTimers() routine.
+       */
+
+      tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
+      boost::shared_ptr<tbox::Timer> t_all =
+         tbox::TimerManager::getManager()->getTimer("appu::main::all");
+      t_all->start();
+
+      /*
        * Retrieve "GlobalInputs" section of the input database and set
        * values accordingly.
        */
@@ -239,6 +256,8 @@ int main(
          input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
+
+      base_name = main_db->getString("base_name");
 
       string log_file_name = "linadv.log";
       if (main_db->keyExists("log_file_name")) {
@@ -330,16 +349,6 @@ int main(
             mpi.getSize());
       }
 
-      /*
-       * Setup the timer manager to trace timing statistics during execution
-       * of the code.  The list of timers is given in the tbox::TimerManager
-       * section of the input file.  Timing information is stored in the
-       * restart file.  Timers will automatically be initialized to their
-       * previous state if the run is restarted, unless they are explicitly
-       * reset using the tbox::TimerManager::resetAllTimers() routine.
-       */
-
-      tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
 
       /*
        * Create major algorithm and data objects which comprise application.
@@ -559,6 +568,8 @@ int main(
 #if (TESTING != 1)
       tbox::TimerManager::getManager()->print(tbox::plog);
 #endif
+      t_all->stop();
+      wc_time += t_all->getTotalWallclockTime();
 
       /*
        * At conclusion of simulation, deallocate objects.
@@ -586,6 +597,15 @@ int main(
       main_db.reset();
 
       tbox::SAMRAIManager::shutdown();
+   }
+
+   int size = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
+   if (tbox::SAMRAI_MPI::getSAMRAIWorld().getRank() == 0) {
+      string timing_file =
+         base_name + ".timing" + tbox::Utilities::intToString(size);
+      FILE* fp = fopen(timing_file.c_str(), "w");
+      fprintf(fp, "%f\n", wc_time);
+      fclose(fp);
    }
 
    tbox::SAMRAIManager::finalize();

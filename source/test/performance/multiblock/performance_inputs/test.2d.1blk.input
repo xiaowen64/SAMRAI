@@ -15,6 +15,8 @@ Main {
    // Dimension of problem.  Vectors in this problem should have compatible length.
    dim = 2
 
+   base_name = "test.2d.1blk"
+
    // log file name
    log_file_name    = "newtest.log"
 
@@ -134,7 +136,8 @@ MblkLinAdv {
 TimerManager {
    timer_list               = "apps::*::*",
                               "algs::*::*",
-                              "mesh::*::*"
+                              "mesh::*::*",
+                              "appu::main::all"
 //   print_exclusive      = TRUE
    print_summed           = TRUE
    print_max              = TRUE

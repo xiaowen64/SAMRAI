@@ -89,7 +89,7 @@ clean-check:
 
 clean:		clean-check
 	$(RM) *.o *.f main
-	$(RM) *visit nkLog.32x32.8
+	$(RM) *visit nkLog.32x32.8 *.timing*
 
 include $(SRCDIR)/Makefile.depend
 

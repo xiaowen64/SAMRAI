@@ -277,7 +277,8 @@ TimerManager {
                             "tbox::AsyncCommStage::*",
                             "tbox::JobRelauncher::*",
                             "tbox::Schedule::*",
-                            "xfer::*::*"
+                            "xfer::*::*",
+                            "appu::main::all"
 }
 
 //See hier::PatchHierarchy for input
