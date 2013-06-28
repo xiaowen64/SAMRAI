@@ -687,6 +687,33 @@ private:
       LoadType high_load ) const;
 
    /*!
+    * @brief Shift load from src to dst by popping the front of
+    * one set of boxes and putting it in the other.
+    *
+    * @param[in,out] main_bin
+    *
+    * @param[in,out] hold_bin
+    *
+    * @param[in] ideal_load The load that main_bin should have.
+    *
+    * @param[in] low_load Return when main_bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @param[in] high_load Return when main_bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @return Amount of load transfered.  If positive, load went
+    * from main_bin to hold_bin.
+    */
+   LoadType
+   adjustLoadByPopping(
+      TransitSet& main_bin,
+      TransitSet& hold_bin,
+      LoadType ideal_load,
+      LoadType low_load,
+      LoadType high_load ) const;
+
+   /*!
     * @brief Shift load from src to dst by swapping BoxInTransit
     * between them.
     *
@@ -1278,6 +1305,7 @@ private:
    boost::shared_ptr<tbox::Timer> t_compute_tree_load;
    std::vector<boost::shared_ptr<tbox::Timer> > t_compute_tree_load_for_cycle;
    boost::shared_ptr<tbox::Timer> t_adjust_load;
+   boost::shared_ptr<tbox::Timer> t_adjust_load_by_popping;
    boost::shared_ptr<tbox::Timer> t_adjust_load_by_swapping;
    boost::shared_ptr<tbox::Timer> t_shift_loads_by_breaking;
    boost::shared_ptr<tbox::Timer> t_find_swap_pair;
@@ -1315,6 +1343,7 @@ private:
 
    // Extra checks independent of optimization/debug.
    char d_print_steps;
+   char d_print_pop_steps;
    char d_print_break_steps;
    char d_print_swap_steps;
    char d_print_edge_steps;

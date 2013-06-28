@@ -103,6 +103,7 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_barrier_before(false),
    d_barrier_after(false),
    d_print_steps(false),
+   d_print_pop_steps(false),
    d_print_break_steps(false),
    d_print_swap_steps(false),
    d_print_edge_steps(false),
@@ -1791,6 +1792,28 @@ TreeLoadBalancer::adjustLoad(
 
    t_adjust_load->start();
 
+   actual_transfer = adjustLoadByPopping(
+      main_bin,
+      hold_bin,
+      ideal_load,
+      low_load,
+      high_load );
+
+   if (d_print_steps) {
+      double balance_penalty = computeBalancePenalty(
+         main_bin,
+         hold_bin,
+         (main_bin.getSumLoad() - ideal_load));
+      tbox::plog << "  Balance penalty after adjustLoadByPopping = "
+                 << balance_penalty
+                 << ", needs " << (ideal_load-main_bin.getSumLoad())
+                 << " more with " << main_bin.size() << " main_bin and "
+                 << hold_bin.size() << " hold_bin Boxes remaining."
+                 << "\n  main_bin now has " << main_bin.getSumLoad()
+                 << " in " << main_bin.size() << " boxes."
+                 << std::endl;
+   }
+
    /*
     * The algorithm cycles through a do-loop.  Each time around, we
     * try to swap some BoxInTransit between main_bin and hold_bin
@@ -2803,6 +2826,119 @@ TreeLoadBalancer::adjustLoadBySwapping(
    }
 
    t_adjust_load_by_swapping->stop();
+
+   return actual_transfer;
+}
+
+
+
+/*
+ *************************************************************************
+ * Attempt to adjust the load of a main_bin by popping the biggest boxes
+ * from a source bin and moving them to a destination bin.
+ *
+ * This method should give results similar to adjustLoadBySwapping,
+ * but when the boxes are small in comparison to the load changed, it
+ * should be faster.
+ *
+ * This method can transfer load both ways.
+ * ideal_transfer > 0 means to raise the load of main_bin
+ * ideal_transfer < 0 means to raise the load of hold_bin
+ *
+ * Return amount of load transfered.
+ *************************************************************************
+ */
+TreeLoadBalancer::LoadType
+TreeLoadBalancer::adjustLoadByPopping(
+   TransitSet& main_bin,
+   TransitSet& hold_bin,
+   LoadType ideal_load,
+   LoadType low_load,
+   LoadType high_load ) const
+{
+   TBOX_ASSERT( high_load >= ideal_load );
+   TBOX_ASSERT( low_load <= ideal_load );
+
+   t_adjust_load_by_popping->start();
+
+   /*
+    * Logic in this method assumes positive transfer from hold_bin
+    * (the source) to main_bin (the destination).  When transfering
+    * the other way, switch the roles of main_bin and hold_bin.
+    */
+   TransitSet *src = &hold_bin;
+   TransitSet *dst = &main_bin;
+   LoadType dst_ideal_load = ideal_load;
+   LoadType dst_low_load = low_load;
+   LoadType dst_high_load = high_load;
+
+   if ( main_bin.getSumLoad() > ideal_load ) {
+
+      dst_ideal_load = hold_bin.getSumLoad() + ( main_bin.getSumLoad() - ideal_load );
+      dst_low_load = hold_bin.getSumLoad() + ( main_bin.getSumLoad() - high_load );
+      dst_high_load = hold_bin.getSumLoad() + ( main_bin.getSumLoad() - low_load );
+
+      src = &main_bin;
+      dst = &hold_bin;
+
+   }
+
+   if (d_print_pop_steps) {
+      tbox::plog << "  Attempting to bring main_bin from "
+                 << main_bin.getSumLoad() << " to " << ideal_load
+                 << " [" << low_load << ',' << high_load
+                 << "] by popping."
+                 << std::endl;
+   }
+
+   LoadType actual_transfer = 0;
+   int acceptance_flags[3] = {0,0,0};
+
+   size_t num_boxes_popped = 0;
+
+   while ( !src->empty() ) {
+
+      const BoxInTransit &candidate_box = *src->begin();
+
+      bool improved = evaluateBreak(
+         acceptance_flags,
+         dst->getSumLoad(),
+         dst->getSumLoad() + candidate_box.d_boxload,
+         dst_ideal_load,
+         dst_low_load,
+         dst_high_load );
+
+      if ( improved ) {
+
+         if ( d_print_pop_steps ) {
+            tbox::plog << "    adjustLoadByPopping pop #" << num_boxes_popped
+                       << ", " << candidate_box;
+         }
+
+         actual_transfer += candidate_box.d_boxload;
+         dst->insert(candidate_box);
+         src->erase(src->begin());
+         ++num_boxes_popped;
+
+         if ( d_print_pop_steps ) {
+            tbox::plog << ", main_bin load is " << main_bin.getSumLoad() << '\n';
+         }
+      }
+      if ( ( dst->getSumLoad() >= dst_low_load && dst->getSumLoad() <= high_load ) ||
+           !improved ) {
+         break;
+      }
+   }
+
+   if (d_print_pop_steps) {
+      tbox::plog << "  Final result in adjustLoadByPopping: "
+                 << main_bin.getSumLoad() << " / " << ideal_load
+                 << "  Off by " << (main_bin.getSumLoad()-ideal_load)
+                 << ".  " << num_boxes_popped << " boxes popped."
+                 << std::endl;
+   }
+
+   t_adjust_load_by_popping->stop();
 
    return actual_transfer;
 }
@@ -3877,6 +4013,8 @@ TreeLoadBalancer::getFromInput(
       d_print_steps = input_db->getBoolWithDefault("DEV_print_steps", false);
       d_print_break_steps =
          input_db->getBoolWithDefault("DEV_print_break_steps", false);
+      d_print_pop_steps =
+         input_db->getBoolWithDefault("DEV_print_pop_steps", d_print_pop_steps);
       d_print_swap_steps =
          input_db->getBoolWithDefault("DEV_print_swap_steps", false);
       d_print_edge_steps =
@@ -4920,6 +5058,8 @@ t_post_load_distribution_barrier = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::find_bad_cuts");
       t_adjust_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::adjustLoad()");
+      t_adjust_load_by_popping = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::adjustLoadByPopping()");
       t_adjust_load_by_swapping = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::adjustLoadBySwapping()");
       t_shift_loads_by_breaking = tbox::TimerManager::getManager()->
