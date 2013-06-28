@@ -2580,7 +2580,20 @@ TreeLoadBalancer::adjustLoadByBreaking(
    int break_acceptance_flags[3] = {0,0,0};
    int &found_breakage = break_acceptance_flags[2];
 
-   for (TransitSet::iterator si = hold_bin.begin(); si != hold_bin.end(); ++si) {
+   /*
+    * Find best box to break.  Loop in reverse because smaller boxes
+    * are cheaper to analyze for bad cuts.
+    */
+   for (TransitSet::reverse_iterator si = hold_bin.rbegin(); si != hold_bin.rend(); ++si) {
+
+      /*
+       * Skip boxes smaller than ideal_transfer.  If we called
+       * adjustLoadBySwapping before entering this method, there
+       * should not be any such boxes.
+       */
+      if ( si->d_boxload < ideal_transfer ) {
+         continue;
+      }
 
       const BoxInTransit& candidate = *si;
 

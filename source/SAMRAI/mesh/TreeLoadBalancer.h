@@ -481,6 +481,7 @@ private:
       //! @name Duplicated set interfaces.
       typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::iterator iterator;
       typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::const_iterator const_iterator;
+      typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::reverse_iterator reverse_iterator;
       typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::key_type key_type;
       typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::value_type value_type;
       TransitSet() : d_set(), d_sumload(0) {}
@@ -494,6 +495,8 @@ private:
       iterator end() { return d_set.end(); }
       const_iterator begin() const { return d_set.begin(); }
       const_iterator end() const { return d_set.end(); }
+      reverse_iterator rbegin() const { return d_set.rbegin(); }
+      reverse_iterator rend() const { return d_set.rend(); }
       size_t size() const { return d_set.size(); }
       std::pair<iterator, bool> insert( const value_type &x ) {
          std::pair<iterator,bool> rval = d_set.insert(x);
