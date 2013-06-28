@@ -621,6 +621,16 @@ int main(
          visit_data_writer.reset();
       }
 
+      t_all->stop();
+      int size = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
+      if (tbox::SAMRAI_MPI::getSAMRAIWorld().getRank() == 0) {
+         string timing_file =
+            base_name + ".timing" + tbox::Utilities::intToString(size);
+         FILE* fp = fopen(timing_file.c_str(), "w");
+         fprintf(fp, "%f\n", t_all->getTotalWallclockTime());
+         fclose(fp);
+      }
+
 #endif
 
 #ifdef TESTING
@@ -631,16 +641,6 @@ int main(
        */
       tbox::pout << "\nPASSED:  nonlinear" << endl;
 #endif
-
-      t_all->stop();
-      int size = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
-      if (tbox::SAMRAI_MPI::getSAMRAIWorld().getRank() == 0) {
-         string timing_file =
-            base_name + ".timing" + tbox::Utilities::intToString(size);
-         FILE* fp = fopen(timing_file.c_str(), "w");
-         fprintf(fp, "%f\n", t_all->getTotalWallclockTime());
-         fclose(fp);
-      }
    }
 
    tbox::SAMRAIManager::shutdown();
