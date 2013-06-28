@@ -1404,7 +1404,7 @@ t_post_load_distribution_barrier->stop();
                           << " units) to child "
                           << ichild << ':' << d_rank_tree->getChildRank(ichild)
                           << " for " << recip_subtree.d_num_procs << " procs:";
-               if ( recip_subtree.d_work_traded.size() ) {
+               if ( recip_subtree.d_work_traded.size() < 10 ) {
                   for (TransitSet::const_iterator ni = recip_subtree.d_work_traded.begin();
                        ni != recip_subtree.d_work_traded.end(); ++ni) {
                      tbox::plog << "  " << *ni;
