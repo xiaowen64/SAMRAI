@@ -4326,6 +4326,30 @@ RefineSchedule::clearRefineItems()
    }
 }
 
+
+/*
+ **************************************************************************
+ **************************************************************************
+ */
+
+void
+RefineSchedule::setDeterministicUnpackOrderingFlag( bool flag )
+{
+   if ( d_coarse_priority_level_schedule ) {
+      d_coarse_priority_level_schedule->setDeterministicUnpackOrderingFlag(flag);
+   }
+   if ( d_fine_priority_level_schedule ) {
+      d_fine_priority_level_schedule->setDeterministicUnpackOrderingFlag(flag);
+   }
+   if ( d_coarse_interp_schedule ) {
+      d_coarse_interp_schedule->setDeterministicUnpackOrderingFlag(flag);
+   }
+   if ( d_coarse_interp_encon_schedule ) {
+      d_coarse_interp_encon_schedule->setDeterministicUnpackOrderingFlag(flag);
+   }
+}
+
+
 /*
  **************************************************************************
  *

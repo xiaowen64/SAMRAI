@@ -165,6 +165,18 @@ public:
    }
 
    /*!
+    * @brief Set whether to unpack messages in a deterministic order.
+    *
+    * By default message unpacking is ordered by receive time, which
+    * is not deterministic.  If your results are dependent on unpack
+    * ordering and you want deterministic results, set this flag to
+    * true.
+    *
+    * @param [in] flag
+    */
+   void setDeterministicUnpackOrderingFlag( bool flag );
+
+   /*!
     * @brief Static function to set box intersection algorithm to use during
     * schedule construction for all CoarsenSchedule objects.
     *

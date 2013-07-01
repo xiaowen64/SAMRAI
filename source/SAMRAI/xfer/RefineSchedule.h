@@ -261,6 +261,18 @@ public:
    }
 
    /*!
+    * @brief Set whether to unpack messages in a deterministic order.
+    *
+    * By default message unpacking is ordered by receive time, which
+    * is not deterministic.  If your results are dependent on unpack
+    * ordering and you want deterministic results, set this flag to
+    * true.
+    *
+    * @param [in] flag
+    */
+   void setDeterministicUnpackOrderingFlag( bool flag );
+
+   /*!
     * @brief Print the refine schedule data to the specified data stream.
     *
     * @param[out] stream Output data stream.
