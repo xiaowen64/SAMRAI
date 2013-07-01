@@ -494,9 +494,9 @@ BoxLevel::swap(
       level_a.d_local_number_of_cells = level_b.d_local_number_of_cells;
       level_b.d_local_number_of_cells = tmpint;
 
-      tmpint = level_a.d_global_number_of_cells;
+      long int tmplongint = level_a.d_global_number_of_cells;
       level_a.d_global_number_of_cells = level_b.d_global_number_of_cells;
-      level_b.d_global_number_of_cells = tmpint;
+      level_b.d_global_number_of_cells = tmplongint;
 
       tmpint = static_cast<int>(level_a.d_local_number_of_boxes);
       level_a.d_local_number_of_boxes = level_b.d_local_number_of_boxes;
@@ -594,7 +594,7 @@ BoxLevel::cacheGlobalReducedData() const
       }
    } else {
       if (d_mpi.getSize() > 1) {
-         int tmpa[2], tmpb[2];
+         long int tmpa[2], tmpb[2];
          tmpa[0] = getLocalNumberOfBoxes();
          tmpa[1] = getLocalNumberOfCells();
 
@@ -604,9 +604,9 @@ BoxLevel::cacheGlobalReducedData() const
          d_mpi.Allreduce(tmpa,
             tmpb,                        // Better to use MPI_IN_PLACE, but not some MPI's do not support.
             2,
-            MPI_INT,
+            MPI_LONG,
             MPI_SUM);
-         d_global_number_of_boxes = tmpb[0];
+         d_global_number_of_boxes = (int)tmpb[0];
          d_global_number_of_cells = tmpb[1];
       } else {
          d_global_number_of_boxes = getLocalNumberOfBoxes();

@@ -735,7 +735,7 @@ public:
     *
     * @pre isInitialized()
     */
-   int
+   long int
    getGlobalNumberOfCells() const
    {
       TBOX_ASSERT(isInitialized());
@@ -1924,7 +1924,7 @@ private:
     *
     * A value < 0 means it has not been computed.
     */
-   mutable int d_global_number_of_cells;
+   mutable long int d_global_number_of_cells;
 
    /*!
     * @brief Local Box count, excluding periodic images.
