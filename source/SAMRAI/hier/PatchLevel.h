@@ -320,7 +320,7 @@ public:
    /*!
     * @brief Get the global number of cells
     */
-   int
+   long int
    getGlobalNumberOfCells() const
    {
       return d_box_level->getGlobalNumberOfCells();

@@ -1370,7 +1370,7 @@ void enforceNesting(
 
    const hier::BoxLevel &L0 = L0_to_L1.getBase();
 
-   const int cell_count = L1.getGlobalNumberOfCells();
+   const long int cell_count = L1.getGlobalNumberOfCells();
 
    /*
     * Make L1 nest inside L0 by nesting_width.

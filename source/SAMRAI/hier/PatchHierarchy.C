@@ -1181,7 +1181,7 @@ PatchHierarchy::recursivePrint(
    int depth)
 {
    int totl_npatches = 0;
-   int totl_ncells = 0;
+   long int totl_ncells = 0;
    int nlevels = getNumberOfLevels();
    os << border << "Domain of hierarchy:\n" << d_domain_box_level->format(border, 2) << '\n'
       << border << "Number of levels = " << nlevels << '\n';
