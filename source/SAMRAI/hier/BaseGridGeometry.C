@@ -66,6 +66,7 @@ boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_set_boundary_boxes;
 boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_set_geometry_data_on_patches;
 boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_compute_boundary_boxes_on_level;
 boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_get_boundary_boxes;
+boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_adjust_multiblock_patch_level_boundaries;
 
 /*
  *************************************************************************
@@ -2187,6 +2188,8 @@ BaseGridGeometry::adjustMultiblockPatchLevelBoundaries(
 
    if (d_number_blocks > 1) {
 
+      t_adjust_multiblock_patch_level_boundaries->start();
+
       const BoxContainer& d_boxes =
          patch_level.getBoxLevel()->getBoxes();
 
@@ -2227,6 +2230,8 @@ BaseGridGeometry::adjustMultiblockPatchLevelBoundaries(
                singularity);
          }
       }
+
+      t_adjust_multiblock_patch_level_boundaries->stop();
    }
 }
 
@@ -2470,28 +2475,22 @@ BaseGridGeometry::initializeCallback()
 {
    t_find_patches_touching_boundaries = tbox::TimerManager::getManager()->
       getTimer("hier::BaseGridGeometry::findPatchesTouchingBoundaries()");
-   TBOX_ASSERT(t_find_patches_touching_boundaries);
    t_touching_boundaries_init = tbox::TimerManager::getManager()->
       getTimer("hier::BaseGridGeometry::...TouchingBoundaries()_init");
-   TBOX_ASSERT(t_touching_boundaries_init);
    t_touching_boundaries_loop = tbox::TimerManager::getManager()->
       getTimer("hier::BaseGridGeometry::...TouchingBoundaries()_loop");
-   TBOX_ASSERT(t_touching_boundaries_loop);
    t_set_geometry_on_patches = tbox::TimerManager::getManager()->
       getTimer("hier::BaseGridGeometry::setGeometryOnPatches()");
-   TBOX_ASSERT(t_set_geometry_on_patches);
    t_set_boundary_boxes = tbox::TimerManager::getManager()->
       getTimer("hier::BaseGridGeometry::setBoundaryBoxes()");
-   TBOX_ASSERT(t_set_boundary_boxes);
    t_set_geometry_data_on_patches = tbox::TimerManager::getManager()->
       getTimer("hier::BaseGridGeometry::set_geometry_data_on_patches");
-   TBOX_ASSERT(t_set_geometry_data_on_patches);
    t_compute_boundary_boxes_on_level = tbox::TimerManager::getManager()->
       getTimer("hier::BaseGridGeometry::computeBoundaryBoxesOnLevel()");
-   TBOX_ASSERT(t_compute_boundary_boxes_on_level);
    t_get_boundary_boxes = tbox::TimerManager::getManager()->
       getTimer("hier::BaseGridGeometry::getBoundaryBoxes()");
-   TBOX_ASSERT(t_get_boundary_boxes);
+   t_adjust_multiblock_patch_level_boundaries = tbox::TimerManager::getManager()->
+      getTimer("hier::BaseGridGeometry::adjustMultiblockPatchLevelBoundaries()");
 }
 
 /*

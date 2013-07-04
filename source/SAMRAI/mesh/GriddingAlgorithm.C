@@ -1694,8 +1694,9 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    }
 
    if (d_barrier_and_time) {
-      t_regrid_finer_create->barrierAndStart();
+      new_box_level->getMPI().Barrier();
    }
+   t_regrid_finer_create->start();
 
    /*
     * Either remove pre-existing fine level from hierarchy and make
@@ -1880,6 +1881,8 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    d_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(
       *d_hierarchy->getPatchLevel(new_ln));
 
+   t_regrid_finer_create->stop();
+
    if (d_barrier_and_time) {
       t_initialize_level_data->barrierAndStart();
    }
@@ -1898,9 +1901,6 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
     * Destroy old patch level, if such a level existed prior to regrid.
     */
    old_fine_level.reset();
-   if (d_barrier_and_time) {
-      t_regrid_finer_create->stop();
-   }
 
    t_regrid_finer_create_and_install->stop();
 }
