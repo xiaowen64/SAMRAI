@@ -3643,12 +3643,12 @@ TreeLoadBalancer::evaluateBreak(
       cur_load <= low_load ? low_load-cur_load : 0.0;
    LoadType new_range_miss = new_load >= high_load ? new_load-high_load :
       new_load <= low_load ? low_load-new_load : 0.0;
-   flags[0] = new_range_miss < cur_range_miss ? 1 : new_range_miss > cur_range_miss ? -1 : 0;
+   flags[0] = new_range_miss < (cur_range_miss-0.001*d_global_avg_load) ? 1 : new_range_miss > cur_range_miss ? -1 : 0;
 
    LoadType cur_diff = tbox::MathUtilities<double>::Abs(cur_load-ideal_load);
    LoadType new_diff = tbox::MathUtilities<double>::Abs(new_load-ideal_load);
 
-   flags[1] = new_diff < cur_diff ? 1 : new_diff > cur_diff ? -1 : 0;
+   flags[1] = new_diff < (cur_diff-0.001*d_global_avg_load) ? 1 : new_diff > cur_diff ? -1 : 0;
 
    /*
     * Combined evaluation gives preference to in-range improvement.
