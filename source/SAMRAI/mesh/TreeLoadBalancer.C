@@ -1528,10 +1528,16 @@ t_post_load_distribution_barrier->stop();
     * We have only sends to complete, so it should not take
     * long to advance them all to completion.
     */
+   if ( d_print_steps ) {
+      tbox::plog << "TreeLaodBalancer::loadBalanceWithinRankGroup waiting for sends to complete.\n";
+   }
    t_finish_sends->start();
    child_send_stage.advanceAll();
    parent_send_stage.advanceAll();
    t_finish_sends->stop();
+   if ( d_print_steps ) {
+      tbox::plog << "TreeLaodBalancer::loadBalanceWithinRankGroup completed sends.\n";
+   }
    child_send_stage.clearCompletionQueue();
    parent_send_stage.clearCompletionQueue();
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1544,11 +1550,20 @@ t_post_load_distribution_barrier->stop();
       TBOX_ASSERT(parent_recv->isDone());
    }
 #endif
+   if ( d_print_steps ) {
+      tbox::plog << "TreeLaodBalancer::loadBalanceWithinRankGroup for completed sends.\n";
+   }
 
 
+   if ( d_print_steps ) {
+      tbox::plog << "TreeLaodBalancer::loadBalanceWithinRankGroup constructing unbalanced->balanced.\n";
+   }
    constructSemilocalUnbalancedToBalanced(
       unbalanced_to_balanced,
       unassigned );
+   if ( d_print_steps ) {
+      tbox::plog << "TreeLaodBalancer::loadBalanceWithinRankGroup finished constructing unbalanced->balanced.\n";
+   }
 
    t_get_map->stop();
 
@@ -2183,9 +2198,15 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
    std::vector<tbox::SAMRAI_MPI::Request>
       send_requests( outgoing_messages_size, MPI_REQUEST_NULL );
 
+   if ( d_print_edge_steps ) {
+      tbox::plog << "TreeLoadBalancer::constructSemilocalUnbalancedToBalanced: starting post-distribution barrier.\n";
+   }
    t_post_load_distribution_barrier->start();
    d_mpi.Barrier(); // This barrier seems to speed up the load balancing, maybe by allowing one communication phase to finish before beginning another.
    t_post_load_distribution_barrier->stop();
+   if ( d_print_edge_steps ) {
+      tbox::plog << "TreeLoadBalancer::constructSemilocalUnbalancedToBalanced: finished post-distribution barrier.\n";
+   }
 
    for ( int send_number = 0; send_number < outgoing_messages_size; ++send_number ) {
 
