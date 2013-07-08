@@ -86,6 +86,7 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_comm_graph_writer(),
    d_master_workload_data_id(d_default_data_id),
    d_flexible_load_tol(0.0),
+   d_load_comparison_tol(1.0e-5),
    d_balance_penalty_wt(1.0),
    d_surface_penalty_wt(1.0),
    d_slender_penalty_wt(1.0),
@@ -1937,7 +1938,7 @@ TreeLoadBalancer::adjustLoad(
       LoadType improvement =
          tbox::MathUtilities<double>::Abs( old_distance_to_ideal
                                            - (ideal_load - main_bin.getSumLoad()) );
-      if ( improvement < 0.001*d_global_avg_load ) {
+      if ( improvement < d_load_comparison_tol*d_global_avg_load ) {
          break;
       }
 
@@ -3643,12 +3644,14 @@ TreeLoadBalancer::evaluateBreak(
       cur_load <= low_load ? low_load-cur_load : 0.0;
    LoadType new_range_miss = new_load >= high_load ? new_load-high_load :
       new_load <= low_load ? low_load-new_load : 0.0;
-   flags[0] = new_range_miss < (cur_range_miss-0.001*d_global_avg_load) ? 1 : new_range_miss > cur_range_miss ? -1 : 0;
+   flags[0] = new_range_miss < (cur_range_miss-d_load_comparison_tol*d_global_avg_load) ?
+      1 : new_range_miss > cur_range_miss ? -1 : 0;
 
    LoadType cur_diff = tbox::MathUtilities<double>::Abs(cur_load-ideal_load);
    LoadType new_diff = tbox::MathUtilities<double>::Abs(new_load-ideal_load);
 
-   flags[1] = new_diff < (cur_diff-0.001*d_global_avg_load) ? 1 : new_diff > cur_diff ? -1 : 0;
+   flags[1] = new_diff < (cur_diff-d_load_comparison_tol*d_global_avg_load) ?
+      1 : new_diff > cur_diff ? -1 : 0;
 
    /*
     * Combined evaluation gives preference to in-range improvement.

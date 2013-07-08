@@ -1226,6 +1226,16 @@ private:
    double d_flexible_load_tol;
 
    /*!
+    * @brief Load comparison tolerance factor.
+    *
+    * When low-level methods check whether one candidate is better
+    * than the other, ignore improvements less than
+    * d_load_comparison_tol*d_global_avg_load.  This prevents infinite
+    * loops when the improvement is very near zero.
+    */
+   double d_load_comparison_tol;
+
+   /*!
     * @brief Weighting factor for penalizing imbalance.
     *
     * @see combinedBreakingPenalty().
