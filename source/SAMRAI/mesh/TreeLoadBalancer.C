@@ -1619,7 +1619,7 @@ t_post_load_distribution_barrier->stop();
        * Record these nodes:
        * - Number of final boxes:
        */
-      d_comm_graph_writer->addRecord( d_mpi, int(0), size_t(8), size_t(7) );
+      d_comm_graph_writer->addRecord( d_mpi, size_t(8), size_t(7) );
 
       const int prank = (d_rank_tree->isRoot() ? -1 : d_rank_tree->getParentRank());
 
