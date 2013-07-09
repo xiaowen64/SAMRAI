@@ -1649,6 +1649,11 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    TBOX_ASSERT(tag_to_new && tag_to_new->hasTranspose());
    TBOX_ASSERT(new_box_level);
 
+   if (d_print_steps) {
+      tbox::plog
+      << "GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel: starting\n";
+   }
+
    t_regrid_finer_create_and_install->start();
 
    hier::Connector& new_to_tag = tag_to_new->getTranspose();
@@ -1656,10 +1661,6 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    /*
     * Compute self-Connector for the new level.
     */
-   if (d_print_steps) {
-      tbox::plog
-      << "GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel: bridge links\n";
-   }
 
    const tbox::Dimension& dim = d_hierarchy->getDim();
 
@@ -1904,6 +1905,11 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    }
 
    t_regrid_finer_create_and_install->stop();
+
+   if (d_print_steps) {
+      tbox::plog
+      << "GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel: returning\n";
+   }
 }
 
 

@@ -86,6 +86,7 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_comm_graph_writer(),
    d_master_workload_data_id(d_default_data_id),
    d_flexible_load_tol(0.0),
+   d_load_comparison_tol(1.0e-5),
    d_balance_penalty_wt(1.0),
    d_surface_penalty_wt(1.0),
    d_slender_penalty_wt(1.0),
@@ -103,6 +104,7 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_barrier_before(false),
    d_barrier_after(false),
    d_print_steps(false),
+   d_print_pop_steps(false),
    d_print_break_steps(false),
    d_print_swap_steps(false),
    d_print_edge_steps(false),
@@ -1527,10 +1529,16 @@ t_post_load_distribution_barrier->stop();
     * We have only sends to complete, so it should not take
     * long to advance them all to completion.
     */
+   if ( d_print_steps ) {
+      tbox::plog << "TreeLaodBalancer::loadBalanceWithinRankGroup waiting for sends to complete.\n";
+   }
    t_finish_sends->start();
    child_send_stage.advanceAll();
    parent_send_stage.advanceAll();
    t_finish_sends->stop();
+   if ( d_print_steps ) {
+      tbox::plog << "TreeLaodBalancer::loadBalanceWithinRankGroup completed sends.\n";
+   }
    child_send_stage.clearCompletionQueue();
    parent_send_stage.clearCompletionQueue();
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1543,11 +1551,20 @@ t_post_load_distribution_barrier->stop();
       TBOX_ASSERT(parent_recv->isDone());
    }
 #endif
+   if ( d_print_steps ) {
+      tbox::plog << "TreeLaodBalancer::loadBalanceWithinRankGroup for completed sends.\n";
+   }
 
 
+   if ( d_print_steps ) {
+      tbox::plog << "TreeLaodBalancer::loadBalanceWithinRankGroup constructing unbalanced->balanced.\n";
+   }
    constructSemilocalUnbalancedToBalanced(
       unbalanced_to_balanced,
       unassigned );
+   if ( d_print_steps ) {
+      tbox::plog << "TreeLaodBalancer::loadBalanceWithinRankGroup finished constructing unbalanced->balanced.\n";
+   }
 
    if ( d_summarize_map ) {
       tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup unbalanced--->balanced map:\n"
@@ -1790,6 +1807,28 @@ TreeLoadBalancer::adjustLoad(
 
    t_adjust_load->start();
 
+   actual_transfer = adjustLoadByPopping(
+      main_bin,
+      hold_bin,
+      ideal_load,
+      low_load,
+      high_load );
+
+   if (d_print_steps) {
+      double balance_penalty = computeBalancePenalty(
+         main_bin,
+         hold_bin,
+         (main_bin.getSumLoad() - ideal_load));
+      tbox::plog << "  Balance penalty after adjustLoadByPopping = "
+                 << balance_penalty
+                 << ", needs " << (ideal_load-main_bin.getSumLoad())
+                 << " more with " << main_bin.size() << " main_bin and "
+                 << hold_bin.size() << " hold_bin Boxes remaining."
+                 << "\n  main_bin now has " << main_bin.getSumLoad()
+                 << " in " << main_bin.size() << " boxes."
+                 << std::endl;
+   }
+
    /*
     * The algorithm cycles through a do-loop.  Each time around, we
     * try to swap some BoxInTransit between main_bin and hold_bin
@@ -1898,7 +1937,7 @@ TreeLoadBalancer::adjustLoad(
       LoadType improvement =
          tbox::MathUtilities<double>::Abs( old_distance_to_ideal
                                            - (ideal_load - main_bin.getSumLoad()) );
-      if ( improvement < 0.001*d_global_avg_load ) {
+      if ( improvement < d_load_comparison_tol*d_global_avg_load ) {
          break;
       }
 
@@ -2159,9 +2198,15 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
    std::vector<tbox::SAMRAI_MPI::Request>
       send_requests( outgoing_messages_size, MPI_REQUEST_NULL );
 
+   if ( d_print_edge_steps ) {
+      tbox::plog << "TreeLoadBalancer::constructSemilocalUnbalancedToBalanced: starting post-distribution barrier.\n";
+   }
    t_post_load_distribution_barrier->start();
    d_mpi.Barrier(); // This barrier seems to speed up the load balancing, maybe by allowing one communication phase to finish before beginning another.
    t_post_load_distribution_barrier->stop();
+   if ( d_print_edge_steps ) {
+      tbox::plog << "TreeLoadBalancer::constructSemilocalUnbalancedToBalanced: finished post-distribution barrier.\n";
+   }
 
    for ( int send_number = 0; send_number < outgoing_messages_size; ++send_number ) {
 
@@ -2579,7 +2624,20 @@ TreeLoadBalancer::adjustLoadByBreaking(
    int break_acceptance_flags[3] = {0,0,0};
    int &found_breakage = break_acceptance_flags[2];
 
-   for (TransitSet::iterator si = hold_bin.begin(); si != hold_bin.end(); ++si) {
+   /*
+    * Find best box to break.  Loop in reverse because smaller boxes
+    * are cheaper to analyze for bad cuts.
+    */
+   for (TransitSet::reverse_iterator si = hold_bin.rbegin(); si != hold_bin.rend(); ++si) {
+
+      /*
+       * Skip boxes smaller than ideal_transfer.  If we called
+       * adjustLoadBySwapping before entering this method, there
+       * should not be any such boxes.
+       */
+      if ( si->d_boxload < ideal_transfer ) {
+         continue;
+      }
 
       const BoxInTransit& candidate = *si;
 
@@ -2791,6 +2849,119 @@ TreeLoadBalancer::adjustLoadBySwapping(
    }
 
    t_adjust_load_by_swapping->stop();
+
+   return actual_transfer;
+}
+
+
+
+/*
+ *************************************************************************
+ * Attempt to adjust the load of a main_bin by popping the biggest boxes
+ * from a source bin and moving them to a destination bin.
+ *
+ * This method should give results similar to adjustLoadBySwapping,
+ * but when the boxes are small in comparison to the load changed, it
+ * should be faster.
+ *
+ * This method can transfer load both ways.
+ * ideal_transfer > 0 means to raise the load of main_bin
+ * ideal_transfer < 0 means to raise the load of hold_bin
+ *
+ * Return amount of load transfered.
+ *************************************************************************
+ */
+TreeLoadBalancer::LoadType
+TreeLoadBalancer::adjustLoadByPopping(
+   TransitSet& main_bin,
+   TransitSet& hold_bin,
+   LoadType ideal_load,
+   LoadType low_load,
+   LoadType high_load ) const
+{
+   TBOX_ASSERT( high_load >= ideal_load );
+   TBOX_ASSERT( low_load <= ideal_load );
+
+   t_adjust_load_by_popping->start();
+
+   /*
+    * Logic in this method assumes positive transfer from hold_bin
+    * (the source) to main_bin (the destination).  When transfering
+    * the other way, switch the roles of main_bin and hold_bin.
+    */
+   TransitSet *src = &hold_bin;
+   TransitSet *dst = &main_bin;
+   LoadType dst_ideal_load = ideal_load;
+   LoadType dst_low_load = low_load;
+   LoadType dst_high_load = high_load;
+
+   if ( main_bin.getSumLoad() > ideal_load ) {
+
+      dst_ideal_load = hold_bin.getSumLoad() + ( main_bin.getSumLoad() - ideal_load );
+      dst_low_load = hold_bin.getSumLoad() + ( main_bin.getSumLoad() - high_load );
+      dst_high_load = hold_bin.getSumLoad() + ( main_bin.getSumLoad() - low_load );
+
+      src = &main_bin;
+      dst = &hold_bin;
+
+   }
+
+   if (d_print_pop_steps) {
+      tbox::plog << "  Attempting to bring main_bin from "
+                 << main_bin.getSumLoad() << " to " << ideal_load
+                 << " [" << low_load << ',' << high_load
+                 << "] by popping."
+                 << std::endl;
+   }
+
+   LoadType actual_transfer = 0;
+   int acceptance_flags[3] = {0,0,0};
+
+   size_t num_boxes_popped = 0;
+
+   while ( !src->empty() ) {
+
+      const BoxInTransit &candidate_box = *src->begin();
+
+      bool improved = evaluateBreak(
+         acceptance_flags,
+         dst->getSumLoad(),
+         dst->getSumLoad() + candidate_box.d_boxload,
+         dst_ideal_load,
+         dst_low_load,
+         dst_high_load );
+
+      if ( improved ) {
+
+         if ( d_print_pop_steps ) {
+            tbox::plog << "    adjustLoadByPopping pop #" << num_boxes_popped
+                       << ", " << candidate_box;
+         }
+
+         actual_transfer += candidate_box.d_boxload;
+         dst->insert(candidate_box);
+         src->erase(src->begin());
+         ++num_boxes_popped;
+
+         if ( d_print_pop_steps ) {
+            tbox::plog << ", main_bin load is " << main_bin.getSumLoad() << '\n';
+         }
+      }
+      if ( ( dst->getSumLoad() >= dst_low_load && dst->getSumLoad() <= high_load ) ||
+           !improved ) {
+         break;
+      }
+   }
+
+   if (d_print_pop_steps) {
+      tbox::plog << "  Final result in adjustLoadByPopping: "
+                 << main_bin.getSumLoad() << " / " << ideal_load
+                 << "  Off by " << (main_bin.getSumLoad()-ideal_load)
+                 << ".  " << num_boxes_popped << " boxes popped."
+                 << std::endl;
+   }
+
+   t_adjust_load_by_popping->stop();
 
    return actual_transfer;
 }
@@ -3474,12 +3645,14 @@ TreeLoadBalancer::evaluateBreak(
       cur_load <= low_load ? low_load-cur_load : 0.0;
    LoadType new_range_miss = new_load >= high_load ? new_load-high_load :
       new_load <= low_load ? low_load-new_load : 0.0;
-   flags[0] = new_range_miss < cur_range_miss ? 1 : new_range_miss > cur_range_miss ? -1 : 0;
+   flags[0] = new_range_miss < (cur_range_miss-d_load_comparison_tol*d_global_avg_load) ?
+      1 : new_range_miss > cur_range_miss ? -1 : 0;
 
    LoadType cur_diff = tbox::MathUtilities<double>::Abs(cur_load-ideal_load);
    LoadType new_diff = tbox::MathUtilities<double>::Abs(new_load-ideal_load);
 
-   flags[1] = new_diff < cur_diff ? 1 : new_diff > cur_diff ? -1 : 0;
+   flags[1] = new_diff < (cur_diff-d_load_comparison_tol*d_global_avg_load) ?
+      1 : new_diff > cur_diff ? -1 : 0;
 
    /*
     * Combined evaluation gives preference to in-range improvement.
@@ -3865,6 +4038,8 @@ TreeLoadBalancer::getFromInput(
       d_print_steps = input_db->getBoolWithDefault("DEV_print_steps", false);
       d_print_break_steps =
          input_db->getBoolWithDefault("DEV_print_break_steps", false);
+      d_print_pop_steps =
+         input_db->getBoolWithDefault("DEV_print_pop_steps", d_print_pop_steps);
       d_print_swap_steps =
          input_db->getBoolWithDefault("DEV_print_swap_steps", false);
       d_print_edge_steps =
@@ -4908,6 +5083,8 @@ t_post_load_distribution_barrier = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::find_bad_cuts");
       t_adjust_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::adjustLoad()");
+      t_adjust_load_by_popping = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::adjustLoadByPopping()");
       t_adjust_load_by_swapping = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::adjustLoadBySwapping()");
       t_shift_loads_by_breaking = tbox::TimerManager::getManager()->

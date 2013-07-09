@@ -481,6 +481,7 @@ private:
       //! @name Duplicated set interfaces.
       typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::iterator iterator;
       typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::const_iterator const_iterator;
+      typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::reverse_iterator reverse_iterator;
       typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::key_type key_type;
       typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::value_type value_type;
       TransitSet() : d_set(), d_sumload(0) {}
@@ -494,6 +495,8 @@ private:
       iterator end() { return d_set.end(); }
       const_iterator begin() const { return d_set.begin(); }
       const_iterator end() const { return d_set.end(); }
+      reverse_iterator rbegin() const { return d_set.rbegin(); }
+      reverse_iterator rend() const { return d_set.rend(); }
       size_t size() const { return d_set.size(); }
       std::pair<iterator, bool> insert( const value_type &x ) {
          std::pair<iterator,bool> rval = d_set.insert(x);
@@ -679,6 +682,33 @@ private:
       TransitSet& main_bin,
       TransitSet& hold_bin,
       hier::LocalId& next_available_index,
+      LoadType ideal_load,
+      LoadType low_load,
+      LoadType high_load ) const;
+
+   /*!
+    * @brief Shift load from src to dst by popping the front of
+    * one set of boxes and putting it in the other.
+    *
+    * @param[in,out] main_bin
+    *
+    * @param[in,out] hold_bin
+    *
+    * @param[in] ideal_load The load that main_bin should have.
+    *
+    * @param[in] low_load Return when main_bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @param[in] high_load Return when main_bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @return Amount of load transfered.  If positive, load went
+    * from main_bin to hold_bin.
+    */
+   LoadType
+   adjustLoadByPopping(
+      TransitSet& main_bin,
+      TransitSet& hold_bin,
       LoadType ideal_load,
       LoadType low_load,
       LoadType high_load ) const;
@@ -1196,6 +1226,16 @@ private:
    double d_flexible_load_tol;
 
    /*!
+    * @brief Load comparison tolerance factor.
+    *
+    * When low-level methods check whether one candidate is better
+    * than the other, ignore improvements less than
+    * d_load_comparison_tol*d_global_avg_load.  This prevents infinite
+    * loops when the improvement is very near zero.
+    */
+   double d_load_comparison_tol;
+
+   /*!
     * @brief Weighting factor for penalizing imbalance.
     *
     * @see combinedBreakingPenalty().
@@ -1275,6 +1315,7 @@ private:
    boost::shared_ptr<tbox::Timer> t_compute_tree_load;
    std::vector<boost::shared_ptr<tbox::Timer> > t_compute_tree_load_for_cycle;
    boost::shared_ptr<tbox::Timer> t_adjust_load;
+   boost::shared_ptr<tbox::Timer> t_adjust_load_by_popping;
    boost::shared_ptr<tbox::Timer> t_adjust_load_by_swapping;
    boost::shared_ptr<tbox::Timer> t_shift_loads_by_breaking;
    boost::shared_ptr<tbox::Timer> t_find_swap_pair;
@@ -1312,6 +1353,7 @@ private:
 
    // Extra checks independent of optimization/debug.
    char d_print_steps;
+   char d_print_pop_steps;
    char d_print_break_steps;
    char d_print_swap_steps;
    char d_print_edge_steps;
