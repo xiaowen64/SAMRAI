@@ -1855,7 +1855,7 @@ TreeLoadBalancer::adjustLoad(
           * in the overloaded side for partial transfer to the
           * underloaded side.
           */
-         LoadType brk_transfer = -adjustLoadByBreaking(
+         LoadType brk_transfer = adjustLoadByBreaking(
             main_bin,
             hold_bin,
             next_available_index,
@@ -2522,7 +2522,7 @@ TreeLoadBalancer::destroyAsyncCommObjects(
  *************************************************************************
  * Attempt bring main_bin to within a specific load range by moving
  * one box to/from it from/to hold_bin.  This method is allowed to break
- * a box and move parts of it.
+ * the box and move parts of it.
  *************************************************************************
  */
 TreeLoadBalancer::LoadType
@@ -2536,7 +2536,7 @@ TreeLoadBalancer::adjustLoadByBreaking(
 {
    LoadType actual_transfer = 0;
 
-   if (main_bin.getSumLoad() < low_load) {
+   if (main_bin.getSumLoad() > high_load) {
       // The logic below does not handle bi-directional transfers, so handle it here.
       actual_transfer = -adjustLoadByBreaking(
          hold_bin,
@@ -2550,21 +2550,21 @@ TreeLoadBalancer::adjustLoadByBreaking(
 
    TBOX_ASSERT(low_load <= ideal_load);
    TBOX_ASSERT(ideal_load <= high_load);
-   TBOX_ASSERT(main_bin.getSumLoad() > high_load);
+   TBOX_ASSERT(main_bin.getSumLoad() <= high_load);
 
    TBOX_ASSERT(main_bin.size() + hold_bin.size() > 0);
 
    t_shift_loads_by_breaking->start();
 
-   const LoadType ideal_transfer = main_bin.getSumLoad() - ideal_load;
-   const LoadType high_transfer = main_bin.getSumLoad() - low_load;
-   const LoadType low_transfer = main_bin.getSumLoad() - high_load;
+   const LoadType ideal_transfer = ideal_load - main_bin.getSumLoad();
+   const LoadType high_transfer = high_load - main_bin.getSumLoad();
+   const LoadType low_transfer = low_load - main_bin.getSumLoad();
 
    if (d_print_steps) {
       tbox::plog << "    adjustLoadByBreaking asked to break off "
                  << ideal_transfer << " [" << low_transfer << ','
-                 << high_transfer << "] from one of " << main_bin.size()
-                 << " Boxes to add to set of " << hold_bin.size()
+                 << high_transfer << "] from one of " << hold_bin.size()
+                 << " Boxes to add to set of " << main_bin.size()
                  << " Boxes."
                  << std::endl;
    }
@@ -2579,7 +2579,7 @@ TreeLoadBalancer::adjustLoadByBreaking(
    int break_acceptance_flags[3] = {0,0,0};
    int &found_breakage = break_acceptance_flags[2];
 
-   for (TransitSet::iterator si = main_bin.begin(); si != main_bin.end(); ++si) {
+   for (TransitSet::iterator si = hold_bin.begin(); si != hold_bin.end(); ++si) {
 
       const BoxInTransit& candidate = *si;
 
@@ -2640,7 +2640,7 @@ TreeLoadBalancer::adjustLoadByBreaking(
       } else {
          if (d_print_break_steps) {
             tbox::plog << "    Break step could not break " << ideal_transfer
-                       << " from main_bin box " << candidate
+                       << " from hold_bin box " << candidate
                        << std::endl;
          }
       }
@@ -2651,9 +2651,9 @@ TreeLoadBalancer::adjustLoadByBreaking(
    if ( found_breakage == 1 ) {
       /*
        * Remove the chosen candidate.  Put its breakoff parts
-       * in hold_bin and its leftover parts back into main_bin.
+       * in main_bin and its leftover parts back into hold_bin.
        */
-      main_bin.erase(breakbox);
+      hold_bin.erase(breakbox);
       for (std::vector<hier::Box>::const_iterator bi = breakoff.begin();
            bi != breakoff.end();
            ++bi) {
@@ -2666,7 +2666,7 @@ TreeLoadBalancer::adjustLoadByBreaking(
                                                              give_box_in_transit.d_orig_box,
                                                              give_box_in_transit.getBox()));
          next_available_index += 2 + d_rank_tree->getDegree();
-         hold_bin.insert(give_box_in_transit);
+         main_bin.insert(give_box_in_transit);
          actual_transfer += give_box_in_transit.d_boxload;
          if (d_print_break_steps) {
             tbox::plog << "    Breakoff box " << *bi << bi->numberCells()
@@ -2687,7 +2687,7 @@ TreeLoadBalancer::adjustLoadByBreaking(
                                                              keep_box_in_transit.d_orig_box,
                                                              keep_box_in_transit.getBox()));
          next_available_index += 2 + d_rank_tree->getDegree();
-         main_bin.insert(keep_box_in_transit);
+         hold_bin.insert(keep_box_in_transit);
          if (d_print_break_steps) {
             tbox::plog << "    Leftover box " << *bi << bi->numberCells()
                        << '|' << bi->size()
@@ -2719,7 +2719,7 @@ TreeLoadBalancer::adjustLoadByBreaking(
  * and may have to swap to shift some of the load
  * back.
  *
- * Return whether any changes were made.
+ * Return amount of load transfered.
  *************************************************************************
  */
 TreeLoadBalancer::LoadType
