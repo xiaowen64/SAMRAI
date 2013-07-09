@@ -583,7 +583,7 @@ private:
 
       /*!
        * @brief Amount of work the subtree is willing to have, based
-       * on the load tolerance and upper limit of children.
+       * on the load tolerance and upper limits of children.
        */
       LoadType d_subtree_load_upperlimit;
 
