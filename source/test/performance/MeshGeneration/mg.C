@@ -155,7 +155,7 @@ size_t num_records_written = 0;
 /*
 ********************************************************************************
 *
-* Performance testing for load balancers.
+* Performance testing for mesh generation operations.
 *
 * 1. Build "level 0" from the domain description (input parameter
 * "domain_boxes").  L0 is for doing the test, not for checking load
