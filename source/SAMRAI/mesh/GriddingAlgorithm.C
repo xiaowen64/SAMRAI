@@ -586,7 +586,7 @@ GriddingAlgorithm::makeCoarsestLevel(
    }
 
    if (d_log_metadata_statistics) {
-      logMetadataStatistics("makeCoarsestLevel", 0, 0, level_time, false, false);
+      d_hierarchy->logMetadataStatistics("makeCoarsestLevel", 0, 0, level_time, false, false);
    }
 
 #ifdef GA_RECORD_STATS
@@ -947,7 +947,7 @@ GriddingAlgorithm::makeFinerLevel(
          t_reset_hier->stop();
 
          if (d_log_metadata_statistics) {
-            logMetadataStatistics("makeFinerLevel", d_hierarchy->getFinestLevelNumber(), cycle, level_time, false, true);
+            d_hierarchy->logMetadataStatistics("makeFinerLevel", d_hierarchy->getFinestLevelNumber(), cycle, level_time, false, true);
          }
       }
 
@@ -1350,7 +1350,7 @@ GriddingAlgorithm::regridFinerLevel(
 
          if (d_log_metadata_statistics) {
             // Don't log the coarse Connector, if the coarse level will be updated.
-            logMetadataStatistics("regridFinerLevel", new_ln, regrid_cycle, regrid_time, new_ln<d_hierarchy->getFinestLevelNumber(), tag_ln==d_base_ln);
+            d_hierarchy->logMetadataStatistics("regridFinerLevel", new_ln, regrid_cycle, regrid_time, new_ln<d_hierarchy->getFinestLevelNumber(), true);
          }
 
       } else {
@@ -4664,66 +4664,6 @@ GriddingAlgorithm::getFromRestart()
    d_barrier_and_time = db->getBool("DEV_barrier_and_time");
 }
 
-/*
- *************************************************************************
- * Log metadata statistics after generating a new level.
- *
- * Log the given level, its peer connector and if requested, the
- * connectors to the next finer and next coarser levels.  Connectors
- * logged will have unit width.
- *************************************************************************
- */
-void
-GriddingAlgorithm::logMetadataStatistics(
-   const char *caller_name,
-   int ln,
-   int cycle,
-   int level_time,
-   bool log_fine_connector,
-   bool log_coarse_connector) const
-{
-   const std::string name("L" + tbox::Utilities::levelToString(ln));
-   const boost::shared_ptr<hier::PatchLevel> level =
-      d_hierarchy->getPatchLevel(ln);
-   const hier::BoxLevel& box_level = *level->getBoxLevel();
-   const hier::IntVector &one_vector =
-      hier::IntVector::getOne(d_hierarchy->getDim());
-
-   tbox::plog << "GriddingAlgorithm metadata statistics from " << caller_name << ", at cycle " << cycle
-              << ", time " << level_time << ", added "
-              << name << ":\n"
-              << box_level.format("\t",0)
-              << '\t' << name << " statistics:\n"
-              << box_level.formatStatistics("\t\t");
-
-   const hier::Connector &peer_conn = level->findConnector(*level,
-      one_vector,
-      hier::CONNECTOR_CREATE,
-      true);
-   tbox::plog << "\tPeer connector:\n" << peer_conn.format("\t\t",0)
-              << "\tPeer connector statistics:\n"
-              << peer_conn.formatStatistics("\t\t");
-
-   if ( log_fine_connector ) {
-      const hier::Connector &fine_conn =
-         level->findConnector(*d_hierarchy->getPatchLevel(ln+1),
-            one_vector,
-            hier::CONNECTOR_CREATE,
-            true);
-      tbox::plog << "\tFine connector:\n" << fine_conn.format("\t\t",0)
-                 << "\tFine connector statistics:\n" << fine_conn.formatStatistics("\t\t");
-   }
-
-   if ( log_coarse_connector ) {
-      const hier::Connector &crse_conn =
-         level->findConnector(*d_hierarchy->getPatchLevel(ln-1),
-            one_vector,
-            hier::CONNECTOR_CREATE,
-            true);
-      tbox::plog << "\tCoarse connector:\n" << crse_conn.format("\t\t",0)
-                 << "\tCoarse connector statistics:\n" << crse_conn.formatStatistics("\t\t");
-   }
-}
 
 /*
  *************************************************************************

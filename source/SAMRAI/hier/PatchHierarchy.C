@@ -874,6 +874,67 @@ PatchHierarchy::removePatchLevel(
 
 /*
  *************************************************************************
+ * Log the given level, its peer connector and if requested, the
+ * connectors to the next finer and next coarser levels.  Connectors
+ * logged will have width required by the hierarchy.
+ *************************************************************************
+ */
+void
+PatchHierarchy::logMetadataStatistics(
+   const char *note,
+   int ln,
+   int cycle,
+   int level_time,
+   bool log_fine_connector,
+   bool log_coarse_connector) const
+{
+   const std::string name("L" + tbox::Utilities::levelToString(ln));
+   const boost::shared_ptr<hier::PatchLevel> level =
+      getPatchLevel(ln);
+   const hier::BoxLevel& box_level = *level->getBoxLevel();
+
+   tbox::plog << "PatchHierarchy metadata statistics '"
+              << note << "', at cycle " << cycle
+              << ", time " << level_time << ", added "
+              << name << ":\n"
+              << box_level.format("\t",0)
+              << '\t' << name << " statistics:\n"
+              << box_level.formatStatistics("\t\t");
+
+   const hier::Connector &peer_conn =
+      level->findConnector(*level,
+                           getRequiredConnectorWidth(ln,ln),
+                           hier::CONNECTOR_CREATE,
+                           true);
+   tbox::plog << "\tPeer connector:\n" << peer_conn.format("\t\t",0)
+              << "\tPeer connector statistics:\n"
+              << peer_conn.formatStatistics("\t\t");
+
+   if ( log_fine_connector ) {
+      const hier::Connector &fine_conn =
+         level->findConnector(*getPatchLevel(ln+1),
+                              getRequiredConnectorWidth(ln,ln+1),
+                              hier::CONNECTOR_CREATE,
+                              true);
+      tbox::plog << "\tFine connector:\n" << fine_conn.format("\t\t",0)
+                 << "\tFine connector statistics:\n" << fine_conn.formatStatistics("\t\t");
+   }
+
+   if ( log_coarse_connector ) {
+      const hier::Connector &crse_conn =
+         level->findConnector(*getPatchLevel(ln-1),
+                              getRequiredConnectorWidth(ln,ln-1),
+                              hier::CONNECTOR_CREATE,
+                              true);
+      tbox::plog << "\tCoarse connector:\n" << crse_conn.format("\t\t",0)
+                 << "\tCoarse connector statistics:\n" << crse_conn.formatStatistics("\t\t");
+   }
+}
+
+
+
+/*
+ *************************************************************************
  *
  * Writes the class version number and the number of levels in the
  * hierarchy to the restart database.  Each patch_level write itself out

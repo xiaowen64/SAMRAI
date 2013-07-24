@@ -1064,17 +1064,6 @@ private:
    allocateTimers();
 
    /*!
-    * @brief Log metadata statistics after generating a new level.
-    */
-   void logMetadataStatistics(
-      const char *caller_name,
-      int ln,
-      int cycle,
-      int level_time,
-      bool log_fine_connector,
-      bool log_coarse_connector) const;
-
-   /*!
     * @brief Initialize static objects and register shutdown routine.
     *
     * Only called by StartupShutdownManager.
