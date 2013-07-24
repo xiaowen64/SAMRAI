@@ -2295,7 +2295,7 @@ GriddingAlgorithm::printStatistics(
          }
          s
          <<
-         " Seq#  SimTime       C-Sum      C-Avg      C-Min   ->    C-Max  C-NormDiff  B-Sum B-Avg B-Min -> B-Max B-NormDiff C/B-Avg\n";
+         " Seq#  SimTime       C-Sum      C-Avg      C-Min   ->    C-Max  C-MaxNorm   B-Sum B-Avg B-Min -> B-Max B-MaxNorm  C/B-Avg\n";
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:1572)
 #endif
@@ -2303,11 +2303,13 @@ GriddingAlgorithm::printStatistics(
             double csum = statn->getGlobalProcStatSum(cstat.getInstanceId(), sn);
             double cmax = statn->getGlobalProcStatMax(cstat.getInstanceId(), sn);
             double cmin = statn->getGlobalProcStatMin(cstat.getInstanceId(), sn);
-            double cdiffnorm = cmax != 0 ? 1.0 - cmin / cmax : 0;
+            double cavg = csum/mpi.getSize();
+            double cdiffnorm = cavg != 0 ? cmax/cavg - 1: 0;
             double bsum = statn->getGlobalProcStatSum(bstat.getInstanceId(), sn);
             double bmax = statn->getGlobalProcStatMax(bstat.getInstanceId(), sn);
             double bmin = statn->getGlobalProcStatMin(bstat.getInstanceId(), sn);
-            double bdiffnorm = bmax != 0 ? 1.0 - bmin / bmax : 0;
+            double bavg = bsum/mpi.getSize();
+            double bdiffnorm = bavg != 0 ? bmax/bavg - 1: 0;
             double stime = statn->getGlobalProcStatMin(
                   tstat.getInstanceId(), sn);
             s << std::setw(3) << sn << "  "
