@@ -58,27 +58,6 @@ using namespace std;
 
 #include <sys/stat.h>
 
-
-#define RECORD_STATS
-//#undef RECORD_STATS
-#ifdef RECORD_STATS
-#include "SAMRAI/tbox/Statistic.h"
-#include "SAMRAI/tbox/Statistician.h"
-#endif
-
-// Classes for autotesting.
-
-#if (TESTING == 1)
-#include "AutoTester.h"
-#endif
-
-using namespace SAMRAI;
-
-void
-outputStats(
-   mesh::GriddingAlgorithm& gridding_algorithm,
-   algs::HyperbolicLevelIntegrator& hyp_level_integrator);
-
 using namespace SAMRAI;
 
 /*
@@ -348,17 +327,6 @@ int main(
          }
       }
 
-#if (TESTING == 1) && !(HAVE_HDF5)
-      /*
-       * If we are autotesting on a system w/o HDF5, the read from
-       * restart will result in an error.  We want this to happen
-       * for users, so they know there is a problem with the restart,
-       * but we don't want it to happen when autotesting.
-       */
-      is_from_restart = false;
-      restart_interval = 0;
-#endif
-
       const bool write_restart = (restart_interval > 0)
          && !(restart_write_dirname.empty());
 
@@ -480,32 +448,6 @@ int main(
 
       tbox::RestartManager::getManager()->closeRestartFile();
 
-#if (TESTING == 1)
-      /*
-       * Create the autotesting component which will verify correctness
-       * of the problem. If no automated testing is done, the object does
-       * not get used.
-       */
-      AutoTester autotester("AutoTester", input_db);
-#endif
-
-      /*
-       * After creating all objects and initializing their state, we
-       * print the input database and variable database contents
-       * to the log file.
-       */
-
-#if 1
-      tbox::plog << "\nCheck input data and variables before simulation:" << endl;
-      tbox::plog << "Input database..." << endl;
-      input_db->printClassData(tbox::plog);
-      tbox::plog << "\nVariable database..." << endl;
-      hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
-
-#endif
-      tbox::plog << "\nCheck Euler data... " << endl;
-      euler_model->printClassData(tbox::plog);
-
       /*
        * Create timers for measuring I/O.
        */
@@ -534,18 +476,6 @@ int main(
 
       double loop_time = time_integrator->getIntegratorTime();
       double loop_time_end = time_integrator->getEndTime();
-
-#if (TESTING == 1)
-      /*
-       * If we are doing autotests, check result...
-       */
-      num_failures += autotester.evalTestData(
-            time_integrator->getIntegratorStep(),
-            patch_hierarchy,
-            time_integrator,
-            hyp_level_integrator,
-            gridding_algorithm);
-#endif
 
       while ((loop_time < loop_time_end) &&
              time_integrator->stepsRemaining()) {
@@ -590,13 +520,6 @@ int main(
          sim_time_stat->recordProcStat(dt_now);
 #endif
 
-         tbox::plog << "Hierarchy summary:\n";
-         patch_hierarchy->recursivePrint(tbox::plog, "H-> ", 1);
-         tbox::plog << "PatchHierarchy summary:\n";
-         patch_hierarchy->recursivePrint(tbox::plog,
-            "H-> ",
-            1);
-
          tbox::plog << endl << endl;
          tbox::pout << "\n\n++++++++++++++++++++++++++++++++++++++++++++" << endl;
          tbox::pout << "At end of timestep # " << iteration_num - 1 << endl;
@@ -635,17 +558,6 @@ int main(
          }
          t_write_viz->stop();
 
-#if (TESTING == 1)
-         /*
-          * If we are doing autotests, check result...
-          */
-         num_failures += autotester.evalTestData(iteration_num,
-               patch_hierarchy,
-               time_integrator,
-               hyp_level_integrator,
-               gridding_algorithm);
-#endif
-
          /*
           * Write byte transfer information to log file.
           */
@@ -661,10 +573,8 @@ int main(
       }
 
       /*
-       * Output timer results.
+       * Output timer result.
        */
-      tbox::TimerManager::getManager()->print(tbox::plog);
-
       t_all->stop();
       int size = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
       if (tbox::SAMRAI_MPI::getSAMRAIWorld().getRank() == 0) {
@@ -674,10 +584,6 @@ int main(
          fprintf(fp, "%f\n", t_all->getTotalWallclockTime());
          fclose(fp);
       }
-
-#ifdef RECORD_STATS
-      outputStats(*gridding_algorithm, *hyp_level_integrator);
-#endif
 
       /*
        * At conclusion of simulation, deallocate objects.
@@ -710,18 +616,3 @@ int main(
 
    return num_failures;
 }
-
-#ifdef RECORD_STATS
-void outputStats(
-   mesh::GriddingAlgorithm& gridding_algorithm,
-   algs::HyperbolicLevelIntegrator& hyp_level_integrator)
-{
-   /*
-    * Output statistics.
-    */
-   tbox::plog << "HyperbolicLevelIntegrator statistics:" << endl;
-   hyp_level_integrator.printStatistics(tbox::plog);
-   tbox::plog << "\nGriddingAlgorithm statistics:" << endl;
-   gridding_algorithm.printStatistics(tbox::plog);
-}
-#endif

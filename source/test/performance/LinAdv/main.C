@@ -61,12 +61,6 @@ using namespace std;
 #include "LinAdv.h"
 #include "SinusoidalFrontTagger.h"
 
-// Classes for run-time plotting and autotesting.
-
-#if (TESTING == 1)
-#include "AutoTester.h"
-#endif
-
 #include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
@@ -328,17 +322,6 @@ int main(
          }
       }
 
-#if (TESTING == 1) && !(HAVE_HDF5)
-      /*
-       * If we are autotesting on a system w/o HDF5, the read from
-       * restart will result in an error.  We want this to happen
-       * for users, so they know there is a problem with the restart,
-       * but we don't want it to happen when autotesting.
-       */
-      is_from_restart = false;
-      restart_interval = 0;
-#endif
-
       const bool write_restart = (restart_interval > 0)
          && !(restart_write_dirname.empty());
 
@@ -536,15 +519,6 @@ int main(
 
       RestartManager::getManager()->closeRestartFile();
 
-#if (TESTING == 1)
-      /*
-       * Create the autotesting object which will verify correctness
-       * of the problem. If no automated testing is done, the object does
-       * not get used.
-       */
-      AutoTester autotester("AutoTester", input_db);
-#endif
-
       /*
        * After creating all objects and initializing their state, we
        * print the input database and variable database contents
@@ -582,17 +556,6 @@ int main(
       double loop_time_end = time_integrator->getEndTime();
 
       int iteration_num = time_integrator->getIntegratorStep();
-
-#if (TESTING == 1)
-      /*
-       * If we are doing autotests, check result...
-       */
-      num_failures += autotester.evalTestData(iteration_num,
-            patch_hierarchy,
-            time_integrator,
-            hyp_level_integrator,
-            gridding_algorithm);
-#endif
 
       while ((loop_time < loop_time_end) &&
              time_integrator->stepsRemaining()) {
@@ -650,18 +613,6 @@ int main(
 #endif
             }
          }
-
-#if (TESTING == 1)
-         /*
-          * If we are doing autotests, check result...
-          */
-         num_failures += autotester.evalTestData(iteration_num,
-               patch_hierarchy,
-               time_integrator,
-               hyp_level_integrator,
-               gridding_algorithm);
-#endif
-
       }
 
       /*

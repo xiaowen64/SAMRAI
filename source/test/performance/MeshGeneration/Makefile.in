@@ -23,7 +23,7 @@ default: check
 include $(OBJECT)/config/Makefile.config
 
 NUM_TESTS = 17
-CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
+CPPFLAGS_EXTRA= -I$(TESTINCLUDE)
 
 TEST_NPROCS = @TEST_NPROCS@
 QUOTE = \"

@@ -22,7 +22,7 @@ default:      main
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA = -I$(TESTINCLUDE)  -DTESTING=0
+CPPFLAGS_EXTRA = -I$(TESTINCLUDE)
 
 NUM_TESTS = 2
 TEST_NPROCS = @TEST_NPROCS@

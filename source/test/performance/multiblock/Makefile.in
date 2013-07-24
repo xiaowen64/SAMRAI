@@ -23,7 +23,7 @@ default:      check
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA= -I$(TESTINCLUDE) -DTESTING=0
+CPPFLAGS_EXTRA= -I$(TESTINCLUDE)
 
 NUM_TESTS     = 0
 

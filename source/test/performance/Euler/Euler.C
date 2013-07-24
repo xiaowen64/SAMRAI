@@ -4648,15 +4648,6 @@ void Euler::checkBoundaryData(
                bscalarcase,
                d_bdry_face_density[refbdryloc]);
       }
-#if (TESTING == 1)
-      if (num_bad_values > 0) {
-         tbox::perr << "\nEuler Boundary Test FAILED: \n"
-                    << "     " << num_bad_values
-                    << " bad DENSITY values found for\n"
-                    << "     boundary type " << btype << " at location "
-                    << bloc << endl;
-      }
-#endif
 
       if (d_dim == tbox::Dimension(2)) {
          num_bad_values =
@@ -4682,15 +4673,6 @@ void Euler::checkBoundaryData(
                bscalarcase,
                d_bdry_face_density[refbdryloc]);
       }
-#if (TESTING == 1)
-      if (num_bad_values > 0) {
-         tbox::perr << "\nEuler Boundary Test FAILED: \n"
-                    << "     " << num_bad_values
-                    << " bad PRESSURE values found for\n"
-                    << "     boundary type " << btype << " at location "
-                    << bloc << endl;
-      }
-#endif
 
       for (int idir = 0; idir < d_dim.getValue(); idir++) {
 
@@ -4748,16 +4730,6 @@ void Euler::checkBoundaryData(
                   vbcase,
                   d_bdry_face_velocity[refbdryloc * d_dim.getValue() + idir]);
          }
-#if (TESTING == 1)
-         if (num_bad_values > 0) {
-            tbox::perr << "\nEuler Boundary Test FAILED: \n"
-                       << "     " << num_bad_values
-                       << " bad VELOCITY values found in direction " << idir
-                       << " for\n"
-                       << "     boundary type " << btype << " at location "
-                       << bloc << endl;
-         }
-#endif
       }
 
    }
