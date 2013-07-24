@@ -546,10 +546,6 @@ GriddingAlgorithm::makeCoarsestLevel(
       boost::shared_ptr<hier::PatchLevel> old_level(
          d_hierarchy->getPatchLevel(ln));
 
-      d_hierarchy->removePatchLevel(ln);
-
-      d_hierarchy->makeNewPatchLevel(ln, new_box_level);
-
       /*
        * Compute old<==>new.  Doing it this way is not scalable, but
        * we only do this for the coarsest level.  The old approach of
@@ -560,6 +556,14 @@ GriddingAlgorithm::makeCoarsestLevel(
       old_level->getBoxLevel()->createConnectorWithTranspose(*new_box_level,
          d_hierarchy->getRequiredConnectorWidth(0, 0, true),
          d_hierarchy->getRequiredConnectorWidth(0, 0, true));
+
+      d_tag_init_strategy->processHierarchyBeforeAddingNewLevel(d_hierarchy,
+         ln,
+         new_box_level);
+
+      d_hierarchy->removePatchLevel(ln);
+
+      d_hierarchy->makeNewPatchLevel(ln, new_box_level);
 
       d_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(
          *d_hierarchy->getPatchLevel(ln));
@@ -921,15 +925,18 @@ GriddingAlgorithm::makeFinerLevel(
             false);
          t_bridge_new_to_new->stop();
 
+         new_box_level->cacheConnector(new_to_new);
+         tag_level->cacheConnector(tag_to_new);
+
          if (d_check_overlapping_patches != 'i') {
             checkOverlappingPatches(*new_to_new);
          }
 
+         d_tag_init_strategy->processHierarchyBeforeAddingNewLevel(d_hierarchy,
+            new_ln,
+            new_box_level);
+
          d_hierarchy->makeNewPatchLevel(new_ln, new_box_level);
-
-         new_box_level->cacheConnector(new_to_new);
-
-         tag_level->cacheConnector(tag_to_new);
 
          d_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(
             *d_hierarchy->getPatchLevel(new_ln));
@@ -1728,8 +1735,6 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
             false);
 
       old_fine_level = d_hierarchy->getPatchLevel(new_ln);
-      d_hierarchy->removePatchLevel(new_ln);
-      // ratio = old_fine_level->getRatioToLevelZero();
       TBOX_ASSERT(ratio == old_fine_level->getRatioToLevelZero());
 
    }
@@ -1801,8 +1806,6 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
 
    } /* d_hierarchy->levelExists(new_ln + 1) */
 
-   d_hierarchy->makeNewPatchLevel(new_ln, new_box_level);
-
    /*
     * Cache Connectors for new level.
     */
@@ -1863,8 +1866,8 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
       d_oca.bridgeWithNesting(
          old_to_new,
          *old_to_tag,
-         d_hierarchy->getPatchLevel(tag_ln)->findConnectorWithTranspose(
-            *d_hierarchy->getPatchLevel(tag_ln + 1),
+         d_hierarchy->getPatchLevel(tag_ln)->getBoxLevel()->findConnectorWithTranspose(
+            *new_box_level,
             d_hierarchy->getRequiredConnectorWidth(tag_ln, tag_ln + 1, true),
             d_hierarchy->getRequiredConnectorWidth(tag_ln + 1, tag_ln),
             hier::CONNECTOR_IMPLICIT_CREATION_RULE,
@@ -1878,6 +1881,15 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
       old_fine_level->cacheConnector(old_to_new);
 
    }
+
+   d_tag_init_strategy->processHierarchyBeforeAddingNewLevel(d_hierarchy,
+      new_ln,
+      new_box_level);
+ 
+   if (old_box_level) {
+      d_hierarchy->removePatchLevel(new_ln);
+   }
+   d_hierarchy->makeNewPatchLevel(new_ln, new_box_level);
 
    d_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(
       *d_hierarchy->getPatchLevel(new_ln));

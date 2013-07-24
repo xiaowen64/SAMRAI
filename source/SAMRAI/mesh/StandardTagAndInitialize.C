@@ -2029,9 +2029,22 @@ StandardTagAndInitialize::setCurrentTaggingCriteria(
 }
 
 void
+StandardTagAndInitialize::processHierarchyBeforeAddingNewLevel(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const int level_number,
+   const boost::shared_ptr<hier::BoxLevel>& new_box_level)
+{
+   d_tag_strategy->processHierarchyBeforeAddingNewLevel(hierarchy,
+      level_number,
+      new_box_level);
+}
+
+
+
+void
 StandardTagAndInitialize::processLevelBeforeRemoval(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-   int level_number,
+   const int level_number,
    const boost::shared_ptr<hier::PatchLevel>& old_level)
 {
    d_tag_strategy->processLevelBeforeRemoval(hierarchy,

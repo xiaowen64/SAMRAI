@@ -490,7 +490,31 @@ public:
    turnOffRichardsonExtrapolation(
       double time);
 
-   /**
+   /*!
+    * @brief Process a hierarchy before swapping old and new levels during
+    * regrid.
+    *
+    * During regrid, if user code needs to do any application-specific
+    * operations on the PatchHierarchy before a new level is added or
+    * an old level is swapped for a new level, this method provides a callback
+    * for the user to define such operations.  The PatchHierarchy is provided
+    * in its state with the old level, if it exists, still in place, while the
+    * new BoxLevel is also provided so that the user code can know the boxes
+    * that will make up the new level.
+    *
+    * @param hierarchy The PatchHierarchy being modified.
+    * @param level_number The number of the PatchLevel in hierarchy being
+    *                     added or regridded.
+    * @param new_box_level BoxLevel containing the boxes for the new level
+    *
+    */
+   virtual void
+   processHierarchyBeforeAddingNewLevel(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const int level_number,
+      const boost::shared_ptr<hier::BoxLevel>& new_box_level);
+
+   /*!
     * In some cases user code may wish to process a PatchLevel before it is
     * removed from the hierarchy.  For example, data may exist only on a given
     * PatchLevel such as the finest level.  If that level were to be removed
@@ -511,7 +535,7 @@ public:
    void
    processLevelBeforeRemoval(
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      int level_number,
+      const int level_number,
       const boost::shared_ptr<hier::PatchLevel>& old_level =
          boost::shared_ptr<hier::PatchLevel>());
 
