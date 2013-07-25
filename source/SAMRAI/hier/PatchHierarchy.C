@@ -911,23 +911,37 @@ PatchHierarchy::logMetadataStatistics(
               << peer_conn.formatStatistics("\t\t");
 
    if ( log_fine_connector ) {
-      const hier::Connector &fine_conn =
+      const hier::Connector &to_fine =
          level->findConnector(*getPatchLevel(ln+1),
                               getRequiredConnectorWidth(ln,ln+1),
                               hier::CONNECTOR_CREATE,
                               true);
-      tbox::plog << "\tFine connector:\n" << fine_conn.format("\t\t",0)
-                 << "\tFine connector statistics:\n" << fine_conn.formatStatistics("\t\t");
+      tbox::plog << "\tTo fine:\n" << to_fine.format("\t\t",0)
+                 << "\tTo fine statistics:\n" << to_fine.formatStatistics("\t\t");
+      const hier::Connector &from_fine =
+         getPatchLevel(ln+1)->findConnector(*level,
+                              getRequiredConnectorWidth(ln+1,ln),
+                              hier::CONNECTOR_CREATE,
+                              true);
+      tbox::plog << "\tFrom fine:\n" << from_fine.format("\t\t",0)
+                 << "\tFrom fine statistics:\n" << to_fine.formatStatistics("\t\t");
    }
 
    if ( log_coarse_connector ) {
-      const hier::Connector &crse_conn =
+      const hier::Connector &to_crse =
          level->findConnector(*getPatchLevel(ln-1),
                               getRequiredConnectorWidth(ln,ln-1),
                               hier::CONNECTOR_CREATE,
                               true);
-      tbox::plog << "\tCoarse connector:\n" << crse_conn.format("\t\t",0)
-                 << "\tCoarse connector statistics:\n" << crse_conn.formatStatistics("\t\t");
+      tbox::plog << "\tTo coarse:\n" << to_crse.format("\t\t",0)
+                 << "\tTo coarse statistics:\n" << to_crse.formatStatistics("\t\t");
+      const hier::Connector &from_crse =
+         getPatchLevel(ln-1)->findConnector(*level,
+                              getRequiredConnectorWidth(ln-1,ln),
+                              hier::CONNECTOR_CREATE,
+                              true);
+      tbox::plog << "\tFrom coarse:\n" << from_crse.format("\t\t",0)
+                 << "\tFrom coarse statistics:\n" << from_crse.formatStatistics("\t\t");
    }
 }
 
