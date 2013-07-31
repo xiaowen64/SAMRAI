@@ -3310,7 +3310,7 @@ GriddingAlgorithm::renumberBoxes(
 #endif
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, new_box_level);
 
-   t_sort_nodes->start();
+   t_renumber_boxes->barrierAndStart();
 
    boost::shared_ptr<hier::MappingConnector> sorting_map;
    boost::shared_ptr<hier::BoxLevel> seq_box_level;
@@ -3326,7 +3326,7 @@ GriddingAlgorithm::renumberBoxes(
       *sorting_map,
       &new_box_level);
 
-   t_sort_nodes->stop();
+   t_renumber_boxes->stop();
 }
 
 /*
@@ -4738,7 +4738,7 @@ GriddingAlgorithm::allocateTimers()
       getTimer("mesh::GriddingAlgorithm::extend_within_domain");
    t_grow_boxes_within_domain = tbox::TimerManager::getManager()->
       getTimer("mesh::GriddingAlgorithm::grow_boxes_within_domain");
-   t_sort_nodes = tbox::TimerManager::getManager()->
+   t_renumber_boxes = tbox::TimerManager::getManager()->
       getTimer("mesh::GriddingAlgorithm::renumberBoxes()");
    t_find_new_to_new = tbox::TimerManager::getManager()->
       getTimer("mesh::GriddingAlgorithm::find_new_to_new");
