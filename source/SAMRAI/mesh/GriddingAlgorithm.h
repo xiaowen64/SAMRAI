@@ -22,6 +22,7 @@
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
+#include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Timer.h"
@@ -851,7 +852,8 @@ private:
       hier::Connector& tag_to_new,
       bool sort_by_corners,
       bool sequentialize_global_indices,
-      const hier::MappingConnectorAlgorithm &mca) const;
+      const hier::MappingConnectorAlgorithm &mca,
+      const hier::BoxLevelConnectorUtils &blcu) const;
 
    /*!
     * @brief Buffer each integer tag on patch level matching given tag
@@ -1273,18 +1275,30 @@ private:
    mutable hier::MappingConnectorAlgorithm d_mca;
 
    /*!
+    * @brief BoxLevelConnectorUtils object used for regrid.
+    */
+   mutable hier::BoxLevelConnectorUtils d_blcu;
+
+   /*!
     * @brief OverlapConnectorAlgorithm object used for initial mesh
-    * construction, sanity checks and other operations that are not
-    * expected to scale well.
+    * construction and other one-time operations that are not expected
+    * to scale well.
     */
    mutable hier::OverlapConnectorAlgorithm d_oca0;
 
    /*!
     * @brief MappingConnectorAlgorithm object used for initial mesh
-    * construction, sanity checks and other operations that are not
-    * expected to scale well.
+    * construction and other one-time operations that are not expected
+    * to scale well.
     */
    mutable hier::MappingConnectorAlgorithm d_mca0;
+
+   /*!
+    * @brief BoxLevelConnectorUtils object used for initial mesh
+    * construction and other one-time operations that are not expected
+    * to scale well.
+    */
+   mutable hier::BoxLevelConnectorUtils d_blcu0;
 
    /*
     * Switches for massaging boxes after clustering.  Should be on for
