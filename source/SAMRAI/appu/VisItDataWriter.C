@@ -122,7 +122,7 @@ VisItDataWriter::VisItDataWriter(
    d_dim(dim)
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(number_procs_per_file > 0);
+   TBOX_ASSERT(number_procs_per_file == 1);
 
    if ((d_dim < tbox::Dimension(2)) || (d_dim > tbox::Dimension(3))) {
       TBOX_ERROR(
