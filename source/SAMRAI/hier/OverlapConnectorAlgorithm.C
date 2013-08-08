@@ -1098,7 +1098,7 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
 
       d_object_timers->t_bridge_discover->start();
 
-      if (west_to_east.getBase().getMPI().getRank()==3546||d_print_steps) {
+      if (d_print_steps) {
          tbox::plog << "Before building RBBTs:\n"
                     << "visible_west_nabrs:"
                     << visible_west_nabrs.format("\n  ")
@@ -1114,7 +1114,7 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
       bool compute_transpose =
          (east_to_west != 0 && east_to_west != &west_to_east);
 
-      const BoxLevel& east(west_to_east.getHead()); // Shouldn't this be getHead()?
+      const BoxLevel& east(west_to_east.getHead());
       const boost::shared_ptr<const BaseGridGeometry> &grid_geometry(
          east.getGridGeometry());
 
