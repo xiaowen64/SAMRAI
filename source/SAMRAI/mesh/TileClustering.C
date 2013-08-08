@@ -156,7 +156,7 @@ TileClustering::findBoxesContainingTags(
 
    // Determine max number of tiles any local patch can generate.
    int max_tiles_for_any_patch = 0;
-   for ( size_t pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
+   for ( int pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
       hier::Box coarsened_box = tag_level->getPatch(pi)->getBox();
       coarsened_box.coarsen(d_box_size);
       hier::IntVector number_tiles = coarsened_box.numberCells();
@@ -170,7 +170,7 @@ TileClustering::findBoxesContainingTags(
     */
 #pragma omp parallel if ( tag_level->getLocalNumberOfPatches() > 4*omp_get_max_threads() )
 #pragma omp for schedule(dynamic)
-   for ( size_t pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
+   for ( int pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
 
       hier::Patch &patch = *tag_level->getPatch(pi);
       const hier::Box &patch_box = patch.getBox();
@@ -252,7 +252,7 @@ TileClustering::findBoxesContainingTags(
                     << " new boxes into " << box_vector.size() << "\n";
       }
 
-      if ( box_vector.size() != static_cast<int>(new_box_level->getLocalNumberOfBoxes()) ) {
+      if ( box_vector.size() != new_box_level->getLocalNumberOfBoxes() ) {
 
          d_object_timers->t_coalesce_adjustment->start();
 
@@ -283,7 +283,7 @@ TileClustering::findBoxesContainingTags(
 #pragma omp for schedule(dynamic)
          for ( size_t i=0; i<box_vector.size(); ++i ) {
 
-            box_vector[i].setId(hier::BoxId(hier::LocalId(i),rank));
+            box_vector[i].setId(hier::BoxId(hier::LocalId(static_cast<int>(i)),rank));
 
             hier::BoxContainer tmp_overlap_boxes;
             tag_boxes.findOverlapBoxes(tmp_overlap_boxes,
@@ -302,7 +302,7 @@ TileClustering::findBoxesContainingTags(
           * Add tag--->new edges.
           */
          hier::BoxContainer new_boxes;
-         for ( int i=0; i<box_vector.size(); ++i ) new_boxes.pushBack(box_vector[i]);
+         for ( size_t i=0; i<box_vector.size(); ++i ) new_boxes.pushBack(box_vector[i]);
          new_boxes.makeTree( new_box_level->getGridGeometry().get() );
          std::vector<hier::Box> real_box_vector, periodic_image_box_vector;
          tag_boxes.separatePeriodicImages( real_box_vector, periodic_image_box_vector );

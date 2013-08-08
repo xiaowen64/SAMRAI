@@ -1407,7 +1407,6 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
    NeighborSet& referenced_head_nabrs,
    const BoxContainer& head_rbbt) const
 {
-const int rank = bridging_connector.getBase().getMPI().getRank();
    const IntVector &head_refinement_ratio(
       bridging_connector.getHead().getRefinementRatio());
 

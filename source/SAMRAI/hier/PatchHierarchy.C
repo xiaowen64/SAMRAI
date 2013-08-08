@@ -884,7 +884,7 @@ PatchHierarchy::logMetadataStatistics(
    const char *note,
    int ln,
    int cycle,
-   int level_time,
+   double level_time,
    bool log_fine_connector,
    bool log_coarse_connector) const
 {

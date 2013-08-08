@@ -2232,7 +2232,7 @@ RefineSchedule::refineScratchData(
 
 #pragma omp parallel shared(coarse_level)
 #pragma omp for schedule(dynamic)
-   for ( size_t pi=0; pi<coarse_level->getLocalNumberOfPatches(); ++pi )
+   for ( int pi=0; pi<coarse_level->getLocalNumberOfPatches(); ++pi )
    {
       const hier::Box& crse_box = coarse_level->getPatch(pi)->getBox();
 
