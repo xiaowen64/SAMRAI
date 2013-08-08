@@ -3370,7 +3370,7 @@ GriddingAlgorithm::enforceProperNesting(
 
    if (d_print_steps) {
       tbox::plog
-         << "GriddingAlgorithm::enforceProperNesting: enforcing proper nesting\n";
+         << "GriddingAlgorithm::enforceProperNesting: entered.\n";
    }
 
    const int new_ln = tag_ln + 1;
@@ -3704,6 +3704,11 @@ GriddingAlgorithm::makeProperNestingMap(
 
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, unnested_box_level);
 
+   if (d_print_steps) {
+      tbox::plog
+         << "GriddingAlgorithm::makeProperNesingMap: entered.\n";
+   }
+
    t_make_nesting_map->start();
 
    boost::shared_ptr<hier::MappingConnector> unnested_to_violator;
@@ -3727,6 +3732,11 @@ GriddingAlgorithm::makeProperNestingMap(
       *unnested_to_violator);
 
    t_make_nesting_map->stop();
+
+   if (d_print_steps) {
+      tbox::plog
+         << "GriddingAlgorithm::makeProperNesingMap: exiting.\n";
+   }
 }
 
 /*
@@ -3748,6 +3758,11 @@ GriddingAlgorithm::computeNestingViolator(
    const int tag_ln,
    const hier::OverlapConnectorAlgorithm &oca) const
 {
+   if (d_print_steps) {
+      tbox::plog
+         << "GriddingAlgorithm::computeNestingViolator: entered.\n";
+   }
+
    const tbox::Dimension& dim = d_hierarchy->getDim();
 
    TBOX_ASSERT(candidate_to_hierarchy.hasTranspose());
@@ -3773,10 +3788,19 @@ GriddingAlgorithm::computeNestingViolator(
     * violates nesting.
     */
    boost::shared_ptr<hier::Connector> candidate_to_complement;
+
+   if (d_print_steps) {
+      tbox::plog
+         << "GriddingAlgorithm::computeNestingViolator: bridging for candidate_to_complement.\n";
+   }
    oca.bridge(candidate_to_complement,
       candidate_to_hierarchy,
       *d_to_nesting_complement[tag_ln],
       false);
+   if (d_print_steps) {
+      tbox::plog
+         << "GriddingAlgorithm::computeNestingViolator: bridged for candidate_to_complement.\n";
+   }
 
    d_blcu.computeInternalParts(
       violator,
@@ -3838,6 +3862,11 @@ GriddingAlgorithm::computeNestingViolator(
    }
 
    t_compute_nesting_violator->stop();
+
+   if (d_print_steps) {
+      tbox::plog
+         << "GriddingAlgorithm::computeNestingViolator: exiting.\n";
+   }
 }
 
 /*
