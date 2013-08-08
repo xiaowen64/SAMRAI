@@ -154,6 +154,17 @@ TileClustering::findBoxesContainingTags(
 
    d_object_timers->t_cluster->start();
 
+   // Determine max number of tiles any local patch can generate.
+   int max_tiles_for_any_patch = 0;
+   for ( size_t pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
+      hier::Box coarsened_box = tag_level->getPatch(pi)->getBox();
+      coarsened_box.coarsen(d_box_size);
+      hier::IntVector number_tiles = coarsened_box.numberCells();
+      number_tiles *= 3; // Possible merging of smaller tiles on either side of it.
+      max_tiles_for_any_patch = tbox::MathUtilities<int>::Max(
+         max_tiles_for_any_patch, number_tiles.getProduct() );
+   }
+
    /*
     * Generate new_box_level and Connectors
     */
@@ -175,7 +186,7 @@ TileClustering::findBoxesContainingTags(
 
          hier::BoxContainer tiles;
          int num_coarse_tags =
-            findTilesContainingTags( tiles, *tag_data, tag_val );
+            findTilesContainingTags( tiles, *tag_data, tag_val, pi*max_tiles_for_any_patch );
 
          if (d_print_steps) {
             tbox::plog << "Tile Clustering generated " << tiles.size()
@@ -404,7 +415,8 @@ int
 TileClustering::findTilesContainingTags(
    hier::BoxContainer &tiles,
    const pdat::CellData<int> &tag_data,
-   int tag_val)
+   int tag_val,
+                                        int first_tile_index)
 {
    tiles.clear();
    tiles.unorder();
@@ -447,8 +459,7 @@ TileClustering::findTilesContainingTags(
              * Choose a LocalId that is independent of ordering so that
              * results are independent of multi-threading.
              */
-            hier::LocalId local_id(coarsened_box.getLocalId()*1000000 +
-                                   coarse_offset);
+            hier::LocalId local_id(first_tile_index + coarse_offset);
 
             tile_box.initialize( tile_box,
                                  local_id,

@@ -158,7 +158,8 @@ private:
    findTilesContainingTags(
       hier::BoxContainer &tiles,
       const pdat::CellData<int> &tag_data,
-      int tag_val);
+      int tag_val,
+                           int first_tile_index);
 
    void setTimers();
 
