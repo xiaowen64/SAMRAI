@@ -165,7 +165,8 @@ public:
    isValid() const
    {
       return (d_periodic_id.isValid() &&
-              d_global_id.getLocalId() != LocalId::getInvalidId() && 
+              d_global_id.getLocalId() != LocalId::getInvalidId() &&
+              d_global_id.getLocalId() >= 0 &&
               d_global_id.getOwnerRank() != tbox::SAMRAI_MPI::getInvalidRank());
    }
 
