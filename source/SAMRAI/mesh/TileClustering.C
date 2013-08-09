@@ -460,6 +460,10 @@ TileClustering::findTilesContainingTags(
              * results are independent of multi-threading.
              */
             hier::LocalId local_id(first_tile_index + coarse_offset);
+            if ( local_id < hier::LocalId::getZero() ) {
+               TBOX_ERROR("TileClustering code cannot compute a valid non-zero\n"
+                          <<"LocalId for a tile.\n");
+            }
 
             tile_box.initialize( tile_box,
                                  local_id,
