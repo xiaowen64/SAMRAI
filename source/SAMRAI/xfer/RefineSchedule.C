@@ -60,6 +60,8 @@ boost::shared_ptr<tbox::Timer> RefineSchedule::t_refine_schedule;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_data;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_data_nonrecursive;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_data_recursive;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_physical_boundaries;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_singularity_boundaries;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_refine_scratch_data;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_finish_sched_const;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_finish_sched_const_recurse;
@@ -1996,6 +1998,7 @@ RefineSchedule::fillPhysicalBoundaries(
    double fill_time) const
 {
    TBOX_ASSERT(d_dst_level);
+   t_fill_physical_boundaries->start();
 
    d_dst_level->setBoundaryBoxes();
 
@@ -2011,6 +2014,7 @@ RefineSchedule::fillPhysicalBoundaries(
          }
       }
    }
+   t_fill_physical_boundaries->stop();
 }
 
 /*
@@ -2026,6 +2030,7 @@ RefineSchedule::fillSingularityBoundaries(
    double fill_time) const
 {
    TBOX_ASSERT(d_dst_level);
+   t_fill_singularity_boundaries->start();
 
    NULL_USE(fill_time);
 
@@ -2127,6 +2132,7 @@ RefineSchedule::fillSingularityBoundaries(
          }
       }
    }
+   t_fill_singularity_boundaries->stop();
 }
 
 /*
@@ -4372,6 +4378,10 @@ RefineSchedule::initializeCallback()
       getTimer("xfer::RefineSchedule::fillData()_nonrecursive");
    t_fill_data_recursive = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::fillData()_recursive");
+   t_fill_physical_boundaries = tbox::TimerManager::getManager()->
+      getTimer("xfer::RefineSchedule::fillPhysicalBoundaries()");
+   t_fill_singularity_boundaries = tbox::TimerManager::getManager()->
+      getTimer("xfer::RefineSchedule::fillSingularityBoundaries()");
    t_refine_scratch_data = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::refineScratchData()");
    t_finish_sched_const = tbox::TimerManager::getManager()->
