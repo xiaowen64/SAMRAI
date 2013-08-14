@@ -1327,6 +1327,8 @@ private:
    boost::shared_ptr<tbox::Timer> t_get_load_from_parent;
    boost::shared_ptr<tbox::Timer> t_construct_semilocal;
    boost::shared_ptr<tbox::Timer> t_construct_semilocal_comm_wait;
+   boost::shared_ptr<tbox::Timer> t_construct_semilocal_send_edges;
+   boost::shared_ptr<tbox::Timer> t_construct_semilocal_local_accounting;
    boost::shared_ptr<tbox::Timer> t_report_loads;
    boost::shared_ptr<tbox::Timer> t_local_balancing;
    boost::shared_ptr<tbox::Timer> t_finish_sends;

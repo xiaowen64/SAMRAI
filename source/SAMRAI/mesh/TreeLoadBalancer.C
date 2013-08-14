@@ -2210,6 +2210,7 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
       tbox::plog << "TreeLoadBalancer::constructSemilocalUnbalancedToBalanced: finished post-distribution barrier.\n";
    }
 
+   t_construct_semilocal_send_edges->start();
    for ( int send_number = 0; send_number < outgoing_messages_size; ++send_number ) {
 
       int recipient = recip_itr->first;
@@ -2233,12 +2234,14 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
       }
 
    }
+   t_construct_semilocal_send_edges->stop();
 
 
    /*
     * Determine number of cells in unbalanced that are not yet accounted
     * for in balanced.
     */
+   t_construct_semilocal_local_accounting->start();
    int num_unaccounted_cells = static_cast<int>(
       unbalanced_to_balanced.getBase().getLocalNumberOfCells());
    if ( d_print_edge_steps ) {
@@ -2255,7 +2258,7 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
          unbalanced_to_balanced.findLocal(unbalanced_box.getBoxId());
 
       if ( neighborhood_itr != unbalanced_to_balanced.end() ) {
-         // unbalanced_box has neighborhood.
+         // unbalanced_box has changed.  Parts of it may still be local.
          for ( hier::Connector::ConstNeighborIterator ni=unbalanced_to_balanced.begin(neighborhood_itr);
                ni!=unbalanced_to_balanced.end(neighborhood_itr); ++ni ) {
             TBOX_ASSERT( ni->getOwnerRank() == d_mpi.getRank() );
@@ -2264,7 +2267,7 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
 
       }
       else {
-         // unbalanced_box has no neighborhood.
+         // unbalanced_box has not changed.  All of it is still local.
          num_unaccounted_cells -= unbalanced_box.size();
       }
 
@@ -2272,6 +2275,7 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
    if ( d_print_edge_steps ) {
       tbox::plog << num_unaccounted_cells << " unaccounted cells\n";
    }
+   t_construct_semilocal_local_accounting->stop();
 
 
    /*
@@ -5098,6 +5102,10 @@ t_post_load_distribution_barrier = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::constructSemilocalUnbalancedToBalanced()");
       t_construct_semilocal_comm_wait = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::constructSemilocalUnbalancedToBalanced()_comm_wait");
+      t_construct_semilocal_send_edges = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::constructSemilocalUnbalancedToBalanced()_send_edges");
+      t_construct_semilocal_local_accounting = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::constructSemilocalUnbalancedToBalanced()_local_accounting");
       t_report_loads = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::report_loads");
       t_finish_sends = tbox::TimerManager::getManager()->
