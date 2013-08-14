@@ -153,10 +153,10 @@ PatchGeometry::setCodimensionBoundaries(
    TBOX_ASSERT(codim <= d_dim.getValue());
    TBOX_ASSERT(codim > 0);
 
-   d_patch_boundaries[codim - 1].resize(bdry_boxes.size(), BoundaryBox(d_dim));
+   d_patch_boundaries[codim - 1].reserve(bdry_boxes.size());
 
    for (int b = 0; b < static_cast<int>(bdry_boxes.size()); b++) {
-      d_patch_boundaries[codim - 1][b] = bdry_boxes[b];
+      d_patch_boundaries[codim - 1].push_back(bdry_boxes[b]);
    }
 }
 
