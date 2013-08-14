@@ -2174,7 +2174,8 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
    for ( TransitSet::const_iterator bi=kept_imports.begin();
          bi!=kept_imports.end(); ++bi ) {
       const BoxInTransit &bit = *bi;
-      boost::shared_ptr<tbox::MessageStream> &mstream = outgoing_messages[bit.d_orig_box.getOwnerRank()];
+      boost::shared_ptr<tbox::MessageStream> &mstream =
+         outgoing_messages[bit.d_orig_box.getOwnerRank()];
       if ( !mstream ) {
          mstream.reset(new tbox::MessageStream);
       }
@@ -2341,11 +2342,6 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
          &status[0]);
       t_construct_semilocal_comm_wait->stop();
       outgoing_messages.clear();
-   }
-   else {
-      t_construct_semilocal_comm_wait->start();
-      tbox::SAMRAI_MPI::Waitall(0, NULL, NULL);
-      t_construct_semilocal_comm_wait->stop();
    }
 
    t_construct_semilocal->stop();
