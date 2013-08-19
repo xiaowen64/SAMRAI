@@ -41,7 +41,7 @@ TileClustering::TileClustering(
 {
    getFromInput(input_db);
    setTimers();
-   d_oca.setTimerPrefix("hier::TileClustering");
+   d_oca.setTimerPrefix("mesh::TileClustering");
 }
 
 TileClustering::~TileClustering()
