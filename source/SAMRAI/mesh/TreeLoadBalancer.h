@@ -1346,6 +1346,8 @@ private:
    boost::shared_ptr<tbox::Timer> t_child_recv_wait;
    boost::shared_ptr<tbox::Timer> t_parent_send_wait;
    boost::shared_ptr<tbox::Timer> t_parent_recv_wait;
+   boost::shared_ptr<tbox::Timer> t_misc1;
+   boost::shared_ptr<tbox::Timer> t_misc2;
 
    /*
     * Statistics on number of cells and patches generated.

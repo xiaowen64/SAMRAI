@@ -2190,6 +2190,7 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
     * the local rank.
     */
 
+   t_misc1->start();
    std::map<int,boost::shared_ptr<tbox::MessageStream> >::iterator recip_itr =
       outgoing_messages.upper_bound(d_mpi.getRank());
    if ( recip_itr == outgoing_messages.end() ) {
@@ -2199,6 +2200,7 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
    int outgoing_messages_size = static_cast<int>(outgoing_messages.size());
    std::vector<tbox::SAMRAI_MPI::Request>
       send_requests( outgoing_messages_size, MPI_REQUEST_NULL );
+   t_misc1->stop();
 
    if ( d_print_edge_steps ) {
       tbox::plog << "TreeLoadBalancer::constructSemilocalUnbalancedToBalanced: starting post-distribution barrier.\n";
@@ -2283,6 +2285,7 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
     * those cells.  Receive until all cells are accounted for.
     */
 
+   t_misc2->start();
    std::vector<char> incoming_message; // Keep outside loop to avoid reconstructions.
    BoxInTransit balanced_box_in_transit(d_dim);
    while ( num_unaccounted_cells > 0 ) {
@@ -2331,9 +2334,10 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
                     << num_unaccounted_cells << " unaccounted.\n";
       }
 
+      incoming_message.clear();
    }
    TBOX_ASSERT( num_unaccounted_cells == 0 );
-   incoming_message.clear();
+   t_misc2->stop();
 
 
    // Wait for the sends to complete before clearing outgoing_messages.
@@ -5140,6 +5144,10 @@ t_post_load_distribution_barrier = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::parent_send_wait");
       t_parent_recv_wait = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::parent_recv_wait");
+      t_misc1 = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::misc1");
+      t_misc2 = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::misc2");
    }
 }
 
