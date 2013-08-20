@@ -443,7 +443,7 @@ int main(
                  << test_err_count << " errs, total of " << total_err_count << "\n";
 
             if ( test_err_count != 0 ) {
-               perr << "Test FaILED.\n";
+               perr << "Test FAILED.\n";
             }
 
 
