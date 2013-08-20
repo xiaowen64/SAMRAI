@@ -347,15 +347,15 @@ int main(
 
       statistician->printLocalStatData(tbox::plog);
 
-      statistician->finalize();
+      statistician->finalize(true);
 
       statistician->printAllGlobalStatData(tbox::plog);
 
-      statistician->finalize();
+      statistician->finalize(true);
 
       statistician->printSpreadSheetOutput();
 
-      statistician->finalize();
+      statistician->finalize(true);
 
       if (mpi.getRank() == 0) {
 
