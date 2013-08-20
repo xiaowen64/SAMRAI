@@ -309,9 +309,10 @@ bool MultiblockTester::verifyCommunicationResults() const
       for (hier::PatchLevel::iterator mi(level->begin());
            mi != level->end(); ++mi) {
 
-         success = d_data_test_strategy->verifyResults(
+         bool level_success = d_data_test_strategy->verifyResults(
                **mi, d_patch_hierarchy, ln,
                mi->getBox().getBlockId());
+         success = level_success && success;
       }
 
    }
