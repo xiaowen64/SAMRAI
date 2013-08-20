@@ -88,7 +88,7 @@ MappingConnector::~MappingConnector()
  ***********************************************************************
  ***********************************************************************
  */
-const MappingConnector&
+MappingConnector&
 MappingConnector::operator = (
    const MappingConnector& rhs)
 {
