@@ -155,137 +155,13 @@ TileClustering::findBoxesContainingTags(
    clusterWithinProcessBoundaries(
       *new_box_level,
       *tag_to_new,
-      *new_to_tag,
       tag_level,
       bound_boxes,
       tag_data_index,
       tag_val);
 
    if ( d_coalesce_boxes ) {
-
-      /*
-       * Try to coalesce the boxes in new_box_level.
-       */
-      // hier::BoxContainer new_boxes;
-      std::vector<hier::Box> box_vector;
-      if (!new_box_level->getBoxes().isEmpty()) {
-
-         d_object_timers->t_coalesce->start();
-
-         hier::LocalId local_id(0);
-
-         const int nblocks = new_box_level->getGridGeometry()->getNumberBlocks();
-
-#pragma omp parallel
-#pragma omp for schedule(dynamic)
-         for (int b = 0; b < nblocks; ++b) {
-            hier::BlockId block_id(b);
-
-            hier::BoxContainer block_boxes(new_box_level->getBoxes(), block_id);
-
-            if (!block_boxes.isEmpty()) {
-               block_boxes.unorder();
-               block_boxes.coalesce();
-               TBOX_omp_set_lock(&l_outputs);
-               // new_boxes.spliceBack(block_boxes);
-               box_vector.insert(box_vector.end(), block_boxes.begin(), block_boxes.end() );
-               TBOX_omp_unset_lock(&l_outputs);
-            }
-         }
-
-         d_object_timers->t_coalesce->stop();
-
-      }
-
-      if ( d_print_steps ) {
-         tbox::plog << "TileClustering coalesced " << new_box_level->getLocalNumberOfBoxes()
-                    << " new boxes into " << box_vector.size() << "\n";
-      }
-
-      if ( box_vector.size() != new_box_level->getLocalNumberOfBoxes() ) {
-
-         d_object_timers->t_coalesce_adjustment->start();
-
-         /*
-          * Coalesce changed the new boxes, so rebuild new_box_level and
-          * Connectors.
-          */
-         new_box_level->initialize( new_box_level->getRefinementRatio(),
-                                    new_box_level->getGridGeometry(),
-                                    new_box_level->getMPI() );
-         tag_to_new.reset( new hier::Connector( tag_box_level,
-                                                *new_box_level,
-                                                zero_vector ) );
-         new_to_tag = new hier::Connector( *new_box_level,
-                                           tag_box_level,
-                                           zero_vector );
-         tag_to_new->setTranspose(new_to_tag, true);
-
-         const hier::BoxContainer &tag_boxes = tag_box_level.getBoxes();
-         tag_boxes.makeTree( tag_box_level.getGridGeometry().get() );
-
-         /*
-          * Assign ids to coalesced boxes, add to BoxLevel and add
-          * new--->tag edges.
-          */
-         const int rank = new_box_level->getMPI().getRank();
-#pragma omp parallel
-#pragma omp for schedule(dynamic)
-         for ( size_t i=0; i<box_vector.size(); ++i ) {
-
-            box_vector[i].setId(hier::BoxId(hier::LocalId(static_cast<int>(i)),rank));
-
-            hier::BoxContainer tmp_overlap_boxes;
-            tag_boxes.findOverlapBoxes(tmp_overlap_boxes,
-                                       box_vector[i],
-                                       tag_box_level.getRefinementRatio() );
-
-            TBOX_omp_set_lock(&l_outputs);
-            new_box_level->addBox(box_vector[i]);
-            new_to_tag->insertNeighbors( tmp_overlap_boxes, box_vector[i].getBoxId() );
-            TBOX_omp_unset_lock(&l_outputs);
-
-         }
-         new_box_level->finalize();
-
-         /*
-          * Add tag--->new edges.
-          */
-         hier::BoxContainer new_boxes;
-         for ( size_t i=0; i<box_vector.size(); ++i ) new_boxes.pushBack(box_vector[i]);
-         new_boxes.makeTree( new_box_level->getGridGeometry().get() );
-         std::vector<hier::Box> real_box_vector, periodic_image_box_vector;
-         tag_boxes.separatePeriodicImages( real_box_vector, periodic_image_box_vector );
-#if 1
-         for ( size_t ib=0; ib<real_box_vector.size(); ++ib ) {
-
-            hier::BoxContainer tmp_overlap_boxes;
-            new_boxes.findOverlapBoxes(tmp_overlap_boxes,
-                                       real_box_vector[ib],
-                                       tag_box_level.getRefinementRatio() );
-
-            TBOX_omp_set_lock(&l_outputs);
-            tag_to_new->insertNeighbors( tmp_overlap_boxes,
-                                         real_box_vector[ib].getBoxId() );
-            TBOX_omp_unset_lock(&l_outputs);
-         }
-#else
-         for ( hier::BoxContainer::const_iterator bi=tag_boxes.begin();
-               bi!=tag_boxes.end(); ++bi ) {
-
-            hier::BoxContainer tmp_overlap_boxes;
-            new_boxes.findOverlapBoxes(tmp_overlap_boxes,
-                                       *bi,
-                                       tag_box_level.getRefinementRatio() );
-
-            tag_to_new->insertNeighbors( tmp_overlap_boxes, bi->getBoxId() );
-         }
-#endif
-
-         d_object_timers->t_coalesce_adjustment->stop();
-
-      }
-
+      coalesceClusters(*new_box_level, tag_to_new);
    }
 
 
@@ -308,10 +184,10 @@ TileClustering::findBoxesContainingTags(
 
    if (d_log_cluster) {
       tbox::plog << "TileClustering cluster log:\n"
-      << "\tNew box_level clustered by TileClustering:\n" << new_box_level->format("\t\t",
-         2)
-      << "\tTileClustering tag_to_new:\n" << tag_to_new->format("\t\t", 2)
-      << "\tTileClustering new_to_tag:\n" << new_to_tag->format("\t\t", 2);
+                 << "\tNew box_level clustered by TileClustering:\n" << new_box_level->format("\t\t",
+                                                                                              2)
+                 << "\tTileClustering tag_to_new:\n" << tag_to_new->format("\t\t", 2)
+                 << "\tTileClustering new_to_tag:\n" << new_to_tag->format("\t\t", 2);
    }
    if (d_log_cluster_summary) {
       /*
@@ -358,14 +234,13 @@ TileClustering::findBoxesContainingTags(
 
 
 /*
- ***********************************************************************
- ***********************************************************************
- */
+***********************************************************************
+***********************************************************************
+*/
 void
 TileClustering::clusterWithinProcessBoundaries(
    hier::BoxLevel &new_box_level,
    hier::Connector &tag_to_new,
-   hier::Connector &new_to_tag,
    const boost::shared_ptr<hier::PatchLevel>& tag_level,
    const hier::BoxContainer& bound_boxes,
    int tag_data_index,
@@ -383,6 +258,8 @@ TileClustering::clusterWithinProcessBoundaries(
       max_tiles_for_any_patch = tbox::MathUtilities<int>::Max(
          max_tiles_for_any_patch, number_tiles.getProduct() );
    }
+
+   hier::Connector &new_to_tag = tag_to_new.getTranspose();
 
    /*
     * Generate new_box_level and Connectors
@@ -600,6 +477,143 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
 #endif
 
    return coarsened_tag_data;
+}
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+TileClustering::coalesceClusters(
+   hier::BoxLevel &new_box_level,
+   boost::shared_ptr<hier::Connector> &tag_to_new)
+{
+   /*
+    * Try to coalesce the boxes in new_box_level.
+    */
+   // hier::BoxContainer new_boxes;
+   std::vector<hier::Box> box_vector;
+   if (!new_box_level.getBoxes().isEmpty()) {
+
+      d_object_timers->t_coalesce->start();
+
+      hier::LocalId local_id(0);
+
+      const int nblocks = new_box_level.getGridGeometry()->getNumberBlocks();
+
+#pragma omp parallel
+#pragma omp for schedule(dynamic)
+      for (int b = 0; b < nblocks; ++b) {
+         hier::BlockId block_id(b);
+
+         hier::BoxContainer block_boxes(new_box_level.getBoxes(), block_id);
+
+         if (!block_boxes.isEmpty()) {
+            block_boxes.unorder();
+            block_boxes.coalesce();
+            TBOX_omp_set_lock(&l_outputs);
+            // new_boxes.spliceBack(block_boxes);
+            box_vector.insert(box_vector.end(), block_boxes.begin(), block_boxes.end() );
+            TBOX_omp_unset_lock(&l_outputs);
+         }
+      }
+
+      d_object_timers->t_coalesce->stop();
+
+   }
+
+   if ( d_print_steps ) {
+      tbox::plog << "TileClustering coalesced " << new_box_level.getLocalNumberOfBoxes()
+                 << " new boxes into " << box_vector.size() << "\n";
+   }
+
+   if ( box_vector.size() != new_box_level.getLocalNumberOfBoxes() ) {
+
+      d_object_timers->t_coalesce_adjustment->start();
+
+      /*
+       * Coalesce changed the new boxes, so rebuild new_box_level and
+       * Connectors.
+       */
+      const hier::IntVector &zero_vector = hier::IntVector::getZero(d_dim);
+      new_box_level.initialize( new_box_level.getRefinementRatio(),
+                                new_box_level.getGridGeometry(),
+                                new_box_level.getMPI() );
+      tag_to_new.reset( new hier::Connector( tag_to_new->getBase(),
+                                             new_box_level,
+                                             zero_vector ) );
+      hier::Connector *new_to_tag = new hier::Connector( new_box_level,
+                                                         tag_to_new->getBase(),
+                                                         zero_vector );
+      tag_to_new->setTranspose(new_to_tag, true);
+
+      const hier::BoxContainer &tag_boxes = tag_to_new->getBase().getBoxes();
+      tag_boxes.makeTree( tag_to_new->getBase().getGridGeometry().get() );
+
+      /*
+       * Assign ids to coalesced boxes, add to BoxLevel and add
+       * new--->tag edges.
+       */
+      const int rank = new_box_level.getMPI().getRank();
+#pragma omp parallel
+#pragma omp for schedule(dynamic)
+      for ( size_t i=0; i<box_vector.size(); ++i ) {
+
+         box_vector[i].setId(hier::BoxId(hier::LocalId(static_cast<int>(i)),rank));
+
+         hier::BoxContainer tmp_overlap_boxes;
+         tag_boxes.findOverlapBoxes(tmp_overlap_boxes,
+                                    box_vector[i],
+                                    tag_to_new->getBase().getRefinementRatio() );
+
+         TBOX_omp_set_lock(&l_outputs);
+         new_box_level.addBox(box_vector[i]);
+         new_to_tag->insertNeighbors( tmp_overlap_boxes, box_vector[i].getBoxId() );
+         TBOX_omp_unset_lock(&l_outputs);
+
+      }
+      new_box_level.finalize();
+
+      /*
+       * Add tag--->new edges.
+       */
+      hier::BoxContainer new_boxes;
+      for ( size_t i=0; i<box_vector.size(); ++i ) new_boxes.pushBack(box_vector[i]);
+      new_boxes.makeTree( new_box_level.getGridGeometry().get() );
+      std::vector<hier::Box> real_box_vector, periodic_image_box_vector;
+      tag_boxes.separatePeriodicImages( real_box_vector, periodic_image_box_vector );
+#if 1
+      for ( size_t ib=0; ib<real_box_vector.size(); ++ib ) {
+
+         hier::BoxContainer tmp_overlap_boxes;
+         new_boxes.findOverlapBoxes(tmp_overlap_boxes,
+                                    real_box_vector[ib],
+                                    tag_to_new->getBase().getRefinementRatio() );
+
+         TBOX_omp_set_lock(&l_outputs);
+         tag_to_new->insertNeighbors( tmp_overlap_boxes,
+                                      real_box_vector[ib].getBoxId() );
+         TBOX_omp_unset_lock(&l_outputs);
+      }
+#else
+      for ( hier::BoxContainer::const_iterator bi=tag_boxes.begin();
+            bi!=tag_boxes.end(); ++bi ) {
+
+         hier::BoxContainer tmp_overlap_boxes;
+         new_boxes.findOverlapBoxes(tmp_overlap_boxes,
+                                    *bi,
+                                    tag_box_level.getRefinementRatio() );
+
+         tag_to_new->insertNeighbors( tmp_overlap_boxes, bi->getBoxId() );
+      }
+#endif
+
+      d_object_timers->t_coalesce_adjustment->stop();
+
+   }
+
+   return;
 }
 
 

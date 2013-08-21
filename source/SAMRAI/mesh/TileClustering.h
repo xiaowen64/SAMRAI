@@ -142,19 +142,19 @@ private:
 
 
    /*!
-    * Cluster, cutting off tiles at process boundaries.
+    * @brief Cluster, cutting off tiles at process boundaries.
     */
    void clusterWithinProcessBoundaries(
       hier::BoxLevel &new_box_level,
       hier::Connector &tag_to_new,
-      hier::Connector &new_to_tag,
       const boost::shared_ptr<hier::PatchLevel>& tag_level,
       const hier::BoxContainer& bound_boxes,
       int tag_data_index,
       int tag_val);
 
    /*!
-    * Create, populate and return a coarsened version of the given tag data.
+    * @brief Create, populate and return a coarsened version of the
+    * given tag data.
     *
     * The coarse cell values are set to tag_data if any corresponding
     * fine cell value is tag_data.  Otherwise, the coarse cell value
@@ -173,6 +173,14 @@ private:
       const pdat::CellData<int> &tag_data,
       int tag_val,
                            int first_tile_index);
+
+   /*!
+    * @brief Coalesce clusters (and update Connectors).
+    */
+   void
+   coalesceClusters(
+      hier::BoxLevel &new_box_level,
+      boost::shared_ptr<hier::Connector> &tag_to_new);
 
    void setTimers();
 
