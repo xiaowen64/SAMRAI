@@ -424,7 +424,6 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
                               hier::IntVector::getZero(tag_data.getDim())));
    coarsened_tag_data->fill(0, 0);
 
-#if 1
    size_t coarse_tag_count = 0;
 
    const int num_coarse_cells = coarsened_box.size();
@@ -452,29 +451,6 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
                  << " to " << coarsened_box
                  << " (" << coarse_tag_count << " tags).\n";
    }
-#else
-   size_t tag_count = 0;
-   size_t coarse_tag_count = 0;
-   pdat::CellIterator finecend(pdat::CellGeometry::end(tag_data.getBox()));
-   for ( pdat::CellIterator fineci(pdat::CellGeometry::begin(tag_data.getBox()));
-         fineci!=finecend; ++fineci ) {
-
-      if ( tag_data(*fineci) == tag_val ) {
-         pdat::CellIndex coarseci = pdat::CellIndex( *fineci / d_box_size );
-
-         coarse_tag_count += ( (*coarsened_tag_data)(coarseci) != tag_val );
-         ++tag_count;
-
-         (*coarsened_tag_data)(coarseci) = tag_val;
-      }
-
-   }
-   if (d_print_steps) {
-      tbox::plog << "TileClustering coarsened box " << tag_data.getBox()
-                 << " (" << tag_count << " tags) to " << coarsened_box
-                 << " (" << coarse_tag_count << " tags).\n";
-   }
-#endif
 
    return coarsened_tag_data;
 }
@@ -583,7 +559,7 @@ TileClustering::coalesceClusters(
       new_boxes.makeTree( new_box_level.getGridGeometry().get() );
       std::vector<hier::Box> real_box_vector, periodic_image_box_vector;
       tag_boxes.separatePeriodicImages( real_box_vector, periodic_image_box_vector );
-#if 1
+
       for ( size_t ib=0; ib<real_box_vector.size(); ++ib ) {
 
          hier::BoxContainer tmp_overlap_boxes;
@@ -596,18 +572,6 @@ TileClustering::coalesceClusters(
                                       real_box_vector[ib].getBoxId() );
          TBOX_omp_unset_lock(&l_outputs);
       }
-#else
-      for ( hier::BoxContainer::const_iterator bi=tag_boxes.begin();
-            bi!=tag_boxes.end(); ++bi ) {
-
-         hier::BoxContainer tmp_overlap_boxes;
-         new_boxes.findOverlapBoxes(tmp_overlap_boxes,
-                                    *bi,
-                                    tag_box_level.getRefinementRatio() );
-
-         tag_to_new->insertNeighbors( tmp_overlap_boxes, bi->getBoxId() );
-      }
-#endif
 
       d_object_timers->t_coalesce_adjustment->stop();
 
