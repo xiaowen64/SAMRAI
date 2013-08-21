@@ -152,64 +152,14 @@ TileClustering::findBoxesContainingTags(
 
    d_object_timers->t_cluster_setup->stop();
 
-   d_object_timers->t_cluster->start();
-
-   // Determine max number of tiles any local patch can generate.
-   int max_tiles_for_any_patch = 0;
-   for ( int pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
-      hier::Box coarsened_box = tag_level->getPatch(pi)->getBox();
-      coarsened_box.coarsen(d_box_size);
-      hier::IntVector number_tiles = coarsened_box.numberCells();
-      number_tiles *= 3; // Possible merging of smaller tiles on either side of it.
-      max_tiles_for_any_patch = tbox::MathUtilities<int>::Max(
-         max_tiles_for_any_patch, number_tiles.getProduct() );
-   }
-
-   /*
-    * Generate new_box_level and Connectors
-    */
-#pragma omp parallel if ( tag_level->getLocalNumberOfPatches() > 4*omp_get_max_threads() )
-#pragma omp for schedule(dynamic)
-   for ( int pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
-
-      hier::Patch &patch = *tag_level->getPatch(pi);
-      const hier::Box &patch_box = patch.getBox();
-      const hier::BlockId &block_id = patch_box.getBlockId();
-
-      TBOX_ASSERT( bound_boxes.begin(block_id) != bound_boxes.end(block_id) );
-      const hier::Box &bounding_box = *bound_boxes.begin(block_id);
-
-      if ( patch.getBox().intersects(bounding_box) ) {
-
-         boost::shared_ptr<pdat::CellData<int> > tag_data(
-            patch.getPatchData(tag_data_index), boost::detail::dynamic_cast_tag());
-
-         hier::BoxContainer tiles;
-         int num_coarse_tags =
-            findTilesContainingTags( tiles, *tag_data, tag_val, pi*max_tiles_for_any_patch );
-
-         if (d_print_steps) {
-            tbox::plog << "Tile Clustering generated " << tiles.size()
-                       << " clusters from " << num_coarse_tags
-                       << " in patch " << patch.getBox().getBoxId() << '\n';
-         }
-
-         TBOX_omp_set_lock(&l_outputs);
-         for ( hier::BoxContainer::iterator bi=tiles.begin(); bi!=tiles.end(); ++bi ) {
-            new_box_level->addBoxWithoutUpdate(*bi);
-            new_to_tag->insertLocalNeighbor( patch_box, bi->getBoxId() );
-            tag_to_new->insertLocalNeighbor( *bi, patch_box.getBoxId() );
-         }
-         TBOX_omp_unset_lock(&l_outputs);
-
-      } // Patch is in bounding box
-
-   } // Loop through tag level
-
-   new_box_level->finalize();
-
-   d_object_timers->t_cluster->stop();
-
+   clusterWithinProcessBoundaries(
+      *new_box_level,
+      *tag_to_new,
+      *new_to_tag,
+      tag_level,
+      bound_boxes,
+      tag_data_index,
+      tag_val);
 
    if ( d_coalesce_boxes ) {
 
@@ -405,6 +355,83 @@ TileClustering::findBoxesContainingTags(
    }
 }
 
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+TileClustering::clusterWithinProcessBoundaries(
+   hier::BoxLevel &new_box_level,
+   hier::Connector &tag_to_new,
+   hier::Connector &new_to_tag,
+   const boost::shared_ptr<hier::PatchLevel>& tag_level,
+   const hier::BoxContainer& bound_boxes,
+   int tag_data_index,
+   int tag_val)
+{
+   d_object_timers->t_cluster->start();
+
+   // Determine max number of tiles any local patch can generate.
+   int max_tiles_for_any_patch = 0;
+   for ( int pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
+      hier::Box coarsened_box = tag_level->getPatch(pi)->getBox();
+      coarsened_box.coarsen(d_box_size);
+      hier::IntVector number_tiles = coarsened_box.numberCells();
+      number_tiles *= 3; // Possible merging of smaller tiles on either side of it.
+      max_tiles_for_any_patch = tbox::MathUtilities<int>::Max(
+         max_tiles_for_any_patch, number_tiles.getProduct() );
+   }
+
+   /*
+    * Generate new_box_level and Connectors
+    */
+#pragma omp parallel if ( tag_level->getLocalNumberOfPatches() > 4*omp_get_max_threads() )
+#pragma omp for schedule(dynamic)
+   for ( int pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
+
+      hier::Patch &patch = *tag_level->getPatch(pi);
+      const hier::Box &patch_box = patch.getBox();
+      const hier::BlockId &block_id = patch_box.getBlockId();
+
+      TBOX_ASSERT( bound_boxes.begin(block_id) != bound_boxes.end(block_id) );
+      const hier::Box &bounding_box = *bound_boxes.begin(block_id);
+
+      if ( patch.getBox().intersects(bounding_box) ) {
+
+         boost::shared_ptr<pdat::CellData<int> > tag_data(
+            patch.getPatchData(tag_data_index), boost::detail::dynamic_cast_tag());
+
+         hier::BoxContainer tiles;
+         int num_coarse_tags =
+            findTilesContainingTags( tiles, *tag_data, tag_val,
+                                     pi*max_tiles_for_any_patch );
+
+         if (d_print_steps) {
+            tbox::plog << "Tile Clustering generated " << tiles.size()
+                       << " clusters from " << num_coarse_tags
+                       << " in patch " << patch.getBox().getBoxId() << '\n';
+         }
+
+         TBOX_omp_set_lock(&l_outputs);
+         for ( hier::BoxContainer::iterator bi=tiles.begin(); bi!=tiles.end(); ++bi ) {
+            new_box_level.addBoxWithoutUpdate(*bi);
+            new_to_tag.insertLocalNeighbor( patch_box, bi->getBoxId() );
+            tag_to_new.insertLocalNeighbor( *bi, patch_box.getBoxId() );
+         }
+         TBOX_omp_unset_lock(&l_outputs);
+
+      } // Patch is in bounding box
+
+   } // Loop through tag level
+
+   new_box_level.finalize();
+
+   d_object_timers->t_cluster->stop();
+
+   return;
+}
 
 
 /*

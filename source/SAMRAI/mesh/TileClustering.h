@@ -140,6 +140,19 @@ protected:
 
 private:
 
+
+   /*!
+    * Cluster, cutting off tiles at process boundaries.
+    */
+   void clusterWithinProcessBoundaries(
+      hier::BoxLevel &new_box_level,
+      hier::Connector &tag_to_new,
+      hier::Connector &new_to_tag,
+      const boost::shared_ptr<hier::PatchLevel>& tag_level,
+      const hier::BoxContainer& bound_boxes,
+      int tag_data_index,
+      int tag_val);
+
    /*!
     * Create, populate and return a coarsened version of the given tag data.
     *
