@@ -186,8 +186,6 @@ int main(
    SAMRAIManager::startup();
    tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-   const int rank = mpi.getRank();
-
    /*
     * Process command line arguments.  For each run, the input
     * filename must be specified.  Usage is:
@@ -912,15 +910,7 @@ int main(
     */
    SAMRAIManager::shutdown();
    SAMRAIManager::finalize();
-
-   if (error_count == 0) {
-      SAMRAI_MPI::finalize();
-   } else {
-      std::cout << "Process " << std::setw(5) << rank << " aborting."
-                << std::endl;
-      tbox::Utilities::abort("Aborting due to nonzero fail count",
-         __FILE__, __LINE__);
-   }
+   SAMRAI_MPI::finalize();
 
    return error_count;
 }
