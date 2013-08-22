@@ -6,8 +6,8 @@
 #define INCLUDED_SAMRAI_CONFIG_H
 
 #define SAMRAI_VERSION_MAJOR 3
-#define SAMRAI_VERSION_MINOR 6
-#define SAMRAI_VERSION_PATCHLEVEL 1
+#define SAMRAI_VERSION_MINOR 7
+#define SAMRAI_VERSION_PATCHLEVEL 0
 
 
 /* Define if bool type is not properly supported */
@@ -62,9 +62,6 @@
 
 /* BOOST headers are available to use */
 #undef HAVE_BOOST_HEADERS
-
-/* BOOST headers are available to use */
-#undef HAVE_PTSCOTCH
 
 /* HAVE_CMATH */
 #undef HAVE_CMATH
@@ -137,6 +134,9 @@
 
 /* HAVE_PRAGMA_STATIC_DATA_SPECIALIZATION */
 #undef HAVE_PRAGMA_STATIC_DATA_SPECIALIZATION
+
+/* PTSCOTCH headers are available to use */
+#undef HAVE_PTSCOTCH
 
 /* SILO library is available so use it */
 #undef HAVE_SILO
