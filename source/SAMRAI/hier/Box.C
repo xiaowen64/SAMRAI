@@ -125,6 +125,33 @@ Box::Box(
 }
 
 Box::Box(
+   const Index& lower,
+   const Index& upper,
+   const BlockId& block_id,
+   const LocalId& local_id,
+   const int owner_rank,
+   const PeriodicId& periodic_id):
+   d_lo(lower),
+   d_hi(upper),
+   d_block_id(block_id),
+   d_id(local_id, owner_rank, periodic_id),
+   d_id_locked(false)
+{
+   TBOX_ASSERT(periodic_id.isValid());
+   TBOX_ASSERT(periodic_id.getPeriodicValue() <
+      PeriodicShiftCatalog::getCatalog(d_lo.getDim())->getNumberOfShifts());
+#ifdef BOX_TELEMETRY
+   // Increment the cumulative constructed count, active box count and
+   // reset the high water mark of active boxes if necessary.
+   ++s_cumulative_constructed_ct;
+   ++s_active_ct;
+   if (s_active_ct > s_high_water) {
+      s_high_water = s_active_ct;
+   }
+#endif
+}
+
+Box::Box(
    const Box& box,
    const LocalId& local_id,
    const int owner,
