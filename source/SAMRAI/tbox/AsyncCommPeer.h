@@ -386,6 +386,20 @@ public:
    void
    completeCurrentOperation();
 
+   /*!
+    * @brief Whether the current (or last) operation was a send.
+    */
+   bool isSender() {
+      return d_base_op == send;
+   }
+
+   /*!
+    * @brief Whether the current (or last) operation was a receive.
+    */
+   bool isReceiver() {
+      return d_base_op == recv;
+   }
+
    //@}
 
 
