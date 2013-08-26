@@ -1530,14 +1530,14 @@ t_post_load_distribution_barrier->stop();
     * long to advance them all to completion.
     */
    if ( d_print_steps ) {
-      tbox::plog << "TreeLaodBalancer::loadBalanceWithinRankGroup waiting for sends to complete.\n";
+      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup waiting for sends to complete.\n";
    }
    t_finish_sends->start();
    child_send_stage.advanceAll();
    parent_send_stage.advanceAll();
    t_finish_sends->stop();
    if ( d_print_steps ) {
-      tbox::plog << "TreeLaodBalancer::loadBalanceWithinRankGroup completed sends.\n";
+      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup completed sends.\n";
    }
    child_send_stage.clearCompletionQueue();
    parent_send_stage.clearCompletionQueue();
@@ -1552,18 +1552,18 @@ t_post_load_distribution_barrier->stop();
    }
 #endif
    if ( d_print_steps ) {
-      tbox::plog << "TreeLaodBalancer::loadBalanceWithinRankGroup for completed sends.\n";
+      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup for completed sends.\n";
    }
 
 
    if ( d_print_steps ) {
-      tbox::plog << "TreeLaodBalancer::loadBalanceWithinRankGroup constructing unbalanced->balanced.\n";
+      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup constructing unbalanced->balanced.\n";
    }
    constructSemilocalUnbalancedToBalanced(
       unbalanced_to_balanced,
       unassigned );
    if ( d_print_steps ) {
-      tbox::plog << "TreeLaodBalancer::loadBalanceWithinRankGroup finished constructing unbalanced->balanced.\n";
+      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup finished constructing unbalanced->balanced.\n";
    }
 
    t_get_map->stop();
