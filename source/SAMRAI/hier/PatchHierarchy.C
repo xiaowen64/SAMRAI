@@ -264,7 +264,8 @@ PatchHierarchy::getFromInput(
             TBOX_WARNING(
                d_object_name << ":  "
                              << "Allowing patches smaller than the given "
-                             << "smallest patch size.  Note:  If periodic "
+                             << "smallest patch size to prevent overlaps.\n"
+                             << "Note:  If periodic "
                              << "boundary conditions are used, this flag is "
                              << "ignored in the periodic directions."
                              << std::endl);
