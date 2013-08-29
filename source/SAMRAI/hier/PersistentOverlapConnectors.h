@@ -396,6 +396,11 @@ private:
     */
    static char s_implicit_connector_creation_rule;
 
+   /*
+    * @brief Count of how many times we have done implicit global searches.
+    */
+   static size_t s_num_implicit_global_searches;
+
 };
 
 }
