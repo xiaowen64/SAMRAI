@@ -367,7 +367,8 @@ TileClustering::findBoxesContainingTags(
       /*
        * Log summary of clustering.
        */
-      tbox::plog << "TileClustering summary:\n";
+      tbox::plog << "TileClustering summary:\n"
+                 << "\tClustered with box_size = " << d_box_size << '\n';
 
       for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
            bi != bound_boxes.end(); ++bi) {
