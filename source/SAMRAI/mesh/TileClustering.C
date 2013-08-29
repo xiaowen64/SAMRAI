@@ -407,7 +407,9 @@ TileClustering::clusterWholeTiles(
             new_box_level.addBox(whole_tile);
             for ( hier::BoxContainer::iterator bi=overlapping_tag_boxes.begin();
                   bi!=overlapping_tag_boxes.end(); ++bi ) {
-               tag_to_new->insertLocalNeighbor( whole_tile, bi->getBoxId() );
+               if ( bi->getOwnerRank() == tag_box_level.getMPI().getRank() ) {
+                  tag_to_new->insertLocalNeighbor( whole_tile, bi->getBoxId() );
+               }
                tiles_to_tag.insertLocalNeighbor( *bi, whole_tile.getBoxId() );
             }
 
