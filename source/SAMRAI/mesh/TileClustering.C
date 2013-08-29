@@ -156,6 +156,7 @@ TileClustering::findBoxesContainingTags(
 
    d_object_timers->t_cluster_setup->stop();
 
+#if 0
    clusterWithinProcessBoundaries(
       *new_box_level,
       *tag_to_new,
@@ -163,6 +164,15 @@ TileClustering::findBoxesContainingTags(
       bound_boxes,
       tag_data_index,
       tag_val);
+#else
+   clusterWholeTiles(
+      *new_box_level,
+      tag_to_new,
+      tag_level,
+      bound_boxes,
+      tag_data_index,
+      tag_val);
+#endif
 
    if ( d_coalesce_boxes ) {
       coalesceClusters(*new_box_level, tag_to_new);
