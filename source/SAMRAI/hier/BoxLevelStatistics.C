@@ -100,9 +100,7 @@ void BoxLevelStatistics::computeLocalBoxLevelStatistics( const BoxLevel &box_lev
    d_sq.d_values[MAX_BOX_VOL] = 0;
    d_sq.d_values[MIN_BOX_VOL] = tbox::MathUtilities<double>::getMax();
    d_sq.d_values[MAX_BOX_LEN] = 0;
-   d_sq.d_values[MIN_BOX_LEN] =
-      (box_level.getLocalNumberOfBoxes() == 0 ?
-       0 : tbox::MathUtilities<double>::getMax());
+   d_sq.d_values[MIN_BOX_LEN] = tbox::MathUtilities<double>::getMax();
    d_sq.d_values[MAX_ASPECT_RATIO] = 0;
    d_sq.d_values[SUM_ASPECT_RATIO] = 0;
    d_sq.d_values[SUM_SURFACE_AREA] = 0.;
