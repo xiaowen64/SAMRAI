@@ -152,6 +152,15 @@ private:
       int tag_data_index,
       int tag_val);
 
+   void
+   clusterWithinLevelBoundaries(
+      hier::BoxLevel &new_box_level,
+      hier::Connector &tag_to_new,
+      const boost::shared_ptr<hier::PatchLevel>& tag_level,
+      const hier::BoxContainer& bound_boxes,
+      int tag_data_index,
+      int tag_val);
+
    /*!
     * @brief Create, populate and return a coarsened version of the
     * given tag data.
@@ -173,6 +182,20 @@ private:
       const pdat::CellData<int> &tag_data,
       int tag_val,
                            int first_tile_index);
+
+   void
+   clusterWholeTiles(
+      hier::BoxLevel &new_box_level,
+      boost::shared_ptr<hier::Connector> &tag_to_new,
+      const boost::shared_ptr<hier::PatchLevel>& tag_level,
+      const hier::BoxContainer& bound_boxes,
+      int tag_data_index,
+      int tag_val);
+
+   void
+   removeDuplicateTiles(
+      hier::BoxLevel &tile_box_level,
+      hier::Connector &tag_to_tiles);
 
    /*!
     * @brief Coalesce clusters (and update Connectors).
@@ -244,6 +267,10 @@ private:
     * @brief Static container of timers that have been looked up.
     */
    static std::map<std::string, TimerStruct> s_static_timers;
+
+   static int s_primary_mpi_tag;
+   static int s_secondary_mpi_tag;
+   static int s_first_data_length;
 
    /*!
     * @brief Structure of timers in s_static_timers, matching this
