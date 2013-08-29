@@ -593,7 +593,7 @@ TileClustering::removeDuplicateTiles(
 
          std::map<hier::BoxId,size_t>::const_iterator chosen_box_itr = changes.find(na->getBoxId());
 
-         if ( chosen_box_itr == changes.end() ) {
+         if ( chosen_box_itr != changes.end() ) {
             tmp_tag_to_tiles.insertLocalNeighbor(chosen_tiles[chosen_box_itr->second], *ni);
          }
          else {
