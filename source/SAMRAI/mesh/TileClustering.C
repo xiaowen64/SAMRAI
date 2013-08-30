@@ -1015,6 +1015,9 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
 
 /*
  ***********************************************************************
+ * This method currently does no communication, assuming tiles don't
+ * cross process boundaries on the tag level.  Now, with whole tiles,
+ * this should be modified so it does the appropriate communication.
  ***********************************************************************
  */
 void
