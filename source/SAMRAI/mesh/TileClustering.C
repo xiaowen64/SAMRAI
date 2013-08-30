@@ -41,6 +41,7 @@ TileClustering::TileClustering(
    const boost::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_box_size(hier::IntVector(d_dim, 8)),
+   d_allow_remote_tile_extent(false),
    d_coalesce_boxes(true),
    d_log_cluster_summary(false),
    d_log_cluster(false),
@@ -156,35 +157,44 @@ TileClustering::findBoxesContainingTags(
 
    d_object_timers->t_cluster_setup->stop();
 
-#if 0
-   clusterWithinProcessBoundaries(
-      *new_box_level,
-      *tag_to_tile,
-      tag_level,
-      bound_boxes,
-      tag_data_index,
-      tag_val);
-#else
-   int has_remote_tile_extent = 0;
-   clusterWholeTiles(
-      *new_box_level,
-      tag_to_tile,
-      has_remote_tile_extent,
-      tag_level,
-      bound_boxes,
-      tag_data_index,
-      tag_val);
 
-   if ( has_remote_tile_extent ) {
-      detectSemilocalEdges( tag_to_tile );
-      /*
-       * Remove duplicated new tiles.  For each set of coinciding tiles,
-       * determine the process with the greatest tag overlap and keep only
-       * the copy from that process.  Discard the others.
-       */
-      removeDuplicateTiles( *new_box_level, *tag_to_tile );
+   if ( d_allow_remote_tile_extent ) {
+
+      int tiles_have_remote_extent = 0;
+      clusterWholeTiles(
+         *new_box_level,
+         tag_to_tile,
+         tiles_have_remote_extent,
+         tag_level,
+         bound_boxes,
+         tag_data_index,
+         tag_val);
+
+      new_box_level->getMPI().AllReduce( &tiles_have_remote_extent, 1, MPI_MAX );
+
+      if ( tiles_have_remote_extent ) {
+         detectSemilocalEdges( tag_to_tile );
+         /*
+          * Remove duplicated new tiles.  For each set of coinciding tiles,
+          * determine the process with the greatest tag overlap and keep only
+          * the copy from that process.  Discard the others.
+          */
+         removeDuplicateTiles( *new_box_level, *tag_to_tile );
+      }
    }
-#endif
+
+   else {
+
+      clusterWithinProcessBoundaries(
+         *new_box_level,
+         *tag_to_tile,
+         tag_level,
+         bound_boxes,
+         tag_data_index,
+         tag_val);
+
+   }
+
 
    if ( d_coalesce_boxes ) {
       coalesceClusters(*new_box_level, tag_to_tile);
@@ -193,8 +203,8 @@ TileClustering::findBoxesContainingTags(
 
 
    /*
-    * Get some global parameters.  Do it before logging to prevent
-    * the logging flag from having an undue side effect on performance.
+    * Get some global parameters.  Do it before logging to prevent the
+    * logging flag from having a side-effect on performance timers.
     */
 
    d_object_timers->t_cluster_wrapup->barrierAndStart();
@@ -349,16 +359,20 @@ TileClustering::clusterWithinProcessBoundaries(
 * but it doesn't require any communication.
 *
 * Any tile with a local tag will be added locally.  If tile crosses
-* patch boundaries and has tags on multiple patches, the tile will be
-* duplicated (with different BoxIds).  Duplication must be corrected
-* by a postprocessing step after this method.
+* patch boundaries, this method does not detect overlaps with remote
+* tag boxes.  If the tile has tags on multiple patches, the tile will
+* be duplicated (with different BoxIds).  Missing edges and tile
+* duplication must be corrected by a postprocessing step after this
+* method.
+*
+* This method is local.
 ***********************************************************************
 */
 void
 TileClustering::clusterWholeTiles(
-   hier::BoxLevel &new_box_level,
+   hier::BoxLevel &tile_box_level,
    boost::shared_ptr<hier::Connector> &tag_to_tile,
-   int &has_remote_tile_extent,
+   int &local_tiles_have_remote_extent,
    const boost::shared_ptr<hier::PatchLevel>& tag_level,
    const hier::BoxContainer& bound_boxes,
    int tag_data_index,
@@ -378,10 +392,10 @@ TileClustering::clusterWholeTiles(
    hier::LocalId last_used_local_id(-1);
 
    /*
-    * Generate new_box_level and Connectors
+    * Generate tile_box_level and Connectors
     */
 
-   has_remote_tile_extent = 0;
+   local_tiles_have_remote_extent = 0;
 
    for ( int pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
 
@@ -420,7 +434,7 @@ TileClustering::clusterWholeTiles(
                visible_tag_boxes.findOverlapBoxes( overlapping_tag_boxes, whole_tile );
             }
 
-            new_box_level.addBox(whole_tile);
+            tile_box_level.addBox(whole_tile);
             for ( hier::BoxContainer::iterator bi=overlapping_tag_boxes.begin();
                   bi!=overlapping_tag_boxes.end(); ++bi ) {
                if ( bi->getOwnerRank() == tag_box_level.getMPI().getRank() ) {
@@ -429,11 +443,11 @@ TileClustering::clusterWholeTiles(
                tiles_to_tag.insertLocalNeighbor( *bi, whole_tile.getBoxId() );
             }
 
-            if ( !has_remote_tile_extent ) {
+            if ( !local_tiles_have_remote_extent ) {
                for ( hier::BoxContainer::const_iterator bi=overlapping_tag_boxes.begin();
                      bi!=overlapping_tag_boxes.end(); ++ bi ) {
                   if ( bi->getOwnerRank() != patch_box.getOwnerRank() ) {
-                     has_remote_tile_extent = true;
+                     local_tiles_have_remote_extent = true;
                      break;
                   }
                }
@@ -445,9 +459,7 @@ TileClustering::clusterWholeTiles(
 
    } // Loop through tag level
 
-   new_box_level.finalize();
-
-   new_box_level.getMPI().AllReduce( &has_remote_tile_extent, 1, MPI_MAX );
+   tile_box_level.finalize();
 
    d_object_timers->t_cluster->stop();
 
@@ -471,8 +483,6 @@ TileClustering::removeDuplicateTiles(
 {
 
    const hier::BoxLevel &tag_box_level = tag_to_tile.getBase();
-   const hier::Connector &tag_to_tag = tag_box_level.findConnector(
-      tag_box_level, d_box_size, hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
 
    hier::Connector &tiles_to_tag = tag_to_tile.getTranspose();
 

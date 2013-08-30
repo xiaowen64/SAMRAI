@@ -187,7 +187,7 @@ private:
    clusterWholeTiles(
       hier::BoxLevel &new_box_level,
       boost::shared_ptr<hier::Connector> &tag_to_new,
-      int &has_remote_tile_extent,
+      int &local_tiles_have_remote_extent,
       const boost::shared_ptr<hier::PatchLevel>& tag_level,
       const hier::BoxContainer& bound_boxes,
       int tag_data_index,
@@ -215,6 +215,15 @@ private:
 
    //! @brief Box size constraint.
    hier::IntVector d_box_size;
+
+   /*!
+    * @brief Whether to allow tiles to have remote extents.
+    *
+    * If false, tiles will be cut at process boundaries, resulting in
+    * completely local tiles.  If true, allow tiles to cross process
+    * boundaries where, resulting in less tile fragmentation.
+    */
+   bool d_allow_remote_tile_extent;
 
    /*!
     * @brief Whether to coalesce tiled-boxes after clustering to
