@@ -181,16 +181,20 @@ private:
       hier::BoxContainer &tiles,
       const pdat::CellData<int> &tag_data,
       int tag_val,
-                           int first_tile_index);
+      int first_tile_index);
 
    void
    clusterWholeTiles(
       hier::BoxLevel &new_box_level,
       boost::shared_ptr<hier::Connector> &tag_to_new,
+      int &has_remote_tile_extent,
       const boost::shared_ptr<hier::PatchLevel>& tag_level,
       const hier::BoxContainer& bound_boxes,
       int tag_data_index,
       int tag_val);
+
+   void
+   detectSemilocalEdges( boost::shared_ptr<hier::Connector> &tag_to_tile );
 
    void
    removeDuplicateTiles(
