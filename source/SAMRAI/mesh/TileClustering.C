@@ -422,9 +422,9 @@ TileClustering::clusterWholeTiles(
    new_box_level.finalize();
 
    /*
-    * Tag boxes don't know about any remote new boxes that may overlap
-    * them.  Must bridge tag<==>tag<==>new to get the complete
-    * tag<==>new.
+    * Bridge tag<==>tag<==>new to get the complete tag<==>new.
+    * Currently, tag boxes don't know about any remote new boxes that
+    * may overlap them.
     *
     * Note: The bridge is convenient but overkill.  We can get same
     * information with a lighter weight communication and no
@@ -456,9 +456,6 @@ TileClustering::clusterWholeTiles(
 * tile crosses any tag box boundary.  This methods removes the
 * duplicates and keep only the one on the process with the greatest
 * overlap.
-*
-* Although this method can use a modify operation to make the change,
-* we have all the information need to avoid the communication cost.
 ***********************************************************************
 */
 void
@@ -473,22 +470,27 @@ TileClustering::removeDuplicateTiles(
 
    hier::Connector &tiles_to_tag = tag_to_tiles.getTranspose();
 
-   hier::BoxContainer visible_tag_boxes;
-   tag_to_tag.getLocalNeighbors(visible_tag_boxes);
 
    /*
-    * Get tiles_crossing_patch_boundaries.  These are identified by
-    * their having muliple neighbors.
+    * Get tiles_crossing_patch_boundaries.  These are
+    * - local tiles with multiple tag neighbors, and
+    * - remote tiles visible locally
     */
 
+   hier::BoxContainer visible_tiles;
+   tag_to_tiles.getLocalNeighbors(visible_tiles);
    hier::BoxContainer tiles_crossing_patch_boundaries;
 
-   for ( hier::BoxContainer::const_iterator bi=tile_box_level.getBoxes().begin();
-         bi!=tile_box_level.getBoxes().end(); ++bi ) {
-      if ( tiles_to_tag.numLocalNeighbors(bi->getBoxId()) > 1 ) {
+   for ( hier::BoxContainer::const_iterator bi=visible_tiles.begin();
+         bi!=visible_tiles.end(); ++bi ) {
+      if ( bi->getOwnerRank() != tiles_to_tag.getMPI().getRank() ||
+           tiles_to_tag.numLocalNeighbors(bi->getBoxId()) > 1 ) {
          tiles_crossing_patch_boundaries.pushBack(*bi);
       }
    }
+
+   visible_tiles.clear();
+
 
    // Chosen tiles among all the duplicate tiles.
    std::vector<hier::Box> chosen_tiles;
@@ -496,19 +498,28 @@ TileClustering::removeDuplicateTiles(
    std::map<hier::BoxId,size_t> changes;
 
    /*
-    * Look for duplicate tiles.  If the O(N) search is too slow, it
-    * can be replaced by ordering the tiles by the lower corner and
-    * doing an O(lg N) search.
+    * Look for duplicate_tiles and choose one from each group of
+    * duplicates.  Chose the first among the duplicate tiles.  Because
+    * duplicate_tiles are sorted, we are arbitrarily choosing the
+    * first in sorted order.  An alternative is to choose one from the
+    * process with most overlap.
     */
    while ( !tiles_crossing_patch_boundaries.isEmpty() ) {
 
-      hier::BoxContainer duplicate_tiles(tiles_crossing_patch_boundaries.front());
+      hier::BoxContainer duplicate_tiles(tiles_crossing_patch_boundaries.front(), true);
       tiles_crossing_patch_boundaries.popFront();
 
+      /*
+       * If the O(N) search for duplicates is too slow, it can be
+       * replaced by ordering the tiles by the lower corner and doing
+       * an O(lg N) search.
+       */
       for ( hier::BoxContainer::iterator bi=tiles_crossing_patch_boundaries.begin();
             bi!=tiles_crossing_patch_boundaries.end(); /* incremented in loop */ ) {
          if ( bi->lower() == duplicate_tiles.front().lower() ) {
-            duplicate_tiles.pushBack(*bi);
+            TBOX_ASSERT( bi->upper() == duplicate_tiles.front().upper() );
+            duplicate_tiles.insert(*bi);
+            changes[bi->getBoxId()] = chosen_tiles.size();
             tiles_crossing_patch_boundaries.erase(bi++);
          }
          else {
@@ -516,48 +527,7 @@ TileClustering::removeDuplicateTiles(
          }
       }
 
-      // Find tag boxes overlapping these duplicate tiles.
-      hier::BoxContainer overlapping_tag_boxes;
-      visible_tag_boxes.findOverlapBoxes( overlapping_tag_boxes, duplicate_tiles.front() );
-
-      // process_overlap[r] is how much process r overlaps the tile.
-      std::map<int,int> process_overlap;
-      for ( hier::BoxContainer::iterator bi=overlapping_tag_boxes.begin();
-            bi!=overlapping_tag_boxes.end(); ++bi ) {
-         process_overlap[bi->getOwnerRank()] += (*bi * duplicate_tiles.front()).size();
-      }
-
-      // owner_overlap corresponds to process with greatest overlap.
-      std::map<int,int>::const_iterator owner_overlap = process_overlap.begin();
-      for ( std::map<int,int>::const_iterator mi=process_overlap.begin();
-            mi!=process_overlap.end(); ++mi ) {
-         if ( mi->second > owner_overlap->second ||
-              ( mi->second == owner_overlap->second &&
-                mi->first < owner_overlap->first ) ) {
-            owner_overlap = mi;
-         }
-      }
-
-      // Choose the tile to keep, from among the duplicates.  If there
-      // are multiple tiles from the chosen owner, choose the one with
-      // the smallest LocalId.
-      chosen_tiles.push_back(hier::Box(d_dim));
-      for ( hier::BoxContainer::iterator bi=duplicate_tiles.begin();
-            bi!=duplicate_tiles.end(); ++bi ) {
-         if ( bi->getOwnerRank() == owner_overlap->first ) {
-            if ( chosen_tiles.back().getLocalId() == hier::LocalId::getInvalidId() ||
-                 chosen_tiles.back().getLocalId() > bi->getLocalId() ) {
-               chosen_tiles.back() = *bi;
-            }
-         }
-      }
-
-      // Populate the change map.
-      for ( hier::BoxContainer::iterator bi=duplicate_tiles.begin();
-            bi!=duplicate_tiles.end(); ++bi ) {
-         TBOX_ASSERT( changes.find(bi->getBoxId()) == changes.end() );
-         changes[bi->getBoxId()] = chosen_tiles.size() - 1;;
-      }
+      chosen_tiles.push_back( *duplicate_tiles.begin() );
 
    }
 
@@ -578,18 +548,21 @@ TileClustering::removeDuplicateTiles(
    for ( hier::BoxContainer::const_iterator bi=tile_box_level.getBoxes().begin();
          bi!=tile_box_level.getBoxes().end(); ++bi ) {
 
-      std::map<hier::BoxId,size_t>::const_iterator chosen_box_itr = changes.find(bi->getBoxId());
+      const hier::Box &possibly_duplicated_tile(*bi);
 
-      hier::Box actual_box =
-         chosen_box_itr == changes.end() ? *bi : chosen_tiles[chosen_box_itr->second];
+      std::map<hier::BoxId,size_t>::const_iterator chosen_box_itr = changes.find(possibly_duplicated_tile.getBoxId());
 
-      tmp_tiles_box_level.addBoxWithoutUpdate(actual_box);
+      const hier::Box &unique_tile =
+         chosen_box_itr == changes.end() ? possibly_duplicated_tile : chosen_tiles[chosen_box_itr->second];
 
-      hier::Connector::ConstNeighborhoodIterator neighborhood =
-         tiles_to_tag.find(bi->getBoxId());
-      for ( hier::Connector::ConstNeighborIterator na=tiles_to_tag.begin(neighborhood);
-            na!=tiles_to_tag.end(neighborhood); ++na ) {
-         tmp_tiles_to_tag.insertLocalNeighbor( *na, actual_box.getBoxId() );
+      if ( unique_tile.getOwnerRank() == tmp_tiles_box_level.getMPI().getRank() ) {
+         tmp_tiles_box_level.addBoxWithoutUpdate(unique_tile);
+         hier::Connector::ConstNeighborhoodIterator neighborhood =
+            tiles_to_tag.find(bi->getBoxId());
+         for ( hier::Connector::ConstNeighborIterator na=tiles_to_tag.begin(neighborhood);
+               na!=tiles_to_tag.end(neighborhood); ++na ) {
+            tmp_tiles_to_tag.insertLocalNeighbor( *na, unique_tile.getBoxId() );
+         }
       }
 
    }
