@@ -108,7 +108,7 @@ TileClustering::getFromInput(
 void
 TileClustering::findBoxesContainingTags(
    boost::shared_ptr<hier::BoxLevel>& new_box_level,
-   boost::shared_ptr<hier::Connector>& tag_to_tile,
+   boost::shared_ptr<hier::Connector>& tag_to_new,
    const boost::shared_ptr<hier::PatchLevel>& tag_level,
    const int tag_data_index,
    const int tag_val,
@@ -148,14 +148,14 @@ TileClustering::findBoxesContainingTags(
                            tag_box_level.getGridGeometry(),
                            tag_box_level.getMPI() ) );
 
-   tag_to_tile.reset(new hier::Connector(*tag_level->getBoxLevel(),
+   tag_to_new.reset(new hier::Connector(*tag_level->getBoxLevel(),
                                         *new_box_level,
                                         zero_vector));
-   hier::Connector* tiles_to_tag = new hier::Connector(
+   hier::Connector* new_to_tag = new hier::Connector(
       *new_box_level,
       *tag_level->getBoxLevel(),
       zero_vector);
-   tag_to_tile->setTranspose(tiles_to_tag, true);
+   tag_to_new->setTranspose(new_to_tag, true);
 
    tag_box_level.getBoxes().makeTree(tag_box_level.getGridGeometry().get());
 
@@ -167,7 +167,7 @@ TileClustering::findBoxesContainingTags(
 
       clusterWholeTiles(
          *new_box_level,
-         tag_to_tile,
+         tag_to_new,
          tiles_have_remote_extent,
          tag_level,
          bound_boxes,
@@ -177,13 +177,13 @@ TileClustering::findBoxesContainingTags(
       new_box_level->getMPI().AllReduce( &tiles_have_remote_extent, 1, MPI_MAX );
 
       if ( tiles_have_remote_extent ) {
-         detectSemilocalEdges( tag_to_tile );
+         detectSemilocalEdges( tag_to_new );
          /*
           * Remove duplicated new tiles.  For each set of coinciding tiles,
           * determine the process with the greatest tag overlap and keep only
           * the copy from that process.  Discard the others.
           */
-         removeDuplicateTiles( *new_box_level, *tag_to_tile );
+         removeDuplicateTiles( *new_box_level, *tag_to_new );
       }
    }
 
@@ -191,7 +191,7 @@ TileClustering::findBoxesContainingTags(
 
       clusterWithinProcessBoundaries(
          *new_box_level,
-         *tag_to_tile,
+         *tag_to_new,
          tag_level,
          bound_boxes,
          tag_data_index,
@@ -201,7 +201,7 @@ TileClustering::findBoxesContainingTags(
 
 
    if ( d_coalesce_boxes ) {
-      coalesceClusters(*new_box_level, tag_to_tile, tiles_have_remote_extent);
+      coalesceClusters(*new_box_level, tag_to_new, tiles_have_remote_extent);
    }
 
 
@@ -226,8 +226,8 @@ TileClustering::findBoxesContainingTags(
       tbox::plog << "TileClustering cluster log:\n"
                  << "\tNew box_level clustered by TileClustering:\n" << new_box_level->format("\t\t",
                                                                                               2)
-                 << "\tTileClustering tag_to_tile:\n" << tag_to_tile->format("\t\t", 2)
-                 << "\tTileClustering tiles_to_tag:\n" << tiles_to_tag->format("\t\t", 2);
+                 << "\tTileClustering tag_to_new:\n" << tag_to_new->format("\t\t", 2)
+                 << "\tTileClustering new_to_tag:\n" << new_to_tag->format("\t\t", 2);
    }
    if (d_log_cluster_summary) {
       /*
@@ -257,10 +257,10 @@ TileClustering::findBoxesContainingTags(
                  << "-" << new_box_level->getMaxNumberOfBoxes() << "]\n"
                  << "\tTileClustering new_level summary:\n" << new_box_level->format("\t\t",0)
                  << "\tTileClustering new_level statistics:\n" << new_box_level->formatStatistics("\t\t")
-                 << "\tTileClustering tiles_to_tag summary:\n" << tiles_to_tag->format("\t\t",0)
-                 << "\tTileClustering tiles_to_tag statistics:\n" << tiles_to_tag->formatStatistics("\t\t")
-                 << "\tTileClustering tag_to_tile summary:\n" << tag_to_tile->format("\t\t",0)
-                 << "\tTileClustering tag_to_tile statistics:\n" << tag_to_tile->formatStatistics("\t\t")
+                 << "\tTileClustering new_to_tag summary:\n" << new_to_tag->format("\t\t",0)
+                 << "\tTileClustering new_to_tag statistics:\n" << new_to_tag->formatStatistics("\t\t")
+                 << "\tTileClustering tag_to_new summary:\n" << tag_to_new->format("\t\t",0)
+                 << "\tTileClustering tag_to_new statistics:\n" << tag_to_new->formatStatistics("\t\t")
                  << "\n";
    }
 
