@@ -206,8 +206,9 @@ private:
     */
    void
    coalesceClusters(
-      hier::BoxLevel &new_box_level,
-      boost::shared_ptr<hier::Connector> &tag_to_new);
+      hier::BoxLevel &tile_box_level,
+      boost::shared_ptr<hier::Connector> &tag_to_tile,
+      int tiles_have_remote_extent);
 
    void setTimers();
 
