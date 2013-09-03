@@ -1148,12 +1148,12 @@ tag_to_tile->getTranspose().assertOverlapCorrectness();
     * Coalesce the boxes and give coalesced boxes unique ids.
     */
    const hier::BoxContainer &pre_boxes = tile_box_level.getBoxes();
-   hier::BoxContainer coalesced_boxes(pre_boxes.begin(), pre_boxes.end(), false);
+   hier::BoxContainer post_boxes(pre_boxes.begin(), pre_boxes.end(), false);
    d_object_timers->t_coalesce->start();
-   coalesced_boxes.coalesce();
-   hier::LocalId last_used_id(-1);
-   for ( hier::BoxContainer::iterator bi=coalesced_boxes.begin();
-         bi!=coalesced_boxes.end(); ++bi ) {
+   post_boxes.coalesce();
+   hier::LocalId last_used_id(tile_box_level.getLastLocalId());
+   for ( hier::BoxContainer::iterator bi=post_boxes.begin();
+         bi!=post_boxes.end(); ++bi ) {
       bi->setId(hier::BoxId(++last_used_id, tile_box_level.getMPI().getRank()));
    }
    d_object_timers->t_coalesce->stop();
@@ -1162,7 +1162,7 @@ tag_to_tile->getTranspose().assertOverlapCorrectness();
    if ( d_print_steps ) {
       tbox::plog << "TileClustering coalesced "
                  << tile_box_level.getLocalNumberOfBoxes()
-                 << " tiles into " << coalesced_boxes.size() << "\n";
+                 << " tiles into " << post_boxes.size() << "\n";
    }
 
 
@@ -1185,27 +1185,27 @@ tag_to_tile->getTranspose().assertOverlapCorrectness();
 
    pre_boxes.makeTree( tile_box_level.getGridGeometry().get() );
 
-   for ( hier::BoxContainer::const_iterator post_itr=coalesced_boxes.begin();
-         post_itr!=coalesced_boxes.end(); ++post_itr ) {
+   for ( hier::BoxContainer::const_iterator post_itr=post_boxes.begin();
+         post_itr!=post_boxes.end(); ++post_itr ) {
 
       hier::BoxContainer tmp_overlap_boxes;
       pre_boxes.findOverlapBoxes( tmp_overlap_boxes, *post_itr );
 
       TBOX_ASSERT( !tmp_overlap_boxes.isEmpty() );
       if ( tmp_overlap_boxes.size() == 1 ) {
+tbox::plog << "Box " << tmp_overlap_boxes.front() << " is the same.\n";
          // pre- and post-box are the same.  No mapping edge.
          TBOX_ASSERT( tmp_overlap_boxes.front().isSpatiallyEqual(*post_itr) );
          tmp_tile_box_level.addBoxWithoutUpdate(tmp_overlap_boxes.front());
       }
       else {
          // Add coalesced box and edges to it.
+         tmp_tile_box_level.addBoxWithoutUpdate(*post_itr);
          for ( hier::BoxContainer::const_iterator pre_itr=tmp_overlap_boxes.begin();
                pre_itr!=tmp_overlap_boxes.end(); ++pre_itr ) {
-            if ( tmp_tile_box_level.hasBox(*post_itr) ) {
-               tmp_tile_box_level.addBoxWithoutUpdate(*post_itr);
-            }
             TBOX_ASSERT( post_itr->getOwnerRank() == pre_itr->getOwnerRank() );
             pre_to_post.insertLocalNeighbor(*post_itr, pre_itr->getBoxId());
+tbox::plog << "Box " << pre_itr->getBoxId() << " changed to " << *post_itr << ".\n";
          }
       }
 
@@ -1213,14 +1213,15 @@ tag_to_tile->getTranspose().assertOverlapCorrectness();
 
    tmp_tile_box_level.finalize();
    TBOX_ASSERT( pre_to_post.isLocal() );
+tbox::plog << "Coalesced:\n" << tmp_tile_box_level.format();
 
 
    /*
     * Apply the modifications.
     */
    hier::MappingConnectorAlgorithm mca;
-mca.setSanityCheckMethodPreconditions(true);
-mca.setSanityCheckMethodPostconditions(true);
+// mca.setSanityCheckMethodPreconditions(true);
+// mca.setSanityCheckMethodPostconditions(true);
    mca.modify( *tag_to_tile,
                pre_to_post,
                &tile_box_level,
