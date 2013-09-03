@@ -210,6 +210,15 @@ private:
       boost::shared_ptr<hier::Connector> &tag_to_tile,
       int tiles_have_remote_extent);
 
+   /*!
+    * @brief Special version of coalesceClusters.
+    * for use when tiles have no remote extent.
+    */
+   void
+   coalesceClusters(
+      hier::BoxLevel &tile_box_level,
+      boost::shared_ptr<hier::Connector> &tag_to_tile);
+
    void setTimers();
 
    const tbox::Dimension d_dim;
