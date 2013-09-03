@@ -1450,8 +1450,10 @@ Connector::assertConsistencyWithBase() const
 {
    if (checkConsistencyWithBase() > 0) {
       TBOX_ERROR(
-         "Connector::assertConsistencyWithBase() found inconsistencies.\n"
-         << "Base box level:\n" << getBase().format("ERROR->", 2));
+         "Connector::assertConsistencyWithHead() found inconsistencies.\n"
+         << "Base BoxLevel:\n" << getBase().format("base-> ", 3)
+         << "Head BoxLevel:\n" << getHead().format("head-> ", 3)
+         << "Connector:\n" << format("E-> ", 3));
    }
 }
 
@@ -1529,9 +1531,9 @@ Connector::assertConsistencyWithHead() const
    if (number_of_inconsistencies > 0) {
       TBOX_ERROR(
          "Connector::assertConsistencyWithHead() found inconsistencies.\n"
-         << getBase().format("base-> ", 3)
-         << getHead().format("head-> ", 3)
-         << format("E-> ", 3));
+         << "Base BoxLevel:\n" << getBase().format("base-> ", 3)
+         << "Head BoxLevel:\n" << getHead().format("head-> ", 3)
+         << "Connector:\n" << format("E-> ", 3));
    }
 }
 
