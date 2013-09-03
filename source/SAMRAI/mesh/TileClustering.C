@@ -174,10 +174,6 @@ TileClustering::findBoxesContainingTags(
          bound_boxes,
          tag_data_index,
          tag_val);
-tag_to_new->assertConsistencyWithBase();
-tag_to_new->assertConsistencyWithHead();
-tag_to_new->getTranspose().assertConsistencyWithBase();
-tag_to_new->getTranspose().assertConsistencyWithHead();
 
       new_box_level->getMPI().AllReduce( &tiles_have_remote_extent, 1, MPI_MAX );
 
@@ -370,9 +366,10 @@ TileClustering::clusterWithinProcessBoundaries(
 * Any tile with a local tag will be added locally.  If tile crosses
 * patch boundaries, this method does not detect overlaps with remote
 * tag boxes.  If the tile has tags on multiple patches, the tile will
-* be duplicated (with different BoxIds).  Missing edges and tile
-* duplication must be corrected by a postprocessing step after this
-* method.
+* be duplicated (with different BoxIds).  tile--->tag will be complete
+* (using info from tag--->tag), but tag--->tile will have missing
+* edges.  Missing edges and tile duplication must be corrected by a
+* postprocessing step after this method.
 *
 * This method is local.
 ***********************************************************************
@@ -468,6 +465,11 @@ TileClustering::clusterWholeTiles(
    } // Loop through tag level
 
    tile_box_level.finalize();
+tag_to_tile->assertConsistencyWithBase();
+tag_to_tile->assertConsistencyWithHead();
+tag_to_tile->getTranspose().assertConsistencyWithBase();
+tag_to_tile->getTranspose().assertConsistencyWithHead();
+tag_to_tile->getTranspose().assertOverlapCorrectness();
 
    d_object_timers->t_cluster->stop();
 
@@ -478,7 +480,8 @@ TileClustering::clusterWholeTiles(
 
 /*
 ***********************************************************************
-* The method clusterWholeTiles may generate duplicate tiles when a
+* Methods clusterWholeTiles() and deteceSemilocalEdges(), preceding
+* this one in execution order, may generate duplicate tiles when a
 * tile crosses any tag box boundary.  This methods removes the
 * duplicates and keep only the one on the process with the greatest
 * overlap.
@@ -494,26 +497,35 @@ TileClustering::removeDuplicateTiles(
 
    hier::Connector &tile_to_tag = tag_to_tile.getTranspose();
 
+tbox::plog << "removeDuplicateTiles input tag_to_tile:\n" << tag_to_tile.format();
+tbox::plog << "removeDuplicateTiles input tile_to_tag:\n" << tile_to_tag.format();
+tag_to_tile.assertOverlapCorrectness();
+tag_to_tile.getTranspose().assertOverlapCorrectness();
 
    /*
     * Get tiles_crossing_patch_boundaries.  These are
     * - local tiles with multiple tag neighbors, and
-    * - remote tiles visible locally
+    * - remote tiles visible locally (found by detectSemilocalEdges)
+    *
+    * The latter may not have multiple local tag neighbors.
     */
 
    hier::BoxContainer visible_tiles;
    tag_to_tile.getLocalNeighbors(visible_tiles);
    hier::BoxContainer tiles_crossing_patch_boundaries;
 
-   for ( hier::BoxContainer::const_iterator bi=visible_tiles.begin();
-         bi!=visible_tiles.end(); ++bi ) {
-      if ( bi->getOwnerRank() != tile_to_tag.getMPI().getRank() ||
-           tile_to_tag.numLocalNeighbors(bi->getBoxId()) > 1 ) {
-         tiles_crossing_patch_boundaries.pushBack(*bi);
+   for ( hier::BoxContainer::const_iterator ti=visible_tiles.begin();
+         ti!=visible_tiles.end(); ++ti ) {
+      const hier::Box &tile(*ti);
+      if ( tile.getOwnerRank() != tile_to_tag.getMPI().getRank() ||
+           tile_to_tag.numLocalNeighbors(tile.getBoxId()) > 1 ) {
+         tiles_crossing_patch_boundaries.pushBack(tile);
       }
    }
+tbox::plog << "visible_tiles: " << visible_tiles.format();
+tbox::plog << "tiles_crossing_patch_boundaries: " << tiles_crossing_patch_boundaries.format();
 
-   visible_tiles.clear();
+   visible_tiles.clear(); // No longer needed.
 
 
    // Chosen tiles among all the duplicate tiles.
@@ -522,27 +534,28 @@ TileClustering::removeDuplicateTiles(
    std::map<hier::BoxId,size_t> changes;
 
    /*
-    * Look for duplicate_tiles and choose one from each group of
-    * duplicates.  Chose the first among the duplicate tiles.  Because
-    * duplicate_tiles are sorted, we are arbitrarily choosing the
-    * first in sorted order.  An alternative is to choose one from the
-    * process with most overlap.
+    * Look for similar_tiles (tiles with same extents) and choose one
+    * from each group of similars.  Chose the first in the group.
+    * Because similar_tiles are sorted, we are arbitrarily choosing
+    * the first in sorted order.  An alternative is to choose one from
+    * the process with most overlap.
     */
    while ( !tiles_crossing_patch_boundaries.isEmpty() ) {
 
-      hier::BoxContainer duplicate_tiles(tiles_crossing_patch_boundaries.front(), true);
+      hier::BoxContainer similar_tiles(tiles_crossing_patch_boundaries.front(), true);
       tiles_crossing_patch_boundaries.popFront();
 
       /*
-       * If the O(N) search for duplicates is too slow, it can be
-       * replaced by ordering the tiles by the lower corner and doing
-       * an O(lg N) search.
+       * Search for tiles with same extent as the first one in
+       * similar_tiles.  If the O(N) search for duplicates is too
+       * slow, it can be replaced by ordering the tiles by the lower
+       * corner and doing an O(lg N) search.
        */
       for ( hier::BoxContainer::iterator bi=tiles_crossing_patch_boundaries.begin();
             bi!=tiles_crossing_patch_boundaries.end(); /* incremented in loop */ ) {
-         if ( bi->lower() == duplicate_tiles.front().lower() ) {
-            TBOX_ASSERT( bi->upper() == duplicate_tiles.front().upper() );
-            duplicate_tiles.insert(*bi);
+         if ( bi->lower() == similar_tiles.front().lower() ) {
+            TBOX_ASSERT( bi->upper() == similar_tiles.front().upper() );
+            similar_tiles.insert(*bi);
             changes[bi->getBoxId()] = chosen_tiles.size();
             tiles_crossing_patch_boundaries.erase(bi++);
          }
@@ -551,7 +564,9 @@ TileClustering::removeDuplicateTiles(
          }
       }
 
-      chosen_tiles.push_back( *duplicate_tiles.begin() );
+      if ( similar_tiles.size() > 1 ) {
+         chosen_tiles.push_back( *similar_tiles.begin() );
+      }
 
    }
 
@@ -565,28 +580,41 @@ TileClustering::removeDuplicateTiles(
       const hier::Box &possibly_duplicated_tile(*tile_itr);
       ++tile_itr;
 
-      std::map<hier::BoxId,size_t>::const_iterator chosen_box_itr = changes.find(possibly_duplicated_tile.getBoxId());
+      std::map<hier::BoxId,size_t>::const_iterator chosen_box_itr =
+         changes.find(possibly_duplicated_tile.getBoxId());
 
       if ( chosen_box_itr != changes.end() ) {
 
-         // possibly_duplicated_tile should be replaced with unique_tile.
+
          const hier::Box &unique_tile = chosen_tiles[chosen_box_itr->second];
 
+tbox::plog << "Change tile " << possibly_duplicated_tile << " to " << unique_tile << std::endl;
+
+         // Add unique_tile if it's local.
          if ( unique_tile.getOwnerRank() == tile_box_level.getMPI().getRank() ) {
-            // Replace possibly_duplicated_tile with unique_tile.
+            tile_box_level.addBoxWithoutUpdate(unique_tile);
             hier::Connector::ConstNeighborhoodIterator neighborhood =
                tile_to_tag.find(possibly_duplicated_tile.getBoxId());
             for ( hier::Connector::ConstNeighborIterator na=tile_to_tag.begin(neighborhood);
                   na!=tile_to_tag.end(neighborhood); ++na ) {
                tile_to_tag.insertLocalNeighbor( *na, unique_tile.getBoxId() );
             }
-            tile_to_tag.eraseLocalNeighborhood(possibly_duplicated_tile.getBoxId());
-            tile_box_level.addBoxWithoutUpdate(unique_tile);
-            tile_box_level.eraseBoxWithoutUpdate(possibly_duplicated_tile);
          }
+
+         // Remove duplicated tile.
+         tile_to_tag.eraseLocalNeighborhood(possibly_duplicated_tile.getBoxId());
+         tile_box_level.eraseBoxWithoutUpdate(possibly_duplicated_tile);
+
       }
 
    }
+   tile_box_level.finalize();
+   tag_to_tile.setHead(tile_box_level, true);
+   tile_to_tag.setBase(tile_box_level, true);
+   tile_box_level.deallocateGlobalizedVersion();
+tile_to_tag.assertConsistencyWithBase();
+tile_to_tag.assertConsistencyWithHead();
+tile_to_tag.assertOverlapCorrectness();
 
    for ( hier::Connector::ConstNeighborhoodIterator ni=tag_to_tile.begin();
          ni!=tag_to_tile.end(); ++ni ) {
@@ -594,7 +622,8 @@ TileClustering::removeDuplicateTiles(
       for ( hier::Connector::ConstNeighborIterator na=tag_to_tile.begin(ni);
             na!=tag_to_tile.end(ni); ++na ) {
 
-         std::map<hier::BoxId,size_t>::const_iterator chosen_box_itr = changes.find(na->getBoxId());
+         std::map<hier::BoxId,size_t>::const_iterator chosen_box_itr =
+            changes.find(na->getBoxId());
 
          if ( chosen_box_itr != changes.end() ) {
             tag_to_tile.insertLocalNeighbor(chosen_tiles[chosen_box_itr->second], *ni);
@@ -603,14 +632,9 @@ TileClustering::removeDuplicateTiles(
 
       }
    }
-
-   tile_box_level.finalize();
-   tag_to_tile.setHead(tile_box_level, true);
-   tile_to_tag.setBase(tile_box_level, true);
-TBOX_ASSERT(tag_to_tile.checkConsistencyWithBase()== 0);
-TBOX_ASSERT(tag_to_tile.checkConsistencyWithHead()== 0);
-TBOX_ASSERT(tile_to_tag.checkConsistencyWithBase()== 0);
-TBOX_ASSERT(tile_to_tag.checkConsistencyWithHead()== 0);
+tag_to_tile.assertConsistencyWithBase();
+tag_to_tile.assertConsistencyWithHead();
+tag_to_tile.assertOverlapCorrectness();
 
 {
    // There should be no overlaps.
@@ -634,6 +658,12 @@ TBOX_ASSERT(tile_to_tag.checkConsistencyWithHead()== 0);
 
 /*
 ***********************************************************************
+* Detect semilocal edges missing from the outputs of
+* clusterWholeTiles().
+*
+* On entry, tile_to_tag must be complete, but tag_to_tile may be
+* missing semilocal edges.  On exit, both would be complete overlap
+* Connectors.
 ***********************************************************************
 */
 void
@@ -643,14 +673,16 @@ TileClustering::detectSemilocalEdges(
    const hier::BoxLevel &tag_box_level = tag_to_tile->getBase();
    const hier::Connector &tag_to_tag = tag_box_level.findConnector(
       tag_box_level, d_box_size, hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
+tbox::plog << "detectSemilocalEdges input tag_to_tile:\n" << tag_to_tile->format();
+tbox::plog << "detectSemilocalEdges input tile_to_tag:\n" << tag_to_tile->getTranspose().format();
 
    /*
     * Bridge tag<==>tag<==>new to get the complete tag<==>new.
     * Currently, tag boxes don't know about any remote new boxes that
     * may overlap them.
     *
-    * Note: The bridge is convenient but overkill.  We can get same
-    * information with a lighter weight communication and no
+    * Note: Bridging is convenient but overkill.  We can get same
+    * information with lighter weight communication and no
     * communication at all when no tiles cross process boundaries.
     */
    d_oca.bridge( tag_to_tile,
@@ -658,6 +690,12 @@ TileClustering::detectSemilocalEdges(
                  hier::Connector(*tag_to_tile) /* verify that copying is really needed */,
                  hier::IntVector::getZero(d_dim),
                  true /* compute transpose */ );
+tag_to_tile->assertConsistencyWithBase();
+tag_to_tile->assertConsistencyWithHead();
+tag_to_tile->getTranspose().assertConsistencyWithBase();
+tag_to_tile->getTranspose().assertConsistencyWithHead();
+tag_to_tile->assertOverlapCorrectness();
+tag_to_tile->getTranspose().assertOverlapCorrectness();
 
    return;
 }
@@ -1099,6 +1137,12 @@ TileClustering::coalesceClusters(
       coalesceClusters(tile_box_level, tag_to_tile);
       return;
    }
+tag_to_tile->assertConsistencyWithBase();
+tag_to_tile->assertConsistencyWithHead();
+tag_to_tile->assertOverlapCorrectness();
+tag_to_tile->getTranspose().assertConsistencyWithBase();
+tag_to_tile->getTranspose().assertConsistencyWithHead();
+tag_to_tile->getTranspose().assertOverlapCorrectness();
 
    /*
     * Coalesce the boxes and give coalesced boxes unique ids.
@@ -1190,8 +1234,9 @@ mca.setSanityCheckMethodPostconditions(true);
 
 /*
  ***********************************************************************
- * This method currently does no communication, assuming tiles don't
+ * This method does no communication but requires that tiles don't
  * cross process boundaries on the tag level.
+ *
  ***********************************************************************
  */
 void
@@ -1199,6 +1244,12 @@ TileClustering::coalesceClusters(
    hier::BoxLevel &tile_box_level,
    boost::shared_ptr<hier::Connector> &tag_to_tile)
 {
+tag_to_tile->assertConsistencyWithBase();
+tag_to_tile->assertConsistencyWithHead();
+tag_to_tile->assertOverlapCorrectness();
+tag_to_tile->getTranspose().assertConsistencyWithBase();
+tag_to_tile->getTranspose().assertConsistencyWithHead();
+tag_to_tile->getTranspose().assertOverlapCorrectness();
    /*
     * Try to coalesce the boxes in tile_box_level.
     */
