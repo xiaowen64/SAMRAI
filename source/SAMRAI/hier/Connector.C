@@ -33,8 +33,6 @@
 #pragma report(disable, CPPC5328)
 #endif
 
-static const std::string dbgbord;
-
 namespace SAMRAI {
 namespace hier {
 
@@ -601,7 +599,7 @@ Connector::finalizeContext()
       TBOX_ERROR(
          "Exiting due to errors."
          << "\nConnector::finalizeContext base box_level:\n"
-         << base.format(dbgbord, 2));
+         << base.format());
    }
 #endif
    computeRatioInfo(
@@ -1469,8 +1467,8 @@ Connector::computeNeighborhoodDifferences(
    const Connector& right)
 {
    if (0) {
-      tbox::plog << "Computing relationship differences, a:\n" << left.format(dbgbord, 3)
-      << "Computing relationship differences, b:\n" << right.format(dbgbord, 3);
+      tbox::plog << "Computing relationship differences, a:\n" << left.format("A-> ")
+      << "Computing relationship differences, b:\n" << right.format("B-> ");
    }
    left_minus_right.reset(new Connector(left.d_base_handle->getBoxLevel(),
       left.d_head_handle->getBoxLevel(),
@@ -1724,16 +1722,15 @@ Connector::assertOverlapCorrectness(
       rank_of_max = recv.rank;
    }
    if (max_error_count > 0) {
-      std::string dbgbord;
       TBOX_ERROR(
-         "Connector::assertOverlapCorrectness found missing and/or extra overlaps."
+         "Connector::assertOverlapCorrectness found missing and/or extra overlaps.\n"
          << "Error in connector, " << local_error_count
          << " local errors, "
          << max_error_count << " max errors on proc " << rank_of_max
          << ":\n"
-         << format(dbgbord, 2)
-         << "base box_level:\n" << getBase().format(dbgbord, 2)
-         << "head box_level:\n" << getHead().format(dbgbord, 2));
+         << format("E-> ")
+         << "base:\n" << getBase().format("B-> ")
+         << "head:\n" << getHead().format("H-> "));
    }
 }
 
