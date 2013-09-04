@@ -1298,6 +1298,8 @@ tag_to_tile->getTranspose().assertOverlapCorrectness();
                  << " tiles into " << box_vector.size() << "\n";
    }
 
+   tile_box_level.deallocateGlobalizedVersion();
+
    if ( box_vector.size() != tile_box_level.getLocalNumberOfBoxes() ) {
 
       d_object_timers->t_coalesce_adjustment->start();
@@ -1308,14 +1310,14 @@ tag_to_tile->getTranspose().assertOverlapCorrectness();
        */
       const hier::IntVector &zero_vector = hier::IntVector::getZero(d_dim);
       tile_box_level.initialize( tile_box_level.getRefinementRatio(),
-                                tile_box_level.getGridGeometry(),
-                                tile_box_level.getMPI() );
+                                 tile_box_level.getGridGeometry(),
+                                 tile_box_level.getMPI() );
       tag_to_tile.reset( new hier::Connector( tag_to_tile->getBase(),
-                                             tile_box_level,
-                                             zero_vector ) );
+                                              tile_box_level,
+                                              zero_vector ) );
       hier::Connector *tile_to_tag = new hier::Connector( tile_box_level,
-                                                         tag_to_tile->getBase(),
-                                                         zero_vector );
+                                                          tag_to_tile->getBase(),
+                                                          zero_vector );
       tag_to_tile->setTranspose(tile_to_tag, true);
 
       const hier::BoxContainer &tag_boxes = tag_to_tile->getBase().getBoxes();
