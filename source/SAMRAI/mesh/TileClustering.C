@@ -681,6 +681,11 @@ tag_to_tile.assertOverlapCorrectness();
 * Detect semilocal edges missing from the outputs of
 * clusterWholeTiles().
 *
+* Methods clusterWholeTiles(), preceding this one in execution order,
+* may generate tile extending past local tag boxes.  It doesn't
+* generate any semilocal edges because it is a completely local
+* algorithm.  This method generates the missing semilocal edges.
+*
 * On entry, tile_to_tag must be complete, but tag_to_tile may be
 * missing semilocal edges.  On exit, both would be complete overlap
 * Connectors.
@@ -705,7 +710,7 @@ tbox::plog << "detectSemilocalEdges input tile_to_tag:\n" << tag_to_tile->getTra
     *
     * Note: Bridging is convenient but overkill.  We can get same
     * information with lighter weight communication and no
-    * communication at all when no tiles cross process boundaries.
+    * communication at all where no tiles cross process boundaries.
     */
    d_oca.bridge( tag_to_tile,
                  tag_to_tag,

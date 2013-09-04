@@ -16,7 +16,7 @@
 Main {
    dim = 3
 
-   base_name = "front.3d.tilelb"
+   base_name = "front.3d.wholetile"
 
    write_visit = TRUE
 
@@ -32,7 +32,7 @@ Main {
 
    box_generator_type = "TileClustering"
 
-   load_balancer_type = "TreeLoadBalancer"
+   load_balancer_type = "ChopAndPackLoadBalancer", "TilePartitioner"
 
    rank_tree_type = "CenteredRankTree"
 
@@ -54,7 +54,9 @@ Main {
 
 TileClustering {
   box_size = 4, 4, 4
+  allow_remote_tile_extent = TRUE
   coalesce_boxes = TRUE
+  DEV_barrier_and_time = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
 }
@@ -82,6 +84,7 @@ TilePartitioner {
   box_size = 12, 12, 12
 
   TreeLoadBalancer {
+    DEV_report_load_balance = FALSE // Reported in main
     DEV_allow_box_breaking = TRUE
     // Debugging options
     DEV_check_map = FALSE
@@ -96,11 +99,9 @@ TilePartitioner {
 
 
 TreeLoadBalancer {
-  DEV_report_load_balance = TRUE // Reported in main
-  DEV_balance_penalty_wt = 1.0
-  DEV_surface_penalty_wt = 1.0
-  DEV_slender_penalty_wt = 1.0
-  DEV_precut_penalty_wt = 1.0
+  DEV_report_load_balance = FALSE // Reported in main
+  max_cycle_spread_ratio = 1000000
+  flexible_load_tolerance = 0.05
 
   // Debugging options
   DEV_check_map = TRUE
