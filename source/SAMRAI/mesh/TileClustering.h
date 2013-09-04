@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Asynchronous Berger-Rigoutsos clustering algorithm.
+ * Description:   Tile clustering algorithm.
  *
  ************************************************************************/
 #ifndef included_mesh_TileClustering
@@ -41,6 +41,14 @@ namespace mesh {
  *   Whether to coalesce boxes after clustering.  This can lead to
  *   clusters that are bigger than specified tile size.
  *
+ *   - \b allow_remote_tile_extent
+ *   Whether to tile to extend to remote tag patches.
+ *   If false, tiles will be cut at process boundaries, resulting in
+ *   completely local tiles.  If true, allow tiles to cross process
+ *   boundaries where, resulting in less tile fragmentation.
+ *   If false, clusters' extent can be dependent on how tag level
+ *   is partitioned.
+ *
  * <b> Details: </b> <br>
  * <table>
  *   <tr>
@@ -61,6 +69,14 @@ namespace mesh {
  *   </tr>
  *   <tr>
  *     <td>coalesce_boxes</td>
+ *     <td>bool</td>
+ *     <td>true</td>
+ *     <td>false/true</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>allow_remote_tile_extent</td>
  *     <td>bool</td>
  *     <td>true</td>
  *     <td>false/true</td>
@@ -116,13 +132,6 @@ public:
 
    /*!
     * @brief Setup names of timers.
-    *
-    * By default, timers are named
-    * "mesh::BergerRigoutsosNode::*", where the third field is
-    * the specific steps performed by the BergerRigoutsosNode.
-    * You can override the first two fields with this method.
-    * Conforming to the timer naming convention, timer_prefix should
-    * have the form "*::*".
     */
    void
    setTimerPrefix(
@@ -228,10 +237,6 @@ private:
 
    /*!
     * @brief Whether to allow tiles to have remote extents.
-    *
-    * If false, tiles will be cut at process boundaries, resulting in
-    * completely local tiles.  If true, allow tiles to cross process
-    * boundaries where, resulting in less tile fragmentation.
     */
    bool d_allow_remote_tile_extent;
 
