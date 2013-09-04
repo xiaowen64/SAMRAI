@@ -12,6 +12,7 @@
 #define included_hier_MappingConnector_C
 
 #include "SAMRAI/hier/MappingConnector.h"
+#include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -262,22 +263,9 @@ MappingConnector::findMappingErrors(
       } else {
          const Box& old_box = *(getBase().getBoxStrict(gid));
 
-         Box grown_box(old_box);
-         grown_box.grow(getConnectorWidth());
-
          for (Connector::ConstNeighborIterator ni = begin(ei);
               ni != end(ei); ++ni) {
             const Box& nabr = *ni;
-
-            if (!grown_box.contains(nabr)) {
-               ++error_count;
-               tbox::perr << "MappingConnector::findMappingErrors("
-                          << error_count
-                          << "): old box " << old_box
-                          << " grown by " << getConnectorWidth()
-                          << " to " << grown_box << " does not contain neighbor "
-                          << nabr << std::endl;
-            }
 
             if (!new_box_level.hasBox(nabr)) {
                ++error_count;
@@ -302,6 +290,37 @@ MappingConnector::findMappingErrors(
 
          }
       }
+   }
+
+   /*
+    * After-boxes should nest in before-boxes grown by the mapping
+    * width.  To perform this check we need the transpose mapping.
+    */
+
+   BoxLevelConnectorUtils blcu;
+   bool locally_nests;
+   bool head_nests_in_base = blcu.baseNestsInHead(
+      &locally_nests,
+      *this,
+      getConnectorWidth(),
+      IntVector::getZero(getBase().getDim()),
+      IntVector::getZero(getBase().getDim()) );
+
+   boost::shared_ptr<BoxLevel> bad_parts;
+   boost::shared_ptr<MappingConnector> pre_to_bad;
+   blcu.computeExternalParts( bad_parts,
+                              pre_to_bad,
+                              *this,
+                              getConnectorWidth() );
+
+   if ( pre_to_bad->getLocalNumberOfRelationships() > 0 ) {
+      tbox::perr << "MappingConnector::findMappingErrors() found bad nesting.\n"
+                 << "Valid maps' head must nest in base, grown by\n"
+                 << "the mapping Connector width.\n"
+                 << "mapped boxes and their bad parts:\n"
+                 << pre_to_bad->format()
+                 << std::endl;
+      error_count += pre_to_bad->getLocalNumberOfRelationships();
    }
 
    return error_count;
