@@ -516,10 +516,10 @@ tag_to_tile.getTranspose().assertOverlapCorrectness();
     * The latter may not have multiple local tag neighbors.
     */
 
-   hier::BoxContainer visible_tiles;
+   hier::BoxContainer visible_tiles(true);
    tag_to_tile.getLocalNeighbors(visible_tiles);
-   hier::BoxContainer tiles_crossing_patch_boundaries;
 
+   hier::BoxContainer tiles_crossing_patch_boundaries;
    for ( hier::BoxContainer::const_iterator ti=visible_tiles.begin();
          ti!=visible_tiles.end(); ++ti ) {
       const hier::Box &tile(*ti);
@@ -530,7 +530,6 @@ tag_to_tile.getTranspose().assertOverlapCorrectness();
    }
 tbox::plog << "visible_tiles: " << visible_tiles.format();
 tbox::plog << "tiles_crossing_patch_boundaries: " << tiles_crossing_patch_boundaries.format();
-
    visible_tiles.clear(); // No longer needed.
 
 
@@ -584,7 +583,6 @@ tbox::plog << "tiles_crossing_patch_boundaries: " << tiles_crossing_patch_bounda
          tile_itr!=tile_box_level.getBoxes().end(); /* incremented in loop */ ) {
 
       const hier::Box &possibly_duplicated_tile(*tile_itr);
-      ++tile_itr;
 
       std::map<hier::BoxId,size_t>::const_iterator chosen_box_itr =
          changes.find(possibly_duplicated_tile.getBoxId());
@@ -595,6 +593,7 @@ tbox::plog << "tiles_crossing_patch_boundaries: " << tiles_crossing_patch_bounda
          const hier::Box &unique_tile = chosen_tiles[chosen_box_itr->second];
 
 tbox::plog << "Change tile " << possibly_duplicated_tile << " to " << unique_tile << std::endl;
+TBOX_ASSERT( unique_tile.isSpatiallyEqual(possibly_duplicated_tile) );
 
          // Add unique_tile if it's local.
          if ( unique_tile.getOwnerRank() == tile_box_level.getMPI().getRank() ) {
@@ -608,9 +607,12 @@ tbox::plog << "Change tile " << possibly_duplicated_tile << " to " << unique_til
          }
 
          // Remove duplicated tile.
-         tile_to_tag.eraseLocalNeighborhood(possibly_duplicated_tile.getBoxId());
-         tile_box_level.eraseBoxWithoutUpdate(possibly_duplicated_tile);
+         tile_to_tag.eraseLocalNeighborhood(tile_itr->getBoxId());
+         tile_box_level.eraseBoxWithoutUpdate(*(tile_itr++));
 
+      }
+      else {
+         ++tile_itr;
       }
 
    }
