@@ -496,6 +496,12 @@ TileClustering::removeDuplicateTiles(
    const hier::BoxLevel &tag_box_level = tag_to_tile.getBase();
 
    hier::Connector &tile_to_tag = tag_to_tile.getTranspose();
+tag_to_tile.assertConsistencyWithBase();
+tag_to_tile.assertConsistencyWithHead();
+tag_to_tile.assertOverlapCorrectness();
+tile_to_tag.assertConsistencyWithBase();
+tile_to_tag.assertConsistencyWithHead();
+tile_to_tag.assertOverlapCorrectness();
 
 tbox::plog << "removeDuplicateTiles input tag_to_tile:\n" << tag_to_tile.format();
 tbox::plog << "removeDuplicateTiles input tile_to_tag:\n" << tile_to_tag.format();
@@ -620,14 +626,18 @@ tile_to_tag.assertOverlapCorrectness();
          ni!=tag_to_tile.end(); ++ni ) {
 
       for ( hier::Connector::ConstNeighborIterator na=tag_to_tile.begin(ni);
-            na!=tag_to_tile.end(ni); ++na ) {
+            na!=tag_to_tile.end(ni); /* incremented in loop */ ) {
 
          std::map<hier::BoxId,size_t>::const_iterator chosen_box_itr =
             changes.find(na->getBoxId());
 
          if ( chosen_box_itr != changes.end() ) {
+tbox::plog << "Change " << *ni << " neighbor tile " << *na << " to " << chosen_tiles[chosen_box_itr->second] << std::endl;
             tag_to_tile.insertLocalNeighbor(chosen_tiles[chosen_box_itr->second], *ni);
-            tag_to_tile.eraseNeighbor(*na, *ni);
+            tag_to_tile.eraseNeighbor(*(na++), *ni);
+         }
+         else {
+            ++na;
          }
 
       }
@@ -1220,8 +1230,8 @@ tbox::plog << "Coalesced:\n" << tmp_tile_box_level.format();
     * Apply the modifications.
     */
    hier::MappingConnectorAlgorithm mca;
-// mca.setSanityCheckMethodPreconditions(true);
-// mca.setSanityCheckMethodPostconditions(true);
+mca.setSanityCheckMethodPreconditions(true);
+mca.setSanityCheckMethodPostconditions(true);
    mca.modify( *tag_to_tile,
                pre_to_post,
                &tile_box_level,
