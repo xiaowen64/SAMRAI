@@ -118,6 +118,25 @@ MappingConnector::createLocalTranspose() const
 
 /*
  ***********************************************************************
+ ***********************************************************************
+ */
+
+MappingConnector*
+MappingConnector::createTranspose() const
+{
+   MappingConnector *transpose =
+      new MappingConnector( getHead(),
+                            getBase(),
+                            convertHeadWidthToBase(getBase().getRefinementRatio(),
+                                                   getHead().getRefinementRatio(),
+                                                   getConnectorWidth()) );
+
+   doTransposeWork(transpose);
+   return transpose;
+}
+
+/*
+ ***********************************************************************
  * Run findMappingErrors and assert that no errors are found.
  ***********************************************************************
  */

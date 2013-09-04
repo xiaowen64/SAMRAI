@@ -800,6 +800,25 @@ Connector::createLocalTranspose() const
  ***********************************************************************
  */
 
+Connector*
+Connector::createTranspose() const
+{
+   Connector *transpose =
+      new Connector( getHead(),
+                     getBase(),
+                     convertHeadWidthToBase(getBase().getRefinementRatio(),
+                                            getHead().getRefinementRatio(),
+                                            getConnectorWidth()) );
+
+   doTransposeWork(transpose);
+   return transpose;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
 void
 Connector::doLocalTransposeWork(
    Connector* transpose) const
@@ -867,6 +886,61 @@ Connector::doLocalTransposeWork(
       transpose->assertTransposeCorrectness(*this, false);
       tbox::perr << "Checking r's transpose correctness:" << std::endl;
       assertTransposeCorrectness(*transpose, false);
+   }
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
+void
+Connector::doTransposeWork( Connector *transpose ) const
+{
+   TBOX_ASSERT(transpose);
+   TBOX_ASSERT(isTransposeOf(*transpose));
+
+   const tbox::Dimension dim(getBase().getDim());
+
+   const Connector* globalized =
+      (d_parallel_state == BoxLevel::GLOBALIZED) ?
+      this : makeGlobalizedCopy(*this);
+
+   const BoxLevel& globalized_base = getBase().getGlobalizedVersion();
+   const BoxContainer &globalized_boxes = globalized_base.getGlobalBoxes();
+
+   for ( BoxContainer::const_iterator bi=globalized_boxes.begin();
+         bi!=globalized_boxes.end(); ++bi ) {
+
+      if ( bi->isPeriodicImage() ) { continue; }
+
+      Connector::ConstNeighborhoodIterator neighborhood =
+         globalized->find(bi->getBoxId());
+
+      if ( neighborhood == globalized->end() ) { continue; }
+
+      for ( Connector::ConstNeighborIterator na=begin(neighborhood);
+            na!=end(neighborhood); ++na ) {
+         if ( na->getOwnerRank() == globalized_base.getMPI().getRank() ) {
+            if ( !na->isPeriodicImage() ) {
+               TBOX_ASSERT( getHead().hasBox(*na) );
+               transpose->insertLocalNeighbor( *bi, na->getBoxId() );
+            }
+            else {
+               // Need to do shifting.
+               TBOX_ERROR("Unfinished Code!!!");
+            }
+         }
+      }
+   }
+
+   if ( globalized != this ) {
+      delete globalized;
+      globalized = 0;
+   }
+
+   if (0) {
+      TBOX_ASSERT(checkTransposeCorrectness(*transpose));
    }
 }
 
