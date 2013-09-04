@@ -16,13 +16,13 @@
 Main {
    dim = 2
 
-   base_name = "newtest.2d"
+   base_name = "lss.2d.wholetile"
 
    write_visit = TRUE
 
    log_all_nodes = FALSE
 
-   domain_boxes = [(0,0),(40,40)]
+   domain_boxes = [(0,0),(47,47)]
    xlo = 0.0, 0.0
    xhi = 1.0, 1.0
 

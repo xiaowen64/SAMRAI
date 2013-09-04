@@ -16,7 +16,7 @@
 Main {
    dim = 2
 
-   base_name = "front.2d.tilelb"
+   base_name = "front.2d.wholetile"
 
    write_visit = TRUE
 
@@ -32,7 +32,7 @@ Main {
 
    box_generator_type = "TileClustering"
 
-   load_balancer_type = "TilePartitioner"
+   load_balancer_type = "ChopAndPackLoadBalancer", "TilePartitioner"
 
    load_balance = TRUE, TRUE, TRUE
 
@@ -52,9 +52,9 @@ Main {
 
 TileClustering {
   box_size = 7, 7
-  allow_remote_tile_extent = FALSE
+  allow_remote_tile_extent = TRUE
   coalesce_boxes = TRUE
-  DEV_print_steps = FALSE
+  DEV_print_steps = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
 }
