@@ -589,8 +589,8 @@ tbox::plog << "tiles_crossing_patch_boundaries: " << tiles_crossing_patch_bounda
       std::map<hier::BoxId,size_t>::const_iterator chosen_box_itr =
          changes.find(possibly_duplicated_tile.getBoxId());
 
-      if ( chosen_box_itr != changes.end() ) {
-
+      if ( chosen_box_itr != changes.end() &&
+           !chosen_tiles[chosen_box_itr->second].isIdEqual(possibly_duplicated_tile) ) {
 
          const hier::Box &unique_tile = chosen_tiles[chosen_box_itr->second];
 
@@ -648,16 +648,17 @@ tag_to_tile.assertOverlapCorrectness();
 
 {
    // There should be no overlaps.
-   hier::BoxContainer visible_tiles;
+   hier::BoxContainer visible_tiles(true);
    tag_to_tile.getLocalNeighbors(visible_tiles);
    visible_tiles.makeTree( tile_box_level.getGridGeometry().get() );
    for ( hier::BoxContainer::const_iterator bi=visible_tiles.begin();
          bi!=visible_tiles.end(); ++bi ) {
+      const hier::Box &tile = *bi;
       hier::BoxContainer overlaps;
-      visible_tiles.findOverlapBoxes( overlaps, *bi );
+      visible_tiles.findOverlapBoxes( overlaps, tile );
       assert( overlaps.size() == 1 );
-      assert( overlaps.front().isIdEqual(*bi) );
-      assert( overlaps.front().isSpatiallyEqual(*bi) );
+      TBOX_ASSERT( overlaps.front().isIdEqual(tile) );
+      TBOX_ASSERT( overlaps.front().isSpatiallyEqual(tile) );
    }
 }
 
