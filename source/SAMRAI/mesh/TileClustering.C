@@ -485,8 +485,6 @@ TileClustering::removeDuplicateTiles(
    hier::Connector &tag_to_tile)
 {
 
-   const hier::BoxLevel &tag_box_level = tag_to_tile.getBase();
-
    hier::Connector &tile_to_tag = tag_to_tile.getTranspose();
 
    /*

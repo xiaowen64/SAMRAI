@@ -459,7 +459,7 @@ int main(
       std::vector<std::string> load_balancer_type =
          main_db->getStringVector("load_balancer_type");
       load_balancer_type.reserve(hierarchy->getMaxNumberOfLevels());
-      while ( load_balancer_type.size() < hierarchy->getMaxNumberOfLevels() ) {
+      while ( static_cast<int>(load_balancer_type.size()) < hierarchy->getMaxNumberOfLevels() ) {
          load_balancer_type.push_back(load_balancer_type.back());
       }
 
