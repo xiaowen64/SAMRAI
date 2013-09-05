@@ -427,31 +427,29 @@ TileClustering::clusterWholeTiles(
          if ( (*coarsened_tag_data)(coarse_cell_index) == tag_val ) {
 
             hier::Box whole_tile(coarse_cell_index,coarse_cell_index,
-                                 coarsened_tag_box.getBlockId(),
+                                 patch_box.getBlockId(),
                                  ++last_used_local_id,
-                                 tag_box_level.getMPI().getRank());
+                                 patch_box.getOwnerRank());
             whole_tile.refine(d_box_size);
 
+            tile_box_level.addBox(whole_tile);
+
+            /*
+             * Compare whole_tile with overlapping_tag_boxes to determine
+             * edges and remote extents.
+             */
             hier::BoxContainer overlapping_tag_boxes;
             visible_tag_boxes.findOverlapBoxes( overlapping_tag_boxes, whole_tile );
 
-            tile_box_level.addBox(whole_tile);
             for ( hier::BoxContainer::iterator bi=overlapping_tag_boxes.begin();
                   bi!=overlapping_tag_boxes.end(); ++bi ) {
-               if ( bi->getOwnerRank() == tag_box_level.getMPI().getRank() ) {
+
+               tile_to_tag.insertLocalNeighbor( *bi, whole_tile.getBoxId() );
+               if ( bi->getOwnerRank() == whole_tile.getOwnerRank() ) {
                   tag_to_tile->insertLocalNeighbor( whole_tile, bi->getBoxId() );
                }
-               tile_to_tag.insertLocalNeighbor( *bi, whole_tile.getBoxId() );
-            }
 
-            if ( !local_tiles_have_remote_extent ) {
-               for ( hier::BoxContainer::const_iterator bi=overlapping_tag_boxes.begin();
-                     bi!=overlapping_tag_boxes.end(); ++ bi ) {
-                  if ( bi->getOwnerRank() != patch_box.getOwnerRank() ) {
-                     local_tiles_have_remote_extent = true;
-                     break;
-                  }
-               }
+               local_tiles_have_remote_extent &= bi->getOwnerRank() != whole_tile.getOwnerRank();
             }
 
          } // coarse_cell_index has local tag.
