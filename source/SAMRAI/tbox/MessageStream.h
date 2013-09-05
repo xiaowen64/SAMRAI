@@ -203,6 +203,23 @@ public:
    }
 
    /*!
+    * @brief Pack content of another data stream into this one.
+    *
+    * @param[in] other  The other data stream.
+    *
+    * @pre writeMode()
+    */
+   void
+   pack(
+      const MessageStream &other )
+   {
+      TBOX_ASSERT(writeMode());
+      if (other.getCurrentSize() > 0) {
+         copyDataIn( other.getBufferStart(), other.getCurrentSize() );
+      }
+   }
+
+   /*!
     * @brief Unpack a single data item from message stream.
     *
     * @param[out] data  Single item of type DATA_TYPE that will be

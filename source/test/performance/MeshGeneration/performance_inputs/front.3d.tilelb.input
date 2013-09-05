@@ -34,6 +34,8 @@ Main {
 
    load_balancer_type = "TilePartitioner"
 
+   rank_tree_type = "CenteredRankTree"
+
    load_balance = TRUE, TRUE, TRUE
 
    mesh_generator_name = "SinusoidalFrontGenerator"
@@ -52,6 +54,7 @@ Main {
 
 TileClustering {
   box_size = 4, 4, 4
+  allow_remote_tile_extent = FALSE
   coalesce_boxes = TRUE
   DEV_barrier_and_time = TRUE
   DEV_log_cluster_summary = FALSE

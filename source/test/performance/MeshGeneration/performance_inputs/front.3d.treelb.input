@@ -55,6 +55,7 @@ Main {
 TileClustering {
   box_size = 4, 4, 4
   coalesce_boxes = TRUE
+  DEV_barrier_and_time = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
 }

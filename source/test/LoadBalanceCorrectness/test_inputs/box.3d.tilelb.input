@@ -56,6 +56,8 @@ Main {
 
 TileClustering {
   box_size = 4, 4, 4
+  allow_remote_tile_extent = TRUE
+  coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
 }

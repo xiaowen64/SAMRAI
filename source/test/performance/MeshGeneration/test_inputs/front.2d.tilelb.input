@@ -34,7 +34,7 @@ Main {
 
    load_balancer_type = "TilePartitioner"
 
-   load_balance = TRUE, TRUE
+   load_balance = TRUE, TRUE, TRUE
 
    mesh_generator_name = "SinusoidalFrontGenerator"
 
@@ -52,7 +52,9 @@ Main {
 
 TileClustering {
   box_size = 7, 7
+  allow_remote_tile_extent = FALSE
   coalesce_boxes = TRUE
+  DEV_print_steps = FALSE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
 }
@@ -80,6 +82,7 @@ TilePartitioner {
   box_size = 21, 21
 
   TreeLoadBalancer {
+    flexible_load_tolerance = 0.03
     DEV_allow_box_breaking = TRUE
     // Debugging options
     DEV_check_map = TRUE
@@ -110,6 +113,11 @@ TreeLoadBalancer {
   DEV_print_edge_steps = FALSE
   DEV_summarize_map = TRUE
 }
+
+
+ChopAndPackLoadBalancer {
+}
+
 
 TimerManager {
 //   print_exclusive      = TRUE
@@ -148,4 +156,9 @@ PatchHierarchy {
    allow_patches_smaller_than_ghostwidth = TRUE
    allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
    proper_nesting_buffer = 7, 7
+}
+
+
+PersistentOverlapConnectors {
+   implicit_connector_creation_rule = "ERROR"
 }

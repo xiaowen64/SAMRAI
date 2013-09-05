@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Asynchronous Berger-Rigoutsos clustering algorithm.
+ * Description:   Tile clustering algorithm.
  *
  ************************************************************************/
 #ifndef included_mesh_TileClustering
@@ -41,6 +41,14 @@ namespace mesh {
  *   Whether to coalesce boxes after clustering.  This can lead to
  *   clusters that are bigger than specified tile size.
  *
+ *   - \b allow_remote_tile_extent
+ *   Whether to tile to extend to remote tag patches.
+ *   If false, tiles will be cut at process boundaries, resulting in
+ *   completely local tiles.  If true, allow tiles to cross process
+ *   boundaries where, resulting in less tile fragmentation.
+ *   If false, clusters' extent can be dependent on how tag level
+ *   is partitioned.
+ *
  * <b> Details: </b> <br>
  * <table>
  *   <tr>
@@ -61,6 +69,14 @@ namespace mesh {
  *   </tr>
  *   <tr>
  *     <td>coalesce_boxes</td>
+ *     <td>bool</td>
+ *     <td>true</td>
+ *     <td>false/true</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>allow_remote_tile_extent</td>
  *     <td>bool</td>
  *     <td>true</td>
  *     <td>false/true</td>
@@ -116,13 +132,6 @@ public:
 
    /*!
     * @brief Setup names of timers.
-    *
-    * By default, timers are named
-    * "mesh::BergerRigoutsosNode::*", where the third field is
-    * the specific steps performed by the BergerRigoutsosNode.
-    * You can override the first two fields with this method.
-    * Conforming to the timer naming convention, timer_prefix should
-    * have the form "*::*".
     */
    void
    setTimerPrefix(
@@ -140,8 +149,24 @@ protected:
 
 private:
 
+
    /*!
-    * Create, populate and return a coarsened version of the given tag data.
+    * @brief Cluster, cutting off tiles at process boundaries.
+    *
+    * This is a special implementation for when we do now allow tiles
+    * to cross process boundaries.
+    */
+   void clusterWithinProcessBoundaries(
+      hier::BoxLevel &new_box_level,
+      hier::Connector &tag_to_new,
+      const boost::shared_ptr<hier::PatchLevel>& tag_level,
+      const hier::BoxContainer& bound_boxes,
+      int tag_data_index,
+      int tag_val);
+
+   /*!
+    * @brief Create, populate and return a coarsened version of the
+    * given tag data.
     *
     * The coarse cell values are set to tag_data if any corresponding
     * fine cell value is tag_data.  Otherwise, the coarse cell value
@@ -159,7 +184,55 @@ private:
       hier::BoxContainer &tiles,
       const pdat::CellData<int> &tag_data,
       int tag_val,
-                           int first_tile_index);
+      int first_tile_index);
+
+   /*!
+    * @brief Cluster tags into whole tiles.  The tiles are not cut up,
+    * even where they cross process boundaries or level boundaries.
+    */
+   void
+   clusterWholeTiles(
+      hier::BoxLevel &new_box_level,
+      boost::shared_ptr<hier::Connector> &tag_to_new,
+      int &local_tiles_have_remote_extent,
+      const boost::shared_ptr<hier::PatchLevel>& tag_level,
+      const hier::BoxContainer& bound_boxes,
+      int tag_data_index,
+      int tag_val);
+
+   /*!
+    * @brief Detect semilocal edges missing from the outputs of
+    * clusterWholeTiles().
+    */
+   void
+   detectSemilocalEdges( boost::shared_ptr<hier::Connector> &tag_to_tile );
+
+   /*!
+    * @brief Remove duplicate tiles created when a tile crosses a
+    * tag-level process boundary.
+    */
+   void
+   removeDuplicateTiles(
+      hier::BoxLevel &tile_box_level,
+      hier::Connector &tag_to_tiles);
+
+   /*!
+    * @brief Coalesce clusters (and update Connectors).
+    */
+   void
+   coalesceClusters(
+      hier::BoxLevel &tile_box_level,
+      boost::shared_ptr<hier::Connector> &tag_to_tile,
+      int tiles_have_remote_extent);
+
+   /*!
+    * @brief Special version of coalesceClusters.
+    * for use when tiles have no remote extent.
+    */
+   void
+   coalesceClusters(
+      hier::BoxLevel &tile_box_level,
+      boost::shared_ptr<hier::Connector> &tag_to_tile);
 
    void setTimers();
 
@@ -167,6 +240,11 @@ private:
 
    //! @brief Box size constraint.
    hier::IntVector d_box_size;
+
+   /*!
+    * @brief Whether to allow tiles to have remote extents.
+    */
+   bool d_allow_remote_tile_extent;
 
    /*!
     * @brief Whether to coalesce tiled-boxes after clustering to
@@ -223,6 +301,10 @@ private:
     * @brief Static container of timers that have been looked up.
     */
    static std::map<std::string, TimerStruct> s_static_timers;
+
+   static int s_primary_mpi_tag;
+   static int s_secondary_mpi_tag;
+   static int s_first_data_length;
 
    /*!
     * @brief Structure of timers in s_static_timers, matching this

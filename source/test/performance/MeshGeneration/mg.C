@@ -456,8 +456,12 @@ int main(
        * Set up the load balancers.
        */
 
-      std::string load_balancer_type =
-         main_db->getStringWithDefault("load_balancer_type", "TreeLoadBalancer");
+      std::vector<std::string> load_balancer_type =
+         main_db->getStringVector("load_balancer_type");
+      load_balancer_type.reserve(hierarchy->getMaxNumberOfLevels());
+      while ( load_balancer_type.size() < hierarchy->getMaxNumberOfLevels() ) {
+         load_balancer_type.push_back(load_balancer_type.back());
+      }
 
       std::string rank_tree_type =
          main_db->getStringWithDefault("rank_tree_type", "CenteredRankTree");
@@ -521,7 +525,7 @@ int main(
          hier::Connector* L0_to_domain = &domain_to_L0->getTranspose();
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb0 =
-            createLoadBalancer( input_db, load_balancer_type, rank_tree_type, 0, dim );
+            createLoadBalancer( input_db, load_balancer_type[0], rank_tree_type, 0, dim );
 
          tbox::plog << "\n\tL0 prebalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
@@ -671,7 +675,7 @@ int main(
          }
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb1
-            = createLoadBalancer( input_db, load_balancer_type, rank_tree_type, finer_ln , dim);
+            = createLoadBalancer( input_db, load_balancer_type[1], rank_tree_type, finer_ln , dim);
 
          outputPrebalance( *L1, *L0, required_connector_width, "L1: " );
 
@@ -825,7 +829,7 @@ int main(
 
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb2
-            = createLoadBalancer( input_db, load_balancer_type, rank_tree_type, finer_ln , dim);
+            = createLoadBalancer( input_db, load_balancer_type[2], rank_tree_type, finer_ln , dim);
 
          outputPrebalance( *L2, L1, required_connector_width, "L2: " );
 

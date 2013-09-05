@@ -33,8 +33,6 @@
 #pragma report(disable, CPPC5328)
 #endif
 
-static const std::string dbgbord;
-
 namespace SAMRAI {
 namespace hier {
 
@@ -601,7 +599,7 @@ Connector::finalizeContext()
       TBOX_ERROR(
          "Exiting due to errors."
          << "\nConnector::finalizeContext base box_level:\n"
-         << base.format(dbgbord, 2));
+         << base.format());
    }
 #endif
    computeRatioInfo(
@@ -802,6 +800,25 @@ Connector::createLocalTranspose() const
  ***********************************************************************
  */
 
+Connector*
+Connector::createTranspose() const
+{
+   Connector *transpose =
+      new Connector( getHead(),
+                     getBase(),
+                     convertHeadWidthToBase(getBase().getRefinementRatio(),
+                                            getHead().getRefinementRatio(),
+                                            getConnectorWidth()) );
+
+   doTransposeWork(transpose);
+   return transpose;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
 void
 Connector::doLocalTransposeWork(
    Connector* transpose) const
@@ -869,6 +886,61 @@ Connector::doLocalTransposeWork(
       transpose->assertTransposeCorrectness(*this, false);
       tbox::perr << "Checking r's transpose correctness:" << std::endl;
       assertTransposeCorrectness(*transpose, false);
+   }
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
+void
+Connector::doTransposeWork( Connector *transpose ) const
+{
+   TBOX_ASSERT(transpose);
+   TBOX_ASSERT(isTransposeOf(*transpose));
+
+   const tbox::Dimension dim(getBase().getDim());
+
+   const Connector* globalized =
+      (d_parallel_state == BoxLevel::GLOBALIZED) ?
+      this : makeGlobalizedCopy(*this);
+
+   const BoxLevel& globalized_base = getBase().getGlobalizedVersion();
+   const BoxContainer &globalized_boxes = globalized_base.getGlobalBoxes();
+
+   for ( BoxContainer::const_iterator bi=globalized_boxes.begin();
+         bi!=globalized_boxes.end(); ++bi ) {
+
+      if ( bi->isPeriodicImage() ) { continue; }
+
+      Connector::ConstNeighborhoodIterator neighborhood =
+         globalized->find(bi->getBoxId());
+
+      if ( neighborhood == globalized->end() ) { continue; }
+
+      for ( Connector::ConstNeighborIterator na=begin(neighborhood);
+            na!=end(neighborhood); ++na ) {
+         if ( na->getOwnerRank() == globalized_base.getMPI().getRank() ) {
+            if ( !na->isPeriodicImage() ) {
+               TBOX_ASSERT( getHead().hasBox(*na) );
+               transpose->insertLocalNeighbor( *bi, na->getBoxId() );
+            }
+            else {
+               // Need to do shifting.
+               TBOX_ERROR("Unfinished Code!!!");
+            }
+         }
+      }
+   }
+
+   if ( globalized != this ) {
+      delete globalized;
+      globalized = 0;
+   }
+
+   if (0) {
+      TBOX_ASSERT(checkTransposeCorrectness(*transpose));
    }
 }
 
@@ -1450,8 +1522,10 @@ Connector::assertConsistencyWithBase() const
 {
    if (checkConsistencyWithBase() > 0) {
       TBOX_ERROR(
-         "Connector::assertConsistencyWithBase() found inconsistencies.\n"
-         << "Base box level:\n" << getBase().format("ERROR->", 2));
+         "Connector::assertConsistencyWithHead() found inconsistencies.\n"
+         << "Base BoxLevel:\n" << getBase().format("base-> ", 3)
+         << "Head BoxLevel:\n" << getHead().format("head-> ", 3)
+         << "Connector:\n" << format("E-> ", 3));
    }
 }
 
@@ -1467,8 +1541,8 @@ Connector::computeNeighborhoodDifferences(
    const Connector& right)
 {
    if (0) {
-      tbox::plog << "Computing relationship differences, a:\n" << left.format(dbgbord, 3)
-      << "Computing relationship differences, b:\n" << right.format(dbgbord, 3);
+      tbox::plog << "Computing relationship differences, a:\n" << left.format("A-> ")
+      << "Computing relationship differences, b:\n" << right.format("B-> ");
    }
    left_minus_right.reset(new Connector(left.d_base_handle->getBoxLevel(),
       left.d_head_handle->getBoxLevel(),
@@ -1529,9 +1603,9 @@ Connector::assertConsistencyWithHead() const
    if (number_of_inconsistencies > 0) {
       TBOX_ERROR(
          "Connector::assertConsistencyWithHead() found inconsistencies.\n"
-         << getBase().format("base-> ", 3)
-         << getHead().format("head-> ", 3)
-         << format("E-> ", 3));
+         << "Base BoxLevel:\n" << getBase().format("base-> ", 3)
+         << "Head BoxLevel:\n" << getHead().format("head-> ", 3)
+         << "Connector:\n" << format("E-> ", 3));
    }
 }
 
@@ -1722,16 +1796,15 @@ Connector::assertOverlapCorrectness(
       rank_of_max = recv.rank;
    }
    if (max_error_count > 0) {
-      std::string dbgbord;
       TBOX_ERROR(
-         "Connector::assertOverlapCorrectness found missing and/or extra overlaps."
+         "Connector::assertOverlapCorrectness found missing and/or extra overlaps.\n"
          << "Error in connector, " << local_error_count
          << " local errors, "
          << max_error_count << " max errors on proc " << rank_of_max
          << ":\n"
-         << format(dbgbord, 2)
-         << "base box_level:\n" << getBase().format(dbgbord, 2)
-         << "head box_level:\n" << getHead().format(dbgbord, 2));
+         << format("E-> ")
+         << "base:\n" << getBase().format("B-> ")
+         << "head:\n" << getHead().format("H-> "));
    }
 }
 

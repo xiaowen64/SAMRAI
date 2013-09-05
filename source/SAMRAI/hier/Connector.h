@@ -847,6 +847,16 @@ public:
    createLocalTranspose() const;
 
    /*!
+    * @brief Create and return this Connector's transpose.
+    *
+    * Similar to createLocalTranspose(), but this method allows
+    * non-local edges.  Global data is required, so this method
+    * is not scalable.
+    */
+   virtual Connector*
+   createTranspose() const;
+
+   /*!
     * @brief Assignment operator
     */
    const Connector&
@@ -1483,6 +1493,17 @@ protected:
     */
    void
    doLocalTransposeWork(
+      Connector* transpose) const;
+
+   /*!
+    * @brief Method to do the work of createTranspose.
+    *
+    * @param transpose
+    *
+    * @pre transpose
+    */
+   void
+   doTransposeWork(
       Connector* transpose) const;
 
 private:
