@@ -2427,17 +2427,8 @@ HyperbolicLevelIntegrator::recordStatistics(
             getStatistic(std::string("HLI_TimeL") + lnstr, "PROC_STAT");
       }
 
-      double level_gridcells = 0.;
-      double level_local_patches = 0.;
-      for (hier::PatchLevel::iterator ip(patch_level.begin());
-           ip != patch_level.end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& patch = *ip;
-         level_gridcells += patch->getBox().size();
-         level_local_patches += 1.0;
-      }
-
-      s_boxes_stat[ln]->recordProcStat(level_local_patches);
-      s_cells_stat[ln]->recordProcStat(level_gridcells);
+      s_boxes_stat[ln]->recordProcStat(patch_level.getBoxLevel()->getLocalNumberOfBoxes());
+      s_cells_stat[ln]->recordProcStat(patch_level.getBoxLevel()->getLocalNumberOfCells());
       s_timestamp_stat[ln]->recordProcStat(current_time);
 
    }
