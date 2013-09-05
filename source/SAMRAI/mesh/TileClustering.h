@@ -152,6 +152,9 @@ private:
 
    /*!
     * @brief Cluster, cutting off tiles at process boundaries.
+    *
+    * This is a special implementation for when we do now allow tiles
+    * to cross process boundaries.
     */
    void clusterWithinProcessBoundaries(
       hier::BoxLevel &new_box_level,
@@ -183,6 +186,10 @@ private:
       int tag_val,
       int first_tile_index);
 
+   /*!
+    * @brief Cluster tags into whole tiles.  The tiles are not cut up,
+    * even where they cross process boundaries or level boundaries.
+    */
    void
    clusterWholeTiles(
       hier::BoxLevel &new_box_level,
@@ -193,9 +200,17 @@ private:
       int tag_data_index,
       int tag_val);
 
+   /*!
+    * @brief Detect semilocal edges missing from the outputs of
+    * clusterWholeTiles().
+    */
    void
    detectSemilocalEdges( boost::shared_ptr<hier::Connector> &tag_to_tile );
 
+   /*!
+    * @brief Remove duplicate tiles created when a tile crosses a
+    * tag-level process boundary.
+    */
    void
    removeDuplicateTiles(
       hier::BoxLevel &tile_box_level,

@@ -365,9 +365,10 @@ TileClustering::clusterWithinProcessBoundaries(
 * be duplicated (with different BoxIds).  tile--->tag will be complete
 * (using info from tag--->tag), but tag--->tile will have missing
 * edges.  Missing edges and tile duplication must be corrected by a
-* postprocessing step after this method.
+* postprocessing step after this method.  See detectSemilocalEdges()
+* and removeDuplicateTiles().
 *
-* This method is local.
+* This method does no communication.
 ***********************************************************************
 */
 void
@@ -469,11 +470,12 @@ TileClustering::clusterWholeTiles(
 
 /*
 ***********************************************************************
-* Methods clusterWholeTiles() and deteceSemilocalEdges(), preceding
+* Methods clusterWholeTiles() and detectSemilocalEdges(), preceding
 * this one in execution order, may generate duplicate tiles when a
 * tile crosses any tag box boundary.  This methods removes the
-* duplicates and keep only the one on the process with the greatest
-* overlap.
+* duplicates.
+*
+* This method does no communication.
 ***********************************************************************
 */
 void
@@ -633,6 +635,8 @@ TileClustering::removeDuplicateTiles(
 * On entry, tile_to_tag must be complete, but tag_to_tile may be
 * missing semilocal edges.  On exit, both would be complete overlap
 * Connectors.
+*
+* This method does a bridge communication.
 ***********************************************************************
 */
 void
@@ -649,7 +653,7 @@ TileClustering::detectSemilocalEdges(
     * may overlap them.
     *
     * Note: Bridging is convenient but overkill.  We can get same
-    * information with lighter weight communication and no
+    * information with much lighter weight communication and no
     * communication at all where no tiles cross process boundaries.
     */
    d_oca.bridge( tag_to_tile,
@@ -808,9 +812,12 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
 
 /*
  ***********************************************************************
- * This method currently does no communication, assuming tiles don't
- * cross process boundaries on the tag level.  Now, with whole tiles,
- * this should be modified so it does the appropriate communication.
+ * Coalesce tile clusters and update tag<==>tile.
+ *
+ * This method uses a modify operation to update tag<==>tile, but if
+ * tag<==>tile is local (tiles have no remote extent), the modify
+ * operation should properly degenerate to a local (non-communicating)
+ * operation.
  ***********************************************************************
  */
 void
