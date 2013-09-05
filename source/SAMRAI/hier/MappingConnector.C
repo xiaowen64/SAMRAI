@@ -294,18 +294,10 @@ MappingConnector::findMappingErrors(
 
    /*
     * After-boxes should nest in before-boxes grown by the mapping
-    * width.  To perform this check we need the transpose mapping.
+    * width.
     */
 
    BoxLevelConnectorUtils blcu;
-   bool locally_nests;
-   bool head_nests_in_base = blcu.baseNestsInHead(
-      &locally_nests,
-      *this,
-      getConnectorWidth(),
-      IntVector::getZero(getBase().getDim()),
-      IntVector::getZero(getBase().getDim()) );
-
    boost::shared_ptr<BoxLevel> bad_parts;
    boost::shared_ptr<MappingConnector> pre_to_bad;
    blcu.computeExternalParts( bad_parts,
