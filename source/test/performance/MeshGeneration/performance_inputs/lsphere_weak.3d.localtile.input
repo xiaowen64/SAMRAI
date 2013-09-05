@@ -121,6 +121,7 @@ ChopAndPackLoadBalancer {
 TileClustering {
   box_size = 8, 8, 8
   coalesce_boxes = TRUE
+  allow_remote_tile_extent = FALSE
   DEV_barrier_and_time = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE

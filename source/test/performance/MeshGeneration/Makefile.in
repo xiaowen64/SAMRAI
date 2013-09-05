@@ -31,10 +31,10 @@ QUOTE = \"
 CXX_OBJS      = mg.o
 
 INPUTS2D =	test_inputs/front.2d.caplb.input	\
-		test_inputs/front.2d.tilelb.input	\
+		test_inputs/front.2d.localtile.input	\
 		test_inputs/front.2d.treelb.input	\
 		test_inputs/lss.2d.caplb.input	\
-		test_inputs/lss.2d.tilelb.input	\
+		test_inputs/lss.2d.localtile.input	\
 		test_inputs/lss.2d.treelb.input
 
 
@@ -42,15 +42,15 @@ INPUTS3D =	test_inputs/spreadby10.3d.treelb.input		\
 		performance_inputs/single_sphere.3d.caplb.input	\
 		performance_inputs/single_sphere.3d.treelb.input	\
 		performance_inputs/lsphere_weak.3d.treelb.input	\
-		performance_inputs/lsphere_weak.3d.tilelb.input	\
+		performance_inputs/lsphere_weak.3d.localtile.input	\
 		performance_inputs/front.3d.caplb.input	\
 		performance_inputs/front.3d.treelb.input	\
-		performance_inputs/front.3d.tilelb.input	\
+		performance_inputs/front.3d.localtile.input	\
 		test_inputs/front.3d.caplb.input	\
-		test_inputs/front.3d.tilelb.input	\
+		test_inputs/front.3d.localtile.input	\
 		test_inputs/front.3d.treelb.input	\
 		test_inputs/lss.3d.caplb.input	\
-		test_inputs/lss.3d.tilelb.input	\
+		test_inputs/lss.3d.localtile.input	\
 		test_inputs/lss.3d.treelb.input
 
 main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)
@@ -104,7 +104,7 @@ perf:	main
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/domexlike.caplb.input;
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/domexlike.treelb.input;
 	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/lsphere_weak.3d.treelb.input;
-	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/lsphere_weak.3d.tilelb.input;
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./main performance_inputs/lsphere_weak.3d.localtile.input;
 	$(OBJECT)/config/serpa-run 2,4 ./main performance_inputs/single_sphere.3d.caplb.input;
 	$(OBJECT)/config/serpa-run 2,4 ./main performance_inputs/single_sphere.3d.treelb.input;
 
