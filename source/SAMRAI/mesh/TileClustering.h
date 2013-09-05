@@ -161,15 +161,6 @@ private:
       int tag_data_index,
       int tag_val);
 
-   void
-   clusterWithinLevelBoundaries(
-      hier::BoxLevel &new_box_level,
-      hier::Connector &tag_to_new,
-      const boost::shared_ptr<hier::PatchLevel>& tag_level,
-      const hier::BoxContainer& bound_boxes,
-      int tag_data_index,
-      int tag_val);
-
    /*!
     * @brief Create, populate and return a coarsened version of the
     * given tag data.
