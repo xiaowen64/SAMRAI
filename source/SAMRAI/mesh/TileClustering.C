@@ -451,7 +451,7 @@ TileClustering::clusterWholeTiles(
                   tag_to_tile->insertLocalNeighbor( whole_tile, bi->getBoxId() );
                }
 
-               local_tiles_have_remote_extent &= bi->getOwnerRank() != whole_tile.getOwnerRank();
+               local_tiles_have_remote_extent |= bi->getOwnerRank() != whole_tile.getOwnerRank();
             }
 
          } // coarse_cell_index has local tag.
