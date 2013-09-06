@@ -29,7 +29,7 @@ then coalesce our tiles.  */
 Main {
    dim = 3
 
-   base_name = "lsphere_weak.3d.tilelb"
+   base_name = "lsphere_weak.3d.localtile"
 
    write_visit = FALSE
 

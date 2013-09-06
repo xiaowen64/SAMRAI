@@ -16,7 +16,7 @@
 Main {
    dim = 2
 
-   base_name = "lss.2d.wholetile"
+   base_name = "lss.2d.tile"
 
    write_visit = TRUE
 

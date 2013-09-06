@@ -16,7 +16,7 @@
 Main {
    dim = 2
 
-   base_name = "front.2d.tilelb"
+   base_name = "front.2d.localtile"
 
    write_visit = TRUE
 
