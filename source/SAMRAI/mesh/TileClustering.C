@@ -441,7 +441,9 @@ TileClustering::clusterWholeTiles(
              * edges and remote extents.
              */
             hier::BoxContainer overlapping_tag_boxes;
-            visible_tag_boxes.findOverlapBoxes( overlapping_tag_boxes, whole_tile );
+            visible_tag_boxes.findOverlapBoxes( overlapping_tag_boxes,
+                                                whole_tile,
+                                                tag_box_level.getRefinementRatio() );
 
             for ( hier::BoxContainer::iterator bi=overlapping_tag_boxes.begin();
                   bi!=overlapping_tag_boxes.end(); ++bi ) {
@@ -879,7 +881,8 @@ TileClustering::coalesceClusters(
          post_itr!=post_boxes.end(); ++post_itr ) {
 
       hier::BoxContainer tmp_overlap_boxes;
-      pre_boxes.findOverlapBoxes( tmp_overlap_boxes, *post_itr );
+      pre_boxes.findOverlapBoxes( tmp_overlap_boxes, *post_itr,
+                                  tile_box_level.getRefinementRatio() );
 
       TBOX_ASSERT( !tmp_overlap_boxes.isEmpty() );
       if ( tmp_overlap_boxes.size() == 1 ) {
