@@ -525,8 +525,8 @@ private:
       Connector* east_to_west,
       const Connector& cent_to_east,
       bool compute_transpose,
-      std::set<int>& incoming_ranks,
-      std::set<int>& outgoing_ranks,
+      const std::set<int>& incoming_ranks,
+      const std::set<int>& outgoing_ranks,
       NeighborSet& visible_west_nabrs,
       NeighborSet& visible_east_nabrs) const;
 
@@ -546,25 +546,44 @@ private:
     */
    void
    privateBridge_removeAndCache(
-      std::map<int, std::vector<int> >& neighbor_removal_mesg,
+      std::map<int, std::vector<int> >& send_mesgs,
       Connector& overlap_connector,
       Connector* overlap_connector_transpose,
       const Connector& misc_connector) const;
 
    /*!
-    *@brief Find all relationships in the Connector(s) to be computed and send
+    * @brief Find all relationships in the Connector(s) to be computed and send
     * outgoing information.
     */
    void
    privateBridge_discoverAndSend(
-      std::map<int, std::vector<int> >& neighbor_removal_mesg,
+      std::map<int, std::vector<int> >& send_mesgs,
       Connector& west_to_east,
       Connector* east_to_west,
-      std::set<int>& incoming_ranks,
-      std::set<int>& outgoing_ranks,
+      const std::set<int>& incoming_ranks,
+      const std::set<int>& outgoing_ranks,
       tbox::AsyncCommPeer<int> all_comms[],
       NeighborSet& visible_west_nabrs,
       NeighborSet& visible_east_nabrs) const;
+
+   /*!
+    * @brief Find all relationships in the Connector(s) to be computed.
+    */
+   void
+   privateBridge_discover(
+      std::vector<int>& send_mesg,
+      Connector& west_to_east,
+      Connector* east_to_west,
+      const NeighborSet& visible_west_nabrs,
+      const NeighborSet& visible_east_nabrs,
+      NeighborSet::const_iterator& west_ni,
+      NeighborSet::const_iterator& east_ni,
+      int curr_owner,
+      const BoxContainer& east_rbbt,
+      const BoxContainer& west_rbbt,
+      const tbox::Dimension& dim,
+      bool compute_transpose,
+      int rank) const;
 
    /*!
     * @brief Find overlap and save in bridging connector or pack
@@ -573,15 +592,17 @@ private:
    void
    privateBridge_findOverlapsForOneProcess(
       const int curr_owner,
-      NeighborSet& visible_base_nabrs,
-      NeighborSet::iterator& base_ni,
+      const NeighborSet& visible_base_nabrs,
+      NeighborSet::const_iterator& base_ni,
       std::vector<int>& send_mesg,
       const int remote_box_counter_index,
       Connector& bridging_connector,
       NeighborSet& referenced_head_nabrs,
       const BoxContainer& head_rbbt) const;
 
-   //! @brief Utility used in privateBridge()
+   /*!
+    * @brief Utility used in privateBridge()
+    */
    void
    privateBridge_unshiftOverlappingNeighbors(
       const Box& box,
@@ -651,10 +672,9 @@ private:
       boost::shared_ptr<tbox::Timer> t_bridge;
       boost::shared_ptr<tbox::Timer> t_bridge_setup_comm;
       boost::shared_ptr<tbox::Timer> t_bridge_remove_and_cache;
-      boost::shared_ptr<tbox::Timer> t_bridge_discover;
+      boost::shared_ptr<tbox::Timer> t_bridge_discover_and_send;
       boost::shared_ptr<tbox::Timer> t_bridge_discover_get_neighbors;
       boost::shared_ptr<tbox::Timer> t_bridge_discover_form_rbbt;
-      boost::shared_ptr<tbox::Timer> t_bridge_discover_find_overlaps;
       boost::shared_ptr<tbox::Timer> t_bridge_share;
       boost::shared_ptr<tbox::Timer> t_bridge_receive_and_unpack;
       boost::shared_ptr<tbox::Timer> t_bridge_MPI_wait;
