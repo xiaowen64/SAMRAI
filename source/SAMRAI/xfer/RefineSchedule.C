@@ -3389,28 +3389,29 @@ RefineSchedule::communicateFillBoxes(
 
    const tbox::Dimension& dim(d_dst_level->getDim());
 
+   int rank = dst_to_fill.getBase().getMPI().getRank();
+
    std::set<int> src_owners;
    d_dst_to_src->getLocalOwners(src_owners);
-   src_owners.erase(dst_to_fill.getBase().getMPI().getRank());
+   src_owners.erase(rank);
 
    std::set<int> dst_owners;
    src_to_dst.getLocalOwners(dst_owners);
-   dst_owners.erase(dst_to_fill.getBase().getMPI().getRank());
+   dst_owners.erase(rank);
 
    std::map<int, std::vector<int> > send_mesgs;
    std::map<int, std::vector<int> > recv_mesgs;
 
+   int num_incoming_comms = static_cast<int>(dst_owners.size());
+   int num_comms = static_cast<int>(src_owners.size()) + num_incoming_comms;
    tbox::AsyncCommStage comm_stage;
-   tbox::AsyncCommPeer<int>* comms =
-      new tbox::AsyncCommPeer<int>[src_owners.size() + dst_owners.size()];
+   tbox::AsyncCommPeer<int>* comms = new tbox::AsyncCommPeer<int>[num_comms];
 
    int mesg_number = 0;
 
    /*
     * Post receives for fill boxes from dst owners.
     */
-
-   // TODO: should use cyclic ordering for efficiency.
    for (std::set<int>::const_iterator di = dst_owners.begin();
         di != dst_owners.end(); ++di) {
       comms[mesg_number].initialize(&comm_stage);
@@ -3427,7 +3428,6 @@ RefineSchedule::communicateFillBoxes(
 
    /*
     * Pack fill boxes and send messages to src owners.
-    * TODO: should use cyclic ordering for efficiency.
     */
    // Pack messages.
    std::vector<int> tmp_mesg;
@@ -3478,8 +3478,11 @@ RefineSchedule::communicateFillBoxes(
       }
    }
    // Send messages.
-   for (std::set<int>::const_iterator si = src_owners.begin();
-        si != src_owners.end(); ++si) {
+   std::set<int>::const_iterator si = src_owners.lower_bound(rank+1);
+   for (; mesg_number < num_comms; ++mesg_number) {
+      if (si == src_owners.end()) {
+         si = src_owners.begin();
+      }
       comms[mesg_number].initialize(&comm_stage);
       comms[mesg_number].setPeerRank(*si);
       // Reuse communicator.  Assuming it has no outstanding messages!
@@ -3490,7 +3493,7 @@ RefineSchedule::communicateFillBoxes(
       if (comms[mesg_number].isDone()) {
          comms[mesg_number].pushToCompletionQueue();
       }
-      ++mesg_number;
+      ++si;
    }
 
    /*

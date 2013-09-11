@@ -460,12 +460,14 @@ GraphLoadBalancer::loadBalanceBoxLevel(
 
    tbox::AsyncCommStage send_stage;
    std::map<int, tbox::AsyncCommPeer<char>* > send_comms;
+   std::set<int> send_procs;
    tbox::AsyncCommStage recv_stage;
    std::map<int, tbox::AsyncCommPeer<char>* > recv_comms;
 
    setupAsyncCommObjects(
       send_stage,
       send_comms,
+      send_procs,
       recv_stage,
       recv_comms,
       old_global_partition,
@@ -539,19 +541,23 @@ GraphLoadBalancer::loadBalanceBoxLevel(
       }
    }
 
-   for (std::map<int, tbox::AsyncCommPeer<char>* >::iterator si =
-        send_comms.begin(); si != send_comms.end(); ++si) {
-
-      tbox::AsyncCommPeer<char>*& send_peer = si->second;
-      const tbox::MessageStream& msg = mstreams[send_peer->getPeerRank()];
+   int send_ct = static_cast<int>(send_procs.size());
+   std::set<int>::const_iterator si = send_procs.lower_bound(my_rank+1);
+   for (int num_sent = 0; num_sent < send_ct; ++num_sent) {
+      if (si == send_procs.end()) {
+         si = send_procs.begin();
+      }
+      int send_rank = *si;
+      tbox::AsyncCommPeer<char>*& send_peer = send_comms[send_rank];
+      const tbox::MessageStream& msg = mstreams[send_rank];
       send_peer->beginSend(static_cast<const char*>(msg.getBufferStart()),
                            static_cast<int>(msg.getCurrentSize()));
+      ++si;
    }
 
-   for (std::map<int, tbox::AsyncCommPeer<char>* >::iterator si =
-        send_comms.begin(); si != send_comms.end(); ++si) {
+   for (si = send_procs.begin(); si != send_procs.end(); ++si) {
 
-      tbox::AsyncCommPeer<char>*& send_peer = si->second;
+      tbox::AsyncCommPeer<char>*& send_peer = send_comms[*si];
       send_peer->completeCurrentOperation();
    }
 
@@ -958,6 +964,7 @@ void
 GraphLoadBalancer::setupAsyncCommObjects(
    tbox::AsyncCommStage& send_stage,
    std::map<int, tbox::AsyncCommPeer<char>* >& send_comms,
+   std::set<int>& send_procs,
    tbox::AsyncCommStage& recv_stage,
    std::map<int, tbox::AsyncCommPeer<char>* >& recv_comms,
    const int* old_partition,
@@ -966,8 +973,6 @@ GraphLoadBalancer::setupAsyncCommObjects(
    const int my_rank,
    const tbox::SAMRAI_MPI& mpi) const
 {
-
-   std::set<int> send_procs;
    std::set<int> recv_procs;
    for (int b = 0; b < num_boxes; ++b) {
       if (old_partition[b] == my_rank &&

@@ -386,6 +386,7 @@ private:
     *
     * @param [out] send_stage Stage for sending operations
     * @param [out] send_comms Maps ranks for sending to AsyncCommPeer objects
+    * @param [out] send_procs Ranks of processes sent to
     * @param [out] recv_stage Stage for receive operations
     * @param [out] recv_comms Maps ranks for receiving to AsyncCommPeer objects
     * @param [in] old_partition array describing pre-balance partition
@@ -397,6 +398,7 @@ private:
    void setupAsyncCommObjects(
       tbox::AsyncCommStage& send_stage,
       std::map<int, tbox::AsyncCommPeer<char>* >& send_comms,
+      std::set<int>& send_procs,
       tbox::AsyncCommStage& recv_stage,
       std::map<int, tbox::AsyncCommPeer<char>* >& recv_comms,
       const int* old_partition,
