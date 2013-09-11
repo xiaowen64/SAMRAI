@@ -40,7 +40,7 @@ F_OBJS      = skelbdry2d.o skelbdry3d.o upfluxsum2d.o upfluxsum3d.o
 
 library:        libSAMRAI_test$(LIB_SUFFIX)
 
-libSAMRAI_test.a:   $(CXX_OBJS) $(F_OBJS)
+libSAMRAI_test$(LIB_SUFFIX):   $(CXX_OBJS) $(F_OBJS)
 	rm -rf libSAMRAI_test$(LIB_SUFFIX)
 	echo $(CXX_OBJS) $(F_OBJS) | @XARGS@ @AR@ ru libSAMRAI_test$(LIB_SUFFIX);
 
