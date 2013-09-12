@@ -50,7 +50,7 @@ SHELL         = /bin/sh
 SAMRAI_TARGET=@SAMRAI_TARGET@
 
 INCLUDE_SAM   = $(SAMRAI)/source
-LIB_SAM       = $(OBJECT)/lib
+LIB_SAM       = @ac_pwd@/lib
 BIN_SAM       = $(OBJECT)/bin
 
 LIB_SUFFIX=@LIB_SUFFIX@
@@ -91,7 +91,13 @@ CPPFLAGS      = @CPPFLAGS@ -I. -I$(OBJECT)/include -I$(INCLUDE_SAM) @INC_PATH@ $
 
 AR	      = @AR@
 
+RPATH	      = @btng_rpath_beginning@
+
+ifdef RPATH
+LDFLAGS       = @LD_FLAGS@ -L$(LIB_SAM) @btng_rpath_beginning@$(LIB_SAM) @LIB_PATH@ $(LDFLAGS_EXTRA)
+else
 LDFLAGS       = @LD_FLAGS@ -L$(LIB_SAM) @LIB_PATH@ $(LDFLAGS_EXTRA)
+endif
 LDLIBS        = $(LDLIBS_EXTRA) @LIB_NAME@
 
 CXXLD_FLAGS   = -L$(LIB_SAM) @CXXLD_FLAGS@ @LIB_PATH@ $(LDFLAGS_EXTRA)

@@ -1608,6 +1608,8 @@ AC_SUBST(SRCDIR_COMPILE_PREFIX)
 AC_SUBST(INC_PATH)
 AC_SUBST(LIB_PATH)
 AC_SUBST(LIB_NAME)
+AC_SUBST(ac_pwd)
+AC_SUBST(btng_rpath_beginning)
 
 dnl Define a macro that links files from the compile tree to the source tree.
 dnl The links have the same name as the the target.  Nothing is done if 
