@@ -2427,8 +2427,12 @@ HyperbolicLevelIntegrator::recordStatistics(
             getStatistic(std::string("HLI_TimeL") + lnstr, "PROC_STAT");
       }
 
-      s_boxes_stat[ln]->recordProcStat(patch_level.getBoxLevel()->getLocalNumberOfBoxes());
-      s_cells_stat[ln]->recordProcStat(patch_level.getBoxLevel()->getLocalNumberOfCells());
+      double level_local_boxes =
+         static_cast<double>(patch_level.getBoxLevel()->getLocalNumberOfBoxes());
+      double level_local_cells =
+         static_cast<double>(patch_level.getBoxLevel()->getLocalNumberOfCells());
+      s_boxes_stat[ln]->recordProcStat(level_local_boxes);
+      s_cells_stat[ln]->recordProcStat(level_local_cells);
       s_timestamp_stat[ln]->recordProcStat(current_time);
 
    }
