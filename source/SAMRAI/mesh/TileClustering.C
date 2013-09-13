@@ -174,45 +174,20 @@ TileClustering::findBoxesContainingTags(
          bound_boxes,
          tag_data_index,
          tag_val);
+tbox::plog << "After clusterWholeTiles:\n" << "tag_to_new:\n" << tag_to_new->format();
 
       new_box_level->getMPI().AllReduce( &tiles_have_remote_extent, 1, MPI_MAX );
 
       if ( tiles_have_remote_extent ) {
          detectSemilocalEdges( tag_to_new );
+tbox::plog << "After detectSemilocalEdges:\n" << "tag_to_new:\n" << tag_to_new->format();
          /*
           * Remove duplicated new tiles.  For each set of coinciding tiles,
           * determine the process with the greatest tag overlap and keep only
           * the copy from that process.  Discard the others.
           */
          removeDuplicateTiles( *new_box_level, *tag_to_new );
-      }
-
-      if ( d_debug_checks ) {
-
-         tag_to_new->assertConsistencyWithBase();
-         tag_to_new->assertConsistencyWithHead();
-         tag_to_new->assertOverlapCorrectness();
-         tag_to_new->getTranspose().assertConsistencyWithBase();
-         tag_to_new->getTranspose().assertConsistencyWithHead();
-         tag_to_new->getTranspose().assertOverlapCorrectness();
-         tag_to_new->assertTransposeCorrectness(tag_to_new->getTranspose());
-
-         // There should be no overlaps.
-         hier::BoxContainer visible_tiles(true);
-         tag_to_new->getLocalNeighbors(visible_tiles);
-         visible_tiles.makeTree( tag_to_new->getBase().getGridGeometry().get() );
-         for ( hier::BoxContainer::const_iterator bi=visible_tiles.begin();
-               bi!=visible_tiles.end(); ++bi ) {
-            const hier::Box &tile = *bi;
-            hier::BoxContainer overlaps;
-            visible_tiles.findOverlapBoxes( overlaps, tile,
-                                            tag_to_new->getBase().getRefinementRatio(),
-                                            true );
-            TBOX_ASSERT( overlaps.size() == 1 );
-            TBOX_ASSERT( overlaps.front().isIdEqual(tile) );
-            TBOX_ASSERT( overlaps.front().isSpatiallyEqual(tile) );
-         }
-
+tbox::plog << "After removeDuplicateTiles:\n" << "tag_to_new:\n" << tag_to_new->format();
       }
 
       shearTilesAtBlockBoundaries( *new_box_level, *tag_to_new );
@@ -262,6 +237,33 @@ TileClustering::findBoxesContainingTags(
 
    if ( d_coalesce_boxes ) {
       coalesceClusters(*new_box_level, tag_to_new, tiles_have_remote_extent);
+      if ( d_debug_checks ) {
+
+         tag_to_new->assertConsistencyWithBase();
+         tag_to_new->assertConsistencyWithHead();
+         tag_to_new->assertOverlapCorrectness();
+         tag_to_new->getTranspose().assertConsistencyWithBase();
+         tag_to_new->getTranspose().assertConsistencyWithHead();
+         tag_to_new->getTranspose().assertOverlapCorrectness();
+         tag_to_new->assertTransposeCorrectness(tag_to_new->getTranspose());
+
+         // There should be no overlaps.
+         hier::BoxContainer visible_tiles(true);
+         tag_to_new->getLocalNeighbors(visible_tiles);
+         visible_tiles.makeTree( tag_to_new->getBase().getGridGeometry().get() );
+         for ( hier::BoxContainer::const_iterator bi=visible_tiles.begin();
+               bi!=visible_tiles.end(); ++bi ) {
+            const hier::Box &tile = *bi;
+            hier::BoxContainer overlaps;
+            visible_tiles.findOverlapBoxes( overlaps, tile,
+                                            tag_to_new->getBase().getRefinementRatio(),
+                                            true );
+            TBOX_ASSERT( overlaps.size() == 1 );
+            TBOX_ASSERT( overlaps.front().isIdEqual(tile) );
+            TBOX_ASSERT( overlaps.front().isSpatiallyEqual(tile) );
+         }
+
+      }
    }
 
 
