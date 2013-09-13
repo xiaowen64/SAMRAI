@@ -187,34 +187,6 @@ TileClustering::findBoxesContainingTags(
          removeDuplicateTiles( *new_box_level, *tag_to_new );
       }
 
-      if ( d_debug_checks ) {
-
-         tag_to_new->assertConsistencyWithBase();
-         tag_to_new->assertConsistencyWithHead();
-         tag_to_new->assertOverlapCorrectness();
-         tag_to_new->getTranspose().assertConsistencyWithBase();
-         tag_to_new->getTranspose().assertConsistencyWithHead();
-         tag_to_new->getTranspose().assertOverlapCorrectness();
-         tag_to_new->assertTransposeCorrectness(tag_to_new->getTranspose());
-
-         // There should be no overlaps.
-         hier::BoxContainer visible_tiles(true);
-         tag_to_new->getLocalNeighbors(visible_tiles);
-         visible_tiles.makeTree( tag_to_new->getBase().getGridGeometry().get() );
-         for ( hier::BoxContainer::const_iterator bi=visible_tiles.begin();
-               bi!=visible_tiles.end(); ++bi ) {
-            const hier::Box &tile = *bi;
-            hier::BoxContainer overlaps;
-            visible_tiles.findOverlapBoxes( overlaps, tile,
-                                            tag_to_new->getBase().getRefinementRatio(),
-                                            true );
-            TBOX_ASSERT( overlaps.size() == 1 );
-            TBOX_ASSERT( overlaps.front().isIdEqual(tile) );
-            TBOX_ASSERT( overlaps.front().isSpatiallyEqual(tile) );
-         }
-
-      }
-
       shearTilesAtBlockBoundaries( *new_box_level, *tag_to_new );
 
       if ( d_debug_checks ) {
@@ -262,6 +234,33 @@ TileClustering::findBoxesContainingTags(
 
    if ( d_coalesce_boxes ) {
       coalesceClusters(*new_box_level, tag_to_new, tiles_have_remote_extent);
+      if ( d_debug_checks ) {
+
+         tag_to_new->assertConsistencyWithBase();
+         tag_to_new->assertConsistencyWithHead();
+         tag_to_new->assertOverlapCorrectness();
+         tag_to_new->getTranspose().assertConsistencyWithBase();
+         tag_to_new->getTranspose().assertConsistencyWithHead();
+         tag_to_new->getTranspose().assertOverlapCorrectness();
+         tag_to_new->assertTransposeCorrectness(tag_to_new->getTranspose());
+
+         // There should be no overlaps.
+         hier::BoxContainer visible_tiles(true);
+         tag_to_new->getLocalNeighbors(visible_tiles);
+         visible_tiles.makeTree( tag_to_new->getBase().getGridGeometry().get() );
+         for ( hier::BoxContainer::const_iterator bi=visible_tiles.begin();
+               bi!=visible_tiles.end(); ++bi ) {
+            const hier::Box &tile = *bi;
+            hier::BoxContainer overlaps;
+            visible_tiles.findOverlapBoxes( overlaps, tile,
+                                            tag_to_new->getBase().getRefinementRatio(),
+                                            true );
+            TBOX_ASSERT( overlaps.size() == 1 );
+            TBOX_ASSERT( overlaps.front().isIdEqual(tile) );
+            TBOX_ASSERT( overlaps.front().isSpatiallyEqual(tile) );
+         }
+
+      }
    }
 
 
@@ -629,8 +628,7 @@ TileClustering::removeDuplicateTiles(
        */
       for ( hier::BoxContainer::iterator bi=tiles_crossing_patch_boundaries.begin();
             bi!=tiles_crossing_patch_boundaries.end(); /* incremented in loop */ ) {
-         if ( bi->lower() == similar_tiles.front().lower() ) {
-            TBOX_ASSERT( bi->upper() == similar_tiles.front().upper() );
+         if ( bi->isSpatiallyEqual(similar_tiles.front()) ) {
             similar_tiles.insert(*bi);
             changes[bi->getBoxId()] = chosen_tiles.size();
             tiles_crossing_patch_boundaries.erase(bi++);
@@ -1015,7 +1013,7 @@ TileClustering::coalesceClusters(
     * Coalesce the boxes and give coalesced boxes unique ids.
     */
    const hier::BoxContainer &pre_boxes = tile_box_level.getBoxes();
-   hier::BoxContainer post_boxes(pre_boxes.begin(), pre_boxes.end(), false);
+   hier::BoxContainer post_boxes(false);
    std::map<hier::BlockId,hier::BoxContainer> post_boxes_by_block;
    for ( hier::BoxContainer::const_iterator bi=pre_boxes.begin();
          bi!=pre_boxes.end(); ++bi ) {
