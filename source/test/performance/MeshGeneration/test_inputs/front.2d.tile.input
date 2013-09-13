@@ -57,6 +57,7 @@ TileClustering {
   DEV_print_steps = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
+  DEV_debug_checks = TRUE
 }
 
 
