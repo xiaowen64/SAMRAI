@@ -183,9 +183,7 @@ TileClustering::findBoxesContainingTags(
          removeDuplicateTiles( *new_box_level, *tag_to_new );
       }
 
-tag_to_new->assertTransposeCorrectness(tag_to_new->getTranspose());
       shearTilesAtBlockBoundaries( *new_box_level, *tag_to_new );
-tag_to_new->assertTransposeCorrectness(tag_to_new->getTranspose());
 
    }
 
@@ -689,16 +687,6 @@ TileClustering::shearTilesAtBlockBoundaries(
    const hier::BoxLevel &tag_box_level = tag_to_tile.getBase();
    hier::Connector &tile_to_tag = tag_to_tile.getTranspose();
 
-tag_to_tile.assertConsistencyWithBase();
-tag_to_tile.assertConsistencyWithHead();
-tag_to_tile.assertOverlapCorrectness();
-tile_to_tag.assertConsistencyWithBase();
-tile_to_tag.assertConsistencyWithHead();
-tile_to_tag.assertOverlapCorrectness();
-tag_to_tile.assertTransposeCorrectness(tile_to_tag);
-tbox::plog << "tile_to_tag:\n" << tile_to_tag.format();
-tbox::plog << "tag_to_tile:\n" << tag_to_tile.format();
-
    const boost::shared_ptr<const hier::BaseGridGeometry> &grid_geom =
       tag_box_level.getGridGeometry();
 
@@ -736,7 +724,6 @@ tbox::plog << "tag_to_tile:\n" << tag_to_tile.format();
          // No change to this tile.
          TBOX_ASSERT( inside_block.size() == 1 );
          TBOX_ASSERT( inside_block.front().isIdEqual(tile) );
-tbox::plog << "No change to tile " << tile << std::endl;
          changes.erase(tile.getLocalId());
          sheared_tile_box_level.addBoxWithoutUpdate(tile);
       }
@@ -744,7 +731,6 @@ tbox::plog << "No change to tile " << tile << std::endl;
          inside_block.coalesce();
          hier::BoxContainer tag_neighbors;
          tile_to_tag.getNeighborBoxes( tile.getBoxId(), tag_neighbors );
-tbox::plog << "Changing tile " << tile << " to :" << inside_block.format();
          for ( hier::BoxContainer::iterator ii=inside_block.begin();
                ii!=inside_block.end(); ++ii ) {
             ii->setLocalId(++last_used_id);
@@ -755,27 +741,14 @@ tbox::plog << "Changing tile " << tile << " to :" << inside_block.format();
 
    }
 
-tbox::plog << "sheared:\n" << sheared_tile_box_level.format();
-tbox::plog << "tile_to_sheared:\n" << tile_to_sheared.format();
    sheared_tile_box_level.finalize();
    tile_box_level.deallocateGlobalizedVersion();
-TBOX_ASSERT( tile_to_sheared.findMappingErrors() == 0 );
 
    hier::MappingConnectorAlgorithm mca;
-mca.setSanityCheckMethodPreconditions(true);
-mca.setSanityCheckMethodPostconditions(true);
    mca.modify( tag_to_tile,
                tile_to_sheared,
                &tile_box_level,
                &sheared_tile_box_level );
-
-tag_to_tile.assertConsistencyWithBase();
-tag_to_tile.assertConsistencyWithHead();
-tag_to_tile.assertOverlapCorrectness();
-tile_to_tag.assertConsistencyWithBase();
-tile_to_tag.assertConsistencyWithHead();
-tile_to_tag.assertOverlapCorrectness();
-tag_to_tile.assertTransposeCorrectness(tile_to_tag);
 
    return;
 }
