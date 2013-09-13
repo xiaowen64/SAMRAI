@@ -174,20 +174,17 @@ TileClustering::findBoxesContainingTags(
          bound_boxes,
          tag_data_index,
          tag_val);
-tbox::plog << "After clusterWholeTiles:\n" << "tag_to_new:\n" << tag_to_new->format();
 
       new_box_level->getMPI().AllReduce( &tiles_have_remote_extent, 1, MPI_MAX );
 
       if ( tiles_have_remote_extent ) {
          detectSemilocalEdges( tag_to_new );
-tbox::plog << "After detectSemilocalEdges:\n" << "tag_to_new:\n" << tag_to_new->format();
          /*
           * Remove duplicated new tiles.  For each set of coinciding tiles,
           * determine the process with the greatest tag overlap and keep only
           * the copy from that process.  Discard the others.
           */
          removeDuplicateTiles( *new_box_level, *tag_to_new );
-tbox::plog << "After removeDuplicateTiles:\n" << "tag_to_new:\n" << tag_to_new->format();
       }
 
       shearTilesAtBlockBoundaries( *new_box_level, *tag_to_new );
