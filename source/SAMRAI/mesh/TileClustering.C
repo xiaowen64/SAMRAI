@@ -629,8 +629,7 @@ TileClustering::removeDuplicateTiles(
        */
       for ( hier::BoxContainer::iterator bi=tiles_crossing_patch_boundaries.begin();
             bi!=tiles_crossing_patch_boundaries.end(); /* incremented in loop */ ) {
-         if ( bi->lower() == similar_tiles.front().lower() ) {
-            TBOX_ASSERT( bi->upper() == similar_tiles.front().upper() );
+         if ( bi->isSpatiallyEqual(similar_tiles.front()) ) {
             similar_tiles.insert(*bi);
             changes[bi->getBoxId()] = chosen_tiles.size();
             tiles_crossing_patch_boundaries.erase(bi++);
