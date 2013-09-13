@@ -42,6 +42,7 @@ TileClustering::TileClustering(
    d_box_size(hier::IntVector(d_dim, 8)),
    d_allow_remote_tile_extent(true),
    d_coalesce_boxes(true),
+   d_debug_checks(false),
    d_log_cluster_summary(false),
    d_log_cluster(false),
    d_barrier_and_time(false),
@@ -95,6 +96,10 @@ TileClustering::getFromInput(
       d_print_steps =
          input_db->getBoolWithDefault("DEV_print_steps",
             d_print_steps);
+
+      d_debug_checks =
+         input_db->getBoolWithDefault("DEV_debug_checks",
+            d_debug_checks);
    }
 }
 
@@ -266,6 +271,33 @@ TileClustering::findBoxesContainingTags(
    }
 
    d_object_timers->t_cluster_wrapup->stop();
+
+   if ( d_debug_checks ) {
+
+      tag_to_new->assertConsistencyWithBase();
+      tag_to_new->assertConsistencyWithHead();
+      tag_to_new->assertOverlapCorrectness();
+      tag_to_new->getTranspose().assertConsistencyWithBase();
+      tag_to_new->getTranspose().assertConsistencyWithHead();
+      tag_to_new->getTranspose().assertOverlapCorrectness();
+      tag_to_new->assertTransposeCorrectness(tag_to_new->getTranspose());
+
+      // There should be no overlaps.
+      hier::BoxContainer visible_tiles(true);
+      tag_to_new->getLocalNeighbors(visible_tiles);
+      visible_tiles.makeTree( tag_to_new->getBase().getGridGeometry().get() );
+      for ( hier::BoxContainer::const_iterator bi=visible_tiles.begin();
+            bi!=visible_tiles.end(); ++bi ) {
+         const hier::Box &tile = *bi;
+         hier::BoxContainer overlaps;
+         visible_tiles.findOverlapBoxes( overlaps, tile );
+         TBOX_ASSERT( overlaps.size() == 1 );
+         TBOX_ASSERT( overlaps.front().isIdEqual(tile) );
+         TBOX_ASSERT( overlaps.front().isSpatiallyEqual(tile) );
+      }
+
+   }
+
 
    if (d_barrier_and_time) {
       d_object_timers->t_find_boxes_containing_tags->barrierAndStop();

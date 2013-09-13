@@ -49,6 +49,9 @@ namespace mesh {
  *   If false, clusters' extent can be dependent on how tag level
  *   is partitioned.
  *
+ *   - \b DEV_debug_checks
+ *   Whether to run expensive checks for debugging.
+ *
  * <b> Details: </b> <br>
  * <table>
  *   <tr>
@@ -79,6 +82,14 @@ namespace mesh {
  *     <td>allow_remote_tile_extent</td>
  *     <td>bool</td>
  *     <td>true</td>
+ *     <td>false/true</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>DEV_debug_checks</td>
+ *     <td>bool</td>
+ *     <td>false</td>
  *     <td>false/true</td>
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
@@ -273,6 +284,7 @@ private:
 
    //@{
    //! @name Diagnostics and performance evaluation
+   bool d_debug_checks;
    hier::OverlapConnectorAlgorithm d_oca;
    bool d_log_cluster_summary;
    bool d_log_cluster;

@@ -68,6 +68,7 @@ TileClustering {
   box_size = 2, 2, 2
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
+  DEV_debug_checks = TRUE
 }
 
 
