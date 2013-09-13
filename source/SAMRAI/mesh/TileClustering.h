@@ -216,6 +216,15 @@ private:
       hier::BoxLevel &tile_box_level,
       hier::Connector &tag_to_tiles);
 
+
+   /*
+    * @brief Shear tiles at block boundaries so they don't cross the boundaries.
+    */
+   void
+   shearTilesAtBlockBoundaries(
+      hier::BoxLevel &tile_box_level,
+      hier::Connector &tag_to_tiles );
+
    /*!
     * @brief Coalesce clusters (and update Connectors).
     */
