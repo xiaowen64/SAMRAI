@@ -300,9 +300,10 @@ MappingConnector::findMappingErrors(
    BoxLevelConnectorUtils blcu;
    boost::shared_ptr<BoxLevel> bad_parts;
    boost::shared_ptr<MappingConnector> pre_to_bad;
+   const Connector *transpose = createTranspose();
    blcu.computeExternalParts( bad_parts,
                               pre_to_bad,
-                              *this,
+                              *transpose,
                               getConnectorWidth() );
 
    if ( pre_to_bad->getLocalNumberOfRelationships() > 0 ) {
@@ -311,9 +312,13 @@ MappingConnector::findMappingErrors(
                  << "the mapping Connector width.\n"
                  << "mapped boxes and their bad parts:\n"
                  << pre_to_bad->format()
+                 << "mapping:\n" << format()
+                 << "transpose mapping:\n" << transpose->format()
                  << std::endl;
       error_count += pre_to_bad->getLocalNumberOfRelationships();
    }
+
+   delete transpose;
 
    return error_count;
 }
