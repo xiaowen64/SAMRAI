@@ -289,7 +289,9 @@ TileClustering::findBoxesContainingTags(
             bi!=visible_tiles.end(); ++bi ) {
          const hier::Box &tile = *bi;
          hier::BoxContainer overlaps;
-         visible_tiles.findOverlapBoxes( overlaps, tile );
+         visible_tiles.findOverlapBoxes( overlaps, tile,
+                                         tag_to_new->getBase().getRefinementRatio(),
+                                         true );
          TBOX_ASSERT( overlaps.size() == 1 );
          TBOX_ASSERT( overlaps.front().isIdEqual(tile) );
          TBOX_ASSERT( overlaps.front().isSpatiallyEqual(tile) );
@@ -958,12 +960,21 @@ TileClustering::coalesceClusters(
     */
    const hier::BoxContainer &pre_boxes = tile_box_level.getBoxes();
    hier::BoxContainer post_boxes(pre_boxes.begin(), pre_boxes.end(), false);
-   d_object_timers->t_coalesce->start();
-   post_boxes.coalesce();
+   std::map<hier::BlockId,hier::BoxContainer> post_boxes_by_block;
+   for ( hier::BoxContainer::const_iterator bi=pre_boxes.begin();
+         bi!=pre_boxes.end(); ++bi ) {
+      post_boxes_by_block[bi->getBlockId()].pushBack(*bi);
+   }
    hier::LocalId last_used_id(tile_box_level.getLastLocalId());
-   for ( hier::BoxContainer::iterator bi=post_boxes.begin();
-         bi!=post_boxes.end(); ++bi ) {
-      bi->setId(hier::BoxId(++last_used_id, tile_box_level.getMPI().getRank()));
+   d_object_timers->t_coalesce->start();
+   for ( std::map<hier::BlockId,hier::BoxContainer>::iterator mi=post_boxes_by_block.begin();
+         mi!=post_boxes_by_block.end(); ++mi ) {
+      mi->second.coalesce();
+      for ( hier::BoxContainer::iterator bi=mi->second.begin();
+            bi!=mi->second.end(); ++bi ) {
+         bi->setId(hier::BoxId(++last_used_id, tile_box_level.getMPI().getRank()));
+         post_boxes.pushBack(*bi);
+      }
    }
    d_object_timers->t_coalesce->stop();
 
