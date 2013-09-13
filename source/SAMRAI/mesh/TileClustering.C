@@ -1014,7 +1014,7 @@ TileClustering::coalesceClusters(
     * Coalesce the boxes and give coalesced boxes unique ids.
     */
    const hier::BoxContainer &pre_boxes = tile_box_level.getBoxes();
-   hier::BoxContainer post_boxes(pre_boxes.begin(), pre_boxes.end(), false);
+   hier::BoxContainer post_boxes(false);
    std::map<hier::BlockId,hier::BoxContainer> post_boxes_by_block;
    for ( hier::BoxContainer::const_iterator bi=pre_boxes.begin();
          bi!=pre_boxes.end(); ++bi ) {
