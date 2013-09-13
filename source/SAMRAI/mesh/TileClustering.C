@@ -14,8 +14,6 @@
 
 #include "SAMRAI/mesh/TileClustering.h"
 
-#include "SAMRAI/hier/MappingConnectorAlgorithm.h"
-#include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -53,6 +51,7 @@ TileClustering::TileClustering(
    getFromInput(input_db);
    setTimerPrefix(s_default_timer_prefix);
    d_oca.setTimerPrefix(s_default_timer_prefix);
+   d_mca.setTimerPrefix(s_default_timer_prefix);
 }
 
 TileClustering::~TileClustering()
@@ -776,11 +775,10 @@ TileClustering::shearTilesAtBlockBoundaries(
    sheared_tile_box_level.finalize();
    tile_box_level.deallocateGlobalizedVersion();
 
-   hier::MappingConnectorAlgorithm mca;
-   mca.modify( tag_to_tile,
-               tile_to_sheared,
-               &tile_box_level,
-               &sheared_tile_box_level );
+   d_mca.modify( tag_to_tile,
+                 tile_to_sheared,
+                 &tile_box_level,
+                 &sheared_tile_box_level );
 
    return;
 }
@@ -1028,11 +1026,16 @@ TileClustering::coalesceClusters(
    /*
     * Apply the modifications.
     */
-   hier::MappingConnectorAlgorithm mca;
-   mca.modify( *tag_to_tile,
-               pre_to_post,
-               &tile_box_level,
-               &tmp_tile_box_level );
+   if ( d_debug_checks ) {
+      d_mca.setSanityCheckMethodPreconditions(true);
+      d_mca.setSanityCheckMethodPostconditions(true);
+   }
+   d_mca.modify( *tag_to_tile,
+                 pre_to_post,
+                 &tile_box_level,
+                 &tmp_tile_box_level );
+   d_mca.setSanityCheckMethodPreconditions(false);
+   d_mca.setSanityCheckMethodPostconditions(false);
 
    d_object_timers->t_coalesce_adjustment->stop();
 

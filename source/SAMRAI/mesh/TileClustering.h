@@ -13,6 +13,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
+#include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/mesh/BoxGeneratorStrategy.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/BoxLevel.h"
@@ -286,6 +287,7 @@ private:
    //! @name Diagnostics and performance evaluation
    bool d_debug_checks;
    hier::OverlapConnectorAlgorithm d_oca;
+   hier::MappingConnectorAlgorithm d_mca;
    bool d_log_cluster_summary;
    bool d_log_cluster;
    bool d_barrier_and_time;
