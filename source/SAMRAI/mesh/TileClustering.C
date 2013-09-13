@@ -187,7 +187,63 @@ TileClustering::findBoxesContainingTags(
          removeDuplicateTiles( *new_box_level, *tag_to_new );
       }
 
+      if ( d_debug_checks ) {
+
+         tag_to_new->assertConsistencyWithBase();
+         tag_to_new->assertConsistencyWithHead();
+         tag_to_new->assertOverlapCorrectness();
+         tag_to_new->getTranspose().assertConsistencyWithBase();
+         tag_to_new->getTranspose().assertConsistencyWithHead();
+         tag_to_new->getTranspose().assertOverlapCorrectness();
+         tag_to_new->assertTransposeCorrectness(tag_to_new->getTranspose());
+
+         // There should be no overlaps.
+         hier::BoxContainer visible_tiles(true);
+         tag_to_new->getLocalNeighbors(visible_tiles);
+         visible_tiles.makeTree( tag_to_new->getBase().getGridGeometry().get() );
+         for ( hier::BoxContainer::const_iterator bi=visible_tiles.begin();
+               bi!=visible_tiles.end(); ++bi ) {
+            const hier::Box &tile = *bi;
+            hier::BoxContainer overlaps;
+            visible_tiles.findOverlapBoxes( overlaps, tile,
+                                            tag_to_new->getBase().getRefinementRatio(),
+                                            true );
+            TBOX_ASSERT( overlaps.size() == 1 );
+            TBOX_ASSERT( overlaps.front().isIdEqual(tile) );
+            TBOX_ASSERT( overlaps.front().isSpatiallyEqual(tile) );
+         }
+
+      }
+
       shearTilesAtBlockBoundaries( *new_box_level, *tag_to_new );
+
+      if ( d_debug_checks ) {
+
+         tag_to_new->assertConsistencyWithBase();
+         tag_to_new->assertConsistencyWithHead();
+         tag_to_new->assertOverlapCorrectness();
+         tag_to_new->getTranspose().assertConsistencyWithBase();
+         tag_to_new->getTranspose().assertConsistencyWithHead();
+         tag_to_new->getTranspose().assertOverlapCorrectness();
+         tag_to_new->assertTransposeCorrectness(tag_to_new->getTranspose());
+
+         // There should be no overlaps.
+         hier::BoxContainer visible_tiles(true);
+         tag_to_new->getLocalNeighbors(visible_tiles);
+         visible_tiles.makeTree( tag_to_new->getBase().getGridGeometry().get() );
+         for ( hier::BoxContainer::const_iterator bi=visible_tiles.begin();
+               bi!=visible_tiles.end(); ++bi ) {
+            const hier::Box &tile = *bi;
+            hier::BoxContainer overlaps;
+            visible_tiles.findOverlapBoxes( overlaps, tile,
+                                            tag_to_new->getBase().getRefinementRatio(),
+                                            true );
+            TBOX_ASSERT( overlaps.size() == 1 );
+            TBOX_ASSERT( overlaps.front().isIdEqual(tile) );
+            TBOX_ASSERT( overlaps.front().isSpatiallyEqual(tile) );
+         }
+
+      }
 
    }
 
