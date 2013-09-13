@@ -909,22 +909,16 @@ Connector::doTransposeWork( Connector *transpose ) const
    const BoxLevel& globalized_base = getBase().getGlobalizedVersion();
    const BoxContainer &globalized_boxes = globalized_base.getGlobalBoxes();
 
-   for ( BoxContainer::const_iterator bi=globalized_boxes.begin();
-         bi!=globalized_boxes.end(); ++bi ) {
+   for ( BoxNeighborhoodCollection::ConstIterator ni=globalized->d_global_relationships.begin();
+         ni!=globalized->d_global_relationships.end(); ++ni ) {
 
-      if ( bi->isPeriodicImage() ) { continue; }
-
-      Connector::ConstNeighborhoodIterator neighborhood =
-         globalized->find(bi->getBoxId());
-
-      if ( neighborhood == globalized->end() ) { continue; }
-
-      for ( Connector::ConstNeighborIterator na=begin(neighborhood);
-            na!=end(neighborhood); ++na ) {
+      for ( Connector::ConstNeighborIterator na=begin(ni); na!=end(ni); ++na ) {
          if ( na->getOwnerRank() == globalized_base.getMPI().getRank() ) {
             if ( !na->isPeriodicImage() ) {
                TBOX_ASSERT( getHead().hasBox(*na) );
-               transpose->insertLocalNeighbor( *bi, na->getBoxId() );
+               transpose->insertLocalNeighbor(
+                  *globalized_boxes.find(Box(dim,*ni)),
+                  na->getBoxId() );
             }
             else {
                // Need to do shifting.
@@ -932,6 +926,7 @@ Connector::doTransposeWork( Connector *transpose ) const
             }
          }
       }
+
    }
 
    if ( globalized != this ) {
