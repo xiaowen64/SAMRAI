@@ -489,10 +489,10 @@ TileClustering::clusterWholeTiles(
 
    /*
     * Generate tile_box_level.  To reduce box count and box aspect
-    * ratios, coalesce tiles associated with a patch (if coalescing is
-    * enabled).  But don't coalesce tiles that are not completely
-    * contained in its originating patch because they may have
-    * duplicates on other processes (which is resolved later).
+    * ratios, coalesce tiles associated with the same tag box (if
+    * coalescing is enabled).  But don't coalesce tiles that are
+    * overlap multiple tag boxes, because they may have duplicates
+    * from other patches (which is resolved later).
     */
 
    local_tiles_have_remote_extent = 0;
@@ -517,8 +517,7 @@ TileClustering::clusterWholeTiles(
       const hier::Box &coarsened_tag_box = coarsened_tag_data->getBox();
       const int num_coarse_cells = coarsened_tag_box.size();
 
-      hier::BoxContainer coalescibles;
-      hier::BoxContainer whole_tiles;
+      hier::BoxContainer coalescibles; // Hold space for coalescible tiles.
 
       for ( int coarse_offset=0; coarse_offset<num_coarse_cells; ++coarse_offset ) {
          const pdat::CellIndex coarse_cell_index(coarsened_tag_box.index(coarse_offset));
@@ -533,13 +532,11 @@ TileClustering::clusterWholeTiles(
             visible_tag_boxes.findOverlapBoxes( overlapping_tag_boxes,
                                                 whole_tile,
                                                 tag_box_level.getRefinementRatio() );
-            std::set<int> owners;
-            overlapping_tag_boxes.getOwners(owners);
-            const bool has_remote_overlap =
-               ( owners.size() > 1 || *owners.begin() != patch_box.getOwnerRank() );
-            local_tiles_have_remote_extent |= has_remote_overlap;
 
-            if ( has_remote_overlap ) {
+            if ( overlapping_tag_boxes.size() == 1 ) {
+               coalescibles.pushBack(whole_tile);
+            }
+            else {
 
                whole_tile.initialize( whole_tile, ++last_used_local_id,
                                       patch_box.getOwnerRank() );
@@ -556,9 +553,12 @@ TileClustering::clusterWholeTiles(
                   local_tiles_have_remote_extent |= bi->getOwnerRank() != patch_box.getOwnerRank();
                }
 
-            }
-            else {
-               coalescibles.pushBack(whole_tile);
+               std::set<int> owners;
+               overlapping_tag_boxes.getOwners(owners);
+               if ( owners.size() > 1 || *owners.begin() != patch_box.getOwnerRank() ) {
+                  local_tiles_have_remote_extent = true;
+               }
+
             }
 
          }
@@ -589,7 +589,6 @@ TileClustering::clusterWholeTiles(
                tag_to_tile->insertLocalNeighbor( tile, bi->getBoxId() );
             }
 
-            local_tiles_have_remote_extent |= bi->getOwnerRank() != tile.getOwnerRank();
          }
 
       }
