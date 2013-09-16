@@ -488,7 +488,11 @@ TileClustering::clusterWholeTiles(
    hier::LocalId last_used_local_id(-1);
 
    /*
-    * Generate tile_box_level and Connectors
+    * Generate tile_box_level.  To reduce box count and box aspect
+    * ratios, coalesce tiles associated with a patch (if coalescing is
+    * enabled).  But don't coalesce tiles that are not completely
+    * contained in its originating patch because they may have
+    * duplicates on other processes (which is resolved later).
     */
 
    local_tiles_have_remote_extent = 0;
@@ -513,43 +517,82 @@ TileClustering::clusterWholeTiles(
       const hier::Box &coarsened_tag_box = coarsened_tag_data->getBox();
       const int num_coarse_cells = coarsened_tag_box.size();
 
-      for ( int coarse_offset=0; coarse_offset<num_coarse_cells; ++coarse_offset ) {
+      hier::BoxContainer coalescibles;
+      hier::BoxContainer whole_tiles;
 
+      for ( int coarse_offset=0; coarse_offset<num_coarse_cells; ++coarse_offset ) {
          const pdat::CellIndex coarse_cell_index(coarsened_tag_box.index(coarse_offset));
 
          if ( (*coarsened_tag_data)(coarse_cell_index) == tag_val ) {
 
             hier::Box whole_tile(coarse_cell_index,coarse_cell_index,
-                                 patch_box.getBlockId(),
-                                 ++last_used_local_id,
-                                 patch_box.getOwnerRank());
+                                 patch_box.getBlockId());
             whole_tile.refine(d_box_size);
 
-            tile_box_level.addBox(whole_tile);
-
-            /*
-             * Compare whole_tile with overlapping_tag_boxes to determine
-             * edges and remote extents.
-             */
             hier::BoxContainer overlapping_tag_boxes;
             visible_tag_boxes.findOverlapBoxes( overlapping_tag_boxes,
                                                 whole_tile,
                                                 tag_box_level.getRefinementRatio() );
+            std::set<int> owners;
+            overlapping_tag_boxes.getOwners(owners);
+            const bool has_remote_overlap =
+               ( owners.size() > 1 || *owners.begin() != patch_box.getOwnerRank() );
+            local_tiles_have_remote_extent |= has_remote_overlap;
 
-            for ( hier::BoxContainer::iterator bi=overlapping_tag_boxes.begin();
-                  bi!=overlapping_tag_boxes.end(); ++bi ) {
+            if ( has_remote_overlap ) {
 
-               tile_to_tag.insertLocalNeighbor( *bi, whole_tile.getBoxId() );
-               if ( bi->getOwnerRank() == whole_tile.getOwnerRank() ) {
-                  tag_to_tile->insertLocalNeighbor( whole_tile, bi->getBoxId() );
+               whole_tile.initialize( whole_tile, ++last_used_local_id,
+                                      patch_box.getOwnerRank() );
+               tile_box_level.addBox(whole_tile);
+
+               for ( hier::BoxContainer::iterator bi=overlapping_tag_boxes.begin();
+                     bi!=overlapping_tag_boxes.end(); ++bi ) {
+
+                  tile_to_tag.insertLocalNeighbor( *bi, whole_tile.getBoxId() );
+                  if ( bi->getOwnerRank() == whole_tile.getOwnerRank() ) {
+                     tag_to_tile->insertLocalNeighbor( whole_tile, bi->getBoxId() );
+                  }
+
+                  local_tiles_have_remote_extent |= bi->getOwnerRank() != patch_box.getOwnerRank();
                }
 
-               local_tiles_have_remote_extent |= bi->getOwnerRank() != whole_tile.getOwnerRank();
+            }
+            else {
+               coalescibles.pushBack(whole_tile);
             }
 
-         } // coarse_cell_index has local tag.
+         }
 
-      } // Loop through coarsened tag cells
+      }
+
+      d_object_timers->t_coalesce->start();
+      coalescibles.coalesce();
+      d_object_timers->t_coalesce->stop();
+
+      for ( hier::BoxContainer::iterator bi=coalescibles.begin();
+            bi!=coalescibles.end(); ++bi ) {
+
+         hier::Box &tile = *bi;
+         tile.initialize( tile, ++last_used_local_id, patch_box.getOwnerRank() );
+         tile_box_level.addBox(tile);
+
+         hier::BoxContainer overlapping_tag_boxes;
+         visible_tag_boxes.findOverlapBoxes( overlapping_tag_boxes,
+                                             tile,
+                                             tag_box_level.getRefinementRatio() );
+
+         for ( hier::BoxContainer::iterator bi=overlapping_tag_boxes.begin();
+               bi!=overlapping_tag_boxes.end(); ++bi ) {
+
+            tile_to_tag.insertLocalNeighbor( *bi, tile.getBoxId() );
+            if ( bi->getOwnerRank() == tile.getOwnerRank() ) {
+               tag_to_tile->insertLocalNeighbor( tile, bi->getBoxId() );
+            }
+
+            local_tiles_have_remote_extent |= bi->getOwnerRank() != tile.getOwnerRank();
+         }
+
+      }
 
    } // Loop through tag level
 
