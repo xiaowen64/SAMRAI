@@ -42,6 +42,12 @@ namespace mesh {
  *   Whether to coalesce boxes after clustering.  This can lead to
  *   clusters that are bigger than specified tile size.
  *
+ *   - \b coalesce_boxes_from_same_patch
+ *   Whether to coalesce tiled-boxes that originate from the
+ *   same tag patch.
+ *   This can reduce number of tiles and lead to clusters bigger than
+ *   tile size.
+ *
  *   - \b allow_remote_tile_extent
  *   Whether to tile to extend to remote tag patches.
  *   If false, tiles will be cut at process boundaries, resulting in
@@ -75,6 +81,14 @@ namespace mesh {
  *     <td>coalesce_boxes</td>
  *     <td>bool</td>
  *     <td>true</td>
+ *     <td>false/true</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>coalesce_boxes_from_same_patch</td>
+ *     <td>bool</td>
+ *     <td>false</td>
  *     <td>false/true</td>
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
@@ -268,10 +282,22 @@ private:
    bool d_allow_remote_tile_extent;
 
    /*!
-    * @brief Whether to coalesce tiled-boxes after clustering to
-    * create boxes bigger than tile size.
+    * @brief Whether to coalesce all local tiled-boxes after
+    * clustering.
+    *
+    * This can reduce number of tiles and lead to clusters bigger than
+    * tile size.
     */
    bool d_coalesce_boxes;
+
+   /*!
+    * @brief Whether to coalesce tiled-boxes that originate from the
+    * same tag patch.
+    *
+    * This can reduce number of tiles and lead to clusters bigger than
+    * tile size.
+    */
+   bool d_coalesce_boxes_from_same_patch;
 
    /*!
     * @brief Thread locker for modifying clustering outputs with multi-threads.

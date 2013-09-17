@@ -40,6 +40,7 @@ TileClustering::TileClustering(
    d_box_size(hier::IntVector(d_dim, 8)),
    d_allow_remote_tile_extent(true),
    d_coalesce_boxes(true),
+   d_coalesce_boxes_from_same_patch(false),
    d_debug_checks(false),
    d_log_cluster_summary(false),
    d_log_cluster(false),
@@ -75,6 +76,10 @@ TileClustering::getFromInput(
       d_coalesce_boxes =
          input_db->getBoolWithDefault("coalesce_boxes",
             d_coalesce_boxes);
+
+      d_coalesce_boxes_from_same_patch =
+         input_db->getBoolWithDefault("coalesce_boxes_from_same_patch",
+            d_coalesce_boxes_from_same_patch);
 
       d_allow_remote_tile_extent =
          input_db->getBoolWithDefault("allow_remote_tile_extent",
@@ -565,9 +570,11 @@ TileClustering::clusterWholeTiles(
 
       }
 
-      d_object_timers->t_coalesce->start();
-      coalescibles.coalesce();
-      d_object_timers->t_coalesce->stop();
+      if ( d_coalesce_boxes_from_same_patch ) {
+         d_object_timers->t_coalesce->start();
+         coalescibles.coalesce();
+         d_object_timers->t_coalesce->stop();
+      }
 
       for ( hier::BoxContainer::iterator bi=coalescibles.begin();
             bi!=coalescibles.end(); ++bi ) {
@@ -957,7 +964,7 @@ TileClustering::findTilesContainingTags(
 
    tiles.order();
 
-   if ( d_coalesce_boxes && tiles.size() > 1 ) {
+   if ( d_coalesce_boxes_from_same_patch && tiles.size() > 1 ) {
       hier::LocalId last_used_id = tiles.back().getLocalId();
       // Coalesce the tiles in this patch and assign ids if they changed.
       hier::BoxContainer unordered_tiles( tiles.begin(), tiles.end(), false );
