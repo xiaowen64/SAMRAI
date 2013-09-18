@@ -599,6 +599,7 @@ BoxTree::finalizeCallback()
 {
    for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
       t_build_tree[i].reset();
+      t_search[i].reset();
    }
 }
 
