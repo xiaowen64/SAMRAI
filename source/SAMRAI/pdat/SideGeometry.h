@@ -119,6 +119,20 @@ public:
       const hier::IntVector& directions);
 
    /*!
+    * @brief Construct the side geometry object given an AMR index
+    * space box and ghost cell width.
+    *
+    * No directions vector is provided, so it is assumed that all
+    * coordinate directions are allocated.
+    *
+    * @pre box.getDim() == ghosts.getDim()
+    * @pre ghosts.min() >= 0
+    */
+   SideGeometry(
+      const hier::Box& box,
+      const hier::IntVector& ghosts);
+
+   /*!
     * @brief The virtual destructor does nothing interesting.
     */
    virtual ~SideGeometry();

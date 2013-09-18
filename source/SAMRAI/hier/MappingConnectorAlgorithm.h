@@ -280,27 +280,49 @@ private:
     */
    void
    privateModify_removeAndCache(
-      std::map<int, std::vector<int> >& neighbor_removal_mesg,
+      std::map<int, std::vector<int> >& send_mesgs,
       Connector& anchor_to_new,
       Connector* new_to_anchor,
       const MappingConnector& old_to_new) const;
 
    /*!
-    * @brief Remove relationships made obsolete by mapping and send
-    * outgoing information.
+    * @brief Discover new relationships formed by mapping and send outgoing
+    * information.
     */
    void
    privateModify_discoverAndSend(
-      std::map<int, std::vector<int> >& neighbor_removal_mesg,
+      std::map<int, std::vector<int> >& send_mesgs,
       Connector& anchor_to_new,
       Connector* new_to_anchor,
-      std::set<int>& incoming_ranks,
-      std::set<int>& outoing_ranks,
+      const std::set<int>& incoming_ranks,
+      const std::set<int>& outoing_ranks,
       tbox::AsyncCommPeer<int> all_comms[],
       BoxContainer& visible_new_nabrs,
       BoxContainer& visible_anchor_nabrs,
-      InvertedNeighborhoodSet& anchor_eto_old,
-      InvertedNeighborhoodSet& new_eto_old,
+      const InvertedNeighborhoodSet& anchor_eto_old,
+      const InvertedNeighborhoodSet& new_eto_old,
+      const Connector& old_to_anchor,
+      const Connector& anchor_to_old,
+      const MappingConnector& old_to_new) const;
+
+
+   /*!
+    * @brief Discover new relationships formed by mapping.
+    */
+   void
+   privateModify_discover(
+      std::vector<int>& send_mesg,
+      Connector& anchor_to_new,
+      Connector* new_to_anchor,
+      const BoxContainer& visible_anchor_nabrs,
+      const BoxContainer& visible_new_nabrs,
+      BoxContainer::const_iterator& anchor_ni,
+      BoxContainer::const_iterator& new_ni,
+      int curr_owner,
+      const tbox::Dimension& dim,
+      int rank,
+      const InvertedNeighborhoodSet& anchor_eto_old,
+      const InvertedNeighborhoodSet& new_eto_old,
       const Connector& old_to_anchor,
       const Connector& anchor_to_old,
       const MappingConnector& old_to_new) const;
@@ -312,16 +334,16 @@ private:
    void
    privateModify_findOverlapsForOneProcess(
       const int owner_rank,
-      BoxContainer& visible_base_nabrs,
-      BoxContainer::iterator& base_ni,
+      const BoxContainer& visible_base_nabrs,
+      BoxContainer::const_iterator& base_ni,
       std::vector<int>& send_mesg,
-      const int remote_box_counter_index,
+      int remote_box_counter_index,
       Connector& mapped_connector,
       BoxContainer& referenced_head_nabrs,
       const Connector& unmapped_connector,
       const Connector& unmapped_connector_transpose,
       const Connector& mapping_connector,
-      InvertedNeighborhoodSet& inverted_nbrhd,
+      const InvertedNeighborhoodSet& inverted_nbrhd,
       const IntVector& refinement_ratio) const;
 
    /*!
@@ -388,7 +410,6 @@ private:
       boost::shared_ptr<tbox::Timer> t_modify_setup_comm;
       boost::shared_ptr<tbox::Timer> t_modify_remove_and_cache;
       boost::shared_ptr<tbox::Timer> t_modify_discover_and_send;
-      boost::shared_ptr<tbox::Timer> t_modify_find_overlaps_for_one_process;
       boost::shared_ptr<tbox::Timer> t_modify_receive_and_unpack;
       boost::shared_ptr<tbox::Timer> t_modify_MPI_wait;
       boost::shared_ptr<tbox::Timer> t_modify_misc;

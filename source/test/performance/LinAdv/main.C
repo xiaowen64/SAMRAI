@@ -61,12 +61,6 @@ using namespace std;
 #include "LinAdv.h"
 #include "SinusoidalFrontTagger.h"
 
-// Classes for run-time plotting and autotesting.
-
-#if (TESTING == 1)
-#include "AutoTester.h"
-#endif
-
 #include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
@@ -234,9 +228,10 @@ int main(
       boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       InputManager::getManager()->parseInputFile(input_filename, input_db);
 
-      if (input_db->isDatabase("TimerManager")) {
-         tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
-      }
+      tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
+      boost::shared_ptr<tbox::Timer> t_all =
+         tbox::TimerManager::getManager()->getTimer("appu::main::all");
+      t_all->start();
 
       boost::shared_ptr<tbox::Timer> t_vis_writing(
          tbox::TimerManager::getManager()->getTimer("apps::Main::vis_writing"));
@@ -269,17 +264,18 @@ int main(
        * Modify basename for this particular run.
        * Add the number of processes and the case name.
        */
+      string base_name_ext = base_name;
       if (!case_name.empty()) {
-         base_name = base_name + '-' + case_name;
+         base_name_ext = base_name_ext + '-' + case_name;
       }
       base_name = base_name + '-' + tbox::Utilities::nodeToString(mpi.getSize());
 
       /*
        * Logging.
        */
-      string log_filename = base_name + ".log";
+      string log_filename = base_name_ext + ".log";
       log_filename =
-         main_db->getStringWithDefault("log_filename", base_name + ".log");
+         main_db->getStringWithDefault("log_filename", base_name_ext + ".log");
 
       bool log_all_nodes = false;
       log_all_nodes =
@@ -296,7 +292,7 @@ int main(
       }
 
       const string viz_dump_dirname = main_db->getStringWithDefault(
-            "viz_dump_dirname", base_name + ".visit");
+            "viz_dump_dirname", base_name_ext + ".visit");
       int visit_number_procs_per_file = 1;
 
       const bool viz_dump_data = (viz_dump_interval > 0);
@@ -323,17 +319,6 @@ int main(
             use_refined_timestepping = false;
          }
       }
-
-#if (TESTING == 1) && !(HAVE_HDF5)
-      /*
-       * If we are autotesting on a system w/o HDF5, the read from
-       * restart will result in an error.  We want this to happen
-       * for users, so they know there is a problem with the restart,
-       * but we don't want it to happen when autotesting.
-       */
-      is_from_restart = false;
-      restart_interval = 0;
-#endif
 
       const bool write_restart = (restart_interval > 0)
          && !(restart_write_dirname.empty());
@@ -532,15 +517,6 @@ int main(
 
       RestartManager::getManager()->closeRestartFile();
 
-#if (TESTING == 1)
-      /*
-       * Create the autotesting object which will verify correctness
-       * of the problem. If no automated testing is done, the object does
-       * not get used.
-       */
-      AutoTester autotester("AutoTester", input_db);
-#endif
-
       /*
        * After creating all objects and initializing their state, we
        * print the input database and variable database contents
@@ -578,17 +554,6 @@ int main(
       double loop_time_end = time_integrator->getEndTime();
 
       int iteration_num = time_integrator->getIntegratorStep();
-
-#if (TESTING == 1)
-      /*
-       * If we are doing autotests, check result...
-       */
-      num_failures += autotester.evalTestData(iteration_num,
-            patch_hierarchy,
-            time_integrator,
-            hyp_level_integrator,
-            gridding_algorithm);
-#endif
 
       while ((loop_time < loop_time_end) &&
              time_integrator->stepsRemaining()) {
@@ -646,18 +611,6 @@ int main(
 #endif
             }
          }
-
-#if (TESTING == 1)
-         /*
-          * If we are doing autotests, check result...
-          */
-         num_failures += autotester.evalTestData(iteration_num,
-               patch_hierarchy,
-               time_integrator,
-               hyp_level_integrator,
-               gridding_algorithm);
-#endif
-
       }
 
       /*
@@ -703,6 +656,16 @@ int main(
        */
       tbox::plog << "\n\nBox searching results:\n";
       hier::BoxTree::printStatistics(dim);
+
+      t_all->stop();
+      int size = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
+      if (tbox::SAMRAI_MPI::getSAMRAIWorld().getRank() == 0) {
+         string timing_file =
+            base_name + ".timing" + tbox::Utilities::intToString(size);
+         FILE* fp = fopen(timing_file.c_str(), "w");
+         fprintf(fp, "%f\n", t_all->getTotalWallclockTime());
+         fclose(fp);
+      }
 
       /*
        * At conclusion of simulation, deallocate objects.

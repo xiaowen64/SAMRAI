@@ -108,22 +108,20 @@ BaseConnectorAlgorithm::setupCommunication(
 /*
  ***********************************************************************
  * privateBridge/Modify_findOverlapsForOneProcess() cached some discovered
- * remote neighbors into send_mesg.  sendDiscoveryToOneProcess() sends
- * the message.
+ * remote neighbors into send_mesg.  packReferencedNeighbors() packs the
+ * message with this information.
  *
  * privateBridge/Modify_findOverlapsForOneProcess() placed neighbor data
  * in referenced_new_head_nabrs and referenced_new_base_nabrs rather than
- * directly into send_mesg.  This method packs the referenced neighbors
- * and send them.
+ * directly into send_mesg.  This method packs the referenced neighbors.
  ***********************************************************************
  */
 void
-BaseConnectorAlgorithm::sendDiscoveryToOneProcess(
+BaseConnectorAlgorithm::packReferencedNeighbors(
    std::vector<int>& send_mesg,
-   const int idx_offset_to_ref,
-   BoxContainer& referenced_new_head_nabrs,
-   BoxContainer& referenced_new_base_nabrs,
-   tbox::AsyncCommPeer<int>& outgoing_comm,
+   int idx_offset_to_ref,
+   const BoxContainer& referenced_new_head_nabrs,
+   const BoxContainer& referenced_new_base_nabrs,
    const tbox::Dimension& dim,
    bool print_steps) const
 {
@@ -166,14 +164,6 @@ BaseConnectorAlgorithm::sendDiscoveryToOneProcess(
    }
 
    TBOX_ASSERT(ptr == &send_mesg[send_mesg.size() - 1] + 1);
-
-   /*
-    * Send message.
-    */
-   outgoing_comm.beginSend(&send_mesg[0], static_cast<int>(send_mesg.size()));
-   if (print_steps) {
-      tbox::plog << "Sent to " << outgoing_comm.getPeerRank() << std::endl;
-   }
 }
 
 /*
@@ -185,7 +175,7 @@ void
 BaseConnectorAlgorithm::receiveAndUnpack(
    Connector& new_base_to_new_head,
    Connector* new_head_to_new_base,
-   std::set<int>& incoming_ranks,
+   const std::set<int>& incoming_ranks,
    tbox::AsyncCommPeer<int> all_comms[],
    tbox::AsyncCommStage& comm_stage,
    const boost::shared_ptr<tbox::Timer>& receive_and_unpack_timer,
@@ -255,7 +245,7 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
    /*
     * Content of send_mesg, constructed largely in
     * privateBridge/Modify_findOverlapsForOneProcess() and
-    * sendDiscoveryToOneProcess():
+    * packReferencedNeighbors():
     *
     * -neighbor-removal section cached in neighbor_removal_mesg.
     * - offset to the reference section (see below)
@@ -322,8 +312,7 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
    const int correct_msg_size = offset
       + 2 /* counters of new_head and new_base reference boxes */
       + Box::commBufferSize(dim) * n_reference_new_base_boxes
-      + Box::commBufferSize(dim) * n_reference_new_head_boxes
-   ;
+      + Box::commBufferSize(dim) * n_reference_new_head_boxes;
    TBOX_ASSERT(msg_size == correct_msg_size);
 #endif
 

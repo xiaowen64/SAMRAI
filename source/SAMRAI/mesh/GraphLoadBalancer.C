@@ -327,7 +327,8 @@ GraphLoadBalancer::loadBalanceBoxLevel(
    }
    if (vendloctab.empty()) {
       vendloctab.push_back(0);
-   } 
+   }
+   int edgelocsize = edgeloctab.size();
    if (edgeloctab.empty()) {
       edgeloctab.push_back(0);
    } 
@@ -366,6 +367,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
       edloloc_ptr = 0;
    }
 
+   
 
    SCOTCH_Num baseval = 0;
 
@@ -381,7 +383,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
                       vendloc_ptr, 
                       veloloc_ptr, // (node weights
                       0, // vlblocltab (labels)
-                      edgeloctab.size(),
+                      edgelocsize, // zero if local proc has no nodes
                       edgeloctab.size(),
                       edgeloc_ptr,
                       0, // edgegsttab (ghosts)
@@ -516,10 +518,10 @@ GraphLoadBalancer::loadBalanceBoxLevel(
       }
    }
 
-   tbox::MessageStream mstream[num_ranks];
+   tbox::MessageStream* mstreams = new tbox::MessageStream[num_ranks];
    for (int rank = 0; rank < num_ranks; ++rank) {
       if (num_send_boxes[rank]) {
-         mstream[rank] << num_send_boxes[rank]; 
+         mstreams[rank] << num_send_boxes[rank]; 
       }
    }
 
@@ -532,7 +534,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
       const int send_rank = transit_box.d_box.getOwnerRank();
       if (send_rank != transit_box.d_orig_box.getOwnerRank()) {
 
-         transit_box.putToMessageStream(mstream[send_rank]);
+         transit_box.putToMessageStream(mstreams[send_rank]);
 
       }
    }
@@ -541,7 +543,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
         send_comms.begin(); si != send_comms.end(); ++si) {
 
       tbox::AsyncCommPeer<char>*& send_peer = si->second;
-      const tbox::MessageStream& msg = mstream[send_peer->getPeerRank()];
+      const tbox::MessageStream& msg = mstreams[send_peer->getPeerRank()];
       send_peer->beginSend(static_cast<const char*>(msg.getBufferStart()),
                            static_cast<int>(msg.getCurrentSize()));
    }
@@ -552,6 +554,8 @@ GraphLoadBalancer::loadBalanceBoxLevel(
       tbox::AsyncCommPeer<char>*& send_peer = si->second;
       send_peer->completeCurrentOperation();
    }
+
+   delete[] mstreams;
 
 
    hier::MappingConnector balance_to_graph(dim);

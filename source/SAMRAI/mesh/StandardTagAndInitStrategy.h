@@ -329,6 +329,33 @@ public:
       const double coarsen_data_time,
       const bool before_advance);
 
+   /*!
+    * @brief Process a hierarchy before swapping old and new levels during
+    * regrid.
+    *
+    * During regrid, if user code needs to do any application-specific
+    * operations on the PatchHierarchy before a new level is added or
+    * an old level is swapped for a new level, this method provides a callback
+    * for the user to define such operations.  The PatchHierarchy is provided
+    * in its state with the old level, if it exists, still in place, while the
+    * new BoxLevel is also provided so that the user code can know the boxes
+    * that will make up the new level.
+    *
+    * This is a virtual method with a no-op implementation provided, so that
+    * users who do not need this processing step need not implement anything.
+    *
+    * @param hierarchy The PatchHierarchy being modified.
+    * @param level_number The number of the PatchLevel in hierarchy being
+    *                     added or regridded.
+    * @param new_box_level BoxLevel containing the boxes for the new level
+    *
+    */
+   virtual void
+   processHierarchyBeforeAddingNewLevel(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const int level_number,
+      const boost::shared_ptr<hier::BoxLevel>& new_box_level);
+
    /**
     * In some cases user code may wish to process a PatchLevel before it is
     * removed from the hierarchy.  For example, data may exist only on a given
@@ -338,6 +365,9 @@ public:
     * PatchLevel is to be removed.  The callback performs any user actions on
     * the level about to be removed.  It is implemented by classes derived from
     * StandardTagAndInitStrategy.
+    *
+    * This is a virtual method with a no-op implementation provided, so that
+    * users who do not need this processing step need not implement anything.
     *
     * @param hierarchy The PatchHierarchy being modified.
     * @param level_number The number of the PatchLevel in hierarchy about to be
@@ -350,7 +380,7 @@ public:
    virtual void
    processLevelBeforeRemoval(
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      int level_number,
+      const int level_number,
       const boost::shared_ptr<hier::PatchLevel>& old_level =
          boost::shared_ptr<hier::PatchLevel>());
 

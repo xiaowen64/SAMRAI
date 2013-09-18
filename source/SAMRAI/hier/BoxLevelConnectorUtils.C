@@ -1440,6 +1440,49 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
    }
 }
 
+void
+BoxLevelConnectorUtils::computeNonIntersectingParts(
+   boost::shared_ptr<BoxLevel>& remainder,
+   boost::shared_ptr<Connector>& input_to_remainder,
+   const Connector& input_to_takeaway) const
+{
+   if (d_sanity_check_precond) {
+      input_to_takeaway.assertOverlapCorrectness();
+   }
+
+   const tbox::Dimension& dim = input_to_takeaway.getConnectorWidth().getDim();
+   boost::shared_ptr<MappingConnector> i_to_r_map;
+   computeExternalParts(remainder,
+                        i_to_r_map,
+                        input_to_takeaway,
+                        IntVector::getZero(dim));
+
+   input_to_remainder = boost::static_pointer_cast<Connector>(i_to_r_map);
+
+   TBOX_ASSERT(input_to_remainder->getConnectorWidth() ==
+               IntVector::getZero(dim)); 
+
+   const BoxContainer& remainder_boxes = remainder->getBoxes();
+   const BoxContainer& input_boxes =
+      input_to_takeaway.getBase().getBoxes();
+
+   if (!remainder_boxes.isEmpty() && !input_boxes.isEmpty()) { 
+
+      for (BoxContainer::const_iterator bi = remainder_boxes.begin();
+           bi != remainder_boxes.end(); ++bi) {
+
+         if (input_boxes.find(*bi) != input_boxes.end()) {
+            input_to_remainder->insertLocalNeighbor(*bi, bi->getBoxId());
+         } else {
+            break;
+         }
+      }
+   }
+
+   TBOX_ASSERT(input_to_remainder->isLocal());
+}
+
+
 /*
  ***********************************************************************
  ***********************************************************************

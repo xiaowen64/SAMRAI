@@ -92,7 +92,7 @@ public:
    /*!
     * @brief Assignment operator
     */
-   const MappingConnector&
+   MappingConnector&
    operator = (
       const MappingConnector& rhs);
 

@@ -269,8 +269,6 @@ private:
       hier::BoxLevel &tile_box_level,
       boost::shared_ptr<hier::Connector> &tag_to_tile);
 
-   void setTimers();
-
    const tbox::Dimension d_dim;
 
    //! @brief Box size constraint.

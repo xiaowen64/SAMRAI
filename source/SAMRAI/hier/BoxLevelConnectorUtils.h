@@ -304,6 +304,29 @@ public:
       d_object_timers->t_compute_internal_parts->stop();
    }
 
+   /*!
+    * @brief Compute parts of a level that do not intersect with another
+    *        level
+    *
+    * Given the Connector input_to_takeaway, this method computes the parts
+    * of the base level 'input' that do not intersect the head level
+    * 'takeaway'.  The results are stored in the BoxLevel 'remainder',
+    * with the input_to_remainder Connector storing the overlap
+    * relationships between 'input' and 'remainder'.
+    *
+    * @param[out] remainder  The non-intersecting parts of input level
+    * @param[out] input_to_remainder  Overlap connector with width zero
+    * @param[in] input_to_takeaway    Overlap connector, may have any width 
+    *
+    * @pre  input_to_takeaway is a complete overlap connector
+    * @post input_to_remainder.isLocal()
+    */
+   void
+   computeNonIntersectingParts(
+      boost::shared_ptr<BoxLevel>& remainder,
+      boost::shared_ptr<Connector>& input_to_remainder,
+      const Connector& input_to_takeaway) const;
+
    //@}
 
    /*!

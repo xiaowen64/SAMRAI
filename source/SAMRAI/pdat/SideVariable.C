@@ -49,6 +49,24 @@ SideVariable<TYPE>::SideVariable(
 }
 
 template<class TYPE>
+SideVariable<TYPE>::SideVariable(
+   const tbox::Dimension& dim,
+   const std::string& name,
+   int depth,
+   bool fine_boundary_represents_var):
+   hier::Variable(name,
+                  boost::make_shared<SideDataFactory<TYPE> >(
+                     depth,
+                     // default zero ghost cells
+                     hier::IntVector::getZero(dim),
+                     fine_boundary_represents_var,
+                     hier::IntVector::getOne(dim))),
+   d_fine_boundary_represents_var(fine_boundary_represents_var),
+   d_directions(hier::IntVector::getOne(dim))
+{
+}
+
+template<class TYPE>
 SideVariable<TYPE>::~SideVariable()
 {
 }

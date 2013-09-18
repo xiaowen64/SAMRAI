@@ -446,7 +446,7 @@ bool CommTester::verifyCommunicationResults() const
            p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
-         tests_pass &=
+         tests_pass = tests_pass &&
             d_data_test_strategy->verifyResults(*patch, d_patch_hierarchy, ln);
       }
    }

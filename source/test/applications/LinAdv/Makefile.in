@@ -28,6 +28,7 @@ CPPFLAGS_EXTRA = -I$(TESTINCLUDE) -DTESTING=1
 NUM_TESTS = 10
 
 TEST_NPROCS = @TEST_NPROCS@
+QUOTE = \"
 
 CXX_OBJS      = main.o LinAdv.o
 F_OBJS        = flux2d.o grad2d.o init2d.o stable2d.o stufprobc.o trace1d.o trace2d.o flux3d.o init3d.o grad3d.o trace3d.o stable3d.o fluxcorner3d.o

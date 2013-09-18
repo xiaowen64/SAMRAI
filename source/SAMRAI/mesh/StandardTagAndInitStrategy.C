@@ -159,9 +159,20 @@ StandardTagAndInitStrategy::resetDataToPreadvanceState(
 }
 
 void
+StandardTagAndInitStrategy::processHierarchyBeforeAddingNewLevel(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const int level_number,
+   const boost::shared_ptr<hier::BoxLevel>& new_box_level)
+{
+   NULL_USE(hierarchy);
+   NULL_USE(level_number);
+   NULL_USE(new_box_level);
+}
+
+void
 StandardTagAndInitStrategy::processLevelBeforeRemoval(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-   int level_number,
+   const int level_number,
    const boost::shared_ptr<hier::PatchLevel>& old_level)
 {
    NULL_USE(hierarchy);

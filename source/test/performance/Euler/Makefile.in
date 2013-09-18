@@ -20,11 +20,12 @@ default:	main
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA= -DTESTING=0
+CPPFLAGS_EXTRA=
 
 NUM_TESTS = 0
 
 TEST_NPROCS = @TEST_NPROCS@
+PERF_NPROCS = 16,32,64
 
 CXX_OBJS      = main.o Euler.o 
 F_OBJS      = \
@@ -39,7 +40,7 @@ main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
 
 clean:
 	$(SAMCLEAN)
-	$(RM) *.f main
+	$(RM) *.f main *.timing*
 
 redo:
 	$(RM) main core *.ii *.int.c
@@ -59,7 +60,7 @@ examples:
 
 perf:	main
 	@for i in performance_inputs/mEuler/*.input ; do	\
-	  $(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+	  $(OBJECT)/config/serpa-run $(PERF_NPROCS) \
 		./main $${i};	\
 	done
 

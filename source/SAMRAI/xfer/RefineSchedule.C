@@ -3999,14 +3999,16 @@ RefineSchedule::constructScheduleTransactions(
             src_mask = test_mask;
             transformation.inverseTransform(src_mask);
 
-            overlap =
-               rep_item.d_var_fill_pattern->calculateOverlap(
-                  *dst_pdf->getBoxGeometry(unshifted_dst_box),
-                  *src_pdf->getBoxGeometry(unshifted_src_box),
-                  dst_box,
-                  src_mask,
-                  fill_box,
-                  true, transformation);
+            if (!src_mask.empty()) { 
+               overlap =
+                  rep_item.d_var_fill_pattern->calculateOverlap(
+                     *dst_pdf->getBoxGeometry(unshifted_dst_box),
+                     *src_pdf->getBoxGeometry(unshifted_src_box),
+                     dst_box,
+                     src_mask,
+                     fill_box,
+                     true, transformation);
+            } 
          } else {
 
             /*
@@ -4035,18 +4037,20 @@ RefineSchedule::constructScheduleTransactions(
             transformation.inverseTransform(transformed_fill_box);
             transformation.inverseTransform(transformed_dst_box);
 
-            overlap =
-               rep_item.d_var_fill_pattern->calculateOverlap(
-                  *dst_pdf->getBoxGeometry(transaction_dst_box),
-                  *src_pdf->getBoxGeometry(unshifted_src_box),
-                  transformed_dst_box,
-                  src_mask,
-                  transformed_fill_box,
-                  true, hier::Transformation(hier::IntVector::getZero(dim)));
+            if (!src_mask.empty()) {
+               overlap =
+                  rep_item.d_var_fill_pattern->calculateOverlap(
+                     *dst_pdf->getBoxGeometry(transaction_dst_box),
+                     *src_pdf->getBoxGeometry(unshifted_src_box),
+                     transformed_dst_box,
+                     src_mask,
+                     transformed_fill_box,
+                     true, hier::Transformation(hier::IntVector::getZero(dim)));
+            }
          }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         if (!overlap) {
+         if (!overlap && !src_mask.empty()) {
             TBOX_ERROR("Internal RefineSchedule error..."
                << "\n Overlap is NULL for "
                << "\n src box = " << src_box
@@ -4103,12 +4107,7 @@ RefineSchedule::constructScheduleTransactions(
                 * whether we use time interpolation.
                 */
 
-               /*
-                * If we only perform the following block only for
-                * non-null d_overlap[i], why not just loop through
-                * box_num instead of num_fill_boxes?
-                */
-               if (!d_overlaps[i]->isOverlapEmpty()) {
+               if (d_overlaps[i] && !d_overlaps[i]->isOverlapEmpty()) {
 
                   boost::shared_ptr<tbox::Transaction> transaction;
 
@@ -4331,6 +4330,30 @@ RefineSchedule::clearRefineItems()
       d_number_refine_items = 0;
    }
 }
+
+
+/*
+ **************************************************************************
+ **************************************************************************
+ */
+
+void
+RefineSchedule::setDeterministicUnpackOrderingFlag( bool flag )
+{
+   if ( d_coarse_priority_level_schedule ) {
+      d_coarse_priority_level_schedule->setDeterministicUnpackOrderingFlag(flag);
+   }
+   if ( d_fine_priority_level_schedule ) {
+      d_fine_priority_level_schedule->setDeterministicUnpackOrderingFlag(flag);
+   }
+   if ( d_coarse_interp_schedule ) {
+      d_coarse_interp_schedule->setDeterministicUnpackOrderingFlag(flag);
+   }
+   if ( d_coarse_interp_encon_schedule ) {
+      d_coarse_interp_encon_schedule->setDeterministicUnpackOrderingFlag(flag);
+   }
+}
+
 
 /*
  **************************************************************************

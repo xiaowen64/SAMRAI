@@ -50,22 +50,31 @@ public:
    /*!
     * @brief Create an side-centered variable object with the given name and
     * depth (i.e., number of data values at each edge index location).
+    *
     * A default depth of one is provided.   The fine boundary representation
     * boolean argument indicates which values (either coarse or fine) take
     * precedence at coarse-fine mesh boundaries during coarsen and refine
     * operations.  The default is that fine data values take precedence
     * on coarse-fine interfaces.
-    *
-    * The default data allocation scheme is that side data will
-    * be allocated for all side normal coordinate directions.  If this is
-    * desired, then the direction argument may be omitted.   If an integer
-    * direction argument is specified, the only data for the given
-    * side normal direction will be maintained and managed for this variable.
     */
    SideVariable(
       const tbox::Dimension& dim,
       const std::string& name,
       const hier::IntVector& directions,
+      int depth = 1,
+      bool fine_boundary_represents_var = true);
+
+   /*!
+    * @brief Constructor that will assume a directions vector of 1 in
+    * all coordinate directions.
+    *
+    * Constructs a SideVariable the same as the first constructor, except
+    * there is no directions argument, meaning that data is expected to 
+    * exist on the sides in all coordinate directions.
+    */
+   SideVariable(
+      const tbox::Dimension& dim,
+      const std::string& name,
       int depth = 1,
       bool fine_boundary_represents_var = true);
 

@@ -1960,6 +1960,11 @@ BoxContainer::BoxContainerConstIterator::BoxContainerConstIterator(
    }
 }
 
+BoxContainer::BoxContainerConstIterator::BoxContainerConstIterator():
+   d_ordered(false)
+{
+}
+
 BoxContainer::BoxContainerConstIterator::~BoxContainerConstIterator()
 {
 }

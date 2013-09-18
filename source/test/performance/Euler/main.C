@@ -58,27 +58,6 @@ using namespace std;
 
 #include <sys/stat.h>
 
-
-#define RECORD_STATS
-//#undef RECORD_STATS
-#ifdef RECORD_STATS
-#include "SAMRAI/tbox/Statistic.h"
-#include "SAMRAI/tbox/Statistician.h"
-#endif
-
-// Classes for autotesting.
-
-#if (TESTING == 1)
-#include "AutoTester.h"
-#endif
-
-using namespace SAMRAI;
-
-void
-outputStats(
-   mesh::GriddingAlgorithm& gridding_algorithm,
-   algs::HyperbolicLevelIntegrator& hyp_level_integrator);
-
 using namespace SAMRAI;
 
 /*
@@ -240,6 +219,20 @@ int main(
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
+       * Setup the timer manager to trace timing statistics during execution
+       * of the code.  The list of timers is given in the TimerManager
+       * section of the input file.  Timing information is stored in the
+       * restart file.  Timers will automatically be initialized to their
+       * previous state if the run is restarted, unless they are explicitly
+       * reset using the TimerManager::resetAllTimers() routine.
+       */
+
+      tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
+      boost::shared_ptr<tbox::Timer> t_all =
+         tbox::TimerManager::getManager()->getTimer("appu::main::all");
+      t_all->start();
+
+      /*
        * Retrieve "Main" section of the input database.  First, read dump
        * information, which is used for writing plot files.  Second, if
        * proper restart information was given on command line, and the
@@ -256,22 +249,23 @@ int main(
        * Modify basename for this particular run.
        * Add the number of processes and the case name.
        */
+      string base_name_ext = base_name;
       if (!case_name.empty()) {
-         base_name = base_name + '-' + case_name;
+         base_name_ext = base_name_ext + '-' + case_name;
       }
-      base_name = base_name + '-' + tbox::Utilities::intToString(
+      base_name_ext = base_name_ext + '-' + tbox::Utilities::intToString(
             mpi.getSize(),
             5);
       tbox::pout << "Added case name (" << case_name << ") and nprocs ("
            << mpi.getSize() << ") to base name -> '"
-           << base_name << "'\n";
+           << base_name_ext << "'\n";
 
       /*
        * Logging.
        */
-      string log_filename = base_name + ".log";
+      string log_filename = base_name_ext + ".log";
       log_filename =
-         main_db->getStringWithDefault("log_filename", base_name + ".log");
+         main_db->getStringWithDefault("log_filename", base_name_ext + ".log");
 
       bool log_all_nodes = false;
       log_all_nodes =
@@ -287,12 +281,12 @@ int main(
          viz_dump_interval = main_db->getInteger("viz_dump_interval");
       }
 
-      string visit_dump_dirname = base_name + ".visit";
+      string visit_dump_dirname = base_name_ext + ".visit";
       bool uses_visit = false;
       int visit_number_procs_per_file = 1;
       if (viz_dump_interval > 0) {
          uses_visit = true;
-         string viz_dump_dirname = base_name;
+         string viz_dump_dirname = base_name_ext;
          if (main_db->keyExists("viz_dump_dirname")) {
             viz_dump_dirname = main_db->getString("viz_dump_dirname");
          }
@@ -333,17 +327,6 @@ int main(
          }
       }
 
-#if (TESTING == 1) && !(HAVE_HDF5)
-      /*
-       * If we are autotesting on a system w/o HDF5, the read from
-       * restart will result in an error.  We want this to happen
-       * for users, so they know there is a problem with the restart,
-       * but we don't want it to happen when autotesting.
-       */
-      is_from_restart = false;
-      restart_interval = 0;
-#endif
-
       const bool write_restart = (restart_interval > 0)
          && !(restart_write_dirname.empty());
 
@@ -359,17 +342,6 @@ int main(
          openRestartFile(restart_read_dirname, restore_num,
             mpi.getSize());
       }
-
-      /*
-       * Setup the timer manager to trace timing statistics during execution
-       * of the code.  The list of timers is given in the TimerManager
-       * section of the input file.  Timing information is stored in the
-       * restart file.  Timers will automatically be initialized to their
-       * previous state if the run is restarted, unless they are explicitly
-       * reset using the TimerManager::resetAllTimers() routine.
-       */
-
-      tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
 
       /*
        * Create major algorithm and data objects which comprise application.
@@ -476,32 +448,6 @@ int main(
 
       tbox::RestartManager::getManager()->closeRestartFile();
 
-#if (TESTING == 1)
-      /*
-       * Create the autotesting component which will verify correctness
-       * of the problem. If no automated testing is done, the object does
-       * not get used.
-       */
-      AutoTester autotester("AutoTester", input_db);
-#endif
-
-      /*
-       * After creating all objects and initializing their state, we
-       * print the input database and variable database contents
-       * to the log file.
-       */
-
-#if 1
-      tbox::plog << "\nCheck input data and variables before simulation:" << endl;
-      tbox::plog << "Input database..." << endl;
-      input_db->printClassData(tbox::plog);
-      tbox::plog << "\nVariable database..." << endl;
-      hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
-
-#endif
-      tbox::plog << "\nCheck Euler data... " << endl;
-      euler_model->printClassData(tbox::plog);
-
       /*
        * Create timers for measuring I/O.
        */
@@ -530,18 +476,6 @@ int main(
 
       double loop_time = time_integrator->getIntegratorTime();
       double loop_time_end = time_integrator->getEndTime();
-
-#if (TESTING == 1)
-      /*
-       * If we are doing autotests, check result...
-       */
-      num_failures += autotester.evalTestData(
-            time_integrator->getIntegratorStep(),
-            patch_hierarchy,
-            time_integrator,
-            hyp_level_integrator,
-            gridding_algorithm);
-#endif
 
       while ((loop_time < loop_time_end) &&
              time_integrator->stepsRemaining()) {
@@ -586,13 +520,6 @@ int main(
          sim_time_stat->recordProcStat(dt_now);
 #endif
 
-         tbox::plog << "Hierarchy summary:\n";
-         patch_hierarchy->recursivePrint(tbox::plog, "H-> ", 1);
-         tbox::plog << "PatchHierarchy summary:\n";
-         patch_hierarchy->recursivePrint(tbox::plog,
-            "H-> ",
-            1);
-
          tbox::plog << endl << endl;
          tbox::pout << "\n\n++++++++++++++++++++++++++++++++++++++++++++" << endl;
          tbox::pout << "At end of timestep # " << iteration_num - 1 << endl;
@@ -631,17 +558,6 @@ int main(
          }
          t_write_viz->stop();
 
-#if (TESTING == 1)
-         /*
-          * If we are doing autotests, check result...
-          */
-         num_failures += autotester.evalTestData(iteration_num,
-               patch_hierarchy,
-               time_integrator,
-               hyp_level_integrator,
-               gridding_algorithm);
-#endif
-
          /*
           * Write byte transfer information to log file.
           */
@@ -657,13 +573,17 @@ int main(
       }
 
       /*
-       * Output timer results.
+       * Output timer result.
        */
-      tbox::TimerManager::getManager()->print(tbox::plog);
-
-#ifdef RECORD_STATS
-      outputStats(*gridding_algorithm, *hyp_level_integrator);
-#endif
+      t_all->stop();
+      int size = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
+      if (tbox::SAMRAI_MPI::getSAMRAIWorld().getRank() == 0) {
+         string timing_file =
+            base_name + ".timing" + tbox::Utilities::intToString(size);
+         FILE* fp = fopen(timing_file.c_str(), "w");
+         fprintf(fp, "%f\n", t_all->getTotalWallclockTime());
+         fclose(fp);
+      }
 
       /*
        * At conclusion of simulation, deallocate objects.
@@ -696,18 +616,3 @@ int main(
 
    return num_failures;
 }
-
-#ifdef RECORD_STATS
-void outputStats(
-   mesh::GriddingAlgorithm& gridding_algorithm,
-   algs::HyperbolicLevelIntegrator& hyp_level_integrator)
-{
-   /*
-    * Output statistics.
-    */
-   tbox::plog << "HyperbolicLevelIntegrator statistics:" << endl;
-   hyp_level_integrator.printStatistics(tbox::plog);
-   tbox::plog << "\nGriddingAlgorithm statistics:" << endl;
-   gridding_algorithm.printStatistics(tbox::plog);
-}
-#endif

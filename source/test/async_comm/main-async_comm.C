@@ -631,15 +631,7 @@ int main(
 
    SAMRAIManager::shutdown();
    SAMRAIManager::finalize();
+   SAMRAI_MPI::finalize();
 
-   if (fail_count == 0) {
-      SAMRAI_MPI::finalize();
-   } else {
-      plog << "Process " << std::setw(5) << rank << " aborting." << std::endl;
-      tbox::Utilities::abort("Aborting due to nonzero fail count",
-         __FILE__, __LINE__);
-   }
-
-   plog << "Process " << std::setw(5) << rank << " exiting." << std::endl;
    return fail_count;
 }

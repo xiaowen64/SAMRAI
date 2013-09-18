@@ -1168,6 +1168,23 @@ CoarsenSchedule::clearCoarsenItems()
 
 
 /*
+ **************************************************************************
+ **************************************************************************
+ */
+
+void
+CoarsenSchedule::setDeterministicUnpackOrderingFlag( bool flag )
+{
+   if ( d_schedule ) {
+      d_schedule->setDeterministicUnpackOrderingFlag(flag);
+   }
+   if ( d_precoarsen_refine_schedule ) {
+      d_precoarsen_refine_schedule->setDeterministicUnpackOrderingFlag(flag);
+   }
+}
+
+
+/*
  * ************************************************************************
  *
  * Print coarsen schedule data to the specified output stream.

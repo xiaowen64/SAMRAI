@@ -92,7 +92,6 @@ int main(
    SAMRAIManager::startup();
    tbox::SAMRAI_MPI mpi(SAMRAI_MPI::getSAMRAIWorld());
 
-   const int rank = mpi.getRank();
    int fail_count = 0;
 
    /*
@@ -591,15 +590,7 @@ int main(
     */
    SAMRAIManager::shutdown();
    SAMRAIManager::finalize();
-
-   if (fail_count == 0) {
-      SAMRAI_MPI::finalize();
-   } else {
-      std::cout << "Process " << std::setw(5) << rank << " aborting."
-                << std::endl;
-      tbox::Utilities::abort("Aborting due to nonzero fail count",
-         __FILE__, __LINE__);
-   }
+   SAMRAI_MPI::finalize();
 
    return fail_count;
 }

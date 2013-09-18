@@ -91,7 +91,7 @@ HierarchyDataOpsManager::~HierarchyDataOpsManager()
 boost::shared_ptr<HierarchyDataOpsReal<double> >
 HierarchyDataOpsManager::getOperationsDouble(
    const boost::shared_ptr<hier::Variable>& variable,
-   boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    bool get_unique)
 {
    TBOX_ASSERT(variable);
@@ -241,7 +241,7 @@ HierarchyDataOpsManager::getOperationsDouble(
 boost::shared_ptr<HierarchyDataOpsReal<float> >
 HierarchyDataOpsManager::getOperationsFloat(
    const boost::shared_ptr<hier::Variable>& variable,
-   boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    bool get_unique)
 {
    TBOX_ASSERT(variable);
@@ -386,7 +386,7 @@ HierarchyDataOpsManager::getOperationsFloat(
 boost::shared_ptr<HierarchyDataOpsComplex>
 HierarchyDataOpsManager::getOperationsComplex(
    const boost::shared_ptr<hier::Variable>& variable,
-   boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    bool get_unique)
 {
    TBOX_ASSERT(variable);
@@ -536,7 +536,7 @@ HierarchyDataOpsManager::getOperationsComplex(
 boost::shared_ptr<HierarchyDataOpsInteger>
 HierarchyDataOpsManager::getOperationsInteger(
    const boost::shared_ptr<hier::Variable>& variable,
-   boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    bool get_unique)
 {
    TBOX_ASSERT(variable);

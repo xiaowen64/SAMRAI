@@ -23,7 +23,7 @@ default:      check
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA= -I$(TESTINCLUDE) -DTESTING=0
+CPPFLAGS_EXTRA= -I$(TESTINCLUDE)
 
 NUM_TESTS     = 0
 
@@ -81,7 +81,7 @@ clean-check:
 
 clean:
 	$(SAMCLEAN)
-	$(RM) *.f main viz*
+	$(RM) *.f main viz* *.timing*
 
 redo:
 	$(RM) main

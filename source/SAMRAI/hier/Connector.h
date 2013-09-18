@@ -859,7 +859,7 @@ public:
    /*!
     * @brief Assignment operator
     */
-   const Connector&
+   Connector&
    operator = (
       const Connector& rhs);
 

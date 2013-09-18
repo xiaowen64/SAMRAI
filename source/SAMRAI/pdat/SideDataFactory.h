@@ -43,16 +43,20 @@ template<class TYPE>
 class SideDataFactory:public hier::PatchDataFactory
 {
 public:
-   /**
-    * The constructor for the side data factory class.  The ghost cell
-    * width, depth (number of components), and fine boundary representation arguments
-    * give the defaults for all edge data objects created with this factory.
-    * Also, the default data allocation scheme is to generate storage for sides
-    * in all coordinate directions (default integer vector of all 1's).  To
-    * use this factory to manage side data objects for sides associated
-    * with a single direction only, provide the directions vector argument.
-    * A zero entry indicates that data for that direction is not wanted.
-    * Otherwise, data will be created for that direction.  See the
+   /*!
+    * @brief The constructor for the side data factory class.
+    *
+    * The ghost cell width, depth (number of components), and fine boundary
+    * representation arguments give the defaults for all edge data objects
+    * created with this factory.
+    * 
+    * The directions vector describes the coordinate directions for which
+    * data will be allocated on the sides of cells in the grid. A value of
+    * 1 indicates that data will be allocated for that coordinate direction,
+    * while a value of zero means data for that direction is not wanted.
+    * To allocate data in all directions, provide an IntVector that is
+    * 1 in all directions, or use the other constructor, which assumes by
+    * default that all directions are desired.  See the
     * SideVariable<TYPE> class header file for more information.
     *
     * @pre depth > 0
@@ -64,6 +68,22 @@ public:
       const hier::IntVector& ghosts,
       bool fine_boundary_represents_var,
       const hier::IntVector& directions);
+
+   /*!
+    * @brief Constructor for the side data factory class setting up allocation
+    * of data in all coordinate directions.
+    *
+    * This constructor works the same as the other constructor, but
+    * it takes no direcions argument, meaning that all directions are going
+    * to be allocated.
+    *
+    * @pre depth > 0
+    * @pre ghosts.min() >= 0
+    */
+   SideDataFactory(
+      int depth,
+      const hier::IntVector& ghosts,
+      bool fine_boundary_represents_var);
 
    /**
     * Virtual destructor for the side data factory class.

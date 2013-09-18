@@ -32,7 +32,6 @@ namespace SAMRAI {
 namespace hier {
 
 boost::shared_ptr<tbox::Timer> BoxTree::t_build_tree[SAMRAI::MAX_DIM_VAL];
-boost::shared_ptr<tbox::Timer> BoxTree::t_search[SAMRAI::MAX_DIM_VAL];
 unsigned int BoxTree::s_num_build[SAMRAI::MAX_DIM_VAL] =
 { 0 };
 unsigned int BoxTree::s_num_generate[SAMRAI::MAX_DIM_VAL]
@@ -583,8 +582,6 @@ BoxTree::initializeCallback()
       const std::string dim_str(tbox::Utilities::intToString(i + 1));
       t_build_tree[i] = tbox::TimerManager::getManager()->
          getTimer(std::string("hier::BoxTree::build_tree[") + dim_str + "]");
-      t_search[i] = tbox::TimerManager::getManager()->
-         getTimer(std::string("hier::BoxTree::search[") + dim_str + "]");
    }
 }
 
@@ -599,7 +596,6 @@ BoxTree::finalizeCallback()
 {
    for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
       t_build_tree[i].reset();
-      t_search[i].reset();
    }
 }
 

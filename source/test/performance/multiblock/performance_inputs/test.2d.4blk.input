@@ -16,6 +16,8 @@
 Main {
    dim = 2
 
+   base_name = "test.2d.4blk"
+
    log_file_name    = "newtest.log"
    log_all_nodes    = TRUE
 
@@ -130,7 +132,8 @@ MblkLinAdv {
 TimerManager {
    timer_list               = "apps::*::*",
                               "algs::*::*",
-                              "mesh::*::*"
+                              "mesh::*::*",
+                              "appu::main::all"
 //   print_exclusive      = TRUE
    print_summed           = TRUE
    print_max              = TRUE

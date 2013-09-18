@@ -529,7 +529,7 @@ BaseGridGeometry::setBoundaryBoxes(
       d_max_data_ghost_width,
       domain);
 
-   for (std::map<BoxId, PatchBoundaries>::const_iterator mi = boundaries.begin();
+   for (std::map<BoxId, PatchBoundaries>::iterator mi = boundaries.begin();
         mi != boundaries.end(); ++mi) {
       boost::shared_ptr<Patch> patch(level.getPatch((*mi).first));
       patch->getPatchGeometry()->setBoundaryBoxesOnPatch((*mi).second.getVectors());
@@ -1094,9 +1094,8 @@ BaseGridGeometry::getBoundaryBoxes(
 
    if (num_per_dirs == d_dim.getValue()) {
       for (int k = 0; k < d_dim.getValue(); k++) {
-         patch_boundaries[k].resize(0, BoundaryBox(d_dim));
+         patch_boundaries[k].clear();
       }
-
    } else {
       if (!domain_boxes.hasTree() && domain_boxes.size() > 10) {
          domain_boxes.makeTree(0);
@@ -1121,11 +1120,6 @@ BaseGridGeometry::getBoundaryBoxes(
       for (int d = 0; d < d_dim.getValue() - num_per_dirs; d++) {
 
          int codim = d + 1;
-
-         patch_boundaries[d].resize(location_index_max[d],
-            BoundaryBox(d_dim));
-         int bdry_array_size = location_index_max[d];
-         int num_bboxes = 0;
 
          for (int loc = 0; loc < location_index_max[d]; loc++) {
             const std::vector<int>& dirs = blut->getDirections(loc, codim);
@@ -1202,29 +1196,16 @@ BaseGridGeometry::getBoundaryBoxes(
                   border_list.coalesce();
                   for (BoxContainer::iterator bl = border_list.begin();
                        bl != border_list.end(); ++bl) {
-                     if (num_bboxes == bdry_array_size) {
-                        patch_boundaries[d].resize(
-                           bdry_array_size + location_index_max[d],
-                           BoundaryBox(d_dim));
-                        bdry_array_size =
-                           static_cast<int>(patch_boundaries[d].size());
-                     }
 
                      BoundaryBox boundary_box(*bl, codim, loc);
 
-                     patch_boundaries[d][num_bboxes] = boundary_box;
-
-                     num_bboxes++;
+                     patch_boundaries[d].push_back(boundary_box);
                   }
 
                   codim_boxlist[d].spliceFront(border_list);
                }
             }
 
-            if (loc + 1 == location_index_max[d]) {
-               patch_boundaries[d].resize(num_bboxes,
-                  BoundaryBox(d_dim));
-            }
          }
       }
    }
@@ -2289,13 +2270,10 @@ BaseGridGeometry::adjustBoundaryBoxesOnPatch(
       for (int i = 0; i < d_dim.getValue(); i++) {
          if (!boundaries_in_sing[i].empty()) {
             int old_size = static_cast<int>(boundaries[i].size());
-            int new_size =
-               old_size + static_cast<int>(boundaries_in_sing[i].size());
-            boundaries[i].resize(new_size, BoundaryBox(d_dim));
             int nb = 0;
             for (std::list<int>::iterator b = boundaries_in_sing[i].begin();
                  b != boundaries_in_sing[i].end(); b++) {
-               boundaries[i][old_size + nb] = codim_boundaries[i][*b];
+               boundaries[i].push_back(codim_boundaries[i][*b]);
                boundaries[i][old_size + nb].setIsMultiblockSingularity(true);
                nb++;
             }

@@ -122,6 +122,6 @@ clean-check:
 
 clean:
 	$(SAMCLEAN)
-	$(RM) *.f main *visit
+	$(RM) *.f main *visit *.timing*
 
 include $(SRCDIR)/Makefile.depend

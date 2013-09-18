@@ -3218,16 +3218,6 @@ void MblkLinAdv::checkBoundaryData(
                bscalarcase,
                d_bdry_face_uval[refbdryloc]);
       }
-#if (TESTING == 1)
-      if (num_bad_values > 0) {
-         tbox::perr << "\nMblkLinAdv Boundary Test FAILED: \n"
-                    << "     " << num_bad_values
-                    << " bad UVAL values found for\n"
-                    << "     boundary type " << btype << " at location "
-                    << bloc << endl;
-      }
-#endif
-
    }
 
 }

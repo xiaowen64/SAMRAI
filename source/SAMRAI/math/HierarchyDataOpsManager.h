@@ -111,10 +111,10 @@ public:
    virtual boost::shared_ptr<HierarchyDataOpsReal<double> >
    getOperationsDouble(
       /*! operation should correspond to this variable */
-      const boost::shared_ptr<hier::Variable>& variable
-      , /*! operation should correspond to this hierarchy */
-      boost::shared_ptr<hier::PatchHierarchy>& hierarchy
-      , /*! Whether a unique operator is requested */
+      const boost::shared_ptr<hier::Variable>& variable,
+      /*! operation should correspond to this hierarchy */
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      /*! Whether a unique operator is requested */
       bool get_unique = false);
 
    /*!
@@ -129,10 +129,10 @@ public:
    virtual boost::shared_ptr<HierarchyDataOpsReal<float> >
    getOperationsFloat(
       /*! operation should correspond to this variable */
-      const boost::shared_ptr<hier::Variable>& variable
-      , /*! operation should correspond to this hierarchy */
-      boost::shared_ptr<hier::PatchHierarchy>& hierarchy
-      , /*! Whether a unique operator is requested */
+      const boost::shared_ptr<hier::Variable>& variable,
+      /*! operation should correspond to this hierarchy */
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      /*! Whether a unique operator is requested */
       bool get_unique = false);
 
    /*!
@@ -147,10 +147,10 @@ public:
    virtual boost::shared_ptr<HierarchyDataOpsComplex>
    getOperationsComplex(
       /*! operation should correspond to this variable */
-      const boost::shared_ptr<hier::Variable>& variable
-      , /*! operation should correspond to this hierarchy */
-      boost::shared_ptr<hier::PatchHierarchy>& hierarchy
-      , /*! Whether a unique operator is requested */
+      const boost::shared_ptr<hier::Variable>& variable,
+      /*! operation should correspond to this hierarchy */
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      /*! Whether a unique operator is requested */
       bool get_unique = false);
 
    /*!
@@ -165,10 +165,10 @@ public:
    virtual boost::shared_ptr<HierarchyDataOpsInteger>
    getOperationsInteger(
       /*! operation should correspond to this variable */
-      const boost::shared_ptr<hier::Variable>& variable
-      , /*! operation should correspond to this hierarchy */
-      boost::shared_ptr<hier::PatchHierarchy>& hierarchy
-      , /*! Whether a unique operator is requested */
+      const boost::shared_ptr<hier::Variable>& variable,
+      /*! operation should correspond to this hierarchy */
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      /*! Whether a unique operator is requested */
       bool get_unique = false);
    //@}
 
