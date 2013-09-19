@@ -264,7 +264,8 @@ PatchHierarchy::getFromInput(
             TBOX_WARNING(
                d_object_name << ":  "
                              << "Allowing patches smaller than the given "
-                             << "smallest patch size.  Note:  If periodic "
+                             << "smallest patch size to prevent overlaps.\n"
+                             << "Note:  If periodic "
                              << "boundary conditions are used, this flag is "
                              << "ignored in the periodic directions."
                              << std::endl);
@@ -867,6 +868,81 @@ PatchHierarchy::removePatchLevel(
    d_patch_levels[l].reset();
    if (d_number_levels == l + 1) {
       d_number_levels--;
+   }
+}
+
+
+
+/*
+ *************************************************************************
+ * Log the given level, its peer connector and if requested, the
+ * connectors to the next finer and next coarser levels.  Connectors
+ * logged will have width required by the hierarchy.
+ *************************************************************************
+ */
+void
+PatchHierarchy::logMetadataStatistics(
+   const char *note,
+   int ln,
+   int cycle,
+   double level_time,
+   bool log_fine_connector,
+   bool log_coarse_connector) const
+{
+   const std::string name("L" + tbox::Utilities::levelToString(ln));
+   const boost::shared_ptr<hier::PatchLevel> level =
+      getPatchLevel(ln);
+   const hier::BoxLevel& box_level = *level->getBoxLevel();
+
+   tbox::plog << "PatchHierarchy metadata statistics '"
+              << note << "', at cycle " << cycle
+              << ", time " << level_time << ", added "
+              << name << ":\n"
+              << box_level.format("\t",0)
+              << '\t' << name << " statistics:\n"
+              << box_level.formatStatistics("\t\t");
+
+   const hier::Connector &peer_conn =
+      level->findConnector(*level,
+                           getRequiredConnectorWidth(ln,ln),
+                           hier::CONNECTOR_CREATE,
+                           true);
+   tbox::plog << "\tPeer connector:\n" << peer_conn.format("\t\t",0)
+              << "\tPeer connector statistics:\n"
+              << peer_conn.formatStatistics("\t\t");
+
+   if ( log_fine_connector ) {
+      const hier::Connector &to_fine =
+         level->findConnector(*getPatchLevel(ln+1),
+                              getRequiredConnectorWidth(ln,ln+1),
+                              hier::CONNECTOR_CREATE,
+                              true);
+      tbox::plog << "\tTo fine:\n" << to_fine.format("\t\t",0)
+                 << "\tTo fine statistics:\n" << to_fine.formatStatistics("\t\t");
+      const hier::Connector &from_fine =
+         getPatchLevel(ln+1)->findConnector(*level,
+                              getRequiredConnectorWidth(ln+1,ln),
+                              hier::CONNECTOR_CREATE,
+                              true);
+      tbox::plog << "\tFrom fine:\n" << from_fine.format("\t\t",0)
+                 << "\tFrom fine statistics:\n" << to_fine.formatStatistics("\t\t");
+   }
+
+   if ( log_coarse_connector ) {
+      const hier::Connector &to_crse =
+         level->findConnector(*getPatchLevel(ln-1),
+                              getRequiredConnectorWidth(ln,ln-1),
+                              hier::CONNECTOR_CREATE,
+                              true);
+      tbox::plog << "\tTo coarse:\n" << to_crse.format("\t\t",0)
+                 << "\tTo coarse statistics:\n" << to_crse.formatStatistics("\t\t");
+      const hier::Connector &from_crse =
+         getPatchLevel(ln-1)->findConnector(*level,
+                              getRequiredConnectorWidth(ln-1,ln),
+                              hier::CONNECTOR_CREATE,
+                              true);
+      tbox::plog << "\tFrom coarse:\n" << from_crse.format("\t\t",0)
+                 << "\tFrom coarse statistics:\n" << from_crse.formatStatistics("\t\t");
    }
 }
 

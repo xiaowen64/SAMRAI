@@ -916,6 +916,28 @@ public:
    }
 
    /*!
+    * @brief Log metadata statistics.
+    *
+    * This is for diagnostic purposes, to be used by developers.  Log
+    * the statistics for a given level in the hierarchy and Connectors
+    * from it.
+    *
+    * @param note Note to be written out.
+    * @param ln Level number to log
+    * @param cycle
+    * @param level_time
+    * @param log_fine_connector
+    * @param log_coarse_connector
+    */
+   void logMetadataStatistics(
+      const char *note,
+      int ln,
+      int cycle,
+      double level_time,
+      bool log_fine_connector,
+      bool log_coarse_connector) const;
+
+   /*!
     * @brief Writes the state of the PatchHierarchy object and the PatchLevels
     * it contains to the restart database.
     *
