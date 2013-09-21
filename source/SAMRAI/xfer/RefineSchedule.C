@@ -4231,16 +4231,10 @@ RefineSchedule::setRefineItems(
 
    d_refine_classes = refine_classes;
 
-#if 1
    TBOX_ASSERT( d_refine_items.empty() );
    d_refine_items.insert( d_refine_items.end(),
                           d_refine_classes->getNumberOfRefineItems(),
                           static_cast<const SAMRAI::xfer::RefineClasses::Data *const>(0) );
-#else
-   d_refine_items.size() = d_refine_classes->getNumberOfRefineItems();
-
-   d_refine_items = new const RefineClasses::Data *[d_refine_items.size()];
-#endif
 
    for (int nd = 0; nd < d_refine_items.size(); nd++) {
       d_refine_classes->getRefineItem(nd).d_tag = nd;
@@ -4326,12 +4320,7 @@ RefineSchedule::clearRefineItems()
       for (int iri = 0; iri < d_refine_items.size(); iri++) {
          d_refine_items[iri] = 0;
       }
-#if 1
       d_refine_items.clear();
-#else
-      delete[] d_refine_items;
-      d_refine_items = 0;
-#endif
    }
 }
 

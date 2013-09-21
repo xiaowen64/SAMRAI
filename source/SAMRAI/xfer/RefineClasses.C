@@ -82,22 +82,8 @@ RefineClasses::insertEquivalenceClassItem(
 
       data.d_class_index = eq_index;
 
-#if 1
       d_equivalence_class_indices[eq_index].push_back(d_refine_classes_data_items.size());
       d_refine_classes_data_items.push_back(data);
-#else
-      if (d_num_refine_items >=
-          static_cast<int>(d_refine_classes_data_items.size())) {
-         d_refine_classes_data_items.resize(
-            d_num_refine_items + s_default_refine_item_array_size);
-      }
-
-      d_refine_classes_data_items[d_num_refine_items] = data;
-
-      d_equivalence_class_indices[eq_index].push_back(d_num_refine_items);
-
-      d_num_refine_items++;
-#endif
 
    }
 
