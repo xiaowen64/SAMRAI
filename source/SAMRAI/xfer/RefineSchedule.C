@@ -4242,11 +4242,9 @@ RefineSchedule::setRefineItems(
    d_refine_items = new const RefineClasses::Data *[d_refine_items.size()];
 #endif
 
-   int ircount = 0;
    for (int nd = 0; nd < d_refine_items.size(); nd++) {
-      d_refine_classes->getRefineItem(nd).d_tag = ircount;
-      d_refine_items[ircount] = &(d_refine_classes->getRefineItem(nd));
-      ircount++;
+      d_refine_classes->getRefineItem(nd).d_tag = nd;
+      d_refine_items[nd] = &(d_refine_classes->getRefineItem(nd));
    }
 
 }
