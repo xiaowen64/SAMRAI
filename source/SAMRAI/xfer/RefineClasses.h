@@ -142,7 +142,7 @@ public:
    int
    getNumberOfRefineItems() const
    {
-      return d_num_refine_items;
+      return static_cast<int>(d_refine_classes_data_items.size());
    }
 
    /*!
@@ -365,21 +365,6 @@ public:
          boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
-    * @brief Get the size that has been allocated for the array storing refine
-    * items.
-    *
-    * Note that this is not necessarily the same as the number of registered
-    * refine items, which can be retrieved using getNumberOfRefineItems().
-    * The refine item array is allocated to a default size and grown when
-    * necessary or when increaseRefineItemArraySize() is called.
-    */
-   int
-   getRefineItemArraySize() const
-   {
-      return static_cast<int>(d_refine_classes_data_items.size());
-   }
-
-   /*!
     * @brief Increase the allocated size of the array storing refine items.
     *
     * This should be used in cases where there is a large number of refine
@@ -480,11 +465,6 @@ private:
     * the array d_refine_classes_data_items.
     */
    std::vector<std::list<int> > d_equivalence_class_indices;
-
-   /*!
-    * The number of refine items that have been registered.
-    */
-   int d_num_refine_items;
 
 };
 
