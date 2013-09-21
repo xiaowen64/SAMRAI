@@ -39,7 +39,7 @@ namespace algs {
  *************************************************************************
  */
 
-const xfer::RefineClasses::Data ** OuternodeSumTransaction::s_refine_items = 0;
+const xfer::RefineClasses::Data *const* OuternodeSumTransaction::s_refine_items = 0;
 int OuternodeSumTransaction::s_num_refine_items = 0;
 
 /*

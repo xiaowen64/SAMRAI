@@ -56,7 +56,7 @@ public:
     */
    static void
    setRefineItems(
-      const RefineClasses::Data** refine_items,
+      const RefineClasses::Data*const* refine_items,
       int num_refine_items)
    {
       TBOX_ASSERT(refine_items != 0);
@@ -211,7 +211,7 @@ private:
       const RefineTimeTransaction&);                    // not implemented
 
    static double s_time;
-   static const RefineClasses::Data** s_refine_items;
+   static const RefineClasses::Data*const* s_refine_items;
    static int s_num_refine_items;
 
    void
