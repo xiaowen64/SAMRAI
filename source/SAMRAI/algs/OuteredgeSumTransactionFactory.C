@@ -47,7 +47,7 @@ OuteredgeSumTransactionFactory::~OuteredgeSumTransactionFactory()
 
 void
 OuteredgeSumTransactionFactory::setRefineItems(
-   const xfer::RefineClasses::Data** refine_items,
+   const xfer::RefineClasses::Data*const* refine_items,
    int num_refine_items)
 {
    OuteredgeSumTransaction::setRefineItems(refine_items,

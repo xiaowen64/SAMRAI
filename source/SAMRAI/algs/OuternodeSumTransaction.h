@@ -54,7 +54,7 @@ public:
     */
    static void
    setRefineItems(
-      const xfer::RefineClasses::Data ** refine_items,
+      const xfer::RefineClasses::Data *const* refine_items,
       int num_refine_items)
    {
       TBOX_ASSERT(refine_items != 0);
@@ -196,7 +196,7 @@ private:
    operator = (
       const OuternodeSumTransaction&);             // not implemented
 
-   static const xfer::RefineClasses::Data** s_refine_items;
+   static const xfer::RefineClasses::Data*const* s_refine_items;
    static int s_num_refine_items;
 
    boost::shared_ptr<hier::PatchLevel> d_dst_level;

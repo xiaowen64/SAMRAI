@@ -908,8 +908,8 @@ private:
     * Structures that store refine data items.
     */
    boost::shared_ptr<RefineClasses> d_refine_classes;
-   int d_number_refine_items;
-   const RefineClasses::Data** d_refine_items;
+
+   std::vector<const RefineClasses::Data*> d_refine_items;
 
    /*!
     * @brief boost::shared_ptr to the destination patch level.

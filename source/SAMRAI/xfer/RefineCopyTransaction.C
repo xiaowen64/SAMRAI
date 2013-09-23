@@ -28,7 +28,7 @@
 namespace SAMRAI {
 namespace xfer {
 
-const RefineClasses::Data ** RefineCopyTransaction::s_refine_items = 0;
+const RefineClasses::Data *const* RefineCopyTransaction::s_refine_items = 0;
 int RefineCopyTransaction::s_num_refine_items = 0;
 
 /*
