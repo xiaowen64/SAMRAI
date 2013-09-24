@@ -57,7 +57,7 @@ public:
       const RefineClasses::Data*const* refine_items,
       int num_refine_items)
    {
-      TBOX_ASSERT(refine_items != 0);
+      TBOX_ASSERT(num_refine_items == 0 || refine_items != 0);
       TBOX_ASSERT(num_refine_items >= 0);
       s_refine_items = refine_items;
       s_num_refine_items = num_refine_items;
