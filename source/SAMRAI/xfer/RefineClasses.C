@@ -82,7 +82,7 @@ RefineClasses::insertEquivalenceClassItem(
 
       data.d_class_index = eq_index;
 
-      d_equivalence_class_indices[eq_index].push_back(d_refine_classes_data_items.size());
+      d_equivalence_class_indices[eq_index].push_back(static_cast<int>(d_refine_classes_data_items.size()));
       d_refine_classes_data_items.push_back(data);
 
    }
