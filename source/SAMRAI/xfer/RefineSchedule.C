@@ -2226,6 +2226,16 @@ RefineSchedule::refineScratchData(
 {
    t_refine_scratch_data->start();
 
+   if ( d_refine_patch_strategy ) {
+      d_refine_patch_strategy->preprocessRefineLevel(
+         *fine_level,
+         *coarse_level,
+         coarse_to_fine,
+         coarse_to_unfilled,
+         overlaps,
+         d_refine_items);
+   }
+
    const hier::IntVector ratio(fine_level->getRatioToLevelZero()
                                / coarse_level->getRatioToLevelZero());
 
@@ -2242,16 +2252,15 @@ RefineSchedule::refineScratchData(
 
       hier::Connector::ConstNeighborhoodIterator dst_nabrs =
          coarse_to_fine.find(crse_box.getBoxId());
-      hier::Connector::ConstNeighborIterator na =
-         coarse_to_fine.begin(dst_nabrs);
-      const hier::Box& dst_box = *na;
+      const hier::Box& dst_box = *coarse_to_fine.begin(dst_nabrs);
 #ifdef DEBUG_CHECK_ASSERTIONS
       /*
        * Each crse_box can point back to just one dst_box.
        * All other boxes in dst_nabrs must be a periodic image of
        * the same dst_box.
        */
-      for (; na != coarse_to_fine.end(dst_nabrs); ++na) {
+      for (hier::Connector::ConstNeighborIterator na=coarse_to_fine.begin(dst_nabrs);
+           na != coarse_to_fine.end(dst_nabrs); ++na) {
          TBOX_ASSERT(na->isPeriodicImage() ||
                      na == coarse_to_fine.begin(dst_nabrs));
          TBOX_ASSERT(na->getGlobalId() == dst_box.getGlobalId());
@@ -2262,8 +2271,7 @@ RefineSchedule::refineScratchData(
       boost::shared_ptr<hier::Patch> crse_patch(coarse_level->getPatch(
                                                 crse_box.getGlobalId()));
 
-      TBOX_ASSERT(coarse_to_unfilled.numLocalNeighbors(
-         crse_box.getBoxId()) == 1);
+      TBOX_ASSERT(coarse_to_unfilled.numLocalNeighbors(crse_box.getBoxId()) == 1);
       hier::Connector::ConstNeighborhoodIterator unfilled_nabrs =
          coarse_to_unfilled.find(crse_box.getBoxId());
       const hier::Box& unfilled_nabr =
@@ -2294,6 +2302,14 @@ RefineSchedule::refineScratchData(
          }
       }
 
+/*
+Problem: This loop reaches this point with the same fine_patch
+multiple times.  That is probably not intended.  We shouldn't be
+calling postprocessRefineBoxes multiple times on the same fine_patch.
+We should be looping through fine_to_coarse, then coarse boxes, then
+unfilled boxes.  That would pass this point only once for each fine
+patch.  Talk with Rich and Bob about this.
+*/
       if (d_refine_patch_strategy) {
          d_refine_patch_strategy->postprocessRefineBoxes(*fine_patch,
             *crse_patch,
@@ -2301,6 +2317,14 @@ RefineSchedule::refineScratchData(
             ratio);
       }
 
+   }
+
+   if ( d_refine_patch_strategy ) {
+      d_refine_patch_strategy->postprocessRefineLevel(
+         *fine_level,
+         *coarse_level,
+         coarse_to_fine,
+         coarse_to_unfilled);
    }
 
    t_refine_scratch_data->stop();
