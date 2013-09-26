@@ -43,7 +43,7 @@ namespace xfer {
 
 double RefineTimeTransaction::s_time = 0.0;
 
-const RefineClasses::Data **
+const RefineClasses::Data *const*
 RefineTimeTransaction::s_refine_items = 0;
 int RefineTimeTransaction::s_num_refine_items = 0;
 

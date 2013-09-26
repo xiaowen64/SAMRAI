@@ -46,7 +46,7 @@ OuternodeSumTransactionFactory::~OuternodeSumTransactionFactory()
  */
 
 void OuternodeSumTransactionFactory::setRefineItems(
-   const xfer::RefineClasses::Data** refine_items,
+   const xfer::RefineClasses::Data*const* refine_items,
    int num_refine_items)
 {
    OuternodeSumTransaction::setRefineItems(refine_items,
