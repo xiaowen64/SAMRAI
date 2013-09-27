@@ -11351,12 +11351,12 @@ for btng_log_vars_index in $btng_log_vars ; do
 done
 
 
-# If openmp is enabled, remove the -lxlomp_ser linker flag
-# or there will be multiple symbols.
+# If openmp is enabled, replace the -lxlomp_ser linker flag with -lxlsmp,
+# as the mpixlc_r warning instructs when LLNL_CHECK_COMPILE_LINE=Warning.
 if test "x$enable_openmp" != xno; then
-  FLIBS="`echo $FLIBS | sed 's/ -lxlomp_ser//g'`"
-  FLIB_NAME="`echo $FLIB_NAME | sed 's/ -lxlomp_ser//g'`"
-  LIB_NAME="`echo $LIB_NAME | sed 's/ -lxlomp_ser//g'`"
+  FLIBS="`echo $FLIBS | sed 's/ -lxlomp_ser/ -lxlsmp/g'`"
+  FLIB_NAME="`echo $FLIB_NAME | sed 's/ -lxlomp_ser/ -lxlsmp/g'`"
+  LIB_NAME="`echo $LIB_NAME | sed 's/ -lxlomp_ser/ -lxlsmp/g'`"
 fi
 
 
