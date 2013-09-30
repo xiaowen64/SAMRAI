@@ -238,6 +238,11 @@ TileClustering::findBoxesContainingTags(
 
 
    if ( d_coalesce_boxes ) {
+
+      if (d_print_steps) {
+         tbox::plog << "TileClustering::findBoxesContainingTags: coalescing." << std::endl;
+      }
+
       coalesceClusters(*new_box_level, tag_to_new, tiles_have_remote_extent);
       if ( d_debug_checks ) {
 
@@ -480,6 +485,10 @@ TileClustering::clusterWholeTiles(
 {
    d_object_timers->t_cluster->start();
 
+   if (d_print_steps) {
+      tbox::plog << "TileClustering::clusterWholeTiles: entered." << std::endl;
+   }
+
    const hier::BoxLevel &tag_box_level = *tag_level->getBoxLevel();
    const hier::Connector &tag_to_tag = tag_box_level.findConnector(
       tag_box_level, d_box_size, hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
@@ -502,11 +511,19 @@ TileClustering::clusterWholeTiles(
 
    local_tiles_have_remote_extent = 0;
 
+   if (d_print_steps) {
+      tbox::plog << "TileClusteringclusterWholeTiles: creating whole tiles\n";
+   }
+
    for ( int pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
 
       hier::Patch &patch = *tag_level->getPatch(pi);
       const hier::Box &patch_box = patch.getBox();
       const hier::BlockId &block_id = patch_box.getBlockId();
+
+      if (d_print_steps) {
+         tbox::plog << "TileClusteringclusterWholeTiles: working patch " << patch_box << "\n";
+      }
 
       TBOX_ASSERT( bound_boxes.begin(block_id) != bound_boxes.end(block_id) );
       const hier::Box &bounding_box = *bound_boxes.begin(block_id);
@@ -516,6 +533,10 @@ TileClustering::clusterWholeTiles(
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch.getPatchData(tag_data_index), boost::detail::dynamic_cast_tag());
 
+      if (d_print_steps) {
+         tbox::plog << "TileClusteringclusterWholeTiles: making coarsened tags." << std::endl;
+      }
+
       boost::shared_ptr<pdat::CellData<int> > coarsened_tag_data =
          makeCoarsenedTagData(*tag_data, tag_val);
 
@@ -523,6 +544,10 @@ TileClustering::clusterWholeTiles(
       const int num_coarse_cells = coarsened_tag_box.size();
 
       hier::BoxContainer coalescibles; // Hold space for coalescible tiles.
+
+      if (d_print_steps) {
+         tbox::plog << "TileClusteringclusterWholeTiles: processing coarsened tags." << std::endl;
+      }
 
       for ( int coarse_offset=0; coarse_offset<num_coarse_cells; ++coarse_offset ) {
          const pdat::CellIndex coarse_cell_index(coarsened_tag_box.index(coarse_offset));
@@ -571,11 +596,17 @@ TileClustering::clusterWholeTiles(
       }
 
       if ( d_coalesce_boxes_from_same_patch ) {
+         if (d_print_steps) {
+            tbox::plog << "TileClusteringclusterWholeTiles: coalesce tiles." << std::endl;
+         }
          d_object_timers->t_coalesce->start();
          coalescibles.coalesce();
          d_object_timers->t_coalesce->stop();
       }
 
+      if (d_print_steps) {
+         tbox::plog << "TileClusteringclusterWholeTiles: creating tiles from coalescibles." << std::endl;
+      }
       for ( hier::BoxContainer::iterator bi=coalescibles.begin();
             bi!=coalescibles.end(); ++bi ) {
 
@@ -604,6 +635,10 @@ TileClustering::clusterWholeTiles(
 
    tile_box_level.finalize();
 
+   if (d_print_steps) {
+      tbox::plog << "TileClustering::clusterWholeTiles: leaving." << std::endl;
+   }
+
    d_object_timers->t_cluster->stop();
 
    return;
@@ -626,6 +661,10 @@ TileClustering::removeDuplicateTiles(
    hier::BoxLevel &tile_box_level,
    hier::Connector &tag_to_tile)
 {
+
+   if (d_print_steps) {
+      tbox::plog << "TileClustering::removeDuplicateTiles: entered." << std::endl;
+   }
 
    hier::Connector &tile_to_tag = tag_to_tile.getTranspose();
 
@@ -757,6 +796,10 @@ TileClustering::removeDuplicateTiles(
       }
    }
 
+   if (d_print_steps) {
+      tbox::plog << "TileClustering::removeDuplicateTiles: leaving." << std::endl;
+   }
+
    return;
 }
 
@@ -783,6 +826,11 @@ void
 TileClustering::detectSemilocalEdges(
    boost::shared_ptr<hier::Connector> &tag_to_tile )
 {
+
+   if (d_print_steps) {
+      tbox::plog << "TileClustering::detectSemilocalEdges: entered." << std::endl;
+   }
+
    const hier::BoxLevel &tag_box_level = tag_to_tile->getBase();
    const hier::Connector &tag_to_tag = tag_box_level.findConnector(
       tag_box_level, d_box_size, hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
@@ -802,6 +850,9 @@ TileClustering::detectSemilocalEdges(
                  hier::IntVector::getZero(d_dim),
                  true /* compute transpose */ );
 
+   if (d_print_steps) {
+      tbox::plog << "TileClustering::detectSemilocalEdges: leaving." << std::endl;
+   }
    return;
 }
 
@@ -819,6 +870,10 @@ TileClustering::shearTilesAtBlockBoundaries(
    hier::BoxLevel &tile_box_level,
    hier::Connector &tag_to_tile)
 {
+
+   if (d_print_steps) {
+      tbox::plog << "TileClustering::shearTilesAtBlockBoundaries: entered." << std::endl;
+   }
    const hier::BoxContainer &tiles = tile_box_level.getBoxes();
    const hier::BoxLevel &tag_box_level = tag_to_tile.getBase();
    hier::Connector &tile_to_tag = tag_to_tile.getTranspose();
@@ -880,10 +935,18 @@ TileClustering::shearTilesAtBlockBoundaries(
    sheared_tile_box_level.finalize();
    tile_box_level.deallocateGlobalizedVersion();
 
+   if (d_print_steps) {
+      tbox::plog << "TileClustering::shearTilesAtBlockBoundaries applying shearing map." << std::endl;
+   }
+
    d_mca.modify( tag_to_tile,
                  tile_to_sheared,
                  &tile_box_level,
                  &sheared_tile_box_level );
+
+   if (d_print_steps) {
+      tbox::plog << "TileClustering::shearTilesAtBlockBoundaries leaving." << std::endl;
+   }
 
    return;
 }
@@ -1026,7 +1089,7 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
    if (d_print_steps) {
       tbox::plog << "TileClustering coarsened box " << tag_data.getBox()
                  << " to " << coarsened_box
-                 << " (" << coarse_tag_count << " tags).\n";
+                 << " (" << coarse_tag_count << " tags)." << std::endl;
    }
 
    return coarsened_tag_data;
@@ -1056,6 +1119,10 @@ TileClustering::coalesceClusters(
    if ( !tiles_have_remote_extent ) {
       coalesceClusters(tile_box_level, tag_to_tile);
       return;
+   }
+
+   if (d_print_steps) {
+      tbox::plog << "TileClustering::coalesceClusters: entered with remote extent." << std::endl;
    }
 
    /*
@@ -1153,6 +1220,10 @@ TileClustering::coalesceClusters(
 
    d_object_timers->t_coalesce_adjustment->stop();
 
+   if (d_print_steps) {
+      tbox::plog << "TileClustering::coalesceClusters: leaving with remote extent." << std::endl;
+   }
+
    return;
 }
 
@@ -1169,6 +1240,10 @@ TileClustering::coalesceClusters(
    hier::BoxLevel &tile_box_level,
    boost::shared_ptr<hier::Connector> &tag_to_tile)
 {
+   if (d_print_steps) {
+      tbox::plog << "TileClustering::coalesceClusters: entered without remote extent." << std::endl;
+   }
+
    /*
     * Try to coalesce the boxes in tile_box_level.
     */
@@ -1279,6 +1354,10 @@ TileClustering::coalesceClusters(
 
       d_object_timers->t_coalesce_adjustment->stop();
 
+   }
+
+   if (d_print_steps) {
+      tbox::plog << "TileClustering::coalesceClusters: leaving without remote extent." << std::endl;
    }
 
    return;
