@@ -1179,9 +1179,9 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
         outgoing_ranks_itr != outgoing_ranks.end(); ++outgoing_ranks_itr) {
       another_outgoing_ranks[i++] = *outgoing_ranks_itr;
    }
-#pragma omp parallel private(i)
+// #pragma omp parallel private(i)
 {
-#pragma omp for schedule(dynamic) nowait
+// #pragma omp for schedule(dynamic) nowait
    for (i = 0; i < imax; ++i) {
       BoxId outgoing_proc_start_id(
          LocalId::getZero(),
