@@ -73,6 +73,24 @@ EOF
 # Maintained by Brian Gunney
 ;;
 
+bgq_mpixlcxx_r) # BG/Q, using mpixlcxx and OpenMP
+cat <<-EOF
+	--with-CXX=mpixlcxx_r
+	--with-CC=mpixlc_r
+	--with-F77=mpixlf77_r
+	FFLAGS=-qnosave LLNL_CHECK_COMPILE_LINE=Warning
+	--enable-openmp
+	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.8.5/parallel
+	--with-boost=/collab/usr/gapps/samrai/apps/sles/boost/1.45.0
+	--with-hypre=no
+	--without-sundials
+	--without-petsc
+	--without-x
+	--enable-rpath=no
+EOF
+# Maintained by Brian Gunney
+;;
+
 chaos5_mpiicc) # CHAOS5, Intel compilers with LLNL mpiicpc front ends
 cat <<-EOF
 	--with-CC=/usr/local/bin/mpiicc-12.1.293
