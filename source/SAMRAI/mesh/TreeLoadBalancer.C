@@ -1067,16 +1067,6 @@ t_post_load_distribution_barrier->stop();
                  << std::endl;
    }
 
-   /*
-    * The incoming unbalanced boxes need a mapping to describe their
-    * change, but we don't know what they will become, so create empty
-    * maps for now.  Should any not change, we'll erase their
-    * neighborhood later.
-    */
-   for (TransitSet::const_iterator ni=unassigned.begin(); ni!=unassigned.end(); ++ni ) {
-      unbalanced_to_balanced.makeEmptyLocalNeighborhood(ni->d_orig_box.getBoxId());
-   }
-
 
 
    /*
@@ -1494,9 +1484,7 @@ t_post_load_distribution_barrier->stop();
       balanced_box_level.addBox(box_in_transit.d_box);
 
       if (box_in_transit.d_box.isIdEqual(box_in_transit.d_orig_box)) {
-         // Unchanged box requires no mapping.  Nothing else need to be done.
-         TBOX_ASSERT( unbalanced_to_balanced.isEmptyNeighborhood(ni->d_box.getBoxId()) );
-         unbalanced_to_balanced.eraseLocalNeighborhood(ni->d_box.getBoxId());
+         // Unchanged box implies assigned back to local process.  It requires no mapping.
          unassigned.erase(ni++);
       } else {
 
@@ -2182,6 +2170,21 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
       bit.putToMessageStream(*mstream);
    }
    t_pack_edge->stop();
+
+
+   /*
+    * The incoming unbalanced boxes need a mapping to describe their
+    * change, but we don't know what they will become, so create empty
+    * maps for now.  Should any not change, we'll erase their
+    * neighborhood later.
+    */
+   for ( hier::BoxContainer::const_iterator bi=unbalanced_to_balanced.getBase().getBoxes().begin();
+         bi!=unbalanced_to_balanced.getBase().getBoxes().end(); ++bi ) {
+      if ( unbalanced_to_balanced.getHead().getBoxes().find(*bi) ==
+           unbalanced_to_balanced.getHead().getBoxes().end() ) {
+         unbalanced_to_balanced.makeEmptyLocalNeighborhood(bi->getBoxId());
+      }
+   }
 
 
    /*
