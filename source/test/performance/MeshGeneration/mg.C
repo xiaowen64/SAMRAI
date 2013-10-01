@@ -39,6 +39,7 @@
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include <vector>
@@ -281,13 +282,12 @@ int main(
          PIO::logOnlyNodeZero(log_file_name);
       }
 
-#ifdef _OPENMP
-      tbox::plog << "Compiled with OpenMP version " << _OPENMP
-                 << ".  Running with " << omp_get_max_threads() << " threads."
+      tbox::plog << "MPI has " << tbox::SAMRAI_MPI::getSAMRAIWorld().getSize()
+                 << " processes." << std::endl;
+      tbox::plog << "OpenMP version "
+                 << TBOX_omp_version << ".\n"
+                 << "Running with " << TBOX_omp_get_max_threads() << " threads."
                  << std::endl;
-#else
-      tbox::plog << "Compiled without OpenMP.\n";
-#endif
 
 
       /*

@@ -8,6 +8,15 @@
  *
  ************************************************************************/
 
+/*
+ * @brief Macros defined for using OpenMP, with sensible definitions
+ * when not using it.
+ *
+ * OpenMP symbols beginning with omp_ is prepended with TBOX_ to
+ * indicate it is a SAMRAI toolbox macro.  Macros for OpenMP functions
+ * must have argument list, even if it is empty.
+ */
+
 #ifndef included_tbox_OpenMPUtilities
 #define included_tbox_OpenMPUtilities
 
@@ -16,6 +25,8 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include <omp.h>
+
+#define TBOX_omp_version _OPENMP
 
 #define TBOX_omp_lock_t omp_lock_t
 
@@ -29,6 +40,8 @@
 #define TBOX_omp_get_max_threads() omp_get_max_threads()
 
 #else
+
+#define TBOX_omp_version 0
 
 #define TBOX_omp_lock_t int
 
