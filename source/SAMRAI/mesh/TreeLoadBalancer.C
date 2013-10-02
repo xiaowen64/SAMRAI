@@ -1644,7 +1644,7 @@ t_post_load_distribution_barrier->stop();
        * Record these nodes:
        * - Number of final boxes:
        */
-      d_comm_graph_writer->addRecord( d_mpi, size_t(8), size_t(7) );
+      d_comm_graph_writer->addRecord( d_mpi, size_t(10), size_t(7) );
 
       const int prank = (d_rank_tree->isRoot() ? -1 : d_rank_tree->getParentRank());
 
@@ -1664,41 +1664,55 @@ t_post_load_distribution_barrier->stop();
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(2),
+         "origins up",
+         double(my_subtree.d_wants_work_from_parent ? 0 : my_subtree.d_work_traded.getNumberOfOriginatingProcesses()),
+         tbox::CommGraphWriter::TO,
+         prank );
+
+      d_comm_graph_writer->setEdgeInCurrentRecord(
+         size_t(3),
          "load down",
          double(my_subtree.d_wants_work_from_parent ? my_subtree.d_work_traded.getSumLoad() : 0),
          tbox::CommGraphWriter::FROM,
          (my_subtree.d_wants_work_from_parent ? prank : -1) );
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
-         size_t(3),
+         size_t(4),
          "boxes down",
          double(my_subtree.d_wants_work_from_parent ? my_subtree.d_work_traded.size() : 0),
          tbox::CommGraphWriter::FROM,
          (my_subtree.d_wants_work_from_parent ? prank : -1) );
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
-         size_t(4),
+         size_t(5),
+         "origins down",
+         double(my_subtree.d_wants_work_from_parent ? my_subtree.d_work_traded.getNumberOfOriginatingProcesses() : 0),
+         tbox::CommGraphWriter::FROM,
+         (my_subtree.d_wants_work_from_parent ? prank : -1) );
+
+      d_comm_graph_writer->setEdgeInCurrentRecord(
+         size_t(6),
          "bytes down",
          double(my_subtree.d_wants_work_from_parent ? parent_recv->getRecvSize() : int(0)),
          tbox::CommGraphWriter::FROM,
          (my_subtree.d_wants_work_from_parent ? prank : -1) );
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
-         size_t(5),
+         size_t(7),
          "child wait",
          t_child_recv_wait->getTotalWallclockTime(),
          tbox::CommGraphWriter::FROM,
          d_rank_tree->getChildRank(0) );
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
-         size_t(6),
+         size_t(8),
          "child wait",
          t_child_recv_wait->getTotalWallclockTime(),
          tbox::CommGraphWriter::FROM,
          d_rank_tree->getChildRank(1) );
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
-         size_t(7),
+         size_t(9),
          "parent wait",
          t_parent_recv_wait->getTotalWallclockTime(),
          tbox::CommGraphWriter::FROM,

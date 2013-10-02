@@ -474,7 +474,6 @@ private:
     * This class is identical to std::set<BoxInTransit,BoxInTransitMoreLoad>
     * and adds tracking of the sum of loads in the set.
     */
-   // typedef std::set<BoxInTransit, BoxInTransitMoreLoad> TransitSet;
    class TransitSet {
    public:
       //@{
@@ -533,6 +532,13 @@ private:
       iterator upper_bound( const key_type &k ) const { return d_set.upper_bound(k); }
       //@}
       LoadType getSumLoad() const { return d_sumload; }
+      size_t getNumberOfOriginatingProcesses() const {
+         std::set<int> originating_procs;
+         for ( const_iterator si=begin(); si!=end(); ++si ) {
+            originating_procs.insert( si->d_orig_box.getOwnerRank() );
+         }
+         return originating_procs.size();
+      }
    private:
       std::set<BoxInTransit, BoxInTransitMoreLoad> d_set;
       LoadType d_sumload;
