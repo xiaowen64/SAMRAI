@@ -474,7 +474,7 @@ private:
     * This class is identical to std::set<BoxInTransit,BoxInTransitMoreLoad>
     * and adds tracking of the sum of loads in the set.
     */
-   class TransitSet {
+   class BoxTransitSet {
    public:
       //@{
       //! @name Duplicated set interfaces.
@@ -483,9 +483,9 @@ private:
       typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::reverse_iterator reverse_iterator;
       typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::key_type key_type;
       typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::value_type value_type;
-      TransitSet() : d_set(), d_sumload(0) {}
+      BoxTransitSet() : d_set(), d_sumload(0) {}
       template<class InputIterator>
-      TransitSet( InputIterator first, InputIterator last ) :
+      BoxTransitSet( InputIterator first, InputIterator last ) :
          d_set(first,last), d_sumload(0) {
          for ( const_iterator bi=d_set.begin(); bi!=d_set.end(); ++bi )
          { d_sumload += bi->d_boxload; };
@@ -510,7 +510,7 @@ private:
       }
       bool empty() const { return d_set.empty(); }
       void clear() { d_sumload = 0; d_set.clear(); }
-      void swap( TransitSet &other ) {
+      void swap( BoxTransitSet &other ) {
          const LoadType tl = d_sumload;
          d_sumload = other.d_sumload;
          other.d_sumload = tl;
@@ -520,12 +520,12 @@ private:
       iterator upper_bound( const key_type &k ) const { return d_set.upper_bound(k); }
       //@}
       LoadType getSumLoad() const { return d_sumload; }
-      void insertAll( const TransitSet &other ) {
+      void insertAll( const BoxTransitSet &other ) {
          size_t old_size = d_set.size();
          d_set.insert( other.d_set.begin(), other.d_set.end() );
          d_sumload += other.d_sumload;
          if ( d_set.size() != old_size + other.size() ) {
-            TBOX_ERROR("TransitSet's insertAll currently can't weed out duplicates.");
+            TBOX_ERROR("BoxTransitSet's insertAll currently can't weed out duplicates.");
          }
       }
       size_t getNumberOfOriginatingProcesses() const {
@@ -619,7 +619,7 @@ private:
        * If the object is for the local process, work_traded means
        * traded with the process's *parent*.
        */
-      TransitSet d_work_traded;
+      BoxTransitSet d_work_traded;
 
       /*!
        * @brief Whether subtree expects its parent to send work down.
@@ -661,17 +661,17 @@ private:
       hier::BoxLevel& balanced_box_level,
       hier::Connector &balanced_to_unbalanced,
       hier::Connector &unbalanced_to_balanced,
-      const TransitSet& unassigned ) const;
+      const BoxTransitSet& unassigned ) const;
 
    void
-      removeLocallyOriginatedBoxesFromTransitSet(
-      TransitSet& transit_set,
+      removeLocallyOriginatedBoxesFromBoxTransitSet(
+      BoxTransitSet& transit_set,
       int local_rank ) const;
 
 
    /*!
-    * @brief Adjust the load in a TransitSet by moving work between it
-    * and another TransitSet.
+    * @brief Adjust the load in a BoxTransitSet by moving work between it
+    * and another BoxTransitSet.
     *
     * @param[in,out] main_bin
     *
@@ -693,8 +693,8 @@ private:
     */
    LoadType
    adjustLoad(
-      TransitSet& main_bin,
-      TransitSet& hold_bin,
+      BoxTransitSet& main_bin,
+      BoxTransitSet& hold_bin,
       hier::LocalId& next_available_index,
       LoadType ideal_load,
       LoadType low_load,
@@ -721,8 +721,8 @@ private:
     */
    LoadType
    adjustLoadByPopping(
-      TransitSet& main_bin,
-      TransitSet& hold_bin,
+      BoxTransitSet& main_bin,
+      BoxTransitSet& hold_bin,
       LoadType ideal_load,
       LoadType low_load,
       LoadType high_load ) const;
@@ -748,8 +748,8 @@ private:
     */
    LoadType
    adjustLoadBySwapping(
-      TransitSet& main_bin,
-      TransitSet& hold_bin,
+      BoxTransitSet& main_bin,
+      BoxTransitSet& hold_bin,
       LoadType ideal_load,
       LoadType low_load,
       LoadType high_load ) const;
@@ -778,8 +778,8 @@ private:
     */
    LoadType
    adjustLoadByBreaking(
-      TransitSet& main_bin,
-      TransitSet& hold_bin,
+      BoxTransitSet& main_bin,
+      BoxTransitSet& hold_bin,
       hier::LocalId &next_available_index,
       LoadType ideal_load,
       LoadType low_load,
@@ -806,8 +806,8 @@ private:
     */
    bool
    swapLoadPair(
-      TransitSet& src,
-      TransitSet& dst,
+      BoxTransitSet& src,
+      BoxTransitSet& dst,
       LoadType& actual_transfer,
       LoadType ideal_transfer,
       LoadType low_transfer,
@@ -864,7 +864,7 @@ private:
    void
    constructSemilocalUnbalancedToBalanced(
       hier::MappingConnector &unbalanced_to_balanced,
-      const TreeLoadBalancer::TransitSet &kept_imports ) const;
+      const TreeLoadBalancer::BoxTransitSet &kept_imports ) const;
 
    /*!
     * @brief Break off a given load size from a given Box.
@@ -952,8 +952,8 @@ private:
 
    double
    computeBalancePenalty(
-      const TransitSet& a,
-      const TransitSet& b,
+      const BoxTransitSet& a,
+      const BoxTransitSet& b,
       double imbalance) const
    {
       NULL_USE(a);
@@ -977,8 +977,8 @@ private:
 
    double
    computeSurfacePenalty(
-      const TransitSet& a,
-      const TransitSet& b) const;
+      const BoxTransitSet& a,
+      const BoxTransitSet& b) const;
 
    double
    computeSurfacePenalty(
@@ -991,8 +991,8 @@ private:
 
    double
    computeSlenderPenalty(
-      const TransitSet& a,
-      const TransitSet& b) const;
+      const BoxTransitSet& a,
+      const BoxTransitSet& b) const;
 
    double
    computeSlenderPenalty(
@@ -1074,14 +1074,14 @@ private:
    }
 
    /*!
-    * @brief Compute the load for a TransitSet.
+    * @brief Compute the load for a BoxTransitSet.
     */
    LoadType
    computeLoad(
-      const TransitSet &transit_set) const
+      const BoxTransitSet &transit_set) const
    {
       LoadType load = 0;
-      for ( TransitSet::const_iterator bi=transit_set.begin();
+      for ( BoxTransitSet::const_iterator bi=transit_set.begin();
             bi!=transit_set.end(); ++bi ) {
          load += bi->d_boxload;
       }
@@ -1128,7 +1128,7 @@ private:
     */
    LoadType
    computeSurplusPerEffectiveDescendent(
-      const TransitSet &unassigned,
+      const BoxTransitSet &unassigned,
       const LoadType group_avg_load,
       const std::vector<SubtreeData> &child_subtrees,
       int first_child ) const;

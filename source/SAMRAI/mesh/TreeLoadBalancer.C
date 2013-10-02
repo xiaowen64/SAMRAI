@@ -1036,7 +1036,7 @@ t_post_load_distribution_barrier->stop();
     * BoxInTransits are placed here before determining whether to keep
     * them or send them to another part of the tree.
     */
-   TransitSet unassigned(balance_box_level.getBoxes().begin(),
+   BoxTransitSet unassigned(balance_box_level.getBoxes().begin(),
                          balance_box_level.getBoxes().end());
 
 
@@ -1113,7 +1113,7 @@ t_post_load_distribution_barrier->stop();
                     << child_subtrees[cindex].d_work_traded.size() << " boxes ("
                     << child_subtrees[cindex].d_work_traded.getSumLoad() << " units):";
          if ( child_subtrees[cindex].d_work_traded.size() < 10 ) {
-            for ( TransitSet::const_iterator ni=child_subtrees[cindex].d_work_traded.begin();
+            for ( BoxTransitSet::const_iterator ni=child_subtrees[cindex].d_work_traded.begin();
                   ni!=child_subtrees[cindex].d_work_traded.end(); ++ni ) {
                const BoxInTransit& box_in_transit = *ni;
                tbox::plog << "  " << box_in_transit;
@@ -1207,7 +1207,7 @@ t_post_load_distribution_barrier->stop();
                           << export_load_low << ", " << export_load_high << "] "
                           << " units) to parent's export bin:";
                if ( my_subtree.d_work_traded.size() < 10 ) {
-                  for (TransitSet::const_iterator ni = my_subtree.d_work_traded.begin();
+                  for (BoxTransitSet::const_iterator ni = my_subtree.d_work_traded.begin();
                        ni!=my_subtree.d_work_traded.end(); ++ni) {
                      tbox::plog << "  " << *ni;
                   }
@@ -1305,7 +1305,7 @@ t_post_load_distribution_barrier->stop();
                     << my_subtree.d_work_traded.size() << " boxes ("
                     << my_subtree.d_work_traded.getSumLoad() << " units):";
          if ( my_subtree.d_work_traded.size() < 10 ) {
-            for ( TransitSet::const_iterator ni=my_subtree.d_work_traded.begin();
+            for ( BoxTransitSet::const_iterator ni=my_subtree.d_work_traded.begin();
                   ni!=my_subtree.d_work_traded.end(); ++ni ) {
                const BoxInTransit& box_in_transit = *ni;
                tbox::plog << "  " << box_in_transit;
@@ -1395,7 +1395,7 @@ t_post_load_distribution_barrier->stop();
                           << ichild << ':' << d_rank_tree->getChildRank(ichild)
                           << " for " << recip_subtree.d_num_procs << " procs:";
                if ( recip_subtree.d_work_traded.size() < 10 ) {
-                  for (TransitSet::const_iterator ni = recip_subtree.d_work_traded.begin();
+                  for (BoxTransitSet::const_iterator ni = recip_subtree.d_work_traded.begin();
                        ni != recip_subtree.d_work_traded.end(); ++ni) {
                      tbox::plog << "  " << *ni;
                   }
@@ -1436,7 +1436,7 @@ t_post_load_distribution_barrier->stop();
                  << (unassigned.getSumLoad()/group_avg_load)
                  << ") units in " << unassigned.size() << " boxes:\n";
       if ( unassigned.size() < 10 ) {
-         for ( TransitSet::const_iterator bi=unassigned.begin();
+         for ( BoxTransitSet::const_iterator bi=unassigned.begin();
                bi!=unassigned.end(); ++bi ) {
             tbox::plog << "    " << *bi << '\n';
          }
@@ -1469,7 +1469,7 @@ t_post_load_distribution_barrier->stop();
       unbalanced_to_balanced,
       unassigned );
 
-   removeLocallyOriginatedBoxesFromTransitSet( unassigned, d_mpi.getRank() );
+   removeLocallyOriginatedBoxesFromBoxTransitSet( unassigned, d_mpi.getRank() );
 #else
    /*
     * All unassigned boxes should go into balanced_box_level.  Put
@@ -1484,7 +1484,7 @@ t_post_load_distribution_barrier->stop();
     * unassigned for the step of notifying their origin owners that we
     * have them.  Otherwise, remove boxes from unassigned.
     */
-   for (TransitSet::iterator
+   for (BoxTransitSet::iterator
         ni = unassigned.begin();
         ni != unassigned.end(); /* incremented in loop */) {
 
@@ -1783,7 +1783,7 @@ TreeLoadBalancer::assignBoxesToLocalProcess(
    hier::BoxLevel& balanced_box_level,
    hier::Connector &balanced_to_unbalanced,
    hier::Connector &unbalanced_to_balanced,
-   const TransitSet& unassigned ) const
+   const BoxTransitSet& unassigned ) const
 {
    /*
     * All unassigned boxes should go into balanced_box_level.  Put
@@ -1791,7 +1791,7 @@ TreeLoadBalancer::assignBoxesToLocalProcess(
     * mapping Connectors where required.
     */
 
-   for (TransitSet::iterator ni = unassigned.begin();
+   for (BoxTransitSet::iterator ni = unassigned.begin();
         ni != unassigned.end(); ++ni ) {
 
       const BoxInTransit& box_in_transit = *ni;
@@ -1819,15 +1819,15 @@ TreeLoadBalancer::assignBoxesToLocalProcess(
 
 /*
  *************************************************************************
- * Remove local boxes from a TransitSet.
+ * Remove local boxes from a BoxTransitSet.
  *************************************************************************
  */
 void
-TreeLoadBalancer::removeLocallyOriginatedBoxesFromTransitSet(
-   TransitSet& transit_set,
+TreeLoadBalancer::removeLocallyOriginatedBoxesFromBoxTransitSet(
+   BoxTransitSet& transit_set,
    int local_rank ) const
 {
-   for (TransitSet::iterator ni = transit_set.begin();
+   for (BoxTransitSet::iterator ni = transit_set.begin();
         ni != transit_set.end(); /* incremented in loop */) {
       if (ni->d_orig_box.getOwnerRank() == local_rank) {
          TBOX_ASSERT(ni->d_orig_box.getOwnerRank() == ni->d_box.getOwnerRank() );
@@ -1867,8 +1867,8 @@ TreeLoadBalancer::removeLocallyOriginatedBoxesFromTransitSet(
  */
 TreeLoadBalancer::LoadType
 TreeLoadBalancer::adjustLoad(
-   TransitSet& main_bin,
-   TransitSet& hold_bin,
+   BoxTransitSet& main_bin,
+   BoxTransitSet& hold_bin,
    hier::LocalId& next_available_index,
    LoadType ideal_load,
    LoadType low_load,
@@ -2074,9 +2074,9 @@ TreeLoadBalancer::packSubtreeDataUp(
    msg << subtree_data.d_eff_load_current;
    msg << subtree_data.d_eff_load_ideal;
    msg << subtree_data.d_eff_load_upperlimit;
-   const TransitSet& for_export = subtree_data.d_work_traded;
+   const BoxTransitSet& for_export = subtree_data.d_work_traded;
    msg << static_cast<int>(for_export.size());
-   for (TransitSet::const_iterator
+   for (BoxTransitSet::const_iterator
         ni = for_export.begin(); ni != for_export.end(); ++ni) {
       const BoxInTransit& box_in_transit = *ni;
       box_in_transit.putToMessageStream(msg);
@@ -2138,9 +2138,9 @@ TreeLoadBalancer::packSubtreeDataDown(
    const SubtreeData& subtree_data) const
 {
    t_pack_load->start();
-   const TransitSet& for_export = subtree_data.d_work_traded;
+   const BoxTransitSet& for_export = subtree_data.d_work_traded;
    msg << static_cast<int>(for_export.size());
-   for (TransitSet::const_iterator
+   for (BoxTransitSet::const_iterator
         ni = for_export.begin(); ni != for_export.end(); ++ni) {
       const BoxInTransit& box_in_transit = *ni;
       box_in_transit.putToMessageStream(msg);
@@ -2194,7 +2194,7 @@ TreeLoadBalancer::unpackSubtreeDataDown(
  */
 TreeLoadBalancer::LoadType
 TreeLoadBalancer::computeSurplusPerEffectiveDescendent(
-   const TransitSet &unassigned,
+   const BoxTransitSet &unassigned,
    const LoadType group_avg_load,
    const std::vector<SubtreeData> &child_subtrees,
    int first_child ) const
@@ -2249,14 +2249,14 @@ TreeLoadBalancer::computeSurplusPerEffectiveDescendent(
 void
 TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
    hier::MappingConnector &unbalanced_to_balanced,
-   const TreeLoadBalancer::TransitSet &kept_imports ) const
+   const TreeLoadBalancer::BoxTransitSet &kept_imports ) const
 {
    t_construct_semilocal->start();
 
    // Stuff the imported BoxInTransits into buffers by their original owners.
    t_pack_edge->start();
    std::map<int,boost::shared_ptr<tbox::MessageStream> > outgoing_messages;
-   for ( TransitSet::const_iterator bi=kept_imports.begin();
+   for ( BoxTransitSet::const_iterator bi=kept_imports.begin();
          bi!=kept_imports.end(); ++bi ) {
       const BoxInTransit &bit = *bi;
       boost::shared_ptr<tbox::MessageStream> &mstream =
@@ -2677,8 +2677,8 @@ TreeLoadBalancer::destroyAsyncCommObjects(
  */
 TreeLoadBalancer::LoadType
 TreeLoadBalancer::adjustLoadByBreaking(
-   TransitSet& main_bin,
-   TransitSet& hold_bin,
+   BoxTransitSet& main_bin,
+   BoxTransitSet& hold_bin,
    hier::LocalId& next_available_index,
    LoadType ideal_load,
    LoadType low_load,
@@ -2733,7 +2733,7 @@ TreeLoadBalancer::adjustLoadByBreaking(
     * Find best box to break.  Loop in reverse because smaller boxes
     * are cheaper to analyze for bad cuts.
     */
-   for (TransitSet::reverse_iterator si = hold_bin.rbegin(); si != hold_bin.rend(); ++si) {
+   for (BoxTransitSet::reverse_iterator si = hold_bin.rbegin(); si != hold_bin.rend(); ++si) {
 
       /*
        * Skip boxes smaller than ideal_transfer.  If we called
@@ -2871,7 +2871,7 @@ TreeLoadBalancer::adjustLoadByBreaking(
  * Attempt to adjust the load of a main_bin by swapping boxes with
  * a hold_bin.
  *
- * Transfering a BoxInTransit from one TransitSet to another
+ * Transfering a BoxInTransit from one BoxTransitSet to another
  * is considered a degenerate "swap" (a BoxInTransit is
  * swapped for nothing) handled by this function.
  *
@@ -2887,8 +2887,8 @@ TreeLoadBalancer::adjustLoadByBreaking(
  */
 TreeLoadBalancer::LoadType
 TreeLoadBalancer::adjustLoadBySwapping(
-   TransitSet& main_bin,
-   TransitSet& hold_bin,
+   BoxTransitSet& main_bin,
+   BoxTransitSet& hold_bin,
    LoadType ideal_load,
    LoadType low_load,
    LoadType high_load ) const
@@ -2976,8 +2976,8 @@ TreeLoadBalancer::adjustLoadBySwapping(
  */
 TreeLoadBalancer::LoadType
 TreeLoadBalancer::adjustLoadByPopping(
-   TransitSet& main_bin,
-   TransitSet& hold_bin,
+   BoxTransitSet& main_bin,
+   BoxTransitSet& hold_bin,
    LoadType ideal_load,
    LoadType low_load,
    LoadType high_load ) const
@@ -2992,8 +2992,8 @@ TreeLoadBalancer::adjustLoadByPopping(
     * (the source) to main_bin (the destination).  When transfering
     * the other way, switch the roles of main_bin and hold_bin.
     */
-   TransitSet *src = &hold_bin;
-   TransitSet *dst = &main_bin;
+   BoxTransitSet *src = &hold_bin;
+   BoxTransitSet *dst = &main_bin;
    LoadType dst_ideal_load = ideal_load;
    LoadType dst_low_load = low_load;
    LoadType dst_high_load = high_load;
@@ -3080,8 +3080,8 @@ TreeLoadBalancer::adjustLoadByPopping(
  */
 bool
 TreeLoadBalancer::swapLoadPair(
-   TransitSet& src,
-   TransitSet& dst,
+   BoxTransitSet& src,
+   BoxTransitSet& dst,
    LoadType& actual_transfer,
    LoadType ideal_transfer,
    LoadType low_transfer,
@@ -3109,13 +3109,13 @@ TreeLoadBalancer::swapLoadPair(
                  << dst.size() << "-box dst." << std::endl;
       tbox::plog << "      src (" << src.size() << "):" << std::endl;
       if ( src.size() < 10 ) {
-         for (TransitSet::iterator si = src.begin(); si != src.end(); ++si) {
+         for (BoxTransitSet::iterator si = src.begin(); si != src.end(); ++si) {
             tbox::plog << "        " << *si << std::endl;
          }
       }
       tbox::plog << "      dst (" << dst.size() << "):" << std::endl;
       if ( dst.size() < 10 ) {
-         for (TransitSet::iterator si = dst.begin(); si != dst.end(); ++si) {
+         for (BoxTransitSet::iterator si = dst.begin(); si != dst.end(); ++si) {
             tbox::plog << "        " << *si << std::endl;
          }
       }
@@ -3157,10 +3157,10 @@ TreeLoadBalancer::swapLoadPair(
     */
 
    // Initialization indicating no swap pair found yet.
-   TransitSet::iterator src_hiside = src.end();
-   TransitSet::iterator dst_hiside = dst.end();
-   TransitSet::iterator src_loside = src.end();
-   TransitSet::iterator dst_loside = dst.end();
+   BoxTransitSet::iterator src_hiside = src.end();
+   BoxTransitSet::iterator dst_hiside = dst.end();
+   BoxTransitSet::iterator src_loside = src.end();
+   BoxTransitSet::iterator dst_loside = dst.end();
 
    // A dummy BoxInTransit for set searches.
    hier::Box dummy_box(d_dim);
@@ -3182,14 +3182,14 @@ TreeLoadBalancer::swapLoadPair(
        */
       dummy_search_target = BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
       dummy_search_target.d_boxload = ideal_transfer;
-      const TransitSet::iterator src_test = src.lower_bound(dummy_search_target);
+      const BoxTransitSet::iterator src_test = src.lower_bound(dummy_search_target);
 
       if (d_print_swap_steps) {
          tbox::plog << "  swapLoadPair with empty dst: ";
       }
 
       if (src_test != src.begin()) {
-         TransitSet::iterator src_test1 = src_test;
+         BoxTransitSet::iterator src_test1 = src_test;
          --src_test1;
          if ( evaluateBreak( hiside_acceptance_flags, hiside_transfer, src_test1->d_boxload,
                              ideal_transfer, low_transfer, high_transfer ) ) {
@@ -3232,9 +3232,9 @@ TreeLoadBalancer::swapLoadPair(
        */
       dummy_search_target = *dst.begin();
       dummy_search_target.d_boxload += ideal_transfer;
-      TransitSet::iterator src_beg = src.lower_bound(dummy_search_target);
+      BoxTransitSet::iterator src_beg = src.lower_bound(dummy_search_target);
 
-      for (TransitSet::iterator src_test = src_beg; src_test != src.end(); ++src_test) {
+      for (BoxTransitSet::iterator src_test = src_beg; src_test != src.end(); ++src_test) {
 
          /*
           * Set dst_test pointing to where we should start looking in dst.
@@ -3245,7 +3245,7 @@ TreeLoadBalancer::swapLoadPair(
          dummy_search_target.d_boxload = tbox::MathUtilities<LoadType>::Max(
                src_test->d_boxload - ideal_transfer,
                0);
-         TransitSet::iterator dst_test = dst.lower_bound(dummy_search_target);
+         BoxTransitSet::iterator dst_test = dst.lower_bound(dummy_search_target);
 
          if (dst_test != dst.end()) {
 
@@ -3375,8 +3375,8 @@ TreeLoadBalancer::swapLoadPair(
    }
 
    bool found_swap = false;
-   TransitSet::iterator isrc = src.end();
-   TransitSet::iterator idst = dst.end();
+   BoxTransitSet::iterator isrc = src.end();
+   BoxTransitSet::iterator idst = dst.end();
    actual_transfer = 0;
 
    if ( evaluateBreak( hiside_acceptance_flags, actual_transfer, hiside_transfer,
@@ -3857,14 +3857,14 @@ TreeLoadBalancer::computeSurfacePenalty(
 
 double
 TreeLoadBalancer::computeSurfacePenalty(
-   const TransitSet& a,
-   const TransitSet& b) const
+   const BoxTransitSet& a,
+   const BoxTransitSet& b) const
 {
    double surface_penalty = 0;
-   for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
+   for (BoxTransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
       surface_penalty += computeSurfacePenalty(bi->d_box);
    }
-   for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
+   for (BoxTransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
       surface_penalty += computeSurfacePenalty(bi->d_box);
    }
    return surface_penalty;
@@ -3934,14 +3934,14 @@ TreeLoadBalancer::computeSlenderPenalty(
 
 double
 TreeLoadBalancer::computeSlenderPenalty(
-   const TransitSet& a,
-   const TransitSet& b) const
+   const BoxTransitSet& a,
+   const BoxTransitSet& b) const
 {
    double slender_penalty = 0;
-   for (TransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
+   for (BoxTransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
       slender_penalty += computeSlenderPenalty(bi->d_box);
    }
-   for (TransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
+   for (BoxTransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
       slender_penalty += computeSlenderPenalty(bi->d_box);
    }
    return slender_penalty;
