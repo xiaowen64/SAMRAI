@@ -502,18 +502,6 @@ private:
          if ( rval.second ) d_sumload += x.d_boxload;
          return rval;
       }
-      template<class InputIterator>
-      void insert( InputIterator first, InputIterator last ) {
-         size_t tmp_size = size();
-         d_set.insert(first,last);
-         for ( InputIterator i=first; i!=last; ++i ) {
-            d_sumload += i->d_boxload;
-            ++tmp_size;
-         };
-         if ( tmp_size != size() ) {
-            TBOX_ERROR("TransitSet's range insert currently can't weed out duplicates.");
-         }
-      }
       void erase(iterator pos) { d_sumload -= pos->d_boxload; d_set.erase(pos); }
       size_t erase(const key_type &k) {
          const size_t num_erased = d_set.erase(k);
@@ -532,6 +520,14 @@ private:
       iterator upper_bound( const key_type &k ) const { return d_set.upper_bound(k); }
       //@}
       LoadType getSumLoad() const { return d_sumload; }
+      void insertAll( const TransitSet &other ) {
+         size_t old_size = d_set.size();
+         d_set.insert( other.d_set.begin(), other.d_set.end() );
+         d_sumload += other.d_sumload;
+         if ( d_set.size() != old_size + other.size() ) {
+            TBOX_ERROR("TransitSet's insertAll currently can't weed out duplicates.");
+         }
+      }
       size_t getNumberOfOriginatingProcesses() const {
          std::set<int> originating_procs;
          for ( const_iterator si=begin(); si!=end(); ++si ) {

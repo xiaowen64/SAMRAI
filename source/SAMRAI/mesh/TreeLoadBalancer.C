@@ -1103,8 +1103,7 @@ t_post_load_distribution_barrier->stop();
          next_available_index[cindex],
          mstream);
 
-      unassigned.insert( child_subtrees[cindex].d_work_traded.begin(),
-                         child_subtrees[cindex].d_work_traded.end() );
+      unassigned.insertAll( child_subtrees[cindex].d_work_traded );
 
       if (d_print_steps) {
          tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
@@ -1293,8 +1292,7 @@ t_post_load_distribution_barrier->stop();
          next_available_index[1 + d_rank_tree->getDegree()],
          mstream);
 
-      unassigned.insert( my_subtree.d_work_traded.begin(),
-                         my_subtree.d_work_traded.end() );
+      unassigned.insertAll( my_subtree.d_work_traded );
       my_subtree.d_subtree_load_current += my_subtree.d_work_traded.getSumLoad();
       my_subtree.d_eff_load_current += my_subtree.d_work_traded.getSumLoad();
 
