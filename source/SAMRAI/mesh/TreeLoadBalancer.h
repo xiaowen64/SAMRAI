@@ -659,11 +659,11 @@ private:
       hier::BoxLevel& balanced_box_level,
       hier::Connector &balanced_to_unbalanced,
       hier::Connector &unbalanced_to_balanced,
-      /* const */ TransitSet& unassigned ) const;
+      const TransitSet& unassigned ) const;
 
    void
-      removeLocalBoxesFromTransitSet(
-      TransitSet& unassigned,
+      removeLocallyOriginatedBoxesFromTransitSet(
+      TransitSet& transit_set,
       int local_rank ) const;
 
 
