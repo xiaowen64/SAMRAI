@@ -1461,6 +1461,16 @@ t_post_load_distribution_barrier->stop();
       }
    }
 
+   t_local_balancing->start();
+
+
+#if 1
+   assignBoxesToLocalProcess(
+      balanced_box_level,
+      balanced_to_unbalanced,
+      unbalanced_to_balanced,
+      unassigned );
+#else
    /*
     * All unassigned boxes should go into balanced_box_level.  Put
     * them there and generate relationships in balanced<==>unbalanced
@@ -1474,8 +1484,6 @@ t_post_load_distribution_barrier->stop();
     * unassigned for the step of notifying their origin owners that we
     * have them.  Otherwise, remove boxes from unassigned.
     */
-   t_local_balancing->start();
-
    for (TransitSet::iterator
         ni = unassigned.begin();
         ni != unassigned.end(); /* incremented in loop */) {
@@ -1506,6 +1514,7 @@ t_post_load_distribution_barrier->stop();
       }
 
    }
+#endif
 
    t_local_balancing->stop();
 
@@ -1740,6 +1749,89 @@ t_post_load_distribution_barrier->stop();
    destroyAsyncCommObjects(child_recvs, parent_recv);
 
    return;
+}
+
+
+
+/*
+ *************************************************************************
+ * Assign boxes to local process (put them in the balanced_box_level
+ * and put edges in balanced<==>unbalanced Connector.
+ *
+ * We can generate balanced--->unbalanced edges for all unassigned
+ * boxes because we have their origin info.  If the unassigned box
+ * originated locally, we can generate the unbalanced--->balanced
+ * edge for them as well.  However, we can't generate these edges
+ * for boxes originating remotely.  For these boxes, leave them in
+ * unassigned for the step of notifying their origin owners that we
+ * have them.  Otherwise, remove boxes from unassigned.
+ *************************************************************************
+ */
+void
+TreeLoadBalancer::assignBoxesToLocalProcess(
+   hier::BoxLevel& balanced_box_level,
+   hier::Connector &balanced_to_unbalanced,
+   hier::Connector &unbalanced_to_balanced,
+   /* const */ TransitSet& unassigned ) const
+{
+   /*
+    * All unassigned boxes should go into balanced_box_level.  Put
+    * them there and generate relationships in balanced<==>unbalanced
+    * mapping Connectors where required.
+    */
+
+   for (TransitSet::iterator
+        ni = unassigned.begin();
+        ni != unassigned.end(); /* incremented in loop */) {
+
+      const BoxInTransit& box_in_transit = *ni;
+      balanced_box_level.addBox(box_in_transit.d_box);
+
+      if (box_in_transit.d_box.isIdEqual(box_in_transit.d_orig_box)) {
+         // Unchanged box implies assigned back to local process.  It requires no mapping.
+         unassigned.erase(ni++);
+      } else {
+
+         balanced_to_unbalanced.insertLocalNeighbor(
+            box_in_transit.d_orig_box,
+            box_in_transit.d_box.getBoxId());
+
+         if (box_in_transit.d_orig_box.getOwnerRank() == d_mpi.getRank()) {
+            unbalanced_to_balanced.insertLocalNeighbor(
+               box_in_transit.d_box,
+               box_in_transit.d_orig_box.getBoxId());
+            unassigned.erase(ni++);
+         }
+         else {
+            // Leave this box in unassigned for notifying originating
+            // process of where it landed.
+            ++ni;
+         }
+      }
+
+   }
+
+}
+
+
+
+
+/*
+ *************************************************************************
+ * Remove local boxes from a TransitSet.
+ *************************************************************************
+ */
+void
+TreeLoadBalancer::removeLocalBoxesFromTransitSet(
+   TransitSet& unassigned,
+   int local_rank ) const
+{
+   for (TransitSet::iterator ni = unassigned.begin();
+        ni != unassigned.end(); /* incremented in loop */) {
+      if (ni->d_orig_box.getOwnerRank() == local_rank) {
+         unassigned.erase(ni++);
+      }
+   }
 }
 
 

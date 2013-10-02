@@ -654,6 +654,18 @@ private:
       hier::Connector* balance_to_anchor,
       const tbox::RankGroup& rank_group) const;
 
+   void
+   assignBoxesToLocalProcess(
+      hier::BoxLevel& balanced_box_level,
+      hier::Connector &balanced_to_unbalanced,
+      hier::Connector &unbalanced_to_balanced,
+      /* const */ TransitSet& unassigned ) const;
+
+   void
+      removeLocalBoxesFromTransitSet(
+      TransitSet& unassigned,
+      int local_rank ) const;
+
 
    /*!
     * @brief Adjust the load in a TransitSet by moving work between it
