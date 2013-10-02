@@ -2249,7 +2249,7 @@ TreeLoadBalancer::computeSurplusPerEffectiveDescendent(
 void
 TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
    hier::MappingConnector &unbalanced_to_balanced,
-   const TreeLoadBalancer::BoxTransitSet &kept_imports ) const
+   const BoxTransitSet &kept_imports ) const
 {
    t_construct_semilocal->start();
 
