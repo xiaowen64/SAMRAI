@@ -49,6 +49,8 @@ Main {
 
    load_balance = TRUE, TRUE
 
+   write_comm_graph = FALSE
+
    mesh_generator_name = "SphericalShellGenerator"
 
    SphericalShellGenerator {

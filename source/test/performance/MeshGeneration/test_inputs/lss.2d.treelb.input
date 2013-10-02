@@ -46,6 +46,8 @@ Main {
    // Whether to load balance (one value for each level).
    load_balance = TRUE, TRUE, TRUE
 
+   write_comm_graph = FALSE
+
    // Mesh generator: SphericalShellGenerator, SinusoidalFrontGenerator, or ShrunkenLevelGenerator.
    mesh_generator_name = "SphericalShellGenerator"
 
