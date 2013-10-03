@@ -1046,8 +1046,6 @@ private:
    boost::shared_ptr<tbox::Timer> t_adjust_load_by_swapping;
    boost::shared_ptr<tbox::Timer> t_shift_loads_by_breaking;
    boost::shared_ptr<tbox::Timer> t_find_swap_pair;
-   boost::shared_ptr<tbox::Timer> t_break_off_load;
-   boost::shared_ptr<tbox::Timer> t_find_bad_cuts;
    boost::shared_ptr<tbox::Timer> t_send_load_to_children;
    boost::shared_ptr<tbox::Timer> t_send_load_to_parent;
    boost::shared_ptr<tbox::Timer> t_get_load_from_children;

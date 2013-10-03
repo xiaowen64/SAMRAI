@@ -4263,10 +4263,6 @@ t_post_load_distribution_barrier = tbox::TimerManager::getManager()->
                      + tbox::Utilities::intToString(i) + "]");
       }
 
-      t_break_off_load = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::breakOffLoad()");
-      t_find_bad_cuts = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::find_bad_cuts");
       t_adjust_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::adjustLoad()");
       t_adjust_load_by_popping = tbox::TimerManager::getManager()->
