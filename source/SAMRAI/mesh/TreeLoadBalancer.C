@@ -92,11 +92,6 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_slender_penalty_wt(1.0),
    d_slender_penalty_threshold(3.0),
    d_precut_penalty_wt(1.0),
-   // Data shared during balancing.
-   d_min_size(d_dim),
-   d_max_size(d_dim),
-   d_bad_interval(d_dim),
-   d_cut_factor(d_dim),
    // Output control.
    d_report_load_balance(false),
    d_summarize_map(false),
@@ -303,16 +298,10 @@ TreeLoadBalancer::loadBalanceBoxLevel(
 
    t_load_balance_box_level->start();
 
-   d_min_size = min_size;
-   d_max_size = max_size;
-   d_bad_interval = bad_interval;
-   d_cut_factor = cut_factor;
-   d_min_load = d_min_size.getProduct();
-   /*
-    * Domain boxes are used by breakOffLoad to determine where
-    * the bad cuts are.  Computing domain_boxes from domain_box_level
-    * should be moved above the this method.
-    */
+   d_pparams = boost::make_shared<PartitioningParams>(
+      *balance_box_level.getGridGeometry(),
+      balance_box_level.getRefinementRatio(),
+      min_size, max_size, bad_interval, cut_factor);
 
    /*
     * We expect the domain box_level to be in globalized state.
@@ -320,30 +309,6 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    TBOX_ASSERT(
       domain_box_level.getParallelState() ==
       hier::BoxLevel::GLOBALIZED);
-
-   d_block_domain_boxes.clear();
-   int nblocks =
-      domain_box_level.getGridGeometry()->getNumberBlocks();
-   d_block_domain_boxes.resize(nblocks);
-
-   if (nblocks == 1) {
-      domain_box_level.getGlobalBoxes(d_block_domain_boxes[0]);
-      d_block_domain_boxes[0].refine(balance_box_level.getRefinementRatio());
-   } else {
-      for (int b = 0; b < nblocks; ++b) {
-         d_block_domain_boxes[b] = hier::BoxContainer(
-            domain_box_level.getGlobalBoxes(), hier::BlockId(b));
-
-         d_block_domain_boxes[b].refine(balance_box_level.getRefinementRatio());
-      }
-   }
-   /*
-    * TODO: d_block_domain_boxes should be made a search tree and
-    * findBadCutPoints should take a search tree form.  We do a lot
-    * of searches through d_block_domain_boxes.  This would only make
-    * a difference when the domain is described using many boxes.
-    */
-
 
    t_compute_local_load->start();
    double local_load = computeLocalLoads(balance_box_level);
@@ -569,11 +534,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
     * Finished load balancing.  Clean up and wrap up.
     */
 
-   d_min_size = hier::IntVector(d_dim, -1);
-   d_max_size = hier::IntVector(d_dim, -1);
-   d_block_domain_boxes.clear();
-   d_bad_interval = hier::IntVector(d_dim, -1);
-   d_cut_factor = hier::IntVector(d_dim, -1);
+   d_pparams.reset();
 
    t_load_balance_box_level->stop();
 
@@ -682,7 +643,7 @@ TreeLoadBalancer::constrainMaxBoxSizes(
        * Else chop it up and keep the parts.
        */
 
-      if (box_size <= d_max_size) {
+      if (box_size <= d_pparams->getMaxBoxSize()) {
 
          if (d_print_break_steps) {
             tbox::plog << "    Not oversized: " << box
@@ -699,11 +660,11 @@ TreeLoadBalancer::constrainMaxBoxSizes(
          hier::BoxContainer chopped(box);
          hier::BoxUtilities::chopBoxes(
             chopped,
-            d_max_size,
-            d_min_size,
-            d_cut_factor,
-            d_bad_interval,
-            d_block_domain_boxes[box.getBlockId().getBlockValue()]);
+            d_pparams->getMaxBoxSize(),
+            d_pparams->getMinBoxSize(),
+            d_pparams->getCutFactor(),
+            d_pparams->getBadInterval(),
+            d_pparams->getDomainBoxes(box.getBlockId()));
          TBOX_ASSERT( !chopped.isEmpty() );
 
          if (chopped.size() != 1) {
@@ -862,8 +823,8 @@ t_post_load_distribution_barrier->stop();
                  << d_mpi.getSize() << " procs, averaging " << group_avg_load
                  << " or " << pow(group_avg_load, 1.0 / d_dim.getValue())
                  << "^" << d_dim << " per proc."
-                 << "  Avg is " << group_avg_load/d_min_size.getProduct()
-                 << " times min size of " << d_min_size
+                 << "  Avg is " << group_avg_load/d_pparams->getMinBoxSize().getProduct()
+                 << " times min size of " << d_pparams->getMinBoxSize()
                  << std::endl;
    }
 
@@ -2042,7 +2003,7 @@ TreeLoadBalancer::adjustLoad(
       tbox::plog << "  adjustLoad point_miss=" << point_miss
                  << "  range_miss="
                  << (range_miss > 0 ? " ":"") // Add space if missed range
-                 << (range_miss > 0.5*d_min_size.getProduct() ? " ":"") // Add space if missed range by a lot
+                 << (range_miss > 0.5*d_pparams->getMinBoxSize().getProduct() ? " ":"") // Add space if missed range by a lot
                  << range_miss
                  << "  " << main_bin.getSumLoad() << '/'
                  << ideal_load << " [" << low_load << ',' << high_load << ']'
@@ -3502,8 +3463,8 @@ TreeLoadBalancer::breakOffLoad(
    t_find_bad_cuts->start();
    hier::BoxUtilities::findBadCutPoints(bad_cuts,
       box,
-      d_block_domain_boxes[box.getBlockId().getBlockValue()],
-      d_bad_interval);
+      d_pparams->getDomainBoxes(box.getBlockId()),
+      d_pparams->getBadInterval());
    t_find_bad_cuts->stop();
 
    // Penalty for not transfering ideal load.
@@ -4267,7 +4228,7 @@ TreeLoadBalancer::breakOffLoad_planar(
       tbox::plog << "      breakOffLoad_planar attempting to break "
                  << ideal_brk_load << " from Box "
                  << box << box.numberCells() << '|' << box.size()
-                 << " min_size=" << d_min_size << std::endl;
+                 << " min_size=" << d_pparams->getMinBoxSize() << std::endl;
    }
 
    breakoff.clear();
@@ -4335,22 +4296,22 @@ TreeLoadBalancer::breakOffLoad_planar(
       // Compute valid cut planes on high and low sides of upper cut plane.
       int lo_upper_cut_plane = box.lower()(brk_dir) + int(ideal_upper_cut_offset);
       int hi_upper_cut_plane = box.lower()(brk_dir) + int(ideal_upper_cut_offset) + 1;
-      lo_upper_cut_plane = ROUND_TO_LO(lo_upper_cut_plane, d_cut_factor(brk_dir));
-      hi_upper_cut_plane = ROUND_TO_HI(hi_upper_cut_plane, d_cut_factor(brk_dir));
-      while ( lo_upper_cut_plane > box.lower()(brk_dir)   && bad[lo_upper_cut_plane-box.lower()(brk_dir)] ) { lo_upper_cut_plane -= d_cut_factor(brk_dir); }
-      while ( hi_upper_cut_plane < box.upper()(brk_dir)+1 && bad[hi_upper_cut_plane-box.lower()(brk_dir)] ) { hi_upper_cut_plane += d_cut_factor(brk_dir); }
+      lo_upper_cut_plane = ROUND_TO_LO(lo_upper_cut_plane, d_pparams->getCutFactor()(brk_dir));
+      hi_upper_cut_plane = ROUND_TO_HI(hi_upper_cut_plane, d_pparams->getCutFactor()(brk_dir));
+      while ( lo_upper_cut_plane > box.lower()(brk_dir)   && bad[lo_upper_cut_plane-box.lower()(brk_dir)] ) { lo_upper_cut_plane -= d_pparams->getCutFactor()(brk_dir); }
+      while ( hi_upper_cut_plane < box.upper()(brk_dir)+1 && bad[hi_upper_cut_plane-box.lower()(brk_dir)] ) { hi_upper_cut_plane += d_pparams->getCutFactor()(brk_dir); }
 
       // Compute valid cut planes on high and low sides of lower cut plane.
       int lo_lower_cut_plane = box.lower()(brk_dir) + int(ideal_lower_cut_offset);
       int hi_lower_cut_plane = box.lower()(brk_dir) + int(ideal_lower_cut_offset) + 1;
-      lo_lower_cut_plane = ROUND_TO_LO(lo_lower_cut_plane, d_cut_factor(brk_dir));
-      hi_lower_cut_plane = ROUND_TO_HI(hi_lower_cut_plane, d_cut_factor(brk_dir));
-      while ( lo_lower_cut_plane > box.lower()(brk_dir)   && bad[lo_lower_cut_plane-box.lower()(brk_dir)] ) { lo_lower_cut_plane -= d_cut_factor(brk_dir); }
-      while ( hi_lower_cut_plane < box.upper()(brk_dir)+1 && bad[hi_lower_cut_plane-box.lower()(brk_dir)] ) { hi_lower_cut_plane += d_cut_factor(brk_dir); }
+      lo_lower_cut_plane = ROUND_TO_LO(lo_lower_cut_plane, d_pparams->getCutFactor()(brk_dir));
+      hi_lower_cut_plane = ROUND_TO_HI(hi_lower_cut_plane, d_pparams->getCutFactor()(brk_dir));
+      while ( lo_lower_cut_plane > box.lower()(brk_dir)   && bad[lo_lower_cut_plane-box.lower()(brk_dir)] ) { lo_lower_cut_plane -= d_pparams->getCutFactor()(brk_dir); }
+      while ( hi_lower_cut_plane < box.upper()(brk_dir)+1 && bad[hi_lower_cut_plane-box.lower()(brk_dir)] ) { hi_lower_cut_plane += d_pparams->getCutFactor()(brk_dir); }
 
 
-      if ( lo_lower_cut_plane - box.lower()(brk_dir) > d_min_size(brk_dir) &&
-           box.upper()(brk_dir)+1 - lo_lower_cut_plane > d_min_size(brk_dir) ) {
+      if ( lo_lower_cut_plane - box.lower()(brk_dir) > d_pparams->getMinBoxSize()(brk_dir) &&
+           box.upper()(brk_dir)+1 - lo_lower_cut_plane > d_pparams->getMinBoxSize()(brk_dir) ) {
 
          const int lo_lower_cut_vol = brk_area*( lo_lower_cut_plane - box.lower()(brk_dir) );
 
@@ -4364,8 +4325,8 @@ TreeLoadBalancer::breakOffLoad_planar(
          }
       }
 
-      if ( ( hi_lower_cut_plane - box.lower()(brk_dir) > d_min_size(brk_dir) &&
-           box.upper()(brk_dir)+1 - hi_lower_cut_plane > d_min_size(brk_dir) ) ||
+      if ( ( hi_lower_cut_plane - box.lower()(brk_dir) > d_pparams->getMinBoxSize()(brk_dir) &&
+           box.upper()(brk_dir)+1 - hi_lower_cut_plane > d_pparams->getMinBoxSize()(brk_dir) ) ||
            hi_lower_cut_plane >= box.upper()(brk_dir)+1 ) {
 
          const int hi_lower_cut_vol = brk_area*( hi_lower_cut_plane - box.lower()(brk_dir) );
@@ -4380,8 +4341,8 @@ TreeLoadBalancer::breakOffLoad_planar(
          }
       }
 
-      if ( ( box.upper()(brk_dir)+1 - lo_upper_cut_plane > d_min_size(brk_dir) &&
-           lo_upper_cut_plane - box.lower()(brk_dir) > d_min_size(brk_dir) ) ||
+      if ( ( box.upper()(brk_dir)+1 - lo_upper_cut_plane > d_pparams->getMinBoxSize()(brk_dir) &&
+           lo_upper_cut_plane - box.lower()(brk_dir) > d_pparams->getMinBoxSize()(brk_dir) ) ||
            lo_upper_cut_plane <= box.lower()(brk_dir) ) {
 
          const int lo_upper_cut_vol = brk_area*( box.upper()(brk_dir)+1 - lo_upper_cut_plane );
@@ -4396,8 +4357,8 @@ TreeLoadBalancer::breakOffLoad_planar(
          }
       }
 
-      if ( box.upper()(brk_dir)+1 - hi_upper_cut_plane > d_min_size(brk_dir) &&
-           hi_upper_cut_plane - box.lower()(brk_dir) > d_min_size(brk_dir) ) {
+      if ( box.upper()(brk_dir)+1 - hi_upper_cut_plane > d_pparams->getMinBoxSize()(brk_dir) &&
+           hi_upper_cut_plane - box.lower()(brk_dir) > d_pparams->getMinBoxSize()(brk_dir) ) {
 
          const int hi_upper_cut_vol = brk_area*( box.upper()(brk_dir)+1 - hi_upper_cut_plane );
 
@@ -4444,11 +4405,11 @@ TreeLoadBalancer::breakOffLoad_planar(
       const hier::Box& b = *bi;
       const hier::IntVector s = b.numberCells();
       for (int d = 0; d < d_dim.getValue(); ++d) {
-         if (((s(d) < d_min_size(d)) && (s(d) != box_dims(d))) ||
+         if (((s(d) < d_pparams->getMinBoxSize()(d)) && (s(d) != box_dims(d))) ||
              (s(d) > box_dims(d))) {
             TBOX_ERROR("TreeLoadBalancer library error:\n"
                << "breakoff box " << b << ", size " << s
-               << "\nis not between the min size " << d_min_size
+               << "\nis not between the min size " << d_pparams->getMinBoxSize()
                << "\nand the original box size " << box_dims << "\n"
                << "break box size " << best_breakoff_box.numberCells() << "\n"
                << "ideal brk load " << ideal_brk_load);
@@ -4461,11 +4422,11 @@ TreeLoadBalancer::breakOffLoad_planar(
       const hier::Box& b = *bi;
       const hier::IntVector s = b.numberCells();
       for (int d = 0; d < d_dim.getValue(); ++d) {
-         if (((s(d) < d_min_size(d)) && (s(d) != box_dims(d))) ||
+         if (((s(d) < d_pparams->getMinBoxSize()(d)) && (s(d) != box_dims(d))) ||
              (s(d) > box_dims(d))) {
             TBOX_ERROR("TreeLoadBalancer library error:\n"
                << "leftover box " << b << ", size " << s
-               << "\nis not between the min size " << d_min_size
+               << "\nis not between the min size " << d_pparams->getMinBoxSize()
                << "\nand the original box size " << box_dims << "\n"
                << "break box size " << best_breakoff_box.numberCells() << "\n"
                << "ideal brk load " << ideal_brk_load);
@@ -4556,7 +4517,7 @@ TreeLoadBalancer::breakOffLoad_cubic(
       tbox::plog << "      breakOffLoad_cubic attempting to break "
                  << ideal_brk_load << " from Box "
                  << box << box.numberCells() << '|' << box.size()
-                 << " min_size=" << d_min_size << std::endl;
+                 << " min_size=" << d_pparams->getMinBoxSize() << std::endl;
    }
 
    breakoff.clear();
@@ -4596,16 +4557,16 @@ TreeLoadBalancer::breakOffLoad_cubic(
     * corners.  Using the other boxes result in too much fragmentation
     * of the incoming box.
     */
-   hier::IntVector brk_size(d_min_size);
-   brk_size.max(d_cut_factor);
+   hier::IntVector brk_size(d_pparams->getMinBoxSize());
+   brk_size.max(d_pparams->getCutFactor());
    brk_size.min(box_dims);
 
    /*
-    * Make sure brk_size is a multiple of d_cut_factor.
+    * Make sure brk_size is a multiple of d_pparams->getCutFactor().
     */
    for (int d = 0; d < d_dim.getValue(); ++d) {
-      if (brk_size(d) % d_cut_factor(d) != 0) {
-         brk_size(d) = ((brk_size(d) / d_cut_factor(d)) + 1) * d_cut_factor(d);
+      if (brk_size(d) % d_pparams->getCutFactor()(d) != 0) {
+         brk_size(d) = ((brk_size(d) / d_pparams->getCutFactor()(d)) + 1) * d_pparams->getCutFactor()(d);
       }
    }
 
@@ -4614,13 +4575,13 @@ TreeLoadBalancer::breakOffLoad_cubic(
     * corner boxes by gradually moving the intersections away
     * from their initial location.
     */
-   hier::IntVector lower_intersection(box.lower() + d_min_size);
-   hier::IntVector upper_intersection(box.upper() - d_min_size + one_vec);
+   hier::IntVector lower_intersection(box.lower() + d_pparams->getMinBoxSize());
+   hier::IntVector upper_intersection(box.upper() - d_pparams->getMinBoxSize() + one_vec);
    for ( int d=0; d<d_dim.getValue(); ++d ) {
       lower_intersection(d) = ROUND_TO_HI( lower_intersection(d),
-                                           d_cut_factor(d) );
+                                           d_pparams->getCutFactor()(d) );
       upper_intersection(d) = ROUND_TO_LO( upper_intersection(d),
-                                           d_cut_factor(d) );
+                                           d_pparams->getCutFactor()(d) );
    }
 
 
@@ -4647,17 +4608,17 @@ TreeLoadBalancer::breakOffLoad_cubic(
 
          if ( touches_upper_side ) {
             corner_box.lower()(d) = upper_intersection(d);
-            if ( corner_box.lower()(d) - box.lower()(d) < d_min_size(d) ) {
+            if ( corner_box.lower()(d) - box.lower()(d) < d_pparams->getMinBoxSize()(d) ) {
                corner_box.lower()(d) = box.lower()(d);
             }
-            expansion_rate(d) = -d_cut_factor(d);
+            expansion_rate(d) = -d_pparams->getCutFactor()(d);
          }
          else {
             corner_box.upper()(d) = lower_intersection(d) - 1;
-            if ( box.upper()(d) - corner_box.upper()(d) < d_min_size(d) ) {
+            if ( box.upper()(d) - corner_box.upper()(d) < d_pparams->getMinBoxSize()(d) ) {
                corner_box.upper()(d) = box.upper()(d);
             }
-            expansion_rate(d) = d_cut_factor(d);
+            expansion_rate(d) = d_pparams->getCutFactor()(d);
          }
 
       }
@@ -4725,7 +4686,7 @@ TreeLoadBalancer::breakOffLoad_cubic(
             corner_box.upper()(inc_dir) = tbox::MathUtilities<int>::Min(
                corner_box.upper()(inc_dir) + expansion_rate(inc_dir),
                box.upper()(inc_dir) );
-            if ( box.upper()(inc_dir) - corner_box.upper()(inc_dir) < d_min_size(inc_dir) ) {
+            if ( box.upper()(inc_dir) - corner_box.upper()(inc_dir) < d_pparams->getMinBoxSize()(inc_dir) ) {
                corner_box.upper()(inc_dir) = box.upper()(inc_dir);
             }
             growable(inc_dir) = corner_box.upper()(inc_dir) < box.upper()(inc_dir);
@@ -4734,7 +4695,7 @@ TreeLoadBalancer::breakOffLoad_cubic(
             corner_box.lower()(inc_dir) = tbox::MathUtilities<int>::Max(
                corner_box.lower()(inc_dir) + expansion_rate(inc_dir),
                box.lower()(inc_dir) );
-            if ( corner_box.lower()(inc_dir) - box.lower()(inc_dir) < d_min_size(inc_dir) ) {
+            if ( corner_box.lower()(inc_dir) - box.lower()(inc_dir) < d_pparams->getMinBoxSize()(inc_dir) ) {
                corner_box.lower()(inc_dir) = box.lower()(inc_dir);
             }
             growable(inc_dir) = corner_box.lower()(inc_dir) > box.lower()(inc_dir);
@@ -4782,11 +4743,11 @@ TreeLoadBalancer::breakOffLoad_cubic(
       const hier::Box& b = *bi;
       const hier::IntVector s = b.numberCells();
       for (int d = 0; d < d_dim.getValue(); ++d) {
-         if (((s(d) < d_min_size(d)) && (s(d) != box_dims(d))) ||
+         if (((s(d) < d_pparams->getMinBoxSize()(d)) && (s(d) != box_dims(d))) ||
              (s(d) > box_dims(d))) {
             TBOX_ERROR("TreeLoadBalancer library error:\n"
                << "breakoff box " << b << ", with size " << s
-               << "\nis not between the min size " << d_min_size
+               << "\nis not between the min size " << d_pparams->getMinBoxSize()
                << "\nand the original box size " << box_dims << "\n"
                << "orig box " << box << "\n"
                << "break box " << b << "\n"
@@ -4801,11 +4762,11 @@ TreeLoadBalancer::breakOffLoad_cubic(
       const hier::Box& b = *bi;
       const hier::IntVector s = b.numberCells();
       for (int d = 0; d < d_dim.getValue(); ++d) {
-         if (((s(d) < d_min_size(d)) && (s(d) != box_dims(d))) ||
+         if (((s(d) < d_pparams->getMinBoxSize()(d)) && (s(d) != box_dims(d))) ||
              (s(d) > box_dims(d))) {
             TBOX_ERROR("TreeLoadBalancer library error:\n"
                << "leftover box " << b << ", with size " << s
-               << "\nis not between the min size " << d_min_size
+               << "\nis not between the min size " << d_pparams->getMinBoxSize()
                << "\nand the original box size " << box_dims << "\n"
                << "orig box " << box << "\n"
                << "break box " << b << "\n"

@@ -14,6 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
+#include "SAMRAI/mesh/PartitioningParams.h"
 #include "SAMRAI/mesh/BoxTransitSet.h"
 #include "SAMRAI/hier/MappingConnector.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
@@ -1054,11 +1055,7 @@ private:
 
    //@{
    //! @name Data shared with private methods during balancing.
-   mutable hier::IntVector d_min_size;
-   mutable hier::IntVector d_max_size;
-   mutable std::vector<hier::BoxContainer> d_block_domain_boxes;
-   mutable hier::IntVector d_bad_interval;
-   mutable hier::IntVector d_cut_factor;
+   mutable boost::shared_ptr<PartitioningParams> d_pparams;
    mutable LoadType d_global_avg_load;
    mutable LoadType d_min_load;
    //@}
