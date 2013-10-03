@@ -1036,8 +1036,8 @@ t_post_load_distribution_barrier->stop();
     * BoxInTransits are placed here before determining whether to keep
     * them or send them to another part of the tree.
     */
-   BoxTransitSet unassigned(balance_box_level.getBoxes().begin(),
-                         balance_box_level.getBoxes().end());
+   BoxTransitSet unassigned;
+   unassigned.insertAll(balance_box_level.getBoxes());
 
 
    /*
@@ -5117,27 +5117,6 @@ TreeLoadBalancer::prebalanceBoxLevel(
 
 
 /*
-**************************************************************************
-**************************************************************************
-*/
-
-std::ostream&
-operator << (
-   std::ostream& co,
-   const TreeLoadBalancer::BoxInTransit& r)
-{
-   co << r.d_box
-   << r.d_box.numberCells() << '|'
-   << r.d_box.numberCells().getProduct();
-   co << '-' << r.d_orig_box
-   << r.d_box.numberCells() << '|'
-   << r.d_box.numberCells().getProduct();
-   return co;
-}
-
-
-
-/*
  ***********************************************************************
  ***********************************************************************
  */
@@ -5249,69 +5228,6 @@ t_post_load_distribution_barrier = tbox::TimerManager::getManager()->
       t_misc2 = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::misc2");
    }
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-TreeLoadBalancer::BoxInTransit::BoxInTransit(
-   const tbox::Dimension &dim) :
-   d_box(dim),
-   d_orig_box(dim)
-{
-}
-
-
-
-/*
- *************************************************************************
- *************************************************************************
- */
-TreeLoadBalancer::BoxInTransit::BoxInTransit(
-   const hier::Box& origin):
-   d_box(origin),
-   d_orig_box(origin),
-   d_boxload(origin.size())
-{
-}
-
-
-
-/*
- *************************************************************************
- * Construct a new BoxInTransit with the history of an existing box.
- *************************************************************************
- */
-TreeLoadBalancer::BoxInTransit::BoxInTransit(
-   const BoxInTransit& other,
-   const hier::Box& box,
-   int rank,
-   hier::LocalId local_id):
-   d_box(box, local_id, rank),
-   d_orig_box(other.d_orig_box),
-   d_boxload(d_box.size())
-{
-}
-
-void
-TreeLoadBalancer::BoxInTransit::putToMessageStream(
-   tbox::MessageStream &mstream ) const
-{
-   d_box.putToMessageStream(mstream);
-   d_orig_box.putToMessageStream(mstream);
-   mstream << d_boxload;
-   return;
-}
-
-void
-TreeLoadBalancer::BoxInTransit::getFromMessageStream(
-   tbox::MessageStream &mstream )
-{
-   d_box.getFromMessageStream(mstream);
-   d_orig_box.getFromMessageStream(mstream);
-   mstream >> d_boxload;
-   return;
 }
 
 TreeLoadBalancer::SubtreeData::SubtreeData():

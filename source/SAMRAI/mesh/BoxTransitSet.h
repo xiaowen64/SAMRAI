@@ -13,6 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/tbox/MessageStream.h"
 
 #include <set>
 
@@ -45,14 +46,21 @@ class BoxTransitSet {
        *
        * @param[in] dim
        */
-      BoxInTransit(const tbox::Dimension& dim);
+      BoxInTransit(const tbox::Dimension& dim) :
+         d_box(dim),
+         d_orig_box(dim)
+         { }
+
 
       /*!
        * @brief Construct a new BoxInTransit from an originating box.
        *
        * @param[in] origin
        */
-      BoxInTransit(const hier::Box& origin);
+      BoxInTransit( const hier::Box& origin ):
+         d_box(origin),
+         d_orig_box(origin),
+         d_boxload(origin.size()) {}
 
       /*!
        * @brief Construct new object having the history an existing
@@ -70,7 +78,11 @@ class BoxTransitSet {
          const BoxInTransit& other,
          const hier::Box& box,
          int rank,
-         hier::LocalId local_id);
+         hier::LocalId local_id) :
+         d_box(box, local_id, rank),
+         d_orig_box(other.d_orig_box),
+         d_boxload(d_box.size())
+         { }
 
       /*!
        * @brief Assignment operator
@@ -120,8 +132,13 @@ class BoxTransitSet {
        * This is the opposite of getFromMessageStream().
        */
       void
-      putToMessageStream(
-         tbox::MessageStream &msg) const;
+      putToMessageStream(tbox::MessageStream &mstream) const
+         {
+            d_box.putToMessageStream(mstream);
+            d_orig_box.putToMessageStream(mstream);
+            mstream << d_boxload;
+            return;
+         }
 
       /*!
        * @brief Set attributes according to data in a MessageStream.
@@ -129,8 +146,13 @@ class BoxTransitSet {
        * This is the opposite of putToMessageStream().
        */
       void
-      getFromMessageStream(
-         tbox::MessageStream &msg);
+      getFromMessageStream(tbox::MessageStream &mstream)
+         {
+            d_box.getFromMessageStream(mstream);
+            d_orig_box.getFromMessageStream(mstream);
+            mstream >> d_boxload;
+            return;
+         }
 
       //! @brief The Box.
       hier::Box d_box;
@@ -149,7 +171,16 @@ class BoxTransitSet {
    friend std::ostream&
    operator << (
       std::ostream& co,
-      const BoxInTransit& r);
+      const BoxInTransit& r)
+      {
+         co << r.d_box
+            << r.d_box.numberCells() << '|'
+            << r.d_box.numberCells().getProduct();
+         co << '-' << r.d_orig_box
+            << r.d_box.numberCells() << '|'
+            << r.d_box.numberCells().getProduct();
+         return co;
+      }
 
 
    /*!
@@ -191,12 +222,6 @@ class BoxTransitSet {
       typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::key_type key_type;
       typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::value_type value_type;
       BoxTransitSet() : d_set(), d_sumload(0) {}
-      template<class InputIterator>
-      BoxTransitSet( InputIterator first, InputIterator last ) :
-         d_set(first,last), d_sumload(0) {
-         for ( const_iterator bi=d_set.begin(); bi!=d_set.end(); ++bi )
-         { d_sumload += bi->d_boxload; };
-      }
       iterator begin() { return d_set.begin(); }
       iterator end() { return d_set.end(); }
       const_iterator begin() const { return d_set.begin(); }
@@ -227,6 +252,17 @@ class BoxTransitSet {
       iterator upper_bound( const key_type &k ) const { return d_set.upper_bound(k); }
       //@}
       LoadType getSumLoad() const { return d_sumload; }
+      void insertAll( const hier::BoxContainer &other ) {
+         size_t old_size = d_set.size();
+         for ( hier::BoxContainer::const_iterator bi=other.begin(); bi!=other.end(); ++bi ) {
+            BoxInTransit new_box(*bi);
+            d_set.insert( new_box );
+            d_sumload += new_box.d_boxload;
+         };
+         if ( d_set.size() != old_size + other.size() ) {
+            TBOX_ERROR("BoxTransitSet's insertAll currently can't weed out duplicates.");
+         }
+      }
       void insertAll( const BoxTransitSet &other ) {
          size_t old_size = d_set.size();
          d_set.insert( other.d_set.begin(), other.d_set.end() );

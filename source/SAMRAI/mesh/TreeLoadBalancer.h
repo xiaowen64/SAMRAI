@@ -301,14 +301,6 @@ private:
 
    typedef BoxTransitSet::BoxInTransit BoxInTransit;
 
-   /*!
-    * @brief Insert BoxInTransit into an output stream.
-    */
-   friend std::ostream&
-   operator << (
-      std::ostream& co,
-      const BoxInTransit& r);
-
 
    /*!
     * @brief Comparison functor for sorting BoxInTransit from more to
@@ -888,21 +880,6 @@ private:
        * the individual cell loads in the overlap region.
        */
       return double((box * restriction).size());
-   }
-
-   /*!
-    * @brief Compute the load for a BoxTransitSet.
-    */
-   LoadType
-   computeLoad(
-      const BoxTransitSet &transit_set) const
-   {
-      LoadType load = 0;
-      for ( BoxTransitSet::const_iterator bi=transit_set.begin();
-            bi!=transit_set.end(); ++bi ) {
-         load += bi->d_boxload;
-      }
-      return load;
    }
 
    /*
