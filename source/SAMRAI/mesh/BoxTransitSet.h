@@ -28,6 +28,8 @@ namespace mesh {
 
 class BoxTransitSet {
 
+public:
+
    typedef double LoadType;
 
    /*!
