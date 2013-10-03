@@ -1030,10 +1030,10 @@ t_post_load_distribution_barrier->stop();
 
 
    /*
-    * unassigned is a container of BoxInTransit that has been released by
+    * unassigned is a container of BoxTransitSet::BoxInTransit that has been released by
     * a process and has not yet been assigned to another.  First, put
     * all initial local work in unassigned.  Imported
-    * BoxInTransits are placed here before determining whether to keep
+    * BoxTransitSet::BoxInTransits are placed here before determining whether to keep
     * them or send them to another part of the tree.
     */
    BoxTransitSet unassigned;
@@ -1073,7 +1073,7 @@ t_post_load_distribution_barrier->stop();
     * Step 2, remote part:
     *
     * Finish getting tree and load data from children.
-    * Add imported BoxInTransit to unassigned bin.
+    * Add imported BoxTransitSet::BoxInTransit to unassigned bin.
     */
    t_get_load_from_children->start();
    while ( child_recv_stage.numberOfCompletedMembers() > 0 ||
@@ -1115,7 +1115,7 @@ t_post_load_distribution_barrier->stop();
          if ( child_subtrees[cindex].d_work_traded.size() < 10 ) {
             for ( BoxTransitSet::const_iterator ni=child_subtrees[cindex].d_work_traded.begin();
                   ni!=child_subtrees[cindex].d_work_traded.end(); ++ni ) {
-               const BoxInTransit& box_in_transit = *ni;
+               const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
                tbox::plog << "  " << box_in_transit;
             }
          }
@@ -1307,7 +1307,7 @@ t_post_load_distribution_barrier->stop();
          if ( my_subtree.d_work_traded.size() < 10 ) {
             for ( BoxTransitSet::const_iterator ni=my_subtree.d_work_traded.begin();
                   ni!=my_subtree.d_work_traded.end(); ++ni ) {
-               const BoxInTransit& box_in_transit = *ni;
+               const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
                tbox::plog << "  " << box_in_transit;
             }
          }
@@ -1488,7 +1488,7 @@ t_post_load_distribution_barrier->stop();
         ni = unassigned.begin();
         ni != unassigned.end(); /* incremented in loop */) {
 
-      const BoxInTransit& box_in_transit = *ni;
+      const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
       balanced_box_level.addBox(box_in_transit.d_box);
 
       if (box_in_transit.d_box.isIdEqual(box_in_transit.d_orig_box)) {
@@ -1794,7 +1794,7 @@ TreeLoadBalancer::assignBoxesToLocalProcess(
    for (BoxTransitSet::iterator ni = unassigned.begin();
         ni != unassigned.end(); ++ni ) {
 
-      const BoxInTransit& box_in_transit = *ni;
+      const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
       balanced_box_level.addBox(box_in_transit.d_box);
 
       if (!box_in_transit.d_box.isIdEqual(box_in_transit.d_orig_box)) {
@@ -1844,7 +1844,7 @@ TreeLoadBalancer::removeLocallyOriginatedBoxesFromBoxTransitSet(
 /*
  *************************************************************************
  *
- * This method adjusts the load in a main_bin of BoxInTransits by
+ * This method adjusts the load in a main_bin of BoxTransitSet::BoxInTransits by
  * moving work between it and a holding bin.  It tries to bring
  * main_bin's load to the specified ideal_load.
  *
@@ -1854,8 +1854,8 @@ TreeLoadBalancer::removeLocallyOriginatedBoxesFromBoxTransitSet(
  * the ideal.
  *
  * This method makes a best effort and returns the amount of load
- * moved.  It can move BoxInTransit between given sets and, if needed,
- * break some BoxInTransit up to move part of the work.
+ * moved.  It can move BoxTransitSet::BoxInTransit between given sets and, if needed,
+ * break some BoxTransitSet::BoxInTransit up to move part of the work.
  *
  * This method is purely local--it reassigns the load but does not
  * communicate the change to any remote process.
@@ -1917,11 +1917,11 @@ TreeLoadBalancer::adjustLoad(
 
    /*
     * The algorithm cycles through a do-loop.  Each time around, we
-    * try to swap some BoxInTransit between main_bin and hold_bin
+    * try to swap some BoxTransitSet::BoxInTransit between main_bin and hold_bin
     * until we have main_bin's load in [low_load,high_load] or we
     * cannot improve the actual_transfer any further.  Then, we try
-    * breaking up a BoxInTransit to improve the results.  If we break
-    * some BoxInTransit, we generate some more swapping options that
+    * breaking up a BoxTransitSet::BoxInTransit to improve the results.  If we break
+    * some BoxTransitSet::BoxInTransit, we generate some more swapping options that
     * were not there before, so we loop back to try swapping again.
     *
     * If a break phase does not break any Box (and does not generate
@@ -1976,7 +1976,7 @@ TreeLoadBalancer::adjustLoad(
       if ( d_allow_box_breaking ) {
          /*
           * Assuming that we did the best we could, swapping
-          * some BoxInTransit without breaking any, we now break up a Box
+          * some BoxTransitSet::BoxInTransit without breaking any, we now break up a Box
           * in the overloaded side for partial transfer to the
           * underloaded side.
           */
@@ -2078,7 +2078,7 @@ TreeLoadBalancer::packSubtreeDataUp(
    msg << static_cast<int>(for_export.size());
    for (BoxTransitSet::const_iterator
         ni = for_export.begin(); ni != for_export.end(); ++ni) {
-      const BoxInTransit& box_in_transit = *ni;
+      const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
       box_in_transit.putToMessageStream(msg);
    }
    msg << subtree_data.d_wants_work_from_parent;
@@ -2109,13 +2109,13 @@ TreeLoadBalancer::unpackSubtreeDataUp(
    msg >> subtree_data.d_eff_load_upperlimit;
    msg >> num_boxes;
    /*
-    * As we pull each BoxInTransit out, give it a new id that reflects
+    * As we pull each BoxTransitSet::BoxInTransit out, give it a new id that reflects
     * its new owner.
     */
-   BoxInTransit received_box(d_dim);
+   BoxTransitSet::BoxInTransit received_box(d_dim);
    for (int i = 0; i < num_boxes; ++i) {
       received_box.getFromMessageStream(msg);
-      BoxInTransit renamed_box(received_box,
+      BoxTransitSet::BoxInTransit renamed_box(received_box,
                                received_box.getBox(),
                                d_mpi.getRank(),
                                next_available_index);
@@ -2142,7 +2142,7 @@ TreeLoadBalancer::packSubtreeDataDown(
    msg << static_cast<int>(for_export.size());
    for (BoxTransitSet::const_iterator
         ni = for_export.begin(); ni != for_export.end(); ++ni) {
-      const BoxInTransit& box_in_transit = *ni;
+      const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
       box_in_transit.putToMessageStream(msg);
    }
    t_pack_load->stop();
@@ -2164,13 +2164,13 @@ TreeLoadBalancer::unpackSubtreeDataDown(
    int num_boxes = 0;
    msg >> num_boxes;
    /*
-    * As we pull each BoxInTransit out, give it a new id that reflects
+    * As we pull each BoxTransitSet::BoxInTransit out, give it a new id that reflects
     * its new owner.
     */
-   BoxInTransit received_box(d_dim);
+   BoxTransitSet::BoxInTransit received_box(d_dim);
    for (int i = 0; i < num_boxes; ++i) {
       received_box.getFromMessageStream(msg);
-      BoxInTransit renamed_box(received_box,
+      BoxTransitSet::BoxInTransit renamed_box(received_box,
                                received_box.getBox(),
                                d_mpi.getRank(),
                                next_available_index);
@@ -2240,7 +2240,7 @@ TreeLoadBalancer::computeSurplusPerEffectiveDescendent(
  * Connector.
  *
  * Determine edges in unbalanced_to_balanced by sending balanced
- * BoxInTransit back to the owners of the unbalanced Boxes that
+ * BoxTransitSet::BoxInTransit back to the owners of the unbalanced Boxes that
  * originated them.  We don't know what ranks will send back the
  * balanced boxes, so we keep receiving messages from any rank until
  * we have accounted for all the cells in the unbalanced BoxLevel.
@@ -2253,12 +2253,12 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
 {
    t_construct_semilocal->start();
 
-   // Stuff the imported BoxInTransits into buffers by their original owners.
+   // Stuff the imported BoxTransitSet::BoxInTransits into buffers by their original owners.
    t_pack_edge->start();
    std::map<int,boost::shared_ptr<tbox::MessageStream> > outgoing_messages;
    for ( BoxTransitSet::const_iterator bi=kept_imports.begin();
          bi!=kept_imports.end(); ++bi ) {
-      const BoxInTransit &bit = *bi;
+      const BoxTransitSet::BoxInTransit &bit = *bi;
       boost::shared_ptr<tbox::MessageStream> &mstream =
          outgoing_messages[bit.d_orig_box.getOwnerRank()];
       if ( !mstream ) {
@@ -2387,7 +2387,7 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
 
    t_misc2->start();
    std::vector<char> incoming_message; // Keep outside loop to avoid reconstructions.
-   BoxInTransit balanced_box_in_transit(d_dim);
+   BoxTransitSet::BoxInTransit balanced_box_in_transit(d_dim);
    while ( num_unaccounted_cells > 0 ) {
 
       t_construct_semilocal_comm_wait->start();
@@ -2618,7 +2618,7 @@ TreeLoadBalancer::setupAsyncCommObjects(
          child_comms[child_num].setMPITag(TreeLoadBalancer_LOADTAG0,
                                           TreeLoadBalancer_LOADTAG1);
          child_comms[child_num].limitFirstDataLength(
-            sizeof(BoxInTransit)*TreeLoadBalancer_FIRSTDATALEN);
+            sizeof(BoxTransitSet::BoxInTransit)*TreeLoadBalancer_FIRSTDATALEN);
       }
    }
 
@@ -2634,7 +2634,7 @@ TreeLoadBalancer::setupAsyncCommObjects(
       parent_comm->setMPITag(TreeLoadBalancer_LOADTAG0,
          TreeLoadBalancer_LOADTAG1);
       parent_comm->limitFirstDataLength(
-         sizeof(BoxInTransit)*TreeLoadBalancer_FIRSTDATALEN);
+         sizeof(BoxTransitSet::BoxInTransit)*TreeLoadBalancer_FIRSTDATALEN);
 
    }
 
@@ -2724,7 +2724,7 @@ TreeLoadBalancer::adjustLoadByBreaking(
    std::vector<hier::Box> breakoff;
    std::vector<hier::Box> leftover;
    double breakoff_amt = 0.0;
-   BoxInTransit breakbox(d_dim);
+   BoxTransitSet::BoxInTransit breakbox(d_dim);
 
    int break_acceptance_flags[3] = {0,0,0};
    int &found_breakage = break_acceptance_flags[2];
@@ -2744,7 +2744,7 @@ TreeLoadBalancer::adjustLoadByBreaking(
          continue;
       }
 
-      const BoxInTransit& candidate = *si;
+      const BoxTransitSet::BoxInTransit& candidate = *si;
 
       if (d_print_steps) {
          tbox::plog << "    Considering break candidate " << candidate
@@ -2820,7 +2820,7 @@ TreeLoadBalancer::adjustLoadByBreaking(
       for (std::vector<hier::Box>::const_iterator bi = breakoff.begin();
            bi != breakoff.end();
            ++bi) {
-         BoxInTransit give_box_in_transit(
+         BoxTransitSet::BoxInTransit give_box_in_transit(
             breakbox,
             *bi,
             d_mpi.getRank(),
@@ -2841,7 +2841,7 @@ TreeLoadBalancer::adjustLoadByBreaking(
       for (std::vector<hier::Box>::const_iterator bi = leftover.begin();
            bi != leftover.end();
            ++bi) {
-         BoxInTransit keep_box_in_transit(
+         BoxTransitSet::BoxInTransit keep_box_in_transit(
             breakbox,
             *bi,
             d_mpi.getRank(),
@@ -2871,8 +2871,8 @@ TreeLoadBalancer::adjustLoadByBreaking(
  * Attempt to adjust the load of a main_bin by swapping boxes with
  * a hold_bin.
  *
- * Transfering a BoxInTransit from one BoxTransitSet to another
- * is considered a degenerate "swap" (a BoxInTransit is
+ * Transfering a BoxTransitSet::BoxInTransit from one BoxTransitSet to another
+ * is considered a degenerate "swap" (a BoxTransitSet::BoxInTransit is
  * swapped for nothing) handled by this function.
  *
  * This method can transfer load both ways.
@@ -3024,7 +3024,7 @@ TreeLoadBalancer::adjustLoadByPopping(
 
    while ( !src->empty() ) {
 
-      const BoxInTransit &candidate_box = *src->begin();
+      const BoxTransitSet::BoxInTransit &candidate_box = *src->begin();
 
       bool improved = evaluateBreak(
          acceptance_flags,
@@ -3073,7 +3073,7 @@ TreeLoadBalancer::adjustLoadByPopping(
 
 /*
  *************************************************************************
- * Find a BoxInTransit in src and a BoxInTransit in dst which when
+ * Find a BoxTransitSet::BoxInTransit in src and a BoxTransitSet::BoxInTransit in dst which when
  * swapped results in shifting close to ideal_shift from src to dst.
  * Make the swap.  Return whether a swap pair was found.
  *************************************************************************
@@ -3162,9 +3162,9 @@ TreeLoadBalancer::swapLoadPair(
    BoxTransitSet::iterator src_loside = src.end();
    BoxTransitSet::iterator dst_loside = dst.end();
 
-   // A dummy BoxInTransit for set searches.
+   // A dummy BoxTransitSet::BoxInTransit for set searches.
    hier::Box dummy_box(d_dim);
-   BoxInTransit dummy_search_target(d_dim);
+   BoxTransitSet::BoxInTransit dummy_search_target(d_dim);
 
    // Difference between swap results and ideal, >= 0
    LoadType hiside_transfer = 0.0;
@@ -3176,11 +3176,11 @@ TreeLoadBalancer::swapLoadPair(
 
    if (dst.empty()) {
       /*
-       * There is no dst BoxInTransit, so the swap would
+       * There is no dst BoxTransitSet::BoxInTransit, so the swap would
        * degnerate to moving a box from src to dst.  Find
-       * the best src BoxInTransit to move.
+       * the best src BoxTransitSet::BoxInTransit to move.
        */
-      dummy_search_target = BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
+      dummy_search_target = BoxTransitSet::BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
       dummy_search_target.d_boxload = ideal_transfer;
       const BoxTransitSet::iterator src_test = src.lower_bound(dummy_search_target);
 
@@ -3241,7 +3241,7 @@ TreeLoadBalancer::swapLoadPair(
           * Look for a load less than the load of src_test by
           * ideal_transfer.
           */
-         dummy_search_target = BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
+         dummy_search_target = BoxTransitSet::BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
          dummy_search_target.d_boxload = tbox::MathUtilities<LoadType>::Max(
                src_test->d_boxload - ideal_transfer,
                0);

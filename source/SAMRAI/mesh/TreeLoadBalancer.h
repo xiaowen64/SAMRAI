@@ -299,31 +299,6 @@ private:
 
    typedef double LoadType;
 
-   typedef BoxTransitSet::BoxInTransit BoxInTransit;
-
-
-   /*!
-    * @brief Comparison functor for sorting BoxInTransit from more to
-    * less loads.
-    */
-   struct BoxInTransitMoreLoad {
-      /*
-       * @brief Compares two BoxInTransit for sorting them from more load
-       * to less load.
-       */
-      bool
-      operator () (
-         const BoxInTransit& a,
-         const BoxInTransit& b) const
-      {
-         if (a.getBox().size() != b.getBox().size()) {
-            return a.d_boxload > b.d_boxload;
-         }
-         return a.d_box.getBoxId() < b.d_box.getBoxId();
-      }
-   };
-
-
 
    /*
     * Static integer constants.  Tags are for isolating messages
