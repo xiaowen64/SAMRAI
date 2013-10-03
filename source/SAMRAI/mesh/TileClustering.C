@@ -1067,8 +1067,8 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
    size_t coarse_tag_count = 0;
 
    const int num_coarse_cells = coarsened_box.size();
-// #pragma omp parallel
-// #pragma omp for schedule(dynamic)
+#pragma omp parallel
+#pragma omp for schedule(dynamic)
    for ( int offset=0; offset<num_coarse_cells; ++offset ) {
       const pdat::CellIndex coarse_cell_index(coarsened_box.index(offset));
 
@@ -1256,8 +1256,8 @@ TileClustering::coalesceClusters(
 
       const int nblocks = tile_box_level.getGridGeometry()->getNumberBlocks();
 
-// #pragma omp parallel
-// #pragma omp for schedule(dynamic)
+#pragma omp parallel
+#pragma omp for schedule(dynamic)
       for (int b = 0; b < nblocks; ++b) {
          hier::BlockId block_id(b);
 
@@ -1312,8 +1312,8 @@ TileClustering::coalesceClusters(
        * tile--->tag edges.
        */
       const int rank = tile_box_level.getMPI().getRank();
-// #pragma omp parallel
-// #pragma omp for schedule(dynamic)
+#pragma omp parallel
+#pragma omp for schedule(dynamic)
       for ( size_t i=0; i<box_vector.size(); ++i ) {
 
          box_vector[i].setId(hier::BoxId(hier::LocalId(static_cast<int>(i)),rank));
