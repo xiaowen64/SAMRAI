@@ -13,6 +13,8 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/hier/BaseGridGeometry.h"
+
 #include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <vector>
@@ -44,7 +46,8 @@ PartitioningParams(
    d_min_size(min_size),
    d_max_size(max_size),
    d_bad_interval(bad_interval),
-   d_cut_factor(cut_factor)
+   d_cut_factor(cut_factor),
+   d_load_comparison_tol(1e-8)
 {
    for ( int bid(0); bid<grid_geometry.getNumberBlocks(); ++bid ) {
       grid_geometry.computePhysicalDomain(
@@ -72,6 +75,10 @@ PartitioningParams(
       return d_cut_factor;
    }
 
+   const double &getLoadComparisonTol() const {
+      return d_load_comparison_tol;
+   }
+
 private:
 
    std::map<hier::BlockId,hier::BoxContainer> d_block_domain_boxes;
@@ -79,6 +86,7 @@ private:
    hier::IntVector d_max_size;
    hier::IntVector d_bad_interval;
    hier::IntVector d_cut_factor;
+   double d_load_comparison_tol;
 
 };
 

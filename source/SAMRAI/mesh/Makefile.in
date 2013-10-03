@@ -36,6 +36,7 @@ OBJS = 	\
 	ChopAndPackLoadBalancer.o \
 	TilePartitioner.o \
 	LoadBalanceStrategy.o \
+	BalanceBoxBreaker.o \
 	GriddingAlgorithmStrategy.o \
 	BergerRigoutsos.o \
 	BergerRigoutsosNode.o \

@@ -652,37 +652,6 @@ private:
       const BoxTransitSet &kept_imports ) const;
 
    /*!
-    * @brief Break off a given load size from a given Box.
-    *
-    * @param[out] breakoff Boxes broken off (usually just one).
-    *
-    * @param[out] leftover Remainder of Box after breakoff is gone.
-    *
-    * @param[out] brk_load The load broken off.
-    *
-    * @param[in] box Box to break.
-    *
-    * @param[in] ideal_load Ideal load to break.
-    *
-    * @param[in] low_load
-    *
-    * @param[in] high_load
-    *
-    * @return whether a successful break was made.
-    *
-    * @pre ideal_load_to_break > 0
-    */
-   bool
-   breakOffLoad(
-      std::vector<hier::Box>& breakoff,
-      std::vector<hier::Box>& leftover,
-      double& brk_load,
-      const hier::Box& box,
-      double ideal_load,
-      double low_load,
-      double high_load ) const;
-
-   /*!
     * @brief Evaluate a trial box-break.
     *
     * Return whether new_load is an improvement over current_load.
@@ -782,28 +751,6 @@ private:
    double
    computeSlenderPenalty(
       const hier::Box& a) const;
-
-   bool
-   breakOffLoad_planar(
-      std::vector<hier::Box>& breakoff,
-      std::vector<hier::Box>& leftover,
-      double& brk_load,
-      const hier::Box& box,
-      double ideal_load,
-      double low_load,
-      double high_load,
-      const std::vector<std::vector<bool> >& bad_cuts ) const;
-
-   bool
-   breakOffLoad_cubic(
-      std::vector<hier::Box>& breakoff,
-      std::vector<hier::Box>& leftover,
-      double& brk_load,
-      const hier::Box& box,
-      double ideal_load,
-      double low_load,
-      double high_load,
-      const std::vector<std::vector<bool> >& bad_cuts ) const;
 
    void
    burstBox(
