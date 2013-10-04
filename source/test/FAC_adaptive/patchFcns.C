@@ -131,8 +131,8 @@ void setCellDataToSinusoid(
    const SinusoidFcn& fcn)
 {
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    if (cd.getDim() == tbox::Dimension(2)) {
       MDA_Access<double, 2, MDA_OrderColMajor<2> >
@@ -226,8 +226,8 @@ void setCellDataToQuartic(
    const QuarticFcn& fcn)
 {
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    if (cd.getDim() == tbox::Dimension(2)) {
       MDA_Access<double, 2, MDA_OrderColMajor<2> >

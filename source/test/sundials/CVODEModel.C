@@ -416,8 +416,8 @@ CVODEModel::applyGradientDetector(
       const boost::shared_ptr<Patch>& patch = *p;
 
       boost::shared_ptr<CellData<int> > tag_data(
-         patch->getPatchData(tag_index),
-         BOOST_CAST_TAG);
+         BOOST_CAST<CellData<int>, PatchData>(
+            patch->getPatchData(tag_index)));
       TBOX_ASSERT(tag_data);
 
       // dumb implementation that tags all cells.
@@ -442,8 +442,8 @@ CVODEModel::setPhysicalBoundaryConditions(
    NULL_USE(time);
 
    boost::shared_ptr<CellData<double> > soln_data(
-      patch.getPatchData(d_soln_scr_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CellData<double>, PatchData>(
+         patch.getPatchData(d_soln_scr_id)));
 
    TBOX_ASSERT(soln_data);
 
@@ -652,14 +652,14 @@ CVODEModel::evaluateRHSFunction(
          const boost::shared_ptr<Patch>& patch = *ip;
 
          boost::shared_ptr<CellData<double> > y(
-            patch->getPatchData(d_soln_scr_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<CellData<double>, PatchData>(
+               patch->getPatchData(d_soln_scr_id)));
          boost::shared_ptr<SideData<double> > diff(
-            patch->getPatchData(d_diff_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<SideData<double>, PatchData>(
+               patch->getPatchData(d_diff_id)));
          boost::shared_ptr<CellData<double> > rhs(
-            patch->getPatchData(y_dot_samvect->getComponentDescriptorIndex(0)),
-            BOOST_CAST_TAG);
+            BOOST_CAST<CellData<double>, PatchData>(
+               patch->getPatchData(y_dot_samvect->getComponentDescriptorIndex(0))));
          TBOX_ASSERT(y);
          TBOX_ASSERT(diff);
          TBOX_ASSERT(rhs);
@@ -668,8 +668,8 @@ CVODEModel::evaluateRHSFunction(
          const Index ilast(patch->getBox().upper());
 
          const boost::shared_ptr<CartesianPatchGeometry> patch_geom(
-            patch->getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<CartesianPatchGeometry, PatchGeometry>(
+               patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
          const double* dx = patch_geom->getDx();
 
@@ -836,8 +836,8 @@ int CVODEModel::CVSpgmrPrecondSet(
          const Index ilast(patch->getBox().upper());
 
          boost::shared_ptr<SideData<double> > diffusion(
-            patch->getPatchData(d_diff_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<SideData<double>, PatchData>(
+               patch->getPatchData(d_diff_id)));
          TBOX_ASSERT(diffusion);
 
          diffusion->fillAll(1.0);
@@ -850,11 +850,11 @@ int CVODEModel::CVSpgmrPrecondSet(
          if (d_use_neumann_bcs) {
 
             boost::shared_ptr<OuterfaceData<int> > flag_data(
-               patch->getPatchData(d_flag_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<OuterfaceData<int>, PatchData>(
+                  patch->getPatchData(d_flag_id)));
             boost::shared_ptr<OuterfaceData<double> > neuf_data(
-               patch->getPatchData(d_neuf_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<OuterfaceData<double>, PatchData>(
+                  patch->getPatchData(d_neuf_id)));
             TBOX_ASSERT(flag_data);
             TBOX_ASSERT(neuf_data);
 
@@ -1021,8 +1021,8 @@ int CVODEModel::CVSpgmrPrecondSolve(
          const boost::shared_ptr<Patch>& patch = *p;
 
          boost::shared_ptr<CellData<double> > z_data(
-            patch->getPatchData(z_indx),
-            BOOST_CAST_TAG);
+            BOOST_CAST<CellData<double>, PatchData>(
+               patch->getPatchData(z_indx)));
          TBOX_ASSERT(z_data);
 
          /*
@@ -1035,8 +1035,8 @@ int CVODEModel::CVSpgmrPrecondSolve(
           */
          PatchCellDataOpsReal<double> math_ops;
          boost::shared_ptr<CellData<double> > r_data(
-            patch->getPatchData(r_indx),
-            BOOST_CAST_TAG);
+            BOOST_CAST<CellData<double>, PatchData>(
+               patch->getPatchData(r_indx)));
          TBOX_ASSERT(r_data);
          math_ops.scale(r_data, 1.0 / gamma, r_data, r_data->getBox());
 
@@ -1044,8 +1044,8 @@ int CVODEModel::CVSpgmrPrecondSolve(
           * Copy interior data from z vector to soln_scratch
           */
          boost::shared_ptr<CellData<double> > z_scr_data(
-            patch->getPatchData(d_soln_scr_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<CellData<double>, PatchData>(
+               patch->getPatchData(d_soln_scr_id)));
          TBOX_ASSERT(z_scr_data);
          z_scr_data->copy(*z_data);
       }
@@ -1127,11 +1127,11 @@ int CVODEModel::CVSpgmrPrecondSolve(
          const boost::shared_ptr<Patch>& patch = *p;
 
          boost::shared_ptr<CellData<double> > soln_scratch(
-            patch->getPatchData(d_soln_scr_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<CellData<double>, PatchData>(
+               patch->getPatchData(d_soln_scr_id)));
          boost::shared_ptr<CellData<double> > z(
-            patch->getPatchData(z_indx),
-            BOOST_CAST_TAG);
+            BOOST_CAST<CellData<double>, PatchData>(
+               patch->getPatchData(z_indx)));
          TBOX_ASSERT(soln_scratch);
          TBOX_ASSERT(z);
 
@@ -1252,8 +1252,8 @@ CVODEModel::setInitialConditions(
              * Set initial conditions for y
              */
             boost::shared_ptr<CellData<double> > y_init(
-               soln_init_samvect->getComponentPatchData(cn, *patch),
-               BOOST_CAST_TAG);
+               BOOST_CAST<CellData<double>, PatchData>(
+                  soln_init_samvect->getComponentPatchData(cn, *patch)));
             TBOX_ASSERT(y_init);
             y_init->fillAll(d_initial_value);
 
@@ -1264,8 +1264,8 @@ CVODEModel::setInitialConditions(
              * approach and set it to 1.
              */
             boost::shared_ptr<SideData<double> > diffusion(
-               patch->getPatchData(d_diff_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<SideData<double>, PatchData>(
+                  patch->getPatchData(d_diff_id)));
             TBOX_ASSERT(diffusion);
 
             diffusion->fillAll(1.0);

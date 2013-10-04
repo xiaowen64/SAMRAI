@@ -128,12 +128,12 @@ void SphericalShellGenerator::setTags(
       boost::shared_ptr<hier::Patch> patch = *pi;
 
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-         patch->getPatchGeometry(),
-         BOOST_CAST_TAG);
+         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            patch->getPatchGeometry()));
 
       boost::shared_ptr<pdat::CellData<int> > tag_data(
-         patch->getPatchData(tag_data_id),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            patch->getPatchData(tag_data_id)));
 
       TBOX_ASSERT(patch_geom);
       TBOX_ASSERT(tag_data);
@@ -287,8 +287,8 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
    if (variable_name == "Tag value") {
 
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-         patch.getPatchGeometry(),
-         BOOST_CAST_TAG);
+         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            patch.getPatchGeometry()));
       TBOX_ASSERT(patch_geom);
 
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));

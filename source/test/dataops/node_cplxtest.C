@@ -256,8 +256,8 @@ int main(
               ip != level->end(); ++ip) {
             patch = *ip;
             boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-               patch->getPatchGeometry(),
-               BOOST_CAST_TAG);
+               BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+                  patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             double node_vol = dx[0];
@@ -265,8 +265,8 @@ int main(
                node_vol *= dx[i];
             }
             boost::shared_ptr<pdat::NodeData<double> > data(
-               patch->getPatchData(nwgt_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+                  patch->getPatchData(nwgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(node_vol);
             pdat::NodeIndex ni(dim);
@@ -1250,8 +1250,8 @@ complexDataSameAsValue(
            ip != level->end(); ++ip) {
          patch = *ip;
          boost::shared_ptr<pdat::NodeData<dcomplex> > nvdata(
-            patch->getPatchData(desc_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+               patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(nvdata);
 
@@ -1290,8 +1290,8 @@ doubleDataSameAsValue(
            ip != level->end(); ++ip) {
          patch = *ip;
          boost::shared_ptr<pdat::NodeData<double> > nvdata(
-            patch->getPatchData(desc_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+               patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(nvdata);
 

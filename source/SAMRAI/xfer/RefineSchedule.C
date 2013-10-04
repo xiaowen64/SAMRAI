@@ -4234,7 +4234,7 @@ RefineSchedule::setRefineItems(
    TBOX_ASSERT( d_refine_items.empty() );
    d_refine_items.insert( d_refine_items.end(),
                           d_refine_classes->getNumberOfRefineItems(),
-                          static_cast<const SAMRAI::xfer::RefineClasses::Data *const>(0) );
+                          static_cast<const SAMRAI::xfer::RefineClasses::Data*>(0) );
 
    for (int nd = 0; nd < static_cast<int>(d_refine_items.size()); nd++) {
       d_refine_classes->getRefineItem(nd).d_tag = nd;

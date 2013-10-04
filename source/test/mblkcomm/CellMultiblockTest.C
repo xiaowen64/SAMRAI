@@ -127,8 +127,8 @@ void CellMultiblockTest::initializeDataOnPatch(
       for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
          boost::shared_ptr<pdat::CellData<double> > cell_data(
-            patch.getPatchData(d_variables[i], getDataContext()),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(cell_data);
 
          hier::Box dbox = cell_data->getGhostBox();
@@ -181,8 +181,8 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
    for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
       boost::shared_ptr<pdat::CellData<double> > cell_data(
-         patch.getPatchData(d_variables[i], getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
 
       /*
@@ -260,8 +260,8 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
    for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
 
       boost::shared_ptr<pdat::CellData<double> > cell_data(
-         patch.getPatchData(d_variables[i], getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
 
       hier::Box sing_fill_box(cell_data->getGhostBox() * fill_box);
@@ -325,8 +325,9 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
                                                   encon_blk_id);
 
                   boost::shared_ptr<pdat::CellData<double> > sing_data(
-                     encon_patch->getPatchData(d_variables[i], getDataContext()),
-                     BOOST_CAST_TAG);
+                     BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+                        encon_patch->getPatchData(
+                           d_variables[i], getDataContext())));
                   TBOX_ASSERT(sing_data);
 
                   pdat::CellIterator ciend(pdat::CellGeometry::end(encon_fill_box));
@@ -426,8 +427,8 @@ bool CellMultiblockTest::verifyResults(
       double correct = (double)block_id.getBlockValue();
 
       boost::shared_ptr<pdat::CellData<double> > cell_data(
-         patch.getPatchData(d_variables[i], getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
       int depth = cell_data->getDepth();
 
@@ -488,9 +489,7 @@ bool CellMultiblockTest::verifyResults(
          }
       }
 
-      boost::shared_ptr<hier::PatchGeometry> pgeom(
-         patch.getPatchGeometry(),
-         BOOST_CAST_TAG);
+      boost::shared_ptr<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
       TBOX_ASSERT(pgeom);
 
       for (int b = 0; b < d_dim.getValue(); b++) {

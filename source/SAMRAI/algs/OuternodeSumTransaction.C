@@ -155,9 +155,9 @@ OuternodeSumTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
    boost::shared_ptr<pdat::OuternodeData<double> > onode_dst_data(
-      d_dst_level->getPatch(d_dst_node.getGlobalId())->
-      getPatchData(s_refine_items[d_refine_item_id]->d_scratch),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+         d_dst_level->getPatch(d_dst_node.getGlobalId())->
+         getPatchData(s_refine_items[d_refine_item_id]->d_scratch)));
    TBOX_ASSERT(onode_dst_data);
 
    onode_dst_data->unpackStreamAndSum(stream, *d_overlap);
@@ -167,15 +167,15 @@ void
 OuternodeSumTransaction::copyLocalData()
 {
    boost::shared_ptr<pdat::OuternodeData<double> > onode_dst_data(
-      d_dst_level->getPatch(d_dst_node.getGlobalId())->
-      getPatchData(s_refine_items[d_refine_item_id]->d_scratch),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+         d_dst_level->getPatch(d_dst_node.getGlobalId())->
+         getPatchData(s_refine_items[d_refine_item_id]->d_scratch)));
    TBOX_ASSERT(onode_dst_data);
 
    boost::shared_ptr<pdat::OuternodeData<double> > onode_src_data(
-      d_src_level->getPatch(d_src_node.getGlobalId())->
-      getPatchData(s_refine_items[d_refine_item_id]->d_src),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+         d_src_level->getPatch(d_src_node.getGlobalId())->
+         getPatchData(s_refine_items[d_refine_item_id]->d_src)));
    TBOX_ASSERT(onode_src_data);
 
    onode_dst_data->sum(*onode_src_data, *d_overlap);

@@ -93,11 +93,11 @@ NodeIntegerInjection::coarsen(
    const hier::IntVector& ratio) const
 {
    boost::shared_ptr<NodeData<int> > fdata(
-      fine.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<NodeData<int>, hier::PatchData>(
+         fine.getPatchData(src_component)));
    boost::shared_ptr<NodeData<int> > cdata(
-      coarse.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<NodeData<int>, hier::PatchData>(
+         coarse.getPatchData(dst_component)));
 
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);

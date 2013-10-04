@@ -808,8 +808,7 @@ CellPoissonFACOps::initializeOperatorState(
                                   << "correspond to a variable.\n");
       }
       boost::shared_ptr<pdat::CellVariable<double> > cell_var(
-         var,
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(var));
       TBOX_ASSERT(cell_var);
    }
    {
@@ -820,8 +819,7 @@ CellPoissonFACOps::initializeOperatorState(
                                   << "correspond to a variable.\n");
       }
       boost::shared_ptr<pdat::CellVariable<double> > cell_var(
-         var,
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(var));
       TBOX_ASSERT(cell_var);
    }
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
@@ -838,8 +836,7 @@ CellPoissonFACOps::initializeOperatorState(
              * Some data checks can only be done if the data already exists.
              */
             boost::shared_ptr<pdat::CellData<double> > cd(
-               fd,
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(fd));
             TBOX_ASSERT(cd);
             if (cd->getDepth() > 1) {
                TBOX_WARNING(d_object_name
@@ -854,8 +851,7 @@ CellPoissonFACOps::initializeOperatorState(
              * Some data checks can only be done if the data already exists.
              */
             boost::shared_ptr<pdat::CellData<double> > cd(
-               ud,
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(ud));
             TBOX_ASSERT(cd);
             if (cd->getDepth() > 1) {
                TBOX_WARNING(d_object_name
@@ -919,8 +915,8 @@ CellPoissonFACOps::initializeOperatorState(
     *   acceptable strings for looking up the refine operator.
     */
    boost::shared_ptr<geom::CartesianGridGeometry> geometry(
-      d_hierarchy->getGridGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+         d_hierarchy->getGridGeometry()));
    TBOX_ASSERT(geometry);
    boost::shared_ptr<hier::Variable> variable;
 
@@ -1414,14 +1410,14 @@ CellPoissonFACOps::smoothErrorByRedBlack(
          }
 
          boost::shared_ptr<pdat::CellData<double> > err_data(
-            data.getComponentPatchData(0, *patch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               data.getComponentPatchData(0, *patch)));
          boost::shared_ptr<pdat::CellData<double> > residual_data(
-            residual.getComponentPatchData(0, *patch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               residual.getComponentPatchData(0, *patch)));
          boost::shared_ptr<pdat::SideData<double> > flux_data(
-            patch->getPatchData(flux_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+               patch->getPatchData(flux_id)));
 
          TBOX_ASSERT(err_data);
          TBOX_ASSERT(residual_data);
@@ -1466,14 +1462,14 @@ CellPoissonFACOps::smoothErrorByRedBlack(
          }
 
          boost::shared_ptr<pdat::CellData<double> > err_data(
-            data.getComponentPatchData(0, *patch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               data.getComponentPatchData(0, *patch)));
          boost::shared_ptr<pdat::CellData<double> > residual_data(
-            residual.getComponentPatchData(0, *patch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               residual.getComponentPatchData(0, *patch)));
          boost::shared_ptr<pdat::SideData<double> > flux_data(
-            patch->getPatchData(flux_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+               patch->getPatchData(flux_id)));
 
          TBOX_ASSERT(err_data);
          TBOX_ASSERT(residual_data);
@@ -1537,8 +1533,8 @@ CellPoissonFACOps::ewingFixFlux(
    const int patch_ln = patch.getPatchLevelNumber();
    const hier::GlobalId id = patch.getGlobalId();
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
    const hier::Box& patch_box(patch.getBox());
@@ -1552,8 +1548,8 @@ CellPoissonFACOps::ewingFixFlux(
    if (d_poisson_spec.dIsVariable()) {
 
       boost::shared_ptr<pdat::SideData<double> > diffcoef_data(
-         patch.getPatchData(d_poisson_spec.getDPatchDataId()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+            patch.getPatchData(d_poisson_spec.getDPatchDataId())));
 
       TBOX_ASSERT(diffcoef_data);
 
@@ -1870,11 +1866,11 @@ CellPoissonFACOps::computeCompositeResidualOnLevel(
       const boost::shared_ptr<hier::Patch>& patch = *pi;
 
       boost::shared_ptr<pdat::CellData<double> > soln_data(
-         solution.getComponentPatchData(0, *patch),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            solution.getComponentPatchData(0, *patch)));
       boost::shared_ptr<pdat::SideData<double> > flux_data(
-         patch->getPatchData(flux_id),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+            patch->getPatchData(flux_id)));
 
       TBOX_ASSERT(soln_data);
       TBOX_ASSERT(flux_data);
@@ -1902,17 +1898,17 @@ CellPoissonFACOps::computeCompositeResidualOnLevel(
         pi != level->end(); ++pi) {
       const boost::shared_ptr<hier::Patch>& patch = *pi;
       boost::shared_ptr<pdat::CellData<double> > soln_data(
-         solution.getComponentPatchData(0, *patch),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            solution.getComponentPatchData(0, *patch)));
       boost::shared_ptr<pdat::CellData<double> > rhs_data(
-         rhs.getComponentPatchData(0, *patch),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            rhs.getComponentPatchData(0, *patch)));
       boost::shared_ptr<pdat::CellData<double> > residual_data(
-         residual.getComponentPatchData(0, *patch),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            residual.getComponentPatchData(0, *patch)));
       boost::shared_ptr<pdat::SideData<double> > flux_data(
-         patch->getPatchData(flux_id),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+            patch->getPatchData(flux_id)));
 
       TBOX_ASSERT(soln_data);
       TBOX_ASSERT(rhs_data);
@@ -1934,8 +1930,8 @@ CellPoissonFACOps::computeCompositeResidualOnLevel(
           *  avoid writing another loop for it.
           */
          boost::shared_ptr<pdat::OutersideData<double> > oflux_data(
-            patch->getPatchData(d_oflux_scratch_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+               patch->getPatchData(d_oflux_scratch_id)));
 
          TBOX_ASSERT(oflux_data);
 
@@ -2026,8 +2022,8 @@ CellPoissonFACOps::computeVectorWeights(
            p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
          boost::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
-            patch->getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               patch->getPatchGeometry()));
 
          TBOX_ASSERT(patch_geometry);
 
@@ -2042,8 +2038,8 @@ CellPoissonFACOps::computeVectorWeights(
          }
 
          boost::shared_ptr<pdat::CellData<double> > w(
-            patch->getPatchData(weight_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(weight_id)));
          TBOX_ASSERT(w);
          w->fillAll(cell_vol);
       }
@@ -2084,8 +2080,8 @@ CellPoissonFACOps::computeVectorWeights(
                hier::Box intersection = *i * (patch->getBox());
                if (!intersection.empty()) {
                   boost::shared_ptr<pdat::CellData<double> > w(
-                     patch->getPatchData(weight_id),
-                     BOOST_CAST_TAG);
+                     BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+                        patch->getPatchData(weight_id)));
                   TBOX_ASSERT(w);
                   w->fillAll(0.0, intersection);
 
@@ -2115,8 +2111,7 @@ CellPoissonFACOps::checkInputPatchDataIndices() const
       boost::shared_ptr<hier::Variable> var;
       vdb.mapIndexToVariable(d_poisson_spec.getDPatchDataId(), var);
       boost::shared_ptr<pdat::SideVariable<double> > diffcoef_var(
-         var,
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::SideVariable<double>, hier::Variable>(var));
 
       TBOX_ASSERT(diffcoef_var);
    }
@@ -2125,8 +2120,7 @@ CellPoissonFACOps::checkInputPatchDataIndices() const
       boost::shared_ptr<hier::Variable> var;
       vdb.mapIndexToVariable(d_poisson_spec.getCPatchDataId(), var);
       boost::shared_ptr<pdat::CellVariable<double> > scalar_field_var(
-         var,
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(var));
 
       TBOX_ASSERT(scalar_field_var);
    }
@@ -2135,8 +2129,7 @@ CellPoissonFACOps::checkInputPatchDataIndices() const
       boost::shared_ptr<hier::Variable> var;
       vdb.mapIndexToVariable(d_flux_id, var);
       boost::shared_ptr<pdat::SideVariable<double> > flux_var(
-         var,
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::SideVariable<double>, hier::Variable>(var));
 
       TBOX_ASSERT(flux_var);
    }
@@ -2165,8 +2158,8 @@ CellPoissonFACOps::computeFluxOnPatch(
       hier::IntVector::getOne(ratio_to_coarser_level.getDim()));
 
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const hier::Box& box = patch.getBox();
    const int* lower = &box.lower()[0];
@@ -2276,8 +2269,8 @@ CellPoissonFACOps::computeResidualOnPatch(
       rhs_data, residual_data);
 
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const hier::Box& box = patch.getBox();
    const int* lower = &box.lower()[0];
@@ -2443,8 +2436,8 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
 
    const int offset = red_or_black == 'r' ? 0 : 1;
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const hier::Box& box = patch.getBox();
    const int* lower = &box.lower()[0];

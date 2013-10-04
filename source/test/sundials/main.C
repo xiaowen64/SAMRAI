@@ -363,8 +363,8 @@ int main(
                const boost::shared_ptr<hier::Patch>& patch = *p;
 
                boost::shared_ptr<CellData<double> > y_data(
-                  y_init->getComponentPatchData(0, *patch),
-                  BOOST_CAST_TAG);
+                  BOOST_CAST<CellData<double>, hier::PatchData>(
+                     y_init->getComponentPatchData(0, *patch)));
                TBOX_ASSERT(y_data);
                y_data->print(y_data->getBox());
             }
@@ -444,8 +444,8 @@ int main(
                   const boost::shared_ptr<hier::Patch>& patch = *p;
 
                   boost::shared_ptr<CellData<double> > y_data(
-                     y_result->getComponentPatchData(0, *patch),
-                     BOOST_CAST_TAG);
+                     BOOST_CAST<CellData<double>, hier::PatchData>(
+                        y_result->getComponentPatchData(0, *patch)));
                   TBOX_ASSERT(y_data);
                   y_data->print(y_data->getBox());
                }

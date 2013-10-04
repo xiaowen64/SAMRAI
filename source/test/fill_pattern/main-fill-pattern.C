@@ -396,8 +396,8 @@ bool SingleLevelTestCase(
            p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::CellData<int> > cdata(
-            patch->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+               patch->getPatchData(data_id)));
          TBOX_ASSERT(cdata);
 
          int data_txt_id = patch->getBox().getLocalId().getValue();
@@ -415,8 +415,8 @@ bool SingleLevelTestCase(
            p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::NodeData<int> > ndata(
-            patch->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::NodeData<int>, hier::PatchData>(
+               patch->getPatchData(data_id)));
          TBOX_ASSERT(ndata);
 
          int data_txt_id = patch->getBox().getLocalId().getValue();
@@ -446,8 +446,8 @@ bool SingleLevelTestCase(
            p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::CellData<int> > cdata(
-            patch->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+               patch->getPatchData(data_id)));
          TBOX_ASSERT(cdata);
 
          pdat::CellData<int> expected(cdata->getBox(),
@@ -477,8 +477,8 @@ bool SingleLevelTestCase(
            p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::NodeData<int> > ndata(
-            patch->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::NodeData<int>, hier::PatchData>(
+               patch->getPatchData(data_id)));
          TBOX_ASSERT(ndata);
 
          pdat::NodeData<int> expected(ndata->getBox(),

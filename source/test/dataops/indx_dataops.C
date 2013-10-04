@@ -222,8 +222,9 @@ int main(
             // access sample data from patch
             boost::shared_ptr<pdat::IndexData<SampleIndexData,
                               pdat::CellGeometry> > sample(
-               patch->getPatchData(data_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::IndexData<SampleIndexData, pdat::CellGeometry>,
+                          hier::PatchData>(
+                  patch->getPatchData(data_id)));
             TBOX_ASSERT(sample);
 
             // iterate over cells of patch and invoke one "SampleIndexData"

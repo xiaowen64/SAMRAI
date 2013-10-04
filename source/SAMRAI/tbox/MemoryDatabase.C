@@ -1614,7 +1614,8 @@ MemoryDatabase::printDatabase(
    for (std::list<KeyData>::const_iterator j = d_keyvalues.begin();
         j != d_keyvalues.end(); j++) {
       if (j->d_type == Database::SAMRAI_DATABASE) {
-         boost::shared_ptr<MemoryDatabase> db(j->d_database, BOOST_CAST_TAG);
+         boost::shared_ptr<MemoryDatabase> db(
+            BOOST_CAST<MemoryDatabase, Database>(j->d_database));
          db->printDatabase(os, indent + 3, toprint);
       }
    }

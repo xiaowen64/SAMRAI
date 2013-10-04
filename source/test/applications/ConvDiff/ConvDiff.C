@@ -388,8 +388,8 @@ void ConvDiff::initializeDataOnPatch(
    if (initial_time) {
 
       const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-         patch.getPatchGeometry(),
-         BOOST_CAST_TAG);
+         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            patch.getPatchGeometry()));
       TBOX_ASSERT(patch_geom);
 
       const double* dx = patch_geom->getDx();
@@ -397,8 +397,8 @@ void ConvDiff::initializeDataOnPatch(
       const double* xhi = patch_geom->getXUpper();
 
       boost::shared_ptr<pdat::CellData<double> > primitive_vars(
-         patch.getPatchData(d_primitive_vars, getInteriorContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_primitive_vars, getInteriorContext())));
 
       TBOX_ASSERT(primitive_vars);
 
@@ -455,8 +455,8 @@ double ConvDiff::computeStableDtOnPatch(
    NULL_USE(time);
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
@@ -510,16 +510,16 @@ void ConvDiff::singleStep(
 {
 
    boost::shared_ptr<pdat::CellData<double> > prim_var_updated(
-      patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext())));
 
    boost::shared_ptr<pdat::CellData<double> > prim_var_fixed(
-      patch.getPatchData(d_primitive_vars, getInteriorContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_primitive_vars, getInteriorContext())));
 
    boost::shared_ptr<pdat::CellData<double> > function_eval(
-      patch.getPatchData(d_function_eval, getInteriorContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_function_eval, getInteriorContext())));
    TBOX_ASSERT(prim_var_updated);
    TBOX_ASSERT(prim_var_fixed);
    TBOX_ASSERT(function_eval);
@@ -528,8 +528,8 @@ void ConvDiff::singleStep(
    const hier::Index ilast = patch.getBox().upper();
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
@@ -623,11 +623,11 @@ void ConvDiff::tagGradientDetectorCells(
    NULL_USE(uses_richardson_extrapolation_too);
 
    boost::shared_ptr<pdat::CellData<int> > tags(
-      patch.getPatchData(tag_index),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+         patch.getPatchData(tag_index)));
    boost::shared_ptr<pdat::CellData<double> > primitive_vars(
-      patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext())));
    TBOX_ASSERT(tags);
    TBOX_ASSERT(primitive_vars);
 
@@ -676,8 +676,8 @@ void ConvDiff::setPhysicalBoundaryConditions(
    NULL_USE(fill_time);
 
    boost::shared_ptr<pdat::CellData<double> > primitive_vars(
-      patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext())));
 
    TBOX_ASSERT(primitive_vars);
    TBOX_ASSERT(primitive_vars->getGhostCellWidth() == d_nghosts);
@@ -1226,8 +1226,8 @@ void ConvDiff::checkBoundaryData(
 #endif
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const std::vector<hier::BoundaryBox>& bdry_boxes =
       pgeom->getCodimensionBoundaries(btype);

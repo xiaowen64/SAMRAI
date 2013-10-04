@@ -415,8 +415,7 @@ CellPoissonFACSolver::createVectorWrappers(
                                   << u << "\n");
       }
       boost::shared_ptr<pdat::CellVariable<double> > cell_variable(
-         variable,
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
       TBOX_ASSERT(cell_variable);
 #endif
       d_uv->addComponent(variable, u, s_weight_id[d_dim.getValue() - 1]);
@@ -434,8 +433,7 @@ CellPoissonFACSolver::createVectorWrappers(
                                   << f << "\n");
       }
       boost::shared_ptr<pdat::CellVariable<double> > cell_variable(
-         variable,
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
       TBOX_ASSERT(cell_variable);
 #endif
       d_fv->addComponent(variable, f, s_weight_id[d_dim.getValue() - 1]);

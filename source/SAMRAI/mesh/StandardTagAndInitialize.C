@@ -298,8 +298,8 @@ StandardTagAndInitialize::tagCellsForRefinement(
          const boost::shared_ptr<hier::Patch>& patch = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > tag_data(
-            patch->getPatchData(tag_index),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+               patch->getPatchData(tag_index)));
 
          TBOX_ASSERT(tag_data);
 
@@ -498,11 +498,11 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
       boost::shared_ptr<hier::Patch> fine_patch(
          patch_level->getPatch(coarse_patch->getGlobalId()));
       boost::shared_ptr<pdat::CellData<int> > ftags(
-         fine_patch->getPatchData(tag_index),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            fine_patch->getPatchData(tag_index)));
       boost::shared_ptr<pdat::CellData<int> > ctags(
-         coarse_patch->getPatchData(tag_index),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            coarse_patch->getPatchData(tag_index)));
 
       TBOX_ASSERT(ftags);
       TBOX_ASSERT(ctags);

@@ -256,17 +256,17 @@ int main(
       }
 
       boost::shared_ptr<math::HierarchyCellDataOpsReal<double> > cell_ops(
-         math::HierarchyDataOpsManager::getManager()->getOperationsDouble(cwgt,
-            hierarchy),
-         BOOST_CAST_TAG);
+         BOOST_CAST<math::HierarchyCellDataOpsReal<double>,
+                    math::HierarchyDataOpsReal<double> >(
+            math::HierarchyDataOpsManager::getManager()->getOperationsDouble(cwgt, hierarchy)));
       boost::shared_ptr<math::HierarchyFaceDataOpsReal<double> > face_ops(
-         math::HierarchyDataOpsManager::getManager()->getOperationsDouble(fwgt,
-            hierarchy),
-         BOOST_CAST_TAG);
+         BOOST_CAST<math::HierarchyFaceDataOpsReal<double>,
+                    math::HierarchyDataOpsReal<double> >(
+            math::HierarchyDataOpsManager::getManager()->getOperationsDouble(fwgt, hierarchy)));
       boost::shared_ptr<math::HierarchyNodeDataOpsReal<double> > node_ops(
-         math::HierarchyDataOpsManager::getManager()->getOperationsDouble(nwgt,
-            hierarchy),
-         BOOST_CAST_TAG);
+          BOOST_CAST<math::HierarchyNodeDataOpsReal<double>,
+                    math::HierarchyDataOpsReal<double> >(
+             math::HierarchyDataOpsManager::getManager()->getOperationsDouble(nwgt, hierarchy)));
 
       TBOX_ASSERT(cell_ops);
       TBOX_ASSERT(face_ops);
@@ -300,8 +300,8 @@ int main(
             const double* dx = pgeom->getDx();
             const double cell_vol = dx[0] * dx[1] * dx[2];
             boost::shared_ptr<pdat::CellData<double> > cvdata(
-               patch->getPatchData(cwgt_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+                  patch->getPatchData(cwgt_id)));
             TBOX_ASSERT(cvdata);
             cvdata->fillAll(cell_vol);
             if (ln == 0) cvdata->fillAll(0.0, (coarse_fine * patch->getBox()));
@@ -322,8 +322,8 @@ int main(
             const double* dx = pgeom->getDx();
             const double face_vol = dx[0] * dx[1] * dx[2];
             boost::shared_ptr<pdat::FaceData<double> > data(
-               patch->getPatchData(fwgt_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+                  patch->getPatchData(fwgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(face_vol);
             pdat::FaceIndex fi(dim3d);
@@ -453,8 +453,8 @@ int main(
             const double* dx = pgeom->getDx();
             const double node_vol = dx[0] * dx[1] * dx[2];
             boost::shared_ptr<pdat::NodeData<double> > data(
-               patch->getPatchData(nwgt_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+                  patch->getPatchData(nwgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(node_vol);
             pdat::NodeIndex ni(dim3d);

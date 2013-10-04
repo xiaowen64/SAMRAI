@@ -468,14 +468,14 @@ void MblkLinAdv::initializeDataOnPatch(
    if (initial_time) {
 
       boost::shared_ptr<pdat::CellData<double> > uval(
-         patch.getPatchData(d_uval, getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_uval, getDataContext())));
       boost::shared_ptr<pdat::CellData<double> > vol(
-         patch.getPatchData(d_vol, getDataContext()),
-            BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_vol, getDataContext())));
       boost::shared_ptr<pdat::NodeData<double> > xyz(
-         patch.getPatchData(d_xyz, getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+            patch.getPatchData(d_xyz, getDataContext())));
 
       TBOX_ASSERT(uval);
       TBOX_ASSERT(vol);
@@ -593,8 +593,8 @@ void MblkLinAdv::initializeDataOnPatch(
          patch.allocatePatchData(d_workload_data_id);
       }
       boost::shared_ptr<pdat::CellData<double> > workload_data(
-         patch.getPatchData(d_workload_data_id),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_workload_data_id)));
       TBOX_ASSERT(workload_data);
       workload_data->fillAll(1.0);
    }
@@ -634,14 +634,14 @@ double MblkLinAdv::computeStableDtOnPatch(
    const hier::Index ilast = patch.getBox().upper();
 
    boost::shared_ptr<pdat::CellData<double> > uval(
-      patch.getPatchData(d_uval, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_uval, getDataContext())));
    boost::shared_ptr<pdat::CellData<double> > vol(
-      patch.getPatchData(d_vol, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_vol, getDataContext())));
    boost::shared_ptr<pdat::NodeData<double> > xyz(
-      patch.getPatchData(d_xyz, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+         patch.getPatchData(d_xyz, getDataContext())));
 
    TBOX_ASSERT(uval);
    TBOX_ASSERT(vol);
@@ -801,20 +801,20 @@ void MblkLinAdv::computeFluxesOnPatch(
    const hier::Index ilast = patch.getBox().upper();
 
    boost::shared_ptr<pdat::CellData<double> > uval(
-      patch.getPatchData(d_uval, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_uval, getDataContext())));
 
    boost::shared_ptr<pdat::CellData<double> > vol(
-      patch.getPatchData(d_vol, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_vol, getDataContext())));
 
    boost::shared_ptr<pdat::SideData<double> > flux(
-      patch.getPatchData(d_flux, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         patch.getPatchData(d_flux, getDataContext())));
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
-      patch.getPatchData(d_xyz, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+         patch.getPatchData(d_xyz, getDataContext())));
 
    /*
     * Verify that the integrator providing the context correctly
@@ -1087,8 +1087,8 @@ void MblkLinAdv::setPhysicalBoundaryConditions(
    NULL_USE(fill_time);
 
    boost::shared_ptr<pdat::CellData<double> > uval(
-      patch.getPatchData(d_uval, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_uval, getDataContext())));
 
    TBOX_ASSERT(uval);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
@@ -1205,18 +1205,18 @@ void MblkLinAdv::postprocessRefine(
 {
 
    boost::shared_ptr<pdat::CellData<double> > cuval(
-      coarse.getPatchData(d_uval, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         coarse.getPatchData(d_uval, getDataContext())));
    boost::shared_ptr<pdat::CellData<double> > cvol(
-      coarse.getPatchData(d_vol, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         coarse.getPatchData(d_vol, getDataContext())));
 
    boost::shared_ptr<pdat::CellData<double> > fuval(
-      fine.getPatchData(d_uval, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         fine.getPatchData(d_uval, getDataContext())));
    boost::shared_ptr<pdat::CellData<double> > fvol(
-      fine.getPatchData(d_vol, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         fine.getPatchData(d_vol, getDataContext())));
 
    TBOX_ASSERT(cuval);
    TBOX_ASSERT(fuval);
@@ -1469,18 +1469,18 @@ void MblkLinAdv::postprocessCoarsen(
 {
 
    boost::shared_ptr<pdat::CellData<double> > cuval(
-      coarse.getPatchData(d_uval, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         coarse.getPatchData(d_uval, getDataContext())));
    boost::shared_ptr<pdat::CellData<double> > cvol(
-      coarse.getPatchData(d_vol, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         coarse.getPatchData(d_vol, getDataContext())));
 
    boost::shared_ptr<pdat::CellData<double> > fuval(
-      fine.getPatchData(d_uval, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         fine.getPatchData(d_uval, getDataContext())));
    boost::shared_ptr<pdat::CellData<double> > fvol(
-      fine.getPatchData(d_vol, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         fine.getPatchData(d_vol, getDataContext())));
 
    TBOX_ASSERT(cuval);
    TBOX_ASSERT(cvol);
@@ -1664,8 +1664,8 @@ void MblkLinAdv::tagGradientDetectorCells(
    const int error_level_number = patch.getPatchLevelNumber();
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
-      patch.getPatchData(d_xyz, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+         patch.getPatchData(d_xyz, getDataContext())));
    TBOX_ASSERT(xyz);
    double* x = xyz->getPointer(0);
    double* y = xyz->getPointer(1);
@@ -1682,11 +1682,11 @@ void MblkLinAdv::tagGradientDetectorCells(
    tbox::plog << "box    = " << patch.getBox() << endl;
 
    boost::shared_ptr<pdat::CellData<int> > tags(
-      patch.getPatchData(tag_indx),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+         patch.getPatchData(tag_indx)));
    boost::shared_ptr<pdat::CellData<double> > var(
-      patch.getPatchData(d_uval, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_uval, getDataContext())));
    TBOX_ASSERT(tags);
    TBOX_ASSERT(var);
 

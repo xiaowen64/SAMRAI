@@ -1215,8 +1215,8 @@ BergerRigoutsosNode::makeLocalTagHistogram()
          if (!(intersection.empty())) {
 
             boost::shared_ptr<pdat::CellData<int> > tag_data_(
-               patch.getPatchData(d_common->d_tag_data_index),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+                  patch.getPatchData(d_common->d_tag_data_index)));
 
             TBOX_ASSERT(tag_data_);
 

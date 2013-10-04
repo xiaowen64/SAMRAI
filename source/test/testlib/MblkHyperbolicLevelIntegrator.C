@@ -1931,8 +1931,8 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
 
          if (d_flux_is_face) {
             boost::shared_ptr<pdat::FaceDataFactory<double> > fdf(
-               var->getPatchDataFactory(),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::FaceDataFactory<double>,
+                          hier::PatchDataFactory>(var->getPatchDataFactory()));
             TBOX_ASSERT(fdf);
             fluxsum.reset(new pdat::OuterfaceVariable<double>(
                   d_dim,
@@ -1941,8 +1941,8 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
             d_flux_face_registered = true;
          } else {
             boost::shared_ptr<pdat::SideDataFactory<double> > sdf(
-               var->getPatchDataFactory(),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::SideDataFactory<double>,
+                          hier::PatchDataFactory>(var->getPatchDataFactory()));
             TBOX_ASSERT(sdf);
             fluxsum.reset(new pdat::OutersideVariable<double>(
                   d_dim,
@@ -2051,15 +2051,15 @@ void MblkHyperbolicLevelIntegrator::preprocessFluxData(
 
                if (d_flux_is_face) {
                   boost::shared_ptr<pdat::OuterfaceData<double> > fsum_data(
-                     (*mi)->getPatchData(fsum_id),
-                     BOOST_CAST_TAG);
+                     BOOST_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
+                        (*mi)->getPatchData(fsum_id)));
 
                   TBOX_ASSERT(fsum_data);
                   fsum_data->fillAll(0.0);
                } else {
                   boost::shared_ptr<pdat::OutersideData<double> > fsum_data(
-                     (*mi)->getPatchData(fsum_id),
-                     BOOST_CAST_TAG);
+                     BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+                        (*mi)->getPatchData(fsum_id)));
 
                   TBOX_ASSERT(fsum_data);
 
@@ -2301,12 +2301,10 @@ void MblkHyperbolicLevelIntegrator::copyTimeDependentData(
       std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =
          d_time_dep_variables.begin();
       while (time_dep_var != d_time_dep_variables.end()) {
-         boost::shared_ptr<hier::PatchData> src_data(
-            patch->getPatchData(*time_dep_var, src_context),
-            BOOST_CAST_TAG);
-         boost::shared_ptr<hier::PatchData> dst_data(
-            patch->getPatchData(*time_dep_var, dst_context),
-            BOOST_CAST_TAG);
+         boost::shared_ptr<hier::PatchData> src_data =
+            patch->getPatchData(*time_dep_var, src_context);
+         boost::shared_ptr<hier::PatchData> dst_data =
+            patch->getPatchData(*time_dep_var, dst_context);
 
          TBOX_ASSERT(src_data);
          TBOX_ASSERT(dst_data);

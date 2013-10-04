@@ -142,13 +142,11 @@ typedef int mode_t;
 #ifdef DEBUG_CHECK_ASSERTIONS
 
 #define BOOST_CAST boost::dynamic_pointer_cast
-#define BOOST_CAST_TAG boost::detail::dynamic_cast_tag()
 #define CPP_CAST dynamic_cast
 
 #else
 
 #define BOOST_CAST boost::static_pointer_cast
-#define BOOST_CAST_TAG boost::detail::static_cast_tag()
 #define CPP_CAST static_cast
 
 #endif

@@ -284,14 +284,14 @@ void MblkEuler::initializeDataOnPatch(
    if (initial_time) {
 
       boost::shared_ptr<pdat::CellData<double> > state(
-         patch.getPatchData(d_state, getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_state, getDataContext())));
       boost::shared_ptr<pdat::CellData<double> > vol(
-         patch.getPatchData(d_vol, getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_vol, getDataContext())));
       boost::shared_ptr<pdat::NodeData<double> > xyz(
-         patch.getPatchData(d_xyz, getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+            patch.getPatchData(d_xyz, getDataContext())));
 
       TBOX_ASSERT(state);
       TBOX_ASSERT(vol);
@@ -619,8 +619,8 @@ void MblkEuler::initializeDataOnPatch(
          patch.allocatePatchData(d_workload_data_id);
       }
       boost::shared_ptr<pdat::CellData<double> > workload_data(
-         patch.getPatchData(d_workload_data_id),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_workload_data_id)));
       TBOX_ASSERT(workload_data);
       workload_data->fillAll(1.0);
    }
@@ -663,11 +663,11 @@ double MblkEuler::computeStableDtOnPatch(
    // get the cell data and their bounds
    //
    boost::shared_ptr<pdat::CellData<double> > state(
-      patch.getPatchData(d_state, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_state, getDataContext())));
    boost::shared_ptr<pdat::NodeData<double> > xyz(
-      patch.getPatchData(d_xyz, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+         patch.getPatchData(d_xyz, getDataContext())));
    hier::IntVector state_ghosts = state->getGhostCellWidth();
    hier::IntVector xyz_ghosts = xyz->getGhostCellWidth();
 
@@ -893,8 +893,8 @@ void MblkEuler::testPatchExtrema(
    const char* pos)
 {
    boost::shared_ptr<pdat::CellData<double> > state(
-      patch.getPatchData(d_state, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_state, getDataContext())));
    TBOX_ASSERT(state);
    hier::IntVector state_ghosts = state->getGhostCellWidth();
 
@@ -976,17 +976,17 @@ void MblkEuler::computeFluxesOnPatch(
    const hier::Index ilast = patch.getBox().upper();
 
    boost::shared_ptr<pdat::CellData<double> > state(
-      patch.getPatchData(d_state, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_state, getDataContext())));
    boost::shared_ptr<pdat::CellData<double> > vol(
-      patch.getPatchData(d_vol, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_vol, getDataContext())));
    boost::shared_ptr<pdat::SideData<double> > flux(
-      patch.getPatchData(d_flux, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         patch.getPatchData(d_flux, getDataContext())));
    boost::shared_ptr<pdat::NodeData<double> > xyz(
-      patch.getPatchData(d_xyz, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+         patch.getPatchData(d_xyz, getDataContext())));
 
    TBOX_ASSERT(state);
    TBOX_ASSERT(flux);
@@ -1481,8 +1481,8 @@ void MblkEuler::markPhysicalBoundaryConditions(
    const hier::IntVector& ghost_width_to_fill)
 {
    boost::shared_ptr<pdat::CellData<double> > state(
-      patch.getPatchData(d_state, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_state, getDataContext())));
    TBOX_ASSERT(state);
 
    //
@@ -1590,11 +1590,11 @@ void MblkEuler::setPhysicalBoundaryConditions(
    markPhysicalBoundaryConditions(patch, ghost_width_to_fill);
 
    boost::shared_ptr<pdat::NodeData<double> > position(
-      patch.getPatchData(d_xyz, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+         patch.getPatchData(d_xyz, getDataContext())));
    boost::shared_ptr<pdat::CellData<double> > state(
-      patch.getPatchData(d_state, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_state, getDataContext())));
    TBOX_ASSERT(position);
    TBOX_ASSERT(state);
 
@@ -1746,18 +1746,18 @@ void MblkEuler::postprocessRefine(
    const hier::IntVector& ratio)
 {
    boost::shared_ptr<pdat::CellData<double> > cstate(
-      coarse.getPatchData(d_state, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         coarse.getPatchData(d_state, getDataContext())));
    boost::shared_ptr<pdat::CellData<double> > cvol(
-      coarse.getPatchData(d_vol, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         coarse.getPatchData(d_vol, getDataContext())));
 
    boost::shared_ptr<pdat::CellData<double> > fstate(
-      fine.getPatchData(d_state, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         fine.getPatchData(d_state, getDataContext())));
    boost::shared_ptr<pdat::CellData<double> > fvol(
-      fine.getPatchData(d_vol, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         fine.getPatchData(d_vol, getDataContext())));
 
    TBOX_ASSERT(cstate);
    TBOX_ASSERT(fstate);
@@ -2010,18 +2010,18 @@ void MblkEuler::postprocessCoarsen(
    const hier::IntVector& ratio)
 {
    boost::shared_ptr<pdat::CellData<double> > cstate(
-      coarse.getPatchData(d_state, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         coarse.getPatchData(d_state, getDataContext())));
    boost::shared_ptr<pdat::CellData<double> > cvol(
-      coarse.getPatchData(d_vol, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         coarse.getPatchData(d_vol, getDataContext())));
 
    boost::shared_ptr<pdat::CellData<double> > fstate(
-      fine.getPatchData(d_state, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         fine.getPatchData(d_state, getDataContext())));
    boost::shared_ptr<pdat::CellData<double> > fvol(
-      fine.getPatchData(d_vol, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         fine.getPatchData(d_vol, getDataContext())));
 
    TBOX_ASSERT(cstate);
    TBOX_ASSERT(cvol);
@@ -2206,8 +2206,8 @@ void MblkEuler::tagGradientDetectorCells(
    const int error_level_number = patch.getPatchLevelNumber();
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
-      patch.getPatchData(d_xyz, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+         patch.getPatchData(d_xyz, getDataContext())));
    TBOX_ASSERT(xyz);
    double* x = xyz->getPointer(0);
    double* y = xyz->getPointer(1);
@@ -2224,11 +2224,11 @@ void MblkEuler::tagGradientDetectorCells(
    tbox::plog << "box    = " << patch.getBox() << endl;
 
    boost::shared_ptr<pdat::CellData<int> > tags(
-      patch.getPatchData(tag_indx),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+         patch.getPatchData(tag_indx)));
    boost::shared_ptr<pdat::CellData<double> > var(
-      patch.getPatchData(d_state, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_state, getDataContext())));
    TBOX_ASSERT(tags);
    TBOX_ASSERT(var);
 
@@ -2589,12 +2589,12 @@ void MblkEuler::setVolumeOnPatch(
    const hier::Patch& patch)
 {
    boost::shared_ptr<pdat::CellData<double> > vol(
-      patch.getPatchData(d_vol, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_vol, getDataContext())));
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
-      patch.getPatchData(d_xyz, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+         patch.getPatchData(d_xyz, getDataContext())));
    TBOX_ASSERT(vol);
    TBOX_ASSERT(xyz);
 

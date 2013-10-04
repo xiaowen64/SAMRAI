@@ -176,8 +176,8 @@ CartesianBoundaryUtilities2::fillEdgeBoundaryData(
    }
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
 
@@ -259,8 +259,8 @@ CartesianBoundaryUtilities2::fillNodeBoundaryData(
    }
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
 
@@ -406,13 +406,13 @@ CartesianBoundaryUtilities2::checkBdryData(
    int bloc = bbox.getLocationIndex();
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
 
    boost::shared_ptr<pdat::CellData<double> > vardata(
-      patch.getPatchData(data_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(data_id)));
    TBOX_ASSERT(vardata);
 
    std::string bdry_type_str;

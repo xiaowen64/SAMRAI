@@ -216,11 +216,11 @@ int main(
 
             // access sample data from patch
             boost::shared_ptr<LSparseData> sample1(
-               patch->getPatchData(data_id1),
-               BOOST_CAST_TAG);
+               BOOST_CAST<LSparseData, hier::PatchData>(
+                  patch->getPatchData(data_id1)));
             boost::shared_ptr<LSparseData> sample2(
-               patch->getPatchData(data_id2),
-               BOOST_CAST_TAG);
+               BOOST_CAST<LSparseData, hier::PatchData>(
+                  patch->getPatchData(data_id2)));
             TBOX_ASSERT(sample1);
             TBOX_ASSERT(sample2);
 
@@ -352,8 +352,8 @@ checkIterators(
          const boost::shared_ptr<hier::Patch>& patch = *ip;
 
          boost::shared_ptr<LSparseData> sample(
-            patch->getPatchData(data_id1),
-            BOOST_CAST_TAG);
+            BOOST_CAST<LSparseData, hier::PatchData>(
+               patch->getPatchData(data_id1)));
          TBOX_ASSERT(sample);
 
          // Test #1a: check empty.  This should be false.
@@ -415,14 +415,14 @@ bool checkCopyOps(
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& patch = *ip;
          boost::shared_ptr<LSparseData> control(
-            patch->getPatchData(data_id1),
-            BOOST_CAST_TAG);
+            BOOST_CAST<LSparseData, hier::PatchData>(
+               patch->getPatchData(data_id1)));
          boost::shared_ptr<LSparseData> copiedTo(
-            patch->getPatchData(data_id1),
-            BOOST_CAST_TAG);
+            BOOST_CAST<LSparseData, hier::PatchData>(
+               patch->getPatchData(data_id1)));
          boost::shared_ptr<LSparseData> copiedFrom(
-            patch->getPatchData(data_id2),
-            BOOST_CAST_TAG);
+            BOOST_CAST<LSparseData, hier::PatchData>(
+               patch->getPatchData(data_id2)));
          TBOX_ASSERT(control);
          TBOX_ASSERT(copiedTo);
          TBOX_ASSERT(copiedFrom);
@@ -494,8 +494,8 @@ bool checkRemoveOps(
          const boost::shared_ptr<hier::Patch>& patch = *ip;
 
          boost::shared_ptr<LSparseData> sample(
-            patch->getPatchData(data_id1),
-            BOOST_CAST_TAG);
+            BOOST_CAST<LSparseData, hier::PatchData>(
+               patch->getPatchData(data_id1)));
          TBOX_ASSERT(sample);
 
          LSparseData::iterator it;

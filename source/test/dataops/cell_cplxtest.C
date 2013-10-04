@@ -255,8 +255,8 @@ int main(
               ip != level->end(); ++ip) {
             patch = *ip;
             boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-               patch->getPatchGeometry(),
-               BOOST_CAST_TAG);
+               BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+                  patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             double cell_vol = dx[0];
@@ -264,8 +264,8 @@ int main(
                cell_vol *= dx[i];
             }
             boost::shared_ptr<pdat::CellData<double> > cvdata(
-               patch->getPatchData(cwgt_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+                  patch->getPatchData(cwgt_id)));
             TBOX_ASSERT(cvdata);
             cvdata->fillAll(cell_vol);
             if (ln == 0) cvdata->fillAll(0.0, (coarse_fine * patch->getBox()));
@@ -285,8 +285,8 @@ int main(
               ip != level->end(); ++ip) {
             patch = *ip;
             boost::shared_ptr<pdat::CellData<double> > cvdata(
-               patch->getPatchData(cwgt_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+                  patch->getPatchData(cwgt_id)));
 
             TBOX_ASSERT(cvdata);
 
@@ -795,8 +795,8 @@ complexDataSameAsValue(
            ip != level->end(); ++ip) {
          patch = *ip;
          boost::shared_ptr<pdat::CellData<dcomplex> > cvdata(
-            patch->getPatchData(desc_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(cvdata);
 
@@ -835,8 +835,8 @@ doubleDataSameAsValue(
            ip != level->end(); ++ip) {
          patch = *ip;
          boost::shared_ptr<pdat::CellData<double> > cvdata(
-            patch->getPatchData(desc_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(cvdata);
 

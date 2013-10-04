@@ -126,11 +126,11 @@ EdgeDoubleConstantRefine::refine(
    const tbox::Dimension& dim(fine.getDim());
 
    boost::shared_ptr<EdgeData<double> > cdata(
-      coarse.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<EdgeData<double>, hier::PatchData>(
+         coarse.getPatchData(src_component)));
    boost::shared_ptr<EdgeData<double> > fdata(
-      fine.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<EdgeData<double>, hier::PatchData>(
+         fine.getPatchData(dst_component)));
 
    const EdgeOverlap* t_overlap = CPP_CAST<const EdgeOverlap *>(&fine_overlap);
 

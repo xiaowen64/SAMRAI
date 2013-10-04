@@ -154,8 +154,8 @@ OuteredgeSumTransactionFactory::preprocessScratchSpace(
       for (int n = 0; n < ncomponents; ++n) {
          if (preprocess_vector.isSet(n)) {
             boost::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
-               patch->getPatchData(n),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
+                  patch->getPatchData(n)));
             TBOX_ASSERT(oedge_data);
             oedge_data->fillAll(0.0);
          }

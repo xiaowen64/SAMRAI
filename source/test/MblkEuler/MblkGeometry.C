@@ -544,8 +544,8 @@ void MblkGeometry::buildCartesianGridOnPatch(
    // get the coordinates array information
    //
    boost::shared_ptr<pdat::NodeData<double> > xyz(
-      patch.getPatchData(xyz_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+         patch.getPatchData(xyz_id)));
 
    TBOX_ASSERT(xyz);
 
@@ -616,8 +616,8 @@ void MblkGeometry::buildWedgeGridOnPatch(
    }
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
-      patch.getPatchData(xyz_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+         patch.getPatchData(xyz_id)));
 
    TBOX_ASSERT(xyz);
 
@@ -686,8 +686,8 @@ void MblkGeometry::buildTrilinearGridOnPatch(
    double nz = (domain.upper(2) - domain.lower(2) + 1);
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
-      patch.getPatchData(xyz_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+         patch.getPatchData(xyz_id)));
 
    TBOX_ASSERT(xyz);
 
@@ -814,8 +814,8 @@ void MblkGeometry::buildSShellGridOnPatch(
    }
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
-      patch.getPatchData(xyz_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+         patch.getPatchData(xyz_id)));
 
    TBOX_ASSERT(xyz);
 
