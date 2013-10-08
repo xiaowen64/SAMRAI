@@ -55,6 +55,10 @@ PartitioningParams(
    }
 }
 
+   double getMinLoad() const {
+      return static_cast<double>(d_min_size.getProduct());
+   }
+
    const hier::IntVector &getMinBoxSize() const {
       return d_min_size;
    }

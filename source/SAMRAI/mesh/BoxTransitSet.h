@@ -12,7 +12,12 @@
 #define included_mesh_BoxTransitSet
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/mesh/BalanceBoxBreaker.h"
+// #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/mesh/PartitioningParams.h"
+#include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/MessageStream.h"
 
 #include <set>
@@ -208,6 +213,155 @@ public:
 
 
 
+public:
+
+   //@{ @name Load adjustment
+
+   /*!
+    * @brief Adjust the load in a BoxTransitSet by moving work between it
+    * and another BoxTransitSet.
+    *
+    * @param[in,out] main_bin
+    *
+    * @param[in,out] hold_bin
+    *
+    * @param[in,out] next_available_index Index for guaranteeing new
+    * Boxes are uniquely numbered.
+    *
+    * @param[in] ideal_load The load that main_bin should have.
+    *
+    * @param[in] low_load Return when main_bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @param[in] high_load Return when main_bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @return Net load transfered into main_bin.  If negative, net
+    * load went out of main_bin.
+    */
+   LoadType
+   adjustLoad(
+      BoxTransitSet& main_bin,
+      BoxTransitSet& hold_bin,
+      hier::LocalId& next_available_index,
+      LoadType ideal_load,
+      LoadType low_load,
+      LoadType high_load ) const;
+
+   /*!
+    * @brief Shift load from src to dst by popping the front of
+    * one set of boxes and putting it in the other.
+    *
+    * @param[in,out] main_bin
+    *
+    * @param[in,out] hold_bin
+    *
+    * @param[in] ideal_load The load that main_bin should have.
+    *
+    * @param[in] low_load Return when main_bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @param[in] high_load Return when main_bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @return Amount of load transfered.  If positive, load went
+    * from main_bin to hold_bin.
+    */
+   LoadType
+   adjustLoadByPopping(
+      BoxTransitSet& main_bin,
+      BoxTransitSet& hold_bin,
+      LoadType ideal_load,
+      LoadType low_load,
+      LoadType high_load ) const;
+
+   /*!
+    * @brief Shift load from src to dst by swapping BoxInTransit
+    * between them.
+    *
+    * @param[in,out] main_bin
+    *
+    * @param[in,out] hold_bin
+    *
+    * @param[in] ideal_load The load that main_bin should have.
+    *
+    * @param[in] low_load Return when main_bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @param[in] high_load Return when main_bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @return Amount of load transfered.  If positive, load went
+    * from main_bin to hold_bin.
+    */
+   LoadType
+   adjustLoadBySwapping(
+      BoxTransitSet& main_bin,
+      BoxTransitSet& hold_bin,
+      LoadType ideal_load,
+      LoadType low_load,
+      LoadType high_load ) const;
+
+   /*!
+    * @brief Shift load from src to dst by swapping BoxInTransit
+    * between them.
+    *
+    * @param[in,out] main_bin
+    *
+    * @param[in,out] hold_bin
+    *
+    * @param[in,out] next_available_index Index for guaranteeing new
+    * Boxes are uniquely numbered.
+    *
+    * @param[in] ideal_load The load that main_bin should have.
+    *
+    * @param[in] low_load Return when main_bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @param[in] high_load Return when main_bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @return Amount of load transfered.  If positive, load went
+    * from main_bin to hold_bin.
+    */
+   LoadType
+   adjustLoadByBreaking(
+      BoxTransitSet& main_bin,
+      BoxTransitSet& hold_bin,
+      hier::LocalId &next_available_index,
+      LoadType ideal_load,
+      LoadType low_load,
+      LoadType high_load ) const;
+
+   /*!
+    * @brief Find a BoxInTransit in each of the source and destination
+    * containers that, when swapped, effects a transfer of the given
+    * amount of work from the source to the destination.  Swap the boxes.
+    *
+    * @param [in,out] src
+    *
+    * @param [in,out] dst
+    *
+    * @param actual_transfer [out] Amount of work transfered from src to
+    * dst.
+    *
+    * @param ideal_transfer [in] Amount of work to be transfered from
+    * src to dst.
+    *
+    * @param low_transfer
+    *
+    * @param high_transfer
+    */
+   bool
+   swapLoadPair(
+      BoxTransitSet& src,
+      BoxTransitSet& dst,
+      LoadType& actual_transfer,
+      LoadType ideal_transfer,
+      LoadType low_transfer,
+      LoadType high_transfer ) const;
+
+   //@}
 
    /*!
     * @brief A set of BoxInTransit, sorted from highest load to lowest load.
@@ -223,7 +377,13 @@ public:
       typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::reverse_iterator reverse_iterator;
       typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::key_type key_type;
       typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::value_type value_type;
-      BoxTransitSet() : d_set(), d_sumload(0) {}
+   BoxTransitSet();
+
+   void setPartitioningParams( const PartitioningParams &pparams )
+      {
+         d_pparams = &pparams;
+         d_bbb.setPartitioningParams(pparams);
+      }
       iterator begin() { return d_set.begin(); }
       iterator end() { return d_set.end(); }
       const_iterator begin() const { return d_set.begin(); }
@@ -281,9 +441,96 @@ public:
          return originating_procs.size();
       }
    private:
+
+   void setTimers();
+
+   /*!
+    * @brief Compute the load for a Box.
+    */
+   double
+   computeLoad(
+      const hier::Box& box) const
+   {
+      /*
+       * Currently only for uniform loads, where the load is equal
+       * to the number of cells.  For non-uniform loads, this method
+       * needs the patch data index for the load.  It would summ up
+       * the individual cell loads in the cell.
+       */
+      return double(box.size());
+   }
+
+   /*!
+    * @brief Compute the load for the Box, restricted to where it
+    * intersects a given box.
+    */
+   double
+   computeLoad(
+      const hier::Box& box,
+      const hier::Box& restriction) const
+   {
+      /*
+       * Currently only for uniform loads, where the load is equal
+       * to the number of cells.  For non-uniform loads, this method
+       * needs the patch data index for the load.  It would summ up
+       * the individual cell loads in the overlap region.
+       */
+      return double((box * restriction).size());
+   }
+
+   double
+   computeBalancePenalty(
+      const std::vector<hier::Box>& a,
+      const std::vector<hier::Box>& b,
+      double imbalance) const
+   {
+      NULL_USE(a);
+      NULL_USE(b);
+      return tbox::MathUtilities<double>::Abs(imbalance);
+   }
+
+   double
+   computeBalancePenalty(
+      const BoxTransitSet& a,
+      const BoxTransitSet& b,
+      double imbalance) const
+   {
+      NULL_USE(a);
+      NULL_USE(b);
+      return tbox::MathUtilities<double>::Abs(imbalance);
+   }
+
+   double
+   computeBalancePenalty(
+      const hier::Box& a,
+      double imbalance) const
+   {
+      NULL_USE(a);
+      return tbox::MathUtilities<double>::Abs(imbalance);
+   }
+
       std::set<BoxInTransit, BoxInTransitMoreLoad> d_set;
       LoadType d_sumload;
-   };
+
+   const PartitioningParams *d_pparams;
+
+   BalanceBoxBreaker d_bbb;
+
+   int d_tree_degree; // For computing LocalId.  Should be factored out into a class that generates LocalIds.
+
+   bool d_allow_box_breaking;
+
+   bool d_print_steps;
+   bool d_print_pop_steps;
+   bool d_print_swap_steps;
+   bool d_print_break_steps;
+
+   boost::shared_ptr<tbox::Timer> t_adjust_load;
+   boost::shared_ptr<tbox::Timer> t_adjust_load_by_popping;
+   boost::shared_ptr<tbox::Timer> t_adjust_load_by_swapping;
+   boost::shared_ptr<tbox::Timer> t_shift_loads_by_breaking;
+   boost::shared_ptr<tbox::Timer> t_find_swap_pair;
+};
 
 
 

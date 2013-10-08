@@ -334,6 +334,11 @@ private:
       //! @brief Constructor.
       SubtreeData();
 
+      void setPartitioningParams( const PartitioningParams &pparams )
+         {
+            d_pparams = &pparams;
+         }
+
       // surplus and deficit are current load compared to ideal.
       LoadType surplus() const { return d_subtree_load_current - d_subtree_load_ideal; }
       LoadType deficit() const { return d_subtree_load_ideal - d_subtree_load_current; }
@@ -410,6 +415,8 @@ private:
        * @brief Whether subtree expects its parent to send work down.
        */
       bool d_wants_work_from_parent;
+
+      const PartitioningParams *d_pparams;
    };
 
    /*

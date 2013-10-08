@@ -1000,6 +1000,7 @@ t_post_load_distribution_barrier->stop();
     * them or send them to another part of the tree.
     */
    BoxTransitSet unassigned;
+   unassigned.setPartitioningParams(*d_pparams);
    unassigned.insertAll(balance_box_level.getBoxes());
 
 
@@ -2718,7 +2719,8 @@ TreeLoadBalancer::adjustLoadByBreaking(
       std::vector<hier::Box> trial_leftover;
       double trial_breakoff_amt;
 
-      BalanceBoxBreaker bbb(*d_pparams);
+      BalanceBoxBreaker bbb;
+      bbb.setPartitioningParams(*d_pparams);
       bbb.breakOffLoad(
          trial_breakoff,
          trial_leftover,

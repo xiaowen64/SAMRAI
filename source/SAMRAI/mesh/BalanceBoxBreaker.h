@@ -31,13 +31,18 @@ public:
 
    typedef double LoadType;
 
-   BalanceBoxBreaker( const PartitioningParams &pparams ) :
-      d_pparams(pparams),
+   BalanceBoxBreaker() :
+      d_pparams(0),
       d_load_comparison_tol(1.0e-5),
       d_print_steps(false),
       d_print_break_steps(false)
       {
          setTimers();
+      }
+
+   void setPartitioningParams( const PartitioningParams &pparams )
+      {
+         d_pparams = &pparams;
       }
 
    //@{
@@ -137,6 +142,9 @@ public:
     *
     * Return whether new_load is an improvement over current_load.
     * This should be renamed compareLoads or checkLoads.
+    *
+    * This method should be renamed to show it is more general than
+    * for evaluating breaks.
     */
    bool
    evaluateBreak(
@@ -157,7 +165,7 @@ private:
 
    void setTimers();
 
-   const PartitioningParams &d_pparams;
+   const PartitioningParams *d_pparams;
    double d_load_comparison_tol;
    bool d_print_steps;
    bool d_print_break_steps;

@@ -95,8 +95,8 @@ BalanceBoxBreaker::breakOffLoad(
    hier::BoxUtilities::findBadCutPoints(
       bad_cuts,
       box,
-      d_pparams.getDomainBoxes(box.getBlockId()),
-      d_pparams.getBadInterval());
+      d_pparams->getDomainBoxes(box.getBlockId()),
+      d_pparams->getBadInterval());
    t_find_bad_cuts->stop();
 
    // Penalty for not transfering ideal load.
@@ -342,7 +342,7 @@ BalanceBoxBreaker::breakOffLoad_planar(
       tbox::plog << "      breakOffLoad_planar attempting to break "
                  << ideal_brk_load << " from Box "
                  << box << box.numberCells() << '|' << box.size()
-                 << " min_size=" << d_pparams.getMinBoxSize() << std::endl;
+                 << " min_size=" << d_pparams->getMinBoxSize() << std::endl;
    }
 
    breakoff.clear();
@@ -410,22 +410,22 @@ BalanceBoxBreaker::breakOffLoad_planar(
       // Compute valid cut planes on high and low sides of upper cut plane.
       int lo_upper_cut_plane = box.lower()(brk_dir) + int(ideal_upper_cut_offset);
       int hi_upper_cut_plane = box.lower()(brk_dir) + int(ideal_upper_cut_offset) + 1;
-      lo_upper_cut_plane = ROUND_TO_LO(lo_upper_cut_plane, d_pparams.getCutFactor()(brk_dir));
-      hi_upper_cut_plane = ROUND_TO_HI(hi_upper_cut_plane, d_pparams.getCutFactor()(brk_dir));
-      while ( lo_upper_cut_plane > box.lower()(brk_dir)   && bad[lo_upper_cut_plane-box.lower()(brk_dir)] ) { lo_upper_cut_plane -= d_pparams.getCutFactor()(brk_dir); }
-      while ( hi_upper_cut_plane < box.upper()(brk_dir)+1 && bad[hi_upper_cut_plane-box.lower()(brk_dir)] ) { hi_upper_cut_plane += d_pparams.getCutFactor()(brk_dir); }
+      lo_upper_cut_plane = ROUND_TO_LO(lo_upper_cut_plane, d_pparams->getCutFactor()(brk_dir));
+      hi_upper_cut_plane = ROUND_TO_HI(hi_upper_cut_plane, d_pparams->getCutFactor()(brk_dir));
+      while ( lo_upper_cut_plane > box.lower()(brk_dir)   && bad[lo_upper_cut_plane-box.lower()(brk_dir)] ) { lo_upper_cut_plane -= d_pparams->getCutFactor()(brk_dir); }
+      while ( hi_upper_cut_plane < box.upper()(brk_dir)+1 && bad[hi_upper_cut_plane-box.lower()(brk_dir)] ) { hi_upper_cut_plane += d_pparams->getCutFactor()(brk_dir); }
 
       // Compute valid cut planes on high and low sides of lower cut plane.
       int lo_lower_cut_plane = box.lower()(brk_dir) + int(ideal_lower_cut_offset);
       int hi_lower_cut_plane = box.lower()(brk_dir) + int(ideal_lower_cut_offset) + 1;
-      lo_lower_cut_plane = ROUND_TO_LO(lo_lower_cut_plane, d_pparams.getCutFactor()(brk_dir));
-      hi_lower_cut_plane = ROUND_TO_HI(hi_lower_cut_plane, d_pparams.getCutFactor()(brk_dir));
-      while ( lo_lower_cut_plane > box.lower()(brk_dir)   && bad[lo_lower_cut_plane-box.lower()(brk_dir)] ) { lo_lower_cut_plane -= d_pparams.getCutFactor()(brk_dir); }
-      while ( hi_lower_cut_plane < box.upper()(brk_dir)+1 && bad[hi_lower_cut_plane-box.lower()(brk_dir)] ) { hi_lower_cut_plane += d_pparams.getCutFactor()(brk_dir); }
+      lo_lower_cut_plane = ROUND_TO_LO(lo_lower_cut_plane, d_pparams->getCutFactor()(brk_dir));
+      hi_lower_cut_plane = ROUND_TO_HI(hi_lower_cut_plane, d_pparams->getCutFactor()(brk_dir));
+      while ( lo_lower_cut_plane > box.lower()(brk_dir)   && bad[lo_lower_cut_plane-box.lower()(brk_dir)] ) { lo_lower_cut_plane -= d_pparams->getCutFactor()(brk_dir); }
+      while ( hi_lower_cut_plane < box.upper()(brk_dir)+1 && bad[hi_lower_cut_plane-box.lower()(brk_dir)] ) { hi_lower_cut_plane += d_pparams->getCutFactor()(brk_dir); }
 
 
-      if ( lo_lower_cut_plane - box.lower()(brk_dir) > d_pparams.getMinBoxSize()(brk_dir) &&
-           box.upper()(brk_dir)+1 - lo_lower_cut_plane > d_pparams.getMinBoxSize()(brk_dir) ) {
+      if ( lo_lower_cut_plane - box.lower()(brk_dir) > d_pparams->getMinBoxSize()(brk_dir) &&
+           box.upper()(brk_dir)+1 - lo_lower_cut_plane > d_pparams->getMinBoxSize()(brk_dir) ) {
 
          const int lo_lower_cut_vol = brk_area*( lo_lower_cut_plane - box.lower()(brk_dir) );
 
@@ -439,8 +439,8 @@ BalanceBoxBreaker::breakOffLoad_planar(
          }
       }
 
-      if ( ( hi_lower_cut_plane - box.lower()(brk_dir) > d_pparams.getMinBoxSize()(brk_dir) &&
-           box.upper()(brk_dir)+1 - hi_lower_cut_plane > d_pparams.getMinBoxSize()(brk_dir) ) ||
+      if ( ( hi_lower_cut_plane - box.lower()(brk_dir) > d_pparams->getMinBoxSize()(brk_dir) &&
+           box.upper()(brk_dir)+1 - hi_lower_cut_plane > d_pparams->getMinBoxSize()(brk_dir) ) ||
            hi_lower_cut_plane >= box.upper()(brk_dir)+1 ) {
 
          const int hi_lower_cut_vol = brk_area*( hi_lower_cut_plane - box.lower()(brk_dir) );
@@ -455,8 +455,8 @@ BalanceBoxBreaker::breakOffLoad_planar(
          }
       }
 
-      if ( ( box.upper()(brk_dir)+1 - lo_upper_cut_plane > d_pparams.getMinBoxSize()(brk_dir) &&
-           lo_upper_cut_plane - box.lower()(brk_dir) > d_pparams.getMinBoxSize()(brk_dir) ) ||
+      if ( ( box.upper()(brk_dir)+1 - lo_upper_cut_plane > d_pparams->getMinBoxSize()(brk_dir) &&
+           lo_upper_cut_plane - box.lower()(brk_dir) > d_pparams->getMinBoxSize()(brk_dir) ) ||
            lo_upper_cut_plane <= box.lower()(brk_dir) ) {
 
          const int lo_upper_cut_vol = brk_area*( box.upper()(brk_dir)+1 - lo_upper_cut_plane );
@@ -471,8 +471,8 @@ BalanceBoxBreaker::breakOffLoad_planar(
          }
       }
 
-      if ( box.upper()(brk_dir)+1 - hi_upper_cut_plane > d_pparams.getMinBoxSize()(brk_dir) &&
-           hi_upper_cut_plane - box.lower()(brk_dir) > d_pparams.getMinBoxSize()(brk_dir) ) {
+      if ( box.upper()(brk_dir)+1 - hi_upper_cut_plane > d_pparams->getMinBoxSize()(brk_dir) &&
+           hi_upper_cut_plane - box.lower()(brk_dir) > d_pparams->getMinBoxSize()(brk_dir) ) {
 
          const int hi_upper_cut_vol = brk_area*( box.upper()(brk_dir)+1 - hi_upper_cut_plane );
 
@@ -519,11 +519,11 @@ BalanceBoxBreaker::breakOffLoad_planar(
       const hier::Box& b = *bi;
       const hier::IntVector s = b.numberCells();
       for (int d = 0; d < box.getDim().getValue(); ++d) {
-         if (((s(d) < d_pparams.getMinBoxSize()(d)) && (s(d) != box_dims(d))) ||
+         if (((s(d) < d_pparams->getMinBoxSize()(d)) && (s(d) != box_dims(d))) ||
              (s(d) > box_dims(d))) {
             TBOX_ERROR("BalanceBoxBreaker library error:\n"
                << "breakoff box " << b << ", size " << s
-               << "\nis not between the min size " << d_pparams.getMinBoxSize()
+               << "\nis not between the min size " << d_pparams->getMinBoxSize()
                << "\nand the original box size " << box_dims << "\n"
                << "break box size " << best_breakoff_box.numberCells() << "\n"
                << "ideal brk load " << ideal_brk_load);
@@ -536,11 +536,11 @@ BalanceBoxBreaker::breakOffLoad_planar(
       const hier::Box& b = *bi;
       const hier::IntVector s = b.numberCells();
       for (int d = 0; d < box.getDim().getValue(); ++d) {
-         if (((s(d) < d_pparams.getMinBoxSize()(d)) && (s(d) != box_dims(d))) ||
+         if (((s(d) < d_pparams->getMinBoxSize()(d)) && (s(d) != box_dims(d))) ||
              (s(d) > box_dims(d))) {
             TBOX_ERROR("BalanceBoxBreaker library error:\n"
                << "leftover box " << b << ", size " << s
-               << "\nis not between the min size " << d_pparams.getMinBoxSize()
+               << "\nis not between the min size " << d_pparams->getMinBoxSize()
                << "\nand the original box size " << box_dims << "\n"
                << "break box size " << best_breakoff_box.numberCells() << "\n"
                << "ideal brk load " << ideal_brk_load);
@@ -631,7 +631,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(
       tbox::plog << "      breakOffLoad_cubic attempting to break "
                  << ideal_brk_load << " from Box "
                  << box << box.numberCells() << '|' << box.size()
-                 << " min_size=" << d_pparams.getMinBoxSize() << std::endl;
+                 << " min_size=" << d_pparams->getMinBoxSize() << std::endl;
    }
 
    breakoff.clear();
@@ -671,16 +671,16 @@ BalanceBoxBreaker::breakOffLoad_cubic(
     * corners.  Using the other boxes result in too much fragmentation
     * of the incoming box.
     */
-   hier::IntVector brk_size(d_pparams.getMinBoxSize());
-   brk_size.max(d_pparams.getCutFactor());
+   hier::IntVector brk_size(d_pparams->getMinBoxSize());
+   brk_size.max(d_pparams->getCutFactor());
    brk_size.min(box_dims);
 
    /*
-    * Make sure brk_size is a multiple of d_pparams.getCutFactor().
+    * Make sure brk_size is a multiple of d_pparams->getCutFactor().
     */
    for (int d = 0; d < box.getDim().getValue(); ++d) {
-      if (brk_size(d) % d_pparams.getCutFactor()(d) != 0) {
-         brk_size(d) = ((brk_size(d) / d_pparams.getCutFactor()(d)) + 1) * d_pparams.getCutFactor()(d);
+      if (brk_size(d) % d_pparams->getCutFactor()(d) != 0) {
+         brk_size(d) = ((brk_size(d) / d_pparams->getCutFactor()(d)) + 1) * d_pparams->getCutFactor()(d);
       }
    }
 
@@ -689,13 +689,13 @@ BalanceBoxBreaker::breakOffLoad_cubic(
     * corner boxes by gradually moving the intersections away
     * from their initial location.
     */
-   hier::IntVector lower_intersection(box.lower() + d_pparams.getMinBoxSize());
-   hier::IntVector upper_intersection(box.upper() - d_pparams.getMinBoxSize() + one_vec);
+   hier::IntVector lower_intersection(box.lower() + d_pparams->getMinBoxSize());
+   hier::IntVector upper_intersection(box.upper() - d_pparams->getMinBoxSize() + one_vec);
    for ( int d=0; d<box.getDim().getValue(); ++d ) {
       lower_intersection(d) = ROUND_TO_HI( lower_intersection(d),
-                                           d_pparams.getCutFactor()(d) );
+                                           d_pparams->getCutFactor()(d) );
       upper_intersection(d) = ROUND_TO_LO( upper_intersection(d),
-                                           d_pparams.getCutFactor()(d) );
+                                           d_pparams->getCutFactor()(d) );
    }
 
 
@@ -722,17 +722,17 @@ BalanceBoxBreaker::breakOffLoad_cubic(
 
          if ( touches_upper_side ) {
             corner_box.lower()(d) = upper_intersection(d);
-            if ( corner_box.lower()(d) - box.lower()(d) < d_pparams.getMinBoxSize()(d) ) {
+            if ( corner_box.lower()(d) - box.lower()(d) < d_pparams->getMinBoxSize()(d) ) {
                corner_box.lower()(d) = box.lower()(d);
             }
-            expansion_rate(d) = -d_pparams.getCutFactor()(d);
+            expansion_rate(d) = -d_pparams->getCutFactor()(d);
          }
          else {
             corner_box.upper()(d) = lower_intersection(d) - 1;
-            if ( box.upper()(d) - corner_box.upper()(d) < d_pparams.getMinBoxSize()(d) ) {
+            if ( box.upper()(d) - corner_box.upper()(d) < d_pparams->getMinBoxSize()(d) ) {
                corner_box.upper()(d) = box.upper()(d);
             }
-            expansion_rate(d) = d_pparams.getCutFactor()(d);
+            expansion_rate(d) = d_pparams->getCutFactor()(d);
          }
 
       }
@@ -800,7 +800,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(
             corner_box.upper()(inc_dir) = tbox::MathUtilities<int>::Min(
                corner_box.upper()(inc_dir) + expansion_rate(inc_dir),
                box.upper()(inc_dir) );
-            if ( box.upper()(inc_dir) - corner_box.upper()(inc_dir) < d_pparams.getMinBoxSize()(inc_dir) ) {
+            if ( box.upper()(inc_dir) - corner_box.upper()(inc_dir) < d_pparams->getMinBoxSize()(inc_dir) ) {
                corner_box.upper()(inc_dir) = box.upper()(inc_dir);
             }
             growable(inc_dir) = corner_box.upper()(inc_dir) < box.upper()(inc_dir);
@@ -809,7 +809,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(
             corner_box.lower()(inc_dir) = tbox::MathUtilities<int>::Max(
                corner_box.lower()(inc_dir) + expansion_rate(inc_dir),
                box.lower()(inc_dir) );
-            if ( corner_box.lower()(inc_dir) - box.lower()(inc_dir) < d_pparams.getMinBoxSize()(inc_dir) ) {
+            if ( corner_box.lower()(inc_dir) - box.lower()(inc_dir) < d_pparams->getMinBoxSize()(inc_dir) ) {
                corner_box.lower()(inc_dir) = box.lower()(inc_dir);
             }
             growable(inc_dir) = corner_box.lower()(inc_dir) > box.lower()(inc_dir);
@@ -857,11 +857,11 @@ BalanceBoxBreaker::breakOffLoad_cubic(
       const hier::Box& b = *bi;
       const hier::IntVector s = b.numberCells();
       for (int d = 0; d < box.getDim().getValue(); ++d) {
-         if (((s(d) < d_pparams.getMinBoxSize()(d)) && (s(d) != box_dims(d))) ||
+         if (((s(d) < d_pparams->getMinBoxSize()(d)) && (s(d) != box_dims(d))) ||
              (s(d) > box_dims(d))) {
             TBOX_ERROR("BalanceBoxBreaker library error:\n"
                << "breakoff box " << b << ", with size " << s
-               << "\nis not between the min size " << d_pparams.getMinBoxSize()
+               << "\nis not between the min size " << d_pparams->getMinBoxSize()
                << "\nand the original box size " << box_dims << "\n"
                << "orig box " << box << "\n"
                << "break box " << b << "\n"
@@ -876,11 +876,11 @@ BalanceBoxBreaker::breakOffLoad_cubic(
       const hier::Box& b = *bi;
       const hier::IntVector s = b.numberCells();
       for (int d = 0; d < box.getDim().getValue(); ++d) {
-         if (((s(d) < d_pparams.getMinBoxSize()(d)) && (s(d) != box_dims(d))) ||
+         if (((s(d) < d_pparams->getMinBoxSize()(d)) && (s(d) != box_dims(d))) ||
              (s(d) > box_dims(d))) {
             TBOX_ERROR("BalanceBoxBreaker library error:\n"
                << "leftover box " << b << ", with size " << s
-               << "\nis not between the min size " << d_pparams.getMinBoxSize()
+               << "\nis not between the min size " << d_pparams->getMinBoxSize()
                << "\nand the original box size " << box_dims << "\n"
                << "orig box " << box << "\n"
                << "break box " << b << "\n"
