@@ -954,9 +954,11 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
         outgoing_ranks_itr != outgoing_ranks.end(); ++outgoing_ranks_itr) {
       another_outgoing_ranks[i++] = *outgoing_ranks_itr;
    }
+#ifdef HAVE_OPENMP
 #pragma omp parallel private(i)
 {
 #pragma omp for schedule(dynamic) nowait
+#endif
    for (i = 0; i < imax; ++i) {
       BoxId outgoing_proc_start_id(
          LocalId::getZero(),
@@ -983,7 +985,9 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
          anchor_to_old,
          old_to_new);
    }
+#ifdef HAVE_OPENMP
 }
+#endif
 
    /*
     * Send all non-local overlap messages.

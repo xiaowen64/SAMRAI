@@ -543,6 +543,7 @@ threading directive for this compiler.
 ]);
          ;;
    esac
+   AC_DEFINE(HAVE_OPENMP,1,OPENMP is available)
 fi
 
 dnl
