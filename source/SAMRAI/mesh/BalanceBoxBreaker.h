@@ -115,19 +115,6 @@ public:
       return tbox::MathUtilities<double>::Abs(imbalance);
    }
 
-#if 0
-   double
-   computeBalancePenalty(
-      const BoxTransitSet& a,
-      const BoxTransitSet& b,
-      double imbalance) const
-   {
-      NULL_USE(a);
-      NULL_USE(b);
-      return tbox::MathUtilities<double>::Abs(imbalance);
-   }
-#endif
-
    double
    computeBalancePenalty(
       const hier::Box& a,
