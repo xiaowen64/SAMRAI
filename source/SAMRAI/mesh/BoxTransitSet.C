@@ -73,13 +73,14 @@ BoxTransitSet::BoxTransitSet() :
  */
 BoxTransitSet::LoadType
 BoxTransitSet::adjustLoad(
-   BoxTransitSet& main_bin,
    BoxTransitSet& hold_bin,
    hier::LocalId& next_available_index,
    LoadType ideal_load,
    LoadType low_load,
-   LoadType high_load ) const
+   LoadType high_load )
 {
+   BoxTransitSet& main_bin(*this);
+
    if (d_print_steps) {
       tbox::plog << "  adjustLoad attempting to bring main load from "
                  << main_bin.getSumLoad() << " to " << ideal_load
@@ -100,7 +101,6 @@ BoxTransitSet::adjustLoad(
    t_adjust_load->start();
 
    actual_transfer = adjustLoadByPopping(
-      main_bin,
       hold_bin,
       ideal_load,
       low_load,
@@ -145,7 +145,6 @@ BoxTransitSet::adjustLoad(
        * Try to balance load through swapping.
        */
       LoadType swap_transfer = adjustLoadBySwapping(
-         main_bin,
          hold_bin,
          ideal_load,
          low_load,
@@ -187,7 +186,6 @@ BoxTransitSet::adjustLoad(
           * underloaded side.
           */
          LoadType brk_transfer = adjustLoadByBreaking(
-            main_bin,
             hold_bin,
             next_available_index,
             ideal_load,
@@ -271,26 +269,26 @@ BoxTransitSet::adjustLoad(
  */
 BoxTransitSet::LoadType
 BoxTransitSet::adjustLoadByBreaking(
-   BoxTransitSet& main_bin,
    BoxTransitSet& hold_bin,
    hier::LocalId& next_available_index,
    LoadType ideal_load,
    LoadType low_load,
-   LoadType high_load ) const
+   LoadType high_load )
 {
    LoadType actual_transfer = 0;
 
-   if (main_bin.getSumLoad() > high_load) {
+   if (getSumLoad() > high_load) {
       // The logic below does not handle bi-directional transfers, so handle it here.
-      actual_transfer = -adjustLoadByBreaking(
-         hold_bin,
-         main_bin,
+      actual_transfer = -hold_bin.adjustLoadByBreaking(
+         *this,
          next_available_index,
-         hold_bin.getSumLoad()-(ideal_load-main_bin.getSumLoad()),
-         hold_bin.getSumLoad()-(high_load-main_bin.getSumLoad()),
-         hold_bin.getSumLoad()-(low_load-main_bin.getSumLoad()) );
+         hold_bin.getSumLoad()-(ideal_load-getSumLoad()),
+         hold_bin.getSumLoad()-(high_load-getSumLoad()),
+         hold_bin.getSumLoad()-(low_load-getSumLoad()) );
       return actual_transfer;
    }
+
+   BoxTransitSet& main_bin(*this);
 
    TBOX_ASSERT(low_load <= ideal_load);
    TBOX_ASSERT(ideal_load <= high_load);
@@ -481,16 +479,17 @@ BoxTransitSet::adjustLoadByBreaking(
  */
 BoxTransitSet::LoadType
 BoxTransitSet::adjustLoadBySwapping(
-   BoxTransitSet& main_bin,
    BoxTransitSet& hold_bin,
    LoadType ideal_load,
    LoadType low_load,
-   LoadType high_load ) const
+   LoadType high_load )
 {
    TBOX_ASSERT( high_load >= ideal_load );
    TBOX_ASSERT( low_load <= ideal_load );
 
    t_adjust_load_by_swapping->start();
+
+   BoxTransitSet& main_bin(*this);
 
    if (d_print_steps) {
       tbox::plog << "  Attempting to bring main_bin from "
@@ -570,16 +569,17 @@ BoxTransitSet::adjustLoadBySwapping(
  */
 BoxTransitSet::LoadType
 BoxTransitSet::adjustLoadByPopping(
-   BoxTransitSet& main_bin,
    BoxTransitSet& hold_bin,
    LoadType ideal_load,
    LoadType low_load,
-   LoadType high_load ) const
+   LoadType high_load )
 {
    TBOX_ASSERT( high_load >= ideal_load );
    TBOX_ASSERT( low_load <= ideal_load );
 
    t_adjust_load_by_popping->start();
+
+   BoxTransitSet& main_bin(*this);
 
    /*
     * Logic in this method assumes positive transfer from hold_bin

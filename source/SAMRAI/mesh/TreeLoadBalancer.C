@@ -1157,13 +1157,13 @@ t_post_load_distribution_barrier->stop();
                           << "] of unassigned load to parent.\n";
             }
 
-            LoadType export_load_actual = my_subtree.d_work_traded.adjustLoad(
-               my_subtree.d_work_traded /* to parent */,
-               unassigned,
-               next_available_index[d_rank_tree->getDegree()],
-               export_load_ideal,
-               export_load_low,
-               export_load_high );
+            const LoadType export_load_actual =
+               my_subtree.d_work_traded.adjustLoad(
+                  unassigned,
+                  next_available_index[d_rank_tree->getDegree()],
+                  export_load_ideal,
+                  export_load_low,
+                  export_load_high );
             TBOX_ASSERT( export_load_actual >= 0 );
 
             my_subtree.d_subtree_load_current -= my_subtree.d_work_traded.getSumLoad();
@@ -1344,13 +1344,13 @@ t_post_load_distribution_barrier->stop();
                           << " [" << export_load_low << ", " << export_load_high << "]\n";
             }
 
-            const LoadType export_load_actual = recip_subtree.d_work_traded.adjustLoad(
-               recip_subtree.d_work_traded,
-               unassigned,
-               next_available_index[d_rank_tree->getDegree()],
-               export_load_ideal,
-               export_load_low,
-               export_load_high );
+            const LoadType export_load_actual =
+               recip_subtree.d_work_traded.adjustLoad(
+                  unassigned,
+                  next_available_index[d_rank_tree->getDegree()],
+                  export_load_ideal,
+                  export_load_low,
+                  export_load_high );
             TBOX_ASSERT(export_load_actual >= 0);
             recip_subtree.d_subtree_load_current += export_load_actual;
             recip_subtree.d_eff_load_current += export_load_actual;

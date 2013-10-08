@@ -218,10 +218,8 @@ public:
    //@{ @name Load adjustment
 
    /*!
-    * @brief Adjust the load in a BoxTransitSet by moving work between it
-    * and another BoxTransitSet.
-    *
-    * @param[in,out] main_bin
+    * @brief Adjust the load in this BoxTransitSet by moving work
+    * between it and another BoxTransitSet.
     *
     * @param[in,out] hold_bin
     *
@@ -241,18 +239,15 @@ public:
     */
    LoadType
    adjustLoad(
-      BoxTransitSet& main_bin,
       BoxTransitSet& hold_bin,
       hier::LocalId& next_available_index,
       LoadType ideal_load,
       LoadType low_load,
-      LoadType high_load ) const;
+      LoadType high_load );
 
    /*!
-    * @brief Shift load from src to dst by popping the front of
-    * one set of boxes and putting it in the other.
-    *
-    * @param[in,out] main_bin
+    * @brief Adjust the load in this BoxTransitSet by moving the
+    * biggest between it and another BoxTransitSet.
     *
     * @param[in,out] hold_bin
     *
@@ -269,17 +264,14 @@ public:
     */
    LoadType
    adjustLoadByPopping(
-      BoxTransitSet& main_bin,
       BoxTransitSet& hold_bin,
       LoadType ideal_load,
       LoadType low_load,
-      LoadType high_load ) const;
+      LoadType high_load );
 
    /*!
-    * @brief Shift load from src to dst by swapping BoxInTransit
-    * between them.
-    *
-    * @param[in,out] main_bin
+    * @brief Adjust the load in this BoxTransitSet by swapping boxes
+    * between it and another BoxTransitSet.
     *
     * @param[in,out] hold_bin
     *
@@ -296,17 +288,15 @@ public:
     */
    LoadType
    adjustLoadBySwapping(
-      BoxTransitSet& main_bin,
       BoxTransitSet& hold_bin,
       LoadType ideal_load,
       LoadType low_load,
-      LoadType high_load ) const;
+      LoadType high_load );
 
    /*!
-    * @brief Shift load from src to dst by swapping BoxInTransit
-    * between them.
-    *
-    * @param[in,out] main_bin
+    * @brief Adjust the load in this BoxTransitSet by moving work
+    * between it and another BoxTransitSet.  One box may be broken
+    * up to have a part of its load moved.
     *
     * @param[in,out] hold_bin
     *
@@ -326,12 +316,11 @@ public:
     */
    LoadType
    adjustLoadByBreaking(
-      BoxTransitSet& main_bin,
       BoxTransitSet& hold_bin,
       hier::LocalId &next_available_index,
       LoadType ideal_load,
       LoadType low_load,
-      LoadType high_load ) const;
+      LoadType high_load );
 
    /*!
     * @brief Find a BoxInTransit in each of the source and destination
