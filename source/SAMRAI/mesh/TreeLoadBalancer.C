@@ -989,7 +989,11 @@ t_post_load_distribution_barrier->stop();
     * Data for storing and transfering subtree info.
     */
    SubtreeData my_subtree;
+   my_subtree.setPartitioningParams(*d_pparams);
    std::vector<SubtreeData> child_subtrees(num_children);
+   for ( size_t i=0; i<child_subtrees.size(); ++i ) {
+      child_subtrees[i].setPartitioningParams(*d_pparams);
+   }
 
 
    /*
@@ -1153,7 +1157,7 @@ t_post_load_distribution_barrier->stop();
                           << "] of unassigned load to parent.\n";
             }
 
-            LoadType export_load_actual = adjustLoad(
+            LoadType export_load_actual = my_subtree.d_work_traded.adjustLoad(
                my_subtree.d_work_traded /* to parent */,
                unassigned,
                next_available_index[d_rank_tree->getDegree()],
@@ -1340,7 +1344,7 @@ t_post_load_distribution_barrier->stop();
                           << " [" << export_load_low << ", " << export_load_high << "]\n";
             }
 
-            const LoadType export_load_actual = adjustLoad(
+            const LoadType export_load_actual = recip_subtree.d_work_traded.adjustLoad(
                recip_subtree.d_work_traded,
                unassigned,
                next_available_index[d_rank_tree->getDegree()],

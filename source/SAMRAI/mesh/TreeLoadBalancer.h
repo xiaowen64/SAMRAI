@@ -337,6 +337,7 @@ private:
       void setPartitioningParams( const PartitioningParams &pparams )
          {
             d_pparams = &pparams;
+            d_work_traded.setPartitioningParams(pparams);
          }
 
       // surplus and deficit are current load compared to ideal.
