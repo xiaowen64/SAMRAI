@@ -461,151 +461,6 @@ private:
       BoxTransitSet& transit_set,
       int local_rank ) const;
 
-
-   /*!
-    * @brief Adjust the load in a BoxTransitSet by moving work between it
-    * and another BoxTransitSet.
-    *
-    * @param[in,out] main_bin
-    *
-    * @param[in,out] hold_bin
-    *
-    * @param[in,out] next_available_index Index for guaranteeing new
-    * Boxes are uniquely numbered.
-    *
-    * @param[in] ideal_load The load that main_bin should have.
-    *
-    * @param[in] low_load Return when main_bin's load is in the range
-    * [low_load,high_load]
-    *
-    * @param[in] high_load Return when main_bin's load is in the range
-    * [low_load,high_load]
-    *
-    * @return Net load transfered into main_bin.  If negative, net
-    * load went out of main_bin.
-    */
-   LoadType
-   adjustLoad(
-      BoxTransitSet& main_bin,
-      BoxTransitSet& hold_bin,
-      hier::LocalId& next_available_index,
-      LoadType ideal_load,
-      LoadType low_load,
-      LoadType high_load ) const;
-
-   /*!
-    * @brief Shift load from src to dst by popping the front of
-    * one set of boxes and putting it in the other.
-    *
-    * @param[in,out] main_bin
-    *
-    * @param[in,out] hold_bin
-    *
-    * @param[in] ideal_load The load that main_bin should have.
-    *
-    * @param[in] low_load Return when main_bin's load is in the range
-    * [low_load,high_load]
-    *
-    * @param[in] high_load Return when main_bin's load is in the range
-    * [low_load,high_load]
-    *
-    * @return Amount of load transfered.  If positive, load went
-    * from main_bin to hold_bin.
-    */
-   LoadType
-   adjustLoadByPopping(
-      BoxTransitSet& main_bin,
-      BoxTransitSet& hold_bin,
-      LoadType ideal_load,
-      LoadType low_load,
-      LoadType high_load ) const;
-
-   /*!
-    * @brief Shift load from src to dst by swapping BoxInTransit
-    * between them.
-    *
-    * @param[in,out] main_bin
-    *
-    * @param[in,out] hold_bin
-    *
-    * @param[in] ideal_load The load that main_bin should have.
-    *
-    * @param[in] low_load Return when main_bin's load is in the range
-    * [low_load,high_load]
-    *
-    * @param[in] high_load Return when main_bin's load is in the range
-    * [low_load,high_load]
-    *
-    * @return Amount of load transfered.  If positive, load went
-    * from main_bin to hold_bin.
-    */
-   LoadType
-   adjustLoadBySwapping(
-      BoxTransitSet& main_bin,
-      BoxTransitSet& hold_bin,
-      LoadType ideal_load,
-      LoadType low_load,
-      LoadType high_load ) const;
-
-   /*!
-    * @brief Shift load from src to dst by swapping BoxInTransit
-    * between them.
-    *
-    * @param[in,out] main_bin
-    *
-    * @param[in,out] hold_bin
-    *
-    * @param[in,out] next_available_index Index for guaranteeing new
-    * Boxes are uniquely numbered.
-    *
-    * @param[in] ideal_load The load that main_bin should have.
-    *
-    * @param[in] low_load Return when main_bin's load is in the range
-    * [low_load,high_load]
-    *
-    * @param[in] high_load Return when main_bin's load is in the range
-    * [low_load,high_load]
-    *
-    * @return Amount of load transfered.  If positive, load went
-    * from main_bin to hold_bin.
-    */
-   LoadType
-   adjustLoadByBreaking(
-      BoxTransitSet& main_bin,
-      BoxTransitSet& hold_bin,
-      hier::LocalId &next_available_index,
-      LoadType ideal_load,
-      LoadType low_load,
-      LoadType high_load ) const;
-
-   /*!
-    * @brief Find a BoxInTransit in each of the source and destination
-    * containers that, when swapped, effects a transfer of the given
-    * amount of work from the source to the destination.  Swap the boxes.
-    *
-    * @param [in,out] src
-    *
-    * @param [in,out] dst
-    *
-    * @param actual_transfer [out] Amount of work transfered from src to
-    * dst.
-    *
-    * @param ideal_transfer [in] Amount of work to be transfered from
-    * src to dst.
-    *
-    * @param low_transfer
-    *
-    * @param high_transfer
-    */
-   bool
-   swapLoadPair(
-      BoxTransitSet& src,
-      BoxTransitSet& dst,
-      LoadType& actual_transfer,
-      LoadType ideal_transfer,
-      LoadType low_transfer,
-      LoadType high_transfer ) const;
-
    /*!
     * @brief Pack load/boxes for sending up.
     */
@@ -658,21 +513,6 @@ private:
    constructSemilocalUnbalancedToBalanced(
       hier::MappingConnector &unbalanced_to_balanced,
       const BoxTransitSet &kept_imports ) const;
-
-   /*!
-    * @brief Evaluate a trial box-break.
-    *
-    * Return whether new_load is an improvement over current_load.
-    * This should be renamed compareLoads or checkLoads.
-    */
-   bool
-   evaluateBreak(
-      int flags[],
-      LoadType current_load,
-      LoadType new_load,
-      LoadType ideal_load,
-      LoadType low_load,
-      LoadType high_load ) const;
 
    /*!
     * @brief Computes surface area of a list of boxes.
@@ -1049,11 +889,6 @@ private:
    boost::shared_ptr<tbox::Timer> t_compute_global_load;
    boost::shared_ptr<tbox::Timer> t_compute_tree_load;
    std::vector<boost::shared_ptr<tbox::Timer> > t_compute_tree_load_for_cycle;
-   boost::shared_ptr<tbox::Timer> t_adjust_load;
-   boost::shared_ptr<tbox::Timer> t_adjust_load_by_popping;
-   boost::shared_ptr<tbox::Timer> t_adjust_load_by_swapping;
-   boost::shared_ptr<tbox::Timer> t_shift_loads_by_breaking;
-   boost::shared_ptr<tbox::Timer> t_find_swap_pair;
    boost::shared_ptr<tbox::Timer> t_send_load_to_children;
    boost::shared_ptr<tbox::Timer> t_send_load_to_parent;
    boost::shared_ptr<tbox::Timer> t_get_load_from_children;
