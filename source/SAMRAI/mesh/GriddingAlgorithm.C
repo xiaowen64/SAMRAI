@@ -1676,6 +1676,10 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
 
    boost::shared_ptr<hier::Connector> new_to_new;
 
+   if (d_print_steps) {
+      tbox::plog << "GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel: bridging for new<==>new\n";
+   }
+
    t_bridge_new_to_new->start();
 
    d_oca.bridgeWithNesting(
@@ -1812,6 +1816,11 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
        * There is a level finer than new_ln.  Connect the new level to
        * the finer level.
        */
+
+      if (d_print_steps) {
+         tbox::plog << "GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel: bridging for new<==>finer\n";
+      }
+
       boost::shared_ptr<hier::Connector> new_to_finer;
 
       t_bridge_new_to_finer->start();
@@ -1856,6 +1865,10 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
        * transfer data from old to new.
        */
 
+      if (d_print_steps) {
+         tbox::plog << "GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel: bridging for new<==>old\n";
+      }
+
       boost::shared_ptr<hier::Connector> old_to_new;
       t_bridge_new_to_old->start();
       d_oca.bridgeWithNesting(
@@ -1890,6 +1903,10 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
       *d_hierarchy->getPatchLevel(new_ln));
 
    t_regrid_finer_create->stop();
+
+   if (d_print_steps) {
+      tbox::plog << "GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel: initializing level data\n";
+   }
 
    if (d_barrier_and_time) {
       t_initialize_level_data->barrierAndStart();
