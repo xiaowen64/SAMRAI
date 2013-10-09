@@ -965,9 +965,9 @@ t_post_load_distribution_barrier->stop();
     * to a box from child 0 is the same value plus 2.  And so on.
     * Each time a value from next_available_index is used, we
     * increment it by 2+deg so that the 2+deg available
-    * values can never be the same.  Moreover, boxes from a certain
-    * source always take indices from its own set, independent of when
-    * boxes from other sources arrive.
+    * values can never be the same.  Moreover, imported boxes
+    * always take indices from the set associated with the importer,
+    * independent their arrival order.
     */
    std::vector<hier::LocalId> next_available_index(2 + d_rank_tree->getDegree());
    next_available_index[0] = balance_box_level.getLastLocalId() + 1;
@@ -982,6 +982,14 @@ t_post_load_distribution_barrier->stop();
 
    for (unsigned int c = 1; c < d_rank_tree->getDegree() + 2; ++c) {
       next_available_index[c] = next_available_index[0] + c;
+   }
+
+   std::vector<hier::SequentialLocalIdGenerator> id_generator(2 + d_rank_tree->getDegree());
+   id_generator[0].setLastValue( next_available_index[0] );
+   id_generator[0].setIncrement( hier::LocalId(id_generator.size()) );
+   for (unsigned int c = 1; c < d_rank_tree->getDegree() + 2; ++c) {
+      id_generator[c].setLastValue( next_available_index[0] + c );
+      id_generator[c].setIncrement( hier::LocalId(id_generator.size()) );
    }
 
 
@@ -1069,6 +1077,7 @@ t_post_load_distribution_barrier->stop();
       unpackSubtreeDataUp(
          child_subtrees[cindex],
          next_available_index[cindex],
+         id_generator[cindex],
          mstream);
 
       unassigned.insertAll( child_subtrees[cindex].d_work_traded );
@@ -1161,6 +1170,7 @@ t_post_load_distribution_barrier->stop();
                my_subtree.d_work_traded.adjustLoad(
                   unassigned,
                   next_available_index[d_rank_tree->getDegree()],
+                  id_generator[d_rank_tree->getDegree()],
                   export_load_ideal,
                   export_load_low,
                   export_load_high );
@@ -1258,6 +1268,7 @@ t_post_load_distribution_barrier->stop();
       unpackSubtreeDataDown(
          my_subtree,
          next_available_index[1 + d_rank_tree->getDegree()],
+         id_generator[1 + d_rank_tree->getDegree()],
          mstream);
 
       unassigned.insertAll( my_subtree.d_work_traded );
@@ -1348,6 +1359,7 @@ t_post_load_distribution_barrier->stop();
                recip_subtree.d_work_traded.adjustLoad(
                   unassigned,
                   next_available_index[d_rank_tree->getDegree()],
+                  id_generator[d_rank_tree->getDegree()],
                   export_load_ideal,
                   export_load_low,
                   export_load_high );
@@ -1848,6 +1860,7 @@ void
 TreeLoadBalancer::unpackSubtreeDataUp(
    SubtreeData& subtree_data,
    hier::LocalId& next_available_index,
+   hier::SequentialLocalIdGenerator& id_generator,
    tbox::MessageStream &msg ) const
 {
    t_unpack_load->start();
@@ -1911,6 +1924,7 @@ void
 TreeLoadBalancer::unpackSubtreeDataDown(
    SubtreeData& subtree_data,
    hier::LocalId& next_available_index,
+   hier::SequentialLocalIdGenerator& id_generator,
    tbox::MessageStream &msg ) const
 {
    t_unpack_load->start();

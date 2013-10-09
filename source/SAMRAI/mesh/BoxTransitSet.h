@@ -14,6 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/hier/SequentialLocalIdGenerator.h"
 #include "SAMRAI/mesh/BalanceBoxBreaker.h"
 // #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
@@ -241,6 +242,7 @@ public:
    adjustLoad(
       BoxTransitSet& hold_bin,
       hier::LocalId& next_available_index,
+      hier::SequentialLocalIdGenerator &id_generator,
       LoadType ideal_load,
       LoadType low_load,
       LoadType high_load );
@@ -318,9 +320,21 @@ public:
    adjustLoadByBreaking(
       BoxTransitSet& hold_bin,
       hier::LocalId &next_available_index,
+      hier::SequentialLocalIdGenerator &id_generator,
       LoadType ideal_load,
       LoadType low_load,
       LoadType high_load );
+
+   /*!
+    * @brief Allow box breaking when adjusting load.
+    *
+    * New boxes created by box breaking are given LocalIds obtained
+    * from the ID generator.
+    */
+   void allowBoxBreaking( hier::SequentialLocalIdGenerator &id_generator ) {
+      d_allow_box_breaking = true;
+      d_id_generator = id_generator;
+   }
 
    /*!
     * @brief Find a BoxInTransit in each of the source and destination
@@ -508,6 +522,7 @@ public:
    int d_tree_degree; // For computing LocalId.  Should be factored out into a class that generates LocalIds.
 
    bool d_allow_box_breaking;
+   hier::SequentialLocalIdGenerator d_id_generator;
 
    bool d_print_steps;
    bool d_print_pop_steps;

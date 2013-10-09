@@ -75,6 +75,7 @@ BoxTransitSet::LoadType
 BoxTransitSet::adjustLoad(
    BoxTransitSet& hold_bin,
    hier::LocalId& next_available_index,
+   hier::SequentialLocalIdGenerator &id_generator,
    LoadType ideal_load,
    LoadType low_load,
    LoadType high_load )
@@ -188,6 +189,7 @@ BoxTransitSet::adjustLoad(
          LoadType brk_transfer = adjustLoadByBreaking(
             hold_bin,
             next_available_index,
+            id_generator,
             ideal_load,
             low_load,
             high_load );
@@ -271,6 +273,7 @@ BoxTransitSet::LoadType
 BoxTransitSet::adjustLoadByBreaking(
    BoxTransitSet& hold_bin,
    hier::LocalId& next_available_index,
+   hier::SequentialLocalIdGenerator &id_generator,
    LoadType ideal_load,
    LoadType low_load,
    LoadType high_load )
@@ -282,6 +285,7 @@ BoxTransitSet::adjustLoadByBreaking(
       actual_transfer = -hold_bin.adjustLoadByBreaking(
          *this,
          next_available_index,
+         id_generator,
          hold_bin.getSumLoad()-(ideal_load-getSumLoad()),
          hold_bin.getSumLoad()-(high_load-getSumLoad()),
          hold_bin.getSumLoad()-(low_load-getSumLoad()) );

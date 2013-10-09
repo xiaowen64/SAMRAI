@@ -476,6 +476,7 @@ private:
    unpackSubtreeDataUp(
       SubtreeData& subtree_data,
       hier::LocalId& next_available_index,
+      hier::SequentialLocalIdGenerator &id_generator,
       tbox::MessageStream &msg ) const;
 
    /*!
@@ -493,6 +494,7 @@ private:
    unpackSubtreeDataDown(
       SubtreeData& subtree_data,
       hier::LocalId& next_available_index,
+      hier::SequentialLocalIdGenerator &id_generator,
       tbox::MessageStream &msg ) const;
 
    /*!
