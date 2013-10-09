@@ -20,6 +20,15 @@
 #ifndef included_tbox_OpenMPUtilities
 #define included_tbox_OpenMPUtilities
 
+/*!
+ * @brief C macros expanding according to whether OpenMP is being
+ * used.
+ *
+ * Macros named TBOX_<name of OpenMP function> expand to the function
+ * when OpenMP is used.  Otherwise, they expand to the equivalence of
+ * one thread.
+ */
+
 #ifdef _OPENMP
 
 #include "SAMRAI/SAMRAI_config.h"
@@ -39,6 +48,37 @@
 #define TBOX_omp_get_num_threads() omp_get_num_threads()
 #define TBOX_omp_get_max_threads() omp_get_max_threads()
 
+#define TBOX_IF_SINGLE_THREAD(CODE) {	\
+   if ( omp_get_num_threads() == 1 ) {	\
+      CODE	\
+   }	\
+}
+
+#define TBOX_IF_MULTI_THREAD(CODE) {	\
+   if ( omp_get_num_threads() > 1 ) {	\
+      CODE	\
+   }	\
+}
+
+#define TBOX_IF_IN_PARALLEL_REGION(CODE) {	\
+   if ( omp_in_parallel() ) {                \
+      CODE	\
+   }	\
+}
+
+#define TBOX_IF_NOT_IN_PARALLEL_REGION(CODE) {	\
+   if ( !omp_in_parallel() ) {                \
+      CODE	\
+   }	\
+}
+
+#define TBOX_IF_HAVE_OPENMP(CODE) {	\
+      CODE	\
+   }	\
+}
+
+#define TBOX_IF_NOT_HAVE_OPENMP(CODE)
+
 #else
 
 #define TBOX_omp_version 0
@@ -53,6 +93,21 @@
 
 #define TBOX_omp_get_num_threads() (1)
 #define TBOX_omp_get_max_threads() (1)
+
+#define TBOX_IF_SINGLE_THREAD(CODE) { CODE }
+
+#define TBOX_IF_MULTI_THREAD(CODE)
+
+#define TBOX_IF_IN_PARALLEL_REGION(CODE)
+
+#define TBOX_IF_NOT_IN_PARALLEL_REGION(CODE) { CODE }
+
+#define TBOX_IF_HAVE_OPENMP(CODE)
+
+#define TBOX_IF_NOT_HAVE_OPENMP(CODE) {	\
+      CODE	\
+   }	\
+}
 
 #endif
 
