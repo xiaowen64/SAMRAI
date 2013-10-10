@@ -956,39 +956,31 @@ t_post_load_distribution_barrier->stop();
     * The local process must generate indices for new and imported
     * boxes.  To do it deterministically, no generated index should
     * depend on message arrival order.  To achieve this, we maintain
-    * 2+deg values in next_available_index: one for the local
-    * process, one for the parent and one for each child.  deg is the
-    * degree of tree d_rank_tree.  The first
-    * index given to a locally generated Box is some index unused by
-    * balance_box_level.  The first index given to a Box
-    * from the parent is the same value plus 1.  The first index given
-    * to a box from child 0 is the same value plus 2.  And so on.
-    * Each time a value from next_available_index is used, we
-    * increment it by 2+deg so that the 2+deg available
-    * values can never be the same.  Moreover, imported boxes
-    * always take indices from the set associated with the importer,
-    * independent their arrival order.
+    * 2+deg ID generators, each set up to provide IDs from its exclusive
+    * pool.  One generator is for the local
+    * process, one is for the parent and the rest for each child.
+    * deg is the degree of tree d_rank_tree.
+    * The first
     */
-   std::vector<hier::LocalId> next_available_index(2 + d_rank_tree->getDegree());
-   next_available_index[0] = balance_box_level.getLastLocalId() + 1;
+   std::vector<hier::SequentialLocalIdGenerator> id_generator(2 + d_rank_tree->getDegree());
+
+   hier::LocalId next_available_index = balance_box_level.getLastLocalId() + 1;
+   hier::LocalId last_used_index = balance_box_level.getLastLocalId();
 
    /*
-    * The next line makes next_available_index[0] divisible by 2+deg.
+    * The next line makes generated LocalId's divisible by 2+deg.
     * It is not strictly necessary but makes debugging much easier because
-    * we can quickly associate any value with the source of its Box.
+    * we can quickly associate any box with its source.
     */
-   next_available_index[0] +=
-      hier::LocalId(2+d_rank_tree->getDegree()) - (next_available_index[0] % (2 + d_rank_tree->getDegree()));
+   next_available_index +=
+      hier::LocalId(id_generator.size()) - (next_available_index % (id_generator.size()));
+   last_used_index = hier::LocalId( last_used_index.getValue()/id_generator.size()*id_generator.size() );
+// TBOX_ASSERT( last_used_index.getValue() + id_generator.size() == next_available_index.getValue() );
 
-   for (unsigned int c = 1; c < d_rank_tree->getDegree() + 2; ++c) {
-      next_available_index[c] = next_available_index[0] + c;
-   }
-
-   std::vector<hier::SequentialLocalIdGenerator> id_generator(2 + d_rank_tree->getDegree());
-   id_generator[0].setLastValue( next_available_index[0] );
+   id_generator[0].setLastValue( next_available_index );
    id_generator[0].setIncrement( hier::LocalId(id_generator.size()) );
    for (unsigned int c = 1; c < d_rank_tree->getDegree() + 2; ++c) {
-      id_generator[c].setLastValue( next_available_index[0] + c );
+      id_generator[c].setLastValue( next_available_index + c );
       id_generator[c].setIncrement( hier::LocalId(id_generator.size()) );
    }
 
