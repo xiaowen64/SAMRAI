@@ -1059,7 +1059,7 @@ t_post_load_distribution_barrier->stop();
          d_mpi.getRank(),
          mstream);
 
-      unassigned.insertAll( child_subtrees[cindex].d_work_traded );
+      // unassigned.insertAll( child_subtrees[cindex].d_work_traded );
 
       if (d_print_steps) {
          tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
@@ -1078,7 +1078,7 @@ t_post_load_distribution_barrier->stop();
          tbox::plog << std::endl;
       }
 
-      my_subtree.addChild( child_subtrees[cindex] );
+      my_subtree.addChild( child_subtrees[cindex], unassigned );
 
    }
 
@@ -1146,16 +1146,13 @@ t_post_load_distribution_barrier->stop();
             }
 
             const LoadType export_load_actual =
-               my_subtree.d_work_traded.adjustLoad(
+               my_subtree.adjustOutboundLoad(
                   unassigned,
                   id_generator[d_rank_tree->getDegree()],
                   export_load_ideal,
                   export_load_low,
                   export_load_high );
             TBOX_ASSERT( export_load_actual >= 0 );
-
-            my_subtree.d_subtree_load_current -= my_subtree.d_work_traded.getSumLoad();
-            my_subtree.d_eff_load_current -= my_subtree.d_work_traded.getSumLoad();
 
             if (d_print_steps) {
                tbox::plog << "Assigned " << my_subtree.d_work_traded.size()
@@ -1233,7 +1230,8 @@ t_post_load_distribution_barrier->stop();
    if (my_subtree.d_wants_work_from_parent) {
 
       /*
-       * Receive and unpack message from parent.
+       * Receive and unpack message from parent, then put the received
+       * work into unassigned for later use.
        */
       t_get_load_from_parent->start();
 
@@ -1248,9 +1246,7 @@ t_post_load_distribution_barrier->stop();
          d_mpi.getRank(),
          mstream);
 
-      unassigned.insertAll( my_subtree.d_work_traded );
-      my_subtree.d_subtree_load_current += my_subtree.d_work_traded.getSumLoad();
-      my_subtree.d_eff_load_current += my_subtree.d_work_traded.getSumLoad();
+      my_subtree.moveInboundLoadToReserve(unassigned);
 
       if ( unassigned_highwater < unassigned.size() ) {
          unassigned_highwater = unassigned.size();
@@ -1333,15 +1329,13 @@ t_post_load_distribution_barrier->stop();
             }
 
             const LoadType export_load_actual =
-               recip_subtree.d_work_traded.adjustLoad(
+               recip_subtree.adjustOutboundLoad(
                   unassigned,
                   id_generator[d_rank_tree->getDegree()],
                   export_load_ideal,
                   export_load_low,
                   export_load_high );
             TBOX_ASSERT(export_load_actual >= 0);
-            recip_subtree.d_subtree_load_current += export_load_actual;
-            recip_subtree.d_eff_load_current += export_load_actual;
 
             if (d_print_steps) {
                tbox::plog << "Assigned " << recip_subtree.d_work_traded.size()
@@ -1819,6 +1813,52 @@ void TreeLoadBalancer::SubtreeData::setStartingLoad(
    d_eff_load_ideal = d_subtree_load_ideal;
    d_eff_load_current = d_subtree_load_current;
    d_eff_load_upperlimit = d_subtree_load_upperlimit;
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+TreeLoadBalancer::LoadType TreeLoadBalancer::SubtreeData::adjustOutboundLoad(
+   BoxTransitSet& reserve_bin,
+   hier::SequentialLocalIdGenerator &id_generator,
+   LoadType ideal_load,
+   LoadType low_load,
+   LoadType high_load )
+{
+   LoadType actual_transfer = d_work_traded.getSumLoad();
+
+   d_work_traded.adjustLoad(
+      reserve_bin,
+      id_generator,
+      ideal_load,
+      low_load,
+      high_load );
+
+   actual_transfer = d_work_traded.getSumLoad() - actual_transfer;
+
+   d_subtree_load_current -= d_work_traded.getSumLoad();
+   d_eff_load_current -= d_work_traded.getSumLoad();
+
+   return actual_transfer;
+}
+
+
+
+/*
+ *************************************************************************
+ * We could empty d_work_traded at the end of this method, because it
+ * is no longer essential.  We keep its contents only for diagnostics.
+ *************************************************************************
+ */
+void TreeLoadBalancer::SubtreeData::moveInboundLoadToReserve(
+   BoxTransitSet& reserve_bin )
+{
+   d_subtree_load_current += d_work_traded.getSumLoad();
+   d_eff_load_current += d_work_traded.getSumLoad();
+   reserve_bin.insertAll( d_work_traded );
 }
 
 
@@ -3325,7 +3365,8 @@ TreeLoadBalancer::SubtreeData::SubtreeData():
 
 void
 TreeLoadBalancer::SubtreeData::addChild(
-   const SubtreeData &child )
+   const SubtreeData &child,
+   BoxTransitSet &reserve )
 {
    /*
     * Sum children load into my_subtree to get data for the whole
@@ -3346,6 +3387,7 @@ TreeLoadBalancer::SubtreeData::addChild(
 
    d_subtree_load_current += child.d_work_traded.getSumLoad();
    d_eff_load_current += child.d_work_traded.getSumLoad();
+   reserve.insertAll( child.d_work_traded );
 }
 
 void

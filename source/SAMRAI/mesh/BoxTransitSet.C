@@ -50,8 +50,8 @@ BoxTransitSet::BoxTransitSet() :
 /*
  *************************************************************************
  *
- * This method adjusts the load in a main_bin of BoxTransitSet::BoxInTransits by
- * moving work between it and a holding bin.  It tries to bring
+ * This method adjusts the load in this BoxTransitSet by
+ * moving work between it (main_bin) and a holding_bin.  It tries to bring
  * main_bin's load to the specified ideal_load.
  *
  * The high_load and low_load define an acceptable range around the
@@ -60,8 +60,8 @@ BoxTransitSet::BoxTransitSet() :
  * the ideal.
  *
  * This method makes a best effort and returns the amount of load
- * moved.  It can move BoxTransitSet::BoxInTransit between given sets and, if needed,
- * break some BoxTransitSet::BoxInTransit up to move part of the work.
+ * moved.  It can move BoxInTransits between given sets and, if needed,
+ * break some BoxInTransits up to move part of the work.
  *
  * This method is purely local--it reassigns the load but does not
  * communicate the change to any remote process.

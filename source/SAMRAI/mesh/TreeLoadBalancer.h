@@ -356,8 +356,21 @@ private:
       LoadType effExcess() const { return d_eff_load_current - d_eff_load_upperlimit; }
       LoadType effMargin() const { return d_eff_load_upperlimit - d_eff_load_current; }
 
+      //! @brief Adjust load to be sent away.
+      LoadType
+      adjustOutboundLoad(
+         BoxTransitSet& reserve_bin,
+         hier::SequentialLocalIdGenerator &id_generator,
+         LoadType ideal_load,
+         LoadType low_load,
+         LoadType high_load );
+
+      //! @brief Move inbound load to the given reserve bin.
+      void moveInboundLoadToReserve( BoxTransitSet &reserve_bin );
+
       //! @brief Incorporate child's data into the subtree.
-      void addChild( const SubtreeData &child );
+      void addChild( const SubtreeData &child,
+                     BoxTransitSet &reserve_bin );
 
       /*!
        * @brief Pack load/boxes for sending up.

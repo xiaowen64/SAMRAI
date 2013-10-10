@@ -235,7 +235,7 @@ public:
     * [low_load,high_load]
     *
     * @return Net load transfered into main_bin.  If negative, net
-    * load went out of main_bin.
+    * load went out of main_bin.  TODO: verify this statement is correct and others like this are incorrect.
     */
    LoadType
    adjustLoad(
