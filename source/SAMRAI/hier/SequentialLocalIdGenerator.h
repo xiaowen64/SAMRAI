@@ -58,12 +58,13 @@ public:
     * @brief Return a LocalId that is one more than the previous
     * value.
     *
-    * This method should return a unique LocalId each time it is
-    * called.
+    * This should be changed to not require a temporary, but that
+    * would change regression results, so I'm delaying it.
     */
    LocalId nextValue() {
+      LocalId tmp = d_last_value;
       d_last_value += d_increment;
-      return d_last_value;
+      return tmp;
    }
 
    /*

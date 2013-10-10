@@ -1884,7 +1884,7 @@ TreeLoadBalancer::unpackSubtreeDataUp(
       BoxTransitSet::BoxInTransit renamed_box(received_box,
                                received_box.getBox(),
                                d_mpi.getRank(),
-                               next_available_index);
+                                              id_generator.nextValue());
       next_available_index += 2 + d_rank_tree->getDegree();
       subtree_data.d_work_traded.insert(renamed_box);
    }
@@ -1940,7 +1940,7 @@ TreeLoadBalancer::unpackSubtreeDataDown(
       BoxTransitSet::BoxInTransit renamed_box(received_box,
                                received_box.getBox(),
                                d_mpi.getRank(),
-                               next_available_index);
+                                                                             id_generator.nextValue());
       next_available_index += 2 + d_rank_tree->getDegree();
       subtree_data.d_work_traded.insert(renamed_box);
    }

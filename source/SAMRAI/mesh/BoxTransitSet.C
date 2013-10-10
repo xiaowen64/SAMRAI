@@ -420,7 +420,7 @@ BoxTransitSet::adjustLoadByBreaking(
             breakbox,
             *bi,
             breakbox.getOwnerRank(),
-            next_available_index);
+            id_generator.nextValue());
          give_box_in_transit.d_boxload = static_cast<int>(computeLoad(
                                                              give_box_in_transit.d_orig_box,
                                                              give_box_in_transit.getBox()));
@@ -441,7 +441,7 @@ BoxTransitSet::adjustLoadByBreaking(
             breakbox,
             *bi,
             breakbox.getOwnerRank(),
-            next_available_index);
+            id_generator.nextValue());
          keep_box_in_transit.d_boxload = static_cast<int>(computeLoad(
                                                              keep_box_in_transit.d_orig_box,
                                                              keep_box_in_transit.getBox()));
