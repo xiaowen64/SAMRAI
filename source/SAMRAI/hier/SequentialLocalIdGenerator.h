@@ -55,16 +55,12 @@ public:
    ~SequentialLocalIdGenerator() {}
 
    /*!
-    * @brief Return a LocalId that is one more than the previous
-    * value.
-    *
-    * This should be changed to not require a temporary, but that
-    * would change regression results, so I'm delaying it.
+    * @brief Return a LocalId that is greater than the previous
+    * value by the increment value.
     */
    LocalId nextValue() {
-      LocalId tmp = d_last_value;
       d_last_value += d_increment;
-      return tmp;
+      return d_last_value;
    }
 
    /*

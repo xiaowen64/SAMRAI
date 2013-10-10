@@ -1713,5 +1713,11 @@ int checkBalanceCorrectness(
       }
    }
 
+   if (error_count > 0) {
+      tbox::plog << "Error - balance correctness failed regardless of baseline\n"
+                 << std::endl;
+      ++error_count;
+   }
+
    return error_count;
 }

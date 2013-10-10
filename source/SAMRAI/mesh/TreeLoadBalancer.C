@@ -975,12 +975,11 @@ t_post_load_distribution_barrier->stop();
    next_available_index +=
       hier::LocalId(id_generator.size()) - (next_available_index % (id_generator.size()));
    last_used_index = hier::LocalId( last_used_index.getValue()/id_generator.size()*id_generator.size() );
-// TBOX_ASSERT( last_used_index.getValue() + id_generator.size() == next_available_index.getValue() );
 
-   id_generator[0].setLastValue( next_available_index );
+   id_generator[0].setLastValue( last_used_index );
    id_generator[0].setIncrement( hier::LocalId(id_generator.size()) );
    for (unsigned int c = 1; c < d_rank_tree->getDegree() + 2; ++c) {
-      id_generator[c].setLastValue( next_available_index + c );
+      id_generator[c].setLastValue( last_used_index + c );
       id_generator[c].setIncrement( hier::LocalId(id_generator.size()) );
    }
 
