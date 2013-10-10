@@ -74,7 +74,6 @@ BoxTransitSet::BoxTransitSet() :
 BoxTransitSet::LoadType
 BoxTransitSet::adjustLoad(
    BoxTransitSet& hold_bin,
-   hier::LocalId& next_available_index,
    hier::SequentialLocalIdGenerator &id_generator,
    LoadType ideal_load,
    LoadType low_load,
@@ -188,7 +187,6 @@ BoxTransitSet::adjustLoad(
           */
          LoadType brk_transfer = adjustLoadByBreaking(
             hold_bin,
-            next_available_index,
             id_generator,
             ideal_load,
             low_load,
@@ -272,7 +270,6 @@ BoxTransitSet::adjustLoad(
 BoxTransitSet::LoadType
 BoxTransitSet::adjustLoadByBreaking(
    BoxTransitSet& hold_bin,
-   hier::LocalId& next_available_index,
    hier::SequentialLocalIdGenerator &id_generator,
    LoadType ideal_load,
    LoadType low_load,
@@ -284,7 +281,6 @@ BoxTransitSet::adjustLoadByBreaking(
       // The logic below does not handle bi-directional transfers, so handle it here.
       actual_transfer = -hold_bin.adjustLoadByBreaking(
          *this,
-         next_available_index,
          id_generator,
          hold_bin.getSumLoad()-(ideal_load-getSumLoad()),
          hold_bin.getSumLoad()-(high_load-getSumLoad()),
@@ -424,7 +420,6 @@ BoxTransitSet::adjustLoadByBreaking(
          give_box_in_transit.d_boxload = static_cast<int>(computeLoad(
                                                              give_box_in_transit.d_orig_box,
                                                              give_box_in_transit.getBox()));
-         next_available_index += 2 + d_tree_degree /* d_rank_tree->getDegree() */;
          main_bin.insert(give_box_in_transit);
          actual_transfer += give_box_in_transit.d_boxload;
          if (d_print_break_steps) {
@@ -445,7 +440,6 @@ BoxTransitSet::adjustLoadByBreaking(
          keep_box_in_transit.d_boxload = static_cast<int>(computeLoad(
                                                              keep_box_in_transit.d_orig_box,
                                                              keep_box_in_transit.getBox()));
-         next_available_index += 2 + d_tree_degree /* d_rank_tree->getDegree() */;
          hold_bin.insert(keep_box_in_transit);
          if (d_print_break_steps) {
             tbox::plog << "    Leftover box " << *bi << bi->numberCells()

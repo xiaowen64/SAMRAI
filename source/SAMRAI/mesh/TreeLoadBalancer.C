@@ -1076,7 +1076,6 @@ t_post_load_distribution_barrier->stop();
                                   false);
       unpackSubtreeDataUp(
          child_subtrees[cindex],
-         next_available_index[cindex],
          id_generator[cindex],
          mstream);
 
@@ -1169,7 +1168,6 @@ t_post_load_distribution_barrier->stop();
             const LoadType export_load_actual =
                my_subtree.d_work_traded.adjustLoad(
                   unassigned,
-                  next_available_index[d_rank_tree->getDegree()],
                   id_generator[d_rank_tree->getDegree()],
                   export_load_ideal,
                   export_load_low,
@@ -1267,7 +1265,6 @@ t_post_load_distribution_barrier->stop();
                                   false);
       unpackSubtreeDataDown(
          my_subtree,
-         next_available_index[1 + d_rank_tree->getDegree()],
          id_generator[1 + d_rank_tree->getDegree()],
          mstream);
 
@@ -1358,7 +1355,6 @@ t_post_load_distribution_barrier->stop();
             const LoadType export_load_actual =
                recip_subtree.d_work_traded.adjustLoad(
                   unassigned,
-                  next_available_index[d_rank_tree->getDegree()],
                   id_generator[d_rank_tree->getDegree()],
                   export_load_ideal,
                   export_load_low,
@@ -1859,7 +1855,6 @@ TreeLoadBalancer::packSubtreeDataUp(
 void
 TreeLoadBalancer::unpackSubtreeDataUp(
    SubtreeData& subtree_data,
-   hier::LocalId& next_available_index,
    hier::SequentialLocalIdGenerator& id_generator,
    tbox::MessageStream &msg ) const
 {
@@ -1875,7 +1870,7 @@ TreeLoadBalancer::unpackSubtreeDataUp(
    msg >> subtree_data.d_eff_load_upperlimit;
    msg >> num_boxes;
    /*
-    * As we pull each BoxTransitSet::BoxInTransit out, give it a new id that reflects
+    * As we pull each BoxInTransit out, give it a new id that reflects
     * its new owner.
     */
    BoxTransitSet::BoxInTransit received_box(d_dim);
@@ -1885,7 +1880,6 @@ TreeLoadBalancer::unpackSubtreeDataUp(
                                received_box.getBox(),
                                d_mpi.getRank(),
                                               id_generator.nextValue());
-      next_available_index += 2 + d_rank_tree->getDegree();
       subtree_data.d_work_traded.insert(renamed_box);
    }
    msg >> subtree_data.d_wants_work_from_parent;
@@ -1923,7 +1917,6 @@ TreeLoadBalancer::packSubtreeDataDown(
 void
 TreeLoadBalancer::unpackSubtreeDataDown(
    SubtreeData& subtree_data,
-   hier::LocalId& next_available_index,
    hier::SequentialLocalIdGenerator& id_generator,
    tbox::MessageStream &msg ) const
 {
@@ -1931,17 +1924,16 @@ TreeLoadBalancer::unpackSubtreeDataDown(
    int num_boxes = 0;
    msg >> num_boxes;
    /*
-    * As we pull each BoxTransitSet::BoxInTransit out, give it a new id that reflects
+    * As we pull each BoxInTransit out, give it a new id that reflects
     * its new owner.
     */
    BoxTransitSet::BoxInTransit received_box(d_dim);
    for (int i = 0; i < num_boxes; ++i) {
       received_box.getFromMessageStream(msg);
       BoxTransitSet::BoxInTransit renamed_box(received_box,
-                               received_box.getBox(),
-                               d_mpi.getRank(),
-                                                                             id_generator.nextValue());
-      next_available_index += 2 + d_rank_tree->getDegree();
+                                              received_box.getBox(),
+                                              d_mpi.getRank(),
+                                              id_generator.nextValue());
       subtree_data.d_work_traded.insert(renamed_box);
    }
    t_unpack_load->stop();

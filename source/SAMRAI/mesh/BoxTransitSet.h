@@ -224,8 +224,7 @@ public:
     *
     * @param[in,out] hold_bin
     *
-    * @param[in,out] next_available_index Index for guaranteeing new
-    * Boxes are uniquely numbered.
+    * @param[in,out] id_generator LocalId generator for new boxes.
     *
     * @param[in] ideal_load The load that main_bin should have.
     *
@@ -241,7 +240,6 @@ public:
    LoadType
    adjustLoad(
       BoxTransitSet& hold_bin,
-      hier::LocalId& next_available_index,
       hier::SequentialLocalIdGenerator &id_generator,
       LoadType ideal_load,
       LoadType low_load,
@@ -302,8 +300,7 @@ public:
     *
     * @param[in,out] hold_bin
     *
-    * @param[in,out] next_available_index Index for guaranteeing new
-    * Boxes are uniquely numbered.
+    * @param[in,out] id_generator LocalId generator for new boxes.
     *
     * @param[in] ideal_load The load that main_bin should have.
     *
@@ -319,7 +316,6 @@ public:
    LoadType
    adjustLoadByBreaking(
       BoxTransitSet& hold_bin,
-      hier::LocalId &next_available_index,
       hier::SequentialLocalIdGenerator &id_generator,
       LoadType ideal_load,
       LoadType low_load,
