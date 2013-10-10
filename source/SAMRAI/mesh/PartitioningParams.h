@@ -79,6 +79,10 @@ PartitioningParams(
       return d_cut_factor;
    }
 
+   const tbox::Dimension &getDim() const {
+      return d_min_size.getDim();
+   }
+
    const double &getLoadComparisonTol() const {
       return d_load_comparison_tol;
    }

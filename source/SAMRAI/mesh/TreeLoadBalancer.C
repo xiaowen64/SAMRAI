@@ -998,9 +998,11 @@ t_post_load_distribution_barrier->stop();
     */
    SubtreeData my_subtree;
    my_subtree.setPartitioningParams(*d_pparams);
+   my_subtree.setTimerPrefix(d_object_name);
    std::vector<SubtreeData> child_subtrees(num_children);
    for ( size_t i=0; i<child_subtrees.size(); ++i ) {
       child_subtrees[i].setPartitioningParams(*d_pparams);
+      child_subtrees[i].setTimerPrefix(d_object_name);
    }
 
 
@@ -1074,9 +1076,9 @@ t_post_load_distribution_barrier->stop();
                                   tbox::MessageStream::Read,
                                   child_recv->getRecvData(),
                                   false);
-      unpackSubtreeDataUp(
-         child_subtrees[cindex],
+      child_subtrees[cindex].unpackDataFromChild(
          id_generator[cindex],
+         d_mpi.getRank(),
          mstream);
 
       unassigned.insertAll( child_subtrees[cindex].d_work_traded );
@@ -1200,7 +1202,7 @@ t_post_load_distribution_barrier->stop();
        * up to parent.
        */
       tbox::MessageStream mstream;
-      packSubtreeDataUp(mstream, my_subtree);
+      my_subtree.packDataToParent(mstream);
       if (d_print_steps) {
          tbox::plog << "Sending to parent " << d_rank_tree->getParentRank() << ": "
                     << my_subtree.d_work_traded.size() << " boxes ("
@@ -1263,9 +1265,9 @@ t_post_load_distribution_barrier->stop();
                                   tbox::MessageStream::Read,
                                   parent_recv->getRecvData(),
                                   false);
-      unpackSubtreeDataDown(
-         my_subtree,
+      my_subtree.unpackDataFromParent(
          id_generator[1 + d_rank_tree->getDegree()],
+         d_mpi.getRank(),
          mstream);
 
       unassigned.insertAll( my_subtree.d_work_traded );
@@ -1382,7 +1384,7 @@ t_post_load_distribution_barrier->stop();
          }
 
          tbox::MessageStream mstream;
-         packSubtreeDataDown(mstream, recip_subtree);
+         recip_subtree.packDataToChild(mstream);
          if (d_print_steps) {
             tbox::plog << "Sending to child "
                        << ichild << ':' << d_rank_tree->getChildRank(ichild)
@@ -1822,27 +1824,26 @@ TreeLoadBalancer::removeLocallyOriginatedBoxesFromBoxTransitSet(
  *************************************************************************
  */
 void
-TreeLoadBalancer::packSubtreeDataUp(
-   tbox::MessageStream& msg,
-   const SubtreeData& subtree_data) const
+TreeLoadBalancer::SubtreeData::packDataToParent(
+   tbox::MessageStream& msg) const
 {
    t_pack_load->start();
-   msg << subtree_data.d_num_procs;
-   msg << subtree_data.d_subtree_load_current;
-   msg << subtree_data.d_subtree_load_ideal;
-   msg << subtree_data.d_subtree_load_upperlimit;
-   msg << subtree_data.d_eff_num_procs;
-   msg << subtree_data.d_eff_load_current;
-   msg << subtree_data.d_eff_load_ideal;
-   msg << subtree_data.d_eff_load_upperlimit;
-   const BoxTransitSet& for_export = subtree_data.d_work_traded;
+   msg << d_num_procs;
+   msg << d_subtree_load_current;
+   msg << d_subtree_load_ideal;
+   msg << d_subtree_load_upperlimit;
+   msg << d_eff_num_procs;
+   msg << d_eff_load_current;
+   msg << d_eff_load_ideal;
+   msg << d_eff_load_upperlimit;
+   const BoxTransitSet& for_export = d_work_traded;
    msg << static_cast<int>(for_export.size());
    for (BoxTransitSet::const_iterator
         ni = for_export.begin(); ni != for_export.end(); ++ni) {
       const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
       box_in_transit.putToMessageStream(msg);
    }
-   msg << subtree_data.d_wants_work_from_parent;
+   msg << d_wants_work_from_parent;
    t_pack_load->stop();
 }
 
@@ -1853,90 +1854,105 @@ TreeLoadBalancer::packSubtreeDataUp(
  *************************************************************************
  */
 void
-TreeLoadBalancer::unpackSubtreeDataUp(
-   SubtreeData& subtree_data,
+TreeLoadBalancer::SubtreeData::unpackDataFromChild(
    hier::SequentialLocalIdGenerator& id_generator,
-   tbox::MessageStream &msg ) const
+   int mpi_rank,
+   tbox::MessageStream &msg )
 {
    t_unpack_load->start();
    int num_boxes = 0;
-   msg >> subtree_data.d_num_procs;
-   msg >> subtree_data.d_subtree_load_current;
-   msg >> subtree_data.d_subtree_load_ideal;
-   msg >> subtree_data.d_subtree_load_upperlimit;
-   msg >> subtree_data.d_eff_num_procs;
-   msg >> subtree_data.d_eff_load_current;
-   msg >> subtree_data.d_eff_load_ideal;
-   msg >> subtree_data.d_eff_load_upperlimit;
+   msg >> d_num_procs;
+   msg >> d_subtree_load_current;
+   msg >> d_subtree_load_ideal;
+   msg >> d_subtree_load_upperlimit;
+   msg >> d_eff_num_procs;
+   msg >> d_eff_load_current;
+   msg >> d_eff_load_ideal;
+   msg >> d_eff_load_upperlimit;
    msg >> num_boxes;
    /*
     * As we pull each BoxInTransit out, give it a new id that reflects
     * its new owner.
     */
-   BoxTransitSet::BoxInTransit received_box(d_dim);
-   for (int i = 0; i < num_boxes; ++i) {
-      received_box.getFromMessageStream(msg);
-      BoxTransitSet::BoxInTransit renamed_box(received_box,
-                               received_box.getBox(),
-                               d_mpi.getRank(),
-                                              id_generator.nextValue());
-      subtree_data.d_work_traded.insert(renamed_box);
-   }
-   msg >> subtree_data.d_wants_work_from_parent;
-   t_unpack_load->stop();
-}
-
-
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void
-TreeLoadBalancer::packSubtreeDataDown(
-   tbox::MessageStream& msg,
-   const SubtreeData& subtree_data) const
-{
-   t_pack_load->start();
-   const BoxTransitSet& for_export = subtree_data.d_work_traded;
-   msg << static_cast<int>(for_export.size());
-   for (BoxTransitSet::const_iterator
-        ni = for_export.begin(); ni != for_export.end(); ++ni) {
-      const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
-      box_in_transit.putToMessageStream(msg);
-   }
-   t_pack_load->stop();
-}
-
-
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void
-TreeLoadBalancer::unpackSubtreeDataDown(
-   SubtreeData& subtree_data,
-   hier::SequentialLocalIdGenerator& id_generator,
-   tbox::MessageStream &msg ) const
-{
-   t_unpack_load->start();
-   int num_boxes = 0;
-   msg >> num_boxes;
-   /*
-    * As we pull each BoxInTransit out, give it a new id that reflects
-    * its new owner.
-    */
-   BoxTransitSet::BoxInTransit received_box(d_dim);
+   BoxTransitSet::BoxInTransit received_box(d_pparams->getDim());
    for (int i = 0; i < num_boxes; ++i) {
       received_box.getFromMessageStream(msg);
       BoxTransitSet::BoxInTransit renamed_box(received_box,
                                               received_box.getBox(),
-                                              d_mpi.getRank(),
+                                              mpi_rank,
                                               id_generator.nextValue());
-      subtree_data.d_work_traded.insert(renamed_box);
+      d_work_traded.insert(renamed_box);
+   }
+   msg >> d_wants_work_from_parent;
+   t_unpack_load->stop();
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void
+TreeLoadBalancer::SubtreeData::packDataToChild(
+   tbox::MessageStream& msg) const
+{
+   t_pack_load->start();
+   const BoxTransitSet& for_export = d_work_traded;
+   msg << static_cast<int>(for_export.size());
+   for (BoxTransitSet::const_iterator
+        ni = for_export.begin(); ni != for_export.end(); ++ni) {
+      const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
+      box_in_transit.putToMessageStream(msg);
+   }
+   t_pack_load->stop();
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void
+TreeLoadBalancer::SubtreeData::unpackDataFromParent(
+   hier::SequentialLocalIdGenerator& id_generator,
+   int mpi_rank,
+   tbox::MessageStream &msg )
+{
+   t_unpack_load->start();
+   int num_boxes = 0;
+   msg >> num_boxes;
+   /*
+    * As we pull each BoxInTransit out, give it a new id that reflects
+    * its new owner.
+    */
+   BoxTransitSet::BoxInTransit received_box(d_pparams->getDim());
+   for (int i = 0; i < num_boxes; ++i) {
+      received_box.getFromMessageStream(msg);
+      BoxTransitSet::BoxInTransit renamed_box(received_box,
+                                              received_box.getBox(),
+                                              mpi_rank,
+                                              id_generator.nextValue());
+      d_work_traded.insert(renamed_box);
    }
    t_unpack_load->stop();
+}
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+TreeLoadBalancer::SubtreeData::setTimerPrefix(
+   const std::string& timer_prefix)
+{
+   t_pack_load = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::pack_load");
+   t_unpack_load = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::unpack_load");
 }
 
 
@@ -3257,10 +3273,6 @@ t_post_load_distribution_barrier = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::finish_sends");
       t_local_balancing = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::local_balancing");
-      t_pack_load = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::pack_load");
-      t_unpack_load = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::unpack_load");
       t_pack_edge = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::pack_edge");
       t_unpack_edge = tbox::TimerManager::getManager()->

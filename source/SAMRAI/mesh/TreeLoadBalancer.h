@@ -354,8 +354,43 @@ private:
       //! @brief Incorporate child's data into the subtree.
       void addChild( const SubtreeData &child );
 
+      /*!
+       * @brief Pack load/boxes for sending up.
+       */
+      void
+      packDataToParent(
+         tbox::MessageStream &msg) const;
+
+      /*!
+       * @brief Unpack load/boxes received from send-up.
+       */
+      void
+      unpackDataFromChild(
+         hier::SequentialLocalIdGenerator &id_generator,
+         int mpi_rank,
+         tbox::MessageStream &msg );
+
+      /*!
+       * @brief Pack load/boxes for sending down.
+       */
+      void
+      packDataToChild(
+         tbox::MessageStream &msg) const;
+
+      /*!
+       * @brief Unpack load/boxes received from send-down.
+       */
+      void
+      unpackDataFromParent(
+         hier::SequentialLocalIdGenerator &id_generator,
+         int mpi_rank,
+         tbox::MessageStream &msg );
+
       //! @brief Diagnostic printing.
       void printClassData( const std::string &border, std::ostream &os ) const;
+
+      //! @brief Setup names of timers.
+      void setTimerPrefix(const std::string& timer_prefix);
 
       /*!
        * @brief Rank of the subtree (rank of its root).
@@ -418,6 +453,9 @@ private:
       bool d_wants_work_from_parent;
 
       const PartitioningParams *d_pparams;
+
+      boost::shared_ptr<tbox::Timer> t_pack_load;
+      boost::shared_ptr<tbox::Timer> t_unpack_load;
    };
 
    /*
@@ -460,42 +498,6 @@ private:
       removeLocallyOriginatedBoxesFromBoxTransitSet(
       BoxTransitSet& transit_set,
       int local_rank ) const;
-
-   /*!
-    * @brief Pack load/boxes for sending up.
-    */
-   void
-   packSubtreeDataUp(
-      tbox::MessageStream &msg,
-      const SubtreeData& subtree_data) const;
-
-   /*!
-    * @brief Unpack load/boxes received from send-up.
-    */
-   void
-   unpackSubtreeDataUp(
-      SubtreeData& subtree_data,
-      hier::LocalId& next_available_index,
-      hier::SequentialLocalIdGenerator &id_generator,
-      tbox::MessageStream &msg ) const;
-
-   /*!
-    * @brief Pack load/boxes for sending down.
-    */
-   void
-   packSubtreeDataDown(
-      tbox::MessageStream &msg,
-      const SubtreeData& subtree_data) const;
-
-   /*!
-    * @brief Unpack load/boxes received from send-down.
-    */
-   void
-   unpackSubtreeDataDown(
-      SubtreeData& subtree_data,
-      hier::LocalId& next_available_index,
-      hier::SequentialLocalIdGenerator &id_generator,
-      tbox::MessageStream &msg ) const;
 
    /*!
     * @brief Construct semilocal relationships in
@@ -902,8 +904,6 @@ private:
    boost::shared_ptr<tbox::Timer> t_report_loads;
    boost::shared_ptr<tbox::Timer> t_local_balancing;
    boost::shared_ptr<tbox::Timer> t_finish_sends;
-   boost::shared_ptr<tbox::Timer> t_pack_load;
-   boost::shared_ptr<tbox::Timer> t_unpack_load;
    boost::shared_ptr<tbox::Timer> t_pack_edge;
    boost::shared_ptr<tbox::Timer> t_unpack_edge;
    boost::shared_ptr<tbox::Timer> t_children_load_comm;
