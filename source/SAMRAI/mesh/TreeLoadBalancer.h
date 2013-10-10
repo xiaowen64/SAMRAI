@@ -340,6 +340,11 @@ private:
             d_work_traded.setPartitioningParams(pparams);
          }
 
+      void setStartingLoad(
+         LoadType ideal,
+         LoadType current,
+         LoadType upperlimit );
+
       // surplus and deficit are current load compared to ideal.
       LoadType surplus() const { return d_subtree_load_current - d_subtree_load_ideal; }
       LoadType deficit() const { return d_subtree_load_ideal - d_subtree_load_current; }

@@ -1017,22 +1017,9 @@ t_post_load_distribution_barrier->stop();
    unassigned.setPartitioningParams(*d_pparams);
    unassigned.insertAll(balance_box_level.getBoxes());
 
-
-   /*
-    * Compute local proc's load and store in
-    * my_subtree.  This will eventually include data for the subtree.
-    * We will add the rest of the subtree's work when we receive that
-    * data from the children.
-    */
-   my_subtree.d_num_procs = 1;
-   my_subtree.d_subtree_load_ideal = group_avg_load;
-   my_subtree.d_subtree_load_current = unassigned.getSumLoad();
-   my_subtree.d_subtree_load_upperlimit = group_avg_load*(1+d_flexible_load_tol);
-
-   my_subtree.d_eff_num_procs = my_subtree.d_num_procs;
-   my_subtree.d_eff_load_ideal = my_subtree.d_subtree_load_ideal;
-   my_subtree.d_eff_load_current = my_subtree.d_subtree_load_current;
-   my_subtree.d_eff_load_upperlimit = my_subtree.d_subtree_load_upperlimit;
+   my_subtree.setStartingLoad( group_avg_load,
+                               unassigned.getSumLoad(),
+                               group_avg_load*(1+d_flexible_load_tol) );
 
    if (d_print_steps) {
       tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
@@ -1815,6 +1802,32 @@ TreeLoadBalancer::removeLocallyOriginatedBoxesFromBoxTransitSet(
          ++ni;
       }
    }
+}
+
+
+
+/*
+ *************************************************************************
+ * Compute local proc's load and store in
+ * my_subtree.  This will eventually include data for the subtree.
+ * We will add the rest of the subtree's work when we receive that
+ * data from the children.
+ *************************************************************************
+ */
+void TreeLoadBalancer::SubtreeData::setStartingLoad(
+   LoadType ideal,
+   LoadType current,
+   LoadType upperlimit )
+{
+   d_num_procs = 1;
+   d_subtree_load_ideal = ideal;
+   d_subtree_load_current = current;
+   d_subtree_load_upperlimit = upperlimit;
+
+   d_eff_num_procs = d_num_procs;
+   d_eff_load_ideal = d_subtree_load_ideal;
+   d_eff_load_current = d_subtree_load_current;
+   d_eff_load_upperlimit = d_subtree_load_upperlimit;
 }
 
 
