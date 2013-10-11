@@ -40,8 +40,6 @@ Main {
 
    load_balance = TRUE, TRUE, TRUE
 
-   write_comm_graph = FALSE
-
    mesh_generator_name = "SphericalShellGenerator"
 
    SphericalShellGenerator {
@@ -54,7 +52,7 @@ Main {
 
    rank_tree_type = "CenteredRankTree"
 
-   write_comm_graph = TRUE // Whether to write communication graph of TreeLoadBalancer.
+   write_comm_graph = FALSE
 
 }
 

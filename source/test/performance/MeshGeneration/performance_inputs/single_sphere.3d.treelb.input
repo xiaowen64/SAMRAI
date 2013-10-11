@@ -22,8 +22,6 @@ Main {
    enforce_nesting = FALSE
    load_balance = TRUE
 
-   write_comm_graph = FALSE
-
    load_balancer_type = "TreeLoadBalancer"
 
    rank_tree_type = "CenteredRankTree"

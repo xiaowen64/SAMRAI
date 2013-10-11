@@ -65,8 +65,6 @@ Main {
    // Tree type for TreeLoadBalancer: CenteredRankTree, BalancedDepthFirstTree, BreadthFirstTree
    rank_tree_type = "CenteredRankTree"
 
-   write_comm_graph = FALSE // Whether to write communication graph of TreeLoadBalancer.
-
 }
 
 // Used if box_generator_type is BergerRigoutsos.  Refer to mesh::BergerRigoutsos for input.
