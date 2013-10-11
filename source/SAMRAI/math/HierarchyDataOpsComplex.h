@@ -261,7 +261,7 @@ public:
 
    /**
     * Return sum of the control volumes associated with the data component.
-    * Note that if the ontrol volumes are set propery, this is equivalent to
+    * Note that if the control volumes are set properly, this is equivalent to
     * integrating a data component containing all ones over the collection of
     * hierarchy levels.
     */
