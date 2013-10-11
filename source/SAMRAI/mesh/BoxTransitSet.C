@@ -122,11 +122,11 @@ BoxTransitSet::adjustLoad(
 
    /*
     * The algorithm cycles through a do-loop.  Each time around, we
-    * try to swap some BoxTransitSet::BoxInTransit between main_bin and hold_bin
+    * try to swap some BoxInTransit between main_bin and hold_bin
     * until we have main_bin's load in [low_load,high_load] or we
     * cannot improve the actual_transfer any further.  Then, we try
-    * breaking up a BoxTransitSet::BoxInTransit to improve the results.  If we break
-    * some BoxTransitSet::BoxInTransit, we generate some more swapping options that
+    * breaking up a BoxInTransit to improve the results.  If we break
+    * some BoxInTransit, we generate some more swapping options that
     * were not there before, so we loop back to try swapping again.
     *
     * If a break phase does not break any Box (and does not generate
@@ -180,7 +180,7 @@ BoxTransitSet::adjustLoad(
       if ( d_allow_box_breaking ) {
          /*
           * Assuming that we did the best we could, swapping
-          * some BoxTransitSet::BoxInTransit without breaking any, we now break up a Box
+          * some BoxInTransit without breaking any, we now break up a Box
           * in the overloaded side for partial transfer to the
           * underloaded side.
           */
@@ -315,7 +315,7 @@ BoxTransitSet::adjustLoadByBreaking(
    std::vector<hier::Box> breakoff;
    std::vector<hier::Box> leftover;
    double breakoff_amt = 0.0;
-   BoxTransitSet::BoxInTransit breakbox(d_pparams->getMinBoxSize().getDim());
+   BoxInTransit breakbox(d_pparams->getMinBoxSize().getDim());
 
    int break_acceptance_flags[3] = {0,0,0};
    int &found_breakage = break_acceptance_flags[2];
@@ -335,7 +335,7 @@ BoxTransitSet::adjustLoadByBreaking(
          continue;
       }
 
-      const BoxTransitSet::BoxInTransit& candidate = *si;
+      const BoxInTransit& candidate = *si;
 
       if (d_print_steps) {
          tbox::plog << "    Considering break candidate " << candidate
@@ -411,7 +411,7 @@ BoxTransitSet::adjustLoadByBreaking(
       for (std::vector<hier::Box>::const_iterator bi = breakoff.begin();
            bi != breakoff.end();
            ++bi) {
-         BoxTransitSet::BoxInTransit give_box_in_transit(
+         BoxInTransit give_box_in_transit(
             breakbox,
             *bi,
             breakbox.getOwnerRank(),
@@ -432,7 +432,7 @@ BoxTransitSet::adjustLoadByBreaking(
       for (std::vector<hier::Box>::const_iterator bi = leftover.begin();
            bi != leftover.end();
            ++bi) {
-         BoxTransitSet::BoxInTransit keep_box_in_transit(
+         BoxInTransit keep_box_in_transit(
             breakbox,
             *bi,
             breakbox.getOwnerRank(),
@@ -462,8 +462,8 @@ BoxTransitSet::adjustLoadByBreaking(
  * Attempt to adjust the load of a main_bin by swapping boxes with
  * a hold_bin.
  *
- * Transfering a BoxTransitSet::BoxInTransit from one BoxTransitSet to another
- * is considered a degenerate "swap" (a BoxTransitSet::BoxInTransit is
+ * Transfering a BoxInTransit from one BoxTransitSet to another
+ * is considered a degenerate "swap" (a BoxInTransit is
  * swapped for nothing) handled by this function.
  *
  * This method can transfer load both ways.
@@ -617,7 +617,7 @@ BoxTransitSet::adjustLoadByPopping(
 
    while ( !src->empty() ) {
 
-      const BoxTransitSet::BoxInTransit &candidate_box = *src->begin();
+      const BoxInTransit &candidate_box = *src->begin();
 
       bool improved = d_bbb.evaluateBreak(
          acceptance_flags,
@@ -666,7 +666,7 @@ BoxTransitSet::adjustLoadByPopping(
 
 /*
  *************************************************************************
- * Find a BoxTransitSet::BoxInTransit in src and a BoxTransitSet::BoxInTransit in dst which when
+ * Find a BoxInTransit in src and a BoxInTransit in dst which when
  * swapped results in shifting close to ideal_shift from src to dst.
  * Make the swap.  Return whether a swap pair was found.
  *************************************************************************
@@ -755,9 +755,9 @@ BoxTransitSet::swapLoadPair(
    BoxTransitSet::iterator src_loside = src.end();
    BoxTransitSet::iterator dst_loside = dst.end();
 
-   // A dummy BoxTransitSet::BoxInTransit for set searches.
+   // A dummy BoxInTransit for set searches.
    hier::Box dummy_box(d_pparams->getMinBoxSize().getDim());
-   BoxTransitSet::BoxInTransit dummy_search_target(d_pparams->getMinBoxSize().getDim());
+   BoxInTransit dummy_search_target(d_pparams->getMinBoxSize().getDim());
 
    // Difference between swap results and ideal, >= 0
    LoadType hiside_transfer = 0.0;
@@ -769,11 +769,11 @@ BoxTransitSet::swapLoadPair(
 
    if (dst.empty()) {
       /*
-       * There is no dst BoxTransitSet::BoxInTransit, so the swap would
+       * There is no dst BoxInTransit, so the swap would
        * degnerate to moving a box from src to dst.  Find
-       * the best src BoxTransitSet::BoxInTransit to move.
+       * the best src BoxInTransit to move.
        */
-      dummy_search_target = BoxTransitSet::BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
+      dummy_search_target = BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
       dummy_search_target.d_boxload = ideal_transfer;
       const BoxTransitSet::iterator src_test = src.lower_bound(dummy_search_target);
 
@@ -834,7 +834,7 @@ BoxTransitSet::swapLoadPair(
           * Look for a load less than the load of src_test by
           * ideal_transfer.
           */
-         dummy_search_target = BoxTransitSet::BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
+         dummy_search_target = BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
          dummy_search_target.d_boxload = tbox::MathUtilities<LoadType>::Max(
                src_test->d_boxload - ideal_transfer,
                0);
