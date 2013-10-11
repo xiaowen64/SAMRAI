@@ -986,12 +986,12 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
    SubtreeData my_subtree;
    my_subtree.setPartitioningParams(*d_pparams);
    my_subtree.setTimerPrefix(d_object_name);
-   my_subtree.d_print_steps = d_print_steps == 'y';
+   my_subtree.setPrintSteps( d_print_steps == 'y' );
    std::vector<SubtreeData> child_subtrees(num_children);
    for ( size_t i=0; i<child_subtrees.size(); ++i ) {
       child_subtrees[i].setPartitioningParams(*d_pparams);
       child_subtrees[i].setTimerPrefix(d_object_name);
-      child_subtrees[i].d_print_steps = d_print_steps == 'y';
+      child_subtrees[i].setPrintSteps( d_print_steps == 'y' );
    }
 
 
@@ -1062,7 +1062,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
          d_mpi.getRank(),
          mstream);
 
-      my_subtree.addChild( child_subtrees[cindex], unassigned );
+      my_subtree.incorporateChild( unassigned, child_subtrees[cindex] );
 
    }
 
@@ -1074,7 +1074,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 
    if ( my_subtree.effDeficit() > 0 && !d_rank_tree->isRoot() ) {
-      my_subtree.d_wants_work_from_parent = true;
+      my_subtree.setWantsWorkFromParent( true );
    }
 
 
@@ -1174,7 +1174,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
     *
     * Finish the send-up and begin the send-down.
     */
-   if (my_subtree.d_wants_work_from_parent) {
+   if (my_subtree.getWantsWorkFromParent()) {
       t_parent_load_comm->start();
       t_get_load_from_parent->start();
 
@@ -1198,7 +1198,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
     */
 
 
-   if (my_subtree.d_wants_work_from_parent) {
+   if (my_subtree.getWantsWorkFromParent()) {
 
       /*
        * Receive and unpack message from parent, then put the received
@@ -1258,7 +1258,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
 
       SubtreeData& recip_subtree = child_subtrees[ichild];
 
-      if (recip_subtree.d_wants_work_from_parent) {
+      if (recip_subtree.getWantsWorkFromParent()) {
 
          const LoadType surplus_per_eff_des =
             computeSurplusPerEffectiveDescendent(
@@ -1269,10 +1269,10 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
 
          const LoadType export_load_ideal = recip_subtree.effDeficit()
             + (surplus_per_eff_des < 0.0 ? 0.0 :
-               surplus_per_eff_des*recip_subtree.d_eff_num_procs);
+               surplus_per_eff_des*recip_subtree.numProcsEffective());
 
          const LoadType export_load_low = recip_subtree.effDeficit()
-            + surplus_per_eff_des*recip_subtree.d_eff_num_procs;
+            + surplus_per_eff_des*recip_subtree.numProcsEffective();
 
          const LoadType export_load_high =
             tbox::MathUtilities<double>::Max(export_load_ideal,
@@ -1496,51 +1496,51 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(0),
          "load up",
-         double(my_subtree.d_wants_work_from_parent ? 0 : my_subtree.d_work_traded.getSumLoad()),
+         double(my_subtree.getWantsWorkFromParent() ? 0 : my_subtree.getExchangeLoad()),
          tbox::CommGraphWriter::TO,
          prank );
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(1),
          "boxes up",
-         double(my_subtree.d_wants_work_from_parent ? 0 : my_subtree.d_work_traded.size()),
+         double(my_subtree.getWantsWorkFromParent() ? 0 : my_subtree.getExchangePackageCount()),
          tbox::CommGraphWriter::TO,
          prank );
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(2),
          "origins up",
-         double(my_subtree.d_wants_work_from_parent ? 0 : my_subtree.d_work_traded.getNumberOfOriginatingProcesses()),
+         double(my_subtree.getWantsWorkFromParent() ? 0 : my_subtree.getExchangeOriginatorCount()),
          tbox::CommGraphWriter::TO,
          prank );
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(3),
          "load down",
-         double(my_subtree.d_wants_work_from_parent ? my_subtree.d_work_traded.getSumLoad() : 0),
+         double(my_subtree.getWantsWorkFromParent() ? my_subtree.getExchangeLoad() : 0),
          tbox::CommGraphWriter::FROM,
-         (my_subtree.d_wants_work_from_parent ? prank : -1) );
+         (my_subtree.getWantsWorkFromParent() ? prank : -1) );
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(4),
          "boxes down",
-         double(my_subtree.d_wants_work_from_parent ? my_subtree.d_work_traded.size() : 0),
+         double(my_subtree.getWantsWorkFromParent() ? my_subtree.getExchangePackageCount() : 0),
          tbox::CommGraphWriter::FROM,
-         (my_subtree.d_wants_work_from_parent ? prank : -1) );
+         (my_subtree.getWantsWorkFromParent() ? prank : -1) );
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(5),
          "origins down",
-         double(my_subtree.d_wants_work_from_parent ? my_subtree.d_work_traded.getNumberOfOriginatingProcesses() : 0),
+         double(my_subtree.getWantsWorkFromParent() ? my_subtree.getExchangeOriginatorCount() : 0),
          tbox::CommGraphWriter::FROM,
-         (my_subtree.d_wants_work_from_parent ? prank : -1) );
+         (my_subtree.getWantsWorkFromParent() ? prank : -1) );
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(6),
          "bytes down",
-         double(my_subtree.d_wants_work_from_parent ? parent_recv->getRecvSize() : int(0)),
+         double(my_subtree.getWantsWorkFromParent() ? parent_recv->getRecvSize() : int(0)),
          tbox::CommGraphWriter::FROM,
-         (my_subtree.d_wants_work_from_parent ? prank : -1) );
+         (my_subtree.getWantsWorkFromParent() ? prank : -1) );
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(7),
@@ -1561,7 +1561,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
          "parent wait",
          t_parent_recv_wait->getTotalWallclockTime(),
          tbox::CommGraphWriter::FROM,
-         (my_subtree.d_wants_work_from_parent ? prank : -1) );
+         (my_subtree.getWantsWorkFromParent() ? prank : -1) );
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(0),
@@ -1714,9 +1714,9 @@ TreeLoadBalancer::computeSurplusPerEffectiveDescendent(
    LoadType ideal_export_to_children = 0.0;
    int num_effective_des = 0;
    for (size_t ichild = first_child; ichild < child_subtrees.size(); ++ichild) {
-      if ( child_subtrees[ichild].d_wants_work_from_parent ) {
+      if ( child_subtrees[ichild].getWantsWorkFromParent() ) {
          ideal_export_to_children += child_subtrees[ichild].effDeficit();
-         num_effective_des += child_subtrees[ichild].d_eff_num_procs;
+         num_effective_des += child_subtrees[ichild].numProcsEffective();
       }
    }
 
@@ -2728,7 +2728,6 @@ TreeLoadBalancer::setTimers()
  *************************************************************************
  */
 TreeLoadBalancer::SubtreeData::SubtreeData():
-   d_subtree_rank(-1),
    d_num_procs(0),
    d_subtree_load_current(0),
    d_subtree_load_ideal(-1),
@@ -2776,9 +2775,9 @@ void TreeLoadBalancer::SubtreeData::setStartingLoad(
  *************************************************************************
  */
 void
-TreeLoadBalancer::SubtreeData::addChild(
-   const SubtreeData &child,
-   BoxTransitSet &reserve )
+TreeLoadBalancer::SubtreeData::incorporateChild(
+   BoxTransitSet &reserve,
+   const SubtreeData &child )
 {
    /*
     * Sum children load into my_subtree to get data for the whole
@@ -2809,7 +2808,7 @@ TreeLoadBalancer::SubtreeData::addChild(
  *************************************************************************
  */
 TreeLoadBalancer::LoadType TreeLoadBalancer::SubtreeData::adjustOutboundLoad(
-   BoxTransitSet& reserve_bin,
+   BoxTransitSet& reserve,
    hier::SequentialLocalIdGenerator &id_generator,
    LoadType ideal_load,
    LoadType low_load,
@@ -2818,7 +2817,7 @@ TreeLoadBalancer::LoadType TreeLoadBalancer::SubtreeData::adjustOutboundLoad(
    LoadType actual_transfer = d_work_traded.getSumLoad();
 
    d_work_traded.adjustLoad(
-      reserve_bin,
+      reserve,
       id_generator,
       ideal_load,
       low_load,
@@ -2856,11 +2855,11 @@ TreeLoadBalancer::LoadType TreeLoadBalancer::SubtreeData::adjustOutboundLoad(
  *************************************************************************
  */
 void TreeLoadBalancer::SubtreeData::moveInboundLoadToReserve(
-   BoxTransitSet& reserve_bin )
+   BoxTransitSet& reserve )
 {
    d_subtree_load_current += d_work_traded.getSumLoad();
    d_eff_load_current += d_work_traded.getSumLoad();
-   reserve_bin.insertAll( d_work_traded );
+   reserve.insertAll( d_work_traded );
 }
 
 

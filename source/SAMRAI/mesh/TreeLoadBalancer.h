@@ -329,8 +329,15 @@ private:
    /*!
     * @brief Data to save for each sending/receiving process and the
     * subtree at that process.
+    *
+    * Terminology: The "pruned" parts of the tree are branches that
+    * are not open to receiving work from above.  These parts are not
+    * counted in the "effective" tree for the purpose of sending down
+    * work.
     */
-   struct SubtreeData {
+   class SubtreeData {
+
+   public:
       //! @brief Constructor.
       SubtreeData();
 
@@ -340,11 +347,22 @@ private:
             d_work_traded.setPartitioningParams(pparams);
          }
 
+      /*!
+       * @brief Set the ideal, current and upper limit of the load for
+       * the local process.
+       */
       void setStartingLoad(
          LoadType ideal,
          LoadType current,
          LoadType upperlimit );
 
+      //! @brief Number of processes in subtree.
+      int numProcs() const { return d_num_procs; }
+      //! @brief Number of processes in effective subtree.
+      int numProcsEffective() const { return d_eff_num_procs; }
+
+      //@{
+      //! @name Amount of work in subtree, compared to various references.
       // surplus and deficit are current load compared to ideal.
       LoadType surplus() const { return d_subtree_load_current - d_subtree_load_ideal; }
       LoadType deficit() const { return d_subtree_load_ideal - d_subtree_load_current; }
@@ -355,54 +373,75 @@ private:
       LoadType margin() const { return d_subtree_load_upperlimit - d_subtree_load_current; }
       LoadType effExcess() const { return d_eff_load_current - d_eff_load_upperlimit; }
       LoadType effMargin() const { return d_eff_load_upperlimit - d_eff_load_current; }
+      //@}
 
-      //! @brief Adjust load to be sent away.
+      //! @brief Set whether this subtree want work from its parents.
+      void setWantsWorkFromParent(bool wants) { d_wants_work_from_parent = wants; }
+
+      //! @brief Get whether this subtree want work from its parents.
+      bool getWantsWorkFromParent() const { return d_wants_work_from_parent; }
+
+      //@{
+      //! @name Information on work exchanged
+      //! @brief Get amount of work exchanged.
+      LoadType getExchangeLoad() const { return d_work_traded.getSumLoad(); }
+      //! @brief Get count of work exchanged.
+      size_t getExchangePackageCount() const { return d_work_traded.size(); }
+      //! @brief Get count of originators of the work exchanged.
+      size_t getExchangeOriginatorCount() const { return d_work_traded.getNumberOfOriginatingProcesses(); }
+
+      //@{
+
+      /*!
+       * @brief Adjust load to be sent away by taking work from or
+       * dumping work into a reserve container.
+       */
       LoadType
       adjustOutboundLoad(
-         BoxTransitSet& reserve_bin,
+         BoxTransitSet& reserve,
          hier::SequentialLocalIdGenerator &id_generator,
          LoadType ideal_load,
          LoadType low_load,
          LoadType high_load );
 
-      //! @brief Move inbound load to the given reserve bin.
-      void moveInboundLoadToReserve( BoxTransitSet &reserve_bin );
-
-      //! @brief Incorporate child's data into the subtree.
-      void addChild( const SubtreeData &child,
-                     BoxTransitSet &reserve_bin );
+      //! @brief Move inbound load to the given reserve container.
+      void moveInboundLoadToReserve( BoxTransitSet &reserve );
 
       /*!
-       * @brief Pack load/boxes for sending up.
+       * @brief Incorporate child subtree into this subtree and add
+       * child's excess to reserve container.
        */
+      void incorporateChild( BoxTransitSet &reserve,
+                             const SubtreeData &child );
+
+      //@{
+      //! @name Packing/unpacking for communication up and down the tree.
+
+      //! @brief Pack load/boxes for sending up to parent.
       void
       packDataToParent(
          tbox::MessageStream &msg) const;
 
-      /*!
-       * @brief Unpack load/boxes received from send-up.
-       */
+      //! @brief Unpack load/boxes received from child.
       void
       unpackDataFromChild(
          hier::SequentialLocalIdGenerator &id_generator,
          int mpi_rank,
          tbox::MessageStream &msg );
 
-      /*!
-       * @brief Pack load/boxes for sending down.
-       */
+      //! @brief Pack load/boxes for sending down to child.
       void
       packDataToChild(
          tbox::MessageStream &msg) const;
 
-      /*!
-       * @brief Unpack load/boxes received from send-down.
-       */
+      //! @brief Unpack load/boxes received from parent.
       void
       unpackDataFromParent(
          hier::SequentialLocalIdGenerator &id_generator,
          int mpi_rank,
          tbox::MessageStream &msg );
+
+      //@}
 
       //! @brief Diagnostic printing.
       void printClassData( const std::string &border, std::ostream &os ) const;
@@ -410,10 +449,10 @@ private:
       //! @brief Setup names of timers.
       void setTimerPrefix(const std::string& timer_prefix);
 
-      /*!
-       * @brief Rank of the subtree (rank of its root).
-       */
-      int d_subtree_rank;
+      //! @brief Whether to print steps for debugging.
+      void setPrintSteps(bool print_steps) { d_print_steps = print_steps; }
+
+   private:
 
       /*!
        * @brief Number of processes in subtree
@@ -470,12 +509,19 @@ private:
        */
       bool d_wants_work_from_parent;
 
+      //! @brief Common partitioning parameters.
       const PartitioningParams *d_pparams;
 
+      //@{
+      //! @name Debugging and diagnostic data.
       boost::shared_ptr<tbox::Timer> t_pack_load;
       boost::shared_ptr<tbox::Timer> t_unpack_load;
       bool d_print_steps;
-   };
+      //@}
+
+   }; // SubtreeData declaration.
+
+
 
    /*
     * @brief Check if there is any pending messages for the private
@@ -506,6 +552,10 @@ private:
       hier::Connector* balance_to_anchor,
       const tbox::RankGroup& rank_group) const;
 
+   /*!
+    * @brief Assign unassigned boxes to local process and set
+    * mapping edges where possible without communicating.
+    */
    void
    assignBoxesToLocalProcess(
       hier::BoxLevel& balanced_box_level,
