@@ -65,8 +65,8 @@ BoxTransitSet::BoxTransitSet() :
  * This method is purely local--it reassigns the load but does not
  * communicate the change to any remote process.
  *
- * Return amount of load moved from main_bin to hold_bin.  Negative
- * amount means load moved from hold_bin to main_bin.
+ * Return amount of load moved to main_bin from hold_bin.  Negative
+ * amount means load moved from main_bin to hold_bin.
  *
  *************************************************************************
  */
@@ -416,9 +416,10 @@ BoxTransitSet::adjustLoadByBreaking(
             *bi,
             breakbox.getOwnerRank(),
             id_generator.nextValue());
-         give_box_in_transit.d_boxload = static_cast<int>(computeLoad(
-                                                             give_box_in_transit.d_orig_box,
-                                                             give_box_in_transit.getBox()));
+         give_box_in_transit.d_boxload =
+            static_cast<int>(computeLoad(
+                                give_box_in_transit.d_orig_box,
+                                give_box_in_transit.getBox()));
          main_bin.insert(give_box_in_transit);
          actual_transfer += give_box_in_transit.d_boxload;
          if (d_print_break_steps) {
@@ -436,9 +437,10 @@ BoxTransitSet::adjustLoadByBreaking(
             *bi,
             breakbox.getOwnerRank(),
             id_generator.nextValue());
-         keep_box_in_transit.d_boxload = static_cast<int>(computeLoad(
-                                                             keep_box_in_transit.d_orig_box,
-                                                             keep_box_in_transit.getBox()));
+         keep_box_in_transit.d_boxload =
+            static_cast<int>(computeLoad(
+                                keep_box_in_transit.d_orig_box,
+                                keep_box_in_transit.getBox()));
          hold_bin.insert(keep_box_in_transit);
          if (d_print_break_steps) {
             tbox::plog << "    Leftover box " << *bi << bi->numberCells()

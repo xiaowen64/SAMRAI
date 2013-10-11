@@ -234,8 +234,8 @@ public:
     * @param[in] high_load Return when main_bin's load is in the range
     * [low_load,high_load]
     *
-    * @return Net load transfered into main_bin.  If negative, net
-    * load went out of main_bin.  TODO: verify this statement is correct and others like this are incorrect.
+    * @return Net load added to this BoxTransitSet.  If negative, load
+    * decreased.
     */
    LoadType
    adjustLoad(
@@ -259,8 +259,8 @@ public:
     * @param[in] high_load Return when main_bin's load is in the range
     * [low_load,high_load]
     *
-    * @return Amount of load transfered.  If positive, load went
-    * from main_bin to hold_bin.
+    * @return Net load added to this BoxTransitSet.  If negative, load
+    * decreased.
     */
    LoadType
    adjustLoadByPopping(
@@ -283,8 +283,8 @@ public:
     * @param[in] high_load Return when main_bin's load is in the range
     * [low_load,high_load]
     *
-    * @return Amount of load transfered.  If positive, load went
-    * from main_bin to hold_bin.
+    * @return Net load added to this BoxTransitSet.  If negative, load
+    * decreased.
     */
    LoadType
    adjustLoadBySwapping(
@@ -310,8 +310,8 @@ public:
     * @param[in] high_load Return when main_bin's load is in the range
     * [low_load,high_load]
     *
-    * @return Amount of load transfered.  If positive, load went
-    * from main_bin to hold_bin.
+    * @return Net load added to this BoxTransitSet.  If negative, load
+    * decreased.
     */
    LoadType
    adjustLoadByBreaking(
