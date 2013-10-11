@@ -181,6 +181,25 @@ public:
    void
    printStatistics(std::ostream& output_stream = tbox::plog) const;
 
+
+   /*!
+    * @brief Enable or disable saving of tree data for diagnostics
+    *
+    * The graph writer is in effect only when using the
+    * TreeLoadBalancer for actual load balancing; see
+    * internal_load_balancer input parameter).
+    *
+    * @param [in] comm_graph_writer
+    * External CommGraphWriter to save tree data to.
+    * Use NULL to disable saving.
+    */
+   void
+   setCommGraphWriter(
+      const boost::shared_ptr<tbox::CommGraphWriter> &comm_graph_writer )
+   {
+      d_tlb.setCommGraphWriter(comm_graph_writer);
+   }
+
 private:
 
    typedef double LoadType;

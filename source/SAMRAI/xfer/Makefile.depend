@@ -1225,7 +1225,9 @@ DEPENDS_17:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	RefinePatchStrategy.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
@@ -1395,8 +1397,10 @@ DEPENDS_19:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.h\
+	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	RefineScheduleConnectorWidthRequestor.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)

@@ -24,7 +24,7 @@ Main {
 
    write_visit = TRUE
 
-   log_all_nodes = FALSE
+   log_all_nodes = TRUE
 
    domain_boxes = [(0,0),(49,49)]
    x_lo = 0.0, 0.0

@@ -27,7 +27,7 @@ Main {
    write_visit = TRUE
 
    // Whether to log all processes.
-   log_all_nodes = FALSE
+   log_all_nodes = TRUE
 
    // Domain definition
    domain_boxes = [(0,0),(49,49)]

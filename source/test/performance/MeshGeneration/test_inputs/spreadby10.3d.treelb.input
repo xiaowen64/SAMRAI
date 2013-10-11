@@ -52,7 +52,7 @@ Main {
 
    rank_tree_type = "CenteredRankTree"
 
-   write_comm_graph = TRUE // Whether to write communication graph of TreeLoadBalancer.
+   write_comm_graph = FALSE
 
 }
 

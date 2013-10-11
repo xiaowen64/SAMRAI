@@ -1222,6 +1222,7 @@ createLoadBalancer(
             std::string("mesh::TilePartitioner") + tbox::Utilities::intToString(ln),
             input_db->getDatabaseWithDefault("TilePartitioner",
                                              boost::shared_ptr<tbox::Database>())));
+      tile_lb->setCommGraphWriter(comm_graph_writer);
       return tile_lb;
 
    } else if (lb_type == "ChopAndPackLoadBalancer") {
