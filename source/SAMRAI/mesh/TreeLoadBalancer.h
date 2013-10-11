@@ -537,98 +537,6 @@ private:
       hier::MappingConnector &unbalanced_to_balanced,
       const BoxTransitSet &kept_imports ) const;
 
-   /*!
-    * @brief Computes surface area of a list of boxes.
-    */
-   double
-   computeBoxSurfaceArea(
-      const std::vector<hier::Box>& boxes) const;
-
-   /*!
-    * @brief Computes the surface area of a box.
-    */
-   int
-   computeBoxSurfaceArea(
-      const hier::Box& box) const;
-
-   double
-   combinedBreakingPenalty(
-      double balance_penalty,
-      double surface_penalty,
-      double slender_penalty) const
-   {
-      double combined_penalty =
-         d_balance_penalty_wt * balance_penalty * balance_penalty
-         + d_surface_penalty_wt * surface_penalty * surface_penalty
-         + d_slender_penalty_wt * slender_penalty * slender_penalty;
-      return combined_penalty;
-   }
-
-   double
-   computeBalancePenalty(
-      const std::vector<hier::Box>& a,
-      const std::vector<hier::Box>& b,
-      double imbalance) const
-   {
-      NULL_USE(a);
-      NULL_USE(b);
-      return tbox::MathUtilities<double>::Abs(imbalance);
-   }
-
-   double
-   computeBalancePenalty(
-      const BoxTransitSet& a,
-      const BoxTransitSet& b,
-      double imbalance) const
-   {
-      NULL_USE(a);
-      NULL_USE(b);
-      return tbox::MathUtilities<double>::Abs(imbalance);
-   }
-
-   double
-   computeBalancePenalty(
-      const hier::Box& a,
-      double imbalance) const
-   {
-      NULL_USE(a);
-      return tbox::MathUtilities<double>::Abs(imbalance);
-   }
-
-   double
-   computeSurfacePenalty(
-      const std::vector<hier::Box>& a,
-      const std::vector<hier::Box>& b) const;
-
-   double
-   computeSurfacePenalty(
-      const BoxTransitSet& a,
-      const BoxTransitSet& b) const;
-
-   double
-   computeSurfacePenalty(
-      const hier::Box& a) const;
-
-   double
-   computeSlenderPenalty(
-      const std::vector<hier::Box>& a,
-      const std::vector<hier::Box>& b) const;
-
-   double
-   computeSlenderPenalty(
-      const BoxTransitSet& a,
-      const BoxTransitSet& b) const;
-
-   double
-   computeSlenderPenalty(
-      const hier::Box& a) const;
-
-   void
-   burstBox(
-      std::vector<hier::Box>& boxes,
-      const hier::Box& bursty,
-      const hier::Box& solid ) const;
-
    /*
     * Utility functions to determine parameter values for level.
     */
@@ -836,40 +744,6 @@ private:
     * loops when the improvement is very near zero.
     */
    double d_load_comparison_tol;
-
-   /*!
-    * @brief Weighting factor for penalizing imbalance.
-    *
-    * @see combinedBreakingPenalty().
-    */
-   double d_balance_penalty_wt;
-
-   /*!
-    * @brief Weighting factor for penalizing new suraces.
-    *
-    * @see combinedBreakingPenalty().
-    */
-   double d_surface_penalty_wt;
-
-   /*!
-    * @brief Weighting factor for penalizing slenderness.
-    *
-    * @see combinedBreakingPenalty().
-    */
-   double d_slender_penalty_wt;
-
-   /*!
-    * @brief How high a slenderness ratio we can tolerate before penalizing.
-    */
-   double d_slender_penalty_threshold;
-
-   /*!
-    * @brief Extra penalty weighting applied before cutting.
-    *
-    * Set to range [1,ininity).
-    * Higher value forces more agressive cutting but can produce more slivers.
-    */
-   double d_precut_penalty_wt;
 
    //@{
    //! @name Data shared with private methods during balancing.

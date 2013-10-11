@@ -515,10 +515,12 @@ public:
 
    BalanceBoxBreaker d_bbb;
 
-   int d_tree_degree; // For computing LocalId.  Should be factored out into a class that generates LocalIds.
-
    bool d_allow_box_breaking;
    hier::SequentialLocalIdGenerator d_id_generator;
+
+
+   //@{
+   //! @name Debugging and diagnostic data.
 
    bool d_print_steps;
    bool d_print_pop_steps;
@@ -530,6 +532,8 @@ public:
    boost::shared_ptr<tbox::Timer> t_adjust_load_by_swapping;
    boost::shared_ptr<tbox::Timer> t_shift_loads_by_breaking;
    boost::shared_ptr<tbox::Timer> t_find_swap_pair;
+
+   //@}
 };
 
 

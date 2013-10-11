@@ -89,11 +89,6 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_master_workload_data_id(d_default_data_id),
    d_flexible_load_tol(0.0),
    d_load_comparison_tol(1.0e-5),
-   d_balance_penalty_wt(1.0),
-   d_surface_penalty_wt(1.0),
-   d_slender_penalty_wt(1.0),
-   d_slender_penalty_threshold(3.0),
-   d_precut_penalty_wt(1.0),
    // Output control.
    d_report_load_balance(false),
    d_summarize_map(false),
@@ -797,9 +792,10 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
        */
       TBOX_ASSERT( balance_box_level.getLocalNumberOfBoxes() == 0 );
 
-t_post_load_distribution_barrier->start();
-d_mpi.Barrier(); // Temporary barrier to determine if the follow communication slows down unfinished communications in load distribution phase.
-t_post_load_distribution_barrier->stop();
+      t_post_load_distribution_barrier->start();
+      d_mpi.Barrier(); // Temporary barrier to determine if the follow communication slows down unfinished communications in load distribution phase.
+      t_post_load_distribution_barrier->stop();
+
       if (balance_to_anchor && balance_to_anchor->hasTranspose()) {
          hier::MappingConnectorAlgorithm mca;
          mca.setTimerPrefix(d_object_name);
@@ -1362,7 +1358,6 @@ t_post_load_distribution_barrier->stop();
    t_local_balancing->start();
 
 
-#if 1
    assignBoxesToLocalProcess(
       balanced_box_level,
       balanced_to_unbalanced,
@@ -1370,51 +1365,6 @@ t_post_load_distribution_barrier->stop();
       unassigned );
 
    removeLocallyOriginatedBoxesFromBoxTransitSet( unassigned, d_mpi.getRank() );
-#else
-   /*
-    * All unassigned boxes should go into balanced_box_level.  Put
-    * them there and generate relationships in balanced<==>unbalanced
-    * mapping Connectors where required.
-    *
-    * We can generate balanced--->unbalanced edges for all unassigned
-    * boxes because we have their origin info.  If the unassigned box
-    * originated locally, we can generate the unbalanced--->balanced
-    * edge for them as well.  However, we can't generate these edges
-    * for boxes originating remotely.  For these boxes, leave them in
-    * unassigned for the step of notifying their origin owners that we
-    * have them.  Otherwise, remove boxes from unassigned.
-    */
-   for (BoxTransitSet::iterator
-        ni = unassigned.begin();
-        ni != unassigned.end(); /* incremented in loop */) {
-
-      const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
-      balanced_box_level.addBox(box_in_transit.d_box);
-
-      if (box_in_transit.d_box.isIdEqual(box_in_transit.d_orig_box)) {
-         // Unchanged box implies assigned back to local process.  It requires no mapping.
-         unassigned.erase(ni++);
-      } else {
-
-         balanced_to_unbalanced.insertLocalNeighbor(
-            box_in_transit.d_orig_box,
-            box_in_transit.d_box.getBoxId());
-
-         if (box_in_transit.d_orig_box.getOwnerRank() == d_mpi.getRank()) {
-            unbalanced_to_balanced.insertLocalNeighbor(
-               box_in_transit.d_box,
-               box_in_transit.d_orig_box.getBoxId());
-            unassigned.erase(ni++);
-         }
-         else {
-            // Leave this box in unassigned for notifying originating
-            // process of where it landed.
-            ++ni;
-         }
-      }
-
-   }
-#endif
 
    t_local_balancing->stop();
 
@@ -1427,15 +1377,12 @@ t_post_load_distribution_barrier->stop();
     * long to advance them all to completion.
     */
    if ( d_print_steps ) {
-      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup waiting for sends to complete.\n";
+      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup: waiting for sends to complete.\n";
    }
    t_finish_sends->start();
    child_send_stage.advanceAll();
    parent_send_stage.advanceAll();
    t_finish_sends->stop();
-   if ( d_print_steps ) {
-      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup completed sends.\n";
-   }
    child_send_stage.clearCompletionQueue();
    parent_send_stage.clearCompletionQueue();
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1449,28 +1396,28 @@ t_post_load_distribution_barrier->stop();
    }
 #endif
    if ( d_print_steps ) {
-      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup for completed sends.\n";
+      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup: completed sends.\n";
    }
 
 
    if ( d_print_steps ) {
-      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup constructing unbalanced->balanced.\n";
+      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup: constructing unbalanced->balanced.\n";
    }
    constructSemilocalUnbalancedToBalanced(
       unbalanced_to_balanced,
       unassigned );
    if ( d_print_steps ) {
-      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup finished constructing unbalanced->balanced.\n";
+      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup: finished constructing unbalanced->balanced.\n";
    }
 
    t_get_map->stop();
 
 
    if ( d_summarize_map ) {
-      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup unbalanced--->balanced map:\n"
+      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup: unbalanced--->balanced map:\n"
                  << unbalanced_to_balanced.format("\t",0)
                  << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
-                 << "TreeLoadBalancer::loadBalanceWithinRankGroup balanced--->unbalanced map:\n"
+                 << "TreeLoadBalancer::loadBalanceWithinRankGroup: balanced--->unbalanced map:\n"
                  << balanced_to_unbalanced.format("\t",0)
                  << "Map statistics:\n" << balanced_to_unbalanced.formatStatistics("\t")
                  << '\n';
@@ -1479,7 +1426,7 @@ t_post_load_distribution_barrier->stop();
 
    if (d_check_connectivity) {
       tbox::plog
-      << "TreeLoadBalancer checking unbalanced-balanced connectivity."
+      << "TreeLoadBalancer::loadBalanceWithinRankGroup: checking unbalanced-balanced connectivity."
       << std::endl;
       int errs = 0;
       if (unbalanced_to_balanced.checkOverlapCorrectness(true, true)) {
@@ -1508,12 +1455,12 @@ t_post_load_distribution_barrier->stop();
    if (d_check_map) {
       if (unbalanced_to_balanced.findMappingErrors() != 0) {
          TBOX_ERROR(
-            "TreeLoadBalancer::loadBalanceWithinRankGroup Mapping errors found in unbalanced_to_balanced!");
+            "TreeLoadBalancer::loadBalanceWithinRankGroup: Mapping errors found in unbalanced_to_balanced!");
       }
       if (unbalanced_to_balanced.checkTransposeCorrectness(
              balanced_to_unbalanced)) {
          TBOX_ERROR(
-            "TreeLoadBalancer::loadBalanceWithinRankGroup Transpose errors found!");
+            "TreeLoadBalancer::loadBalanceWithinRankGroup: Transpose errors found!");
       }
    }
 
@@ -1654,13 +1601,13 @@ t_post_load_distribution_barrier->stop();
    }
 
 
-   if (d_print_steps) {
-      tbox::plog << "TreeLoadBalancer::LoadBalanceWithinRankGroup returning"
-                 << std::endl;
-   }
-
    destroyAsyncCommObjects(child_sends, parent_send);
    destroyAsyncCommObjects(child_recvs, parent_recv);
+
+   if (d_print_steps) {
+      tbox::plog << "TreeLoadBalancer::LoadBalanceWithinRankGroup: returning"
+                 << std::endl;
+   }
 
    return;
 }
@@ -1737,285 +1684,6 @@ TreeLoadBalancer::removeLocallyOriginatedBoxesFromBoxTransitSet(
          ++ni;
       }
    }
-}
-
-
-
-/*
- *************************************************************************
- * Compute local proc's load and store in
- * my_subtree.  This will eventually include data for the subtree.
- * We will add the rest of the subtree's work when we receive that
- * data from the children.
- *************************************************************************
- */
-void TreeLoadBalancer::SubtreeData::setStartingLoad(
-   LoadType ideal,
-   LoadType current,
-   LoadType upperlimit )
-{
-   d_num_procs = 1;
-   d_subtree_load_ideal = ideal;
-   d_subtree_load_current = current;
-   d_subtree_load_upperlimit = upperlimit;
-
-   d_eff_num_procs = d_num_procs;
-   d_eff_load_ideal = d_subtree_load_ideal;
-   d_eff_load_current = d_subtree_load_current;
-   d_eff_load_upperlimit = d_subtree_load_upperlimit;
-}
-
-
-
-/*
- *************************************************************************
- *************************************************************************
- */
-TreeLoadBalancer::LoadType TreeLoadBalancer::SubtreeData::adjustOutboundLoad(
-   BoxTransitSet& reserve_bin,
-   hier::SequentialLocalIdGenerator &id_generator,
-   LoadType ideal_load,
-   LoadType low_load,
-   LoadType high_load )
-{
-   LoadType actual_transfer = d_work_traded.getSumLoad();
-
-   d_work_traded.adjustLoad(
-      reserve_bin,
-      id_generator,
-      ideal_load,
-      low_load,
-      high_load );
-
-   actual_transfer = d_work_traded.getSumLoad() - actual_transfer;
-
-   d_subtree_load_current -= d_work_traded.getSumLoad();
-   d_eff_load_current -= d_work_traded.getSumLoad();
-
-   if (d_print_steps) {
-      tbox::plog << "SubtreeData::adjustOutboundLoad: Assigned "
-                 << d_work_traded.size() << " boxes ("
-                 << d_work_traded.getSumLoad() << " / ["
-                 << low_load << ", " << high_load << "] "
-                 << " units) to export bin:";
-      if ( d_work_traded.size() < 10 ) {
-         for (BoxTransitSet::const_iterator ni = d_work_traded.begin();
-              ni!=d_work_traded.end(); ++ni) {
-            tbox::plog << "  " << *ni;
-         }
-      }
-      tbox::plog << std::endl;
-   }
-
-   return actual_transfer;
-}
-
-
-
-/*
- *************************************************************************
- * We could empty d_work_traded at the end of this method, because it
- * is no longer essential.  We keep its contents only for diagnostics.
- *************************************************************************
- */
-void TreeLoadBalancer::SubtreeData::moveInboundLoadToReserve(
-   BoxTransitSet& reserve_bin )
-{
-   d_subtree_load_current += d_work_traded.getSumLoad();
-   d_eff_load_current += d_work_traded.getSumLoad();
-   reserve_bin.insertAll( d_work_traded );
-}
-
-
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void
-TreeLoadBalancer::SubtreeData::packDataToParent(
-   tbox::MessageStream& msg) const
-{
-   t_pack_load->start();
-
-   msg << d_num_procs;
-   msg << d_subtree_load_current;
-   msg << d_subtree_load_ideal;
-   msg << d_subtree_load_upperlimit;
-   msg << d_eff_num_procs;
-   msg << d_eff_load_current;
-   msg << d_eff_load_ideal;
-   msg << d_eff_load_upperlimit;
-   msg << d_wants_work_from_parent;
-
-   msg << static_cast<int>(d_work_traded.size());
-   for (BoxTransitSet::const_iterator
-        ni = d_work_traded.begin(); ni != d_work_traded.end(); ++ni) {
-      const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
-      box_in_transit.putToMessageStream(msg);
-   }
-
-   if (d_print_steps) {
-      tbox::plog << "SubtreeData::packDataToParent:  packed "
-                 << d_work_traded.size() << " boxes ("
-                 << d_work_traded.getSumLoad() << " units)."
-                 << "  message length = " << msg.getCurrentSize() << " bytes"
-                 << std::endl;
-   }
-
-   t_pack_load->stop();
-}
-
-
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void
-TreeLoadBalancer::SubtreeData::unpackDataFromChild(
-   hier::SequentialLocalIdGenerator& id_generator,
-   int mpi_rank,
-   tbox::MessageStream &msg )
-{
-   t_unpack_load->start();
-
-   msg >> d_num_procs;
-   msg >> d_subtree_load_current;
-   msg >> d_subtree_load_ideal;
-   msg >> d_subtree_load_upperlimit;
-   msg >> d_eff_num_procs;
-   msg >> d_eff_load_current;
-   msg >> d_eff_load_ideal;
-   msg >> d_eff_load_upperlimit;
-   msg >> d_wants_work_from_parent;
-
-   /*
-    * As we pull each BoxInTransit out, give it a new id that reflects
-    * its new owner.
-    */
-   int num_boxes = 0;
-   msg >> num_boxes;
-   BoxTransitSet::BoxInTransit received_box(d_pparams->getDim());
-   for (int i = 0; i < num_boxes; ++i) {
-      received_box.getFromMessageStream(msg);
-      BoxTransitSet::BoxInTransit renamed_box(received_box,
-                                              received_box.getBox(),
-                                              mpi_rank,
-                                              id_generator.nextValue());
-      d_work_traded.insert(renamed_box);
-   }
-
-   if (d_print_steps) {
-      tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
-      tbox::plog.precision(6);
-      tbox::plog << "SubtreeData::unpackDataFromChild: Unpacked "
-                 << d_work_traded.size() << " boxes ("
-                 << d_work_traded.getSumLoad() << " units):";
-      if ( d_work_traded.size() < 10 ) {
-         for ( BoxTransitSet::const_iterator ni=d_work_traded.begin();
-               ni!=d_work_traded.end(); ++ni ) {
-            const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
-            tbox::plog << "  " << box_in_transit;
-         }
-      }
-      tbox::plog << std::endl;
-   }
-
-   t_unpack_load->stop();
-}
-
-
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void
-TreeLoadBalancer::SubtreeData::packDataToChild(
-   tbox::MessageStream& msg) const
-{
-   t_pack_load->start();
-
-   msg << static_cast<int>(d_work_traded.size());
-   for (BoxTransitSet::const_iterator
-        ni = d_work_traded.begin(); ni != d_work_traded.end(); ++ni) {
-      const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
-      box_in_transit.putToMessageStream(msg);
-   }
-
-   if (d_print_steps) {
-      tbox::plog << "SubtreeData::packDataToChild: packed "
-                 << d_work_traded.size() << " boxes ("
-                 << d_work_traded.getSumLoad() << " units)."
-                 << "  message length = " << msg.getCurrentSize() << " bytes"
-                 << std::endl;
-   }
-
-   t_pack_load->stop();
-}
-
-
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void
-TreeLoadBalancer::SubtreeData::unpackDataFromParent(
-   hier::SequentialLocalIdGenerator& id_generator,
-   int mpi_rank,
-   tbox::MessageStream &msg )
-{
-   t_unpack_load->start();
-
-   int num_boxes = 0;
-   msg >> num_boxes;
-   /*
-    * As we pull each BoxInTransit out, give it a new id that reflects
-    * its new owner.
-    */
-   BoxTransitSet::BoxInTransit received_box(d_pparams->getDim());
-   for (int i = 0; i < num_boxes; ++i) {
-      received_box.getFromMessageStream(msg);
-      BoxTransitSet::BoxInTransit renamed_box(received_box,
-                                              received_box.getBox(),
-                                              mpi_rank,
-                                              id_generator.nextValue());
-      d_work_traded.insert(renamed_box);
-   }
-
-   if (d_print_steps) {
-      tbox::plog << "SubtreeData::unpackDataFromParent: unpacked "
-                 << d_work_traded.size() << " boxes ("
-                 << d_work_traded.getSumLoad() << " units):";
-      if ( d_work_traded.size() < 10 ) {
-         for ( BoxTransitSet::const_iterator ni=d_work_traded.begin();
-               ni!=d_work_traded.end(); ++ni ) {
-            const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
-            tbox::plog << "  " << box_in_transit;
-         }
-      }
-      tbox::plog << std::endl;
-   }
-
-   t_unpack_load->stop();
-}
-
-
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void
-TreeLoadBalancer::SubtreeData::setTimerPrefix(
-   const std::string& timer_prefix)
-{
-   t_pack_load = tbox::TimerManager::getManager()->
-      getTimer(timer_prefix + "::pack_load");
-   t_unpack_load = tbox::TimerManager::getManager()->
-      getTimer(timer_prefix + "::unpack_load");
 }
 
 
@@ -2508,310 +2176,6 @@ TreeLoadBalancer::destroyAsyncCommObjects(
 
 /*
  *************************************************************************
- * Measuring surface area of boxes is used in penalizing
- * the creation of new surfaces.
- *************************************************************************
- */
-
-double
-TreeLoadBalancer::computeBoxSurfaceArea(
-   const std::vector<hier::Box>& boxes) const
-{
-   int surface_area = 0;
-   for (std::vector<hier::Box>::const_iterator bi = boxes.begin();
-        bi != boxes.end();
-        ++bi) {
-      const hier::Box& box = *bi;
-      int volume = box.size();
-      for (int d = 0; d < d_dim.getValue(); ++d) {
-         surface_area += volume / box.numberCells(d);
-      }
-   }
-   surface_area *= 2;
-   return surface_area;
-}
-
-
-
-/*
- *************************************************************************
- * Measuring surface area of boxes is used in penalizing
- * the creation of new surfaces.
- *************************************************************************
- */
-
-int
-TreeLoadBalancer::computeBoxSurfaceArea(
-   const hier::Box& box) const
-{
-   int surface_area = 0;
-   int volume = box.size();
-   for (int d = 0; d < d_dim.getValue(); ++d) {
-      surface_area += volume / box.numberCells(d);
-   }
-   surface_area *= 2;
-   return surface_area;
-}
-
-
-
-/*
- *************************************************************************
- * Return non-dimensional volume-weighted surface penalty for a box.  The
- * reference zero penalty is for a box of equal sides having the same
- * volume.
- *************************************************************************
- */
-
-double
-TreeLoadBalancer::computeSurfacePenalty(
-   const std::vector<hier::Box>& a,
-   const std::vector<hier::Box>& b) const
-{
-   double surface_penalty = 0;
-   for (std::vector<hier::Box>::const_iterator bi = a.begin();
-        bi != a.end();
-        ++bi) {
-      surface_penalty += computeSurfacePenalty(*bi);
-   }
-   for (std::vector<hier::Box>::const_iterator bi = b.begin();
-        bi != b.end();
-        ++bi) {
-      surface_penalty += computeSurfacePenalty(*bi);
-   }
-   return surface_penalty;
-}
-
-
-
-/*
- *************************************************************************
- * Return non-dimensional volume-weighted surface penalty for a box.  The
- * reference zero penalty is for a box of equal sides having the same
- * volume.
- *************************************************************************
- */
-
-double
-TreeLoadBalancer::computeSurfacePenalty(
-   const BoxTransitSet& a,
-   const BoxTransitSet& b) const
-{
-   double surface_penalty = 0;
-   for (BoxTransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      surface_penalty += computeSurfacePenalty(bi->d_box);
-   }
-   for (BoxTransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      surface_penalty += computeSurfacePenalty(bi->d_box);
-   }
-   return surface_penalty;
-}
-
-
-
-/*
- *************************************************************************
- * Return non-dimensional volume-weighted surface penalty for a box.  The
- * reference zero penalty is for a box of equal sides having the same
- * volume.
- *************************************************************************
- */
-
-double
-TreeLoadBalancer::computeSurfacePenalty(
-   const hier::Box& a) const
-{
-   int boxvol = a.size();
-   double surface_area = computeBoxSurfaceArea(a);
-   double best_surface = 2 * d_dim.getValue() * pow(static_cast<double>(boxvol),
-         static_cast<double>(d_dim.getValue() - 1) / d_dim.getValue());
-   double surface_penalty = surface_area / best_surface - 1.0;
-   surface_penalty = surface_penalty * surface_penalty; // Make it blow up.
-   return surface_penalty;
-}
-
-
-
-/*
- *************************************************************************
- * Return non-dimensional volume-weighted slenderness penalty for two
- * containers of boxes.  The reference zero penalty refers to a box with
- * all sides the same length.
- *************************************************************************
- */
-
-double
-TreeLoadBalancer::computeSlenderPenalty(
-   const std::vector<hier::Box>& a,
-   const std::vector<hier::Box>& b) const
-{
-   double slender_penalty = 0;
-   for (std::vector<hier::Box>::const_iterator bi = a.begin();
-        bi != a.end();
-        ++bi) {
-      slender_penalty += computeSlenderPenalty(*bi);
-   }
-   for (std::vector<hier::Box>::const_iterator bi = b.begin();
-        bi != b.end();
-        ++bi) {
-      slender_penalty += computeSlenderPenalty(*bi);
-   }
-   return slender_penalty;
-}
-
-
-
-/*
- *************************************************************************
- * Return non-dimensional volume-weighted slenderness penalty for two
- * containers of boxes.  The reference zero penalty refers to a box with
- * all sides the same length.
- *************************************************************************
- */
-
-double
-TreeLoadBalancer::computeSlenderPenalty(
-   const BoxTransitSet& a,
-   const BoxTransitSet& b) const
-{
-   double slender_penalty = 0;
-   for (BoxTransitSet::const_iterator bi = a.begin(); bi != a.end(); ++bi) {
-      slender_penalty += computeSlenderPenalty(bi->d_box);
-   }
-   for (BoxTransitSet::const_iterator bi = b.begin(); bi != b.end(); ++bi) {
-      slender_penalty += computeSlenderPenalty(bi->d_box);
-   }
-   return slender_penalty;
-}
-
-
-
-/*
- *************************************************************************
- * Return non-dimensional volume-weighted slenderness penalty for two
- * containers of boxes.  The reference zero penalty refers to a box with
- * all sides the same length.
- *************************************************************************
- */
-
-double
-TreeLoadBalancer::computeSlenderPenalty(
-   const hier::Box& a) const
-{
-   const hier::IntVector boxdim = a.numberCells();
-   double slender_penalty = static_cast<double>(boxdim.max()) / boxdim.min() - 1.0;
-   slender_penalty = slender_penalty * slender_penalty; // Make it blow up.
-   return slender_penalty;
-}
-
-
-
-/*
- *************************************************************************
- * Break up box bursty against box solid and adds the pieces to list.
- * This version differs from that in BoxContainer in that it tries to minimize
- * slivers.
- *************************************************************************
- */
-
-void
-TreeLoadBalancer::burstBox(
-   std::vector<hier::Box>& boxes,
-   const hier::Box& bursty,
-   const hier::Box& solid ) const
-{
-   /*
-    * This method lacks logic to handle the case of solid not being
-    * completely inside bursty.  That feature is not currently needed.
-    */
-   TBOX_ASSERT(bursty.contains(solid));
-
-   const hier::IntVector solid_size = solid.numberCells();
-
-   boxes.clear();
-   hier::Box cutme = bursty;
-   while (!cutme.isSpatiallyEqual(solid)) {
-
-      int cut_dir = 999999;
-      bool cut_above_solid = false; // Whether to slice off the piece above solid (vs below).
-      /*
-       * Find direction and place to cut.  To minimize slivers, cut
-       * from cutme the thickest slab (in direction normal to cut)
-       * possible.
-       */
-      int slab_thickness = 0;
-      for (int d = 0; d < d_dim.getValue(); ++d) {
-         if (cutme.numberCells(d) > solid_size(d)) {
-            const int thickness_from_upper_cut = cutme.upper() (d)
-               - solid.upper() (d);
-            if (thickness_from_upper_cut > slab_thickness) {
-               slab_thickness = thickness_from_upper_cut;
-               cut_dir = d;
-               cut_above_solid = true;
-            }
-            const int thickness_from_lower_cut = solid.lower() (d)
-               - cutme.lower() (d);
-            if (thickness_from_lower_cut > slab_thickness) {
-               slab_thickness = thickness_from_lower_cut;
-               cut_dir = d;
-               cut_above_solid = false;
-            }
-         }
-      }
-      TBOX_ASSERT(cut_dir >= 0 && cut_dir < d_dim.getValue());
-
-      hier::Box removeme = cutme;
-      if (cut_above_solid) {
-         cutme.upper() (cut_dir) = solid.upper() (cut_dir);
-         removeme.lower() (cut_dir) = solid.upper() (cut_dir) + 1;
-      } else {
-         cutme.lower() (cut_dir) = solid.lower() (cut_dir);
-         removeme.upper() (cut_dir) = solid.lower() (cut_dir) - 1;
-      }
-
-      boxes.push_back(removeme);
-
-   }
-
-   if (d_print_break_steps) {
-      tbox::plog << "      burstBox: " << bursty << " = " << solid;
-      for (std::vector<hier::Box>::const_iterator bi = boxes.begin();
-           bi != boxes.end();
-           bi++) {
-         tbox::plog << " + " << *bi;
-      }
-      tbox::plog << std::endl;
-   }
-#ifdef DEBUG_CHECK_ASSERTIONS
-   for (std::vector<hier::Box>::const_iterator bi = boxes.begin();
-        bi != boxes.end();
-        bi++) {
-      for (std::vector<hier::Box>::const_iterator bj = boxes.begin();
-           bj != boxes.end();
-           bj++) {
-         if (bi != bj) {
-            TBOX_ASSERT(!bi->intersects(*bj));
-         }
-      }
-   }
-   hier::BoxContainer l1(bursty);
-   hier::BoxContainer l2(solid);
-   for (std::vector<hier::Box>::const_iterator bi = boxes.begin();
-        bi != boxes.end();
-        bi++) {
-      l2.pushFront(*bi);
-   }
-   l1.removeIntersections(l2);
-   TBOX_ASSERT(l1.isEmpty());
-   l2.removeIntersections(bursty);
-   TBOX_ASSERT(l2.isEmpty());
-#endif
-}
-
-
-
-/*
- *************************************************************************
  *************************************************************************
  */
 TreeLoadBalancer::LoadType
@@ -2913,15 +2277,6 @@ TreeLoadBalancer::getFromInput(
       d_allow_box_breaking =
          input_db->getBoolWithDefault("DEV_allow_box_breaking",
                                       d_allow_box_breaking);
-
-      d_balance_penalty_wt =
-         input_db->getDoubleWithDefault("DEV_balance_penalty_wt", 1.0);
-      d_surface_penalty_wt =
-         input_db->getDoubleWithDefault("DEV_surface_penalty_wt", 1.0);
-      d_slender_penalty_wt =
-         input_db->getDoubleWithDefault("DEV_slender_penalty_wt", 1.0);
-      d_precut_penalty_wt =
-         input_db->getDoubleWithDefault("DEV_precut_penalty_wt", 1.0);
 
    }
 }
@@ -3295,8 +2650,8 @@ TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::mapOversizedBoxes()");
       t_load_distribution = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::load_distribution");
-t_post_load_distribution_barrier = tbox::TimerManager::getManager()->
-   getTimer(d_object_name + "::post_load_distribution_barrier");
+      t_post_load_distribution_barrier = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::post_load_distribution_barrier");
       t_compute_local_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::compute_local_load");
       t_compute_global_load = tbox::TimerManager::getManager()->
@@ -3367,6 +2722,11 @@ t_post_load_distribution_barrier = tbox::TimerManager::getManager()->
    }
 }
 
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
 TreeLoadBalancer::SubtreeData::SubtreeData():
    d_subtree_rank(-1),
    d_num_procs(0),
@@ -3383,6 +2743,38 @@ TreeLoadBalancer::SubtreeData::SubtreeData():
 {
 }
 
+
+
+/*
+ *************************************************************************
+ * Set the starting load, which includes only the local processor's
+ * contribution.  The parent's and children's contributions would be
+ * added later.
+ *************************************************************************
+ */
+void TreeLoadBalancer::SubtreeData::setStartingLoad(
+   LoadType ideal,
+   LoadType current,
+   LoadType upperlimit )
+{
+   d_num_procs = 1;
+   d_subtree_load_ideal = ideal;
+   d_subtree_load_current = current;
+   d_subtree_load_upperlimit = upperlimit;
+
+   d_eff_num_procs = d_num_procs;
+   d_eff_load_ideal = d_subtree_load_ideal;
+   d_eff_load_current = d_subtree_load_current;
+   d_eff_load_upperlimit = d_subtree_load_upperlimit;
+}
+
+
+
+/*
+ *************************************************************************
+ * Incorporate a child subtree's data into this subtree.
+ *************************************************************************
+ */
 void
 TreeLoadBalancer::SubtreeData::addChild(
    const SubtreeData &child,
@@ -3410,6 +2802,265 @@ TreeLoadBalancer::SubtreeData::addChild(
    reserve.insertAll( child.d_work_traded );
 }
 
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+TreeLoadBalancer::LoadType TreeLoadBalancer::SubtreeData::adjustOutboundLoad(
+   BoxTransitSet& reserve_bin,
+   hier::SequentialLocalIdGenerator &id_generator,
+   LoadType ideal_load,
+   LoadType low_load,
+   LoadType high_load )
+{
+   LoadType actual_transfer = d_work_traded.getSumLoad();
+
+   d_work_traded.adjustLoad(
+      reserve_bin,
+      id_generator,
+      ideal_load,
+      low_load,
+      high_load );
+
+   actual_transfer = d_work_traded.getSumLoad() - actual_transfer;
+
+   d_subtree_load_current -= d_work_traded.getSumLoad();
+   d_eff_load_current -= d_work_traded.getSumLoad();
+
+   if (d_print_steps) {
+      tbox::plog << "SubtreeData::adjustOutboundLoad: Assigned "
+                 << d_work_traded.size() << " boxes ("
+                 << d_work_traded.getSumLoad() << " / ["
+                 << low_load << ", " << high_load << "] "
+                 << " units) to export bin:";
+      if ( d_work_traded.size() < 10 ) {
+         for (BoxTransitSet::const_iterator ni = d_work_traded.begin();
+              ni!=d_work_traded.end(); ++ni) {
+            tbox::plog << "  " << *ni;
+         }
+      }
+      tbox::plog << std::endl;
+   }
+
+   return actual_transfer;
+}
+
+
+
+/*
+ *************************************************************************
+ * We could empty d_work_traded at the end of this method, because it
+ * is no longer essential.  We keep its contents only for diagnostics.
+ *************************************************************************
+ */
+void TreeLoadBalancer::SubtreeData::moveInboundLoadToReserve(
+   BoxTransitSet& reserve_bin )
+{
+   d_subtree_load_current += d_work_traded.getSumLoad();
+   d_eff_load_current += d_work_traded.getSumLoad();
+   reserve_bin.insertAll( d_work_traded );
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void
+TreeLoadBalancer::SubtreeData::packDataToParent(
+   tbox::MessageStream& msg) const
+{
+   t_pack_load->start();
+
+   msg << d_num_procs;
+   msg << d_subtree_load_current;
+   msg << d_subtree_load_ideal;
+   msg << d_subtree_load_upperlimit;
+   msg << d_eff_num_procs;
+   msg << d_eff_load_current;
+   msg << d_eff_load_ideal;
+   msg << d_eff_load_upperlimit;
+   msg << d_wants_work_from_parent;
+
+   msg << static_cast<int>(d_work_traded.size());
+   for (BoxTransitSet::const_iterator
+        ni = d_work_traded.begin(); ni != d_work_traded.end(); ++ni) {
+      const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
+      box_in_transit.putToMessageStream(msg);
+   }
+
+   if (d_print_steps) {
+      tbox::plog << "SubtreeData::packDataToParent:  packed "
+                 << d_work_traded.size() << " boxes ("
+                 << d_work_traded.getSumLoad() << " units)."
+                 << "  message length = " << msg.getCurrentSize() << " bytes"
+                 << std::endl;
+   }
+
+   t_pack_load->stop();
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void
+TreeLoadBalancer::SubtreeData::unpackDataFromChild(
+   hier::SequentialLocalIdGenerator& id_generator,
+   int mpi_rank,
+   tbox::MessageStream &msg )
+{
+   t_unpack_load->start();
+
+   msg >> d_num_procs;
+   msg >> d_subtree_load_current;
+   msg >> d_subtree_load_ideal;
+   msg >> d_subtree_load_upperlimit;
+   msg >> d_eff_num_procs;
+   msg >> d_eff_load_current;
+   msg >> d_eff_load_ideal;
+   msg >> d_eff_load_upperlimit;
+   msg >> d_wants_work_from_parent;
+
+   /*
+    * As we pull each BoxInTransit out, give it a new id that reflects
+    * its new owner.
+    */
+   int num_boxes = 0;
+   msg >> num_boxes;
+   BoxTransitSet::BoxInTransit received_box(d_pparams->getDim());
+   for (int i = 0; i < num_boxes; ++i) {
+      received_box.getFromMessageStream(msg);
+      BoxTransitSet::BoxInTransit renamed_box(received_box,
+                                              received_box.getBox(),
+                                              mpi_rank,
+                                              id_generator.nextValue());
+      d_work_traded.insert(renamed_box);
+   }
+
+   if (d_print_steps) {
+      tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
+      tbox::plog.precision(6);
+      tbox::plog << "SubtreeData::unpackDataFromChild: Unpacked "
+                 << d_work_traded.size() << " boxes ("
+                 << d_work_traded.getSumLoad() << " units):";
+      if ( d_work_traded.size() < 10 ) {
+         for ( BoxTransitSet::const_iterator ni=d_work_traded.begin();
+               ni!=d_work_traded.end(); ++ni ) {
+            const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
+            tbox::plog << "  " << box_in_transit;
+         }
+      }
+      tbox::plog << std::endl;
+   }
+
+   t_unpack_load->stop();
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void
+TreeLoadBalancer::SubtreeData::packDataToChild(
+   tbox::MessageStream& msg) const
+{
+   t_pack_load->start();
+
+   msg << static_cast<int>(d_work_traded.size());
+   for (BoxTransitSet::const_iterator
+        ni = d_work_traded.begin(); ni != d_work_traded.end(); ++ni) {
+      const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
+      box_in_transit.putToMessageStream(msg);
+   }
+
+   if (d_print_steps) {
+      tbox::plog << "SubtreeData::packDataToChild: packed "
+                 << d_work_traded.size() << " boxes ("
+                 << d_work_traded.getSumLoad() << " units)."
+                 << "  message length = " << msg.getCurrentSize() << " bytes"
+                 << std::endl;
+   }
+
+   t_pack_load->stop();
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void
+TreeLoadBalancer::SubtreeData::unpackDataFromParent(
+   hier::SequentialLocalIdGenerator& id_generator,
+   int mpi_rank,
+   tbox::MessageStream &msg )
+{
+   t_unpack_load->start();
+
+   int num_boxes = 0;
+   msg >> num_boxes;
+   /*
+    * As we pull each BoxInTransit out, give it a new id that reflects
+    * its new owner.
+    */
+   BoxTransitSet::BoxInTransit received_box(d_pparams->getDim());
+   for (int i = 0; i < num_boxes; ++i) {
+      received_box.getFromMessageStream(msg);
+      BoxTransitSet::BoxInTransit renamed_box(received_box,
+                                              received_box.getBox(),
+                                              mpi_rank,
+                                              id_generator.nextValue());
+      d_work_traded.insert(renamed_box);
+   }
+
+   if (d_print_steps) {
+      tbox::plog << "SubtreeData::unpackDataFromParent: unpacked "
+                 << d_work_traded.size() << " boxes ("
+                 << d_work_traded.getSumLoad() << " units):";
+      if ( d_work_traded.size() < 10 ) {
+         for ( BoxTransitSet::const_iterator ni=d_work_traded.begin();
+               ni!=d_work_traded.end(); ++ni ) {
+            const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
+            tbox::plog << "  " << box_in_transit;
+         }
+      }
+      tbox::plog << std::endl;
+   }
+
+   t_unpack_load->stop();
+}
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+TreeLoadBalancer::SubtreeData::setTimerPrefix(
+   const std::string& timer_prefix)
+{
+   t_pack_load = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::pack_load");
+   t_unpack_load = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::unpack_load");
+}
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
 void
 TreeLoadBalancer::SubtreeData::printClassData(
    const std::string &border,

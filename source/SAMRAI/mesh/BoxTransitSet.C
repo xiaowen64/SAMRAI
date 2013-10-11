@@ -37,7 +37,6 @@ BoxTransitSet::BoxTransitSet() :
    d_sumload(0),
    d_pparams(0),
    d_bbb(),
-   d_tree_degree(2 /* should be replaced by LocalId generator */),
    d_allow_box_breaking(true),
    d_print_steps(false),
    d_print_pop_steps(false),
