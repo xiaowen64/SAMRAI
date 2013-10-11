@@ -990,10 +990,12 @@ t_post_load_distribution_barrier->stop();
    SubtreeData my_subtree;
    my_subtree.setPartitioningParams(*d_pparams);
    my_subtree.setTimerPrefix(d_object_name);
+   my_subtree.d_print_steps = d_print_steps == 'y';
    std::vector<SubtreeData> child_subtrees(num_children);
    for ( size_t i=0; i<child_subtrees.size(); ++i ) {
       child_subtrees[i].setPartitioningParams(*d_pparams);
       child_subtrees[i].setTimerPrefix(d_object_name);
+      child_subtrees[i].d_print_steps = d_print_steps == 'y';
    }
 
 
@@ -1054,29 +1056,15 @@ t_post_load_distribution_barrier->stop();
                                   tbox::MessageStream::Read,
                                   child_recv->getRecvData(),
                                   false);
+
+      if (d_print_steps) {
+         tbox::plog << "Unpacking from child "
+                    << cindex << ':' << d_rank_tree->getChildRank(cindex) << ":\n";
+      }
       child_subtrees[cindex].unpackDataFromChild(
          id_generator[cindex],
          d_mpi.getRank(),
          mstream);
-
-      // unassigned.insertAll( child_subtrees[cindex].d_work_traded );
-
-      if (d_print_steps) {
-         tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
-         tbox::plog.precision(6);
-         tbox::plog << "Received from child "
-                    << cindex << ':' << d_rank_tree->getChildRank(cindex) << ": "
-                    << child_subtrees[cindex].d_work_traded.size() << " boxes ("
-                    << child_subtrees[cindex].d_work_traded.getSumLoad() << " units):";
-         if ( child_subtrees[cindex].d_work_traded.size() < 10 ) {
-            for ( BoxTransitSet::const_iterator ni=child_subtrees[cindex].d_work_traded.begin();
-                  ni!=child_subtrees[cindex].d_work_traded.end(); ++ni ) {
-               const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
-               tbox::plog << "  " << box_in_transit;
-            }
-         }
-         tbox::plog << std::endl;
-      }
 
       my_subtree.addChild( child_subtrees[cindex], unassigned );
 
@@ -1140,9 +1128,11 @@ t_post_load_distribution_barrier->stop();
          if ( export_load_low > 0 ) {
 
             if (d_print_steps) {
-               tbox::plog << "Attempting to reassign " << export_load_ideal
-                          << " [" << export_load_low << ", " << export_load_high
-                          << "] of unassigned load to parent.\n";
+               tbox::plog << "Adjusting outbound load for parent "
+                          << d_rank_tree->getParentRank()
+                          << " to " << export_load_ideal
+                          << " [" << export_load_low
+                          << ", " << export_load_high << "]\n";
             }
 
             const LoadType export_load_actual =
@@ -1154,20 +1144,6 @@ t_post_load_distribution_barrier->stop();
                   export_load_high );
             TBOX_ASSERT( export_load_actual >= 0 );
 
-            if (d_print_steps) {
-               tbox::plog << "Assigned " << my_subtree.d_work_traded.size()
-                          << " boxes (" << export_load_actual << " / ["
-                          << export_load_low << ", " << export_load_high << "] "
-                          << " units) to parent's export bin:";
-               if ( my_subtree.d_work_traded.size() < 10 ) {
-                  for (BoxTransitSet::const_iterator ni = my_subtree.d_work_traded.begin();
-                       ni!=my_subtree.d_work_traded.end(); ++ni) {
-                     tbox::plog << "  " << *ni;
-                  }
-               }
-               tbox::plog << std::endl;
-            }
-
          }
 
       }
@@ -1176,14 +1152,13 @@ t_post_load_distribution_barrier->stop();
        * Send local subtree info, along with any exported work,
        * up to parent.
        */
+      if (d_print_steps) {
+         tbox::plog << "Packing data to to parent "
+                    << d_rank_tree->getParentRank() << ": " << std::endl;
+      }
       tbox::MessageStream mstream;
       my_subtree.packDataToParent(mstream);
       if (d_print_steps) {
-         tbox::plog << "Sending to parent " << d_rank_tree->getParentRank() << ": "
-                    << my_subtree.d_work_traded.size() << " boxes ("
-                    << my_subtree.d_work_traded.getSumLoad() << " units)."
-                    << "  message length = " << mstream.getCurrentSize() << " bytes"
-                    << std::endl;
          tbox::plog << "unassigned has: " << unassigned.size()
                     << " boxes (" << unassigned.getSumLoad() << " units)."
                     << std::endl;
@@ -1237,6 +1212,11 @@ t_post_load_distribution_barrier->stop();
 
       parent_recv->completeCurrentOperation();
 
+      if (d_print_steps) {
+         tbox::plog << "Received from parent " << d_rank_tree->getParentRank()
+                    << "... Unpacking." << std::endl;
+      }
+
       tbox::MessageStream mstream(parent_recv->getRecvSize(),
                                   tbox::MessageStream::Read,
                                   parent_recv->getRecvData(),
@@ -1250,20 +1230,6 @@ t_post_load_distribution_barrier->stop();
 
       if ( unassigned_highwater < unassigned.size() ) {
          unassigned_highwater = unassigned.size();
-      }
-
-      if (d_print_steps) {
-         tbox::plog << "Received from parent " << d_rank_tree->getParentRank() << ":"
-                    << my_subtree.d_work_traded.size() << " boxes ("
-                    << my_subtree.d_work_traded.getSumLoad() << " units):";
-         if ( my_subtree.d_work_traded.size() < 10 ) {
-            for ( BoxTransitSet::const_iterator ni=my_subtree.d_work_traded.begin();
-                  ni!=my_subtree.d_work_traded.end(); ++ni ) {
-               const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
-               tbox::plog << "  " << box_in_transit;
-            }
-         }
-         tbox::plog << std::endl;
       }
 
       t_get_load_from_parent->stop();
@@ -1322,10 +1288,11 @@ t_post_load_distribution_barrier->stop();
          if ( export_load_low > 0.0 ) {
 
             if (d_print_steps) {
-               tbox::plog << "Adjusting export bin for child "
+               tbox::plog << "Adjusting outbound load for child "
                           << ichild << ':' << d_rank_tree->getChildRank(ichild)
                           << " to " << export_load_ideal
-                          << " [" << export_load_low << ", " << export_load_high << "]\n";
+                          << " [" << export_load_low
+                          << ", " << export_load_high << "]\n";
             }
 
             const LoadType export_load_actual =
@@ -1337,33 +1304,16 @@ t_post_load_distribution_barrier->stop();
                   export_load_high );
             TBOX_ASSERT(export_load_actual >= 0);
 
-            if (d_print_steps) {
-               tbox::plog << "Assigned " << recip_subtree.d_work_traded.size()
-                          << " boxes (" << export_load_actual << " / " << export_load_ideal
-                          << " [" << export_load_low << ", " << export_load_high << "] "
-                          << " units) to child "
-                          << ichild << ':' << d_rank_tree->getChildRank(ichild)
-                          << " for " << recip_subtree.d_num_procs << " procs:";
-               if ( recip_subtree.d_work_traded.size() < 10 ) {
-                  for (BoxTransitSet::const_iterator ni = recip_subtree.d_work_traded.begin();
-                       ni != recip_subtree.d_work_traded.end(); ++ni) {
-                     tbox::plog << "  " << *ni;
-                  }
-               }
-               tbox::plog << std::endl;
-            }
-
          }
 
+         if (d_print_steps) {
+            tbox::plog << "Packing data to child "
+                       << ichild << ':' << d_rank_tree->getChildRank(ichild)
+                       << std::endl;
+         }
          tbox::MessageStream mstream;
          recip_subtree.packDataToChild(mstream);
          if (d_print_steps) {
-            tbox::plog << "Sending to child "
-                       << ichild << ':' << d_rank_tree->getChildRank(ichild)
-                       << ' ' << recip_subtree.d_work_traded.size() << " boxes ("
-                       << recip_subtree.d_work_traded.getSumLoad() << " units)."
-                       << "  message length = " << mstream.getCurrentSize() << " bytes"
-                       << std::endl;
             tbox::plog << "unassigned has: " << unassigned.size()
                        << " boxes (" << unassigned.getSumLoad() << " units)."
                        << std::endl;
@@ -1842,6 +1792,21 @@ TreeLoadBalancer::LoadType TreeLoadBalancer::SubtreeData::adjustOutboundLoad(
    d_subtree_load_current -= d_work_traded.getSumLoad();
    d_eff_load_current -= d_work_traded.getSumLoad();
 
+   if (d_print_steps) {
+      tbox::plog << "SubtreeData::adjustOutboundLoad: Assigned "
+                 << d_work_traded.size() << " boxes ("
+                 << d_work_traded.getSumLoad() << " / ["
+                 << low_load << ", " << high_load << "] "
+                 << " units) to export bin:";
+      if ( d_work_traded.size() < 10 ) {
+         for (BoxTransitSet::const_iterator ni = d_work_traded.begin();
+              ni!=d_work_traded.end(); ++ni) {
+            tbox::plog << "  " << *ni;
+         }
+      }
+      tbox::plog << std::endl;
+   }
+
    return actual_transfer;
 }
 
@@ -1872,6 +1837,7 @@ TreeLoadBalancer::SubtreeData::packDataToParent(
    tbox::MessageStream& msg) const
 {
    t_pack_load->start();
+
    msg << d_num_procs;
    msg << d_subtree_load_current;
    msg << d_subtree_load_ideal;
@@ -1880,14 +1846,23 @@ TreeLoadBalancer::SubtreeData::packDataToParent(
    msg << d_eff_load_current;
    msg << d_eff_load_ideal;
    msg << d_eff_load_upperlimit;
-   const BoxTransitSet& for_export = d_work_traded;
-   msg << static_cast<int>(for_export.size());
+   msg << d_wants_work_from_parent;
+
+   msg << static_cast<int>(d_work_traded.size());
    for (BoxTransitSet::const_iterator
-        ni = for_export.begin(); ni != for_export.end(); ++ni) {
+        ni = d_work_traded.begin(); ni != d_work_traded.end(); ++ni) {
       const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
       box_in_transit.putToMessageStream(msg);
    }
-   msg << d_wants_work_from_parent;
+
+   if (d_print_steps) {
+      tbox::plog << "SubtreeData::packDataToParent:  packed "
+                 << d_work_traded.size() << " boxes ("
+                 << d_work_traded.getSumLoad() << " units)."
+                 << "  message length = " << msg.getCurrentSize() << " bytes"
+                 << std::endl;
+   }
+
    t_pack_load->stop();
 }
 
@@ -1904,7 +1879,7 @@ TreeLoadBalancer::SubtreeData::unpackDataFromChild(
    tbox::MessageStream &msg )
 {
    t_unpack_load->start();
-   int num_boxes = 0;
+
    msg >> d_num_procs;
    msg >> d_subtree_load_current;
    msg >> d_subtree_load_ideal;
@@ -1913,11 +1888,14 @@ TreeLoadBalancer::SubtreeData::unpackDataFromChild(
    msg >> d_eff_load_current;
    msg >> d_eff_load_ideal;
    msg >> d_eff_load_upperlimit;
-   msg >> num_boxes;
+   msg >> d_wants_work_from_parent;
+
    /*
     * As we pull each BoxInTransit out, give it a new id that reflects
     * its new owner.
     */
+   int num_boxes = 0;
+   msg >> num_boxes;
    BoxTransitSet::BoxInTransit received_box(d_pparams->getDim());
    for (int i = 0; i < num_boxes; ++i) {
       received_box.getFromMessageStream(msg);
@@ -1927,7 +1905,23 @@ TreeLoadBalancer::SubtreeData::unpackDataFromChild(
                                               id_generator.nextValue());
       d_work_traded.insert(renamed_box);
    }
-   msg >> d_wants_work_from_parent;
+
+   if (d_print_steps) {
+      tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
+      tbox::plog.precision(6);
+      tbox::plog << "SubtreeData::unpackDataFromChild: Unpacked "
+                 << d_work_traded.size() << " boxes ("
+                 << d_work_traded.getSumLoad() << " units):";
+      if ( d_work_traded.size() < 10 ) {
+         for ( BoxTransitSet::const_iterator ni=d_work_traded.begin();
+               ni!=d_work_traded.end(); ++ni ) {
+            const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
+            tbox::plog << "  " << box_in_transit;
+         }
+      }
+      tbox::plog << std::endl;
+   }
+
    t_unpack_load->stop();
 }
 
@@ -1942,13 +1936,22 @@ TreeLoadBalancer::SubtreeData::packDataToChild(
    tbox::MessageStream& msg) const
 {
    t_pack_load->start();
-   const BoxTransitSet& for_export = d_work_traded;
-   msg << static_cast<int>(for_export.size());
+
+   msg << static_cast<int>(d_work_traded.size());
    for (BoxTransitSet::const_iterator
-        ni = for_export.begin(); ni != for_export.end(); ++ni) {
+        ni = d_work_traded.begin(); ni != d_work_traded.end(); ++ni) {
       const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
       box_in_transit.putToMessageStream(msg);
    }
+
+   if (d_print_steps) {
+      tbox::plog << "SubtreeData::packDataToChild: packed "
+                 << d_work_traded.size() << " boxes ("
+                 << d_work_traded.getSumLoad() << " units)."
+                 << "  message length = " << msg.getCurrentSize() << " bytes"
+                 << std::endl;
+   }
+
    t_pack_load->stop();
 }
 
@@ -1965,6 +1968,7 @@ TreeLoadBalancer::SubtreeData::unpackDataFromParent(
    tbox::MessageStream &msg )
 {
    t_unpack_load->start();
+
    int num_boxes = 0;
    msg >> num_boxes;
    /*
@@ -1980,6 +1984,21 @@ TreeLoadBalancer::SubtreeData::unpackDataFromParent(
                                               id_generator.nextValue());
       d_work_traded.insert(renamed_box);
    }
+
+   if (d_print_steps) {
+      tbox::plog << "SubtreeData::unpackDataFromParent: unpacked "
+                 << d_work_traded.size() << " boxes ("
+                 << d_work_traded.getSumLoad() << " units):";
+      if ( d_work_traded.size() < 10 ) {
+         for ( BoxTransitSet::const_iterator ni=d_work_traded.begin();
+               ni!=d_work_traded.end(); ++ni ) {
+            const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
+            tbox::plog << "  " << box_in_transit;
+         }
+      }
+      tbox::plog << std::endl;
+   }
+
    t_unpack_load->stop();
 }
 
@@ -3359,7 +3378,8 @@ TreeLoadBalancer::SubtreeData::SubtreeData():
    d_eff_load_ideal(-1),
    d_eff_load_upperlimit(-1),
    d_work_traded(),
-   d_wants_work_from_parent(false)
+   d_wants_work_from_parent(false),
+   d_print_steps(false)
 {
 }
 

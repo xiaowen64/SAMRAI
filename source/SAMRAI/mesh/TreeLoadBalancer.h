@@ -474,6 +474,7 @@ private:
 
       boost::shared_ptr<tbox::Timer> t_pack_load;
       boost::shared_ptr<tbox::Timer> t_unpack_load;
+      bool d_print_steps;
    };
 
    /*
