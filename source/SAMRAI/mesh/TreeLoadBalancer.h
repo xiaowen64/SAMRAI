@@ -389,9 +389,11 @@ private:
       size_t getExchangePackageCount() const { return d_work_traded.size(); }
       //! @brief Get count of originators of the work exchanged.
       size_t getExchangeOriginatorCount() const { return d_work_traded.getNumberOfOriginatingProcesses(); }
+      //@}
+
 
       //@{
-
+      //! @name Methods supporting load import/export.
       /*!
        * @brief Adjust load to be sent away by taking work from or
        * dumping work into a reserve container.
@@ -413,6 +415,8 @@ private:
        */
       void incorporateChild( BoxTransitSet &reserve,
                              const SubtreeData &child );
+      //@}
+
 
       //@{
       //! @name Packing/unpacking for communication up and down the tree.
