@@ -1055,6 +1055,51 @@ BoxTransitSet::setTimers()
       getTimer("mesh::BoxTransitSet::swapLoadPair()");
 }
 
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+BoxTransitSet::putToMessageStream( tbox::MessageStream &msg ) const
+{
+   msg << static_cast<int>(size());
+   for (BoxTransitSet::const_iterator
+        ni = begin(); ni != end(); ++ni) {
+      const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
+      box_in_transit.putToMessageStream(msg);
+   }
+}
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+BoxTransitSet::getFromMessageStream( tbox::MessageStream &msg, int mpi_rank )
+{
+   /*
+    * As we pull each BoxInTransit out, give it a new id that reflects
+    * its new owner.
+    */
+   int num_boxes = 0;
+   msg >> num_boxes;
+   BoxTransitSet::BoxInTransit received_box(d_pparams->getDim());
+   for (int i = 0; i < num_boxes; ++i) {
+      received_box.getFromMessageStream(msg);
+      BoxTransitSet::BoxInTransit renamed_box(received_box,
+                                              received_box.getBox(),
+                                              mpi_rank,
+                                              d_id_generator.nextValue());
+      insert(renamed_box);
+   }
+}
+
+
+
 }
 }
 

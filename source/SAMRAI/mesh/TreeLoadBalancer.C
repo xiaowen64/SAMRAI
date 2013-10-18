@@ -1352,7 +1352,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
    t_local_balancing->start();
 
 
-   assignBoxesToLocalProcess(
+   assignUnassignedToLocalProcess(
       balanced_box_level,
       balanced_to_unbalanced,
       unbalanced_to_balanced,
@@ -1620,7 +1620,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
  * for boxes originating remotely, so these edges will be missing.
  */
 void
-TreeLoadBalancer::assignBoxesToLocalProcess(
+TreeLoadBalancer::assignUnassignedToLocalProcess(
    hier::BoxLevel& balanced_box_level,
    hier::Connector &balanced_to_unbalanced,
    hier::Connector &unbalanced_to_balanced,
@@ -2878,12 +2878,7 @@ TreeLoadBalancer::SubtreeData::packDataToParent(
    msg << d_eff_load_upperlimit;
    msg << d_wants_work_from_parent;
 
-   msg << static_cast<int>(d_work_traded.size());
-   for (BoxTransitSet::const_iterator
-        ni = d_work_traded.begin(); ni != d_work_traded.end(); ++ni) {
-      const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
-      box_in_transit.putToMessageStream(msg);
-   }
+   d_work_traded.putToMessageStream(msg);
 
    if (d_print_steps) {
       tbox::plog << "SubtreeData::packDataToParent:  packed "
@@ -2920,6 +2915,9 @@ TreeLoadBalancer::SubtreeData::unpackDataFromChild(
    msg >> d_eff_load_upperlimit;
    msg >> d_wants_work_from_parent;
 
+#if 0
+   d_work_traded.getFromMessageStream(msg, mpi_rank);
+#else
    /*
     * As we pull each BoxInTransit out, give it a new id that reflects
     * its new owner.
@@ -2935,6 +2933,7 @@ TreeLoadBalancer::SubtreeData::unpackDataFromChild(
                                               id_generator.nextValue());
       d_work_traded.insert(renamed_box);
    }
+#endif
 
    if (d_print_steps) {
       tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
@@ -2967,12 +2966,7 @@ TreeLoadBalancer::SubtreeData::packDataToChild(
 {
    t_pack_load->start();
 
-   msg << static_cast<int>(d_work_traded.size());
-   for (BoxTransitSet::const_iterator
-        ni = d_work_traded.begin(); ni != d_work_traded.end(); ++ni) {
-      const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
-      box_in_transit.putToMessageStream(msg);
-   }
+   d_work_traded.putToMessageStream(msg);
 
    if (d_print_steps) {
       tbox::plog << "SubtreeData::packDataToChild: packed "
@@ -2999,6 +2993,9 @@ TreeLoadBalancer::SubtreeData::unpackDataFromParent(
 {
    t_unpack_load->start();
 
+#if 0
+   d_work_traded.getFromMessageStream(msg, mpi_rank);
+#else
    int num_boxes = 0;
    msg >> num_boxes;
    /*
@@ -3014,6 +3011,7 @@ TreeLoadBalancer::SubtreeData::unpackDataFromParent(
                                               id_generator.nextValue());
       d_work_traded.insert(renamed_box);
    }
+#endif
 
    if (d_print_steps) {
       tbox::plog << "SubtreeData::unpackDataFromParent: unpacked "

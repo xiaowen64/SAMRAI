@@ -561,7 +561,7 @@ private:
     * mapping edges where possible without communicating.
     */
    void
-   assignBoxesToLocalProcess(
+   assignUnassignedToLocalProcess(
       hier::BoxLevel& balanced_box_level,
       hier::Connector &balanced_to_unbalanced,
       hier::Connector &unbalanced_to_balanced,

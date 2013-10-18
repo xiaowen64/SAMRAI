@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/SequentialLocalIdGenerator.h"
 #include "SAMRAI/mesh/BalanceBoxBreaker.h"
-// #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/MessageStream.h"
@@ -196,10 +195,6 @@ public:
     * less loads.
     */
    struct BoxInTransitMoreLoad {
-      /*
-       * @brief Compares two BoxInTransit for sorting them from more load
-       * to less load.
-       */
       bool
       operator () (
          const BoxInTransit& a,
@@ -439,6 +434,13 @@ public:
          }
          return originating_procs.size();
       }
+
+   //@{
+   //! @name Packing/unpacking for communication.
+   void putToMessageStream( tbox::MessageStream &msg ) const;
+   void getFromMessageStream( tbox::MessageStream &msg, int mpi_rank );
+   //@}
+
    private:
 
    void setTimers();
