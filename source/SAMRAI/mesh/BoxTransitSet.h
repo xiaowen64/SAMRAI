@@ -193,6 +193,11 @@ public:
    /*!
     * @brief Comparison functor for sorting BoxInTransit from more to
     * less loads.
+    *
+    * Ties are broken by BlockId, then lexical comparison of the box's
+    * lower corner, then lexical comparison of the upper corner, then
+    * orginator BoxId.  The comparison should not use the box's BoxId
+    * because some boxes may not have valid ones.
     */
    struct BoxInTransitMoreLoad {
       bool
@@ -203,7 +208,23 @@ public:
          if (a.getBox().size() != b.getBox().size()) {
             return a.d_boxload > b.d_boxload;
          }
-         return a.d_box.getBoxId() < b.d_box.getBoxId();
+         if ( a.getBox().getBlockId() != b.getBox().getBlockId() ) {
+            return a.getBox().getBlockId() < b.getBox().getBlockId();
+         }
+         if ( a.getBox().lower() != b.getBox().lower() ) {
+            return lexicalIndexLessThan(a.getBox().lower(), b.getBox().lower());
+         }
+         if ( a.getBox().upper() != b.getBox().upper() ) {
+            return lexicalIndexLessThan(a.getBox().upper(), b.getBox().upper());
+         }
+         return a.d_orig_box.getBoxId() < b.d_orig_box.getBoxId();
+      }
+      bool lexicalIndexLessThan( const hier::IntVector &a,
+                                 const hier::IntVector &b ) const {
+         for ( int i=0; i<a.getDim().getValue(); ++i ) {
+            if ( a(i) != b(i) ) return a(i) < b(i);
+         }
+         return false;
       }
    };
 

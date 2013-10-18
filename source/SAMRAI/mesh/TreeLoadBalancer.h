@@ -565,7 +565,7 @@ private:
       hier::BoxLevel& balanced_box_level,
       hier::Connector &balanced_to_unbalanced,
       hier::Connector &unbalanced_to_balanced,
-      const BoxTransitSet& unassigned ) const;
+      BoxTransitSet& unassigned ) const;
 
    void
       removeLocallyOriginatedBoxesFromBoxTransitSet(

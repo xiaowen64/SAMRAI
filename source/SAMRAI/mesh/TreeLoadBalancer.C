@@ -1624,7 +1624,7 @@ TreeLoadBalancer::assignUnassignedToLocalProcess(
    hier::BoxLevel& balanced_box_level,
    hier::Connector &balanced_to_unbalanced,
    hier::Connector &unbalanced_to_balanced,
-   const BoxTransitSet& unassigned ) const
+   BoxTransitSet& unassigned ) const
 {
    /*
     * All unassigned boxes should go into balanced_box_level.  Put
@@ -1632,25 +1632,38 @@ TreeLoadBalancer::assignUnassignedToLocalProcess(
     * mapping Connectors where required.
     */
 
+   BoxTransitSet new_unassigned;
+   hier::LocalId new_local_id = unbalanced_to_balanced.getBase().getLastLocalId();
+
    for (BoxTransitSet::iterator ni = unassigned.begin();
         ni != unassigned.end(); ++ni ) {
 
-      const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
-      balanced_box_level.addBox(box_in_transit.d_box);
+      BoxTransitSet::BoxInTransit added_box(*ni);
+      if (!added_box.d_box.isIdEqual(added_box.d_orig_box)) {
+         added_box.d_box.initialize( added_box.d_box,
+                                     ++new_local_id,
+                                     d_mpi.getRank() );
+      }
+      balanced_box_level.addBox(added_box.d_box);
 
-      if (!box_in_transit.d_box.isIdEqual(box_in_transit.d_orig_box)) {
+      if (!added_box.d_box.isIdEqual(added_box.d_orig_box)) {
 
          balanced_to_unbalanced.insertLocalNeighbor(
-            box_in_transit.d_orig_box,
-            box_in_transit.d_box.getBoxId());
+            added_box.d_orig_box,
+            added_box.d_box.getBoxId());
 
-         if (box_in_transit.d_orig_box.getOwnerRank() == d_mpi.getRank()) {
+         if (added_box.d_orig_box.getOwnerRank() == d_mpi.getRank()) {
             unbalanced_to_balanced.insertLocalNeighbor(
-               box_in_transit.d_box,
-               box_in_transit.d_orig_box.getBoxId());
+               added_box.d_box,
+               added_box.d_orig_box.getBoxId());
          }
       }
 
+   }
+
+   unassigned.clear();
+   for ( BoxTransitSet::iterator ni=new_unassigned.begin(); ni!=new_unassigned.end(); ++ni ) {
+      unassigned.insert(*ni);
    }
 
 }
