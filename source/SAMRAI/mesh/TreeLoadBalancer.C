@@ -61,12 +61,6 @@ const int TreeLoadBalancer::TreeLoadBalancer_MIN_NPROC_FOR_AUTOMATIC_MULTICYCLE;
 const int TreeLoadBalancer::d_default_data_id = -1;
 
 
-// Round a to the nearest higher integer divisible by b.  This should work even for a < 0.
-#define ROUND_TO_HI(a,b) ((a)-((((a)%(b))-(b))%(b)))
-// Round a to the nearest lower integer divisible by b.  This should work even for a < 0.
-#define ROUND_TO_LO(a,b) ((a)-((((a)%(b))+(b))%(b)))
-
-
 /*
  *************************************************************************
  * TreeLoadBalancer constructor.
@@ -1262,7 +1256,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
 
          const LoadType surplus_per_eff_des =
             computeSurplusPerEffectiveDescendent(
-               unassigned,
+               unassigned.getSumLoad(),
                group_avg_load,
                child_subtrees,
                ichild );
@@ -1700,15 +1694,15 @@ TreeLoadBalancer::removeLocallyOriginatedBoxesFromBoxTransitSet(
  */
 TreeLoadBalancer::LoadType
 TreeLoadBalancer::computeSurplusPerEffectiveDescendent(
-   const BoxTransitSet &unassigned,
-   const LoadType group_avg_load,
+   const LoadType &unassigned_load,
+   const LoadType &group_avg_load,
    const std::vector<SubtreeData> &child_subtrees,
    int first_child ) const
 {
    const LoadType load_for_me = group_avg_load*(1 + d_flexible_load_tol);
 
    // Available amount for descendents after removing load_for_me:
-   const LoadType load_for_descendents = unassigned.getSumLoad() - load_for_me;
+   const LoadType load_for_descendents = unassigned_load - load_for_me;
 
    // Total of ideal exports to children:
    LoadType ideal_export_to_children = 0.0;

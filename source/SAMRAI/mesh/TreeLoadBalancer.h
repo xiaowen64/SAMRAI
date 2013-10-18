@@ -674,8 +674,8 @@ private:
     */
    LoadType
    computeSurplusPerEffectiveDescendent(
-      const BoxTransitSet &unassigned,
-      const LoadType group_avg_load,
+      const LoadType &unassigned_load,
+      const LoadType &group_avg_load,
       const std::vector<SubtreeData> &child_subtrees,
       int first_child ) const;
 
