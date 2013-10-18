@@ -13,6 +13,9 @@
 /* Define if bool type is not properly supported */
 #undef BOOL_IS_BROKEN
 
+/* Enable Box counting */
+#undef BOX_TELEMETRY
+
 /* Define if std::fill_n returns void */
 #undef CASC_STD_FILL_N_RETURNS_VOID
 
