@@ -567,11 +567,6 @@ private:
       hier::Connector &unbalanced_to_balanced,
       BoxTransitSet& unassigned ) const;
 
-   void
-      removeLocallyOriginatedBoxesFromBoxTransitSet(
-      BoxTransitSet& transit_set,
-      int local_rank ) const;
-
    /*!
     * @brief Construct semilocal relationships in
     * unbalanced--->balanced Connector.

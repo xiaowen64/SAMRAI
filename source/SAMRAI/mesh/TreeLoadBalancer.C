@@ -1358,8 +1358,6 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       unbalanced_to_balanced,
       unassigned );
 
-   removeLocallyOriginatedBoxesFromBoxTransitSet( unassigned, d_mpi.getRank() );
-
    t_local_balancing->stop();
 
    t_load_distribution->stop();
@@ -1610,8 +1608,10 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
 
 /*
  *************************************************************************
- * Assign boxes to local process (put them in the balanced_box_level
- * and put edges in balanced<==>unbalanced Connector.
+ * Assign unassigned boxes to local process (put them in the
+ * balanced_box_level and put edges in balanced<==>unbalanced
+ * Connector).  Remove from the unassigned set all boxes for which we
+ * can generate unbalanced--->balanced.
  *
  * We can generate balanced--->unbalanced edges for all unassigned
  * boxes because we have their origin info.  If the unassigned box
@@ -1645,7 +1645,9 @@ TreeLoadBalancer::assignUnassignedToLocalProcess(
                                      d_mpi.getRank() );
       }
       balanced_box_level.addBox(added_box.d_box);
-      new_unassigned.insert(added_box);
+      if ( added_box.d_orig_box.getOwnerRank() != added_box.d_box.getOwnerRank() ) {
+         new_unassigned.insert(added_box);
+      }
 
       if (!added_box.d_box.isIdEqual(added_box.d_orig_box)) {
 
@@ -1667,31 +1669,6 @@ TreeLoadBalancer::assignUnassignedToLocalProcess(
       unassigned.insert(*ni);
    }
 
-}
-
-
-
-
-/*
- *************************************************************************
- * Remove local boxes from a BoxTransitSet.
- *************************************************************************
- */
-void
-TreeLoadBalancer::removeLocallyOriginatedBoxesFromBoxTransitSet(
-   BoxTransitSet& transit_set,
-   int local_rank ) const
-{
-   for (BoxTransitSet::iterator ni = transit_set.begin();
-        ni != transit_set.end(); /* incremented in loop */) {
-      if (ni->d_orig_box.getOwnerRank() == local_rank) {
-         TBOX_ASSERT(ni->d_orig_box.getOwnerRank() == ni->d_box.getOwnerRank() );
-         transit_set.erase(ni++);
-      }
-      else {
-         ++ni;
-      }
-   }
 }
 
 
