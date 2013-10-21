@@ -557,14 +557,14 @@ private:
       const tbox::RankGroup& rank_group) const;
 
    /*!
-    * @brief Assign unassigned boxes to local process and set
-    * mapping edges where possible without communicating.
+    * @brief Assign unassigned boxes to local process and generate
+    * balanced<==>unbalanced map.
     */
    void
-   assignUnassignedToLocalProcess(
+   assignUnassignedToLocalProcessAndGenerateMap(
       hier::BoxLevel& balanced_box_level,
-      hier::Connector &balanced_to_unbalanced,
-      hier::Connector &unbalanced_to_balanced,
+      hier::MappingConnector &balanced_to_unbalanced,
+      hier::MappingConnector &unbalanced_to_balanced,
       BoxTransitSet& unassigned ) const;
 
    /*!

@@ -1352,7 +1352,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
    t_local_balancing->start();
 
 
-   assignUnassignedToLocalProcess(
+   assignUnassignedToLocalProcessAndGenerateMap(
       balanced_box_level,
       balanced_to_unbalanced,
       unbalanced_to_balanced,
@@ -1391,16 +1391,6 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup: completed sends.\n";
    }
 
-
-   if ( d_print_steps ) {
-      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup: constructing unbalanced->balanced.\n";
-   }
-   constructSemilocalUnbalancedToBalanced(
-      unbalanced_to_balanced,
-      unassigned );
-   if ( d_print_steps ) {
-      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup: finished constructing unbalanced->balanced.\n";
-   }
 
    t_get_map->stop();
 
@@ -1620,10 +1610,10 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
  * for boxes originating remotely, so these edges will be missing.
  */
 void
-TreeLoadBalancer::assignUnassignedToLocalProcess(
+TreeLoadBalancer::assignUnassignedToLocalProcessAndGenerateMap(
    hier::BoxLevel& balanced_box_level,
-   hier::Connector &balanced_to_unbalanced,
-   hier::Connector &unbalanced_to_balanced,
+   hier::MappingConnector &balanced_to_unbalanced,
+   hier::MappingConnector &unbalanced_to_balanced,
    BoxTransitSet& unassigned ) const
 {
    /*
@@ -1632,7 +1622,7 @@ TreeLoadBalancer::assignUnassignedToLocalProcess(
     * mapping Connectors where required.
     */
 
-   BoxTransitSet new_unassigned;
+   BoxTransitSet kept_imports;
    hier::LocalId new_local_id = unbalanced_to_balanced.getBase().getLastLocalId();
 
    for (BoxTransitSet::iterator ni = unassigned.begin();
@@ -1645,17 +1635,23 @@ TreeLoadBalancer::assignUnassignedToLocalProcess(
                                      d_mpi.getRank() );
       }
       balanced_box_level.addBox(added_box.d_box);
+
       if ( added_box.d_orig_box.getOwnerRank() != added_box.d_box.getOwnerRank() ) {
-         new_unassigned.insert(added_box);
+         // box originated remotely.  Cannot generate unbalanced--->balanced for it.
+         TBOX_ASSERT( added_box.d_orig_box.getOwnerRank() != d_mpi.getRank() );
+         kept_imports.insert(added_box);
       }
 
       if (!added_box.d_box.isIdEqual(added_box.d_orig_box)) {
-
          balanced_to_unbalanced.insertLocalNeighbor(
             added_box.d_orig_box,
             added_box.d_box.getBoxId());
+      }
 
-         if (added_box.d_orig_box.getOwnerRank() == d_mpi.getRank()) {
+      if (added_box.d_orig_box.getOwnerRank() == d_mpi.getRank()) {
+         TBOX_ASSERT( added_box.d_box.getOwnerRank() == added_box.d_orig_box.getOwnerRank() );
+         // box originated locally.  Can generate unbalanced--->balanced for it if needed.
+         if ( added_box.d_box.getLocalId() != added_box.d_orig_box.getLocalId() ) {
             unbalanced_to_balanced.insertLocalNeighbor(
                added_box.d_box,
                added_box.d_orig_box.getBoxId());
@@ -1664,9 +1660,13 @@ TreeLoadBalancer::assignUnassignedToLocalProcess(
 
    }
 
-   unassigned.clear();
-   for ( BoxTransitSet::iterator ni=new_unassigned.begin(); ni!=new_unassigned.end(); ++ni ) {
-      unassigned.insert(*ni);
+
+   if ( d_print_steps ) {
+      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup: constructing unbalanced->balanced.\n";
+   }
+   constructSemilocalUnbalancedToBalanced( unbalanced_to_balanced, kept_imports );
+   if ( d_print_steps ) {
+      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup: finished constructing unbalanced->balanced.\n";
    }
 
 }
