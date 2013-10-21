@@ -656,6 +656,18 @@ private:
       const double group_sum_load ) const;
 
    /*!
+    * @brief Distribute load on the tree and generate unbalanced<==>balanced maps.
+    */
+   void
+   distributeLoad(
+      hier::BoxLevel &balanced_box_level,
+      hier::MappingConnector &balanced_to_unbalanced,
+      hier::MappingConnector &unbalanced_to_balanced,
+      hier::Connector *balance_to_anchor,
+      const tbox::RankGroup& rank_group,
+      const double group_sum_load ) const;
+
+   /*!
     * @brief Constrain maximum box sizes in the given BoxLevel and
     * update given Connectors to the changed BoxLevel.
     *
