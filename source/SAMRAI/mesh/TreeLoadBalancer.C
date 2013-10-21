@@ -1645,6 +1645,7 @@ TreeLoadBalancer::assignUnassignedToLocalProcess(
                                      d_mpi.getRank() );
       }
       balanced_box_level.addBox(added_box.d_box);
+      new_unassigned.insert(added_box);
 
       if (!added_box.d_box.isIdEqual(added_box.d_orig_box)) {
 
@@ -1860,7 +1861,7 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
    int num_unaccounted_cells = static_cast<int>(
       unbalanced_to_balanced.getBase().getLocalNumberOfCells());
    if ( d_print_edge_steps ) {
-      tbox::plog << num_unaccounted_cells << " unbalanced cells\n";
+      tbox::plog << num_unaccounted_cells << " unbalanced cells." << std::endl;
    }
 
    const hier::BoxContainer &unbalanced_boxes = unbalanced_to_balanced.getBase().getBoxes();
@@ -1888,7 +1889,7 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
 
    }
    if ( d_print_edge_steps ) {
-      tbox::plog << num_unaccounted_cells << " unaccounted cells\n";
+      tbox::plog << num_unaccounted_cells << " unaccounted cells." << std::endl;
    }
    t_construct_semilocal_local_accounting->stop();
 
