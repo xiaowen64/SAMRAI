@@ -307,13 +307,7 @@ private:
     */
    static const int TreeLoadBalancer_LOADTAG0 = 1;
    static const int TreeLoadBalancer_LOADTAG1 = 2;
-   static const int TreeLoadBalancer_EDGETAG0 = 3;
-   static const int TreeLoadBalancer_EDGETAG1 = 4;
-   static const int TreeLoadBalancer_PREBALANCE0 = 5;
-   static const int TreeLoadBalancer_PREBALANCE1 = 6;
    static const int TreeLoadBalancer_FIRSTDATALEN = 500;
-
-   static const int TreeLoadBalancer_MIN_NPROC_FOR_AUTOMATIC_MULTICYCLE = 65;
 
    // The following are not implemented, but are provided here for
    // dumb compilers.
@@ -529,21 +523,6 @@ private:
    void
    getFromInput(
       const boost::shared_ptr<tbox::Database>& input_db);
-
-   /*!
-    * Move Boxes in balance_box_level from ranks outside of
-    * rank_group to ranks inside rank_group.  Modify the given connectors
-    * to make them correct following this moving of boxes.
-    *
-    * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
-    * @pre !balance_to_anchor || (balance_to_anchor->getTranspose().checkTransposeCorrectness(*balance_to_anchor) == 0)
-    * @pre !balance_to_anchor || (balance_to_anchor->checkTransposeCorrectness(balance_to_anchor->getTranspose()) == 0)
-    */
-   void
-   prebalanceBoxLevel(
-      hier::BoxLevel& balance_box_level,
-      hier::Connector* balance_to_anchor,
-      const tbox::RankGroup& rank_group) const;
 
    /*
     * Utility functions to determine parameter values for level.

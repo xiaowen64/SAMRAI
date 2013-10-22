@@ -20,6 +20,7 @@
 #include "SAMRAI/math/PatchCellDataNormOpsReal.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
 #include "SAMRAI/mesh/SpatialKey.h"
+#include "SAMRAI/tbox/RankGroup.h"
 
 #include <iostream>
 #include <list>
@@ -397,6 +398,24 @@ struct BalanceUtilities {
       hier::BoxLevel& box_level,
       hier::Connector* anchor_to_level,
       const PartitioningParams &pparams );
+
+   static const int BalanceUtilities_PREBALANCE0 = 5;
+   static const int BalanceUtilities_PREBALANCE1 = 6;
+
+   /*!
+    * Move Boxes in balance_box_level from ranks outside of
+    * rank_group to ranks inside rank_group.  Modify the given connectors
+    * to make them correct following this moving of boxes.
+    *
+    * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
+    * @pre !balance_to_anchor || (balance_to_anchor->getTranspose().checkTransposeCorrectness(*balance_to_anchor) == 0)
+    * @pre !balance_to_anchor || (balance_to_anchor->checkTransposeCorrectness(balance_to_anchor->getTranspose()) == 0)
+    */
+   static void
+   prebalanceBoxLevel(
+      hier::BoxLevel& balance_box_level,
+      hier::Connector* balance_to_anchor,
+      const tbox::RankGroup& rank_group);
 
 
 private:
