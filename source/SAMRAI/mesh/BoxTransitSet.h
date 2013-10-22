@@ -14,11 +14,13 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/hier/MappingConnector.h"
 #include "SAMRAI/hier/SequentialLocalIdGenerator.h"
 #include "SAMRAI/mesh/BalanceBoxBreaker.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/MessageStream.h"
+#include "SAMRAI/tbox/StartupShutdownManager.h"
 
 #include <set>
 
@@ -231,6 +233,20 @@ public:
 
 
 public:
+
+   /*!
+    * @brief Setup names of timers.
+    *
+    * By default, timers are named "tbox::Schedule::*",
+    * where the third field is the specific steps performed
+    * by the Schedule.  You can override the first two
+    * fields with this method.  Conforming to the timer
+    * naming convention, timer_prefix should have the form
+    * "*::*".
+    */
+   void
+   setTimerPrefix(
+      const std::string& timer_prefix);
 
    //@{ @name Load adjustment
 
@@ -452,7 +468,63 @@ public:
    void getFromMessageStream( tbox::MessageStream &msg );
    //@}
 
+   /*!
+    * @brief Assign unassigned boxes to local process and generate
+    * balanced<==>unbalanced map.
+    */
+   void
+   assignUnassignedToLocalProcessAndGenerateMap(
+      hier::BoxLevel& balanced_box_level,
+      hier::MappingConnector &balanced_to_unbalanced,
+      hier::MappingConnector &unbalanced_to_balanced,
+      BoxTransitSet& unassigned ) const;
+
    private:
+
+   static const int BoxTransitSet_EDGETAG0 = 3;
+   static const int BoxTransitSet_EDGETAG1 = 4;
+
+   /*!
+    * @brief Construct semilocal relationships in
+    * unbalanced--->balanced Connector.
+    *
+    * Constructing semilocal unbalanced--->balanced relationships
+    * require communication to determine where exported work ended up.
+    * This methods does the necessary communication and constructs
+    * these relationship in the given Connector.
+    *
+    * @param [out] unbalanced_to_balanced Connector to store
+    * relationships in.
+    *
+    * @param [in] kept_imports Work that was imported and locally kept.
+    */
+   void
+   constructSemilocalUnbalancedToBalanced(
+      hier::MappingConnector &unbalanced_to_balanced,
+      const BoxTransitSet &kept_imports ) const;
+
+   /*!
+    * @brief Set up things for the entire class.
+    *
+    * Only called by StartupShutdownManager.
+    */
+   static void
+   initializeCallback()
+   {
+      TimerStruct& timers(s_static_timers[s_default_timer_prefix]);
+      getAllTimers(s_default_timer_prefix, timers);
+   }
+
+   /*!
+    * Free static timers.
+    *
+    * Only called by StartupShutdownManager.
+    */
+   static void
+   finalizeCallback()
+   {
+      s_static_timers.clear();
+   }
 
    void setTimers();
 
@@ -532,20 +604,70 @@ public:
 
 
    //@{
-   //! @name Debugging and diagnostic data.
+   //! @name Debugging attibutes.
 
    bool d_print_steps;
    bool d_print_pop_steps;
    bool d_print_swap_steps;
    bool d_print_break_steps;
-
-   boost::shared_ptr<tbox::Timer> t_adjust_load;
-   boost::shared_ptr<tbox::Timer> t_adjust_load_by_popping;
-   boost::shared_ptr<tbox::Timer> t_adjust_load_by_swapping;
-   boost::shared_ptr<tbox::Timer> t_shift_loads_by_breaking;
-   boost::shared_ptr<tbox::Timer> t_find_swap_pair;
+   bool d_print_edge_steps;
 
    //@}
+
+   //@{
+   //! @name Timer data for Schedule class.
+
+   /*
+    * @brief Structure of timers used by this class.
+    *
+    * Each Schedule object can set its own timer names through
+    * setTimerPrefix().  This leads to many timer look-ups.  Because
+    * it is expensive to look up timers, this class caches the timers
+    * that has been looked up.  Each TimerStruct stores the timers
+    * corresponding to a prefix.
+    */
+   struct TimerStruct {
+      boost::shared_ptr<tbox::Timer> t_adjust_load;
+      boost::shared_ptr<tbox::Timer> t_adjust_load_by_popping;
+      boost::shared_ptr<tbox::Timer> t_adjust_load_by_swapping;
+      boost::shared_ptr<tbox::Timer> t_shift_loads_by_breaking;
+      boost::shared_ptr<tbox::Timer> t_find_swap_pair;
+      boost::shared_ptr<tbox::Timer> t_construct_semilocal;
+      boost::shared_ptr<tbox::Timer> t_construct_semilocal_comm_wait;
+      boost::shared_ptr<tbox::Timer> t_construct_semilocal_send_edges;
+      boost::shared_ptr<tbox::Timer> t_construct_semilocal_local_accounting;
+      boost::shared_ptr<tbox::Timer> t_pack_edge;
+      boost::shared_ptr<tbox::Timer> t_unpack_edge;
+      boost::shared_ptr<tbox::Timer> t_post_load_distribution_barrier;
+   };
+
+   //! @brief Default prefix for Timers.
+   static const std::string s_default_timer_prefix;
+
+   /*!
+    * @brief Static container of timers that have been looked up.
+    */
+   static std::map<std::string, TimerStruct> s_static_timers;
+
+   /*!
+    * @brief Structure of timers in s_static_timers, matching this
+    * object's timer prefix.
+    */
+   TimerStruct* d_object_timers;
+
+   /*!
+    * @brief Get all the timers defined in TimerStruct.  The timers
+    * are named with the given prefix.
+    */
+   static void
+   getAllTimers(
+      const std::string& timer_prefix,
+      TimerStruct& timers);
+
+   //@}
+
+   static tbox::StartupShutdownManager::Handler
+      s_initialize_finalize_handler;
 };
 
 

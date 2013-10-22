@@ -545,36 +545,6 @@ private:
       hier::Connector* balance_to_anchor,
       const tbox::RankGroup& rank_group) const;
 
-   /*!
-    * @brief Assign unassigned boxes to local process and generate
-    * balanced<==>unbalanced map.
-    */
-   void
-   assignUnassignedToLocalProcessAndGenerateMap(
-      hier::BoxLevel& balanced_box_level,
-      hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced,
-      BoxTransitSet& unassigned ) const;
-
-   /*!
-    * @brief Construct semilocal relationships in
-    * unbalanced--->balanced Connector.
-    *
-    * Constructing semilocal unbalanced--->balanced relationships
-    * require communication to determine where exported work ended up.
-    * This methods does the necessary communication and constructs
-    * these relationship in the given Connector.
-    *
-    * @param [out] unbalanced_to_balanced Connector to store
-    * relationships in.
-    *
-    * @param [in] kept_imports Work that was imported and locally kept.
-    */
-   void
-   constructSemilocalUnbalancedToBalanced(
-      hier::MappingConnector &unbalanced_to_balanced,
-      const BoxTransitSet &kept_imports ) const;
-
    /*
     * Utility functions to determine parameter values for level.
     */
@@ -841,7 +811,6 @@ private:
    boost::shared_ptr<tbox::Timer> t_constrain_size;
    boost::shared_ptr<tbox::Timer> t_map_big_boxes;
    boost::shared_ptr<tbox::Timer> t_load_distribution;
-   boost::shared_ptr<tbox::Timer> t_post_load_distribution_barrier;
    boost::shared_ptr<tbox::Timer> t_compute_local_load;
    boost::shared_ptr<tbox::Timer> t_compute_global_load;
    boost::shared_ptr<tbox::Timer> t_compute_tree_load;
@@ -850,15 +819,9 @@ private:
    boost::shared_ptr<tbox::Timer> t_send_load_to_parent;
    boost::shared_ptr<tbox::Timer> t_get_load_from_children;
    boost::shared_ptr<tbox::Timer> t_get_load_from_parent;
-   boost::shared_ptr<tbox::Timer> t_construct_semilocal;
-   boost::shared_ptr<tbox::Timer> t_construct_semilocal_comm_wait;
-   boost::shared_ptr<tbox::Timer> t_construct_semilocal_send_edges;
-   boost::shared_ptr<tbox::Timer> t_construct_semilocal_local_accounting;
    boost::shared_ptr<tbox::Timer> t_report_loads;
    boost::shared_ptr<tbox::Timer> t_local_balancing;
    boost::shared_ptr<tbox::Timer> t_finish_sends;
-   boost::shared_ptr<tbox::Timer> t_pack_edge;
-   boost::shared_ptr<tbox::Timer> t_unpack_edge;
    boost::shared_ptr<tbox::Timer> t_children_load_comm;
    boost::shared_ptr<tbox::Timer> t_parent_load_comm;
    boost::shared_ptr<tbox::Timer> t_children_edge_comm;
