@@ -30,7 +30,11 @@ namespace mesh {
 
 /*
  * @brief Implementation of TreeLoadBalancer::TransitSet, representing
- * the load with a set of boxes.
+ * the load with a set of boxes, sorted from highest load to lowest
+ * load.
+ *
+ * As a container, this class is identical to
+ * std::set<BoxInTransit,BoxInTransitMoreLoad>.
  */
 
 class BoxTransitSet {
@@ -221,6 +225,7 @@ public:
          }
          return a.d_orig_box.getBoxId() < b.d_orig_box.getBoxId();
       }
+   private:
       bool lexicalIndexLessThan( const hier::IntVector &a,
                                  const hier::IntVector &b ) const {
          for ( int i=0; i<a.getDim().getValue(); ++i ) {
@@ -234,21 +239,7 @@ public:
 
 public:
 
-   /*!
-    * @brief Setup names of timers.
-    *
-    * By default, timers are named "tbox::Schedule::*",
-    * where the third field is the specific steps performed
-    * by the Schedule.  You can override the first two
-    * fields with this method.  Conforming to the timer
-    * naming convention, timer_prefix should have the form
-    * "*::*".
-    */
-   void
-   setTimerPrefix(
-      const std::string& timer_prefix);
-
-   //@{ @name Load adjustment
+   BoxTransitSet();
 
    /*!
     * @brief Adjust the load in this BoxTransitSet by moving work
@@ -273,6 +264,144 @@ public:
       LoadType ideal_load,
       LoadType low_load,
       LoadType high_load );
+
+
+   /*!
+    * @brief Assign unassigned boxes to local process and generate
+    * balanced<==>unbalanced map.
+    *
+    * This method uses communication to set up the map.
+    */
+   void
+   assignContentToLocalProcessAndGenerateMap(
+      hier::BoxLevel& balanced_box_level,
+      hier::MappingConnector &balanced_to_unbalanced,
+      hier::MappingConnector &unbalanced_to_balanced ) const;
+
+
+   /*!
+    * @brief Allow box breaking when adjusting load.
+    */
+   void allowBoxBreaking() {
+      d_allow_box_breaking = true;
+   }
+
+
+   /*!
+    * @brief Set the PartitioningParams data to be used as needed.
+    */
+   void setPartitioningParams( const PartitioningParams &pparams ) {
+      d_pparams = &pparams;
+      d_bbb.setPartitioningParams(pparams);
+   }
+
+
+   //! @brief Return the total load contained.
+   LoadType getSumLoad() const { return d_sumload; }
+
+
+   //! @brief Insert all boxes from the given BoxContainer.
+   void insertAll( const hier::BoxContainer &other ) {
+      size_t old_size = d_set.size();
+      for ( hier::BoxContainer::const_iterator bi=other.begin(); bi!=other.end(); ++bi ) {
+         BoxInTransit new_box(*bi);
+         d_set.insert( new_box );
+         d_sumload += new_box.d_boxload;
+      };
+      if ( d_set.size() != old_size + other.size() ) {
+         TBOX_ERROR("BoxTransitSet's insertAll currently can't weed out duplicates.");
+      }
+   }
+
+
+   //! @brief Insert all boxes from the given BoxTransitSet.
+   void insertAll( const BoxTransitSet &other ) {
+      size_t old_size = d_set.size();
+      d_set.insert( other.d_set.begin(), other.d_set.end() );
+      d_sumload += other.d_sumload;
+      if ( d_set.size() != old_size + other.size() ) {
+         TBOX_ERROR("BoxTransitSet's insertAll currently can't weed out duplicates.");
+      }
+   }
+
+
+   //! @brief Return number of processes contributing to the contents of this container.
+   size_t getNumberOfOriginatingProcesses() const {
+      std::set<int> originating_procs;
+      for ( const_iterator si=begin(); si!=end(); ++si ) {
+         originating_procs.insert( si->d_orig_box.getOwnerRank() );
+      }
+      return originating_procs.size();
+   }
+
+
+   //@{
+   //! @name Set interfaces, internally delegated to stl::set.
+   typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::iterator iterator;
+   typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::const_iterator const_iterator;
+   typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::reverse_iterator reverse_iterator;
+   typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::key_type key_type;
+   typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::value_type value_type;
+   iterator begin() { return d_set.begin(); }
+   iterator end() { return d_set.end(); }
+   const_iterator begin() const { return d_set.begin(); }
+   const_iterator end() const { return d_set.end(); }
+   reverse_iterator rbegin() const { return d_set.rbegin(); }
+   reverse_iterator rend() const { return d_set.rend(); }
+   size_t size() const { return d_set.size(); }
+   std::pair<iterator, bool> insert( const value_type &x ) {
+      std::pair<iterator,bool> rval = d_set.insert(x);
+      if ( rval.second ) d_sumload += x.d_boxload;
+      return rval;
+   }
+   void erase(iterator pos) { d_sumload -= pos->d_boxload; d_set.erase(pos); }
+   size_t erase(const key_type &k) {
+      const size_t num_erased = d_set.erase(k);
+      if ( num_erased ) d_sumload -= k.d_boxload;
+      return num_erased;
+   }
+   bool empty() const { return d_set.empty(); }
+   void clear() { d_sumload = 0; d_set.clear(); }
+   void swap( BoxTransitSet &other ) {
+      const LoadType tl = d_sumload;
+      d_sumload = other.d_sumload;
+      other.d_sumload = tl;
+      d_set.swap(other.d_set);
+   }
+   iterator lower_bound( const key_type &k ) const { return d_set.lower_bound(k); }
+   iterator upper_bound( const key_type &k ) const { return d_set.upper_bound(k); }
+   //@}
+
+
+   //@{
+   //! @name Packing/unpacking for communication.
+   void putToMessageStream( tbox::MessageStream &msg ) const;
+   void getFromMessageStream( tbox::MessageStream &msg );
+   //@}
+
+
+   /*!
+    * @brief Setup names of timers.
+    *
+    * By default, timers are named "mesh::BoxTransitSet::*",
+    * where the third field is the specific steps performed
+    * by the Schedule.  You can override the first two
+    * fields with this method.  Conforming to the timer
+    * naming convention, timer_prefix should have the form
+    * "*::*".
+    */
+   void
+   setTimerPrefix(
+      const std::string& timer_prefix);
+
+
+private:
+
+   static const int BoxTransitSet_EDGETAG0 = 3;
+   static const int BoxTransitSet_EDGETAG1 = 4;
+
+
+   //@{ @name Load adjustment methods
 
    /*!
     * @brief Adjust the load in this BoxTransitSet by moving the
@@ -322,6 +451,7 @@ public:
       LoadType low_load,
       LoadType high_load );
 
+
    /*!
     * @brief Adjust the load in this BoxTransitSet by moving work
     * between it and another BoxTransitSet.  One box may be broken
@@ -347,12 +477,6 @@ public:
       LoadType low_load,
       LoadType high_load );
 
-   /*!
-    * @brief Allow box breaking when adjusting load.
-    */
-   void allowBoxBreaking() {
-      d_allow_box_breaking = true;
-   }
 
    /*!
     * @brief Find a BoxInTransit in each of the source and destination
@@ -384,104 +508,6 @@ public:
 
    //@}
 
-   /*!
-    * @brief A set of BoxInTransit, sorted from highest load to lowest load.
-    *
-    * This class is identical to std::set<BoxInTransit,BoxInTransitMoreLoad>
-    * and adds tracking of the sum of loads in the set.
-    */
-   public:
-      //@{
-      //! @name Duplicated set interfaces.
-      typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::iterator iterator;
-      typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::const_iterator const_iterator;
-      typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::reverse_iterator reverse_iterator;
-      typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::key_type key_type;
-      typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::value_type value_type;
-   BoxTransitSet();
-
-   void setPartitioningParams( const PartitioningParams &pparams )
-      {
-         d_pparams = &pparams;
-         d_bbb.setPartitioningParams(pparams);
-      }
-      iterator begin() { return d_set.begin(); }
-      iterator end() { return d_set.end(); }
-      const_iterator begin() const { return d_set.begin(); }
-      const_iterator end() const { return d_set.end(); }
-      reverse_iterator rbegin() const { return d_set.rbegin(); }
-      reverse_iterator rend() const { return d_set.rend(); }
-      size_t size() const { return d_set.size(); }
-      std::pair<iterator, bool> insert( const value_type &x ) {
-         std::pair<iterator,bool> rval = d_set.insert(x);
-         if ( rval.second ) d_sumload += x.d_boxload;
-         return rval;
-      }
-      void erase(iterator pos) { d_sumload -= pos->d_boxload; d_set.erase(pos); }
-      size_t erase(const key_type &k) {
-         const size_t num_erased = d_set.erase(k);
-         if ( num_erased ) d_sumload -= k.d_boxload;
-         return num_erased;
-      }
-      bool empty() const { return d_set.empty(); }
-      void clear() { d_sumload = 0; d_set.clear(); }
-      void swap( BoxTransitSet &other ) {
-         const LoadType tl = d_sumload;
-         d_sumload = other.d_sumload;
-         other.d_sumload = tl;
-         d_set.swap(other.d_set);
-      }
-      iterator lower_bound( const key_type &k ) const { return d_set.lower_bound(k); }
-      iterator upper_bound( const key_type &k ) const { return d_set.upper_bound(k); }
-      //@}
-      LoadType getSumLoad() const { return d_sumload; }
-      void insertAll( const hier::BoxContainer &other ) {
-         size_t old_size = d_set.size();
-         for ( hier::BoxContainer::const_iterator bi=other.begin(); bi!=other.end(); ++bi ) {
-            BoxInTransit new_box(*bi);
-            d_set.insert( new_box );
-            d_sumload += new_box.d_boxload;
-         };
-         if ( d_set.size() != old_size + other.size() ) {
-            TBOX_ERROR("BoxTransitSet's insertAll currently can't weed out duplicates.");
-         }
-      }
-      void insertAll( const BoxTransitSet &other ) {
-         size_t old_size = d_set.size();
-         d_set.insert( other.d_set.begin(), other.d_set.end() );
-         d_sumload += other.d_sumload;
-         if ( d_set.size() != old_size + other.size() ) {
-            TBOX_ERROR("BoxTransitSet's insertAll currently can't weed out duplicates.");
-         }
-      }
-      size_t getNumberOfOriginatingProcesses() const {
-         std::set<int> originating_procs;
-         for ( const_iterator si=begin(); si!=end(); ++si ) {
-            originating_procs.insert( si->d_orig_box.getOwnerRank() );
-         }
-         return originating_procs.size();
-      }
-
-   //@{
-   //! @name Packing/unpacking for communication.
-   void putToMessageStream( tbox::MessageStream &msg ) const;
-   void getFromMessageStream( tbox::MessageStream &msg );
-   //@}
-
-   /*!
-    * @brief Assign unassigned boxes to local process and generate
-    * balanced<==>unbalanced map.
-    */
-   void
-   assignContentToLocalProcessAndGenerateMap(
-      hier::BoxLevel& balanced_box_level,
-      hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced ) const;
-
-   private:
-
-   static const int BoxTransitSet_EDGETAG0 = 3;
-   static const int BoxTransitSet_EDGETAG1 = 4;
 
    /*!
     * @brief Construct semilocal relationships in
@@ -489,8 +515,6 @@ public:
     *
     * Constructing semilocal unbalanced--->balanced relationships
     * require communication to determine where exported work ended up.
-    * This methods does the necessary communication and constructs
-    * these relationship in the given Connector.
     *
     * @param [out] unbalanced_to_balanced Connector to store
     * relationships in.
@@ -501,6 +525,7 @@ public:
    constructSemilocalUnbalancedToBalanced(
       hier::MappingConnector &unbalanced_to_balanced,
       const BoxTransitSet &kept_imports ) const;
+
 
    /*!
     * @brief Set up things for the entire class.
@@ -514,6 +539,7 @@ public:
       getAllTimers(s_default_timer_prefix, timers);
    }
 
+
    /*!
     * Free static timers.
     *
@@ -525,7 +551,6 @@ public:
       s_static_timers.clear();
    }
 
-   void setTimers();
 
    /*!
     * @brief Compute the load for a Box.
@@ -534,12 +559,6 @@ public:
    computeLoad(
       const hier::Box& box) const
    {
-      /*
-       * Currently only for uniform loads, where the load is equal
-       * to the number of cells.  For non-uniform loads, this method
-       * needs the patch data index for the load.  It would summ up
-       * the individual cell loads in the cell.
-       */
       return double(box.size());
    }
 
@@ -552,48 +571,21 @@ public:
       const hier::Box& box,
       const hier::Box& restriction) const
    {
-      /*
-       * Currently only for uniform loads, where the load is equal
-       * to the number of cells.  For non-uniform loads, this method
-       * needs the patch data index for the load.  It would summ up
-       * the individual cell loads in the overlap region.
-       */
       return double((box * restriction).size());
    }
 
+
+   //! @brief Balance penalty is proportional to imbalance.
    double
    computeBalancePenalty(
-      const std::vector<hier::Box>& a,
-      const std::vector<hier::Box>& b,
       double imbalance) const
    {
-      NULL_USE(a);
-      NULL_USE(b);
       return tbox::MathUtilities<double>::Abs(imbalance);
    }
 
-   double
-   computeBalancePenalty(
-      const BoxTransitSet& a,
-      const BoxTransitSet& b,
-      double imbalance) const
-   {
-      NULL_USE(a);
-      NULL_USE(b);
-      return tbox::MathUtilities<double>::Abs(imbalance);
-   }
 
-   double
-   computeBalancePenalty(
-      const hier::Box& a,
-      double imbalance) const
-   {
-      NULL_USE(a);
-      return tbox::MathUtilities<double>::Abs(imbalance);
-   }
-
-      std::set<BoxInTransit, BoxInTransitMoreLoad> d_set;
-      LoadType d_sumload;
+   std::set<BoxInTransit, BoxInTransitMoreLoad> d_set;
+   LoadType d_sumload;
 
    const PartitioningParams *d_pparams;
 
@@ -603,14 +595,12 @@ public:
 
 
    //@{
-   //! @name Debugging attibutes.
-
+   //! @name Debugging stuff.
    bool d_print_steps;
    bool d_print_pop_steps;
    bool d_print_swap_steps;
    bool d_print_break_steps;
    bool d_print_edge_steps;
-
    //@}
 
    //@{

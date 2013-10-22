@@ -162,8 +162,8 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
  * Construct semilocal relationships in unbalanced--->balanced
  * Connector.
  *
- * Determine edges in unbalanced_to_balanced by sending balanced
- * BoxTransitSet::BoxInTransit back to the owners of the unbalanced Boxes that
+ * Determine relationships in unbalanced_to_balanced by sending
+ * balanced boxes back to the owners of the unbalanced Boxes that
  * originated them.  We don't know what ranks will send back the
  * balanced boxes, so we keep receiving messages from any rank until
  * we have accounted for all the cells in the unbalanced BoxLevel.
@@ -447,8 +447,6 @@ BoxTransitSet::adjustLoad(
 
    if (d_print_steps) {
       double balance_penalty = computeBalancePenalty(
-         main_bin,
-         hold_bin,
          (main_bin.getSumLoad() - ideal_load));
       tbox::plog << "  Balance penalty after adjustLoadByPopping = "
                  << balance_penalty
@@ -493,8 +491,6 @@ BoxTransitSet::adjustLoad(
 
       if (d_print_steps) {
          double balance_penalty = computeBalancePenalty(
-            main_bin,
-            hold_bin,
             (main_bin.getSumLoad() - ideal_load));
          tbox::plog << "  Balance penalty after adjustLoadBySwapping = "
                     << balance_penalty
@@ -533,8 +529,6 @@ BoxTransitSet::adjustLoad(
 
          if (d_print_steps) {
             double balance_penalty = computeBalancePenalty(
-               main_bin,
-               hold_bin,
                (main_bin.getSumLoad() - ideal_load));
             tbox::plog << "  Balance penalty after adjustLoadByBreaking = "
                        << balance_penalty
@@ -1426,17 +1420,6 @@ BoxTransitSet::getAllTimers(
       getTimer(timer_prefix + "::pack_edge");
    timers.t_unpack_edge = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::unpack_edge");
-}
-
-
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void
-BoxTransitSet::setTimers()
-{
 }
 
 
