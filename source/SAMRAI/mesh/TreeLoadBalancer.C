@@ -15,8 +15,6 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
-#include "SAMRAI/mesh/BalanceBoxBreaker.h"
-
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
@@ -1353,11 +1351,10 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
 
    t_local_balancing->start();
 
-   unassigned.assignUnassignedToLocalProcessAndGenerateMap(
+   unassigned.assignContentToLocalProcessAndGenerateMap(
       balanced_box_level,
       balanced_to_unbalanced,
-      unbalanced_to_balanced,
-      unassigned );
+      unbalanced_to_balanced );
 
    t_local_balancing->stop();
 

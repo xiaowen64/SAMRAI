@@ -473,11 +473,10 @@ public:
     * balanced<==>unbalanced map.
     */
    void
-   assignUnassignedToLocalProcessAndGenerateMap(
+   assignContentToLocalProcessAndGenerateMap(
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced,
-      BoxTransitSet& unassigned ) const;
+      hier::MappingConnector &unbalanced_to_balanced ) const;
 
    private:
 

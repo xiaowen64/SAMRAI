@@ -64,27 +64,27 @@ BoxTransitSet::BoxTransitSet() :
 
 /*
  *************************************************************************
- * Assign unassigned boxes to local process (put them in the
- * balanced_box_level and put edges in balanced<==>unbalanced
- * Connector).  Remove from the unassigned set all boxes for which we
- * can generate unbalanced--->balanced.
+ * Assign boxes to local process (put them in the balanced_box_level
+ * and put edges in balanced<==>unbalanced Connector).
  *
  * We can generate balanced--->unbalanced edges for all unassigned
- * boxes because we have their origin info.  If the unassigned box
- * originated locally, we can generate the unbalanced--->balanced
- * edge for them as well.  However, we can't generate these edges
- * for boxes originating remotely, so these edges will be missing.
+ * boxes because we have their origin info.  If the box originated
+ * locally, we can generate the unbalanced--->balanced edge for them
+ * as well.  However, we can't generate these edges for boxes
+ * originating remotely.  They are generated in
+ * constructSemilocalUnbalancedToBalanced, which uses communication.
  */
 void
-BoxTransitSet::assignUnassignedToLocalProcessAndGenerateMap(
+BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
    hier::BoxLevel& balanced_box_level,
    hier::MappingConnector &balanced_to_unbalanced,
-   hier::MappingConnector &unbalanced_to_balanced,
-   BoxTransitSet& unassigned ) const
+   hier::MappingConnector &unbalanced_to_balanced ) const
 {
    if ( d_print_steps ) {
       tbox::plog << "TreeLoadBalancer::assignUnassignedToLocalProcessAndGenerateMap: entered." << std::endl;
    }
+
+   const BoxTransitSet& unassigned = *this;
 
    /*
     * All unassigned boxes should go into balanced_box_level.  Put
@@ -180,7 +180,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
       tbox::plog << "TreeLoadBalancer::constructSemilocalUnbalancedToBalanced: entered." << std::endl;
    }
 
-   // Stuff the imported BoxTransitSet::BoxInTransits into buffers by their original owners.
+   // Stuff the imported boxes into buffers by their original owners.
    d_object_timers->t_pack_edge->start();
    std::map<int,boost::shared_ptr<tbox::MessageStream> > outgoing_messages;
    for ( BoxTransitSet::const_iterator bi=kept_imports.begin();
