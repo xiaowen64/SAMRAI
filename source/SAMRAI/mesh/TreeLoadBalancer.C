@@ -793,25 +793,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       // d_mpi.Barrier(); // Temporary barrier to determine if the follow communication slows down unfinished communications in load distribution phase.
       // t_post_load_distribution_barrier->stop();
 
-#if 0
-      if (balance_to_anchor && balance_to_anchor->hasTranspose()) {
-         hier::MappingConnectorAlgorithm mca;
-         mca.setTimerPrefix(d_object_name);
-         t_use_map->start();
-         mca.modify(
-            balance_to_anchor->getTranspose(),
-            unbalanced_to_balanced,
-            &balance_box_level,
-            &balanced_box_level);
-         t_use_map->stop();
-      } else {
-         hier::BoxLevel::swap(balance_box_level, balanced_box_level);
-      }
-      return;
-#endif
    }
-#if 1
-   // need to include the above if-block in map computation, then have the whole MPI group apply the map together so that parallel state and globalized version caching is consistent across MPI group.
    else {
       distributeLoadAndComputeMap(
          balanced_box_level,
@@ -821,8 +803,6 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
          rank_group,
          group_sum_load );
    }
-#else
-#endif
 
 
    if (balance_to_anchor && balance_to_anchor->hasTranspose()) {
@@ -1083,7 +1063,7 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
     * Step 2, remote part:
     *
     * Finish getting tree and load data from children.
-    * Add imported BoxTransitSet::BoxInTransit to unassigned bin.
+    * Add imported work to unassigned bin.
     */
    t_get_load_from_children->start();
    while ( child_recv_stage.numberOfCompletedMembers() > 0 ||
@@ -1578,9 +1558,6 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
          double(unassigned_highwater) );
 
    }
-
-   destroyAsyncCommObjects(child_sends, parent_send);
-   destroyAsyncCommObjects(child_recvs, parent_recv);
 
    return;
 }
