@@ -984,41 +984,9 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
 
    /*
     * Step 2, local part:
-    *
-    * The local process must generate indices for new and imported
-    * boxes.  To do it deterministically, no generated index should
-    * depend on message arrival order.  To achieve this, we maintain
-    * 2+deg ID generators, each set up to provide IDs from its exclusive
-    * pool.  One generator is for the local
-    * process, one is for the parent and the rest for each child.
-    * deg is the degree of tree d_rank_tree.
-    * The first
     */
-   std::vector<hier::SequentialLocalIdGenerator> id_generator(2 + d_rank_tree->getDegree());
 
-   hier::LocalId next_available_index = unbalanced_box_level.getLastLocalId() + 1;
-   hier::LocalId last_used_index = unbalanced_box_level.getLastLocalId();
-
-   /*
-    * The next line makes generated LocalId's divisible by 2+deg.
-    * It is not strictly necessary but makes debugging much easier because
-    * we can quickly associate any box with its source.
-    */
-   next_available_index +=
-      hier::LocalId(id_generator.size()) - (next_available_index % (id_generator.size()));
-   last_used_index = hier::LocalId( last_used_index.getValue()/id_generator.size()*id_generator.size() );
-
-   id_generator[0].setLastValue( last_used_index );
-   id_generator[0].setIncrement( hier::LocalId(id_generator.size()) );
-   for (unsigned int c = 1; c < d_rank_tree->getDegree() + 2; ++c) {
-      id_generator[c].setLastValue( last_used_index + c );
-      id_generator[c].setIncrement( hier::LocalId(id_generator.size()) );
-   }
-
-
-   /*
-    * Data for storing and transfering subtree info.
-    */
+   // State of the tree, as seen by local process.
    SubtreeData my_subtree;
    my_subtree.setPartitioningParams(*d_pparams);
    my_subtree.setTimerPrefix(d_object_name);
@@ -1094,7 +1062,6 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
                     << cindex << ':' << d_rank_tree->getChildRank(cindex) << ":\n";
       }
       child_subtrees[cindex].unpackDataFromChild(
-         id_generator[cindex],
          d_mpi.getRank(),
          mstream);
 
@@ -1170,7 +1137,6 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
             const LoadType export_load_actual =
                my_subtree.adjustOutboundLoad(
                   unassigned,
-                  id_generator[d_rank_tree->getDegree()],
                   export_load_ideal,
                   export_load_low,
                   export_load_high );
@@ -1254,7 +1220,6 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
                                   parent_recv->getRecvData(),
                                   false);
       my_subtree.unpackDataFromParent(
-         id_generator[1 + d_rank_tree->getDegree()],
          d_mpi.getRank(),
          mstream);
 
@@ -1330,7 +1295,6 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
             const LoadType export_load_actual =
                recip_subtree.adjustOutboundLoad(
                   unassigned,
-                  id_generator[d_rank_tree->getDegree()],
                   export_load_ideal,
                   export_load_low,
                   export_load_high );
@@ -2762,7 +2726,6 @@ TreeLoadBalancer::SubtreeData::incorporateChild(
  */
 TreeLoadBalancer::LoadType TreeLoadBalancer::SubtreeData::adjustOutboundLoad(
    BoxTransitSet& reserve,
-   hier::SequentialLocalIdGenerator &id_generator,
    LoadType ideal_load,
    LoadType low_load,
    LoadType high_load )
@@ -2771,7 +2734,6 @@ TreeLoadBalancer::LoadType TreeLoadBalancer::SubtreeData::adjustOutboundLoad(
 
    d_work_traded.adjustLoad(
       reserve,
-      id_generator,
       ideal_load,
       low_load,
       high_load );
@@ -2858,7 +2820,6 @@ TreeLoadBalancer::SubtreeData::packDataToParent(
  */
 void
 TreeLoadBalancer::SubtreeData::unpackDataFromChild(
-   hier::SequentialLocalIdGenerator& id_generator,
    int mpi_rank,
    tbox::MessageStream &msg )
 {
@@ -2889,7 +2850,7 @@ TreeLoadBalancer::SubtreeData::unpackDataFromChild(
       BoxTransitSet::BoxInTransit renamed_box(received_box,
                                               received_box.getBox(),
                                               mpi_rank,
-                                              id_generator.nextValue());
+                                              hier::LocalId::getInvalidId());
       d_work_traded.insert(renamed_box);
    }
 #endif
@@ -2946,7 +2907,6 @@ TreeLoadBalancer::SubtreeData::packDataToChild(
  */
 void
 TreeLoadBalancer::SubtreeData::unpackDataFromParent(
-   hier::SequentialLocalIdGenerator& id_generator,
    int mpi_rank,
    tbox::MessageStream &msg )
 {
@@ -2967,7 +2927,7 @@ TreeLoadBalancer::SubtreeData::unpackDataFromParent(
       BoxTransitSet::BoxInTransit renamed_box(received_box,
                                               received_box.getBox(),
                                               mpi_rank,
-                                              id_generator.nextValue());
+                                              hier::LocalId::getInvalidId());
       d_work_traded.insert(renamed_box);
    }
 #endif

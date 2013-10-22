@@ -73,7 +73,6 @@ BoxTransitSet::BoxTransitSet() :
 BoxTransitSet::LoadType
 BoxTransitSet::adjustLoad(
    BoxTransitSet& hold_bin,
-   hier::SequentialLocalIdGenerator &id_generator,
    LoadType ideal_load,
    LoadType low_load,
    LoadType high_load )
@@ -186,7 +185,6 @@ BoxTransitSet::adjustLoad(
           */
          LoadType brk_transfer = adjustLoadByBreaking(
             hold_bin,
-            id_generator,
             ideal_load,
             low_load,
             high_load );
@@ -269,7 +267,6 @@ BoxTransitSet::adjustLoad(
 BoxTransitSet::LoadType
 BoxTransitSet::adjustLoadByBreaking(
    BoxTransitSet& hold_bin,
-   hier::SequentialLocalIdGenerator &id_generator,
    LoadType ideal_load,
    LoadType low_load,
    LoadType high_load )
@@ -280,7 +277,6 @@ BoxTransitSet::adjustLoadByBreaking(
       // The logic below does not handle bi-directional transfers, so handle it here.
       actual_transfer = -hold_bin.adjustLoadByBreaking(
          *this,
-         id_generator,
          hold_bin.getSumLoad()-(ideal_load-getSumLoad()),
          hold_bin.getSumLoad()-(high_load-getSumLoad()),
          hold_bin.getSumLoad()-(low_load-getSumLoad()) );
@@ -415,7 +411,7 @@ BoxTransitSet::adjustLoadByBreaking(
             breakbox,
             *bi,
             breakbox.getOwnerRank(),
-            id_generator.nextValue());
+            hier::LocalId::getInvalidId());
          give_box_in_transit.d_boxload =
             static_cast<int>(computeLoad(
                                 give_box_in_transit.d_orig_box,
@@ -436,7 +432,7 @@ BoxTransitSet::adjustLoadByBreaking(
             breakbox,
             *bi,
             breakbox.getOwnerRank(),
-            id_generator.nextValue());
+            hier::LocalId::getInvalidId());
          keep_box_in_transit.d_boxload =
             static_cast<int>(computeLoad(
                                 keep_box_in_transit.d_orig_box,
@@ -1090,11 +1086,7 @@ BoxTransitSet::getFromMessageStream( tbox::MessageStream &msg, int mpi_rank )
    BoxTransitSet::BoxInTransit received_box(d_pparams->getDim());
    for (int i = 0; i < num_boxes; ++i) {
       received_box.getFromMessageStream(msg);
-      BoxTransitSet::BoxInTransit renamed_box(received_box,
-                                              received_box.getBox(),
-                                              mpi_rank,
-                                              d_id_generator.nextValue());
-      insert(renamed_box);
+      insert(received_box);
    }
 }
 

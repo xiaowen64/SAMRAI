@@ -240,8 +240,6 @@ public:
     *
     * @param[in,out] hold_bin
     *
-    * @param[in,out] id_generator LocalId generator for new boxes.
-    *
     * @param[in] ideal_load The load that main_bin should have.
     *
     * @param[in] low_load Return when main_bin's load is in the range
@@ -256,7 +254,6 @@ public:
    LoadType
    adjustLoad(
       BoxTransitSet& hold_bin,
-      hier::SequentialLocalIdGenerator &id_generator,
       LoadType ideal_load,
       LoadType low_load,
       LoadType high_load );
@@ -316,8 +313,6 @@ public:
     *
     * @param[in,out] hold_bin
     *
-    * @param[in,out] id_generator LocalId generator for new boxes.
-    *
     * @param[in] ideal_load The load that main_bin should have.
     *
     * @param[in] low_load Return when main_bin's load is in the range
@@ -332,20 +327,15 @@ public:
    LoadType
    adjustLoadByBreaking(
       BoxTransitSet& hold_bin,
-      hier::SequentialLocalIdGenerator &id_generator,
       LoadType ideal_load,
       LoadType low_load,
       LoadType high_load );
 
    /*!
     * @brief Allow box breaking when adjusting load.
-    *
-    * New boxes created by box breaking are given LocalIds obtained
-    * from the ID generator.
     */
-   void allowBoxBreaking( hier::SequentialLocalIdGenerator &id_generator ) {
+   void allowBoxBreaking() {
       d_allow_box_breaking = true;
-      d_id_generator = id_generator;
    }
 
    /*!
@@ -539,7 +529,6 @@ public:
    BalanceBoxBreaker d_bbb;
 
    bool d_allow_box_breaking;
-   hier::SequentialLocalIdGenerator d_id_generator;
 
 
    //@{

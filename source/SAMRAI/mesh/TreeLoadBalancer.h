@@ -401,7 +401,6 @@ private:
       LoadType
       adjustOutboundLoad(
          BoxTransitSet& reserve,
-         hier::SequentialLocalIdGenerator &id_generator,
          LoadType ideal_load,
          LoadType low_load,
          LoadType high_load );
@@ -429,7 +428,6 @@ private:
       //! @brief Unpack load/boxes received from child.
       void
       unpackDataFromChild(
-         hier::SequentialLocalIdGenerator &id_generator,
          int mpi_rank,
          tbox::MessageStream &msg );
 
@@ -441,7 +439,6 @@ private:
       //! @brief Unpack load/boxes received from parent.
       void
       unpackDataFromParent(
-         hier::SequentialLocalIdGenerator &id_generator,
          int mpi_rank,
          tbox::MessageStream &msg );
 
