@@ -295,9 +295,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       domain_box_level.getParallelState() ==
       hier::BoxLevel::GLOBALIZED);
 
-   t_compute_local_load->start();
-   double local_load = computeLocalLoads(balance_box_level);
-   t_compute_local_load->stop();
+   double local_load = computeLocalLoad(balance_box_level);
 
    LoadType max_local_load = local_load;
 
@@ -380,9 +378,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
 
       // If not the first cycle, local_load needs updating.
       if (icycle > 0) {
-         t_compute_local_load->start();
-         local_load = computeLocalLoads(balance_box_level);
-         t_compute_local_load->stop();
+         local_load = computeLocalLoad(balance_box_level);
       }
 
       if (d_report_load_balance) {
@@ -517,7 +513,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
 
    t_load_balance_box_level->stop();
 
-   local_load = computeLocalLoads(balance_box_level);
+   local_load = computeLocalLoad(balance_box_level);
    d_load_stat.push_back(local_load);
    d_box_count_stat.push_back(
       static_cast<int>(balance_box_level.getBoxes().size()));
@@ -845,11 +841,11 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
 
 
    /*
-    * unassigned is a container of BoxTransitSet::BoxInTransit that has been released by
-    * a process and has not yet been assigned to another.  First, put
-    * all initial local work in unassigned.  Imported
-    * BoxTransitSet::BoxInTransits are placed here before determining whether to keep
-    * them or send them to another part of the tree.
+    * unassigned is a container of loads that have been released by
+    * their owners and has not yet been assigned to another.  First,
+    * put all initial local work in unassigned.  Imported loads are
+    * placed here before determining whether to keep them or send them
+    * to another part of the tree.
     */
    BoxTransitSet unassigned;
    unassigned.setPartitioningParams(*d_pparams);
@@ -1499,9 +1495,9 @@ TreeLoadBalancer::createBalanceRankGroupBasedOnCycles(
 
    /*
     * Compute the number of group and, implicitly, the group sizes.
-    * Tiny groups tend to leave the members with possibly large
-    * overloads.  In order to make all groups similar in size we round
-    * down the number of groups (and round up the group size).
+    * We round down the number of groups (and round up the group size)
+    * to avoid pathologically small groups that might leave its
+    * members with possibly large overloads.
     */
    number_of_groups =
       static_cast<int>(pow(static_cast<double>(d_mpi.getSize()),
@@ -1631,10 +1627,10 @@ TreeLoadBalancer::destroyAsyncCommObjects(
  *************************************************************************
  */
 TreeLoadBalancer::LoadType
-TreeLoadBalancer::computeLocalLoads(
+TreeLoadBalancer::computeLocalLoad(
    const hier::BoxLevel& box_level) const
 {
-   // Count up workload.
+   t_compute_local_load->start();
    double load = 0.0;
    const hier::BoxContainer& boxes = box_level.getBoxes();
    for (hier::BoxContainer::const_iterator ni = boxes.begin();
@@ -1643,6 +1639,7 @@ TreeLoadBalancer::computeLocalLoads(
       double box_load = computeLoad(*ni);
       load += box_load;
    }
+   t_compute_local_load->stop();
    return static_cast<LoadType>(load);
 }
 
@@ -1806,7 +1803,7 @@ TreeLoadBalancer::setTimers()
       t_load_distribution = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::load_distribution");
       t_compute_local_load = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::compute_local_load");
+         getTimer(d_object_name + "::computeLocalLoad");
       t_compute_global_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::compute_global_load");
       t_compute_tree_load = tbox::TimerManager::getManager()->

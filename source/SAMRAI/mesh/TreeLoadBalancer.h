@@ -575,7 +575,7 @@ private:
     * Count the local workload.
     */
    LoadType
-   computeLocalLoads(
+   computeLocalLoad(
       const hier::BoxLevel& box_level) const;
 
    /*!
