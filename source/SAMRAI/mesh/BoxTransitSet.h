@@ -449,7 +449,7 @@ public:
    //@{
    //! @name Packing/unpacking for communication.
    void putToMessageStream( tbox::MessageStream &msg ) const;
-   void getFromMessageStream( tbox::MessageStream &msg, int mpi_rank );
+   void getFromMessageStream( tbox::MessageStream &msg );
    //@}
 
    private:

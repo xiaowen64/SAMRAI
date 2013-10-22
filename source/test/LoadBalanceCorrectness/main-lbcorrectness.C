@@ -1417,35 +1417,53 @@ createLoadBalancer(
       boost::shared_ptr<tbox::RankTreeStrategy> rank_tree = getRankTree(*input_db,
                                                                         rank_tree_type);
 
+      const boost::shared_ptr<tbox::Database> db =
+         input_db->getDatabaseWithDefault("TreeLoadBalancer",
+                                          boost::shared_ptr<tbox::Database>());
       boost::shared_ptr<mesh::TreeLoadBalancer>
          tree_lb(new mesh::TreeLoadBalancer(
             dim,
             std::string("mesh::TreeLoadBalancer") + tbox::Utilities::intToString(ln),
-            input_db->getDatabaseWithDefault("TreeLoadBalancer",
-                                             boost::shared_ptr<tbox::Database>()),
+            db,
             rank_tree ));
       tree_lb->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
       tree_lb->setCommGraphWriter(comm_graph_writer);
+      if ( db ) {
+         tbox::plog << "TreeLoadBalancer created with this input database:\n";
+         db->printClassData(plog);
+      }
       return tree_lb;
 
    } else if (lb_type == "TilePartitioner") {
 
+      const boost::shared_ptr<tbox::Database> db =
+         input_db->getDatabaseWithDefault("TilePartitioner",
+                                          boost::shared_ptr<tbox::Database>());
       boost::shared_ptr<mesh::TilePartitioner>
          tile_lb(new mesh::TilePartitioner(
             dim,
             std::string("mesh::TilePartitioner") + tbox::Utilities::intToString(ln),
-            input_db->getDatabaseWithDefault("TilePartitioner",
-                                             boost::shared_ptr<tbox::Database>())));
+            db ));
+      if ( db ) {
+         tbox::plog << "TilePartitioner created with this input database:\n";
+         db->printClassData(plog);
+      }
       return tile_lb;
 
    } else if (lb_type == "ChopAndPackLoadBalancer") {
 
+      const boost::shared_ptr<tbox::Database> db =
+         input_db->getDatabaseWithDefault("ChopAndPackackLoadBalancer",
+                                          boost::shared_ptr<tbox::Database>());
       boost::shared_ptr<mesh::ChopAndPackLoadBalancer>
          cap_lb(new mesh::ChopAndPackLoadBalancer(
             dim,
             std::string("mesh::ChopAndPackLoadBalancer") + tbox::Utilities::intToString(ln),
-            input_db->getDatabaseWithDefault("ChopAndPackLoadBalancer",
-                                             boost::shared_ptr<tbox::Database>())));
+            db ));
+      if ( db ) {
+         tbox::plog << "ChopAndPackLoadBalancer created with this input database:\n";
+         db->printClassData(plog);
+      }
       return cap_lb;
 
    }

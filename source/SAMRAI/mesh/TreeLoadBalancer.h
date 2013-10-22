@@ -422,25 +422,19 @@ private:
 
       //! @brief Pack load/boxes for sending up to parent.
       void
-      packDataToParent(
-         tbox::MessageStream &msg) const;
+      packDataToParent( tbox::MessageStream &msg) const;
 
       //! @brief Unpack load/boxes received from child.
       void
-      unpackDataFromChild(
-         int mpi_rank,
-         tbox::MessageStream &msg );
+      unpackDataFromChild( tbox::MessageStream &msg );
 
       //! @brief Pack load/boxes for sending down to child.
       void
-      packDataToChild(
-         tbox::MessageStream &msg) const;
+      packDataToChild( tbox::MessageStream &msg) const;
 
       //! @brief Unpack load/boxes received from parent.
       void
-      unpackDataFromParent(
-         int mpi_rank,
-         tbox::MessageStream &msg );
+      unpackDataFromParent( tbox::MessageStream &msg );
 
       //@}
 

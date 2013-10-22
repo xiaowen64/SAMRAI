@@ -1061,9 +1061,7 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
          tbox::plog << "Unpacking from child "
                     << cindex << ':' << d_rank_tree->getChildRank(cindex) << ":\n";
       }
-      child_subtrees[cindex].unpackDataFromChild(
-         d_mpi.getRank(),
-         mstream);
+      child_subtrees[cindex].unpackDataFromChild(mstream);
 
       my_subtree.incorporateChild( unassigned, child_subtrees[cindex] );
 
@@ -1219,9 +1217,7 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
                                   tbox::MessageStream::Read,
                                   parent_recv->getRecvData(),
                                   false);
-      my_subtree.unpackDataFromParent(
-         d_mpi.getRank(),
-         mstream);
+      my_subtree.unpackDataFromParent(mstream);
 
       my_subtree.moveInboundLoadToReserve(unassigned);
 
@@ -1548,6 +1544,10 @@ TreeLoadBalancer::assignUnassignedToLocalProcessAndGenerateMap(
    hier::MappingConnector &unbalanced_to_balanced,
    BoxTransitSet& unassigned ) const
 {
+   if ( d_print_steps ) {
+      tbox::plog << "TreeLoadBalancer::assignUnassignedToLocalProcessAndGenerateMap: entered." << std::endl;
+   }
+
    /*
     * All unassigned boxes should go into balanced_box_level.  Put
     * them there and generate relationships in balanced<==>unbalanced
@@ -1560,11 +1560,23 @@ TreeLoadBalancer::assignUnassignedToLocalProcessAndGenerateMap(
    for (BoxTransitSet::iterator ni = unassigned.begin();
         ni != unassigned.end(); ++ni ) {
 
+      if ( d_print_edge_steps ) {
+         tbox::plog << "\tunassigned box: " << *ni << std::endl;
+      }
+
       BoxTransitSet::BoxInTransit added_box(*ni);
-      if (!added_box.d_box.isIdEqual(added_box.d_orig_box)) {
+      // if (!added_box.d_box.isIdEqual(added_box.d_orig_box)) {
+      if ( added_box.d_orig_box.getOwnerRank() != balanced_box_level.getMPI().getRank() ||
+           added_box.d_box.getLocalId() != added_box.d_orig_box.getLocalId() ) {
+         if ( d_print_edge_steps ) {
+            tbox::plog << "\t\tReinitialize " << added_box.d_box << " to ";
+         }
          added_box.d_box.initialize( added_box.d_box,
                                      ++new_local_id,
                                      d_mpi.getRank() );
+         if ( d_print_edge_steps ) {
+            tbox::plog << added_box.d_box << std::endl;
+         }
       }
       balanced_box_level.addBox(added_box.d_box);
 
@@ -1572,6 +1584,9 @@ TreeLoadBalancer::assignUnassignedToLocalProcessAndGenerateMap(
          // box originated remotely.  Cannot generate unbalanced--->balanced for it.
          TBOX_ASSERT( added_box.d_orig_box.getOwnerRank() != d_mpi.getRank() );
          kept_imports.insert(added_box);
+         if ( d_print_edge_steps ) {
+            tbox::plog << "\t\tKeeping imported box " << added_box << std::endl;
+         }
       }
 
       if (!added_box.d_box.isIdEqual(added_box.d_orig_box)) {
@@ -1592,13 +1607,10 @@ TreeLoadBalancer::assignUnassignedToLocalProcessAndGenerateMap(
 
    }
 
+   constructSemilocalUnbalancedToBalanced( unbalanced_to_balanced, kept_imports );
 
    if ( d_print_steps ) {
-      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup: constructing unbalanced->balanced.\n";
-   }
-   constructSemilocalUnbalancedToBalanced( unbalanced_to_balanced, kept_imports );
-   if ( d_print_steps ) {
-      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup: finished constructing unbalanced->balanced.\n";
+      tbox::plog << "TreeLoadBalancer::assignUnassignedToLocalProcessAndGenerateMap: exiting." << std::endl;
    }
 
 }
@@ -1675,6 +1687,10 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
    const BoxTransitSet &kept_imports ) const
 {
    t_construct_semilocal->start();
+
+   if ( d_print_steps ) {
+      tbox::plog << "TreeLoadBalancer::constructSemilocalUnbalancedToBalanced: entered." << std::endl;
+   }
 
    // Stuff the imported BoxTransitSet::BoxInTransits into buffers by their original owners.
    t_pack_edge->start();
@@ -1873,6 +1889,10 @@ TreeLoadBalancer::constructSemilocalUnbalancedToBalanced(
          &status[0]);
       t_construct_semilocal_comm_wait->stop();
       outgoing_messages.clear();
+   }
+
+   if ( d_print_steps ) {
+      tbox::plog << "TreeLoadBalancer::constructSemilocalUnbalancedToBalanced: exiting." << std::endl;
    }
 
    t_construct_semilocal->stop();
@@ -2164,7 +2184,7 @@ TreeLoadBalancer::getFromInput(
       d_print_swap_steps =
          input_db->getBoolWithDefault("DEV_print_swap_steps", false);
       d_print_edge_steps =
-         input_db->getBoolWithDefault("DEV_print_edge_steps", false);
+         input_db->getBoolWithDefault("DEV_print_edge_steps", d_print_edge_steps);
       d_check_connectivity =
          input_db->getBoolWithDefault("DEV_check_connectivity",
             d_check_connectivity);
@@ -2820,7 +2840,6 @@ TreeLoadBalancer::SubtreeData::packDataToParent(
  */
 void
 TreeLoadBalancer::SubtreeData::unpackDataFromChild(
-   int mpi_rank,
    tbox::MessageStream &msg )
 {
    t_unpack_load->start();
@@ -2835,25 +2854,7 @@ TreeLoadBalancer::SubtreeData::unpackDataFromChild(
    msg >> d_eff_load_upperlimit;
    msg >> d_wants_work_from_parent;
 
-#if 0
-   d_work_traded.getFromMessageStream(msg, mpi_rank);
-#else
-   /*
-    * As we pull each BoxInTransit out, give it a new id that reflects
-    * its new owner.
-    */
-   int num_boxes = 0;
-   msg >> num_boxes;
-   BoxTransitSet::BoxInTransit received_box(d_pparams->getDim());
-   for (int i = 0; i < num_boxes; ++i) {
-      received_box.getFromMessageStream(msg);
-      BoxTransitSet::BoxInTransit renamed_box(received_box,
-                                              received_box.getBox(),
-                                              mpi_rank,
-                                              hier::LocalId::getInvalidId());
-      d_work_traded.insert(renamed_box);
-   }
-#endif
+   d_work_traded.getFromMessageStream(msg);
 
    if (d_print_steps) {
       tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
@@ -2907,30 +2908,11 @@ TreeLoadBalancer::SubtreeData::packDataToChild(
  */
 void
 TreeLoadBalancer::SubtreeData::unpackDataFromParent(
-   int mpi_rank,
    tbox::MessageStream &msg )
 {
    t_unpack_load->start();
 
-#if 0
-   d_work_traded.getFromMessageStream(msg, mpi_rank);
-#else
-   int num_boxes = 0;
-   msg >> num_boxes;
-   /*
-    * As we pull each BoxInTransit out, give it a new id that reflects
-    * its new owner.
-    */
-   BoxTransitSet::BoxInTransit received_box(d_pparams->getDim());
-   for (int i = 0; i < num_boxes; ++i) {
-      received_box.getFromMessageStream(msg);
-      BoxTransitSet::BoxInTransit renamed_box(received_box,
-                                              received_box.getBox(),
-                                              mpi_rank,
-                                              hier::LocalId::getInvalidId());
-      d_work_traded.insert(renamed_box);
-   }
-#endif
+   d_work_traded.getFromMessageStream(msg);
 
    if (d_print_steps) {
       tbox::plog << "SubtreeData::unpackDataFromParent: unpacked "

@@ -1075,7 +1075,7 @@ BoxTransitSet::putToMessageStream( tbox::MessageStream &msg ) const
  ***********************************************************************
  */
 void
-BoxTransitSet::getFromMessageStream( tbox::MessageStream &msg, int mpi_rank )
+BoxTransitSet::getFromMessageStream( tbox::MessageStream &msg )
 {
    /*
     * As we pull each BoxInTransit out, give it a new id that reflects
