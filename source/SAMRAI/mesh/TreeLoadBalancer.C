@@ -1062,8 +1062,8 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
                     << cindex << ':' << d_rank_tree->getChildRank(cindex) << ":\n";
       }
       child_subtrees[cindex].unpackDataFromChild(mstream);
-
-      my_subtree.incorporateChild( unassigned, child_subtrees[cindex] );
+      my_subtree.incorporateChild( child_subtrees[cindex] );
+      child_subtrees[cindex].moveInboundLoadToReserve(unassigned);
 
    }
 
@@ -1217,8 +1217,7 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
                                   tbox::MessageStream::Read,
                                   parent_recv->getRecvData(),
                                   false);
-      my_subtree.unpackDataFromParent(mstream);
-
+      my_subtree.unpackDataFromParentAndIncorporate(mstream);
       my_subtree.moveInboundLoadToReserve(unassigned);
 
       if ( unassigned_highwater < unassigned.size() ) {
@@ -2713,14 +2712,8 @@ void TreeLoadBalancer::SubtreeData::setStartingLoad(
  */
 void
 TreeLoadBalancer::SubtreeData::incorporateChild(
-   BoxTransitSet &reserve,
    const SubtreeData &child )
 {
-   /*
-    * Sum children load into my_subtree to get data for the whole
-    * subtree.
-    */
-
    d_num_procs += child.d_num_procs;
    d_subtree_load_current += child.d_subtree_load_current;
    d_subtree_load_upperlimit += child.d_subtree_load_upperlimit;
@@ -2735,7 +2728,6 @@ TreeLoadBalancer::SubtreeData::incorporateChild(
 
    d_subtree_load_current += child.d_work_traded.getSumLoad();
    d_eff_load_current += child.d_work_traded.getSumLoad();
-   reserve.insertAll( child.d_work_traded );
 }
 
 
@@ -2792,8 +2784,6 @@ TreeLoadBalancer::LoadType TreeLoadBalancer::SubtreeData::adjustOutboundLoad(
 void TreeLoadBalancer::SubtreeData::moveInboundLoadToReserve(
    BoxTransitSet& reserve )
 {
-   d_subtree_load_current += d_work_traded.getSumLoad();
-   d_eff_load_current += d_work_traded.getSumLoad();
    reserve.insertAll( d_work_traded );
 }
 
@@ -2907,12 +2897,14 @@ TreeLoadBalancer::SubtreeData::packDataToChild(
  *************************************************************************
  */
 void
-TreeLoadBalancer::SubtreeData::unpackDataFromParent(
+TreeLoadBalancer::SubtreeData::unpackDataFromParentAndIncorporate(
    tbox::MessageStream &msg )
 {
    t_unpack_load->start();
 
    d_work_traded.getFromMessageStream(msg);
+   d_subtree_load_current += d_work_traded.getSumLoad();
+   d_eff_load_current += d_work_traded.getSumLoad();
 
    if (d_print_steps) {
       tbox::plog << "SubtreeData::unpackDataFromParent: unpacked "

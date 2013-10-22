@@ -409,11 +409,9 @@ private:
       void moveInboundLoadToReserve( BoxTransitSet &reserve );
 
       /*!
-       * @brief Incorporate child subtree into this subtree and add
-       * child's excess to reserve container.
+       * @brief Incorporate child subtree into this subtree.
        */
-      void incorporateChild( BoxTransitSet &reserve,
-                             const SubtreeData &child );
+      void incorporateChild( const SubtreeData &child );
       //@}
 
 
@@ -434,7 +432,7 @@ private:
 
       //! @brief Unpack load/boxes received from parent.
       void
-      unpackDataFromParent( tbox::MessageStream &msg );
+      unpackDataFromParentAndIncorporate( tbox::MessageStream &msg );
 
       //@}
 
