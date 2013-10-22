@@ -15,6 +15,8 @@
 
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
+#include "SAMRAI/hier/MappingConnector.h"
+#include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -1958,6 +1960,110 @@ BalanceUtilities::qsortRankAndLoadCompareAscending(
    }
 
    return 0;
+}
+
+
+
+/*
+ *************************************************************************
+ * Constrain maximum box sizes in the given BoxLevel and
+ * update given Connectors to the changed BoxLevel.
+ *************************************************************************
+ */
+void
+BalanceUtilities::constrainMaxBoxSizes(
+   hier::BoxLevel& box_level,
+   hier::Connector* anchor_to_level,
+   const PartitioningParams &pparams )
+{
+   TBOX_ASSERT(!anchor_to_level || anchor_to_level->hasTranspose());
+
+   const hier::IntVector& zero_vector(hier::IntVector::getZero(box_level.getDim()));
+
+   hier::BoxLevel constrained(box_level.getRefinementRatio(),
+      box_level.getGridGeometry(),
+      box_level.getMPI());
+   hier::MappingConnector unconstrained_to_constrained(box_level,
+      constrained,
+      zero_vector);
+
+   const hier::BoxContainer& unconstrained_boxes = box_level.getBoxes();
+
+   hier::LocalId next_available_index = box_level.getLastLocalId() + 1;
+
+   for (hier::BoxContainer::const_iterator ni = unconstrained_boxes.begin();
+        ni != unconstrained_boxes.end(); ++ni) {
+
+      const hier::Box& box = *ni;
+
+      const hier::IntVector box_size = box.numberCells();
+
+      /*
+       * If box already conform to max size constraint, keep it.
+       * Else chop it up and keep the parts.
+       */
+
+      if (box_size <= pparams.getMaxBoxSize()) {
+
+         constrained.addBox(box);
+
+      } else {
+
+         hier::BoxContainer chopped(box);
+         hier::BoxUtilities::chopBoxes(
+            chopped,
+            pparams.getMaxBoxSize(),
+            pparams.getMinBoxSize(),
+            pparams.getCutFactor(),
+            pparams.getBadInterval(),
+            pparams.getDomainBoxes(box.getBlockId()));
+         TBOX_ASSERT( !chopped.isEmpty() );
+
+         if (chopped.size() != 1) {
+
+            hier::Connector::NeighborhoodIterator base_box_itr =
+               unconstrained_to_constrained.makeEmptyLocalNeighborhood(
+                  box.getBoxId());
+
+            for (hier::BoxContainer::iterator li = chopped.begin();
+                 li != chopped.end(); ++li) {
+
+               const hier::Box fragment = *li;
+
+               const hier::Box new_box(fragment,
+                                       next_available_index++,
+                                       box_level.getMPI().getRank());
+               TBOX_ASSERT(new_box.getBlockId() == ni->getBlockId());
+
+               constrained.addBox(new_box);
+
+               unconstrained_to_constrained.insertLocalNeighbor(
+                  new_box,
+                  base_box_itr);
+
+            }
+
+         } else {
+            TBOX_ASSERT( box.isSpatiallyEqual( chopped.front() ) );
+            constrained.addBox(box);
+         }
+
+      }
+
+   }
+
+   if (anchor_to_level && anchor_to_level->isFinalized()) {
+      // Modify anchor<==>level Connectors and swap box_level with constrained.
+      hier::MappingConnectorAlgorithm mca;
+      mca.modify(*anchor_to_level,
+                 unconstrained_to_constrained,
+                 &box_level,
+                 &constrained);
+   } else {
+      // Swap box_level and constrained without touching anchor<==>level.
+      hier::BoxLevel::swap(box_level, constrained);
+   }
+
 }
 
 }

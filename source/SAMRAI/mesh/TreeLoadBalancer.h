@@ -637,18 +637,6 @@ private:
       hier::Connector *balance_to_anchor ) const;
 
    /*!
-    * @brief Constrain maximum box sizes in the given BoxLevel and
-    * update given Connectors to the changed BoxLevel.
-    *
-    * @pre !anchor_to_level || anchor_to_level->hasTranspose()
-    * @pre d_dim == box_level.getDim()
-    */
-   void
-   constrainMaxBoxSizes(
-      hier::BoxLevel& box_level,
-      hier::Connector* anchor_to_level) const;
-
-   /*!
     * @brief Compute surplus load per descendent who is still waiting
     * for load from parents.
     */
@@ -809,7 +797,6 @@ private:
    boost::shared_ptr<tbox::Timer> t_get_map;
    boost::shared_ptr<tbox::Timer> t_use_map;
    boost::shared_ptr<tbox::Timer> t_constrain_size;
-   boost::shared_ptr<tbox::Timer> t_map_big_boxes;
    boost::shared_ptr<tbox::Timer> t_load_distribution;
    boost::shared_ptr<tbox::Timer> t_compute_local_load;
    boost::shared_ptr<tbox::Timer> t_compute_global_load;

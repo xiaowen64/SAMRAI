@@ -487,8 +487,6 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       }
 
    }
-// TBOX_ASSERT(balance_box_level.getParallelState() == hier::BoxLevel::DISTRIBUTED);
-tbox::plog << __FILE__ << ':' << __LINE__ << " parallel state: " << balance_box_level.getParallelState() << std::endl;
 
 
    /*
@@ -501,16 +499,10 @@ tbox::plog << __FILE__ << ':' << __LINE__ << " parallel state: " << balance_box_
    if (max_size != max_intvector) {
 
       t_constrain_size->barrierAndStart();
-      if (balance_to_anchor) {
-         constrainMaxBoxSizes(
-            balance_box_level,
-            &balance_to_anchor->getTranspose());
-      }
-      else {
-         constrainMaxBoxSizes(
-            balance_box_level,
-            balance_to_anchor);
-      }
+      BalanceUtilities::constrainMaxBoxSizes(
+         balance_box_level,
+         balance_to_anchor ? &balance_to_anchor->getTranspose() : 0,
+         *d_pparams );
       t_constrain_size->stop();
 
       if (d_print_steps) {
@@ -584,146 +576,6 @@ tbox::plog << __FILE__ << ':' << __LINE__ << " parallel state: " << balance_box_
    }
 
 tbox::plog << __FILE__ << ':' << __LINE__ << " parallel state: " << balance_box_level.getParallelState() << std::endl;
-}
-
-
-
-/*
- *************************************************************************
- * Constrain maximum box sizes in the given BoxLevel and
- * update given Connectors to the changed BoxLevel.
- *************************************************************************
- */
-void
-TreeLoadBalancer::constrainMaxBoxSizes(
-   hier::BoxLevel& box_level,
-   hier::Connector* anchor_to_level) const
-{
-   TBOX_ASSERT(!anchor_to_level || anchor_to_level->hasTranspose());
-   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, box_level);
-
-   t_map_big_boxes->start();
-
-   if (d_print_break_steps) {
-      tbox::plog << "Mapping oversized boxes starting with "
-                 << box_level.getBoxes().size() << " boxes."
-                 << std::endl;
-   }
-
-   const hier::IntVector& zero_vector(hier::IntVector::getZero(d_dim));
-
-   hier::BoxLevel constrained(box_level.getRefinementRatio(),
-      box_level.getGridGeometry(),
-      box_level.getMPI());
-   hier::MappingConnector unconstrained_to_constrained(box_level,
-      constrained,
-      zero_vector);
-
-   const hier::BoxContainer& unconstrained_boxes = box_level.getBoxes();
-
-   hier::LocalId next_available_index = box_level.getLastLocalId() + 1;
-
-   for (hier::BoxContainer::const_iterator ni = unconstrained_boxes.begin();
-        ni != unconstrained_boxes.end(); ++ni) {
-
-      const hier::Box& box = *ni;
-
-      const hier::IntVector box_size = box.numberCells();
-
-      /*
-       * If box already conform to max size constraint, keep it.
-       * Else chop it up and keep the parts.
-       */
-
-      if (box_size <= d_pparams->getMaxBoxSize()) {
-
-         if (d_print_break_steps) {
-            tbox::plog << "    Not oversized: " << box
-                       << box.numberCells() << "\n";
-         }
-         constrained.addBox(box);
-
-      } else {
-
-         if (d_print_break_steps) {
-            tbox::plog << "    Breaking oversized " << box
-                       << box.numberCells() << " ->";
-         }
-         hier::BoxContainer chopped(box);
-         hier::BoxUtilities::chopBoxes(
-            chopped,
-            d_pparams->getMaxBoxSize(),
-            d_pparams->getMinBoxSize(),
-            d_pparams->getCutFactor(),
-            d_pparams->getBadInterval(),
-            d_pparams->getDomainBoxes(box.getBlockId()));
-         TBOX_ASSERT( !chopped.isEmpty() );
-
-         if (chopped.size() != 1) {
-
-            hier::Connector::NeighborhoodIterator base_box_itr =
-               unconstrained_to_constrained.makeEmptyLocalNeighborhood(
-                  box.getBoxId());
-
-            for (hier::BoxContainer::iterator li = chopped.begin();
-                 li != chopped.end(); ++li) {
-
-               const hier::Box fragment = *li;
-
-               const hier::Box new_box(fragment,
-                                       next_available_index++,
-                                       d_mpi.getRank());
-               TBOX_ASSERT(new_box.getBlockId() == ni->getBlockId());
-
-               if (d_print_break_steps) {
-                  tbox::plog << "  " << new_box
-                             << new_box.numberCells();
-               }
-
-               constrained.addBox(new_box);
-
-               unconstrained_to_constrained.insertLocalNeighbor(
-                  new_box,
-                  base_box_itr);
-
-            }
-
-            if (d_print_break_steps) {
-               tbox::plog << "\n";
-            }
-
-         } else {
-            TBOX_ASSERT( box.isSpatiallyEqual( chopped.front() ) );
-            if (d_print_break_steps) {
-               tbox::plog << " Unbreakable!" << "\n";
-            }
-            constrained.addBox(box);
-         }
-
-      }
-
-   }
-
-   if (d_print_steps) {
-      tbox::plog
-      << " TreeLoadBalancer::constrainMaxBoxSizes completed building unconstrained_to_constrained"
-      << "\n";
-   }
-
-   if (anchor_to_level && anchor_to_level->isFinalized()) {
-      // Modify anchor<==>level Connectors and swap box_level with constrained.
-      hier::MappingConnectorAlgorithm mca;
-      mca.setTimerPrefix(d_object_name);
-      mca.modify(*anchor_to_level,
-                 unconstrained_to_constrained,
-                 &box_level,
-                 &constrained);
-   } else {
-      // Swap box_level and constrained without touching anchor<==>level.
-      hier::BoxLevel::swap(box_level, constrained);
-   }
-
-   t_map_big_boxes->stop();
 }
 
 
@@ -1796,7 +1648,7 @@ TreeLoadBalancer::computeLocalLoads(
       double box_load = computeLoad(*ni);
       load += box_load;
    }
-   return static_cast<double>(load);
+   return static_cast<LoadType>(load);
 }
 
 
@@ -2251,12 +2103,8 @@ TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::use_map");
       t_constrain_size = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::constrain_size");
-      t_map_big_boxes = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::mapOversizedBoxes()");
       t_load_distribution = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::load_distribution");
-      // t_post_load_distribution_barrier = tbox::TimerManager::getManager()->
-         // getTimer(d_object_name + "::post_load_distribution_barrier");
       t_compute_local_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::compute_local_load");
       t_compute_global_load = tbox::TimerManager::getManager()->

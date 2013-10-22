@@ -14,9 +14,11 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BaseGridGeometry.h"
+#include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/math/PatchCellDataNormOpsReal.h"
+#include "SAMRAI/mesh/PartitioningParams.h"
 #include "SAMRAI/mesh/SpatialKey.h"
 
 #include <iostream>
@@ -383,6 +385,19 @@ struct BalanceUtilities {
       std::ostream& output_stream);
 
    //@}
+
+
+   /*
+    * Constrain maximum box sizes in the given BoxLevel and
+    * update given Connectors to the changed BoxLevel.
+    *
+    * @pre !anchor_to_level || anchor_to_level->hasTranspose()
+    */
+   static void constrainMaxBoxSizes(
+      hier::BoxLevel& box_level,
+      hier::Connector* anchor_to_level,
+      const PartitioningParams &pparams );
+
 
 private:
 
