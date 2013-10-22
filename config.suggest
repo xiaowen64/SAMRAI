@@ -91,8 +91,8 @@ EOF
 
 seq_thread_mpixlcxx) # Sequoia, threaded using mpixlcxx
 cat <<-EOF
-	--with-CXX=mpixlcxx
-	--with-CC=mpixlc
+	--with-CXX=mpixlcxx_r
+	--with-CC=mpixlc_r
 	--with-F77=mpif77
 	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.8.5/parallel
 	--with-boost=/collab/usr/gapps/samrai/apps/sles/boost/1.45.0
