@@ -2323,18 +2323,18 @@ GriddingAlgorithm::printStatistics(
 #pragma warning (disable:1572)
 #endif
          for (int sn = 0; sn < cstat.getStatSequenceLength(); ++sn) {
-            double csum = statn->getGlobalProcStatSum(cstat.getInstanceId(), sn);
-            double cmax = statn->getGlobalProcStatMax(cstat.getInstanceId(), sn);
-            double cmin = statn->getGlobalProcStatMin(cstat.getInstanceId(), sn);
-            double cavg = csum/mpi.getSize();
-            double cdiffnorm = cavg != 0 ? cmax/cavg - 1: 0;
-            double bsum = statn->getGlobalProcStatSum(bstat.getInstanceId(), sn);
-            double bmax = statn->getGlobalProcStatMax(bstat.getInstanceId(), sn);
-            double bmin = statn->getGlobalProcStatMin(bstat.getInstanceId(), sn);
-            double bavg = bsum/mpi.getSize();
-            double bdiffnorm = bavg != 0 ? bmax/bavg - 1: 0;
-            double stime = statn->getGlobalProcStatMin(
-                  tstat.getInstanceId(), sn);
+            const double csum = statn->getGlobalProcStatSum(cstat.getInstanceId(), sn);
+            const double cmax = statn->getGlobalProcStatMax(cstat.getInstanceId(), sn);
+            const double cmin = statn->getGlobalProcStatMin(cstat.getInstanceId(), sn);
+            const double cavg = csum/mpi.getSize();
+            const double cmaxnorm = cavg != 0 ? cmax/cavg - 1: 0;
+            const double bsum = statn->getGlobalProcStatSum(bstat.getInstanceId(), sn);
+            const double bmax = statn->getGlobalProcStatMax(bstat.getInstanceId(), sn);
+            const double bmin = statn->getGlobalProcStatMin(bstat.getInstanceId(), sn);
+            const double bavg = bsum/mpi.getSize();
+            const double bmaxnorm = bavg != 0 ? bmax/bavg - 1: 0;
+            const double stime = statn->getGlobalProcStatMin(
+               tstat.getInstanceId(), sn);
             s << std::setw(3) << sn << "  "
               << std::scientific << std::setprecision(6) << std::setw(12)
               << stime
@@ -2344,14 +2344,14 @@ GriddingAlgorithm::printStatistics(
               << std::setw(10) << csum / mpi.getSize() << " "
               << std::setw(10) << cmin << " -> "
               << std::setw(10) << cmax
-              << "  " << std::setw(4) << std::setprecision(4) << cdiffnorm
+              << "  " << std::setw(4) << std::setprecision(4) << cmaxnorm
               << "  "
               << std::fixed << std::setprecision(0)
               << std::setw(6) << bsum << " "
               << std::setw(5) << bsum / mpi.getSize() << " "
               << std::setw(5) << bmin << "  ->"
               << std::setw(5) << bmax
-              << "   " << std::setw(4) << std::setprecision(4) << bdiffnorm
+              << "   " << std::setw(4) << std::setprecision(4) << bmaxnorm
               << std::setw(10) << std::setprecision(0)
               << (bsum != 0 ? csum / bsum : 0)
               << std::endl;
