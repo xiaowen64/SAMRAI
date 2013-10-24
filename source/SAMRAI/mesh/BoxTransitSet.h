@@ -338,7 +338,7 @@ public:
 
 
    //@{
-   //! @name Set interfaces, internally delegated to stl::set.
+   //! @name Set interfaces, exactly like the C++ standard stl::set.
    typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::iterator iterator;
    typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::const_iterator const_iterator;
    typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::reverse_iterator reverse_iterator;

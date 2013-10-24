@@ -118,13 +118,13 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
    BoxTransitSet kept_imports;
    hier::LocalId new_local_id = unbalanced_to_balanced.getBase().getLastLocalId();
 
-   for (BoxTransitSet::iterator ni = begin(); ni != end(); ++ni ) {
+   for (iterator ni = begin(); ni != end(); ++ni ) {
 
       if ( d_print_edge_steps ) {
          tbox::plog << "\tassigning box: " << *ni << std::endl;
       }
 
-      BoxTransitSet::BoxInTransit added_box(*ni);
+      BoxInTransit added_box(*ni);
       // if (!added_box.d_box.isIdEqual(added_box.d_orig_box)) {
       if ( added_box.d_orig_box.getOwnerRank() != mpi.getRank() ||
            added_box.d_box.getLocalId() != added_box.d_orig_box.getLocalId() ) {
@@ -211,9 +211,9 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    // Stuff the imported boxes into buffers by their original owners.
    d_object_timers->t_pack_edge->start();
    std::map<int,boost::shared_ptr<tbox::MessageStream> > outgoing_messages;
-   for ( BoxTransitSet::const_iterator bi=kept_imports.begin();
+   for ( const_iterator bi=kept_imports.begin();
          bi!=kept_imports.end(); ++bi ) {
-      const BoxTransitSet::BoxInTransit &bit = *bi;
+      const BoxInTransit &bit = *bi;
       boost::shared_ptr<tbox::MessageStream> &mstream =
          outgoing_messages[bit.d_orig_box.getOwnerRank()];
       if ( !mstream ) {
@@ -325,7 +325,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
     */
 
    std::vector<char> incoming_message; // Keep outside loop to avoid reconstructions.
-   BoxTransitSet::BoxInTransit balanced_box_in_transit(unbalanced_box_level.getDim());
+   BoxInTransit balanced_box_in_transit(unbalanced_box_level.getDim());
    while ( num_unaccounted_cells > 0 ) {
 
       d_object_timers->t_construct_semilocal_comm_wait->start();
@@ -667,7 +667,7 @@ BoxTransitSet::adjustLoadByBreaking(
     * Find best box to break.  Loop in reverse because smaller boxes
     * are cheaper to analyze for bad cuts.
     */
-   for (BoxTransitSet::reverse_iterator si = hold_bin.rbegin(); si != hold_bin.rend(); ++si) {
+   for (reverse_iterator si = hold_bin.rbegin(); si != hold_bin.rend(); ++si) {
 
       /*
        * Skip boxes smaller than ideal_transfer.  If we called
@@ -1045,13 +1045,13 @@ BoxTransitSet::swapLoadPair(
                  << dst.size() << "-box dst." << std::endl;
       tbox::plog << "      src (" << src.size() << "):" << std::endl;
       if ( src.size() < 10 ) {
-         for (BoxTransitSet::iterator si = src.begin(); si != src.end(); ++si) {
+         for (iterator si = src.begin(); si != src.end(); ++si) {
             tbox::plog << "        " << *si << std::endl;
          }
       }
       tbox::plog << "      dst (" << dst.size() << "):" << std::endl;
       if ( dst.size() < 10 ) {
-         for (BoxTransitSet::iterator si = dst.begin(); si != dst.end(); ++si) {
+         for (iterator si = dst.begin(); si != dst.end(); ++si) {
             tbox::plog << "        " << *si << std::endl;
          }
       }
@@ -1093,10 +1093,10 @@ BoxTransitSet::swapLoadPair(
     */
 
    // Initialization indicating no swap pair found yet.
-   BoxTransitSet::iterator src_hiside = src.end();
-   BoxTransitSet::iterator dst_hiside = dst.end();
-   BoxTransitSet::iterator src_loside = src.end();
-   BoxTransitSet::iterator dst_loside = dst.end();
+   iterator src_hiside = src.end();
+   iterator dst_hiside = dst.end();
+   iterator src_loside = src.end();
+   iterator dst_loside = dst.end();
 
    // A dummy BoxInTransit for set searches.
    hier::Box dummy_box(d_pparams->getMinBoxSize().getDim());
@@ -1118,14 +1118,14 @@ BoxTransitSet::swapLoadPair(
        */
       dummy_search_target = BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
       dummy_search_target.d_boxload = ideal_transfer;
-      const BoxTransitSet::iterator src_test = src.lower_bound(dummy_search_target);
+      const iterator src_test = src.lower_bound(dummy_search_target);
 
       if (d_print_swap_steps) {
          tbox::plog << "  swapLoadPair with empty dst: ";
       }
 
       if (src_test != src.begin()) {
-         BoxTransitSet::iterator src_test1 = src_test;
+         iterator src_test1 = src_test;
          --src_test1;
          if ( d_bbb.evaluateBreak( hiside_acceptance_flags, hiside_transfer, src_test1->d_boxload,
                              ideal_transfer, low_transfer, high_transfer ) ) {
@@ -1168,9 +1168,9 @@ BoxTransitSet::swapLoadPair(
        */
       dummy_search_target = *dst.begin();
       dummy_search_target.d_boxload += ideal_transfer;
-      BoxTransitSet::iterator src_beg = src.lower_bound(dummy_search_target);
+      iterator src_beg = src.lower_bound(dummy_search_target);
 
-      for (BoxTransitSet::iterator src_test = src_beg; src_test != src.end(); ++src_test) {
+      for (iterator src_test = src_beg; src_test != src.end(); ++src_test) {
 
          /*
           * Set dst_test pointing to where we should start looking in dst.
@@ -1181,7 +1181,7 @@ BoxTransitSet::swapLoadPair(
          dummy_search_target.d_boxload = tbox::MathUtilities<LoadType>::Max(
                src_test->d_boxload - ideal_transfer,
                0);
-         BoxTransitSet::iterator dst_test = dst.lower_bound(dummy_search_target);
+         iterator dst_test = dst.lower_bound(dummy_search_target);
 
          if (dst_test != dst.end()) {
 
@@ -1311,8 +1311,8 @@ BoxTransitSet::swapLoadPair(
    }
 
    bool found_swap = false;
-   BoxTransitSet::iterator isrc = src.end();
-   BoxTransitSet::iterator idst = dst.end();
+   iterator isrc = src.end();
+   iterator idst = dst.end();
    actual_transfer = 0;
 
    if ( d_bbb.evaluateBreak( hiside_acceptance_flags, actual_transfer, hiside_transfer,
@@ -1447,9 +1447,8 @@ void
 BoxTransitSet::putToMessageStream( tbox::MessageStream &msg ) const
 {
    msg << static_cast<int>(size());
-   for (BoxTransitSet::const_iterator
-        ni = begin(); ni != end(); ++ni) {
-      const BoxTransitSet::BoxInTransit& box_in_transit = *ni;
+   for (const_iterator ni = begin(); ni != end(); ++ni) {
+      const BoxInTransit& box_in_transit = *ni;
       box_in_transit.putToMessageStream(msg);
    }
 }
@@ -1469,7 +1468,7 @@ BoxTransitSet::getFromMessageStream( tbox::MessageStream &msg )
     */
    int num_boxes = 0;
    msg >> num_boxes;
-   BoxTransitSet::BoxInTransit received_box(d_pparams->getDim());
+   BoxInTransit received_box(d_pparams->getDim());
    for (int i = 0; i < num_boxes; ++i) {
       received_box.getFromMessageStream(msg);
       insert(received_box);
