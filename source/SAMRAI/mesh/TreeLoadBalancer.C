@@ -604,6 +604,8 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
    unbalanced_to_balanced.setTranspose(&balanced_to_unbalanced, false);
 
 
+   t_get_map->start();
+
    if ( !rank_group.isMember(d_mpi.getRank()) ) {
       /*
        * If the local process is not a member of the RankGroup, it
@@ -622,14 +624,26 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
 
    }
    else {
-      distributeLoadAndComputeMap(
-         balanced_box_level,
-         balanced_to_unbalanced,
-         unbalanced_to_balanced,
-         balance_to_reference,
+
+      BoxTransitSet balanced_work(*d_pparams);
+      distributeLoadAcrossRankGroup(
+         balanced_work,
+         balance_box_level,
          rank_group,
          group_sum_load );
+
+      t_local_balancing->start();
+
+      balanced_work.assignContentToLocalProcessAndGenerateMap(
+         balanced_box_level,
+         balanced_to_unbalanced,
+         unbalanced_to_balanced );
+
+      t_local_balancing->stop();
+
    }
+
+   t_get_map->stop();
 
 
    if (balance_to_reference && balance_to_reference->hasTranspose()) {
@@ -663,18 +677,14 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
  *************************************************************************
  */
 void
-TreeLoadBalancer::distributeLoadAndComputeMap(
-   hier::BoxLevel &balanced_box_level,
-   hier::MappingConnector &balanced_to_unbalanced,
-   hier::MappingConnector &unbalanced_to_balanced,
-   hier::Connector *balance_to_reference,
+TreeLoadBalancer::distributeLoadAcrossRankGroup(
+   BoxTransitSet &balanced_work,
+   const hier::BoxLevel &unbalanced_box_level,
    const tbox::RankGroup& rank_group,
-   const double group_sum_load ) const
+   double group_sum_load ) const
 {
 
    double group_avg_load = group_sum_load / rank_group.size();
-
-   const hier::BoxLevel &unbalanced_box_level = balanced_to_unbalanced.getHead();
 
    if (d_print_steps) {
       tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
@@ -689,8 +699,6 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
                  << std::endl;
    }
 
-
-   t_get_map->start();
 
    t_load_distribution->start();
 
@@ -832,8 +840,12 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
     * put all initial local work in unassigned.  Imported loads are
     * placed here before determining whether to keep them or send them
     * to another part of the tree.
+    *
+    * unassigned is a reference to balanced_work, because at the end
+    * of the algorithm, everything left unassigned is actually the
+    * balanced load.
     */
-   BoxTransitSet unassigned;
+   BoxTransitSet &unassigned(balanced_work);
    unassigned.setPartitioningParams(*d_pparams);
    unassigned.insertAll(unbalanced_box_level.getBoxes());
 
@@ -1177,16 +1189,6 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
       }
    }
 
-
-   t_local_balancing->start();
-
-   unassigned.assignContentToLocalProcessAndGenerateMap(
-      balanced_box_level,
-      balanced_to_unbalanced,
-      unbalanced_to_balanced );
-
-   t_local_balancing->stop();
-
    t_load_distribution->stop();
 
 
@@ -1220,8 +1222,6 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
 
    destroyAsyncCommObjects(child_sends, parent_send);
    destroyAsyncCommObjects(child_recvs, parent_recv);
-
-   t_get_map->stop();
 
 
    if ( d_comm_graph_writer ) {
@@ -1320,17 +1320,17 @@ TreeLoadBalancer::distributeLoadAndComputeMap(
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(2),
          "final box count",
-         double(balanced_box_level.getLocalNumberOfBoxes()) );
+         double(balanced_work.size()) );
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(3),
          "final surplus",
-         double(balanced_box_level.getLocalNumberOfCells())-group_avg_load );
+         double(balanced_work.getSumLoad())-group_avg_load );
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(4),
          "final load",
-         double(balanced_box_level.getLocalNumberOfCells())/group_avg_load );
+         double(balanced_work.getSumLoad())/group_avg_load );
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(5),

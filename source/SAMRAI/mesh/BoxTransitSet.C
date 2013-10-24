@@ -61,6 +61,27 @@ BoxTransitSet::BoxTransitSet() :
 }
 
 
+/*
+*************************************************************************
+*************************************************************************
+*/
+BoxTransitSet::BoxTransitSet( const PartitioningParams &pparams ) :
+   d_set(),
+   d_sumload(0),
+   d_pparams(0),
+   d_bbb(),
+   d_allow_box_breaking(true),
+   d_print_steps(false),
+   d_print_pop_steps(false),
+   d_print_swap_steps(false),
+   d_print_break_steps(false),
+   d_print_edge_steps(false)
+{
+   setTimerPrefix(s_default_timer_prefix);
+   setPartitioningParams(pparams);
+}
+
+
 
 /*
  *************************************************************************

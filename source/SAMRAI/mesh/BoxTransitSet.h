@@ -241,6 +241,8 @@ public:
 
    BoxTransitSet();
 
+   BoxTransitSet( const PartitioningParams &pparams );
+
    /*!
     * @brief Adjust the load in this BoxTransitSet by moving work
     * between it and another BoxTransitSet.

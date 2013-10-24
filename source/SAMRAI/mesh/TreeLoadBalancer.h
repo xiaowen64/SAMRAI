@@ -590,20 +590,14 @@ private:
       const double group_sum_load ) const;
 
    /*!
-    * @brief Distribute load on the tree and generate unbalanced<==>balanced maps.
-    *
-    * This method should be split into distributeLoad() and
-    * finishMapConstruction().  The post-load-distribution barrier can
-    * be restored and placed between the two function calls.
+    * @brief Distribute load on the tree.
     */
    void
-   distributeLoadAndComputeMap(
-      hier::BoxLevel &balanced_box_level,
-      hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced,
-      hier::Connector *balance_to_reference,
+   distributeLoadAcrossRankGroup(
+      BoxTransitSet &balanced_work,
+      const hier::BoxLevel &unbalanced_box_level,
       const tbox::RankGroup& rank_group,
-      const double group_sum_load ) const;
+      double group_sum_load ) const;
 
    /*!
     * @brief Compute surplus load per descendent who is still waiting
