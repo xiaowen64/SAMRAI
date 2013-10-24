@@ -337,6 +337,16 @@ public:
    }
 
 
+   //! @brief Return number of cells in this container.
+   int getNumberOfCells() const {
+      int num_cells = 0;
+      for ( const_iterator si=begin(); si!=end(); ++si ) {
+         num_cells += si->d_box.size();
+      }
+      return num_cells;
+   }
+
+
    //@{
    //! @name Set interfaces, exactly like the C++ standard stl::set.
    typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::iterator iterator;
@@ -627,7 +637,6 @@ private:
       boost::shared_ptr<tbox::Timer> t_construct_semilocal;
       boost::shared_ptr<tbox::Timer> t_construct_semilocal_comm_wait;
       boost::shared_ptr<tbox::Timer> t_construct_semilocal_send_edges;
-      boost::shared_ptr<tbox::Timer> t_construct_semilocal_local_accounting;
       boost::shared_ptr<tbox::Timer> t_pack_edge;
       boost::shared_ptr<tbox::Timer> t_unpack_edge;
       boost::shared_ptr<tbox::Timer> t_post_load_distribution_barrier;

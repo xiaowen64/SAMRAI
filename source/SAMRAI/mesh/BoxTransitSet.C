@@ -12,7 +12,6 @@
 #define included_mesh_BoxTransitSet_C
 
 #include "SAMRAI/mesh/BoxTransitSet.h"
-#include "SAMRAI/mesh/BalanceBoxBreaker.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -111,6 +110,9 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
     * All contents should go into balanced_box_level.  Put them there
     * and generate relationships in balanced<==>unbalanced mapping
     * Connectors where required.
+    *
+    * If a box originated remotely, or it originated locally but is
+    * not the same box anymore, it needs a new BoxId.
     */
 
    const tbox::SAMRAI_MPI &mpi = balanced_box_level.getMPI();
@@ -125,15 +127,17 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
       }
 
       BoxInTransit added_box(*ni);
-      // if (!added_box.d_box.isIdEqual(added_box.d_orig_box)) {
       if ( added_box.d_orig_box.getOwnerRank() != mpi.getRank() ||
            added_box.d_box.getLocalId() != added_box.d_orig_box.getLocalId() ) {
+
          if ( d_print_edge_steps ) {
             tbox::plog << "\t\tReinitialize " << added_box.d_box << " to ";
          }
+
          added_box.d_box.initialize( added_box.d_box,
                                      ++new_local_id,
                                      mpi.getRank() );
+
          if ( d_print_edge_steps ) {
             tbox::plog << added_box.d_box << std::endl;
          }
@@ -141,8 +145,7 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
       balanced_box_level.addBox(added_box.d_box);
 
       if ( added_box.d_orig_box.getOwnerRank() != added_box.d_box.getOwnerRank() ) {
-         // box originated remotely.  Cannot generate unbalanced--->balanced for it.
-         TBOX_ASSERT( added_box.d_orig_box.getOwnerRank() != mpi.getRank() );
+         // Cannot generate unbalanced--->balanced for imported boxes.
          kept_imports.insert(added_box);
          if ( d_print_edge_steps ) {
             tbox::plog << "\t\tKeeping imported box " << added_box << std::endl;
@@ -156,7 +159,6 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
       }
 
       if (added_box.d_orig_box.getOwnerRank() == mpi.getRank()) {
-         TBOX_ASSERT( added_box.d_box.getOwnerRank() == added_box.d_orig_box.getOwnerRank() );
          // box originated locally.  Can generate unbalanced--->balanced for it if needed.
          if ( added_box.d_box.getLocalId() != added_box.d_orig_box.getLocalId() ) {
             unbalanced_to_balanced.insertLocalNeighbor(
@@ -187,9 +189,9 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
  *
  * Determine relationships in unbalanced_to_balanced by sending
  * balanced boxes back to the owners of the unbalanced Boxes that
- * originated them.  We don't know what ranks will send back the
- * balanced boxes, so we keep receiving messages from any rank until
- * we have accounted for all the cells in the unbalanced BoxLevel.
+ * originated them.  We don't know what ranks will sending to us, so
+ * we keep receiving messages from any rank until we have accounted
+ * for all the cells in the unbalanced BoxLevel.
  *************************************************************************
  */
 void
@@ -200,7 +202,8 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    d_object_timers->t_construct_semilocal->start();
 
    if ( d_print_steps ) {
-      tbox::plog << "BoxTransitSet::constructSemilocalUnbalancedToBalanced: entered." << std::endl;
+      tbox::plog << "BoxTransitSet::constructSemilocalUnbalancedToBalanced: entered."
+                 << std::endl;
    }
 
    const hier::BoxLevel &balanced_box_level = unbalanced_to_balanced.getHead();
@@ -211,8 +214,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    // Stuff the imported boxes into buffers by their original owners.
    d_object_timers->t_pack_edge->start();
    std::map<int,boost::shared_ptr<tbox::MessageStream> > outgoing_messages;
-   for ( const_iterator bi=kept_imports.begin();
-         bi!=kept_imports.end(); ++bi ) {
+   for ( const_iterator bi=kept_imports.begin(); bi!=kept_imports.end(); ++bi ) {
       const BoxInTransit &bit = *bi;
       boost::shared_ptr<tbox::MessageStream> &mstream =
          outgoing_messages[bit.d_orig_box.getOwnerRank()];
@@ -222,18 +224,6 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
       bit.putToMessageStream(*mstream);
    }
    d_object_timers->t_pack_edge->stop();
-
-
-   /*
-    * Unbalanced boxes need a mapping to describe their change, but we
-    * don't know what they will become, so create empty maps for now.
-    */
-   for ( hier::BoxContainer::const_iterator bi=unbalanced_boxes.begin();
-         bi!=unbalanced_boxes.end(); ++bi ) {
-      if ( !balanced_box_level.hasBox(*bi) ) {
-         unbalanced_to_balanced.makeEmptyLocalNeighborhood(bi->getBoxId());
-      }
-   }
 
 
    /*
@@ -279,44 +269,14 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    d_object_timers->t_construct_semilocal_send_edges->stop();
 
 
-   /*
-    * Determine number of cells in unbalanced that are not yet accounted
-    * for in balanced.
-    */
-   d_object_timers->t_construct_semilocal_local_accounting->start();
    int num_unaccounted_cells = static_cast<int>(
-      unbalanced_box_level.getLocalNumberOfCells());
-   if ( d_print_edge_steps ) {
-      tbox::plog << num_unaccounted_cells << " unbalanced cells." << std::endl;
-   }
+      unbalanced_box_level.getLocalNumberOfCells()
+      + kept_imports.getNumberOfCells()
+      - balanced_box_level.getLocalNumberOfCells() );
 
-   for ( hier::BoxContainer::const_iterator bi=unbalanced_boxes.begin();
-         bi!=unbalanced_boxes.end(); ++bi ) {
-
-      const hier::Box &unbalanced_box = *bi;
-
-      hier::Connector::ConstNeighborhoodIterator neighborhood_itr =
-         unbalanced_to_balanced.findLocal(unbalanced_box.getBoxId());
-
-      if ( neighborhood_itr != unbalanced_to_balanced.end() ) {
-         // unbalanced_box has changed.  Parts of it may still be local.
-         for ( hier::Connector::ConstNeighborIterator ni=unbalanced_to_balanced.begin(neighborhood_itr);
-               ni!=unbalanced_to_balanced.end(neighborhood_itr); ++ni ) {
-            TBOX_ASSERT( ni->getOwnerRank() == mpi.getRank() );
-            num_unaccounted_cells -= ni->size();
-         }
-
-      }
-      else {
-         // unbalanced_box has not changed.  All of it is still local.
-         num_unaccounted_cells -= unbalanced_box.size();
-      }
-
-   }
    if ( d_print_edge_steps ) {
       tbox::plog << num_unaccounted_cells << " unaccounted cells." << std::endl;
    }
-   d_object_timers->t_construct_semilocal_local_accounting->stop();
 
 
    /*
@@ -324,8 +284,9 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
     * those cells.  Receive until all cells are accounted for.
     */
 
-   std::vector<char> incoming_message; // Keep outside loop to avoid reconstructions.
+   std::vector<char> incoming_message;
    BoxInTransit balanced_box_in_transit(unbalanced_box_level.getDim());
+
    while ( num_unaccounted_cells > 0 ) {
 
       d_object_timers->t_construct_semilocal_comm_wait->start();
@@ -355,7 +316,6 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
       while ( !msg.endOfData() ) {
 
          balanced_box_in_transit.getFromMessageStream(msg);
-         TBOX_ASSERT( balanced_box_in_transit.d_orig_box.getOwnerRank() == mpi.getRank() );
          unbalanced_to_balanced.insertLocalNeighbor(
             balanced_box_in_transit.d_box,
             balanced_box_in_transit.d_orig_box.getBoxId() );
@@ -388,7 +348,8 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    }
 
    if ( d_print_steps ) {
-      tbox::plog << "BoxTransitSet::constructSemilocalUnbalancedToBalanced: exiting." << std::endl;
+      tbox::plog << "BoxTransitSet::constructSemilocalUnbalancedToBalanced: exiting."
+                 << std::endl;
    }
 
    d_object_timers->t_construct_semilocal->stop();
@@ -1428,8 +1389,6 @@ BoxTransitSet::getAllTimers(
       getTimer(timer_prefix + "::constructSemilocalUnbalancedToBalanced()_comm_wait");
    timers.t_construct_semilocal_send_edges = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::constructSemilocalUnbalancedToBalanced()_send_edges");
-   timers.t_construct_semilocal_local_accounting = tbox::TimerManager::getManager()->
-      getTimer(timer_prefix + "::constructSemilocalUnbalancedToBalanced()_local_accounting");
 
    timers.t_pack_edge = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::pack_edge");
