@@ -161,8 +161,7 @@ TreeLoadBalancer::setWorkloadPatchDataIndex(
 
 /*
  *************************************************************************
- * This method implements the abstract LoadBalanceStrategy interface,
- * but it is not where the tree load balancer algorithm is implemented.
+ * This method implements the abstract LoadBalanceStrategy interface.
  *
  * This method does some preliminary setup then calls
  * loadBalanceWithinRankGroup to do the work.  The set-up includes
@@ -312,6 +311,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
 
       dtmp[0] = local_load;
       dtmp[1] = static_cast<double>(nproc_with_initial_load);
+
       d_mpi.Allreduce(dtmp, dtmp_sum, 2, MPI_DOUBLE, MPI_SUM);
       global_sum_load = dtmp_sum[0];
       nproc_with_initial_load = (size_t)dtmp_sum[1];
@@ -355,7 +355,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
     * Exception: If given a RankGroup with less than all ranks, we
     * treat it as a specific user request to balance only within the
     * RankGroup and just use the RankGroup as is.  We are not set up
-    * to support such request and multi-cycling simultaneously.
+    * to support such a request and multi-cycling simultaneously.
     */
    const double fanout_size = max_local_load/d_global_avg_load;
    const int number_of_cycles = rank_group.containsAllRanks() ? 1 :
@@ -616,9 +616,9 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
        */
       TBOX_ASSERT( balance_box_level.getLocalNumberOfBoxes() == 0 );
 
-      // t_post_load_distribution_barrier->start();
-      // d_mpi.Barrier(); // Temporary barrier to determine if the follow communication slows down unfinished communications in load distribution phase.
-      // t_post_load_distribution_barrier->stop();
+      t_post_load_distribution_barrier->start();
+      d_mpi.Barrier();
+      t_post_load_distribution_barrier->stop();
 
    }
    else {
@@ -629,6 +629,10 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
          balance_box_level,
          rank_group,
          group_sum_load );
+
+      t_post_load_distribution_barrier->start();
+      d_mpi.Barrier();
+      t_post_load_distribution_barrier->stop();
 
       balanced_work.assignContentToLocalProcessAndGenerateMap(
          balanced_box_level,
@@ -1016,7 +1020,6 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
     * Finish the send-up and begin the send-down.
     */
    if (my_branch.getWantsWorkFromParent()) {
-      t_parent_load_comm->start();
       t_get_load_from_parent->start();
 
       parent_recv->setRecvTimer(t_parent_recv_wait);
@@ -1024,7 +1027,6 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
       parent_recv->beginRecv();
 
       t_get_load_from_parent->stop();
-      t_parent_load_comm->stop();
    }
 
 
@@ -1205,12 +1207,15 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
    if ( d_print_steps ) {
       tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup: waiting for sends to complete.\n";
    }
+
    t_finish_sends->start();
    child_send_stage.advanceAll();
    parent_send_stage.advanceAll();
    t_finish_sends->stop();
+
    child_send_stage.clearCompletionQueue();
    parent_send_stage.clearCompletionQueue();
+
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int i = 0; i < num_children; ++i) {
       TBOX_ASSERT(child_sends[i].isDone());
@@ -1782,14 +1787,18 @@ TreeLoadBalancer::setTimers()
    if (!t_load_balance_box_level) {
       t_load_balance_box_level = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::loadBalanceBoxLevel()");
+
       t_get_map = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::get_map");
       t_use_map = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::use_map");
+
       t_constrain_size = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::constrain_size");
+
       t_distribute_load_across_rank_group = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::distributeLoadAcrossRankGroup");
+
       t_compute_local_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::computeLocalLoad");
       t_compute_global_load = tbox::TimerManager::getManager()->
@@ -1807,6 +1816,9 @@ TreeLoadBalancer::setTimers()
                      + tbox::Utilities::intToString(i) + "]");
       }
 
+      t_local_load_moves = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::local_load_moves");
+
       t_send_load_to_children = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::send_load_to_children");
       t_send_load_to_parent = tbox::TimerManager::getManager()->
@@ -1815,24 +1827,16 @@ TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::get_load_from_children");
       t_get_load_from_parent = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::get_load_from_parent");
+
+      t_post_load_distribution_barrier = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::post_load_distribution_barrier");
+
       t_report_loads = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::report_loads");
+
       t_finish_sends = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::finish_sends");
-      t_local_load_moves = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::local_load_moves");
-      t_parent_load_comm = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::parent_load_comm");
-      t_children_load_comm = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::children_load_comm");
-      t_parent_edge_comm = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::parent_edge_comm");
-      t_children_edge_comm = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::children_edge_comm");
-      t_barrier_before = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::barrier_before");
-      t_barrier_after = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::barrier_after");
+
       t_child_send_wait = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::child_send_wait");
       t_child_recv_wait = tbox::TimerManager::getManager()->
@@ -1841,10 +1845,11 @@ TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::parent_send_wait");
       t_parent_recv_wait = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::parent_recv_wait");
-      t_misc1 = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::misc1");
-      t_misc2 = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::misc2");
+
+      t_barrier_before = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::barrier_before");
+      t_barrier_after = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::barrier_after");
    }
 }
 

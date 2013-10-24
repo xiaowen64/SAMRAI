@@ -768,21 +768,16 @@ private:
    boost::shared_ptr<tbox::Timer> t_send_load_to_parent;
    boost::shared_ptr<tbox::Timer> t_get_load_from_children;
    boost::shared_ptr<tbox::Timer> t_get_load_from_parent;
+   boost::shared_ptr<tbox::Timer> t_post_load_distribution_barrier;
    boost::shared_ptr<tbox::Timer> t_report_loads;
    boost::shared_ptr<tbox::Timer> t_local_load_moves;
    boost::shared_ptr<tbox::Timer> t_finish_sends;
-   boost::shared_ptr<tbox::Timer> t_children_load_comm;
-   boost::shared_ptr<tbox::Timer> t_parent_load_comm;
-   boost::shared_ptr<tbox::Timer> t_children_edge_comm;
-   boost::shared_ptr<tbox::Timer> t_parent_edge_comm;
    boost::shared_ptr<tbox::Timer> t_barrier_before;
    boost::shared_ptr<tbox::Timer> t_barrier_after;
    boost::shared_ptr<tbox::Timer> t_child_send_wait;
    boost::shared_ptr<tbox::Timer> t_child_recv_wait;
    boost::shared_ptr<tbox::Timer> t_parent_send_wait;
    boost::shared_ptr<tbox::Timer> t_parent_recv_wait;
-   boost::shared_ptr<tbox::Timer> t_misc1;
-   boost::shared_ptr<tbox::Timer> t_misc2;
 
    /*
     * Statistics on number of cells and patches generated.

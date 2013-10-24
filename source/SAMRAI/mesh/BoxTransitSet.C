@@ -252,16 +252,6 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    std::vector<tbox::SAMRAI_MPI::Request>
       send_requests( outgoing_messages_size, MPI_REQUEST_NULL );
 
-   // if ( d_print_edge_steps ) {
-      // tbox::plog << "BoxTransitSet::constructSemilocalUnbalancedToBalanced: starting post-distribution barrier.\n";
-   // }
-   // t_post_load_distribution_barrier->start();
-   // d_mpi.Barrier(); // This barrier seems to speed up the load balancing, maybe by allowing one communication phase to finish before beginning another.
-   // t_post_load_distribution_barrier->stop();
-   // if ( d_print_edge_steps ) {
-      // tbox::plog << "BoxTransitSet::constructSemilocalUnbalancedToBalanced: finished post-distribution barrier.\n";
-   // }
-
    d_object_timers->t_construct_semilocal_send_edges->start();
    for ( int send_number = 0; send_number < outgoing_messages_size; ++send_number ) {
 
