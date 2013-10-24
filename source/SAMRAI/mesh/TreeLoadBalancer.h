@@ -759,7 +759,7 @@ private:
    boost::shared_ptr<tbox::Timer> t_get_map;
    boost::shared_ptr<tbox::Timer> t_use_map;
    boost::shared_ptr<tbox::Timer> t_constrain_size;
-   boost::shared_ptr<tbox::Timer> t_load_distribution;
+   boost::shared_ptr<tbox::Timer> t_distribute_load_across_rank_group;
    boost::shared_ptr<tbox::Timer> t_compute_local_load;
    boost::shared_ptr<tbox::Timer> t_compute_global_load;
    boost::shared_ptr<tbox::Timer> t_compute_tree_load;
@@ -769,7 +769,7 @@ private:
    boost::shared_ptr<tbox::Timer> t_get_load_from_children;
    boost::shared_ptr<tbox::Timer> t_get_load_from_parent;
    boost::shared_ptr<tbox::Timer> t_report_loads;
-   boost::shared_ptr<tbox::Timer> t_local_balancing;
+   boost::shared_ptr<tbox::Timer> t_local_load_moves;
    boost::shared_ptr<tbox::Timer> t_finish_sends;
    boost::shared_ptr<tbox::Timer> t_children_load_comm;
    boost::shared_ptr<tbox::Timer> t_parent_load_comm;
