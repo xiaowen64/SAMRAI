@@ -586,8 +586,6 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
    TBOX_ASSERT(!balance_to_reference || balance_to_reference->hasTranspose());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, balance_box_level);
 
-   double group_avg_load = group_sum_load / rank_group.size();
-
    /*
     * Initialize empty balanced_box_level and mappings.
     */

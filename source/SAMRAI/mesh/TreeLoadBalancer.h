@@ -327,7 +327,7 @@ private:
     * Terminology: The "pruned" parts of the tree are branches that
     * are not open to receiving work from their parents.  These parts
     * are not counted in the "effective" tree for the purpose of
-    * sending down work.
+    * distributing work on the branch.
     */
    class BranchData {
 
@@ -342,8 +342,9 @@ private:
          }
 
       /*!
-       * @brief Set the ideal, current and upper limit of the load for
-       * the local process.
+       * @brief Set the starting ideal, current and upper limit of the
+       * load for the branch, which includes just the values from
+       * local process.
        */
       void setStartingLoad(
          LoadType ideal,
@@ -590,7 +591,11 @@ private:
       const double group_sum_load ) const;
 
    /*!
-    * @brief Distribute load on the tree.
+    * @brief Distribute load across the rank group using the tree
+    * algorithm.
+    *
+    * Initial work is give in unbalanced_box_level.  Put the final
+    * local work in balanced_work.
     */
    void
    distributeLoadAcrossRankGroup(
