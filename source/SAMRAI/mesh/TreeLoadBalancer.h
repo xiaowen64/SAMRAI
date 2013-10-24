@@ -119,9 +119,8 @@ public:
     *
     * @param[in] dim
     *
-    * @param[in] name User-defined std::string identifier used for error
-    * reporting and timer names.  If omitted, "TreeLoadBalancer"
-    * is used.
+    * @param[in] name User-defined identifier used for error reporting
+    * and timer names.
     *
     * @param[in] rank_tree How to arange a contiguous range of MPI ranks
     * into a tree.  If omitted, we use a tbox::CenteredRankTree.
@@ -155,7 +154,8 @@ public:
     * requires a global communication, so all processes in the
     * communicator must call it.  The advantage of a duplicate
     * communicator is that it ensures the communications for the
-    * object won't accidentally interact with other communications.
+    * object won't accidentally interact with unrelated
+    * communications.
     *
     * If the duplicate SAMRAI_MPI it is set, the TreeLoadBalancer will
     * only balance BoxLevels with congruent SAMRAI_MPI objects and
@@ -223,8 +223,8 @@ public:
     * Note: This implementation does not yet support non-uniform load
     * balancing.
     *
-    * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
-    * @pre !balance_to_anchor || balance_to_anchor->isTransposeOf(balance_to_anchor->getTranspose())
+    * @pre !balance_to_reference || balance_to_reference->hasTranspose()
+    * @pre !balance_to_reference || balance_to_reference->isTransposeOf(balance_to_reference->getTranspose())
     * @pre (d_dim == balance_box_level.getDim()) &&
     *      (d_dim == min_size.getDim()) && (d_dim == max_size.getDim()) &&
     *      (d_dim == domain_box_level.getDim()) &&
@@ -236,7 +236,7 @@ public:
    void
    loadBalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
-      hier::Connector* balance_to_anchor,
+      hier::Connector* balance_to_reference,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::IntVector& min_size,
@@ -322,23 +322,23 @@ private:
 
    /*!
     * @brief Data to save for each sending/receiving process and the
-    * subtree at that process.
+    * branch at that process.
     *
     * Terminology: The "pruned" parts of the tree are branches that
-    * are not open to receiving work from above.  These parts are not
-    * counted in the "effective" tree for the purpose of sending down
-    * work.
+    * are not open to receiving work from their parents.  These parts
+    * are not counted in the "effective" tree for the purpose of
+    * sending down work.
     */
-   class SubtreeData {
+   class BranchData {
 
    public:
       //! @brief Constructor.
-      SubtreeData();
+      BranchData();
 
       void setPartitioningParams( const PartitioningParams &pparams )
          {
             d_pparams = &pparams;
-            d_work_traded.setPartitioningParams(pparams);
+            d_shipment.setPartitioningParams(pparams);
          }
 
       /*!
@@ -350,39 +350,39 @@ private:
          LoadType current,
          LoadType upperlimit );
 
-      //! @brief Number of processes in subtree.
+      //! @brief Number of processes in branch.
       int numProcs() const { return d_num_procs; }
-      //! @brief Number of processes in effective subtree.
+      //! @brief Number of processes in effective branch.
       int numProcsEffective() const { return d_eff_num_procs; }
 
       //@{
-      //! @name Amount of work in subtree, compared to various references.
+      //! @name Amount of work in branch, compared to various references.
       // surplus and deficit are current load compared to ideal.
-      LoadType surplus() const { return d_subtree_load_current - d_subtree_load_ideal; }
-      LoadType deficit() const { return d_subtree_load_ideal - d_subtree_load_current; }
+      LoadType surplus() const { return d_branch_load_current - d_branch_load_ideal; }
+      LoadType deficit() const { return d_branch_load_ideal - d_branch_load_current; }
       LoadType effSurplus() const { return d_eff_load_current - d_eff_load_ideal; }
       LoadType effDeficit() const { return d_eff_load_ideal - d_eff_load_current; }
       // excess and margin are current load compared to upper limit.
-      LoadType excess() const { return d_subtree_load_current - d_subtree_load_upperlimit; }
-      LoadType margin() const { return d_subtree_load_upperlimit - d_subtree_load_current; }
+      LoadType excess() const { return d_branch_load_current - d_branch_load_upperlimit; }
+      LoadType margin() const { return d_branch_load_upperlimit - d_branch_load_current; }
       LoadType effExcess() const { return d_eff_load_current - d_eff_load_upperlimit; }
       LoadType effMargin() const { return d_eff_load_upperlimit - d_eff_load_current; }
       //@}
 
-      //! @brief Set whether this subtree want work from its parents.
-      void setWantsWorkFromParent(bool wants) { d_wants_work_from_parent = wants; }
+      //! @brief Tell this tree to eventually ask for work from its parent.
+      void setWantsWorkFromParent() { d_wants_work_from_parent = true; }
 
-      //! @brief Get whether this subtree want work from its parents.
+      //! @brief Get whether this branch want work from its parents.
       bool getWantsWorkFromParent() const { return d_wants_work_from_parent; }
 
       //@{
-      //! @name Information on work exchanged
-      //! @brief Get amount of work exchanged.
-      LoadType getExchangeLoad() const { return d_work_traded.getSumLoad(); }
-      //! @brief Get count of work exchanged.
-      size_t getExchangePackageCount() const { return d_work_traded.size(); }
-      //! @brief Get count of originators of the work exchanged.
-      size_t getExchangeOriginatorCount() const { return d_work_traded.getNumberOfOriginatingProcesses(); }
+      //! @name Information on work shipped
+      //! @brief Get amount of work shipped.
+      LoadType getShipmentLoad() const { return d_shipment.getSumLoad(); }
+      //! @brief Get count of work shipped.
+      size_t getShipmentPackageCount() const { return d_shipment.size(); }
+      //! @brief Get count of originators of the work shipped.
+      size_t getShipmentOriginatorCount() const { return d_shipment.getNumberOfOriginatingProcesses(); }
       //@}
 
 
@@ -403,9 +403,9 @@ private:
       void moveInboundLoadToReserve( BoxTransitSet &reserve );
 
       /*!
-       * @brief Incorporate child subtree into this subtree.
+       * @brief Incorporate child branch into this branch.
        */
-      void incorporateChild( const SubtreeData &child );
+      void incorporateChild( const BranchData &child );
       //@}
 
 
@@ -442,57 +442,57 @@ private:
    private:
 
       /*!
-       * @brief Number of processes in subtree
+       * @brief Number of processes in branch
        */
       int d_num_procs;
 
       /*!
-       * @brief Current amount of work in the subtree, including local unassigned
+       * @brief Current load in the branch, including local unassigned load.
        */
-      LoadType d_subtree_load_current;
+      LoadType d_branch_load_current;
 
       /*!
-       * @brief Ideal amount of work for the subtree
+       * @brief Ideal load for the branch
        */
-      LoadType d_subtree_load_ideal;
+      LoadType d_branch_load_ideal;
 
       /*!
-       * @brief Amount of work the subtree is willing to have, based
-       * on the load tolerance and upper limits of children.
+       * @brief Load the branch is willing to have, based on the load
+       * tolerance and upper limits of children.
        */
-      LoadType d_subtree_load_upperlimit;
+      LoadType d_branch_load_upperlimit;
 
       /*!
-       * @brief Number of processes in subtree after pruning independent descendants
+       * @brief Number of processes in branch after pruning.
        */
       int d_eff_num_procs;
 
       /*!
-       * @brief Current amount of work in the pruned subtree, including local unassigned
+       * @brief Current load in the pruned branch, including local unassigned load.
        */
       LoadType d_eff_load_current;
 
       /*!
-       * @brief Ideal amount of work for the pruned subtree
+       * @brief Ideal load for the pruned branch.
        */
       LoadType d_eff_load_ideal;
 
       /*!
-       * @brief Amount of work the pruned subtree is willing to have, based
-       * on the load tolerance and upper limit of dependent children.
+       * @brief Load the pruned branch is willing to have, based
+       * on the load tolerance and upper limit of unpruned children.
        */
       LoadType d_eff_load_upperlimit;
 
       /*!
-       * @brief Work to traded (or to be traded).
+       * @brief Load received or to be sent.
        *
-       * If the object is for the local process, work_traded means
-       * traded with the process's *parent*.
+       * If this object is for the local process, shipment is to or
+       * from the process's *parent*.
        */
-      BoxTransitSet d_work_traded;
+      BoxTransitSet d_shipment;
 
       /*!
-       * @brief Whether subtree expects its parent to send work down.
+       * @brief Whether branch expects its parent to send work down.
        */
       bool d_wants_work_from_parent;
 
@@ -506,7 +506,7 @@ private:
       bool d_print_steps;
       //@}
 
-   }; // SubtreeData declaration.
+   }; // BranchData declaration.
 
 
 
@@ -546,9 +546,7 @@ private:
    {
       /*
        * Currently only for uniform loads, where the load is equal
-       * to the number of cells.  For non-uniform loads, this method
-       * needs the patch data index for the load.  It would summ up
-       * the individual cell loads in the cell.
+       * to the number of cells.
        */
       return double(box.size());
    }
@@ -564,9 +562,7 @@ private:
    {
       /*
        * Currently only for uniform loads, where the load is equal
-       * to the number of cells.  For non-uniform loads, this method
-       * needs the patch data index for the load.  It would summ up
-       * the individual cell loads in the overlap region.
+       * to the number of cells.
        */
       return double((box * restriction).size());
    }
@@ -580,40 +576,34 @@ private:
 
    /*!
     * @brief Given an "unbalanced" BoxLevel, compute the BoxLevel that
-    * is load-balanced within the given rank_group and compute the
-    * mapping between the unbalanced and balanced BoxLevels.
+    * is load-balanced within the given rank_group and update the
+    * Connector between it and a reference BoxLevel.
     *
-    * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
+    * @pre !balance_to_reference || balance_to_reference->hasTranspose()
     * @pre d_dim == balance_box_level.getDim()
     */
    void
    loadBalanceWithinRankGroup(
       hier::BoxLevel& balance_box_level,
-      hier::Connector* balance_to_anchor,
+      hier::Connector* balance_to_reference,
       const tbox::RankGroup& rank_group,
       const double group_sum_load ) const;
 
    /*!
     * @brief Distribute load on the tree and generate unbalanced<==>balanced maps.
+    *
+    * This method should be split into distributeLoad() and
+    * finishMapConstruction().  The post-load-distribution barrier can
+    * be restored and placed between the two function calls.
     */
    void
    distributeLoadAndComputeMap(
       hier::BoxLevel &balanced_box_level,
       hier::MappingConnector &balanced_to_unbalanced,
       hier::MappingConnector &unbalanced_to_balanced,
-      hier::Connector *balance_to_anchor,
+      hier::Connector *balance_to_reference,
       const tbox::RankGroup& rank_group,
       const double group_sum_load ) const;
-
-   /*!
-    * @brief Apply the load distribution map.
-    */
-   void
-   applyLoadDistributionMap(
-      hier::BoxLevel &balanced_box_level,
-      hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced,
-      hier::Connector *balance_to_anchor ) const;
 
    /*!
     * @brief Compute surplus load per descendent who is still waiting
@@ -623,7 +613,7 @@ private:
    computeSurplusPerEffectiveDescendent(
       const LoadType &unassigned_load,
       const LoadType &group_avg_load,
-      const std::vector<SubtreeData> &child_subtrees,
+      const std::vector<BranchData> &child_branches,
       int first_child ) const;
 
    /*!
@@ -637,24 +627,19 @@ private:
     * @param [out] rank_group
     * @param [out] num_groups
     * @param [out] group_num
-    * @param [in] cycle_number
-    * @param [in] number_of_cycles
+    * @param [in] cycle_fraction How far we are in the cycles.
+    *   Value of 1 means the last cycle.
     */
    void
    createBalanceRankGroupBasedOnCycles(
       tbox::RankGroup &rank_group,
       int &num_groups,
       int &group_num,
-      const int cycle_number,
-      const int number_of_cycles) const;
+      double cycle_fraction) const;
 
    /*!
-    * @brief Set up the asynchronous communication objects for the
-    * given RankGroup.
-    *
-    * Based on a conceptual process tree with num_children children,
-    * set the AsyncCommPeer objects for communication with children
-    * and parent.
+    * @brief Set the AsyncCommPeer objects for this process to
+    * communicate with its parent and children.
     *
     * @param [out] child_stage
     * @param [out] child_comms
@@ -749,10 +734,17 @@ private:
    mutable LoadType d_min_load;
    //@}
 
+   static const int d_default_data_id;
+
+   //@{
+   //! @name Used for evaluating peformance.
+
+   bool d_barrier_before;
+   bool d_barrier_after;
 
    /*!
-    * @brief Whether to immediately report the results of the load balancing cycles
-    * in the log files.
+    * @brief Whether to immediately report the results of the load
+    * balancing cycles in the log files.
     */
    bool d_report_load_balance;
 
@@ -760,14 +752,6 @@ private:
     * @brief See "summarize_map" input parameter.
     */
    char d_summarize_map;
-
-   //@{
-   //! @name Used for evaluating peformance.
-   bool d_barrier_before;
-   bool d_barrier_after;
-   //@}
-
-   static const int d_default_data_id;
 
    /*
     * Performance timers.
@@ -806,6 +790,8 @@ private:
     */
    mutable std::vector<double> d_load_stat;
    mutable std::vector<int> d_box_count_stat;
+
+   //@}
 
    // Extra checks independent of optimization/debug.
    char d_print_steps;
