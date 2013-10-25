@@ -75,7 +75,6 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_comm_graph_writer(),
    d_master_workload_data_id(d_default_data_id),
    d_flexible_load_tol(0.0),
-   d_load_comparison_tol(1.0e-5),
    // Performance evaluation.
    d_barrier_before(false),
    d_barrier_after(false),

@@ -37,11 +37,6 @@ public:
          setTimers();
       }
 
-   void setPartitioningParams( const PartitioningParams &pparams )
-      {
-         d_pparams = &pparams;
-      }
-
 
    /*!
     * @brief Break off a given load size from a given Box.
