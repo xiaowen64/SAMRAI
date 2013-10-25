@@ -290,7 +290,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       domain_box_level.getParallelState() ==
       hier::BoxLevel::GLOBALIZED);
 
-   double local_load = computeLocalLoad(balance_box_level);
+   LoadType local_load = computeLocalLoad(balance_box_level);
 
    LoadType max_local_load = local_load;
 
