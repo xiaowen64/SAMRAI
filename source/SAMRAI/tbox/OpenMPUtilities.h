@@ -72,10 +72,7 @@
    }	\
 }
 
-#define TBOX_IF_HAVE_OPENMP(CODE) {	\
-      CODE	\
-   }	\
-}
+#define TBOX_IF_HAVE_OPENMP(CODE) { CODE }
 
 #define TBOX_IF_NOT_HAVE_OPENMP(CODE)
 
@@ -104,10 +101,7 @@
 
 #define TBOX_IF_HAVE_OPENMP(CODE)
 
-#define TBOX_IF_NOT_HAVE_OPENMP(CODE) {	\
-      CODE	\
-   }	\
-}
+#define TBOX_IF_NOT_HAVE_OPENMP(CODE) { CODE }
 
 #endif
 
