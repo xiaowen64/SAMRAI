@@ -29,11 +29,8 @@ class BalanceBoxBreaker {
 
 public:
 
-   typedef double LoadType;
-
    BalanceBoxBreaker() :
       d_pparams(0),
-      d_load_comparison_tol(1.0e-5),
       d_print_steps(false),
       d_print_break_steps(false)
       {
@@ -45,9 +42,6 @@ public:
          d_pparams = &pparams;
       }
 
-   //@{
-
-   //! @name Box breaking.
 
    /*!
     * @brief Break off a given load size from a given Box.
@@ -80,6 +74,9 @@ public:
       double low_load,
       double high_load ) const;
 
+
+private:
+
    bool
    breakOffLoad_planar(
       std::vector<hier::Box>& breakoff,
@@ -102,8 +99,6 @@ public:
       double high_load,
       const std::vector<std::vector<bool> >& bad_cuts ) const;
 
-   //@}
-
    double
    computeBalancePenalty(
       const std::vector<hier::Box>& a,
@@ -124,8 +119,6 @@ public:
       return tbox::MathUtilities<double>::Abs(imbalance);
    }
 
-private:
-
    void
    burstBox(
       std::vector<hier::Box>& boxes,
@@ -135,7 +128,6 @@ private:
    void setTimers();
 
    const PartitioningParams *d_pparams;
-   double d_load_comparison_tol;
 
    //@{
    //! @name Debugging and diagnostic data

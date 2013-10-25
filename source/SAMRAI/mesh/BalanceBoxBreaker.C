@@ -647,7 +647,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(
 
    hier::Box best_breakoff_box(box.getDim());
    hier::IntVector best_breakoff_size = zero_vec;
-   LoadType best_breakoff_load = 0;
+   double best_breakoff_load = 0;
 
    /*
     * We consider 2^dim boxes grown from the incoming box's corners.
@@ -716,7 +716,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(
        */
       hier::Box corner_box(box);
       hier::IntVector corner_box_size = zero_vec;
-      LoadType corner_box_load = 0;
+      double corner_box_load = 0;
       hier::IntVector expansion_rate(box.getDim());
 
       for ( int d=0; d<box.getDim().getValue(); ++d ) {
