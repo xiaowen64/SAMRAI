@@ -46,9 +46,12 @@ public:
    /*!
     * @brief Break off a given load size from a given Box.
     *
+    * Attempt to break off the ideal_load, or at least a load
+    * inside the range [low_load, high_load].
+    *
     * @param[out] breakoff Boxes broken off (usually just one).
     *
-    * @param[out] leftover Remainder of Box after breakoff is gone.
+    * @param[out] leftover Remainder of box after breakoff is gone.
     *
     * @param[out] brk_load The load broken off.
     *
