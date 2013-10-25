@@ -239,8 +239,6 @@ public:
 
 public:
 
-   BoxTransitSet();
-
    BoxTransitSet( const PartitioningParams &pparams );
 
    /*!
@@ -286,15 +284,6 @@ public:
     */
    void allowBoxBreaking() {
       d_allow_box_breaking = true;
-   }
-
-
-   /*!
-    * @brief Set the PartitioningParams data to be used as needed.
-    */
-   void setPartitioningParams( const PartitioningParams &pparams ) {
-      d_pparams = &pparams;
-      d_bbb.setPartitioningParams(pparams);
    }
 
 

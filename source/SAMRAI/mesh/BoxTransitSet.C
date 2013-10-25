@@ -44,31 +44,11 @@ BoxTransitSet::s_initialize_finalize_handler(
 *************************************************************************
 *************************************************************************
 */
-BoxTransitSet::BoxTransitSet() :
-   d_set(),
-   d_sumload(0),
-   d_pparams(0),
-   d_bbb(),
-   d_allow_box_breaking(true),
-   d_print_steps(false),
-   d_print_pop_steps(false),
-   d_print_swap_steps(false),
-   d_print_break_steps(false),
-   d_print_edge_steps(false)
-{
-   setTimerPrefix(s_default_timer_prefix);
-}
-
-
-/*
-*************************************************************************
-*************************************************************************
-*/
 BoxTransitSet::BoxTransitSet( const PartitioningParams &pparams ) :
    d_set(),
    d_sumload(0),
-   d_pparams(0),
-   d_bbb(),
+   d_pparams(&pparams),
+   d_bbb(pparams),
    d_allow_box_breaking(true),
    d_print_steps(false),
    d_print_pop_steps(false),
@@ -77,7 +57,6 @@ BoxTransitSet::BoxTransitSet( const PartitioningParams &pparams ) :
    d_print_edge_steps(false)
 {
    setTimerPrefix(s_default_timer_prefix);
-   setPartitioningParams(pparams);
 }
 
 
@@ -117,7 +96,7 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
 
    const tbox::SAMRAI_MPI &mpi = balanced_box_level.getMPI();
 
-   BoxTransitSet kept_imports;
+   BoxTransitSet kept_imports(*d_pparams);
    hier::LocalId new_local_id = unbalanced_to_balanced.getBase().getLastLocalId();
 
    for (iterator ni = begin(); ni != end(); ++ni ) {

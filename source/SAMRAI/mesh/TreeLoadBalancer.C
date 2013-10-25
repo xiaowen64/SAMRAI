@@ -820,13 +820,11 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
     */
 
    // State of the tree, as seen by local process.
-   BranchData my_branch;
-   my_branch.setPartitioningParams(*d_pparams);
+   BranchData my_branch(*d_pparams);
    my_branch.setTimerPrefix(d_object_name);
    my_branch.setPrintSteps( d_print_steps == 'y' );
-   std::vector<BranchData> child_branches(num_children);
+   std::vector<BranchData> child_branches(num_children, BranchData(*d_pparams));
    for ( size_t i=0; i<child_branches.size(); ++i ) {
-      child_branches[i].setPartitioningParams(*d_pparams);
       child_branches[i].setTimerPrefix(d_object_name);
       child_branches[i].setPrintSteps( d_print_steps == 'y' );
    }
@@ -844,7 +842,6 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
     * balanced load.
     */
    BoxTransitSet &unassigned(balanced_work);
-   unassigned.setPartitioningParams(*d_pparams);
 
    t_local_load_moves->start();
    unassigned.insertAll(unbalanced_box_level.getBoxes());
@@ -1858,7 +1855,7 @@ TreeLoadBalancer::setTimers()
  *************************************************************************
  *************************************************************************
  */
-TreeLoadBalancer::BranchData::BranchData():
+TreeLoadBalancer::BranchData::BranchData( const PartitioningParams &pparams ):
    d_num_procs(0),
    d_branch_load_current(0),
    d_branch_load_ideal(-1),
@@ -1867,8 +1864,9 @@ TreeLoadBalancer::BranchData::BranchData():
    d_eff_load_current(0),
    d_eff_load_ideal(-1),
    d_eff_load_upperlimit(-1),
-   d_shipment(),
+   d_shipment(pparams),
    d_wants_work_from_parent(false),
+   d_pparams(&pparams),
    d_print_steps(false)
 {
 }

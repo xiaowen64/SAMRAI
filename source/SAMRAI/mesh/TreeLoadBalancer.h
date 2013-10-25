@@ -333,13 +333,7 @@ private:
 
    public:
       //! @brief Constructor.
-      BranchData();
-
-      void setPartitioningParams( const PartitioningParams &pparams )
-         {
-            d_pparams = &pparams;
-            d_shipment.setPartitioningParams(pparams);
-         }
+      BranchData( const PartitioningParams &pparams );
 
       /*!
        * @brief Set the starting ideal, current and upper limit of the

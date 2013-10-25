@@ -29,8 +29,8 @@ class BalanceBoxBreaker {
 
 public:
 
-   BalanceBoxBreaker() :
-      d_pparams(0),
+   BalanceBoxBreaker(const PartitioningParams &pparams) :
+      d_pparams(&pparams),
       d_print_steps(false),
       d_print_break_steps(false)
       {
