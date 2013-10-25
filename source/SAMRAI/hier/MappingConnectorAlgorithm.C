@@ -955,7 +955,7 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
       another_outgoing_ranks[i++] = *outgoing_ranks_itr;
    }
 #ifdef HAVE_OPENMP
-#pragma omp parallel private(i)
+#pragma omp parallel private(i) num_threads(4)
 {
 #pragma omp for schedule(dynamic) nowait
 #endif
