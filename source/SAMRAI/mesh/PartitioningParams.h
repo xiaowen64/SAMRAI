@@ -25,8 +25,6 @@ namespace mesh {
 
 
 
-
-
 /*!
  * @brief Light weight class holding parameters generally used
  * in partitioning.
@@ -36,24 +34,24 @@ class PartitioningParams
 {
 public:
 
-PartitioningParams(
-   const hier::BaseGridGeometry &grid_geometry,
-   const hier::IntVector &ratio_to_level_zero,
-   const hier::IntVector &min_size,
-   const hier::IntVector &max_size,
-   const hier::IntVector &bad_interval,
-   const hier::IntVector &cut_factor ) :
-   d_min_size(min_size),
-   d_max_size(max_size),
-   d_bad_interval(bad_interval),
-   d_cut_factor(cut_factor),
-   d_load_comparison_tol(1e-8)
-{
-   for ( int bid(0); bid<grid_geometry.getNumberBlocks(); ++bid ) {
-      grid_geometry.computePhysicalDomain(
-         d_block_domain_boxes[hier::BlockId(bid)], ratio_to_level_zero, hier::BlockId(bid));
-   }
-}
+   PartitioningParams(
+      const hier::BaseGridGeometry &grid_geometry,
+      const hier::IntVector &ratio_to_level_zero,
+      const hier::IntVector &min_size,
+      const hier::IntVector &max_size,
+      const hier::IntVector &bad_interval,
+      const hier::IntVector &cut_factor ) :
+      d_min_size(min_size),
+      d_max_size(max_size),
+      d_bad_interval(bad_interval),
+      d_cut_factor(cut_factor),
+      d_load_comparison_tol(1e-8)
+      {
+         for ( int bid(0); bid<grid_geometry.getNumberBlocks(); ++bid ) {
+            grid_geometry.computePhysicalDomain(
+               d_block_domain_boxes[hier::BlockId(bid)], ratio_to_level_zero, hier::BlockId(bid));
+         }
+      }
 
    double getMinLoad() const {
       return static_cast<double>(d_min_size.getProduct());
@@ -86,6 +84,27 @@ PartitioningParams(
    const double &getLoadComparisonTol() const {
       return d_load_comparison_tol;
    }
+
+   /*!
+    * @brief Evaluate whether a new load is an improvement over
+    * a current load based on its closeness to an ideal value and
+    * whether it is within an acceptable range.
+    *
+    * Return values in flags:
+    * - [0]: -1, 0 or 1: degrades, leave-alone or improves in-range
+    * - [1]: -1, 0 or 1: degrades, leave-alone or improves balance
+    * - [2]: 0 or 1: whether new is an overall improvement over current
+    *
+    * Return whether new_load is an improvement over current_load.
+    */
+   bool
+   compareLoads(
+      int flags[],
+      double current_load,
+      double new_load,
+      double ideal_load,
+      double low_load,
+      double high_load ) const;
 
 private:
 

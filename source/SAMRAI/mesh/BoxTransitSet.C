@@ -661,7 +661,7 @@ BoxTransitSet::adjustLoadByBreaking(
 
       if (!trial_breakoff.empty()) {
 
-         const bool accept_break = d_bbb.evaluateBreak(
+         const bool accept_break = d_pparams->compareLoads(
             break_acceptance_flags, breakoff_amt, trial_breakoff_amt,
             ideal_transfer, low_transfer, high_transfer );
          if (d_print_break_steps) {
@@ -923,13 +923,10 @@ BoxTransitSet::adjustLoadByPopping(
 
       const BoxInTransit &candidate_box = *src->begin();
 
-      bool improved = d_bbb.evaluateBreak(
-         acceptance_flags,
-         dst->getSumLoad(),
+      bool improved = d_pparams->compareLoads(
+         acceptance_flags, dst->getSumLoad(),
          dst->getSumLoad() + candidate_box.d_boxload,
-         dst_ideal_load,
-         dst_low_load,
-         dst_high_load );
+         dst_ideal_load, dst_low_load, dst_high_load );
 
       if ( improved ) {
 
@@ -1038,11 +1035,10 @@ BoxTransitSet::swapLoadPair(
     * looking until we find the pair giving the lowest balance_penalty
     * on swapping.
     *
-    * isrc and idst point to the current best pair to swap.  new_balance_penalty
-    * is the balance_penalty if we swap them.
+    * isrc and idst point to the current best pair to swap.
     *
-    * src_test and dst_test are trial pairs to check to see if we can improve on
-    * new_balance_penalty.
+    * src_test and dst_test are trial pairs to check to see if we can
+    * improve on new_balance_penalty.
     *
     * We will look for two "best" pairs:
     *
@@ -1088,8 +1084,9 @@ BoxTransitSet::swapLoadPair(
       if (src_test != src.begin()) {
          iterator src_test1 = src_test;
          --src_test1;
-         if ( d_bbb.evaluateBreak( hiside_acceptance_flags, hiside_transfer, src_test1->d_boxload,
-                             ideal_transfer, low_transfer, high_transfer ) ) {
+         if ( d_pparams->compareLoads( hiside_acceptance_flags, hiside_transfer,
+                                       src_test1->d_boxload, ideal_transfer,
+                                       low_transfer, high_transfer ) ) {
             src_hiside = src_test1;
             hiside_transfer = src_hiside->d_boxload;
             if (d_print_swap_steps) {
@@ -1103,8 +1100,9 @@ BoxTransitSet::swapLoadPair(
          }
       }
       if (src_test != src.end()) {
-         if ( d_bbb.evaluateBreak( loside_acceptance_flags, loside_transfer, src_test->d_boxload,
-                             ideal_transfer, low_transfer, high_transfer ) ) {
+         if ( d_pparams->compareLoads( loside_acceptance_flags, loside_transfer,
+                                       src_test->d_boxload, ideal_transfer,
+                                       low_transfer, high_transfer ) ) {
             src_loside = src_test;
             loside_transfer = src_loside->d_boxload;
             if (d_print_swap_steps) {
@@ -1154,9 +1152,9 @@ BoxTransitSet::swapLoadPair(
              * dst for the low-side transfer.
              */
 
-            d_bbb.evaluateBreak( hiside_acceptance_flags, hiside_transfer,
-                           src_test->d_boxload - dst_test->d_boxload,
-                           ideal_transfer, low_transfer, high_transfer );
+            d_pparams->compareLoads( hiside_acceptance_flags, hiside_transfer,
+                                     src_test->d_boxload - dst_test->d_boxload,
+                                     ideal_transfer, low_transfer, high_transfer );
 
             if ( hiside_acceptance_flags[2] == 1 ) {
                src_hiside = src_test;
@@ -1174,9 +1172,9 @@ BoxTransitSet::swapLoadPair(
             if (dst_test != dst.begin()) {
                --dst_test; // Now, src_test and dst_test transferer by *less* than ideal_transfer.
 
-               d_bbb.evaluateBreak( loside_acceptance_flags, loside_transfer,
-                              src_test->d_boxload - dst_test->d_boxload,
-                              ideal_transfer, low_transfer, high_transfer );
+               d_pparams->compareLoads( loside_acceptance_flags, loside_transfer,
+                                        src_test->d_boxload - dst_test->d_boxload,
+                                        ideal_transfer, low_transfer, high_transfer );
 
                if ( loside_acceptance_flags[2] == 1 ) {
                   src_loside = src_test;
@@ -1200,11 +1198,11 @@ BoxTransitSet::swapLoadPair(
              * Chech this against the current high- and low-side choices.
              */
             if (src_test->d_boxload > ideal_transfer) {
-               // Moving src_test to src is moving too much--hiside.
+               // Moving src_test to dst is moving too much--hiside.
 
-               d_bbb.evaluateBreak( hiside_acceptance_flags, hiside_transfer,
-                              src_test->d_boxload,
-                              ideal_transfer, low_transfer, high_transfer );
+               d_pparams->compareLoads( hiside_acceptance_flags, hiside_transfer,
+                                        src_test->d_boxload, ideal_transfer,
+                                        low_transfer, high_transfer );
 
                if ( hiside_acceptance_flags[2] == 1 ) {
                   src_hiside = src_test;
@@ -1219,11 +1217,11 @@ BoxTransitSet::swapLoadPair(
                   }
                }
             } else {
-               // Moving src_test to src is moving (just right or) too little--loside.
+               // Moving src_test to dst is moving (just right or) too little--loside.
 
-               d_bbb.evaluateBreak( loside_acceptance_flags, loside_transfer,
-                              src_test->d_boxload,
-                              ideal_transfer, low_transfer, high_transfer );
+               d_pparams->compareLoads( loside_acceptance_flags, loside_transfer,
+                                        src_test->d_boxload, ideal_transfer,
+                                        low_transfer, high_transfer );
 
                if ( loside_acceptance_flags[2] == 1 ) {
                   src_loside = src_test;
@@ -1255,19 +1253,15 @@ BoxTransitSet::swapLoadPair(
 
    }
 
-   /*
-    * Swapping does not produce new cuts, so it is ok to omit the penalties
-    * arising from cutting.
-    */
-   double current_balance_penalty = static_cast<double>(ideal_transfer);
-   double balance_penalty_loside = static_cast<double>(loside_transfer-ideal_transfer);
-   double balance_penalty_hiside = static_cast<double>(hiside_transfer-ideal_transfer);
 
    if (d_print_swap_steps) {
+      double balance_penalty_current = static_cast<double>(ideal_transfer);
+      double balance_penalty_loside = static_cast<double>(loside_transfer-ideal_transfer);
+      double balance_penalty_hiside = static_cast<double>(hiside_transfer-ideal_transfer);
       tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
       tbox::plog.precision(8);
       tbox::plog << "    Swap candidates give penalties (unswap,lo,hi): "
-                 << current_balance_penalty << " , " << balance_penalty_loside
+                 << balance_penalty_current << " , " << balance_penalty_loside
                  << " , " << balance_penalty_hiside << std::endl;
    }
 
@@ -1276,8 +1270,9 @@ BoxTransitSet::swapLoadPair(
    iterator idst = dst.end();
    actual_transfer = 0;
 
-   if ( d_bbb.evaluateBreak( hiside_acceptance_flags, actual_transfer, hiside_transfer,
-                       ideal_transfer, low_transfer, high_transfer ) ) {
+   if ( d_pparams->compareLoads( hiside_acceptance_flags, actual_transfer,
+                                 hiside_transfer, ideal_transfer,
+                                 low_transfer, high_transfer ) ) {
       isrc = src_hiside;
       idst = dst_hiside;
       actual_transfer = hiside_transfer;
@@ -1287,8 +1282,9 @@ BoxTransitSet::swapLoadPair(
       }
    }
 
-   if ( d_bbb.evaluateBreak( loside_acceptance_flags, actual_transfer, loside_transfer,
-                       ideal_transfer, low_transfer, high_transfer ) ) {
+   if ( d_pparams->compareLoads( loside_acceptance_flags, actual_transfer,
+                                 loside_transfer, ideal_transfer,
+                                 low_transfer, high_transfer ) ) {
       isrc = src_loside;
       idst = dst_loside;
       actual_transfer = loside_transfer;

@@ -124,24 +124,6 @@ public:
       return tbox::MathUtilities<double>::Abs(imbalance);
    }
 
-   /*!
-    * @brief Evaluate a trial box-break.
-    *
-    * Return whether new_load is an improvement over current_load.
-    * This should be renamed compareLoads or checkLoads.
-    *
-    * This method should be renamed to show it is more general than
-    * for evaluating breaks.
-    */
-   bool
-   evaluateBreak(
-      int flags[],
-      LoadType current_load,
-      LoadType new_load,
-      LoadType ideal_load,
-      LoadType low_load,
-      LoadType high_load ) const;
-
 private:
 
    void
