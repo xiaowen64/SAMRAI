@@ -696,6 +696,7 @@ private:
     */
    static boost::shared_ptr<tbox::Timer> t_load_balance_boxes;
    static boost::shared_ptr<tbox::Timer> t_load_balance_boxes_remove_intersection;
+   static boost::shared_ptr<tbox::Timer> t_get_global_boxes;
    static boost::shared_ptr<tbox::Timer> t_bin_pack_boxes;
    static boost::shared_ptr<tbox::Timer> t_bin_pack_boxes_sort;
    static boost::shared_ptr<tbox::Timer> t_bin_pack_boxes_pack;

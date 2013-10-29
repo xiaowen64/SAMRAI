@@ -51,6 +51,7 @@ ChopAndPackLoadBalancer::s_initialize_handler(
 
 boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_load_balance_boxes;
 boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_load_balance_boxes_remove_intersection;
+boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_get_global_boxes;
 boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_bin_pack_boxes;
 boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_bin_pack_boxes_sort;
 boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_bin_pack_boxes_pack;
@@ -281,8 +282,10 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       }
    }
 
+   t_get_global_boxes->barrierAndStart();
    hier::BoxLevel globalized_input_box_level(balance_box_level);
    globalized_input_box_level.setParallelState(hier::BoxLevel::GLOBALIZED);
+   t_get_global_boxes->stop();
 
    hier::BoxContainer in_boxes;
    const hier::BoxContainer globalized_input_boxes(
@@ -1299,6 +1302,8 @@ ChopAndPackLoadBalancer::initializeCallback()
       tbox::TimerManager::getManager()->
       getTimer(
          "mesh::ChopAndPackLoadBalancer::loadBalanceBoxes()_remove_intersection");
+   t_get_global_boxes = tbox::TimerManager::getManager()->
+      getTimer("mesh::ChopAndPackLoadBalancer::get_global_boxes");
    t_bin_pack_boxes = tbox::TimerManager::getManager()->
       getTimer("mesh::ChopAndPackLoadBalancer::binPackBoxes()");
    t_bin_pack_boxes_sort = tbox::TimerManager::getManager()->
