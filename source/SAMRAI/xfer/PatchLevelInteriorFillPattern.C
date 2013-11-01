@@ -14,6 +14,7 @@
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -86,8 +87,8 @@ PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
    /*
     * Fill just the interior.  Disregard gcw.
     */
-   for (hier::BoxContainer::const_iterator ni = dst_boxes.begin();
-        ni != dst_boxes.end(); ++ni) {
+   for (hier::RealBoxConstIterator ni(dst_boxes.realBegin());
+        ni != dst_boxes.realEnd(); ++ni) {
       const hier::BoxId& gid = ni->getBoxId();
       const hier::Box& dst_box = *dst_box_level.getBox(gid);
       fill_box_level->addBoxWithoutUpdate(dst_box);

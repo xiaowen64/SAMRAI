@@ -14,6 +14,7 @@
 #include "SAMRAI/xfer/PatchLevelBorderAndInteriorFillPattern.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 namespace SAMRAI {
@@ -90,8 +91,8 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
     * normally filled by coarser box_level.)
     */
    hier::LocalId last_id = dst_box_level.getLastLocalId();
-   for (hier::BoxContainer::const_iterator ni = dst_boxes.begin();
-        ni != dst_boxes.end(); ++ni) {
+   for (hier::RealBoxConstIterator ni(dst_boxes.realBegin());
+        ni != dst_boxes.realEnd(); ++ni) {
 
       const hier::BoxId& gid(ni->getBoxId());
       const hier::Box& dst_box = *dst_box_level.getBox(gid);
