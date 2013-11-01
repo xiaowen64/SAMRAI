@@ -64,8 +64,8 @@ public:
     * Can assume:
     * -# dest_ln is not the finest level in the range being solved.
     * -# corresponding solution has been computed on level dest_ln+1.
-    * -# the source and destination residual vectors (s and d) may
-    *    or may not be the same.  (This function must work in either case.)
+    * -# the source and destination residual vectors may or may not
+    *      be the same.  (This method must work in either case.)
     *
     * Upon return from this function, the solution on the refined region
     * of the coarse level will represent the coarsened version of the
@@ -96,8 +96,8 @@ public:
     * Can assume:
     * -# dest_ln is not the finest level in the range being solved.
     * -# correspnding residual has been computed on level dest_ln+1.
-    * -# the source and destination residual vectors (s and d) may
-    *    or may not be the same.  (This function must work in either case.)
+    * -# the source and destination residual vectors may or may not
+    *      be the same.  (This method must work in either case.)
     *
     * Upon return from this function, the residual on the refined region
     * of the coarse level will represent the coarsened version of the
