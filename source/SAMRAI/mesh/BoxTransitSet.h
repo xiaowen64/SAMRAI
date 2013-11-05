@@ -179,24 +179,6 @@ public:
 
 
    /*!
-    * @brief Insert BoxInTransit into an output stream.
-    */
-   friend std::ostream&
-   operator << (
-      std::ostream& co,
-      const BoxInTransit& r)
-      {
-         co << r.d_box
-            << r.d_box.numberCells() << '|'
-            << r.d_box.numberCells().getProduct();
-         co << '-' << r.d_orig_box
-            << r.d_box.numberCells() << '|'
-            << r.d_box.numberCells().getProduct();
-         return co;
-      }
-
-
-   /*!
     * @brief Comparison functor for sorting BoxInTransit from more to
     * less loads.
     *
@@ -234,6 +216,30 @@ public:
          return false;
       }
    };
+
+
+   void recursivePrint(
+      std::ostream &co=tbox::plog,
+      const std::string &border=std::string(),
+      int detail_depth=1 ) const;
+
+
+   /*!
+    * @brief Insert BoxInTransit into an output stream.
+    */
+   friend std::ostream&
+   operator << (
+      std::ostream& co,
+      const BoxInTransit& r)
+      {
+         co << r.d_box
+            << r.d_box.numberCells() << '|'
+            << r.d_box.numberCells().getProduct();
+         co << '-' << r.d_orig_box
+            << r.d_box.numberCells() << '|'
+            << r.d_box.numberCells().getProduct();
+         return co;
+      }
 
 
 

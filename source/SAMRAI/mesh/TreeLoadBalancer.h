@@ -247,16 +247,6 @@ public:
       const tbox::RankGroup& rank_group = tbox::RankGroup()) const;
 
    /*!
-    * @brief Print out all members of the class instance to given
-    * output stream.
-    *
-    * @param[in] output_stream
-    */
-   virtual void
-   printClassData(
-      std::ostream& output_stream) const;
-
-   /*!
     * @brief Write out statistics recorded for the most recent load
     * balancing result.
     *
@@ -426,7 +416,9 @@ private:
       //@}
 
       //! @brief Diagnostic printing.
-      void printClassData( const std::string &border, std::ostream &os ) const;
+      void recursivePrint( std::ostream &os,
+                           const std::string &border=std::string(),
+                           int detail_depth=2 ) const;
 
       //! @brief Setup names of timers.
       void setTimerPrefix(const std::string& timer_prefix);

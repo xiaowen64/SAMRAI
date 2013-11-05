@@ -1411,6 +1411,31 @@ BoxTransitSet::getFromMessageStream( tbox::MessageStream &msg )
 
 
 
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+BoxTransitSet::recursivePrint(
+   std::ostream &co,
+   const std::string &border,
+   int detail_depth ) const
+{
+   co << getSumLoad() << " units in " << size() << " boxes.";
+   if ( detail_depth > 0 ) {
+      size_t count = 0;
+      co << ":\n";
+      for ( BoxTransitSet::const_iterator bi=begin();
+            bi!=end() && count < 10; ++bi, ++count ) {
+         tbox::plog << "    " << *bi << '\n';
+      }
+   }
+   else {
+      co << ".\n";
+   }
+}
+
+
 }
 }
 
