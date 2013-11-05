@@ -314,9 +314,9 @@ private:
     * @brief Data to save for each sending/receiving process and the
     * branch at that process.
     *
-    * Terminology: The "pruned" parts of the tree are branches that
-    * are not open to receiving work from their parents.  These parts
-    * are not counted in the "effective" tree for the purpose of
+    * Terminology: Parts of any tree may not be open to receiving work
+    * from their parents because they have enough work already.  These
+    * parts are not counted in the "effective" tree for the purpose of
     * distributing work on the branch.
     */
    class BranchData {
@@ -455,18 +455,18 @@ private:
       int d_eff_num_procs;
 
       /*!
-       * @brief Current load in the pruned branch, including local unassigned load.
+       * @brief Current load in the effective branch.
        */
       LoadType d_eff_load_current;
 
       /*!
-       * @brief Ideal load for the pruned branch.
+       * @brief Ideal load for the effective branch.
        */
       LoadType d_eff_load_ideal;
 
       /*!
-       * @brief Load the pruned branch is willing to have, based
-       * on the load tolerance and upper limit of unpruned children.
+       * @brief Load the effective branch is willing to have, which is
+       * a sum of the upper limits of its effective children.
        */
       LoadType d_eff_load_upperlimit;
 

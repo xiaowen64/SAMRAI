@@ -1273,9 +1273,9 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
 
 /*
  *************************************************************************
- * Compute the surplus per descendent in the pruned tree rooted at the
- * local process.  This surplus, if any, is the difference between the
- * available load_for_descendents, spread over those descendents.
+ * Compute the surplus per descendent in the effective tree rooted at
+ * the local process.  This surplus, if any, is the difference between
+ * the available load_for_descendents, spread over those descendents.
  *
  * Surplus per descendent will be zero if we don't need to push surplus
  * work to children.
@@ -1290,10 +1290,8 @@ TreeLoadBalancer::computeSurplusPerEffectiveDescendent(
 {
    const LoadType load_for_me = group_avg_load*(1 + d_flexible_load_tol);
 
-   // Available amount for descendents after removing load_for_me:
    const LoadType load_for_descendents = unassigned_load - load_for_me;
 
-   // Total of ideal exports to children:
    LoadType ideal_export_to_children = 0.0;
    int num_effective_des = 0;
    for (size_t ichild = first_child; ichild < child_branches.size(); ++ichild) {
@@ -1303,7 +1301,6 @@ TreeLoadBalancer::computeSurplusPerEffectiveDescendent(
       }
    }
 
-   // Amount of surplus per effective descendent.
    const LoadType surplus_per_effective_descendent =
       (load_for_descendents - ideal_export_to_children) / num_effective_des;
 
