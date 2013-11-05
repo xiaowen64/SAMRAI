@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Implementation of TreeLoadBalancer::TransitSet.
+ * Description:   Implementation of TreeLoadBalancer.
  *
  ************************************************************************/
 
@@ -596,7 +596,7 @@ private:
 
    const PartitioningParams *d_pparams;
 
-   BalanceBoxBreaker d_bbb;
+   BalanceBoxBreaker d_box_breaker;
 
    bool d_allow_box_breaking;
 

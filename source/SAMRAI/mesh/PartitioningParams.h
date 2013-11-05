@@ -86,9 +86,9 @@ public:
    }
 
    /*!
-    * @brief Evaluate whether a new load is an improvement over
-    * a current load based on its closeness to an ideal value and
-    * whether it is within an acceptable range.
+    * @brief Evaluate whether a new load is an improvement over a
+    * current load based on their proximity to an ideal value or range
+    * of acceptable values.
     *
     * Return values in flags:
     * - [0]: -1, 0 or 1: degrades, leave-alone or improves in-range

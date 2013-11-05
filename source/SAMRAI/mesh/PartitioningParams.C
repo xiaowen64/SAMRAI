@@ -20,18 +20,6 @@ namespace mesh {
 
 /*
  *************************************************************************
- * Determine whether a proposed break should be accepted based on
- * closeness to ideal and being within a given range.
- *
- * Return values in flags:
- * - [0]: -1, 0 or 1: degrades, leave-alone or improves in-range
- * - [1]: -1, 0 or 1: degrades, leave-alone or improves balance
- * - [2]: 0 or 1: whether new is an overall improvement over current
- *
- * Overall improvement gives preference to in-range improvement.
- * If in-range is the same, use balance improvement.
- *
- * Return whether new_load is an improvement over current_load.
  *************************************************************************
  */
 

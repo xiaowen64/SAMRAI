@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Implementation of TreeLoadBalancer::TransitSet.
+ * Description:   Implementation of TreeLoadBalancer.
  *
  ************************************************************************/
 
@@ -48,7 +48,7 @@ BoxTransitSet::BoxTransitSet( const PartitioningParams &pparams ) :
    d_set(),
    d_sumload(0),
    d_pparams(&pparams),
-   d_bbb(pparams),
+   d_box_breaker(pparams),
    d_allow_box_breaking(true),
    d_print_steps(false),
    d_print_pop_steps(false),
@@ -629,7 +629,7 @@ BoxTransitSet::adjustLoadByBreaking(
       std::vector<hier::Box> trial_leftover;
       double trial_breakoff_amt;
 
-      d_bbb.breakOffLoad(
+      d_box_breaker.breakOffLoad(
          trial_breakoff,
          trial_leftover,
          trial_breakoff_amt,
