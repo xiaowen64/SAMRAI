@@ -680,8 +680,10 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
    const tbox::RankGroup& rank_group,
    double group_sum_load ) const
 {
-
    t_distribute_load_across_rank_group->start();
+
+   TBOX_ASSERT(balanced_work.getNumberOfItems() == 0);
+   TBOX_ASSERT(balanced_work.getSumLoad() <= d_pparams->getLoadComparisonTol());
 
    double group_avg_load = group_sum_load / rank_group.size();
 
@@ -837,8 +839,6 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
     */
    BoxTransitSet &unassigned(balanced_work);
 
-   unassigned.clear();
-
    t_local_load_moves->start();
    unassigned.insertAll(unbalanced_box_level.getBoxes());
    t_local_load_moves->stop();
@@ -899,7 +899,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
    // We should have received everything by this point.
    TBOX_ASSERT(!child_recv_stage.hasPendingRequests());
 
-   size_t unassigned_highwater = unassigned.size();
+   size_t unassigned_highwater = unassigned.getNumberOfItems();
 
    if ( my_branch.effDeficit() > 0 && !d_rank_tree->isRoot() ) {
       my_branch.setWantsWorkFromParent();
@@ -1005,8 +1005,8 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
       my_branch.moveInboundLoadToReserve(unassigned);
       t_local_load_moves->stop();
 
-      if ( unassigned_highwater < unassigned.size() ) {
-         unassigned_highwater = unassigned.size();
+      if ( unassigned_highwater < unassigned.getNumberOfItems() ) {
+         unassigned_highwater = unassigned.getNumberOfItems();
       }
 
       t_get_load_from_parent->stop();
@@ -1240,7 +1240,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(2),
          "final box count",
-         double(balanced_work.size()) );
+         double(balanced_work.getNumberOfItems()) );
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(3),
@@ -1472,7 +1472,7 @@ TreeLoadBalancer::setupAsyncCommObjects(
          child_comms[child_num].setMPITag(TreeLoadBalancer_LOADTAG0,
                                           TreeLoadBalancer_LOADTAG1);
          child_comms[child_num].limitFirstDataLength(
-            sizeof(BoxTransitSet::BoxInTransit)*TreeLoadBalancer_FIRSTDATALEN);
+            TreeLoadBalancer_FIRSTDATALEN);
       }
    }
 
@@ -1488,7 +1488,7 @@ TreeLoadBalancer::setupAsyncCommObjects(
       parent_comm->setMPITag(TreeLoadBalancer_LOADTAG0,
          TreeLoadBalancer_LOADTAG1);
       parent_comm->limitFirstDataLength(
-         sizeof(BoxTransitSet::BoxInTransit)*TreeLoadBalancer_FIRSTDATALEN);
+         TreeLoadBalancer_FIRSTDATALEN);
 
    }
 
@@ -1890,10 +1890,9 @@ TreeLoadBalancer::BranchData::packDataToParent(
    d_shipment.putToMessageStream(msg);
 
    if (d_print_steps) {
-      tbox::plog << "BranchData::packDataToParent:  packed "
-                 << d_shipment.size() << " boxes ("
-                 << d_shipment.getSumLoad() << " units)."
-                 << "  message length = " << msg.getCurrentSize() << " bytes"
+      tbox::plog << "BranchData::packDataToParent:  packed ";
+      d_shipment.recursivePrint(tbox::plog, "", 0);
+      tbox::plog << "  message length = " << msg.getCurrentSize() << " bytes"
                  << std::endl;
    }
 
@@ -1950,10 +1949,9 @@ TreeLoadBalancer::BranchData::packDataToChild(
    d_shipment.putToMessageStream(msg);
 
    if (d_print_steps) {
-      tbox::plog << "BranchData::packDataToChild: packed "
-                 << d_shipment.size() << " boxes ("
-                 << d_shipment.getSumLoad() << " units)."
-                 << "  message length = " << msg.getCurrentSize() << " bytes"
+      tbox::plog << "BranchData::packDataToChild: packed ";
+      d_shipment.recursivePrint(tbox::plog, "", 0);
+      tbox::plog << "  message length = " << msg.getCurrentSize() << " bytes"
                  << std::endl;
    }
 

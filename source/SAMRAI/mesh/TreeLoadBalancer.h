@@ -378,7 +378,7 @@ private:
          { return d_shipment.getSumLoad(); }
       //! @brief Get count of work shipped.
       size_t getShipmentPackageCount() const
-         { return d_shipment.size(); }
+         { return d_shipment.getNumberOfItems(); }
       //! @brief Get count of originators of the work shipped.
       size_t getShipmentOriginatorCount() const
          { return d_shipment.getNumberOfOriginatingProcesses(); }

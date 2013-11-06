@@ -60,6 +60,62 @@ BoxTransitSet::BoxTransitSet( const PartitioningParams &pparams ) :
 }
 
 
+/*
+*************************************************************************
+*************************************************************************
+*/
+void BoxTransitSet::insertAll( const hier::BoxContainer &other )
+{
+   size_t old_size = d_set.size();
+   for ( hier::BoxContainer::const_iterator bi=other.begin(); bi!=other.end(); ++bi ) {
+      BoxInTransit new_box(*bi);
+      d_set.insert( new_box );
+      d_sumload += new_box.d_boxload;
+   };
+   if ( d_set.size() != old_size + other.size() ) {
+      TBOX_ERROR("BoxTransitSet's insertAll currently can't weed out duplicates.");
+   }
+}
+
+
+/*
+*************************************************************************
+*************************************************************************
+*/
+void BoxTransitSet::insertAll( const BoxTransitSet &other )
+{
+   size_t old_size = d_set.size();
+   d_set.insert( other.d_set.begin(), other.d_set.end() );
+   d_sumload += other.d_sumload;
+   if ( d_set.size() != old_size + other.size() ) {
+      TBOX_ERROR("BoxTransitSet's insertAll currently can't weed out duplicates.");
+   }
+}
+
+
+/*
+*************************************************************************
+*************************************************************************
+*/
+size_t BoxTransitSet::getNumberOfItems() const
+{
+   return size();
+}
+
+
+/*
+*************************************************************************
+*************************************************************************
+*/
+size_t BoxTransitSet::getNumberOfOriginatingProcesses() const
+{
+   std::set<int> originating_procs;
+   for ( const_iterator si=begin(); si!=end(); ++si ) {
+      originating_procs.insert( si->d_orig_box.getOwnerRank() );
+   }
+   return originating_procs.size();
+}
+
 
 /*
  *************************************************************************
@@ -187,7 +243,6 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
 
    const hier::BoxLevel &balanced_box_level = unbalanced_to_balanced.getHead();
    const hier::BoxLevel &unbalanced_box_level = unbalanced_to_balanced.getBase();
-   const hier::BoxContainer &unbalanced_boxes = unbalanced_box_level.getBoxes();
    const tbox::SAMRAI_MPI &mpi = unbalanced_box_level.getMPI();
 
    // Stuff the imported boxes into buffers by their original owners.
@@ -248,9 +303,13 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    d_object_timers->t_construct_semilocal_send_edges->stop();
 
 
+   int num_cells_imported = 0;
+   for ( const_iterator si=kept_imports.begin(); si!=kept_imports.end(); ++si ) {
+      num_cells_imported += si->d_box.size();
+   }
+
    int num_unaccounted_cells = static_cast<int>(
-      unbalanced_box_level.getLocalNumberOfCells()
-      + kept_imports.getNumberOfCells()
+      unbalanced_box_level.getLocalNumberOfCells() + num_cells_imported
       - balanced_box_level.getLocalNumberOfCells() );
 
    if ( d_print_edge_steps ) {
@@ -1427,7 +1486,7 @@ BoxTransitSet::recursivePrint(
       co << ":\n";
       for ( BoxTransitSet::const_iterator bi=begin();
             bi!=end() && count < 10; ++bi, ++count ) {
-         tbox::plog << "    " << *bi << '\n';
+         tbox::plog << border << "    " << *bi << '\n';
       }
    }
    else {

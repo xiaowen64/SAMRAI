@@ -43,6 +43,103 @@ public:
 
    typedef double LoadType;
 
+   BoxTransitSet( const PartitioningParams &pparams );
+
+   //! @brief Return the total load contained.
+   LoadType getSumLoad() const { return d_sumload; }
+
+   //! @brief Insert all boxes from the given BoxContainer.
+   void insertAll( const hier::BoxContainer &other );
+
+   //! @brief Insert all boxes from the given BoxTransitSet.
+   void insertAll( const BoxTransitSet &other );
+
+   //! @brief Return number of items in this container.
+   size_t getNumberOfItems() const;
+
+   //! @brief Return number of processes contributing to the contents.
+   size_t getNumberOfOriginatingProcesses() const;
+
+   //@{
+   //! @name Packing/unpacking for communication.
+
+   void putToMessageStream( tbox::MessageStream &msg ) const;
+
+   void getFromMessageStream( tbox::MessageStream &msg );
+   //@}
+
+
+   /*!
+    * @brief Adjust the load in this BoxTransitSet by moving work
+    * between it and another BoxTransitSet.
+    *
+    * @param[in,out] hold_bin Holding bin for reserve load.
+    *
+    * @param[in] ideal_load The load that this bin should have.
+    *
+    * @param[in] low_load Return when this bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @param[in] high_load Return when this bin's load is in the range
+    * [low_load,high_load]
+    *
+    * @return Net load added to this BoxTransitSet.  If negative, load
+    * decreased.
+    */
+   LoadType
+   adjustLoad(
+      BoxTransitSet& hold_bin,
+      LoadType ideal_load,
+      LoadType low_load,
+      LoadType high_load );
+
+
+   /*!
+    * @brief Assign unassigned boxes to local process and generate
+    * balanced<==>unbalanced map.
+    *
+    * This method uses communication to set up the map.
+    */
+   void
+   assignContentToLocalProcessAndGenerateMap(
+      hier::BoxLevel& balanced_box_level,
+      hier::MappingConnector &balanced_to_unbalanced,
+      hier::MappingConnector &unbalanced_to_balanced ) const;
+
+
+   /*!
+    * @brief Allow box breaking when adjusting load.
+    */
+   void allowBoxBreaking() {
+      d_allow_box_breaking = true;
+   }
+
+   /*!
+    * @brief Setup names of timers.
+    *
+    * By default, timers are named "mesh::BoxTransitSet::*",
+    * where the third field is the specific steps performed
+    * by the Schedule.  You can override the first two
+    * fields with this method.  Conforming to the timer
+    * naming convention, timer_prefix should have the form
+    * "*::*".
+    */
+   void
+   setTimerPrefix(
+      const std::string& timer_prefix);
+
+   void recursivePrint(
+      std::ostream &co=tbox::plog,
+      const std::string &border=std::string(),
+      int detail_depth=1 ) const;
+
+
+private:
+
+   static const int BoxTransitSet_EDGETAG0 = 3;
+   static const int BoxTransitSet_EDGETAG1 = 4;
+
+
    /*!
     * @brief Data to save for each Box that gets passed along the tree
     * edges.
@@ -139,11 +236,7 @@ public:
          return d_box;
       }
 
-      /*!
-       * @brief Put self into a MessageStream.
-       *
-       * This is the opposite of getFromMessageStream().
-       */
+      //! @brief Put self into a MessageStream.
       void
       putToMessageStream(tbox::MessageStream &mstream) const
          {
@@ -153,11 +246,7 @@ public:
             return;
          }
 
-      /*!
-       * @brief Set attributes according to data in a MessageStream.
-       *
-       * This is the opposite of putToMessageStream().
-       */
+      //! @brief Set attributes according to data in a MessageStream.
       void
       getFromMessageStream(tbox::MessageStream &mstream)
          {
@@ -167,13 +256,12 @@ public:
             return;
          }
 
-      //! @brief The Box.
       hier::Box d_box;
 
       //! @brief Originating Box.
       hier::Box d_orig_box;
 
-      //! @brief Work load in this box.
+      //! @brief Work load in this d_box.
       LoadType d_boxload;
    };
 
@@ -218,132 +306,8 @@ public:
    };
 
 
-   void recursivePrint(
-      std::ostream &co=tbox::plog,
-      const std::string &border=std::string(),
-      int detail_depth=1 ) const;
-
-
-   /*!
-    * @brief Insert BoxInTransit into an output stream.
-    */
-   friend std::ostream&
-   operator << (
-      std::ostream& co,
-      const BoxInTransit& r)
-      {
-         co << r.d_box
-            << r.d_box.numberCells() << '|'
-            << r.d_box.numberCells().getProduct();
-         co << '-' << r.d_orig_box
-            << r.d_box.numberCells() << '|'
-            << r.d_box.numberCells().getProduct();
-         return co;
-      }
-
-
-
-public:
-
-   BoxTransitSet( const PartitioningParams &pparams );
-
-   /*!
-    * @brief Adjust the load in this BoxTransitSet by moving work
-    * between it and another BoxTransitSet.
-    *
-    * @param[in,out] hold_bin Holding bin for reserve load.
-    *
-    * @param[in] ideal_load The load that this bin should have.
-    *
-    * @param[in] low_load Return when this bin's load is in the range
-    * [low_load,high_load]
-    *
-    * @param[in] high_load Return when this bin's load is in the range
-    * [low_load,high_load]
-    *
-    * @return Net load added to this BoxTransitSet.  If negative, load
-    * decreased.
-    */
-   LoadType
-   adjustLoad(
-      BoxTransitSet& hold_bin,
-      LoadType ideal_load,
-      LoadType low_load,
-      LoadType high_load );
-
-
-   /*!
-    * @brief Assign unassigned boxes to local process and generate
-    * balanced<==>unbalanced map.
-    *
-    * This method uses communication to set up the map.
-    */
-   void
-   assignContentToLocalProcessAndGenerateMap(
-      hier::BoxLevel& balanced_box_level,
-      hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced ) const;
-
-
-   /*!
-    * @brief Allow box breaking when adjusting load.
-    */
-   void allowBoxBreaking() {
-      d_allow_box_breaking = true;
-   }
-
-
-   //! @brief Return the total load contained.
-   LoadType getSumLoad() const { return d_sumload; }
-
-
-   //! @brief Insert all boxes from the given BoxContainer.
-   void insertAll( const hier::BoxContainer &other ) {
-      size_t old_size = d_set.size();
-      for ( hier::BoxContainer::const_iterator bi=other.begin(); bi!=other.end(); ++bi ) {
-         BoxInTransit new_box(*bi);
-         d_set.insert( new_box );
-         d_sumload += new_box.d_boxload;
-      };
-      if ( d_set.size() != old_size + other.size() ) {
-         TBOX_ERROR("BoxTransitSet's insertAll currently can't weed out duplicates.");
-      }
-   }
-
-
-   //! @brief Insert all boxes from the given BoxTransitSet.
-   void insertAll( const BoxTransitSet &other ) {
-      size_t old_size = d_set.size();
-      d_set.insert( other.d_set.begin(), other.d_set.end() );
-      d_sumload += other.d_sumload;
-      if ( d_set.size() != old_size + other.size() ) {
-         TBOX_ERROR("BoxTransitSet's insertAll currently can't weed out duplicates.");
-      }
-   }
-
-
-   //! @brief Return number of processes contributing to the contents of this container.
-   size_t getNumberOfOriginatingProcesses() const {
-      std::set<int> originating_procs;
-      for ( const_iterator si=begin(); si!=end(); ++si ) {
-         originating_procs.insert( si->d_orig_box.getOwnerRank() );
-      }
-      return originating_procs.size();
-   }
-
-
-   //! @brief Return number of cells in this container.
-   int getNumberOfCells() const {
-      int num_cells = 0;
-      for ( const_iterator si=begin(); si!=end(); ++si ) {
-         num_cells += si->d_box.size();
-      }
-      return num_cells;
-   }
-
-
    //@{
-   //! @name Set interfaces, exactly like the C++ standard stl::set.
+   //! @name Interfaces like the C++ standard stl::set, to help readability.
    typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::iterator iterator;
    typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::const_iterator const_iterator;
    typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::reverse_iterator reverse_iterator;
@@ -380,32 +344,20 @@ public:
    //@}
 
 
-   //@{
-   //! @name Packing/unpacking for communication.
-   void putToMessageStream( tbox::MessageStream &msg ) const;
-   void getFromMessageStream( tbox::MessageStream &msg );
-   //@}
-
-
    /*!
-    * @brief Setup names of timers.
-    *
-    * By default, timers are named "mesh::BoxTransitSet::*",
-    * where the third field is the specific steps performed
-    * by the Schedule.  You can override the first two
-    * fields with this method.  Conforming to the timer
-    * naming convention, timer_prefix should have the form
-    * "*::*".
+    * @brief Insert BoxInTransit into an output stream.
     */
-   void
-   setTimerPrefix(
-      const std::string& timer_prefix);
-
-
-private:
-
-   static const int BoxTransitSet_EDGETAG0 = 3;
-   static const int BoxTransitSet_EDGETAG1 = 4;
+   friend std::ostream&
+   operator << ( std::ostream& co, const BoxInTransit& r)
+      {
+         co << r.d_box
+            << r.d_box.numberCells() << '|'
+            << r.d_box.numberCells().getProduct();
+         co << '-' << r.d_orig_box
+            << r.d_box.numberCells() << '|'
+            << r.d_box.numberCells().getProduct();
+         return co;
+      }
 
 
    //@{ @name Load adjustment methods
@@ -559,9 +511,7 @@ private:
    }
 
 
-   /*!
-    * @brief Compute the load for a Box.
-    */
+   //! @brief Compute the load for a Box.
    double
    computeLoad(
       const hier::Box& box) const
