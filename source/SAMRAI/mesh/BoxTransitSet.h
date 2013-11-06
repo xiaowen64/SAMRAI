@@ -251,14 +251,14 @@ public:
     * @brief Adjust the load in this BoxTransitSet by moving work
     * between it and another BoxTransitSet.
     *
-    * @param[in,out] hold_bin
+    * @param[in,out] hold_bin Holding bin for reserve load.
     *
-    * @param[in] ideal_load The load that main_bin should have.
+    * @param[in] ideal_load The load that this bin should have.
     *
-    * @param[in] low_load Return when main_bin's load is in the range
+    * @param[in] low_load Return when this bin's load is in the range
     * [low_load,high_load]
     *
-    * @param[in] high_load Return when main_bin's load is in the range
+    * @param[in] high_load Return when this bin's load is in the range
     * [low_load,high_load]
     *
     * @return Net load added to this BoxTransitSet.  If negative, load
@@ -414,14 +414,14 @@ private:
     * @brief Adjust the load in this BoxTransitSet by moving the
     * biggest between it and another BoxTransitSet.
     *
-    * @param[in,out] hold_bin
+    * @param[in,out] hold_bin Holding bin for reserve load.
     *
-    * @param[in] ideal_load The load that main_bin should have.
+    * @param[in] ideal_load The load that this bin should have.
     *
-    * @param[in] low_load Return when main_bin's load is in the range
+    * @param[in] low_load Return when this bin's load is in the range
     * [low_load,high_load]
     *
-    * @param[in] high_load Return when main_bin's load is in the range
+    * @param[in] high_load Return when this bin's load is in the range
     * [low_load,high_load]
     *
     * @return Net load added to this BoxTransitSet.  If negative, load
@@ -438,14 +438,14 @@ private:
     * @brief Adjust the load in this BoxTransitSet by swapping boxes
     * between it and another BoxTransitSet.
     *
-    * @param[in,out] hold_bin
+    * @param[in,out] hold_bin Holding bin for reserve load.
     *
-    * @param[in] ideal_load The load that main_bin should have.
+    * @param[in] ideal_load The load that this bin should have.
     *
-    * @param[in] low_load Return when main_bin's load is in the range
+    * @param[in] low_load Return when this bin's load is in the range
     * [low_load,high_load]
     *
-    * @param[in] high_load Return when main_bin's load is in the range
+    * @param[in] high_load Return when this bin's load is in the range
     * [low_load,high_load]
     *
     * @return Net load added to this BoxTransitSet.  If negative, load
@@ -464,14 +464,14 @@ private:
     * between it and another BoxTransitSet.  One box may be broken
     * up to have a part of its load moved.
     *
-    * @param[in,out] hold_bin
+    * @param[in,out] hold_bin Holding bin for reserve load.
     *
-    * @param[in] ideal_load The load that main_bin should have.
+    * @param[in] ideal_load The load that this bin should have.
     *
-    * @param[in] low_load Return when main_bin's load is in the range
+    * @param[in] low_load Return when this bin's load is in the range
     * [low_load,high_load]
     *
-    * @param[in] high_load Return when main_bin's load is in the range
+    * @param[in] high_load Return when this bin's load is in the range
     * [low_load,high_load]
     *
     * @return Net load added to this BoxTransitSet.  If negative, load
