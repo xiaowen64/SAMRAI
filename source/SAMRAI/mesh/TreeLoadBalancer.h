@@ -16,7 +16,6 @@
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
 #include "SAMRAI/mesh/BoxTransitSet.h"
-#include "SAMRAI/hier/MappingConnector.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
 #include "SAMRAI/tbox/CommGraphWriter.h"
@@ -58,17 +57,17 @@ namespace mesh {
  * <b> Definitions: </b>
  *
  *   - \b flexible_load_tolerance
- *   Fraction of ideal load a process can take on in order to avoid excessive
+ *   Fraction of ideal load a process can take on in order to reduce
  *   box cutting and load movement.  This is not a hard limit and some
- *   processes can still exceed this amount.  Higher values help the load
- *   balancer run faster but produces less balanced work loads.
+ *   processes can still exceed this amount.  Higher values often reduce
+ *   partitioning time and box count but produce less balanced work loads.
  *
  *   - \b max_cycle_spread_ratio
  *   This parameter limits how many processes may receive the load of one
- *   process in a load fan-out cycle.  If a process has too much initial load,
- *   this limit causes the load to fan out the load over multiple cycles.  It
- *   alleviates the bottle-neck of one process having to work with too many
- *   other processes in any cycle.
+ *   process in a load distribution cycle.  If a process has too much
+ *   initial load, this limit causes the load to distribute the load over
+ *   multiple cycles.  It alleviates the bottle-neck of one process having
+ *   to work with too many other processes in any cycle.
  *
  * <b> Details: </b> <br>
  * <table>
@@ -267,7 +266,7 @@ public:
     *
     * @param [in] comm_graph_writer
     * External CommGraphWriter to save tree data to.
-    * Use NULL to disable saving.
+    * Use 0 to disable saving.
     */
    void
    setCommGraphWriter(
@@ -336,38 +335,53 @@ private:
          LoadType upperlimit );
 
       //! @brief Number of processes in branch.
-      int numProcs() const { return d_num_procs; }
+      int numProcs() const
+         { return d_num_procs; }
       //! @brief Number of processes in effective branch.
-      int numProcsEffective() const { return d_eff_num_procs; }
+      int numProcsEffective() const
+         { return d_eff_num_procs; }
 
       //@{
       //! @name Amount of work in branch, compared to various references.
       // surplus and deficit are current load compared to ideal.
-      LoadType surplus() const { return d_branch_load_current - d_branch_load_ideal; }
-      LoadType deficit() const { return d_branch_load_ideal - d_branch_load_current; }
-      LoadType effSurplus() const { return d_eff_load_current - d_eff_load_ideal; }
-      LoadType effDeficit() const { return d_eff_load_ideal - d_eff_load_current; }
+      LoadType surplus() const
+         { return d_branch_load_current - d_branch_load_ideal; }
+      LoadType deficit() const
+         { return d_branch_load_ideal - d_branch_load_current; }
+      LoadType effSurplus() const
+         { return d_eff_load_current - d_eff_load_ideal; }
+      LoadType effDeficit() const
+         { return d_eff_load_ideal - d_eff_load_current; }
       // excess and margin are current load compared to upper limit.
-      LoadType excess() const { return d_branch_load_current - d_branch_load_upperlimit; }
-      LoadType margin() const { return d_branch_load_upperlimit - d_branch_load_current; }
-      LoadType effExcess() const { return d_eff_load_current - d_eff_load_upperlimit; }
-      LoadType effMargin() const { return d_eff_load_upperlimit - d_eff_load_current; }
+      LoadType excess() const
+         { return d_branch_load_current - d_branch_load_upperlimit; }
+      LoadType margin() const
+         { return d_branch_load_upperlimit - d_branch_load_current; }
+      LoadType effExcess() const
+         { return d_eff_load_current - d_eff_load_upperlimit; }
+      LoadType effMargin() const
+         { return d_eff_load_upperlimit - d_eff_load_current; }
       //@}
 
       //! @brief Tell this tree to eventually ask for work from its parent.
-      void setWantsWorkFromParent() { d_wants_work_from_parent = true; }
+      void setWantsWorkFromParent()
+         { d_wants_work_from_parent = true; }
 
       //! @brief Get whether this branch want work from its parents.
-      bool getWantsWorkFromParent() const { return d_wants_work_from_parent; }
+      bool getWantsWorkFromParent() const
+         { return d_wants_work_from_parent; }
 
       //@{
       //! @name Information on work shipped
       //! @brief Get amount of work shipped.
-      LoadType getShipmentLoad() const { return d_shipment.getSumLoad(); }
+      LoadType getShipmentLoad() const
+         { return d_shipment.getSumLoad(); }
       //! @brief Get count of work shipped.
-      size_t getShipmentPackageCount() const { return d_shipment.size(); }
+      size_t getShipmentPackageCount() const
+         { return d_shipment.size(); }
       //! @brief Get count of originators of the work shipped.
-      size_t getShipmentOriginatorCount() const { return d_shipment.getNumberOfOriginatingProcesses(); }
+      size_t getShipmentOriginatorCount() const
+         { return d_shipment.getNumberOfOriginatingProcesses(); }
       //@}
 
 
@@ -424,7 +438,8 @@ private:
       void setTimerPrefix(const std::string& timer_prefix);
 
       //! @brief Whether to print steps for debugging.
-      void setPrintSteps(bool print_steps) { d_print_steps = print_steps; }
+      void setPrintSteps(bool print_steps)
+         { d_print_steps = print_steps; }
 
    private:
 
@@ -672,7 +687,7 @@ private:
    //! @brief Whether d_mpi is an internal duplicate.  See setSAMRAI_MPI().
    bool d_mpi_is_dupe;
 
-   //! @brief Max number of processes the a single process may spread its load onto per root cycle.
+   //! @brief Max number of processes the a single process may spread load to per cycle.
    int d_max_cycle_spread_ratio;
 
    //! @brief Whether to allow box breaking.
@@ -696,9 +711,9 @@ private:
 
    /*!
     * @brief Fraction of ideal load a process can accept over and above
-    * the ideal it should have.
+    * the ideal.
     *
-    * See input parameter "flexible_load_tol".
+    * See input parameter "flexible_load_tolerance".
     */
    double d_flexible_load_tol;
 

@@ -124,7 +124,7 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
       balanced_box_level.addBox(added_box.d_box);
 
       if ( added_box.d_orig_box.getOwnerRank() != added_box.d_box.getOwnerRank() ) {
-         // Cannot generate unbalanced--->balanced for imported boxes.
+         // Keep track of imported boxes so their original owners can be notified.
          kept_imports.insert(added_box);
          if ( d_print_edge_steps ) {
             tbox::plog << "\t\tKeeping imported box " << added_box << std::endl;
