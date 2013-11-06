@@ -107,9 +107,7 @@ public:
       hier::MappingConnector &unbalanced_to_balanced ) const;
 
 
-   /*!
-    * @brief Allow box breaking when adjusting load.
-    */
+   //! @brief Allow box breaking when adjusting load.
    void allowBoxBreaking() {
       d_allow_box_breaking = true;
    }
@@ -158,8 +156,7 @@ private:
        */
       BoxInTransit(const tbox::Dimension& dim) :
          d_box(dim),
-         d_orig_box(dim)
-         { }
+         d_orig_box(dim) {}
 
 
       /*!
@@ -177,11 +174,8 @@ private:
        * object but is otherwise different.
        *
        * @param[in] other
-       *
        * @param[in] box
-       *
        * @param[in] rank
-       *
        * @param[in] local_id
        */
       BoxInTransit(
@@ -191,17 +185,14 @@ private:
          hier::LocalId local_id) :
          d_box(box, local_id, rank),
          d_orig_box(other.d_orig_box),
-         d_boxload(d_box.size())
-         { }
+         d_boxload(d_box.size()) {}
 
       /*!
        * @brief Assignment operator
        *
        * @param[in] other
        */
-      const BoxInTransit&
-      operator = (const BoxInTransit& other)
-      {
+      const BoxInTransit& operator = (const BoxInTransit& other) {
          d_box = other.d_box;
          d_orig_box = other.d_orig_box;
          d_boxload = other.d_boxload;
@@ -209,52 +200,40 @@ private:
       }
 
       //! @brief Return the owner rank.
-      int
-      getOwnerRank() const
-      {
+      int getOwnerRank() const {
          return d_box.getOwnerRank();
       }
 
       //! @brief Return the LocalId.
-      hier::LocalId
-      getLocalId() const
-      {
+      hier::LocalId getLocalId() const {
          return d_box.getLocalId();
       }
 
       //! @brief Return the Box.
-      hier::Box&
-      getBox()
-      {
+      hier::Box& getBox() {
          return d_box;
       }
 
       //! @brief Return the Box.
-      const hier::Box&
-      getBox() const
-      {
+      const hier::Box& getBox() const {
          return d_box;
       }
 
       //! @brief Put self into a MessageStream.
-      void
-      putToMessageStream(tbox::MessageStream &mstream) const
-         {
-            d_box.putToMessageStream(mstream);
-            d_orig_box.putToMessageStream(mstream);
-            mstream << d_boxload;
-            return;
-         }
+      void putToMessageStream(tbox::MessageStream &mstream) const {
+         d_box.putToMessageStream(mstream);
+         d_orig_box.putToMessageStream(mstream);
+         mstream << d_boxload;
+         return;
+      }
 
       //! @brief Set attributes according to data in a MessageStream.
-      void
-      getFromMessageStream(tbox::MessageStream &mstream)
-         {
-            d_box.getFromMessageStream(mstream);
-            d_orig_box.getFromMessageStream(mstream);
-            mstream >> d_boxload;
-            return;
-         }
+      void getFromMessageStream(tbox::MessageStream &mstream) {
+         d_box.getFromMessageStream(mstream);
+         d_orig_box.getFromMessageStream(mstream);
+         mstream >> d_boxload;
+         return;
+      }
 
       hier::Box d_box;
 
@@ -276,11 +255,9 @@ private:
     * because some boxes may not have valid ones.
     */
    struct BoxInTransitMoreLoad {
-      bool
-      operator () (
+      bool operator () (
          const BoxInTransit& a,
-         const BoxInTransit& b) const
-      {
+         const BoxInTransit& b) const {
          if (a.getBox().size() != b.getBox().size()) {
             return a.d_boxload > b.d_boxload;
          }
@@ -347,17 +324,16 @@ private:
    /*!
     * @brief Insert BoxInTransit into an output stream.
     */
-   friend std::ostream&
-   operator << ( std::ostream& co, const BoxInTransit& r)
-      {
-         co << r.d_box
-            << r.d_box.numberCells() << '|'
-            << r.d_box.numberCells().getProduct();
-         co << '-' << r.d_orig_box
-            << r.d_box.numberCells() << '|'
-            << r.d_box.numberCells().getProduct();
-         return co;
-      }
+   friend std::ostream& operator << ( std::ostream& co,
+                                      const BoxInTransit& r) {
+      co << r.d_box
+         << r.d_box.numberCells() << '|'
+         << r.d_box.numberCells().getProduct();
+      co << '-' << r.d_orig_box
+         << r.d_box.numberCells() << '|'
+         << r.d_box.numberCells().getProduct();
+      return co;
+   }
 
 
    //@{ @name Load adjustment methods
@@ -379,8 +355,7 @@ private:
     * @return Net load added to this BoxTransitSet.  If negative, load
     * decreased.
     */
-   LoadType
-   adjustLoadByPopping(
+   LoadType adjustLoadByPopping(
       BoxTransitSet& hold_bin,
       LoadType ideal_load,
       LoadType low_load,
@@ -403,8 +378,7 @@ private:
     * @return Net load added to this BoxTransitSet.  If negative, load
     * decreased.
     */
-   LoadType
-   adjustLoadBySwapping(
+   LoadType adjustLoadBySwapping(
       BoxTransitSet& hold_bin,
       LoadType ideal_load,
       LoadType low_load,
@@ -429,8 +403,7 @@ private:
     * @return Net load added to this BoxTransitSet.  If negative, load
     * decreased.
     */
-   LoadType
-   adjustLoadByBreaking(
+   LoadType adjustLoadByBreaking(
       BoxTransitSet& hold_bin,
       LoadType ideal_load,
       LoadType low_load,
@@ -456,8 +429,7 @@ private:
     *
     * @param high_transfer
     */
-   bool
-   swapLoadPair(
+   bool swapLoadPair(
       BoxTransitSet& src,
       BoxTransitSet& dst,
       LoadType& actual_transfer,
@@ -480,8 +452,7 @@ private:
     *
     * @param [in] kept_imports Work that was imported and locally kept.
     */
-   void
-   constructSemilocalUnbalancedToBalanced(
+   void constructSemilocalUnbalancedToBalanced(
       hier::MappingConnector &unbalanced_to_balanced,
       const BoxTransitSet &kept_imports ) const;
 
@@ -491,9 +462,7 @@ private:
     *
     * Only called by StartupShutdownManager.
     */
-   static void
-   initializeCallback()
-   {
+   static void initializeCallback() {
       TimerStruct& timers(s_static_timers[s_default_timer_prefix]);
       getAllTimers(s_default_timer_prefix, timers);
    }
@@ -504,18 +473,13 @@ private:
     *
     * Only called by StartupShutdownManager.
     */
-   static void
-   finalizeCallback()
-   {
+   static void finalizeCallback() {
       s_static_timers.clear();
    }
 
 
    //! @brief Compute the load for a Box.
-   double
-   computeLoad(
-      const hier::Box& box) const
-   {
+   double computeLoad( const hier::Box& box) const {
       return double(box.size());
    }
 
@@ -523,8 +487,7 @@ private:
     * @brief Compute the load for the Box, restricted to where it
     * intersects a given box.
     */
-   double
-   computeLoad(
+   double computeLoad(
       const hier::Box& box,
       const hier::Box& restriction) const
    {
@@ -533,10 +496,7 @@ private:
 
 
    //! @brief Balance penalty is proportional to imbalance.
-   double
-   computeBalancePenalty(
-      double imbalance) const
-   {
+   double computeBalancePenalty( double imbalance) const {
       return tbox::MathUtilities<double>::Abs(imbalance);
    }
 
