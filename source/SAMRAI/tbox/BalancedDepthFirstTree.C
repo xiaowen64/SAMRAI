@@ -199,6 +199,10 @@ BalancedDepthFirstTree::setupTreeForContiguousRanks(
             // This is a right child in a left-leaf switchable.
             d_parent = d_parent + 1;
          }
+         if ( last_rank - first_rank + 1 == 3 ) {
+            // Special case of exactly 3 ranks allows the root be switched.
+            d_root_rank = first_rank + 1;
+         }
       } else {
          /*
           * Rank is not in a switchable trio, but its children
