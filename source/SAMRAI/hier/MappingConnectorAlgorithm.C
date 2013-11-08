@@ -39,8 +39,7 @@ int MappingConnectorAlgorithm::s_operation_mpi_tag = 0;
  * with reused tags anyway.
  */
 
-tbox::SAMRAI_MPI MappingConnectorAlgorithm::s_class_mpi(
-   tbox::SAMRAI_MPI::commNull);
+tbox::SAMRAI_MPI MappingConnectorAlgorithm::s_class_mpi(MPI_COMM_NULL);
 
 tbox::StartupShutdownManager::Handler
 MappingConnectorAlgorithm::s_initialize_finalize_handler(
@@ -1408,7 +1407,7 @@ MappingConnectorAlgorithm::initializeCallback()
 void
 MappingConnectorAlgorithm::finalizeCallback()
 {
-   if (s_class_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (s_class_mpi.getCommunicator() != MPI_COMM_NULL) {
       s_class_mpi.freeCommunicator();
    }
 }

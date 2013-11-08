@@ -44,8 +44,7 @@ int OverlapConnectorAlgorithm::s_operation_mpi_tag = 0;
  * with reused tags anyway.
  */
 
-tbox::SAMRAI_MPI OverlapConnectorAlgorithm::s_class_mpi(
-   tbox::SAMRAI_MPI::commNull);
+tbox::SAMRAI_MPI OverlapConnectorAlgorithm::s_class_mpi(MPI_COMM_NULL);
 
 tbox::StartupShutdownManager::Handler
 OverlapConnectorAlgorithm::s_initialize_finalize_handler(
@@ -73,7 +72,7 @@ OverlapConnectorAlgorithm::OverlapConnectorAlgorithm():
     * to protect itself from unrelated communications in shared
     * communicators.
     */
-   if (s_class_mpi.getCommunicator() == tbox::SAMRAI_MPI::commNull) {
+   if (s_class_mpi.getCommunicator() == MPI_COMM_NULL) {
       if (tbox::SAMRAI_MPI::usingMPI()) {
          const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
          s_class_mpi.dupCommunicator(mpi);
@@ -1626,7 +1625,7 @@ OverlapConnectorAlgorithm::initializeCallback()
 void
 OverlapConnectorAlgorithm::finalizeCallback()
 {
-   if (s_class_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (s_class_mpi.getCommunicator() != MPI_COMM_NULL) {
       s_class_mpi.freeCommunicator();
    }
 

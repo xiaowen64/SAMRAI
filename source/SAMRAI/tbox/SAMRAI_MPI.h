@@ -23,10 +23,11 @@
 /*!
  * @brief Enumeration to define MPI constants when compiling without MPI.
  *
- * These are defined in the global namespace, and it does not matter
- * what values these take because they are not used.  (They are just place
- * holders to let code compile without MPI without adding excessive
- * preprocessor guards to the code.)
+ * These are defined in the global namespace because that's where MPI
+ * defines them.  It does not matter what values these take because
+ * they are not used.  (They are just place holders to let code
+ * compile without MPI without adding excessive preprocessor guards to
+ * the code.)
  *
  * This is not a complete set.  Developers should add as needed to extend
  * SAMRAI_MPI's functionality.
@@ -138,11 +139,9 @@ public:
    };
 #endif
 
-   /*!
-    * @brief MPI communicator constants
-    */
-   static Comm commWorld;
-   static Comm commNull;
+   // Obsolete and should be removed.
+   static const Comm commWorld; // Should use MPI_COMM_WORLD directly.
+   static const Comm commNull; // Should use MPI_COMM_NULL directly.
 
    /*!
     * @brief Get the primary SAMRAI_MPI object owned by SAMRAI.

@@ -162,7 +162,7 @@ public:
     * duplicate MPI communicator is freed when the object is
     * destructed, or freeMPICommunicator() is called.
     *
-    * @pre samrai_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull
+    * @pre samrai_mpi.getCommunicator() != MPI_COMM_NULL
     */
    void
    setSAMRAI_MPI(

@@ -78,7 +78,7 @@ TreeLoadBalancer::TreeLoadBalancer(
    const boost::shared_ptr<tbox::RankTreeStrategy> &rank_tree):
    d_dim(dim),
    d_object_name(name),
-   d_mpi(tbox::SAMRAI_MPI::commNull),
+   d_mpi(MPI_COMM_NULL),
    d_mpi_is_dupe(false),
    d_max_cycle_spread_ratio(1000000),
    d_allow_box_breaking(true),
@@ -2365,7 +2365,7 @@ void
 TreeLoadBalancer::setSAMRAI_MPI(
    const tbox::SAMRAI_MPI& samrai_mpi)
 {
-   if (samrai_mpi.getCommunicator() == tbox::SAMRAI_MPI::commNull) {
+   if (samrai_mpi.getCommunicator() == MPI_COMM_NULL) {
       TBOX_ERROR("TreeLoadBalancer::setSAMRAI_MPI error: Given\n"
          << "communicator is invalid.");
    }
@@ -2397,7 +2397,7 @@ TreeLoadBalancer::freeMPICommunicator()
          d_mpi.freeCommunicator();
       }
    }
-   d_mpi.setCommunicator(tbox::SAMRAI_MPI::commNull);
+   d_mpi.setCommunicator(MPI_COMM_NULL);
    d_mpi_is_dupe = false;
 }
 
@@ -4102,7 +4102,7 @@ TreeLoadBalancer::assertNoMessageForPrivateCommunicator() const
     * that there is no messages in transit, but it can find
     * messages that have arrived but not received.
     */
-   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (d_mpi.getCommunicator() != MPI_COMM_NULL) {
       int flag;
       tbox::SAMRAI_MPI::Status mpi_status;
       int mpi_err = d_mpi.Iprobe(MPI_ANY_SOURCE,

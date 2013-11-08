@@ -108,7 +108,7 @@ BergerRigoutsos::BergerRigoutsos(
 
 BergerRigoutsos::~BergerRigoutsos()
 {
-   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (d_mpi.getCommunicator() != MPI_COMM_NULL) {
       // Free the private communicator (if SAMRAI_MPI has not been finalized).
       int flag;
       tbox::SAMRAI_MPI::Finalized(&flag);
@@ -920,7 +920,7 @@ BergerRigoutsos::useDuplicateMPI(
       TBOX_ASSERT( d_mpi.getCommunicator() == MPI_COMM_NULL );
    }
 
-   if (mpi_object.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (mpi_object.getCommunicator() != MPI_COMM_NULL) {
       d_mpi.dupCommunicator(mpi_object);
    }
 
@@ -1008,7 +1008,7 @@ BergerRigoutsos::setupMPIDependentData()
             &flag);
       }
       if (tag_upper_bound_ptr == 0) {
-         tbox::SAMRAI_MPI mpi1(tbox::SAMRAI_MPI::commWorld);
+         tbox::SAMRAI_MPI mpi1(MPI_COMM_WORLD);
          mpi1.Attr_get(
             MPI_TAG_UB,
             &tag_upper_bound_ptr,
@@ -1071,7 +1071,7 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
     * that there is no messages in transit, but it can find
     * messages that have arrived but not received.
     */
-   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull &&
+   if (d_mpi.getCommunicator() != MPI_COMM_NULL &&
        d_mpi != d_tag_level->getBoxLevel()->getMPI() ) {
       int flag;
       tbox::SAMRAI_MPI::Status mpi_status;

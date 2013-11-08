@@ -132,7 +132,7 @@ BoxLevel::BoxLevel(
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state):
-   d_mpi(tbox::SAMRAI_MPI::commNull),
+   d_mpi(MPI_COMM_NULL),
    d_ratio(ratio),
 
    d_local_number_of_cells(0),
@@ -416,7 +416,7 @@ BoxLevel::clear()
    }
    if (isInitialized()) {
       clearForBoxChanges();
-      d_mpi = tbox::SAMRAI_MPI(tbox::SAMRAI_MPI::commNull);
+      d_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL);
       d_boxes.clear();
       d_global_boxes.clear();
       d_ratio(0) = 0;
@@ -474,7 +474,7 @@ BoxLevel::swap(
       Box tmpbox(level_a.getDim());
       ParallelState tmpstate;
       const BoxLevel* tmpmbl;
-      tbox::SAMRAI_MPI tmpmpi(tbox::SAMRAI_MPI::commNull);
+      tbox::SAMRAI_MPI tmpmpi(MPI_COMM_NULL);
       boost::shared_ptr<const BaseGridGeometry> tmpgridgeom(
          level_a.getGridGeometry());
 
