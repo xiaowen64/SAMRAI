@@ -22,6 +22,7 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/PatchLevelFactory.h"
 #include "SAMRAI/hier/PersistentOverlapConnectors.h"
+#include "SAMRAI/hier/UncoveredBoxIterator.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -1023,6 +1024,24 @@ public:
    getObjectName() const
    {
       return d_object_name;
+   }
+
+   /*!
+    * @brief Returns an iterator to the first uncovered Box in this hierarchy.
+    */
+   UncoveredBoxIterator
+   beginUncovered()
+   {
+      return UncoveredBoxIterator(this, true);
+   }
+
+   /*!
+    * @brief Returns an iterator to the last uncovered Box in this hierarchy.
+    */
+   UncoveredBoxIterator
+   endUncovered()
+   {
+      return UncoveredBoxIterator(this, false);
    }
 
 private:

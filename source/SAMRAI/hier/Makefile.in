@@ -77,7 +77,8 @@ OBJS = 	\
 	CoarsenOperator.o \
 	RefineOperator.o \
 	TimeInterpolateOperator.o \
-	Transformation.o
+	Transformation.o \
+	UncoveredBoxIterator.o
 
 library: $(OBJS)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
