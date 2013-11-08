@@ -190,6 +190,7 @@ int main(
 {
 #ifndef HAVE_MPI
    // This test doesn't make sense without MPI because it cannot avoid MPI interfaces.
+   NULL_USE(argc);
    std::cout << "PASSED: " << argv[0] << std::endl;
    return 0;
 #else
@@ -1262,6 +1263,7 @@ SAMRAI_MPI::Comm getRotatedMPI( const SAMRAI_MPI::Comm &old_comm )
    MPI_Comm_create( old_comm, new_group, &new_comm );
    return new_comm;
 #else
+   NULL_USE(old_comm);
    return SAMRAI_MPI::Comm();
 #endif
 }
@@ -1306,6 +1308,7 @@ SAMRAI_MPI::Comm getSmallerMPI( const SAMRAI_MPI::Comm &old_comm )
    MPI_Comm_create( old_comm, new_group, &new_comm );
    return (old_rank == 1 ? MPI_COMM_NULL : new_comm);
 #else
+   NULL_USE(old_comm);
    return SAMRAI_MPI::Comm();
 #endif
 }
