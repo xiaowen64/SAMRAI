@@ -1412,7 +1412,9 @@ Connector::checkTransposeCorrectness(
    }
 
    int global_err_count = static_cast<int>(err_count);
-   getMPI().AllReduce( &global_err_count, 1, MPI_SUM );
+   if ( getMPI().getSize() > 1 ) {
+      getMPI().AllReduce( &global_err_count, 1, MPI_SUM );
+   }
 
    return static_cast<size_t>(global_err_count);
 }

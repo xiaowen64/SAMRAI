@@ -37,6 +37,7 @@ enum {
    // Special values:
    MPI_SUCCESS = 0,
    MPI_CONGRUENT,
+   MPI_IDENT,
    MPI_REQUEST_NULL,
    MPI_ERR_IN_STATUS,
    MPI_UNDEFINED,
@@ -48,6 +49,7 @@ enum {
    MPI_DOUBLE,
    MPI_FLOAT,
    MPI_INT,
+   MPI_LONG,
    MPI_C_DOUBLE_COMPLEX,
    MPI_2INT,
    MPI_DOUBLE_INT,
@@ -153,6 +155,10 @@ public:
     *
     * The use of this object outside of the SAMRAI library should be
     * carefully limited to avoid mixing messages.
+    *
+    * After SAMRAI_MPI::init() and before SAMRAI_MPI::finalize(), the
+    * object returned is useable.  Otherwise it is intentionally
+    * invalid.
     *
     * @see init()
     */
@@ -313,6 +319,16 @@ public:
     *
     * @pre s_mpi_is_initialized
     */
+
+   static int
+   Comm_rank(
+      Comm comm,
+      int* rank);
+
+   static int
+   Comm_size(
+      Comm comm,
+      int* size);
 
    static int
    Comm_compare(
@@ -714,7 +730,8 @@ public:
    disableMPI();
 
    /*!
-    * @brief Whether SAMRAI is using MPI.
+    * @brief Whether SAMRAI is using MPI (configured, compiled and
+    * initialized).
     *
     * @see disableMPI().
     */
@@ -819,7 +836,7 @@ private:
    int d_size;
 
    /*!
-    * @brief Whether MPI is initialized.
+    * @brief Whether the actual MPI library (not this wrapper) is initialized.
     */
    static bool s_mpi_is_initialized;
 

@@ -190,6 +190,7 @@ int main(
 {
 #ifndef HAVE_MPI
    // This test doesn't make sense without MPI because it cannot avoid MPI interfaces.
+   std::cout << "PASSED: " << argv[0] << std::endl;
    return 0;
 #else
 
@@ -1235,6 +1236,7 @@ void destroyAsyncComms(
  */
 SAMRAI_MPI::Comm getRotatedMPI( const SAMRAI_MPI::Comm &old_comm )
 {
+#ifdef HAVE_MPI
    int old_rank, old_size;
    MPI_Comm_rank(old_comm, &old_rank);
    MPI_Comm_size(old_comm, &old_size);
@@ -1259,6 +1261,9 @@ SAMRAI_MPI::Comm getRotatedMPI( const SAMRAI_MPI::Comm &old_comm )
    SAMRAI_MPI::Comm new_comm;
    MPI_Comm_create( old_comm, new_group, &new_comm );
    return new_comm;
+#else
+   return SAMRAI_MPI::Comm();
+#endif
 }
 
 
@@ -1270,6 +1275,7 @@ SAMRAI_MPI::Comm getRotatedMPI( const SAMRAI_MPI::Comm &old_comm )
  */
 SAMRAI_MPI::Comm getSmallerMPI( const SAMRAI_MPI::Comm &old_comm )
 {
+#ifdef HAVE_MPI
    int old_rank, old_size;
    MPI_Comm_rank(old_comm, &old_rank);
    MPI_Comm_size(old_comm, &old_size);
@@ -1299,4 +1305,7 @@ SAMRAI_MPI::Comm getSmallerMPI( const SAMRAI_MPI::Comm &old_comm )
    SAMRAI_MPI::Comm new_comm;
    MPI_Comm_create( old_comm, new_group, &new_comm );
    return (old_rank == 1 ? MPI_COMM_NULL : new_comm);
+#else
+   return SAMRAI_MPI::Comm();
+#endif
 }

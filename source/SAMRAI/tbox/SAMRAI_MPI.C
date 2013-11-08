@@ -147,6 +147,9 @@ SAMRAI_MPI::init(
 #else
    NULL_USE(argc);
    NULL_USE(argv);
+   s_samrai_world.d_comm = MPI_COMM_WORLD;
+   s_samrai_world.d_size = 1;
+   s_samrai_world.d_rank = 0;
 #endif
 
    commWorld = MPI_COMM_WORLD;
@@ -251,6 +254,54 @@ SAMRAI_MPI::finalize()
  *
  *****************************************************************************
  */
+
+/*
+ *****************************************************************************
+ *****************************************************************************
+ */
+int
+SAMRAI_MPI::Comm_rank(
+   Comm comm,
+   int* rank)
+{
+#ifndef HAVE_MPI
+   NULL_USE(comm);
+#endif
+   if (!s_mpi_is_initialized) {
+      TBOX_ERROR("SAMRAI_MPI::Comm_rank is a no-op without run-time MPI!");
+   }
+   int rval = MPI_SUCCESS;
+#ifdef HAVE_MPI
+   rval = MPI_Comm_rank(comm, rank);
+#else
+   *rank = 0;
+#endif
+   return rval;
+}
+
+/*
+ *****************************************************************************
+ *****************************************************************************
+ */
+int
+SAMRAI_MPI::Comm_size(
+   Comm comm,
+   int* size)
+{
+#ifndef HAVE_MPI
+   NULL_USE(comm);
+#endif
+   if (!s_mpi_is_initialized) {
+      TBOX_ERROR("SAMRAI_MPI::Comm_size is a no-op without run-time MPI!");
+   }
+   int rval = MPI_SUCCESS;
+#ifdef HAVE_MPI
+   return MPI_Comm_size(comm, size);
+#else
+   *size = 1;
+#endif
+   return rval;
+}
 
 /*
  *****************************************************************************
@@ -1417,6 +1468,8 @@ SAMRAI_MPI::dupCommunicator(
    TBOX_ASSERT(d_size == r.d_size);
 #else
    NULL_USE(r);
+   d_rank = 0;
+   d_size = 1;
 #endif
 }
 
