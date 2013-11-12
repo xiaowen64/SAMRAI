@@ -98,22 +98,8 @@ private:
       const std::vector<std::vector<bool> >& bad_cuts ) const;
 
    double
-   computeBalancePenalty(
-      const std::vector<hier::Box>& a,
-      const std::vector<hier::Box>& b,
-      double imbalance) const
+   computeBalancePenalty(double imbalance) const
    {
-      NULL_USE(a);
-      NULL_USE(b);
-      return tbox::MathUtilities<double>::Abs(imbalance);
-   }
-
-   double
-   computeBalancePenalty(
-      const hier::Box& a,
-      double imbalance) const
-   {
-      NULL_USE(a);
       return tbox::MathUtilities<double>::Abs(imbalance);
    }
 

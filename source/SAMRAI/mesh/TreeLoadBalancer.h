@@ -57,12 +57,14 @@ namespace mesh {
  * <b> Definitions: </b>
  *
  *   - \b flexible_load_tolerance
- *   Fraction of ideal load a process can take on in order to reduce
- *   box cutting and load movement.  This is not a hard limit and some
- *   processes can still exceed this amount.  Higher values often reduce
- *   partitioning time and box count but produce less balanced work loads.
+ *   Fraction of ideal load a process can
+ *   take on in order to reduce box cutting and load movement.  Higher
+ *   values often reduce partitioning time and box count but produce
+ *   less balanced work loads.  Surplus work greater than this
+ *   tolerance can still result due to other constraints, such as
+ *   minimum box size.
  *
- *   - \b max_cycle_spread_ratio
+ *   - \b max_cycle_spread_procs
  *   This parameter limits how many processes may receive the load of one
  *   process in a load distribution cycle.  If a process has too much
  *   initial load, this limit causes the load to distribute the load over
@@ -88,7 +90,7 @@ namespace mesh {
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
  *   <tr>
- *     <td>max_cycle_spread_ratio</td>
+ *     <td>max_cycle_spread_procs</td>
  *     <td>int</td>
  *     <td>1000000</td>
  *     <td> > 1</td>
@@ -121,12 +123,12 @@ public:
     * @param[in] name User-defined identifier used for error reporting
     * and timer names.
     *
-    * @param[in] rank_tree How to arange a contiguous range of MPI ranks
-    * into a tree.  If omitted, we use a tbox::CenteredRankTree.
-    *
     * @param[in] input_db (optional) database pointer providing
     * parameters from input file.  This pointer may be null indicating
     * no input is used.
+    *
+    * @param[in] rank_tree How to arange a contiguous range of MPI ranks
+    * into a tree.  If omitted, we use a tbox::CenteredRankTree.
     *
     * @pre !name.empty()
     */
@@ -688,7 +690,7 @@ private:
    bool d_mpi_is_dupe;
 
    //! @brief Max number of processes the a single process may spread load to per cycle.
-   int d_max_cycle_spread_ratio;
+   int d_max_cycle_spread_procs;
 
    //! @brief Whether to allow box breaking.
    bool d_allow_box_breaking;
@@ -724,7 +726,7 @@ private:
    mutable LoadType d_min_load;
    //@}
 
-   static const int d_default_data_id;
+   static const int s_default_data_id;
 
    //@{
    //! @name Used for evaluating peformance.

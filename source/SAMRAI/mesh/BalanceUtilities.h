@@ -299,6 +299,28 @@ struct BalanceUtilities {
       const hier::Box& box);
 
    /*!
+    * @brief Evaluate whether a new load is an improvement over a
+    * current load based on their proximity to an ideal value or range
+    * of acceptable values.
+    *
+    * Return values in flags:
+    * - [0]: -1, 0 or 1: degrades, leave-alone or improves in-range
+    * - [1]: -1, 0 or 1: degrades, leave-alone or improves balance
+    * - [2]: 0 or 1: whether new is an overall improvement over current
+    *
+    * Return whether new_load is an improvement over current_load.
+    */
+   static bool
+   compareLoads(
+      int flags[],
+      double current_load,
+      double new_load,
+      double ideal_load,
+      double low_load,
+      double high_load,
+      const PartitioningParams &pparams);
+
+   /*!
     * Compute and return load balance efficiency for a level.
     *
     * @return         Double-valued estimate of the load balance efficiency

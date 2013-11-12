@@ -101,7 +101,7 @@ TilePartitioner {
 
 TreeLoadBalancer {
   DEV_report_load_balance = FALSE // Reported in main
-  max_cycle_spread_ratio = 1000000
+  max_cycle_spread_procs = 1000000
   flexible_load_tolerance = 0.05
 
   // Debugging options

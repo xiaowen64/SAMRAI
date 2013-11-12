@@ -51,7 +51,7 @@ const int TreeLoadBalancer::TreeLoadBalancer_LOADTAG0;
 const int TreeLoadBalancer::TreeLoadBalancer_LOADTAG1;
 const int TreeLoadBalancer::TreeLoadBalancer_FIRSTDATALEN;
 
-const int TreeLoadBalancer::d_default_data_id = -1;
+const int TreeLoadBalancer::s_default_data_id = -1;
 
 
 /*
@@ -69,11 +69,11 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_object_name(name),
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_mpi_is_dupe(false),
-   d_max_cycle_spread_ratio(1000000),
+   d_max_cycle_spread_procs(1000000),
    d_allow_box_breaking(true),
    d_rank_tree(rank_tree ? rank_tree : boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::CenteredRankTree) ),
    d_comm_graph_writer(),
-   d_master_workload_data_id(d_default_data_id),
+   d_master_workload_data_id(s_default_data_id),
    d_flexible_load_tol(0.0),
    // Performance evaluation.
    d_barrier_before(false),
@@ -342,7 +342,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    /*
     * Compute how many balancing cycles to use based on severity of
     * imbalance, using formula
-    * d_max_cycle_spread_ratio^number_of_cycles >= fanout_size.
+    * d_max_cycle_spread_procs^number_of_cycles >= fanout_size.
     *
     * The objective of balancing over multiple cycles is to avoid
     * unscalable performance in cases where just a few processes own
@@ -358,10 +358,10 @@ TreeLoadBalancer::loadBalanceBoxLevel(
     */
    const double fanout_size = max_local_load/d_global_avg_load;
    const int number_of_cycles = rank_group.containsAllRanks() ? 1 :
-      int(ceil( log(fanout_size)/log(d_max_cycle_spread_ratio) ));
+      int(ceil( log(fanout_size)/log(d_max_cycle_spread_procs) ));
       if (d_print_steps) {
          tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel"
-                    << " max_cycle_spread_ratio=" << d_max_cycle_spread_ratio
+                    << " max_cycle_spread_procs=" << d_max_cycle_spread_procs
                     << " fanout_size=" << fanout_size
                     << " number_of_cycles=" << number_of_cycles
                     << std::endl;
@@ -571,8 +571,8 @@ TreeLoadBalancer::loadBalanceBoxLevel(
 /*
  *************************************************************************
  * Given an "unbalanced" BoxLevel, load balance it within the given
- * RankGroup and update Connectors using the tree load balancing
- * algorithm..
+ * RankGroup using the tree load balancing algorithm and update
+ * Connectors.
  *************************************************************************
  */
 void
@@ -586,7 +586,8 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, balance_box_level);
 
    /*
-    * Initialize empty balanced_box_level and mappings.
+    * Initialize empty balanced_box_level and mappings so they are
+    * ready to be populated.
     */
    hier::BoxLevel balanced_box_level(
       balance_box_level.getRefinementRatio(),
@@ -785,7 +786,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
     * local data with children branch data.
     *
     * 3. If parent exists:
-    * Send branch info to parent.
+    * Send branch info to parent, including work, if any.
     *
     * 4. If parent exists and we need more work:
     * Receive additional work from parent.
@@ -829,7 +830,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
     *
     * unassigned is a container of loads that have been released by
     * their owners and have not yet been assigned to another.  First,
-    * put all initial local work in unassigned.  Imported loads are
+    * put all initial local work in unassigned.  Received loads are
     * placed here before determining whether to keep them or send them
     * to another part of the tree.
     *
@@ -901,6 +902,14 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
 
    size_t unassigned_highwater = unassigned.getNumberOfItems();
 
+   /*
+    * TODO: Maybe this should be deficit() or
+    * max(deficit(),effDeficit()) instead of effDeficit().  The
+    * argument is to keep each branch near its ideal so work doesn't
+    * accumulate at the root.  This may be responsible for the 20%
+    * unbalance observed at 1M procs.  There should be a corresponding
+    * change to computeSurplusPerEffectiveDescendent().
+    */
    if ( my_branch.effDeficit() > 0 && !d_rank_tree->isRoot() ) {
       my_branch.setWantsWorkFromParent();
    }
@@ -1587,9 +1596,9 @@ TreeLoadBalancer::getFromInput(
       d_barrier_after = input_db->getBoolWithDefault("DEV_barrier_after",
          d_barrier_after);
 
-      d_max_cycle_spread_ratio =
-         input_db->getIntegerWithDefault("max_cycle_spread_ratio",
-            d_max_cycle_spread_ratio);
+      d_max_cycle_spread_procs =
+         input_db->getIntegerWithDefault("max_cycle_spread_procs",
+            d_max_cycle_spread_procs);
 
       d_flexible_load_tol =
          input_db->getDoubleWithDefault("flexible_load_tolerance",

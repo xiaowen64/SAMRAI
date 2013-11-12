@@ -170,8 +170,7 @@ private:
          d_boxload(origin.size()) {}
 
       /*!
-       * @brief Construct new object having the history an existing
-       * object but is otherwise different.
+       * @brief Construct new object having the originator of an existing object.
        *
        * @param[in] other
        * @param[in] box
@@ -237,7 +236,7 @@ private:
 
       hier::Box d_box;
 
-      //! @brief Originating Box.
+      //! @brief Originating Box (the oldest one leading to this one).
       hier::Box d_orig_box;
 
       //! @brief Work load in this d_box.

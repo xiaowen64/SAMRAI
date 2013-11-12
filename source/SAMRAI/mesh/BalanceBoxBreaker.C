@@ -14,6 +14,7 @@
 #include "SAMRAI/mesh/BalanceBoxBreaker.h"
 
 #include "SAMRAI/hier/BoxUtilities.h"
+#include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
@@ -100,8 +101,7 @@ BalanceBoxBreaker::breakOffLoad(
    t_find_bad_cuts->stop();
 
    // Penalty for not transfering ideal load.
-   double best_balance_penalty = computeBalancePenalty(box,
-         ideal_load_to_break);
+   double best_balance_penalty = computeBalancePenalty(ideal_load_to_break);
 
    if (d_print_break_steps) {
       tbox::plog.unsetf(std::ios::fixed | std::ios::scientific);
@@ -133,8 +133,7 @@ BalanceBoxBreaker::breakOffLoad(
 
          found_any_break = true;
 
-         double planar_balance_penalty = computeBalancePenalty(planar_breakoff,
-               planar_leftover,
+         double planar_balance_penalty = computeBalancePenalty(
                static_cast<double>(planar_brk_load - ideal_load_to_break));
 
          if (d_print_break_steps) {
@@ -173,9 +172,9 @@ BalanceBoxBreaker::breakOffLoad(
 
          int break_acceptance_flags[3] = {0,0,0};
 
-         const bool accept_break = d_pparams->compareLoads(
+         const bool accept_break = BalanceUtilities::compareLoads(
             break_acceptance_flags, brk_load, planar_brk_load,
-            ideal_load_to_break, low_load, high_load );
+            ideal_load_to_break, low_load, high_load, *d_pparams );
          if (d_print_break_steps) {
             tbox::plog << "      Break evaluation:"
                        << "  " << break_acceptance_flags[0]
@@ -229,9 +228,7 @@ BalanceBoxBreaker::breakOffLoad(
          found_any_break = true;
 
          double cubic_balance_penalty = computeBalancePenalty(
-               cubic_breakoff,
-               cubic_leftover,
-               static_cast<double>(cubic_brk_load - ideal_load_to_break));
+            static_cast<double>(cubic_brk_load - ideal_load_to_break));
 
          if (d_print_break_steps) {
             tbox::plog.unsetf(std::ios::fixed | std::ios::scientific);
@@ -268,9 +265,9 @@ BalanceBoxBreaker::breakOffLoad(
 
          int break_acceptance_flags[3] = {0,0,0};
 
-         const bool accept_break = d_pparams->compareLoads(
+         const bool accept_break = BalanceUtilities::compareLoads(
             break_acceptance_flags, brk_load, cubic_brk_load,
-            ideal_load_to_break, low_load, high_load );
+            ideal_load_to_break, low_load, high_load, *d_pparams );
          if (d_print_break_steps) {
             tbox::plog << "      Break evaluation:"
                        << "  " << break_acceptance_flags[0]
@@ -429,9 +426,10 @@ BalanceBoxBreaker::breakOffLoad_planar(
 
          const int lo_lower_cut_vol = brk_area*( lo_lower_cut_plane - box.lower()(brk_dir) );
 
-         if ( d_pparams->compareLoads( break_acceptance_flags, brk_load,
-                                       lo_lower_cut_vol, ideal_brk_load,
-                                       low_load, high_load ) ) {
+         if ( BalanceUtilities::compareLoads(
+                 break_acceptance_flags, brk_load,
+                 lo_lower_cut_vol, ideal_brk_load,
+                 low_load, high_load, *d_pparams ) ) {
             brk_load = lo_lower_cut_vol;
             best_breakoff_box = best_leftover_box = box;
             best_breakoff_box.upper()(brk_dir) = lo_lower_cut_plane - 1;
@@ -446,9 +444,10 @@ BalanceBoxBreaker::breakOffLoad_planar(
 
          const int hi_lower_cut_vol = brk_area*( hi_lower_cut_plane - box.lower()(brk_dir) );
 
-         if ( d_pparams->compareLoads( break_acceptance_flags, brk_load,
-                                       hi_lower_cut_vol, ideal_brk_load,
-                                       low_load, high_load ) ) {
+         if ( BalanceUtilities::compareLoads(
+                 break_acceptance_flags, brk_load,
+                 hi_lower_cut_vol, ideal_brk_load,
+                 low_load, high_load, *d_pparams ) ) {
             brk_load = hi_lower_cut_vol;
             best_breakoff_box = best_leftover_box = box;
             best_breakoff_box.upper()(brk_dir) = hi_lower_cut_plane - 1;
@@ -463,9 +462,10 @@ BalanceBoxBreaker::breakOffLoad_planar(
 
          const int lo_upper_cut_vol = brk_area*( box.upper()(brk_dir)+1 - lo_upper_cut_plane );
 
-         if ( d_pparams->compareLoads( break_acceptance_flags, brk_load,
-                                       lo_upper_cut_vol, ideal_brk_load,
-                                       low_load, high_load ) ) {
+         if ( BalanceUtilities::compareLoads(
+                 break_acceptance_flags, brk_load,
+                 lo_upper_cut_vol, ideal_brk_load,
+                 low_load, high_load, *d_pparams ) ) {
             brk_load = lo_upper_cut_vol;
             best_breakoff_box = best_leftover_box = box;
             best_breakoff_box.lower()(brk_dir) = lo_upper_cut_plane;
@@ -479,9 +479,10 @@ BalanceBoxBreaker::breakOffLoad_planar(
 
          const int hi_upper_cut_vol = brk_area*( box.upper()(brk_dir)+1 - hi_upper_cut_plane );
 
-         if ( d_pparams->compareLoads( break_acceptance_flags, brk_load,
-                                       hi_upper_cut_vol, ideal_brk_load,
-                                       low_load, high_load ) ) {
+         if ( BalanceUtilities::compareLoads(
+                 break_acceptance_flags, brk_load,
+                 hi_upper_cut_vol, ideal_brk_load,
+                 low_load, high_load, *d_pparams ) ) {
             brk_load = hi_upper_cut_vol;
             best_breakoff_box = best_leftover_box = box;
             best_breakoff_box.lower()(brk_dir) = hi_upper_cut_plane;
@@ -751,9 +752,10 @@ BalanceBoxBreaker::breakOffLoad_cubic(
 
       int break_acceptance_flags[3] = {0,0,0};
 
-      if ( d_pparams->compareLoads( break_acceptance_flags, best_breakoff_load,
-                                    corner_box_load, ideal_brk_load,
-                                    low_load, high_load) ) {
+      if ( BalanceUtilities::compareLoads(
+              break_acceptance_flags, best_breakoff_load,
+              corner_box_load, ideal_brk_load,
+              low_load, high_load, *d_pparams) ) {
          best_breakoff_box = corner_box;
          best_breakoff_size = corner_box_size;
          best_breakoff_load = corner_box_load;
@@ -827,9 +829,9 @@ BalanceBoxBreaker::breakOffLoad_cubic(
          }
 
 
-         const bool accept_break = d_pparams->compareLoads(
-            break_acceptance_flags, best_breakoff_load,
-            corner_box_load, ideal_brk_load, low_load, high_load );
+         const bool accept_break = BalanceUtilities::compareLoads(
+            break_acceptance_flags, best_breakoff_load, corner_box_load,
+            ideal_brk_load, low_load, high_load, *d_pparams );
 
          if ( accept_break ) {
             best_breakoff_box = corner_box;

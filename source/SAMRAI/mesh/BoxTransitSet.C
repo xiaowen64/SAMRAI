@@ -12,6 +12,7 @@
 #define included_mesh_BoxTransitSet_C
 
 #include "SAMRAI/mesh/BoxTransitSet.h"
+#include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -699,9 +700,9 @@ BoxTransitSet::adjustLoadByBreaking(
 
       if (!trial_breakoff.empty()) {
 
-         const bool accept_break = d_pparams->compareLoads(
+         const bool accept_break = BalanceUtilities::compareLoads(
             break_acceptance_flags, breakoff_amt, trial_breakoff_amt,
-            ideal_transfer, low_transfer, high_transfer );
+            ideal_transfer, low_transfer, high_transfer, *d_pparams );
          if (d_print_break_steps) {
             tbox::plog << "      Break evaluation:"
                        << "  " << break_acceptance_flags[0]
@@ -961,10 +962,10 @@ BoxTransitSet::adjustLoadByPopping(
 
       const BoxInTransit &candidate_box = *src->begin();
 
-      bool improved = d_pparams->compareLoads(
+      bool improved = BalanceUtilities::compareLoads(
          acceptance_flags, dst->getSumLoad(),
          dst->getSumLoad() + candidate_box.d_boxload,
-         dst_ideal_load, dst_low_load, dst_high_load );
+         dst_ideal_load, dst_low_load, dst_high_load, *d_pparams );
 
       if ( improved ) {
 
@@ -1122,9 +1123,10 @@ BoxTransitSet::swapLoadPair(
       if (src_test != src.begin()) {
          iterator src_test1 = src_test;
          --src_test1;
-         if ( d_pparams->compareLoads( hiside_acceptance_flags, hiside_transfer,
-                                       src_test1->d_boxload, ideal_transfer,
-                                       low_transfer, high_transfer ) ) {
+         if ( BalanceUtilities::compareLoads(
+                 hiside_acceptance_flags, hiside_transfer,
+                 src_test1->d_boxload, ideal_transfer,
+                 low_transfer, high_transfer, *d_pparams ) ) {
             src_hiside = src_test1;
             hiside_transfer = src_hiside->d_boxload;
             if (d_print_swap_steps) {
@@ -1138,9 +1140,10 @@ BoxTransitSet::swapLoadPair(
          }
       }
       if (src_test != src.end()) {
-         if ( d_pparams->compareLoads( loside_acceptance_flags, loside_transfer,
-                                       src_test->d_boxload, ideal_transfer,
-                                       low_transfer, high_transfer ) ) {
+         if ( BalanceUtilities::compareLoads(
+                 loside_acceptance_flags, loside_transfer,
+                 src_test->d_boxload, ideal_transfer,
+                 low_transfer, high_transfer, *d_pparams ) ) {
             src_loside = src_test;
             loside_transfer = src_loside->d_boxload;
             if (d_print_swap_steps) {
@@ -1190,9 +1193,10 @@ BoxTransitSet::swapLoadPair(
              * dst for the low-side transfer.
              */
 
-            d_pparams->compareLoads( hiside_acceptance_flags, hiside_transfer,
-                                     src_test->d_boxload - dst_test->d_boxload,
-                                     ideal_transfer, low_transfer, high_transfer );
+            BalanceUtilities::compareLoads(
+               hiside_acceptance_flags, hiside_transfer,
+               src_test->d_boxload - dst_test->d_boxload,
+               ideal_transfer, low_transfer, high_transfer, *d_pparams );
 
             if ( hiside_acceptance_flags[2] == 1 ) {
                src_hiside = src_test;
@@ -1210,9 +1214,10 @@ BoxTransitSet::swapLoadPair(
             if (dst_test != dst.begin()) {
                --dst_test; // Now, src_test and dst_test transferer by *less* than ideal_transfer.
 
-               d_pparams->compareLoads( loside_acceptance_flags, loside_transfer,
-                                        src_test->d_boxload - dst_test->d_boxload,
-                                        ideal_transfer, low_transfer, high_transfer );
+               BalanceUtilities::compareLoads(
+                  loside_acceptance_flags, loside_transfer,
+                  src_test->d_boxload - dst_test->d_boxload,
+                  ideal_transfer, low_transfer, high_transfer, *d_pparams );
 
                if ( loside_acceptance_flags[2] == 1 ) {
                   src_loside = src_test;
@@ -1238,9 +1243,10 @@ BoxTransitSet::swapLoadPair(
             if (src_test->d_boxload > ideal_transfer) {
                // Moving src_test to dst is moving too much--hiside.
 
-               d_pparams->compareLoads( hiside_acceptance_flags, hiside_transfer,
-                                        src_test->d_boxload, ideal_transfer,
-                                        low_transfer, high_transfer );
+               BalanceUtilities::compareLoads(
+                  hiside_acceptance_flags, hiside_transfer,
+                  src_test->d_boxload, ideal_transfer,
+                  low_transfer, high_transfer, *d_pparams );
 
                if ( hiside_acceptance_flags[2] == 1 ) {
                   src_hiside = src_test;
@@ -1257,9 +1263,10 @@ BoxTransitSet::swapLoadPair(
             } else {
                // Moving src_test to dst is moving (just right or) too little--loside.
 
-               d_pparams->compareLoads( loside_acceptance_flags, loside_transfer,
-                                        src_test->d_boxload, ideal_transfer,
-                                        low_transfer, high_transfer );
+               BalanceUtilities::compareLoads(
+                  loside_acceptance_flags, loside_transfer,
+                  src_test->d_boxload, ideal_transfer,
+                  low_transfer, high_transfer, *d_pparams );
 
                if ( loside_acceptance_flags[2] == 1 ) {
                   src_loside = src_test;
@@ -1308,9 +1315,10 @@ BoxTransitSet::swapLoadPair(
    iterator idst = dst.end();
    actual_transfer = 0;
 
-   if ( d_pparams->compareLoads( hiside_acceptance_flags, actual_transfer,
-                                 hiside_transfer, ideal_transfer,
-                                 low_transfer, high_transfer ) ) {
+   if ( BalanceUtilities::compareLoads(
+           hiside_acceptance_flags, actual_transfer,
+           hiside_transfer, ideal_transfer,
+           low_transfer, high_transfer, *d_pparams ) ) {
       isrc = src_hiside;
       idst = dst_hiside;
       actual_transfer = hiside_transfer;
@@ -1320,9 +1328,10 @@ BoxTransitSet::swapLoadPair(
       }
    }
 
-   if ( d_pparams->compareLoads( loside_acceptance_flags, actual_transfer,
-                                 loside_transfer, ideal_transfer,
-                                 low_transfer, high_transfer ) ) {
+   if ( BalanceUtilities::compareLoads(
+           loside_acceptance_flags, actual_transfer,
+           loside_transfer, ideal_transfer,
+           low_transfer, high_transfer, *d_pparams ) ) {
       isrc = src_loside;
       idst = dst_loside;
       actual_transfer = loside_transfer;
