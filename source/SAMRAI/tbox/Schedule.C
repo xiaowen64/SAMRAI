@@ -8,6 +8,7 @@
  *
  ************************************************************************/
 #include "SAMRAI/tbox/Schedule.h"
+#include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -41,13 +42,14 @@ const size_t Schedule::s_default_first_message_length = 1000;
 
 const std::string Schedule::s_default_timer_prefix("tbox::Schedule");
 std::map<std::string, Schedule::TimerStruct> Schedule::s_static_timers;
+bool Schedule::s_ignore_external_timer_prefix(false);
 
 StartupShutdownManager::Handler
 Schedule::s_initialize_finalize_handler(
    Schedule::initializeCallback,
    0,
    0,
-   Schedule::finalizeCallback,
+   0,
    StartupShutdownManager::priorityTimers);
 
 /*
@@ -594,14 +596,48 @@ Schedule::printClassData(
  ***********************************************************************
  */
 void
+Schedule::initializeCallback()
+{
+   /*
+    * - set up debugging flags.
+    */
+   if (tbox::InputManager::inputDatabaseExists()) {
+      boost::shared_ptr<tbox::Database> idb(
+         tbox::InputManager::getInputDatabase());
+      if (idb->isDatabase("Schedule")) {
+         boost::shared_ptr<tbox::Database> sched_db(
+            idb->getDatabase("Schedule"));
+         s_ignore_external_timer_prefix =
+            sched_db->getBoolWithDefault("DEV_ignore_external_timer_prefix",
+                                         false);
+      }
+   }
+
+   // Initialize timers with default prefix.
+   getAllTimers(s_default_timer_prefix,
+      s_static_timers[s_default_timer_prefix]);
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
 Schedule::setTimerPrefix(
    const std::string& timer_prefix)
 {
+   std::string timer_prefix_used;
+   if (s_ignore_external_timer_prefix) {
+      timer_prefix_used = s_default_timer_prefix;
+   }
+   else {
+      timer_prefix_used = timer_prefix;
+   }
    std::map<std::string, TimerStruct>::iterator ti(
-      s_static_timers.find(timer_prefix));
+      s_static_timers.find(timer_prefix_used));
    if (ti == s_static_timers.end()) {
-      d_object_timers = &s_static_timers[timer_prefix];
-      getAllTimers(timer_prefix, *d_object_timers);
+      d_object_timers = &s_static_timers[timer_prefix_used];
+      getAllTimers(timer_prefix_used, *d_object_timers);
    } else {
       d_object_timers = &(ti->second);
    }

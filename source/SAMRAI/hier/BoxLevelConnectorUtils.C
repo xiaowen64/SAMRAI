@@ -18,6 +18,7 @@
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
+#include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
 #include "boost/make_shared.hpp"
@@ -30,6 +31,15 @@ namespace hier {
 
 const std::string BoxLevelConnectorUtils::s_default_timer_prefix("hier::BoxLevelConnectorUtils");
 std::map<std::string, BoxLevelConnectorUtils::TimerStruct> BoxLevelConnectorUtils::s_static_timers;
+bool BoxLevelConnectorUtils::s_ignore_external_timer_prefix(false);
+ 
+tbox::StartupShutdownManager::Handler
+BoxLevelConnectorUtils::s_initialize_finalize_handler(
+   BoxLevelConnectorUtils::initializeCallback,
+   0,
+   0,
+   0,
+   tbox::StartupShutdownManager::priorityTimers);
 
 /*
  ***********************************************************************
@@ -1480,6 +1490,35 @@ BoxLevelConnectorUtils::computeNonIntersectingParts(
    TBOX_ASSERT(input_to_remainder->isLocal());
 }
 
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
+void
+BoxLevelConnectorUtils::initializeCallback()
+{
+   /*
+    * - set up debugging flags.
+    */
+   if (tbox::InputManager::inputDatabaseExists()) {
+      boost::shared_ptr<tbox::Database> idb(
+         tbox::InputManager::getInputDatabase());
+      if (idb->isDatabase("BoxLevelConnectorUtils")) {
+         boost::shared_ptr<tbox::Database> blcu_db(
+            idb->getDatabase("BoxLevelConnectorUtils"));
+         s_ignore_external_timer_prefix =
+            blcu_db->getBoolWithDefault("DEV_ignore_external_timer_prefix",
+                                        false);
+      }
+   }
+
+   // Initialize timers with default prefix.
+   getAllTimers(s_default_timer_prefix,
+                s_static_timers[s_default_timer_prefix]);
+
+}
+
 
 /*
  ***********************************************************************
@@ -1489,11 +1528,18 @@ void
 BoxLevelConnectorUtils::setTimerPrefix(
    const std::string& timer_prefix)
 {
+   std::string timer_prefix_used;
+   if (s_ignore_external_timer_prefix) {
+      timer_prefix_used = s_default_timer_prefix;
+   }
+   else {
+      timer_prefix_used = timer_prefix;
+   }
    std::map<std::string, TimerStruct>::iterator ti(
-      s_static_timers.find(timer_prefix));
+      s_static_timers.find(timer_prefix_used));
    if (ti == s_static_timers.end()) {
-      d_object_timers = &s_static_timers[timer_prefix];
-      getAllTimers(timer_prefix, *d_object_timers);
+      d_object_timers = &s_static_timers[timer_prefix_used];
+      getAllTimers(timer_prefix_used, *d_object_timers);
    } else {
       d_object_timers = &(ti->second);
    }

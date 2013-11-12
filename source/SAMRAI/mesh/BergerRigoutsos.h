@@ -863,6 +863,8 @@ private:
     */
    static std::map<std::string, TimerStruct> s_static_timers;
 
+   static bool s_ignore_external_timer_prefix;
+
    /*!
     * @brief Structure of timers in s_static_timers, matching this
     * object's timer prefix.

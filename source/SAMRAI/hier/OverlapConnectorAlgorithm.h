@@ -47,12 +47,6 @@ public:
    virtual ~OverlapConnectorAlgorithm();
 
    /*!
-    * @brief Read extra debugging flag from input database.
-    */
-   void
-   getFromInput();
-
-   /*!
     * @brief Create overlap Connector then discover and add overlaps from base
     * to head to it.
     *
@@ -687,6 +681,8 @@ private:
     * @brief Static container of timers that have been looked up.
     */
    static std::map<std::string, TimerStruct> s_static_timers;
+
+   static bool s_ignore_external_timer_prefix;
 
    /*!
     * @brief Structure of timers in s_static_timers, matching this

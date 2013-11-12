@@ -27,8 +27,9 @@ namespace hier {
 
 const std::string MappingConnectorAlgorithm::s_default_timer_prefix("hier::MappingConnectorAlgorithm");
 std::map<std::string, MappingConnectorAlgorithm::TimerStruct> MappingConnectorAlgorithm::s_static_timers;
+bool MappingConnectorAlgorithm::s_ignore_external_timer_prefix(false);
 
-char MappingConnectorAlgorithm::s_print_steps = '\0';
+char MappingConnectorAlgorithm::s_print_steps = 'n';
 
 const std::string MappingConnectorAlgorithm::s_dbgbord;
 
@@ -61,7 +62,6 @@ MappingConnectorAlgorithm::MappingConnectorAlgorithm():
    d_sanity_check_outputs(false)
 {
    setTimerPrefix(s_default_timer_prefix);
-   getFromInput();
 }
 
 /*
@@ -71,31 +71,6 @@ MappingConnectorAlgorithm::MappingConnectorAlgorithm():
 
 MappingConnectorAlgorithm::~MappingConnectorAlgorithm()
 {
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void
-MappingConnectorAlgorithm::getFromInput()
-{
-   if (s_print_steps == '\0') {
-      s_print_steps = 'n';
-      if (tbox::InputManager::inputDatabaseExists()) {
-         boost::shared_ptr<tbox::Database> idb(
-            tbox::InputManager::getInputDatabase());
-         if (idb->isDatabase("MappingConnectorAlgorithm")) {
-            boost::shared_ptr<tbox::Database> ocu_db(
-               idb->getDatabase("MappingConnectorAlgorithm"));
-            s_print_steps =
-               ocu_db->getCharWithDefault("DEV_print_modify_steps", 'n');
-            if (!(s_print_steps == 'n' || s_print_steps == 'y')) {
-               INPUT_VALUE_ERROR("DEV_print_modify_steps");
-            }
-         }
-      }
-   }
 }
 
 /*
@@ -1378,22 +1353,25 @@ MappingConnectorAlgorithm::initializeCallback()
    }
 
    /*
-    * - sets up debugging flags.
+    * - set up debugging flags.
     */
-
-   if (s_print_steps == '\0') {
-      if (tbox::InputManager::inputDatabaseExists()) {
-         s_print_steps = 'n';
-         boost::shared_ptr<tbox::Database> idb(
-            tbox::InputManager::getInputDatabase());
-         if (idb->isDatabase("MappingConnectorAlgorithm")) {
-            boost::shared_ptr<tbox::Database> ocu_db(
-               idb->getDatabase("MappingConnectorAlgorithm"));
-            s_print_steps = ocu_db->getCharWithDefault("print_modify_steps",
-                  s_print_steps);
-         }
+   if (tbox::InputManager::inputDatabaseExists()) {
+      boost::shared_ptr<tbox::Database> idb(
+         tbox::InputManager::getInputDatabase());
+      if (idb->isDatabase("MappingConnectorAlgorithm")) {
+         boost::shared_ptr<tbox::Database> mca_db(
+            idb->getDatabase("MappingConnectorAlgorithm"));
+         s_print_steps =
+            mca_db->getCharWithDefault("DEV_print_modify_steps", 'n');
+         s_ignore_external_timer_prefix =
+            mca_db->getBoolWithDefault("DEV_ignore_external_timer_prefix",
+                                       false);
       }
    }
+
+   // Initialize timers with default prefix.
+   getAllTimers(s_default_timer_prefix,
+                s_static_timers[s_default_timer_prefix]);
 
 }
 
@@ -1420,11 +1398,18 @@ void
 MappingConnectorAlgorithm::setTimerPrefix(
    const std::string& timer_prefix)
 {
+   std::string timer_prefix_used;
+   if (s_ignore_external_timer_prefix) {
+      timer_prefix_used = s_default_timer_prefix;
+   }
+   else {
+      timer_prefix_used = timer_prefix;
+   }
    std::map<std::string, TimerStruct>::iterator ti(
-      s_static_timers.find(timer_prefix));
+      s_static_timers.find(timer_prefix_used));
    if (ti == s_static_timers.end()) {
-      d_object_timers = &s_static_timers[timer_prefix];
-      getAllTimers(timer_prefix, *d_object_timers);
+      d_object_timers = &s_static_timers[timer_prefix_used];
+      getAllTimers(timer_prefix_used, *d_object_timers);
    } else {
       d_object_timers = &(ti->second);
    }
