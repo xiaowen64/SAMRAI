@@ -42,7 +42,8 @@ OBJS = 	\
 	BergerRigoutsos.o \
 	BergerRigoutsosNode.o \
 	MultiblockGriddingTagger.o \
-	TileClustering.o
+	TileClustering.o \
+	PartitioningParams.o
 
 library: $(OBJS)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done

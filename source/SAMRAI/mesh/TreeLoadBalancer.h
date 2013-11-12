@@ -16,7 +16,6 @@
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
 #include "SAMRAI/mesh/BoxTransitSet.h"
-#include "SAMRAI/hier/MappingConnector.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
 #include "SAMRAI/tbox/CommGraphWriter.h"
@@ -58,17 +57,19 @@ namespace mesh {
  * <b> Definitions: </b>
  *
  *   - \b flexible_load_tolerance
- *   Fraction of ideal load a process can take on in order to avoid excessive
- *   box cutting and load movement.  This is not a hard limit and some
- *   processes can still exceed this amount.  Higher values help the load
- *   balancer run faster but produces less balanced work loads.
+ *   Fraction of ideal load a process can
+ *   take on in order to reduce box cutting and load movement.  Higher
+ *   values often reduce partitioning time and box count but produce
+ *   less balanced work loads.  Surplus work greater than this
+ *   tolerance can still result due to other constraints, such as
+ *   minimum box size.
  *
- *   - \b max_cycle_spread_ratio
+ *   - \b max_cycle_spread_procs
  *   This parameter limits how many processes may receive the load of one
- *   process in a load fan-out cycle.  If a process has too much initial load,
- *   this limit causes the load to fan out the load over multiple cycles.  It
- *   alleviates the bottle-neck of one process having to work with too many
- *   other processes in any cycle.
+ *   process in a load distribution cycle.  If a process has too much
+ *   initial load, this limit causes the load to distribute the load over
+ *   multiple cycles.  It alleviates the bottle-neck of one process having
+ *   to work with too many other processes in any cycle.
  *
  * <b> Details: </b> <br>
  * <table>
@@ -89,7 +90,7 @@ namespace mesh {
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
  *   <tr>
- *     <td>max_cycle_spread_ratio</td>
+ *     <td>max_cycle_spread_procs</td>
  *     <td>int</td>
  *     <td>1000000</td>
  *     <td> > 1</td>
@@ -119,16 +120,15 @@ public:
     *
     * @param[in] dim
     *
-    * @param[in] name User-defined std::string identifier used for error
-    * reporting and timer names.  If omitted, "TreeLoadBalancer"
-    * is used.
-    *
-    * @param[in] rank_tree How to arange a contiguous range of MPI ranks
-    * into a tree.  If omitted, we use a tbox::CenteredRankTree.
+    * @param[in] name User-defined identifier used for error reporting
+    * and timer names.
     *
     * @param[in] input_db (optional) database pointer providing
     * parameters from input file.  This pointer may be null indicating
     * no input is used.
+    *
+    * @param[in] rank_tree How to arange a contiguous range of MPI ranks
+    * into a tree.  If omitted, we use a tbox::CenteredRankTree.
     *
     * @pre !name.empty()
     */
@@ -155,7 +155,8 @@ public:
     * requires a global communication, so all processes in the
     * communicator must call it.  The advantage of a duplicate
     * communicator is that it ensures the communications for the
-    * object won't accidentally interact with other communications.
+    * object won't accidentally interact with unrelated
+    * communications.
     *
     * If the duplicate SAMRAI_MPI it is set, the TreeLoadBalancer will
     * only balance BoxLevels with congruent SAMRAI_MPI objects and
@@ -223,8 +224,8 @@ public:
     * Note: This implementation does not yet support non-uniform load
     * balancing.
     *
-    * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
-    * @pre !balance_to_anchor || balance_to_anchor->isTransposeOf(balance_to_anchor->getTranspose())
+    * @pre !balance_to_reference || balance_to_reference->hasTranspose()
+    * @pre !balance_to_reference || balance_to_reference->isTransposeOf(balance_to_reference->getTranspose())
     * @pre (d_dim == balance_box_level.getDim()) &&
     *      (d_dim == min_size.getDim()) && (d_dim == max_size.getDim()) &&
     *      (d_dim == domain_box_level.getDim()) &&
@@ -236,7 +237,7 @@ public:
    void
    loadBalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
-      hier::Connector* balance_to_anchor,
+      hier::Connector* balance_to_reference,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::IntVector& min_size,
@@ -245,16 +246,6 @@ public:
       const hier::IntVector& bad_interval,
       const hier::IntVector& cut_factor,
       const tbox::RankGroup& rank_group = tbox::RankGroup()) const;
-
-   /*!
-    * @brief Print out all members of the class instance to given
-    * output stream.
-    *
-    * @param[in] output_stream
-    */
-   virtual void
-   printClassData(
-      std::ostream& output_stream) const;
 
    /*!
     * @brief Write out statistics recorded for the most recent load
@@ -277,7 +268,7 @@ public:
     *
     * @param [in] comm_graph_writer
     * External CommGraphWriter to save tree data to.
-    * Use NULL to disable saving.
+    * Use 0 to disable saving.
     */
    void
    setCommGraphWriter(
@@ -307,13 +298,7 @@ private:
     */
    static const int TreeLoadBalancer_LOADTAG0 = 1;
    static const int TreeLoadBalancer_LOADTAG1 = 2;
-   static const int TreeLoadBalancer_EDGETAG0 = 3;
-   static const int TreeLoadBalancer_EDGETAG1 = 4;
-   static const int TreeLoadBalancer_PREBALANCE0 = 5;
-   static const int TreeLoadBalancer_PREBALANCE1 = 6;
    static const int TreeLoadBalancer_FIRSTDATALEN = 500;
-
-   static const int TreeLoadBalancer_MIN_NPROC_FOR_AUTOMATIC_MULTICYCLE = 65;
 
    // The following are not implemented, but are provided here for
    // dumb compilers.
@@ -328,70 +313,82 @@ private:
 
    /*!
     * @brief Data to save for each sending/receiving process and the
-    * subtree at that process.
+    * branch at that process.
     *
-    * Terminology: The "pruned" parts of the tree are branches that
-    * are not open to receiving work from above.  These parts are not
-    * counted in the "effective" tree for the purpose of sending down
-    * work.
+    * Terminology: Parts of any tree may not be open to receiving work
+    * from their parents because they have enough work already.  These
+    * parts are not counted in the "effective" tree for the purpose of
+    * distributing work on the branch.
     */
-   class SubtreeData {
+   class BranchData {
 
    public:
       //! @brief Constructor.
-      SubtreeData();
-
-      void setPartitioningParams( const PartitioningParams &pparams )
-         {
-            d_pparams = &pparams;
-            d_work_traded.setPartitioningParams(pparams);
-         }
+      BranchData( const PartitioningParams &pparams );
 
       /*!
-       * @brief Set the ideal, current and upper limit of the load for
-       * the local process.
+       * @brief Set the starting ideal, current and upper limit of the
+       * load for the branch, which includes just the values from
+       * local process.
        */
       void setStartingLoad(
          LoadType ideal,
          LoadType current,
          LoadType upperlimit );
 
-      //! @brief Number of processes in subtree.
-      int numProcs() const { return d_num_procs; }
-      //! @brief Number of processes in effective subtree.
-      int numProcsEffective() const { return d_eff_num_procs; }
+      //! @brief Number of processes in branch.
+      int numProcs() const
+         { return d_num_procs; }
+      //! @brief Number of processes in effective branch.
+      int numProcsEffective() const
+         { return d_eff_num_procs; }
 
       //@{
-      //! @name Amount of work in subtree, compared to various references.
+      //! @name Amount of work in branch, compared to various references.
       // surplus and deficit are current load compared to ideal.
-      LoadType surplus() const { return d_subtree_load_current - d_subtree_load_ideal; }
-      LoadType deficit() const { return d_subtree_load_ideal - d_subtree_load_current; }
-      LoadType effSurplus() const { return d_eff_load_current - d_eff_load_ideal; }
-      LoadType effDeficit() const { return d_eff_load_ideal - d_eff_load_current; }
+      LoadType surplus() const
+         { return d_branch_load_current - d_branch_load_ideal; }
+      LoadType deficit() const
+         { return d_branch_load_ideal - d_branch_load_current; }
+      LoadType effSurplus() const
+         { return d_eff_load_current - d_eff_load_ideal; }
+      LoadType effDeficit() const
+         { return d_eff_load_ideal - d_eff_load_current; }
       // excess and margin are current load compared to upper limit.
-      LoadType excess() const { return d_subtree_load_current - d_subtree_load_upperlimit; }
-      LoadType margin() const { return d_subtree_load_upperlimit - d_subtree_load_current; }
-      LoadType effExcess() const { return d_eff_load_current - d_eff_load_upperlimit; }
-      LoadType effMargin() const { return d_eff_load_upperlimit - d_eff_load_current; }
+      LoadType excess() const
+         { return d_branch_load_current - d_branch_load_upperlimit; }
+      LoadType margin() const
+         { return d_branch_load_upperlimit - d_branch_load_current; }
+      LoadType effExcess() const
+         { return d_eff_load_current - d_eff_load_upperlimit; }
+      LoadType effMargin() const
+         { return d_eff_load_upperlimit - d_eff_load_current; }
       //@}
 
-      //! @brief Set whether this subtree want work from its parents.
-      void setWantsWorkFromParent(bool wants) { d_wants_work_from_parent = wants; }
+      //! @brief Tell this tree to eventually ask for work from its parent.
+      void setWantsWorkFromParent()
+         { d_wants_work_from_parent = true; }
 
-      //! @brief Get whether this subtree want work from its parents.
-      bool getWantsWorkFromParent() const { return d_wants_work_from_parent; }
-
-      //@{
-      //! @name Information on work exchanged
-      //! @brief Get amount of work exchanged.
-      LoadType getExchangeLoad() const { return d_work_traded.getSumLoad(); }
-      //! @brief Get count of work exchanged.
-      size_t getExchangePackageCount() const { return d_work_traded.size(); }
-      //! @brief Get count of originators of the work exchanged.
-      size_t getExchangeOriginatorCount() const { return d_work_traded.getNumberOfOriginatingProcesses(); }
+      //! @brief Get whether this branch want work from its parents.
+      bool getWantsWorkFromParent() const
+         { return d_wants_work_from_parent; }
 
       //@{
+      //! @name Information on work shipped
+      //! @brief Get amount of work shipped.
+      LoadType getShipmentLoad() const
+         { return d_shipment.getSumLoad(); }
+      //! @brief Get count of work shipped.
+      size_t getShipmentPackageCount() const
+         { return d_shipment.getNumberOfItems(); }
+      //! @brief Get count of originators of the work shipped.
+      size_t getShipmentOriginatorCount() const
+         { return d_shipment.getNumberOfOriginatingProcesses(); }
+      //@}
 
+
+      //@{
+      //! @name Methods supporting load import/export.
       /*!
        * @brief Adjust load to be sent away by taking work from or
        * dumping work into a reserve container.
@@ -399,7 +396,6 @@ private:
       LoadType
       adjustOutboundLoad(
          BoxTransitSet& reserve,
-         hier::SequentialLocalIdGenerator &id_generator,
          LoadType ideal_load,
          LoadType low_load,
          LoadType high_load );
@@ -408,104 +404,99 @@ private:
       void moveInboundLoadToReserve( BoxTransitSet &reserve );
 
       /*!
-       * @brief Incorporate child subtree into this subtree and add
-       * child's excess to reserve container.
+       * @brief Incorporate child branch into this branch.
        */
-      void incorporateChild( BoxTransitSet &reserve,
-                             const SubtreeData &child );
+      void incorporateChild( const BranchData &child );
+      //@}
+
 
       //@{
       //! @name Packing/unpacking for communication up and down the tree.
 
       //! @brief Pack load/boxes for sending up to parent.
       void
-      packDataToParent(
-         tbox::MessageStream &msg) const;
+      packDataToParent( tbox::MessageStream &msg) const;
 
       //! @brief Unpack load/boxes received from child.
       void
-      unpackDataFromChild(
-         hier::SequentialLocalIdGenerator &id_generator,
-         int mpi_rank,
-         tbox::MessageStream &msg );
+      unpackDataFromChild( tbox::MessageStream &msg );
 
       //! @brief Pack load/boxes for sending down to child.
       void
-      packDataToChild(
-         tbox::MessageStream &msg) const;
+      packDataToChild( tbox::MessageStream &msg) const;
 
       //! @brief Unpack load/boxes received from parent.
       void
-      unpackDataFromParent(
-         hier::SequentialLocalIdGenerator &id_generator,
-         int mpi_rank,
-         tbox::MessageStream &msg );
+      unpackDataFromParentAndIncorporate( tbox::MessageStream &msg );
 
       //@}
 
       //! @brief Diagnostic printing.
-      void printClassData( const std::string &border, std::ostream &os ) const;
+      void recursivePrint( std::ostream &os,
+                           const std::string &border=std::string(),
+                           int detail_depth=2 ) const;
 
       //! @brief Setup names of timers.
       void setTimerPrefix(const std::string& timer_prefix);
 
       //! @brief Whether to print steps for debugging.
-      void setPrintSteps(bool print_steps) { d_print_steps = print_steps; }
+      void setPrintSteps(bool print_steps)
+         { d_print_steps = print_steps; }
 
    private:
 
       /*!
-       * @brief Number of processes in subtree
+       * @brief Number of processes in branch
        */
       int d_num_procs;
 
       /*!
-       * @brief Current amount of work in the subtree, including local unassigned
+       * @brief Current load in the branch, including local unassigned load.
        */
-      LoadType d_subtree_load_current;
+      LoadType d_branch_load_current;
 
       /*!
-       * @brief Ideal amount of work for the subtree
+       * @brief Ideal load for the branch
        */
-      LoadType d_subtree_load_ideal;
+      LoadType d_branch_load_ideal;
 
       /*!
-       * @brief Amount of work the subtree is willing to have, based
-       * on the load tolerance and upper limits of children.
+       * @brief Load the branch is willing to have, based on the load
+       * tolerance and upper limits of children.
        */
-      LoadType d_subtree_load_upperlimit;
+      LoadType d_branch_load_upperlimit;
 
       /*!
-       * @brief Number of processes in subtree after pruning independent descendants
+       * @brief Number of processes in branch after pruning.
        */
       int d_eff_num_procs;
 
       /*!
-       * @brief Current amount of work in the pruned subtree, including local unassigned
+       * @brief Current load in the effective branch.
        */
       LoadType d_eff_load_current;
 
       /*!
-       * @brief Ideal amount of work for the pruned subtree
+       * @brief Ideal load for the effective branch.
        */
       LoadType d_eff_load_ideal;
 
       /*!
-       * @brief Amount of work the pruned subtree is willing to have, based
-       * on the load tolerance and upper limit of dependent children.
+       * @brief Load the effective branch is willing to have, which is
+       * a sum of the upper limits of its effective children.
        */
       LoadType d_eff_load_upperlimit;
 
       /*!
-       * @brief Work to traded (or to be traded).
+       * @brief Load received or to be sent.
        *
-       * If the object is for the local process, work_traded means
-       * traded with the process's *parent*.
+       * If this object is for the local process, shipment is to or
+       * from the process's *parent*.
        */
-      BoxTransitSet d_work_traded;
+      BoxTransitSet d_shipment;
 
       /*!
-       * @brief Whether subtree expects its parent to send work down.
+       * @brief Whether branch expects its parent to send work down.
        */
       bool d_wants_work_from_parent;
 
@@ -519,7 +510,7 @@ private:
       bool d_print_steps;
       //@}
 
-   }; // SubtreeData declaration.
+   }; // BranchData declaration.
 
 
 
@@ -536,56 +527,6 @@ private:
    void
    getFromInput(
       const boost::shared_ptr<tbox::Database>& input_db);
-
-   /*!
-    * Move Boxes in balance_box_level from ranks outside of
-    * rank_group to ranks inside rank_group.  Modify the given connectors
-    * to make them correct following this moving of boxes.
-    *
-    * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
-    * @pre !balance_to_anchor || (balance_to_anchor->getTranspose().checkTransposeCorrectness(*balance_to_anchor) == 0)
-    * @pre !balance_to_anchor || (balance_to_anchor->checkTransposeCorrectness(balance_to_anchor->getTranspose()) == 0)
-    */
-   void
-   prebalanceBoxLevel(
-      hier::BoxLevel& balance_box_level,
-      hier::Connector* balance_to_anchor,
-      const tbox::RankGroup& rank_group) const;
-
-   /*!
-    * @brief Assign unassigned boxes to local process and set
-    * mapping edges where possible without communicating.
-    */
-   void
-   assignBoxesToLocalProcess(
-      hier::BoxLevel& balanced_box_level,
-      hier::Connector &balanced_to_unbalanced,
-      hier::Connector &unbalanced_to_balanced,
-      const BoxTransitSet& unassigned ) const;
-
-   void
-      removeLocallyOriginatedBoxesFromBoxTransitSet(
-      BoxTransitSet& transit_set,
-      int local_rank ) const;
-
-   /*!
-    * @brief Construct semilocal relationships in
-    * unbalanced--->balanced Connector.
-    *
-    * Constructing semilocal unbalanced--->balanced relationships
-    * require communication to determine where exported work ended up.
-    * This methods does the necessary communication and constructs
-    * these relationship in the given Connector.
-    *
-    * @param [out] unbalanced_to_balanced Connector to store
-    * relationships in.
-    *
-    * @param [in] kept_imports Work that was imported and locally kept.
-    */
-   void
-   constructSemilocalUnbalancedToBalanced(
-      hier::MappingConnector &unbalanced_to_balanced,
-      const BoxTransitSet &kept_imports ) const;
 
    /*
     * Utility functions to determine parameter values for level.
@@ -609,9 +550,7 @@ private:
    {
       /*
        * Currently only for uniform loads, where the load is equal
-       * to the number of cells.  For non-uniform loads, this method
-       * needs the patch data index for the load.  It would summ up
-       * the individual cell loads in the cell.
+       * to the number of cells.
        */
       return double(box.size());
    }
@@ -627,9 +566,7 @@ private:
    {
       /*
        * Currently only for uniform loads, where the load is equal
-       * to the number of cells.  For non-uniform loads, this method
-       * needs the patch data index for the load.  It would summ up
-       * the individual cell loads in the overlap region.
+       * to the number of cells.
        */
       return double((box * restriction).size());
    }
@@ -638,35 +575,37 @@ private:
     * Count the local workload.
     */
    LoadType
-   computeLocalLoads(
+   computeLocalLoad(
       const hier::BoxLevel& box_level) const;
 
    /*!
     * @brief Given an "unbalanced" BoxLevel, compute the BoxLevel that
-    * is load-balanced within the given rank_group and compute the
-    * mapping between the unbalanced and balanced BoxLevels.
+    * is load-balanced within the given rank_group and update the
+    * Connector between it and a reference BoxLevel.
     *
-    * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
+    * @pre !balance_to_reference || balance_to_reference->hasTranspose()
     * @pre d_dim == balance_box_level.getDim()
     */
    void
    loadBalanceWithinRankGroup(
       hier::BoxLevel& balance_box_level,
-      hier::Connector* balance_to_anchor,
+      hier::Connector* balance_to_reference,
       const tbox::RankGroup& rank_group,
       const double group_sum_load ) const;
 
    /*!
-    * @brief Constrain maximum box sizes in the given BoxLevel and
-    * update given Connectors to the changed BoxLevel.
+    * @brief Distribute load across the rank group using the tree
+    * algorithm.
     *
-    * @pre !anchor_to_level || anchor_to_level->hasTranspose()
-    * @pre d_dim == box_level.getDim()
+    * Initial work is give in unbalanced_box_level.  Put the final
+    * local work in balanced_work.
     */
    void
-   constrainMaxBoxSizes(
-      hier::BoxLevel& box_level,
-      hier::Connector* anchor_to_level) const;
+   distributeLoadAcrossRankGroup(
+      BoxTransitSet &balanced_work,
+      const hier::BoxLevel &unbalanced_box_level,
+      const tbox::RankGroup& rank_group,
+      double group_sum_load ) const;
 
    /*!
     * @brief Compute surplus load per descendent who is still waiting
@@ -674,9 +613,9 @@ private:
     */
    LoadType
    computeSurplusPerEffectiveDescendent(
-      const BoxTransitSet &unassigned,
-      const LoadType group_avg_load,
-      const std::vector<SubtreeData> &child_subtrees,
+      const LoadType &unassigned_load,
+      const LoadType &group_avg_load,
+      const std::vector<BranchData> &child_branches,
       int first_child ) const;
 
    /*!
@@ -690,24 +629,19 @@ private:
     * @param [out] rank_group
     * @param [out] num_groups
     * @param [out] group_num
-    * @param [in] cycle_number
-    * @param [in] number_of_cycles
+    * @param [in] cycle_fraction How far we are in the cycles.
+    *   Value of 1 means the last cycle.
     */
    void
    createBalanceRankGroupBasedOnCycles(
       tbox::RankGroup &rank_group,
       int &num_groups,
       int &group_num,
-      const int cycle_number,
-      const int number_of_cycles) const;
+      double cycle_fraction) const;
 
    /*!
-    * @brief Set up the asynchronous communication objects for the
-    * given RankGroup.
-    *
-    * Based on a conceptual process tree with num_children children,
-    * set the AsyncCommPeer objects for communication with children
-    * and parent.
+    * @brief Set the AsyncCommPeer objects for this process to
+    * communicate with its parent and children.
     *
     * @param [out] child_stage
     * @param [out] child_comms
@@ -755,8 +689,8 @@ private:
    //! @brief Whether d_mpi is an internal duplicate.  See setSAMRAI_MPI().
    bool d_mpi_is_dupe;
 
-   //! @brief Max number of processes the a single process may spread its load onto per root cycle.
-   int d_max_cycle_spread_ratio;
+   //! @brief Max number of processes the a single process may spread load to per cycle.
+   int d_max_cycle_spread_procs;
 
    //! @brief Whether to allow box breaking.
    bool d_allow_box_breaking;
@@ -779,21 +713,11 @@ private:
 
    /*!
     * @brief Fraction of ideal load a process can accept over and above
-    * the ideal it should have.
+    * the ideal.
     *
-    * See input parameter "flexible_load_tol".
+    * See input parameter "flexible_load_tolerance".
     */
    double d_flexible_load_tol;
-
-   /*!
-    * @brief Load comparison tolerance factor.
-    *
-    * When low-level methods check whether one candidate is better
-    * than the other, ignore improvements less than
-    * d_load_comparison_tol*d_global_avg_load.  This prevents infinite
-    * loops when the improvement is very near zero.
-    */
-   double d_load_comparison_tol;
 
    //@{
    //! @name Data shared with private methods during balancing.
@@ -802,10 +726,17 @@ private:
    mutable LoadType d_min_load;
    //@}
 
+   static const int s_default_data_id;
+
+   //@{
+   //! @name Used for evaluating peformance.
+
+   bool d_barrier_before;
+   bool d_barrier_after;
 
    /*!
-    * @brief Whether to immediately report the results of the load balancing cycles
-    * in the log files.
+    * @brief Whether to immediately report the results of the load
+    * balancing cycles in the log files.
     */
    bool d_report_load_balance;
 
@@ -814,14 +745,6 @@ private:
     */
    char d_summarize_map;
 
-   //@{
-   //! @name Used for evaluating peformance.
-   bool d_barrier_before;
-   bool d_barrier_after;
-   //@}
-
-   static const int d_default_data_id;
-
    /*
     * Performance timers.
     */
@@ -829,9 +752,7 @@ private:
    boost::shared_ptr<tbox::Timer> t_get_map;
    boost::shared_ptr<tbox::Timer> t_use_map;
    boost::shared_ptr<tbox::Timer> t_constrain_size;
-   boost::shared_ptr<tbox::Timer> t_map_big_boxes;
-   boost::shared_ptr<tbox::Timer> t_load_distribution;
-   boost::shared_ptr<tbox::Timer> t_post_load_distribution_barrier;
+   boost::shared_ptr<tbox::Timer> t_distribute_load_across_rank_group;
    boost::shared_ptr<tbox::Timer> t_compute_local_load;
    boost::shared_ptr<tbox::Timer> t_compute_global_load;
    boost::shared_ptr<tbox::Timer> t_compute_tree_load;
@@ -840,33 +761,24 @@ private:
    boost::shared_ptr<tbox::Timer> t_send_load_to_parent;
    boost::shared_ptr<tbox::Timer> t_get_load_from_children;
    boost::shared_ptr<tbox::Timer> t_get_load_from_parent;
-   boost::shared_ptr<tbox::Timer> t_construct_semilocal;
-   boost::shared_ptr<tbox::Timer> t_construct_semilocal_comm_wait;
-   boost::shared_ptr<tbox::Timer> t_construct_semilocal_send_edges;
-   boost::shared_ptr<tbox::Timer> t_construct_semilocal_local_accounting;
+   boost::shared_ptr<tbox::Timer> t_post_load_distribution_barrier;
    boost::shared_ptr<tbox::Timer> t_report_loads;
-   boost::shared_ptr<tbox::Timer> t_local_balancing;
+   boost::shared_ptr<tbox::Timer> t_local_load_moves;
    boost::shared_ptr<tbox::Timer> t_finish_sends;
-   boost::shared_ptr<tbox::Timer> t_pack_edge;
-   boost::shared_ptr<tbox::Timer> t_unpack_edge;
-   boost::shared_ptr<tbox::Timer> t_children_load_comm;
-   boost::shared_ptr<tbox::Timer> t_parent_load_comm;
-   boost::shared_ptr<tbox::Timer> t_children_edge_comm;
-   boost::shared_ptr<tbox::Timer> t_parent_edge_comm;
    boost::shared_ptr<tbox::Timer> t_barrier_before;
    boost::shared_ptr<tbox::Timer> t_barrier_after;
    boost::shared_ptr<tbox::Timer> t_child_send_wait;
    boost::shared_ptr<tbox::Timer> t_child_recv_wait;
    boost::shared_ptr<tbox::Timer> t_parent_send_wait;
    boost::shared_ptr<tbox::Timer> t_parent_recv_wait;
-   boost::shared_ptr<tbox::Timer> t_misc1;
-   boost::shared_ptr<tbox::Timer> t_misc2;
 
    /*
     * Statistics on number of cells and patches generated.
     */
    mutable std::vector<double> d_load_stat;
    mutable std::vector<int> d_box_count_stat;
+
+   //@}
 
    // Extra checks independent of optimization/debug.
    char d_print_steps;

@@ -15,15 +15,10 @@
 
 #include "SAMRAI/hier/BaseGridGeometry.h"
 
-#include "boost/shared_ptr.hpp"
-#include <iostream>
-#include <vector>
-#include <set>
+#include <map>
 
 namespace SAMRAI {
 namespace mesh {
-
-
 
 
 
@@ -36,24 +31,24 @@ class PartitioningParams
 {
 public:
 
-PartitioningParams(
-   const hier::BaseGridGeometry &grid_geometry,
-   const hier::IntVector &ratio_to_level_zero,
-   const hier::IntVector &min_size,
-   const hier::IntVector &max_size,
-   const hier::IntVector &bad_interval,
-   const hier::IntVector &cut_factor ) :
-   d_min_size(min_size),
-   d_max_size(max_size),
-   d_bad_interval(bad_interval),
-   d_cut_factor(cut_factor),
-   d_load_comparison_tol(1e-8)
-{
-   for ( int bid(0); bid<grid_geometry.getNumberBlocks(); ++bid ) {
-      grid_geometry.computePhysicalDomain(
-         d_block_domain_boxes[hier::BlockId(bid)], ratio_to_level_zero, hier::BlockId(bid));
-   }
-}
+   PartitioningParams(
+      const hier::BaseGridGeometry &grid_geometry,
+      const hier::IntVector &ratio_to_level_zero,
+      const hier::IntVector &min_size,
+      const hier::IntVector &max_size,
+      const hier::IntVector &bad_interval,
+      const hier::IntVector &cut_factor ) :
+      d_min_size(min_size),
+      d_max_size(max_size),
+      d_bad_interval(bad_interval),
+      d_cut_factor(cut_factor),
+      d_load_comparison_tol(1e-8)
+      {
+         for ( int bid(0); bid<grid_geometry.getNumberBlocks(); ++bid ) {
+            grid_geometry.computePhysicalDomain(
+               d_block_domain_boxes[hier::BlockId(bid)], ratio_to_level_zero, hier::BlockId(bid));
+         }
+      }
 
    double getMinLoad() const {
       return static_cast<double>(d_min_size.getProduct());

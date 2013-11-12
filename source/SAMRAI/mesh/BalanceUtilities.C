@@ -15,6 +15,8 @@
 
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
+#include "SAMRAI/hier/MappingConnector.h"
+#include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -33,6 +35,9 @@ namespace SAMRAI {
 namespace mesh {
 
 math::PatchCellDataNormOpsReal<double> BalanceUtilities::s_norm_ops;
+
+const int BalanceUtilities::BalanceUtilities_PREBALANCE0;
+const int BalanceUtilities::BalanceUtilities_PREBALANCE1;
 
 /*
  *************************************************************************
@@ -1750,6 +1755,41 @@ BalanceUtilities::computeLoadBalanceEfficiency(
 
 /*
  *************************************************************************
+ *************************************************************************
+ */
+
+bool
+BalanceUtilities::compareLoads(
+   int flags[],
+   double cur_load,
+   double new_load,
+   double ideal_load,
+   double low_load,
+   double high_load,
+   const PartitioningParams &pparams)
+{
+   double cur_range_miss = cur_load >= high_load ? cur_load-high_load :
+      ( cur_load <= low_load ? low_load-cur_load : 0.0 );
+   double new_range_miss = new_load >= high_load ? new_load-high_load :
+      ( new_load <= low_load ? low_load-new_load : 0.0 );
+   flags[0] = new_range_miss < (cur_range_miss-pparams.getLoadComparisonTol()) ? 1 :
+      ( new_range_miss > cur_range_miss ? -1 : 0 );
+
+   double cur_diff = tbox::MathUtilities<double>::Abs(cur_load-ideal_load);
+   double new_diff = tbox::MathUtilities<double>::Abs(new_load-ideal_load);
+
+   flags[1] = new_diff < (cur_diff-pparams.getLoadComparisonTol()) ? 1 :
+      ( new_diff > cur_diff ? -1 : 0 );
+
+   flags[2] = flags[0] != 0 ? flags[0] : ( flags[1] != 0 ? flags[1] : 0 );
+
+   return flags[2] == 1;
+}
+
+
+
+/*
+ *************************************************************************
  * Gather and report load balance for a single balancing.
  *************************************************************************
  */
@@ -1958,6 +1998,408 @@ BalanceUtilities::qsortRankAndLoadCompareAscending(
    }
 
    return 0;
+}
+
+
+
+/*
+ *************************************************************************
+ * Constrain maximum box sizes in the given BoxLevel and
+ * update given Connectors to the changed BoxLevel.
+ *************************************************************************
+ */
+void
+BalanceUtilities::constrainMaxBoxSizes(
+   hier::BoxLevel& box_level,
+   hier::Connector* anchor_to_level,
+   const PartitioningParams &pparams )
+{
+   TBOX_ASSERT(!anchor_to_level || anchor_to_level->hasTranspose());
+
+   const hier::IntVector& zero_vector(hier::IntVector::getZero(box_level.getDim()));
+
+   hier::BoxLevel constrained(box_level.getRefinementRatio(),
+      box_level.getGridGeometry(),
+      box_level.getMPI());
+   hier::MappingConnector unconstrained_to_constrained(box_level,
+      constrained,
+      zero_vector);
+
+   const hier::BoxContainer& unconstrained_boxes = box_level.getBoxes();
+
+   hier::LocalId next_available_index = box_level.getLastLocalId() + 1;
+
+   for (hier::BoxContainer::const_iterator ni = unconstrained_boxes.begin();
+        ni != unconstrained_boxes.end(); ++ni) {
+
+      const hier::Box& box = *ni;
+
+      const hier::IntVector box_size = box.numberCells();
+
+      /*
+       * If box already conform to max size constraint, keep it.
+       * Else chop it up and keep the parts.
+       */
+
+      if (box_size <= pparams.getMaxBoxSize()) {
+
+         constrained.addBox(box);
+
+      } else {
+
+         hier::BoxContainer chopped(box);
+         hier::BoxUtilities::chopBoxes(
+            chopped,
+            pparams.getMaxBoxSize(),
+            pparams.getMinBoxSize(),
+            pparams.getCutFactor(),
+            pparams.getBadInterval(),
+            pparams.getDomainBoxes(box.getBlockId()));
+         TBOX_ASSERT( !chopped.isEmpty() );
+
+         if (chopped.size() != 1) {
+
+            hier::Connector::NeighborhoodIterator base_box_itr =
+               unconstrained_to_constrained.makeEmptyLocalNeighborhood(
+                  box.getBoxId());
+
+            for (hier::BoxContainer::iterator li = chopped.begin();
+                 li != chopped.end(); ++li) {
+
+               const hier::Box fragment = *li;
+
+               const hier::Box new_box(fragment,
+                                       next_available_index++,
+                                       box_level.getMPI().getRank());
+               TBOX_ASSERT(new_box.getBlockId() == ni->getBlockId());
+
+               constrained.addBox(new_box);
+
+               unconstrained_to_constrained.insertLocalNeighbor(
+                  new_box,
+                  base_box_itr);
+
+            }
+
+         } else {
+            TBOX_ASSERT( box.isSpatiallyEqual( chopped.front() ) );
+            constrained.addBox(box);
+         }
+
+      }
+
+   }
+
+   if (anchor_to_level && anchor_to_level->isFinalized()) {
+      // Modify anchor<==>level Connectors and swap box_level with constrained.
+      hier::MappingConnectorAlgorithm mca;
+      mca.setTimerPrefix("mesh::BalanceUtilities");
+      mca.modify(*anchor_to_level,
+                 unconstrained_to_constrained,
+                 &box_level,
+                 &constrained);
+   } else {
+      // Swap box_level and constrained without touching anchor<==>level.
+      hier::BoxLevel::swap(box_level, constrained);
+   }
+
+}
+
+
+
+
+
+
+/*
+**************************************************************************
+* Move Boxes in balance_box_level from ranks outside of
+* rank_group to ranks inside rank_group.  Modify the given connectors
+* to make them correct following this moving of boxes.
+**************************************************************************
+*/
+
+void
+BalanceUtilities::prebalanceBoxLevel(
+   hier::BoxLevel& balance_box_level,
+   hier::Connector* balance_to_anchor,
+   const tbox::RankGroup& rank_group)
+{
+
+   if (balance_to_anchor) {
+      TBOX_ASSERT(balance_to_anchor->hasTranspose());
+      TBOX_ASSERT(balance_to_anchor->getTranspose().checkTransposeCorrectness(*balance_to_anchor) == 0);
+      TBOX_ASSERT(balance_to_anchor->checkTransposeCorrectness(balance_to_anchor->getTranspose()) == 0);
+   }
+
+   /*
+    * tmp_box_level will contain the same boxes as
+    * balance_box_level, but all will live on the processors
+    * specified in rank_group.
+    */
+   hier::BoxLevel tmp_box_level(balance_box_level.getRefinementRatio(),
+      balance_box_level.getGridGeometry(),
+      balance_box_level.getMPI());
+
+   /*
+    * If a rank is not in rank_group it is called a "sending" rank, as
+    * it will send any Boxes it has to a rank in rank_group.
+    */
+   bool is_sending_rank = rank_group.isMember(balance_box_level.getMPI().getRank()) ? false : true;
+
+   int output_nproc = rank_group.size();
+
+   /*
+    * the send and receive comm objects
+    */
+   tbox::AsyncCommStage comm_stage;
+   tbox::AsyncCommPeer<int>* box_send = 0;
+   tbox::AsyncCommPeer<int>* box_recv = 0;
+   tbox::AsyncCommPeer<int>* id_send = 0;
+   tbox::AsyncCommPeer<int>* id_recv = 0;
+
+   /*
+    * A sending rank will send its Boxes to a receiving rank, and
+    * that receiving processor will add it to its local set of Boxes.
+    * When the box is added on the receiving processor, it will receive
+    * a new LocalId.  This LocalId value needs to be sent back to
+    * the sending processor, in order to construct the mapping connectors.
+    *
+    * Therefore the sending ranks construct comm objects for sending boxes
+    * and receiving LocalIdes.
+    *
+    * Sending processors send to ranks in the rank_group determined by
+    * a modulo heuristic.
+    */
+   if (is_sending_rank) {
+      box_send = new tbox::AsyncCommPeer<int>;
+      box_send->initialize(&comm_stage);
+      box_send->setPeerRank(rank_group.getMappedRank(balance_box_level.getMPI().getRank() % output_nproc));
+      box_send->setMPI(balance_box_level.getMPI());
+      box_send->setMPITag(BalanceUtilities_PREBALANCE0 + 2 * balance_box_level.getMPI().getRank(),
+         BalanceUtilities_PREBALANCE1 + 2 * balance_box_level.getMPI().getRank());
+
+      id_recv = new tbox::AsyncCommPeer<int>;
+      id_recv->initialize(&comm_stage);
+      id_recv->setPeerRank(rank_group.getMappedRank(balance_box_level.getMPI().getRank() % output_nproc));
+      id_recv->setMPI(balance_box_level.getMPI());
+      id_recv->setMPITag(BalanceUtilities_PREBALANCE0 + 2 * balance_box_level.getMPI().getRank(),
+         BalanceUtilities_PREBALANCE1 + 2 * balance_box_level.getMPI().getRank());
+   }
+
+   /*
+    * The receiving ranks construct comm objects for receiving boxes
+    * and sending LocalIdes.
+    */
+   int num_recvs = 0;
+   if (rank_group.isMember(balance_box_level.getMPI().getRank())) {
+      std::list<int> recv_ranks;
+      for (int i = 0; i < balance_box_level.getMPI().getSize(); i++) {
+         if (!rank_group.isMember(i) &&
+             rank_group.getMappedRank(i % output_nproc) == balance_box_level.getMPI().getRank()) {
+            recv_ranks.push_back(i);
+         }
+      }
+      num_recvs = static_cast<int>(recv_ranks.size());
+      if (num_recvs > 0) {
+         box_recv = new tbox::AsyncCommPeer<int>[num_recvs];
+         id_send = new tbox::AsyncCommPeer<int>[num_recvs];
+         int recv_count = 0;
+         for (std::list<int>::const_iterator ri(recv_ranks.begin());
+              ri != recv_ranks.end(); ri++) {
+            const int rank = *ri;
+            box_recv[recv_count].initialize(&comm_stage);
+            box_recv[recv_count].setPeerRank(rank);
+            box_recv[recv_count].setMPI(balance_box_level.getMPI());
+            box_recv[recv_count].setMPITag(BalanceUtilities_PREBALANCE0 + 2 * rank,
+               BalanceUtilities_PREBALANCE1 + 2 * rank);
+
+            id_send[recv_count].initialize(&comm_stage);
+            id_send[recv_count].setPeerRank(rank);
+            id_send[recv_count].setMPI(balance_box_level.getMPI());
+            id_send[recv_count].setMPITag(BalanceUtilities_PREBALANCE0 + 2 * rank,
+               BalanceUtilities_PREBALANCE1 + 2 * rank);
+
+            recv_count++;
+         }
+         TBOX_ASSERT(num_recvs == recv_count);
+      }
+   }
+
+   /*
+    * Construct the mapping Connectors which describe the mapping from the box
+    * configuration of the given balance_box_level, to the new
+    * configuration stored in tmp_box_level.  These mapping Connectors
+    * are necessary to modify the two Connectors given in the argument list,
+    * so that on return from this method, they will be correct for the new
+    * balance_box_level.
+    */
+   hier::MappingConnector balance_to_tmp(
+      balance_box_level,
+      tmp_box_level,
+      hier::IntVector::getZero(balance_box_level.getDim()));
+
+   hier::MappingConnector tmp_to_balance(
+      tmp_box_level,
+      balance_box_level,
+      hier::IntVector::getZero(balance_box_level.getDim()));
+
+   balance_to_tmp.setTranspose(&tmp_to_balance, false);
+
+   /*
+    * Where Boxes already exist on ranks in rank_group,
+    * move them directly to tmp_box_level.
+    */
+   if (!is_sending_rank) {
+      const hier::BoxContainer& unchanged_boxes =
+         balance_box_level.getBoxes();
+
+      for (hier::BoxContainer::const_iterator ni = unchanged_boxes.begin();
+           ni != unchanged_boxes.end(); ++ni) {
+
+         const hier::Box& box = *ni;
+         tmp_box_level.addBox(box);
+      }
+   }
+
+   const int buf_size = hier::Box::commBufferSize(balance_box_level.getDim());
+
+   /*
+    * On sending ranks, pack the Boxes into buffers and send.
+    */
+   if (is_sending_rank) {
+      const hier::BoxContainer& sending_boxes =
+         balance_box_level.getBoxes();
+      const int num_sending_boxes =
+         static_cast<int>(sending_boxes.size());
+
+      int* buffer = new int[buf_size * num_sending_boxes];
+      int box_count = 0;
+      for (hier::BoxContainer::const_iterator ni = sending_boxes.begin();
+           ni != sending_boxes.end(); ++ni) {
+
+         const hier::Box& box = *ni;
+
+         box.putToIntBuffer(&buffer[box_count * buf_size]);
+         box_count++;
+      }
+      box_send->beginSend(buffer, buf_size * num_sending_boxes);
+
+      delete[] buffer;
+   }
+
+   /*
+    * On receiving ranks, complete the receives, add the boxes to local
+    * tmp_box_level, insert boxes into tmp_to_balance, and then
+    * send the new LocalIdes back to the sending processors.
+    */
+   if (!is_sending_rank && num_recvs > 0) {
+      for (int i = 0; i < num_recvs; i++) {
+         box_recv[i].beginRecv();
+      }
+      int num_completed_recvs = 0;
+      std::vector<bool> completed(num_recvs, false);
+      while (num_completed_recvs < num_recvs) {
+         for (int i = 0; i < num_recvs; i++) {
+            if (!completed[i] && box_recv[i].checkRecv()) {
+               num_completed_recvs++;
+               completed[i] = true;
+               const int num_boxes = box_recv[i].getRecvSize() / buf_size;
+               const int* buffer = box_recv[i].getRecvData();
+               int* id_buffer = new int[num_boxes];
+
+               for (int b = 0; b < num_boxes; b++) {
+                  hier::Box box(balance_box_level.getDim());
+
+                  box.getFromIntBuffer(&buffer[b * buf_size]);
+
+                  hier::BoxContainer::const_iterator tmp_iter =
+                     tmp_box_level.addBox(box,
+                        box.getBlockId());
+
+                  hier::BoxId tmp_box_id = tmp_iter->getBoxId();
+
+                  tmp_to_balance.insertLocalNeighbor(box, tmp_box_id);
+
+                  id_buffer[b] = tmp_box_id.getLocalId().getValue();
+               }
+               id_send[i].beginSend(id_buffer, num_boxes);
+
+               delete[] id_buffer;
+            }
+         }
+      }
+      for (int i = 0; i < num_recvs; i++) {
+         if (!id_send[i].checkSend()) {
+            id_send[i].completeCurrentOperation();
+         }
+      }
+   }
+
+   /*
+    * On sending ranks, receive the LocalIds, and add the edges
+    * to balance_to_tmp.
+    */
+   if (is_sending_rank) {
+      if (!box_send->checkSend()) {
+         box_send->completeCurrentOperation();
+      }
+
+      id_recv->beginRecv();
+
+      if (!id_recv->checkRecv()) {
+         id_recv->completeCurrentOperation();
+      }
+      const int* buffer = id_recv->getRecvData();
+
+      const hier::BoxContainer& sending_boxes =
+         balance_box_level.getBoxes();
+      TBOX_ASSERT(static_cast<int>(id_recv->getRecvSize()) == sending_boxes.size());
+
+      int box_count = 0;
+      for (hier::BoxContainer::const_iterator ni = sending_boxes.begin();
+           ni != sending_boxes.end(); ++ni) {
+
+         hier::Box new_box(
+            *ni,
+            (hier::LocalId)buffer[box_count],
+            rank_group.getMappedRank(balance_box_level.getMPI().getRank() % output_nproc));
+
+         balance_to_tmp.insertLocalNeighbor(new_box, (*ni).getBoxId());
+         box_count++;
+      }
+   }
+
+   if (balance_to_anchor && balance_to_anchor->hasTranspose()) {
+      /*
+       * This modify operation copies tmp_box_level to
+       * balance_box_level, and changes balance_to_anchor and
+       * its transpose such that they are correct for the new state
+       * of balance_box_level.
+       */
+      hier::MappingConnectorAlgorithm mca;
+      mca.setTimerPrefix("mesh::BalanceUtilities");
+      mca.modify(balance_to_anchor->getTranspose(),
+         balance_to_tmp,
+         &balance_box_level,
+         &tmp_box_level);
+
+      TBOX_ASSERT(balance_to_anchor->getTranspose().checkTransposeCorrectness(*balance_to_anchor) == 0);
+      TBOX_ASSERT(balance_to_anchor->checkTransposeCorrectness(balance_to_anchor->getTranspose()) == 0);
+   } else {
+      hier::BoxLevel::swap(balance_box_level, tmp_box_level);
+   }
+
+   /*
+    * Clean up raw pointer allocation.
+    */
+   if (is_sending_rank) {
+      delete box_send;
+      delete id_recv;
+   }
+   if (num_recvs) {
+      delete[] box_recv;
+      delete[] id_send;
+   }
 }
 
 }

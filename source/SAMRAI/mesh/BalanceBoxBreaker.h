@@ -29,32 +29,24 @@ class BalanceBoxBreaker {
 
 public:
 
-   typedef double LoadType;
-
-   BalanceBoxBreaker() :
-      d_pparams(0),
-      d_load_comparison_tol(1.0e-5),
+   BalanceBoxBreaker(const PartitioningParams &pparams) :
+      d_pparams(&pparams),
       d_print_steps(false),
       d_print_break_steps(false)
       {
          setTimers();
       }
 
-   void setPartitioningParams( const PartitioningParams &pparams )
-      {
-         d_pparams = &pparams;
-      }
-
-   //@{
-
-   //! @name Box breaking.
 
    /*!
     * @brief Break off a given load size from a given Box.
     *
+    * Attempt to break off the ideal_load, or at least a load
+    * inside the range [low_load, high_load].
+    *
     * @param[out] breakoff Boxes broken off (usually just one).
     *
-    * @param[out] leftover Remainder of Box after breakoff is gone.
+    * @param[out] leftover Remainder of box after breakoff is gone.
     *
     * @param[out] brk_load The load broken off.
     *
@@ -80,6 +72,9 @@ public:
       double low_load,
       double high_load ) const;
 
+
+private:
+
    bool
    breakOffLoad_planar(
       std::vector<hier::Box>& breakoff,
@@ -102,47 +97,11 @@ public:
       double high_load,
       const std::vector<std::vector<bool> >& bad_cuts ) const;
 
-   //@}
-
    double
-   computeBalancePenalty(
-      const std::vector<hier::Box>& a,
-      const std::vector<hier::Box>& b,
-      double imbalance) const
+   computeBalancePenalty(double imbalance) const
    {
-      NULL_USE(a);
-      NULL_USE(b);
       return tbox::MathUtilities<double>::Abs(imbalance);
    }
-
-   double
-   computeBalancePenalty(
-      const hier::Box& a,
-      double imbalance) const
-   {
-      NULL_USE(a);
-      return tbox::MathUtilities<double>::Abs(imbalance);
-   }
-
-   /*!
-    * @brief Evaluate a trial box-break.
-    *
-    * Return whether new_load is an improvement over current_load.
-    * This should be renamed compareLoads or checkLoads.
-    *
-    * This method should be renamed to show it is more general than
-    * for evaluating breaks.
-    */
-   bool
-   evaluateBreak(
-      int flags[],
-      LoadType current_load,
-      LoadType new_load,
-      LoadType ideal_load,
-      LoadType low_load,
-      LoadType high_load ) const;
-
-private:
 
    void
    burstBox(
@@ -153,7 +112,6 @@ private:
    void setTimers();
 
    const PartitioningParams *d_pparams;
-   double d_load_comparison_tol;
 
    //@{
    //! @name Debugging and diagnostic data
