@@ -644,6 +644,17 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
    t_get_map->stop();
 
 
+   if ( d_summarize_map ) {
+      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup: unbalanced--->balanced map:\n"
+                 << unbalanced_to_balanced.format("\t",0)
+                 << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
+                 << "TreeLoadBalancer::loadBalanceWithinRankGroup: balanced--->unbalanced map:\n"
+                 << balanced_to_unbalanced.format("\t",0)
+                 << "Map statistics:\n" << balanced_to_unbalanced.formatStatistics("\t")
+                 << '\n';
+   }
+
+
    if (balance_to_reference && balance_to_reference->hasTranspose()) {
       t_use_map->barrierAndStart();
       hier::MappingConnectorAlgorithm mca;
@@ -1685,7 +1696,7 @@ TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::constrain_size");
 
       t_distribute_load_across_rank_group = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::distributeLoadAcrossRankGroup");
+         getTimer(d_object_name + "::distributeLoadAcrossRankGroup()");
 
       t_compute_local_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::computeLocalLoad");
