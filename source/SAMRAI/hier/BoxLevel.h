@@ -1692,35 +1692,6 @@ private:
 
    //@}
 
-   /*!
-    * @brief Set up things for the entire class.
-    *
-    * Only called by StartupShutdownManager.
-    */
-   static void
-   initializeCallback()
-   {
-      t_initialize_private = tbox::TimerManager::getManager()->
-         getTimer("hier::BoxLevel::initializePrivate()");
-      t_acquire_remote_boxes = tbox::TimerManager::getManager()->
-         getTimer("hier::BoxLevel::acquireRemoteBoxes()");
-      t_cache_global_reduced_data = tbox::TimerManager::getManager()->
-         getTimer("hier::BoxLevel::cacheGlobalReducedData()");
-   }
-
-   /*!
-    * @brief Free static timers.
-    *
-    * Only called by StartupShutdownManager.
-    */
-   static void
-   finalizeCallback()
-   {
-      t_initialize_private.reset();
-      t_acquire_remote_boxes.reset();
-      t_cache_global_reduced_data.reset();
-   }
-
 private:
    friend class PersistentOverlapConnectors;
 
@@ -1876,6 +1847,35 @@ private:
    getFromRestart(
       tbox::Database& restart_db,
       const boost::shared_ptr<const BaseGridGeometry>& grid_geom);
+
+   /*!
+    * @brief Set up things for the entire class.
+    *
+    * Only called by StartupShutdownManager.
+    */
+   static void
+   initializeCallback()
+   {
+      t_initialize_private = tbox::TimerManager::getManager()->
+         getTimer("hier::BoxLevel::initializePrivate()");
+      t_acquire_remote_boxes = tbox::TimerManager::getManager()->
+         getTimer("hier::BoxLevel::acquireRemoteBoxes()");
+      t_cache_global_reduced_data = tbox::TimerManager::getManager()->
+         getTimer("hier::BoxLevel::cacheGlobalReducedData()");
+   }
+
+   /*!
+    * @brief Free static timers.
+    *
+    * Only called by StartupShutdownManager.
+    */
+   static void
+   finalizeCallback()
+   {
+      t_initialize_private.reset();
+      t_acquire_remote_boxes.reset();
+      t_cache_global_reduced_data.reset();
+   }
 
    /*!
     * @brief BoxLevel is a parallel object,
