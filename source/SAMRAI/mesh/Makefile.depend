@@ -19,13 +19,18 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSingleBlockIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxNeighborhoodCollection.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/Connector.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
@@ -36,8 +41,12 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PersistentOverlapConnectors.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
@@ -45,8 +54,22 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BalanceBoxBreaker.h			\
+	$(INCLUDE_SAM)/SAMRAI/mesh/BalanceUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/PartitioningParams.h			\
+	$(INCLUDE_SAM)/SAMRAI/mesh/SpatialKey.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
@@ -56,9 +79,12 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/RankGroup.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -68,6 +94,13 @@ DEPENDS_0:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.C		\
+	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.C				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
@@ -421,6 +454,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSingleBlockIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
@@ -442,9 +476,12 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PersistentOverlapConnectors.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/SequentialLocalIdGenerator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
@@ -453,9 +490,23 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BalanceBoxBreaker.h			\
+	$(INCLUDE_SAM)/SAMRAI/mesh/BalanceUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BoxTransitSet.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/PartitioningParams.h			\
+	$(INCLUDE_SAM)/SAMRAI/mesh/SpatialKey.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
@@ -465,9 +516,11 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/RankGroup.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
@@ -478,6 +531,13 @@ DEPENDS_5:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_5 +=\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.C		\
+	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.C				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 endif
 
