@@ -27,9 +27,9 @@ namespace hier {
 
 const std::string MappingConnectorAlgorithm::s_default_timer_prefix("hier::MappingConnectorAlgorithm");
 std::map<std::string, MappingConnectorAlgorithm::TimerStruct> MappingConnectorAlgorithm::s_static_timers;
-bool MappingConnectorAlgorithm::s_ignore_external_timer_prefix(false);
+char MappingConnectorAlgorithm::s_ignore_external_timer_prefix('n');
 
-char MappingConnectorAlgorithm::s_print_steps = 'n';
+char MappingConnectorAlgorithm::s_print_steps = '\0';
 
 const std::string MappingConnectorAlgorithm::s_dbgbord;
 
@@ -61,6 +61,7 @@ MappingConnectorAlgorithm::MappingConnectorAlgorithm():
    d_sanity_check_inputs(false),
    d_sanity_check_outputs(false)
 {
+   getFromInput();
    setTimerPrefix(s_default_timer_prefix);
 }
 
@@ -71,6 +72,39 @@ MappingConnectorAlgorithm::MappingConnectorAlgorithm():
 
 MappingConnectorAlgorithm::~MappingConnectorAlgorithm()
 {
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
+void
+MappingConnectorAlgorithm::getFromInput()
+{
+   if (s_print_steps == '\0') {
+      s_print_steps = 'n';
+      if (tbox::InputManager::inputDatabaseExists()) {
+         boost::shared_ptr<tbox::Database> idb(
+            tbox::InputManager::getInputDatabase());
+         if (idb->isDatabase("MappingConnectorAlgorithm")) {
+            boost::shared_ptr<tbox::Database> mca_db(
+               idb->getDatabase("MappingConnectorAlgorithm"));
+            s_print_steps =
+               mca_db->getCharWithDefault("DEV_print_modify_steps", 'n');
+            if (!(s_print_steps == 'n' || s_print_steps == 'y')) {
+               INPUT_VALUE_ERROR("DEV_print_modify_steps");
+            }
+            s_ignore_external_timer_prefix =
+               mca_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
+                                          'n');
+            if (!(s_ignore_external_timer_prefix == 'n' ||
+                  s_ignore_external_timer_prefix == 'y')) {
+               INPUT_VALUE_ERROR("DEV_ignore_external_timer_prefix");
+            }
+         }
+      }
+   }
 }
 
 /*
@@ -1352,23 +1386,6 @@ MappingConnectorAlgorithm::initializeCallback()
       s_class_mpi.dupCommunicator(mpi);
    }
 
-   /*
-    * - set up debugging flags.
-    */
-   if (tbox::InputManager::inputDatabaseExists()) {
-      boost::shared_ptr<tbox::Database> idb(
-         tbox::InputManager::getInputDatabase());
-      if (idb->isDatabase("MappingConnectorAlgorithm")) {
-         boost::shared_ptr<tbox::Database> mca_db(
-            idb->getDatabase("MappingConnectorAlgorithm"));
-         s_print_steps =
-            mca_db->getCharWithDefault("DEV_print_modify_steps", 'n');
-         s_ignore_external_timer_prefix =
-            mca_db->getBoolWithDefault("DEV_ignore_external_timer_prefix",
-                                       false);
-      }
-   }
-
    // Initialize timers with default prefix.
    getAllTimers(s_default_timer_prefix,
                 s_static_timers[s_default_timer_prefix]);
@@ -1399,7 +1416,7 @@ MappingConnectorAlgorithm::setTimerPrefix(
    const std::string& timer_prefix)
 {
    std::string timer_prefix_used;
-   if (s_ignore_external_timer_prefix) {
+   if (s_ignore_external_timer_prefix == 'y') {
       timer_prefix_used = s_default_timer_prefix;
    }
    else {

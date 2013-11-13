@@ -31,10 +31,10 @@ namespace hier {
 
 const std::string BoxLevelConnectorUtils::s_default_timer_prefix("hier::BoxLevelConnectorUtils");
 std::map<std::string, BoxLevelConnectorUtils::TimerStruct> BoxLevelConnectorUtils::s_static_timers;
-bool BoxLevelConnectorUtils::s_ignore_external_timer_prefix(false);
+char BoxLevelConnectorUtils::s_ignore_external_timer_prefix('\0');
  
 tbox::StartupShutdownManager::Handler
-BoxLevelConnectorUtils::s_initialize_finalize_handler(
+BoxLevelConnectorUtils::s_initialize_handler(
    BoxLevelConnectorUtils::initializeCallback,
    0,
    0,
@@ -49,7 +49,43 @@ BoxLevelConnectorUtils::BoxLevelConnectorUtils():
    d_sanity_check_precond(false),
    d_sanity_check_postcond(false)
 {
+   getFromInput();
    setTimerPrefix(s_default_timer_prefix);
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+BoxLevelConnectorUtils::~BoxLevelConnectorUtils()
+{
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+BoxLevelConnectorUtils::getFromInput()
+{
+   if (s_ignore_external_timer_prefix == '\0') {
+      s_ignore_external_timer_prefix = 'n';
+      if (tbox::InputManager::inputDatabaseExists()) {
+         boost::shared_ptr<tbox::Database> idb(
+           tbox::InputManager::getInputDatabase());
+         if (idb->isDatabase("BoxLevelConnectorUtils")) {
+            boost::shared_ptr<tbox::Database> blcu_db(
+               idb->getDatabase("BoxLevelConnectorUtils"));
+            s_ignore_external_timer_prefix =
+               blcu_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
+                                           'n');
+            if (!(s_ignore_external_timer_prefix == 'n' ||
+                  s_ignore_external_timer_prefix == 'y')) {
+               INPUT_VALUE_ERROR("DEV_ignore_external_timer_prefix");
+            }
+         }
+      }
+   }
 }
 
 /*
@@ -1498,21 +1534,6 @@ BoxLevelConnectorUtils::computeNonIntersectingParts(
 void
 BoxLevelConnectorUtils::initializeCallback()
 {
-   /*
-    * - set up debugging flags.
-    */
-   if (tbox::InputManager::inputDatabaseExists()) {
-      boost::shared_ptr<tbox::Database> idb(
-         tbox::InputManager::getInputDatabase());
-      if (idb->isDatabase("BoxLevelConnectorUtils")) {
-         boost::shared_ptr<tbox::Database> blcu_db(
-            idb->getDatabase("BoxLevelConnectorUtils"));
-         s_ignore_external_timer_prefix =
-            blcu_db->getBoolWithDefault("DEV_ignore_external_timer_prefix",
-                                        false);
-      }
-   }
-
    // Initialize timers with default prefix.
    getAllTimers(s_default_timer_prefix,
                 s_static_timers[s_default_timer_prefix]);
@@ -1529,7 +1550,7 @@ BoxLevelConnectorUtils::setTimerPrefix(
    const std::string& timer_prefix)
 {
    std::string timer_prefix_used;
-   if (s_ignore_external_timer_prefix) {
+   if (s_ignore_external_timer_prefix == 'y') {
       timer_prefix_used = s_default_timer_prefix;
    }
    else {

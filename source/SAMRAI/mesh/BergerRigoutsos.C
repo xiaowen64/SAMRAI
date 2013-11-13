@@ -28,7 +28,7 @@ namespace mesh {
 
 const std::string BergerRigoutsos::s_default_timer_prefix("mesh::BergerRigoutsos");
 std::map<std::string, BergerRigoutsos::TimerStruct> BergerRigoutsos::s_static_timers;
-bool BergerRigoutsos::s_ignore_external_timer_prefix(false);
+char BergerRigoutsos::s_ignore_external_timer_prefix('n');
 
 /*
  ************************************************************************
@@ -128,8 +128,12 @@ BergerRigoutsos::getFromInput(
    if (input_db) {
 
       s_ignore_external_timer_prefix =
-         input_db->getBoolWithDefault("DEV__ignore_external_timer_prefix",
-                                      false);
+         input_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
+                                      'n');
+      if (!(s_ignore_external_timer_prefix == 'n' ||
+            s_ignore_external_timer_prefix == 'y')) {
+         INPUT_VALUE_ERROR("DEV_ignore_external_timer_prefix");
+      }
 
       if (input_db->isInteger("max_box_size")) {
          input_db->getIntegerArray("max_box_size",
@@ -1116,7 +1120,7 @@ BergerRigoutsos::setTimerPrefix(
    const std::string& timer_prefix)
 {
    std::string timer_prefix_used;
-   if (s_ignore_external_timer_prefix) {
+   if (s_ignore_external_timer_prefix == 'y') {
       timer_prefix_used = s_default_timer_prefix;
    }
    else {

@@ -40,6 +40,11 @@ public:
    BoxLevelConnectorUtils();
 
    /*!
+    * @brief Destructor.
+    */
+   ~BoxLevelConnectorUtils();
+
+   /*!
     * @brief Set whether to run expensive sanity checks on input parameters.
     *
     * Mainly for debugging.
@@ -521,6 +526,15 @@ public:
    setTimerPrefix(
       const std::string& timer_prefix);
 
+   /*!
+    * @brief Get the name of this object.
+    */
+   const std::string
+   getObjectName() const
+   {
+      return "BoxLevelConnectorUtils";
+   }
+
 private:
    /*!
     * @brief Delegated work of computeInternalParts and computeExternalParts.
@@ -543,7 +557,13 @@ private:
    qsortBoxCompare(
       const void* v,
       const void* w);
- 
+
+   /*!
+    * @brief Read extra debugging flag from input database.
+    */
+   void
+   getFromInput();
+
    /*!
     * @brief Set up things for the entire class.
     *
@@ -585,7 +605,7 @@ private:
     */
    static std::map<std::string, TimerStruct> s_static_timers;
 
-   static bool s_ignore_external_timer_prefix;
+   static char s_ignore_external_timer_prefix;
 
    /*!
     * @brief Structure of timers in s_static_timers, matching this
@@ -608,8 +628,7 @@ private:
    bool d_sanity_check_precond;
    bool d_sanity_check_postcond;
  
-   static tbox::StartupShutdownManager::Handler
-      s_initialize_finalize_handler;
+   static tbox::StartupShutdownManager::Handler s_initialize_handler;
 
 };
 

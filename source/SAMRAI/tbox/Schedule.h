@@ -278,6 +278,15 @@ public:
       return d_coms != 0;
    }
 
+   /*!
+    * @brief Get the name of this object.
+    */
+   const std::string
+   getObjectName() const
+   {
+      return "Schedule";
+   }
+
 private:
    void
    allocateCommunicationObjects();
@@ -311,7 +320,17 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   initializeCallback();
+   initializeCallback()
+   {
+      TimerStruct& timers(s_static_timers[s_default_timer_prefix]);
+      getAllTimers(s_default_timer_prefix, timers);
+   }
+
+   /*!
+    * @brief Read input data from input database and initialize class members.
+    */
+   void
+   getFromInput();
 
    /*
     * @brief Transactions in this schedule.
@@ -415,7 +434,7 @@ private:
     */
    static std::map<std::string, TimerStruct> s_static_timers;
 
-   static bool s_ignore_external_timer_prefix;
+   static char s_ignore_external_timer_prefix;
 
    /*!
     * @brief Structure of timers in s_static_timers, matching this

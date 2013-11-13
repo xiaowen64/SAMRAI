@@ -42,7 +42,7 @@ const size_t Schedule::s_default_first_message_length = 1000;
 
 const std::string Schedule::s_default_timer_prefix("tbox::Schedule");
 std::map<std::string, Schedule::TimerStruct> Schedule::s_static_timers;
-bool Schedule::s_ignore_external_timer_prefix(false);
+char Schedule::s_ignore_external_timer_prefix('\0');
 
 StartupShutdownManager::Handler
 Schedule::s_initialize_finalize_handler(
@@ -67,6 +67,7 @@ Schedule::Schedule():
    d_unpack_in_deterministic_order(false),
    d_object_timers(NULL)
 {
+   getFromInput();
    setTimerPrefix(s_default_timer_prefix);
 }
 
@@ -596,26 +597,29 @@ Schedule::printClassData(
  ***********************************************************************
  */
 void
-Schedule::initializeCallback()
+Schedule::getFromInput()
 {
    /*
     * - set up debugging flags.
     */
-   if (tbox::InputManager::inputDatabaseExists()) {
-      boost::shared_ptr<tbox::Database> idb(
-         tbox::InputManager::getInputDatabase());
-      if (idb->isDatabase("Schedule")) {
-         boost::shared_ptr<tbox::Database> sched_db(
-            idb->getDatabase("Schedule"));
-         s_ignore_external_timer_prefix =
-            sched_db->getBoolWithDefault("DEV_ignore_external_timer_prefix",
-                                         false);
+   if (s_ignore_external_timer_prefix == '\0') {
+      s_ignore_external_timer_prefix = 'n';
+      if (tbox::InputManager::inputDatabaseExists()) {
+         boost::shared_ptr<tbox::Database> idb(
+            tbox::InputManager::getInputDatabase());
+         if (idb->isDatabase("Schedule")) {
+            boost::shared_ptr<tbox::Database> sched_db(
+               idb->getDatabase("Schedule"));
+            s_ignore_external_timer_prefix =
+               sched_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
+                                            'n');
+            if (!(s_ignore_external_timer_prefix == 'n' ||
+                  s_ignore_external_timer_prefix == 'y')) {
+               INPUT_VALUE_ERROR("DEV_ignore_external_timer_prefix");
+            }
+         }
       }
    }
-
-   // Initialize timers with default prefix.
-   getAllTimers(s_default_timer_prefix,
-      s_static_timers[s_default_timer_prefix]);
 }
 
 /*
@@ -627,7 +631,7 @@ Schedule::setTimerPrefix(
    const std::string& timer_prefix)
 {
    std::string timer_prefix_used;
-   if (s_ignore_external_timer_prefix) {
+   if (s_ignore_external_timer_prefix == 'y') {
       timer_prefix_used = s_default_timer_prefix;
    }
    else {

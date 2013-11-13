@@ -34,9 +34,9 @@ namespace hier {
 
 const std::string OverlapConnectorAlgorithm::s_default_timer_prefix("hier::OverlapConnectorAlgorithm");
 std::map<std::string, OverlapConnectorAlgorithm::TimerStruct> OverlapConnectorAlgorithm::s_static_timers;
-bool OverlapConnectorAlgorithm::s_ignore_external_timer_prefix(false);
+char OverlapConnectorAlgorithm::s_ignore_external_timer_prefix('n');
 
-char OverlapConnectorAlgorithm::s_print_steps = 'n';
+char OverlapConnectorAlgorithm::s_print_steps = '\0';
 
 int OverlapConnectorAlgorithm::s_operation_mpi_tag = 0;
 /*
@@ -66,6 +66,7 @@ OverlapConnectorAlgorithm::OverlapConnectorAlgorithm():
    d_sanity_check_method_preconditions(false),
    d_sanity_check_method_postconditions(false)
 {
+   getFromInput();
    setTimerPrefix(s_default_timer_prefix);
 }
 
@@ -76,6 +77,39 @@ OverlapConnectorAlgorithm::OverlapConnectorAlgorithm():
 
 OverlapConnectorAlgorithm::~OverlapConnectorAlgorithm()
 {
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
+void
+OverlapConnectorAlgorithm::getFromInput()
+{
+   if (s_print_steps == '\0') {
+      s_print_steps = 'n';
+      if (tbox::InputManager::inputDatabaseExists()) {
+         boost::shared_ptr<tbox::Database> idb(
+            tbox::InputManager::getInputDatabase());
+         if (idb->isDatabase("OverlapConnectorAlgorithm")) {
+            boost::shared_ptr<tbox::Database> oca_db(
+               idb->getDatabase("OverlapConnectorAlgorithm"));
+            s_print_steps =
+               oca_db->getCharWithDefault("DEV_print_bridge_steps", 'n');
+            if (!(s_print_steps == 'n' || s_print_steps == 'y')) {
+               INPUT_VALUE_ERROR("DEV_print_bridge_steps");
+            }
+            s_ignore_external_timer_prefix =
+               oca_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
+                                          'n');
+            if (!(s_ignore_external_timer_prefix == 'n' ||
+                  s_ignore_external_timer_prefix == 'y')) {
+               INPUT_VALUE_ERROR("DEV_ignore_external_timer_prefix");
+            }
+         }
+      }
+   }
 }
 
 /*
@@ -1574,23 +1608,6 @@ OverlapConnectorAlgorithm::initializeCallback()
       }
    }
 
-   /*
-    * - set up debugging flags.
-    */
-   if (tbox::InputManager::inputDatabaseExists()) {
-      boost::shared_ptr<tbox::Database> idb(
-         tbox::InputManager::getInputDatabase());
-      if (idb->isDatabase("OverlapConnectorAlgorithm")) {
-         boost::shared_ptr<tbox::Database> oca_db(
-            idb->getDatabase("OverlapConnectorAlgorithm"));
-         s_print_steps =
-            oca_db->getCharWithDefault("DEV_print_bridge_steps", 'n');
-         s_ignore_external_timer_prefix =
-            oca_db->getBoolWithDefault("DEV_ignore_external_timer_prefix",
-                                       false);
-      }
-   }
-
    // Initialize timers with default prefix.
    getAllTimers(s_default_timer_prefix,
                 s_static_timers[s_default_timer_prefix]);
@@ -1621,7 +1638,7 @@ OverlapConnectorAlgorithm::setTimerPrefix(
    const std::string& timer_prefix)
 {
    std::string timer_prefix_used;
-   if (s_ignore_external_timer_prefix) {
+   if (s_ignore_external_timer_prefix == 'y') {
       timer_prefix_used = s_default_timer_prefix;
    }
    else {

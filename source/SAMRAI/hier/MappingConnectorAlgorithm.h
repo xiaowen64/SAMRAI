@@ -341,6 +341,12 @@ private:
       const IntVector& refinement_ratio) const;
 
    /*!
+    * @brief Read extra debugging flag from input database.
+    */
+   void
+   getFromInput();
+
+   /*!
     * @brief Set up things for the entire class.
     *
     * Only called by StartupShutdownManager.
@@ -417,7 +423,7 @@ private:
     */
    static std::map<std::string, TimerStruct> s_static_timers;
 
-   static bool s_ignore_external_timer_prefix;
+   static char s_ignore_external_timer_prefix;
 
    /*!
     * @brief Structure of timers in s_static_timers, matching this
