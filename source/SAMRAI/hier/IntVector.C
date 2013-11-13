@@ -181,9 +181,6 @@ IntVector::initializeCallback()
 {
    for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       s_zeros[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 0);
-   }
-
-   for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       s_ones[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 1);
    }
 }

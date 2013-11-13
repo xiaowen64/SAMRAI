@@ -509,7 +509,6 @@ private:
    static boost::shared_ptr<tbox::Timer> t_coarsen_data;
    static boost::shared_ptr<tbox::Timer> t_gen_sched_n_squared;
    static boost::shared_ptr<tbox::Timer> t_gen_sched_dlbg;
-   static boost::shared_ptr<tbox::Timer> t_invert_edges;
    static boost::shared_ptr<tbox::Timer> t_coarse_data_fill;
 
    //*}

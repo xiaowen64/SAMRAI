@@ -29,8 +29,8 @@ namespace solv {
  */
 
 bool CellPoissonFACSolver::s_initialized = 0;
-int CellPoissonFACSolver::s_weight_id[SAMRAI::MAX_DIM_VAL];
-int CellPoissonFACSolver::s_instance_counter[SAMRAI::MAX_DIM_VAL];
+int CellPoissonFACSolver::s_weight_id[SAMRAI::MAX_DIM_VAL] = {0};
+int CellPoissonFACSolver::s_instance_counter[SAMRAI::MAX_DIM_VAL] = {0};
 
 /*
  *************************************************************************

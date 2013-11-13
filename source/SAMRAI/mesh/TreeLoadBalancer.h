@@ -1298,7 +1298,7 @@ private:
    bool d_barrier_after;
    //@}
 
-   static const int d_default_data_id;
+   static const int s_default_data_id;
 
    /*
     * Performance timers.

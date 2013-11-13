@@ -48,9 +48,6 @@
 namespace SAMRAI {
 namespace xfer {
 
-static const std::string logbord;
-static const std::string errbord("E-> ");
-
 bool RefineSchedule::s_extra_debug = false;
 bool RefineSchedule::s_barrier_and_time = false;
 bool RefineSchedule::s_read_static_input = false;

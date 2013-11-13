@@ -30,8 +30,8 @@ std::vector<const PatchHierarchy::ConnectorWidthRequestorStrategy *>
 PatchHierarchy::s_class_cwrs;
 
 tbox::StartupShutdownManager::Handler
-PatchHierarchy::s_initialize_finalize_handler(
-   PatchHierarchy::initializeCallback,
+PatchHierarchy::s_finalize_handler(
+   0,
    0,
    0,
    PatchHierarchy::finalizeCallback,

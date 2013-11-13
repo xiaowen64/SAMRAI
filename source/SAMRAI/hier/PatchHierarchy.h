@@ -1100,19 +1100,6 @@ private:
    getFromRestart();
 
    /*!
-    * @brief Set up things for the entire class.
-    *
-    * Only called by StartupShutdownManager.
-    */
-   static void
-   initializeCallback()
-   {
-      /*
-       * No-op.  This class doesn't
-       */
-   }
-
-   /*!
     * @brief Free static timers.
     *
     * Only called by StartupShutdownManager.
@@ -1291,8 +1278,7 @@ private:
    /*!
     * @brief Shutdown handler for clearing out static registry.
     */
-   static tbox::StartupShutdownManager::Handler
-      s_initialize_finalize_handler;
+   static tbox::StartupShutdownManager::Handler s_finalize_handler;
 
    //@}
 

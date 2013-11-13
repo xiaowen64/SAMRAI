@@ -1100,26 +1100,6 @@ private:
       delete s_buf_tag_indx;
    }
 
-   /*!
-    * @brief Initialize static objects and register shutdown routine.
-    *
-    * Only called by StartupShutdownManager.
-    */
-   static void
-   initializeCallback()
-   {
-   }
-
-   /*!
-    * @brief Method registered with ShutdownRegister to cleanup statics.
-    *
-    * Only called by StartupShutdownManager.
-    */
-   static void
-   finalizeCallback()
-   {
-   }
-
    /*
     * @brief Record statistics on how many patches and cells were generated.
     */
@@ -1378,13 +1358,7 @@ private:
    bool d_print_steps;
 
    /*
-    * Static initialization and cleanup handler.
-    */
-   static tbox::StartupShutdownManager::Handler
-      s_initialize_handler;
-
-   /*
-    *
+    * Static startup and shutdown handler.
     */
    static tbox::StartupShutdownManager::Handler
       s_startup_shutdown_handler;

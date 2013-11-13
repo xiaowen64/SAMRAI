@@ -35,13 +35,11 @@ namespace hier {
 
 const int PatchLevel::HIER_PATCH_LEVEL_VERSION = 3;
 
-static boost::shared_ptr<tbox::Timer> t_level_constructor;
-static boost::shared_ptr<tbox::Timer> t_constructor_setup;
-static boost::shared_ptr<tbox::Timer> t_constructor_phys_domain;
-static boost::shared_ptr<tbox::Timer> t_constructor_touch_boundaries;
-static boost::shared_ptr<tbox::Timer> t_constructor_set_geometry;
-static boost::shared_ptr<tbox::Timer> t_set_patch_touches;
-static boost::shared_ptr<tbox::Timer> t_constructor_compute_shifts;
+boost::shared_ptr<tbox::Timer> PatchLevel::t_level_constructor;
+boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_setup;
+boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_phys_domain;
+boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_touch_boundaries;
+boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_set_geometry;
 
 tbox::StartupShutdownManager::Handler
 PatchLevel::s_initialize_finalize_handler(
@@ -982,8 +980,6 @@ PatchLevel::initializeCallback()
       getTimer("hier::PatchLevel::constructor_touch_boundaries");
    t_constructor_set_geometry = tbox::TimerManager::getManager()->
       getTimer("hier::PatchLevel::set_geometry");
-   t_constructor_compute_shifts = tbox::TimerManager::getManager()->
-      getTimer("hier::PatchLevel::constructor_compute_shifts");
 }
 
 /*
@@ -1003,8 +999,6 @@ PatchLevel::finalizeCallback()
    t_constructor_phys_domain.reset();
    t_constructor_touch_boundaries.reset();
    t_constructor_set_geometry.reset();
-   t_set_patch_touches.reset();
-   t_constructor_compute_shifts.reset();
 }
 
 /*

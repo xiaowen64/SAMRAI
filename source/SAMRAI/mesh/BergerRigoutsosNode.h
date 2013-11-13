@@ -608,13 +608,6 @@ private:
    int d_n_cont;
 
    //@}
-
-   /*
-    * Static initialization and cleanup handler.
-    */
-
-   static tbox::StartupShutdownManager::Handler
-      s_initialize_handler;
 };
 
 }

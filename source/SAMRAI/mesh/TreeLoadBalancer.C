@@ -56,7 +56,7 @@ const int TreeLoadBalancer::TreeLoadBalancer_PREBALANCE1;
 const int TreeLoadBalancer::TreeLoadBalancer_FIRSTDATALEN;
 const int TreeLoadBalancer::TreeLoadBalancer_MIN_NPROC_FOR_AUTOMATIC_MULTICYCLE;
 
-const int TreeLoadBalancer::d_default_data_id = -1;
+const int TreeLoadBalancer::s_default_data_id = -1;
 
 
 // Round a to the nearest higher integer divisible by b.  This should work even for a < 0.
@@ -84,7 +84,7 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_allow_box_breaking(true),
    d_rank_tree(rank_tree ? rank_tree : boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::CenteredRankTree) ),
    d_comm_graph_writer(),
-   d_master_workload_data_id(d_default_data_id),
+   d_master_workload_data_id(s_default_data_id),
    d_flexible_load_tol(0.0),
    d_load_comparison_tol(1.0e-5),
    d_balance_penalty_wt(1.0),

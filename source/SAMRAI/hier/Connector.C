@@ -1724,7 +1724,6 @@ Connector::assertOverlapCorrectness(
       rank_of_max = recv.rank;
    }
    if (max_error_count > 0) {
-      std::string dbgbord;
       TBOX_ERROR(
          "Connector::assertOverlapCorrectness found missing and/or extra overlaps."
          << "Error in connector, " << local_error_count

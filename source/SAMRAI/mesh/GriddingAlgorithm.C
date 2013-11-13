@@ -62,14 +62,6 @@ GriddingAlgorithm::s_startup_shutdown_handler(
    0,
    tbox::StartupShutdownManager::priorityListElements);
 
-tbox::StartupShutdownManager::Handler
-GriddingAlgorithm::s_initialize_handler(
-   GriddingAlgorithm::initializeCallback,
-   0,
-   0,
-   GriddingAlgorithm::finalizeCallback,
-   tbox::StartupShutdownManager::priorityTimers);
-
 /*
  *************************************************************************
  *
