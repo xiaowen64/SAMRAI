@@ -905,8 +905,14 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
    /*
     * TODO: Maybe this should be deficit() or
     * max(deficit(),effDeficit()) instead of effDeficit().  The
-    * argument is to keep each branch near its ideal so work doesn't
-    * accumulate at the root.  This may be responsible for the 20%
+    * argument for using deficit() is: if a branch ends up underloaded
+    * (for any reason) its deficit should be kept within its parent's
+    * branch.  The argument for using effDeficit() is: if part of the
+    * branch took more work, the rest of the branch should take the
+    * fair share because it can be done without aggravating overloads
+    * and it would help keeping the parent branch's work within the
+    * parent's branch (preserve locality).  Not using deficit() to
+    * decide to get work from parent may be responsible for the 20%
     * unbalance observed at 1M procs.  There should be a corresponding
     * change to computeSurplusPerEffectiveDescendent().
     */
