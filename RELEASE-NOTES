@@ -58,6 +58,15 @@ descriptions of items in the following list are provided below.
 2) It is now possible to run on problems with a global cell count in excess
    of 2G.
 
+3) Side-centered patch data classes have new constructors that provide
+   a simpler way to allocate data in all normal directions.
+
+4) New interfaces in TagAndInitializeStrategy and
+   StandardTagAndInitStrategy allow for callbacks to user code before 
+   a PatchLevel is removed from a PatchHierarchy or replaced by a new
+   PatchLevel during regridding.
+   
+
 -----------------------------------------------------------------------------
                 Summary of what's changed
 -----------------------------------------------------------------------------
@@ -88,6 +97,36 @@ descriptions of items in the following list are provided below.
    significant performance degradation simply from enabling threading.
 
 2) The global number of cells held by BoxLevel is now a long.
+
+3) SideData and associated classes for side-centered data now have constructors
+   that take no "directions" vector.  This provides a default case where
+   data is allocated in all normal directions.
+
+4) New interfaces in TagAndInitializeStrategy and
+   StandardTagAndInitStrategy allow for callbacks to user code before
+   a PatchLevel is removed from a PatchHierarchy or replaced by a new
+   PatchLevel during regridding.
+
+   processLevelBeforeRemoval is called before the finest PatchLevel in 
+   a hierarchy is to be removed--that is the total number of levels is being
+   reduced.  This interface provides user code an opportunity to extract
+   any needed data from the PatchLevel before it is destroyed.
+
+   processHierarchyBeforeAddingNewLevel is called both before adding an
+   entirely new PatchLevel at a new level of resolution to the hierarchy,
+   as well as before swapping an old PatchLevel for a new PatchLevel during
+   regridding.  This allows user code an opportunity to do any needed
+   processing of the hierarchy while the old level still exists and the new
+   level is known.
+
+   The most common use case for these interfaces is in user classes that
+   derive from StandardTagAndInitStrategy.  These interfaces are provided
+   as virtual methods with default no-op implementations in
+   StandardTagAndInitStrategy.
+
+
+
+
 
 -----------------------------------------------------------------------------
                 Details about what's changed
