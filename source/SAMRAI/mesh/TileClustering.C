@@ -296,7 +296,7 @@ TileClustering::findBoxesContainingTags(
                  << "\tNew box_level clustered by TileClustering:\n" << new_box_level->format("\t\t",
                                                                                               2)
                  << "\tTileClustering tag_to_new:\n" << tag_to_new->format("\t\t", 2)
-                 << "\tTileClustering new_to_tag:\n" << new_to_tag->format("\t\t", 2);
+                 << "\tTileClustering new_to_tag:\n" << tag_to_new->getTranspose().format("\t\t", 2);
    }
    if (d_log_cluster_summary) {
       /*
@@ -327,8 +327,8 @@ TileClustering::findBoxesContainingTags(
                  << "-" << new_box_level->getMaxNumberOfBoxes() << "]\n"
                  << "\tTileClustering new_level summary:\n" << new_box_level->format("\t\t",0)
                  << "\tTileClustering new_level statistics:\n" << new_box_level->formatStatistics("\t\t")
-                 << "\tTileClustering new_to_tag summary:\n" << new_to_tag->format("\t\t",0)
-                 << "\tTileClustering new_to_tag statistics:\n" << new_to_tag->formatStatistics("\t\t")
+                 << "\tTileClustering new_to_tag summary:\n" << tag_to_new->getTranspose().format("\t\t",0)
+                 << "\tTileClustering new_to_tag statistics:\n" << tag_to_new->getTranspose().formatStatistics("\t\t")
                  << "\tTileClustering tag_to_new summary:\n" << tag_to_new->format("\t\t",0)
                  << "\tTileClustering tag_to_new statistics:\n" << tag_to_new->formatStatistics("\t\t")
                  << "\n";
