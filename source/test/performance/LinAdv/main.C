@@ -268,7 +268,7 @@ int main(
       if (!case_name.empty()) {
          base_name_ext = base_name_ext + '-' + case_name;
       }
-      base_name = base_name + '-' + tbox::Utilities::nodeToString(mpi.getSize());
+      base_name_ext = base_name_ext + '-' + tbox::Utilities::nodeToString(mpi.getSize());
 
       /*
        * Logging.
