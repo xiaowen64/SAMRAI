@@ -54,7 +54,7 @@ public:
    /*!
     * @brief Assignment operator.
     *
-    * @param rhs[in] The right hand side of the assignment.
+    * @param[in] rhs The right hand side of the assignment.
     */
    UncoveredBoxIterator&
    operator = (
