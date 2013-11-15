@@ -446,12 +446,7 @@ GriddingAlgorithm::makeCoarsestLevel(
    }
 
    if (d_sequentialize_patch_indices) {
-      renumberBoxes(*new_box_level,
-                    domain_to_new,
-                    false /* sort_by_corners */,
-                    true /* sequentialize_global_indices */,
-                    d_mca0,
-                    d_blcu0);
+      renumberBoxes(*new_box_level, domain_to_new, false, true);
    }
 
    d_blcu0.addPeriodicImagesAndRelationships(
@@ -2706,12 +2701,7 @@ GriddingAlgorithm::readLevelBoxes(
       t_load_balance0->stop();
 
       if (d_sequentialize_patch_indices) {
-         renumberBoxes(*new_box_level,
-                       *coarser_to_new,
-                       false,
-                       true,
-                       d_mca0,
-                       d_blcu0);
+         renumberBoxes(*new_box_level, *coarser_to_new, false, true);
       }
 
       d_blcu0.addPeriodicImages(
@@ -3258,12 +3248,7 @@ GriddingAlgorithm::findRefinementBoxes(
          if (d_print_steps) {
             tbox::plog << "GriddingAlgorithm::findRefinementBoxes: begin sorting boxes." << std::endl;
          }
-         renumberBoxes(*new_box_level,
-                       *tag_to_new,
-                       false,
-                       true,
-                       d_mca,
-                       d_blcu);
+         renumberBoxes(*new_box_level, *tag_to_new, false, true);
          if (d_print_steps) {
             tbox::plog << "GriddingAlgorithm::findRefinementBoxes: end sorting boxes." << std::endl;
          }
@@ -3322,11 +3307,9 @@ GriddingAlgorithm::findRefinementBoxes(
 void
 GriddingAlgorithm::renumberBoxes(
    hier::BoxLevel& new_box_level,
-   hier::Connector& tag_to_new,
+   hier::Connector& ref_to_new,
    bool sort_by_corners,
-   bool sequentialize_global_indices,
-   const hier::MappingConnectorAlgorithm &mca,
-   const hier::BoxLevelConnectorUtils &blcu) const
+   bool sequentialize_global_indices ) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    const tbox::Dimension& dim = d_hierarchy->getDim();
@@ -3335,18 +3318,42 @@ GriddingAlgorithm::renumberBoxes(
 
    t_renumber_boxes->barrierAndStart();
 
+   const hier::OverlapConnectorAlgorithm *oca = &d_oca;
+   const hier::MappingConnectorAlgorithm *mca = &d_mca;
+   const hier::BoxLevelConnectorUtils *blcu = &d_blcu;
+   if ( &ref_to_new.getBase() == &d_hierarchy->getDomainBoxLevel() ) {
+      oca = &d_oca0;
+      mca = &d_mca0;
+      blcu = &d_blcu0;
+   }
+
    boost::shared_ptr<hier::MappingConnector> sorting_map;
    boost::shared_ptr<hier::BoxLevel> seq_box_level;
-   blcu.makeSortingMap(
+   blcu->makeSortingMap(
       seq_box_level,
       sorting_map,
       new_box_level,
       sort_by_corners,
       sequentialize_global_indices);
 
-   mca.modify(tag_to_new,
-      *sorting_map,
-      &new_box_level);
+   /*
+    * Modify works well in most cases, but if ref is actually the
+    * domain its cost is O(N^2).  In such a case, the O(N*lg(N))
+    * search scales bettter.
+    */
+   if ( &ref_to_new.getBase() != &d_hierarchy->getDomainBoxLevel() ) {
+      mca->modify(ref_to_new,
+                  *sorting_map,
+                  &new_box_level);
+   } else {
+      hier::BoxLevel::swap(new_box_level,*seq_box_level);
+      ref_to_new.clearNeighborhoods();
+      ref_to_new.getTranspose().clearNeighborhoods();
+      ref_to_new.setHead(new_box_level, true);
+      ref_to_new.getTranspose().setBase(new_box_level, true);
+      oca->findOverlaps(ref_to_new);
+      oca->findOverlaps(ref_to_new.getTranspose());
+   }
 
    t_renumber_boxes->stop();
 }

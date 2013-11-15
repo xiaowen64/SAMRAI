@@ -835,25 +835,20 @@ private:
     *
     * @param[in,out] new_box_level
     *
-    * @param[in,out] tag_to_new
+    * @param[in,out] ref_to_new
     *
     * @param[in] sort_by_corners
     *
     * @param[in] sequentialize_global_indices
-    *
-    * @param[in] mca MappingConnectorAlgorithm with timer set
-    * in the calling context.
     *
     * @pre d_hierarchy->getDim() == new_box_level.getDim()
     */
    void
    renumberBoxes(
       hier::BoxLevel& new_box_level,
-      hier::Connector& tag_to_new,
+      hier::Connector& ref_to_new,
       bool sort_by_corners,
-      bool sequentialize_global_indices,
-      const hier::MappingConnectorAlgorithm &mca,
-      const hier::BoxLevelConnectorUtils &blcu) const;
+      bool sequentialize_global_indices ) const;
 
    /*!
     * @brief Buffer each integer tag on patch level matching given tag
