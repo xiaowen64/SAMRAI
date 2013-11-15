@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_NodeOverlap_C
-#define included_pdat_NodeOverlap_C
-
 #include "SAMRAI/pdat/NodeOverlap.h"
 
 namespace SAMRAI {
@@ -73,4 +69,3 @@ NodeOverlap::getTransformation() const
 
 }
 }
-#endif

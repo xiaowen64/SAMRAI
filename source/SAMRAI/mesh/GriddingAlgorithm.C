@@ -7,10 +7,6 @@
  * Description:   AMR hierarchy generation and regridding routines.
  *
  ************************************************************************/
-
-#ifndef included_mesh_GriddingAlgorithm_C
-#define included_mesh_GriddingAlgorithm_C
-
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 
 #include "SAMRAI/tbox/IEEE.h"
@@ -4831,6 +4827,4 @@ GriddingAlgorithm::allocateTimers()
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

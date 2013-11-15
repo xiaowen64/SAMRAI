@@ -7,10 +7,6 @@
  * Description:   Operations for complex edge-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchEdgeDataOpsComplex_C
-#define included_math_PatchEdgeDataOpsComplex_C
-
 #include "SAMRAI/math/PatchEdgeDataOpsComplex.h"
 #include "SAMRAI/pdat/EdgeGeometry.h"
 
@@ -89,4 +85,3 @@ PatchEdgeDataOpsComplex::copyData(
 
 }
 }
-#endif

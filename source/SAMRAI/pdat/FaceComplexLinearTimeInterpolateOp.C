@@ -7,10 +7,6 @@
  * Description:   Linear time interp operator for face-centered complex data.
  *
  ************************************************************************/
-
-#ifndef included_pdat_FaceComplexLinearTimeInterpolateOp_C
-#define included_pdat_FaceComplexLinearTimeInterpolateOp_C
-
 #include "SAMRAI/pdat/FaceComplexLinearTimeInterpolateOp.h"
 #include "SAMRAI/pdat/FaceData.h"
 #include "SAMRAI/pdat/FaceVariable.h"
@@ -252,4 +248,3 @@ FaceComplexLinearTimeInterpolateOp::timeInterpolate(
 
 }
 }
-#endif

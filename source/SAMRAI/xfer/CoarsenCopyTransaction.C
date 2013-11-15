@@ -7,10 +7,6 @@
  * Description:   Communication transaction for data copies during data coarsening
  *
  ************************************************************************/
-
-#ifndef included_xfer_CoarsenCopyTransaction_C
-#define included_xfer_CoarsenCopyTransaction_C
-
 #include "SAMRAI/xfer/CoarsenCopyTransaction.h"
 
 #include "SAMRAI/hier/Patch.h"
@@ -206,6 +202,4 @@ CoarsenCopyTransaction::printClassData(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

@@ -8,10 +8,6 @@
  *                double data on a mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_OuternodeDoubleInjection_C
-#define included_pdat_OuternodeDoubleInjection_C
-
 #include "SAMRAI/pdat/OuternodeDoubleInjection.h"
 
 #include "SAMRAI/pdat/OuternodeData.h"
@@ -239,5 +235,3 @@ OuternodeDoubleInjection::coarsen(
 
 }
 }
-
-#endif

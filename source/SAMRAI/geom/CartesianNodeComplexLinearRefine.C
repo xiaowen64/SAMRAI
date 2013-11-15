@@ -8,10 +8,6 @@
  *                a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianNodeComplexLinearRefine_C
-#define included_geom_CartesianNodeComplexLinearRefine_C
-
 #include "SAMRAI/geom/CartesianNodeComplexLinearRefine.h"
 #include "SAMRAI/tbox/Complex.h"
 
@@ -212,4 +208,3 @@ CartesianNodeComplexLinearRefine::refine(
 
 }
 }
-#endif

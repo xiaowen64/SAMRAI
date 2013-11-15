@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_SideComplexConstantRefine_C
-#define included_pdat_SideComplexConstantRefine_C
-
 #include "SAMRAI/pdat/SideComplexConstantRefine.h"
 
 #include <float.h>
@@ -259,4 +255,3 @@ void SideComplexConstantRefine::refine(
 
 }
 }
-#endif

@@ -7,10 +7,6 @@
  * Description:   Operations for integer face-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchFaceDataOpsInteger_C
-#define included_math_PatchFaceDataOpsInteger_C
-
 #include "SAMRAI/math/PatchFaceDataOpsInteger.h"
 #include "SAMRAI/pdat/FaceGeometry.h"
 
@@ -132,4 +128,3 @@ PatchFaceDataOpsInteger::abs(
 
 }
 }
-#endif

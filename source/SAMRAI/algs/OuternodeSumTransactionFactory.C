@@ -7,10 +7,6 @@
  * Description:   Factory for creating outernode sum transaction objects
  *
  ************************************************************************/
-
-#ifndef included_algs_OuternodeSumTransactionFactory_C
-#define included_algs_OuternodeSumTransactionFactory_C
-
 #include "SAMRAI/algs/OuternodeSumTransactionFactory.h"
 
 #include "SAMRAI/pdat/OuternodeData.h"
@@ -163,4 +159,3 @@ void OuternodeSumTransactionFactory::preprocessScratchSpace(
 
 }
 }
-#endif

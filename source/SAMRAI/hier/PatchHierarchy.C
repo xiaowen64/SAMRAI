@@ -7,10 +7,6 @@
  * Description:   An AMR hierarchy of patch levels
  *
  ************************************************************************/
-
-#ifndef included_hier_PatchHierarchy_C
-#define included_hier_PatchHierarchy_C
-
 #include "SAMRAI/hier/PatchHierarchy.h"
 
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
@@ -1282,5 +1278,3 @@ PatchHierarchy::ConnectorWidthRequestorStrategy::~ConnectorWidthRequestorStrateg
 
 }
 }
-
-#endif

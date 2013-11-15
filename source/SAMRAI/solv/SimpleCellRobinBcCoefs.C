@@ -7,9 +7,6 @@
  * Description:   Level solver for diffusion-like elliptic problems.
  *
  ************************************************************************/
-#ifndef included_solv_SimpleCellRobinBcCoefs_C
-#define included_solv_SimpleCellRobinBcCoefs_C
-
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/math/ArrayDataBasicOps.h"
 #include "SAMRAI/pdat/CellData.h"
@@ -685,6 +682,4 @@ SimpleCellRobinBcCoefs::makeSideBoundaryBox(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

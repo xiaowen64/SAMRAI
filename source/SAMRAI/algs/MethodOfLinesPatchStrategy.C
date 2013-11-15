@@ -8,10 +8,6 @@
  *                MethodOfLines integration algorithm
  *
  ************************************************************************/
-
-#ifndef included_algs_MethodOfLinesPatchStrategy_C
-#define included_algs_MethodOfLinesPatchStrategy_C
-
 #include "SAMRAI/algs/MethodOfLinesPatchStrategy.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 
@@ -41,4 +37,3 @@ MethodOfLinesPatchStrategy::~MethodOfLinesPatchStrategy()
 
 }
 }
-#endif

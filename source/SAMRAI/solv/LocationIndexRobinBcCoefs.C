@@ -7,9 +7,6 @@
  * Description:   Robin boundary condition support on cartesian grids.
  *
  ************************************************************************/
-#ifndef included_solv_LocationIndexRobinBcCoefs_C
-#define included_solv_LocationIndexRobinBcCoefs_C
-
 #include <stdlib.h>
 
 #include "SAMRAI/solv/LocationIndexRobinBcCoefs.h"
@@ -190,4 +187,3 @@ LocationIndexRobinBcCoefs::operator = (
 
 }
 }
-#endif

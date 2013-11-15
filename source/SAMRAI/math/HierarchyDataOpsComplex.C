@@ -7,10 +7,6 @@
  * Description:   Interface to operations for complex data on hierarchy.
  *
  ************************************************************************/
-
-#ifndef included_math_HierarchyDataOpsComplex_C
-#define included_math_HierarchyDataOpsComplex_C
-
 #include "SAMRAI/math/HierarchyDataOpsComplex.h"
 
 namespace SAMRAI {
@@ -26,4 +22,3 @@ HierarchyDataOpsComplex::~HierarchyDataOpsComplex()
 
 }
 }
-#endif

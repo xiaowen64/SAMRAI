@@ -7,10 +7,6 @@
  * Description:   A container of boxes with basic domain calculus operations
  *
  ************************************************************************/
-
-#ifndef included_hier_BoxContainer_C
-#define included_hier_BoxContainer_C
-
 #include "SAMRAI/hier/BoxContainer.h"
 
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
@@ -1978,6 +1974,4 @@ BoxContainer::BoxContainerConstIterator::~BoxContainerConstIterator()
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

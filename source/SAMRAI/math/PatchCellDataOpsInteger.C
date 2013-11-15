@@ -7,10 +7,6 @@
  * Description:   Operations for integer cell-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchCellDataOpsInteger_C
-#define included_math_PatchCellDataOpsInteger_C
-
 #include "SAMRAI/math/PatchCellDataOpsInteger.h"
 
 namespace SAMRAI {
@@ -58,4 +54,3 @@ PatchCellDataOpsInteger::swapData(
 
 }
 }
-#endif

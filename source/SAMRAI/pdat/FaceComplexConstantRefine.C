@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_FaceComplexConstantRefine_C
-#define included_pdat_FaceComplexConstantRefine_C
-
 #include "SAMRAI/pdat/FaceComplexConstantRefine.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -255,4 +251,3 @@ FaceComplexConstantRefine::refine(
 
 }
 }
-#endif

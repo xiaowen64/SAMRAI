@@ -7,10 +7,6 @@
  * Description:   Singleton manager for hierarchy data operation objects.
  *
  ************************************************************************/
-
-#ifndef included_math_HierarchyDataOpsManager_C
-#define included_math_HierarchyDataOpsManager_C
-
 #include "SAMRAI/math/HierarchyDataOpsManager.h"
 
 #include "SAMRAI/math/HierarchyCellDataOpsReal.h"
@@ -669,4 +665,3 @@ HierarchyDataOpsManager::getOperationsInteger(
 
 }
 }
-#endif

@@ -8,10 +8,6 @@
  *                a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianSideComplexWeightedAverage_C
-#define included_geom_CartesianSideComplexWeightedAverage_C
-
 #include "SAMRAI/geom/CartesianSideComplexWeightedAverage.h"
 #include "SAMRAI/tbox/Complex.h"
 
@@ -249,4 +245,3 @@ CartesianSideComplexWeightedAverage::coarsen(
 
 }
 }
-#endif

@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_OuterfaceFloatConstantRefine_C
-#define included_pdat_OuterfaceFloatConstantRefine_C
-
 #include "SAMRAI/pdat/OuterfaceFloatConstantRefine.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -267,4 +263,3 @@ OuterfaceFloatConstantRefine::refine(
 
 }
 }
-#endif

@@ -7,9 +7,6 @@
  * Description:   Set of edges incident from a box_level of a distributed box graph.
  *
  ************************************************************************/
-#ifndef included_hier_PeriodicShiftCatalog_C
-#define included_hier_PeriodicShiftCatalog_C
-
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -223,6 +220,4 @@ PeriodicShiftCatalog::initializeShiftsByIndexDirections(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

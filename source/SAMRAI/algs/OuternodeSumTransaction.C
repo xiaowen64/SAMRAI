@@ -7,10 +7,6 @@
  * Description:   Communication transaction for summing outernode data
  *
  ************************************************************************/
-
-#ifndef included_algs_OuternodeSumTransaction_C
-#define included_algs_OuternodeSumTransaction_C
-
 #include "SAMRAI/algs/OuternodeSumTransaction.h"
 
 #include "SAMRAI/hier/Patch.h"
@@ -224,6 +220,4 @@ OuternodeSumTransaction::printClassData(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

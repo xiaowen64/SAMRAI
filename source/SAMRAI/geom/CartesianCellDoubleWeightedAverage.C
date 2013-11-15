@@ -8,10 +8,6 @@
  *                a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianCellDoubleWeightedAverage_C
-#define included_geom_CartesianCellDoubleWeightedAverage_C
-
 #include "SAMRAI/geom/CartesianCellDoubleWeightedAverage.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/hier/Index.h"
@@ -193,4 +189,3 @@ CartesianCellDoubleWeightedAverage::coarsen(
 
 }
 }
-#endif

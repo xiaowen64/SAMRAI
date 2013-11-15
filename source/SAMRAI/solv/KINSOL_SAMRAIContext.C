@@ -7,10 +7,6 @@
  * Description:   KINSOL solver for use within a SAMRAI-based application.
  *
  ************************************************************************/
-
-#ifndef included_solv_KINSOL_SAMRAIContext_C
-#define included_solv_KINSOL_SAMRAIContext_C
-
 #include "SAMRAI/solv/KINSOL_SAMRAIContext.h"
 
 #ifdef HAVE_SUNDIALS
@@ -555,5 +551,4 @@ KINSOL_SAMRAIContext::printClassData(
 }
 }
 
-#endif
 #endif

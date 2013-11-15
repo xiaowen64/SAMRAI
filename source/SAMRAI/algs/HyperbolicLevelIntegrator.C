@@ -8,10 +8,6 @@
  *                (basic hyperbolic systems)
  *
  ************************************************************************/
-
-#ifndef included_algs_HyperbolicLevelIntegrator_C
-#define included_algs_HyperbolicLevelIntegrator_C
-
 #include "SAMRAI/algs/HyperbolicLevelIntegrator.h"
 
 #include "SAMRAI/pdat/CellData.h"
@@ -2806,5 +2802,3 @@ HyperbolicLevelIntegrator::finalizeCallback()
 
 }
 }
-
-#endif

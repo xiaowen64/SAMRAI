@@ -7,10 +7,6 @@
  * Description:   Operations for complex side data on multiple levels.
  *
  ************************************************************************/
-
-#ifndef included_math_HierarchySideDataOpsComplex_C
-#define included_math_HierarchySideDataOpsComplex_C
-
 #include "SAMRAI/math/HierarchySideDataOpsComplex.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
@@ -1177,4 +1173,3 @@ HierarchySideDataOpsComplex::integral(
 
 }
 }
-#endif

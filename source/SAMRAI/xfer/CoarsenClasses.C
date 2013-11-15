@@ -7,10 +7,6 @@
  * Description:   Simple structure for managing coarsening data in equivalence classes.
  *
  ************************************************************************/
-
-#ifndef included_xfer_CoarsenClasses_C
-#define included_xfer_CoarsenClasses_C
-
 #include "SAMRAI/xfer/CoarsenClasses.h"
 
 #include "SAMRAI/hier/IntVector.h"
@@ -438,4 +434,3 @@ CoarsenClasses::Data::Data(
 
 }
 }
-#endif

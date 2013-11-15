@@ -7,10 +7,6 @@
  * Description:   Base class for application-level variables
  *
  ************************************************************************/
-
-#ifndef included_hier_Variable_C
-#define included_hier_Variable_C
-
 #include "SAMRAI/hier/Variable.h"
 
 namespace SAMRAI {
@@ -45,4 +41,3 @@ Variable::~Variable()
 
 }
 }
-#endif

@@ -7,10 +7,6 @@
  * Description:   Iterator for face centered patch data types
  *
  ************************************************************************/
-
-#ifndef included_pdat_FaceIterator_C
-#define included_pdat_FaceIterator_C
-
 #include "SAMRAI/pdat/FaceIterator.h"
 
 namespace SAMRAI {
@@ -74,4 +70,3 @@ FaceIterator::operator ++ (
 
 }
 }
-#endif

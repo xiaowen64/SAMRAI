@@ -7,10 +7,6 @@
  * Description:   Norm operations for complex edge-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchEdgeDataNormOpsComplex_C
-#define included_math_PatchEdgeDataNormOpsComplex_C
-
 #include "SAMRAI/math/PatchEdgeDataNormOpsComplex.h"
 #include "SAMRAI/pdat/EdgeGeometry.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -308,4 +304,3 @@ PatchEdgeDataNormOpsComplex::integral(
 
 }
 }
-#endif

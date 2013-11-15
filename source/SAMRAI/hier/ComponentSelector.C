@@ -7,10 +7,6 @@
  * Description:   Simple bit vector of a fixed length (128 bits)
  *
  ************************************************************************/
-
-#ifndef included_hier_ComponentSelector_C
-#define included_hier_ComponentSelector_C
-
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -160,5 +156,3 @@ ComponentSelector::printClassData(
 
 }
 }
-
-#endif

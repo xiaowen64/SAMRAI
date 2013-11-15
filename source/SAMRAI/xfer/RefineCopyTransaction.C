@@ -7,10 +7,6 @@
  * Description:   Communication transaction for data copies during data refining
  *
  ************************************************************************/
-
-#ifndef included_xfer_RefineCopyTransaction_C
-#define included_xfer_RefineCopyTransaction_C
-
 #include "SAMRAI/xfer/RefineCopyTransaction.h"
 
 #include "SAMRAI/hier/Patch.h"
@@ -204,6 +200,4 @@ RefineCopyTransaction::printClassData(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

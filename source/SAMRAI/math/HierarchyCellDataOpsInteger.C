@@ -7,10 +7,6 @@
  * Description:   Operations for integer cell data on multiple levels.
  *
  ************************************************************************/
-
-#ifndef included_math_HierarchyCellDataOpsInteger_C
-#define included_math_HierarchyCellDataOpsInteger_C
-
 #include "SAMRAI/math/HierarchyCellDataOpsInteger.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/pdat/CellDataFactory.h"
@@ -825,4 +821,3 @@ HierarchyCellDataOpsInteger::setRandomValues(
 
 }
 }
-#endif

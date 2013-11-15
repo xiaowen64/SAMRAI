@@ -7,10 +7,6 @@
  * Description:   Manager class for variables used in a SAMRAI application.
  *
  ************************************************************************/
-
-#ifndef included_hier_VariableDatabase_C
-#define included_hier_VariableDatabase_C
-
 #include "SAMRAI/hier/VariableDatabase.h"
 
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -1192,4 +1188,3 @@ VariableDatabase::registerVariableAndContext_Private(
 
 }
 }
-#endif

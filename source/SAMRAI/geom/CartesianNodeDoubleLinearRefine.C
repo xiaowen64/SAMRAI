@@ -8,10 +8,6 @@
  *                a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianNodeDoubleLinearRefine_C
-#define included_geom_CartesianNodeDoubleLinearRefine_C
-
 #include "SAMRAI/geom/CartesianNodeDoubleLinearRefine.h"
 
 #include <float.h>
@@ -211,4 +207,3 @@ CartesianNodeDoubleLinearRefine::refine(
 
 }
 }
-#endif

@@ -7,10 +7,6 @@
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
-
-#ifndef included_mesh_MultiblockGriddingTagger_C
-#define included_mesh_MultiblockGriddingTagger_C
-
 #include "SAMRAI/mesh/MultiblockGriddingTagger.h"
 
 #include "SAMRAI/hier/Connector.h"
@@ -265,6 +261,4 @@ MultiblockGriddingTagger::postprocessRefine(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

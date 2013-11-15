@@ -7,10 +7,6 @@
  * Description:   Linear time interp operator for float outerside patch data.
  *
  ************************************************************************/
-
-#ifndef included_pdat_OutersideFloatLinearTimeInterpolateOp_C
-#define included_pdat_OutersideFloatLinearTimeInterpolateOp_C
-
 #include "SAMRAI/pdat/OutersideFloatLinearTimeInterpolateOp.h"
 
 #include "SAMRAI/hier/Box.h"
@@ -257,4 +253,3 @@ OutersideFloatLinearTimeInterpolateOp::timeInterpolate(
 
 }
 }
-#endif

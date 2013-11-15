@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_NodeGeometry_C
-#define included_pdat_NodeGeometry_C
-
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/pdat/NodeIterator.h"
 #include "SAMRAI/hier/BoxContainer.h"
@@ -398,4 +394,3 @@ NodeGeometry::end(
 
 }
 }
-#endif

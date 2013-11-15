@@ -7,10 +7,6 @@
  * Description:   Refine schedule for data transfer between AMR levels
  *
  ************************************************************************/
-
-#ifndef included_xfer_RefineSchedule_C
-#define included_xfer_RefineSchedule_C
-
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/BoxGeometryVariableFillPattern.h"
 #include "SAMRAI/xfer/PatchLevelFullFillPattern.h"
@@ -4457,6 +4453,4 @@ RefineSchedule::finalizeCallback()
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

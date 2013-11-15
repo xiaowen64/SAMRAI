@@ -7,10 +7,6 @@
  * Description:   Operations for complex cell data on multiple levels.
  *
  ************************************************************************/
-
-#ifndef included_math_HierarchyCellDataOpsComplex_C
-#define included_math_HierarchyCellDataOpsComplex_C
-
 #include "SAMRAI/math/HierarchyCellDataOpsComplex.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/pdat/CellDataFactory.h"
@@ -1114,4 +1110,3 @@ HierarchyCellDataOpsComplex::integral(
 
 }
 }
-#endif

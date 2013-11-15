@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_FaceGeometry_C
-#define included_pdat_FaceGeometry_C
-
 #include "SAMRAI/pdat/FaceGeometry.h"
 #include "SAMRAI/pdat/FaceIterator.h"
 #include "SAMRAI/hier/BoxContainer.h"
@@ -655,4 +651,3 @@ FaceGeometry::end(
 
 }
 }
-#endif

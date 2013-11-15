@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_OuternodeGeometry_C
-#define included_pdat_OuternodeGeometry_C
-
 #include "SAMRAI/pdat/OuternodeGeometry.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
@@ -471,4 +467,3 @@ OuternodeGeometry::setUpOverlap(
 
 }
 }
-#endif

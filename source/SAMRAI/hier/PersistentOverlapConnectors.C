@@ -7,9 +7,6 @@
  * Description:   Registry of PersistentOverlapConnectorss incident from a common BoxLevel.
  *
  ************************************************************************/
-#ifndef included_hier_PersistentOverlapConnectors_C
-#define included_hier_PersistentOverlapConnectors_C
-
 #include "SAMRAI/hier/PersistentOverlapConnectors.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/BoxLevel.h"
@@ -587,4 +584,3 @@ PersistentOverlapConnectors::postprocessForEmptyNeighborContainers(
 
 }
 }
-#endif

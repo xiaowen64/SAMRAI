@@ -7,9 +7,6 @@
  * Description:   Algorithms for working with MappingConnectors.
  *
  ************************************************************************/
-#ifndef included_hier_MappingConnectorAlgorithm_C
-#define included_hier_MappingConnectorAlgorithm_C
-
 #include "SAMRAI/hier/BoxContainerUtils.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/tbox/InputManager.h"
@@ -1459,4 +1456,3 @@ MappingConnectorAlgorithm::getAllTimers(
 
 }
 }
-#endif

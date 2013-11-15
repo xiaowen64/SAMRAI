@@ -7,9 +7,6 @@
  * Description:   Utility for building efficient communication tree.
  *
  ************************************************************************/
-#ifndef included_tbox_RankTreeStrategy_C
-#define included_tbox_RankTreeStrategy_C
-
 #include "SAMRAI/tbox/RankTreeStrategy.h"
 
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -42,6 +39,4 @@ RankTreeStrategy::~RankTreeStrategy()
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

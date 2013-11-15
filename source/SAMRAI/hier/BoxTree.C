@@ -7,10 +7,6 @@
  * Description:   Binary tree of Boxes for overlap searches.
  *
  ************************************************************************/
-
-#ifndef included_hier_BoxTree_C
-#define included_hier_BoxTree_C
-
 #include "SAMRAI/hier/BoxTree.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -816,6 +812,4 @@ BoxTree::printStatistics(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

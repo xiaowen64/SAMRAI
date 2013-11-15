@@ -7,10 +7,6 @@
  * Description:   A n-dimensional integer vector
  *
  ************************************************************************/
-
-#ifndef included_hier_IntVector_C
-#define included_hier_IntVector_C
-
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
@@ -196,5 +192,3 @@ IntVector::finalizeCallback()
 
 }
 }
-
-#endif

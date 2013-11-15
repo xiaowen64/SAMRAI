@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_CellIndex_C
-#define included_pdat_CellIndex_C
-
 #include "SAMRAI/pdat/CellIndex.h"
 
 namespace SAMRAI {
@@ -38,4 +34,3 @@ CellIndex::~CellIndex()
 
 }
 }
-#endif

@@ -7,10 +7,6 @@
  * Description:   Fill pattern class to provide interface for stencils
  *
  ************************************************************************/
-
-#ifndef included_pdat_FirstLayerEdgeVariableFillPattern_C
-#define included_pdat_FirstLayerEdgeVariableFillPattern_C
-
 #include "SAMRAI/pdat/FirstLayerEdgeVariableFillPattern.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -207,4 +203,3 @@ FirstLayerEdgeVariableFillPattern::computeFillBoxesOverlap(
 
 }
 }
-#endif

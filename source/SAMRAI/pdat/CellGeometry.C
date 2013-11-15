@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_CellGeometry_C
-#define included_pdat_CellGeometry_C
-
 #include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/pdat/CellIterator.h"
 #include "SAMRAI/pdat/CellOverlap.h"
@@ -355,4 +351,3 @@ CellGeometry::end(
 
 }
 }
-#endif

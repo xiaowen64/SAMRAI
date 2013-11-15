@@ -7,10 +7,6 @@
  * Description:   Patch container class for patch data objects
  *
  ************************************************************************/
-
-#ifndef included_hier_Patch_C
-#define included_hier_Patch_C
-
 #include "SAMRAI/hier/Patch.h"
 
 #include <typeinfo>
@@ -379,4 +375,3 @@ operator << (
 
 }
 }
-#endif

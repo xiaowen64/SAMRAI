@@ -7,10 +7,6 @@
  * Description:   Operations for integer node data on multiple levels.
  *
  ************************************************************************/
-
-#ifndef included_math_HierarchyNodeDataOpsInteger_C
-#define included_math_HierarchyNodeDataOpsInteger_C
-
 #include "SAMRAI/math/HierarchyNodeDataOpsInteger.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
@@ -869,4 +865,3 @@ HierarchyNodeDataOpsInteger::setRandomValues(
 
 }
 }
-#endif

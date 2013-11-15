@@ -7,10 +7,6 @@
  * Description:   Interface to operations for integer data on hierarchy.
  *
  ************************************************************************/
-
-#ifndef included_math_HierarchyDataOpsInteger_C
-#define included_math_HierarchyDataOpsInteger_C
-
 #include "SAMRAI/math/HierarchyDataOpsInteger.h"
 
 namespace SAMRAI {
@@ -26,4 +22,3 @@ HierarchyDataOpsInteger::~HierarchyDataOpsInteger()
 
 }
 }
-#endif

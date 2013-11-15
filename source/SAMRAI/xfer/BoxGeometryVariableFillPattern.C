@@ -7,10 +7,6 @@
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
-
-#ifndef included_xfer_BoxGeometryVariableFillPattern_C
-#define included_xfer_BoxGeometryVariableFillPattern_C
-
 #include "SAMRAI/xfer/BoxGeometryVariableFillPattern.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -99,4 +95,3 @@ BoxGeometryVariableFillPattern::computeFillBoxesOverlap(
 
 }
 }
-#endif

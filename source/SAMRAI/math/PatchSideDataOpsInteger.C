@@ -7,10 +7,6 @@
  * Description:   Operations for integer side-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchSideDataOpsInteger_C
-#define included_math_PatchSideDataOpsInteger_C
-
 #include "SAMRAI/math/PatchSideDataOpsInteger.h"
 #include "SAMRAI/pdat/SideGeometry.h"
 
@@ -143,4 +139,3 @@ PatchSideDataOpsInteger::abs(
 
 }
 }
-#endif

@@ -7,10 +7,6 @@
  * Description:   Base class for geometry management on patches
  *
  ************************************************************************/
-
-#ifndef included_hier_PatchGeometry_C
-#define included_hier_PatchGeometry_C
-
 #include "SAMRAI/hier/PatchGeometry.h"
 
 #include "SAMRAI/hier/BoundaryLookupTable.h"
@@ -216,6 +212,4 @@ PatchGeometry::TwoDimBool::TwoDimBool(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

@@ -7,10 +7,6 @@
  * Description:   Abstract factory class for creating patch level objects
  *
  ************************************************************************/
-
-#ifndef included_hier_PatchLevelFactory_C
-#define included_hier_PatchLevelFactory_C
-
 #include "SAMRAI/hier/PatchLevelFactory.h"
 
 #include "boost/make_shared.hpp"
@@ -82,4 +78,3 @@ PatchLevelFactory::allocate(
 
 }
 }
-#endif

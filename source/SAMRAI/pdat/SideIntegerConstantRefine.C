@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_SideIntegerConstantRefine_C
-#define included_pdat_SideIntegerConstantRefine_C
-
 #include "SAMRAI/pdat/SideIntegerConstantRefine.h"
 
 #include <float.h>
@@ -260,4 +256,3 @@ SideIntegerConstantRefine::refine(
 
 }
 }
-#endif

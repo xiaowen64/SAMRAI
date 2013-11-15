@@ -7,10 +7,6 @@
  * Description:   Interface to level routines for time-refinement integrator.
  *
  ************************************************************************/
-
-#ifndef included_algs_TimeRefinementLevelStrategy_C
-#define included_algs_TimeRefinementLevelStrategy_C
-
 #include "SAMRAI/algs/TimeRefinementLevelStrategy.h"
 
 namespace SAMRAI {
@@ -34,4 +30,3 @@ TimeRefinementLevelStrategy::~TimeRefinementLevelStrategy()
 
 }
 }
-#endif

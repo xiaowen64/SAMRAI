@@ -7,10 +7,6 @@
  * Description:   Operations for complex cell-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchCellDataOpsComplex_C
-#define included_math_PatchCellDataOpsComplex_C
-
 #include "SAMRAI/math/PatchCellDataOpsComplex.h"
 
 namespace SAMRAI {
@@ -58,4 +54,3 @@ PatchCellDataOpsComplex::swapData(
 
 }
 }
-#endif

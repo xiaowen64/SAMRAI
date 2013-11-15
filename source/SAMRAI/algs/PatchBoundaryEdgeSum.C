@@ -7,10 +7,6 @@
  * Description:   Routines for summing edge data at patch boundaries
  *
  ************************************************************************/
-
-#ifndef included_algs_PatchBoundaryEdgeSum_C
-#define included_algs_PatchBoundaryEdgeSum_C
-
 #include "SAMRAI/algs/PatchBoundaryEdgeSum.h"
 
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -380,5 +376,3 @@ PatchBoundaryEdgeSum::doLevelSum(
 
 }
 }
-
-#endif

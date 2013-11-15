@@ -7,10 +7,6 @@
  * Description:   Scalable load balancer using tree algorithm.
  *
  ************************************************************************/
-
-#ifndef included_mesh_TreeLoadBalancer_C
-#define included_mesh_TreeLoadBalancer_C
-
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -5284,6 +5280,4 @@ TreeLoadBalancer::SubtreeData::printClassData(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

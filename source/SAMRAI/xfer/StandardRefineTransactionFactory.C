@@ -8,10 +8,6 @@
  *                for refine schedules.
  *
  ************************************************************************/
-
-#ifndef included_xfer_StandardRefineTransactionFactory_C
-#define included_xfer_StandardRefineTransactionFactory_C
-
 #include "SAMRAI/xfer/StandardRefineTransactionFactory.h"
 
 #include "SAMRAI/xfer/RefineCopyTransaction.h"
@@ -135,4 +131,3 @@ StandardRefineTransactionFactory::preprocessScratchSpace(
 
 }
 }
-#endif

@@ -7,9 +7,6 @@
  * Description:   Set of boxes in a box_level of a distributed box graph.
  *
  ************************************************************************/
-#ifndef included_hier_BoxLevel_C
-#define included_hier_BoxLevel_C
-
 #include "SAMRAI/hier/BoxLevel.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -1655,6 +1652,4 @@ BoxLevel::recursivePrint(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

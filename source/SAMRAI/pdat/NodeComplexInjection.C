@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_NodeComplexInjection_C
-#define included_pdat_NodeComplexInjection_C
-
 #include "SAMRAI/pdat/NodeComplexInjection.h"
 #include "SAMRAI/tbox/Complex.h"
 
@@ -151,4 +147,3 @@ NodeComplexInjection::coarsen(
 
 }
 }
-#endif

@@ -7,10 +7,6 @@
  * Description:   Operations for complex face data on multiple levels.
  *
  ************************************************************************/
-
-#ifndef included_math_HierarchyFaceDataOpsComplex_C
-#define included_math_HierarchyFaceDataOpsComplex_C
-
 #include "SAMRAI/math/HierarchyFaceDataOpsComplex.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
@@ -1169,4 +1165,3 @@ HierarchyFaceDataOpsComplex::integral(
 
 }
 }
-#endif

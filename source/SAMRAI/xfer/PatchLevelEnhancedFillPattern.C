@@ -7,10 +7,6 @@
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
-
-#ifndef included_xfer_PatchLevelEnhancedFillPattern_C
-#define included_xfer_PatchLevelEnhancedFillPattern_C
-
 #include "SAMRAI/xfer/PatchLevelEnhancedFillPattern.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
@@ -191,4 +187,3 @@ PatchLevelEnhancedFillPattern::getMaxFillBoxes() const
 
 }
 }
-#endif

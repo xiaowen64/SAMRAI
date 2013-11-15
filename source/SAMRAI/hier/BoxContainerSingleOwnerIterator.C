@@ -7,9 +7,6 @@
  * Description:   Special iterator for BoxContainer.
  *
  ************************************************************************/
-#ifndef included_hier_BoxContainerSingleOwnerIterator_C
-#define included_hier_BoxContainerSingleOwnerIterator_C
-
 #include "SAMRAI/hier/BoxContainerSingleOwnerIterator.h"
 
 namespace SAMRAI {
@@ -73,4 +70,3 @@ BoxContainerSingleOwnerIterator::operator ++ (
 
 }
 }
-#endif

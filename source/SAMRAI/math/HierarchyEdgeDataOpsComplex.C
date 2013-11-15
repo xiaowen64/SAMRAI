@@ -7,10 +7,6 @@
  * Description:   Operations for complex edge data on multiple levels.
  *
  ************************************************************************/
-
-#ifndef included_math_HierarchyEdgeDataOpsComplex_C
-#define included_math_HierarchyEdgeDataOpsComplex_C
-
 #include "SAMRAI/math/HierarchyEdgeDataOpsComplex.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
@@ -1172,4 +1168,3 @@ HierarchyEdgeDataOpsComplex::integral(
 
 }
 }
-#endif

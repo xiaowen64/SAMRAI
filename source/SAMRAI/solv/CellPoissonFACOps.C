@@ -7,9 +7,6 @@
  * Description:   Operator class for cell-centered scalar Poisson using FAC
  *
  ************************************************************************/
-#ifndef included_solv_CellPoissonFACOps_C
-#define included_solv_CellPoissonFACOps_C
-
 #include "SAMRAI/solv/CellPoissonFACOps.h"
 
 #include IOMANIP_HEADER_FILE
@@ -2902,4 +2899,3 @@ CellPoissonFACOps::finalizeCallback()
 
 }
 }
-#endif

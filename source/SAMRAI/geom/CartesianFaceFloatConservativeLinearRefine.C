@@ -8,10 +8,6 @@
  *                float data on a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianFaceFloatConservativeLinearRefine_C
-#define included_geom_CartesianFaceFloatConservativeLinearRefine_C
-
 #include "SAMRAI/geom/CartesianFaceFloatConservativeLinearRefine.h"
 #include <float.h>
 #include <math.h>
@@ -319,4 +315,3 @@ CartesianFaceFloatConservativeLinearRefine::refine(
 
 }
 }
-#endif

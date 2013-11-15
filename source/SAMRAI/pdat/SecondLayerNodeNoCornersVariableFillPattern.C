@@ -7,10 +7,6 @@
  * Description:   Fill pattern class to provide interface for stencils
  *
  ************************************************************************/
-
-#ifndef included_pdat_SecondLayerNodeNoCornersVariableFillPattern_C
-#define included_pdat_SecondLayerNodeNoCornersVariableFillPattern_C
-
 #include "SAMRAI/pdat/SecondLayerNodeNoCornersVariableFillPattern.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -210,4 +206,3 @@ SecondLayerNodeNoCornersVariableFillPattern::computeFillBoxesOverlap(
 
 }
 }
-#endif

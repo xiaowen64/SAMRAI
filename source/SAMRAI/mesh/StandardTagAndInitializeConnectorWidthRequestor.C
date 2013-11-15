@@ -7,10 +7,6 @@
  * Description:   StandardTagAndInitialize's implementation of PatchHierarchy
  *
  ************************************************************************/
-
-#ifndef included_mesh_StandardTagAndInitializeConnectorWidthRequestor_C
-#define included_mesh_StandardTagAndInitializeConnectorWidthRequestor_C
-
 #include "SAMRAI/mesh/StandardTagAndInitializeConnectorWidthRequestor.h"
 
 #include "SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.h"
@@ -194,4 +190,3 @@ StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
 
 }
 }
-#endif

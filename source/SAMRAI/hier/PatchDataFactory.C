@@ -7,10 +7,6 @@
  * Description:   Factory abstract base class for creating patch data objects
  *
  ************************************************************************/
-
-#ifndef included_hier_PatchDataFactory_C
-#define included_hier_PatchDataFactory_C
-
 #include "SAMRAI/hier/PatchDataFactory.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -41,4 +37,3 @@ PatchDataFactory::getMultiblockDataTranslator()
 
 }
 }
-#endif

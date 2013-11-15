@@ -7,10 +7,6 @@
  * Description:   Base class for geometry management in AMR hierarchy
  *
  ************************************************************************/
-
-#ifndef included_hier_BaseGridGeometry_C
-#define included_hier_BaseGridGeometry_C
-
 #include "SAMRAI/hier/BaseGridGeometry.h"
 
 #include "SAMRAI/hier/BoundaryLookupTable.h"
@@ -2516,6 +2512,4 @@ BaseGridGeometry::Neighbor::Neighbor(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

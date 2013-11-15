@@ -7,10 +7,6 @@
  * Description:   Operations for integer side data on multiple levels.
  *
  ************************************************************************/
-
-#ifndef included_math_HierarchySideDataOpsInteger_C
-#define included_math_HierarchySideDataOpsInteger_C
-
 #include "SAMRAI/math/HierarchySideDataOpsInteger.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/BoxContainer.h"
@@ -888,4 +884,3 @@ HierarchySideDataOpsInteger::setRandomValues(
 
 }
 }
-#endif

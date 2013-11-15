@@ -8,10 +8,6 @@
  *                an AMR hierarchy.
  *
  ************************************************************************/
-
-#ifndef included_hier_Transformation_C
-#define included_hier_Transformation_C
-
 #include "SAMRAI/hier/Transformation.h"
 
 #include "SAMRAI/hier/Patch.h"
@@ -816,5 +812,3 @@ Transformation::rotateAboutAxis(
 
 }
 }
-
-#endif

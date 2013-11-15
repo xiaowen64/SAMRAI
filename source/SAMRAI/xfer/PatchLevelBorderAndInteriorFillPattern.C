@@ -7,10 +7,6 @@
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
-
-#ifndef included_xfer_PatchLevelBorderAndInteriorFillPattern_C
-#define included_xfer_PatchLevelBorderAndInteriorFillPattern_C
-
 #include "SAMRAI/xfer/PatchLevelBorderAndInteriorFillPattern.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/Box.h"
@@ -207,4 +203,3 @@ PatchLevelBorderAndInteriorFillPattern::fillingEnhancedConnectivityOnly() const
 
 }
 }
-#endif

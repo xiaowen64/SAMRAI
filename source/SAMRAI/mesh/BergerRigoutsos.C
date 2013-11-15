@@ -7,9 +7,6 @@
  * Description:   Asynchronous Berger-Rigoutsos algorithm wrapper
  *
  ************************************************************************/
-#ifndef included_mesh_BergerRigoutsos_C
-#define included_mesh_BergerRigoutsos_C
-
 #include <stdlib.h>
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
@@ -1201,4 +1198,3 @@ BergerRigoutsos::setTimerPrefix(
 
 }
 }
-#endif

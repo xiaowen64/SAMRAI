@@ -7,10 +7,6 @@
  * Description:   Routines for summing node data at patch boundaries
  *
  ************************************************************************/
-
-#ifndef included_algs_MblkPatchBoundaryNodeSum_C
-#define included_algs_MblkPatchBoundaryNodeSum_C
-
 #include "SAMRAI/algs/MblkPatchBoundaryNodeSum.h"
 
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -488,5 +484,3 @@ MblkPatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
 
 }
 }
-
-#endif

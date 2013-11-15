@@ -7,10 +7,6 @@
  * Description:   Operations for integer edge-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchEdgeDataOpsInteger_C
-#define included_math_PatchEdgeDataOpsInteger_C
-
 #include "SAMRAI/math/PatchEdgeDataOpsInteger.h"
 #include "SAMRAI/pdat/EdgeGeometry.h"
 
@@ -132,4 +128,3 @@ PatchEdgeDataOpsInteger::abs(
 
 }
 }
-#endif

@@ -7,10 +7,6 @@
  * Description:   Factory class for patch data objects that live on a patch
  *
  ************************************************************************/
-
-#ifndef included_hier_PatchDescriptor_C
-#define included_hier_PatchDescriptor_C
-
 #include "SAMRAI/hier/PatchDescriptor.h"
 
 #include "SAMRAI/tbox/SAMRAIManager.h"
@@ -250,6 +246,4 @@ PatchDescriptor::getPatchDataDim(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

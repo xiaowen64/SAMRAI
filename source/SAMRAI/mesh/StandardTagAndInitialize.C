@@ -8,10 +8,6 @@
  *                a new level.
  *
  ************************************************************************/
-
-#ifndef included_mesh_StandardTagAndInitialize_C
-#define included_mesh_StandardTagAndInitialize_C
-
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 
 #include "SAMRAI/pdat/CellIntegerConstantRefine.h"
@@ -2080,4 +2076,3 @@ static int GCD(
 
 }
 }
-#endif

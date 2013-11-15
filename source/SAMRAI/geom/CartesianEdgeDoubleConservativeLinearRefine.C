@@ -8,10 +8,6 @@
  *                double data on a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianEdgeDoubleConservativeLinearRefine_C
-#define included_geom_CartesianEdgeDoubleConservativeLinearRefine_C
-
 #include "SAMRAI/geom/CartesianEdgeDoubleConservativeLinearRefine.h"
 #include <float.h>
 #include <math.h>
@@ -319,4 +315,3 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
 
 }
 }
-#endif

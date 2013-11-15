@@ -7,10 +7,6 @@
  * Description:   Writes data files for visualization by VisIt
  *
  ************************************************************************/
-
-#ifndef included_appu_VisItDataWriter_C
-#define included_appu_VisItDataWriter_C
-
 #include "SAMRAI/appu/VisItDataWriter.h"
 
 #ifdef HAVE_HDF5
@@ -4750,8 +4746,6 @@ VisItDataWriter::childParentStruct::childParentStruct():
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif
 
 #endif

@@ -7,10 +7,6 @@
  * Description:   Box representing a portion of the AMR index space
  *
  ************************************************************************/
-
-#ifndef included_hier_Box_C
-#define included_hier_Box_C
-
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -1132,5 +1128,3 @@ BoxIterator::~BoxIterator()
 
 }
 }
-
-#endif

@@ -8,10 +8,6 @@
  *                double data on a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianSideDoubleConservativeLinearRefine_C
-#define included_geom_CartesianSideDoubleConservativeLinearRefine_C
-
 #include "SAMRAI/geom/CartesianSideDoubleConservativeLinearRefine.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/hier/Index.h"
@@ -328,4 +324,3 @@ CartesianSideDoubleConservativeLinearRefine::refine(
 
 }
 }
-#endif

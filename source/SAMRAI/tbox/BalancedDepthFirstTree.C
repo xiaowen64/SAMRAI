@@ -7,9 +7,6 @@
  * Description:   Utility for building efficient communication tree.
  *
  ************************************************************************/
-#ifndef included_tbox_BalancedDepthFirstTree_C
-#define included_tbox_BalancedDepthFirstTree_C
-
 #include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 
 #include "SAMRAI/tbox/PIO.h"
@@ -244,6 +241,4 @@ BalancedDepthFirstTree::setupTreeForContiguousRanks(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

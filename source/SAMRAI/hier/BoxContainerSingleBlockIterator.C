@@ -7,9 +7,6 @@
  * Description:   Special iterator for BoxContainer.
  *
  ************************************************************************/
-#ifndef included_hier_BoxContainerSingleBlockIterator_C
-#define included_hier_BoxContainerSingleBlockIterator_C
-
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 
 namespace SAMRAI {
@@ -84,4 +81,3 @@ BoxContainerSingleBlockIterator::count() const
 
 }
 }
-#endif

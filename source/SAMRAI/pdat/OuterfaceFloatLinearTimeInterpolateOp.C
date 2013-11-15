@@ -7,10 +7,6 @@
  * Description:   Linear time interp operator for float outerface patch data.
  *
  ************************************************************************/
-
-#ifndef included_pdat_OuterfaceFloatLinearTimeInterpolateOp_C
-#define included_pdat_OuterfaceFloatLinearTimeInterpolateOp_C
-
 #include "SAMRAI/pdat/OuterfaceFloatLinearTimeInterpolateOp.h"
 
 #include "SAMRAI/pdat/OuterfaceData.h"
@@ -257,4 +253,3 @@ OuterfaceFloatLinearTimeInterpolateOp::timeInterpolate(
 
 }
 }
-#endif

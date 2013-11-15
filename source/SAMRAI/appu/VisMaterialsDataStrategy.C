@@ -8,10 +8,6 @@
  *                dump file
  *
  ************************************************************************/
-
-#ifndef included_appu_VisMaterialsDataStrategy_C
-#define included_appu_VisMaterialsDataStrategy_C
-
 #include "SAMRAI/appu/VisMaterialsDataStrategy.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -96,5 +92,3 @@ VisMaterialsDataStrategy::packSpeciesFractionsIntoDoubleBuffer(
 
 }
 }
-
-#endif

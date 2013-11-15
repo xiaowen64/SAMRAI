@@ -8,10 +8,6 @@
  *                omplex data on a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianCellComplexConservativeLinearRefine_C
-#define included_geom_CartesianCellComplexConservativeLinearRefine_C
-
 #include "SAMRAI/geom/CartesianCellComplexConservativeLinearRefine.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellData.h"
@@ -236,5 +232,3 @@ CartesianCellComplexConservativeLinearRefine::refine(
 
 }
 }
-
-#endif

@@ -7,10 +7,6 @@
  * Description:   Linear time interp operator for cell-centered complex data.
  *
  ************************************************************************/
-
-#ifndef included_pdat_CellComplexLinearTimeInterpolateOp_C
-#define included_pdat_CellComplexLinearTimeInterpolateOp_C
-
 #include "SAMRAI/pdat/CellComplexLinearTimeInterpolateOp.h"
 #include "SAMRAI/tbox/Complex.h"
 
@@ -181,4 +177,3 @@ CellComplexLinearTimeInterpolateOp::timeInterpolate(
 
 }
 }
-#endif

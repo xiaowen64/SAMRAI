@@ -7,9 +7,6 @@
  * Description:   Asynchronous Berger-Rigoutsos algorithm wrapper
  *
  ************************************************************************/
-#ifndef included_mesh_TileClustering_C
-#define included_mesh_TileClustering_C
-
 #include <stdlib.h>
 
 #include "SAMRAI/mesh/TileClustering.h"
@@ -431,4 +428,3 @@ TileClustering::setTimers()
 
 }
 }
-#endif

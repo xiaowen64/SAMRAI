@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_SideIndex_C
-#define included_pdat_SideIndex_C
-
 #include "SAMRAI/pdat/SideIndex.h"
 
 namespace SAMRAI {
@@ -62,4 +58,3 @@ SideIndex::toCell(
 
 }
 }
-#endif

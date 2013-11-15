@@ -7,10 +7,6 @@
  * Description:   Iterator for node centered patch data types
  *
  ************************************************************************/
-
-#ifndef included_pdat_NodeIterator_C
-#define included_pdat_NodeIterator_C
-
 #include "SAMRAI/pdat/NodeIterator.h"
 
 namespace SAMRAI {
@@ -73,4 +69,3 @@ NodeIterator::operator ++ (
 
 }
 }
-#endif

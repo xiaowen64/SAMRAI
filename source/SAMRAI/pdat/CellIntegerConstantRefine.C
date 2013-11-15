@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_CellIntegerConstantRefine_C
-#define included_pdat_CellIntegerConstantRefine_C
-
 #include "SAMRAI/pdat/CellIntegerConstantRefine.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
@@ -188,4 +184,3 @@ CellIntegerConstantRefine::refine(
 
 }
 }
-#endif

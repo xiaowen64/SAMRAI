@@ -7,10 +7,6 @@
  * Description:   Spatial Key used for generating space-filling curves.
  *
  ************************************************************************/
-
-#ifndef included_mesh_SpatialKey_C
-#define included_mesh_SpatialKey_C
-
 #include "SAMRAI/mesh/SpatialKey.h"
 
 #include <stdio.h>
@@ -230,6 +226,4 @@ SpatialKey::setKey(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

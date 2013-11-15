@@ -7,9 +7,6 @@
  * Description:   Node in asynchronous Berger-Rigoutsos tree
  *
  ************************************************************************/
-#ifndef included_mesh_BergerRigoutsosNode_C
-#define included_mesh_BergerRigoutsosNode_C
-
 #include <cstring>
 #include <algorithm>
 
@@ -2439,6 +2436,4 @@ BergerRigoutsosNode::printNodeState(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

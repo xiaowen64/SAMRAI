@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_EdgeIntegerConstantRefine_C
-#define included_pdat_EdgeIntegerConstantRefine_C
-
 #include "SAMRAI/pdat/EdgeIntegerConstantRefine.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -252,4 +248,3 @@ EdgeIntegerConstantRefine::refine(
 
 }
 }
-#endif

@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_CellFloatConstantRefine_C
-#define included_pdat_CellFloatConstantRefine_C
-
 #include "SAMRAI/pdat/CellFloatConstantRefine.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
@@ -184,4 +180,3 @@ CellFloatConstantRefine::refine(
 
 }
 }
-#endif

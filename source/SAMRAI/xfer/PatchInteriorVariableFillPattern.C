@@ -7,10 +7,6 @@
  * Description:   Fill pattern class that fills patch interiors only
  *
  ************************************************************************/
-
-#ifndef included_xfer_PatchInteriorVariableFillPattern_C
-#define included_xfer_PatchInteriorVariableFillPattern_C
-
 #include "SAMRAI/xfer/PatchInteriorVariableFillPattern.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -118,4 +114,3 @@ PatchInteriorVariableFillPattern::getPatternName() const
 
 }
 }
-#endif

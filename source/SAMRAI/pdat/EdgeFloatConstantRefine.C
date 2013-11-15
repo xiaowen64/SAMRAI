@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_EdgeFloatConstantRefine_C
-#define included_pdat_EdgeFloatConstantRefine_C
-
 #include "SAMRAI/pdat/EdgeFloatConstantRefine.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -252,4 +248,3 @@ EdgeFloatConstantRefine::refine(
 
 }
 }
-#endif

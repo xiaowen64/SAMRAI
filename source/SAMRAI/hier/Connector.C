@@ -8,9 +8,6 @@
  *                box graph.
  *
  ************************************************************************/
-#ifndef included_hier_Connector_C
-#define included_hier_Connector_C
-
 #include "SAMRAI/hier/Connector.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -2163,6 +2160,4 @@ Connector::findOverlaps_rbbt(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

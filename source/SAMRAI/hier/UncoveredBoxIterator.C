@@ -7,13 +7,9 @@
  * Description:   A container of boxes with basic domain calculus operations
  *
  ************************************************************************/
-
-#ifndef included_hier_UncoveredBoxIterator_C
-#define included_hier_UncoveredBoxIterator_C
-
+#include "SAMRAI/hier/UncoveredBoxIterator.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/hier/UncoveredBoxIterator.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -381,5 +377,3 @@ UncoveredBoxIterator::findOverlappedPatch()
 
 }
 }
-
-#endif

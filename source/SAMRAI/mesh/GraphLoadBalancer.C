@@ -7,10 +7,6 @@
  * Description:   Scalable load balancer using tree algorithm.
  *
  ************************************************************************/
-
-#ifndef included_mesh_GraphLoadBalancer_C
-#define included_mesh_GraphLoadBalancer_C
-
 #include "SAMRAI/mesh/GraphLoadBalancer.h"
 
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
@@ -1089,6 +1085,3 @@ GraphLoadBalancer::getFromInput(
 
 }
 }
-
-#endif
-

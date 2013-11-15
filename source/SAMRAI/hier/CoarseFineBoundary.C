@@ -7,10 +7,6 @@
  * Description:   For describing coarse-fine boundary interfaces
  *
  ************************************************************************/
-
-#ifndef included_hier_CoarseFineBoundary_C
-#define included_hier_CoarseFineBoundary_C
-
 #include "SAMRAI/hier/CoarseFineBoundary.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -410,6 +406,4 @@ CoarseFineBoundary::printClassData(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

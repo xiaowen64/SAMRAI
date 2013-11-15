@@ -7,10 +7,6 @@
  * Description:   Identifier for a Box.
  *
  ************************************************************************/
-
-#ifndef included_hier_BoxId_C
-#define included_hier_BoxId_C
-
 #include "SAMRAI/hier/BoxId.h"
 
 #include <iostream>
@@ -83,4 +79,3 @@ operator << (
 
 }
 }
-#endif

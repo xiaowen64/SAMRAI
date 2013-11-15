@@ -7,9 +7,6 @@
  * Description:   Robin boundary condition support on cartesian grids.
  *
  ************************************************************************/
-#ifndef included_solv_GhostCellRobinBcCoefs_C
-#define included_solv_GhostCellRobinBcCoefs_C
-
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
@@ -245,4 +242,3 @@ GhostCellRobinBcCoefs::makeSideBoundaryBox(
 
 }
 }
-#endif

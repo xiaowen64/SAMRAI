@@ -7,10 +7,6 @@
  * Description:   Linear time interp operator for cell-centered double patch data.
  *
  ************************************************************************/
-
-#ifndef included_pdat_CellDoubleLinearTimeInterpolateOp_C
-#define included_pdat_CellDoubleLinearTimeInterpolateOp_C
-
 #include "SAMRAI/pdat/CellDoubleLinearTimeInterpolateOp.h"
 
 #include "SAMRAI/pdat/CellData.h"
@@ -182,4 +178,3 @@ CellDoubleLinearTimeInterpolateOp::timeInterpolate(
 
 }
 }
-#endif

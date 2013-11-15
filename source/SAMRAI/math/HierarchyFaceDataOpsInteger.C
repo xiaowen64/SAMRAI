@@ -7,10 +7,6 @@
  * Description:   Operations for integer face data on multiple levels.
  *
  ************************************************************************/
-
-#ifndef included_math_HierarchyFaceDataOpsInteger_C
-#define included_math_HierarchyFaceDataOpsInteger_C
-
 #include "SAMRAI/math/HierarchyFaceDataOpsInteger.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/BoxContainer.h"
@@ -882,4 +878,3 @@ HierarchyFaceDataOpsInteger::setRandomValues(
 
 }
 }
-#endif

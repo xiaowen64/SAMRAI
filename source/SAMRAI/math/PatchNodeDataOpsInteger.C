@@ -7,10 +7,6 @@
  * Description:   Operations for integer node-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchNodeDataOpsInteger_C
-#define included_math_PatchNodeDataOpsInteger_C
-
 #include "SAMRAI/math/PatchNodeDataOpsInteger.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
 
@@ -73,4 +69,3 @@ PatchNodeDataOpsInteger::printData(
 
 }
 }
-#endif

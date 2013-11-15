@@ -7,10 +7,6 @@
  * Description:   Operations for integer edge data on multiple levels.
  *
  ************************************************************************/
-
-#ifndef included_math_HierarchyEdgeDataOpsInteger_C
-#define included_math_HierarchyEdgeDataOpsInteger_C
-
 #include "SAMRAI/math/HierarchyEdgeDataOpsInteger.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/BoxContainer.h"
@@ -883,4 +879,3 @@ HierarchyEdgeDataOpsInteger::setRandomValues(
 
 }
 }
-#endif

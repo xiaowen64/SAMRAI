@@ -7,9 +7,6 @@
  * Description:   Utilities for working on DLBG edges.
  *
  ************************************************************************/
-#ifndef included_hier_BoxLevelConnectorUtils_C
-#define included_hier_BoxLevelConnectorUtils_C
-
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -1610,4 +1607,3 @@ BoxLevelConnectorUtils::getAllTimers(
 
 }
 }
-#endif

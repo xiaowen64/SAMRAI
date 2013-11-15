@@ -7,10 +7,6 @@
  * Description:   Coarsening schedule for data transfer between AMR levels
  *
  ************************************************************************/
-
-#ifndef included_xfer_CoarsenSchedule_C
-#define included_xfer_CoarsenSchedule_C
-
 #include "SAMRAI/xfer/CoarsenSchedule.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
@@ -1257,5 +1253,3 @@ CoarsenSchedule::finalizeCallback()
 
 }
 }
-
-#endif

@@ -7,10 +7,6 @@
  * Description:   A collection of patches at one level of the AMR hierarchy
  *
  ************************************************************************/
-
-#ifndef included_hier_PatchLevel_C
-#define included_hier_PatchLevel_C
-
 #include "SAMRAI/hier/PatchLevel.h"
 
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -1032,6 +1028,4 @@ PatchLevel::Iterator::Iterator(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

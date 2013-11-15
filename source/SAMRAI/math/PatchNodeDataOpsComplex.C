@@ -7,10 +7,6 @@
  * Description:   Operations for complex node-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchNodeDataOpsComplex_C
-#define included_math_PatchNodeDataOpsComplex_C
-
 #include "SAMRAI/math/PatchNodeDataOpsComplex.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
 
@@ -73,4 +69,3 @@ PatchNodeDataOpsComplex::printData(
 
 }
 }
-#endif

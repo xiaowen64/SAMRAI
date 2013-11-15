@@ -8,10 +8,6 @@
  *                a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianOuterfaceFloatWeightedAverage_C
-#define included_geom_CartesianOuterfaceFloatWeightedAverage_C
-
 #include "SAMRAI/geom/CartesianOuterfaceFloatWeightedAverage.h"
 
 #include <float.h>
@@ -241,4 +237,3 @@ CartesianOuterfaceFloatWeightedAverage::coarsen(
 
 }
 }
-#endif

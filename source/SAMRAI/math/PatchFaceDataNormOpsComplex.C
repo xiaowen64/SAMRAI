@@ -7,10 +7,6 @@
  * Description:   Norm operations for complex face-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchFaceDataNormOpsComplex_C
-#define included_math_PatchFaceDataNormOpsComplex_C
-
 #include "SAMRAI/math/PatchFaceDataNormOpsComplex.h"
 #include "SAMRAI/pdat/FaceGeometry.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -314,4 +310,3 @@ PatchFaceDataNormOpsComplex::integral(
 
 }
 }
-#endif

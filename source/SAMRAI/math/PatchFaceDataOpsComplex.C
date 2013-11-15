@@ -7,10 +7,6 @@
  * Description:   Operations for complex face-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchFaceDataOpsComplex_C
-#define included_math_PatchFaceDataOpsComplex_C
-
 #include "SAMRAI/math/PatchFaceDataOpsComplex.h"
 #include "SAMRAI/pdat/FaceGeometry.h"
 
@@ -89,4 +85,3 @@ PatchFaceDataOpsComplex::copyData(
 
 }
 }
-#endif

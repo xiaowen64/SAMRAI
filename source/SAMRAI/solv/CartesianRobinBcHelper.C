@@ -7,9 +7,6 @@
  * Description:   Robin boundary condition support on cartesian grids.
  *
  ************************************************************************/
-#ifndef included_solv_CartesianRobinBcHelper_C
-#define included_solv_CartesianRobinBcHelper_C
-
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -851,4 +848,3 @@ CartesianRobinBcHelper::makeNodeBoundaryBox(
 
 }
 }
-#endif

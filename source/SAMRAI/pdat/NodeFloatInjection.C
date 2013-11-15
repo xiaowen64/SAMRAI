@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_NodeFloatInjection_C
-#define included_pdat_NodeFloatInjection_C
-
 #include "SAMRAI/pdat/NodeFloatInjection.h"
 
 #include <float.h>
@@ -150,4 +146,3 @@ NodeFloatInjection::coarsen(
 
 }
 }
-#endif

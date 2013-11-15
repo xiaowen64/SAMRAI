@@ -7,9 +7,6 @@
  * Description:   Hypre solver interface for diffusion-like elliptic problems.
  *
  ************************************************************************/
-#ifndef included_solv_CellPoissonHypreSolver_C
-#define included_solv_CellPoissonHypreSolver_C
-
 #include "SAMRAI/solv/CellPoissonHypreSolver.h"
 
 #ifdef HAVE_HYPRE
@@ -1591,5 +1588,4 @@ CellPoissonHypreSolver::finalizeCallback()
 }
 }
 
-#endif
 #endif

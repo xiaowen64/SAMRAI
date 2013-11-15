@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_CellDoubleConstantRefine_C
-#define included_pdat_CellDoubleConstantRefine_C
-
 #include "SAMRAI/pdat/CellDoubleConstantRefine.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
@@ -187,4 +183,3 @@ CellDoubleConstantRefine::refine(
 
 }
 }
-#endif

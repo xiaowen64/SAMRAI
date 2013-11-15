@@ -8,10 +8,6 @@
  *                a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianFaceDoubleWeightedAverage_C
-#define included_geom_CartesianFaceDoubleWeightedAverage_C
-
 #include "SAMRAI/geom/CartesianFaceDoubleWeightedAverage.h"
 
 #include <float.h>
@@ -315,4 +311,3 @@ CartesianFaceDoubleWeightedAverage::coarsen(
 
 }
 }
-#endif

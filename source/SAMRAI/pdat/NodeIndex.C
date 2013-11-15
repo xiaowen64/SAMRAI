@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_NodeIndex_C
-#define included_pdat_NodeIndex_C
-
 #include "SAMRAI/pdat/NodeIndex.h"
 
 namespace SAMRAI {
@@ -92,4 +88,3 @@ NodeIndex::setOffsets()
 
 }
 }
-#endif

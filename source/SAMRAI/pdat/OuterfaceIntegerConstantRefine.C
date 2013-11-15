@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_OuterfaceIntegerConstantRefine_C
-#define included_pdat_OuterfaceIntegerConstantRefine_C
-
 #include "SAMRAI/pdat/OuterfaceIntegerConstantRefine.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -267,4 +263,3 @@ OuterfaceIntegerConstantRefine::refine(
 
 }
 }
-#endif

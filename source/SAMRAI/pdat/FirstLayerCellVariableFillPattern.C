@@ -7,10 +7,6 @@
  * Description:   Fill pattern class to provide interface for stencils
  *
  ************************************************************************/
-
-#ifndef included_pdat_FirstLayerCellVariableFillPattern_C
-#define included_pdat_FirstLayerCellVariableFillPattern_C
-
 #include "SAMRAI/pdat/FirstLayerCellVariableFillPattern.h"
 
 #include "SAMRAI/pdat/CellGeometry.h"
@@ -158,4 +154,3 @@ FirstLayerCellVariableFillPattern::computeFillBoxesOverlap(
 
 }
 }
-#endif

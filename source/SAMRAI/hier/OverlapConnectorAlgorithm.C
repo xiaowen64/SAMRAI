@@ -7,9 +7,6 @@
  * Description:   Algorithms for working with overlap Connectors.
  *
  ************************************************************************/
-#ifndef included_hier_OverlapConnectorAlgorithm_C
-#define included_hier_OverlapConnectorAlgorithm_C
-
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxContainerUtils.h"
@@ -1696,6 +1693,4 @@ OverlapConnectorAlgorithm::getAllTimers(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

@@ -7,10 +7,6 @@
  * Description:   Iterator for edge centered patch data types
  *
  ************************************************************************/
-
-#ifndef included_pdat_EdgeIterator_C
-#define included_pdat_EdgeIterator_C
-
 #include "SAMRAI/pdat/EdgeIterator.h"
 
 namespace SAMRAI {
@@ -74,4 +70,3 @@ EdgeIterator::operator ++ (
 
 }
 }
-#endif

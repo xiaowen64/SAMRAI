@@ -7,10 +7,6 @@
  * Description:   Basic method-of-lines time integration algorithm
  *
  ************************************************************************/
-
-#ifndef included_algs_MethodOfLinesIntegrator_C
-#define included_algs_MethodOfLinesIntegrator_C
-
 #include "SAMRAI/algs/MethodOfLinesIntegrator.h"
 
 #include "SAMRAI/hier/Patch.h"
@@ -895,4 +891,3 @@ MethodOfLinesIntegrator::printClassData(
 
 }
 }
-#endif

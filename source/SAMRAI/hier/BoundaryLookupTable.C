@@ -7,10 +7,6 @@
  * Description:   Lookup table to aid in BoundaryBox construction
  *
  ************************************************************************/
-
-#ifndef included_hier_BoundaryLookupTable_C
-#define included_hier_BoundaryLookupTable_C
-
 #include "SAMRAI/hier/BoundaryLookupTable.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
@@ -193,6 +189,4 @@ BoundaryLookupTable::finalizeCallback()
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

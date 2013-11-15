@@ -7,10 +7,6 @@
  * Description:   Simple structure for managing refinement data in equivalence classes.
  *
  ************************************************************************/
-
-#ifndef included_xfer_RefineClasses_C
-#define included_xfer_RefineClasses_C
-
 #include <typeinfo>
 
 #include "SAMRAI/xfer/RefineClasses.h"
@@ -534,4 +530,3 @@ RefineClasses::getEquivalenceClassIndex(
 
 }
 }
-#endif

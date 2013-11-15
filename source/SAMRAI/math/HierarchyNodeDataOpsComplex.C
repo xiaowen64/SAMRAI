@@ -7,10 +7,6 @@
  * Description:   Operations for complex node data on multiple levels.
  *
  ************************************************************************/
-
-#ifndef included_math_HierarchyNodeDataOpsComplex_C
-#define included_math_HierarchyNodeDataOpsComplex_C
-
 #include "SAMRAI/math/HierarchyNodeDataOpsComplex.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
@@ -1158,4 +1154,3 @@ HierarchyNodeDataOpsComplex::integral(
 
 }
 }
-#endif

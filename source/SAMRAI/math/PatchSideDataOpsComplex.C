@@ -7,10 +7,6 @@
  * Description:   Operations for complex side-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchSideDataOpsComplex_C
-#define included_math_PatchSideDataOpsComplex_C
-
 #include "SAMRAI/math/PatchSideDataOpsComplex.h"
 #include "SAMRAI/pdat/SideGeometry.h"
 
@@ -94,4 +90,3 @@ PatchSideDataOpsComplex::copyData(
 
 }
 }
-#endif

@@ -7,9 +7,6 @@
  * Description:   Algorithms for working with mapping Connectors.
  *
  ************************************************************************/
-#ifndef included_hier_BaseConnectorAlgorithm_C
-#define included_hier_BaseConnectorAlgorithm_C
-
 #include "SAMRAI/hier/BaseConnectorAlgorithm.h"
 #include "SAMRAI/hier/BoxContainer.h"
 
@@ -400,4 +397,3 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
 
 }
 }
-#endif

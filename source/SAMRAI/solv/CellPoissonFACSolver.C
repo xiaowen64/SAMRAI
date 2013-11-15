@@ -7,9 +7,6 @@
  * Description:   High-level solver (wrapper) for scalar poisson equation.
  *
  ************************************************************************/
-#ifndef included_solv_CellPoissonFACSolver_C
-#define included_solv_CellPoissonFACSolver_C
-
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/solv/CellPoissonFACSolver.h"
 #include "SAMRAI/tbox/PIO.h"
@@ -453,4 +450,3 @@ CellPoissonFACSolver::initializeStatics()
 
 }
 }
-#endif

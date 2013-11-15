@@ -8,10 +8,6 @@
  *                a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianEdgeComplexWeightedAverage_C
-#define included_geom_CartesianEdgeComplexWeightedAverage_C
-
 #include <float.h>
 #include <math.h>
 
@@ -231,4 +227,3 @@ CartesianEdgeComplexWeightedAverage::coarsen(
 
 }
 }
-#endif

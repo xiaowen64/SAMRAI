@@ -7,10 +7,6 @@
  * Description:   Communication transaction for summing outeredge data
  *
  ************************************************************************/
-
-#ifndef included_algs_OuteredgeSumTransaction_C
-#define included_algs_OuteredgeSumTransaction_C
-
 #include "SAMRAI/algs/OuteredgeSumTransaction.h"
 
 #include "SAMRAI/hier/Patch.h"
@@ -226,6 +222,4 @@ OuteredgeSumTransaction::printClassData(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

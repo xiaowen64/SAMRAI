@@ -7,10 +7,6 @@
  * Description:   utility routines useful for load balancing operations
  *
  ************************************************************************/
-
-#ifndef included_mesh_BalanceUtilities_C
-#define included_mesh_BalanceUtilities_C
-
 #include "SAMRAI/mesh/BalanceUtilities.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -1969,6 +1965,4 @@ BalanceUtilities::qsortRankAndLoadCompareAscending(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

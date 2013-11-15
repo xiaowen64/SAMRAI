@@ -7,10 +7,6 @@
  * Description:   Strategy interface for box generation routines.
  *
  ************************************************************************/
-
-#ifndef included_mesh_BoxGeneratorStrategy_C
-#define included_mesh_BoxGeneratorStrategy_C
-
 #include "SAMRAI/mesh/BoxGeneratorStrategy.h"
 
 namespace SAMRAI {
@@ -34,5 +30,3 @@ BoxGeneratorStrategy::~BoxGeneratorStrategy()
 
 }
 }
-
-#endif

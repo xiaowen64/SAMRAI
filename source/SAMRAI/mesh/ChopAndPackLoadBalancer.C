@@ -7,10 +7,6 @@
  * Description:   Load balance routines for uniform and non-uniform workloads.
  *
  ************************************************************************/
-
-#ifndef included_mesh_ChopAndPackLoadBalancer_C
-#define included_mesh_ChopAndPackLoadBalancer_C
-
 #define ChopAndPackLoadBalancer_MARKLOADFORPOSTPROCESSING
 
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
@@ -1326,4 +1322,3 @@ ChopAndPackLoadBalancer::finalizeCallback()
 
 }
 }
-#endif

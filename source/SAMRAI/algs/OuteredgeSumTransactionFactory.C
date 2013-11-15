@@ -7,10 +7,6 @@
  * Description:   Factory for creating outeredge sum transaction objects
  *
  ************************************************************************/
-
-#ifndef included_algs_OuteredgeSumTransactionFactory_C
-#define included_algs_OuteredgeSumTransactionFactory_C
-
 #include "SAMRAI/algs/OuteredgeSumTransactionFactory.h"
 
 #include "SAMRAI/pdat/OuteredgeData.h"
@@ -166,4 +162,3 @@ OuteredgeSumTransactionFactory::preprocessScratchSpace(
 
 }
 }
-#endif

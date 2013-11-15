@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_EdgeIndex_C
-#define included_pdat_EdgeIndex_C
-
 #include "SAMRAI/pdat/EdgeIndex.h"
 
 namespace SAMRAI {
@@ -70,4 +66,3 @@ EdgeIndex::toCell(
 
 }
 }
-#endif

@@ -8,10 +8,6 @@
  *                data on a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianCellFloatConservativeLinearRefine_C
-#define included_geom_CartesianCellFloatConservativeLinearRefine_C
-
 #include "SAMRAI/geom/CartesianCellFloatConservativeLinearRefine.h"
 #include <float.h>
 #include <math.h>
@@ -236,4 +232,3 @@ CartesianCellFloatConservativeLinearRefine::refine(
 
 }
 }
-#endif
