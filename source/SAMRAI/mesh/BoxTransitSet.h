@@ -15,7 +15,6 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/MappingConnector.h"
-#include "SAMRAI/hier/SequentialLocalIdGenerator.h"
 #include "SAMRAI/mesh/BalanceBoxBreaker.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
 #include "SAMRAI/tbox/Dimension.h"
@@ -107,9 +106,9 @@ public:
       hier::MappingConnector &unbalanced_to_balanced ) const;
 
 
-   //! @brief Allow box breaking when adjusting load.
-   void allowBoxBreaking() {
-      d_allow_box_breaking = true;
+   //! @brief Whether to allow box breaking.
+   void allowBoxBreaking( bool allow_box_breaking ) {
+      d_allow_box_breaking = allow_box_breaking;
    }
 
    /*!
@@ -191,7 +190,7 @@ private:
        *
        * @param[in] other
        */
-      const BoxInTransit& operator = (const BoxInTransit& other) {
+      BoxInTransit& operator = (const BoxInTransit& other) {
          d_box = other.d_box;
          d_orig_box = other.d_orig_box;
          d_boxload = other.d_boxload;
