@@ -15,6 +15,7 @@
 #include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
+#include "SAMRAI/mesh/TransitLoad.h"
 #include "SAMRAI/mesh/BoxTransitSet.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
@@ -377,13 +378,13 @@ private:
       //! @name Information on work shipped
       //! @brief Get amount of work shipped.
       LoadType getShipmentLoad() const
-         { return d_shipment.getSumLoad(); }
+         { return d_shipment->getSumLoad(); }
       //! @brief Get count of work shipped.
       size_t getShipmentPackageCount() const
-         { return d_shipment.getNumberOfItems(); }
+         { return d_shipment->getNumberOfItems(); }
       //! @brief Get count of originators of the work shipped.
       size_t getShipmentOriginatorCount() const
-         { return d_shipment.getNumberOfOriginatingProcesses(); }
+         { return d_shipment->getNumberOfOriginatingProcesses(); }
       //@}
 
 
@@ -493,7 +494,7 @@ private:
        * If this object is for the local process, shipment is to or
        * from the process's *parent*.
        */
-      BoxTransitSet d_shipment;
+      boost::shared_ptr<BoxTransitSet> d_shipment;
 
       /*!
        * @brief Whether branch expects its parent to send work down.
