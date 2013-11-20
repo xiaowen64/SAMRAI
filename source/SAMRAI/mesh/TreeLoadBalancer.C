@@ -931,7 +931,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
       tbox::plog << "Initial branch:\n";
       my_branch.recursivePrint( tbox::plog, "  " );
       tbox::plog << "unassigned: ";
-      unassigned.recursivePrint(tbox::plog, "  ", 0);
+      unassigned.recursivePrint(tbox::plog, "  ", 1);
    }
 
    t_get_load_from_children->stop();
@@ -1036,7 +1036,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
       tbox::plog << "Postparent branch:\n";
       my_branch.recursivePrint( tbox::plog, "  " );
       tbox::plog << "unassigned: ";
-      unassigned.recursivePrint(tbox::plog, "  ", 0);
+      unassigned.recursivePrint(tbox::plog, "  ", 1);
    }
 
 
@@ -2070,7 +2070,7 @@ TreeLoadBalancer::BranchData::recursivePrint(
       << '\n' << border
       << "   wants work from parent = " << d_wants_work_from_parent
       << '\n' << border
-      << "   shipment:";
+      << "   shipment: ";
    d_shipment->recursivePrint(os, border + "   ", detail_depth-1);
    return;
 }

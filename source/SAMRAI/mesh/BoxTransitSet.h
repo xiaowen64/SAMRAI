@@ -328,8 +328,8 @@ private:
          << r.d_box.numberCells() << '|'
          << r.d_box.numberCells().getProduct();
       co << '-' << r.d_orig_box
-         << r.d_box.numberCells() << '|'
-         << r.d_box.numberCells().getProduct();
+         << r.d_orig_box.numberCells() << '|'
+         << r.d_orig_box.numberCells().getProduct();
       return co;
    }
 
@@ -491,6 +491,13 @@ private:
    {
       return double((box * restriction).size());
    }
+
+   /*!
+    * @brief Look for an input database called "BoxTransitSet" and
+    * read parameters if it exists.
+    */
+   void
+   getFromInput();
 
 
    //! @brief Balance penalty is proportional to imbalance.
