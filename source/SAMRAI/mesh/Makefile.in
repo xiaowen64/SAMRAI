@@ -38,6 +38,7 @@ OBJS = 	\
 	LoadBalanceStrategy.o \
 	BalanceBoxBreaker.o \
 	BoxTransitSet.o \
+	VoucherTransitLoad.o \
 	TransitLoad.o \
 	GriddingAlgorithmStrategy.o \
 	BergerRigoutsos.o \

@@ -462,6 +462,9 @@ private:
       const BoxTransitSet &kept_imports ) const;
 
 
+   /*!
+    * @brief Re-cast a TransitLoad object to a BoxTransitSet.
+    */
    const BoxTransitSet &recastTransitLoad( const TransitLoad &transit_load ) {
       const BoxTransitSet *ptr = static_cast<const BoxTransitSet*>(&transit_load);
       TBOX_ASSERT(ptr);
@@ -469,6 +472,9 @@ private:
    }
 
 
+   /*!
+    * @brief Re-cast a TransitLoad object to a BoxTransitSet.
+    */
    BoxTransitSet &recastTransitLoad( TransitLoad &transit_load ) {
       BoxTransitSet *ptr = static_cast<BoxTransitSet*>(&transit_load);
       TBOX_ASSERT(ptr);
