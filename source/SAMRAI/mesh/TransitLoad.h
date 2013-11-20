@@ -28,9 +28,9 @@ namespace mesh {
  * @brief Base class for container work in transit through the tree
  * in the TreeLoadBalancer algorithm.
  *
- * TransitLoad base class follows a prototype design pattern.
+ * TransitLoad base class follows the prototype design pattern.
  * Subclasses must implement clone(), initialize(), and a copy
- * constructor according to the design pattern concept.
+ * constructor according to this design pattern.
  *
  * @see mesh::TreeLoadBalancer
  */
@@ -49,7 +49,7 @@ public:
    //! @brief Clone object according to design pattern.
    virtual boost::shared_ptr<TransitLoad> clone() const = 0;
 
-   //! @brief Initialize object according to design pattern.
+   //! @brief Initialize object.
    virtual void initialize() = 0;
 
    //@}

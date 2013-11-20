@@ -65,6 +65,34 @@ BoxTransitSet::BoxTransitSet( const PartitioningParams &pparams ) :
 
 /*
 *************************************************************************
+Initialize sets to a new (empty) container but retains current
+supplemental data such as diagnostic parameters.
+*************************************************************************
+*/
+void BoxTransitSet::initialize()
+{
+   d_set.clear();
+   d_sumload = 0.0;
+}
+
+
+/*
+*************************************************************************
+Initialize sets to a new (empty) container but retains current
+supplemental data such as diagnostic parameters.
+*************************************************************************
+*/
+boost::shared_ptr<TransitLoad> BoxTransitSet::clone() const
+{
+   boost::shared_ptr<BoxTransitSet> new_object =
+      boost::make_shared<BoxTransitSet>(*this);
+   new_object->initialize();
+   return new_object;
+}
+
+
+/*
+*************************************************************************
 *************************************************************************
 */
 void BoxTransitSet::insertAll( const hier::BoxContainer &other )
@@ -85,8 +113,9 @@ void BoxTransitSet::insertAll( const hier::BoxContainer &other )
 *************************************************************************
 *************************************************************************
 */
-void BoxTransitSet::insertAll( const BoxTransitSet &other )
+void BoxTransitSet::insertAll( const TransitLoad &other_transit_load )
 {
+   const BoxTransitSet &other = recastTransitLoad(other_transit_load);
    size_t old_size = d_set.size();
    d_set.insert( other.d_set.begin(), other.d_set.end() );
    d_sumload += other.d_sumload;
@@ -427,12 +456,13 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
  */
 BoxTransitSet::LoadType
 BoxTransitSet::adjustLoad(
-   BoxTransitSet& hold_bin,
+   TransitLoad& transit_load_hold_bin,
    LoadType ideal_load,
    LoadType low_load,
    LoadType high_load )
 {
    BoxTransitSet& main_bin(*this);
+   BoxTransitSet& hold_bin(recastTransitLoad(transit_load_hold_bin));
 
    if (d_print_steps) {
       tbox::plog << "  adjustLoad attempting to bring main load from "

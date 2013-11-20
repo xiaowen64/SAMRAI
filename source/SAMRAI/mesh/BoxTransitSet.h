@@ -17,6 +17,7 @@
 #include "SAMRAI/hier/MappingConnector.h"
 #include "SAMRAI/mesh/BalanceBoxBreaker.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
+#include "SAMRAI/mesh/TransitLoad.h"
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -36,13 +37,19 @@ namespace mesh {
  * std::set<BoxInTransit,BoxInTransitMoreLoad>.
  */
 
-class BoxTransitSet {
+class BoxTransitSet : public TransitLoad {
 
 public:
 
    typedef double LoadType;
 
    BoxTransitSet( const PartitioningParams &pparams );
+
+   //! @brief Initialize implementation for TransitLoad interface.
+   void initialize();
+
+   //! @brief Clone object.
+   boost::shared_ptr<TransitLoad> clone() const;
 
    //! @brief Return the total load contained.
    LoadType getSumLoad() const { return d_sumload; }
@@ -51,7 +58,7 @@ public:
    void insertAll( const hier::BoxContainer &other );
 
    //! @brief Insert all boxes from the given BoxTransitSet.
-   void insertAll( const BoxTransitSet &other );
+   void insertAll( const TransitLoad &other );
 
    //! @brief Return number of items in this container.
    size_t getNumberOfItems() const;
@@ -87,7 +94,7 @@ public:
     */
    LoadType
    adjustLoad(
-      BoxTransitSet& hold_bin,
+      TransitLoad& hold_bin,
       LoadType ideal_load,
       LoadType low_load,
       LoadType high_load );
@@ -453,6 +460,20 @@ private:
    void constructSemilocalUnbalancedToBalanced(
       hier::MappingConnector &unbalanced_to_balanced,
       const BoxTransitSet &kept_imports ) const;
+
+
+   const BoxTransitSet &recastTransitLoad( const TransitLoad &transit_load ) {
+      const BoxTransitSet *ptr = static_cast<const BoxTransitSet*>(&transit_load);
+      TBOX_ASSERT(ptr);
+      return *ptr;
+   }
+
+
+   BoxTransitSet &recastTransitLoad( TransitLoad &transit_load ) {
+      BoxTransitSet *ptr = static_cast<BoxTransitSet*>(&transit_load);
+      TBOX_ASSERT(ptr);
+      return *ptr;
+   }
 
 
    /*!
