@@ -32,6 +32,12 @@ namespace mesh {
  * Subclasses must implement clone(), initialize(), and a copy
  * constructor according to this design pattern.
  *
+ * TransitLoad objects have dual responsibilities.  First, it is a
+ * container for loads that move around the tree.  The implementation
+ * is responsible for how the load is represented.  Second, it
+ * generates the mapping between the pre- and post-balance load
+ * distribution.
+ *
  * @see mesh::TreeLoadBalancer
  */
 
@@ -56,7 +62,7 @@ public:
 
 
    //@{
-   //! @brief Container characteristics
+   //! @brief Container-like characteristics
 
    //! @brief Return the total load contained.
    virtual double getSumLoad() const = 0;
@@ -121,10 +127,19 @@ public:
 
 
    /*!
-    * @brief Assign unassigned boxes to local process and generate
+    * @brief Assign contents to local process and generate
     * balanced<==>unbalanced map.
     *
     * This method uses communication to set up the map.
+    *
+    * @param balanced_box_level Empty BoxLevel to populate with the
+    * contents of this TransitLoad.
+    *
+    * @param balanced_to_unalanced Empty Connector to populate with
+    * the balanced--->unbalanced edges.
+    *
+    * @param unbalanced_to_alanced Empty Connector to populate with
+    * the unbalanced--->balanced edges.
     */
    virtual void
    assignContentToLocalProcessAndGenerateMap(
