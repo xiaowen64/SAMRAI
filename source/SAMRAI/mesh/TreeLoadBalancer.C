@@ -1769,6 +1769,27 @@ TreeLoadBalancer::BranchData::BranchData( const PartitioningParams &pparams ):
 }
 
 
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+TreeLoadBalancer::BranchData::BranchData( const BranchData &other ):
+   d_num_procs(other.d_num_procs),
+   d_branch_load_current(other.d_branch_load_current),
+   d_branch_load_ideal(other.d_branch_load_ideal),
+   d_branch_load_upperlimit(other.d_branch_load_upperlimit),
+   d_eff_num_procs(other.d_eff_num_procs),
+   d_eff_load_current(other.d_eff_load_current),
+   d_eff_load_ideal(other.d_eff_load_ideal),
+   d_eff_load_upperlimit(other.d_eff_load_upperlimit),
+   d_shipment(boost::make_shared<BoxTransitSet>(*other.d_shipment)),
+   d_wants_work_from_parent(other.d_wants_work_from_parent),
+   d_pparams(other.d_pparams),
+   d_print_steps(other.d_print_steps)
+{
+}
+
+
 
 /*
  *************************************************************************

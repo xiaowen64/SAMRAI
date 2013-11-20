@@ -326,6 +326,8 @@ private:
    public:
       //! @brief Constructor.
       BranchData( const PartitioningParams &pparams );
+      //! @brief Copy constructor.
+      BranchData( const BranchData &other );
 
       /*!
        * @brief Set the starting ideal, current and upper limit of the
