@@ -17,6 +17,7 @@
 #include "SAMRAI/hier/MappingConnector.h"
 #include "SAMRAI/mesh/BalanceBoxBreaker.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
+#include "SAMRAI/mesh/TransitLoad.h"
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -36,13 +37,19 @@ namespace mesh {
  * std::set<BoxInTransit,BoxInTransitMoreLoad>.
  */
 
-class BoxTransitSet {
+class BoxTransitSet : public TransitLoad {
 
 public:
 
    typedef double LoadType;
 
    BoxTransitSet( const PartitioningParams &pparams );
+
+   //! @brief Initialize implementation for TransitLoad interface.
+   void initialize();
+
+   //! @brief Clone object.
+   boost::shared_ptr<TransitLoad> clone() const;
 
    //! @brief Return the total load contained.
    LoadType getSumLoad() const { return d_sumload; }
@@ -51,7 +58,7 @@ public:
    void insertAll( const hier::BoxContainer &other );
 
    //! @brief Insert all boxes from the given BoxTransitSet.
-   void insertAll( const BoxTransitSet &other );
+   void insertAll( const TransitLoad &other );
 
    //! @brief Return number of items in this container.
    size_t getNumberOfItems() const;
@@ -87,7 +94,7 @@ public:
     */
    LoadType
    adjustLoad(
-      BoxTransitSet& hold_bin,
+      TransitLoad& hold_bin,
       LoadType ideal_load,
       LoadType low_load,
       LoadType high_load );
@@ -328,8 +335,8 @@ private:
          << r.d_box.numberCells() << '|'
          << r.d_box.numberCells().getProduct();
       co << '-' << r.d_orig_box
-         << r.d_box.numberCells() << '|'
-         << r.d_box.numberCells().getProduct();
+         << r.d_orig_box.numberCells() << '|'
+         << r.d_orig_box.numberCells().getProduct();
       return co;
    }
 
@@ -455,6 +462,20 @@ private:
       const BoxTransitSet &kept_imports ) const;
 
 
+   const BoxTransitSet &recastTransitLoad( const TransitLoad &transit_load ) {
+      const BoxTransitSet *ptr = static_cast<const BoxTransitSet*>(&transit_load);
+      TBOX_ASSERT(ptr);
+      return *ptr;
+   }
+
+
+   BoxTransitSet &recastTransitLoad( TransitLoad &transit_load ) {
+      BoxTransitSet *ptr = static_cast<BoxTransitSet*>(&transit_load);
+      TBOX_ASSERT(ptr);
+      return *ptr;
+   }
+
+
    /*!
     * @brief Set up things for the entire class.
     *
@@ -491,6 +512,13 @@ private:
    {
       return double((box * restriction).size());
    }
+
+   /*!
+    * @brief Look for an input database called "BoxTransitSet" and
+    * read parameters if it exists.
+    */
+   void
+   getFromInput();
 
 
    //! @brief Balance penalty is proportional to imbalance.

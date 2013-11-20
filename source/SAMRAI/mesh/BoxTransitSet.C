@@ -13,6 +13,7 @@
 
 #include "SAMRAI/mesh/BoxTransitSet.h"
 #include "SAMRAI/mesh/BalanceUtilities.h"
+#include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -57,7 +58,36 @@ BoxTransitSet::BoxTransitSet( const PartitioningParams &pparams ) :
    d_print_break_steps(false),
    d_print_edge_steps(false)
 {
+   getFromInput();
    setTimerPrefix(s_default_timer_prefix);
+}
+
+
+/*
+*************************************************************************
+Initialize sets to a new (empty) container but retains current
+supplemental data such as diagnostic parameters.
+*************************************************************************
+*/
+void BoxTransitSet::initialize()
+{
+   d_set.clear();
+   d_sumload = 0.0;
+}
+
+
+/*
+*************************************************************************
+Initialize sets to a new (empty) container but retains current
+supplemental data such as diagnostic parameters.
+*************************************************************************
+*/
+boost::shared_ptr<TransitLoad> BoxTransitSet::clone() const
+{
+   boost::shared_ptr<BoxTransitSet> new_object =
+      boost::make_shared<BoxTransitSet>(*this);
+   new_object->initialize();
+   return new_object;
 }
 
 
@@ -83,8 +113,9 @@ void BoxTransitSet::insertAll( const hier::BoxContainer &other )
 *************************************************************************
 *************************************************************************
 */
-void BoxTransitSet::insertAll( const BoxTransitSet &other )
+void BoxTransitSet::insertAll( const TransitLoad &other_transit_load )
 {
+   const BoxTransitSet &other = recastTransitLoad(other_transit_load);
    size_t old_size = d_set.size();
    d_set.insert( other.d_set.begin(), other.d_set.end() );
    d_sumload += other.d_sumload;
@@ -138,7 +169,7 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
 {
    d_object_timers->t_assign_content_to_local_process_and_generate_map->start();
 
-   if ( d_print_steps ) {
+   if ( d_print_steps || d_print_edge_steps ) {
       tbox::plog << "BoxTransitSet::assignUnassignedToLocalProcessAndGenerateMap: entered." << std::endl;
    }
 
@@ -207,7 +238,7 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
 
    constructSemilocalUnbalancedToBalanced( unbalanced_to_balanced, kept_imports );
 
-   if ( d_print_steps ) {
+   if ( d_print_steps || d_print_edge_steps ) {
       tbox::plog << "BoxTransitSet::assignUnassignedToLocalProcessAndGenerateMap: exiting." << std::endl;
    }
 
@@ -237,7 +268,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
 {
    d_object_timers->t_construct_semilocal->start();
 
-   if ( d_print_steps ) {
+   if ( d_print_steps || d_print_edge_steps ) {
       tbox::plog << "BoxTransitSet::constructSemilocalUnbalancedToBalanced: entered."
                  << std::endl;
    }
@@ -386,7 +417,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
       outgoing_messages.clear();
    }
 
-   if ( d_print_steps ) {
+   if ( d_print_steps || d_print_edge_steps ) {
       tbox::plog << "BoxTransitSet::constructSemilocalUnbalancedToBalanced: exiting."
                  << std::endl;
    }
@@ -425,12 +456,13 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
  */
 BoxTransitSet::LoadType
 BoxTransitSet::adjustLoad(
-   BoxTransitSet& hold_bin,
+   TransitLoad& transit_load_hold_bin,
    LoadType ideal_load,
    LoadType low_load,
    LoadType high_load )
 {
    BoxTransitSet& main_bin(*this);
+   BoxTransitSet& hold_bin(recastTransitLoad(transit_load_hold_bin));
 
    if (d_print_steps) {
       tbox::plog << "  adjustLoad attempting to bring main load from "
@@ -1489,7 +1521,7 @@ BoxTransitSet::recursivePrint(
    const std::string &border,
    int detail_depth ) const
 {
-   co << getSumLoad() << " units in " << size() << " boxes.";
+   co << getSumLoad() << " units in " << size() << " boxes";
    if ( detail_depth > 0 ) {
       size_t count = 0;
       co << ":\n";
@@ -1500,6 +1532,41 @@ BoxTransitSet::recursivePrint(
    }
    else {
       co << ".\n";
+   }
+}
+
+
+
+/*
+ *************************************************************************
+ * Look for an input database called "BoxTransitSet" and read
+ * parameters if it exists.
+ *************************************************************************
+ */
+
+void
+BoxTransitSet::getFromInput()
+{
+   if ( !tbox::InputManager::inputDatabaseExists() ) return;
+
+   tbox::InputManager *im = tbox::InputManager::getManager();
+
+   boost::shared_ptr<tbox::Database> input_db = tbox::InputManager::getInputDatabase();
+
+   if ( input_db->isDatabase("BoxTransitSet") ) {
+
+      boost::shared_ptr<tbox::Database> my_db = input_db->getDatabase("BoxTransitSet");
+
+      d_print_steps = my_db->getBoolWithDefault("DEV_print_steps", d_print_steps);
+      d_print_break_steps =
+         my_db->getBoolWithDefault("DEV_print_break_steps", d_print_break_steps);
+      d_print_pop_steps =
+         my_db->getBoolWithDefault("DEV_print_pop_steps", d_print_pop_steps);
+      d_print_swap_steps =
+         my_db->getBoolWithDefault("DEV_print_swap_steps", d_print_swap_steps);
+      d_print_edge_steps =
+         my_db->getBoolWithDefault("DEV_print_edge_steps", d_print_edge_steps);
+
    }
 }
 

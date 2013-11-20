@@ -785,10 +785,6 @@ private:
 
    // Extra checks independent of optimization/debug.
    char d_print_steps;
-   char d_print_pop_steps;
-   char d_print_break_steps;
-   char d_print_swap_steps;
-   char d_print_edge_steps;
    char d_check_connectivity;
    char d_check_map;
 

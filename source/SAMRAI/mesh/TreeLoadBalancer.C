@@ -81,10 +81,6 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_report_load_balance(false),
    d_summarize_map(false),
    d_print_steps(false),
-   d_print_pop_steps(false),
-   d_print_break_steps(false),
-   d_print_swap_steps(false),
-   d_print_edge_steps(false),
    d_check_connectivity(false),
    d_check_map(false)
 {
@@ -228,8 +224,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       d_mpi = balance_box_level.getMPI();
    }
 
-   if (d_print_steps ||
-       d_print_break_steps) {
+   if (d_print_steps) {
       tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel called with:"
                  << "\n  min_size = " << min_size
                  << "\n  max_size = " << max_size
@@ -931,7 +926,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
       tbox::plog << "Initial branch:\n";
       my_branch.recursivePrint( tbox::plog, "  " );
       tbox::plog << "unassigned: ";
-      unassigned.recursivePrint(tbox::plog, "  ", 0);
+      unassigned.recursivePrint(tbox::plog, "  ", 1);
    }
 
    t_get_load_from_children->stop();
@@ -1036,7 +1031,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
       tbox::plog << "Postparent branch:\n";
       my_branch.recursivePrint( tbox::plog, "  " );
       tbox::plog << "unassigned: ";
-      unassigned.recursivePrint(tbox::plog, "  ", 0);
+      unassigned.recursivePrint(tbox::plog, "  ", 1);
    }
 
 
@@ -1576,27 +1571,16 @@ TreeLoadBalancer::getFromInput(
    if (input_db) {
 
       d_print_steps = input_db->getBoolWithDefault("DEV_print_steps", false);
-      d_print_break_steps =
-         input_db->getBoolWithDefault("DEV_print_break_steps", false);
-      d_print_pop_steps =
-         input_db->getBoolWithDefault("DEV_print_pop_steps", d_print_pop_steps);
-      d_print_swap_steps =
-         input_db->getBoolWithDefault("DEV_print_swap_steps", false);
-      d_print_edge_steps =
-         input_db->getBoolWithDefault("DEV_print_edge_steps", d_print_edge_steps);
       d_check_connectivity =
-         input_db->getBoolWithDefault("DEV_check_connectivity",
-            d_check_connectivity);
+         input_db->getBoolWithDefault("DEV_check_connectivity", d_check_connectivity);
       d_check_map =
-         input_db->getBoolWithDefault("DEV_check_map",
-            d_check_map);
+         input_db->getBoolWithDefault("DEV_check_map", d_check_map);
 
       d_summarize_map = input_db->getBoolWithDefault("DEV_summarize_map",
          d_summarize_map);
 
       d_report_load_balance = input_db->getBoolWithDefault(
-         "DEV_report_load_balance",
-         d_report_load_balance);
+         "DEV_report_load_balance", d_report_load_balance);
       d_barrier_before = input_db->getBoolWithDefault("DEV_barrier_before",
          d_barrier_before);
       d_barrier_after = input_db->getBoolWithDefault("DEV_barrier_after",
@@ -2070,7 +2054,7 @@ TreeLoadBalancer::BranchData::recursivePrint(
       << '\n' << border
       << "   wants work from parent = " << d_wants_work_from_parent
       << '\n' << border
-      << "   shipment:";
+      << "   shipment: ";
    d_shipment->recursivePrint(os, border + "   ", detail_depth-1);
    return;
 }
