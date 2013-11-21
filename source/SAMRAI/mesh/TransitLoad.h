@@ -32,11 +32,11 @@ namespace mesh {
  * Subclasses must implement clone(), initialize(), and a copy
  * constructor according to this design pattern.
  *
- * TransitLoad objects have dual responsibilities.  First, it is a
- * container for loads that move around the tree.  The implementation
- * is responsible for how the load is represented.  Second, it
- * generates the mapping between the pre- and post-balance load
- * distribution.
+ * TransitLoad has dual responsibilities.  First, it is a container of
+ * loads that move around the tree.  The implementation may represent
+ * the work however it wants.  Second, it generates the mapping
+ * between the pre- and post-balance BoxLevels.  It must have this
+ * responsibility because it alone knows how the work is represented.
  *
  * @see mesh::TreeLoadBalancer
  */

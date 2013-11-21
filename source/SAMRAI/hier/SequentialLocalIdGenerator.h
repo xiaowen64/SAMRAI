@@ -12,6 +12,7 @@
 #define included_hier_SequentialLocalIdGenerator
 
 #include "SAMRAI/SAMRAI_config.h"
+#include "SAMRAI/tbox/MessageStream.h"
 
 #include <iostream>
 
@@ -79,6 +80,18 @@ public:
     */
    void setIncrement( const LocalId &increment ) {
       d_increment = increment;
+   }
+
+   //! @brief Pack into a MessageStream.
+   friend operator << ( tbox::MessageStream &msg,
+                        const SequentialLocalIdGenerator &id_gen ) {
+      msg << id_gen.d_last_value << id_gen.d_increment;
+   }
+
+   //! @brief Unpack from a MessageStream.
+   friend operator >> ( tbox::MessageStream &msg,
+                        SequentialLocalIdGenerator &id_gen ) {
+      msg >> id_gen.d_last_value >> id_gen.d_increment;
    }
 
 private:
