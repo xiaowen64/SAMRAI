@@ -291,17 +291,7 @@ private:
     */
    struct TimerStruct {
       boost::shared_ptr<tbox::Timer> t_adjust_load;
-      boost::shared_ptr<tbox::Timer> t_adjust_load_by_popping;
-      boost::shared_ptr<tbox::Timer> t_adjust_load_by_swapping;
-      boost::shared_ptr<tbox::Timer> t_shift_loads_by_breaking;
-      boost::shared_ptr<tbox::Timer> t_find_swap_pair;
       boost::shared_ptr<tbox::Timer> t_assign_content_to_local_process_and_generate_map;
-      boost::shared_ptr<tbox::Timer> t_construct_semilocal;
-      boost::shared_ptr<tbox::Timer> t_construct_semilocal_comm_wait;
-      boost::shared_ptr<tbox::Timer> t_construct_semilocal_send_edges;
-      boost::shared_ptr<tbox::Timer> t_pack_edge;
-      boost::shared_ptr<tbox::Timer> t_unpack_edge;
-      boost::shared_ptr<tbox::Timer> t_post_load_distribution_barrier;
    };
 
    //! @brief Default prefix for Timers.

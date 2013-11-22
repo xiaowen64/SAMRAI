@@ -441,18 +441,6 @@ VoucherTransitLoad::getAllTimers(
 
    timers.t_assign_content_to_local_process_and_generate_map = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::assignContentToLocalProcessAndGenerateMap()");
-
-   timers.t_construct_semilocal = tbox::TimerManager::getManager()->
-      getTimer(timer_prefix + "::constructSemilocalUnbalancedToBalanced()");
-   timers.t_construct_semilocal_comm_wait = tbox::TimerManager::getManager()->
-      getTimer(timer_prefix + "::constructSemilocalUnbalancedToBalanced()_comm_wait");
-   timers.t_construct_semilocal_send_edges = tbox::TimerManager::getManager()->
-      getTimer(timer_prefix + "::constructSemilocalUnbalancedToBalanced()_send_edges");
-
-   timers.t_pack_edge = tbox::TimerManager::getManager()->
-      getTimer(timer_prefix + "::pack_edge");
-   timers.t_unpack_edge = tbox::TimerManager::getManager()->
-      getTimer(timer_prefix + "::unpack_edge");
 }
 
 
