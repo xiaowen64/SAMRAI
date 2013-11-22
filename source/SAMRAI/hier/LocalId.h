@@ -105,6 +105,15 @@ public:
    }
 
    /*!
+    * @brief Whether value is a valid one (not equal to getInvalidId()).
+    */
+   bool
+   isValid() const
+   {
+      return d_value != s_invalid_id.getValue();
+   }
+
+   /*!
     * @brief Get the LocalId with a numerical value of zero.
     */
    static const LocalId&
