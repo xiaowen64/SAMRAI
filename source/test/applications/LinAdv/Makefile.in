@@ -163,7 +163,6 @@ clean:		clean-check
 
 include $(SRCDIR)/Makefile.depend
 
-FORTRAN       = $(SRCDIR)/fortran/$(PDIM)d
 M4DIRS        = -DFORTDIR=$(SRCDIR)/fortran $(SAMRAI_M4_FLAGS)
 
 AutoTester.o:	$(AUTOTEST)/AutoTester.C

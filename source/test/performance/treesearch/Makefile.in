@@ -15,8 +15,6 @@ VPATH	      =	@srcdir@
 OBJECT        = ../../../..
 REPORT        = $(OBJECT)/report.xml
 
-CPPFLAGS_EXTRA= -DNDIM=$(PDIM)
-
 default: check
 
 include $(OBJECT)/config/Makefile.config

@@ -20,7 +20,7 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA	= -DDISPLAY -DNDIM=$(PDIM)  -DTESTING=1
+CPPFLAGS_EXTRA	= -DDISPLAY -DTESTING=1
 
 ifneq (,$(findstring libdcomplex, $(SAMRAI_LIBRARY_TARGETS)))
   NUM_TESTS = 24

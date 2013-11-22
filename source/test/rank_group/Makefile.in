@@ -15,7 +15,7 @@ VPATH	      =	@srcdir@
 OBJECT        = ../../..
 REPORT        = $(OBJECT)/report.xml
 
-CPPFLAGS_EXTRA= -DNDIM=$(PDIM)  -DTESTING=1
+CPPFLAGS_EXTRA= -DTESTING=1
 
 default: check
 

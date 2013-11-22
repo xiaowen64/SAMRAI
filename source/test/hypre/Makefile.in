@@ -20,7 +20,7 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA= -DNDIM=$(PDIM) -DTESTING=1
+CPPFLAGS_EXTRA= -DTESTING=1
 
 NUM_TESTS = 2
 
