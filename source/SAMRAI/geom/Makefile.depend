@@ -71,7 +71,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianCellComplexConservativeLinearRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -81,9 +80,9 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
+
+${FILE_0}: ${DEPENDS_0}
 
 FILE_1=CartesianCellComplexLinearRefine.o
 DEPENDS_1:=\
@@ -145,7 +144,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianCellComplexLinearRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -155,9 +153,9 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
+
+${FILE_1}: ${DEPENDS_1}
 
 FILE_2=CartesianCellComplexWeightedAverage.o
 DEPENDS_2:=\
@@ -219,7 +217,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianCellComplexWeightedAverage.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -229,9 +226,9 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
+
+${FILE_2}: ${DEPENDS_2}
 
 FILE_3=CartesianCellDoubleConservativeLinearRefine.o
 DEPENDS_3:=\
@@ -293,7 +290,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianCellDoubleConservativeLinearRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -303,9 +299,9 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
+
+${FILE_3}: ${DEPENDS_3}
 
 FILE_4=CartesianCellDoubleLinearRefine.o
 DEPENDS_4:=\
@@ -367,7 +363,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianCellDoubleLinearRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -377,9 +372,9 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
+
+${FILE_4}: ${DEPENDS_4}
 
 FILE_5=CartesianCellDoubleWeightedAverage.o
 DEPENDS_5:=\
@@ -441,7 +436,6 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianCellDoubleWeightedAverage.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_5 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -451,9 +445,9 @@ DEPENDS_5 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
+
+${FILE_5}: ${DEPENDS_5}
 
 FILE_6=CartesianCellFloatConservativeLinearRefine.o
 DEPENDS_6:=\
@@ -515,7 +509,6 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianCellFloatConservativeLinearRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_6 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -525,9 +518,9 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
+
+${FILE_6}: ${DEPENDS_6}
 
 FILE_7=CartesianCellFloatLinearRefine.o
 DEPENDS_7:=\
@@ -589,7 +582,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianCellFloatLinearRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_7 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -599,9 +591,9 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_7:X.o=${NDIM}.o}: ${DEPENDS_7}
+
+${FILE_7}: ${DEPENDS_7}
 
 FILE_8=CartesianCellFloatWeightedAverage.o
 DEPENDS_8:=\
@@ -663,7 +655,6 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianCellFloatWeightedAverage.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_8 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -673,9 +664,9 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_8:X.o=${NDIM}.o}: ${DEPENDS_8}
+
+${FILE_8}: ${DEPENDS_8}
 
 FILE_9=CartesianEdgeComplexWeightedAverage.o
 DEPENDS_9:=\
@@ -740,7 +731,6 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianEdgeComplexWeightedAverage.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_9 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -752,9 +742,9 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_9:X.o=${NDIM}.o}: ${DEPENDS_9}
+
+${FILE_9}: ${DEPENDS_9}
 
 FILE_10=CartesianEdgeDoubleConservativeLinearRefine.o
 DEPENDS_10:=\
@@ -819,7 +809,6 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianEdgeDoubleConservativeLinearRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_10 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -831,9 +820,9 @@ DEPENDS_10 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}
+
+${FILE_10}: ${DEPENDS_10}
 
 FILE_11=CartesianEdgeDoubleWeightedAverage.o
 DEPENDS_11:=\
@@ -898,7 +887,6 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianEdgeDoubleWeightedAverage.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_11 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -910,9 +898,9 @@ DEPENDS_11 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_11:X.o=${NDIM}.o}: ${DEPENDS_11}
+
+${FILE_11}: ${DEPENDS_11}
 
 FILE_12=CartesianEdgeFloatConservativeLinearRefine.o
 DEPENDS_12:=\
@@ -977,7 +965,6 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianEdgeFloatConservativeLinearRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_12 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -989,9 +976,9 @@ DEPENDS_12 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_12:X.o=${NDIM}.o}: ${DEPENDS_12}
+
+${FILE_12}: ${DEPENDS_12}
 
 FILE_13=CartesianEdgeFloatWeightedAverage.o
 DEPENDS_13:=\
@@ -1056,7 +1043,6 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianEdgeFloatWeightedAverage.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_13 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1068,9 +1054,9 @@ DEPENDS_13 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_13:X.o=${NDIM}.o}: ${DEPENDS_13}
+
+${FILE_13}: ${DEPENDS_13}
 
 FILE_14=CartesianFaceComplexWeightedAverage.o
 DEPENDS_14:=\
@@ -1135,7 +1121,6 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianFaceComplexWeightedAverage.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_14 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1147,9 +1132,9 @@ DEPENDS_14 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_14:X.o=${NDIM}.o}: ${DEPENDS_14}
+
+${FILE_14}: ${DEPENDS_14}
 
 FILE_15=CartesianFaceDoubleConservativeLinearRefine.o
 DEPENDS_15:=\
@@ -1214,7 +1199,6 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianFaceDoubleConservativeLinearRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_15 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1226,9 +1210,9 @@ DEPENDS_15 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_15:X.o=${NDIM}.o}: ${DEPENDS_15}
+
+${FILE_15}: ${DEPENDS_15}
 
 FILE_16=CartesianFaceDoubleWeightedAverage.o
 DEPENDS_16:=\
@@ -1293,7 +1277,6 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianFaceDoubleWeightedAverage.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_16 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1305,9 +1288,9 @@ DEPENDS_16 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_16:X.o=${NDIM}.o}: ${DEPENDS_16}
+
+${FILE_16}: ${DEPENDS_16}
 
 FILE_17=CartesianFaceFloatConservativeLinearRefine.o
 DEPENDS_17:=\
@@ -1372,7 +1355,6 @@ DEPENDS_17:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianFaceFloatConservativeLinearRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_17 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1384,9 +1366,9 @@ DEPENDS_17 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_17:X.o=${NDIM}.o}: ${DEPENDS_17}
+
+${FILE_17}: ${DEPENDS_17}
 
 FILE_18=CartesianFaceFloatWeightedAverage.o
 DEPENDS_18:=\
@@ -1451,7 +1433,6 @@ DEPENDS_18:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianFaceFloatWeightedAverage.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_18 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1463,9 +1444,9 @@ DEPENDS_18 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_18:X.o=${NDIM}.o}: ${DEPENDS_18}
+
+${FILE_18}: ${DEPENDS_18}
 
 FILE_19=CartesianGridGeometry.o
 DEPENDS_19:=\
@@ -1618,7 +1599,6 @@ DEPENDS_19:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h CartesianGridGeometry.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_19 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1650,9 +1630,9 @@ DEPENDS_19 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_19:X.o=${NDIM}.o}: ${DEPENDS_19}
+
+${FILE_19}: ${DEPENDS_19}
 
 FILE_20=CartesianNodeComplexLinearRefine.o
 DEPENDS_20:=\
@@ -1717,7 +1697,6 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianNodeComplexLinearRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_20 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1729,9 +1708,9 @@ DEPENDS_20 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_20:X.o=${NDIM}.o}: ${DEPENDS_20}
+
+${FILE_20}: ${DEPENDS_20}
 
 FILE_21=CartesianNodeDoubleLinearRefine.o
 DEPENDS_21:=\
@@ -1796,7 +1775,6 @@ DEPENDS_21:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianNodeDoubleLinearRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_21 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1808,9 +1786,9 @@ DEPENDS_21 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_21:X.o=${NDIM}.o}: ${DEPENDS_21}
+
+${FILE_21}: ${DEPENDS_21}
 
 FILE_22=CartesianNodeFloatLinearRefine.o
 DEPENDS_22:=\
@@ -1875,7 +1853,6 @@ DEPENDS_22:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianNodeFloatLinearRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_22 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1887,9 +1864,9 @@ DEPENDS_22 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_22:X.o=${NDIM}.o}: ${DEPENDS_22}
+
+${FILE_22}: ${DEPENDS_22}
 
 FILE_23=CartesianOuterfaceComplexWeightedAverage.o
 DEPENDS_23:=\
@@ -1954,7 +1931,6 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianOuterfaceComplexWeightedAverage.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_23 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1966,9 +1942,9 @@ DEPENDS_23 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_23:X.o=${NDIM}.o}: ${DEPENDS_23}
+
+${FILE_23}: ${DEPENDS_23}
 
 FILE_24=CartesianOuterfaceDoubleWeightedAverage.o
 DEPENDS_24:=\
@@ -2033,7 +2009,6 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianOuterfaceDoubleWeightedAverage.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_24 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2045,9 +2020,9 @@ DEPENDS_24 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_24:X.o=${NDIM}.o}: ${DEPENDS_24}
+
+${FILE_24}: ${DEPENDS_24}
 
 FILE_25=CartesianOuterfaceFloatWeightedAverage.o
 DEPENDS_25:=\
@@ -2112,7 +2087,6 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianOuterfaceFloatWeightedAverage.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_25 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2124,9 +2098,9 @@ DEPENDS_25 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_25:X.o=${NDIM}.o}: ${DEPENDS_25}
+
+${FILE_25}: ${DEPENDS_25}
 
 FILE_26=CartesianOutersideDoubleWeightedAverage.o
 DEPENDS_26:=\
@@ -2191,7 +2165,6 @@ DEPENDS_26:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianOutersideDoubleWeightedAverage.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_26 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2203,9 +2176,9 @@ DEPENDS_26 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_26:X.o=${NDIM}.o}: ${DEPENDS_26}
+
+${FILE_26}: ${DEPENDS_26}
 
 FILE_27=CartesianPatchGeometry.o
 DEPENDS_27:=\
@@ -2236,12 +2209,11 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h CartesianPatchGeometry.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_27 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_27:X.o=${NDIM}.o}: ${DEPENDS_27}
+
+${FILE_27}: ${DEPENDS_27}
 
 FILE_28=CartesianSideComplexWeightedAverage.o
 DEPENDS_28:=\
@@ -2306,7 +2278,6 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianSideComplexWeightedAverage.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_28 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2318,9 +2289,9 @@ DEPENDS_28 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_28:X.o=${NDIM}.o}: ${DEPENDS_28}
+
+${FILE_28}: ${DEPENDS_28}
 
 FILE_29=CartesianSideDoubleConservativeLinearRefine.o
 DEPENDS_29:=\
@@ -2385,7 +2356,6 @@ DEPENDS_29:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianSideDoubleConservativeLinearRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_29 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2397,9 +2367,9 @@ DEPENDS_29 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_29:X.o=${NDIM}.o}: ${DEPENDS_29}
+
+${FILE_29}: ${DEPENDS_29}
 
 FILE_30=CartesianSideDoubleWeightedAverage.o
 DEPENDS_30:=\
@@ -2464,7 +2434,6 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianSideDoubleWeightedAverage.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_30 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2476,9 +2445,9 @@ DEPENDS_30 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_30:X.o=${NDIM}.o}: ${DEPENDS_30}
+
+${FILE_30}: ${DEPENDS_30}
 
 FILE_31=CartesianSideFloatConservativeLinearRefine.o
 DEPENDS_31:=\
@@ -2543,7 +2512,6 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianSideFloatConservativeLinearRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_31 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2555,9 +2523,9 @@ DEPENDS_31 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_31:X.o=${NDIM}.o}: ${DEPENDS_31}
+
+${FILE_31}: ${DEPENDS_31}
 
 FILE_32=CartesianSideFloatWeightedAverage.o
 DEPENDS_32:=\
@@ -2622,7 +2590,6 @@ DEPENDS_32:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CartesianSideFloatWeightedAverage.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_32 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2634,9 +2601,9 @@ DEPENDS_32 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_32:X.o=${NDIM}.o}: ${DEPENDS_32}
+
+${FILE_32}: ${DEPENDS_32}
 
 FILE_33=GridGeometry.o
 DEPENDS_33:=\
@@ -2791,7 +2758,6 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h GridGeometry.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_33 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2824,7 +2790,7 @@ DEPENDS_33 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_33:X.o=${NDIM}.o}: ${DEPENDS_33}
+
+${FILE_33}: ${DEPENDS_33}
 

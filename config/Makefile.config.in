@@ -105,9 +105,6 @@ CXXLDLIBS     = $(LDLIBS_EXTRA) @LIB_NAME@
 
 SAMRAI_M4_FLAGS = -DSAMRAI_FORTDIR=$(INCLUDE_SAM)/SAMRAI/pdat/fortran
 
-# Are object files dependent on template implementation files (.C)
-DEPENDS_ON_TEMPLATE_IMPLEMENTATION=@DEPENDS_ON_TEMPLATE_IMPLEMENTATION@
-
 # Should the special SAMRAI targets be included in the Makefile.config
 DEVELOPER_MAKEFILE=@DEVELOPER_MAKEFILE@
 

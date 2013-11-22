@@ -547,13 +547,6 @@ threading directive for this compiler.
 fi
 
 dnl
-dnl The standard requires that implementation be present when compiling a template.
-dnl
-AC_DEFINE([INCLUDE_TEMPLATE_IMPLEMENTATION],[1],[INCLUDE_TEMPLATE_IMPLEMENTATION])
-DEPENDS_ON_TEMPLATE_IMPLEMENTATION="yes"
-AC_SUBST(DEPENDS_ON_TEMPLATE_IMPLEMENTATION)
-
-dnl
 dnl Set the compile mode flag for the kind of target to build
 dnl
 

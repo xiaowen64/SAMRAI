@@ -213,9 +213,6 @@
 /* "Compiling without deprecated features" */
 #undef INCLUDE_DEPRECATED
 
-/* INCLUDE_TEMPLATE_IMPLEMENTATION */
-#undef INCLUDE_TEMPLATE_IMPLEMENTATION
-
 /* Header file for iomanip */
 #undef IOMANIP_HEADER_FILE
 

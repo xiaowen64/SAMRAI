@@ -22,12 +22,11 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Array.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
 	
-endif
 
-${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
+
+${FILE_0}: ${DEPENDS_0}
 
 FILE_1=ArraySpecial.o
 DEPENDS_1:=\
@@ -39,12 +38,11 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h ArraySpecial.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.C
-endif
 
-${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
+
+${FILE_1}: ${DEPENDS_1}
 
 FILE_2=AsyncCommGroup.o
 DEPENDS_2:=\
@@ -68,12 +66,11 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h AsyncCommGroup.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
+
+${FILE_2}: ${DEPENDS_2}
 
 FILE_3=AsyncCommPeer.o
 DEPENDS_3:=\
@@ -97,12 +94,11 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h AsyncCommPeer.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_3 +=\
 	
-endif
 
-${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
+
+${FILE_3}: ${DEPENDS_3}
 
 FILE_4=AsyncCommStage.o
 DEPENDS_4:=\
@@ -125,12 +121,11 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h AsyncCommStage.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
+
+${FILE_4}: ${DEPENDS_4}
 
 FILE_5=BalancedDepthFirstTree.o
 DEPENDS_5:=\
@@ -151,12 +146,11 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BalancedDepthFirstTree.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_5 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
+
+${FILE_5}: ${DEPENDS_5}
 
 FILE_6=BreadthFirstRankTree.o
 DEPENDS_6:=\
@@ -177,12 +171,11 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BreadthFirstRankTree.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_6 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
+
+${FILE_6}: ${DEPENDS_6}
 
 FILE_7=CenteredRankTree.o
 DEPENDS_7:=\
@@ -203,12 +196,11 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h CenteredRankTree.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_7 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_7:X.o=${NDIM}.o}: ${DEPENDS_7}
+
+${FILE_7}: ${DEPENDS_7}
 
 FILE_8=Clock.o
 DEPENDS_8:=\
@@ -221,12 +213,11 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Clock.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_8 +=\
 	
-endif
 
-${FILE_8:X.o=${NDIM}.o}: ${DEPENDS_8}
+
+${FILE_8}: ${DEPENDS_8}
 
 FILE_9=CommGraphWriter.o
 DEPENDS_9:=\
@@ -240,12 +231,11 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h CommGraphWriter.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_9 +=\
 	
-endif
 
-${FILE_9:X.o=${NDIM}.o}: ${DEPENDS_9}
+
+${FILE_9}: ${DEPENDS_9}
 
 FILE_10=Database.o
 DEPENDS_10:=\
@@ -260,12 +250,11 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Database.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_10 +=\
 	
-endif
 
-${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}
+
+${FILE_10}: ${DEPENDS_10}
 
 FILE_11=DatabaseBox.o
 DEPENDS_11:=\
@@ -277,12 +266,11 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h DatabaseBox.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_11 +=\
 	
-endif
 
-${FILE_11:X.o=${NDIM}.o}: ${DEPENDS_11}
+
+${FILE_11}: ${DEPENDS_11}
 
 FILE_12=DatabaseFactory.o
 DEPENDS_12:=\
@@ -298,12 +286,11 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h DatabaseFactory.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_12 +=\
 	
-endif
 
-${FILE_12:X.o=${NDIM}.o}: ${DEPENDS_12}
+
+${FILE_12}: ${DEPENDS_12}
 
 FILE_13=Dimension.o
 DEPENDS_13:=\
@@ -314,12 +301,11 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Dimension.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_13 +=\
 	
-endif
 
-${FILE_13:X.o=${NDIM}.o}: ${DEPENDS_13}
+
+${FILE_13}: ${DEPENDS_13}
 
 FILE_14=Grammar.o
 DEPENDS_14:=\
@@ -335,12 +321,11 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Grammar.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_14 +=\
 	
-endif
 
-${FILE_14:X.o=${NDIM}.o}: ${DEPENDS_14}
+
+${FILE_14}: ${DEPENDS_14}
 
 FILE_15=HDFDatabase.o
 DEPENDS_15:=\
@@ -357,12 +342,11 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h HDFDatabase.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_15 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_15:X.o=${NDIM}.o}: ${DEPENDS_15}
+
+${FILE_15}: ${DEPENDS_15}
 
 FILE_16=HDFDatabaseFactory.o
 DEPENDS_16:=\
@@ -380,12 +364,11 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h HDFDatabaseFactory.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_16 +=\
 	
-endif
 
-${FILE_16:X.o=${NDIM}.o}: ${DEPENDS_16}
+
+${FILE_16}: ${DEPENDS_16}
 
 FILE_17=IEEE.o
 DEPENDS_17:=\
@@ -399,12 +382,11 @@ DEPENDS_17:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h IEEE.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_17 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_17:X.o=${NDIM}.o}: ${DEPENDS_17}
+
+${FILE_17}: ${DEPENDS_17}
 
 FILE_18=InputManager.o
 DEPENDS_18:=\
@@ -425,12 +407,11 @@ DEPENDS_18:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h InputManager.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_18 +=\
 	
-endif
 
-${FILE_18:X.o=${NDIM}.o}: ${DEPENDS_18}
+
+${FILE_18}: ${DEPENDS_18}
 
 FILE_19=Logger.o
 DEPENDS_19:=\
@@ -439,23 +420,21 @@ DEPENDS_19:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h Logger.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_19 +=\
 	
-endif
 
-${FILE_19:X.o=${NDIM}.o}: ${DEPENDS_19}
+
+${FILE_19}: ${DEPENDS_19}
 
 FILE_20=MathUtilities.o
 DEPENDS_20:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h MathUtilities.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_20 +=\
 	
-endif
 
-${FILE_20:X.o=${NDIM}.o}: ${DEPENDS_20}
+
+${FILE_20}: ${DEPENDS_20}
 
 FILE_21=MathUtilitiesSpecial.o
 DEPENDS_21:=\
@@ -467,12 +446,11 @@ DEPENDS_21:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	MathUtilitiesSpecial.C Utilities.h
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_21 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_21:X.o=${NDIM}.o}: ${DEPENDS_21}
+
+${FILE_21}: ${DEPENDS_21}
 
 FILE_22=MemoryDatabase.o
 DEPENDS_22:=\
@@ -489,12 +467,11 @@ DEPENDS_22:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h MemoryDatabase.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_22 +=\
 	
-endif
 
-${FILE_22:X.o=${NDIM}.o}: ${DEPENDS_22}
+
+${FILE_22}: ${DEPENDS_22}
 
 FILE_23=MemoryDatabaseFactory.o
 DEPENDS_23:=\
@@ -512,12 +489,11 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h MemoryDatabaseFactory.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_23 +=\
 	
-endif
 
-${FILE_23:X.o=${NDIM}.o}: ${DEPENDS_23}
+
+${FILE_23}: ${DEPENDS_23}
 
 FILE_24=MemoryUtilities.o
 DEPENDS_24:=\
@@ -536,12 +512,11 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h MemoryUtilities.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_24 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_24:X.o=${NDIM}.o}: ${DEPENDS_24}
+
+${FILE_24}: ${DEPENDS_24}
 
 FILE_25=MessageStream.o
 DEPENDS_25:=\
@@ -553,12 +528,11 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h MessageStream.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_25 +=\
 	
-endif
 
-${FILE_25:X.o=${NDIM}.o}: ${DEPENDS_25}
+
+${FILE_25}: ${DEPENDS_25}
 
 FILE_26=NullDatabase.o
 DEPENDS_26:=\
@@ -574,12 +548,11 @@ DEPENDS_26:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h NullDatabase.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_26 +=\
 	
-endif
 
-${FILE_26:X.o=${NDIM}.o}: ${DEPENDS_26}
+
+${FILE_26}: ${DEPENDS_26}
 
 FILE_27=PIO.o
 DEPENDS_27:=\
@@ -597,12 +570,11 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h PIO.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_27 +=\
 	
-endif
 
-${FILE_27:X.o=${NDIM}.o}: ${DEPENDS_27}
+
+${FILE_27}: ${DEPENDS_27}
 
 FILE_28=ParallelBuffer.o
 DEPENDS_28:=\
@@ -615,12 +587,11 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h ParallelBuffer.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_28 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_28:X.o=${NDIM}.o}: ${DEPENDS_28}
+
+${FILE_28}: ${DEPENDS_28}
 
 FILE_29=Parser.o
 DEPENDS_29:=\
@@ -638,12 +609,11 @@ DEPENDS_29:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Parser.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_29 +=\
 	
-endif
 
-${FILE_29:X.o=${NDIM}.o}: ${DEPENDS_29}
+
+${FILE_29}: ${DEPENDS_29}
 
 FILE_30=RankGroup.o
 DEPENDS_30:=\
@@ -662,12 +632,11 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h RankGroup.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_30 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_30:X.o=${NDIM}.o}: ${DEPENDS_30}
+
+${FILE_30}: ${DEPENDS_30}
 
 FILE_31=RankTreeStrategy.o
 DEPENDS_31:=\
@@ -687,12 +656,11 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h RankTreeStrategy.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_31 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_31:X.o=${NDIM}.o}: ${DEPENDS_31}
+
+${FILE_31}: ${DEPENDS_31}
 
 FILE_32=ReferenceCounter.o
 DEPENDS_32:=\
@@ -701,12 +669,11 @@ DEPENDS_32:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	ReferenceCounter.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_32 +=\
 	
-endif
 
-${FILE_32:X.o=${NDIM}.o}: ${DEPENDS_32}
+
+${FILE_32}: ${DEPENDS_32}
 
 FILE_33=RestartManager.o
 DEPENDS_33:=\
@@ -729,12 +696,11 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h RestartManager.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_33 +=\
 	
-endif
 
-${FILE_33:X.o=${NDIM}.o}: ${DEPENDS_33}
+
+${FILE_33}: ${DEPENDS_33}
 
 FILE_34=SAMRAIManager.o
 DEPENDS_34:=\
@@ -753,12 +719,11 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SAMRAIManager.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_34 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_34:X.o=${NDIM}.o}: ${DEPENDS_34}
+
+${FILE_34}: ${DEPENDS_34}
 
 FILE_35=SAMRAI_MPI.o
 DEPENDS_35:=\
@@ -775,12 +740,11 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SAMRAI_MPI.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_35 +=\
 	
-endif
 
-${FILE_35:X.o=${NDIM}.o}: ${DEPENDS_35}
+
+${FILE_35}: ${DEPENDS_35}
 
 FILE_36=Scanner.o
 DEPENDS_36:=\
@@ -796,12 +760,11 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Grammar.h Scanner.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_36 +=\
 	
-endif
 
-${FILE_36:X.o=${NDIM}.o}: ${DEPENDS_36}
+
+${FILE_36}: ${DEPENDS_36}
 
 FILE_37=Schedule.o
 DEPENDS_37:=\
@@ -814,7 +777,10 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/InputDatabase.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/InputManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
@@ -827,12 +793,11 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Schedule.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_37 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C
-endif
 
-${FILE_37:X.o=${NDIM}.o}: ${DEPENDS_37}
+
+${FILE_37}: ${DEPENDS_37}
 
 FILE_38=Serializable.o
 DEPENDS_38:=\
@@ -848,12 +813,11 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Serializable.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_38 +=\
 	
-endif
 
-${FILE_38:X.o=${NDIM}.o}: ${DEPENDS_38}
+
+${FILE_38}: ${DEPENDS_38}
 
 FILE_39=SiloDatabase.o
 DEPENDS_39:=\
@@ -870,12 +834,11 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SiloDatabase.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_39 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_39:X.o=${NDIM}.o}: ${DEPENDS_39}
+
+${FILE_39}: ${DEPENDS_39}
 
 FILE_40=SiloDatabaseFactory.o
 DEPENDS_40:=\
@@ -893,12 +856,11 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SiloDatabaseFactory.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_40 +=\
 	
-endif
 
-${FILE_40:X.o=${NDIM}.o}: ${DEPENDS_40}
+
+${FILE_40}: ${DEPENDS_40}
 
 FILE_41=StartupShutdownManager.o
 DEPENDS_41:=\
@@ -908,12 +870,11 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h StartupShutdownManager.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_41 +=\
 	
-endif
 
-${FILE_41:X.o=${NDIM}.o}: ${DEPENDS_41}
+
+${FILE_41}: ${DEPENDS_41}
 
 FILE_42=StatTransaction.o
 DEPENDS_42:=\
@@ -932,12 +893,11 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h StatTransaction.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_42 +=\
 	
-endif
 
-${FILE_42:X.o=${NDIM}.o}: ${DEPENDS_42}
+
+${FILE_42}: ${DEPENDS_42}
 
 FILE_43=Statistic.o
 DEPENDS_43:=\
@@ -957,12 +917,11 @@ DEPENDS_43:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Statistic.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Statistic.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_43 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_43:X.o=${NDIM}.o}: ${DEPENDS_43}
+
+${FILE_43}: ${DEPENDS_43}
 
 FILE_44=Statistician.o
 DEPENDS_44:=\
@@ -994,13 +953,12 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Statistician.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_44 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_44:X.o=${NDIM}.o}: ${DEPENDS_44}
+
+${FILE_44}: ${DEPENDS_44}
 
 FILE_45=Timer.o
 DEPENDS_45:=\
@@ -1021,12 +979,11 @@ DEPENDS_45:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Timer.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_45 +=\
 	
-endif
 
-${FILE_45:X.o=${NDIM}.o}: ${DEPENDS_45}
+
+${FILE_45}: ${DEPENDS_45}
 
 FILE_46=TimerManager.o
 DEPENDS_46:=\
@@ -1051,12 +1008,11 @@ DEPENDS_46:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h TimerManager.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_46 +=\
 	
-endif
 
-${FILE_46:X.o=${NDIM}.o}: ${DEPENDS_46}
+
+${FILE_46}: ${DEPENDS_46}
 
 FILE_47=Tracer.o
 DEPENDS_47:=\
@@ -1064,12 +1020,11 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Tracer.h Tracer.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_47 +=\
 	
-endif
 
-${FILE_47:X.o=${NDIM}.o}: ${DEPENDS_47}
+
+${FILE_47}: ${DEPENDS_47}
 
 FILE_48=Transaction.o
 DEPENDS_48:=\
@@ -1082,12 +1037,11 @@ DEPENDS_48:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Transaction.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_48 +=\
 	
-endif
 
-${FILE_48:X.o=${NDIM}.o}: ${DEPENDS_48}
+
+${FILE_48}: ${DEPENDS_48}
 
 FILE_49=Utilities.o
 DEPENDS_49:=\
@@ -1104,10 +1058,9 @@ DEPENDS_49:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h Utilities.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_49 +=\
 	
-endif
 
-${FILE_49:X.o=${NDIM}.o}: ${DEPENDS_49}
+
+${FILE_49}: ${DEPENDS_49}
 
