@@ -335,6 +335,10 @@ public:
       int* count);
 
    static int
+   Request_free(
+      Request *request);
+
+   static int
    Test(
       Request* request,
       int* flag,
