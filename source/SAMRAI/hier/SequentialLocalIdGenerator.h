@@ -83,16 +83,22 @@ public:
    }
 
    //! @brief Pack into a MessageStream.
-   friend operator << ( tbox::MessageStream &msg,
-                        const SequentialLocalIdGenerator &id_gen ) {
-      msg << id_gen.d_last_value << id_gen.d_increment;
-   }
+   friend tbox::MessageStream &operator << (
+      tbox::MessageStream &msg,
+      const SequentialLocalIdGenerator &id_gen )
+      {
+         msg << id_gen.d_last_value << id_gen.d_increment;
+         return msg;
+      }
 
    //! @brief Unpack from a MessageStream.
-   friend operator >> ( tbox::MessageStream &msg,
-                        SequentialLocalIdGenerator &id_gen ) {
-      msg >> id_gen.d_last_value >> id_gen.d_increment;
-   }
+   friend tbox::MessageStream &operator >> (
+      tbox::MessageStream &msg,
+      SequentialLocalIdGenerator &id_gen )
+      {
+         msg >> id_gen.d_last_value >> id_gen.d_increment;
+         return msg;
+      }
 
 private:
 
