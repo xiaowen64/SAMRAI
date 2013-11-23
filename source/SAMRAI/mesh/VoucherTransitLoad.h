@@ -13,8 +13,10 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/MappingConnector.h"
+#include "SAMRAI/hier/SequentialLocalIdGenerator.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
 #include "SAMRAI/mesh/TransitLoad.h"
+#include "SAMRAI/mesh/BoxTransitSet.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
 #include <set>
@@ -128,69 +130,95 @@ private:
    static const int VoucherTransitLoad_EDGETAG1 = 4;
 
 
-   /*!
-    * @brief Voucher's load value.
-    */
-   struct VoucherValue {
-
-      /*!
-       * @brief Constructor
-       */
-      VoucherValue() : d_load(0) {}
-
-      /*!
-       * @brief Constructor
-       */
-      VoucherValue( double load ) : d_load(load) {}
-
-      //! @brief Put self into a MessageStream.
-      void putToMessageStream(tbox::MessageStream &mstream) const {
-         mstream << d_load;
-         return;
+   //! @brief Voucher.
+   struct Voucher {
+      //! @brief Default constructor constructs voucher of zero value.
+      Voucher() :
+         d_issuer_rank(tbox::SAMRAI_MPI::getInvalidRank()),
+         d_load(0.0) {}
+      //! @brief Initializing constructor sets voucher value and issuer.
+      Voucher( const LoadType &load, int issuer_rank ) :
+         d_issuer_rank(issuer_rank),
+         d_load(d_load) {}
+      //! @brief Construct a voucher by combining two vouchers from the same issuer.
+      Voucher( const Voucher &a, const Voucher &b ) :
+         d_issuer_rank(a.d_issuer_rank),
+         d_load( a.d_load + b.d_load ) {
+         if ( a.d_issuer_rank != b.d_issuer_rank ) {
+            TBOX_ERROR("VoucherTransitLoad: Cannot combine vouchers from different issuers.");
+         }
       }
-
-      //! @brief Set attributes according to data in a MessageStream.
-      void getFromMessageStream(tbox::MessageStream &mstream) {
-         mstream >> d_load;
-         return;
-      }
-
-      //! @brief Work load in this d_box.
+      int d_issuer_rank;
       LoadType d_load;
+   };
+
+
+   //! @brief Comparison functor for sorting Vouchers by issuer rank and load.
+   struct VoucherRankCompare {
+      bool operator () ( const Voucher& a, const Voucher& b) const {
+         if (a.d_issuer_rank != b.d_issuer_rank) {
+            return a.d_issuer_rank > b.d_issuer_rank;
+         }
+         return a.d_load > b.d_load;
+      }
+   };
+
+
+   //! @brief Encapsulates voucher redemption for both redeemer and fulfiller.
+   struct VoucherRedemption {
+      VoucherRedemption() : d_mpi(MPI_COMM_NULL) {};
+      ~VoucherRedemption() {
+         if ( d_mpi_request != MPI_REQUEST_NULL ) {
+            TBOX_ERROR("Need to finish send before destructing d_msg.");
+            tbox::SAMRAI_MPI::Request_free(&d_mpi_request);
+         }
+      }
+      //@{
+      //! @name Methods for redeeming and fulfilling voucher
+      void requestRedemption( const Voucher &v,
+                              const hier::SequentialLocalIdGenerator &id_gen,
+                              const tbox::SAMRAI_MPI &mpi );
+
+      void receiveRedemption( int message_length,
+                              const PartitioningParams &pparams );
+
+      void receiveRedeemerRequest( int redeemer_rank, int message_length,
+                                   const tbox::SAMRAI_MPI &mpi );
+
+      void fulfillRedemption( BoxTransitSet &reserve,
+                              const PartitioningParams &pparams );
+      //@}
+      Voucher d_voucher;
+      int d_redeemer_rank;
+      //! @brief Redeemer-specified LocalId generator to avoid ID clashes.
+      hier::SequentialLocalIdGenerator d_id_gen;
+      boost::shared_ptr<tbox::MessageStream> d_msg;
+      tbox::SAMRAI_MPI d_mpi;
+      MPI_Request d_mpi_request;
    };
 
 
    //@{
    //! @name Interfaces like the C++ standard stl::map, to help readability.
-   typedef std::map<int,LoadType>::iterator iterator;
-   typedef std::map<int,LoadType>::const_iterator const_iterator;
-   typedef std::map<int,LoadType>::reverse_iterator reverse_iterator;
-   typedef std::map<int,LoadType>::key_type key_type;
-   typedef std::map<int,LoadType>::value_type value_type;
-   iterator begin() { return d_vouchers.begin(); }
-   iterator end() { return d_vouchers.end(); }
-   const_iterator begin() const { return d_vouchers.begin(); }
-   const_iterator end() const { return d_vouchers.end(); }
-   size_t size() const { return d_vouchers.size(); }
-   bool empty() const { return d_vouchers.empty(); }
-   void clear() { d_sumload = 0; d_vouchers.clear(); }
+   typedef std::set<Voucher,VoucherRankCompare>::iterator iterator;
+   typedef std::set<Voucher,VoucherRankCompare>::const_iterator const_iterator;
+   typedef std::set<Voucher,VoucherRankCompare>::reverse_iterator reverse_iterator;
+   typedef std::set<Voucher,VoucherRankCompare>::key_type key_type;
+   typedef std::set<Voucher,VoucherRankCompare>::value_type value_type;
+   iterator begin() { return d_voucher_set.begin(); }
+   iterator end() { return d_voucher_set.end(); }
+   const_iterator begin() const { return d_voucher_set.begin(); }
+   const_iterator end() const { return d_voucher_set.end(); }
+   size_t size() const { return d_voucher_set.size(); }
+   bool empty() const { return d_voucher_set.empty(); }
+   void clear() { d_sumload = 0; d_voucher_set.clear(); }
    void swap( VoucherTransitLoad &other ) {
       const LoadType tl = d_sumload;
       d_sumload = other.d_sumload;
       other.d_sumload = tl;
-      d_vouchers.swap(other.d_vouchers);
+      d_voucher_set.swap(other.d_voucher_set);
    }
    //@}
-
-
-   /*!
-    * @brief Insert Voucher into an output stream.
-    */
-   friend std::ostream& operator << ( std::ostream& co,
-                                      const VoucherValue& r ) {
-      co << r.d_load;
-      return co;
-   }
 
 
    /*!
@@ -230,6 +258,20 @@ private:
    }
 
 
+   /*!
+    * @brief Find the voucher value issued by the given process.
+    */
+   LoadType findIssuerValue( int issuer_rank ) const
+      {
+         Voucher tmp_voucher( 0.0, issuer_rank );
+         const_iterator vi = d_voucher_set.lower_bound(tmp_voucher);
+         if ( vi != d_voucher_set.end() && vi->d_issuer_rank == issuer_rank ) {
+            tmp_voucher.d_load = vi->d_load;
+         }
+         return tmp_voucher.d_load;
+      }
+
+
    //! @brief Compute the load for a Box.
    LoadType computeLoad( const hier::Box& box) const {
       return LoadType(box.size());
@@ -264,6 +306,7 @@ private:
 
 
    //! @brief Work load, sorted by originating rank.
+   std::set<Voucher,VoucherRankCompare> d_voucher_set;
    std::map<int,LoadType> d_vouchers;
 
    LoadType d_sumload;

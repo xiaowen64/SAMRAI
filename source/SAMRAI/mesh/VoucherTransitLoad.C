@@ -47,7 +47,7 @@ VoucherTransitLoad::s_initialize_finalize_handler(
 *************************************************************************
 */
 VoucherTransitLoad::VoucherTransitLoad( const PartitioningParams &pparams ) :
-   d_vouchers(),
+   d_voucher_set(),
    d_sumload(0),
    d_pparams(&pparams),
    d_print_steps(false),
@@ -64,7 +64,7 @@ VoucherTransitLoad::VoucherTransitLoad( const PartitioningParams &pparams ) :
 void VoucherTransitLoad::insertAll( const hier::BoxContainer &other )
 {
    for ( hier::BoxContainer::const_iterator bi=other.begin(); bi!=other.end(); ++bi ) {
-      d_vouchers[bi->getOwnerRank()] += LoadType(bi->size());
+      d_voucher_set.insert( Voucher( LoadType(bi->size()), bi->getOwnerRank() ) );
       d_sumload += bi->size();
    }
 }
@@ -77,9 +77,18 @@ void VoucherTransitLoad::insertAll( const hier::BoxContainer &other )
 void VoucherTransitLoad::insertAll( const TransitLoad &other_transit_load )
 {
    const VoucherTransitLoad &other = recastTransitLoad(other_transit_load);
-   for ( std::map<int,LoadType>::const_iterator mi=other.d_vouchers.begin();
-         mi!=other.d_vouchers.end(); ++mi ) {
-      d_vouchers[mi->first] += mi->second;
+   for ( std::set<Voucher,VoucherRankCompare>::iterator si=d_voucher_set.begin();
+         si!=d_voucher_set.end(); ++si ) {
+      std::set<Voucher,VoucherRankCompare>::iterator sj =
+         d_voucher_set.lower_bound(*si);
+      if ( sj->d_issuer_rank == si->d_issuer_rank ) {
+         Voucher combined_voucher( *si, *sj );
+         d_voucher_set.erase(sj++);
+         d_voucher_set.insert(combined_voucher);
+      }
+      else {
+         d_voucher_set.insert(*si);
+      }
    }
    d_sumload += other.d_sumload;
 }
@@ -91,7 +100,7 @@ void VoucherTransitLoad::insertAll( const TransitLoad &other_transit_load )
 */
 size_t VoucherTransitLoad::getNumberOfItems() const
 {
-   return d_vouchers.size();
+   return d_voucher_set.size();
 }
 
 
@@ -101,7 +110,7 @@ size_t VoucherTransitLoad::getNumberOfItems() const
 */
 size_t VoucherTransitLoad::getNumberOfOriginatingProcesses() const
 {
-   return d_vouchers.size();
+   return d_voucher_set.size();
 }
 
 
@@ -110,18 +119,24 @@ size_t VoucherTransitLoad::getNumberOfOriginatingProcesses() const
  * Assign boxes to local process (put them in the balanced_box_level
  * and put edges in balanced<==>unbalanced Connector).
  *
- * We can generate balanced--->unbalanced edges for all boxes because
- * we have their origin info.  If the box originated locally, we can
- * generate the unbalanced--->balanced edge for them as well.
- * However, we can't generate these edges for boxes originating
- * remotely.  They are generated in
- * constructSemilocalUnbalancedToBalanced, which uses communication.
+ * This method does a P2P communication to convert the vouchers to
+ * boxes then delegates to BoxTransitSet to do the rest.
+ *
+ * This method does two things:
+ * - request/receive work for voucher to be redeemed
+ * - receive/fulfill redemption requests
+ *
+ * We organize these things to try to overlap communication.
+ * 1. request work for vouchers to be redeemed
+ * 2. receive redemption requests
+ * 3. fulfill redemption requests
+ * 4. receive work for vouchers to be redeemed
  */
 void
 VoucherTransitLoad::assignContentToLocalProcessAndGenerateMap(
    hier::BoxLevel& balanced_box_level,
    hier::MappingConnector &balanced_to_unbalanced,
-   hier::MappingConnector &unbalanced_to_balanced ) const
+   hier::MappingConnector &unbalanced_to_balanced )
 {
    d_object_timers->t_assign_content_to_local_process_and_generate_map->start();
 
@@ -129,12 +144,96 @@ VoucherTransitLoad::assignContentToLocalProcessAndGenerateMap(
       tbox::plog << "VoucherTransitLoad::assignUnassignedToLocalProcessAndGenerateMap: entered." << std::endl;
    }
 
-   BoxTransitSet transit_boxes(*d_pparams);
+   const hier::BoxLevel &unbalanced_box_level = unbalanced_to_balanced.getBase();
+   const tbox::SAMRAI_MPI &mpi = unbalanced_box_level.getMPI();
+
+
+   // 1. Request redemption for each voucher.
+
+   std::map<int,VoucherRedemption> redemptions_to_request;
+
+   const hier::LocalId last_local_id = unbalanced_box_level.getLastLocalId();
+   int count = 0;
+   for ( const_iterator si=d_voucher_set.begin(); si!=d_voucher_set.end(); ++si, ++count ) {
+
+      hier::SequentialLocalIdGenerator id_gen( last_local_id + count,
+                                               hier::LocalId(d_voucher_set.size()) );
+
+      redemptions_to_request[si->d_issuer_rank].requestRedemption( *si, id_gen, mpi );
+   }
+
+
+   /*
+    * If there is unaccounted work, then some process must have our
+    * vouchers.  Fulfill these redemption requests until we accounted
+    * for everything.
+    *
+    * For now, work is same as cell count.
+    */
+
+   LoadType unaccounted_work = LoadType(unbalanced_box_level.getLocalNumberOfCells())
+      - findIssuerValue(mpi.getRank());
+
+   if ( d_print_edge_steps ) {
+      tbox::plog << "unaccounted work is " << unaccounted_work << std::endl;
+   }
+
+   // Set up the reserve for fulfilling incoming redemption requests.
+   BoxTransitSet reserve(*d_pparams);
+   reserve.insertAll( unbalanced_box_level.getBoxes() );
+
+
+   // 2. Receive redemption requests for us to fulfill.
+
+   std::map<int,VoucherRedemption> redemptions_to_fulfill;
+
+   while ( unaccounted_work > d_pparams->getLoadComparisonTol() ) {
+
+      tbox::SAMRAI_MPI::Status status;
+      mpi.Probe( MPI_ANY_SOURCE, VoucherTransitLoad_EDGETAG0, &status );
+
+      int source = status.MPI_SOURCE;
+      int count = -1;
+      tbox::SAMRAI_MPI::Get_count( &status, MPI_CHAR, &count );
+
+      VoucherRedemption &vr = redemptions_to_fulfill[source];
+      vr.receiveRedeemerRequest( source, count, mpi );
+
+      unaccounted_work -= vr.d_voucher.d_load;
+      TBOX_ASSERT( unaccounted_work > -d_pparams->getLoadComparisonTol() );
+
+   }
+
+
+   // 3. Fulfill redemption requests.
+
+   for ( std::map<int,VoucherRedemption>::iterator mi=redemptions_to_fulfill.begin();
+         mi!=redemptions_to_fulfill.end(); ++mi ) {
+
+      VoucherRedemption &vr = mi->second;
+      vr.fulfillRedemption( reserve, *d_pparams );
+   }
+
+
+   // 4. Fill each incoming VoucherRedemption and send to redeemer.
+
+   while ( !redemptions_to_request.empty() ) {
+
+      tbox::SAMRAI_MPI::Status status;
+      mpi.Probe( MPI_ANY_SOURCE, VoucherTransitLoad_EDGETAG0, &status );
+
+      int source = status.MPI_SOURCE;
+      int count = -1;
+      tbox::SAMRAI_MPI::Get_count( &status, MPI_CHAR, &count );
+
+      VoucherRedemption &rr = redemptions_to_request[source];
+      rr.receiveRedemption(count, *d_pparams);
+
+   }
+
 
    TBOX_ERROR("Missing code to convert vouchers to fill transit_boxes.");
 
-   transit_boxes.assignContentToLocalProcessAndGenerateMap(
-      balanced_box_level, balanced_to_unbalanced, unbalanced_to_balanced );
 
    if ( d_print_steps ) {
       tbox::plog << "VoucherTransitLoad::assignUnassignedToLocalProcessAndGenerateMap: exiting." << std::endl;
@@ -145,187 +244,110 @@ VoucherTransitLoad::assignContentToLocalProcessAndGenerateMap(
 
 
 
+/*
+*************************************************************************
+*************************************************************************
+*/
+void VoucherTransitLoad::VoucherRedemption::requestRedemption(
+   const Voucher &voucher,
+   const hier::SequentialLocalIdGenerator &id_gen,
+   const tbox::SAMRAI_MPI &mpi )
+{
+   d_voucher = voucher;
+   d_id_gen = id_gen;
+   d_mpi = mpi;
+   d_msg = boost::make_shared<tbox::MessageStream>();
+   (*d_msg) << d_voucher.d_load << d_id_gen;
+   d_mpi.Isend(
+      (void*)(d_msg->getBufferStart()),
+      static_cast<int>(d_msg->getCurrentSize()),
+      MPI_CHAR,
+      d_voucher.d_issuer_rank,
+      VoucherTransitLoad_EDGETAG0,
+      &d_mpi_request);
+}
+
 
 
 /*
- *************************************************************************
- * Construct semilocal relationships in unbalanced--->balanced
- * Connector.
- *
- * Determine relationships in unbalanced_to_balanced by sending
- * balanced boxes back to the owners of the unbalanced Boxes that
- * originated them.  We don't know what ranks will sending to us, so
- * we keep receiving messages from any rank until we have accounted
- * for all the cells in the unbalanced BoxLevel.
- *************************************************************************
- */
-void
-VoucherTransitLoad::constructSemilocalUnbalancedToBalanced(
-   hier::MappingConnector &unbalanced_to_balanced,
-   const VoucherTransitLoad &kept_imports ) const
+*************************************************************************
+*************************************************************************
+*/
+void VoucherTransitLoad::VoucherRedemption::receiveRedemption(
+   int message_length,
+   const PartitioningParams &pparams )
 {
-   d_object_timers->t_construct_semilocal->start();
-
-   if ( d_print_steps ) {
-      tbox::plog << "VoucherTransitLoad::constructSemilocalUnbalancedToBalanced: entered."
-                 << std::endl;
-   }
-
-   const hier::BoxLevel &balanced_box_level = unbalanced_to_balanced.getHead();
-   const hier::BoxLevel &unbalanced_box_level = unbalanced_to_balanced.getBase();
-   const tbox::SAMRAI_MPI &mpi = unbalanced_box_level.getMPI();
-
-#if 1
-   TBOX_ERROR("Unfinished code.");
-#else
-   // Stuff the imported boxes into buffers by their original owners.
-   d_object_timers->t_pack_edge->start();
-   std::map<int,boost::shared_ptr<tbox::MessageStream> > outgoing_messages;
-   for ( const_iterator bi=kept_imports.begin(); bi!=kept_imports.end(); ++bi ) {
-      const Voucher &bit = *bi;
-      boost::shared_ptr<tbox::MessageStream> &mstream =
-         outgoing_messages[bit.d_orig_box.getOwnerRank()];
-      if ( !mstream ) {
-         mstream.reset(new tbox::MessageStream);
-      }
-      bit.putToMessageStream(*mstream);
-   }
-   d_object_timers->t_pack_edge->stop();
+   std::vector<char> incoming_message(message_length);
+   tbox::SAMRAI_MPI::Status status;
+   d_mpi.Recv( static_cast<void*>(&incoming_message[0]),
+               message_length,
+               MPI_CHAR,
+               d_voucher.d_issuer_rank,
+               VoucherTransitLoad_EDGETAG1,
+               &status );
+   d_msg = boost::make_shared<tbox::MessageStream>(
+      message_length, tbox::MessageStream::Read,
+      static_cast<void*>(&incoming_message[0]), false);
+   BoxTransitSet box_shipment(pparams);
+   box_shipment.getFromMessageStream(*d_msg);
+   TBOX_ERROR("Need to set up edges from box_shipment received.");
+}
 
 
-   /*
-    * Send outgoing_messages.  Optimization for mitigating contention:
-    * Start by sending to the first recipient with a rank higher than
-    * the local rank.
-    */
 
-   std::map<int,boost::shared_ptr<tbox::MessageStream> >::iterator recip_itr =
-      outgoing_messages.upper_bound(mpi.getRank());
-   if ( recip_itr == outgoing_messages.end() ) {
-      recip_itr = outgoing_messages.begin();
-   }
-
-   int outgoing_messages_size = static_cast<int>(outgoing_messages.size());
-   std::vector<tbox::SAMRAI_MPI::Request>
-      send_requests( outgoing_messages_size, MPI_REQUEST_NULL );
-
-   d_object_timers->t_construct_semilocal_send_edges->start();
-   for ( int send_number = 0; send_number < outgoing_messages_size; ++send_number ) {
-
-      int recipient = recip_itr->first;
-      tbox::MessageStream &mstream = *recip_itr->second;
-
-      if ( d_print_edge_steps ) {
-         tbox::plog << "Accounting for cells on proc " << recipient << '\n';
-      }
-
-      mpi.Isend(
-         (void*)(mstream.getBufferStart()),
-         static_cast<int>(mstream.getCurrentSize()),
-         MPI_CHAR,
-         recipient,
-         VoucherTransitLoad_EDGETAG0,
-         &send_requests[send_number]);
-
-      ++recip_itr;
-      if ( recip_itr == outgoing_messages.end() ) {
-         recip_itr = outgoing_messages.begin();
-      }
-
-   }
-   d_object_timers->t_construct_semilocal_send_edges->stop();
+/*
+*************************************************************************
+*************************************************************************
+*/
+void VoucherTransitLoad::VoucherRedemption::receiveRedeemerRequest(
+   int redeemer_rank, int message_length,
+   const tbox::SAMRAI_MPI &mpi )
+{
+   d_mpi = mpi;
+   d_redeemer_rank = redeemer_rank;
+   std::vector<char> incoming_message(message_length);
+   tbox::SAMRAI_MPI::Status status;
+   d_mpi.Recv(
+      static_cast<void*>(&incoming_message[0]),
+      message_length,
+      MPI_CHAR,
+      d_redeemer_rank,
+      VoucherTransitLoad_EDGETAG0,
+      &status );
+   d_msg = boost::make_shared<tbox::MessageStream>(
+      message_length, tbox::MessageStream::Read,
+      static_cast<void*>(&incoming_message[0]), false);
+   (*d_msg) >> d_voucher.d_load >> d_id_gen;
+   TBOX_ASSERT( d_msg->endOfData() );
+   d_msg.reset();
+}
 
 
-   int num_cells_imported = 0;
-   for ( const_iterator si=kept_imports.begin(); si!=kept_imports.end(); ++si ) {
-      num_cells_imported += si->d_box.size();
-   }
 
-   int num_unaccounted_cells = static_cast<int>(
-      unbalanced_box_level.getLocalNumberOfCells() + num_cells_imported
-      - balanced_box_level.getLocalNumberOfCells() );
-
-   if ( d_print_edge_steps ) {
-      tbox::plog << num_unaccounted_cells << " unaccounted cells." << std::endl;
-   }
-
-
-   /*
-    * Receive info about exported cells from processes that now own
-    * those cells.  Receive until all cells are accounted for.
-    */
-
-   std::vector<char> incoming_message;
-   Voucher balanced_box_in_transit(unbalanced_box_level.getDim());
-
-   while ( num_unaccounted_cells > 0 ) {
-
-      d_object_timers->t_construct_semilocal_comm_wait->start();
-      tbox::SAMRAI_MPI::Status status;
-      mpi.Probe( MPI_ANY_SOURCE, VoucherTransitLoad_EDGETAG0, &status );
-
-      int source = status.MPI_SOURCE;
-      int count = -1;
-      tbox::SAMRAI_MPI::Get_count( &status, MPI_CHAR, &count );
-      incoming_message.resize( count, -1 );
-
-      mpi.Recv(
-         static_cast<void*>(&incoming_message[0]),
-         count,
-         MPI_CHAR,
-         source,
-         VoucherTransitLoad_EDGETAG0,
-         &status );
-      d_object_timers->t_construct_semilocal_comm_wait->stop();
-
-      tbox::MessageStream msg( incoming_message.size(),
-                               tbox::MessageStream::Read,
-                               static_cast<void*>(&incoming_message[0]),
-                               false );
-      const int old_count = num_unaccounted_cells;
-      d_object_timers->t_unpack_edge->start();
-      while ( !msg.endOfData() ) {
-
-         balanced_box_in_transit.getFromMessageStream(msg);
-         unbalanced_to_balanced.insertLocalNeighbor(
-            balanced_box_in_transit.d_box,
-            balanced_box_in_transit.d_orig_box.getBoxId() );
-         num_unaccounted_cells -= balanced_box_in_transit.d_box.size();
-
-      }
-      d_object_timers->t_unpack_edge->stop();
-
-      if ( d_print_edge_steps ) {
-         tbox::plog << "Process " << source << " accounted for "
-                    << (old_count-num_unaccounted_cells) << " cells, leaving "
-                    << num_unaccounted_cells << " unaccounted.\n";
-      }
-
-      incoming_message.clear();
-   }
-   TBOX_ASSERT( num_unaccounted_cells == 0 );
-
-
-   // Wait for the sends to complete before clearing outgoing_messages.
-   if (send_requests.size() > 0) {
-      std::vector<tbox::SAMRAI_MPI::Status> status(send_requests.size());
-      d_object_timers->t_construct_semilocal_comm_wait->start();
-      tbox::SAMRAI_MPI::Waitall(
-         static_cast<int>(send_requests.size()),
-         &send_requests[0],
-         &status[0]);
-      d_object_timers->t_construct_semilocal_comm_wait->stop();
-      outgoing_messages.clear();
-   }
-#endif
-
-   if ( d_print_steps ) {
-      tbox::plog << "VoucherTransitLoad::constructSemilocalUnbalancedToBalanced: exiting."
-                 << std::endl;
-   }
-
-   d_object_timers->t_construct_semilocal->stop();
-
+/*
+*************************************************************************
+*************************************************************************
+*/
+void VoucherTransitLoad::VoucherRedemption::fulfillRedemption(
+   BoxTransitSet &reserve,
+   const PartitioningParams &pparams )
+{
+   BoxTransitSet box_shipment(pparams);
+   box_shipment.adjustLoad( reserve,
+                            d_voucher.d_load,
+                            d_voucher.d_load,
+                            d_voucher.d_load );
+   box_shipment.assignOwnership( d_id_gen, d_mpi.getRank() );
+   d_msg = boost::make_shared<tbox::MessageStream>();
+   box_shipment.putToMessageStream(*d_msg);
+   d_mpi.Isend(
+      (void*)(d_msg->getBufferStart()),
+      static_cast<int>(d_msg->getCurrentSize()),
+      MPI_CHAR,
+      d_redeemer_rank,
+      VoucherTransitLoad_EDGETAG1,
+      &d_mpi_request);
+   TBOX_ERROR("Need to receive message and set up map, but probably not here.");
    return;
 }
 
@@ -452,9 +474,9 @@ VoucherTransitLoad::getAllTimers(
 void
 VoucherTransitLoad::putToMessageStream( tbox::MessageStream &msg ) const
 {
-   msg << static_cast<int>(d_vouchers.size());
-   for (const_iterator ni = d_vouchers.begin(); ni != d_vouchers.end(); ++ni) {
-      msg << ni->first << ni->second;
+   msg << d_voucher_set.size();
+   for (const_iterator ni = d_voucher_set.begin(); ni != d_voucher_set.end(); ++ni) {
+      msg << ni->d_issuer_rank << ni->d_load;
    }
 }
 
@@ -471,13 +493,23 @@ VoucherTransitLoad::getFromMessageStream( tbox::MessageStream &msg )
     * As we pull each Voucher out, give it a new id that reflects
     * its new owner.
     */
-   int num_vouchers = 0;
+   size_t num_vouchers = 0;
    msg >> num_vouchers;
-   int orig_rank;
+   int issuer_rank;
    LoadType load;
-   for (int i = 0; i < num_vouchers; ++i) {
-      msg >> orig_rank >> load;
-      d_vouchers[orig_rank] += load;
+   for (size_t i = 0; i < num_vouchers; ++i) {
+      msg >> issuer_rank >> load;
+      const Voucher voucher(load, issuer_rank);
+      std::set<Voucher,VoucherRankCompare>::iterator sj =
+         d_voucher_set.lower_bound(voucher);
+      if ( sj->d_issuer_rank == voucher.d_issuer_rank ) {
+         const Voucher combined_voucher( *sj, voucher );
+         d_voucher_set.erase(sj++);
+         d_voucher_set.insert(combined_voucher);
+      }
+      else {
+         d_voucher_set.insert(voucher);
+      }
    }
 }
 
@@ -497,9 +529,9 @@ VoucherTransitLoad::recursivePrint(
    if ( detail_depth > 0 ) {
       size_t count = 0;
       co << ":\n";
-      for ( VoucherTransitLoad::const_iterator bi=begin();
-            bi!=end() && count < 50; ++bi, ++count ) {
-         tbox::plog << border << "    " << bi->first << ':' << bi->second << '\n';
+      for ( VoucherTransitLoad::const_iterator vi=begin();
+            vi!=end() && count < 50; ++vi, ++count ) {
+         tbox::plog << border << "    " << vi->d_issuer_rank << ':' << vi->d_load << '\n';
       }
    }
    else {
