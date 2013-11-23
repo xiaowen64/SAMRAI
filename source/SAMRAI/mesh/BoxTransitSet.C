@@ -165,7 +165,7 @@ void
 BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
    hier::BoxLevel& balanced_box_level,
    hier::MappingConnector &balanced_to_unbalanced,
-   hier::MappingConnector &unbalanced_to_balanced ) const
+   hier::MappingConnector &unbalanced_to_balanced )
 {
    d_object_timers->t_assign_content_to_local_process_and_generate_map->start();
 
@@ -174,45 +174,37 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
    }
 
    /*
-    * All contents should go into balanced_box_level.  Put them there
-    * and generate relationships in balanced<==>unbalanced mapping
-    * Connectors where required.
-    *
-    * If a box originated remotely, or it originated locally but is
-    * not the same box anymore, it needs a new BoxId.
+    * Reassign contents to local process.
     */
 
    const tbox::SAMRAI_MPI &mpi = balanced_box_level.getMPI();
 
+   hier::SequentialLocalIdGenerator id_gen(
+      unbalanced_to_balanced.getBase().getLastLocalId() );
+
+   assignOwnership( id_gen, mpi.getRank() );
+
+   /*
+    * Generate relationships in balanced<==>unbalanced mapping
+    * Connectors where required.
+    *
+    * Keep track of imported boxes so their original owners can be
+    * notified.
+    */
+
    BoxTransitSet kept_imports(*d_pparams);
-   hier::LocalId new_local_id = unbalanced_to_balanced.getBase().getLastLocalId();
 
    for (iterator ni = begin(); ni != end(); ++ni ) {
 
+      const BoxInTransit &added_box = *ni;
+
       if ( d_print_edge_steps ) {
-         tbox::plog << "\tassigning box: " << *ni << std::endl;
+         tbox::plog << "\tassigning box: " << added_box << std::endl;
       }
 
-      BoxInTransit added_box(*ni);
-      if ( added_box.d_orig_box.getOwnerRank() != mpi.getRank() ||
-           added_box.d_box.getLocalId() != added_box.d_orig_box.getLocalId() ) {
-
-         if ( d_print_edge_steps ) {
-            tbox::plog << "\t\tReinitialize " << added_box.d_box << " to ";
-         }
-
-         added_box.d_box.initialize( added_box.d_box,
-                                     ++new_local_id,
-                                     mpi.getRank() );
-
-         if ( d_print_edge_steps ) {
-            tbox::plog << added_box.d_box << std::endl;
-         }
-      }
       balanced_box_level.addBox(added_box.d_box);
 
       if ( added_box.d_orig_box.getOwnerRank() != added_box.d_box.getOwnerRank() ) {
-         // Keep track of imported boxes so their original owners can be notified.
          kept_imports.insert(added_box);
          if ( d_print_edge_steps ) {
             tbox::plog << "\t\tKeeping imported box " << added_box << std::endl;
@@ -425,6 +417,40 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    d_object_timers->t_construct_semilocal->stop();
 
    return;
+}
+
+
+
+
+/*
+*************************************************************************
+* Assign the boxes to the new owner.  Any box that isn't already owned
+* by the new owner or doesn't have a valid LocalId, is given one by
+* the SequentialLocalIdGenerator.
+*************************************************************************
+*/
+void
+BoxTransitSet::assignOwnership(
+   hier::SequentialLocalIdGenerator &id_gen,
+   int new_owner_rank )
+{
+   std::set<BoxInTransit,BoxInTransitMoreLoad> tmp_set;
+
+   for ( const_iterator bi=begin(); bi!=end(); ++bi ) {
+      if ( bi->getOwnerRank() != new_owner_rank ||
+           !bi->getLocalId().isValid() ) {
+         BoxInTransit reassigned_box(
+            *bi, bi->getBox(), new_owner_rank, id_gen.nextValue() );
+         tmp_set.insert( tmp_set.end(), reassigned_box );
+      }
+      else {
+         tmp_set.insert( tmp_set.end(), *bi );
+      }
+   }
+   d_set.swap(tmp_set);
+
+   return;
+
 }
 
 

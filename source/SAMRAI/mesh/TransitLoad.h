@@ -145,7 +145,7 @@ public:
    assignContentToLocalProcessAndGenerateMap(
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced ) const = 0;
+      hier::MappingConnector &unbalanced_to_balanced ) = 0;
 
 
    //! @brief Whether to allow box breaking.

@@ -15,6 +15,7 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/MappingConnector.h"
+#include "SAMRAI/hier/SequentialLocalIdGenerator.h"
 #include "SAMRAI/mesh/BalanceBoxBreaker.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
 #include "SAMRAI/mesh/TransitLoad.h"
@@ -101,7 +102,7 @@ public:
 
 
    /*!
-    * @brief Assign unassigned boxes to local process and generate
+    * @brief Assign contents to local process and generate
     * balanced<==>unbalanced map.
     *
     * This method uses communication to set up the map.
@@ -110,7 +111,20 @@ public:
    assignContentToLocalProcessAndGenerateMap(
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced ) const;
+      hier::MappingConnector &unbalanced_to_balanced );
+
+
+   /*
+    * @brief Assign the boxes to the new owner.
+    *
+    * Any box that isn't already owned by the new owner or doesn't
+    * have a valid LocalId, is given one by the
+    * SequentialLocalIdGenerator.
+    */
+   void
+   assignOwnership(
+      hier::SequentialLocalIdGenerator &id_gen,
+      int new_owner_rank );
 
 
    //! @brief Whether to allow box breaking.
@@ -176,7 +190,7 @@ private:
          d_boxload(origin.size()) {}
 
       /*!
-       * @brief Construct new object having the originator of an existing object.
+       * @brief Construct new object like an existing object but with a new ID.
        *
        * @param[in] other
        * @param[in] box
