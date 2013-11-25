@@ -473,20 +473,24 @@ private:
 
 
    /*!
-    * @brief Construct semilocal relationships in
-    * unbalanced--->balanced Connector.
+    * @brief Communicate semi-local relationships in
+    * unbalanced<==>balanced Connector.
     *
-    * Constructing semilocal unbalanced--->balanced relationships
-    * require communication to determine where exported work ended up.
+    * Recall that semi-local relationships are those where the base
+    * and head boxes are owned by different processes.  These edges
+    * require communication to set up.
     *
-    * @param [out] unbalanced_to_balanced Connector to store
-    * relationships in.
+    * @param [out] unbalanced_to_balanced
     *
-    * @param [in] kept_imports Work that was imported and locally kept.
+    * @param [out] balanced_to_unbalanced
+    *
+    * @param [in] semi_local BoxInTransit representing semi-local
+    * edges.
     */
-   void constructSemilocalUnbalancedToBalanced(
+   void communicateSemilocalEdges(
       hier::MappingConnector &unbalanced_to_balanced,
-      const BoxTransitSet &kept_imports ) const;
+      hier::MappingConnector &balanced_to_unbalanced,
+      const BoxTransitSet &semi_local ) const;
 
 
    /*!

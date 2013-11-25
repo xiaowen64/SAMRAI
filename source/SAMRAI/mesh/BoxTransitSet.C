@@ -199,7 +199,10 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
       balanced_to_unbalanced,
       kept_imports );
 
-   constructSemilocalUnbalancedToBalanced( unbalanced_to_balanced, kept_imports );
+   communicateSemilocalEdges(
+      unbalanced_to_balanced,
+      balanced_to_unbalanced,
+      kept_imports );
 
    if ( d_print_steps || d_print_edge_steps ) {
       tbox::plog << "BoxTransitSet::assignUnassignedToLocalProcessAndGenerateMap: exiting." << std::endl;
@@ -214,20 +217,15 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
 
 /*
  *************************************************************************
- * Construct semilocal relationships in unbalanced--->balanced
+ * Construct semilocal relationships in unbalanced<==>balanced
  * Connector.
- *
- * Determine relationships in unbalanced_to_balanced by sending
- * balanced boxes back to the owners of the unbalanced Boxes that
- * originated them.  We don't know what ranks will sending to us, so
- * we keep receiving messages from any rank until we have accounted
- * for all the cells in the unbalanced BoxLevel.
  *************************************************************************
  */
 void
-BoxTransitSet::constructSemilocalUnbalancedToBalanced(
+BoxTransitSet::communicateSemilocalEdges(
    hier::MappingConnector &unbalanced_to_balanced,
-   const BoxTransitSet &kept_imports ) const
+   hier::MappingConnector &balanced_to_unbalanced,
+   const BoxTransitSet &semi_local ) const
 {
    d_object_timers->t_construct_semilocal->start();
 
@@ -243,7 +241,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    // Stuff the imported boxes into buffers by their original owners.
    d_object_timers->t_pack_edge->start();
    std::map<int,boost::shared_ptr<tbox::MessageStream> > outgoing_messages;
-   for ( const_iterator bi=kept_imports.begin(); bi!=kept_imports.end(); ++bi ) {
+   for ( const_iterator bi=semi_local.begin(); bi!=semi_local.end(); ++bi ) {
       const BoxInTransit &bit = *bi;
       boost::shared_ptr<tbox::MessageStream> &mstream =
          outgoing_messages[bit.d_orig_box.getOwnerRank()];
@@ -299,7 +297,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
 
 
    int num_cells_imported = 0;
-   for ( const_iterator si=kept_imports.begin(); si!=kept_imports.end(); ++si ) {
+   for ( const_iterator si=semi_local.begin(); si!=semi_local.end(); ++si ) {
       num_cells_imported += si->d_box.size();
    }
 
