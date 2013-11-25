@@ -115,16 +115,29 @@ public:
 
 
    /*
-    * @brief Assign the boxes to the new owner.
+    * @brief Reassign the boxes to the new owner.
     *
     * Any box that isn't already owned by the new owner or doesn't
     * have a valid LocalId, is given one by the
     * SequentialLocalIdGenerator.
     */
    void
-   assignOwnership(
+   reassignOwnership(
       hier::SequentialLocalIdGenerator &id_gen,
       int new_owner_rank );
+
+
+   /*!
+    * @brief Generate the balanced BoxLevel and most
+    * unbalanced<==>balanced edges.  Identify semi-local edges that
+    * must be communicated to remote owners.
+    */
+   void
+   generateBalancedBoxLevelAndMostMapEdges(
+      hier::BoxLevel &balanced_box_level,
+      hier::MappingConnector &unbalanced_to_balanced,
+      hier::MappingConnector &balanced_to_unbalanced,
+      BoxTransitSet &semi_local ) const;
 
 
    //! @brief Whether to allow box breaking.

@@ -174,15 +174,14 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
    }
 
    /*
-    * Reassign contents to local process.
+    * Reassign contents to local process, assigning IDs that don't
+    * conflict with current Boxes.
     */
-
-   const tbox::SAMRAI_MPI &mpi = balanced_box_level.getMPI();
 
    hier::SequentialLocalIdGenerator id_gen(
       unbalanced_to_balanced.getBase().getLastLocalId() );
 
-   assignOwnership( id_gen, mpi.getRank() );
+   reassignOwnership( id_gen, balanced_box_level.getMPI().getRank() );
 
    /*
     * Generate relationships in balanced<==>unbalanced mapping
@@ -194,39 +193,11 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
 
    BoxTransitSet kept_imports(*d_pparams);
 
-   for (iterator ni = begin(); ni != end(); ++ni ) {
-
-      const BoxInTransit &added_box = *ni;
-
-      if ( d_print_edge_steps ) {
-         tbox::plog << "\tassigning box: " << added_box << std::endl;
-      }
-
-      balanced_box_level.addBox(added_box.d_box);
-
-      if ( added_box.d_orig_box.getOwnerRank() != added_box.d_box.getOwnerRank() ) {
-         kept_imports.insert(added_box);
-         if ( d_print_edge_steps ) {
-            tbox::plog << "\t\tKeeping imported box " << added_box << std::endl;
-         }
-      }
-
-      if (!added_box.d_box.isIdEqual(added_box.d_orig_box)) {
-         balanced_to_unbalanced.insertLocalNeighbor(
-            added_box.d_orig_box,
-            added_box.d_box.getBoxId());
-      }
-
-      if (added_box.d_orig_box.getOwnerRank() == mpi.getRank()) {
-         // box originated locally.  Can generate unbalanced--->balanced for it if needed.
-         if ( added_box.d_box.getLocalId() != added_box.d_orig_box.getLocalId() ) {
-            unbalanced_to_balanced.insertLocalNeighbor(
-               added_box.d_box,
-               added_box.d_orig_box.getBoxId());
-         }
-      }
-
-   }
+   generateBalancedBoxLevelAndMostMapEdges(
+      balanced_box_level,
+      unbalanced_to_balanced,
+      balanced_to_unbalanced,
+      kept_imports );
 
    constructSemilocalUnbalancedToBalanced( unbalanced_to_balanced, kept_imports );
 
@@ -424,13 +395,13 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
 
 /*
 *************************************************************************
-* Assign the boxes to the new owner.  Any box that isn't already owned
-* by the new owner or doesn't have a valid LocalId, is given one by
-* the SequentialLocalIdGenerator.
+* Reassign the boxes to the new owner.  Any box that isn't already
+* owned by the new owner or doesn't have a valid LocalId, is given one
+* by the SequentialLocalIdGenerator.
 *************************************************************************
 */
 void
-BoxTransitSet::assignOwnership(
+BoxTransitSet::reassignOwnership(
    hier::SequentialLocalIdGenerator &id_gen,
    int new_owner_rank )
 {
@@ -451,6 +422,66 @@ BoxTransitSet::assignOwnership(
 
    return;
 
+}
+
+
+
+
+/*
+*************************************************************************
+* Put all d_box into balanced BoxLevel.  Generate all
+* d_box<==>d_orig_box mapping edges, except for those that cannot be
+* set up without communication.  These semi-local edges have either a
+* remote d_box or a remote d_orig_box.  Identify them by populating
+* the semi_local container.
+*
+* Each d_box must have a valid BoxId.
+*************************************************************************
+*/
+void
+BoxTransitSet::generateBalancedBoxLevelAndMostMapEdges(
+   hier::BoxLevel &balanced_box_level,
+   hier::MappingConnector &unbalanced_to_balanced,
+   hier::MappingConnector &balanced_to_unbalanced,
+   BoxTransitSet &semi_local ) const
+{
+
+   tbox::SAMRAI_MPI mpi = balanced_box_level.getMPI();
+
+   for (iterator ni = begin(); ni != end(); ++ni ) {
+
+      const BoxInTransit &added_box = *ni;
+
+      if ( d_print_edge_steps ) {
+         tbox::plog << "\tassigning box: " << added_box << std::endl;
+      }
+
+      balanced_box_level.addBox(added_box.d_box);
+
+      if ( added_box.d_box.getOwnerRank() != added_box.d_orig_box.getOwnerRank() ) {
+         semi_local.insert(added_box);
+      }
+
+      if ( !added_box.d_box.isIdEqual(added_box.d_orig_box) ) {
+         // ID changed means mapping needed, but store only for local boxes.
+
+         if ( added_box.d_box.getOwnerRank() == mpi.getRank() ) {
+            balanced_to_unbalanced.insertLocalNeighbor(
+               added_box.d_orig_box,
+               added_box.d_box.getBoxId());
+         }
+
+         if ( added_box.d_orig_box.getOwnerRank() == mpi.getRank() ) {
+            unbalanced_to_balanced.insertLocalNeighbor(
+               added_box.d_box,
+               added_box.d_orig_box.getBoxId());
+         }
+
+      }
+
+   }
+
+   return;
 }
 
 

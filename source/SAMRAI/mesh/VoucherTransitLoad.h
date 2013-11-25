@@ -186,6 +186,7 @@ private:
                                    const tbox::SAMRAI_MPI &mpi );
 
       void fulfillRedemption( BoxTransitSet &reserve,
+                              hier::MappingConnector &unbalanced_to_balanced,
                               const PartitioningParams &pparams );
       //@}
       Voucher d_voucher;

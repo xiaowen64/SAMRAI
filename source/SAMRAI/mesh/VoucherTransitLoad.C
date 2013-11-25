@@ -127,10 +127,15 @@ size_t VoucherTransitLoad::getNumberOfOriginatingProcesses() const
  * - receive/fulfill redemption requests
  *
  * We organize these things to try to overlap communication.
- * 1. request work for vouchers to be redeemed
- * 2. receive redemption requests
- * 3. fulfill redemption requests
- * 4. receive work for vouchers to be redeemed
+ * 1. Request work for vouchers to be redeemed.
+ * 2. Receive redemption requests.
+ * 3. Fulfill redemption requests.
+ * 4. Receive work for vouchers to be redeemed.
+ *
+ * Each process will be either a redeemer or a fulfiller, but not
+ * both.  The code should automatically drop through any unneeded
+ * steps without requiring special logic.  Thus, there are 4
+ * communication phases, but each process participates in only two.
  */
 void
 VoucherTransitLoad::assignContentToLocalProcessAndGenerateMap(
@@ -148,7 +153,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndGenerateMap(
    const tbox::SAMRAI_MPI &mpi = unbalanced_box_level.getMPI();
 
 
-   // 1. Request redemption for each voucher.
+   // 1. Request work for vouchers to be redeemed.
 
    std::map<int,VoucherRedemption> redemptions_to_request;
 
@@ -211,11 +216,11 @@ VoucherTransitLoad::assignContentToLocalProcessAndGenerateMap(
          mi!=redemptions_to_fulfill.end(); ++mi ) {
 
       VoucherRedemption &vr = mi->second;
-      vr.fulfillRedemption( reserve, *d_pparams );
+      vr.fulfillRedemption( reserve, unbalanced_to_balanced, *d_pparams );
    }
 
 
-   // 4. Fill each incoming VoucherRedemption and send to redeemer.
+   // 4. Receive work for vouchers to be redeemed.
 
    while ( !redemptions_to_request.empty() ) {
 
@@ -330,6 +335,7 @@ void VoucherTransitLoad::VoucherRedemption::receiveRedeemerRequest(
 */
 void VoucherTransitLoad::VoucherRedemption::fulfillRedemption(
    BoxTransitSet &reserve,
+   hier::MappingConnector &unbalanced_to_balanced,
    const PartitioningParams &pparams )
 {
    BoxTransitSet box_shipment(pparams);
@@ -337,7 +343,7 @@ void VoucherTransitLoad::VoucherRedemption::fulfillRedemption(
                             d_voucher.d_load,
                             d_voucher.d_load,
                             d_voucher.d_load );
-   box_shipment.assignOwnership( d_id_gen, d_mpi.getRank() );
+   box_shipment.reassignOwnership( d_id_gen, d_mpi.getRank() );
    d_msg = boost::make_shared<tbox::MessageStream>();
    box_shipment.putToMessageStream(*d_msg);
    d_mpi.Isend(
@@ -347,7 +353,12 @@ void VoucherTransitLoad::VoucherRedemption::fulfillRedemption(
       d_redeemer_rank,
       VoucherTransitLoad_EDGETAG1,
       &d_mpi_request);
-   TBOX_ERROR("Need to receive message and set up map, but probably not here.");
+
+   // Set up map.
+
+   TBOX_ERROR("Missing code to set up map.");
+
+   TBOX_ERROR("What should fulfiller do with reserve after this step?.  Need to set up mappings again.");
    return;
 }
 
