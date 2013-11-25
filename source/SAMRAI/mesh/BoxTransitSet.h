@@ -473,7 +473,7 @@ private:
 
 
    /*!
-    * @brief Communicate semi-local relationships in
+    * @brief Communicate semi-local edges to generate relationships in
     * unbalanced<==>balanced Connector.
     *
     * Recall that semi-local relationships are those where the base
@@ -485,12 +485,16 @@ private:
     * @param [out] balanced_to_unbalanced
     *
     * @param [in] semi_local BoxInTransit representing semi-local
-    * edges.
+    * edges.  Maybe this method should be bound to semi_local???
+    *
+    * @param [in] origin_ranks Origin owners that are sending
+    * unbalanced--->balanced data.
     */
    void communicateSemilocalEdges(
       hier::MappingConnector &unbalanced_to_balanced,
       hier::MappingConnector &balanced_to_unbalanced,
-      const BoxTransitSet &semi_local ) const;
+      const BoxTransitSet &semi_local,
+      const std::set<int> &origin_ranks = std::set<int>() ) const;
 
 
    /*!
