@@ -169,6 +169,7 @@ private:
 
    static const int BoxTransitSet_EDGETAG0 = 3;
    static const int BoxTransitSet_EDGETAG1 = 4;
+   static const int BoxTransitSet_FIRSTDATALEN = 1000;
 
 
    /*!
@@ -480,6 +481,9 @@ private:
     * and head boxes are owned by different processes.  These edges
     * require communication to set up.
     *
+    * @param [out] balanced_box_level Home for new boxes that this
+    * method learns about through the communications.
+    *
     * @param [out] unbalanced_to_balanced
     *
     * @param [out] balanced_to_unbalanced
@@ -491,6 +495,7 @@ private:
     * unbalanced--->balanced data.
     */
    void communicateSemilocalEdges(
+      hier::BoxLevel &balanced_box_level,
       hier::MappingConnector &unbalanced_to_balanced,
       hier::MappingConnector &balanced_to_unbalanced,
       const BoxTransitSet &semi_local,

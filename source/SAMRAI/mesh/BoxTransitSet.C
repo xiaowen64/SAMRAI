@@ -15,6 +15,8 @@
 #include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
+#include "SAMRAI/tbox/AsyncCommPeer.h"
+#include "SAMRAI/tbox/AsyncCommStage.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -29,6 +31,7 @@ namespace mesh {
 
 const int BoxTransitSet::BoxTransitSet_EDGETAG0;
 const int BoxTransitSet::BoxTransitSet_EDGETAG1;
+const int BoxTransitSet::BoxTransitSet_FIRSTDATALEN;
 
 const std::string BoxTransitSet::s_default_timer_prefix("mesh::BoxTransitSet");
 std::map<std::string, BoxTransitSet::TimerStruct> BoxTransitSet::s_static_timers;
@@ -200,6 +203,7 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
       kept_imports );
 
    communicateSemilocalEdges(
+      balanced_box_level,
       unbalanced_to_balanced,
       balanced_to_unbalanced,
       kept_imports );
@@ -217,7 +221,7 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
 
 /*
  *************************************************************************
- * Communicate semi-local relationships in unbalanced<==>balanced
+ * Communicate semilocal relationships in unbalanced<==>balanced
  * Connectors.  These relationships are represented by semi_local.  A
  * process owns either d_box or d_orig_box (never both!) of each item
  * in its semi_local.  The owner of the other doesn't have this data,
@@ -231,10 +235,10 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
  * Sending is simple because all out-going information is available in
  * semi_local.  Receiving is trickier because we don't know what
  * process to receive from.  The solution depends on the direction of
- * the semi-local edges.
+ * the semilocal edges.
  *
- * - For unbalanced--->balanced edges, we receive from any process
- *   until we account for all cells in unbalanced.
+ * - For unbalanced--->balanced, we receive from any process until we
+ *   account for all cells in unbalanced.
  *
  * - For balanced--->unbalanced, the owners of relevant unbalanced
  *   boxes must be provided in the origin_ranks argument.
@@ -242,6 +246,7 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
  */
 void
 BoxTransitSet::communicateSemilocalEdges(
+   hier::BoxLevel &balanced_box_level,
    hier::MappingConnector &unbalanced_to_balanced,
    hier::MappingConnector &balanced_to_unbalanced,
    const BoxTransitSet &semi_local,
@@ -254,7 +259,6 @@ BoxTransitSet::communicateSemilocalEdges(
                  << std::endl;
    }
 
-   const hier::BoxLevel &balanced_box_level = unbalanced_to_balanced.getHead();
    const hier::BoxLevel &unbalanced_box_level = unbalanced_to_balanced.getBase();
    const tbox::SAMRAI_MPI &mpi = unbalanced_box_level.getMPI();
 
@@ -331,8 +335,63 @@ BoxTransitSet::communicateSemilocalEdges(
 
 
    /*
+    * Receive from from owners of unbalanced boxes contributing to
+    * our balanced boxes, and set up balanced--->unbalanced edges.
+    */
+
+   tbox::AsyncCommPeer<char> *comm_recvs = new tbox::AsyncCommPeer<char>[origin_ranks.size()];
+   tbox::AsyncCommStage comm_stage;
+   size_t count = 0;
+   for ( std::set<int>::const_iterator si=origin_ranks.begin();
+         si!=origin_ranks.end(); ++si, ++count ) {
+      comm_recvs[count].initialize(&comm_stage);
+      comm_recvs[count].setPeerRank(*si);
+      comm_recvs[count].setMPI(mpi);
+      comm_recvs[count].setMPITag(BoxTransitSet_EDGETAG0, BoxTransitSet_EDGETAG1);
+      comm_recvs[count].limitFirstDataLength(BoxTransitSet_FIRSTDATALEN);
+      comm_recvs[count].beginRecv();
+      if ( comm_recvs[count].isDone() ) {
+         comm_recvs[count].pushToCompletionQueue();
+      }
+   }
+
+   BoxInTransit bit(unbalanced_box_level.getDim());
+   while ( comm_stage.numberOfCompletedMembers() > 0 ||
+           comm_stage.advanceSome() ) {
+
+      tbox::AsyncCommPeer<char>* comm_recv =
+         CPP_CAST<tbox::AsyncCommPeer<char> *>(comm_stage.popCompletionQueue());
+      TBOX_ASSERT(comm_recv != 0);
+      TBOX_ASSERT(comm_recv >= comm_recvs);
+      TBOX_ASSERT(comm_recv < comm_recvs + origin_ranks.size());
+
+      tbox::MessageStream mstream(comm_recv->getRecvSize(),
+                                  tbox::MessageStream::Read,
+                                  comm_recv->getRecvData(),
+                                  false);
+
+      d_object_timers->t_unpack_edge->start();
+      while ( !mstream.endOfData() ) {
+
+         bit.getFromMessageStream(mstream);
+         TBOX_ASSERT( bit.d_box.getOwnerRank() == mpi.getRank() );
+         TBOX_ASSERT( bit.d_orig_box.getOwnerRank() == comm_recv->getPeerRank() );
+         balanced_box_level.addBox(bit.d_box);
+         balanced_to_unbalanced.insertLocalNeighbor(
+            bit.d_box, bit.d_orig_box.getBoxId() );
+
+      }
+      d_object_timers->t_unpack_edge->stop();
+
+   }
+   delete [] comm_recvs;
+   comm_recvs = 0;
+
+
+   /*
     * Receive info about exported cells from processes that now own
     * those cells.  Receive until all cells are accounted for.
+    * This gives us all missing semilocal unbalanced--->balanced.
     */
 
    std::vector<char> incoming_message;
@@ -449,7 +508,7 @@ BoxTransitSet::reassignOwnership(
 *************************************************************************
 * Put all d_box into balanced BoxLevel.  Generate all
 * d_box<==>d_orig_box mapping edges, except for those that cannot be
-* set up without communication.  These semi-local edges have either a
+* set up without communication.  These semilocal edges have either a
 * remote d_box or a remote d_orig_box.  Identify them by populating
 * the semi_local container.
 *
