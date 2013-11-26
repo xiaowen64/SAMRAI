@@ -190,8 +190,9 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
     * Generate relationships in balanced<==>unbalanced mapping
     * Connectors where required.
     *
-    * Keep track of imported boxes so their original owners can be
-    * notified.
+    * Keep track of imported boxes, because they represent semilocal
+    * edges.  Communicate semilocal edges to the the owners of the
+    * other end of the edge.
     */
 
    BoxTransitSet kept_imports(*d_pparams);
@@ -202,11 +203,10 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
       balanced_to_unbalanced,
       kept_imports );
 
-   communicateSemilocalEdges(
+   kept_imports.communicateSemilocalEdges(
       balanced_box_level,
       unbalanced_to_balanced,
-      balanced_to_unbalanced,
-      kept_imports );
+      balanced_to_unbalanced );
 
    if ( d_print_steps || d_print_edge_steps ) {
       tbox::plog << "BoxTransitSet::assignUnassignedToLocalProcessAndGenerateMap: exiting." << std::endl;
@@ -222,18 +222,18 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
 /*
  *************************************************************************
  * Communicate semilocal relationships in unbalanced<==>balanced
- * Connectors.  These relationships are represented by semi_local.  A
- * process owns either d_box or d_orig_box (never both!) of each item
- * in its semi_local.  The owner of the other doesn't have this data,
- * so this method does the necessary P2P communication to set up the
- * transpose edges.
+ * Connectors.  These relationships must be represented by this
+ * object.  Semilocal means the local process owns either d_box or
+ * d_orig_box (not both!) of each item in this BoxTransitSet.  The
+ * owner of the other doesn't have this data, so this method does the
+ * necessary P2P communication to set up the transpose edges.
  *
- * Each process already knows the data in its own semi_local,
- * obviously.  The idea is to acquire relevant data from the
- * semi_local of other processes.
+ * Each process already knows the data in its BoxTransitSet,
+ * obviously.  The idea is to acquire relevant data from other
+ * processes.
  *
- * Sending is simple because all out-going information is available in
- * semi_local.  Receiving is trickier because we don't know what
+ * Sending is simple because all out-going information is locally
+ * available.  Receiving is trickier because we don't know what
  * process to receive from.  The solution depends on the direction of
  * the semilocal edges.
  *
@@ -249,7 +249,6 @@ BoxTransitSet::communicateSemilocalEdges(
    hier::BoxLevel &balanced_box_level,
    hier::MappingConnector &unbalanced_to_balanced,
    hier::MappingConnector &balanced_to_unbalanced,
-   const BoxTransitSet &semi_local,
    const std::set<int> &origin_ranks ) const
 {
    d_object_timers->t_construct_semilocal->start();
@@ -265,7 +264,7 @@ BoxTransitSet::communicateSemilocalEdges(
    // Stuff the imported boxes into buffers by their original owners.
    d_object_timers->t_pack_edge->start();
    std::map<int,boost::shared_ptr<tbox::MessageStream> > outgoing_messages;
-   for ( const_iterator bi=semi_local.begin(); bi!=semi_local.end(); ++bi ) {
+   for ( const_iterator bi=begin(); bi!=end(); ++bi ) {
       const BoxInTransit &bit = *bi;
       boost::shared_ptr<tbox::MessageStream> &mstream =
          outgoing_messages[bit.d_orig_box.getOwnerRank()];
@@ -321,7 +320,7 @@ BoxTransitSet::communicateSemilocalEdges(
 
 
    int num_cells_imported = 0;
-   for ( const_iterator si=semi_local.begin(); si!=semi_local.end(); ++si ) {
+   for ( const_iterator si=begin(); si!=end(); ++si ) {
       num_cells_imported += si->d_box.size();
    }
 

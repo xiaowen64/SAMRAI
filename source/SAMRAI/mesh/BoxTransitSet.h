@@ -474,22 +474,23 @@ private:
 
 
    /*!
-    * @brief Communicate semi-local edges to generate relationships in
-    * unbalanced<==>balanced Connector.
+    * @brief Communicate semilocal relationships in
+    * unbalanced<==>balanced Connectors.
+    *
+    * These relationships must be represented by this object.
+    * Semilocal means the local process owns either d_box or
+    * d_orig_box (not both!) of each item in this BoxTransitSet.
     *
     * Recall that semi-local relationships are those where the base
     * and head boxes are owned by different processes.  These edges
     * require communication to set up.
     *
     * @param [out] balanced_box_level Home for new boxes that this
-    * method learns about through the communications.
+    * method learns about through communication.
     *
     * @param [out] unbalanced_to_balanced
     *
     * @param [out] balanced_to_unbalanced
-    *
-    * @param [in] semi_local BoxInTransit representing semi-local
-    * edges.  Maybe this method should be bound to semi_local???
     *
     * @param [in] origin_ranks Origin owners that are sending
     * unbalanced--->balanced data.
@@ -498,7 +499,6 @@ private:
       hier::BoxLevel &balanced_box_level,
       hier::MappingConnector &unbalanced_to_balanced,
       hier::MappingConnector &balanced_to_unbalanced,
-      const BoxTransitSet &semi_local,
       const std::set<int> &origin_ranks = std::set<int>() ) const;
 
 
