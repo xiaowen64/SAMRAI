@@ -47,6 +47,7 @@ VoucherTransitLoad::s_initialize_finalize_handler(
 *************************************************************************
 */
 VoucherTransitLoad::VoucherTransitLoad( const PartitioningParams &pparams ) :
+   TransitLoad(),
    d_voucher_set(),
    d_sumload(0),
    d_pparams(&pparams),

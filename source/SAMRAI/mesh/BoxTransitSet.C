@@ -50,6 +50,7 @@ BoxTransitSet::s_initialize_finalize_handler(
 *************************************************************************
 */
 BoxTransitSet::BoxTransitSet( const PartitioningParams &pparams ) :
+   TransitLoad(),
    d_set(),
    d_sumload(0),
    d_pparams(&pparams),

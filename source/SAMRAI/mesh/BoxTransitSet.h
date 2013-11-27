@@ -147,12 +147,6 @@ public:
       hier::MappingConnector &unbalanced_to_balanced,
       hier::MappingConnector &balanced_to_unbalanced ) const;
 
-
-   //! @brief Whether to allow box breaking.
-   void allowBoxBreaking( bool allow_box_breaking ) {
-      d_allow_box_breaking = allow_box_breaking;
-   }
-
    /*!
     * @brief Setup names of timers.
     *

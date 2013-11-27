@@ -52,7 +52,9 @@ class TransitLoad {
 
 public:
 
-   TransitLoad() {}
+   TransitLoad();
+
+   TransitLoad( const TransitLoad &other );
 
    virtual ~TransitLoad() {}
 
@@ -156,7 +158,13 @@ public:
 
 
    //! @brief Whether to allow box breaking.
-   virtual void allowBoxBreaking( bool allow_box_breaking ) = 0;
+   void setAllowBoxBreaking( bool allow_box_breaking ) {
+      d_allow_box_breaking = allow_box_breaking;
+   }
+
+   bool getAllowBoxBreaking() const {
+      return d_allow_box_breaking;
+   }
 
 
    //@{
@@ -174,6 +182,10 @@ public:
       int detail_depth=1 ) const;
 
    //@}
+
+private:
+
+   bool d_allow_box_breaking;
 
 };
 
