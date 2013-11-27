@@ -12,7 +12,7 @@
 #define included_mesh_TreeLoadBalancer
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/mesh/BalanceUtilities.h"
+#include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
 #include "SAMRAI/mesh/TransitLoad.h"
@@ -23,15 +23,12 @@
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/RankGroup.h"
 #include "SAMRAI/tbox/RankTreeStrategy.h"
-#include "SAMRAI/tbox/Statistic.h"
-#include "SAMRAI/tbox/Statistician.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <vector>
-#include <set>
 
 namespace SAMRAI {
 namespace mesh {
@@ -255,12 +252,7 @@ public:
     */
    void
    printStatistics(
-      std::ostream& output_stream = tbox::plog) const
-   {
-      BalanceUtilities::gatherAndReportLoadBalance(d_load_stat,
-         tbox::SAMRAI_MPI::getSAMRAIWorld(),
-         output_stream);
-   }
+      std::ostream& output_stream = tbox::plog) const;
 
 
    /*!
@@ -721,6 +713,11 @@ private:
     * See input parameter "flexible_load_tolerance".
     */
    double d_flexible_load_tol;
+
+   /*!
+    * @brief Metadata operations with timers set according to this object.
+    */
+   hier::MappingConnectorAlgorithm d_mca;
 
    //@{
    //! @name Data shared with private methods during balancing.

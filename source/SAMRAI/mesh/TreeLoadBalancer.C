@@ -13,10 +13,10 @@
 
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/mesh/BoxTransitSet.h"
+#include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
-#include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -29,7 +29,6 @@
 #include "SAMRAI/tbox/AsyncCommStage.h"
 #include "SAMRAI/tbox/AsyncCommGroup.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Statistician.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
 #include <algorithm>
@@ -76,6 +75,7 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_comm_graph_writer(),
    d_master_workload_data_id(s_default_data_id),
    d_flexible_load_tol(0.0),
+   d_mca(),
    // Performance evaluation.
    d_barrier_before(false),
    d_barrier_after(false),
@@ -88,6 +88,7 @@ TreeLoadBalancer::TreeLoadBalancer(
    TBOX_ASSERT(!name.empty());
    getFromInput(input_db);
    setTimers();
+   d_mca.setTimerPrefix(d_object_name);
 }
 
 
@@ -643,9 +644,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
 
    if (balance_to_reference && balance_to_reference->hasTranspose()) {
       t_use_map->barrierAndStart();
-      hier::MappingConnectorAlgorithm mca;
-      mca.setTimerPrefix(d_object_name);
-      mca.modify(
+      d_mca.modify(
          balance_to_reference->getTranspose(),
          unbalanced_to_balanced,
          &balance_box_level,
@@ -2021,6 +2020,22 @@ TreeLoadBalancer::BranchData::setTimerPrefix(
       getTimer(timer_prefix + "::pack_load");
    t_unpack_load = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::unpack_load");
+}
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+TreeLoadBalancer::printStatistics(
+   std::ostream& output_stream) const
+{
+   BalanceUtilities::gatherAndReportLoadBalance(
+      d_load_stat,
+      tbox::SAMRAI_MPI::getSAMRAIWorld(),
+      output_stream);
 }
 
 
