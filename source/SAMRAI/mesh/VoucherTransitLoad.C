@@ -601,6 +601,23 @@ VoucherTransitLoad::raiseDstLoad(
  ***********************************************************************
  ***********************************************************************
  */
+VoucherTransitLoad::LoadType
+VoucherTransitLoad::findIssuerValue( int issuer_rank ) const
+{
+   Voucher tmp_voucher( 0.0, issuer_rank );
+   const_iterator vi = d_voucher_set.lower_bound(tmp_voucher);
+   if ( vi != d_voucher_set.end() && vi->d_issuer_rank == issuer_rank ) {
+      tmp_voucher.d_load = vi->d_load;
+   }
+   return tmp_voucher.d_load;
+}
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
 void
 VoucherTransitLoad::setTimerPrefix(
    const std::string& timer_prefix)
@@ -693,18 +710,19 @@ VoucherTransitLoad::recursivePrint(
    const std::string &border,
    int detail_depth ) const
 {
-   co << getSumLoad() << " units in " << size() << " boxes.";
+   co << getSumLoad() << " units in " << size() << " vouchers";
    if ( detail_depth > 0 ) {
       size_t count = 0;
       co << ":\n";
       for ( VoucherTransitLoad::const_iterator vi=begin();
             vi!=end() && count < 50; ++vi, ++count ) {
-         tbox::plog << border << "    " << vi->d_issuer_rank << ':' << vi->d_load << '\n';
+         co << border << "    " << *vi << '\n';
       }
    }
    else {
       co << ".\n";
    }
+   co.flush();
 }
 
 

@@ -149,11 +149,13 @@ private:
       //! @brief Default constructor constructs voucher of zero value.
       Voucher() :
          d_issuer_rank(tbox::SAMRAI_MPI::getInvalidRank()),
-         d_load(0.0) {}
+         d_load(0.0) {
+      }
       //! @brief Initializing constructor sets voucher value and issuer.
       Voucher( const LoadType &load, int issuer_rank ) :
          d_issuer_rank(issuer_rank),
-         d_load(load) {}
+         d_load(load) {
+      }
       //! @brief Construct a voucher by combining two vouchers from the same issuer.
       Voucher( const Voucher &a, const Voucher &b ) :
          d_issuer_rank(a.d_issuer_rank),
@@ -167,6 +169,10 @@ private:
          d_issuer_rank(src.d_issuer_rank),
          d_load(load <= src.d_load ? load : src.d_load) {
          src.d_load -= d_load;
+      }
+      friend std::ostream &operator<<( std::ostream &co, const Voucher &v ) {
+         co << v.d_issuer_rank << ':' << v.d_load;
+         return co;
       }
       /*!
        * @brief Adjust load by taking work from or giving work to
@@ -185,9 +191,9 @@ private:
    struct VoucherRankCompare {
       bool operator () ( const Voucher& a, const Voucher& b) const {
          if (a.d_issuer_rank != b.d_issuer_rank) {
-            return a.d_issuer_rank > b.d_issuer_rank;
+            return a.d_issuer_rank < b.d_issuer_rank;
          }
-         return a.d_load > b.d_load;
+         return a.d_load < b.d_load;
       }
    };
 
@@ -329,15 +335,7 @@ private:
    /*!
     * @brief Find the voucher value issued by the given process.
     */
-   LoadType findIssuerValue( int issuer_rank ) const
-      {
-         Voucher tmp_voucher( 0.0, issuer_rank );
-         const_iterator vi = d_voucher_set.lower_bound(tmp_voucher);
-         if ( vi != d_voucher_set.end() && vi->d_issuer_rank == issuer_rank ) {
-            tmp_voucher.d_load = vi->d_load;
-         }
-         return tmp_voucher.d_load;
-      }
+   LoadType findIssuerValue( int issuer_rank ) const;
 
 
    //! @brief Compute the load for a Box.
