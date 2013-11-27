@@ -30,9 +30,9 @@ namespace mesh {
 
 
 /*
- * @brief Implementation of TreeLoadBalancer::TransitSet, representing
- * the load with a set of boxes, sorted from highest load to lowest
- * load.
+ * @brief Implementation of TransitLoad, representing the load with a
+ * set of boxes, each of which represents a load and knows the origin
+ * of its load.
  *
  * As a container, this class is identical to
  * std::set<BoxInTransit,BoxInTransitMoreLoad>.
@@ -136,8 +136,11 @@ public:
 
 
    /*!
-    * @brief Generate unbalanced<==>balanced edges incident from a
-    * local box.  Edges not incident from a local Box are not generated.
+    * @brief Generate unbalanced<==>balanced edges incident from
+    * local boxes.
+    *
+    * This method does no communication.  Semilocal edges not incident
+    * from remote Boxes are not communicated.
     */
    void
    generateLocalBasedMapEdges(

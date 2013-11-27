@@ -26,18 +26,18 @@ namespace mesh {
 
 
 /*
- * @brief Implementation of TreeLoadBalancer::TransitSet, representing
- * the load with a set of vouchers, sorted from highest load to lowest
- * load.
+ * @brief Implementation of TransitLoad, representing the load with a
+ * set of vouchers, each of which has a work value and the rank of the
+ * process that issued the voucher.
  *
  * As a container, this class is identical to
  * std::set<Voucher,VoucherMoreLoad>.
  *
  * Terminology: To avoid confusing the sending and receiving of
  * messages, the sending and receiving of work use the terms supply
- * and demand.  The holder of a voucher demands the work.  The issuer
- * of that voucher supplies the work.  Both send and receive messages
- * to accomplish this.
+ * and demand.  During redemption of vouchers, the holder of a voucher
+ * demands the work.  The issuer of that voucher supplies the work.
+ * Both send and receive messages to accomplish this.
  */
 
 class VoucherTransitLoad : public TransitLoad {
@@ -257,7 +257,7 @@ private:
 
 
    /*!
-    * @brief Re-cast a TransitLoad object to a BoxTransitSet.
+    * @brief Re-cast a TransitLoad object to a VoucherTransitLoad.
     */
    const VoucherTransitLoad &recastTransitLoad( const TransitLoad &transit_load ) {
       const VoucherTransitLoad *ptr = static_cast<const VoucherTransitLoad*>(&transit_load);
@@ -267,7 +267,7 @@ private:
 
 
    /*!
-    * @brief Re-cast a TransitLoad object to a BoxTransitSet.
+    * @brief Re-cast a TransitLoad object to a VoucherTransitLoad.
     */
    VoucherTransitLoad &recastTransitLoad( TransitLoad &transit_load ) {
       VoucherTransitLoad *ptr = static_cast<VoucherTransitLoad*>(&transit_load);

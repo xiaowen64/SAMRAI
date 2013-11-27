@@ -15,10 +15,7 @@
 #include "SAMRAI/mesh/BoxTransitSet.h"
 #include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/tbox/StartupShutdownManager.h"
 
-#include "SAMRAI/hier/BoxUtilities.h"
-#include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellDataFactory.h"
