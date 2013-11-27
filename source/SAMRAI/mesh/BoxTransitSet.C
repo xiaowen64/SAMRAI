@@ -55,7 +55,6 @@ BoxTransitSet::BoxTransitSet( const PartitioningParams &pparams ) :
    d_sumload(0),
    d_pparams(&pparams),
    d_box_breaker(pparams),
-   d_allow_box_breaking(true),
    d_print_steps(false),
    d_print_pop_steps(false),
    d_print_swap_steps(false),
@@ -634,7 +633,7 @@ BoxTransitSet::adjustLoad(
       }
 
 
-      if ( d_allow_box_breaking ) {
+      if ( getAllowBoxBreaking() ) {
          /*
           * Assuming that we did the best we could, swapping
           * some BoxInTransit without breaking any, we now break up a Box

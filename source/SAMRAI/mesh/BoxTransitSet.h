@@ -571,8 +571,6 @@ private:
 
    BalanceBoxBreaker d_box_breaker;
 
-   bool d_allow_box_breaking;
-
 
    //@{
    //! @name Debugging stuff.
