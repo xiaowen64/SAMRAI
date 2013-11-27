@@ -46,6 +46,8 @@ public:
 
    BoxTransitSet( const PartitioningParams &pparams );
 
+   BoxTransitSet( const BoxTransitSet &other );
+
    //! @brief Initialize implementation for TransitLoad interface.
    void initialize();
 

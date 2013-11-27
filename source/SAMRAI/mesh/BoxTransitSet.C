@@ -69,6 +69,26 @@ BoxTransitSet::BoxTransitSet( const PartitioningParams &pparams ) :
 
 /*
 *************************************************************************
+*************************************************************************
+*/
+BoxTransitSet::BoxTransitSet( const BoxTransitSet &other ) :
+   TransitLoad(other),
+   d_set(other.d_set),
+   d_sumload(other.d_sumload),
+   d_pparams(other.d_pparams),
+   d_box_breaker(other.d_box_breaker),
+   d_print_steps(other.d_print_steps),
+   d_print_pop_steps(other.d_print_pop_steps),
+   d_print_swap_steps(other.d_print_swap_steps),
+   d_print_break_steps(other.d_print_break_steps),
+   d_print_edge_steps(other.d_print_edge_steps),
+   d_object_timers(other.d_object_timers)
+{
+}
+
+
+/*
+*************************************************************************
 Initialize sets to a new (empty) container but retains current
 supplemental data such as diagnostic parameters.
 *************************************************************************
