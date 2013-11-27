@@ -1623,8 +1623,6 @@ BoxTransitSet::getFromInput()
 {
    if ( !tbox::InputManager::inputDatabaseExists() ) return;
 
-   tbox::InputManager *im = tbox::InputManager::getManager();
-
    boost::shared_ptr<tbox::Database> input_db = tbox::InputManager::getInputDatabase();
 
    if ( input_db->isDatabase("BoxTransitSet") ) {

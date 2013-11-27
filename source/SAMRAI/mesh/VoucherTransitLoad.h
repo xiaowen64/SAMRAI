@@ -145,7 +145,7 @@ private:
       //! @brief Initializing constructor sets voucher value and issuer.
       Voucher( const LoadType &load, int issuer_rank ) :
          d_issuer_rank(issuer_rank),
-         d_load(d_load) {}
+         d_load(load) {}
       //! @brief Construct a voucher by combining two vouchers from the same issuer.
       Voucher( const Voucher &a, const Voucher &b ) :
          d_issuer_rank(a.d_issuer_rank),

@@ -160,8 +160,9 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    for ( const_iterator si=d_voucher_set.begin();
          si!=d_voucher_set.end(); ++si, ++count ) {
 
-      hier::SequentialLocalIdGenerator id_gen( last_local_id + count,
-                                               hier::LocalId(d_voucher_set.size()) );
+      hier::SequentialLocalIdGenerator id_gen(
+         last_local_id + count,
+         hier::LocalId(static_cast<int>(d_voucher_set.size())) );
 
       redemptions_to_request[si->d_issuer_rank].sendWorkDemand( *si, id_gen, mpi );
    }
@@ -378,14 +379,13 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkSupply(
       static_cast<void*>(&incoming_message[0]), false);
    BoxTransitSet box_shipment(pparams);
    box_shipment.getFromMessageStream(*d_msg);
+   d_msg.reset();
 
    box_shipment.putInBoxLevel(balanced_box_level);
 
    box_shipment.generateLocalBasedMapEdges(
       unbalanced_to_balanced,
       balanced_to_unbalanced);
-
-   d_msg.reset();
 }
 
 
