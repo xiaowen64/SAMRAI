@@ -491,15 +491,17 @@ VoucherTransitLoad::adjustLoad(
 
    if ( change > 0 ) {
       // Move load to main_bin.
-      raiseDstLoad( recastTransitLoad(hold_bin),
-                    main_bin,
-                    ideal_load );
+      actual_transfer =
+         raiseDstLoad( recastTransitLoad(hold_bin),
+                       main_bin,
+                       ideal_load );
    }
    else if ( change < 0 ) {
       // Move load to hold_bin.
-      raiseDstLoad( main_bin,
-                    recastTransitLoad(hold_bin),
-                    hold_bin.getSumLoad() - change );
+      actual_transfer =
+         -raiseDstLoad( main_bin,
+                        recastTransitLoad(hold_bin),
+                        hold_bin.getSumLoad() - change );
    }
 
    if ( d_print_steps ) {
