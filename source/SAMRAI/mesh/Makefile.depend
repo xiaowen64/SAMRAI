@@ -1739,7 +1739,6 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PersistentOverlapConnectors.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/SequentialLocalIdGenerator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
@@ -1748,9 +1747,7 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/mesh/BalanceBoxBreaker.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BalanceUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/mesh/BoxTransitSet.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/ChopAndPackLoadBalancer.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/GraphLoadBalancer.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/LoadBalanceStrategy.h		\
@@ -1899,7 +1896,6 @@ DEPENDS_22:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxNeighborhoodCollection.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Connector.h				\
@@ -1979,8 +1975,6 @@ DEPENDS_22:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Statistic.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Statistician.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h TreeLoadBalancer.C
