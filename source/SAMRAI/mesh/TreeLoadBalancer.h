@@ -99,6 +99,10 @@ namespace mesh {
  * @internal The following are developer inputs.  Defaults listed
  * in parenthesis:
  *
+ * @internal DEV_voucher_mode (false)
+ * bool
+ * Whether to use experimental voucher mode.
+ *
  * @internal DEV_allow_box_breaking (true)
  * bool
  * Whether to allow box-breaking.  Set to false when boxes have
@@ -686,6 +690,9 @@ private:
 
    //! @brief Max number of processes the a single process may spread load to per cycle.
    int d_max_cycle_spread_procs;
+
+   //! @brief Whether to move load via vouchers.
+   bool d_voucher_mode;
 
    //! @brief Whether to allow box breaking.
    bool d_allow_box_breaking;

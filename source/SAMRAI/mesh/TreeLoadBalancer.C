@@ -13,6 +13,7 @@
 
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/mesh/BoxTransitSet.h"
+#include "SAMRAI/mesh/VoucherTransitLoad.h"
 #include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/hier/BoxContainer.h"
 
@@ -67,6 +68,7 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_mpi_is_dupe(false),
    d_max_cycle_spread_procs(1000000),
+   d_voucher_mode(false),
    d_allow_box_breaking(true),
    d_rank_tree(rank_tree ? rank_tree : boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::CenteredRankTree) ),
    d_comm_graph_writer(),
@@ -617,10 +619,22 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
    }
    else {
 
-      BoxTransitSet balanced_work(*d_pparams);
+      /*
+       * Create a concrete TransitLoad container to hold the
+       * distributed work.
+       */
+      boost::shared_ptr<TransitLoad> balanced_work;
+      if ( d_voucher_mode ) {
+         balanced_work = boost::make_shared<VoucherTransitLoad>(*d_pparams);
+      }
+      else {
+         balanced_work = boost::make_shared<BoxTransitSet>(*d_pparams);
+      }
+
+      balanced_work->setAllowBoxBreaking(d_allow_box_breaking);
 
       distributeLoadAcrossRankGroup(
-         balanced_work,
+         *balanced_work,
          balance_box_level,
          rank_group,
          group_sum_load );
@@ -629,7 +643,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       d_mpi.Barrier();
       t_post_load_distribution_barrier->stop();
 
-      balanced_work.assignContentToLocalProcessAndPopulateMaps(
+      balanced_work->assignContentToLocalProcessAndPopulateMaps(
          balanced_box_level,
          balanced_to_unbalanced,
          unbalanced_to_balanced );
@@ -1591,6 +1605,10 @@ TreeLoadBalancer::getFromInput(
       d_allow_box_breaking =
          input_db->getBoolWithDefault("DEV_allow_box_breaking",
                                       d_allow_box_breaking);
+
+      d_voucher_mode =
+         input_db->getBoolWithDefault("DEV_voucher_mode",
+                                      d_voucher_mode);
 
    }
 }
