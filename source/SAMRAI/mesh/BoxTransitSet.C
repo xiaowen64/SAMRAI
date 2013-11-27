@@ -195,15 +195,12 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
     * other end of the edge.
     */
 
-   BoxTransitSet kept_imports(*d_pparams);
-
    generateBalancedBoxLevelAndMostMapEdges(
       balanced_box_level,
       unbalanced_to_balanced,
-      balanced_to_unbalanced,
-      kept_imports );
+      balanced_to_unbalanced );
 
-   kept_imports.constructSemilocalUnbalancedToBalanced( unbalanced_to_balanced );
+   constructSemilocalUnbalancedToBalanced( unbalanced_to_balanced );
 
    if ( d_print_steps || d_print_edge_steps ) {
       tbox::plog << "BoxTransitSet::assignUnassignedToLocalProcessAndGenerateMap: exiting." << std::endl;
@@ -256,11 +253,19 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    const hier::BoxLevel &balanced_box_level = unbalanced_to_balanced.getHead();
    const tbox::SAMRAI_MPI &mpi = unbalanced_box_level.getMPI();
 
+   int num_cells_imported = 0;
+
    // Stuff the imported boxes into buffers by their original owners.
    d_object_timers->t_pack_edge->start();
    std::map<int,boost::shared_ptr<tbox::MessageStream> > outgoing_messages;
    for ( const_iterator bi=begin(); bi!=end(); ++bi ) {
       const BoxInTransit &bit = *bi;
+      TBOX_ASSERT( bit.d_box.getOwnerRank() == mpi.getRank() );
+      if ( bit.d_orig_box.getOwnerRank() == mpi.getRank() ) {
+         // Not imported.
+         continue;
+      }
+      num_cells_imported += bit.d_box.size();
       boost::shared_ptr<tbox::MessageStream> &mstream =
          outgoing_messages[bit.d_orig_box.getOwnerRank()];
       if ( !mstream ) {
@@ -313,11 +318,6 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    }
    d_object_timers->t_construct_semilocal_send_edges->stop();
 
-
-   int num_cells_imported = 0;
-   for ( const_iterator si=begin(); si!=end(); ++si ) {
-      num_cells_imported += si->d_box.size();
-   }
 
    int num_unaccounted_cells = static_cast<int>(
       unbalanced_box_level.getLocalNumberOfCells() + num_cells_imported
@@ -449,8 +449,7 @@ BoxTransitSet::reassignOwnership(
 * Put all d_box into balanced BoxLevel.  Generate all
 * d_box<==>d_orig_box mapping edges, except for those that cannot be
 * set up without communication.  These semilocal edges have either a
-* remote d_box or a remote d_orig_box.  Identify them by populating
-* the semi_local container.
+* remote d_box or a remote d_orig_box.
 *
 * Each d_box must have a valid BoxId.
 *************************************************************************
@@ -459,8 +458,7 @@ void
 BoxTransitSet::generateBalancedBoxLevelAndMostMapEdges(
    hier::BoxLevel &balanced_box_level,
    hier::MappingConnector &unbalanced_to_balanced,
-   hier::MappingConnector &balanced_to_unbalanced,
-   BoxTransitSet &semi_local ) const
+   hier::MappingConnector &balanced_to_unbalanced ) const
 {
 
    tbox::SAMRAI_MPI mpi = balanced_box_level.getMPI();
@@ -474,10 +472,6 @@ BoxTransitSet::generateBalancedBoxLevelAndMostMapEdges(
       }
 
       balanced_box_level.addBox(added_box.d_box);
-
-      if ( added_box.d_box.getOwnerRank() != added_box.d_orig_box.getOwnerRank() ) {
-         semi_local.insert(added_box);
-      }
 
       if ( !added_box.d_box.isIdEqual(added_box.d_orig_box) ) {
          // ID changed means mapping needed, but store only for local boxes.

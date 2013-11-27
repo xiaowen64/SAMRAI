@@ -136,8 +136,7 @@ public:
    generateBalancedBoxLevelAndMostMapEdges(
       hier::BoxLevel &balanced_box_level /* can be removed if this method is split up */,
       hier::MappingConnector &unbalanced_to_balanced,
-      hier::MappingConnector &balanced_to_unbalanced,
-      BoxTransitSet &semi_local ) const;
+      hier::MappingConnector &balanced_to_unbalanced ) const;
 
 
    //! @brief Whether to allow box breaking.
