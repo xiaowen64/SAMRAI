@@ -108,7 +108,7 @@ public:
     * This method uses communication to set up the map.
     */
    void
-   assignContentToLocalProcessAndGenerateMap(
+   assignContentToLocalProcessAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector &balanced_to_unbalanced,
       hier::MappingConnector &unbalanced_to_balanced );

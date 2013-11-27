@@ -165,7 +165,7 @@ size_t BoxTransitSet::getNumberOfOriginatingProcesses() const
  * constructSemilocalUnbalancedToBalanced, which uses communication.
  */
 void
-BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
+BoxTransitSet::assignContentToLocalProcessAndPopulateMaps(
    hier::BoxLevel& balanced_box_level,
    hier::MappingConnector &balanced_to_unbalanced,
    hier::MappingConnector &unbalanced_to_balanced )
@@ -173,7 +173,7 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
    d_object_timers->t_assign_content_to_local_process_and_generate_map->start();
 
    if ( d_print_steps || d_print_edge_steps ) {
-      tbox::plog << "BoxTransitSet::assignUnassignedToLocalProcessAndGenerateMap: entered." << std::endl;
+      tbox::plog << "BoxTransitSet::assignContentToLocalProcessAndPopulateMaps: entered." << std::endl;
    }
 
    /*
@@ -196,7 +196,7 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
    constructSemilocalUnbalancedToBalanced( unbalanced_to_balanced );
 
    if ( d_print_steps || d_print_edge_steps ) {
-      tbox::plog << "BoxTransitSet::assignUnassignedToLocalProcessAndGenerateMap: exiting." << std::endl;
+      tbox::plog << "BoxTransitSet::assignContentToLocalProcessAndPopulateMaps: exiting." << std::endl;
    }
 
    d_object_timers->t_assign_content_to_local_process_and_generate_map->stop();
@@ -1530,7 +1530,7 @@ BoxTransitSet::getAllTimers(
       getTimer(timer_prefix + "::swapLoadPair()");
 
    timers.t_assign_content_to_local_process_and_generate_map = tbox::TimerManager::getManager()->
-      getTimer(timer_prefix + "::assignContentToLocalProcessAndGenerateMap()");
+      getTimer(timer_prefix + "::assignContentToLocalProcessAndPopulateMaps()");
 
    timers.t_construct_semilocal = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::constructSemilocalUnbalancedToBalanced()");

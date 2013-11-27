@@ -631,7 +631,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       d_mpi.Barrier();
       t_post_load_distribution_barrier->stop();
 
-      balanced_work.assignContentToLocalProcessAndGenerateMap(
+      balanced_work.assignContentToLocalProcessAndPopulateMaps(
          balanced_box_level,
          balanced_to_unbalanced,
          unbalanced_to_balanced );

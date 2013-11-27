@@ -136,7 +136,7 @@ size_t VoucherTransitLoad::getNumberOfOriginatingProcesses() const
  * 4. Receive work for redeemed vouchers.
  */
 void
-VoucherTransitLoad::assignContentToLocalProcessAndGenerateMap(
+VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    hier::BoxLevel& balanced_box_level,
    hier::MappingConnector &balanced_to_unbalanced,
    hier::MappingConnector &unbalanced_to_balanced )
@@ -144,7 +144,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndGenerateMap(
    d_object_timers->t_assign_content_to_local_process_and_generate_map->start();
 
    if ( d_print_steps ) {
-      tbox::plog << "VoucherTransitLoad::assignUnassignedToLocalProcessAndGenerateMap: entered." << std::endl;
+      tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps: entered." << std::endl;
    }
 
    const hier::BoxLevel &unbalanced_box_level = unbalanced_to_balanced.getBase();
@@ -244,7 +244,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndGenerateMap(
 
 
    if ( d_print_steps ) {
-      tbox::plog << "VoucherTransitLoad::assignUnassignedToLocalProcessAndGenerateMap: exiting." << std::endl;
+      tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps: exiting." << std::endl;
    }
 
    d_object_timers->t_assign_content_to_local_process_and_generate_map->stop();
@@ -499,7 +499,7 @@ VoucherTransitLoad::getAllTimers(
       getTimer(timer_prefix + "::adjustLoad()");
 
    timers.t_assign_content_to_local_process_and_generate_map = tbox::TimerManager::getManager()->
-      getTimer(timer_prefix + "::assignContentToLocalProcessAndGenerateMap()");
+      getTimer(timer_prefix + "::assignContentToLocalProcessAndPopulateMaps()");
 }
 
 

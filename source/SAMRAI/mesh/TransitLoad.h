@@ -32,11 +32,18 @@ namespace mesh {
  * Subclasses must implement clone(), initialize(), and a copy
  * constructor according to this design pattern.
  *
- * TransitLoad has dual responsibilities.  First, it is a container of
- * loads that move around the tree.  The implementation may represent
- * the work however it wants.  Second, it generates the mapping
- * between the pre- and post-balance BoxLevels.  It must have this
- * responsibility because it alone knows how the work is represented.
+ * TransitLoad has dual responsibilities.
+ *
+ * - First, it's a container of loads that move around the tree.  The
+ * implementation may represent the work however it wants and should
+ * be able to shift load from one container to another.  See
+ * adjustLoad().
+ *
+ * - Second, it generates the mappings between the pre- and
+ * post-balance BoxLevels.  See
+ * assignContentsToLocalProcessAndPopulateMaps().  It must have this
+ * responsibility because the implementation alone knows how the work
+ * is represented.
  *
  * @see mesh::TreeLoadBalancer
  */
@@ -142,7 +149,7 @@ public:
     * the unbalanced--->balanced edges.
     */
    virtual void
-   assignContentToLocalProcessAndGenerateMap(
+   assignContentToLocalProcessAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector &balanced_to_unbalanced,
       hier::MappingConnector &unbalanced_to_balanced ) = 0;

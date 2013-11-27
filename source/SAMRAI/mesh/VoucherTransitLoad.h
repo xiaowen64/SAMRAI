@@ -52,9 +52,9 @@ public:
    LoadType getSumLoad() const { return d_sumload; }
 
    //! @brief Insert all boxes from the given BoxContainer.
-   void insertAll( const hier::BoxContainer &other );
+   void insertAll( const hier::BoxContainer &box_container );
 
-   //! @brief Insert all boxes from the given VoucherTransitLoad.
+   //! @brief Insert all boxes from the given TransitLoad.
    void insertAll( const TransitLoad &other );
 
    //! @brief Return number of items in this container.
@@ -98,13 +98,13 @@ public:
 
 
    /*!
-    * @brief Assign unassigned boxes to local process and generate
-    * balanced<==>unbalanced map.
+    * @brief Assign unassigned boxes to local process and populate
+    * balanced<==>unbalanced.
     *
     * This method uses communication to set up the map.
     */
    void
-   assignContentToLocalProcessAndGenerateMap(
+   assignContentToLocalProcessAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector &balanced_to_unbalanced,
       hier::MappingConnector &unbalanced_to_balanced );
