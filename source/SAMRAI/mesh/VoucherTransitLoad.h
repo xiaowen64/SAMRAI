@@ -194,7 +194,10 @@ private:
 
    //! @brief Encapsulates voucher redemption for both demander and supplier.
    struct VoucherRedemption {
-      VoucherRedemption() : d_mpi(MPI_COMM_NULL) {};
+      VoucherRedemption() :
+         d_demander_rank(tbox::SAMRAI_MPI::getInvalidRank()),
+         d_mpi(MPI_COMM_NULL),
+         d_mpi_request(MPI_REQUEST_NULL) {};
       ~VoucherRedemption() {
          if ( d_mpi_request != MPI_REQUEST_NULL ) {
             TBOX_ERROR("Need to finish communication before destructing d_msg.");
