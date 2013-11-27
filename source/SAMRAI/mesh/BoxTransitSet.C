@@ -186,19 +186,12 @@ BoxTransitSet::assignContentToLocalProcessAndGenerateMap(
 
    reassignOwnership( id_gen, balanced_box_level.getMPI().getRank() );
 
-   /*
-    * Generate relationships in balanced<==>unbalanced mapping
-    * Connectors where required.
-    *
-    * Keep track of imported boxes, because they represent semilocal
-    * edges.  Communicate semilocal edges to the the owners of the
-    * other end of the edge.
-    */
+   putInBoxLevel(balanced_box_level);
 
-   generateBalancedBoxLevelAndMostMapEdges(
-      balanced_box_level,
-      unbalanced_to_balanced,
-      balanced_to_unbalanced );
+   /*
+    * Generate balanced<==>unbalanced
+    */
+   generateLocalBasedMapEdges( unbalanced_to_balanced, balanced_to_unbalanced );
 
    constructSemilocalUnbalancedToBalanced( unbalanced_to_balanced );
 
@@ -446,6 +439,26 @@ BoxTransitSet::reassignOwnership(
 
 /*
 *************************************************************************
+* Put all d_box into a BoxLevel.
+* Each d_box must have a valid BoxId and owned by the local process.
+*************************************************************************
+*/
+void
+BoxTransitSet::putInBoxLevel(
+   hier::BoxLevel &box_level ) const
+{
+   for (iterator ni = begin(); ni != end(); ++ni ) {
+      TBOX_ASSERT( ni->d_box.getOwnerRank() == box_level.getMPI().getRank() );
+      box_level.addBox(ni->d_box);
+   }
+   return;
+}
+
+
+
+
+/*
+*************************************************************************
 * Put all d_box into balanced BoxLevel.  Generate all
 * d_box<==>d_orig_box mapping edges, except for those that cannot be
 * set up without communication.  These semilocal edges have either a
@@ -455,23 +468,16 @@ BoxTransitSet::reassignOwnership(
 *************************************************************************
 */
 void
-BoxTransitSet::generateBalancedBoxLevelAndMostMapEdges(
-   hier::BoxLevel &balanced_box_level,
+BoxTransitSet::generateLocalBasedMapEdges(
    hier::MappingConnector &unbalanced_to_balanced,
    hier::MappingConnector &balanced_to_unbalanced ) const
 {
 
-   tbox::SAMRAI_MPI mpi = balanced_box_level.getMPI();
+   tbox::SAMRAI_MPI mpi = unbalanced_to_balanced.getBase().getMPI();
 
    for (iterator ni = begin(); ni != end(); ++ni ) {
 
       const BoxInTransit &added_box = *ni;
-
-      if ( d_print_edge_steps ) {
-         tbox::plog << "\tassigning box: " << added_box << std::endl;
-      }
-
-      balanced_box_level.addBox(added_box.d_box);
 
       if ( !added_box.d_box.isIdEqual(added_box.d_orig_box) ) {
          // ID changed means mapping needed, but store only for local boxes.

@@ -128,13 +128,19 @@ public:
 
 
    /*!
-    * @brief Generate the balanced BoxLevel and most
-    * unbalanced<==>balanced edges.  Identify semi-local edges that
-    * must be communicated to remote owners.
+    * @brief Put contents into a BoxLevel.
     */
    void
-   generateBalancedBoxLevelAndMostMapEdges(
-      hier::BoxLevel &balanced_box_level /* can be removed if this method is split up */,
+   putInBoxLevel(
+      hier::BoxLevel &box_level ) const;
+
+
+   /*!
+    * @brief Generate unbalanced<==>balanced edges incident from a
+    * local box.  Edges not incident from a local Box are not generated.
+    */
+   void
+   generateLocalBasedMapEdges(
       hier::MappingConnector &unbalanced_to_balanced,
       hier::MappingConnector &balanced_to_unbalanced ) const;
 

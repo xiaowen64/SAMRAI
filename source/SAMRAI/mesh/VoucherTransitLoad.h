@@ -194,7 +194,6 @@ private:
 
       void sendWorkSupply(
          BoxTransitSet &reserve,
-         hier::BoxLevel &balanced_box_level /* unused, can be removed */,
          hier::MappingConnector &unbalanced_to_balanced,
          hier::MappingConnector &balanced_to_unbalanced /* unused, can be removed */,
          const PartitioningParams &pparams );
