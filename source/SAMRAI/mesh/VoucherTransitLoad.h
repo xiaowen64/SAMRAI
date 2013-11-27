@@ -48,6 +48,14 @@ public:
 
    VoucherTransitLoad( const PartitioningParams &pparams );
 
+   VoucherTransitLoad( const VoucherTransitLoad &other );
+
+   //! @brief Clone object according to design pattern.
+   boost::shared_ptr<TransitLoad> clone() const;
+
+   //! @brief Initialize object.
+   void initialize();
+
    //! @brief Return the total load contained.
    LoadType getSumLoad() const { return d_sumload; }
 

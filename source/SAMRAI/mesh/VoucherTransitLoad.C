@@ -62,6 +62,51 @@ VoucherTransitLoad::VoucherTransitLoad( const PartitioningParams &pparams ) :
 *************************************************************************
 *************************************************************************
 */
+VoucherTransitLoad::VoucherTransitLoad( const VoucherTransitLoad &other ) :
+   TransitLoad(other),
+   d_voucher_set(other.d_voucher_set),
+   d_sumload(other.d_sumload),
+   d_pparams(other.d_pparams),
+   d_print_steps(other.d_print_steps),
+   d_print_edge_steps(other.d_print_edge_steps),
+   d_object_timers(other.d_object_timers)
+{
+}
+
+
+/*
+*************************************************************************
+Initialize sets to a new (empty) container but retains current
+supplemental data such as diagnostic parameters.
+*************************************************************************
+*/
+void VoucherTransitLoad::initialize()
+{
+   d_voucher_set.clear();
+   d_sumload = 0.0;
+}
+
+
+/*
+*************************************************************************
+Initialize sets to a new (empty) container but retains current
+supplemental data such as diagnostic parameters.
+*************************************************************************
+*/
+boost::shared_ptr<TransitLoad> VoucherTransitLoad::clone() const
+{
+   boost::shared_ptr<VoucherTransitLoad> new_object =
+      boost::make_shared<VoucherTransitLoad>(*this);
+   new_object->setAllowBoxBreaking(getAllowBoxBreaking());
+   new_object->initialize();
+   return new_object;
+}
+
+
+/*
+*************************************************************************
+*************************************************************************
+*/
 void VoucherTransitLoad::insertAll( const hier::BoxContainer &other )
 {
    for ( hier::BoxContainer::const_iterator bi=other.begin(); bi!=other.end(); ++bi ) {
