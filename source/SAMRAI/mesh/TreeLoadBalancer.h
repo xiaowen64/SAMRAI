@@ -16,7 +16,6 @@
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
 #include "SAMRAI/mesh/TransitLoad.h"
-#include "SAMRAI/mesh/BoxTransitSet.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
 #include "SAMRAI/tbox/CommGraphWriter.h"
@@ -325,7 +324,8 @@ private:
 
    public:
       //! @brief Constructor.
-      BranchData( const PartitioningParams &pparams );
+      BranchData( const PartitioningParams &pparams,
+                  const TransitLoad &transit_load_prototype );
       //! @brief Copy constructor.
       BranchData( const BranchData &other );
 
@@ -398,13 +398,13 @@ private:
        */
       LoadType
       adjustOutboundLoad(
-         BoxTransitSet& reserve,
+         TransitLoad& reserve,
          LoadType ideal_load,
          LoadType low_load,
          LoadType high_load );
 
       //! @brief Move inbound load to the given reserve container.
-      void moveInboundLoadToReserve( BoxTransitSet &reserve );
+      void moveInboundLoadToReserve( TransitLoad &reserve );
 
       /*!
        * @brief Incorporate child branch into this branch.
@@ -496,7 +496,7 @@ private:
        * If this object is for the local process, shipment is to or
        * from the process's *parent*.
        */
-      boost::shared_ptr<BoxTransitSet> d_shipment;
+      boost::shared_ptr<TransitLoad> d_shipment;
 
       /*!
        * @brief Whether branch expects its parent to send work down.
@@ -605,7 +605,7 @@ private:
     */
    void
    distributeLoadAcrossRankGroup(
-      BoxTransitSet &balanced_work,
+      TransitLoad &balanced_work,
       const hier::BoxLevel &unbalanced_box_level,
       const tbox::RankGroup& rank_group,
       double group_sum_load ) const;

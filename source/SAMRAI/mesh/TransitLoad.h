@@ -25,7 +25,7 @@ namespace mesh {
 
 
 /*!
- * @brief Base class for container work in transit through the tree
+ * @brief Base class for container of work in transit through the tree
  * in the TreeLoadBalancer algorithm.
  *
  * TransitLoad base class follows the prototype design pattern.

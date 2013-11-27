@@ -12,6 +12,7 @@
 #define included_mesh_TreeLoadBalancer_C
 
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/mesh/BoxTransitSet.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
@@ -619,6 +620,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
    else {
 
       BoxTransitSet balanced_work(*d_pparams);
+
       distributeLoadAcrossRankGroup(
          balanced_work,
          balance_box_level,
@@ -671,7 +673,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
  */
 void
 TreeLoadBalancer::distributeLoadAcrossRankGroup(
-   BoxTransitSet &balanced_work,
+   TransitLoad &balanced_work,
    const hier::BoxLevel &unbalanced_box_level,
    const tbox::RankGroup& rank_group,
    double group_sum_load ) const
@@ -810,14 +812,10 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
 
 
    // State of the tree, as seen by local process.
-   BranchData my_branch(*d_pparams);
+   BranchData my_branch(*d_pparams, balanced_work);
    my_branch.setTimerPrefix(d_object_name);
    my_branch.setPrintSteps( d_print_steps == 'y' );
-   std::vector<BranchData> child_branches(num_children, BranchData(*d_pparams));
-   for ( size_t i=0; i<child_branches.size(); ++i ) {
-      child_branches[i].setTimerPrefix(d_object_name);
-      child_branches[i].setPrintSteps( d_print_steps == 'y' );
-   }
+   std::vector<BranchData> child_branches(num_children, my_branch);
 
 
    /*
@@ -833,7 +831,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
     * of the algorithm, everything left unassigned is actually the
     * balanced load.
     */
-   BoxTransitSet &unassigned(balanced_work);
+   TransitLoad &unassigned(balanced_work);
 
    t_local_load_moves->start();
    unassigned.insertAll(unbalanced_box_level.getBoxes());
@@ -1736,7 +1734,9 @@ TreeLoadBalancer::setTimers()
  *************************************************************************
  *************************************************************************
  */
-TreeLoadBalancer::BranchData::BranchData( const PartitioningParams &pparams ):
+TreeLoadBalancer::BranchData::BranchData(
+   const PartitioningParams &pparams,
+   const TransitLoad &transit_load_prototype ) :
    d_num_procs(0),
    d_branch_load_current(0),
    d_branch_load_ideal(-1),
@@ -1745,11 +1745,12 @@ TreeLoadBalancer::BranchData::BranchData( const PartitioningParams &pparams ):
    d_eff_load_current(0),
    d_eff_load_ideal(-1),
    d_eff_load_upperlimit(-1),
-   d_shipment(boost::make_shared<BoxTransitSet>(pparams)),
+   d_shipment(transit_load_prototype.clone()),
    d_wants_work_from_parent(false),
    d_pparams(&pparams),
    d_print_steps(false)
 {
+   d_shipment->initialize();
 }
 
 
@@ -1766,11 +1767,14 @@ TreeLoadBalancer::BranchData::BranchData( const BranchData &other ):
    d_eff_load_current(other.d_eff_load_current),
    d_eff_load_ideal(other.d_eff_load_ideal),
    d_eff_load_upperlimit(other.d_eff_load_upperlimit),
-   d_shipment(boost::make_shared<BoxTransitSet>(*other.d_shipment)),
+   d_shipment(other.d_shipment->clone()),
    d_wants_work_from_parent(other.d_wants_work_from_parent),
    d_pparams(other.d_pparams),
+   t_pack_load(other.t_pack_load),
+   t_unpack_load(other.t_unpack_load),
    d_print_steps(other.d_print_steps)
 {
+   d_shipment->initialize();
 }
 
 
@@ -1832,7 +1836,7 @@ TreeLoadBalancer::BranchData::incorporateChild(
  *************************************************************************
  */
 TreeLoadBalancer::LoadType TreeLoadBalancer::BranchData::adjustOutboundLoad(
-   BoxTransitSet& reserve,
+   TransitLoad& reserve,
    LoadType ideal_load,
    LoadType low_load,
    LoadType high_load )
@@ -1880,7 +1884,7 @@ TreeLoadBalancer::LoadType TreeLoadBalancer::BranchData::adjustOutboundLoad(
  *************************************************************************
  */
 void TreeLoadBalancer::BranchData::moveInboundLoadToReserve(
-   BoxTransitSet& reserve )
+   TransitLoad& reserve )
 {
    reserve.insertAll( *d_shipment );
 }
