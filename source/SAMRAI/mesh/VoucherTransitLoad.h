@@ -32,6 +32,12 @@ namespace mesh {
  *
  * As a container, this class is identical to
  * std::set<Voucher,VoucherMoreLoad>.
+ *
+ * Terminology: To avoid confusing the sending and receiving of
+ * messages, the sending and receiving of work use the terms supply
+ * and demand.  The holder of a voucher demands the work.  The issuer
+ * of that voucher supplies the work.  Both send and receive messages
+ * to accomplish this.
  */
 
 class VoucherTransitLoad : public TransitLoad {
@@ -164,34 +170,46 @@ private:
    };
 
 
-   //! @brief Encapsulates voucher redemption for both redeemer and fulfiller.
+   //! @brief Encapsulates voucher redemption for both demander and supplier.
    struct VoucherRedemption {
       VoucherRedemption() : d_mpi(MPI_COMM_NULL) {};
       ~VoucherRedemption() {
          if ( d_mpi_request != MPI_REQUEST_NULL ) {
-            TBOX_ERROR("Need to finish send before destructing d_msg.");
+            TBOX_ERROR("Need to finish communication before destructing d_msg.");
             tbox::SAMRAI_MPI::Request_free(&d_mpi_request);
          }
       }
+
       //@{
-      //! @name Methods for redeeming and fulfilling voucher
-      void requestRedemption( const Voucher &v,
-                              const hier::SequentialLocalIdGenerator &id_gen,
-                              const tbox::SAMRAI_MPI &mpi );
+      //! @name Demanding and supplying work for based on a voucher.
+      void sendWorkDemand(
+         const Voucher &v,
+         const hier::SequentialLocalIdGenerator &id_gen,
+         const tbox::SAMRAI_MPI &mpi );
 
-      void receiveRedemption( int message_length,
-                              const PartitioningParams &pparams );
+      void recvWorkDemand(
+         int demander_rank,
+         int message_length,
+         const tbox::SAMRAI_MPI &mpi );
 
-      void receiveRedeemerRequest( int redeemer_rank, int message_length,
-                                   const tbox::SAMRAI_MPI &mpi );
+      void sendWorkSupply(
+         BoxTransitSet &reserve,
+         hier::BoxLevel &balanced_box_level /* unused, can be removed */,
+         hier::MappingConnector &unbalanced_to_balanced,
+         hier::MappingConnector &balanced_to_unbalanced /* unused, can be removed */,
+         const PartitioningParams &pparams );
 
-      void fulfillRedemption( BoxTransitSet &reserve,
-                              hier::MappingConnector &unbalanced_to_balanced,
-                              const PartitioningParams &pparams );
+      void recvWorkSupply(
+         int message_length,
+         hier::BoxLevel &balanced_box_level,
+         hier::MappingConnector &unbalanced_to_balanced /* unused, can be removed */,
+         hier::MappingConnector &balanced_to_unbalanced,
+         const PartitioningParams &pparams );
       //@}
+
       Voucher d_voucher;
-      int d_redeemer_rank;
-      //! @brief Redeemer-specified LocalId generator to avoid ID clashes.
+      int d_demander_rank;
+      //! @brief Demander-specified LocalId generator to avoid ID clashes.
       hier::SequentialLocalIdGenerator d_id_gen;
       boost::shared_ptr<tbox::MessageStream> d_msg;
       tbox::SAMRAI_MPI d_mpi;

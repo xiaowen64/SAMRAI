@@ -119,23 +119,21 @@ size_t VoucherTransitLoad::getNumberOfOriginatingProcesses() const
  * Assign boxes to local process (put them in the balanced_box_level
  * and put edges in balanced<==>unbalanced Connector).
  *
- * This method does a P2P communication to convert the vouchers to
+ * This method does some P2P communication to convert the vouchers to
  * boxes then delegates to BoxTransitSet to do the rest.
  *
  * This method does two things:
- * - request/receive work for voucher to be redeemed
- * - receive/fulfill redemption requests
+ * - Voucher redeemers request and receive work for their vouchers.
+ * - Voucher fulfillers receive and fulfill redemption requests.
+ * The code is writen to let each process be both redeemers and
+ * fulfillers.  Logic should drop through correctly when the process
+ * plays just one role.
  *
- * We organize these things to try to overlap communication.
+ * There are four major steps, organized to overlap communication.
  * 1. Request work for vouchers to be redeemed.
  * 2. Receive redemption requests.
  * 3. Fulfill redemption requests.
- * 4. Receive work for vouchers to be redeemed.
- *
- * Each process will be either a redeemer or a fulfiller, but not
- * both.  The code should automatically drop through any unneeded
- * steps without requiring special logic.  Thus, there are 4
- * communication phases, but each process participates in only two.
+ * 4. Receive work for redeemed vouchers.
  */
 void
 VoucherTransitLoad::assignContentToLocalProcessAndGenerateMap(
@@ -159,12 +157,13 @@ VoucherTransitLoad::assignContentToLocalProcessAndGenerateMap(
 
    const hier::LocalId last_local_id = unbalanced_box_level.getLastLocalId();
    int count = 0;
-   for ( const_iterator si=d_voucher_set.begin(); si!=d_voucher_set.end(); ++si, ++count ) {
+   for ( const_iterator si=d_voucher_set.begin();
+         si!=d_voucher_set.end(); ++si, ++count ) {
 
       hier::SequentialLocalIdGenerator id_gen( last_local_id + count,
                                                hier::LocalId(d_voucher_set.size()) );
 
-      redemptions_to_request[si->d_issuer_rank].requestRedemption( *si, id_gen, mpi );
+      redemptions_to_request[si->d_issuer_rank].sendWorkDemand( *si, id_gen, mpi );
    }
 
 
@@ -202,7 +201,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndGenerateMap(
       tbox::SAMRAI_MPI::Get_count( &status, MPI_CHAR, &count );
 
       VoucherRedemption &vr = redemptions_to_fulfill[source];
-      vr.receiveRedeemerRequest( source, count, mpi );
+      vr.recvWorkDemand( source, count, mpi );
 
       unaccounted_work -= vr.d_voucher.d_load;
       TBOX_ASSERT( unaccounted_work > -d_pparams->getLoadComparisonTol() );
@@ -216,7 +215,11 @@ VoucherTransitLoad::assignContentToLocalProcessAndGenerateMap(
          mi!=redemptions_to_fulfill.end(); ++mi ) {
 
       VoucherRedemption &vr = mi->second;
-      vr.fulfillRedemption( reserve, unbalanced_to_balanced, *d_pparams );
+      vr.sendWorkSupply( reserve,
+                         balanced_box_level,
+                         unbalanced_to_balanced,
+                         balanced_to_unbalanced,
+                         *d_pparams );
    }
 
 
@@ -231,13 +234,14 @@ VoucherTransitLoad::assignContentToLocalProcessAndGenerateMap(
       int count = -1;
       tbox::SAMRAI_MPI::Get_count( &status, MPI_CHAR, &count );
 
-      VoucherRedemption &rr = redemptions_to_request[source];
-      rr.receiveRedemption(count, *d_pparams);
+      VoucherRedemption &vr = redemptions_to_request[source];
+      vr.recvWorkSupply( count,
+                         balanced_box_level,
+                         unbalanced_to_balanced,
+                         balanced_to_unbalanced,
+                         *d_pparams );
 
    }
-
-
-   TBOX_ERROR("Missing code to convert vouchers to fill transit_boxes.");
 
 
    if ( d_print_steps ) {
@@ -251,9 +255,11 @@ VoucherTransitLoad::assignContentToLocalProcessAndGenerateMap(
 
 /*
 *************************************************************************
+* Start redeeming a voucher by sending the demand for work to the
+* voucher issuer.
 *************************************************************************
 */
-void VoucherTransitLoad::VoucherRedemption::requestRedemption(
+void VoucherTransitLoad::VoucherRedemption::sendWorkDemand(
    const Voucher &voucher,
    const hier::SequentialLocalIdGenerator &id_gen,
    const tbox::SAMRAI_MPI &mpi )
@@ -270,6 +276,7 @@ void VoucherTransitLoad::VoucherRedemption::requestRedemption(
       d_voucher.d_issuer_rank,
       VoucherTransitLoad_EDGETAG0,
       &d_mpi_request);
+   d_msg.reset();
 }
 
 
@@ -278,8 +285,83 @@ void VoucherTransitLoad::VoucherRedemption::requestRedemption(
 *************************************************************************
 *************************************************************************
 */
-void VoucherTransitLoad::VoucherRedemption::receiveRedemption(
+void VoucherTransitLoad::VoucherRedemption::recvWorkDemand(
+   int demander_rank,
    int message_length,
+   const tbox::SAMRAI_MPI &mpi )
+{
+   d_mpi = mpi;
+   d_demander_rank = demander_rank;
+   std::vector<char> incoming_message(message_length);
+   tbox::SAMRAI_MPI::Status status;
+   d_mpi.Recv(
+      static_cast<void*>(&incoming_message[0]),
+      message_length,
+      MPI_CHAR,
+      d_demander_rank,
+      VoucherTransitLoad_EDGETAG0,
+      &status );
+   d_msg = boost::make_shared<tbox::MessageStream>(
+      message_length, tbox::MessageStream::Read,
+      static_cast<void*>(&incoming_message[0]), false);
+   (*d_msg) >> d_voucher.d_load >> d_id_gen;
+   TBOX_ASSERT( d_msg->endOfData() );
+   TBOX_ASSERT( d_voucher.d_issuer_rank == mpi.getRank() );
+   d_msg.reset();
+}
+
+
+
+/*
+*************************************************************************
+* Fulfill the voucher redemption by sending a supply of work to the
+* demander.  The work is appropriated from a reserve.  Mapping edges
+* based on the supplied work are saved in MappingConnectors.
+*************************************************************************
+*/
+void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
+   BoxTransitSet &reserve,
+   hier::BoxLevel &balanced_box_level,
+   hier::MappingConnector &unbalanced_to_balanced,
+   hier::MappingConnector &balanced_to_unbalanced,
+   const PartitioningParams &pparams )
+{
+   BoxTransitSet box_shipment(pparams);
+   box_shipment.adjustLoad( reserve,
+                            d_voucher.d_load,
+                            d_voucher.d_load,
+                            d_voucher.d_load );
+   box_shipment.reassignOwnership( d_id_gen, d_mpi.getRank() );
+   BoxTransitSet semi_local(pparams);
+   box_shipment.generateBalancedBoxLevelAndMostMapEdges(
+      balanced_box_level,
+      unbalanced_to_balanced,
+      balanced_to_unbalanced,
+      semi_local);
+   semi_local.putToMessageStream(*d_msg);
+   d_mpi.Isend(
+      (void*)(d_msg->getBufferStart()),
+      static_cast<int>(d_msg->getCurrentSize()),
+      MPI_CHAR,
+      d_demander_rank,
+      VoucherTransitLoad_EDGETAG0,
+      &d_mpi_request);
+   return;
+}
+
+
+
+/*
+*************************************************************************
+* Receive work supply from the issuer of the voucher.  Mapping edges
+* based on the work shipped are saved in MappingConnectors.
+*************************************************************************
+*/
+void VoucherTransitLoad::VoucherRedemption::recvWorkSupply(
+   int message_length,
+   hier::BoxLevel &balanced_box_level /* can be removed */,
+   hier::MappingConnector &unbalanced_to_balanced,
+   hier::MappingConnector &balanced_to_unbalanced,
    const PartitioningParams &pparams )
 {
    std::vector<char> incoming_message(message_length);
@@ -294,72 +376,13 @@ void VoucherTransitLoad::VoucherRedemption::receiveRedemption(
       message_length, tbox::MessageStream::Read,
       static_cast<void*>(&incoming_message[0]), false);
    BoxTransitSet box_shipment(pparams);
+   BoxTransitSet semi_local(pparams);
    box_shipment.getFromMessageStream(*d_msg);
-   TBOX_ERROR("Need to set up edges from box_shipment received.");
-}
-
-
-
-/*
-*************************************************************************
-*************************************************************************
-*/
-void VoucherTransitLoad::VoucherRedemption::receiveRedeemerRequest(
-   int redeemer_rank, int message_length,
-   const tbox::SAMRAI_MPI &mpi )
-{
-   d_mpi = mpi;
-   d_redeemer_rank = redeemer_rank;
-   std::vector<char> incoming_message(message_length);
-   tbox::SAMRAI_MPI::Status status;
-   d_mpi.Recv(
-      static_cast<void*>(&incoming_message[0]),
-      message_length,
-      MPI_CHAR,
-      d_redeemer_rank,
-      VoucherTransitLoad_EDGETAG0,
-      &status );
-   d_msg = boost::make_shared<tbox::MessageStream>(
-      message_length, tbox::MessageStream::Read,
-      static_cast<void*>(&incoming_message[0]), false);
-   (*d_msg) >> d_voucher.d_load >> d_id_gen;
-   TBOX_ASSERT( d_msg->endOfData() );
-   d_msg.reset();
-}
-
-
-
-/*
-*************************************************************************
-*************************************************************************
-*/
-void VoucherTransitLoad::VoucherRedemption::fulfillRedemption(
-   BoxTransitSet &reserve,
-   hier::MappingConnector &unbalanced_to_balanced,
-   const PartitioningParams &pparams )
-{
-   BoxTransitSet box_shipment(pparams);
-   box_shipment.adjustLoad( reserve,
-                            d_voucher.d_load,
-                            d_voucher.d_load,
-                            d_voucher.d_load );
-   box_shipment.reassignOwnership( d_id_gen, d_mpi.getRank() );
-   d_msg = boost::make_shared<tbox::MessageStream>();
-   box_shipment.putToMessageStream(*d_msg);
-   d_mpi.Isend(
-      (void*)(d_msg->getBufferStart()),
-      static_cast<int>(d_msg->getCurrentSize()),
-      MPI_CHAR,
-      d_redeemer_rank,
-      VoucherTransitLoad_EDGETAG1,
-      &d_mpi_request);
-
-   // Set up map.
-
-   TBOX_ERROR("Missing code to set up map.");
-
-   TBOX_ERROR("What should fulfiller do with reserve after this step?.  Need to set up mappings again.");
-   return;
+   box_shipment.generateBalancedBoxLevelAndMostMapEdges(
+      balanced_box_level,
+      unbalanced_to_balanced,
+      balanced_to_unbalanced,
+      semi_local);
 }
 
 
