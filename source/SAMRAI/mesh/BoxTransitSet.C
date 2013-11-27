@@ -60,7 +60,8 @@ BoxTransitSet::BoxTransitSet( const PartitioningParams &pparams ) :
    d_print_pop_steps(false),
    d_print_swap_steps(false),
    d_print_break_steps(false),
-   d_print_edge_steps(false)
+   d_print_edge_steps(false),
+   d_object_timers(0)
 {
    getFromInput();
    setTimerPrefix(s_default_timer_prefix);
@@ -90,6 +91,7 @@ boost::shared_ptr<TransitLoad> BoxTransitSet::clone() const
 {
    boost::shared_ptr<BoxTransitSet> new_object =
       boost::make_shared<BoxTransitSet>(*this);
+   new_object->setAllowBoxBreaking(getAllowBoxBreaking());
    new_object->initialize();
    return new_object;
 }
