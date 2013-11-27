@@ -154,6 +154,20 @@ private:
             TBOX_ERROR("VoucherTransitLoad: Cannot combine vouchers from different issuers.");
          }
       }
+      //@ @brief Construct a Voucher by taking value from an existing Voucher.
+      Voucher ( LoadType load, Voucher &src ) :
+         d_issuer_rank(src.d_issuer_rank),
+         d_load(load <= src.d_load ? load : src.d_load) {
+         src.d_load -= d_load;
+      }
+      /*!
+       * @brief Adjust load by taking work from or giving work to
+       * another Voucher.
+       *
+       * Similar to the interface defined in TransitLoad but working
+       * with individual vouchers instead of containers.
+       */
+      LoadType adjustLoad( Voucher &other, LoadType ideal_load );
       int d_issuer_rank;
       LoadType d_load;
    };
@@ -217,7 +231,7 @@ private:
 
 
    //@{
-   //! @name Interfaces like the C++ standard stl::map, to help readability.
+   //! @name Interfaces like the C++ standard stl::set, to help readability.
    typedef std::set<Voucher,VoucherRankCompare>::iterator iterator;
    typedef std::set<Voucher,VoucherRankCompare>::const_iterator const_iterator;
    typedef std::set<Voucher,VoucherRankCompare>::reverse_iterator reverse_iterator;
@@ -227,13 +241,28 @@ private:
    iterator end() { return d_voucher_set.end(); }
    const_iterator begin() const { return d_voucher_set.begin(); }
    const_iterator end() const { return d_voucher_set.end(); }
+   reverse_iterator rbegin() { return d_voucher_set.rbegin(); }
+   reverse_iterator rend() { return d_voucher_set.rend(); }
+   iterator insert( const Voucher &v ) {
+      iterator itr = d_voucher_set.lower_bound(v);
+      if ( itr != d_voucher_set.end() &&
+           v.d_issuer_rank != itr->d_issuer_rank ) {
+         TBOX_ERROR("Not supporting multiple vouchers from same issuer.");
+      }
+      d_sumload += v.d_load;
+      return d_voucher_set.insert( itr, v );
+   }
+   void erase( iterator pos) {
+      d_sumload -= pos->d_load;
+      return d_voucher_set.erase(pos);
+   }
    size_t size() const { return d_voucher_set.size(); }
    bool empty() const { return d_voucher_set.empty(); }
    void clear() { d_sumload = 0; d_voucher_set.clear(); }
    void swap( VoucherTransitLoad &other ) {
-      const LoadType tl = d_sumload;
+      const LoadType tmpload = d_sumload;
       d_sumload = other.d_sumload;
-      other.d_sumload = tl;
+      other.d_sumload = tmpload;
       d_voucher_set.swap(other.d_voucher_set);
    }
    //@}
@@ -254,6 +283,16 @@ private:
    void constructSemilocalUnbalancedToBalanced(
       hier::MappingConnector &unbalanced_to_balanced,
       const VoucherTransitLoad &kept_imports ) const;
+
+
+   /*!
+    * @brief Raise load of dst container by shifing load from src.
+    */
+   static LoadType
+   raiseDstLoad(
+      VoucherTransitLoad& src,
+      VoucherTransitLoad& dst,
+      LoadType ideal_dst_load );
 
 
    /*!
@@ -325,7 +364,6 @@ private:
 
    //! @brief Work load, sorted by originating rank.
    std::set<Voucher,VoucherRankCompare> d_voucher_set;
-   std::map<int,LoadType> d_vouchers;
 
    LoadType d_sumload;
 

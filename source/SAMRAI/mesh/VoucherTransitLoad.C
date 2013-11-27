@@ -392,29 +392,27 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkSupply(
 
 
 /*
- *************************************************************************
- *
- * This method adjusts the load in this VoucherTransitLoad by
- * moving work between it (main_bin) and a holding_bin.  It tries to bring
- * main_bin's load to the specified ideal_load.
- *
- * The high_load and low_load define an acceptable range around the
- * ideal_load.  As soon as the main load falls in this range, no
- * further change is tried, even if it may bring the load closer to
- * the ideal.
- *
- * This method makes a best effort and returns the amount of load
- * moved.  It can move Vouchers between given sets and, if needed,
- * break some Vouchers up to move part of the work.
- *
- * This method is purely local--it reassigns the load but does not
- * communicate the change to any remote process.
- *
- * Return amount of load moved to main_bin from hold_bin.  Negative
- * amount means load moved from main_bin to hold_bin.
- *
- *************************************************************************
- */
+*************************************************************************
+* This method adjusts the load in this VoucherTransitLoad by moving
+* work between it (main_bin) and a holding_bin.  It tries to bring
+* main_bin's load to the specified ideal_load.
+*
+* The high_load and low_load define an acceptable range around the
+* ideal_load.  As soon as the main load falls in this range, no
+* further change is tried, even if it may bring the load closer to
+* the ideal.
+*
+* This method makes a best effort and returns the amount of load
+* moved.  It can move Vouchers between given sets and, if needed,
+* break some Vouchers up to move part of the work.
+*
+* This method is purely local--it reassigns the load but does not
+* communicate the change to any remote process.
+*
+* Return amount of load moved to main_bin from hold_bin.  Negative
+* amount means load moved from main_bin to hold_bin.
+*************************************************************************
+*/
 VoucherTransitLoad::LoadType
 VoucherTransitLoad::adjustLoad(
    TransitLoad& hold_bin,
@@ -443,6 +441,20 @@ VoucherTransitLoad::adjustLoad(
 
    d_object_timers->t_adjust_load->start();
 
+   const LoadType change = ideal_load - main_bin.getSumLoad();
+
+   if ( change > 0 ) {
+      // Move load to main_bin.
+      raiseDstLoad( recastTransitLoad(hold_bin),
+                    main_bin,
+                    ideal_load );
+   }
+   else if ( change < 0 ) {
+      // Move load to hold_bin.
+      raiseDstLoad( main_bin,
+                    recastTransitLoad(hold_bin),
+                    hold_bin.getSumLoad() - change );
+   }
 
    if ( d_print_steps ) {
       const LoadType point_miss = main_bin.getSumLoad() - ideal_load;
@@ -462,6 +474,77 @@ VoucherTransitLoad::adjustLoad(
    d_object_timers->t_adjust_load->stop();
 
    return actual_transfer;
+}
+
+
+
+
+/*
+*************************************************************************
+* Raise load of dst container by shifing load from src.
+*************************************************************************
+*/
+VoucherTransitLoad::LoadType
+VoucherTransitLoad::raiseDstLoad(
+   VoucherTransitLoad& src,
+   VoucherTransitLoad& dst,
+   LoadType ideal_dst_load )
+{
+   TBOX_ASSERT( ideal_dst_load >= dst.getSumLoad() );
+
+   // Handle empty-container cases here.
+   if ( src.empty() ) {
+      return 0;
+   }
+
+   /*
+    * Decide whether to take work from the beginning or the end of
+    * src, whichever is closer to the dst.  This is a minor
+    * optimization to better preserve locality when the issuer rank
+    * ranges of src and dst don't overlap much.
+    */
+   bool take_from_src_end = true;
+   if ( !dst.empty() ) {
+
+      const LoadType gap_at_src_end =
+         tbox::MathUtilities<double>::Abs(
+            src.rbegin()->d_issuer_rank - dst.begin()->d_issuer_rank);
+
+      const LoadType gap_at_src_begin =
+         tbox::MathUtilities<double>::Abs(
+            dst.rbegin()->d_issuer_rank - src.begin()->d_issuer_rank);
+
+      take_from_src_end = gap_at_src_end < gap_at_src_begin;
+   }
+
+   LoadType old_dst_load = dst.getSumLoad();
+
+   do {
+
+      iterator src_itr;
+      if ( take_from_src_end ) {
+         src_itr = src.end();
+         --src_itr;
+      }
+      else {
+         src_itr = src.begin();
+      }
+
+      Voucher free_voucher = *src_itr;
+      src.erase(src_itr);
+
+      if ( free_voucher.d_load < (ideal_dst_load - dst.getSumLoad()) ) {
+         dst.insert(free_voucher);
+      }
+      else {
+         Voucher partial_voucher((ideal_dst_load - dst.getSumLoad()), free_voucher);
+         dst.insert(partial_voucher);
+         src.insert(free_voucher);
+      }
+
+   } while ( dst.getSumLoad() < ideal_dst_load && !src.empty() );
+
+   return (dst.getSumLoad() - old_dst_load);
 }
 
 
