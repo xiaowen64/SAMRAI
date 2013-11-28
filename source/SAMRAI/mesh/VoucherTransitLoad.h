@@ -269,6 +269,15 @@ private:
       d_sumload += v.d_load;
       return d_voucher_set.insert( itr, v );
    }
+   size_t erase( const Voucher &v ) {
+      iterator vi = d_voucher_set.lower_bound(v);
+      if ( vi != d_voucher_set.end() ) {
+         d_sumload -= vi->d_load;
+         erase(vi);
+         return 1;
+      }
+      return 0;
+   }
    void erase( iterator pos) {
       d_sumload -= pos->d_load;
       return d_voucher_set.erase(pos);

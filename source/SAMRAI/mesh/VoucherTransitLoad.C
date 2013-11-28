@@ -197,6 +197,25 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    const tbox::SAMRAI_MPI &mpi = unbalanced_box_level.getMPI();
 
 
+   /*
+    * If there is unaccounted work, then some process must have our
+    * vouchers.  Fulfill these redemption requests until we accounted
+    * for everything.
+    *
+    * For now, work is same as cell count.
+    */
+
+   LoadType unaccounted_work = LoadType(unbalanced_box_level.getLocalNumberOfCells())
+      - findIssuerValue(mpi.getRank());
+
+   if ( d_print_edge_steps ) {
+      tbox::plog << "unaccounted work is " << unaccounted_work << std::endl;
+   }
+
+   // Remove voucher I issued.
+   erase( Voucher(0, mpi.getRank()) );
+
+
    // 1. Request work for vouchers to be redeemed.
 
    std::map<int,VoucherRedemption> redemptions_to_request;
@@ -211,22 +230,6 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
          hier::LocalId(static_cast<int>(d_voucher_set.size())) );
 
       redemptions_to_request[si->d_issuer_rank].sendWorkDemand( *si, id_gen, mpi );
-   }
-
-
-   /*
-    * If there is unaccounted work, then some process must have our
-    * vouchers.  Fulfill these redemption requests until we accounted
-    * for everything.
-    *
-    * For now, work is same as cell count.
-    */
-
-   LoadType unaccounted_work = LoadType(unbalanced_box_level.getLocalNumberOfCells())
-      - findIssuerValue(mpi.getRank());
-
-   if ( d_print_edge_steps ) {
-      tbox::plog << "unaccounted work is " << unaccounted_work << std::endl;
    }
 
    // Set up the reserve for fulfilling incoming redemption requests.
