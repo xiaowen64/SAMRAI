@@ -267,9 +267,9 @@ private:
       iterator itr = d_voucher_set.lower_bound( Voucher(0,v.d_issuer_rank) );
       if ( itr != d_voucher_set.end() &&
            itr->d_issuer_rank == v.d_issuer_rank ) {
-         TBOX_ERROR("Cannot insert Voucher issued by rank " << v.d_issuer_rank
-                    << " because there is already one from that issuer.\n"
-                    << "To combine the vouchers, use insertCombine().");
+         TBOX_ERROR("Cannot insert Voucher " << v
+                    << ".\nThere is already one from the same issuer."
+                    << "\nTo combine the vouchers, use insertCombine().");
       }
       itr = d_voucher_set.insert( itr, v );
       return std::pair<iterator, bool>(itr,true);
