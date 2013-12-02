@@ -643,14 +643,42 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       d_mpi.Barrier();
       t_post_load_distribution_barrier->stop();
 
+      if ( d_print_steps ) {
+         tbox::plog << "TreeLaodBalancer::loadBalanceWithinRankGroup constructing unbalanced<==>balanced.\n";
+      }
       balanced_work->assignContentToLocalProcessAndPopulateMaps(
          balanced_box_level,
          balanced_to_unbalanced,
          unbalanced_to_balanced );
+      if ( d_print_steps ) {
+         tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup finished constructing unbalanced<==>balanced.\n";
+      }
 
    }
 
    t_get_map->stop();
+
+   if ( d_summarize_map ) {
+      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup unbalanced--->balanced map:\n"
+                 << unbalanced_to_balanced.format("\t",0)
+                 << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
+                 << "TreeLoadBalancer::loadBalanceWithinRankGroup balanced--->unbalanced map:\n"
+                 << balanced_to_unbalanced.format("\t",0)
+                 << "Map statistics:\n" << balanced_to_unbalanced.formatStatistics("\t")
+                 << '\n';
+   }
+
+   if (d_check_map) {
+      if (unbalanced_to_balanced.findMappingErrors() != 0) {
+         TBOX_ERROR(
+            "TreeLoadBalancer::loadBalanceWithinRankGroup Mapping errors found in unbalanced_to_balanced!");
+      }
+      if (unbalanced_to_balanced.checkTransposeCorrectness(
+             balanced_to_unbalanced)) {
+         TBOX_ERROR(
+            "TreeLoadBalancer::loadBalanceWithinRankGroup Transpose errors found!");
+      }
+   }
 
 
    if (balance_to_reference && balance_to_reference->hasTranspose()) {

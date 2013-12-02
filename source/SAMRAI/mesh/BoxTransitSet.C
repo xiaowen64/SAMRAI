@@ -471,6 +471,7 @@ BoxTransitSet::putInBoxLevel(
 {
    for (iterator ni = begin(); ni != end(); ++ni ) {
       TBOX_ASSERT( ni->d_box.getOwnerRank() == box_level.getMPI().getRank() );
+      TBOX_ASSERT( ni->d_box.getBoxId().isValid() );
       box_level.addBox(ni->d_box);
    }
    return;
