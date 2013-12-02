@@ -385,7 +385,7 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
                             d_voucher.d_load,
                             d_voucher.d_load,
                             d_voucher.d_load );
-   box_shipment.reassignOwnership( d_id_gen, d_mpi.getRank() );
+   box_shipment.reassignOwnership( d_id_gen, d_demander_rank );
 
    d_msg = boost::make_shared<tbox::MessageStream>();
    box_shipment.putToMessageStream(*d_msg);
@@ -436,7 +436,6 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkSupply(
    box_shipment.getFromMessageStream(*d_msg);
    d_msg.reset();
 
-   box_shipment.reassignOwnership( d_id_gen, d_mpi.getRank() );
    box_shipment.putInBoxLevel(balanced_box_level);
 
    box_shipment.generateLocalBasedMapEdges(
