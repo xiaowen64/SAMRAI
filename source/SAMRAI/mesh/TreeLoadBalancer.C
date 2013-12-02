@@ -852,7 +852,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
    // State of the tree, as seen by local process.
    BranchData my_branch(*d_pparams, balanced_work);
    my_branch.setTimerPrefix(d_object_name);
-   my_branch.setPrintSteps( d_print_steps == 'y' );
+   my_branch.setPrintSteps(d_print_steps);
    std::vector<BranchData> child_branches(num_children, my_branch);
 
 

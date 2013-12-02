@@ -27,8 +27,8 @@
 namespace SAMRAI {
 namespace mesh {
 
-const int VoucherTransitLoad::VoucherTransitLoad_EDGETAG0;
-const int VoucherTransitLoad::VoucherTransitLoad_EDGETAG1;
+const int VoucherTransitLoad::VoucherTransitLoad_DEMANDTAG;
+const int VoucherTransitLoad::VoucherTransitLoad_SUPPLYTAG;
 
 const std::string VoucherTransitLoad::s_default_timer_prefix("mesh::VoucherTransitLoad");
 std::map<std::string, VoucherTransitLoad::TimerStruct> VoucherTransitLoad::s_static_timers;
@@ -122,20 +122,10 @@ void VoucherTransitLoad::insertAll( const hier::BoxContainer &other )
 void VoucherTransitLoad::insertAll( const TransitLoad &other_transit_load )
 {
    const VoucherTransitLoad &other = recastTransitLoad(other_transit_load);
-   for ( std::set<Voucher,VoucherRankCompare>::iterator si=d_voucher_set.begin();
-         si!=d_voucher_set.end(); ++si ) {
-      std::set<Voucher,VoucherRankCompare>::iterator sj =
-         d_voucher_set.lower_bound(*si);
-      if ( sj->d_issuer_rank == si->d_issuer_rank ) {
-         Voucher combined_voucher( *si, *sj );
-         d_voucher_set.erase(sj++);
-         d_voucher_set.insert(combined_voucher);
-      }
-      else {
-         d_voucher_set.insert(*si);
-      }
+   for ( const_iterator si=other.d_voucher_set.begin();
+         si!=other.d_voucher_set.end(); ++si ) {
+      insertCombine(*si);
    }
-   d_sumload += other.d_sumload;
 }
 
 
@@ -220,7 +210,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    std::map<int,VoucherRedemption> redemptions_to_request;
 
    const hier::LocalId last_local_id = unbalanced_box_level.getLastLocalId();
-   int count = 0;
+   int count = 1;
    for ( const_iterator si=d_voucher_set.begin();
          si!=d_voucher_set.end(); ++si, ++count ) {
 
@@ -243,7 +233,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    while ( unaccounted_work > d_pparams->getLoadComparisonTol() ) {
 
       tbox::SAMRAI_MPI::Status status;
-      mpi.Probe( MPI_ANY_SOURCE, VoucherTransitLoad_EDGETAG0, &status );
+      mpi.Probe( MPI_ANY_SOURCE, VoucherTransitLoad_DEMANDTAG, &status );
 
       int source = status.MPI_SOURCE;
       int count = -1;
@@ -272,6 +262,12 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
 
 
    // Anything left in reserve is kept locally.
+   hier::SequentialLocalIdGenerator id_gen(
+      last_local_id,
+      hier::LocalId(static_cast<int>(d_voucher_set.size())) );
+   reserve.reassignOwnership(
+      id_gen,
+      balanced_box_level.getMPI().getRank() );
    reserve.putInBoxLevel(balanced_box_level);
 
 
@@ -280,7 +276,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    while ( !redemptions_to_request.empty() ) {
 
       tbox::SAMRAI_MPI::Status status;
-      mpi.Probe( MPI_ANY_SOURCE, VoucherTransitLoad_EDGETAG0, &status );
+      mpi.Probe( MPI_ANY_SOURCE, VoucherTransitLoad_SUPPLYTAG, &status );
 
       int source = status.MPI_SOURCE;
       int count = -1;
@@ -293,6 +289,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
                          balanced_to_unbalanced,
                          *d_pparams );
 
+      redemptions_to_request.erase(source);
    }
 
 
@@ -319,15 +316,18 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkDemand(
    d_voucher = voucher;
    d_id_gen = id_gen;
    d_mpi = mpi;
+
    d_msg = boost::make_shared<tbox::MessageStream>();
-   (*d_msg) << d_voucher.d_load << d_id_gen;
+   (*d_msg) << d_id_gen << d_voucher;
+
    d_mpi.Isend(
       (void*)(d_msg->getBufferStart()),
       static_cast<int>(d_msg->getCurrentSize()),
       MPI_CHAR,
       d_voucher.d_issuer_rank,
-      VoucherTransitLoad_EDGETAG0,
+      VoucherTransitLoad_DEMANDTAG,
       &d_mpi_request);
+
    d_msg.reset();
 }
 
@@ -352,15 +352,16 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkDemand(
       message_length,
       MPI_CHAR,
       d_demander_rank,
-      VoucherTransitLoad_EDGETAG0,
+      VoucherTransitLoad_DEMANDTAG,
       &status );
 
    d_msg = boost::make_shared<tbox::MessageStream>(
       message_length, tbox::MessageStream::Read,
       static_cast<void*>(&incoming_message[0]), false);
-   (*d_msg) >> d_voucher.d_load >> d_id_gen;
+   (*d_msg) >> d_id_gen >> d_voucher;
    TBOX_ASSERT( d_msg->endOfData() );
    TBOX_ASSERT( d_voucher.d_issuer_rank == mpi.getRank() );
+
    d_msg.reset();
 }
 
@@ -386,13 +387,15 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
                             d_voucher.d_load );
    box_shipment.reassignOwnership( d_id_gen, d_mpi.getRank() );
 
+   d_msg = boost::make_shared<tbox::MessageStream>();
    box_shipment.putToMessageStream(*d_msg);
+
    d_mpi.Isend(
       (void*)(d_msg->getBufferStart()),
       static_cast<int>(d_msg->getCurrentSize()),
       MPI_CHAR,
       d_demander_rank,
-      VoucherTransitLoad_EDGETAG0,
+      VoucherTransitLoad_SUPPLYTAG,
       &d_mpi_request);
 
    box_shipment.generateLocalBasedMapEdges(
@@ -423,7 +426,7 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkSupply(
                message_length,
                MPI_CHAR,
                d_voucher.d_issuer_rank,
-               VoucherTransitLoad_EDGETAG1,
+               VoucherTransitLoad_SUPPLYTAG,
                &status );
 
    d_msg = boost::make_shared<tbox::MessageStream>(
@@ -433,11 +436,26 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkSupply(
    box_shipment.getFromMessageStream(*d_msg);
    d_msg.reset();
 
+   box_shipment.reassignOwnership( d_id_gen, d_mpi.getRank() );
    box_shipment.putInBoxLevel(balanced_box_level);
 
    box_shipment.generateLocalBasedMapEdges(
       unbalanced_to_balanced,
       balanced_to_unbalanced);
+}
+
+
+
+/*
+*************************************************************************
+*************************************************************************
+*/
+void VoucherTransitLoad::VoucherRedemption::finishSendRequest()
+{
+   if ( d_mpi_request != MPI_REQUEST_NULL ) {
+      tbox::SAMRAI_MPI::Wait( &d_mpi_request, MPI_STATUS_IGNORE );
+   }
+   TBOX_ASSERT( d_mpi_request == MPI_REQUEST_NULL );
 }
 
 
@@ -550,6 +568,9 @@ VoucherTransitLoad::raiseDstLoad(
    if ( src.empty() ) {
       return 0;
    }
+
+src.recursivePrint(tbox::plog, "src: ", 1);
+dst.recursivePrint(tbox::plog, "dst: ", 1);
 
    /*
     * Decide whether to take work from the beginning or the end of
@@ -710,21 +731,10 @@ VoucherTransitLoad::getFromMessageStream( tbox::MessageStream &msg )
     */
    size_t num_vouchers = 0;
    msg >> num_vouchers;
-   int issuer_rank;
-   LoadType load;
+   Voucher v;
    for (size_t i = 0; i < num_vouchers; ++i) {
-      msg >> issuer_rank >> load;
-      const Voucher voucher(load, issuer_rank);
-      std::set<Voucher,VoucherRankCompare>::iterator sj =
-         d_voucher_set.lower_bound(voucher);
-      if ( sj->d_issuer_rank == voucher.d_issuer_rank ) {
-         const Voucher combined_voucher( *sj, voucher );
-         d_voucher_set.erase(sj++);
-         d_voucher_set.insert(combined_voucher);
-      }
-      else {
-         d_voucher_set.insert(voucher);
-      }
+      msg >> v.d_issuer_rank >> v.d_load;
+      insert(v);
    }
 }
 

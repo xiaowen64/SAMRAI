@@ -140,8 +140,8 @@ public:
 
 private:
 
-   static const int VoucherTransitLoad_EDGETAG0 = 3;
-   static const int VoucherTransitLoad_EDGETAG1 = 4;
+   static const int VoucherTransitLoad_DEMANDTAG = 3;
+   static const int VoucherTransitLoad_SUPPLYTAG = 4;
 
 
    //! @brief Voucher.
@@ -174,6 +174,14 @@ private:
          co << v.d_issuer_rank << '|' << v.d_load;
          return co;
       }
+      friend tbox::MessageStream &operator<<( tbox::MessageStream &ms, const Voucher &v ) {
+         ms << v.d_issuer_rank << v.d_load;
+         return ms;
+      }
+      friend tbox::MessageStream &operator>>( tbox::MessageStream &ms, Voucher &v ) {
+         ms >> v.d_issuer_rank >> v.d_load;
+         return ms;
+      }
       /*!
        * @brief Adjust load by taking work from or giving work to
        * another Voucher.
@@ -205,10 +213,14 @@ private:
          d_mpi(MPI_COMM_NULL),
          d_mpi_request(MPI_REQUEST_NULL) {};
       ~VoucherRedemption() {
+#if 1
+         finishSendRequest();
+#else
          if ( d_mpi_request != MPI_REQUEST_NULL ) {
             TBOX_ERROR("Need to finish communication before destructing d_msg.");
             tbox::SAMRAI_MPI::Request_free(&d_mpi_request);
          }
+#endif
       }
 
       //@{
@@ -236,6 +248,8 @@ private:
          hier::MappingConnector &balanced_to_unbalanced,
          const PartitioningParams &pparams );
       //@}
+
+      void finishSendRequest();
 
       Voucher d_voucher;
       int d_demander_rank;
