@@ -171,7 +171,7 @@ private:
          src.d_load -= d_load;
       }
       friend std::ostream &operator<<( std::ostream &co, const Voucher &v ) {
-         co << v.d_issuer_rank << ':' << v.d_load;
+         co << v.d_issuer_rank << '|' << v.d_load;
          return co;
       }
       /*!
@@ -272,6 +272,7 @@ private:
                     << "\nTo combine the vouchers, use insertCombine().");
       }
       itr = d_voucher_set.insert( itr, v );
+      d_sumload += v.d_load;
       return std::pair<iterator, bool>(itr,true);
    }
    size_t erase( const Voucher &v ) {
@@ -285,7 +286,10 @@ private:
    }
    void erase( iterator pos) {
       d_sumload -= pos->d_load;
-      return d_voucher_set.erase(pos);
+      size_t old_size = d_voucher_set.size();
+      d_voucher_set.erase(pos);
+      TBOX_ASSERT( d_voucher_set.size() == old_size - 1 );
+      return;
    }
    void swap( VoucherTransitLoad &other ) {
       const LoadType tmpload = d_sumload;
