@@ -613,6 +613,11 @@ VoucherTransitLoad::eraseIssuer( int issuer_rank )
    Voucher tmp_voucher( 0.0, issuer_rank );
    const_iterator vi = d_voucher_set.lower_bound(tmp_voucher);
    if ( vi != d_voucher_set.end() && vi->d_issuer_rank == issuer_rank ) {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      const_iterator vi1 = vi;
+      ++vi1;
+      TBOX_ASSERT( vi1 == d_voucher_set.end() || vi1->d_issuer_rank != issuer_rank);
+#endif
       d_sumload -= vi->d_load;
       d_voucher_set.erase(vi);
       return true;

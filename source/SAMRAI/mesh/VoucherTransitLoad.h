@@ -30,7 +30,7 @@ namespace mesh {
  * set of vouchers, each of which has a work value and the rank of the
  * process that issued the voucher.
  *
- * As a container, this class is identical to
+ * As a container, this class is nearly identical to
  * std::set<Voucher,VoucherMoreLoad>.
  *
  * Terminology: To avoid confusing the sending and receiving of
@@ -260,6 +260,9 @@ private:
    const_iterator end() const { return d_voucher_set.end(); }
    reverse_iterator rbegin() { return d_voucher_set.rbegin(); }
    reverse_iterator rend() { return d_voucher_set.rend(); }
+   size_t size() const { return d_voucher_set.size(); }
+   bool empty() const { return d_voucher_set.empty(); }
+   void clear() { d_sumload = 0; d_voucher_set.clear(); }
    std::pair<iterator, bool> insert( const Voucher &v ) {
       iterator itr = d_voucher_set.lower_bound( Voucher(0,v.d_issuer_rank) );
       if ( itr != d_voucher_set.end() &&
@@ -284,9 +287,6 @@ private:
       d_sumload -= pos->d_load;
       return d_voucher_set.erase(pos);
    }
-   size_t size() const { return d_voucher_set.size(); }
-   bool empty() const { return d_voucher_set.empty(); }
-   void clear() { d_sumload = 0; d_voucher_set.clear(); }
    void swap( VoucherTransitLoad &other ) {
       const LoadType tmpload = d_sumload;
       d_sumload = other.d_sumload;
