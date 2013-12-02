@@ -110,8 +110,7 @@ boost::shared_ptr<TransitLoad> VoucherTransitLoad::clone() const
 void VoucherTransitLoad::insertAll( const hier::BoxContainer &other )
 {
    for ( hier::BoxContainer::const_iterator bi=other.begin(); bi!=other.end(); ++bi ) {
-      d_voucher_set.insert( Voucher( LoadType(bi->size()), bi->getOwnerRank() ) );
-      d_sumload += bi->size();
+      insertCombine( Voucher( LoadType(bi->size()), bi->getOwnerRank() ) );
    }
 }
 
@@ -213,7 +212,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    }
 
    // Remove voucher I issued.
-   erase( Voucher(0, mpi.getRank()) );
+   eraseIssuer( mpi.getRank() );
 
 
    // 1. Request work for vouchers to be redeemed.
@@ -270,6 +269,10 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
                          balanced_to_unbalanced,
                          *d_pparams );
    }
+
+
+   // Anything left in reserve is kept locally.
+   reserve.putInBoxLevel(balanced_box_level);
 
 
    // 4. Receive work for vouchers to be redeemed.
@@ -596,6 +599,25 @@ VoucherTransitLoad::raiseDstLoad(
    } while ( dst.getSumLoad() < ideal_dst_load && !src.empty() );
 
    return (dst.getSumLoad() - old_dst_load);
+}
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+bool
+VoucherTransitLoad::eraseIssuer( int issuer_rank )
+{
+   Voucher tmp_voucher( 0.0, issuer_rank );
+   const_iterator vi = d_voucher_set.lower_bound(tmp_voucher);
+   if ( vi != d_voucher_set.end() && vi->d_issuer_rank == issuer_rank ) {
+      d_sumload -= vi->d_load;
+      d_voucher_set.erase(vi);
+      return true;
+   }
+   return false;
 }
 
 

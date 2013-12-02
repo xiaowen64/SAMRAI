@@ -260,14 +260,16 @@ private:
    const_iterator end() const { return d_voucher_set.end(); }
    reverse_iterator rbegin() { return d_voucher_set.rbegin(); }
    reverse_iterator rend() { return d_voucher_set.rend(); }
-   iterator insert( const Voucher &v ) {
-      iterator itr = d_voucher_set.lower_bound(v);
+   std::pair<iterator, bool> insert( const Voucher &v ) {
+      iterator itr = d_voucher_set.lower_bound( Voucher(0,v.d_issuer_rank) );
       if ( itr != d_voucher_set.end() &&
-           v.d_issuer_rank != itr->d_issuer_rank ) {
-         TBOX_ERROR("Not supporting multiple vouchers from same issuer.");
+           itr->d_issuer_rank == v.d_issuer_rank ) {
+         TBOX_ERROR("Cannot insert Voucher issued by rank " << v.d_issuer_rank
+                    << " because there is already one from that issuer.\n"
+                    << "To combine the vouchers, use insertCombine().");
       }
-      d_sumload += v.d_load;
-      return d_voucher_set.insert( itr, v );
+      itr = d_voucher_set.insert( itr, v );
+      return std::pair<iterator, bool>(itr,true);
    }
    size_t erase( const Voucher &v ) {
       iterator vi = d_voucher_set.lower_bound(v);
@@ -292,6 +294,33 @@ private:
       d_voucher_set.swap(other.d_voucher_set);
    }
    //@}
+
+
+   /*!
+    * @brief Insert voucher, combining with existing voucher from same issuer.
+    */
+   iterator insertCombine( const Voucher &v ) {
+      iterator itr = d_voucher_set.lower_bound(v);
+      if ( itr == d_voucher_set.end() ||
+           v.d_issuer_rank != itr->d_issuer_rank ) {
+         itr = d_voucher_set.insert( itr, v );
+      }
+      else {
+         iterator pre_combine = itr;
+         itr = d_voucher_set.insert( itr, Voucher(*itr,v) );
+         d_voucher_set.erase(pre_combine);
+      }
+      d_sumload += v.d_load;
+      return itr;
+   }
+
+
+   /*!
+    * @brief Erase voucher issued by the given process.
+    *
+    * @return Whether there was a Voucher to be erased.
+    */
+   bool eraseIssuer( int issuer_rank );
 
 
    /*!
