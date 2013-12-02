@@ -210,13 +210,13 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    std::map<int,VoucherRedemption> redemptions_to_request;
 
    const hier::LocalId last_local_id = unbalanced_box_level.getLastLocalId();
+   const hier::LocalId local_id_inc(1 + d_voucher_set.size());
+
    int count = 1;
    for ( const_iterator si=d_voucher_set.begin();
          si!=d_voucher_set.end(); ++si, ++count ) {
 
-      hier::SequentialLocalIdGenerator id_gen(
-         last_local_id + count,
-         hier::LocalId(static_cast<int>(d_voucher_set.size())) );
+      hier::SequentialLocalIdGenerator id_gen( last_local_id + count, local_id_inc );
 
       redemptions_to_request[si->d_issuer_rank].sendWorkDemand( *si, id_gen, mpi );
    }
@@ -262,13 +262,15 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
 
 
    // Anything left in reserve is kept locally.
-   hier::SequentialLocalIdGenerator id_gen(
-      last_local_id,
-      hier::LocalId(static_cast<int>(d_voucher_set.size())) );
+   hier::SequentialLocalIdGenerator id_gen( last_local_id, local_id_inc );
    reserve.reassignOwnership(
       id_gen,
       balanced_box_level.getMPI().getRank() );
+
    reserve.putInBoxLevel(balanced_box_level);
+   reserve.generateLocalBasedMapEdges(
+      unbalanced_to_balanced,
+      balanced_to_unbalanced);
 
 
    // 4. Receive work for vouchers to be redeemed.
@@ -437,7 +439,6 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkSupply(
    d_msg.reset();
 
    box_shipment.putInBoxLevel(balanced_box_level);
-
    box_shipment.generateLocalBasedMapEdges(
       unbalanced_to_balanced,
       balanced_to_unbalanced);
