@@ -405,7 +405,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
     */
    const double fanout_size = max_local_load/d_global_avg_load;
    const int number_of_cycles =
-      int(ceil( log(fanout_size)/log(d_max_cycle_spread_ratio) ));
+      int(ceil( log(fanout_size)/log(double(d_max_cycle_spread_ratio)) ));
       if (d_print_steps) {
          tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel"
                     << " max_cycle_spread_ratio=" << d_max_cycle_spread_ratio
