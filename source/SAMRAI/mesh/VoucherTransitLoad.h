@@ -140,13 +140,15 @@ public:
 
 private:
 
+   //! @brief MPI tag for demand communication.
    static const int VoucherTransitLoad_DEMANDTAG = 3;
+   //! @brief MPI tag for supply communication.
    static const int VoucherTransitLoad_SUPPLYTAG = 4;
 
 
    //! @brief Voucher.
    struct Voucher {
-      //! @brief Default constructor constructs voucher of zero value.
+      //! @brief Default constructor sets zero value and invalid issuer.
       Voucher() :
          d_issuer_rank(tbox::SAMRAI_MPI::getInvalidRank()),
          d_load(0.0) {
@@ -156,7 +158,7 @@ private:
          d_issuer_rank(issuer_rank),
          d_load(load) {
       }
-      //! @brief Construct a voucher by combining two vouchers from the same issuer.
+      //! @brief Construct Voucher by combining two vouchers from the same issuer.
       Voucher( const Voucher &a, const Voucher &b ) :
          d_issuer_rank(a.d_issuer_rank),
          d_load( a.d_load + b.d_load ) {
@@ -164,7 +166,7 @@ private:
             TBOX_ERROR("VoucherTransitLoad: Cannot combine vouchers from different issuers.");
          }
       }
-      //@ @brief Construct a Voucher by taking value from an existing Voucher.
+      //@ @brief Construct Voucher by taking value from an existing Voucher.
       Voucher ( LoadType load, Voucher &src ) :
          d_issuer_rank(src.d_issuer_rank),
          d_load(load <= src.d_load ? load : src.d_load) {
@@ -217,7 +219,7 @@ private:
       }
 
       //@{
-      //! @name Demanding and supplying work for based on a voucher.
+      //! @name Demanding and supplying work based on a voucher.
       void sendWorkDemand(
          const Voucher &v,
          const hier::SequentialLocalIdGenerator &id_gen,
@@ -248,6 +250,7 @@ private:
       int d_demander_rank;
       //! @brief Demander-specified LocalId generator to avoid ID clashes.
       hier::SequentialLocalIdGenerator d_id_gen;
+
       boost::shared_ptr<tbox::MessageStream> d_msg;
       tbox::SAMRAI_MPI d_mpi;
       MPI_Request d_mpi_request;
@@ -320,7 +323,7 @@ private:
       }
       else {
          // Create combined voucher to replace existing one.
-         Voucher combined (*itr,v);
+         Voucher combined(*itr,v);
          d_voucher_set.erase(itr++);
          itr = d_voucher_set.insert( itr, combined );
       }
@@ -337,6 +340,7 @@ private:
     */
    bool eraseIssuer( int issuer_rank );
 
+   //! @brief Sanity check enforcing no-duplicate-issuer rule.
    void checkDupes() const {
       for ( const_iterator i=begin(); i!=end(); ++i ) {
          const_iterator i1 = i;
@@ -346,23 +350,6 @@ private:
          }
       }
    }
-
-
-   /*!
-    * @brief Construct semilocal relationships in
-    * unbalanced--->balanced Connector.
-    *
-    * Constructing semilocal unbalanced--->balanced relationships
-    * require communication to determine where exported work ended up.
-    *
-    * @param [out] unbalanced_to_balanced Connector to store
-    * relationships in.
-    *
-    * @param [in] kept_imports Work that was imported and locally kept.
-    */
-   void constructSemilocalUnbalancedToBalanced(
-      hier::MappingConnector &unbalanced_to_balanced,
-      const VoucherTransitLoad &kept_imports ) const;
 
 
    /*!
@@ -396,15 +383,10 @@ private:
 
 
    /*!
-    * @brief Find the voucher value issued by the given process.
+    * @brief Yank out and return the Voucher issued by the given
+    * process.  If Voucher isn't there, return zero-valued Voucher.
     */
-   LoadType findIssuerValue( int issuer_rank ) const;
-
-
-   //! @brief Compute the load for a Box.
-   LoadType computeLoad( const hier::Box& box) const {
-      return LoadType(box.size());
-   }
+   Voucher yankVoucher( int issuer_rank );
 
 
    /*!
@@ -425,12 +407,6 @@ private:
     */
    static void finalizeCallback() {
       s_static_timers.clear();
-   }
-
-
-   //! @brief Balance penalty is proportional to imbalance.
-   double computeBalancePenalty( double imbalance) const {
-      return tbox::MathUtilities<double>::Abs(imbalance);
    }
 
 

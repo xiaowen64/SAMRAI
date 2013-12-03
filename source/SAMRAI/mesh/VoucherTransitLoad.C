@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Implementation of TreeLoadBalancer.
+ * Description:   Implementation of TransitLoad by vouchers.
  *
  ************************************************************************/
 
@@ -150,12 +150,47 @@ size_t VoucherTransitLoad::getNumberOfOriginatingProcesses() const
 
 
 /*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+VoucherTransitLoad::putToMessageStream( tbox::MessageStream &msg ) const
+{
+   msg << d_voucher_set.size();
+   for (const_iterator ni = d_voucher_set.begin(); ni != d_voucher_set.end(); ++ni) {
+      msg << ni->d_issuer_rank << ni->d_load;
+   }
+}
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+VoucherTransitLoad::getFromMessageStream( tbox::MessageStream &msg )
+{
+   /*
+    * As we pull each Voucher out, give it a new id that reflects
+    * its new owner.
+    */
+   size_t num_vouchers = 0;
+   msg >> num_vouchers;
+   Voucher v;
+   for (size_t i = 0; i < num_vouchers; ++i) {
+      msg >> v.d_issuer_rank >> v.d_load;
+      insert(v);
+   }
+}
+
+
+/*
  *************************************************************************
  * Assign boxes to local process (put them in the balanced_box_level
- * and put edges in balanced<==>unbalanced Connector).
+ * and populate balanced<==>unbalanced).
  *
  * This method does two things:
- * - Voucher redeemers request and receive work for their vouchers.
+ * - Voucher redeemers request and receive work vouchers they hold.
  * - Voucher fulfillers receive and fulfill redemption requests.
  * The code is writen to let each process be both redeemers and
  * fulfillers.  Logic should drop through correctly on processes
@@ -184,25 +219,20 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
 
 
    /*
-    * If there is unaccounted work, then some process must have our
-    * vouchers.  Fulfill these redemption requests until we accounted
-    * for everything.
-    *
-    * For now, work is same as cell count.
+    * unaccounted_work is amount of work we started with, minus what
+    * we can still acount for (the part we still hold).  The rest have
+    * been sent off in the form of vouchers and we don't know where
+    * they ended up.
     */
-
    LoadType unaccounted_work = LoadType(unbalanced_box_level.getLocalNumberOfCells())
-      - findIssuerValue(mpi.getRank());
+      - yankVoucher(mpi.getRank()).d_load;
 
    if ( d_print_edge_steps ) {
       tbox::plog << "unaccounted work is " << unaccounted_work << std::endl;
    }
 
-   // Remove voucher I issued.
-   eraseIssuer( mpi.getRank() );
 
-
-   // 1. Request work for vouchers to be redeemed.
+   // 1. Send work demands for vouchers we want to redeem.
 
    std::map<int,VoucherRedemption> redemptions_to_request;
 
@@ -223,7 +253,14 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    reserve.insertAll( unbalanced_box_level.getBoxes() );
 
 
-   // 2. Receive redemption requests for us to fulfill.
+   // 2. Receive work demands for voucher we generated but can't account for.
+
+   /*
+    * If there is unaccounted work, then some process must have our
+    * voucher.  Reveive their demand for work until we've accounted
+    * for everything.  Don't supply work until all demands are
+    * received, because that leads to non-deterministic results.
+    */
 
    std::map<int,VoucherRedemption> redemptions_to_fulfill;
 
@@ -245,7 +282,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    }
 
 
-   // 3. Fulfill redemption requests.
+   // 3. Supply work according to received demands.
 
    for ( std::map<int,VoucherRedemption>::iterator mi=redemptions_to_fulfill.begin();
          mi!=redemptions_to_fulfill.end(); ++mi ) {
@@ -270,7 +307,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
       balanced_to_unbalanced);
 
 
-   // 4. Receive work for vouchers to be redeemed.
+   // 4. Receive work according to the demands we sent.
 
    while ( !redemptions_to_request.empty() ) {
 
@@ -369,8 +406,8 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkDemand(
 /*
 *************************************************************************
 * Fulfill the voucher redemption by sending a supply of work to the
-* demander.  The work is appropriated from a reserve.  Mapping edges
-* based on the supplied work are saved in MappingConnectors.
+* demander.  The work is appropriated from a reserve.  Save mapping
+* edges incident from local boxes.
 *************************************************************************
 */
 void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
@@ -408,8 +445,8 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
 
 /*
 *************************************************************************
-* Receive work supply from the issuer of the voucher.  Mapping edges
-* based on the work shipped are saved in MappingConnectors.
+* Receive work supply from the issuer of the voucher.  Save mapping
+* edges incident from local boxes.
 *************************************************************************
 */
 void VoucherTransitLoad::VoucherRedemption::recvWorkSupply(
@@ -460,24 +497,21 @@ void VoucherTransitLoad::VoucherRedemption::finishSendRequest()
 
 /*
 *************************************************************************
-* This method adjusts the load in this VoucherTransitLoad by moving
-* work between it (main_bin) and a holding_bin.  It tries to bring
-* main_bin's load to the specified ideal_load.
+* Adjust the VoucherTransitLoad by moving work between it (main_bin)
+* and a hold_bin.  Try to bring the load to the specified ideal.
 *
 * The high_load and low_load define an acceptable range around the
-* ideal_load.  As soon as the main load falls in this range, no
-* further change is tried, even if it may bring the load closer to
-* the ideal.
+* ideal_load.
 *
 * This method makes a best effort and returns the amount of load
-* moved.  It can move Vouchers between given sets and, if needed,
+* moved.  It can move Vouchers between given bins and, if needed,
 * break some Vouchers up to move part of the work.
 *
 * This method is purely local--it reassigns the load but does not
 * communicate the change to any remote process.
 *
-* Return amount of load moved to main_bin from hold_bin.  Negative
-* amount means load moved from main_bin to hold_bin.
+* Return amount of load moved to this object from hold_bin.  Negative
+* amount means load moved from this object to hold_bin.
 *************************************************************************
 */
 VoucherTransitLoad::LoadType
@@ -561,9 +595,9 @@ VoucherTransitLoad::raiseDstLoad(
 {
    TBOX_ASSERT( ideal_dst_load >= dst.getSumLoad() );
 
-   // Handle empty-container cases here.
    if ( src.empty() ) {
       return 0;
+      // No-op empty-container cases is not handled below.
    }
 
 src.recursivePrint(tbox::plog, "src: ", 1);
@@ -591,7 +625,7 @@ dst.recursivePrint(tbox::plog, "dst: ", 1);
 
    LoadType old_dst_load = dst.getSumLoad();
 
-   do {
+   while ( dst.getSumLoad() < ideal_dst_load && !src.empty() ) {
 
       iterator src_itr;
       if ( take_from_src_end ) {
@@ -614,7 +648,7 @@ dst.recursivePrint(tbox::plog, "dst: ", 1);
          src.insert(free_voucher);
       }
 
-   } while ( dst.getSumLoad() < ideal_dst_load && !src.empty() );
+   }
 
    return (dst.getSumLoad() - old_dst_load);
 }
@@ -649,15 +683,16 @@ VoucherTransitLoad::eraseIssuer( int issuer_rank )
  ***********************************************************************
  ***********************************************************************
  */
-VoucherTransitLoad::LoadType
-VoucherTransitLoad::findIssuerValue( int issuer_rank ) const
+VoucherTransitLoad::Voucher
+VoucherTransitLoad::yankVoucher( int issuer_rank )
 {
    Voucher tmp_voucher( 0.0, issuer_rank );
    const_iterator vi = d_voucher_set.lower_bound(tmp_voucher);
    if ( vi != d_voucher_set.end() && vi->d_issuer_rank == issuer_rank ) {
       tmp_voucher.d_load = vi->d_load;
+      erase(vi);
    }
-   return tmp_voucher.d_load;
+   return tmp_voucher;
 }
 
 
@@ -696,43 +731,6 @@ VoucherTransitLoad::getAllTimers(
 
    timers.t_assign_content_to_local_process_and_generate_map = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::assignContentToLocalProcessAndPopulateMaps()");
-}
-
-
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void
-VoucherTransitLoad::putToMessageStream( tbox::MessageStream &msg ) const
-{
-   msg << d_voucher_set.size();
-   for (const_iterator ni = d_voucher_set.begin(); ni != d_voucher_set.end(); ++ni) {
-      msg << ni->d_issuer_rank << ni->d_load;
-   }
-}
-
-
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void
-VoucherTransitLoad::getFromMessageStream( tbox::MessageStream &msg )
-{
-   /*
-    * As we pull each Voucher out, give it a new id that reflects
-    * its new owner.
-    */
-   size_t num_vouchers = 0;
-   msg >> num_vouchers;
-   Voucher v;
-   for (size_t i = 0; i < num_vouchers; ++i) {
-      msg >> v.d_issuer_rank >> v.d_load;
-      insert(v);
-   }
 }
 
 
