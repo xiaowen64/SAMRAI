@@ -282,11 +282,12 @@ private:
       if ( itr != d_voucher_set.end() &&
            itr->d_issuer_rank == v.d_issuer_rank ) {
          TBOX_ERROR("Cannot insert Voucher " << v
-                    << ".\nThere is already one from the same issuer."
+                    << ".\nExisting voucher " << *itr << " is from the same issuer."
                     << "\nTo combine the vouchers, use insertCombine().");
       }
       itr = d_voucher_set.insert( itr, v );
       d_sumload += v.d_load;
+      checkDupes();
       return std::pair<iterator, bool>(itr,true);
    }
    size_t erase( const Voucher &v ) {
@@ -318,7 +319,7 @@ private:
     * @brief Insert voucher, combining with existing voucher from same issuer.
     */
    iterator insertCombine( const Voucher &v ) {
-      iterator itr = d_voucher_set.lower_bound(v);
+      iterator itr = d_voucher_set.lower_bound( Voucher(0.0, v.d_issuer_rank) );
       if ( itr == d_voucher_set.end() ||
            v.d_issuer_rank != itr->d_issuer_rank ) {
          itr = d_voucher_set.insert( itr, v );
@@ -329,6 +330,7 @@ private:
          d_voucher_set.erase(pre_combine);
       }
       d_sumload += v.d_load;
+      checkDupes();
       return itr;
    }
 
@@ -339,6 +341,16 @@ private:
     * @return Whether there was a Voucher to be erased.
     */
    bool eraseIssuer( int issuer_rank );
+
+   void checkDupes() const {
+      for ( const_iterator i=begin(); i!=end(); ++i ) {
+         const_iterator i1 = i;
+         ++i1;
+         if ( i1 != end() && i1->d_issuer_rank == i->d_issuer_rank ) {
+            TBOX_ERROR("Duplicate issuer found.");
+         }
+      }
+   }
 
 
    /*!

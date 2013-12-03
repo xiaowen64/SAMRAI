@@ -154,15 +154,12 @@ size_t VoucherTransitLoad::getNumberOfOriginatingProcesses() const
  * Assign boxes to local process (put them in the balanced_box_level
  * and put edges in balanced<==>unbalanced Connector).
  *
- * This method does some P2P communication to convert the vouchers to
- * boxes then delegates to BoxTransitSet to do the rest.
- *
  * This method does two things:
  * - Voucher redeemers request and receive work for their vouchers.
  * - Voucher fulfillers receive and fulfill redemption requests.
  * The code is writen to let each process be both redeemers and
- * fulfillers.  Logic should drop through correctly when the process
- * plays just one role.
+ * fulfillers.  Logic should drop through correctly on processes
+ * that plays just one role.
  *
  * There are four major steps, organized to overlap communication.
  * 1. Request work for vouchers to be redeemed.
