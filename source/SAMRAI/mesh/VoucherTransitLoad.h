@@ -213,14 +213,7 @@ private:
          d_mpi(MPI_COMM_NULL),
          d_mpi_request(MPI_REQUEST_NULL) {};
       ~VoucherRedemption() {
-#if 1
          finishSendRequest();
-#else
-         if ( d_mpi_request != MPI_REQUEST_NULL ) {
-            TBOX_ERROR("Need to finish communication before destructing d_msg.");
-            tbox::SAMRAI_MPI::Request_free(&d_mpi_request);
-         }
-#endif
       }
 
       //@{
@@ -322,12 +315,14 @@ private:
       iterator itr = d_voucher_set.lower_bound( Voucher(0.0, v.d_issuer_rank) );
       if ( itr == d_voucher_set.end() ||
            v.d_issuer_rank != itr->d_issuer_rank ) {
+         // Safe to insert.
          itr = d_voucher_set.insert( itr, v );
       }
       else {
-         iterator pre_combine = itr;
-         itr = d_voucher_set.insert( itr, Voucher(*itr,v) );
-         d_voucher_set.erase(pre_combine);
+         // Create combined voucher to replace existing one.
+         Voucher combined (*itr,v);
+         d_voucher_set.erase(itr++);
+         itr = d_voucher_set.insert( itr, combined );
       }
       d_sumload += v.d_load;
       checkDupes();
