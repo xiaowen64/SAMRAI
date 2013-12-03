@@ -251,13 +251,14 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    // Set up the reserve for fulfilling incoming redemption requests.
    BoxTransitSet reserve(*d_pparams);
    reserve.insertAll( unbalanced_box_level.getBoxes() );
+   reserve.setAllowBoxBreaking( getAllowBoxBreaking() );
 
 
    // 2. Receive work demands for voucher we generated but can't account for.
 
    /*
-    * If there is unaccounted work, then some process must have our
-    * voucher.  Reveive their demand for work until we've accounted
+    * If there is unaccounted work, then some processes must have our
+    * voucher.  Reveive their demands for work until we've accounted
     * for everything.  Don't supply work until all demands are
     * received, because that leads to non-deterministic results.
     */
@@ -417,6 +418,7 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
    const PartitioningParams &pparams )
 {
    BoxTransitSet box_shipment(pparams);
+   box_shipment.setAllowBoxBreaking( reserve.getAllowBoxBreaking() );
    box_shipment.adjustLoad( reserve,
                             d_voucher.d_load,
                             d_voucher.d_load,

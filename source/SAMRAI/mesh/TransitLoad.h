@@ -64,7 +64,7 @@ public:
    //! @brief Clone object according to design pattern.
    virtual boost::shared_ptr<TransitLoad> clone() const = 0;
 
-   //! @brief Initialize object.
+   //! @brief Initialize object according to design pattern.
    virtual void initialize() = 0;
 
    //@}

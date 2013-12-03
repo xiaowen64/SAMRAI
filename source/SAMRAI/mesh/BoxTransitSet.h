@@ -44,56 +44,45 @@ public:
 
    typedef double LoadType;
 
+   //! @name Constructor
    BoxTransitSet( const PartitioningParams &pparams );
 
+   //! @name Copy constructor
    BoxTransitSet( const BoxTransitSet &other );
 
-   //! @brief Initialize implementation for TransitLoad interface.
-   void initialize();
+   //@{
+   //! @name TransitLoad abstract interfaces
 
-   //! @brief Clone object.
+   //! @copydoc TransitLoad::clone()
    boost::shared_ptr<TransitLoad> clone() const;
 
-   //! @brief Return the total load contained.
+   //! @copydoc TransitLoad::initialize()
+   void initialize();
+
+   //! @copydoc TransitLoad::getSumLoad()
    LoadType getSumLoad() const { return d_sumload; }
 
-   //! @brief Insert all boxes from the given BoxContainer.
-   void insertAll( const hier::BoxContainer &other );
+   //! @copydoc TransitLoad::insertAll( const hier::BoxContainer & )
+   void insertAll( const hier::BoxContainer &box_container );
 
-   //! @brief Insert all boxes from the given BoxTransitSet.
+   //! @copydoc TransitLoad::insertAll( const TransitLoad & )
    void insertAll( const TransitLoad &other );
 
-   //! @brief Return number of items in this container.
+   //! @copydoc TransitLoad::getNumberOfItems()
    size_t getNumberOfItems() const;
 
-   //! @brief Return number of processes contributing to the contents.
+   //! @copydoc TransitLoad::getNumberOfOriginatingProcesses()
    size_t getNumberOfOriginatingProcesses() const;
 
-   //@{
-   //! @name Packing/unpacking for communication.
-
+   //! @copydoc TransitLoad::putToMessageStream()
    void putToMessageStream( tbox::MessageStream &msg ) const;
 
+   //! @copydoc TransitLoad::getFromMessageStream()
    void getFromMessageStream( tbox::MessageStream &msg );
-   //@}
 
 
    /*!
-    * @brief Adjust the load in this BoxTransitSet by moving work
-    * between it and another BoxTransitSet.
-    *
-    * @param[in,out] hold_bin Holding bin for reserve load.
-    *
-    * @param[in] ideal_load The load that this bin should have.
-    *
-    * @param[in] low_load Return when this bin's load is in the range
-    * [low_load,high_load]
-    *
-    * @param[in] high_load Return when this bin's load is in the range
-    * [low_load,high_load]
-    *
-    * @return Net load added to this BoxTransitSet.  If negative, load
-    * decreased.
+    * @copydoc TransitLoad::adjustLoad()
     */
    LoadType
    adjustLoad(
@@ -104,16 +93,17 @@ public:
 
 
    /*!
-    * @brief Assign contents to local process and generate
-    * balanced<==>unbalanced map.
+    * @copydoc TransitLoad::assignContentToLocalProcessAndPopulateMaps()
     *
-    * This method uses communication to set up the map.
+    * This method uses communication to redeem vouchers and up the map.
     */
    void
    assignContentToLocalProcessAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector &balanced_to_unbalanced,
       hier::MappingConnector &unbalanced_to_balanced );
+
+   //@}
 
 
    /*

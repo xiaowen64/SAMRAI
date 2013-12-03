@@ -596,7 +596,7 @@ private:
     * @brief Distribute load across the rank group using the tree
     * algorithm.
     *
-    * Initial work is give in unbalanced_box_level.  Put the final
+    * Initial work is given in unbalanced_box_level.  Put the final
     * local work in balanced_work.
     */
    void
