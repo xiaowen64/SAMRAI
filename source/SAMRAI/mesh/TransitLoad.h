@@ -157,6 +157,9 @@ public:
       hier::MappingConnector &unbalanced_to_balanced ) = 0;
 
 
+   //@{
+   //! @name Parameters in box breaking
+
    //! @brief Whether to allow box breaking.
    void setAllowBoxBreaking( bool allow_box_breaking ) {
       d_allow_box_breaking = allow_box_breaking;
@@ -165,6 +168,17 @@ public:
    bool getAllowBoxBreaking() const {
       return d_allow_box_breaking;
    }
+
+   //! @brief Set threshold for resisting small and thin boxes.
+   void setThresholdWidth( double threshold_width ) {
+      d_threshold_width = threshold_width;
+   }
+
+   double getThresholdWidth() const {
+      return d_threshold_width;
+   }
+
+   //@}
 
 
    //@{
@@ -186,6 +200,7 @@ public:
 private:
 
    bool d_allow_box_breaking;
+   double d_threshold_width;
 
 };
 
