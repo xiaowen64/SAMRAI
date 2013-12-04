@@ -60,7 +60,8 @@ BalanceBoxBreaker::breakOffLoad(
    const hier::Box& box,
    double ideal_load_to_break,
    double low_load,
-   double high_load ) const
+   double high_load,
+   double threshold_width ) const
 {
    TBOX_ASSERT(ideal_load_to_break > 0);
 
@@ -373,7 +374,7 @@ BalanceBoxBreaker::breakOffLoad_planar(
    best_leftover_box.setBlockId(box.getBlockId());
    brk_load = 0;
 
-   int break_acceptance_flags[3] = {0,0,0};
+   int break_acceptance_flags[4] = {0,0,0,0};
    bool sufficient_brk_load = false;
 
    for (int d = box.getDim().getValue() - 1; d >= 0 && !sufficient_brk_load; --d) {
@@ -672,7 +673,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(
     *
     * upper_intersection is the point where all upper cuts intersect.
     * lower_intersection is the point where all lower cuts intersect.
-    * We only consider the but boxes that touch the incoming box's
+    * We only consider the cut boxes that touch the incoming box's
     * corners.  Using the other boxes result in too much fragmentation
     * of the incoming box.
     */
@@ -750,7 +751,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(
       }
 
 
-      int break_acceptance_flags[3] = {0,0,0};
+      int break_acceptance_flags[4] = {0,0,0,0};
 
       if ( BalanceUtilities::compareLoads(
               break_acceptance_flags, best_breakoff_load,
@@ -906,8 +907,8 @@ BalanceBoxBreaker::breakOffLoad_cubic(
 /*
  *************************************************************************
  * Break up box bursty against box solid and adds the pieces to list.
- * This version differs from that in BoxContainer in that it tries to minimize
- * slivers.
+ * This version differs from that in BoxContainer in that it tries to
+ * minimize slivers.
  *************************************************************************
  */
 
@@ -1003,6 +1004,48 @@ BalanceBoxBreaker::burstBox(
    l2.removeIntersections(bursty);
    TBOX_ASSERT(l2.isEmpty());
 #endif
+}
+
+
+/*
+ *************************************************************************
+ * Compute a box_size score that is low for box widths smaller than
+ * some threshold_width.  Boxes longer than this are okay assuming
+ * that they can be broken down further.  Boxes shorter than this are
+ * undesirable because they lead to excessive box count and/or aspect
+ * ratios.
+ *************************************************************************
+ */
+double BalanceBoxBreaker::computeWidthScore(
+   const hier::IntVector &box_size,
+   double threshold_width ) const
+{
+   double width_score = 1.0;
+   for ( int d=0; d<box_size.getDim().getValue(); ++d ) {
+      double s = box_size(d)/threshold_width;
+      s = tbox::MathUtilities<double>::Max( 1.0, s );
+      // For non-linear scoring, try s = sqrt(s);
+      width_score *= s;
+   }
+   return width_score;
+}
+
+
+/*
+ *************************************************************************
+ * Compute a size score for multiple boxes.  The combined score is the
+ * produce of individual scores.
+ *************************************************************************
+ */
+double BalanceBoxBreaker::computeWidthScore(
+   const std::vector<hier::Box> &boxes,
+   double threshold_width ) const
+{
+   double width_score = 1.0;
+   for ( int i=0; i<boxes.size(); ++i ) {
+      width_score *= computeWidthScore( boxes[i].numberCells(), threshold_width );
+   }
+   return width_score;
 }
 
 

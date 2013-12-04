@@ -825,7 +825,8 @@ BoxTransitSet::adjustLoadByBreaking(
          candidate.d_box,
          ideal_transfer,
          low_transfer,
-         high_transfer );
+         high_transfer,
+         getThresholdWidth());
 
       if (!trial_breakoff.empty()) {
 

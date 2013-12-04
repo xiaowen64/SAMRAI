@@ -29,10 +29,11 @@ class BalanceBoxBreaker {
 
 public:
 
-   BalanceBoxBreaker(const PartitioningParams &pparams) :
-      d_pparams(&pparams),
-      d_print_steps(false),
-      d_print_break_steps(false)
+   BalanceBoxBreaker(
+      const PartitioningParams &pparams,
+      bool print_break_steps = false )
+      : d_pparams(&pparams),
+        d_print_break_steps(print_break_steps)
       {
          setTimers();
       }
@@ -58,6 +59,9 @@ public:
     *
     * @param[in] high_load
     *
+    * @param[in] threshold_width Try to avoid making boxes thinner
+    * than this width in any direction.
+    *
     * @return whether a successful break was made.
     *
     * @pre ideal_load_to_break > 0
@@ -70,7 +74,13 @@ public:
       const hier::Box& box,
       double ideal_load,
       double low_load,
-      double high_load ) const;
+      double high_load ,
+      double threshold_width ) const;
+
+
+   void setPrintBreakSteps( bool print_break_steps ) {
+      d_print_break_steps = print_break_steps;
+   }
 
 
 private:
@@ -103,6 +113,21 @@ private:
       return tbox::MathUtilities<double>::Abs(imbalance);
    }
 
+   /*!
+    * @brief Compute a score that is low for box widths smaller than
+    * some threshold_width.
+    */
+   double computeWidthScore(
+      const hier::IntVector &box_size,
+      double threshold_width ) const;
+
+   /*!
+    * @brief Compute a combined width score for multiple boxes.
+    */
+   double computeWidthScore(
+      const std::vector<hier::Box> &boxes,
+      double threshold_width ) const;
+
    void
    burstBox(
       std::vector<hier::Box>& boxes,
@@ -116,7 +141,6 @@ private:
    //@{
    //! @name Debugging and diagnostic data
 
-   bool d_print_steps;
    bool d_print_break_steps;
    boost::shared_ptr<tbox::Timer> t_break_off_load;
    boost::shared_ptr<tbox::Timer> t_find_bad_cuts;
