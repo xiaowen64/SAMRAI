@@ -171,7 +171,7 @@ BalanceBoxBreaker::breakOffLoad(
          }
 
 
-         int break_acceptance_flags[3] = {0,0,0};
+         int break_acceptance_flags[4] = {0,0,0,0};
 
          const bool accept_break = BalanceUtilities::compareLoads(
             break_acceptance_flags, brk_load, planar_brk_load,
@@ -264,7 +264,7 @@ BalanceBoxBreaker::breakOffLoad(
                        << std::endl;
          }
 
-         int break_acceptance_flags[3] = {0,0,0};
+         int break_acceptance_flags[4] = {0,0,0,0};
 
          const bool accept_break = BalanceUtilities::compareLoads(
             break_acceptance_flags, brk_load, cubic_brk_load,

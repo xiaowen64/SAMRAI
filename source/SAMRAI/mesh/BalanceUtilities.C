@@ -1783,6 +1783,8 @@ BalanceUtilities::compareLoads(
 
    flags[2] = flags[0] != 0 ? flags[0] : ( flags[1] != 0 ? flags[1] : 0 );
 
+   flags[3] = (new_load <= high_load && new_load >= low_load);
+
    return flags[2] == 1;
 }
 
