@@ -41,7 +41,8 @@ TransitLoad::TransitLoad() :
  ***********************************************************************
  */
 TransitLoad::TransitLoad( const TransitLoad &other ) :
-   d_allow_box_breaking(other.d_allow_box_breaking)
+   d_allow_box_breaking(other.d_allow_box_breaking),
+   d_threshold_width(other.d_threshold_width)
 {
 }
 
