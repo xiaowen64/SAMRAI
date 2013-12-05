@@ -37,6 +37,18 @@ PartitioningParams::PartitioningParams(
 }
 
 
+PartitioningParams::PartitioningParams(
+   const PartitioningParams &other ) :
+   d_block_domain_boxes(other.d_block_domain_boxes),
+   d_min_size(other.d_min_size),
+   d_max_size(other.d_max_size),
+   d_bad_interval(other.d_bad_interval),
+   d_cut_factor(other.d_cut_factor),
+   d_load_comparison_tol(other.d_load_comparison_tol)
+{
+}
+
+
 }
 }
 

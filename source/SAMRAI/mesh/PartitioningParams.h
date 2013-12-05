@@ -39,6 +39,8 @@ public:
       const hier::IntVector &bad_interval,
       const hier::IntVector &cut_factor );
 
+   PartitioningParams( const PartitioningParams &other );
+
    double getMinLoad() const {
       return static_cast<double>(d_min_size.getProduct());
    }
