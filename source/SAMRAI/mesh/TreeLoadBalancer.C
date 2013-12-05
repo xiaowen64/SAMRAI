@@ -987,11 +987,6 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
 
       if ( my_branch.effExcess() > 0 ) {
 
-         if (d_print_steps) {
-            tbox::plog << "Pushing to parent rank "
-                       << d_rank_tree->getParentRank() << ':' << std::endl;
-         }
-
          /*
           * Try to send work in the range of [effective excess,surplus].
           * Sending less than effective excess would overload this branch.
@@ -1007,7 +1002,14 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
           */
          const LoadType export_load_low = tbox::MathUtilities<double>::Min(my_branch.effExcess(), my_branch.surplus());
          const LoadType export_load_high = my_branch.surplus();
-         const LoadType export_load_ideal = export_load_low;
+         const LoadType export_load_ideal = my_branch.surplus();
+
+         if (d_print_steps) {
+            tbox::plog << "Pushing to parent rank "
+                       << d_rank_tree->getParentRank() << ' ' << export_load_ideal
+                       << " [" << export_load_low << ", " << export_load_high << ']'
+                       << std::endl;
+         }
 
          t_local_load_moves->start();
          my_branch.adjustOutboundLoad(
@@ -1095,11 +1097,6 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
 
       if (recip_branch.getWantsWorkFromParent()) {
 
-         if (d_print_steps) {
-            tbox::plog << "Pushing to child " << ichild << ':'
-                       << d_rank_tree->getChildRank(ichild) << ':' << std::endl;
-         }
-
          const LoadType surplus_per_eff_des =
             computeSurplusPerEffectiveDescendent(
                unassigned.getSumLoad(),
@@ -1117,6 +1114,13 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
          const LoadType export_load_high =
             tbox::MathUtilities<double>::Max(export_load_ideal,
                                              recip_branch.effMargin());
+
+         if (d_print_steps) {
+            tbox::plog << "Pushing to child " << ichild << " ("
+                       << d_rank_tree->getChildRank(ichild) << ") " << export_load_ideal
+                       << " [" << export_load_low << ", " << export_load_high << ']'
+                       << std::endl;
+         }
 
          t_local_load_moves->start();
          recip_branch.adjustOutboundLoad(
