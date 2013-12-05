@@ -268,6 +268,7 @@ private:
    bool empty() const { return d_voucher_set.empty(); }
    void clear() { d_sumload = 0; d_voucher_set.clear(); }
    std::pair<iterator, bool> insert( const Voucher &v ) {
+      TBOX_ASSERT( v.d_load >= d_pparams->getLoadComparisonTol() );
       iterator itr = d_voucher_set.lower_bound( Voucher(0,v.d_issuer_rank) );
       if ( itr != d_voucher_set.end() &&
            itr->d_issuer_rank == v.d_issuer_rank ) {
@@ -313,11 +314,13 @@ private:
       if ( itr == d_voucher_set.end() ||
            v.d_issuer_rank != itr->d_issuer_rank ) {
          // Safe to insert.
+         TBOX_ASSERT( v.d_load >= d_pparams->getLoadComparisonTol() );
          itr = d_voucher_set.insert( itr, v );
       }
       else {
          // Create combined voucher to replace existing one.
          Voucher combined(*itr,v);
+         TBOX_ASSERT( combined.d_load >= d_pparams->getLoadComparisonTol() );
          d_voucher_set.erase(itr++);
          itr = d_voucher_set.insert( itr, combined );
       }
@@ -340,7 +343,16 @@ private:
          const_iterator i1 = i;
          ++i1;
          if ( i1 != end() && i1->d_issuer_rank == i->d_issuer_rank ) {
-            TBOX_ERROR("Duplicate issuer found.");
+         }
+      }
+   }
+
+   //! @brief Sanity check catching extremely small vouchers.
+   void checkSmallVouchers() const {
+      for ( const_iterator i=begin(); i!=end(); ++i ) {
+         if ( i->d_load < d_pparams->getLoadComparisonTol() ) {
+         TBOX_ERROR("Voucher " << *i << " is smaller than tolerance "
+                    << d_pparams->getLoadComparisonTol());
          }
       }
    }

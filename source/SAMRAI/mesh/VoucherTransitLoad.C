@@ -124,6 +124,7 @@ void VoucherTransitLoad::insertAll( const TransitLoad &other_transit_load )
    const VoucherTransitLoad &other = recastTransitLoad(other_transit_load);
    for ( const_iterator si=other.d_voucher_set.begin();
          si!=other.d_voucher_set.end(); ++si ) {
+      TBOX_ASSERT( si->d_load >= d_pparams->getLoadComparisonTol() );
       insertCombine(*si);
    }
 }
