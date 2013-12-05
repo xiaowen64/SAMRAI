@@ -752,6 +752,11 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
    balanced_work.setAllowBoxBreaking(d_allow_box_breaking);
    const double ideal_box_width = pow(group_avg_load, 1.0/d_dim.getValue());
    balanced_work.setThresholdWidth( 1.0*ideal_box_width );
+   if ( d_print_steps ) {
+      tbox::plog << "TreeLoadBalancer::distributeLoadAcrossRankGroup: ideal_box_width = " << ideal_box_width
+                 << "\n  Set threshold width to " << balanced_work.getThresholdWidth()
+                 << std::endl;
+   }
 
 
    /*

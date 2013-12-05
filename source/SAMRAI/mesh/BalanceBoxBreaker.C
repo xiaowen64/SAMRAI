@@ -112,6 +112,7 @@ BalanceBoxBreaker::breakOffLoad(
       tbox::plog << "      pre-break imbalance: " << ideal_load_to_break
                  << " balance penalty: " << best_balance_penalty
                  << " width score: " << best_width_score
+                 << " threshold_width: " << threshold_width
                  << std::endl;
    }
 

@@ -158,7 +158,7 @@ VoucherTransitLoad::putToMessageStream( tbox::MessageStream &msg ) const
 {
    msg << d_voucher_set.size();
    for (const_iterator ni = d_voucher_set.begin(); ni != d_voucher_set.end(); ++ni) {
-      msg << ni->d_issuer_rank << ni->d_load;
+      msg << *ni;
    }
 }
 
@@ -178,7 +178,7 @@ VoucherTransitLoad::getFromMessageStream( tbox::MessageStream &msg )
    msg >> num_vouchers;
    Voucher v;
    for (size_t i = 0; i < num_vouchers; ++i) {
-      msg >> v.d_issuer_rank >> v.d_load;
+      msg >> v;
       insert(v);
    }
 }
@@ -250,8 +250,9 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
 
    // Set up the reserve for fulfilling incoming redemption requests.
    BoxTransitSet reserve(*d_pparams);
-   reserve.insertAll( unbalanced_box_level.getBoxes() );
    reserve.setAllowBoxBreaking( getAllowBoxBreaking() );
+   reserve.setThresholdWidth( getThresholdWidth() );
+   reserve.insertAll( unbalanced_box_level.getBoxes() );
 
 
    // 2. Receive work demands for voucher we generated but can't account for.
@@ -289,6 +290,11 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
          mi!=redemptions_to_fulfill.end(); ++mi ) {
 
       VoucherRedemption &vr = mi->second;
+      if ( d_print_edge_steps ) {
+         tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
+                    << "\nsupplying " << vr.d_voucher.d_load << " to rank " << mi->first
+                    << std::endl;
+      }
       vr.sendWorkSupply( reserve,
                          unbalanced_to_balanced,
                          balanced_to_unbalanced,
@@ -419,6 +425,7 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
 {
    BoxTransitSet box_shipment(pparams);
    box_shipment.setAllowBoxBreaking( reserve.getAllowBoxBreaking() );
+   box_shipment.setThresholdWidth( reserve.getThresholdWidth() );
    box_shipment.adjustLoad( reserve,
                             d_voucher.d_load,
                             d_voucher.d_load,
@@ -502,12 +509,14 @@ void VoucherTransitLoad::VoucherRedemption::finishSendRequest()
 * Adjust the VoucherTransitLoad by moving work between it (main_bin)
 * and a hold_bin.  Try to bring the load to the specified ideal.
 *
-* The high_load and low_load define an acceptable range around the
-* ideal_load.
+* It can move Vouchers between given bins and, if needed, break some
+* Vouchers up to move part of the work.
 *
-* This method makes a best effort and returns the amount of load
-* moved.  It can move Vouchers between given bins and, if needed,
-* break some Vouchers up to move part of the work.
+* The high_load and low_load define an acceptable range around the
+* ideal_load.  Because vouchers can be cut at any arbitrary amount
+* (unlike boxes), this method tries to minimize the load shifting
+* by doing the minimum adjustment necessary to get in the acceptable
+* range, rather than reaching the ideal_load.
 *
 * This method is purely local--it reassigns the load but does not
 * communicate the change to any remote process.
@@ -601,9 +610,6 @@ VoucherTransitLoad::raiseDstLoad(
       return 0;
       // No-op empty-container cases is not handled below.
    }
-
-src.recursivePrint(tbox::plog, "src: ", 1);
-dst.recursivePrint(tbox::plog, "dst: ", 1);
 
    /*
     * Decide whether to take work from the beginning or the end of
