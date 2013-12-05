@@ -631,8 +631,6 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
          balanced_work = boost::make_shared<BoxTransitSet>(*d_pparams);
       }
 
-      balanced_work->setAllowBoxBreaking(d_allow_box_breaking);
-
       distributeLoadAcrossRankGroup(
          *balanced_work,
          balance_box_level,
@@ -748,6 +746,12 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
     */
    group_avg_load =
       tbox::MathUtilities<double>::Max(group_avg_load, d_global_avg_load);
+
+
+   // Set parameters governing box breaking.
+   balanced_work.setAllowBoxBreaking(d_allow_box_breaking);
+   const double ideal_box_width = pow(group_avg_load, 1.0/d_dim.getValue());
+   balanced_work.setThresholdWidth( 1.0*ideal_box_width );
 
 
    /*
