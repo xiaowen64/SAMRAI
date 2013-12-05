@@ -32,7 +32,7 @@ Main {
 
    box_generator_type = "TileClustering"
 
-   load_balancer_type = "TreeLoadBalancer", "TilePartitioner"
+   load_balancer_type = "TreeLoadBalancer"
 
    load_balance = TRUE, TRUE, TRUE
 
