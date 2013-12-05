@@ -656,7 +656,10 @@ VoucherTransitLoad::raiseDstLoad(
          Voucher partial_voucher((ideal_dst_load - dst.getSumLoad()), free_voucher);
          dst.insert(partial_voucher);
          src.insert(free_voucher);
-         // Breaking not strictly needed but may prevent logic error due to floating point rounding.
+         /*
+          * Breaking not strictly needed, except rounding error may
+          * cause adding another partial voucher from same issuer.
+          */
          break;
       }
 
