@@ -64,6 +64,7 @@ BoxTransitSet::BoxTransitSet( const PartitioningParams &pparams ) :
 {
    getFromInput();
    setTimerPrefix(s_default_timer_prefix);
+   d_box_breaker.setPrintBreakSteps(d_print_break_steps);
 }
 
 
@@ -84,6 +85,7 @@ BoxTransitSet::BoxTransitSet( const BoxTransitSet &other ) :
    d_print_edge_steps(other.d_print_edge_steps),
    d_object_timers(other.d_object_timers)
 {
+   d_box_breaker.setPrintBreakSteps(d_print_break_steps);
 }
 
 
@@ -789,7 +791,7 @@ BoxTransitSet::adjustLoadByBreaking(
    double breakoff_amt = 0.0;
    BoxInTransit breakbox(d_pparams->getMinBoxSize().getDim());
 
-   int break_acceptance_flags[3] = {0,0,0};
+   int break_acceptance_flags[4] = {0,0,0,0};
    int &found_breakage = break_acceptance_flags[2];
 
    /*
@@ -838,6 +840,7 @@ BoxTransitSet::adjustLoadByBreaking(
                        << "  " << break_acceptance_flags[0]
                        << "  " << break_acceptance_flags[1]
                        << "  " << break_acceptance_flags[2]
+                       << "  " << break_acceptance_flags[3]
                        << std::endl;
          }
 
@@ -849,6 +852,7 @@ BoxTransitSet::adjustLoadByBreaking(
                        << "  in-range imp = " << break_acceptance_flags[0]
                        << "  balance imp = " << break_acceptance_flags[1]
                        << "  overal imp = " << break_acceptance_flags[2]
+                       << "  in range = " << break_acceptance_flags[3]
                        << "  accept_break = " << accept_break
                        << std::endl;
          }
@@ -1084,7 +1088,7 @@ BoxTransitSet::adjustLoadByPopping(
    }
 
    LoadType actual_transfer = 0;
-   int acceptance_flags[3] = {0,0,0};
+   int acceptance_flags[4] = {0,0,0,0};
 
    size_t num_boxes_popped = 0;
 
@@ -1233,8 +1237,8 @@ BoxTransitSet::swapLoadPair(
    LoadType loside_transfer = 0.0;
 
 
-   int loside_acceptance_flags[3] = {0,0,0};
-   int hiside_acceptance_flags[3] = {0,0,0};
+   int loside_acceptance_flags[4] = {0,0,0,0};
+   int hiside_acceptance_flags[4] = {0,0,0,0};
 
    if (dst.empty()) {
       /*
@@ -1265,7 +1269,8 @@ BoxTransitSet::swapLoadPair(
                           << ", off by " << hiside_transfer-ideal_transfer
                           << ", acceptance_flags=" << hiside_acceptance_flags[0]
                           << ',' << hiside_acceptance_flags[1]
-                          << ',' << hiside_acceptance_flags[2];
+                          << ',' << hiside_acceptance_flags[2]
+                          << ',' << hiside_acceptance_flags[3];
             }
          }
       }
@@ -1282,7 +1287,8 @@ BoxTransitSet::swapLoadPair(
                           << ", off by " << loside_transfer-ideal_transfer
                           << ", acceptance_flags=" << loside_acceptance_flags[0]
                           << ',' << loside_acceptance_flags[1]
-                          << ',' << loside_acceptance_flags[2];
+                          << ',' << loside_acceptance_flags[2]
+                          << ',' << loside_acceptance_flags[3];
             }
          }
       }
