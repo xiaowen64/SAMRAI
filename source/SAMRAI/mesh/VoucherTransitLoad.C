@@ -546,8 +546,8 @@ VoucherTransitLoad::adjustLoad(
 
    LoadType actual_transfer = 0;
 
-   if ((main_bin.empty() && ideal_load <= 0 ) ||
-       (hold_bin.empty() && main_bin.getSumLoad() < ideal_load )) {
+   if ((main_bin.empty() && ideal_load <= d_pparams->getLoadComparisonTol() ) ||
+       (hold_bin.empty() && main_bin.getSumLoad() < ideal_load + d_pparams->getLoadComparisonTol() )) {
       return actual_transfer;
    }
 
@@ -633,7 +633,8 @@ VoucherTransitLoad::raiseDstLoad(
 
    LoadType old_dst_load = dst.getSumLoad();
 
-   while ( dst.getSumLoad() < ideal_dst_load && !src.empty() ) {
+   while ( dst.getSumLoad() < ideal_dst_load - dst.d_pparams->getLoadComparisonTol() &&
+           !src.empty() ) {
 
       iterator src_itr;
       if ( take_from_src_end ) {
@@ -647,13 +648,15 @@ VoucherTransitLoad::raiseDstLoad(
       Voucher free_voucher = *src_itr;
       src.erase(src_itr);
 
-      if ( free_voucher.d_load < (ideal_dst_load - dst.getSumLoad()) ) {
+      if ( free_voucher.d_load < (ideal_dst_load - dst.getSumLoad() + dst.d_pparams->getLoadComparisonTol()) ) {
          dst.insert(free_voucher);
       }
       else {
          Voucher partial_voucher((ideal_dst_load - dst.getSumLoad()), free_voucher);
          dst.insert(partial_voucher);
          src.insert(free_voucher);
+         // Breaking not strictly needed but may prevent logic error due to floating point rounding.
+         break;
       }
 
    }
