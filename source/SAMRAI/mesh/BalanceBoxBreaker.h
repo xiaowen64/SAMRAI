@@ -80,7 +80,65 @@ public:
    }
 
 
+   /*!
+    * @brief Break up box bursty against box solid and adds the pieces
+    * in the given container.
+    *
+    * This version differs from that in BoxContainer in that it tries
+    * to minimize slivers.
+    */
+   static void
+   burstBox(
+      std::vector<hier::Box>& boxes,
+      const hier::Box& bursty,
+      const hier::Box& solid );
+
+   static double
+   computeBalancePenalty(double imbalance)
+   {
+      return tbox::MathUtilities<double>::Abs(imbalance);
+   }
+
+   /*!
+    * @brief Compute a score that is low for box widths smaller than
+    * some threshold_width.
+    */
+   static double computeWidthScore(
+      const hier::IntVector &box_size,
+      double threshold_width );
+
+   /*!
+    * @brief Compute a combined width score for multiple boxes.
+    */
+   static double computeWidthScore(
+      const std::vector<hier::Box> &boxes,
+      double threshold_width );
+
+
 private:
+
+   struct TrialBreak {
+      TrialBreak( const PartitioningParams &pparams,
+                  double threshold_width );
+      //! @brief Break box from whole and store results.
+      void breakBox( const hier::Box &box,
+                     const hier::Box &whole );
+      //! @brief Compute merits vs doing nothing and return improvement flag.
+      bool computeMerits( double ideal_load, double low_load, double high_load );
+      //! @brief Whether this improves over another (or degrades or leaves alone).
+      int improvesOver( const TrialBreak &other ) const;
+
+      double d_breakoff_load;
+      std::vector<hier::Box> d_breakoff;
+      std::vector<hier::Box> d_leftover;
+      double d_ideal_load, d_low_load, d_high_load;
+      int d_width_score;
+      int d_balance_penalty;
+      //! @brief Flags from comparing this trial vs doing nothing.
+      int d_flags[4];
+      const PartitioningParams *d_pparams;
+      const double d_threshold_width;
+   };
 
    bool
    breakOffLoad_planar(
@@ -103,33 +161,6 @@ private:
       double low_load,
       double high_load,
       const std::vector<std::vector<bool> >& bad_cuts ) const;
-
-   double
-   computeBalancePenalty(double imbalance) const
-   {
-      return tbox::MathUtilities<double>::Abs(imbalance);
-   }
-
-   /*!
-    * @brief Compute a score that is low for box widths smaller than
-    * some threshold_width.
-    */
-   double computeWidthScore(
-      const hier::IntVector &box_size,
-      double threshold_width ) const;
-
-   /*!
-    * @brief Compute a combined width score for multiple boxes.
-    */
-   double computeWidthScore(
-      const std::vector<hier::Box> &boxes,
-      double threshold_width ) const;
-
-   void
-   burstBox(
-      std::vector<hier::Box>& boxes,
-      const hier::Box& bursty,
-      const hier::Box& solid ) const;
 
    void setTimers();
 

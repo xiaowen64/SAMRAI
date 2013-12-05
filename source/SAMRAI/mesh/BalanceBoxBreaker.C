@@ -992,9 +992,6 @@ BalanceBoxBreaker::breakOffLoad_cubic(
 
 /*
  *************************************************************************
- * Break up box bursty against box solid and adds the pieces to list.
- * This version differs from that in BoxContainer in that it tries to
- * minimize slivers.
  *************************************************************************
  */
 
@@ -1002,7 +999,7 @@ void
 BalanceBoxBreaker::burstBox(
    std::vector<hier::Box>& boxes,
    const hier::Box& bursty,
-   const hier::Box& solid ) const
+   const hier::Box& solid )
 {
    /*
     * This method lacks logic to handle the case of solid not being
@@ -1057,39 +1054,7 @@ BalanceBoxBreaker::burstBox(
 
    }
 
-   if (d_print_break_steps) {
-      tbox::plog << "      burstBox: " << bursty << " = " << solid;
-      for (std::vector<hier::Box>::const_iterator bi = boxes.begin();
-           bi != boxes.end();
-           bi++) {
-         tbox::plog << " + " << *bi;
-      }
-      tbox::plog << std::endl;
-   }
-#ifdef DEBUG_CHECK_ASSERTIONS
-   for (std::vector<hier::Box>::const_iterator bi = boxes.begin();
-        bi != boxes.end();
-        bi++) {
-      for (std::vector<hier::Box>::const_iterator bj = boxes.begin();
-           bj != boxes.end();
-           bj++) {
-         if (bi != bj) {
-            TBOX_ASSERT(!bi->intersects(*bj));
-         }
-      }
-   }
-   hier::BoxContainer l1(bursty);
-   hier::BoxContainer l2(solid);
-   for (std::vector<hier::Box>::const_iterator bi = boxes.begin();
-        bi != boxes.end();
-        bi++) {
-      l2.pushFront(*bi);
-   }
-   l1.removeIntersections(l2);
-   TBOX_ASSERT(l1.isEmpty());
-   l2.removeIntersections(bursty);
-   TBOX_ASSERT(l2.isEmpty());
-#endif
+   return;
 }
 
 
@@ -1104,7 +1069,7 @@ BalanceBoxBreaker::burstBox(
  */
 double BalanceBoxBreaker::computeWidthScore(
    const hier::IntVector &box_size,
-   double threshold_width ) const
+   double threshold_width )
 {
    double width_score = 1.0;
    for ( int d=0; d<box_size.getDim().getValue(); ++d ) {
@@ -1125,7 +1090,7 @@ double BalanceBoxBreaker::computeWidthScore(
  */
 double BalanceBoxBreaker::computeWidthScore(
    const std::vector<hier::Box> &boxes,
-   double threshold_width ) const
+   double threshold_width )
 {
    double width_score = 1.0;
    for ( int i=0; i<boxes.size(); ++i ) {
@@ -1145,6 +1110,128 @@ void BalanceBoxBreaker::setTimers()
       getTimer("mesh::BalanceBoxBreaker::breakOffLoad()");
    t_find_bad_cuts = tbox::TimerManager::getManager()->
       getTimer("mesh::BalanceBoxBreaker::find_bad_cuts");
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+BalanceBoxBreaker::TrialBreak::TrialBreak(
+   const PartitioningParams &pparams,
+   double threshold_width )
+   : d_breakoff_load(0.0),
+     d_breakoff(),
+     d_leftover(),
+     d_ideal_load(-1.0),
+     d_low_load(-1.0),
+     d_high_load(-1.0),
+     d_width_score(1.0),
+     d_balance_penalty(0.0),
+     d_pparams(&pparams),
+     d_threshold_width(threshold_width)
+{}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void BalanceBoxBreaker::TrialBreak::breakBox(
+   const hier::Box &box,
+   const hier::Box &whole )
+{
+   d_breakoff.clear();
+   d_leftover.clear();
+   burstBox( d_leftover, whole, box );
+   d_breakoff.push_back(box);
+   d_breakoff_load = double(box.size());
+
+   d_width_score =
+      computeWidthScore( d_breakoff, d_threshold_width ) *
+      computeWidthScore( d_leftover, d_threshold_width );
+   return;
+}
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+bool BalanceBoxBreaker::TrialBreak::computeMerits(
+   double ideal_load, double low_load, double high_load )
+{
+   TBOX_ASSERT( !d_breakoff.empty() );
+
+   d_ideal_load = ideal_load;
+   d_low_load = low_load;
+   d_high_load = high_load;
+
+   d_balance_penalty = BalanceBoxBreaker::computeBalancePenalty(
+      d_breakoff_load - d_ideal_load);
+   return BalanceUtilities::compareLoads(
+      d_flags, 0, d_breakoff_load,
+      d_ideal_load, d_low_load, d_high_load, *d_pparams);
+}
+
+
+/*
+ *************************************************************************
+ * Decide whether to take planar or cubic results.  If both are
+ * in-range, pick the one with the best width score.  If only one
+ * is in-range, pick that one.  If none are in range but both are
+ * better than not breaking, chose the one with better overall
+ * improvement.  If only one is better than not breaking, choose
+ * that one.  Else, choose none.
+ *************************************************************************
+ */
+int BalanceBoxBreaker::TrialBreak::improvesOver(
+   const TrialBreak &other ) const
+{
+   TBOX_ASSERT( !this->d_breakoff.empty() );
+   TBOX_ASSERT( !other.d_breakoff.empty() );
+
+   int improves = 0;
+
+   if ( this->d_flags[3] && other.d_flags[3] ) {
+      improves =
+         ( this->d_width_score > other.d_width_score ) ? 1 :
+         ( this->d_width_score < other.d_width_score ) ? -1 : 0;
+      if ( improves == 0 ) {
+         improves =
+            ( this->d_balance_penalty < other.d_balance_penalty ) ? 1 :
+            ( this->d_balance_penalty > other.d_balance_penalty ) ? -1 : 0;
+         // How about balance_score = -balance_penalty so everything is a "score."
+      }
+   }
+
+   else if ( this->d_flags[3] ) {
+      improves = 1;
+   }
+
+   else if ( other.d_flags[3] ) {
+      improves = -1;
+   }
+
+   else if ( this->d_flags[2] && other.d_flags[2] ) {
+      int flags[4] = {0,0,0,0};
+      BalanceUtilities::compareLoads(
+         flags, this->d_breakoff_load, other.d_breakoff_load,
+         d_ideal_load, d_low_load, d_high_load, *d_pparams );
+      improves = flags[2];
+   }
+
+   else if ( this->d_flags[2] ) {
+      improves = 1;
+   }
+
+   else if ( other.d_flags[2] ) {
+      improves = -1;
+   }
+
+   return improves;
 }
 
 }
