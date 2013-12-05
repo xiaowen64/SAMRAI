@@ -36,6 +36,25 @@ namespace mesh {
 #define ROUND_TO_LO(a,b) ((a)-((((a)%(b))+(b))%(b)))
 
 
+BalanceBoxBreaker::BalanceBoxBreaker(
+   const PartitioningParams &pparams,
+   bool print_break_steps )
+   : d_pparams(&pparams),
+     d_print_break_steps(print_break_steps)
+{
+   setTimers();
+}
+
+
+BalanceBoxBreaker::BalanceBoxBreaker( const BalanceBoxBreaker &other )
+   : d_pparams(other.d_pparams),
+     d_print_break_steps(other.d_print_break_steps),
+     t_break_off_load(other.t_break_off_load),
+     t_find_bad_cuts(other.t_find_bad_cuts)
+{
+}
+
+
 /*
  *************************************************************************
  * Master method for breaking off a load.
@@ -549,7 +568,7 @@ BalanceBoxBreaker::breakOffLoad_planar(
 
       sufficient_brk_load = (brk_load >= low_load) && (brk_load <= high_load);
 
-   }
+   } // d-loop
 
    bool successful_break = false;
    if (!best_breakoff_box.empty()) {

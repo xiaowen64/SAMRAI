@@ -31,12 +31,9 @@ public:
 
    BalanceBoxBreaker(
       const PartitioningParams &pparams,
-      bool print_break_steps = false )
-      : d_pparams(&pparams),
-        d_print_break_steps(print_break_steps)
-      {
-         setTimers();
-      }
+      bool print_break_steps = false );
+
+   BalanceBoxBreaker( const BalanceBoxBreaker &other );
 
 
    /*!
