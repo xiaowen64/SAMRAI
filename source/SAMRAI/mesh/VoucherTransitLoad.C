@@ -280,7 +280,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
       vr.recvWorkDemand( source, count, mpi );
 
       unaccounted_work -= vr.d_voucher.d_load;
-      TBOX_ASSERT( unaccounted_work > -d_pparams->getLoadComparisonTol() );
+      TBOX_ASSERT( unaccounted_work >= -d_pparams->getLoadComparisonTol() );
 
    }
 
