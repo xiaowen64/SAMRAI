@@ -28,7 +28,7 @@ PartitioningParams::PartitioningParams(
    d_max_size(max_size),
    d_bad_interval(bad_interval),
    d_cut_factor(cut_factor),
-   d_load_comparison_tol(0)
+   d_load_comparison_tol(1e-9)
 {
    for ( int bid(0); bid<grid_geometry.getNumberBlocks(); ++bid ) {
       grid_geometry.computePhysicalDomain(

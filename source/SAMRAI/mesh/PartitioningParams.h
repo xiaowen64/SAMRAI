@@ -80,6 +80,14 @@ private:
    hier::IntVector d_max_size;
    hier::IntVector d_bad_interval;
    hier::IntVector d_cut_factor;
+
+   /*!
+    * @brief Tolerance for comparing floating point loads.
+    *
+    * Should be set to at least possible rounding errors.
+    * Better if set between that and the greatest work value
+    * that would be considered "no work".
+    */
    double d_load_comparison_tol;
 
 };
