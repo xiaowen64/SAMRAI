@@ -169,7 +169,14 @@ public:
       return d_allow_box_breaking;
    }
 
-   //! @brief Set threshold for resisting small and thin boxes.
+   /*!
+    * @brief Set threshold for resisting small and thin boxes.
+    *
+    * Default initial threshold is very small (practically unlimited).
+    * This is not a hard limit, but implementations should use it to
+    * determine when a box is getting too small in one or more
+    * dimension.
+    */
    void setThresholdWidth( double threshold_width ) {
       d_threshold_width = threshold_width;
    }

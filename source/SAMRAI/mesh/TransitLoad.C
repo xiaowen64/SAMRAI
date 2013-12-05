@@ -31,7 +31,7 @@ namespace mesh {
  */
 TransitLoad::TransitLoad() :
    d_allow_box_breaking(true),
-   d_threshold_width(tbox::MathUtilities<double>::getMax())
+   d_threshold_width(1.0e-12)
 {
 }
 

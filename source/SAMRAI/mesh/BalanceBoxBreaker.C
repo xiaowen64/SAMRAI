@@ -102,25 +102,34 @@ BalanceBoxBreaker::breakOffLoad(
    t_find_bad_cuts->stop();
 
    // Penalty for not transfering ideal load.
+   brk_load = 0;
    double best_balance_penalty = computeBalancePenalty(ideal_load_to_break);
+   double best_width_score = computeWidthScore( box.numberCells(), threshold_width );
 
    if (d_print_break_steps) {
       tbox::plog.unsetf(std::ios::fixed | std::ios::scientific);
       tbox::plog.precision(6);
       tbox::plog << "      pre-break imbalance: " << ideal_load_to_break
                  << " balance penalty: " << best_balance_penalty
+                 << " width score: " << best_width_score
                  << std::endl;
    }
 
-   brk_load = 0;
-   bool found_any_break = false;
+   /*
+    * Try planar break.
+    */
+
+   double planar_brk_load = 0;
+   std::vector<hier::Box> planar_breakoff;
+   std::vector<hier::Box> planar_leftover;
+   int planar_acceptance_flags[4] = {0,0,0,0};
+   double planar_balance_penalty = best_balance_penalty;
+   double planar_width_score = best_width_score;
+   bool planar_break_found = false;
 
    {
-      std::vector<hier::Box> planar_breakoff;
-      std::vector<hier::Box> planar_leftover;
-      double planar_brk_load;
 
-      bool found_this_break = breakOffLoad_planar(
+      planar_break_found = breakOffLoad_planar(
             planar_breakoff,
             planar_leftover,
             planar_brk_load,
@@ -130,14 +139,10 @@ BalanceBoxBreaker::breakOffLoad(
             high_load,
             bad_cuts );
 
-      if (found_this_break) {
-
-         found_any_break = true;
-
-         double planar_balance_penalty = computeBalancePenalty(
-               static_cast<double>(planar_brk_load - ideal_load_to_break));
+      if (planar_break_found) {
 
          if (d_print_break_steps) {
+            // Should move this if-block into breakOffLoad_planar.
             tbox::plog.unsetf(std::ios::fixed | std::ios::scientific);
             tbox::plog.precision(6);
             tbox::plog << "      breakOffLoad_planar broke off "
@@ -165,56 +170,58 @@ BalanceBoxBreaker::breakOffLoad(
             }
             tbox::plog << "\n        imbalance: "
                        << (planar_brk_load - ideal_load_to_break)
-                       << " balance penalties: "
-                       << planar_balance_penalty
                        << std::endl;
          }
 
+         planar_balance_penalty = computeBalancePenalty(
+               static_cast<double>(planar_brk_load - ideal_load_to_break));
+         planar_width_score =
+            computeWidthScore(planar_breakoff, threshold_width) *
+            computeWidthScore(planar_leftover, threshold_width);
 
-         int break_acceptance_flags[4] = {0,0,0,0};
-
-         const bool accept_break = BalanceUtilities::compareLoads(
-            break_acceptance_flags, brk_load, planar_brk_load,
+         BalanceUtilities::compareLoads(
+            planar_acceptance_flags, brk_load, planar_brk_load,
             ideal_load_to_break, low_load, high_load, *d_pparams );
+
          if (d_print_break_steps) {
-            tbox::plog << "      Break evaluation:"
-                       << "  " << break_acceptance_flags[0]
-                       << "  " << break_acceptance_flags[1]
-                       << "  " << break_acceptance_flags[2]
+            tbox::plog << " planar_balance_penalty: " << planar_balance_penalty
+                       << " planar_width_score: " << planar_width_score
+                       << std::endl;
+            tbox::plog << "      planar_acceptance_flags:"
+                       << "  " << planar_acceptance_flags[0]
+                       << "  " << planar_acceptance_flags[1]
+                       << "  " << planar_acceptance_flags[2]
+                       << "  " << planar_acceptance_flags[3]
                        << std::endl;
          }
 
-         if (accept_break) {
-            if (d_print_break_steps) {
-               tbox::plog << "      Keeping planar cut result."
-                          << "  " << planar_breakoff.size() << " boxes broken off."
-                          << "  " << planar_leftover.size() << " boxes leftover."
-                          << std::endl;
-            }
-            breakoff.swap(planar_breakoff);
-            leftover.swap(planar_leftover);
-            brk_load = planar_brk_load;
-            best_balance_penalty = planar_balance_penalty;
-         } else {
-            if (d_print_break_steps) {
-               tbox::plog << "      Rejecting planar cut result." << std::endl;
-            }
+      } else {
+         if (d_print_break_steps) {
+            tbox::plog << "      breakOffLoad_planar could not break "
+                       << ideal_load_to_break << " from " << box
+                       << '/' << box.numberCells()
+                       << '/' << box.numberCells().getProduct()
+                       << std::endl;
          }
-
       }
+
    }
 
    /*
-    * If above cut algorithms fail to break or improve the penalty, try
-    * more cutting algorithms.
+    * Try cubic break.
     */
+
+   double cubic_brk_load = 0;
+   std::vector<hier::Box> cubic_breakoff;
+   std::vector<hier::Box> cubic_leftover;
+   int cubic_acceptance_flags[4] = {0,0,0,0};
+   double cubic_balance_penalty = best_balance_penalty;
+   double cubic_width_score = best_width_score;
+   bool cubic_break_found = false;
+
    {
 
-      std::vector<hier::Box> cubic_breakoff;
-      std::vector<hier::Box> cubic_leftover;
-      double cubic_brk_load;
-
-      bool found_this_break = breakOffLoad_cubic(
+      cubic_break_found = breakOffLoad_cubic(
             cubic_breakoff,
             cubic_leftover,
             cubic_brk_load,
@@ -224,14 +231,10 @@ BalanceBoxBreaker::breakOffLoad(
             high_load,
             bad_cuts );
 
-      if (found_this_break) {
-
-         found_any_break = true;
-
-         double cubic_balance_penalty = computeBalancePenalty(
-            static_cast<double>(cubic_brk_load - ideal_load_to_break));
+      if (cubic_break_found) {
 
          if (d_print_break_steps) {
+            // Should move this if-block into breakOffLoad_cubic.
             tbox::plog.unsetf(std::ios::fixed | std::ios::scientific);
             tbox::plog.precision(6);
             tbox::plog << "      breakOffLoad_cubic broke off "
@@ -259,40 +262,31 @@ BalanceBoxBreaker::breakOffLoad(
             }
             tbox::plog << "\n        imbalance: "
                        << (cubic_brk_load - ideal_load_to_break)
-                       << " balance penalties: "
-                       << cubic_balance_penalty
                        << std::endl;
          }
 
-         int break_acceptance_flags[4] = {0,0,0,0};
+         cubic_balance_penalty = computeBalancePenalty(
+            static_cast<double>(cubic_brk_load - ideal_load_to_break));
+         cubic_width_score =
+            computeWidthScore(cubic_breakoff, threshold_width) *
+            computeWidthScore(cubic_leftover, threshold_width);
 
-         const bool accept_break = BalanceUtilities::compareLoads(
-            break_acceptance_flags, brk_load, cubic_brk_load,
+         BalanceUtilities::compareLoads(
+            cubic_acceptance_flags, brk_load, cubic_brk_load,
             ideal_load_to_break, low_load, high_load, *d_pparams );
+
          if (d_print_break_steps) {
+            tbox::plog << " cubic_balance_penalty: " << cubic_balance_penalty
+                       << " cubic_width_score: " << cubic_width_score
+                       << std::endl;
             tbox::plog << "      Break evaluation:"
-                       << "  " << break_acceptance_flags[0]
-                       << "  " << break_acceptance_flags[1]
-                       << "  " << break_acceptance_flags[2]
+                       << "  " << cubic_acceptance_flags[0]
+                       << "  " << cubic_acceptance_flags[1]
+                       << "  " << cubic_acceptance_flags[2]
+                       << "  " << cubic_acceptance_flags[3]
                        << std::endl;
          }
 
-         if (accept_break) {
-            if (d_print_break_steps) {
-               tbox::plog << "      choosing breakOffLoad_cubic result."
-                          << "  " << cubic_breakoff.size() << " boxes broken off."
-                          << "  " << cubic_leftover.size() << " boxes leftover."
-                          << std::endl;
-            }
-            breakoff.swap(cubic_breakoff);
-            leftover.swap(cubic_leftover);
-            brk_load = cubic_brk_load;
-            best_balance_penalty = cubic_balance_penalty;
-         } else {
-            if (d_print_break_steps) {
-               tbox::plog << "      Rejecting cubic cut result." << std::endl;
-            }
-         }
       } else {
          if (d_print_break_steps) {
             tbox::plog << "      breakOffLoad_cubic could not break "
@@ -305,9 +299,69 @@ BalanceBoxBreaker::breakOffLoad(
 
    }
 
+   /*
+    * Decide whether to take planar or cubic results.  If both are
+    * in-range, pick the one with the best width score.  If only one
+    * is in-range, pick that one.  If none are in range but both are
+    * better than not breaking, chose the one with better overall
+    * improvement.  If only one is better than not breaking, choose
+    * that one.  Else, choose none.
+    */
+   char choice = '\0';
+   if ( planar_acceptance_flags[3] && cubic_acceptance_flags[3] ) {
+      choice = ( planar_width_score >= cubic_width_score ) ? 'p' : 'c';
+   }
+   else if ( planar_acceptance_flags[3] ) {
+      choice = 'p';
+   }
+   else if ( cubic_acceptance_flags[3] ) {
+      choice = 'c';
+   }
+   else if ( planar_acceptance_flags[2] && cubic_acceptance_flags[2] ) {
+      int acceptance_flags[4] = {0,0,0,0};
+      choice = BalanceUtilities::compareLoads(
+         acceptance_flags, planar_brk_load, cubic_brk_load,
+         ideal_load_to_break, low_load, high_load, *d_pparams ) ? 'c' : 'p';
+   }
+   else if ( planar_acceptance_flags[2] ) {
+      choice = 'p';
+   }
+   else if ( cubic_acceptance_flags[2] ) {
+      choice = 'c';
+   }
+
+   if ( choice == 'p' ) {
+      if (d_print_break_steps) {
+         tbox::plog << "      Choosing planar break result."
+                    << "  " << planar_breakoff.size() << " boxes broken off."
+                    << "  " << planar_leftover.size() << " boxes leftover."
+                    << std::endl;
+      }
+      breakoff.swap(planar_breakoff);
+      leftover.swap(planar_leftover);
+      brk_load = planar_brk_load;
+   }
+   else if ( choice == 'c' ) {
+      if (d_print_break_steps) {
+         tbox::plog << "      Choosing cubic break result."
+                    << "  " << cubic_breakoff.size() << " boxes broken off."
+                    << "  " << cubic_leftover.size() << " boxes leftover."
+                    << std::endl;
+      }
+      breakoff.swap(cubic_breakoff);
+      leftover.swap(cubic_leftover);
+      brk_load = cubic_brk_load;
+   }
+   else {
+      if (d_print_break_steps) {
+         tbox::plog << "      choosing no cut result."
+                    << std::endl;
+      }
+   }
+
    t_break_off_load->stop();
 
-   return found_any_break;
+   return (choice != '0');
 }
 
 
@@ -760,6 +814,12 @@ BalanceBoxBreaker::breakOffLoad_cubic(
          best_breakoff_box = corner_box;
          best_breakoff_size = corner_box_size;
          best_breakoff_load = corner_box_load;
+         if ( d_print_break_steps ) {
+            tbox::plog << "best_breakoff_box is now box " << bn << " " << best_breakoff_box
+                       << ", best_breakoff_size = " << best_breakoff_size
+                       << ", best_breakoff_load = " << best_breakoff_load
+                       << std::endl;
+         }
          if ( best_breakoff_load >= low_load && brk_load <= high_load ) {
             break;
          }
@@ -838,6 +898,12 @@ BalanceBoxBreaker::breakOffLoad_cubic(
             best_breakoff_box = corner_box;
             best_breakoff_size = corner_box_size;
             best_breakoff_load = corner_box_load;
+            if ( d_print_break_steps ) {
+               tbox::plog << "best_breakoff_box is now box " << bn << " " << best_breakoff_box
+                          << ", best_breakoff_size = " << best_breakoff_size
+                          << ", best_breakoff_load = " << best_breakoff_load
+                          << std::endl;
+            }
             if ( best_breakoff_load >= low_load && best_breakoff_load <= high_load ) {
                break;
             }
@@ -1023,7 +1089,7 @@ double BalanceBoxBreaker::computeWidthScore(
    double width_score = 1.0;
    for ( int d=0; d<box_size.getDim().getValue(); ++d ) {
       double s = box_size(d)/threshold_width;
-      s = tbox::MathUtilities<double>::Max( 1.0, s );
+      s = tbox::MathUtilities<double>::Min( 1.0, s );
       // For non-linear scoring, try s = sqrt(s);
       width_score *= s;
    }
