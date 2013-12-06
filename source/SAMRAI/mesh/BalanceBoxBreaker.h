@@ -142,6 +142,7 @@ private:
 
    bool
    breakOffLoad_planar(
+      TrialBreak &trial,
       std::vector<hier::Box>& breakoff,
       std::vector<hier::Box>& leftover,
       double& brk_load,
@@ -153,6 +154,7 @@ private:
 
    bool
    breakOffLoad_cubic(
+      TrialBreak &trial,
       std::vector<hier::Box>& breakoff,
       std::vector<hier::Box>& leftover,
       double& brk_load,
