@@ -320,7 +320,7 @@ BalanceBoxBreaker::breakOffLoad_planar( TrialBreak &trial ) const
 
    if (box_vol <= trial.d_ideal_load) {
       // Easy: break off everything.
-      trial.breakBox(trial.d_whole_box);
+      trial.computeBreakData(trial.d_whole_box);
       if (d_print_break_steps) {
          tbox::plog << "      breakOffLoad_planar broke off entire Box "
                     << trial.d_whole_box
@@ -401,7 +401,7 @@ BalanceBoxBreaker::breakOffLoad_planar( TrialBreak &trial ) const
 
          hier::Box brk_box(trial.d_whole_box);
          brk_box.upper()(brk_dir) = lo_lower_cut_plane - 1;
-         trial1.breakBox(brk_box);
+         trial1.computeBreakData(brk_box);
          if ( trial1.improvesOver(trial) ) {
             trial.swap(trial1);
             if ( d_print_break_steps ) {
@@ -417,7 +417,7 @@ BalanceBoxBreaker::breakOffLoad_planar( TrialBreak &trial ) const
 
          hier::Box brk_box(trial.d_whole_box);
          brk_box.upper()(brk_dir) = tbox::MathUtilities<int>::Min(hi_lower_cut_plane - 1, trial1.d_whole_box.upper()(brk_dir));
-         trial1.breakBox(brk_box);
+         trial1.computeBreakData(brk_box);
          if ( trial1.improvesOver(trial) ) {
             trial.swap(trial1);
             if ( d_print_break_steps ) {
@@ -433,7 +433,7 @@ BalanceBoxBreaker::breakOffLoad_planar( TrialBreak &trial ) const
 
          hier::Box brk_box(trial.d_whole_box);
          brk_box.lower()(brk_dir) = tbox::MathUtilities<int>::Max(lo_upper_cut_plane, trial1.d_whole_box.lower()(brk_dir));
-         trial1.breakBox(brk_box);
+         trial1.computeBreakData(brk_box);
          if ( trial1.improvesOver(trial) ) {
             trial.swap(trial1);
             if ( d_print_break_steps ) {
@@ -448,7 +448,7 @@ BalanceBoxBreaker::breakOffLoad_planar( TrialBreak &trial ) const
 
          hier::Box brk_box(trial.d_whole_box);
          brk_box.lower()(brk_dir) = hi_upper_cut_plane;
-         trial1.breakBox(brk_box);
+         trial1.computeBreakData(brk_box);
          if ( trial1.improvesOver(trial) ) {
             trial.swap(trial1);
             if ( d_print_break_steps ) {
@@ -533,7 +533,7 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
 
    if (trial.d_ideal_load >= box_load) {
       // Easy: break off everything.
-      trial.breakBox(trial.d_whole_box);
+      trial.computeBreakData(trial.d_whole_box);
       if (d_print_break_steps) {
          tbox::plog << "      breakOffLoad_cubic broke off entire Box "
                     << trial.d_whole_box
@@ -790,7 +790,7 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
 
 
    if ( !best_breakoff_box.empty() ) {
-      trial.breakBox(best_breakoff_box);
+      trial.computeBreakData(best_breakoff_box);
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1027,7 +1027,7 @@ BalanceBoxBreaker::TrialBreak::TrialBreak(
  * Break box out of d_whole_box and store results.
  *************************************************************************
  */
-void BalanceBoxBreaker::TrialBreak::breakBox(
+void BalanceBoxBreaker::TrialBreak::computeBreakData(
    const hier::Box &box )
 {
    d_breakoff.clear();

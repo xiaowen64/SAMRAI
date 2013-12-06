@@ -121,10 +121,10 @@ public:
                   const hier::Box &whole_box,
                   const std::vector<std::vector<bool> > &bad_cuts,
                   double ideal_load, double low_load, double high_load );
-      //! @brief Construct break where breakoff and leftover are reversed.
+      //! @brief Construct TrialBreak where breakoff and leftover are reversed.
       TrialBreak( const TrialBreak &orig, bool make_reverse );
-      //! @brief Break box from whole and store results.
-      void breakBox( const hier::Box &box );
+      //! @brief Compute data for breaking box from whole and store results.
+      void computeBreakData( const hier::Box &box );
       void swapWithReversedTrial( TrialBreak &reversed );
       //! @brief Compute merits vs doing nothing and return improvement flag.
       bool computeMerits();
