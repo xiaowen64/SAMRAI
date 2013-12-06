@@ -1005,9 +1005,8 @@ BalanceBoxBreaker::TrialBreak::TrialBreak(
      d_breakoff(),
      d_leftover(),
      d_ideal_load(orig.d_whole_box.size() - orig.d_ideal_load),
-     // Bug: next two items should be high and low, not ideal.
-     d_low_load(orig.d_whole_box.size() - orig.d_ideal_load),
-     d_high_load(orig.d_whole_box.size() - orig.d_ideal_load),
+     d_low_load(orig.d_whole_box.size() - orig.d_high_load),
+     d_high_load(orig.d_whole_box.size() - orig.d_low_load),
      d_width_score(orig.d_width_score),
      d_balance_penalty(orig.d_balance_penalty),
      d_pparams(orig.d_pparams),
