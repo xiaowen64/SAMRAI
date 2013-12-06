@@ -125,7 +125,7 @@ private:
                   double ideal_load, double low_load, double high_load );
       //! @brief Break box from whole and store results.
       void breakBox( const hier::Box &box );
-      void swapWithReversedTrial( TrialBreak &reversed, double whole_box_load );
+      void swapWithReversedTrial( TrialBreak &reversed );
       //! @brief Compute merits vs doing nothing and return improvement flag.
       bool computeMerits();
       //! @brief Whether this improves over another (or degrades or leaves alone).
@@ -134,7 +134,7 @@ private:
       //! @brief Swap this object with another.
       void swap( TrialBreak &other );
 
-      double d_breakoff_load;
+      double d_breakoff_load; // Should change to int d_breakoff_cells.  This class doesn't deal in arbitrary load types.
       std::vector<hier::Box> d_breakoff;
       std::vector<hier::Box> d_leftover;
       const double d_ideal_load;

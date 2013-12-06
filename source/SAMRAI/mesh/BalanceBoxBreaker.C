@@ -544,9 +544,9 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
                                  box_dims.getProduct() - trial.d_ideal_load,
                                  box_dims.getProduct() - trial.d_ideal_load );
       bool success =
-         breakOffLoad_cubic( reversed_trial );
+         breakOffLoad_cubic(reversed_trial);
       if (success) {
-         trial.swapWithReversedTrial( reversed_trial, double(box_dims.getProduct()) );
+         trial.swapWithReversedTrial(reversed_trial);
       }
       return success;
    }
@@ -667,7 +667,6 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
       if ( d_print_break_steps ) {
          tbox::plog << "Initial corner box " << bn << " is " << corner_box << corner_box.numberCells() << '|' << corner_box.size() << std::endl;
       }
-
 
       int break_acceptance_flags[4] = {0,0,0,0};
 
@@ -1006,11 +1005,19 @@ void BalanceBoxBreaker::TrialBreak::breakBox(
  *************************************************************************
  */
 void BalanceBoxBreaker::TrialBreak::swapWithReversedTrial(
-   TrialBreak &reversed, double whole_box_load )
+   TrialBreak &reversed )
 {
+   TBOX_ASSERT( &d_whole_box == &reversed.d_whole_box );
+   TBOX_ASSERT( &d_bad_cuts == &reversed.d_bad_cuts );
+   TBOX_ASSERT( d_pparams == reversed.d_pparams );
+   TBOX_ASSERT( d_ideal_load == reversed.d_ideal_load );
+   TBOX_ASSERT( d_low_load == reversed.d_low_load );
+   TBOX_ASSERT( d_high_load == reversed.d_high_load );
+   TBOX_ASSERT( d_threshold_width == reversed.d_threshold_width );
+
    d_breakoff.swap(reversed.d_leftover);
    d_leftover.swap(reversed.d_breakoff);
-   d_breakoff_load = whole_box_load - reversed.d_breakoff_load;
+   d_breakoff_load = double(d_whole_box.size()) - reversed.d_breakoff_load;
    computeMerits();
 }
 
