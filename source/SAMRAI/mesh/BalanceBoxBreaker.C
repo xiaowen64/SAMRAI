@@ -142,79 +142,73 @@ BalanceBoxBreaker::breakOffLoad(
    TrialBreak planar_trial( *d_pparams, threshold_width,
                             box, bad_cuts,
                             ideal_load_to_break, low_load, high_load );
-   bool planar_break_found = false;
 
-   {
+   if ( breakOffLoad_planar(planar_trial) ) {
 
-      planar_break_found = breakOffLoad_planar( planar_trial );
-
-      if (planar_break_found) {
-
-         if (d_print_break_steps) {
-            // Should move this if-block into breakOffLoad_planar.
-            tbox::plog.unsetf(std::ios::fixed | std::ios::scientific);
-            tbox::plog.precision(6);
-            tbox::plog << "      breakOffLoad_planar broke off "
-                       << planar_trial.d_breakoff_load << " / " << ideal_load_to_break
-                       << " from " << box << '|'
-                       << box.numberCells() << '|'
-                       << box.size() << " into "
-                       << planar_trial.d_breakoff.size()
-                       << " breakoff: ";
-            for (std::vector<hier::Box>::const_iterator bi =
-                    planar_trial.d_breakoff.begin();
-                 bi != planar_trial.d_breakoff.end();
-                 ++bi) {
-               tbox::plog << " " << *bi << '|' << bi->numberCells() << '|'
-                          << bi->size();
-            }
-            tbox::plog << "\n        and " << planar_trial.d_leftover.size()
-                       << " leftover boxes:";
-            for (std::vector<hier::Box>::const_iterator bi =
-                    planar_trial.d_leftover.begin();
-                 bi != planar_trial.d_leftover.end();
-                 ++bi) {
-               tbox::plog << " " << *bi << '|' << bi->numberCells() << '|'
-                          << bi->size();
-            }
-            tbox::plog << "\n        imbalance: "
-                       << (planar_trial.d_breakoff_load - ideal_load_to_break)
-                       << std::endl;
+      if (d_print_break_steps) {
+         // Should move this if-block into breakOffLoad_planar.
+         tbox::plog.unsetf(std::ios::fixed | std::ios::scientific);
+         tbox::plog.precision(6);
+         tbox::plog << "      breakOffLoad_planar broke off "
+                    << planar_trial.d_breakoff_load << " / " << ideal_load_to_break
+                    << " from " << box << '|'
+                    << box.numberCells() << '|'
+                    << box.size() << " into "
+                    << planar_trial.d_breakoff.size()
+                    << " breakoff: ";
+         for (std::vector<hier::Box>::const_iterator bi =
+                 planar_trial.d_breakoff.begin();
+              bi != planar_trial.d_breakoff.end();
+              ++bi) {
+            tbox::plog << " " << *bi << '|' << bi->numberCells() << '|'
+                       << bi->size();
          }
-
-         planar_trial.d_balance_penalty = computeBalancePenalty(
-               static_cast<double>(planar_trial.d_breakoff_load - ideal_load_to_break));
-         planar_trial.d_width_score =
-            computeWidthScore(planar_trial.d_breakoff, threshold_width) *
-            computeWidthScore(planar_trial.d_leftover, threshold_width);
-
-         BalanceUtilities::compareLoads(
-            planar_trial.d_flags, brk_load, planar_trial.d_breakoff_load,
-            ideal_load_to_break, low_load, high_load, *d_pparams );
-
-         if (d_print_break_steps) {
-            tbox::plog << " planar_trial.d_balance_penalty: " << planar_trial.d_balance_penalty
-                       << " planar_trial.d_width_score: " << planar_trial.d_width_score
-                       << std::endl;
-            tbox::plog << "      planar_trial.d_flags:"
-                       << "  " << planar_trial.d_flags[0]
-                       << "  " << planar_trial.d_flags[1]
-                       << "  " << planar_trial.d_flags[2]
-                       << "  " << planar_trial.d_flags[3]
-                       << std::endl;
+         tbox::plog << "\n        and " << planar_trial.d_leftover.size()
+                    << " leftover boxes:";
+         for (std::vector<hier::Box>::const_iterator bi =
+                 planar_trial.d_leftover.begin();
+              bi != planar_trial.d_leftover.end();
+              ++bi) {
+            tbox::plog << " " << *bi << '|' << bi->numberCells() << '|'
+                       << bi->size();
          }
-
-      } else {
-         if (d_print_break_steps) {
-            tbox::plog << "      breakOffLoad_planar could not break "
-                       << ideal_load_to_break << " from " << box
-                       << '/' << box.numberCells()
-                       << '/' << box.numberCells().getProduct()
-                       << std::endl;
-         }
+         tbox::plog << "\n        imbalance: "
+                    << (planar_trial.d_breakoff_load - ideal_load_to_break)
+                    << std::endl;
       }
 
+      planar_trial.d_balance_penalty = computeBalancePenalty(
+         static_cast<double>(planar_trial.d_breakoff_load - ideal_load_to_break));
+      planar_trial.d_width_score =
+         computeWidthScore(planar_trial.d_breakoff, threshold_width) *
+         computeWidthScore(planar_trial.d_leftover, threshold_width);
+
+      BalanceUtilities::compareLoads(
+         planar_trial.d_flags, brk_load, planar_trial.d_breakoff_load,
+         ideal_load_to_break, low_load, high_load, *d_pparams );
+
+      if (d_print_break_steps) {
+         tbox::plog << " planar_trial.d_balance_penalty: " << planar_trial.d_balance_penalty
+                    << " planar_trial.d_width_score: " << planar_trial.d_width_score
+                    << std::endl;
+         tbox::plog << "      planar_trial.d_flags:"
+                    << "  " << planar_trial.d_flags[0]
+                    << "  " << planar_trial.d_flags[1]
+                    << "  " << planar_trial.d_flags[2]
+                    << "  " << planar_trial.d_flags[3]
+                    << std::endl;
+      }
+
+   } else {
+      if (d_print_break_steps) {
+         tbox::plog << "      breakOffLoad_planar could not break "
+                    << ideal_load_to_break << " from " << box
+                    << '/' << box.numberCells()
+                    << '/' << box.numberCells().getProduct()
+                    << std::endl;
+      }
    }
+
 
    /*
     * Try cubic break.
@@ -223,79 +217,73 @@ BalanceBoxBreaker::breakOffLoad(
    TrialBreak cubic_trial( *d_pparams, threshold_width,
                            box, bad_cuts,
                            ideal_load_to_break, low_load, high_load );
-   bool cubic_break_found = false;
 
-   {
+   if ( breakOffLoad_cubic(cubic_trial) ) {
 
-      cubic_break_found = breakOffLoad_cubic( cubic_trial );
-
-      if (cubic_break_found) {
-
-         if (d_print_break_steps) {
-            // Should move this if-block into breakOffLoad_cubic.
-            tbox::plog.unsetf(std::ios::fixed | std::ios::scientific);
-            tbox::plog.precision(6);
-            tbox::plog << "      breakOffLoad_cubic broke off "
-                       << cubic_trial.d_breakoff_load << " / " << ideal_load_to_break
-                       << " from " << box << '|'
-                       << box.numberCells() << '|'
-                       << box.size() << " into "
-                       << cubic_trial.d_breakoff.size()
-                       << " breakoff: ";
-            for (std::vector<hier::Box>::const_iterator bi =
-                    cubic_trial.d_breakoff.begin();
-                 bi != cubic_trial.d_breakoff.end();
-                 ++bi) {
-               tbox::plog << " " << *bi << '|' << bi->numberCells() << '|'
-                          << bi->size();
-            }
-            tbox::plog << "\n        and " << cubic_trial.d_leftover.size()
-                       << " leftover boxes:";
-            for (std::vector<hier::Box>::const_iterator bi =
-                    cubic_trial.d_leftover.begin();
-                 bi != cubic_trial.d_leftover.end();
-                 ++bi) {
-               tbox::plog << " " << *bi << '|' << bi->numberCells() << '|'
-                          << bi->size();
-            }
-            tbox::plog << "\n        imbalance: "
-                       << (cubic_trial.d_breakoff_load - ideal_load_to_break)
-                       << std::endl;
+      if (d_print_break_steps) {
+         // Should move this if-block into breakOffLoad_cubic.
+         tbox::plog.unsetf(std::ios::fixed | std::ios::scientific);
+         tbox::plog.precision(6);
+         tbox::plog << "      breakOffLoad_cubic broke off "
+                    << cubic_trial.d_breakoff_load << " / " << ideal_load_to_break
+                    << " from " << box << '|'
+                    << box.numberCells() << '|'
+                    << box.size() << " into "
+                    << cubic_trial.d_breakoff.size()
+                    << " breakoff: ";
+         for (std::vector<hier::Box>::const_iterator bi =
+                 cubic_trial.d_breakoff.begin();
+              bi != cubic_trial.d_breakoff.end();
+              ++bi) {
+            tbox::plog << " " << *bi << '|' << bi->numberCells() << '|'
+                       << bi->size();
          }
-
-         cubic_trial.d_balance_penalty = computeBalancePenalty(
-            static_cast<double>(cubic_trial.d_breakoff_load - ideal_load_to_break));
-         cubic_trial.d_width_score =
-            computeWidthScore(cubic_trial.d_breakoff, threshold_width) *
-            computeWidthScore(cubic_trial.d_leftover, threshold_width);
-
-         BalanceUtilities::compareLoads(
-            cubic_trial.d_flags, brk_load, cubic_trial.d_breakoff_load,
-            ideal_load_to_break, low_load, high_load, *d_pparams );
-
-         if (d_print_break_steps) {
-            tbox::plog << " cubic_trial.d_balance_penalty: " << cubic_trial.d_balance_penalty
-                       << " cubic_trial.d_width_score: " << cubic_trial.d_width_score
-                       << std::endl;
-            tbox::plog << "      Break evaluation:"
-                       << "  " << cubic_trial.d_flags[0]
-                       << "  " << cubic_trial.d_flags[1]
-                       << "  " << cubic_trial.d_flags[2]
-                       << "  " << cubic_trial.d_flags[3]
-                       << std::endl;
+         tbox::plog << "\n        and " << cubic_trial.d_leftover.size()
+                    << " leftover boxes:";
+         for (std::vector<hier::Box>::const_iterator bi =
+                 cubic_trial.d_leftover.begin();
+              bi != cubic_trial.d_leftover.end();
+              ++bi) {
+            tbox::plog << " " << *bi << '|' << bi->numberCells() << '|'
+                       << bi->size();
          }
-
-      } else {
-         if (d_print_break_steps) {
-            tbox::plog << "      breakOffLoad_cubic could not break "
-                       << ideal_load_to_break << " from " << box
-                       << '/' << box.numberCells()
-                       << '/' << box.numberCells().getProduct()
-                       << std::endl;
-         }
+         tbox::plog << "\n        imbalance: "
+                    << (cubic_trial.d_breakoff_load - ideal_load_to_break)
+                    << std::endl;
       }
 
+      cubic_trial.d_balance_penalty = computeBalancePenalty(
+         static_cast<double>(cubic_trial.d_breakoff_load - ideal_load_to_break));
+      cubic_trial.d_width_score =
+         computeWidthScore(cubic_trial.d_breakoff, threshold_width) *
+         computeWidthScore(cubic_trial.d_leftover, threshold_width);
+
+      BalanceUtilities::compareLoads(
+         cubic_trial.d_flags, brk_load, cubic_trial.d_breakoff_load,
+         ideal_load_to_break, low_load, high_load, *d_pparams );
+
+      if (d_print_break_steps) {
+         tbox::plog << " cubic_trial.d_balance_penalty: " << cubic_trial.d_balance_penalty
+                    << " cubic_trial.d_width_score: " << cubic_trial.d_width_score
+                    << std::endl;
+         tbox::plog << "      Break evaluation:"
+                    << "  " << cubic_trial.d_flags[0]
+                    << "  " << cubic_trial.d_flags[1]
+                    << "  " << cubic_trial.d_flags[2]
+                    << "  " << cubic_trial.d_flags[3]
+                    << std::endl;
+      }
+
+   } else {
+      if (d_print_break_steps) {
+         tbox::plog << "      breakOffLoad_cubic could not break "
+                    << ideal_load_to_break << " from " << box
+                    << '/' << box.numberCells()
+                    << '/' << box.numberCells().getProduct()
+                    << std::endl;
+      }
    }
+
 
    /*
     * Decide whether to take planar or cubic results.  If both are
