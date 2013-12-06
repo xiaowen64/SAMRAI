@@ -441,16 +441,28 @@ BalanceBoxBreaker::breakOffLoad_planar( TrialBreak &trial ) const
       int hi_upper_cut_plane = trial.d_whole_box.lower()(brk_dir) + int(ideal_upper_cut_offset) + 1;
       lo_upper_cut_plane = ROUND_TO_LO(lo_upper_cut_plane, d_pparams->getCutFactor()(brk_dir));
       hi_upper_cut_plane = ROUND_TO_HI(hi_upper_cut_plane, d_pparams->getCutFactor()(brk_dir));
-      while ( lo_upper_cut_plane > trial.d_whole_box.lower()(brk_dir)   && bad[lo_upper_cut_plane-trial.d_whole_box.lower()(brk_dir)] ) { lo_upper_cut_plane -= d_pparams->getCutFactor()(brk_dir); }
-      while ( hi_upper_cut_plane < trial.d_whole_box.upper()(brk_dir)+1 && bad[hi_upper_cut_plane-trial.d_whole_box.lower()(brk_dir)] ) { hi_upper_cut_plane += d_pparams->getCutFactor()(brk_dir); }
+      while ( lo_upper_cut_plane > trial.d_whole_box.lower()(brk_dir)   &&
+              bad[lo_upper_cut_plane-trial.d_whole_box.lower()(brk_dir)] ) {
+         lo_upper_cut_plane -= d_pparams->getCutFactor()(brk_dir);
+      }
+      while ( hi_upper_cut_plane < trial.d_whole_box.upper()(brk_dir)+1 &&
+              bad[hi_upper_cut_plane-trial.d_whole_box.lower()(brk_dir)] ) {
+         hi_upper_cut_plane += d_pparams->getCutFactor()(brk_dir);
+      }
 
       // Compute valid cut planes on high and low sides of lower cut plane.
       int lo_lower_cut_plane = trial.d_whole_box.lower()(brk_dir) + int(ideal_lower_cut_offset);
       int hi_lower_cut_plane = trial.d_whole_box.lower()(brk_dir) + int(ideal_lower_cut_offset) + 1;
       lo_lower_cut_plane = ROUND_TO_LO(lo_lower_cut_plane, d_pparams->getCutFactor()(brk_dir));
       hi_lower_cut_plane = ROUND_TO_HI(hi_lower_cut_plane, d_pparams->getCutFactor()(brk_dir));
-      while ( lo_lower_cut_plane > trial.d_whole_box.lower()(brk_dir)   && bad[lo_lower_cut_plane-trial.d_whole_box.lower()(brk_dir)] ) { lo_lower_cut_plane -= d_pparams->getCutFactor()(brk_dir); }
-      while ( hi_lower_cut_plane < trial.d_whole_box.upper()(brk_dir)+1 && bad[hi_lower_cut_plane-trial.d_whole_box.lower()(brk_dir)] ) { hi_lower_cut_plane += d_pparams->getCutFactor()(brk_dir); }
+      while ( lo_lower_cut_plane > trial.d_whole_box.lower()(brk_dir)   &&
+              bad[lo_lower_cut_plane-trial.d_whole_box.lower()(brk_dir)] ) {
+         lo_lower_cut_plane -= d_pparams->getCutFactor()(brk_dir);
+      }
+      while ( hi_lower_cut_plane < trial.d_whole_box.upper()(brk_dir)+1 &&
+              bad[hi_lower_cut_plane-trial.d_whole_box.lower()(brk_dir)] ) {
+         hi_lower_cut_plane += d_pparams->getCutFactor()(brk_dir);
+      }
 
 
       if ( lo_lower_cut_plane - trial.d_whole_box.lower()(brk_dir) > d_pparams->getMinBoxSize()(brk_dir) &&
