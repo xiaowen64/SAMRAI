@@ -90,12 +90,6 @@ BlockGridGeometry {
 
    Singularity0 {
       blocks = 0,1,2,3,4
-
-      sing_box_0 = [(20,20),(20,20)]
-      sing_box_1 = [(20,20),(20,20)]
-      sing_box_2 = [(20,-1),(20,-1)]
-      sing_box_3 = [(-1,-1),(-1,-1)]
-      sing_box_4 = [(-1,20),(-1,20)]
    }
  
    BlockNeighbors0 {
@@ -114,7 +108,6 @@ BlockGridGeometry {
       rotation_b_to_a = "J_UP", "I_DOWN"
       point_in_a_space = 19,19
       point_in_b_space = 20,-1
-      is_singularity = TRUE
    }
 
    BlockNeighbors2 {
@@ -124,7 +117,6 @@ BlockGridGeometry {
       rotation_b_to_a = "I_UP", "J_UP"
       point_in_a_space = 19,19
       point_in_b_space = -1,-1
-      is_singularity = TRUE
    }
 
    BlockNeighbors3 {
@@ -154,7 +146,6 @@ BlockGridGeometry {
       rotation_b_to_a = "I_UP", "J_UP"
       point_in_a_space = 19,19
       point_in_b_space = -1,-1
-      is_singularity = TRUE
    }
 
    BlockNeighbors6 {
@@ -164,7 +155,6 @@ BlockGridGeometry {
       rotation_b_to_a = "J_DOWN", "I_UP"
       point_in_a_space = 19,19
       point_in_b_space = -1,20
-      is_singularity = TRUE
    }
 
    BlockNeighbors7 {
@@ -184,7 +174,6 @@ BlockGridGeometry {
       rotation_b_to_a = "I_UP", "J_UP"
       point_in_a_space = 19,0
       point_in_b_space = -1,20
-      is_singularity = TRUE
    }
 
    BlockNeighbors9 {

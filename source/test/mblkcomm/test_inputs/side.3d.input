@@ -88,10 +88,6 @@ BlockGridGeometry {
 
    Singularity0 {
       blocks = 0,1,2
-
-      sing_box_0 = [(21,14,0),(21,14,15)]
-      sing_box_1 = [(-1,14,0),(-1,14,15)]
-      sing_box_2 = [(21,0,26),(21,15,26)]
    }
 
    BlockNeighbors0 {

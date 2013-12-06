@@ -186,7 +186,7 @@ bool
 BoxContainer::operator == (
    const BoxContainer& rhs) const
 {
-   bool isEqual = (d_ordered && rhs.d_ordered); 
+   bool isEqual = (d_ordered == rhs.d_ordered); 
    if (isEqual) {
       isEqual = size() == rhs.size();
    }
