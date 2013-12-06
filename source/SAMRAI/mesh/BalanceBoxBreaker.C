@@ -1107,7 +1107,9 @@ BalanceBoxBreaker::TrialBreak::TrialBreak(
      d_threshold_width(threshold_width),
      d_whole_box(whole_box),
      d_bad_cuts(bad_cuts)
-{}
+{
+   computeMerits(); // This is the merits of doing nothing.
+}
 
 
 
@@ -1149,9 +1151,9 @@ void BalanceBoxBreaker::TrialBreak::swapWithReversedTrial(
  */
 bool BalanceBoxBreaker::TrialBreak::computeMerits()
 {
-   TBOX_ASSERT( !d_breakoff.empty() );
-
    d_width_score =
+      ( d_breakoff.empty() && d_leftover.empty() ) ?
+      computeWidthScore( d_whole_box.numberCells(), d_threshold_width ) :
       computeWidthScore( d_breakoff, d_threshold_width ) *
       computeWidthScore( d_leftover, d_threshold_width );
 
