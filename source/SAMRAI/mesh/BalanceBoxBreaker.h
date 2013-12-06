@@ -115,52 +115,53 @@ public:
       double threshold_width );
 
 
-private:
-
    struct TrialBreak {
       TrialBreak( const PartitioningParams &pparams,
-                  double threshold_width );
-      //! @brief Break box from whole and store results.
-      void breakBox( const hier::Box &box,
-                     const hier::Box &whole );
+                  double threshold_width,
+                  const hier::Box &whole_box,
+                  const std::vector<std::vector<bool> > &bad_cuts,
+                  double ideal_load, double low_load, double high_load );
+      //! @brief Construct TrialBreak where breakoff and leftover are reversed.
+      TrialBreak( const TrialBreak &orig, bool make_reverse );
+      //! @brief Compute data for breaking box from whole and store results.
+      void computeBreakData( const hier::Box &box );
+      void swapWithReversedTrial( TrialBreak &reversed );
       //! @brief Compute merits vs doing nothing and return improvement flag.
-      bool computeMerits( double ideal_load, double low_load, double high_load );
+      bool computeMerits();
       //! @brief Whether this improves over another (or degrades or leaves alone).
       int improvesOver( const TrialBreak &other ) const;
 
-      double d_breakoff_load;
+      //! @brief Swap this object with another.
+      void swap( TrialBreak &other );
+
+      friend std::ostream &operator << (
+         std::ostream &os,
+         const TrialBreak &tb );
+
+      double d_breakoff_load; // Should change to int d_breakoff_cells.  This class doesn't deal in arbitrary load types.
       std::vector<hier::Box> d_breakoff;
       std::vector<hier::Box> d_leftover;
-      double d_ideal_load, d_low_load, d_high_load;
-      int d_width_score;
-      int d_balance_penalty;
+      const double d_ideal_load;
+      const double d_low_load;
+      const double  d_high_load;
+      double d_width_score;
+      double d_balance_penalty;
       //! @brief Flags from comparing this trial vs doing nothing.
       int d_flags[4];
       const PartitioningParams *d_pparams;
       const double d_threshold_width;
+      const hier::Box &d_whole_box;
+      const std::vector<std::vector<bool> > &d_bad_cuts;
    };
 
-   bool
-   breakOffLoad_planar(
-      std::vector<hier::Box>& breakoff,
-      std::vector<hier::Box>& leftover,
-      double& brk_load,
-      const hier::Box& box,
-      double ideal_load,
-      double low_load,
-      double high_load,
-      const std::vector<std::vector<bool> >& bad_cuts ) const;
+
+private:
 
    bool
-   breakOffLoad_cubic(
-      std::vector<hier::Box>& breakoff,
-      std::vector<hier::Box>& leftover,
-      double& brk_load,
-      const hier::Box& box,
-      double ideal_load,
-      double low_load,
-      double high_load,
-      const std::vector<std::vector<bool> >& bad_cuts ) const;
+   breakOffLoad_planar( TrialBreak &trial ) const;
+
+   bool
+   breakOffLoad_cubic( TrialBreak &trial ) const;
 
    void setTimers();
 
