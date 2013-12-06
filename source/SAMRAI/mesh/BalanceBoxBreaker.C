@@ -365,7 +365,6 @@ BalanceBoxBreaker::breakOffLoad(
 bool
 BalanceBoxBreaker::breakOffLoad_planar( TrialBreak &trial ) const
 {
-
    const tbox::Dimension dim(trial.d_whole_box.getDim());
 
    if (d_print_break_steps) {
@@ -409,7 +408,7 @@ BalanceBoxBreaker::breakOffLoad_planar( TrialBreak &trial ) const
    int break_acceptance_flags[4] = {0,0,0,0};
    bool sufficient_brk_load = false;
 
-   for (int d = trial.d_whole_box.getDim().getValue() - 1; d >= 0 && !sufficient_brk_load; --d) {
+   for (int d = dim.getValue() - 1; d >= 0 && !sufficient_brk_load; --d) {
 
       /*
        * Search directions from longest to shortest because we prefer
@@ -556,7 +555,7 @@ BalanceBoxBreaker::breakOffLoad_planar( TrialBreak &trial ) const
         ++bi) {
       const hier::Box& b = *bi;
       const hier::IntVector s = b.numberCells();
-      for (int d = 0; d < trial.d_whole_box.getDim().getValue(); ++d) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          if (((s(d) < d_pparams->getMinBoxSize()(d)) && (s(d) != box_dims(d))) ||
              (s(d) > box_dims(d))) {
             TBOX_ERROR("BalanceBoxBreaker library error:\n"
@@ -573,7 +572,7 @@ BalanceBoxBreaker::breakOffLoad_planar( TrialBreak &trial ) const
         ++bi) {
       const hier::Box& b = *bi;
       const hier::IntVector s = b.numberCells();
-      for (int d = 0; d < trial.d_whole_box.getDim().getValue(); ++d) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          if (((s(d) < d_pparams->getMinBoxSize()(d)) && (s(d) != box_dims(d))) ||
              (s(d) > box_dims(d))) {
             TBOX_ERROR("BalanceBoxBreaker library error:\n"
@@ -610,6 +609,7 @@ BalanceBoxBreaker::breakOffLoad_planar( TrialBreak &trial ) const
 bool
 BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
 {
+   const tbox::Dimension dim(trial.d_whole_box.getDim());
 
    const hier::IntVector box_dims(trial.d_whole_box.numberCells());
 
@@ -668,10 +668,10 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
    trial.d_leftover.clear();
    trial.d_breakoff_load = 0.0;
 
-   const hier::IntVector &one_vec = hier::IntVector::getOne(trial.d_whole_box.getDim());
-   const hier::IntVector &zero_vec = hier::IntVector::getZero(trial.d_whole_box.getDim());
+   const hier::IntVector &one_vec = hier::IntVector::getOne(dim);
+   const hier::IntVector &zero_vec = hier::IntVector::getZero(dim);
 
-   hier::Box best_breakoff_box(trial.d_whole_box.getDim());
+   hier::Box best_breakoff_box(dim);
    hier::IntVector best_breakoff_size = zero_vec;
    double best_breakoff_load = 0;
 
@@ -708,7 +708,7 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
    /*
     * Make sure brk_size is a multiple of d_pparams->getCutFactor().
     */
-   for (int d = 0; d < trial.d_whole_box.getDim().getValue(); ++d) {
+   for (int d = 0; d < dim.getValue(); ++d) {
       if (brk_size(d) % d_pparams->getCutFactor()(d) != 0) {
          brk_size(d) = ((brk_size(d) / d_pparams->getCutFactor()(d)) + 1) * d_pparams->getCutFactor()(d);
       }
@@ -721,7 +721,7 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
     */
    hier::IntVector lower_intersection(trial.d_whole_box.lower() + d_pparams->getMinBoxSize());
    hier::IntVector upper_intersection(trial.d_whole_box.upper() - d_pparams->getMinBoxSize() + one_vec);
-   for ( int d=0; d<trial.d_whole_box.getDim().getValue(); ++d ) {
+   for ( int d=0; d<dim.getValue(); ++d ) {
       lower_intersection(d) = ROUND_TO_HI( lower_intersection(d),
                                            d_pparams->getCutFactor()(d) );
       upper_intersection(d) = ROUND_TO_LO( upper_intersection(d),
@@ -729,7 +729,7 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
    }
 
 
-   const int num_corners = 1 << trial.d_whole_box.getDim().getValue();
+   const int num_corners = 1 << dim.getValue();
 
    for ( int bn=0; bn<num_corners; ++bn ) {
 
@@ -743,9 +743,9 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
       hier::Box corner_box(trial.d_whole_box);
       hier::IntVector corner_box_size = zero_vec;
       double corner_box_load = 0;
-      hier::IntVector expansion_rate(trial.d_whole_box.getDim());
+      hier::IntVector expansion_rate(dim);
 
-      for ( int d=0; d<trial.d_whole_box.getDim().getValue(); ++d ) {
+      for ( int d=0; d<dim.getValue(); ++d ) {
 
          // In direction d, does corner_box touch the upper (vs lower) side of box:
          int touches_upper_side = bn & (1 << d) ;
@@ -802,8 +802,8 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
        * big engough so that it cannot not be grown without breaking
        * off too much.
        */
-      hier::IntVector growable(trial.d_whole_box.getDim(), 1);
-      for (int d = 0; d < trial.d_whole_box.getDim().getValue(); ++d) {
+      hier::IntVector growable(dim, 1);
+      for (int d = 0; d < dim.getValue(); ++d) {
          growable[d] = corner_box_size[d] < box_dims[d];
       }
 
@@ -820,7 +820,7 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
           */
 
          int inc_dir = -1;
-         for (int d = 0; d < trial.d_whole_box.getDim().getValue(); ++d) {
+         for (int d = 0; d < dim.getValue(); ++d) {
             if ( growable(d) &&
                  (inc_dir == -1 || corner_box_size(d) < corner_box_size(inc_dir)) )
                inc_dir = d;
@@ -900,7 +900,7 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
         ++bi) {
       const hier::Box& b = *bi;
       const hier::IntVector s = b.numberCells();
-      for (int d = 0; d < trial.d_whole_box.getDim().getValue(); ++d) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          if (((s(d) < d_pparams->getMinBoxSize()(d)) && (s(d) != box_dims(d))) ||
              (s(d) > box_dims(d))) {
             TBOX_ERROR("BalanceBoxBreaker library error:\n"
@@ -919,7 +919,7 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
         ++bi) {
       const hier::Box& b = *bi;
       const hier::IntVector s = b.numberCells();
-      for (int d = 0; d < trial.d_whole_box.getDim().getValue(); ++d) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          if (((s(d) < d_pparams->getMinBoxSize()(d)) && (s(d) != box_dims(d))) ||
              (s(d) > box_dims(d))) {
             TBOX_ERROR("BalanceBoxBreaker library error:\n"
@@ -1100,12 +1100,11 @@ BalanceBoxBreaker::TrialBreak::TrialBreak(
  *************************************************************************
  */
 void BalanceBoxBreaker::TrialBreak::breakBox(
-   const hier::Box &box,
-   const hier::Box &whole )
+   const hier::Box &box )
 {
    d_breakoff.clear();
    d_leftover.clear();
-   burstBox( d_leftover, whole, box );
+   burstBox( d_leftover, d_whole_box, box );
    d_breakoff.push_back(box);
    d_breakoff_load = double(box.size());
    computeMerits();
