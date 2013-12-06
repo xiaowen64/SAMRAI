@@ -679,10 +679,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(
             box,
             bad_cuts );
       if (success) {
-         trial.d_breakoff.swap(reversed_trial.d_leftover);
-         trial.d_leftover.swap(reversed_trial.d_breakoff);
-         trial.d_breakoff_load = box_dims.getProduct() - reversed_trial.d_breakoff_load;
-         trial.computeMerits();
+         trial.swapWithReversedTrial( reversed_trial, double(box_dims.getProduct()) );
       }
       return success;
    }
@@ -1134,6 +1131,20 @@ void BalanceBoxBreaker::TrialBreak::breakBox(
    d_breakoff_load = double(box.size());
    computeMerits();
    return;
+}
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void BalanceBoxBreaker::TrialBreak::swapWithReversedTrial(
+   TrialBreak &reversed, double whole_box_load )
+{
+   d_breakoff.swap(reversed.d_leftover);
+   d_leftover.swap(reversed.d_breakoff);
+   d_breakoff_load = whole_box_load - reversed.d_breakoff_load;
+   computeMerits();
 }
 
 

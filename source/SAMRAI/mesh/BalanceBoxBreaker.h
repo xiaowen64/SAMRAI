@@ -124,6 +124,7 @@ private:
       //! @brief Break box from whole and store results.
       void breakBox( const hier::Box &box,
                      const hier::Box &whole );
+      void swapWithReversedTrial( TrialBreak &reversed, double whole_box_load );
       //! @brief Compute merits vs doing nothing and return improvement flag.
       bool computeMerits();
       //! @brief Whether this improves over another (or degrades or leaves alone).
