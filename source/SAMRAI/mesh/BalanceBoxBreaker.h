@@ -131,12 +131,17 @@ private:
       //! @brief Whether this improves over another (or degrades or leaves alone).
       int improvesOver( const TrialBreak &other ) const;
 
+      //! @brief Swap this object with another.
+      void swap( TrialBreak &other );
+
       double d_breakoff_load;
       std::vector<hier::Box> d_breakoff;
       std::vector<hier::Box> d_leftover;
-      double d_ideal_load, d_low_load, d_high_load;
-      int d_width_score;
-      int d_balance_penalty;
+      const double d_ideal_load;
+      const double d_low_load;
+      const double  d_high_load;
+      double d_width_score;
+      double d_balance_penalty;
       //! @brief Flags from comparing this trial vs doing nothing.
       int d_flags[4];
       const PartitioningParams *d_pparams;

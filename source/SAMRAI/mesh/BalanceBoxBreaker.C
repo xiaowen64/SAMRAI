@@ -1204,6 +1204,50 @@ int BalanceBoxBreaker::TrialBreak::improvesOver(
    return improves;
 }
 
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void BalanceBoxBreaker::TrialBreak::swap( TrialBreak &other )
+{
+   TBOX_ASSERT( &d_whole_box == &other.d_whole_box );
+   TBOX_ASSERT( &d_bad_cuts == &other.d_bad_cuts );
+   TBOX_ASSERT( d_pparams == other.d_pparams );
+   TBOX_ASSERT( d_ideal_load == other.d_ideal_load );
+   TBOX_ASSERT( d_low_load == other.d_low_load );
+   TBOX_ASSERT( d_high_load == other.d_high_load );
+   TBOX_ASSERT( d_threshold_width == other.d_threshold_width );
+
+   d_breakoff.swap(other.d_breakoff);
+   d_leftover.swap(other.d_leftover);
+
+   double tmpd;
+
+   tmpd = d_breakoff_load;
+   d_breakoff_load = other.d_breakoff_load;
+   other.d_breakoff_load = tmpd;
+
+   tmpd = d_width_score;
+   d_width_score = other.d_width_score;
+   other.d_width_score = tmpd;
+
+   tmpd = d_balance_penalty;
+   d_balance_penalty = other.d_balance_penalty;
+   other.d_balance_penalty = tmpd;
+
+   int tmpi;
+   for ( int i=0; i<4; ++i ) {
+      tmpi = d_flags[i];
+      d_flags[i] = other.d_flags[i];
+      other.d_flags[i] = tmpi;
+   }
+
+   return;
+}
+
+
 }
 }
 
