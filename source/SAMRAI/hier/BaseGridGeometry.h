@@ -787,15 +787,11 @@ public:
        *                       block's index space
        * @param[in] transformation The transformation needed to align the
        *                           neighboring index spaces
-       * @param[in] is_singularity True if the current block and the
-       *                           neighboring block abut at a reduced
-       *                           or enhanced connectivity singularity
        */
       Neighbor(
          const BlockId& block_id,
          const BoxContainer& domain,
-         const Transformation& transformation,
-         const bool is_singularity);
+         const Transformation& transformation);
 
       /*!
        * @brief Get the block number of the neighboring block.
@@ -844,7 +840,17 @@ public:
       }
 
       /*!
-       * @brief Tell if the neighboring block touch each other at an
+       * @brief Set the flag telling if that the neighboring blocks
+       * touch each other at an enhanced connectivity singularity.
+       */ 
+      void
+      setSingularity(bool is_singularity)
+      {
+         d_is_singularity = is_singularity;
+      }
+
+      /*!
+       * @brief Tell if the neighboring blocks touch each other at an
        * enhanced connectivity singularity.
        */
       bool
@@ -889,8 +895,6 @@ private:
     *                            with block a's
     * @param[in] shift_b_to_a    The post-rotation shift to move b into its
     *                            correct location within a's index space
-    * @param[in] neighbor_type   The type (codimension) of the neighbor
-    *                            relationship
     *
     * @pre getDim() = shift_b_to_a.getDim()
     */
@@ -899,8 +903,7 @@ private:
       const BlockId& block_a,
       const BlockId& block_b,
       const Transformation::RotationIdentifier rotation_b_to_a,
-      const IntVector& shift_b_to_a,
-      const int neighbor_type);
+      const IntVector& shift_b_to_a);
 
    /*!
     * @brief Get a BoxContainer that contains all of the index space of all other
@@ -948,38 +951,6 @@ private:
       const BlockId& block_id) const
    {
       return d_singularity[block_id.getBlockValue()];
-   }
-
-   /*!
-    * @brief Return a list of integers indicating all of the
-    * singularities touched by the block indicated by block_id.
-    *
-    * @return For every singularity point the block touches, the
-    * vector<int> will contain the index of that singularity.
-    *
-    * @param[in] block_id
-    */
-   const std::vector<int>&
-   getSingularityIndices(
-      const BlockId& block_id) const
-   {
-      return d_singularity_indices[block_id.getBlockValue()];
-   }
-
-   /*!
-    * @brief Tell if block represented by block_id touches
-    * a reduced-connectivity singularity
-    *
-    * @return True if the block touches reduced connectivity singularity,
-    * false if not.
-    *
-    * @param[in] block_id
-    */
-   bool
-   reducedConnectivityExists(
-      const BlockId& block_id) const
-   {
-      return d_reduced_connect[block_id.getBlockValue()];
    }
 
    /*!
@@ -1396,19 +1367,6 @@ private:
     * block touches.
     */
    std::vector<BoxContainer> d_singularity;
-
-   /*!
-    * @brief An array of singularity indices of a multiblock
-    * domain.  d_singularity_indices[bn] is a list of singularity indices
-    * touched by block bn.
-    */
-   std::vector<std::vector<int> > d_singularity_indices;
-
-   /*!
-    * @brief Tell whether each block touches a reduced-connectivity
-    * singularity.
-    */
-   std::vector<bool> d_reduced_connect;
 
    /*!
     * @brief Tell whether there is enhanced connectivity anywhere in the

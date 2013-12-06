@@ -83,6 +83,9 @@ descriptions of items in the following list are provided below.
    therefore eliminated our use of them and the macro, BOOST_CAST_TAG from
    the library.
 
+3) The input format for identifying multiblock singularities has
+   been simplified.
+
 
 *****************************************************************************
 
@@ -155,6 +158,22 @@ descriptions of items in the following list are provided below.
    ...
    boost::shared_ptr<DerivedClass> derived(
       BOOST_CAST<DerivedClass, BaseClass>(base));
+
+3) The input format for identifying multiblock singularities has
+   been simplified.  All that is now required for each singularity in
+   a multiblock mesh is the "blocks" entry within each SingularityN
+   input section, taking a list of integers representing the block numbers
+   of the blocks that touch that singularity, whether it be a point or a
+   line.
+
+   Singularity0 {
+      blocks = 0,1,2,4,6
+   }
+
+   Additionally, the BlockNeighbors input sections no longer require an
+   "is_singularity" input option for neighboring blocks that touch across
+   an enhanced connectivity singularity.  The library now determines this
+   information internally.
 
 
 =============================================================================
