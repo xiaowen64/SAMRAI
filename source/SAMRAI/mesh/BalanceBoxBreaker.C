@@ -150,8 +150,6 @@ BalanceBoxBreaker::breakOffLoad(
 
       planar_break_found = breakOffLoad_planar(
          planar_trial,
-            planar_trial.d_breakoff,
-            planar_trial.d_leftover,
             planar_brk_load,
             box,
             ideal_load_to_break,
@@ -242,8 +240,6 @@ BalanceBoxBreaker::breakOffLoad(
 
       cubic_break_found = breakOffLoad_cubic(
          cubic_trial,
-            cubic_trial.d_breakoff,
-            cubic_trial.d_leftover,
             cubic_brk_load,
             box,
             ideal_load_to_break,
@@ -399,8 +395,6 @@ BalanceBoxBreaker::breakOffLoad(
 bool
 BalanceBoxBreaker::breakOffLoad_planar(
    TrialBreak &trial,
-   std::vector<hier::Box>& breakoff,
-   std::vector<hier::Box>& leftover,
    double& brk_load,
    const hier::Box& box,
    double ideal_brk_load,
@@ -418,8 +412,8 @@ BalanceBoxBreaker::breakOffLoad_planar(
                  << " min_size=" << d_pparams->getMinBoxSize() << std::endl;
    }
 
-   breakoff.clear();
-   leftover.clear();
+   trial.d_breakoff.clear();
+   trial.d_leftover.clear();
 
    const hier::IntVector& box_dims = box.numberCells();
 
@@ -427,7 +421,7 @@ BalanceBoxBreaker::breakOffLoad_planar(
 
    if (box_vol <= ideal_brk_load) {
       // Easy: break off everything.
-      breakoff.push_back(box);
+      trial.d_breakoff.push_back(box);
       brk_load = box_vol;
       if (d_print_break_steps) {
          tbox::plog << "      breakOffLoad_planar broke off entire Box "
@@ -573,7 +567,7 @@ BalanceBoxBreaker::breakOffLoad_planar(
 
    bool successful_break = false;
    if (!best_breakoff_box.empty()) {
-      breakoff.push_back(best_breakoff_box);
+      trial.d_breakoff.push_back(best_breakoff_box);
       TBOX_ASSERT( brk_load == best_breakoff_box.size() );
       successful_break = true;
       if (d_print_break_steps) {
@@ -590,12 +584,12 @@ BalanceBoxBreaker::breakOffLoad_planar(
       }
    }
    if (!best_leftover_box.empty()) {
-      leftover.push_back(best_leftover_box);
+      trial.d_leftover.push_back(best_leftover_box);
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (std::vector<hier::Box>::iterator bi = breakoff.begin();
-        bi != breakoff.end();
+   for (std::vector<hier::Box>::iterator bi = trial.d_breakoff.begin();
+        bi != trial.d_breakoff.end();
         ++bi) {
       const hier::Box& b = *bi;
       const hier::IntVector s = b.numberCells();
@@ -611,8 +605,8 @@ BalanceBoxBreaker::breakOffLoad_planar(
          }
       }
    }
-   for (std::vector<hier::Box>::iterator bi = leftover.begin();
-        bi != leftover.end();
+   for (std::vector<hier::Box>::iterator bi = trial.d_leftover.begin();
+        bi != trial.d_leftover.end();
         ++bi) {
       const hier::Box& b = *bi;
       const hier::IntVector s = b.numberCells();
@@ -653,8 +647,6 @@ BalanceBoxBreaker::breakOffLoad_planar(
 bool
 BalanceBoxBreaker::breakOffLoad_cubic(
    TrialBreak &trial,
-   std::vector<hier::Box>& breakoff,
-   std::vector<hier::Box>& leftover,
    double& brk_load,
    const hier::Box& box,
    double ideal_brk_load,
@@ -669,9 +661,9 @@ BalanceBoxBreaker::breakOffLoad_cubic(
 
    if (ideal_brk_load >= box_load) {
       // Easy: break off everything.
-      leftover.clear();
-      breakoff.clear();
-      breakoff.push_back(box);
+      trial.d_leftover.clear();
+      trial.d_breakoff.clear();
+      trial.d_breakoff.push_back(box);
       brk_load = box_load;
       if (d_print_break_steps) {
          tbox::plog << "      breakOffLoad_cubic broke off entire Box "
@@ -696,8 +688,6 @@ BalanceBoxBreaker::breakOffLoad_cubic(
       bool success =
          breakOffLoad_cubic(
             trial,
-            breakoff,
-            leftover,
             brk_load,
             box,
             box_dims.getProduct() - ideal_brk_load,
@@ -718,8 +708,8 @@ BalanceBoxBreaker::breakOffLoad_cubic(
                  << " min_size=" << d_pparams->getMinBoxSize() << std::endl;
    }
 
-   breakoff.clear();
-   leftover.clear();
+   trial.d_breakoff.clear();
+   trial.d_leftover.clear();
    brk_load = 0.0;
 
    const hier::IntVector &one_vec = hier::IntVector::getOne(box.getDim());
@@ -940,17 +930,17 @@ BalanceBoxBreaker::breakOffLoad_cubic(
 
    if ( !best_breakoff_box.empty() ) {
       brk_load = best_breakoff_load;
-      breakoff.push_back(best_breakoff_box);
+      trial.d_breakoff.push_back(best_breakoff_box);
 
       burstBox(
-         leftover,
+         trial.d_leftover,
          box,
          best_breakoff_box );
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (std::vector<hier::Box>::iterator bi = breakoff.begin();
-        bi != breakoff.end();
+   for (std::vector<hier::Box>::iterator bi = trial.d_breakoff.begin();
+        bi != trial.d_breakoff.end();
         ++bi) {
       const hier::Box& b = *bi;
       const hier::IntVector s = b.numberCells();
@@ -968,8 +958,8 @@ BalanceBoxBreaker::breakOffLoad_cubic(
          }
       }
    }
-   for (std::vector<hier::Box>::iterator bi = leftover.begin();
-        bi != leftover.end();
+   for (std::vector<hier::Box>::iterator bi = trial.d_leftover.begin();
+        bi != trial.d_leftover.end();
         ++bi) {
       const hier::Box& b = *bi;
       const hier::IntVector s = b.numberCells();
@@ -989,7 +979,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(
    }
 #endif
 
-   return !breakoff.empty();
+   return !trial.d_breakoff.empty();
 }
 
 
