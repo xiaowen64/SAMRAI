@@ -135,6 +135,10 @@ BalanceBoxBreaker::breakOffLoad(
                  << std::endl;
    }
 
+   TrialBreak best_trial( *d_pparams, threshold_width,
+                          box, bad_cuts,
+                          ideal_load_to_break, low_load, high_load );
+
    /*
     * Try planar break.
     */
@@ -177,16 +181,6 @@ BalanceBoxBreaker::breakOffLoad(
                     << std::endl;
       }
 
-      planar_trial.d_balance_penalty = computeBalancePenalty(
-         static_cast<double>(planar_trial.d_breakoff_load - ideal_load_to_break));
-      planar_trial.d_width_score =
-         computeWidthScore(planar_trial.d_breakoff, threshold_width) *
-         computeWidthScore(planar_trial.d_leftover, threshold_width);
-
-      BalanceUtilities::compareLoads(
-         planar_trial.d_flags, brk_load, planar_trial.d_breakoff_load,
-         ideal_load_to_break, low_load, high_load, *d_pparams );
-
       if (d_print_break_steps) {
          tbox::plog << " planar_trial.d_balance_penalty: " << planar_trial.d_balance_penalty
                     << " planar_trial.d_width_score: " << planar_trial.d_width_score
@@ -197,6 +191,10 @@ BalanceBoxBreaker::breakOffLoad(
                     << "  " << planar_trial.d_flags[2]
                     << "  " << planar_trial.d_flags[3]
                     << std::endl;
+      }
+
+      if ( planar_trial.improvesOver(best_trial) ) {
+         best_trial.swap(planar_trial);
       }
 
    } else {
@@ -252,16 +250,6 @@ BalanceBoxBreaker::breakOffLoad(
                     << std::endl;
       }
 
-      cubic_trial.d_balance_penalty = computeBalancePenalty(
-         static_cast<double>(cubic_trial.d_breakoff_load - ideal_load_to_break));
-      cubic_trial.d_width_score =
-         computeWidthScore(cubic_trial.d_breakoff, threshold_width) *
-         computeWidthScore(cubic_trial.d_leftover, threshold_width);
-
-      BalanceUtilities::compareLoads(
-         cubic_trial.d_flags, brk_load, cubic_trial.d_breakoff_load,
-         ideal_load_to_break, low_load, high_load, *d_pparams );
-
       if (d_print_break_steps) {
          tbox::plog << " cubic_trial.d_balance_penalty: " << cubic_trial.d_balance_penalty
                     << " cubic_trial.d_width_score: " << cubic_trial.d_width_score
@@ -272,6 +260,10 @@ BalanceBoxBreaker::breakOffLoad(
                     << "  " << cubic_trial.d_flags[2]
                     << "  " << cubic_trial.d_flags[3]
                     << std::endl;
+      }
+
+      if ( cubic_trial.improvesOver(best_trial) ) {
+         best_trial.swap(cubic_trial);
       }
 
    } else {
@@ -285,69 +277,14 @@ BalanceBoxBreaker::breakOffLoad(
    }
 
 
-   /*
-    * Decide whether to take planar or cubic results.  If both are
-    * in-range, pick the one with the best width score.  If only one
-    * is in-range, pick that one.  If none are in range but both are
-    * better than not breaking, chose the one with better overall
-    * improvement.  If only one is better than not breaking, choose
-    * that one.  Else, choose none.
-    */
-   char choice = '\0';
-   if ( planar_trial.d_flags[3] && cubic_trial.d_flags[3] ) {
-      choice = ( planar_trial.d_width_score >= cubic_trial.d_width_score ) ? 'p' : 'c';
-   }
-   else if ( planar_trial.d_flags[3] ) {
-      choice = 'p';
-   }
-   else if ( cubic_trial.d_flags[3] ) {
-      choice = 'c';
-   }
-   else if ( planar_trial.d_flags[2] && cubic_trial.d_flags[2] ) {
-      int acceptance_flags[4] = {0,0,0,0};
-      choice = BalanceUtilities::compareLoads(
-         acceptance_flags, planar_trial.d_breakoff_load, cubic_trial.d_breakoff_load,
-         ideal_load_to_break, low_load, high_load, *d_pparams ) ? 'c' : 'p';
-   }
-   else if ( planar_trial.d_flags[2] ) {
-      choice = 'p';
-   }
-   else if ( cubic_trial.d_flags[2] ) {
-      choice = 'c';
-   }
-
-   if ( choice == 'p' ) {
-      if (d_print_break_steps) {
-         tbox::plog << "      Choosing planar break result."
-                    << "  " << planar_trial.d_breakoff.size() << " boxes broken off."
-                    << "  " << planar_trial.d_leftover.size() << " boxes leftover."
-                    << std::endl;
-      }
-      breakoff.swap(planar_trial.d_breakoff);
-      leftover.swap(planar_trial.d_leftover);
-      brk_load = planar_trial.d_breakoff_load;
-   }
-   else if ( choice == 'c' ) {
-      if (d_print_break_steps) {
-         tbox::plog << "      Choosing cubic break result."
-                    << "  " << cubic_trial.d_breakoff.size() << " boxes broken off."
-                    << "  " << cubic_trial.d_leftover.size() << " boxes leftover."
-                    << std::endl;
-      }
-      breakoff.swap(cubic_trial.d_breakoff);
-      leftover.swap(cubic_trial.d_leftover);
-      brk_load = cubic_trial.d_breakoff_load;
-   }
-   else {
-      if (d_print_break_steps) {
-         tbox::plog << "      choosing no cut result."
-                    << std::endl;
-      }
+   if ( !best_trial.d_breakoff.empty() ) {
+      breakoff.swap(best_trial.d_breakoff);
+      leftover.swap(best_trial.d_leftover);
+      brk_load = best_trial.d_breakoff_load;
    }
 
    t_break_off_load->stop();
-
-   return (choice != '0');
+   return !breakoff.empty();
 }
 
 
@@ -577,10 +514,7 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
 
    if (trial.d_ideal_load >= box_load) {
       // Easy: break off everything.
-      trial.d_leftover.clear();
-      trial.d_breakoff.clear();
-      trial.d_breakoff.push_back(trial.d_whole_box);
-      trial.d_breakoff_load = box_load;
+      trial.breakBox(trial.d_whole_box);
       if (d_print_break_steps) {
          tbox::plog << "      breakOffLoad_cubic broke off entire Box "
                     << trial.d_whole_box
@@ -845,13 +779,7 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
 
 
    if ( !best_breakoff_box.empty() ) {
-      trial.d_breakoff_load = best_breakoff_load;
-      trial.d_breakoff.push_back(best_breakoff_box);
-
-      burstBox(
-         trial.d_leftover,
-         trial.d_whole_box,
-         best_breakoff_box );
+      trial.breakBox(best_breakoff_box);
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
