@@ -142,9 +142,6 @@ BalanceBoxBreaker::breakOffLoad(
    TrialBreak planar_trial( *d_pparams, threshold_width,
                             box, bad_cuts,
                             ideal_load_to_break, low_load, high_load );
-   int planar_acceptance_flags[4] = {0,0,0,0};
-   double planar_balance_penalty = best_balance_penalty;
-   double planar_width_score = best_width_score;
    bool planar_break_found = false;
 
    {
@@ -185,25 +182,25 @@ BalanceBoxBreaker::breakOffLoad(
                        << std::endl;
          }
 
-         planar_balance_penalty = computeBalancePenalty(
+         planar_trial.d_balance_penalty = computeBalancePenalty(
                static_cast<double>(planar_trial.d_breakoff_load - ideal_load_to_break));
-         planar_width_score =
+         planar_trial.d_width_score =
             computeWidthScore(planar_trial.d_breakoff, threshold_width) *
             computeWidthScore(planar_trial.d_leftover, threshold_width);
 
          BalanceUtilities::compareLoads(
-            planar_acceptance_flags, brk_load, planar_trial.d_breakoff_load,
+            planar_trial.d_flags, brk_load, planar_trial.d_breakoff_load,
             ideal_load_to_break, low_load, high_load, *d_pparams );
 
          if (d_print_break_steps) {
-            tbox::plog << " planar_balance_penalty: " << planar_balance_penalty
-                       << " planar_width_score: " << planar_width_score
+            tbox::plog << " planar_trial.d_balance_penalty: " << planar_trial.d_balance_penalty
+                       << " planar_trial.d_width_score: " << planar_trial.d_width_score
                        << std::endl;
-            tbox::plog << "      planar_acceptance_flags:"
-                       << "  " << planar_acceptance_flags[0]
-                       << "  " << planar_acceptance_flags[1]
-                       << "  " << planar_acceptance_flags[2]
-                       << "  " << planar_acceptance_flags[3]
+            tbox::plog << "      planar_trial.d_flags:"
+                       << "  " << planar_trial.d_flags[0]
+                       << "  " << planar_trial.d_flags[1]
+                       << "  " << planar_trial.d_flags[2]
+                       << "  " << planar_trial.d_flags[3]
                        << std::endl;
          }
 
@@ -226,9 +223,6 @@ BalanceBoxBreaker::breakOffLoad(
    TrialBreak cubic_trial( *d_pparams, threshold_width,
                            box, bad_cuts,
                            ideal_load_to_break, low_load, high_load );
-   int cubic_acceptance_flags[4] = {0,0,0,0};
-   double cubic_balance_penalty = best_balance_penalty;
-   double cubic_width_score = best_width_score;
    bool cubic_break_found = false;
 
    {
@@ -269,25 +263,25 @@ BalanceBoxBreaker::breakOffLoad(
                        << std::endl;
          }
 
-         cubic_balance_penalty = computeBalancePenalty(
+         cubic_trial.d_balance_penalty = computeBalancePenalty(
             static_cast<double>(cubic_trial.d_breakoff_load - ideal_load_to_break));
-         cubic_width_score =
+         cubic_trial.d_width_score =
             computeWidthScore(cubic_trial.d_breakoff, threshold_width) *
             computeWidthScore(cubic_trial.d_leftover, threshold_width);
 
          BalanceUtilities::compareLoads(
-            cubic_acceptance_flags, brk_load, cubic_trial.d_breakoff_load,
+            cubic_trial.d_flags, brk_load, cubic_trial.d_breakoff_load,
             ideal_load_to_break, low_load, high_load, *d_pparams );
 
          if (d_print_break_steps) {
-            tbox::plog << " cubic_balance_penalty: " << cubic_balance_penalty
-                       << " cubic_width_score: " << cubic_width_score
+            tbox::plog << " cubic_trial.d_balance_penalty: " << cubic_trial.d_balance_penalty
+                       << " cubic_trial.d_width_score: " << cubic_trial.d_width_score
                        << std::endl;
             tbox::plog << "      Break evaluation:"
-                       << "  " << cubic_acceptance_flags[0]
-                       << "  " << cubic_acceptance_flags[1]
-                       << "  " << cubic_acceptance_flags[2]
-                       << "  " << cubic_acceptance_flags[3]
+                       << "  " << cubic_trial.d_flags[0]
+                       << "  " << cubic_trial.d_flags[1]
+                       << "  " << cubic_trial.d_flags[2]
+                       << "  " << cubic_trial.d_flags[3]
                        << std::endl;
          }
 
@@ -312,25 +306,25 @@ BalanceBoxBreaker::breakOffLoad(
     * that one.  Else, choose none.
     */
    char choice = '\0';
-   if ( planar_acceptance_flags[3] && cubic_acceptance_flags[3] ) {
-      choice = ( planar_width_score >= cubic_width_score ) ? 'p' : 'c';
+   if ( planar_trial.d_flags[3] && cubic_trial.d_flags[3] ) {
+      choice = ( planar_trial.d_width_score >= cubic_trial.d_width_score ) ? 'p' : 'c';
    }
-   else if ( planar_acceptance_flags[3] ) {
+   else if ( planar_trial.d_flags[3] ) {
       choice = 'p';
    }
-   else if ( cubic_acceptance_flags[3] ) {
+   else if ( cubic_trial.d_flags[3] ) {
       choice = 'c';
    }
-   else if ( planar_acceptance_flags[2] && cubic_acceptance_flags[2] ) {
+   else if ( planar_trial.d_flags[2] && cubic_trial.d_flags[2] ) {
       int acceptance_flags[4] = {0,0,0,0};
       choice = BalanceUtilities::compareLoads(
          acceptance_flags, planar_trial.d_breakoff_load, cubic_trial.d_breakoff_load,
          ideal_load_to_break, low_load, high_load, *d_pparams ) ? 'c' : 'p';
    }
-   else if ( planar_acceptance_flags[2] ) {
+   else if ( planar_trial.d_flags[2] ) {
       choice = 'p';
    }
-   else if ( cubic_acceptance_flags[2] ) {
+   else if ( cubic_trial.d_flags[2] ) {
       choice = 'c';
    }
 
