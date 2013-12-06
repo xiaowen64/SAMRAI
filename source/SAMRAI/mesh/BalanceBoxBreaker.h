@@ -119,12 +119,13 @@ private:
 
    struct TrialBreak {
       TrialBreak( const PartitioningParams &pparams,
-                  double threshold_width );
+                  double threshold_width,
+                  double ideal_load, double low_load, double high_load );
       //! @brief Break box from whole and store results.
       void breakBox( const hier::Box &box,
                      const hier::Box &whole );
       //! @brief Compute merits vs doing nothing and return improvement flag.
-      bool computeMerits( double ideal_load, double low_load, double high_load );
+      bool computeMerits();
       //! @brief Whether this improves over another (or degrades or leaves alone).
       int improvesOver( const TrialBreak &other ) const;
 
@@ -144,18 +145,12 @@ private:
    breakOffLoad_planar(
       TrialBreak &trial,
       const hier::Box& box,
-      double ideal_load,
-      double low_load,
-      double high_load,
       const std::vector<std::vector<bool> >& bad_cuts ) const;
 
    bool
    breakOffLoad_cubic(
       TrialBreak &trial,
       const hier::Box& box,
-      double ideal_load,
-      double low_load,
-      double high_load,
       const std::vector<std::vector<bool> >& bad_cuts ) const;
 
    void setTimers();
