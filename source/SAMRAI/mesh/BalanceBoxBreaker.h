@@ -143,7 +143,6 @@ private:
    bool
    breakOffLoad_planar(
       TrialBreak &trial,
-      double& brk_load,
       const hier::Box& box,
       double ideal_load,
       double low_load,
@@ -153,7 +152,6 @@ private:
    bool
    breakOffLoad_cubic(
       TrialBreak &trial,
-      double& brk_load,
       const hier::Box& box,
       double ideal_load,
       double low_load,
