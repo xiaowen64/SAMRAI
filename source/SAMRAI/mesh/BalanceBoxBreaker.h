@@ -120,6 +120,8 @@ private:
    struct TrialBreak {
       TrialBreak( const PartitioningParams &pparams,
                   double threshold_width,
+                  const hier::Box &whole_box,
+                  const std::vector<std::vector<bool> > &bad_cuts,
                   double ideal_load, double low_load, double high_load );
       //! @brief Break box from whole and store results.
       void breakBox( const hier::Box &box,
@@ -140,19 +142,15 @@ private:
       int d_flags[4];
       const PartitioningParams *d_pparams;
       const double d_threshold_width;
+      const hier::Box &d_whole_box;
+      const std::vector<std::vector<bool> > &d_bad_cuts;
    };
 
    bool
-   breakOffLoad_planar(
-      TrialBreak &trial,
-      const hier::Box& box,
-      const std::vector<std::vector<bool> >& bad_cuts ) const;
+   breakOffLoad_planar( TrialBreak &trial ) const;
 
    bool
-   breakOffLoad_cubic(
-      TrialBreak &trial,
-      const hier::Box& box,
-      const std::vector<std::vector<bool> >& bad_cuts ) const;
+   breakOffLoad_cubic( TrialBreak &trial ) const;
 
    void setTimers();
 
