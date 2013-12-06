@@ -115,14 +115,14 @@ public:
       double threshold_width );
 
 
-private:
-
    struct TrialBreak {
       TrialBreak( const PartitioningParams &pparams,
                   double threshold_width,
                   const hier::Box &whole_box,
                   const std::vector<std::vector<bool> > &bad_cuts,
                   double ideal_load, double low_load, double high_load );
+      //! @brief Construct break where breakoff and leftover are reversed.
+      TrialBreak( const TrialBreak &orig, bool make_reverse );
       //! @brief Break box from whole and store results.
       void breakBox( const hier::Box &box );
       void swapWithReversedTrial( TrialBreak &reversed );
@@ -133,6 +133,10 @@ private:
 
       //! @brief Swap this object with another.
       void swap( TrialBreak &other );
+
+      friend std::ostream &operator << (
+         std::ostream &os,
+         const TrialBreak &tb );
 
       double d_breakoff_load; // Should change to int d_breakoff_cells.  This class doesn't deal in arbitrary load types.
       std::vector<hier::Box> d_breakoff;
@@ -149,6 +153,9 @@ private:
       const hier::Box &d_whole_box;
       const std::vector<std::vector<bool> > &d_bad_cuts;
    };
+
+
+private:
 
    bool
    breakOffLoad_planar( TrialBreak &trial ) const;

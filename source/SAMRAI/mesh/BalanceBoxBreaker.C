@@ -404,6 +404,10 @@ BalanceBoxBreaker::breakOffLoad_planar( TrialBreak &trial ) const
          trial1.breakBox(brk_box);
          if ( trial1.improvesOver(trial) ) {
             trial.swap(trial1);
+            if ( d_print_break_steps ) {
+               tbox::plog << "breakOffLoad_planar choosing dir " << brk_dir
+                          << " lo_lower_cut_plane " << ":" << trial << std::endl;
+            }
          }
       }
 
@@ -416,6 +420,10 @@ BalanceBoxBreaker::breakOffLoad_planar( TrialBreak &trial ) const
          trial1.breakBox(brk_box);
          if ( trial1.improvesOver(trial) ) {
             trial.swap(trial1);
+            if ( d_print_break_steps ) {
+               tbox::plog << "breakOffLoad_planar choosing dir " << brk_dir
+                          << " hi_lower_cut_plane " << ":" << trial << std::endl;
+            }
          }
       }
 
@@ -428,6 +436,10 @@ BalanceBoxBreaker::breakOffLoad_planar( TrialBreak &trial ) const
          trial1.breakBox(brk_box);
          if ( trial1.improvesOver(trial) ) {
             trial.swap(trial1);
+            if ( d_print_break_steps ) {
+               tbox::plog << "breakOffLoad_planar choosing dir " << brk_dir
+                          << " lo_upper_cut_plane " << ":" << trial << std::endl;
+            }
          }
       }
 
@@ -439,6 +451,10 @@ BalanceBoxBreaker::breakOffLoad_planar( TrialBreak &trial ) const
          trial1.breakBox(brk_box);
          if ( trial1.improvesOver(trial) ) {
             trial.swap(trial1);
+            if ( d_print_break_steps ) {
+               tbox::plog << "breakOffLoad_planar choosing dir " << brk_dir
+                          << " hi_upper_cut_plane " << ":" << trial << std::endl;
+            }
          }
       }
 
@@ -482,6 +498,9 @@ BalanceBoxBreaker::breakOffLoad_planar( TrialBreak &trial ) const
       }
    }
 #endif
+   if ( d_print_break_steps ) {
+      tbox::plog << "breakOffLoad_planar returning." << std::endl;
+   }
 
    return !trial.d_breakoff.empty();
 }
@@ -535,14 +554,7 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
          << " instead of " << trial.d_ideal_load << " / "
          << box_dims.getProduct() << std::endl;
       }
-      TrialBreak reversed_trial( *trial.d_pparams,
-                                 trial.d_threshold_width,
-                                 trial.d_whole_box,
-                                 trial.d_bad_cuts,
-                                 box_dims.getProduct() - trial.d_ideal_load,
-                                 // Bug: next two items should be high and low, not ideal.
-                                 box_dims.getProduct() - trial.d_ideal_load,
-                                 box_dims.getProduct() - trial.d_ideal_load );
+      TrialBreak reversed_trial( trial, true );
       bool success =
          breakOffLoad_cubic(reversed_trial);
       if (success) {
@@ -984,6 +996,34 @@ BalanceBoxBreaker::TrialBreak::TrialBreak(
 
 /*
  *************************************************************************
+ *************************************************************************
+ */
+BalanceBoxBreaker::TrialBreak::TrialBreak(
+   const TrialBreak &orig,
+   bool make_reverse )
+   : d_breakoff_load(0.0),
+     d_breakoff(),
+     d_leftover(),
+     d_ideal_load(orig.d_whole_box.size() - orig.d_ideal_load),
+     // Bug: next two items should be high and low, not ideal.
+     d_low_load(orig.d_whole_box.size() - orig.d_ideal_load),
+     d_high_load(orig.d_whole_box.size() - orig.d_ideal_load),
+     d_width_score(orig.d_width_score),
+     d_balance_penalty(orig.d_balance_penalty),
+     d_pparams(orig.d_pparams),
+     d_threshold_width(orig.d_threshold_width),
+     d_whole_box(orig.d_whole_box),
+     d_bad_cuts(orig.d_bad_cuts)
+{
+   // make_reverse only prevents this from being mistaken for a copy constructor.
+   NULL_USE(make_reverse);
+   computeMerits(); // This is the merits of doing nothing.
+}
+
+
+
+/*
+ *************************************************************************
  * Break box out of d_whole_box and store results.
  *************************************************************************
  */
@@ -1007,13 +1047,17 @@ void BalanceBoxBreaker::TrialBreak::breakBox(
 void BalanceBoxBreaker::TrialBreak::swapWithReversedTrial(
    TrialBreak &reversed )
 {
-   TBOX_ASSERT( &d_whole_box == &reversed.d_whole_box );
-   TBOX_ASSERT( &d_bad_cuts == &reversed.d_bad_cuts );
-   TBOX_ASSERT( d_pparams == reversed.d_pparams );
-   TBOX_ASSERT( d_ideal_load == reversed.d_ideal_load );
-   TBOX_ASSERT( d_low_load == reversed.d_low_load );
-   TBOX_ASSERT( d_high_load == reversed.d_high_load );
-   TBOX_ASSERT( d_threshold_width == reversed.d_threshold_width );
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if ( &d_whole_box != &reversed.d_whole_box ||
+        &d_bad_cuts != &reversed.d_bad_cuts ||
+        d_pparams != reversed.d_pparams ||
+        d_threshold_width != reversed.d_threshold_width ) {
+      TBOX_ERROR("BalanceBoxBreaker::TrialBreak::swapWithReversedTrial:"
+                 << "\nIncompatible TrialBreaks:"
+                 << "\nthis:\n" << *this
+                 << "\nreversed:\n" << reversed );
+   }
+#endif
 
    d_breakoff.swap(reversed.d_leftover);
    d_leftover.swap(reversed.d_breakoff);
@@ -1045,12 +1089,11 @@ bool BalanceBoxBreaker::TrialBreak::computeMerits()
 
 /*
  *************************************************************************
- * Decide whether to take planar or cubic results.  If both are
- * in-range, pick the one with the best width score.  If only one
- * is in-range, pick that one.  If none are in range but both are
- * better than not breaking, chose the one with better overall
- * improvement.  If only one is better than not breaking, choose
- * that one.  Else, choose none.
+ * Decide this TrialBreak is an improvement over anoter.  If both are
+ * in-range, pick the one with the best width score.  If only one is
+ * in-range, pick that one.  If none are in range but both are better
+ * than not breaking, chose the one with better load.  If only one is
+ * better than not breaking, choose that one.  Else, choose none.
  *************************************************************************
  */
 int BalanceBoxBreaker::TrialBreak::improvesOver(
@@ -1078,19 +1121,18 @@ int BalanceBoxBreaker::TrialBreak::improvesOver(
       improves = -1;
    }
 
-   else if ( this->d_flags[2] && other.d_flags[2] ) {
+   else if ( this->d_flags[2]==1 && other.d_flags[2]==1 ) {
       int flags[4] = {0,0,0,0};
-      BalanceUtilities::compareLoads(
-         flags, this->d_breakoff_load, other.d_breakoff_load,
+      improves = BalanceUtilities::compareLoads(
+         flags, other.d_breakoff_load, this->d_breakoff_load,
          d_ideal_load, d_low_load, d_high_load, *d_pparams );
-      improves = flags[2];
    }
 
-   else if ( this->d_flags[2] ) {
+   else if ( this->d_flags[2]==1 ) {
       improves = 1;
    }
 
-   else if ( other.d_flags[2] ) {
+   else if ( other.d_flags[2]==1 ) {
       improves = -1;
    }
 
@@ -1138,6 +1180,46 @@ void BalanceBoxBreaker::TrialBreak::swap( TrialBreak &other )
    }
 
    return;
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+std::ostream &operator << (
+   std::ostream &co,
+   const BalanceBoxBreaker::TrialBreak &tb )
+{
+   co.unsetf(std::ios::fixed | std::ios::scientific);
+   co.precision(6);
+   co << "\n      TrialBreak state: broke off "
+      << tb.d_breakoff_load << " / " << tb.d_ideal_load
+      << " [" << tb.d_low_load << ", " << tb.d_high_load
+      << "] from " << tb.d_whole_box << '|'
+      << tb.d_whole_box.numberCells() << '|'
+      << tb.d_whole_box.size() << " into:"
+      << "\n      " << tb.d_breakoff.size() << " breakoff boxes: ";
+   for (std::vector<hier::Box>::const_iterator bi = tb.d_breakoff.begin();
+        bi != tb.d_breakoff.end(); ++bi) {
+      co << " " << *bi << '|' << bi->numberCells() << '|' << bi->size();
+   }
+   co << "\n      " << tb.d_leftover.size() << " leftover boxes:";
+   for (std::vector<hier::Box>::const_iterator bi = tb.d_leftover.begin();
+        bi != tb.d_leftover.end(); ++bi) {
+      co << " " << *bi << '|' << bi->numberCells() << '|' << bi->size();
+   }
+   co << "\n      imbalance: "
+      << (tb.d_breakoff_load - tb.d_ideal_load)
+      << " d_balance_penalty: " << tb.d_balance_penalty
+      << " d_width_score: " << tb.d_width_score;
+   co << "\n      d_flags:"
+      << "  " << tb.d_flags[0]
+      << "  " << tb.d_flags[1]
+      << "  " << tb.d_flags[2]
+      << "  " << tb.d_flags[3];
+   return co;
 }
 
 
