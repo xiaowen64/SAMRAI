@@ -171,9 +171,6 @@ BlockGeometry {
    // Singularity defn and neighbors
    Singularity0 {
       blocks = 0 , 1 , 2
-      sing_box_0 = [ (0,20,20), (19,20,20) ]
-      sing_box_1 = [ (0,-1,  20), (19,-1,  20) ]
-      sing_box_2 = [ (0,20,20), (19,20,20) ]
    }
 
    BlockNeighbors0 {

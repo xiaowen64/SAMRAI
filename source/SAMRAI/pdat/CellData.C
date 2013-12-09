@@ -17,6 +17,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/pdat/CellOverlap.h"
+#include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -32,6 +33,10 @@ namespace pdat {
 
 template<class TYPE>
 const int CellData<TYPE>::PDAT_CELLDATA_VERSION = 1;
+
+template<class TYPE>
+boost::shared_ptr<tbox::Timer> CellData<TYPE>::t_copy;
+
 
 /*
  *************************************************************************
@@ -76,6 +81,9 @@ CellData<TYPE>::CellData(
    TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
+
+   t_copy = tbox::TimerManager::getManager()->
+      getTimer("pdat::CellData::copy");
 
    d_data.reset(new ArrayData<TYPE>(getGhostBox(), depth));
 }
@@ -209,6 +217,7 @@ CellData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
+   t_copy->start();
    const CellData<TYPE>* t_src = dynamic_cast<const CellData<TYPE> *>(&src);
 
    const CellOverlap* t_overlap = dynamic_cast<const CellOverlap *>(&overlap);
@@ -225,6 +234,7 @@ CellData<TYPE>::copy(
          copyWithRotation(*t_src, *t_overlap);
       }
    }
+   t_copy->stop();
 }
 
 template<class TYPE>

@@ -484,6 +484,8 @@ private:
 
    boost::shared_ptr<ArrayData<TYPE> > d_data;
 
+   static boost::shared_ptr<tbox::Timer> t_copy;
+
 };
 
 }
