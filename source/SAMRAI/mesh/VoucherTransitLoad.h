@@ -202,55 +202,6 @@ private:
    };
 
 
-   //! @brief Encapsulates voucher redemption for both demander and supplier.
-   struct VoucherRedemption {
-      VoucherRedemption() :
-         d_demander_rank(tbox::SAMRAI_MPI::getInvalidRank()),
-         d_mpi(MPI_COMM_NULL),
-         d_mpi_request(MPI_REQUEST_NULL) {};
-      ~VoucherRedemption() {
-         finishSendRequest();
-      }
-
-      //@{
-      //! @name Demanding and supplying work based on a voucher.
-      void sendWorkDemand(
-         const Voucher &v,
-         const hier::SequentialLocalIdGenerator &id_gen,
-         const tbox::SAMRAI_MPI &mpi );
-
-      void recvWorkDemand(
-         int demander_rank,
-         int message_length,
-         const tbox::SAMRAI_MPI &mpi );
-
-      void sendWorkSupply(
-         BoxTransitSet &reserve,
-         hier::MappingConnector &unbalanced_to_balanced,
-         hier::MappingConnector &balanced_to_unbalanced /* unused, can be removed */,
-         const PartitioningParams &pparams );
-
-      void recvWorkSupply(
-         int message_length,
-         hier::BoxLevel &balanced_box_level,
-         hier::MappingConnector &unbalanced_to_balanced /* unused, can be removed */,
-         hier::MappingConnector &balanced_to_unbalanced,
-         const PartitioningParams &pparams );
-      //@}
-
-      void finishSendRequest();
-
-      Voucher d_voucher;
-      int d_demander_rank;
-      //! @brief Demander-specified LocalId generator to avoid ID clashes.
-      hier::SequentialLocalIdGenerator d_id_gen;
-
-      boost::shared_ptr<tbox::MessageStream> d_msg;
-      tbox::SAMRAI_MPI d_mpi;
-      MPI_Request d_mpi_request;
-   };
-
-
    //@{
    //! @name Interfaces like the C++ standard stl::set, to help readability.
    typedef std::set<Voucher,VoucherRankCompare> RankOrderedVouchers;
@@ -305,6 +256,65 @@ private:
       d_voucher_set.swap(other.d_voucher_set);
    }
    //@}
+
+
+   //! @brief Encapsulates voucher redemption for both demander and supplier.
+   struct VoucherRedemption {
+      VoucherRedemption() :
+         d_demander_rank(tbox::SAMRAI_MPI::getInvalidRank()),
+         d_mpi(MPI_COMM_NULL),
+         d_mpi_request(MPI_REQUEST_NULL) {};
+      ~VoucherRedemption() {
+         finishSendRequest();
+      }
+
+      //@{
+      //! @name Demanding and supplying work based on a voucher.
+      void sendWorkDemand(
+         const VoucherTransitLoad::const_iterator &voucher,
+         const VoucherTransitLoad &all_vouchers,
+         const hier::SequentialLocalIdGenerator &id_gen,
+         const tbox::SAMRAI_MPI &mpi );
+
+      void recvWorkDemand(
+         int demander_rank,
+         int message_length,
+         const tbox::SAMRAI_MPI &mpi );
+
+      void sendWorkSupply(
+         BoxTransitSet &reserve,
+         hier::MappingConnector &unbalanced_to_balanced,
+         hier::MappingConnector &balanced_to_unbalanced /* unused, can be removed */,
+         const PartitioningParams &pparams );
+
+      void recvWorkSupply(
+         int message_length,
+         hier::BoxLevel &balanced_box_level,
+         hier::MappingConnector &unbalanced_to_balanced /* unused, can be removed */,
+         hier::MappingConnector &balanced_to_unbalanced,
+         const PartitioningParams &pparams );
+      //@}
+
+      void takeWorkFromReserve(
+         BoxTransitSet &work,
+         BoxTransitSet &reserve,
+         const PartitioningParams &pparams );
+
+         void finishSendRequest();
+
+      Voucher d_voucher;
+      int d_demander_rank;
+      //! @brief Number vouchers demander is trying to redeem.
+      size_t d_demander_voucher_count;
+      //! @brief Amount of load demander is trying to redeem.
+      double d_demander_voucher_load;
+      //! @brief Demander-specified LocalId generator to avoid ID clashes.
+      hier::SequentialLocalIdGenerator d_id_gen;
+
+      boost::shared_ptr<tbox::MessageStream> d_msg;
+      tbox::SAMRAI_MPI d_mpi;
+      MPI_Request d_mpi_request;
+   };
 
 
    /*!
@@ -417,8 +427,8 @@ private:
    }
 
 
-   //! @brief Work load, sorted by originating rank.
-   std::set<Voucher,VoucherRankCompare> d_voucher_set;
+   //! @brief Work load, sorted by issuer rank.
+   RankOrderedVouchers d_voucher_set;
 
    LoadType d_sumload;
 

@@ -246,7 +246,8 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
 
       hier::SequentialLocalIdGenerator id_gen( last_local_id + count, local_id_inc );
 
-      redemptions_to_request[si->d_issuer_rank].sendWorkDemand( *si, id_gen, mpi );
+      redemptions_to_request[si->d_issuer_rank].sendWorkDemand(
+         si, *this, id_gen, mpi );
    }
 
    // Set up the reserve for fulfilling incoming redemption requests.
@@ -353,16 +354,20 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
 *************************************************************************
 */
 void VoucherTransitLoad::VoucherRedemption::sendWorkDemand(
-   const Voucher &voucher,
+   const VoucherTransitLoad::const_iterator &voucher,
+   const VoucherTransitLoad &all_vouchers,
    const hier::SequentialLocalIdGenerator &id_gen,
    const tbox::SAMRAI_MPI &mpi )
 {
-   d_voucher = voucher;
+   d_voucher = *voucher;
+   d_demander_voucher_count = all_vouchers.size();
+   d_demander_voucher_load = all_vouchers.getSumLoad();
    d_id_gen = id_gen;
    d_mpi = mpi;
 
    d_msg = boost::make_shared<tbox::MessageStream>();
-   (*d_msg) << d_id_gen << d_voucher;
+   (*d_msg) << d_id_gen << d_voucher
+            << d_demander_voucher_count << d_demander_voucher_load;
 
    d_mpi.Isend(
       (void*)(d_msg->getBufferStart()),
@@ -404,7 +409,8 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkDemand(
    d_msg = boost::make_shared<tbox::MessageStream>(
       message_length, tbox::MessageStream::Read,
       static_cast<void*>(&incoming_message[0]), false);
-   (*d_msg) >> d_id_gen >> d_voucher;
+   (*d_msg) >> d_id_gen >> d_voucher
+            >> d_demander_voucher_count >> d_demander_voucher_load;
    TBOX_ASSERT( d_msg->endOfData() );
    TBOX_ASSERT( d_voucher.d_issuer_rank == mpi.getRank() );
 
@@ -416,8 +422,8 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkDemand(
 /*
 *************************************************************************
 * Send a supply of work to the demander to fulfill a voucher.  The
-* work is appropriated from a reserve.  Save mapping edges incident
-* from local boxes.
+* work is taken from a reserve.  Save mapping edges incident from
+* local boxes.
 *************************************************************************
 */
 void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
@@ -427,13 +433,7 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
    const PartitioningParams &pparams )
 {
    BoxTransitSet box_shipment(pparams);
-   box_shipment.setAllowBoxBreaking( reserve.getAllowBoxBreaking() );
-   box_shipment.setThresholdWidth( reserve.getThresholdWidth() );
-   box_shipment.adjustLoad( reserve,
-                            d_voucher.d_load,
-                            d_voucher.d_load,
-                            d_voucher.d_load );
-   box_shipment.reassignOwnership( d_id_gen, d_demander_rank );
+   takeWorkFromReserve( box_shipment, reserve, pparams );
 
    d_msg = boost::make_shared<tbox::MessageStream>();
    box_shipment.putToMessageStream(*d_msg);
@@ -488,6 +488,27 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkSupply(
    box_shipment.generateLocalBasedMapEdges(
       unbalanced_to_balanced,
       balanced_to_unbalanced);
+}
+
+
+
+/*
+*************************************************************************
+*************************************************************************
+*/
+void VoucherTransitLoad::VoucherRedemption::takeWorkFromReserve(
+   BoxTransitSet &work,
+   BoxTransitSet &reserve,
+   const PartitioningParams &pparams )
+{
+   work.setAllowBoxBreaking( reserve.getAllowBoxBreaking() );
+   work.setThresholdWidth( reserve.getThresholdWidth() );
+   work.adjustLoad( reserve,
+                    d_voucher.d_load,
+                    d_voucher.d_load,
+                    d_voucher.d_load );
+   work.reassignOwnership( d_id_gen, d_demander_rank );
+   return;
 }
 
 
