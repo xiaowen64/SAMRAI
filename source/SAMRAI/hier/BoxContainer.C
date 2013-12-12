@@ -1710,7 +1710,8 @@ BoxContainer::getFromRestart(
  */
 void
 BoxContainer::print(
-   std::ostream& co) const
+   std::ostream& co,
+   const std::string &border ) const
 {
    co << size() << " boxes, " << (d_ordered?"ordered":"unordered") << '\n';
    for (const_iterator bi = begin(); bi != end(); ++bi) {
