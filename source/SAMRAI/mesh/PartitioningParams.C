@@ -23,11 +23,13 @@ PartitioningParams::PartitioningParams(
    const hier::IntVector &min_size,
    const hier::IntVector &max_size,
    const hier::IntVector &bad_interval,
-   const hier::IntVector &cut_factor ) :
+   const hier::IntVector &cut_factor,
+   double flexible_load_tol ) :
    d_min_size(min_size),
    d_max_size(max_size),
    d_bad_interval(bad_interval),
    d_cut_factor(cut_factor),
+   d_flexible_load_tol(flexible_load_tol),
    d_load_comparison_tol(1e-9)
 {
    for ( int bid(0); bid<grid_geometry.getNumberBlocks(); ++bid ) {

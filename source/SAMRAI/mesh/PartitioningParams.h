@@ -37,7 +37,8 @@ public:
       const hier::IntVector &min_size,
       const hier::IntVector &max_size,
       const hier::IntVector &bad_interval,
-      const hier::IntVector &cut_factor );
+      const hier::IntVector &cut_factor,
+      double flexible_load_tol );
 
    PartitioningParams( const PartitioningParams &other );
 
@@ -69,6 +70,10 @@ public:
       return d_min_size.getDim();
    }
 
+   const double &getFlexibleLoadTol() const {
+      return d_flexible_load_tol;
+   }
+
    const double &getLoadComparisonTol() const {
       return d_load_comparison_tol;
    }
@@ -80,6 +85,12 @@ private:
    hier::IntVector d_max_size;
    hier::IntVector d_bad_interval;
    hier::IntVector d_cut_factor;
+
+   /*!
+    * @brief Fraction of ideal load a process can accept over and
+    * above the ideal.
+    */
+   double d_flexible_load_tol;
 
    /*!
     * @brief Tolerance for comparing floating point loads.

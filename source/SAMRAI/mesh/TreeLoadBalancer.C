@@ -277,7 +277,8 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    d_pparams = boost::make_shared<PartitioningParams>(
       *balance_box_level.getGridGeometry(),
       balance_box_level.getRefinementRatio(),
-      min_size, max_size, bad_interval, cut_factor);
+      min_size, max_size, bad_interval, cut_factor,
+      d_flexible_load_tol);
 
    /*
     * We expect the domain box_level to be in globalized state.
