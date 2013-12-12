@@ -1686,15 +1686,49 @@ public:
    /*!
     * @brief  Equality operator
     *
-    * @return  If ordered, return true if all BoxIds in this and rhs are
-    *          identical.  If unordered, return true if a Boxes in this
-    *          and rhs are spatially equal.
+    * If the container is ordered, then this checks if all boxes have
+    * identical BoxIds and are spatially equal to the boxes in rhs.  If
+    * unordered, then this checks only the spatial equality of the boxes.
+    * 
+    * Addtionally to be considered equal, both containers must contain the
+    * same number of boxes and have the same ordered/unordered state.
+    *
+    * @return  true only if the containers meet the equality conditions.
     *
     * @param[in] rhs
     */
    bool
    operator == (
       const BoxContainer& rhs) const;
+
+   /*!
+    * @brief  Check for equality of BoxIds in ordered containers.
+    *
+    * An error will occur if this operator is called with either BoxContainer 
+    * in unordered state.
+    *
+    * @return  true if both containers are the same size and the boxes
+    *          have identical BoxIds.
+    *
+    * @param[in] other
+    * @pre isOrdered() && other.isOrdered()
+    *
+    */
+   bool
+   isIdEqual(
+      const BoxContainer& other) const;
+
+   /*!
+    * @brief  Check for spatial equality of all boxes
+    *
+    * @return  true if both containers are the same size and the boxes
+    *          are spatially equal (same extents and same BlockId).
+    *
+    * @param[in] other
+    */
+   bool
+   isSpatiallyEqual(
+      const BoxContainer& other) const;
 
    /*!
     * @brief  Inequality operator

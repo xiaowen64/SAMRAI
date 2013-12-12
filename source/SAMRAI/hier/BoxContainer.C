@@ -186,22 +186,57 @@ bool
 BoxContainer::operator == (
    const BoxContainer& rhs) const
 {
-   bool isEqual = (d_ordered == rhs.d_ordered); 
-   if (isEqual) {
-      isEqual = size() == rhs.size();
-   }
-   if (isEqual) {
-      if (!d_ordered) { 
-         isEqual = std::equal(d_list.begin(), d_list.end(),
-                      rhs.d_list.begin(), Box::box_equality());
+   bool is_equal = (d_ordered == rhs.d_ordered); 
+   if (is_equal) {
+      if (!d_ordered) {
+         is_equal = isSpatiallyEqual(rhs);
       } else {
-         isEqual = std::equal(d_set.begin(), d_set.end(),
-                      rhs.d_set.begin(), Box::id_equal());
+         is_equal = isIdEqual(rhs);
+         if (is_equal) {
+            is_equal = isSpatiallyEqual(rhs);
+         }
       }
    }
 
-   return isEqual;
+   return is_equal;
 }
+
+bool
+BoxContainer::isIdEqual(
+   const BoxContainer& other) const
+{
+   if (!d_ordered || !other.d_ordered) {
+      TBOX_ERROR("isIdEqual called on unordered container." << std::endl);
+   }
+
+   bool is_equal = (size() == other.size());
+   if (is_equal) {
+      is_equal = std::equal(d_set.begin(), d_set.end(),
+                    other.d_set.begin(), Box::id_equal());
+   } 
+ 
+   return is_equal;
+}
+
+bool
+BoxContainer::isSpatiallyEqual(
+   const BoxContainer& other) const
+{
+
+   bool is_equal = (size() == other.size());
+   if (is_equal) {
+      if (d_ordered && other.d_ordered) {
+         is_equal = std::equal(d_set.begin(), d_set.end(),
+                       other.d_set.begin(), Box::box_equality());
+      } else {
+         is_equal = std::equal(d_list.begin(), d_list.end(),
+                       other.d_list.begin(), Box::box_equality());
+      }
+   }
+
+   return is_equal;
+}
+
 
 /*
  *************************************************************************
