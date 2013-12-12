@@ -40,10 +40,9 @@ namespace mesh {
  * adjustLoad().
  *
  * - Second, it generates the mappings between the pre- and
- * post-balance BoxLevels.  See
- * assignContentsToLocalProcessAndPopulateMaps().  It must have this
- * responsibility because the implementation alone knows how the work
- * is represented.
+ * post-balance BoxLevels.  It must have this responsibility because
+ * the implementation alone knows how the work is represented.  See
+ * assignContentsToLocalProcessAndPopulateMaps().
  *
  * @see mesh::TreeLoadBalancer
  */
@@ -172,10 +171,10 @@ public:
    /*!
     * @brief Set threshold for resisting small and thin boxes.
     *
-    * Default initial threshold is very small (practically unlimited).
     * This is not a hard limit, but implementations should use it to
     * determine when a box is getting too small in one or more
-    * dimension.
+    * dimension.  Default initial threshold is very small (practically
+    * unlimited).
     */
    void setThresholdWidth( double threshold_width ) {
       d_threshold_width = threshold_width;

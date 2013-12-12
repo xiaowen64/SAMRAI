@@ -253,11 +253,12 @@ private:
 
    //@{
    //! @name Interfaces like the C++ standard stl::set, to help readability.
-   typedef std::set<Voucher,VoucherRankCompare>::iterator iterator;
-   typedef std::set<Voucher,VoucherRankCompare>::const_iterator const_iterator;
-   typedef std::set<Voucher,VoucherRankCompare>::reverse_iterator reverse_iterator;
-   typedef std::set<Voucher,VoucherRankCompare>::key_type key_type;
-   typedef std::set<Voucher,VoucherRankCompare>::value_type value_type;
+   typedef std::set<Voucher,VoucherRankCompare> RankOrderedVouchers;
+   typedef RankOrderedVouchers::iterator iterator;
+   typedef RankOrderedVouchers::const_iterator const_iterator;
+   typedef RankOrderedVouchers::reverse_iterator reverse_iterator;
+   typedef RankOrderedVouchers::key_type key_type;
+   typedef RankOrderedVouchers::value_type value_type;
    iterator begin() { return d_voucher_set.begin(); }
    iterator end() { return d_voucher_set.end(); }
    const_iterator begin() const { return d_voucher_set.begin(); }

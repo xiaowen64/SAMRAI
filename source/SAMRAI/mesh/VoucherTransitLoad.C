@@ -348,8 +348,8 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
 
 /*
 *************************************************************************
-* Start redeeming a voucher by sending the demand for work to the
-* voucher issuer.
+* Send a demand for work to the voucher issuer, starting the voucher
+* redemption sequence of steps.
 *************************************************************************
 */
 void VoucherTransitLoad::VoucherRedemption::sendWorkDemand(
@@ -379,6 +379,8 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkDemand(
 
 /*
 *************************************************************************
+* Receive a demand for work from a process holding a locally issued
+* voucher.
 *************************************************************************
 */
 void VoucherTransitLoad::VoucherRedemption::recvWorkDemand(
@@ -413,9 +415,9 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkDemand(
 
 /*
 *************************************************************************
-* Fulfill the voucher redemption by sending a supply of work to the
-* demander.  The work is appropriated from a reserve.  Save mapping
-* edges incident from local boxes.
+* Send a supply of work to the demander to fulfill a voucher.  The
+* work is appropriated from a reserve.  Save mapping edges incident
+* from local boxes.
 *************************************************************************
 */
 void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
@@ -508,16 +510,15 @@ void VoucherTransitLoad::VoucherRedemption::finishSendRequest()
 /*
 *************************************************************************
 * Adjust the VoucherTransitLoad by moving work between it (main_bin)
-* and a hold_bin.  Try to bring the load to the specified ideal.
+* and another (hold_bin).  Try to bring the load to the specified
+* ideal.
 *
-* It can move Vouchers between given bins and, if needed, break some
-* Vouchers up to move part of the work.
+* Move Vouchers between given bins and, if needed, break some Vouchers
+* up to move part of the work.
 *
 * The high_load and low_load define an acceptable range around the
-* ideal_load.  Because vouchers can be cut at any arbitrary amount
-* (unlike boxes), this method tries to minimize the load shifting
-* by doing the minimum adjustment necessary to get in the acceptable
-* range, rather than reaching the ideal_load.
+* ideal_load.  Because vouchers can be cut to any arbitrary amount
+* (unlike boxes), it only uses the ideal_load.
 *
 * This method is purely local--it reassigns the load but does not
 * communicate the change to any remote process.
