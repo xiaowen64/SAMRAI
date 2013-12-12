@@ -226,7 +226,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
     * they ended up.
     */
    LoadType unaccounted_work = LoadType(unbalanced_box_level.getLocalNumberOfCells())
-      - yankVoucher(mpi.getRank()).d_load;
+      - findVoucher(mpi.getRank()).d_load;
 
    if ( d_print_edge_steps ) {
       tbox::plog << "unaccounted work is " << unaccounted_work << std::endl;
@@ -238,16 +238,16 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    std::map<int,VoucherRedemption> redemptions_to_request;
 
    const hier::LocalId last_local_id = unbalanced_box_level.getLastLocalId();
-   const hier::LocalId local_id_inc(1 + d_voucher_set.size());
+   const hier::LocalId local_id_inc(d_voucher_set.size());
 
-   int count = 1;
+   int count = 0;
    for ( const_iterator si=d_voucher_set.begin();
          si!=d_voucher_set.end(); ++si, ++count ) {
-
-      hier::SequentialLocalIdGenerator id_gen( last_local_id + count, local_id_inc );
-
-      redemptions_to_request[si->d_issuer_rank].sendWorkDemand(
-         si, *this, id_gen, mpi );
+      if ( si->d_issuer_rank != mpi.getRank() ) {
+         hier::SequentialLocalIdGenerator id_gen( last_local_id + count, local_id_inc );
+         redemptions_to_request[si->d_issuer_rank].sendWorkDemand(
+            si, *this, id_gen, mpi );
+      }
    }
 
    // Set up the reserve for fulfilling incoming redemption requests.
@@ -712,6 +712,23 @@ VoucherTransitLoad::eraseIssuer( int issuer_rank )
       return true;
    }
    return false;
+}
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+VoucherTransitLoad::Voucher
+VoucherTransitLoad::findVoucher( int issuer_rank ) const
+{
+   Voucher tmp_voucher( 0.0, issuer_rank );
+   const_iterator vi = d_voucher_set.lower_bound(tmp_voucher);
+   if ( vi != d_voucher_set.end() && vi->d_issuer_rank == issuer_rank ) {
+      tmp_voucher.d_load = vi->d_load;
+   }
+   return tmp_voucher;
 }
 
 

@@ -402,6 +402,13 @@ private:
 
 
    /*!
+    * @brief Return the Voucher issued by the given process.  If
+    * Voucher isn't there, return zero-valued Voucher.
+    */
+   Voucher findVoucher( int issuer_rank ) const;
+
+
+   /*!
     * @brief Yank out and return the Voucher issued by the given
     * process.  If Voucher isn't there, return zero-valued Voucher.
     */
