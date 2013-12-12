@@ -172,8 +172,8 @@ public:
     * @brief Set threshold for resisting small and thin boxes.
     *
     * This is not a hard limit, but implementations should use it to
-    * determine when a box is getting too small in one or more
-    * dimension.  Default initial threshold is very small (practically
+    * determine when a box is getting too small in any coordinate
+    * direction.  Default initial threshold is very small (practically
     * unlimited).
     */
    void setThresholdWidth( double threshold_width ) {

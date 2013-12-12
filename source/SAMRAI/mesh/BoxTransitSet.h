@@ -95,7 +95,7 @@ public:
    /*!
     * @copydoc TransitLoad::assignContentToLocalProcessAndPopulateMaps()
     *
-    * This method uses communication to redeem vouchers and up the map.
+    * This method uses communication to populate the map.
     */
    void
    assignContentToLocalProcessAndPopulateMaps(

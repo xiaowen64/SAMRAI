@@ -14,6 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
 
 #include <vector>
@@ -65,8 +66,8 @@ public:
     */
    bool
    breakOffLoad(
-      std::vector<hier::Box>& breakoff,
-      std::vector<hier::Box>& leftover,
+      hier::BoxContainer& breakoff,
+      hier::BoxContainer& leftover,
       double& brk_load,
       const hier::Box& box,
       double ideal_load,
@@ -89,7 +90,7 @@ public:
     */
    static void
    burstBox(
-      std::vector<hier::Box>& boxes,
+      hier::BoxContainer& boxes,
       const hier::Box& bursty,
       const hier::Box& solid );
 
@@ -111,7 +112,7 @@ public:
     * @brief Compute a combined width score for multiple boxes.
     */
    static double computeWidthScore(
-      const std::vector<hier::Box> &boxes,
+      const hier::BoxContainer& boxes,
       double threshold_width );
 
 
@@ -139,8 +140,8 @@ public:
          const TrialBreak &tb );
 
       double d_breakoff_load; // Should change to int d_breakoff_cells.  This class doesn't deal in arbitrary load types.
-      std::vector<hier::Box> d_breakoff;
-      std::vector<hier::Box> d_leftover;
+      hier::BoxContainer d_breakoff;
+      hier::BoxContainer d_leftover;
       const double d_ideal_load;
       const double d_low_load;
       const double  d_high_load;

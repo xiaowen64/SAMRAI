@@ -786,8 +786,8 @@ BoxTransitSet::adjustLoadByBreaking(
 
 
    // Data for the best cutting results so far:
-   std::vector<hier::Box> breakoff;
-   std::vector<hier::Box> leftover;
+   hier::BoxContainer breakoff;
+   hier::BoxContainer leftover;
    double breakoff_amt = 0.0;
    BoxInTransit breakbox(d_pparams->getMinBoxSize().getDim());
 
@@ -816,8 +816,8 @@ BoxTransitSet::adjustLoadByBreaking(
                     << std::endl;
       }
 
-      std::vector<hier::Box> trial_breakoff;
-      std::vector<hier::Box> trial_leftover;
+      hier::BoxContainer trial_breakoff;
+      hier::BoxContainer trial_leftover;
       double trial_breakoff_amt;
 
       d_box_breaker.breakOffLoad(
@@ -885,7 +885,7 @@ BoxTransitSet::adjustLoadByBreaking(
        * in main_bin and its leftover parts back into hold_bin.
        */
       hold_bin.erase(breakbox);
-      for (std::vector<hier::Box>::const_iterator bi = breakoff.begin();
+      for (hier::BoxContainer::const_iterator bi = breakoff.begin();
            bi != breakoff.end();
            ++bi) {
          BoxInTransit give_box_in_transit(
@@ -899,14 +899,8 @@ BoxTransitSet::adjustLoadByBreaking(
                                 give_box_in_transit.getBox()));
          main_bin.insert(give_box_in_transit);
          actual_transfer += give_box_in_transit.d_boxload;
-         if (d_print_break_steps) {
-            tbox::plog << "    Breakoff box " << *bi << bi->numberCells()
-                       << '|' << bi->size()
-                       << " -> " << give_box_in_transit
-                       << std::endl;
-         }
       }
-      for (std::vector<hier::Box>::const_iterator bi = leftover.begin();
+      for (hier::BoxContainer::const_iterator bi = leftover.begin();
            bi != leftover.end();
            ++bi) {
          BoxInTransit keep_box_in_transit(
@@ -919,12 +913,6 @@ BoxTransitSet::adjustLoadByBreaking(
                                 keep_box_in_transit.d_orig_box,
                                 keep_box_in_transit.getBox()));
          hold_bin.insert(keep_box_in_transit);
-         if (d_print_break_steps) {
-            tbox::plog << "    Leftover box " << *bi << bi->numberCells()
-                       << '|' << bi->size()
-                       << " -> " << keep_box_in_transit
-                       << std::endl;
-         }
       }
    }
 
