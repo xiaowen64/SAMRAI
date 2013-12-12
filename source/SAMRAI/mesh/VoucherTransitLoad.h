@@ -263,9 +263,11 @@ private:
       VoucherRedemption() :
          d_demander_rank(tbox::SAMRAI_MPI::getInvalidRank()),
          d_mpi(MPI_COMM_NULL),
-         d_mpi_request(MPI_REQUEST_NULL) {};
+         d_mpi_request(MPI_REQUEST_NULL),
+         d_pparams(0) {};
       ~VoucherRedemption() {
          finishSendRequest();
+         d_pparams = 0;
       }
 
       //@{
@@ -297,8 +299,7 @@ private:
 
       void takeWorkFromReserve(
          BoxTransitSet &work,
-         BoxTransitSet &reserve,
-         const PartitioningParams &pparams );
+         BoxTransitSet &reserve );
 
          void finishSendRequest();
 
@@ -310,6 +311,7 @@ private:
       double d_demander_voucher_load;
       //! @brief Demander-specified LocalId generator to avoid ID clashes.
       hier::SequentialLocalIdGenerator d_id_gen;
+      const PartitioningParams *d_pparams;
 
       boost::shared_ptr<tbox::MessageStream> d_msg;
       tbox::SAMRAI_MPI d_mpi;

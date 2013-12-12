@@ -432,8 +432,9 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
    hier::MappingConnector &balanced_to_unbalanced,
    const PartitioningParams &pparams )
 {
+   d_pparams = &pparams;
    BoxTransitSet box_shipment(pparams);
-   takeWorkFromReserve( box_shipment, reserve, pparams );
+   takeWorkFromReserve( box_shipment, reserve );
 
    d_msg = boost::make_shared<tbox::MessageStream>();
    box_shipment.putToMessageStream(*d_msg);
@@ -498,8 +499,7 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkSupply(
 */
 void VoucherTransitLoad::VoucherRedemption::takeWorkFromReserve(
    BoxTransitSet &work,
-   BoxTransitSet &reserve,
-   const PartitioningParams &pparams )
+   BoxTransitSet &reserve )
 {
    work.setAllowBoxBreaking( reserve.getAllowBoxBreaking() );
    work.setThresholdWidth( reserve.getThresholdWidth() );
