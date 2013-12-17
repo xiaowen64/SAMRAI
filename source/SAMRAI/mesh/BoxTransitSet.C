@@ -463,8 +463,8 @@ BoxTransitSet::reassignOwnership(
 
 /*
 *************************************************************************
-* Put all d_box into a BoxLevel.
-* Each d_box must have a valid BoxId and owned by the local process.
+* Put all local d_box into a BoxLevel.
+* Each d_box must have a valid BoxId.
 *************************************************************************
 */
 void
@@ -472,9 +472,10 @@ BoxTransitSet::putInBoxLevel(
    hier::BoxLevel &box_level ) const
 {
    for (iterator ni = begin(); ni != end(); ++ni ) {
-      TBOX_ASSERT( ni->d_box.getOwnerRank() == box_level.getMPI().getRank() );
       TBOX_ASSERT( ni->d_box.getBoxId().isValid() );
-      box_level.addBox(ni->d_box);
+      if ( ni->d_box.getOwnerRank() == box_level.getMPI().getRank() ) {
+         box_level.addBox(ni->d_box);
+      }
    }
    return;
 }

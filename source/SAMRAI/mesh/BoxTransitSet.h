@@ -120,7 +120,7 @@ public:
 
 
    /*!
-    * @brief Put contents into a BoxLevel.
+    * @brief Put local Boxes into a BoxLevel.
     */
    void
    putInBoxLevel(

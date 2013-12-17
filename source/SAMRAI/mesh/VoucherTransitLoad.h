@@ -380,7 +380,11 @@ private:
 
 
    /*!
-    * @brief Alternative option to recursively partition work supply.
+    * @brief Assign a reserve to a set of VoucherRedemption.
+    *
+    * Alternative option to recursively partition work supply.
+    *
+    * On return, work assignments will be reflected in reserve.
     */
    void recursiveSendWorkSupply(
    const std::map<int,VoucherRedemption>::iterator &begin,
@@ -458,6 +462,7 @@ private:
 
    const PartitioningParams *d_pparams;
 
+   bool d_partition_work_supply_recursively;
 
    //@{
    //! @name Debugging stuff.
