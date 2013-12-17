@@ -258,14 +258,10 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
 #define TRANSFER_VR
 #ifdef TRANSFER_VR
       else {
+         // Locally fulfilled.  Place in redemption_to_fulfill for processing.
          hier::SequentialLocalIdGenerator id_gen( ++local_id_offset, local_id_inc );
          VoucherRedemption &vr = redemptions_to_fulfill[mpi.getRank()];
-         vr.d_mpi = mpi;
-         vr.d_demander_rank = mpi.getRank();
-         vr.d_id_gen = id_gen;
-         vr.d_voucher = *si;
-         vr.d_demander_voucher_count = size();
-         vr.d_demander_voucher_load = getSumLoad();
+         vr.setLocalRedemption( si, *this, id_gen, mpi );
       }
 #endif
    }
@@ -555,6 +551,27 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkDemand(
    TBOX_ASSERT( d_voucher.d_issuer_rank == mpi.getRank() );
 
    d_msg.reset();
+}
+
+
+
+/*
+*************************************************************************
+* Set a demand for work issued locally.
+*************************************************************************
+*/
+void VoucherTransitLoad::VoucherRedemption::setLocalRedemption(
+   const VoucherTransitLoad::const_iterator &voucher,
+   const VoucherTransitLoad &all_vouchers,
+   const hier::SequentialLocalIdGenerator &id_gen,
+   const tbox::SAMRAI_MPI &mpi )
+{
+   d_voucher = *voucher;
+   d_demander_rank = mpi.getRank();
+   d_demander_voucher_count = all_vouchers.size();
+   d_demander_voucher_load = all_vouchers.getSumLoad();
+   d_id_gen = id_gen;
+   d_mpi = mpi;
 }
 
 

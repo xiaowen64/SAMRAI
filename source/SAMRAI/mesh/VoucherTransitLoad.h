@@ -291,6 +291,16 @@ private:
       void recvWorkSupply(
          int message_length,
          const PartitioningParams &pparams );
+
+      void setLocalRedemption(
+         const VoucherTransitLoad::const_iterator &voucher,
+         const VoucherTransitLoad &all_vouchers,
+         const hier::SequentialLocalIdGenerator &id_gen,
+         const tbox::SAMRAI_MPI &mpi );
+
+      void fulfillLocalRedemption(
+         BoxTransitSet &reserve,
+         const PartitioningParams &pparams );
       //@}
 
       void takeWorkFromReserve(
