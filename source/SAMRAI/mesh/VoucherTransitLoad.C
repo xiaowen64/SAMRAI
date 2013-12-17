@@ -258,7 +258,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
 #define TRANSFER_VR
 #ifdef TRANSFER_VR
       else {
-         // Locally fulfilled.  Place in redemption_to_fulfill for processing.
+         // Locally fulfilled.  Place in redemptions_to_fulfill for processing.
          hier::SequentialLocalIdGenerator id_gen( ++local_id_offset, local_id_inc );
          VoucherRedemption &vr = redemptions_to_fulfill[mpi.getRank()];
          vr.setLocalRedemption( si, *this, id_gen, mpi );
@@ -347,14 +347,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
          }
 #ifdef TRANSFER_VR
          else {
-            vr.d_box_shipment = boost::make_shared<BoxTransitSet>(*d_pparams);
-            vr.d_box_shipment->setAllowBoxBreaking( reserve.getAllowBoxBreaking() );
-            vr.d_box_shipment->setThresholdWidth( reserve.getThresholdWidth() );
-            vr.d_box_shipment->adjustLoad( reserve,
-                                           vr.d_voucher.d_load,
-                                           vr.d_voucher.d_load,
-                                           vr.d_voucher.d_load );
-            vr.d_box_shipment->reassignOwnership( vr.d_id_gen, vr.d_demander_rank );
+            vr.fulfillLocalRedemption( reserve, *d_pparams );
             vr.d_box_shipment->putInBoxLevel(balanced_box_level);
             vr.d_box_shipment->generateLocalBasedMapEdges(
                unbalanced_to_balanced,
@@ -557,27 +550,6 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkDemand(
 
 /*
 *************************************************************************
-* Set a demand for work issued locally.
-*************************************************************************
-*/
-void VoucherTransitLoad::VoucherRedemption::setLocalRedemption(
-   const VoucherTransitLoad::const_iterator &voucher,
-   const VoucherTransitLoad &all_vouchers,
-   const hier::SequentialLocalIdGenerator &id_gen,
-   const tbox::SAMRAI_MPI &mpi )
-{
-   d_voucher = *voucher;
-   d_demander_rank = mpi.getRank();
-   d_demander_voucher_count = all_vouchers.size();
-   d_demander_voucher_load = all_vouchers.getSumLoad();
-   d_id_gen = id_gen;
-   d_mpi = mpi;
-}
-
-
-
-/*
-*************************************************************************
 * Send a supply of work to the demander to fulfill a voucher.  The
 * work is taken from a reserve.  Save mapping edges incident from
 * local boxes.
@@ -643,6 +615,49 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkSupply(
    d_box_shipment = boost::make_shared<BoxTransitSet>(pparams);
    d_box_shipment->getFromMessageStream(*d_msg);
    d_msg.reset();
+}
+
+
+
+/*
+*************************************************************************
+* Set a demand for a local redemption.
+*************************************************************************
+*/
+void VoucherTransitLoad::VoucherRedemption::setLocalRedemption(
+   const VoucherTransitLoad::const_iterator &voucher,
+   const VoucherTransitLoad &all_vouchers,
+   const hier::SequentialLocalIdGenerator &id_gen,
+   const tbox::SAMRAI_MPI &mpi )
+{
+   d_voucher = *voucher;
+   d_demander_rank = mpi.getRank();
+   d_demander_voucher_count = all_vouchers.size();
+   d_demander_voucher_load = all_vouchers.getSumLoad();
+   d_id_gen = id_gen;
+   d_mpi = mpi;
+}
+
+
+
+/*
+*************************************************************************
+* Supply work to fulfill local redemption.
+*************************************************************************
+*/
+void VoucherTransitLoad::VoucherRedemption::fulfillLocalRedemption(
+   BoxTransitSet &reserve,
+   const PartitioningParams &pparams )
+{
+   d_pparams = &pparams;
+   d_box_shipment = boost::make_shared<BoxTransitSet>(*d_pparams);
+   d_box_shipment->setAllowBoxBreaking( reserve.getAllowBoxBreaking() );
+   d_box_shipment->setThresholdWidth( reserve.getThresholdWidth() );
+   d_box_shipment->adjustLoad( reserve,
+                               d_voucher.d_load,
+                               d_voucher.d_load,
+                               d_voucher.d_load );
+   d_box_shipment->reassignOwnership( d_id_gen, d_demander_rank );
 }
 
 
