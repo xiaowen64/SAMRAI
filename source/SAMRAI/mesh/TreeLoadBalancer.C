@@ -821,7 +821,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
 
 
    /*
-    * Outline of the tree load balancing algorithm as implemented:
+    * Essential outline of the tree load balancing algorithm as implemented:
     *
     * 1. For each child of the local process:
     * Receive data from branch rooted at child (nodes in

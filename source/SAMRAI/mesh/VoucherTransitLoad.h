@@ -306,7 +306,7 @@ private:
       double d_demander_voucher_load;
       //! @brief Demander-specified LocalId generator to avoid ID clashes.
       hier::SequentialLocalIdGenerator d_id_gen;
-      //! @brief Shipment of work, as boxes.
+      //! @brief Shipment of work, as boxes, sent or received.
       boost::shared_ptr<BoxTransitSet> d_box_shipment;
       const PartitioningParams *d_pparams;
 
