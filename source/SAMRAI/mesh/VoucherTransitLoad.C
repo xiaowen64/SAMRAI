@@ -297,10 +297,11 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
                     << "\nsupplying " << vr.d_voucher.d_load << " to rank " << mi->first
                     << std::endl;
       }
-      vr.sendWorkSupply( reserve,
-                         unbalanced_to_balanced,
-                         balanced_to_unbalanced,
-                         *d_pparams );
+      vr.sendWorkSupply( reserve, *d_pparams );
+
+      vr.d_box_shipment->generateLocalBasedMapEdges(
+         unbalanced_to_balanced,
+         balanced_to_unbalanced);
    }
 
 
@@ -328,11 +329,12 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
       tbox::SAMRAI_MPI::Get_count( &status, MPI_CHAR, &count );
 
       VoucherRedemption &vr = redemptions_to_request[source];
-      vr.recvWorkSupply( count,
-                         balanced_box_level,
-                         unbalanced_to_balanced,
-                         balanced_to_unbalanced,
-                         *d_pparams );
+      vr.recvWorkSupply( count, *d_pparams );
+
+      vr.d_box_shipment->putInBoxLevel(balanced_box_level);
+      vr.d_box_shipment->generateLocalBasedMapEdges(
+         unbalanced_to_balanced,
+         balanced_to_unbalanced);
 
       redemptions_to_request.erase(source);
    }
@@ -376,8 +378,6 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkDemand(
       d_voucher.d_issuer_rank,
       VoucherTransitLoad_DEMANDTAG,
       &d_mpi_request);
-
-   d_msg.reset();
 }
 
 
@@ -428,16 +428,14 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkDemand(
 */
 void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
    BoxTransitSet &reserve,
-   hier::MappingConnector &unbalanced_to_balanced,
-   hier::MappingConnector &balanced_to_unbalanced,
    const PartitioningParams &pparams )
 {
    d_pparams = &pparams;
-   BoxTransitSet box_shipment(pparams);
-   takeWorkFromReserve( box_shipment, reserve );
+   d_box_shipment = boost::make_shared<BoxTransitSet>(pparams);
+   takeWorkFromReserve( *d_box_shipment, reserve );
 
    d_msg = boost::make_shared<tbox::MessageStream>();
-   box_shipment.putToMessageStream(*d_msg);
+   d_box_shipment->putToMessageStream(*d_msg);
 
    d_mpi.Isend(
       (void*)(d_msg->getBufferStart()),
@@ -446,10 +444,6 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
       d_demander_rank,
       VoucherTransitLoad_SUPPLYTAG,
       &d_mpi_request);
-
-   box_shipment.generateLocalBasedMapEdges(
-      unbalanced_to_balanced,
-      balanced_to_unbalanced);
 
    return;
 }
@@ -464,9 +458,6 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
 */
 void VoucherTransitLoad::VoucherRedemption::recvWorkSupply(
    int message_length,
-   hier::BoxLevel &balanced_box_level,
-   hier::MappingConnector &unbalanced_to_balanced,
-   hier::MappingConnector &balanced_to_unbalanced,
    const PartitioningParams &pparams )
 {
    std::vector<char> incoming_message(message_length);
@@ -481,14 +472,9 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkSupply(
    d_msg = boost::make_shared<tbox::MessageStream>(
       message_length, tbox::MessageStream::Read,
       static_cast<void*>(&incoming_message[0]), false);
-   BoxTransitSet box_shipment(pparams);
-   box_shipment.getFromMessageStream(*d_msg);
+   d_box_shipment = boost::make_shared<BoxTransitSet>(pparams);
+   d_box_shipment->getFromMessageStream(*d_msg);
    d_msg.reset();
-
-   box_shipment.putInBoxLevel(balanced_box_level);
-   box_shipment.generateLocalBasedMapEdges(
-      unbalanced_to_balanced,
-      balanced_to_unbalanced);
 }
 
 

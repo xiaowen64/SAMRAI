@@ -285,15 +285,10 @@ private:
 
       void sendWorkSupply(
          BoxTransitSet &reserve,
-         hier::MappingConnector &unbalanced_to_balanced,
-         hier::MappingConnector &balanced_to_unbalanced /* unused, can be removed */,
          const PartitioningParams &pparams );
 
       void recvWorkSupply(
          int message_length,
-         hier::BoxLevel &balanced_box_level,
-         hier::MappingConnector &unbalanced_to_balanced /* unused, can be removed */,
-         hier::MappingConnector &balanced_to_unbalanced,
          const PartitioningParams &pparams );
       //@}
 
@@ -311,6 +306,8 @@ private:
       double d_demander_voucher_load;
       //! @brief Demander-specified LocalId generator to avoid ID clashes.
       hier::SequentialLocalIdGenerator d_id_gen;
+      //! @brief Shipment of work, as boxes.
+      boost::shared_ptr<BoxTransitSet> d_box_shipment;
       const PartitioningParams *d_pparams;
 
       boost::shared_ptr<tbox::MessageStream> d_msg;
