@@ -245,8 +245,8 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    const hier::LocalId local_id_inc(d_voucher_set.size());
 
    for ( const_iterator si=d_voucher_set.begin(); si!=d_voucher_set.end(); ++si ) {
+      hier::SequentialLocalIdGenerator id_gen( ++local_id_offset, local_id_inc );
       if ( si->d_issuer_rank != mpi.getRank() ) {
-         hier::SequentialLocalIdGenerator id_gen( ++local_id_offset, local_id_inc );
          if ( d_print_edge_steps ) {
             tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
                        << " sending demand for voucher " << *si << '.'
@@ -255,15 +255,11 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
          redemptions_to_request[si->d_issuer_rank].sendWorkDemand(
             si, *this, id_gen, mpi );
       }
-#define TRANSFER_VR
-#ifdef TRANSFER_VR
       else {
          // Locally fulfilled.  Place in redemptions_to_fulfill for processing.
-         hier::SequentialLocalIdGenerator id_gen( ++local_id_offset, local_id_inc );
-         VoucherRedemption &vr = redemptions_to_fulfill[mpi.getRank()];
-         vr.setLocalRedemption( si, *this, id_gen, mpi );
+         redemptions_to_fulfill[mpi.getRank()].setLocalRedemption(
+            si, *this, id_gen, mpi );
       }
-#endif
    }
 
    // Set up the reserve for fulfilling incoming redemption requests.
@@ -345,7 +341,6 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
                unbalanced_to_balanced,
                balanced_to_unbalanced);
          }
-#ifdef TRANSFER_VR
          else {
             vr.fulfillLocalRedemption( reserve, *d_pparams );
             vr.d_box_shipment->putInBoxLevel(balanced_box_level);
@@ -353,7 +348,6 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
                unbalanced_to_balanced,
                balanced_to_unbalanced);
          }
-#endif
       }
 
       // Anything left in reserve is kept locally.
@@ -491,6 +485,7 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkDemand(
    const tbox::SAMRAI_MPI &mpi )
 {
    d_voucher = *voucher;
+   d_demander_rank = mpi.getRank();
    d_demander_voucher_count = all_vouchers.size();
    d_demander_voucher_load = all_vouchers.getSumLoad();
    d_id_gen = id_gen;
