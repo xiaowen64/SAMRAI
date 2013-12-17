@@ -237,14 +237,17 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
 
    std::map<int,VoucherRedemption> redemptions_to_request;
 
-   const hier::LocalId last_local_id = unbalanced_box_level.getLastLocalId();
+   hier::LocalId local_id_offset = unbalanced_box_level.getLastLocalId();
    const hier::LocalId local_id_inc(d_voucher_set.size());
 
-   int count = 0;
-   for ( const_iterator si=d_voucher_set.begin();
-         si!=d_voucher_set.end(); ++si, ++count ) {
+   for ( const_iterator si=d_voucher_set.begin(); si!=d_voucher_set.end(); ++si ) {
       if ( si->d_issuer_rank != mpi.getRank() ) {
-         hier::SequentialLocalIdGenerator id_gen( last_local_id + count, local_id_inc );
+         hier::SequentialLocalIdGenerator id_gen( ++local_id_offset, local_id_inc );
+         if ( d_print_edge_steps ) {
+            tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
+                       << " sending demand for voucher " << *si << '.'
+                       << std::endl;
+         }
          redemptions_to_request[si->d_issuer_rank].sendWorkDemand(
             si, *this, id_gen, mpi );
       }
@@ -280,6 +283,13 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
       VoucherRedemption &vr = redemptions_to_fulfill[source];
       vr.recvWorkDemand( source, count, mpi );
 
+      if ( d_print_edge_steps ) {
+         tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
+                    << " received demand from " << source << " for voucher "
+                    << vr.d_voucher << '.'
+                    << std::endl;
+      }
+
       unaccounted_work -= vr.d_voucher.d_load;
       TBOX_ASSERT( unaccounted_work >= -d_pparams->getLoadComparisonTol() );
 
@@ -292,12 +302,14 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
          mi!=redemptions_to_fulfill.end(); ++mi ) {
 
       VoucherRedemption &vr = mi->second;
+      vr.sendWorkSupply( reserve, *d_pparams );
       if ( d_print_edge_steps ) {
          tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
-                    << "\nsupplying " << vr.d_voucher.d_load << " to rank " << mi->first
-                    << std::endl;
+                    << " sent supply to " << mi->first << " for voucher "
+                    << vr.d_voucher << ": ";
+         vr.d_box_shipment->recursivePrint();
+         tbox::plog << std::endl;
       }
-      vr.sendWorkSupply( reserve, *d_pparams );
 
       vr.d_box_shipment->generateLocalBasedMapEdges(
          unbalanced_to_balanced,
@@ -306,7 +318,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
 
 
    // Anything left in reserve is kept locally.
-   hier::SequentialLocalIdGenerator id_gen( last_local_id, local_id_inc );
+   hier::SequentialLocalIdGenerator id_gen( unbalanced_box_level.getLastLocalId(), local_id_inc );
    reserve.reassignOwnership(
       id_gen,
       balanced_box_level.getMPI().getRank() );
@@ -335,6 +347,14 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
       vr.d_box_shipment->generateLocalBasedMapEdges(
          unbalanced_to_balanced,
          balanced_to_unbalanced);
+
+      if ( d_print_edge_steps ) {
+         tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
+                    << " received supply from rank " << source << " for " << vr.d_voucher
+                    << ": ";
+         vr.d_box_shipment->recursivePrint();
+         tbox::plog << std::endl;
+      }
 
       redemptions_to_request.erase(source);
    }
@@ -788,11 +808,12 @@ VoucherTransitLoad::recursivePrint(
    co << getSumLoad() << " units in " << size() << " vouchers";
    if ( detail_depth > 0 ) {
       size_t count = 0;
-      co << ":\n";
+      co << ":";
       for ( VoucherTransitLoad::const_iterator vi=begin();
             vi!=end() && count < 50; ++vi, ++count ) {
-         co << border << "    " << *vi << '\n';
+         co << border << "  " << *vi;
       }
+      co << '\n';
    }
    else {
       co << ".\n";
