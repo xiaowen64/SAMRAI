@@ -1897,8 +1897,6 @@ BaseGridGeometry::readBlockDataFromInput(
        */ 
       for (int si = 0; si < d_number_of_block_singularities; ++si) {
 
-         int num_sing_blocks = singularity_blocks[si].size();
-
          for (std::set<int>::iterator sbi = singularity_blocks[si].begin();
               sbi != singularity_blocks[si].end(); ++sbi) {
 
