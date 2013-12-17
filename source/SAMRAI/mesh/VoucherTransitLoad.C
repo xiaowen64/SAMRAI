@@ -258,6 +258,12 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    reserve.setAllowBoxBreaking( getAllowBoxBreaking() );
    reserve.setThresholdWidth( getThresholdWidth() );
    reserve.insertAll( unbalanced_box_level.getBoxes() );
+   if ( d_print_edge_steps ) {
+      tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
+                 << " reserve before redemption steps: ";
+      reserve.recursivePrint();
+      tbox::plog << std::endl;
+   }
 
 
    // 2. Receive work demands for voucher we generated but can't account for.
@@ -314,6 +320,13 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
       vr.d_box_shipment->generateLocalBasedMapEdges(
          unbalanced_to_balanced,
          balanced_to_unbalanced);
+   }
+
+   if ( d_print_edge_steps ) {
+      tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
+                 << " reserve after sending work supplies: ";
+      reserve.recursivePrint();
+      tbox::plog << std::endl;
    }
 
 
