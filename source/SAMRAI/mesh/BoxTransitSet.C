@@ -564,7 +564,7 @@ BoxTransitSet::adjustLoad(
    BoxTransitSet& hold_bin(recastTransitLoad(transit_load_hold_bin));
 
    if (d_print_steps) {
-      tbox::plog << "  adjustLoad attempting to bring main load from "
+      tbox::plog << "  BoxTransitSet::adjustLoad attempting to bring main load from "
                  << main_bin.getSumLoad() << " to " << ideal_load
                  << " or within [" << low_load << ", " << high_load << "]."
                  << std::endl;

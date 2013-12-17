@@ -309,6 +309,7 @@ private:
       }
    };
 
+public:
 
    //@{
    //! @name Interfaces like the C++ standard stl::set, to help readability.
@@ -347,6 +348,7 @@ private:
    iterator upper_bound( const key_type &k ) const { return d_set.upper_bound(k); }
    //@}
 
+private:
 
    /*!
     * @brief Insert BoxInTransit into an output stream.

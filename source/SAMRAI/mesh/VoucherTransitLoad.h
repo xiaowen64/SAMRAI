@@ -285,7 +285,8 @@ private:
 
       void sendWorkSupply(
          BoxTransitSet &reserve,
-         const PartitioningParams &pparams );
+         const PartitioningParams &pparams,
+         bool send_all );
 
       void recvWorkSupply(
          int message_length,
@@ -379,6 +380,15 @@ private:
 
 
    /*!
+    * @brief Alternative option to recursively partition work supply.
+    */
+   void recursiveSendWorkSupply(
+   const std::map<int,VoucherRedemption>::iterator &begin,
+   const std::map<int,VoucherRedemption>::iterator &end,
+   BoxTransitSet &reserve );
+
+
+   /*!
     * @brief Re-cast a TransitLoad object to a VoucherTransitLoad.
     */
    const VoucherTransitLoad &recastTransitLoad( const TransitLoad &transit_load ) {
@@ -410,6 +420,14 @@ private:
     * process.  If Voucher isn't there, return zero-valued Voucher.
     */
    Voucher yankVoucher( int issuer_rank );
+
+
+   /*!
+    * @brief Look for an input database called "VoucherTransitLoad"
+    * and read parameters if it exists.
+    */
+   void
+   getFromInput();
 
 
    /*!
