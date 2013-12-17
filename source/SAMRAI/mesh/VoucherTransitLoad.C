@@ -254,11 +254,12 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
          redemptions_to_request[si->d_issuer_rank].sendWorkDemand(
             si, *this, id_gen, mpi );
       }
-#if 0
+#define TRANSFER_VR
+#ifdef TRANSFER_VR
       else {
          hier::SequentialLocalIdGenerator id_gen( ++local_id_offset, local_id_inc );
          VoucherRedemption &vr = redemptions_to_fulfill[mpi.getRank()];
-         vr.mpi = mpi;
+         vr.d_mpi = mpi;
          vr.d_demander_rank = mpi.getRank();
          vr.d_id_gen = id_gen;
          vr.d_voucher = *si;
@@ -332,19 +333,43 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
          mi!=redemptions_to_fulfill.end(); ++mi ) {
 
       VoucherRedemption &vr = mi->second;
-      vr.sendWorkSupply( reserve, *d_pparams, false );
-      if ( d_print_edge_steps ) {
-         tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
-                    << " sent supply to " << mi->first << " for voucher "
-                    << vr.d_voucher << ": ";
-         vr.d_box_shipment->recursivePrint();
-         tbox::plog << std::endl;
-      }
+      if ( vr.d_demander_rank != mpi.getRank() ) {
+         vr.sendWorkSupply( reserve, *d_pparams, false );
+         if ( d_print_edge_steps ) {
+            tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
+                       << " sent supply to " << mi->first << " for voucher "
+                       << vr.d_voucher << ": ";
+            vr.d_box_shipment->recursivePrint();
+            tbox::plog << std::endl;
+         }
 
-      vr.d_box_shipment->generateLocalBasedMapEdges(
-         unbalanced_to_balanced,
-         balanced_to_unbalanced);
+         vr.d_box_shipment->generateLocalBasedMapEdges(
+            unbalanced_to_balanced,
+            balanced_to_unbalanced);
+      }
+#ifdef TRANSFER_VR
+      else {
+         vr.d_box_shipment = boost::make_shared<BoxTransitSet>(*d_pparams);
+         vr.d_box_shipment->setAllowBoxBreaking( reserve.getAllowBoxBreaking() );
+         vr.d_box_shipment->setThresholdWidth( reserve.getThresholdWidth() );
+         vr.d_box_shipment->adjustLoad( reserve,
+                                        vr.d_voucher.d_load,
+                                        vr.d_voucher.d_load,
+                                        vr.d_voucher.d_load );
+         vr.d_box_shipment->reassignOwnership( vr.d_id_gen, vr.d_demander_rank );
+         vr.d_box_shipment->putInBoxLevel(balanced_box_level);
+         vr.d_box_shipment->generateLocalBasedMapEdges(
+            unbalanced_to_balanced,
+            balanced_to_unbalanced);
+      }
+#endif
    }
+
+   // Anything left in reserve is kept locally.
+   hier::SequentialLocalIdGenerator id_gen( unbalanced_box_level.getLastLocalId(), local_id_inc );
+   reserve.reassignOwnership(
+      id_gen,
+      balanced_box_level.getMPI().getRank() );
 #endif
 
    if ( d_print_edge_steps ) {
@@ -354,12 +379,6 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
       tbox::plog << std::endl;
    }
 
-
-   // Anything left in reserve is kept locally.
-   hier::SequentialLocalIdGenerator id_gen( unbalanced_box_level.getLastLocalId(), local_id_inc );
-   reserve.reassignOwnership(
-      id_gen,
-      balanced_box_level.getMPI().getRank() );
 
    reserve.putInBoxLevel(balanced_box_level);
    reserve.generateLocalBasedMapEdges(
