@@ -53,6 +53,7 @@ VoucherTransitLoad::VoucherTransitLoad( const PartitioningParams &pparams ) :
    d_sumload(0),
    d_pparams(&pparams),
    d_partition_work_supply_recursively(true),
+   d_flexible_load_tol(0.0),
    d_print_steps(false),
    d_print_edge_steps(false)
 {
@@ -210,9 +211,12 @@ void
 VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    hier::BoxLevel& balanced_box_level,
    hier::MappingConnector &balanced_to_unbalanced,
-   hier::MappingConnector &unbalanced_to_balanced )
+   hier::MappingConnector &unbalanced_to_balanced,
+   double flexible_load_tol )
 {
    d_object_timers->t_assign_content_to_local_process_and_generate_map->start();
+
+   d_flexible_load_tol = flexible_load_tol;
 
    if ( d_print_steps ) {
       tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps: entered." << std::endl;
@@ -334,7 +338,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
 
          VoucherRedemption &vr = mi->second;
          if ( vr.d_demander_rank != mpi.getRank() ) {
-            vr.sendWorkSupply( reserve, *d_pparams, false );
+            vr.sendWorkSupply( reserve, flexible_load_tol, *d_pparams, false );
             if ( d_print_edge_steps ) {
                tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
                           << " sent supply to " << mi->first << " for voucher "
@@ -411,6 +415,8 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
       tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps: exiting." << std::endl;
    }
 
+   d_flexible_load_tol = 0.0;
+
    d_object_timers->t_assign_content_to_local_process_and_generate_map->stop();
 }
 
@@ -436,7 +442,7 @@ void VoucherTransitLoad::recursiveSendWorkSupply(
 
    if ( right_begin == left_begin ) {
       if ( begin->second.d_demander_rank != begin->second.d_mpi.getRank() ) {
-         begin->second.sendWorkSupply( reserve, *d_pparams, true );
+         begin->second.sendWorkSupply( reserve, d_flexible_load_tol, *d_pparams, true );
       }
       else {
          begin->second.fulfillLocalRedemption( reserve, *d_pparams, true );
@@ -468,7 +474,12 @@ void VoucherTransitLoad::recursiveSendWorkSupply(
       }
 
       BoxTransitSet left_reserve(*d_pparams);
-      left_reserve.adjustLoad( reserve, left_load, left_load, left_load );
+      double upper_lim = left_load*(1 + d_flexible_load_tol);
+      double lower_lim = left_load*(1 - d_flexible_load_tol);
+      lower_lim = tbox::MathUtilities<double>::Max(
+         lower_lim, left_load - right_load*d_flexible_load_tol );
+
+      left_reserve.adjustLoad( reserve, left_load, lower_lim, upper_lim );
 
       recursiveSendWorkSupply( left_begin, left_end, left_reserve );
       recursiveSendWorkSupply( right_begin, right_end, reserve );
@@ -562,6 +573,7 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkDemand(
 */
 void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
    BoxTransitSet &reserve,
+   double flexible_load_tol,
    const PartitioningParams &pparams,
    bool send_all )
 {
@@ -572,10 +584,15 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
    if ( send_all ) {
       d_box_shipment->swap(reserve);
    } else {
+      double upper_lim = d_voucher.d_load*(1 + flexible_load_tol);
+      double lower_lim = d_voucher.d_load*(1 - flexible_load_tol);
+      lower_lim = tbox::MathUtilities<double>::Max(
+         lower_lim,
+         d_voucher.d_load - (reserve.getSumLoad()-d_voucher.d_load)*flexible_load_tol );
       d_box_shipment->adjustLoad( reserve,
                                   d_voucher.d_load,
-                                  d_voucher.d_load,
-                                  d_voucher.d_load );
+                                  lower_lim,
+                                  upper_lim );
    }
    d_box_shipment->reassignOwnership( d_id_gen, d_demander_rank );
 

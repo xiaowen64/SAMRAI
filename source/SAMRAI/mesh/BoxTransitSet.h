@@ -101,7 +101,8 @@ public:
    assignContentToLocalProcessAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced );
+      hier::MappingConnector &unbalanced_to_balanced,
+      double flexible_load_tol = 0.0 );
 
    //@}
 

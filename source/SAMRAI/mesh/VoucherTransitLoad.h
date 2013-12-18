@@ -107,7 +107,8 @@ public:
    assignContentToLocalProcessAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced );
+      hier::MappingConnector &unbalanced_to_balanced,
+      double flexible_load_tol = 0.0 );
 
    //@}
 
@@ -285,6 +286,7 @@ private:
 
       void sendWorkSupply(
          BoxTransitSet &reserve,
+         double flexible_load_tol,
          const PartitioningParams &pparams,
          bool send_all );
 
@@ -474,6 +476,8 @@ private:
    const PartitioningParams *d_pparams;
 
    bool d_partition_work_supply_recursively;
+
+   double d_flexible_load_tol;
 
    //@{
    //! @name Debugging stuff.

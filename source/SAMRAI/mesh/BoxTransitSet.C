@@ -193,8 +193,11 @@ void
 BoxTransitSet::assignContentToLocalProcessAndPopulateMaps(
    hier::BoxLevel& balanced_box_level,
    hier::MappingConnector &balanced_to_unbalanced,
-   hier::MappingConnector &unbalanced_to_balanced )
+   hier::MappingConnector &unbalanced_to_balanced,
+   double flexible_load_tol )
 {
+   NULL_USE(flexible_load_tol);
+
    d_object_timers->t_assign_content_to_local_process_and_generate_map->start();
 
    if ( d_print_steps || d_print_edge_steps ) {

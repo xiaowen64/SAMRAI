@@ -157,20 +157,23 @@ public:
     *
     * This method uses communication to set up the map.
     *
-    * @param balanced_box_level Empty BoxLevel to populate with the
-    * contents of this TransitLoad.
+    * @param balanced_box_level [io] Empty BoxLevel to populate with
+    * the contents of this TransitLoad.
     *
-    * @param balanced_to_unalanced Empty Connector to populate with
-    * the balanced--->unbalanced edges.
+    * @param balanced_to_unalanced [io] Empty Connector to populate
+    * with the balanced--->unbalanced edges.
     *
-    * @param unbalanced_to_alanced Empty Connector to populate with
-    * the unbalanced--->balanced edges.
+    * @param unbalanced_to_alanced [io] Empty Connector to populate
+    * with the unbalanced--->balanced edges.
+    *
+    * @param [i] flexible_load_tol
     */
    virtual void
    assignContentToLocalProcessAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced ) = 0;
+      hier::MappingConnector &unbalanced_to_balanced,
+      double flexible_load_tol = 0.0 ) = 0;
 
 
    //@{
