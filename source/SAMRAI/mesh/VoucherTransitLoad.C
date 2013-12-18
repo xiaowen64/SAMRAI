@@ -52,7 +52,7 @@ VoucherTransitLoad::VoucherTransitLoad( const PartitioningParams &pparams ) :
    d_voucher_set(),
    d_sumload(0),
    d_pparams(&pparams),
-   d_partition_work_supply_recursively(false),
+   d_partition_work_supply_recursively(true),
    d_print_steps(false),
    d_print_edge_steps(false)
 {
@@ -313,14 +313,20 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    // 3. Supply work according to received demands.
 
    if ( d_partition_work_supply_recursively ) {
-      recursiveSendWorkSupply(
-         redemptions_to_fulfill.begin(),
-         redemptions_to_fulfill.end(),
-         reserve );
+      if ( !redemptions_to_fulfill.empty() ) {
+         recursiveSendWorkSupply(
+            redemptions_to_fulfill.begin(),
+            redemptions_to_fulfill.end(),
+            reserve );
 
-      reserve.generateLocalBasedMapEdges(
-         unbalanced_to_balanced,
-         balanced_to_unbalanced);
+         for ( std::map<int,VoucherRedemption>::const_iterator mi=redemptions_to_fulfill.begin();
+               mi!=redemptions_to_fulfill.end(); ++mi ) {
+            mi->second.d_box_shipment->putInBoxLevel(balanced_box_level);
+            mi->second.d_box_shipment->generateLocalBasedMapEdges(
+               unbalanced_to_balanced,
+               balanced_to_unbalanced);
+         }
+      }
    }
    else {
       for ( std::map<int,VoucherRedemption>::iterator mi=redemptions_to_fulfill.begin();
@@ -342,7 +348,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
                balanced_to_unbalanced);
          }
          else {
-            vr.fulfillLocalRedemption( reserve, *d_pparams );
+            vr.fulfillLocalRedemption( reserve, *d_pparams, false );
             vr.d_box_shipment->putInBoxLevel(balanced_box_level);
             vr.d_box_shipment->generateLocalBasedMapEdges(
                unbalanced_to_balanced,
@@ -430,7 +436,12 @@ void VoucherTransitLoad::recursiveSendWorkSupply(
    std::map<int,VoucherRedemption>::iterator right_begin = end; --right_begin;
 
    if ( right_begin == left_begin ) {
-      begin->second.sendWorkSupply( reserve, *d_pparams, true );
+      if ( begin->second.d_demander_rank != begin->second.d_mpi.getRank() ) {
+         begin->second.sendWorkSupply( reserve, *d_pparams, true );
+      }
+      else {
+         begin->second.fulfillLocalRedemption( reserve, *d_pparams, true );
+      }
 
       if ( d_print_edge_steps ) {
          tbox::plog << "VoucherTransitLoad::recursiveSendWorkSupply:"
@@ -642,16 +653,22 @@ void VoucherTransitLoad::VoucherRedemption::setLocalRedemption(
 */
 void VoucherTransitLoad::VoucherRedemption::fulfillLocalRedemption(
    BoxTransitSet &reserve,
-   const PartitioningParams &pparams )
+   const PartitioningParams &pparams,
+   bool all )
 {
    d_pparams = &pparams;
    d_box_shipment = boost::make_shared<BoxTransitSet>(*d_pparams);
    d_box_shipment->setAllowBoxBreaking( reserve.getAllowBoxBreaking() );
    d_box_shipment->setThresholdWidth( reserve.getThresholdWidth() );
-   d_box_shipment->adjustLoad( reserve,
-                               d_voucher.d_load,
-                               d_voucher.d_load,
-                               d_voucher.d_load );
+   if ( all ) {
+      d_box_shipment->swap(reserve);
+   }
+   else {
+      d_box_shipment->adjustLoad( reserve,
+                                  d_voucher.d_load,
+                                  d_voucher.d_load,
+                                  d_voucher.d_load );
+   }
    d_box_shipment->reassignOwnership( d_id_gen, d_demander_rank );
 }
 

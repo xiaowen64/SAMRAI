@@ -300,7 +300,8 @@ private:
 
       void fulfillLocalRedemption(
          BoxTransitSet &reserve,
-         const PartitioningParams &pparams );
+         const PartitioningParams &pparams,
+         bool all );
       //@}
 
       void takeWorkFromReserve(
