@@ -120,6 +120,7 @@ BoxTransitSet {
 
 
 VoucherTransitLoad {
+  DEV_partition_work_supply_recursively = TRUE
   DEV_print_steps = TRUE
   DEV_print_edge_steps = TRUE
 }
@@ -143,7 +144,7 @@ PatchHierarchy {
    /*
      Specify number of levels (1, 2 or 3 for this test).
    */
-   max_levels = 3
+   max_levels = 1
 
    largest_patch_size {
       level_0 = -1,-1

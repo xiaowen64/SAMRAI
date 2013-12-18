@@ -1014,9 +1014,14 @@ VoucherTransitLoad::getFromInput()
 
       boost::shared_ptr<tbox::Database> my_db = input_db->getDatabase("VoucherTransitLoad");
 
-      d_print_steps = my_db->getBoolWithDefault("DEV_print_steps", d_print_steps);
-      d_print_edge_steps =
-         my_db->getBoolWithDefault("DEV_print_edge_steps", d_print_edge_steps);
+      d_partition_work_supply_recursively = my_db->getBoolWithDefault(
+         "DEV_partition_work_supply_recursively", d_partition_work_supply_recursively);
+
+      d_print_steps = my_db->getBoolWithDefault(
+         "DEV_print_steps", d_print_steps);
+
+      d_print_edge_steps = my_db->getBoolWithDefault(
+         "DEV_print_edge_steps", d_print_edge_steps);
 
    }
 }
