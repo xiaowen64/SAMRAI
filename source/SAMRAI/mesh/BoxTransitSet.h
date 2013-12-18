@@ -158,6 +158,67 @@ public:
       const std::string &border=std::string(),
       int detail_depth=1 ) const;
 
+   /*!
+    * @brief Intermediary between BoxTransitSet and output streams,
+    * adding ability to control the output.  See
+    * BoxTransitSet::format().
+    */
+   class Outputter
+   {
+
+      //! @brief Insert a BoxTransitSet to the stream according to Outputter settings.
+      friend std::ostream&
+      operator << ( std::ostream& s,
+                    const Outputter& f)
+         {
+            f.d_boxes.recursivePrint(s, f.d_border, f.d_detail_depth);
+            return s;
+         }
+
+private:
+      friend class BoxTransitSet;
+      /*!
+       * @brief Construct the Outputter with a BoxTransitSet and the
+       * parameters needed to output the BoxTransitSet to a stream.
+       */
+      Outputter(
+         const BoxTransitSet& boxes,
+         const std::string& border,
+         int detail_depth = 2) :
+         d_boxes(boxes),
+         d_border(border),
+         d_detail_depth(detail_depth)
+         {}
+
+      void operator = (const Outputter& rhs); // Unimplemented private.
+      const BoxTransitSet& d_boxes;
+      const std::string d_border;
+      const int d_detail_depth;
+   };
+
+   /*!
+    * @brief Return a object to that can format the BoxTransitSet for
+    * inserting into output streams.
+    *
+    * Usage example (printing with a tab indentation):
+    * @verbatim
+    *    cout << "my boxes:\n" << boxes.format("\t") << endl;
+    * @endverbatim
+    *
+    * @param[in] border Left border of the output
+    *
+    * @param[in] detail_depth How much detail to print.
+    */
+   Outputter
+   format(
+      const std::string& border = std::string(),
+      int detail_depth = 2) const
+      {
+         return Outputter(*this, border, detail_depth);
+      }
+
+   //@}
+
 
 private:
 

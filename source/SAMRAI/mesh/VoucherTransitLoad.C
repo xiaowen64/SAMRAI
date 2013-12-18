@@ -269,8 +269,8 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    reserve.insertAll( unbalanced_box_level.getBoxes() );
    if ( d_print_edge_steps ) {
       tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
-                 << " reserve before redemption steps: ";
-      reserve.recursivePrint();
+                 << " reserve before redemption steps: "
+                 << reserve.format();
       tbox::plog << std::endl;
    }
 
@@ -338,9 +338,9 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
             if ( d_print_edge_steps ) {
                tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
                           << " sent supply to " << mi->first << " for voucher "
-                          << vr.d_voucher << ": ";
-               vr.d_box_shipment->recursivePrint();
-               tbox::plog << std::endl;
+                          << vr.d_voucher << ": "
+                          << vr.d_box_shipment->format()
+                          << std::endl;
             }
 
             vr.d_box_shipment->generateLocalBasedMapEdges(
@@ -365,9 +365,9 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
 
    if ( d_print_edge_steps ) {
       tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
-                 << " reserve after sending work supplies: ";
-      reserve.recursivePrint();
-      tbox::plog << std::endl;
+                 << " reserve after sending work supplies: "
+                 << reserve.format()
+                 << std::endl;
    }
 
 
@@ -399,9 +399,8 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
       if ( d_print_edge_steps ) {
          tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
                     << " received supply from rank " << source << " for " << vr.d_voucher
-                    << ": ";
-         vr.d_box_shipment->recursivePrint();
-         tbox::plog << std::endl;
+                    << ": " << vr.d_box_shipment->format()
+                    << std::endl;
       }
 
       redemptions_to_request.erase(source);
@@ -446,8 +445,8 @@ void VoucherTransitLoad::recursiveSendWorkSupply(
       if ( d_print_edge_steps ) {
          tbox::plog << "VoucherTransitLoad::recursiveSendWorkSupply:"
                     << " sent supply to " << begin->first << " for voucher "
-                    << begin->second.d_voucher << ": ";
-         begin->second.d_box_shipment->recursivePrint();
+                    << begin->second.d_voucher << ": "
+                    << begin->second.d_box_shipment->format();
          tbox::plog << std::endl;
       }
 
