@@ -20,7 +20,7 @@ Main {
 
    write_visit = TRUE
 
-   log_all_nodes = FALSE
+   log_all_nodes = TRUE
 
    domain_boxes = [(0,0),(47,47)]
    xlo = 0.0, 0.0
@@ -111,10 +111,17 @@ TreeLoadBalancer {
 
 
 BoxTransitSet {
+  DEV_print_steps = FALSE
   DEV_print_pop_steps = FALSE
   DEV_print_swap_steps = FALSE
   DEV_print_break_steps = FALSE
   DEV_print_edge_steps = FALSE
+}
+
+
+VoucherTransitLoad {
+  DEV_print_steps = TRUE
+  DEV_print_edge_steps = TRUE
 }
 
 

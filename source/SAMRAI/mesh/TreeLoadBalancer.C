@@ -643,7 +643,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       t_post_load_distribution_barrier->stop();
 
       if ( d_print_steps ) {
-         tbox::plog << "TreeLaodBalancer::loadBalanceWithinRankGroup constructing unbalanced<==>balanced.\n";
+         tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup constructing unbalanced<==>balanced.\n";
       }
       balanced_work->assignContentToLocalProcessAndPopulateMaps(
          balanced_box_level,

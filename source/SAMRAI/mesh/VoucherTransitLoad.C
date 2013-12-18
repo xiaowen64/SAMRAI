@@ -14,6 +14,7 @@
 #include "SAMRAI/mesh/VoucherTransitLoad.h"
 #include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/mesh/BoxTransitSet.h"
+#include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -51,9 +52,11 @@ VoucherTransitLoad::VoucherTransitLoad( const PartitioningParams &pparams ) :
    d_voucher_set(),
    d_sumload(0),
    d_pparams(&pparams),
+   d_partition_work_supply_recursively(true),
    d_print_steps(false),
    d_print_edge_steps(false)
 {
+   getFromInput();
    setTimerPrefix(s_default_timer_prefix);
 }
 
@@ -236,19 +239,25 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    // 1. Send work demands for vouchers we want to redeem.
 
    std::map<int,VoucherRedemption> redemptions_to_request;
+   std::map<int,VoucherRedemption> redemptions_to_fulfill;
 
    hier::LocalId local_id_offset = unbalanced_box_level.getLastLocalId();
    const hier::LocalId local_id_inc(d_voucher_set.size());
 
    for ( const_iterator si=d_voucher_set.begin(); si!=d_voucher_set.end(); ++si ) {
+      hier::SequentialLocalIdGenerator id_gen( ++local_id_offset, local_id_inc );
       if ( si->d_issuer_rank != mpi.getRank() ) {
-         hier::SequentialLocalIdGenerator id_gen( ++local_id_offset, local_id_inc );
          if ( d_print_edge_steps ) {
             tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
                        << " sending demand for voucher " << *si << '.'
                        << std::endl;
          }
          redemptions_to_request[si->d_issuer_rank].sendWorkDemand(
+            si, *this, id_gen, mpi );
+      }
+      else {
+         // Locally fulfilled.  Place in redemptions_to_fulfill for processing.
+         redemptions_to_fulfill[mpi.getRank()].setLocalRedemption(
             si, *this, id_gen, mpi );
       }
    }
@@ -275,7 +284,6 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
     * received, because that leads to non-deterministic results.
     */
 
-   std::map<int,VoucherRedemption> redemptions_to_fulfill;
 
    while ( unaccounted_work > d_pparams->getLoadComparisonTol() ) {
 
@@ -304,22 +312,55 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
 
    // 3. Supply work according to received demands.
 
-   for ( std::map<int,VoucherRedemption>::iterator mi=redemptions_to_fulfill.begin();
-         mi!=redemptions_to_fulfill.end(); ++mi ) {
+   if ( d_partition_work_supply_recursively ) {
+      if ( !redemptions_to_fulfill.empty() ) {
+         recursiveSendWorkSupply(
+            redemptions_to_fulfill.begin(),
+            redemptions_to_fulfill.end(),
+            reserve );
 
-      VoucherRedemption &vr = mi->second;
-      vr.sendWorkSupply( reserve, *d_pparams );
-      if ( d_print_edge_steps ) {
-         tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
-                    << " sent supply to " << mi->first << " for voucher "
-                    << vr.d_voucher << ": ";
-         vr.d_box_shipment->recursivePrint();
-         tbox::plog << std::endl;
+         for ( std::map<int,VoucherRedemption>::const_iterator mi=redemptions_to_fulfill.begin();
+               mi!=redemptions_to_fulfill.end(); ++mi ) {
+            mi->second.d_box_shipment->putInBoxLevel(balanced_box_level);
+            mi->second.d_box_shipment->generateLocalBasedMapEdges(
+               unbalanced_to_balanced,
+               balanced_to_unbalanced);
+         }
+      }
+   }
+   else {
+      for ( std::map<int,VoucherRedemption>::iterator mi=redemptions_to_fulfill.begin();
+            mi!=redemptions_to_fulfill.end(); ++mi ) {
+
+         VoucherRedemption &vr = mi->second;
+         if ( vr.d_demander_rank != mpi.getRank() ) {
+            vr.sendWorkSupply( reserve, *d_pparams, false );
+            if ( d_print_edge_steps ) {
+               tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
+                          << " sent supply to " << mi->first << " for voucher "
+                          << vr.d_voucher << ": ";
+               vr.d_box_shipment->recursivePrint();
+               tbox::plog << std::endl;
+            }
+
+            vr.d_box_shipment->generateLocalBasedMapEdges(
+               unbalanced_to_balanced,
+               balanced_to_unbalanced);
+         }
+         else {
+            vr.fulfillLocalRedemption( reserve, *d_pparams, false );
+            vr.d_box_shipment->putInBoxLevel(balanced_box_level);
+            vr.d_box_shipment->generateLocalBasedMapEdges(
+               unbalanced_to_balanced,
+               balanced_to_unbalanced);
+         }
       }
 
-      vr.d_box_shipment->generateLocalBasedMapEdges(
-         unbalanced_to_balanced,
-         balanced_to_unbalanced);
+      // Anything left in reserve is kept locally.
+      hier::SequentialLocalIdGenerator id_gen( unbalanced_box_level.getLastLocalId(), local_id_inc );
+      reserve.reassignOwnership(
+         id_gen,
+         balanced_box_level.getMPI().getRank() );
    }
 
    if ( d_print_edge_steps ) {
@@ -329,12 +370,6 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
       tbox::plog << std::endl;
    }
 
-
-   // Anything left in reserve is kept locally.
-   hier::SequentialLocalIdGenerator id_gen( unbalanced_box_level.getLastLocalId(), local_id_inc );
-   reserve.reassignOwnership(
-      id_gen,
-      balanced_box_level.getMPI().getRank() );
 
    reserve.putInBoxLevel(balanced_box_level);
    reserve.generateLocalBasedMapEdges(
@@ -384,6 +419,72 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
 
 /*
 *************************************************************************
+* Alternative option to recursively partition work supply.
+* This version tries to avoid cutting small amounts out of big
+* boxes, which unavoidable generates slivers.
+*************************************************************************
+*/
+void VoucherTransitLoad::recursiveSendWorkSupply(
+   const std::map<int,VoucherRedemption>::iterator &begin,
+   const std::map<int,VoucherRedemption>::iterator &end,
+   BoxTransitSet &reserve )
+{
+   std::map<int,VoucherRedemption>::iterator left_begin = begin;
+   std::map<int,VoucherRedemption>::iterator left_end = begin; ++left_end;
+
+   std::map<int,VoucherRedemption>::iterator right_end = end;
+   std::map<int,VoucherRedemption>::iterator right_begin = end; --right_begin;
+
+   if ( right_begin == left_begin ) {
+      if ( begin->second.d_demander_rank != begin->second.d_mpi.getRank() ) {
+         begin->second.sendWorkSupply( reserve, *d_pparams, true );
+      }
+      else {
+         begin->second.fulfillLocalRedemption( reserve, *d_pparams, true );
+      }
+
+      if ( d_print_edge_steps ) {
+         tbox::plog << "VoucherTransitLoad::recursiveSendWorkSupply:"
+                    << " sent supply to " << begin->first << " for voucher "
+                    << begin->second.d_voucher << ": ";
+         begin->second.d_box_shipment->recursivePrint();
+         tbox::plog << std::endl;
+      }
+
+   }
+
+   else {
+
+      double left_load = left_begin->second.d_voucher.d_load;
+      double right_load = right_begin->second.d_voucher.d_load;
+
+      // Find midpoint, where left side ends and right side begins.
+      while ( left_end != right_begin ) {
+         left_load += left_end->second.d_voucher.d_load;
+         ++left_end;
+         if ( left_end != right_begin ) {
+            --right_begin;
+            right_load += right_begin->second.d_voucher.d_load;
+         }
+      }
+
+      BoxTransitSet right_reserve(*d_pparams);
+      right_reserve.adjustLoad( reserve, right_load, right_load, right_load );
+
+      recursiveSendWorkSupply( left_begin, left_end, reserve );
+      recursiveSendWorkSupply( right_begin, right_end, right_reserve );
+
+      reserve.insertAll(right_reserve);
+
+   }
+
+   return;
+}
+
+
+
+/*
+*************************************************************************
 * Send a demand for work to the voucher issuer, starting the voucher
 * redemption sequence of steps.
 *************************************************************************
@@ -395,6 +496,7 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkDemand(
    const tbox::SAMRAI_MPI &mpi )
 {
    d_voucher = *voucher;
+   d_demander_rank = mpi.getRank();
    d_demander_voucher_count = all_vouchers.size();
    d_demander_voucher_load = all_vouchers.getSumLoad();
    d_id_gen = id_gen;
@@ -461,11 +563,22 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkDemand(
 */
 void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
    BoxTransitSet &reserve,
-   const PartitioningParams &pparams )
+   const PartitioningParams &pparams,
+   bool send_all )
 {
    d_pparams = &pparams;
    d_box_shipment = boost::make_shared<BoxTransitSet>(pparams);
-   takeWorkFromReserve( *d_box_shipment, reserve );
+   d_box_shipment->setAllowBoxBreaking( reserve.getAllowBoxBreaking() );
+   d_box_shipment->setThresholdWidth( reserve.getThresholdWidth() );
+   if ( send_all ) {
+      d_box_shipment->swap(reserve);
+   } else {
+      d_box_shipment->adjustLoad( reserve,
+                                  d_voucher.d_load,
+                                  d_voucher.d_load,
+                                  d_voucher.d_load );
+   }
+   d_box_shipment->reassignOwnership( d_id_gen, d_demander_rank );
 
    d_msg = boost::make_shared<tbox::MessageStream>();
    d_box_shipment->putToMessageStream(*d_msg);
@@ -508,6 +621,55 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkSupply(
    d_box_shipment = boost::make_shared<BoxTransitSet>(pparams);
    d_box_shipment->getFromMessageStream(*d_msg);
    d_msg.reset();
+}
+
+
+
+/*
+*************************************************************************
+* Set a demand for a local redemption.
+*************************************************************************
+*/
+void VoucherTransitLoad::VoucherRedemption::setLocalRedemption(
+   const VoucherTransitLoad::const_iterator &voucher,
+   const VoucherTransitLoad &all_vouchers,
+   const hier::SequentialLocalIdGenerator &id_gen,
+   const tbox::SAMRAI_MPI &mpi )
+{
+   d_voucher = *voucher;
+   d_demander_rank = mpi.getRank();
+   d_demander_voucher_count = all_vouchers.size();
+   d_demander_voucher_load = all_vouchers.getSumLoad();
+   d_id_gen = id_gen;
+   d_mpi = mpi;
+}
+
+
+
+/*
+*************************************************************************
+* Supply work to fulfill local redemption.
+*************************************************************************
+*/
+void VoucherTransitLoad::VoucherRedemption::fulfillLocalRedemption(
+   BoxTransitSet &reserve,
+   const PartitioningParams &pparams,
+   bool all )
+{
+   d_pparams = &pparams;
+   d_box_shipment = boost::make_shared<BoxTransitSet>(*d_pparams);
+   d_box_shipment->setAllowBoxBreaking( reserve.getAllowBoxBreaking() );
+   d_box_shipment->setThresholdWidth( reserve.getThresholdWidth() );
+   if ( all ) {
+      d_box_shipment->swap(reserve);
+   }
+   else {
+      d_box_shipment->adjustLoad( reserve,
+                                  d_voucher.d_load,
+                                  d_voucher.d_load,
+                                  d_voucher.d_load );
+   }
+   d_box_shipment->reassignOwnership( d_id_gen, d_demander_rank );
 }
 
 
@@ -832,6 +994,32 @@ VoucherTransitLoad::recursivePrint(
       co << ".\n";
    }
    co.flush();
+}
+
+
+
+/*
+*************************************************************************
+* Look for an input database called "VoucherTransitLoad" and read
+* parameters if it exists.
+*************************************************************************
+*/
+void
+VoucherTransitLoad::getFromInput()
+{
+   if ( !tbox::InputManager::inputDatabaseExists() ) return;
+
+   boost::shared_ptr<tbox::Database> input_db = tbox::InputManager::getInputDatabase();
+
+   if ( input_db->isDatabase("VoucherTransitLoad") ) {
+
+      boost::shared_ptr<tbox::Database> my_db = input_db->getDatabase("VoucherTransitLoad");
+
+      d_print_steps = my_db->getBoolWithDefault("DEV_print_steps", d_print_steps);
+      d_print_edge_steps =
+         my_db->getBoolWithDefault("DEV_print_edge_steps", d_print_edge_steps);
+
+   }
 }
 
 

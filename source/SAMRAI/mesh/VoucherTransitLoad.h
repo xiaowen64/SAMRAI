@@ -285,11 +285,23 @@ private:
 
       void sendWorkSupply(
          BoxTransitSet &reserve,
-         const PartitioningParams &pparams );
+         const PartitioningParams &pparams,
+         bool send_all );
 
       void recvWorkSupply(
          int message_length,
          const PartitioningParams &pparams );
+
+      void setLocalRedemption(
+         const VoucherTransitLoad::const_iterator &voucher,
+         const VoucherTransitLoad &all_vouchers,
+         const hier::SequentialLocalIdGenerator &id_gen,
+         const tbox::SAMRAI_MPI &mpi );
+
+      void fulfillLocalRedemption(
+         BoxTransitSet &reserve,
+         const PartitioningParams &pparams,
+         bool all );
       //@}
 
       void takeWorkFromReserve(
@@ -379,6 +391,19 @@ private:
 
 
    /*!
+    * @brief Assign a reserve to a set of VoucherRedemption.
+    *
+    * Alternative option to recursively partition work supply.
+    *
+    * On return, work assignments will be reflected in reserve.
+    */
+   void recursiveSendWorkSupply(
+   const std::map<int,VoucherRedemption>::iterator &begin,
+   const std::map<int,VoucherRedemption>::iterator &end,
+   BoxTransitSet &reserve );
+
+
+   /*!
     * @brief Re-cast a TransitLoad object to a VoucherTransitLoad.
     */
    const VoucherTransitLoad &recastTransitLoad( const TransitLoad &transit_load ) {
@@ -413,6 +438,14 @@ private:
 
 
    /*!
+    * @brief Look for an input database called "VoucherTransitLoad"
+    * and read parameters if it exists.
+    */
+   void
+   getFromInput();
+
+
+   /*!
     * @brief Set up things for the entire class.
     *
     * Only called by StartupShutdownManager.
@@ -440,6 +473,7 @@ private:
 
    const PartitioningParams *d_pparams;
 
+   bool d_partition_work_supply_recursively;
 
    //@{
    //! @name Debugging stuff.

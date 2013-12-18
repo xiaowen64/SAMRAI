@@ -62,6 +62,7 @@ BoxTransitSet::BoxTransitSet( const PartitioningParams &pparams ) :
    d_print_edge_steps(false),
    d_object_timers(0)
 {
+   TBOX_ASSERT( &pparams != 0 );
    getFromInput();
    setTimerPrefix(s_default_timer_prefix);
    d_box_breaker.setPrintBreakSteps(d_print_break_steps);
@@ -463,8 +464,8 @@ BoxTransitSet::reassignOwnership(
 
 /*
 *************************************************************************
-* Put all d_box into a BoxLevel.
-* Each d_box must have a valid BoxId and owned by the local process.
+* Put all local d_box into a BoxLevel.
+* Each d_box must have a valid BoxId.
 *************************************************************************
 */
 void
@@ -472,9 +473,10 @@ BoxTransitSet::putInBoxLevel(
    hier::BoxLevel &box_level ) const
 {
    for (iterator ni = begin(); ni != end(); ++ni ) {
-      TBOX_ASSERT( ni->d_box.getOwnerRank() == box_level.getMPI().getRank() );
       TBOX_ASSERT( ni->d_box.getBoxId().isValid() );
-      box_level.addBox(ni->d_box);
+      if ( ni->d_box.getOwnerRank() == box_level.getMPI().getRank() ) {
+         box_level.addBox(ni->d_box);
+      }
    }
    return;
 }
@@ -564,7 +566,7 @@ BoxTransitSet::adjustLoad(
    BoxTransitSet& hold_bin(recastTransitLoad(transit_load_hold_bin));
 
    if (d_print_steps) {
-      tbox::plog << "  adjustLoad attempting to bring main load from "
+      tbox::plog << "  BoxTransitSet::adjustLoad attempting to bring main load from "
                  << main_bin.getSumLoad() << " to " << ideal_load
                  << " or within [" << low_load << ", " << high_load << "]."
                  << std::endl;
