@@ -1145,7 +1145,7 @@ int BalanceBoxBreaker::TrialBreak::improvesOver(
       improves = -1;
    }
 
-   return improves;
+   return improves == 1;
 }
 
 
