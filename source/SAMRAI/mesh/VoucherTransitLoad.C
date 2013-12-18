@@ -479,7 +479,22 @@ void VoucherTransitLoad::recursiveSendWorkSupply(
       lower_lim = tbox::MathUtilities<double>::Max(
          lower_lim, left_load - right_load*d_flexible_load_tol );
 
+      if ( d_print_edge_steps ) {
+         tbox::plog << "VoucherTransitLoad::recursiveSendWorkSupply: splitting reserve:"
+                    << reserve.format()
+                    << "to get left_load of " << left_load << " [" << lower_lim << ',' << upper_lim << ']'
+                    << "left_reserve is now: " << left_reserve.format()
+                    << std::endl;
+      }
+
       left_reserve.adjustLoad( reserve, left_load, lower_lim, upper_lim );
+
+      if ( d_print_edge_steps ) {
+         tbox::plog << "VoucherTransitLoad::recursiveSendWorkSupply split reserve into left: "
+                    << left_reserve.format()
+                    << "and right: " << reserve.format()
+                    << std::endl;
+      }
 
       recursiveSendWorkSupply( left_begin, left_end, left_reserve );
       recursiveSendWorkSupply( right_begin, right_end, reserve );
