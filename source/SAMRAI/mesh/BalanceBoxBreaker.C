@@ -178,23 +178,15 @@ BalanceBoxBreaker::breakOffLoad(
          }
          tbox::plog << "\n        imbalance: "
                     << (planar_trial.d_breakoff_load - ideal_load_to_break)
-                    << std::endl;
-      }
-
-      if (d_print_break_steps) {
-         tbox::plog << " planar_trial.d_balance_penalty: " << planar_trial.d_balance_penalty
-                    << " planar_trial.d_width_score: " << planar_trial.d_width_score
-                    << std::endl;
-         tbox::plog << "      planar_trial.d_flags:"
-                    << "  " << planar_trial.d_flags[0]
-                    << "  " << planar_trial.d_flags[1]
-                    << "  " << planar_trial.d_flags[2]
-                    << "  " << planar_trial.d_flags[3]
+                    << planar_trial
                     << std::endl;
       }
 
       if ( planar_trial.improvesOver(best_trial) ) {
          best_trial.swap(planar_trial);
+         if ( d_print_break_steps ) {
+            tbox::plog << " breakOffLoad: chose the above trial break" << std::endl;
+         }
       }
 
    } else {
@@ -247,23 +239,15 @@ BalanceBoxBreaker::breakOffLoad(
          }
          tbox::plog << "\n        imbalance: "
                     << (cubic_trial.d_breakoff_load - ideal_load_to_break)
-                    << std::endl;
-      }
-
-      if (d_print_break_steps) {
-         tbox::plog << " cubic_trial.d_balance_penalty: " << cubic_trial.d_balance_penalty
-                    << " cubic_trial.d_width_score: " << cubic_trial.d_width_score
-                    << std::endl;
-         tbox::plog << "      Break evaluation:"
-                    << "  " << cubic_trial.d_flags[0]
-                    << "  " << cubic_trial.d_flags[1]
-                    << "  " << cubic_trial.d_flags[2]
-                    << "  " << cubic_trial.d_flags[3]
+                    << cubic_trial
                     << std::endl;
       }
 
       if ( cubic_trial.improvesOver(best_trial) ) {
          best_trial.swap(cubic_trial);
+         if ( d_print_break_steps ) {
+            tbox::plog << " breakOffLoad: chose the above trial break" << std::endl;
+         }
       }
 
    } else {

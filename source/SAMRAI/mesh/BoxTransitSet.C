@@ -841,24 +841,16 @@ BoxTransitSet::adjustLoadByBreaking(
             break_acceptance_flags, breakoff_amt, trial_breakoff_amt,
             ideal_transfer, low_transfer, high_transfer, *d_pparams );
          if (d_print_break_steps) {
-            tbox::plog << "      Break evaluation:"
+            tbox::plog << "    adjustLoadByBreaking sees potential to replace "
+                       << candidate << " with "
+                       << trial_breakoff.size() << " breakoff Boxes and "
+                       << trial_leftover.size() << " leftover Boxes."
+                       << "  break amount = " << trial_breakoff_amt
+                       << "\n    Break evaluation:"
                        << "  " << break_acceptance_flags[0]
                        << "  " << break_acceptance_flags[1]
                        << "  " << break_acceptance_flags[2]
                        << "  " << break_acceptance_flags[3]
-                       << std::endl;
-         }
-
-         if (d_print_break_steps) {
-            tbox::plog << "    Potential to replace " << candidate << " with "
-                       << trial_breakoff.size() << " breakoff Boxes and "
-                       << trial_leftover.size() << " leftover Boxes."
-                       << "  break amount = " << trial_breakoff_amt
-                       << "  in-range imp = " << break_acceptance_flags[0]
-                       << "  balance imp = " << break_acceptance_flags[1]
-                       << "  overal imp = " << break_acceptance_flags[2]
-                       << "  in range = " << break_acceptance_flags[3]
-                       << "  accept_break = " << accept_break
                        << std::endl;
          }
 
