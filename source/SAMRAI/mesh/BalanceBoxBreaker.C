@@ -707,8 +707,7 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
          growable[d] = corner_box_size[d] < box_dims[d];
       }
 
-      while ( ( best_breakoff_load < trial.d_low_load || best_breakoff_load > trial.d_high_load ) &&
-              corner_box_load >= trial.d_ideal_load ) {
+      while ( corner_box_load < trial.d_ideal_load ) {
          /*
           * The while loop gradually increases corner_box to bring
           * its size closer to trial.d_ideal_load.  Stop loop when
