@@ -20,7 +20,7 @@ Main {
 
    write_visit = TRUE
 
-   log_all_nodes = TRUE
+   log_all_nodes = FALSE
 
    domain_boxes = [(0,0),(47,47)]
    xlo = 0.0, 0.0
@@ -144,7 +144,7 @@ PatchHierarchy {
    /*
      Specify number of levels (1, 2 or 3 for this test).
    */
-   max_levels = 1
+   max_levels = 3
 
    largest_patch_size {
       level_0 = -1,-1
