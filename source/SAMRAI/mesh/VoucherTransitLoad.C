@@ -467,13 +467,13 @@ void VoucherTransitLoad::recursiveSendWorkSupply(
          }
       }
 
-      BoxTransitSet right_reserve(*d_pparams);
-      right_reserve.adjustLoad( reserve, right_load, right_load, right_load );
+      BoxTransitSet left_reserve(*d_pparams);
+      left_reserve.adjustLoad( reserve, right_load, right_load, right_load );
 
-      recursiveSendWorkSupply( left_begin, left_end, reserve );
-      recursiveSendWorkSupply( right_begin, right_end, right_reserve );
+      recursiveSendWorkSupply( left_begin, left_end, left_reserve );
+      recursiveSendWorkSupply( right_begin, right_end, reserve );
 
-      reserve.insertAll(right_reserve);
+      reserve.insertAll(left_reserve);
 
    }
 
