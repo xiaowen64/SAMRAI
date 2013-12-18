@@ -690,7 +690,7 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
                        << ", best_breakoff_load = " << best_breakoff_load
                        << std::endl;
          }
-         if ( best_breakoff_load >= trial.d_low_load && trial.d_breakoff_load <= trial.d_high_load ) {
+         if ( best_breakoff_load >= trial.d_ideal_load ) {
             break;
          }
       }
@@ -708,7 +708,7 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
       }
 
       while ( ( best_breakoff_load < trial.d_low_load || best_breakoff_load > trial.d_high_load ) &&
-              corner_box_load < trial.d_ideal_load ) {
+              corner_box_load >= trial.d_ideal_load ) {
          /*
           * The while loop gradually increases corner_box to bring
           * its size closer to trial.d_ideal_load.  Stop loop when
@@ -764,9 +764,6 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
             best_breakoff_box = corner_box;
             best_breakoff_size = corner_box_size;
             best_breakoff_load = corner_box_load;
-            if ( best_breakoff_load >= trial.d_low_load && best_breakoff_load <= trial.d_high_load ) {
-               break;
-            }
          }
 
       } // while loop
