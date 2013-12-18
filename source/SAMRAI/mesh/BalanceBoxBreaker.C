@@ -698,9 +698,8 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
 
 
       /*
-       * stop_growing: whether corner_box_size is already
-       * big engough so that it cannot not be grown without breaking
-       * off too much.
+       * growable: whether corner_box_size can be grown without
+       * breaking off too much.
        */
       hier::IntVector growable(dim, 1);
       for (int d = 0; d < dim.getValue(); ++d) {
@@ -1199,7 +1198,8 @@ std::ostream &operator << (
       << "  " << tb.d_flags[0]
       << "  " << tb.d_flags[1]
       << "  " << tb.d_flags[2]
-      << "  " << tb.d_flags[3];
+      << "  " << tb.d_flags[3]
+      << std::endl;
    return co;
 }
 
