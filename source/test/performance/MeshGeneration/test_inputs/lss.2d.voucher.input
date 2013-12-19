@@ -25,14 +25,14 @@ Main {
 
    // Domain definition: box, lower and upper corners.
    domain_boxes = [(0,0),(47,47)]
-   x_lo = 0.0, 0.0
-   x_up = 1.0, 1.0
+   xlo = 0.0, 0.0
+   xhi = 1.0, 1.0
 
    // Whether to enforce nesting (one value for each level, but first value is ignored).
    enforce_nesting = TRUE, TRUE, TRUE
 
    // Scale the domain size by number of processes divided by this value.
-   autoscale_base_nprocs = 1
+   autoscale_base_nprocs = 4
 
    // Box generator types: BergerRigoutsos or TileClustering
    box_generator_type = "BergerRigoutsos"

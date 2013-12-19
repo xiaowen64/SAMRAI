@@ -20,7 +20,7 @@ Main {
 
    write_visit = TRUE
 
-   log_all_nodes = TRUE
+   log_all_nodes = FALSE
 
    domain_boxes = [(0,0,0),(10,10,10)]
    xlo = 0.0, 0.0, 0.0
@@ -32,7 +32,7 @@ Main {
 
    box_generator_type = "TileClustering"
 
-   load_balancer_type = "ChopAndPackLoadBalancer", "TilePartitioner"
+   load_balancer_type = "TreeLoadBalancer", "TilePartitioner"
 
    load_balance = TRUE, TRUE, TRUE
 
@@ -41,6 +41,7 @@ Main {
    mesh_generator_name = "SphericalShellGenerator"
 
    SphericalShellGenerator {
+
       radii = 0.0, 0.35,    0.70, 0.75,    1.15, 1.17
 
       buffer_distance_0 = 0.04, 0.04, 0.04
@@ -85,6 +86,7 @@ TilePartitioner {
 
   TreeLoadBalancer {
     flexible_load_tolerance = 0.03
+    DEV_voucher_mode = FALSE
     DEV_allow_box_breaking = TRUE
     // Debugging options
     DEV_check_map = FALSE
@@ -100,6 +102,7 @@ TilePartitioner {
 
 TreeLoadBalancer {
   flexible_load_tolerance = 0.03
+  DEV_voucher_mode = FALSE
   DEV_report_load_balance = TRUE // Reported in main
   DEV_balance_penalty_wt = 1.0
   DEV_surface_penalty_wt = 1.0
@@ -127,9 +130,7 @@ TimerManager {
 
 PatchHierarchy {
 
-   /*
-     Specify number of levels (1, 2 or 3 for this test).
-   */
+   // Specify number of levels (1, 2 or 3 for this test).
    max_levels = 3
 
    largest_patch_size {

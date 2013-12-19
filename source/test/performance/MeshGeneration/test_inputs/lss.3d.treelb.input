@@ -65,8 +65,9 @@ Main {
 
 // Used if box_generator_type is TileClustering.  Refer to mesh::TileClustering for input.
 TileClustering {
-  coalesce_boxes = TRUE
   box_size = 4, 4, 4
+  allow_remote_tile_extent = TRUE
+  coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
   DEV_print_steps = FALSE
@@ -100,6 +101,7 @@ TilePartitioner {
 
   TreeLoadBalancer {
     flexible_load_tolerance = 0.03
+    DEV_voucher_mode = FALSE
     DEV_allow_box_breaking = TRUE
     // Debugging options
     DEV_check_map = FALSE
@@ -116,6 +118,7 @@ TilePartitioner {
 // Used if load_balancer_type is TreeLoadBalancer.  Refer to mesh::TreeLoadBalancer for input.
 TreeLoadBalancer {
   flexible_load_tolerance = 0.03
+  DEV_voucher_mode = FALSE
   DEV_report_load_balance = TRUE // Reported in main
   DEV_balance_penalty_wt = 1.0
   DEV_surface_penalty_wt = 1.0
