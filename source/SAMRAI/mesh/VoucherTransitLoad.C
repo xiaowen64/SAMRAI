@@ -257,7 +257,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
                        << std::endl;
          }
          redemptions_to_request[si->d_issuer_rank].sendWorkDemand(
-            si, *this, id_gen, mpi );
+            si, id_gen, mpi );
       }
       else {
          // Locally fulfilled.  Place in redemptions_to_fulfill for processing.
@@ -514,20 +514,16 @@ void VoucherTransitLoad::recursiveSendWorkSupply(
 */
 void VoucherTransitLoad::VoucherRedemption::sendWorkDemand(
    const VoucherTransitLoad::const_iterator &voucher,
-   const VoucherTransitLoad &all_vouchers,
    const hier::SequentialLocalIdGenerator &id_gen,
    const tbox::SAMRAI_MPI &mpi )
 {
    d_voucher = *voucher;
    d_demander_rank = mpi.getRank();
-   d_demander_voucher_count = all_vouchers.size();
-   d_demander_voucher_load = all_vouchers.getSumLoad();
    d_id_gen = id_gen;
    d_mpi = mpi;
 
    d_msg = boost::make_shared<tbox::MessageStream>();
-   (*d_msg) << d_id_gen << d_voucher
-            << d_demander_voucher_count << d_demander_voucher_load;
+   (*d_msg) << d_id_gen << d_voucher;
 
    d_mpi.Isend(
       (void*)(d_msg->getBufferStart()),
@@ -567,8 +563,7 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkDemand(
    d_msg = boost::make_shared<tbox::MessageStream>(
       message_length, tbox::MessageStream::Read,
       static_cast<void*>(&incoming_message[0]), false);
-   (*d_msg) >> d_id_gen >> d_voucher
-            >> d_demander_voucher_count >> d_demander_voucher_load;
+   (*d_msg) >> d_id_gen >> d_voucher;
    TBOX_ASSERT( d_msg->endOfData() );
    TBOX_ASSERT( d_voucher.d_issuer_rank == mpi.getRank() );
 
@@ -667,8 +662,6 @@ void VoucherTransitLoad::VoucherRedemption::setLocalRedemption(
 {
    d_voucher = *voucher;
    d_demander_rank = mpi.getRank();
-   d_demander_voucher_count = all_vouchers.size();
-   d_demander_voucher_load = all_vouchers.getSumLoad();
    d_id_gen = id_gen;
    d_mpi = mpi;
 }

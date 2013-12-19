@@ -275,7 +275,6 @@ private:
       //! @name Demanding and supplying work based on a voucher.
       void sendWorkDemand(
          const VoucherTransitLoad::const_iterator &voucher,
-         const VoucherTransitLoad &all_vouchers,
          const hier::SequentialLocalIdGenerator &id_gen,
          const tbox::SAMRAI_MPI &mpi );
 
@@ -314,10 +313,6 @@ private:
 
       Voucher d_voucher;
       int d_demander_rank;
-      //! @brief Number vouchers demander is trying to redeem.
-      size_t d_demander_voucher_count;
-      //! @brief Amount of load demander is trying to redeem.
-      double d_demander_voucher_load;
       //! @brief Demander-specified LocalId generator to avoid ID clashes.
       hier::SequentialLocalIdGenerator d_id_gen;
       //! @brief Shipment of work, as boxes, sent or received.
