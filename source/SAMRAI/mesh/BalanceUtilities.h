@@ -15,6 +15,7 @@
 
 #include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/Connector.h"
+#include "SAMRAI/hier/MappingConnector.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/math/PatchCellDataNormOpsReal.h"
@@ -297,6 +298,58 @@ struct BalanceUtilities {
       const boost::shared_ptr<hier::Patch>& patch,
       int wrk_indx,
       const hier::Box& box);
+
+   /*!
+    * @brief Find small boxes in a post-balance BoxLevel that are not
+    * in a pre-balance BoxLevel.
+    *
+    * @param co Stream to report findings
+    *
+    * @param border Left border in report output
+    *
+    * @param [i] post_to_pre
+    *
+    * @param [i] min_width Report post-balance boxes smaller than
+    * min_width in any direction.
+    *
+    * @param [i] min_vol Report post-balance boxes with fewer cells
+    * than this.
+    */
+   static void findSmallBoxesInPostbalance(
+      std::ostream &co,
+      const std::string &border,
+      const hier::MappingConnector &post_to_pre,
+      const hier::IntVector &min_width,
+      size_t min_vol );
+
+   /*!
+    * @brief Find small boxes in a post-balance BoxLevel that are not
+    * in a pre-balance BoxLevel.
+    *
+    * This method does not scale.  It acquires and processes
+    * globalized data.
+    *
+    * @param co Stream to report findings
+    *
+    * @param border Left border in report output
+    *
+    * @param [i] pre Pre-balance BoxLevel
+    *
+    * @param [i] post Post-balance BoxLevel
+    *
+    * @param [i] min_width Report post-balance boxes smaller than
+    * min_width in any direction.
+    *
+    * @param [i] min_vol Report post-balance boxes with fewer cells
+    * than this.
+    */
+   static void findSmallBoxesInPostbalance(
+      std::ostream &co,
+      const std::string &border,
+      const hier::BoxLevel &pre,
+      const hier::BoxLevel &post,
+      const hier::IntVector &min_width,
+      size_t min_vol );
 
    /*!
     * @brief Evaluate whether a new load is an improvement over a
