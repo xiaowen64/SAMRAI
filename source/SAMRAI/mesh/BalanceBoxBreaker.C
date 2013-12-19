@@ -913,8 +913,7 @@ double BalanceBoxBreaker::computeWidthScore(
    for ( int d=0; d<box_size.getDim().getValue(); ++d ) {
       double s = box_size(d)/threshold_width;
       s = tbox::MathUtilities<double>::Min( 1.0, s );
-      // For non-linear scoring, try s = sqrt(s);
-      width_score *= s;
+      width_score = tbox::MathUtilities<double>::Min( s, width_score );
    }
    return width_score;
 }
