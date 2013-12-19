@@ -790,6 +790,7 @@ void EdgeMultiblockTest::postprocessRefine(
    pdat::EdgeDoubleConstantRefine ref_op;
 
    hier::BoxContainer fine_box_list(fine_box);
+   hier::BoxContainer empty_box_list;
 
    xfer::BoxGeometryVariableFillPattern fill_pattern;
 
@@ -804,6 +805,7 @@ void EdgeMultiblockTest::postprocessRefine(
       boost::shared_ptr<hier::BoxOverlap> fine_overlap(
          fill_pattern.computeFillBoxesOverlap(
             fine_box_list,
+            empty_box_list,
             fine.getBox(),
             fine.getPatchData(id)->getGhostBox(),
             *fine_pdf));

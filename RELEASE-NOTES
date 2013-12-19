@@ -38,6 +38,10 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
 
 1) The MappingConnector assignment operator now returns a non-const
    MappingConnector as it should.
+
+2) A bug in some VariableFillPatterns that caused interpolated data to
+   overwrite communicated data has been fixed.  See "what's changed" for
+   more info.
      
 *****************************************************************************
 
@@ -85,6 +89,10 @@ descriptions of items in the following list are provided below.
 
 3) The input format for identifying multiblock singularities has
    been simplified.
+
+4) A bug fix for certain VariableFillPattern classes has added an
+   argument to pure virtual method
+   VariableFillPattern::computeFillBoxesOverlap.
 
 
 *****************************************************************************
@@ -174,6 +182,25 @@ descriptions of items in the following list are provided below.
    "is_singularity" input option for neighboring blocks that touch across
    an enhanced connectivity singularity.  The library now determines this
    information internally.
+
+4) A bug fix for certain VariableFillPattern classes has added an
+   argument to pure virtual method
+   VariableFillPattern::computeFillBoxesOverlap.
+
+   The bug was that computeFillBoxesOverlap provided only a cell-centered
+   fill_boxes BoxContainer, which gave no way for concrete fill pattern
+   implementation for node-centered data or other data with centerings on
+   the boundary of a cell to distinguish data points that need filling
+   by interpolation from data points that can be filled from the source level.
+   A new argument, node_fill_boxes, has been added to computeFillBoxesOverlap
+   consisting of a BoxContainer of node-centered fill boxes.  These boxes are
+   made by transforming the cell-centered fill boxes to a node centering and
+   then removing any nodes that can be filled from the source level.
+
+   Only certain specialized implementations of VariableFillPattern need this
+   new argument.  When not needed, it should be ignored.
+
+
 
 
 =============================================================================

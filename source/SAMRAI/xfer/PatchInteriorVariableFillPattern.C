@@ -82,10 +82,13 @@ PatchInteriorVariableFillPattern::calculateOverlap(
 boost::shared_ptr<hier::BoxOverlap>
 PatchInteriorVariableFillPattern::computeFillBoxesOverlap(
    const hier::BoxContainer& fill_boxes,
+   const hier::BoxContainer& unfilled_node_boxes,
    const hier::Box& patch_box,
    const hier::Box& data_box,
    const hier::PatchDataFactory& pdf) const
 {
+   NULL_USE(unfilled_node_boxes);
+
    /*
     * For this case, the overlap is simply the intersection of
     * fill_boxes, data_box, and patch_box.

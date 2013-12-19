@@ -765,6 +765,7 @@ RefineSchedule::finishScheduleConstruction(
       *dst_to_unfilled,
       hierarchy);
 
+
    t_get_global_box_count->barrierAndStart();
 
    const bool need_to_fill =
@@ -798,6 +799,9 @@ RefineSchedule::finishScheduleConstruction(
    if (need_to_fill) {
 
       t_finish_sched_const_recurse->start();
+
+      makeNodeCenteredUnfilledBoxLevel(*d_unfilled_box_level,
+                                       *dst_to_unfilled);
 
       /*
        * If there are no coarser levels in the hierarchy or the
@@ -1146,6 +1150,116 @@ RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
 
    t_shear->stop();
 }
+
+/*
+ **************************************************************************
+ * Make the node-centered unfilled box level.
+ **************************************************************************
+ */
+
+void
+RefineSchedule::makeNodeCenteredUnfilledBoxLevel(
+   const hier::BoxLevel& unfilled_box_level,
+   const hier::Connector& dst_to_unfilled)
+{
+   const tbox::Dimension& dim = unfilled_box_level.getDim();
+
+   d_unfilled_node_box_level.reset(new hier::BoxLevel(
+         unfilled_box_level.getRefinementRatio(),
+         unfilled_box_level.getGridGeometry(),
+         unfilled_box_level.getMPI()));
+
+   d_unfilled_to_unfilled_node.reset(new hier::Connector(
+         unfilled_box_level,
+         *d_unfilled_node_box_level,
+         hier::IntVector::getZero(unfilled_box_level.getDim())));
+
+   const hier::BoxLevel& dst_box_level = dst_to_unfilled.getBase();
+
+   hier::Connector const* dst_to_src;
+   if (d_src_level) {
+      dst_to_src = d_dst_to_src;
+   } else {
+      dst_to_src = 0;
+   }
+
+   hier::LocalId last_unfilled_node_local_id(-1);
+   const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry(
+      dst_to_unfilled.getBase().getGridGeometry());
+
+   for (hier::Connector::ConstNeighborhoodIterator cf = dst_to_unfilled.begin();
+        cf != dst_to_unfilled.end(); ++cf) {
+
+      const hier::BoxId& dst_box_id(*cf);
+      const hier::Box& dst_box = *dst_box_level.getBox(dst_box_id);
+      const hier::BlockId& dst_block = dst_box.getBlockId();
+      hier::Box dst_node_box(dst_box);
+      dst_node_box.upper() += hier::IntVector::getOne(dim);
+
+      for (hier::Connector::ConstNeighborIterator ni = dst_to_unfilled.begin(cf);
+           ni != dst_to_unfilled.end(cf); ++ni) {
+
+         const hier::Box& unfilled_box = *ni;
+
+         hier::BoxContainer unfilled_node_boxes(unfilled_box);
+         unfilled_node_boxes.begin()->upper() += hier::IntVector::getOne(dim);
+
+         if (d_src_level && dst_to_src->hasNeighborSet(dst_box_id)) {
+
+            hier::Connector::ConstNeighborhoodIterator dst_src_itr =
+               dst_to_src->findLocal(dst_box_id);
+
+            for (hier::Connector::ConstNeighborIterator ds =
+                 dst_to_src->begin(dst_src_itr);
+                 ds != dst_to_src->end(dst_src_itr); ++ds) {
+
+               const hier::Box& src_box = *ds;
+               const hier::BlockId& src_block = src_box.getBlockId();
+               hier::Box src_node_box(src_box);
+               if (src_block == dst_block) {
+                  src_node_box.upper() += hier::IntVector::getOne(dim);
+               } else if (grid_geometry->areNeighbors(src_block, dst_block)) {
+                  grid_geometry->transformBox(
+                     src_node_box,
+                     d_dst_level->getRatioToLevelZero(),
+                     dst_block,
+                     src_block);
+                  src_node_box.upper() += hier::IntVector::getOne(dim);
+               }
+               if (!(src_node_box*dst_node_box).empty()) {
+                  unfilled_node_boxes.removeIntersections(src_node_box);
+               }
+            }
+         } 
+
+         unfilled_node_boxes.coalesce();
+
+         hier::Connector::NeighborhoodIterator unfilled_itr =
+            d_unfilled_to_unfilled_node->
+               makeEmptyLocalNeighborhood(unfilled_box.getBoxId());
+
+         for (hier::BoxContainer::iterator ui = unfilled_node_boxes.begin();
+              ui != unfilled_node_boxes.end(); ++ui) {
+
+            hier::Box unfilled_nodal(*ui,
+                                     ++last_unfilled_node_local_id,
+                                     dst_box.getOwnerRank());
+            TBOX_ASSERT(unfilled_nodal.getBlockId() == dst_block);
+
+            d_unfilled_node_box_level->addBoxWithoutUpdate(unfilled_nodal);
+
+            d_unfilled_to_unfilled_node->insertLocalNeighbor(
+               unfilled_nodal,
+               unfilled_itr);
+         }
+ 
+      }
+   }
+
+   d_unfilled_node_box_level->finalize();
+
+}
+
 
 /*
  **************************************************************************
@@ -2360,6 +2474,11 @@ RefineSchedule::computeRefineOverlaps(
          unfilled_nabrs);
       hier::BoxContainer fill_boxes(unfilled_nabr);
 
+      const hier::BoxId& unfilled_id = unfilled_nabr.getBoxId();
+
+      hier::BoxContainer node_fill_boxes;
+      d_unfilled_to_unfilled_node->getNeighborBoxes(unfilled_id, node_fill_boxes);
+
       /*
        * The refine overlap will cover only  the fine fill box regions.
        * of index space.  Note that we restrict the interpolation range
@@ -2392,6 +2511,7 @@ RefineSchedule::computeRefineOverlaps(
                refine_overlaps[ne] =
                   rep_item.d_var_fill_pattern->computeFillBoxesOverlap(
                      fill_boxes,
+                     node_fill_boxes,
                      fine_patch->getBox(),
                      scratch_space,
                      *fine_pdf);
@@ -2400,6 +2520,7 @@ RefineSchedule::computeRefineOverlaps(
                refine_overlaps[ne] =
                   bg_fill_pattern->computeFillBoxesOverlap(
                      fill_boxes,
+                     node_fill_boxes,
                      fine_patch->getBox(),
                      scratch_space,
                      *fine_pdf);
@@ -2687,7 +2808,8 @@ RefineSchedule::generateCommunicationSchedule(
        */
       if (!unfilled_boxes_for_dst.isEmpty()) {
 
-         unfilled_boxes_for_dst.coalesce(); 
+         unfilled_boxes_for_dst.coalesce();
+
          hier::Connector::NeighborhoodIterator base_box_itr =
             dst_to_unfilled->makeEmptyLocalNeighborhood(dst_box_id);
          for (hier::BoxContainer::iterator bi = unfilled_boxes_for_dst.begin();

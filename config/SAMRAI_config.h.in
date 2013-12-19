@@ -7,7 +7,7 @@
 
 #define SAMRAI_VERSION_MAJOR 3
 #define SAMRAI_VERSION_MINOR 7
-#define SAMRAI_VERSION_PATCHLEVEL 0
+#define SAMRAI_VERSION_PATCHLEVEL 2
 
 
 /* Define if bool type is not properly supported */

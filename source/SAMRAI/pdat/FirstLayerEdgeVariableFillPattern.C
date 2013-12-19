@@ -159,11 +159,13 @@ FirstLayerEdgeVariableFillPattern::computeStencilBoxes(
 boost::shared_ptr<hier::BoxOverlap>
 FirstLayerEdgeVariableFillPattern::computeFillBoxesOverlap(
    const hier::BoxContainer& fill_boxes,
+   const hier::BoxContainer& node_fill_boxes,
    const hier::Box& patch_box,
    const hier::Box& data_box,
    const hier::PatchDataFactory& pdf) const
 {
    NULL_USE(pdf);
+   NULL_USE(node_fill_boxes);
 
    const tbox::Dimension& dim = patch_box.getDim();
 
