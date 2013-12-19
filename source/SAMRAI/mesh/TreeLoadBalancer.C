@@ -463,7 +463,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       loadBalanceWithinRankGroup(
          balance_box_level,
          balance_to_reference,
-         rank_group,
+         cycle_rank_group,
          group_sum_load );
 
       if (d_barrier_after) {
@@ -728,7 +728,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
       tbox::plog.precision(6);
       tbox::plog << "TreeLoadBalancer::LoadBalanceWithinRankGroup balancing "
                  << group_sum_load << " units in group of "
-                 << d_mpi.getSize() << " procs, averaging " << group_avg_load
+                 << rank_group.size() << " procs, averaging " << group_avg_load
                  << " or " << pow(group_avg_load, 1.0 / d_dim.getValue())
                  << "^" << d_dim << " per proc."
                  << "  Avg is " << group_avg_load/d_pparams->getMinBoxSize().getProduct()
