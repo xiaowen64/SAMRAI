@@ -418,11 +418,9 @@ private:
    friend std::ostream& operator << ( std::ostream& co,
                                       const BoxInTransit& r) {
       co << r.d_box
-         << r.d_box.numberCells() << '|'
-         << r.d_box.numberCells().getProduct();
-      co << '-' << r.d_orig_box
-         << r.d_orig_box.numberCells() << '|'
-         << r.d_orig_box.numberCells().getProduct();
+         << r.d_box.numberCells() << '|' << r.d_box.size() << '-'
+         << r.d_orig_box
+         << r.d_orig_box.numberCells() << '|' << r.d_orig_box.size();
       return co;
    }
 
