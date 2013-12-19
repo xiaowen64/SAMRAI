@@ -1718,7 +1718,8 @@ BoxContainer::print(
       Box box(*bi);
       co << "    "
          << box << "   "
-         << box.numberCells() << '\n';
+         << box.numberCells() << '|'
+         << box.size() << '\n';
    }
 }
 
