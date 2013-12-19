@@ -263,9 +263,9 @@ private:
    struct VoucherRedemption {
       VoucherRedemption() :
          d_demander_rank(tbox::SAMRAI_MPI::getInvalidRank()),
+         d_pparams(0),
          d_mpi(MPI_COMM_NULL),
-         d_mpi_request(MPI_REQUEST_NULL),
-         d_pparams(0) {};
+         d_mpi_request(MPI_REQUEST_NULL) {};
       ~VoucherRedemption() {
          finishSendRequest();
          d_pparams = 0;
