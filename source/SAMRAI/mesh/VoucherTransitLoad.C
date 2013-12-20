@@ -246,7 +246,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    std::map<int,VoucherRedemption> redemptions_to_fulfill;
 
    hier::LocalId local_id_offset = unbalanced_box_level.getLastLocalId();
-   const hier::LocalId local_id_inc(d_voucher_set.size());
+   const hier::LocalId local_id_inc(static_cast<int>(d_voucher_set.size()));
 
    for ( const_iterator si=d_voucher_set.begin(); si!=d_voucher_set.end(); ++si ) {
       hier::SequentialLocalIdGenerator id_gen( ++local_id_offset, local_id_inc );
@@ -261,8 +261,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
       }
       else {
          // Locally fulfilled.  Place in redemptions_to_fulfill for processing.
-         redemptions_to_fulfill[mpi.getRank()].setLocalRedemption(
-            si, *this, id_gen, mpi );
+         redemptions_to_fulfill[mpi.getRank()].setLocalRedemption( si, id_gen, mpi );
       }
    }
 
@@ -656,7 +655,6 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkSupply(
 */
 void VoucherTransitLoad::VoucherRedemption::setLocalRedemption(
    const VoucherTransitLoad::const_iterator &voucher,
-   const VoucherTransitLoad &all_vouchers,
    const hier::SequentialLocalIdGenerator &id_gen,
    const tbox::SAMRAI_MPI &mpi )
 {

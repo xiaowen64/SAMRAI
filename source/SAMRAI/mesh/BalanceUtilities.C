@@ -1775,7 +1775,7 @@ BalanceUtilities::findSmallBoxesInPostbalance(
 
       const hier::Box &post_box = *bi;
 
-      if ( post_box.numberCells() >= min_width && post_box.size() >= min_cells ) {
+      if ( post_box.numberCells() >= min_width && static_cast<size_t>(post_box.size()) >= min_cells ) {
          continue;
       }
 
@@ -1790,7 +1790,7 @@ BalanceUtilities::findSmallBoxesInPostbalance(
             if ( !(na->numberCells() >= min_width) ) {
                small_width = false;
             }
-            if ( !(na->size() >= min_cells) ) {
+            if ( !(static_cast<size_t>(na->size()) >= min_cells) ) {
                small_cells = false;
             }
          }
