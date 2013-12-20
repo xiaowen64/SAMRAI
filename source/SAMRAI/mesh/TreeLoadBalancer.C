@@ -1483,7 +1483,7 @@ TreeLoadBalancer::createBalanceRankGroupBasedOnCycles(
          + (d_mpi.getRank() - first_rank_in_base_sized_group) / base_group_size;
 
       const int group_first_rank = first_rank_in_base_sized_group +
-         (group_num - first_base_sized_group)*(1+base_group_size);
+         (group_num - first_base_sized_group)*base_group_size;
 
       rank_group.setMinMax( group_first_rank,
                             group_first_rank + base_group_size - 1 );
