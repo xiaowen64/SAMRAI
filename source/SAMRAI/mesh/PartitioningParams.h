@@ -37,18 +37,10 @@ public:
       const hier::IntVector &min_size,
       const hier::IntVector &max_size,
       const hier::IntVector &bad_interval,
-      const hier::IntVector &cut_factor ) :
-      d_min_size(min_size),
-      d_max_size(max_size),
-      d_bad_interval(bad_interval),
-      d_cut_factor(cut_factor),
-      d_load_comparison_tol(1e-8)
-      {
-         for ( int bid(0); bid<grid_geometry.getNumberBlocks(); ++bid ) {
-            grid_geometry.computePhysicalDomain(
-               d_block_domain_boxes[hier::BlockId(bid)], ratio_to_level_zero, hier::BlockId(bid));
-         }
-      }
+      const hier::IntVector &cut_factor,
+      double flexible_load_tol );
+
+   PartitioningParams( const PartitioningParams &other );
 
    double getMinLoad() const {
       return static_cast<double>(d_min_size.getProduct());
@@ -78,6 +70,10 @@ public:
       return d_min_size.getDim();
    }
 
+   const double &getFlexibleLoadTol() const {
+      return d_flexible_load_tol;
+   }
+
    const double &getLoadComparisonTol() const {
       return d_load_comparison_tol;
    }
@@ -89,6 +85,20 @@ private:
    hier::IntVector d_max_size;
    hier::IntVector d_bad_interval;
    hier::IntVector d_cut_factor;
+
+   /*!
+    * @brief Fraction of ideal load a process can accept over and
+    * above the ideal.
+    */
+   double d_flexible_load_tol;
+
+   /*!
+    * @brief Tolerance for comparing floating point loads.
+    *
+    * Should be set to at least possible rounding errors.
+    * Better if set between that and the greatest work value
+    * that would be considered "no work".
+    */
    double d_load_comparison_tol;
 
 };

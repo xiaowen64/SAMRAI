@@ -28,7 +28,7 @@ Main {
 
    enforce_nesting = TRUE, TRUE, FALSE
 
-   autoscale_base_nprocs = 1
+   autoscale_base_nprocs = 4
 
    box_generator_type = "TileClustering"
 

@@ -357,6 +357,29 @@ SAMRAI_MPI::Get_count(
  *****************************************************************************
  */
 int
+SAMRAI_MPI::Request_free(
+   Request* request)
+{
+#ifndef HAVE_MPI
+   NULL_USE(request);
+#endif
+   int rval = MPI_SUCCESS;
+   if (!s_mpi_is_initialized) {
+      TBOX_ERROR("SAMRAI_MPI::Get_count is a no-op without run-time MPI!");
+   }
+#ifdef HAVE_MPI
+   else {
+      rval = MPI_Request_free(request);
+   }
+#endif
+   return rval;
+}
+
+/*
+ *****************************************************************************
+ *****************************************************************************
+ */
+int
 SAMRAI_MPI::Test(
    Request* request,
    int* flag,

@@ -32,7 +32,7 @@ Main {
 
    box_generator_type = "TileClustering"
 
-   load_balancer_type = "ChopAndPackLoadBalancer", "TilePartitioner"
+   load_balancer_type = "TreeLoadBalancer", "TilePartitioner"
 
    load_balance = TRUE, TRUE, TRUE
 
@@ -83,7 +83,9 @@ TilePartitioner {
   box_size = 21, 21
 
   TreeLoadBalancer {
-    flexible_load_tolerance = 0.03
+    flexible_load_tolerance = 0.05
+    // max_cycle_spread_procs = 8
+    DEV_voucher_mode = FALSE
     DEV_allow_box_breaking = TRUE
     // Debugging options
     DEV_check_map = TRUE
@@ -98,17 +100,22 @@ TilePartitioner {
 
 
 TreeLoadBalancer {
-  flexible_load_tolerance = 0.03
+  flexible_load_tolerance = 0.05
+  // max_cycle_spread_procs = 8
+  DEV_voucher_mode = FALSE
   DEV_report_load_balance = TRUE // Reported in main
-  DEV_balance_penalty_wt = 1.0
-  DEV_surface_penalty_wt = 1.0
-  DEV_slender_penalty_wt = 1.0
-  DEV_precut_penalty_wt = 1.0
 
   // Debugging options
+  DEV_print_steps = FALSE
   DEV_check_map = TRUE
   DEV_check_connectivity = TRUE
+  DEV_summarize_map = TRUE
+}
+
+
+BoxTransitSet {
   DEV_print_steps = FALSE
+  DEV_print_pop_steps = FALSE
   DEV_print_swap_steps = FALSE
   DEV_print_break_steps = FALSE
   DEV_print_edge_steps = FALSE
@@ -131,9 +138,7 @@ TimerManager {
 
 PatchHierarchy {
 
-   /*
-     Specify number of levels (1, 2 or 3 for this test).
-   */
+   // Specify number of levels (1, 2 or 3 for this test).
    max_levels = 3
 
    largest_patch_size {

@@ -283,7 +283,7 @@ MappingConnector::findMappingErrors(
                              << error_count
                              << "): old box " << old_box
                              << " mapped to neighbor " << nabr
-                             << " inconsistent new box "
+                             << ", which is inconsistent with head box "
                              << head_box << std::endl;
                }
             }
