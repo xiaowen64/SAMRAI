@@ -473,6 +473,9 @@ private:
 
    double d_flexible_load_tol;
 
+   //! @brief Reserve load container used during redemption phase.
+   BoxTransitSet d_reserve;
+
    //@{
    //! @name Debugging stuff.
    bool d_print_steps;

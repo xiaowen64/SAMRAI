@@ -621,8 +621,8 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
    else {
 
       /*
-       * Create a concrete TransitLoad container to hold the
-       * distributed work.
+       * Create a concrete TransitLoad container to hold the work
+       * being redistributed.
        */
       boost::shared_ptr<TransitLoad> balanced_work;
       if ( d_voucher_mode ) {

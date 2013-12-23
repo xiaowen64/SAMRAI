@@ -54,6 +54,7 @@ VoucherTransitLoad::VoucherTransitLoad( const PartitioningParams &pparams ) :
    d_pparams(&pparams),
    d_partition_work_supply_recursively(true),
    d_flexible_load_tol(0.0),
+   d_reserve(pparams),
    d_print_steps(false),
    d_print_edge_steps(false),
    d_object_timers(0)
@@ -72,6 +73,9 @@ VoucherTransitLoad::VoucherTransitLoad( const VoucherTransitLoad &other, bool co
    d_voucher_set(),
    d_sumload(0),
    d_pparams(other.d_pparams),
+   d_partition_work_supply_recursively(other.d_partition_work_supply_recursively),
+   d_flexible_load_tol(other.d_flexible_load_tol),
+   d_reserve(*other.d_pparams),
    d_print_steps(other.d_print_steps),
    d_print_edge_steps(other.d_print_edge_steps),
    d_object_timers(other.d_object_timers)
@@ -267,14 +271,14 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
    }
 
    // Set up the reserve for fulfilling incoming redemption requests.
-   BoxTransitSet reserve(*d_pparams);
-   reserve.setAllowBoxBreaking( getAllowBoxBreaking() );
-   reserve.setThresholdWidth( getThresholdWidth() );
-   reserve.insertAll( unbalanced_box_level.getBoxes() );
+   d_reserve.clear();
+   d_reserve.setAllowBoxBreaking( getAllowBoxBreaking() );
+   d_reserve.setThresholdWidth( getThresholdWidth() );
+   d_reserve.insertAll( unbalanced_box_level.getBoxes() );
    if ( d_print_edge_steps ) {
       tbox::plog << "VoucherTransitLoad::assignToLocalAndPopulateMaps:"
                  << " reserve before redemption steps: "
-                 << reserve.format();
+                 << d_reserve.format();
       tbox::plog << std::endl;
    }
 
@@ -321,7 +325,7 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
          recursiveSendWorkSupply(
             redemptions_to_fulfill.begin(),
             redemptions_to_fulfill.end(),
-            reserve );
+            d_reserve );
 
          for ( std::map<int,VoucherRedemption>::const_iterator mi=redemptions_to_fulfill.begin();
                mi!=redemptions_to_fulfill.end(); ++mi ) {
@@ -338,7 +342,7 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
 
          VoucherRedemption &vr = mi->second;
          if ( vr.d_demander_rank != mpi.getRank() ) {
-            vr.sendWorkSupply( reserve, flexible_load_tol, *d_pparams, false );
+            vr.sendWorkSupply( d_reserve, flexible_load_tol, *d_pparams, false );
             if ( d_print_edge_steps ) {
                tbox::plog << "VoucherTransitLoad::assignToLocalAndPopulateMaps:"
                           << " sent supply to " << mi->first << " for voucher "
@@ -352,7 +356,7 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
                balanced_to_unbalanced);
          }
          else {
-            vr.fulfillLocalRedemption( reserve, *d_pparams, false );
+            vr.fulfillLocalRedemption( d_reserve, *d_pparams, false );
             vr.d_box_shipment->putInBoxLevel(balanced_box_level);
             vr.d_box_shipment->generateLocalBasedMapEdges(
                unbalanced_to_balanced,
@@ -360,9 +364,9 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
          }
       }
 
-      // Anything left in reserve is kept locally.
+      // Anything left in d_reserve is kept locally.
       hier::SequentialLocalIdGenerator id_gen( unbalanced_box_level.getLastLocalId(), local_id_inc );
-      reserve.reassignOwnership(
+      d_reserve.reassignOwnership(
          id_gen,
          balanced_box_level.getMPI().getRank() );
    }
@@ -370,13 +374,13 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
    if ( d_print_edge_steps ) {
       tbox::plog << "VoucherTransitLoad::assignToLocalAndPopulateMaps:"
                  << " reserve after sending work supplies: "
-                 << reserve.format()
+                 << d_reserve.format()
                  << std::endl;
    }
 
 
-   reserve.putInBoxLevel(balanced_box_level);
-   reserve.generateLocalBasedMapEdges(
+   d_reserve.putInBoxLevel(balanced_box_level);
+   d_reserve.generateLocalBasedMapEdges(
       unbalanced_to_balanced,
       balanced_to_unbalanced);
 
@@ -947,6 +951,7 @@ VoucherTransitLoad::setTimerPrefix(
    } else {
       d_object_timers = &(ti->second);
    }
+   d_reserve.setTimerPrefix(timer_prefix);
 }
 
 
