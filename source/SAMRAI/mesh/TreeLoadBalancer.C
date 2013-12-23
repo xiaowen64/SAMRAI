@@ -627,11 +627,12 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       boost::shared_ptr<TransitLoad> balanced_work;
       if ( d_voucher_mode ) {
          balanced_work = boost::make_shared<VoucherTransitLoad>(*d_pparams);
+         balanced_work->setTimerPrefix(d_object_name + "::VoucherTransitLoad");
       }
       else {
          balanced_work = boost::make_shared<BoxTransitSet>(*d_pparams);
+         balanced_work->setTimerPrefix(d_object_name + "::BoxTransitSet");
       }
-      balanced_work->setTimerPrefix(d_object_name);
 
       distributeLoadAcrossRankGroup(
          *balanced_work,
@@ -646,13 +647,13 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       if ( d_print_steps ) {
          tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup constructing unbalanced<==>balanced.\n";
       }
-      t_assign_to_local_and_populate_mapss->start();
+      t_assign_to_local_and_populate_maps->start();
       balanced_work->assignToLocalAndPopulateMaps(
          balanced_box_level,
          balanced_to_unbalanced,
          unbalanced_to_balanced,
          d_flexible_load_tol );
-      t_assign_to_local_and_populate_mapss->stop();
+      t_assign_to_local_and_populate_maps->stop();
       if ( d_print_steps ) {
          tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup finished constructing unbalanced<==>balanced.\n";
       }
@@ -1746,8 +1747,8 @@ TreeLoadBalancer::setTimers()
       t_distribute_load_across_rank_group = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::distributeLoadAcrossRankGroup()");
 
-      t_assign_to_local_and_populate_mapss = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::assign_to_local_and_populate_mapss");
+      t_assign_to_local_and_populate_maps = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::assign_to_local_and_populate_maps");
 
       t_compute_local_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::computeLocalLoad");

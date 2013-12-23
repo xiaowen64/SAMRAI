@@ -769,7 +769,7 @@ private:
    boost::shared_ptr<tbox::Timer> t_get_load_from_children;
    boost::shared_ptr<tbox::Timer> t_get_load_from_parent;
    boost::shared_ptr<tbox::Timer> t_post_load_distribution_barrier;
-   boost::shared_ptr<tbox::Timer> t_assign_to_local_and_populate_mapss;
+   boost::shared_ptr<tbox::Timer> t_assign_to_local_and_populate_maps;
    boost::shared_ptr<tbox::Timer> t_report_loads;
    boost::shared_ptr<tbox::Timer> t_local_load_moves;
    boost::shared_ptr<tbox::Timer> t_finish_sends;

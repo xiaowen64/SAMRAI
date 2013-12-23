@@ -477,7 +477,7 @@ void VoucherTransitLoad::recursiveSendWorkSupply(
          }
       }
 
-      BoxTransitSet left_reserve(*d_pparams);
+      BoxTransitSet left_reserve(reserve, false);
       double upper_lim = left_load*(1 + d_flexible_load_tol);
       double lower_lim = left_load*(1 - d_flexible_load_tol);
       lower_lim = tbox::MathUtilities<double>::Max(
@@ -951,7 +951,7 @@ VoucherTransitLoad::setTimerPrefix(
    } else {
       d_object_timers = &(ti->second);
    }
-   d_reserve.setTimerPrefix(timer_prefix);
+   d_reserve.setTimerPrefix(timer_prefix + "::redemption");
 }
 
 
