@@ -55,7 +55,8 @@ VoucherTransitLoad::VoucherTransitLoad( const PartitioningParams &pparams ) :
    d_partition_work_supply_recursively(true),
    d_flexible_load_tol(0.0),
    d_print_steps(false),
-   d_print_edge_steps(false)
+   d_print_edge_steps(false),
+   d_object_timers(0)
 {
    getFromInput();
    setTimerPrefix(s_default_timer_prefix);
@@ -94,7 +95,7 @@ void VoucherTransitLoad::initialize()
 /*
 *************************************************************************
 Initialize sets to a new (empty) container but retains current
-supplemental data such as diagnostic parameters.
+supplemental data such as control and diagnostic parameters.
 *************************************************************************
 */
 boost::shared_ptr<TransitLoad> VoucherTransitLoad::clone() const

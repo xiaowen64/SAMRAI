@@ -631,6 +631,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       else {
          balanced_work = boost::make_shared<BoxTransitSet>(*d_pparams);
       }
+      balanced_work->setTimerPrefix(d_object_name);
 
       distributeLoadAcrossRankGroup(
          *balanced_work,
@@ -645,11 +646,13 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       if ( d_print_steps ) {
          tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup constructing unbalanced<==>balanced.\n";
       }
+      t_assign_content_to_local_process_and_generate_maps->start();
       balanced_work->assignContentToLocalProcessAndPopulateMaps(
          balanced_box_level,
          balanced_to_unbalanced,
          unbalanced_to_balanced,
          d_flexible_load_tol );
+      t_assign_content_to_local_process_and_generate_maps->stop();
       if ( d_print_steps ) {
          tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup finished constructing unbalanced<==>balanced.\n";
       }
@@ -1742,6 +1745,9 @@ TreeLoadBalancer::setTimers()
 
       t_distribute_load_across_rank_group = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::distributeLoadAcrossRankGroup()");
+
+      t_assign_content_to_local_process_and_generate_maps = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::assign_content_to_local_process_and_generate_maps");
 
       t_compute_local_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::computeLocalLoad");

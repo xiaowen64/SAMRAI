@@ -93,7 +93,7 @@ BoxTransitSet::BoxTransitSet( const BoxTransitSet &other ) :
 /*
 *************************************************************************
 Initialize sets to a new (empty) container but retains current
-supplemental data such as diagnostic parameters.
+supplemental data such as control and diagnostic parameters.
 *************************************************************************
 */
 void BoxTransitSet::initialize()
