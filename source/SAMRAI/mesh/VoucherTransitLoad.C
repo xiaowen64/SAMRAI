@@ -209,18 +209,18 @@ VoucherTransitLoad::getFromMessageStream( tbox::MessageStream &msg )
  * 4. Receive work for redeemed vouchers.
  */
 void
-VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
+VoucherTransitLoad::assignToLocalAndPopulateMaps(
    hier::BoxLevel& balanced_box_level,
    hier::MappingConnector &balanced_to_unbalanced,
    hier::MappingConnector &unbalanced_to_balanced,
    double flexible_load_tol )
 {
-   d_object_timers->t_assign_content_to_local_process_and_generate_map->start();
+   d_object_timers->t_assign_to_local_and_populate_maps->start();
 
    d_flexible_load_tol = flexible_load_tol;
 
    if ( d_print_steps ) {
-      tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps: entered." << std::endl;
+      tbox::plog << "VoucherTransitLoad::assignToLocalAndPopulateMaps: entered." << std::endl;
    }
 
    const hier::BoxLevel &unbalanced_box_level = unbalanced_to_balanced.getBase();
@@ -253,7 +253,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
       hier::SequentialLocalIdGenerator id_gen( ++local_id_offset, local_id_inc );
       if ( si->d_issuer_rank != mpi.getRank() ) {
          if ( d_print_edge_steps ) {
-            tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
+            tbox::plog << "VoucherTransitLoad::assignToLocalAndPopulateMaps:"
                        << " sending demand for voucher " << *si << '.'
                        << std::endl;
          }
@@ -272,7 +272,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    reserve.setThresholdWidth( getThresholdWidth() );
    reserve.insertAll( unbalanced_box_level.getBoxes() );
    if ( d_print_edge_steps ) {
-      tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
+      tbox::plog << "VoucherTransitLoad::assignToLocalAndPopulateMaps:"
                  << " reserve before redemption steps: "
                  << reserve.format();
       tbox::plog << std::endl;
@@ -302,7 +302,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
       vr.recvWorkDemand( source, count, mpi );
 
       if ( d_print_edge_steps ) {
-         tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
+         tbox::plog << "VoucherTransitLoad::assignToLocalAndPopulateMaps:"
                     << " received demand from " << source << " for voucher "
                     << vr.d_voucher << '.'
                     << std::endl;
@@ -340,7 +340,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
          if ( vr.d_demander_rank != mpi.getRank() ) {
             vr.sendWorkSupply( reserve, flexible_load_tol, *d_pparams, false );
             if ( d_print_edge_steps ) {
-               tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
+               tbox::plog << "VoucherTransitLoad::assignToLocalAndPopulateMaps:"
                           << " sent supply to " << mi->first << " for voucher "
                           << vr.d_voucher << ": "
                           << vr.d_box_shipment->format()
@@ -368,7 +368,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
    }
 
    if ( d_print_edge_steps ) {
-      tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
+      tbox::plog << "VoucherTransitLoad::assignToLocalAndPopulateMaps:"
                  << " reserve after sending work supplies: "
                  << reserve.format()
                  << std::endl;
@@ -401,7 +401,7 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
          balanced_to_unbalanced);
 
       if ( d_print_edge_steps ) {
-         tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps:"
+         tbox::plog << "VoucherTransitLoad::assignToLocalAndPopulateMaps:"
                     << " received supply from rank " << source << " for " << vr.d_voucher
                     << ": " << vr.d_box_shipment->format()
                     << std::endl;
@@ -412,12 +412,12 @@ VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps(
 
 
    if ( d_print_steps ) {
-      tbox::plog << "VoucherTransitLoad::assignContentToLocalProcessAndPopulateMaps: exiting." << std::endl;
+      tbox::plog << "VoucherTransitLoad::assignToLocalAndPopulateMaps: exiting." << std::endl;
    }
 
    d_flexible_load_tol = 0.0;
 
-   d_object_timers->t_assign_content_to_local_process_and_generate_map->stop();
+   d_object_timers->t_assign_to_local_and_populate_maps->stop();
 }
 
 
@@ -697,26 +697,6 @@ void VoucherTransitLoad::VoucherRedemption::fulfillLocalRedemption(
 *************************************************************************
 *************************************************************************
 */
-void VoucherTransitLoad::VoucherRedemption::takeWorkFromReserve(
-   BoxTransitSet &work,
-   BoxTransitSet &reserve )
-{
-   work.setAllowBoxBreaking( reserve.getAllowBoxBreaking() );
-   work.setThresholdWidth( reserve.getThresholdWidth() );
-   work.adjustLoad( reserve,
-                    d_voucher.d_load,
-                    d_voucher.d_load,
-                    d_voucher.d_load );
-   work.reassignOwnership( d_id_gen, d_demander_rank );
-   return;
-}
-
-
-
-/*
-*************************************************************************
-*************************************************************************
-*/
 void VoucherTransitLoad::VoucherRedemption::finishSendRequest()
 {
    if ( d_mpi_request != MPI_REQUEST_NULL ) {
@@ -983,8 +963,8 @@ VoucherTransitLoad::getAllTimers(
    timers.t_adjust_load = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::adjustLoad()");
 
-   timers.t_assign_content_to_local_process_and_generate_map = tbox::TimerManager::getManager()->
-      getTimer(timer_prefix + "::assignContentToLocalProcessAndPopulateMaps()");
+   timers.t_assign_to_local_and_populate_maps = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::assignToLocalAndPopulateMaps()");
 }
 
 

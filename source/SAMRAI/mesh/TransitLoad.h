@@ -152,8 +152,8 @@ public:
 
 
    /*!
-    * @brief Assign contents to local process and generate
-    * balanced<==>unbalanced map.
+    * @brief Assign contents to local process and populate the
+    * balanced<==>unbalanced maps.
     *
     * This method uses communication to set up the map.
     *
@@ -169,7 +169,7 @@ public:
     * @param [i] flexible_load_tol
     */
    virtual void
-   assignContentToLocalProcessAndPopulateMaps(
+   assignToLocalAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector &balanced_to_unbalanced,
       hier::MappingConnector &unbalanced_to_balanced,

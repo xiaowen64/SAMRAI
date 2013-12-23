@@ -99,12 +99,12 @@ public:
 
 
    /*!
-    * @copydoc TransitLoad::assignContentToLocalProcessAndPopulateMaps()
+    * @copydoc TransitLoad::assignToLocalAndPopulateMaps()
     *
     * This method uses communication to redeem vouchers and up the map.
     */
    void
-   assignContentToLocalProcessAndPopulateMaps(
+   assignToLocalAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector &balanced_to_unbalanced,
       hier::MappingConnector &unbalanced_to_balanced,
@@ -493,7 +493,7 @@ private:
     */
    struct TimerStruct {
       boost::shared_ptr<tbox::Timer> t_adjust_load;
-      boost::shared_ptr<tbox::Timer> t_assign_content_to_local_process_and_generate_map;
+      boost::shared_ptr<tbox::Timer> t_assign_to_local_and_populate_maps;
    };
 
    //! @brief Default prefix for Timers.
