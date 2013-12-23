@@ -98,11 +98,9 @@ Initialize sets to a new (empty) container but retains current
 supplemental data such as control and diagnostic parameters.
 *************************************************************************
 */
-boost::shared_ptr<TransitLoad> VoucherTransitLoad::clone() const
+VoucherTransitLoad* VoucherTransitLoad::clone() const
 {
-   boost::shared_ptr<VoucherTransitLoad> new_object =
-      boost::make_shared<VoucherTransitLoad>(*this);
-   new_object->setAllowBoxBreaking(getAllowBoxBreaking());
+   VoucherTransitLoad* new_object = new VoucherTransitLoad(*this);
    new_object->initialize();
    return new_object;
 }
@@ -678,9 +676,8 @@ void VoucherTransitLoad::VoucherRedemption::fulfillLocalRedemption(
    bool all )
 {
    d_pparams = &pparams;
-   d_box_shipment = boost::make_shared<BoxTransitSet>(*d_pparams);
-   d_box_shipment->setAllowBoxBreaking( reserve.getAllowBoxBreaking() );
-   d_box_shipment->setThresholdWidth( reserve.getThresholdWidth() );
+   d_box_shipment = boost::shared_ptr<BoxTransitSet>(reserve.clone());
+   d_box_shipment->initialize();
    if ( all ) {
       d_box_shipment->swap(reserve);
    }

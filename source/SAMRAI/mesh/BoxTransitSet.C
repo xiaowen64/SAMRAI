@@ -109,11 +109,9 @@ Initialize sets to a new (empty) container but retains current
 supplemental data such as diagnostic parameters.
 *************************************************************************
 */
-boost::shared_ptr<TransitLoad> BoxTransitSet::clone() const
+BoxTransitSet* BoxTransitSet::clone() const
 {
-   boost::shared_ptr<BoxTransitSet> new_object =
-      boost::make_shared<BoxTransitSet>(*this);
-   new_object->setAllowBoxBreaking(getAllowBoxBreaking());
+   BoxTransitSet* new_object = new BoxTransitSet(*this);
    new_object->initialize();
    return new_object;
 }

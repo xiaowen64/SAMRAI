@@ -54,7 +54,7 @@ public:
    //! @name TransitLoad abstract interfaces
 
    //! @copydoc TransitLoad::clone()
-   boost::shared_ptr<TransitLoad> clone() const;
+   BoxTransitSet* clone() const;
 
    //! @copydoc TransitLoad::initialize()
    void initialize();
