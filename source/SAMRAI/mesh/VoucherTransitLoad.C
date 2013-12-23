@@ -67,22 +67,26 @@ VoucherTransitLoad::VoucherTransitLoad( const PartitioningParams &pparams ) :
 *************************************************************************
 *************************************************************************
 */
-VoucherTransitLoad::VoucherTransitLoad( const VoucherTransitLoad &other ) :
+VoucherTransitLoad::VoucherTransitLoad( const VoucherTransitLoad &other, bool copy_load ) :
    TransitLoad(other),
-   d_voucher_set(other.d_voucher_set),
-   d_sumload(other.d_sumload),
+   d_voucher_set(),
+   d_sumload(0),
    d_pparams(other.d_pparams),
    d_print_steps(other.d_print_steps),
    d_print_edge_steps(other.d_print_edge_steps),
    d_object_timers(other.d_object_timers)
 {
+   if ( copy_load ) {
+      d_voucher_set = other.d_voucher_set;
+      d_sumload = other.d_sumload;
+   }
 }
 
 
 /*
 *************************************************************************
 Initialize sets to a new (empty) container but retains current
-supplemental data such as diagnostic parameters.
+supplemental data such as control and diagnostic parameters.
 *************************************************************************
 */
 void VoucherTransitLoad::initialize()
@@ -94,14 +98,12 @@ void VoucherTransitLoad::initialize()
 
 /*
 *************************************************************************
-Initialize sets to a new (empty) container but retains current
-supplemental data such as control and diagnostic parameters.
+Allocate a new object exactly like this, but empty.
 *************************************************************************
 */
 VoucherTransitLoad* VoucherTransitLoad::clone() const
 {
-   VoucherTransitLoad* new_object = new VoucherTransitLoad(*this);
-   new_object->initialize();
+   VoucherTransitLoad* new_object = new VoucherTransitLoad(*this, false);
    return new_object;
 }
 
@@ -677,7 +679,6 @@ void VoucherTransitLoad::VoucherRedemption::fulfillLocalRedemption(
 {
    d_pparams = &pparams;
    d_box_shipment = boost::shared_ptr<BoxTransitSet>(reserve.clone());
-   d_box_shipment->initialize();
    if ( all ) {
       d_box_shipment->swap(reserve);
    }

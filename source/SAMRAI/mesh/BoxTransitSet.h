@@ -48,7 +48,7 @@ public:
    BoxTransitSet( const PartitioningParams &pparams );
 
    //! @name Copy constructor
-   BoxTransitSet( const BoxTransitSet &other );
+   BoxTransitSet( const BoxTransitSet &other, bool copy_load = true );
 
    //@{
    //! @name TransitLoad abstract interfaces

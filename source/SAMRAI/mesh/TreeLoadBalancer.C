@@ -1824,7 +1824,6 @@ TreeLoadBalancer::BranchData::BranchData(
    d_pparams(&pparams),
    d_print_steps(false)
 {
-   d_shipment->initialize();
 }
 
 
@@ -1848,7 +1847,6 @@ TreeLoadBalancer::BranchData::BranchData( const BranchData &other ):
    t_unpack_load(other.t_unpack_load),
    d_print_steps(other.d_print_steps)
 {
-   d_shipment->initialize();
 }
 
 

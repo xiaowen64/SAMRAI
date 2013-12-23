@@ -73,10 +73,10 @@ BoxTransitSet::BoxTransitSet( const PartitioningParams &pparams ) :
 *************************************************************************
 *************************************************************************
 */
-BoxTransitSet::BoxTransitSet( const BoxTransitSet &other ) :
+BoxTransitSet::BoxTransitSet( const BoxTransitSet &other, bool copy_load ) :
    TransitLoad(other),
-   d_set(other.d_set),
-   d_sumload(other.d_sumload),
+   d_set(),
+   d_sumload(0),
    d_pparams(other.d_pparams),
    d_box_breaker(other.d_box_breaker),
    d_print_steps(other.d_print_steps),
@@ -86,6 +86,10 @@ BoxTransitSet::BoxTransitSet( const BoxTransitSet &other ) :
    d_print_edge_steps(other.d_print_edge_steps),
    d_object_timers(other.d_object_timers)
 {
+   if ( copy_load ) {
+      d_set = other.d_set;
+      d_sumload = other.d_sumload;
+   }
    d_box_breaker.setPrintBreakSteps(d_print_break_steps);
 }
 
@@ -105,14 +109,12 @@ void BoxTransitSet::initialize()
 
 /*
 *************************************************************************
-Initialize sets to a new (empty) container but retains current
-supplemental data such as diagnostic parameters.
+Allocate a new object exactly like this, but empty.
 *************************************************************************
 */
 BoxTransitSet* BoxTransitSet::clone() const
 {
-   BoxTransitSet* new_object = new BoxTransitSet(*this);
-   new_object->initialize();
+   BoxTransitSet* new_object = new BoxTransitSet(*this, false);
    return new_object;
 }
 

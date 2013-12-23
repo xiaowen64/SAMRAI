@@ -54,7 +54,7 @@ public:
    VoucherTransitLoad( const PartitioningParams &pparams );
 
    //! @name Copy constructor
-   VoucherTransitLoad( const VoucherTransitLoad &other );
+   VoucherTransitLoad( const VoucherTransitLoad &other, bool copy_load = true );
 
    //@{
    //! @name TransitLoad abstract interfaces
