@@ -430,7 +430,11 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
 *************************************************************************
 * Alternative option to recursively partition work supply.
 * This version tries to avoid cutting small amounts out of big
-* boxes, which unavoidable generates slivers.
+* boxes, which unavoidablly generates slivers.
+*
+* This method splits the reserve into a left half and a right half.
+* It gives the left side to demanders in first half of [begin,end) and
+* the right side to the second half.
 *************************************************************************
 */
 void VoucherTransitLoad::recursiveSendWorkSupply(
