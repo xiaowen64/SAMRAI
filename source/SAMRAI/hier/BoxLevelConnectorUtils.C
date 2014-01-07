@@ -461,8 +461,8 @@ BoxLevelConnectorUtils::makeSortingMap(
          output_map->insertLocalNeighbor(new_box,
             cur_box.getBoxId());
       }
-      sorted_box_level->finalize();
    }
+   sorted_box_level->finalize();
 
    d_object_timers->t_make_sorting_map->stop();
 }
