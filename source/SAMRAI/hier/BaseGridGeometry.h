@@ -1026,14 +1026,14 @@ private:
       const BlockId& transformed_block);
 
    /*!
-    * @brief Return a list of Neighbor objects describing all of the neighbors
-    * of the block indicated by the block_id.
+    * @brief Return a map containing Neighbor objects describing all of the
+    * neighbors of the block indicated by the block_id.
     *
-    * @return The list of neighbors
+    * @return The map holding the neighbors
     *
     * @param[in] block_id
     */
-   const std::list<Neighbor>&
+   const std::map<BlockId, Neighbor>&
    getNeighbors(
       const BlockId& block_id) const
    {
@@ -1359,7 +1359,7 @@ private:
     * @brief Associated with each block is a list of Neighbors that
     * it shares a block boundary with.
     */
-   std::vector<std::list<Neighbor> > d_block_neighbors;
+   std::vector<std::map<BlockId, Neighbor> > d_block_neighbors;
 
    /*!
     * @brief An array of BoxContainers defining the singularities of a multiblock

@@ -670,7 +670,8 @@ BaseGridGeometry::getFromRestart()
                nbr_transformed_domain,
                nbr_transformation);
             block_nbr.setSingularity(nbr_is_singularity);
-            d_block_neighbors[b].push_front(block_nbr);
+            std::pair<BlockId,Neighbor> nbr_pair(nbr_block_id, block_nbr);
+            d_block_neighbors[b].insert(nbr_pair);
          }
       }
    }
@@ -850,24 +851,25 @@ BaseGridGeometry::putToRestart(
          neighbors_db->putInteger("num_neighbors",
             static_cast<int>(d_block_neighbors[b].size()));
          int count = 0;
-         for (std::list<Neighbor>::const_iterator ni = d_block_neighbors[b].begin();
+         for (std::map<BlockId,Neighbor>::const_iterator ni = d_block_neighbors[b].begin();
               ni != d_block_neighbors[b].end(); ++ni) {
+            const Neighbor& neighbor = ni->second;
             std::string neighbor_db_name =
                "neighbor_" + tbox::Utilities::intToString(count);
             boost::shared_ptr<tbox::Database> neighbor_db =
                neighbors_db->putDatabase(neighbor_db_name);
             neighbor_db->putInteger("nbr_block_id",
-               ni->getBlockId().getBlockValue());
-            ni->getTransformedDomain().putToRestart(neighbor_db);
+               neighbor.getBlockId().getBlockValue());
+            neighbor.getTransformedDomain().putToRestart(neighbor_db);
             neighbor_db->putInteger("rotation_identifier",
-               ni->getTransformation().getRotation());
-            ni->getTransformation().getOffset().putToRestart(*neighbor_db,
+               neighbor.getTransformation().getRotation());
+            neighbor.getTransformation().getOffset().putToRestart(*neighbor_db,
                "offset");
             neighbor_db->putInteger("begin_block",
-               ni->getTransformation().getBeginBlock().getBlockValue());
+               neighbor.getTransformation().getBeginBlock().getBlockValue());
             neighbor_db->putInteger("end_block",
-               ni->getTransformation().getEndBlock().getBlockValue());
-            neighbor_db->putBool("d_is_singularity", ni->isSingularity());
+               neighbor.getTransformation().getEndBlock().getBlockValue());
+            neighbor_db->putBool("d_is_singularity", neighbor.isSingularity());
             ++count;
          }
       }
@@ -1907,7 +1909,7 @@ BaseGridGeometry::readBlockDataFromInput(
             cur_grow.grow(hier::IntVector::getOne(d_dim));
             cur_grow.simplify();
 
-            std::list<Neighbor>& nbr_list =
+            std::map<BlockId, Neighbor>& nbr_map =
                d_block_neighbors[cur_block];
 
             /*
@@ -1918,15 +1920,16 @@ BaseGridGeometry::readBlockDataFromInput(
              */
             std::map<BlockId, BoxContainer> nbr_ghost_buffer;
 
-            for (std::list<Neighbor>::iterator nei = nbr_list.begin();
-                 nei != nbr_list.end(); nei++) {
+            for (std::map<BlockId, Neighbor>::iterator nei = nbr_map.begin();
+                 nei != nbr_map.end(); nei++) {
 
-               const hier::BlockId& nbr_blk = nei->getBlockId();
+               const hier::BlockId& nbr_blk = nei->second.getBlockId();
 
                if (singularity_blocks[si].find(nbr_blk.getBlockValue()) !=
                    singularity_blocks[si].end()) {
 
-                  BoxContainer transformed_domain(nei->getTransformedDomain());
+                  BoxContainer transformed_domain(
+                     nei->second.getTransformedDomain());
                   transformed_domain.unorder();
                   transformed_domain.intersectBoxes(cur_grow);
 
@@ -1975,14 +1978,14 @@ BaseGridGeometry::readBlockDataFromInput(
                d_has_enhanced_connectivity = true;
                d_singularity[cur_block].coalesce();
 
-               for (std::list<Neighbor>::iterator nei = nbr_list.begin();
-                    nei != nbr_list.end(); nei++) {
+               for (std::map<BlockId,Neighbor>::iterator nei = nbr_map.begin();
+                    nei != nbr_map.end(); nei++) {
 
-                  const hier::BlockId& nbr_blk = nei->getBlockId();
+                  const hier::BlockId& nbr_blk = nei->second.getBlockId();
                   if (encon_nbrs.find(nbr_blk.getBlockValue()) !=
                       encon_nbrs.end()) {
 
-                     nei->setSingularity(true);
+                     nei->second.setSingularity(true);
                 
                   }
                }
@@ -2010,23 +2013,23 @@ BaseGridGeometry::readBlockDataFromInput(
                   cdn->upper() += IntVector::getOne(d_dim);
                }
 
-               for (std::list<Neighbor>::iterator nei = nbr_list.begin();
-                    nei != nbr_list.end(); nei++) {
+               for (std::map<BlockId,Neighbor>::iterator nei = nbr_map.begin();
+                    nei != nbr_map.end(); nei++) {
 
-                  const hier::BlockId& nbr_blk = nei->getBlockId();
+                  const hier::BlockId& nbr_blk = nei->second.getBlockId();
 
                   if (singularity_blocks[si].find(nbr_blk.getBlockValue()) !=
                       singularity_blocks[si].end()) {
 
                      BoxContainer nbr_block_nodal(
-                        nei->getTransformedDomain());
+                        nei->second.getTransformedDomain());
                      for (BoxContainer::iterator nbn = nbr_block_nodal.begin();
                           nbn != nbr_block_nodal.end(); ++nbn) {
                         nbn->upper() += IntVector::getOne(d_dim);
                      }
 
                      cur_domain_nodal.intersectBoxes(nbr_block_nodal);
-                  } 
+                  }
                }
                cur_domain_nodal.coalesce();
                TBOX_ASSERT(cur_domain_nodal.size() <= 1); 
@@ -2180,11 +2183,11 @@ BaseGridGeometry::getDomainOutsideBlock(
    BoxContainer& domain_outside_block,
    const BlockId& block_id) const
 {
-   const std::list<Neighbor>& nbr_list =
+   const std::map<BlockId,Neighbor>& nbr_map =
       d_block_neighbors[block_id.getBlockValue()];
-   for (std::list<Neighbor>::const_iterator nei = nbr_list.begin();
-        nei != nbr_list.end(); nei++) {
-      BoxContainer transformed_domain(nei->getTransformedDomain()); 
+   for (std::map<BlockId,Neighbor>::const_iterator nei = nbr_map.begin();
+        nei != nbr_map.end(); nei++) {
+      BoxContainer transformed_domain(nei->second.getTransformedDomain()); 
       domain_outside_block.spliceFront(transformed_domain);
    }
 }
@@ -2259,8 +2262,10 @@ BaseGridGeometry::registerNeighbors(
    Neighbor neighbor_of_a(block_b, b_domain_in_a_space,
                           transformation);
 
-   d_block_neighbors[a].push_front(neighbor_of_a);
-   d_block_neighbors[b].push_front(neighbor_of_b);
+   std::pair<BlockId,Neighbor> nbr_of_a_pair(block_b, neighbor_of_a);
+   d_block_neighbors[a].insert(nbr_of_a_pair);
+   std::pair<BlockId,Neighbor> nbr_of_b_pair(block_a, neighbor_of_b);
+   d_block_neighbors[b].insert(nbr_of_b_pair);
 
 }
 
@@ -2281,17 +2286,16 @@ BaseGridGeometry::transformBox(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, box, ratio);
 
-   const std::list<Neighbor>& nbr_list =
-      d_block_neighbors[output_block.getBlockValue()];
-   for (std::list<Neighbor>::const_iterator ni = nbr_list.begin();
-        ni != nbr_list.end(); ni++) {
-      if (ni->getBlockId() == input_block) {
-         IntVector refined_shift = (ni->getShift()) * (ratio);
-         box.rotate(ni->getRotationIdentifier());
-         box.shift(refined_shift);
-         box.setBlockId(output_block);
-         return true;
-      }
+   int out_blk = output_block.getBlockValue();
+   std::map<BlockId,Neighbor>::const_iterator itr =
+      d_block_neighbors[out_blk].find(input_block); 
+   if (itr != d_block_neighbors[out_blk].end()) { 
+      const Neighbor& neighbor = itr->second;
+      IntVector refined_shift = (neighbor.getShift()) * (ratio);
+      box.rotate(neighbor.getRotationIdentifier());
+      box.shift(refined_shift);
+      box.setBlockId(output_block);
+      return true;
    }
    return false;
 }
@@ -2313,20 +2317,19 @@ BaseGridGeometry::transformBoxContainer(
    const BlockId& output_block,
    const BlockId& input_block) const
 {
-   const std::list<Neighbor>& nbr_list =
-      d_block_neighbors[output_block.getBlockValue()];
-   for (std::list<Neighbor>::const_iterator ni = nbr_list.begin();
-        ni != nbr_list.end(); ni++) {
-      if (ni->getBlockId() == input_block) {
-         IntVector refined_shift = (ni->getShift()) * (ratio);
-         boxes.rotate(ni->getRotationIdentifier());
-         boxes.shift(refined_shift);
-         for (BoxContainer::iterator itr = boxes.begin(); itr != boxes.end();
-              ++itr) {
-            itr->setBlockId(output_block);
-         }
-         return true;
+   int out_blk = output_block.getBlockValue();
+   std::map<BlockId,Neighbor>::const_iterator itr =
+      d_block_neighbors[out_blk].find(input_block);
+   if (itr != d_block_neighbors[out_blk].end()) {
+      const Neighbor& neighbor = itr->second;
+      IntVector refined_shift = (neighbor.getShift()) * (ratio);
+      boxes.rotate(neighbor.getRotationIdentifier());
+      boxes.shift(refined_shift);
+      for (BoxContainer::iterator itr = boxes.begin(); itr != boxes.end();
+           ++itr) {
+         itr->setBlockId(output_block);
       }
+      return true;
    }
    return false;
 }
@@ -2346,14 +2349,11 @@ BaseGridGeometry::getTransformedBlock(
    const BlockId& base_block,
    const BlockId& transformed_block)
 {
-   std::list<Neighbor>& nbr_list =
-      d_block_neighbors[base_block.getBlockValue()];
-   for (std::list<Neighbor>::iterator ni = nbr_list.begin();
-        ni != nbr_list.end(); ni++) {
-      if (ni->getBlockId() == transformed_block) {
-         block = ni->getTransformedDomain();
-         break;
-      }
+   int base_blk = base_block.getBlockValue();
+   std::map<BlockId,Neighbor>::const_iterator itr =
+      d_block_neighbors[base_blk].find(transformed_block);
+   if (itr != d_block_neighbors[base_blk].end()) {
+      block = itr->second.getTransformedDomain();
    }
 }
 
@@ -2389,10 +2389,10 @@ BaseGridGeometry::adjustMultiblockPatchLevelBoundaries(
 
          BoxContainer pseudo_domain;
 
-         std::list<Neighbor>& nbr_list = d_block_neighbors[nb];
-         for (std::list<Neighbor>::iterator nei = nbr_list.begin();
-              nei != nbr_list.end(); nei++) {
-            BoxContainer transformed_domain(nei->getTransformedDomain());
+         std::map<BlockId,Neighbor>& nbr_map = d_block_neighbors[nb];
+         for (std::map<BlockId,Neighbor>::iterator nei = nbr_map.begin();
+              nei != nbr_map.end(); nei++) {
+            BoxContainer transformed_domain(nei->second.getTransformedDomain());
             pseudo_domain.spliceFront(transformed_domain);
          }
 
@@ -2501,14 +2501,11 @@ BaseGridGeometry::getRotationIdentifier(
    TBOX_ASSERT(areNeighbors(dst, src));
 
    Transformation::RotationIdentifier rotate = Transformation::NO_ROTATE;
-   const std::list<Neighbor>& nbr_list =
-      d_block_neighbors[dst.getBlockValue()];
-   for (std::list<Neighbor>::const_iterator ni = nbr_list.begin();
-        ni != nbr_list.end(); ni++) {
-      if (ni->getBlockId() == src.getBlockValue()) {
-         rotate = ni->getTransformation().getRotation();
-         break;
-      }
+   int dst_blk = dst.getBlockValue();
+   std::map<BlockId,Neighbor>::const_iterator itr =
+      d_block_neighbors[dst_blk].find(src);
+   if (itr != d_block_neighbors[dst_blk].end()) {
+      rotate = itr->second.getTransformation().getRotation();
    }
 
    return rotate;
@@ -2526,13 +2523,11 @@ BaseGridGeometry::getOffset(
 {
    TBOX_ASSERT(areNeighbors(dst, src));
 
-   const std::list<Neighbor>& nbr_list =
-      d_block_neighbors[dst.getBlockValue()];
-   for (std::list<Neighbor>::const_iterator ni = nbr_list.begin();
-        ni != nbr_list.end(); ni++) {
-      if (ni->getBlockId() == src.getBlockValue()) {
-         return ni->getTransformation().getOffset();
-      }
+   int dst_blk = dst.getBlockValue();
+   std::map<BlockId,Neighbor>::const_iterator itr =
+      d_block_neighbors[dst_blk].find(src);
+   if (itr != d_block_neighbors[dst_blk].end()) {
+      return itr->second.getTransformation().getOffset();
    }
 
    return IntVector::getOne(d_dim);
@@ -2550,14 +2545,11 @@ BaseGridGeometry::areNeighbors(
 {
    bool are_neighbors = false;
 
-   const std::list<Neighbor>& nbr_list =
-      d_block_neighbors[block_a.getBlockValue()];
-   for (std::list<Neighbor>::const_iterator ni = nbr_list.begin();
-        ni != nbr_list.end(); ni++) {
-      if (ni->getBlockId() == block_b.getBlockValue()) {
-         are_neighbors = true;
-         break;
-      }
+   int a_blk = block_a.getBlockValue();
+   std::map<BlockId,Neighbor>::const_iterator itr =
+      d_block_neighbors[a_blk].find(block_b);
+   if (itr != d_block_neighbors[a_blk].end()) {
+      are_neighbors = true;
    }
 
    return are_neighbors;
@@ -2575,15 +2567,12 @@ BaseGridGeometry::areSingularityNeighbors(
 {
    bool are_sing_neighbors = false;
 
-   const std::list<Neighbor>& nbr_list =
-      d_block_neighbors[block_a.getBlockValue()];
-   for (std::list<Neighbor>::const_iterator ni = nbr_list.begin();
-        ni != nbr_list.end(); ni++) {
-      if (ni->getBlockId() == block_b.getBlockValue()) {
-         if (ni->isSingularity()) {
-            are_sing_neighbors = true;
-            break;
-         }
+   int a_blk = block_a.getBlockValue();
+   std::map<BlockId,Neighbor>::const_iterator itr =
+      d_block_neighbors[a_blk].find(block_b);
+   if (itr != d_block_neighbors[a_blk].end()) {
+      if (itr->second.isSingularity()) {
+         are_sing_neighbors = true;
       }
    }
 
@@ -2624,13 +2613,13 @@ BaseGridGeometry::printClassData(
       stream << "   Block " << bn << '\n';
 
       const BlockId block_id(bn);
-      const std::list<Neighbor>& block_neighbors(getNeighbors(block_id));
+      const std::map<BlockId,Neighbor>& block_neighbors(getNeighbors(block_id));
 
       const BoxContainer& singularity_boxlist(getSingularityBoxContainer(block_id));
 
-      for (std::list<Neighbor>::const_iterator li = block_neighbors.begin();
+      for (std::map<BlockId,Neighbor>::const_iterator li = block_neighbors.begin();
            li != block_neighbors.end(); li++) {
-         const Neighbor& neighbor(*li);
+         const Neighbor& neighbor(li->second);
          stream << "      neighbor block " << neighbor.getBlockId() << ':';
          stream << " singularity = " << neighbor.isSingularity() << '\n';
       }

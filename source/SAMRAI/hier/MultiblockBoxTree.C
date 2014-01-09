@@ -119,14 +119,14 @@ MultiblockBoxTree::findOverlapBoxes(
     * Search in the index spaces neighboring block_id for overlaps.
     */
 
-   const std::list<BaseGridGeometry::Neighbor>& block_neighbors(
+   const std::map<BlockId,BaseGridGeometry::Neighbor>& block_neighbors(
       d_grid_geometry->getNeighbors(block_id));
 
-   for (std::list<BaseGridGeometry::Neighbor>::const_iterator ni =
+   for (std::map<BlockId,BaseGridGeometry::Neighbor>::const_iterator ni =
         block_neighbors.begin();
         ni != block_neighbors.end(); ni++) {
 
-      const BaseGridGeometry::Neighbor& neighbor(*ni);
+      const BaseGridGeometry::Neighbor& neighbor(ni->second);
 
       if (!include_singularity_block_neighbors && neighbor.isSingularity()) {
          continue;
@@ -184,14 +184,14 @@ MultiblockBoxTree::findOverlapBoxes(
     * Search in the index spaces neighboring block_id for overlaps.
     */
 
-   const std::list<BaseGridGeometry::Neighbor>& block_neighbors(
+   const std::map<BlockId,BaseGridGeometry::Neighbor>& block_neighbors(
       d_grid_geometry->getNeighbors(block_id));
 
-   for (std::list<BaseGridGeometry::Neighbor>::const_iterator ni =
+   for (std::map<BlockId,BaseGridGeometry::Neighbor>::const_iterator ni =
         block_neighbors.begin();
         ni != block_neighbors.end(); ni++) {
 
-      const BaseGridGeometry::Neighbor& neighbor(*ni);
+      const BaseGridGeometry::Neighbor& neighbor(ni->second);
 
       if (!include_singularity_block_neighbors && neighbor.isSingularity()) {
          continue;
