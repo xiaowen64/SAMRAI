@@ -1498,7 +1498,7 @@ BoxLevelConnectorUtils::computeNonIntersectingParts(
                         input_to_takeaway,
                         IntVector::getZero(dim));
 
-   input_to_remainder = boost::static_pointer_cast<Connector>(i_to_r_map);
+   input_to_remainder = BOOST_CAST<Connector>(i_to_r_map);
 
    TBOX_ASSERT(input_to_remainder->getConnectorWidth() ==
                IntVector::getZero(dim)); 

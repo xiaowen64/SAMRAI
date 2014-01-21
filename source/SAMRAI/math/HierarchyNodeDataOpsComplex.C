@@ -869,8 +869,7 @@ HierarchyNodeDataOpsComplex::L1Norm(
          }
 
          boost::shared_ptr<pdat::NodeData<double> > cv(
-            pd,
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(pd));
          norm += d_patch_ops.L1Norm(d, box, cv);
       }
    }
@@ -935,8 +934,7 @@ HierarchyNodeDataOpsComplex::weightedL2Norm(
          }
 
          boost::shared_ptr<pdat::NodeData<double> > cv(
-            pd,
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(pd));
          double pnorm = d_patch_ops.weightedL2Norm(d, w, box, cv);
 
          norm_squared += pnorm * pnorm;
@@ -1016,8 +1014,7 @@ HierarchyNodeDataOpsComplex::maxNorm(
          }
 
          boost::shared_ptr<pdat::NodeData<double> > cv(
-            pd,
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(pd));
          norm = tbox::MathUtilities<double>::Max(norm,
                d_patch_ops.maxNorm(d, box, cv));
       }
@@ -1071,8 +1068,7 @@ HierarchyNodeDataOpsComplex::dot(
          }
 
          boost::shared_ptr<pdat::NodeData<double> > cv(
-            pd,
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(pd));
          dprod += d_patch_ops.dot(d1, d2, box, cv);
       }
    }

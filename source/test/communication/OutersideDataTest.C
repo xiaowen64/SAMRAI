@@ -212,11 +212,9 @@ void OutersideDataTest::initializeDataOnPatch(
          TBOX_ASSERT(data);
 
          boost::shared_ptr<pdat::OutersideData<double> > oside_data(
-            data,
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(data));
          boost::shared_ptr<pdat::SideData<double> > side_data(
-            data,
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(data));
 
          hier::Box dbox = data->getBox();
 
@@ -239,11 +237,9 @@ void OutersideDataTest::initializeDataOnPatch(
          TBOX_ASSERT(data);
 
          boost::shared_ptr<pdat::OutersideData<double> > oside_data(
-            data,
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(data));
          boost::shared_ptr<pdat::SideData<double> > side_data(
-            data,
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(data));
 
          hier::Box dbox = data->getGhostBox();
 

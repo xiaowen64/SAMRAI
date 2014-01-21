@@ -140,14 +140,14 @@ GriddingAlgorithm::GriddingAlgorithm(
    tag_interior_variable_name += dim_extension.str();
    tag_buffer_variable_name += dim_extension.str();
 
-   d_tag = boost::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
+   d_tag = BOOST_CAST<pdat::CellVariable<int>, hier::Variable>(
        var_db->getVariable(tag_interior_variable_name));
    if (!d_tag) {
       d_tag.reset(
          new pdat::CellVariable<int>(dim, tag_interior_variable_name, 1));
    }
 
-   d_buf_tag = boost::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
+   d_buf_tag = BOOST_CAST<pdat::CellVariable<int>, hier::Variable>(
       var_db->getVariable(tag_buffer_variable_name));
    if (!d_buf_tag) {
       d_buf_tag.reset(new pdat::CellVariable<int>(dim,
@@ -209,8 +209,8 @@ GriddingAlgorithm::GriddingAlgorithm(
    }
    if (d_tag_init_strategy->getErrorCoarsenRatio() > 1) {
       boost::shared_ptr<StandardTagAndInitialize> std_tag_init(
-         d_tag_init_strategy,
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST<StandardTagAndInitialize, TagAndInitializeStrategy>(
+            d_tag_init_strategy));
       if (std_tag_init) {
          d_hierarchy->registerConnectorWidthRequestor(
             std_tag_init->getConnectorWidthRequestor());
@@ -3913,7 +3913,7 @@ GriddingAlgorithm::computeProperNestingData(
       }
 
       d_to_nesting_complement[ln] =
-         boost::static_pointer_cast<hier::Connector, hier::MappingConnector>(
+         BOOST_CAST<hier::Connector, hier::MappingConnector>(
             to_nesting_complement);
       d_to_nesting_complement[ln]->setTranspose(
          d_to_nesting_complement[ln]->createLocalTranspose(),

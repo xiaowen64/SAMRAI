@@ -381,8 +381,8 @@ VisItDataWriter::resetLevelPlotQuantity(
 
    if (!found_type) {
       boost::shared_ptr<pdat::CellDataFactory<float> > ffactory(
-         factory,
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST<pdat::CellDataFactory<float>, hier::PatchDataFactory>(
+            factory));
       if (ffactory) {
          vdt = VISIT_FLOAT;
          vc = VISIT_CELL;
@@ -391,8 +391,8 @@ VisItDataWriter::resetLevelPlotQuantity(
    }
    if (!found_type) {
       boost::shared_ptr<pdat::NodeDataFactory<float> > ffactory(
-         factory,
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST<pdat::NodeDataFactory<float>, hier::PatchDataFactory>(
+            factory));
       if (ffactory) {
          vdt = VISIT_FLOAT;
          vc = VISIT_NODE;
@@ -402,8 +402,8 @@ VisItDataWriter::resetLevelPlotQuantity(
 
    if (!found_type) {
       boost::shared_ptr<pdat::CellDataFactory<double> > dfactory(
-         factory,
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST<pdat::CellDataFactory<double>, hier::PatchDataFactory>(
+            factory));
       if (dfactory) {
          vdt = VISIT_DOUBLE;
          vc = VISIT_CELL;
@@ -412,8 +412,8 @@ VisItDataWriter::resetLevelPlotQuantity(
    }
    if (!found_type) {
       boost::shared_ptr<pdat::NodeDataFactory<double> > dfactory(
-         factory,
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST<pdat::NodeDataFactory<double>, hier::PatchDataFactory>(
+            factory));
       if (dfactory) {
          vdt = VISIT_DOUBLE;
          vc = VISIT_NODE;
@@ -422,8 +422,8 @@ VisItDataWriter::resetLevelPlotQuantity(
    }
    if (!found_type) {
       boost::shared_ptr<pdat::CellDataFactory<int> > ifactory(
-         factory,
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST<pdat::CellDataFactory<int>, hier::PatchDataFactory>(
+            factory));
       if (ifactory) {
          vdt = VISIT_INT;
          vc = VISIT_CELL;
@@ -432,8 +432,8 @@ VisItDataWriter::resetLevelPlotQuantity(
    }
    if (!found_type) {
       boost::shared_ptr<pdat::NodeDataFactory<int> > ifactory(
-         factory,
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST<pdat::NodeDataFactory<int>, hier::PatchDataFactory>(
+            factory));
       if (ifactory) {
          vdt = VISIT_INT;
          vc = VISIT_NODE;
@@ -535,8 +535,8 @@ VisItDataWriter::registerNodeCoordinates(
    if (!found_type) {
 
       boost::shared_ptr<pdat::NodeDataFactory<float> > ffactory(
-         factory,
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST<pdat::NodeDataFactory<float>, hier::PatchDataFactory>(
+            factory));
       if (ffactory) {
          var_depth = ffactory->getDepth();
          found_type = true;
@@ -544,8 +544,8 @@ VisItDataWriter::registerNodeCoordinates(
    }
    if (!found_type) {
       boost::shared_ptr<pdat::NodeDataFactory<double> > dfactory(
-         factory,
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST<pdat::NodeDataFactory<double>, hier::PatchDataFactory>(
+            factory));
       if (dfactory) {
          var_depth = dfactory->getDepth();
          found_type = true;
@@ -647,16 +647,16 @@ VisItDataWriter::registerSingleNodeCoordinate(
    bool found_type = false;
    if (!found_type) {
       boost::shared_ptr<pdat::NodeDataFactory<float> > ffactory(
-         factory,
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST<pdat::NodeDataFactory<float>, hier::PatchDataFactory>(
+            factory));
       if (ffactory) {
          found_type = true;
       }
    }
    if (!found_type) {
       boost::shared_ptr<pdat::NodeDataFactory<double> > dfactory(
-         factory,
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST<pdat::NodeDataFactory<double>, hier::PatchDataFactory>(
+            factory));
       if (dfactory) {
          found_type = true;
       }
@@ -1120,8 +1120,8 @@ VisItDataWriter::initializePlotItem(
 
          if (!found_type) {
             boost::shared_ptr<pdat::CellDataFactory<float> > ffactory(
-               factory,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST<pdat::CellDataFactory<float>,
+                          hier::PatchDataFactory>(factory));
             if (ffactory) {
                plotitem.d_var_centering = VISIT_CELL;
                plotitem.d_var_data_type = VISIT_FLOAT;
@@ -1131,8 +1131,8 @@ VisItDataWriter::initializePlotItem(
          }
          if (!found_type) {
             boost::shared_ptr<pdat::CellDataFactory<double> > dfactory(
-               factory,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST<pdat::CellDataFactory<double>,
+                          hier::PatchDataFactory>(factory));
             if (dfactory) {
                plotitem.d_var_centering = VISIT_CELL;
                plotitem.d_var_data_type = VISIT_DOUBLE;
@@ -1142,8 +1142,8 @@ VisItDataWriter::initializePlotItem(
          }
          if (!found_type) {
             boost::shared_ptr<pdat::CellDataFactory<int> > ifactory(
-               factory,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST<pdat::CellDataFactory<int>,
+                          hier::PatchDataFactory>(factory));
             if (ifactory) {
                plotitem.d_var_centering = VISIT_CELL;
                plotitem.d_var_data_type = VISIT_INT;
@@ -1153,8 +1153,8 @@ VisItDataWriter::initializePlotItem(
          }
          if (!found_type) {
             boost::shared_ptr<pdat::NodeDataFactory<float> > ffactory(
-               factory,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST<pdat::NodeDataFactory<float>,
+                          hier::PatchDataFactory>(factory));
             if (ffactory) {
                plotitem.d_var_centering = VISIT_NODE;
                plotitem.d_var_data_type = VISIT_FLOAT;
@@ -1164,8 +1164,8 @@ VisItDataWriter::initializePlotItem(
          }
          if (!found_type) {
             boost::shared_ptr<pdat::NodeDataFactory<double> > dfactory(
-               factory,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST<pdat::NodeDataFactory<double>,
+                          hier::PatchDataFactory>(factory));
             if (dfactory) {
                plotitem.d_var_centering = VISIT_NODE;
                plotitem.d_var_data_type = VISIT_DOUBLE;
@@ -1175,8 +1175,8 @@ VisItDataWriter::initializePlotItem(
          }
          if (!found_type) {
             boost::shared_ptr<pdat::NodeDataFactory<int> > ifactory(
-               factory,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST<pdat::NodeDataFactory<int>,
+                          hier::PatchDataFactory>(factory));
             if (ifactory) {
                plotitem.d_var_centering = VISIT_NODE;
                plotitem.d_var_data_type = VISIT_INT;
