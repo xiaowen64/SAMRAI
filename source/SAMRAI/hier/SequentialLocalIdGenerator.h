@@ -20,12 +20,11 @@ namespace SAMRAI {
 namespace hier {
 
 /*!
- * @brief Strategy interface for generating LocalId.
+ * @brief Class for generating sequential LocalId.
  *
- * This implementation generates new LocalId by increasing the
- * previously generated value by a constant increment (1 by default).
- * It is possible to set both the previously generated valut and the
- * increment.
+ * Objects of this class generate new LocalId by increasing the last
+ * generated value by a constant increment (1 by default).  It is
+ * possible to set both the last generated value and the increment.
  */
 class SequentialLocalIdGenerator
 {
@@ -40,7 +39,7 @@ public:
       d_last_value(-1), d_increment(1) {}
 
    /*!
-    * @brief Default constructor.
+    * @brief Constructor.
     *
     * Construct an object with user-defined last value and increment.
     */
@@ -56,7 +55,7 @@ public:
    ~SequentialLocalIdGenerator() {}
 
    /*!
-    * @brief Return a LocalId that is greater than the previous
+    * @brief Return a LocalId that is greater than the last
     * value by the increment value.
     */
    LocalId nextValue() {
