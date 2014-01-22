@@ -339,7 +339,11 @@ public:
    {
       BoxId mbid(gid);
       PatchContainer::const_iterator it = d_patches.find(mbid);
-      TBOX_ASSERT(it != d_patches.end());
+      if (it == d_patches.end()) {
+         TBOX_ERROR("PatchLevel::getPatch error: GlobalId "
+                    << gid << " does not exist locally.\n"
+                    << "You must specify the GlobalId of a current local patch.");
+      }
       return it->second;
    }
 
@@ -357,12 +361,12 @@ public:
       const BoxId& mbid) const
    {
       const PatchContainer::const_iterator mi = d_patches.find(mbid);
-#ifdef DEBUG_CHECK_ASSERTIONS
       if (mi == d_patches.end()) {
-         TBOX_ERROR("PatchLevel::getPatch(" << mbid
-            << "): patch does not exist locally." << std::endl);
+         TBOX_ERROR("PatchLevel::getPatch error: BoxId "
+                    << mbid << " does not exist locally.\n"
+                    << "You must specify the BoxId of a current local box"
+                    << " that is not a periodic image.");
       }
-#endif
       return (*mi).second;
    }
 
@@ -374,7 +378,11 @@ public:
     */
    const boost::shared_ptr<Patch> &getPatch( size_t index ) const
       {
-         TBOX_ASSERT( index < d_patch_vector.size() );
+         if ( index >= d_patch_vector.size() ) {
+            TBOX_ERROR("PatchLevel::getPatch error: index "
+                       << index << " is too big.\n"
+                       << "There are only " << d_patch_vector.size() << " patches.");
+         }
          return d_patch_vector[index];
       }
 
