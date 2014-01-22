@@ -421,7 +421,7 @@ TileClustering::clusterWithinProcessBoundaries(
       if ( patch.getBox().intersects(bounding_box) ) {
 
          boost::shared_ptr<pdat::CellData<int> > tag_data(
-            patch.getPatchData(tag_data_index), boost::detail::dynamic_cast_tag());
+            BOOST_CAST<pdat::CellData<int>, hier::PatchData>(patch.getPatchData(tag_data_index)));
 
          hier::BoxContainer tiles;
          int num_coarse_tags =
@@ -533,7 +533,7 @@ TileClustering::clusterWholeTiles(
       if ( !patch.getBox().intersects(bounding_box) ) { continue; }
 
       boost::shared_ptr<pdat::CellData<int> > tag_data(
-         patch.getPatchData(tag_data_index), boost::detail::dynamic_cast_tag());
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(patch.getPatchData(tag_data_index)));
 
       if (d_print_steps) {
          tbox::plog << "TileClusteringclusterWholeTiles: making coarsened tags." << std::endl;
