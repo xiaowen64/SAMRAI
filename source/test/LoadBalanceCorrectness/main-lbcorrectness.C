@@ -36,10 +36,12 @@
 #include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/BreadthFirstRankTree.h"
 #include "SAMRAI/tbox/CenteredRankTree.h"
+#include "SAMRAI/tbox/HDFDatabase.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
+#include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include <vector>
 
@@ -288,6 +290,14 @@ int main(
          PIO::logOnlyNodeZero(log_file_name);
       }
 
+#ifdef _OPENMP
+      tbox::plog << "Compiled with OpenMP version " << _OPENMP
+                 << ".  Running with " << omp_get_max_threads() << " threads."
+                 << std::endl;
+#else
+      tbox::plog << "Compiled without OpenMP.\n";
+#endif
+
 
       /*
        * Whether to perform certain steps in mesh generation.
@@ -489,7 +499,6 @@ int main(
       baseline_filename = baseline_filename + "/" + base_name + ".baselinedb."
          + tbox::Utilities::processorToString(mpi.getRank());
 #endif
-      tbox::HDFDatabase basline_db(baseline_filename);
 
       /*
        * If baseline_action states whether we want to generate the
@@ -504,6 +513,8 @@ int main(
          TBOX_ERROR("main: If given, baseline_action must be \"GENERATE\" or \"COMPARE\"");
       }
 
+
+#ifdef HAVE_HDF5
       boost::shared_ptr<tbox::HDFDatabase> baseline_db(
          new tbox::HDFDatabase("LoadBalanceCorrectness baseline"));
 
@@ -512,6 +523,11 @@ int main(
       } else if (baseline_action == 'c') {
          baseline_db->open(baseline_filename);
       }
+#else
+      TBOX_WARNING("HDF5 is not available.\n"
+                   << "Skipping baseline comparison and generation.\n"
+                   << "This means no regression checks!\n");
+#endif
 
 
       plog << "Input database after initialization..." << std::endl;
@@ -588,6 +604,7 @@ int main(
 
          outputPrebalance( L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0,0), "L0: " );
 
+#ifdef HAVE_HDF5
          if (baseline_action == 'g') {
             boost::shared_ptr<tbox::Database> prebalance_L0_db =
                baseline_db->putDatabase("prebalance BoxLevel 0");
@@ -605,7 +622,7 @@ int main(
 
             if (L0 != *baseline_prebalance_L0) {
                tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
-                          << "the prebalance BoxLevel generated is different\n"
+                          << "the prebalance L0 BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
                           << "Writing the BoxLevels in log files.\n";
@@ -615,6 +632,7 @@ int main(
                           << baseline_prebalance_L0->format("Baseline prebalance: ", 2);
             }
          }
+#endif
 
 
          if ( load_balance[0] ) {
@@ -635,6 +653,7 @@ int main(
          }
 
 
+#ifdef HAVE_HDF5
          if (baseline_action == 'g') {
             boost::shared_ptr<tbox::Database> postbalance_box_level_db =
                baseline_db->putDatabase("postbalance BoxLevel 0");
@@ -652,7 +671,7 @@ int main(
 
             if (L0 != *baseline_postbalance_L0) {
                tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
-                          << "the postbalance BoxLevel generated is different\n"
+                          << "the postbalance L0 BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
                           << "Writing the BoxLevels in log files.\n";
@@ -662,6 +681,7 @@ int main(
                           << baseline_postbalance_L0->format("Baseline postbalance: ", 2);
             }
          }
+#endif
 
          sortNodes(L0,
             *domain_to_L0,
@@ -781,6 +801,7 @@ int main(
 
          outputPrebalance( *L1, L0, required_connector_width, "L1: " );
 
+#ifdef HAVE_HDF5
          if (baseline_action == 'g') {
             boost::shared_ptr<tbox::Database> prebalance_box_level_db =
                baseline_db->putDatabase("prebalance BoxLevel 1");
@@ -798,7 +819,7 @@ int main(
 
             if (*L1 != *baseline_prebalance_L1) {
                tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
-                          << "the prebalance BoxLevel generated is different\n"
+                          << "the prebalance L1 BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
                           << "Writing the BoxLevels in log files.\n";
@@ -808,6 +829,7 @@ int main(
                           << baseline_prebalance_L1->format("Baseline prebalance: ", 2);
             }
          }
+#endif
 
 
          if ( load_balance[1] ) {
@@ -828,6 +850,7 @@ int main(
          }
 
 
+#ifdef HAVE_HDF5
          if (baseline_action == 'g') {
             boost::shared_ptr<tbox::Database> postbalance_box_level_db =
                baseline_db->putDatabase("postbalance BoxLevel 1");
@@ -845,7 +868,7 @@ int main(
 
             if (*L1 != *baseline_postbalance_L1) {
                tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
-                          << "the postbalance BoxLevel generated is different\n"
+                          << "the postbalance L1 BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
                           << "Writing the BoxLevels in log files.\n";
@@ -855,6 +878,7 @@ int main(
                           << baseline_postbalance_L1->format("Baseline postbalance: ", 2);
             }
          }
+#endif
 
          sortNodes(*L1,
                    *L0_to_L1,
@@ -972,6 +996,7 @@ int main(
 
          outputPrebalance( *L2, L1, required_connector_width, "L2: " );
 
+#ifdef HAVE_HDF5
          if (baseline_action == 'g') {
             boost::shared_ptr<tbox::Database> prebalance_box_level_db =
                baseline_db->putDatabase("prebalance BoxLevel 2");
@@ -989,7 +1014,7 @@ int main(
 
             if (*L2 != *baseline_prebalance_L2) {
                tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
-                          << "the prebalance BoxLevel generated is different\n"
+                          << "the prebalance L2 BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
                           << "Writing the BoxLevels in log files.\n";
@@ -999,6 +1024,7 @@ int main(
                           << baseline_prebalance_L2->format("Baseline prebalance: ", 2);
             }
          }
+#endif
 
 
          if ( load_balance[2] ) {
@@ -1019,6 +1045,7 @@ int main(
          }
 
 
+#ifdef HAVE_HDF5
          if (baseline_action == 'g') {
             boost::shared_ptr<tbox::Database> postbalance_box_level_db =
                baseline_db->putDatabase("postbalance BoxLevel 2");
@@ -1036,7 +1063,7 @@ int main(
 
             if (*L2 != *baseline_postbalance_L2) {
                tbox::perr << "FAILED: LoadBalanceCorrectness test regression:\n"
-                          << "the postbalance BoxLevel generated is different\n"
+                          << "the postbalance L2 BoxLevel generated is different\n"
                           << "from the baseline in the database.  The load balancing\n"
                           << "may be correct, but it failed against regression.\n"
                           << "Writing the BoxLevels in log files.\n";
@@ -1046,6 +1073,7 @@ int main(
                           << baseline_postbalance_L2->format("Baseline postbalance: ", 2);
             }
          }
+#endif
 
          sortNodes(*L2,
                    *L1_to_L2,
@@ -1389,35 +1417,53 @@ createLoadBalancer(
       boost::shared_ptr<tbox::RankTreeStrategy> rank_tree = getRankTree(*input_db,
                                                                         rank_tree_type);
 
+      const boost::shared_ptr<tbox::Database> db =
+         input_db->getDatabaseWithDefault("TreeLoadBalancer",
+                                          boost::shared_ptr<tbox::Database>());
       boost::shared_ptr<mesh::TreeLoadBalancer>
          tree_lb(new mesh::TreeLoadBalancer(
             dim,
             std::string("mesh::TreeLoadBalancer") + tbox::Utilities::intToString(ln),
-            input_db->getDatabaseWithDefault("TreeLoadBalancer",
-                                             boost::shared_ptr<tbox::Database>()),
+            db,
             rank_tree ));
       tree_lb->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
       tree_lb->setCommGraphWriter(comm_graph_writer);
+      if ( db ) {
+         tbox::plog << "TreeLoadBalancer created with this input database:\n";
+         db->printClassData(plog);
+      }
       return tree_lb;
 
    } else if (lb_type == "TilePartitioner") {
 
+      const boost::shared_ptr<tbox::Database> db =
+         input_db->getDatabaseWithDefault("TilePartitioner",
+                                          boost::shared_ptr<tbox::Database>());
       boost::shared_ptr<mesh::TilePartitioner>
          tile_lb(new mesh::TilePartitioner(
             dim,
             std::string("mesh::TilePartitioner") + tbox::Utilities::intToString(ln),
-            input_db->getDatabaseWithDefault("TilePartitioner",
-                                             boost::shared_ptr<tbox::Database>())));
+            db ));
+      if ( db ) {
+         tbox::plog << "TilePartitioner created with this input database:\n";
+         db->printClassData(plog);
+      }
       return tile_lb;
 
    } else if (lb_type == "ChopAndPackLoadBalancer") {
 
+      const boost::shared_ptr<tbox::Database> db =
+         input_db->getDatabaseWithDefault("ChopAndPackackLoadBalancer",
+                                          boost::shared_ptr<tbox::Database>());
       boost::shared_ptr<mesh::ChopAndPackLoadBalancer>
          cap_lb(new mesh::ChopAndPackLoadBalancer(
             dim,
             std::string("mesh::ChopAndPackLoadBalancer") + tbox::Utilities::intToString(ln),
-            input_db->getDatabaseWithDefault("ChopAndPackLoadBalancer",
-                                             boost::shared_ptr<tbox::Database>())));
+            db ));
+      if ( db ) {
+         tbox::plog << "ChopAndPackLoadBalancer created with this input database:\n";
+         db->printClassData(plog);
+      }
       return cap_lb;
 
    }
@@ -1683,6 +1729,12 @@ int checkBalanceCorrectness(
          }
          ++error_count;
       }
+   }
+
+   if (error_count > 0) {
+      tbox::plog << "Error - balance correctness failed regardless of baseline\n"
+                 << std::endl;
+      ++error_count;
    }
 
    return error_count;

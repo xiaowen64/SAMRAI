@@ -39,6 +39,7 @@
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include <vector>
@@ -99,6 +100,7 @@ boost::shared_ptr<mesh::BoxGeneratorStrategy>
 createBoxGenerator(
    const boost::shared_ptr<tbox::Database> &input_db,
    const std::string &bg_type,
+   int ln,
    const tbox::Dimension &dim );
 
 boost::shared_ptr<mesh::LoadBalanceStrategy>
@@ -256,7 +258,7 @@ int main(
          base_name_ext = base_name_ext + '-' + case_name;
       }
       base_name_ext = base_name_ext + '-' +
-           tbox::Utilities::processorToString(mpi.getSize());
+           tbox::Utilities::nodeToString(mpi.getSize());
       tbox::plog << "Added case name (" << case_name << ") and nprocs ("
                  << mpi.getSize() << ") to base name -> '"
                  << base_name_ext << "'\n";
@@ -279,6 +281,13 @@ int main(
       } else {
          PIO::logOnlyNodeZero(log_file_name);
       }
+
+      tbox::plog << "MPI has " << tbox::SAMRAI_MPI::getSAMRAIWorld().getSize()
+                 << " processes." << std::endl;
+      tbox::plog << "OpenMP version "
+                 << TBOX_omp_version << ".\n"
+                 << "Running with " << TBOX_omp_get_max_threads() << " threads."
+                 << std::endl;
 
 
       /*
@@ -385,9 +394,6 @@ int main(
       std::string box_generator_type =
          main_db->getStringWithDefault("box_generator_type", "BergerRigoutsos");
 
-      boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator =
-         createBoxGenerator( input_db, box_generator_type, dim );
-
       /*
        * Create hierarchy.
        */
@@ -451,8 +457,12 @@ int main(
        * Set up the load balancers.
        */
 
-      std::string load_balancer_type =
-         main_db->getStringWithDefault("load_balancer_type", "TreeLoadBalancer");
+      std::vector<std::string> load_balancer_type =
+         main_db->getStringVector("load_balancer_type");
+      load_balancer_type.reserve(hierarchy->getMaxNumberOfLevels());
+      while ( static_cast<int>(load_balancer_type.size()) < hierarchy->getMaxNumberOfLevels() ) {
+         load_balancer_type.push_back(load_balancer_type.back());
+      }
 
       std::string rank_tree_type =
          main_db->getStringWithDefault("rank_tree_type", "CenteredRankTree");
@@ -516,7 +526,7 @@ int main(
          hier::Connector* L0_to_domain = &domain_to_L0->getTranspose();
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb0 =
-            createLoadBalancer( input_db, load_balancer_type, rank_tree_type, 0, dim );
+            createLoadBalancer( input_db, load_balancer_type[0], rank_tree_type, 0, dim );
 
          tbox::plog << "\n\tL0 prebalance loads:\n";
          mesh::BalanceUtilities::gatherAndReportLoadBalance(
@@ -603,9 +613,11 @@ int main(
          /*
           * Cluster.
           */
+         boost::shared_ptr<mesh::BoxGeneratorStrategy> bg1 =
+            createBoxGenerator( input_db, box_generator_type, finer_ln, dim );
          tbox::pout << "\tClustering..." << std::endl;
          tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
-         box_generator->findBoxesContainingTags(
+         bg1->findBoxesContainingTags(
             L1,
             L0_to_L1,
             hierarchy->getPatchLevel(coarser_ln),
@@ -614,6 +626,26 @@ int main(
             hier::BoxContainer(L0->getGlobalBoundingBox(0)),
             min_size,
             required_connector_width);
+
+         if ( L0_to_L1->getConnectorWidth() != required_connector_width ) {
+            const hier::Connector &L0_to_L0 =
+               L0->findConnectorWithTranspose(
+                  *L0,
+                  required_connector_width,
+                  required_connector_width,
+                  hier::CONNECTOR_IMPLICIT_CREATION_RULE);
+            hier::OverlapConnectorAlgorithm timed_oca;
+            timed_oca.setTimerPrefix("apps::fix_zero_width1");
+            tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
+            timed_oca.bridgeWithNesting(
+               L0_to_L1,
+               L0_to_L0,
+               hier::Connector(*L0_to_L1),
+               hier::IntVector::getZero(dim),
+               hier::IntVector::getZero(dim),
+               required_connector_width,
+               true);
+         }
 
          outputPostcluster( *L1, *L0, required_connector_width, "L1: " );
 
@@ -644,7 +676,7 @@ int main(
          }
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb1
-            = createLoadBalancer( input_db, load_balancer_type, rank_tree_type, finer_ln , dim);
+            = createLoadBalancer( input_db, load_balancer_type[1], rank_tree_type, finer_ln , dim);
 
          outputPrebalance( *L1, *L0, required_connector_width, "L1: " );
 
@@ -735,8 +767,10 @@ int main(
           * Cluster.
           */
          tbox::pout << "\tClustering..." << std::endl;
+         boost::shared_ptr<mesh::BoxGeneratorStrategy> bg2 =
+            createBoxGenerator( input_db, box_generator_type, finer_ln, dim );
          tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
-         box_generator->findBoxesContainingTags(
+         bg2->findBoxesContainingTags(
             L2,
             L1_to_L2,
             hierarchy->getPatchLevel(coarser_ln),
@@ -745,6 +779,26 @@ int main(
             hier::BoxContainer(L1.getGlobalBoundingBox(0)),
             min_size,
             required_connector_width);
+
+         if ( L1_to_L2->getConnectorWidth() != required_connector_width ) {
+            const hier::Connector &L1_to_L1 =
+               L1.findConnectorWithTranspose(
+                  L1,
+                  required_connector_width,
+                  required_connector_width,
+                  hier::CONNECTOR_IMPLICIT_CREATION_RULE);
+            hier::OverlapConnectorAlgorithm timed_oca;
+            timed_oca.setTimerPrefix("apps::fix_zero_width2");
+            tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
+            timed_oca.bridgeWithNesting(
+               L1_to_L2,
+               L1_to_L1,
+               hier::Connector(*L1_to_L2),
+               hier::IntVector::getZero(dim),
+               hier::IntVector::getZero(dim),
+               required_connector_width,
+               true);
+         }
 
          outputPostcluster( *L2, L1, required_connector_width, "L2: " );
 
@@ -776,7 +830,7 @@ int main(
 
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb2
-            = createLoadBalancer( input_db, load_balancer_type, rank_tree_type, finer_ln , dim);
+            = createLoadBalancer( input_db, load_balancer_type[2], rank_tree_type, finer_ln , dim);
 
          outputPrebalance( *L2, L1, required_connector_width, "L2: " );
 
@@ -1197,8 +1251,10 @@ boost::shared_ptr<mesh::BoxGeneratorStrategy>
 createBoxGenerator(
    const boost::shared_ptr<tbox::Database> &input_db,
    const std::string &bg_type,
+   int ln,
    const tbox::Dimension &dim )
 {
+   boost::shared_ptr<tbox::Database> null_db;
 
    if (bg_type == "BergerRigoutsos") {
 
@@ -1206,20 +1262,24 @@ createBoxGenerator(
       berger_rigoutsos(
          new mesh::BergerRigoutsos(
             dim,
-            input_db->getDatabaseWithDefault("BergerRigoutsos", boost::shared_ptr<tbox::Database>()) ) );
+            input_db->getDatabaseWithDefault(
+               std::string("BergerRigoutsos"), null_db ) ) );
       berger_rigoutsos->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      berger_rigoutsos->setTimerPrefix(
+         std::string("mesh::BergerRigoutsos") + tbox::Utilities::intToString(ln));
 
       return berger_rigoutsos;
 
    } else if (bg_type == "TileClustering") {
 
       boost::shared_ptr<mesh::TileClustering>
-      tiled(
+      tile_clustering(
          new mesh::TileClustering(
             dim,
-            input_db->getDatabaseWithDefault("TileClustering", boost::shared_ptr<tbox::Database>()) ) );
+            input_db->getDatabaseWithDefault(
+               std::string("TileClustering"), null_db ) ) );
 
-      return tiled;
+      return tile_clustering;
 
    }
    else {

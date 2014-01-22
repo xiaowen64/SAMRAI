@@ -14,10 +14,13 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BaseGridGeometry.h"
+#include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/math/PatchCellDataNormOpsReal.h"
+#include "SAMRAI/mesh/PartitioningParams.h"
 #include "SAMRAI/mesh/SpatialKey.h"
+#include "SAMRAI/tbox/RankGroup.h"
 
 #include <iostream>
 #include <list>
@@ -296,6 +299,28 @@ struct BalanceUtilities {
       const hier::Box& box);
 
    /*!
+    * @brief Evaluate whether a new load is an improvement over a
+    * current load based on their proximity to an ideal value or range
+    * of acceptable values.
+    *
+    * Return values in flags:
+    * - [0]: -1, 0 or 1: degrades, leave-alone or improves in-range
+    * - [1]: -1, 0 or 1: degrades, leave-alone or improves balance
+    * - [2]: 0 or 1: whether new is an overall improvement over current
+    *
+    * Return whether new_load is an improvement over current_load.
+    */
+   static bool
+   compareLoads(
+      int flags[],
+      double current_load,
+      double new_load,
+      double ideal_load,
+      double low_load,
+      double high_load,
+      const PartitioningParams &pparams);
+
+   /*!
     * Compute and return load balance efficiency for a level.
     *
     * @return         Double-valued estimate of the load balance efficiency
@@ -383,6 +408,37 @@ struct BalanceUtilities {
       std::ostream& output_stream);
 
    //@}
+
+
+   /*
+    * Constrain maximum box sizes in the given BoxLevel and
+    * update given Connectors to the changed BoxLevel.
+    *
+    * @pre !anchor_to_level || anchor_to_level->hasTranspose()
+    */
+   static void constrainMaxBoxSizes(
+      hier::BoxLevel& box_level,
+      hier::Connector* anchor_to_level,
+      const PartitioningParams &pparams );
+
+   static const int BalanceUtilities_PREBALANCE0 = 5;
+   static const int BalanceUtilities_PREBALANCE1 = 6;
+
+   /*!
+    * Move Boxes in balance_box_level from ranks outside of
+    * rank_group to ranks inside rank_group.  Modify the given connectors
+    * to make them correct following this moving of boxes.
+    *
+    * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
+    * @pre !balance_to_anchor || (balance_to_anchor->getTranspose().checkTransposeCorrectness(*balance_to_anchor) == 0)
+    * @pre !balance_to_anchor || (balance_to_anchor->checkTransposeCorrectness(balance_to_anchor->getTranspose()) == 0)
+    */
+   static void
+   prebalanceBoxLevel(
+      hier::BoxLevel& balance_box_level,
+      hier::Connector* balance_to_anchor,
+      const tbox::RankGroup& rank_group);
+
 
 private:
 

@@ -52,7 +52,7 @@ Main {
 
    rank_tree_type = "CenteredRankTree"
 
-   write_comm_graph = TRUE // Whether to write communication graph of TreeLoadBalancer.
+   write_comm_graph = FALSE
 
 }
 
@@ -63,7 +63,7 @@ BergerRigoutsos {
 
 TreeLoadBalancer {
   DEV_report_load_balance = FALSE // Reported in main
-  max_cycle_spread_ratio = 10
+  max_cycle_spread_procs = 10
   flexible_load_tolerance = 0.05
   DEV_balance_penalty_wt = 1.0
   DEV_surface_penalty_wt = 0.0
