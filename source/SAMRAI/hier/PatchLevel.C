@@ -36,6 +36,8 @@ boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_setup;
 boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_phys_domain;
 boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_touch_boundaries;
 boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_set_geometry;
+boost::shared_ptr<tbox::Timer> PatchLevel::t_set_patch_touches;
+boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_compute_shifts;
 
 tbox::StartupShutdownManager::Handler
 PatchLevel::s_initialize_finalize_handler(
@@ -144,6 +146,7 @@ PatchLevel::PatchLevel(
       patch = d_factory->allocate(box, d_descriptor);
       patch->setPatchLevelNumber(d_level_number);
       patch->setPatchInHierarchy(d_in_hierarchy);
+      d_patch_vector.push_back(patch);
    }
 
    d_boundary_boxes_created = false;
@@ -254,6 +257,7 @@ PatchLevel::PatchLevel(
       patch = d_factory->allocate(box, d_descriptor);
       patch->setPatchLevelNumber(d_level_number);
       patch->setPatchInHierarchy(d_in_hierarchy);
+      d_patch_vector.push_back(patch);
    }
 
    d_boundary_boxes_created = false;
@@ -474,6 +478,7 @@ PatchLevel::setRefinedPatchLevel(
       d_patches[box_id] = d_factory->allocate(box, d_descriptor);
       d_patches[box_id]->setPatchLevelNumber(d_level_number);
       d_patches[box_id]->setPatchInHierarchy(d_in_hierarchy);
+      d_patch_vector.push_back(d_patches[box_id]);
    }
 
    std::map<BoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
@@ -640,6 +645,7 @@ PatchLevel::setCoarsenedPatchLevel(
       d_patches[box_id] = d_factory->allocate(box, d_descriptor);
       d_patches[box_id]->setPatchLevelNumber(d_level_number);
       d_patches[box_id]->setPatchInHierarchy(d_in_hierarchy);
+      d_patch_vector.push_back(d_patches[box_id]);
    }
 
    d_boundary_boxes_created = false;
@@ -776,6 +782,7 @@ PatchLevel::getFromRestart(
    d_box_level.reset(new BoxLevel(getDim(), *mbl_database, grid_geometry));
 
    d_patches.clear();
+   d_patch_vector.clear();
 
    const BoxContainer& boxes = d_box_level->getBoxes();
    for (RealBoxConstIterator ni(boxes.realBegin());
@@ -803,6 +810,7 @@ PatchLevel::getFromRestart(
       patch->getFromRestart(
          restart_db->getDatabase(patch_name),
          component_selector);
+      d_patch_vector.push_back(patch);
    }
 
 }
@@ -976,6 +984,8 @@ PatchLevel::initializeCallback()
       getTimer("hier::PatchLevel::constructor_touch_boundaries");
    t_constructor_set_geometry = tbox::TimerManager::getManager()->
       getTimer("hier::PatchLevel::set_geometry");
+   t_constructor_compute_shifts = tbox::TimerManager::getManager()->
+      getTimer("hier::PatchLevel::constructor_compute_shifts");
 }
 
 /*
@@ -995,6 +1005,8 @@ PatchLevel::finalizeCallback()
    t_constructor_phys_domain.reset();
    t_constructor_touch_boundaries.reset();
    t_constructor_set_geometry.reset();
+   t_set_patch_touches.reset();
+   t_constructor_compute_shifts.reset();
 }
 
 /*

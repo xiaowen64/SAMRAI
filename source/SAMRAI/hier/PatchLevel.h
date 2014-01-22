@@ -367,6 +367,18 @@ public:
    }
 
    /*!
+    * @brief Get a patch using a random access index.
+    *
+    * The index specifies the position of the patch as would be
+    * encountered when iterating through the patches.
+    */
+   const boost::shared_ptr<Patch> &getPatch( size_t index ) const
+      {
+         TBOX_ASSERT( index < d_patch_vector.size() );
+         return d_patch_vector[index];
+      }
+
+   /*!
     * @brief Get the PatchDescriptor
     *
     * @return pointer to the patch descriptor for the hierarchy.
@@ -1120,9 +1132,13 @@ private:
 
    /*
     * @brief Container of distributed patches on level.
-    *
     */
    typedef std::map<BoxId, boost::shared_ptr<Patch> > PatchContainer;
+
+   /*
+    * @brief Vector of local patches on level.
+    */
+   typedef std::vector<boost::shared_ptr<Patch> > PatchVector;
 
 public:
    /*!
@@ -1379,10 +1395,24 @@ private:
     */
    PatchContainer d_patches;
 
+   /*!
+    * @brief Vector holding the same patches in d_patches, in the same order.
+    *
+    * This allows random access to the patches.
+    */
+   PatchVector d_patch_vector;
+
    /*
     * Flag to indicate boundary boxes are created.
     */
    bool d_boundary_boxes_created;
+
+   /*!
+    * @brief Has shutdown handler been initialized.
+    *
+    * This should be checked and set in every ctor.
+    */
+   static bool s_initialized;
 
    /*!
     * @brief Initialize static state
@@ -1395,6 +1425,8 @@ private:
    static boost::shared_ptr<tbox::Timer> t_constructor_phys_domain;
    static boost::shared_ptr<tbox::Timer> t_constructor_touch_boundaries;
    static boost::shared_ptr<tbox::Timer> t_constructor_set_geometry;
+   static boost::shared_ptr<tbox::Timer> t_set_patch_touches;
+   static boost::shared_ptr<tbox::Timer> t_constructor_compute_shifts;
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

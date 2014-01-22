@@ -7,6 +7,10 @@
  * Description:   Scalable load balancer using tree algorithm.
  *
  ************************************************************************/
+
+#ifndef included_mesh_TilePartitioner_C
+#define included_mesh_TilePartitioner_C
+
 #include "SAMRAI/mesh/TilePartitioner.h"
 
 #include "SAMRAI/mesh/BalanceUtilities.h"
@@ -309,4 +313,6 @@ TilePartitioner::printStatistics(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
+#endif
+
 #endif

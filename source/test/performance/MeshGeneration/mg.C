@@ -1222,6 +1222,7 @@ createLoadBalancer(
             std::string("mesh::TilePartitioner") + tbox::Utilities::intToString(ln),
             input_db->getDatabaseWithDefault("TilePartitioner",
                                              boost::shared_ptr<tbox::Database>())));
+      tile_lb->setCommGraphWriter(comm_graph_writer);
       return tile_lb;
 
    } else if (lb_type == "ChopAndPackLoadBalancer") {
@@ -1278,6 +1279,8 @@ createBoxGenerator(
             dim,
             input_db->getDatabaseWithDefault(
                std::string("TileClustering"), null_db ) ) );
+      tile_clustering->setTimerPrefix(
+         std::string("mesh::TileClustering") + tbox::Utilities::intToString(ln));
 
       return tile_clustering;
 

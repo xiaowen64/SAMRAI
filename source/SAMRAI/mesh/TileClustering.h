@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Asynchronous Berger-Rigoutsos clustering algorithm.
+ * Description:   Tile clustering algorithm.
  *
  ************************************************************************/
 #ifndef included_mesh_TileClustering
@@ -13,11 +13,13 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
+#include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/mesh/BoxGeneratorStrategy.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/pdat/CellData.h"
+#include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/Database.h"
 
 #include "boost/shared_ptr.hpp"
@@ -39,6 +41,23 @@ namespace mesh {
  *   - \b coalesce_boxes
  *   Whether to coalesce boxes after clustering.  This can lead to
  *   clusters that are bigger than specified tile size.
+ *
+ *   - \b coalesce_boxes_from_same_patch
+ *   Whether to coalesce tiled-boxes that originate from the
+ *   same tag patch.
+ *   This can reduce number of tiles and lead to clusters bigger than
+ *   tile size.
+ *
+ *   - \b allow_remote_tile_extent
+ *   Whether to tile to extend to remote tag patches.
+ *   If false, tiles will be cut at process boundaries, resulting in
+ *   completely local tiles.  If true, allow tiles to cross process
+ *   boundaries where, resulting in less tile fragmentation.
+ *   If false, clusters' extent can be dependent on how tag level
+ *   is partitioned.
+ *
+ *   - \b DEV_debug_checks
+ *   Whether to run expensive checks for debugging.
  *
  * <b> Details: </b> <br>
  * <table>
@@ -62,6 +81,30 @@ namespace mesh {
  *     <td>coalesce_boxes</td>
  *     <td>bool</td>
  *     <td>true</td>
+ *     <td>false/true</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>coalesce_boxes_from_same_patch</td>
+ *     <td>bool</td>
+ *     <td>false</td>
+ *     <td>false/true</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>allow_remote_tile_extent</td>
+ *     <td>bool</td>
+ *     <td>true</td>
+ *     <td>false/true</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>DEV_debug_checks</td>
+ *     <td>bool</td>
+ *     <td>false</td>
  *     <td>false/true</td>
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
@@ -113,6 +156,13 @@ public:
       const hier::IntVector& min_box,
       const hier::IntVector& max_gcw);
 
+   /*!
+    * @brief Setup names of timers.
+    */
+   void
+   setTimerPrefix(
+      const std::string& timer_prefix);
+
 protected:
    /*!
     * @brief Read parameters from input database.
@@ -125,8 +175,24 @@ protected:
 
 private:
 
+
    /*!
-    * Create, populate and return a coarsened version of the given tag data.
+    * @brief Cluster, cutting off tiles at process boundaries.
+    *
+    * This is a special implementation for when we do now allow tiles
+    * to cross process boundaries.
+    */
+   void clusterWithinProcessBoundaries(
+      hier::BoxLevel &new_box_level,
+      hier::Connector &tag_to_new,
+      const boost::shared_ptr<hier::PatchLevel>& tag_level,
+      const hier::BoxContainer& bound_boxes,
+      int tag_data_index,
+      int tag_val);
+
+   /*!
+    * @brief Create, populate and return a coarsened version of the
+    * given tag data.
     *
     * The coarse cell values are set to tag_data if any corresponding
     * fine cell value is tag_data.  Otherwise, the coarse cell value
@@ -136,7 +202,72 @@ private:
    makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
                         int tag_value) const;
 
-   void setTimers();
+   /*!
+    * @brief Find tagged tiles in a single patch.
+    */
+   int
+   findTilesContainingTags(
+      hier::BoxContainer &tiles,
+      const pdat::CellData<int> &tag_data,
+      int tag_val,
+      int first_tile_index);
+
+   /*!
+    * @brief Cluster tags into whole tiles.  The tiles are not cut up,
+    * even where they cross process boundaries or level boundaries.
+    */
+   void
+   clusterWholeTiles(
+      hier::BoxLevel &new_box_level,
+      boost::shared_ptr<hier::Connector> &tag_to_new,
+      int &local_tiles_have_remote_extent,
+      const boost::shared_ptr<hier::PatchLevel>& tag_level,
+      const hier::BoxContainer& bound_boxes,
+      int tag_data_index,
+      int tag_val);
+
+   /*!
+    * @brief Detect semilocal edges missing from the outputs of
+    * clusterWholeTiles().
+    */
+   void
+   detectSemilocalEdges( boost::shared_ptr<hier::Connector> &tag_to_tile );
+
+   /*!
+    * @brief Remove duplicate tiles created when a tile crosses a
+    * tag-level process boundary.
+    */
+   void
+   removeDuplicateTiles(
+      hier::BoxLevel &tile_box_level,
+      hier::Connector &tag_to_tiles);
+
+
+   /*
+    * @brief Shear tiles at block boundaries so they don't cross the boundaries.
+    */
+   void
+   shearTilesAtBlockBoundaries(
+      hier::BoxLevel &tile_box_level,
+      hier::Connector &tag_to_tiles );
+
+   /*!
+    * @brief Coalesce clusters (and update Connectors).
+    */
+   void
+   coalesceClusters(
+      hier::BoxLevel &tile_box_level,
+      boost::shared_ptr<hier::Connector> &tag_to_tile,
+      int tiles_have_remote_extent);
+
+   /*!
+    * @brief Special version of coalesceClusters.
+    * for use when tiles have no remote extent.
+    */
+   void
+   coalesceClusters(
+      hier::BoxLevel &tile_box_level,
+      boost::shared_ptr<hier::Connector> &tag_to_tile);
 
    const tbox::Dimension d_dim;
 
@@ -144,22 +275,90 @@ private:
    hier::IntVector d_box_size;
 
    /*!
-    * @brief Whether to coalesce tiled-boxes after clustering to
-    * create boxes bigger than tile size.
+    * @brief Whether to allow tiles to have remote extents.
+    */
+   bool d_allow_remote_tile_extent;
+
+   /*!
+    * @brief Whether to coalesce all local tiled-boxes after
+    * clustering.
+    *
+    * This can reduce number of tiles and lead to clusters bigger than
+    * tile size.
     */
    bool d_coalesce_boxes;
 
+   /*!
+    * @brief Whether to coalesce tiled-boxes that originate from the
+    * same tag patch.
+    *
+    * This can reduce number of tiles and lead to clusters bigger than
+    * tile size.
+    */
+   bool d_coalesce_boxes_from_same_patch;
+
+   /*!
+    * @brief Thread locker for modifying clustering outputs with multi-threads.
+    */
+   TBOX_omp_lock_t l_outputs;
+
+   /*!
+    * @brief Thread locker for modifying intermediate data with multi-threads.
+    */
+   TBOX_omp_lock_t l_interm;
+
    //@{
    //! @name Diagnostics and performance evaluation
+   bool d_debug_checks;
    hier::OverlapConnectorAlgorithm d_oca;
+   hier::MappingConnectorAlgorithm d_mca;
    bool d_log_cluster_summary;
    bool d_log_cluster;
    bool d_barrier_and_time;
    bool d_print_steps;
-   boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
-   boost::shared_ptr<tbox::Timer> t_cluster;
-   boost::shared_ptr<tbox::Timer> t_coalesce;
-   boost::shared_ptr<tbox::Timer> t_global_reductions;
+   //@}
+
+
+   //@{
+   //! @name Performance timer data for this class.
+
+   /*
+    * @brief Structure of timers used by this class.
+    *
+    * Each object can set its own timer names through
+    * setTimerPrefix().  This leads to many timer look-ups.  Because
+    * it is expensive to look up timers, this class caches the timers
+    * that has been looked up.  Each TimerStruct stores the timers
+    * corresponding to a prefix.
+    */
+   struct TimerStruct {
+      boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
+      boost::shared_ptr<tbox::Timer> t_cluster;
+      boost::shared_ptr<tbox::Timer> t_coalesce;
+      boost::shared_ptr<tbox::Timer> t_coalesce_adjustment;
+      boost::shared_ptr<tbox::Timer> t_global_reductions;
+      boost::shared_ptr<tbox::Timer> t_cluster_setup;
+      boost::shared_ptr<tbox::Timer> t_cluster_wrapup;
+   };
+
+   //! @brief Default prefix for Timers.
+   static const std::string s_default_timer_prefix;
+
+   /*!
+    * @brief Static container of timers that have been looked up.
+    */
+   static std::map<std::string, TimerStruct> s_static_timers;
+
+   static int s_primary_mpi_tag;
+   static int s_secondary_mpi_tag;
+   static int s_first_data_length;
+
+   /*!
+    * @brief Structure of timers in s_static_timers, matching this
+    * object's timer prefix.
+    */
+   TimerStruct* d_object_timers;
+
    //@}
 
 };

@@ -101,6 +101,36 @@ public:
    /*!
     * @brief Initializing constructor.
     *
+    * @param[in] lower
+    *
+    * @param[in] upper
+    *
+    * @param[in] block_id
+    *
+    * @param[in] local_id
+    *
+    * @param[in] owner_rank
+    *
+    * @param[in] periodic_id Describes the periodic shift.  If
+    * periodic_id is non-zero, specify the Box in the position shifted
+    * according to the @c periodic_id.  The default argument for @c
+    * periodic_id corresponds to the zero-shift.
+    *
+    * @pre periodic_id.isValid()
+    * @pre periodic_id.getPeriodicValue() <
+    *      PeriodicShiftCatalog::getCatalog(box.getDim())->getNumberOfShifts()
+    */
+   Box(
+      const Index& lower,
+      const Index& upper,
+      const BlockId& block_id,
+      const LocalId& local_id,
+      const int owner_rank,
+      const PeriodicId& periodic_id = PeriodicId::zero());
+
+   /*!
+    * @brief Initializing constructor.
+    *
     * @param[in] box
     *
     * @param[in] local_id
@@ -295,6 +325,13 @@ public:
    getBlockId() const
    {
       return d_block_id;
+   }
+
+   //! @brief Set the LocalId.
+   void
+   setLocalId(const LocalId &local_id)
+   {
+      return d_id.initialize(local_id, d_id.getOwnerRank(), d_id.getPeriodicId());
    }
 
    //! @brief Get the LocalId.
