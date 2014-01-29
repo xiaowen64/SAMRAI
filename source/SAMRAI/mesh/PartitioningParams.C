@@ -30,7 +30,7 @@ PartitioningParams::PartitioningParams(
    d_bad_interval(bad_interval),
    d_cut_factor(cut_factor),
    d_flexible_load_tol(flexible_load_tol),
-   d_load_comparison_tol(1e-9)
+   d_load_comparison_tol(1e-6)
 {
    for ( int bid(0); bid<grid_geometry.getNumberBlocks(); ++bid ) {
       grid_geometry.computePhysicalDomain(
@@ -48,6 +48,26 @@ PartitioningParams::PartitioningParams(
    d_cut_factor(other.d_cut_factor),
    d_load_comparison_tol(other.d_load_comparison_tol)
 {
+}
+
+
+std::ostream &operator<<(
+   std::ostream &os,
+   const PartitioningParams &pp )
+{
+   os.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
+   os.precision(6);
+   os << "min_size=" << pp.d_min_size
+      << "  max_size=" << pp.d_max_size
+      << "  bad_interval=" << pp.d_bad_interval
+      << "  cut_factor=" << pp.d_cut_factor
+      << "  flexible_load_tol=" << pp.d_flexible_load_tol
+      << "  load_comparison_tol=" << pp.d_load_comparison_tol;
+   for ( std::map<hier::BlockId,hier::BoxContainer>::const_iterator mi=pp.d_block_domain_boxes.begin();
+         mi!=pp.d_block_domain_boxes.end(); ++mi ) {
+      os << ' ' << mi->first << ':' << mi->second.format();
+   }
+   return os;
 }
 
 

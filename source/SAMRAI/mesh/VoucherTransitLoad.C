@@ -224,7 +224,9 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
    d_flexible_load_tol = flexible_load_tol;
 
    if ( d_print_steps ) {
-      tbox::plog << "VoucherTransitLoad::assignToLocalAndPopulateMaps: entered." << std::endl;
+      tbox::plog << "VoucherTransitLoad::assignToLocalAndPopulateMaps: entered."
+                 << "\npparams: " << *d_pparams
+                 << std::endl;
    }
 
    const hier::BoxLevel &unbalanced_box_level = unbalanced_to_balanced.getBase();
@@ -304,15 +306,15 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
 
       VoucherRedemption &vr = redemptions_to_fulfill[source];
       vr.recvWorkDemand( source, count, mpi );
+      unaccounted_work -= vr.d_voucher.d_load;
 
       if ( d_print_edge_steps ) {
          tbox::plog << "VoucherTransitLoad::assignToLocalAndPopulateMaps:"
                     << " received demand from " << source << " for voucher "
-                    << vr.d_voucher << '.'
+                    << vr.d_voucher << " leaving unaccounted_work = " << unaccounted_work
                     << std::endl;
       }
 
-      unaccounted_work -= vr.d_voucher.d_load;
       TBOX_ASSERT( unaccounted_work >= -d_pparams->getLoadComparisonTol() );
 
    }

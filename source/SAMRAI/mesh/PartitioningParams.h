@@ -78,6 +78,8 @@ public:
       return d_load_comparison_tol;
    }
 
+   friend std::ostream &operator<<( std::ostream &os, const PartitioningParams &pp );
+
 private:
 
    std::map<hier::BlockId,hier::BoxContainer> d_block_domain_boxes;
