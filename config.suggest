@@ -69,11 +69,12 @@ cat <<-EOF
 	--without-petsc
 	--without-x
 	--enable-rpath=no
+	--disable-openmp
 EOF
 # Maintained by Brian Gunney
 ;;
 
-bgq_mpixlcxx_r) # BG/Q, using mpixlcxx and OpenMP
+bgq_mpixlcxx_r) # BG/Q, using threaded mpixlcxx_r and OpenMP
 cat <<-EOF
 	--with-CXX=mpixlcxx_r
 	--with-CC=mpixlc_r
@@ -87,6 +88,7 @@ cat <<-EOF
 	--without-petsc
 	--without-x
 	--enable-rpath=no
+	--enable-openmp
 EOF
 # Maintained by Brian Gunney
 ;;
