@@ -444,15 +444,20 @@ SAMRAIVectorReal<TYPE>::setComponent(
    if (!vop) {
 
       const boost::shared_ptr<pdat::CellVariable<TYPE> > cellvar(
-         BOOST_CAST<pdat::CellVariable<TYPE>, hier::Variable>(var));
+         boost::dynamic_pointer_cast<pdat::CellVariable<TYPE>, hier::Variable>(
+            var));
       const boost::shared_ptr<pdat::EdgeVariable<TYPE> > edgevar(
-         BOOST_CAST<pdat::EdgeVariable<TYPE>, hier::Variable>(var));
+         boost::dynamic_pointer_cast<pdat::EdgeVariable<TYPE>, hier::Variable>(
+            var));
       const boost::shared_ptr<pdat::FaceVariable<TYPE> > facevar(
-         BOOST_CAST<pdat::FaceVariable<TYPE>, hier::Variable>(var));
+         boost::dynamic_pointer_cast<pdat::FaceVariable<TYPE>, hier::Variable>(
+            var));
       const boost::shared_ptr<pdat::NodeVariable<TYPE> > nodevar(
-         BOOST_CAST<pdat::NodeVariable<TYPE>, hier::Variable>(var));
+         boost::dynamic_pointer_cast<pdat::NodeVariable<TYPE>, hier::Variable>(
+            var));
       const boost::shared_ptr<pdat::SideVariable<TYPE> > sidevar(
-         BOOST_CAST<pdat::SideVariable<TYPE>, hier::Variable>(var));
+         boost::dynamic_pointer_cast<pdat::SideVariable<TYPE>, hier::Variable>(
+            var));
 
       if (cellvar) {
          if (!SAMRAIVectorReal<TYPE>::s_cell_ops[dim.getValue() - 1]) {

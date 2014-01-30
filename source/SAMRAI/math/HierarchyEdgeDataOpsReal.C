@@ -912,7 +912,8 @@ HierarchyEdgeDataOpsReal<TYPE>::L1Norm(
          }
 
          boost::shared_ptr<pdat::EdgeData<double> > cv(
-            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(pd));
+            boost::dynamic_pointer_cast<pdat::EdgeData<double>,
+                                        hier::PatchData>(pd));
          norm += d_patch_ops.L1Norm(data, box, cv);
       }
    }
@@ -984,7 +985,8 @@ HierarchyEdgeDataOpsReal<TYPE>::weightedL2Norm(
          }
 
          boost::shared_ptr<pdat::EdgeData<double> > cv(
-            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(pd));
+            boost::dynamic_pointer_cast<pdat::EdgeData<double>,
+                                        hier::PatchData>(pd));
          double pnorm = d_patch_ops.weightedL2Norm(data, weight, box, cv);
 
          norm_squared += pnorm * pnorm;
@@ -1068,7 +1070,8 @@ HierarchyEdgeDataOpsReal<TYPE>::maxNorm(
          }
 
          boost::shared_ptr<pdat::EdgeData<double> > cv(
-            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(pd));
+            boost::dynamic_pointer_cast<pdat::EdgeData<double>,
+                                        hier::PatchData>(pd));
          norm = tbox::MathUtilities<double>::Max(norm,
                d_patch_ops.maxNorm(data, box, cv));
       }
@@ -1127,7 +1130,8 @@ HierarchyEdgeDataOpsReal<TYPE>::dot(
          }
 
          boost::shared_ptr<pdat::EdgeData<double> > cv(
-            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(pd));
+            boost::dynamic_pointer_cast<pdat::EdgeData<double>,
+                                        hier::PatchData>(pd));
          dprod += d_patch_ops.dot(data1, data2, box, cv);
       }
    }
@@ -1235,7 +1239,8 @@ HierarchyEdgeDataOpsReal<TYPE>::computeConstrProdPos(
          }
 
          boost::shared_ptr<pdat::EdgeData<double> > cv(
-            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(pd));
+            boost::dynamic_pointer_cast<pdat::EdgeData<double>,
+                                        hier::PatchData>(pd));
          test = tbox::MathUtilities<int>::Min(test,
                d_patch_ops.computeConstrProdPos(data1, data2, box, cv));
       }
@@ -1287,7 +1292,8 @@ HierarchyEdgeDataOpsReal<TYPE>::compareToScalar(
          }
 
          boost::shared_ptr<pdat::EdgeData<double> > cv(
-            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(pd));
+            boost::dynamic_pointer_cast<pdat::EdgeData<double>,
+                                        hier::PatchData>(pd));
          d_patch_ops.compareToScalar(dst, src, alpha, box, cv);
       }
    }
@@ -1335,7 +1341,8 @@ HierarchyEdgeDataOpsReal<TYPE>::testReciprocal(
          }
 
          boost::shared_ptr<pdat::EdgeData<double> > cv(
-            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(pd));
+            boost::dynamic_pointer_cast<pdat::EdgeData<double>,
+                                        hier::PatchData>(pd));
          test = tbox::MathUtilities<int>::Min(test,
                d_patch_ops.testReciprocal(dst, src, box, cv));
       }

@@ -207,9 +207,11 @@ void OuterfaceDataTest::initializeDataOnPatch(
          TBOX_ASSERT(data);
 
          boost::shared_ptr<pdat::OuterfaceData<double> > oface_data(
-            BOOST_CAST<pdat::OuterfaceData<double>, hier::PatchData>(data));
+            boost::dynamic_pointer_cast<pdat::OuterfaceData<double>,
+                                        hier::PatchData>(data));
          boost::shared_ptr<pdat::FaceData<double> > face_data(
-            BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(data));
+            boost::dynamic_pointer_cast<pdat::FaceData<double>,
+                                        hier::PatchData>(data));
 
          hier::Box dbox = data->getBox();
 
@@ -232,9 +234,11 @@ void OuterfaceDataTest::initializeDataOnPatch(
          TBOX_ASSERT(data);
 
          boost::shared_ptr<pdat::OuterfaceData<double> > oface_data(
-            BOOST_CAST<pdat::OuterfaceData<double>, hier::PatchData>(data));
+            boost::dynamic_pointer_cast<pdat::OuterfaceData<double>,
+                                        hier::PatchData>(data));
          boost::shared_ptr<pdat::FaceData<double> > face_data(
-            BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(data));
+            boost::dynamic_pointer_cast<pdat::FaceData<double>,
+                                        hier::PatchData>(data));
 
          hier::Box dbox = data->getGhostBox();
 

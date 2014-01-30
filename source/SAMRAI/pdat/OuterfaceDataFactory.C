@@ -187,7 +187,8 @@ OuterfaceDataFactory<TYPE>::validCopyTo(
     */
    if (!valid_copy) {
       boost::shared_ptr<FaceDataFactory<TYPE> > fdf(
-         BOOST_CAST<FaceDataFactory<TYPE>, hier::PatchDataFactory>(dst_pdf));
+         boost::dynamic_pointer_cast<FaceDataFactory<TYPE>,
+                                     hier::PatchDataFactory>(dst_pdf));
       if (fdf) {
          valid_copy = true;
       }
@@ -195,7 +196,8 @@ OuterfaceDataFactory<TYPE>::validCopyTo(
 
    if (!valid_copy) {
       boost::shared_ptr<OuterfaceDataFactory<TYPE> > ofdf(
-         BOOST_CAST<OuterfaceDataFactory<TYPE>, hier::PatchDataFactory>(
+         boost::dynamic_pointer_cast<OuterfaceDataFactory<TYPE>,
+                                     hier::PatchDataFactory>(
             dst_pdf));
       if (ofdf) {
          valid_copy = true;

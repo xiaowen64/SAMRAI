@@ -396,7 +396,7 @@ void LinAdv::setupLoadBalancer(
 
    if (d_use_nonuniform_workload && gridding_algorithm) {
       boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
-         BOOST_CAST<mesh::TreeLoadBalancer, mesh::LoadBalanceStrategy>(
+         boost::dynamic_pointer_cast<mesh::TreeLoadBalancer, mesh::LoadBalanceStrategy>(
             gridding_algorithm->getLoadBalanceStrategy()));
       if (load_balancer) {
          d_workload_variable.reset(

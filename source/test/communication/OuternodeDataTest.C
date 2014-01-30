@@ -298,9 +298,11 @@ void OuternodeDataTest::initializeDataOnPatch(
          TBOX_ASSERT(data);
 
          boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
-            BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(data));
+            boost::dynamic_pointer_cast<pdat::OuternodeData<double>,
+                                        hier::PatchData>(data));
          boost::shared_ptr<pdat::NodeData<double> > node_data(
-            BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(data));
+            boost::dynamic_pointer_cast<pdat::NodeData<double>,
+                                        hier::PatchData>(data));
 
          hier::Box dbox = data->getBox();
 
@@ -321,9 +323,11 @@ void OuternodeDataTest::initializeDataOnPatch(
             patch.getPatchData(variables[i], getDataContext()));
          TBOX_ASSERT(data);
          boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
-            BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(data));
+            boost::dynamic_pointer_cast<pdat::OuternodeData<double>,
+                                        hier::PatchData>(data));
          boost::shared_ptr<pdat::NodeData<double> > node_data(
-            BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(data));
+            boost::dynamic_pointer_cast<pdat::NodeData<double>,
+                                        hier::PatchData>(data));
 
          hier::Box dbox = data->getGhostBox();
 

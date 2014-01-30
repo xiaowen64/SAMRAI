@@ -1928,9 +1928,11 @@ HyperbolicLevelIntegrator::registerVariable(
           * synchronization of data betweeen patch levels in the hierarchy.
           */
          const boost::shared_ptr<pdat::FaceVariable<double> > face_var(
-            BOOST_CAST<pdat::FaceVariable<double>, hier::Variable>(var));
+            boost::dynamic_pointer_cast<pdat::FaceVariable<double>,
+                                        hier::Variable>(var));
          const boost::shared_ptr<pdat::SideVariable<double> > side_var(
-            BOOST_CAST<pdat::SideVariable<double>, hier::Variable>(var));
+            boost::dynamic_pointer_cast<pdat::SideVariable<double>,
+                                        hier::Variable>(var));
 
          if (face_var) {
             if (d_flux_side_registered) {

@@ -162,7 +162,8 @@ NodeDataFactory<TYPE>::validCopyTo(
     */
    if (!valid_copy) {
       boost::shared_ptr<NodeDataFactory<TYPE> > ndf(
-         BOOST_CAST<NodeDataFactory<TYPE>, hier::PatchDataFactory>(dst_pdf));
+         boost::dynamic_pointer_cast<NodeDataFactory<TYPE>,
+                                     hier::PatchDataFactory>(dst_pdf));
       if (ndf) {
          valid_copy = true;
       }
@@ -170,7 +171,8 @@ NodeDataFactory<TYPE>::validCopyTo(
 
    if (!valid_copy) {
       boost::shared_ptr<OuternodeDataFactory<TYPE> > ondf(
-         BOOST_CAST<OuternodeDataFactory<TYPE>, hier::PatchDataFactory>(
+         boost::dynamic_pointer_cast<OuternodeDataFactory<TYPE>,
+                                     hier::PatchDataFactory>(
             dst_pdf));
       if (ondf) {
          valid_copy = true;

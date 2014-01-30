@@ -91,7 +91,7 @@ CellPoissonFACSolver::CellPoissonFACSolver(
    static std::string weight_variable_name("CellPoissonFACSolver_weight");
 
    boost::shared_ptr<pdat::CellVariable<double> > weight(
-      BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(
+      boost::dynamic_pointer_cast<pdat::CellVariable<double>, hier::Variable>(
          var_db->getVariable(weight_variable_name)));
    if (!weight) {
       weight.reset(
