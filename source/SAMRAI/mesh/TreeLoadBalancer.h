@@ -764,6 +764,7 @@ private:
    boost::shared_ptr<tbox::Timer> t_compute_global_load;
    boost::shared_ptr<tbox::Timer> t_compute_tree_load;
    std::vector<boost::shared_ptr<tbox::Timer> > t_compute_tree_load_for_cycle;
+   std::vector<boost::shared_ptr<tbox::Timer> > t_load_balance_for_cycle;
    boost::shared_ptr<tbox::Timer> t_send_load_to_children;
    boost::shared_ptr<tbox::Timer> t_send_load_to_parent;
    boost::shared_ptr<tbox::Timer> t_get_load_from_children;

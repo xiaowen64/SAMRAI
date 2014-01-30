@@ -460,11 +460,13 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       }
 
       // Run the tree load balancing algorithm.
+      t_load_balance_for_cycle[icycle]->start();
       loadBalanceWithinRankGroup(
          balance_box_level,
          balance_to_reference,
          cycle_rank_group,
          group_sum_load );
+      t_load_balance_for_cycle[icycle]->stop();
 
       if (d_barrier_after) {
          t_barrier_after->start();
@@ -1757,13 +1759,15 @@ TreeLoadBalancer::setTimers()
       t_compute_tree_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::compute_tree_load");
 
-      const int max_cycles_to_time = 4;
-      t_compute_tree_load_for_cycle.resize(
-         max_cycles_to_time,
-         boost::shared_ptr<tbox::Timer>() );
+      const int max_cycles_to_time = 5;
+      t_compute_tree_load_for_cycle.resize( max_cycles_to_time, boost::shared_ptr<tbox::Timer>() );
+      t_load_balance_for_cycle.resize( max_cycles_to_time, boost::shared_ptr<tbox::Timer>() );
       for ( int i=0; i<max_cycles_to_time; ++i ) {
          t_compute_tree_load_for_cycle[i] = tbox::TimerManager::getManager()->
             getTimer(d_object_name + "::compute_tree_load_for_cycle["
+                     + tbox::Utilities::intToString(i) + "]");
+         t_load_balance_for_cycle[i] = tbox::TimerManager::getManager()->
+            getTimer(d_object_name + "::load_balance_for_cycle["
                      + tbox::Utilities::intToString(i) + "]");
       }
 

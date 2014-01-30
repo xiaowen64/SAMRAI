@@ -824,6 +824,8 @@ VoucherTransitLoad::raiseDstLoad(
       // No-op empty-container cases is not handled below.
    }
 
+   d_object_timers->t_raise_dst_load->start();
+
    /*
     * Decide whether to take work from the beginning or the end of
     * src, whichever is closer to the dst.  This is a minor
@@ -877,6 +879,7 @@ VoucherTransitLoad::raiseDstLoad(
 
    }
 
+   d_object_timers->t_raise_dst_load->stop();
    return (dst.getSumLoad() - old_dst_load);
 }
 
@@ -973,6 +976,9 @@ VoucherTransitLoad::getAllTimers(
 {
    timers.t_adjust_load = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::adjustLoad()");
+
+   timers.t_raise_dst_load = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::raiseDstLoad()");
 
    timers.t_assign_to_local_and_populate_maps = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::assignToLocalAndPopulateMaps()");

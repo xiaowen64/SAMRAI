@@ -379,7 +379,7 @@ private:
    /*!
     * @brief Raise load of dst container by shifing load from src.
     */
-   static LoadType
+   LoadType
    raiseDstLoad(
       VoucherTransitLoad& src,
       VoucherTransitLoad& dst,
@@ -496,6 +496,7 @@ private:
     */
    struct TimerStruct {
       boost::shared_ptr<tbox::Timer> t_adjust_load;
+      boost::shared_ptr<tbox::Timer> t_raise_dst_load;
       boost::shared_ptr<tbox::Timer> t_assign_to_local_and_populate_maps;
    };
 
