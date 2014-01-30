@@ -2477,7 +2477,10 @@ RefineSchedule::computeRefineOverlaps(
       const hier::BoxId& unfilled_id = unfilled_nabr.getBoxId();
 
       hier::BoxContainer node_fill_boxes;
-      d_unfilled_to_unfilled_node->getNeighborBoxes(unfilled_id, node_fill_boxes);
+      if (!is_encon) {
+         d_unfilled_to_unfilled_node->getNeighborBoxes(unfilled_id,
+                                                       node_fill_boxes);
+      }
 
       /*
        * The refine overlap will cover only  the fine fill box regions.
@@ -3985,6 +3988,10 @@ RefineSchedule::constructScheduleTransactions(
          hier::Connector::ConstNeighborhoodIterator ei =
             d_dst_to_encon->findLocal(dst_box.getBoxId());
 
+         if (ei == d_dst_to_encon->end()) {
+            return;
+         }
+
          const hier::BlockId& src_block_id = src_box.getBlockId();
 
          for (hier::Connector::ConstNeighborIterator en = d_dst_to_encon->begin(ei);
@@ -4000,6 +4007,14 @@ RefineSchedule::constructScheduleTransactions(
 
          TBOX_ASSERT(src_box.getOwnerRank() == my_rank);
 
+         hier::Connector& src_to_encon = d_encon_to_src->getTranspose();
+         hier::Connector::ConstNeighborhoodIterator ei =
+            src_to_encon.findLocal(src_box.getBoxId());
+
+         if (ei == src_to_encon.end()) {
+            return;
+         } 
+
          hier::IntVector test_gcw(
             hier::IntVector::max(d_boundary_fill_ghost_width,
                d_max_stencil_width));
@@ -4007,10 +4022,6 @@ RefineSchedule::constructScheduleTransactions(
 
          hier::Box test_dst_box(dst_box);
          test_dst_box.grow(test_gcw);
-
-         hier::Connector& src_to_encon = d_encon_to_src->getTranspose();
-         hier::Connector::ConstNeighborhoodIterator ei =
-            src_to_encon.findLocal(src_box.getBoxId());
 
          hier::BoxContainer encon_nbr_choices;
          for (hier::Connector::ConstNeighborIterator ni = src_to_encon.begin(ei);
