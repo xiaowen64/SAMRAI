@@ -211,32 +211,32 @@ private:
    typedef RankOrderedVouchers::reverse_iterator reverse_iterator;
    typedef RankOrderedVouchers::key_type key_type;
    typedef RankOrderedVouchers::value_type value_type;
-   iterator begin() { return d_voucher_set.begin(); }
-   iterator end() { return d_voucher_set.end(); }
-   const_iterator begin() const { return d_voucher_set.begin(); }
-   const_iterator end() const { return d_voucher_set.end(); }
-   reverse_iterator rbegin() { return d_voucher_set.rbegin(); }
-   reverse_iterator rend() { return d_voucher_set.rend(); }
-   size_t size() const { return d_voucher_set.size(); }
-   bool empty() const { return d_voucher_set.empty(); }
-   void clear() { d_sumload = 0; d_voucher_set.clear(); }
+   iterator begin() { return d_vouchers.begin(); }
+   iterator end() { return d_vouchers.end(); }
+   const_iterator begin() const { return d_vouchers.begin(); }
+   const_iterator end() const { return d_vouchers.end(); }
+   reverse_iterator rbegin() { return d_vouchers.rbegin(); }
+   reverse_iterator rend() { return d_vouchers.rend(); }
+   size_t size() const { return d_vouchers.size(); }
+   bool empty() const { return d_vouchers.empty(); }
+   void clear() { d_sumload = 0; d_vouchers.clear(); }
    std::pair<iterator, bool> insert( const Voucher &v ) {
       TBOX_ASSERT( v.d_load >= d_pparams->getLoadComparisonTol() );
-      iterator itr = d_voucher_set.lower_bound( Voucher(0,v.d_issuer_rank) );
-      if ( itr != d_voucher_set.end() &&
+      iterator itr = d_vouchers.lower_bound( Voucher(0,v.d_issuer_rank) );
+      if ( itr != d_vouchers.end() &&
            itr->d_issuer_rank == v.d_issuer_rank ) {
          TBOX_ERROR("Cannot insert Voucher " << v
                     << ".\nExisting voucher " << *itr << " is from the same issuer."
                     << "\nTo combine the vouchers, use insertCombine().");
       }
-      itr = d_voucher_set.insert( itr, v );
+      itr = d_vouchers.insert( itr, v );
       d_sumload += v.d_load;
       checkDupes();
       return std::pair<iterator, bool>(itr,true);
    }
    size_t erase( const Voucher &v ) {
-      iterator vi = d_voucher_set.lower_bound(v);
-      if ( vi != d_voucher_set.end() ) {
+      iterator vi = d_vouchers.lower_bound(v);
+      if ( vi != d_vouchers.end() ) {
          d_sumload -= vi->d_load;
          erase(vi);
          return 1;
@@ -245,16 +245,16 @@ private:
    }
    void erase( iterator pos) {
       d_sumload -= pos->d_load;
-      size_t old_size = d_voucher_set.size();
-      d_voucher_set.erase(pos);
-      TBOX_ASSERT( d_voucher_set.size() == old_size - 1 );
+      size_t old_size = d_vouchers.size();
+      d_vouchers.erase(pos);
+      TBOX_ASSERT( d_vouchers.size() == old_size - 1 );
       return;
    }
    void swap( VoucherTransitLoad &other ) {
       const LoadType tmpload = d_sumload;
       d_sumload = other.d_sumload;
       other.d_sumload = tmpload;
-      d_voucher_set.swap(other.d_voucher_set);
+      d_vouchers.swap(other.d_vouchers);
    }
    //@}
 
@@ -328,19 +328,19 @@ private:
     * @brief Insert voucher, combining with existing voucher from same issuer.
     */
    iterator insertCombine( const Voucher &v ) {
-      iterator itr = d_voucher_set.lower_bound( Voucher(0.0, v.d_issuer_rank) );
-      if ( itr == d_voucher_set.end() ||
+      iterator itr = d_vouchers.lower_bound( Voucher(0.0, v.d_issuer_rank) );
+      if ( itr == d_vouchers.end() ||
            v.d_issuer_rank != itr->d_issuer_rank ) {
          // Safe to insert.
          TBOX_ASSERT( v.d_load >= d_pparams->getLoadComparisonTol() );
-         itr = d_voucher_set.insert( itr, v );
+         itr = d_vouchers.insert( itr, v );
       }
       else {
          // Create combined voucher to replace existing one.
          Voucher combined(*itr,v);
          TBOX_ASSERT( combined.d_load >= d_pparams->getLoadComparisonTol() );
-         d_voucher_set.erase(itr++);
-         itr = d_voucher_set.insert( itr, combined );
+         d_vouchers.erase(itr++);
+         itr = d_vouchers.insert( itr, combined );
       }
       d_sumload += v.d_load;
       checkDupes();
@@ -463,7 +463,7 @@ private:
 
 
    //! @brief Work load, sorted by issuer rank.
-   RankOrderedVouchers d_voucher_set;
+   RankOrderedVouchers d_vouchers;
 
    LoadType d_sumload;
 

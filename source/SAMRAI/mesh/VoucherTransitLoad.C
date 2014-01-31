@@ -49,7 +49,7 @@ VoucherTransitLoad::s_initialize_finalize_handler(
 */
 VoucherTransitLoad::VoucherTransitLoad( const PartitioningParams &pparams ) :
    TransitLoad(),
-   d_voucher_set(),
+   d_vouchers(),
    d_sumload(0),
    d_pparams(&pparams),
    d_partition_work_supply_recursively(true),
@@ -70,7 +70,7 @@ VoucherTransitLoad::VoucherTransitLoad( const PartitioningParams &pparams ) :
 */
 VoucherTransitLoad::VoucherTransitLoad( const VoucherTransitLoad &other, bool copy_load ) :
    TransitLoad(other),
-   d_voucher_set(),
+   d_vouchers(),
    d_sumload(0),
    d_pparams(other.d_pparams),
    d_partition_work_supply_recursively(other.d_partition_work_supply_recursively),
@@ -81,7 +81,7 @@ VoucherTransitLoad::VoucherTransitLoad( const VoucherTransitLoad &other, bool co
    d_object_timers(other.d_object_timers)
 {
    if ( copy_load ) {
-      d_voucher_set = other.d_voucher_set;
+      d_vouchers = other.d_vouchers;
       d_sumload = other.d_sumload;
    }
 }
@@ -95,7 +95,7 @@ supplemental data such as control and diagnostic parameters.
 */
 void VoucherTransitLoad::initialize()
 {
-   d_voucher_set.clear();
+   d_vouchers.clear();
    d_sumload = 0.0;
 }
 
@@ -131,8 +131,8 @@ void VoucherTransitLoad::insertAll( const hier::BoxContainer &other )
 void VoucherTransitLoad::insertAll( const TransitLoad &other_transit_load )
 {
    const VoucherTransitLoad &other = recastTransitLoad(other_transit_load);
-   for ( const_iterator si=other.d_voucher_set.begin();
-         si!=other.d_voucher_set.end(); ++si ) {
+   for ( const_iterator si=other.d_vouchers.begin();
+         si!=other.d_vouchers.end(); ++si ) {
       TBOX_ASSERT( si->d_load >= d_pparams->getLoadComparisonTol() );
       insertCombine(*si);
    }
@@ -145,7 +145,7 @@ void VoucherTransitLoad::insertAll( const TransitLoad &other_transit_load )
 */
 size_t VoucherTransitLoad::getNumberOfItems() const
 {
-   return d_voucher_set.size();
+   return d_vouchers.size();
 }
 
 
@@ -155,7 +155,7 @@ size_t VoucherTransitLoad::getNumberOfItems() const
 */
 size_t VoucherTransitLoad::getNumberOfOriginatingProcesses() const
 {
-   return d_voucher_set.size();
+   return d_vouchers.size();
 }
 
 
@@ -166,8 +166,8 @@ size_t VoucherTransitLoad::getNumberOfOriginatingProcesses() const
 void
 VoucherTransitLoad::putToMessageStream( tbox::MessageStream &msg ) const
 {
-   msg << d_voucher_set.size();
-   for (const_iterator ni = d_voucher_set.begin(); ni != d_voucher_set.end(); ++ni) {
+   msg << d_vouchers.size();
+   for (const_iterator ni = d_vouchers.begin(); ni != d_vouchers.end(); ++ni) {
       msg << *ni;
    }
 }
@@ -249,9 +249,9 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
    std::map<int,VoucherRedemption> redemptions_to_fulfill;
 
    hier::LocalId local_id_offset = unbalanced_box_level.getLastLocalId();
-   const hier::LocalId local_id_inc(static_cast<int>(d_voucher_set.size()));
+   const hier::LocalId local_id_inc(static_cast<int>(d_vouchers.size()));
 
-   for ( const_iterator si=d_voucher_set.begin(); si!=d_voucher_set.end(); ++si ) {
+   for ( const_iterator si=d_vouchers.begin(); si!=d_vouchers.end(); ++si ) {
       hier::SequentialLocalIdGenerator id_gen( ++local_id_offset, local_id_inc );
       if ( si->d_issuer_rank != mpi.getRank() ) {
          if ( d_print_edge_steps ) {
@@ -889,15 +889,15 @@ bool
 VoucherTransitLoad::eraseIssuer( int issuer_rank )
 {
    Voucher tmp_voucher( 0.0, issuer_rank );
-   const_iterator vi = d_voucher_set.lower_bound(tmp_voucher);
-   if ( vi != d_voucher_set.end() && vi->d_issuer_rank == issuer_rank ) {
+   const_iterator vi = d_vouchers.lower_bound(tmp_voucher);
+   if ( vi != d_vouchers.end() && vi->d_issuer_rank == issuer_rank ) {
 #ifdef DEBUG_CHECK_ASSERTIONS
       const_iterator vi1 = vi;
       ++vi1;
-      TBOX_ASSERT( vi1 == d_voucher_set.end() || vi1->d_issuer_rank != issuer_rank);
+      TBOX_ASSERT( vi1 == d_vouchers.end() || vi1->d_issuer_rank != issuer_rank);
 #endif
       d_sumload -= vi->d_load;
-      d_voucher_set.erase(vi);
+      d_vouchers.erase(vi);
       return true;
    }
    return false;
@@ -913,8 +913,8 @@ VoucherTransitLoad::Voucher
 VoucherTransitLoad::findVoucher( int issuer_rank ) const
 {
    Voucher tmp_voucher( 0.0, issuer_rank );
-   const_iterator vi = d_voucher_set.lower_bound(tmp_voucher);
-   if ( vi != d_voucher_set.end() && vi->d_issuer_rank == issuer_rank ) {
+   const_iterator vi = d_vouchers.lower_bound(tmp_voucher);
+   if ( vi != d_vouchers.end() && vi->d_issuer_rank == issuer_rank ) {
       tmp_voucher.d_load = vi->d_load;
    }
    return tmp_voucher;
@@ -930,8 +930,8 @@ VoucherTransitLoad::Voucher
 VoucherTransitLoad::yankVoucher( int issuer_rank )
 {
    Voucher tmp_voucher( 0.0, issuer_rank );
-   const_iterator vi = d_voucher_set.lower_bound(tmp_voucher);
-   if ( vi != d_voucher_set.end() && vi->d_issuer_rank == issuer_rank ) {
+   const_iterator vi = d_vouchers.lower_bound(tmp_voucher);
+   if ( vi != d_vouchers.end() && vi->d_issuer_rank == issuer_rank ) {
       tmp_voucher.d_load = vi->d_load;
       erase(vi);
    }
