@@ -71,8 +71,8 @@ public:
    //! @copydoc TransitLoad::insertAll( const hier::BoxContainer & )
    void insertAll( const hier::BoxContainer &box_container );
 
-   //! @copydoc TransitLoad::insertAll( const TransitLoad & )
-   void insertAll( const TransitLoad &other );
+   //! @copydoc TransitLoad::insertAll( TransitLoad & )
+   void insertAll( TransitLoad &other );
 
    //! @copydoc TransitLoad::getNumberOfItems()
    size_t getNumberOfItems() const;

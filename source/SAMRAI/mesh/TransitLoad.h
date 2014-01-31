@@ -81,10 +81,12 @@ public:
    /*!
     * @brief Insert all boxes from the given TransitSet.
     *
+    * Changes to other as an implementation side-effect is allowed.
+    *
     * @param other [i] Other TransitLoad container whose
     * implementation matches this one.
     */
-   virtual void insertAll( const TransitLoad &other ) = 0;
+   virtual void insertAll( TransitLoad &other ) = 0;
 
    //! @brief Return number of items in this container.
    virtual size_t getNumberOfItems() const = 0;

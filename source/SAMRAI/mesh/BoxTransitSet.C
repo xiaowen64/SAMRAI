@@ -141,7 +141,7 @@ void BoxTransitSet::insertAll( const hier::BoxContainer &other )
 *************************************************************************
 *************************************************************************
 */
-void BoxTransitSet::insertAll( const TransitLoad &other_transit_load )
+void BoxTransitSet::insertAll( TransitLoad &other_transit_load )
 {
    const BoxTransitSet &other = recastTransitLoad(other_transit_load);
    size_t old_size = d_set.size();

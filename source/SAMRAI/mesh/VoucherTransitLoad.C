@@ -128,7 +128,7 @@ void VoucherTransitLoad::insertAll( const hier::BoxContainer &other )
 *************************************************************************
 *************************************************************************
 */
-void VoucherTransitLoad::insertAll( const TransitLoad &other_transit_load )
+void VoucherTransitLoad::insertAll( TransitLoad &other_transit_load )
 {
    const VoucherTransitLoad &other = recastTransitLoad(other_transit_load);
    for ( const_iterator si=other.d_vouchers.begin();
