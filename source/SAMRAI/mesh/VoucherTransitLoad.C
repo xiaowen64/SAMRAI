@@ -180,10 +180,6 @@ VoucherTransitLoad::putToMessageStream( tbox::MessageStream &msg ) const
 void
 VoucherTransitLoad::getFromMessageStream( tbox::MessageStream &msg )
 {
-   /*
-    * As we pull each Voucher out, give it a new id that reflects
-    * its new owner.
-    */
    size_t num_vouchers = 0;
    msg >> num_vouchers;
    Voucher v;

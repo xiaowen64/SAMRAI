@@ -1977,7 +1977,6 @@ TreeLoadBalancer::BranchData::packDataToParent(
    tbox::MessageStream& msg) const
 {
    t_pack_load->start();
-
    msg << d_num_procs;
    msg << d_branch_load_current;
    msg << d_branch_load_ideal;
@@ -1987,16 +1986,7 @@ TreeLoadBalancer::BranchData::packDataToParent(
    msg << d_eff_load_ideal;
    msg << d_eff_load_upperlimit;
    msg << d_wants_work_from_parent;
-
    d_shipment->putToMessageStream(msg);
-
-   if (d_print_steps) {
-      tbox::plog << "BranchData::packDataToParent:  packed ";
-      d_shipment->recursivePrint(tbox::plog, "", 0);
-      tbox::plog << "  message length = " << msg.getCurrentSize() << " bytes"
-                 << std::endl;
-   }
-
    t_pack_load->stop();
 }
 
@@ -2011,7 +2001,6 @@ TreeLoadBalancer::BranchData::unpackDataFromChild(
    tbox::MessageStream &msg )
 {
    t_unpack_load->start();
-
    msg >> d_num_procs;
    msg >> d_branch_load_current;
    msg >> d_branch_load_ideal;
@@ -2021,17 +2010,7 @@ TreeLoadBalancer::BranchData::unpackDataFromChild(
    msg >> d_eff_load_ideal;
    msg >> d_eff_load_upperlimit;
    msg >> d_wants_work_from_parent;
-
    d_shipment->getFromMessageStream(msg);
-
-   if (d_print_steps) {
-      tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
-      tbox::plog.precision(6);
-      tbox::plog << "BranchData::unpackDataFromChild: Unpacked to shipment ";
-      d_shipment->recursivePrint(tbox::plog);
-      tbox::plog << std::endl;
-   }
-
    t_unpack_load->stop();
 }
 
@@ -2046,16 +2025,7 @@ TreeLoadBalancer::BranchData::packDataToChild(
    tbox::MessageStream& msg) const
 {
    t_pack_load->start();
-
    d_shipment->putToMessageStream(msg);
-
-   if (d_print_steps) {
-      tbox::plog << "BranchData::packDataToChild: packed ";
-      d_shipment->recursivePrint(tbox::plog, "", 0);
-      tbox::plog << "  message length = " << msg.getCurrentSize() << " bytes"
-                 << std::endl;
-   }
-
    t_pack_load->stop();
 }
 
@@ -2070,17 +2040,9 @@ TreeLoadBalancer::BranchData::unpackDataFromParentAndIncorporate(
    tbox::MessageStream &msg )
 {
    t_unpack_load->start();
-
    d_shipment->getFromMessageStream(msg);
    d_branch_load_current += d_shipment->getSumLoad();
    d_eff_load_current += d_shipment->getSumLoad();
-
-   if (d_print_steps) {
-      tbox::plog << "BranchData::unpackDataFromParentAndIncorporate: unpacked ";
-      d_shipment->recursivePrint(tbox::plog);
-      tbox::plog << std::endl;
-   }
-
    t_unpack_load->stop();
 }
 
