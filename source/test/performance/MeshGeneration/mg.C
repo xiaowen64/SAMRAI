@@ -563,6 +563,7 @@ int main(
          outputPostbalance( *L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0,0), "L0: " );
 
          if ( comm_graph_writer ) {
+            tbox::pout << "\tWriting communication graph..." << std::endl;
             tbox::plog << "\nCommunication Graph for balancing L0:\n";
             for ( ; num_records_written<comm_graph_writer->getNumberOfRecords(); ++num_records_written ) {
                comm_graph_writer->writeGraphToTextStream( num_records_written, tbox::plog );
@@ -713,6 +714,7 @@ int main(
             L1->getMPI());
 
          if ( comm_graph_writer ) {
+            tbox::pout << "\tWriting communication graph..." << std::endl;
             tbox::plog << "\nCommunication Graph for balancing L1:\n";
             for ( ; num_records_written<comm_graph_writer->getNumberOfRecords(); ++num_records_written ) {
                comm_graph_writer->writeGraphToTextStream( num_records_written, tbox::plog );
@@ -867,6 +869,7 @@ int main(
             L2->getMPI());
 
          if ( comm_graph_writer ) {
+            tbox::pout << "\tWriting communication graph..." << std::endl;
             tbox::plog << "\nCommunication Graph for balancing L2:\n";
             for ( ; num_records_written<comm_graph_writer->getNumberOfRecords(); ++num_records_written ) {
                comm_graph_writer->writeGraphToTextStream( num_records_written, tbox::plog );

@@ -1218,14 +1218,11 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
       tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup: completed sends.\n";
    }
 
-   destroyAsyncCommObjects(child_sends, parent_send);
-   destroyAsyncCommObjects(child_recvs, parent_recv);
-
 
    if ( d_comm_graph_writer ) {
       /*
        * To evaluate performance of the algorithm, record these edges:
-       * - Two edges to parent: load shipped, and boxes shipped.
+       * - Two edges to parent: load shipped, and items shipped.
        * - Same two edges from parent, plus one more for message size.
        * - Two timer for edges from children, one from parent.
        * Record these nodes:
@@ -1244,7 +1241,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(1),
-         "boxes up",
+         "items up",
          double(my_branch.getWantsWorkFromParent() ? 0 : my_branch.getShipmentPackageCount()),
          tbox::CommGraphWriter::TO,
          prank );
@@ -1265,7 +1262,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(4),
-         "boxes down",
+         "items down",
          double(my_branch.getWantsWorkFromParent() ? my_branch.getShipmentPackageCount() : 0),
          tbox::CommGraphWriter::FROM,
          (my_branch.getWantsWorkFromParent() ? prank : -1) );
@@ -1322,13 +1319,13 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(3),
-         "final surplus",
-         double(balanced_work.getSumLoad())-group_avg_load );
+         "final load",
+         double(balanced_work.getSumLoad())/group_avg_load );
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(4),
-         "final load",
-         double(balanced_work.getSumLoad())/group_avg_load );
+         "final surplus",
+         double(balanced_work.getSumLoad())-group_avg_load );
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(5),
@@ -1341,6 +1338,9 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
          double(unassigned_highwater) );
 
    }
+
+   destroyAsyncCommObjects(child_sends, parent_send);
+   destroyAsyncCommObjects(child_recvs, parent_recv);
 
    t_distribute_load_across_rank_group->stop();
 
