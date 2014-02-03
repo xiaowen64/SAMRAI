@@ -42,6 +42,17 @@ public:
    virtual ~CommGraphWriter();
 
    /*!
+    * @brief Set whether to write full graph.
+    *
+    * Writing full graph is unscalable, but can be done at large scales
+    * if you have enough computing time and memory.  Writing full graph
+    * is on by default.
+    */
+   void setWriteFullGraph( bool write_full_graph ) {
+      d_write_full_graph = write_full_graph;
+   }
+
+   /*!
     * @brief Add a graph record.
     *
     * @param[in] mpi Where the graph data is distributed.
@@ -105,7 +116,7 @@ public:
 private:
 
    struct Edge {
-      Edge() : d_value(-1.0), d_dir(TO), d_other_node(-1) {}
+      Edge() : d_value(0.0), d_dir(TO), d_other_node(-1) {}
       double d_value;
       EdgeDirection d_dir;
       int d_other_node;
@@ -125,8 +136,19 @@ private:
       std::vector<NodeValue> d_node_values;
    };
 
+   void writeGraphSummaryToTextStream(
+      size_t record_number,
+      std::ostream &os ) const;
+
+   void writeFullGraphToTextStream(
+      size_t record_number,
+      std::ostream &os ) const;
+
+
    int d_root_rank;
    std::vector<Record> d_records;
+
+   bool d_write_full_graph;
 
 };
 

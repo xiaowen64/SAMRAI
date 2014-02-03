@@ -31,7 +31,8 @@ namespace tbox {
  ***********************************************************************
  */
 CommGraphWriter::CommGraphWriter()
-   : d_root_rank(0)
+   : d_root_rank(0),
+     d_write_full_graph(true)
 {
 }
 
@@ -120,6 +121,89 @@ void CommGraphWriter::writeGraphToTextStream(
    size_t record_number,
    std::ostream &os ) const
 {
+   if ( d_write_full_graph ) {
+      writeFullGraphToTextStream(record_number, os);
+   }
+   else {
+      writeGraphSummaryToTextStream(record_number, os);
+   }
+   return;
+}
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void CommGraphWriter::writeGraphSummaryToTextStream(
+   size_t record_number,
+   std::ostream &os ) const
+{
+   /*
+    * Gather graph data on d_root_rank and write out.
+    */
+   TBOX_ASSERT( record_number < d_records.size() );
+
+   const Record &record = d_records[record_number];
+
+   tbox::MessageStream ostr;
+   std::vector<double> values;
+   values.reserve( record.d_node_values.size() + record.d_edges.size() );
+
+   for ( size_t inodev=0; inodev<record.d_node_values.size(); ++inodev ) {
+      values.push_back( record.d_node_values[inodev].d_value );
+   }
+   for ( size_t iedge=0; iedge<record.d_edges.size(); ++iedge ) {
+      values.push_back( record.d_edges[iedge].d_value );
+   }
+
+   if ( values.size() > 0 ) {
+      std::vector<double> tmpvalues(values);
+      record.d_mpi.Reduce(
+         (void*)&tmpvalues[0],
+         (void*)&values[0],
+         int(values.size()),
+         MPI_DOUBLE,
+         MPI_MAX,
+         d_root_rank );
+   }
+
+   os.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
+   os.precision(8);
+
+   std::vector<NodeValue> max_nodev(record.d_node_values.size());
+   std::vector<Edge> max_edge(record.d_edges.size());
+
+   if ( record.d_mpi.getRank() == d_root_rank ) {
+
+      std::vector<double>::const_iterator vi = values.begin();
+
+      os << "\nCommGraphWriter begin record number " << record_number << '\n';
+      os << "Node maximums:\n";
+      for (  size_t inodev=0; inodev<record.d_node_values.size(); ++inodev ) {
+         os << '\t' << record.d_node_values[inodev].d_label << '\t' << *(vi++) << '\n';
+      }
+      os << "Edge maximums:\n";
+      for ( size_t iedge=0; iedge<record.d_edges.size(); ++iedge ) {
+         os << '\t' << record.d_edges[iedge].d_label << '\t' << *(vi++) << '\n';
+      }
+
+   }
+
+   return;
+}
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void CommGraphWriter::writeFullGraphToTextStream(
+   size_t record_number,
+   std::ostream &os ) const
+{
    /*
     * Gather graph data on d_root_rank and write out.
     */
@@ -155,6 +239,9 @@ void CommGraphWriter::writeGraphToTextStream(
    os.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
    os.precision(8);
 
+   std::vector<NodeValue> max_nodev(record.d_node_values.size());
+   std::vector<Edge> max_edge(record.d_edges.size());
+
    if ( record.d_mpi.getRank() == d_root_rank ) {
 
       os << "\nCommGraphWriter begin record number " << record_number << '\n';
@@ -175,6 +262,9 @@ void CommGraphWriter::writeGraphToTextStream(
                   << '\t' << tmpnodev.d_value
                   << '\t' << record.d_node_values[inodev].d_label
                   << '\n';
+               if ( max_nodev[inodev].d_value < tmpnodev.d_value ) {
+                  max_nodev[inodev] = tmpnodev;
+               }
             }
 
             Edge tmpedge;
@@ -186,12 +276,23 @@ void CommGraphWriter::writeGraphToTextStream(
                   << '\t' << tmpedge.d_value
                   << '\t' << record.d_edges[iedge].d_label
                   << '\n';
+               if ( max_edge[iedge].d_value < tmpedge.d_value ) {
+                  max_edge[iedge] = tmpedge;
+               }
             }
 
          }
       }
 
       os << "CommGraphWriter end record number " << record_number << '\n';
+      os << "Node maximums:\n";
+      for (  size_t inodev=0; inodev<record.d_node_values.size(); ++inodev ) {
+         os << '\t' << record.d_node_values[inodev].d_label << '\t' << max_nodev[inodev].d_value << '\n';
+      }
+      os << "Edge maximums:\n";
+      for ( size_t iedge=0; iedge<record.d_edges.size(); ++iedge ) {
+         os << '\t' << record.d_edges[iedge].d_label << '\t' << max_edge[iedge].d_value << '\n';
+      }
 
    }
 
