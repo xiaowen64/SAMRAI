@@ -53,14 +53,14 @@ CommGraphWriter::~CommGraphWriter()
  */
 size_t CommGraphWriter::addRecord(
    const SAMRAI_MPI &mpi,
-   size_t number_of_edges,
-   size_t number_of_node_values )
+   size_t number_of_edge_types,
+   size_t number_of_node_value_types )
 {
    d_records.resize( 1 + d_records.size() );
    Record &record = d_records.back();
    record.d_mpi = mpi;
-   record.d_edges.resize(number_of_edges);
-   record.d_node_values.resize(number_of_node_values);
+   record.d_edges.resize(number_of_edge_types);
+   record.d_node_values.resize(number_of_node_value_types);
    return (d_records.size() - 1);
 }
 
@@ -71,15 +71,15 @@ size_t CommGraphWriter::addRecord(
  ***********************************************************************
  */
 void CommGraphWriter::setEdgeInCurrentRecord(
-   size_t edge_index,
+   size_t edge_type_index,
    const std::string &edge_label,
    double edge_value,
    EdgeDirection edge_direction,
    int other_node )
 {
-   TBOX_ASSERT( edge_index < d_records.back().d_edges.size() );
+   TBOX_ASSERT( edge_type_index < d_records.back().d_edges.size() );
 
-   Edge &edge = d_records.back().d_edges[edge_index];
+   Edge &edge = d_records.back().d_edges[edge_type_index];
 
    edge.d_label = edge_label;
    edge.d_value = edge_value;
@@ -96,13 +96,13 @@ void CommGraphWriter::setEdgeInCurrentRecord(
  ***********************************************************************
  */
 void CommGraphWriter::setNodeValueInCurrentRecord(
-   size_t nodevalue_index,
+   size_t nodevalue_type_index,
    const std::string &nodevalue_label,
    double node_value )
 {
-   TBOX_ASSERT( nodevalue_index < d_records.back().d_node_values.size() );
+   TBOX_ASSERT( nodevalue_type_index < d_records.back().d_node_values.size() );
 
-   NodeValue &nodevalue = d_records.back().d_node_values[nodevalue_index];
+   NodeValue &nodevalue = d_records.back().d_node_values[nodevalue_type_index];
 
    nodevalue.d_value = node_value;
    nodevalue.d_label = nodevalue_label;

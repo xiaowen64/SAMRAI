@@ -46,16 +46,16 @@ public:
     *
     * @param[in] mpi Where the graph data is distributed.
     *
-    * @param[in] number_of_edges
+    * @param[in] number_of_edge_types
     *
-    * @param[in] number_of_node_values
+    * @param[in] number_of_node_value_types
     *
     * @return Index of the record.
     */
    size_t addRecord(
       const SAMRAI_MPI &mpi,
-      size_t number_of_edges,
-      size_t number_of_node_values );
+      size_t number_of_edge_types,
+      size_t number_of_node_value_types );
 
    /*!
     * @brief Get the current number of records.
@@ -76,7 +76,7 @@ public:
     * nothing in this method.
     */
    void setEdgeInCurrentRecord(
-      size_t edge_index,
+      size_t edge_type_index,
       const std::string &edge_label,
       double edge_value,
       EdgeDirection edge_direction,
@@ -90,7 +90,7 @@ public:
     * nothing in this method.
     */
    void setNodeValueInCurrentRecord(
-      size_t nodevalue_index,
+      size_t nodevalue_type_index,
       const std::string &nodevalue_label,
       double node_value );
 
