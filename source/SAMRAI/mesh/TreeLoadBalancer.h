@@ -81,7 +81,7 @@ namespace mesh {
  *   <tr>
  *     <td>flexible_load_tolerance</td>
  *     <td>double</td>
- *     <td>0.0</td>
+ *     <td>0.05</td>
  *     <td>0-1</td>
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
@@ -89,7 +89,7 @@ namespace mesh {
  *   <tr>
  *     <td>max_cycle_spread_procs</td>
  *     <td>int</td>
- *     <td>1000000</td>
+ *     <td>1000</td>
  *     <td> > 1</td>
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
