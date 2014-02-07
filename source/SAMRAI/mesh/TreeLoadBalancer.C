@@ -67,7 +67,7 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_object_name(name),
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_mpi_is_dupe(false),
-   d_max_cycle_spread_procs(1000),
+   d_max_cycle_spread_procs(500),
    d_voucher_mode(false),
    d_allow_box_breaking(true),
    d_rank_tree(rank_tree ? rank_tree : boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::CenteredRankTree) ),

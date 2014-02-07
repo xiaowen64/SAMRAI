@@ -89,7 +89,7 @@ namespace mesh {
  *   <tr>
  *     <td>max_cycle_spread_procs</td>
  *     <td>int</td>
- *     <td>1000</td>
+ *     <td>500</td>
  *     <td> > 1</td>
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
