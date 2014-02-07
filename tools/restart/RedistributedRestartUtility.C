@@ -65,11 +65,10 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
       int num_files_to_write = (total_input_files < total_output_files) ?
          static_cast<int>(file_mapping[icount].size()) : 1;
 
-      string restore_buf;
-      string nodes_buf;
-
-      restore_buf = "/restore." + tbox::Utilities::intToString(restore_num, 6);
-      nodes_buf = "/nodes." + tbox::Utilities::nodeToString(total_output_files);
+      string restore_buf =
+         "/restore." + tbox::Utilities::intToString(restore_num, 6);
+      string nodes_buf =
+         "/nodes." + tbox::Utilities::nodeToString(total_output_files);
 
       string restart_dirname = output_dirname + restore_buf + nodes_buf;
 
@@ -83,7 +82,6 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
       std::vector<boost::shared_ptr<tbox::Database> >
       output_dbs(num_files_to_write);
 
-      string proc_buf;
       for (int i = 0; i < num_files_to_write; i++) {
 
          int cur_out_file_id;
@@ -101,8 +99,8 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
             }
          }
 
-         proc_buf = "/proc." + tbox::Utilities::processorToString(
-            cur_out_file_id);
+         string proc_buf =
+            "/proc." + tbox::Utilities::processorToString(cur_out_file_id);
 
          string output_filename = restart_dirname + proc_buf;
 
@@ -148,8 +146,8 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
             cur_in_file_id = file_mapping[icount][i];
          }
 
-         proc_buf = "/proc." + tbox::Utilities::processorToString(
-               cur_in_file_id);
+         string proc_buf =
+            "/proc." + tbox::Utilities::processorToString(cur_in_file_id);
 
          string restart_filename = input_dirname + restore_buf + nodes_buf
             + proc_buf;
@@ -677,13 +675,12 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
             }
          }
 
-         string in_patch_name;
-         string out_patch_name;
-         in_patch_name = "level_" + tbox::Utilities::levelToString(level_number)
+         string in_patch_name =
+            "level_" + tbox::Utilities::levelToString(level_number)
             + "-patch_" + tbox::Utilities::patchToString(*ilp)
             + "-block_" + tbox::Utilities::blockToString(*ilb);
-         out_patch_name = "level_" + tbox::Utilities::levelToString(
-               level_number)
+         string out_patch_name =
+            "level_" + tbox::Utilities::levelToString(level_number)
             + "-patch_" + tbox::Utilities::patchToString(*olp)
             + "-block_" + tbox::Utilities::blockToString(*olb);
 
