@@ -188,6 +188,7 @@ void CommGraphWriter::writeGraphSummaryToTextStream(
       for ( size_t iedge=0; iedge<record.d_edges.size(); ++iedge ) {
          os << '\t' << record.d_edges[iedge].d_label << '\t' << *(vi++) << '\n';
       }
+      os << "CommGraphWriter end record number " << record_number << '\n';
 
    }
 
@@ -284,7 +285,6 @@ void CommGraphWriter::writeFullGraphToTextStream(
          }
       }
 
-      os << "CommGraphWriter end record number " << record_number << '\n';
       os << "Node maximums:\n";
       for (  size_t inodev=0; inodev<record.d_node_values.size(); ++inodev ) {
          os << '\t' << record.d_node_values[inodev].d_label << '\t' << max_nodev[inodev].d_value << '\n';
@@ -293,6 +293,8 @@ void CommGraphWriter::writeFullGraphToTextStream(
       for ( size_t iedge=0; iedge<record.d_edges.size(); ++iedge ) {
          os << '\t' << record.d_edges[iedge].d_label << '\t' << max_edge[iedge].d_value << '\n';
       }
+
+      os << "CommGraphWriter end record number " << record_number << '\n';
 
    }
 
