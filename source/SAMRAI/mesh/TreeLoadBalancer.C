@@ -372,10 +372,10 @@ TreeLoadBalancer::loadBalanceBoxLevel(
     * across all processes.
     */
 
-   for (int icycle = 0; icycle < number_of_cycles; ++icycle) {
+   for (int icycle = number_of_cycles-1; icycle >= 0; --icycle) {
 
       // If not the first cycle, local_load needs updating.
-      if (icycle > 0) {
+      if (icycle != number_of_cycles-1) {
          local_load = computeLocalLoad(balance_box_level);
       }
 
@@ -390,7 +390,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       }
 
 
-      const bool last_cycle = (icycle == number_of_cycles-1);
+      const bool last_cycle = (icycle == 0);
 
 
       /*
@@ -409,7 +409,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
             cycle_rank_group,
             number_of_groups,
             group_num,
-            double(icycle + 1) / number_of_cycles);
+            1 - double(icycle)/number_of_cycles );
       }
 
 
