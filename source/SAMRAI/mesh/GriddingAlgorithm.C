@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/math/PatchCellDataBasicOps.h"
-#include "SAMRAI/math/PatchCellDataOpsInteger.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 
 #include <stdio.h>
@@ -2381,7 +2380,6 @@ GriddingAlgorithm::checkNonrefinedTags(
     * Check for user-tagged cells in the violating parts of the tag level.
     */
    math::PatchCellDataBasicOps<int> dataop;
-   math::PatchCellDataOpsInteger dataopi;
    int maxval = 0;
    for (hier::Connector::ConstNeighborhoodIterator ei = tag_to_violator->begin();
         ei != tag_to_violator->end(); ++ei) {
