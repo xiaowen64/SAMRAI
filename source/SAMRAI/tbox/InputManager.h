@@ -146,7 +146,7 @@ protected:
 private:
    InputManager(
       const InputManager&);           // not implemented
-   void
+   InputManager&
    operator = (
       const InputManager&);                // not implemented
 

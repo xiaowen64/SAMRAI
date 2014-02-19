@@ -97,7 +97,7 @@ public:
 private:
    ReferenceCounter(
       const ReferenceCounter&);                 // not implemented
-   void
+   ReferenceCounter&
    operator = (
       const ReferenceCounter&);                 // not implemented
 

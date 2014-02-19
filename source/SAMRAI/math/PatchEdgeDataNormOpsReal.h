@@ -237,10 +237,10 @@ public:
 private:
    // The following are not implemented:
    PatchEdgeDataNormOpsReal(
-      const PatchEdgeDataNormOpsReal<TYPE>&);
-   void
+      const PatchEdgeDataNormOpsReal&);
+   PatchEdgeDataNormOpsReal&
    operator = (
-      const PatchEdgeDataNormOpsReal<TYPE>&);
+      const PatchEdgeDataNormOpsReal&);
 
    ArrayDataNormOpsReal<TYPE> d_array_ops;
 };

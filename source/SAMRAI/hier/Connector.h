@@ -91,7 +91,7 @@ public:
     * @see setHead()
     * @see setWidth()
     */
-   Connector(
+   explicit Connector(
       const tbox::Dimension& dim);
 
    /*!
@@ -1425,7 +1425,7 @@ private:
          const std::string& border,
          int detail_depth = 2,
          bool output_statistics = false);
-      void
+      Outputter&
       operator = (
          const Outputter& r);               // Unimplemented private.
       const Connector& d_conn;

@@ -280,7 +280,7 @@ private:
    // The following are not implemented:
    PatchCellDataNormOpsComplex(
       const PatchCellDataNormOpsComplex&);
-   void
+   PatchCellDataNormOpsComplex&
    operator = (
       const PatchCellDataNormOpsComplex&);
 

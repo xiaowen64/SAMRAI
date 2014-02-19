@@ -498,7 +498,7 @@ private:
    // The following are not implemented
    HierarchyFaceDataOpsComplex(
       const HierarchyFaceDataOpsComplex&);
-   void
+   HierarchyFaceDataOpsComplex&
    operator = (
       const HierarchyFaceDataOpsComplex&);
 

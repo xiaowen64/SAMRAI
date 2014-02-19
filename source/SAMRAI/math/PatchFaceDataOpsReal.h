@@ -120,10 +120,10 @@ public:
 private:
    // The following are not implemented:
    PatchFaceDataOpsReal(
-      const PatchFaceDataOpsReal<TYPE>&);
-   void
+      const PatchFaceDataOpsReal&);
+   PatchFaceDataOpsReal&
    operator = (
-      const PatchFaceDataOpsReal<TYPE>&);
+      const PatchFaceDataOpsReal&);
 
 };
 

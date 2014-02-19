@@ -148,7 +148,7 @@ private:
    // The following two functions are not implemented
    OuteredgeSumTransactionFactory(
       const OuteredgeSumTransactionFactory&);
-   void
+   OuteredgeSumTransactionFactory&
    operator = (
       const OuteredgeSumTransactionFactory&);
 

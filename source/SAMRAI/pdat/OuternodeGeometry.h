@@ -168,7 +168,7 @@ private:
    OuternodeGeometry(
       const OuternodeGeometry&);
    /*! Not implemented */
-   void
+   OuternodeGeometry&
    operator = (
       const OuternodeGeometry&);
 

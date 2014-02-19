@@ -231,7 +231,7 @@ private:
        *
        * @param[in] dim
        */
-      BoxInTransit(const tbox::Dimension& dim);
+      explicit BoxInTransit(const tbox::Dimension& dim);
 
 
       /*!
@@ -257,8 +257,9 @@ private:
        *
        * @param[in] other
        */      
-      const BoxInTransit&
-      operator = (const BoxInTransit& other)
+      BoxInTransit&
+      operator = (
+         const BoxInTransit& other)
       {
          d_box = other.d_box;
          d_orig_box = other.d_orig_box;

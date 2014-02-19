@@ -130,7 +130,7 @@ public:
 private:
    FirstLayerCellNoCornersVariableFillPattern(
       const FirstLayerCellNoCornersVariableFillPattern&);    // not implemented
-   void
+   FirstLayerCellNoCornersVariableFillPattern&
    operator = (
       const FirstLayerCellNoCornersVariableFillPattern&);    // not implemented
 

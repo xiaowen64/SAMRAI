@@ -665,10 +665,10 @@ private:
 
    // The following are not implemented
    SAMRAIVectorReal(
-      const SAMRAIVectorReal<TYPE>&);
-   void
+      const SAMRAIVectorReal&);
+   SAMRAIVectorReal&
    operator = (
-      const SAMRAIVectorReal<TYPE>&);
+      const SAMRAIVectorReal&);
 
    /*
     * Private member function to set number of vector components.  This

@@ -167,7 +167,7 @@ private:
    // The following two functions are not implemented
    RefineTransactionFactory(
       const RefineTransactionFactory&);
-   void
+   RefineTransactionFactory&
    operator = (
       const RefineTransactionFactory&);
 

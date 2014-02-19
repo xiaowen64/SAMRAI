@@ -255,10 +255,10 @@ public:
 private:
    // The following are not implemented:
    PatchSideDataBasicOps(
-      const PatchSideDataBasicOps<TYPE>&);
-   void
+      const PatchSideDataBasicOps&);
+   PatchSideDataBasicOps&
    operator = (
-      const PatchSideDataBasicOps<TYPE>&);
+      const PatchSideDataBasicOps&);
 
    ArrayDataBasicOps<TYPE> d_array_ops;
 };

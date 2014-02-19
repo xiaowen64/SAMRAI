@@ -580,12 +580,12 @@ private:
 
    // Unimplemented copy constructor
    SideData(
-      const SideData<TYPE>&);
+      const SideData&);
 
    // Unimplemented assignment operator
-   void
+   SideData&
    operator = (
-      const SideData<TYPE>&);
+      const SideData&);
 
    void
    copyWithRotation(

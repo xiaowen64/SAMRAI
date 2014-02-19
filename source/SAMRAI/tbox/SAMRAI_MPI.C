@@ -87,6 +87,19 @@ SAMRAI_MPI::SAMRAI_MPI(
 
 /*
  **************************************************************************
+ * Copy constructor.
+ **************************************************************************
+ */
+SAMRAI_MPI::SAMRAI_MPI(
+   const SAMRAI_MPI& other) :
+   d_comm(other.d_comm),
+   d_rank(other.d_rank),
+   d_size(other.d_size)
+{
+}
+
+/*
+ **************************************************************************
  *
  * Abort the program.
  *

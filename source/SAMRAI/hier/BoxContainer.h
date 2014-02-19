@@ -1799,7 +1799,7 @@ private:
          const std::string& border,
          int detail_depth = 2);
 
-      void
+      Outputter&
       operator = (
          const Outputter& rhs);               // Unimplemented private.
 

@@ -133,7 +133,7 @@ public:
 private:
    SecondLayerNodeNoCornersVariableFillPattern(
       const SecondLayerNodeNoCornersVariableFillPattern&);  // not implemented
-   void
+   SecondLayerNodeNoCornersVariableFillPattern&
    operator = (
       const SecondLayerNodeNoCornersVariableFillPattern&);  // not implemented
 

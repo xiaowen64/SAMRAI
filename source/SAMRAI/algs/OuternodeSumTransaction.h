@@ -192,7 +192,7 @@ public:
 private:
    OuternodeSumTransaction(
       const OuternodeSumTransaction&);                      // not implemented
-   void
+   OuternodeSumTransaction&
    operator = (
       const OuternodeSumTransaction&);             // not implemented
 

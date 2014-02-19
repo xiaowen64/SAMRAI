@@ -216,7 +216,7 @@ private:
 
    NodeGeometry(
       const NodeGeometry&);             // not implemented
-   void
+   NodeGeometry&
    operator = (
       const NodeGeometry&);                     // not implemented
 

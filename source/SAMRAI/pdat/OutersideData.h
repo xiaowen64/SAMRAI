@@ -561,12 +561,12 @@ private:
 
    // Unimplemented copy constructor
    OutersideData(
-      const OutersideData<TYPE>&);
+      const OutersideData&);
 
    // Unimplemented assignment operator
-   void
+   OutersideData&
    operator = (
-      const OutersideData<TYPE>&);
+      const OutersideData&);
 
    int d_depth;
 

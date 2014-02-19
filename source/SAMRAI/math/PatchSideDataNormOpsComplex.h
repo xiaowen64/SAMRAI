@@ -248,7 +248,7 @@ private:
    // The following are not implemented:
    PatchSideDataNormOpsComplex(
       const PatchSideDataNormOpsComplex&);
-   void
+   PatchSideDataNormOpsComplex&
    operator = (
       const PatchSideDataNormOpsComplex&);
 

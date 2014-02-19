@@ -133,10 +133,10 @@ public:
 
 private:
    IndexDataFactory(
-      const IndexDataFactory<TYPE, BOX_GEOMETRY>&);
-   void
+      const IndexDataFactory&);
+   IndexDataFactory&
    operator = (
-      const IndexDataFactory<TYPE, BOX_GEOMETRY>&);
+      const IndexDataFactory&);
 
 };
 

@@ -172,7 +172,7 @@ LocationIndexRobinBcCoefs::numberOfExtensionsFillable() const
  ************************************************************************
  */
 
-const LocationIndexRobinBcCoefs&
+LocationIndexRobinBcCoefs&
 LocationIndexRobinBcCoefs::operator = (
    const LocationIndexRobinBcCoefs& r)
 {

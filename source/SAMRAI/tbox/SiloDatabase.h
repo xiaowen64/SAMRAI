@@ -550,11 +550,12 @@ public:
    using Database::getStringArray;
 
 private:
+   SiloDatabase();                      // not implemented
    SiloDatabase(
       const SiloDatabase&);             // not implemented
-   void
+   SiloDatabase&
    operator = (
-      const SiloDatabase&);                 // not implemented
+      const SiloDatabase&);             // not implemented
 
    bool
    isSiloType(

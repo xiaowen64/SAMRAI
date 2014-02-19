@@ -269,7 +269,7 @@ public:
    /*!
     * @brief Assignment operator.
     */
-   const LocationIndexRobinBcCoefs&
+   LocationIndexRobinBcCoefs&
    operator = (
       const LocationIndexRobinBcCoefs& r);
 

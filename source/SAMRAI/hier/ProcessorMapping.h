@@ -186,7 +186,7 @@ private:
    void
    computeLocalIndices() const;
 
-   void
+   ProcessorMapping&
    operator = (
       const ProcessorMapping&);                 // not implemented
 

@@ -195,7 +195,7 @@ protected:
 private:
    PatchDataFactory(
       const PatchDataFactory&);               // not implemented
-   void
+   PatchDataFactory&
    operator = (
       const PatchDataFactory&);               // not implemented
    PatchDataFactory();                             // not implemented,

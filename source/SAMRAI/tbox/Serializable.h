@@ -58,6 +58,16 @@ public:
    putToRestart(
       const boost::shared_ptr<Database>& restart_db) const = 0;
 
+private:
+   // Unimplemented copy constructor.
+   Serializable(
+      const Serializable& other);
+
+   // Unimplemented default constructor.
+   Serializable&
+   operator = (
+      const Serializable& rhs);
+
 };
 
 }

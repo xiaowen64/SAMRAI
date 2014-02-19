@@ -85,11 +85,11 @@ private:
     * compiler from generating a default.
     */
    SparseDataVariable(
-      const SparseDataVariable<BOX_GEOMETRY>& rhs);
+      const SparseDataVariable& rhs);
 
-   SparseDataVariable<BOX_GEOMETRY>&
+   SparseDataVariable&
    operator = (
-      const SparseDataVariable<BOX_GEOMETRY>& rhs);
+      const SparseDataVariable& rhs);
 
 }; // end class SparseDataVariable.
 

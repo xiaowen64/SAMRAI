@@ -134,7 +134,7 @@ public:
 private:
    VariableFillPattern(
       const VariableFillPattern&);                     // not implemented
-   void
+   VariableFillPattern&
    operator = (
       const VariableFillPattern&);                     // not implemented
 

@@ -225,7 +225,7 @@ public:
 private:
    Parser(
       const Parser&);           // not implemented
-   void
+   Parser&
    operator = (
       const Parser&);           // not implemented
 

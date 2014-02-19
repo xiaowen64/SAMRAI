@@ -119,10 +119,10 @@ public:
 private:
    // The following are not implemented:
    PatchEdgeDataOpsReal(
-      const PatchEdgeDataOpsReal<TYPE>&);
-   void
+      const PatchEdgeDataOpsReal&);
+   PatchEdgeDataOpsReal&
    operator = (
-      const PatchEdgeDataOpsReal<TYPE>&);
+      const PatchEdgeDataOpsReal&);
 
 };
 

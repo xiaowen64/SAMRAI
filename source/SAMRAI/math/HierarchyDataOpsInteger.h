@@ -279,7 +279,7 @@ private:
    // The following are not implemented
    HierarchyDataOpsInteger(
       const HierarchyDataOpsInteger&);
-   void
+   HierarchyDataOpsInteger&
    operator = (
       const HierarchyDataOpsInteger&);
 

@@ -252,10 +252,10 @@ public:
 private:
    // The following are not implemented:
    ArrayDataBasicOps(
-      const ArrayDataBasicOps<TYPE>&);
-   void
+      const ArrayDataBasicOps&);
+   ArrayDataBasicOps&
    operator = (
-      const ArrayDataBasicOps<TYPE>&);
+      const ArrayDataBasicOps&);
 
 };
 

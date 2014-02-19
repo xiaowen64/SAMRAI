@@ -1347,7 +1347,7 @@ private:
    // The following are not yet implemented:
    GriddingAlgorithm(
       const GriddingAlgorithm&);
-   void
+   GriddingAlgorithm&
    operator = (
       const GriddingAlgorithm&);
 

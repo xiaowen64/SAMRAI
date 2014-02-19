@@ -206,7 +206,7 @@ public:
 private:
    CoarsenSchedule(
       const CoarsenSchedule&);              // not implemented
-   void
+   CoarsenSchedule&
    operator = (
       const CoarsenSchedule&);              // not implemented
 

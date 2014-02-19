@@ -499,7 +499,7 @@ private:
    // The following are not implemented
    HierarchyEdgeDataOpsComplex(
       const HierarchyEdgeDataOpsComplex&);
-   void
+   HierarchyEdgeDataOpsComplex&
    operator = (
       const HierarchyEdgeDataOpsComplex&);
 

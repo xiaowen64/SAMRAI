@@ -125,9 +125,10 @@ public:
       std::ostream& stream) const;
 
 private:
+   StatTransaction();                           // not implemented
    StatTransaction(
       const StatTransaction&);                  // not implemented
-   void
+   StatTransaction&
    operator = (
       const StatTransaction&);                  // not implemented
 

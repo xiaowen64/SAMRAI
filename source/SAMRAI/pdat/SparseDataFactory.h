@@ -158,11 +158,11 @@ private:
     * ensure the compiler does not create a default implementation.
     */
    SparseDataFactory(
-      const SparseDataFactory<BOX_GEOMETRY>& rhs);
+      const SparseDataFactory& other);
 
-   SparseDataFactory<BOX_GEOMETRY>&
+   SparseDataFactory&
    operator = (
-      const SparseDataFactory<BOX_GEOMETRY>& rhs);
+      const SparseDataFactory& rhs);
 
    std::vector<std::string> d_dbl_attributes;
    std::vector<std::string> d_int_attributes;

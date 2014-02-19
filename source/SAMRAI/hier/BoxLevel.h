@@ -1648,7 +1648,7 @@ private:
          const std::string& border,
          int detail_depth = 2,
          bool output_statistics = false);
-      void
+      Outputter&
       operator = (
          const Outputter& r);               // Unimplemented private.
       const BoxLevel& d_level;

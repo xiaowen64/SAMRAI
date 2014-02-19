@@ -187,6 +187,15 @@ public:
 
 private:
 
+   // Unimplemented copy constructor.
+   BalancedDepthFirstTree(
+      const BalancedDepthFirstTree& other);
+
+   // Unimplemented assignment operator.
+   BalancedDepthFirstTree&
+   operator = (
+      const BalancedDepthFirstTree& rhs);
+
    /*!
     * @brief Set up the tree.
     *

@@ -498,7 +498,7 @@ private:
    // The following are not implemented
    HierarchyNodeDataOpsComplex(
       const HierarchyNodeDataOpsComplex&);
-   void
+   HierarchyNodeDataOpsComplex&
    operator = (
       const HierarchyNodeDataOpsComplex&);
 

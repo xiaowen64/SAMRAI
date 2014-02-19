@@ -146,7 +146,7 @@ public:
 private:
    FirstLayerEdgeVariableFillPattern(
       const FirstLayerEdgeVariableFillPattern&);    // not implemented
-   void
+   FirstLayerEdgeVariableFillPattern&
    operator = (
       const FirstLayerEdgeVariableFillPattern&);    // not implemented
 

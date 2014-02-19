@@ -625,10 +625,10 @@ public:
 private:
    // The following are not implemented
    HierarchyCellDataOpsReal(
-      const HierarchyCellDataOpsReal<TYPE>&);
-   void
+      const HierarchyCellDataOpsReal&);
+   HierarchyCellDataOpsReal&
    operator = (
-      const HierarchyCellDataOpsReal<TYPE>&);
+      const HierarchyCellDataOpsReal&);
 
    boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;

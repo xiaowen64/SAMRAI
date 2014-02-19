@@ -90,7 +90,7 @@ private:
    // The following two functions are not implemented
    StandardCoarsenTransactionFactory(
       const StandardCoarsenTransactionFactory&);
-   void
+   StandardCoarsenTransactionFactory&
    operator = (
       const StandardCoarsenTransactionFactory&);
 

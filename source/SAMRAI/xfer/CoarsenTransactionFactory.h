@@ -103,7 +103,7 @@ public:
 private:
    CoarsenTransactionFactory(
       const CoarsenTransactionFactory&);                  // not implemented
-   void
+   CoarsenTransactionFactory&
    operator = (
       const CoarsenTransactionFactory&);                  // not implemented
 

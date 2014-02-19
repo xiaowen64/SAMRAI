@@ -137,7 +137,7 @@ public:
 private:
    BoxGeometryVariableFillPattern(
       const BoxGeometryVariableFillPattern&);    // not implemented
-   void
+   BoxGeometryVariableFillPattern&
    operator = (
       const BoxGeometryVariableFillPattern&);    // not implemented
 

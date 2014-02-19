@@ -57,7 +57,7 @@ public:
 private:
    PatchFactory(
       const PatchFactory&);             // not implemented
-   void
+   PatchFactory&
    operator = (
       const PatchFactory&);                     // not implemented
 

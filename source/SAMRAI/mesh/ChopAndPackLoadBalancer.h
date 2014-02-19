@@ -427,7 +427,7 @@ private:
    // dumb compilers.
    ChopAndPackLoadBalancer(
       const ChopAndPackLoadBalancer&);
-   void
+   ChopAndPackLoadBalancer&
    operator = (
       const ChopAndPackLoadBalancer&);
 

@@ -216,11 +216,11 @@ StartupShutdownManager::finalize()
    s_initialized = false;
 }
 
-StartupShutdownManager::AbstractHandler::~AbstractHandler()
+StartupShutdownManager::AbstractHandler::AbstractHandler()
 {
 }
 
-StartupShutdownManager::Handler::Handler()
+StartupShutdownManager::AbstractHandler::~AbstractHandler()
 {
 }
 
@@ -308,6 +308,10 @@ StartupShutdownManager::Handler::hasFinalize()
 StartupShutdownManager::ListElement::ListElement():
    handler(0),
    next(0)
+{
+}
+
+StartupShutdownManager::ListElement::~ListElement()
 {
 }
 

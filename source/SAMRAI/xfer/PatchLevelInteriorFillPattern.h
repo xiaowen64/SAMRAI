@@ -136,7 +136,7 @@ public:
 private:
    PatchLevelInteriorFillPattern(
       const PatchLevelInteriorFillPattern&);         // not implemented
-   void
+   PatchLevelInteriorFillPattern&
    operator = (
       const PatchLevelInteriorFillPattern&);        // not implemented
 

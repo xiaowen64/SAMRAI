@@ -467,10 +467,10 @@ public:
 private:
    // The following are not implemented
    HierarchyDataOpsReal(
-      const HierarchyDataOpsReal<TYPE>&);
-   void
+      const HierarchyDataOpsReal&);
+   HierarchyDataOpsReal&
    operator = (
-      const HierarchyDataOpsReal<TYPE>&);
+      const HierarchyDataOpsReal&);
 
 };
 

@@ -89,10 +89,10 @@ public:
 private:
    // neither of the following functions are implemented
    OuterfaceVariable(
-      const OuterfaceVariable<TYPE>&);
-   void
+      const OuterfaceVariable&);
+   OuterfaceVariable&
    operator = (
-      const OuterfaceVariable<TYPE>&);
+      const OuterfaceVariable&);
 };
 
 }

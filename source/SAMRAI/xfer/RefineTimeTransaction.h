@@ -206,7 +206,7 @@ public:
 private:
    RefineTimeTransaction(
       const RefineTimeTransaction&);                    // not implemented
-   void
+   RefineTimeTransaction&
    operator = (
       const RefineTimeTransaction&);                    // not implemented
 

@@ -627,10 +627,10 @@ public:
 private:
    // The following are not implemented
    HierarchySideDataOpsReal(
-      const HierarchySideDataOpsReal<TYPE>&);
-   void
+      const HierarchySideDataOpsReal&);
+   HierarchySideDataOpsReal&
    operator = (
-      const HierarchySideDataOpsReal<TYPE>&);
+      const HierarchySideDataOpsReal&);
 
    boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;

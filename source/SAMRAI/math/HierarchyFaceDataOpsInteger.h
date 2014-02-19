@@ -384,7 +384,7 @@ private:
    // The following are not implemented
    HierarchyFaceDataOpsInteger(
       const HierarchyFaceDataOpsInteger&);
-   void
+   HierarchyFaceDataOpsInteger&
    operator = (
       const HierarchyFaceDataOpsInteger&);
 

@@ -209,7 +209,7 @@ private:
 
    EdgeGeometry(
       const EdgeGeometry&);             // not implemented
-   void
+   EdgeGeometry&
    operator = (
       const EdgeGeometry&);                     // not implemented
 

@@ -200,6 +200,12 @@ public:
       const Comm& comm);
 
    /*!
+    * @brief Copy constructor.
+    */
+   SAMRAI_MPI(
+      const SAMRAI_MPI& other);
+
+   /*!
     * @brief Get the local process rank from the last time the
     * internal communicator was set.
     */
@@ -270,7 +276,7 @@ public:
     *
     * @param[in] rhs
     */
-   const SAMRAI_MPI&
+   SAMRAI_MPI&
    operator = (
       const SAMRAI_MPI& rhs)
    {
@@ -792,6 +798,9 @@ public:
    finalize();
 
 private:
+   // Unimplemented default constructor.
+   SAMRAI_MPI();
+
    //@{
 
    /*!

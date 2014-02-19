@@ -192,7 +192,7 @@ public:
 private:
    OuteredgeSumTransaction(
       const OuteredgeSumTransaction&);                      // not implemented
-   void
+   OuteredgeSumTransaction&
    operator = (
       const OuteredgeSumTransaction&);             // not implemented
 

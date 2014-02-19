@@ -273,6 +273,15 @@ protected:
       RestartManager* subclass_instance);
 
 private:
+   // Unimplemented copy constructor.
+   RestartManager(
+      const RestartManager& other);
+
+   // Unimplemented assignment operator.
+   RestartManager&
+   operator = (
+      const RestartManager& rhs);
+
    /**
     * Write all objects registered to as restart objects to the
     * restart database.

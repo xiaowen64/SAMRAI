@@ -158,7 +158,7 @@ private:
    LoadBalanceStrategy(
       const LoadBalanceStrategy&);
 
-   void
+   LoadBalanceStrategy&
    operator = (
       const LoadBalanceStrategy&);
 

@@ -198,7 +198,7 @@ private:
 
    CellGeometry(
       const CellGeometry&);             // not implemented
-   void
+   CellGeometry&
    operator = (
       const CellGeometry&);                     // not implemented
 

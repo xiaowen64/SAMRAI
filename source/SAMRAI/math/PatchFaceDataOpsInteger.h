@@ -141,7 +141,7 @@ private:
    // The following are not implemented:
    PatchFaceDataOpsInteger(
       const PatchFaceDataOpsInteger&);
-   void
+   PatchFaceDataOpsInteger&
    operator = (
       const PatchFaceDataOpsInteger&);
 

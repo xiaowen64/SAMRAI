@@ -129,7 +129,7 @@ public:
 private:
    PatchInteriorVariableFillPattern(
       const PatchInteriorVariableFillPattern&);    // not implemented
-   void
+   PatchInteriorVariableFillPattern&
    operator = (
       const PatchInteriorVariableFillPattern&);    // not implemented
 

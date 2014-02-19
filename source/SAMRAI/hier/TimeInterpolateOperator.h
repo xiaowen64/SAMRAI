@@ -97,7 +97,7 @@ private:
    // Neither of these is implemented.
    TimeInterpolateOperator(
       const TimeInterpolateOperator&);
-   void
+   TimeInterpolateOperator&
    operator = (
       const TimeInterpolateOperator&);
 

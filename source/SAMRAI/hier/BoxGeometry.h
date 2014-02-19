@@ -162,7 +162,7 @@ public:
 private:
    BoxGeometry(
       const BoxGeometry&);              // not implemented
-   void
+   BoxGeometry&
    operator = (
       const BoxGeometry&);              // not implemented
 

@@ -306,7 +306,7 @@ private:
    TreeLoadBalancer(
       const TreeLoadBalancer&);
 
-   void
+   TreeLoadBalancer&
    operator = (
       const TreeLoadBalancer&);
 

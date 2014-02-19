@@ -24,6 +24,30 @@ namespace tbox {
  */
 class MemoryDatabaseFactory:public DatabaseFactory
 {
+public:
+   /**
+    * Default constructor.
+    */
+   MemoryDatabaseFactory();
+
+   /**
+    * Copy constructor.
+    */
+   MemoryDatabaseFactory(
+      const MemoryDatabaseFactory& other);
+
+   /**
+    * Assignment operator.
+    */
+   MemoryDatabaseFactory&
+   operator = (
+      const MemoryDatabaseFactory& rhs);
+
+   /**
+    * Destructor.
+    */
+   ~MemoryDatabaseFactory();
+
    /**
     * Build a new Database object.
     */

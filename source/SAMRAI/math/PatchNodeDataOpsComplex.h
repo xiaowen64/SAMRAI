@@ -126,7 +126,7 @@ private:
    // The following are not implemented:
    PatchNodeDataOpsComplex(
       const PatchNodeDataOpsComplex&);
-   void
+   PatchNodeDataOpsComplex&
    operator = (
       const PatchNodeDataOpsComplex&);
 

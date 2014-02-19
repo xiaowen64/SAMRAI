@@ -81,12 +81,12 @@ public:
 private:
    // Unimplemented copy constructor
    CellVariable(
-      const CellVariable<TYPE>&);
+      const CellVariable&);
 
    // Unimplemented assignment operator
-   void
+   CellVariable&
    operator = (
-      const CellVariable<TYPE>&);
+      const CellVariable&);
 };
 
 }

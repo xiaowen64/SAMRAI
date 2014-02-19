@@ -60,7 +60,7 @@ private:
    // The following are not implemented:
    ArrayDataNormOpsInteger(
       const ArrayDataNormOpsInteger&);
-   void
+   ArrayDataNormOpsInteger&
    operator = (
       const ArrayDataNormOpsInteger&);
 };

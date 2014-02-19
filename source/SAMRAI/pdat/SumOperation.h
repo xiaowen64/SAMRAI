@@ -45,10 +45,10 @@ public:
 
 private:
    SumOperation(
-      const SumOperation<TYPE>&);             // not implemented
-   void
+      const SumOperation&);             // not implemented
+   SumOperation&
    operator = (
-      const SumOperation<TYPE>&);              // not implemented
+      const SumOperation&);              // not implemented
 };
 
 }

@@ -88,12 +88,12 @@ private:
 
    // Unimplemented copy constructor
    EdgeVariable(
-      const EdgeVariable<TYPE>&);
+      const EdgeVariable&);
 
    // Unimplemented assignment operator
-   void
+   EdgeVariable&
    operator = (
-      const EdgeVariable<TYPE>&);
+      const EdgeVariable&);
 
 };
 

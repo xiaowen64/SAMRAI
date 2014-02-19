@@ -521,12 +521,12 @@ private:
 
    // Unimplemented copy constructor
    IndexData(
-      const IndexData<TYPE, BOX_GEOMETRY>&);
+      const IndexData&);
 
    // Unimplemented assignment operator
-   void
+   IndexData&
    operator = (
-      const IndexData<TYPE, BOX_GEOMETRY>&);
+      const IndexData&);
 
    const tbox::Dimension d_dim;
 

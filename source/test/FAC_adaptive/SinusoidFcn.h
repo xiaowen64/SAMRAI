@@ -27,7 +27,7 @@ class SinusoidFcn
 {
 
 public:
-   SinusoidFcn(
+   explicit SinusoidFcn(
       const tbox::Dimension& dim);
 
    /*!

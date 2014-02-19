@@ -195,6 +195,15 @@ public:
 
 private:
 
+   // Unimplemented copy constructor.
+   CenteredRankTree(
+      const CenteredRankTree& other);
+
+   // Unimplemented assignment operator.
+   CenteredRankTree&
+   operator = (
+      const CenteredRankTree& rhs);
+
    /*!
     * @brief Set up the tree.
     *

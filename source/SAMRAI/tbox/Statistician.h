@@ -909,6 +909,15 @@ protected:
       const std::string& name) const;
 
 private:
+   // Unimplemented copy constructor.
+   Statistician(
+      const Statistician& other);
+
+   // Unimplemented assignment operator.
+   Statistician&
+   operator = (
+      const Statistician& rhs);
+
    /*!
     * @brief Get global-reduction statistics without depending on an
     * MPI gather, which is slow and does not scale.
@@ -1132,6 +1141,18 @@ public:
    }
 
 private:
+   // Unimplemented default constructor.
+   StatisticRestartDatabase();
+
+   // Unimplemented default constructor.
+   StatisticRestartDatabase(
+      const StatisticRestartDatabase& other);
+
+   // Unimplemented assignment operator.
+   StatisticRestartDatabase&
+   operator = (
+      const StatisticRestartDatabase& rhs);
+
    std::string d_object_name;
 
    /*

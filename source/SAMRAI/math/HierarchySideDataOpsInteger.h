@@ -384,7 +384,7 @@ private:
    // The following are not implemented
    HierarchySideDataOpsInteger(
       const HierarchySideDataOpsInteger&);
-   void
+   HierarchySideDataOpsInteger&
    operator = (
       const HierarchySideDataOpsInteger&);
 

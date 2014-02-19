@@ -383,7 +383,7 @@ private:
    // The following are not implemented
    HierarchyCellDataOpsInteger(
       const HierarchyCellDataOpsInteger&);
-   void
+   HierarchyCellDataOpsInteger&
    operator = (
       const HierarchyCellDataOpsInteger&);
 

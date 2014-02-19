@@ -125,12 +125,44 @@ RankGroup::RankGroup(
 
 /*
  ***********************************************************************
+ * Copy constructor.
+ ***********************************************************************
+ */
+RankGroup::RankGroup(
+   const RankGroup& other)
+   : d_min(other.d_min),
+     d_max(other.d_max),
+     d_ranks(other.d_ranks),
+     d_storage(other.d_storage),
+     d_samrai_mpi(other.d_samrai_mpi)
+{
+}
+
+/*
+ ***********************************************************************
  * Destructor
  ***********************************************************************
  */
 
 RankGroup::~RankGroup()
 {
+}
+
+/*
+ ***********************************************************************
+ * Assignment operator.
+ ***********************************************************************
+ */
+ RankGroup&
+ RankGroup::operator = (
+   const RankGroup& rhs)
+{
+   d_min = rhs.d_min;
+   d_max = rhs.d_max;
+   d_ranks = rhs.d_ranks;
+   d_storage = rhs.d_storage;
+   d_samrai_mpi = rhs.d_samrai_mpi;
+   return *this;
 }
 
 /*

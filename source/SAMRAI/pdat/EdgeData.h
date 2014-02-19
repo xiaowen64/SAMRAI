@@ -529,12 +529,12 @@ private:
 
    // Unimplemented copy constructor
    EdgeData(
-      const EdgeData<TYPE>&);
+      const EdgeData&);
 
    // Unimplemented assignment operator
-   void
+   EdgeData&
    operator = (
-      const EdgeData<TYPE>&);
+      const EdgeData&);
 
    void
    copyWithRotation(

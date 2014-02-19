@@ -161,7 +161,8 @@ class BoxNeighborhoodCollection
        *
        * @param rhs
        */
-      BoxNeighborhoodCollection& operator = (
+      BoxNeighborhoodCollection&
+      operator = (
          const BoxNeighborhoodCollection& rhs);
 
 

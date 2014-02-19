@@ -328,7 +328,7 @@ private:
    // The following are not implemented:
    TagAndInitializeStrategy(
       const TagAndInitializeStrategy&);
-   void
+   TagAndInitializeStrategy&
    operator = (
       const TagAndInitializeStrategy&);
 

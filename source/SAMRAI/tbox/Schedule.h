@@ -310,7 +310,7 @@ private:
 
    Schedule(
       const Schedule&);                 // not implemented
-   void
+   Schedule&
    operator = (
       const Schedule&);                 // not implemented
 

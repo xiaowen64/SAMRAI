@@ -79,12 +79,12 @@ public:
 private:
    // Unimplemented copy constructor
    IndexVariable(
-      const IndexVariable<TYPE, BOX_GEOMETRY>&);
+      const IndexVariable&);
 
    // Unimplemented assignment operator
-   void
+   IndexVariable&
    operator = (
-      const IndexVariable<TYPE, BOX_GEOMETRY>&);
+      const IndexVariable&);
 
 };
 

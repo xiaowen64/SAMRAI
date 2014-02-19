@@ -150,7 +150,7 @@ private:
    // The following two functions are not implemented
    OuternodeSumTransactionFactory(
       const OuternodeSumTransactionFactory&);
-   void
+   OuternodeSumTransactionFactory&
    operator = (
       const OuternodeSumTransactionFactory&);
 

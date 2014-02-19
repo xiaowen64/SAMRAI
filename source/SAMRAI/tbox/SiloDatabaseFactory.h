@@ -25,6 +25,30 @@ namespace tbox {
  */
 class SiloDatabaseFactory:public DatabaseFactory
 {
+public:
+   /**
+    * Default constructor.
+    */
+   SiloDatabaseFactory();
+
+   /**
+    * Copy constructor.
+    */
+   SiloDatabaseFactory(
+      const SiloDatabaseFactory& other);
+
+   /**
+    * Assignment operator.
+    */
+   SiloDatabaseFactory&
+   operator = (
+      const SiloDatabaseFactory& rhs);
+
+   /**
+    * Destructor.
+    */
+   ~SiloDatabaseFactory();
+
    /**
     * Build a new Database object.
     */

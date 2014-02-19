@@ -120,10 +120,10 @@ public:
 private:
    // The following are not implemented:
    PatchCellDataOpsReal(
-      const PatchCellDataOpsReal<TYPE>&);
-   void
+      const PatchCellDataOpsReal&);
+   PatchCellDataOpsReal&
    operator = (
-      const PatchCellDataOpsReal<TYPE>&);
+      const PatchCellDataOpsReal&);
 
 };
 

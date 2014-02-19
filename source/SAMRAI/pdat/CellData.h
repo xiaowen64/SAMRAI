@@ -463,12 +463,12 @@ private:
 
    // Unimplemented copy constructor
    CellData(
-      const CellData<TYPE>&);
+      const CellData&);
 
    // Unimplemented assignment operator
-   void
+   CellData
    operator = (
-      const CellData<TYPE>&);
+      const CellData&);
 
    void
    copyWithRotation(

@@ -111,7 +111,7 @@ public:
 private:
    VariableContext(
       const VariableContext&);                // not implemented
-   void
+   VariableContext&
    operator = (
       const VariableContext&);                     // not implemented
 

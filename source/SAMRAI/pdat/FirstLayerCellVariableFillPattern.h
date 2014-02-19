@@ -128,7 +128,7 @@ public:
 private:
    FirstLayerCellVariableFillPattern(
       const FirstLayerCellVariableFillPattern&);    // not implemented
-   void
+   FirstLayerCellVariableFillPattern&
    operator = (
       const FirstLayerCellVariableFillPattern&);    // not implemented
 

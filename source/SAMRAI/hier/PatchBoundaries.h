@@ -61,7 +61,7 @@ public:
     *
     * @param[in] r  Patchboundaries object to be copied in assignment.
     */
-   const PatchBoundaries&
+   PatchBoundaries&
    operator = (
       const PatchBoundaries& r)
    {

@@ -139,7 +139,7 @@ public:
 private:
    RefineOperator(
       const RefineOperator&);                   // not implemented
-   void
+   RefineOperator&
    operator = (
       const RefineOperator&);                           // not implemented
 

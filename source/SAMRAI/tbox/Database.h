@@ -1630,6 +1630,16 @@ public:
    printClassData(
       std::ostream& os = pout) = 0;
 
+private:
+   // Unimplemented copy constructor.
+   Database(
+      const Database& other);
+
+   // Unimplemented assignment operator.
+   Database&
+   operator = (
+      const Database& rhs);
+
 };
 
 }

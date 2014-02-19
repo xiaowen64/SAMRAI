@@ -88,12 +88,12 @@ private:
 
    // Unimplemented copy constructor
    NodeVariable(
-      const NodeVariable<TYPE>&);
+      const NodeVariable&);
 
    // Unimplemented assignment operator
-   void
+   NodeVariable&
    operator = (
-      const NodeVariable<TYPE>&);
+      const NodeVariable&);
 };
 
 }

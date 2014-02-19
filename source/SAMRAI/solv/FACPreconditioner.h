@@ -466,7 +466,7 @@ private:
    //! @name Functions not implemented:
    FACPreconditioner(
       const FACPreconditioner&);
-   void
+   FACPreconditioner&
    operator = (
       const FACPreconditioner&);
    //@}

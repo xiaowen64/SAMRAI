@@ -44,6 +44,16 @@ public:
   virtual boost::shared_ptr<Database>
   allocate(
      const std::string& name) = 0;
+
+private:
+  // Unimplemented copy constructor.
+  DatabaseFactory(
+     const DatabaseFactory& other);
+
+  // Unimplemented assignment operator.
+  DatabaseFactory&
+  operator = (
+     const DatabaseFactory& rhs);
 };
 
 }

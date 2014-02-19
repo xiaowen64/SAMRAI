@@ -760,7 +760,7 @@ private:
    // The following are not implemented:
    TimeRefinementIntegrator(
       const TimeRefinementIntegrator&);
-   void
+   TimeRefinementIntegrator&
    operator = (
       const TimeRefinementIntegrator&);
 

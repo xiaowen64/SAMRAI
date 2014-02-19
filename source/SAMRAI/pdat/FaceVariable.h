@@ -94,12 +94,12 @@ private:
 
    // Unimplemented copy constructor
    FaceVariable(
-      const FaceVariable<TYPE>&);
+      const FaceVariable&);
 
    // Unimplemented assignment operator
-   void
+   FaceVariable&
    operator = (
-      const FaceVariable<TYPE>&);
+      const FaceVariable&);
 };
 
 }

@@ -24,6 +24,30 @@ namespace tbox {
  */
 class HDFDatabaseFactory:public DatabaseFactory
 {
+public:
+   /**
+    * Default constructor.
+    */
+   HDFDatabaseFactory();
+
+   /**
+    * Copy constructor.
+    */
+   HDFDatabaseFactory(
+      const HDFDatabaseFactory& other);
+
+   /**
+    * Assignment operator.
+    */
+   HDFDatabaseFactory&
+   operator = (
+      const HDFDatabaseFactory& rhs);
+
+   /**
+    * Destructor.
+    */
+   ~HDFDatabaseFactory();
+
    /**
     * Build a new Database object.
     */

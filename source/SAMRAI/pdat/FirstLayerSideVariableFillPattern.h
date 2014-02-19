@@ -131,7 +131,7 @@ public:
 private:
    FirstLayerSideVariableFillPattern(
       const FirstLayerSideVariableFillPattern&);    // not implemented
-   void
+   FirstLayerSideVariableFillPattern&
    operator = (
       const FirstLayerSideVariableFillPattern&);    // not implemented
 

@@ -87,9 +87,22 @@ public:
          SAMRAI_MPI(SAMRAI_MPI::getSAMRAIWorld()));
 
    /*!
+    * Copy constructor.
+    */
+   RankGroup(
+      const RankGroup& other);
+
+   /*!
     * Destructor
     */
    ~RankGroup();
+
+   /*!
+    * Assignment operator.
+    */
+   RankGroup&
+   operator = (
+      const RankGroup& rhs);
 
    /*!
     * Returns true if the RankGroup contains ranks for all available

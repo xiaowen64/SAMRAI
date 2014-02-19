@@ -141,7 +141,7 @@ private:
    // The following are not implemented:
    PatchEdgeDataOpsInteger(
       const PatchEdgeDataOpsInteger&);
-   void
+   PatchEdgeDataOpsInteger&
    operator = (
       const PatchEdgeDataOpsInteger&);
 

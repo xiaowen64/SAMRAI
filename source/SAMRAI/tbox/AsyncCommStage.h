@@ -103,6 +103,7 @@ public:
        * attachStage() to properly stage the Member.
        */
       Member();
+
       /*!
        * @brief Initializing constructor.
        *
@@ -113,6 +114,7 @@ public:
          const size_t nreq,
          AsyncCommStage* stage,
          Handler* handler);
+
       /*!
        * @brief Destructor detach the Member from its stage.
        * Memory allocated by the stage to support the Member
@@ -319,6 +321,15 @@ private:
        * stage will set the Member's internal data.
        */
       friend class AsyncCommStage;
+
+      // Unimplemented copy constructor.
+      Member(
+         const Member& other);
+
+      // Unimplemented assignment operator.
+      Member&
+      operator = (
+         const Member& rhs);
 
       /*!
        * @brief The stage this Member belongs to.
@@ -531,6 +542,15 @@ private:
     * part of the stage code.
     */
    friend class Member;
+
+   // Unimplemented copy constructor.
+   AsyncCommStage(
+      const AsyncCommStage& other);
+
+   // Unimplemented assignment operator.
+   AsyncCommStage&
+   operator = (
+      const AsyncCommStage& rhs);
 
    //@{
    //! @name Private methods to be called only by Members of the stage.

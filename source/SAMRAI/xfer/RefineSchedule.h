@@ -289,7 +289,7 @@ private:
 
    RefineSchedule(
       const RefineSchedule&);                   // not implemented
-   void
+   RefineSchedule&
    operator = (
       const RefineSchedule&);                   // not implemented
 

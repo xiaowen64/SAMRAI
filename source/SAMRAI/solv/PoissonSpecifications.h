@@ -68,7 +68,7 @@ public:
     *
     * Assign everything except name.
     */
-   const PoissonSpecifications&
+   PoissonSpecifications&
    operator = (
       const PoissonSpecifications& r)
    {

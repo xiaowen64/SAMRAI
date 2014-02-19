@@ -530,11 +530,12 @@ public:
    using Database::getStringArray;
 
 private:
+   HDFDatabase();                     // not implemented
    HDFDatabase(
       const HDFDatabase&);            // not implemented
-   void
+   HDFDatabase&
    operator = (
-      const HDFDatabase&);                 // not implemented
+      const HDFDatabase&);            // not implemented
 
    /*
     * Static function passed HDF5 iterator routine to look up database keys.

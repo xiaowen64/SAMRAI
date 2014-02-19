@@ -908,9 +908,10 @@ public:
    }
 
 private:
+   MemoryDatabase();                            // not implemented
    MemoryDatabase(
       const MemoryDatabase&);                   // not implemented
-   void
+   MemoryDatabase&
    operator = (
       const MemoryDatabase&);                   // not implemented
 

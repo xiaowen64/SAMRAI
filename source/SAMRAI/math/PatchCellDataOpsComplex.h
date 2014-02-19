@@ -131,7 +131,7 @@ private:
    // The following are not implemented:
    PatchCellDataOpsComplex(
       const PatchCellDataOpsComplex&);
-   void
+   PatchCellDataOpsComplex&
    operator = (
       const PatchCellDataOpsComplex&);
 

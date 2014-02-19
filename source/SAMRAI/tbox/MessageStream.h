@@ -349,7 +349,7 @@ private:
 
    MessageStream(
       const MessageStream&);            // not implemented
-   void
+   MessageStream&
    operator = (
       const MessageStream&);            // not implemented
 

@@ -74,7 +74,7 @@ private:
    // The following are not implemented:
    BoxGeneratorStrategy(
       const BoxGeneratorStrategy&);
-   void
+   BoxGeneratorStrategy&
    operator = (
       const BoxGeneratorStrategy&);
 

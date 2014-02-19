@@ -130,7 +130,7 @@ private:
    // The following two functions are not implemented
    StandardRefineTransactionFactory(
       const StandardRefineTransactionFactory&);
-   void
+   StandardRefineTransactionFactory&
    operator = (
       const StandardRefineTransactionFactory&);
 

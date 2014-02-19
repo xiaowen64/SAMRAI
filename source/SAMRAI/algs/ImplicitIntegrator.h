@@ -357,7 +357,7 @@ private:
    // The following are not implemented:
    ImplicitIntegrator(
       const ImplicitIntegrator&);
-   void
+   ImplicitIntegrator&
    operator = (
       const ImplicitIntegrator&);
 

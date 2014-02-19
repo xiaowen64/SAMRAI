@@ -186,7 +186,7 @@ public:
 private:
    RefineCopyTransaction(
       const RefineCopyTransaction&);                    // not implemented
-   void
+   RefineCopyTransaction&
    operator = (
       const RefineCopyTransaction&);                    // not implemented
 

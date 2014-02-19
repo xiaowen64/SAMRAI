@@ -349,9 +349,9 @@ public:
 private:
    NullDatabase(
       const NullDatabase&);             // not implemented
-   void
+   NullDatabase&
    operator = (
-      const NullDatabase&);                     // not implemented
+      const NullDatabase&);             // not implemented
 
 };
 

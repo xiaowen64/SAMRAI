@@ -1405,7 +1405,8 @@ public:
    /*!
     * @brief Assign value from an object of the non-const version.
     */
-   const MDA_AccessConst& operator = (
+   const MDA_AccessConst&
+   operator = (
       const MDA_Access<MDA_TYPE, MDA_DIM, OrderType>& r) {
       (MDA_Access<MDA_TYPE, MDA_DIM, OrderType>&)(*this) = r;
       return *this;
