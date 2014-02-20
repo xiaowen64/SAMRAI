@@ -471,7 +471,7 @@ int main(
       const bool write_comm_graph = main_db->getBoolWithDefault("write_comm_graph", false);
       if ( write_comm_graph ) {
          comm_graph_writer.reset( new CommGraphWriter );
-         comm_graph_writer->setWriteFullGraph( mpi.getSize() <= 4096 );
+         comm_graph_writer->setWriteFullGraph( mpi.getSize() <= 16 );
       }
 
 
