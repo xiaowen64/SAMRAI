@@ -33,8 +33,9 @@ namespace SAMRAI {
 namespace hier {
 
 class BoxLevel;
-class PatchLevel;
 class BoxTree;
+class PatchLevel;
+class SingularityFinder;
 
 /*!
  * @brief Class BaseGridGeometry manages the index space that determines the
@@ -905,6 +906,8 @@ private:
       const Transformation::RotationIdentifier rotation_b_to_a,
       const IntVector& shift_b_to_a);
 
+   void findSingularities(std::vector<std::set<int> >& singularity_blocks);
+
    /*!
     * @brief Get a BoxContainer that contains all of the index space of all other
     * blocks in the multiblock domain.
@@ -1354,6 +1357,8 @@ private:
     * The number of blocks singularities in the block configuration.
     */
    int d_number_of_block_singularities;
+
+   boost::shared_ptr<SingularityFinder> d_singularity_finder;
 
    /*!
     * @brief Associated with each block is a list of Neighbors that

@@ -10,21 +10,12 @@
 #include "SAMRAI/hier/BaseGridGeometry.h"
 
 #include "SAMRAI/hier/BoundaryLookupTable.h"
-#include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
-#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/BoxTree.h"
-#include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
-#include "SAMRAI/tbox/SAMRAI_MPI.h"
+#include "SAMRAI/hier/SingularityFinder.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-#include "SAMRAI/tbox/TimerManager.h"
-#include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include "boost/shared_ptr.hpp"
@@ -1859,7 +1850,9 @@ BaseGridGeometry::readBlockDataFromInput(
     * singularity.
     */
    std::vector<std::set<int> > singularity_blocks;
-
+   findSingularities(singularity_blocks);
+   d_number_of_block_singularities = singularity_blocks.size();
+/*
    for (d_number_of_block_singularities = 0; true;
         ++d_number_of_block_singularities) {
 
@@ -1883,7 +1876,7 @@ BaseGridGeometry::readBlockDataFromInput(
 
       }
    }
-
+*/
    if (d_number_blocks == 1 && d_number_of_block_singularities > 0) {
       TBOX_ERROR("BaseGridGeometry::readBlockDataFromInput() error...\n"
          << "block singularities specified for single block problem."
@@ -2266,7 +2259,89 @@ BaseGridGeometry::registerNeighbors(
    d_block_neighbors[a].insert(nbr_of_a_pair);
    std::pair<BlockId,Neighbor> nbr_of_b_pair(block_a, neighbor_of_b);
    d_block_neighbors[b].insert(nbr_of_b_pair);
+}
 
+void BaseGridGeometry::findSingularities(
+   std::vector<std::set<int> >& singularity_blocks)
+{
+   std::map< BlockId, std::set<BlockId> > face_neighbors;
+
+   for (int b = 0; b < d_number_blocks; ++b) {
+      hier::BlockId base_block(b);
+
+      const std::map<BlockId,Neighbor>& nbrs_of_base = d_block_neighbors[b];
+
+      for (std::map<BlockId,Neighbor>::const_iterator
+           itr = nbrs_of_base.begin(); itr != nbrs_of_base.end(); ++itr) {
+
+         const BlockId& nbr_blk = itr->first;
+         const Neighbor& nbr = itr->second;
+
+         if (face_neighbors[base_block].find(nbr_blk) !=
+             face_neighbors[base_block].end()) {
+            TBOX_ASSERT(face_neighbors[nbr_blk].find(base_block) !=
+                        face_neighbors[nbr_blk].end());
+
+            continue;
+         }
+
+         BoxContainer base_domain(d_physical_domain, base_block);
+         BoxContainer nbr_domain(nbr.getTransformedDomain());
+
+         base_domain.unorder();
+         nbr_domain.unorder();
+         base_domain.coalesce();
+         nbr_domain.coalesce();
+
+         for (hier::BoxContainer::iterator b_itr = base_domain.begin();
+              b_itr != base_domain.end(); ++b_itr) {
+
+            b_itr->upper() += hier::IntVector::getOne(d_dim);
+
+         }
+
+         for (hier::BoxContainer::iterator n_itr = nbr_domain.begin();
+              n_itr != nbr_domain.end(); ++n_itr) {
+
+            n_itr->upper() += hier::IntVector::getOne(d_dim);
+
+         }
+
+         base_domain.intersectBoxes(nbr_domain);
+
+         bool is_face = false;
+         for (hier::BoxContainer::const_iterator b_itr = base_domain.begin();
+              b_itr != base_domain.end(); ++b_itr) {
+
+            hier::IntVector box_size(b_itr->numberCells());
+
+            int num_width_one = 0;
+            for (int d = 0; d < d_dim.getValue(); ++d) {
+               if (box_size[d] == 1) {
+                  ++num_width_one;
+               }
+            }
+
+            if (num_width_one == 1) {
+               is_face = true;
+            }
+         }
+
+         if (is_face) {
+            face_neighbors[base_block].insert(nbr_blk);
+            face_neighbors[nbr_blk].insert(base_block);
+         }
+      }
+   }
+
+   if (!face_neighbors.empty()) {
+      if (d_singularity_finder.get() == 0) {
+         d_singularity_finder.reset(new SingularityFinder(d_dim));
+      }
+      d_singularity_finder->findSingularities(singularity_blocks,
+                                              this,
+                                              face_neighbors);
+   }
 }
 
 /*

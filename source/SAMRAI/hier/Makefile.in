@@ -22,16 +22,17 @@ include $(OBJECT)/config/Makefile.config
 SUBDIRS = fortran
 
 OBJS = 	\
-	LocalId.o \
+	BaseGridGeometry.o \
 	BlockId.o \
-	PeriodicId.o \
 	BoxContainer.o \
 	CoarseFineBoundary.o \
-	BaseGridGeometry.o \
+	LocalId.o \
 	PatchBoundaries.o \
 	PatchHierarchy.o \
 	PatchLevel.o \
 	PatchLevelFactory.o \
+	PeriodicId.o \
+	SingularityFinder.o \
 	VariableDatabase.o \
 	Variable.o \
 	PatchDescriptor.o \
