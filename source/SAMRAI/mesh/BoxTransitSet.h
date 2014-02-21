@@ -17,6 +17,7 @@
 #include "SAMRAI/hier/MappingConnector.h"
 #include "SAMRAI/hier/SequentialLocalIdGenerator.h"
 #include "SAMRAI/mesh/BalanceBoxBreaker.h"
+#include "SAMRAI/mesh/BoxInTransit.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
 #include "SAMRAI/mesh/TransitLoad.h"
 #include "SAMRAI/tbox/Dimension.h"
@@ -47,7 +48,11 @@ public:
    //! @name Constructor
    BoxTransitSet( const PartitioningParams &pparams );
 
-   //! @name Copy constructor
+   /*!
+    * @name Copy constructor
+    *
+    * The content may be omitted from the copy, using the flag copy_load.
+    */
    BoxTransitSet( const BoxTransitSet &other, bool copy_load = true );
 
    //@{
@@ -229,112 +234,6 @@ private:
 
 
    /*!
-    * @brief Data to save for each Box that gets passed along the tree
-    * edges.
-    *
-    * The purpose of the BoxInTransit is to associate extra data with
-    * a Box as it is broken up and passed from process to process.  A
-    * BoxInTransit is a Box going through these changes.  It has a
-    * current work load and an orginating Box.
-    */
-   struct BoxInTransit {
-
-      /*!
-       * @brief Constructor
-       *
-       * @param[in] dim
-       */
-      BoxInTransit(const tbox::Dimension& dim) :
-         d_box(dim),
-         d_orig_box(dim) {}
-
-
-      /*!
-       * @brief Construct a new BoxInTransit from an originating box.
-       *
-       * @param[in] origin
-       */
-      BoxInTransit( const hier::Box& origin ):
-         d_box(origin),
-         d_orig_box(origin),
-         d_boxload(origin.size()) {}
-
-      /*!
-       * @brief Construct new object like an existing object but with a new ID.
-       *
-       * @param[in] other
-       * @param[in] box
-       * @param[in] rank
-       * @param[in] local_id
-       */
-      BoxInTransit(
-         const BoxInTransit& other,
-         const hier::Box& box,
-         int rank,
-         hier::LocalId local_id) :
-         d_box(box, local_id, rank),
-         d_orig_box(other.d_orig_box),
-         d_boxload(d_box.size()) {}
-
-      /*!
-       * @brief Assignment operator
-       *
-       * @param[in] other
-       */
-      BoxInTransit& operator = (const BoxInTransit& other) {
-         d_box = other.d_box;
-         d_orig_box = other.d_orig_box;
-         d_boxload = other.d_boxload;
-         return *this;
-      }
-
-      //! @brief Return the owner rank.
-      int getOwnerRank() const {
-         return d_box.getOwnerRank();
-      }
-
-      //! @brief Return the LocalId.
-      hier::LocalId getLocalId() const {
-         return d_box.getLocalId();
-      }
-
-      //! @brief Return the Box.
-      hier::Box& getBox() {
-         return d_box;
-      }
-
-      //! @brief Return the Box.
-      const hier::Box& getBox() const {
-         return d_box;
-      }
-
-      //! @brief Put self into a MessageStream.
-      void putToMessageStream(tbox::MessageStream &mstream) const {
-         d_box.putToMessageStream(mstream);
-         d_orig_box.putToMessageStream(mstream);
-         mstream << d_boxload;
-         return;
-      }
-
-      //! @brief Set attributes according to data in a MessageStream.
-      void getFromMessageStream(tbox::MessageStream &mstream) {
-         d_box.getFromMessageStream(mstream);
-         d_orig_box.getFromMessageStream(mstream);
-         mstream >> d_boxload;
-         return;
-      }
-
-      hier::Box d_box;
-
-      //! @brief Originating Box (the oldest one leading to this one).
-      hier::Box d_orig_box;
-
-      //! @brief Work load in this d_box.
-      LoadType d_boxload;
-   };
-
-
-   /*!
     * @brief Comparison functor for sorting BoxInTransit from more to
     * less loads.
     *
@@ -348,7 +247,7 @@ private:
          const BoxInTransit& a,
          const BoxInTransit& b) const {
          if (a.getBox().size() != b.getBox().size()) {
-            return a.d_boxload > b.d_boxload;
+            return a.getLoad() > b.getLoad();
          }
          if ( a.getBox().getBlockId() != b.getBox().getBlockId() ) {
             return a.getBox().getBlockId() < b.getBox().getBlockId();
@@ -359,7 +258,7 @@ private:
          if ( a.getBox().upper() != b.getBox().upper() ) {
             return lexicalIndexLessThan(a.getBox().upper(), b.getBox().upper());
          }
-         return a.d_orig_box.getBoxId() < b.d_orig_box.getBoxId();
+         return a.getOrigBox().getBoxId() < b.getOrigBox().getBoxId();
       }
    private:
       bool lexicalIndexLessThan( const hier::IntVector &a,
@@ -389,13 +288,13 @@ public:
    size_t size() const { return d_set.size(); }
    std::pair<iterator, bool> insert( const value_type &x ) {
       std::pair<iterator,bool> rval = d_set.insert(x);
-      if ( rval.second ) d_sumload += x.d_boxload;
+      if ( rval.second ) d_sumload += x.getLoad();
       return rval;
    }
-   void erase(iterator pos) { d_sumload -= pos->d_boxload; d_set.erase(pos); }
+   void erase(iterator pos) { d_sumload -= pos->getLoad(); d_set.erase(pos); }
    size_t erase(const key_type &k) {
       const size_t num_erased = d_set.erase(k);
-      if ( num_erased ) d_sumload -= k.d_boxload;
+      if ( num_erased ) d_sumload -= k.getLoad();
       return num_erased;
    }
    bool empty() const { return d_set.empty(); }
@@ -411,18 +310,6 @@ public:
    //@}
 
 private:
-
-   /*!
-    * @brief Insert BoxInTransit into an output stream.
-    */
-   friend std::ostream& operator << ( std::ostream& co,
-                                      const BoxInTransit& r) {
-      co << r.d_box
-         << r.d_box.numberCells() << '|' << r.d_box.size() << '-'
-         << r.d_orig_box
-         << r.d_orig_box.numberCells() << '|' << r.d_orig_box.size();
-      return co;
-   }
 
 
    //@{ @name Load adjustment methods
@@ -534,8 +421,8 @@ private:
     * fill in unbalanced--->balanced Connectors.
     *
     * These relationships must be represented by this object.
-    * Semilocal means the local process owns either d_box or
-    * d_orig_box (not both!) of each item in this BoxTransitSet.
+    * Semilocal means the local process owns either Box or
+    * the orginal box (not both!) of each item in this BoxTransitSet.
     *
     * Recall that semi-local relationships are those where the base
     * and head boxes are owned by different processes.  These edges

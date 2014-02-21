@@ -82,6 +82,7 @@ public:
     * @brief Insert all boxes from the given TransitSet.
     *
     * Changes to other as an implementation side-effect is allowed.
+    * This and other are guaranteed to be the same concrete type.
     *
     * @param other [i] Other TransitLoad container whose
     * implementation matches this one.
@@ -98,6 +99,9 @@ public:
    virtual bool empty() const {
       return getNumberOfItems() == 0;
    }
+
+   //! @brief Empty the container.
+   virtual void clear() = 0;
 
    //@}
 

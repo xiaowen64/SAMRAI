@@ -129,7 +129,7 @@ void BoxTransitSet::insertAll( const hier::BoxContainer &other )
    for ( hier::BoxContainer::const_iterator bi=other.begin(); bi!=other.end(); ++bi ) {
       BoxInTransit new_box(*bi);
       d_set.insert( new_box );
-      d_sumload += new_box.d_boxload;
+      d_sumload += new_box.getLoad();
    };
    if ( d_set.size() != old_size + other.size() ) {
       TBOX_ERROR("BoxTransitSet's insertAll currently can't weed out duplicates.");
@@ -171,7 +171,7 @@ size_t BoxTransitSet::getNumberOfOriginatingProcesses() const
 {
    std::set<int> originating_procs;
    for ( const_iterator si=begin(); si!=end(); ++si ) {
-      originating_procs.insert( si->d_orig_box.getOwnerRank() );
+      originating_procs.insert( si->getOrigBox().getOwnerRank() );
    }
    return originating_procs.size();
 }
@@ -239,7 +239,7 @@ BoxTransitSet::assignToLocalAndPopulateMaps(
  * Communicate semilocal relationships in unbalanced--->balanced
  * Connectors.  These relationships must be represented by this
  * object.  Semilocal means the local process owns either d_box or
- * d_orig_box (not both!) of each item in this BoxTransitSet.  The
+ * getOrigBox() (not both!) of each item in this BoxTransitSet.  The
  * owner of the other doesn't have this data, so this method does the
  * necessary P2P communication to set up the transpose edges.
  *
@@ -281,14 +281,14 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    std::map<int,boost::shared_ptr<tbox::MessageStream> > outgoing_messages;
    for ( const_iterator bi=begin(); bi!=end(); ++bi ) {
       const BoxInTransit &bit = *bi;
-      TBOX_ASSERT( bit.d_box.getOwnerRank() == mpi.getRank() );
-      if ( bit.d_orig_box.getOwnerRank() == mpi.getRank() ) {
+      TBOX_ASSERT( bit.getBox().getOwnerRank() == mpi.getRank() );
+      if ( bit.getOrigBox().getOwnerRank() == mpi.getRank() ) {
          // Not imported.
          continue;
       }
-      num_cells_imported += bit.d_box.size();
+      num_cells_imported += bit.getBox().size();
       boost::shared_ptr<tbox::MessageStream> &mstream =
-         outgoing_messages[bit.d_orig_box.getOwnerRank()];
+         outgoing_messages[bit.getOrigBox().getOwnerRank()];
       if ( !mstream ) {
          mstream.reset(new tbox::MessageStream);
       }
@@ -388,9 +388,9 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
 
          balanced_box_in_transit.getFromMessageStream(msg);
          unbalanced_to_balanced.insertLocalNeighbor(
-            balanced_box_in_transit.d_box,
-            balanced_box_in_transit.d_orig_box.getBoxId() );
-         num_unaccounted_cells -= balanced_box_in_transit.d_box.size();
+            balanced_box_in_transit.getBox(),
+            balanced_box_in_transit.getOrigBox().getBoxId() );
+         num_unaccounted_cells -= balanced_box_in_transit.getBox().size();
 
       }
       d_object_timers->t_unpack_edge->stop();
@@ -476,9 +476,9 @@ BoxTransitSet::putInBoxLevel(
    hier::BoxLevel &box_level ) const
 {
    for (iterator ni = begin(); ni != end(); ++ni ) {
-      TBOX_ASSERT( ni->d_box.getBoxId().isValid() );
-      if ( ni->d_box.getOwnerRank() == box_level.getMPI().getRank() ) {
-         box_level.addBox(ni->d_box);
+      TBOX_ASSERT( ni->getBox().getBoxId().isValid() );
+      if ( ni->getBox().getOwnerRank() == box_level.getMPI().getRank() ) {
+         box_level.addBox(ni->getBox());
       }
    }
    return;
@@ -490,9 +490,9 @@ BoxTransitSet::putInBoxLevel(
 /*
 *************************************************************************
 * Put all d_box into balanced BoxLevel.  Generate all
-* d_box<==>d_orig_box mapping edges, except for those that cannot be
+* d_box<==>getOrigBox() mapping edges, except for those that cannot be
 * set up without communication.  These semilocal edges have either a
-* remote d_box or a remote d_orig_box.
+* remote d_box or a remote getOrigBox().
 *
 * Each d_box must have a valid BoxId.
 *************************************************************************
@@ -509,19 +509,19 @@ BoxTransitSet::generateLocalBasedMapEdges(
 
       const BoxInTransit &added_box = *ni;
 
-      if ( !added_box.d_box.isIdEqual(added_box.d_orig_box) ) {
+      if ( !added_box.isOriginal() ) {
          // ID changed means mapping needed, but store only for local boxes.
 
-         if ( added_box.d_box.getOwnerRank() == mpi.getRank() ) {
+         if ( added_box.getBox().getOwnerRank() == mpi.getRank() ) {
             balanced_to_unbalanced.insertLocalNeighbor(
-               added_box.d_orig_box,
-               added_box.d_box.getBoxId());
+               added_box.getOrigBox(),
+               added_box.getBox().getBoxId());
          }
 
-         if ( added_box.d_orig_box.getOwnerRank() == mpi.getRank() ) {
+         if ( added_box.getOrigBox().getOwnerRank() == mpi.getRank() ) {
             unbalanced_to_balanced.insertLocalNeighbor(
-               added_box.d_box,
-               added_box.d_orig_box.getBoxId());
+               added_box.getBox(),
+               added_box.getOrigBox().getBoxId());
          }
 
       }
@@ -810,7 +810,7 @@ BoxTransitSet::adjustLoadByBreaking(
        * adjustLoadBySwapping before entering this method, there
        * should not be any such boxes.
        */
-      if ( si->d_boxload < ideal_transfer ) {
+      if ( si->getLoad() < ideal_transfer ) {
          continue;
       }
 
@@ -829,7 +829,7 @@ BoxTransitSet::adjustLoadByBreaking(
          trial_breakoff,
          trial_leftover,
          trial_breakoff_amt,
-         candidate.d_box,
+         candidate.getBox(),
          ideal_transfer,
          low_transfer,
          high_transfer,
@@ -890,12 +890,12 @@ BoxTransitSet::adjustLoadByBreaking(
             *bi,
             breakbox.getOwnerRank(),
             hier::LocalId::getInvalidId());
-         give_box_in_transit.d_boxload =
+         give_box_in_transit.setLoad(
             static_cast<int>(computeLoad(
-                                give_box_in_transit.d_orig_box,
-                                give_box_in_transit.getBox()));
+                                give_box_in_transit.getOrigBox(),
+                                give_box_in_transit.getBox())));
          main_bin.insert(give_box_in_transit);
-         actual_transfer += give_box_in_transit.d_boxload;
+         actual_transfer += give_box_in_transit.getLoad();
       }
       for (hier::BoxContainer::const_iterator bi = leftover.begin();
            bi != leftover.end();
@@ -905,10 +905,10 @@ BoxTransitSet::adjustLoadByBreaking(
             *bi,
             breakbox.getOwnerRank(),
             hier::LocalId::getInvalidId());
-         keep_box_in_transit.d_boxload =
+         keep_box_in_transit.setLoad(
             static_cast<int>(computeLoad(
-                                keep_box_in_transit.d_orig_box,
-                                keep_box_in_transit.getBox()));
+                                keep_box_in_transit.getOrigBox(),
+                                keep_box_in_transit.getBox())));
          hold_bin.insert(keep_box_in_transit);
       }
    }
@@ -1083,7 +1083,7 @@ BoxTransitSet::adjustLoadByPopping(
 
       bool improved = BalanceUtilities::compareLoads(
          acceptance_flags, dst->getSumLoad(),
-         dst->getSumLoad() + candidate_box.d_boxload,
+         dst->getSumLoad() + candidate_box.getLoad(),
          dst_ideal_load, dst_low_load, dst_high_load, *d_pparams );
 
       if ( improved ) {
@@ -1093,7 +1093,7 @@ BoxTransitSet::adjustLoadByPopping(
                        << ", " << candidate_box;
          }
 
-         actual_transfer += candidate_box.d_boxload;
+         actual_transfer += candidate_box.getLoad();
          dst->insert(candidate_box);
          src->erase(src->begin());
          ++num_boxes_popped;
@@ -1232,7 +1232,7 @@ BoxTransitSet::swapLoadPair(
        * the best src BoxInTransit to move.
        */
       dummy_search_target = BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
-      dummy_search_target.d_boxload = ideal_transfer;
+      dummy_search_target.setLoad(ideal_transfer);
       const iterator src_test = src.lower_bound(dummy_search_target);
 
       if (d_print_swap_steps) {
@@ -1244,13 +1244,13 @@ BoxTransitSet::swapLoadPair(
          --src_test1;
          if ( BalanceUtilities::compareLoads(
                  hiside_acceptance_flags, hiside_transfer,
-                 src_test1->d_boxload, ideal_transfer,
+                 src_test1->getLoad(), ideal_transfer,
                  low_transfer, high_transfer, *d_pparams ) ) {
             src_hiside = src_test1;
-            hiside_transfer = src_hiside->d_boxload;
+            hiside_transfer = src_hiside->getLoad();
             if (d_print_swap_steps) {
                tbox::plog << "  hi src: " << (*src_hiside)
-                          << " with transfer " << src_hiside->d_boxload
+                          << " with transfer " << src_hiside->getLoad()
                           << ", off by " << hiside_transfer-ideal_transfer
                           << ", acceptance_flags=" << hiside_acceptance_flags[0]
                           << ',' << hiside_acceptance_flags[1]
@@ -1262,13 +1262,13 @@ BoxTransitSet::swapLoadPair(
       if (src_test != src.end()) {
          if ( BalanceUtilities::compareLoads(
                  loside_acceptance_flags, loside_transfer,
-                 src_test->d_boxload, ideal_transfer,
+                 src_test->getLoad(), ideal_transfer,
                  low_transfer, high_transfer, *d_pparams ) ) {
             src_loside = src_test;
-            loside_transfer = src_loside->d_boxload;
+            loside_transfer = src_loside->getLoad();
             if (d_print_swap_steps) {
                tbox::plog << "  lo src: " << (*src_loside)
-                          << " with transfer " << src_loside->d_boxload
+                          << " with transfer " << src_loside->getLoad()
                           << ", off by " << loside_transfer-ideal_transfer
                           << ", acceptance_flags=" << loside_acceptance_flags[0]
                           << ',' << loside_acceptance_flags[1]
@@ -1288,7 +1288,7 @@ BoxTransitSet::swapLoadPair(
        * exceeds the biggest dst box by at least ideal_transfer.
        */
       dummy_search_target = *dst.begin();
-      dummy_search_target.d_boxload += ideal_transfer;
+      dummy_search_target.setLoad( dummy_search_target.getLoad() + ideal_transfer );
       iterator src_beg = src.lower_bound(dummy_search_target);
 
       for (iterator src_test = src_beg; src_test != src.end(); ++src_test) {
@@ -1299,9 +1299,9 @@ BoxTransitSet::swapLoadPair(
           * ideal_transfer.
           */
          dummy_search_target = BoxInTransit(hier::Box(dummy_box, hier::LocalId::getZero(), 0));
-         dummy_search_target.d_boxload = tbox::MathUtilities<LoadType>::Max(
-               src_test->d_boxload - ideal_transfer,
-               0);
+         dummy_search_target.setLoad( tbox::MathUtilities<LoadType>::Max(
+               src_test->getLoad() - ideal_transfer,
+               0));
          iterator dst_test = dst.lower_bound(dummy_search_target);
 
          if (dst_test != dst.end()) {
@@ -1316,13 +1316,13 @@ BoxTransitSet::swapLoadPair(
 
             BalanceUtilities::compareLoads(
                hiside_acceptance_flags, hiside_transfer,
-               src_test->d_boxload - dst_test->d_boxload,
+               src_test->getLoad() - dst_test->getLoad(),
                ideal_transfer, low_transfer, high_transfer, *d_pparams );
 
             if ( hiside_acceptance_flags[2] == 1 ) {
                src_hiside = src_test;
                dst_hiside = dst_test;
-               hiside_transfer = src_hiside->d_boxload - dst_hiside->d_boxload;
+               hiside_transfer = src_hiside->getLoad() - dst_hiside->getLoad();
                if (d_print_swap_steps) {
                   tbox::plog << "    new hi-swap pair: " << (*src_hiside)
                              << " & " << (*dst_hiside) << " with transfer "
@@ -1337,13 +1337,13 @@ BoxTransitSet::swapLoadPair(
 
                BalanceUtilities::compareLoads(
                   loside_acceptance_flags, loside_transfer,
-                  src_test->d_boxload - dst_test->d_boxload,
+                  src_test->getLoad() - dst_test->getLoad(),
                   ideal_transfer, low_transfer, high_transfer, *d_pparams );
 
                if ( loside_acceptance_flags[2] == 1 ) {
                   src_loside = src_test;
                   dst_loside = dst_test;
-                  loside_transfer = src_loside->d_boxload - dst_loside->d_boxload;
+                  loside_transfer = src_loside->getLoad() - dst_loside->getLoad();
                   if (d_print_swap_steps) {
                      tbox::plog << "    new lo-swap pair: " << (*src_loside)
                                 << " & " << (*dst_loside) << " with transfer "
@@ -1361,22 +1361,22 @@ BoxTransitSet::swapLoadPair(
              * box.  So the only choice is swapping src_test for nothing.
              * Chech this against the current high- and low-side choices.
              */
-            if (src_test->d_boxload > ideal_transfer) {
+            if (src_test->getLoad() > ideal_transfer) {
                // Moving src_test to dst is moving too much--hiside.
 
                BalanceUtilities::compareLoads(
                   hiside_acceptance_flags, hiside_transfer,
-                  src_test->d_boxload, ideal_transfer,
+                  src_test->getLoad(), ideal_transfer,
                   low_transfer, high_transfer, *d_pparams );
 
                if ( hiside_acceptance_flags[2] == 1 ) {
                   src_hiside = src_test;
                   dst_hiside = dst.end();
-                  hiside_transfer = src_hiside->d_boxload;
+                  hiside_transfer = src_hiside->getLoad();
                   if (d_print_swap_steps) {
                      tbox::plog << "    new hi-swap source: " << (*src_hiside)
                                 << " & " << "no dst" << " with transfer "
-                                << (src_hiside->d_boxload)
+                                << (src_hiside->getLoad())
                                 << " missing by " << hiside_transfer-ideal_transfer
                                 << std::endl;
                   }
@@ -1386,17 +1386,17 @@ BoxTransitSet::swapLoadPair(
 
                BalanceUtilities::compareLoads(
                   loside_acceptance_flags, loside_transfer,
-                  src_test->d_boxload, ideal_transfer,
+                  src_test->getLoad(), ideal_transfer,
                   low_transfer, high_transfer, *d_pparams );
 
                if ( loside_acceptance_flags[2] == 1 ) {
                   src_loside = src_test;
                   dst_loside = dst.end();
-                  loside_transfer = src_loside->d_boxload;
+                  loside_transfer = src_loside->getLoad();
                   if (d_print_swap_steps) {
                      tbox::plog << "    new lo-swap source: " << (*src_loside)
                                 << " & " << "no dst" << " with transfer "
-                                << (src_loside->d_boxload)
+                                << (src_loside->getLoad())
                                 << " missing by " << loside_transfer-ideal_transfer
                                 << std::endl;
                   }
