@@ -27,14 +27,14 @@ MessageStream::MessageStream(
    const void *data_to_read,
    bool deep_copy):
    d_mode(mode),
-   d_buffer(),
-   d_buffer_access(0),
+   d_write_buffer(),
+   d_read_buffer(0),
    d_buffer_size(0),
    d_buffer_index(0),
-   d_grow_as_needed(false)
+   d_grow_as_needed(false),
+   d_deep_copy_read(deep_copy)
 {
    TBOX_ASSERT(num_bytes >= 1);
-   d_buffer.reserve(num_bytes);
 
    if ( mode == Read ) {
       if ( data_to_read == 0 ) {
@@ -42,34 +42,39 @@ MessageStream::MessageStream(
                     <<"No data_to_read was given to a Read-mode MessageStream.\n");
       }
       if ( deep_copy ) {
-         d_buffer.insert( d_buffer.end(),
-                          static_cast<const char*>(data_to_read),
-                          static_cast<const char*>(data_to_read)+num_bytes );
-         d_buffer_access = &d_buffer[0];
+         d_read_buffer = new char [num_bytes];
+         memcpy(const_cast<char*>(d_read_buffer), data_to_read, num_bytes);
       }
       else {
-         d_buffer_access = static_cast<const char*>(data_to_read);
+         d_read_buffer = static_cast<const char*>(data_to_read);
       }
       d_buffer_size = num_bytes;
+   }
+   else {
+      d_write_buffer.reserve(num_bytes);
    }
    return;
 }
 
 MessageStream::MessageStream()
    : d_mode(Write),
-     d_buffer(),
-     d_buffer_access(0),
+     d_write_buffer(),
+     d_read_buffer(0),
      d_buffer_size(0),
      d_buffer_index(0),
-     d_grow_as_needed(true)
+     d_grow_as_needed(true),
+     d_deep_copy_read(false)
 {
-   d_buffer.reserve(10);
+   d_write_buffer.reserve(10);
    return;
 }
 
 MessageStream::~MessageStream()
 {
-   d_buffer_access = 0;
+   if (d_mode == Read && d_deep_copy_read) {
+      delete [] d_read_buffer;
+   }
+   d_read_buffer = 0;
 }
 
 /*
@@ -86,7 +91,7 @@ MessageStream::printClassData(
 {
    os << "Maximum buffer size = " << d_buffer_size << std::endl;
    os << "Current buffer index = " << d_buffer_index << std::endl;
-   os << "Pointer to buffer data = " << static_cast<const void *>(d_buffer_access) << std::endl;
+   os << "Pointer to buffer data = " << static_cast<const void *>(d_read_buffer) << std::endl;
 }
 
 }
