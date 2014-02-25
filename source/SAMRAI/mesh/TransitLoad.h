@@ -140,23 +140,6 @@ public:
       double high_load ) = 0;
 
 
-   virtual double
-   assignLocalLoad(
-      TransitLoad& hold_bin,
-      double ideal_load,
-      double low_load,
-      double high_load,
-      int local_assignment_step ) {
-      NULL_USE(hold_bin);
-      NULL_USE(ideal_load);
-      NULL_USE(low_load);
-      NULL_USE(high_load);
-      NULL_USE(local_assignment_step);
-      TBOX_ERROR("DONT use this yet.");
-      return 0;
-   }
-
-
    /*!
     * @brief Assign contents to local process and populate the
     * balanced<==>unbalanced maps.

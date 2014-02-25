@@ -621,6 +621,9 @@ BoxTransitSet::adjustLoad(
     * the correct range).  We also break out if there is no improvement,
     * which can happen when the swp and break steps undo each other's
     * work (due to round-off errors).
+    *
+    * TODO: This should be a while loop.  We don't need to enter it
+    * if already in range.
     */
    do {
 
@@ -1104,6 +1107,16 @@ BoxTransitSet::adjustLoadByPopping(
       }
       if ( ( dst->getSumLoad() >= dst_low_load && dst->getSumLoad() <= high_load ) ||
            !improved ) {
+         /*
+          * TODO: Popping a box is so inexpensive that we should
+          * really continue until !improved, instead of breaking out
+          * right when the dst is within the desired range.  The only
+          * argument for exiting early here is to keep as much load
+          * off the transit lines as possible to avoid bandwith
+          * limitations.  Experience shows that bandwidth is
+          * challenged by number of box sources rather than number of
+          * boxes.
+          */
          break;
       }
    }
