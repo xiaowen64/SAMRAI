@@ -3616,8 +3616,7 @@ RefineSchedule::communicateFillBoxes(
    /*
     * Complete communication and unpack messages.
     */
-   while ( comm_stage.numberOfCompletedMembers() > 0 ||
-           comm_stage.advanceSome() ) {
+   while ( comm_stage.hasCompletedMembers() || comm_stage.advanceSome() ) {
       tbox::AsyncCommPeer<int>* peer =
          CPP_CAST<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
       TBOX_ASSERT(peer != 0);

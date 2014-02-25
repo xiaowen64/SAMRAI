@@ -588,13 +588,16 @@ BergerRigoutsos::clusterAndComputeRelationships()
 
          // Wait for some incoming messages.
          d_object_timers->t_comm_wait->start();
-         n_comm_group_completed =
-            static_cast<int>(d_comm_stage.advanceSome());
+         d_comm_stage.advanceSome();
+         if (d_log_do_loop) {
+            n_comm_group_completed = 
+               static_cast<int>(d_comm_stage.numberOfCompletedMembers());
+         }
          d_object_timers->t_comm_wait->stop();
 
          // Continue nodes with completed messages.
          d_object_timers->t_compute->start();
-         while ( d_comm_stage.numberOfCompletedMembers() > 0 ) {
+         while ( d_comm_stage.hasCompletedMembers() ) {
             BergerRigoutsosNode* node_for_relaunch =
                (BergerRigoutsosNode *)(d_comm_stage.popCompletionQueue()->getHandler());
             if (d_log_do_loop) {

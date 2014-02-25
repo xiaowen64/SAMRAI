@@ -593,8 +593,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
     * Complete receives and unpack streams.
     */
    std::list<BoxInTransit> received_transit_boxes;
-   while ( recv_stage.numberOfCompletedMembers() > 0 ||
-           recv_stage.advanceSome() ) {
+   while ( recv_stage.hasCompletedMembers() || recv_stage.advanceSome() ) {
 
       tbox::AsyncCommPeer<char>* recv_peer =
          CPP_CAST<tbox::AsyncCommPeer<char> *>(recv_stage.popCompletionQueue());

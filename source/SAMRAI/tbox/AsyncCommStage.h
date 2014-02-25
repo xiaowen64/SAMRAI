@@ -389,9 +389,9 @@ private:
     * another processor, it is better to use advanceSome(), which uses
     * MPI_Waitsome, which avoids starvation.
     *
-    * @return Number of completed Members in the completion queue.
+    * @return True if there are still completed Members in the completion queue.
     */
-   size_t
+   bool
    advanceAny();
 
    /*!
@@ -400,9 +400,9 @@ private:
     *
     * The completed Members are accessible through popCompletionQueue().
     *
-    * @return Number of completed Members in the completion queue.
+    * @return True if there are still completed Members in the completion queue.
     */
-   size_t
+   bool
    advanceSome();
 
    /*!
@@ -410,9 +410,9 @@ private:
     *
     * The completed Members are accessible through popCompletionQueue().
     *
-    * @return Number of completed Members in the completion queue.
+    * @return True if there are still completed Members in the completion queue.
     */
-   size_t
+   bool
    advanceAll();
 
    /*
@@ -428,6 +428,21 @@ private:
    numberOfCompletedMembers() const
    {
       return d_completed_members.size();
+   }
+
+   /*
+    * @brief Returns true if there are completed stage Members in the completion
+    * queue.
+    *
+    * Members that completed their communication operation through
+    * advanceAny(), advanceSome() or advanceAll() can be accessed
+    * through popCompletionQueue().  This method tells if there are
+    * any members in that queue.
+    */
+   bool
+   hasCompletedMembers() const
+   {
+      return !d_completed_members.empty();
    }
 
    /*!
@@ -462,7 +477,7 @@ private:
     * can also push Members onto the queue using the Member's
     * pushToCompletionQueue().
     *
-    * @pre numberOfCompletedMembers() != 0
+    * @pre hasCompletedMembers()
     * @pre firstCompletedMember()->isDone()
     */
    Member*

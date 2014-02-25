@@ -471,7 +471,7 @@ Schedule::processCompletedCommunications()
 
       // Complete sends.
       d_com_stage.advanceAll();
-      while ( d_com_stage.numberOfCompletedMembers() > 0 ) {
+      while ( d_com_stage.hasCompletedMembers() ) {
          d_com_stage.popCompletionQueue();
       }
 
@@ -480,15 +480,15 @@ Schedule::processCompletedCommunications()
 
       // Unpack in order of completed receives.
 
-      while ( d_com_stage.numberOfCompletedMembers() > 0 ||
-              d_com_stage.advanceSome() ) {
+      size_t num_senders = d_recv_sets.size();
+      while ( d_com_stage.hasCompletedMembers() || d_com_stage.advanceSome() ) {
 
          AsyncCommPeer<char>* completed_comm =
             CPP_CAST<AsyncCommPeer<char> *>(d_com_stage.popCompletionQueue());
 
          TBOX_ASSERT(completed_comm != 0);
          TBOX_ASSERT(completed_comm->isDone());
-         if (static_cast<size_t>(completed_comm - d_coms) < d_recv_sets.size()) {
+         if (static_cast<size_t>(completed_comm - d_coms) < num_senders) {
 
             const int sender = completed_comm->getPeerRank();
 

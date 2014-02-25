@@ -186,7 +186,7 @@ void TypeIndependentTester<TYPE>::runTest(
       /*
        * Check completed members for correctness.
        */
-      while ( stage.numberOfCompletedMembers() > 0 ) {
+      while ( stage.hasCompletedMembers() ) {
 
          AsyncCommStage::Member* completed_member = stage.popCompletionQueue();
 

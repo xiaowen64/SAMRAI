@@ -866,7 +866,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
     * its data and add any imported work to unassigned bin.
     */
    t_get_load_from_children->start();
-   while ( child_recv_stage.numberOfCompletedMembers() > 0 ||
+   while ( child_recv_stage.hasCompletedMembers() ||
            child_recv_stage.advanceSome() ) {
 
       tbox::AsyncCommPeer<char>* child_recv =
