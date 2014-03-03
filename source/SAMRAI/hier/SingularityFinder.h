@@ -37,9 +37,10 @@ public:
    ~SingularityFinder();
 
    void findSingularities(
-      std::vector<std::set<int> >& singularity_blocks,
-      BaseGridGeometry* grid_geometry,
-      const std::map< BlockId, std::set<BlockId> > face_neighbors);
+      std::set<std::set<BlockId> >& singularity_blocks,
+      const BoxContainer& domain_boxes,
+      const BaseGridGeometry& grid_geometry,
+      const std::map< BoxId, std::map<BoxId,int> >& face_neighbors);
  
 
 private:
@@ -126,30 +127,36 @@ private:
 
    SingularityFinder();
 
-   void connect(const BlockId& block_a,
-                const BlockId& block_b,
-                const BaseGridGeometry* grid_geometry);
+   void connect(const BoxId& id_a,
+                const BoxId& id_b,
+                int face_a,
+                int face_b,
+                const BoxContainer& domain_boxes,
+                const BaseGridGeometry& grid_geometry);
 
    void analyzeConnections();
 
    void findCoincidentEdges(std::map<int,int>& map_of_edges,
-                            const BlockId& block_a,
-                            const BlockId& block_b,
+                            const BoxId& id_a,
+                            const BoxId& id_b,
                             int facea,
-                            const BaseGridGeometry* grid_geometry);
+                            int faceb,
+                            const BoxContainer& domain_boxes,
+                            const BaseGridGeometry& grid_geometry);
 
    void findCoincidentPoints(std::map<int,int>& map_of_points,
-                             const BlockId& block_a,
-                             const BlockId& block_b,
+                             const BoxId& id_a,
+                             const BoxId& id_b,
                              int facea,
-                             const BaseGridGeometry* grid_geometry);
+                             const BoxContainer& domain_boxes,
+                             const BaseGridGeometry& grid_geometry);
 
    tbox::Dimension d_dim;
 
    std::vector<boost::shared_ptr<Block> > d_blocks;
    std::vector<boost::shared_ptr<Face> > d_faces;
-   std::vector<boost::shared_ptr<Edge> > d_edges;
-   std::vector<boost::shared_ptr<Point> > d_points;
+   std::list<boost::shared_ptr<Edge> > d_edges;
+   std::list<boost::shared_ptr<Point> > d_points;
 
    static std::vector< std::vector<int> > s_face_edges;
    static std::vector< std::vector<int> > s_face_nodes;

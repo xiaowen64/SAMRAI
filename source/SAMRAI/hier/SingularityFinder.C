@@ -130,43 +130,50 @@ SingularityFinder::~SingularityFinder()
 
 void
 SingularityFinder::findSingularities(
-   std::vector<std::set<int> >& singularity_blocks,
-   BaseGridGeometry* grid_geometry,
-   const std::map< BlockId, std::set<BlockId> > face_neighbors)
+   std::set<std::set<BlockId> >& singularity_blocks,
+   const BoxContainer& domain_boxes,
+   const BaseGridGeometry& grid_geometry,
+   const std::map< BoxId, std::map<BoxId,int> >& face_neighbors)
 {
    if (face_neighbors.empty()) return;
 
-   std::map< BlockId, std::set<BlockId> > unprocessed = face_neighbors;
-   std::set<BlockId> can_be_processed;
-   can_be_processed.insert(face_neighbors.begin()->first);
+   std::map< BoxId, std::map<BoxId,int> > unprocessed = face_neighbors;
+   std::list<BoxId> to_be_processed;
+   to_be_processed.push_back(face_neighbors.begin()->first);
 
    do {
-      std::map<BlockId, std::set<BlockId> >::iterator un_itr = unprocessed.begin();
-      BlockId base_block = un_itr->first;
+      BoxId base_id = *(to_be_processed.begin());
+      to_be_processed.pop_front();
 
-      while (can_be_processed.find(base_block) == can_be_processed.end()) {
-         ++un_itr;
-         base_block = un_itr->first;
-      }
+      if (unprocessed.find(base_id) == unprocessed.end()) continue;
 
-      const std::set<BlockId>& nbr_blocks = face_neighbors.find(base_block)->second;
-      for (std::set<BlockId>::const_iterator nbr_itr = nbr_blocks.begin();
-           nbr_itr != nbr_blocks.end(); ++nbr_itr) {
+      TBOX_ASSERT(face_neighbors.find(base_id) != face_neighbors.end());
+      const std::map<BoxId,int>& nbr_ids = face_neighbors.find(base_id)->second;
+      for (std::map<BoxId,int>::const_iterator nbr_itr = nbr_ids.begin();
+           nbr_itr != nbr_ids.end(); ++nbr_itr) {
 
-         const BlockId& nbr_block = *nbr_itr;
+         const std::pair<BoxId,int>& nbr_face = *nbr_itr;
+         const BoxId& nbr_id = nbr_face.first;
+         int facea = nbr_face.second;
 
-         if (unprocessed[base_block].find(nbr_block) != unprocessed[base_block].end()) {
-            connect(base_block, nbr_block, grid_geometry);
+         TBOX_ASSERT(face_neighbors.find(nbr_id) != face_neighbors.end());
+         const std::map<BoxId,int>& nbr_of_nbr = face_neighbors.find(nbr_id)->second;
+         TBOX_ASSERT(nbr_of_nbr.find(base_id) != nbr_of_nbr.end());
+         int faceb = nbr_of_nbr.find(base_id)->second;
 
-            can_be_processed.insert(nbr_block); 
+         if (unprocessed[base_id].find(nbr_id) != unprocessed[base_id].end()) {
+            connect(base_id, nbr_id, facea, faceb, domain_boxes, grid_geometry);
 
-            unprocessed[base_block].erase(nbr_block);
-            if (unprocessed[base_block].empty()) {
-               unprocessed.erase(base_block);
+            to_be_processed.push_back(nbr_id); 
+
+            unprocessed[nbr_id].erase(base_id);
+            if (unprocessed[nbr_id].empty()) {
+               unprocessed.erase(nbr_id);
             }
-            unprocessed[nbr_block].erase(base_block);
-            if (unprocessed[nbr_block].empty()) {
-               unprocessed.erase(nbr_block);
+            unprocessed[base_id].erase(nbr_id);
+            if (unprocessed[base_id].empty()) {
+               unprocessed.erase(base_id);
+               break;
             }
          }
       }
@@ -174,9 +181,12 @@ SingularityFinder::findSingularities(
 
    analyzeConnections();
 
-   for (int i = 0; i < d_edges.size(); i++) {
-      if (d_edges[i]->d_bdry) continue;
-      int nblocks = d_edges[i]->d_blocks.size();
+   std::set<std::set<BlockId> > sing_set;
+
+   for (std::list<boost::shared_ptr<Edge> >::iterator e_itr = d_edges.begin();
+        e_itr != d_edges.end(); ++e_itr) {
+      if ((**e_itr).d_bdry) continue;
+      int nblocks = (**e_itr).d_blocks.size();
       bool enhanced = false;
       bool reduced = false;
       if (nblocks < 4) {
@@ -186,13 +196,21 @@ SingularityFinder::findSingularities(
       }
 
       if (reduced || enhanced) {
-         singularity_blocks.push_back(d_edges[i]->d_blocks); 
+         std::set<BlockId> sing_set;
+         for (std::set<int>::iterator s_itr = (**e_itr).d_blocks.begin();
+              s_itr != (**e_itr).d_blocks.end(); ++s_itr) {
+            BoxId box_id(LocalId(*s_itr),0);
+            const BlockId& block_id = domain_boxes.find(Box(d_dim,box_id))->getBlockId();
+            sing_set.insert(block_id);
+         }
+         singularity_blocks.insert(sing_set); 
       }
    }
 
-   for (int i = 0; i < d_points.size(); i++) {
-      if (d_points[i]->d_bdry) continue;
-      int nblocks = d_points[i]->d_blocks.size();
+   for (std::list<boost::shared_ptr<Point> >::iterator p_itr = d_points.begin();
+        p_itr != d_points.end(); ++p_itr) {
+      if ((**p_itr).d_bdry) continue;
+      int nblocks = (**p_itr).d_blocks.size();
       bool enhanced = false;
       bool reduced = false;
       if (nblocks < (1<<d_dim.getValue())) {
@@ -202,86 +220,37 @@ SingularityFinder::findSingularities(
       }
 
       if (reduced || enhanced) {
-         singularity_blocks.push_back(d_points[i]->d_blocks);
+         std::set<BlockId> sing_set;
+         for (std::set<int>::iterator s_itr = (**p_itr).d_blocks.begin();
+              s_itr != (**p_itr).d_blocks.end(); ++s_itr) {
+            BoxId box_id(LocalId(*s_itr),0);
+            const BlockId& block_id = domain_boxes.find(Box(d_dim,box_id))->getBlockId();
+            sing_set.insert(block_id);
+         }
+         singularity_blocks.insert(sing_set);
       }
    }
 
 }
 
 void
-SingularityFinder::connect(const BlockId& block_a,
-                           const BlockId& block_b,
-                           const BaseGridGeometry* grid_geometry)
+SingularityFinder::connect(const BoxId& id_a,
+                           const BoxId& id_b,
+                           int facea,
+                           int faceb,
+                           const BoxContainer& domain_boxes,
+                           const BaseGridGeometry& grid_geometry)
 {
-
-   int facea = -1;
-   int faceb = -1; 
-
-   const std::map<BlockId,BaseGridGeometry::Neighbor>& nbrs_of_a =
-      grid_geometry->getNeighbors(block_a);
-
-   std::map<BlockId,BaseGridGeometry::Neighbor>::const_iterator itr = nbrs_of_a.find(block_b);
-   if (itr != nbrs_of_a.end()) {
-      const BaseGridGeometry::Neighbor& neighbor = itr->second;
-      TBOX_ASSERT(neighbor.getBlockId() == block_b); 
-
-      BoxContainer a_domain(grid_geometry->getPhysicalDomain(), block_a);
-      Box node_box_a(a_domain.getBoundingBox());
-      node_box_a.upper() += IntVector::getOne(d_dim);
-
-      Box node_box_b(neighbor.getTransformedDomain().getBoundingBox());
-      node_box_b.upper() += IntVector::getOne(d_dim);
-
-      Box shared_face(node_box_a * node_box_b);
-
-      for (int d = 0; d < d_dim.getValue(); ++d) {
-         if (shared_face.lower()(d) == shared_face.upper()(d)) {
-            if (shared_face.lower(d) == node_box_a.lower(d)) {
-               facea = 2*d;
-            } else {
-               facea = 2*d + 1;
-            }
-         }
-      } 
-   }
-
-   const std::map<BlockId,BaseGridGeometry::Neighbor>& nbrs_of_b =
-      grid_geometry->getNeighbors(block_b);
-
-   itr = nbrs_of_b.find(block_a);
-   if (itr != nbrs_of_b.end()) {
-      const BaseGridGeometry::Neighbor& neighbor = itr->second;
-      TBOX_ASSERT(neighbor.getBlockId() == block_a);
-
-      BoxContainer b_domain(grid_geometry->getPhysicalDomain(), block_b);
-      Box node_box_b(b_domain.getBoundingBox());
-      node_box_b.upper() += IntVector::getOne(d_dim);
-
-      Box node_box_a(neighbor.getTransformedDomain().getBoundingBox());
-      node_box_a.upper() += IntVector::getOne(d_dim);
-
-      Box shared_face(node_box_a * node_box_b);
-
-      for (int d = 0; d < d_dim.getValue(); ++d) {
-         if (shared_face.lower()(d) == shared_face.upper()(d)) {
-            if (shared_face.lower(d) == node_box_b.lower(d)) {
-               faceb = 2*d;
-            } else {
-               faceb = 2*d + 1;
-            }
-         }
-      }
-   }
 
    boost::shared_ptr<Face> face = boost::make_shared<Face>();
    d_faces.push_back(face);
 
    if (d_blocks.empty()) {
-      d_blocks.resize(grid_geometry->getNumberBlocks());
+      d_blocks.resize(domain_boxes.size());
    }
 
-   int a = block_a.getBlockValue();
-   int b = block_b.getBlockValue();
+   int a = id_a.getLocalId().getValue();
+   int b = id_b.getLocalId().getValue();
    if (d_blocks[a].get() == 0) {
       d_blocks[a] = boost::make_shared<Block>(d_dim);
    }
@@ -300,7 +269,7 @@ SingularityFinder::connect(const BlockId& block_a,
     * Map from edge on 'a' to edge on 'b'
     */ 
    std::map<int,int> map_of_edges;
-   findCoincidentEdges(map_of_edges, block_a, block_b, facea, grid_geometry);
+   findCoincidentEdges(map_of_edges, id_a, id_b, facea, faceb, domain_boxes, grid_geometry);
 
    for (std::map<int,int>::const_iterator e_itr = map_of_edges.begin();
         e_itr != map_of_edges.end(); ++e_itr) {
@@ -312,11 +281,30 @@ SingularityFinder::connect(const BlockId& block_a,
          edgea.reset(new Edge());
          edgeb = edgea;
          d_edges.push_back(edgea);
-      } else if (edgea.get() != 0) {
+      } else if (edgea.get() != 0 && edgeb.get() == 0) {
          edgeb = edgea;
-      }
-      else {
+      } else if (edgeb.get() != 0 && edgea.get() == 0) {
          edgea = edgeb;
+      } else if (edgea.get() == edgeb.get()) {
+         // nothing needed
+      } else {
+         TBOX_ASSERT(edgea.get() != 0 && edgeb.get() != 0);
+         for (std::set<int>::iterator b_itr = edgeb->d_blocks.begin();
+              b_itr != edgeb->d_blocks.end(); ++b_itr) {
+            edgea->d_blocks.insert(*b_itr);
+            edgea->d_block_to_edge[*b_itr] = edgeb->d_block_to_edge[*b_itr];
+            if (*b_itr != a && *b_itr != b) {
+               d_blocks[*b_itr]->d_edge[edgea->d_block_to_edge[*b_itr]] = edgea;
+            }
+         }
+         for (std::list<boost::shared_ptr<Edge> >::iterator e_itr =
+              d_edges.begin(); e_itr != d_edges.end(); ++e_itr) {
+            if (e_itr->get() == edgeb.get()) {
+               d_edges.erase(e_itr);
+               break;
+            }
+         }
+         edgeb = edgea;
       }
 
       edgea->d_blocks.insert(a);
@@ -326,7 +314,7 @@ SingularityFinder::connect(const BlockId& block_a,
    }
 
    std::map<int,int> map_of_points;
-   findCoincidentPoints(map_of_points, block_a, block_b, facea, grid_geometry);
+   findCoincidentPoints(map_of_points, id_a, id_b, facea, domain_boxes, grid_geometry);
 
    for (std::map<int,int>::const_iterator e_itr = map_of_points.begin();
         e_itr != map_of_points.end(); ++e_itr) {
@@ -338,11 +326,30 @@ SingularityFinder::connect(const BlockId& block_a,
          pointa.reset(new Point());
          pointb = pointa;
          d_points.push_back(pointa);
-      } else if (pointa.get() != 0) {
+      } else if (pointa.get() != 0 && pointb.get() == 0) {
          pointb = pointa;
-      }
-      else {
+      } else if (pointb.get() != 0 && pointa.get() == 0) {
          pointa = pointb;
+      } else if (pointa.get() == pointb.get()) {
+         // nothing needed
+      } else {
+         TBOX_ASSERT(pointa.get() != 0 && pointb.get() != 0);
+         for (std::set<int>::iterator b_itr = pointb->d_blocks.begin();
+              b_itr != pointb->d_blocks.end(); ++b_itr) {
+             pointa->d_blocks.insert(*b_itr);
+             pointa->d_block_to_point[*b_itr] = pointb->d_block_to_point[*b_itr];
+             if (*b_itr != a && *b_itr != b) {
+                d_blocks[*b_itr]->d_point[pointa->d_block_to_point[*b_itr]] = pointa;
+             }
+         }
+         for (std::list<boost::shared_ptr<Point> >::iterator e_itr =
+              d_points.begin(); e_itr != d_points.end(); ++e_itr) {
+            if (e_itr->get() == pointb.get()) {
+               d_points.erase(e_itr);
+               break;
+            }
+         }
+         pointb = pointa;
       }
 
       pointa->d_blocks.insert(a);
@@ -404,20 +411,33 @@ SingularityFinder::analyzeConnections()
 void
 SingularityFinder::findCoincidentEdges(
    std::map<int,int>& map_of_edges,
-   const BlockId& block_a,
-   const BlockId& block_b,
+   const BoxId& id_a,
+   const BoxId& id_b,
    int facea,
-   const BaseGridGeometry* grid_geometry)
+   int faceb,
+   const BoxContainer& domain_boxes,
+   const BaseGridGeometry& grid_geometry)
 {
    if (d_dim.getValue() != 3) return;
 
-   BoxContainer a_domain(grid_geometry->getPhysicalDomain(), block_a);
-   Box a_box(a_domain.getBoundingBox());
+   Box a_box = *(domain_boxes.find(Box(d_dim, id_a)));
+   Box b_box = *(domain_boxes.find(Box(d_dim, id_b)));
 
-   BoxContainer b_domain(grid_geometry->getPhysicalDomain(), block_b);
-   Box b_node_box(b_domain.getBoundingBox());
+   for (int d = 0; d < d_dim.getValue(); ++d) {
+      if (a_box.lower()(d) == a_box.upper()(d)) {
+         a_box.lower()(d) -= 1;
+         a_box.upper()(d) += 1;
+      }
+      if (b_box.lower()(d) == b_box.upper()(d)) {
+         b_box.lower()(d) -= 1;
+         b_box.upper()(d) += 1;
+      }
+   }
+
+   Box b_node_box(b_box);
    b_node_box.upper() += IntVector::getOne(d_dim);
    IntVector b_box_size(b_node_box.numberCells());
+   hier::BoxContainer b_edge_boxes;
 
    int nedges_per_face = 4;
 
@@ -482,19 +502,23 @@ SingularityFinder::findCoincidentEdges(
             break;
       }
 
-      bool transformed = grid_geometry->transformBox(edge_box,
-                                                     IntVector::getOne(d_dim),
-                                                     block_b,
-                                                     block_a);
-      TBOX_ASSERT(transformed);
+      if (a_box.getBlockId() != b_box.getBlockId()) {
+         bool transformed = grid_geometry.transformBox(edge_box,
+                                                       IntVector::getOne(d_dim),
+                                                       b_box.getBlockId(),
+                                                       a_box.getBlockId());
+         TBOX_ASSERT(transformed);
+      }
       edge_box.upper() += IntVector::getOne(d_dim);
       Box b_edge(edge_box*b_node_box);
       
       IntVector b_edge_dirs(b_edge.numberCells());
+      int num_zero_dirs = 0;
       for (int d = 0; d < d_dim.getValue(); ++d) {
          TBOX_ASSERT(b_edge_dirs[d] >= 1);
          if (b_edge_dirs[d] == b_box_size[d]) {
             b_edge_dirs[d] = 0;
+            num_zero_dirs++;
          } else if (b_edge.lower()(d) == b_node_box.lower(d)) {
             b_edge_dirs[d] = -1;
          } else if (b_edge.upper()(d) == b_node_box.upper(d)) {
@@ -502,6 +526,99 @@ SingularityFinder::findCoincidentEdges(
          } else {
             TBOX_ERROR("   ");
          }
+      }
+
+      if (num_zero_dirs != 1) {
+         if (b_edge_boxes.isEmpty()) {
+            for (int e = 0; e < nedges_per_face; ++e) {
+
+               int edge_idx = s_face_edges[faceb][e];
+
+               Box add_box(b_box);
+               add_box.upper() += IntVector::getOne(d_dim);
+
+               switch (edge_idx) {
+
+                  case 0:
+                     add_box.upper()(0) = add_box.lower(0);
+                     add_box.upper()(1) = add_box.lower(1);
+                     break;
+                  case 1:
+                     add_box.lower()(0) = add_box.upper(0);
+                     add_box.upper()(1) = add_box.lower(1);
+                     break;
+                  case 2:
+                     add_box.upper()(0) = add_box.lower(0);
+                     add_box.lower()(1) = add_box.upper(1);
+                     break;
+                  case 3:
+                     add_box.lower()(0) = add_box.upper(0);
+                     add_box.lower()(1) = add_box.upper(1);
+                     break;
+                  case 4:
+                     add_box.upper()(0) = add_box.lower(0);
+                     add_box.upper()(2) = add_box.lower(2);
+                     break;
+                  case 5:
+                     add_box.lower()(0) = add_box.upper(0);
+                     add_box.upper()(2) = add_box.lower(2);
+                     break;
+                  case 6:
+                     add_box.upper()(0) = add_box.lower(0);
+                     add_box.lower()(2) = add_box.upper(2);
+                     break;
+                  case 7:
+                     add_box.lower()(0) = add_box.upper(0);
+                     add_box.lower()(2) = add_box.upper(2);
+                     break;
+                  case 8:
+                     add_box.upper()(1) = add_box.lower(1);
+                     add_box.upper()(2) = add_box.lower(2);
+                     break;
+                  case 9:
+                     add_box.lower()(1) = add_box.upper(1);
+                     add_box.upper()(2) = add_box.lower(2);
+                     break;
+                  case 10:
+                     add_box.upper()(1) = add_box.lower(1);
+                     add_box.lower()(2) = add_box.upper(2);
+                     break;
+                  case 11:
+                     add_box.lower()(1) = add_box.upper(1);
+                     add_box.lower()(2) = add_box.upper(2);
+                     break;
+                  default:
+                     break;
+
+               }
+
+               b_edge_boxes.pushBack(add_box);
+            }
+         }
+
+         BoxContainer b_edge_cntnr(b_edge);
+         b_edge_cntnr.intersectBoxes(b_edge_boxes);
+         b_edge_cntnr.coalesce();
+         TBOX_ASSERT(b_edge_cntnr.size() == 1);
+
+         b_edge = *(b_edge_cntnr.begin());
+         b_edge_dirs = b_edge.numberCells();
+         num_zero_dirs = 0;
+         for (int d = 0; d < d_dim.getValue(); ++d) {
+            TBOX_ASSERT(b_edge_dirs[d] >= 1);
+            if (b_edge_dirs[d] == b_box_size[d]) {
+               b_edge_dirs[d] = 0;
+               num_zero_dirs++;
+            } else if (b_edge.lower()(d) == b_node_box.lower(d)) {
+               b_edge_dirs[d] = -1;
+            } else if (b_edge.upper()(d) == b_node_box.upper(d)) {
+               b_edge_dirs[d] = 1;
+            } else {
+               TBOX_ERROR("   ");
+            }
+         }
+ 
+         TBOX_ASSERT(num_zero_dirs == 1); 
       }
 
       if (b_edge_dirs[0] == 0) {
@@ -566,16 +683,28 @@ SingularityFinder::findCoincidentEdges(
 void
 SingularityFinder::findCoincidentPoints(
    std::map<int,int>& map_of_points,
-   const BlockId& block_a,
-   const BlockId& block_b,
+   const BoxId& id_a,
+   const BoxId& id_b,
    int facea,
-   const BaseGridGeometry* grid_geometry)
+   const BoxContainer& domain_boxes,
+   const BaseGridGeometry& grid_geometry)
 {
-   BoxContainer a_domain(grid_geometry->getPhysicalDomain(), block_a);
-   Box a_box(a_domain.getBoundingBox());
 
-   BoxContainer b_domain(grid_geometry->getPhysicalDomain(), block_b);
-   Box b_node_box(b_domain.getBoundingBox());
+   Box a_box = *(domain_boxes.find(Box(d_dim, id_a)));
+   Box b_box = *(domain_boxes.find(Box(d_dim, id_b)));
+
+   for (int d = 0; d < d_dim.getValue(); ++d) {
+      if (a_box.lower()(d) == a_box.upper()(d)) {
+         a_box.lower()(d) -= 1;
+         a_box.upper()(d) += 1;
+      }
+      if (b_box.lower()(d) == b_box.upper()(d)) {
+         b_box.lower()(d) -= 1;
+         b_box.upper()(d) += 1;
+      }
+   }
+
+   Box b_node_box(b_box);
    b_node_box.upper() += IntVector::getOne(d_dim);
    IntVector b_box_size(b_node_box.numberCells());
 
@@ -605,11 +734,14 @@ SingularityFinder::findCoincidentPoints(
          }
       }
 
-      bool transformed = grid_geometry->transformBox(point_box,
-                                                     IntVector::getOne(d_dim),
-                                                     block_b,
-                                                     block_a);
-      TBOX_ASSERT(transformed);
+      if (a_box.getBlockId() != b_box.getBlockId()) {
+         bool transformed = grid_geometry.transformBox(point_box,
+                                                       IntVector::getOne(d_dim),
+                                                       b_box.getBlockId(),
+                                                       a_box.getBlockId());
+         TBOX_ASSERT(transformed);
+      }
+
       point_box.upper() += IntVector::getOne(d_dim);
       Box b_point(point_box*b_node_box);
 

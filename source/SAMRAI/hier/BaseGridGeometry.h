@@ -906,7 +906,11 @@ private:
       const Transformation::RotationIdentifier rotation_b_to_a,
       const IntVector& shift_b_to_a);
 
-   void findSingularities(std::vector<std::set<int> >& singularity_blocks);
+   void findSingularities(std::set<std::set<BlockId> >& singularity_blocks);
+
+   void chopDomain(
+      BoxContainer& chopped_domain,
+      std::map<BlockId, std::set<BoxId> >& chop_map);
 
    /*!
     * @brief Get a BoxContainer that contains all of the index space of all other
