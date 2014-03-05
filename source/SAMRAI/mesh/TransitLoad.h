@@ -111,6 +111,18 @@ public:
    virtual void putToMessageStream( tbox::MessageStream &msg ) const = 0;
 
    virtual void getFromMessageStream( tbox::MessageStream &msg ) = 0;
+
+   friend tbox::MessageStream & operator << (
+      tbox::MessageStream & msg, const TransitLoad& transit_load ) {
+      transit_load.putToMessageStream(msg);
+      return msg;
+   }
+
+   friend tbox::MessageStream & operator >> (
+      tbox::MessageStream & msg, TransitLoad& transit_load ) {
+      transit_load.getFromMessageStream(msg);
+      return msg;
+   }
    //@}
 
 
