@@ -549,6 +549,11 @@ public:
       int dest,
       int tag) const;
 
+   int Sendrecv(
+      void *sendbuf, int sendcount, Datatype sendtype, int dest, int sendtag,
+      void *recvbuf, int recvcount, Datatype recvtype, int source, int recvtag,
+      Status *status ) const;
+
    //@}
 
    //@{
