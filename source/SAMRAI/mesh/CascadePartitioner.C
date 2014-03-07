@@ -66,8 +66,6 @@ CascadePartitioner::CascadePartitioner(
    d_object_name(name),
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_mpi_is_dupe(false),
-   d_voucher_mode(false),
-   d_allow_box_breaking(true),
    d_master_workload_data_id(s_default_data_id),
    d_flexible_load_tol(0.05),
    d_mca(),
@@ -78,7 +76,8 @@ CascadePartitioner::CascadePartitioner(
    d_summarize_map(false),
    d_print_steps(false),
    d_check_connectivity(false),
-   d_check_map(false)
+   d_check_map(false),
+   d_num_ag_cycles(0)
 {
    TBOX_ASSERT(!name.empty());
    getFromInput(input_db);
@@ -251,13 +250,6 @@ CascadePartitioner::loadBalanceBoxLevel(
       balance_to_reference->setBase(balance_box_level, true);
    }
 
-
-   if (d_barrier_before) {
-      t_barrier_before->start();
-      d_mpi.Barrier();
-      t_barrier_before->stop();
-   }
-
    t_load_balance_box_level->start();
 
    d_pparams = boost::make_shared<PartitioningParams>(
@@ -277,12 +269,10 @@ CascadePartitioner::loadBalanceBoxLevel(
     * Determine the total load and number of processes that has any
     * initial load.
     */
-   t_compute_global_load->start();
    global_sum_load = local_load;
    if (d_mpi.getSize() > 1) {
       d_mpi.AllReduce( &global_sum_load, 1, MPI_SUM );
    }
-   t_compute_global_load->stop();
 
    if (d_print_steps) {
       tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
@@ -299,51 +289,11 @@ CascadePartitioner::loadBalanceBoxLevel(
 
    d_global_avg_load = global_sum_load / rank_group.size();
 
-
-   if (d_print_steps) {
-      tbox::plog << "CascadePartitioner::loadBalanceBoxLevel"
-                 << " cycle number=" << icycle
-                 << " number_of_groups=" << number_of_groups
-                 << " my group_num=" << group_num
-                 << " my group size=" << cycle_rank_group.size()
-                 << " my group_sum_load=" << group_sum_load
-                 << std::endl;
-   }
-
    // Run the partitioning algorithm.
    partitionByCascade(
       balance_box_level,
-      balance_to_reference );
-
-   if (d_barrier_after) {
-      t_barrier_after->start();
-      d_mpi.Barrier();
-      t_barrier_after->stop();
-   }
-
-
-   /*
-    * If max_size is given (positive), constrain boxes to the given
-    * max_size.  If not given, skip the enforcement step to save some
-    * communications.
-    */
-
-   hier::IntVector max_intvector(d_dim, tbox::MathUtilities<int>::getMax());
-   if (max_size != max_intvector) {
-
-      t_constrain_size->barrierAndStart();
-      BalanceUtilities::constrainMaxBoxSizes(
-         balance_box_level,
-         balance_to_reference ? &balance_to_reference->getTranspose() : 0,
-         *d_pparams );
-      t_constrain_size->stop();
-
-      if (d_print_steps) {
-         tbox::plog << " CascadePartitioner completed constraining box sizes."
-                    << "\n";
-      }
-
-   }
+      balance_to_reference,
+      global_sum_load );
 
 
    /*
@@ -364,13 +314,10 @@ CascadePartitioner::loadBalanceBoxLevel(
    }
 
    if (d_report_load_balance) {
-      t_report_loads->start();
       tbox::plog
-      << "CascadePartitioner::loadBalanceBoxLevel results after "
-      << number_of_cycles << " cycles:" << std::endl;
+         << "CascadePartitioner::loadBalanceBoxLevel results  ";
       BalanceUtilities::gatherAndReportLoadBalance(local_load,
          balance_box_level.getMPI());
-      t_report_loads->stop();
    }
 
    if (d_check_connectivity && balance_to_reference) {
@@ -402,12 +349,6 @@ CascadePartitioner::loadBalanceBoxLevel(
                  << std::endl;
    }
 
-   if (d_barrier_after) {
-      t_barrier_after->start();
-      d_mpi.Barrier();
-      t_barrier_after->stop();
-   }
-
 }
 
 
@@ -423,10 +364,13 @@ CascadePartitioner::loadBalanceBoxLevel(
 void
 CascadePartitioner::partitionByCascade(
    hier::BoxLevel& balance_box_level,
-   hier::Connector* balance_to_reference) const
+   hier::Connector* balance_to_reference,
+   double global_sum_load
+   ) const
 {
 
-   LoadType local_load = computeLocalLoad(balance_box_level);
+   BoxTransitSet local_load(*d_pparams);
+   local_load.insertAll( balance_box_level.getBoxes() );
 
    /*
     * Initialize empty balanced_box_level and mappings so they are
@@ -445,7 +389,7 @@ CascadePartitioner::partitionByCascade(
    unbalanced_to_balanced.setTranspose(&balanced_to_unbalanced, false);
 
 
-   double group_load = local_load;
+   double group_load = local_load.getSumLoad();
 
    const int lg_size = lgInt(d_mpi.getSize());
 
@@ -453,56 +397,48 @@ CascadePartitioner::partitionByCascade(
 
    t_get_map->start();
 
+#if 0
    if ( d_mpi.getSize() >= ag_group_size && ag_group_size > 1 ) {
-      if( verbose && d_mpi.getRank()==0) {
-         std::cout << "agglomerating " << ag_group_size << " ranks" << std::endl;
-      }
       agglomerate( ag_group_size, minMessageBytes );
    }
+#endif
 
-   d_groups.resize(lg_size);
-   d_groups[0].makeSingleProcessGroup( d_mpi, group_load.getSumLoad() );
+
+   // Data on groups.
+   std::vector<CascadePartitionerGroup> groups(lg_size);
+   groups[0].makeSingleProcessGroup( d_mpi, *d_pparams, local_load, global_sum_load );
 
    /*
     * How agglomeration affects the cycles required to spread out
-    * loads: The last d_agglom_cycles of the outer_cycle and first
-    * d_agglom_cycles of the inner_cycle are eliminated.  These cycles
+    * loads: The last d_num_ag_cycles of the outer_cycle and first
+    * d_num_ag_cycles of the inner_cycle are eliminated.  These cycles
     * only move loads within the agglomerated groups.
     */
-   for ( int outer_cycle=0; outer_cycle<lg_size-d_agglom_cycles; ++outer_cycle ) {
+   for ( int outer_cycle=0; outer_cycle<lg_size-d_num_ag_cycles; ++outer_cycle ) {
 
       int inner_cycleMax = lg_size - outer_cycle;
 
-      for ( int inner_cycle=d_agglom_cycles+1; inner_cycle<inner_cycleMax; ++inner_cycle ) {
+      for ( int inner_cycle=d_num_ag_cycles+1; inner_cycle<inner_cycleMax; ++inner_cycle ) {
 
          /*
           * Only the first rank in each agglomerated group runs the
           * inner cycle.  The rest are represented by those ranks.
           * The barrier is for timing purpose, and all must run it.
           */
-         MPI_Barrier(comm);
-
-         if ( d_mpi.getRank() % d_ag_group_size == 0 ) {
-
-            cascadeCycle(group_load,
-                         balance_box_level,
-                         balance_to_reference,
-                         outer_cycle,
-                         inner_cycle);
+         if ( d_mpi.getRank() % ag_group_size == 0 ) {
+            groups[inner_cycle].makeComboGroup(groups[inner_cycle-1]);
+            groups[inner_cycle].balanceConstituentHalves();
          }
 
-         MPI_Barrier(comm);
-
       }
 
    }
 
+#if 0
    if ( d_mpi.getSize() >= ag_group_size && ag_group_size > 1 ) {
-      if( verbose && d_mpi.getRank()==0) {
-         std::cout << "deagglomerating " << ag_group_size << " ranks" << std::endl;
-      }
       deagglomerate( ag_group_size, minMessageBytes );
    }
+#endif
 
 
    t_get_map->stop();
@@ -559,7 +495,7 @@ CascadePartitioner::partitionByCascade(
    }
 
    t_assign_to_local_and_populate_maps->start();
-   balanced_work->assignToLocalAndPopulateMaps(
+   local_load.assignToLocalAndPopulateMaps(
       balanced_box_level,
       balanced_to_unbalanced,
       unbalanced_to_balanced,
@@ -571,103 +507,6 @@ CascadePartitioner::partitionByCascade(
          << "CascadePartitioner::partitionByCascade finished constructing unbalanced<==>balanced.\n";
    }
 
-   d_groups.clear();
-}
-
-
-
-/*
- *************************************************************************
- * In a cascade cycle, the processes in two halves of a group pair up
- * to exchange work.  The process in the heavier half shift load to
- * the process in the lighter half.
- *
- * my_transit_load is the local portion of the group load.
- *************************************************************************
- */
-void
-CascadePartitioner::exchangeAsGiver(
-   int inner_cycle ) const
-{
-   // Giver priority goes to ranks closer to taker half.
-   const Position giver_priority = d_group[inner_cycle].otherPosition();
-
-   d_group[inner_cycle].communicateGroupWeight();
-
-   if ( partner >= d_mpi.getSize() ) {
-      return;
-   }
-
-   if ( d_our[inner_cycle-1].surplus() > d_pparams.getLoadComparisonTol() &&
-        d_their[inner_cycle-1].surplus() < d_pparams.getLoadComparisonTol() ) {
-      exchangeAsGiver( inner_cycle );
-   }
-   else if ( d_our[inner_cycle-1].surplus() < d_pparams.getLoadComparisonTol() &&
-        d_their[inner_cycle-1].surplus() > d_pparams.getLoadComparisonTol() ) {
-      exchangeAsTaker( inner_cycle );
-   }
-
-
-   if (d_print_steps) {
-      tbox::plog << "CascadePartitioner::cascadeCycle: returning"
-                 << std::endl;
-   }
-
-   return;
-}
-
-
-
-/*
- *************************************************************************
- * In a cascade cycle, the processes in two groups pair up to exchange
- * work.  The process in the heavier group shift load to the process
- * in the highter group.
- *
- * group_load is the sum of the load of the group of the local
- * process.  Input value is for the half-group (or the previous
- * cycle's joined group).  Output value is for the joined group.
- *
- * my_transit_load is the local portion of the group load.
- *************************************************************************
- */
-void
-CascadePartitioner::cascadeCycle(
-   hier::TransitLoad &my_transit_load,
-   double &my_group_load,
-   hier::BoxLevel& balance_box_level,
-   hier::Connector* balance_to_reference,
-   int outer_cycle,
-   int inner_cycle ) const
-{
-   d_groups[inner_cycle].makeComboGroup( d_groups[inner_cycle-1] );
-
-   if ( partner >= d_mpi.getSize() ) {
-      return;
-   }
-
-   if ( d_groups[inner_cycle].ourSurplus() > d_pparams.getLoadComparisonTol() &&
-        d_groups[inner_cycle].otherSurplus() < d_pparams.getLoadComparisonTol() ) {
-      // Send work from lower half to upper half.
-      double weight = d_groups[inner_cycle].removeLoadFromOurHalf(
-         d_groups[inner_cycle].getOtherWeight() );
-      d_groups[inner_cycle].addWeightToOtherHalf(weight);
-   }
-   else if ( d_groups[inner_cycle].ourSurplus() < d_pparams.getLoadComparisonTol() &&
-             d_groups[inner_cycle].otherSurplus() > d_pparams.getLoadComparisonTol() ) {
-      // Send work from upper half to lower half.
-      double weight = d_groups[inner_cycle].removeLoadFromOtherHalf(
-         d_groups[inner_cycle].getOtherWeight() );
-      d_groups[inner_cycle].addWeightToOurHalf(weight);
-   }
-
-
-   if (d_print_steps) {
-      tbox::plog << "CascadePartitioner::cascadeCycle: returning"
-                 << std::endl;
-   }
-
-   return;
 }
 
 
@@ -677,7 +516,7 @@ CascadePartitioner::cascadeCycle(
  * Compute log-base-2 of integer, rounded up.
  *************************************************************************
  */
-int CascadePartitioner::lgInt(int s) {
+int CascadePartitioner::lgInt(int s) const {
    int lg_s = 0;
    while ( (1<<lg_s) < s ) {
       ++lg_s;
@@ -744,7 +583,6 @@ CascadePartitioner::LoadType
 CascadePartitioner::computeLocalLoad(
    const hier::BoxLevel& box_level) const
 {
-   t_compute_local_load->start();
    double load = 0.0;
    const hier::BoxContainer& boxes = box_level.getBoxes();
    for (hier::BoxContainer::const_iterator ni = boxes.begin();
@@ -753,7 +591,6 @@ CascadePartitioner::computeLocalLoad(
       double box_load = double(ni->size());
       load += box_load;
    }
-   t_compute_local_load->stop();
    return static_cast<LoadType>(load);
 }
 
@@ -790,21 +627,9 @@ CascadePartitioner::getFromInput(
       d_barrier_after = input_db->getBoolWithDefault("DEV_barrier_after",
          d_barrier_after);
 
-      d_max_cycle_spread_procs =
-         input_db->getIntegerWithDefault("max_cycle_spread_procs",
-            d_max_cycle_spread_procs);
-
       d_flexible_load_tol =
          input_db->getDoubleWithDefault("flexible_load_tolerance",
             d_flexible_load_tol);
-
-      d_allow_box_breaking =
-         input_db->getBoolWithDefault("DEV_allow_box_breaking",
-                                      d_allow_box_breaking);
-
-      d_voucher_mode =
-         input_db->getBoolWithDefault("DEV_voucher_mode",
-                                      d_voucher_mode);
 
    }
 }
@@ -881,19 +706,7 @@ CascadePartitioner::setTimers()
 
       t_assign_to_local_and_populate_maps = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::assign_to_local_and_populate_maps");
-      t_compute_global_load = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::compute_global_load");
 
-      t_local_load_moves = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::local_load_moves");
-
-      t_report_loads = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::report_loads");
-
-      t_barrier_before = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::barrier_before");
-      t_barrier_after = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::barrier_after");
    }
 }
 
@@ -911,46 +724,6 @@ CascadePartitioner::printStatistics(
       d_load_stat,
       tbox::SAMRAI_MPI::getSAMRAIWorld(),
       output_stream);
-}
-
-
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void
-CascadePartitioner::BranchData::recursivePrint(
-   std::ostream &os,
-   const std::string &border,
-   int detail_depth ) const
-{
-   os.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
-   os.precision(6);
-   os << border
-      << "Full nproc = " << d_num_procs
-      << "   current = " << d_branch_load_current
-      << "   ideal = " << d_branch_load_ideal
-      << "   ratio = " << (d_branch_load_current/d_branch_load_ideal)
-      << "   avg = " << (d_branch_load_current / d_num_procs)
-      << "   upperlimit = " << d_branch_load_upperlimit
-      << "   surplus = " << surplus()
-      << "   excess =  " << excess()
-      << '\n' << border
-      << "Effective nproc = " << d_eff_num_procs
-      << "   current = " << d_eff_load_current
-      << "   ideal = " << d_eff_load_ideal
-      << "   ratio = " << (d_eff_load_current/d_eff_load_ideal)
-      << "   avg = " << (d_eff_load_current / d_eff_num_procs)
-      << "   upperlimit = " << d_eff_load_upperlimit
-      << "   surplus = " << effSurplus()
-      << "   excess =  " << effExcess()
-      << '\n' << border
-      << "   wants work from parent = " << d_wants_work_from_parent
-      << '\n' << border
-      << "   shipment: ";
-   d_shipment->recursivePrint(os, border + "   ", detail_depth-1);
-   return;
 }
 
 }

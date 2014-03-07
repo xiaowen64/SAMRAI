@@ -12,6 +12,7 @@
 #define included_mesh_CascadePartitioner
 
 #include "SAMRAI/SAMRAI_config.h"
+#include "SAMRAI/mesh/CascadePartitionerGroup.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
@@ -308,9 +309,10 @@ private:
     *@brief Implements the cascade partitioner algorithm.
     */
    void
-   CascadePartitioner::partitionByCascade(
+   partitionByCascade(
       hier::BoxLevel& balance_box_level,
-      hier::Connector* balance_to_reference) const;
+      hier::Connector* balance_to_reference,
+      double global_sum_load ) const;
 
    /*!
     * @brief Executes a single cascade cycle.
@@ -322,6 +324,9 @@ private:
       hier::Connector* balance_to_reference,
       int outerCycle,
       int innerCycle ) const;
+
+   //! @brief Compute log-base-2 of integer, rounded up.
+   int lgInt(int s) const;
 
    /*!
     * @brief Set up timers for the object.
@@ -362,11 +367,6 @@ private:
    double d_flexible_load_tol;
 
    /*!
-    * @brief Data on groups.
-    */
-   std::vector<CascadePartitionerGroup> d_groups;
-
-   /*!
     * @brief Metadata operations with timers set according to this object.
     */
    hier::MappingConnectorAlgorithm d_mca;
@@ -379,6 +379,8 @@ private:
    //@}
 
    static const int s_default_data_id;
+
+   int d_num_ag_cycles;
 
    //@{
    //! @name Used for evaluating peformance.
@@ -401,6 +403,7 @@ private:
     * Performance timers.
     */
    boost::shared_ptr<tbox::Timer> t_load_balance_box_level;
+   boost::shared_ptr<tbox::Timer> t_assign_to_local_and_populate_maps;
    boost::shared_ptr<tbox::Timer> t_get_map;
    boost::shared_ptr<tbox::Timer> t_use_map;
 
@@ -410,6 +413,9 @@ private:
    char d_print_steps;
    char d_check_connectivity;
    char d_check_map;
+
+   mutable std::vector<double> d_load_stat;
+   mutable std::vector<int> d_box_count_stat;
 
 };
 

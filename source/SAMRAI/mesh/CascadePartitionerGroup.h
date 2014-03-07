@@ -8,15 +8,16 @@
  *
  ************************************************************************/
 
-#ifndef included_mesh_CascadePartitioner
-#define included_mesh_CascadePartitioner
+#ifndef included_mesh_CascadePartitionerGroup
+#define included_mesh_CascadePartitionerGroup
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
 #include "SAMRAI/mesh/TransitLoad.h"
+#include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
-#include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace mesh {
@@ -33,13 +34,11 @@ namespace mesh {
  */
 class CascadePartitionerGroup {
 
-   //! @brief Where a group falls in the next larger group.
-   enum Position { Lower=0, Upper=1 };
+public:
 
    CascadePartitionerGroup() :
-      d_mpi(),
+      d_mpi(tbox::SAMRAI_MPI::getSAMRAIWorld()),
       d_cycle_num(-1),
-      d_group_size(-1),
       d_first_lower_rank(-1),
       d_first_upper_rank(-1),
       d_end_rank(-1),
@@ -48,92 +47,57 @@ class CascadePartitionerGroup {
       d_our_position(Lower),
       d_lower_weight(0.0),
       d_upper_weight(0.0),
-      d_our_weight(0.0),
-      d_far_weight(0.0),
-      d_may_supply_from_our_half(true),
-      d_may_supply_from_far_half(true),
-      d_local_load(0) {}
-      d_shipment(0) {}
+      d_our_weight(0),
+      d_far_weight(0),
+      d_our_half_may_supply(true),
+      d_far_half_may_supply(true),
+      d_local_load(0),
+      d_global_load_avg(0),
+      d_pparams(0),
+      d_shipment(),
+      d_comm() {}
+
+   /*!
+    * @brief Copy constructor doesn't copy anything.  It is not used but is required
+    * for the class to be used in an stl::vector.
+    */
+   CascadePartitionerGroup( const CascadePartitionerGroup &other ) :
+      d_mpi(MPI_COMM_NULL),
+      d_cycle_num(-1),
+      d_first_lower_rank(-1),
+      d_first_upper_rank(-1),
+      d_end_rank(-1),
+      d_contact(-1),
+      d_our_half(0),
+      d_our_position(Lower),
+      d_lower_weight(0.0),
+      d_upper_weight(0.0),
+      d_our_weight(0),
+      d_far_weight(0),
+      d_our_half_may_supply(true),
+      d_far_half_may_supply(true),
+      d_local_load(0),
+      d_global_load_avg(0),
+      d_pparams(0),
+      d_shipment(),
+      d_comm() {}
 
    ~CascadePartitionerGroup() {}
 
    /*!
     * @brief Make a cycle-zero, single-process group.
     */
-   void makeSingleProcessGroup( tbox::SAMRAI_MPI &mpi, TransitLoad &local_load,
-                                TransitLoad &shipment ) {
-      d_mpi = mpi;
-      d_cycle_num = 0;
-      d_group_size = 1;
-      d_first_lower_rank = d_mpi.getRank();
-      d_first_upper_rank = d_first_lower_rank+1;
-      d_end_rank = d_first_lower_rank+1;
-      d_contact = -1;
-      d_our_half = 0;
-      d_our_position = Lower;
-      d_lower_weight = local_load.getSumLoad();
-      d_upper_weight = 0.0;
-      d_our_weight = &d_lower_weight;
-      d_far_weight = 0;
-      d_local_load = &local_load;
-      d_shipment = &shipment;
-   }
+   void makeSingleProcessGroup(
+      tbox::SAMRAI_MPI &mpi,
+      const PartitioningParams &pparams,
+      TransitLoad &local_load,
+      double global_load );
 
    /*!
     * @brief Make a combo group consistng of the given half-group and
     * its corresponding partner, which this method will determine.
-    *
-    * Local process provides the half containing the local rank
-    * (our_half).  Data for other half (the far half) is obtained by
-    * communication.
     */
-   void makeComboGroup( CascadePartitionerGroup &our_half ) {
-
-      /*
-       * Set up the groups
-       */
-
-      d_our_half = &our_half;
-      d_cycle_num = our_half.d_cycle_num+1;
-      d_mpi = our_half.d_mpi;
-      d_local_load = 0; // For single-process groups only.
-
-      d_group_size = 1 << d_cycle_num;
-      int group_num = d_mpi.getRank()/group_size;
-
-      d_first_lower_rank = group_size*group_num;
-      d_first_upper_rank = tbox::MathUtilities<int>::Min(
-         first_lower_rank + group_size/2, d_mpi.getSize());
-      d_end_rank = tbox::MathUtilities<int>::Min(
-         d_first_lower_rnak + group_size, d_mpi.getSize());
-
-      int relative_rank = d_mpi.getRank() - d_first_lower_rank;
-
-      d_our_position = relative_rank >= group_size/2 ? Upper : Lower;
-      d_contact = d_position == Lower ?
-         d_mpi.getRank() + group_size/2 :
-         d_mpi.getRank() - group_size/2;
-      if ( d_contact >= d_mpi.getSize() ) {
-         d_contact = -1;
-      }
-      d_our_weight = d_our_position == Lower ? &d_lower_weight : &d_upper_weight;
-      d_far_weight = d_our_position == Lower ? &d_upper_weight : &d_lower_weight;
-
-      /*
-       * Record weights of the two halves.
-       */
-      double far_weight = 0.0;
-      double our_weight = d_our_half->getComboWeight();
-      if ( d_contact >= 0 ) {
-         d_mpi.Sendrecv( &our_weight, 1, MPI_DOUBLE, d_contact, 0,
-                         &far_weight, 1, MPI_DOUBLE, d_contact, 1 );
-      }
-      d_lower_weight = d_our_position == Lower ? our_weight : far_weight;
-      d_upper_weight = d_our_position == Upper ? our_weight : far_weight;
-   }
-
-
-private:
+   void makeComboGroup( CascadePartitionerGroup &our_half );
 
    /*!
     * @brief Improve balance of the two halves of this group by moving
@@ -141,10 +105,16 @@ private:
     */
    void balanceConstituentHalves();
 
+
+private:
+
+   //! @brief Where a group falls in the next larger group.
+   enum Position { Lower=0, Upper=1 };
+
    //! @brief Position of the half containing local process.
    Position ourPosition() const { return d_our_position; }
    //! @brief Position of the half not containing local process.
-   Position farPosition() const { return !d_our_position; }
+   Position farPosition() const { return d_our_position == Lower ? Upper : Lower; }
    //! @brief Contact rank.
    int contact() const { return d_contact; }
    //! @brief Weight of the group (combined weight of its two halves).
@@ -159,11 +129,11 @@ private:
    }
    //! @brief Surplus of our half.
    double ourSurplus() const {
-      return d_our_position == Lower ? getLowerSurplus() : getUpperSurplus();
+      return d_our_position == Lower ? lowerSurplus() : upperSurplus();
    }
    //! @brief Surplus of far half.
    double farSurplus() const {
-      return d_our_position == Lower ? getUpperSurplus() : getLowerSurplus();
+      return d_our_position == Lower ? upperSurplus() : lowerSurplus();
    }
 
    /*!
@@ -198,15 +168,11 @@ private:
    double supplyLoadFromOurHalf( double amount, int taker ) {
       TBOX_ASSERT( amount > 0.0 );
       double removed = 0.0;
-      if ( d_may_supply_from_our_half &&
+      if ( d_our_half_may_supply &&
            ourSurplus() >= d_pparams->getLoadComparisonTol() ) {
 
-         removed = d_our_half->supplyLoad( amount, taker_rank );
-         if ( d_our_position == Lower ) {
-            d_lower_weight -= removed;
-         } else {
-            d_upper_weight -= removed;
-         }
+         removed = d_our_half->supplyLoad( amount, taker );
+         *d_our_weight -= removed;
       }
       return removed;
    }
@@ -225,10 +191,10 @@ private:
    double supplyLoadFromFarHalf( double amount ) {
       TBOX_ASSERT( amount > 0.0 );
       double removed = 0.0;
-      if ( d_may_supply_from_far_half &&
+      if ( d_far_half_may_supply &&
            farSurplus() >= d_pparams->getLoadComparisonTol() ) {
-         removed = tbox::MathUtilities<double>::Min( amount, d_far_weight );
-         d_far_weight -= removed;
+         removed = tbox::MathUtilities<double>::Min( amount, *d_far_weight );
+         *d_far_weight -= removed;
       }
       return removed;
    }
@@ -240,7 +206,7 @@ private:
    void recordDemandReceivedByOurHalf( double amount ) {
       if ( d_our_position == Lower ) { d_lower_weight += amount; }
       else { d_upper_weight += amount; }
-      d_may_supply_from_our_half = false;
+      d_our_half_may_supply = false;
    }
    /*!
     * @brief Record work amount received (estimated) by far half and
@@ -249,19 +215,16 @@ private:
    void recordDemandReceivedByFarHalf( double amount ) {
       if ( d_our_position == Upper ) { d_lower_weight += amount; }
       else { d_upper_weight += amount; }
-      d_may_supply_from_far_half = false;
+      d_far_half_may_supply = false;
    }
 
    void sendMyShipment( int taker );
    void unpackSuppliedLoad();
 
-   tbox::SAMRAI_MPI &d_mpi;
+   tbox::SAMRAI_MPI d_mpi;
 
    //! @brief Cycle number.  Group has 2^d_cycle_num ranks.
    int d_cycle_num;
-
-   //! @brief Number of processes in the group.
-   int d_group_size;
 
    //! @brief First rank in lower half.
    int d_first_lower_rank;
@@ -274,6 +237,9 @@ private:
 
    //! Rank of contact (if any) in the far half of the group.
    int d_contact;
+
+   //! Whether contact may supply load.
+   bool d_contact_may_supply;
 
    //! @brief The half containing me.
    CascadePartitionerGroup *d_our_half;
@@ -294,16 +260,21 @@ private:
    double *d_far_weight;
 
    //! @brief Whether our half may supply load.
-   bool d_may_supply_from_our_half;
+   bool d_our_half_may_supply;
 
    //! @brief Whether far half may supply load.
-   bool d_may_supply_from_far_half;
+   bool d_far_half_may_supply;
 
 
    //! @brief Load of local process, for single-process group.
    TransitLoad *d_local_load;
+
+   double d_global_load_avg;
+
+   const PartitioningParams *d_pparams;
+
    //! @brief Cache for to be shipped, for single-process group.
-   bool::shared_ptr<TransitLoad> d_shipment;
+   boost::shared_ptr<TransitLoad> d_shipment;
    tbox::AsyncCommPeer<char> d_comm;
 };
 
