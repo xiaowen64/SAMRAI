@@ -51,31 +51,22 @@ CascadePartitioner::balanceConstituentHalves()
       double supplied_weight = d_groups[inner_cycle].supplyLoadFromOurHalf(
          -d_groups[inner_cycle].farSurplus(), d_contact );
 
-      d_groups[inner_cycle].addWeightToFarHalf(supplied_weight);
-
-      /*
-       * If local indicated to contact that local has surplus,
-       * send the shipment set aside by groups[0].
-       */
-      if ( d_groups[0].canSend() ) {
-         send_comm.beginSend();
-      }
+      d_groups[inner_cycle].recordDemandReceivedByFarHalf(supplied_weight);
    }
 
    else if ( d_groups[inner_cycle].farSurplus() >  d_pparams.getLoadComparisonTol() &&
              d_groups[inner_cycle].ourSurplus() < -d_pparams.getLoadComparisonTol() ) {
 
       if ( d_contact_has_surplus ) {
-         recv_comm.beginRecv( d_contact );
+         d_comm.beginRecv( d_contact );
       }
 
       double supplied_weight = d_groups[inner_cycle].supplyLoadFromFarHalf(
          -d_groups[inner_cycle].ourSurplus() );
 
-      d_groups[inner_cycle].addWeightToOurHalf(supplied_weight);
+      d_groups[inner_cycle].recordDemandReceivedByOurHalf(supplied_weight);
 
-      recv_comm.completeCurrentOperation();
-      // Unpack into d_groups[0].d_local_load (local_load).
+      unpackSuppliedLoad();
    }
 
    return;
@@ -115,16 +106,18 @@ CascadePartitioner::supplyLoad( double amount, int taker )
       sendMyShipment(taker);
    }
 
+   /*
+    * Group contains two halves.  First, supply from the half closer
+    * to taker.  If more is needed, supply from other half.
+    */
    else if ( ( d_our_position == Lower && taker <  d_first_lower_rank ) ||
              ( d_our_position == upper && taker >= d_first_upper_rank ) ) {
-      // Group is two-halves, with our half closer to taker.
       removed = supplyLoadFromOurHalf( amount, priority );
       if ( removed < amount ) {
          removed += supplyLoadFromFarHalf( amount-removed );
       }
    }
    else {
-      // Group is two-halves, with far half closer to taker.
       removed = supplyLoadFromFarHalf( amount );
       if ( removed < amount ) {
          removed += supplyLoadFromOurHalf( amount-removed, taker );
@@ -146,6 +139,21 @@ CascadePartitioner::sendMyShipment( int taker )
    msg << *shipment;
    d_comm.setPeerRank(taker);
    d_comm.beginSend( msg.getBufferStart(), msg.getCurrentSize() );
+   return;
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void
+CascadePartitioner::unpackSuppliedLoad()
+{
+   d_comm.completeCurrentOperation();
+   tbox::MessageStream msg( d_comm.getRecvData(), d_comm.getRecvSize() );
+   *d_local_load < msg;
    return;
 }
 

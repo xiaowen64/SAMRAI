@@ -108,8 +108,10 @@ public:
    //@{
    //! @name Packing/unpacking for communication.
 
+   //! @brief Put content into MessageStream.
    virtual void putToMessageStream( tbox::MessageStream &msg ) const = 0;
 
+   //! @brief Add to content from MessageStream.
    virtual void getFromMessageStream( tbox::MessageStream &msg ) = 0;
 
    friend tbox::MessageStream & operator << (

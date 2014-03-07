@@ -50,6 +50,8 @@ class CascadePartitionerGroup {
       d_upper_weight(0.0),
       d_our_weight(0.0),
       d_far_weight(0.0),
+      d_may_supply_from_our_half(true),
+      d_may_supply_from_far_half(true),
       d_local_load(0) {}
       d_shipment(0) {}
 
@@ -196,9 +198,10 @@ private:
    double supplyLoadFromOurHalf( double amount, int taker ) {
       TBOX_ASSERT( amount > 0.0 );
       double removed = 0.0;
-      if ( ourSurplus() >= d_pparams->getLoadComparisonTol() ) {
-         removed = d_our_half->supplyLoad( amount, taker_rank );
+      if ( d_may_supply_from_our_half &&
+           ourSurplus() >= d_pparams->getLoadComparisonTol() ) {
 
+         removed = d_our_half->supplyLoad( amount, taker_rank );
          if ( d_our_position == Lower ) {
             d_lower_weight -= removed;
          } else {
@@ -222,21 +225,35 @@ private:
    double supplyLoadFromFarHalf( double amount ) {
       TBOX_ASSERT( amount > 0.0 );
       double removed = 0.0;
-      if ( farSurplus() >= d_pparams->getLoadComparisonTol() ) {
+      if ( d_may_supply_from_far_half &&
+           farSurplus() >= d_pparams->getLoadComparisonTol() ) {
          removed = tbox::MathUtilities<double>::Min( amount, d_far_weight );
          d_far_weight -= removed;
       }
       return removed;
    }
 
-   void addWeightToOurHalf( double amount ) {
+   /*!
+    * @brief Record work amount received (estimated) by our half and
+    * forbid it from becoming a supplier.
+    */
+   void recordDemandReceivedByOurHalf( double amount ) {
       if ( d_our_position == Lower ) { d_lower_weight += amount; }
       else { d_upper_weight += amount; }
+      d_may_supply_from_our_half = false;
    }
-   void addWeightToFarHalf( double amount ) {
+   /*!
+    * @brief Record work amount received (estimated) by far half and
+    * forbid it from becoming a supplier.
+    */
+   void recordDemandReceivedByFarHalf( double amount ) {
       if ( d_our_position == Upper ) { d_lower_weight += amount; }
       else { d_upper_weight += amount; }
+      d_may_supply_from_far_half = false;
    }
+
+   void sendMyShipment( int taker );
+   void unpackSuppliedLoad();
 
    tbox::SAMRAI_MPI &d_mpi;
 
@@ -271,10 +288,16 @@ private:
    double d_upper_weight;
 
    //! @brief Points to either d_lower_weight or d_upper_weight.
-   double d_our_weight;
+   double *d_our_weight;
 
    //! @brief Points to either d_lower_weight or d_upper_weight.
-   double d_far_weight;
+   double *d_far_weight;
+
+   //! @brief Whether our half may supply load.
+   bool d_may_supply_from_our_half;
+
+   //! @brief Whether far half may supply load.
+   bool d_may_supply_from_far_half;
 
 
    //! @brief Load of local process, for single-process group.
