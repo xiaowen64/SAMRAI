@@ -48,6 +48,8 @@ class CascadePartitionerGroup {
       d_our_position(Lower),
       d_lower_weight(0.0),
       d_upper_weight(0.0),
+      d_our_weight(0.0),
+      d_far_weight(0.0),
       d_local_load(0) {}
       d_shipment(0) {}
 
@@ -69,6 +71,8 @@ class CascadePartitionerGroup {
       d_our_position = Lower;
       d_lower_weight = local_load.getSumLoad();
       d_upper_weight = 0.0;
+      d_our_weight = &d_lower_weight;
+      d_far_weight = 0;
       d_local_load = &local_load;
       d_shipment = &shipment;
    }
@@ -82,6 +86,11 @@ class CascadePartitionerGroup {
     * communication.
     */
    void makeComboGroup( CascadePartitionerGroup &our_half ) {
+
+      /*
+       * Set up the groups
+       */
+
       d_our_half = &our_half;
       d_cycle_num = our_half.d_cycle_num+1;
       d_mpi = our_half.d_mpi;
@@ -105,13 +114,18 @@ class CascadePartitionerGroup {
       if ( d_contact >= d_mpi.getSize() ) {
          d_contact = -1;
       }
+      d_our_weight = d_our_position == Lower ? &d_lower_weight : &d_upper_weight;
+      d_far_weight = d_our_position == Lower ? &d_upper_weight : &d_lower_weight;
 
+      /*
+       * Record weights of the two halves.
+       */
+      double far_weight = 0.0;
+      double our_weight = d_our_half->getComboWeight();
       if ( d_contact >= 0 ) {
-         double our_weight = d_our_half->getComboWeight();
          d_mpi.Sendrecv( &our_weight, 1, MPI_DOUBLE, d_contact, 0,
                          &far_weight, 1, MPI_DOUBLE, d_contact, 1 );
       }
-
       d_lower_weight = d_our_position == Lower ? our_weight : far_weight;
       d_upper_weight = d_our_position == Upper ? our_weight : far_weight;
    }
@@ -120,10 +134,10 @@ class CascadePartitionerGroup {
 private:
 
    /*!
-    * @brief Improve balance of the two halves by moving load from
-    * overloaded half to underloadef half.
+    * @brief Improve balance of the two halves of this group by moving
+    * load from overloaded half to underloadef half.
     */
-   void balanceHalves() {
+   void balanceConstituentHalves();
 
    //! @brief Position of the half containing local process.
    Position ourPosition() const { return d_our_position; }
@@ -151,16 +165,19 @@ private:
    }
 
    /*!
-    * @brief Try to remove an amount of weight the group.
+    * @brief Try to supply an amount of weight by removing it from the
+    * group, and return the (estimated) amount supplied.
     *
     * Removing weight from groups containing more than the local process
     * reports an estimate of the amount removed, based on what should have
     * been removed.  Due to load cutting restrictions, the actual amount
     * removed may differ.
     *
-    * @param taker Rank of process taking load from local process.
+    * @param taker Representative of the group demanding this work.
+    * Local process is to send to this representative any work it
+    * personally supplies.
     */
-   double giveLoad( double amount, int taker );
+   double supplyLoad( double amount, int taker );
 
    /*!
     * @brief Try to remove an amount of weight from our half of the group.
@@ -169,18 +186,24 @@ private:
     * local rank, otherwise, it's an estimate based on what the
     * requested removal amount was.
     *
+    * This method is recursive by the sequence
+    * supplyLoadFromOurHalf-supplyLoad-supplyLoadFromOurHalf.
+    *
     * @param taker Rank of process taking load from local process.
     *
     * @return Amount removed (or an estimate)
     */
-   double giveLoadFromOurHalf( double amount, int taker ) {
+   double supplyLoadFromOurHalf( double amount, int taker ) {
       TBOX_ASSERT( amount > 0.0 );
-      double removed = d_our_half->giveLoad( amount, taker_rank );
+      double removed = 0.0;
+      if ( ourSurplus() >= d_pparams->getLoadComparisonTol() ) {
+         removed = d_our_half->supplyLoad( amount, taker_rank );
 
-      if ( d_our_position == Lower ) {
-         d_lower_weight -= removed;
-      } else {
-         d_upper_weight -= removed;
+         if ( d_our_position == Lower ) {
+            d_lower_weight -= removed;
+         } else {
+            d_upper_weight -= removed;
+         }
       }
       return removed;
    }
@@ -196,10 +219,13 @@ private:
     * @return Estimate of amount removed (actual value not locally
     * available)
     */
-   double giveLoadFromFarHalf( double amount ) {
+   double supplyLoadFromFarHalf( double amount ) {
       TBOX_ASSERT( amount > 0.0 );
-      double removed = tbox::MathUtilities<double>::Min( amount, d_far_weight );
-      d_far_weight -= removed;
+      double removed = 0.0;
+      if ( farSurplus() >= d_pparams->getLoadComparisonTol() ) {
+         removed = tbox::MathUtilities<double>::Min( amount, d_far_weight );
+         d_far_weight -= removed;
+      }
       return removed;
    }
 
@@ -244,11 +270,18 @@ private:
    //! @brief Sum of load held by upper half (or approxmimation).
    double d_upper_weight;
 
+   //! @brief Points to either d_lower_weight or d_upper_weight.
+   double d_our_weight;
+
+   //! @brief Points to either d_lower_weight or d_upper_weight.
+   double d_far_weight;
+
 
    //! @brief Load of local process, for single-process group.
    TransitLoad *d_local_load;
    //! @brief Cache for to be shipped, for single-process group.
    bool::shared_ptr<TransitLoad> d_shipment;
+   tbox::AsyncCommPeer<char> d_comm;
 };
 
 }

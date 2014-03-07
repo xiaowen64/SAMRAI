@@ -28,21 +28,30 @@ namespace mesh {
 
 /*
  *************************************************************************
- * If one half has a surplus and the other has a negative surplus,
- * move weight from the former to the latter.
+ * If one half has a positive surplus and the other half has a
+ * negative surplus, the former supplies work to the latter.  Amount
+ * supplied is ideally the minimum of the supplier's surplus and the
+ * demander's deficit.  (Actual ammounts are limited by load cutting
+ * restrictions.)
+ *
+ * This method records estimates of the weight changes to the groups
+ * it knows about, It doesn't record the actual weight changes because
+ * that happens remotely.  Each process on the supply half send a
+ * message received by its contact on the demand half.  The messages
+ * has the actual work to be transfered.
  *************************************************************************
  */
 void
-CascadePartitioner::balanceHalves()
+CascadePartitioner::balanceConstituentHalves()
 {
 
    if ( d_groups[inner_cycle].ourSurplus() >  d_pparams.getLoadComparisonTol() &&
         d_groups[inner_cycle].farSurplus() < -d_pparams.getLoadComparisonTol() ) {
 
-      double weight = d_groups[inner_cycle].removeWeightFromOurHalf(
-         -d_groups[inner_cycle].farSurplus() );
+      double supplied_weight = d_groups[inner_cycle].supplyLoadFromOurHalf(
+         -d_groups[inner_cycle].farSurplus(), d_contact );
 
-      d_groups[inner_cycle].addWeightToFarHalf(weight);
+      d_groups[inner_cycle].addWeightToFarHalf(supplied_weight);
 
       /*
        * If local indicated to contact that local has surplus,
@@ -60,10 +69,10 @@ CascadePartitioner::balanceHalves()
          recv_comm.beginRecv( d_contact );
       }
 
-      double weight = d_groups[inner_cycle].removeWeightFromOtherHalf(
+      double supplied_weight = d_groups[inner_cycle].supplyLoadFromFarHalf(
          -d_groups[inner_cycle].ourSurplus() );
 
-      d_groups[inner_cycle].addWeightToOurHalf(weight);
+      d_groups[inner_cycle].addWeightToOurHalf(supplied_weight);
 
       recv_comm.completeCurrentOperation();
       // Unpack into d_groups[0].d_local_load (local_load).
@@ -76,42 +85,68 @@ CascadePartitioner::balanceHalves()
 
 /*
  *************************************************************************
+ * Supply specified amount of load to another group with a work
+ * demand.  Any load supplied by local process is to be sent to the
+ * designated taker, a process in the demand group.  Give priority
+ * to supplies closest to the taker in rank space.
+ *
  * 1. If group is single-process, try to remove load from d_local_load
  *    and put it in d_shipment.
  * 2. Else:
- *    a: Remove weight from the half matching the priority.
- *    b: If step a didn't remove enough, remove some from the other half.
+ *    a: Supply load from the half closest to the taker.
+ *    b: If step a didn't supply enough, remove some from the other half.
+ *
+ * This method is recursive by the sequence
+ * supplyLoad-supplyLoadFromOurHalf-supplyLoad.
  *************************************************************************
  */
 double
-CascadePartitioner::giveLoad( double amount, int taker )
+CascadePartitioner::supplyLoad( double amount, int taker )
 {
    TBOX_ASSERT( amount > 0.0 );
    double removed = 0.0;
+
    if ( d_cycle_num == 0 ) {
+      // Group is single-process, not two halves.
       d_shipment = d_local_load->clone();
-      shipment->adjustLoad( *d_local_load, amount, amount, amount );
-      tbox::MessageStream msg;
-      msg << *shipment;
-      removed = d_shipment.getSumLoad();
+      d_shipment->adjustLoad( *d_local_load, amount, amount, amount );
+      removed = d_shipment->getSumLoad();
       d_lower_weight -= removed;
+      sendMyShipment(taker);
    }
 
-   const Position priority = taker < d_first_lower_rank ? Lower : Upper;
-
-   else if ( priority == d_our_position ) {
-      removed = giveLoadFromOurHalf( amount, priority );
+   else if ( ( d_our_position == Lower && taker <  d_first_lower_rank ) ||
+             ( d_our_position == upper && taker >= d_first_upper_rank ) ) {
+      // Group is two-halves, with our half closer to taker.
+      removed = supplyLoadFromOurHalf( amount, priority );
       if ( removed < amount ) {
-         removed += giveLoadFromFarHalf( amount-removed );
+         removed += supplyLoadFromFarHalf( amount-removed );
       }
    }
    else {
-      removed = giveLoadFromFarHalf( amount );
+      // Group is two-halves, with far half closer to taker.
+      removed = supplyLoadFromFarHalf( amount );
       if ( removed < amount ) {
-         removed += giveLoadFromOurHalf( amount-removed, taker );
+         removed += supplyLoadFromOurHalf( amount-removed, taker );
       }
    }
    return removed;
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void
+CascadePartitioner::sendMyShipment( int taker )
+{
+   tbox::MessageStream msg;
+   msg << *shipment;
+   d_comm.setPeerRank(taker);
+   d_comm.beginSend( msg.getBufferStart(), msg.getCurrentSize() );
+   return;
 }
 
 }
