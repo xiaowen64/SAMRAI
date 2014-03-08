@@ -111,12 +111,6 @@ private:
    //! @brief Where a group falls in the next larger group.
    enum Position { Lower=0, Upper=1 };
 
-   //! @brief Position of the half containing local process.
-   Position ourPosition() const { return d_our_position; }
-   //! @brief Position of the half not containing local process.
-   Position farPosition() const { return d_our_position == Lower ? Upper : Lower; }
-   //! @brief Contact rank.
-   int contact() const { return d_contact; }
    //! @brief Weight of the group (combined weight of its two halves).
    double getComboWeight() const { return d_lower_weight + d_upper_weight; }
    //! @brief Surplus of lower half.
@@ -200,8 +194,8 @@ private:
    }
 
    /*!
-    * @brief Record work amount received (estimated) by our half and
-    * forbid it from becoming a supplier.
+    * @brief Record estimated work amount received by our half-group and
+    * that the half-group may not become a supplier.
     */
    void recordDemandReceivedByOurHalf( double amount ) {
       if ( d_our_position == Lower ) { d_lower_weight += amount; }
@@ -209,8 +203,8 @@ private:
       d_our_half_may_supply = false;
    }
    /*!
-    * @brief Record work amount received (estimated) by far half and
-    * forbid it from becoming a supplier.
+    * @brief Record estimated work amount received by far half-group and
+    * that the half-group may not become a supplier.
     */
    void recordDemandReceivedByFarHalf( double amount ) {
       if ( d_our_position == Upper ) { d_lower_weight += amount; }
