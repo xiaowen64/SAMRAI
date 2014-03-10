@@ -70,15 +70,12 @@ BergerRigoutsos {
 
 
 CascadePartitioner {
-  flexible_load_tol = 0.05
+  flexible_load_tolerance = 0.05
   // Debugging options
-  report_load_balance = TRUE
+  DEV_report_load_balance = TRUE
   DEV_check_map = TRUE
-  DEV_check_connectivity = FALSE
-  DEV_print_steps = FALSE
-  DEV_print_swap_steps = TRUE
-  DEV_print_break_steps = TRUE
-  DEV_print_edge_steps = FALSE
+  DEV_check_connectivity = TRUE
+  DEV_print_steps = TRUE
   DEV_summarize_map = TRUE
 }
 

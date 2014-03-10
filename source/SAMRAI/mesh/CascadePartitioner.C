@@ -153,14 +153,6 @@ CascadePartitioner::setWorkloadPatchDataIndex(
 /*
  *************************************************************************
  * This method implements the abstract LoadBalanceStrategy interface.
- *
- * This method does some preliminary setup then calls
- * loadBalanceWithinRankGroup to do the work.  The set-up includes
- * determining how many cycles to use to gradually balance a severely
- * unbalanced load.
- *
- * After load balancing, it enforces the maximum size restriction
- * by breaking up large boxes and update balance<==>reference again.
  *************************************************************************
  */
 void
@@ -284,7 +276,7 @@ CascadePartitioner::loadBalanceBoxLevel(
    }
 
 
-   d_global_avg_load = global_sum_load / rank_group.size();
+   d_global_load_avg = global_sum_load / rank_group.size();
 
    // Run the partitioning algorithm.
    partitionByCascade(
@@ -365,9 +357,12 @@ CascadePartitioner::partitionByCascade(
    double global_sum_load
    ) const
 {
+   if ( d_print_steps ) {
+      tbox::plog << "CascadePartitioner::partitionByCascade: entered" << std::endl;
+   }
 
-   BoxTransitSet local_load(*d_pparams);
-   local_load.insertAll( balance_box_level.getBoxes() );
+   BoxTransitSet local_work(*d_pparams);
+   local_work.insertAll( balance_box_level.getBoxes() );
 
    /*
     * Initialize empty balanced_box_level and mappings so they are
@@ -386,7 +381,7 @@ CascadePartitioner::partitionByCascade(
    unbalanced_to_balanced.setTranspose(&balanced_to_unbalanced, false);
 
 
-   double group_load = local_load.getSumLoad();
+   double group_load = local_work.getSumLoad();
 
    const int lg_size = lgInt(d_mpi.getSize());
 
@@ -401,9 +396,10 @@ CascadePartitioner::partitionByCascade(
 #endif
 
 
+tbox::plog << "lg_size="<<lg_size << "  ag_group_size="<<ag_group_size << std::endl;
    // Data on groups.
    std::vector<CascadePartitionerGroup> groups(lg_size+1);
-   groups[0].makeSingleProcessGroup( d_mpi, *d_pparams, local_load, global_sum_load );
+   groups[0].makeSingleProcessGroup( this, local_work );
 
    /*
     * How agglomeration affects the cycles required to spread out
@@ -412,10 +408,12 @@ CascadePartitioner::partitionByCascade(
     * only move loads within the agglomerated groups.
     */
    for ( int outer_cycle=0; outer_cycle<lg_size-d_num_ag_cycles; ++outer_cycle ) {
+tbox::plog << "outer_cycle="<<outer_cycle << std::endl;
 
-      int inner_cycleMax = lg_size - outer_cycle;
+      int inner_cycleMax = lg_size + 1 - outer_cycle;
 
       for ( int inner_cycle=d_num_ag_cycles+1; inner_cycle<inner_cycleMax; ++inner_cycle ) {
+tbox::plog << "inner_cycle="<<inner_cycle << std::endl;
 
          /*
           * Only the first rank in each agglomerated group runs the
@@ -443,7 +441,7 @@ CascadePartitioner::partitionByCascade(
    }
 
    t_assign_to_local_and_populate_maps->start();
-   local_load.assignToLocalAndPopulateMaps(
+   local_work.assignToLocalAndPopulateMaps(
       balanced_box_level,
       balanced_to_unbalanced,
       unbalanced_to_balanced,
@@ -453,11 +451,11 @@ CascadePartitioner::partitionByCascade(
    t_get_map->stop();
 
    if ( d_summarize_map ) {
-      tbox::plog << "local_load:\n"; local_load.recursivePrint(tbox::plog, "LL->\t", 2);
-      tbox::plog << "CascadePartitioner::loadBalanceWithinRankGroup unbalanced--->balanced map:\n"
+      tbox::plog << "local_work:\n"; local_work.recursivePrint(tbox::plog, "LL->\t", 2);
+      tbox::plog << "CascadePartitioner::partitionByCascade unbalanced--->balanced map:\n"
                  << unbalanced_to_balanced.format("\t",0)
                  << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
-                 << "CascadePartitioner::loadBalanceWithinRankGroup balanced--->unbalanced map:\n"
+                 << "CascadePartitioner::partitionByCascade balanced--->unbalanced map:\n"
                  << balanced_to_unbalanced.format("\t",0)
                  << "Map statistics:\n" << balanced_to_unbalanced.formatStatistics("\t")
                  << '\n';
@@ -466,21 +464,21 @@ CascadePartitioner::partitionByCascade(
    if (d_check_map) {
       if (unbalanced_to_balanced.findMappingErrors() != 0) {
          TBOX_ERROR(
-            "CascadePartitioner::loadBalanceWithinRankGroup Mapping errors found in unbalanced_to_balanced!");
+            "CascadePartitioner::partitionByCascade Mapping errors found in unbalanced_to_balanced!");
       }
       if (unbalanced_to_balanced.checkTransposeCorrectness(
              balanced_to_unbalanced)) {
          TBOX_ERROR(
-            "CascadePartitioner::loadBalanceWithinRankGroup Transpose errors found!");
+            "CascadePartitioner::partitionByCascade Transpose errors found!");
       }
    }
 
 
    if ( d_summarize_map ) {
-      tbox::plog << "CascadePartitioner::loadBalanceWithinRankGroup: unbalanced--->balanced map:\n"
+      tbox::plog << "CascadePartitioner::partitionByCascade: unbalanced--->balanced map:\n"
                  << unbalanced_to_balanced.format("\t",0)
                  << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
-                 << "CascadePartitioner::loadBalanceWithinRankGroup: balanced--->unbalanced map:\n"
+                 << "CascadePartitioner::partitionByCascade: balanced--->unbalanced map:\n"
                  << balanced_to_unbalanced.format("\t",0)
                  << "Map statistics:\n" << balanced_to_unbalanced.formatStatistics("\t")
                  << '\n';
@@ -504,6 +502,9 @@ CascadePartitioner::partitionByCascade(
          << "CascadePartitioner::partitionByCascade finished constructing unbalanced<==>balanced.\n";
    }
 
+   if ( d_print_steps ) {
+      tbox::plog << "CascadePartitioner::partitionByCascade: leaving" << std::endl;
+   }
 }
 
 

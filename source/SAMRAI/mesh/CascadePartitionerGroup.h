@@ -22,6 +22,7 @@
 namespace SAMRAI {
 namespace mesh {
 
+class CascadePartitioner;
 
 /*!
  * @brief A grouping of processes in the CascadePartitioner algorithm,
@@ -47,9 +48,6 @@ class CascadePartitionerGroup {
 public:
 
    CascadePartitionerGroup() :
-      d_mpi(tbox::SAMRAI_MPI::getSAMRAIWorld()),
-      d_global_load_avg(0),
-      d_pparams(0),
       d_cycle_num(-1),
       d_first_lower_rank(-1),
       d_first_upper_rank(-1),
@@ -72,7 +70,6 @@ public:
     * for the class to be used in an stl::vector.
     */
    CascadePartitionerGroup( const CascadePartitionerGroup &other ) :
-      d_mpi(MPI_COMM_NULL),
       d_cycle_num(-1),
       d_first_lower_rank(-1),
       d_first_upper_rank(-1),
@@ -87,8 +84,6 @@ public:
       d_our_half_may_supply(true),
       d_far_half_may_supply(true),
       d_local_load(0),
-      d_global_load_avg(0),
-      d_pparams(0),
       d_shipment(),
       d_comm() {}
 
@@ -98,10 +93,8 @@ public:
     * @brief Make a cycle-zero, single-process group.
     */
    void makeSingleProcessGroup(
-      tbox::SAMRAI_MPI &mpi,
-      const PartitioningParams &pparams,
-      TransitLoad &local_load,
-      double global_load );
+      const CascadePartitioner *common_data,
+      TransitLoad &local_load );
 
    /*!
     * @brief Make a combined group consisting of the given half-group
@@ -119,6 +112,8 @@ public:
     */
    void balanceConstituentHalves();
 
+   void printClassData( std::ostream &co, const std::string &border ) const;
+
 
 private:
 
@@ -130,11 +125,11 @@ private:
 
    //! @brief Surplus of lower half.
    double lowerSurplus() const {
-      return d_lower_work - d_global_load_avg*(d_first_upper_rank-d_first_lower_rank);
+      return d_lower_work - d_lower_capacity;
    }
    //! @brief Surplus of upper half.
    double upperSurplus() const {
-      return d_upper_work - d_global_load_avg*(d_end_rank-d_first_upper_rank);
+      return d_upper_work - d_upper_capacity;
    }
    //! @brief Surplus of our half.
    double ourSurplus() const {
@@ -209,11 +204,7 @@ private:
    void sendMyShipment( int taker );
    void unpackSuppliedLoad();
 
-   tbox::SAMRAI_MPI d_mpi;
-
-   double d_global_load_avg;
-
-   const PartitioningParams *d_pparams;
+   const CascadePartitioner *d_common;
 
    //! @brief Cycle number.  Group has 2^d_cycle_num ranks.
    int d_cycle_num;
@@ -244,6 +235,12 @@ private:
 
    //! @brief Sum of load held by upper half (or approxmimation).
    double d_upper_work;
+
+   //! @brief Ideal load based on number of ranks in lower half.
+   double d_lower_capacity;
+
+   //! @brief Ideal load based on number of ranks in upper half.
+   double d_upper_capacity;
 
    //! @brief Points to either d_lower_work or d_upper_work.
    double *d_our_work;

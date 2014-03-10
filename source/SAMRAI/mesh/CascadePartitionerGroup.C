@@ -28,16 +28,12 @@ namespace mesh {
  * @brief Make a cycle-zero, single-process group.
  */
 void CascadePartitionerGroup::makeSingleProcessGroup(
-   tbox::SAMRAI_MPI &mpi,
-   const PartitioningParams &pparams,
-   TransitLoad &local_load,
-   double global_load )
+   const CascadePartitioner *common_data,
+   TransitLoad &local_load )
 {
-   d_mpi = mpi;
-   d_global_load_avg = global_load/d_mpi.getSize();
-   d_pparams = &pparams;
+   d_common = common_data;
    d_cycle_num = 0;
-   d_first_lower_rank = d_mpi.getRank();
+   d_first_lower_rank = d_common->d_mpi.getRank();
    d_first_upper_rank = d_first_lower_rank+1;
    d_end_rank = d_first_lower_rank+1;
    d_contact = -1;
@@ -48,6 +44,12 @@ void CascadePartitionerGroup::makeSingleProcessGroup(
    d_our_work = &d_lower_work;
    d_far_work = 0;
    d_local_load = &local_load;
+   d_lower_capacity = d_common->d_global_load_avg;
+   d_upper_capacity = 0.0;
+   if ( d_common->d_print_steps ) {
+      tbox::plog << "CascadePartitionerGroup::makeSingleProcessGroup:\n";
+      printClassData( tbox::plog, "\t" );
+   }
 }
 
 /*!
@@ -64,27 +66,27 @@ void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_ha
     * Set up the groups
     */
 
+   d_common = our_half.d_common;
    d_our_half = &our_half;
    d_cycle_num = our_half.d_cycle_num+1;
-   d_mpi = our_half.d_mpi;
    d_local_load = 0; // For single-process groups only.
 
    int group_size = 1 << d_cycle_num;
-   int group_num = d_mpi.getRank()/group_size;
+   int group_num = d_common->d_mpi.getRank()/group_size;
 
    d_first_lower_rank = group_size*group_num;
    d_first_upper_rank = tbox::MathUtilities<int>::Min(
-      d_first_lower_rank + group_size/2, d_mpi.getSize());
+      d_first_lower_rank + group_size/2, d_common->d_mpi.getSize());
    d_end_rank = tbox::MathUtilities<int>::Min(
-      d_first_lower_rank + group_size, d_mpi.getSize());
+      d_first_lower_rank + group_size, d_common->d_mpi.getSize());
 
-   int relative_rank = d_mpi.getRank() - d_first_lower_rank;
+   int relative_rank = d_common->d_mpi.getRank() - d_first_lower_rank;
 
    d_our_position = relative_rank >= group_size/2 ? Upper : Lower;
    d_contact = d_our_position == Lower ?
-      d_mpi.getRank() + group_size/2 :
-      d_mpi.getRank() - group_size/2;
-   if ( d_contact >= d_mpi.getSize() ) {
+      d_common->d_mpi.getRank() + group_size/2 :
+      d_common->d_mpi.getRank() - group_size/2;
+   if ( d_contact >= d_common->d_mpi.getSize() ) {
       d_contact = -1;
    }
    d_our_work = d_our_position == Lower ? &d_lower_work : &d_upper_work;
@@ -103,9 +105,9 @@ void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_ha
       std::vector<char> tmp_buffer(send_msg.getCurrentSize());
 
       tbox::SAMRAI_MPI::Status status;
-      d_mpi.Sendrecv( (void*)(send_msg.getBufferStart()), 1, MPI_CHAR, d_contact, 0,
-                      &tmp_buffer[0], 1, MPI_CHAR, d_contact, 1,
-                      &status );
+      d_common->d_mpi.Sendrecv( (void*)(send_msg.getBufferStart()), 1, MPI_CHAR, d_contact, 0,
+                                &tmp_buffer[0], 1, MPI_CHAR, d_contact, 1,
+                                &status );
 
       tbox::MessageStream recv_msg( tmp_buffer.size(),
                                     tbox::MessageStream::Read,
@@ -115,8 +117,13 @@ void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_ha
    d_lower_work = d_our_position == Lower ? our_work : far_work;
    d_upper_work = d_our_position == Upper ? our_work : far_work;
 
-   d_global_load_avg = our_half.d_global_load_avg;
-   d_pparams = our_half.d_pparams;
+   d_lower_capacity = d_common->d_global_load_avg*(d_first_upper_rank-d_first_lower_rank);
+   d_upper_capacity = d_common->d_global_load_avg*(d_end_rank-d_first_upper_rank);
+
+   if ( d_common->d_print_steps ) {
+      tbox::plog << "CascadePartitionerGroup::makeCombinedGroup:\n";
+      printClassData( tbox::plog, "\t" );
+   }
 }
 
 
@@ -140,8 +147,8 @@ void
 CascadePartitionerGroup::balanceConstituentHalves()
 {
 
-   if ( ourSurplus() >  d_pparams->getLoadComparisonTol() &&
-        farSurplus() < -d_pparams->getLoadComparisonTol() ) {
+   if ( ourSurplus() >  d_common->d_pparams->getLoadComparisonTol() &&
+        farSurplus() < -d_common->d_pparams->getLoadComparisonTol() ) {
 
       double work_supplied = supplyWorkFromOurHalf(
          -farSurplus(), d_contact );
@@ -149,8 +156,8 @@ CascadePartitionerGroup::balanceConstituentHalves()
       recordWorkTakenByFarHalf(work_supplied);
    }
 
-   else if ( farSurplus() >  d_pparams->getLoadComparisonTol() &&
-             ourSurplus() < -d_pparams->getLoadComparisonTol() ) {
+   else if ( farSurplus() >  d_common->d_pparams->getLoadComparisonTol() &&
+             ourSurplus() < -d_common->d_pparams->getLoadComparisonTol() ) {
 
       if ( d_contact_may_supply ) {
          d_comm.setPeerRank(d_contact);
@@ -233,7 +240,7 @@ double CascadePartitionerGroup::supplyWorkFromOurHalf( double work_requested, in
    TBOX_ASSERT( work_requested > 0.0 );
    double work_supplied = 0.0;
    if ( d_our_half_may_supply &&
-        ourSurplus() >= d_pparams->getLoadComparisonTol() ) {
+        ourSurplus() >= d_common->d_pparams->getLoadComparisonTol() ) {
       work_supplied = d_our_half->supplyWork( work_requested, taker );
       *d_our_work -= work_supplied;
    }
@@ -256,7 +263,7 @@ double CascadePartitionerGroup::supplyWorkFromFarHalf( double work_requested ) {
    TBOX_ASSERT( work_requested > 0.0 );
    double work_supplied = 0.0;
    if ( d_far_half_may_supply &&
-        farSurplus() >= d_pparams->getLoadComparisonTol() ) {
+        farSurplus() >= d_common->d_pparams->getLoadComparisonTol() ) {
       work_supplied = tbox::MathUtilities<double>::Min( work_requested, *d_far_work );
       *d_far_work -= work_supplied;
    }
@@ -292,6 +299,29 @@ CascadePartitionerGroup::unpackSuppliedLoad()
    tbox::MessageStream recv_msg( d_comm.getRecvSize(), tbox::MessageStream::Read,
                                  d_comm.getRecvData(), true );
    recv_msg >> d_local_load;
+   return;
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void
+CascadePartitionerGroup::printClassData( std::ostream &co, const std::string &border ) const
+{
+   co << border << "cycle " << d_cycle_num
+      << "  [" << d_first_lower_rank << ',' << d_first_upper_rank << ',' << d_end_rank
+      << ")  group_size=" << d_end_rank-d_first_lower_rank << '='
+      << d_first_upper_rank-d_first_lower_rank << '+' << d_end_rank-d_first_upper_rank << "\n"
+      << border << " lower_work=" << d_lower_work << '/' << d_lower_capacity
+      << "  " << " upper_work=" << d_upper_work << '/' << d_upper_capacity << '\n'
+      << border << " our_position=" << d_our_position
+      << "  our_half_may_supply: " << d_our_half_may_supply
+      << "  far_half_may_supply: " << d_far_half_may_supply
+      << "  contact=" << d_contact << "  contact_may_supply: " << d_contact_may_supply
+      << '\n';
    return;
 }
 

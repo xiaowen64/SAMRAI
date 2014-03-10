@@ -335,6 +335,15 @@ private:
    setTimers();
 
    /*
+    * CascadePartitioner and CascadePartitionerGroup are tightly
+    * coupled.  CascadePartitioner has the common parts of the data
+    * and algorithm.  CascadePartitionerGroup has the group-specific
+    * parts.  CascadePartitionerGroup can be made a private subclass
+    * of CascadePartitioner, but that would make a big file.
+    */
+   friend CascadePartitionerGroup;
+
+   /*
     * Object dimension.
     */
    const tbox::Dimension d_dim;
@@ -374,7 +383,7 @@ private:
    //@{
    //! @name Data shared with private methods during balancing.
    mutable boost::shared_ptr<PartitioningParams> d_pparams;
-   mutable LoadType d_global_avg_load;
+   mutable LoadType d_global_load_avg;
    mutable LoadType d_min_load;
    //@}
 
