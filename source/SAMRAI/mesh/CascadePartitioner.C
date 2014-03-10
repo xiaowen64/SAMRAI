@@ -260,8 +260,6 @@ CascadePartitioner::loadBalanceBoxLevel(
 
    LoadType local_load = computeLocalLoad(balance_box_level);
 
-   LoadType max_local_load = local_load;
-
    LoadType global_sum_load = local_load;
 
 
@@ -278,7 +276,6 @@ CascadePartitioner::loadBalanceBoxLevel(
       tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
       tbox::plog.precision(6);
       tbox::plog << "CascadePartitioner::loadBalanceBoxLevel"
-                 << " max_local_load=" << max_local_load
                  << " global_sum_load=" << global_sum_load
                  << " (initially born across " << d_mpi.getSize()
                  << " procs, averaging " << global_sum_load / d_mpi.getSize()
@@ -405,7 +402,7 @@ CascadePartitioner::partitionByCascade(
 
 
    // Data on groups.
-   std::vector<CascadePartitionerGroup> groups(lg_size);
+   std::vector<CascadePartitionerGroup> groups(lg_size+1);
    groups[0].makeSingleProcessGroup( d_mpi, *d_pparams, local_load, global_sum_load );
 
    /*
@@ -426,7 +423,7 @@ CascadePartitioner::partitionByCascade(
           * The barrier is for timing purpose, and all must run it.
           */
          if ( d_mpi.getRank() % ag_group_size == 0 ) {
-            groups[inner_cycle].makeComboGroup(groups[inner_cycle-1]);
+            groups[inner_cycle].makeCombinedGroup(groups[inner_cycle-1]);
             groups[inner_cycle].balanceConstituentHalves();
          }
 
@@ -440,10 +437,23 @@ CascadePartitioner::partitionByCascade(
    }
 #endif
 
+   if ( d_print_steps ) {
+      tbox::plog
+         << "CascadePartitioner::partitionByCascade constructing unbalanced<==>balanced.\n";
+   }
+
+   t_assign_to_local_and_populate_maps->start();
+   local_load.assignToLocalAndPopulateMaps(
+      balanced_box_level,
+      balanced_to_unbalanced,
+      unbalanced_to_balanced,
+      d_flexible_load_tol );
+   t_assign_to_local_and_populate_maps->stop();
 
    t_get_map->stop();
 
    if ( d_summarize_map ) {
+      tbox::plog << "local_load:\n"; local_load.recursivePrint(tbox::plog, "LL->\t", 2);
       tbox::plog << "CascadePartitioner::loadBalanceWithinRankGroup unbalanced--->balanced map:\n"
                  << unbalanced_to_balanced.format("\t",0)
                  << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
@@ -488,19 +498,6 @@ CascadePartitioner::partitionByCascade(
    } else {
       hier::BoxLevel::swap(balance_box_level, balanced_box_level);
    }
-
-   if ( d_print_steps ) {
-      tbox::plog
-         << "CascadePartitioner::partitionByCascade constructing unbalanced<==>balanced.\n";
-   }
-
-   t_assign_to_local_and_populate_maps->start();
-   local_load.assignToLocalAndPopulateMaps(
-      balanced_box_level,
-      balanced_to_unbalanced,
-      unbalanced_to_balanced,
-      d_flexible_load_tol );
-   t_assign_to_local_and_populate_maps->stop();
 
    if ( d_print_steps ) {
       tbox::plog
