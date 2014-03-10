@@ -26,6 +26,7 @@
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/mesh/BalanceUtilities.h"
+#include "SAMRAI/mesh/CascadePartitioner.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/mesh/TilePartitioner.h"
 #include "SAMRAI/mesh/TileClustering.h"
@@ -1465,6 +1466,22 @@ createLoadBalancer(
          db->printClassData(plog);
       }
       return cap_lb;
+
+   } else if (lb_type == "CascadePartitioner") {
+
+      const boost::shared_ptr<tbox::Database> db =
+         input_db->getDatabaseWithDefault("CascadePartitioner",
+                                          boost::shared_ptr<tbox::Database>());
+      boost::shared_ptr<mesh::CascadePartitioner>
+         cp_lb(new mesh::CascadePartitioner(
+            dim,
+            std::string("mesh::CascadePartitioner") + tbox::Utilities::intToString(ln),
+            db ));
+      if ( db ) {
+         tbox::plog << "CascadePartitioner created with this input database:\n";
+         db->printClassData(plog);
+      }
+      return cp_lb;
 
    }
    else {
