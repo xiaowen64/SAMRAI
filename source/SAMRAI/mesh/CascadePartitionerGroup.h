@@ -24,12 +24,22 @@ namespace mesh {
 
 
 /*!
- * @brief A grouping of processes in the CascadePartitioner algorithm.
+ * @brief A grouping of processes in the CascadePartitioner algorithm,
+ * which is either a single-process group or a combination of two
+ * groups.
  *
- * Smallest gruops are single-process groups.  With each
- * CascadePartitioner cycle, two adjacent groups are combined to make
- * a bigger group.  The bigger group can shift load from its
- * overloaded half to its underloaded half.
+ * @b Terminology: The first groups in the CascadePartitioner are
+ * single-process groups.  With each CascadePartitioner cycle, two
+ * adjacent groups are combined to make a bigger group.  Cycle c has
+ * $2^c$ ranks in each group.  The two constituent groups in combined
+ * group are sometimes called "halves", because each makes up half of
+ * the combined group.  The lower half has smaller ranks than the
+ * upper half.  In addition, the half containing the local process is
+ * called "our half", while the one not containing the local process
+ * is called the "far half".
+ *
+ * A group can shift load from its overloaded half to its underloaded
+ * half, and this is how the CascadePartitioner balance loads.
  *
  */
 class CascadePartitionerGroup {
@@ -38,6 +48,8 @@ public:
 
    CascadePartitionerGroup() :
       d_mpi(tbox::SAMRAI_MPI::getSAMRAIWorld()),
+      d_global_load_avg(0),
+      d_pparams(0),
       d_cycle_num(-1),
       d_first_lower_rank(-1),
       d_first_upper_rank(-1),
@@ -45,15 +57,13 @@ public:
       d_contact(-1),
       d_our_half(0),
       d_our_position(Lower),
-      d_lower_weight(0.0),
-      d_upper_weight(0.0),
-      d_our_weight(0),
-      d_far_weight(0),
+      d_lower_work(0.0),
+      d_upper_work(0.0),
+      d_our_work(0),
+      d_far_work(0),
       d_our_half_may_supply(true),
       d_far_half_may_supply(true),
       d_local_load(0),
-      d_global_load_avg(0),
-      d_pparams(0),
       d_shipment(),
       d_comm() {}
 
@@ -70,10 +80,10 @@ public:
       d_contact(-1),
       d_our_half(0),
       d_our_position(Lower),
-      d_lower_weight(0.0),
-      d_upper_weight(0.0),
-      d_our_weight(0),
-      d_far_weight(0),
+      d_lower_work(0.0),
+      d_upper_work(0.0),
+      d_our_work(0),
+      d_far_work(0),
       d_our_half_may_supply(true),
       d_far_half_may_supply(true),
       d_local_load(0),
@@ -94,14 +104,18 @@ public:
       double global_load );
 
    /*!
-    * @brief Make a combo group consistng of the given half-group and
-    * its corresponding partner, which this method will determine.
+    * @brief Make a combined group consisting of the given half-group
+    * and the other half-group, which this method will figure out.
     */
-   void makeComboGroup( CascadePartitionerGroup &our_half );
+   void makeCombinedGroup( CascadePartitionerGroup &our_half );
 
    /*!
-    * @brief Improve balance of the two halves of this group by moving
-    * load from overloaded half to underloadef half.
+    * @brief Improve balance of the two halves of this group by
+    * supplying load from overloaded half to underloadef half.
+    *
+    * Ideally, the work supplied is minimum of the overloaded half's
+    * surplus and the underloaded half's deficit.  The ideal may not
+    * be achieved due to load-cutting restrictions.
     */
    void balanceConstituentHalves();
 
@@ -111,15 +125,16 @@ private:
    //! @brief Where a group falls in the next larger group.
    enum Position { Lower=0, Upper=1 };
 
-   //! @brief Weight of the group (combined weight of its two halves).
-   double getComboWeight() const { return d_lower_weight + d_upper_weight; }
+   //! @brief Work of the group (combined work of its two halves).
+   double getCombinedWork() const { return d_lower_work + d_upper_work; }
+
    //! @brief Surplus of lower half.
    double lowerSurplus() const {
-      return d_lower_weight - d_global_load_avg*(d_first_upper_rank-d_first_lower_rank);
+      return d_lower_work - d_global_load_avg*(d_first_upper_rank-d_first_lower_rank);
    }
    //! @brief Surplus of upper half.
    double upperSurplus() const {
-      return d_upper_weight - d_global_load_avg*(d_end_rank-d_first_upper_rank);
+      return d_upper_work - d_global_load_avg*(d_end_rank-d_first_upper_rank);
    }
    //! @brief Surplus of our half.
    double ourSurplus() const {
@@ -131,84 +146,63 @@ private:
    }
 
    /*!
-    * @brief Try to supply an amount of weight by removing it from the
-    * group, and return the (estimated) amount supplied.
+    * @brief Try to supply the requested amount of work by removing
+    * it from this group, and return the (estimated) amount supplied.
     *
-    * Removing weight from groups containing more than the local process
-    * reports an estimate of the amount removed, based on what should have
-    * been removed.  Due to load cutting restrictions, the actual amount
-    * removed may differ.
+    * Supplying work from multi-process groups returns an estimate of
+    * the amount supplied, based on the work available.  Due to load
+    * cutting restrictions, the actual amount supplied may differ.
+    * Single-process groups will set aside any work it personally
+    * gives up.  See d_shipment.
     *
-    * @param taker Representative of the group demanding this work.
-    * Local process is to send to this representative any work it
-    * personally supplies.
+    * @param taker Representative of the group getting this work.
+    *
+    * @return Work supplied (or an estimate)
     */
-   double supplyLoad( double amount, int taker );
+   double supplyWork( double work_requested, int taker );
 
    /*!
-    * @brief Try to remove an amount of weight from our half of the group.
+    * @brief Try to supply the requested amount of work from our half
+    * of the group.
     *
-    * The return value is exact if the group includes only the
-    * local rank, otherwise, it's an estimate based on what the
-    * requested removal amount was.
-    *
-    * This method is recursive by the sequence
-    * supplyLoadFromOurHalf-supplyLoad-supplyLoadFromOurHalf.
+    * The return value is exact if the group includes only the local
+    * rank, otherwise, it's an estimate based on the requested supply.
     *
     * @param taker Rank of process taking load from local process.
     *
-    * @return Amount removed (or an estimate)
+    * @return Work supplied (or an estimate)
     */
-   double supplyLoadFromOurHalf( double amount, int taker ) {
-      TBOX_ASSERT( amount > 0.0 );
-      double removed = 0.0;
-      if ( d_our_half_may_supply &&
-           ourSurplus() >= d_pparams->getLoadComparisonTol() ) {
-
-         removed = d_our_half->supplyLoad( amount, taker );
-         *d_our_weight -= removed;
-      }
-      return removed;
-   }
+   double supplyWorkFromOurHalf( double work_requested, int taker );
 
    /*!
-    * @brief Symbolically try to remove an amount of weight from the
-    * half of the group not containing the local process.
+    * @brief Symbolically to supply the requested amount of work from
+    * the half of the group not containing the local process.
     *
     * No real work is exchanged because the local process is not in
     * the far half.  This method just estimates what the far half
-    * would give away.
+    * could give away.
     *
-    * @return Estimate of amount removed (actual value not locally
+    * @return Estimate of work supplied (actual value not locally
     * available)
     */
-   double supplyLoadFromFarHalf( double amount ) {
-      TBOX_ASSERT( amount > 0.0 );
-      double removed = 0.0;
-      if ( d_far_half_may_supply &&
-           farSurplus() >= d_pparams->getLoadComparisonTol() ) {
-         removed = tbox::MathUtilities<double>::Min( amount, *d_far_weight );
-         *d_far_weight -= removed;
-      }
-      return removed;
-   }
+   double supplyWorkFromFarHalf( double work_requested );
 
    /*!
     * @brief Record estimated work amount received by our half-group and
     * that the half-group may not become a supplier.
     */
-   void recordDemandReceivedByOurHalf( double amount ) {
-      if ( d_our_position == Lower ) { d_lower_weight += amount; }
-      else { d_upper_weight += amount; }
+   void recordWorkTakenByOurHalf( double amount ) {
+      if ( d_our_position == Lower ) { d_lower_work += amount; }
+      else { d_upper_work += amount; }
       d_our_half_may_supply = false;
    }
    /*!
     * @brief Record estimated work amount received by far half-group and
     * that the half-group may not become a supplier.
     */
-   void recordDemandReceivedByFarHalf( double amount ) {
-      if ( d_our_position == Upper ) { d_lower_weight += amount; }
-      else { d_upper_weight += amount; }
+   void recordWorkTakenByFarHalf( double amount ) {
+      if ( d_our_position == Upper ) { d_lower_work += amount; }
+      else { d_upper_work += amount; }
       d_far_half_may_supply = false;
    }
 
@@ -216,6 +210,10 @@ private:
    void unpackSuppliedLoad();
 
    tbox::SAMRAI_MPI d_mpi;
+
+   double d_global_load_avg;
+
+   const PartitioningParams *d_pparams;
 
    //! @brief Cycle number.  Group has 2^d_cycle_num ranks.
    int d_cycle_num;
@@ -242,16 +240,16 @@ private:
    Position d_our_position;
 
    //! @brief Sum of load held by lower half (or approxmimation).
-   double d_lower_weight;
+   double d_lower_work;
 
    //! @brief Sum of load held by upper half (or approxmimation).
-   double d_upper_weight;
+   double d_upper_work;
 
-   //! @brief Points to either d_lower_weight or d_upper_weight.
-   double *d_our_weight;
+   //! @brief Points to either d_lower_work or d_upper_work.
+   double *d_our_work;
 
-   //! @brief Points to either d_lower_weight or d_upper_weight.
-   double *d_far_weight;
+   //! @brief Points to either d_lower_work or d_upper_work.
+   double *d_far_work;
 
    //! @brief Whether our half may supply load.
    bool d_our_half_may_supply;
@@ -260,16 +258,20 @@ private:
    bool d_far_half_may_supply;
 
 
+   //@{
+   //! @name For single-process groups.
+
    //! @brief Load of local process, for single-process group.
    TransitLoad *d_local_load;
 
-   double d_global_load_avg;
-
-   const PartitioningParams *d_pparams;
-
    //! @brief Cache for to be shipped, for single-process group.
    boost::shared_ptr<TransitLoad> d_shipment;
+
+   //! @brief High-level communication object.
    tbox::AsyncCommPeer<char> d_comm;
+
+   //@}
+
 };
 
 }
