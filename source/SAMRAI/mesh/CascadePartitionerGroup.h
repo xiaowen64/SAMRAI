@@ -48,6 +48,7 @@ class CascadePartitionerGroup {
 public:
 
    CascadePartitionerGroup() :
+      d_common(0),
       d_cycle_num(-1),
       d_first_lower_rank(-1),
       d_first_upper_rank(-1),
@@ -59,6 +60,8 @@ public:
       d_upper_work(0.0),
       d_our_work(0),
       d_far_work(0),
+      d_lower_capacity(0.0),
+      d_upper_capacity(0.0),
       d_local_may_supply(true),
       d_contact_may_supply(true),
       d_our_half_may_supply(true),
@@ -70,6 +73,7 @@ public:
     * for the class to be used in an stl::vector.
     */
    CascadePartitionerGroup( const CascadePartitionerGroup &other ) :
+      d_common(0),
       d_cycle_num(-1),
       d_first_lower_rank(-1),
       d_first_upper_rank(-1),

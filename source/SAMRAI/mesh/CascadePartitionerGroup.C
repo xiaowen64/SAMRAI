@@ -53,6 +53,8 @@ void CascadePartitionerGroup::makeSingleProcessGroup(
 
    d_far_half_may_supply = d_contact_may_supply = false;
 
+   d_shipment.reset();
+
    if ( d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerGroup::makeSingleProcessGroup: leaving\n";
       printClassData( tbox::plog, "\t" );
@@ -143,6 +145,8 @@ void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_ha
    }
    d_lower_work = d_our_position == Lower ? our_work : far_work;
    d_upper_work = d_our_position == Upper ? our_work : far_work;
+
+   d_shipment.reset();
 
    if ( d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerGroup::makeCombinedGroup:\n";
@@ -369,12 +373,16 @@ CascadePartitionerGroup::printClassData( std::ostream &co, const std::string &bo
       << "  [" << d_first_lower_rank << ',' << d_first_upper_rank << ',' << d_end_rank
       << ")  group_size=" << d_end_rank-d_first_lower_rank << '='
       << d_first_upper_rank-d_first_lower_rank << '+' << d_end_rank-d_first_upper_rank << "\n"
-      << border << "lower_work=" << d_lower_work << '/' << d_lower_capacity
+      << border
+      << "our_position=" << d_our_position << "  contact=" << d_contact
+      << border
+      << "lower_work=" << d_lower_work << '/' << d_lower_capacity
       << "  " << " upper_work=" << d_upper_work << '/' << d_upper_capacity << '\n'
-      << border << "our_position=" << d_our_position
-      << "  our_half_may_supply: " << d_our_half_may_supply
-      << "  far_half_may_supply: " << d_far_half_may_supply
-      << "  contact=" << d_contact << "  contact_may_supply: " << d_contact_may_supply
+      << border
+      << "  our_half_may_supply=" << d_our_half_may_supply
+      << "  local_may_supply=" << d_local_may_supply
+      << "  far_half_may_supply=" << d_far_half_may_supply
+      << "  contact_may_supply=" << d_contact_may_supply
       << '\n';
    return;
 }

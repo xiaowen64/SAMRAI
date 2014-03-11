@@ -403,7 +403,6 @@ CascadePartitioner::partitionByCascade(
 tbox::plog << "lg_size="<<lg_size << "  ag_group_size="<<ag_group_size << std::endl;
    // Data on groups.
    std::vector<CascadePartitionerGroup> groups(lg_size+1);
-   groups[0].makeSingleProcessGroup( this, local_work );
 
    /*
     * How agglomeration affects the cycles required to spread out
@@ -415,6 +414,8 @@ tbox::plog << "lg_size="<<lg_size << "  ag_group_size="<<ag_group_size << std::e
 tbox::plog << "outer_cycle="<<outer_cycle << std::endl;
 
       int inner_cycleMax = lg_size + 1 - outer_cycle;
+
+      groups[0].makeSingleProcessGroup( this, local_work );
 
       for ( int inner_cycle=d_num_ag_cycles+1; inner_cycle<inner_cycleMax; ++inner_cycle ) {
 tbox::plog << "inner_cycle="<<inner_cycle << std::endl;
