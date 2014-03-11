@@ -386,6 +386,8 @@ private:
    mutable LoadType d_global_load_avg;
    mutable LoadType d_min_load;
 
+   //! @brief Local load subject to change.
+   mutable TransitLoad *d_local_load;
    //! @brief High-level communication manager.
    mutable tbox::AsyncCommStage d_comm_stage;
    //! @brief High-level peer-to-peer communication object.

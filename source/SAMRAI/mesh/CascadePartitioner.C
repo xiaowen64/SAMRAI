@@ -366,6 +366,7 @@ CascadePartitioner::partitionByCascade(
 
    BoxTransitSet local_work(*d_pparams);
    local_work.insertAll( balance_box_level.getBoxes() );
+   d_local_load = &local_work;
 
    /*
     * Initialize empty balanced_box_level and mappings so they are
@@ -439,6 +440,7 @@ tbox::plog << "inner_cycle="<<inner_cycle << std::endl;
 #endif
 
    if ( d_print_steps ) {
+      tbox::plog << "local_work:\n"; local_work.recursivePrint(tbox::plog, "LL->\t", 2);
       tbox::plog
          << "CascadePartitioner::partitionByCascade constructing unbalanced<==>balanced.\n";
    }
@@ -454,7 +456,6 @@ tbox::plog << "inner_cycle="<<inner_cycle << std::endl;
    t_get_map->stop();
 
    if ( d_summarize_map ) {
-      tbox::plog << "local_work:\n"; local_work.recursivePrint(tbox::plog, "LL->\t", 2);
       tbox::plog << "CascadePartitioner::partitionByCascade unbalanced--->balanced map:\n"
                  << unbalanced_to_balanced.format("\t",0)
                  << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
@@ -504,6 +505,8 @@ tbox::plog << "inner_cycle="<<inner_cycle << std::endl;
       tbox::plog
          << "CascadePartitioner::partitionByCascade finished constructing unbalanced<==>balanced.\n";
    }
+
+   d_local_load = 0;
 
    if ( d_print_steps ) {
       tbox::plog << "CascadePartitioner::partitionByCascade: leaving" << std::endl;

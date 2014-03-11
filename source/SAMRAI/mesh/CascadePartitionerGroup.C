@@ -43,7 +43,6 @@ void CascadePartitionerGroup::makeSingleProcessGroup(
    d_upper_work = 0.0;
    d_our_work = &d_lower_work;
    d_far_work = 0;
-   d_local_load = &local_load;
    d_lower_capacity = d_common->d_global_load_avg;
    d_upper_capacity = 0.0;
    if ( d_common->d_print_steps ) {
@@ -73,7 +72,6 @@ void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_ha
    d_common = our_half.d_common;
    d_our_half = &our_half;
    d_cycle_num = our_half.d_cycle_num+1;
-   d_local_load = 0; // For single-process groups only.
 
    int group_size = 1 << d_cycle_num;
    int group_num = d_common->d_mpi.getRank()/group_size;
@@ -110,8 +108,16 @@ void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_ha
 
       tbox::SAMRAI_MPI::Status status;
       d_common->d_mpi.Sendrecv(
-         (void*)(send_msg.getBufferStart()), 1, MPI_CHAR, d_contact, CascadePartitionerGroup_TAG_InfoExchange,
-         &tmp_buffer[0], 1, MPI_CHAR, d_contact, CascadePartitionerGroup_TAG_InfoExchange,
+         (void*)(send_msg.getBufferStart()),
+         send_msg.getCurrentSize(),
+         MPI_CHAR,
+         d_contact,
+         CascadePartitionerGroup_TAG_InfoExchange,
+         &tmp_buffer[0],
+         send_msg.getCurrentSize(),
+         MPI_CHAR,
+         d_contact,
+         CascadePartitionerGroup_TAG_InfoExchange,
          &status );
 
       tbox::MessageStream recv_msg( tmp_buffer.size(),
@@ -155,10 +161,14 @@ CascadePartitionerGroup::balanceConstituentHalves()
    if ( ourSurplus() >  d_common->d_pparams->getLoadComparisonTol() &&
         farSurplus() < -d_common->d_pparams->getLoadComparisonTol() ) {
 
-      double work_supplied = supplyWorkFromOurHalf(
-         -farSurplus(), d_contact );
+      double work_supplied = supplyWorkFromOurHalf( -farSurplus(), d_contact );
 
       recordWorkTakenByFarHalf(work_supplied);
+
+      if ( d_common->d_print_steps ) {
+         tbox::plog << "CascadePartitionerGroup::balanceConstituentHalves:\n"
+                    << "  supplied " << work_supplied << " from our half to far half.\n";
+      }
    }
 
    else if ( farSurplus() >  d_common->d_pparams->getLoadComparisonTol() &&
@@ -166,6 +176,8 @@ CascadePartitionerGroup::balanceConstituentHalves()
 
       if ( d_contact_may_supply ) {
          d_common->d_comm_peer.setPeerRank(d_contact);
+         d_common->d_comm_peer.setMPITag( CascadePartitionerGroup_TAG_LoadTransfer0,
+                                          CascadePartitionerGroup_TAG_LoadTransfer1 );
          d_common->d_comm_peer.beginRecv();
       }
 
@@ -175,9 +187,14 @@ CascadePartitionerGroup::balanceConstituentHalves()
       recordWorkTakenByOurHalf(work_supplied);
 
       unpackSuppliedLoad();
+
+      if ( d_common->d_print_steps ) {
+         tbox::plog << "CascadePartitionerGroup::balanceConstituentHalves:\n"
+                    << "  supplied " << work_supplied << " from far half to our half.\n";
+      }
    }
 
-   // Complete the load send, if there were any.
+   // Complete the load send, if there was any.
    d_common->d_comm_stage.advanceAll();
    while ( d_common->d_comm_stage.numberOfCompletedMembers() > 0 ) {
       d_common->d_comm_stage.popCompletionQueue();
@@ -195,7 +212,7 @@ CascadePartitionerGroup::balanceConstituentHalves()
  * taker, a process in the requesting group.  Give priority to
  * supplies closest to the taker in rank space.
  *
- * 1. If group is single-process, remove load from d_local_load
+ * 1. If group is single-process, remove load from d_common->d_local_load
  *    and put it in d_shipment.
  * 2. Else:
  *    A: Remove load from the half closest to the taker.
@@ -214,8 +231,8 @@ CascadePartitionerGroup::supplyWork( double work_requested, int taker )
 
    if ( d_cycle_num == 0 ) {
       // Group is single-process, not two halves.
-      d_shipment = boost::shared_ptr<TransitLoad>(d_local_load->clone());
-      d_shipment->adjustLoad( *d_local_load, work_requested, work_requested, work_requested );
+      d_shipment = boost::shared_ptr<TransitLoad>(d_common->d_local_load->clone());
+      d_shipment->adjustLoad( *d_common->d_local_load, work_requested, work_requested, work_requested );
       work_supplied = d_shipment->getSumLoad();
       d_lower_work -= work_supplied;
       sendMyShipment(taker);
@@ -290,6 +307,10 @@ double CascadePartitionerGroup::supplyWorkFromFarHalf( double work_requested ) {
 void
 CascadePartitionerGroup::sendMyShipment( int taker )
 {
+   if ( d_common->d_print_steps ) {
+      tbox::plog << "CascadePartitionerGroup::sendMyShipment: sending to " << taker << ":\n";
+      d_shipment->recursivePrint(tbox::plog, "Send: ", 2);
+   }
    tbox::MessageStream msg;
    msg << *d_shipment;
    d_common->d_comm_peer.setPeerRank(taker);
@@ -314,7 +335,11 @@ CascadePartitionerGroup::unpackSuppliedLoad()
                                  tbox::MessageStream::Read,
                                  d_common->d_comm_peer.getRecvData(),
                                  true );
-   recv_msg >> d_local_load;
+   recv_msg >> *d_common->d_local_load;
+   if ( d_common->d_print_steps ) {
+      tbox::plog << "CascadePartitionerGroup::unpackSuppliedLoad: updated d_local_load:\n";
+     d_common->d_local_load->recursivePrint(tbox::plog, "Curr: ", 2);
+   }
    return;
 }
 

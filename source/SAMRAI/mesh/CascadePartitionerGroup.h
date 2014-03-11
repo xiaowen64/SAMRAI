@@ -61,7 +61,6 @@ public:
       d_far_work(0),
       d_our_half_may_supply(true),
       d_far_half_may_supply(true),
-      d_local_load(0),
       d_shipment() {}
 
    /*!
@@ -82,7 +81,6 @@ public:
       d_far_work(0),
       d_our_half_may_supply(true),
       d_far_half_may_supply(true),
-      d_local_load(0),
       d_shipment() {}
 
    ~CascadePartitionerGroup() {}
@@ -263,9 +261,6 @@ private:
 
    //@{
    //! @name For single-process groups.
-
-   //! @brief Load of local process, for single-process group.
-   TransitLoad *d_local_load;
 
    //! @brief Cache for to be shipped, for single-process group.
    boost::shared_ptr<TransitLoad> d_shipment;
