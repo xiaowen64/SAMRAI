@@ -47,7 +47,7 @@ void CascadePartitionerGroup::makeSingleProcessGroup(
    d_lower_capacity = d_common->d_global_load_avg;
    d_upper_capacity = 0.0;
    if ( d_common->d_print_steps ) {
-      tbox::plog << "CascadePartitionerGroup::makeSingleProcessGroup:\n";
+      tbox::plog << "CascadePartitionerGroup::makeSingleProcessGroup: leaving\n";
       printClassData( tbox::plog, "\t" );
    }
 }
@@ -62,6 +62,10 @@ void CascadePartitionerGroup::makeSingleProcessGroup(
  */
 void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_half )
 {
+   if ( our_half.d_common->d_print_steps ) {
+      tbox::plog << "CascadePartitionerGroup::makeCombinedGroup: entered\n";
+   }
+
    /*
     * Set up the groups
     */
@@ -105,9 +109,10 @@ void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_ha
       std::vector<char> tmp_buffer(send_msg.getCurrentSize());
 
       tbox::SAMRAI_MPI::Status status;
-      d_common->d_mpi.Sendrecv( (void*)(send_msg.getBufferStart()), 1, MPI_CHAR, d_contact, 0,
-                                &tmp_buffer[0], 1, MPI_CHAR, d_contact, 1,
-                                &status );
+      d_common->d_mpi.Sendrecv(
+         (void*)(send_msg.getBufferStart()), 1, MPI_CHAR, d_contact, CascadePartitionerGroup_TAG_InfoExchange,
+         &tmp_buffer[0], 1, MPI_CHAR, d_contact, CascadePartitionerGroup_TAG_InfoExchange,
+         &status );
 
       tbox::MessageStream recv_msg( tmp_buffer.size(),
                                     tbox::MessageStream::Read,
@@ -160,8 +165,8 @@ CascadePartitionerGroup::balanceConstituentHalves()
              ourSurplus() < -d_common->d_pparams->getLoadComparisonTol() ) {
 
       if ( d_contact_may_supply ) {
-         d_comm.setPeerRank(d_contact);
-         d_comm.beginRecv();
+         d_common->d_comm_peer.setPeerRank(d_contact);
+         d_common->d_comm_peer.beginRecv();
       }
 
       double work_supplied = supplyWorkFromFarHalf(
@@ -170,6 +175,12 @@ CascadePartitionerGroup::balanceConstituentHalves()
       recordWorkTakenByOurHalf(work_supplied);
 
       unpackSuppliedLoad();
+   }
+
+   // Complete the load send, if there were any.
+   d_common->d_comm_stage.advanceAll();
+   while ( d_common->d_comm_stage.numberOfCompletedMembers() > 0 ) {
+      d_common->d_comm_stage.popCompletionQueue();
    }
 
    return;
@@ -281,8 +292,11 @@ CascadePartitionerGroup::sendMyShipment( int taker )
 {
    tbox::MessageStream msg;
    msg << *d_shipment;
-   d_comm.setPeerRank(taker);
-   d_comm.beginSend( (const char*)(msg.getBufferStart()), msg.getCurrentSize() );
+   d_common->d_comm_peer.setPeerRank(taker);
+   d_common->d_comm_peer.setMPITag( CascadePartitionerGroup_TAG_LoadTransfer0,
+                                    CascadePartitionerGroup_TAG_LoadTransfer1 );
+   d_common->d_comm_peer.beginSend( (const char*)(msg.getBufferStart()),
+                                    msg.getCurrentSize() );
    return;
 }
 
@@ -295,9 +309,11 @@ CascadePartitionerGroup::sendMyShipment( int taker )
 void
 CascadePartitionerGroup::unpackSuppliedLoad()
 {
-   d_comm.completeCurrentOperation();
-   tbox::MessageStream recv_msg( d_comm.getRecvSize(), tbox::MessageStream::Read,
-                                 d_comm.getRecvData(), true );
+   d_common->d_comm_peer.completeCurrentOperation();
+   tbox::MessageStream recv_msg( d_common->d_comm_peer.getRecvSize(),
+                                 tbox::MessageStream::Read,
+                                 d_common->d_comm_peer.getRecvData(),
+                                 true );
    recv_msg >> d_local_load;
    return;
 }
@@ -315,9 +331,9 @@ CascadePartitionerGroup::printClassData( std::ostream &co, const std::string &bo
       << "  [" << d_first_lower_rank << ',' << d_first_upper_rank << ',' << d_end_rank
       << ")  group_size=" << d_end_rank-d_first_lower_rank << '='
       << d_first_upper_rank-d_first_lower_rank << '+' << d_end_rank-d_first_upper_rank << "\n"
-      << border << " lower_work=" << d_lower_work << '/' << d_lower_capacity
+      << border << "lower_work=" << d_lower_work << '/' << d_lower_capacity
       << "  " << " upper_work=" << d_upper_work << '/' << d_upper_capacity << '\n'
-      << border << " our_position=" << d_our_position
+      << border << "our_position=" << d_our_position
       << "  our_half_may_supply: " << d_our_half_may_supply
       << "  far_half_may_supply: " << d_far_half_may_supply
       << "  contact=" << d_contact << "  contact_may_supply: " << d_contact_may_supply

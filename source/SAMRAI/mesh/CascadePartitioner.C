@@ -69,6 +69,9 @@ CascadePartitioner::CascadePartitioner(
    d_master_workload_data_id(s_default_data_id),
    d_flexible_load_tol(0.05),
    d_mca(),
+   // Shared data.
+   d_comm_stage(),
+   d_comm_peer(&d_comm_stage),
    // Performance evaluation.
    d_barrier_before(false),
    d_barrier_after(false),

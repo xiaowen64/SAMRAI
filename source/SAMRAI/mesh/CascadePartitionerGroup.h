@@ -62,8 +62,7 @@ public:
       d_our_half_may_supply(true),
       d_far_half_may_supply(true),
       d_local_load(0),
-      d_shipment(),
-      d_comm() {}
+      d_shipment() {}
 
    /*!
     * @brief Copy constructor doesn't copy anything.  It is not used but is required
@@ -84,8 +83,7 @@ public:
       d_our_half_may_supply(true),
       d_far_half_may_supply(true),
       d_local_load(0),
-      d_shipment(),
-      d_comm() {}
+      d_shipment() {}
 
    ~CascadePartitionerGroup() {}
 
@@ -116,6 +114,14 @@ public:
 
 
 private:
+
+   /*
+    * Static integer constants.  Tags are for isolating messages
+    * from different phases of the algorithm.
+    */
+   static const int CascadePartitionerGroup_TAG_InfoExchange = 1000;
+   static const int CascadePartitionerGroup_TAG_LoadTransfer0 = 1001;
+   static const int CascadePartitionerGroup_TAG_LoadTransfer1 = 1002;
 
    //! @brief Where a group falls in the next larger group.
    enum Position { Lower=0, Upper=1 };
@@ -263,9 +269,6 @@ private:
 
    //! @brief Cache for to be shipped, for single-process group.
    boost::shared_ptr<TransitLoad> d_shipment;
-
-   //! @brief High-level communication object.
-   tbox::AsyncCommPeer<char> d_comm;
 
    //@}
 

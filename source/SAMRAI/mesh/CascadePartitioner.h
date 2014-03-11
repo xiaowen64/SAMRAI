@@ -381,10 +381,15 @@ private:
    hier::MappingConnectorAlgorithm d_mca;
 
    //@{
-   //! @name Data shared with private methods during balancing.
+   //! @name Shared temporaries during balancing.
    mutable boost::shared_ptr<PartitioningParams> d_pparams;
    mutable LoadType d_global_load_avg;
    mutable LoadType d_min_load;
+
+   //! @brief High-level communication manager.
+   mutable tbox::AsyncCommStage d_comm_stage;
+   //! @brief High-level peer-to-peer communication object.
+   mutable tbox::AsyncCommPeer<char> d_comm_peer;
    //@}
 
    static const int s_default_data_id;
