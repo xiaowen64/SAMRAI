@@ -59,6 +59,8 @@ public:
       d_upper_work(0.0),
       d_our_work(0),
       d_far_work(0),
+      d_local_may_supply(true),
+      d_contact_may_supply(true),
       d_our_half_may_supply(true),
       d_far_half_may_supply(true),
       d_shipment() {}
@@ -79,6 +81,8 @@ public:
       d_upper_work(0.0),
       d_our_work(0),
       d_far_work(0),
+      d_local_may_supply(true),
+      d_contact_may_supply(true),
       d_our_half_may_supply(true),
       d_far_half_may_supply(true),
       d_shipment() {}
@@ -193,7 +197,7 @@ private:
    void recordWorkTakenByOurHalf( double amount ) {
       if ( d_our_position == Lower ) { d_lower_work += amount; }
       else { d_upper_work += amount; }
-      d_our_half_may_supply = false;
+      d_our_half_may_supply = d_local_may_supply = false;
    }
    /*!
     * @brief Record estimated work amount received by far half-group and
@@ -202,11 +206,11 @@ private:
    void recordWorkTakenByFarHalf( double amount ) {
       if ( d_our_position == Upper ) { d_lower_work += amount; }
       else { d_upper_work += amount; }
-      d_far_half_may_supply = false;
+      d_far_half_may_supply = d_contact_may_supply = false;
    }
 
    void sendMyShipment( int taker );
-   void unpackSuppliedLoad();
+   void receiveAndUnpackSuppliedLoad();
 
    const CascadePartitioner *d_common;
 
@@ -224,9 +228,6 @@ private:
 
    //! Rank of contact (if any) in the far half of the group.
    int d_contact;
-
-   //! Whether contact may supply load.
-   bool d_contact_may_supply;
 
    //! @brief The half containing me.
    CascadePartitionerGroup *d_our_half;
@@ -251,6 +252,12 @@ private:
 
    //! @brief Points to either d_lower_work or d_upper_work.
    double *d_far_work;
+
+   //! @brief Whether local process may supply load.
+   bool d_local_may_supply;
+
+   //! Whether contact may supply load.
+   bool d_contact_may_supply;
 
    //! @brief Whether our half may supply load.
    bool d_our_half_may_supply;

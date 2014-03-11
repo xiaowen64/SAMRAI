@@ -39,12 +39,20 @@ void CascadePartitionerGroup::makeSingleProcessGroup(
    d_contact = -1;
    d_our_half = 0;
    d_our_position = Lower;
+
    d_lower_work = local_load.getSumLoad();
    d_upper_work = 0.0;
    d_our_work = &d_lower_work;
    d_far_work = 0;
+
    d_lower_capacity = d_common->d_global_load_avg;
    d_upper_capacity = 0.0;
+
+   d_our_half_may_supply = d_local_may_supply =
+      d_lower_work > ( d_lower_capacity + d_common->d_pparams->getLoadComparisonTol() );
+
+   d_far_half_may_supply = d_contact_may_supply = false;
+
    if ( d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerGroup::makeSingleProcessGroup: leaving\n";
       printClassData( tbox::plog, "\t" );
@@ -82,6 +90,9 @@ void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_ha
    d_end_rank = tbox::MathUtilities<int>::Min(
       d_first_lower_rank + group_size, d_common->d_mpi.getSize());
 
+   d_lower_capacity = d_common->d_global_load_avg*(d_first_upper_rank-d_first_lower_rank);
+   d_upper_capacity = d_common->d_global_load_avg*(d_end_rank-d_first_upper_rank);
+
    int relative_rank = d_common->d_mpi.getRank() - d_first_lower_rank;
 
    d_our_position = relative_rank >= group_size/2 ? Upper : Lower;
@@ -94,6 +105,11 @@ void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_ha
    d_our_work = d_our_position == Lower ? &d_lower_work : &d_upper_work;
    d_far_work = d_our_position == Lower ? &d_upper_work : &d_lower_work;
 
+   *d_our_work = d_our_half->getCombinedWork();
+   d_our_half_may_supply = *d_our_work > d_common->d_pparams->getLoadComparisonTol() +
+      ( d_our_position == Lower ? d_lower_capacity : d_upper_capacity ) ;
+   d_local_may_supply = d_our_half->d_local_may_supply && d_our_half_may_supply;
+
    /*
     * Record works of the two halves.  Needs communication to get
     * data about the far half of the group.
@@ -102,7 +118,7 @@ void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_ha
    double far_work = 0.0;
    if ( d_contact >= 0 ) {
       tbox::MessageStream send_msg;
-      send_msg << our_work << d_our_half_may_supply;
+      send_msg << our_work << d_our_half_may_supply << d_local_may_supply;
 
       std::vector<char> tmp_buffer(send_msg.getCurrentSize());
 
@@ -123,13 +139,10 @@ void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_ha
       tbox::MessageStream recv_msg( tmp_buffer.size(),
                                     tbox::MessageStream::Read,
                                     &tmp_buffer[0], false );
-      recv_msg >> far_work >> d_contact_may_supply;
+      recv_msg >> far_work >> d_far_half_may_supply >> d_contact_may_supply;
    }
    d_lower_work = d_our_position == Lower ? our_work : far_work;
    d_upper_work = d_our_position == Upper ? our_work : far_work;
-
-   d_lower_capacity = d_common->d_global_load_avg*(d_first_upper_rank-d_first_lower_rank);
-   d_upper_capacity = d_common->d_global_load_avg*(d_end_rank-d_first_upper_rank);
 
    if ( d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerGroup::makeCombinedGroup:\n";
@@ -181,12 +194,13 @@ CascadePartitionerGroup::balanceConstituentHalves()
          d_common->d_comm_peer.beginRecv();
       }
 
-      double work_supplied = supplyWorkFromFarHalf(
-         -ourSurplus() );
+      double work_supplied = supplyWorkFromFarHalf( -ourSurplus() );
 
       recordWorkTakenByOurHalf(work_supplied);
 
-      unpackSuppliedLoad();
+      if ( d_contact_may_supply ) {
+         receiveAndUnpackSuppliedLoad();
+      }
 
       if ( d_common->d_print_steps ) {
          tbox::plog << "CascadePartitionerGroup::balanceConstituentHalves:\n"
@@ -327,7 +341,7 @@ CascadePartitionerGroup::sendMyShipment( int taker )
  *************************************************************************
  */
 void
-CascadePartitionerGroup::unpackSuppliedLoad()
+CascadePartitionerGroup::receiveAndUnpackSuppliedLoad()
 {
    d_common->d_comm_peer.completeCurrentOperation();
    tbox::MessageStream recv_msg( d_common->d_comm_peer.getRecvSize(),
@@ -336,7 +350,7 @@ CascadePartitionerGroup::unpackSuppliedLoad()
                                  true );
    recv_msg >> *d_common->d_local_load;
    if ( d_common->d_print_steps ) {
-      tbox::plog << "CascadePartitionerGroup::unpackSuppliedLoad: updated d_local_load:\n";
+      tbox::plog << "CascadePartitionerGroup::receiveAndUnpackSuppliedLoad: updated d_local_load:\n";
      d_common->d_local_load->recursivePrint(tbox::plog, "Curr: ", 2);
    }
    return;
