@@ -226,7 +226,6 @@ double
 CascadePartitionerGroup::supplyWork( double work_requested, int taker )
 {
    TBOX_ASSERT( work_requested > 0.0 );
-   TBOX_ASSERT( d_our_half_may_supply );  // Should be checked by calling method.
    double work_supplied = 0.0;
 
    if ( d_cycle_num == 0 ) {
