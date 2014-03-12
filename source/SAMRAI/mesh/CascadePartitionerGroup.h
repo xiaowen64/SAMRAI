@@ -50,9 +50,9 @@ public:
    CascadePartitionerGroup() :
       d_common(0),
       d_cycle_num(-1),
-      d_first_lower_rank(-1),
-      d_first_upper_rank(-1),
-      d_end_rank(-1),
+      d_lower_begin(-1),
+      d_upper_begin(-1),
+      d_upper_end(-1),
       d_contact(-1),
       d_our_half(0),
       d_our_position(Lower),
@@ -65,8 +65,7 @@ public:
       d_local_may_supply(true),
       d_contact_may_supply(true),
       d_our_half_may_supply(true),
-      d_far_half_may_supply(true),
-      d_shipment() {}
+      d_far_half_may_supply(true) {}
 
    /*!
     * @brief Copy constructor doesn't copy anything.  It is not used but is required
@@ -75,9 +74,9 @@ public:
    CascadePartitionerGroup( const CascadePartitionerGroup &other ) :
       d_common(0),
       d_cycle_num(-1),
-      d_first_lower_rank(-1),
-      d_first_upper_rank(-1),
-      d_end_rank(-1),
+      d_lower_begin(-1),
+      d_upper_begin(-1),
+      d_upper_end(-1),
       d_contact(-1),
       d_our_half(0),
       d_our_position(Lower),
@@ -88,8 +87,7 @@ public:
       d_local_may_supply(true),
       d_contact_may_supply(true),
       d_our_half_may_supply(true),
-      d_far_half_may_supply(true),
-      d_shipment() {}
+      d_far_half_may_supply(true) {}
 
    ~CascadePartitionerGroup() {}
 
@@ -135,19 +133,19 @@ private:
    //! @brief Work of the group (combined work of its two halves).
    double getCombinedWork() const { return d_lower_work + d_upper_work; }
 
-   //! @brief Surplus of lower half.
+   //! @brief Surplus (estimated) of lower half.
    double lowerSurplus() const {
       return d_lower_work - d_lower_capacity;
    }
-   //! @brief Surplus of upper half.
+   //! @brief Surplus (estimated) of upper half.
    double upperSurplus() const {
       return d_upper_work - d_upper_capacity;
    }
-   //! @brief Surplus of our half.
+   //! @brief Surplus (estimated) of our half.
    double ourSurplus() const {
       return d_our_position == Lower ? lowerSurplus() : upperSurplus();
    }
-   //! @brief Surplus of far half.
+   //! @brief Surplus (estimated) of far half.
    double farSurplus() const {
       return d_our_position == Lower ? upperSurplus() : lowerSurplus();
    }
@@ -156,11 +154,14 @@ private:
     * @brief Try to supply the requested amount of work by removing
     * it from this group, and return the (estimated) amount supplied.
     *
-    * Supplying work from multi-process groups returns an estimate of
-    * the amount supplied, based on the work available.  Due to load
-    * cutting restrictions, the actual amount supplied may differ.
-    * Single-process groups will set aside any work it personally
-    * gives up.  See d_shipment.
+    * Supplying work returns an estimate of the amount supplied, based
+    * on the work available and assuming perfect load cutting.  Due to
+    * restrictions such as in box cutting, the actual amount supplied
+    * may differ.  Using correct values locally and estimates for far
+    * groups will lead to discrpepancies in record-keeping.
+    *
+    * Single-process groups set aside any work it personally gives up
+    * in d_common->d_shipment
     *
     * @param taker Representative of the group getting this work.
     *
@@ -194,25 +195,6 @@ private:
     */
    double supplyWorkFromFarHalf( double work_requested );
 
-   /*!
-    * @brief Record estimated work amount received by our half-group and
-    * that the half-group may not become a supplier.
-    */
-   void recordWorkTakenByOurHalf( double amount ) {
-      if ( d_our_position == Lower ) { d_lower_work += amount; }
-      else { d_upper_work += amount; }
-      d_our_half_may_supply = d_local_may_supply = false;
-   }
-   /*!
-    * @brief Record estimated work amount received by far half-group and
-    * that the half-group may not become a supplier.
-    */
-   void recordWorkTakenByFarHalf( double amount ) {
-      if ( d_our_position == Upper ) { d_lower_work += amount; }
-      else { d_upper_work += amount; }
-      d_far_half_may_supply = d_contact_may_supply = false;
-   }
-
    void sendMyShipment( int taker );
    void receiveAndUnpackSuppliedLoad();
 
@@ -222,13 +204,13 @@ private:
    int d_cycle_num;
 
    //! @brief First rank in lower half.
-   int d_first_lower_rank;
+   int d_lower_begin;
 
    //! @brief First rank in upper half.
-   int d_first_upper_rank;
+   int d_upper_begin;
 
    //! @brief One past the last rank.
-   int d_end_rank;
+   int d_upper_end;
 
    //! Rank of contact (if any) in the far half of the group.
    int d_contact;
@@ -257,6 +239,9 @@ private:
    //! @brief Points to either d_lower_work or d_upper_work.
    double *d_far_work;
 
+   //@{
+   //! @name For determining whether to send/receive, not for computing how much load to transfer.
+
    //! @brief Whether local process may supply load.
    bool d_local_may_supply;
 
@@ -268,13 +253,6 @@ private:
 
    //! @brief Whether far half may supply load.
    bool d_far_half_may_supply;
-
-
-   //@{
-   //! @name For single-process groups.
-
-   //! @brief Cache for to be shipped, for single-process group.
-   boost::shared_ptr<TransitLoad> d_shipment;
 
    //@}
 

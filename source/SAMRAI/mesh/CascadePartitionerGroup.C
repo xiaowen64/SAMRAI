@@ -33,9 +33,9 @@ void CascadePartitionerGroup::makeSingleProcessGroup(
 {
    d_common = common_data;
    d_cycle_num = 0;
-   d_first_lower_rank = d_common->d_mpi.getRank();
-   d_first_upper_rank = d_first_lower_rank+1;
-   d_end_rank = d_first_lower_rank+1;
+   d_lower_begin = d_common->d_mpi.getRank();
+   d_upper_begin = d_lower_begin+1;
+   d_upper_end = d_lower_begin+1;
    d_contact = -1;
    d_our_half = 0;
    d_our_position = Lower;
@@ -51,9 +51,7 @@ void CascadePartitionerGroup::makeSingleProcessGroup(
    d_our_half_may_supply = d_local_may_supply =
       d_lower_work > ( d_lower_capacity + d_common->d_pparams->getLoadComparisonTol() );
 
-   d_far_half_may_supply = d_contact_may_supply = false;
-
-   d_shipment.reset();
+   d_far_half_may_supply = d_contact_may_supply = false; // No far half.
 
    if ( d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerGroup::makeSingleProcessGroup: leaving\n";
@@ -86,16 +84,16 @@ void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_ha
    int group_size = 1 << d_cycle_num;
    int group_num = d_common->d_mpi.getRank()/group_size;
 
-   d_first_lower_rank = group_size*group_num;
-   d_first_upper_rank = tbox::MathUtilities<int>::Min(
-      d_first_lower_rank + group_size/2, d_common->d_mpi.getSize());
-   d_end_rank = tbox::MathUtilities<int>::Min(
-      d_first_lower_rank + group_size, d_common->d_mpi.getSize());
+   d_lower_begin = group_size*group_num;
+   d_upper_begin = tbox::MathUtilities<int>::Min(
+      d_lower_begin + group_size/2, d_common->d_mpi.getSize());
+   d_upper_end = tbox::MathUtilities<int>::Min(
+      d_lower_begin + group_size, d_common->d_mpi.getSize());
 
-   d_lower_capacity = d_common->d_global_load_avg*(d_first_upper_rank-d_first_lower_rank);
-   d_upper_capacity = d_common->d_global_load_avg*(d_end_rank-d_first_upper_rank);
+   d_lower_capacity = d_common->d_global_load_avg*(d_upper_begin-d_lower_begin);
+   d_upper_capacity = d_common->d_global_load_avg*(d_upper_end-d_upper_begin);
 
-   int relative_rank = d_common->d_mpi.getRank() - d_first_lower_rank;
+   int relative_rank = d_common->d_mpi.getRank() - d_lower_begin;
 
    d_our_position = relative_rank >= group_size/2 ? Upper : Lower;
    d_contact = d_our_position == Lower ?
@@ -107,15 +105,16 @@ void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_ha
    d_our_work = d_our_position == Lower ? &d_lower_work : &d_upper_work;
    d_far_work = d_our_position == Lower ? &d_upper_work : &d_lower_work;
 
+   /*
+    * Determine and record work of the two halves.  Needs
+    * communication to get data about the far half of the group.
+    */
+
    *d_our_work = d_our_half->getCombinedWork();
    d_our_half_may_supply = *d_our_work > d_common->d_pparams->getLoadComparisonTol() +
       ( d_our_position == Lower ? d_lower_capacity : d_upper_capacity ) ;
    d_local_may_supply = d_our_half->d_local_may_supply && d_our_half_may_supply;
 
-   /*
-    * Record works of the two halves.  Needs communication to get
-    * data about the far half of the group.
-    */
    double our_work = d_our_half->getCombinedWork();
    double far_work = 0.0;
    if ( d_contact >= 0 ) {
@@ -143,10 +142,9 @@ void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_ha
                                     &tmp_buffer[0], false );
       recv_msg >> far_work >> d_far_half_may_supply >> d_contact_may_supply;
    }
+
    d_lower_work = d_our_position == Lower ? our_work : far_work;
    d_upper_work = d_our_position == Upper ? our_work : far_work;
-
-   d_shipment.reset();
 
    if ( d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerGroup::makeCombinedGroup:\n";
@@ -180,11 +178,19 @@ CascadePartitionerGroup::balanceConstituentHalves()
 
       double work_supplied = supplyWorkFromOurHalf( -farSurplus(), d_contact );
 
-      recordWorkTakenByFarHalf(work_supplied);
+      // Record work taken by the far half.
+      *d_far_work += work_supplied;
+      d_far_half_may_supply = d_contact_may_supply = false;
+
+      if ( d_local_may_supply ) {
+         sendMyShipment(d_contact);
+      }
 
       if ( d_common->d_print_steps ) {
          tbox::plog << "CascadePartitionerGroup::balanceConstituentHalves:\n"
-                    << "  supplied " << work_supplied << " from our half to far half.\n";
+                    << "  supplied " << work_supplied
+                    << " from our half to far half.  d_local_may_supply="
+                    << d_local_may_supply << "\n";
       }
    }
 
@@ -200,15 +206,19 @@ CascadePartitionerGroup::balanceConstituentHalves()
 
       double work_supplied = supplyWorkFromFarHalf( -ourSurplus() );
 
-      recordWorkTakenByOurHalf(work_supplied);
-
-      if ( d_contact_may_supply ) {
-         receiveAndUnpackSuppliedLoad();
-      }
+      // Record work taken by our half.
+      *d_our_work += work_supplied;
+      d_our_half_may_supply = d_local_may_supply = false;
 
       if ( d_common->d_print_steps ) {
          tbox::plog << "CascadePartitionerGroup::balanceConstituentHalves:\n"
-                    << "  supplied " << work_supplied << " from far half to our half.\n";
+                    << "  recorded supply of " << work_supplied
+                    << " from far half to our half.  d_contact_may_supply="
+                    << d_contact_may_supply << "\n";
+      }
+
+      if ( d_contact_may_supply ) {
+         receiveAndUnpackSuppliedLoad();
       }
    }
 
@@ -218,6 +228,10 @@ CascadePartitionerGroup::balanceConstituentHalves()
       d_common->d_comm_stage.popCompletionQueue();
    }
 
+   if ( d_common->d_print_steps ) {
+      tbox::plog << "CascadePartitionerGroup::balanceConstituentHalves: leaving with state:\n";
+      printClassData( tbox::plog, "\t" );
+   }
    return;
 }
 
@@ -231,7 +245,7 @@ CascadePartitionerGroup::balanceConstituentHalves()
  * supplies closest to the taker in rank space.
  *
  * 1. If group is single-process, remove load from d_common->d_local_load
- *    and put it in d_shipment.
+ *    and put it in d_common->d_shipment.
  * 2. Else:
  *    A: Remove load from the half closest to the taker.
  *    B: If step A didn't supply enough, remove some from the other half.
@@ -246,17 +260,32 @@ CascadePartitionerGroup::supplyWork( double work_requested, int taker )
    TBOX_ASSERT( work_requested > 0.0 );
    double work_supplied = 0.0;
 
-   if ( d_cycle_num == 0 ) {
-      // Group is single-process, not two halves.
-      d_shipment = boost::shared_ptr<TransitLoad>(d_common->d_local_load->clone());
-      d_shipment->adjustLoad( *d_common->d_local_load, work_requested, work_requested, work_requested );
-      work_supplied = d_shipment->getSumLoad();
+   if ( d_cycle_num == 0 && d_local_may_supply ) {
+
+      /*
+       * Estimate the work that can be supplied.  Even though we can
+       * compute the work_suppliled exactly, we must use the estimate
+       * based on perfect work division, not actual work division, so
+       * that our record matches the record remote processes keep on
+       * us.
+       */
+      work_supplied = tbox::MathUtilities<double>::Min(
+         work_requested, d_common->d_local_load->getSumLoad() );
       d_lower_work -= work_supplied;
-      sendMyShipment(taker);
+
+      d_common->d_shipment->adjustLoad(
+         *d_common->d_local_load,
+         work_requested,
+         work_requested,
+         work_requested );
+
+      d_local_may_supply =
+         d_common->d_local_load->getSumLoad() > ( d_lower_capacity + d_common->d_pparams->getLoadComparisonTol() );
+      d_our_half_may_supply = ourSurplus() > d_common->d_pparams->getLoadComparisonTol();
    }
 
-   else if ( ( d_our_position == Lower && taker <  d_first_lower_rank ) ||
-             ( d_our_position == Upper && taker >= d_first_upper_rank ) ) {
+   else if ( ( d_our_position == Lower && taker <  d_upper_begin ) ||
+             ( d_our_position == Upper && taker >= d_upper_begin ) ) {
       work_supplied = supplyWorkFromOurHalf( work_requested, taker );
       if ( work_supplied < work_requested ) {
          work_supplied += supplyWorkFromFarHalf( work_requested-work_supplied );
@@ -275,19 +304,22 @@ CascadePartitionerGroup::supplyWork( double work_requested, int taker )
 
 /*
  *************************************************************************
- * Try to supply an amount of work from our half of the group.
+ * Supply an amount of work from our half of the group.
  *
  * This method is recursive by the sequence
  * supplyWorkFromOurHalf-supplyWork-supplyWorkFromOurHalf.
+ *
+ * Note: Don't assume this work will be added to the far half.
+ * It may be combined with other works and added to a bigger group.
  *************************************************************************
  */
 double CascadePartitionerGroup::supplyWorkFromOurHalf( double work_requested, int taker ) {
    TBOX_ASSERT( work_requested > 0.0 );
    double work_supplied = 0.0;
-   if ( d_our_half_may_supply &&
-        ourSurplus() >= d_common->d_pparams->getLoadComparisonTol() ) {
+   if ( d_our_half_may_supply ) {
       work_supplied = d_our_half->supplyWork( work_requested, taker );
       *d_our_work -= work_supplied;
+      d_our_half_may_supply = ourSurplus() > d_common->d_pparams->getLoadComparisonTol();
    }
    return work_supplied;
 }
@@ -296,21 +328,24 @@ double CascadePartitionerGroup::supplyWorkFromOurHalf( double work_requested, in
 
 /*
  *************************************************************************
- * Symbolically try to supply an amount of work from the
- * half of the group not containing the local process.
+ * Symbolically supply an amount of work from the far half of the
+ * group.
  *
  * No real work is exchanged because the local process is not in
  * the far half.  This method just estimates what the far half
  * would give away.
+ *
+ * Note: Don't assume this work will be added to our half.
+ * It may be combined with other works and added to a bigger group.
  *************************************************************************
  */
 double CascadePartitionerGroup::supplyWorkFromFarHalf( double work_requested ) {
    TBOX_ASSERT( work_requested > 0.0 );
    double work_supplied = 0.0;
-   if ( d_far_half_may_supply &&
-        farSurplus() >= d_common->d_pparams->getLoadComparisonTol() ) {
+   if ( d_far_half_may_supply ) {
       work_supplied = tbox::MathUtilities<double>::Min( work_requested, *d_far_work );
       *d_far_work -= work_supplied;
+      d_far_half_may_supply = farSurplus() > d_common->d_pparams->getLoadComparisonTol();
    }
    return work_supplied;
 }
@@ -326,10 +361,10 @@ CascadePartitionerGroup::sendMyShipment( int taker )
 {
    if ( d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerGroup::sendMyShipment: sending to " << taker << ":\n";
-      d_shipment->recursivePrint(tbox::plog, "Send: ", 2);
+      d_common->d_shipment->recursivePrint(tbox::plog, "Send: ", 2);
    }
    tbox::MessageStream msg;
-   msg << *d_shipment;
+   msg << *d_common->d_shipment;
    d_common->d_comm_peer.setPeerRank(taker);
    d_common->d_comm_peer.setMPITag( CascadePartitionerGroup_TAG_LoadTransfer0,
                                     CascadePartitionerGroup_TAG_LoadTransfer1 );
@@ -369,17 +404,17 @@ CascadePartitionerGroup::receiveAndUnpackSuppliedLoad()
 void
 CascadePartitionerGroup::printClassData( std::ostream &co, const std::string &border ) const
 {
-   co << border << "cycle " << d_cycle_num
-      << "  [" << d_first_lower_rank << ',' << d_first_upper_rank << ',' << d_end_rank
-      << ")  group_size=" << d_end_rank-d_first_lower_rank << '='
-      << d_first_upper_rank-d_first_lower_rank << '+' << d_end_rank-d_first_upper_rank << "\n"
-      << border
+   const std::string indent( border + std::string(d_cycle_num,' ') );
+   co << indent << "cycle " << d_cycle_num
+      << "  [" << d_lower_begin << ',' << d_upper_begin << ',' << d_upper_end
+      << ")  group_size=" << d_upper_end-d_lower_begin << '='
+      << d_upper_begin-d_lower_begin << '+' << d_upper_end-d_upper_begin << "\n"
+      << indent
       << "our_position=" << d_our_position << "  contact=" << d_contact
-      << border
-      << "lower_work=" << d_lower_work << '/' << d_lower_capacity
+      << "  lower_work=" << d_lower_work << '/' << d_lower_capacity
       << "  " << " upper_work=" << d_upper_work << '/' << d_upper_capacity << '\n'
-      << border
-      << "  our_half_may_supply=" << d_our_half_may_supply
+      << indent
+      << "our_half_may_supply=" << d_our_half_may_supply
       << "  local_may_supply=" << d_local_may_supply
       << "  far_half_may_supply=" << d_far_half_may_supply
       << "  contact_may_supply=" << d_contact_may_supply

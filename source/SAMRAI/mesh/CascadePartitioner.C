@@ -364,9 +364,10 @@ CascadePartitioner::partitionByCascade(
       tbox::plog << "CascadePartitioner::partitionByCascade: entered" << std::endl;
    }
 
-   BoxTransitSet local_work(*d_pparams);
+   BoxTransitSet local_work(*d_pparams), shipment(*d_pparams);
    local_work.insertAll( balance_box_level.getBoxes() );
    d_local_load = &local_work;
+   d_shipment = &shipment;
 
    /*
     * Initialize empty balanced_box_level and mappings so they are
