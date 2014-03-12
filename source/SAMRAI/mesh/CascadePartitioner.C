@@ -412,14 +412,14 @@ tbox::plog << "lg_size="<<lg_size << "  ag_group_size="<<ag_group_size << std::e
     * only move loads within the agglomerated groups.
     */
    for ( int outer_cycle=0; outer_cycle<lg_size-d_num_ag_cycles; ++outer_cycle ) {
-tbox::plog << "outer_cycle="<<outer_cycle << std::endl;
+tbox::plog << "\nouter_cycle="<<outer_cycle << std::endl;
 
       int inner_cycleMax = lg_size + 1 - outer_cycle;
 
       groups[0].makeSingleProcessGroup( this, local_work );
 
       for ( int inner_cycle=d_num_ag_cycles+1; inner_cycle<inner_cycleMax; ++inner_cycle ) {
-tbox::plog << "inner_cycle="<<inner_cycle << std::endl;
+tbox::plog << "\ninner_cycle="<<inner_cycle << std::endl;
 
          /*
           * Only the first rank in each agglomerated group runs the
@@ -442,7 +442,8 @@ tbox::plog << "inner_cycle="<<inner_cycle << std::endl;
 #endif
 
    if ( d_print_steps ) {
-      tbox::plog << "local_work:\n"; local_work.recursivePrint(tbox::plog, "LL->\t", 2);
+      tbox::plog << "CascadePartitioner: local_work after load distribution:\n";
+      local_work.recursivePrint(tbox::plog, "LL->\t", 2);
       tbox::plog
          << "CascadePartitioner::partitionByCascade constructing unbalanced<==>balanced.\n";
    }

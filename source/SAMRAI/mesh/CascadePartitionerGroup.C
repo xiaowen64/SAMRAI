@@ -187,7 +187,7 @@ CascadePartitionerGroup::balanceConstituentHalves()
       }
 
       if ( d_common->d_print_steps ) {
-         tbox::plog << "CascadePartitionerGroup::balanceConstituentHalves:\n"
+         tbox::plog << "CascadePartitionerGroup::balanceConstituentHalves:"
                     << "  supplied " << work_supplied
                     << " from our half to far half.  d_local_may_supply="
                     << d_local_may_supply << "\n";
@@ -211,7 +211,7 @@ CascadePartitionerGroup::balanceConstituentHalves()
       d_our_half_may_supply = d_local_may_supply = false;
 
       if ( d_common->d_print_steps ) {
-         tbox::plog << "CascadePartitionerGroup::balanceConstituentHalves:\n"
+         tbox::plog << "CascadePartitionerGroup::balanceConstituentHalves:"
                     << "  recorded supply of " << work_supplied
                     << " from far half to our half.  d_contact_may_supply="
                     << d_contact_may_supply << "\n";
@@ -278,6 +278,12 @@ CascadePartitionerGroup::supplyWork( double work_requested, int taker )
          work_requested,
          work_requested,
          work_requested );
+      if ( d_common->d_print_steps ) {
+         tbox::plog << "CascadePartitionerGroup::supplyWork giving to " << taker << ": ";
+         d_common->d_shipment->recursivePrint();
+         tbox::plog << "CascadePartitionerGroup::supplyWork keeping: ";
+         d_common->d_local_load->recursivePrint();
+      }
 
       d_local_may_supply =
          d_common->d_local_load->getSumLoad() > ( d_lower_capacity + d_common->d_pparams->getLoadComparisonTol() );
@@ -370,6 +376,7 @@ CascadePartitionerGroup::sendMyShipment( int taker )
                                     CascadePartitionerGroup_TAG_LoadTransfer1 );
    d_common->d_comm_peer.beginSend( (const char*)(msg.getBufferStart()),
                                     msg.getCurrentSize() );
+   d_common->d_shipment->clear();
    return;
 }
 
@@ -404,7 +411,7 @@ CascadePartitionerGroup::receiveAndUnpackSuppliedLoad()
 void
 CascadePartitionerGroup::printClassData( std::ostream &co, const std::string &border ) const
 {
-   const std::string indent( border + std::string(d_cycle_num,' ') );
+   const std::string indent( border + std::string(d_cycle_num,' ') + std::string(d_cycle_num,' ') );
    co << indent << "cycle " << d_cycle_num
       << "  [" << d_lower_begin << ',' << d_upper_begin << ',' << d_upper_end
       << ")  group_size=" << d_upper_end-d_lower_begin << '='
@@ -418,7 +425,9 @@ CascadePartitionerGroup::printClassData( std::ostream &co, const std::string &bo
       << "  local_may_supply=" << d_local_may_supply
       << "  far_half_may_supply=" << d_far_half_may_supply
       << "  contact_may_supply=" << d_contact_may_supply
-      << '\n';
+      << '\n' << indent
+      << "local_load:";
+   d_common->d_local_load->recursivePrint(tbox::plog, indent,0);
    return;
 }
 
