@@ -260,34 +260,35 @@ CascadePartitionerGroup::supplyWork( double work_requested, int taker )
    TBOX_ASSERT( work_requested > 0.0 );
    double work_supplied = 0.0;
 
-   if ( d_cycle_num == 0 && d_local_may_supply ) {
+   if ( d_cycle_num == 0 ) {
+      if ( d_local_may_supply ) {
+         /*
+          * Estimate the work that can be supplied.  Even though we can
+          * compute the work_suppliled exactly, we must use the estimate
+          * based on perfect work division, not actual work division, so
+          * that our record matches the record remote processes keep on
+          * us.
+          */
+         work_supplied = tbox::MathUtilities<double>::Min(
+            work_requested, d_common->d_local_load->getSumLoad() );
+         d_lower_work -= work_supplied;
 
-      /*
-       * Estimate the work that can be supplied.  Even though we can
-       * compute the work_suppliled exactly, we must use the estimate
-       * based on perfect work division, not actual work division, so
-       * that our record matches the record remote processes keep on
-       * us.
-       */
-      work_supplied = tbox::MathUtilities<double>::Min(
-         work_requested, d_common->d_local_load->getSumLoad() );
-      d_lower_work -= work_supplied;
+         d_common->d_shipment->adjustLoad(
+            *d_common->d_local_load,
+            work_requested,
+            work_requested,
+            work_requested );
+         if ( d_common->d_print_steps ) {
+            tbox::plog << "CascadePartitionerGroup::supplyWork giving to " << taker << ": ";
+            d_common->d_shipment->recursivePrint();
+            tbox::plog << "CascadePartitionerGroup::supplyWork keeping: ";
+            d_common->d_local_load->recursivePrint();
+         }
 
-      d_common->d_shipment->adjustLoad(
-         *d_common->d_local_load,
-         work_requested,
-         work_requested,
-         work_requested );
-      if ( d_common->d_print_steps ) {
-         tbox::plog << "CascadePartitionerGroup::supplyWork giving to " << taker << ": ";
-         d_common->d_shipment->recursivePrint();
-         tbox::plog << "CascadePartitionerGroup::supplyWork keeping: ";
-         d_common->d_local_load->recursivePrint();
+         d_local_may_supply =
+            d_common->d_local_load->getSumLoad() > ( d_lower_capacity + d_common->d_pparams->getLoadComparisonTol() );
+         d_our_half_may_supply = ourSurplus() > d_common->d_pparams->getLoadComparisonTol();
       }
-
-      d_local_may_supply =
-         d_common->d_local_load->getSumLoad() > ( d_lower_capacity + d_common->d_pparams->getLoadComparisonTol() );
-      d_our_half_may_supply = ourSurplus() > d_common->d_pparams->getLoadComparisonTol();
    }
 
    else if ( ( d_our_position == Lower && taker <  d_upper_begin ) ||
@@ -415,12 +416,13 @@ CascadePartitionerGroup::printClassData( std::ostream &co, const std::string &bo
    co << indent << "cycle " << d_cycle_num
       << "  [" << d_lower_begin << ',' << d_upper_begin << ',' << d_upper_end
       << ")  group_size=" << d_upper_end-d_lower_begin << '='
-      << d_upper_begin-d_lower_begin << '+' << d_upper_end-d_upper_begin << "\n"
-      << indent
+      << d_upper_begin-d_lower_begin << '+' << d_upper_end-d_upper_begin
+      << "  this=" << this << "  our_half=" << d_our_half
+      << '\n' << indent
       << "our_position=" << d_our_position << "  contact=" << d_contact
       << "  lower_work=" << d_lower_work << '/' << d_lower_capacity
-      << "  " << " upper_work=" << d_upper_work << '/' << d_upper_capacity << '\n'
-      << indent
+      << "  " << " upper_work=" << d_upper_work << '/' << d_upper_capacity
+      << '\n' << indent
       << "our_half_may_supply=" << d_our_half_may_supply
       << "  local_may_supply=" << d_local_may_supply
       << "  far_half_may_supply=" << d_far_half_may_supply
