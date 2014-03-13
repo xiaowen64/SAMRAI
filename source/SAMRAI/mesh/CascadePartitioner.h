@@ -12,7 +12,7 @@
 #define included_mesh_CascadePartitioner
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/mesh/CascadePartitionerGroup.h"
+#include "SAMRAI/mesh/CascadePartitionerCombinedGroup.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
@@ -335,13 +335,13 @@ private:
    setTimers();
 
    /*
-    * CascadePartitioner and CascadePartitionerGroup are tightly
+    * CascadePartitioner and CascadePartitionerCombinedGroup are tightly
     * coupled.  CascadePartitioner has the common parts of the data
-    * and algorithm.  CascadePartitionerGroup has the group-specific
-    * parts.  CascadePartitionerGroup can be made a private subclass
+    * and algorithm.  CascadePartitionerCombinedGroup has the group-specific
+    * parts.  CascadePartitionerCombinedGroup can be made a private subclass
     * of CascadePartitioner, but that would make a big file.
     */
-   friend CascadePartitionerGroup;
+   friend CascadePartitionerCombinedGroup;
 
    /*
     * Object dimension.

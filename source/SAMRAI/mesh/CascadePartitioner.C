@@ -403,7 +403,7 @@ CascadePartitioner::partitionByCascade(
 
 tbox::plog << "lg_size="<<lg_size << "  ag_group_size="<<ag_group_size << std::endl;
    // Data on groups.
-   std::vector<CascadePartitionerGroup> groups(lg_size+1);
+   std::vector<CascadePartitionerCombinedGroup> groups(lg_size+1);
 
    /*
     * How agglomeration affects the cycles required to spread out

@@ -608,7 +608,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BoxInTransit.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BoxTransitSet.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitioner.h			\
-	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitionerGroup.h		\
+	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitionerCombinedGroup.h	\
 	$(INCLUDE_SAM)/SAMRAI/mesh/LoadBalanceStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/PartitioningParams.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/SpatialKey.h				\
@@ -670,7 +670,7 @@ endif
 
 ${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
 
-FILE_7=CascadePartitionerGroup.o
+FILE_7=CascadePartitionerCombinedGroup.o
 DEPENDS_7:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
@@ -718,7 +718,7 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitioner.h			\
-	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitionerGroup.h		\
+	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitionerCombinedGroup.h	\
 	$(INCLUDE_SAM)/SAMRAI/mesh/LoadBalanceStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/PartitioningParams.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TransitLoad.h			\
@@ -744,7 +744,8 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h CascadePartitionerGroup.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	CascadePartitionerCombinedGroup.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_7 +=\

@@ -8,8 +8,8 @@
  *
  ************************************************************************/
 
-#ifndef included_mesh_CascadePartitionerGroup
-#define included_mesh_CascadePartitionerGroup
+#ifndef included_mesh_CascadePartitionerCombinedGroup
+#define included_mesh_CascadePartitionerCombinedGroup
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
@@ -43,11 +43,11 @@ class CascadePartitioner;
  * half, and this is how the CascadePartitioner balance loads.
  *
  */
-class CascadePartitionerGroup {
+class CascadePartitionerCombinedGroup {
 
 public:
 
-   CascadePartitionerGroup() :
+   CascadePartitionerCombinedGroup() :
       d_common(0),
       d_cycle_num(-1),
       d_lower_begin(-1),
@@ -71,7 +71,7 @@ public:
     * @brief Copy constructor doesn't copy anything.  It is not used but is required
     * for the class to be used in an stl::vector.
     */
-   CascadePartitionerGroup( const CascadePartitionerGroup &other ) :
+   CascadePartitionerCombinedGroup( const CascadePartitionerCombinedGroup &other ) :
       d_common(0),
       d_cycle_num(-1),
       d_lower_begin(-1),
@@ -89,7 +89,7 @@ public:
       d_our_half_may_supply(true),
       d_far_half_may_supply(true) {}
 
-   ~CascadePartitionerGroup() {}
+   ~CascadePartitionerCombinedGroup() {}
 
    /*!
     * @brief Make a cycle-zero, single-process group.
@@ -102,7 +102,7 @@ public:
     * @brief Make a combined group consisting of the given half-group
     * and the other half-group, which this method will figure out.
     */
-   void makeCombinedGroup( CascadePartitionerGroup &our_half );
+   void makeCombinedGroup( CascadePartitionerCombinedGroup &our_half );
 
    /*!
     * @brief Improve balance of the two halves of this group by
@@ -123,9 +123,9 @@ private:
     * Static integer constants.  Tags are for isolating messages
     * from different phases of the algorithm.
     */
-   static const int CascadePartitionerGroup_TAG_InfoExchange = 1000;
-   static const int CascadePartitionerGroup_TAG_LoadTransfer0 = 1001;
-   static const int CascadePartitionerGroup_TAG_LoadTransfer1 = 1002;
+   static const int CascadePartitionerCombinedGroup_TAG_InfoExchange = 1000;
+   static const int CascadePartitionerCombinedGroup_TAG_LoadTransfer0 = 1001;
+   static const int CascadePartitionerCombinedGroup_TAG_LoadTransfer1 = 1002;
 
    //! @brief Where a group falls in the next larger group.
    enum Position { Lower=0, Upper=1 };
@@ -216,7 +216,7 @@ private:
    int d_contact;
 
    //! @brief The half containing me.
-   CascadePartitionerGroup *d_our_half;
+   CascadePartitionerCombinedGroup *d_our_half;
 
    //! @brief Position of d_our_half in this group.
    Position d_our_position;

@@ -27,7 +27,7 @@ namespace mesh {
 /*!
  * @brief Make a cycle-zero, single-process group.
  */
-void CascadePartitionerGroup::makeSingleProcessGroup(
+void CascadePartitionerCombinedGroup::makeSingleProcessGroup(
    const CascadePartitioner *common_data,
    TransitLoad &local_load )
 {
@@ -54,7 +54,7 @@ void CascadePartitionerGroup::makeSingleProcessGroup(
    d_far_half_may_supply = d_contact_may_supply = false; // No far half.
 
    if ( d_common->d_print_steps ) {
-      tbox::plog << "CascadePartitionerGroup::makeSingleProcessGroup: leaving\n";
+      tbox::plog << "CascadePartitionerCombinedGroup::makeSingleProcessGroup: leaving\n";
       printClassData( tbox::plog, "\t" );
    }
 }
@@ -67,10 +67,10 @@ void CascadePartitionerGroup::makeSingleProcessGroup(
  * (our_half).  Data for other half (the far half) is obtained by
  * communication.
  */
-void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_half )
+void CascadePartitionerCombinedGroup::makeCombinedGroup( CascadePartitionerCombinedGroup &our_half )
 {
    if ( our_half.d_common->d_print_steps ) {
-      tbox::plog << "CascadePartitionerGroup::makeCombinedGroup: entered\n";
+      tbox::plog << "CascadePartitionerCombinedGroup::makeCombinedGroup: entered\n";
    }
 
    /*
@@ -129,12 +129,12 @@ void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_ha
          send_msg.getCurrentSize(),
          MPI_CHAR,
          d_contact,
-         CascadePartitionerGroup_TAG_InfoExchange,
+         CascadePartitionerCombinedGroup_TAG_InfoExchange,
          &tmp_buffer[0],
          send_msg.getCurrentSize(),
          MPI_CHAR,
          d_contact,
-         CascadePartitionerGroup_TAG_InfoExchange,
+         CascadePartitionerCombinedGroup_TAG_InfoExchange,
          &status );
 
       tbox::MessageStream recv_msg( tmp_buffer.size(),
@@ -147,7 +147,7 @@ void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_ha
    d_upper_work = d_our_position == Upper ? our_work : far_work;
 
    if ( d_common->d_print_steps ) {
-      tbox::plog << "CascadePartitionerGroup::makeCombinedGroup:\n";
+      tbox::plog << "CascadePartitionerCombinedGroup::makeCombinedGroup:\n";
       printClassData( tbox::plog, "\t" );
    }
 }
@@ -170,7 +170,7 @@ void CascadePartitionerGroup::makeCombinedGroup( CascadePartitionerGroup &our_ha
  *************************************************************************
  */
 void
-CascadePartitionerGroup::balanceConstituentHalves()
+CascadePartitionerCombinedGroup::balanceConstituentHalves()
 {
 
    if ( ourSurplus() >  d_common->d_pparams->getLoadComparisonTol() &&
@@ -187,7 +187,7 @@ CascadePartitionerGroup::balanceConstituentHalves()
       }
 
       if ( d_common->d_print_steps ) {
-         tbox::plog << "CascadePartitionerGroup::balanceConstituentHalves:"
+         tbox::plog << "CascadePartitionerCombinedGroup::balanceConstituentHalves:"
                     << "  supplied " << work_supplied
                     << " from our half to far half.  d_local_may_supply="
                     << d_local_may_supply << "\n";
@@ -199,8 +199,8 @@ CascadePartitionerGroup::balanceConstituentHalves()
 
       if ( d_contact_may_supply ) {
          d_common->d_comm_peer.setPeerRank(d_contact);
-         d_common->d_comm_peer.setMPITag( CascadePartitionerGroup_TAG_LoadTransfer0,
-                                          CascadePartitionerGroup_TAG_LoadTransfer1 );
+         d_common->d_comm_peer.setMPITag( CascadePartitionerCombinedGroup_TAG_LoadTransfer0,
+                                          CascadePartitionerCombinedGroup_TAG_LoadTransfer1 );
          d_common->d_comm_peer.beginRecv();
       }
 
@@ -211,7 +211,7 @@ CascadePartitionerGroup::balanceConstituentHalves()
       d_our_half_may_supply = d_local_may_supply = false;
 
       if ( d_common->d_print_steps ) {
-         tbox::plog << "CascadePartitionerGroup::balanceConstituentHalves:"
+         tbox::plog << "CascadePartitionerCombinedGroup::balanceConstituentHalves:"
                     << "  recorded supply of " << work_supplied
                     << " from far half to our half.  d_contact_may_supply="
                     << d_contact_may_supply << "\n";
@@ -229,7 +229,7 @@ CascadePartitionerGroup::balanceConstituentHalves()
    }
 
    if ( d_common->d_print_steps ) {
-      tbox::plog << "CascadePartitionerGroup::balanceConstituentHalves: leaving with state:\n";
+      tbox::plog << "CascadePartitionerCombinedGroup::balanceConstituentHalves: leaving with state:\n";
       printClassData( tbox::plog, "\t" );
    }
    return;
@@ -255,7 +255,7 @@ CascadePartitionerGroup::balanceConstituentHalves()
  *************************************************************************
  */
 double
-CascadePartitionerGroup::supplyWork( double work_requested, int taker )
+CascadePartitionerCombinedGroup::supplyWork( double work_requested, int taker )
 {
    TBOX_ASSERT( work_requested > 0.0 );
    double work_supplied = 0.0;
@@ -279,9 +279,9 @@ CascadePartitionerGroup::supplyWork( double work_requested, int taker )
             work_requested,
             work_requested );
          if ( d_common->d_print_steps ) {
-            tbox::plog << "CascadePartitionerGroup::supplyWork giving to " << taker << ": ";
+            tbox::plog << "CascadePartitionerCombinedGroup::supplyWork giving to " << taker << ": ";
             d_common->d_shipment->recursivePrint();
-            tbox::plog << "CascadePartitionerGroup::supplyWork keeping: ";
+            tbox::plog << "CascadePartitionerCombinedGroup::supplyWork keeping: ";
             d_common->d_local_load->recursivePrint();
          }
 
@@ -320,7 +320,7 @@ CascadePartitionerGroup::supplyWork( double work_requested, int taker )
  * It may be combined with other works and added to a bigger group.
  *************************************************************************
  */
-double CascadePartitionerGroup::supplyWorkFromOurHalf( double work_requested, int taker ) {
+double CascadePartitionerCombinedGroup::supplyWorkFromOurHalf( double work_requested, int taker ) {
    TBOX_ASSERT( work_requested > 0.0 );
    double work_supplied = 0.0;
    if ( d_our_half_may_supply ) {
@@ -346,7 +346,7 @@ double CascadePartitionerGroup::supplyWorkFromOurHalf( double work_requested, in
  * It may be combined with other works and added to a bigger group.
  *************************************************************************
  */
-double CascadePartitionerGroup::supplyWorkFromFarHalf( double work_requested ) {
+double CascadePartitionerCombinedGroup::supplyWorkFromFarHalf( double work_requested ) {
    TBOX_ASSERT( work_requested > 0.0 );
    double work_supplied = 0.0;
    if ( d_far_half_may_supply ) {
@@ -364,17 +364,17 @@ double CascadePartitionerGroup::supplyWorkFromFarHalf( double work_requested ) {
  *************************************************************************
  */
 void
-CascadePartitionerGroup::sendMyShipment( int taker )
+CascadePartitionerCombinedGroup::sendMyShipment( int taker )
 {
    if ( d_common->d_print_steps ) {
-      tbox::plog << "CascadePartitionerGroup::sendMyShipment: sending to " << taker << ":\n";
+      tbox::plog << "CascadePartitionerCombinedGroup::sendMyShipment: sending to " << taker << ":\n";
       d_common->d_shipment->recursivePrint(tbox::plog, "Send: ", 2);
    }
    tbox::MessageStream msg;
    msg << *d_common->d_shipment;
    d_common->d_comm_peer.setPeerRank(taker);
-   d_common->d_comm_peer.setMPITag( CascadePartitionerGroup_TAG_LoadTransfer0,
-                                    CascadePartitionerGroup_TAG_LoadTransfer1 );
+   d_common->d_comm_peer.setMPITag( CascadePartitionerCombinedGroup_TAG_LoadTransfer0,
+                                    CascadePartitionerCombinedGroup_TAG_LoadTransfer1 );
    d_common->d_comm_peer.beginSend( (const char*)(msg.getBufferStart()),
                                     msg.getCurrentSize() );
    d_common->d_shipment->clear();
@@ -388,7 +388,7 @@ CascadePartitionerGroup::sendMyShipment( int taker )
  *************************************************************************
  */
 void
-CascadePartitionerGroup::receiveAndUnpackSuppliedLoad()
+CascadePartitionerCombinedGroup::receiveAndUnpackSuppliedLoad()
 {
    d_common->d_comm_peer.completeCurrentOperation();
    tbox::MessageStream recv_msg( d_common->d_comm_peer.getRecvSize(),
@@ -397,7 +397,7 @@ CascadePartitionerGroup::receiveAndUnpackSuppliedLoad()
                                  true );
    recv_msg >> *d_common->d_local_load;
    if ( d_common->d_print_steps ) {
-      tbox::plog << "CascadePartitionerGroup::receiveAndUnpackSuppliedLoad: updated d_local_load:\n";
+      tbox::plog << "CascadePartitionerCombinedGroup::receiveAndUnpackSuppliedLoad: updated d_local_load:\n";
      d_common->d_local_load->recursivePrint(tbox::plog, "Curr: ", 2);
    }
    return;
@@ -410,7 +410,7 @@ CascadePartitionerGroup::receiveAndUnpackSuppliedLoad()
  *************************************************************************
  */
 void
-CascadePartitionerGroup::printClassData( std::ostream &co, const std::string &border ) const
+CascadePartitionerCombinedGroup::printClassData( std::ostream &co, const std::string &border ) const
 {
    const std::string indent( border + std::string(d_cycle_num,' ') + std::string(d_cycle_num,' ') );
    co << indent << "cycle " << d_cycle_num
