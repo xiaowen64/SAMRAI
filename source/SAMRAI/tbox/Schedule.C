@@ -333,7 +333,31 @@ Schedule::postSends()
    size_t counter = 0;
    for (TransactionSets::const_iterator mi = d_send_sets.begin();
         mi != d_send_sets.end(); ++mi) {
-      send_sets_vec[counter++] = &mi->second;
+      const std::list<boost::shared_ptr<Transaction> >* transactions =
+         &mi->second;
+      size_t byte_count = 0;
+      bool can_estimate_incoming_message_size = true;
+      for (ConstIterator pack = transactions->begin();
+           pack != transactions->end(); pack++) {
+         if (!(*pack)->canEstimateIncomingMessageSize()) {
+            can_estimate_incoming_message_size = false;
+         }
+         byte_count += (*pack)->computeOutgoingMessageSize();
+      }
+
+      // If receiver knows message size set it exactly.
+      if (can_estimate_incoming_message_size) {
+         send_coms[counter].limitFirstDataLength(byte_count);
+      }
+
+      // Allocate the MessageStream for this destination process.
+      outgoing_streams[counter] =
+         new MessageStream(byte_count, MessageStream::Write);
+
+      // Save the send set.
+      send_sets_vec[counter] = transactions;
+
+      ++counter;
    }
 
 #ifdef HAVE_OPENMP
@@ -346,28 +370,12 @@ Schedule::postSends()
       // Compute message size and whether receiver can estimate it.
       const std::list<boost::shared_ptr<Transaction> >* transactions =
          send_sets_vec[counter];
-      size_t byte_count = 0;
-      bool can_estimate_incoming_message_size = true;
-      for (ConstIterator pack = transactions->begin();
-           pack != transactions->end(); pack++) {
-         if (!(*pack)->canEstimateIncomingMessageSize()) {
-            can_estimate_incoming_message_size = false;
-         }
-         byte_count += (*pack)->computeOutgoingMessageSize();
-      }
 
       // Pack outgoing data into a message.
-      MessageStream* outgoing_stream =
-         new MessageStream(byte_count, MessageStream::Write);
-      outgoing_streams[counter] = outgoing_stream;
+      MessageStream* outgoing_stream = outgoing_streams[counter];
       for (ConstIterator pack = transactions->begin();
            pack != transactions->end(); pack++) {
          (*pack)->packStream(*outgoing_stream);
-      }
-
-      if (can_estimate_incoming_message_size) {
-         // Receiver knows message size, so set it exactly.
-         send_coms[counter].limitFirstDataLength(byte_count);
       }
    }
 #ifdef HAVE_OPENMP
