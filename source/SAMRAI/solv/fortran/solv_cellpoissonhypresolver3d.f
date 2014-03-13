@@ -1,7 +1,7 @@
 c
 c  File:        $URL$
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2014 Lawrence Livermore National Security, LLC
 c  Release:     
 c  Revision:    
 c  Modified:    
