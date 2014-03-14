@@ -360,11 +360,6 @@ Schedule::postSends()
       ++counter;
    }
 
-#ifdef HAVE_OPENMP
-#pragma omp parallel private(counter) num_threads(4)
-{
-#pragma omp for schedule(dynamic) nowait
-#endif
    for (counter = 0; counter < num_send_sets; ++counter) {
 
       // Compute message size and whether receiver can estimate it.
@@ -378,9 +373,6 @@ Schedule::postSends()
          (*pack)->packStream(*outgoing_stream);
       }
    }
-#ifdef HAVE_OPENMP
-}
-#endif
 
    // We start the sends with the first rank higher than the local process,
    // continuing with the lowest rank process.  This ordering tends to spread
