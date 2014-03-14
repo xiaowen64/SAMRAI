@@ -47,7 +47,7 @@ CascadePartitionerTree::CascadePartitionerTree(
    d_far(0),
    d_leaf(0),
 
-   d_work(0),
+   d_work(-1.0),
    d_capacity(d_common->d_global_load_avg*d_common->d_mpi.getSize()),
    d_group_may_supply(false)
 {
@@ -83,7 +83,7 @@ CascadePartitionerTree::CascadePartitionerTree(
    d_far(0),
    d_leaf(0),
 
-   d_work(0.0),
+   d_work(-1.0),
    d_capacity(0),
    d_group_may_supply(false)
 {
@@ -155,9 +155,15 @@ CascadePartitionerTree::makeChildren()
    }
 
    else {
-      // This is a leaf and has no children.
+      /*
+       * This is a leaf.  It has no children but can compute group
+       * load locally.
+       */
       if ( d_begin == d_common->d_mpi.getRank() ) {
          d_leaf = this;
+         d_work = d_common->d_local_load->getSumLoad();
+         d_group_may_supply = d_process_may_supply[0] =
+            d_work > d_capacity + d_common->d_pparams->getLoadComparisonTol() ;
       }
    }
 
@@ -181,6 +187,8 @@ CascadePartitionerTree::~CascadePartitionerTree()
 
 /*
  *************************************************************************
+ * Starting at the leaves, combine sibling data balance them, then
+ * continue toward the root.
  *************************************************************************
  */
 void CascadePartitionerTree::balanceAll()
@@ -192,16 +200,112 @@ void CascadePartitionerTree::balanceAll()
     * but within each branch, there may be imbalance.
     * We need lg_size outer cycles, each balancing a generation.
     */
-   CascadePartitionerTree *current_group = this;
+
    for ( int outer_cycle=0; outer_cycle<lg_size; ++outer_cycle ) {
-      current_group->balanceChildren();
-      current_group = current_group->d_near;
-      if ( d_common->d_print_steps ) {
-         tbox::plog << "CascadePartitionerTree::balanceAll: finished outer_cycle " << outer_cycle << "\n";
-         printClassData( tbox::plog, "\t" );
+      tbox::plog << "\nouter_cycle="<<outer_cycle << std::endl;
+
+      int inner_cycleMax = lg_size + 1 - outer_cycle;
+
+      CascadePartitionerTree *current_near_child = d_leaf;
+      CascadePartitionerTree *current_parent = current_near_child->d_parent;
+
+      for ( int inner_cycle=1; inner_cycle<inner_cycleMax; ++inner_cycle ) {
+         tbox::plog << "\ninner_cycle="<<inner_cycle << std::endl;
+
+         current_parent->combineChildren();
+         current_parent->balanceChildren();
+
+         current_near_child = current_parent;
+         current_parent = current_near_child->d_parent;
+
+         if ( d_common->d_print_steps ) {
+            tbox::plog << "CascadePartitionerTree::balanceAll: finished outer_cycle "
+                       << outer_cycle << "\n";
+            printClassData( tbox::plog, "\t" );
+         }
+      }
+
+   }
+
+}
+
+
+
+/*
+ *************************************************************************
+ * Combine near and far children data (using communication) to compute
+ * work-related data for this group.
+ *
+ * NOTE: This method can probably be re-organized as if there's only
+ * one contact.  We only need to exchange data with the second contact
+ * if the the far group may supply and the near group has a deficit.
+ *************************************************************************
+ */
+void
+CascadePartitionerTree::combineChildren()
+{
+   /*
+    * Determine and record work of the two halves.  Needs
+    * communication to get data about the far half of the group.
+    */
+
+   tbox::MessageStream send_msg;
+   send_msg << d_near->d_work << d_near->d_group_may_supply << d_near->d_process_may_supply[0];
+
+   for ( int i=0; i<2; ++i ) {
+      if ( d_contact[i] >= 0 ) {
+
+         d_common->d_comm_peer[i].setPeerRank(d_contact[i]);
+         d_common->d_comm_peer[i].setMPITag( CascadePartitionerTree_TAG_InfoExchange0,
+                                             CascadePartitionerTree_TAG_InfoExchange1 );
+         d_common->d_comm_peer[i].limitFirstDataLength( send_msg.getCurrentSize() );
+         if ( d_common->d_comm_peer[i].beginRecv() ) {
+            d_common->d_comm_peer[i].pushToCompletionQueue();
+         }
+
+         d_common->d_comm_peer[2+i].setPeerRank(d_contact[i]);
+         d_common->d_comm_peer[2+i].setMPITag( CascadePartitionerTree_TAG_InfoExchange0,
+                                               CascadePartitionerTree_TAG_InfoExchange1 );
+         d_common->d_comm_peer[2+i].limitFirstDataLength( send_msg.getCurrentSize() );
+         d_common->d_comm_peer[2+i].beginSend(static_cast<const char*>(send_msg.getBufferStart()),
+                                              send_msg.getCurrentSize() );
+
       }
    }
 
+   d_far->d_group_may_supply = true;
+   if ( d_common->d_comm_stage.numberOfCompletedMembers() > 0 ) {
+      d_common->d_comm_stage.advanceAny();
+   }
+   while ( d_common->d_comm_stage.numberOfCompletedMembers() > 0 ) {
+
+      tbox::AsyncCommPeer<char> *completed = static_cast<tbox::AsyncCommPeer<char>*>(
+         d_common->d_comm_stage.popCompletionQueue() );
+
+      const int i = completed - d_common->d_comm_peer;
+      if ( i < 2 ) {
+         // This was a receive.
+         tbox::MessageStream recv_msg(completed->getRecvSize(),
+                                      tbox::MessageStream::Read,
+                                      completed->getRecvData(),
+                                      false);
+         double tmp_far_work;
+         bool tmp_far_flag;
+         recv_msg >> tmp_far_work >> tmp_far_flag >> d_far->d_process_may_supply[i];
+         d_far->d_work += tmp_far_work;
+         d_far->d_group_may_supply &= tmp_far_flag;
+      }
+
+      d_common->d_comm_stage.advanceAny();
+   }
+
+   d_work = d_near->d_work + d_far->d_work;
+
+   if ( d_common->d_print_steps ) {
+      tbox::plog << "CascadePartitionerTree::combineChildren: leaving with state:\n";
+      printClassData( tbox::plog, "\t" );
+   }
+   return;
 }
 
 

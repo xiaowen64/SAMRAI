@@ -76,9 +76,10 @@ private:
     * Static integer constants.  Tags are for isolating messages
     * from different phases of the algorithm.
     */
-   static const int CascadePartitionerTree_TAG_InfoExchange = 1000;
-   static const int CascadePartitionerTree_TAG_LoadTransfer0 = 1001;
-   static const int CascadePartitionerTree_TAG_LoadTransfer1 = 1002;
+   static const int CascadePartitionerTree_TAG_InfoExchange0 = 1000;
+   static const int CascadePartitionerTree_TAG_InfoExchange1 = 1001;
+   static const int CascadePartitionerTree_TAG_LoadTransfer0 = 1002;
+   static const int CascadePartitionerTree_TAG_LoadTransfer1 = 1003;
 
    //! @brief Where a group falls in the next larger group.
    static const int s_lower = Lower;
@@ -94,6 +95,12 @@ private:
    void makeChildren();
 
    /*!
+    * @brief Combine near and far children data (using communication)
+    * to compute work-related data for this group.
+    */
+   void combineChildren();
+
+   /*!
     * @brief Improve balance of the two children of this group by
     * supplying load from overloaded child to underloaded child.
     *
@@ -107,9 +114,6 @@ private:
    CascadePartitionerTree *sibling() {
       return d_parent->d_children[!d_position];
    }
-
-   //! @brief Estimated work of the group.
-   double getWork() const { return d_work; }
 
    //! @brief Estimated surplus of the group.
    double surplus() const {
@@ -191,10 +195,10 @@ private:
    //@{
    //! @name Work measures
 
-   //! @brief Estimated load of this group.
+   //! @brief Estimated load of this branch.
    double d_work;
 
-   //! @brief Ideal amount of work for this group.
+   //! @brief Ideal amount of work for this branch.
    double d_capacity;
 
    //@}

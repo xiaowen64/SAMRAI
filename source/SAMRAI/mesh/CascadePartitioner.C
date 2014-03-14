@@ -81,8 +81,7 @@ CascadePartitioner::CascadePartitioner(
    d_check_map(false),
    d_num_ag_cycles(0)
 {
-   d_comm_peer[0].initialize(&d_comm_stage);
-   d_comm_peer[1].initialize(&d_comm_stage);
+   for ( int i=0; i<4; ++i ) d_comm_peer[i].initialize(&d_comm_stage);
 
    TBOX_ASSERT(!name.empty());
    getFromInput(input_db);

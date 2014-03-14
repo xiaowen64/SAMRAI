@@ -392,10 +392,10 @@ private:
    mutable TransitLoad *d_local_load;
    //! @brief Load shipment for sending.
    mutable TransitLoad *d_shipment;
-   //! @brief High-level communication manager.
+   //! @brief High-level communication stage.
    mutable tbox::AsyncCommStage d_comm_stage;
    //! @brief High-level peer-to-peer communication object.
-   mutable tbox::AsyncCommPeer<char> d_comm_peer[2];
+   mutable tbox::AsyncCommPeer<char> d_comm_peer[4];
    //@}
 
    static const int s_default_data_id;
