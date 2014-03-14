@@ -51,6 +51,7 @@ CascadePartitionerTree::CascadePartitionerTree(
    d_capacity(d_common->d_global_load_avg*d_common->d_mpi.getSize()),
    d_group_may_supply(false)
 {
+   d_children[0] = d_children[1] = 0;
    d_contact[0] = d_contact[1] = -1;
    d_process_may_supply[0] = d_process_may_supply[1] = false;
 
@@ -71,10 +72,10 @@ CascadePartitionerTree::CascadePartitionerTree(
    CascadePartitionerTree &parent,
    Position my_position ) :
    d_common(parent.d_common),
-   d_generation(1 + d_parent->d_generation),
+   d_generation(1 + parent.d_generation),
 
-   d_begin(d_parent->d_begin),
-   d_end(d_parent->d_end),
+   d_begin(parent.d_begin),
+   d_end(parent.d_end),
    d_position(my_position),
 
    d_parent(&parent),
@@ -86,6 +87,7 @@ CascadePartitionerTree::CascadePartitionerTree(
    d_capacity(0),
    d_group_may_supply(false)
 {
+   d_children[0] = d_children[1] = 0;
    d_contact[0] = d_contact[1] = -1;
    d_process_may_supply[0] = d_process_may_supply[1] = false;
 
@@ -165,10 +167,8 @@ CascadePartitionerTree::makeChildren()
  */
 CascadePartitionerTree::~CascadePartitionerTree()
 {
-   if ( this != d_leaf ) {
-      delete d_children[0];
-      delete d_children[1];
-   }
+   if ( d_children[0] ) delete d_children[0];
+   if ( d_children[1] ) delete d_children[1];
    d_children[0] = d_children[1] = d_near = d_far = d_leaf = 0;
 }
 

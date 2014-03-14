@@ -139,9 +139,9 @@ private:
    void sendShipment( int taker );
    void receiveAndUnpackSuppliedLoad();
 
+
+   //! @brief Data the main CascadePartitioner shares with all parts of the tree.
    const CascadePartitioner *d_common;
-
-
 
    //@{
    //! @brief Group specification
