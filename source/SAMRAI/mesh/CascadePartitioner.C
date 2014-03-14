@@ -404,38 +404,9 @@ CascadePartitioner::partitionByCascade(
 
 
 tbox::plog << "lg_size="<<lg_size << "  ag_group_size="<<ag_group_size << std::endl;
-   // Data on groups.
-   std::vector<CascadePartitionerCombinedGroup> groups(lg_size+1);
+   CascadePartitionerTree groups(*this);
+   groups.balanceAll();
 
-   /*
-    * How agglomeration affects the cycles required to spread out
-    * loads: The last d_num_ag_cycles of the outer_cycle and first
-    * d_num_ag_cycles of the inner_cycle are eliminated.  These cycles
-    * only move loads within the agglomerated groups.
-    */
-   for ( int outer_cycle=0; outer_cycle<lg_size-d_num_ag_cycles; ++outer_cycle ) {
-tbox::plog << "\nouter_cycle="<<outer_cycle << std::endl;
-
-      int inner_cycleMax = lg_size + 1 - outer_cycle;
-
-      groups[0].makeSingleProcessGroup( this, local_work );
-
-      for ( int inner_cycle=d_num_ag_cycles+1; inner_cycle<inner_cycleMax; ++inner_cycle ) {
-tbox::plog << "\ninner_cycle="<<inner_cycle << std::endl;
-
-         /*
-          * Only the first rank in each agglomerated group runs the
-          * inner cycle.  The rest are represented by those ranks.
-          * The barrier is for timing purpose, and all must run it.
-          */
-         if ( d_mpi.getRank() % ag_group_size == 0 ) {
-            groups[inner_cycle].makeCombinedGroup(groups[inner_cycle-1]);
-            groups[inner_cycle].balanceConstituentHalves();
-         }
-
-      }
-
-   }
 
 #if 0
    if ( d_mpi.getSize() >= ag_group_size && ag_group_size > 1 ) {

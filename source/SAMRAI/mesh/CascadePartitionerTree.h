@@ -53,14 +53,9 @@ public:
    ~CascadePartitionerTree();
 
    /*!
-    * @brief Improve balance of the two children of this group by
-    * supplying load from overloaded child to underloaded child.
-    *
-    * Ideally, the work supplied is minimum of the overloaded child's
-    * surplus and the underloaded child's deficit.  The ideal may not
-    * be achieved due to load-cutting restrictions.
+    * @brief Run the complete cascade partitioner algorithm.
     */
-   void balanceChildren();
+   void balanceAll();
 
    void printClassData( std::ostream &co, const std::string &border ) const;
 
@@ -93,10 +88,20 @@ private:
     * @brief Construct child node.
     */
    CascadePartitionerTree( CascadePartitionerTree &parent,
-                            Position my_position );
+                           Position my_position );
 
    //! Allocate and set up the group's children.
    void makeChildren();
+
+   /*!
+    * @brief Improve balance of the two children of this group by
+    * supplying load from overloaded child to underloaded child.
+    *
+    * Ideally, the work supplied is minimum of the overloaded child's
+    * surplus and the underloaded child's deficit.  The ideal may not
+    * be achieved due to load-cutting restrictions.
+    */
+   void balanceChildren();
 
    //! @brief Return sibling group.
    CascadePartitionerTree *sibling() {
@@ -189,7 +194,7 @@ private:
    //! @brief Estimated load of this group.
    double d_work;
 
-   //! @brief Capacity of this group to handle work.
+   //! @brief Ideal amount of work for this group.
    double d_capacity;
 
    //@}
@@ -197,9 +202,13 @@ private:
 
 
    //@{
-   //! @name For determining whether to send/receive, not for computing how much load to transfer.
+   //! @name For determining participation in certain group activities.
 
-   //! @brief Whether this group may supply work to its sibling.
+   /*!
+    * @brief Whether this group may supply work to its sibling.
+    *
+    * A group that received work may not later become a supplier.
+    */
    bool d_group_may_supply;
 
    /*!
@@ -210,6 +219,9 @@ private:
     * process may supply work and second value is unused.  If this is
     * a far group, the two values correspond to whether the two
     * contacts (d_contact) may supply work.
+    *
+    * A process that received work or is a member of a group that
+    * received work may not later become a supplier.
     */
    bool d_process_may_supply[2];
 

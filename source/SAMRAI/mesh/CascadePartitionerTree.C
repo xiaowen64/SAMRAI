@@ -176,11 +176,35 @@ CascadePartitionerTree::~CascadePartitionerTree()
 
 /*
  *************************************************************************
+ *************************************************************************
+ */
+void CascadePartitionerTree::balanceAll()
+{
+   const int lg_size = CascadePartitioner::lgInt(d_common->d_mpi.getSize());
+
+   /*
+    * Calling balanceChildren balances current_group's two branches,
+    * but within each branch, there may be imbalance.
+    * We need lg_size outer cycles, each balancing a generation.
+    */
+   CascadePartitionerTree *current_group = this;
+   for ( int outer_cycle=0; outer_cycle<lg_size; ++outer_cycle ) {
+      current_group->balanceChildren();
+      current_group = current_group->d_near;
+   }
+
+}
+
+
+
+/*
+ *************************************************************************
  * If one child has a positive surplus and the other has a negative
  * surplus, the former supplies work to the latter.  Amount supplied
  * is ideally the minimum of the supplier's surplus and the
  * requestor's deficit.  (Actual ammounts are affected by load cutting
- * restrictions.)
+ * restrictions.)  Note that only children groups will be balanced
+ * (not all descendents).
  *
  * This method records estimates of the work changes to the groups it
  * knows about.  It doesn't record the actual work changes because
@@ -290,10 +314,10 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
 {
    TBOX_ASSERT( work_requested > 0.0 );
    TBOX_ASSERT( taker < d_begin && taker >= d_end ); // Taker must not be member.
-   double est_work_supplied = 0.0;
+   double est_work_supplied = 0.0; // Estimate of work supplied by this group.
 
    if ( d_children[0] != 0 ) {
-      // Not a leaf.  Supply load from children.
+      // Not a leaf:  Supply load from children.
       if ( taker < d_begin ) {
          est_work_supplied = d_children[0]->supplyWork( work_requested, taker );
          if ( est_work_supplied < work_requested ) {
@@ -309,7 +333,7 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
    }
 
    else {
-      // Is a leaf.  Supply load from self.
+      // Is a leaf:  Supply load from self.
       if ( d_group_may_supply ) {
          est_work_supplied = tbox::MathUtilities<double>::Min( work_requested, d_work );
          d_work -= est_work_supplied;
