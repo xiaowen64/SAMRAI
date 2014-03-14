@@ -124,6 +124,8 @@ CASC and LC systems.
 						   we have configured.
 	(b) sh ../SAMRAI/config.suggest [arch]  -- prints configure options
 
+        (c) ../config.suggest [arch] | xargs ../configure -- use options
+
 See the section "Configure Options" below for more details on supported 
 configuration options.  
 
@@ -238,6 +240,7 @@ possible configure options--use "configure --help" for that.
 
 	sh ../SAMRAI/config.suggest         -- lists architectures supported
 	sh ../SAMRAI/config.suggest [arch]  -- prints configure options
+        ../config.suggest [arch] | xargs ../configure -- use options
 
 The default settings used by config.suggest refer to locations on the
 LLNL systems where we have found them.  However, please note that these
