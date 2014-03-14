@@ -1,7 +1,7 @@
 c    
 c File:        $URL$
 c Package:     SAMRAI application utilities
-c Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
+c Copyright:   (c) 1997-2014 Lawrence Livermore National Security, LLC
 c Revision:    $LastChangedRevision$
 c Description: copies data from 2D fortran array to 1D double buffer
 c
