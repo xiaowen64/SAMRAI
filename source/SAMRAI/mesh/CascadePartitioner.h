@@ -13,6 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/mesh/CascadePartitionerCombinedGroup.h"
+#include "SAMRAI/mesh/CascadePartitionerTree.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
@@ -326,7 +327,7 @@ private:
       int innerCycle ) const;
 
    //! @brief Compute log-base-2 of integer, rounded up.
-   int lgInt(int s) const;
+   static int lgInt(int s);
 
    /*!
     * @brief Set up timers for the object.
@@ -341,6 +342,7 @@ private:
     * parts.  CascadePartitionerCombinedGroup can be made a private subclass
     * of CascadePartitioner, but that would make a big file.
     */
+   friend CascadePartitionerTree;
    friend CascadePartitionerCombinedGroup;
 
    /*
@@ -393,7 +395,7 @@ private:
    //! @brief High-level communication manager.
    mutable tbox::AsyncCommStage d_comm_stage;
    //! @brief High-level peer-to-peer communication object.
-   mutable tbox::AsyncCommPeer<char> d_comm_peer;
+   mutable tbox::AsyncCommPeer<char> d_comm_peer[2];
    //@}
 
    static const int s_default_data_id;

@@ -8,9 +8,10 @@
  *
  ************************************************************************/
 
-#ifndef included_mesh_CascadePartitioner_C
-#define included_mesh_CascadePartitioner_C
+#ifndef included_mesh_CascadePartitionerCombinedGroup_C
+#define included_mesh_CascadePartitionerCombinedGroup_C
 
+#include "SAMRAI/mesh/CascadePartitionerCombinedGroup.h"
 #include "SAMRAI/mesh/CascadePartitioner.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -198,10 +199,10 @@ CascadePartitionerCombinedGroup::balanceConstituentHalves()
              ourSurplus() < -d_common->d_pparams->getLoadComparisonTol() ) {
 
       if ( d_contact_may_supply ) {
-         d_common->d_comm_peer.setPeerRank(d_contact);
-         d_common->d_comm_peer.setMPITag( CascadePartitionerCombinedGroup_TAG_LoadTransfer0,
-                                          CascadePartitionerCombinedGroup_TAG_LoadTransfer1 );
-         d_common->d_comm_peer.beginRecv();
+         d_common->d_comm_peer[0].setPeerRank(d_contact);
+         d_common->d_comm_peer[0].setMPITag( CascadePartitionerCombinedGroup_TAG_LoadTransfer0,
+                                             CascadePartitionerCombinedGroup_TAG_LoadTransfer1 );
+         d_common->d_comm_peer[0].beginRecv();
       }
 
       double work_supplied = supplyWorkFromFarHalf( -ourSurplus() );
@@ -372,11 +373,11 @@ CascadePartitionerCombinedGroup::sendMyShipment( int taker )
    }
    tbox::MessageStream msg;
    msg << *d_common->d_shipment;
-   d_common->d_comm_peer.setPeerRank(taker);
-   d_common->d_comm_peer.setMPITag( CascadePartitionerCombinedGroup_TAG_LoadTransfer0,
-                                    CascadePartitionerCombinedGroup_TAG_LoadTransfer1 );
-   d_common->d_comm_peer.beginSend( (const char*)(msg.getBufferStart()),
-                                    msg.getCurrentSize() );
+   d_common->d_comm_peer[0].setPeerRank(taker);
+   d_common->d_comm_peer[0].setMPITag( CascadePartitionerCombinedGroup_TAG_LoadTransfer0,
+                                       CascadePartitionerCombinedGroup_TAG_LoadTransfer1 );
+   d_common->d_comm_peer[0].beginSend( (const char*)(msg.getBufferStart()),
+                                       msg.getCurrentSize() );
    d_common->d_shipment->clear();
    return;
 }
@@ -390,10 +391,10 @@ CascadePartitionerCombinedGroup::sendMyShipment( int taker )
 void
 CascadePartitionerCombinedGroup::receiveAndUnpackSuppliedLoad()
 {
-   d_common->d_comm_peer.completeCurrentOperation();
-   tbox::MessageStream recv_msg( d_common->d_comm_peer.getRecvSize(),
+   d_common->d_comm_peer[0].completeCurrentOperation();
+   tbox::MessageStream recv_msg( d_common->d_comm_peer[0].getRecvSize(),
                                  tbox::MessageStream::Read,
-                                 d_common->d_comm_peer.getRecvData(),
+                                 d_common->d_comm_peer[0].getRecvData(),
                                  true );
    recv_msg >> *d_common->d_local_load;
    if ( d_common->d_print_steps ) {

@@ -71,7 +71,6 @@ CascadePartitioner::CascadePartitioner(
    d_mca(),
    // Shared data.
    d_comm_stage(),
-   d_comm_peer(&d_comm_stage),
    // Performance evaluation.
    d_barrier_before(false),
    d_barrier_after(false),
@@ -82,6 +81,9 @@ CascadePartitioner::CascadePartitioner(
    d_check_map(false),
    d_num_ag_cycles(0)
 {
+   d_comm_peer[0].initialize(&d_comm_stage);
+   d_comm_peer[1].initialize(&d_comm_stage);
+
    TBOX_ASSERT(!name.empty());
    getFromInput(input_db);
    setTimers();
@@ -523,7 +525,7 @@ tbox::plog << "\ninner_cycle="<<inner_cycle << std::endl;
  * Compute log-base-2 of integer, rounded up.
  *************************************************************************
  */
-int CascadePartitioner::lgInt(int s) const {
+int CascadePartitioner::lgInt(int s) {
    int lg_s = 0;
    while ( (1<<lg_s) < s ) {
       ++lg_s;
