@@ -58,7 +58,7 @@ CascadePartitionerTree::CascadePartitionerTree(
    makeChildren();
 
    if ( d_common->d_print_steps ) {
-      tbox::plog << "CascadePartitionerTree::makeSingleProcessGroup: leaving\n";
+      tbox::plog << "CascadePartitionerTree::root constructor: leaving\n";
       printClassData( tbox::plog, "\t" );
    }
 }
@@ -125,6 +125,11 @@ CascadePartitionerTree::CascadePartitionerTree(
       makeChildren();
    }
 
+
+   if ( d_common->d_print_steps ) {
+      tbox::plog << "CascadePartitionerTree::non-root constructor: leaving\n";
+      printClassData( tbox::plog, "\t" );
+   }
    return;
 }
 
@@ -191,6 +196,10 @@ void CascadePartitionerTree::balanceAll()
    for ( int outer_cycle=0; outer_cycle<lg_size; ++outer_cycle ) {
       current_group->balanceChildren();
       current_group = current_group->d_near;
+      if ( d_common->d_print_steps ) {
+         tbox::plog << "CascadePartitionerTree::balanceAll: finished outer_cycle " << outer_cycle << "\n";
+         printClassData( tbox::plog, "\t" );
+      }
    }
 
 }
@@ -231,7 +240,7 @@ CascadePartitionerTree::balanceChildren()
       }
 
       if ( d_common->d_print_steps ) {
-         tbox::plog << "CascadePartitionerTree::balanceConstituentHalves:"
+         tbox::plog << "CascadePartitionerTree::balanceChildren:"
                     << "  supplied " << work_supplied
                     << " from our half to far half.  d_process_may_supply="
                     << d_process_may_supply[0] << ',' << d_process_may_supply[1] << "\n";
