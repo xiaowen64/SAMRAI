@@ -1623,7 +1623,7 @@ BoxTransitSet::recursivePrint(
    const std::string &border,
    int detail_depth ) const
 {
-   co << getSumLoad() << " units in " << size() << " boxes";
+   co << border << getSumLoad() << " units in " << size() << " boxes";
    if ( detail_depth > 0 ) {
       size_t count = 0;
       co << ":\n";

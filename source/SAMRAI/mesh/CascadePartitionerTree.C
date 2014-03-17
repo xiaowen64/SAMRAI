@@ -47,7 +47,7 @@ CascadePartitionerTree::CascadePartitionerTree(
    d_far(0),
    d_leaf(0),
 
-   d_work(-1.0),
+   d_work(partitioner.d_local_load->getSumLoad()),
    d_capacity(d_common->d_global_load_avg*d_common->d_mpi.getSize()),
    d_group_may_supply(false)
 {
@@ -244,18 +244,27 @@ void CascadePartitionerTree::balanceAll()
 void
 CascadePartitionerTree::combineChildren()
 {
+   if ( d_common->d_print_steps ) {
+      tbox::plog << "CascadePartitionerTree::combineChildren: entered with state:\n";
+      printClassData( tbox::plog, "\t" );
+      tbox::plog << "and d_near state:\n";
+      d_near->printClassData( tbox::plog, "\t" );
+   }
+
    /*
     * Determine and record work of the two halves.  Needs
     * communication to get data about the far half of the group.
     */
+   d_far->d_work = 0.0;
+   d_far->d_group_may_supply = true;
 
    tbox::MessageStream send_msg;
    send_msg << d_near->d_work << d_near->d_group_may_supply << d_near->d_process_may_supply[0];
 
    for ( int i=0; i<2; ++i ) {
-      if ( d_contact[i] >= 0 ) {
+      if ( d_near->d_contact[i] >= 0 ) {
 
-         d_common->d_comm_peer[i].setPeerRank(d_contact[i]);
+         d_common->d_comm_peer[i].setPeerRank(d_near->d_contact[i]);
          d_common->d_comm_peer[i].setMPITag( CascadePartitionerTree_TAG_InfoExchange0,
                                              CascadePartitionerTree_TAG_InfoExchange1 );
          d_common->d_comm_peer[i].limitFirstDataLength( send_msg.getCurrentSize() );
@@ -263,7 +272,7 @@ CascadePartitionerTree::combineChildren()
             d_common->d_comm_peer[i].pushToCompletionQueue();
          }
 
-         d_common->d_comm_peer[2+i].setPeerRank(d_contact[i]);
+         d_common->d_comm_peer[2+i].setPeerRank(d_near->d_contact[i]);
          d_common->d_comm_peer[2+i].setMPITag( CascadePartitionerTree_TAG_InfoExchange0,
                                                CascadePartitionerTree_TAG_InfoExchange1 );
          d_common->d_comm_peer[2+i].limitFirstDataLength( send_msg.getCurrentSize() );
@@ -274,7 +283,7 @@ CascadePartitionerTree::combineChildren()
    }
 
    d_far->d_group_may_supply = true;
-   if ( d_common->d_comm_stage.numberOfCompletedMembers() > 0 ) {
+   if ( d_common->d_comm_stage.numberOfCompletedMembers() == 0 ) {
       d_common->d_comm_stage.advanceAny();
    }
    while ( d_common->d_comm_stage.numberOfCompletedMembers() > 0 ) {
@@ -298,12 +307,19 @@ CascadePartitionerTree::combineChildren()
 
       d_common->d_comm_stage.advanceAny();
    }
+   TBOX_ASSERT( d_common->d_comm_stage.numberOfPendingMembers() == 0 );
 
    d_work = d_near->d_work + d_far->d_work;
 
    if ( d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerTree::combineChildren: leaving with state:\n";
       printClassData( tbox::plog, "\t" );
+      tbox::plog << "and near state:\n";
+      d_near->printClassData( tbox::plog, "\t" );
+      tbox::plog << "and far state:\n";
+      d_far->printClassData( tbox::plog, "\t" );
+      tbox::plog << "\tlocal_load:\n";
+      d_common->d_local_load->recursivePrint(tbox::plog, "\t",0);
    }
    return;
 }
@@ -332,37 +348,41 @@ CascadePartitionerTree::balanceChildren()
 
    if ( d_near->surplus() > d_common->d_pparams->getLoadComparisonTol() &&
         d_far->surplus() < -d_common->d_pparams->getLoadComparisonTol() ) {
+      // Outgoing work.
 
-      double work_supplied = d_near->supplyWork( -d_far->surplus(), d_contact[0] );
+      double work_supplied = d_near->supplyWork( -d_far->surplus(), d_near->d_contact[0] );
 
       // Record work taken by the far child.
       d_far->d_work += work_supplied;
       d_far->d_group_may_supply = d_far->d_process_may_supply[0] = d_far->d_process_may_supply[1] = false;
 
-      if ( d_process_may_supply[0] ) {
-         sendShipment(d_contact[0]);
+      if ( d_near->d_process_may_supply[0] ) {
+         sendShipment(d_near->d_contact[0]);
+      }
+      else {
+         TBOX_ASSERT( d_common->d_shipment->empty() );
       }
 
       if ( d_common->d_print_steps ) {
          tbox::plog << "CascadePartitionerTree::balanceChildren:"
                     << "  supplied " << work_supplied
-                    << " from our half to far half.  d_process_may_supply="
-                    << d_process_may_supply[0] << ',' << d_process_may_supply[1] << "\n";
+                    << " from our half to far half.\n";
       }
    }
 
    else if ( d_far->surplus()  >  d_common->d_pparams->getLoadComparisonTol() &&
              d_near->surplus() < -d_common->d_pparams->getLoadComparisonTol() ) {
+      // Incoming work.
 
       if ( d_far->d_group_may_supply ) {
-         if ( d_process_may_supply[0] ) {
-            d_common->d_comm_peer[0].setPeerRank(d_contact[0]);
+         if ( d_far->d_process_may_supply[0] ) {
+            d_common->d_comm_peer[0].setPeerRank(d_near->d_contact[0]);
             d_common->d_comm_peer[0].setMPITag( CascadePartitionerTree_TAG_LoadTransfer0,
                                                 CascadePartitionerTree_TAG_LoadTransfer1 );
             d_common->d_comm_peer[0].beginRecv();
          }
-         if ( d_process_may_supply[1] ) {
-            d_common->d_comm_peer[1].setPeerRank(d_contact[1]);
+         if ( d_far->d_process_may_supply[1] ) {
+            d_common->d_comm_peer[1].setPeerRank(d_near->d_contact[1]);
             d_common->d_comm_peer[1].setMPITag( CascadePartitionerTree_TAG_LoadTransfer0,
                                                 CascadePartitionerTree_TAG_LoadTransfer1 );
             d_common->d_comm_peer[1].beginRecv();
@@ -375,15 +395,14 @@ CascadePartitionerTree::balanceChildren()
       d_near->d_work += work_supplied;
       d_near->d_group_may_supply = d_near->d_process_may_supply[0] = false;
 
-      if ( d_common->d_print_steps ) {
-         tbox::plog << "CascadePartitionerTree::balanceConstituentHalves:"
-                    << "  recorded supply of " << work_supplied
-                    << " from far half to our half.  d_process_may_supply="
-                    << d_process_may_supply[0] << ',' << d_process_may_supply[1] << "\n";
+      if ( d_far->d_process_may_supply[0] || d_far->d_process_may_supply[1] ) {
+         receiveAndUnpackSuppliedLoad();
       }
 
-      if ( d_process_may_supply[0] || d_process_may_supply[1] ) {
-         receiveAndUnpackSuppliedLoad();
+      if ( d_common->d_print_steps ) {
+         tbox::plog << "CascadePartitionerTree::balanceChildren:"
+                    << "  recorded supply of " << work_supplied
+                    << " from far half to our half.\n";
       }
    }
 
@@ -394,7 +413,7 @@ CascadePartitionerTree::balanceChildren()
    }
 
    if ( d_common->d_print_steps ) {
-      tbox::plog << "CascadePartitionerTree::balanceConstituentHalves: leaving with state:\n";
+      tbox::plog << "CascadePartitionerTree::balanceChildren: leaving with state:\n";
       printClassData( tbox::plog, "\t" );
    }
    return;
@@ -426,7 +445,7 @@ double
 CascadePartitionerTree::supplyWork( double work_requested, int taker )
 {
    TBOX_ASSERT( work_requested > 0.0 );
-   TBOX_ASSERT( taker < d_begin && taker >= d_end ); // Taker must not be member.
+   TBOX_ASSERT( taker < d_begin || taker >= d_end ); // Taker must not be member.
    double est_work_supplied = 0.0; // Estimate of work supplied by this group.
 
    if ( d_children[0] != 0 ) {
@@ -548,8 +567,7 @@ CascadePartitionerTree::printClassData( std::ostream &co, const std::string &bor
 {
    const std::string indent( border + std::string(cycleNum(),' ') + std::string(cycleNum(),' ') );
    co << indent << "generation=" << d_generation << "  cycle=" << cycleNum()
-      << "  [" << d_begin << ',' << d_end << ")  group_size="
-      << d_end-d_begin << '='
+      << "  [" << d_begin << ',' << d_end << ")  group_size=" << d_end-d_begin
       << "  this=" << this
       << '\n' << indent
       << "position=" << d_position << "  contact=" << d_contact[0] << ',' << d_contact[1]
@@ -557,9 +575,7 @@ CascadePartitionerTree::printClassData( std::ostream &co, const std::string &bor
       << '\n' << indent
       << "group_may_supply=" << d_group_may_supply
       << "  process_may_supply=" << d_process_may_supply[0] << ',' << d_process_may_supply[1]
-      << '\n' << indent
-      << "local_load:";
-   d_common->d_local_load->recursivePrint(tbox::plog, indent,0);
+      << '\n';
    return;
 }
 

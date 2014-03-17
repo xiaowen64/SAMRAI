@@ -394,7 +394,7 @@ private:
    mutable TransitLoad *d_shipment;
    //! @brief High-level communication stage.
    mutable tbox::AsyncCommStage d_comm_stage;
-   //! @brief High-level peer-to-peer communication object.
+   //! @brief High-level peer-to-peer communication object (2 receives, 2 sends).
    mutable tbox::AsyncCommPeer<char> d_comm_peer[4];
    //@}
 
