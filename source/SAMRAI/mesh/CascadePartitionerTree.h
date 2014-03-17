@@ -86,10 +86,10 @@ private:
    static const int s_upper = Upper;
 
    /*!
-    * @brief Construct child node.
+    * @brief Construct child node based on its position in the parent.
     */
    CascadePartitionerTree( CascadePartitionerTree &parent,
-                           Position my_position );
+                           Position group_position );
 
    //! Allocate and set up the group's children.
    void makeChildren();
@@ -142,6 +142,9 @@ private:
 
    void sendShipment( int taker );
    void receiveAndUnpackSuppliedLoad();
+
+   //! @brief Recompute data for leaf groups.
+   void recomputeLeafData();
 
 
    //! @brief Data the main CascadePartitioner shares with all parts of the tree.
@@ -212,6 +215,7 @@ private:
     * @brief Whether this group may supply work to its sibling.
     *
     * A group that received work may not later become a supplier.
+    * (But its parent may still be if its sibling is.)
     */
    bool d_group_may_supply;
 
