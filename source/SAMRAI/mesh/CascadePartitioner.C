@@ -264,16 +264,21 @@ CascadePartitioner::loadBalanceBoxLevel(
     * initial load.
     */
    global_sum_load = local_load;
+   double tmp_double[2];
+   tmp_double[0] = local_load;
+   tmp_double[1] = static_cast<double>(balance_box_level.getBoxes().size() > 0);
    if (d_mpi.getSize() > 1) {
-      d_mpi.AllReduce( &global_sum_load, 1, MPI_SUM );
+      d_mpi.AllReduce( tmp_double, 2, MPI_SUM );
    }
+   global_sum_load = tmp_double[0];
+   int num_procs_with_load = static_cast<int>(tmp_double[1] + 0.5);
 
    if (d_print_steps) {
       tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
       tbox::plog.precision(6);
       tbox::plog << "CascadePartitioner::loadBalanceBoxLevel"
                  << " global_sum_load=" << global_sum_load
-                 << " (initially born across " << d_mpi.getSize()
+                 << " (initially born across " << num_procs_with_load << " of " << d_mpi.getSize()
                  << " procs, averaging " << global_sum_load / d_mpi.getSize()
                  << " or " << pow(global_sum_load / d_mpi.getSize(), 1.0 / d_dim.getValue())
                  << "^" << d_dim << " per proc." << std::endl;
