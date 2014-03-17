@@ -2063,7 +2063,7 @@ BaseGridGeometry::readBlockDataFromInput(
                      bool use_box = true;
 
                      for (BoxContainer::iterator cd = cur_domain.begin();
-                          cd != cur_domain_nodal.end(); ++cd) {
+                          cd != cur_domain.end(); ++cd) {
 
                         const hier::Box& domain_box = *cd;
 
