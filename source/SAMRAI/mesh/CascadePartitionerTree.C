@@ -66,7 +66,10 @@ CascadePartitionerTree::CascadePartitionerTree(
 
 
 /*
- * Construct a child group.
+ * Construct a child group.  Child group has either the first half or
+ * the second half of the parent group.  If parent group has odd
+ * number of processes, the extra process is placed in the Upper child
+ * group.
  */
 CascadePartitionerTree::CascadePartitionerTree(
    CascadePartitionerTree &parent,
@@ -381,7 +384,7 @@ CascadePartitionerTree::balanceChildren()
          }
 
          TBOX_ASSERT( d_near->d_contact[0] >= 0 );
-         sendShipment(d_near->d_contact[0]);
+         sendShipment(d_near->d_contact[0]); // If 2 contacts in far group, send to the first one only.
       }
    }
 
@@ -389,7 +392,15 @@ CascadePartitionerTree::balanceChildren()
              d_near->surplus() < -d_common->d_pparams->getLoadComparisonTol() ) {
       // Incoming work, from far child to near child.
 
-      if ( d_far->d_group_may_supply ) {
+      /*
+       * Even when far group may supply, it will not supply to an
+       * odd process, because the odd process would be a redundant
+       * receiver for its group.  An odd process is the last
+       * process in a group with an odd process count.
+       */
+      const bool is_odd = (d_end-d_begin)%2 && d_common->d_mpi.getRank() == d_end-1;
+
+      if ( d_far->d_group_may_supply && !is_odd ) {
          if ( d_far->d_process_may_supply[0] ) {
             d_common->d_comm_peer[0].setPeerRank(d_near->d_contact[0]);
             d_common->d_comm_peer[0].setMPITag( CascadePartitionerTree_TAG_LoadTransfer0,
