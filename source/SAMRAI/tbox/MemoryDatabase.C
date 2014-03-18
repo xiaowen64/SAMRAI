@@ -184,7 +184,7 @@ MemoryDatabase::getArrayType(
  *************************************************************************
  */
 
-int
+size_t
 MemoryDatabase::getArraySize(
    const std::string& key)
 {
@@ -282,7 +282,7 @@ void
 MemoryDatabase::putBoolArray(
    const std::string& key,
    const bool * const data,
-   const int nelements)
+   const size_t nelements)
 {
    deleteKeyIfFound(key);
    KeyData keydata;
@@ -293,7 +293,7 @@ MemoryDatabase::putBoolArray(
    keydata.d_from_default = false;
    keydata.d_boolean = std::vector<bool>(nelements);
 
-   for (int i = 0; i < nelements; i++) {
+   for (size_t i = 0; i < nelements; i++) {
       keydata.d_boolean[i] = data[i];
    }
 
@@ -342,10 +342,10 @@ void
 MemoryDatabase::getBoolArray(
    const std::string& key,
    bool* data,
-   const int nelements)
+   const size_t nelements)
 {
    std::vector<bool> tmp = getBoolVector(key);
-   const int tsize = static_cast<int>(tmp.size());
+   const size_t tsize = tmp.size();
 
    if (nelements != tsize) {
       MEMORY_DB_ERROR(
@@ -354,7 +354,7 @@ MemoryDatabase::getBoolArray(
                                  << tsize << "...");
    }
 
-   for (int i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
 }
@@ -395,7 +395,7 @@ void
 MemoryDatabase::putDatabaseBoxArray(
    const std::string& key,
    const DatabaseBox * const data,
-   const int nelements)
+   const size_t nelements)
 {
    deleteKeyIfFound(key);
    KeyData keydata;
@@ -406,7 +406,7 @@ MemoryDatabase::putDatabaseBoxArray(
    keydata.d_from_default = false;
    keydata.d_box = std::vector<DatabaseBox>(nelements);
 
-   for (int i = 0; i < nelements; i++) {
+   for (size_t i = 0; i < nelements; i++) {
       keydata.d_box[i] = data[i];
    }
 
@@ -455,10 +455,10 @@ void
 MemoryDatabase::getDatabaseBoxArray(
    const std::string& key,
    DatabaseBox* data,
-   const int nelements)
+   const size_t nelements)
 {
    std::vector<DatabaseBox> tmp = getDatabaseBoxVector(key);
-   const int tsize = static_cast<int>(tmp.size());
+   const size_t tsize = tmp.size();
 
    if (nelements != tsize) {
       MEMORY_DB_ERROR(
@@ -467,7 +467,7 @@ MemoryDatabase::getDatabaseBoxArray(
                                  << tsize << "...");
    }
 
-   for (int i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
 }
@@ -508,7 +508,7 @@ void
 MemoryDatabase::putCharArray(
    const std::string& key,
    const char * const data,
-   const int nelements)
+   const size_t nelements)
 {
    deleteKeyIfFound(key);
    KeyData keydata;
@@ -519,7 +519,7 @@ MemoryDatabase::putCharArray(
    keydata.d_from_default = false;
    keydata.d_char = std::vector<char>(nelements);
 
-   for (int i = 0; i < nelements; i++) {
+   for (size_t i = 0; i < nelements; i++) {
       keydata.d_char[i] = data[i];
    }
 
@@ -568,10 +568,10 @@ void
 MemoryDatabase::getCharArray(
    const std::string& key,
    char* data,
-   const int nelements)
+   const size_t nelements)
 {
    std::vector<char> tmp = getCharVector(key);
-   const int tsize = static_cast<int>(tmp.size());
+   const size_t tsize = tmp.size();
 
    if (nelements != tsize) {
       MEMORY_DB_ERROR(
@@ -580,7 +580,7 @@ MemoryDatabase::getCharArray(
                                  << tsize << "...");
    }
 
-   for (int i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
 }
@@ -626,7 +626,7 @@ void
 MemoryDatabase::putComplexArray(
    const std::string& key,
    const dcomplex * const data,
-   const int nelements)
+   const size_t nelements)
 {
    deleteKeyIfFound(key);
    KeyData keydata;
@@ -637,7 +637,7 @@ MemoryDatabase::putComplexArray(
    keydata.d_from_default = false;
    keydata.d_complex = std::vector<dcomplex>(nelements);
 
-   for (int i = 0; i < nelements; i++) {
+   for (size_t i = 0; i < nelements; i++) {
       keydata.d_complex[i] = data[i];
    }
 
@@ -731,10 +731,10 @@ void
 MemoryDatabase::getComplexArray(
    const std::string& key,
    dcomplex* data,
-   const int nelements)
+   const size_t nelements)
 {
    std::vector<dcomplex> tmp = getComplexVector(key);
-   const int tsize = static_cast<int>(tmp.size());
+   const size_t tsize = tmp.size();
 
    if (nelements != tsize) {
       MEMORY_DB_ERROR(
@@ -743,7 +743,7 @@ MemoryDatabase::getComplexArray(
                                  << tsize << "...");
    }
 
-   for (int i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
 }
@@ -787,7 +787,7 @@ void
 MemoryDatabase::putDoubleArray(
    const std::string& key,
    const double * const data,
-   const int nelements)
+   const size_t nelements)
 {
    deleteKeyIfFound(key);
    KeyData keydata;
@@ -798,7 +798,7 @@ MemoryDatabase::putDoubleArray(
    keydata.d_from_default = false;
    keydata.d_double = std::vector<double>(nelements);
 
-   for (int i = 0; i < nelements; i++) {
+   for (size_t i = 0; i < nelements; i++) {
       keydata.d_double[i] = data[i];
    }
 
@@ -856,14 +856,14 @@ MemoryDatabase::getDoubleVector(
    switch (keydata->d_type) {
       case Database::SAMRAI_INT: {
          array = std::vector<double>(keydata->d_integer.size());
-         for (int i = 0; i < static_cast<int>(keydata->d_integer.size()); i++) {
+         for (size_t i = 0; i < keydata->d_integer.size(); i++) {
             array[i] = (double)keydata->d_integer[i];
          }
          break;
       }
       case Database::SAMRAI_FLOAT: {
          array = std::vector<double>(keydata->d_float.size());
-         for (int i = 0; i < static_cast<int>(keydata->d_float.size()); i++) {
+         for (size_t i = 0; i < keydata->d_float.size(); i++) {
             array[i] = (double)keydata->d_float[i];
          }
          break;
@@ -883,10 +883,10 @@ void
 MemoryDatabase::getDoubleArray(
    const std::string& key,
    double* data,
-   const int nelements)
+   const size_t nelements)
 {
    std::vector<double> tmp = getDoubleVector(key);
-   const int tsize = static_cast<int>(tmp.size());
+   const size_t tsize = tmp.size();
 
    if (nelements != tsize) {
       MEMORY_DB_ERROR(
@@ -895,7 +895,7 @@ MemoryDatabase::getDoubleArray(
                                  << tsize << "...");
    }
 
-   for (int i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
 }
@@ -940,7 +940,7 @@ void
 MemoryDatabase::putFloatArray(
    const std::string& key,
    const float * const data,
-   const int nelements)
+   const size_t nelements)
 {
    deleteKeyIfFound(key);
    KeyData keydata;
@@ -951,7 +951,7 @@ MemoryDatabase::putFloatArray(
    keydata.d_from_default = false;
    keydata.d_float = std::vector<float>(nelements);
 
-   for (int i = 0; i < nelements; i++) {
+   for (size_t i = 0; i < nelements; i++) {
       keydata.d_float[i] = data[i];
    }
 
@@ -1015,7 +1015,7 @@ MemoryDatabase::getFloatVector(
    switch (keydata->d_type) {
       case Database::SAMRAI_INT: {
          array = std::vector<float>(keydata->d_integer.size());
-         for (int i = 0; i < static_cast<int>(keydata->d_integer.size()); i++) {
+         for (size_t i = 0; i < keydata->d_integer.size(); i++) {
             array[i] = static_cast<float>(keydata->d_integer[i]);
          }
          break;
@@ -1025,7 +1025,7 @@ MemoryDatabase::getFloatVector(
          break;
       case Database::SAMRAI_DOUBLE: {
          array = std::vector<float>(keydata->d_double.size());
-         for (int i = 0; i < static_cast<int>(keydata->d_double.size()); i++) {
+         for (size_t i = 0; i < keydata->d_double.size(); i++) {
             array[i] = static_cast<float>(keydata->d_double[i]);
          }
          break;
@@ -1041,10 +1041,10 @@ void
 MemoryDatabase::getFloatArray(
    const std::string& key,
    float* data,
-   const int nelements)
+   const size_t nelements)
 {
    std::vector<float> tmp = getFloatVector(key);
-   const int tsize = static_cast<int>(tmp.size());
+   const size_t tsize = tmp.size();
 
    if (nelements != tsize) {
       MEMORY_DB_ERROR(
@@ -1053,7 +1053,7 @@ MemoryDatabase::getFloatArray(
                                  << tsize << "...");
    }
 
-   for (int i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
 }
@@ -1094,7 +1094,7 @@ void
 MemoryDatabase::putIntegerArray(
    const std::string& key,
    const int * const data,
-   const int nelements)
+   const size_t nelements)
 {
    deleteKeyIfFound(key);
    KeyData keydata;
@@ -1105,7 +1105,7 @@ MemoryDatabase::putIntegerArray(
    keydata.d_from_default = false;
    keydata.d_integer = std::vector<int>(nelements);
 
-   for (int i = 0; i < nelements; i++) {
+   for (size_t i = 0; i < nelements; i++) {
       keydata.d_integer[i] = data[i];
    }
 
@@ -1154,10 +1154,10 @@ void
 MemoryDatabase::getIntegerArray(
    const std::string& key,
    int* data,
-   const int nelements)
+   const size_t nelements)
 {
    std::vector<int> tmp = getIntegerVector(key);
-   const int tsize = static_cast<int>(tmp.size());
+   const size_t tsize = tmp.size();
 
    if (nelements != tsize) {
       MEMORY_DB_ERROR(
@@ -1166,7 +1166,7 @@ MemoryDatabase::getIntegerArray(
                                  << tsize << "...");
    }
 
-   for (int i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
 }
@@ -1207,7 +1207,7 @@ void
 MemoryDatabase::putStringArray(
    const std::string& key,
    const std::string * const data,
-   const int nelements)
+   const size_t nelements)
 {
    deleteKeyIfFound(key);
    KeyData keydata;
@@ -1218,7 +1218,7 @@ MemoryDatabase::putStringArray(
    keydata.d_from_default = false;
    keydata.d_string = std::vector<std::string>(nelements);
 
-   for (int i = 0; i < nelements; i++) {
+   for (size_t i = 0; i < nelements; i++) {
       keydata.d_string[i] = data[i];
    }
 
@@ -1267,10 +1267,10 @@ void
 MemoryDatabase::getStringArray(
    const std::string& key,
    std::string* data,
-   const int nelements)
+   const size_t nelements)
 {
    std::vector<std::string> tmp = getStringVector(key);
-   const int tsize = static_cast<int>(tmp.size());
+   const size_t tsize = tmp.size();
 
    if (nelements != tsize) {
       MEMORY_DB_ERROR(
@@ -1279,7 +1279,7 @@ MemoryDatabase::getStringArray(
                                  << tsize << "...");
    }
 
-   for (int i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
 }

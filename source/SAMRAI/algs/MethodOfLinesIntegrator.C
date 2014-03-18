@@ -700,7 +700,7 @@ MethodOfLinesIntegrator::getFromInput(
       if (!is_from_restart || read_on_restart) {
 
          if (input_db->keyExists("alpha_1")) {
-            int array_size = input_db->getArraySize("alpha_1");
+            size_t array_size = input_db->getArraySize("alpha_1");
             if (array_size > 3) {
                TBOX_ERROR("MethodOfLinesIntegrator::getFromInput() error...\n"
                   << "number of alpha_1 entries must be <=3." << std::endl);
@@ -709,7 +709,7 @@ MethodOfLinesIntegrator::getFromInput(
          }
 
          if (input_db->keyExists("alpha_2")) {
-            int array_size = input_db->getArraySize("alpha_2");
+            size_t array_size = input_db->getArraySize("alpha_2");
             if (array_size > 3) {
                TBOX_ERROR("MethodOfLinesIntegrator::getFromInput() error...\n"
                   << "number of alpha_2 entries must be <=3." << std::endl);
@@ -718,7 +718,7 @@ MethodOfLinesIntegrator::getFromInput(
          }
 
          if (input_db->keyExists("beta")) {
-            int array_size = input_db->getArraySize("beta");
+            size_t array_size = input_db->getArraySize("beta");
             if (array_size > 3) {
                TBOX_ERROR("MethodOfLinesIntegrator::getFromInput() error...\n"
                   << "number of beta entries must be <=3." << std::endl);
