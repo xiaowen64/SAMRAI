@@ -245,7 +245,7 @@ void testDatabaseContents(
                  << ": # `db' keys wrong" << endl;
       ++number_of_failures;
    }
-   nkeys = static_cast<int>(arraydbkeys.size());
+   nkeys = arraydbkeys.size();
    if (nkeys != 8) {
       tbox::perr << "FAILED: - Test #2b-" << tag
                  << ": # `arraydb' keys wrong"
