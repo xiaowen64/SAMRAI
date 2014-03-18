@@ -301,7 +301,8 @@ ArrayData<TYPE>::copy(
    const hier::Transformation& transformation)
 {
    if (transformation.getRotation() == hier::Transformation::NO_ROTATE
-       && transformation.getOffset() == hier::IntVector::getZero(box.getDim())) {
+       && transformation.getOffset() == hier::IntVector::getZero(box.getDim())
+       && transformation.getBeginBlock() == transformation.getEndBlock()) {
 
       copy(src, box);
 

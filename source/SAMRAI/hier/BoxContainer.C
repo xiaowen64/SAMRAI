@@ -1864,6 +1864,29 @@ BoxContainer::findOverlapBoxes(
                             include_singularity_block_neighbors); 
 }
 
+void
+BoxContainer::findOverlapBoxes(
+   std::vector<const Box*>& overlap_boxes,
+   const Box& box,
+   const IntVector& refinement_ratio,
+   bool include_singularity_block_neighbors) const
+{
+   if (isEmpty()) {
+      return;
+   }
+
+   if (!d_tree) {
+      TBOX_ERROR("Must call makeTree before calling findOverlapBoxes with refinement ratio argument."
+         << std::endl);
+   }
+
+   d_tree->findOverlapBoxes(overlap_boxes,
+                            box,
+                            refinement_ratio,
+                            include_singularity_block_neighbors);
+}
+
+
 
 bool
 BoxContainer::hasOverlap(

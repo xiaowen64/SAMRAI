@@ -910,7 +910,7 @@ private:
 
    void chopDomain(
       BoxContainer& chopped_domain,
-      std::map<BlockId, std::set<BoxId> >& chop_map);
+      std::map< BoxId, std::map<BoxId, int> > face_neighbors);
 
    /*!
     * @brief Get a BoxContainer that contains all of the index space of all other

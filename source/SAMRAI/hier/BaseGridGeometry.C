@@ -2269,12 +2269,10 @@ void BaseGridGeometry::findSingularities(
    TBOX_ASSERT(d_number_blocks > 1);
 
    BoxContainer chopped_domain;
-   std::map<BlockId, std::set<BoxId> > chop_map;
-   chopDomain(chopped_domain, chop_map);
-
-   //std::map< BlockId, std::set<BlockId> > face_neighbors;
-   //std::map< BlockId, std::map<BlockId, int> > face_neighbors;
    std::map< BoxId, std::map<BoxId, int> > face_neighbors;
+   chopDomain(chopped_domain, face_neighbors);
+
+   chopped_domain.makeTree(this);
 
    for (BoxContainer::iterator b_itr = chopped_domain.begin();
         b_itr != chopped_domain.end(); ++b_itr) {
@@ -2283,13 +2281,19 @@ void BaseGridGeometry::findSingularities(
       const BlockId& base_block = base_box.getBlockId();
       const BoxId& base_id = base_box.getBoxId();
 
+      hier::Box grow_base(base_box);
+      grow_base.grow(IntVector::getOne(d_dim));
+
+      std::vector<const Box*> nbr_boxes;
+      chopped_domain.findOverlapBoxes(nbr_boxes, grow_base, IntVector::getOne(d_dim));
+
       const std::map<BlockId,Neighbor>& nbrs_of_base =
          d_block_neighbors[base_block.getBlockValue()];
 
-      for (BoxContainer::iterator n_itr = chopped_domain.begin();
-           n_itr != chopped_domain.end(); ++n_itr) {
+      for (std::vector<const Box*>::const_iterator n_itr = nbr_boxes.begin();
+           n_itr != nbr_boxes.end(); ++n_itr) {
 
-         const Box& nbr_box = *n_itr;
+         const Box& nbr_box = **n_itr;
          const BoxId& nbr_id = nbr_box.getBoxId();
 
          if (nbr_id <= base_id) {
@@ -2300,7 +2304,7 @@ void BaseGridGeometry::findSingularities(
          if (base_block != nbr_block &&
              nbrs_of_base.find(nbr_block) == nbrs_of_base.end()) {
             continue;
-         } 
+         }
 
          if (face_neighbors[base_id].find(nbr_id) !=
              face_neighbors[base_id].end()) {
@@ -2416,10 +2420,13 @@ void BaseGridGeometry::findSingularities(
 void
 BaseGridGeometry::chopDomain(
    BoxContainer& chopped_domain,
-   std::map<BlockId, std::set<BoxId> >& chop_map)
+   std::map< BoxId, std::map<BoxId, int> > face_neighbors)
 {
    chopped_domain = d_physical_domain;
    chopped_domain.order();
+
+   std::map<BoxId, std::set<BoxId> > dont_chop;
+   std::map<BoxId, std::set<BoxId> > neighbors;
 
    bool breaking_needed = true;
    bool chopped = false;
@@ -2435,6 +2442,7 @@ BaseGridGeometry::chopDomain(
          for ( ; bi != chopped_domain.end(base_block); ++bi) {
 
             const Box& base_box = *bi;
+            const BoxId& base_id = base_box.getBoxId();
             Box base_node_box(base_box);
             base_node_box.upper() += IntVector::getOne(d_dim);
             IntVector base_node_size(base_node_box.numberCells()); 
@@ -2443,50 +2451,67 @@ BaseGridGeometry::chopDomain(
                chopped_domain.begin(base_block));
 
             for ( ; si != chopped_domain.end(base_block); ++si) {
+               const BoxId& other_id = si->getBoxId(); 
+               if (base_id != other_id) {
+                  if (dont_chop[base_id].find(other_id) == dont_chop[base_id].end()) {
+                     Box nbr_node_box(*si);
+                     nbr_node_box.upper() += IntVector::getOne(d_dim);
 
-               if (base_box.getBoxId() != si->getBoxId()) {
-                  Box nbr_node_box(*si);
-                  nbr_node_box.upper() += IntVector::getOne(d_dim);
+                     Box intersect(base_node_box*nbr_node_box);
+                     if (!intersect.empty()) {
+                        neighbors[base_id].insert(other_id);
+                        neighbors[other_id].insert(base_id);
+                        IntVector intersect_size(intersect.numberCells());
+                        for (int d = 0; d < d_dim.getValue(); ++d) { 
+                           if (intersect_size[d] != 1) {
+                              if (intersect_size[d] != base_node_size[d]) {
+                                 bool chop_low;
+                                 int chop;
+                                 if (base_box.lower()(d) != si->lower()(d)) {
+                                    chop = std::max<int>(base_box.lower(d),
+                                                         si->lower(d));
+                                    chop_low = true;
+                                 } else {
+                                    chop = std::min<int>(base_box.upper(d),
+                                                         si->upper(d));
+                                    chop_low = false;
+                                 }
 
-                  Box intersect(base_node_box*nbr_node_box);
-                  if (!intersect.empty()) {
-                     IntVector intersect_size(intersect.numberCells());
-                     for (int d = 0; d < d_dim.getValue(); ++d) { 
-                        if (intersect_size[d] != 1) {
-                           if (intersect_size[d] != base_node_size[d]) {
-                              bool chop_low;
-                              int chop;
-                              if (base_box.lower()(d) != si->lower()(d)) {
-                                 chop = std::max<int>(base_box.lower(d),
-                                                      si->lower(d));
-                                 chop_low = true;
-                              } else {
-                                 chop = std::min<int>(base_box.upper(d),
-                                                      si->upper(d));
-                                 chop_low = false;
+                                 BoxContainer::iterator box_itr =
+                                    chopped_domain.find(base_box);
+
+                                 LocalId local_id(chopped_domain.size());
+                                 Box new_box(base_box, local_id, 0);
+                                 if (chop_low == true) {
+                                    new_box.lower()(d) = chop;
+                                    box_itr->upper()(d) = chop-1;
+                                 } else {
+                                    new_box.upper()(d) = chop;
+                                    box_itr->lower()(d) = chop+1;
+                                 }
+                                 chopped_domain.insert(chopped_domain.end(),
+                                                       new_box);
+                                 chopped = true;
+
+                                 dont_chop[base_id].clear();
+                                 for (std::set<BoxId>::iterator nn_itr =
+                                      neighbors[base_id].begin();
+                                      nn_itr != neighbors[base_id].end();
+                                      ++nn_itr) {
+
+                                    dont_chop[*nn_itr].erase(base_id);
+                                 } 
+                                 break;
                               }
-
-                              BoxContainer::iterator box_itr =
-                                 chopped_domain.find(base_box);
-
-                              LocalId local_id(chopped_domain.size());
-                              Box new_box(base_box, local_id, 0);
-                              if (chop_low == true) {
-                                 new_box.lower()(d) = chop;
-                                 box_itr->upper()(d) = chop-1;
-                              } else {
-                                 new_box.upper()(d) = chop;
-                                 box_itr->lower()(d) = chop+1;
-                              }
-                              chopped_domain.insert(chopped_domain.end(),
-                                                    new_box);
-                              chopped = true;
-                              break;
                            }
                         }
                      }
                   }
-                  if (chopped) break;
+                  if (chopped) {
+                     break;
+                  } else {
+                     dont_chop[base_id].insert(other_id);
+                  }
                }
             }
             if (chopped) break; 
@@ -2502,55 +2527,75 @@ BaseGridGeometry::chopDomain(
 
                for ( ; ni != chopped_domain.end(nbr_block); ++ni) {
 
-                  Box nbr_box(*ni);
-                  transformBox(nbr_box,
-                               IntVector::getOne(d_dim),
-                               base_block,
-                               nbr_block);
-                  Box nbr_node_box(nbr_box);
-                  nbr_node_box.upper() += IntVector::getOne(d_dim);
+                  const BoxId& other_id = ni->getBoxId();
+                  std::set<BoxId>& nochop = dont_chop[base_id];
+                  if (nochop.find(other_id) == nochop.end()) {
 
-                  Box intersect(base_node_box*nbr_node_box);
-                  if (!intersect.empty()) {
-                     IntVector intersect_size(intersect.numberCells());
-                     for (int d = 0; d < d_dim.getValue(); ++d) {
-                        if (intersect_size[d] != 1) {
-                           if (intersect_size[d] != base_node_size[d]) {
-                              bool chop_low;
-                              int chop;
-                              if (base_box.lower()(d) != nbr_box.lower()(d)) {
-                                 chop = std::max<int>(base_box.lower(d), 
-                                                      nbr_box.lower(d));
-                                 chop_low = true;
-                              } else {
-                                 chop = std::min<int>(base_box.upper(d),
-                                                      nbr_box.upper(d));
-                                 chop_low = false;
+                     Box nbr_box(*ni);
+                     transformBox(nbr_box,
+                                  IntVector::getOne(d_dim),
+                                  base_block,
+                                  nbr_block);
+                     Box nbr_node_box(nbr_box);
+                     nbr_node_box.upper() += IntVector::getOne(d_dim);
+
+                     Box intersect(base_node_box*nbr_node_box);
+                     if (!intersect.empty()) {
+                        neighbors[base_id].insert(other_id);
+                        neighbors[other_id].insert(base_id);
+                        IntVector intersect_size(intersect.numberCells());
+                        for (int d = 0; d < d_dim.getValue(); ++d) {
+                           if (intersect_size[d] != 1) {
+                              if (intersect_size[d] != base_node_size[d]) {
+                                 bool chop_low;
+                                 int chop;
+                                 if (base_box.lower()(d) != nbr_box.lower()(d)) {
+                                    chop = std::max<int>(base_box.lower(d), 
+                                                         nbr_box.lower(d));
+                                    chop_low = true;
+                                 } else {
+                                    chop = std::min<int>(base_box.upper(d),
+                                                         nbr_box.upper(d));
+                                    chop_low = false;
+                                 }
+
+                                 BoxContainer::iterator box_itr =
+                                    chopped_domain.find(base_box);
+
+                                 LocalId local_id(chopped_domain.size());
+                                 Box new_box(base_box, local_id, 0);
+                                 if (chop_low == true) {
+                                    new_box.lower()(d) = chop;
+                                    box_itr->upper()(d) = chop-1;
+                                 } else {
+                                    new_box.upper()(d) = chop;
+                                    box_itr->lower()(d) = chop+1;
+                                 }
+
+                                 chopped_domain.insert(chopped_domain.end(),
+                                                       new_box);
+                                 chopped = true;
+
+                                 nochop.clear();
+                                 for (std::set<BoxId>::iterator nn_itr =
+                                      neighbors[base_id].begin();
+                                      nn_itr != neighbors[base_id].end();
+                                      ++nn_itr) {
+
+                                    dont_chop[*nn_itr].erase(base_id);
+                                 }
+                                 break;
                               }
-
-                              BoxContainer::iterator box_itr =
-                                 chopped_domain.find(base_box);
-
-                              LocalId local_id(chopped_domain.size());
-                              Box new_box(base_box, local_id, 0);
-                              if (chop_low == true) {
-                                 new_box.lower()(d) = chop;
-                                 box_itr->upper()(d) = chop-1;
-                              } else {
-                                 new_box.upper()(d) = chop;
-                                 box_itr->lower()(d) = chop+1;
-                              }
-
-                              chopped_domain.insert(chopped_domain.end(),
-                                                    new_box);
-                              chopped = true;
-                              break;
                            }
                         }
                      }
                   }
 
-                  if (chopped) break;
+                  if (chopped) {
+                     break;
+                  } else {
+                     nochop.insert(other_id);
+                  }
                }
                if (chopped) break;
             }

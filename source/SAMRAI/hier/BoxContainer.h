@@ -1976,6 +1976,13 @@ private:
       const IntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
 
+   void
+   findOverlapBoxes(
+      std::vector<const Box*>& overlap_boxes,
+      const Box& box,
+      const IntVector& refinement_ratio,
+      bool include_singularity_block_neighbors = false) const;
+
    /*!
     * @brief Determine if a given box intersects with the BoxContainer.
     *
