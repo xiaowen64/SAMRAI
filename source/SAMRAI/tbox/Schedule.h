@@ -422,6 +422,7 @@ private:
       boost::shared_ptr<Timer> t_post_sends;
       boost::shared_ptr<Timer> t_process_incoming_messages;
       boost::shared_ptr<Timer> t_MPI_wait;
+      boost::shared_ptr<Timer> t_pack_stream;
       boost::shared_ptr<Timer> t_unpack_stream;
       boost::shared_ptr<Timer> t_local_copies;
    };
