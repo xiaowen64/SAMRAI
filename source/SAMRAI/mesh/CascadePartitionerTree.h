@@ -61,9 +61,9 @@ public:
 
 
    //! @brief Generation number (generation 0 contains all ranks).
-   int generationNum() const { return d_generation; }
+   int generationNum() const { return d_gen_num; }
 
-   //! @brief Generation number (generation 0 contains all ranks).
+   //! @brief Cycle number (cycle i groups has 2^i processes).
    int cycleNum() const;
 
 
@@ -154,7 +154,7 @@ private:
    //! @brief Group specification
 
    //! @brief Generation number.  Generation 0 contains all ranks.
-   int d_generation;
+   int d_gen_num;
 
    //! @brief First rank in group.
    int d_begin;

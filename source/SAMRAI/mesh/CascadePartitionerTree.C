@@ -36,7 +36,7 @@ namespace mesh {
 CascadePartitionerTree::CascadePartitionerTree(
    const CascadePartitioner &partitioner ) :
    d_common(&partitioner),
-   d_generation(0),
+   d_gen_num(0),
 
    d_begin(0),
    d_end(partitioner.d_mpi.getSize()),
@@ -72,7 +72,7 @@ CascadePartitionerTree::CascadePartitionerTree(
    CascadePartitionerTree &parent,
    Position group_position ) :
    d_common(parent.d_common),
-   d_generation(1 + parent.d_generation),
+   d_gen_num(1 + parent.d_gen_num),
 
    d_begin(parent.d_begin),
    d_end(parent.d_end),
@@ -183,47 +183,56 @@ CascadePartitionerTree::~CascadePartitionerTree()
 
 /*
  *************************************************************************
- * Starting at the leaves, combine sibling data balance them, then
- * continue toward the root.
+ * This method contains the looping structure required to balance all
+ * groups.  Starting at the leaves, combine sibling data to balance
+ * them, then continue toward the root.
  *************************************************************************
  */
 void CascadePartitionerTree::balanceAll()
 {
-   const int lg_size = CascadePartitioner::lgInt(d_common->d_mpi.getSize());
+   int top_group_num = 0; // For debugging only.
 
    /*
-    * Calling balanceChildren balances current_group's two branches,
-    * but within each branch, there may be imbalance.
-    * We need lg_size outer cycles, each balancing a generation.
+    * Balancing a group doesn't guarantee all its descendent groups
+    * are balanced.  This loop goes through all generations to balance
+    * each group (top_group) in turn.
     */
+   for ( CascadePartitionerTree *top_group=this; top_group!=d_leaf;
+         top_group = top_group->d_near ) {
 
-   for ( int outer_cycle=0; outer_cycle<lg_size; ++outer_cycle ) {
-      tbox::plog << "\nouter_cycle="<<outer_cycle << std::endl;
-
-      int inner_cycleMax = lg_size + 1 - outer_cycle;
+      tbox::plog << "\nCascadePartitionerTree::balanceAll balancing outer top_group "
+                 << top_group->d_gen_num << std::endl;
 
       d_leaf->recomputeLeafData();
 
-      CascadePartitionerTree *current_near_child = d_leaf;
-      CascadePartitionerTree *current_parent = current_near_child->d_parent;
-
-      for ( int inner_cycle=1; inner_cycle<inner_cycleMax; ++inner_cycle ) {
-         tbox::plog << "\ninner_cycle="<<inner_cycle << std::endl;
-
-         current_parent->combineChildren();
-         current_parent->balanceChildren();
-
-         current_near_child = current_parent;
-         current_parent = current_near_child->d_parent;
+      /*
+       * Balance top_group by sweeping from leaf to top_group, shifting
+       * load from surplus child to deficit child as we go.
+       */
+      for ( CascadePartitionerTree *current_group = d_leaf->d_parent;
+            current_group != 0 && current_group->d_near != top_group;
+            current_group = current_group->d_parent ) {
 
          if ( d_common->d_print_steps ) {
-            tbox::plog << "CascadePartitionerTree::balanceAll: finished outer_cycle "
-                       << outer_cycle << "\n";
+            tbox::plog << "\nCascadePartitionerTree::balanceAll shuffling generation "
+                       << current_group->d_gen_num << "\n";
             printClassData( tbox::plog, "\t" );
          }
-      }
 
-   }
+         current_group->combineChildren();
+         current_group->balanceChildren();
+
+         if ( d_common->d_print_steps ) {
+            tbox::plog << "\nCascadePartitionerTree::balanceAll shuffled generation "
+                       << current_group->d_gen_num << "\n";
+            printClassData( tbox::plog, "\t" );
+         }
+
+      } // Inner loop.
+
+      ++top_group_num; // For debugging only.
+
+   } // Outer loop.
 
 }
 
@@ -245,9 +254,9 @@ CascadePartitionerTree::combineChildren()
    if ( d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerTree::combineChildren: entered with state:\n";
       printClassData( tbox::plog, "\t" );
-      tbox::plog << "child 0:\n";
+      tbox::plog << "\tchild 0:\n";
       d_children[0]->printClassData( tbox::plog, "\t" );
-      tbox::plog << "child 1:\n";
+      tbox::plog << "\tchild 1:\n";
       d_children[1]->printClassData( tbox::plog, "\t" );
    }
 
@@ -266,26 +275,22 @@ CascadePartitionerTree::combineChildren()
          d_common->d_comm_peer[i].setMPITag( CascadePartitionerTree_TAG_InfoExchange0,
                                              CascadePartitionerTree_TAG_InfoExchange1 );
          d_common->d_comm_peer[i].limitFirstDataLength( send_msg.getCurrentSize() );
-         if ( d_common->d_comm_peer[i].beginRecv() ) {
-            d_common->d_comm_peer[i].pushToCompletionQueue();
-         }
+         d_common->d_comm_peer[i].beginRecv(true);
 
          d_common->d_comm_peer[2+i].setPeerRank(d_near->d_contact[i]);
          d_common->d_comm_peer[2+i].setMPITag( CascadePartitionerTree_TAG_InfoExchange0,
                                                CascadePartitionerTree_TAG_InfoExchange1 );
          d_common->d_comm_peer[2+i].limitFirstDataLength( send_msg.getCurrentSize() );
-         d_common->d_comm_peer[2+i].beginSend(static_cast<const char*>(send_msg.getBufferStart()),
-                                              send_msg.getCurrentSize() );
+         d_common->d_comm_peer[2+i].beginSend( static_cast<const char*>(send_msg.getBufferStart()),
+                                               send_msg.getCurrentSize(), true );
 
       }
    }
 
    d_far->d_work = 0.0;
    d_far->d_group_may_supply = true;
-   if ( d_common->d_comm_stage.numberOfCompletedMembers() == 0 ) {
-      d_common->d_comm_stage.advanceAny();
-   }
-   while ( d_common->d_comm_stage.numberOfCompletedMembers() > 0 ) {
+   while ( d_common->d_comm_stage.numberOfCompletedMembers() > 0 ||
+           d_common->d_comm_stage.advanceAny() ) {
 
       tbox::AsyncCommPeer<char> *completed = static_cast<tbox::AsyncCommPeer<char>*>(
          d_common->d_comm_stage.popCompletionQueue() );
@@ -303,8 +308,6 @@ CascadePartitionerTree::combineChildren()
          d_far->d_work += tmp_far_work;
          d_far->d_group_may_supply &= tmp_far_flag;
       }
-
-      d_common->d_comm_stage.advanceAny();
    }
    TBOX_ASSERT( d_common->d_comm_stage.numberOfPendingMembers() == 0 );
 
@@ -318,11 +321,11 @@ CascadePartitionerTree::combineChildren()
    if ( d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerTree::combineChildren: leaving with state:\n";
       printClassData( tbox::plog, "\t" );
-      tbox::plog << "child 0:\n";
+      tbox::plog << "\tchild 0:\n";
       d_children[0]->printClassData( tbox::plog, "\t" );
-      tbox::plog << "child 1:\n";
+      tbox::plog << "\tchild 1:\n";
       d_children[1]->printClassData( tbox::plog, "\t" );
-      tbox::plog << "\tlocal_load:\n";
+      tbox::plog << "\tlocal_load:";
       d_common->d_local_load->recursivePrint(tbox::plog, "\t",0);
    }
    return;
@@ -344,6 +347,10 @@ CascadePartitionerTree::combineChildren()
  * that happens remotely.  Each process in the supply group send a
  * message received by its contact(s) on the requesting group.  The
  * messages has the actual work to be transfered.
+ *
+ * Note: This method balances only the children groups (the lower
+ * child and upper), not all descendents.  To balance the near grand
+ * child, call d_near->balanceChildren().
  *************************************************************************
  */
 void
@@ -387,13 +394,13 @@ CascadePartitionerTree::balanceChildren()
             d_common->d_comm_peer[0].setPeerRank(d_near->d_contact[0]);
             d_common->d_comm_peer[0].setMPITag( CascadePartitionerTree_TAG_LoadTransfer0,
                                                 CascadePartitionerTree_TAG_LoadTransfer1 );
-            d_common->d_comm_peer[0].beginRecv();
+            d_common->d_comm_peer[0].beginRecv(true);
          }
          if ( d_far->d_process_may_supply[1] ) {
             d_common->d_comm_peer[1].setPeerRank(d_near->d_contact[1]);
             d_common->d_comm_peer[1].setMPITag( CascadePartitionerTree_TAG_LoadTransfer0,
                                                 CascadePartitionerTree_TAG_LoadTransfer1 );
-            d_common->d_comm_peer[1].beginRecv();
+            d_common->d_comm_peer[1].beginRecv(true);
          }
       }
 
@@ -423,11 +430,11 @@ CascadePartitionerTree::balanceChildren()
    if ( d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerTree::balanceChildren: leaving with state:\n";
       printClassData( tbox::plog, "\t" );
-      tbox::plog << "child 0:\n";
+      tbox::plog << "\tchild 0:\n";
       d_children[0]->printClassData( tbox::plog, "\t" );
-      tbox::plog << "child 1:\n";
+      tbox::plog << "\tchild 1:\n";
       d_children[1]->printClassData( tbox::plog, "\t" );
-      tbox::plog << "\tlocal_load:\n";
+      tbox::plog << "\tlocal_load:";
       d_common->d_local_load->recursivePrint(tbox::plog, "\t",0);
    }
    return;
@@ -528,7 +535,7 @@ CascadePartitionerTree::sendShipment( int taker )
    d_common->d_comm_peer[0].setMPITag( CascadePartitionerTree_TAG_LoadTransfer0,
                                        CascadePartitionerTree_TAG_LoadTransfer1 );
    d_common->d_comm_peer[0].beginSend( (const char*)(msg.getBufferStart()),
-                                       msg.getCurrentSize() );
+                                       msg.getCurrentSize(), true );
    d_common->d_shipment->clear();
    return;
 }
@@ -542,17 +549,21 @@ CascadePartitionerTree::sendShipment( int taker )
 void
 CascadePartitionerTree::receiveAndUnpackSuppliedLoad()
 {
-   while ( d_common->d_comm_stage.advanceAny() ) {
+   while ( d_common->d_comm_stage.numberOfCompletedMembers() > 0 ||
+           d_common->d_comm_stage.advanceAny() ) {
       tbox::AsyncCommStage::Member *completed = d_common->d_comm_stage.popCompletionQueue();
       tbox::AsyncCommPeer<char> *comm_peer = static_cast<tbox::AsyncCommPeer<char>*>(completed);
       tbox::MessageStream recv_msg( comm_peer->getRecvSize(),
                                     tbox::MessageStream::Read,
                                     comm_peer->getRecvData(),
                                     true );
+      const int old_item_count = d_common->d_local_load->getNumberOfItems();
       recv_msg >> *d_common->d_local_load;
       if ( d_common->d_print_steps ) {
-         tbox::plog << "CascadePartitionerTree::receiveAndUnpackSuppliedLoad: received from "
-                    << comm_peer->getPeerRank() << " and updated d_local_load:\n";
+         tbox::plog << "CascadePartitionerTree::receiveAndUnpackSuppliedLoad: received "
+                    << d_common->d_local_load->getNumberOfItems()-old_item_count
+                    << " from process " << comm_peer->getPeerRank()
+                    << " items and updated d_local_load:\n";
          d_common->d_local_load->recursivePrint(tbox::plog, "Curr: ", 2);
       }
    }
@@ -585,7 +596,7 @@ CascadePartitionerTree::recomputeLeafData()
 int
 CascadePartitionerTree::cycleNum() const
 {
-   return CascadePartitioner::lgInt(d_common->d_mpi.getSize()) - d_generation;
+   return CascadePartitioner::lgInt(d_common->d_mpi.getSize()) - d_gen_num;
 }
 
 
@@ -597,10 +608,11 @@ CascadePartitionerTree::cycleNum() const
 void
 CascadePartitionerTree::printClassData( std::ostream &co, const std::string &border ) const
 {
-   const std::string indent( border + std::string(cycleNum(),' ') + std::string(cycleNum(),' ') );
-   co << indent << "generation=" << d_generation << "  cycle=" << cycleNum()
+   const std::string indent( border + std::string(d_gen_num,' ') + std::string(d_gen_num,' ') );
+   co << indent << "gen_num=" << d_gen_num << "  cycle=" << cycleNum()
       << "  [" << d_begin << ',' << d_end << ")  group_size=" << d_end-d_begin
       << "  local leaf=" << (this==d_leaf) << "  this=" << this
+      << "  far=" << d_far << "  near=" << d_near
       << '\n' << indent
       << "position=" << d_position << "  contact=" << d_contact[0] << ',' << d_contact[1]
       << "  work=" << d_work << '/' << d_capacity
