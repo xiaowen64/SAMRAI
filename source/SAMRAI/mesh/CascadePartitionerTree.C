@@ -107,9 +107,8 @@ CascadePartitionerTree::CascadePartitionerTree(
     * rank in lower group two contacts).
     */
    const int relative_rank = d_common->d_mpi.getRank() < upper_begin ?
-      d_common->d_mpi.getRank() - d_begin :
+      d_common->d_mpi.getRank() - d_parent->d_begin :
       d_common->d_mpi.getRank() - upper_begin ;
-   d_contact[1] = -1;
    if ( group_position == Lower ) {
       d_contact[0] = relative_rank + upper_begin;
       if ( d_common->d_mpi.getRank() == upper_begin-1 &&
@@ -152,9 +151,9 @@ CascadePartitionerTree::makeChildren()
       d_children[0] = new CascadePartitionerTree( *this, Lower );
       d_children[1] = new CascadePartitionerTree( *this, Upper );
 
-      const bool in_upper = d_common->d_mpi.getRank() >= d_children[1]->d_begin;
-      d_near = d_children[in_upper];
-      d_far = d_children[!in_upper];
+      const bool in_upper_branch = d_common->d_mpi.getRank() >= d_children[1]->d_begin;
+      d_near = d_children[in_upper_branch];
+      d_far = d_children[!in_upper_branch];
 
       d_leaf = d_near->d_leaf;
    }
@@ -219,7 +218,7 @@ void CascadePartitionerTree::balanceAll()
          if ( d_common->d_print_steps ) {
             tbox::plog << "\nCascadePartitionerTree::balanceAll shuffling generation "
                        << current_group->d_gen_num << "\n";
-            printClassData( tbox::plog, "\t" );
+            current_group->printClassData( tbox::plog, "\t" );
          }
 
          current_group->combineChildren();
@@ -228,7 +227,7 @@ void CascadePartitionerTree::balanceAll()
          if ( d_common->d_print_steps ) {
             tbox::plog << "\nCascadePartitionerTree::balanceAll shuffled generation "
                        << current_group->d_gen_num << "\n";
-            printClassData( tbox::plog, "\t" );
+            current_group->printClassData( tbox::plog, "\t" );
          }
 
       } // Inner loop.
