@@ -562,8 +562,8 @@ CascadePartitionerTree::receiveAndUnpackSuppliedLoad()
       if ( d_common->d_print_steps ) {
          tbox::plog << "CascadePartitionerTree::receiveAndUnpackSuppliedLoad: received "
                     << d_common->d_local_load->getNumberOfItems()-old_item_count
-                    << " from process " << comm_peer->getPeerRank()
-                    << " items and updated d_local_load:\n";
+                    << " item from process " << comm_peer->getPeerRank()
+                    << " and updated d_local_load:\n";
          d_common->d_local_load->recursivePrint(tbox::plog, "Curr: ", 2);
       }
    }
@@ -612,7 +612,7 @@ CascadePartitionerTree::printClassData( std::ostream &co, const std::string &bor
    co << indent << "gen_num=" << d_gen_num << "  cycle=" << cycleNum()
       << "  [" << d_begin << ',' << d_end << ")  group_size=" << d_end-d_begin
       << "  local leaf=" << (this==d_leaf) << "  this=" << this
-      << "  far=" << d_far << "  near=" << d_near
+      << "  near=" << d_near << "  far=" << d_far
       << '\n' << indent
       << "position=" << d_position << "  contact=" << d_contact[0] << ',' << d_contact[1]
       << "  work=" << d_work << '/' << d_capacity
