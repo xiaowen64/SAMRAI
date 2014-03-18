@@ -1,7 +1,7 @@
 c
 c  File:        $URL$
 c  Package:     SAMRAI algs
-c  Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2014 Lawrence Livermore National Security, LLC
 c  Revision:    
 c  Modified:    
 c  Description:    F77 routines for summing outernode data with
@@ -10,7 +10,7 @@ c
 c
 c  File:        $URL$
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2014 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Description: m4 include file for dimensioning 2d arrays in FORTRAN routines.
 c

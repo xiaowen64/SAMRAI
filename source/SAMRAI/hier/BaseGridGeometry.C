@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Base class for geometry management in AMR hierarchy
  *
  ************************************************************************/
@@ -2063,7 +2063,7 @@ BaseGridGeometry::readBlockDataFromInput(
                      bool use_box = true;
 
                      for (BoxContainer::iterator cd = cur_domain.begin();
-                          cd != cur_domain_nodal.end(); ++cd) {
+                          cd != cur_domain.end(); ++cd) {
 
                         const hier::Box& domain_box = *cd;
 

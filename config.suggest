@@ -2,7 +2,7 @@
 ##
 ## File:        $URL$
 ## Package:     SAMRAI
-## Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
+## Copyright:   (c) 1997-2014 Lawrence Livermore National Security, LLC
 ## Revision:    $LastChangedRevision$
 ## Description: script to suggest ways to configure SAMRAI
 ##
@@ -311,6 +311,60 @@ cat <<-EOF
 EOF
 # Maintained by Steven Smith
 ;;
+
+# CASC RedHat 6, default GNU compilers, x86_64. The only reason this
+# is different from Redhat 5 is that things hosted on /usr/apps have
+# different versions installed.
+
+casc_rh6_gnu_x64)  # CASC RedHat 6, default GNU compilers
+cat <<-EOF
+	--with-CXX=/usr/bin/g++
+	--with-CC=/usr/bin/gcc
+	--with-F77=/usr/bin/gfortran
+	--with-hdf5=/usr/casc/samrai/apps/rh5/hdf5/1.8.5p1
+	--with-boost=/usr/casc/samrai/apps/rh5/boost/1.55.0
+	--with-silo=/usr/casc/samrai/apps/rh5/silo/4.7.2_opt
+	--with-mpi-include=/usr/apps/mpich2/latest/include
+	--with-mpi-lib-dirs=/usr/apps/mpich2/latest/lib
+	--with-mpi-libs="mpich mpl rt pthread"
+	--with-parallel-run-bin=/usr/apps/mpich2/latest/bin/mpirun
+	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.6.0b.gcc.4.1.2.opt
+	--with-lapack=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
+	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -llapack"
+	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
+	--with-blas-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -lf77blas -lcblas -latlas"
+	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-3.2-p7.gcc.4.1.2
+	--with-sundials=/usr/casc/samrai/apps/rh5/sundials/2.3.0_gcc.4.1.2
+	--enable-rpath=-Wl,-R
+EOF
+#
+;;
+
+
+casc_rh6_gnu48_x64)   # CASC RedHat 6, GNU-4.8.1 compilers
+cat <<-EOF
+	--with-CXX=/usr/apps/gcc/4.8.1/bin/g++
+	--with-CC=/usr/apps/gcc/4.8.1/bin/gcc
+	--with-F77=/usr/apps/gcc/4.8.1/bin/gfortran
+	--with-hdf5=/usr/casc/samrai/apps/rh5/hdf5/1.8.5p1
+	--with-boost=/usr/casc/samrai/apps/rh5/boost/1.55.0
+	--with-silo=/usr/casc/samrai/apps/rh5/silo/4.7.2_opt
+	--with-mpi-include=/usr/apps/mpich2/latest/include
+	--with-mpi-lib-dirs=/usr/apps/mpich2/latest/lib
+	--with-mpi-libs="mpich mpl rt pthread"
+	--with-parallel-run-bin=/usr/apps/mpich2/latest/bin/mpirun
+	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.6.0b.gcc.4.1.2.opt
+	--with-lapack=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
+	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -llapack"
+	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
+	--with-blas-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -lf77blas -lcblas -latlas"
+	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-3.2-p7.gcc.4.1.2
+	--with-sundials=/usr/casc/samrai/apps/rh5/sundials/2.3.0_gcc.4.1.2
+	--enable-rpath=-Wl,-R
+EOF
+#
+;;
+
 
 #-----------------------------------------------------------------------------
 # Misc other machines
