@@ -203,7 +203,9 @@ void CascadePartitionerTree::balanceAll()
          top_group = top_group->d_near ) {
 
       tbox::plog << "\nCascadePartitionerTree::balanceAll balancing outer top_group "
-                 << top_group->d_gen_num << std::endl;
+                 << top_group->d_gen_num
+                 << "  with exact local_load=" << d_common->d_local_load->getSumLoad()
+                 << std::endl;
 
       d_leaf->recomputeLeafData();
 
@@ -215,19 +217,28 @@ void CascadePartitionerTree::balanceAll()
             current_group != 0 && current_group->d_near != top_group;
             current_group = current_group->d_parent ) {
 
+         current_group->combineChildren();
          if ( d_common->d_print_steps ) {
-            tbox::plog << "\nCascadePartitionerTree::balanceAll shuffling generation "
+            tbox::plog << "\nCascadePartitionerTree::balanceAll outer top_group "
+                       << top_group->d_gen_num << "  shuffling generation "
                        << current_group->d_gen_num << "\n";
             current_group->printClassData( tbox::plog, "\t" );
+            tbox::plog << "\tchild 0:\n";
+            current_group->d_children[0]->printClassData( tbox::plog, "\t" );
+            tbox::plog << "\tchild 1:\n";
+            current_group->d_children[1]->printClassData( tbox::plog, "\t" );
          }
 
-         current_group->combineChildren();
          current_group->balanceChildren();
-
          if ( d_common->d_print_steps ) {
-            tbox::plog << "\nCascadePartitionerTree::balanceAll shuffled generation "
+            tbox::plog << "\nCascadePartitionerTree::balanceAll outer top_group "
+                       << top_group->d_gen_num << "  shuffled generation "
                        << current_group->d_gen_num << "\n";
             current_group->printClassData( tbox::plog, "\t" );
+            tbox::plog << "\tchild 0:\n";
+            current_group->d_children[0]->printClassData( tbox::plog, "\t" );
+            tbox::plog << "\tchild 1:\n";
+            current_group->d_children[1]->printClassData( tbox::plog, "\t" );
          }
 
       } // Inner loop.
@@ -253,7 +264,7 @@ void CascadePartitionerTree::balanceAll()
 void
 CascadePartitionerTree::combineChildren()
 {
-   if ( d_common->d_print_steps ) {
+   if ( false && d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerTree::combineChildren: entered with state:\n";
       printClassData( tbox::plog, "\t" );
       tbox::plog << "\tchild 0:\n";
@@ -304,11 +315,7 @@ CascadePartitionerTree::combineChildren()
                                       tbox::MessageStream::Read,
                                       completed->getRecvData(),
                                       false);
-         double tmp_far_work;
-         bool tmp_far_flag;
-         recv_msg >> tmp_far_work >> tmp_far_flag >> d_far->d_process_may_supply[i];
-         d_far->d_work += tmp_far_work;
-         d_far->d_group_may_supply &= tmp_far_flag;
+         recv_msg >> d_far->d_work >> d_far->d_group_may_supply >> d_far->d_process_may_supply[i];
       }
    }
    TBOX_ASSERT( d_common->d_comm_stage.numberOfPendingMembers() == 0 );
@@ -320,7 +327,7 @@ CascadePartitionerTree::combineChildren()
    // If process still may supply for near child, it may supply for this group.
    d_process_may_supply[0] = d_near->d_process_may_supply[0];
 
-   if ( d_common->d_print_steps ) {
+   if ( false && d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerTree::combineChildren: leaving with state:\n";
       printClassData( tbox::plog, "\t" );
       tbox::plog << "\tchild 0:\n";
@@ -393,26 +400,47 @@ CascadePartitionerTree::balanceChildren()
 
       /*
        * Even when a group may supply, it will not supply to a
-       * redundant_receiver.  It will send to the primary receiver
-       * everything it wants to send to the group.  A process is a
-       * redundant receiver if its group is bigger than the sibling
-       * group, and it is the last rank in its group.
+       * redundant_demand.  It will supply to its first contact
+       * everything it wants to send to the group.  A redundant_demand
+       * is one from the second contact in the same group.  Local
+       * demand is redundant if the near group is bigger than the far
+       * group and local process is the last rank in its group.
        */
-      const bool redundant_receiver = d_near->size() > d_far->size() &&
+      const bool redundant_demand = d_near->size() > d_far->size() &&
          d_common->d_mpi.getRank() == d_end-1;
 
-      if ( d_far->d_group_may_supply && !redundant_receiver ) {
+      if ( d_far->d_group_may_supply && !redundant_demand ) {
          if ( d_far->d_process_may_supply[0] ) {
             d_common->d_comm_peer[0].setPeerRank(d_near->d_contact[0]);
             d_common->d_comm_peer[0].setMPITag( CascadePartitionerTree_TAG_LoadTransfer0,
                                                 CascadePartitionerTree_TAG_LoadTransfer1 );
             d_common->d_comm_peer[0].beginRecv(true);
+            if ( d_common->d_print_steps ) {
+               tbox::plog << "CascadePartitionerTree::balanceChildren:"
+                          << "  expecting shipment from first contact " << d_near->d_contact[0]
+                          << "  redundant_demand=" << redundant_demand
+                          << "  d_near->size()=" << d_near->size()
+                          << "  d_far->size()=" << d_far->size()
+                          << "  d_end=" << d_end
+                          << "  d_common->d_mpi.getRank()=" << d_common->d_mpi.getRank()
+                          << "\n";
+            }
          }
          if ( d_far->d_process_may_supply[1] ) {
             d_common->d_comm_peer[1].setPeerRank(d_near->d_contact[1]);
             d_common->d_comm_peer[1].setMPITag( CascadePartitionerTree_TAG_LoadTransfer0,
                                                 CascadePartitionerTree_TAG_LoadTransfer1 );
             d_common->d_comm_peer[1].beginRecv(true);
+            if ( d_common->d_print_steps ) {
+               tbox::plog << "CascadePartitionerTree::balanceChildren:"
+                          << "  expecting shipment from second contact " << d_near->d_contact[1]
+                          << "  redundant_demand=" << redundant_demand
+                          << "  d_near->size()=" << d_near->size()
+                          << "  d_far->size()=" << d_far->size()
+                          << "  d_end=" << d_end
+                          << "  d_common->d_mpi.getRank()=" << d_common->d_mpi.getRank()
+                          << "\n";
+            }
          }
       }
 
@@ -628,6 +656,7 @@ CascadePartitionerTree::printClassData( std::ostream &co, const std::string &bor
       << '\n' << indent
       << "position=" << d_position << "  contact=" << d_contact[0] << ',' << d_contact[1]
       << "  work=" << d_work << '/' << d_capacity
+      << "  actual holding=" << d_common->d_local_load->getSumLoad()
       << '\n' << indent
       << "group_may_supply=" << d_group_may_supply
       << "  process_may_supply=" << d_process_may_supply[0] << ',' << d_process_may_supply[1]
