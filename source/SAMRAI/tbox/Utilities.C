@@ -153,6 +153,22 @@ Utilities::intToString(
 }
 
 /*
+ * Routine to convert a size_t to a string.
+ */
+std::string
+Utilities::sizetToString(
+   size_t num,
+   int min_width)
+{
+   int tmp_width = (min_width > 0 ? min_width : 1);
+   std::ostringstream os;
+   os << std::setw(tmp_width) << std::setfill('0') << num;
+   os << std::flush;
+
+   return os.str();  //returns the string form of the stringstream object
+}
+
+/*
  * Routine that calls abort and prints calling location to error stream.
  */
 void

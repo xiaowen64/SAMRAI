@@ -414,6 +414,23 @@ struct Utilities {
       int min_width = 1);
 
    /*!
+    * Convert a size_t to a string.
+    *
+    * The returned string is padded with zeros as needed so that it
+    * contains at least the number of characters indicated by the
+    * minimum width argument.  When the number is positive, the
+    * string is padded on the left. When the number is negative,
+    * the '-' sign appears first, followed by the integer value
+    * padded on the left with zeros.  For example, the statement
+    * intToString(12, 5) returns "00012" and the statement
+    * intToString(-12, 5) returns "-0012".
+    */
+   static std::string
+   sizetToString(
+      size_t num,
+      int min_width = 1);
+
+   /*!
     * Convert common integer values to strings.
     *
     * These are simply wrappers around intToString that ensure the

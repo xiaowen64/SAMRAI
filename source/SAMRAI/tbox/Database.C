@@ -142,12 +142,12 @@ void
 Database::getBoolArray(
    const std::string& key,
    bool* data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
 
    std::vector<bool> tmp = getBoolVector(key);
-   const int tsize = static_cast<int>(tmp.size());
+   const size_t tsize = tmp.size();
 
    if (nelements != tsize) {
       TBOX_ERROR("Database::getBoolVector() error in database "
@@ -157,7 +157,7 @@ Database::getBoolArray(
          << "\n    Actual array size = " << tsize << std::endl);
    }
 
-   for (int i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
 
@@ -261,12 +261,12 @@ void
 Database::getDatabaseBoxArray(
    const std::string& key,
    DatabaseBox* data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
 
    std::vector<DatabaseBox> tmp = getDatabaseBoxVector(key);
-   const int tsize = static_cast<int>(tmp.size());
+   const size_t tsize = tmp.size();
 
    if (nelements != tsize) {
       TBOX_ERROR("Database::getDatabaseBoxArray() error in database "
@@ -276,7 +276,7 @@ Database::getDatabaseBoxArray(
          << "\n    Actual array size = " << tsize << std::endl);
    }
 
-   for (int i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
 }
@@ -385,12 +385,12 @@ void
 Database::getCharArray(
    const std::string& key,
    char* data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
 
    std::vector<char> tmp = getCharVector(key);
-   const int tsize = static_cast<int>(tmp.size());
+   const size_t tsize = tmp.size();
 
    if (nelements != tsize) {
       TBOX_ERROR("Database::getCharArray() error in database "
@@ -400,7 +400,7 @@ Database::getCharArray(
          << "\n    Actual array size = " << tsize << std::endl);
    }
 
-   for (int i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
 }
@@ -510,12 +510,12 @@ void
 Database::getComplexArray(
    const std::string& key,
    dcomplex* data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
 
    std::vector<dcomplex> tmp = getComplexVector(key);
-   const int tsize = static_cast<int>(tmp.size());
+   const size_t tsize = tmp.size();
 
    if (nelements != tsize) {
       TBOX_ERROR("Database::getComplexArray() error in database "
@@ -525,7 +525,7 @@ Database::getComplexArray(
          << "\n    Actual array size = " << tsize << std::endl);
    }
 
-   for (int i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
 }
@@ -634,12 +634,12 @@ void
 Database::getFloatArray(
    const std::string& key,
    float* data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
 
    std::vector<float> tmp = getFloatVector(key);
-   const int tsize = static_cast<int>(tmp.size());
+   const size_t tsize = tmp.size();
 
    if (nelements != tsize) {
       TBOX_ERROR("Database::getFloatArray() error in database "
@@ -649,7 +649,7 @@ Database::getFloatArray(
          << "\n    Actual array size = " << tsize << std::endl);
    }
 
-   for (int i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
 }
@@ -756,12 +756,12 @@ void
 Database::getDoubleArray(
    const std::string& key,
    double* data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
 
    std::vector<double> tmp = getDoubleVector(key);
-   const int tsize = static_cast<int>(tmp.size());
+   const size_t tsize = tmp.size();
 
    if (nelements != tsize) {
       TBOX_ERROR("Database::getDoubleArray() error in database "
@@ -771,7 +771,7 @@ Database::getDoubleArray(
          << "\n    Actual array size = " << tsize << std::endl);
    }
 
-   for (int i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
 }
@@ -879,12 +879,12 @@ void
 Database::getIntegerArray(
    const std::string& key,
    int* data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
 
    std::vector<int> tmp = getIntegerVector(key);
-   const int tsize = static_cast<int>(tmp.size());
+   const size_t tsize = tmp.size();
 
    if (nelements != tsize) {
       TBOX_ERROR("Database::getIntegerArray() error in database "
@@ -894,7 +894,7 @@ Database::getIntegerArray(
          << "\n    Actual array size = " << tsize << std::endl);
    }
 
-   for (int i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
 }
@@ -1002,12 +1002,12 @@ void
 Database::getStringArray(
    const std::string& key,
    std::string* data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
 
    std::vector<std::string> tmp = getStringVector(key);
-   const int tsize = static_cast<int>(tmp.size());
+   const size_t tsize = tmp.size();
 
    if (nelements != tsize) {
       TBOX_ERROR("Database::getStringArray() error in database "
@@ -1017,7 +1017,7 @@ Database::getStringArray(
          << "\n    Actual array size = " << tsize << std::endl);
    }
 
-   for (int i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; i++) {
       data[i] = tmp[i];
    }
 
