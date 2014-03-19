@@ -849,10 +849,10 @@ PETScAbstractVectorReal<TYPE>::vecSetOption(
 {
    NULL_USE(x);
    NULL_USE(op);
+   NULL_USE(result);
    TBOX_ERROR(
       "PETScAbstractVectorReal<TYPE>::vecSetOption() unimplemented"
       << std::endl);
-   result = PETSC_TRUE;
    PetscFunctionReturn(0);
 }
 

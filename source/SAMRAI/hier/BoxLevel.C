@@ -606,8 +606,10 @@ BoxLevel::cacheGlobalReducedData() const
          d_global_number_of_boxes = (int)tmpb[0];
          d_global_number_of_cells = tmpb[1];
       } else {
-         d_global_number_of_boxes = getLocalNumberOfBoxes();
-         d_global_number_of_cells = getLocalNumberOfCells();
+         d_global_number_of_boxes =
+	    static_cast<int>(getLocalNumberOfBoxes());
+         d_global_number_of_cells =
+	    static_cast<int>(getLocalNumberOfCells());
       }
 
       TBOX_ASSERT(d_global_number_of_boxes >= 0);
@@ -627,8 +629,10 @@ BoxLevel::cacheGlobalReducedData() const
    if (d_mpi.getSize() == 1) {
 
       d_global_bounding_box = d_local_bounding_box;
-      d_max_number_of_boxes = d_min_number_of_boxes = getLocalNumberOfBoxes();
-      d_max_number_of_cells = d_min_number_of_cells = getLocalNumberOfCells();
+      d_max_number_of_boxes = d_min_number_of_boxes =
+	 static_cast<int>(getLocalNumberOfBoxes());
+      d_max_number_of_cells = d_min_number_of_cells =
+	 static_cast<int>(getLocalNumberOfCells());
       d_global_max_box_size = d_local_max_box_size;
       d_global_min_box_size = d_local_min_box_size;
 
@@ -647,9 +651,9 @@ BoxLevel::cacheGlobalReducedData() const
                send_mesg.push_back(d_local_max_box_size[bn][i]);
             }
          }
-         send_mesg.push_back(getLocalNumberOfBoxes());
+         send_mesg.push_back(static_cast<int>(getLocalNumberOfBoxes()));
          send_mesg.push_back(-static_cast<int>(getLocalNumberOfBoxes()));
-         send_mesg.push_back(getLocalNumberOfCells());
+         send_mesg.push_back(static_cast<int>(getLocalNumberOfCells()));
          send_mesg.push_back(-static_cast<int>(getLocalNumberOfCells()));
 
          std::vector<int> recv_mesg(send_mesg.size());

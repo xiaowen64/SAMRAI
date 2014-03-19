@@ -209,7 +209,7 @@ private:
       const unsigned int coord,
       const int coord_offset);
 
-   int d_bits_per_int;
+   size_t d_bits_per_int;
    unsigned int d_key[NUM_COORDS_MIXED_FOR_SPATIAL_KEY];
 };
 

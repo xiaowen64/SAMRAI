@@ -1524,7 +1524,7 @@ Connector::computeNeighborhoodDifferences(
 void
 Connector::assertConsistencyWithHead() const
 {
-   const int number_of_inconsistencies = checkConsistencyWithHead();
+   const size_t number_of_inconsistencies = checkConsistencyWithHead();
    if (number_of_inconsistencies > 0) {
       TBOX_ERROR(
          "Connector::assertConsistencyWithHead() found inconsistencies.\n"

@@ -164,12 +164,11 @@ SpatialKey::blendOneCoord(
 {
    unsigned int shifted_coord = coord;
 
-   int bit_in_int;
-   for (bit_in_int = 0; bit_in_int < d_bits_per_int; bit_in_int++) {
+   for (size_t bit_in_int = 0; bit_in_int < d_bits_per_int; bit_in_int++) {
       if (shifted_coord & ((unsigned int)1)) {
-         unsigned int bit_index;
-         int int_index;
-         int bit_offset;
+         size_t bit_index;
+         size_t int_index;
+         size_t bit_offset;
 
          bit_index = NUM_COORDS_MIXED_FOR_SPATIAL_KEY * bit_in_int
             + coord_offset;
