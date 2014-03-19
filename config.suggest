@@ -344,7 +344,8 @@ EOF
 casc_rh6_gnu48_x64)   # CASC RedHat 6, GNU-4.8.1 compilers
 cat <<-EOF
 	--with-CXX=/usr/apps/gcc/4.8.1/bin/g++
-	--with-CC=/usr/apps/gcc/4.8.1/bin/gcc
+	--with-CC=/usr/apps/gcc/4.8.1/bin/gcc	
+	--with-extra-cxx-flags="-Wno-unused-local-typedefs"
 	--with-F77=/usr/apps/gcc/4.8.1/bin/gfortran
 	--with-hdf5=/usr/casc/samrai/apps/rh5/hdf5/1.8.5p1
 	--with-boost=/usr/casc/samrai/apps/rh5/boost/1.55.0

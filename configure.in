@@ -384,6 +384,25 @@ case "$with_extra_ld_flags" in
   ;;
 esac
 
+dnl
+dnl A way to manually add flags to the c++ compiler command.
+dnl
+AC_ARG_WITH([extra-cxx-flags],
+[AS_HELP_STRING([--with-extra-cxx-flags=STRING],
+   [Specify additional flags for the c++ compiler.])],
+,with_extra_cxx_flags='no')
+case "$with_extra_cxx_flags" in
+  no)
+    : No op
+  ;;
+  yes)
+    : No op
+  ;;
+  *)
+    CXX_FLAGS="$CXX_FLAGS $with_extra_cxx_flags"
+  ;;
+esac
+
 
 dnl
 dnl Find ar for archiving
@@ -483,6 +502,7 @@ esac
 case $CXX_ID in
    gnu)
       CXX_FLAGS="-Wall -Wextra -Wconversion $CXX_FLAGS"
+
       case $ARCH in
          IRIX64)
             CXX_FLAGS="-mabi=64 $CXX_FLAGS"
