@@ -392,14 +392,16 @@ CascadePartitionerTree::balanceChildren()
       // Incoming work, from far child to near child.
 
       /*
-       * Even when far group may supply, it will not supply to an
-       * odd process, because the odd process would be a redundant
-       * receiver for its group.  An odd process is the last
-       * process in a group with an odd process count.
+       * Even when a group may supply, it will not supply to a
+       * redundant_receiver.  It will send to the primary receiver
+       * everything it wants to send to the group.  A process is a
+       * redundant receiver if its group is bigger than the sibling
+       * group, and it is the last rank in its group.
        */
-      const bool is_odd = (d_end-d_begin)%2 && d_common->d_mpi.getRank() == d_end-1;
+      const bool redundant_receiver = d_near->size() > d_far->size() &&
+         d_common->d_mpi.getRank() == d_end-1;
 
-      if ( d_far->d_group_may_supply && !is_odd ) {
+      if ( d_far->d_group_may_supply && !redundant_receiver ) {
          if ( d_far->d_process_may_supply[0] ) {
             d_common->d_comm_peer[0].setPeerRank(d_near->d_contact[0]);
             d_common->d_comm_peer[0].setMPITag( CascadePartitionerTree_TAG_LoadTransfer0,

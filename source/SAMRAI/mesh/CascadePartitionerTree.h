@@ -66,6 +66,11 @@ public:
    //! @brief Cycle number (cycle i groups has 2^i processes).
    int cycleNum() const;
 
+   //! @brief Size of group (number of processes in it).
+   size_t size() const {
+      return d_end-d_begin;
+   }
+
 
 private:
 
