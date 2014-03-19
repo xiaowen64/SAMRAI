@@ -446,7 +446,7 @@ CascadePartitionerTree::balanceChildren()
 
       double work_supplied = d_far->supplyWork( -d_near->surplus(), d_common->d_mpi.getRank() );
 
-      // Record work taken by near child.
+      // Record work taken by near child group.
       d_near->d_work += work_supplied;
       d_near->d_group_may_supply = d_near->d_process_may_supply[0] = false;
 
@@ -625,6 +625,11 @@ CascadePartitionerTree::recomputeLeafData()
    d_work = d_common->d_local_load->getSumLoad();
    d_group_may_supply = d_process_may_supply[0] =
       d_work > d_capacity + d_common->d_pparams->getLoadComparisonTol() ;
+   /*
+    * TODO: Try not resetting d_group_may_supply.  Seems bad that a
+    * leaf that received slightly more than its demand would now try
+    * to send that slight bit elsewhere.
+    */
 }
 
 

@@ -221,6 +221,11 @@ private:
     *
     * A group that received work may not later become a supplier.
     * (But its parent may still be if its sibling is.)
+    * Note: This should permission should be propagated to ancestor
+    * groups but not descendent groups, because work received should
+    * be further distributed to descendents.  Work received should
+    * not be supplied to sibling, because that allows load to move
+    * back and forth for trivial imbalances.
     */
    bool d_group_may_supply;
 
