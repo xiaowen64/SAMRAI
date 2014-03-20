@@ -71,6 +71,11 @@ public:
       return d_end-d_begin;
    }
 
+   //! @brief Whether group contains a given rank.
+   bool containsRank( int rank ) const {
+      return d_begin <= rank && rank < d_end;
+   }
+
 
 private:
 
@@ -130,7 +135,7 @@ private:
     * it from this group, and return the (estimated) amount supplied.
     *
     * Supplying work returns an estimate of the amount supplied, based
-    * on the work available and assuming perfect load cutting.  Due to
+    * on available surplus and assuming perfect load cutting.  Due to
     * restrictions such as in box cutting, the actual amount supplied
     * may differ.  Actual amount is available when the group contains
     * just the local process, but the estimate is always available.

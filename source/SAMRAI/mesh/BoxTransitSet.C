@@ -1632,9 +1632,6 @@ BoxTransitSet::recursivePrint(
          tbox::plog << border << "    " << *bi << '\n';
       }
    }
-   else {
-      co << ".\n";
-   }
 }
 
 

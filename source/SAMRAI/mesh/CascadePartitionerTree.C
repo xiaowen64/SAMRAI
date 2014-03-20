@@ -506,11 +506,13 @@ double
 CascadePartitionerTree::supplyWork( double work_requested, int taker )
 {
    TBOX_ASSERT( work_requested > 0.0 );
-   TBOX_ASSERT( taker < d_begin || taker >= d_end ); // Taker must not be member.
+   TBOX_ASSERT( !containsRank(taker) );
+   TBOX_ASSERT( containsRank(d_common->d_mpi.getRank()) || d_children[0] == 0 ); // Only near groups should store children.
+
    double est_work_supplied = 0.0; // Estimate of work supplied by this group.
 
    if ( d_children[0] != 0 ) {
-      // Not a leaf:  Supply load from children.
+      // Near group and not a leaf:  Supply load from children.
       if ( taker < d_begin ) {
          est_work_supplied = d_children[0]->supplyWork( work_requested, taker );
          if ( est_work_supplied < work_requested ) {
@@ -525,30 +527,38 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
       }
    }
 
+   else if ( !containsRank(d_common->d_mpi.getRank()) ) {
+      // Is a far group: Doesn't matter if it's a leaf.
+      est_work_supplied = tbox::MathUtilities<double>::Min( work_requested, surplus() );
+      d_work -= est_work_supplied;
+   }
+
    else {
-      // Is a leaf:  Supply load from self.
+      /*
+       * Is a near leaf group: Compute how much work we can supply,
+       * update group's work estimate and apportion the load to
+       * supply.
+       */
       if ( d_group_may_supply ) {
-         est_work_supplied = tbox::MathUtilities<double>::Min( work_requested, d_work );
+         est_work_supplied = tbox::MathUtilities<double>::Min( work_requested, surplus() );
          d_work -= est_work_supplied;
 
-         if ( d_begin == d_common->d_mpi.getRank() ) {
-            d_common->d_shipment->adjustLoad(
-               *d_common->d_local_load,
-               work_requested,
-               work_requested,
-               work_requested );
-            if ( d_common->d_print_steps ) {
-               tbox::plog << "CascadePartitionerTree::supplyWork giving to " << taker << ": ";
-               d_common->d_shipment->recursivePrint();
-               tbox::plog << "CascadePartitionerTree::supplyWork keeping: ";
-               d_common->d_local_load->recursivePrint();
-            }
-
-            d_process_may_supply[0] =
-               d_common->d_local_load->getSumLoad() - d_capacity > d_common->d_pparams->getLoadComparisonTol();
-
-            d_group_may_supply = surplus() > d_common->d_pparams->getLoadComparisonTol();
+         d_common->d_shipment->adjustLoad(
+            *d_common->d_local_load,
+            est_work_supplied,
+            est_work_supplied,
+            est_work_supplied );
+         if ( d_common->d_print_steps ) {
+            tbox::plog << "CascadePartitionerTree::supplyWork giving to " << taker << ": ";
+            d_common->d_shipment->recursivePrint();
+            tbox::plog << "CascadePartitionerTree::supplyWork keeping: ";
+            d_common->d_local_load->recursivePrint();
          }
+
+         d_process_may_supply[0] =
+            d_common->d_local_load->getSumLoad() - d_capacity > d_common->d_pparams->getLoadComparisonTol();
+
+         d_group_may_supply = surplus() > d_common->d_pparams->getLoadComparisonTol();
 
       }
    }
@@ -566,8 +576,11 @@ void
 CascadePartitionerTree::sendShipment( int taker )
 {
    if ( d_common->d_print_steps ) {
-      tbox::plog << "CascadePartitionerTree::sendMyShipment: sending to " << taker << ":\n";
-      d_common->d_shipment->recursivePrint(tbox::plog, "Send: ", 2);
+      tbox::plog << "CascadePartitionerTree::sendMyShipment: sending to " << taker << ' ';
+      d_common->d_shipment->recursivePrint(tbox::plog, "", 0);
+      tbox::plog << " leaving d_local_load with ";
+      d_common->d_local_load->recursivePrint(tbox::plog, "", 0);
+      tbox::plog << '\n';
    }
    tbox::MessageStream msg;
    msg << *d_common->d_shipment;
@@ -597,15 +610,17 @@ CascadePartitionerTree::receiveAndUnpackSuppliedLoad()
                                     tbox::MessageStream::Read,
                                     comm_peer->getRecvData(),
                                     true );
-      const int old_item_count = d_common->d_local_load->getNumberOfItems();
-      recv_msg >> *d_common->d_local_load;
+      recv_msg >> *d_common->d_shipment;
+      d_common->d_local_load->insertAll(*d_common->d_shipment);
       if ( d_common->d_print_steps ) {
-         tbox::plog << "CascadePartitionerTree::receiveAndUnpackSuppliedLoad: received "
-                    << d_common->d_local_load->getNumberOfItems()-old_item_count
-                    << " item from process " << comm_peer->getPeerRank()
-                    << " and updated d_local_load:\n";
-         d_common->d_local_load->recursivePrint(tbox::plog, "Curr: ", 2);
+         tbox::plog << "CascadePartitionerTree::receiveAndUnpackSuppliedLoad: received ";
+         d_common->d_shipment->recursivePrint(tbox::plog, "", 0);
+         tbox::plog << " from process " << comm_peer->getPeerRank()
+                    << " and updated d_local_load to ";
+         d_common->d_local_load->recursivePrint(tbox::plog, "", 0);
+         tbox::plog << '\n';
       }
+      d_common->d_shipment->clear();
    }
    return;
 }
@@ -661,7 +676,7 @@ CascadePartitionerTree::printClassData( std::ostream &co, const std::string &bor
       << '\n' << indent
       << "position=" << d_position << "  contact=" << d_contact[0] << ',' << d_contact[1]
       << "  work=" << d_work << '/' << d_capacity
-      << "  actual holding=" << d_common->d_local_load->getSumLoad()
+      << "  local_load=" << d_common->d_local_load->getSumLoad()
       << '\n' << indent
       << "group_may_supply=" << d_group_may_supply
       << "  process_may_supply=" << d_process_may_supply[0] << ',' << d_process_may_supply[1]
