@@ -546,8 +546,8 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
          d_common->d_shipment->adjustLoad(
             *d_common->d_local_load,
             est_work_supplied,
-            est_work_supplied,
-            est_work_supplied );
+            0.9999*est_work_supplied,
+            1.0001*est_work_supplied );
          if ( d_common->d_print_steps ) {
             tbox::plog << "CascadePartitionerTree::supplyWork giving to " << taker << ": ";
             d_common->d_shipment->recursivePrint();

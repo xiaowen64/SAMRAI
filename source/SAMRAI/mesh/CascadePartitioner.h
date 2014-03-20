@@ -336,10 +336,10 @@ private:
    setTimers();
 
    /*
-    * CascadePartitioner and CascadePartitionerCombinedGroup are tightly
+    * CascadePartitioner and CascadePartitionerTree are tightly
     * coupled.  CascadePartitioner has the common parts of the data
-    * and algorithm.  CascadePartitionerCombinedGroup has the group-specific
-    * parts.  CascadePartitionerCombinedGroup can be made a private subclass
+    * and algorithm.  CascadePartitionerTree has the group-specific
+    * parts.  CascadePartitionerTree can be made a private subclass
     * of CascadePartitioner, but that would make a big file.
     */
    friend CascadePartitionerTree;
@@ -390,7 +390,7 @@ private:
 
    //! @brief Local load subject to change.
    mutable TransitLoad *d_local_load;
-   //! @brief Load shipment for sending.
+   //! @brief Load shipment for sending and receiving.
    mutable TransitLoad *d_shipment;
    //! @brief High-level communication stage.
    mutable tbox::AsyncCommStage d_comm_stage;

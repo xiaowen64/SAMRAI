@@ -28,6 +28,17 @@ class CascadePartitioner;
  * @brief A binary-tree of process groups in the CascadePartitioner
  * algorithm,
  *
+ * In this partitioner, the MPI ranks are recursively split into
+ * groups, forming the nodes of a binary tree.  The root branch
+ * contains all ranks.  The leaves are single-process groups.  Each
+ * group is represented by a CascadePartitionerTree.
+ * repre
+ *
+ * We balance loads one sibling pair at a time, starting with the
+ * leaves, shifting load from overloaded groups to underloaded groups.
+ * As we move toward the groups, the loads can be propagated into ever
+ * bigger groups.
+ *
  * @b Terminology: The root group includes all ranks.  It splits into
  * lower and upper groups (known as branches).  The lower branch has
  * the lower ranks.  If the group has an odd number of ranks, the
@@ -177,6 +188,11 @@ private:
 
    /*!
     * @brief Rank of contacts in sibling branch.
+    *
+    * Communication between sibling groups is done between a process
+    * in one group and its contact in the sibling group.  Contacting
+    * pairs are assigned based on the process's relative rank in its
+    * group.
     *
     * Most processes have just one contact in the sibling group.  The
     * only processes to have 2 contacts are in the lower sibling of a
