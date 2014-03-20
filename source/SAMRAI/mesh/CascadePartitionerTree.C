@@ -543,11 +543,12 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
          est_work_supplied = tbox::MathUtilities<double>::Min( work_requested, surplus() );
          d_work -= est_work_supplied;
 
+         const double tolerance = d_common->d_flexible_load_tol*d_common->d_global_load_avg;
          d_common->d_shipment->adjustLoad(
             *d_common->d_local_load,
             est_work_supplied,
-            0.9999*est_work_supplied,
-            1.0001*est_work_supplied );
+            est_work_supplied-tolerance,
+            est_work_supplied+tolerance );
          if ( d_common->d_print_steps ) {
             tbox::plog << "CascadePartitionerTree::supplyWork giving to " << taker << ": ";
             d_common->d_shipment->recursivePrint();
