@@ -145,3 +145,7 @@ PatchHierarchy {
    allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
    proper_nesting_buffer = 1, 1
 }
+
+BoxTransitSet {
+   DEV_print_break_steps = FALSE
+}

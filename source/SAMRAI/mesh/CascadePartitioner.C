@@ -371,7 +371,12 @@ CascadePartitioner::partitionByCascade(
    }
 
    BoxTransitSet local_work(*d_pparams), shipment(*d_pparams);
+   local_work.setAllowBoxBreaking(true);
+   const double ideal_box_width = pow(d_global_load_avg, 1.0/d_dim.getValue());
+   local_work.setThresholdWidth( ideal_box_width );
+   shipment.setThresholdWidth( ideal_box_width );
    local_work.insertAll( balance_box_level.getBoxes() );
+
    d_local_load = &local_work;
    d_shipment = &shipment;
 
