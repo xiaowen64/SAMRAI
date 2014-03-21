@@ -670,11 +670,6 @@ CascadePartitionerTree::recomputeLeafData()
    d_work = d_common->d_local_load->getSumLoad();
    d_group_may_supply = d_process_may_supply[0] =
       surplus() > d_common->d_pparams->getLoadComparisonTol() ;
-   /*
-    * TODO: Try not resetting d_group_may_supply.  Seems bad that a
-    * leaf that received slightly more than its demand would now try
-    * to send that slight bit elsewhere.
-    */
 }
 
 
