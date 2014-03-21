@@ -529,8 +529,11 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
 
    else if ( !containsRank(d_common->d_mpi.getRank()) ) {
       // Is a far group: Doesn't matter if it's a leaf.
-      est_work_supplied = tbox::MathUtilities<double>::Min( work_requested, surplus() );
-      d_work -= est_work_supplied;
+      if ( d_group_may_supply ) {
+         est_work_supplied = tbox::MathUtilities<double>::Min( work_requested, surplus() );
+         TBOX_ASSERT( est_work_supplied >= 0.0 );
+         d_work -= est_work_supplied;
+      }
    }
 
    else {
