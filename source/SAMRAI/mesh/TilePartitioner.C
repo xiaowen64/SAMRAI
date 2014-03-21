@@ -295,7 +295,8 @@ TilePartitioner::getFromInput(
          else {
             TBOX_ERROR("TilePartitioner::getFromInput error:\n"
                        <<"internal_load_balancer must be set to\n"
-                       <<"\"ChopAndPackLoadBalancer\" or \"TreeLoadBalancer\".\n");
+                       <<"\"ChopAndPackLoadBalancer\" or \"TreeLoadBalancer\" or \"CascadePartitioner\".\n"
+                       <<"You specified \"" << internal_load_balancer << "\".");
          }
 
       }

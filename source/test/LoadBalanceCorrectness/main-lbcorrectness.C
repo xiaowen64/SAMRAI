@@ -510,8 +510,9 @@ int main(
       char baseline_action = '\0';
       if ( bl_act == "GENERATE" ) { baseline_action = 'g'; }
       else if ( bl_act == "COMPARE" ) { baseline_action = 'c'; }
+      else if ( bl_act == "NONE" ) { baseline_action = 'n'; }
       else {
-         TBOX_ERROR("main: If given, baseline_action must be \"GENERATE\" or \"COMPARE\"");
+         TBOX_ERROR("main: If given, baseline_action must be \"GENERATE\" or \"COMPARE\" or \"NONE\"");
       }
 
 
