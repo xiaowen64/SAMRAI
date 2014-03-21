@@ -510,6 +510,7 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
    TBOX_ASSERT( work_requested > 0.0 );
    TBOX_ASSERT( !containsRank(taker) );
    TBOX_ASSERT( containsRank(d_common->d_mpi.getRank()) || d_children[0] == 0 ); // Only near groups should store children.
+   TBOX_ASSERT( d_group_may_supply == (surplus() > d_common->d_pparams->getLoadComparisonTol()) );
 
    if ( d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerTree::supplyWork generation "
@@ -520,62 +521,78 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
 
    double est_work_supplied = 0.0; // Estimate of work supplied by this group.
 
-   if ( d_children[0] != 0 ) {
-      // Near group and not a leaf:  Supply load from children.
-      if ( taker < d_begin ) {
-         est_work_supplied = d_children[0]->supplyWork( work_requested, taker );
-         if ( est_work_supplied < work_requested ) {
-            est_work_supplied += d_children[1]->supplyWork( work_requested-est_work_supplied, taker );
+   if ( d_group_may_supply ) {
+
+      // Supply no more than surplus.  (Sibling assumes this in its estimate.)
+      work_requested = tbox::MathUtilities<double>::Min( work_requested, surplus() );
+
+      if ( d_children[0] != 0 ) {
+         // Near group and not a leaf:  Supply load from children.
+         if ( taker < d_begin ) {
+            est_work_supplied = d_children[0]->supplyWork( work_requested, taker );
+            if ( est_work_supplied < work_requested ) {
+               est_work_supplied +=
+                  d_children[1]->supplyWork( work_requested-est_work_supplied, taker );
+            }
+         }
+         else {
+            est_work_supplied = d_children[1]->supplyWork( work_requested, taker );
+            if ( est_work_supplied < work_requested ) {
+               est_work_supplied
+                  = d_children[0]->supplyWork( work_requested-est_work_supplied, taker );
+            }
          }
       }
+
+      else if ( !containsRank(d_common->d_mpi.getRank()) ) {
+         // Is a far group: Doesn't matter if it's a leaf.
+         if ( d_group_may_supply ) {
+            est_work_supplied = tbox::MathUtilities<double>::Min( work_requested, surplus() );
+            TBOX_ASSERT( est_work_supplied >= 0.0 );
+            d_work -= est_work_supplied;
+         }
+      }
+
       else {
-         est_work_supplied = d_children[1]->supplyWork( work_requested, taker );
-         if ( est_work_supplied < work_requested ) {
-            est_work_supplied = d_children[0]->supplyWork( work_requested-est_work_supplied, taker );
+         /*
+          * Is a near leaf group: Compute how much work we can supply,
+          * update group's work estimate and apportion the load to
+          * supply.
+          */
+         if ( d_group_may_supply ) {
+            est_work_supplied = tbox::MathUtilities<double>::Min( work_requested, surplus() );
+            d_work -= est_work_supplied;
+
+            const double tolerance = d_common->d_flexible_load_tol*d_common->d_global_load_avg;
+            d_common->d_shipment->adjustLoad(
+               *d_common->d_local_load,
+               est_work_supplied,
+               est_work_supplied-tolerance,
+               est_work_supplied+tolerance );
+            if ( d_common->d_print_steps ) {
+               tbox::plog << "CascadePartitionerTree::supplyWork giving to " << taker << ": ";
+               d_common->d_shipment->recursivePrint();
+               tbox::plog << "CascadePartitionerTree::supplyWork keeping: ";
+               d_common->d_local_load->recursivePrint();
+            }
+
+            d_process_may_supply[0] =
+               d_common->d_local_load->getSumLoad() - d_capacity >
+               d_common->d_pparams->getLoadComparisonTol();
+
+            d_group_may_supply = surplus() > d_common->d_pparams->getLoadComparisonTol();
+
          }
       }
+
    }
 
-   else if ( !containsRank(d_common->d_mpi.getRank()) ) {
-      // Is a far group: Doesn't matter if it's a leaf.
-      if ( d_group_may_supply ) {
-         est_work_supplied = tbox::MathUtilities<double>::Min( work_requested, surplus() );
-         TBOX_ASSERT( est_work_supplied >= 0.0 );
-         d_work -= est_work_supplied;
-      }
+   if ( d_common->d_print_steps ) {
+      tbox::plog << "CascadePartitionerTree::supplyWork generation "
+                 << d_gen_num << " [" << d_begin << ',' << d_end << ')'
+                 << " supplied estimated " << est_work_supplied << " to " << taker
+                 << std::endl;
    }
-
-   else {
-      /*
-       * Is a near leaf group: Compute how much work we can supply,
-       * update group's work estimate and apportion the load to
-       * supply.
-       */
-      if ( d_group_may_supply ) {
-         est_work_supplied = tbox::MathUtilities<double>::Min( work_requested, surplus() );
-         d_work -= est_work_supplied;
-
-         const double tolerance = d_common->d_flexible_load_tol*d_common->d_global_load_avg;
-         d_common->d_shipment->adjustLoad(
-            *d_common->d_local_load,
-            est_work_supplied,
-            est_work_supplied-tolerance,
-            est_work_supplied+tolerance );
-         if ( d_common->d_print_steps ) {
-            tbox::plog << "CascadePartitionerTree::supplyWork giving to " << taker << ": ";
-            d_common->d_shipment->recursivePrint();
-            tbox::plog << "CascadePartitionerTree::supplyWork keeping: ";
-            d_common->d_local_load->recursivePrint();
-         }
-
-         d_process_may_supply[0] =
-            d_common->d_local_load->getSumLoad() - d_capacity > d_common->d_pparams->getLoadComparisonTol();
-
-         d_group_may_supply = surplus() > d_common->d_pparams->getLoadComparisonTol();
-
-      }
-   }
-
    return est_work_supplied;
 }
 
@@ -652,7 +669,7 @@ CascadePartitionerTree::recomputeLeafData()
    TBOX_ASSERT( this == d_leaf ); // Should only be called for leaves.
    d_work = d_common->d_local_load->getSumLoad();
    d_group_may_supply = d_process_may_supply[0] =
-      d_work > d_capacity + d_common->d_pparams->getLoadComparisonTol() ;
+      surplus() > d_common->d_pparams->getLoadComparisonTol() ;
    /*
     * TODO: Try not resetting d_group_may_supply.  Seems bad that a
     * leaf that received slightly more than its demand would now try
@@ -689,6 +706,7 @@ CascadePartitionerTree::printClassData( std::ostream &co, const std::string &bor
       << '\n' << indent
       << "position=" << d_position << "  contact=" << d_contact[0] << ',' << d_contact[1]
       << "  work=" << d_work << '/' << d_capacity
+      << "  surplus=" << surplus()
       << "  local_load=" << d_common->d_local_load->getSumLoad()
       << '\n' << indent
       << "group_may_supply=" << d_group_may_supply
