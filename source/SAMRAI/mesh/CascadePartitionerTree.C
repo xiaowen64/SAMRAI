@@ -324,7 +324,7 @@ CascadePartitionerTree::combineChildren()
 
    // Work data is function of children data.
    d_work = d_children[0]->d_work + d_children[1]->d_work;
-   d_group_may_supply = d_children[0]->d_group_may_supply || d_children[1]->d_group_may_supply;
+   d_group_may_supply = surplus() > d_common->d_pparams->getLoadComparisonTol();
 
    // If process still may supply for near child, it may supply for this group.
    d_process_may_supply[0] = d_near->d_process_may_supply[0];
@@ -510,6 +510,13 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
    TBOX_ASSERT( work_requested > 0.0 );
    TBOX_ASSERT( !containsRank(taker) );
    TBOX_ASSERT( containsRank(d_common->d_mpi.getRank()) || d_children[0] == 0 ); // Only near groups should store children.
+
+   if ( d_common->d_print_steps ) {
+      tbox::plog << "CascadePartitionerTree::supplyWork generation "
+                 << d_gen_num << " [" << d_begin << ',' << d_end << ')'
+                 << " attempting to supply " << work_requested << " to " << taker
+                 << std::endl;
+   }
 
    double est_work_supplied = 0.0; // Estimate of work supplied by this group.
 
