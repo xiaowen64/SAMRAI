@@ -370,6 +370,17 @@ private:
    int d_master_workload_data_id;
 
    /*!
+    * @brief Whether to balance intermediate groups (vs balancing only the top
+    * group of each outer cycle).
+    *
+    * There may be performance and data locality benefits when
+    * skipping intermediate groups.  I'm exploring this.
+    *
+    * See input parameter "DEV_balance_intermediate_groups".
+    */
+   bool d_balance_intermediate_groups;
+
+   /*!
     * @brief Fraction of ideal load a process can accept over and above
     * the ideal.
     *

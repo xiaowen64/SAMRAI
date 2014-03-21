@@ -220,7 +220,7 @@ void CascadePartitionerTree::balanceAll()
          current_group->combineChildren();
          if ( d_common->d_print_steps ) {
             tbox::plog << "\nCascadePartitionerTree::balanceAll outer top_group "
-                       << top_group->d_gen_num << "  shuffling generation "
+                       << top_group->d_gen_num << "  combined generation "
                        << current_group->d_gen_num << "\n";
             current_group->printClassData( tbox::plog, "\t" );
             tbox::plog << "\tchild 0:\n";
@@ -229,16 +229,18 @@ void CascadePartitionerTree::balanceAll()
             current_group->d_children[1]->printClassData( tbox::plog, "\t" );
          }
 
-         current_group->balanceChildren();
-         if ( d_common->d_print_steps ) {
-            tbox::plog << "\nCascadePartitionerTree::balanceAll outer top_group "
-                       << top_group->d_gen_num << "  shuffled generation "
-                       << current_group->d_gen_num << "\n";
-            current_group->printClassData( tbox::plog, "\t" );
-            tbox::plog << "\tchild 0:\n";
-            current_group->d_children[0]->printClassData( tbox::plog, "\t" );
-            tbox::plog << "\tchild 1:\n";
-            current_group->d_children[1]->printClassData( tbox::plog, "\t" );
+         if ( d_common->d_balance_intermediate_groups || current_group == top_group ) {
+            current_group->balanceChildren();
+            if ( d_common->d_print_steps ) {
+               tbox::plog << "\nCascadePartitionerTree::balanceAll outer top_group "
+                          << top_group->d_gen_num << "  shuffled generation "
+                          << current_group->d_gen_num << "\n";
+               current_group->printClassData( tbox::plog, "\t" );
+               tbox::plog << "\tchild 0:\n";
+               current_group->d_children[0]->printClassData( tbox::plog, "\t" );
+               tbox::plog << "\tchild 1:\n";
+               current_group->d_children[1]->printClassData( tbox::plog, "\t" );
+            }
          }
 
       } // Inner loop.

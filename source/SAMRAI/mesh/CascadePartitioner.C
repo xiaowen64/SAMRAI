@@ -68,6 +68,7 @@ CascadePartitioner::CascadePartitioner(
    d_mpi_is_dupe(false),
    d_master_workload_data_id(s_default_data_id),
    d_flexible_load_tol(0.05),
+   d_balance_intermediate_groups(false),
    d_mca(),
    // Shared data.
    d_comm_stage(),
@@ -615,6 +616,10 @@ CascadePartitioner::getFromInput(
          d_barrier_before);
       d_barrier_after = input_db->getBoolWithDefault("DEV_barrier_after",
          d_barrier_after);
+
+      d_balance_intermediate_groups =
+         input_db->getBoolWithDefault("DEV_balance_intermediate_groups",
+            d_balance_intermediate_groups);
 
       d_flexible_load_tol =
          input_db->getDoubleWithDefault("flexible_load_tolerance",
