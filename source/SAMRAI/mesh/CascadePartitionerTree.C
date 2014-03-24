@@ -524,22 +524,22 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
    if ( d_group_may_supply ) {
 
       // Supply no more than surplus.  (Sibling assumes this in its estimate.)
-      work_requested = tbox::MathUtilities<double>::Min( work_requested, surplus() );
+      const double work_allowed = tbox::MathUtilities<double>::Min( work_requested, surplus() );
 
       if ( d_children[0] != 0 ) {
-         // Near group and not a leaf:  Supply load from children.
+         // Near group and not a leaf: Recursively supply load from children.
          if ( taker < d_begin ) {
-            est_work_supplied = d_children[0]->supplyWork( work_requested, taker );
-            if ( est_work_supplied < work_requested ) {
+            est_work_supplied = d_children[0]->supplyWork( work_allowed, taker );
+            if ( est_work_supplied < work_allowed ) {
                est_work_supplied +=
-                  d_children[1]->supplyWork( work_requested-est_work_supplied, taker );
+                  d_children[1]->supplyWork( work_allowed-est_work_supplied, taker );
             }
          }
          else {
-            est_work_supplied = d_children[1]->supplyWork( work_requested, taker );
-            if ( est_work_supplied < work_requested ) {
-               est_work_supplied
-                  = d_children[0]->supplyWork( work_requested-est_work_supplied, taker );
+            est_work_supplied = d_children[1]->supplyWork( work_allowed, taker );
+            if ( est_work_supplied < work_allowed ) {
+               est_work_supplied +=
+                  d_children[0]->supplyWork( work_allowed-est_work_supplied, taker );
             }
          }
       }
@@ -547,7 +547,7 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
       else if ( !containsRank(d_common->d_mpi.getRank()) ) {
          // Is a far group: Doesn't matter if it's a leaf.
          if ( d_group_may_supply ) {
-            est_work_supplied = tbox::MathUtilities<double>::Min( work_requested, surplus() );
+            est_work_supplied = work_allowed;
             TBOX_ASSERT( est_work_supplied >= 0.0 );
             d_work -= est_work_supplied;
          }
@@ -556,11 +556,10 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
       else {
          /*
           * Is a near leaf group: Compute how much work we can supply,
-          * update group's work estimate and apportion the load to
-          * supply.
+          * update group's work estimate and set aside the shipment.
           */
          if ( d_group_may_supply ) {
-            est_work_supplied = tbox::MathUtilities<double>::Min( work_requested, surplus() );
+            est_work_supplied = work_allowed;
             d_work -= est_work_supplied;
 
             const double tolerance = d_common->d_flexible_load_tol*d_common->d_global_load_avg;
