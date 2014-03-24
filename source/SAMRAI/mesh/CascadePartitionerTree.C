@@ -48,7 +48,7 @@ CascadePartitionerTree::CascadePartitionerTree(
    d_leaf(0),
 
    d_work(partitioner.d_local_load->getSumLoad()),
-   d_capacity(d_common->d_global_load_avg*d_common->d_mpi.getSize()),
+   d_obligation(d_common->d_global_load_avg*d_common->d_mpi.getSize()),
    d_group_may_supply(false)
 {
    d_children[0] = d_children[1] = 0;
@@ -87,7 +87,7 @@ CascadePartitionerTree::CascadePartitionerTree(
    d_leaf(0),
 
    d_work(-1.0),
-   d_capacity(0),
+   d_obligation(-1.0),
    d_group_may_supply(false)
 {
    d_children[0] = d_children[1] = 0;
@@ -98,7 +98,7 @@ CascadePartitionerTree::CascadePartitionerTree(
    if ( group_position == Lower ) { d_end = upper_begin; }
    else { d_begin = upper_begin; }
 
-   d_capacity = d_common->d_global_load_avg*(d_end-d_begin);
+   d_obligation = d_common->d_global_load_avg*(d_end-d_begin);
 
    /*
     * Assign contacts by pairing this process with the sibling group's
@@ -186,8 +186,11 @@ CascadePartitionerTree::~CascadePartitionerTree()
 /*
  *************************************************************************
  * This method contains the looping structure required to balance all
- * groups.  Starting at the leaves, combine sibling data to balance
- * them, then continue toward the root.
+ * groups.  The outer loop (top_group) balances the largest group
+ * to the smallest.  The inner loop (current_group) goes from the leaf
+ * to the top_group, combining groups to build a sufficient global
+ * picture.  It may balance current_group as it goes along or wait
+ * until the end before balancing.
  *************************************************************************
  */
 void CascadePartitionerTree::balanceAll()
@@ -209,15 +212,29 @@ void CascadePartitionerTree::balanceAll()
 
       d_leaf->recomputeLeafData();
 
-      /*
-       * Balance top_group by sweeping from leaf to top_group, shifting
-       * load from surplus child to deficit child as we go.
-       */
       for ( CascadePartitionerTree *current_group = d_leaf->d_parent;
             current_group != 0 && current_group->d_near != top_group;
             current_group = current_group->d_parent ) {
 
          current_group->combineChildren();
+         if ( false && current_group == top_group && top_group->d_gen_num != 0 ) {
+            /*
+             * Top group cannot change its average load, which may
+             * differ from the global average.  Because we are stuck
+             * with this average, we distribute load based on it.
+             * Reset the load each process in the group is obliged to
+             * have based on the top_group average.
+             */
+            if ( d_common->d_print_steps ) {
+               tbox::plog << "\nCascadePartitionerTree::balanceAll generation "
+                          << current_group->d_gen_num << " reset obligation from "
+                          << current_group->d_obligation;
+            }
+            current_group->resetObligation(top_group->d_work/top_group->size());
+            if ( d_common->d_print_steps ) {
+               tbox::plog << " to " << current_group->d_obligation << std::endl;
+            }
+         }
          if ( d_common->d_print_steps ) {
             tbox::plog << "\nCascadePartitionerTree::balanceAll outer top_group "
                        << top_group->d_gen_num << "  combined generation "
@@ -324,7 +341,7 @@ CascadePartitionerTree::combineChildren()
 
    // Work data is function of children data.
    d_work = d_children[0]->d_work + d_children[1]->d_work;
-   d_group_may_supply = surplus() > d_common->d_pparams->getLoadComparisonTol();
+   d_group_may_supply = estimatedSurplus() > d_common->d_pparams->getLoadComparisonTol();
 
    // If process still may supply for near child, it may supply for this group.
    d_process_may_supply[0] = d_near->d_process_may_supply[0];
@@ -373,13 +390,13 @@ CascadePartitionerTree::balanceChildren()
 
    TBOX_ASSERT( d_common->d_shipment->empty() );
 
-   if ( d_near->surplus() > d_common->d_pparams->getLoadComparisonTol() &&
-        d_far->surplus() < -d_common->d_pparams->getLoadComparisonTol() ) {
+   if ( d_near->estimatedSurplus() > d_common->d_pparams->getLoadComparisonTol() &&
+        d_far->estimatedSurplus() < -d_common->d_pparams->getLoadComparisonTol() ) {
       // Outgoing work, from near child to far child.
 
       if ( d_near->d_process_may_supply[0] ) {
 
-         double work_supplied = d_near->supplyWork( -d_far->surplus(), d_near->d_contact[0] );
+         double work_supplied = d_near->supplyWork( -d_far->estimatedSurplus(), d_near->d_contact[0] );
 
          // Record work taken by the far child.
          d_far->d_work += work_supplied;
@@ -396,8 +413,8 @@ CascadePartitionerTree::balanceChildren()
       }
    }
 
-   else if ( d_far->surplus()  >  d_common->d_pparams->getLoadComparisonTol() &&
-             d_near->surplus() < -d_common->d_pparams->getLoadComparisonTol() ) {
+   else if ( d_far->estimatedSurplus()  >  d_common->d_pparams->getLoadComparisonTol() &&
+             d_near->estimatedSurplus() < -d_common->d_pparams->getLoadComparisonTol() ) {
       // Incoming work, from far child to near child.
 
       /*
@@ -446,7 +463,7 @@ CascadePartitionerTree::balanceChildren()
          }
       }
 
-      double work_supplied = d_far->supplyWork( -d_near->surplus(), d_common->d_mpi.getRank() );
+      double work_supplied = d_far->supplyWork( -d_near->estimatedSurplus(), d_common->d_mpi.getRank() );
 
       // Record work taken by near child group.
       d_near->d_work += work_supplied;
@@ -510,7 +527,7 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
    TBOX_ASSERT( work_requested > 0.0 );
    TBOX_ASSERT( !containsRank(taker) );
    TBOX_ASSERT( containsRank(d_common->d_mpi.getRank()) || d_children[0] == 0 ); // Only near groups should store children.
-   TBOX_ASSERT( d_group_may_supply == (surplus() > d_common->d_pparams->getLoadComparisonTol()) );
+   TBOX_ASSERT( d_group_may_supply == (estimatedSurplus() > d_common->d_pparams->getLoadComparisonTol()) );
 
    if ( d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerTree::supplyWork generation "
@@ -524,7 +541,7 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
    if ( d_group_may_supply ) {
 
       // Supply no more than surplus.  (Sibling assumes this in its estimate.)
-      const double work_allowed = tbox::MathUtilities<double>::Min( work_requested, surplus() );
+      const double work_allowed = tbox::MathUtilities<double>::Min( work_requested, estimatedSurplus() );
 
       if ( d_children[0] != 0 ) {
          // Near group and not a leaf: Recursively supply load from children.
@@ -573,13 +590,21 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
                d_common->d_shipment->recursivePrint();
                tbox::plog << "CascadePartitionerTree::supplyWork keeping: ";
                d_common->d_local_load->recursivePrint();
+               if ( d_common->d_shipment->getSumLoad() > est_work_supplied+tolerance ||
+                    d_common->d_shipment->getSumLoad() < est_work_supplied-tolerance ) {
+                  tbox::plog << "  Shipment target missed: shipment "
+                             << d_common->d_shipment->getSumLoad()/est_work_supplied
+                             << "  kept: "
+                             << d_common->d_local_load->getSumLoad()
+                             << std::endl;
+               }
             }
 
             d_process_may_supply[0] =
-               d_common->d_local_load->getSumLoad() - d_capacity >
+               d_common->d_local_load->getSumLoad() - d_obligation >
                d_common->d_pparams->getLoadComparisonTol();
 
-            d_group_may_supply = surplus() > d_common->d_pparams->getLoadComparisonTol();
+            d_group_may_supply = estimatedSurplus() > d_common->d_pparams->getLoadComparisonTol();
 
          }
       }
@@ -668,7 +693,26 @@ CascadePartitionerTree::recomputeLeafData()
    TBOX_ASSERT( this == d_leaf ); // Should only be called for leaves.
    d_work = d_common->d_local_load->getSumLoad();
    d_group_may_supply = d_process_may_supply[0] =
-      surplus() > d_common->d_pparams->getLoadComparisonTol() ;
+      estimatedSurplus() > d_common->d_pparams->getLoadComparisonTol() ;
+}
+
+
+
+/*
+ *************************************************************************
+ * Reset the obligation of group based on the given average load.
+ *************************************************************************
+ */
+void
+CascadePartitionerTree::resetObligation( double avg_load )
+{
+   d_obligation = avg_load*size();
+   d_group_may_supply = estimatedSurplus() > d_common->d_pparams->getLoadComparisonTol();
+
+   if ( d_children[0] ) {
+      d_children[0]->resetObligation(avg_load);
+      d_children[1]->resetObligation(avg_load);
+   }
 }
 
 
@@ -699,8 +743,8 @@ CascadePartitionerTree::printClassData( std::ostream &co, const std::string &bor
       << "  near=" << d_near << "  far=" << d_far
       << '\n' << indent
       << "position=" << d_position << "  contact=" << d_contact[0] << ',' << d_contact[1]
-      << "  work=" << d_work << '/' << d_capacity
-      << "  surplus=" << surplus()
+      << "  work=" << d_work << '/' << d_obligation
+      << "  estimated surplus=" << estimatedSurplus()
       << "  local_load=" << d_common->d_local_load->getSumLoad()
       << '\n' << indent
       << "group_may_supply=" << d_group_may_supply

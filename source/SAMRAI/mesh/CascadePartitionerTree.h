@@ -137,8 +137,8 @@ private:
    }
 
    //! @brief Estimated surplus of the group.
-   double surplus() const {
-      return d_work - d_capacity;
+   double estimatedSurplus() const {
+      return d_work - d_obligation;
    }
 
    /*!
@@ -166,6 +166,13 @@ private:
 
    //! @brief Recompute data for leaf groups.
    void recomputeLeafData();
+
+   /*!
+    * @brief Reset obligation recursively for all descendents.
+    *
+    * @param avg_load Average per-process load in the group.
+    */
+   void resetObligation( double avg_load );
 
 
    //! @brief Data the main CascadePartitioner shares with all parts of the tree.
@@ -227,8 +234,8 @@ private:
    //! @brief Estimated load of this branch.
    double d_work;
 
-   //! @brief Ideal amount of work for this branch.
-   double d_capacity;
+   //! @brief Amount of work the group obligated to have.
+   double d_obligation;
 
    //@}
 
