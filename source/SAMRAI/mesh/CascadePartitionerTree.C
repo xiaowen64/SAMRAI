@@ -217,7 +217,18 @@ void CascadePartitionerTree::balanceAll()
             current_group = current_group->d_parent ) {
 
          current_group->combineChildren();
-         if ( false && current_group == top_group && top_group->d_gen_num != 0 ) {
+         if ( d_common->d_print_steps ) {
+            tbox::plog << "\nCascadePartitionerTree::balanceAll outer top_group "
+                       << top_group->d_gen_num << "  combined generation "
+                       << current_group->d_gen_num << "\n";
+            current_group->printClassData( tbox::plog, "\t" );
+            tbox::plog << "\tchild 0:\n";
+            current_group->d_children[0]->printClassData( tbox::plog, "\t" );
+            tbox::plog << "\tchild 1:\n";
+            current_group->d_children[1]->printClassData( tbox::plog, "\t" );
+         }
+         if ( d_common->d_reset_obligations &&
+              current_group == top_group && top_group->d_gen_num != 0 ) {
             /*
              * Top group cannot change its average load, which may
              * differ from the global average.  Because we are stuck
@@ -234,16 +245,6 @@ void CascadePartitionerTree::balanceAll()
             if ( d_common->d_print_steps ) {
                tbox::plog << " to " << current_group->d_obligation << std::endl;
             }
-         }
-         if ( d_common->d_print_steps ) {
-            tbox::plog << "\nCascadePartitionerTree::balanceAll outer top_group "
-                       << top_group->d_gen_num << "  combined generation "
-                       << current_group->d_gen_num << "\n";
-            current_group->printClassData( tbox::plog, "\t" );
-            tbox::plog << "\tchild 0:\n";
-            current_group->d_children[0]->printClassData( tbox::plog, "\t" );
-            tbox::plog << "\tchild 1:\n";
-            current_group->d_children[1]->printClassData( tbox::plog, "\t" );
          }
 
          if ( d_common->d_balance_intermediate_groups || current_group == top_group ) {
@@ -592,9 +593,12 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
                d_common->d_local_load->recursivePrint();
                if ( d_common->d_shipment->getSumLoad() > est_work_supplied+tolerance ||
                     d_common->d_shipment->getSumLoad() < est_work_supplied-tolerance ) {
-                  tbox::plog << "  Shipment target missed: shipment "
-                             << d_common->d_shipment->getSumLoad()/est_work_supplied
-                             << "  kept: "
+                  tbox::plog << "  shipment missed range: target shipment "
+                             << d_common->d_shipment->getSumLoad() << " / " << est_work_supplied
+                             << " [" << est_work_supplied-tolerance << ','
+                             << est_work_supplied+tolerance << "] by "
+                             << d_common->d_shipment->getSumLoad()-est_work_supplied
+                             << " units.  kept: "
                              << d_common->d_local_load->getSumLoad()
                              << std::endl;
                }

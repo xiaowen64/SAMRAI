@@ -79,14 +79,14 @@ namespace mesh {
  * @internal The following are developer inputs.  Defaults listed
  * in parenthesis:
  *
- * @internal DEV_voucher_mode (false)
+ * @internal DEV_reset_obligations (true)
  * bool
- * Whether to use experimental voucher mode.
+ * Whether to reset load obligations within groups that cannot change its load average.
  *
- * @internal DEV_allow_box_breaking (true)
+ * @internal DEV_balance_intermediate_groups (false)
  * bool
- * Whether to allow box-breaking.  Set to false when boxes have
- * been pre-cut.
+ * Whether to balance intermediate groups instead of balancing just the top groups
+ * in each cycle.
  *
  * @see mesh::LoadBalanceStrategy
  */
@@ -379,6 +379,17 @@ private:
     * See input parameter "DEV_balance_intermediate_groups".
     */
    bool d_balance_intermediate_groups;
+
+   /*!
+    * @brief Whether to reset load obligations within groups that
+    * cannot change its load average.
+    *
+    * This option helps reduce imbalances but makes imbalances
+    * caused by bugs more difficult to find.
+    *
+    * See input parameter "DEV_reset_obligations".
+    */
+   bool d_reset_obligations;
 
    /*!
     * @brief Fraction of ideal load a process can accept over and above
