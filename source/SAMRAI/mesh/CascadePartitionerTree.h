@@ -64,9 +64,9 @@ public:
    ~CascadePartitionerTree();
 
    /*!
-    * @brief Run the complete cascade partitioner algorithm.
+    * @brief Distribute the load using the cascade algorithm.
     */
-   void balanceAll();
+   void distributeLoad();
 
    void printClassData( std::ostream &co, const std::string &border ) const;
 

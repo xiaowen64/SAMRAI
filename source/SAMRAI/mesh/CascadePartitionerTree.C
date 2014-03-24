@@ -193,8 +193,10 @@ CascadePartitionerTree::~CascadePartitionerTree()
  * until the end before balancing.
  *************************************************************************
  */
-void CascadePartitionerTree::balanceAll()
+void CascadePartitionerTree::distributeLoad()
 {
+   d_common->t_distribute_load->start();
+
    int top_group_num = 0; // For debugging only.
 
    /*
@@ -206,7 +208,7 @@ void CascadePartitionerTree::balanceAll()
          top_group = top_group->d_near ) {
 
       if ( d_common->d_print_steps ) {
-         tbox::plog << "\nCascadePartitionerTree::balanceAll balancing outer top_group "
+         tbox::plog << "\nCascadePartitionerTree::distributeLoad balancing outer top_group "
                     << top_group->d_gen_num
                     << "  with exact local_load=" << d_common->d_local_load->getSumLoad()
                     << std::endl;
@@ -220,7 +222,7 @@ void CascadePartitionerTree::balanceAll()
 
          current_group->combineChildren();
          if ( d_common->d_print_steps ) {
-            tbox::plog << "\nCascadePartitionerTree::balanceAll outer top_group "
+            tbox::plog << "\nCascadePartitionerTree::distributeLoad outer top_group "
                        << top_group->d_gen_num << "  combined generation "
                        << current_group->d_gen_num << "\n";
             current_group->printClassData( tbox::plog, "\t" );
@@ -239,7 +241,7 @@ void CascadePartitionerTree::balanceAll()
              * have based on the top_group average.
              */
             if ( d_common->d_print_steps ) {
-               tbox::plog << "\nCascadePartitionerTree::balanceAll generation "
+               tbox::plog << "\nCascadePartitionerTree::distributeLoad generation "
                           << current_group->d_gen_num << " reset obligation from "
                           << current_group->d_obligation;
             }
@@ -252,7 +254,7 @@ void CascadePartitionerTree::balanceAll()
          if ( d_common->d_balance_intermediate_groups || current_group == top_group ) {
             current_group->balanceChildren();
             if ( d_common->d_print_steps ) {
-               tbox::plog << "\nCascadePartitionerTree::balanceAll outer top_group "
+               tbox::plog << "\nCascadePartitionerTree::distributeLoad outer top_group "
                           << top_group->d_gen_num << "  shuffled generation "
                           << current_group->d_gen_num << "\n";
                current_group->printClassData( tbox::plog, "\t" );
@@ -269,6 +271,7 @@ void CascadePartitionerTree::balanceAll()
 
    } // Outer loop.
 
+   d_common->t_distribute_load->stop();
 }
 
 
@@ -286,6 +289,8 @@ void CascadePartitionerTree::balanceAll()
 void
 CascadePartitionerTree::combineChildren()
 {
+   d_common->t_combine_children->start();
+
    if ( false && d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerTree::combineChildren: entered with state:\n";
       printClassData( tbox::plog, "\t" );
@@ -359,6 +364,8 @@ CascadePartitionerTree::combineChildren()
       tbox::plog << "\tlocal_load:";
       d_common->d_local_load->recursivePrint(tbox::plog, "\t",0);
    }
+
+   d_common->t_combine_children->stop();
    return;
 }
 
@@ -387,6 +394,8 @@ CascadePartitionerTree::combineChildren()
 void
 CascadePartitionerTree::balanceChildren()
 {
+   d_common->t_balance_children->start();
+
    if ( d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerTree::balanceChildren: entered\n";
    }
@@ -399,7 +408,9 @@ CascadePartitionerTree::balanceChildren()
 
       if ( d_near->d_process_may_supply[0] ) {
 
+         d_common->t_supply_work->start();
          double work_supplied = d_near->supplyWork( -d_far->estimatedSurplus(), d_near->d_contact[0] );
+         d_common->t_supply_work->stop();
 
          // Record work taken by the far child.
          d_far->d_work += work_supplied;
@@ -466,7 +477,9 @@ CascadePartitionerTree::balanceChildren()
          }
       }
 
+      d_common->t_supply_work->start();
       double work_supplied = d_far->supplyWork( -d_near->estimatedSurplus(), d_common->d_mpi.getRank() );
+      d_common->t_supply_work->stop();
 
       // Record work taken by near child group.
       d_near->d_work += work_supplied;
@@ -499,6 +512,8 @@ CascadePartitionerTree::balanceChildren()
       tbox::plog << "\tlocal_load:";
       d_common->d_local_load->recursivePrint(tbox::plog, "\t",0);
    }
+
+   d_common->t_balance_children->stop();
    return;
 }
 
@@ -635,6 +650,8 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
 void
 CascadePartitionerTree::sendShipment( int taker )
 {
+   d_common->t_send_shipment->start();
+
    if ( d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerTree::sendMyShipment: sending to " << taker << ' ';
       d_common->d_shipment->recursivePrint(tbox::plog, "", 0);
@@ -650,6 +667,8 @@ CascadePartitionerTree::sendShipment( int taker )
    d_common->d_comm_peer[0].beginSend( (const char*)(msg.getBufferStart()),
                                        msg.getCurrentSize(), true );
    d_common->d_shipment->clear();
+
+   d_common->t_send_shipment->stop();
    return;
 }
 
@@ -662,6 +681,8 @@ CascadePartitionerTree::sendShipment( int taker )
 void
 CascadePartitionerTree::receiveAndUnpackSuppliedLoad()
 {
+   d_common->t_receive_and_unpack_supplied_load->start();
+
    while ( d_common->d_comm_stage.numberOfCompletedMembers() > 0 ||
            d_common->d_comm_stage.advanceAny() ) {
       tbox::AsyncCommStage::Member *completed = d_common->d_comm_stage.popCompletionQueue();
@@ -682,6 +703,8 @@ CascadePartitionerTree::receiveAndUnpackSuppliedLoad()
       }
       d_common->d_shipment->clear();
    }
+
+   d_common->t_receive_and_unpack_supplied_load->stop();
    return;
 }
 

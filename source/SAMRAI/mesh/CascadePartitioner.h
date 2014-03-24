@@ -448,6 +448,12 @@ private:
    boost::shared_ptr<tbox::Timer> t_assign_to_local_and_populate_maps;
    boost::shared_ptr<tbox::Timer> t_get_map;
    boost::shared_ptr<tbox::Timer> t_use_map;
+   boost::shared_ptr<tbox::Timer> t_distribute_load;
+   boost::shared_ptr<tbox::Timer> t_combine_children;
+   boost::shared_ptr<tbox::Timer> t_balance_children;
+   boost::shared_ptr<tbox::Timer> t_supply_work;
+   boost::shared_ptr<tbox::Timer> t_send_shipment;
+   boost::shared_ptr<tbox::Timer> t_receive_and_unpack_supplied_load;
 
    //@}
 

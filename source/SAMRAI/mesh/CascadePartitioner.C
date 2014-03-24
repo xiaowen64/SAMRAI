@@ -416,7 +416,7 @@ CascadePartitioner::partitionByCascade(
 
 tbox::plog << "lg_size="<<lg_size << "  ag_group_size="<<ag_group_size << std::endl;
    CascadePartitionerTree groups(*this);
-   groups.balanceAll();
+   groups.distributeLoad();
 
 
 #if 0
@@ -705,6 +705,20 @@ CascadePartitioner::setTimers()
 
       t_assign_to_local_and_populate_maps = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::assign_to_local_and_populate_maps");
+
+      // These timers are shared by CascadePartitionerTree.
+      t_distribute_load = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::distributeLoad()");
+      t_combine_children = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::combineChildren()");
+      t_balance_children = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::balanceChildren()");
+      t_supply_work = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::supply_work");
+      t_send_shipment = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::sendShipment()");
+      t_receive_and_unpack_supplied_load = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::reveiveAndUnpackSuppliedLoad()");
 
    }
 }
