@@ -325,6 +325,7 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
             redemptions_to_fulfill.end(),
             d_reserve );
 
+         // Done fulfilling redemptions.  The rest stay on local process.
          for ( std::map<int,VoucherRedemption>::const_iterator mi=redemptions_to_fulfill.begin();
                mi!=redemptions_to_fulfill.end(); ++mi ) {
             mi->second.d_box_shipment->putInBoxLevel(balanced_box_level);

@@ -249,6 +249,14 @@ BalanceBoxBreaker::breakOffLoad(
             tbox::plog << " breakOffLoad: chose the above trial break" << std::endl;
          }
       }
+      else {
+         if ( d_print_break_steps ) {
+            tbox::plog << " breakOffLoad: cubic break did not improve:"
+                       << "\n   cubic_trial:" << cubic_trial
+                       << "\n   best_trial:" << best_trial
+                       << std::endl;
+         }
+      }
 
    } else {
       if (d_print_break_steps) {
@@ -922,7 +930,7 @@ double BalanceBoxBreaker::computeWidthScore(
 /*
  *************************************************************************
  * Compute a size score for multiple boxes.  The combined score is the
- * produce of individual scores.
+ * product of individual scores.
  *************************************************************************
  */
 double BalanceBoxBreaker::computeWidthScore(
@@ -1076,11 +1084,12 @@ bool BalanceBoxBreaker::TrialBreak::computeMerits()
 
 /*
  *************************************************************************
- * Decide this TrialBreak is an improvement over anoter.  If both are
- * in-range, pick the one with the best width score.  If only one is
- * in-range, pick that one.  If none are in range but both are better
- * than not breaking, chose the one with better load.  If only one is
- * better than not breaking, choose that one.  Else, choose none.
+ * Determine if this TrialBreak is an improvement over another.  If
+ * both are in-range, pick the one with the best width score.  If only
+ * one is in-range, pick that one.  If none are in range but both are
+ * better than not breaking, chose the one with better load.  If only
+ * one is better than not breaking, choose that one.  Else, choose
+ * none.
  *************************************************************************
  */
 int BalanceBoxBreaker::TrialBreak::improvesOver(

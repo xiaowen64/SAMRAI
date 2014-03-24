@@ -25,8 +25,8 @@ namespace mesh {
 
 
 /*!
- * @brief Base class for container of work in transit through the tree
- * in the TreeLoadBalancer algorithm.
+ * @brief Base class for container of work in transit during
+ * partitioning.
  *
  * TransitLoad base class follows the prototype design pattern.
  * Subclasses must implement clone(), initialize(), and a copy
@@ -34,7 +34,7 @@ namespace mesh {
  *
  * TransitLoad has dual responsibilities.
  *
- * - First, it's a container of loads that move around the tree.  The
+ * - First, it's a container of loads that move around.  The
  * implementation may represent the work however it wants and should
  * be able to shift load from one container to another.  See
  * adjustLoad().
@@ -42,9 +42,9 @@ namespace mesh {
  * - Second, it generates the mappings between the pre- and
  * post-balance BoxLevels.  It must have this responsibility because
  * the implementation alone knows how the work is represented.  See
- * assignContentsToLocalProcessAndPopulateMaps().
+ * assignToLocalAndPopulateMaps().
  *
- * @see mesh::TreeLoadBalancer
+ * For usage examples, see mesh::TreeLoadBalancer.
  */
 
 class TransitLoad {
@@ -82,6 +82,7 @@ public:
     * @brief Insert all boxes from the given TransitSet.
     *
     * Changes to other as an implementation side-effect is allowed.
+    * This and other are guaranteed to be the same concrete type.
     *
     * @param other [i] Other TransitLoad container whose
     * implementation matches this one.
@@ -99,14 +100,31 @@ public:
       return getNumberOfItems() == 0;
    }
 
+   //! @brief Empty the container.
+   virtual void clear() = 0;
+
    //@}
 
    //@{
    //! @name Packing/unpacking for communication.
 
+   //! @brief Put content into MessageStream.
    virtual void putToMessageStream( tbox::MessageStream &msg ) const = 0;
 
+   //! @brief Add to content from MessageStream.
    virtual void getFromMessageStream( tbox::MessageStream &msg ) = 0;
+
+   friend tbox::MessageStream & operator << (
+      tbox::MessageStream & msg, const TransitLoad& transit_load ) {
+      transit_load.putToMessageStream(msg);
+      return msg;
+   }
+
+   friend tbox::MessageStream & operator >> (
+      tbox::MessageStream & msg, TransitLoad& transit_load ) {
+      transit_load.getFromMessageStream(msg);
+      return msg;
+   }
    //@}
 
 
@@ -134,23 +152,6 @@ public:
       double ideal_load,
       double low_load,
       double high_load ) = 0;
-
-
-   virtual double
-   assignLocalLoad(
-      TransitLoad& hold_bin,
-      double ideal_load,
-      double low_load,
-      double high_load,
-      int local_assignment_step ) {
-      NULL_USE(hold_bin);
-      NULL_USE(ideal_load);
-      NULL_USE(low_load);
-      NULL_USE(high_load);
-      NULL_USE(local_assignment_step);
-      TBOX_ERROR("DONT use this yet.");
-      return 0;
-   }
 
 
    /*!

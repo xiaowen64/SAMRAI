@@ -246,7 +246,8 @@ template<class TYPE>
 bool
 AsyncCommPeer<TYPE>::beginSend(
    const TYPE* buffer,
-   int size)
+   int size,
+   bool automatic_push_to_completion_queue )
 {
    if (getNextTaskOp() != none) {
       TBOX_ERROR("Cannot begin communication while another is in progress.\n"
@@ -260,7 +261,7 @@ AsyncCommPeer<TYPE>::beginSend(
    d_full_count = size;
    d_base_op = send;
    d_next_task_op = send_start;
-   bool status = checkSend();
+   bool status = checkSend(automatic_push_to_completion_queue);
    d_external_buf = 0;
    return status;
 }
@@ -303,7 +304,8 @@ AsyncCommPeer<TYPE>::resizeBuffer(
  */
 template<class TYPE>
 bool
-AsyncCommPeer<TYPE>::checkSend()
+AsyncCommPeer<TYPE>::checkSend(
+   bool automatic_push_to_completion_queue )
 {
    if (getBaseOp() != send) {
       TBOX_ERROR("Cannot check nonexistent send operation.\n"
@@ -483,6 +485,10 @@ AsyncCommPeer<TYPE>::checkSend()
          << ",  mpi_tag = " << d_tag0);
    }
 
+   if ( automatic_push_to_completion_queue && d_next_task_op == none ) {
+      pushToCompletionQueue();
+   }
+
    return d_next_task_op == none;
 }
 
@@ -494,7 +500,8 @@ AsyncCommPeer<TYPE>::checkSend()
  */
 template<class TYPE>
 bool
-AsyncCommPeer<TYPE>::beginRecv()
+AsyncCommPeer<TYPE>::beginRecv(
+   bool automatic_push_to_completion_queue )
 {
    if (getNextTaskOp() != none) {
       TBOX_ERROR("Cannot begin communication while another is in progress.\n"
@@ -507,7 +514,7 @@ AsyncCommPeer<TYPE>::beginRecv()
    d_full_count = 0;
    d_base_op = recv;
    d_next_task_op = recv_start;
-   return checkRecv();
+   return checkRecv(automatic_push_to_completion_queue);
 }
 
 /*
@@ -523,7 +530,8 @@ AsyncCommPeer<TYPE>::beginRecv()
  */
 template<class TYPE>
 bool
-AsyncCommPeer<TYPE>::checkRecv()
+AsyncCommPeer<TYPE>::checkRecv(
+   bool automatic_push_to_completion_queue )
 {
    if (getBaseOp() != recv) {
       TBOX_ERROR("Cannot check nonexistent receive operation.\n"
@@ -764,6 +772,10 @@ AsyncCommPeer<TYPE>::checkRecv()
          TBOX_ERROR("checkRecv is incompatible with current state.\n"
          << "mpi_communicator = " << d_mpi.getCommunicator()
          << ",  mpi_tag = " << d_tag0);
+   }
+
+   if ( automatic_push_to_completion_queue && d_next_task_op == none ) {
+      pushToCompletionQueue();
    }
 
    return d_next_task_op == none;

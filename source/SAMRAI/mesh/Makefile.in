@@ -34,6 +34,9 @@ OBJS = 	\
 	TreeLoadBalancer.o \
 	GraphLoadBalancer.o \
 	ChopAndPackLoadBalancer.o \
+	CascadePartitioner.o \
+	CascadePartitionerTree.o \
+	CascadePartitionerCombinedGroup.o \
 	TilePartitioner.o \
 	LoadBalanceStrategy.o \
 	BalanceBoxBreaker.o \

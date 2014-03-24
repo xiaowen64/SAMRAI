@@ -16,11 +16,11 @@
 Main {
    dim = 2
 
-   base_name = "box.2d.tilelb"
+   base_name = "box.2d.cascade"
 
    baseline_dirname = "test_inputs"
 
-   baseline_action = "COMPARE" // "GENERATE" or "COMPARE" or "NONE"
+   baseline_action = "NONE" // "COMPARE" // "GENERATE" or "COMPARE" or "NONE"
 
    write_visit = TRUE
 
@@ -30,15 +30,15 @@ Main {
    x_lo = 0.0, 0.0
    x_up = 1.0, 1.0
 
-   enforce_nesting = TRUE, TRUE, FALSE
+   enforce_nesting = TRUE, TRUE, TRUE
 
    load_balance = TRUE, TRUE
 
    autoscale_base_nprocs = 1
 
-   box_generator_type = "TileClustering"
+   box_generator_type = "BergerRigoutsos"
 
-   load_balancer_type = "TilePartitioner"
+   load_balancer_type = "CascadePartitioner"
 
    mesh_generator_name = "ShrunkenLevelGenerator"
 
@@ -71,18 +71,21 @@ BergerRigoutsos {
 }
 
 
+CascadePartitioner {
+  flexible_load_tolerance = 0.05
+  DEV_balance_intermediate_groups = FALSE
+  // Debugging options
+  DEV_report_load_balance = TRUE
+  DEV_check_map = TRUE
+  DEV_check_connectivity = TRUE
+  DEV_print_steps = TRUE
+  DEV_summarize_map = TRUE
+}
+
+
 TilePartitioner {
   box_size = 10, 10
-  internal_load_balancer = "TreeLoadBalancer"
 
-  CascadePartitioner {
-    flexible_load_tolerance = 0.05
-    // Debugging options
-    DEV_check_map = TRUE
-    DEV_check_connectivity = FALSE
-    DEV_print_steps = FALSE
-    DEV_summarize_map = TRUE
-  }
   TreeLoadBalancer {
     // Debugging options
     DEV_check_map = TRUE
@@ -107,6 +110,18 @@ TreeLoadBalancer {
   DEV_print_break_steps = FALSE
   DEV_print_edge_steps = FALSE
   DEV_summarize_map = TRUE
+}
+
+CenteredRankTree {
+  make_first_rank_the_root = FALSE
+}
+
+BalancedDepthFirstTree {
+  do_left_leaf_switch = TRUE
+}
+
+BreadthFirstRankTree {
+  tree_degree = 2
 }
 
 TimerManager {
@@ -141,5 +156,9 @@ PatchHierarchy {
 
    allow_patches_smaller_than_ghostwidth = TRUE
    allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
-   proper_nesting_buffer = 10, 10
+   proper_nesting_buffer = 1, 1
+}
+
+BoxTransitSet {
+   DEV_print_break_steps = FALSE
 }

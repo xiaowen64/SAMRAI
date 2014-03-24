@@ -8,7 +8,7 @@
  *
  ************************************************************************/
 
-// Mesh configuration: Single box
+// Mesh configuration: Lump with 2 shells.
 
 // Refer to lss.2d.treelb.input for full description of all input parameters
 // specific to this problem.
@@ -16,11 +16,11 @@
 Main {
    dim = 2
 
-   base_name = "box.2d.tilelb"
+   base_name = "lss.2d.cascade"
 
    baseline_dirname = "test_inputs"
 
-   baseline_action = "COMPARE" // "GENERATE" or "COMPARE" or "NONE"
+   baseline_action = "NONE" // "COMPARE" // "GENERATE" or "COMPARE" or "NONE"
 
    write_visit = TRUE
 
@@ -30,22 +30,25 @@ Main {
    x_lo = 0.0, 0.0
    x_up = 1.0, 1.0
 
-   enforce_nesting = TRUE, TRUE, FALSE
+   enforce_nesting = TRUE, TRUE, TRUE
 
    load_balance = TRUE, TRUE
 
    autoscale_base_nprocs = 1
 
-   box_generator_type = "TileClustering"
+   box_generator_type = "BergerRigoutsos"
 
-   load_balancer_type = "TilePartitioner"
+   load_balancer_type = "CascadePartitioner"
 
-   mesh_generator_name = "ShrunkenLevelGenerator"
+   rank_tree_type = "CenteredRankTree"
 
-   ShrunkenLevelGenerator {
-      domain_scale_method = 'r'
-      shrink_distance_0 = 0.20, 0.20
-      shrink_distance_1 = 0.20, 0.20
+   mesh_generator_name = "SphericalShellGenerator"
+
+   SphericalShellGenerator {
+      radii = 0.0, 0.35,    0.60, 0.65,    0.95, 0.97
+
+      buffer_distance_0 = 0.04, 0.04
+      buffer_distance_1 = 0.00, 0.00
    }
 
 }
@@ -71,18 +74,21 @@ BergerRigoutsos {
 }
 
 
+CascadePartitioner {
+  flexible_load_tolerance = 0.05
+  DEV_balance_intermediate_groups = FALSE
+  // Debugging options
+  DEV_report_load_balance = TRUE
+  DEV_check_map = TRUE
+  DEV_check_connectivity = TRUE
+  DEV_print_steps = TRUE
+  DEV_summarize_map = TRUE
+}
+
+
 TilePartitioner {
   box_size = 10, 10
-  internal_load_balancer = "TreeLoadBalancer"
 
-  CascadePartitioner {
-    flexible_load_tolerance = 0.05
-    // Debugging options
-    DEV_check_map = TRUE
-    DEV_check_connectivity = FALSE
-    DEV_print_steps = FALSE
-    DEV_summarize_map = TRUE
-  }
   TreeLoadBalancer {
     // Debugging options
     DEV_check_map = TRUE
@@ -141,5 +147,9 @@ PatchHierarchy {
 
    allow_patches_smaller_than_ghostwidth = TRUE
    allow_patches_smaller_than_minimum_size_to_prevent_overlaps = TRUE
-   proper_nesting_buffer = 10, 10
+   proper_nesting_buffer = 1, 1
+}
+
+BoxTransitSet {
+   DEV_print_break_steps = FALSE
 }
