@@ -205,10 +205,12 @@ void CascadePartitionerTree::balanceAll()
    for ( CascadePartitionerTree *top_group=this; top_group!=d_leaf;
          top_group = top_group->d_near ) {
 
-      tbox::plog << "\nCascadePartitionerTree::balanceAll balancing outer top_group "
-                 << top_group->d_gen_num
-                 << "  with exact local_load=" << d_common->d_local_load->getSumLoad()
-                 << std::endl;
+      if ( d_common->d_print_steps ) {
+         tbox::plog << "\nCascadePartitionerTree::balanceAll balancing outer top_group "
+                    << top_group->d_gen_num
+                    << "  with exact local_load=" << d_common->d_local_load->getSumLoad()
+                    << std::endl;
+      }
 
       d_leaf->recomputeLeafData();
 
