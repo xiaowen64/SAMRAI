@@ -248,6 +248,9 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BalanceUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BergerRigoutsos.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BoxGeneratorStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitioner.h			\
+	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitionerCombinedGroup.h	\
+	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitionerTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/ChopAndPackLoadBalancer.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/GraphLoadBalancer.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/GriddingAlgorithm.h			\

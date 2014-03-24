@@ -609,6 +609,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BoxTransitSet.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitioner.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitionerCombinedGroup.h	\
+	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitionerTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/LoadBalanceStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/PartitioningParams.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/SpatialKey.h				\
@@ -719,6 +720,7 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitioner.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitionerCombinedGroup.h	\
+	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitionerTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/LoadBalanceStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/PartitioningParams.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TransitLoad.h			\
@@ -2039,6 +2041,9 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BalanceUtilities.h			\
+	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitioner.h			\
+	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitionerCombinedGroup.h	\
+	$(INCLUDE_SAM)/SAMRAI/mesh/CascadePartitionerTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/ChopAndPackLoadBalancer.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/GraphLoadBalancer.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/LoadBalanceStrategy.h		\
