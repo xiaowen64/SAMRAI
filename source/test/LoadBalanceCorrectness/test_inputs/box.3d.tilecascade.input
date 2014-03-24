@@ -17,7 +17,7 @@ Main {
 
    dim = 3
 
-   base_name = "box.3d.cascade"
+   base_name = "box.3d.tilecascade"
 
    baseline_dirname = "test_inputs"
 
@@ -37,9 +37,9 @@ Main {
 
    autoscale_base_nprocs = 4
 
-   box_generator_type = "BergerRigoutsos"
+   box_generator_type = "TileClustering"
 
-   load_balancer_type = "CascadePartitioner"
+   load_balancer_type = "TilePartitioner"
 
    mesh_generator_name = "ShrunkenLevelGenerator"
 
