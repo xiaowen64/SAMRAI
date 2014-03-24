@@ -30,7 +30,7 @@ Main {
    x_lo = 0.0, 0.0
    x_up = 1.0, 1.0
 
-   enforce_nesting = TRUE, TRUE, FALSE
+   enforce_nesting = TRUE, TRUE, TRUE
 
    load_balance = TRUE, TRUE
 

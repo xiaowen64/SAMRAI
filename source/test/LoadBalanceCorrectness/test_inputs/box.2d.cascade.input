@@ -112,6 +112,18 @@ TreeLoadBalancer {
   DEV_summarize_map = TRUE
 }
 
+CenteredRankTree {
+  make_first_rank_the_root = FALSE
+}
+
+BalancedDepthFirstTree {
+  do_left_leaf_switch = TRUE
+}
+
+BreadthFirstRankTree {
+  tree_degree = 2
+}
+
 TimerManager {
 //   print_exclusive      = TRUE
    print_summed           = TRUE
