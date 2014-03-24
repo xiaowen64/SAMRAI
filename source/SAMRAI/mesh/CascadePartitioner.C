@@ -88,6 +88,7 @@ CascadePartitioner::CascadePartitioner(
    TBOX_ASSERT(!name.empty());
    getFromInput(input_db);
    setTimers();
+   d_comm_stage.setCommunicationWaitTimer(t_communication_wait);
    d_mca.setTimerPrefix(d_object_name);
 }
 
@@ -265,6 +266,7 @@ CascadePartitioner::loadBalanceBoxLevel(
     * Determine the total load and number of processes that has any
     * initial load.
     */
+   t_get_global_load->start();
    global_sum_load = local_load;
    double tmp_double[2];
    tmp_double[0] = local_load;
@@ -274,6 +276,7 @@ CascadePartitioner::loadBalanceBoxLevel(
    }
    global_sum_load = tmp_double[0];
    int num_procs_with_load = static_cast<int>(tmp_double[1] + 0.5);
+   t_get_global_load->stop();
 
    if (d_print_steps) {
       tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
@@ -304,7 +307,6 @@ CascadePartitioner::loadBalanceBoxLevel(
 
    t_load_balance_box_level->stop();
 
-   local_load = computeLocalLoad(balance_box_level);
    d_load_stat.push_back(local_load);
    d_box_count_stat.push_back(
       static_cast<int>(balance_box_level.getBoxes().size()));
@@ -706,6 +708,12 @@ CascadePartitioner::setTimers()
       t_assign_to_local_and_populate_maps = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::assign_to_local_and_populate_maps");
 
+      t_get_global_load = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::get_global_load");
+
+      t_communication_wait = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::communication_wait");
+
       // These timers are shared by CascadePartitionerTree.
       t_distribute_load = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::distributeLoad()");
@@ -718,7 +726,7 @@ CascadePartitioner::setTimers()
       t_send_shipment = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::sendShipment()");
       t_receive_and_unpack_supplied_load = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::reveiveAndUnpackSuppliedLoad()");
+         getTimer(d_object_name + "::receiveAndUnpackSuppliedLoad()");
 
    }
 }
