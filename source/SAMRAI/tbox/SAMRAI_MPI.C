@@ -300,13 +300,12 @@ SAMRAI_MPI::Comm_size(
    if (!s_mpi_is_initialized) {
       TBOX_ERROR("SAMRAI_MPI::Comm_size is a no-op without run-time MPI!");
    }
-   int rval = MPI_SUCCESS;
 #ifdef HAVE_MPI
    return MPI_Comm_size(comm, size);
 #else
    *size = 1;
+   return MPI_SUCCESS;
 #endif
-   return rval;
 }
 
 /*
