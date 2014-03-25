@@ -105,9 +105,13 @@ everything:
 	$(MAKE) examples
 	$(MAKE) perf
 
-clean:
-	$(SAMCLEAN)
-	$(RM) testHDF5 testHDF5AppFileOpen testSilo testSiloAppFileOpen testMemory
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
 	$(RM) test_dir *.silo *.hdf5
+
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) testHDF5 testHDF5AppFileOpen testSilo testSiloAppFileOpen \
+	testMemory
 
 include $(SRCDIR)/Makefile.depend

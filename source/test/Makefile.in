@@ -108,3 +108,7 @@ everything:
 clean:
 	$(RM) $(REPORT)
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+
+checkclean:
+	$(RM) $(REPORT)
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done

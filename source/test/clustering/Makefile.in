@@ -51,3 +51,6 @@ everything:
 
 clean:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+
+checkclean:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done

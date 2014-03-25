@@ -100,8 +100,9 @@ DEVELOPER_MAKEFILE=@DEVELOPER_MAKEFILE@
 # Rules used in all directories.
 ######################################################################
 
-SAMCLEAN=@$(RM) *.o *.ii *.int.c *.log *.log.* stamp-* core core.* stats -r ti_files ii_files \
-		*.valgrind
+CLEAN_COMMON_LIB_FILES = @$(RM) *.o
+CLEAN_COMMON_CHECK_FILES = @$(RM) *visit *.log* foo *core* *.TVD* *.valgrind
+CLEAN_COMMON_TEST_FILES = @$(RM) *.o *.f
 
 # Used to control which types are created.
 # Default is double, integer, bool, float, complex, char

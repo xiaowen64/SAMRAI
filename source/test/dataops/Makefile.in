@@ -284,11 +284,12 @@ everything:
 	$(MAKE) examples
 	$(MAKE) perf
 
-clean-check:
-	$(SAMCLEAN)
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
 
-clean:	clean-check
-	$(RM) *_hiertest* *_cplxtest* *_patchtest* *_dataops*
+clean:	checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) *_hiertest *_cplxtest *_patchtest *_dataops
 
 
 include $(SRCDIR)/Makefile.depend

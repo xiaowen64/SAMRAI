@@ -52,9 +52,7 @@ checkcompile:
 checktest:
 	$(MAKE) check
 
-clean-check:
-	$(SAMCLEAN)
-	rm -rf *f libSAMRAI*
+checkclean:
 
 examples:
 
@@ -62,7 +60,9 @@ perf:
 
 everything:
 
-clean:	clean-check
+clean:	checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) libSAMRAI_test$(LIB_SUFFIX)
 
 include $(SRCDIR)/Makefile.depend
 

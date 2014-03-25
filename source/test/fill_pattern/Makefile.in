@@ -67,8 +67,11 @@ everything:
 	$(MAKE) examples
 	$(MAKE) perf
 
-clean: 
-	$(SAMCLEAN)
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
+
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
 	$(RM) main
 
 include $(SRCDIR)/Makefile.depend

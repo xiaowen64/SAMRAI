@@ -153,13 +153,13 @@ everything:
 	$(MAKE) examples
 	$(MAKE) perf
 
-clean-check:
-	$(SAMCLEAN)
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
+	$(RM) test*restart* viz*
 
-clean:		clean-check
-	$(RM) *.f *main* 
-	$(RM) test*restart*
-	$(RM) viz*
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) main
 
 include $(SRCDIR)/Makefile.depend
 

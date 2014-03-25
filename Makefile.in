@@ -60,7 +60,7 @@ cleantest:
 	cd source/test && $(MAKE) clean
 
 checkclean:
-	cd source/test && $(MAKE) clean
+	cd source/test && $(MAKE) checkclean
 
 # Build temporary files containing list of object files for each
 # library.
