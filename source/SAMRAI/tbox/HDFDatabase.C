@@ -2083,7 +2083,6 @@ HDFDatabase::getStringVector(
    hsize_t nsel;
    size_t dsize;
    hid_t dset, dspace, dtype;
-   char* local_buf;
 
 #if (H5_VERS_MAJOR > 1) || ((H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 6))
    dset = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
@@ -2101,16 +2100,19 @@ HDFDatabase::getStringVector(
    dsize = H5Tget_size(dtype);
    nsel = H5Sget_select_npoints(dspace);
 
-   local_buf = new char[nsel * dsize];
-
-   errf = H5Dread(dset, dtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, local_buf);
-   TBOX_ASSERT(errf >= 0);
-
    std::vector<std::string> stringArray(static_cast<int>(nsel));
 
-   for (int i = 0; i < static_cast<int>(nsel); i++) {
-      std::string* locPtr = &stringArray[i];
-      *locPtr = &local_buf[i * dsize];
+   if (nsel > 0) {
+      char* local_buf = new char[nsel * dsize];
+
+      errf = H5Dread(dset, dtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, local_buf);
+      TBOX_ASSERT(errf >= 0);
+
+      for (int i = 0; i < static_cast<int>(nsel); i++) {
+         std::string* locPtr = &stringArray[i];
+         *locPtr = &local_buf[i * dsize];
+      }
+      delete[] local_buf;
    }
 
    errf = H5Sclose(dspace);
@@ -2122,7 +2124,6 @@ HDFDatabase::getStringVector(
    errf = H5Dclose(dset);
    TBOX_ASSERT(errf >= 0);
 
-   delete[] local_buf;
    return stringArray;
 }
 
