@@ -187,16 +187,6 @@ public:
       const bool& data);
 
    /**
-    * Create a boolean vector entry in the database with the specified
-    * key name.  If the key already exists in the database, then the old
-    * key record is deleted and the new one is silently created in its place.
-    */
-   virtual void
-   putBoolVector(
-      const std::string& key,
-      const std::vector<bool>& data);
-
-   /**
     * Create a boolean array entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.

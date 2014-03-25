@@ -265,20 +265,6 @@ MemoryDatabase::putBool(
 }
 
 void
-MemoryDatabase::putBoolVector(
-   const std::string& key,
-   const std::vector<bool>& data)
-{
-   int nbools = static_cast<int>(data.size());
-   bool* bool_array = new bool[nbools];
-   for (int i = 0; i < nbools; ++i) {
-      bool_array[i] = data[i];
-   }
-   putBoolArray(key, bool_array, nbools);
-   delete [] bool_array;
-}
-
-void
 MemoryDatabase::putBoolArray(
    const std::string& key,
    const bool * const data,
