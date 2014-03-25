@@ -20,7 +20,7 @@ std::vector< std::vector<int> > SingularityFinder::s_face_nodes;
 /*
  * ************************************************************************
  *
- * Constructors
+ * Constructor
  *
  * ************************************************************************
  */
@@ -128,6 +128,14 @@ SingularityFinder::~SingularityFinder()
 {
 }
 
+/*
+ * ************************************************************************
+ *
+ * Find the singularities.
+ *
+ * ************************************************************************
+ */
+
 void
 SingularityFinder::findSingularities(
    std::set<std::set<BlockId> >& singularity_blocks,
@@ -136,6 +144,9 @@ SingularityFinder::findSingularities(
    const std::map< BoxId, std::map<BoxId,int> >& face_neighbors)
 {
    if (face_neighbors.empty()) return;
+   if (grid_geometry.getNumberBlocks() == 1) return;
+
+   TBOX_ASSERT(singularity_blocks.empty());
 
    std::map< BoxId, std::map<BoxId,int> > unprocessed = face_neighbors;
    std::list<BoxId> to_be_processed;
@@ -179,7 +190,7 @@ SingularityFinder::findSingularities(
       }
    } while (!unprocessed.empty());
 
-   analyzeConnections();
+   findBoundaryFaces();
 
    std::set<std::set<BlockId> > sing_set;
 
@@ -200,7 +211,8 @@ SingularityFinder::findSingularities(
          for (std::set<int>::iterator s_itr = (**e_itr).d_blocks.begin();
               s_itr != (**e_itr).d_blocks.end(); ++s_itr) {
             BoxId box_id(LocalId(*s_itr),0);
-            const BlockId& block_id = domain_boxes.find(Box(d_dim,box_id))->getBlockId();
+            const BlockId& block_id =
+               domain_boxes.find(Box(d_dim,box_id))->getBlockId();
             sing_set.insert(block_id);
          }
          singularity_blocks.insert(sing_set); 
@@ -224,7 +236,8 @@ SingularityFinder::findSingularities(
          for (std::set<int>::iterator s_itr = (**p_itr).d_blocks.begin();
               s_itr != (**p_itr).d_blocks.end(); ++s_itr) {
             BoxId box_id(LocalId(*s_itr),0);
-            const BlockId& block_id = domain_boxes.find(Box(d_dim,box_id))->getBlockId();
+            const BlockId& block_id =
+               domain_boxes.find(Box(d_dim,box_id))->getBlockId();
             sing_set.insert(block_id);
          }
          singularity_blocks.insert(sing_set);
@@ -232,6 +245,14 @@ SingularityFinder::findSingularities(
    }
 
 }
+
+/*
+ * ************************************************************************
+ *
+ * Figure out the connection between Box A and Box B
+ *
+ * ************************************************************************
+ */
 
 void
 SingularityFinder::connect(const BoxId& id_a,
@@ -269,7 +290,15 @@ SingularityFinder::connect(const BoxId& id_a,
     * Map from edge on 'a' to edge on 'b'
     */ 
    std::map<int,int> map_of_edges;
-   findCoincidentEdges(map_of_edges, id_a, id_b, facea, faceb, domain_boxes, grid_geometry);
+   if (d_dim.getValue() == 3) {
+      findCoincidentEdges(map_of_edges,
+                          id_a,
+                          id_b,
+                          facea,
+                          faceb,
+                          domain_boxes,
+                          grid_geometry);
+   }
 
    for (std::map<int,int>::const_iterator e_itr = map_of_edges.begin();
         e_itr != map_of_edges.end(); ++e_itr) {
@@ -314,7 +343,12 @@ SingularityFinder::connect(const BoxId& id_a,
    }
 
    std::map<int,int> map_of_points;
-   findCoincidentPoints(map_of_points, id_a, id_b, facea, domain_boxes, grid_geometry);
+   findCoincidentPoints(map_of_points,
+                        id_a,
+                        id_b,
+                        facea,
+                        domain_boxes,
+                        grid_geometry);
 
    for (std::map<int,int>::const_iterator e_itr = map_of_points.begin();
         e_itr != map_of_points.end(); ++e_itr) {
@@ -337,9 +371,11 @@ SingularityFinder::connect(const BoxId& id_a,
          for (std::set<int>::iterator b_itr = pointb->d_blocks.begin();
               b_itr != pointb->d_blocks.end(); ++b_itr) {
              pointa->d_blocks.insert(*b_itr);
-             pointa->d_block_to_point[*b_itr] = pointb->d_block_to_point[*b_itr];
+             pointa->d_block_to_point[*b_itr] =
+                pointb->d_block_to_point[*b_itr];
              if (*b_itr != a && *b_itr != b) {
-                d_blocks[*b_itr]->d_point[pointa->d_block_to_point[*b_itr]] = pointa;
+                d_blocks[*b_itr]->d_point[pointa->d_block_to_point[*b_itr]] =
+                   pointa;
              }
          }
          for (std::list<boost::shared_ptr<Point> >::iterator e_itr =
@@ -360,8 +396,16 @@ SingularityFinder::connect(const BoxId& id_a,
 
 }
 
+/*
+ * ************************************************************************
+ *
+ * Figure the boundary faces, those not shared between blocks or boxes
+ *
+ * ************************************************************************
+ */
+
 void
-SingularityFinder::analyzeConnections()
+SingularityFinder::findBoundaryFaces()
 {
    for (int iblock = 0; iblock < d_blocks.size(); iblock++) {
 
@@ -402,11 +446,17 @@ SingularityFinder::analyzeConnections()
                block->d_point[point_idx]->d_bdry = true;
             }
          }
-
       }
    }
-
 }
+
+/*
+ * ************************************************************************
+ *
+ * Given two boxes that are face neighbors, find their shared edges
+ *
+ * ************************************************************************
+ */
 
 void
 SingularityFinder::findCoincidentEdges(
@@ -419,6 +469,7 @@ SingularityFinder::findCoincidentEdges(
    const BaseGridGeometry& grid_geometry)
 {
    if (d_dim.getValue() != 3) return;
+   TBOX_ASSERT(map_of_edges.empty());
 
    Box a_box = *(domain_boxes.find(Box(d_dim, id_a)));
    Box b_box = *(domain_boxes.find(Box(d_dim, id_b)));
@@ -524,7 +575,7 @@ SingularityFinder::findCoincidentEdges(
          } else if (b_edge.upper()(d) == b_node_box.upper(d)) {
             b_edge_dirs[d] = 1;
          } else {
-            TBOX_ERROR("   ");
+            TBOX_ERROR("SingularityFinder::findCoincidentEdges: Transformed box is not at the edge of the reference box.");
          }
       }
 
@@ -614,7 +665,7 @@ SingularityFinder::findCoincidentEdges(
             } else if (b_edge.upper()(d) == b_node_box.upper(d)) {
                b_edge_dirs[d] = 1;
             } else {
-               TBOX_ERROR("   ");
+               TBOX_ERROR("SingularityFinder::findCoincidentEdges: Transformed box is not at the edge of the reference box.");
             }
          }
  
@@ -667,7 +718,7 @@ SingularityFinder::findCoincidentEdges(
             }
          }
       } else {
-         TBOX_ERROR("  "); 
+         TBOX_ERROR("SingularityFinder::findCoincidentEdges failed to find location of edges."); 
       }
 
       TBOX_ASSERT(edgeb_idx >= 0);
@@ -679,6 +730,13 @@ SingularityFinder::findCoincidentEdges(
 
 }
 
+/*
+ * ************************************************************************
+ *
+ * Given two boxes that are face neighbors, find their shared corner points
+ *
+ * ************************************************************************
+ */
 
 void
 SingularityFinder::findCoincidentPoints(
@@ -752,7 +810,7 @@ SingularityFinder::findCoincidentPoints(
          } else if (b_point.upper()(d) == b_node_box.upper()(d)) {
             b_point_dirs[d] = 1;
          } else {
-            TBOX_ERROR("   ");
+            TBOX_ERROR("SingularityFinder::findCoincidentPoints: Transformed box is not located at the corner of the reference box");
          }
       }
 
@@ -768,7 +826,6 @@ SingularityFinder::findCoincidentPoints(
       map_of_points[pointa_idx] = pointb_idx; 
 
    }
-   
 
 }
 

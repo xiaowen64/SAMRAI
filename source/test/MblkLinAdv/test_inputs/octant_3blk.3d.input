@@ -243,11 +243,6 @@ BlockGeometry {
    domain_boxes_1 = [ (0,0,0) , (19,19,19) ]
    domain_boxes_2 = [ (0,0,0) , (19,19,19) ]
 
-   // Singularity defn and neighbors
-   Singularity0 {
-      blocks = 0 , 1 , 2
-   }
-
    BlockNeighbors0 {
       block_a = 0
       block_b = 1

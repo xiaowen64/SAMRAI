@@ -906,11 +906,39 @@ private:
       const Transformation::RotationIdentifier rotation_b_to_a,
       const IntVector& shift_b_to_a);
 
+   /*!
+    * @brief find the blocks that touch singularities.
+    *
+    * @param[out] singularity_blocks Container to hold the singularity
+    *                                information. Each singularity is
+    *                                represented by a member of the outer set,
+    *                                while the inner set holds all BlockIds
+    *                                for the blocks that touch a particular
+    *                                singularity.
+    *
+    * @pre singularity_blocks.empty()
+    * @pre d_number_blocks > 1
+    */
    void findSingularities(std::set<std::set<BlockId> >& singularity_blocks);
 
-   void chopDomain(
-      BoxContainer& chopped_domain,
-      std::map< BoxId, std::map<BoxId, int> > face_neighbors);
+   /*
+    * @brief Chop the physical domain of this geometry into a container
+    * that has no T-junctions at adjacent faces
+    *
+    * A T-junction occurs when a face one Box in the physical touches the faces
+    * of more than one other Box.  This method creates a representation of the
+    * domain that has chopped the physical domain Boxes such that there are
+    * no T-junctions.
+    *
+    * If the physical domain has no T-junctions, then the output chopped_domain
+    * will be a simple copy of the physical domain.
+    *
+    * @param[out] chopped_domain  Container to hold chopped representation of
+    *                             the domain.
+    *
+    * @pre chopped_domain.isEmpty();
+    */
+   void chopDomain(BoxContainer& chopped_domain);
 
    /*!
     * @brief Get a BoxContainer that contains all of the index space of all other

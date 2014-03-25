@@ -1854,31 +1854,7 @@ BaseGridGeometry::readBlockDataFromInput(
       findSingularities(singularity_blocks);
    }
    d_number_of_block_singularities = singularity_blocks.size();
-/*
-   for (d_number_of_block_singularities = 0; true;
-        ++d_number_of_block_singularities) {
 
-      sing_name = "Singularity" +
-         tbox::Utilities::intToString(d_number_of_block_singularities);
-
-      if (!input_db->keyExists(sing_name)) {
-         break;
-      }
-
-      singularity_blocks.resize(d_number_of_block_singularities+1);
-
-      boost::shared_ptr<tbox::Database> sing_db(
-         input_db->getDatabase(sing_name));
-
-      std::vector<int> blocks = sing_db->getIntegerVector("blocks");
-
-      for (int i = 0; i < static_cast<int>(blocks.size()); i++) {
-
-         singularity_blocks[d_number_of_block_singularities].insert(blocks[i]);
-
-      }
-   }
-*/
    if (d_number_blocks == 1 && d_number_of_block_singularities > 0) {
       TBOX_ERROR("BaseGridGeometry::readBlockDataFromInput() error...\n"
          << "block singularities specified for single block problem."
@@ -2263,16 +2239,26 @@ BaseGridGeometry::registerNeighbors(
    d_block_neighbors[b].insert(nbr_of_b_pair);
 }
 
+/*
+ * ************************************************************************
+ *
+ * Find singularities
+ *
+ * ************************************************************************
+ */
+
 void BaseGridGeometry::findSingularities(
    std::set<std::set<BlockId> >& singularity_blocks)
 {
    TBOX_ASSERT(d_number_blocks > 1);
+   TBOX_ASSERT(singularity_blocks.empty());
 
    BoxContainer chopped_domain;
-   std::map< BoxId, std::map<BoxId, int> > face_neighbors;
-   chopDomain(chopped_domain, face_neighbors);
+   chopDomain(chopped_domain);
 
    chopped_domain.makeTree(this);
+
+   std::map< BoxId, std::map<BoxId, int> > face_neighbors;
 
    for (BoxContainer::iterator b_itr = chopped_domain.begin();
         b_itr != chopped_domain.end(); ++b_itr) {
@@ -2397,7 +2383,7 @@ void BaseGridGeometry::findSingularities(
                      face_num = 2 * normal_dir + 1; 
                   }
                } else {
-                  TBOX_ERROR("Face from one side of block boundary but not the other.");
+                  TBOX_ERROR("BaseGridGeometry::findSingularities: Face found on one side of block boundary but not the other.");
                } 
 
                face_neighbors[nbr_id].insert(std::make_pair<BoxId,int>(base_id, face_num));
@@ -2417,11 +2403,20 @@ void BaseGridGeometry::findSingularities(
    }
 }
 
+/*
+ * ************************************************************************
+ *
+ * Chop domain to eliminate T-junctions.
+ *
+ * ************************************************************************
+ */
+
 void
 BaseGridGeometry::chopDomain(
-   BoxContainer& chopped_domain,
-   std::map< BoxId, std::map<BoxId, int> > face_neighbors)
+   BoxContainer& chopped_domain)
 {
+   TBOX_ASSERT(chopped_domain.isEmpty());
+
    chopped_domain = d_physical_domain;
    chopped_domain.order();
 

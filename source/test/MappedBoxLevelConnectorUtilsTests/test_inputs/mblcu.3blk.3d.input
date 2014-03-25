@@ -36,10 +36,6 @@ GridGeometry {
    domain_boxes_1 = [ (0,0,0) , (25,13,11) ]
    domain_boxes_2 = [ (0,0,0) , (20,25,11) ]
 
-   Singularity0 {
-      blocks = 0,1,2
-   }
-
    BlockNeighbors0 {
       block_a = 0
       block_b = 1

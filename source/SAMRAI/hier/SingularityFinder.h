@@ -23,6 +23,9 @@ namespace hier {
 
 
 /*!
+ * @brief Class SingularityFinder implements an algorithm to find
+ * multiblock singularities based on the relationships between blocks that
+ * touch on an entire face.
  */
 
 class SingularityFinder
@@ -36,6 +39,37 @@ public:
     */
    ~SingularityFinder();
 
+   /*!
+    * @brief Find the singularities based on the relationship between
+    * face neighbors.
+    *
+    * The singularity information is computed based on the face_neighbors
+    * input. In the nested map of maps face_neighbors, the key for the outer
+    * map is a BoxId of a Box in the domain_boxes input (the reference Box).
+    * For each reference Box,the inner map contains information about all its
+    * face neighbors.
+    *
+    * Each face neighbor has a BoxId as its identifying key and
+    * an integer to indicate which face of the reference Box the neighbor
+    * touches. The formula for the integer identifier is:  For each normal
+    * direction D = 0,...,NDIM-1, the lower face identifier is 2*D and the
+    * upper face identifier is 2*D+1.
+    *
+    * The domain_boxes input is a representation of the physical domain that
+    * must be set up such that all face neighbor relationships between
+    * Boxes touch each other across the entirety of each Box face.
+    *
+    * @param[out] singularity_blocks Output for the computed singularities.
+    *                                The outer set is the container of all
+    *                                singularities, while each inner set
+    *                                contains all of the BlockIds for the
+    *                                blocks that touch one singularity.
+    * @param[in] domain_boxes   Representation of the physical domain.
+    * @param[in] grid_geometry  The grid geometry describing the multiblock
+    *                           layout.
+    * @param[in] face_neighbors Input information about face neighbor
+    *                           relationships, described above.
+    */
    void findSingularities(
       std::set<std::set<BlockId> >& singularity_blocks,
       const BoxContainer& domain_boxes,
@@ -50,8 +84,11 @@ private:
    struct Edge;
    struct Point;
 
-   struct Block {
-
+   /*!
+    * @brief Private struct Block holds inforation about all
+    * the faces, edges, and corner points of a block.
+    */
+   struct Block { 
       Block(const tbox::Dimension& dim) {
 
          if (dim.getValue() == 1) {
@@ -92,6 +129,12 @@ private:
       std::vector<boost::shared_ptr<Point> > d_point;
    };
 
+   /*!
+    * @brief Private struct Face
+    *
+    * Each block face is represented by this struct.  When a face is shared by
+    * two blocks, a single instance of this struct is shared by both blocks.
+    */
    struct Face {
 
       Face() {
@@ -103,6 +146,14 @@ private:
       std::map<int,int> d_block_to_face;
    };
 
+
+   /*!
+    * @brief Private struct Edge
+    *
+    * In 3D, each block edge is represented by this struct.  When an edge is
+    * shared by multiple blocks, a single instance of this struct is shared by
+    * all of the blocks.
+    */
    struct Edge {
 
       Edge() {
@@ -114,6 +165,13 @@ private:
       std::map<int,int> d_block_to_edge;
    };
 
+   /*!
+    * @brief Private struct Point
+    *
+    * Each corner point of a block is represented by this struct.  When a
+    * point is shared by multiple blocks, a single instance of this struct is
+    * shared by all of the blocks.
+    */
    struct Point {
 
       Point() {
@@ -125,8 +183,24 @@ private:
       std::map<int,int> d_block_to_point;
    };
 
+   /*
+    * Unimplemented default constructor.
+    */
    SingularityFinder();
 
+   /*!
+    * @brief Find all shared information between two Boxes.
+    *
+    * Given two BoxIds representing two Boxes that share a face,
+    * compute all the information about shared points and edges.
+    *
+    * @param[in] id_a           ID of Box A
+    * @param[in] id_b           ID of Box B
+    * @param[in] face_a         Face of Box A that touches Box B
+    * @param[in] face_b         Face of Box B that touches Box A
+    * @param[in] domain_boxes   Boxes for the physical domain
+    * @param[in] grid_geometry
+    */
    void connect(const BoxId& id_a,
                 const BoxId& id_b,
                 int face_a,
@@ -134,8 +208,15 @@ private:
                 const BoxContainer& domain_boxes,
                 const BaseGridGeometry& grid_geometry);
 
-   void analyzeConnections();
+   /*!
+    * @brief Determine which block faces are not shared by two blocks.  These
+    * are boundary faces and must be excluded from the singularity computation.
+    */
+   void findBoundaryFaces();
 
+   /*!
+    * @brief Determine which edges are shared between two boxes.
+    */
    void findCoincidentEdges(std::map<int,int>& map_of_edges,
                             const BoxId& id_a,
                             const BoxId& id_b,
@@ -144,6 +225,9 @@ private:
                             const BoxContainer& domain_boxes,
                             const BaseGridGeometry& grid_geometry);
 
+   /*!
+    * @brief Determine which corner points are shared between two boxes.
+    */
    void findCoincidentPoints(std::map<int,int>& map_of_points,
                              const BoxId& id_a,
                              const BoxId& id_b,
@@ -158,27 +242,13 @@ private:
    std::list<boost::shared_ptr<Edge> > d_edges;
    std::list<boost::shared_ptr<Point> > d_points;
 
+   /*!
+    * @brief Static vectors that serve as a table to map face identifiers
+    * to edge and node integer identifiers.
+    */
    static std::vector< std::vector<int> > s_face_edges;
    static std::vector< std::vector<int> > s_face_nodes;
 
-
-
-/*
-int face_edges[6][4] = {{ 0, 2, 4, 6}, // face 0
-                        { 1, 3, 5, 7}, // face 1
-                        { 0, 1, 8,10}, // face 2
-                        { 2, 3, 9,11}, // face 3
-                        { 4, 5, 8, 9}, // face 4
-                        { 6, 7,10,11}  // face 5
-};
-
-int face_points[6][4] = {{ 0, 2, 4, 6}, // face 0
-                         { 1, 3, 5, 7}, // face 1
-                         { 0, 1, 4, 5}, // face 2
-                         { 2, 3, 6, 7}, // face 3
-                         { 0, 1, 2, 3}, // face 4
-                         { 4, 5, 6, 7}  // face 5
-*/
 };
 
 }
