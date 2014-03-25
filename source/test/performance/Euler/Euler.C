@@ -4622,56 +4622,50 @@ void Euler::checkBoundaryData(
          }
       }
 
-      int num_bad_values = 0;
-
       if (d_dim == tbox::Dimension(2)) {
-         num_bad_values =
-            appu::CartesianBoundaryUtilities2::checkBdryData(
-               d_density->getName(),
-               patch,
-               vdb->mapVariableAndContextToIndex(d_density,
-                  getDataContext()), 0,
-               ghost_width_to_check,
-               bbox,
-               bscalarcase,
-               d_bdry_edge_density[refbdryloc]);
+         appu::CartesianBoundaryUtilities2::checkBdryData(
+            d_density->getName(),
+            patch,
+            vdb->mapVariableAndContextToIndex(d_density, getDataContext()),
+            0,
+            ghost_width_to_check,
+            bbox,
+            bscalarcase,
+            d_bdry_edge_density[refbdryloc]);
       }
       if (d_dim == tbox::Dimension(3)) {
-         num_bad_values =
-            appu::CartesianBoundaryUtilities3::checkBdryData(
-               d_density->getName(),
-               patch,
-               vdb->mapVariableAndContextToIndex(d_density,
-                  getDataContext()), 0,
-               ghost_width_to_check,
-               bbox,
-               bscalarcase,
-               d_bdry_face_density[refbdryloc]);
+         appu::CartesianBoundaryUtilities3::checkBdryData(
+            d_density->getName(),
+            patch,
+            vdb->mapVariableAndContextToIndex(d_density, getDataContext()),
+            0,
+            ghost_width_to_check,
+            bbox,
+            bscalarcase,
+            d_bdry_face_density[refbdryloc]);
       }
 
       if (d_dim == tbox::Dimension(2)) {
-         num_bad_values =
-            appu::CartesianBoundaryUtilities2::checkBdryData(
-               d_pressure->getName(),
-               patch,
-               vdb->mapVariableAndContextToIndex(d_pressure, getDataContext()),
-               0,
-               ghost_width_to_check,
-               bbox,
-               bscalarcase,
-               d_bdry_edge_density[refbdryloc]);
+         appu::CartesianBoundaryUtilities2::checkBdryData(
+            d_pressure->getName(),
+            patch,
+            vdb->mapVariableAndContextToIndex(d_pressure, getDataContext()),
+            0,
+            ghost_width_to_check,
+            bbox,
+            bscalarcase,
+            d_bdry_edge_density[refbdryloc]);
       }
       if (d_dim == tbox::Dimension(3)) {
-         num_bad_values =
-            appu::CartesianBoundaryUtilities3::checkBdryData(
-               d_pressure->getName(),
-               patch,
-               vdb->mapVariableAndContextToIndex(d_pressure, getDataContext()),
-               0,
-               ghost_width_to_check,
-               bbox,
-               bscalarcase,
-               d_bdry_face_density[refbdryloc]);
+         appu::CartesianBoundaryUtilities3::checkBdryData(
+            d_pressure->getName(),
+            patch,
+            vdb->mapVariableAndContextToIndex(d_pressure, getDataContext()),
+            0,
+            ghost_width_to_check,
+            bbox,
+            bscalarcase,
+            d_bdry_face_density[refbdryloc]);
       }
 
       for (int idir = 0; idir < d_dim.getValue(); idir++) {
@@ -4707,28 +4701,26 @@ void Euler::checkBoundaryData(
          }
 
          if (d_dim == tbox::Dimension(2)) {
-            num_bad_values =
-               appu::CartesianBoundaryUtilities2::checkBdryData(
-                  d_velocity->getName(),
-                  patch,
-                  vdb->mapVariableAndContextToIndex(d_velocity, getDataContext()),
-                  idir,
-                  ghost_width_to_check,
-                  bbox,
-                  vbcase,
-                  d_bdry_edge_velocity[refbdryloc * d_dim.getValue() + idir]);
+            appu::CartesianBoundaryUtilities2::checkBdryData(
+               d_velocity->getName(),
+               patch,
+               vdb->mapVariableAndContextToIndex(d_velocity, getDataContext()),
+               idir,
+               ghost_width_to_check,
+               bbox,
+               vbcase,
+               d_bdry_edge_velocity[refbdryloc * d_dim.getValue() + idir]);
          }
          if (d_dim == tbox::Dimension(3)) {
-            num_bad_values =
-               appu::CartesianBoundaryUtilities3::checkBdryData(
-                  d_velocity->getName(),
-                  patch,
-                  vdb->mapVariableAndContextToIndex(d_velocity, getDataContext()),
-                  idir,
-                  ghost_width_to_check,
-                  bbox,
-                  vbcase,
-                  d_bdry_face_velocity[refbdryloc * d_dim.getValue() + idir]);
+            appu::CartesianBoundaryUtilities3::checkBdryData(
+               d_velocity->getName(),
+               patch,
+               vdb->mapVariableAndContextToIndex(d_velocity, getDataContext()),
+               idir,
+               ghost_width_to_check,
+               bbox,
+               vbcase,
+               d_bdry_face_velocity[refbdryloc * d_dim.getValue() + idir]);
          }
       }
 

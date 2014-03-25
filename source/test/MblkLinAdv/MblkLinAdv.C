@@ -2984,10 +2984,14 @@ void MblkLinAdv::checkBoundaryData(
          }
       }
 
+#if (TESTING == 1)
       int num_bad_values = 0;
+#endif
 
       if (d_dim == tbox::Dimension(2)) {
+#if (TESTING == 1)
          num_bad_values =
+#endif
             SkeletonBoundaryUtilities2::checkBdryData(
                d_uval->getName(),
                patch,
@@ -2998,7 +3002,9 @@ void MblkLinAdv::checkBoundaryData(
                d_bdry_edge_uval[refbdryloc]);
       }
       else if (d_dim == tbox::Dimension(3)) {
+#if (TESTING == 1)
          num_bad_values =
+#endif
             SkeletonBoundaryUtilities3::checkBdryData(
                d_uval->getName(),
                patch,

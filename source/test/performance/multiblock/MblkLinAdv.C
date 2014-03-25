@@ -2747,7 +2747,6 @@ void MblkLinAdv::getFromInput(
              (d_data_problem == "SINE_CONSTANT_Y") ||
              (d_data_problem == "SINE_CONSTANT_Z"))) {
 
-         int idir = 0;
          if (d_data_problem == "PIECEWISE_CONSTANT_Y") {
             if (d_dim < tbox::Dimension(2)) {
                TBOX_ERROR(
@@ -2755,7 +2754,6 @@ void MblkLinAdv::getFromInput(
                                 << "problem invalid in 1 dimension."
                                 << endl);
             }
-            idir = 1;
          }
 
          if (d_data_problem == "PIECEWISE_CONSTANT_Z") {
@@ -2764,7 +2762,6 @@ void MblkLinAdv::getFromInput(
                   d_object_name << ": `PIECEWISE_CONSTANT_Z' "
                                 << "problem invalid in 1 or 2 dimensions." << endl);
             }
-            idir = 2;
          }
 
          std::vector<string> init_data_keys = init_data_db->getAllKeys();
@@ -3194,29 +3191,25 @@ void MblkLinAdv::checkBoundaryData(
          }
       }
 
-      int num_bad_values = 0;
-
       if (d_dim == tbox::Dimension(2)) {
-         num_bad_values =
-            SkeletonBoundaryUtilities2::checkBdryData(
-               d_uval->getName(),
-               patch,
-               vdb->mapVariableAndContextToIndex(d_uval, getDataContext()), 0,
-               ghost_width_to_check,
-               bbox,
-               bscalarcase,
-               d_bdry_edge_uval[refbdryloc]);
+         SkeletonBoundaryUtilities2::checkBdryData(
+            d_uval->getName(),
+            patch,
+            vdb->mapVariableAndContextToIndex(d_uval, getDataContext()), 0,
+            ghost_width_to_check,
+            bbox,
+            bscalarcase,
+            d_bdry_edge_uval[refbdryloc]);
       }
       if (d_dim == tbox::Dimension(3)) {
-         num_bad_values =
-            SkeletonBoundaryUtilities3::checkBdryData(
-               d_uval->getName(),
-               patch,
-               vdb->mapVariableAndContextToIndex(d_uval, getDataContext()), 0,
-               ghost_width_to_check,
-               bbox,
-               bscalarcase,
-               d_bdry_face_uval[refbdryloc]);
+         SkeletonBoundaryUtilities3::checkBdryData(
+            d_uval->getName(),
+            patch,
+            vdb->mapVariableAndContextToIndex(d_uval, getDataContext()), 0,
+            ghost_width_to_check,
+            bbox,
+            bscalarcase,
+            d_bdry_face_uval[refbdryloc]);
       }
    }
 
