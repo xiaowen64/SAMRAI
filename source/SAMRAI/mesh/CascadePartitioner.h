@@ -117,9 +117,7 @@ public:
       const tbox::Dimension& dim,
       const std::string& name,
       const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>(),
-      const boost::shared_ptr<tbox::RankTreeStrategy> &rank_tree =
-         boost::shared_ptr<tbox::RankTreeStrategy>());
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * @brief Virtual destructor releases all internal storage.

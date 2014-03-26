@@ -46,6 +46,7 @@ using namespace std;
 #include "SAMRAI/algs/HyperbolicLevelIntegrator.h"
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/mesh/CascadePartitioner.h"
 #include "SAMRAI/mesh/TilePartitioner.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
@@ -447,6 +448,25 @@ int main(
          load_balancer = tree_load_balancer;
          load_balancer0 = tree_load_balancer0;
       }
+      else if ( load_balancer_type == "CascadePartitioner" ) {
+
+         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner(
+            new mesh::CascadePartitioner(
+               dim,
+               "mesh::CascadePartitioner",
+               input_db->getDatabase("CascadePartitioner")));
+         cascade_partitioner->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner0(
+            new mesh::CascadePartitioner(
+               dim,
+               "mesh::CascadePartitioner0",
+               input_db->getDatabase("CascadePartitioner")));
+         cascade_partitioner0->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+         load_balancer = cascade_partitioner;
+         load_balancer0 = cascade_partitioner0;
+      }
       else if ( load_balancer_type == "ChopAndPackLoadBalancer" ) {
 
          boost::shared_ptr<mesh::ChopAndPackLoadBalancer> cap_load_balancer(
@@ -638,6 +658,17 @@ int main(
          TBOX_ASSERT(tree_load_balancer);
          tbox::plog << "\n\nLoad balancing results:\n";
          tree_load_balancer->printStatistics(tbox::plog);
+      }
+      if ( load_balancer_type == "CascadePartitioner" ) {
+         /*
+          * Output load balancing results for CascadePartitioner.
+          */
+         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner(
+            BOOST_CAST<mesh::CascadePartitioner, mesh::LoadBalanceStrategy>(
+               load_balancer));
+         TBOX_ASSERT(cascade_partitioner);
+         tbox::plog << "\n\nLoad balancing results:\n";
+         cascade_partitioner->printStatistics(tbox::plog);
       }
       else if ( load_balancer_type == "TilePartitioner" ) {
          /*

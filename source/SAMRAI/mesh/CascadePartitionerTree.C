@@ -207,6 +207,8 @@ void CascadePartitionerTree::distributeLoad()
    for ( CascadePartitionerTree *top_group=this; top_group!=d_leaf;
          top_group = top_group->d_near ) {
 
+      top_group_num = top_group->d_gen_num; // For debugging only.
+
       if ( d_common->d_print_steps ) {
          tbox::plog << "\nCascadePartitionerTree::distributeLoad balancing outer top_group "
                     << top_group->d_gen_num
@@ -216,6 +218,13 @@ void CascadePartitionerTree::distributeLoad()
 
       d_leaf->recomputeLeafData();
 
+      /*
+       * This loop builds an O(lgN) summary of the top_group, enough
+       * to balance its lower and upper halves, then it balances the
+       * two halves.  Balancing descendent groups along the way is
+       * optional, according to the d_balance_intermediate_groups
+       * flag.
+       */
       for ( CascadePartitionerTree *current_group = d_leaf->d_parent;
             current_group != 0 && current_group->d_near != top_group;
             current_group = current_group->d_parent ) {
@@ -240,14 +249,13 @@ void CascadePartitionerTree::distributeLoad()
              * Reset the load each process in the group is obliged to
              * have based on the top_group average.
              */
+            const double old_obligation = current_group->d_obligation;
+            current_group->resetObligation(top_group->d_work/top_group->size());
             if ( d_common->d_print_steps ) {
                tbox::plog << "\nCascadePartitionerTree::distributeLoad generation "
                           << current_group->d_gen_num << " reset obligation from "
-                          << current_group->d_obligation;
-            }
-            current_group->resetObligation(top_group->d_work/top_group->size());
-            if ( d_common->d_print_steps ) {
-               tbox::plog << " to " << current_group->d_obligation << std::endl;
+                          << old_obligation << " to " << current_group->d_obligation
+                          << std::endl;
             }
          }
 
@@ -266,8 +274,6 @@ void CascadePartitionerTree::distributeLoad()
          }
 
       } // Inner loop.
-
-      ++top_group_num; // For debugging only.
 
    } // Outer loop.
 
@@ -290,15 +296,6 @@ void
 CascadePartitionerTree::combineChildren()
 {
    d_common->t_combine_children->start();
-
-   if ( false && d_common->d_print_steps ) {
-      tbox::plog << "CascadePartitionerTree::combineChildren: entered with state:\n";
-      printClassData( tbox::plog, "\t" );
-      tbox::plog << "\tchild 0:\n";
-      d_children[0]->printClassData( tbox::plog, "\t" );
-      tbox::plog << "\tchild 1:\n";
-      d_children[1]->printClassData( tbox::plog, "\t" );
-   }
 
    /*
     * Determine and record work of the two halves.  Needs
@@ -353,17 +350,6 @@ CascadePartitionerTree::combineChildren()
 
    // If process still may supply for near child, it may supply for this group.
    d_process_may_supply[0] = d_near->d_process_may_supply[0];
-
-   if ( false && d_common->d_print_steps ) {
-      tbox::plog << "CascadePartitionerTree::combineChildren: leaving with state:\n";
-      printClassData( tbox::plog, "\t" );
-      tbox::plog << "\tchild 0:\n";
-      d_children[0]->printClassData( tbox::plog, "\t" );
-      tbox::plog << "\tchild 1:\n";
-      d_children[1]->printClassData( tbox::plog, "\t" );
-      tbox::plog << "\tlocal_load:";
-      d_common->d_local_load->recursivePrint(tbox::plog, "\t",0);
-   }
 
    d_common->t_combine_children->stop();
    return;
@@ -500,17 +486,6 @@ CascadePartitionerTree::balanceChildren()
    d_common->d_comm_stage.advanceAll();
    while ( d_common->d_comm_stage.numberOfCompletedMembers() > 0 ) {
       d_common->d_comm_stage.popCompletionQueue();
-   }
-
-   if ( d_common->d_print_steps ) {
-      tbox::plog << "CascadePartitionerTree::balanceChildren: leaving with state:\n";
-      printClassData( tbox::plog, "\t" );
-      tbox::plog << "\tchild 0:\n";
-      d_children[0]->printClassData( tbox::plog, "\t" );
-      tbox::plog << "\tchild 1:\n";
-      d_children[1]->printClassData( tbox::plog, "\t" );
-      tbox::plog << "\tlocal_load:";
-      d_common->d_local_load->recursivePrint(tbox::plog, "\t",0);
    }
 
    d_common->t_balance_children->stop();
@@ -729,7 +704,8 @@ CascadePartitionerTree::recomputeLeafData()
 
 /*
  *************************************************************************
- * Reset the obligation of group based on the given average load.
+ * Reset the obligation of this group and its descendents based on the
+ * given average load.
  *************************************************************************
  */
 void
@@ -772,9 +748,10 @@ CascadePartitionerTree::printClassData( std::ostream &co, const std::string &bor
       << "  near=" << d_near << "  far=" << d_far
       << '\n' << indent
       << "position=" << d_position << "  contact=" << d_contact[0] << ',' << d_contact[1]
-      << "  work=" << d_work << '/' << d_obligation
-      << "  estimated surplus=" << estimatedSurplus()
-      << "  local_load=" << d_common->d_local_load->getSumLoad()
+      << "  work=" << d_work << '/' << d_obligation << " (" << size()*d_common->d_global_load_avg
+      << ")  estimated surplus=" << estimatedSurplus()
+      << " (" << d_work-(size()*d_common->d_global_load_avg)
+      << ")  local_load=" << d_common->d_local_load->getSumLoad()
       << '\n' << indent
       << "group_may_supply=" << d_group_may_supply
       << "  process_may_supply=" << d_process_may_supply[0] << ',' << d_process_may_supply[1]

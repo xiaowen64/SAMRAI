@@ -60,8 +60,7 @@ const int CascadePartitioner::s_default_data_id = -1;
 CascadePartitioner::CascadePartitioner(
    const tbox::Dimension& dim,
    const std::string& name,
-   const boost::shared_ptr<tbox::Database>& input_db,
-   const boost::shared_ptr<tbox::RankTreeStrategy> &rank_tree):
+   const boost::shared_ptr<tbox::Database>& input_db) :
    d_dim(dim),
    d_object_name(name),
    d_mpi(tbox::SAMRAI_MPI::commNull),
@@ -307,6 +306,7 @@ CascadePartitioner::loadBalanceBoxLevel(
 
    t_load_balance_box_level->stop();
 
+   local_load = computeLocalLoad(balance_box_level);
    d_load_stat.push_back(local_load);
    d_box_count_stat.push_back(
       static_cast<int>(balance_box_level.getBoxes().size()));
