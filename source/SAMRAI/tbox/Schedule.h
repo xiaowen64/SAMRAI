@@ -293,7 +293,9 @@ private:
    void
    deallocateCommunicationObjects()
    {
-      delete[] d_coms;
+      if (d_coms) {
+         delete[] d_coms;
+      }
       d_coms = 0;
    }
 

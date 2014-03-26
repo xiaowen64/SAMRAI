@@ -1499,7 +1499,9 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
       if (d_worker_min_max != 0) {
          delete[] d_worker_min_max;
       }
-      d_worker_min_max = new patchMinMaxStruct[num_components];
+      if (num_components > 0) {
+         d_worker_min_max = new patchMinMaxStruct[num_components];
+      }
       memset((char *)d_worker_min_max, 0,
          num_components * sizeof(patchMinMaxStruct));
       for (int i = 0; i < num_components; i++) {
@@ -3394,7 +3396,9 @@ VisItDataWriter::writeSummaryToHDFFile(
          } // loop over components
       } // loop over variables
 
-      delete[] d_worker_min_max;
+      if (d_worker_min_max) {
+         delete[] d_worker_min_max;
+      }
 
       key_string = "patch_extents";
       HDFputPatchExtentsStructArray(key_string,

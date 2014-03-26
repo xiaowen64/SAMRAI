@@ -2272,7 +2272,10 @@ BalanceUtilities::prebalanceBoxLevel(
       const int num_sending_boxes =
          static_cast<int>(sending_boxes.size());
 
-      int* buffer = new int[buf_size * num_sending_boxes];
+      int* buffer = 0;
+      if (num_sending_boxes > 0) {
+         buffer = new int[buf_size * num_sending_boxes];
+      }
       int box_count = 0;
       for (hier::BoxContainer::const_iterator ni = sending_boxes.begin();
            ni != sending_boxes.end(); ++ni) {
@@ -2284,7 +2287,9 @@ BalanceUtilities::prebalanceBoxLevel(
       }
       box_send->beginSend(buffer, buf_size * num_sending_boxes);
 
-      delete[] buffer;
+      if (buffer) {
+         delete[] buffer;
+      }
    }
 
    /*
@@ -2305,7 +2310,10 @@ BalanceUtilities::prebalanceBoxLevel(
                completed[i] = true;
                const int num_boxes = box_recv[i].getRecvSize() / buf_size;
                const int* buffer = box_recv[i].getRecvData();
-               int* id_buffer = new int[num_boxes];
+               int* id_buffer = 0;
+               if (num_boxes > 0) {
+                  id_buffer = new int[num_boxes];
+               }
 
                for (int b = 0; b < num_boxes; b++) {
                   hier::Box box(balance_box_level.getDim());
@@ -2324,7 +2332,9 @@ BalanceUtilities::prebalanceBoxLevel(
                }
                id_send[i].beginSend(id_buffer, num_boxes);
 
-               delete[] id_buffer;
+               if (id_buffer) {
+                  delete[] id_buffer;
+               }
             }
          }
       }

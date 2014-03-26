@@ -455,7 +455,10 @@ IndexData<TYPE, BOX_GEOMETRY>::unpackStream(
    }
 
    int i;
-   TYPE* items = new TYPE[num_items];
+   TYPE* items = 0;
+   if (num_items > 0) {
+      items = new TYPE[num_items];
+   }
    for (i = 0; i < num_items; i++) {
       int index_buf[SAMRAI::MAX_DIM_VAL];
       stream.unpack(index_buf, d_dim.getValue());
@@ -466,7 +469,9 @@ IndexData<TYPE, BOX_GEOMETRY>::unpackStream(
       (items + i)->unpackStream(stream, t_overlap->getSourceOffset());
       addItem(index + (t_overlap->getSourceOffset()), items[i]);
    }
-   delete[] items;
+   if (items) {
+      delete[] items;
+   }
 }
 
 /*

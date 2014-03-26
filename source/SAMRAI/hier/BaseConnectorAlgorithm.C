@@ -56,7 +56,9 @@ BaseConnectorAlgorithm::setupCommunication(
    comm_stage.setCommunicationWaitTimer(mpi_wait_timer);
    const int n_comm = static_cast<int>(
          incoming_ranks.size() + outgoing_ranks.size());
-   all_comms = new tbox::AsyncCommPeer<int>[n_comm];
+   if (n_comm > 0) {
+      all_comms = new tbox::AsyncCommPeer<int>[n_comm];
+   }
 
    const int tag0 = ++operation_mpi_tag;
    const int tag1 = ++operation_mpi_tag;

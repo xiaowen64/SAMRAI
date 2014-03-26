@@ -2006,8 +2006,12 @@ Statistician::finalize(
 
       } // if I am processor zero
 
-      delete[] global_proc_stats;
-      delete[] global_patch_stats;
+      if (global_proc_stats) {
+         delete[] global_proc_stats;
+      }
+      if (global_patch_stats) {
+         delete[] global_patch_stats;
+      }
 
       d_has_gathered_stats = true;
 

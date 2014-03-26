@@ -571,7 +571,9 @@ MappingConnectorAlgorithm::privateModify(
 
    d_object_timers->t_modify_misc->start();
 
-   delete[] all_comms;
+   if (all_comms) {
+      delete[] all_comms;
+   }
 
    /*
     * Now we have set up the NeighborhoodSets for anchor_to_new and

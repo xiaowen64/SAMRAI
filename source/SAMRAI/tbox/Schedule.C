@@ -499,7 +499,9 @@ void
 Schedule::allocateCommunicationObjects()
 {
    const size_t length = d_recv_sets.size() + d_send_sets.size();
-   d_coms = new AsyncCommPeer<char>[length];
+   if (length > 0) {
+      d_coms = new AsyncCommPeer<char>[length];
+   }
 
    size_t counter = 0;
    for (TransactionSets::iterator ti = d_recv_sets.begin();

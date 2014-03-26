@@ -936,7 +936,9 @@ OverlapConnectorAlgorithm::privateBridge(
 
    d_object_timers->t_bridge_share->stop();
 
-   delete[] all_comms;
+   if (all_comms) {
+      delete[] all_comms;
+   }
 
    if (d_sanity_check_method_postconditions) {
       west_to_east.assertConsistencyWithBase();
