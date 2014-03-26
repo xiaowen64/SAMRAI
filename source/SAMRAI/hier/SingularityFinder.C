@@ -197,7 +197,7 @@ SingularityFinder::findSingularities(
    for (std::list<boost::shared_ptr<Edge> >::iterator e_itr = d_edges.begin();
         e_itr != d_edges.end(); ++e_itr) {
       if ((**e_itr).d_bdry) continue;
-      int nblocks = (**e_itr).d_blocks.size();
+      int nblocks = static_cast<int>((**e_itr).d_blocks.size());
       bool enhanced = false;
       bool reduced = false;
       if (nblocks < 4) {
@@ -222,7 +222,7 @@ SingularityFinder::findSingularities(
    for (std::list<boost::shared_ptr<Point> >::iterator p_itr = d_points.begin();
         p_itr != d_points.end(); ++p_itr) {
       if ((**p_itr).d_bdry) continue;
-      int nblocks = (**p_itr).d_blocks.size();
+      int nblocks = static_cast<int>((**p_itr).d_blocks.size());
       bool enhanced = false;
       bool reduced = false;
       if (nblocks < (1<<d_dim.getValue())) {
@@ -283,8 +283,6 @@ SingularityFinder::connect(const BoxId& id_a,
    d_blocks[b]->d_face[faceb] = face;
    face->d_block_to_face[a] = facea; 
    face->d_block_to_face[b] = faceb;
-
-   int nedges_per_face = d_dim.getValue() == 3 ? 4 : 0;
 
    /*
     * Map from edge on 'a' to edge on 'b'
@@ -407,7 +405,7 @@ SingularityFinder::connect(const BoxId& id_a,
 void
 SingularityFinder::findBoundaryFaces()
 {
-   for (int iblock = 0; iblock < d_blocks.size(); iblock++) {
+   for (int iblock = 0; iblock < static_cast<int>(d_blocks.size()); iblock++) {
 
       boost::shared_ptr<Block>& block = d_blocks[iblock];
 

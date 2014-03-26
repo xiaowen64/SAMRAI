@@ -1853,7 +1853,8 @@ BaseGridGeometry::readBlockDataFromInput(
    if (d_number_blocks > 1) {
       findSingularities(singularity_blocks);
    }
-   d_number_of_block_singularities = singularity_blocks.size();
+   d_number_of_block_singularities =
+      static_cast<int>(singularity_blocks.size());
 
    if (d_number_blocks == 1 && d_number_of_block_singularities > 0) {
       TBOX_ERROR("BaseGridGeometry::readBlockDataFromInput() error...\n"
