@@ -146,7 +146,7 @@ CascadePartitionerTree::CascadePartitionerTree(
 void
 CascadePartitionerTree::makeChildren()
 {
-   if ( (d_end-d_begin) > 1 ) {
+   if ( size() > 1 ) {
 
       d_children[0] = new CascadePartitionerTree( *this, Lower );
       d_children[1] = new CascadePartitionerTree( *this, Upper );
@@ -159,7 +159,6 @@ CascadePartitionerTree::makeChildren()
    }
 
    else {
-      // This is a local leaf.
       if ( d_begin == d_common->d_mpi.getRank() ) {
          d_leaf = this;
       }
@@ -233,13 +232,15 @@ void CascadePartitionerTree::distributeLoad()
          if ( d_common->d_print_steps ) {
             tbox::plog << "\nCascadePartitionerTree::distributeLoad outer top_group "
                        << top_group->d_gen_num << "  combined generation "
-                       << current_group->d_gen_num << "\n";
+                       << current_group->d_gen_num << ".  All d_work values are exact.\n";
+            tbox::plog << "\tcurrent_group:\n";
             current_group->printClassData( tbox::plog, "\t" );
             tbox::plog << "\tchild 0:\n";
             current_group->d_children[0]->printClassData( tbox::plog, "\t" );
             tbox::plog << "\tchild 1:\n";
             current_group->d_children[1]->printClassData( tbox::plog, "\t" );
          }
+
          if ( d_common->d_reset_obligations &&
               current_group == top_group && top_group->d_gen_num != 0 ) {
             /*
@@ -264,7 +265,8 @@ void CascadePartitionerTree::distributeLoad()
             if ( d_common->d_print_steps ) {
                tbox::plog << "\nCascadePartitionerTree::distributeLoad outer top_group "
                           << top_group->d_gen_num << "  shuffled generation "
-                          << current_group->d_gen_num << "\n";
+                          << current_group->d_gen_num << ".  d_work is exact, but childrens' are estimates.\n";
+               tbox::plog << "\tcurrent_group:\n";
                current_group->printClassData( tbox::plog, "\t" );
                tbox::plog << "\tchild 0:\n";
                current_group->d_children[0]->printClassData( tbox::plog, "\t" );
@@ -286,6 +288,12 @@ void CascadePartitionerTree::distributeLoad()
  *************************************************************************
  * Combine near and far children data (using communication) to compute
  * work-related data for this group.
+ *
+ * After combining children, d_work and d_far->d_work are exact.  Both
+ * d_near->d_work and d_far->d_work remain exact until
+ * balanceChildren(), when we just estimate transfers by other ranks
+ * in this group.  d_work remains exact longer--until the next bigger
+ * group calls balanceChildren().
  *
  * NOTE: This method can probably be re-organized as if there's only
  * one contact.  We only need to exchange data with the second contact
@@ -383,7 +391,7 @@ CascadePartitionerTree::balanceChildren()
    d_common->t_balance_children->start();
 
    if ( d_common->d_print_steps ) {
-      tbox::plog << "CascadePartitionerTree::balanceChildren: entered\n";
+      tbox::plog << "\nCascadePartitionerTree::balanceChildren: entered\n";
    }
 
    TBOX_ASSERT( d_common->d_shipment->empty() );
@@ -481,6 +489,9 @@ CascadePartitionerTree::balanceChildren()
          receiveAndUnpackSuppliedLoad();
       }
    }
+   else {
+      tbox::plog << "CascadePartitionerTree::balanceChildren: not supplying or demanding\n";
+   }
 
    // Complete the load send, if there was any.
    d_common->d_comm_stage.advanceAll();
@@ -489,6 +500,10 @@ CascadePartitionerTree::balanceChildren()
    }
 
    d_common->t_balance_children->stop();
+
+   if ( d_common->d_print_steps ) {
+      tbox::plog << "CascadePartitionerTree::balanceChildren: leaving\n";
+   }
    return;
 }
 
@@ -533,7 +548,11 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
 
    if ( d_group_may_supply ) {
 
-      // Supply no more than surplus.  (Sibling assumes this in its estimate.)
+      /*
+       * Supply no more than surplus.  Sibling group assumes this in
+       * its estimate.  If we supply much more, this group and its
+       * sibling may end up supplying too much.
+       */
       const double work_allowed = tbox::MathUtilities<double>::Min( work_requested, estimatedSurplus() );
 
       if ( d_children[0] != 0 ) {
@@ -600,12 +619,12 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
                d_common->d_local_load->getSumLoad() - d_obligation >
                d_common->d_pparams->getLoadComparisonTol();
 
-            d_group_may_supply = estimatedSurplus() > d_common->d_pparams->getLoadComparisonTol();
-
          }
       }
 
-   }
+      d_group_may_supply = estimatedSurplus() > d_common->d_pparams->getLoadComparisonTol();
+
+   } // d_group_may_supply
 
    if ( d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerTree::supplyWork generation "
