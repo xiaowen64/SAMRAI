@@ -88,6 +88,11 @@ namespace mesh {
  * Whether to balance intermediate groups instead of balancing just the top groups
  * in each cycle.
  *
+ * @internal DEV_limit_supply_to_surplus (true)
+ * bool
+ * Whether limit work a process can supply to its surplus.  The effects on partitioning
+ * speed and quality are not yet known.
+ *
  * @see mesh::LoadBalanceStrategy
  */
 
@@ -366,6 +371,11 @@ private:
    std::vector<int> d_workload_data_id;
 
    int d_master_workload_data_id;
+
+   /*!
+    * @brief Whether to limit what a process can give to its surplus.
+    */
+   bool d_limit_supply_to_surplus;
 
    /*!
     * @brief Whether to balance intermediate groups (vs balancing only the top

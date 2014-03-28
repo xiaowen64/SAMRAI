@@ -66,6 +66,7 @@ CascadePartitioner::CascadePartitioner(
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_mpi_is_dupe(false),
    d_master_workload_data_id(s_default_data_id),
+   d_limit_supply_to_surplus(true),
    d_flexible_load_tol(0.05),
    d_balance_intermediate_groups(false),
    d_reset_obligations(true),
@@ -603,6 +604,10 @@ CascadePartitioner::getFromInput(
          d_barrier_before);
       d_barrier_after = input_db->getBoolWithDefault("DEV_barrier_after",
          d_barrier_after);
+
+      d_limit_supply_to_surplus =
+         input_db->getBoolWithDefault("DEV_limit_supply_to_surplus",
+            d_limit_supply_to_surplus);
 
       d_balance_intermediate_groups =
          input_db->getBoolWithDefault("DEV_balance_intermediate_groups",

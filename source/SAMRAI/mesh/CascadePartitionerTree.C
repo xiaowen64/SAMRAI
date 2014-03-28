@@ -559,7 +559,7 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
    if ( d_group_may_supply ) {
 
       const double allowed_supply = tbox::MathUtilities<double>::Min(
-         work_requested, estimatedSurplus() );
+         work_requested, d_common->d_limit_supply_to_surplus ? estimatedSurplus() : d_work );
       TBOX_ASSERT( allowed_supply >= 0.0 );
 
       if ( d_children[0] != 0 ) {
