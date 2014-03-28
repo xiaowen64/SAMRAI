@@ -22,7 +22,7 @@ include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA= -DTESTING=1
 
-NUM_TESTS = 25
+NUM_TESTS = 27
 
 TEST_NPROCS = @TEST_NPROCS@
 QUOTE = \"
