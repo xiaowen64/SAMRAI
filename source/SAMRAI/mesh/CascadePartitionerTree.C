@@ -558,74 +558,65 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
 
    if ( d_group_may_supply ) {
 
-      /*
-       * Supply no more than surplus.  Sibling group assumes this in
-       * its estimate.  If we supply much more, this group and its
-       * sibling may end up supplying too much.
-       */
-      const double work_allowed = tbox::MathUtilities<double>::Min( work_requested, estimatedSurplus() );
+      const double allowed_supply = tbox::MathUtilities<double>::Min(
+         work_requested, estimatedSurplus() );
+      TBOX_ASSERT( allowed_supply >= 0.0 );
 
       if ( d_children[0] != 0 ) {
          // Near group and not a leaf: Recursively supply load from children.
          if ( taker < d_begin ) {
-            est_work_supplied = d_children[0]->supplyWork( work_allowed, taker );
-            if ( est_work_supplied < work_allowed ) {
+            est_work_supplied = d_children[0]->supplyWork( allowed_supply, taker );
+            if ( est_work_supplied < allowed_supply ) {
                est_work_supplied +=
-                  d_children[1]->supplyWork( work_allowed-est_work_supplied, taker );
+                  d_children[1]->supplyWork( allowed_supply-est_work_supplied, taker );
             }
          }
          else {
-            est_work_supplied = d_children[1]->supplyWork( work_allowed, taker );
-            if ( est_work_supplied < work_allowed ) {
+            est_work_supplied = d_children[1]->supplyWork( allowed_supply, taker );
+            if ( est_work_supplied < allowed_supply ) {
                est_work_supplied +=
-                  d_children[0]->supplyWork( work_allowed-est_work_supplied, taker );
+                  d_children[0]->supplyWork( allowed_supply-est_work_supplied, taker );
             }
          }
-      }
-
-      else if ( !containsRank(d_common->d_mpi.getRank()) ) {
-         // Is a far group: Doesn't matter if it's a leaf.
-         est_work_supplied = work_allowed;
-         TBOX_ASSERT( est_work_supplied >= 0.0 );
-         d_work -= est_work_supplied;
       }
 
       else {
-         /*
-          * Is a near leaf group: Compute how much work we can supply,
-          * update group's work estimate and set aside the shipment.
-          */
-         est_work_supplied = work_allowed;
+         // This is a leaf and/or a far group.  No children, and no recursion.
+         est_work_supplied = allowed_supply;
          d_work -= est_work_supplied;
 
-         const double tolerance = d_common->d_flexible_load_tol*d_common->d_global_load_avg;
-         d_common->d_shipment->adjustLoad(
-            *d_common->d_local_load,
-            est_work_supplied,
-            est_work_supplied-tolerance,
-            est_work_supplied+tolerance );
-         if ( d_common->d_print_steps ) {
-            tbox::plog << "CascadePartitionerTree::supplyWork giving to " << taker << ": ";
-            d_common->d_shipment->recursivePrint();
-            tbox::plog << "CascadePartitionerTree::supplyWork keeping: ";
-            d_common->d_local_load->recursivePrint();
-            if ( d_common->d_shipment->getSumLoad() > est_work_supplied+tolerance ||
-                 d_common->d_shipment->getSumLoad() < est_work_supplied-tolerance ) {
-               tbox::plog << "  shipment missed range: target shipment "
-                          << d_common->d_shipment->getSumLoad() << " / " << est_work_supplied
-                          << " [" << est_work_supplied-tolerance << ','
-                          << est_work_supplied+tolerance << "] by "
-                          << d_common->d_shipment->getSumLoad()-est_work_supplied
-                          << " units.  kept: "
-                          << d_common->d_local_load->getSumLoad()
-                          << std::endl;
+         if ( containsRank(d_common->d_mpi.getRank()) ) {
+            // This is a near leaf group: set aside the work shipment.
+            TBOX_ASSERT( size() == 1 );
+            const double tolerance = d_common->d_flexible_load_tol*d_common->d_global_load_avg;
+            d_common->d_shipment->adjustLoad(
+               *d_common->d_local_load,
+               est_work_supplied,
+               est_work_supplied-tolerance,
+               est_work_supplied+tolerance );
+
+            if ( d_common->d_print_steps ) {
+               tbox::plog << "CascadePartitionerTree::supplyWork giving to " << taker << ": ";
+               d_common->d_shipment->recursivePrint();
+               tbox::plog << "CascadePartitionerTree::supplyWork keeping: ";
+               d_common->d_local_load->recursivePrint();
+               if ( d_common->d_shipment->getSumLoad() > est_work_supplied+tolerance ||
+                    d_common->d_shipment->getSumLoad() < est_work_supplied-tolerance ) {
+                  tbox::plog << "  shipment missed range: target shipment "
+                             << d_common->d_shipment->getSumLoad() << " / " << est_work_supplied
+                             << " [" << est_work_supplied-tolerance << ','
+                             << est_work_supplied+tolerance << "] by "
+                             << d_common->d_shipment->getSumLoad()-est_work_supplied
+                             << " units.  kept: "
+                             << d_common->d_local_load->getSumLoad()
+                             << std::endl;
+               }
             }
+
+            d_process_may_supply[0] =
+               d_common->d_local_load->getSumLoad() - d_obligation >
+               d_common->d_pparams->getLoadComparisonTol();
          }
-
-         d_process_may_supply[0] =
-            d_common->d_local_load->getSumLoad() - d_obligation >
-            d_common->d_pparams->getLoadComparisonTol();
-
       }
 
       d_group_may_supply = estimatedSurplus() > d_common->d_pparams->getLoadComparisonTol();
