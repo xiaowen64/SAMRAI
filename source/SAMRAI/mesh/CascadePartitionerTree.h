@@ -32,23 +32,18 @@ class CascadePartitioner;
  * groups, forming the nodes of a binary tree.  The root branch
  * contains all ranks.  The leaves are single-process groups.  Each
  * group is represented by a CascadePartitionerTree.
- * repre
- *
- * We balance loads one sibling pair at a time, starting with the
- * leaves, shifting load from overloaded groups to underloaded groups.
- * As we move toward the groups, the loads can be propagated into ever
- * bigger groups.
  *
  * @b Terminology: The root group includes all ranks.  It splits into
- * lower and upper groups (known as branches).  The lower branch has
- * the lower ranks.  If the group has an odd number of ranks, the
+ * lower and upper groups (also called branches).  The lower branch
+ * has the lower ranks.  If the group has an odd number of ranks, the
  * upper branch has one more rank in it.  The branch containing the
  * local process is also called "near branch", while the one not
  * containing the local process is the "far branch".
  *
  * A parent can shift load from its overloaded child to its
  * underloaded child, and this is how the CascadePartitioner balance
- * loads.
+ * loads.  We balance the two halves of the global group first, then
+ * we balance its children, continuing until all groups are balanced.
  *
  */
 class CascadePartitionerTree {
@@ -145,12 +140,12 @@ private:
     * @brief Try to supply the requested amount of work by removing
     * it from this group, and return the (estimated) amount supplied.
     *
-    * Supplying work returns an estimate of the amount supplied, based
-    * on available surplus and assuming perfect load cutting.  Due to
-    * restrictions such as in box cutting, the actual amount supplied
-    * may differ.  Actual amount is available when the group contains
-    * just the local process, but the estimate is always available.
-    * We always use estimates to discrpepancies in record-keeping.
+    * Returns an estimate of the amount supplied based on available
+    * work and assuming perfect load cutting.  Due to restrictions
+    * such as in box cutting, the actual amount supplied may differ.
+    * Actual amount is available when the group contains just the
+    * local process, but the estimate is always available.  We always
+    * use estimates to avoid record-keeping discrpepancies.
     *
     * Single-process groups set aside any work it personally gives up
     * in d_common->d_shipment
@@ -190,16 +185,15 @@ private:
    //! @brief One past last rank in group.
    int d_end;
 
-   //! @brief Position of this group in the parent.
+   //! @brief Position of this group in its parent.
    int d_position;
 
    /*!
     * @brief Rank of contacts in sibling branch.
     *
-    * Communication between sibling groups is done between a process
-    * in one group and its contact in the sibling group.  Contacting
-    * pairs are assigned based on the process's relative rank in its
-    * group.
+    * Communication between sibling groups occurs between processes in
+    * one group and their respective contacts in the sibling group.
+    * Processes are paired their relative ranks in their group.
     *
     * Most processes have just one contact in the sibling group.  The
     * only processes to have 2 contacts are in the lower sibling of a
@@ -212,7 +206,11 @@ private:
    //! @brief Parent group.
    CascadePartitionerTree *d_parent;
 
-   //! @brief Lower and upper children branches.
+   /*!
+    * @brief Lower and upper children branches.
+    *
+    * Children exist iff this is a near group and not a leaf.
+    */
    CascadePartitionerTree *d_children[2];
 
    //! @brief Near child branch (branch containing local process).
