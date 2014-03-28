@@ -420,8 +420,6 @@ private:
 
    static const int s_default_data_id;
 
-   int d_num_ag_cycles;
-
    //@{
    //! @name Used for evaluating peformance.
 

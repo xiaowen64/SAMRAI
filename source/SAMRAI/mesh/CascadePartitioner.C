@@ -79,8 +79,7 @@ CascadePartitioner::CascadePartitioner(
    d_summarize_map(false),
    d_print_steps(false),
    d_check_connectivity(false),
-   d_check_map(false),
-   d_num_ag_cycles(0)
+   d_check_map(false)
 {
    for ( int i=0; i<4; ++i ) d_comm_peer[i].initialize(&d_comm_stage);
 
@@ -405,27 +404,12 @@ CascadePartitioner::partitionByCascade(
 
    const int lg_size = lgInt(d_mpi.getSize());
 
-   const int ag_group_size = 1 << d_num_ag_cycles;
-
    t_get_map->start();
 
-#if 0
-   if ( d_mpi.getSize() >= ag_group_size && ag_group_size > 1 ) {
-      agglomerate( ag_group_size, minMessageBytes );
-   }
-#endif
 
-
-tbox::plog << "lg_size="<<lg_size << "  ag_group_size="<<ag_group_size << std::endl;
    CascadePartitionerTree groups(*this);
    groups.distributeLoad();
 
-
-#if 0
-   if ( d_mpi.getSize() >= ag_group_size && ag_group_size > 1 ) {
-      deagglomerate( ag_group_size, minMessageBytes );
-   }
-#endif
 
    if ( d_print_steps ) {
       tbox::plog << "CascadePartitioner: local_work after load distribution:\n";

@@ -55,6 +55,11 @@ CascadePartitionerTree::CascadePartitionerTree(
    d_contact[0] = d_contact[1] = -1;
    d_process_may_supply[0] = d_process_may_supply[1] = false;
 
+   if ( d_common->d_print_steps ) {
+      tbox::plog << "CascadePartitionerTree::root constructor: entered\n";
+      printClassData( tbox::plog, "\t" );
+   }
+
    makeChildren();
 
    if ( d_common->d_print_steps ) {
@@ -122,6 +127,11 @@ CascadePartitionerTree::CascadePartitionerTree(
    }
 
    d_process_may_supply[0] = d_process_may_supply[1] = false;
+
+   if ( d_common->d_print_steps ) {
+      tbox::plog << "CascadePartitionerTree::non-root constructor: entered\n";
+      printClassData( tbox::plog, "\t" );
+   }
 
    // If local process is in this group, make its children.  Otherwise skip.
    if ( d_common->d_mpi.getRank() >= d_begin &&
