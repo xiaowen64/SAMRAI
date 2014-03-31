@@ -444,7 +444,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
 
    if ((wrk_indx < 0) || (hierarchy->getNumberOfLevels() == 0)) {
 
-      if (!d_ignore_level_box_union_is_single_box) {
+      if (!d_ignore_level_box_union_is_single_box && hierarchy->getGridGeometry()->getNumberBlocks() == 1) {
          hier::Box bbox = in_boxes.getBoundingBox();
          hier::BoxContainer difference(bbox);
          t_load_balance_boxes_remove_intersection->start();

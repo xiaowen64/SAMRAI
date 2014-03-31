@@ -318,10 +318,24 @@ bool
 BalanceUtilities::privateBadCutPointsExist(
    const hier::BoxContainer& physical_domain)
 {
-   hier::BoxContainer bounding_box(physical_domain.getBoundingBox());
-   bounding_box.removeIntersections(physical_domain);
+   bool bad_cuts_exist = false;
 
-   return !bounding_box.isEmpty();
+   std::map<hier::BlockId, hier::BoxContainer> domain_by_blocks;
+   for (hier::BoxContainer::const_iterator itr = physical_domain.begin();
+        itr != physical_domain.end(); ++itr) {
+      const hier::BlockId& block_id = itr->getBlockId();
+      domain_by_blocks[block_id].pushBack(*itr);
+   }
+   for (std::map<hier::BlockId, hier::BoxContainer>::iterator m_itr =
+        domain_by_blocks.begin(); m_itr != domain_by_blocks.end(); ++m_itr) {
+      hier::BoxContainer bounding_box(m_itr->second.getBoundingBox());
+      bounding_box.removeIntersections(m_itr->second);
+      if (!bounding_box.isEmpty()) {
+         bad_cuts_exist = true;
+      }
+   }  
+
+   return bad_cuts_exist;
 }
 
 /*
