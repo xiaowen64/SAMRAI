@@ -195,28 +195,19 @@ CascadePartitionerTree::~CascadePartitionerTree()
 /*
  *************************************************************************
  * This method contains the looping structure required to balance all
- * groups.  The outer loop (top_group) balances the largest group
- * to the smallest.  The inner loop (current_group) goes from the leaf
- * to the top_group, combining groups to build a sufficient global
- * picture.  It may balance current_group as it goes along or wait
- * until the end before balancing.
+ * groups.  The outer loop (top_group) cycles from the largest group
+ * to the smallest, balancing the two halves of each group.  The inner
+ * loop (current_group) cycles from the leaf to the current top_group,
+ * combining groups to build a sufficient global picture of top_group,
+ * then balance its two halves.
  *************************************************************************
  */
 void CascadePartitionerTree::distributeLoad()
 {
    d_common->t_distribute_load->start();
 
-   int top_group_num = 0; // For debugging only.
-
-   /*
-    * Balancing a group doesn't guarantee all its descendent groups
-    * are balanced.  This loop goes through all generations to balance
-    * each group (top_group) in turn.
-    */
    for ( CascadePartitionerTree *top_group=this; top_group!=d_leaf;
          top_group = top_group->d_near ) {
-
-      top_group_num = top_group->d_gen_num; // For debugging only.
 
       if ( d_common->d_print_steps ) {
          tbox::plog << "\nCascadePartitionerTree::distributeLoad balancing outer top_group "
@@ -227,13 +218,6 @@ void CascadePartitionerTree::distributeLoad()
 
       d_leaf->recomputeLeafData();
 
-      /*
-       * This loop builds an O(lgN) summary of the top_group, enough
-       * to balance its lower and upper halves, then it balances the
-       * two halves.  Balancing descendent groups along the way is
-       * optional, according to the d_balance_intermediate_groups
-       * flag.
-       */
       for ( CascadePartitionerTree *current_group = d_leaf->d_parent;
             current_group != 0 && current_group->d_near != top_group;
             current_group = current_group->d_parent ) {
@@ -253,23 +237,20 @@ void CascadePartitionerTree::distributeLoad()
 
          if ( d_common->d_reset_obligations &&
               current_group == top_group && top_group->d_gen_num != 0 ) {
-            /*
-             * Top group cannot change its average load, which may
-             * differ from the global average.  Because we are stuck
-             * with this average, we distribute load based on it.
-             * Reset the load each process in the group is obliged to
-             * have based on the top_group average.
-             */
-            const double old_obligation = current_group->d_obligation;
-            current_group->resetObligation(top_group->d_work/top_group->size());
+            const double old_obligation = top_group->d_obligation;
+            top_group->resetObligation( top_group->d_work/top_group->size() );
             if ( d_common->d_print_steps ) {
                tbox::plog << "\nCascadePartitionerTree::distributeLoad generation "
-                          << current_group->d_gen_num << " reset obligation from "
-                          << old_obligation << " to " << current_group->d_obligation
+                          << top_group->d_gen_num << " reset obligation from "
+                          << old_obligation << " to " << top_group->d_obligation
                           << std::endl;
             }
          }
 
+         /*
+          * Balance the children is needed only for top_gorup, but we
+          * optionally also balance intermediate children.
+          */
          if ( d_common->d_balance_intermediate_groups || current_group == top_group ) {
             current_group->balanceChildren();
             if ( d_common->d_print_steps ) {
@@ -285,9 +266,9 @@ void CascadePartitionerTree::distributeLoad()
             }
          }
 
-      } // Inner loop.
+      } // Inner loop, current_group
 
-   } // Outer loop.
+   } // Outer loop, top_group
 
    d_common->t_distribute_load->stop();
 }
@@ -297,11 +278,12 @@ void CascadePartitionerTree::distributeLoad()
 /*
  *************************************************************************
  * Combine near and far children data (using communication) to compute
- * work-related data for this group.
+ * work-related data for this group.  Update work-related values in
+ * this group and its far child.
  *
- * After combining children, d_work and d_far->d_work are exact.  Both
- * d_near->d_work and d_far->d_work remain exact until
- * balanceChildren(), when we just estimate transfers by other ranks
+ * After combining children, d_work, d_near->d_work and d_far->d_work
+ * are exact.  d_near->d_work and d_far->d_work remain exact until
+ * balanceChildren(), when we just estimate transfers by remote ranks
  * in this group.  d_work remains exact longer--until the next bigger
  * group calls balanceChildren().
  *
@@ -721,7 +703,11 @@ CascadePartitionerTree::recomputeLeafData()
 /*
  *************************************************************************
  * Reset the obligation of this group and its descendents based on the
- * given average load.
+ * given avg_load.
+ *
+ * This method is needed after a group balances its children, and the
+ * children are stuck with their load, which may be higher than the
+ * global average.  Because we are stuck with this group average, we
  *************************************************************************
  */
 void
