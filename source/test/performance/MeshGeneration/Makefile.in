@@ -22,7 +22,7 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
-NUM_TESTS = 37
+NUM_TESTS = 38
 CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
 
 TEST_NPROCS = @TEST_NPROCS@
@@ -54,6 +54,7 @@ INPUTS3D =	test_inputs/spreadby10.3d.treelb.input		\
 		performance_inputs/lsphere_weak.3d.localtile.input	\
 		performance_inputs/front.3d.caplb.input	\
 		performance_inputs/front.3d.treelb.input	\
+		performance_inputs/front.3d.cascade.input	\
 		performance_inputs/front.3d.tile.input	\
 		performance_inputs/front.3d.localtile.input	\
 		performance_inputs/domexlike.caplb.input	\
