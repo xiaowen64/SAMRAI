@@ -40,7 +40,6 @@ CascadePartitionerTree::CascadePartitionerTree(
 
    d_begin(0),
    d_end(partitioner.d_mpi.getSize()),
-   d_position(-1),
 
    d_parent(0),
    d_near(0),
@@ -84,7 +83,6 @@ CascadePartitionerTree::CascadePartitionerTree(
 
    d_begin(parent.d_begin),
    d_end(parent.d_end),
-   d_position(group_position),
 
    d_parent(&parent),
    d_near(0),
@@ -749,7 +747,7 @@ CascadePartitionerTree::printClassData( std::ostream &co, const std::string &bor
       << "  local leaf=" << (this==d_leaf) << "  this=" << this
       << "  near=" << d_near << "  far=" << d_far
       << '\n' << indent
-      << "position=" << d_position << "  contact=" << d_contact[0] << ',' << d_contact[1]
+      << "contact=" << d_contact[0] << ',' << d_contact[1]
       << "  work=" << d_work << '/' << d_obligation << " (" << size()*d_common->d_global_load_avg
       << ")  estimated surplus=" << estimatedSurplus()
       << " (" << d_work-(size()*d_common->d_global_load_avg)

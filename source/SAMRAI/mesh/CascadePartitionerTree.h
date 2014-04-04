@@ -97,10 +97,6 @@ private:
    static const int CascadePartitionerTree_TAG_LoadTransfer0 = 1002;
    static const int CascadePartitionerTree_TAG_LoadTransfer1 = 1003;
 
-   //! @brief Where a group falls in the next larger group.
-   static const int s_lower = Lower;
-   static const int s_upper = Upper;
-
    /*!
     * @brief Construct child node based on its position in the parent.
     */
@@ -126,11 +122,6 @@ private:
     */
    void balanceChildren();
 
-   //! @brief Return sibling group.
-   CascadePartitionerTree *sibling() {
-      return d_parent->d_children[!d_position];
-   }
-
    //! @brief Estimated surplus of the group.
    double estimatedSurplus() const {
       return d_work - d_obligation;
@@ -140,26 +131,27 @@ private:
     * @brief Try to supply the requested amount of work by removing
     * it from this group, and return the (estimated) amount supplied.
     *
-    * Returns an estimate of the amount supplied based on available
-    * work and assuming perfect load cutting.  Due to restrictions
-    * such as in box cutting, the actual amount supplied may differ.
-    * Actual amount is available when the group contains just the
-    * local process, but the estimate is always available.  We always
-    * use estimates to avoid record-keeping discrpepancies.
+    * Due to restrictions such as in box cutting, the estimated work
+    * supplied may differ from the actual amount.  Actual amount is
+    * available when the group contains just the local process, but
+    * the estimate is always available.  We always use estimates to
+    * avoid record-keeping discrpepancies.
     *
     * Single-process groups set aside any work it personally gives up
     * in d_common->d_shipment
     *
+    * @param work_requested
     * @param taker Representative of the group getting this work.
     *
-    * @return Work supplied estimate based on perfect load cutting
+    * @return Estimate of the amount supplied based on available work
+    * and assuming perfect load cutting.
     */
    double supplyWork( double work_requested, int taker );
 
    void sendShipment( int taker );
    void receiveAndUnpackSuppliedLoad();
 
-   //! @brief Recompute data for leaf groups.
+   //! @brief Recompute work-related data for a leaf group.
    void recomputeLeafData();
 
    /*!
@@ -184,9 +176,6 @@ private:
 
    //! @brief One past last rank in group.
    int d_end;
-
-   //! @brief Position of this group in its parent.
-   int d_position;
 
    /*!
     * @brief Rank of contacts in sibling branch.
