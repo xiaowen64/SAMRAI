@@ -142,6 +142,7 @@ install: library tools
 	$(INSTALL) -d -m 755 $(INSTDIR)/include
 	$(INSTALL) -d -m 755 $(INSTDIR)/include/SAMRAI
 	$(INSTALL) -p -c -m 644 COPYRIGHT $(INSTDIR)
+	$(INSTALL) -p -c -m 644 COPYING.LESSER $(INSTDIR)
 	$(INSTALL) -p -c -m 644 config.status $(INSTDIR)/config
 	$(INSTALL) -p -c -m 644 config/Makefile.config $(INSTDIR)/config
 	cat config/Makefile.config.install >> $(INSTDIR)/config/Makefile.config 
