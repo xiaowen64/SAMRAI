@@ -3524,23 +3524,45 @@ RefineSchedule::communicateFillBoxes(
    tbox::AsyncCommStage comm_stage;
    tbox::AsyncCommPeer<int>* comms = new tbox::AsyncCommPeer<int>[num_comms];
 
+   // Set up all comms.
+   // We want to post the first receive for the processor with rank immediatly
+   // less that this processor's.  Set mesg_number to the index of the comm
+   // whose processor's receive we want to post first.
    int mesg_number = 0;
+   int counter = 0;
+   for (std::set<int>::const_iterator di = dst_owners.begin();
+        di != dst_owners.end(); ++di) {
+      comms[counter].initialize(&comm_stage);
+      comms[counter].setPeerRank(*di);
+      // Reuse communicator.  Assuming it has no outstanding messages!
+      comms[counter].setMPI(src_to_dst.getMPI());
+      comms[counter].setMPITag(0, 1);
+      if (*di < rank) {
+         ++mesg_number;
+      }
+      ++counter;
+   }
+   mesg_number = mesg_number > 0 ? mesg_number - 1 : num_incoming_comms - 1;
+
+   // Set iterator si corresponds to comms[mesg_number].
+   std::set<int>::const_iterator si =
+      dst_owners.find(comms[mesg_number].getPeerRank());
 
    /*
     * Post receives for fill boxes from dst owners.
     */
-   for (std::set<int>::const_iterator di = dst_owners.begin();
-        di != dst_owners.end(); ++di) {
-      comms[mesg_number].initialize(&comm_stage);
-      comms[mesg_number].setPeerRank(*di);
-      // Reuse communicator.  Assuming it has no outstanding messages!
-      comms[mesg_number].setMPI(src_to_dst.getMPI());
-      comms[mesg_number].setMPITag(0, 1);
+   for (counter = 0; counter < num_incoming_comms;
+        ++counter, --si, --mesg_number) {
       comms[mesg_number].beginRecv();
       if (comms[mesg_number].isDone()) {
          comms[mesg_number].pushToCompletionQueue();
       }
-      ++mesg_number;
+
+      if (si == dst_owners.begin()) {
+         // Continue loop at the opposite end.
+         si = dst_owners.end();
+         mesg_number = num_incoming_comms;
+      }
    }
 
    /*
@@ -3594,9 +3616,15 @@ RefineSchedule::communicateFillBoxes(
          }
       }
    }
+
    // Send messages.
-   std::set<int>::const_iterator si = src_owners.lower_bound(rank+1);
-   for (; mesg_number < num_comms; ++mesg_number) {
+   // We want the first send to be to the processor whose rank is immediately
+   // greater that the sender's.  Set si to the processor whose send we want to
+   // post first.
+   si = src_owners.lower_bound(rank+1);
+   for (mesg_number = num_incoming_comms;
+        mesg_number < num_comms;
+        ++mesg_number, ++si) {
       if (si == src_owners.end()) {
          si = src_owners.begin();
       }
@@ -3610,7 +3638,6 @@ RefineSchedule::communicateFillBoxes(
       if (comms[mesg_number].isDone()) {
          comms[mesg_number].pushToCompletionQueue();
       }
-      ++si;
    }
 
    /*
