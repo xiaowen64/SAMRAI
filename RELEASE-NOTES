@@ -94,6 +94,8 @@ descriptions of items in the following list are provided below.
    argument to pure virtual method
    VariableFillPattern::computeFillBoxesOverlap.
 
+5) Rename test directory FAC_nonadaptive to FAC_staticrefinement.
+
 
 *****************************************************************************
 
@@ -134,6 +136,9 @@ descriptions of items in the following list are provided below.
    derive from StandardTagAndInitStrategy.  These interfaces are provided
    as virtual methods with default no-op implementations in
    StandardTagAndInitStrategy.
+
+5) Rename test directory FAC_nonadaptive to FAC_staticrefinement.
+   The old name caused led some to believe it didn't use AMR.
 
 
 

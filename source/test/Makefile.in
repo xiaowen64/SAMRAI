@@ -40,7 +40,7 @@ SUBDIRS = \
    patchbdrysum \
    dataops \
    hypre \
-   FAC_nonadaptive \
+   FAC_staticrefinement \
    FAC_adaptive \
    vector \
    sundials \

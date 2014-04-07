@@ -10,7 +10,7 @@
 
 SAMRAI	      = @top_srcdir@
 SRCDIR        = @srcdir@
-SUBDIR        = source/test/FAC_nonadaptive
+SUBDIR        = source/test/FAC_staticrefinement
 VPATH         = @srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
@@ -41,7 +41,7 @@ check:
 check2d:	main
 	@for i in test_inputs/*2d.input ; do	\
 	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-	    echo "    <testcase classname=\"FAC_nonadaptive\" name=$(QUOTE)$$i $$p procs$(QUOTE)>" >> $(REPORT); \
+	    echo "    <testcase classname=\"FAC_staticrefinement\" name=$(QUOTE)$$i $$p procs$(QUOTE)>" >> $(REPORT); \
 	    $(OBJECT)/config/serpa-run $$p ./main $${i} | $(TEE) foo; \
 	    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
 	    echo "    </testcase>" >> $(REPORT); \
@@ -52,7 +52,7 @@ check2d:	main
 check3d:	main
 	@for i in test_inputs/*3d.input ; do	\
 	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-	    echo "    <testcase classname=\"FAC_nonadaptive\" name=$(QUOTE)$$i $$p procs$(QUOTE)>" >> $(REPORT); \
+	    echo "    <testcase classname=\"FAC_staticrefinement\" name=$(QUOTE)$$i $$p procs$(QUOTE)>" >> $(REPORT); \
 	    $(OBJECT)/config/serpa-run $$p ./main $${i} | $(TEE) foo; \
 	    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
 	    echo "    </testcase>" >> $(REPORT); \
