@@ -1505,9 +1505,9 @@ BaseGridGeometry::resetDomainBoxContainer()
 
    if (is_periodic) {
 
-      PeriodicShiftCatalog::initializeShiftsByIndexDirections(d_periodic_shift);
-      const PeriodicShiftCatalog* periodic_shift_catalog =
+      PeriodicShiftCatalog* periodic_shift_catalog =
          PeriodicShiftCatalog::getCatalog(d_dim);
+      periodic_shift_catalog->initializeShiftsByIndexDirections(d_periodic_shift);
 
       const IntVector &one_vector(IntVector::getOne(d_dim));
 
