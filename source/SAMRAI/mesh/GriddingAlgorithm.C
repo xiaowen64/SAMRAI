@@ -3058,9 +3058,7 @@ GriddingAlgorithm::findRefinementBoxes(
          TBOX_ASSERT(tag_to_new->checkOverlapCorrectness(false, true, true) == 0);
       }
 
-
       enforceOverflowNesting( *new_box_level, *tag_to_new );
-
 
       /*
        * If clustering implementation didn't provide the requested width,
@@ -3091,7 +3089,6 @@ GriddingAlgorithm::findRefinementBoxes(
          }
          t_fix_zero_width_clustering->barrierAndStop();
       }
-
 
       if (d_enforce_proper_nesting) {
          enforceProperNesting( *new_box_level, *tag_to_new, tag_ln );
@@ -3176,8 +3173,8 @@ GriddingAlgorithm::findRefinementBoxes(
          ratio);
 
       if (d_check_connectors) {
-         TBOX_ASSERT(tag_to_new->getTranspose().checkOverlapCorrectness() == 0);
-         TBOX_ASSERT(tag_to_new->checkOverlapCorrectness() == 0);
+         TBOX_ASSERT(tag_to_new->getTranspose().checkOverlapCorrectness(false,true,true) == 0);
+         TBOX_ASSERT(tag_to_new->checkOverlapCorrectness(false,true,true) == 0);
       }
 
       if (d_load_balance) {
