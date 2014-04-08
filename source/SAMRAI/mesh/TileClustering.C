@@ -495,8 +495,9 @@ TileClustering::clusterWholeTiles(
    const hier::Connector &tag_to_tag = tag_box_level.findConnector(
       tag_box_level, d_box_size, hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
 
-   hier::BoxContainer visible_tag_boxes;
+   hier::BoxContainer visible_tag_boxes(true); // Ordering is precondition for removePeriodicImageBoxes.
    tag_to_tag.getLocalNeighbors(visible_tag_boxes);
+   visible_tag_boxes.removePeriodicImageBoxes();
    visible_tag_boxes.makeTree(tag_box_level.getGridGeometry().get());
 
    hier::Connector &tile_to_tag = tag_to_tile->getTranspose();
@@ -834,8 +835,16 @@ TileClustering::detectSemilocalEdges(
    }
 
    const hier::BoxLevel &tag_box_level = tag_to_tile->getBase();
-   const hier::Connector &tag_to_tag = tag_box_level.findConnector(
+   hier::Connector tag_to_tag = tag_box_level.findConnector(
       tag_box_level, d_box_size, hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
+   /*
+    * We don't want to introduce periodic relationships yet, so remove
+    * them from the tag<==>tag leg of the bridge.  tag_to_tag doesn't
+    * point to itself as its own transpose, but it could and should,
+    * and used to.
+    */
+   tag_to_tag.removePeriodicRelationships();
+   tag_to_tag.getTranspose().removePeriodicRelationships();
 
    /*
     * Bridge tag<==>tag<==>new to get the complete tag<==>new.
@@ -848,7 +857,7 @@ TileClustering::detectSemilocalEdges(
     */
    d_oca.bridge( tag_to_tile,
                  tag_to_tag,
-                 hier::Connector(*tag_to_tile) /* verify that copying is really needed */,
+                 hier::Connector(*tag_to_tile),
                  hier::IntVector::getZero(d_dim),
                  true /* compute transpose */ );
 
