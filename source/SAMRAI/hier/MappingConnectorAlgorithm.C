@@ -354,7 +354,7 @@ MappingConnectorAlgorithm::privateModify(
     * ratios.
     */
    const BoxLevel& old = old_to_anchor.getBase();
-   const BoxLevel& anchor = anchor_to_new.getBase();
+   const BoxLevel& anchor = anchor_to_old.getBase();
    const BoxLevel& new_level = old_to_new.getHead();
    const IntVector& old_ratio = old.getRefinementRatio();
    const IntVector& anchor_ratio = anchor.getRefinementRatio();
@@ -407,6 +407,9 @@ MappingConnectorAlgorithm::privateModify(
          new_ratio,
          anchor.getRefinementRatio(),
          anchor_to_new_width);
+
+   anchor_to_new.shrinkWidth(anchor_to_new_width);
+   new_to_anchor.shrinkWidth(new_to_anchor_width);
 
    d_object_timers->t_modify_misc->stop();
 
