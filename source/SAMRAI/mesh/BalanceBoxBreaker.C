@@ -917,13 +917,7 @@ double BalanceBoxBreaker::computeWidthScore(
    const hier::IntVector &box_size,
    double threshold_width )
 {
-   double width_score = 1.0;
-   for ( int d=0; d<box_size.getDim().getValue(); ++d ) {
-      double s = box_size(d)/threshold_width;
-      s = tbox::MathUtilities<double>::Min( 1.0, s );
-      width_score = tbox::MathUtilities<double>::Min( s, width_score );
-   }
-   return width_score;
+   return tbox::MathUtilities<double>::Min( box_size.min()/threshold_width, 1 );
 }
 
 
