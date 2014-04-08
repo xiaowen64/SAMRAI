@@ -865,6 +865,19 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
          hierarchy->getGridGeometry(),
          hierarchy->getPatchDescriptor()));
 
+   const hier::PatchLevel& hiercoarse =
+      *hierarchy->getPatchLevel(level_number-1);
+
+   const hier::Connector* tmp_to_hiercoarse = 0;
+   if (level_number != 0) {
+      tmp_to_hiercoarse =
+         &tmp_level->findConnectorWithTranspose(hiercoarse,
+            hierarchy->getRequiredConnectorWidth(level_number,level_number-1),
+            hierarchy->getRequiredConnectorWidth(level_number-1,level_number),
+            hier::CONNECTOR_CREATE,
+            true);
+   }
+
    tmp_level->allocatePatchData(wrk_indx);
 
    xfer::RefineAlgorithm fill_work_algorithm;
@@ -967,7 +980,7 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
 void
 ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
    const hier::BoxContainer& box_list_in,
-   const std::vector<double>& weights_in,
+   std::vector<double>& weights_in,
    hier::BoxContainer& box_list_out,
    std::vector<double>& weights_out,
    const tbox::SAMRAI_MPI& mpi) const
@@ -992,8 +1005,8 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
    }
 #endif
 
-   int buf_size_in = size_in * d_dim.getValue() * 2;
-   int buf_size_out = size_out * d_dim.getValue() * 2;
+   int buf_size_in = size_in * (d_dim.getValue() * 2 + 1);
+   int buf_size_out = size_out * (d_dim.getValue() * 2 + 1);
 
    int curr_box_list_out_size = box_list_out.size();
    if (size_out > curr_box_list_out_size) {
@@ -1012,7 +1025,7 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
 
    int* buf_in_ptr = 0;
    int* buf_out_ptr = 0;
-   const double* wgts_in_ptr = 0;
+   double* wgts_in_ptr = 0;
    double* wgts_out_ptr = 0;
 
    if (size_in > 0) {
@@ -1034,6 +1047,7 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
          buf_in_ptr[offset++] = x->lower(i);
          buf_in_ptr[offset++] = x->upper(i);
       }
+      buf_in_ptr[offset++] = x->getBlockId().getBlockValue();
    }
 
    /*
@@ -1050,15 +1064,15 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
    }
    TBOX_ASSERT(weights_out.size() == total_count);
 
-   mpi.Allgatherv((void *)wgts_in_ptr,
+   mpi.Allgatherv(static_cast<void*>(wgts_in_ptr),
       size_in,
-      MPI_INT,
+      MPI_DOUBLE,
       wgts_out_ptr,
       &counts[0],
       &displs[0],
-      MPI_INT);
+      MPI_DOUBLE);
 
-   const int ints_per_box = d_dim.getValue() * 2;
+   const int ints_per_box = d_dim.getValue() * 2 + 1;
    for (size_t i = 0; i < displs.size(); ++i) {
       counts[i] *= ints_per_box;
       displs[i] *= ints_per_box;
@@ -1075,6 +1089,7 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
          b->lower(j) = buf_out_ptr[offset++];
          b->upper(j) = buf_out_ptr[offset++];
       }
+      b->setBlockId(hier::BlockId(buf_out_ptr[offset++]));
    }
 
 }
@@ -1258,14 +1273,14 @@ ChopAndPackLoadBalancer::binPackBoxes(
    t_bin_pack_boxes_pack->start();
    if (bin_pack_method == "SPATIAL") {
 
-      (void)BalanceUtilities::spatialBinPack(mapping,
+      BalanceUtilities::spatialBinPack(mapping,
          workloads,
          boxes,
          num_procs);
 
    } else if (bin_pack_method == "GREEDY") {
 
-      (void)BalanceUtilities::binPack(mapping,
+      BalanceUtilities::binPack(mapping,
          workloads,
          num_procs);
 

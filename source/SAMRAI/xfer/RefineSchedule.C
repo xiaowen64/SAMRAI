@@ -131,7 +131,7 @@ RefineSchedule::RefineSchedule(
    }
 
    if ( d_dst_level->getGridGeometry()->getNumberOfBlockSingularities() > 0 &&
-        !d_singularity_patch_strategy ) {
+        !d_singularity_patch_strategy && d_refine_patch_strategy ) {
       TBOX_ERROR("RefineSchedule: Schedules for meshes with singularities\n"
                  <<"requires a SingularityPatchStrategy implementation along\n"
                  <<"with the RefinePatchStrategy.  To do this,\n"
@@ -313,7 +313,7 @@ RefineSchedule::RefineSchedule(
    const tbox::Dimension& dim(dst_level->getDim());
 
    if ( dst_level->getGridGeometry()->getNumberOfBlockSingularities() > 0 &&
-        !d_singularity_patch_strategy ) {
+        !d_singularity_patch_strategy && d_refine_patch_strategy ) {
       TBOX_ERROR("RefineSchedule: Schedules for meshes with singularities\n"
                  <<"requires a SingularityPatchStrategy implementation along\n"
                  <<"with the RefinePatchStrategy.  To do this,\n"
@@ -364,12 +364,16 @@ RefineSchedule::RefineSchedule(
 
    if ( next_coarser_ln >= 0 ) {
       RefineScheduleConnectorWidthRequestor rscwr;
-      if ( d_dst_level->getRatioToLevelZero() != hierarchy->getPatchLevel(next_coarser_ln+1)->getRatioToLevelZero() ) {
-         hier::IntVector expansion_ratio =
-            hierarchy->getPatchLevel(next_coarser_ln+1)->getRatioToLevelZero() / d_dst_level->getRatioToLevelZero();
-         TBOX_ASSERT( expansion_ratio * d_dst_level->getRatioToLevelZero() == hierarchy->getPatchLevel(next_coarser_ln+1)->getRatioToLevelZero() );
-         TBOX_ASSERT( hier::IntVector(dim,expansion_ratio(0)) == expansion_ratio );
-         rscwr.setGhostCellWidthFactor(expansion_ratio(0));
+
+      if ( hierarchy->getNumberOfLevels() > next_coarser_ln + 1 ) {
+         if ( d_dst_level->getRatioToLevelZero() !=
+              hierarchy->getPatchLevel(next_coarser_ln+1)->getRatioToLevelZero() ) {
+            hier::IntVector expansion_ratio =
+               hierarchy->getPatchLevel(next_coarser_ln+1)->getRatioToLevelZero() / d_dst_level->getRatioToLevelZero();
+            TBOX_ASSERT( expansion_ratio * d_dst_level->getRatioToLevelZero() == hierarchy->getPatchLevel(next_coarser_ln+1)->getRatioToLevelZero() );
+            TBOX_ASSERT( hier::IntVector(dim,expansion_ratio(0)) == expansion_ratio );
+            rscwr.setGhostCellWidthFactor(expansion_ratio(0));
+         }
       }
       rscwr.computeRequiredFineConnectorWidthsForRecursiveRefinement(
          d_fine_connector_widths,

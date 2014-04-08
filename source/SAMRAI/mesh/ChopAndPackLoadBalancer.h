@@ -585,7 +585,7 @@ private:
    void
    exchangeBoxContainersAndWeightArrays(
       const hier::BoxContainer& box_list_in,
-      const std::vector<double>& weights_in,
+      std::vector<double>& weights_in,
       hier::BoxContainer& box_list_out,
       std::vector<double>& weights_out,
       const tbox::SAMRAI_MPI& mpi) const;
