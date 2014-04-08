@@ -1115,13 +1115,13 @@ Connector::recursivePrint(
          if (ni != getBase().getBoxes().end()) {
             os << border << "  "
                << (*ni) << "_"
-               << (*ni).numberCells() << '\n';
+               << (*ni).numberCells();
          } else {
             os << border << "  #"
                << box_id
-               << ": INVALID DATA WARNING: No base box with this index!\n";
+               << ": INVALID DATA WARNING: No base box with this index!";
          }
-         os << border << "    Neighbors (" << numLocalNeighbors(box_id) << "):"
+         os << "  has " << numLocalNeighbors(box_id) << " neighbors:"
             << ((detail_depth > 1) ? "\n" : " ...\n");
          if (detail_depth > 1) {
             for (ConstNeighborIterator i_nabr = begin(ei);
