@@ -1291,7 +1291,7 @@ HyperbolicLevelIntegrator::standardLevelSynchronization(
    TBOX_ASSERT(hierarchy->getPatchLevel(finest_level));
    t_std_level_sync->start();
 
-   for (int fine_ln = finest_level; fine_ln > coarsest_level; fine_ln--) {
+   for (int fine_ln = finest_level; fine_ln > coarsest_level; --fine_ln) {
       const int coarse_ln = fine_ln - 1;
 
       boost::shared_ptr<hier::PatchLevel> fine_level(
@@ -1366,7 +1366,7 @@ HyperbolicLevelIntegrator::synchronizeNewLevels(
 
       d_patch_strategy->setDataContext(d_current);
 
-      for (int fine_ln = finest_level; fine_ln > coarsest_level; fine_ln--) {
+      for (int fine_ln = finest_level; fine_ln > coarsest_level; --fine_ln) {
          const int coarse_ln = fine_ln - 1;
 
          boost::shared_ptr<hier::PatchLevel> fine_level(

@@ -118,7 +118,7 @@ CellPoissonFACSolver::CellPoissonFACSolver(
 
 CellPoissonFACSolver::~CellPoissonFACSolver()
 {
-   s_instance_counter[d_dim.getValue() - 1]--;
+   --s_instance_counter[d_dim.getValue() - 1];
 
    deallocateSolverState();
 

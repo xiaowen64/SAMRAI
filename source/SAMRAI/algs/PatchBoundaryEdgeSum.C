@@ -72,7 +72,7 @@ PatchBoundaryEdgeSum::PatchBoundaryEdgeSum(
 PatchBoundaryEdgeSum::~PatchBoundaryEdgeSum()
 {
 
-   s_instance_counter--;
+   --s_instance_counter;
    if (s_instance_counter == 0) {
       const int arr_length_depth =
          static_cast<int>(s_oedge_src_id_array.size());

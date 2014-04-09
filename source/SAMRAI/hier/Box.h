@@ -667,7 +667,7 @@ public:
       const Index& p) const
    {
       int myoffset = 0;
-      for (int i = getDim().getValue() - 1; i > 0; i--) {
+      for (int i = getDim().getValue() - 1; i > 0; --i) {
          myoffset = (d_hi(i - 1) - d_lo(i - 1) + 1) * (p(i) - d_lo(i) + myoffset);
       }
       myoffset += p(0) - d_lo(0);

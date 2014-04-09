@@ -791,7 +791,7 @@ IndexData<TYPE, BOX_GEOMETRY>::removeNodeFromList(
 
    d_data[node->d_offset] = 0;
 
-   d_number_items--;
+   --d_number_items;
 }
 
 template<class TYPE, class BOX_GEOMETRY>

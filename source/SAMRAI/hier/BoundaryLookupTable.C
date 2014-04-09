@@ -120,7 +120,7 @@ BoundaryLookupTable::buildTable(
          ptr += codim;
       }
    }
-   rec_level--;
+   --rec_level;
 }
 
 /*

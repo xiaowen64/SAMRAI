@@ -625,7 +625,7 @@ CVODEModel::evaluateRHSFunction(
       d_soln_scr_id,                            // scratch
       refine_op);
 
-   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
       if (!level->checkAllocated(d_soln_scr_id)) {
          level->allocatePatchData(d_soln_scr_id);
@@ -645,7 +645,7 @@ CVODEModel::evaluateRHSFunction(
    /*
     * Step through the levels and compute rhs
     */
-   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       for (PatchLevel::iterator ip(level->begin()); ip != level->end(); ++ip) {
@@ -709,7 +709,7 @@ CVODEModel::evaluateRHSFunction(
    /*
     * Deallocate scratch space.
     */
-   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       hierarchy->getPatchLevel(ln)->deallocatePatchData(d_soln_scr_id);
    }
 
@@ -798,7 +798,7 @@ int CVODEModel::CVSpgmrPrecondSet(
     */
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<PatchLevel> level(
          hierarchy->getPatchLevel(amr_level));
 
@@ -1009,7 +1009,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
     * solution scratch context.
     */
    int ln;
-   for (ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       if (!level->checkAllocated(d_soln_scr_id)) {
@@ -1120,7 +1120,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
    * into the z vector.
    *
    ******************************************************************/
-   for (ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       for (PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {

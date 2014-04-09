@@ -117,7 +117,7 @@ SAMRAIVectorReal<TYPE>::~SAMRAIVectorReal()
 
    const tbox::Dimension& dim(d_hierarchy->getDim());
 
-   SAMRAIVectorReal<TYPE>::s_instance_counter[dim.getValue() - 1]--;
+   --SAMRAIVectorReal<TYPE>::s_instance_counter[dim.getValue() - 1];
 
    d_number_components = 0;
 

@@ -163,7 +163,7 @@ BalanceUtilities::privateRecursiveProcAssign(
       double prev_weight = acc_weight - weights[cut_index - 1];
       if ((cut_index > wt_index_lo + 1) &&
           ((acc_weight - cut_weight) > (cut_weight - prev_weight))) {
-         cut_index--;
+         --cut_index;
       }
 
       /*
@@ -560,7 +560,7 @@ BalanceUtilities::privateFindCutPoint(
       double l_work = acc_work;
       while ((bad_cut_points[l_index]) && (l_index > 2)) {
          l_work -= work_in_slice[l_index - 1];
-         l_index--;
+         --l_index;
       }
 
       int r_index = cut_index;
@@ -1121,10 +1121,10 @@ BalanceUtilities::spatialBinPack(
       permutation[i] = i;
    }
 
-   for (i = nboxes / 2 - 1; i >= 0; i--) {
+   for (i = nboxes / 2 - 1; i >= 0; --i) {
       privateHeapify(permutation, spatial_keys, i, nboxes);
    }
-   for (i = nboxes - 1; i >= 1; i--) {
+   for (i = nboxes - 1; i >= 1; --i) {
       const int tmp = permutation[0];
       permutation[0] = permutation[i];
       permutation[i] = tmp;
@@ -1470,7 +1470,7 @@ BalanceUtilities::computeDomainDependentProcessorLayout(
           (pnew.size() > 0) && (counter < num_procs)) {
 
       //  Loop over prime factors - largest to smallest
-      for (int k = static_cast<int>(pnew.size()) - 1; k >= 0; k--) {
+      for (int k = static_cast<int>(pnew.size()) - 1; k >= 0; --k) {
 
          //  determine i - direction in which d is largest
          i = 0;
@@ -1646,10 +1646,10 @@ BalanceUtilities::sortDescendingBoxWorkloads(
     * Execute the heapsort using static member function privateHeapify()
     */
 
-   for (int j = nboxes / 2 - 1; j >= 0; j--) {
+   for (int j = nboxes / 2 - 1; j >= 0; --j) {
       privateHeapify(permutation, workload, j, nboxes);
    }
-   for (int k = nboxes - 1; k >= 1; k--) {
+   for (int k = nboxes - 1; k >= 1; --k) {
       const int tmp = permutation[0];
       permutation[0] = permutation[k];
       permutation[k] = tmp;

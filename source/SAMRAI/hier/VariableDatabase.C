@@ -434,14 +434,14 @@ VariableDatabase::removePatchDataIndex(
          d_patch_descriptor->removePatchDataComponent(data_id);
 
          if (d_index2variable_map[data_id]) {
-            d_num_registered_patch_data_ids--;
+            --d_num_registered_patch_data_ids;
          }
 
          d_index2variable_map[data_id].reset();
          if (data_id == d_max_descriptor_id) {
-            for (int id = d_max_descriptor_id; id >= 0; id--) {
+            for (int id = d_max_descriptor_id; id >= 0; --id) {
                if (!d_index2variable_map[id]) {
-                  d_max_descriptor_id--;
+                  --d_max_descriptor_id;
                } else {
                   break;
                }

@@ -128,8 +128,8 @@ void txt2boxes(
                int j0 = it->second / 2;
                j1 = it2->second / 2;
 
-               i1--;
-               j1--;
+               --i1;
+               --j1;
 
                // Flip coordinates vertically.
                j0 = cell_max - j0;

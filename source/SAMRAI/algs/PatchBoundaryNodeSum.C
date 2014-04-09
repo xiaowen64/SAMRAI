@@ -150,7 +150,7 @@ PatchBoundaryNodeSum::PatchBoundaryNodeSum(
 PatchBoundaryNodeSum::~PatchBoundaryNodeSum()
 {
 
-   s_instance_counter--;
+   --s_instance_counter;
    if (s_instance_counter == 0) {
       const int arr_length_depth =
          static_cast<int>(s_onode_src_id_array.size());
@@ -613,7 +613,7 @@ PatchBoundaryNodeSum::computeSum(
 
       }
 
-      for (ln = d_finest_level; ln > d_coarsest_level; ln--) {
+      for (ln = d_finest_level; ln > d_coarsest_level; --ln) {
 
          boost::shared_ptr<hier::PatchLevel> level(
             d_hierarchy->getPatchLevel(ln));

@@ -594,7 +594,7 @@ FaceGeometry::transform(
 
    for (int d = 0; d < dim.getValue(); ++d) {
       if (d != new_normal_direction && rotate_index(d) > 0) {
-         rotate_index(d)--;
+         --rotate_index(d);
       }
    }
 

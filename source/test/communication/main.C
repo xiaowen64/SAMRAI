@@ -473,7 +473,7 @@ int main(
              * Create communication schedules for data coarsen tests.
              */
             coarsen_create_time->start();
-            for (int i = nlevels - 1; i > 0; i--) {
+            for (int i = nlevels - 1; i > 0; --i) {
                comm_tester->createCoarsenSchedule(i);
             }
             coarsen_create_time->stop();
@@ -482,7 +482,7 @@ int main(
              * Perform coarsen data communication operations.
              */
             coarsen_comm_time->start();
-            for (int j = nlevels - 1; j > 0; j--) {
+            for (int j = nlevels - 1; j > 0; --j) {
                comm_tester->performCoarsenOperations(j);
             }
             coarsen_comm_time->stop();
@@ -536,7 +536,7 @@ int main(
              * Perform coarsen data communication operations.
              */
             coarsen_comm_time->start();
-            for (int j = nlevels - 1; j > 0; j--) {
+            for (int j = nlevels - 1; j > 0; --j) {
                comm_tester->performCoarsenOperations(j);
             }
             coarsen_comm_time->stop();

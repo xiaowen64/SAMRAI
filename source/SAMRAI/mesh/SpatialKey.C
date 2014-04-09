@@ -109,7 +109,7 @@ SpatialKey::operator < (
       } else if (d_key[i] > spatial_key.d_key[i]) {
          return false;
       }
-      i--;
+      --i;
    }
 
    // the two spatial keys are equal, so return false
@@ -136,7 +136,7 @@ operator << (
    char* buf = new char[spatial_key.d_bits_per_int / SpatialKey::BITS_PER_HEX_CHAR
                         * SpatialKey::NUM_COORDS_MIXED_FOR_SPATIAL_KEY + 1];
 
-   for (int i = SpatialKey::NUM_COORDS_MIXED_FOR_SPATIAL_KEY - 1; i >= 0; i--) {
+   for (int i = SpatialKey::NUM_COORDS_MIXED_FOR_SPATIAL_KEY - 1; i >= 0; --i) {
       sprintf(&(buf[spatial_key.d_bits_per_int / SpatialKey::BITS_PER_HEX_CHAR
                     * ((SpatialKey::NUM_COORDS_MIXED_FOR_SPATIAL_KEY - 1) - i)]),
          "%08x", spatial_key.d_key[i]);

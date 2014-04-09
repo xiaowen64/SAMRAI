@@ -426,7 +426,7 @@ BoxContainer::simplify()
       const tbox::Dimension dim(d_list.front().getDim());
 
       BoxContainer notCanonical;
-      for (int d = dim.getValue() - 1; d >= 0; d--) {
+      for (int d = dim.getValue() - 1; d >= 0; --d) {
          notCanonical.spliceBack(*this);
          while (!notCanonical.isEmpty()) {
             Box tryMe = notCanonical.front();

@@ -394,7 +394,7 @@ void ModifiedBratuProblem::setVectorWeights(
 {
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
 
       /*
        * On every level, first assign cell volume to vector weight.
@@ -501,7 +501,7 @@ void ModifiedBratuProblem::setInitialGuess(
    boost::shared_ptr<hier::PatchHierarchy> hierarchy(
       d_solution_vector->getPatchHierarchy());
 
-   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       hierarchy->getPatchLevel(ln)->
       allocatePatchData(d_jacobian_data);
       hierarchy->getPatchLevel(ln)->
@@ -1262,7 +1262,7 @@ void ModifiedBratuProblem::evaluateBratuFunction(
    int amr_level = 0;
    for (amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
       boost::shared_ptr<hier::PatchLevel> finer_level(
@@ -1286,7 +1286,7 @@ void ModifiedBratuProblem::evaluateBratuFunction(
 
    for (amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
 
@@ -1644,7 +1644,7 @@ void ModifiedBratuProblem::evaluateBratuFunction(
       d_soln_coarsen_op);
    for (amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
       boost::shared_ptr<hier::PatchLevel> finer_level(
@@ -1695,7 +1695,7 @@ ModifiedBratuProblem::jacobianTimesVector(
 
    for (int amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
 
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
@@ -1740,7 +1740,7 @@ ModifiedBratuProblem::jacobianTimesVector(
 
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
 
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
@@ -2126,7 +2126,7 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
 
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
 
@@ -2368,7 +2368,7 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
 
    for (int amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
       boost::shared_ptr<hier::PatchLevel> finer_level(
@@ -2406,7 +2406,7 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
 
    for (int amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
       boost::shared_ptr<hier::PatchLevel> finer_level(
@@ -2419,7 +2419,7 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
 
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
 
@@ -2465,7 +2465,7 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
 
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
 

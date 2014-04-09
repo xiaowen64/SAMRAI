@@ -185,7 +185,7 @@ int main(
                pdat::FaceIndex findx(*ifc, a, f);
 
                int offset = 0;
-               for (int i = dim.getValue() - 1; i > 0; i--) {
+               for (int i = dim.getValue() - 1; i > 0; --i) {
                   offset = (fhi(i - 1) - flo(i - 1) + 1)
                      * (findx(i) - flo(i) + offset);
                }
@@ -246,7 +246,7 @@ int main(
             pdat::NodeIndex nindx(*inc, corner);
 
             int offset = 0;
-            for (int i = dim.getValue() - 1; i > 0; i--) {
+            for (int i = dim.getValue() - 1; i > 0; --i) {
                offset = (nhi(i - 1) - nlo(i - 1) + 1)
                   * (nindx(i) - nlo(i) + offset);
             }
@@ -322,7 +322,7 @@ int main(
                pdat::EdgeIndex eindx(*iec, a, f);
 
                int offset = 0;
-               for (int i = dim.getValue() - 1; i > 0; i--) {
+               for (int i = dim.getValue() - 1; i > 0; --i) {
                   offset = (ehi(i - 1) - elo(i - 1) + 1)
                      * (eindx(i) - elo(i) + offset);
                }
@@ -386,7 +386,7 @@ int main(
                pdat::SideIndex sindx(*isc, a, f);
 
                int offset = 0;
-               for (int i = dim.getValue() - 1; i > 0; i--) {
+               for (int i = dim.getValue() - 1; i > 0; --i) {
                   offset = (shi(i - 1) - slo(i - 1) + 1)
                      * (sindx(i) - slo(i) + offset);
                }

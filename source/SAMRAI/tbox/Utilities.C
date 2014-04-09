@@ -64,7 +64,7 @@ Utilities::recursiveMkdir(
             if (path_buf[pos] == seperator) {
                slash_found = true;
                if (pos >= 0) path_buf[pos] = '\0';
-            } else pos--;
+            } else --pos;
          }
       }
 

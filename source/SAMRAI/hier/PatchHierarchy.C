@@ -863,7 +863,7 @@ PatchHierarchy::removePatchLevel(
 
    d_patch_levels[l].reset();
    if (d_number_levels == l + 1) {
-      d_number_levels--;
+      --d_number_levels;
    }
 }
 

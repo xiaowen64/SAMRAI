@@ -205,7 +205,7 @@ int main(
        */
       int counter = 0;
       std::ostream& os = tbox::plog;
-      for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+      for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
 

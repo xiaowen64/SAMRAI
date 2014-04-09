@@ -589,7 +589,7 @@ EdgeGeometry::transform(
 
    for (int i = 0; i < dim.getValue(); ++i) {
       if (i == new_axis_direction && index(i) > 0) {
-         index(i)--;
+         --index(i);
       }
    }
 
