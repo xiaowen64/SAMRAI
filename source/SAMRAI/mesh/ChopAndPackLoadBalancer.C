@@ -124,14 +124,14 @@ ChopAndPackLoadBalancer::setMaxWorkloadFactor(
       int asize = static_cast<int>(d_max_workload_factor.size());
       if (asize < level_number + 1) {
          d_max_workload_factor.resize(level_number + 1);
-         for (int i = asize; i < level_number - 1; i++) {
+         for (int i = asize; i < level_number - 1; ++i) {
             d_max_workload_factor[i] = d_master_max_workload_factor;
          }
          d_max_workload_factor[level_number] = factor;
       }
    } else {
       d_master_max_workload_factor = factor;
-      for (int ln = 0; ln < static_cast<int>(d_max_workload_factor.size()); ln++) {
+      for (int ln = 0; ln < static_cast<int>(d_max_workload_factor.size()); ++ln) {
          d_max_workload_factor[ln] = d_master_max_workload_factor;
       }
    }
@@ -147,14 +147,14 @@ ChopAndPackLoadBalancer::setWorkloadTolerance(
       int asize = static_cast<int>(d_workload_tolerance.size());
       if (asize < level_number + 1) {
          d_workload_tolerance.resize(level_number + 1);
-         for (int i = asize; i < level_number - 1; i++) {
+         for (int i = asize; i < level_number - 1; ++i) {
             d_workload_tolerance[i] = d_master_workload_tolerance;
          }
          d_workload_tolerance[level_number] = tolerance;
       }
    } else {
       d_master_workload_tolerance = tolerance;
-      for (int ln = 0; ln < static_cast<int>(d_workload_tolerance.size()); ln++) {
+      for (int ln = 0; ln < static_cast<int>(d_workload_tolerance.size()); ++ln) {
          d_workload_tolerance[ln] = d_master_workload_tolerance;
       }
    }
@@ -175,14 +175,14 @@ ChopAndPackLoadBalancer::setWorkloadPatchDataIndex(
       int asize = static_cast<int>(d_workload_data_id.size());
       if (asize < level_number + 1) {
          d_workload_data_id.resize(level_number + 1);
-         for (int i = asize; i < level_number - 1; i++) {
+         for (int i = asize; i < level_number - 1; ++i) {
             d_workload_data_id[i] = d_master_workload_data_id;
          }
          d_workload_data_id[level_number] = data_id;
       }
    } else {
       d_master_workload_data_id = data_id;
-      for (int ln = 0; ln < static_cast<int>(d_workload_data_id.size()); ln++) {
+      for (int ln = 0; ln < static_cast<int>(d_workload_data_id.size()); ++ln) {
          d_workload_data_id[ln] = d_master_workload_data_id;
       }
    }
@@ -196,14 +196,14 @@ ChopAndPackLoadBalancer::setUniformWorkload(
      int asize = static_cast<int>(d_workload_data_id.size());
       if (asize < level_number + 1) {
          d_workload_data_id.resize(level_number + 1);
-         for (int i = asize; i < level_number - 1; i++) {
+         for (int i = asize; i < level_number - 1; ++i) {
             d_workload_data_id[i] = d_master_workload_data_id;
          }
          d_workload_data_id[level_number] = -1;
       }
    } else {
       d_master_workload_data_id = -1;
-      for (int ln = 0; ln < static_cast<int>(d_workload_data_id.size()); ln++) {
+      for (int ln = 0; ln < static_cast<int>(d_workload_data_id.size()); ++ln) {
          d_workload_data_id[ln] = d_master_workload_data_id;
       }
    }
@@ -230,14 +230,14 @@ ChopAndPackLoadBalancer::setBinPackMethod(
       int asize = static_cast<int>(d_bin_pack_method.size());
       if (asize < level_number + 1) {
          d_bin_pack_method.resize(level_number + 1);
-         for (int i = asize; i < level_number - 1; i++) {
+         for (int i = asize; i < level_number - 1; ++i) {
             d_bin_pack_method[i] = d_master_bin_pack_method;
          }
          d_bin_pack_method[level_number] = method;
       }
    } else {
       d_master_bin_pack_method = method;
-      for (int ln = 0; ln < static_cast<int>(d_bin_pack_method.size()); ln++) {
+      for (int ln = 0; ln < static_cast<int>(d_bin_pack_method.size()); ++ln) {
          d_bin_pack_method[ln] = d_master_bin_pack_method;
       }
    }
@@ -638,7 +638,7 @@ ChopAndPackLoadBalancer::chopUniformSingleBox(
     */
 
    hier::IntVector ideal_box_size(d_dim);
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       ideal_box_size(i) = (int)ceil((double)in_box.numberCells(
                i) / (double)processor_distribution(i));
 
@@ -767,9 +767,9 @@ ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
    out_workloads.resize(out_boxes.size());
    int i = 0;
    for (std::list<double>::const_iterator il(tmp_work_list.begin());
-        il != tmp_work_list.end(); il++) {
+        il != tmp_work_list.end(); ++il) {
       out_workloads[i] = *il;
-      i++;
+      ++i;
    }
 
 }
@@ -954,9 +954,9 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
 
    int i = 0;
    for (std::list<double>::const_iterator il(tmp_work_list.begin());
-        il != tmp_work_list.end(); il++) {
+        il != tmp_work_list.end(); ++il) {
       local_out_workloads[i] = *il;
-      i++;
+      ++i;
    }
 
    /*
@@ -1126,22 +1126,22 @@ ChopAndPackLoadBalancer::printClassData(
    int ln;
 
    os << "d_workload_data_id..." << std::endl;
-   for (ln = 0; ln < static_cast<int>(d_workload_data_id.size()); ln++) {
+   for (ln = 0; ln < static_cast<int>(d_workload_data_id.size()); ++ln) {
       os << "    d_workload_data_id[" << ln << "] = "
          << d_workload_data_id[ln] << std::endl;
    }
    os << "d_max_workload_factor..." << std::endl;
-   for (ln = 0; ln < static_cast<int>(d_max_workload_factor.size()); ln++) {
+   for (ln = 0; ln < static_cast<int>(d_max_workload_factor.size()); ++ln) {
       os << "    d_max_workload_factor[" << ln << "] = "
          << d_max_workload_factor[ln] << std::endl;
    }
    os << "d_workload_tolerance..." << std::endl;
-   for (ln = 0; ln < static_cast<int>(d_workload_tolerance.size()); ln++) {
+   for (ln = 0; ln < static_cast<int>(d_workload_tolerance.size()); ++ln) {
       os << "    d_workload_tolerance[" << ln << "] = "
          << d_workload_tolerance[ln] << std::endl;
    }
    os << "d_bin_pack_method..." << std::endl;
-   for (ln = 0; ln < static_cast<int>(d_bin_pack_method.size()); ln++) {
+   for (ln = 0; ln < static_cast<int>(d_bin_pack_method.size()); ++ln) {
       os << "    d_bin_pack_method[" << ln << "] = "
          << d_bin_pack_method[ln] << std::endl;
    }
@@ -1214,7 +1214,7 @@ ChopAndPackLoadBalancer::getFromInput(
 
          /* consistency check */
          int totprocs = 1;
-         for (int n = 0; n < d_dim.getValue(); n++) {
+         for (int n = 0; n < d_dim.getValue(); ++n) {
             totprocs *= temp_processor_layout[n];
          }
 
@@ -1226,7 +1226,7 @@ ChopAndPackLoadBalancer::getFromInput(
                              << "\nbe generated when needed."
                              << std::endl);
          } else {
-            for (int n = 0; n < d_dim.getValue(); n++) {
+            for (int n = 0; n < d_dim.getValue(); ++n) {
                d_processor_layout(n) = temp_processor_layout[n];
             }
             d_processor_layout_specified = true;

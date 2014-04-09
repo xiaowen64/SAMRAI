@@ -141,7 +141,7 @@ SecondLayerNodeNoCornersVariableFillPattern::computeStencilBoxes(
    const tbox::Dimension& dim = dst_box.getDim();
    hier::Box dst_node_box(NodeGeometry::toNodeBox(dst_box));
 
-   for (unsigned short i = 0; i < dim.getValue(); i++) {
+   for (unsigned short i = 0; i < dim.getValue(); ++i) {
       hier::Box low_box(dst_node_box);
       low_box.lower(i) = dst_node_box.lower(i) - 1;
       low_box.upper(i) = low_box.lower(i);

@@ -123,10 +123,10 @@ ConvDiff::ConvDiff(
     *     mu    = diffusion coefficient
     *     gamma = source coefficient
     */
-   for (k = 0; k < d_dim.getValue(); k++) d_convection_coeff[k] = 0.;
+   for (k = 0; k < d_dim.getValue(); ++k) d_convection_coeff[k] = 0.;
 
    // Physics parameters
-   for (k = 0; k < NEQU; k++) d_tolerance[k] = 0.;
+   for (k = 0; k < NEQU; ++k) d_tolerance[k] = 0.;
 
    /*
     * Defaults for problem type and initial data.  Set initial
@@ -145,14 +145,14 @@ ConvDiff::ConvDiff(
     */
    if (d_dim == tbox::Dimension(2)) {
       d_scalar_bdry_edge_conds.resize(NUM_2D_EDGES);
-      for (int ei = 0; ei < NUM_2D_EDGES; ei++) {
+      for (int ei = 0; ei < NUM_2D_EDGES; ++ei) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
       }
 
       d_scalar_bdry_node_conds.resize(NUM_2D_NODES);
       d_node_bdry_edge.resize(NUM_2D_NODES);
 
-      for (int ni = 0; ni < NUM_2D_NODES; ni++) {
+      for (int ni = 0; ni < NUM_2D_NODES; ++ni) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
          d_node_bdry_edge[ni] = BOGUS_BDRY_DATA;
       }
@@ -162,13 +162,13 @@ ConvDiff::ConvDiff(
    }
    else if (d_dim == tbox::Dimension(3)) {
       d_scalar_bdry_face_conds.resize(NUM_3D_FACES);
-      for (int fi = 0; fi < NUM_3D_FACES; fi++) {
+      for (int fi = 0; fi < NUM_3D_FACES; ++fi) {
          d_scalar_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
       }
 
       d_scalar_bdry_edge_conds.resize(NUM_3D_EDGES);
       d_edge_bdry_face.resize(NUM_3D_EDGES);
-      for (int ei = 0; ei < NUM_3D_EDGES; ei++) {
+      for (int ei = 0; ei < NUM_3D_EDGES; ++ei) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_edge_bdry_face[ei] = BOGUS_BDRY_DATA;
       }
@@ -176,7 +176,7 @@ ConvDiff::ConvDiff(
       d_scalar_bdry_node_conds.resize(NUM_3D_NODES);
       d_node_bdry_face.resize(NUM_3D_NODES);
 
-      for (int ni = 0; ni < NUM_3D_NODES; ni++) {
+      for (int ni = 0; ni < NUM_3D_NODES; ++ni) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
          d_node_bdry_face[ni] = BOGUS_BDRY_DATA;
       }
@@ -214,13 +214,13 @@ ConvDiff::ConvDiff(
     * so we reset them to FLOW.
     */
    if (d_dim == tbox::Dimension(2)) {
-      for (int i = 0; i < NUM_2D_EDGES; i++) {
+      for (int i = 0; i < NUM_2D_EDGES; ++i) {
          if (d_scalar_bdry_edge_conds[i] == BdryCond::REFLECT) {
             d_scalar_bdry_edge_conds[i] = BdryCond::FLOW;
          }
       }
 
-      for (int i = 0; i < NUM_2D_NODES; i++) {
+      for (int i = 0; i < NUM_2D_NODES; ++i) {
          if (d_scalar_bdry_node_conds[i] == BdryCond::XREFLECT) {
             d_scalar_bdry_node_conds[i] = BdryCond::XFLOW;
          }
@@ -236,13 +236,13 @@ ConvDiff::ConvDiff(
       }
    }
    else if (d_dim == tbox::Dimension(3)) {
-      for (int i = 0; i < NUM_3D_FACES; i++) {
+      for (int i = 0; i < NUM_3D_FACES; ++i) {
          if (d_scalar_bdry_face_conds[i] == BdryCond::REFLECT) {
             d_scalar_bdry_face_conds[i] = BdryCond::FLOW;
          }
       }
 
-      for (int i = 0; i < NUM_3D_EDGES; i++) {
+      for (int i = 0; i < NUM_3D_EDGES; ++i) {
          if (d_scalar_bdry_edge_conds[i] == BdryCond::XREFLECT) {
             d_scalar_bdry_edge_conds[i] = BdryCond::XFLOW;
          }
@@ -260,7 +260,7 @@ ConvDiff::ConvDiff(
          }
       }
 
-      for (int i = 0; i < NUM_3D_NODES; i++) {
+      for (int i = 0; i < NUM_3D_NODES; ++i) {
          if (d_scalar_bdry_node_conds[i] == BdryCond::XREFLECT) {
             d_scalar_bdry_node_conds[i] = BdryCond::XFLOW;
          }
@@ -342,7 +342,7 @@ void ConvDiff::registerModelVariables(
    const int size = static_cast<int>(dump_name.length()) + 16;
    char* buffer = new char[size];
 
-   for (int n = 0; n < NEQU; n++) {
+   for (int n = 0; n < NEQU; ++n) {
       sprintf(buffer, "%s%01d", dump_name.c_str(), n);
       string variable_name(buffer);
 #ifdef HAVE_HDF5
@@ -813,7 +813,7 @@ void ConvDiff::printClassData(
       << d_grid_geometry.get() << endl;
 
    os << "Coefficients..." << endl;
-   for (j = 0; j < d_dim.getValue(); j++) os << "d_convection_coeff[" << j << "] = "
+   for (j = 0; j < d_dim.getValue(); ++j) os << "d_convection_coeff[" << j << "] = "
                                              << d_convection_coeff[j] << endl;
    os << "d_diffusion_coeff = " << d_diffusion_coeff << endl;
    os << "d_source_coeff = " << d_source_coeff << endl;
@@ -823,18 +823,18 @@ void ConvDiff::printClassData(
 
    os << "       d_radius = " << d_radius << endl;
    os << "       d_center = ";
-   for (j = 0; j < d_dim.getValue(); j++) os << d_center[j] << " ";
+   for (j = 0; j < d_dim.getValue(); ++j) os << d_center[j] << " ";
    os << endl;
    os << "       d_val_inside = ";
-   for (j = 0; j < NEQU; j++) os << d_val_inside[j] << " ";
+   for (j = 0; j < NEQU; ++j) os << d_val_inside[j] << " ";
    os << endl;
    os << "       d_val_outside = ";
-   for (j = 0; j < NEQU; j++) os << d_val_outside[j] << " ";
+   for (j = 0; j < NEQU; ++j) os << d_val_outside[j] << " ";
    os << endl;
 
    os << "Boundary Condition data..." << endl;
    if (d_dim == tbox::Dimension(2)) {
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
             << d_scalar_bdry_edge_conds[j] << endl;
          if (d_scalar_bdry_edge_conds[j] == BdryCond::DIRICHLET) {
@@ -843,7 +843,7 @@ void ConvDiff::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
             << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_edge[" << j << "] = "
@@ -851,7 +851,7 @@ void ConvDiff::printClassData(
       }
    }
    else if (d_dim == tbox::Dimension(3)) {
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_face_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_face_conds.size()); ++j) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
             << d_scalar_bdry_face_conds[j] << endl;
          if (d_scalar_bdry_face_conds[j] == BdryCond::DIRICHLET) {
@@ -860,14 +860,14 @@ void ConvDiff::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
             << d_scalar_bdry_edge_conds[j] << endl;
          os << "       d_edge_bdry_face[" << j << "] = "
             << d_edge_bdry_face[j] << endl;
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
             << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_face[" << j << "] = "
@@ -992,8 +992,8 @@ void ConvDiff::getFromInput(
       const hier::IntVector one_vec = hier::IntVector::getOne(d_dim);
       hier::IntVector periodic = d_grid_geometry->getPeriodicShift(one_vec);
       int num_per_dirs = 0;
-      for (int id = 0; id < d_dim.getValue(); id++) {
-         if (periodic(id)) num_per_dirs++;
+      for (int id = 0; id < d_dim.getValue(); ++id) {
+         if (periodic(id)) ++num_per_dirs;
       }
 
       if (input_db->keyExists("Boundary_data")) {
@@ -1234,7 +1234,7 @@ void ConvDiff::checkBoundaryData(
 
    hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
 
-   for (int i = 0; i < static_cast<int>(bdry_boxes.size()); i++) {
+   for (int i = 0; i < static_cast<int>(bdry_boxes.size()); ++i) {
       hier::BoundaryBox bbox = bdry_boxes[i];
       TBOX_ASSERT(bbox.getBoundaryType() == btype);
       int bloc = bbox.getLocationIndex();

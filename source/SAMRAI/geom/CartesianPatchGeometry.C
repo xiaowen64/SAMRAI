@@ -38,7 +38,7 @@ CartesianPatchGeometry::CartesianPatchGeometry(
 
    const tbox::Dimension& dim(ratio_to_level_zero.getDim());
 
-   for (int id = 0; id < dim.getValue(); id++) {
+   for (int id = 0; id < dim.getValue(); ++id) {
       d_dx[id] = dx[id];
       d_x_lo[id] = x_lo[id];
       d_x_up[id] = x_up[id];
@@ -72,17 +72,17 @@ CartesianPatchGeometry::printClassData(
    os << "Printing CartesianPatchGeometry data: this = "
       << (CartesianPatchGeometry *)this << std::endl;
    os << "x_lo = ";
-   for (int id1 = 0; id1 < dim.getValue(); id1++) {
+   for (int id1 = 0; id1 < dim.getValue(); ++id1) {
       os << d_x_lo[id1] << "   ";
    }
    os << std::endl;
    os << "x_up = ";
-   for (int id2 = 0; id2 < dim.getValue(); id2++) {
+   for (int id2 = 0; id2 < dim.getValue(); ++id2) {
       os << d_x_up[id2] << "   ";
    }
    os << std::endl;
    os << "dx = ";
-   for (int id3 = 0; id3 < dim.getValue(); id3++) {
+   for (int id3 = 0; id3 < dim.getValue(); ++id3) {
       os << d_dx[id3] << "   ";
    }
    os << std::endl;

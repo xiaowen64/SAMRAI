@@ -23,7 +23,7 @@ SideOverlap::SideOverlap(
    const tbox::Dimension& dim = d_transformation.getOffset().getDim();
    d_dst_boxes.resize(boxes.size());
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dim.getValue(); ++d) {
       d_dst_boxes[d] = boxes[d];
       if (!d_dst_boxes[d].isEmpty()) d_is_overlap_empty = false;
    }

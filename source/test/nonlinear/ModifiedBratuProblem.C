@@ -512,7 +512,7 @@ void ModifiedBratuProblem::setInitialGuess(
 
       for (int amr_level = 0;
            amr_level < hierarchy->getNumberOfLevels();
-           amr_level++) {
+           ++amr_level) {
 
          boost::shared_ptr<hier::PatchLevel> patch_level(
             hierarchy->getPatchLevel(amr_level));
@@ -576,7 +576,7 @@ void ModifiedBratuProblem::setInitialGuess(
 
       for (int amr_level = 0;
            amr_level < hierarchy->getNumberOfLevels();
-           amr_level++) {
+           ++amr_level) {
 
          boost::shared_ptr<hier::PatchLevel> patch_level(
             hierarchy->getPatchLevel(amr_level));
@@ -718,7 +718,7 @@ bool ModifiedBratuProblem::checkNewSolution(
       d_solution_vector->getPatchHierarchy());
    for (int amr_level = 0;
         amr_level < hierarchy->getNumberOfLevels();
-        amr_level++) {
+        ++amr_level) {
       boost::shared_ptr<hier::PatchLevel> patch_level(
          hierarchy->getPatchLevel(amr_level));
       double levelerror = 0.0;
@@ -808,7 +808,7 @@ void ModifiedBratuProblem::updateSolution(
 
    for (int amr_level = 0;
         amr_level < hierarchy->getNumberOfLevels();
-        amr_level++) {
+        ++amr_level) {
 
       boost::shared_ptr<hier::PatchLevel> patch_level(
          hierarchy->getPatchLevel(amr_level));
@@ -978,7 +978,7 @@ void ModifiedBratuProblem::resetHierarchyConfiguration(
       && (coarsest_level <= finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int ln0 = 0; ln0 <= finest_level; ln0++) {
+   for (int ln0 = 0; ln0 <= finest_level; ++ln0) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln0));
    }
 #endif
@@ -1377,7 +1377,7 @@ void ModifiedBratuProblem::evaluateBratuFunction(
                patch_geom->getFaceBoundaries();
          }
 #endif
-         for (int i = 0; i < static_cast<int>(bdry_faces.size()); i++) {
+         for (int i = 0; i < static_cast<int>(bdry_faces.size()); ++i) {
 
             hier::Box bbox = bdry_faces[i].getBox();
             const hier::Index ibeg = bbox.lower();
@@ -1449,7 +1449,7 @@ void ModifiedBratuProblem::evaluateBratuFunction(
 
             TBOX_ASSERT(coarse_fine_flux);
 
-            for (int side = 0; side < 2; side++) {
+            for (int side = 0; side < 2; ++side) {
                if (d_dim == tbox::Dimension(1)) {
                   FORT_EWFLUXCOPY1D(ifirst(0), ilast(0),
                      flux->getPointer(0),
@@ -1858,7 +1858,7 @@ ModifiedBratuProblem::jacobianTimesVector(
                patch_geom->getFaceBoundaries();
          }
 #endif
-         for (int i = 0; i < static_cast<int>(bdry_faces.size()); i++) {
+         for (int i = 0; i < static_cast<int>(bdry_faces.size()); ++i) {
 
             hier::Box bbox = bdry_faces[i].getBox();
             const hier::Index ibeg = bbox.lower();
@@ -1933,7 +1933,7 @@ ModifiedBratuProblem::jacobianTimesVector(
 
          if (amr_level > 0) {
             TBOX_ASSERT(coarse_fine_flux);
-            for (int side = 0; side < 2; side++) {
+            for (int side = 0; side < 2; ++side) {
                if (d_dim == tbox::Dimension(1)) {
                   FORT_EWFLUXCOPY1D(ifirst(0), ilast(0),
                      flux->getPointer(0),
@@ -2663,7 +2663,7 @@ void ModifiedBratuProblem::setPhysicalBoundaryConditions(
     */
 
    int face;
-   for (int i = 0; i < static_cast<int>(boundary.size()); i++) {
+   for (int i = 0; i < static_cast<int>(boundary.size()); ++i) {
       hier::Box bbox = hier::Box(boundary[i].getBox());
       face = boundary[i].getLocationIndex();
       if (d_dim == tbox::Dimension(1)) {
@@ -2856,7 +2856,7 @@ void ModifiedBratuProblem::getLevelEdges(
    TBOX_ASSERT(geometry);
    const std::vector<hier::BoundaryBox>& boundary_boxes =
       geometry->getCodimensionBoundaries(1);
-   for (int i = 0; i < static_cast<int>(boundary_boxes.size()); i++) {
+   for (int i = 0; i < static_cast<int>(boundary_boxes.size()); ++i) {
       boxes.removeIntersections(boundary_boxes[i].getBox());
    }
 
@@ -2886,8 +2886,8 @@ void ModifiedBratuProblem::correctLevelFlux(
        * is used to fill the ghost cells.
        */
 
-      for (int d = 0; d < d_dim.getValue(); d++) {
-         for (int s = 0; s <= 1; s++) {
+      for (int d = 0; d < d_dim.getValue(); ++d) {
+         for (int s = 0; s <= 1; ++s) {
             hier::Index delta(d_dim, 0);
             delta(d) = ((s == 0) ? 1 : -1);
             hier::Index twodelta(d_dim, 0);
@@ -2924,8 +2924,8 @@ void ModifiedBratuProblem::correctPatchFlux(
    TBOX_ASSERT(geometry);
    const double* dx = geometry->getDx();
 
-   for (int d = 0; d < d_dim.getValue(); d++) {
-      for (int s = 0; s <= 1; s++) {
+   for (int d = 0; d < d_dim.getValue(); ++d) {
+      for (int s = 0; s <= 1; ++s) {
          hier::Index delta1(d_dim, 0);
          delta1(d) = ((s == 0) ? 1 : -1);
          hier::Index delta2(d_dim, 0);

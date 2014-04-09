@@ -171,7 +171,7 @@ int main(
    /*
     * Run problem twice to test startup/shutdown process for multi-block problems.
     */
-   for (int run = 0; run < 2; run++) {
+   for (int run = 0; run < 2; ++run) {
 
       tbox::SAMRAIManager::startup();
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());

@@ -104,7 +104,7 @@ CellPoissonFACSolver::CellPoissonFACSolver(
             hier::IntVector::getZero(d_dim));
    }
 
-   s_instance_counter[d_dim.getValue() - 1]++;
+   ++s_instance_counter[d_dim.getValue() - 1];
 }
 
 /*

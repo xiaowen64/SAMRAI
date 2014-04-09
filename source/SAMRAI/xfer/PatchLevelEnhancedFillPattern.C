@@ -92,7 +92,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
 
       for (std::map<hier::BlockId,hier::BaseGridGeometry::Neighbor>::const_iterator ni =
            neighbors.begin();
-           ni != neighbors.end(); ni++) {
+           ni != neighbors.end(); ++ni) {
 
          if (ni->second.isSingularity()) {
 
@@ -109,7 +109,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
                   has_base_box = true;
                }
                for (hier::BoxContainer::iterator ei = encon_boxes.begin();
-                    ei != encon_boxes.end(); ei++) {
+                    ei != encon_boxes.end(); ++ei) {
 
                   hier::Box fill_box(
                      *ei,

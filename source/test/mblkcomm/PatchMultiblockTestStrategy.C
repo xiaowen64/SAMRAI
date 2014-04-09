@@ -74,7 +74,7 @@ void PatchMultiblockTestStrategy::readVariableInput(
    d_variable_dst_ghosts.resize(nkeys, hier::IntVector(d_dim, 0));
    d_variable_refine_op.resize(nkeys);
 
-   for (int i = 0; i < nkeys; i++) {
+   for (int i = 0; i < nkeys; ++i) {
 
       boost::shared_ptr<tbox::Database> var_db(db->getDatabase(var_keys[i]));
 
@@ -127,7 +127,7 @@ void PatchMultiblockTestStrategy::readRefinementInput(
    int nkeys = static_cast<int>(box_keys.size());
 
    d_refine_level_boxes.resize(nkeys);
-   for (int i = 0; i < nkeys; i++) {
+   for (int i = 0; i < nkeys; ++i) {
       std::vector<tbox::DatabaseBox> db_box_vector =
          db->getDatabaseBoxVector(box_keys[i]);
       d_refine_level_boxes[i] = db_box_vector;

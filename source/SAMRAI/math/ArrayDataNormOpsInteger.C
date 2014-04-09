@@ -53,7 +53,7 @@ ArrayDataNormOpsInteger::abs(
       int dst_w[SAMRAI::MAX_DIM_VAL];
       int src_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src_w[i] = src_box.numberCells(i);
@@ -72,28 +72,28 @@ ArrayDataNormOpsInteger::abs(
       const int* sd = src.getPointer();
 
       const int ddepth = dst.getDepth();
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int dst_counter = dst_begin;
          int src_counter = src_begin;
 
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             dst_b[nd] = dst_counter;
             src_b[nd] = src_counter;
          }
 
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                dd[dst_counter + i0] =
                   tbox::MathUtilities<int>::Abs(sd[src_counter + i0]);
             }
 
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -106,14 +106,14 @@ ArrayDataNormOpsInteger::abs(
             if (dim_jump > 0) {
                int dst_step = 1;
                int src_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   dst_step *= dst_w[k];
                   src_step *= src_w[k];
                }
                dst_counter = dst_b[dim_jump - 1] + dst_step;
                src_counter = src_b[dim_jump - 1] + src_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   dst_b[m] = dst_counter;
                   src_b[m] = src_counter;
                }

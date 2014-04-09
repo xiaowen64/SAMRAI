@@ -29,7 +29,7 @@ void
 MathUtilities<TYPE>::setVectorToSignalingNaN(
    std::vector<TYPE>& vector)
 {
-   for (int i = 0; i < static_cast<int>(vector.size()); i++) {
+   for (int i = 0; i < static_cast<int>(vector.size()); ++i) {
       vector[i] = getSignalingNaN();
    }
 }
@@ -40,7 +40,7 @@ MathUtilities<TYPE>::setArrayToSignalingNaN(
    TYPE* array,
    int n)
 {
-   for (int i = 0; i < n; i++) {
+   for (int i = 0; i < n; ++i) {
       array[i] = getSignalingNaN();
    }
 }
@@ -58,7 +58,7 @@ void
 MathUtilities<TYPE>::setVectorToMax(
    std::vector<TYPE>& vector)
 {
-   for (int i = 0; i < static_cast<int>(vector.size()); i++) {
+   for (int i = 0; i < static_cast<int>(vector.size()); ++i) {
       vector[i] = getMax();
    }
 }
@@ -69,7 +69,7 @@ MathUtilities<TYPE>::setArrayToMax(
    TYPE* array,
    int n)
 {
-   for (int i = 0; i < n; i++) {
+   for (int i = 0; i < n; ++i) {
       array[i] = getMax();
    }
 }
@@ -87,7 +87,7 @@ void
 MathUtilities<TYPE>::setVectorToMin(
    std::vector<TYPE>& vector)
 {
-   for (int i = 0; i < static_cast<int>(vector.size()); i++) {
+   for (int i = 0; i < static_cast<int>(vector.size()); ++i) {
       vector[i] = getMin();
    }
 }
@@ -98,7 +98,7 @@ MathUtilities<TYPE>::setArrayToMin(
    TYPE* array,
    int n)
 {
-   for (int i = 0; i < n; i++) {
+   for (int i = 0; i < n; ++i) {
       array[i] = getMin();
    }
 }
@@ -116,7 +116,7 @@ void
 MathUtilities<TYPE>::setVectorToEpsilon(
    std::vector<TYPE>& vector)
 {
-   for (int i = 0; i < static_cast<int>(vector.size()); i++) {
+   for (int i = 0; i < static_cast<int>(vector.size()); ++i) {
       vector[i] = getEpsilon();
    }
 }
@@ -127,7 +127,7 @@ MathUtilities<TYPE>::setArrayToEpsilon(
    TYPE* array,
    int n)
 {
-   for (int i = 0; i < n; i++) {
+   for (int i = 0; i < n; ++i) {
       array[i] = getEpsilon();
    }
 }

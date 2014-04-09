@@ -63,7 +63,7 @@ SiloDatabase::nameMangle(
    std::string name) {
    std::stringstream mangled_name;
 
-   for (std::string::size_type i = 0; i < name.size(); i++) {
+   for (std::string::size_type i = 0; i < name.size(); ++i) {
       if (IsValid(name[i])) {
          mangled_name << name[i];
       } else {
@@ -352,11 +352,11 @@ SiloDatabase::getAllKeys()
 
       tmp_keys.resize(toc->nvar + toc->ndir);
 
-      for (int i = 0; i < toc->nvar; i++) {
+      for (int i = 0; i < toc->nvar; ++i) {
          tmp_keys[i] = toc->var_names[i];
       }
 
-      for (int i = 0; i < toc->ndir; i++) {
+      for (int i = 0; i < toc->ndir; ++i) {
          tmp_keys[i + toc->nvar] = toc->dir_names[i];
       }
 
@@ -616,7 +616,7 @@ SiloDatabase::putBoolArray(
 
    short temp_array[nelements];
 
-   for (size_t i = 0; i < nelements; i++) {
+   for (size_t i = 0; i < nelements; ++i) {
       temp_array[i] = data[i];
    }
 
@@ -652,7 +652,7 @@ SiloDatabase::getBoolVector(
 
    getSiloSimpleType(key, temp_array);
 
-   for (int i = 0; i < getSiloSimpleTypeLength(key); i++) {
+   for (int i = 0; i < getSiloSimpleTypeLength(key); ++i) {
       boolArray[i] = temp_array[i];
    }
 
@@ -723,7 +723,7 @@ SiloDatabase::putDatabaseBoxArray(
    elemnames[2] = "lo";
 
    int size = 0;
-   for (size_t i = 0; i < nelements; i++) {
+   for (size_t i = 0; i < nelements; ++i) {
       size += data[i].d_data.d_dimension;
    }
 
@@ -734,12 +734,12 @@ SiloDatabase::putDatabaseBoxArray(
    std::vector<int> values(nelements + size * 2);
 
    size_t offset = nelements;
-   for (size_t i = 0; i < nelements; i++) {
+   for (size_t i = 0; i < nelements; ++i) {
       values[i] = data[i].d_data.d_dimension;
-      for (int d = 0; d < data[i].d_data.d_dimension; d++) {
+      for (int d = 0; d < data[i].d_data.d_dimension; ++d) {
          values[offset] = data[i].d_data.d_lo[d];
          values[offset + size] = data[i].d_data.d_hi[d];
-         offset++;
+         ++offset;
       }
    }
 
@@ -792,17 +792,17 @@ SiloDatabase::getDatabaseBoxVector(
 
    int* values = static_cast<int *>(ca->values);
    int offset = ca->elemlengths[0];
-   for (int i = 0; i < (ca->elemlengths[0]); i++) {
+   for (int i = 0; i < (ca->elemlengths[0]); ++i) {
       boxVector[i].d_data.d_dimension = values[i];
       /*
        * This preserves old behavior where boxes can be different dims but is
        * likely not supported anywhere else in the library.
        */
       boxVector[i].setDim(Dimension((unsigned short)values[i]));
-      for (int d = 0; d < boxVector[i].d_data.d_dimension; d++) {
+      for (int d = 0; d < boxVector[i].d_data.d_dimension; ++d) {
          boxVector[i].d_data.d_lo[d] = values[offset];
          boxVector[i].d_data.d_hi[d] = values[offset + ca->elemlengths[1]];
-         offset++;
+         ++offset;
       }
    }
 
@@ -948,7 +948,7 @@ SiloDatabase::putComplexArray(
    elemlengths[0] = static_cast<int>(nelements);
    elemlengths[1] = static_cast<int>(nelements);
 
-   for (size_t i = 0; i < nelements; i++) {
+   for (size_t i = 0; i < nelements; ++i) {
       values[i] = data[i].real();
       values[i + nelements] = data[i].imag();
    }
@@ -1005,7 +1005,7 @@ SiloDatabase::getComplexVector(
 
    std::vector<dcomplex> complexArray(ca->elemlengths[0]);
 
-   for (int i = 0; i < ca->elemlengths[0]; i++) {
+   for (int i = 0; i < ca->elemlengths[0]; ++i) {
       complexArray[i] = dcomplex(static_cast<double *>(ca->values)[i],
             static_cast<double *>(ca->values)[i + ca->elemlengths[0]]);
    }
@@ -1286,7 +1286,7 @@ SiloDatabase::putStringArray(
    std::string values;
    int elemlengths[nelements];
 
-   for (size_t i = 0; i < nelements; i++) {
+   for (size_t i = 0; i < nelements; ++i) {
       strings[i] = Utilities::sizetToString(i);
       elemnames[i] = strings[i].c_str();
       elemlengths[i] = static_cast<int>(data[i].size());
@@ -1352,7 +1352,7 @@ SiloDatabase::getStringVector(
    std::string values = static_cast<char *>(ca->values);
 
    std::string::size_type start = 0;
-   for (int i = 0; i < ca->nelems; i++) {
+   for (int i = 0; i < ca->nelems; ++i) {
       stringArray[i] = values.substr(start, ca->elemlengths[i]);
       start = start + ca->elemlengths[i];
    }
@@ -1387,7 +1387,7 @@ SiloDatabase::printClassData(
          << d_database_name << "'..." << std::endl;
    }
 
-   for (int i = 0; i < static_cast<int>(keys.size()); i++) {
+   for (int i = 0; i < static_cast<int>(keys.size()); ++i) {
       switch (getArrayType(keys[i])) {
          case Database::SAMRAI_INVALID: {
             os << "   Data entry `" << keys[i] << "' is"

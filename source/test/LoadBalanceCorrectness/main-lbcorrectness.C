@@ -571,7 +571,7 @@ int main(
                ++L0_boxes_itr;
             }
          }
-         for (int i = my_boxes_start; i < my_boxes_stop; ++i, L0_boxes_itr++) {
+         for (int i = my_boxes_start; i < my_boxes_stop; ++i, ++L0_boxes_itr) {
             L0.addBox(*L0_boxes_itr, hier::BlockId::zero());
          }
 

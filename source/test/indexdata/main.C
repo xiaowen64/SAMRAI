@@ -54,7 +54,7 @@ public:
    {
       NULL_USE(idx);
       NULL_USE(src_offset);
-      for (int n = 0; n < NN; n++) {
+      for (int n = 0; n < NN; ++n) {
          x[n] = src_item.x[n];
       }
    }
@@ -543,7 +543,7 @@ int main(
          IndexIterator<Item, pdat::CellGeometry> itend(data, false);
          for (IndexIterator<Item, pdat::CellGeometry> it(data, true);
               it != itend; ++it) {
-            count++;
+            ++count;
          }
          assert(3 == count);
       }
@@ -642,7 +642,7 @@ int main(
 
          timer->start();
 
-         for (int n = 0; n < num_inserts; n++) {
+         for (int n = 0; n < num_inserts; ++n) {
             int i = rand() % size;
             int j = rand() % size;
 
@@ -682,7 +682,7 @@ int main(
 
          timer->start();
 
-         for (int n = 0; n < num_inserts; n++) {
+         for (int n = 0; n < num_inserts; ++n) {
             int i = rand() % size;
             int j = rand() % size;
 
@@ -721,7 +721,7 @@ int main(
 
          timer->start();
 
-         for (int n = 0; n < num_inserts; n++) {
+         for (int n = 0; n < num_inserts; ++n) {
             int i = rand() % size;
             int j = rand() % size;
 

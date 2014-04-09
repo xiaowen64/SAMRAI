@@ -105,7 +105,7 @@ RankGroup::RankGroup(
     * Check that each entry in the array has a unique value and is increasing
     * order
     */
-   for (int i = 0; i < static_cast<int>(rank_group.size()); i++) {
+   for (int i = 0; i < static_cast<int>(rank_group.size()); ++i) {
       TBOX_ASSERT(rank_group[i] >= 0);
       TBOX_ASSERT(rank_group[i] < nodes);
       if (i > 0) {

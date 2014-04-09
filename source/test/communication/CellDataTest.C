@@ -126,7 +126,7 @@ void CellDataTest::registerVariables(
 
    d_variables.resize(nvars);
 
-   for (int i = 0; i < nvars; i++) {
+   for (int i = 0; i < nvars; ++i) {
       d_variables[i].reset(
          new pdat::CellVariable<double>(d_dim,
                                         d_variable_src_name[i],
@@ -191,7 +191,7 @@ void CellDataTest::setLinearData(
          z = lowerx[2] + pdx[2] * ((*ci)(2) - loweri(2) + 0.5);
       }
 
-      for (int d = 0; d < depth; d++) {
+      for (int d = 0; d < depth; ++d) {
          (*data)(*ci, d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
       }
 
@@ -236,11 +236,11 @@ void CellDataTest::setConservativeData(
       for (pdat::CellIterator fi(pdat::CellGeometry::begin(sbox));
            fi != fiend; ++fi) {
          double value = 0.0;
-         for (int d = 0; d < d_dim.getValue(); d++) {
+         for (int d = 0; d < d_dim.getValue(); ++d) {
             value += (double)((*fi)(d));
          }
          value /= ncells;
-         for (int dep = 0; dep < depth; dep++) {
+         for (int dep = 0; dep < depth; ++dep) {
             (*data)(*fi, dep) = value;
          }
       }
@@ -265,11 +265,11 @@ void CellDataTest::setConservativeData(
 
       int coarse_ncells = ncells;
       std::vector<std::vector<double> > delta(d_dim.getValue());
-      for (int d = 0; d < d_dim.getValue(); d++) {
+      for (int d = 0; d < d_dim.getValue(); ++d) {
          delta[d].resize(ratio(d), 0.0);
          coarse_ncells /= ratio(d);
          double coarse_dx = dx[d] * ratio(d);
-         for (int i = 0; i < ratio(d); i++) {
+         for (int i = 0; i < ratio(d); ++i) {
             /*
              * delta[d][i] is the physical distance from i-th fine
              * cell centroid in d-direction to coarse cell centroid.
@@ -287,17 +287,17 @@ void CellDataTest::setConservativeData(
          const hier::IntVector ci(hier::Index::coarsen(*fi, ratio));
          hier::IntVector del(ci.getDim());  // Index vector from ci to fi.
          double value = 0.0;
-         for (int d = 0; d < d_dim.getValue(); d++) {
+         for (int d = 0; d < d_dim.getValue(); ++d) {
             del(d) = (int)delta[d][(*fi)(d) - ci(d) * ratio(d)];
             value += (double)(ci(d));
          }
          value /= coarse_ncells;
 
-         for (int d = 0; d < d_dim.getValue(); d++) {
+         for (int d = 0; d < d_dim.getValue(); ++d) {
             value += ci(d) * del(d);
          }
 
-         for (int dep = 0; dep < depth; dep++) {
+         for (int dep = 0; dep < depth; ++dep) {
             (*data)(*fi, dep) = value;
          }
 
@@ -342,7 +342,7 @@ void CellDataTest::setPeriodicData(
          tmpf = sin(2 * M_PI * tmpf);
          val *= tmpf;
       }
-      for (int d = 0; d < depth; d++) {
+      for (int d = 0; d < depth; ++d) {
          (*data)(*ci, d) = val;
       }
 
@@ -364,7 +364,7 @@ void CellDataTest::initializeDataOnPatch(
 
    if (d_do_refine) {
 
-      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          boost::shared_ptr<pdat::CellData<double> > cell_data(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
@@ -383,7 +383,7 @@ void CellDataTest::initializeDataOnPatch(
 
    } else if (d_do_coarsen) {
 
-      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          boost::shared_ptr<pdat::CellData<double> > cell_data(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
@@ -431,7 +431,7 @@ void CellDataTest::checkPatchInteriorData(
    pdat::CellIterator ciend(pdat::CellGeometry::end(interior));
    for (pdat::CellIterator ci(pdat::CellGeometry::begin(interior));
         ci != ciend; ++ci) {
-      for (int d = 0; d < depth; d++) {
+      for (int d = 0; d < depth; ++d) {
          if (!(tbox::MathUtilities<double>::equalEps((*data)(*ci, d),
                   (*correct_data)(*ci, d)))) {
             tbox::perr << "FAILED: -- patch interior not properly filled"
@@ -473,7 +473,7 @@ void CellDataTest::setPhysicalBoundaryConditions(
          pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
    const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
-   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       boost::shared_ptr<pdat::CellData<double> > cell_data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
@@ -486,7 +486,7 @@ void CellDataTest::setPhysicalBoundaryConditions(
       /*
        * Set node boundary data.
        */
-      for (int ni = 0; ni < num_node_bdry_boxes; ni++) {
+      for (int ni = 0; ni < num_node_bdry_boxes; ++ni) {
 
          hier::Box fill_box = pgeom->getBoundaryFillBox(node_bdry[ni],
                patch.getBox(),
@@ -503,7 +503,7 @@ void CellDataTest::setPhysicalBoundaryConditions(
          /*
           * Set edge boundary data.
           */
-         for (int ei = 0; ei < num_edge_bdry_boxes; ei++) {
+         for (int ei = 0; ei < num_edge_bdry_boxes; ++ei) {
 
             hier::Box fill_box = pgeom->getBoundaryFillBox(edge_bdry[ei],
                   patch.getBox(),
@@ -521,7 +521,7 @@ void CellDataTest::setPhysicalBoundaryConditions(
          /*
           * Set face boundary data.
           */
-         for (int fi = 0; fi < num_face_bdry_boxes; fi++) {
+         for (int fi = 0; fi < num_face_bdry_boxes; ++fi) {
 
             hier::Box fill_box = pgeom->getBoundaryFillBox(face_bdry[fi],
                   patch.getBox(),
@@ -566,7 +566,7 @@ bool CellDataTest::verifyResults(
       tbox::plog << "Patch box = " << patch.getBox() << endl;
 
       hier::IntVector tgcw(periodic_shift.getDim(), 0);
-      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
          tgcw.max(patch.getPatchData(d_variables[i], getDataContext())->
             getGhostCellWidth());
       }
@@ -592,7 +592,7 @@ bool CellDataTest::verifyResults(
          }
       }
 
-      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          boost::shared_ptr<pdat::CellData<double> > cell_data(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
@@ -605,7 +605,7 @@ bool CellDataTest::verifyResults(
          for (pdat::CellIterator ci(pdat::CellGeometry::begin(dbox));
               ci != ciend; ++ci) {
             double correct = (*solution)(*ci);
-            for (int d = 0; d < depth; d++) {
+            for (int d = 0; d < depth; ++d) {
                double result = (*cell_data)(*ci, d);
                if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."

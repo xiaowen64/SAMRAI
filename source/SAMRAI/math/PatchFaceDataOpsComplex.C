@@ -77,7 +77,7 @@ PatchFaceDataOpsComplex::copyData(
    TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = box.getDim().getValue();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       dst->getArrayData(d).copy(src->getArrayData(d),
          pdat::FaceGeometry::toFaceBox(box, d));
    }

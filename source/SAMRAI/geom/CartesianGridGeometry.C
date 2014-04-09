@@ -239,7 +239,7 @@ CartesianGridGeometry::makeCoarsenedGridGeometry(
    const int nboxes = fine_domain.size();
    hier::BoxContainer::const_iterator fine_domain_itr = fine_domain.begin();
    hier::BoxContainer::iterator coarse_domain_itr = coarse_domain.begin();
-   for (int ib = 0; ib < nboxes; ib++, ++fine_domain_itr, ++coarse_domain_itr) {
+   for (int ib = 0; ib < nboxes; ++ib, ++fine_domain_itr, ++coarse_domain_itr) {
       hier::Box testbox = hier::Box::refine(*coarse_domain_itr, coarsen_ratio);
       if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -290,7 +290,7 @@ CartesianGridGeometry::setGeometryData(
    TBOX_ASSERT(x_lo != 0);
    TBOX_ASSERT(x_up != 0);
 
-   for (int id = 0; id < dim.getValue(); id++) {
+   for (int id = 0; id < dim.getValue(); ++id) {
       d_x_lo[id] = x_lo[id];
       d_x_up[id] = x_up[id];
    }
@@ -309,7 +309,7 @@ CartesianGridGeometry::setGeometryData(
    d_domain_box = bigbox;
 
    hier::IntVector ncells = d_domain_box.numberCells();
-   for (int id2 = 0; id2 < dim.getValue(); id2++) {
+   for (int id2 = 0; id2 < dim.getValue(); ++id2) {
       double length = d_x_up[id2] - d_x_lo[id2];
       d_dx[id2] = length / ((double)ncells(id2));
    }
@@ -342,7 +342,7 @@ CartesianGridGeometry::setGeometryDataOnPatch(
    TBOX_ASSERT(ratio_to_level_zero != hier::IntVector::getZero(dim));
 
    if (dim > tbox::Dimension(1)) {
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dim.getValue(); ++i) {
          TBOX_ASSERT((ratio_to_level_zero(i)
                       * ratio_to_level_zero((i + 1) % dim.getValue()) > 0)
             || (ratio_to_level_zero(i) == 1)
@@ -358,7 +358,7 @@ CartesianGridGeometry::setGeometryDataOnPatch(
    bool coarsen = false;
    if (ratio_to_level_zero(0) < 0) coarsen = true;
    hier::IntVector tmp_rat = (ratio_to_level_zero);
-   for (int id2 = 0; id2 < dim.getValue(); id2++) {
+   for (int id2 = 0; id2 < dim.getValue(); ++id2) {
       tmp_rat(id2) = abs(ratio_to_level_zero(id2));
    }
 
@@ -367,17 +367,17 @@ CartesianGridGeometry::setGeometryDataOnPatch(
 
    if (coarsen) {
       index_box.coarsen(tmp_rat);
-      for (int id3 = 0; id3 < dim.getValue(); id3++) {
+      for (int id3 = 0; id3 < dim.getValue(); ++id3) {
          dx[id3] = d_dx[id3] * ((double)tmp_rat(id3));
       }
    } else {
       index_box.refine(tmp_rat);
-      for (int id4 = 0; id4 < dim.getValue(); id4++) {
+      for (int id4 = 0; id4 < dim.getValue(); ++id4) {
          dx[id4] = d_dx[id4] / ((double)tmp_rat(id4));
       }
    }
 
-   for (int id5 = 0; id5 < dim.getValue(); id5++) {
+   for (int id5 = 0; id5 < dim.getValue(); ++id5) {
       x_lo[id5] = d_x_lo[id5]
          + ((double)(box.lower(id5) - index_box.lower(id5))) * dx[id5];
       x_up[id5] = x_lo[id5] + ((double)box.numberCells(id5)) * dx[id5];
@@ -513,17 +513,17 @@ CartesianGridGeometry::printClassData(
 
    int id;
    os << "d_x_lo = ";
-   for (id = 0; id < dim.getValue(); id++) {
+   for (id = 0; id < dim.getValue(); ++id) {
       os << d_x_lo[id] << "   ";
    }
    os << std::endl;
    os << "d_x_up = ";
-   for (id = 0; id < dim.getValue(); id++) {
+   for (id = 0; id < dim.getValue(); ++id) {
       os << d_x_up[id] << "   ";
    }
    os << std::endl;
    os << "d_dx = ";
-   for (id = 0; id < dim.getValue(); id++) {
+   for (id = 0; id < dim.getValue(); ++id) {
       os << d_dx[id] << "   ";
    }
    os << std::endl;

@@ -143,14 +143,14 @@ TreeLoadBalancer::setWorkloadPatchDataIndex(
       int asize = static_cast<int>(d_workload_data_id.size());
       if (asize < level_number + 1) {
          d_workload_data_id.resize(level_number + 1);
-         for (int i = asize; i < level_number - 1; i++) {
+         for (int i = asize; i < level_number - 1; ++i) {
             d_workload_data_id[i] = d_master_workload_data_id;
          }
          d_workload_data_id[level_number] = data_id;
       }
    } else {
       d_master_workload_data_id = data_id;
-      for (int ln = 0; ln < static_cast<int>(d_workload_data_id.size()); ln++) {
+      for (int ln = 0; ln < static_cast<int>(d_workload_data_id.size()); ++ln) {
          d_workload_data_id[ln] = d_master_workload_data_id;
       }
    }

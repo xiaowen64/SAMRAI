@@ -22,7 +22,7 @@ ComponentSelector::ComponentSelector(
    int num_mod = pd_entries % C_BITSET_SIZE;
 
    if (num_mod != 0) {
-      num_bitset_elements++;
+      ++num_bitset_elements;
    }
 
    std::bitset<C_BITSET_SIZE> l_bits;

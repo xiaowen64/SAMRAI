@@ -93,7 +93,7 @@ void CellMultiblockTest::registerVariables(
 
    d_variables.resize(nvars);
 
-   for (int i = 0; i < nvars; i++) {
+   for (int i = 0; i < nvars; ++i) {
       d_variables[i].reset(
          new pdat::CellVariable<double>(d_dim,
                                         d_variable_src_name[i],
@@ -124,7 +124,7 @@ void CellMultiblockTest::initializeDataOnPatch(
        || ((d_refine_option == "INTERIOR_FROM_COARSER_LEVEL")
            && (level_number < d_finest_level_number))) {
 
-      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          boost::shared_ptr<pdat::CellData<double> > cell_data(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
@@ -178,7 +178,7 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
          pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
    const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
-   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       boost::shared_ptr<pdat::CellData<double> > cell_data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
@@ -204,7 +204,7 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
          /*
           * Set edge boundary data.
           */
-         for (int ei = 0; ei < num_edge_bdry_boxes; ei++) {
+         for (int ei = 0; ei < num_edge_bdry_boxes; ++ei) {
 
             hier::Box fill_box = pgeom->getBoundaryFillBox(edge_bdry[ei],
                   patch.getBox(),
@@ -222,7 +222,7 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
          /*
           * Set face boundary data.
           */
-         for (int fi = 0; fi < num_face_bdry_boxes; fi++) {
+         for (int fi = 0; fi < num_face_bdry_boxes; ++fi) {
 
             hier::Box fill_box = pgeom->getBoundaryFillBox(face_bdry[fi],
                   patch.getBox(),
@@ -257,7 +257,7 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
    const std::map<hier::BlockId,hier::BaseGridGeometry::Neighbor>& neighbors =
       grid_geometry->getNeighbors(patch_blk_id);
 
-   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       boost::shared_ptr<pdat::CellData<double> > cell_data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
@@ -331,7 +331,7 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
                        ci != ciend; ++ci) {
                      pdat::CellIndex src_index(*ci);
                      pdat::CellGeometry::transform(src_index, back_trans);
-                     for (int d = 0; d < depth; d++) {
+                     for (int d = 0; d < depth; ++d) {
                         (*cell_data)(*ci, d) += (*sing_data)(src_index, d);
                      }
                   }
@@ -346,7 +346,7 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
          pdat::CellIterator ciend(pdat::CellGeometry::end(sing_fill_box));
          for (pdat::CellIterator ci(pdat::CellGeometry::begin(sing_fill_box));
               ci != ciend; ++ci) {
-            for (int d = 0; d < depth; d++) {
+            for (int d = 0; d < depth; ++d) {
                (*cell_data)(*ci, d) /= num_encon_used;
             }
          }
@@ -366,7 +366,7 @@ void CellMultiblockTest::postprocessRefine(
 {
    pdat::CellDoubleConstantRefine ref_op;
 
-   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       int id = hier::VariableDatabase::getDatabase()->
          mapVariableAndContextToIndex(d_variables[i], context);
@@ -394,7 +394,7 @@ bool CellMultiblockTest::verifyResults(
    tbox::plog << "Patch box = " << patch.getBox() << endl;
 
    hier::IntVector tgcw(d_dim, 0);
-   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
       tgcw.max(patch.getPatchData(d_variables[i], getDataContext())->
          getGhostCellWidth());
    }
@@ -418,7 +418,7 @@ bool CellMultiblockTest::verifyResults(
 
    bool test_failed = false;
 
-   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       double correct = (double)block_id.getBlockValue();
 
@@ -431,7 +431,7 @@ bool CellMultiblockTest::verifyResults(
       pdat::CellIterator ciend(pdat::CellGeometry::end(pbox));
       for (pdat::CellIterator ci(pdat::CellGeometry::begin(pbox));
            ci != ciend; ++ci) {
-         for (int d = 0; d < depth; d++) {
+         for (int d = 0; d < depth; ++d) {
             double result = (*cell_data)(*ci, d);
 
             if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
@@ -449,7 +449,7 @@ bool CellMultiblockTest::verifyResults(
       hier::Box gbox = cell_data->getGhostBox();
 
       for (std::map<hier::BlockId,hier::BaseGridGeometry::Neighbor>::const_iterator
-           ne = neighbors.begin(); ne != neighbors.end(); ne++) {
+           ne = neighbors.begin(); ne != neighbors.end(); ++ne) {
 
          correct = ne->second.getBlockId().getBlockValue();
 
@@ -467,7 +467,7 @@ bool CellMultiblockTest::verifyResults(
            pdat::CellIterator ciend(pdat::CellGeometry::end(*ng));
            for (pdat::CellIterator ci(pdat::CellGeometry::begin(*ng));
                 ci != ciend; ++ci) {
-               for (int d = 0; d < depth; d++) {
+               for (int d = 0; d < depth; ++d) {
                   double result = (*cell_data)(*ci, d);
 
                   if (!tbox::MathUtilities<double>::equalEps(correct,
@@ -488,11 +488,11 @@ bool CellMultiblockTest::verifyResults(
       boost::shared_ptr<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
       TBOX_ASSERT(pgeom);
 
-      for (int b = 0; b < d_dim.getValue(); b++) {
+      for (int b = 0; b < d_dim.getValue(); ++b) {
          const std::vector<hier::BoundaryBox>& bdry =
             pgeom->getCodimensionBoundaries(b + 1);
 
-         for (int k = 0; k < static_cast<int>(bdry.size()); k++) {
+         for (int k = 0; k < static_cast<int>(bdry.size()); ++k) {
             hier::Box fill_box = pgeom->getBoundaryFillBox(bdry[k],
                   patch.getBox(),
                   tgcw);
@@ -503,14 +503,14 @@ bool CellMultiblockTest::verifyResults(
 
                int num_sing_neighbors = 0;
                for (std::map<hier::BlockId,hier::BaseGridGeometry::Neighbor>::const_iterator ns(
-                    neighbors.begin()); ns != neighbors.end(); ns++) {
+                    neighbors.begin()); ns != neighbors.end(); ++ns) {
                   if (ns->second.isSingularity()) {
                      hier::BoxContainer neighbor_ghost(
                         ns->second.getTransformedDomain());
                      neighbor_ghost.refine(ratio);
                      neighbor_ghost.intersectBoxes(fill_box);
                      if (neighbor_ghost.size()) {
-                        num_sing_neighbors++;
+                        ++num_sing_neighbors;
                         correct += ns->second.getBlockId().getBlockValue();
                      }
                   }
@@ -533,7 +533,7 @@ bool CellMultiblockTest::verifyResults(
             pdat::CellIterator ciend(pdat::CellGeometry::end(fill_box));
             for (pdat::CellIterator ci(pdat::CellGeometry::begin(fill_box));
                  ci != ciend; ++ci) {
-               for (int d = 0; d < depth; d++) {
+               for (int d = 0; d < depth; ++d) {
                   double result = (*cell_data)(*ci, d);
 
                   if (!tbox::MathUtilities<double>::equalEps(correct,

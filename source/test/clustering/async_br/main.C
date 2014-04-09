@@ -291,7 +291,7 @@ int main(
       tbox::MemoryUtilities::printMemoryInfo(tbox::plog);
       bool done = false;
       for (int ln = 0; patch_hierarchy->levelCanBeRefined(ln) && !done;
-           ln++) {
+           ++ln) {
          tbox::plog << "Adding finer levels with ln = " << ln << endl;
          boost::shared_ptr<hier::PatchLevel> level_(
             patch_hierarchy->getPatchLevel(ln));

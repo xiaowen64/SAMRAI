@@ -72,7 +72,7 @@ SpatialKey::SpatialKey(
    const SpatialKey& spatial_key)
 {
    d_bits_per_int = BITS_PER_BYTE * sizeof(unsigned int);
-   for (int i = 0; i < NUM_COORDS_MIXED_FOR_SPATIAL_KEY; i++) {
+   for (int i = 0; i < NUM_COORDS_MIXED_FOR_SPATIAL_KEY; ++i) {
       d_key[i] = spatial_key.d_key[i];
    }
 }
@@ -164,7 +164,7 @@ SpatialKey::blendOneCoord(
 {
    unsigned int shifted_coord = coord;
 
-   for (size_t bit_in_int = 0; bit_in_int < d_bits_per_int; bit_in_int++) {
+   for (size_t bit_in_int = 0; bit_in_int < d_bits_per_int; ++bit_in_int) {
       if (shifted_coord & ((unsigned int)1)) {
          size_t bit_index;
          size_t int_index;

@@ -527,7 +527,7 @@ CellPoissonHypreSolver::allocateHypreData()
             { -1 }, { 0 }
          };
          HYPRE_StructStencilCreate(d_dim.getValue(), stencil_size, &d_stencil);
-         for (int s = 0; s < stencil_size; s++) {
+         for (int s = 0; s < stencil_size; ++s) {
             HYPRE_StructStencilSetElement(d_stencil, s,
                stencil_offsets[s]);
          }
@@ -537,7 +537,7 @@ CellPoissonHypreSolver::allocateHypreData()
             { -1, 0 }, { 0, -1 }, { 0, 0 }
          };
          HYPRE_StructStencilCreate(d_dim.getValue(), stencil_size, &d_stencil);
-         for (int s = 0; s < stencil_size; s++) {
+         for (int s = 0; s < stencil_size; ++s) {
             HYPRE_StructStencilSetElement(d_stencil, s,
                stencil_offsets[s]);
          }
@@ -547,7 +547,7 @@ CellPoissonHypreSolver::allocateHypreData()
             { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 }, { 0, 0, 0 }
          };
          HYPRE_StructStencilCreate(d_dim.getValue(), stencil_size, &d_stencil);
-         for (int s = 0; s < stencil_size; s++) {
+         for (int s = 0; s < stencil_size; ++s) {
             HYPRE_StructStencilSetElement(d_stencil, s,
                stencil_offsets[s]);
          }
@@ -993,7 +993,7 @@ CellPoissonHypreSolver::setMatrixCoefficients(
       int stencil_indices[stencil_size];
       double mat_entries[stencil_size];
 
-      for (i = 0; i < stencil_size; i++) stencil_indices[i] = i;
+      for (i = 0; i < stencil_size; ++i) stencil_indices[i] = i;
 
       pdat::CellIterator ic(pdat::CellGeometry::begin(patch_box));
       pdat::CellIterator icend(pdat::CellGeometry::end(patch_box));

@@ -42,7 +42,7 @@ PatchSideDataOpsInteger::numberOfEntries(
    const hier::Box ibox = box * data->getGhostBox();
    const hier::IntVector& directions = data->getDirectionVector();
    const int data_depth = data->getDepth();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          retval +=
             ((pdat::SideGeometry::toSideBox(ibox, d).size()) * data_depth);
@@ -109,7 +109,7 @@ PatchSideDataOpsInteger::copyData(
 
    int dimVal = box.getDim().getValue();
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          dst->getArrayData(d).copy(src->getArrayData(d),
             pdat::SideGeometry::toSideBox(box, d));
@@ -128,7 +128,7 @@ PatchSideDataOpsInteger::abs(
 
    int dimVal = box.getDim().getValue();
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          d_array_ops.abs(dst->getArrayData(d),
             src->getArrayData(d),

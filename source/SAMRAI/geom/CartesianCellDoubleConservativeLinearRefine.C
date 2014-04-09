@@ -176,7 +176,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
    std::vector<double> diff0(cgbox.numberCells(0) + 1);
    pdat::CellData<double> slope0(cgbox, 1, tmp_ghosts);
 
-   for (int d = 0; d < fdata->getDepth(); d++) {
+   for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {
          SAMRAI_F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (ifirstc(0),
             ilastc(0),

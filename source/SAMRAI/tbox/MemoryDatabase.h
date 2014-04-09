@@ -944,7 +944,7 @@ private:
       std::ostream& os,
       const long indent)
    {
-      for (int i = 0; i < indent; i++) {
+      for (int i = 0; i < indent; ++i) {
          os << " ";
       }
    }

@@ -211,9 +211,9 @@ BaseGridGeometry::computeBoundaryBoxesOnLevel(
    TBOX_ASSERT(ghost_width >= IntVector::getZero(ghost_width.getDim()));
 #ifdef DEBUG_CHECK_ASSERTIONS
    int num_per_dirs = 0;
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       if (periodic_shift(i)) {
-         num_per_dirs++;
+         ++num_per_dirs;
       }
    }
    if (num_per_dirs > 0) {
@@ -256,11 +256,11 @@ BaseGridGeometry::computeBoundaryBoxesOnLevel(
             ghost_width, periodic_shift);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         for (int j = 0; j < d_dim.getValue(); j++) {
+         for (int j = 0; j < d_dim.getValue(); ++j) {
             iter = (boundaries.find(patch_id));
             TBOX_ASSERT(iter != boundaries.end());
             for (int k = 0;
-                 k < static_cast<int>(((*iter).second)[j].size()); k++) {
+                 k < static_cast<int>(((*iter).second)[j].size()); ++k) {
                TBOX_ASSERT(checkBoundaryBox(((*iter).second)[j][k], *patch,
                      domain[block_num], num_per_dirs, ghost_width));
             }
@@ -364,7 +364,7 @@ BaseGridGeometry::computeBoxTouchingBoundaries(
       }
    } else {
       bool bdry_located = false;
-      for (int nd = 0; nd < d_dim.getValue(); nd++) {
+      for (int nd = 0; nd < d_dim.getValue(); ++nd) {
          BoxContainer lower_list(bdry_list);
          BoxContainer upper_list(bdry_list);
 
@@ -400,7 +400,7 @@ BaseGridGeometry::computeBoxTouchingBoundaries(
        * concave corner of an L-shaped domain.
        */
       if (!bdry_located) {
-         for (int nd = 0; nd < d_dim.getValue(); nd++) {
+         for (int nd = 0; nd < d_dim.getValue(); ++nd) {
             touches_periodic_bdry(nd, 0) = touches_periodic_bdry(nd, 1) = false;
 
             bool lower_side = false;
@@ -450,7 +450,7 @@ BaseGridGeometry::setGeometryOnPatches(
    TBOX_ASSERT(ratio_to_level_zero != IntVector::getZero(d_dim));
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim.getValue() > 1) {
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
          TBOX_ASSERT((ratio_to_level_zero(i)
                       * ratio_to_level_zero((i + 1) % d_dim.getValue()) > 0)
             || (ratio_to_level_zero(i) == 1)
@@ -548,11 +548,11 @@ BaseGridGeometry::setGeometryDataOnPatch(
     * all components not equal to 1 must have the same sign.
     */
    int i;
-   for (i = 0; i < dim.getValue(); i++) {
+   for (i = 0; i < dim.getValue(); ++i) {
       TBOX_ASSERT(ratio_to_level_zero(i) != 0);
    }
    if (dim > tbox::Dimension(1)) {
-      for (i = 0; i < dim.getValue(); i++) {
+      for (i = 0; i < dim.getValue(); ++i) {
          TBOX_ASSERT((ratio_to_level_zero(i)
                       * ratio_to_level_zero((i + 1) % dim.getValue()) > 0)
             || (ratio_to_level_zero(i) == 1)
@@ -611,7 +611,7 @@ BaseGridGeometry::getFromRestart()
    BoxContainer domain;
    LocalId local_id(0);
 
-   for (int b = 0; b < d_number_blocks; b++) {
+   for (int b = 0; b < d_number_blocks; ++b) {
       domain_name = "domain_boxes_" + tbox::Utilities::intToString(b);
       std::vector<tbox::DatabaseBox> db_box_vector =
          db->getDatabaseBoxVector(domain_name);
@@ -720,7 +720,7 @@ BaseGridGeometry::getFromInput(
       BoxContainer domain;
       LocalId local_id(0);
 
-      for (int b = 0; b < d_number_blocks; b++) {
+      for (int b = 0; b < d_number_blocks; ++b) {
 
          domain_name = "domain_boxes_" + tbox::Utilities::intToString(b);
 
@@ -766,7 +766,7 @@ BaseGridGeometry::getFromInput(
       IntVector per_bc(dim, 0);
       if (input_db->keyExists("periodic_dimension")) {
          input_db->getIntegerArray("periodic_dimension", pbc, dim.getValue());
-         for (int i = 0; i < dim.getValue(); i++) {
+         for (int i = 0; i < dim.getValue(); ++i) {
             per_bc(i) = ((pbc[i] == 0) ? 0 : 1);
          }
       }
@@ -817,7 +817,7 @@ BaseGridGeometry::putToRestart(
 
    restart_db->putInteger("num_blocks", d_number_blocks);
 
-   for (int b = 0; b < d_number_blocks; b++) {
+   for (int b = 0; b < d_number_blocks; ++b) {
 
       std::string domain_name =
          "domain_boxes_" + tbox::Utilities::intToString(b);
@@ -900,9 +900,9 @@ BaseGridGeometry::computeShiftsForBox(
 
    int num_periodic_dirs = 0;
 
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       if (periodic_shift(i) != 0) {
-         num_periodic_dirs++;
+         ++num_periodic_dirs;
       }
    }
 
@@ -919,16 +919,16 @@ BaseGridGeometry::computeShiftsForBox(
       const std::vector<int>& location_index_max =
          blut->getMaxLocationIndices();
 
-      for (int d = 0; d < num_periodic_dirs; d++) {
+      for (int d = 0; d < num_periodic_dirs; ++d) {
 
          const int codim = d + 1;
 
-         for (int loc = 0; loc < location_index_max[d]; loc++) {
+         for (int loc = 0; loc < location_index_max[d]; ++loc) {
 
             const std::vector<int>& dirs = blut->getDirections(loc, codim);
 
             bool need_to_test = true;
-            for (int k = 0; k < static_cast<int>(dirs.size()); k++) {
+            for (int k = 0; k < static_cast<int>(dirs.size()); ++k) {
                if (periodic_shift(dirs[k]) == 0) {
                   need_to_test = false;
                   break;
@@ -941,7 +941,7 @@ BaseGridGeometry::computeShiftsForBox(
                IntVector border_shift(d_dim, 0);
 
                std::vector<bool> is_upper(codim);
-               for (int j = 0; j < codim; j++) {
+               for (int j = 0; j < codim; ++j) {
                   if (blut->isUpper(loc, codim, j)) {
                      border.lower(dirs[j]) = box.upper(dirs[j]);
                      border.upper(dirs[j]) = box.upper(dirs[j]);
@@ -981,7 +981,7 @@ BaseGridGeometry::computeShiftsForBox(
                   } else {
 
                      bool shift_to_add = true;
-                     for (int c = 0; c < codim; c++) {
+                     for (int c = 0; c < codim; ++c) {
 
                         if (is_upper[c]) {
                            if (border.upper(dirs[c]) <=
@@ -1001,7 +1001,7 @@ BaseGridGeometry::computeShiftsForBox(
 
                      if (shift_to_add) {
                         IntVector new_shift(d_dim, 0);
-                        for (int b = 0; b < codim; b++) {
+                        for (int b = 0; b < codim; ++b) {
                            if (is_upper[b]) {
                               new_shift(dirs[b]) =
                                  -domain_bound_box.numberCells(dirs[b]);
@@ -1045,12 +1045,12 @@ BaseGridGeometry::getBoundaryBoxes(
    const Index ilast = box.upper();
 
    int num_per_dirs = 0;
-   for (int d = 0; d < d_dim.getValue(); d++) {
+   for (int d = 0; d < d_dim.getValue(); ++d) {
       num_per_dirs += (periodic_shift(d) ? 1 : 0);
    }
 
    if (num_per_dirs == d_dim.getValue()) {
-      for (int k = 0; k < d_dim.getValue(); k++) {
+      for (int k = 0; k < d_dim.getValue(); ++k) {
          patch_boundaries[k].clear();
       }
    } else {
@@ -1074,15 +1074,15 @@ BaseGridGeometry::getBoundaryBoxes(
          blut->getMaxLocationIndices();
       std::vector<BoxContainer> codim_boxlist(d_dim.getValue());
 
-      for (int d = 0; d < d_dim.getValue() - num_per_dirs; d++) {
+      for (int d = 0; d < d_dim.getValue() - num_per_dirs; ++d) {
 
          int codim = d + 1;
 
-         for (int loc = 0; loc < location_index_max[d]; loc++) {
+         for (int loc = 0; loc < location_index_max[d]; ++loc) {
             const std::vector<int>& dirs = blut->getDirections(loc, codim);
 
             bool all_is_per = true;
-            for (int p = 0; p < codim; p++) {
+            for (int p = 0; p < codim; ++p) {
                if (periodic_shift(dirs[p]) == 0) {
                   all_is_per = false;
                }
@@ -1092,7 +1092,7 @@ BaseGridGeometry::getBoundaryBoxes(
                Box border(box);
                IntVector border_shift(d_dim, 0);
 
-               for (int i = 0; i < codim; i++) {
+               for (int i = 0; i < codim; ++i) {
                   if (blut->isUpper(loc, codim, i)) {
                      border.lower(dirs[i]) = box.upper(dirs[i]);
                      border.upper(dirs[i]) = box.upper(dirs[i]);
@@ -1105,9 +1105,9 @@ BaseGridGeometry::getBoundaryBoxes(
                }
 
                // grow in non-dirs directions
-               for (int j = 0; j < d_dim.getValue(); j++) {
+               for (int j = 0; j < d_dim.getValue(); ++j) {
                   bool dir_used = false;
-                  for (int du = 0; du < codim; du++) {
+                  for (int du = 0; du < codim; ++du) {
                      if (dirs[du] == j) {
                         dir_used = true;
                         break;
@@ -1140,7 +1140,7 @@ BaseGridGeometry::getBoundaryBoxes(
                }
  
                if (!border_list.isEmpty()) {
-                  for (int bd = 0; bd < d; bd++) {
+                  for (int bd = 0; bd < d; ++bd) {
                      border_list.removeIntersections(codim_boxlist[bd]);
 
                      if (border_list.isEmpty()) {
@@ -1193,11 +1193,11 @@ BaseGridGeometry::computePhysicalDomain(
     * of ratio not equal to 1 must have the same sign.
     */
    int i;
-   for (i = 0; i < d_dim.getValue(); i++) {
+   for (i = 0; i < d_dim.getValue(); ++i) {
       TBOX_ASSERT(ratio_to_level_zero(i) != 0);
    }
    if (d_dim.getValue() > 1) {
-      for (i = 0; i < d_dim.getValue(); i++) {
+      for (i = 0; i < d_dim.getValue(); ++i) {
          TBOX_ASSERT((ratio_to_level_zero(i)
                       * ratio_to_level_zero((i + 1) % d_dim.getValue()) > 0)
             || (ratio_to_level_zero(i) == 1)
@@ -1217,7 +1217,7 @@ BaseGridGeometry::computePhysicalDomain(
    if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
       bool coarsen = false;
       IntVector tmp_rat = ratio_to_level_zero;
-      for (int id = 0; id < d_dim.getValue(); id++) {
+      for (int id = 0; id < d_dim.getValue(); ++id) {
          if (ratio_to_level_zero(id) < 0) coarsen = true;
          tmp_rat(id) = abs(ratio_to_level_zero(id));
       }
@@ -1253,11 +1253,11 @@ BaseGridGeometry::computePhysicalDomain(
     * of ratio not equal to 1 must have the same sign.
     */
    int i;
-   for (i = 0; i < d_dim.getValue(); i++) {
+   for (i = 0; i < d_dim.getValue(); ++i) {
       TBOX_ASSERT(ratio_to_level_zero(i) != 0);
    }
    if (d_dim.getValue() > 1) {
-      for (i = 0; i < d_dim.getValue(); i++) {
+      for (i = 0; i < d_dim.getValue(); ++i) {
          TBOX_ASSERT((ratio_to_level_zero(i)
                       * ratio_to_level_zero((i + 1) % d_dim.getValue()) > 0)
             || (ratio_to_level_zero(i) == 1)
@@ -1277,7 +1277,7 @@ BaseGridGeometry::computePhysicalDomain(
    if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
       bool coarsen = false;
       IntVector tmp_rat = ratio_to_level_zero;
-      for (int id = 0; id < d_dim.getValue(); id++) {
+      for (int id = 0; id < d_dim.getValue(); ++id) {
          if (ratio_to_level_zero(id) < 0) {
             coarsen = true;
          }
@@ -1314,11 +1314,11 @@ BaseGridGeometry::computePhysicalDomain(
     * of ratio not equal to 1 must have the same sign.
     */
    int i;
-   for (i = 0; i < d_dim.getValue(); i++) {
+   for (i = 0; i < d_dim.getValue(); ++i) {
       TBOX_ASSERT(ratio_to_level_zero(i) != 0);
    }
    if (d_dim.getValue() > 1) {
-      for (i = 0; i < d_dim.getValue(); i++) {
+      for (i = 0; i < d_dim.getValue(); ++i) {
          TBOX_ASSERT((ratio_to_level_zero(i)
                       * ratio_to_level_zero((i + 1) % d_dim.getValue()) > 0)
             || (ratio_to_level_zero(i) == 1)
@@ -1332,7 +1332,7 @@ BaseGridGeometry::computePhysicalDomain(
    if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
       bool coarsen = false;
       IntVector tmp_rat = ratio_to_level_zero;
-      for (int id = 0; id < d_dim.getValue(); id++) {
+      for (int id = 0; id < d_dim.getValue(); ++id) {
          if (ratio_to_level_zero(id) < 0) coarsen = true;
          tmp_rat(id) = abs(ratio_to_level_zero(id));
       }
@@ -1358,11 +1358,11 @@ BaseGridGeometry::computePhysicalDomain(
     * of ratio not equal to 1 must have the same sign.
     */
    int i;
-   for (i = 0; i < d_dim.getValue(); i++) {
+   for (i = 0; i < d_dim.getValue(); ++i) {
       TBOX_ASSERT(ratio_to_level_zero(i) != 0);
    }
    if (d_dim.getValue() > 1) {
-      for (i = 0; i < d_dim.getValue(); i++) {
+      for (i = 0; i < d_dim.getValue(); ++i) {
          TBOX_ASSERT((ratio_to_level_zero(i)
                       * ratio_to_level_zero((i + 1) % d_dim.getValue()) > 0)
             || (ratio_to_level_zero(i) == 1)
@@ -1376,7 +1376,7 @@ BaseGridGeometry::computePhysicalDomain(
    if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
       bool coarsen = false;
       IntVector tmp_rat = ratio_to_level_zero;
-      for (int id = 0; id < d_dim.getValue(); id++) {
+      for (int id = 0; id < d_dim.getValue(); ++id) {
          if (ratio_to_level_zero(id) < 0) coarsen = true;
          tmp_rat(id) = abs(ratio_to_level_zero(id));
       }
@@ -1424,7 +1424,7 @@ BaseGridGeometry::setPhysicalDomain(
    d_number_blocks = number_blocks;
    LocalId local_id(0);
 
-   for (int b = 0; b < number_blocks; b++) {
+   for (int b = 0; b < number_blocks; ++b) {
       BlockId block_id(b);
 
       BoxContainer block_domain(domain, block_id);
@@ -1453,7 +1453,7 @@ BaseGridGeometry::setPhysicalDomain(
        * If necessary, reset periodic shift amounts using the new
        * bounding box.
        */
-      for (int id = 0; id < d_dim.getValue(); id++) {
+      for (int id = 0; id < d_dim.getValue(); ++id) {
          d_periodic_shift(id) = ((d_periodic_shift(id) == 0) ? 0 : 1);
       }
 
@@ -1467,7 +1467,7 @@ BaseGridGeometry::setPhysicalDomain(
 
             Box bounding_box(d_physical_domain.getBoundingBox());
 
-            for (int id = 0; id < d_dim.getValue(); id++) {
+            for (int id = 0; id < d_dim.getValue(); ++id) {
                d_periodic_shift(id) *= bounding_box.numberCells(id);
             }
 
@@ -1580,11 +1580,11 @@ BaseGridGeometry::getPeriodicShift(
     * all components not equal to 1 must have the same sign.
     */
    int k;
-   for (k = 0; k < d_dim.getValue(); k++) {
+   for (k = 0; k < d_dim.getValue(); ++k) {
       TBOX_ASSERT(ratio_to_level_zero(k) != 0);
    }
    if (d_dim.getValue() > 1) {
-      for (k = 0; k < d_dim.getValue(); k++) {
+      for (k = 0; k < d_dim.getValue(); ++k) {
          TBOX_ASSERT((ratio_to_level_zero(k)
                       * ratio_to_level_zero((k + 1) % d_dim.getValue()) > 0)
             || (ratio_to_level_zero(k) == 1)
@@ -1594,7 +1594,7 @@ BaseGridGeometry::getPeriodicShift(
 #endif
 
    IntVector periodic_shift(d_dim);
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       if (ratio_to_level_zero(i) > 0) {
          periodic_shift(i) = d_periodic_shift(i) * ratio_to_level_zero(i);
       } else {
@@ -1634,7 +1634,7 @@ BaseGridGeometry::checkPeriodicValidity(
    domain_box.grow(grow_direction);
    int i;
    Index min_index(d_dim, 0), max_index(d_dim, 0);
-   for (i = 0; i < d_dim.getValue(); i++) {
+   for (i = 0; i < d_dim.getValue(); ++i) {
       //set min/max of the bounding box
       min_index(i) = domain_box.lower(i);
       max_index(i) = domain_box.upper(i);
@@ -1648,7 +1648,7 @@ BaseGridGeometry::checkPeriodicValidity(
     * lower index of the box matches the bounding box min.  If
     * not, this direction is not a valid periodic direction.
     */
-   for (i = 0; i < d_dim.getValue(); i++) {
+   for (i = 0; i < d_dim.getValue(); ++i) {
       BoxContainer dup_domain2(domain);
       IntVector grow_one(d_dim, 0);
       grow_one(i) = 1;
@@ -1670,7 +1670,7 @@ BaseGridGeometry::checkPeriodicValidity(
       }
    }
 
-   for (i = 0; i < d_dim.getValue(); i++) {
+   for (i = 0; i < d_dim.getValue(); ++i) {
       if ((valid_direction(i) == 0) &&
           (d_periodic_shift(i) != 0)) {
          is_valid = false;
@@ -1712,7 +1712,7 @@ BaseGridGeometry::checkBoundaryBox(
     */
    IntVector box_size(d_dim);
 
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       box_size(i) = bbox.numberCells(i);
    }
 
@@ -1733,10 +1733,10 @@ BaseGridGeometry::checkBoundaryBox(
    if (!grow_patch_box.isSpatiallyEqual((grow_patch_box + bbox))) {
       bool valid_box = false;
       grow_patch_box = patch_box;
-      for (int j = 0; j < d_dim.getValue(); j++) {
+      for (int j = 0; j < d_dim.getValue(); ++j) {
          if (num_per_dirs == 0) {
 
-            for (int k = 1; k < d_dim.getValue(); k++) {
+            for (int k = 1; k < d_dim.getValue(); ++k) {
 
                grow_patch_box.grow((j + k) % d_dim.getValue(),
                   max_data_ghost_width((j + k) % d_dim.getValue()));
@@ -1745,7 +1745,7 @@ BaseGridGeometry::checkBoundaryBox(
 
          } else {
 
-            for (int k = 1; k < d_dim.getValue(); k++) {
+            for (int k = 1; k < d_dim.getValue(); ++k) {
 
                grow_patch_box.grow((j + k) % d_dim.getValue(),
                   2 * max_data_ghost_width((j + k) % d_dim.getValue()));
@@ -1794,7 +1794,7 @@ BaseGridGeometry::readBlockDataFromInput(
    std::string sing_name;
    std::string neighbor_name;
 
-   for (int bn = 0; true; bn++) {
+   for (int bn = 0; true; ++bn) {
       neighbor_name = "BlockNeighbors" + tbox::Utilities::intToString(bn);
 
       if (!input_db->keyExists(neighbor_name)) {
@@ -1823,7 +1823,7 @@ BaseGridGeometry::readBlockDataFromInput(
          Index b_index(d_dim);
          Index a_index(d_dim);
 
-         for (int p = 0; p < d_dim.getValue(); p++) {
+         for (int p = 0; p < d_dim.getValue(); ++p) {
             b_index(p) = b_array[p];
             a_index(p) = a_array[p];
          }
@@ -1895,7 +1895,7 @@ BaseGridGeometry::readBlockDataFromInput(
             std::map<BlockId, BoxContainer> nbr_ghost_buffer;
 
             for (std::map<BlockId, Neighbor>::iterator nei = nbr_map.begin();
-                 nei != nbr_map.end(); nei++) {
+                 nei != nbr_map.end(); ++nei) {
 
                const hier::BlockId& nbr_blk = nei->second.getBlockId();
 
@@ -1952,7 +1952,7 @@ BaseGridGeometry::readBlockDataFromInput(
                d_singularity[cur_block].coalesce();
 
                for (std::map<BlockId,Neighbor>::iterator nei = nbr_map.begin();
-                    nei != nbr_map.end(); nei++) {
+                    nei != nbr_map.end(); ++nei) {
 
                   const hier::BlockId& nbr_blk = nei->second.getBlockId();
                   if (encon_nbrs.find(nbr_blk.getBlockValue()) !=
@@ -1987,7 +1987,7 @@ BaseGridGeometry::readBlockDataFromInput(
                }
 
                for (std::map<BlockId,Neighbor>::iterator nei = nbr_map.begin();
-                    nei != nbr_map.end(); nei++) {
+                    nei != nbr_map.end(); ++nei) {
 
                   const hier::BlockId& nbr_blk = nei->second.getBlockId();
 
@@ -2158,7 +2158,7 @@ BaseGridGeometry::getDomainOutsideBlock(
    const std::map<BlockId,Neighbor>& nbr_map =
       d_block_neighbors[block_id.getBlockValue()];
    for (std::map<BlockId,Neighbor>::const_iterator nei = nbr_map.begin();
-        nei != nbr_map.end(); nei++) {
+        nei != nbr_map.end(); ++nei) {
       BoxContainer transformed_domain(nei->second.getTransformedDomain()); 
       domain_outside_block.spliceFront(transformed_domain);
    }
@@ -2717,7 +2717,7 @@ BaseGridGeometry::adjustMultiblockPatchLevelBoundaries(
 
       IntVector gcw(patch_level.getPatchDescriptor()->getMaxGhostWidth(d_dim));
 
-      for (int nb = 0; nb < d_number_blocks; nb++) {
+      for (int nb = 0; nb < d_number_blocks; ++nb) {
 
          const BlockId block_id(nb);
 
@@ -2728,7 +2728,7 @@ BaseGridGeometry::adjustMultiblockPatchLevelBoundaries(
 
          std::map<BlockId,Neighbor>& nbr_map = d_block_neighbors[nb];
          for (std::map<BlockId,Neighbor>::iterator nei = nbr_map.begin();
-              nei != nbr_map.end(); nei++) {
+              nei != nbr_map.end(); ++nei) {
             BoxContainer transformed_domain(nei->second.getTransformedDomain());
             pseudo_domain.spliceFront(transformed_domain);
          }
@@ -2789,14 +2789,14 @@ BaseGridGeometry::adjustBoundaryBoxesOnPatch(
 
       std::vector<BoundaryBox> codim_boundaries[SAMRAI::MAX_DIM_VAL];
       std::list<int> boundaries_in_sing[SAMRAI::MAX_DIM_VAL];
-      for (int codim = 2; codim <= d_dim.getValue(); codim++) {
+      for (int codim = 2; codim <= d_dim.getValue(); ++codim) {
 
          codim_boundaries[codim - 1] =
             patch.getPatchGeometry()->getCodimensionBoundaries(codim);
 
          int num_boxes = static_cast<int>(codim_boundaries[codim - 1].size());
 
-         for (int n = 0; n < num_boxes; n++) {
+         for (int n = 0; n < num_boxes; ++n) {
             Box border_box(codim_boundaries[codim - 1][n].getBox());
             BoxContainer sing_test_list(singularity);
             sing_test_list.intersectBoxes(border_box);
@@ -2806,15 +2806,15 @@ BaseGridGeometry::adjustBoundaryBoxesOnPatch(
          }
       }
 
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
          if (!boundaries_in_sing[i].empty()) {
             int old_size = static_cast<int>(boundaries[i].size());
             int nb = 0;
             for (std::list<int>::iterator b = boundaries_in_sing[i].begin();
-                 b != boundaries_in_sing[i].end(); b++) {
+                 b != boundaries_in_sing[i].end(); ++b) {
                boundaries[i].push_back(codim_boundaries[i][*b]);
                boundaries[i][old_size + nb].setIsMultiblockSingularity(true);
-               nb++;
+               ++nb;
             }
          }
          patch.getPatchGeometry()->setCodimensionBoundaries(boundaries[i],
@@ -2955,7 +2955,7 @@ BaseGridGeometry::printClassData(
       const BoxContainer& singularity_boxlist(getSingularityBoxContainer(block_id));
 
       for (std::map<BlockId,Neighbor>::const_iterator li = block_neighbors.begin();
-           li != block_neighbors.end(); li++) {
+           li != block_neighbors.end(); ++li) {
          const Neighbor& neighbor(li->second);
          stream << "      neighbor block " << neighbor.getBlockId() << ':';
          stream << " singularity = " << neighbor.isSingularity() << '\n';

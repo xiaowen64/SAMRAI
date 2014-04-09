@@ -90,7 +90,7 @@ public:
     * following example:
     *
     * \code
-    * for(int i = 0; i < d_elements; i++) {
+    * for(int i = 0; i < d_elements; ++i) {
     *       void *p = &d_objects[i];
     *       (void) new (p) TYPE(arg1, arg2);
     *    }

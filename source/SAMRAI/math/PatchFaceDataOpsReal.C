@@ -94,7 +94,7 @@ PatchFaceDataOpsReal<TYPE>::copyData(
 
    int dimVal = dst->getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       (dst->getArrayData(d)).copy(src->getArrayData(d), face_box);
    }

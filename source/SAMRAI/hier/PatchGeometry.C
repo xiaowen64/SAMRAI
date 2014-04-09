@@ -40,11 +40,11 @@ PatchGeometry::PatchGeometry(
     * of ratio not equal to 1 must have the same sign.
     */
    int i;
-   for (i = 0; i < d_dim.getValue(); i++) {
+   for (i = 0; i < d_dim.getValue(); ++i) {
       TBOX_ASSERT(ratio_to_level_zero(i) != 0);
    }
    if (d_dim.getValue() > 1) {
-      for (i = 0; i < d_dim.getValue(); i++) {
+      for (i = 0; i < d_dim.getValue(); ++i) {
          TBOX_ASSERT((ratio_to_level_zero(i)
                       * ratio_to_level_zero((i + 1) % d_dim.getValue()) > 0)
             || (ratio_to_level_zero(i) == 1)
@@ -56,8 +56,8 @@ PatchGeometry::PatchGeometry(
    d_has_regular_boundary = false;
    d_has_periodic_boundary = false;
 
-   for (int axis = 0; axis < d_dim.getValue(); axis++) {
-      for (int dir = 0; dir < 2; dir++) {
+   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
+      for (int dir = 0; dir < 2; ++dir) {
          d_touches_regular_bdry(axis, dir) = touches_regular_bdry(axis, dir);
 
          if (d_touches_regular_bdry(axis, dir)) {
@@ -81,7 +81,7 @@ PatchGeometry::getBoundaryFillBox(
    TBOX_ASSERT_OBJDIM_EQUALITY3(bbox, patch_box, gcw);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       TBOX_ASSERT(gcw(i) >= 0);
    }
 #endif
@@ -106,7 +106,7 @@ PatchGeometry::getBoundaryFillBox(
    if (!fill_box.empty()) {
 
       // Loop over codimension (a.k.a. boundary type)
-      for (int codim = 1; codim <= d_dim.getValue(); codim++) {
+      for (int codim = 1; codim <= d_dim.getValue(); ++codim) {
 
          // When we get a match on the boundary type
          if (bdry_type == codim) {
@@ -119,7 +119,7 @@ PatchGeometry::getBoundaryFillBox(
                blut->getDirections(location_index, codim);
 
             // For each direction, identify this as an upper or lower boundary.
-            for (int i = 0; i < codim; i++) {
+            for (int i = 0; i < codim; ++i) {
                if (blut->isUpper(location_index, codim, i)) {
                   fill_box.growUpper(dir[i], gcw(dir[i]) - 1);
                } else {
@@ -142,7 +142,7 @@ PatchGeometry::setCodimensionBoundaries(
    int codim)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int i = 0; i < static_cast<int>(bdry_boxes.size()); i++) {
+   for (int i = 0; i < static_cast<int>(bdry_boxes.size()); ++i) {
       TBOX_ASSERT(bdry_boxes[i].getBoundaryType() == codim);
    }
 #endif
@@ -152,7 +152,7 @@ PatchGeometry::setCodimensionBoundaries(
    d_patch_boundaries[codim - 1].clear();
    d_patch_boundaries[codim - 1].reserve(bdry_boxes.size());
 
-   for (int b = 0; b < static_cast<int>(bdry_boxes.size()); b++) {
+   for (int b = 0; b < static_cast<int>(bdry_boxes.size()); ++b) {
       d_patch_boundaries[codim - 1].push_back(bdry_boxes[b]);
    }
 }
@@ -161,7 +161,7 @@ void
 PatchGeometry::setBoundaryBoxesOnPatch(
    const std::vector<std::vector<BoundaryBox> >& bdry)
 {
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       setCodimensionBoundaries(bdry[i], i + 1);
    }
 }
@@ -175,11 +175,11 @@ PatchGeometry::printClassData(
    stream << "d_has_regular_boundary = "
           << d_has_regular_boundary << std::endl;
    stream << "Boundary boxes for patch..." << std::endl;
-   for (int d = 0; d < d_dim.getValue(); d++) {
+   for (int d = 0; d < d_dim.getValue(); ++d) {
       const int n = static_cast<int>(d_patch_boundaries[d].size());
       stream << "Boundary box array " << d << " has " << n << " boxes"
              << std::endl;
-      for (int i = 0; i < n; i++) {
+      for (int i = 0; i < n; ++i) {
          stream << "box " << i << " = "
                 << d_patch_boundaries[d][i].getBox() << std::endl;
       }

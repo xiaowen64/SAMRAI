@@ -99,12 +99,12 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
 
    boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dim.getValue(); ++d) {
 
       const std::vector<hier::BoundaryBox>& bbox =
          pgeom->getCodimensionBoundaries(d + 1);
 
-      for (int b = 0; b < static_cast<int>(bbox.size()); b++) {
+      for (int b = 0; b < static_cast<int>(bbox.size()); ++b) {
          if (!bbox[b].getIsMultiblockSingularity()) {
             hier::Box fill_box = pgeom->getBoundaryFillBox(bbox[b],
                   patch.getBox(),

@@ -169,7 +169,7 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
 
-   for (int axis = 0; axis < dim.getValue(); axis++) {
+   for (int axis = 0; axis < dim.getValue(); ++axis) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
 
       for (hier::BoxContainer::const_iterator b = boxes.begin();
@@ -179,7 +179,7 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
          TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, face_box);
 
          hier::Box fine_box(dim);
-         for (int i = 0; i < dim.getValue(); i++) {
+         for (int i = 0; i < dim.getValue(); ++i) {
             fine_box.lower((axis + i) % dim.getValue()) = face_box.lower(i);
             fine_box.upper((axis + i) % dim.getValue()) = face_box.upper(i);
          }
@@ -196,7 +196,7 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
          std::vector<double> diff0(cgbox.numberCells(0) + 2);
          pdat::FaceData<double> slope0(cgbox, 1, tmp_ghosts);
 
-         for (int d = 0; d < fdata->getDepth(); d++) {
+         for (int d = 0; d < fdata->getDepth(); ++d) {
             if ((dim == tbox::Dimension(1))) {
                SAMRAI_F77_FUNC(cartclinreffacedoub1d, CARTCLINREFFACEDOUB1D) (
                   ifirstc(0), ilastc(0),

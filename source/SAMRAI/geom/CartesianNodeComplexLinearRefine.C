@@ -161,7 +161,7 @@ CartesianNodeComplexLinearRefine::refine(
    const hier::Index ifirstf = fine_box.lower();
    const hier::Index ilastf = fine_box.upper();
 
-   for (int d = 0; d < fdata->getDepth(); d++) {
+   for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {
          SAMRAI_F77_FUNC(cartlinrefnodecplx1d, CARTLINREFNODECPLX1D) (ifirstc(0),
             ilastc(0),

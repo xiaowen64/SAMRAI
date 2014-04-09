@@ -128,7 +128,7 @@ BoxContainer::BoxContainer(
    d_ordered(false)
 {
    const int n = static_cast<int>(other.size());
-   for (int j = 0; j < n; j++) {
+   for (int j = 0; j < n; ++j) {
       pushBack(Box(other[j]));
    }
 }
@@ -168,7 +168,7 @@ BoxContainer::operator = (
    clear();
 
    const int n = static_cast<int>(rhs.size());
-   for (int j = 0; j < n; j++) {
+   for (int j = 0; j < n; ++j) {
       pushBack(Box(rhs[j]));
    }
    d_ordered = false;
@@ -447,7 +447,7 @@ BoxContainer::simplify()
                   const Index& bh = tryMe.upper();
 
                   combineDaPuppies = true;
-                  for (int du = d + 1; du < dim.getValue(); du++) {
+                  for (int du = d + 1; du < dim.getValue(); ++du) {
                      if ((al(du) != bl(du)) || (ah(du) != bh(du))) {
                         combineDaPuppies = false;
                         break;
@@ -457,7 +457,7 @@ BoxContainer::simplify()
                      if ((bl(d) > ah(d) + 1) || (bh(d) < al(d) - 1)) {
                         combineDaPuppies = false;
                      } else {
-                        for (int dl = 0; dl < d; dl++) {
+                        for (int dl = 0; dl < d; ++dl) {
                            if ((bl(dl) > ah(dl)) || (bh(dl) < al(dl))) {
                               combineDaPuppies = false;
                               break;
@@ -483,7 +483,7 @@ BoxContainer::simplify()
                   const Index& bh = tryMe.upper();
                   Index il = andMe.lower();
                   Index ih = andMe.upper();
-                  for (int dl = 0; dl < d; dl++) {
+                  for (int dl = 0; dl < d; ++dl) {
                      if (il(dl) < bl(dl)) {
                         il(dl) = bl(dl);
                      }
@@ -1283,7 +1283,7 @@ BoxContainer::burstBoxes(
 
    // Break bursty region against solid region along low directions first
 
-   for (int d = 0; d < dimension; d++) {
+   for (int d = 0; d < dimension; ++d) {
       if (bursth(d) > solidh(d)) {
          Index newl = burstl;
          newl(d) = solidh(d) + 1;
@@ -1330,7 +1330,7 @@ BoxContainer::burstBoxes(
 
    // Break bursty region against solid region along low directions first
 
-   for (int d = 0; d < direction; d++) {
+   for (int d = 0; d < direction; ++d) {
       if (bursth(d) > solidh(d)) {
          Index newl = burstl;
          newl(d) = solidh(d) + 1;

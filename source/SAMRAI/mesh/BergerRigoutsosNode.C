@@ -1412,11 +1412,11 @@ BergerRigoutsosNode::acceptOrSplitBox()
        * favor the direction with the greatest cut_margin.
        */
       int dim;
-      for (dim = 0; dim < d_common->getDim().getValue(); dim++) {
+      for (dim = 0; dim < d_common->getDim().getValue(); ++dim) {
          sorted_margins(dim) = dim;
       }
-      for (int d0 = 0; d0 < d_common->getDim().getValue() - 1; d0++) {
-         for (int d1 = d0 + 1; d1 < d_common->getDim().getValue(); d1++) {
+      for (int d0 = 0; d0 < d_common->getDim().getValue() - 1; ++d0) {
+         for (int d1 = d0 + 1; d1 < d_common->getDim().getValue(); ++d1) {
             if (cut_margin(sorted_margins(d0)) <
                 cut_margin(sorted_margins(d1))) {
                int tmp_dim = sorted_margins(d0);
@@ -1426,7 +1426,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
          }
       }
 #ifdef DEBUG_CHECK_ASSERTIONS
-      for (dim = 0; dim < d_common->getDim().getValue() - 1; dim++) {
+      for (dim = 0; dim < d_common->getDim().getValue() - 1; ++dim) {
          TBOX_ASSERT(cut_margin(sorted_margins(dim)) >=
                      cut_margin(sorted_margins(dim + 1)));
       }
@@ -1444,7 +1444,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
        * according to the cut_margin.
        */
       for (num_cuttable_dim = 0; num_cuttable_dim < d_common->getDim().getValue();
-           num_cuttable_dim++) {
+           ++num_cuttable_dim) {
          if (cut_margin(sorted_margins(num_cuttable_dim)) < 0) {
             break;
          }
@@ -1469,7 +1469,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
       hier::Index lft_hi(box_hi);
       hier::Index rht_lo(box_lo);
 
-      for (dir = 0; dir < d_common->getDim().getValue(); dir++) {
+      for (dir = 0; dir < d_common->getDim().getValue(); ++dir) {
          cut_dir = sorted_margins(dir);
          if (cut_margin(cut_dir) < 0) {
             continue;  // This direction is too small to cut.

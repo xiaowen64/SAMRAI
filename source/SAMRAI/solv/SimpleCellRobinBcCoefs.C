@@ -98,7 +98,7 @@ SimpleCellRobinBcCoefs::setBoundaries(
    if (boundary_type == "Dirichlet") {
       d_flux_id = -1;
       d_flag_id = -1;
-      for (k = 0; k < 2 * d_dim.getValue(); k++) {
+      for (k = 0; k < 2 * d_dim.getValue(); ++k) {
          d_bdry_types[k] = DIRICHLET;
       }
    } else if (boundary_type == "Neumann") {
@@ -110,7 +110,7 @@ SimpleCellRobinBcCoefs::setBoundaries(
                           << ") for Neumann boundary condition.\n");
       }
 #endif
-      for (k = 0; k < 2 * d_dim.getValue(); k++) {
+      for (k = 0; k < 2 * d_dim.getValue(); ++k) {
          d_bdry_types[k] = NEUMANN;
       }
       d_flux_id = fluxes;
@@ -133,11 +133,11 @@ SimpleCellRobinBcCoefs::setBoundaries(
       d_flux_id = fluxes;
       d_flag_id = flags;
       if (bdry_types != 0) {
-         for (k = 0; k < 2 * d_dim.getValue(); k++) {
+         for (k = 0; k < 2 * d_dim.getValue(); ++k) {
             d_bdry_types[k] = bdry_types[k];
          }
       } else {
-         for (k = 0; k < 2 * d_dim.getValue(); k++) {
+         for (k = 0; k < 2 * d_dim.getValue(); ++k) {
             d_bdry_types[k] = MIXED;
          }
       }

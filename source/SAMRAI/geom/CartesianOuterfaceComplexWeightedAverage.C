@@ -158,9 +158,9 @@ CartesianOuterfaceComplexWeightedAverage::coarsen(
    const hier::Index ifirstc = coarse_box.lower();
    const hier::Index ilastc = coarse_box.upper();
 
-   for (int d = 0; d < cdata->getDepth(); d++) {
+   for (int d = 0; d < cdata->getDepth(); ++d) {
       // loop over lower and upper outerface arrays
-      for (int i = 0; i < 2; i++) {
+      for (int i = 0; i < 2; ++i) {
          if ((dim == tbox::Dimension(1))) {
             SAMRAI_F77_FUNC(cartwgtavgoutfacecplx1d,
                CARTWGTAVGOUTFACECPLX1D) (ifirstc(0), ilastc(0),

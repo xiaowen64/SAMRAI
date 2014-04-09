@@ -69,7 +69,7 @@ StartupShutdownManager::registerHandler(
       s_manager_list_last[priority]->next = item;
    }
    s_manager_list_last[priority] = item;
-   s_num_manager_items[priority]++;
+   ++s_num_manager_items[priority];
 }
 
 void

@@ -26,7 +26,7 @@ FaceIndex::FaceIndex(
    d_axis(axis)
 {
    (*this)(0) = rhs(d_axis) + face;
-   for (int i = 1; i < getDim().getValue(); i++) {
+   for (int i = 1; i < getDim().getValue(); ++i) {
       (*this)(i) = rhs((d_axis + i) % getDim().getValue());
    }
 }
@@ -48,7 +48,7 @@ FaceIndex::toCell(
 {
    hier::Index index(getDim());
    index(d_axis) = (*this)(0) + face - 1;
-   for (int i = 1; i < getDim().getValue(); i++) {
+   for (int i = 1; i < getDim().getValue(); ++i) {
       index((d_axis + i) % getDim().getValue()) = (*this)(i);
    }
    return index;

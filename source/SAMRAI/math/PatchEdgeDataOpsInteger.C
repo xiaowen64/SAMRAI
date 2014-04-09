@@ -41,7 +41,7 @@ PatchEdgeDataOpsInteger::numberOfEntries(
    int retval = 0;
    const hier::Box ibox = box * data->getGhostBox();
    const int data_depth = data->getDepth();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       retval += ((pdat::EdgeGeometry::toEdgeBox(ibox, d).size()) * data_depth);
    }
    return retval;
@@ -103,7 +103,7 @@ PatchEdgeDataOpsInteger::copyData(
    TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = box.getDim().getValue();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       dst->getArrayData(d).copy(src->getArrayData(d),
          pdat::EdgeGeometry::toEdgeBox(box, d));
    }
@@ -119,7 +119,7 @@ PatchEdgeDataOpsInteger::abs(
    TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = box.getDim().getValue();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       d_array_ops.abs(dst->getArrayData(d),
          src->getArrayData(d),
          pdat::EdgeGeometry::toEdgeBox(box, d));

@@ -47,7 +47,7 @@ SideIndex::toCell(
 
    hier::Index index(dim);
 
-   for (int i = 0; i < dim.getValue(); i++) {
+   for (int i = 0; i < dim.getValue(); ++i) {
       index(i) = (*this)(i);
    }
 

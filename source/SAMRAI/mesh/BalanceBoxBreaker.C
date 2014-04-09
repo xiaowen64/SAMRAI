@@ -974,7 +974,7 @@ BalanceBoxBreaker::burstBox(
       tbox::plog << "      burstBox: " << bursty << " = " << solid;
       for (std::vector<hier::Box>::const_iterator bi = boxes.begin();
            bi != boxes.end();
-           bi++) {
+           ++bi) {
          tbox::plog << " + " << *bi;
       }
       tbox::plog << std::endl;
@@ -982,10 +982,10 @@ BalanceBoxBreaker::burstBox(
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (std::vector<hier::Box>::const_iterator bi = boxes.begin();
         bi != boxes.end();
-        bi++) {
+        ++bi) {
       for (std::vector<hier::Box>::const_iterator bj = boxes.begin();
            bj != boxes.end();
-           bj++) {
+           ++bj) {
          if (bi != bj) {
             TBOX_ASSERT(!bi->intersects(*bj));
          }
@@ -995,7 +995,7 @@ BalanceBoxBreaker::burstBox(
    hier::BoxContainer l2(solid);
    for (std::vector<hier::Box>::const_iterator bi = boxes.begin();
         bi != boxes.end();
-        bi++) {
+        ++bi) {
       l2.pushFront(*bi);
    }
    l1.removeIntersections(l2);

@@ -362,7 +362,7 @@ GriddingAlgorithm::makeCoarsestLevel(
     */
    if (!level_zero_exists) {
       for (int b = 0; b < d_hierarchy->getGridGeometry()->getNumberBlocks();
-           b++) {
+           ++b) {
          hier::BoxContainer domain_boxes(
             d_hierarchy->getGridGeometry()->getPhysicalDomain(),
             hier::BlockId(b));
@@ -985,7 +985,7 @@ GriddingAlgorithm::regridAllFinerLevels(
    TBOX_ASSERT(static_cast<int>(tag_buffer.size()) >= level_number + 1);
 #ifdef DEBUG_CHECK_ASSERTIONS
    int array_size = static_cast<int>(tag_buffer.size());
-   for (int i = 0; i < array_size; i++) {
+   for (int i = 0; i < array_size; ++i) {
       TBOX_ASSERT(tag_buffer[i] >= 0);
    }
 #endif
@@ -1018,7 +1018,7 @@ GriddingAlgorithm::regridAllFinerLevels(
        */
       if (d_tag_init_strategy->usesTimeIntegration(cycle, level_time)) {
          for (int ln = level_number;
-              ln <= d_hierarchy->getFinestLevelNumber(); ln++) {
+              ln <= d_hierarchy->getFinestLevelNumber(); ++ln) {
             if (d_hierarchy->levelCanBeRefined(ln)) {
                bool initial_time = false;
                double level_regrid_start_time = 0.;
@@ -1155,7 +1155,7 @@ GriddingAlgorithm::regridFinerLevel(
    TBOX_ASSERT(static_cast<int>(tag_buffer.size()) >= tag_ln + 1);
 #ifdef DEBUG_CHECK_ASSERTIONS
    int array_size = static_cast<int>(tag_buffer.size());
-   for (int i = 0; i < array_size; i++) {
+   for (int i = 0; i < array_size; ++i) {
       TBOX_ASSERT(tag_buffer[i] >= 0);
    }
 #endif
@@ -2089,7 +2089,7 @@ GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes) cons
         itr != domain_boxes.end(); ++itr, ++i) {
 
       hier::Box test_box = *itr;
-      for (int dir = 0; dir < dim.getValue(); dir++) {
+      for (int dir = 0; dir < dim.getValue(); ++dir) {
 
          if (test_box.numberCells(dir) < smallest_patch(dir)) {
 
@@ -3125,7 +3125,7 @@ GriddingAlgorithm::findRefinementBoxes(
 
          bool need_to_grow = false;
          hier::IntVector min_size(hier::IntVector::getOne(dim));
-         for (int i = 0; i < dim.getValue(); i++) {
+         for (int i = 0; i < dim.getValue(); ++i) {
             if (periodic_dirs(i)) {
                need_to_grow = true;
                min_size(i) = smallest_box_to_refine(i);
@@ -4230,7 +4230,7 @@ GriddingAlgorithm::getGriddingParameters(
          d_hierarchy->getGridGeometry()->getPeriodicShift(hier::IntVector::getOne(
                dim)));
 
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dim.getValue(); ++i) {
          if (periodic_dirs(i)) {
             smallest_patch(i) =
                tbox::MathUtilities<int>::Max(smallest_patch(i), max_ghosts(i));
@@ -4374,7 +4374,7 @@ GriddingAlgorithm::printClassData(
 {
    os << "\nGriddingAlgorithm::printClassData..." << std::endl;
    os << "   static data members:" << std::endl;
-   for (int d = 0; d < SAMRAI::MAX_DIM_VAL; d++) {
+   for (int d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       os << "      (*s_tag_indx)[" << d << "] = "
          << (*s_tag_indx)[d] << std::endl;
       os << "      (*s_buf_tag_indx)[" << d << "] = "

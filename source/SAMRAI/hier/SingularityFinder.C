@@ -405,11 +405,11 @@ SingularityFinder::connect(const BoxId& id_a,
 void
 SingularityFinder::findBoundaryFaces()
 {
-   for (int iblock = 0; iblock < static_cast<int>(d_blocks.size()); iblock++) {
+   for (int iblock = 0; iblock < static_cast<int>(d_blocks.size()); ++iblock) {
 
       boost::shared_ptr<Block>& block = d_blocks[iblock];
 
-      for (int iface = 0; iface < 2*d_dim.getValue(); iface++) {
+      for (int iface = 0; iface < 2*d_dim.getValue(); ++iface) {
 
          boost::shared_ptr<Face>& face = block->d_face[iface];
 
@@ -421,7 +421,7 @@ SingularityFinder::findBoundaryFaces()
             face->d_blocks.insert(iblock);
 
             if (d_dim.getValue() > 2) {
-               for (int iedge = 0; iedge < 4; iedge++) {
+               for (int iedge = 0; iedge < 4; ++iedge) {
                   int edge_idx = s_face_edges[iface][iedge];
                   if (!block->d_edge[edge_idx]) {
                      boost::shared_ptr<Edge> edge = boost::make_shared<Edge>();
@@ -490,7 +490,7 @@ SingularityFinder::findCoincidentEdges(
 
    int nedges_per_face = 4;
 
-   for (int i = 0; i < nedges_per_face; i++) {
+   for (int i = 0; i < nedges_per_face; ++i) {
 
       int edgea_idx = s_face_edges[facea][i];
       int edgeb_idx = -1;
@@ -567,7 +567,7 @@ SingularityFinder::findCoincidentEdges(
          TBOX_ASSERT(b_edge_dirs[d] >= 1);
          if (b_edge_dirs[d] == b_box_size[d]) {
             b_edge_dirs[d] = 0;
-            num_zero_dirs++;
+            ++num_zero_dirs;
          } else if (b_edge.lower()(d) == b_node_box.lower(d)) {
             b_edge_dirs[d] = -1;
          } else if (b_edge.upper()(d) == b_node_box.upper(d)) {
@@ -657,7 +657,7 @@ SingularityFinder::findCoincidentEdges(
             TBOX_ASSERT(b_edge_dirs[d] >= 1);
             if (b_edge_dirs[d] == b_box_size[d]) {
                b_edge_dirs[d] = 0;
-               num_zero_dirs++;
+               ++num_zero_dirs;
             } else if (b_edge.lower()(d) == b_node_box.lower(d)) {
                b_edge_dirs[d] = -1;
             } else if (b_edge.upper()(d) == b_node_box.upper(d)) {
@@ -766,7 +766,7 @@ SingularityFinder::findCoincidentPoints(
 
    int npoints_per_face = 1 << (d_dim.getValue()-1); 
 
-   for (int i = 0; i < npoints_per_face; i++) {
+   for (int i = 0; i < npoints_per_face; ++i) {
 
       int pointa_idx = s_face_nodes[facea][i];
 

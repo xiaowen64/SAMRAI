@@ -129,7 +129,7 @@ Timer::start()
       }
       d_is_running = true;
 
-      d_accesses++;
+      ++d_accesses;
 
       Clock::timestamp(d_user_start_total,
          d_system_start_total,

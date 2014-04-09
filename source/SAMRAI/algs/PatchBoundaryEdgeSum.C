@@ -57,7 +57,7 @@ PatchBoundaryEdgeSum::PatchBoundaryEdgeSum(
 
    d_object_name = object_name;
 
-   s_instance_counter++;
+   ++s_instance_counter;
 }
 
 /*
@@ -76,11 +76,11 @@ PatchBoundaryEdgeSum::~PatchBoundaryEdgeSum()
    if (s_instance_counter == 0) {
       const int arr_length_depth =
          static_cast<int>(s_oedge_src_id_array.size());
-      for (int id = 0; id < arr_length_depth; id++) {
+      for (int id = 0; id < arr_length_depth; ++id) {
          const int arr_length_nvar =
             static_cast<int>(s_oedge_src_id_array[id].size());
 
-         for (int iv = 0; iv < arr_length_nvar; iv++) {
+         for (int iv = 0; iv < arr_length_nvar; ++iv) {
 
             if (s_oedge_src_id_array[id][iv] >= 0) {
                hier::VariableDatabase::getDatabase()->
@@ -150,7 +150,7 @@ PatchBoundaryEdgeSum::registerSum(
 
    const int reg_sum_id = d_num_reg_sum;
 
-   d_num_reg_sum++;
+   ++d_num_reg_sum;
 
    d_user_edge_data_id.resize(d_num_reg_sum);
    d_user_edge_data_id[reg_sum_id] = ID_UNDEFINED;
@@ -173,7 +173,7 @@ PatchBoundaryEdgeSum::registerSum(
       const int new_size = array_by_depth_size;
 
       d_num_registered_data_by_depth.resize(new_size);
-      for (int i = old_size; i < new_size; i++) {
+      for (int i = old_size; i < new_size; ++i) {
          d_num_registered_data_by_depth[i] = 0;
       }
    }
@@ -194,7 +194,7 @@ PatchBoundaryEdgeSum::registerSum(
 
       s_oedge_src_id_array[data_depth].resize(new_size);
       s_oedge_dst_id_array[data_depth].resize(new_size);
-      for (int i = old_size; i < new_size; i++) {
+      for (int i = old_size; i < new_size; ++i) {
          s_oedge_src_id_array[data_depth][i] = ID_UNDEFINED;
          s_oedge_dst_id_array[data_depth][i] = ID_UNDEFINED;
       }
@@ -273,7 +273,7 @@ PatchBoundaryEdgeSum::setupSum(
    // Communication algorithm for summing outeredge values on a level
    xfer::RefineAlgorithm single_level_sum_algorithm;
 
-   for (int i = 0; i < d_num_reg_sum; i++) {
+   for (int i = 0; i < d_num_reg_sum; ++i) {
       single_level_sum_algorithm.registerRefine(d_oedge_dst_id[i],  // dst data
          d_oedge_src_id[i],                                         // src data
          d_oedge_dst_id[i],                                         // scratch data
@@ -333,7 +333,7 @@ PatchBoundaryEdgeSum::doLevelSum(
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       int array_size = static_cast<int>(d_user_edge_data_id.size());
-      for (int i = 0; i < array_size; i++) {
+      for (int i = 0; i < array_size; ++i) {
          boost::shared_ptr<pdat::EdgeData<double> > edge_data(
             BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
                patch->getPatchData(d_user_edge_data_id[i])));
@@ -356,7 +356,7 @@ PatchBoundaryEdgeSum::doLevelSum(
       const boost::shared_ptr<hier::Patch>& patch = *ip2;
 
       int array_size = static_cast<int>(d_user_edge_data_id.size());
-      for (int i = 0; i < array_size; i++) {
+      for (int i = 0; i < array_size; ++i) {
          boost::shared_ptr<pdat::EdgeData<double> > edge_data(
             BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
                patch->getPatchData(d_user_edge_data_id[i])));

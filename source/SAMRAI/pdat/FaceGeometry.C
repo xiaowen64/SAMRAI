@@ -108,7 +108,7 @@ FaceGeometry::toFaceBox(
       const int x = face_normal;
       face_box.lower(0) = box.lower(x);
       face_box.upper(0) = box.upper(x) + 1;
-      for (int i = 1; i < dim.getValue(); i++) {
+      for (int i = 1; i < dim.getValue(); ++i) {
          const int y = (face_normal + i) % dim.getValue();
          face_box.lower(i) = box.lower(y);
          face_box.upper(i) = box.upper(y);
@@ -162,7 +162,7 @@ FaceGeometry::computeDestinationBoxes(
          one_vector));
 
    if (!quick_check.empty()) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          const hier::Box dst_face(toFaceBox(dst_ghost, d));
          const hier::Box src_face(toFaceBox(src_shift, d));
          const hier::Box fill_face(toFaceBox(fill_box, d));
@@ -247,7 +247,7 @@ FaceGeometry::setUpOverlap(
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          hier::Box face_box(FaceGeometry::toFaceBox(*b, d));
          dst_boxes[d].pushBack(face_box);
       }
@@ -284,7 +284,7 @@ FaceGeometry::transform(
          transformation.getRotation();
 
       hier::Box cell_box(dim);
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          int cell_dim = (normal_direction + d) % dim.getValue();
          cell_box.lower() (cell_dim) = box.lower() (d);
          cell_box.upper() (cell_dim) = box.upper() (d);
@@ -407,7 +407,7 @@ FaceGeometry::transform(
          }
       }
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          int cell_dim = (normal_direction + d) % dim.getValue();
          box.lower() (d) = cell_box.lower() (cell_dim);
          box.upper() (d) = cell_box.upper() (cell_dim);
@@ -444,11 +444,11 @@ FaceGeometry::transform(
    const int normal_direction = index.getAxis();
 
    FaceIndex rotate_index(dim);
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dim.getValue(); ++d) {
       int rotate_dim = (normal_direction + d) % dim.getValue();
       rotate_index(rotate_dim) = index(d);
       if (d != 0 && rotate_index(rotate_dim) >= 0) {
-         rotate_index(rotate_dim)++;
+         ++rotate_index(rotate_dim);
       }
    }
    rotate_index.setAxis(normal_direction);
@@ -462,7 +462,7 @@ FaceGeometry::transform(
       if (rotation_num) {
 
          hier::Index tmp_index(dim);
-         for (int r = 0; r < rotation_num; r++) {
+         for (int r = 0; r < rotation_num; ++r) {
             tmp_index = rotate_index;
             rotate_index(0) = tmp_index(1);
             rotate_index(1) = -tmp_index(0);
@@ -592,14 +592,14 @@ FaceGeometry::transform(
       new_normal_direction = rotate_index.getAxis();
    }
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dim.getValue(); ++d) {
       if (d != new_normal_direction && rotate_index(d) > 0) {
          rotate_index(d)--;
       }
    }
 
    rotate_index += transformation.getOffset();
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dim.getValue(); ++d) {
       int rotate_dim = (new_normal_direction + d) % dim.getValue();
       index(d) = rotate_index(rotate_dim);
    }
@@ -618,7 +618,7 @@ FaceGeometry::rotateAboutAxis(FaceIndex& index,
    const int b = (axis + 2) % dim.getValue();
 
    FaceIndex tmp_index(dim);
-   for (int j = 0; j < num_rotations; j++) {
+   for (int j = 0; j < num_rotations; ++j) {
       tmp_index = index;
       index(a) = tmp_index(b);
       index(b) = -tmp_index(a);
@@ -626,7 +626,7 @@ FaceGeometry::rotateAboutAxis(FaceIndex& index,
 
    int new_normal_direction = index.getAxis();
    if (new_normal_direction != axis) {
-      for (int j = 0; j < num_rotations; j++) {
+      for (int j = 0; j < num_rotations; ++j) {
          new_normal_direction = new_normal_direction == a ? b : a;
       }
    }

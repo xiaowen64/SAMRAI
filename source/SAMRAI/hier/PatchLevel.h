@@ -212,7 +212,7 @@ public:
       const int level)
    {
       d_level_number = level;
-      for (Iterator p(begin()); p != end(); p++) {
+      for (Iterator p(begin()); p != end(); ++p) {
          p->setPatchLevelNumber(d_level_number);
       }
    }
@@ -274,7 +274,7 @@ public:
       bool in_hierarchy)
    {
       d_in_hierarchy = in_hierarchy;
-      for (Iterator p(begin()); p != end(); p++) {
+      for (Iterator p(begin()); p != end(); ++p) {
          p->setPatchInHierarchy(d_in_hierarchy);
       }
    }
@@ -763,7 +763,7 @@ public:
       const int id,
       const double timestamp = 0.0)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->allocatePatchData(id, timestamp);
       }
    }
@@ -780,7 +780,7 @@ public:
       const ComponentSelector& components,
       const double timestamp = 0.0)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->allocatePatchData(components, timestamp);
       }
    }
@@ -817,7 +817,7 @@ public:
    deallocatePatchData(
       const int id)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->deallocatePatchData(id);
       }
    }
@@ -834,7 +834,7 @@ public:
    deallocatePatchData(
       const ComponentSelector& components)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->deallocatePatchData(components);
       }
    }
@@ -861,7 +861,7 @@ public:
       const double timestamp,
       const int id)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->setTime(timestamp, id);
       }
    }
@@ -878,7 +878,7 @@ public:
       const double timestamp,
       const ComponentSelector& components)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->setTime(timestamp, components);
       }
    }
@@ -892,7 +892,7 @@ public:
    setTime(
       const double timestamp)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->setTime(timestamp);
       }
    }

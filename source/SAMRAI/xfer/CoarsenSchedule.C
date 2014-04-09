@@ -129,7 +129,7 @@ CoarsenSchedule::CoarsenSchedule(
    const hier::IntVector& fine(d_fine_level->getRatioToLevelZero());
    const hier::IntVector& crse(d_crse_level->getRatioToLevelZero());
    int i;
-   for (i = 0; i < dim.getValue(); i++) {
+   for (i = 0; i < dim.getValue(); ++i) {
       if (fine(i) > 1) {
          d_ratio_between_levels(i) = fine(i) / crse(i);
       } else {
@@ -139,11 +139,11 @@ CoarsenSchedule::CoarsenSchedule(
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (i = 0; i < dim.getValue(); i++) {
+   for (i = 0; i < dim.getValue(); ++i) {
       TBOX_ASSERT(d_ratio_between_levels(i) != 0);
    }
    if (dim > tbox::Dimension(1))
-      for (i = 0; i < dim.getValue(); i++) {
+      for (i = 0; i < dim.getValue(); ++i) {
          if (d_ratio_between_levels(i)
              * d_ratio_between_levels((i + 1) % dim.getValue()) < 0) {
             TBOX_ASSERT((d_ratio_between_levels(i) == 1) ||
@@ -404,7 +404,7 @@ CoarsenSchedule::setupRefineAlgorithm()
 
       d_precoarsen_refine_algorithm.reset(new RefineAlgorithm());
 
-      for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
+      for (size_t ici = 0; ici < d_number_coarsen_items; ++ici) {
          const int src_id = d_coarsen_items[ici]->d_src;
          d_precoarsen_refine_algorithm->registerRefine(src_id,
             src_id,
@@ -498,7 +498,7 @@ CoarsenSchedule::generateScheduleNSquared()
 
    hier::BoxContainer::const_iterator crse_itr_dp =
       d_crse_level->getBoxes().begin();
-   for (int dp = 0; dp < dst_npatches; dp++, ++crse_itr_dp) {
+   for (int dp = 0; dp < dst_npatches; ++dp, ++crse_itr_dp) {
 
       const hier::Box dst_box(*crse_itr_dp,
                               hier::LocalId(dp),
@@ -506,7 +506,7 @@ CoarsenSchedule::generateScheduleNSquared()
 
       hier::BoxContainer::const_iterator crse_itr_sp =
          d_temp_crse_level->getBoxes().begin();
-      for (int sp = 0; sp < src_npatches; sp++, ++crse_itr_sp) {
+      for (int sp = 0; sp < src_npatches; ++sp, ++crse_itr_sp) {
 
          const hier::Box src_box(
             *crse_itr_sp,
@@ -694,7 +694,7 @@ CoarsenSchedule::getMaxGhostsToGrow() const
     */
    hier::IntVector gcw(dim, 1);
 
-   for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
+   for (size_t ici = 0; ici < d_number_coarsen_items; ++ici) {
 
       const int src_id = d_coarsen_items[ici]->d_src;
       gcw.max(pd->getPatchDataFactory(src_id)->getGhostCellWidth());
@@ -826,7 +826,7 @@ CoarsenSchedule::constructScheduleTransactions(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (grid_geometry->areSingularityNeighbors(dst_block_id, src_block_id)) {
-         for (int nc = 0; nc < num_equiv_classes; nc++) {
+         for (int nc = 0; nc < num_equiv_classes; ++nc) {
             const CoarsenClasses::Data& rep_item =
                d_coarsen_classes->getClassRepresentative(nc);
 
@@ -842,7 +842,7 @@ CoarsenSchedule::constructScheduleTransactions(
    std::vector<boost::shared_ptr<tbox::Transaction> > transactions(
       num_coarsen_items);
 
-   for (int nc = 0; nc < num_equiv_classes; nc++) {
+   for (int nc = 0; nc < num_equiv_classes; ++nc) {
 
       if ( s_extra_debug ) {
          tbox::plog << " equivalent class " << nc << "/" << num_equiv_classes << std::endl;
@@ -923,7 +923,7 @@ CoarsenSchedule::constructScheduleTransactions(
             tbox::plog << " Overlap FINITE." << std::endl;
          }
          for (std::list<int>::iterator l(d_coarsen_classes->getIterator(nc));
-              l != d_coarsen_classes->getIteratorEnd(nc); l++) {
+              l != d_coarsen_classes->getIteratorEnd(nc); ++l) {
             const CoarsenClasses::Data& item =
                d_coarsen_classes->getCoarsenItem(*l);
             TBOX_ASSERT(item.d_class_index == nc);
@@ -946,7 +946,7 @@ CoarsenSchedule::constructScheduleTransactions(
 
    }  // iterate over all coarsen equivalence classes
 
-   for (int i = 0; i < num_coarsen_items; i++) {
+   for (int i = 0; i < num_coarsen_items; ++i) {
       if (transactions[i]) {
          d_schedule->appendTransaction(transactions[i]);
       }
@@ -987,7 +987,7 @@ CoarsenSchedule::coarsenSourceData(
             *fine_patch, box, d_ratio_between_levels);
       }
 
-      for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
+      for (size_t ici = 0; ici < d_number_coarsen_items; ++ici) {
          const CoarsenClasses::Data * const crs_item =
             d_coarsen_items[ici];
          if (crs_item->d_opcoarsen) {
@@ -1032,7 +1032,7 @@ CoarsenSchedule::setCoarsenItems(
     */
    d_sources.clrAllFlags();
 
-   for (unsigned int nc = 0; nc < d_number_coarsen_items; nc++) {
+   for (unsigned int nc = 0; nc < d_number_coarsen_items; ++nc) {
       const CoarsenClasses::Data& item = d_coarsen_classes->getCoarsenItem(nc);
       d_sources.setFlag(item.d_src);
    }
@@ -1045,10 +1045,10 @@ CoarsenSchedule::setCoarsenItems(
       new const CoarsenClasses::Data *[d_number_coarsen_items];
 
    int ircount = 0;
-   for (unsigned int nc = 0; nc < d_number_coarsen_items; nc++) {
+   for (unsigned int nc = 0; nc < d_number_coarsen_items; ++nc) {
       d_coarsen_classes->getCoarsenItem(nc).d_tag = ircount;
       d_coarsen_items[ircount] = &(d_coarsen_classes->getCoarsenItem(nc));
-      ircount++;
+      ++ircount;
    }
 
 }
@@ -1083,7 +1083,7 @@ CoarsenSchedule::initialCheckCoarsenClassItems() const
       user_gcw = d_coarsen_patch_strategy->getCoarsenOpStencilWidth(dim);
    }
 
-   for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
+   for (size_t ici = 0; ici < d_number_coarsen_items; ++ici) {
 
       const CoarsenClasses::Data * const crs_item = d_coarsen_items[ici];
 
@@ -1153,7 +1153,7 @@ void
 CoarsenSchedule::clearCoarsenItems()
 {
    if (d_coarsen_items) {
-      for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
+      for (size_t ici = 0; ici < d_number_coarsen_items; ++ici) {
          d_coarsen_items[ici] = 0;
       }
       delete[] d_coarsen_items;

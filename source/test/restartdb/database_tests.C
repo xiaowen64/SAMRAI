@@ -364,7 +364,7 @@ void testDatabaseContents(
                  << "  , Expected = " << arraydb_dcomplexArray.size() << endl;
       ++number_of_failures;
    }
-   for (i = 0; i < tsize; i++) {
+   for (i = 0; i < tsize; ++i) {
       if (tarraydb_dcomplexArray[i] != arraydb_dcomplexArray[i]) {
          tbox::perr << "FAILED: - Test #4b-" << tag
                     << ": `Array Entries' database"
@@ -382,7 +382,7 @@ void testDatabaseContents(
                  << "  , Expected = " << arraydb_boolArray.size() << endl;
       ++number_of_failures;
    }
-   for (i = 0; i < tsize; i++) {
+   for (i = 0; i < tsize; ++i) {
       if (tarraydb_boolArray[i] != arraydb_boolArray[i]) {
          tbox::perr << "FAILED: - Test #4d-" << tag
                     << ": `Array Entries' database"
@@ -401,7 +401,7 @@ void testDatabaseContents(
                  << "  , Expected = " << arraydb_intArray.size() << endl;
       ++number_of_failures;
    }
-   for (i = 0; i < tsize; i++) {
+   for (i = 0; i < tsize; ++i) {
       if (tarraydb_intArray[i] != arraydb_intArray[i]) {
          tbox::perr << "FAILED: - Test #4f-" << tag
                     << ": `Array Entries' database"
@@ -419,7 +419,7 @@ void testDatabaseContents(
                  << "  , Expected = " << arraydb_stringArray[i] << endl;
       ++number_of_failures;
    }
-   for (i = 0; i < tsize; i++) {
+   for (i = 0; i < tsize; ++i) {
       if (tarraydb_stringArray[i] != arraydb_stringArray[i]) {
          tbox::perr << "FAILED: - Test #4h-" << tag
                     << ": `Array Entries' database"
@@ -437,7 +437,7 @@ void testDatabaseContents(
                  << "  , Expected = " << arraydb_floatArray.size() << endl;
       ++number_of_failures;
    }
-   for (i = 0; i < tsize; i++) {
+   for (i = 0; i < tsize; ++i) {
       if (!tbox::MathUtilities<float>::equalEps(tarraydb_floatArray[i],
              arraydb_floatArray[i])) {
          tbox::perr << "FAILED: - Test #4j-" << tag
@@ -457,7 +457,7 @@ void testDatabaseContents(
                  << "  , Expected = " << arraydb_doubleArray.size() << endl;
       ++number_of_failures;
    }
-   for (i = 0; i < tsize; i++) {
+   for (i = 0; i < tsize; ++i) {
       if (!tbox::MathUtilities<double>::equalEps(tarraydb_doubleArray[i],
              arraydb_doubleArray[i])) {
          tbox::perr << "FAILED: - Test #4l-" << tag
@@ -475,7 +475,7 @@ void testDatabaseContents(
                  << "  , Expected = " << arraydb_charArray.size() << endl;
       ++number_of_failures;
    }
-   for (i = 0; i < tsize; i++) {
+   for (i = 0; i < tsize; ++i) {
       if (tarraydb_charArray[i] != arraydb_charArray[i]) {
          tbox::perr << "FAILED: - Test #4l-" << tag
                     << ": `Array Entries' database"
@@ -493,7 +493,7 @@ void testDatabaseContents(
                  << "  , Expected = " << arraydb_boxArray.size() << endl;
       ++number_of_failures;
    }
-   for (i = 0; i < tsize; i++) {
+   for (i = 0; i < tsize; ++i) {
       if (!(tarraydb_boxVector[i] == arraydb_boxArray[i])) {
          tbox::perr << "FAILED: - Test #4p-" << tag
                     << ": `Array Entries' database"

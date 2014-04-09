@@ -403,9 +403,9 @@ HDFDatabase::getAllKeys()
 
    int k = 0;
    for (std::list<KeyData>::iterator i = d_keydata.begin();
-        i != d_keydata.end(); i++) {
+        i != d_keydata.end(); ++i) {
       tmp_keys[k] = i->d_key;
-      k++;
+      ++k;
    }
 
    cleanupKeySearch();
@@ -1139,7 +1139,7 @@ HDFDatabase::putCharArray(
       errf = H5Tset_strpad(atype, H5T_STR_NULLTERM);
       TBOX_ASSERT(errf >= 0);
 
-      for (size_t i = 0; i < nelements; i++) {
+      for (size_t i = 0; i < nelements; ++i) {
          local_buf[i] = data[i];
       }
 
@@ -1991,13 +1991,13 @@ HDFDatabase::putStringArray(
       int maxlen = 0;
       int current, data_size;
       size_t i;
-      for (i = 0; i < nelements; i++) {
+      for (i = 0; i < nelements; ++i) {
          current = static_cast<int>(data[i].size());
          if (current > maxlen) maxlen = current;
       }
 
       char* local_buf = new char[nelements * (maxlen + 1)];
-      for (i = 0; i < nelements; i++) {
+      for (i = 0; i < nelements; ++i) {
          strcpy(&local_buf[i * (maxlen + 1)], data[i].c_str());
          data_size = static_cast<int>(data[i].size());
          if (data_size < maxlen) {
@@ -2108,7 +2108,7 @@ HDFDatabase::getStringVector(
       errf = H5Dread(dset, dtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, local_buf);
       TBOX_ASSERT(errf >= 0);
 
-      for (int i = 0; i < static_cast<int>(nsel); i++) {
+      for (int i = 0; i < static_cast<int>(nsel); ++i) {
          std::string* locPtr = &stringArray[i];
          *locPtr = &local_buf[i * dsize];
       }
@@ -2203,7 +2203,7 @@ HDFDatabase::printClassData(
    }
 
    for (std::list<KeyData>::iterator i = d_keydata.begin();
-        i != d_keydata.end(); i++) {
+        i != d_keydata.end(); ++i) {
       int t = i->d_type;
       switch (MathUtilities<int>::Abs(t)) {
          case KEY_DATABASE: {
@@ -2407,7 +2407,7 @@ HDFDatabase::insertArray(
 
 #else
    size_t newdim[H5S_MAX_RANK];
-   for (int i = 0; i < ndims; i++) {
+   for (int i = 0; i < ndims; ++i) {
       newdim[i] = dim[i];
    }
 

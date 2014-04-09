@@ -343,7 +343,7 @@ HyperbolicLevelIntegrator::initializeLevelData(
 
             patch->setPatchData(old_indx, patch->getPatchData(cur_indx));
 
-            time_dep_var++;
+            ++time_dep_var;
          }
 
       }
@@ -398,7 +398,7 @@ HyperbolicLevelIntegrator::resetHierarchyConfiguration(
       && (coarsest_level <= finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int ln0 = 0; ln0 <= finest_level; ln0++) {
+   for (int ln0 = 0; ln0 <= finest_level; ++ln0) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln0));
    }
 #endif
@@ -408,7 +408,7 @@ HyperbolicLevelIntegrator::resetHierarchyConfiguration(
    d_bdry_sched_advance.resize(finest_hiera_level + 1);
    d_bdry_sched_advance_new.resize(finest_hiera_level + 1);
 
-   for (int ln = coarsest_level; ln <= finest_hiera_level; ln++) {
+   for (int ln = coarsest_level; ln <= finest_hiera_level; ++ln) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       t_advance_bdry_fill_create->start();
@@ -893,7 +893,7 @@ HyperbolicLevelIntegrator::getMaxFinerLevelDt(
 
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int id = 0; id < ratio.getDim().getValue(); id++) {
+   for (int id = 0; id < ratio.getDim().getValue(); ++id) {
       TBOX_ASSERT(ratio(id) > 0);
    }
 #endif
@@ -1262,7 +1262,7 @@ HyperbolicLevelIntegrator::standardLevelSynchronization(
    TBOX_ASSERT(hierarchy);
 
    std::vector<double> old_times(finest_level - coarsest_level + 1);
-   for (int i = coarsest_level; i <= finest_level; i++) {
+   for (int i = coarsest_level; i <= finest_level; ++i) {
       old_times[i] = old_time;
    }
    standardLevelSynchronization(hierarchy, coarsest_level, finest_level,
@@ -1283,7 +1283,7 @@ HyperbolicLevelIntegrator::standardLevelSynchronization(
       && (finest_level <= hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(static_cast<int>(old_times.size()) >= finest_level);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int ln = coarsest_level; ln < finest_level; ln++) {
+   for (int ln = coarsest_level; ln < finest_level; ++ln) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln));
       TBOX_ASSERT(sync_time >= old_times[ln]);
    }
@@ -1355,7 +1355,7 @@ HyperbolicLevelIntegrator::synchronizeNewLevels(
       && (coarsest_level < finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int ln = coarsest_level; ln <= finest_level; ln++) {
+   for (int ln = coarsest_level; ln <= finest_level; ++ln) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln));
    }
 #endif
@@ -1579,7 +1579,7 @@ HyperbolicLevelIntegrator::resetTimeDependentData(
 
          patch->deallocatePatchData(new_indx);
 
-         time_dep_var++;
+         ++time_dep_var;
 
       }
 
@@ -2120,7 +2120,7 @@ HyperbolicLevelIntegrator::preprocessFluxData(
                   fsum_data->fillAll(0.0);
                }
 
-               fs_var++;
+               ++fs_var;
             }
          }
 
@@ -2230,9 +2230,9 @@ HyperbolicLevelIntegrator::postprocessFluxData(
                flux_ghosts = sflux_data->getGhostCellWidth();
             }
 
-            for (int d = 0; d < ddepth; d++) {
+            for (int d = 0; d < ddepth; ++d) {
                // loop over lower and upper parts of outer face/side arrays
-               for (int ifs = 0; ifs < 2; ifs++) {
+               for (int ifs = 0; ifs < 2; ++ifs) {
                   if (level->getDim() == tbox::Dimension(1)) {
                      SAMRAI_F77_FUNC(upfluxsum1d, UPFLUXSUM1D) (ilo(0), ihi(0),
                         flux_ghosts(0),
@@ -2339,8 +2339,8 @@ HyperbolicLevelIntegrator::postprocessFluxData(
                }  // loop over lower and upper sides/faces
             }  // loop over depth
 
-            flux_var++;
-            fluxsum_var++;
+            ++flux_var;
+            ++fluxsum_var;
 
          }  // loop over flux variables
 
@@ -2381,7 +2381,7 @@ HyperbolicLevelIntegrator::copyTimeDependentData(
             patch->getPatchData(*time_dep_var, dst_context));
 
          dst_data->copy(*src_data);
-         time_dep_var++;
+         ++time_dep_var;
       }
 
    }

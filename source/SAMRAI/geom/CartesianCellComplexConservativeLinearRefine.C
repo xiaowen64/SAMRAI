@@ -170,7 +170,7 @@ CartesianCellComplexConservativeLinearRefine::refine(
    std::vector<dcomplex> diff0(cgbox.numberCells(0) + 1);
    pdat::CellData<dcomplex> slope0(cgbox, 1, tmp_ghosts);
 
-   for (int d = 0; d < fdata->getDepth(); d++) {
+   for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {
          SAMRAI_F77_FUNC(cartclinrefcellcplx1d, CARTCLINREFCELLCPLX1D) (ifirstc(0),
             ilastc(0),

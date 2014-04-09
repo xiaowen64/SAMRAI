@@ -99,7 +99,7 @@ void OuterfaceDataTest::readTestInput(
 
    d_use_fine_value_at_interface.resize(nkeys);
 
-   for (int i = 0; i < nkeys; i++) {
+   for (int i = 0; i < nkeys; ++i) {
       boost::shared_ptr<tbox::Database> var_db(
          var_data->getDatabase(var_keys[i]));
 
@@ -151,7 +151,7 @@ void OuterfaceDataTest::registerVariables(
    d_variables_src.resize(nvars);
    d_variables_dst.resize(nvars);
 
-   for (int i = 0; i < nvars; i++) {
+   for (int i = 0; i < nvars; ++i) {
       d_variables_src[i].reset(
          new pdat::OuterfaceVariable<double>(dim,
                                              d_variable_src_name[i],
@@ -199,7 +199,7 @@ void OuterfaceDataTest::initializeDataOnPatch(
 
    if (d_do_refine) {
 
-      for (int i = 0; i < static_cast<int>(variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(variables.size()); ++i) {
 
          boost::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
@@ -226,7 +226,7 @@ void OuterfaceDataTest::initializeDataOnPatch(
 
    } else if (d_do_coarsen) {
 
-      for (int i = 0; i < static_cast<int>(variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(variables.size()); ++i) {
 
          boost::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
@@ -268,7 +268,7 @@ void OuterfaceDataTest::checkPatchInteriorData(
 
    const int depth = data->getDepth();
 
-   for (int axis = 0; axis < d_dim.getValue(); axis++) {
+   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
       const pdat::FaceIndex loweri(interior.lower(), axis, 0);
       pdat::FaceIterator fiend(pdat::FaceGeometry::end(interior, axis));
       for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(interior, axis));
@@ -307,7 +307,7 @@ void OuterfaceDataTest::checkPatchInteriorData(
          }
 
          double value;
-         for (int d = 0; d < depth; d++) {
+         for (int d = 0; d < depth; ++d) {
             value = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
             if (!(tbox::MathUtilities<double>::equalEps((*data)(*fi,
                                                                 d), value))) {
@@ -348,7 +348,7 @@ void OuterfaceDataTest::setLinearData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   for (int axis = 0; axis < d_dim.getValue(); axis++) {
+   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
       const pdat::FaceIndex loweri(patch.getBox().lower(), axis, 0);
       pdat::FaceIterator fiend(pdat::FaceGeometry::end(sbox, axis));
       for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(sbox, axis));
@@ -386,7 +386,7 @@ void OuterfaceDataTest::setLinearData(
             }
          }
 
-         for (int d = 0; d < depth; d++) {
+         for (int d = 0; d < depth; ++d) {
             (*data)(*fi,
                     d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
          }
@@ -415,8 +415,8 @@ void OuterfaceDataTest::setLinearData(
 
    const int depth = data->getDepth();
 
-   for (int axis = 0; axis < d_dim.getValue(); axis++) {
-      for (int f = 0; f < 2; f++) {
+   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
+      for (int f = 0; f < 2; ++f) {
          const hier::Box databox = data->getArrayData(axis, f).getBox();
 
          const pdat::FaceIndex loweri(patch.getBox().lower(), axis, 0);
@@ -456,7 +456,7 @@ void OuterfaceDataTest::setLinearData(
             }
             double value = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
 
-            for (int d = 0; d < depth; d++) {
+            for (int d = 0; d < depth; ++d) {
                data->getArrayData(axis, f) (*bi, d) = value;
             }
          }
@@ -487,7 +487,7 @@ bool OuterfaceDataTest::verifyResults(
       tbox::plog << "Patch box = " << patch.getBox() << endl;
 
       hier::IntVector tgcw(d_dim, 0);
-      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); ++i) {
          tgcw.max(patch.getPatchData(d_variables_dst[i], getDataContext())->
             getGhostCellWidth());
       }
@@ -505,7 +505,7 @@ bool OuterfaceDataTest::verifyResults(
          setLinearData(solution, tbox, patch); //, hierarchy, level_number);
       }
 
-      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); ++i) {
 
          boost::shared_ptr<pdat::FaceData<double> > face_data(
             BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
@@ -514,12 +514,12 @@ bool OuterfaceDataTest::verifyResults(
          int depth = face_data->getDepth();
          hier::Box dbox = face_data->getGhostBox();
 
-         for (int id = 0; id < d_dim.getValue(); id++) {
+         for (int id = 0; id < d_dim.getValue(); ++id) {
             pdat::FaceIterator fiend(pdat::FaceGeometry::end(dbox, id));
             for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(dbox, id));
                  fi != fiend; ++fi) {
                double correct = (*solution)(*fi);
-               for (int d = 0; d < depth; d++) {
+               for (int d = 0; d < depth; ++d) {
                   double result = (*face_data)(*fi, d);
                   if (!tbox::MathUtilities<double>::equalEps(correct,
                          result)) {

@@ -49,7 +49,7 @@ typedef int mode_t;
  */
 #define NULL_USE(variable)                               \
    do {                                                  \
-      if (0) { char* temp = (char *)&variable; temp++; } \
+      if (0) { char* temp = (char *)&variable; ++temp; } \
    } while (0)
 
 /*!

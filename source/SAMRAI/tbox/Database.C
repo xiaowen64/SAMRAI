@@ -157,7 +157,7 @@ Database::getBoolArray(
          << "\n    Actual array size = " << tsize << std::endl);
    }
 
-   for (size_t i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; ++i) {
       data[i] = tmp[i];
    }
 
@@ -276,7 +276,7 @@ Database::getDatabaseBoxArray(
          << "\n    Actual array size = " << tsize << std::endl);
    }
 
-   for (size_t i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; ++i) {
       data[i] = tmp[i];
    }
 }
@@ -400,7 +400,7 @@ Database::getCharArray(
          << "\n    Actual array size = " << tsize << std::endl);
    }
 
-   for (size_t i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; ++i) {
       data[i] = tmp[i];
    }
 }
@@ -525,7 +525,7 @@ Database::getComplexArray(
          << "\n    Actual array size = " << tsize << std::endl);
    }
 
-   for (size_t i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; ++i) {
       data[i] = tmp[i];
    }
 }
@@ -649,7 +649,7 @@ Database::getFloatArray(
          << "\n    Actual array size = " << tsize << std::endl);
    }
 
-   for (size_t i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; ++i) {
       data[i] = tmp[i];
    }
 }
@@ -771,7 +771,7 @@ Database::getDoubleArray(
          << "\n    Actual array size = " << tsize << std::endl);
    }
 
-   for (size_t i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; ++i) {
       data[i] = tmp[i];
    }
 }
@@ -894,7 +894,7 @@ Database::getIntegerArray(
          << "\n    Actual array size = " << tsize << std::endl);
    }
 
-   for (size_t i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; ++i) {
       data[i] = tmp[i];
    }
 }
@@ -1017,7 +1017,7 @@ Database::getStringArray(
          << "\n    Actual array size = " << tsize << std::endl);
    }
 
-   for (size_t i = 0; i < tsize; i++) {
+   for (size_t i = 0; i < tsize; ++i) {
       data[i] = tmp[i];
    }
 

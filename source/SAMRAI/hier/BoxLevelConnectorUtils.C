@@ -980,7 +980,7 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
 
          for (std::map<BlockId,BaseGridGeometry::Neighbor>::const_iterator ni =
               neighbors.begin();
-              ni != neighbors.end(); ni++) {
+              ni != neighbors.end(); ++ni) {
             const BaseGridGeometry::Neighbor& neighbor(ni->second);
             if (neighbor.isSingularity()) {
                reduced_connectivity_singularity_boxes.removeIntersections(
@@ -1012,7 +1012,7 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
 
          for (std::map<BlockId,BaseGridGeometry::Neighbor>::const_iterator ni =
               neighbors.begin();
-              ni != neighbors.end(); ni++) {
+              ni != neighbors.end(); ++ni) {
             const BaseGridGeometry::Neighbor& neighbor(ni->second);
             const BlockId neighbor_block_id(neighbor.getBlockId());
             if (neighbor.isSingularity() &&

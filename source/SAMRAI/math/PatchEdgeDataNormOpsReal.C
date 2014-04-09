@@ -53,7 +53,7 @@ PatchEdgeDataNormOpsReal<TYPE>::numberOfEntries(
 
    int retval = 0;
    const hier::Box ibox = box * data->getGhostBox();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box dbox = pdat::EdgeGeometry::toEdgeBox(ibox, d);
       retval += (dbox.size() * data->getDepth());
    }
@@ -80,7 +80,7 @@ PatchEdgeDataNormOpsReal<TYPE>::sumControlVolumes(
    int dimVal = data->getDim().getValue();
 
    double retval = 0.0;
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       retval += d_array_ops.sumControlVolumes(data->getArrayData(d),
             cvol->getArrayData(d),
@@ -101,7 +101,7 @@ PatchEdgeDataNormOpsReal<TYPE>::abs(
 
    int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.abs(dst->getArrayData(d),
          src->getArrayData(d),
@@ -123,14 +123,14 @@ PatchEdgeDataNormOpsReal<TYPE>::L1Norm(
 
    double retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          retval += d_array_ops.L1Norm(data->getArrayData(d), edge_box);
       }
    } else {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          retval += d_array_ops.L1NormWithControlVolume(data->getArrayData(d),
                cvol->getArrayData(d),
@@ -154,7 +154,7 @@ PatchEdgeDataNormOpsReal<TYPE>::L2Norm(
 
    double retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          double aval = d_array_ops.L2Norm(data->getArrayData(d), edge_box);
          retval += aval * aval;
@@ -162,7 +162,7 @@ PatchEdgeDataNormOpsReal<TYPE>::L2Norm(
    } else {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          double aval = d_array_ops.L2NormWithControlVolume(
                data->getArrayData(d),
@@ -189,7 +189,7 @@ PatchEdgeDataNormOpsReal<TYPE>::weightedL2Norm(
 
    double retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          double aval = d_array_ops.weightedL2Norm(data->getArrayData(d),
                weight->getArrayData(d),
@@ -199,7 +199,7 @@ PatchEdgeDataNormOpsReal<TYPE>::weightedL2Norm(
    } else {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          double aval = d_array_ops.weightedL2NormWithControlVolume(
                data->getArrayData(d),
@@ -262,14 +262,14 @@ PatchEdgeDataNormOpsReal<TYPE>::maxNorm(
 
    double retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box edge_box =
             pdat::EdgeGeometry::toEdgeBox(box, d);
          retval = tbox::MathUtilities<double>::Max(retval,
                d_array_ops.maxNorm(data->getArrayData(d), edge_box));
       }
    } else {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box edge_box =
             pdat::EdgeGeometry::toEdgeBox(box, d);
          retval = tbox::MathUtilities<double>::Max(retval,
@@ -296,14 +296,14 @@ PatchEdgeDataNormOpsReal<TYPE>::dot(
 
    TYPE retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          retval += d_array_ops.dot(data1->getArrayData(d),
                data2->getArrayData(d),
                edge_box);
       }
    } else {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          retval += d_array_ops.dotWithControlVolume(
                data1->getArrayData(d),
@@ -328,7 +328,7 @@ PatchEdgeDataNormOpsReal<TYPE>::integral(
 
    TYPE retval = 0.0;
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box side_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       retval += d_array_ops.integral(
             data->getArrayData(d),

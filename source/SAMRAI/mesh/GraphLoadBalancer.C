@@ -146,7 +146,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
        * Heuristic to choose a target box size if none was given in
        * input. 
        */ 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          std::set<int> choices;
 
          choices.insert(min_size(d) * min_size(d));
@@ -161,7 +161,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
       target_size = d_target_box_size;
    }
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dim.getValue(); ++d) {
       if (target_size(d) > max_size(d)) target_size(d) = max_size(d);
       if (target_size(d) < min_size(d)) target_size(d) = min_size(d);
    }

@@ -409,7 +409,7 @@ int main(
 
       std::vector<int>
       tag_buffer_array(patch_hierarchy->getMaxNumberOfLevels());
-      for (int il = 0; il < patch_hierarchy->getMaxNumberOfLevels(); il++) {
+      for (int il = 0; il < patch_hierarchy->getMaxNumberOfLevels(); ++il) {
          tag_buffer_array[il] = main_restart_data->getTagBuffer();
          tbox::pout << "il = " << il << " tag_buffer = "
                     << tag_buffer_array[il]
@@ -439,7 +439,7 @@ int main(
          bool initial_cycle = true;
          for (int ln = 0;
               patch_hierarchy->levelCanBeRefined(ln) && !done;
-              ln++) {
+              ++ln) {
             gridding_algorithm->makeFinerLevel(
                tag_buffer_array[ln],
                initial_cycle,
@@ -511,7 +511,7 @@ int main(
              (iteration_num < main_restart_data->getMaxTimesteps())) {
 
          iteration_num = main_restart_data->getIterationNumber();
-         iteration_num++;
+         ++iteration_num;
 
          tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
          tbox::pout << "At begining of timestep # " << iteration_num - 1

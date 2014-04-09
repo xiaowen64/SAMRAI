@@ -136,7 +136,7 @@ int main(
          boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_domain_itr = coarse_domain.begin();
-      for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_domain_itr) {
+      for (int ib = 0; ib < n_coarse_boxes; ++ib, ++coarse_domain_itr) {
          if (nproc > 1) {
             if (ib == layer0->getMPI().getRank()) {
                layer0->addBox(hier::Box(*coarse_domain_itr,
@@ -149,7 +149,7 @@ int main(
       }
 
       hier::BoxContainer::iterator fine_domain_itr = fine_domain.begin();
-      for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_domain_itr) {
+      for (int ib = 0; ib < n_fine_boxes; ++ib, ++fine_domain_itr) {
          if (nproc > 1) {
             if (ib == layer1->getMPI().getRank()) {
                layer1->addBox(hier::Box(*fine_domain_itr,
@@ -358,7 +358,7 @@ checkIterators(
 
          // Test #1a: check empty.  This should be false.
          if (sample->empty()) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - sparse data structure reports empty. "
             << std::endl;
@@ -374,17 +374,17 @@ checkIterators(
                // check element access.
                for (int i = 0; i < DSIZE; ++i) {
                   if (it[pdat::DoubleAttributeId(i)] != i) {
-                     num_failures++;
+                     ++num_failures;
                   }
                }
 
                for (int j = 0; j < ISIZE; ++j) {
                   if (it[pdat::IntegerAttributeId(j)] != j) {
-                     num_failures++;
+                     ++num_failures;
                   }
                }
             } // for (; it != ... (attribute iterator)
-         } // for (; ic; ic++) ... (cell iterator)
+         } // for (; ic; ++ic) ... (cell iterator)
       } // for (hier::PatchLevel::iterator...
    } // hierarchy iteration
 #endif
@@ -429,7 +429,7 @@ bool checkCopyOps(
 
          int edit = copiedTo->size() / 2;
          LSparseData::iterator ct_it(copiedTo.get());
-         for ( ; ct_it != copiedTo->end() && edit > 0; ++ct_it, edit--) {
+         for ( ; ct_it != copiedTo->end() && edit > 0; ++ct_it, --edit) {
          }
 
          while (ct_it != copiedTo->end()) {
@@ -522,7 +522,7 @@ bool checkRemoveOps(
          sample->clear();
 
          if (!sample->empty()) {
-            num_failures++;
+            ++num_failures;
             remove_passed = false;
             tbox::perr << "sample size is " << sample->size() << std::endl;
          }

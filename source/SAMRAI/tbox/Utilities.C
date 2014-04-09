@@ -107,7 +107,7 @@ Utilities::recursiveMkdir(
                null_found = true;
                path_buf[pos] = seperator;
             }
-            pos++;
+            ++pos;
          }
 
          /* make directory if not at end of path */

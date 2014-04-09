@@ -316,7 +316,7 @@ CellData<TYPE>::copyWithRotation(
             hier::Transformation::rotateIndex(src_index, back_rotate);
             src_index += back_shift;
 
-            for (int d = 0; d < depth; d++) {
+            for (int d = 0; d < depth; ++d) {
                (*d_data)(dst_index, d) = (*src.d_data)(src_index, d);
             }
          }
@@ -448,7 +448,7 @@ CellData<TYPE>::packWithRotation(
 
       if (!copybox.empty()) {
 
-         for (int d = 0; d < depth; d++) {
+         for (int d = 0; d < depth; ++d) {
             CellData<double>::iterator ciend(CellGeometry::end(copybox));
             for (CellData<double>::iterator ci(CellGeometry::begin(copybox));
                  ci != ciend; ++ci) {
@@ -458,7 +458,7 @@ CellData<TYPE>::packWithRotation(
                src_index += back_shift;
 
                buffer[i] = (*d_data)(src_index, d);
-               i++;
+               ++i;
             }
          }
       }
@@ -549,7 +549,7 @@ void CellData<TYPE>::unpackStreamAndSum(
       t_overlap->getDestinationBoxContainer() );
    const hier::IntVector& src_offset( t_overlap->getSourceOffset() );
    for (hier::BoxContainer::const_iterator dst_box(dst_boxes.begin());
-        dst_box != dst_boxes.end(); dst_box++) {
+        dst_box != dst_boxes.end(); ++dst_box) {
       const hier::Box intersect( *dst_box * d_data->getBox() );
       if (!intersect.empty()) {
          d_data->unpackStreamAndSum( stream, intersect, src_offset );
@@ -617,7 +617,7 @@ CellData<TYPE>::print(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   for (int d = 0; d < d_depth; d++) {
+   for (int d = 0; d < d_depth; ++d) {
       os << "Array depth = " << d << std::endl;
       print(box, d, os, prec);
    }

@@ -91,7 +91,7 @@ PatchSideDataOpsReal<TYPE>::copyData(
    int dimVal = box.getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          (dst->getArrayData(d)).copy(src->getArrayData(d), side_box);

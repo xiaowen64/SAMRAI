@@ -83,7 +83,7 @@ int main(
       hier::Index box_lower(dim, 0);
       hier::Index box_upper(dim);
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          box_upper(d) = (d + 4) * 3;
       }
 
@@ -118,7 +118,7 @@ int main(
 
       int cell_data_size = box.size();
 
-      for (int i = 0; i < cell_data_size; i++) {
+      for (int i = 0; i < cell_data_size; ++i) {
          cell_ptr[i] = (double)i;
       }
 
@@ -131,7 +131,7 @@ int main(
             tbox::perr << "FAILED: - CellIterator test" << std::endl;
             ++error_count;
          }
-         j++;
+         ++j;
       }
 
       /*
@@ -140,7 +140,7 @@ int main(
 
       double* face_ptr[SAMRAI::MAX_DIM_VAL];
 
-      for (int axis = 0; axis < dim.getValue(); axis++) {
+      for (int axis = 0; axis < dim.getValue(); ++axis) {
 
          face_ptr[axis] = face_data.getPointer(axis);
 
@@ -149,7 +149,7 @@ int main(
 
          int face_data_size = face_box.size();
 
-         for (int i = 0; i < face_data_size; i++) {
+         for (int i = 0; i < face_data_size; ++i) {
             face_ptr[axis][i] = (double)i;
          }
 
@@ -162,7 +162,7 @@ int main(
                tbox::perr << "FAILED: - FaceIterator test" << std::endl;
                ++error_count;
             }
-            j++;
+            ++j;
          }
       }
 
@@ -174,13 +174,13 @@ int main(
       for (pdat::CellIterator ifc(pdat::CellGeometry::begin(box));
            ifc != ifcend; ++ifc) {
 
-         for (int a = 0; a < dim.getValue(); a++) {
+         for (int a = 0; a < dim.getValue(); ++a) {
 
             hier::Box face_box = pdat::FaceGeometry::toFaceBox(box,
                   a);
             hier::Index flo = face_box.lower();
             hier::Index fhi = face_box.upper();
-            for (int f = 0; f < 2; f++) {
+            for (int f = 0; f < 2; ++f) {
 
                pdat::FaceIndex findx(*ifc, a, f);
 
@@ -213,7 +213,7 @@ int main(
 
       int node_data_size = node_box.size();
 
-      for (int i = 0; i < node_data_size; i++) {
+      for (int i = 0; i < node_data_size; ++i) {
          node_ptr[i] = (double)i;
       }
 
@@ -226,7 +226,7 @@ int main(
             tbox::perr << "FAILED: - NodeIterator test" << std::endl;
             ++error_count;
          }
-         j++;
+         ++j;
       }
 
       /*
@@ -259,11 +259,11 @@ int main(
             }
 
             int u;
-            for (u = 0; u < dim.getValue(); u++) {
+            for (u = 0; u < dim.getValue(); ++u) {
                if (corner(u) == 1) {
                   corner(u) = 0;
                } else {
-                  corner(u)++;
+                  ++corner(u);
                   break;
                }
             }
@@ -279,7 +279,7 @@ int main(
 
       double* edge_ptr[SAMRAI::MAX_DIM_VAL];
 
-      for (int axis = 0; axis < dim.getValue(); axis++) {
+      for (int axis = 0; axis < dim.getValue(); ++axis) {
 
          edge_ptr[axis] = edge_data.getPointer(axis);
 
@@ -287,7 +287,7 @@ int main(
                axis);
          int edge_data_size = edge_box.size();
 
-         for (int i = 0; i < edge_data_size; i++) {
+         for (int i = 0; i < edge_data_size; ++i) {
             edge_ptr[axis][i] = (double)i;
          }
 
@@ -300,7 +300,7 @@ int main(
                tbox::perr << "FAILED: - EdgeIterator test" << std::endl;
                ++error_count;
             }
-            j++;
+            ++j;
          }
       }
 
@@ -311,14 +311,14 @@ int main(
       pdat::CellIterator iecend(pdat::CellGeometry::end(box));
       for (pdat::CellIterator iec(pdat::CellGeometry::begin(box));
            iec != iecend; ++iec) {
-         for (int a = 0; a < dim.getValue(); a++) {
+         for (int a = 0; a < dim.getValue(); ++a) {
 
             hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box,
                   a);
             hier::Index elo = edge_box.lower();
             hier::Index ehi = edge_box.upper();
 
-            for (int f = 0; f < (1 << (dim.getValue() - 1)); f++) {
+            for (int f = 0; f < (1 << (dim.getValue() - 1)); ++f) {
                pdat::EdgeIndex eindx(*iec, a, f);
 
                int offset = 0;
@@ -343,7 +343,7 @@ int main(
 
       double* side_ptr[SAMRAI::MAX_DIM_VAL];
 
-      for (int axis = 0; axis < dim.getValue(); axis++) {
+      for (int axis = 0; axis < dim.getValue(); ++axis) {
 
          side_ptr[axis] = side_data.getPointer(axis);
 
@@ -351,7 +351,7 @@ int main(
                axis);
          int side_data_size = side_box.size();
 
-         for (int i = 0; i < side_data_size; i++) {
+         for (int i = 0; i < side_data_size; ++i) {
             side_ptr[axis][i] = (double)i;
          }
 
@@ -364,7 +364,7 @@ int main(
                tbox::perr << "FAILED: - SideIterator test" << std::endl;
                ++error_count;
             }
-            j++;
+            ++j;
          }
       }
 
@@ -375,14 +375,14 @@ int main(
       pdat::CellIterator iscend(pdat::CellGeometry::end(box));
       for (pdat::CellIterator isc(pdat::CellGeometry::begin(box));
            isc != iscend; ++isc) {
-         for (int a = 0; a < dim.getValue(); a++) {
+         for (int a = 0; a < dim.getValue(); ++a) {
 
             hier::Box side_box = pdat::SideGeometry::toSideBox(box,
                   a);
             hier::Index slo = side_box.lower();
             hier::Index shi = side_box.upper();
 
-            for (int f = 0; f < 2; f++) {
+            for (int f = 0; f < 2; ++f) {
                pdat::SideIndex sindx(*isc, a, f);
 
                int offset = 0;

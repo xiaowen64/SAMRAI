@@ -87,7 +87,7 @@ void BoundaryDataTester::setPhysicalBoundaryConditions(
               << endl;
    tbox::plog << "ghost_width_to_fill = " << ghost_width_to_fill << endl;
 
-   for (int iv = 0; iv < static_cast<int>(d_variables.size()); iv++) {
+   for (int iv = 0; iv < static_cast<int>(d_variables.size()); ++iv) {
 
       boost::shared_ptr<pdat::CellData<double> > cvdata(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
@@ -190,7 +190,7 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
         ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
-      for (int iv = 0; iv < static_cast<int>(d_variables.size()); iv++) {
+      for (int iv = 0; iv < static_cast<int>(d_variables.size()); ++iv) {
          boost::shared_ptr<pdat::CellData<double> > cvdata(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_variables[iv], d_variable_context)));
@@ -205,13 +205,13 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
         ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
-      for (int iv = 0; iv < static_cast<int>(d_variables.size()); iv++) {
+      for (int iv = 0; iv < static_cast<int>(d_variables.size()); ++iv) {
          boost::shared_ptr<pdat::CellData<double> > cvdata(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_variables[iv], d_variable_context)));
 
          TBOX_ASSERT(cvdata);
-         for (int id = 0; id < cvdata->getDepth(); id++) {
+         for (int id = 0; id < cvdata->getDepth(); ++id) {
             cvdata->fill(d_variable_interior_values[iv][id],
                patch->getBox(),
                id);
@@ -250,7 +250,7 @@ int BoundaryDataTester::runBoundaryTest(
 
    xfer::RefineAlgorithm boundary_fill;
 
-   for (int iv = 0; iv < static_cast<int>(d_variables.size()); iv++) {
+   for (int iv = 0; iv < static_cast<int>(d_variables.size()); ++iv) {
       int datid =
          variable_db->mapVariableAndContextToIndex(d_variables[iv],
             d_variable_context);
@@ -286,9 +286,9 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
    int nkeys = static_cast<int>(var_keys.size());
 
    int var_cnt = 0;
-   for (int i = 0; i < nkeys; i++) {
+   for (int i = 0; i < nkeys; ++i) {
       if (db->getDatabase(var_keys[i])->keyExists("name")) {
-         var_cnt++;
+         ++var_cnt;
       }
    }
 
@@ -297,7 +297,7 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
    d_variable_num_ghosts.resize(var_cnt, hier::IntVector(d_dim, 1));
    d_variable_interior_values.resize(var_cnt);
 
-   for (int i = 0; i < nkeys; i++) {
+   for (int i = 0; i < nkeys; ++i) {
 
       boost::shared_ptr<tbox::Database> var_db(db->getDatabase(var_keys[i]));
 
@@ -340,7 +340,7 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
 
    d_variables.resize(d_variable_name.size());
 
-   for (int iv = 0; iv < static_cast<int>(d_variable_name.size()); iv++) {
+   for (int iv = 0; iv < static_cast<int>(d_variable_name.size()); ++iv) {
       d_variables[iv].reset(
          new pdat::CellVariable<double>(d_dim, d_variable_name[iv],
                                         d_variable_depth[iv]));
@@ -374,7 +374,7 @@ void BoundaryDataTester::setBoundaryDataDefaults()
       d_master_bdry_edge_conds.resize(NUM_2D_EDGES);
       d_scalar_bdry_edge_conds.resize(NUM_2D_EDGES);
       d_vector_bdry_edge_conds.resize(NUM_2D_EDGES);
-      for (int ei = 0; ei < NUM_2D_EDGES; ei++) {
+      for (int ei = 0; ei < NUM_2D_EDGES; ++ei) {
          d_master_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_vector_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
@@ -385,7 +385,7 @@ void BoundaryDataTester::setBoundaryDataDefaults()
       d_vector_bdry_node_conds.resize(NUM_2D_NODES);
       d_node_bdry_edge.resize(NUM_2D_NODES);
 
-      for (int ni = 0; ni < NUM_2D_NODES; ni++) {
+      for (int ni = 0; ni < NUM_2D_NODES; ++ni) {
          d_master_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
          d_vector_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
@@ -397,7 +397,7 @@ void BoundaryDataTester::setBoundaryDataDefaults()
       d_master_bdry_face_conds.resize(NUM_3D_FACES);
       d_scalar_bdry_face_conds.resize(NUM_3D_FACES);
       d_vector_bdry_face_conds.resize(NUM_3D_FACES);
-      for (int fi = 0; fi < NUM_3D_FACES; fi++) {
+      for (int fi = 0; fi < NUM_3D_FACES; ++fi) {
          d_master_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
          d_scalar_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
          d_vector_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
@@ -407,7 +407,7 @@ void BoundaryDataTester::setBoundaryDataDefaults()
       d_scalar_bdry_edge_conds.resize(NUM_3D_EDGES);
       d_vector_bdry_edge_conds.resize(NUM_3D_EDGES);
       d_edge_bdry_face.resize(NUM_3D_EDGES);
-      for (int ei = 0; ei < NUM_3D_EDGES; ei++) {
+      for (int ei = 0; ei < NUM_3D_EDGES; ++ei) {
          d_master_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_vector_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
@@ -419,7 +419,7 @@ void BoundaryDataTester::setBoundaryDataDefaults()
       d_vector_bdry_node_conds.resize(NUM_3D_NODES);
       d_node_bdry_face.resize(NUM_3D_NODES);
 
-      for (int ni = 0; ni < NUM_3D_NODES; ni++) {
+      for (int ni = 0; ni < NUM_3D_NODES; ++ni) {
          d_master_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
          d_vector_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
@@ -428,7 +428,7 @@ void BoundaryDataTester::setBoundaryDataDefaults()
    }
 
    d_variable_bc_values.resize(d_variable_name.size());
-   for (int iv = 0; iv < static_cast<int>(d_variable_name.size()); iv++) {
+   for (int iv = 0; iv < static_cast<int>(d_variable_name.size()); ++iv) {
       if (d_dim == tbox::Dimension(2)) {
          d_variable_bc_values[iv].resize(NUM_2D_EDGES * d_variable_depth[iv]);
       }
@@ -474,7 +474,7 @@ void BoundaryDataTester::readBoundaryDataStateEntry(
    TBOX_ASSERT(!db_name.empty());
    TBOX_ASSERT(d_variable_bc_values.size() == d_variable_name.size());
 
-   for (int iv = 0; iv < static_cast<int>(d_variable_name.size()); iv++) {
+   for (int iv = 0; iv < static_cast<int>(d_variable_name.size()); ++iv) {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (d_dim == tbox::Dimension(2)) {
@@ -497,7 +497,7 @@ void BoundaryDataTester::readBoundaryDataStateEntry(
                                      << d_variable_name[iv] << " values given in "
                                      << db_name << " input database." << endl);
          }
-         for (int id = 0; id < depth; id++) {
+         for (int id = 0; id < depth; ++id) {
             d_variable_bc_values[iv][bdry_location_index * depth + id] =
                tmp_val[id];
          }
@@ -521,8 +521,8 @@ void BoundaryDataTester::readBoundaryDataInput(
                                   d_dim,
                                   1)));
    int num_per_dirs = 0;
-   for (int id = 0; id < d_dim.getValue(); id++) {
-      if (periodic(id)) num_per_dirs++;
+   for (int id = 0; id < d_dim.getValue(); ++id) {
+      if (periodic(id)) ++num_per_dirs;
    }
 
    if (num_per_dirs < d_dim.getValue()) {
@@ -572,7 +572,7 @@ void BoundaryDataTester::readBoundaryDataInput(
 void BoundaryDataTester::postprocessBoundaryInput()
 {
    if (d_dim == tbox::Dimension(2)) {
-      for (int i = 0; i < NUM_2D_EDGES; i++) {
+      for (int i = 0; i < NUM_2D_EDGES; ++i) {
          d_scalar_bdry_edge_conds[i] = d_master_bdry_edge_conds[i];
          d_vector_bdry_edge_conds[i] = d_master_bdry_edge_conds[i];
 
@@ -580,7 +580,7 @@ void BoundaryDataTester::postprocessBoundaryInput()
             d_scalar_bdry_edge_conds[i] = BdryCond::FLOW;
          }
       }
-      for (int i = 0; i < NUM_2D_NODES; i++) {
+      for (int i = 0; i < NUM_2D_NODES; ++i) {
          d_scalar_bdry_node_conds[i] = d_master_bdry_node_conds[i];
          d_vector_bdry_node_conds[i] = d_master_bdry_node_conds[i];
 
@@ -599,7 +599,7 @@ void BoundaryDataTester::postprocessBoundaryInput()
       }
    }
    if (d_dim == tbox::Dimension(3)) {
-      for (int i = 0; i < NUM_3D_FACES; i++) {
+      for (int i = 0; i < NUM_3D_FACES; ++i) {
          d_scalar_bdry_face_conds[i] = d_master_bdry_face_conds[i];
          d_vector_bdry_face_conds[i] = d_master_bdry_face_conds[i];
 
@@ -608,7 +608,7 @@ void BoundaryDataTester::postprocessBoundaryInput()
          }
       }
 
-      for (int i = 0; i < NUM_3D_EDGES; i++) {
+      for (int i = 0; i < NUM_3D_EDGES; ++i) {
          d_scalar_bdry_edge_conds[i] = d_master_bdry_edge_conds[i];
          d_vector_bdry_edge_conds[i] = d_master_bdry_edge_conds[i];
 
@@ -629,7 +629,7 @@ void BoundaryDataTester::postprocessBoundaryInput()
          }
       }
 
-      for (int i = 0; i < NUM_3D_NODES; i++) {
+      for (int i = 0; i < NUM_3D_NODES; ++i) {
          d_scalar_bdry_node_conds[i] = d_master_bdry_node_conds[i];
          d_vector_bdry_node_conds[i] = d_master_bdry_node_conds[i];
 
@@ -685,12 +685,12 @@ void BoundaryDataTester::checkBoundaryData(
    const std::vector<hier::BoundaryBox>& bdry_boxes =
       pgeom->getCodimensionBoundaries(btype);
 
-   for (int i = 0; i < static_cast<int>(bdry_boxes.size()); i++) {
+   for (int i = 0; i < static_cast<int>(bdry_boxes.size()); ++i) {
       hier::BoundaryBox bbox = bdry_boxes[i];
       TBOX_ASSERT(bbox.getBoundaryType() == btype);
       int bloc = bbox.getLocationIndex();
 
-      for (int iv = 0; iv < static_cast<int>(d_variables.size()); iv++) {
+      for (int iv = 0; iv < static_cast<int>(d_variables.size()); ++iv) {
          boost::shared_ptr<pdat::CellData<double> > cvdata(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[iv], d_variable_context)));
@@ -761,7 +761,7 @@ void BoundaryDataTester::checkBoundaryData(
             }
 #if (TESTING == 1)
             if (num_bad_values > 0) {
-               d_fail_count++;
+               ++d_fail_count;
                tbox::perr << "\nBoundary Test FAILED: \n"
                           << "     " << num_bad_values << " bad "
                           << d_variable_name[iv] << " values found for"
@@ -772,7 +772,7 @@ void BoundaryDataTester::checkBoundaryData(
 #endif
 
          } else {
-            for (int id = 0; id < depth; id++) {
+            for (int id = 0; id < depth; ++id) {
                int vbcase = bscalarcase;
                if (d_dim == tbox::Dimension(2)) {
                   if (btype == Bdry::EDGE2D) {
@@ -834,7 +834,7 @@ void BoundaryDataTester::checkBoundaryData(
                }
 #if (TESTING == 1)
                if (num_bad_values > 0) {
-                  d_fail_count++;
+                  ++d_fail_count;
                   tbox::perr << "\nBoundary Test FAILED: \n"
                              << "     " << num_bad_values << " bad "
                              << d_variable_name[iv] << " values found for"
@@ -844,13 +844,13 @@ void BoundaryDataTester::checkBoundaryData(
                }
 #endif
 
-            }  // for (int id = 0; id < depth; id++)
+            }  // for (int id = 0; id < depth; ++id)
 
          }  // else
 
-      }   // for (int iv = 0; iv < static_cast<int>(d_variables.size()); iv++)
+      }   // for (int iv = 0; iv < static_cast<int>(d_variables.size()); ++iv)
 
-   }  // for (int i = 0; i < static_cast<int>(bdry_boxes.size()); i++ )
+   }  // for (int i = 0; i < static_cast<int>(bdry_boxes.size()); ++i )
 
 }
 
@@ -880,13 +880,13 @@ void BoundaryDataTester::printClassData(
    }
 
    os << "\nVariables ...\n" << endl;
-   for (i = 0; i < static_cast<int>(d_variable_name.size()); i++) {
+   for (i = 0; i < static_cast<int>(d_variable_name.size()); ++i) {
       os << "Variable " << i << endl;
       os << "   name       = " << d_variable_name[i] << endl;
       os << "   depth      = " << d_variable_depth[i] << endl;
       os << "   num_ghosts = " << d_variable_num_ghosts[i] << endl;
       os << "   interior_values = " << d_variable_interior_values[i][0];
-      for (j = 1; j < d_variable_depth[i]; j++) {
+      for (j = 1; j < d_variable_depth[i]; ++j) {
          os << " ,  " << d_variable_interior_values[i][j];
       }
       os << endl;
@@ -895,7 +895,7 @@ void BoundaryDataTester::printClassData(
    os << "\n   Boundary condition data... " << endl;
 
    if (d_dim == tbox::Dimension(2)) {
-      for (j = 0; j < static_cast<int>(d_master_bdry_edge_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_master_bdry_edge_conds.size()); ++j) {
          os << "\n       d_master_bdry_edge_conds[" << j << "] = "
             << d_master_bdry_edge_conds[j] << endl;
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
@@ -904,10 +904,10 @@ void BoundaryDataTester::printClassData(
             << d_vector_bdry_edge_conds[j] << endl;
          if (d_master_bdry_edge_conds[j] == BdryCond::DIRICHLET ||
              d_master_bdry_edge_conds[j] == BdryCond::NEUMANN) {
-            for (i = 0; i < static_cast<int>(d_variable_name.size()); i++) {
+            for (i = 0; i < static_cast<int>(d_variable_name.size()); ++i) {
                os << d_variable_name[i] << " bdry edge value[" << j << "] = "
                   << d_variable_bc_values[i][j * d_variable_depth[i]];
-               for (int id = 1; id < d_variable_depth[i]; id++) {
+               for (int id = 1; id < d_variable_depth[i]; ++id) {
                   os << " , "
                      << d_variable_bc_values[i][j * d_variable_depth[i] + id];
                }
@@ -916,7 +916,7 @@ void BoundaryDataTester::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_master_bdry_node_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_master_bdry_node_conds.size()); ++j) {
          os << "\n       d_master_bdry_node_conds[" << j << "] = "
             << d_master_bdry_node_conds[j] << endl;
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
@@ -928,7 +928,7 @@ void BoundaryDataTester::printClassData(
       }
    }
    if (d_dim == tbox::Dimension(3)) {
-      for (j = 0; j < static_cast<int>(d_master_bdry_face_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_master_bdry_face_conds.size()); ++j) {
          os << "\n       d_master_bdry_face_conds[" << j << "] = "
             << d_master_bdry_face_conds[j] << endl;
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
@@ -937,10 +937,10 @@ void BoundaryDataTester::printClassData(
             << d_vector_bdry_face_conds[j] << endl;
          if (d_master_bdry_face_conds[j] == BdryCond::DIRICHLET ||
              d_master_bdry_face_conds[j] == BdryCond::NEUMANN) {
-            for (i = 0; i < static_cast<int>(d_variable_name.size()); i++) {
+            for (i = 0; i < static_cast<int>(d_variable_name.size()); ++i) {
                os << d_variable_name[i] << " bdry edge value[" << j << "] = "
                   << d_variable_bc_values[i][j * d_variable_depth[i]];
-               for (int id = 1; id < d_variable_depth[i]; id++) {
+               for (int id = 1; id < d_variable_depth[i]; ++id) {
                   os << " , "
                      << d_variable_bc_values[i][j * d_variable_depth[i] + id];
                }
@@ -949,7 +949,7 @@ void BoundaryDataTester::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_master_bdry_edge_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_master_bdry_edge_conds.size()); ++j) {
          os << "\n       d_master_bdry_edge_conds[" << j << "] = "
             << d_master_bdry_edge_conds[j] << endl;
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
@@ -960,7 +960,7 @@ void BoundaryDataTester::printClassData(
             << d_edge_bdry_face[j] << endl;
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_master_bdry_node_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_master_bdry_node_conds.size()); ++j) {
          os << "\n       d_master_bdry_node_conds[" << j << "] = "
             << d_master_bdry_node_conds[j] << endl;
          os << "       d_scalar_bdry_node_conds[" << j << "] = "

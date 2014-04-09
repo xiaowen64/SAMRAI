@@ -358,7 +358,7 @@ int main(
             active_ranks[0] = 0;
          } else {
             active_ranks.resize(nnodes / 2);
-            for (int i = 0; i < nnodes / 2; i++) {
+            for (int i = 0; i < nnodes / 2; ++i) {
                active_ranks[i] = (i + 1) % (nnodes / 2);
             }
             std::sort(&active_ranks[0],

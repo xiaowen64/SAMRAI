@@ -245,7 +245,7 @@ ImplicitIntegrator::updateSolution()
 {
    d_current_time += d_current_dt;
    d_old_dt = d_current_dt;
-   d_integrator_step++;
+   ++d_integrator_step;
 
    d_implicit_equations->updateSolution(d_current_time);
 

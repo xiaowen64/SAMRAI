@@ -175,7 +175,7 @@ SideFloatLinearTimeInterpolateOp::timeInterpolate(
       tfrac = 0.0;
    }
 
-   for (int d = 0; d < dst_dat->getDepth(); d++) {
+   for (int d = 0; d < dst_dat->getDepth(); ++d) {
       if (dim == tbox::Dimension(1)) {
          if (directions(0)) {
             SAMRAI_F77_FUNC(lintimeintsidefloat1d, LINTIMEINTSIDEFLOAT1D) (ifirst(0),

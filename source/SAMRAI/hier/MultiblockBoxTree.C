@@ -124,7 +124,7 @@ MultiblockBoxTree::findOverlapBoxes(
 
    for (std::map<BlockId,BaseGridGeometry::Neighbor>::const_iterator ni =
         block_neighbors.begin();
-        ni != block_neighbors.end(); ni++) {
+        ni != block_neighbors.end(); ++ni) {
 
       const BaseGridGeometry::Neighbor& neighbor(ni->second);
 
@@ -189,7 +189,7 @@ MultiblockBoxTree::findOverlapBoxes(
 
    for (std::map<BlockId,BaseGridGeometry::Neighbor>::const_iterator ni =
         block_neighbors.begin();
-        ni != block_neighbors.end(); ni++) {
+        ni != block_neighbors.end(); ++ni) {
 
       const BaseGridGeometry::Neighbor& neighbor(ni->second);
 

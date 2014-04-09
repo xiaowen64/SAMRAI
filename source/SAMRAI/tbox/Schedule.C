@@ -272,7 +272,7 @@ Schedule::postReceives()
       unsigned int byte_count = 0;
       bool can_estimate_incoming_message_size = true;
       for (ConstIterator r = transactions.begin();
-           r != transactions.end(); r++) {
+           r != transactions.end(); ++r) {
          if (!(*r)->canEstimateIncomingMessageSize()) {
             can_estimate_incoming_message_size = false;
             break;
@@ -349,7 +349,7 @@ Schedule::postSends()
       size_t byte_count = 0;
       bool can_estimate_incoming_message_size = true;
       for (ConstIterator pack = transactions.begin();
-           pack != transactions.end(); pack++) {
+           pack != transactions.end(); ++pack) {
          if (!(*pack)->canEstimateIncomingMessageSize()) {
             can_estimate_incoming_message_size = false;
          }
@@ -360,7 +360,7 @@ Schedule::postSends()
       MessageStream outgoing_stream(byte_count, MessageStream::Write) ;
       d_object_timers->t_pack_stream->start();
       for (ConstIterator pack = transactions.begin();
-           pack != transactions.end(); pack++) {
+           pack != transactions.end(); ++pack) {
          (*pack)->packStream(outgoing_stream);
       }
       d_object_timers->t_pack_stream->stop();
@@ -392,7 +392,7 @@ Schedule::performLocalCopies()
 {
    d_object_timers->t_local_copies->start();
    for (Iterator local = d_local_set.begin();
-        local != d_local_set.end(); local++) {
+        local != d_local_set.end(); ++local) {
       (*local)->copyLocalData();
    }
    d_object_timers->t_local_copies->stop();
@@ -435,7 +435,7 @@ Schedule::processCompletedCommunications()
 
          d_object_timers->t_unpack_stream->start();
          for (Iterator recv = d_recv_sets[sender].begin();
-              recv != d_recv_sets[sender].end(); recv++) {
+              recv != d_recv_sets[sender].end(); ++recv) {
             (*recv)->unpackStream(incoming_stream);
          }
          d_object_timers->t_unpack_stream->stop();
@@ -474,7 +474,7 @@ Schedule::processCompletedCommunications()
 
             d_object_timers->t_unpack_stream->start();
             for (Iterator recv = d_recv_sets[sender].begin();
-                 recv != d_recv_sets[sender].end(); recv++) {
+                 recv != d_recv_sets[sender].end(); ++recv) {
                (*recv)->unpackStream(incoming_stream);
             }
             d_object_timers->t_unpack_stream->stop();
@@ -546,7 +546,7 @@ Schedule::printClassData(
       const std::list<boost::shared_ptr<Transaction> >& send_set = ss->second;
       stream << "Send Set: " << ss->first << std::endl;
       for (ConstIterator send = send_set.begin();
-           send != send_set.end(); send++) {
+           send != send_set.end(); ++send) {
          (*send)->printClassData(stream);
       }
    }
@@ -556,14 +556,14 @@ Schedule::printClassData(
       const std::list<boost::shared_ptr<Transaction> >& recv_set = rs->second;
       stream << "Recv Set: " << rs->first << std::endl;
       for (ConstIterator recv = recv_set.begin();
-           recv != recv_set.end(); recv++) {
+           recv != recv_set.end(); ++recv) {
          (*recv)->printClassData(stream);
       }
    }
 
    stream << "Local Set" << std::endl;
    for (ConstIterator local = d_local_set.begin();
-        local != d_local_set.end(); local++) {
+        local != d_local_set.end(); ++local) {
       (*local)->printClassData(stream);
    }
 }

@@ -80,7 +80,7 @@ PatchSideDataOpsComplex::copyData(
 
    int dimVal = box.getDim().getValue();
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          dst->getArrayData(d).copy(src->getArrayData(d),
             pdat::SideGeometry::toSideBox(box, d));

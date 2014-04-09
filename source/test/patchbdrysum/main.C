@@ -284,7 +284,7 @@ int main(
       double loop_time = 0.;
       int loop_cycle = 0;
       std::vector<int> tag_buffer_array(patch_hierarchy->getMaxNumberOfLevels());
-      for (int il = 0; il < patch_hierarchy->getMaxNumberOfLevels(); il++) {
+      for (int il = 0; il < patch_hierarchy->getMaxNumberOfLevels(); ++il) {
          tag_buffer_array[il] = 1;
       }
       gridding_algorithm->makeCoarsestLevel(loop_time);
@@ -293,7 +293,7 @@ int main(
       bool initial_cycle = true;
       for (int ln = 0;
            patch_hierarchy->levelCanBeRefined(ln) && !done;
-           ln++) {
+           ++ln) {
          gridding_algorithm->makeFinerLevel(
             tag_buffer_array[ln],
             initial_cycle,
@@ -314,7 +314,7 @@ int main(
       int nlevels = patch_hierarchy->getNumberOfLevels();
 
       for (int pln = 0; pln <= patch_hierarchy->getFinestLevelNumber();
-           pln++) {
+           ++pln) {
          boost::shared_ptr<PatchLevel> level(
             patch_hierarchy->getPatchLevel(pln));
 
@@ -347,13 +347,13 @@ int main(
          hier_sum_test->setupOuternodeSum(patch_hierarchy);
       }
       if (do_edge_sum) {
-         for (int ln = 0; ln < nlevels; ln++) {
+         for (int ln = 0; ln < nlevels; ++ln) {
             hier_sum_test->setupOuteredgeSum(patch_hierarchy,
                ln);
          }
       }
 
-      for (int i = 0; i < nsteps; i++) {
+      for (int i = 0; i < nsteps; ++i) {
 
          /*
           * In the process of constructing the hierarchy, we set cell values
@@ -364,7 +364,7 @@ int main(
             fail_count += hier_sum_test->setInitialNodeValues(patch_hierarchy);
          }
          if (do_edge_sum) {
-            for (int ln = 0; ln < nlevels; ln++) {
+            for (int ln = 0; ln < nlevels; ++ln) {
                boost::shared_ptr<PatchLevel> level(
                   patch_hierarchy->getPatchLevel(ln));
                fail_count += hier_sum_test->setInitialEdgeValues(level);
@@ -388,7 +388,7 @@ int main(
             hier_sum_test->doOuternodeSum();
          }
          if (do_edge_sum) {
-            for (int ln = 0; ln < nlevels; ln++) {
+            for (int ln = 0; ln < nlevels; ++ln) {
                hier_sum_test->doOuteredgeSum(ln);
             }
          }
@@ -404,7 +404,7 @@ int main(
       tbox::pout << "\n" << endl;
 
       if (do_edge_sum) {
-         for (int ln = 0; ln < nlevels; ln++) {
+         for (int ln = 0; ln < nlevels; ++ln) {
             boost::shared_ptr<PatchLevel> level(
                patch_hierarchy->getPatchLevel(ln));
             fail_count += hier_sum_test->checkEdgeResult(level);

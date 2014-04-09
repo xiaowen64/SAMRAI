@@ -168,7 +168,7 @@ FaceFloatLinearTimeInterpolateOp::timeInterpolate(
       tfrac = 0.0;
    }
 
-   for (int d = 0; d < dst_dat->getDepth(); d++) {
+   for (int d = 0; d < dst_dat->getDepth(); ++d) {
       if (dim == tbox::Dimension(1)) {
          SAMRAI_F77_FUNC(lintimeintfacefloat1d, LINTIMEINTFACEFLOAT1D) (ifirst(0),
             ilast(0),

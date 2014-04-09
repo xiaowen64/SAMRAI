@@ -232,7 +232,7 @@ NodeGeometry::transform(
 
       if (rotation_num) {
          NodeIndex tmp_index(dim);
-         for (int r = 0; r < rotation_num; r++) {
+         for (int r = 0; r < rotation_num; ++r) {
             tmp_index = index;
             index(0) = tmp_index(1);
             index(1) = -tmp_index(0);
@@ -371,7 +371,7 @@ NodeGeometry::rotateAboutAxis(NodeIndex& index,
    const int b = (axis + 2) % dim.getValue();
 
    NodeIndex tmp_index(dim);
-   for (int j = 0; j < num_rotations; j++) {
+   for (int j = 0; j < num_rotations; ++j) {
       tmp_index = index;
       index(a) = tmp_index(b);
       index(b) = -tmp_index(a);

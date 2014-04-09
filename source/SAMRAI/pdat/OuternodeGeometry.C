@@ -147,7 +147,7 @@ OuternodeGeometry::doOverlap(
       const hier::Box fill_node_box(
          NodeGeometry::toNodeBox(fill_box));
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
 
          hier::Box trimmed_src_node_box = src_node_box;
          for (int dh = d + 1; dh < dim.getValue(); ++dh) {
@@ -254,7 +254,7 @@ OuternodeGeometry::doOverlap(
       const hier::Box fill_node_box(
          NodeGeometry::toNodeBox(fill_box));
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
 
          hier::Box trimmed_dst_node_box(dst_node_box * fill_node_box);
          for (int dh = d + 1; dh < dim.getValue(); ++dh) {

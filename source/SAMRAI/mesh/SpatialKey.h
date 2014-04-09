@@ -64,7 +64,7 @@ public:
    operator = (
       const SpatialKey& spatial_key)
    {
-      for (int i = 0; i < NUM_COORDS_MIXED_FOR_SPATIAL_KEY; i++) {
+      for (int i = 0; i < NUM_COORDS_MIXED_FOR_SPATIAL_KEY; ++i) {
          d_key[i] = spatial_key.d_key[i];
       }
       return *this;
@@ -79,7 +79,7 @@ public:
       const SpatialKey& spatial_key) const
    {
       bool are_equal = true;
-      for (int i = 0; i < NUM_COORDS_MIXED_FOR_SPATIAL_KEY; i++) {
+      for (int i = 0; i < NUM_COORDS_MIXED_FOR_SPATIAL_KEY; ++i) {
          if (d_key[i] != spatial_key.d_key[i]) {
             are_equal = false;
             break;
@@ -146,7 +146,7 @@ public:
    void
    setToZero()
    {
-      for (int i = 0; i < NUM_COORDS_MIXED_FOR_SPATIAL_KEY; i++) {
+      for (int i = 0; i < NUM_COORDS_MIXED_FOR_SPATIAL_KEY; ++i) {
          d_key[i] = 0;
       }
    }

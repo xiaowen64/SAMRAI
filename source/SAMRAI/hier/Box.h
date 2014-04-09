@@ -593,7 +593,7 @@ public:
    bool
    isEmpty() const
    {
-      for (int i = 0; i < getDim().getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); ++i) {
          if (d_hi(i) < d_lo(i)) {
             return true;
          }
@@ -642,7 +642,7 @@ public:
       int mysize = 0;
       if (!empty()) {
          mysize = 1;
-         for (int i = 0; i < getDim().getValue(); i++) {
+         for (int i = 0; i < getDim().getValue(); ++i) {
             mysize *= (d_hi(i) - d_lo(i) + 1);
          }
       }
@@ -710,7 +710,7 @@ public:
    contains(
       const Index& p) const
    {
-      for (int i = 0; i < getDim().getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); ++i) {
          if ((p(i) < d_lo(i)) || (p(i) > d_hi(i))) {
             return false;
          }
@@ -1111,7 +1111,7 @@ public:
       const IntVector& ratio)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
-      for (int i = 0; i < getDim().getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); ++i) {
          d_lo(i) = coarsen(d_lo(i), ratio(i));
          d_hi(i) = coarsen(d_hi(i), ratio(i));
       }
@@ -1483,11 +1483,11 @@ public:
       int)
    {
       BoxIterator tmp = *this;
-      d_index(0)++;
-      for (int i = 0; i < (d_index.getDim().getValue() - 1); i++) {
+      ++d_index(0);
+      for (int i = 0; i < (d_index.getDim().getValue() - 1); ++i) {
          if (d_index(i) > d_box.upper(i)) {
             d_index(i) = d_box.lower(i);
-            d_index(i + 1)++;
+            ++d_index(i + 1);
          } else
             break;
       }
@@ -1500,11 +1500,11 @@ public:
    BoxIterator&
    operator ++ ()
    {
-      d_index(0)++;
-      for (int i = 0; i < (d_index.getDim().getValue() - 1); i++) {
+      ++d_index(0);
+      for (int i = 0; i < (d_index.getDim().getValue() - 1); ++i) {
          if (d_index(i) > d_box.upper(i)) {
             d_index(i) = d_box.lower(i);
-            d_index(i + 1)++;
+            ++d_index(i + 1);
          } else
             break;
       }

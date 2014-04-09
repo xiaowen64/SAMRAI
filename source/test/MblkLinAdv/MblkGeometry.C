@@ -48,7 +48,7 @@ MblkGeometry::MblkGeometry(
    d_nblocks = nblocks;
 
    d_metrics_set.resize(10);
-   for (int i = 0; i < 10; i++) {
+   for (int i = 0; i < 10; ++i) {
       d_metrics_set[i] = false;
    }
 
@@ -143,9 +143,9 @@ void MblkGeometry::tagOctantCells(
          + (regrid_time * d_tag_velocity) + (0.5 * d_tag_width);
 
       hier::Box pbox = patch.getBox();
-      for (int k = pbox.lower(2); k <= pbox.upper(2) + 1; k++) {
-         for (int j = pbox.lower(1); j <= pbox.upper(1) + 1; j++) {
-            for (int i = pbox.lower(0); i <= pbox.upper(0) + 1; i++) {
+      for (int k = pbox.lower(2); k <= pbox.upper(2) + 1; ++k) {
+         for (int j = pbox.lower(1); j <= pbox.upper(1) + 1; ++j) {
+            for (int i = pbox.lower(0); i <= pbox.upper(0) + 1; ++i) {
                hier::Index ic(i, j, k);
                pdat::NodeIndex node(ic, pdat::NodeIndex::LLL);
                hier::Index icm1(i - 1, j - 1, k - 1);
@@ -200,7 +200,7 @@ void MblkGeometry::getFromInput(
       d_cart_xlo.resize(d_nblocks);
       d_cart_xhi.resize(d_nblocks);
 
-      for (nb = 0; nb < d_nblocks; nb++) {
+      for (nb = 0; nb < d_nblocks; ++nb) {
 
          // xlo
          sprintf(block_name, "domain_xlo_%d", nb);
@@ -212,7 +212,7 @@ void MblkGeometry::getFromInput(
          }
          d_cart_xlo[nb].resize(d_dim.getValue());
          cart_db->getDoubleArray(block_name, temp_domain, d_dim.getValue());
-         for (i = 0; i < d_dim.getValue(); i++) {
+         for (i = 0; i < d_dim.getValue(); ++i) {
             d_cart_xlo[nb][i] = temp_domain[i];
          }
 
@@ -226,7 +226,7 @@ void MblkGeometry::getFromInput(
          }
          d_cart_xhi[nb].resize(d_dim.getValue());
          cart_db->getDoubleArray(block_name, temp_domain, d_dim.getValue());
-         for (i = 0; i < d_dim.getValue(); i++) {
+         for (i = 0; i < d_dim.getValue(); ++i) {
             d_cart_xhi[nb][i] = temp_domain[i];
          }
 
@@ -245,7 +245,7 @@ void MblkGeometry::getFromInput(
       d_wedge_rmin.resize(d_nblocks);
       d_wedge_rmax.resize(d_nblocks);
 
-      for (nb = 0; nb < d_nblocks; nb++) {
+      for (nb = 0; nb < d_nblocks; ++nb) {
 
          // rmin
          sprintf(block_name, "rmin_%d", nb);
@@ -336,7 +336,7 @@ void MblkGeometry::getFromInput(
     * Block rotation
     */
    d_block_rotation.resize(d_nblocks);
-   for (nb = 0; nb < d_nblocks; nb++) {
+   for (nb = 0; nb < d_nblocks; ++nb) {
       d_block_rotation[nb] = 0;
       sprintf(block_name, "rotation_%d", nb);
       if (db->keyExists(block_name)) {
@@ -358,20 +358,20 @@ void MblkGeometry::getFromInput(
     *
     */
    d_refine_boxes.resize(d_nblocks);
-   for (nb = 0; nb < d_nblocks; nb++) {
+   for (nb = 0; nb < d_nblocks; ++nb) {
 
       // see what the max number of levels is
       int max_ln = 0;
       int ln;
-      for (ln = 0; ln < 10; ln++) {
+      for (ln = 0; ln < 10; ++ln) {
          sprintf(block_name, "refine_boxes_%d_%d", nb, ln);
          if (db->keyExists(block_name)) {
-            max_ln++;
+            ++max_ln;
          }
       }
       d_refine_boxes[nb].resize(max_ln);
 
-      for (ln = 0; ln < max_ln; ln++) {
+      for (ln = 0; ln < max_ln; ++ln) {
          sprintf(block_name, "refine_boxes_%d_%d", nb, ln);
          if (db->keyExists(block_name)) {
             std::vector<tbox::DatabaseBox> db_box_vector =
@@ -492,7 +492,7 @@ void MblkGeometry::getDx(
                        << "takes in the domain." << std::endl);
    }
 
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       dx[i] = d_dx[level_number][i];
    }
 
@@ -538,7 +538,7 @@ void MblkGeometry::setCartesianMetrics(
     * Compute dx from first grid geometry block only.  Its assumed
     * to be uniform across the multiple blocks.
     */
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       d_dx[level_number][i] =
          (d_cart_xhi[0][i] - d_cart_xlo[0][i]) / (double)diff(i);
    }
@@ -701,9 +701,9 @@ void MblkGeometry::buildWedgeGridOnPatch(
    // ----------- set the wedge nodal positions
    //
 
-   for (int k = nd_kmin; k <= nd_kmax; k++) {
-      for (int j = nd_jmin; j <= nd_jmax; j++) {
-         for (int i = nd_imin; i <= nd_imax; i++) {
+   for (int k = nd_kmin; k <= nd_kmax; ++k) {
+      for (int j = nd_jmin; j <= nd_jmax; ++j) {
+         for (int i = nd_imin; i <= nd_imax; ++i) {
 
             int ind = POLY3(i, j, k, nd_imin, nd_jmin, nd_kmin, nd_nx, nd_nxny);
 
@@ -860,8 +860,8 @@ void MblkGeometry::buildSShellGridOnPatch(
          // step in a radial direction in x and set y and z appropriately
          // for a solid angle we go -th to th and -phi to phi
          //
-         for (int k = nd_kmin; k <= nd_kmax; k++) {
-            for (int j = nd_jmin; j <= nd_jmax; j++) {
+         for (int k = nd_kmin; k <= nd_kmax; ++k) {
+            for (int j = nd_jmin; j <= nd_jmax; ++j) {
 
                double theta = d_sangle_thmin + j * d_dx[level_number][1]; // dx used for dth
                double phi = d_sangle_thmin + k * d_dx[level_number][2];
@@ -870,7 +870,7 @@ void MblkGeometry::buildSShellGridOnPatch(
                double yface = sin(theta) * cos(phi);
                double zface = sin(phi);
 
-               for (int i = nd_imin; i <= nd_imax; i++) {
+               for (int i = nd_imin; i <= nd_imax; ++i) {
 
                   int ind = POLY3(i,
                         j,
@@ -910,8 +910,8 @@ void MblkGeometry::buildSShellGridOnPatch(
          // the block we are in.  This is contained in the dispOctant.m
          // matlab code.
          //
-         for (int k = nd_kmin; k <= nd_kmax; k++) {
-            for (int j = nd_jmin; j <= nd_jmax; j++) {
+         for (int k = nd_kmin; k <= nd_kmax; ++k) {
+            for (int j = nd_jmin; j <= nd_jmax; ++j) {
 
                //
                // compute the position on the unit sphere for our radial line
@@ -920,7 +920,7 @@ void MblkGeometry::buildSShellGridOnPatch(
                computeUnitSphereOctant(block_number, nth, j, k,
                   &xface, &yface, &zface);
 
-               for (int i = nd_imin; i <= nd_imax; i++) {
+               for (int i = nd_imin; i <= nd_imax; ++i) {
                   int ind = POLY3(i,
                         j,
                         k,
