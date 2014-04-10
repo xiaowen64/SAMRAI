@@ -295,11 +295,6 @@ CascadePartitionerTree::combineChildren()
 {
    d_common->t_combine_children->start();
 
-   /*
-    * Determine and record work of the two halves.  Needs
-    * communication to get data about the far half of the group.
-    */
-
    tbox::MessageStream send_msg;
    send_msg << d_near->d_work << d_near->d_group_may_supply << d_near->d_process_may_supply[0];
 
@@ -331,6 +326,7 @@ CascadePartitionerTree::combineChildren()
          d_common->d_comm_stage.popCompletionQueue() );
 
       const int i = completed - d_common->d_comm_peer;
+      TBOX_ASSERT(i >= 0 && i < 4 );
       if ( i < 2 ) {
          // This was a receive.
          tbox::MessageStream recv_msg(completed->getRecvSize(),
@@ -342,7 +338,6 @@ CascadePartitionerTree::combineChildren()
    }
    TBOX_ASSERT( d_common->d_comm_stage.numberOfPendingMembers() == 0 );
 
-   // Work data is function of children data.
    d_work = d_children[0]->d_work + d_children[1]->d_work;
    d_group_may_supply = estimatedSurplus() > d_common->d_pparams->getLoadComparisonTol();
 
@@ -544,29 +539,21 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
 
       if ( d_children[0] != 0 ) {
          // Near group and not a leaf: Recursively supply load from children.
-         if ( taker < d_begin ) {
-            est_work_supplied = d_children[0]->supplyWork( allowed_supply, taker );
-            if ( est_work_supplied < allowed_supply ) {
-               est_work_supplied +=
-                  d_children[1]->supplyWork( allowed_supply-est_work_supplied, taker );
-            }
-         }
-         else {
-            est_work_supplied = d_children[1]->supplyWork( allowed_supply, taker );
-            if ( est_work_supplied < allowed_supply ) {
-               est_work_supplied +=
-                  d_children[0]->supplyWork( allowed_supply-est_work_supplied, taker );
-            }
+         const int priority = taker >= d_begin;
+         est_work_supplied = d_children[priority]->supplyWork( allowed_supply, taker );
+         if ( est_work_supplied < allowed_supply ) {
+            est_work_supplied +=
+               d_children[!priority]->supplyWork( allowed_supply-est_work_supplied, taker );
          }
       }
 
       else {
-         // This is a leaf and/or a far group.  No children, and no recursion.
+         // A leaf and/or a far group.  No children, and no recursion.
          est_work_supplied = allowed_supply;
          d_work -= est_work_supplied;
 
          if ( containsRank(d_common->d_mpi.getRank()) ) {
-            // This is a near leaf group: set aside the work shipment.
+            // This is a near leaf group: apportion the load shipment.
             TBOX_ASSERT( size() == 1 );
             const double tolerance = d_common->d_flexible_load_tol*d_common->d_global_load_avg;
             d_common->d_shipment->adjustLoad(
