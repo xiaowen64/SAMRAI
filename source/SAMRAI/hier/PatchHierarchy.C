@@ -753,6 +753,12 @@ PatchHierarchy::makeNewPatchLevel(
             << ", it should be " << expected_ratio << std::endl);
       }
    }
+   if (d_patch_levels.size() > ln && d_patch_levels[ln].get() != 0) {
+      TBOX_ERROR("PatchHierarchy::makeNewPatchLevel: patch level "
+         << ln << " already exists. "
+         << "Remove old level from the hierarchy before making "
+         << "a new level in its place." << std::endl);
+   }
 
    if (ln >= d_number_levels) {
       d_number_levels = ln + 1;
@@ -819,6 +825,12 @@ PatchHierarchy::makeNewPatchLevel(
             << new_box_level->getRefinementRatio()
             << ", it should be " << expected_ratio << std::endl);
       }
+   }
+   if (d_patch_levels.size() > ln && d_patch_levels[ln].get() != 0) {
+      TBOX_ERROR("PatchHierarchy::makeNewPatchLevel: patch level "
+         << ln << " already exists. "
+         << "Remove old level from the hierarchy before making "
+         << "a new level in its place." << std::endl);
    }
 
    if (ln >= d_number_levels) {

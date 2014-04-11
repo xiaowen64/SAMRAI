@@ -395,10 +395,6 @@ public:
       const std::string& coarse_hierarchy_name,
       const IntVector& coarsen_ratio) const;
 
-/*
- * TODO: Is it an error to call these methods when a level with the given
- * level number already exists?  Are some preconditions assumed?
- */
    /*!
     * @brief Construct new PatchLevel in hierarchy at given level number.
     *
