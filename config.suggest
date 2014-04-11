@@ -202,6 +202,7 @@ cat <<-EOF
 	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-3.2-p7.gcc.4.1.2
 	--with-sundials=/usr/casc/samrai/apps/rh5/sundials/2.3.0_gcc.4.1.2
 	--enable-rpath=-Wl,-R
+	--disable-openmp
 EOF
 #
 ;;
