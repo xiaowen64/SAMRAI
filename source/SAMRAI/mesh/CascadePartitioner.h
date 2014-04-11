@@ -12,7 +12,6 @@
 #define included_mesh_CascadePartitioner
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/mesh/CascadePartitionerCombinedGroup.h"
 #include "SAMRAI/mesh/CascadePartitionerTree.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
@@ -39,6 +38,7 @@ namespace mesh {
 /*!
  * @brief Provides load balancing routines for AMR hierarchy by
  * implemementing the LoadBalancerStrategy.
+ * This is UNSUPPORTED, EXPERIMENTAL code not for general use.
  *
  * Currently, only uniform load balancing is supported.  Eventually,
  * non-uniform load balancing should be supported.  (Non-uniform load
@@ -345,8 +345,7 @@ private:
     * parts.  CascadePartitionerTree can be made a private subclass
     * of CascadePartitioner, but that would make a big file.
     */
-   friend CascadePartitionerTree;
-   friend CascadePartitionerCombinedGroup;
+   friend class CascadePartitionerTree;
 
    /*
     * Object dimension.
