@@ -185,7 +185,11 @@ CascadePartitionerTree::~CascadePartitionerTree()
 {
    if ( d_children[0] ) delete d_children[0];
    if ( d_children[1] ) delete d_children[1];
-   d_children[0] = d_children[1] = d_near = d_far = d_leaf = 0;
+   d_children[0] = 0;
+   d_children[1] = 0;
+   d_near = 0;
+   d_far = 0;
+   d_leaf = 0;
 }
 
 
