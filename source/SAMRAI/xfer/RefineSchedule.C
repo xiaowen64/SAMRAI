@@ -1880,8 +1880,7 @@ RefineSchedule::fillData(
     */
 
    d_transaction_factory->setTransactionTime(fill_time);
-   d_transaction_factory->setRefineItems(&d_refine_items[0],
-                                         static_cast<int>(d_refine_items.size()));
+   d_transaction_factory->setRefineItems(&d_refine_items[0]);
 
    /*
     * Check whether scratch data needs to be allocated on the destination

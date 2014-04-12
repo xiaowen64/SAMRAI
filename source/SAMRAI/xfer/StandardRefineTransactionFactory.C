@@ -44,13 +44,11 @@ StandardRefineTransactionFactory::~StandardRefineTransactionFactory()
 
 void
 StandardRefineTransactionFactory::setRefineItems(
-   const RefineClasses::Data*const* refine_items,
-   int num_refine_items)
+   const RefineClasses::Data*const* refine_items)
 {
-   RefineCopyTransaction::setRefineItems(refine_items, num_refine_items);
-   RefineTimeTransaction::setRefineItems(refine_items, num_refine_items);
+   RefineCopyTransaction::setRefineItems(refine_items);
+   RefineTimeTransaction::setRefineItems(refine_items);
    d_refine_items = refine_items;
-   d_num_refine_items = num_refine_items;
 }
 
 void
@@ -59,7 +57,6 @@ StandardRefineTransactionFactory::unsetRefineItems()
    RefineCopyTransaction::unsetRefineItems();
    RefineTimeTransaction::unsetRefineItems();
    d_refine_items = 0;
-   d_num_refine_items = 0;
 }
 
 void

@@ -43,13 +43,10 @@ OuteredgeSumTransactionFactory::~OuteredgeSumTransactionFactory()
 
 void
 OuteredgeSumTransactionFactory::setRefineItems(
-   const xfer::RefineClasses::Data*const* refine_items,
-   int num_refine_items)
+   const xfer::RefineClasses::Data*const* refine_items)
 {
-   OuteredgeSumTransaction::setRefineItems(refine_items,
-      num_refine_items);
+   OuteredgeSumTransaction::setRefineItems(refine_items);
    d_refine_items = refine_items;
-   d_number_refine_items = num_refine_items;
 }
 
 void
@@ -57,7 +54,6 @@ OuteredgeSumTransactionFactory::unsetRefineItems()
 {
    OuteredgeSumTransaction::unsetRefineItems();
    d_refine_items = 0;
-   d_number_refine_items = 0;
 }
 
 /*

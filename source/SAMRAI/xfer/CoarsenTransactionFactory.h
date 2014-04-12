@@ -67,8 +67,7 @@ public:
     */
    virtual void
    setCoarsenItems(
-      const CoarsenClasses::Data ** coarsen_items,
-      int num_coarsen_items) = 0;
+      const CoarsenClasses::Data ** coarsen_items) = 0;
 
    /*!
     * @brief Pure virtual function to clear the array of CoarsenClass::Data

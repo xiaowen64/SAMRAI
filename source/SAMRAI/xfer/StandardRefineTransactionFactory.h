@@ -53,8 +53,7 @@ public:
     */
    virtual void
    setRefineItems(
-      const RefineClasses::Data *const* refine_items,
-      int num_refine_items);
+      const RefineClasses::Data *const* refine_items);
 
    /*!
     * @brief Clear the array of RefineClass::Data items used by the
@@ -135,7 +134,6 @@ private:
       const StandardRefineTransactionFactory&);
 
    const RefineClasses::Data*const* d_refine_items;
-   int d_num_refine_items;
 
 };
 

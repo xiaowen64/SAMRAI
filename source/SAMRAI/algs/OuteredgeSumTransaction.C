@@ -36,7 +36,6 @@ namespace algs {
  */
 
 const xfer::RefineClasses::Data *const* OuteredgeSumTransaction::s_refine_items = 0;
-int OuteredgeSumTransaction::s_num_refine_items = 0;
 
 /*
  *************************************************************************
@@ -195,7 +194,6 @@ OuteredgeSumTransaction::printClassData(
    stream << "   refine item array:        "
           << (xfer::RefineClasses::Data **)s_refine_items
           << std::endl;
-   stream << "   num refine items:       " << s_num_refine_items << std::endl;
    stream << "   destination node:       " << d_dst_node << std::endl;
    stream << "   source node:            " << d_src_node << std::endl;
    stream << "   refine item id:         " << d_refine_item_id << std::endl;

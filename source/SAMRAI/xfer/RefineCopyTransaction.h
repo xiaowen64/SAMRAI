@@ -49,18 +49,12 @@ public:
     * data transfers.  The array must be set before any transactions are
     * executed.  The array is set in the RefineSchedule class.
     *
-    * @pre refine_items != 0
-    * @pre num_refine_items >= 0
     */
    static void
    setRefineItems(
-      const RefineClasses::Data*const* refine_items,
-      int num_refine_items)
+      const RefineClasses::Data*const* refine_items)
    {
-      TBOX_ASSERT(num_refine_items == 0 || refine_items != 0);
-      TBOX_ASSERT(num_refine_items >= 0);
       s_refine_items = refine_items;
-      s_num_refine_items = num_refine_items;
    }
 
    /*!
@@ -74,7 +68,6 @@ public:
    unsetRefineItems()
    {
       s_refine_items = 0;
-      s_num_refine_items = 0;
    }
 
    /*!
@@ -191,7 +184,6 @@ private:
       const RefineCopyTransaction&);                    // not implemented
 
    static const RefineClasses::Data*const* s_refine_items;
-   static int s_num_refine_items;
 
    boost::shared_ptr<hier::Patch> d_dst_patch;
    int d_dst_patch_rank;

@@ -42,20 +42,16 @@ OuternodeSumTransactionFactory::~OuternodeSumTransactionFactory()
  */
 
 void OuternodeSumTransactionFactory::setRefineItems(
-   const xfer::RefineClasses::Data*const* refine_items,
-   int num_refine_items)
+   const xfer::RefineClasses::Data*const* refine_items)
 {
-   OuternodeSumTransaction::setRefineItems(refine_items,
-      num_refine_items);
+   OuternodeSumTransaction::setRefineItems(refine_items);
    d_refine_items = refine_items;
-   d_number_refine_items = num_refine_items;
 }
 
 void OuternodeSumTransactionFactory::unsetRefineItems()
 {
    OuternodeSumTransaction::unsetRefineItems();
    d_refine_items = 0;
-   d_number_refine_items = 0;
 }
 
 /*

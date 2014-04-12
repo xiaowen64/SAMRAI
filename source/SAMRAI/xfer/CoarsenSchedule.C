@@ -264,8 +264,7 @@ CoarsenSchedule::coarsenData() const
     * Set the coarsen items for all transactions.  These items are
     * shared by all transaction objects in the communication schedule.
     */
-   d_transaction_factory->setCoarsenItems(d_coarsen_items,
-      static_cast<int>(d_number_coarsen_items));
+   d_transaction_factory->setCoarsenItems(d_coarsen_items);
 
    /*
     * Allocate the source data space on the temporary patch level.

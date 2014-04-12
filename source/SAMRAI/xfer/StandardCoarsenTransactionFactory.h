@@ -51,8 +51,7 @@ public:
     */
    virtual void
    setCoarsenItems(
-      const CoarsenClasses::Data ** coarsen_items,
-      int num_coarsen_items);
+      const CoarsenClasses::Data ** coarsen_items);
 
    /*!
     * @brief Clear the array of CoarsenClass::Data items used by the
@@ -95,7 +94,6 @@ private:
       const StandardCoarsenTransactionFactory&);
 
    const CoarsenClasses::Data** d_coarsen_items;
-   int d_num_coarsen_items;
 
 };
 

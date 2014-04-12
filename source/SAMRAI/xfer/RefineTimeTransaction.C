@@ -41,7 +41,6 @@ double RefineTimeTransaction::s_time = 0.0;
 
 const RefineClasses::Data *const*
 RefineTimeTransaction::s_refine_items = 0;
-int RefineTimeTransaction::s_num_refine_items = 0;
 
 /*
  *************************************************************************
@@ -78,8 +77,6 @@ RefineTimeTransaction::RefineTimeTransaction(
       dst_box,
       src_box,
       box);
-
-   // Note: s_num_coarsen_items cannot be used at this point!
 
    if (d_dst_patch_rank == dst_level->getBoxLevel()->getMPI().getRank()) {
       d_dst_patch = dst_level->getPatch(dst_box.getBoxId());
@@ -276,7 +273,6 @@ RefineTimeTransaction::printClassData(
    stream << "   transaction time:        " << s_time << std::endl;
    stream << "   refine item array:        "
           << (RefineClasses::Data **)s_refine_items << std::endl;
-   stream << "   num refine items:        " << s_num_refine_items << std::endl;
    stream << "   destination patch rank:        " << d_dst_patch_rank
           << std::endl;
    stream << "   source patch rank:             " << d_src_patch_rank

@@ -25,7 +25,6 @@ namespace SAMRAI {
 namespace xfer {
 
 const CoarsenClasses::Data ** CoarsenCopyTransaction::s_coarsen_items = 0;
-int CoarsenCopyTransaction::s_num_coarsen_items = 0;
 
 /*
  *************************************************************************
@@ -60,7 +59,6 @@ CoarsenCopyTransaction::CoarsenCopyTransaction(
    TBOX_ASSERT(src_box.getLocalId() >= 0);
    TBOX_ASSERT(coarsen_item_id >= 0);
 
-   // Note: s_num_coarsen_items cannot be used at this point!
 
    if (d_dst_patch_rank == dst_level->getBoxLevel()->getMPI().getRank()) {
       d_dst_patch = dst_level->getPatch(dst_box.getGlobalId());
@@ -171,7 +169,6 @@ CoarsenCopyTransaction::printClassData(
    stream << "Coarsen Copy Transaction" << std::endl;
    stream << "   coarsen item array:        "
           << (CoarsenClasses::Data **)s_coarsen_items << std::endl;
-   stream << "   num coarsen items:      " << s_num_coarsen_items << std::endl;
    stream << "   destination patch rank:       " << d_dst_patch_rank
           << std::endl;
    stream << "   source patch_rank:            " << d_src_patch_rank

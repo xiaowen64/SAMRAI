@@ -54,13 +54,10 @@ public:
     */
    static void
    setCoarsenItems(
-      const CoarsenClasses::Data** coarsen_items,
-      int num_coarsen_items)
+      const CoarsenClasses::Data** coarsen_items)
    {
       TBOX_ASSERT(coarsen_items != 0);
-      TBOX_ASSERT(num_coarsen_items >= 0);
       s_coarsen_items = coarsen_items;
-      s_num_coarsen_items = num_coarsen_items;
    }
 
    /*!
@@ -74,7 +71,6 @@ public:
    unsetCoarsenItems()
    {
       s_coarsen_items = 0;
-      s_num_coarsen_items = 0;
    }
 
    /*!
@@ -191,7 +187,6 @@ private:
       const CoarsenCopyTransaction&);                   // not implemented
 
    static const CoarsenClasses::Data** s_coarsen_items;
-   static int s_num_coarsen_items;
 
    boost::shared_ptr<hier::Patch> d_dst_patch;
    int d_dst_patch_rank;
