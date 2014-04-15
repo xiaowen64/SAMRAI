@@ -99,11 +99,16 @@ private:
 
    /*!
     * @brief Construct child node based on its position in the parent.
+    *
+    * @param parent
+    * @param group_position Position of this group.
     */
    CascadePartitionerTree( CascadePartitionerTree &parent,
                            Position group_position );
 
-   //! Allocate and set up the group's children.
+   /*!
+    * @brief Allocate and set up the group's children, if any.
+    */
    void makeChildren();
 
    /*!

@@ -55,8 +55,8 @@ CascadePartitionerTree::CascadePartitionerTree(
    d_process_may_supply[0] = d_process_may_supply[1] = false;
 
    if ( d_common->d_print_steps ) {
-      tbox::plog << "CascadePartitionerTree::root constructor: entered\n";
-      printClassData( tbox::plog, "\t" );
+      tbox::plog << "CascadePartitionerTree::root constructor: entered generation "
+                 << d_gen_num << "  ranks " << d_begin << '-' << d_end << "\n";
    }
 
    makeChildren();
@@ -70,10 +70,15 @@ CascadePartitionerTree::CascadePartitionerTree(
 
 
 /*
- * Construct a child group.  Child group has either the first half or
- * the second half of the parent group.  If parent group has odd
- * number of processes, the extra process is placed in the Upper child
- * group.
+ * Construct a child group.  Child group has either the lower half or
+ * the upper half of the parent group, indicated by group_position.
+ * If parent group has odd number of processes, the extra process is
+ * placed in the upper group.
+ *
+ * Assign contacts by pairing this process with the process having the
+ * same relative rank in the sibling group.  If upper group has an
+ * extra rank, pair it with the last rank in lower group (giving last
+ * rank in lower group two contacts).
  */
 CascadePartitionerTree::CascadePartitionerTree(
    CascadePartitionerTree &parent,
@@ -93,55 +98,46 @@ CascadePartitionerTree::CascadePartitionerTree(
    d_obligation(-1.0),
    d_group_may_supply(false)
 {
+   if ( d_common->d_print_steps ) {
+      tbox::plog << "CascadePartitionerTree::non-root constructor: entered generation "
+                 << d_gen_num << "  parent ranks " << d_begin << '-' << d_end
+                 << "  position " << group_position << "\n";
+   }
+
    d_children[0] = d_children[1] = 0;
    d_contact[0] = d_contact[1] = -1;
    d_process_may_supply[0] = d_process_may_supply[1] = false;
 
    const int upper_begin = (d_parent->d_begin + d_parent->d_end)/2;
-   if ( group_position == Lower ) { d_end = upper_begin; }
-   else { d_begin = upper_begin; }
 
-   d_obligation = d_common->d_global_load_avg*(d_end-d_begin);
-
-   /*
-    * Assign contacts by pairing this process with the sibling group's
-    * process having the same relative rank.  If upper group has an
-    * odd rank, pair it with the last rank in lower group (giving last
-    * rank in lower group two contacts).
-    */
-   const int relative_rank = d_common->d_mpi.getRank() < upper_begin ?
-      d_common->d_mpi.getRank() - d_parent->d_begin :
-      d_common->d_mpi.getRank() - upper_begin ;
    if ( group_position == Lower ) {
+      d_end = upper_begin;
+      const int relative_rank = d_common->d_mpi.getRank() - d_parent->d_begin;
       d_contact[0] = relative_rank + upper_begin;
-      if ( d_common->d_mpi.getRank() == upper_begin-1 &&
-           (d_parent->d_end - d_parent->d_begin)%2 ) {
+
+      if ( (d_parent->d_end - d_parent->d_begin)%2 &&
+         d_common->d_mpi.getRank() == upper_begin-1 ) {
          d_contact[1] = 1 + d_contact[0];
       }
    }
    else {
+      d_begin = upper_begin;
+      const int relative_rank = d_common->d_mpi.getRank() - upper_begin;
       d_contact[0] = tbox::MathUtilities<int>::Min(
          relative_rank + d_parent->d_begin, upper_begin-1 );
    }
 
-   d_process_may_supply[0] = d_process_may_supply[1] = false;
+   d_obligation = d_common->d_global_load_avg*(d_end-d_begin);
 
-   if ( d_common->d_print_steps ) {
-      tbox::plog << "CascadePartitionerTree::non-root constructor: entered\n";
-      printClassData( tbox::plog, "\t" );
-   }
-
-   // If local process is in this group, make its children.  Otherwise skip.
-   if ( d_common->d_mpi.getRank() >= d_begin &&
-        d_common->d_mpi.getRank() < d_end ) {
+   if ( containsRank(d_common->d_mpi.getRank()) ) {
       makeChildren();
    }
-
 
    if ( d_common->d_print_steps ) {
       tbox::plog << "CascadePartitionerTree::non-root constructor: leaving\n";
       printClassData( tbox::plog, "\t" );
    }
+
    return;
 }
 
@@ -159,7 +155,7 @@ CascadePartitionerTree::makeChildren()
       d_children[0] = new CascadePartitionerTree( *this, Lower );
       d_children[1] = new CascadePartitionerTree( *this, Upper );
 
-      const bool in_upper_branch = d_common->d_mpi.getRank() >= d_children[1]->d_begin;
+      const bool in_upper_branch = d_children[1]->containsRank(d_common->d_mpi.getRank());
       d_near = d_children[in_upper_branch];
       d_far = d_children[!in_upper_branch];
 
@@ -190,6 +186,7 @@ CascadePartitionerTree::~CascadePartitionerTree()
    d_near = 0;
    d_far = 0;
    d_leaf = 0;
+   d_common = 0;
 }
 
 
