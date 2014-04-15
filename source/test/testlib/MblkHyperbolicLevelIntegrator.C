@@ -17,6 +17,7 @@
 using namespace std;
 
 #include "SAMRAI/tbox/RestartManager.h"
+#include "SAMRAI/hier/PatchDataRestartManager.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/FaceVariable.h"
 #include "SAMRAI/pdat/OuterfaceVariable.h"
@@ -1715,8 +1716,8 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
          /*
           * Register variable and context needed for restart.
           */
-         hier::VariableDatabase::getDatabase()->
-         registerPatchDataForRestart(cur_id);
+         hier::PatchDataRestartManager::getManager()->
+            registerPatchDataForRestart(cur_id);
 
          /*
           * Set boundary fill schedules for time-dependent variable.
@@ -1804,8 +1805,8 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
          /*
           * Register variable and context needed for restart.
           */
-         hier::VariableDatabase::getDatabase()->
-         registerPatchDataForRestart(cur_id);
+         hier::PatchDataRestartManager::getManager()->
+            registerPatchDataForRestart(cur_id);
 
          /*
           * Bdry algorithms for input variables will fill from current only.
@@ -1853,8 +1854,8 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
          /*
           * Register variable and context needed for restart.
           */
-         hier::VariableDatabase::getDatabase()->
-         registerPatchDataForRestart(cur_id);
+         hier::PatchDataRestartManager::getManager()->
+            registerPatchDataForRestart(cur_id);
 
          d_mblk_fill_new_level->registerRefine(
             cur_id, cur_id, scr_id, refine_op);

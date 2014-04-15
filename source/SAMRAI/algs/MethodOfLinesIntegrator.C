@@ -11,6 +11,7 @@
 
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchData.h"
+#include "SAMRAI/hier/PatchDataRestartManager.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/RestartManager.h"
@@ -393,8 +394,8 @@ MethodOfLinesIntegrator::registerVariable(
          /*
           * Register variable and context needed for restart.
           */
-         hier::VariableDatabase::getDatabase()->
-         registerPatchDataForRestart(current);
+         hier::PatchDataRestartManager::getManager()->
+            registerPatchDataForRestart(current);
 
          /*
           * Ask the geometry for the appropriate refinement operator and

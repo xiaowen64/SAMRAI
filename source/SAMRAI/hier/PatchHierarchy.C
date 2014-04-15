@@ -753,7 +753,8 @@ PatchHierarchy::makeNewPatchLevel(
             << ", it should be " << expected_ratio << std::endl);
       }
    }
-   if (d_patch_levels.size() > ln && d_patch_levels[ln].get() != 0) {
+   if (static_cast<int>(d_patch_levels.size()) > ln &&
+       d_patch_levels[ln].get() != 0) {
       TBOX_ERROR("PatchHierarchy::makeNewPatchLevel: patch level "
          << ln << " already exists. "
          << "Remove old level from the hierarchy before making "
@@ -826,7 +827,8 @@ PatchHierarchy::makeNewPatchLevel(
             << ", it should be " << expected_ratio << std::endl);
       }
    }
-   if (d_patch_levels.size() > ln && d_patch_levels[ln].get() != 0) {
+   if (static_cast<int>(d_patch_levels.size()) > ln &&
+       d_patch_levels[ln].get() != 0) {
       TBOX_ERROR("PatchHierarchy::makeNewPatchLevel: patch level "
          << ln << " already exists. "
          << "Remove old level from the hierarchy before making "
@@ -975,33 +977,6 @@ void
 PatchHierarchy::putToRestart(
    const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   putToRestart(restart_db,
-      VariableDatabase::getDatabase()->getPatchDataRestartTable());
-}
-
-
-
-/*
- *************************************************************************
- *
- * Writes the class version number and the number of levels in the
- * hierarchy to the restart database.  Each patch_level write itself out
- * to the restart database.  The database keys for the patch levels are
- * given by "level#" where # is the level number for the patch_level.
- * The patchdata that are written to the database are determined by
- * which those bits in the specified ComponentSelector that are
- * set.
- *
- * Asserts that the database pointer passed in is not NULL.
- *
- *************************************************************************
- */
-
-void
-PatchHierarchy::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db,
-   const ComponentSelector& patchdata_write_table) const
-{
    TBOX_ASSERT(restart_db);
 
    restart_db->putInteger("HIER_PATCH_HIERARCHY_VERSION",
@@ -1078,7 +1053,7 @@ PatchHierarchy::putToRestart(
      boost::shared_ptr<tbox::Database> level_database(
          restart_db->putDatabase(level_names[i]));
 
-      d_patch_levels[i]->putToRestart(level_database, patchdata_write_table);
+      d_patch_levels[i]->putToRestart(level_database);
    }
 }
 
@@ -1212,15 +1187,12 @@ PatchHierarchy::initializeHierarchy()
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!restart_db->isDatabase(d_object_name)) {
-      TBOX_ERROR("PatchHierarchy::getFromRestart() error...\n"
+      TBOX_ERROR("PatchHierarchy::initializeHierarchy() error...\n"
          << "   Restart database with name "
          << d_object_name << " not found in restart file" << std::endl);
    }
    boost::shared_ptr<tbox::Database> database(
       restart_db->getDatabase(d_object_name));
-
-   const ComponentSelector& component_selector =
-      VariableDatabase::getDatabase()->getPatchDataRestartTable();
 
    d_patch_levels.resize(d_number_levels);
    for (int i = 0; i < d_number_levels; ++i) {
@@ -1233,7 +1205,6 @@ PatchHierarchy::initializeHierarchy()
          level_database,
          d_grid_geometry,
          d_patch_descriptor,
-         component_selector,
          d_patch_factory,
          false);
    }

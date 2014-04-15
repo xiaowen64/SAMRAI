@@ -24,6 +24,7 @@
 #include "SAMRAI/xfer/CoarsenSchedule.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
+#include "SAMRAI/hier/PatchDataRestartManager.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -1749,8 +1750,8 @@ HyperbolicLevelIntegrator::registerVariable(
          /*
           * Register variable and context needed for restart.
           */
-         hier::VariableDatabase::getDatabase()->
-         registerPatchDataForRestart(cur_id);
+         hier::PatchDataRestartManager::getManager()->
+            registerPatchDataForRestart(cur_id);
 
          /*
           * Set boundary fill schedules for time-dependent variable.
@@ -1844,8 +1845,8 @@ HyperbolicLevelIntegrator::registerVariable(
          /*
           * Register variable and context needed for restart.
           */
-         hier::VariableDatabase::getDatabase()->
-         registerPatchDataForRestart(cur_id);
+         hier::PatchDataRestartManager::getManager()->
+            registerPatchDataForRestart(cur_id);
 
          /*
           * Bdry algorithms for input variables will fill from current only.
@@ -1896,8 +1897,8 @@ HyperbolicLevelIntegrator::registerVariable(
          /*
           * Register variable and context needed for restart.
           */
-         hier::VariableDatabase::getDatabase()->
-         registerPatchDataForRestart(cur_id);
+         hier::PatchDataRestartManager::getManager()->
+            registerPatchDataForRestart(cur_id);
 
          boost::shared_ptr<hier::RefineOperator> refine_op(
             transfer_geom->lookupRefineOperator(var, refine_name));

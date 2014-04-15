@@ -33,6 +33,7 @@ OBJS = 	\
 	PatchLevelFactory.o \
 	PeriodicId.o \
 	SingularityFinder.o \
+	PatchDataRestartManager.o \
 	VariableDatabase.o \
 	Variable.o \
 	PatchDescriptor.o \

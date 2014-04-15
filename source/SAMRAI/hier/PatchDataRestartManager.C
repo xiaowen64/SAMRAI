@@ -74,47 +74,5 @@ PatchDataRestartManager::~PatchDataRestartManager()
 {
 }
 
-/*
- *************************************************************************
- *
- * Returns true if the supplied patch data index is registered for restart.
- *
- *************************************************************************
- */
-bool
-PatchDataRestartManager::isPatchDataRegisteredForRestart(
-   int index) const
-{
-   return d_patchdata_restart_table.isSet(index);
-}
-
-/*
- *************************************************************************
- *
- * Registers a patch data index for restart.
- *
- *************************************************************************
- */
-void
-PatchDataRestartManager::registerPatchDataForRestart(
-   int index)
-{
-   d_patchdata_restart_table.setFlag(index);
-}
-
-/*
- *************************************************************************
- *
- * Unregisters a patch data index for restart.
- *
- *************************************************************************
- */
-void
-PatchDataRestartManager::unregisterPatchDataForRestart(
-   int index)
-{
-   d_patchdata_restart_table.clrFlag(index);
-}
-
 }
 }

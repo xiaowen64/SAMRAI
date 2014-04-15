@@ -307,7 +307,6 @@ PatchLevel::PatchLevel(
    const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
    const boost::shared_ptr<PatchDescriptor>& descriptor,
    const boost::shared_ptr<PatchFactory>& factory,
-   const ComponentSelector& component_selector,
    bool defer_boundary_box_creation):
    d_dim(grid_geometry->getDim()),
    d_has_globalized_data(false),
@@ -329,7 +328,7 @@ PatchLevel::PatchLevel(
    d_geometry = grid_geometry;
    d_descriptor = descriptor;
 
-   getFromRestart(restart_database, component_selector);
+   getFromRestart(restart_database);
 
    d_boundary_boxes_created = false;
 
@@ -723,8 +722,7 @@ PatchLevel::getBoxes(
 
 void
 PatchLevel::getFromRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db,
-   const ComponentSelector& component_selector)
+   const boost::shared_ptr<tbox::Database>& restart_db)
 {
    TBOX_ASSERT(restart_db);
 
@@ -807,9 +805,7 @@ PatchLevel::getFromRestart(
       patch = d_factory->allocate(box, d_descriptor);
       patch->setPatchLevelNumber(d_level_number);
       patch->setPatchInHierarchy(d_in_hierarchy);
-      patch->getFromRestart(
-         restart_db->getDatabase(patch_name),
-         component_selector);
+      patch->getFromRestart(restart_db->getDatabase(patch_name));
       d_patch_vector.push_back(patch);
    }
 
@@ -834,8 +830,7 @@ PatchLevel::getFromRestart(
  */
 void
 PatchLevel::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db,
-   const ComponentSelector& patchdata_write_table) const
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -889,9 +884,7 @@ PatchLevel::putToRestart(
          + tbox::Utilities::blockToString(
             ip->getBox().getBlockId().getBlockValue());
 
-      ip->putToRestart(
-         restart_db->putDatabase(patch_name),
-         patchdata_write_table);
+      ip->putToRestart(restart_db->putDatabase(patch_name));
    }
 
 }

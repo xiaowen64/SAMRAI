@@ -48,6 +48,7 @@ using namespace std;
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/hier/PatchDataRestartManager.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 
 //integer constants for boundary conditions
@@ -393,6 +394,8 @@ void LinAdv::setupLoadBalancer(
    const hier::IntVector& zero_vec = hier::IntVector::getZero(d_dim);
 
    hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
+   hier::PatchDataRestartManager* pdrm =
+      hier::PatchDataRestartManager::getManager();
 
    if (d_use_nonuniform_workload && gridding_algorithm) {
       boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
@@ -409,7 +412,7 @@ void LinAdv::setupLoadBalancer(
                vardb->getContext("WORKLOAD"),
                zero_vec);
          load_balancer->setWorkloadPatchDataIndex(d_workload_data_id);
-         vardb->registerPatchDataForRestart(d_workload_data_id);
+         pdrm->registerPatchDataForRestart(d_workload_data_id);
       } else {
          TBOX_WARNING(
             d_object_name << ": "

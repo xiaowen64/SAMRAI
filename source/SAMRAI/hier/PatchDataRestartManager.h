@@ -50,7 +50,10 @@ public:
     */
    bool
    isPatchDataRegisteredForRestart(
-      int index) const;
+      int index) const
+   {
+      return d_patchdata_restart_table.isSet(index);
+   }
 
    /**
     * Registers a patch data index for restart.
@@ -59,7 +62,10 @@ public:
     */
    void
    registerPatchDataForRestart(
-      int index);
+      int index)
+   {
+      d_patchdata_restart_table.setFlag(index);
+   }
 
    /**
     * Unregisters a patch data index for restart.
@@ -68,7 +74,22 @@ public:
     */
    void
    unregisterPatchDataForRestart(
-      int index);
+      int index)
+   {
+      d_patchdata_restart_table.clrFlag(index);
+   }
+
+   /**
+    * Returns true if the patch data components selected by "selected" are
+    * identical to the components registered in the manager and vice-versa.
+    *
+    * @param[in]  selected  The patch data components that have been selected.
+    */
+   bool
+   registeredPatchDataMatches(const ComponentSelector& selected)
+   {
+      return selected == d_patchdata_restart_table;
+   }
 
 private:
    /**
