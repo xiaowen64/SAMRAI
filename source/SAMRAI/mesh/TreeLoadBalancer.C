@@ -356,8 +356,9 @@ TreeLoadBalancer::loadBalanceBoxLevel(
     * RankGroup and just use the RankGroup as is.  We are not set up
     * to support such a request and multi-cycling simultaneously.
     */
-   const double fanout_size = max_local_load/d_global_avg_load;
-   const int number_of_cycles = rank_group.containsAllRanks() ? 1 :
+   const double fanout_size = d_global_avg_load > d_pparams->getLoadComparisonTol() ?
+      max_local_load/d_global_avg_load : 1.0;
+   const int number_of_cycles = !rank_group.containsAllRanks() ? 1 :
       int(ceil( log(fanout_size)/log(static_cast<double>(d_max_cycle_spread_procs)) ));
       if (d_print_steps) {
          tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel"
