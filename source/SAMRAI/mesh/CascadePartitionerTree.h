@@ -26,9 +26,10 @@ class CascadePartitioner;
 
 /*!
  * @brief A binary-tree of process groups in the CascadePartitioner
- * algorithm,
+ * algorithm.  This class is used internally in the CascadePartioner
+ * class.  It should not be used otherwise.
  *
- * In this partitioner, the MPI ranks are recursively split into
+ * In cascade partitioner, the MPI ranks are recursively split into
  * groups, forming the nodes of a binary tree.  The root branch
  * contains all ranks.  The leaves are single-process groups.  Each
  * group is represented by a CascadePartitionerTree.
@@ -36,15 +37,9 @@ class CascadePartitioner;
  * @b Terminology: The root group includes all ranks.  It splits into
  * lower and upper groups (also called branches).  The lower branch
  * has the lower ranks.  If the group has an odd number of ranks, the
- * upper branch has one more rank in it.  The branch containing the
- * local process is also called "near branch", while the one not
- * containing the local process is the "far branch".
- *
- * A parent can shift load from its overloaded child to its
- * underloaded child, and this is how the CascadePartitioner balance
- * loads.  We balance the two halves of the global group first, then
- * we balance its children, continuing until all groups are balanced.
- *
+ * upper branch has one rank more than the lower.  The branch
+ * containing the local process is also known as the "near branch";
+ * the one not containing the local process is the "far branch".
  */
 class CascadePartitionerTree {
 
@@ -68,9 +63,6 @@ public:
 
    //! @brief Generation number (generation 0 contains all ranks).
    int generationNum() const { return d_gen_num; }
-
-   //! @brief Cycle number (cycle i groups has 2^i processes).
-   int cycleNum() const;
 
    //! @brief Size of group (number of processes in it).
    size_t size() const {
@@ -101,7 +93,7 @@ private:
     * @brief Construct child node based on its position in the parent.
     *
     * @param parent
-    * @param group_position Position of this group.
+    * @param group_position Position of this group in its parent.
     */
    CascadePartitionerTree( CascadePartitionerTree &parent,
                            Position group_position );
@@ -112,18 +104,14 @@ private:
    void makeChildren();
 
    /*!
-    * @brief Combine near and far children data (using communication)
-    * to compute work-related data for this group.
+    * @brief Combine near and far data for children group, to compute
+    * work-related data for this group.
     */
    void combineChildren();
 
    /*!
-    * @brief Improve balance of the two children of this group by
+    * @brief Improve balance of the children of this group by
     * supplying load from overloaded child to underloaded child.
-    *
-    * Ideally, the work supplied is minimum of the overloaded child's
-    * surplus and the underloaded child's deficit.  The ideal may not
-    * be achieved due to load-cutting restrictions.
     */
    void balanceChildren();
 
@@ -136,16 +124,12 @@ private:
     * @brief Try to supply the requested amount of work by removing
     * it from this group, and return the (estimated) amount supplied.
     *
-    * Due to restrictions such as in box cutting, the estimated work
-    * supplied may differ from the actual amount.  Actual amount is
-    * available when the group contains just the local process, but
-    * the estimate is always available.  We always use estimates to
-    * avoid record-keeping discrpepancies.
-    *
-    * Single-process groups set aside any work it personally gives up
-    * in d_common->d_shipment
+    * The work supplied is an estimate because the group almost always
+    * contains remote ranks whose exact actions are not known.
+    * Single-process groups set aside any work it personally gives up.
     *
     * @param work_requested
+    *
     * @param taker Representative of the group getting this work.
     *
     * @return Estimate of the amount supplied based on available work
@@ -173,7 +157,7 @@ private:
    //@{
    //! @brief Group specification
 
-   //! @brief Generation number.  Generation 0 contains all ranks.
+   //! @brief Generation number.  (Generation 0 contains all ranks.)
    int d_gen_num;
 
    //! @brief First rank in group.
@@ -187,7 +171,6 @@ private:
     *
     * Communication between sibling groups occurs between processes in
     * one group and their respective contacts in the sibling group.
-    * Processes are paired their relative ranks in their group.
     *
     * Most processes have just one contact in the sibling group.  The
     * only processes to have 2 contacts are in the lower sibling of a
@@ -223,7 +206,7 @@ private:
    //@{
    //! @name Work measures
 
-   //! @brief Estimated load of this branch.
+   //! @brief Estimated amount of work in this branch.
    double d_work;
 
    //! @brief Amount of work the group obligated to have.
@@ -236,17 +219,7 @@ private:
    //@{
    //! @name For determining participation in certain group activities.
 
-   /*!
-    * @brief Whether this group may supply work to its sibling.
-    *
-    * A group that received work may not later become a supplier.
-    * (But its parent may still be if its sibling is.)
-    * Note: This should permission should be propagated to ancestor
-    * groups but not descendent groups, because work received should
-    * be further distributed to descendents.  Work received should
-    * not be supplied to sibling, because that allows load to move
-    * back and forth for trivial imbalances.
-    */
+   //! @brief Whether this group may supply work to its sibling.
    bool d_group_may_supply;
 
    /*!
@@ -257,9 +230,6 @@ private:
     * process may supply work and second value is unused.  If this is
     * a far group, the two values correspond to whether the two
     * contacts (d_contact) may supply work.
-    *
-    * A process that received work or is a member of a group that
-    * received work may not later become a supplier.
     */
    bool d_process_may_supply[2];
 

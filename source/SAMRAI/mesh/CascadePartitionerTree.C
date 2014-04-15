@@ -498,9 +498,9 @@ CascadePartitionerTree::balanceChildren()
 /*
  *************************************************************************
  * Supply work_requested to another group requesting work.  Any load
- * supplied by local process is will be sent to the designated taker,
- * a process in the requesting group.  Give priority to supplies
- * closest to the taker in rank space.
+ * supplied by local process will be sent to the designated taker, a
+ * process in the requesting group.  Give priority to supplies closest
+ * to the taker in rank space.
  *
  * 1. If this is a leaf, remove load from d_common->d_local_load
  *    and put it in d_common->d_shipment.
@@ -714,23 +714,12 @@ CascadePartitionerTree::resetObligation( double avg_load )
  *************************************************************************
  *************************************************************************
  */
-int
-CascadePartitionerTree::cycleNum() const
-{
-   return CascadePartitioner::lgInt(d_common->d_mpi.getSize()) - d_gen_num;
-}
-
-
-
-/*
- *************************************************************************
- *************************************************************************
- */
 void
 CascadePartitionerTree::printClassData( std::ostream &co, const std::string &border ) const
 {
    const std::string indent( border + std::string(d_gen_num,' ') + std::string(d_gen_num,' ') );
-   co << indent << "gen_num=" << d_gen_num << "  cycle=" << cycleNum()
+   const int cycle_num = CascadePartitioner::lgInt(d_common->d_mpi.getSize()) - d_gen_num;
+   co << indent << "gen_num=" << d_gen_num << "  cycle=" << cycle_num
       << "  [" << d_begin << ',' << d_end << ")  group_size=" << d_end-d_begin
       << "  local leaf=" << (this==d_leaf) << "  this=" << this
       << "  near=" << d_near << "  far=" << d_far
