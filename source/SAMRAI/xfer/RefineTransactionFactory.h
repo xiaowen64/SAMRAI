@@ -59,26 +59,6 @@ public:
    virtual ~RefineTransactionFactory();
 
    /*!
-    * @brief Pure virtual function to set the array of RefineClass::Data items
-    * associated with the refine schedule.  Typical concrete transactions used
-    * by the schedule use this information to communicate data.  This operation
-    * is called by the refine schedule during the execution of the
-    * RefineSchedule::fillData() routine before data communication
-    * operations begin.
-    */
-   virtual void
-   setRefineItems(
-      const RefineClasses::Data *const* refine_items) = 0;
-
-   /*!
-    * @brief Pure virtual function to clear the array of RefineClass::Data items
-    * associated with the refine schedule.  This operation is called by the
-    * refine schedule after data communication operations are complete.
-    */
-   virtual void
-   unsetRefineItems() = 0;
-
-   /*!
     * @brief Pure virtual function to allocate a concrete refine transaction
     * object.  This routine is called by the refine schedule during
     * construction of the schedule.
@@ -104,7 +84,8 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_box,
       const hier::Box& src_box,
-      int ritem_id,
+      const RefineClasses::Data** refine_data,
+      int item_id,
       const hier::Box& box,
       bool use_time_interpolation = false) const = 0;
 
@@ -115,7 +96,8 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_box,
       const hier::Box& src_box,
-      int ritem_id) const
+      const RefineClasses::Data** refine_data,
+      int item_id) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level,
          *src_level,
@@ -127,7 +109,8 @@ public:
          overlap,
          dst_box,
          src_box,
-         ritem_id,
+         refine_data,
+         item_id,
          hier::Box::getEmptyBox(src_level->getDim()),
          false);
    }

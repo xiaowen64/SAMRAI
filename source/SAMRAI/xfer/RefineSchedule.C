@@ -99,6 +99,7 @@ RefineSchedule::RefineSchedule(
    const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
    RefinePatchStrategy* patch_strategy,
    bool use_time_refinement):
+   d_number_refine_items(0),
    d_refine_items(0),
    d_dst_level(dst_level),
    d_src_level(src_level),
@@ -276,6 +277,7 @@ RefineSchedule::RefineSchedule(
    const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
    RefinePatchStrategy* patch_strategy,
    bool use_time_refinement):
+   d_number_refine_items(0),
    d_refine_items(0),
    d_dst_level(dst_level),
    d_src_level(src_level),
@@ -493,6 +495,7 @@ RefineSchedule::RefineSchedule(
    const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
    RefinePatchStrategy* patch_strategy,
    const RefineSchedule *top_refine_schedule):
+   d_number_refine_items(0),
    d_refine_items(0),
    d_dst_level(dst_level),
    d_src_level(src_level),
@@ -624,6 +627,7 @@ RefineSchedule::RefineSchedule(
 RefineSchedule::~RefineSchedule()
 {
    clearRefineItems();
+   delete[] d_refine_items;
 }
 
 /*
@@ -1883,7 +1887,6 @@ RefineSchedule::fillData(
     */
 
    d_transaction_factory->setTransactionTime(fill_time);
-   d_transaction_factory->setRefineItems(&d_refine_items[0]);
 
    /*
     * Check whether scratch data needs to be allocated on the destination
@@ -1926,13 +1929,6 @@ RefineSchedule::fillData(
    if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
       d_encon_level->deallocatePatchData(encon_allocate_vector);
    }
-
-   /*
-    * Unset the refine items for all transactions.  These items are
-    * shared by all transaction objects in the communication schedule.
-    */
-
-   d_transaction_factory->unsetRefineItems();
 
    t_fill_data_nonrecursive->stop();
 
@@ -2265,7 +2261,7 @@ RefineSchedule::allocateScratchSpace(
 
    hier::ComponentSelector preprocess_vector;
 
-   for (size_t iri = 0; iri < d_refine_items.size(); ++iri) {
+   for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
       const int scratch_id = d_refine_items[iri]->d_scratch;
       if (!level->checkAllocated(scratch_id)) {
          allocate_vector.setFlag(scratch_id);
@@ -2301,7 +2297,7 @@ RefineSchedule::copyScratchToDestination() const
         p != d_dst_level->end(); ++p) {
       const boost::shared_ptr<hier::Patch>& patch(*p);
 
-      for (size_t iri = 0; iri < d_refine_items.size(); ++iri) {
+      for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
          const int src_id = d_refine_items[iri]->d_scratch;
          const int dst_id = d_refine_items[iri]->d_dst;
          if (src_id != dst_id) {
@@ -2397,7 +2393,7 @@ RefineSchedule::refineScratchData(
             ratio);
       }
 
-      for (size_t iri = 0; iri < d_refine_items.size(); ++iri) {
+      for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
          const RefineClasses::Data * const ref_item = d_refine_items[iri];
          // This if-block can be factored out and put into RefineClasses::Data.
          if (ref_item->d_oprefine) {
@@ -3198,7 +3194,7 @@ RefineSchedule::setDefaultFillBoxLevel(
    const hier::IntVector& constant_one_intvector(hier::IntVector::getOne(dim));
 
    bool need_nontrivial_ghosts = false;
-   for (size_t iri = 0; iri < d_refine_items.size(); ++iri) {
+   for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
       if (!(d_refine_items[iri]->d_fine_bdry_reps_var)) {
          need_nontrivial_ghosts = true;
       }
@@ -3724,7 +3720,7 @@ RefineSchedule::getDataOnPatchBorderFlag() const
    boost::shared_ptr<hier::PatchDescriptor> pd(
       d_dst_level->getPatchDescriptor());
 
-   for (size_t iri = 0; iri < d_refine_items.size(); ++iri) {
+   for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
       const int dst_id = d_refine_items[iri]->d_dst;
       const hier::PatchDataFactory &pdf = *pd->getPatchDataFactory(dst_id);
       if ( pdf.dataLivesOnPatchBorder() ) {
@@ -3755,7 +3751,7 @@ RefineSchedule::getMinConnectorWidth() const
    boost::shared_ptr<hier::PatchDescriptor> pd(
       d_dst_level->getPatchDescriptor());
 
-   for (size_t iri = 0; iri < d_refine_items.size(); ++iri) {
+   for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
 
       const int dst_id = d_refine_items[iri]->d_dst;
       const hier::PatchDataFactory &dst_pdf = *pd->getPatchDataFactory(dst_id);
@@ -3798,7 +3794,7 @@ RefineSchedule::getMaxDestinationGhosts() const
    boost::shared_ptr<hier::PatchDescriptor> pd(
       d_dst_level->getPatchDescriptor());
 
-   for (size_t iri = 0; iri < d_refine_items.size(); ++iri) {
+   for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
       const int dst_id = d_refine_items[iri]->d_dst;
       gcw.max(pd->getPatchDataFactory(dst_id)->getGhostCellWidth());
    }
@@ -3824,7 +3820,7 @@ RefineSchedule::getMaxScratchGhosts() const
    boost::shared_ptr<hier::PatchDescriptor> pd(
       d_dst_level->getPatchDescriptor());
 
-   for (size_t iri = 0; iri < d_refine_items.size(); ++iri) {
+   for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
       const int scratch_id = d_refine_items[iri]->d_scratch;
       gcw.max(pd->getPatchDataFactory(scratch_id)->getGhostCellWidth());
    }
@@ -3850,7 +3846,7 @@ RefineSchedule::getMaxStencilGhosts() const
       gcw = d_refine_patch_strategy->getRefineOpStencilWidth(dim);
    }
 
-   for (size_t iri = 0; iri < d_refine_items.size(); ++iri) {
+   for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
       if (d_refine_items[iri]->d_oprefine) {
          gcw.max(d_refine_items[iri]->d_oprefine->getStencilWidth(dim));
       }
@@ -4260,10 +4256,11 @@ RefineSchedule::constructScheduleTransactions(
            l != d_refine_classes->getIteratorEnd(nc); ++l) {
          const RefineClasses::Data& item = d_refine_classes->getRefineItem(*l);
          TBOX_ASSERT(item.d_class_index == nc);
+         TBOX_ASSERT(&item == d_refine_items[*l]);
+         TBOX_ASSERT(item.d_tag == *l);
 
          const int dst_id = item.d_scratch;
          const int src_id = item.d_src;
-         const int ritem_count = item.d_tag;
 
          /*
           * If the src and dst patches, levels, and components are the
@@ -4302,7 +4299,8 @@ RefineSchedule::constructScheduleTransactions(
                            d_overlaps[i],
                            transaction_dst_box,
                            src_box,
-                           ritem_count);
+                           d_refine_items, 
+                           item.d_tag);
                   } else if (use_time_interpolation &&
                              item.d_time_interpolate) {
 
@@ -4311,7 +4309,8 @@ RefineSchedule::constructScheduleTransactions(
                            d_overlaps[i],
                            transaction_dst_box, src_box,
                            *itr,
-                           ritem_count));
+                           d_refine_items,
+                           item.d_tag));
 
                   } else {  // no time interpolation
 
@@ -4319,7 +4318,8 @@ RefineSchedule::constructScheduleTransactions(
                            transaction_dst_level, d_src_level,
                            d_overlaps[i],
                            transaction_dst_box, src_box,
-                           ritem_count));
+                           d_refine_items,
+                           item.d_tag));
 
                   }  // time interpolation conditional
 
@@ -4415,15 +4415,18 @@ RefineSchedule::setRefineItems(
 {
 
    clearRefineItems();
+   TBOX_ASSERT( d_number_refine_items == 0 );
 
    d_refine_classes = refine_classes;
 
-   TBOX_ASSERT( d_refine_items.empty() );
-   d_refine_items.insert( d_refine_items.end(),
-                          d_refine_classes->getNumberOfRefineItems(),
-                          static_cast<const SAMRAI::xfer::RefineClasses::Data*>(0) );
+   d_number_refine_items = d_refine_classes->getNumberOfRefineItems();
 
-   for (int nd = 0; nd < static_cast<int>(d_refine_items.size()); ++nd) {
+   if (!d_refine_items) {
+      d_refine_items =
+         new const RefineClasses::Data *[d_number_refine_items];
+   }
+
+   for (int nd = 0; nd < static_cast<int>(d_number_refine_items); ++nd) {
       d_refine_classes->getRefineItem(nd).d_tag = nd;
       d_refine_items[nd] = &(d_refine_classes->getRefineItem(nd));
    }
@@ -4461,7 +4464,7 @@ RefineSchedule::initialCheckRefineClassItems() const
 
    if (user_gcw > constant_zero_intvector) {
 
-      for (size_t iri = 0; iri < d_refine_items.size(); ++iri) {
+      for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
 
          const RefineClasses::Data * const ref_item = d_refine_items[iri];
 
@@ -4503,11 +4506,11 @@ RefineSchedule::initialCheckRefineClassItems() const
 void
 RefineSchedule::clearRefineItems()
 {
-   if (!d_refine_items.empty()) {
-      for (size_t iri = 0; iri < d_refine_items.size(); ++iri) {
-         d_refine_items[iri] = 0;
+   if (d_refine_items) {
+      for (size_t ici = 0; ici < d_number_refine_items; ++ici) {
+         d_refine_items[ici] = 0;
       }
-      d_refine_items.clear();
+      d_number_refine_items = 0;
    }
 }
 

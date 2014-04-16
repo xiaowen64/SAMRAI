@@ -43,32 +43,6 @@ namespace xfer {
 class RefineCopyTransaction:public tbox::Transaction
 {
 public:
-   /*!
-    * Static member function to set the array of refine class data items that
-    * is shared by all object instances of this copy transaction class during
-    * data transfers.  The array must be set before any transactions are
-    * executed.  The array is set in the RefineSchedule class.
-    *
-    */
-   static void
-   setRefineItems(
-      const RefineClasses::Data*const* refine_items)
-   {
-      s_refine_items = refine_items;
-   }
-
-   /*!
-    * Static member function to unset the array of refine class data items that
-    * is shared by all object instances of this copy transaction class during
-    * data transfers.  The unset function is used to prevent erroneous
-    * execution of different schedules.  The array is unset in the
-    * RefineSchedule class.
-    */
-   static void
-   unsetRefineItems()
-   {
-      s_refine_items = 0;
-   }
 
    /*!
     * Construct a transaction with the specified source and destination
@@ -105,7 +79,8 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_box,
       const hier::Box& src_box,
-      const int refine_item_id);
+      const RefineClasses::Data** refine_data,
+      int item_id);
 
    /*!
     * The virtual destructor for the copy transaction releases all
@@ -183,14 +158,13 @@ private:
    operator = (
       const RefineCopyTransaction&);                    // not implemented
 
-   static const RefineClasses::Data*const* s_refine_items;
-
    boost::shared_ptr<hier::Patch> d_dst_patch;
    int d_dst_patch_rank;
    boost::shared_ptr<hier::Patch> d_src_patch;
    int d_src_patch_rank;
    boost::shared_ptr<hier::BoxOverlap> d_overlap;
-   int d_refine_item_id;
+   const RefineClasses::Data** d_refine_data;
+   int d_item_id;
    int d_incoming_bytes;
    int d_outgoing_bytes;
 

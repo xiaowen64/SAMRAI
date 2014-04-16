@@ -58,26 +58,6 @@ public:
    virtual ~CoarsenTransactionFactory();
 
    /*!
-    * @brief Pure virtual function to set the array of CoarsenClass::Data items
-    * associated with the coarsen schedule.  Typical concrete transactions used
-    * by the schedule use this information to communicate data.  This operation
-    * is called by the coarsen schedule during the execution of the
-    * CoarsenSchedule::fillData() routine before data communication
-    * operations begin.
-    */
-   virtual void
-   setCoarsenItems(
-      const CoarsenClasses::Data ** coarsen_items) = 0;
-
-   /*!
-    * @brief Pure virtual function to clear the array of CoarsenClass::Data
-    * items associated with the coarsen schedule.  This operation is called by
-    * the coarsen schedule after data communication operations are complete.
-    */
-   virtual void
-   unsetCoarsenItems() = 0;
-
-   /*!
     * @brief Pure virtual function to allocate a concrete coarsen transaction
     * object.  This routine is called by the coarsen schedule during
     * construction of the schedule.
@@ -87,7 +67,7 @@ public:
     * @param overlap        boost::shared_ptr to overlap region between patches.
     * @param dst_box        Destination Box in destination patch level.
     * @param src_box        Source Box in source patch level.
-    * @param citem_id       Integer index of CoarsenClass::Data item associated
+    * @param item_id        Integer index of CoarsenClass::Data item associated
     *                       with transaction.
     */
    virtual boost::shared_ptr<tbox::Transaction>
@@ -97,7 +77,8 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_box,
       const hier::Box& src_box,
-      int citem_id) const = 0;
+      const CoarsenClasses::Data** coarsen_data,
+      int item_id) const = 0;
 
 private:
    CoarsenTransactionFactory(

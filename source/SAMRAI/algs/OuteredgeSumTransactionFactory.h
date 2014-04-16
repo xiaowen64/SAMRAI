@@ -45,21 +45,6 @@ public:
    virtual ~OuteredgeSumTransactionFactory();
 
    /*!
-    * @brief Set the array of xfer::RefineClasses::Data items used by the
-    * transactions.
-    */
-   void
-   setRefineItems(
-      const xfer::RefineClasses::Data *const* refine_items);
-
-   /*!
-    * @brief Clear the array of xfer::RefineClasses::Data items used by the
-    * transactions.
-    */
-   void
-   unsetRefineItems();
-
-   /*!
     * @brief Allocate an OuteredgeSumTransaction object.
     *
     * @param dst_level      boost::shared_ptr to destination patch level.
@@ -94,7 +79,8 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_node,
       const hier::Box& src_node,
-      int ritem_id,
+      const xfer::RefineClasses::Data** refine_data,
+      int item_id,
       const hier::Box& box,
       bool use_time_interpolation = false) const;
 
@@ -121,7 +107,8 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_node,
       const hier::Box& src_node,
-      int ritem_id) const;
+      const xfer::RefineClasses::Data** refine_data,
+      int item_id) const;
 
    /*!
     * @brief Function to initialize scratch space data for the sum transactions
@@ -150,8 +137,6 @@ private:
    OuteredgeSumTransactionFactory&
    operator = (
       const OuteredgeSumTransactionFactory&);
-
-   const xfer::RefineClasses::Data*const* d_refine_items;
 
 };
 

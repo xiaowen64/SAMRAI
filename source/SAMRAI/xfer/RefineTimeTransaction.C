@@ -39,9 +39,6 @@ namespace xfer {
 
 double RefineTimeTransaction::s_time = 0.0;
 
-const RefineClasses::Data *const*
-RefineTimeTransaction::s_refine_items = 0;
-
 /*
  *************************************************************************
  *
@@ -49,7 +46,6 @@ RefineTimeTransaction::s_refine_items = 0;
  *
  *************************************************************************
  */
-
 RefineTimeTransaction::RefineTimeTransaction(
    const boost::shared_ptr<hier::PatchLevel>& dst_level,
    const boost::shared_ptr<hier::PatchLevel>& src_level,
@@ -57,21 +53,24 @@ RefineTimeTransaction::RefineTimeTransaction(
    const hier::Box& dst_box,
    const hier::Box& src_box,
    const hier::Box& box,
-   const int refine_item_id):
+   const RefineClasses::Data** refine_data,
+   int item_id):
    d_dst_patch(),
    d_dst_patch_rank(dst_box.getOwnerRank()),
    d_src_patch(),
    d_src_patch_rank(src_box.getOwnerRank()),
    d_overlap(overlap),
    d_box(box),
-   d_refine_item_id(refine_item_id)
+   d_refine_data(refine_data),
+   d_item_id(item_id)
 {
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
    TBOX_ASSERT(overlap);
    TBOX_ASSERT(dst_box.getLocalId() >= 0);
    TBOX_ASSERT(src_box.getLocalId() >= 0);
-   TBOX_ASSERT(refine_item_id >= 0);
+   TBOX_ASSERT(item_id >= 0);
+   TBOX_ASSERT(refine_data[item_id] != 0);
    TBOX_ASSERT_OBJDIM_EQUALITY5(*dst_level,
       *src_level,
       dst_box,
@@ -104,13 +103,11 @@ RefineTimeTransaction::canEstimateIncomingMessageSize()
    bool can_estimate = false;
    if (d_src_patch) {
       can_estimate =
-         d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->
-            d_src_told)
+         d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_told)
          ->canEstimateStreamSizeFromBox();
    } else {
       can_estimate =
-         d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->
-            d_scratch)
+         d_dst_patch->getPatchData(d_refine_data[d_item_id]->d_scratch)
          ->canEstimateStreamSizeFromBox();
    }
    return can_estimate;
@@ -120,8 +117,7 @@ size_t
 RefineTimeTransaction::computeIncomingMessageSize()
 {
    d_incoming_bytes =
-      d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->
-         d_scratch)
+      d_dst_patch->getPatchData(d_refine_data[d_item_id]->d_scratch)
       ->getDataStreamSize(*d_overlap);
    return d_incoming_bytes;
 }
@@ -130,8 +126,7 @@ size_t
 RefineTimeTransaction::computeOutgoingMessageSize()
 {
    d_outgoing_bytes =
-      d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->
-         d_src_told)
+      d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_told)
       ->getDataStreamSize(*d_overlap);
    return d_outgoing_bytes;
 }
@@ -159,15 +154,14 @@ RefineTimeTransaction::packStream(
 
    boost::shared_ptr<hier::PatchData> temporary_patch_data(
       d_src_patch->getPatchDescriptor()
-      ->getPatchDataFactory(s_refine_items[d_refine_item_id]->
-         d_src_told)
+      ->getPatchDataFactory(d_refine_data[d_item_id]->d_src_told)
       ->allocate(temporary_patch));
    temporary_patch_data->setTime(s_time);
 
    timeInterpolate(
       temporary_patch_data,
-      d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->d_src_told),
-      d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->d_src_tnew));
+      d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_told),
+      d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_tnew));
 
    temporary_patch_data->packStream(stream, *d_overlap);
 }
@@ -176,7 +170,7 @@ void
 RefineTimeTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
-   d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->d_scratch)
+   d_dst_patch->getPatchData(d_refine_data[d_item_id]->d_scratch)
    ->unpackStream(stream, *d_overlap);
 }
 
@@ -193,12 +187,9 @@ RefineTimeTransaction::copyLocalData()
        hier::IntVector::getZero(d_box.getDim())) {
 
       timeInterpolate(
-         d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->
-            d_scratch),
-         d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->
-            d_src_told),
-         d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->
-            d_src_tnew));
+         d_dst_patch->getPatchData(d_refine_data[d_item_id]->d_scratch),
+         d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_told),
+         d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_tnew));
 
    } else {
 
@@ -211,20 +202,17 @@ RefineTimeTransaction::copyLocalData()
 
       boost::shared_ptr<hier::PatchData> temp(
          d_src_patch->getPatchDescriptor()
-         ->getPatchDataFactory(s_refine_items[d_refine_item_id]->
-            d_src_told)
+         ->getPatchDataFactory(d_refine_data[d_item_id]->d_src_told)
          ->allocate(temporary_patch));
 
       temp->setTime(s_time);
 
       timeInterpolate(
          temp,
-         d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->
-            d_src_told),
-         d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->
-            d_src_tnew));
+         d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_told),
+         d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_tnew));
 
-      d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->d_scratch)
+      d_dst_patch->getPatchData(d_refine_data[d_item_id]->d_scratch)
       ->copy(*temp, *d_overlap);
 
    }
@@ -243,8 +231,8 @@ RefineTimeTransaction::timeInterpolate(
    TBOX_ASSERT(tbox::MathUtilities<double>::equalEps(pd_dst->getTime(), s_time));
 
    if (tbox::MathUtilities<double>::equalEps(pd_old->getTime(), s_time)) {
-      s_refine_items[d_refine_item_id]->
-      d_optime->timeInterpolate(*pd_dst, d_box, *pd_old, *pd_old);
+      d_refine_data[d_item_id]->
+         d_optime->timeInterpolate(*pd_dst, d_box, *pd_old, *pd_old);
    } else {
 
       TBOX_ASSERT(pd_new);
@@ -252,8 +240,8 @@ RefineTimeTransaction::timeInterpolate(
       TBOX_ASSERT(pd_old->getTime() < s_time);
       TBOX_ASSERT(pd_new->getTime() >= s_time);
 
-      s_refine_items[d_refine_item_id]->
-      d_optime->timeInterpolate(*pd_dst, d_box, *pd_old, *pd_new);
+      d_refine_data[d_item_id]->
+         d_optime->timeInterpolate(*pd_dst, d_box, *pd_old, *pd_new);
    }
 }
 
@@ -272,22 +260,22 @@ RefineTimeTransaction::printClassData(
    stream << "Refine Time Transaction" << std::endl;
    stream << "   transaction time:        " << s_time << std::endl;
    stream << "   refine item array:        "
-          << (RefineClasses::Data **)s_refine_items << std::endl;
+          << (RefineClasses::Data *)d_refine_data[d_item_id] << std::endl;
    stream << "   destination patch rank:        " << d_dst_patch_rank
           << std::endl;
    stream << "   source patch rank:             " << d_src_patch_rank
           << std::endl;
    stream << "   time interpolation box:  " << d_box << std::endl;
-   stream << "   refine item id:          " << d_refine_item_id << std::endl;
-   if (s_refine_items) {
+   stream << "   refine item id :  " << d_item_id << std::endl;
+   if (d_refine_data) {
       stream << "   destination patch data id:  "
-             << s_refine_items[d_refine_item_id]->d_scratch << std::endl;
+             << d_refine_data[d_item_id]->d_scratch << std::endl;
       stream << "   source (old) patch data id: "
-             << s_refine_items[d_refine_item_id]->d_src_told << std::endl;
+             << d_refine_data[d_item_id]->d_src_told << std::endl;
       stream << "   source (new) patch data id: "
-             << s_refine_items[d_refine_item_id]->d_src_tnew << std::endl;
+             << d_refine_data[d_item_id]->d_src_tnew << std::endl;
       stream << "   time interpolation name id: "
-             << typeid(*s_refine_items[d_refine_item_id]->d_optime).name() << std::endl;
+             << typeid(*d_refine_data[d_item_id]->d_optime).name() << std::endl;
    }
    stream << "   incoming bytes:          " << d_incoming_bytes << std::endl;
    stream << "   outgoing bytes:          " << d_outgoing_bytes << std::endl;

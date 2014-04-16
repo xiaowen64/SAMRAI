@@ -456,7 +456,6 @@ private:
     * coarsening operations.
     */
    CoarsenPatchStrategy* d_coarsen_patch_strategy;
-//   RefinePatchStrategy* d_refine_patch_strategy;
 
    /*!
     * @brief Factory object used to create data transactions when schedule is

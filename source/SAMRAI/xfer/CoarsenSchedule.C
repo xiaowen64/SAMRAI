@@ -182,6 +182,7 @@ CoarsenSchedule::CoarsenSchedule(
 CoarsenSchedule::~CoarsenSchedule()
 {
    clearCoarsenItems();
+   delete[] d_coarsen_items;
 }
 
 /*
@@ -261,12 +262,6 @@ CoarsenSchedule::coarsenData() const
    t_coarsen_data->barrierAndStart();
 
    /*
-    * Set the coarsen items for all transactions.  These items are
-    * shared by all transaction objects in the communication schedule.
-    */
-   d_transaction_factory->setCoarsenItems(d_coarsen_items);
-
-   /*
     * Allocate the source data space on the temporary patch level.
     * We do not know the current time, so set it to zero.  It should
     * not matter, since the copy routines do not require that
@@ -300,13 +295,6 @@ CoarsenSchedule::coarsenData() const
     */
 
    d_temp_crse_level->deallocatePatchData(d_sources);
-
-   /*
-    * Unset the coarsen items for the copy transactions.  These items
-    * are shared by all such transaction objects in the communication
-    * schedule.
-    */
-   d_transaction_factory->unsetCoarsenItems();
 
    t_coarsen_data->stop();
 
@@ -926,6 +914,8 @@ CoarsenSchedule::constructScheduleTransactions(
             const CoarsenClasses::Data& item =
                d_coarsen_classes->getCoarsenItem(*l);
             TBOX_ASSERT(item.d_class_index == nc);
+            TBOX_ASSERT(item.d_tag == *l);
+            TBOX_ASSERT(&item == d_coarsen_items[*l]);
 
             const int citem_count = item.d_tag;
             transactions[citem_count] =
@@ -934,6 +924,7 @@ CoarsenSchedule::constructScheduleTransactions(
                   overlap,
                   dst_box,
                   src_box,
+                  d_coarsen_items,
                   citem_count);
          }
       }
@@ -1040,8 +1031,10 @@ CoarsenSchedule::setCoarsenItems(
     * Allocate and initialize array of coarsen items.
     */
 
-   d_coarsen_items =
-      new const CoarsenClasses::Data *[d_number_coarsen_items];
+   if (!d_coarsen_items) {
+      d_coarsen_items =
+         new const CoarsenClasses::Data *[d_number_coarsen_items];
+   }
 
    int ircount = 0;
    for (unsigned int nc = 0; nc < d_number_coarsen_items; ++nc) {
@@ -1155,8 +1148,6 @@ CoarsenSchedule::clearCoarsenItems()
       for (size_t ici = 0; ici < d_number_coarsen_items; ++ici) {
          d_coarsen_items[ici] = 0;
       }
-      delete[] d_coarsen_items;
-      d_coarsen_items = 0;
       d_number_coarsen_items = 0;
    }
 }

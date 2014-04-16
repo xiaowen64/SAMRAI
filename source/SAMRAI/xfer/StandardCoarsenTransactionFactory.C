@@ -36,29 +36,6 @@ StandardCoarsenTransactionFactory::~StandardCoarsenTransactionFactory()
 /*
  *************************************************************************
  *
- * Set/unset information for transactions managed by this factory class.
- *
- *************************************************************************
- */
-
-void
-StandardCoarsenTransactionFactory::setCoarsenItems(
-   const CoarsenClasses::Data** coarsen_items)
-{
-   CoarsenCopyTransaction::setCoarsenItems(coarsen_items);
-   d_coarsen_items = coarsen_items;
-}
-
-void
-StandardCoarsenTransactionFactory::unsetCoarsenItems()
-{
-   CoarsenCopyTransaction::unsetCoarsenItems();
-   d_coarsen_items = 0;
-}
-
-/*
- *************************************************************************
- *
  * Allocate appropriate transaction object.
  *
  *************************************************************************
@@ -71,7 +48,8 @@ StandardCoarsenTransactionFactory::allocate(
    const boost::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_box,
    const hier::Box& src_box,
-   int citem_id) const
+   const CoarsenClasses::Data** coarsen_data,
+   int item_id) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level,
       *src_level,
@@ -84,7 +62,8 @@ StandardCoarsenTransactionFactory::allocate(
       overlap,
       dst_box,
       src_box,
-      citem_id);
+      coarsen_data,
+      item_id);
 }
 
 }

@@ -927,7 +927,15 @@ private:
     */
    boost::shared_ptr<RefineClasses> d_refine_classes;
 
-   std::vector<const RefineClasses::Data*> d_refine_items;
+   /*!
+    * @brief number of refine data items
+    */
+   size_t d_number_refine_items;
+
+   /*!
+    * @brief used as array to store copy of refine data items.
+    */
+   const RefineClasses::Data** d_refine_items;
 
    /*!
     * @brief boost::shared_ptr to the destination patch level.

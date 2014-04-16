@@ -43,34 +43,6 @@ namespace algs {
 class OuternodeSumTransaction:public tbox::Transaction
 {
 public:
-   /*!
-    * Static member function to set the array of refine class data items that
-    * is shared by all object instances of this sum transaction class during
-    * data transfers.  The array must be set before any transactions are
-    * executed.  The array is set in the xfer::RefineSchedule class.
-    *
-    * @pre refine_items != 0);
-    */
-   static void
-   setRefineItems(
-      const xfer::RefineClasses::Data *const* refine_items)
-   {
-      TBOX_ASSERT(refine_items != 0);
-      s_refine_items = refine_items;
-   }
-
-   /*!
-    * Static member function to unset the array of refine class data items that
-    * is shared by all object instances of this sum transaction class during
-    * data transfers.  The unset function is used to prevent erroneous
-    * execution of different schedules.  The array is unset in the
-    * RefineSchedule class.
-    */
-   static void
-   unsetRefineItems()
-   {
-      s_refine_items = 0;
-   }
 
    /*!
     * Construct a transaction with the specified source and destination
@@ -108,7 +80,8 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_node,
       const hier::Box& src_node,
-      int refine_item_id);
+      const xfer::RefineClasses::Data** refine_data,
+      int item_id);
 
    /*!
     * The virtual destructor for the copy transaction releases all
@@ -162,7 +135,7 @@ public:
    /*!
     * Unpack the transaction data from the message stream.
     *
-    * @pre d_dst_level->getPatch(d_dst_node.getGlobalId())->getPatchData(s_refine_items[d_refine_item_id]->d_scratch) is actually a boost::shared_ptr<pdat::OuternodeData<double> >
+    * @pre d_dst_level->getPatch(d_dst_node.getGlobalId())->getPatchData(d_refine_data[d_item_id]->d_scratch) is actually a boost::shared_ptr<pdat::OuternodeData<double> >
     */
    virtual void
    unpackStream(
@@ -171,8 +144,8 @@ public:
    /*!
     * Perform the local data copy for the transaction.
     *
-    * @pre d_dst_level->getPatch(d_dst_node.getGlobalId())->getPatchData(s_refine_items[d_refine_item_id]->d_scratch) is actually a boost::shared_ptr<pdat::OuternodeData<double> >
-    * @pre d_src_level->getPatch(d_src_node.getGlobalId())->getPatchData(s_refine_items[d_refine_item_id]->d_src) is actually a boost::shared_ptr<pdat::OuternodeData<double> >
+    * @pre d_dst_level->getPatch(d_dst_node.getGlobalId())->getPatchData(d_refine_data[d_item_id]->d_scratch) is actually a boost::shared_ptr<pdat::OuternodeData<double> >
+    * @pre d_src_level->getPatch(d_src_node.getGlobalId())->getPatchData(d_refine_data[d_item_id]->d_src) is actually a boost::shared_ptr<pdat::OuternodeData<double> >
     */
    virtual void
    copyLocalData();
@@ -191,14 +164,14 @@ private:
    operator = (
       const OuternodeSumTransaction&);             // not implemented
 
-   static const xfer::RefineClasses::Data*const* s_refine_items;
 
    boost::shared_ptr<hier::PatchLevel> d_dst_level;
    boost::shared_ptr<hier::PatchLevel> d_src_level;
    boost::shared_ptr<hier::BoxOverlap> d_overlap;
    hier::Box d_dst_node;
    hier::Box d_src_node;
-   int d_refine_item_id;
+   const xfer::RefineClasses::Data** d_refine_data;
+   int d_item_id;
    int d_incoming_bytes;
    int d_outgoing_bytes;
 

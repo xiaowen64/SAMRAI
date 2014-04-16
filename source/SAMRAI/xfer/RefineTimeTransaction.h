@@ -45,33 +45,6 @@ namespace xfer {
 class RefineTimeTransaction:public tbox::Transaction
 {
 public:
-   /*!
-    * Static member function to set the array of refine class data items that
-    * is shared by all object instances of this time transaction class during
-    * data transfers.  The array must be set before any transactions are
-    * executed.  The array is set in the RefineSchedule class.
-    *
-    * @pre refine_items != 0
-    */
-   static void
-   setRefineItems(
-      const RefineClasses::Data*const* refine_items)
-   {
-      s_refine_items = refine_items;
-   }
-
-   /*!
-    * Static member function to unset the array of refine class data items that
-    * is shared by all object instances of this time transaction class during
-    * data transfers.  The unset function is used to prevent erroneous
-    * execution of different schedules.  The array is unset in the
-    * RefineSchedule class.
-    */
-   static void
-   unsetRefineItems()
-   {
-      s_refine_items = 0;
-   }
 
    /*!
     * Static member function to set the transaction time that will be shared
@@ -126,7 +99,8 @@ public:
       const hier::Box& dst_box,
       const hier::Box& src_box,
       const hier::Box& box,
-      const int refine_item_id);
+      const RefineClasses::Data** refine_data,
+      int item_id);
 
    /*!
     * The virtual destructor for time transaction releases all
@@ -205,7 +179,6 @@ private:
       const RefineTimeTransaction&);                    // not implemented
 
    static double s_time;
-   static const RefineClasses::Data*const* s_refine_items;
 
    void
    timeInterpolate(
@@ -219,7 +192,8 @@ private:
    int d_src_patch_rank;
    boost::shared_ptr<hier::BoxOverlap> d_overlap;
    hier::Box d_box;
-   int d_refine_item_id;
+   const RefineClasses::Data** d_refine_data;
+   int d_item_id;
    int d_incoming_bytes;
    int d_outgoing_bytes;
 
