@@ -54,8 +54,8 @@ template<class TYPE>
 int NodeVariable<TYPE>::getDepth() const
 {
    boost::shared_ptr<NodeDataFactory<TYPE> > factory(
-      getPatchDataFactory(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<NodeDataFactory<TYPE>, hier::PatchDataFactory>(
+         getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();
 }

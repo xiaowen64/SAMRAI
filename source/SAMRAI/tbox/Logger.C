@@ -10,6 +10,7 @@
 
 #include "SAMRAI/tbox/Logger.h"
 #include "SAMRAI/tbox/PIO.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
 namespace tbox {
@@ -142,6 +143,24 @@ Logger::getInstance()
    }
 
    return s_instance;
+}
+
+Logger::Appender::Appender()
+{
+}
+
+Logger::Appender::Appender(
+   const Appender& other)
+{
+   NULL_USE(other);
+}
+
+Logger::Appender&
+Logger::Appender::operator = (
+   const Appender& rhs)
+{
+   NULL_USE(rhs);
+   return *this;
 }
 
 Logger::Appender::~Appender()

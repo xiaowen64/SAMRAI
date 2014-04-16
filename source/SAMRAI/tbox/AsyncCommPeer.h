@@ -487,7 +487,7 @@ private:
     * @brief Assert that user-set MPI parameters are valid.
     *
     * @pre getPrimaryTag() >= 0 && getSecondaryTag() >= 0
-    * @pre getMPI().getCommunicator() != SAMRAI_MPI::commNull
+    * @pre getMPI().getCommunicator() != MPI_COMM_NULL
     * @pre getPeerRank() >= 0
     * @pre getPeerRank() != getMPI().getRank() || SAMRAI_MPI::usingMPI()
     */

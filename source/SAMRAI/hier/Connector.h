@@ -91,7 +91,7 @@ public:
     * @see setHead()
     * @see setWidth()
     */
-   Connector(
+   explicit Connector(
       const tbox::Dimension& dim);
 
    /*!
@@ -151,7 +151,7 @@ public:
       if ( d_base_handle ) {
          d_relationships.clear();
          d_global_relationships.clear();
-         d_mpi.setCommunicator(tbox::SAMRAI_MPI::commNull);
+         d_mpi.setCommunicator(MPI_COMM_NULL);
          d_base_handle.reset();
          d_head_handle.reset();
          d_base_width(0) = d_ratio(0) = 0;
@@ -1435,7 +1435,7 @@ private:
          const std::string& border,
          int detail_depth = 2,
          bool output_statistics = false);
-      void
+      Outputter&
       operator = (
          const Outputter& r);               // Unimplemented private.
       const Connector& d_conn;

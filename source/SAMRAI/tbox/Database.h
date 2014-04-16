@@ -162,7 +162,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual int
+   virtual size_t
    getArraySize(
       const std::string& key) = 0;
 
@@ -268,7 +268,7 @@ public:
    putBoolArray(
       const std::string& key,
       const bool * const data,
-      const int nelements) = 0;
+      const size_t nelements) = 0;
 
    /**
     * Get a boolean entry in the database with the specified key name.
@@ -326,7 +326,7 @@ public:
    getBoolArray(
       const std::string& key,
       bool* data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Return whether the specified key represents a box entry.  If
@@ -382,7 +382,7 @@ public:
    putDatabaseBoxArray(
       const std::string& key,
       const DatabaseBox * const data,
-      const int nelements) = 0;
+      const size_t nelements) = 0;
 
    /**
     * Get a box entry in the database with the specified key name.
@@ -443,7 +443,7 @@ public:
    getDatabaseBoxArray(
       const std::string& key,
       DatabaseBox* data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Return whether the specified key represents a character entry.  If
@@ -501,7 +501,7 @@ public:
    putCharArray(
       const std::string& key,
       const char * const data,
-      const int nelements) = 0;
+      const size_t nelements) = 0;
 
    /**
     * Get a character entry in the database with the specified key name.
@@ -562,7 +562,7 @@ public:
    getCharArray(
       const std::string& key,
       char* data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Return whether the specified key represents a complex entry.  If
@@ -618,7 +618,7 @@ public:
    putComplexArray(
       const std::string& key,
       const dcomplex * const data,
-      const int nelements) = 0;
+      const size_t nelements) = 0;
 
    /**
     * Get a complex entry in the database with the specified key name.
@@ -679,7 +679,7 @@ public:
    getComplexArray(
       const std::string& key,
       dcomplex* data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Return whether the specified key represents a double entry.  If
@@ -735,7 +735,7 @@ public:
    putDoubleArray(
       const std::string& key,
       const double * const data,
-      const int nelements) = 0;
+      const size_t nelements) = 0;
 
    /**
     * Get a double entry in the database with the specified key name.
@@ -796,7 +796,7 @@ public:
    getDoubleArray(
       const std::string& key,
       double* data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Return whether the specified key represents a float entry.  If
@@ -852,7 +852,7 @@ public:
    putFloatArray(
       const std::string& key,
       const float * const data,
-      const int nelements) = 0;
+      const size_t nelements) = 0;
 
    /**
     * Get a float entry in the database with the specified key name.
@@ -913,7 +913,7 @@ public:
    getFloatArray(
       const std::string& key,
       float* data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Return whether the specified key represents an integer entry.  If
@@ -969,7 +969,7 @@ public:
    putIntegerArray(
       const std::string& key,
       const int * const data,
-      const int nelements) = 0;
+      const size_t nelements) = 0;
 
    /**
     * Get an integer entry in the database with the specified key name.
@@ -1030,7 +1030,7 @@ public:
    getIntegerArray(
       const std::string& key,
       int* data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Return whether the specified key represents a std::string entry.  If
@@ -1086,7 +1086,7 @@ public:
    putStringArray(
       const std::string& key,
       const std::string * const data,
-      const int nelements) = 0;
+      const size_t nelements) = 0;
 
    /**
     * Get a string entry in the database with the specified key name.
@@ -1147,7 +1147,7 @@ public:
    getStringArray(
       const std::string& key,
       std::string* data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Get a bool entry in the database with the specified key name.
@@ -1629,6 +1629,16 @@ public:
    virtual void
    printClassData(
       std::ostream& os = pout) = 0;
+
+private:
+   // Unimplemented copy constructor.
+   Database(
+      const Database& other);
+
+   // Unimplemented assignment operator.
+   Database&
+   operator = (
+      const Database& rhs);
 
 };
 

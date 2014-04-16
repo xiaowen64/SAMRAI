@@ -96,6 +96,7 @@ public:
     * @param[in] fill_boxes  list representing the all of the space on a patch
     *                        or its ghost region that may be filled by a
     *                        refine operator (cell-centered representation)
+    * @param[in] node_fill_boxes node-centered representation of fill_boxes  
     * @param[in] patch_box   box representing the patch where a refine operator
     *                        will fill data.  (cell-centered representation)
     * @param[in] data_box    box representing the full extent of the region
@@ -107,6 +108,7 @@ public:
    boost::shared_ptr<hier::BoxOverlap>
    computeFillBoxesOverlap(
       const hier::BoxContainer& fill_boxes,
+      const hier::BoxContainer& node_fill_boxes,
       const hier::Box& patch_box,
       const hier::Box& data_box,
       const hier::PatchDataFactory& pdf) const;
@@ -135,7 +137,7 @@ public:
 private:
    BoxGeometryVariableFillPattern(
       const BoxGeometryVariableFillPattern&);    // not implemented
-   void
+   BoxGeometryVariableFillPattern&
    operator = (
       const BoxGeometryVariableFillPattern&);    // not implemented
 

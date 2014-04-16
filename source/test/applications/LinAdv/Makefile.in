@@ -55,13 +55,15 @@ check2d:	main
 	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
 	  echo "    </testcase>" >> $(REPORT); \
 	done
-	$(RM) test.2d.restart/restore.000003/nodes.*1;
-	$(RM) test.2d.restart/restore.000003/nodes.*4;
-	$(OBJECT)/config/serpa-run 2 $(OBJECT)/tools/restart/restart-redistribute test.2d.restart test_restart_redistribute_2d 3 4;
-	@echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d restart redistribute 4 procs$(QUOTE)>" >> $(REPORT);
-	$(OBJECT)/config/serpa-run 4 ./main test_inputs/test.2d.input test_restart_redistribute_2d 3 | $(TEE) foo;
-	@if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi;
-	@echo "    </testcase>" >> $(REPORT);
+ifeq ($(findstring 4, ${TEST_NPROCS}),4)
+	  $(RM) test.2d.restart/restore.000003/nodes.*1;
+	  $(RM) test.2d.restart/restore.000003/nodes.*4;
+	  $(OBJECT)/config/serpa-run 2 $(OBJECT)/tools/restart/restart-redistribute test.2d.restart test_restart_redistribute_2d 3 4;
+	  @echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d restart redistribute 4 procs$(QUOTE)>" >> $(REPORT);
+	  $(OBJECT)/config/serpa-run 4 ./main test_inputs/test.2d.input test_restart_redistribute_2d 3 | $(TEE) foo;
+	  @if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi;
+	  @echo "    </testcase>" >> $(REPORT);
+endif
 	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
 	  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d restart $$p procs$(QUOTE)>" >> $(REPORT); \
 	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test.2d.input test.2d.restart 5 | $(TEE) foo; \
@@ -151,17 +153,16 @@ everything:
 	$(MAKE) examples
 	$(MAKE) perf
 
-clean-check:
-	$(SAMCLEAN)
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
+	$(RM) test*restart* viz*
 
-clean:		clean-check
-	$(RM) *.f *main* 
-	$(RM) test*restart*
-	$(RM) viz*
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) main
 
 include $(SRCDIR)/Makefile.depend
 
-FORTRAN       = $(SRCDIR)/fortran/$(PDIM)d
 M4DIRS        = -DFORTDIR=$(SRCDIR)/fortran $(SAMRAI_M4_FLAGS)
 
 AutoTester.o:	$(AUTOTEST)/AutoTester.C

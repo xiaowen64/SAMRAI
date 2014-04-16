@@ -47,8 +47,8 @@ template<class TYPE>
 int OutersideVariable<TYPE>::getDepth() const
 {
    boost::shared_ptr<OutersideDataFactory<TYPE> > factory(
-      getPatchDataFactory(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<OutersideDataFactory<TYPE>, hier::PatchDataFactory>(
+         getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();
 }

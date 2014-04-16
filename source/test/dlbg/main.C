@@ -300,7 +300,7 @@ int main(
       t_generate_mesh->start();
       gridding_algorithm->makeCoarsestLevel(0.0);
       bool done = false;
-      for (ln = 0; patch_hierarchy->levelCanBeRefined(ln) && !done; ln++) {
+      for (ln = 0; patch_hierarchy->levelCanBeRefined(ln) && !done; ++ln) {
          tbox::plog << "Adding finer levels with ln = " << ln << std::endl;
          boost::shared_ptr<hier::PatchLevel> level_(
             patch_hierarchy->getPatchLevel(ln));

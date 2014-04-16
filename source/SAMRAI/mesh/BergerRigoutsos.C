@@ -7,9 +7,6 @@
  * Description:   Asynchronous Berger-Rigoutsos algorithm wrapper
  *
  ************************************************************************/
-#ifndef included_mesh_BergerRigoutsos_C
-#define included_mesh_BergerRigoutsos_C
-
 #include <stdlib.h>
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
@@ -28,7 +25,7 @@ namespace mesh {
 
 const std::string BergerRigoutsos::s_default_timer_prefix("mesh::BergerRigoutsos");
 std::map<std::string, BergerRigoutsos::TimerStruct> BergerRigoutsos::s_static_timers;
-
+char BergerRigoutsos::s_ignore_external_timer_prefix('n');
 
 /*
  ************************************************************************
@@ -114,7 +111,7 @@ BergerRigoutsos::BergerRigoutsos(
 BergerRigoutsos::~BergerRigoutsos()
 {
    TBOX_omp_destroy_lock(&l_relaunch_queue);
-   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (d_mpi.getCommunicator() != MPI_COMM_NULL) {
       // Free the private communicator (if SAMRAI_MPI has not been finalized).
       int flag;
       tbox::SAMRAI_MPI::Finalized(&flag);
@@ -129,6 +126,14 @@ BergerRigoutsos::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db)
 {
    if (input_db) {
+
+      s_ignore_external_timer_prefix =
+         input_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
+                                      'n');
+      if (!(s_ignore_external_timer_prefix == 'n' ||
+            s_ignore_external_timer_prefix == 'y')) {
+         INPUT_VALUE_ERROR("DEV_ignore_external_timer_prefix");
+      }
 
       if (input_db->isInteger("max_box_size")) {
          input_db->getIntegerArray("max_box_size",
@@ -586,13 +591,16 @@ BergerRigoutsos::clusterAndComputeRelationships()
 
          // Wait for some incoming messages.
          d_object_timers->t_comm_wait->start();
-         n_comm_group_completed =
-            static_cast<int>(d_comm_stage.advanceSome());
+         d_comm_stage.advanceSome();
+         if (d_log_do_loop) {
+            n_comm_group_completed = 
+               static_cast<int>(d_comm_stage.numberOfCompletedMembers());
+         }
          d_object_timers->t_comm_wait->stop();
 
          // Continue nodes with completed messages.
          d_object_timers->t_compute->start();
-         while ( d_comm_stage.numberOfCompletedMembers() > 0 ) {
+         while ( d_comm_stage.hasCompletedMembers() ) {
             BergerRigoutsosNode* node_for_relaunch =
                (BergerRigoutsosNode *)(d_comm_stage.popCompletionQueue()->getHandler());
             if (d_log_do_loop) {
@@ -926,7 +934,7 @@ BergerRigoutsos::useDuplicateMPI(
       TBOX_ASSERT( d_mpi.getCommunicator() == MPI_COMM_NULL );
    }
 
-   if (mpi_object.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (mpi_object.getCommunicator() != MPI_COMM_NULL) {
       d_mpi.dupCommunicator(mpi_object);
    }
 
@@ -1014,7 +1022,7 @@ BergerRigoutsos::setupMPIDependentData()
             &flag);
       }
       if (tag_upper_bound_ptr == 0) {
-         tbox::SAMRAI_MPI mpi1(tbox::SAMRAI_MPI::commWorld);
+         tbox::SAMRAI_MPI mpi1(MPI_COMM_WORLD);
          mpi1.Attr_get(
             MPI_TAG_UB,
             &tag_upper_bound_ptr,
@@ -1077,7 +1085,7 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
     * that there is no messages in transit, but it can find
     * messages that have arrived but not received.
     */
-   if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull &&
+   if (d_mpi.getCommunicator() != MPI_COMM_NULL &&
        d_mpi != d_tag_level->getBoxLevel()->getMPI() ) {
       int flag;
       tbox::SAMRAI_MPI::Status mpi_status;
@@ -1114,14 +1122,21 @@ void
 BergerRigoutsos::setTimerPrefix(
    const std::string& timer_prefix)
 {
+   std::string timer_prefix_used;
+   if (s_ignore_external_timer_prefix == 'y') {
+      timer_prefix_used = s_default_timer_prefix;
+   }
+   else {
+      timer_prefix_used = timer_prefix;
+   }
    std::map<std::string, TimerStruct>::iterator ti(
-      s_static_timers.find(timer_prefix));
+      s_static_timers.find(timer_prefix_used));
 
    if (ti != s_static_timers.end()) {
       d_object_timers = &(ti->second);
    } else {
 
-      d_object_timers = &s_static_timers[timer_prefix];
+      d_object_timers = &s_static_timers[timer_prefix_used];
 
       tbox::TimerManager *tm = tbox::TimerManager::getManager();
 
@@ -1129,46 +1144,46 @@ BergerRigoutsos::setTimerPrefix(
          getTimer(timer_prefix + "::findBoxesContainingTags()");
 
       d_object_timers->t_cluster = tm->
-         getTimer(timer_prefix + "::cluster");
+         getTimer(timer_prefix_used + "::cluster");
       d_object_timers->t_cluster_and_compute_relationships = tm->
-         getTimer(timer_prefix + "::clusterAndComputeRelationships()");
+         getTimer(timer_prefix_used + "::clusterAndComputeRelationships()");
       d_object_timers->t_continue_algorithm = tm->
-         getTimer(timer_prefix + "::continueAlgorithm()");
+         getTimer(timer_prefix_used + "::continueAlgorithm()");
 
       d_object_timers->t_compute = tm->
-         getTimer(timer_prefix + "::compute");
+         getTimer(timer_prefix_used + "::compute");
       d_object_timers->t_comm_wait = tm->
-         getTimer(timer_prefix + "::Comm_wait");
+         getTimer(timer_prefix_used + "::Comm_wait");
       d_object_timers->t_MPI_wait = tm->
-         getTimer(timer_prefix + "::MPI_wait");
+         getTimer(timer_prefix_used + "::MPI_wait");
 
       d_object_timers->t_compute_new_neighborhood_sets = tm->
-         getTimer(timer_prefix + "::computeNewNeighborhoodSets()");
+         getTimer(timer_prefix_used + "::computeNewNeighborhoodSets()");
       d_object_timers->t_share_new_relationships = tm->
-         getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()");
+         getTimer(timer_prefix_used + "::shareNewNeighborhoodSetsWithOwners()");
       d_object_timers->t_share_new_relationships_send = tm->
-         getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()_send");
+         getTimer(timer_prefix_used + "::shareNewNeighborhoodSetsWithOwners()_send");
       d_object_timers->t_share_new_relationships_recv = tm->
-         getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()_recv");
+         getTimer(timer_prefix_used + "::shareNewNeighborhoodSetsWithOwners()_recv");
       d_object_timers->t_share_new_relationships_unpack = tm->
-         getTimer(timer_prefix + "::shareNewNeighborhoodSetsWithOwners()_unpack");
+         getTimer(timer_prefix_used + "::shareNewNeighborhoodSetsWithOwners()_unpack");
 
       d_object_timers->t_local_histogram = tm->
-         getTimer(timer_prefix + "::makeLocalTagHistogram()");
+         getTimer(timer_prefix_used + "::makeLocalTagHistogram()");
       d_object_timers->t_local_tasks = tm->
-         getTimer(timer_prefix + "::continueAlgorithm()_local_tasks");
+         getTimer(timer_prefix_used + "::continueAlgorithm()_local_tasks");
 
       // Multi-stage timers
       d_object_timers->t_reduce_histogram = tm->
-         getTimer(timer_prefix + "::reduce_histogram");
+         getTimer(timer_prefix_used + "::reduce_histogram");
       d_object_timers->t_bcast_acceptability = tm->
-         getTimer(timer_prefix + "::bcast_acceptability");
+         getTimer(timer_prefix_used + "::bcast_acceptability");
       d_object_timers->t_gather_grouping_criteria = tm->
-         getTimer(timer_prefix + "::gather_grouping_criteria");
+         getTimer(timer_prefix_used + "::gather_grouping_criteria");
       d_object_timers->t_bcast_child_groups = tm->
-         getTimer(timer_prefix + "::bcast_child_groups");
+         getTimer(timer_prefix_used + "::bcast_child_groups");
       d_object_timers->t_bcast_to_dropouts = tm->
-         getTimer(timer_prefix + "::bcast_to_dropouts");
+         getTimer(timer_prefix_used + "::bcast_to_dropouts");
 
       // Pre- and post-processing timers.
       d_object_timers->t_barrier_before = tm->
@@ -1189,4 +1204,3 @@ BergerRigoutsos::setTimerPrefix(
 
 }
 }
-#endif

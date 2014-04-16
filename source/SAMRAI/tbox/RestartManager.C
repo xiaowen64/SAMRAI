@@ -200,7 +200,7 @@ RestartManager::registerRestartItem(
       d_restart_items_list.begin();
 
    bool found_item = false;
-   for ( ; !found_item && iter != d_restart_items_list.end(); iter++) {
+   for ( ; !found_item && iter != d_restart_items_list.end(); ++iter) {
       found_item = (iter->name == name);
    }
 
@@ -239,7 +239,7 @@ RestartManager::unregisterRestartItem(
    std::list<RestartManager::RestartItem>::iterator iter =
       d_restart_items_list.begin();
 
-   for ( ; iter != d_restart_items_list.end(); iter++) {
+   for ( ; iter != d_restart_items_list.end(); ++iter) {
       if (iter->name == name) {
          d_restart_items_list.erase(iter);
          break;
@@ -308,7 +308,7 @@ RestartManager::writeRestartFile(
 
    std::list<RestartManager::RestartItem>::iterator i =
       d_restart_items_list.begin();
-   for ( ; i != d_restart_items_list.end(); i++) {
+   for ( ; i != d_restart_items_list.end(); ++i) {
       boost::shared_ptr<Database> obj_db(
          database->putDatabase(i->name));
       (i->obj)->putToRestart(obj_db);

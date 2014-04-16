@@ -243,7 +243,7 @@ private:
 
    PatchDescriptor(
       const PatchDescriptor&);                  // not implemented
-   void
+   PatchDescriptor&
    operator = (
       const PatchDescriptor&);                  // not implemented
 

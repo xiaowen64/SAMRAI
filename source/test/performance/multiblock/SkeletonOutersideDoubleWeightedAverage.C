@@ -116,11 +116,11 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
    const hier::IntVector& ratio) const
 {
    boost::shared_ptr<pdat::OuterfaceData<double> > fdata(
-      fine.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
+         fine.getPatchData(src_component)));
    boost::shared_ptr<pdat::OuterfaceData<double> > cdata(
-      coarse.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
+         coarse.getPatchData(dst_component)));
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
@@ -150,9 +150,9 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
    getDx(clev_num, cdx);
    getDx(flev_num, fdx);
 
-   for (int d = 0; d < cdata->getDepth(); d++) {
+   for (int d = 0; d < cdata->getDepth(); ++d) {
       // loop over lower and upper outerside arrays
-      for (int i = 0; i < 2; i++) {
+      for (int i = 0; i < 2; ++i) {
          if (d_dim == tbox::Dimension(1)) {
             SAMRAI_F77_FUNC(cartwgtavgoutfacedoub1d, CARTWGTAVGOUTFACEDOUB1D) (
                ifirstc(0), ilastc(0),
@@ -236,7 +236,7 @@ void SkeletonOutersideDoubleWeightedAverage::setDx(
    }
    if (static_cast<int>(d_dx[level_number].size()) < d_dim.getValue()) {
       d_dx[level_number].resize(d_dim.getValue());
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
          d_dx[level_number][i] = dx[i];
       }
    }
@@ -246,7 +246,7 @@ void SkeletonOutersideDoubleWeightedAverage::getDx(
    const int level_number,
    double* dx) const
 {
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       dx[i] = d_dx[level_number][i];
    }
 }

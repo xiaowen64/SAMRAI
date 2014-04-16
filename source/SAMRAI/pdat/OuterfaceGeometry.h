@@ -127,7 +127,7 @@ private:
 
    OuterfaceGeometry(
       const OuterfaceGeometry&);                // not implemented
-   void
+   OuterfaceGeometry&
    operator = (
       const OuterfaceGeometry&);                    // not implemented
 

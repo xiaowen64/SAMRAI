@@ -358,7 +358,7 @@ int main(
             active_ranks[0] = 0;
          } else {
             active_ranks.resize(nnodes / 2);
-            for (int i = 0; i < nnodes / 2; i++) {
+            for (int i = 0; i < nnodes / 2; ++i) {
                active_ranks[i] = (i + 1) % (nnodes / 2);
             }
             std::sort(&active_ranks[0],
@@ -639,8 +639,8 @@ void generatePrebalanceByUserShells(
    hier::VariableDatabase* vdb =
       hier::VariableDatabase::getDatabase();
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
-      hierarchy->getGridGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+         hierarchy->getGridGeometry()));
    TBOX_ASSERT(grid_geometry);
 
    boost::shared_ptr<hier::PatchLevel> tag_level(
@@ -669,8 +669,8 @@ void generatePrebalanceByUserShells(
         pi != tag_level->end(); ++pi) {
       const boost::shared_ptr<hier::Patch>& patch = *pi;
       boost::shared_ptr<pdat::CellData<int> > tag_data(
-         patch->getPatchData(tag_id),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            patch->getPatchData(tag_id)));
       TBOX_ASSERT(tag_data);
 
       tag_data->getArrayData().undefineData();

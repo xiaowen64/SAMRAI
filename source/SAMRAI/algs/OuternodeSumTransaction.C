@@ -7,10 +7,6 @@
  * Description:   Communication transaction for summing outernode data
  *
  ************************************************************************/
-
-#ifndef included_algs_OuternodeSumTransaction_C
-#define included_algs_OuternodeSumTransaction_C
-
 #include "SAMRAI/algs/OuternodeSumTransaction.h"
 
 #include "SAMRAI/hier/Patch.h"
@@ -40,7 +36,6 @@ namespace algs {
  */
 
 const xfer::RefineClasses::Data *const* OuternodeSumTransaction::s_refine_items = 0;
-int OuternodeSumTransaction::s_num_refine_items = 0;
 
 /*
  *************************************************************************
@@ -155,9 +150,9 @@ OuternodeSumTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
    boost::shared_ptr<pdat::OuternodeData<double> > onode_dst_data(
-      d_dst_level->getPatch(d_dst_node.getGlobalId())->
-      getPatchData(s_refine_items[d_refine_item_id]->d_scratch),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+         d_dst_level->getPatch(d_dst_node.getGlobalId())->
+         getPatchData(s_refine_items[d_refine_item_id]->d_scratch)));
    TBOX_ASSERT(onode_dst_data);
 
    onode_dst_data->unpackStreamAndSum(stream, *d_overlap);
@@ -167,15 +162,15 @@ void
 OuternodeSumTransaction::copyLocalData()
 {
    boost::shared_ptr<pdat::OuternodeData<double> > onode_dst_data(
-      d_dst_level->getPatch(d_dst_node.getGlobalId())->
-      getPatchData(s_refine_items[d_refine_item_id]->d_scratch),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+         d_dst_level->getPatch(d_dst_node.getGlobalId())->
+         getPatchData(s_refine_items[d_refine_item_id]->d_scratch)));
    TBOX_ASSERT(onode_dst_data);
 
    boost::shared_ptr<pdat::OuternodeData<double> > onode_src_data(
-      d_src_level->getPatch(d_src_node.getGlobalId())->
-      getPatchData(s_refine_items[d_refine_item_id]->d_src),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+         d_src_level->getPatch(d_src_node.getGlobalId())->
+         getPatchData(s_refine_items[d_refine_item_id]->d_src)));
    TBOX_ASSERT(onode_src_data);
 
    onode_dst_data->sum(*onode_src_data, *d_overlap);
@@ -197,7 +192,6 @@ OuternodeSumTransaction::printClassData(
    stream << "   refine item array:        "
           << (xfer::RefineClasses::Data **)s_refine_items
           << std::endl;
-   stream << "   num refine items:      " << s_num_refine_items << std::endl;
    stream << "   destination node:       " << d_dst_node << std::endl;
    stream << "   source node:            " << d_src_node << std::endl;
    stream << "   refine item id:         " << d_refine_item_id << std::endl;
@@ -224,6 +218,4 @@ OuternodeSumTransaction::printClassData(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

@@ -7,10 +7,6 @@
  * Description:   Periodic shift identifier in periodic domain.
  *
  ************************************************************************/
-
-#ifndef included_hier_PeriodicId_C
-#define included_hier_PeriodicId_C
-
 #include "SAMRAI/hier/PeriodicId.h"
 
 #include <iostream>
@@ -73,4 +69,3 @@ operator << (
 
 }
 }
-#endif

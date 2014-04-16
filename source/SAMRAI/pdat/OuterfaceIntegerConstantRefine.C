@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_OuterfaceIntegerConstantRefine_C
-#define included_pdat_OuterfaceIntegerConstantRefine_C
-
 #include "SAMRAI/pdat/OuterfaceIntegerConstantRefine.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -136,11 +132,11 @@ OuterfaceIntegerConstantRefine::refine(
    const tbox::Dimension& dim(fine.getDim());
 
    boost::shared_ptr<OuterfaceData<int> > cdata(
-      coarse.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<OuterfaceData<int>, hier::PatchData>(
+         coarse.getPatchData(src_component)));
    boost::shared_ptr<OuterfaceData<int> > fdata(
-      fine.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<OuterfaceData<int>, hier::PatchData>(
+         fine.getPatchData(dst_component)));
 
    const FaceOverlap* t_overlap = CPP_CAST<const FaceOverlap *>(&fine_overlap);
 
@@ -158,7 +154,7 @@ OuterfaceIntegerConstantRefine::refine(
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   for (int axis = 0; axis < dim.getValue(); axis++) {
+   for (int axis = 0; axis < dim.getValue(); ++axis) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
 
       for (hier::BoxContainer::const_iterator b = boxes.begin();
@@ -168,7 +164,7 @@ OuterfaceIntegerConstantRefine::refine(
          TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, face_box);
 
          hier::Box fine_box(dim);
-         for (int i = 0; i < dim.getValue(); i++) {
+         for (int i = 0; i < dim.getValue(); ++i) {
             fine_box.lower((axis + i) % dim.getValue()) = face_box.lower(i);
             fine_box.upper((axis + i) % dim.getValue()) = face_box.upper(i);
          }
@@ -181,9 +177,9 @@ OuterfaceIntegerConstantRefine::refine(
          const hier::Index ifirstf = fine_box.lower();
          const hier::Index ilastf = fine_box.upper();
 
-         for (int d = 0; d < fdata->getDepth(); d++) {
+         for (int d = 0; d < fdata->getDepth(); ++d) {
             // loop over lower and upper outerface arrays
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 2; ++i) {
                if (dim == tbox::Dimension(1)) {
                   SAMRAI_F77_FUNC(conrefoutfaceintg1d, CONREFOUTFACEINTG1D) (
                      ifirstc(0), ilastc(0),
@@ -267,4 +263,3 @@ OuterfaceIntegerConstantRefine::refine(
 
 }
 }
-#endif

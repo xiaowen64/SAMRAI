@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_EdgeOverlap_C
-#define included_pdat_EdgeOverlap_C
-
 #include "SAMRAI/pdat/EdgeOverlap.h"
 
 #include "SAMRAI/pdat/EdgeGeometry.h"
@@ -27,7 +23,7 @@ EdgeOverlap::EdgeOverlap(
    const tbox::Dimension dim(transformation.getOffset().getDim());
    d_dst_boxes.resize(boxes.size());
 
-   for (int d = 0; d < static_cast<int>(boxes.size()); d++) {
+   for (int d = 0; d < static_cast<int>(boxes.size()); ++d) {
       d_dst_boxes[d] = boxes[d];
       if (!d_dst_boxes[d].isEmpty()) d_is_overlap_empty = false;
    }
@@ -95,4 +91,3 @@ EdgeOverlap::getTransformation() const
 
 }
 }
-#endif

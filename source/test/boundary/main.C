@@ -168,7 +168,7 @@ int main(
       hier::BoxContainer::const_iterator domain_boxes = domain.begin();
       int rank = mpi.getRank();
       int size = mpi.getSize();
-      for (hier::LocalId ib(0); ib < boxes.size(); ib++, ++domain_boxes) {
+      for (hier::LocalId ib(0); ib < boxes.size(); ++ib, ++domain_boxes) {
          if (ib % size == rank) {
             layer0->addBox(hier::Box(*domain_boxes, ib, rank));
          }

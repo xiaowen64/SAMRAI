@@ -7,10 +7,6 @@
  * Description:   Box representing a portion of the AMR index space
  *
  ************************************************************************/
-
-#ifndef included_hier_Box_C
-#define included_hier_Box_C
-
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -424,10 +420,10 @@ Box::index(
 
    int remainder = offset;
 
-   for (int d = getDim().getValue() - 1; d > -1; d--) {
+   for (int d = getDim().getValue() - 1; d > -1; --d) {
       /* Compute the stride for indexing */
       int stride = 1;
-      for (int stride_dim = 0; stride_dim < d; stride_dim++) {
+      for (int stride_dim = 0; stride_dim < d; ++stride_dim) {
          stride *= n[stride_dim];
       }
 
@@ -543,7 +539,7 @@ Box::intersects(
       }
    }
 
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < getDim().getValue(); ++i) {
       if (tbox::MathUtilities<int>::Max(d_lo(i), box.d_lo(i)) >
           tbox::MathUtilities<int>::Min(d_hi(i), box.d_hi(i))) {
          return false;
@@ -629,7 +625,7 @@ Box::refine(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
 
    bool negative_ratio = false;
-   for (int d = 0; d < getDim().getValue(); d++) {
+   for (int d = 0; d < getDim().getValue(); ++d) {
       if (ratio(d) < 0) {
          negative_ratio = true;
          break;
@@ -640,7 +636,7 @@ Box::refine(
       d_lo *= ratio;
       d_hi = d_hi * ratio + (ratio - 1);
    } else {
-      for (int i = 0; i < getDim().getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); ++i) {
          if (ratio(i) > 0) {
             d_lo(i) *= ratio(i);
             d_hi(i) = d_hi(i) * ratio(i) + (ratio(i) - 1);
@@ -666,7 +662,7 @@ Box::longestDirection() const
    int max = upper(0) - lower(0);
    int dim = 0;
 
-   for (int i = 1; i < getDim().getValue(); i++)
+   for (int i = 1; i < getDim().getValue(); ++i)
       if ((upper(i) - lower(i)) > max) {
          max = upper(i) - lower(i);
          dim = i;
@@ -689,7 +685,7 @@ Box::DatabaseBox_from_Box() const
 
    new_Box.setDim(getDim());
 
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < getDim().getValue(); ++i) {
       new_Box.lower(i) = d_lo(i);
       new_Box.upper(i) = d_hi(i);
    }
@@ -701,7 +697,7 @@ void
 Box::set_Box_from_DatabaseBox(
    const tbox::DatabaseBox& box)
 {
-   for (int i = 0; i < box.getDimVal(); i++) {
+   for (int i = 0; i < box.getDimVal(); ++i) {
       d_lo(i) = box.lower(i);
       d_hi(i) = box.upper(i);
    }
@@ -712,7 +708,7 @@ Box::putToIntBuffer(
    int* buffer) const
 {
    buffer[0] = d_block_id.getBlockValue();
-   buffer++;
+   ++buffer;
 
    d_id.putToIntBuffer(buffer);
    buffer += BoxId::commBufferSize();
@@ -730,7 +726,7 @@ Box::getFromIntBuffer(
    const int* buffer)
 {
    d_block_id = BlockId(buffer[0]);
-   buffer++; 
+   ++buffer; 
 
    d_id.getFromIntBuffer(buffer);
    buffer += BoxId::commBufferSize();
@@ -834,20 +830,20 @@ Box::coalesceIntervals(
          return retval;
       }
    } else {
-      for (int id = 0; id < dim; id++) {
+      for (int id = 0; id < dim; ++id) {
          if ((lo1[id] == lo2[id]) && (hi1[id] == hi2[id])) {
             int id2;
             int low1[SAMRAI::MAX_DIM_VAL];
             int high1[SAMRAI::MAX_DIM_VAL];
             int low2[SAMRAI::MAX_DIM_VAL];
             int high2[SAMRAI::MAX_DIM_VAL];
-            for (id2 = 0; id2 < id; id2++) {
+            for (id2 = 0; id2 < id; ++id2) {
                low1[id2] = lo1[id2];
                high1[id2] = hi1[id2];
                low2[id2] = lo2[id2];
                high2[id2] = hi2[id2];
             }
-            for (id2 = id + 1; id2 < dim; id2++) {
+            for (id2 = id + 1; id2 < dim; ++id2) {
                int id1 = id2 - 1;
                low1[id1] = lo1[id2];
                high1[id1] = hi1[id2];
@@ -894,7 +890,7 @@ Box::coalesceWith(
       const int* box_hi = &box.upper()[0];
       int me_lo[SAMRAI::MAX_DIM_VAL];
       int me_hi[SAMRAI::MAX_DIM_VAL];
-      for (id = 0; id < getDim().getValue(); id++) {
+      for (id = 0; id < getDim().getValue(); ++id) {
          me_lo[id] = d_lo(id);
          me_hi[id] = d_hi(id);
       }
@@ -906,7 +902,7 @@ Box::coalesceWith(
          id = 0;
          while (retval && (id < getDim().getValue())) {
             retval = ((me_lo[id] <= box_lo[id]) && (me_hi[id] >= box_hi[id]));
-            id++;
+            ++id;
          }
          if (!retval) { // me doesn't contain box; check other way around...
             retval = true;
@@ -914,7 +910,7 @@ Box::coalesceWith(
             while (retval && (id < getDim().getValue())) {
                retval = ((box_lo[id] <= me_lo[id])
                          && (box_hi[id] >= me_hi[id]));
-               id++;
+               ++id;
             }
          }
       }
@@ -952,7 +948,7 @@ Box::rotateAboutAxis(
    Index tmp_lo(dim);
    Index tmp_hi(dim);
 
-   for (int j = 0; j < num_rotations; j++) {
+   for (int j = 0; j < num_rotations; ++j) {
       tmp_lo = d_lo;
       tmp_hi = d_hi;
       d_lo(a) = tmp_lo(b);
@@ -997,7 +993,7 @@ Box::rotate(
       if (rotation_number > 3) {
          TBOX_ERROR("Box::rotate invalid 2D RotationIdentifier.");
       }
-      for (int j = 0; j < rotation_number; j++) {
+      for (int j = 0; j < rotation_number; ++j) {
          Index tmp_lo(d_lo);
          Index tmp_hi(d_hi);
 
@@ -1159,5 +1155,3 @@ BoxIterator::~BoxIterator()
 
 }
 }
-
-#endif

@@ -34,7 +34,7 @@ Array<bool>::Array(
       d_counter = new ReferenceCounter;
       d_elements = n;
 
-      for (int i = 0; i < d_elements; i++) {
+      for (int i = 0; i < d_elements; ++i) {
          d_objects[i] = default_value;
       }
 
@@ -55,7 +55,7 @@ Array<char>::Array(
       d_counter = new ReferenceCounter;
       d_elements = n;
 
-      for (int i = 0; i < d_elements; i++) {
+      for (int i = 0; i < d_elements; ++i) {
          d_objects[i] = default_value;
       }
 
@@ -76,7 +76,7 @@ Array<int>::Array(
       d_counter = new ReferenceCounter;
       d_elements = n;
 
-      for (int i = 0; i < d_elements; i++) {
+      for (int i = 0; i < d_elements; ++i) {
          d_objects[i] = default_value;
       }
 
@@ -97,7 +97,7 @@ Array<float>::Array(
       d_counter = new ReferenceCounter;
       d_elements = n;
 
-      for (int i = 0; i < d_elements; i++) {
+      for (int i = 0; i < d_elements; ++i) {
          d_objects[i] = default_value;
       }
 
@@ -118,7 +118,7 @@ Array<double>::Array(
       d_counter = new ReferenceCounter;
       d_elements = n;
 
-      for (int i = 0; i < d_elements; i++) {
+      for (int i = 0; i < d_elements; ++i) {
          d_objects[i] = default_value;
       }
 

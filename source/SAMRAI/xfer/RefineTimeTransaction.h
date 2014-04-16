@@ -52,17 +52,12 @@ public:
     * executed.  The array is set in the RefineSchedule class.
     *
     * @pre refine_items != 0
-    * @pre num_refine_items >= 0
     */
    static void
    setRefineItems(
-      const RefineClasses::Data*const* refine_items,
-      int num_refine_items)
+      const RefineClasses::Data*const* refine_items)
    {
-      TBOX_ASSERT(num_refine_items == 0 || refine_items != 0);
-      TBOX_ASSERT(num_refine_items >= 0);
       s_refine_items = refine_items;
-      s_num_refine_items = num_refine_items;
    }
 
    /*!
@@ -76,7 +71,6 @@ public:
    unsetRefineItems()
    {
       s_refine_items = 0;
-      s_num_refine_items = 0;
    }
 
    /*!
@@ -206,13 +200,12 @@ public:
 private:
    RefineTimeTransaction(
       const RefineTimeTransaction&);                    // not implemented
-   void
+   RefineTimeTransaction&
    operator = (
       const RefineTimeTransaction&);                    // not implemented
 
    static double s_time;
    static const RefineClasses::Data*const* s_refine_items;
-   static int s_num_refine_items;
 
    void
    timeInterpolate(

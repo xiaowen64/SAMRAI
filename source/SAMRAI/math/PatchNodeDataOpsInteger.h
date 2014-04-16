@@ -160,7 +160,7 @@ private:
    // The following are not implemented:
    PatchNodeDataOpsInteger(
       const PatchNodeDataOpsInteger&);
-   void
+   PatchNodeDataOpsInteger&
    operator = (
       const PatchNodeDataOpsInteger&);
 

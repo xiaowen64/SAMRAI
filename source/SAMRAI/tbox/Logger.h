@@ -96,6 +96,15 @@ public:
          const std::string& filename,
          const int line) = 0;
 
+      Appender();
+
+      Appender(
+         const Appender& other);
+
+      Appender&
+      operator = (
+         const Appender& rhs);
+
       virtual ~Appender();
    };
 
@@ -215,11 +224,20 @@ private:
     */
    Logger();
 
+   // Unimplemented copy constructor.
+   Logger(
+      const Logger& other);
+
    /*
     * Private destructor to avoid destruction of the singleton
     * outside this class.
     */
    ~Logger();
+
+   // Unimplemented assignment operator.
+   Logger&
+      operator = (
+      const Logger& rhs);
 
    /*!
     * Frees instance of the singleton logger.

@@ -52,7 +52,7 @@ void txt2boxes(
    // translate coordinates into cell-centered, lower-left origin based
 
    int width = -1;
-   for (unsigned int idx = 0; idx < strlen(txt) - 1; idx++) {
+   for (unsigned int idx = 0; idx < strlen(txt) - 1; ++idx) {
       if (('x' == txt[idx] || '.' == txt[idx]) &&
           ('.' == txt[idx + 1] || '|' == txt[idx + 1])) {
          width = idx + 1;
@@ -72,7 +72,7 @@ void txt2boxes(
 
    // make vector of x locations
    vector<pair<int, int> > ix;
-   for (unsigned int idx = 0; idx < strlen(txt); idx++) {
+   for (unsigned int idx = 0; idx < strlen(txt); ++idx) {
       if ('x' == txt[idx]) {
          int j = idx / width;
          int i = idx - j * width;
@@ -82,7 +82,7 @@ void txt2boxes(
 
    // foreach x1 in x
    vector<pair<int, int> >::iterator it;
-   for (it = ix.begin(); it != ix.end(); it++) {
+   for (it = ix.begin(); it != ix.end(); ++it) {
 
       vector<pair<int, int> >::iterator it2;
 
@@ -92,7 +92,7 @@ void txt2boxes(
       vector<hier::Box> boxes_here;
       boxes_here.clear();
 
-      for (it2 = ix.begin(); it2 != ix.end(); it2++) {
+      for (it2 = ix.begin(); it2 != ix.end(); ++it2) {
 
          if (it2->first > it->first &&
              it2->second > it->second) {
@@ -111,8 +111,8 @@ void txt2boxes(
             if (txt[idx2] != 'x') isbox = false;
 
             // ...interior cells contain no corners
-            for (int i = it->first + 1; i < it2->first; i++) {
-               for (int j = it->second + 1; j < it2->second; j++) {
+            for (int i = it->first + 1; i < it2->first; ++i) {
+               for (int j = it->second + 1; j < it2->second; ++j) {
                   int idx = j * width + i;
                   if ('x' == txt[idx]) isbox = false;
                   if ('-' == txt[idx]) isbox = false;
@@ -128,8 +128,8 @@ void txt2boxes(
                int j0 = it->second / 2;
                j1 = it2->second / 2;
 
-               i1--;
-               j1--;
+               --i1;
+               --j1;
 
                // Flip coordinates vertically.
                j0 = cell_max - j0;
@@ -154,7 +154,7 @@ void txt2boxes(
          hier::Box smallest_box(boxes_here[0]);
 
          for (vector<hier::Box>::iterator itb = boxes_here.begin();
-              itb != boxes_here.end(); itb++) {
+              itb != boxes_here.end(); ++itb) {
             if ((*itb).numberCells() < smallest_box.numberCells()) {
                smallest_box = *itb;
             }
@@ -176,7 +176,7 @@ int txt_width(
    const char* txt)
 {
    int width = -1;
-   for (unsigned int idx = 0; idx < strlen(txt) - 1; idx++) {
+   for (unsigned int idx = 0; idx < strlen(txt) - 1; ++idx) {
       if (('x' == txt[idx] || '.' == txt[idx]) &&
           ('.' == txt[idx + 1] || '|' == txt[idx + 1])) {
          width = idx + 1;
@@ -237,11 +237,11 @@ bool txt_next_val(
 
       // If we outside the grid, there cannot be a value here
       if (grid_i < 0 || grid_j < 0) {
-         idx++;
+         ++idx;
          continue;
       }
       if (grid_i > grid_width || grid_j > grid_height) {
-         idx++;
+         ++idx;
          continue;
       }
       // Translate grid coords to text coordinates.  Text coordinates
@@ -286,7 +286,7 @@ bool txt_next_val(
          return true;
       }
 
-      idx++; // advance to next domain idx
+      ++idx; // advance to next domain idx
 
    } while (cnt++ < cnt_max);
 
@@ -360,7 +360,7 @@ bool SingleLevelTestCase(
 
       if (proc == mpi.getRank()) {
          mblevel->addBox(hier::Box(*level_boxes_itr, local_id, proc));
-         local_id++;
+         ++local_id;
       }
 
    }
@@ -396,8 +396,8 @@ bool SingleLevelTestCase(
            p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::CellData<int> > cdata(
-            patch->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+               patch->getPatchData(data_id)));
          TBOX_ASSERT(cdata);
 
          int data_txt_id = patch->getBox().getLocalId().getValue();
@@ -415,8 +415,8 @@ bool SingleLevelTestCase(
            p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::NodeData<int> > ndata(
-            patch->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::NodeData<int>, hier::PatchData>(
+               patch->getPatchData(data_id)));
          TBOX_ASSERT(ndata);
 
          int data_txt_id = patch->getBox().getLocalId().getValue();
@@ -446,8 +446,8 @@ bool SingleLevelTestCase(
            p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::CellData<int> > cdata(
-            patch->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+               patch->getPatchData(data_id)));
          TBOX_ASSERT(cdata);
 
          pdat::CellData<int> expected(cdata->getBox(),
@@ -477,8 +477,8 @@ bool SingleLevelTestCase(
            p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::NodeData<int> > ndata(
-            patch->getPatchData(data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::NodeData<int>, hier::PatchData>(
+               patch->getPatchData(data_id)));
          TBOX_ASSERT(ndata);
 
          pdat::NodeData<int> expected(ndata->getBox(),
@@ -1029,9 +1029,9 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
       ".   .   .   .   .   .   .   .   .   .   ." // 7
       ". . 0 . 0 . 0 . 0 . 0 . 0 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 6
-      ". . 0 . 0 . 0 . 0 . 0 . 0 . 0 . . . . . ."
+      ". . 0 . 0 . 0 . 0 . 8 . 0 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 5
-      ". . 0 . 0 . 0 . 0 . 0 . 0 . 0 . . . . . ."
+      ". . 0 . 0 . 0 . 8 . 0 . 0 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 4
       ". . 0 . 0 . 0 . 0 . 0 . 0 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 3
@@ -1057,9 +1057,9 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
       ".   .   .   .   .   .   .   .   .   .   ." // 7
       ". . . . . . 1 . 1 . 1 . 1 . 1 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 6
-      ". . . . . . 1 . 1 . 1 . 1 . 1 . 1 . 1 . ."
+      ". . . . . . 1 . 1 . 8 . 1 . 1 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 5
-      ". . . . . . 1 . 1 . 1 . 1 . 1 . 1 . 1 . ."
+      ". . . . . . 1 . 1 . 1 . 8 . 1 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 4
       ". . . . . . 1 . 1 . 1 . 1 . 1 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 3
@@ -1087,9 +1087,9 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
       ".   .   .   .   .   .   .   .   .   .   ." // 6
       ". . 2 . 2 . 2 . 2 . 2 . 2 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 5
-      ". . 2 . 2 . 2 . 2 . 2 . 2 . 2 . . . . . ."
+      ". . 2 . 2 . 2 . 8 . 2 . 2 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 4
-      ". . 2 . 2 . 2 . 2 . 2 . 2 . 2 . . . . . ."
+      ". . 2 . 2 . 2 . 2 . 8 . 2 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 3
       ". . 2 . 2 . 2 . 2 . 2 . 2 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 2
@@ -1115,9 +1115,9 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
       ".   .   .   .   .   .   .   .   .   .   ." // 6
       ". . . . . . 3 . 3 . 3 . 3 . 3 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 5
-      ". . . . . . 3 . 3 . 3 . 3 . 3 . 3 . 3 . ."
+      ". . . . . . 3 . 3 . 3 . 8 . 3 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 4
-      ". . . . . . 3 . 3 . 3 . 3 . 3 . 3 . 3 . ."
+      ". . . . . . 3 . 3 . 8 . 3 . 3 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 3
       ". . . . . . 3 . 3 . 3 . 3 . 3 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 2
@@ -1139,11 +1139,11 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
       ".   .   .   .   .   .   .   .   .   .   ." // 7
       ". . 0 . 0 . 0 . 0 . 0 . 1 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 6
-      ". . 0 . 0 . 0 . 0 . 0 . 1 . 0 . . . . . ."
+      ". . 0 . 0 . 0 . 0 . 8 . 1 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 5
-      ". . 0 . 0 . 0 . 0 . 0 . 1 . 0 . . . . . ."
+      ". . 0 . 0 . 0 . 8 . 0 . 8 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 4
-      ". . 0 . 0 . 2 . 2 . 2 . 0 . 0 . . . . . ."
+      ". . 0 . 0 . 2 . 2 . 8 . 0 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 3
       ". . 0 . 0 . 0 . 0 . 0 . 0 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 2
@@ -1167,11 +1167,11 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
       ".   .   .   .   .   .   .   .   .   .   ." // 7
       ". . . . . . 1 . 0 . 1 . 1 . 1 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 6
-      ". . . . . . 1 . 0 . 1 . 1 . 1 . 1 . 1 . ."
+      ". . . . . . 1 . 0 . 8 . 1 . 1 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 5
-      ". . . . . . 1 . 0 . 1 . 1 . 1 . 1 . 1 . ."
+      ". . . . . . 1 . 8 . 1 . 8 . 1 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 4
-      ". . . . . . 1 . 1 . 3 . 3 . 3 . 1 . 1 . ."
+      ". . . . . . 1 . 1 . 8 . 3 . 3 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 3
       ". . . . . . 1 . 1 . 1 . 1 . 1 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 2
@@ -1195,11 +1195,11 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
       ".   .   .   .   .   .   .   .   .   .   ." // 7
       ". . 2 . 2 . 2 . 2 . 2 . 2 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 6
-      ". . 2 . 2 . 0 . 0 . 0 . 2 . 2 . . . . . ."
+      ". . 2 . 2 . 0 . 0 . 8 . 2 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 5
-      ". . 2 . 2 . 2 . 2 . 2 . 3 . 2 . . . . . ."
+      ". . 2 . 2 . 2 . 8 . 2 . 8 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 4
-      ". . 2 . 2 . 2 . 2 . 2 . 3 . 2 . . . . . ."
+      ". . 2 . 2 . 2 . 2 . 8 . 3 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 3
       ". . 2 . 2 . 2 . 2 . 2 . 3 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 2
@@ -1223,11 +1223,11 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
       ".   .   .   .   .   .   .   .   .   .   ." // 7
       ". . . . . . 3 . 3 . 3 . 3 . 3 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 6
-      ". . . . . . 3 . 3 . 1 . 1 . 1 . 3 . 3 . ."
+      ". . . . . . 3 . 3 . 8 . 1 . 1 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 5
-      ". . . . . . 3 . 2 . 3 . 3 . 3 . 3 . 3 . ."
+      ". . . . . . 3 . 8 . 3 . 8 . 3 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 4
-      ". . . . . . 3 . 2 . 3 . 3 . 3 . 3 . 3 . ."
+      ". . . . . . 3 . 2 . 8 . 3 . 3 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 3
       ". . . . . . 3 . 2 . 3 . 3 . 3 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 2
@@ -1303,9 +1303,9 @@ bool Test_SecondLayerNodeVariableFillPattern()
       ".   .   .   .   .   .   .   .   .   .   ." // 7
       ". . 0 . 0 . 0 . 0 . 0 . 0 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 6
-      ". . 0 . 0 . 0 . 0 . 0 . 0 . 0 . . . . . ."
+      ". . 0 . 0 . 0 . 0 . 8 . 0 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 5
-      ". . 0 . 0 . 0 . 0 . 0 . 0 . 0 . . . . . ."
+      ". . 0 . 0 . 0 . 8 . 0 . 0 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 4
       ". . 0 . 0 . 0 . 0 . 0 . 0 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 3
@@ -1331,9 +1331,9 @@ bool Test_SecondLayerNodeVariableFillPattern()
       ".   .   .   .   .   .   .   .   .   .   ." // 7
       ". . . . . . 1 . 1 . 1 . 1 . 1 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 6
-      ". . . . . . 1 . 1 . 1 . 1 . 1 . 1 . 1 . ."
+      ". . . . . . 1 . 1 . 8 . 1 . 1 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 5
-      ". . . . . . 1 . 1 . 1 . 1 . 1 . 1 . 1 . ."
+      ". . . . . . 1 . 1 . 1 . 8 . 1 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 4
       ". . . . . . 1 . 1 . 1 . 1 . 1 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 3
@@ -1361,9 +1361,9 @@ bool Test_SecondLayerNodeVariableFillPattern()
       ".   .   .   .   .   .   .   .   .   .   ." // 6
       ". . 2 . 2 . 2 . 2 . 2 . 2 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 5
-      ". . 2 . 2 . 2 . 2 . 2 . 2 . 2 . . . . . ."
+      ". . 2 . 2 . 2 . 8 . 2 . 2 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 4
-      ". . 2 . 2 . 2 . 2 . 2 . 2 . 2 . . . . . ."
+      ". . 2 . 2 . 2 . 2 . 8 . 2 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 3
       ". . 2 . 2 . 2 . 2 . 2 . 2 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 2
@@ -1389,9 +1389,9 @@ bool Test_SecondLayerNodeVariableFillPattern()
       ".   .   .   .   .   .   .   .   .   .   ." // 6
       ". . . . . . 3 . 3 . 3 . 3 . 3 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 5
-      ". . . . . . 3 . 3 . 3 . 3 . 3 . 3 . 3 . ."
+      ". . . . . . 3 . 3 . 3 . 8 . 3 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 4
-      ". . . . . . 3 . 3 . 3 . 3 . 3 . 3 . 3 . ."
+      ". . . . . . 3 . 3 . 8 . 3 . 3 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 3
       ". . . . . . 3 . 3 . 3 . 3 . 3 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 2
@@ -1413,11 +1413,11 @@ bool Test_SecondLayerNodeVariableFillPattern()
       ".   .   .   .   .   .   .   .   .   .   ." // 7
       ". . 0 . 0 . 0 . 0 . 0 . 1 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 6
-      ". . 0 . 0 . 0 . 0 . 0 . 1 . 0 . . . . . ."
+      ". . 0 . 0 . 0 . 0 . 8 . 1 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 5
-      ". . 0 . 0 . 0 . 0 . 0 . 1 . 0 . . . . . ."
+      ". . 0 . 0 . 0 . 8 . 0 . 8 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 4
-      ". . 0 . 0 . 2 . 2 . 2 . 3 . 0 . . . . . ."
+      ". . 0 . 0 . 2 . 2 . 8 . 3 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 3
       ". . 0 . 0 . 0 . 0 . 0 . 0 . 0 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 2
@@ -1441,11 +1441,11 @@ bool Test_SecondLayerNodeVariableFillPattern()
       ".   .   .   .   .   .   .   .   .   .   ." // 7
       ". . . . . . 1 . 0 . 1 . 1 . 1 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 6
-      ". . . . . . 1 . 0 . 1 . 1 . 1 . 1 . 1 . ."
+      ". . . . . . 1 . 0 . 8 . 1 . 1 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 5
-      ". . . . . . 1 . 0 . 1 . 1 . 1 . 1 . 1 . ."
+      ". . . . . . 1 . 8 . 1 . 8 . 1 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 4
-      ". . . . . . 1 . 2 . 3 . 3 . 3 . 1 . 1 . ."
+      ". . . . . . 1 . 2 . 8 . 3 . 3 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 3
       ". . . . . . 1 . 1 . 1 . 1 . 1 . 1 . 1 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 2
@@ -1469,11 +1469,11 @@ bool Test_SecondLayerNodeVariableFillPattern()
       ".   .   .   .   .   .   .   .   .   .   ." // 7
       ". . 2 . 2 . 2 . 2 . 2 . 2 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 6
-      ". . 2 . 2 . 0 . 0 . 0 . 1 . 2 . . . . . ."
+      ". . 2 . 2 . 0 . 0 . 8 . 1 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 5
-      ". . 2 . 2 . 2 . 2 . 2 . 3 . 2 . . . . . ."
+      ". . 2 . 2 . 2 . 8 . 2 . 8 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 4
-      ". . 2 . 2 . 2 . 2 . 2 . 3 . 2 . . . . . ."
+      ". . 2 . 2 . 2 . 2 . 8 . 3 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 3
       ". . 2 . 2 . 2 . 2 . 2 . 3 . 2 . . . . . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 2
@@ -1497,11 +1497,11 @@ bool Test_SecondLayerNodeVariableFillPattern()
       ".   .   .   .   .   .   .   .   .   .   ." // 7
       ". . . . . . 3 . 3 . 3 . 3 . 3 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 6
-      ". . . . . . 3 . 0 . 1 . 1 . 1 . 3 . 3 . ."
+      ". . . . . . 3 . 0 . 8 . 1 . 1 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 5
-      ". . . . . . 3 . 2 . 3 . 3 . 3 . 3 . 3 . ."
+      ". . . . . . 3 . 8 . 3 . 8 . 3 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 4
-      ". . . . . . 3 . 2 . 3 . 3 . 3 . 3 . 3 . ."
+      ". . . . . . 3 . 2 . 8 . 3 . 3 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 3
       ". . . . . . 3 . 2 . 3 . 3 . 3 . 3 . 3 . ."
       ".   .   .   .   .   .   .   .   .   .   ." // 2

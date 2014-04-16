@@ -7,10 +7,6 @@
  * Description:   Linear time interp operator for face-centered complex data.
  *
  ************************************************************************/
-
-#ifndef included_pdat_FaceComplexLinearTimeInterpolateOp_C
-#define included_pdat_FaceComplexLinearTimeInterpolateOp_C
-
 #include "SAMRAI/pdat/FaceComplexLinearTimeInterpolateOp.h"
 #include "SAMRAI/pdat/FaceData.h"
 #include "SAMRAI/pdat/FaceVariable.h"
@@ -172,7 +168,7 @@ FaceComplexLinearTimeInterpolateOp::timeInterpolate(
       tfrac = 0.0;
    }
 
-   for (int d = 0; d < dst_dat->getDepth(); d++) {
+   for (int d = 0; d < dst_dat->getDepth(); ++d) {
       if (dim == tbox::Dimension(1)) {
          SAMRAI_F77_FUNC(lintimeintfacecmplx1d, LINTIMEINTFACECMPLX1D) (ifirst(0),
             ilast(0),
@@ -252,4 +248,3 @@ FaceComplexLinearTimeInterpolateOp::timeInterpolate(
 
 }
 }
-#endif

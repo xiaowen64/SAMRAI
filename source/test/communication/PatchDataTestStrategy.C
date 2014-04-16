@@ -78,7 +78,7 @@ void PatchDataTestStrategy::readVariableInput(
    d_variable_coarsen_op.resize(nkeys);
    d_variable_refine_op.resize(nkeys);
 
-   for (int i = 0; i < nkeys; i++) {
+   for (int i = 0; i < nkeys; ++i) {
 
       boost::shared_ptr<tbox::Database> var_db(db->getDatabase(var_keys[i]));
 

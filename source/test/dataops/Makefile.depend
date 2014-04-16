@@ -30,12 +30,11 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SampleIndexData.C	\
 	SampleIndexData.h
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
+
+${FILE_0}: ${DEPENDS_0}
 
 FILE_1=cell_cplxtest.o
 DEPENDS_1:=\
@@ -79,6 +78,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/UncoveredBoxIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
@@ -129,7 +129,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h cell_cplxtest.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
@@ -148,9 +147,9 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
+
+${FILE_1}: ${DEPENDS_1}
 
 FILE_2=cell_hiertest.o
 DEPENDS_2:=\
@@ -194,6 +193,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/UncoveredBoxIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
@@ -239,7 +239,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h cell_hiertest.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
@@ -258,9 +257,9 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
+
+${FILE_2}: ${DEPENDS_2}
 
 FILE_3=cell_patchtest.o
 DEPENDS_3:=\
@@ -345,7 +344,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h cell_patchtest.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
@@ -362,9 +360,9 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
+
+${FILE_3}: ${DEPENDS_3}
 
 FILE_4=edge_cplxtest.o
 DEPENDS_4:=\
@@ -409,6 +407,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/UncoveredBoxIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
@@ -462,7 +461,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h edge_cplxtest.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
@@ -483,9 +481,9 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
+
+${FILE_4}: ${DEPENDS_4}
 
 FILE_5=edge_hiertest.o
 DEPENDS_5:=\
@@ -530,6 +528,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/UncoveredBoxIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
@@ -583,7 +582,6 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h edge_hiertest.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_5 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
@@ -604,9 +602,9 @@ DEPENDS_5 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
+
+${FILE_5}: ${DEPENDS_5}
 
 FILE_6=face_cplxtest.o
 DEPENDS_6:=\
@@ -651,6 +649,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/UncoveredBoxIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
@@ -704,7 +703,6 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h face_cplxtest.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_6 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
@@ -725,9 +723,9 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
+
+${FILE_6}: ${DEPENDS_6}
 
 FILE_7=face_hiertest.o
 DEPENDS_7:=\
@@ -772,6 +770,7 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/UncoveredBoxIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
@@ -825,7 +824,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h face_hiertest.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_7 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
@@ -846,9 +844,9 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_7:X.o=${NDIM}.o}: ${DEPENDS_7}
+
+${FILE_7}: ${DEPENDS_7}
 
 FILE_8=indx_dataops.o
 DEPENDS_8:=\
@@ -892,6 +890,7 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/UncoveredBoxIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
@@ -924,15 +923,14 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SampleIndexData.h	\
 	indx_dataops.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_8 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/IndexData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/IndexDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/IndexVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_8:X.o=${NDIM}.o}: ${DEPENDS_8}
+
+${FILE_8}: ${DEPENDS_8}
 
 FILE_9=node_cplxtest.o
 DEPENDS_9:=\
@@ -977,6 +975,7 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/UncoveredBoxIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
@@ -1030,7 +1029,6 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h node_cplxtest.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_9 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
@@ -1051,9 +1049,9 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_9:X.o=${NDIM}.o}: ${DEPENDS_9}
+
+${FILE_9}: ${DEPENDS_9}
 
 FILE_10=node_hiertest.o
 DEPENDS_10:=\
@@ -1098,6 +1096,7 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/UncoveredBoxIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
@@ -1151,7 +1150,6 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h node_hiertest.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_10 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
@@ -1172,9 +1170,9 @@ DEPENDS_10 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}
+
+${FILE_10}: ${DEPENDS_10}
 
 FILE_11=side_cplxtest.o
 DEPENDS_11:=\
@@ -1219,6 +1217,7 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/UncoveredBoxIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
@@ -1272,7 +1271,6 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h side_cplxtest.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_11 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
@@ -1293,9 +1291,9 @@ DEPENDS_11 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_11:X.o=${NDIM}.o}: ${DEPENDS_11}
+
+${FILE_11}: ${DEPENDS_11}
 
 FILE_12=side_hiertest.o
 DEPENDS_12:=\
@@ -1340,6 +1338,7 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/UncoveredBoxIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
@@ -1393,7 +1392,6 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h side_hiertest.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_12 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
@@ -1414,7 +1412,7 @@ DEPENDS_12 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_12:X.o=${NDIM}.o}: ${DEPENDS_12}
+
+${FILE_12}: ${DEPENDS_12}
 

@@ -7,10 +7,6 @@
  * Description:   Box geometry description for overlap computations
  *
  ************************************************************************/
-
-#ifndef included_hier_BoxGeometry_C
-#define included_hier_BoxGeometry_C
-
 #include "SAMRAI/hier/BoxGeometry.h"
 
 namespace SAMRAI {
@@ -26,4 +22,3 @@ BoxGeometry::~BoxGeometry()
 
 }
 }
-#endif

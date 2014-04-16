@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_SideDoubleConstantRefine_C
-#define included_pdat_SideDoubleConstantRefine_C
-
 #include "SAMRAI/pdat/SideDoubleConstantRefine.h"
 
 #include <float.h>
@@ -128,11 +124,11 @@ SideDoubleConstantRefine::refine(
    const tbox::Dimension& dim(fine.getDim());
 
    boost::shared_ptr<SideData<double> > cdata(
-      coarse.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<SideData<double>, hier::PatchData>(
+         coarse.getPatchData(src_component)));
    boost::shared_ptr<SideData<double> > fdata(
-      fine.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<SideData<double>, hier::PatchData>(
+         fine.getPatchData(dst_component)));
 
    const SideOverlap* t_overlap =
       CPP_CAST<const SideOverlap *>(&fine_overlap);
@@ -156,7 +152,7 @@ SideDoubleConstantRefine::refine(
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   for (int axis = 0; axis < dim.getValue(); axis++) {
+   for (int axis = 0; axis < dim.getValue(); ++axis) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
 
       for (hier::BoxContainer::const_iterator b = boxes.begin();
@@ -173,7 +169,7 @@ SideDoubleConstantRefine::refine(
          const hier::Index ifirstf = fine_box.lower();
          const hier::Index ilastf = fine_box.upper();
 
-         for (int d = 0; d < fdata->getDepth(); d++) {
+         for (int d = 0; d < fdata->getDepth(); ++d) {
             if (dim == tbox::Dimension(1)) {
                if (directions(axis)) {
                   SAMRAI_F77_FUNC(conrefsidedoub1d, CONREFSIDEDOUB1D) (
@@ -261,4 +257,3 @@ SideDoubleConstantRefine::refine(
 
 }
 }
-#endif

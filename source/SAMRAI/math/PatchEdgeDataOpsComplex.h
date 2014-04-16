@@ -120,7 +120,7 @@ private:
    // The following are not implemented:
    PatchEdgeDataOpsComplex(
       const PatchEdgeDataOpsComplex&);
-   void
+   PatchEdgeDataOpsComplex&
    operator = (
       const PatchEdgeDataOpsComplex&);
 

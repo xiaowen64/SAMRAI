@@ -7,10 +7,6 @@
  * Description:   Norm operations for complex data arrays.
  *
  ************************************************************************/
-
-#ifndef included_math_ArrayDataNormOpsComplex_C
-#define included_math_ArrayDataNormOpsComplex_C
-
 #include "SAMRAI/math/ArrayDataNormOpsComplex.h"
 
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -57,7 +53,7 @@ ArrayDataNormOpsComplex::abs(
       int dst_w[SAMRAI::MAX_DIM_VAL];
       int src_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src_w[i] = src_box.numberCells(i);
@@ -76,27 +72,27 @@ ArrayDataNormOpsComplex::abs(
       const dcomplex* sd = src.getPointer();
 
       const int ddepth = dst.getDepth();
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int dst_counter = dst_begin;
          int src_counter = src_begin;
 
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             dst_b[nd] = dst_counter;
             src_b[nd] = src_counter;
          }
 
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                dd[dst_counter + i0] = sqrt(norm(sd[src_counter + i0]));
             }
 
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -109,14 +105,14 @@ ArrayDataNormOpsComplex::abs(
             if (dim_jump > 0) {
                int dst_step = 1;
                int src_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   dst_step *= dst_w[k];
                   src_step *= src_w[k];
                }
                dst_counter = dst_b[dim_jump - 1] + dst_step;
                src_counter = src_b[dim_jump - 1] + src_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   dst_b[m] = dst_counter;
                   src_b[m] = src_counter;
                }
@@ -151,7 +147,7 @@ ArrayDataNormOpsComplex::sumControlVolumes(
       int box_w[SAMRAI::MAX_DIM_VAL];
       int cv_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          cv_w[i] = cv_box.numberCells(i);
          dim_counter[i] = 0;
@@ -169,23 +165,23 @@ ArrayDataNormOpsComplex::sumControlVolumes(
 
       const double* cvd = cvol.getPointer();
 
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int cv_counter = cv_begin;
 
          int cv_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             cv_b[nd] = cv_counter;
          }
 
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                sum += cvd[cv_counter + i0];
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -196,12 +192,12 @@ ArrayDataNormOpsComplex::sumControlVolumes(
             }
             if (dim_jump > 0) {
                int cv_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   cv_step *= cv_w[k];
                }
                cv_counter = cv_b[dim_jump - 1] + cv_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   cv_b[m] = cv_counter;
                }
             }
@@ -242,7 +238,7 @@ ArrayDataNormOpsComplex::L1NormWithControlVolume(
       int d_w[SAMRAI::MAX_DIM_VAL];
       int cv_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          cv_w[i] = cv_box.numberCells(i);
@@ -260,26 +256,26 @@ ArrayDataNormOpsComplex::L1NormWithControlVolume(
       const dcomplex* dd = data.getPointer();
       const double* cvd = cvol.getPointer();
 
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int d_counter = d_begin;
          int cv_counter = cv_begin;
 
          int d_b[SAMRAI::MAX_DIM_VAL];
          int cv_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             d_b[nd] = d_counter;
             cv_b[nd] = cv_counter;
          }
 
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                l1norm += sqrt(norm(dd[d_counter + i0])) * cvd[cv_counter + i0];
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -292,14 +288,14 @@ ArrayDataNormOpsComplex::L1NormWithControlVolume(
             if (dim_jump > 0) {
                int d_step = 1;
                int cv_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   d_step *= d_w[k];
                   cv_step *= cv_w[k];
                }
                d_counter = d_b[dim_jump - 1] + d_step;
                cv_counter = cv_b[dim_jump - 1] + cv_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   d_b[m] = d_counter;
                   cv_b[m] = cv_counter;
                }
@@ -333,7 +329,7 @@ ArrayDataNormOpsComplex::L1Norm(
       int box_w[SAMRAI::MAX_DIM_VAL];
       int d_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
@@ -349,23 +345,23 @@ ArrayDataNormOpsComplex::L1Norm(
 
       const dcomplex* dd = data.getPointer();
 
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int d_counter = d_begin;
 
          int d_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             d_b[nd] = d_counter;
          }
 
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                l1norm += sqrt(norm(dd[d_counter + i0]));
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -377,12 +373,12 @@ ArrayDataNormOpsComplex::L1Norm(
 
             if (dim_jump > 0) {
                int d_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   d_step *= d_w[k];
                }
                d_counter = d_b[dim_jump - 1] + d_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   d_b[m] = d_counter;
                }
             }
@@ -426,7 +422,7 @@ ArrayDataNormOpsComplex::dotWithControlVolume(
       int d2_w[SAMRAI::MAX_DIM_VAL];
       int cv_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d1_w[i] = d1_box.numberCells(i);
          d2_w[i] = d2_box.numberCells(i);
@@ -448,7 +444,7 @@ ArrayDataNormOpsComplex::dotWithControlVolume(
       const dcomplex* dd2 = data2.getPointer();
       const double* cvd = cvol.getPointer();
 
-      for (int d = 0; d < d1depth; d++) {
+      for (int d = 0; d < d1depth; ++d) {
 
          int d1_counter = d1_begin;
          int d2_counter = d2_begin;
@@ -457,21 +453,21 @@ ArrayDataNormOpsComplex::dotWithControlVolume(
          int d1_b[SAMRAI::MAX_DIM_VAL];
          int d2_b[SAMRAI::MAX_DIM_VAL];
          int cv_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             d1_b[nd] = d1_counter;
             d2_b[nd] = d2_counter;
             cv_b[nd] = cv_counter;
          }
 
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                dprod += dd1[d1_counter + i0]
                   * conj(dd2[d2_counter + i0]) * cvd[cv_counter + i0];
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -485,7 +481,7 @@ ArrayDataNormOpsComplex::dotWithControlVolume(
                int d1_step = 1;
                int d2_step = 1;
                int cv_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   d1_step *= d1_w[k];
                   d2_step *= d2_w[k];
                   cv_step *= cv_w[k];
@@ -494,7 +490,7 @@ ArrayDataNormOpsComplex::dotWithControlVolume(
                d2_counter = d2_b[dim_jump - 1] + d2_step;
                cv_counter = cv_b[dim_jump - 1] + cv_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   d1_b[m] = d1_counter;
                   d2_b[m] = d2_counter;
                   cv_b[m] = cv_counter;
@@ -539,7 +535,7 @@ ArrayDataNormOpsComplex::dot(
       int d1_w[SAMRAI::MAX_DIM_VAL];
       int d2_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d1_w[i] = d1_box.numberCells(i);
          d2_w[i] = d2_box.numberCells(i);
@@ -557,26 +553,26 @@ ArrayDataNormOpsComplex::dot(
       const dcomplex* dd1 = data1.getPointer();
       const dcomplex* dd2 = data2.getPointer();
 
-      for (int d = 0; d < d1depth; d++) {
+      for (int d = 0; d < d1depth; ++d) {
 
          int d1_counter = d1_begin;
          int d2_counter = d2_begin;
 
          int d1_b[SAMRAI::MAX_DIM_VAL];
          int d2_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             d1_b[nd] = d1_counter;
             d2_b[nd] = d2_counter;
          }
 
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                dprod += dd1[d1_counter + i0] * conj(dd2[d2_counter + i0]);
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -589,14 +585,14 @@ ArrayDataNormOpsComplex::dot(
             if (dim_jump > 0) {
                int d1_step = 1;
                int d2_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   d1_step *= d1_w[k];
                   d2_step *= d2_w[k];
                }
                d1_counter = d1_b[dim_jump - 1] + d1_step;
                d2_counter = d2_b[dim_jump - 1] + d2_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   d1_b[m] = d1_counter;
                   d2_b[m] = d2_counter;
                }
@@ -639,7 +635,7 @@ ArrayDataNormOpsComplex::integral(
       int d_w[SAMRAI::MAX_DIM_VAL];
       int v_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          v_w[i] = v_box.numberCells(i);
@@ -657,26 +653,26 @@ ArrayDataNormOpsComplex::integral(
       const dcomplex* dd = data.getPointer();
       const double* vd = vol.getPointer();
 
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int d_counter = d_begin;
          int v_counter = v_begin;
 
          int d_b[SAMRAI::MAX_DIM_VAL];
          int v_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             d_b[nd] = d_counter;
             v_b[nd] = v_counter;
          }
 
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                integral += dd[d_counter + i0] * vd[v_counter + i0];
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -689,14 +685,14 @@ ArrayDataNormOpsComplex::integral(
             if (dim_jump > 0) {
                int d_step = 1;
                int v_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   d_step *= d_w[k];
                   v_step *= v_w[k];
                }
                d_counter = d_b[dim_jump - 1] + d_step;
                v_counter = v_b[dim_jump - 1] + v_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   d_b[m] = d_counter;
                   v_b[m] = v_counter;
                }
@@ -741,7 +737,7 @@ ArrayDataNormOpsComplex::weightedL2NormWithControlVolume(
       int d_w[SAMRAI::MAX_DIM_VAL];
       int cv_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          w_w[i] = w_box.numberCells(i);
          d_w[i] = d_box.numberCells(i);
@@ -763,7 +759,7 @@ ArrayDataNormOpsComplex::weightedL2NormWithControlVolume(
       const dcomplex* wd = wgt.getPointer();
       const double* cvd = cvol.getPointer();
 
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int d_counter = d_begin;
          int w_counter = w_begin;
@@ -772,21 +768,21 @@ ArrayDataNormOpsComplex::weightedL2NormWithControlVolume(
          int d_b[SAMRAI::MAX_DIM_VAL];
          int w_b[SAMRAI::MAX_DIM_VAL];
          int cv_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             d_b[nd] = d_counter;
             w_b[nd] = w_counter;
             cv_b[nd] = cv_counter;
          }
 
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                dcomplex val = dd[d_counter + i0] * wd[w_counter + i0];
                wl2norm += real(val * conj(val)) * cvd[cv_counter + i0];
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -800,7 +796,7 @@ ArrayDataNormOpsComplex::weightedL2NormWithControlVolume(
                int d_step = 1;
                int w_step = 1;
                int cv_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   d_step *= d_w[k];
                   w_step *= w_w[k];
                   cv_step *= cv_w[k];
@@ -809,7 +805,7 @@ ArrayDataNormOpsComplex::weightedL2NormWithControlVolume(
                w_counter = w_b[dim_jump - 1] + w_step;
                cv_counter = cv_b[dim_jump - 1] + cv_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   d_b[m] = d_counter;
                   w_b[m] = w_counter;
                   cv_b[m] = cv_counter;
@@ -849,7 +845,7 @@ ArrayDataNormOpsComplex::weightedL2Norm(
       int w_w[SAMRAI::MAX_DIM_VAL];
       int d_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          w_w[i] = w_box.numberCells(i);
          d_w[i] = d_box.numberCells(i);
@@ -869,26 +865,26 @@ ArrayDataNormOpsComplex::weightedL2Norm(
 
       const int ddepth = data.getDepth();
 
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int d_counter = d_begin;
          int w_counter = w_begin;
 
          int d_b[SAMRAI::MAX_DIM_VAL];
          int w_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             d_b[nd] = d_counter;
             w_b[nd] = w_counter;
          }
 
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                dcomplex val = dd[d_counter + i0] * wd[w_counter + i0];
                wl2norm += real(val * conj(val));
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -901,14 +897,14 @@ ArrayDataNormOpsComplex::weightedL2Norm(
             if (dim_jump > 0) {
                int d_step = 1;
                int w_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   d_step *= d_w[k];
                   w_step *= w_w[k];
                }
                d_counter = d_b[dim_jump - 1] + d_step;
                w_counter = w_b[dim_jump - 1] + w_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   d_b[m] = d_counter;
                   w_b[m] = w_counter;
                }
@@ -949,7 +945,7 @@ ArrayDataNormOpsComplex::maxNormWithControlVolume(
       int d_w[SAMRAI::MAX_DIM_VAL];
       int cv_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          cv_w[i] = cv_box.numberCells(i);
@@ -967,21 +963,21 @@ ArrayDataNormOpsComplex::maxNormWithControlVolume(
       const dcomplex* dd = data.getPointer();
       const double* cvd = cvol.getPointer();
 
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int d_counter = d_begin;
          int cv_counter = cv_begin;
 
          int d_b[SAMRAI::MAX_DIM_VAL];
          int cv_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             d_b[nd] = d_counter;
             cv_b[nd] = cv_counter;
          }
 
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                if (cvd[cv_counter + i0] > 0.0) {
                   maxnorm = tbox::MathUtilities<double>::Max(maxnorm,
                         norm(dd[d_counter + i0]));
@@ -989,7 +985,7 @@ ArrayDataNormOpsComplex::maxNormWithControlVolume(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -1002,14 +998,14 @@ ArrayDataNormOpsComplex::maxNormWithControlVolume(
             if (dim_jump > 0) {
                int d_step = 1;
                int cv_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   d_step *= d_w[k];
                   cv_step *= cv_w[k];
                }
                d_counter = d_b[dim_jump - 1] + d_step;
                cv_counter = cv_b[dim_jump - 1] + cv_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   d_b[m] = d_counter;
                   cv_b[m] = cv_counter;
                }
@@ -1043,7 +1039,7 @@ ArrayDataNormOpsComplex::maxNorm(
       int box_w[SAMRAI::MAX_DIM_VAL];
       int d_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
@@ -1058,24 +1054,24 @@ ArrayDataNormOpsComplex::maxNorm(
       const dcomplex* dd = data.getPointer();
 
       const int ddepth = data.getDepth();
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int d_counter = d_begin;
 
          int d_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             d_b[nd] = d_counter;
          }
 
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                maxnorm = tbox::MathUtilities<double>::Max(maxnorm,
                      norm(dd[d_counter + i0]));
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -1087,12 +1083,12 @@ ArrayDataNormOpsComplex::maxNorm(
 
             if (dim_jump > 0) {
                int d_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   d_step *= d_w[k];
                }
                d_counter = d_b[dim_jump - 1] + d_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   d_b[m] = d_counter;
                }
             }
@@ -1107,4 +1103,3 @@ ArrayDataNormOpsComplex::maxNorm(
 
 }
 }
-#endif

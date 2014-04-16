@@ -7,10 +7,6 @@
  * Description:   Simple bit vector of a fixed length (128 bits)
  *
  ************************************************************************/
-
-#ifndef included_hier_ComponentSelector_C
-#define included_hier_ComponentSelector_C
-
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -26,7 +22,7 @@ ComponentSelector::ComponentSelector(
    int num_mod = pd_entries % C_BITSET_SIZE;
 
    if (num_mod != 0) {
-      num_bitset_elements++;
+      ++num_bitset_elements;
    }
 
    std::bitset<C_BITSET_SIZE> l_bits;
@@ -160,5 +156,3 @@ ComponentSelector::printClassData(
 
 }
 }
-
-#endif

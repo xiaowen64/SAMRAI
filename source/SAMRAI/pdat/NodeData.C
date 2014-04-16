@@ -284,7 +284,7 @@ NodeData<TYPE>::copyWithRotation(
             NodeIndex src_index(dst_index);
             NodeGeometry::transform(src_index, back_trans);
 
-            for (int d = 0; d < depth; d++) {
+            for (int d = 0; d < depth; ++d) {
                (*d_data)(dst_index, d) = (*(src.d_data))(src_index, d);
             }
          }
@@ -422,7 +422,7 @@ NodeData<TYPE>::packWithRotation(
 
       if (!copybox.empty()) {
 
-         for (int d = 0; d < depth; d++) {
+         for (int d = 0; d < depth; ++d) {
             hier::Box::iterator ciend(copybox.end());
             for (hier::Box::iterator ci(copybox.begin()); ci != ciend; ++ci) {
 
@@ -430,7 +430,7 @@ NodeData<TYPE>::packWithRotation(
                NodeGeometry::transform(src_index, back_trans);
 
                buffer[i] = (*d_data)(src_index, d);
-               i++;
+               ++i;
             }
          }
       }
@@ -537,7 +537,7 @@ NodeData<TYPE>::print(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   for (int d = 0; d < d_depth; d++) {
+   for (int d = 0; d < d_depth; ++d) {
       os << "Array depth = " << d << std::endl;
       print(box, d, os, prec);
    }

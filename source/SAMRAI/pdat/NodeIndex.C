@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_NodeIndex_C
-#define included_pdat_NodeIndex_C
-
 #include "SAMRAI/pdat/NodeIndex.h"
 
 namespace SAMRAI {
@@ -46,7 +42,7 @@ NodeIndex::NodeIndex(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < getDim().getValue(); ++i) {
       TBOX_ASSERT(corner(i) == 0 || corner(i) == 1);
    }
 #endif
@@ -77,11 +73,11 @@ NodeIndex::setOffsets()
       s_offsets[dim_index] = std::vector<hier::IntVector>(
             2 << SAMRAI::MAX_DIM_VAL,
             hier::IntVector(dim));
-      for (int i = 0; i < (1 << dim.getValue()); i++) {
+      for (int i = 0; i < (1 << dim.getValue()); ++i) {
          hier::IntVector offset(dim, 0);
 
          offset(0) = i % 2;
-         for (int j = 1; j < dim.getValue(); j++) {
+         for (int j = 1; j < dim.getValue(); ++j) {
             offset(j) = (i / (1 << j)) % 2;
          }
          s_offsets[dim_index][i] = offset;
@@ -92,4 +88,3 @@ NodeIndex::setOffsets()
 
 }
 }
-#endif

@@ -89,10 +89,10 @@ public:
 private:
    // neither of the following functions are implemented
    OutersideVariable(
-      const OutersideVariable<TYPE>&);
-   void
+      const OutersideVariable&);
+   OutersideVariable&
    operator = (
-      const OutersideVariable<TYPE>&);
+      const OutersideVariable&);
 
 };
 

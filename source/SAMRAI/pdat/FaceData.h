@@ -535,12 +535,12 @@ private:
 
    // Unimplemented copy constructor
    FaceData(
-      const FaceData<TYPE>&);
+      const FaceData&);
 
    // Unimplemented assignment operator
-   void
+   FaceData&
    operator = (
-      const FaceData<TYPE>&);
+      const FaceData&);
 
    void
    copyWithRotation(

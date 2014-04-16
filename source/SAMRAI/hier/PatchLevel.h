@@ -212,7 +212,7 @@ public:
       const int level)
    {
       d_level_number = level;
-      for (Iterator p(begin()); p != end(); p++) {
+      for (Iterator p(begin()); p != end(); ++p) {
          p->setPatchLevelNumber(d_level_number);
       }
    }
@@ -274,7 +274,7 @@ public:
       bool in_hierarchy)
    {
       d_in_hierarchy = in_hierarchy;
-      for (Iterator p(begin()); p != end(); p++) {
+      for (Iterator p(begin()); p != end(); ++p) {
          p->setPatchInHierarchy(d_in_hierarchy);
       }
    }
@@ -339,7 +339,11 @@ public:
    {
       BoxId mbid(gid);
       PatchContainer::const_iterator it = d_patches.find(mbid);
-      TBOX_ASSERT(it != d_patches.end());
+      if (it == d_patches.end()) {
+         TBOX_ERROR("PatchLevel::getPatch error: GlobalId "
+                    << gid << " does not exist locally.\n"
+                    << "You must specify the GlobalId of a current local patch.");
+      }
       return it->second;
    }
 
@@ -357,12 +361,12 @@ public:
       const BoxId& mbid) const
    {
       const PatchContainer::const_iterator mi = d_patches.find(mbid);
-#ifdef DEBUG_CHECK_ASSERTIONS
       if (mi == d_patches.end()) {
-         TBOX_ERROR("PatchLevel::getPatch(" << mbid
-            << "): patch does not exist locally." << std::endl);
+         TBOX_ERROR("PatchLevel::getPatch error: BoxId "
+                    << mbid << " does not exist locally.\n"
+                    << "You must specify the BoxId of a current local box"
+                    << " that is not a periodic image.");
       }
-#endif
       return (*mi).second;
    }
 
@@ -374,7 +378,11 @@ public:
     */
    const boost::shared_ptr<Patch> &getPatch( size_t index ) const
       {
-         TBOX_ASSERT( index < d_patch_vector.size() );
+         if ( index >= d_patch_vector.size() ) {
+            TBOX_ERROR("PatchLevel::getPatch error: index "
+                       << index << " is too big.\n"
+                       << "There are only " << d_patch_vector.size() << " patches.");
+         }
          return d_patch_vector[index];
       }
 
@@ -755,7 +763,7 @@ public:
       const int id,
       const double timestamp = 0.0)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->allocatePatchData(id, timestamp);
       }
    }
@@ -772,7 +780,7 @@ public:
       const ComponentSelector& components,
       const double timestamp = 0.0)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->allocatePatchData(components, timestamp);
       }
    }
@@ -809,7 +817,7 @@ public:
    deallocatePatchData(
       const int id)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->deallocatePatchData(id);
       }
    }
@@ -826,7 +834,7 @@ public:
    deallocatePatchData(
       const ComponentSelector& components)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->deallocatePatchData(components);
       }
    }
@@ -853,7 +861,7 @@ public:
       const double timestamp,
       const int id)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->setTime(timestamp, id);
       }
    }
@@ -870,7 +878,7 @@ public:
       const double timestamp,
       const ComponentSelector& components)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->setTime(timestamp, components);
       }
    }
@@ -884,7 +892,7 @@ public:
    setTime(
       const double timestamp)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->setTime(timestamp);
       }
    }
@@ -1419,6 +1427,14 @@ private:
     */
    static bool
    initialize();
+
+   static boost::shared_ptr<tbox::Timer> t_level_constructor;
+   static boost::shared_ptr<tbox::Timer> t_constructor_setup;
+   static boost::shared_ptr<tbox::Timer> t_constructor_phys_domain;
+   static boost::shared_ptr<tbox::Timer> t_constructor_touch_boundaries;
+   static boost::shared_ptr<tbox::Timer> t_constructor_set_geometry;
+   static boost::shared_ptr<tbox::Timer> t_set_patch_touches;
+   static boost::shared_ptr<tbox::Timer> t_constructor_compute_shifts;
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

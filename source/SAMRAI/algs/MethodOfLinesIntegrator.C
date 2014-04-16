@@ -7,10 +7,6 @@
  * Description:   Basic method-of-lines time integration algorithm
  *
  ************************************************************************/
-
-#ifndef included_algs_MethodOfLinesIntegrator_C
-#define included_algs_MethodOfLinesIntegrator_C
-
 #include "SAMRAI/algs/MethodOfLinesIntegrator.h"
 
 #include "SAMRAI/hier/Patch.h"
@@ -158,7 +154,7 @@ MethodOfLinesIntegrator::getTimestep(
    double dt = tbox::MathUtilities<double>::getMax();
    const int nlevels = hierarchy->getNumberOfLevels();
 
-   for (int l = 0; l < nlevels; l++) {
+   for (int l = 0; l < nlevels; ++l) {
       boost::shared_ptr<hier::PatchLevel> level = hierarchy->getPatchLevel(l);
 
       TBOX_ASSERT(level);
@@ -220,7 +216,7 @@ MethodOfLinesIntegrator::advanceHierarchy(
     */
    const int nlevels = hierarchy->getNumberOfLevels();
 
-   for (int ln = 0; ln < nlevels; ln++) {
+   for (int ln = 0; ln < nlevels; ++ln) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       TBOX_ASSERT(level);
@@ -241,13 +237,13 @@ MethodOfLinesIntegrator::advanceHierarchy(
    /*
     * Loop through Runge-Kutta steps
     */
-   for (int rkstep = 0; rkstep < d_order; rkstep++) {
+   for (int rkstep = 0; rkstep < d_order; ++rkstep) {
 
       /*
        * Loop through levels in the patch hierarchy and advance data on
        * each level by a single RK step.
        */
-      for (int ln = 0; ln < nlevels; ln++) {
+      for (int ln = 0; ln < nlevels; ++ln) {
 
          /*
           * Fill ghost cells of all patches in level
@@ -283,7 +279,7 @@ MethodOfLinesIntegrator::advanceHierarchy(
 
    }  // rksteps loop
 
-   for (int ln = 0; ln < nlevels; ln++) {
+   for (int ln = 0; ln < nlevels; ++ln) {
       copyScratchToCurrent(hierarchy->getPatchLevel(ln));
 
       /*
@@ -295,7 +291,7 @@ MethodOfLinesIntegrator::advanceHierarchy(
    /*
     * dallocate U_scratch and rhs data
     */
-   for (int ln = 0; ln < nlevels; ln++) {
+   for (int ln = 0; ln < nlevels; ++ln) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       level->deallocatePatchData(d_scratch_data);
       level->deallocatePatchData(d_rhs_data);
@@ -578,7 +574,7 @@ MethodOfLinesIntegrator::resetHierarchyConfiguration(
    d_coarsen_schedule.resize(finest_hiera_level + 1);
 
    //  Build coarsen and refine communication schedules.
-   for (int ln = coarsest_level; ln <= finest_hiera_level; ln++) {
+   for (int ln = coarsest_level; ln <= finest_hiera_level; ++ln) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       TBOX_ASSERT(level);
@@ -704,7 +700,7 @@ MethodOfLinesIntegrator::getFromInput(
       if (!is_from_restart || read_on_restart) {
 
          if (input_db->keyExists("alpha_1")) {
-            int array_size = input_db->getArraySize("alpha_1");
+            size_t array_size = input_db->getArraySize("alpha_1");
             if (array_size > 3) {
                TBOX_ERROR("MethodOfLinesIntegrator::getFromInput() error...\n"
                   << "number of alpha_1 entries must be <=3." << std::endl);
@@ -713,7 +709,7 @@ MethodOfLinesIntegrator::getFromInput(
          }
 
          if (input_db->keyExists("alpha_2")) {
-            int array_size = input_db->getArraySize("alpha_2");
+            size_t array_size = input_db->getArraySize("alpha_2");
             if (array_size > 3) {
                TBOX_ERROR("MethodOfLinesIntegrator::getFromInput() error...\n"
                   << "number of alpha_2 entries must be <=3." << std::endl);
@@ -722,7 +718,7 @@ MethodOfLinesIntegrator::getFromInput(
          }
 
          if (input_db->keyExists("beta")) {
-            int array_size = input_db->getArraySize("beta");
+            size_t array_size = input_db->getArraySize("beta");
             if (array_size > 3) {
                TBOX_ERROR("MethodOfLinesIntegrator::getFromInput() error...\n"
                   << "number of beta entries must be <=3." << std::endl);
@@ -821,7 +817,7 @@ MethodOfLinesIntegrator::copyCurrentToScratch(
             patch->getPatchData(*soln_var, d_scratch));
 
          dst_data->copy(*src_data);
-         soln_var++;
+         ++soln_var;
 
       }
 
@@ -857,7 +853,7 @@ MethodOfLinesIntegrator::copyScratchToCurrent(
             patch->getPatchData(*soln_var, d_current));
 
          dst_data->copy(*src_data);
-         soln_var++;
+         ++soln_var;
 
       }
 
@@ -883,7 +879,7 @@ MethodOfLinesIntegrator::printClassData(
    os << "d_object_name = " << d_object_name << std::endl;
    os << "d_order = " << d_order << std::endl;
 
-   for (int j = 0; j < d_order; j++) {
+   for (int j = 0; j < d_order; ++j) {
       os << "d_alpha_1[" << j << "] = " << d_alpha_1[j] << std::endl;
       os << "d_alpha_2[" << j << "] = " << d_alpha_2[j] << std::endl;
       os << "d_beta[" << j << "] = " << d_beta[j] << std::endl;
@@ -895,4 +891,3 @@ MethodOfLinesIntegrator::printClassData(
 
 }
 }
-#endif

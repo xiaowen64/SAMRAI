@@ -115,6 +115,15 @@ public:
 
 private:
 
+   // Unimplemented copy constructor.
+   CommGraphWriter(
+      const CommGraphWriter& other);
+
+   // Unimplemented assignment operator.
+   CommGraphWriter&
+   operator = (
+      const CommGraphWriter& rhs);
+
    struct Edge {
       Edge() : d_value(0.0), d_dir(TO), d_other_node(-1) {}
       double d_value;

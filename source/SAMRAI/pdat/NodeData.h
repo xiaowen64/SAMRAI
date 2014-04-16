@@ -445,12 +445,12 @@ private:
 
    // Unimplemented copy constructor
    NodeData(
-      const NodeData<TYPE>&);
+      const NodeData&);
 
    // Unimplemented assignment operator
-   void
+   NodeData&
    operator = (
-      const NodeData<TYPE>&);
+      const NodeData&);
 
    void
    copyWithRotation(

@@ -46,78 +46,78 @@ int main(
       tbox::Dimension dim3(3);
 
       if (dim1.getValue() != 1) {
-         fail_count++;
+         ++fail_count;
          TBOX_ERROR("Failed dim check; dim = 1");
       }
 
       if (dim2.getValue() != 2) {
-         fail_count++;
+         ++fail_count;
          TBOX_ERROR("Failed dim check; dim = 2");
       }
 
       if (dim3.getValue() != 3) {
-         fail_count++;
+         ++fail_count;
          TBOX_ERROR("Failed dim check; dim = 3");
       }
 
       tbox::Dimension a(2), b(2);
       if (!(a == b)) {
-         fail_count++;
+         ++fail_count;
          TBOX_ERROR("Failed dim comparison check: ==");
       }
 
       if (!(a != dim1)) {
-         fail_count++;
+         ++fail_count;
          TBOX_ERROR("Failed dim comparison check: !=");
       }
 
       if (dim1 > dim2) {
-         fail_count++;
+         ++fail_count;
          TBOX_ERROR("Failed dim comparison check: >");
       }
 
       if (!(dim3 > dim2)) {
-         fail_count++;
+         ++fail_count;
          TBOX_ERROR("Failed dim comparison check: >");
       }
 
       if (dim1 >= dim2) {
-         fail_count++;
+         ++fail_count;
          TBOX_ERROR("Failed dim comparison check: >=");
       }
 
       if (!(dim3 >= dim2)) {
-         fail_count++;
+         ++fail_count;
          TBOX_ERROR("Failed dim comparison check: >=");
       }
 
       if (!(dim2 >= dim2)) {
-         fail_count++;
+         ++fail_count;
          TBOX_ERROR("Failed dim comparison check: >=");
       }
 
       if (dim2 < dim1) {
-         fail_count++;
+         ++fail_count;
          TBOX_ERROR("Failed dim comparison check: <");
       }
 
       if (!(dim2 < dim3)) {
-         fail_count++;
+         ++fail_count;
          TBOX_ERROR("Failed dim comparison check: <");
       }
 
       if (dim2 <= dim1) {
-         fail_count++;
+         ++fail_count;
          TBOX_ERROR("Failed dim comparison check: <=");
       }
 
       if (!(dim2 <= dim3)) {
-         fail_count++;
+         ++fail_count;
          TBOX_ERROR("Failed dim comparison check: <=");
       }
 
       if (!(dim2 <= dim2)) {
-         fail_count++;
+         ++fail_count;
          TBOX_ERROR("Failed dim comparison check: <=");
       }
 
@@ -125,7 +125,7 @@ int main(
       // Currently not allowed.
       a = dim3;
       if (a != dim3) {
-         fail_count++;
+         ++fail_count;
          TBOX_ERROR("Failed dim assignment check");
       }
 #endif

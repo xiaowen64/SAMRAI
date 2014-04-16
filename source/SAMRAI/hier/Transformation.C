@@ -8,10 +8,6 @@
  *                an AMR hierarchy.
  *
  ************************************************************************/
-
-#ifndef included_hier_Transformation_C
-#define included_hier_Transformation_C
-
 #include "SAMRAI/hier/Transformation.h"
 
 #include "SAMRAI/hier/Patch.h"
@@ -706,7 +702,7 @@ Transformation::rotateIndex(
    } else if (dim.getValue() == 2) {
       int num_rotations = (int)rotation;
 
-      for (int j = 0; j < num_rotations; j++) {
+      for (int j = 0; j < num_rotations; ++j) {
          int tmp_in[2];
          tmp_in[0] = index[0];
          tmp_in[1] = index[1];
@@ -806,7 +802,7 @@ Transformation::rotateAboutAxis(
       const int a = (axis + 1) % dim.getValue();
       const int b = (axis + 2) % dim.getValue();
 
-      for (int j = 0; j < num_rotations; j++) {
+      for (int j = 0; j < num_rotations; ++j) {
          int tmp_in[3] = { index[0], index[1], index[2] };
          index[a] = tmp_in[b];
          index[b] = -tmp_in[a] - 1;
@@ -816,5 +812,3 @@ Transformation::rotateAboutAxis(
 
 }
 }
-
-#endif

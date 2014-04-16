@@ -72,9 +72,9 @@ SkeletonCellDoubleConservativeLinearRefine(
 {
    const int max_levels = 10;
    d_dx.resize(max_levels);
-   for (int n = 0; n < max_levels; n++) {
+   for (int n = 0; n < max_levels; ++n) {
       d_dx[n].resize(dim.getValue());
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dim.getValue(); ++i) {
          d_dx[n][i] = 1.;
       }
    }
@@ -131,11 +131,11 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
    const hier::IntVector& ratio) const
 {
    boost::shared_ptr<pdat::CellData<double> > cdata(
-      coarse.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         coarse.getPatchData(src_component)));
    boost::shared_ptr<pdat::CellData<double> > fdata(
-      fine.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         fine.getPatchData(dst_component)));
 
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
@@ -170,7 +170,7 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
    getDx(clev_num, cdx);
    getDx(flev_num, fdx);
 
-   for (int d = 0; d < fdata->getDepth(); d++) {
+   for (int d = 0; d < fdata->getDepth(); ++d) {
       if (fine.getDim() == tbox::Dimension(1)) {
          SAMRAI_F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (
             ifirstc(0), ilastc(0),
@@ -240,7 +240,7 @@ void SkeletonCellDoubleConservativeLinearRefine::setDx(
    if (level_number >= static_cast<int>(d_dx.size())) {
       d_dx.resize(level_number + 1);
       d_dx[level_number].resize(d_dim.getValue());
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
          d_dx[level_number][i] = dx[i];
       }
    }
@@ -250,7 +250,7 @@ void SkeletonCellDoubleConservativeLinearRefine::getDx(
    const int level_number,
    double* dx) const
 {
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       dx[i] = d_dx[level_number][i];
    }
 }

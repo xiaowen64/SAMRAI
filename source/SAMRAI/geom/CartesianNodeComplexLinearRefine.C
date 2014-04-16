@@ -8,10 +8,6 @@
  *                a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianNodeComplexLinearRefine_C
-#define included_geom_CartesianNodeComplexLinearRefine_C
-
 #include "SAMRAI/geom/CartesianNodeComplexLinearRefine.h"
 #include "SAMRAI/tbox/Complex.h"
 
@@ -133,11 +129,11 @@ CartesianNodeComplexLinearRefine::refine(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, fine_box, ratio);
 
    boost::shared_ptr<pdat::NodeData<dcomplex> > cdata(
-      coarse.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+         coarse.getPatchData(src_component)));
    boost::shared_ptr<pdat::NodeData<dcomplex> > fdata(
-      fine.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+         fine.getPatchData(dst_component)));
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
@@ -150,11 +146,11 @@ CartesianNodeComplexLinearRefine::refine(
    const hier::Index fihi = fdata->getGhostBox().upper();
 
    const boost::shared_ptr<CartesianPatchGeometry> cgeom(
-      coarse.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+         coarse.getPatchGeometry()));
    const boost::shared_ptr<CartesianPatchGeometry> fgeom(
-      fine.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+         fine.getPatchGeometry()));
 
    TBOX_ASSERT(cgeom);
    TBOX_ASSERT(fgeom);
@@ -165,7 +161,7 @@ CartesianNodeComplexLinearRefine::refine(
    const hier::Index ifirstf = fine_box.lower();
    const hier::Index ilastf = fine_box.upper();
 
-   for (int d = 0; d < fdata->getDepth(); d++) {
+   for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {
          SAMRAI_F77_FUNC(cartlinrefnodecplx1d, CARTLINREFNODECPLX1D) (ifirstc(0),
             ilastc(0),
@@ -212,4 +208,3 @@ CartesianNodeComplexLinearRefine::refine(
 
 }
 }
-#endif

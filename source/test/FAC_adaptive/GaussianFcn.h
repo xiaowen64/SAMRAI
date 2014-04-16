@@ -32,7 +32,7 @@ class GaussianFcn
 
 public:
    GaussianFcn();
-   GaussianFcn(
+   explicit GaussianFcn(
       const tbox::Dimension& dim);
 
    /*!

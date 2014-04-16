@@ -22,6 +22,7 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/PatchLevelFactory.h"
 #include "SAMRAI/hier/PersistentOverlapConnectors.h"
+#include "SAMRAI/hier/UncoveredBoxIterator.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -394,10 +395,6 @@ public:
       const std::string& coarse_hierarchy_name,
       const IntVector& coarsen_ratio) const;
 
-/*
- * TODO: Is it an error to call these methods when a level with the given
- * level number already exists?  Are some preconditions assumed?
- */
    /*!
     * @brief Construct new PatchLevel in hierarchy at given level number.
     *
@@ -1025,6 +1022,24 @@ public:
       return d_object_name;
    }
 
+   /*!
+    * @brief Returns an iterator to the first uncovered Box in this hierarchy.
+    */
+   UncoveredBoxIterator
+   beginUncovered()
+   {
+      return UncoveredBoxIterator(this, true);
+   }
+
+   /*!
+    * @brief Returns an iterator to the last uncovered Box in this hierarchy.
+    */
+   UncoveredBoxIterator
+   endUncovered()
+   {
+      return UncoveredBoxIterator(this, false);
+   }
+
 private:
    /*
     * Static integer constant describing class's version number.
@@ -1079,19 +1094,6 @@ private:
     */
    void
    getFromRestart();
-
-   /*!
-    * @brief Set up things for the entire class.
-    *
-    * Only called by StartupShutdownManager.
-    */
-   static void
-   initializeCallback()
-   {
-      /*
-       * No-op.  This class doesn't
-       */
-   }
 
    /*!
     * @brief Free static timers.
@@ -1272,8 +1274,7 @@ private:
    /*!
     * @brief Shutdown handler for clearing out static registry.
     */
-   static tbox::StartupShutdownManager::Handler
-      s_initialize_finalize_handler;
+   static tbox::StartupShutdownManager::Handler s_finalize_handler;
 
    //@}
 

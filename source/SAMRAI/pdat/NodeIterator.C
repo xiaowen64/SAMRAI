@@ -7,10 +7,6 @@
  * Description:   Iterator for node centered patch data types
  *
  ************************************************************************/
-
-#ifndef included_pdat_NodeIterator_C
-#define included_pdat_NodeIterator_C
-
 #include "SAMRAI/pdat/NodeIterator.h"
 
 namespace SAMRAI {
@@ -42,11 +38,11 @@ NodeIterator::~NodeIterator()
 NodeIterator&
 NodeIterator::operator ++ ()
 {
-   d_index(0)++;
-   for (int i = 0; i < d_box.getDim().getValue() - 1; i++) {
+   ++d_index(0);
+   for (int i = 0; i < d_box.getDim().getValue() - 1; ++i) {
       if (d_index(i) > d_box.upper(i)) {
          d_index(i) = d_box.lower(i);
-         d_index(i + 1)++;
+         ++d_index(i + 1);
       } else {
          break;
       }
@@ -59,11 +55,11 @@ NodeIterator::operator ++ (
    int)
 {
    NodeIterator tmp = *this;
-   d_index(0)++;
-   for (int i = 0; i < d_box.getDim().getValue() - 1; i++) {
+   ++d_index(0);
+   for (int i = 0; i < d_box.getDim().getValue() - 1; ++i) {
       if (d_index(i) > d_box.upper(i)) {
          d_index(i) = d_box.lower(i);
-         d_index(i + 1)++;
+         ++d_index(i + 1);
       } else {
          break;
       }
@@ -73,4 +69,3 @@ NodeIterator::operator ++ (
 
 }
 }
-#endif

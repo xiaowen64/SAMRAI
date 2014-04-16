@@ -567,12 +567,12 @@ private:
 
    // Unimplemented copy constructor
    OuterfaceData(
-      const OuterfaceData<TYPE>&);
+      const OuterfaceData&);
 
    // Unimplemented assignment operator
-   void
+   OuterfaceData&
    operator = (
-      const OuterfaceData<TYPE>&);
+      const OuterfaceData&);
 
    int d_depth;
 

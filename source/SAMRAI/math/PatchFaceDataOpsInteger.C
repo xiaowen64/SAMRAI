@@ -7,10 +7,6 @@
  * Description:   Operations for integer face-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchFaceDataOpsInteger_C
-#define included_math_PatchFaceDataOpsInteger_C
-
 #include "SAMRAI/math/PatchFaceDataOpsInteger.h"
 #include "SAMRAI/pdat/FaceGeometry.h"
 
@@ -45,7 +41,7 @@ PatchFaceDataOpsInteger::numberOfEntries(
    int retval = 0;
    const hier::Box ibox = box * data->getGhostBox();
    const int data_depth = data->getDepth();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       retval += ((pdat::FaceGeometry::toFaceBox(ibox, d).size()) * data_depth);
    }
    return retval;
@@ -68,11 +64,11 @@ PatchFaceDataOpsInteger::swapData(
    TBOX_ASSERT(patch);
 
    boost::shared_ptr<pdat::FaceData<int> > d1(
-      patch->getPatchData(data1_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+         patch->getPatchData(data1_id)));
    boost::shared_ptr<pdat::FaceData<int> > d2(
-      patch->getPatchData(data2_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+         patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
@@ -107,7 +103,7 @@ PatchFaceDataOpsInteger::copyData(
    TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = box.getDim().getValue();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       dst->getArrayData(d).copy(src->getArrayData(d),
          pdat::FaceGeometry::toFaceBox(box, d));
    }
@@ -123,7 +119,7 @@ PatchFaceDataOpsInteger::abs(
    TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = box.getDim().getValue();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       d_array_ops.abs(dst->getArrayData(d),
          src->getArrayData(d),
          pdat::FaceGeometry::toFaceBox(box, d));
@@ -132,4 +128,3 @@ PatchFaceDataOpsInteger::abs(
 
 }
 }
-#endif

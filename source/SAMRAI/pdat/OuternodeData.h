@@ -637,13 +637,13 @@ private:
    static const int PDAT_OUTERNODEDATA_VERSION;
 
    // Unimplemented copy constructor
-   OuternodeData<TYPE>(
-      const OuternodeData<TYPE>&);
+   OuternodeData(
+      const OuternodeData&);
 
    // Unimplemented assignment operator
-   void
+   OuternodeData&
    operator = (
-      const OuternodeData<TYPE>&);
+      const OuternodeData&);
 
    //@
    //! @name Internal implementations of data copy operations.

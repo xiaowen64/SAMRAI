@@ -8,9 +8,6 @@
  *                box graph.
  *
  ************************************************************************/
-#ifndef included_hier_MappingConnector_C
-#define included_hier_MappingConnector_C
-
 #include "SAMRAI/hier/MappingConnector.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
@@ -332,6 +329,4 @@ MappingConnector::findMappingErrors(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

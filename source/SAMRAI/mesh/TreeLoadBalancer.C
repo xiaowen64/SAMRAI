@@ -130,9 +130,9 @@ TreeLoadBalancer::setWorkloadPatchDataIndex(
    int level_number)
 {
    boost::shared_ptr<pdat::CellDataFactory<double> > datafact(
-      hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
-      getPatchDataFactory(data_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellDataFactory<double>, hier::PatchDataFactory>(
+         hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
+         getPatchDataFactory(data_id)));
 
    TBOX_ASSERT(datafact);
 
@@ -140,14 +140,14 @@ TreeLoadBalancer::setWorkloadPatchDataIndex(
       int asize = static_cast<int>(d_workload_data_id.size());
       if (asize < level_number + 1) {
          d_workload_data_id.resize(level_number + 1);
-         for (int i = asize; i < level_number - 1; i++) {
+         for (int i = asize; i < level_number - 1; ++i) {
             d_workload_data_id[i] = d_master_workload_data_id;
          }
          d_workload_data_id[level_number] = data_id;
       }
    } else {
       d_master_workload_data_id = data_id;
-      for (int ln = 0; ln < static_cast<int>(d_workload_data_id.size()); ln++) {
+      for (int ln = 0; ln < static_cast<int>(d_workload_data_id.size()); ++ln) {
          d_workload_data_id[ln] = d_master_workload_data_id;
       }
    }
@@ -926,7 +926,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
     * its data and add any imported work to unassigned bin.
     */
    t_get_load_from_children->start();
-   while ( child_recv_stage.numberOfCompletedMembers() > 0 ||
+   while ( child_recv_stage.hasCompletedMembers() ||
            child_recv_stage.advanceSome() ) {
 
       tbox::AsyncCommPeer<char>* child_recv =
@@ -1911,6 +1911,7 @@ TreeLoadBalancer::BranchData::incorporateChild(
 
 /*
  *************************************************************************
+ * Incorporate a child branch's data into this branch.
  *************************************************************************
  */
 TreeLoadBalancer::LoadType TreeLoadBalancer::BranchData::adjustOutboundLoad(

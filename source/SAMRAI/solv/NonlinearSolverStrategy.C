@@ -7,10 +7,6 @@
  * Description:   Interface between implicit integrator and nonlinear solver.
  *
  ************************************************************************/
-
-#ifndef included_solv_NonlinearSolverStrategy_C
-#define included_solv_NonlinearSolverStrategy_C
-
 #include "SAMRAI/solv/NonlinearSolverStrategy.h"
 
 namespace SAMRAI {
@@ -26,4 +22,3 @@ NonlinearSolverStrategy::~NonlinearSolverStrategy()
 
 }
 }
-#endif

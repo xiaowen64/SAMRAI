@@ -38,9 +38,13 @@ main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS)     \
 	$(LIBSAMRAI) $(LDLIBS) -o main
 
-clean:
-	$(SAMCLEAN)
-	$(RM) *.f main *.timing*
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
+	$(RM) *.timing*
+
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) main
 
 redo:
 	$(RM) main core *.ii *.int.c

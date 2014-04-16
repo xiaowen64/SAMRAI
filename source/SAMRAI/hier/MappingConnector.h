@@ -37,7 +37,7 @@ public:
     * @see setHead()
     * @see setWidth()
     */
-   MappingConnector(
+   explicit MappingConnector(
       const tbox::Dimension& dim);
 
    /*!

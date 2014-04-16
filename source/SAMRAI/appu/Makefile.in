@@ -32,7 +32,7 @@ OBJS = 	\
 library: $(OBJS) $(OBJSXD)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 clean:
-	$(SAMCLEAN)
+	$(CLEAN_COMMON_LIB_FILES)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 
 include $(SRCDIR)/Makefile.depend

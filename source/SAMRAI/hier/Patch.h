@@ -556,7 +556,7 @@ private:
     */
    Patch(
       const Patch&);
-   void
+   Patch&
    operator = (
       const Patch&);
 

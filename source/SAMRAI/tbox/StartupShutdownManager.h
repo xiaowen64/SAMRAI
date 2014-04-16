@@ -66,6 +66,11 @@ public:
 
 public:
       /*!
+       * @brief Default constructor.
+       */
+      AbstractHandler();
+
+      /*!
        * @brief Virtual destructor since class has virtual methods.
        */
       virtual ~AbstractHandler();
@@ -139,6 +144,16 @@ public:
        */
       virtual bool
       hasFinalize() = 0;
+
+private:
+      // Unimplemented copy constructor.
+      AbstractHandler(
+         const AbstractHandler& other);
+
+      // Unimplemented assignment operator.
+      AbstractHandler&
+      operator = (
+         const AbstractHandler& rhs);
    };
 
    /*!
@@ -277,12 +292,17 @@ public:
       hasFinalize();
 
 private:
-      /*!
-       * @brief Default constructor is private.
-       *
-       * TODO:  Should this be unimplemented?
-       */
+      // Unimplemented default constructor.
       Handler();
+
+      // Unimplemented copy constructor.
+      Handler(
+         const Handler& other);
+
+      // Unimplemented assignment operator.
+      Handler&
+      operator = (
+         const Handler& rhs);
 
       /*!
        * @brief Initialize function.
@@ -400,6 +420,18 @@ private:
    static const unsigned char priorityVariables = 100;
 
 private:
+   // Unimplemented default constructor.
+   StartupShutdownManager();
+
+   // Unimplemented copy constructor.
+   StartupShutdownManager(
+      const StartupShutdownManager& other);
+
+   // Unimplemented default constructor.
+   StartupShutdownManager&
+   operator = (
+      const StartupShutdownManager& rhs);
+
    /*!
     * @brief Sets up the StartupShutdownManager singleton.
     */
@@ -417,6 +449,19 @@ public:
        * @brief Constructor.
        */
       ListElement();
+
+      // Unimplemented copy constructor.
+      ListElement(const ListElement& other);
+
+      // Unimplemented assignment operator.
+      ListElement&
+      operator = (
+         const ListElement& rhs);
+
+      /*!
+       * @brief Destructor.
+       */
+      ~ListElement();
 
       /*!
        * @brief A registered handler being stored in a list.

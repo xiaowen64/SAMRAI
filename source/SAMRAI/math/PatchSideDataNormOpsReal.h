@@ -255,10 +255,10 @@ public:
 private:
    // The following are not implemented:
    PatchSideDataNormOpsReal(
-      const PatchSideDataNormOpsReal<TYPE>&);
-   void
+      const PatchSideDataNormOpsReal&);
+   PatchSideDataNormOpsReal&
    operator = (
-      const PatchSideDataNormOpsReal<TYPE>&);
+      const PatchSideDataNormOpsReal&);
 
    ArrayDataNormOpsReal<TYPE> d_array_ops;
 };

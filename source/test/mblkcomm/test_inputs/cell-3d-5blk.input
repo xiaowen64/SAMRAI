@@ -70,7 +70,7 @@ CellMultiblockTest {
          dst_name = "dst_var1"
          depth = 1
          src_ghosts = 0,0,0
-         dst_ghosts = 1,1,0
+         dst_ghosts = 1,1,1
          refine_operator = "NO_REFINE"
       }
    }
@@ -88,16 +88,6 @@ BlockGridGeometry {
    domain_boxes_3 = [ (0,0,0) , (19,19,14) ]
    domain_boxes_4 = [ (0,0,0) , (19,19,14) ]
 
-   Singularity0 {
-      blocks = 0,1,2,3,4
-
-      sing_box_0 = [(20,20,0),(20,20,14)]
-      sing_box_1 = [(20,0,20),(20,14,20)]
-      sing_box_2 = [(20,-1,0),(20,-1,14)]
-      sing_box_3 = [(-1,-1,0),(-1,-1,14)]
-      sing_box_4 = [(-1,20,0),(-1,20,14)]
-   }
- 
    BlockNeighbors0 {
       block_a = 0
       block_b = 1
@@ -114,7 +104,6 @@ BlockGridGeometry {
       rotation_b_to_a = "J_UP", "I_DOWN", "K_UP"
       point_in_a_space = 19,19,0
       point_in_b_space = 20,-1,0
-      is_singularity = TRUE
    }
 
    BlockNeighbors2 {
@@ -124,7 +113,6 @@ BlockGridGeometry {
       rotation_b_to_a = "I_UP", "J_UP", "K_UP"
       point_in_a_space = 19,19,0
       point_in_b_space = -1,-1,0
-      is_singularity = TRUE
    }
 
    BlockNeighbors3 {
@@ -142,8 +130,8 @@ BlockGridGeometry {
       block_b = 2
 
       rotation_b_to_a = "J_DOWN", "K_UP", "I_DOWN"
-      point_in_a_space = 19,0,0
-      point_in_b_space = 0,0,19
+      point_in_a_space = 19,0,19
+      point_in_b_space = 20,0,0
 
    }
 
@@ -154,7 +142,6 @@ BlockGridGeometry {
       rotation_b_to_a = "J_UP", "K_UP", "I_UP"
       point_in_a_space = 19,0,19
       point_in_b_space = -1,-1,0
-      is_singularity = TRUE
    }
 
    BlockNeighbors6 {
@@ -164,7 +151,6 @@ BlockGridGeometry {
       rotation_b_to_a = "I_UP", "K_UP", "J_DOWN"
       point_in_a_space = 19,0,19
       point_in_b_space = -1,20,0
-      is_singularity = TRUE
    }
 
    BlockNeighbors7 {
@@ -184,7 +170,6 @@ BlockGridGeometry {
       rotation_b_to_a = "I_UP", "J_UP", "K_UP"
       point_in_a_space = 19,0,0
       point_in_b_space = -1,20,0
-      is_singularity = TRUE
    }
 
    BlockNeighbors9 {

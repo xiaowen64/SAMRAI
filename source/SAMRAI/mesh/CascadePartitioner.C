@@ -131,9 +131,9 @@ CascadePartitioner::setWorkloadPatchDataIndex(
    int level_number)
 {
    boost::shared_ptr<pdat::CellDataFactory<double> > datafact(
-      hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
-      getPatchDataFactory(data_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellDataFactory<double>, hier::PatchDataFactory>(
+         hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
+         getPatchDataFactory(data_id)));
 
    TBOX_ASSERT(datafact);
 

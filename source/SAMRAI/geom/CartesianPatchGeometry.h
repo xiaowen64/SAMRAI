@@ -99,7 +99,7 @@ private:
    // These are not implemented.
    CartesianPatchGeometry(
       const CartesianPatchGeometry&);
-   void
+   CartesianPatchGeometry&
    operator = (
       const CartesianPatchGeometry&);
 

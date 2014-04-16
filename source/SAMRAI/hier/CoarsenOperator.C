@@ -7,10 +7,6 @@
  * Description:   Abstract base class for spatial coarsening operators.
  *
  ************************************************************************/
-
-#ifndef included_hier_CoarsenOperator_C
-#define included_hier_CoarsenOperator_C
-
 #include "SAMRAI/hier/CoarsenOperator.h"
 
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -125,4 +121,3 @@ CoarsenOperator::finalizeCallback()
 
 }
 }
-#endif

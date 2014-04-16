@@ -302,7 +302,7 @@ bool MultiblockTester::verifyCommunicationResults() const
       d_data_test_strategy->setDataContext(d_destination);
    }
    for (int ln = 0;
-        ln <= d_patch_hierarchy->getFinestLevelNumber(); ln++) {
+        ln <= d_patch_hierarchy->getFinestLevelNumber(); ++ln) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_patch_hierarchy->getPatchLevel(ln));
 
@@ -547,7 +547,7 @@ void MultiblockTester::setupHierarchy(
    gridding_alg->makeCoarsestLevel(d_fake_time);
 
    bool initial_cycle = true;
-   for (int ln = 0; d_patch_hierarchy->levelCanBeRefined(ln); ln++) {
+   for (int ln = 0; d_patch_hierarchy->levelCanBeRefined(ln); ++ln) {
       gridding_alg->makeFinerLevel(
          fake_tag_buffer,
          initial_cycle,
@@ -559,7 +559,7 @@ void MultiblockTester::setupHierarchy(
    tbox::plog << "\n\nHierarchy:\n";
    d_patch_hierarchy->recursivePrint(tbox::plog, "", 2);
 
-   for (int ln = 1; ln < d_patch_hierarchy->getNumberOfLevels(); ln++) {
+   for (int ln = 1; ln < d_patch_hierarchy->getNumberOfLevels(); ++ln) {
       hier::CoarseFineBoundary cf_bndry(*d_patch_hierarchy, ln,
                                         hier::IntVector::getOne(d_dim));
    }

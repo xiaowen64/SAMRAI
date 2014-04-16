@@ -7,10 +7,6 @@
  * Description:   StandardTagAndInitialize's implementation of PatchHierarchy
  *
  ************************************************************************/
-
-#ifndef included_mesh_StandardTagAndInitializeConnectorWidthRequestor_C
-#define included_mesh_StandardTagAndInitializeConnectorWidthRequestor_C
-
 #include "SAMRAI/mesh/StandardTagAndInitializeConnectorWidthRequestor.h"
 
 #include "SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.h"
@@ -162,9 +158,9 @@ StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
     * level are between the supported 2 or 3, and that the error coarsen
     * ratios are constant over the hierarchy.
     */
-   for (int ln = 1; ln < static_cast<int>(ratios_to_coarser.size()); ln++) {
+   for (int ln = 1; ln < static_cast<int>(ratios_to_coarser.size()); ++ln) {
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          int gcd = GCD(error_coarsen_ratio, ratios_to_coarser[ln](d));
          if ((gcd % error_coarsen_ratio) != 0) {
             gcd = ratios_to_coarser[ln](d);
@@ -194,4 +190,3 @@ StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
 
 }
 }
-#endif

@@ -170,16 +170,16 @@ int main(
       hier::BoxContainer::iterator coarse_domain_itr = coarse_domain.begin();
       if (nproc > 1) {
          if (layer0->getMPI().getRank() == 0) {
-            for (int ib = 0; ib < n_coarse_boxes / 2; ib++, ++coarse_domain_itr) {
+            for (int ib = 0; ib < n_coarse_boxes / 2; ++ib, ++coarse_domain_itr) {
                layer0->addBox(hier::Box(*coarse_domain_itr,
                      hier::LocalId(ib),
                      layer0->getMPI().getRank()));
             }
          } else {
-            for (int ib = 0; ib < n_coarse_boxes / 2; ib++) {
+            for (int ib = 0; ib < n_coarse_boxes / 2; ++ib) {
                ++coarse_domain_itr;
             }
-            for (int ib = n_coarse_boxes / 2; ib < n_coarse_boxes; ib++, ++coarse_domain_itr) {
+            for (int ib = n_coarse_boxes / 2; ib < n_coarse_boxes; ++ib, ++coarse_domain_itr) {
                layer0->addBox(hier::Box(*coarse_domain_itr,
                      hier::LocalId(ib),
                      layer0->getMPI().getRank()));
@@ -188,7 +188,7 @@ int main(
 
       } else {
 
-         for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_domain_itr) {
+         for (int ib = 0; ib < n_coarse_boxes; ++ib, ++coarse_domain_itr) {
             layer0->addBox(hier::Box(*coarse_domain_itr,
                   hier::LocalId(ib),
                   layer0->getMPI().getRank()));
@@ -200,16 +200,16 @@ int main(
       if (nproc > 1) {
 
          if (layer1->getMPI().getRank() == 0) {
-            for (int ib = 0; ib < n_fine_boxes / 2; ib++, ++fine_boxes_itr) {
+            for (int ib = 0; ib < n_fine_boxes / 2; ++ib, ++fine_boxes_itr) {
                layer1->addBox(hier::Box(*fine_boxes_itr,
                      hier::LocalId(ib),
                      layer1->getMPI().getRank()));
             }
          } else {
-            for (int ib = 0; ib < n_fine_boxes / 2; ib++) {
+            for (int ib = 0; ib < n_fine_boxes / 2; ++ib) {
                ++fine_boxes_itr;
             }
-            for (int ib = n_fine_boxes / 2; ib < n_fine_boxes; ib++, ++fine_boxes_itr) {
+            for (int ib = n_fine_boxes / 2; ib < n_fine_boxes; ++ib, ++fine_boxes_itr) {
                layer1->addBox(hier::Box(*fine_boxes_itr,
                      hier::LocalId(ib),
                      layer1->getMPI().getRank()));
@@ -218,7 +218,7 @@ int main(
 
       } else {
 
-         for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_boxes_itr) {
+         for (int ib = 0; ib < n_fine_boxes; ++ib, ++fine_boxes_itr) {
             layer1->addBox(hier::Box(*fine_boxes_itr,
                   hier::LocalId(ib),
                   layer1->getMPI().getRank()));
@@ -284,24 +284,24 @@ int main(
       int nwgt_id = variable_db->registerVariableAndContext(
             nwgt, dummy, no_ghosts);
 
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
          hierarchy->getPatchLevel(ln)->allocatePatchData(cwgt_id);
          hierarchy->getPatchLevel(ln)->allocatePatchData(fwgt_id);
          hierarchy->getPatchLevel(ln)->allocatePatchData(nwgt_id);
       }
 
       boost::shared_ptr<math::HierarchyCellDataOpsReal<double> > cell_ops(
-         math::HierarchyDataOpsManager::getManager()->getOperationsDouble(cwgt,
-            hierarchy),
-         BOOST_CAST_TAG);
+         BOOST_CAST<math::HierarchyCellDataOpsReal<double>,
+                    math::HierarchyDataOpsReal<double> >(
+            math::HierarchyDataOpsManager::getManager()->getOperationsDouble(cwgt, hierarchy)));
       boost::shared_ptr<math::HierarchyFaceDataOpsReal<double> > face_ops(
-         math::HierarchyDataOpsManager::getManager()->getOperationsDouble(fwgt,
-            hierarchy),
-         BOOST_CAST_TAG);
+         BOOST_CAST<math::HierarchyFaceDataOpsReal<double>,
+                    math::HierarchyDataOpsReal<double> >(
+            math::HierarchyDataOpsManager::getManager()->getOperationsDouble(fwgt, hierarchy)));
       boost::shared_ptr<math::HierarchyNodeDataOpsReal<double> > node_ops(
-         math::HierarchyDataOpsManager::getManager()->getOperationsDouble(nwgt,
-            hierarchy),
-         BOOST_CAST_TAG);
+         BOOST_CAST<math::HierarchyNodeDataOpsReal<double>,
+                    math::HierarchyDataOpsReal<double> >(
+            math::HierarchyDataOpsManager::getManager()->getOperationsDouble(nwgt, hierarchy)));
 
       TBOX_ASSERT(cell_ops);
       TBOX_ASSERT(face_ops);
@@ -323,7 +323,7 @@ int main(
 
       // Initialize control volume data for cell-centered components
 
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
 
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
@@ -336,8 +336,8 @@ int main(
             const double* dx = pgeom->getDx();
             const double cell_vol = dx[0] * dx[1] * dx[2];
             boost::shared_ptr<pdat::CellData<double> > cvdata(
-                  patch->getPatchData(cwgt_id),
-                  BOOST_CAST_TAG);
+               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+                  patch->getPatchData(cwgt_id)));
             TBOX_ASSERT(cvdata);
             cvdata->fillAll(cell_vol);
             if (ln == 0) cvdata->fillAll(0.0, (coarse_fine * patch->getBox()));
@@ -345,7 +345,7 @@ int main(
       }
 
       // Initialize control volume data for face-centered components
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
 
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
@@ -358,8 +358,8 @@ int main(
             const double* dx = pgeom->getDx();
             const double face_vol = dx[0] * dx[1] * dx[2];
             boost::shared_ptr<pdat::FaceData<double> > data(
-               patch->getPatchData(fwgt_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+                  patch->getPatchData(fwgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(face_vol);
             pdat::FaceIndex fi(dim3d);
@@ -383,8 +383,8 @@ int main(
             }
             //X face boundaries
             if (plo0 == level_box.lower(0)) {
-               for (kc = plo2; kc <= phi2; kc++) {
-                  for (jc = plo1; jc <= phi1; jc++) {
+               for (kc = plo2; kc <= phi2; ++kc) {
+                  for (jc = plo1; jc <= phi1; ++jc) {
                      fi = pdat::FaceIndex(hier::Index(plo0, jc, kc),
                            pdat::FaceIndex::X,
                            pdat::FaceIndex::Lower);
@@ -392,8 +392,8 @@ int main(
                   }
                }
             } else {
-               for (kc = plo2; kc <= phi2; kc++) {
-                  for (jc = plo1; jc <= phi1; jc++) {
+               for (kc = plo2; kc <= phi2; ++kc) {
+                  for (jc = plo1; jc <= phi1; ++jc) {
                      fi = pdat::FaceIndex(hier::Index(plo0, jc, kc),
                            pdat::FaceIndex::X,
                            pdat::FaceIndex::Lower);
@@ -402,8 +402,8 @@ int main(
                }
             }
             if (phi0 == level_box.upper(0)) {
-               for (kc = plo2; kc <= phi2; kc++) {
-                  for (jc = plo1; jc <= phi1; jc++) {
+               for (kc = plo2; kc <= phi2; ++kc) {
+                  for (jc = plo1; jc <= phi1; ++jc) {
                      fi = pdat::FaceIndex(hier::Index(phi0, jc, kc),
                            pdat::FaceIndex::X,
                            pdat::FaceIndex::Upper);
@@ -414,8 +414,8 @@ int main(
 
             //Y face boundaries
             if (plo1 == level_box.lower(1)) {
-               for (kc = plo2; kc <= phi2; kc++) {
-                  for (ic = plo0; ic <= phi0; ic++) {
+               for (kc = plo2; kc <= phi2; ++kc) {
+                  for (ic = plo0; ic <= phi0; ++ic) {
                      fi = pdat::FaceIndex(hier::Index(ic, plo1, kc),
                            pdat::FaceIndex::Y,
                            pdat::FaceIndex::Lower);
@@ -423,8 +423,8 @@ int main(
                   }
                }
             } else {
-               for (kc = plo2; kc <= phi2; kc++) {
-                  for (ic = plo0; ic <= phi0; ic++) {
+               for (kc = plo2; kc <= phi2; ++kc) {
+                  for (ic = plo0; ic <= phi0; ++ic) {
                      fi = pdat::FaceIndex(hier::Index(ic, plo1, kc),
                            pdat::FaceIndex::Y,
                            pdat::FaceIndex::Lower);
@@ -433,8 +433,8 @@ int main(
                }
             }
             if (phi1 == level_box.upper(1)) {
-               for (kc = plo2; kc <= phi2; kc++) {
-                  for (ic = plo0; ic <= phi0; ic++) {
+               for (kc = plo2; kc <= phi2; ++kc) {
+                  for (ic = plo0; ic <= phi0; ++ic) {
                      fi = pdat::FaceIndex(hier::Index(ic, phi1, kc),
                            pdat::FaceIndex::Y,
                            pdat::FaceIndex::Upper);
@@ -445,8 +445,8 @@ int main(
 
             //Z face boundaries
             if (plo2 == level_box.lower(2)) {
-               for (jc = plo1; jc <= phi1; jc++) {
-                  for (ic = plo0; ic <= phi0; ic++) {
+               for (jc = plo1; jc <= phi1; ++jc) {
+                  for (ic = plo0; ic <= phi0; ++ic) {
                      fi = pdat::FaceIndex(hier::Index(ic, jc, plo2),
                            pdat::FaceIndex::Z,
                            pdat::FaceIndex::Lower);
@@ -454,8 +454,8 @@ int main(
                   }
                }
             } else {
-               for (jc = plo1; jc <= phi1; jc++) {
-                  for (ic = plo0; ic <= phi0; ic++) {
+               for (jc = plo1; jc <= phi1; ++jc) {
+                  for (ic = plo0; ic <= phi0; ++ic) {
                      fi = pdat::FaceIndex(hier::Index(ic, jc, plo2),
                            pdat::FaceIndex::Z,
                            pdat::FaceIndex::Lower);
@@ -464,8 +464,8 @@ int main(
                }
             }
             if (phi2 == level_box.upper(2)) {
-               for (jc = plo1; jc <= phi1; jc++) {
-                  for (ic = plo0; ic <= phi0; ic++) {
+               for (jc = plo1; jc <= phi1; ++jc) {
+                  for (ic = plo0; ic <= phi0; ++ic) {
                      fi = pdat::FaceIndex(hier::Index(ic, jc, phi2),
                            pdat::FaceIndex::Z,
                            pdat::FaceIndex::Upper);
@@ -476,7 +476,7 @@ int main(
          }
       }
 
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
@@ -488,8 +488,8 @@ int main(
             const double* dx = pgeom->getDx();
             const double node_vol = dx[0] * dx[1] * dx[2];
             boost::shared_ptr<pdat::NodeData<double> > data(
-               patch->getPatchData(nwgt_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+                  patch->getPatchData(nwgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(node_vol);
             pdat::NodeIndex ni(dim3d);
@@ -516,16 +516,16 @@ int main(
 
             //X faces
             if (plo(0) == level_box.lower(0)) {
-               for (kc = plo(2); kc < phi(2); kc++) {
-                  for (jc = plo(1); jc < phi(1); jc++) {
+               for (kc = plo(2); kc < phi(2); ++kc) {
+                  for (jc = plo(1); jc < phi(1); ++jc) {
                      ni = pdat::NodeIndex(hier::Index(plo(
                                  0), jc, kc), pdat::NodeIndex::LUU);
                      (*data)(ni) *= bdry_face_factor;
                   }
                }
             } else {
-               for (kc = plo(2); kc < phi(2); kc++) {
-                  for (jc = plo(1); jc < phi(1); jc++) {
+               for (kc = plo(2); kc < phi(2); ++kc) {
+                  for (jc = plo(1); jc < phi(1); ++jc) {
                      ni = pdat::NodeIndex(hier::Index(plo(
                                  0), jc, kc), pdat::NodeIndex::LUU);
                      (*data)(ni) = 0.0;
@@ -533,8 +533,8 @@ int main(
                }
             }
             if (phi(0) == level_box.upper(0)) {
-               for (kc = plo(2); kc < phi(2); kc++) {
-                  for (jc = plo(1); jc < phi(1); jc++) {
+               for (kc = plo(2); kc < phi(2); ++kc) {
+                  for (jc = plo(1); jc < phi(1); ++jc) {
                      ni = pdat::NodeIndex(hier::Index(phi(
                                  0), jc, kc), pdat::NodeIndex::UUU);
                      (*data)(ni) *= bdry_face_factor;
@@ -544,16 +544,16 @@ int main(
 
             //Y faces
             if (plo(1) == level_box.lower(1)) {
-               for (kc = plo(2); kc < phi(2); kc++) {
-                  for (ic = plo(0); ic < phi(0); ic++) {
+               for (kc = plo(2); kc < phi(2); ++kc) {
+                  for (ic = plo(0); ic < phi(0); ++ic) {
                      ni = pdat::NodeIndex(hier::Index(ic, plo(
                                  1), kc), pdat::NodeIndex::ULU);
                      (*data)(ni) *= bdry_face_factor;
                   }
                }
             } else {
-               for (kc = plo(2); kc < phi(2); kc++) {
-                  for (ic = plo(0); ic < phi(0); ic++) {
+               for (kc = plo(2); kc < phi(2); ++kc) {
+                  for (ic = plo(0); ic < phi(0); ++ic) {
                      ni = pdat::NodeIndex(hier::Index(ic, plo(
                                  1), kc), pdat::NodeIndex::ULU);
                      (*data)(ni) = 0.0;
@@ -561,8 +561,8 @@ int main(
                }
             }
             if (phi(1) == level_box.upper(1)) {
-               for (kc = plo(2); kc < phi(2); kc++) {
-                  for (ic = plo(0); ic < phi(0); ic++) {
+               for (kc = plo(2); kc < phi(2); ++kc) {
+                  for (ic = plo(0); ic < phi(0); ++ic) {
                      ni = pdat::NodeIndex(hier::Index(ic, phi(
                                  1), kc), pdat::NodeIndex::UUU);
                      (*data)(ni) *= bdry_face_factor;
@@ -572,16 +572,16 @@ int main(
 
             //Z faces
             if (plo(2) == level_box.lower(2)) {
-               for (jc = plo(1); jc < phi(1); jc++) {
-                  for (ic = plo(0); ic < phi(0); ic++) {
+               for (jc = plo(1); jc < phi(1); ++jc) {
+                  for (ic = plo(0); ic < phi(0); ++ic) {
                      ni = pdat::NodeIndex(hier::Index(ic, jc, plo(
                                  2)), pdat::NodeIndex::UUL);
                      (*data)(ni) *= bdry_face_factor;
                   }
                }
             } else {
-               for (jc = plo(1); jc < phi(1); jc++) {
-                  for (ic = plo(0); ic < phi(0); ic++) {
+               for (jc = plo(1); jc < phi(1); ++jc) {
+                  for (ic = plo(0); ic < phi(0); ++ic) {
                      ni = pdat::NodeIndex(hier::Index(ic, jc, plo(
                                  2)), pdat::NodeIndex::UUL);
                      (*data)(ni) = 0.0;
@@ -589,8 +589,8 @@ int main(
                }
             }
             if (phi(2) == level_box.upper(2)) {
-               for (jc = plo(1); jc < phi(1); jc++) {
-                  for (ic = plo(0); ic < phi(0); ic++) {
+               for (jc = plo(1); jc < phi(1); ++jc) {
+                  for (ic = plo(0); ic < phi(0); ++ic) {
                      ni = pdat::NodeIndex(hier::Index(ic, jc, phi(
                                  2)), pdat::NodeIndex::UUU);
                      (*data)(ni) *= bdry_face_factor;
@@ -599,7 +599,7 @@ int main(
             }
 
             // edge boundaries
-            for (ic = plo(0); ic < phi(0); ic++) {
+            for (ic = plo(0); ic < phi(0); ++ic) {
                ni = pdat::NodeIndex(hier::Index(ic, plo(1), plo(
                            2)), pdat::NodeIndex::ULL);
                if (plo(1) == level_box.lower(1)) {
@@ -652,7 +652,7 @@ int main(
                }
             }
 
-            for (jc = plo(1); jc < phi(1); jc++) {
+            for (jc = plo(1); jc < phi(1); ++jc) {
                ni = pdat::NodeIndex(hier::Index(plo(0), jc, plo(
                            2)), pdat::NodeIndex::LUL);
                if (plo(0) == level_box.lower(0)) {
@@ -705,7 +705,7 @@ int main(
                }
             }
 
-            for (kc = plo(2); kc < phi(2); kc++) {
+            for (kc = plo(2); kc < phi(2); ++kc) {
                ni = pdat::NodeIndex(hier::Index(plo(0), plo(
                            1), kc), pdat::NodeIndex::LLU);
                if (plo(0) == level_box.lower(0)) {
@@ -985,28 +985,28 @@ int main(
 
       norm = cell_ops->sumControlVolumes(cvindx[0], cwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(norm, (double)0.5)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #1, norm != 0.5\n";
       }
       //pout << "Component 0 : " << norm << " = 0.5?" << endl;
 
       norm = face_ops->sumControlVolumes(fvindx[0], fwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(norm, (double)0.75)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #2, norm != 0.75\n";
       }
       //pout << "Component 1 : " << norm << " = 0.75?" << endl;
 
       norm = node_ops->sumControlVolumes(nvindx[0], nwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(norm, (double)0.25)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #3, norm != 0.25\n";
       }
       //pout << "Component 2 : " << norm << " = 0.25?" << endl;
 
       norm = node_ops->sumControlVolumes(nvindx[1], nwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(norm, (double)0.25)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #4, norm != 0.25\n";
       }
       //pout << "Component 3 : " << norm << " = 0.25?\n" << endl;
@@ -1041,7 +1041,7 @@ int main(
       VecNorm(pvec0, NORM_1, &p_norm);
       //pout << "L1-norm of pvec0 is " << norm << " = 6.0?\n" << endl;
       if (!tbox::MathUtilities<double>::equalEps(my_norm, p_norm)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #5, L1-norm calculation\n";
       }
       l1_norm = my_norm;
@@ -1050,7 +1050,7 @@ int main(
       my_norm = my_vec0->L2Norm();
       VecNorm(pvec0, NORM_2, &p_norm);
       if (!tbox::MathUtilities<double>::equalEps(my_norm, p_norm)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #6, L2-norm calculation\n";
       }
       l2_norm = my_norm;
@@ -1058,11 +1058,11 @@ int main(
       double both_norms[2];
       VecNorm(pvec0, NORM_1_AND_2, both_norms);
       if (!tbox::MathUtilities<double>::equalEps(both_norms[0], l1_norm)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #7, both norms calculation, L1-norm\n";
       }
       if (!tbox::MathUtilities<double>::equalEps(both_norms[1], l2_norm)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #8, both norms calculation, L2-norm\n";
       }
       //pout << "Both norms of pvec0: " << both_norms[0] << " and "
@@ -1089,7 +1089,7 @@ int main(
       VecMin(pvec0, &dummy1, &min_val);
       tbox::plog << "min of pvec0 is " << min_val << " = 2.0?\n" << endl;
       if (!tbox::MathUtilities<double>::equalEps(my_min_val, p_min_val)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #9, min val calculation\n";
       }
 
@@ -1101,7 +1101,7 @@ int main(
       double p_max_val;
       VecMax(pvec1, &dummy1, &p_max_val);
       if (!tbox::MathUtilities<double>::equalEps(my_max_val, p_max_val)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #10, reciprocal max val calculation\n";
       }
 
@@ -1182,20 +1182,20 @@ int main(
 
       double max_val = my_vec1->max();
       if (!tbox::MathUtilities<double>::equalEps(max_val, (double)1100.0)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #11, max bogus value\n";
       }
 
       min_val = my_vec1->min();
       if (!tbox::MathUtilities<double>::equalEps(min_val, (double)-3300.0)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #12, min bogus value\n";
       }
 
       my_norm = my_vec1->L2Norm();
       VecNorm(pvec1, NORM_2, &p_norm);
       if (!tbox::MathUtilities<double>::equalEps(my_norm, p_norm)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #13, L2-norm calculation\n";
       }
 
@@ -1204,33 +1204,33 @@ int main(
       double p_dot;
       VecDot(pvec1, pvec1, &p_dot);
       if (!tbox::MathUtilities<double>::equalEps(my_dot, p_dot)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #14, dot product calculation\n";
       }
 
       VecTDot(pvec1, pvec1, &p_dot);
       if (!tbox::MathUtilities<double>::equalEps(my_dot, p_dot)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #15, T-dot product calculation\n";
       }
 
       my_norm = my_vec1->maxNorm();
       VecNorm(pvec1, NORM_INFINITY, &p_norm);
       if (!tbox::MathUtilities<double>::equalEps(my_norm, p_norm)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #16, max norm calculation\n";
       }
 
       VecSet(pvec0, twelve);
       norm = my_vec1->weightedL2Norm(my_vec0);
       if (!tbox::MathUtilities<double>::equalEps(norm, (double)7.6393717)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #17, weighted L2 norm calculation\n";
       }
 
       norm = my_vec0->RMSNorm();
       if (!tbox::MathUtilities<double>::equalEps(norm, (double)12.0)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Test #18, RMS norm calculation\n";
       }
 
@@ -1279,7 +1279,7 @@ int main(
 
       tbox::plog << "\nVariables and data components in new vector...";
       int ncomp = sam_vec3->getNumberOfComponents();
-      for (int ic = 0; ic < ncomp; ic++) {
+      for (int ic = 0; ic < ncomp; ++ic) {
          tbox::plog << "\n   Comp id, variable, data id = "
                     << ic << ", "
                     << sam_vec3->getComponentVariable(ic)->getName() << ", "
@@ -1348,19 +1348,19 @@ int main(
       my_vec1->freeVectorComponents();
       my_vec2->freeVectorComponents();
 
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
          hierarchy->getPatchLevel(ln)->deallocatePatchData(cwgt_id);
          hierarchy->getPatchLevel(ln)->deallocatePatchData(fwgt_id);
          hierarchy->getPatchLevel(ln)->deallocatePatchData(nwgt_id);
       }
 
-      for (iv = 0; iv < NCELL_VARS; iv++) {
+      for (iv = 0; iv < NCELL_VARS; ++iv) {
          cvar[iv].reset();
       }
-      for (iv = 0; iv < NFACE_VARS; iv++) {
+      for (iv = 0; iv < NFACE_VARS; ++iv) {
          fvar[iv].reset();
       }
-      for (iv = 0; iv < NNODE_VARS; iv++) {
+      for (iv = 0; iv < NNODE_VARS; ++iv) {
          nvar[iv].reset();
       }
       cwgt.reset();

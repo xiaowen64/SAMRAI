@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_EdgeIndex_C
-#define included_pdat_EdgeIndex_C
-
 #include "SAMRAI/pdat/EdgeIndex.h"
 
 namespace SAMRAI {
@@ -32,7 +28,7 @@ EdgeIndex::EdgeIndex(
    if (getDim() > tbox::Dimension(1)) {
       (*this)((d_axis + 1) % getDim().getValue()) += edge % 2;
    }
-   for (int j = 2; j < getDim().getValue(); j++) {
+   for (int j = 2; j < getDim().getValue(); ++j) {
       (*this)((d_axis + j) % getDim().getValue()) += (edge / (1 << (j - 1))) % 2;
    }
 }
@@ -55,14 +51,14 @@ EdgeIndex::toCell(
    const tbox::Dimension& dim(getDim());
    hier::Index index(dim);
 
-   for (int i = 0; i < dim.getValue(); i++) {
+   for (int i = 0; i < dim.getValue(); ++i) {
       index(i) = (*this)(i);
    }
 
    if (dim > tbox::Dimension(1)) {
       index((d_axis + 1) % dim.getValue()) += ((edge % 2) - 1);
    }
-   for (int j = 2; j < dim.getValue(); j++) {
+   for (int j = 2; j < dim.getValue(); ++j) {
       index((d_axis + j) % dim.getValue()) += (((edge / (2 << (j - 1))) % 2) - 1);
    }
    return index;
@@ -70,4 +66,3 @@ EdgeIndex::toCell(
 
 }
 }
-#endif

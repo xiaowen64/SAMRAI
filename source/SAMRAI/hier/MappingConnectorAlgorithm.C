@@ -7,9 +7,6 @@
  * Description:   Algorithms for working with MappingConnectors.
  *
  ************************************************************************/
-#ifndef included_hier_MappingConnectorAlgorithm_C
-#define included_hier_MappingConnectorAlgorithm_C
-
 #include "SAMRAI/hier/BoxContainerUtils.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/tbox/InputManager.h"
@@ -27,6 +24,7 @@ namespace hier {
 
 const std::string MappingConnectorAlgorithm::s_default_timer_prefix("hier::MappingConnectorAlgorithm");
 std::map<std::string, MappingConnectorAlgorithm::TimerStruct> MappingConnectorAlgorithm::s_static_timers;
+char MappingConnectorAlgorithm::s_ignore_external_timer_prefix('n');
 
 char MappingConnectorAlgorithm::s_print_steps = '\0';
 
@@ -39,8 +37,7 @@ int MappingConnectorAlgorithm::s_operation_mpi_tag = 0;
  * with reused tags anyway.
  */
 
-tbox::SAMRAI_MPI MappingConnectorAlgorithm::s_class_mpi(
-   tbox::SAMRAI_MPI::commNull);
+tbox::SAMRAI_MPI MappingConnectorAlgorithm::s_class_mpi(MPI_COMM_NULL);
 
 tbox::StartupShutdownManager::Handler
 MappingConnectorAlgorithm::s_initialize_finalize_handler(
@@ -61,8 +58,8 @@ MappingConnectorAlgorithm::MappingConnectorAlgorithm():
    d_sanity_check_inputs(false),
    d_sanity_check_outputs(false)
 {
-   setTimerPrefix(s_default_timer_prefix);
    getFromInput();
+   setTimerPrefix(s_default_timer_prefix);
 }
 
 /*
@@ -78,6 +75,7 @@ MappingConnectorAlgorithm::~MappingConnectorAlgorithm()
  ***********************************************************************
  ***********************************************************************
  */
+
 void
 MappingConnectorAlgorithm::getFromInput()
 {
@@ -87,12 +85,19 @@ MappingConnectorAlgorithm::getFromInput()
          boost::shared_ptr<tbox::Database> idb(
             tbox::InputManager::getInputDatabase());
          if (idb->isDatabase("MappingConnectorAlgorithm")) {
-            boost::shared_ptr<tbox::Database> ocu_db(
+            boost::shared_ptr<tbox::Database> mca_db(
                idb->getDatabase("MappingConnectorAlgorithm"));
             s_print_steps =
-               ocu_db->getCharWithDefault("DEV_print_modify_steps", 'n');
+               mca_db->getCharWithDefault("DEV_print_modify_steps", 'n');
             if (!(s_print_steps == 'n' || s_print_steps == 'y')) {
                INPUT_VALUE_ERROR("DEV_print_modify_steps");
+            }
+            s_ignore_external_timer_prefix =
+               mca_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
+                                          'n');
+            if (!(s_ignore_external_timer_prefix == 'n' ||
+                  s_ignore_external_timer_prefix == 'y')) {
+               INPUT_VALUE_ERROR("DEV_ignore_external_timer_prefix");
             }
          }
       }
@@ -569,7 +574,9 @@ MappingConnectorAlgorithm::privateModify(
 
    d_object_timers->t_modify_misc->start();
 
-   delete[] all_comms;
+   if (all_comms) {
+      delete[] all_comms;
+   }
 
    /*
     * Now we have set up the NeighborhoodSets for anchor_to_new and
@@ -961,9 +968,11 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
         outgoing_ranks_itr != outgoing_ranks.end(); ++outgoing_ranks_itr) {
       another_outgoing_ranks[i++] = *outgoing_ranks_itr;
    }
-#pragma omp parallel private(i)
+#ifdef HAVE_OPENMP
+#pragma omp parallel private(i) num_threads(4)
 {
 #pragma omp for schedule(dynamic) nowait
+#endif
    for (i = 0; i < imax; ++i) {
       BoxId outgoing_proc_start_id(
          LocalId::getZero(),
@@ -990,7 +999,9 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
          anchor_to_old,
          old_to_new);
    }
+#ifdef HAVE_OPENMP
 }
+#endif
 
    /*
     * Send all non-local overlap messages.
@@ -1381,23 +1392,9 @@ MappingConnectorAlgorithm::initializeCallback()
       s_class_mpi.dupCommunicator(mpi);
    }
 
-   /*
-    * - sets up debugging flags.
-    */
-
-   if (s_print_steps == '\0') {
-      if (tbox::InputManager::inputDatabaseExists()) {
-         s_print_steps = 'n';
-         boost::shared_ptr<tbox::Database> idb(
-            tbox::InputManager::getInputDatabase());
-         if (idb->isDatabase("MappingConnectorAlgorithm")) {
-            boost::shared_ptr<tbox::Database> ocu_db(
-               idb->getDatabase("MappingConnectorAlgorithm"));
-            s_print_steps = ocu_db->getCharWithDefault("print_modify_steps",
-                  s_print_steps);
-         }
-      }
-   }
+   // Initialize timers with default prefix.
+   getAllTimers(s_default_timer_prefix,
+                s_static_timers[s_default_timer_prefix]);
 
 }
 
@@ -1411,7 +1408,7 @@ MappingConnectorAlgorithm::initializeCallback()
 void
 MappingConnectorAlgorithm::finalizeCallback()
 {
-   if (s_class_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (s_class_mpi.getCommunicator() != MPI_COMM_NULL) {
       s_class_mpi.freeCommunicator();
    }
 }
@@ -1424,11 +1421,18 @@ void
 MappingConnectorAlgorithm::setTimerPrefix(
    const std::string& timer_prefix)
 {
+   std::string timer_prefix_used;
+   if (s_ignore_external_timer_prefix == 'y') {
+      timer_prefix_used = s_default_timer_prefix;
+   }
+   else {
+      timer_prefix_used = timer_prefix;
+   }
    std::map<std::string, TimerStruct>::iterator ti(
-      s_static_timers.find(timer_prefix));
+      s_static_timers.find(timer_prefix_used));
    if (ti == s_static_timers.end()) {
-      d_object_timers = &s_static_timers[timer_prefix];
-      getAllTimers(timer_prefix, *d_object_timers);
+      d_object_timers = &s_static_timers[timer_prefix_used];
+      getAllTimers(timer_prefix_used, *d_object_timers);
    } else {
       d_object_timers = &(ti->second);
    }
@@ -1461,4 +1465,3 @@ MappingConnectorAlgorithm::getAllTimers(
 
 }
 }
-#endif

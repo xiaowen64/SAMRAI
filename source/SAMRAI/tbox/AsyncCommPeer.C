@@ -57,7 +57,6 @@ AsyncCommPeer<TYPE>::s_initialize_finalize_handler(
 
 /*
  ***********************************************************************
- * TODO: d_mpi should be initialized with commNull or SAMRAI's comm base.
  ***********************************************************************
  */
 template<class TYPE>
@@ -96,7 +95,6 @@ AsyncCommPeer<TYPE>::AsyncCommPeer():
  * Construct a simple object that works with a communication stage.
  * All parameters are set to reasonable defaults or, if appropriate,
  * invalid values.
- * TODO: d_mpi should be initialized with commNull or SAMRAI's comm base.
  ***********************************************************************
  */
 template<class TYPE>
@@ -794,7 +792,7 @@ AsyncCommPeer<TYPE>::checkMPIParams()
          << d_tag0 << " and " << d_tag1
          << "\nUse setMPITag() to set it.");
    }
-   if (getMPI().getCommunicator() == SAMRAI_MPI::commNull) {
+   if (getMPI().getCommunicator() == MPI_COMM_NULL) {
       TBOX_ERROR("AsyncCommPeer: Invalid MPI communicator value "
          << d_mpi.getCommunicator() << "\nUse setCommunicator() to set it.");
    }

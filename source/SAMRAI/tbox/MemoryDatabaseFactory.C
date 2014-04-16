@@ -10,11 +10,35 @@
 
 #include "SAMRAI/tbox/MemoryDatabaseFactory.h"
 #include "SAMRAI/tbox/MemoryDatabase.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace tbox {
+
+MemoryDatabaseFactory::MemoryDatabaseFactory()
+{
+}
+
+MemoryDatabaseFactory::~MemoryDatabaseFactory()
+{
+}
+
+MemoryDatabaseFactory::MemoryDatabaseFactory(
+   const MemoryDatabaseFactory& other)
+   : DatabaseFactory()
+{
+   NULL_USE(other);
+}
+
+MemoryDatabaseFactory&
+MemoryDatabaseFactory::operator = (
+   const MemoryDatabaseFactory& rhs)
+{
+   NULL_USE(rhs);
+   return *this;
+}
 
 /**
  * Build a new MemoryDatabase object.

@@ -28,6 +28,6 @@ include $(OBJECT)/config/Makefile.config
 library:	$(OBJS)
 
 clean:
-	$(SAMCLEAN)
+	$(CLEAN_COMMON_LIB_FILES)
 
 include $(SRCDIR)/Makefile.depend

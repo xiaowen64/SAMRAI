@@ -8,10 +8,6 @@
  *                a new level.
  *
  ************************************************************************/
-
-#ifndef included_mesh_StandardTagAndInitialize_C
-#define included_mesh_StandardTagAndInitialize_C
-
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 
 #include "SAMRAI/pdat/CellIntegerConstantRefine.h"
@@ -198,7 +194,7 @@ StandardTagAndInitialize::resetHierarchyConfiguration(
       && (coarsest_level <= finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int ln0 = 0; ln0 <= finest_level; ln0++) {
+   for (int ln0 = 0; ln0 <= finest_level; ++ln0) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln0));
    }
 #endif
@@ -298,8 +294,8 @@ StandardTagAndInitialize::tagCellsForRefinement(
          const boost::shared_ptr<hier::Patch>& patch = *ip;
 
          boost::shared_ptr<pdat::CellData<int> > tag_data(
-            patch->getPatchData(tag_index),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+               patch->getPatchData(tag_index)));
 
          TBOX_ASSERT(tag_data);
 
@@ -438,7 +434,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
 
    double start_time = regrid_time;
    double end_time = 0.0;
-   for (int step_cnt = 0; step_cnt < n_steps; step_cnt++) {
+   for (int step_cnt = 0; step_cnt < n_steps; ++step_cnt) {
 
       end_time = start_time + dt;
       bool last_step = (step_cnt == (n_steps - 1));
@@ -498,11 +494,11 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
       boost::shared_ptr<hier::Patch> fine_patch(
          patch_level->getPatch(coarse_patch->getGlobalId()));
       boost::shared_ptr<pdat::CellData<int> > ftags(
-         fine_patch->getPatchData(tag_index),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            fine_patch->getPatchData(tag_index)));
       boost::shared_ptr<pdat::CellData<int> > ctags(
-         coarse_patch->getPatchData(tag_index),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            coarse_patch->getPatchData(tag_index)));
 
       TBOX_ASSERT(ftags);
       TBOX_ASSERT(ctags);
@@ -516,7 +512,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
       const hier::Index ifirstc = coarse_patch->getBox().lower();
       const hier::Index ilastc = coarse_patch->getBox().upper();
 
-      for (int d = 0; d < ctags->getDepth(); d++) {
+      for (int d = 0; d < ctags->getDepth(); ++d) {
          if (dim == tbox::Dimension(1)) {
             SAMRAI_F77_FUNC(coarsentags1d, COARSENTAGS1D) (ifirstc(0), ilastc(0),
                filo(0), fihi(0),
@@ -901,7 +897,7 @@ StandardTagAndInitialize::coarsestLevelBoxesOK(
       for (hier::BoxContainer::const_iterator ib = boxes.begin();
            ib != boxes.end(); ++ib) {
          hier::IntVector n_cells = ib->numberCells();
-         for (int i = 0; i < dim.getValue(); i++) {
+         for (int i = 0; i < dim.getValue(); ++i) {
             int error_coarsen_ratio = getErrorCoarsenRatio();
             if (!((n_cells(i) % error_coarsen_ratio) == 0)) {
                tbox::perr << "Bad domain box: " << *ib << std::endl;
@@ -957,9 +953,9 @@ StandardTagAndInitialize::checkCoarsenRatios(
        * level are between the supported 2 or 3, and that the error coarsen
        * ratios are constant over the hierarchy.
        */
-      for (int ln = 1; ln < static_cast<int>(ratio_to_coarser.size()); ln++) {
+      for (int ln = 1; ln < static_cast<int>(ratio_to_coarser.size()); ++ln) {
 
-         for (int d = 0; d < dim.getValue(); d++) {
+         for (int d = 0; d < dim.getValue(); ++d) {
             int gcd = GCD(error_coarsen_ratio, ratio_to_coarser[ln](d));
             if ((gcd % error_coarsen_ratio) != 0) {
                gcd = ratio_to_coarser[ln](d);
@@ -2080,4 +2076,3 @@ static int GCD(
 
 }
 }
-#endif

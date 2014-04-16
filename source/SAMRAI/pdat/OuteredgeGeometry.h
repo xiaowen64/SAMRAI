@@ -159,7 +159,7 @@ private:
 
    OuteredgeGeometry(
       const OuteredgeGeometry&);               // not implemented
-   void
+   OuteredgeGeometry&
    operator = (
       const OuteredgeGeometry&);                // not implemented
 

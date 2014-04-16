@@ -7,10 +7,6 @@
  * Description:   GriddingAlgorihtm's implementation of PatchHierarchy
  *
  ************************************************************************/
-
-#ifndef included_mesh_GriddingAlgorithmConnectorWidthRequestor_C
-#define included_mesh_GriddingAlgorithmConnectorWidthRequestor_C
-
 #include "SAMRAI/mesh/GriddingAlgorithmConnectorWidthRequestor.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -216,5 +212,3 @@ GriddingAlgorithmConnectorWidthRequestor::setTagToClusterWidth(
 
 }
 }
-
-#endif

@@ -29,12 +29,8 @@ restart-redistribute:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
 
 tools: restart-redistribute
 
-
-clean-check:
-		$(RM) restart-resdistribute
-		$(SAMCLEAN)
-
-clean:		clean-check
-		$(RM) redo
+clean:
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) restart-resdistribute
 
 include $(SRCDIR)/Makefile.depend

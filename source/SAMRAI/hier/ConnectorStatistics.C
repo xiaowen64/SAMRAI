@@ -7,9 +7,6 @@
  * Description:   Statistical characteristics of a Connector.
  *
  ************************************************************************/
-#ifndef included_hier_ConnectorStatistics_C
-#define included_hier_ConnectorStatistics_C
-
 #include "SAMRAI/hier/ConnectorStatistics.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -338,6 +335,4 @@ ConnectorStatistics::finalizeCallback()
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

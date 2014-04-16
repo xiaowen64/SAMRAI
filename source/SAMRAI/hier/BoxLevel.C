@@ -7,9 +7,6 @@
  * Description:   Set of boxes in a box_level of a distributed box graph.
  *
  ************************************************************************/
-#ifndef included_hier_BoxLevel_C
-#define included_hier_BoxLevel_C
-
 #include "SAMRAI/hier/BoxLevel.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -132,7 +129,7 @@ BoxLevel::BoxLevel(
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state):
-   d_mpi(tbox::SAMRAI_MPI::commNull),
+   d_mpi(MPI_COMM_NULL),
    d_ratio(ratio),
 
    d_local_number_of_cells(0),
@@ -416,7 +413,7 @@ BoxLevel::clear()
    }
    if (isInitialized()) {
       clearForBoxChanges();
-      d_mpi = tbox::SAMRAI_MPI(tbox::SAMRAI_MPI::commNull);
+      d_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL);
       d_boxes.clear();
       d_global_boxes.clear();
       d_ratio(0) = 0;
@@ -474,7 +471,7 @@ BoxLevel::swap(
       Box tmpbox(level_a.getDim());
       ParallelState tmpstate;
       const BoxLevel* tmpmbl;
-      tbox::SAMRAI_MPI tmpmpi(tbox::SAMRAI_MPI::commNull);
+      tbox::SAMRAI_MPI tmpmpi(MPI_COMM_NULL);
       boost::shared_ptr<const BaseGridGeometry> tmpgridgeom(
          level_a.getGridGeometry());
 
@@ -609,8 +606,10 @@ BoxLevel::cacheGlobalReducedData() const
          d_global_number_of_boxes = (int)tmpb[0];
          d_global_number_of_cells = tmpb[1];
       } else {
-         d_global_number_of_boxes = getLocalNumberOfBoxes();
-         d_global_number_of_cells = getLocalNumberOfCells();
+         d_global_number_of_boxes =
+	    static_cast<int>(getLocalNumberOfBoxes());
+         d_global_number_of_cells =
+	    static_cast<int>(getLocalNumberOfCells());
       }
 
       TBOX_ASSERT(d_global_number_of_boxes >= 0);
@@ -630,8 +629,10 @@ BoxLevel::cacheGlobalReducedData() const
    if (d_mpi.getSize() == 1) {
 
       d_global_bounding_box = d_local_bounding_box;
-      d_max_number_of_boxes = d_min_number_of_boxes = getLocalNumberOfBoxes();
-      d_max_number_of_cells = d_min_number_of_cells = getLocalNumberOfCells();
+      d_max_number_of_boxes = d_min_number_of_boxes =
+	 static_cast<int>(getLocalNumberOfBoxes());
+      d_max_number_of_cells = d_min_number_of_cells =
+	 static_cast<int>(getLocalNumberOfCells());
       d_global_max_box_size = d_local_max_box_size;
       d_global_min_box_size = d_local_min_box_size;
 
@@ -650,9 +651,9 @@ BoxLevel::cacheGlobalReducedData() const
                send_mesg.push_back(d_local_max_box_size[bn][i]);
             }
          }
-         send_mesg.push_back(getLocalNumberOfBoxes());
+         send_mesg.push_back(static_cast<int>(getLocalNumberOfBoxes()));
          send_mesg.push_back(-static_cast<int>(getLocalNumberOfBoxes()));
-         send_mesg.push_back(getLocalNumberOfCells());
+         send_mesg.push_back(static_cast<int>(getLocalNumberOfCells()));
          send_mesg.push_back(-static_cast<int>(getLocalNumberOfCells()));
 
          std::vector<int> recv_mesg(send_mesg.size());
@@ -1657,6 +1658,4 @@ BoxLevel::recursivePrint(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

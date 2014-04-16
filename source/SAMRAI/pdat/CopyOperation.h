@@ -45,10 +45,10 @@ public:
 
 private:
    CopyOperation(
-      const CopyOperation<TYPE>&);              // not implemented
-   void
+      const CopyOperation&);              // not implemented
+   CopyOperation&
    operator = (
-      const CopyOperation<TYPE>&);              // not implemented
+      const CopyOperation&);              // not implemented
 };
 
 }

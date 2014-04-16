@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_EdgeDoubleConstantRefine_C
-#define included_pdat_EdgeDoubleConstantRefine_C
-
 #include "SAMRAI/pdat/EdgeDoubleConstantRefine.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -126,11 +122,11 @@ EdgeDoubleConstantRefine::refine(
    const tbox::Dimension& dim(fine.getDim());
 
    boost::shared_ptr<EdgeData<double> > cdata(
-      coarse.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<EdgeData<double>, hier::PatchData>(
+         coarse.getPatchData(src_component)));
    boost::shared_ptr<EdgeData<double> > fdata(
-      fine.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<EdgeData<double>, hier::PatchData>(
+         fine.getPatchData(dst_component)));
 
    const EdgeOverlap* t_overlap = CPP_CAST<const EdgeOverlap *>(&fine_overlap);
 
@@ -148,7 +144,7 @@ EdgeDoubleConstantRefine::refine(
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   for (int axis = 0; axis < dim.getValue(); axis++) {
+   for (int axis = 0; axis < dim.getValue(); ++axis) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
 
       for (hier::BoxContainer::const_iterator b = boxes.begin();
@@ -157,7 +153,7 @@ EdgeDoubleConstantRefine::refine(
          hier::Box fine_box(*b);
          TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, fine_box);
 
-         for (int i = 0; i < dim.getValue(); i++) {
+         for (int i = 0; i < dim.getValue(); ++i) {
             if (i != axis) {
                fine_box.upper(i) -= 1;
             }
@@ -169,7 +165,7 @@ EdgeDoubleConstantRefine::refine(
          const hier::Index ifirstf = fine_box.lower();
          const hier::Index ilastf = fine_box.upper();
 
-         for (int d = 0; d < fdata->getDepth(); d++) {
+         for (int d = 0; d < fdata->getDepth(); ++d) {
             if (dim == tbox::Dimension(1)) {
                SAMRAI_F77_FUNC(conrefedgedoub1d, CONREFEDGEDOUB1D) (
                   ifirstc(0), ilastc(0),
@@ -252,4 +248,3 @@ EdgeDoubleConstantRefine::refine(
 
 }
 }
-#endif

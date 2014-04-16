@@ -413,14 +413,14 @@ int main(
        * tagged cells before new levels are created.
        */
       std::vector<int> tag_buffer(patch_hierarchy->getMaxNumberOfLevels());
-      for (int ln = 0; ln < patch_hierarchy->getMaxNumberOfLevels(); ln++) {
+      for (int ln = 0; ln < patch_hierarchy->getMaxNumberOfLevels(); ++ln) {
          tag_buffer[ln] = 0;
       }
       if (main_db->keyExists("tag_buffer")) {
          std::vector<int> input_tags = main_db->getIntegerVector("tag_buffer");
          if (input_tags.size() > 0) {
             for (int ln0 = 0; ln0 < patch_hierarchy->getMaxNumberOfLevels();
-                 ln0++) {
+                 ++ln0) {
                if (static_cast<int>(input_tags.size()) > ln0) {
                   tag_buffer[ln0] = ((input_tags[ln0] > 0) ?
                                      input_tags[ln0] : 0);
@@ -479,7 +479,7 @@ int main(
          bool done = false;
          bool initial_cycle = true;
          for (int lnum = 0;
-              patch_hierarchy->levelCanBeRefined(lnum) && !done; lnum++) {
+              patch_hierarchy->levelCanBeRefined(lnum) && !done; ++lnum) {
             gridding_algorithm->makeFinerLevel(
                tag_buffer[lnum],
                initial_cycle,

@@ -8,10 +8,6 @@
  *                float data on a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianSideFloatConservativeLinearRefine_C
-#define included_geom_CartesianSideFloatConservativeLinearRefine_C
-
 #include "SAMRAI/geom/CartesianSideFloatConservativeLinearRefine.h"
 
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
@@ -143,11 +139,11 @@ CartesianSideFloatConservativeLinearRefine::refine(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, coarse, ratio);
 
    boost::shared_ptr<pdat::SideData<float> > cdata(
-      coarse.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::SideData<float>, hier::PatchData>(
+         coarse.getPatchData(src_component)));
    boost::shared_ptr<pdat::SideData<float> > fdata(
-      fine.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::SideData<float>, hier::PatchData>(
+         fine.getPatchData(dst_component)));
 
    const pdat::SideOverlap* t_overlap =
       CPP_CAST<const pdat::SideOverlap *>(&fine_overlap);
@@ -171,16 +167,16 @@ CartesianSideFloatConservativeLinearRefine::refine(
    const hier::Index fihi = fdata->getGhostBox().upper();
 
    const boost::shared_ptr<CartesianPatchGeometry> cgeom(
-      coarse.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+         coarse.getPatchGeometry()));
    const boost::shared_ptr<CartesianPatchGeometry> fgeom(
-      fine.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+         fine.getPatchGeometry()));
 
    TBOX_ASSERT(cgeom);
    TBOX_ASSERT(fgeom);
 
-   for (int axis = 0; axis < dim.getValue(); axis++) {
+   for (int axis = 0; axis < dim.getValue(); ++axis) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
 
       for (hier::BoxContainer::const_iterator b = boxes.begin();
@@ -202,7 +198,7 @@ CartesianSideFloatConservativeLinearRefine::refine(
          pdat::SideData<float> slope0(cgbox, 1, tmp_ghosts,
                                       directions);
 
-         for (int d = 0; d < fdata->getDepth(); d++) {
+         for (int d = 0; d < fdata->getDepth(); ++d) {
             if ((dim == tbox::Dimension(1))) {
                if (directions(axis)) {
                   SAMRAI_F77_FUNC(cartclinrefsideflot1d, CARTCLINREFSIDEFLOT1D) (
@@ -328,4 +324,3 @@ CartesianSideFloatConservativeLinearRefine::refine(
 
 }
 }
-#endif

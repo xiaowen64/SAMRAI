@@ -8,10 +8,6 @@
  *                for coarsen schedules.
  *
  ************************************************************************/
-
-#ifndef included_xfer_StandardCoarsenTransactionFactory_C
-#define included_xfer_StandardCoarsenTransactionFactory_C
-
 #include "SAMRAI/xfer/StandardCoarsenTransactionFactory.h"
 
 #include "SAMRAI/xfer/CoarsenCopyTransaction.h"
@@ -47,13 +43,10 @@ StandardCoarsenTransactionFactory::~StandardCoarsenTransactionFactory()
 
 void
 StandardCoarsenTransactionFactory::setCoarsenItems(
-   const CoarsenClasses::Data** coarsen_items,
-   int num_coarsen_items)
+   const CoarsenClasses::Data** coarsen_items)
 {
-   CoarsenCopyTransaction::setCoarsenItems(coarsen_items,
-      num_coarsen_items);
+   CoarsenCopyTransaction::setCoarsenItems(coarsen_items);
    d_coarsen_items = coarsen_items;
-   d_num_coarsen_items = num_coarsen_items;
 }
 
 void
@@ -61,7 +54,6 @@ StandardCoarsenTransactionFactory::unsetCoarsenItems()
 {
    CoarsenCopyTransaction::unsetCoarsenItems();
    d_coarsen_items = 0;
-   d_num_coarsen_items = 0;
 }
 
 /*
@@ -97,4 +89,3 @@ StandardCoarsenTransactionFactory::allocate(
 
 }
 }
-#endif

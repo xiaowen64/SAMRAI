@@ -7,10 +7,6 @@
  * Description:   AMR hierarchy generation and regridding routines.
  *
  ************************************************************************/
-
-#ifndef included_mesh_GriddingAlgorithmStrategy_C
-#define included_mesh_GriddingAlgorithmStrategy_C
-
 #include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
 
 namespace SAMRAI {
@@ -26,4 +22,3 @@ GriddingAlgorithmStrategy::~GriddingAlgorithmStrategy()
 
 }
 }
-#endif

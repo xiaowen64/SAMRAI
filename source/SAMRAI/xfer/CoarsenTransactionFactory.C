@@ -8,10 +8,6 @@
  *                oarsen schedules.
  *
  ************************************************************************/
-
-#ifndef included_xfer_CoarsenTransactionFactory_C
-#define included_xfer_CoarsenTransactionFactory_C
-
 #include "SAMRAI/xfer/CoarsenTransactionFactory.h"
 
 namespace SAMRAI {
@@ -35,4 +31,3 @@ CoarsenTransactionFactory::~CoarsenTransactionFactory()
 
 }
 }
-#endif

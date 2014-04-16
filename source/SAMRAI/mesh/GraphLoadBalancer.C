@@ -7,10 +7,6 @@
  * Description:   Scalable load balancer using tree algorithm.
  *
  ************************************************************************/
-
-#ifndef included_mesh_GraphLoadBalancer_C
-#define included_mesh_GraphLoadBalancer_C
-
 #include "SAMRAI/mesh/GraphLoadBalancer.h"
 
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
@@ -150,7 +146,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
        * Heuristic to choose a target box size if none was given in
        * input. 
        */ 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          std::set<int> choices;
 
          choices.insert(min_size(d) * min_size(d));
@@ -165,7 +161,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
       target_size = d_target_box_size;
    }
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dim.getValue(); ++d) {
       if (target_size(d) > max_size(d)) target_size(d) = max_size(d);
       if (target_size(d) < min_size(d)) target_size(d) = min_size(d);
    }
@@ -460,12 +456,14 @@ GraphLoadBalancer::loadBalanceBoxLevel(
 
    tbox::AsyncCommStage send_stage;
    std::map<int, tbox::AsyncCommPeer<char>* > send_comms;
+   std::set<int> send_procs;
    tbox::AsyncCommStage recv_stage;
    std::map<int, tbox::AsyncCommPeer<char>* > recv_comms;
 
    setupAsyncCommObjects(
       send_stage,
       send_comms,
+      send_procs,
       recv_stage,
       recv_comms,
       old_global_partition,
@@ -539,19 +537,23 @@ GraphLoadBalancer::loadBalanceBoxLevel(
       }
    }
 
-   for (std::map<int, tbox::AsyncCommPeer<char>* >::iterator si =
-        send_comms.begin(); si != send_comms.end(); ++si) {
-
-      tbox::AsyncCommPeer<char>*& send_peer = si->second;
-      const tbox::MessageStream& msg = mstreams[send_peer->getPeerRank()];
+   int send_ct = static_cast<int>(send_procs.size());
+   std::set<int>::const_iterator si = send_procs.lower_bound(my_rank+1);
+   for (int num_sent = 0; num_sent < send_ct; ++num_sent) {
+      if (si == send_procs.end()) {
+         si = send_procs.begin();
+      }
+      int send_rank = *si;
+      tbox::AsyncCommPeer<char>*& send_peer = send_comms[send_rank];
+      const tbox::MessageStream& msg = mstreams[send_rank];
       send_peer->beginSend(static_cast<const char*>(msg.getBufferStart()),
                            static_cast<int>(msg.getCurrentSize()));
+      ++si;
    }
 
-   for (std::map<int, tbox::AsyncCommPeer<char>* >::iterator si =
-        send_comms.begin(); si != send_comms.end(); ++si) {
+   for (si = send_procs.begin(); si != send_procs.end(); ++si) {
 
-      tbox::AsyncCommPeer<char>*& send_peer = si->second;
+      tbox::AsyncCommPeer<char>*& send_peer = send_comms[*si];
       send_peer->completeCurrentOperation();
    }
 
@@ -591,8 +593,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
     * Complete receives and unpack streams.
     */
    std::list<BoxInTransit> received_transit_boxes;
-   while ( recv_stage.numberOfCompletedMembers() > 0 ||
-           recv_stage.advanceSome() ) {
+   while ( recv_stage.hasCompletedMembers() || recv_stage.advanceSome() ) {
 
       tbox::AsyncCommPeer<char>* recv_peer =
          CPP_CAST<tbox::AsyncCommPeer<char> *>(recv_stage.popCompletionQueue());
@@ -958,6 +959,7 @@ void
 GraphLoadBalancer::setupAsyncCommObjects(
    tbox::AsyncCommStage& send_stage,
    std::map<int, tbox::AsyncCommPeer<char>* >& send_comms,
+   std::set<int>& send_procs,
    tbox::AsyncCommStage& recv_stage,
    std::map<int, tbox::AsyncCommPeer<char>* >& recv_comms,
    const int* old_partition,
@@ -966,8 +968,6 @@ GraphLoadBalancer::setupAsyncCommObjects(
    const int my_rank,
    const tbox::SAMRAI_MPI& mpi) const
 {
-
-   std::set<int> send_procs;
    std::set<int> recv_procs;
    for (int b = 0; b < num_boxes; ++b) {
       if (old_partition[b] == my_rank &&
@@ -1084,6 +1084,3 @@ GraphLoadBalancer::getFromInput(
 
 }
 }
-
-#endif
-

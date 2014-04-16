@@ -7,10 +7,6 @@
  * Description:   Strategy interface for Richardson extrapolation error detection.
  *
  ************************************************************************/
-
-#ifndef included_mesh_StandardTagAndInitStrategy_C
-#define included_mesh_StandardTagAndInitStrategy_C
-
 #include "SAMRAI/mesh/StandardTagAndInitStrategy.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -182,4 +178,3 @@ StandardTagAndInitStrategy::processLevelBeforeRemoval(
 
 }
 }
-#endif

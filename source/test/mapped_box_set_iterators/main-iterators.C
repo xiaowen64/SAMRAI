@@ -75,7 +75,7 @@ int main(
             if (bi->getBlockId() != bid) {
                tbox::perr << "FAILED: - Test #1: box id " << bi->getBlockId()
                           << " should have BlockId " << bid << endl;
-               fail_count++;
+               ++fail_count;
             }
 
          }
@@ -91,7 +91,7 @@ int main(
             if (bi->getOwnerRank() != owner_rank) {
                tbox::perr << "FAILED: - Test #2: box id " << bi->getBlockId()
                           << " should have rank " << owner_rank << endl;
-               fail_count++;
+               ++fail_count;
             }
 
          }

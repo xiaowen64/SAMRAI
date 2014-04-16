@@ -7,10 +7,6 @@
  * Description:   Factory for creating outeredge sum transaction objects
  *
  ************************************************************************/
-
-#ifndef included_algs_OuteredgeSumTransactionFactory_C
-#define included_algs_OuteredgeSumTransactionFactory_C
-
 #include "SAMRAI/algs/OuteredgeSumTransactionFactory.h"
 
 #include "SAMRAI/pdat/OuteredgeData.h"
@@ -47,13 +43,10 @@ OuteredgeSumTransactionFactory::~OuteredgeSumTransactionFactory()
 
 void
 OuteredgeSumTransactionFactory::setRefineItems(
-   const xfer::RefineClasses::Data*const* refine_items,
-   int num_refine_items)
+   const xfer::RefineClasses::Data*const* refine_items)
 {
-   OuteredgeSumTransaction::setRefineItems(refine_items,
-      num_refine_items);
+   OuteredgeSumTransaction::setRefineItems(refine_items);
    d_refine_items = refine_items;
-   d_number_refine_items = num_refine_items;
 }
 
 void
@@ -61,7 +54,6 @@ OuteredgeSumTransactionFactory::unsetRefineItems()
 {
    OuteredgeSumTransaction::unsetRefineItems();
    d_refine_items = 0;
-   d_number_refine_items = 0;
 }
 
 /*
@@ -154,8 +146,8 @@ OuteredgeSumTransactionFactory::preprocessScratchSpace(
       for (int n = 0; n < ncomponents; ++n) {
          if (preprocess_vector.isSet(n)) {
             boost::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
-               patch->getPatchData(n),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
+                  patch->getPatchData(n)));
             TBOX_ASSERT(oedge_data);
             oedge_data->fillAll(0.0);
          }
@@ -166,4 +158,3 @@ OuteredgeSumTransactionFactory::preprocessScratchSpace(
 
 }
 }
-#endif

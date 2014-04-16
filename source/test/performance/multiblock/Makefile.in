@@ -76,12 +76,13 @@ everything:
 	$(MAKE) examples
 	$(MAKE) perf
 
-clean-check:
-	$(SAMCLEAN)
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
+	$(RM) *.timing*
 
-clean:
-	$(SAMCLEAN)
-	$(RM) *.f main viz* *.timing*
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) main
 
 redo:
 	$(RM) main

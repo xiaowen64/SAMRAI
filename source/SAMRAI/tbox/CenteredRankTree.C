@@ -7,9 +7,6 @@
  * Description:   Utility for building efficient communication tree.
  *
  ************************************************************************/
-#ifndef included_tbox_CenteredRankTree_C
-#define included_tbox_CenteredRankTree_C
-
 #include "SAMRAI/tbox/CenteredRankTree.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -206,6 +203,4 @@ CenteredRankTree::setupTreeForContiguousRanks(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

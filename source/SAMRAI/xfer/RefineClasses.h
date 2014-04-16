@@ -406,7 +406,7 @@ public:
 private:
    RefineClasses(
       const RefineClasses&);            // not implemented
-   void
+   RefineClasses&
    operator = (
       const RefineClasses&);                     // not implemented
 

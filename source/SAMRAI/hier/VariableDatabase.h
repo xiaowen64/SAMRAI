@@ -802,9 +802,9 @@ private:
    /*
     * Static data members used to control allocation of arrays.
     */
-   static int s_context_array_alloc_size;
-   static int s_variable_array_alloc_size;
-   static int s_descriptor_array_alloc_size;
+   static const int s_context_array_alloc_size;
+   static const int s_variable_array_alloc_size;
+   static const int s_descriptor_array_alloc_size;
 
    /*
     * Data members that store variable, context, patch data index information.

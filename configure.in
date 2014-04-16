@@ -19,7 +19,7 @@ AH_TOP([
 
 #define SAMRAI_VERSION_MAJOR 3
 #define SAMRAI_VERSION_MINOR 7
-#define SAMRAI_VERSION_PATCHLEVEL 0
+#define SAMRAI_VERSION_PATCHLEVEL 3
 ])
 AH_BOTTOM([
 
@@ -386,6 +386,25 @@ case "$with_extra_ld_flags" in
   ;;
 esac
 
+dnl
+dnl A way to manually add flags to the c++ compiler command.
+dnl
+AC_ARG_WITH([extra-cxx-flags],
+[AS_HELP_STRING([--with-extra-cxx-flags=STRING],
+   [Specify additional flags for the c++ compiler.])],
+,with_extra_cxx_flags='no')
+case "$with_extra_cxx_flags" in
+  no)
+    : No op
+  ;;
+  yes)
+    : No op
+  ;;
+  *)
+    CXX_FLAGS="$CXX_FLAGS $with_extra_cxx_flags"
+  ;;
+esac
+
 
 dnl
 dnl Find ar for archiving
@@ -485,6 +504,7 @@ esac
 case $CXX_ID in
    gnu)
       CXX_FLAGS="-Wall -Wextra -Wconversion $CXX_FLAGS"
+
       case $ARCH in
          IRIX64)
             CXX_FLAGS="-mabi=64 $CXX_FLAGS"
@@ -545,14 +565,8 @@ threading directive for this compiler.
 ]);
          ;;
    esac
+   AC_DEFINE(HAVE_OPENMP,1,OPENMP is available)
 fi
-
-dnl
-dnl The standard requires that implementation be present when compiling a template.
-dnl
-AC_DEFINE([INCLUDE_TEMPLATE_IMPLEMENTATION],[1],[INCLUDE_TEMPLATE_IMPLEMENTATION])
-DEPENDS_ON_TEMPLATE_IMPLEMENTATION="yes"
-AC_SUBST(DEPENDS_ON_TEMPLATE_IMPLEMENTATION)
 
 dnl
 dnl Set the compile mode flag for the kind of target to build
@@ -1643,6 +1657,8 @@ AC_SUBST(SRCDIR_COMPILE_PREFIX)
 AC_SUBST(INC_PATH)
 AC_SUBST(LIB_PATH)
 AC_SUBST(LIB_NAME)
+AC_SUBST(ac_pwd)
+AC_SUBST(btng_rpath_beginning)
 
 dnl Define a macro that links files from the compile tree to the source tree.
 dnl The links have the same name as the the target.  Nothing is done if 
@@ -1733,6 +1749,7 @@ dnl
 if test `pwd` != `cd "$srcdir" && pwd`
 then 
      $INSTALL  $srcdir/COPYRIGHT COPYRIGHT
+     $INSTALL  $srcdir/COPYING.LESSER COPYING.LESSER
      $INSTALL  $srcdir/RELEASE-NOTES RELEASE-NOTES 
      $INSTALL  $srcdir/INSTALL-NOTES INSTALL-NOTES 
      $MKDIR_P source/test/testtools

@@ -81,8 +81,8 @@ template<class TYPE>
 int SideVariable<TYPE>::getDepth() const
 {
    boost::shared_ptr<SideDataFactory<TYPE> > factory(
-      getPatchDataFactory(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<SideDataFactory<TYPE>, hier::PatchDataFactory>(
+         getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();
 }

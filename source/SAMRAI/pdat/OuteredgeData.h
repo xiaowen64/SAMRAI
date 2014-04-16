@@ -711,13 +711,13 @@ private:
    static const int PDAT_OUTEREDGEDATA_VERSION;
 
    // Unimplemented copy constructor
-   OuteredgeData<TYPE>(
-      const OuteredgeData<TYPE>&);
+   OuteredgeData(
+      const OuteredgeData&);
 
    // Unimplemented assignment operator
-   void
+   OuteredgeData&
    operator = (
-      const OuteredgeData<TYPE>&);
+      const OuteredgeData&);
 
    //@{
    //! @name Internal implementations for data copy operations.

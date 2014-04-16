@@ -7,9 +7,6 @@
  * Description:   Registry of BoxLevelHandles incident from a common BoxLevel.
  *
  ************************************************************************/
-#ifndef included_hier_BoxLevelHandle_C
-#define included_hier_BoxLevelHandle_C
-
 #include "SAMRAI/hier/BoxLevelHandle.h"
 #include "SAMRAI/hier/BoxLevel.h"
 
@@ -61,4 +58,3 @@ BoxLevelHandle::getBoxLevel() const
 
 }
 }
-#endif

@@ -7,9 +7,6 @@
  * Description:   Algorithms for working with mapping Connectors.
  *
  ************************************************************************/
-#ifndef included_hier_BaseConnectorAlgorithm_C
-#define included_hier_BaseConnectorAlgorithm_C
-
 #include "SAMRAI/hier/BaseConnectorAlgorithm.h"
 #include "SAMRAI/hier/BoxContainer.h"
 
@@ -59,7 +56,9 @@ BaseConnectorAlgorithm::setupCommunication(
    comm_stage.setCommunicationWaitTimer(mpi_wait_timer);
    const int n_comm = static_cast<int>(
          incoming_ranks.size() + outgoing_ranks.size());
-   all_comms = new tbox::AsyncCommPeer<int>[n_comm];
+   if (n_comm > 0) {
+      all_comms = new tbox::AsyncCommPeer<int>[n_comm];
+   }
 
    const int tag0 = ++operation_mpi_tag;
    const int tag1 = ++operation_mpi_tag;
@@ -185,8 +184,7 @@ BaseConnectorAlgorithm::receiveAndUnpack(
    /*
     * Receive and unpack messages.
     */
-   while ( comm_stage.numberOfCompletedMembers() > 0 ||
-           comm_stage.advanceSome() ) {
+   while ( comm_stage.hasCompletedMembers() || comm_stage.advanceSome() ) {
 
       tbox::AsyncCommPeer<int>* peer =
          CPP_CAST<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
@@ -400,4 +398,3 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
 
 }
 }
-#endif

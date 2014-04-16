@@ -113,7 +113,7 @@ public:
 private:
    Transaction(
       const Transaction&);              // not implemented
-   void
+   Transaction&
    operator = (
       const Transaction&);              // not implemented
 

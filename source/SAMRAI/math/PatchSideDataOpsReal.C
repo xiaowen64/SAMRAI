@@ -46,11 +46,11 @@ PatchSideDataOpsReal<TYPE>::swapData(
    TBOX_ASSERT(patch);
 
    boost::shared_ptr<pdat::SideData<TYPE> > d1(
-      patch->getPatchData(data1_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+         patch->getPatchData(data1_id)));
    boost::shared_ptr<pdat::SideData<TYPE> > d2(
-      patch->getPatchData(data2_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+         patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
@@ -91,7 +91,7 @@ PatchSideDataOpsReal<TYPE>::copyData(
    int dimVal = box.getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          (dst->getArrayData(d)).copy(src->getArrayData(d), side_box);

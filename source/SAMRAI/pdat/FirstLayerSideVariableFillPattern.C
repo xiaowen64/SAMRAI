@@ -7,10 +7,6 @@
  * Description:   Fill pattern class to provide interface for stencils
  *
  ************************************************************************/
-
-#ifndef included_pdat_FirstLayerSideVariableFillPattern_C
-#define included_pdat_FirstLayerSideVariableFillPattern_C
-
 #include "SAMRAI/pdat/FirstLayerSideVariableFillPattern.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -163,11 +159,13 @@ FirstLayerSideVariableFillPattern::computeStencilBoxes(
 boost::shared_ptr<hier::BoxOverlap>
 FirstLayerSideVariableFillPattern::computeFillBoxesOverlap(
    const hier::BoxContainer& fill_boxes,
+   const hier::BoxContainer& node_fill_boxes,
    const hier::Box& patch_box,
    const hier::Box& data_box,
    const hier::PatchDataFactory& pdf) const
 {
    NULL_USE(pdf);
+   NULL_USE(node_fill_boxes);
 
    const tbox::Dimension& dim = patch_box.getDim();
 
@@ -207,4 +205,3 @@ FirstLayerSideVariableFillPattern::computeFillBoxesOverlap(
 
 }
 }
-#endif

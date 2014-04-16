@@ -7,10 +7,6 @@
  * Description:   Coarsening algorithm for data transfer between AMR levels
  *
  ************************************************************************/
-
-#ifndef included_xfer_CoarsenAlgorithm_C
-#define included_xfer_CoarsenAlgorithm_C
-
 #include "SAMRAI/xfer/CoarsenAlgorithm.h"
 
 #include "SAMRAI/xfer/BoxGeometryVariableFillPattern.h"
@@ -175,4 +171,3 @@ CoarsenAlgorithm::printClassData(
 
 }
 }
-#endif

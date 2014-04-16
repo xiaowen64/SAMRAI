@@ -297,10 +297,11 @@ private:
    checkArraySizes(
       int seq_num);
 
-   // The following two members are not implemented
+   // The following three members are not implemented
+   Statistic();
    Statistic(
       const Statistic&);
-   void
+   Statistic&
    operator = (
       const Statistic&);
 

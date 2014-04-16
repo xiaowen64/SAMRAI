@@ -50,8 +50,7 @@ public:
     */
    void
    setRefineItems(
-      const xfer::RefineClasses::Data *const* refine_items,
-      int num_refine_items);
+      const xfer::RefineClasses::Data *const* refine_items);
 
    /*!
     * @brief Clear the array of xfer::RefineClasses::Data items used by the
@@ -148,12 +147,11 @@ private:
    // The following two functions are not implemented
    OuteredgeSumTransactionFactory(
       const OuteredgeSumTransactionFactory&);
-   void
+   OuteredgeSumTransactionFactory&
    operator = (
       const OuteredgeSumTransactionFactory&);
 
    const xfer::RefineClasses::Data*const* d_refine_items;
-   int d_number_refine_items;
 
 };
 

@@ -6,9 +6,6 @@
 * Copyright:     (c) 1997 - 2011 Lawrence Livermore National Security, LLC
 * Description:   pdat
 **********************************************************************/
-#ifndef included_pdat_DoubleAttributeId_C
-#define included_pdat_DoubleAttributeId_C
-
 #include "SAMRAI/pdat/DoubleAttributeId.h"
 
 namespace SAMRAI {
@@ -49,4 +46,3 @@ DoubleAttributeId::~DoubleAttributeId()
 
 }
 }
-#endif

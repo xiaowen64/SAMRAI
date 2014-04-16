@@ -308,10 +308,10 @@ AsyncCommStage::privateYankFromCompletionQueue( Member &member )
 AsyncCommStage::Member*
 AsyncCommStage::popCompletionQueue()
 {
-   if (numberOfCompletedMembers() == 0) {
+   if (!hasCompletedMembers()) {
       TBOX_ERROR("AsyncCommStage::popCompletionQueue(): There is no\n"
                  << "completed member.  You cannot call this method\n"
-                 << "when numberOfCompletedMembers() > 0." << std::endl);
+                 << "when hasCompletedMembers()." << std::endl);
    }
    if (!firstCompletedMember()->isDone()) {
       TBOX_ERROR("AsyncCommStage::popCompletionQueue error:\n"
@@ -333,13 +333,13 @@ AsyncCommStage::popCompletionQueue()
  * repeatedly until all outstanding communications are complete.
  ******************************************************************
  */
-size_t
+bool
 AsyncCommStage::advanceAll()
 {
    while (hasPendingRequests()) {
       advanceSome();
    }
-   return d_completed_members.size();
+   return !d_completed_members.empty();
 }
 
 /*
@@ -353,16 +353,16 @@ AsyncCommStage::advanceAll()
  * finished.  If no Member has finished, repeat until at least one has.
  ******************************************************************
  */
-size_t
+bool
 AsyncCommStage::advanceSome()
 {
    if (!SAMRAI_MPI::usingMPI()) {
-      return 0;
+      return false;
    }
 
    if (d_members.empty()) {
       // Short cut for an empty stage.
-      return 0;
+      return false;
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -490,7 +490,7 @@ AsyncCommStage::advanceSome()
 
    } while (n_req_completed > 0 && n_member_completed == 0);
 
-   return d_completed_members.size();
+   return !d_completed_members.empty();
 }
 
 /*
@@ -504,11 +504,11 @@ AsyncCommStage::advanceSome()
  * has completed its communication operation.
  ****************************************************************
  */
-size_t
+bool
 AsyncCommStage::advanceAny()
 {
    if (!SAMRAI_MPI::usingMPI()) {
-      return 0;
+      return false;
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -595,7 +595,7 @@ AsyncCommStage::advanceAny()
       privatePushToCompletionQueue(*d_members[member_index_on_stage]);
    }
 
-   return d_completed_members.size();
+   return !d_completed_members.empty();
 }
 
 /*

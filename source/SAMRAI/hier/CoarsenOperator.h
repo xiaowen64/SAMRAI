@@ -140,7 +140,7 @@ public:
 private:
    CoarsenOperator(
       const CoarsenOperator&);                  // not implemented
-   void
+   CoarsenOperator&
    operator = (
       const CoarsenOperator&);                  // not implemented
 

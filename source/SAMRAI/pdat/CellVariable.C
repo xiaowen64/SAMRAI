@@ -50,8 +50,8 @@ int
 CellVariable<TYPE>::getDepth() const
 {
    boost::shared_ptr<CellDataFactory<TYPE> > cell_factory(
-      getPatchDataFactory(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CellDataFactory<TYPE>, hier::PatchDataFactory>(
+         getPatchDataFactory()));
    TBOX_ASSERT(cell_factory);
    return cell_factory->getDepth();
 }

@@ -158,10 +158,10 @@ public:
 private:
    // The following are not implemented:
    PatchNodeDataMiscellaneousOpsReal(
-      const PatchNodeDataMiscellaneousOpsReal<TYPE>&);
-   void
+      const PatchNodeDataMiscellaneousOpsReal&);
+   PatchNodeDataMiscellaneousOpsReal&
    operator = (
-      const PatchNodeDataMiscellaneousOpsReal<TYPE>&);
+      const PatchNodeDataMiscellaneousOpsReal&);
 
    ArrayDataMiscellaneousOpsReal<TYPE> d_array_ops;
 };

@@ -206,17 +206,39 @@ SparseDataTester::testPackStream()
 
    sample2->unpackStream(upStr, overlap);
 
-   SparseDataType::iterator iter2(sample2.get());
+//   SparseDataType::iterator iter2(sample2.get());
 
    sample2->printNames(tbox::plog);
    tbox::plog << "Printing sample2" << std::endl;
    sample2->printAttributes(tbox::plog);
-   for ( ; iter != sample->end() && iter2 != sample2->end(); ++iter, ++iter2) {
+/*
+  for ( ; iter != sample->end() && iter2 != sample2->end(); ++iter, ++iter2) {
       tbox::plog << "iter1 node: " << std::endl;
       tbox::plog << iter;
       tbox::plog << "iter2 node: " << std::endl;
       tbox::plog << iter2;
       if (!iter.equals(iter2)) {
+         success = false;
+      }
+      tbox::plog << std::endl;
+   }
+*/
+   for ( ; iter != sample->end(); ++iter) {
+      tbox::plog << "iter1 node: " << std::endl;
+      tbox::plog << iter;
+
+      bool found = false;
+      SparseDataType::iterator iter2(sample2.get());
+      for ( ; iter2 != sample2->end(); ++iter2) {
+         if (iter.equals(iter2)) {
+            found = true;
+            tbox::plog << "iter2 node: " << std::endl;
+            tbox::plog << iter2;
+            break;
+         }
+      }
+
+      if (!found) {
          success = false;
       }
       tbox::plog << std::endl;
@@ -250,11 +272,18 @@ SparseDataTester::testDatabaseInterface()
    sample2->getFromRestart(input_db);
 
    SparseDataType::iterator iter1(sample.get());
-   SparseDataType::iterator iter2(sample2.get());
 
-   for ( ; iter1 != sample->end() && iter2 != sample2->end() && success;
-         ++iter1, ++iter2) {
-      if (!iter1.equals(iter2)) {
+   for ( ; iter1 != sample->end(); ++iter1) {
+      bool found = false;
+      SparseDataType::iterator iter2(sample2.get());
+      for ( ; iter2 != sample2->end(); ++iter2) {
+         if (iter1.equals(iter2)) {
+            found = true;
+            break;
+         }
+      }
+
+      if (!found) {
          success = false;
       }
    }

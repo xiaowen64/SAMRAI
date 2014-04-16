@@ -162,7 +162,7 @@ void Foo::setMaxDepth(
 void Foo::start(
    std::string& name)
 {
-   d_depth++;
+   ++d_depth;
 
    boost::shared_ptr<tbox::Timer> timer(
       tbox::TimerManager::getManager()->getTimer(name));

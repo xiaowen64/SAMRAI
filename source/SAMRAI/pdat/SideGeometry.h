@@ -241,7 +241,7 @@ private:
 
    SideGeometry(
       const SideGeometry&);             // not implemented
-   void
+   SideGeometry&
    operator = (
       const SideGeometry&);                     // not implemented
 

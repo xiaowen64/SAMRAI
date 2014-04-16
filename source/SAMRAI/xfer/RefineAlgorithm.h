@@ -674,7 +674,7 @@ public:
 private:
    RefineAlgorithm(
       const RefineAlgorithm&);                  // not implemented
-   void
+   RefineAlgorithm&
    operator = (
       const RefineAlgorithm&);                  // not implemented
 

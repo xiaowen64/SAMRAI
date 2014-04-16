@@ -167,7 +167,7 @@ public:
 private:
    Variable(
       const Variable&);         // not implemented
-   void
+   Variable&
    operator = (
       const Variable&);                 // not implemented
 

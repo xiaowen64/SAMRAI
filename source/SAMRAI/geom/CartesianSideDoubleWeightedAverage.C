@@ -8,10 +8,6 @@
  *                a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianSideDoubleWeightedAverage_C
-#define included_geom_CartesianSideDoubleWeightedAverage_C
-
 #include "SAMRAI/geom/CartesianSideDoubleWeightedAverage.h"
 
 #include <float.h>
@@ -126,11 +122,11 @@ CartesianSideDoubleWeightedAverage::coarsen(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, coarse_box, ratio);
 
    boost::shared_ptr<pdat::SideData<double> > fdata(
-      fine.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         fine.getPatchData(src_component)));
    boost::shared_ptr<pdat::SideData<double> > cdata(
-      coarse.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         coarse.getPatchData(dst_component)));
 
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
@@ -147,11 +143,11 @@ CartesianSideDoubleWeightedAverage::coarsen(
    const hier::Index cihi = cdata->getGhostBox().upper();
 
    const boost::shared_ptr<CartesianPatchGeometry> fgeom(
-      fine.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+         fine.getPatchGeometry()));
    const boost::shared_ptr<CartesianPatchGeometry> cgeom(
-      coarse.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+         coarse.getPatchGeometry()));
 
    TBOX_ASSERT(fgeom);
    TBOX_ASSERT(cgeom);
@@ -159,7 +155,7 @@ CartesianSideDoubleWeightedAverage::coarsen(
    const hier::Index ifirstc = coarse_box.lower();
    const hier::Index ilastc = coarse_box.upper();
 
-   for (int d = 0; d < cdata->getDepth(); d++) {
+   for (int d = 0; d < cdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {
          if (directions(0)) {
             SAMRAI_F77_FUNC(cartwgtavgsidedoub1d, CARTWGTAVGSIDEDOUB1D) (ifirstc(0),
@@ -247,4 +243,3 @@ CartesianSideDoubleWeightedAverage::coarsen(
 
 }
 }
-#endif

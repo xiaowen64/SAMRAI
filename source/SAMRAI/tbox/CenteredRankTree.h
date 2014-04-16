@@ -57,7 +57,9 @@ namespace tbox {
  * assume that close natural ordering usually means close together on
  * the network.  Thus nodes close together in the tree are also close
  * together on the network.  Thus, communication between nearest
- * neighbors in the tree tend to be faster.
+ * neighbors in the tree tend to be faster.  If the weight of each edge
+ * is the difference in ranks of its nodes, the sum of all weights in
+ * a tree of N nodes is N*ln(N).
  *
  * The tree formed by this class has the property that each and every
  * subtree is composed nodes with contiguous natural ordering.  This
@@ -192,6 +194,15 @@ public:
    }
 
 private:
+
+   // Unimplemented copy constructor.
+   CenteredRankTree(
+      const CenteredRankTree& other);
+
+   // Unimplemented assignment operator.
+   CenteredRankTree&
+   operator = (
+      const CenteredRankTree& rhs);
 
    /*!
     * @brief Set up the tree.

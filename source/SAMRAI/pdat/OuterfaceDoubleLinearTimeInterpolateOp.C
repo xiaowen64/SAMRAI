@@ -7,10 +7,6 @@
  * Description:   Linear time interp operator for double outerface patch data.
  *
  ************************************************************************/
-
-#ifndef included_pdat_OuterfaceDoubleLinearTimeInterpolateOp_C
-#define included_pdat_OuterfaceDoubleLinearTimeInterpolateOp_C
-
 #include "SAMRAI/pdat/OuterfaceDoubleLinearTimeInterpolateOp.h"
 
 #include "SAMRAI/pdat/OuterfaceData.h"
@@ -172,9 +168,9 @@ OuterfaceDoubleLinearTimeInterpolateOp::timeInterpolate(
       tfrac = 0.0;
    }
 
-   for (int d = 0; d < dst_dat->getDepth(); d++) {
+   for (int d = 0; d < dst_dat->getDepth(); ++d) {
       // loop over lower and upper outerface arrays
-      for (int i = 0; i < 2; i++) {
+      for (int i = 0; i < 2; ++i) {
          if (dim == tbox::Dimension(1)) {
             SAMRAI_F77_FUNC(lintimeintoutfacedoub1d,
                LINTIMEINTOUTFACEDOUB1D) (ifirst(0), ilast(0),
@@ -257,4 +253,3 @@ OuterfaceDoubleLinearTimeInterpolateOp::timeInterpolate(
 
 }
 }
-#endif

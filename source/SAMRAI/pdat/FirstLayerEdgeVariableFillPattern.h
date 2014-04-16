@@ -29,6 +29,21 @@ namespace pdat {
  * It is used to calculate overlaps according to a pattern which limits the
  * overlaps to the first layer of boundary edges, that is the edges that
  * lie on the patch boundary.
+ *
+ * In this diagram of a 2x2 patch with a ghost width of one, + are
+ * patch nodes, * are ghost nodes.  i markes the i edges that will be
+ * filled using this pattern, and j marks the j edges that will be
+ * filled.
+ *
+ * *...*...*...*...*
+ * |   |   |   |   |
+ * *...+-i-+-i-+...*
+ * |   j   |   j   |
+ * *...+---+---+...*
+ * |   j   |   j   |
+ * *...+-i-+-i-+...*
+ * |   |   |   |   |
+ * *...*...*...*...*
  */
 
 class FirstLayerEdgeVariableFillPattern:
@@ -99,6 +114,7 @@ public:
     * @param[in] fill_boxes  list representing the all of the space on a patch
     *                        or its ghost region that may be filled by a
     *                        refine operator (cell-centered represtentation)
+    * @param[in] node_fill_boxes  node-centered represenation of fill_boxes
     * @param[in] patch_box   box representing the patch where a refine operator
     *                        will fill data.  (cell-centered representation)
     * @param[in] data_box    box representing the full extent of the region
@@ -110,6 +126,7 @@ public:
    boost::shared_ptr<hier::BoxOverlap>
    computeFillBoxesOverlap(
       const hier::BoxContainer& fill_boxes,
+      const hier::BoxContainer& node_fill_boxes,
       const hier::Box& patch_box,
       const hier::Box& data_box,
       const hier::PatchDataFactory& pdf) const;
@@ -129,7 +146,7 @@ public:
 private:
    FirstLayerEdgeVariableFillPattern(
       const FirstLayerEdgeVariableFillPattern&);    // not implemented
-   void
+   FirstLayerEdgeVariableFillPattern&
    operator = (
       const FirstLayerEdgeVariableFillPattern&);    // not implemented
 

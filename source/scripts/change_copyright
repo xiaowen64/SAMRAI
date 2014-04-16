@@ -29,7 +29,7 @@
 #=============================================================================
 # First find all the files with old copyright dates
 #=============================================================================
-find . -type f ! -name \*.svn\* -exec grep -l "1997-2012" {} \; > files
+find . -type f ! -name \*.svn\* -exec grep -l "1997-2014" {} \; > files
 
 #=============================================================================
 # Replace the old copyright dates with new dates
@@ -38,7 +38,7 @@ for i in `cat files`
 do
     echo $i
     cp $i $i.sed.bak
-    sed "s/1997-2012/1997-2013/" $i.sed.bak > $i
+    sed "s/1997-2014/1997-2014/" $i.sed.bak > $i
 done
 
 #=============================================================================

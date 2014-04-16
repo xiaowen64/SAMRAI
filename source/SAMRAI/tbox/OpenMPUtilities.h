@@ -20,15 +20,6 @@
 #ifndef included_tbox_OpenMPUtilities
 #define included_tbox_OpenMPUtilities
 
-/*!
- * @brief C macros expanding according to whether OpenMP is being
- * used.
- *
- * Macros named TBOX_<name of OpenMP function> expand to the function
- * when OpenMP is used.  Otherwise, they expand to the equivalence of
- * one thread.
- */
-
 #ifdef _OPENMP
 
 #include "SAMRAI/SAMRAI_config.h"

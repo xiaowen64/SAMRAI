@@ -7,9 +7,6 @@
  * Description:   Robin boundary condition support on cartesian grids.
  *
  ************************************************************************/
-#ifndef included_solv_GhostCellRobinBcCoefs_C
-#define included_solv_GhostCellRobinBcCoefs_C
-
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
@@ -86,8 +83,7 @@ GhostCellRobinBcCoefs::setGhostDataId(
                                   << " does not correspond to any variable.");
       }
       boost::shared_ptr<pdat::CellVariable<double> > cell_variable_ptr(
-         variable_ptr,
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(variable_ptr));
       TBOX_ASSERT(cell_variable_ptr);
    }
 }
@@ -120,8 +116,8 @@ GhostCellRobinBcCoefs::setBcCoefs(
    t_set_bc_coefs->start();
 
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
 
    TBOX_ASSERT(patch_geom);
 
@@ -166,8 +162,7 @@ GhostCellRobinBcCoefs::setBcCoefs(
                                   << d_ghost_data_id << " does not exist.");
       }
       boost::shared_ptr<pdat::CellData<double> > cell_data(
-         patch_data,
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(patch_data));
 
       TBOX_ASSERT(cell_data);
 
@@ -247,4 +242,3 @@ GhostCellRobinBcCoefs::makeSideBoundaryBox(
 
 }
 }
-#endif
