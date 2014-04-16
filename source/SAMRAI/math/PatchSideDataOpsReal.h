@@ -121,10 +121,10 @@ public:
 private:
    // The following are not implemented:
    PatchSideDataOpsReal(
-      const PatchSideDataOpsReal<TYPE>&);
-   void
+      const PatchSideDataOpsReal&);
+   PatchSideDataOpsReal&
    operator = (
-      const PatchSideDataOpsReal<TYPE>&);
+      const PatchSideDataOpsReal&);
 
 };
 

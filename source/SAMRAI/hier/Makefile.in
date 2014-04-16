@@ -22,16 +22,17 @@ include $(OBJECT)/config/Makefile.config
 SUBDIRS = fortran
 
 OBJS = 	\
-	LocalId.o \
+	BaseGridGeometry.o \
 	BlockId.o \
-	PeriodicId.o \
 	BoxContainer.o \
 	CoarseFineBoundary.o \
-	BaseGridGeometry.o \
+	LocalId.o \
 	PatchBoundaries.o \
 	PatchHierarchy.o \
 	PatchLevel.o \
 	PatchLevelFactory.o \
+	PeriodicId.o \
+	SingularityFinder.o \
 	VariableDatabase.o \
 	Variable.o \
 	PatchDescriptor.o \
@@ -77,12 +78,13 @@ OBJS = 	\
 	CoarsenOperator.o \
 	RefineOperator.o \
 	TimeInterpolateOperator.o \
-	Transformation.o
+	Transformation.o \
+	UncoveredBoxIterator.o
 
 library: $(OBJS)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 clean:
-	$(SAMCLEAN)
+	$(CLEAN_COMMON_LIB_FILES)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 
 include $(SRCDIR)/Makefile.depend

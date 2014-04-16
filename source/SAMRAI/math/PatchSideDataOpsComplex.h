@@ -122,7 +122,7 @@ private:
    // The following are not implemented:
    PatchSideDataOpsComplex(
       const PatchSideDataOpsComplex&);
-   void
+   PatchSideDataOpsComplex&
    operator = (
       const PatchSideDataOpsComplex&);
 

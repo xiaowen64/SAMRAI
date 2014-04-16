@@ -7,10 +7,6 @@
  * Description:   Lookup table to aid in BoundaryBox construction
  *
  ************************************************************************/
-
-#ifndef included_hier_BoundaryLookupTable_C
-#define included_hier_BoundaryLookupTable_C
-
 #include "SAMRAI/hier/BoundaryLookupTable.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
@@ -58,7 +54,7 @@ BoundaryLookupTable::BoundaryLookupTable(
 
       d_ncomb.resize(dim_val);
       d_max_li.resize(dim_val);
-      for (int codim = 1; codim <= dim_val; codim++) {
+      for (int codim = 1; codim <= dim_val; ++codim) {
          int cdm1 = codim - 1;
          d_ncomb[cdm1] = factrl[dim_val]
             / (factrl[codim] * factrl[dim_val - codim]);
@@ -72,9 +68,9 @@ BoundaryLookupTable::BoundaryLookupTable(
             recursive_work_lvl, recursive_work_ptr, codim, 1);
 
          d_table[cdm1].resize(d_ncomb[cdm1]);
-         for (int j = 0; j < d_ncomb[cdm1]; j++) {
+         for (int j = 0; j < d_ncomb[cdm1]; ++j) {
             d_table[cdm1][j].resize(codim);
-            for (int k = 0; k < codim; k++) {
+            for (int k = 0; k < codim; ++k) {
                d_table[cdm1][j][k] = work[j * codim + k] - 1;
             }
          }
@@ -108,23 +104,23 @@ BoundaryLookupTable::buildTable(
    const int codim,
    const int ibeg)
 {
-   rec_level++;
+   ++rec_level;
    if (rec_level == 1) {
       ptr = table;
    }
    int iend = d_dim.getValue() - codim + rec_level;
-   for (int i = ibeg; i <= iend; i++) {
+   for (int i = ibeg; i <= iend; ++i) {
       work[rec_level - 1] = i;
       if (rec_level != codim) {
          buildTable(ptr, work, rec_level, ptr, codim, i + 1);
       } else {
-         for (int j = 0; j < codim; j++) {
+         for (int j = 0; j < codim; ++j) {
             *(ptr + j) = work[j];
          }
          ptr += codim;
       }
    }
-   rec_level--;
+   --rec_level;
 }
 
 /*
@@ -142,14 +138,14 @@ BoundaryLookupTable::buildBoundaryDirectionVectors()
 
    d_bdry_dirs.resize(d_dim.getValue());
 
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       d_bdry_dirs[i].resize(d_max_li[i], IntVector::getZero(d_dim));
       int codim = i + 1;
 
-      for (int loc = 0; loc < d_max_li[i]; loc++) {
+      for (int loc = 0; loc < d_max_li[i]; ++loc) {
          const std::vector<int>& dirs = getDirections(loc, codim);
 
-         for (int d = 0; d < static_cast<int>(dirs.size()); d++) {
+         for (int d = 0; d < static_cast<int>(dirs.size()); ++d) {
 
             if (isUpper(loc, codim, d)) {
 
@@ -193,6 +189,4 @@ BoundaryLookupTable::finalizeCallback()
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

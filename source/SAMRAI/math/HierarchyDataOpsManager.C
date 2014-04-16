@@ -7,10 +7,6 @@
  * Description:   Singleton manager for hierarchy data operation objects.
  *
  ************************************************************************/
-
-#ifndef included_math_HierarchyDataOpsManager_C
-#define included_math_HierarchyDataOpsManager_C
-
 #include "SAMRAI/math/HierarchyDataOpsManager.h"
 
 #include "SAMRAI/math/HierarchyCellDataOpsReal.h"
@@ -99,20 +95,20 @@ HierarchyDataOpsManager::getOperationsDouble(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*variable, *hierarchy);
 
    const boost::shared_ptr<pdat::CellVariable<double> > cellvar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::CellVariable<double>,
+                                  hier::Variable>(variable));
    const boost::shared_ptr<pdat::FaceVariable<double> > facevar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::FaceVariable<double>,
+                                  hier::Variable>(variable));
    const boost::shared_ptr<pdat::NodeVariable<double> > nodevar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::NodeVariable<double>,
+                                  hier::Variable>(variable));
    const boost::shared_ptr<pdat::SideVariable<double> > sidevar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::SideVariable<double>,
+                                  hier::Variable>(variable));
    const boost::shared_ptr<pdat::EdgeVariable<double> > edgevar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::EdgeVariable<double>,
+                                  hier::Variable>(variable));
 
    boost::shared_ptr<HierarchyDataOpsReal<double> > ops;
 
@@ -249,20 +245,20 @@ HierarchyDataOpsManager::getOperationsFloat(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*variable, *hierarchy);
 
    const boost::shared_ptr<pdat::CellVariable<float> > cellvar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::CellVariable<float>,
+                                  hier::Variable>(variable));
    const boost::shared_ptr<pdat::FaceVariable<float> > facevar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::FaceVariable<float>,
+                                  hier::Variable>(variable));
    const boost::shared_ptr<pdat::NodeVariable<float> > nodevar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::NodeVariable<float>,
+                                  hier::Variable>(variable));
    const boost::shared_ptr<pdat::SideVariable<float> > sidevar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::SideVariable<float>,
+                                  hier::Variable>(variable));
    const boost::shared_ptr<pdat::EdgeVariable<float> > edgevar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::EdgeVariable<float>,
+                                  hier::Variable>(variable));
 
    boost::shared_ptr<HierarchyDataOpsReal<float> > ops;
 
@@ -394,20 +390,20 @@ HierarchyDataOpsManager::getOperationsComplex(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*variable, *hierarchy);
 
    const boost::shared_ptr<pdat::CellVariable<dcomplex> > cellvar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::CellVariable<dcomplex>,
+                                  hier::Variable>(variable));
    const boost::shared_ptr<pdat::FaceVariable<dcomplex> > facevar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::FaceVariable<dcomplex>,
+                                  hier::Variable>(variable));
    const boost::shared_ptr<pdat::NodeVariable<dcomplex> > nodevar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::NodeVariable<dcomplex>,
+                                  hier::Variable>(variable));
    const boost::shared_ptr<pdat::SideVariable<dcomplex> > sidevar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::SideVariable<dcomplex>,
+                                  hier::Variable>(variable));
    const boost::shared_ptr<pdat::EdgeVariable<dcomplex> > edgevar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::EdgeVariable<dcomplex>,
+                                  hier::Variable>(variable));
 
    boost::shared_ptr<HierarchyDataOpsComplex> ops;
 
@@ -544,20 +540,20 @@ HierarchyDataOpsManager::getOperationsInteger(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*variable, *hierarchy);
 
    const boost::shared_ptr<pdat::CellVariable<int> > cellvar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::CellVariable<int>,
+                                  hier::Variable>(variable));
    const boost::shared_ptr<pdat::FaceVariable<int> > facevar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::FaceVariable<int>,
+                                  hier::Variable>(variable));
    const boost::shared_ptr<pdat::NodeVariable<int> > nodevar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::NodeVariable<int>,
+                                  hier::Variable>(variable));
    const boost::shared_ptr<pdat::SideVariable<int> > sidevar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::SideVariable<int>,
+                                  hier::Variable>(variable));
    const boost::shared_ptr<pdat::EdgeVariable<int> > edgevar(
-      variable,
-      boost::detail::dynamic_cast_tag());
+      boost::dynamic_pointer_cast<pdat::EdgeVariable<int>,
+                                  hier::Variable>(variable));
 
    boost::shared_ptr<HierarchyDataOpsInteger> ops;
 
@@ -669,4 +665,3 @@ HierarchyDataOpsManager::getOperationsInteger(
 
 }
 }
-#endif

@@ -180,7 +180,7 @@ PETScAbstractVectorReal<TYPE>::vecDuplicateVecs(
    ierr = PetscMalloc(n * sizeof(Vec *), varr_new);
    PETSC_SAMRAI_ERROR(ierr);
 
-   for (int i = 0; i < n; i++) {
+   for (int i = 0; i < n; ++i) {
       PETScAbstractVectorReal<TYPE>::vecDuplicate(v_in, *varr_new + i);
    }
    PetscFunctionReturn(0);
@@ -196,11 +196,11 @@ PETScAbstractVectorReal<TYPE>::vecDestroyVecs(
    int ierr = 0;
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (i = 0; i < n; i++) {
+   for (i = 0; i < n; ++i) {
       TBOX_ASSERT(v_arr[i] != 0);
    }
 #endif
-   for (i = 0; i < n; i++) {
+   for (i = 0; i < n; ++i) {
       Vec petsc_vec = v_arr[i];
       vecDestroy(petsc_vec);
 
@@ -271,7 +271,7 @@ PETScAbstractVectorReal<TYPE>::vecMDot(
 
    TBOX_ASSERT(x != 0);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int i = 0; i < nv; i++) {
+   for (int i = 0; i < nv; ++i) {
       TBOX_ASSERT(y[i] != 0);
    }
 #endif
@@ -849,10 +849,10 @@ PETScAbstractVectorReal<TYPE>::vecSetOption(
 {
    NULL_USE(x);
    NULL_USE(op);
+   NULL_USE(result);
    TBOX_ERROR(
       "PETScAbstractVectorReal<TYPE>::vecSetOption() unimplemented"
       << std::endl);
-   result = PETSC_TRUE;
    PetscFunctionReturn(0);
 }
 

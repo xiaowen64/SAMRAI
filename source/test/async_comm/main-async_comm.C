@@ -83,11 +83,8 @@ int main(
        * to avoid possible interference with other communications
        * by SAMRAI library.
        */
-      tbox::SAMRAI_MPI::Comm isolated_communicator(MPI_COMM_NULL);
-      if (tbox::SAMRAI_MPI::usingMPI()) {
-         tbox::SAMRAI_MPI::getSAMRAIWorld().Comm_dup(&isolated_communicator);
-      }
-      tbox::SAMRAI_MPI isolated_mpi(isolated_communicator);
+      tbox::SAMRAI_MPI isolated_mpi(MPI_COMM_NULL);
+      isolated_mpi.dupCommunicator(SAMRAI_MPI::getSAMRAIWorld());
       plog << "Process " << std::setw(5) << rank
            << " duplicated Communicator." << std::endl;
 
@@ -314,7 +311,7 @@ int main(
              * For the synchronous (groupwise) broadcast test,
              * each group broadcasts the its group id.
              */
-            TBOX_ASSERT( comm_stage.numberOfCompletedMembers() == 0 );
+            TBOX_ASSERT( !comm_stage.hasCompletedMembers() );
             plog << "\n\n\n*********** Synchronous Broadcast "
                  << sync_bcast_count << " ************\n";
             for (ai = 0; ai < num_active_groups; ++ai)
@@ -348,7 +345,7 @@ int main(
          }
 
          if (sync_sumreduce_count < sync_sumreduce_cycles) {
-            TBOX_ASSERT( comm_stage.numberOfCompletedMembers() == 0 );
+            TBOX_ASSERT( !comm_stage.hasCompletedMembers() );
             /*
              * For the sum advanceSome reduce test,
              * each group sums up the ranks of its members, plus 1.
@@ -390,7 +387,7 @@ int main(
          }
 
          if (asyncany_bcast_count < asyncany_bcast_cycles) {
-            TBOX_ASSERT( comm_stage.numberOfCompletedMembers() == 0 );
+            TBOX_ASSERT( !comm_stage.hasCompletedMembers() );
             /*
              * For the advanceSome broadcast test,
              * each group broadcasts the its group id.
@@ -412,7 +409,7 @@ int main(
                } else {
                   comm_stage.advanceAny();
                }
-               if ( comm_stage.numberOfCompletedMembers() > 0 ) {
+               if ( comm_stage.hasCompletedMembers() ) {
                   AsyncCommGroup *completed_group =
                      CPP_CAST<AsyncCommGroup *>(comm_stage.popCompletionQueue());
                   TBOX_ASSERT(completed_group);
@@ -444,7 +441,7 @@ int main(
          }
 
          if (asyncany_sumreduce_count < asyncany_sumreduce_cycles) {
-            TBOX_ASSERT( comm_stage.numberOfCompletedMembers() == 0 );
+            TBOX_ASSERT( !comm_stage.hasCompletedMembers() );
             /*
              * For the advanceSome broadcast test,
              * each group broadcasts the its group id.
@@ -464,12 +461,12 @@ int main(
                   }
                   ++counter;
                }
-               if ( comm_stage.numberOfCompletedMembers() == 0 ) {
+               if ( !comm_stage.hasCompletedMembers() ) {
                   comm_stage.advanceAny();
                   TBOX_ASSERT( comm_stage.numberOfCompletedMembers() < 2 );
                }
                TBOX_ASSERT( comm_stage.numberOfCompletedMembers() < 2 );
-               if ( comm_stage.numberOfCompletedMembers() > 0 ) {
+               if ( comm_stage.hasCompletedMembers() ) {
                   AsyncCommGroup *completed_group =
                      CPP_CAST<AsyncCommGroup *>(comm_stage.popCompletionQueue());
                   TBOX_ASSERT(completed_group);
@@ -505,7 +502,7 @@ int main(
          }
 
          if (asyncsome_bcast_count < asyncsome_bcast_cycles) {
-            TBOX_ASSERT( comm_stage.numberOfCompletedMembers() == 0 );
+            TBOX_ASSERT( !comm_stage.hasCompletedMembers() );
             /*
              * For the advanceSome broadcast test,
              * each group broadcasts the its group id.
@@ -522,7 +519,7 @@ int main(
                }
             }
             plog << "Job Group Result Correct  Note\n";
-            while ( comm_stage.numberOfCompletedMembers() > 0 ||
+            while ( comm_stage.hasCompletedMembers() ||
                     comm_stage.advanceSome() ) {
                AsyncCommGroup* completed_group =
                   CPP_CAST<AsyncCommGroup *>(comm_stage.popCompletionQueue());
@@ -553,7 +550,7 @@ int main(
          }
 
          if (asyncsome_sumreduce_count < asyncsome_sumreduce_cycles) {
-            TBOX_ASSERT( comm_stage.numberOfCompletedMembers() == 0 );
+            TBOX_ASSERT( !comm_stage.hasCompletedMembers() );
             /*
              * For the sum advanceSome reduce test,
              * each group sums up the ranks of its members, plus 1.
@@ -569,7 +566,7 @@ int main(
                }
             }
             plog << "Job Group Result Correct  Note\n";
-            while ( comm_stage.numberOfCompletedMembers() > 0 ||
+            while ( comm_stage.hasCompletedMembers() ||
                     comm_stage.advanceSome() ) {
                AsyncCommGroup* completed_group =
                   CPP_CAST<AsyncCommGroup *>(comm_stage.popCompletionQueue());
@@ -618,10 +615,6 @@ int main(
        */
 
       TimerManager::getManager()->print(plog);
-
-#if defined(HAVE_MPI)
-      MPI_Comm_free(&isolated_communicator);
-#endif
 
    }
 

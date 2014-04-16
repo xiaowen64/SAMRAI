@@ -140,7 +140,7 @@ private:
    PatchLevelEnhancedFillPattern(
       const PatchLevelEnhancedFillPattern&);           // not implemented
 
-   void
+   PatchLevelEnhancedFillPattern&
    operator = (
       const PatchLevelEnhancedFillPattern&);           // not implemented
 

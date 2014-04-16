@@ -214,8 +214,8 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
    const tbox::Dimension dim(hierarchy->getDim());
 
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
-      hierarchy->getGridGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+         hierarchy->getGridGeometry()));
    TBOX_ASSERT(grid_geometry);
 
    const int tag_val = 1;
@@ -262,8 +262,8 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
 
       boost::shared_ptr<hier::Patch> patch = *pi;
       boost::shared_ptr<pdat::CellData<int> > tag_data(
-         patch->getPatchData(tag_data_id),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            patch->getPatchData(tag_data_id)));
       TBOX_ASSERT(tag_data);
 
       tag_data->getArrayData().fillAll(0);

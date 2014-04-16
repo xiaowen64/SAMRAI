@@ -193,6 +193,18 @@ public:
       int maxnum);
 
 private:
+   // Unimplemented default constructor.
+   SAMRAIManager();
+
+   // Unimplemented copy constructor.
+   SAMRAIManager(
+      const SAMRAIManager& other);
+
+   // Unimplemented assignment operator.
+   SAMRAIManager&
+   operator = (
+      const SAMRAIManager& rhs);
+
    /*!
     * Flag indicating SAMRAIManager has been initialized.
     */

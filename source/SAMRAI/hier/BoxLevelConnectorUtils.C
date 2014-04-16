@@ -7,9 +7,6 @@
  * Description:   Utilities for working on DLBG edges.
  *
  ************************************************************************/
-#ifndef included_hier_BoxLevelConnectorUtils_C
-#define included_hier_BoxLevelConnectorUtils_C
-
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -18,6 +15,7 @@
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
+#include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
 #include "boost/make_shared.hpp"
@@ -30,6 +28,15 @@ namespace hier {
 
 const std::string BoxLevelConnectorUtils::s_default_timer_prefix("hier::BoxLevelConnectorUtils");
 std::map<std::string, BoxLevelConnectorUtils::TimerStruct> BoxLevelConnectorUtils::s_static_timers;
+char BoxLevelConnectorUtils::s_ignore_external_timer_prefix('\0');
+ 
+tbox::StartupShutdownManager::Handler
+BoxLevelConnectorUtils::s_initialize_handler(
+   BoxLevelConnectorUtils::initializeCallback,
+   0,
+   0,
+   0,
+   tbox::StartupShutdownManager::priorityTimers);
 
 /*
  ***********************************************************************
@@ -39,7 +46,43 @@ BoxLevelConnectorUtils::BoxLevelConnectorUtils():
    d_sanity_check_precond(false),
    d_sanity_check_postcond(false)
 {
+   getFromInput();
    setTimerPrefix(s_default_timer_prefix);
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+BoxLevelConnectorUtils::~BoxLevelConnectorUtils()
+{
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+BoxLevelConnectorUtils::getFromInput()
+{
+   if (s_ignore_external_timer_prefix == '\0') {
+      s_ignore_external_timer_prefix = 'n';
+      if (tbox::InputManager::inputDatabaseExists()) {
+         boost::shared_ptr<tbox::Database> idb(
+           tbox::InputManager::getInputDatabase());
+         if (idb->isDatabase("BoxLevelConnectorUtils")) {
+            boost::shared_ptr<tbox::Database> blcu_db(
+               idb->getDatabase("BoxLevelConnectorUtils"));
+            s_ignore_external_timer_prefix =
+               blcu_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
+                                           'n');
+            if (!(s_ignore_external_timer_prefix == 'n' ||
+                  s_ignore_external_timer_prefix == 'y')) {
+               INPUT_VALUE_ERROR("DEV_ignore_external_timer_prefix");
+            }
+         }
+      }
+   }
 }
 
 /*
@@ -418,8 +461,8 @@ BoxLevelConnectorUtils::makeSortingMap(
          output_map->insertLocalNeighbor(new_box,
             cur_box.getBoxId());
       }
-      sorted_box_level->finalize();
    }
+   sorted_box_level->finalize();
 
    d_object_timers->t_make_sorting_map->stop();
 }
@@ -932,13 +975,13 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
           */
          BoxContainer reduced_connectivity_singularity_boxes(
             grid_geometry->getSingularityBoxContainer(block_id));
-         const std::list<BaseGridGeometry::Neighbor>& neighbors(
+         const std::map<BlockId,BaseGridGeometry::Neighbor>& neighbors(
             grid_geometry->getNeighbors(block_id));
 
-         for (std::list<BaseGridGeometry::Neighbor>::const_iterator ni =
+         for (std::map<BlockId,BaseGridGeometry::Neighbor>::const_iterator ni =
               neighbors.begin();
-              ni != neighbors.end(); ni++) {
-            const BaseGridGeometry::Neighbor& neighbor(*ni);
+              ni != neighbors.end(); ++ni) {
+            const BaseGridGeometry::Neighbor& neighbor(ni->second);
             if (neighbor.isSingularity()) {
                reduced_connectivity_singularity_boxes.removeIntersections(
                   neighbor.getTransformedDomain());
@@ -967,10 +1010,10 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
             singularity_boxes.refine(refinement_ratio);
          }
 
-         for (std::list<BaseGridGeometry::Neighbor>::const_iterator ni =
+         for (std::map<BlockId,BaseGridGeometry::Neighbor>::const_iterator ni =
               neighbors.begin();
-              ni != neighbors.end(); ni++) {
-            const BaseGridGeometry::Neighbor& neighbor(*ni);
+              ni != neighbors.end(); ++ni) {
+            const BaseGridGeometry::Neighbor& neighbor(ni->second);
             const BlockId neighbor_block_id(neighbor.getBlockId());
             if (neighbor.isSingularity() &&
                 reference_boxes_tree.hasBoxInBlock(neighbor_block_id)) {
@@ -1482,6 +1525,20 @@ BoxLevelConnectorUtils::computeNonIntersectingParts(
    TBOX_ASSERT(input_to_remainder->isLocal());
 }
 
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
+void
+BoxLevelConnectorUtils::initializeCallback()
+{
+   // Initialize timers with default prefix.
+   getAllTimers(s_default_timer_prefix,
+                s_static_timers[s_default_timer_prefix]);
+
+}
+
 
 /*
  ***********************************************************************
@@ -1491,11 +1548,18 @@ void
 BoxLevelConnectorUtils::setTimerPrefix(
    const std::string& timer_prefix)
 {
+   std::string timer_prefix_used;
+   if (s_ignore_external_timer_prefix == 'y') {
+      timer_prefix_used = s_default_timer_prefix;
+   }
+   else {
+      timer_prefix_used = timer_prefix;
+   }
    std::map<std::string, TimerStruct>::iterator ti(
-      s_static_timers.find(timer_prefix));
+      s_static_timers.find(timer_prefix_used));
    if (ti == s_static_timers.end()) {
-      d_object_timers = &s_static_timers[timer_prefix];
-      getAllTimers(timer_prefix, *d_object_timers);
+      d_object_timers = &s_static_timers[timer_prefix_used];
+      getAllTimers(timer_prefix_used, *d_object_timers);
    } else {
       d_object_timers = &(ti->second);
    }
@@ -1545,4 +1609,3 @@ BoxLevelConnectorUtils::getAllTimers(
 
 }
 }
-#endif

@@ -132,7 +132,7 @@ BalanceUtilities::privateRecursiveProcAssign(
     * in the weight index range to the processor
     */
    if (proc_index_hi == proc_index_lo) {
-      for (i = wt_index_lo; i <= wt_index_hi; i++) {
+      for (i = wt_index_lo; i <= wt_index_hi; ++i) {
          mapping.setProcessorAssignment(i, proc_index_lo);
       }
    } else {  // otherwise recurse
@@ -152,7 +152,7 @@ BalanceUtilities::privateRecursiveProcAssign(
        */
       while ((cut_index <= wt_index_hi) && (acc_weight < cut_weight)) {
          acc_weight += weights[cut_index];
-         cut_index++;
+         ++cut_index;
       }
 
       /*
@@ -164,7 +164,7 @@ BalanceUtilities::privateRecursiveProcAssign(
       double prev_weight = acc_weight - weights[cut_index - 1];
       if ((cut_index > wt_index_lo + 1) &&
           ((acc_weight - cut_weight) > (cut_weight - prev_weight))) {
-         cut_index--;
+         --cut_index;
       }
 
       /*
@@ -249,7 +249,7 @@ BalanceUtilities::privatePrimeFactorization(
 
          // Step 5 - factor found. Increase t by 1, set p[t] = d[k], n = q.
 
-         t++;
+         ++t;
          p.resize(t + 1);
          p[t] = d[k];
          n = q;
@@ -260,13 +260,13 @@ BalanceUtilities::privatePrimeFactorization(
 
          if (q > d[k]) {
 
-            k++;
+            ++k;
 
          } else {
 
             // Step 7 - n is prime.  Increment t by 1, set p[t] = n, and terminate.
 
-            t++;
+            ++t;
             p.resize(t + 1);
             p[t] = n;
             break;
@@ -286,22 +286,22 @@ BalanceUtilities::privateResetPrimesArray(
    std::vector<int> temp;
    temp.resize(static_cast<int>(p.size()));
    int i;
-   for (i = 0; i < static_cast<int>(p.size()); i++) temp[i] = p[i];
+   for (i = 0; i < static_cast<int>(p.size()); ++i) temp[i] = p[i];
 
    // resize p to only keep values > 1
    int newsize = 0;
-   for (i = 0; i < static_cast<int>(p.size()); i++) {
-      if (p[i] > 1) newsize++;
+   for (i = 0; i < static_cast<int>(p.size()); ++i) {
+      if (p[i] > 1) ++newsize;
    }
 
    p.resize(newsize);
    newsize = 0;
 
    // set values in the new p array
-   for (i = 0; i < static_cast<int>(temp.size()); i++) {
+   for (i = 0; i < static_cast<int>(temp.size()); ++i) {
       if (temp[i] > 1) {
          p[newsize] = temp[i];
-         newsize++;
+         ++newsize;
       }
    }
 }
@@ -319,10 +319,24 @@ bool
 BalanceUtilities::privateBadCutPointsExist(
    const hier::BoxContainer& physical_domain)
 {
-   hier::BoxContainer bounding_box(physical_domain.getBoundingBox());
-   bounding_box.removeIntersections(physical_domain);
+   bool bad_cuts_exist = false;
 
-   return !bounding_box.isEmpty();
+   std::map<hier::BlockId, hier::BoxContainer> domain_by_blocks;
+   for (hier::BoxContainer::const_iterator itr = physical_domain.begin();
+        itr != physical_domain.end(); ++itr) {
+      const hier::BlockId& block_id = itr->getBlockId();
+      domain_by_blocks[block_id].pushBack(*itr);
+   }
+   for (std::map<hier::BlockId, hier::BoxContainer>::iterator m_itr =
+        domain_by_blocks.begin(); m_itr != domain_by_blocks.end(); ++m_itr) {
+      hier::BoxContainer bounding_box(m_itr->second.getBoundingBox());
+      bounding_box.removeIntersections(m_itr->second);
+      if (!bounding_box.isEmpty()) {
+         bad_cuts_exist = true;
+      }
+   }  
+
+   return bad_cuts_exist;
 }
 
 /*
@@ -368,18 +382,18 @@ BalanceUtilities::privateInitializeBadCutPointsForBox(
 
    if (set_dummy_cut_points) {
 
-      for (id = 0; id < dim.getValue(); id++) {
+      for (id = 0; id < dim.getValue(); ++id) {
          const int ncells = box.numberCells(id);
          bad_cut_points[id].resize(ncells);
          std::vector<bool>& arr_ref = bad_cut_points[id];
-         for (ic = 0; ic < ncells; ic++) {
+         for (ic = 0; ic < ncells; ++ic) {
             arr_ref[ic] = false;
          }
       }
 
    } else {
 
-      for (id = 0; id < dim.getValue(); id++) {
+      for (id = 0; id < dim.getValue(); ++id) {
          hier::BoxUtilities::
          findBadCutPointsForDirection(id,
             bad_cut_points[id],
@@ -423,7 +437,7 @@ BalanceUtilities::privateFindBestCutDimension(
 
    hier::Box size_test_box(in_box);
 
-   for (int id = 0; id < dim.getValue(); id++) {
+   for (int id = 0; id < dim.getValue(); ++id) {
       int ncells = in_box.numberCells(id);
       if ((ncells < 2 * min_size(id)) ||
           (ncells % cut_factor(id))) {
@@ -457,13 +471,13 @@ BalanceUtilities::privateFindBestCutDimension(
 
          std::vector<bool>& bad_cuts_for_dir = bad_cut_points[cutdim];
 
-         for (i = 0; i < mincut; i++) {
+         for (i = 0; i < mincut; ++i) {
             bad_cuts_for_dir[i] = true;
          }
-         for (i = (numcells - mincut + 1); i < numcells; i++) {
+         for (i = (numcells - mincut + 1); i < numcells; ++i) {
             bad_cuts_for_dir[i] = true;
          }
-         for (i = 0; i < numcells; i++) {
+         for (i = 0; i < numcells; ++i) {
             if (i % cutfact) {
                bad_cuts_for_dir[i] = true;
             }
@@ -526,13 +540,13 @@ BalanceUtilities::privateFindCutPoint(
 
    while (cut_index < mincut) {
       acc_work += work_in_slice[cut_index];
-      cut_index++;
+      ++cut_index;
    }
 
    int last = numcells - mincut;
    while ((acc_work < work_cutpt) && (cut_index < last)) {
       acc_work += work_in_slice[cut_index];
-      cut_index++;
+      ++cut_index;
    }
 
    /*
@@ -547,14 +561,14 @@ BalanceUtilities::privateFindCutPoint(
       double l_work = acc_work;
       while ((bad_cut_points[l_index]) && (l_index > 2)) {
          l_work -= work_in_slice[l_index - 1];
-         l_index--;
+         --l_index;
       }
 
       int r_index = cut_index;
       double r_work = acc_work;
       while ((bad_cut_points[r_index]) && (r_index < numcells - 1)) {
          r_work += work_in_slice[r_index];
-         r_index++;
+         ++r_index;
       }
 
       if ((work_cutpt - l_work) < (r_work - work_cutpt)) {
@@ -613,7 +627,7 @@ BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
    box_hi.lower(cutdim) = cut_index;
 
    int i;
-   for (int id = 0; id < dim.getValue(); id++) {
+   for (int id = 0; id < dim.getValue(); ++id) {
 
       const std::vector<bool>& arr_ref_in = bad_cut_points[id];
 
@@ -624,7 +638,7 @@ BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
       bad_cut_points_for_boxhi[id].resize(ncellshi);
 
       std::vector<bool>& arr_ref_cutlo = bad_cut_points_for_boxlo[id];
-      for (i = 0; i < ncellslo; i++) {
+      for (i = 0; i < ncellslo; ++i) {
          arr_ref_cutlo[i] = arr_ref_in[i];
       }
 
@@ -632,11 +646,11 @@ BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
 
       if (id == cutdim) {
          int mark = box_lo.numberCells(cutdim);
-         for (i = 0; i < ncellshi; i++) {
+         for (i = 0; i < ncellshi; ++i) {
             arr_ref_cuthi[i] = arr_ref_in[i + mark];
          }
       } else {
-         for (i = 0; i < ncellshi; i++) {
+         for (i = 0; i < ncellshi; ++i) {
             arr_ref_cuthi[i] = arr_ref_in[i];
          }
       }
@@ -702,14 +716,14 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
           */
 
          double work_in_single_slice = 1.0;
-         for (int id = 0; id < dim.getValue(); id++) {
+         for (int id = 0; id < dim.getValue(); ++id) {
             if (id != cut_dim) {
                work_in_single_slice *= (double)in_box.numberCells(id);
             }
          }
 
          std::vector<double> work_in_slices(numcells);
-         for (i = 0; i < numcells; i++) {
+         for (i = 0; i < numcells; ++i) {
             work_in_slices[i] = work_in_single_slice;
          }
 
@@ -844,7 +858,7 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
          slice_box.upper(cut_dim) = slice_box.lower(cut_dim);
 
          std::vector<double> work_in_slices(numcells);
-         for (i = 0; i < numcells; i++) {
+         for (i = 0; i < numcells; ++i) {
             work_in_slices[i] =
                BalanceUtilities::computeNonUniformWorkload(patch,
                   work_data_index,
@@ -885,7 +899,7 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
 
          const int box_lo_ncells = box_lo.numberCells(cut_dim);
          double box_lo_workload = 0.0;
-         for (i = 0; i < box_lo_ncells; i++) {
+         for (i = 0; i < box_lo_ncells; ++i) {
             box_lo_workload += work_in_slices[i];
          }
          privateRecursiveBisectionNonuniformSingleBox(out_boxes,
@@ -948,8 +962,8 @@ BalanceUtilities::computeNonUniformWorkload(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*patch, box);
 
    const boost::shared_ptr<pdat::CellData<double> > work_data(
-      patch->getPatchData(wrk_indx),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch->getPatchData(wrk_indx)));
 
    TBOX_ASSERT(work_data);
 
@@ -984,26 +998,26 @@ BalanceUtilities::binPack(
    mapping.setMappingSize(nboxes);
 
    double avg_work = 0.0;
-   for (int w = 0; w < nboxes; w++) {
+   for (int w = 0; w < nboxes; ++w) {
       TBOX_ASSERT(weights[w] >= 0.0);
       avg_work += weights[w];
    }
    avg_work /= nproc;
 
    std::vector<double> work(nproc);
-   for (int p = 0; p < nproc; p++) {
+   for (int p = 0; p < nproc; ++p) {
       work[p] = 0.0;
    }
 
    /*
     * Assign each box to the processor with the lowest workload
     */
-   for (int b = 0; b < nboxes; b++) {
+   for (int b = 0; b < nboxes; ++b) {
       const double weight = weights[b];
 
       int proc = 0;
       double diff = avg_work - (work[0] + weight);
-      for (int p = 1; p < nproc; p++) {
+      for (int p = 1; p < nproc; ++p) {
          const double d = avg_work - (work[p] + weight);
          if (((diff > 0.0) && (d >= 0.0) &&
               (d < diff)) || ((diff < 0.0) && (d > diff))) {
@@ -1021,7 +1035,7 @@ BalanceUtilities::binPack(
     */
 
    double max_work = 0.0;
-   for (int iw = 0; iw < nproc; iw++) {
+   for (int iw = 0; iw < nproc; ++iw) {
       if (work[iw] > max_work) max_work = work[iw];
    }
 
@@ -1104,14 +1118,14 @@ BalanceUtilities::spatialBinPack(
 
    std::vector<int> permutation(nboxes);
 
-   for (i = 0; i < nboxes; i++) {
+   for (i = 0; i < nboxes; ++i) {
       permutation[i] = i;
    }
 
-   for (i = nboxes / 2 - 1; i >= 0; i--) {
+   for (i = nboxes / 2 - 1; i >= 0; --i) {
       privateHeapify(permutation, spatial_keys, i, nboxes);
    }
-   for (i = nboxes - 1; i >= 1; i--) {
+   for (i = nboxes - 1; i >= 1; --i) {
       const int tmp = permutation[0];
       permutation[0] = permutation[i];
       permutation[i] = tmp;
@@ -1149,15 +1163,15 @@ BalanceUtilities::spatialBinPack(
        */
 
       std::vector<SpatialKey> unsorted_keys(nboxes);
-      for (i = 0; i < nboxes; i++) {
+      for (i = 0; i < nboxes; ++i) {
          unsorted_keys[i] = spatial_keys[i];
       }
 
-      for (i = 0; i < nboxes; i++) {
+      for (i = 0; i < nboxes; ++i) {
          spatial_keys[i] = unsorted_keys[permutation[i]];
       }
 
-      for (i = 0; i < nboxes - 1; i++) {
+      for (i = 0; i < nboxes - 1; ++i) {
          TBOX_ASSERT(spatial_keys[i] <= spatial_keys[i + 1]);
       }
 #endif
@@ -1168,7 +1182,7 @@ BalanceUtilities::spatialBinPack(
    /* Find average workload */
 
    double avg_work = 0.0;
-   for (i = 0; i < nboxes; i++) {
+   for (i = 0; i < nboxes; ++i) {
       TBOX_ASSERT(weights[i] >= 0.0);
       avg_work += weights[i];
    }
@@ -1190,10 +1204,10 @@ BalanceUtilities::spatialBinPack(
 
    /* compute work load for each processor */
    std::vector<double> work(nproc);
-   for (i = 0; i < nproc; i++) {
+   for (i = 0; i < nproc; ++i) {
       work[i] = 0.0;
    }
-   for (i = 0; i < nboxes; i++) {
+   for (i = 0; i < nboxes; ++i) {
       work[mapping.getProcessorAssignment(i)] += weights[i];
    }
 
@@ -1202,7 +1216,7 @@ BalanceUtilities::spatialBinPack(
     */
 
    double max_work = 0.0;
-   for (i = 0; i < nproc; i++) {
+   for (i = 0; i < nproc; ++i) {
       if (work[i] > max_work) max_work = work[i];
    }
 
@@ -1417,7 +1431,7 @@ BalanceUtilities::computeDomainDependentProcessorLayout(
    int i;
    TBOX_ASSERT(num_procs > 0);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (i = 0; i < dim.getValue(); i++) {
+   for (i = 0; i < dim.getValue(); ++i) {
       TBOX_ASSERT(box.numberCells(i) > 0);
    }
 #endif
@@ -1433,13 +1447,13 @@ BalanceUtilities::computeDomainDependentProcessorLayout(
    privatePrimeFactorization(num_procs, p);
 
    hier::IntVector d = box.numberCells();
-   for (i = 0; i < dim.getValue(); i++) {
+   for (i = 0; i < dim.getValue(); ++i) {
       proc_dist(i) = 1;
    }
 
    std::vector<int> pnew;
    pnew.resize(static_cast<int>(p.size()));
-   for (i = 0; i < static_cast<int>(p.size()); i++) {
+   for (i = 0; i < static_cast<int>(p.size()); ++i) {
       pnew[i] = p[i];
    }
    privateResetPrimesArray(pnew);
@@ -1457,12 +1471,12 @@ BalanceUtilities::computeDomainDependentProcessorLayout(
           (pnew.size() > 0) && (counter < num_procs)) {
 
       //  Loop over prime factors - largest to smallest
-      for (int k = static_cast<int>(pnew.size()) - 1; k >= 0; k--) {
+      for (int k = static_cast<int>(pnew.size()) - 1; k >= 0; --k) {
 
          //  determine i - direction in which d is largest
          i = 0;
          int nx = d[i];
-         for (int j = 0; j < dim.getValue(); j++) {
+         for (int j = 0; j < dim.getValue(); ++j) {
             if (d[j] > nx) i = j;
          }
 
@@ -1486,7 +1500,7 @@ BalanceUtilities::computeDomainDependentProcessorLayout(
 
       } // loop over prime factors
 
-      counter++;
+      ++counter;
    } // while loop
 
    /*
@@ -1528,7 +1542,7 @@ BalanceUtilities::computeDomainIndependentProcessorLayout(
 
    TBOX_ASSERT(num_procs > 0);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (i = 0; i < dim.getValue(); i++) {
+   for (i = 0; i < dim.getValue(); ++i) {
       TBOX_ASSERT(box.numberCells(i) > 0);
    }
 #endif
@@ -1551,13 +1565,13 @@ BalanceUtilities::computeDomainIndependentProcessorLayout(
    privatePrimeFactorization(num_procs, p);
 
    hier::IntVector d = box.numberCells();
-   for (i = 0; i < dim.getValue(); i++) {
+   for (i = 0; i < dim.getValue(); ++i) {
       proc_dist(i) = 1;
    }
 
    std::vector<int> pnew;
    pnew.resize(static_cast<int>(p.size()));
-   for (i = 0; i < static_cast<int>(p.size()); i++) pnew[i] = p[i];
+   for (i = 0; i < static_cast<int>(p.size()); ++i) pnew[i] = p[i];
    privateResetPrimesArray(pnew);
 
    /*
@@ -1570,7 +1584,7 @@ BalanceUtilities::computeDomainIndependentProcessorLayout(
       //  determine i - direction in which d is largest
       i = 0;
       int nx = d[i];
-      for (int j = 0; j < dim.getValue(); j++) {
+      for (int j = 0; j < dim.getValue(); ++j) {
          if (d[j] > nx) i = j;
       }
 
@@ -1625,7 +1639,7 @@ BalanceUtilities::sortDescendingBoxWorkloads(
    const int nboxes = static_cast<int>(workload.size());
    std::vector<int> permutation(nboxes);
 
-   for (int i = 0; i < nboxes; i++) {
+   for (int i = 0; i < nboxes; ++i) {
       permutation[i] = i;
    }
 
@@ -1633,10 +1647,10 @@ BalanceUtilities::sortDescendingBoxWorkloads(
     * Execute the heapsort using static member function privateHeapify()
     */
 
-   for (int j = nboxes / 2 - 1; j >= 0; j--) {
+   for (int j = nboxes / 2 - 1; j >= 0; --j) {
       privateHeapify(permutation, workload, j, nboxes);
    }
-   for (int k = nboxes - 1; k >= 1; k--) {
+   for (int k = nboxes - 1; k >= 1; --k) {
       const int tmp = permutation[0];
       permutation[0] = permutation[k];
       permutation[k] = tmp;
@@ -1673,7 +1687,7 @@ BalanceUtilities::sortDescendingBoxWorkloads(
        * Verify that the workload is sorted in nonincreasing order
        */
 
-      for (int n = 0; n < nboxes - 1; n++) {
+      for (int n = 0; n < nboxes - 1; ++n) {
          TBOX_ASSERT(workload[n] >= workload[n + 1]);
       }
 #endif
@@ -1706,7 +1720,7 @@ BalanceUtilities::computeLoadBalanceEfficiency(
    const int nprocs = mpi.getSize();
    std::vector<double> work(nprocs);
 
-   for (i = 0; i < nprocs; i++) {
+   for (i = 0; i < nprocs; ++i) {
       work[i] = 0.0;
    }
 
@@ -1724,8 +1738,8 @@ BalanceUtilities::computeLoadBalanceEfficiency(
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& patch = *ip;
          boost::shared_ptr<pdat::CellData<double> > weight(
-            patch->getPatchData(workload_data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(workload_data_id)));
 
          TBOX_ASSERT(weight);
 
@@ -1741,7 +1755,7 @@ BalanceUtilities::computeLoadBalanceEfficiency(
 
    double max_work = 0.0;
    double total_work = 0.0;
-   for (i = 0; i < nprocs; i++) {
+   for (i = 0; i < nprocs; ++i) {
       total_work += work[i];
       if (work[i] > max_work) max_work = work[i];
    }
@@ -2284,7 +2298,7 @@ BalanceUtilities::prebalanceBoxLevel(
    int num_recvs = 0;
    if (rank_group.isMember(balance_box_level.getMPI().getRank())) {
       std::list<int> recv_ranks;
-      for (int i = 0; i < balance_box_level.getMPI().getSize(); i++) {
+      for (int i = 0; i < balance_box_level.getMPI().getSize(); ++i) {
          if (!rank_group.isMember(i) &&
              rank_group.getMappedRank(i % output_nproc) == balance_box_level.getMPI().getRank()) {
             recv_ranks.push_back(i);
@@ -2296,7 +2310,7 @@ BalanceUtilities::prebalanceBoxLevel(
          id_send = new tbox::AsyncCommPeer<int>[num_recvs];
          int recv_count = 0;
          for (std::list<int>::const_iterator ri(recv_ranks.begin());
-              ri != recv_ranks.end(); ri++) {
+              ri != recv_ranks.end(); ++ri) {
             const int rank = *ri;
             box_recv[recv_count].initialize(&comm_stage);
             box_recv[recv_count].setPeerRank(rank);
@@ -2310,7 +2324,7 @@ BalanceUtilities::prebalanceBoxLevel(
             id_send[recv_count].setMPITag(BalanceUtilities_PREBALANCE0 + 2 * rank,
                BalanceUtilities_PREBALANCE1 + 2 * rank);
 
-            recv_count++;
+            ++recv_count;
          }
          TBOX_ASSERT(num_recvs == recv_count);
       }
@@ -2363,7 +2377,10 @@ BalanceUtilities::prebalanceBoxLevel(
       const int num_sending_boxes =
          static_cast<int>(sending_boxes.size());
 
-      int* buffer = new int[buf_size * num_sending_boxes];
+      int* buffer = 0;
+      if (num_sending_boxes > 0) {
+         buffer = new int[buf_size * num_sending_boxes];
+      }
       int box_count = 0;
       for (hier::BoxContainer::const_iterator ni = sending_boxes.begin();
            ni != sending_boxes.end(); ++ni) {
@@ -2371,11 +2388,13 @@ BalanceUtilities::prebalanceBoxLevel(
          const hier::Box& box = *ni;
 
          box.putToIntBuffer(&buffer[box_count * buf_size]);
-         box_count++;
+         ++box_count;
       }
       box_send->beginSend(buffer, buf_size * num_sending_boxes);
 
-      delete[] buffer;
+      if (buffer) {
+         delete[] buffer;
+      }
    }
 
    /*
@@ -2384,21 +2403,24 @@ BalanceUtilities::prebalanceBoxLevel(
     * send the new LocalIdes back to the sending processors.
     */
    if (!is_sending_rank && num_recvs > 0) {
-      for (int i = 0; i < num_recvs; i++) {
+      for (int i = 0; i < num_recvs; ++i) {
          box_recv[i].beginRecv();
       }
       int num_completed_recvs = 0;
       std::vector<bool> completed(num_recvs, false);
       while (num_completed_recvs < num_recvs) {
-         for (int i = 0; i < num_recvs; i++) {
+         for (int i = 0; i < num_recvs; ++i) {
             if (!completed[i] && box_recv[i].checkRecv()) {
-               num_completed_recvs++;
+               ++num_completed_recvs;
                completed[i] = true;
                const int num_boxes = box_recv[i].getRecvSize() / buf_size;
                const int* buffer = box_recv[i].getRecvData();
-               int* id_buffer = new int[num_boxes];
+               int* id_buffer = 0;
+               if (num_boxes > 0) {
+                  id_buffer = new int[num_boxes];
+               }
 
-               for (int b = 0; b < num_boxes; b++) {
+               for (int b = 0; b < num_boxes; ++b) {
                   hier::Box box(balance_box_level.getDim());
 
                   box.getFromIntBuffer(&buffer[b * buf_size]);
@@ -2415,11 +2437,13 @@ BalanceUtilities::prebalanceBoxLevel(
                }
                id_send[i].beginSend(id_buffer, num_boxes);
 
-               delete[] id_buffer;
+               if (id_buffer) {
+                  delete[] id_buffer;
+               }
             }
          }
       }
-      for (int i = 0; i < num_recvs; i++) {
+      for (int i = 0; i < num_recvs; ++i) {
          if (!id_send[i].checkSend()) {
             id_send[i].completeCurrentOperation();
          }
@@ -2456,7 +2480,7 @@ BalanceUtilities::prebalanceBoxLevel(
             rank_group.getMappedRank(balance_box_level.getMPI().getRank() % output_nproc));
 
          balance_to_tmp.insertLocalNeighbor(new_box, (*ni).getBoxId());
-         box_count++;
+         ++box_count;
       }
    }
 

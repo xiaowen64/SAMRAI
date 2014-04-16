@@ -144,7 +144,7 @@ private:
    // The following are not implemented:
    PatchSideDataOpsInteger(
       const PatchSideDataOpsInteger&);
-   void
+   PatchSideDataOpsInteger&
    operator = (
       const PatchSideDataOpsInteger&);
 

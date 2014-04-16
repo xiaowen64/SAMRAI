@@ -7,9 +7,6 @@
  * Description:   Common Box operations for Box containers.
  *
  ************************************************************************/
-#ifndef included_hier_BoxContainerUtils_C
-#define included_hier_BoxContainerUtils_C
-
 #include "SAMRAI/hier/BoxContainerUtils.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
@@ -49,4 +46,3 @@ BoxContainerUtils::recursivePrintBoxVector(
 
 }
 }
-#endif

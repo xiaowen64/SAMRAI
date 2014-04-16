@@ -7,10 +7,6 @@
  * Description:   Linear time interp operator for side-centered double patch data.
  *
  ************************************************************************/
-
-#ifndef included_pdat_SideDoubleLinearTimeInterpolateOp_C
-#define included_pdat_SideDoubleLinearTimeInterpolateOp_C
-
 #include "SAMRAI/pdat/SideDoubleLinearTimeInterpolateOp.h"
 
 #include "SAMRAI/hier/Box.h"
@@ -179,7 +175,7 @@ SideDoubleLinearTimeInterpolateOp::timeInterpolate(
       tfrac = 0.0;
    }
 
-   for (int d = 0; d < dst_dat->getDepth(); d++) {
+   for (int d = 0; d < dst_dat->getDepth(); ++d) {
       if (dim == tbox::Dimension(1)) {
          if (directions(0)) {
             SAMRAI_F77_FUNC(lintimeintsidedoub1d, LINTIMEINTSIDEDOUB1D) (ifirst(0),
@@ -271,4 +267,3 @@ SideDoubleLinearTimeInterpolateOp::timeInterpolate(
 
 }
 }
-#endif

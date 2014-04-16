@@ -105,7 +105,7 @@ int main(
       hier::Index flo1(dim);
       hier::Index fhi1(dim);
 
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dim.getValue(); ++i) {
          lo[i] = 0.0;
          clo0(i) = 0;
          flo0(i) = 4;
@@ -169,7 +169,7 @@ int main(
          boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
-      for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_itr) {
+      for (int ib = 0; ib < n_coarse_boxes; ++ib, ++coarse_itr) {
          if (nproc > 1) {
             if (ib == layer0->getMPI().getRank()) {
                layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
@@ -181,7 +181,7 @@ int main(
       }
 
       hier::BoxContainer::iterator fine_itr = fine_boxes.begin();
-      for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_itr) {
+      for (int ib = 0; ib < n_fine_boxes; ++ib, ++fine_itr) {
          if (nproc > 1) {
             if (ib == layer1->getMPI().getRank()) {
                layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib),
@@ -223,9 +223,9 @@ int main(
             cwgt, dummy, no_ghosts);
 
       // allocate data on hierarchy
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
          hierarchy->getPatchLevel(ln)->allocatePatchData(cwgt_id);
-         for (iv = 0; iv < NVARS; iv++) {
+         for (iv = 0; iv < NVARS; ++iv) {
             hierarchy->getPatchLevel(ln)->allocatePatchData(cvindx[iv]);
          }
       }
@@ -248,24 +248,24 @@ int main(
       // Initialize control volume data for cell-centered components
       hier::Box coarse_fine = fine0 + fine1;
       coarse_fine.coarsen(ratio);
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
             boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-               patch->getPatchGeometry(),
-               BOOST_CAST_TAG);
+               BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+                  patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             double cell_vol = dx[0];
-            for (int i = 1; i < dim.getValue(); i++) {
+            for (int i = 1; i < dim.getValue(); ++i) {
                cell_vol *= dx[i];
             }
             boost::shared_ptr<pdat::CellData<double> > cvdata(
-               patch->getPatchData(cwgt_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+                  patch->getPatchData(cwgt_id)));
             TBOX_ASSERT(cvdata);
             cvdata->fillAll(cell_vol);
             if (ln == 0) cvdata->fillAll(0.0, (coarse_fine * patch->getBox()));
@@ -278,15 +278,15 @@ int main(
       // Expected: cwgt = 0.01 on coarse (except where finer patch exists) and
       // 0.0025 on fine level for 2d.  0.001 and 0.000125 for 3d.
       bool vol_test_passed = true;
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
             boost::shared_ptr<pdat::CellData<double> > cvdata(
-               patch->getPatchData(cwgt_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+                  patch->getPatchData(cwgt_id)));
 
             TBOX_ASSERT(cvdata);
 
@@ -332,7 +332,7 @@ int main(
          }
       }
       if (!vol_test_passed) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #1a: Check control volume data set properly"
          << std::endl;
@@ -343,7 +343,7 @@ int main(
       // Expected: norm = 0.5
       double norm = cell_ops->sumControlVolumes(cvindx[0], cwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(norm, 0.5)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #1b: math::HierarchyCellDataOpsComplex::sumControlVolumes()\n"
          << "Expected value = 0.5 , Computed value = "
@@ -362,7 +362,7 @@ int main(
             compare = 660;
 
          if (num_data_points != compare) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #2: math::HierarchyCellDataOpsReal::numberOfEntries()\n"
             << "Expected value = " << compare
@@ -376,7 +376,7 @@ int main(
       dcomplex val0 = dcomplex(2.0, 1.5);
       cell_ops->setToScalar(cvindx[0], val0);
       if (!complexDataSameAsValue(cvindx[0], val0, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #3a: math::HierarchyCellDataOpsComplex::setToScalar()\n"
          << "Expected: v0 = " << val0 << std::endl;
@@ -388,7 +388,7 @@ int main(
       dcomplex val1(4.0, 3.0);
       cell_ops->setToScalar(cvindx[1], val1);
       if (!complexDataSameAsValue(cvindx[1], val1, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #3b: math::HierarchyCellDataOpsComplex::setToScalar()\n"
          << "Expected: v1 = " << val1 << std::endl;
@@ -399,7 +399,7 @@ int main(
       // Expected: v2 = v1 = (4.0, 3.0)
       cell_ops->copyData(cvindx[2], cvindx[1]);
       if (!complexDataSameAsValue(cvindx[2], val1, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #4: math::HierarchyCellDataOpsComplex::copyData()\n"
          << "Expected: v2 = v1 = " << val1 << std::endl;
@@ -410,14 +410,14 @@ int main(
       // Expected: v0 = (4.0, 3.0), v1 = (2.0,1.5)
       cell_ops->swapData(cvindx[0], cvindx[1]);
       if (!complexDataSameAsValue(cvindx[0], val1, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #5a: math::HierarchyCellDataOpsComplex::swapData()\n"
          << "Expected: v0 = " << val1 << std::endl;
          cell_ops->printData(cvindx[0], tbox::plog);
       }
       if (!complexDataSameAsValue(cvindx[1], val0, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #5b: math::HierarchyCellDataOpsComplex::swapData()\n"
          << "Expected: v1 = " << val0 << std::endl;
@@ -429,7 +429,7 @@ int main(
       cell_ops->scale(cvindx[2], 0.25, cvindx[2]);
       dcomplex val_scale(1.0, 0.75);
       if (!complexDataSameAsValue(cvindx[2], val_scale, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #6: math::HierarchyCellDataOpsComplex::scale()\n"
          << "Expected: v2 = " << val_scale << std::endl;
@@ -441,7 +441,7 @@ int main(
       cell_ops->add(cvindx[3], cvindx[0], cvindx[1]);
       dcomplex val_add(6.0, 4.5);
       if (!complexDataSameAsValue(cvindx[3], val_add, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #7: math::HierarchyCellDataOpsComplex::add()\n"
          << "Expected: v3 = " << val_add << std::endl;
@@ -456,7 +456,7 @@ int main(
       cell_ops->subtract(cvindx[1], cvindx[3], cvindx[0]);
       dcomplex val_sub(6.0, 0.0);
       if (!complexDataSameAsValue(cvindx[1], val_sub, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #8: math::HierarchyCellDataOpsComplex::subtract()\n"
          << "Expected: v1 = " << val_sub << std::endl;
@@ -468,7 +468,7 @@ int main(
       cell_ops->addScalar(cvindx[1], cvindx[1], dcomplex(0.0, -4.0));
       dcomplex val_addScalar(6.0, -4.0);
       if (!complexDataSameAsValue(cvindx[1], val_addScalar, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #9a: math::HierarchyCellDataOpsComplex::addScalar()\n"
          << "Expected: v1 = " << val_addScalar << std::endl;
@@ -480,7 +480,7 @@ int main(
       cell_ops->addScalar(cvindx[2], cvindx[2], dcomplex(0.0, 0.25));
       val_addScalar = dcomplex(1.0, 1.0);
       if (!complexDataSameAsValue(cvindx[2], val_addScalar, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #9c: math::HierarchyCellDataOpsComplex::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
@@ -492,7 +492,7 @@ int main(
       cell_ops->addScalar(cvindx[2], cvindx[2], dcomplex(3.0, -4.0));
       val_addScalar = dcomplex(4.0, -3.0);
       if (!complexDataSameAsValue(cvindx[2], val_addScalar, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #9d: math::HierarchyCellDataOpsComplex::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
@@ -507,7 +507,7 @@ int main(
       cell_ops->multiply(cvindx[1], cvindx[3], cvindx[1]);
       dcomplex val_mult(3.0, -2.0);
       if (!complexDataSameAsValue(cvindx[1], val_mult, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #10: math::HierarchyCellDataOpsComplex::multiply()\n"
          << "Expected: v1 = " << val_mult << std::endl;
@@ -519,7 +519,7 @@ int main(
       cell_ops->divide(cvindx[0], cvindx[2], cvindx[1]);
       dcomplex val_div(1.3846153846154, -0.076923076923077);
       if (!complexDataSameAsValue(cvindx[0], val_div, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #11: math::HierarchyCellDataOpsComplex::divide()\n"
          << "Expected: v0 = " << val_div << std::endl;
@@ -531,7 +531,7 @@ int main(
       cell_ops->reciprocal(cvindx[1], cvindx[1]);
       dcomplex val_rec(0.23076923076923, 0.15384615384615);
       if (!complexDataSameAsValue(cvindx[1], val_rec, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #12: math::HierarchyCellDataOpsComplex::reciprocal()\n"
          << "Expected: v1 = " << val_rec << std::endl;
@@ -601,7 +601,7 @@ int main(
          }
       }
       if (!bogus_value_test_passed) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #13:  Place some bogus values on coarse level"
          << std::endl;
@@ -622,7 +622,7 @@ int main(
             compare = 4402.00337888;
 
          if (!tbox::MathUtilities<double>::equalEps(bogus_l1_norm, compare)) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #14: math::HierarchyCellDataOpsComplex::L1Norm()"
             << " - w/o control weight\n"
@@ -636,7 +636,7 @@ int main(
       // Expected:  correct_l1_norm = 2.5
       double correct_l1_norm = cell_ops->L1Norm(cvindx[2], cwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(correct_l1_norm, 2.5)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #15: math::HierarchyCellDataOpsComplex::L1Norm()"
          << " - w/control weight\n"
@@ -648,7 +648,7 @@ int main(
       // Expected:  l2_norm = 3.53553390593
       double l2_norm = cell_ops->L2Norm(cvindx[2], cwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(l2_norm, 3.53553390593)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #16: math::HierarchyCellDataOpsComplex::L2Norm()\n"
          << "Expected value = 3.53553390593, Computed value = "
@@ -659,7 +659,7 @@ int main(
       // Expected:  bogus_max_norm = 1000.19998
       double bogus_max_norm = cell_ops->maxNorm(cvindx[2]);
       if (!tbox::MathUtilities<double>::equalEps(bogus_max_norm, 1000.19998)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #17: math::HierarchyCellDataOpsComplex::maxNorm() "
          << "- w/o control weight\n"
@@ -671,7 +671,7 @@ int main(
       // Expected:  max_norm = 5.0
       double max_norm = cell_ops->maxNorm(cvindx[2], cwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(max_norm, 5.0)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #18: math::HierarchyCellDataOpsComplex::maxNorm() "
          << "- w/control weight\n"
@@ -690,7 +690,7 @@ int main(
          dcomplex(2.0, 0.0), cvindx[1], dcomplex(0.0, -1.0), cvindx[0]);
       dcomplex val_linearSum(2.0, 5.0);
       if (!complexDataSameAsValue(cvindx[3], val_linearSum, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #19: math::HierarchyCellDataOpsComplex::linearSum()\n"
          << "Expected: v3 = " << val_linearSum << std::endl;
@@ -702,7 +702,7 @@ int main(
       cell_ops->axmy(cvindx[3], 3.0, cvindx[1], cvindx[0]);
       dcomplex val_axmy(6.5, 12.0);
       if (!complexDataSameAsValue(cvindx[3], val_axmy, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #20: math::HierarchyCellDataOpsComplex::axmy()\n"
          << "Expected: v3 = " << val_axmy << std::endl;
@@ -714,7 +714,7 @@ int main(
       dcomplex cdot = cell_ops->dot(cvindx[2], cvindx[1], cwgt_id);
       dcomplex ans_2_dot_1(8.75, -10.5);
       if (!tbox::MathUtilities<dcomplex>::equalEps(cdot, ans_2_dot_1)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #21a: math::HierarchyCellDataOpsComplex::dot()\n"
          << "Expected value = (8.75,-10.5), Computed value = "
@@ -726,7 +726,7 @@ int main(
       dcomplex cdot2 = cell_ops->dot(cvindx[1], cvindx[2], cwgt_id);
       dcomplex ans_1_dot_2(8.75, 10.5);
       if (!tbox::MathUtilities<dcomplex>::equalEps(cdot2, ans_1_dot_2)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #21b: math::HierarchyCellDataOpsComplex::dot()\n"
          << "Expected value = (8.75,10.5), Computed value = "
@@ -738,7 +738,7 @@ int main(
       cell_ops->setToScalar(cvindx[0], dcomplex(4.0, -3.0));
       cell_ops->abs(cwgt_id, cvindx[0]);
       if (!doubleDataSameAsValue(cwgt_id, 5.0, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #22: math::HierarchyCellDataOpsComplex::abs()\n"
          << "Expected: abs(v0) = 5.0" << std::endl;
@@ -746,14 +746,14 @@ int main(
       }
 
       // deallocate data on hierarchy
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
          hierarchy->getPatchLevel(ln)->deallocatePatchData(cwgt_id);
-         for (iv = 0; iv < NVARS; iv++) {
+         for (iv = 0; iv < NVARS; ++iv) {
             hierarchy->getPatchLevel(ln)->deallocatePatchData(cvindx[iv]);
          }
       }
 
-      for (iv = 0; iv < NVARS; iv++) {
+      for (iv = 0; iv < NVARS; ++iv) {
          cvar[iv].reset();
       }
       cwgt.reset();
@@ -789,14 +789,14 @@ complexDataSameAsValue(
 
    int ln;
    boost::shared_ptr<hier::Patch> patch;
-   for (ln = 0; ln < 2; ln++) {
+   for (ln = 0; ln < 2; ++ln) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          patch = *ip;
          boost::shared_ptr<pdat::CellData<dcomplex> > cvdata(
-            patch->getPatchData(desc_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+               patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(cvdata);
 
@@ -829,14 +829,14 @@ doubleDataSameAsValue(
 
    int ln;
    boost::shared_ptr<hier::Patch> patch;
-   for (ln = 0; ln < 2; ln++) {
+   for (ln = 0; ln < 2; ++ln) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          patch = *ip;
          boost::shared_ptr<pdat::CellData<double> > cvdata(
-            patch->getPatchData(desc_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(cvdata);
 

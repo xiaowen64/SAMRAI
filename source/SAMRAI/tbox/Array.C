@@ -67,7 +67,7 @@ Array<TYPE>::Array(
       d_counter = new ReferenceCounter;
       d_elements = n;
 
-      for (int i = 0; i < d_elements; i++) {
+      for (int i = 0; i < d_elements; ++i) {
          void* p = &d_objects[i];
          (void)new (p)TYPE(default_value);
       }
@@ -132,7 +132,7 @@ Array<TYPE>::resizeArray(
    if (n != d_elements) {
       Array<TYPE> array(n, default_value);
       const int s = (d_elements < n ? d_elements : n);
-      for (int i = 0; i < s; i++) {
+      for (int i = 0; i < s; ++i) {
          array.d_objects[i] = d_objects[i];
       }
 
@@ -155,13 +155,13 @@ Array<TYPE>::erase(
             malloc(sizeof(TYPE) * new_d_elements));
 
       /* copy lower part of array */
-      for (int j = 0; j < position; j++) {
+      for (int j = 0; j < position; ++j) {
          void* p = &new_d_objects[j];
          (void)new (p)TYPE(d_objects[j]);
       }
 
       /* copy upper part of array */
-      for (int j = position + 1; j < d_elements; j++) {
+      for (int j = position + 1; j < d_elements; ++j) {
          void* p = &new_d_objects[j - 1];
          (void)new (p)TYPE(d_objects[j]);
       }
@@ -190,7 +190,7 @@ void
 Array<TYPE>::deleteObjects()
 {
    if (d_objects) {
-      for (int i = 0; i < d_elements; i++) {
+      for (int i = 0; i < d_elements; ++i) {
          d_objects[i].~TYPE();
       }
       free(reinterpret_cast<char *>(d_objects));

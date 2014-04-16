@@ -222,7 +222,7 @@ private:
    TilePartitioner(
       const TilePartitioner&);
 
-   void
+   TilePartitioner&
    operator = (
       const TilePartitioner&);
 

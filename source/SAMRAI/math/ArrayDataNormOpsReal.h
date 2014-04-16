@@ -230,10 +230,10 @@ public:
 private:
    // The following are not implemented:
    ArrayDataNormOpsReal(
-      const ArrayDataNormOpsReal<TYPE>&);
-   void
+      const ArrayDataNormOpsReal&);
+   ArrayDataNormOpsReal&
    operator = (
-      const ArrayDataNormOpsReal<TYPE>&);
+      const ArrayDataNormOpsReal&);
 };
 
 }

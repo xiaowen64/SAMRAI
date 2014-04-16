@@ -7,10 +7,6 @@
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
-
-#ifndef included_xfer_PatchLevelEnhancedFillPattern_C
-#define included_xfer_PatchLevelEnhancedFillPattern_C
-
 #include "SAMRAI/xfer/PatchLevelEnhancedFillPattern.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
@@ -85,7 +81,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
       hier::BoxContainer fill_boxes(
          hier::Box::grow(dst_box, fill_ghost_width));
 
-      const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
+      const std::map<hier::BlockId,hier::BaseGridGeometry::Neighbor>& neighbors =
          grid_geometry->getNeighbors(dst_box.getBlockId());
 
       hier::BoxContainer constructed_fill_boxes;
@@ -94,13 +90,13 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
          dst_to_fill->findLocal(dst_box_id);
       bool has_base_box = base_box_itr != dst_to_fill->end();
 
-      for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator ni =
+      for (std::map<hier::BlockId,hier::BaseGridGeometry::Neighbor>::const_iterator ni =
            neighbors.begin();
-           ni != neighbors.end(); ni++) {
+           ni != neighbors.end(); ++ni) {
 
-         if (ni->isSingularity()) {
+         if (ni->second.isSingularity()) {
 
-            hier::BoxContainer encon_boxes(ni->getTransformedDomain());
+            hier::BoxContainer encon_boxes(ni->second.getTransformedDomain());
             encon_boxes.refine(dst_box_level.getRefinementRatio());
             encon_boxes.intersectBoxes(fill_boxes);
             encon_boxes.removeIntersections(constructed_fill_boxes);
@@ -113,7 +109,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
                   has_base_box = true;
                }
                for (hier::BoxContainer::iterator ei = encon_boxes.begin();
-                    ei != encon_boxes.end(); ei++) {
+                    ei != encon_boxes.end(); ++ei) {
 
                   hier::Box fill_box(
                      *ei,
@@ -191,4 +187,3 @@ PatchLevelEnhancedFillPattern::getMaxFillBoxes() const
 
 }
 }
-#endif

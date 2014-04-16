@@ -135,7 +135,7 @@ void EdgeDataTest::readTestInput(
 
    d_use_fine_value_at_interface.resize(nkeys);
 
-   for (int i = 0; i < nkeys; i++) {
+   for (int i = 0; i < nkeys; ++i) {
       boost::shared_ptr<tbox::Database> var_db(
          var_data->getDatabase(var_keys[i]));
 
@@ -159,7 +159,7 @@ void EdgeDataTest::registerVariables(
 
    d_variables.resize(nvars);
 
-   for (int i = 0; i < nvars; i++) {
+   for (int i = 0; i < nvars; ++i) {
       d_variables[i].reset(
          new pdat::EdgeVariable<double>(d_dim, d_variable_src_name[i],
                                         d_variable_depth[i],
@@ -197,7 +197,7 @@ void EdgeDataTest::setConstantData(
 
    if (!box.empty()) {
 
-      for (int axis = 0; axis < d_dim.getValue(); axis++) {
+      for (int axis = 0; axis < d_dim.getValue(); ++axis) {
          pdat::ArrayData<double>& array = data->getArrayData(axis);
 
          double value = GETVALUE(d_dim.getValue(), ndimfact, axis);
@@ -246,21 +246,21 @@ void EdgeDataTest::setConservativeData(
        *    u2(i,j,k) = (i + j)/ncells
        */
 
-      for (int axis = 0; axis < d_dim.getValue(); axis++) {
+      for (int axis = 0; axis < d_dim.getValue(); ++axis) {
          pdat::CellIterator ciend(pdat::CellGeometry::end(sbox));
          for (pdat::CellIterator ci(pdat::CellGeometry::begin(sbox));
               ci != ciend; ++ci) {
             double value = 0.0;
-            for (i = 0; i < d_dim.getValue(); i++) {
+            for (i = 0; i < d_dim.getValue(); ++i) {
                if (i == axis) {
                   value += (double)((*ci)(i));
                }
             }
             value /= ncells;
             if (d_dim == tbox::Dimension(1)) {
-               for (int edge = 0; edge < 1; edge++) {
+               for (int edge = 0; edge < 1; ++edge) {
                   pdat::EdgeIndex si(*ci, axis, edge);
-                  for (int d = 0; d < depth; d++) {
+                  for (int d = 0; d < depth; ++d) {
                      (*data)(si, d) = value;
                   }
                }
@@ -268,9 +268,9 @@ void EdgeDataTest::setConservativeData(
             if (d_dim == tbox::Dimension(2)) {
                for (int edge = pdat::EdgeIndex::Lower;
                     edge <= pdat::EdgeIndex::Upper;
-                    edge++) {
+                    ++edge) {
                   pdat::EdgeIndex si(*ci, axis, edge);
-                  for (int d = 0; d < depth; d++) {
+                  for (int d = 0; d < depth; ++d) {
                      (*data)(si, d) = value;
                   }
                }
@@ -278,9 +278,9 @@ void EdgeDataTest::setConservativeData(
             if (d_dim == tbox::Dimension(3)) {
                for (int edge = pdat::EdgeIndex::LowerLeft;
                     edge <= pdat::EdgeIndex::UpperRight;
-                    edge++) {
+                    ++edge) {
                   pdat::EdgeIndex si(*ci, axis, edge);
-                  for (int d = 0; d < depth; d++) {
+                  for (int d = 0; d < depth; ++d) {
                      (*data)(si, d) = value;
                   }
                }
@@ -302,29 +302,29 @@ void EdgeDataTest::setConservativeData(
       const int max_ratio = ratio.max();
 
       boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-         patch.getPatchGeometry(),
-         BOOST_CAST_TAG);
+         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            patch.getPatchGeometry()));
       TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
 
       int coarse_ncells = ncells;
       double* delta = new double[max_ratio * d_dim.getValue()];
-      for (j = 0; j < d_dim.getValue(); j++) {
+      for (j = 0; j < d_dim.getValue(); ++j) {
          coarse_ncells /= ratio(j);
          double coarse_dx = dx[j] * ratio(j);
-         for (i = 0; i < ratio(j); i++) {
+         for (i = 0; i < ratio(j); ++i) {
             delta[j * max_ratio + i] = (i + 0.5) * dx[j] - coarse_dx * 0.5;
          }
       }
 
-      for (int axis = 0; axis < d_dim.getValue(); axis++) {
+      for (int axis = 0; axis < d_dim.getValue(); ++axis) {
          hier::IntVector ci(ratio.getDim());
          hier::IntVector del(ratio.getDim());
          pdat::CellIterator fiend(pdat::CellGeometry::end(sbox));
          for (pdat::CellIterator fi(pdat::CellGeometry::begin(sbox));
               fi != fiend; ++fi) {
             double value = 0.0;
-            for (i = 0; i < d_dim.getValue(); i++) {
+            for (i = 0; i < d_dim.getValue(); ++i) {
                if (i == axis) {
                   int findx = (*fi)(i);
                   ci(i) = ((findx < 0) ? (findx + 1) / ratio(i) - 1
@@ -335,16 +335,16 @@ void EdgeDataTest::setConservativeData(
             }
             value /= coarse_ncells;
 
-            for (j = 0; j < d_dim.getValue(); j++) {
+            for (j = 0; j < d_dim.getValue(); ++j) {
                if (j == axis) {
                   value += ci(j) * del(j);
                }
             }
 
             if (d_dim == tbox::Dimension(1)) {
-               for (int edge = 0; edge < 1; edge++) {
+               for (int edge = 0; edge < 1; ++edge) {
                   pdat::EdgeIndex si(*fi, axis, edge);
-                  for (int d = 0; d < depth; d++) {
+                  for (int d = 0; d < depth; ++d) {
                      (*data)(si, d) = value;
                   }
                }
@@ -352,9 +352,9 @@ void EdgeDataTest::setConservativeData(
             if (d_dim == tbox::Dimension(2)) {
                for (int edge = pdat::EdgeIndex::Lower;
                     edge <= pdat::EdgeIndex::Upper;
-                    edge++) {
+                    ++edge) {
                   pdat::EdgeIndex si(*fi, axis, edge);
-                  for (int d = 0; d < depth; d++) {
+                  for (int d = 0; d < depth; ++d) {
                      (*data)(si, d) = value;
                   }
                }
@@ -362,9 +362,9 @@ void EdgeDataTest::setConservativeData(
             if (d_dim == tbox::Dimension(3)) {
                for (int edge = pdat::EdgeIndex::LowerLeft;
                     edge <= pdat::EdgeIndex::UpperRight;
-                    edge++) {
+                    ++edge) {
                   pdat::EdgeIndex si(*fi, axis, edge);
-                  for (int d = 0; d < depth; d++) {
+                  for (int d = 0; d < depth; ++d) {
                      (*data)(si, d) = value;
                   }
                }
@@ -390,11 +390,11 @@ void EdgeDataTest::initializeDataOnPatch(
 
    if (d_do_refine) {
 
-      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          boost::shared_ptr<pdat::EdgeData<double> > edge_data(
-            patch.getPatchData(d_variables[i], getDataContext()),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+               patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(edge_data);
 
          hier::Box dbox = edge_data->getBox();
@@ -405,11 +405,11 @@ void EdgeDataTest::initializeDataOnPatch(
 
    } else if (d_do_coarsen) {
 
-      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          boost::shared_ptr<pdat::EdgeData<double> > edge_data(
-            patch.getPatchData(d_variables[i], getDataContext()),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+               patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(edge_data);
 
          hier::Box dbox = edge_data->getGhostBox();
@@ -437,7 +437,7 @@ void EdgeDataTest::setConstantBoundaryData(
 
    if (bbox.getBoundaryType() == d_dim.getValue()) {
 
-      for (int axis = 0; axis < d_dim.getValue(); axis++) {
+      for (int axis = 0; axis < d_dim.getValue(); ++axis) {
          if (axis == 0) {
             if (lid % 2) {
                fillbox.growLower(axis,
@@ -468,7 +468,7 @@ void EdgeDataTest::setConstantBoundaryData(
       }
 
    } else if (bbox.getBoundaryType() == 1) {
-      for (int axis = 0; axis < d_dim.getValue(); axis++) {
+      for (int axis = 0; axis < d_dim.getValue(); ++axis) {
          if (lid == 2 * axis) {
             fillbox.growLower(axis,
                tbox::MathUtilities<int>::Max(gcw(axis) - 1, 0));
@@ -542,7 +542,7 @@ void EdgeDataTest::setConstantBoundaryData(
       }
    }
 
-   for (int id = 0; id < d_dim.getValue(); id++) {
+   for (int id = 0; id < d_dim.getValue(); ++id) {
       double value = GETVALUE(d_dim.getValue(), ndimfact, axfact);
       data->getArrayData(id).fillAll(value,
          pdat::EdgeGeometry::toEdgeBox(fillbox, id));
@@ -575,7 +575,7 @@ bool EdgeDataTest::verifyResults(
       tbox::plog << "Patch box = " << patch.getBox() << endl;
 
       hier::IntVector tgcw(d_dim, 0);
-      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
          tgcw.max(patch.getPatchData(d_variables[i], getDataContext())->
             getGhostCellWidth());
       }
@@ -592,11 +592,11 @@ bool EdgeDataTest::verifyResults(
             patch, hierarchy, level_number);
       }
 
-      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          boost::shared_ptr<pdat::EdgeData<double> > edge_data(
-            patch.getPatchData(d_variables[i], getDataContext()),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+               patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(edge_data);
          int depth = edge_data->getDepth();
          hier::Box dbox = edge_data->getGhostBox();
@@ -606,12 +606,12 @@ bool EdgeDataTest::verifyResults(
             setLinearData(solution, tbox, patch);
          }
 
-         for (int id = 0; id < d_dim.getValue(); id++) {
+         for (int id = 0; id < d_dim.getValue(); ++id) {
             pdat::EdgeIterator siend(pdat::EdgeGeometry::end(dbox, id));
             for (pdat::EdgeIterator si(pdat::EdgeGeometry::begin(dbox, id));
                  si != siend; ++si) {
                double correct = (*solution)(*si);
-               for (int d = 0; d < depth; d++) {
+               for (int d = 0; d < depth; ++d) {
                   double result = (*edge_data)(*si, d);
                   if (!tbox::MathUtilities<double>::equalEps(correct,
                          result)) {
@@ -649,8 +649,8 @@ void EdgeDataTest::setLinearData(
    TBOX_ASSERT(data);
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
@@ -660,7 +660,7 @@ void EdgeDataTest::setLinearData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   for (int axis = 0; axis < d_dim.getValue(); axis++) {
+   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
       const pdat::EdgeIndex loweri(patch.getBox().lower(), axis, 0);
       pdat::EdgeIterator eiend(pdat::EdgeGeometry::end(sbox, axis));
       for (pdat::EdgeIterator ei(pdat::EdgeGeometry::begin(sbox, axis));
@@ -692,7 +692,7 @@ void EdgeDataTest::setLinearData(
             }
          }
 
-         for (int d = 0; d < depth; d++) {
+         for (int d = 0; d < depth; ++d) {
             (*data)(*ei,
                     d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
          }
@@ -715,7 +715,7 @@ void EdgeDataTest::checkPatchInteriorData(
 
    const int depth = data->getDepth();
 
-   for (int axis = 0; axis < d_dim.getValue(); axis++) {
+   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
       const pdat::EdgeIndex loweri(interior.lower(), axis, 0);
       pdat::EdgeIterator eiend(pdat::EdgeGeometry::end(interior, axis));
       for (pdat::EdgeIterator ei(pdat::EdgeGeometry::begin(interior, axis));
@@ -748,7 +748,7 @@ void EdgeDataTest::checkPatchInteriorData(
          }
 
          double value;
-         for (int d = 0; d < depth; d++) {
+         for (int d = 0; d < depth; ++d) {
             value = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
             if (!(tbox::MathUtilities<double>::equalEps((*data)(*ei,
                                                                 d), value))) {
@@ -770,8 +770,8 @@ void EdgeDataTest::setPhysicalBoundaryConditions(
    NULL_USE(time);
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
 
    const std::vector<hier::BoundaryBox>& node_bdry =
@@ -789,11 +789,11 @@ void EdgeDataTest::setPhysicalBoundaryConditions(
          pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
    const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
-   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       boost::shared_ptr<pdat::EdgeData<double> > edge_data(
-         patch.getPatchData(d_variables[i], getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+            patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(edge_data);
 
       hier::Box patch_interior = edge_data->getBox();
@@ -802,7 +802,7 @@ void EdgeDataTest::setPhysicalBoundaryConditions(
       /*
        * Set node boundary data.
        */
-      for (int ni = 0; ni < num_node_bdry_boxes; ni++) {
+      for (int ni = 0; ni < num_node_bdry_boxes; ++ni) {
          hier::Box fill_box = pgeom->getBoundaryFillBox(node_bdry[ni],
                patch.getBox(),
                gcw);
@@ -814,7 +814,7 @@ void EdgeDataTest::setPhysicalBoundaryConditions(
          /*
           * Set edge boundary data.
           */
-         for (int ei = 0; ei < num_edge_bdry_boxes; ei++) {
+         for (int ei = 0; ei < num_edge_bdry_boxes; ++ei) {
             hier::Box fill_box = pgeom->getBoundaryFillBox(edge_bdry[ei],
                   patch.getBox(),
                   gcw);
@@ -827,7 +827,7 @@ void EdgeDataTest::setPhysicalBoundaryConditions(
          /*
           * Set face boundary data.
           */
-         for (int fi = 0; fi < num_face_bdry_boxes; fi++) {
+         for (int fi = 0; fi < num_face_bdry_boxes; ++fi) {
             hier::Box fill_box = pgeom->getBoundaryFillBox(face_bdry[fi],
                   patch.getBox(),
                   gcw);

@@ -137,8 +137,8 @@ void HyprePoisson::initializeLevelData(
 
    boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy = hierarchy;
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geom(
-      patch_hierarchy->getGridGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+         patch_hierarchy->getGridGeometry()));
    TBOX_ASSERT(grid_geom);
 
    boost::shared_ptr<hier::PatchLevel> level(
@@ -166,15 +166,15 @@ void HyprePoisson::initializeLevelData(
       }
       hier::Box pbox = patch->getBox();
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-         patch->getPatchGeometry(),
-         BOOST_CAST_TAG);
+         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            patch->getPatchGeometry()));
 
       boost::shared_ptr<pdat::CellData<double> > exact_data(
-         patch->getPatchData(d_exact_id),
-        BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch->getPatchData(d_exact_id)));
       boost::shared_ptr<pdat::CellData<double> > rhs_data(
-         patch->getPatchData(d_rhs_id),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch->getPatchData(d_rhs_id)));
       TBOX_ASSERT(patch_geom);
       TBOX_ASSERT(exact_data);
       TBOX_ASSERT(rhs_data);
@@ -252,8 +252,8 @@ bool HyprePoisson::solvePoisson()
         ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
       boost::shared_ptr<pdat::CellData<double> > data(
-         patch->getPatchData(d_comp_soln_id),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch->getPatchData(d_comp_soln_id)));
       TBOX_ASSERT(data);
       data->fill(0.0);
    }
@@ -365,11 +365,11 @@ bool HyprePoisson::packDerivedDataIntoDoubleBuffer(
 
    if (variable_name == "Error") {
       boost::shared_ptr<pdat::CellData<double> > current_solution_(
-         patch.getPatchData(d_comp_soln_id),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_comp_soln_id)));
       boost::shared_ptr<pdat::CellData<double> > exact_solution_(
-         patch.getPatchData(d_exact_id),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_exact_id)));
       TBOX_ASSERT(current_solution_);
       TBOX_ASSERT(exact_solution_);
       pdat::CellData<double>& current_solution = *current_solution_;

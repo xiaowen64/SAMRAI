@@ -7,10 +7,6 @@
  * Description:   Simple structure for managing refinement data in equivalence classes.
  *
  ************************************************************************/
-
-#ifndef included_xfer_RefineClasses_C
-#define included_xfer_RefineClasses_C
-
 #include <typeinfo>
 
 #include "SAMRAI/xfer/RefineClasses.h"
@@ -308,7 +304,7 @@ RefineClasses::classesMatch(
 
          } // if number of items in equivalence class match
 
-         eq_index++;
+         ++eq_index;
 
       } // while equivalence classes match
 
@@ -385,19 +381,19 @@ RefineClasses::printClassData(
 {
    stream << "RefineClasses::printClassData()\n";
    stream << "--------------------------------------\n";
-   for (int i = 0; i < static_cast<int>(d_equivalence_class_indices.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_equivalence_class_indices.size()); ++i) {
       stream << "EQUIVALENCE CLASS # " << i << std::endl;
       int j = 0;
       const std::list<int>& indices = d_equivalence_class_indices[i];
       for (std::list<int>::const_iterator li(indices.begin());
-           li != indices.end(); li++) {
+           li != indices.end(); ++li) {
 
          stream << "Item # " << j << std::endl;
          stream << "-----------------------------\n";
 
          printRefineItem(stream, d_refine_classes_data_items[*li]);
 
-         j++;
+         ++j;
       }
       stream << std::endl;
    }
@@ -525,7 +521,7 @@ RefineClasses::getEquivalenceClassIndex(
          eq_index = check_index;
       }
 
-      check_index++;
+      ++check_index;
    }
 
    return eq_index;
@@ -534,4 +530,3 @@ RefineClasses::getEquivalenceClassIndex(
 
 }
 }
-#endif

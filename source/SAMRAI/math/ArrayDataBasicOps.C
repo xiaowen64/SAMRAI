@@ -74,7 +74,7 @@ ArrayDataBasicOps<TYPE>::scale(
          int dst_w[SAMRAI::MAX_DIM_VAL];
          int src_w[SAMRAI::MAX_DIM_VAL];
          int dim_counter[SAMRAI::MAX_DIM_VAL];
-         for (int i = 0; i < dimVal; i++) {
+         for (int i = 0; i < dimVal; ++i) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
             src_w[i] = src_box.numberCells(i);
@@ -92,14 +92,14 @@ ArrayDataBasicOps<TYPE>::scale(
          TYPE* dd = dst.getPointer();
          const TYPE* sd = src.getPointer();
 
-         for (int d = 0; d < ddepth; d++) {
+         for (int d = 0; d < ddepth; ++d) {
 
             int dst_counter = dst_begin;
             int src_counter = src_begin;
 
             int dst_b[SAMRAI::MAX_DIM_VAL];
             int src_b[SAMRAI::MAX_DIM_VAL];
-            for (int nd = 0; nd < dimVal; nd++) {
+            for (int nd = 0; nd < dimVal; ++nd) {
                dst_b[nd] = dst_counter;
                src_b[nd] = src_counter;
             }
@@ -107,14 +107,14 @@ ArrayDataBasicOps<TYPE>::scale(
             /*
              * Loop over each contiguous block of data.
              */
-            for (int nb = 0; nb < num_d0_blocks; nb++) {
+            for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-               for (int i0 = 0; i0 < box_w[0]; i0++) {
+               for (int i0 = 0; i0 < box_w[0]; ++i0) {
                   dd[dst_counter + i0] = alpha * sd[src_counter + i0];
                }
                int dim_jump = 0;
 
-               for (int j = 1; j < dimVal; j++) {
+               for (int j = 1; j < dimVal; ++j) {
                   if (dim_counter[j] < box_w[j] - 1) {
                      ++dim_counter[j];
                      dim_jump = j;
@@ -127,14 +127,14 @@ ArrayDataBasicOps<TYPE>::scale(
                if (dim_jump > 0) {
                   int dst_step = 1;
                   int src_step = 1;
-                  for (int k = 0; k < dim_jump; k++) {
+                  for (int k = 0; k < dim_jump; ++k) {
                      dst_step *= dst_w[k];
                      src_step *= src_w[k];
                   }
                   dst_counter = dst_b[dim_jump - 1] + dst_step;
                   src_counter = src_b[dim_jump - 1] + src_step;
 
-                  for (int m = 0; m < dim_jump; m++) {
+                  for (int m = 0; m < dim_jump; ++m) {
                      dst_b[m] = dst_counter;
                      src_b[m] = src_counter;
                   }
@@ -184,7 +184,7 @@ ArrayDataBasicOps<TYPE>::addScalar(
          int dst_w[SAMRAI::MAX_DIM_VAL];
          int src_w[SAMRAI::MAX_DIM_VAL];
          int dim_counter[SAMRAI::MAX_DIM_VAL];
-         for (int i = 0; i < dimVal; i++) {
+         for (int i = 0; i < dimVal; ++i) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
             src_w[i] = src_box.numberCells(i);
@@ -202,14 +202,14 @@ ArrayDataBasicOps<TYPE>::addScalar(
          TYPE* dd = dst.getPointer();
          const TYPE* sd = src.getPointer();
 
-         for (int d = 0; d < ddepth; d++) {
+         for (int d = 0; d < ddepth; ++d) {
 
             int dst_counter = dst_begin;
             int src_counter = src_begin;
 
             int dst_b[SAMRAI::MAX_DIM_VAL];
             int src_b[SAMRAI::MAX_DIM_VAL];
-            for (int nd = 0; nd < dimVal; nd++) {
+            for (int nd = 0; nd < dimVal; ++nd) {
                dst_b[nd] = dst_counter;
                src_b[nd] = src_counter;
             }
@@ -217,14 +217,14 @@ ArrayDataBasicOps<TYPE>::addScalar(
             /*
              * Loop over each contiguous block of data.
              */
-            for (int nb = 0; nb < num_d0_blocks; nb++) {
+            for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-               for (int i0 = 0; i0 < box_w[0]; i0++) {
+               for (int i0 = 0; i0 < box_w[0]; ++i0) {
                   dd[dst_counter + i0] = alpha + sd[src_counter + i0];
                }
                int dim_jump = 0;
 
-               for (int j = 1; j < dimVal; j++) {
+               for (int j = 1; j < dimVal; ++j) {
                   if (dim_counter[j] < box_w[j] - 1) {
                      ++dim_counter[j];
                      dim_jump = j;
@@ -237,14 +237,14 @@ ArrayDataBasicOps<TYPE>::addScalar(
                if (dim_jump > 0) {
                   int dst_step = 1;
                   int src_step = 1;
-                  for (int k = 0; k < dim_jump; k++) {
+                  for (int k = 0; k < dim_jump; ++k) {
                      dst_step *= dst_w[k];
                      src_step *= src_w[k];
                   }
                   dst_counter = dst_b[dim_jump - 1] + dst_step;
                   src_counter = src_b[dim_jump - 1] + src_step;
 
-                  for (int m = 0; m < dim_jump; m++) {
+                  for (int m = 0; m < dim_jump; ++m) {
                      dst_b[m] = dst_counter;
                      src_b[m] = src_counter;
                   }
@@ -288,7 +288,7 @@ ArrayDataBasicOps<TYPE>::add(
       int src1_w[SAMRAI::MAX_DIM_VAL];
       int src2_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src1_w[i] = src1_box.numberCells(i);
@@ -310,7 +310,7 @@ ArrayDataBasicOps<TYPE>::add(
       const TYPE* s1d = src1.getPointer();
       const TYPE* s2d = src2.getPointer();
 
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int dst_counter = dst_begin;
          int src1_counter = src1_begin;
@@ -319,7 +319,7 @@ ArrayDataBasicOps<TYPE>::add(
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src1_b[SAMRAI::MAX_DIM_VAL];
          int src2_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             dst_b[nd] = dst_counter;
             src1_b[nd] = src1_counter;
             src2_b[nd] = src2_counter;
@@ -328,15 +328,15 @@ ArrayDataBasicOps<TYPE>::add(
          /*
           * Loop over each contiguous block of data.
           */
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                dd[dst_counter + i0] = s1d[src1_counter + i0]
                   + s2d[src2_counter + i0];
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -350,7 +350,7 @@ ArrayDataBasicOps<TYPE>::add(
                int dst_step = 1;
                int src1_step = 1;
                int src2_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   dst_step *= dst_w[k];
                   src1_step *= src1_w[k];
                   src2_step *= src2_w[k];
@@ -359,7 +359,7 @@ ArrayDataBasicOps<TYPE>::add(
                src1_counter = src1_b[dim_jump - 1] + src1_step;
                src2_counter = src2_b[dim_jump - 1] + src2_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   dst_b[m] = dst_counter;
                   src1_b[m] = src1_counter;
                   src2_b[m] = src2_counter;
@@ -404,7 +404,7 @@ ArrayDataBasicOps<TYPE>::subtract(
       int src1_w[SAMRAI::MAX_DIM_VAL];
       int src2_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src1_w[i] = src1_box.numberCells(i);
@@ -426,7 +426,7 @@ ArrayDataBasicOps<TYPE>::subtract(
       const TYPE* s1d = src1.getPointer();
       const TYPE* s2d = src2.getPointer();
 
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int dst_counter = dst_begin;
          int src1_counter = src1_begin;
@@ -435,7 +435,7 @@ ArrayDataBasicOps<TYPE>::subtract(
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src1_b[SAMRAI::MAX_DIM_VAL];
          int src2_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             dst_b[nd] = dst_counter;
             src1_b[nd] = src1_counter;
             src2_b[nd] = src2_counter;
@@ -444,15 +444,15 @@ ArrayDataBasicOps<TYPE>::subtract(
          /*
           * Loop over each contiguous block of data.
           */
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                dd[dst_counter + i0] = s1d[src1_counter + i0]
                   - s2d[src2_counter + i0];
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -466,7 +466,7 @@ ArrayDataBasicOps<TYPE>::subtract(
                int dst_step = 1;
                int src1_step = 1;
                int src2_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   dst_step *= dst_w[k];
                   src1_step *= src1_w[k];
                   src2_step *= src2_w[k];
@@ -475,7 +475,7 @@ ArrayDataBasicOps<TYPE>::subtract(
                src1_counter = src1_b[dim_jump - 1] + src1_step;
                src2_counter = src2_b[dim_jump - 1] + src2_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   dst_b[m] = dst_counter;
                   src1_b[m] = src1_counter;
                   src2_b[m] = src2_counter;
@@ -519,7 +519,7 @@ ArrayDataBasicOps<TYPE>::multiply(
       int src1_w[SAMRAI::MAX_DIM_VAL];
       int src2_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src1_w[i] = src1_box.numberCells(i);
@@ -541,7 +541,7 @@ ArrayDataBasicOps<TYPE>::multiply(
       const TYPE* s1d = src1.getPointer();
       const TYPE* s2d = src2.getPointer();
 
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int dst_counter = dst_begin;
          int src1_counter = src1_begin;
@@ -550,7 +550,7 @@ ArrayDataBasicOps<TYPE>::multiply(
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src1_b[SAMRAI::MAX_DIM_VAL];
          int src2_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             dst_b[nd] = dst_counter;
             src1_b[nd] = src1_counter;
             src2_b[nd] = src2_counter;
@@ -559,15 +559,15 @@ ArrayDataBasicOps<TYPE>::multiply(
          /*
           * Loop over each contiguous block of data.
           */
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                dd[dst_counter + i0] = s1d[src1_counter + i0]
                   * s2d[src2_counter + i0];
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -581,7 +581,7 @@ ArrayDataBasicOps<TYPE>::multiply(
                int dst_step = 1;
                int src1_step = 1;
                int src2_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   dst_step *= dst_w[k];
                   src1_step *= src1_w[k];
                   src2_step *= src2_w[k];
@@ -590,7 +590,7 @@ ArrayDataBasicOps<TYPE>::multiply(
                src1_counter = src1_b[dim_jump - 1] + src1_step;
                src2_counter = src2_b[dim_jump - 1] + src2_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   dst_b[m] = dst_counter;
                   src1_b[m] = src1_counter;
                   src2_b[m] = src2_counter;
@@ -634,7 +634,7 @@ ArrayDataBasicOps<TYPE>::divide(
       int src1_w[SAMRAI::MAX_DIM_VAL];
       int src2_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src1_w[i] = src1_box.numberCells(i);
@@ -656,7 +656,7 @@ ArrayDataBasicOps<TYPE>::divide(
       const TYPE* s1d = src1.getPointer();
       const TYPE* s2d = src2.getPointer();
 
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int dst_counter = dst_begin;
          int src1_counter = src1_begin;
@@ -665,21 +665,21 @@ ArrayDataBasicOps<TYPE>::divide(
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src1_b[SAMRAI::MAX_DIM_VAL];
          int src2_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             dst_b[nd] = dst_counter;
             src1_b[nd] = src1_counter;
             src2_b[nd] = src2_counter;
          }
 
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                dd[dst_counter + i0] = s1d[src1_counter + i0]
                   / s2d[src2_counter + i0];
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -693,7 +693,7 @@ ArrayDataBasicOps<TYPE>::divide(
                int dst_step = 1;
                int src1_step = 1;
                int src2_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   dst_step *= dst_w[k];
                   src1_step *= src1_w[k];
                   src2_step *= src2_w[k];
@@ -702,7 +702,7 @@ ArrayDataBasicOps<TYPE>::divide(
                src1_counter = src1_b[dim_jump - 1] + src1_step;
                src2_counter = src2_b[dim_jump - 1] + src2_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   dst_b[m] = dst_counter;
                   src1_b[m] = src1_counter;
                   src2_b[m] = src2_counter;
@@ -743,7 +743,7 @@ ArrayDataBasicOps<TYPE>::reciprocal(
       int dst_w[SAMRAI::MAX_DIM_VAL];
       int src_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src_w[i] = src_box.numberCells(i);
@@ -761,14 +761,14 @@ ArrayDataBasicOps<TYPE>::reciprocal(
       TYPE* dd = dst.getPointer();
       const TYPE* sd = src.getPointer();
 
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int dst_counter = dst_begin;
          int src_counter = src_begin;
 
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             dst_b[nd] = dst_counter;
             src_b[nd] = src_counter;
          }
@@ -776,15 +776,15 @@ ArrayDataBasicOps<TYPE>::reciprocal(
          /*
           * Loop over each contiguous block of data.
           */
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                dd[dst_counter + i0] =
                   tbox::MathUtilities<TYPE>::getOne() / sd[src_counter + i0];
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -797,14 +797,14 @@ ArrayDataBasicOps<TYPE>::reciprocal(
             if (dim_jump > 0) {
                int dst_step = 1;
                int src_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   dst_step *= dst_w[k];
                   src_step *= src_w[k];
                }
                dst_counter = dst_b[dim_jump - 1] + dst_step;
                src_counter = src_b[dim_jump - 1] + src_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   dst_b[m] = dst_counter;
                   src_b[m] = src_counter;
                }
@@ -871,7 +871,7 @@ ArrayDataBasicOps<TYPE>::linearSum(
          int src1_w[SAMRAI::MAX_DIM_VAL];
          int src2_w[SAMRAI::MAX_DIM_VAL];
          int dim_counter[SAMRAI::MAX_DIM_VAL];
-         for (int i = 0; i < dimVal; i++) {
+         for (int i = 0; i < dimVal; ++i) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
             src1_w[i] = src1_box.numberCells(i);
@@ -893,7 +893,7 @@ ArrayDataBasicOps<TYPE>::linearSum(
          const TYPE* s1d = src1.getPointer();
          const TYPE* s2d = src2.getPointer();
 
-         for (int d = 0; d < ddepth; d++) {
+         for (int d = 0; d < ddepth; ++d) {
 
             int dst_counter = dst_begin;
             int src1_counter = src1_begin;
@@ -902,7 +902,7 @@ ArrayDataBasicOps<TYPE>::linearSum(
             int dst_b[SAMRAI::MAX_DIM_VAL];
             int src1_b[SAMRAI::MAX_DIM_VAL];
             int src2_b[SAMRAI::MAX_DIM_VAL];
-            for (int nd = 0; nd < dimVal; nd++) {
+            for (int nd = 0; nd < dimVal; ++nd) {
                dst_b[nd] = dst_counter;
                src1_b[nd] = src1_counter;
                src2_b[nd] = src2_counter;
@@ -911,15 +911,15 @@ ArrayDataBasicOps<TYPE>::linearSum(
             /*
              * Loop over each contiguous block of data.
              */
-            for (int nb = 0; nb < num_d0_blocks; nb++) {
+            for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-               for (int i0 = 0; i0 < box_w[0]; i0++) {
+               for (int i0 = 0; i0 < box_w[0]; ++i0) {
                   dd[dst_counter + i0] = alpha * s1d[src1_counter + i0]
                      + beta * s2d[src2_counter + i0];
                }
                int dim_jump = 0;
 
-               for (int j = 1; j < dimVal; j++) {
+               for (int j = 1; j < dimVal; ++j) {
                   if (dim_counter[j] < box_w[j] - 1) {
                      ++dim_counter[j];
                      dim_jump = j;
@@ -933,7 +933,7 @@ ArrayDataBasicOps<TYPE>::linearSum(
                   int dst_step = 1;
                   int src1_step = 1;
                   int src2_step = 1;
-                  for (int k = 0; k < dim_jump; k++) {
+                  for (int k = 0; k < dim_jump; ++k) {
                      dst_step *= dst_w[k];
                      src1_step *= src1_w[k];
                      src2_step *= src2_w[k];
@@ -942,7 +942,7 @@ ArrayDataBasicOps<TYPE>::linearSum(
                   src1_counter = src1_b[dim_jump - 1] + src1_step;
                   src2_counter = src2_b[dim_jump - 1] + src2_step;
 
-                  for (int m = 0; m < dim_jump; m++) {
+                  for (int m = 0; m < dim_jump; ++m) {
                      dst_b[m] = dst_counter;
                      src1_b[m] = src1_counter;
                      src2_b[m] = src2_counter;
@@ -996,7 +996,7 @@ ArrayDataBasicOps<TYPE>::axpy(
          int src1_w[SAMRAI::MAX_DIM_VAL];
          int src2_w[SAMRAI::MAX_DIM_VAL];
          int dim_counter[SAMRAI::MAX_DIM_VAL];
-         for (int i = 0; i < dimVal; i++) {
+         for (int i = 0; i < dimVal; ++i) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
             src1_w[i] = src1_box.numberCells(i);
@@ -1018,7 +1018,7 @@ ArrayDataBasicOps<TYPE>::axpy(
          const TYPE* s1d = src1.getPointer();
          const TYPE* s2d = src2.getPointer();
 
-         for (int d = 0; d < ddepth; d++) {
+         for (int d = 0; d < ddepth; ++d) {
 
             int dst_counter = dst_begin;
             int src1_counter = src1_begin;
@@ -1027,7 +1027,7 @@ ArrayDataBasicOps<TYPE>::axpy(
             int dst_b[SAMRAI::MAX_DIM_VAL];
             int src1_b[SAMRAI::MAX_DIM_VAL];
             int src2_b[SAMRAI::MAX_DIM_VAL];
-            for (int nd = 0; nd < dimVal; nd++) {
+            for (int nd = 0; nd < dimVal; ++nd) {
                dst_b[nd] = dst_counter;
                src1_b[nd] = src1_counter;
                src2_b[nd] = src2_counter;
@@ -1036,15 +1036,15 @@ ArrayDataBasicOps<TYPE>::axpy(
             /*
              * Loop over each contiguous block of data.
              */
-            for (int nb = 0; nb < num_d0_blocks; nb++) {
+            for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-               for (int i0 = 0; i0 < box_w[0]; i0++) {
+               for (int i0 = 0; i0 < box_w[0]; ++i0) {
                   dd[dst_counter + i0] = alpha * s1d[src1_counter + i0]
                      + s2d[src2_counter + i0];
                }
                int dim_jump = 0;
 
-               for (int j = 1; j < dimVal; j++) {
+               for (int j = 1; j < dimVal; ++j) {
                   if (dim_counter[j] < box_w[j] - 1) {
                      ++dim_counter[j];
                      dim_jump = j;
@@ -1058,7 +1058,7 @@ ArrayDataBasicOps<TYPE>::axpy(
                   int dst_step = 1;
                   int src1_step = 1;
                   int src2_step = 1;
-                  for (int k = 0; k < dim_jump; k++) {
+                  for (int k = 0; k < dim_jump; ++k) {
                      dst_step *= dst_w[k];
                      src1_step *= src1_w[k];
                      src2_step *= src2_w[k];
@@ -1067,7 +1067,7 @@ ArrayDataBasicOps<TYPE>::axpy(
                   src1_counter = src1_b[dim_jump - 1] + src1_step;
                   src2_counter = src2_b[dim_jump - 1] + src2_step;
 
-                  for (int m = 0; m < dim_jump; m++) {
+                  for (int m = 0; m < dim_jump; ++m) {
                      dst_b[m] = dst_counter;
                      src1_b[m] = src1_counter;
                      src2_b[m] = src2_counter;
@@ -1119,7 +1119,7 @@ ArrayDataBasicOps<TYPE>::axmy(
          int src1_w[SAMRAI::MAX_DIM_VAL];
          int src2_w[SAMRAI::MAX_DIM_VAL];
          int dim_counter[SAMRAI::MAX_DIM_VAL];
-         for (int i = 0; i < dimVal; i++) {
+         for (int i = 0; i < dimVal; ++i) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
             src1_w[i] = src1_box.numberCells(i);
@@ -1141,7 +1141,7 @@ ArrayDataBasicOps<TYPE>::axmy(
          const TYPE* s1d = src1.getPointer();
          const TYPE* s2d = src2.getPointer();
 
-         for (int d = 0; d < ddepth; d++) {
+         for (int d = 0; d < ddepth; ++d) {
 
             int dst_counter = dst_begin;
             int src1_counter = src1_begin;
@@ -1150,7 +1150,7 @@ ArrayDataBasicOps<TYPE>::axmy(
             int dst_b[SAMRAI::MAX_DIM_VAL];
             int src1_b[SAMRAI::MAX_DIM_VAL];
             int src2_b[SAMRAI::MAX_DIM_VAL];
-            for (int nd = 0; nd < dimVal; nd++) {
+            for (int nd = 0; nd < dimVal; ++nd) {
                dst_b[nd] = dst_counter;
                src1_b[nd] = src1_counter;
                src2_b[nd] = src2_counter;
@@ -1159,15 +1159,15 @@ ArrayDataBasicOps<TYPE>::axmy(
             /*
              * Loop over each contiguous block of data.
              */
-            for (int nb = 0; nb < num_d0_blocks; nb++) {
+            for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-               for (int i0 = 0; i0 < box_w[0]; i0++) {
+               for (int i0 = 0; i0 < box_w[0]; ++i0) {
                   dd[dst_counter + i0] = alpha * s1d[src1_counter + i0]
                      - s2d[src2_counter + i0];
                }
                int dim_jump = 0;
 
-               for (int j = 1; j < dimVal; j++) {
+               for (int j = 1; j < dimVal; ++j) {
                   if (dim_counter[j] < box_w[j] - 1) {
                      ++dim_counter[j];
                      dim_jump = j;
@@ -1181,7 +1181,7 @@ ArrayDataBasicOps<TYPE>::axmy(
                   int dst_step = 1;
                   int src1_step = 1;
                   int src2_step = 1;
-                  for (int k = 0; k < dim_jump; k++) {
+                  for (int k = 0; k < dim_jump; ++k) {
                      dst_step *= dst_w[k];
                      src1_step *= src1_w[k];
                      src2_step *= src2_w[k];
@@ -1190,7 +1190,7 @@ ArrayDataBasicOps<TYPE>::axmy(
                   src1_counter = src1_b[dim_jump - 1] + src1_step;
                   src2_counter = src2_b[dim_jump - 1] + src2_step;
 
-                  for (int m = 0; m < dim_jump; m++) {
+                  for (int m = 0; m < dim_jump; ++m) {
                      dst_b[m] = dst_counter;
                      src1_b[m] = src1_counter;
                      src2_b[m] = src2_counter;
@@ -1226,7 +1226,7 @@ ArrayDataBasicOps<TYPE>::min(
       int box_w[SAMRAI::MAX_DIM_VAL];
       int d_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
@@ -1242,24 +1242,24 @@ ArrayDataBasicOps<TYPE>::min(
 
       const TYPE* dd = data.getPointer();
 
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int d_counter = d_begin;
 
          int d_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             d_b[nd] = d_counter;
          }
 
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                minval =
                   tbox::MathUtilities<TYPE>::Min(minval, dd[d_counter + i0]);
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -1270,12 +1270,12 @@ ArrayDataBasicOps<TYPE>::min(
             }
             if (dim_jump > 0) {
                int d_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   d_step *= d_w[k];
                }
                d_counter = d_b[dim_jump - 1] + d_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   d_b[m] = d_counter;
                }
             }
@@ -1307,7 +1307,7 @@ ArrayDataBasicOps<TYPE>::max(
       int box_w[SAMRAI::MAX_DIM_VAL];
       int d_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
@@ -1323,24 +1323,24 @@ ArrayDataBasicOps<TYPE>::max(
 
       const TYPE* dd = data.getPointer();
 
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int d_counter = d_begin;
 
          int d_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             d_b[nd] = d_counter;
          }
 
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                maxval =
                   tbox::MathUtilities<TYPE>::Max(maxval, dd[d_counter + i0]);
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -1351,12 +1351,12 @@ ArrayDataBasicOps<TYPE>::max(
             }
             if (dim_jump > 0) {
                int d_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   d_step *= d_w[k];
                }
                d_counter = d_b[dim_jump - 1] + d_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   d_b[m] = d_counter;
                }
             }
@@ -1388,7 +1388,7 @@ ArrayDataBasicOps<TYPE>::setRandomValues(
       int box_w[SAMRAI::MAX_DIM_VAL];
       int d_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; i++) {
+      for (int i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
@@ -1404,23 +1404,23 @@ ArrayDataBasicOps<TYPE>::setRandomValues(
 
       TYPE* dd = dst.getPointer();
 
-      for (int d = 0; d < ddepth; d++) {
+      for (int d = 0; d < ddepth; ++d) {
 
          int d_counter = d_begin;
 
          int d_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; nd++) {
+         for (int nd = 0; nd < dimVal; ++nd) {
             d_b[nd] = d_counter;
          }
 
-         for (int nb = 0; nb < num_d0_blocks; nb++) {
+         for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-            for (int i0 = 0; i0 < box_w[0]; i0++) {
+            for (int i0 = 0; i0 < box_w[0]; ++i0) {
                dd[d_counter + i0] = tbox::MathUtilities<TYPE>::Rand(low, width);
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; j++) {
+            for (int j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -1431,12 +1431,12 @@ ArrayDataBasicOps<TYPE>::setRandomValues(
             }
             if (dim_jump > 0) {
                int d_step = 1;
-               for (int k = 0; k < dim_jump; k++) {
+               for (int k = 0; k < dim_jump; ++k) {
                   d_step *= d_w[k];
                }
                d_counter = d_b[dim_jump - 1] + d_step;
 
-               for (int m = 0; m < dim_jump; m++) {
+               for (int m = 0; m < dim_jump; ++m) {
                   d_b[m] = d_counter;
                }
             }

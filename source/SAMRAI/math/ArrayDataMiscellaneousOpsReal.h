@@ -193,10 +193,10 @@ public:
 private:
    // The following are not implemented:
    ArrayDataMiscellaneousOpsReal(
-      const ArrayDataMiscellaneousOpsReal<TYPE>&);
-   void
+      const ArrayDataMiscellaneousOpsReal&);
+   ArrayDataMiscellaneousOpsReal&
    operator = (
-      const ArrayDataMiscellaneousOpsReal<TYPE>&);
+      const ArrayDataMiscellaneousOpsReal&);
 
 };
 

@@ -7,10 +7,6 @@
  * Description:   A n-dimensional integer vector
  *
  ************************************************************************/
-
-#ifndef included_hier_IntVector_C
-#define included_hier_IntVector_C
-
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
@@ -101,7 +97,7 @@ operator >> (
 {
    while (s.get() != '(') ;
 
-   for (int i = 0; i < rhs.getDim().getValue(); i++) {
+   for (int i = 0; i < rhs.getDim().getValue(); ++i) {
       s >> rhs(i);
       if (i < rhs.getDim().getValue() - 1)
          while (s.get() != ',') ;
@@ -118,7 +114,7 @@ std::ostream& operator << (
 {
    s << '(';
 
-   for (int i = 0; i < rhs.getDim().getValue(); i++) {
+   for (int i = 0; i < rhs.getDim().getValue(); ++i) {
       s << rhs(i);
       if (i < rhs.getDim().getValue() - 1)
          s << ",";
@@ -157,11 +153,11 @@ IntVector::sortIntVector(
 {
    const IntVector num_cells = values;
 
-   for (int d = 0; d < d_dim.getValue(); d++) {
+   for (int d = 0; d < d_dim.getValue(); ++d) {
       d_vector[d] = d;
    }
-   for (int d0 = 0; d0 < d_dim.getValue() - 1; d0++) {
-      for (int d1 = d0 + 1; d1 < d_dim.getValue(); d1++) {
+   for (int d0 = 0; d0 < d_dim.getValue() - 1; ++d0) {
+      for (int d1 = d0 + 1; d1 < d_dim.getValue(); ++d1) {
          if (values(d_vector[d0]) > values(d_vector[d1])) {
             int tmp_d = d_vector[d0];
             d_vector[d0] = d_vector[d1];
@@ -170,7 +166,7 @@ IntVector::sortIntVector(
       }
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int d = 0; d < d_dim.getValue() - 1; d++) {
+   for (int d = 0; d < d_dim.getValue() - 1; ++d) {
       TBOX_ASSERT(values(d_vector[d]) <= values(d_vector[d + 1]));
    }
 #endif
@@ -181,9 +177,6 @@ IntVector::initializeCallback()
 {
    for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       s_zeros[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 0);
-   }
-
-   for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       s_ones[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 1);
    }
 }
@@ -199,5 +192,3 @@ IntVector::finalizeCallback()
 
 }
 }
-
-#endif

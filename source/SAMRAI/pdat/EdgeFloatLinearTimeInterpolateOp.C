@@ -7,10 +7,6 @@
  * Description:   Linear time interp operator for edge-centered float patch data.
  *
  ************************************************************************/
-
-#ifndef included_pdat_EdgeFloatLinearTimeInterpolateOp_C
-#define included_pdat_EdgeFloatLinearTimeInterpolateOp_C
-
 #include "SAMRAI/pdat/EdgeFloatLinearTimeInterpolateOp.h"
 
 #include "SAMRAI/hier/Box.h"
@@ -172,7 +168,7 @@ EdgeFloatLinearTimeInterpolateOp::timeInterpolate(
       tfrac = 0.0;
    }
 
-   for (int d = 0; d < dst_dat->getDepth(); d++) {
+   for (int d = 0; d < dst_dat->getDepth(); ++d) {
       if (dim == tbox::Dimension(1)) {
          SAMRAI_F77_FUNC(lintimeintedgefloat1d, LINTIMEINTEDGEFLOAT1D) (ifirst(0),
             ilast(0),
@@ -252,4 +248,3 @@ EdgeFloatLinearTimeInterpolateOp::timeInterpolate(
 
 }
 }
-#endif

@@ -20,7 +20,7 @@ default:      check
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA= -DDISPLAY -DNDIM=$(PDIM) -DTESTING=1
+CPPFLAGS_EXTRA= -DDISPLAY -DTESTING=1
 
 CXX_OBJS      = main.o HierSumTest.o
 F_OBJS       = edgeops2d.o edgeops3d.o
@@ -79,14 +79,12 @@ everything:
 	$(MAKE) examples
 	$(MAKE) perf
 
-clean-check:
-	$(SAMCLEAN)
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
 
-clean:
-	$(SAMCLEAN)
-	$(RM) *.f *main* 
-	$(RM) restart-*d*
-	$(RM) viz*
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) main
 
 
 include $(SRCDIR)/Makefile.depend

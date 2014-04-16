@@ -463,12 +463,12 @@ private:
 
    // Unimplemented copy constructor
    CellData(
-      const CellData<TYPE>&);
+      const CellData&);
 
    // Unimplemented assignment operator
-   void
+   CellData
    operator = (
-      const CellData<TYPE>&);
+      const CellData&);
 
    void
    copyWithRotation(
@@ -483,6 +483,8 @@ private:
    int d_depth;
 
    boost::shared_ptr<ArrayData<TYPE> > d_data;
+
+   static boost::shared_ptr<tbox::Timer> t_copy;
 
 };
 

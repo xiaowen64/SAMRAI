@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_SideGeometry_C
-#define included_pdat_SideGeometry_C
-
 #include "SAMRAI/pdat/SideGeometry.h"
 #include "SAMRAI/pdat/SideIterator.h"
 #include "SAMRAI/hier/BoxContainer.h"
@@ -115,7 +111,7 @@ SideGeometry::calculateOverlap(
 /*
  *************************************************************************
  *
- * Compute the boxes that will be used to contstruct an overlap object
+ * Compute the boxes that will be used to construct an overlap object
  *
  *************************************************************************
  */
@@ -156,7 +152,7 @@ SideGeometry::computeDestinationBoxes(
    if (!quick_check.empty()) {
 
       const hier::IntVector& dirs = src_geometry.getDirectionVector();
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          if (dirs(d)) {
             const hier::Box dst_side(toSideBox(dst_ghost, d));
             const hier::Box src_side(toSideBox(src_shift, d));
@@ -279,7 +275,7 @@ SideGeometry::setUpOverlap(
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          hier::Box side_box(SideGeometry::toSideBox(*b, d));
          dst_boxes[d].pushBack(side_box);
       }
@@ -465,9 +461,9 @@ SideGeometry::transform(
 
    const int normal_direction = index.getAxis();
 
-   for (int i = 0; i < dim.getValue(); i++) {
+   for (int i = 0; i < dim.getValue(); ++i) {
       if (i != normal_direction && index(i) >= 0) {
-         index(i)++;
+         ++index(i);
       }
    }
 
@@ -480,7 +476,7 @@ SideGeometry::transform(
       if (rotation_num) {
 
          SideIndex tmp_index(dim);
-         for (int r = 0; r < rotation_num; r++) {
+         for (int r = 0; r < rotation_num; ++r) {
             tmp_index = index;
             index(0) = tmp_index(1);
             index(1) = -tmp_index(0);
@@ -610,9 +606,9 @@ SideGeometry::transform(
       new_normal_direction = index.getAxis();
    }
 
-   for (int i = 0; i < dim.getValue(); i++) {
+   for (int i = 0; i < dim.getValue(); ++i) {
       if (i != new_normal_direction && index(i) > 0) {
-         index(i)--;
+         --index(i);
       }
    }
 
@@ -629,7 +625,7 @@ SideGeometry::rotateAboutAxis(SideIndex& index,
    const int b = (axis + 2) % dim.getValue();
 
    SideIndex tmp_index(dim);
-   for (int j = 0; j < num_rotations; j++) {
+   for (int j = 0; j < num_rotations; ++j) {
       tmp_index = index;
       index(a) = tmp_index(b);
       index(b) = -tmp_index(a);
@@ -637,7 +633,7 @@ SideGeometry::rotateAboutAxis(SideIndex& index,
 
    int new_normal_direction = index.getAxis();
    if (new_normal_direction != axis) {
-      for (int j = 0; j < num_rotations; j++) {
+      for (int j = 0; j < num_rotations; ++j) {
          new_normal_direction = new_normal_direction == a ? b : a;
       }
    }
@@ -662,4 +658,3 @@ SideGeometry::end(
 
 }
 }
-#endif

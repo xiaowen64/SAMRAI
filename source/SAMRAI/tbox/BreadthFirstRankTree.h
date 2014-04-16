@@ -185,6 +185,15 @@ public:
 
 private:
 
+   // Unimplemented copy constructor.
+   BreadthFirstRankTree(
+      const BreadthFirstRankTree& other);
+
+   // Unimplemented assignment operator.
+   BreadthFirstRankTree&
+   operator = (
+      const BreadthFirstRankTree& rhs);
+
    /*!
     * @brief Construct the tree.
     *

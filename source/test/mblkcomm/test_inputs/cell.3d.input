@@ -88,14 +88,6 @@ BlockGridGeometry {
    domain_boxes_1 = [ (0,0,0) , (25,13,15) ]
    domain_boxes_2 = [ (0,0,0) , (20,25,15) ]
 
-   Singularity0 {
-      blocks = 0,1,2
-
-      sing_box_0 = [(21,14,0),(21,14,15)]
-      sing_box_1 = [(-1,14,0),(-1,14,15)]
-      sing_box_2 = [(21,-1,0),(21,-1,15)]
-   }
- 
    BlockNeighbors0 {
       block_a = 0
       block_b = 1

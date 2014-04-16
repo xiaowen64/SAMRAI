@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_NodeComplexInjection_C
-#define included_pdat_NodeComplexInjection_C
-
 #include "SAMRAI/pdat/NodeComplexInjection.h"
 #include "SAMRAI/tbox/Complex.h"
 
@@ -96,11 +92,11 @@ NodeComplexInjection::coarsen(
    TBOX_ASSERT_OBJDIM_EQUALITY4(coarse, fine, coarse_box, ratio);
 
    boost::shared_ptr<NodeData<dcomplex> > fdata(
-      fine.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<NodeData<dcomplex>, hier::PatchData>(
+         fine.getPatchData(src_component)));
    boost::shared_ptr<NodeData<dcomplex> > cdata(
-      coarse.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<NodeData<dcomplex>, hier::PatchData>(
+         coarse.getPatchData(dst_component)));
 
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
@@ -114,7 +110,7 @@ NodeComplexInjection::coarsen(
    const hier::Index ifirstc = coarse_box.lower();
    const hier::Index ilastc = coarse_box.upper();
 
-   for (int d = 0; d < cdata->getDepth(); d++) {
+   for (int d = 0; d < cdata->getDepth(); ++d) {
       if (fine.getDim() == tbox::Dimension(1)) {
          SAMRAI_F77_FUNC(conavgnodecplx1d, CONAVGNODECPLX1D) (ifirstc(0), ilastc(0),
             filo(0), fihi(0),
@@ -151,4 +147,3 @@ NodeComplexInjection::coarsen(
 
 }
 }
-#endif

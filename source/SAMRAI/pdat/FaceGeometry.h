@@ -210,7 +210,7 @@ private:
 
    FaceGeometry(
       const FaceGeometry&);             // not implemented
-   void
+   FaceGeometry&
    operator = (
       const FaceGeometry&);                     // not implemented
 

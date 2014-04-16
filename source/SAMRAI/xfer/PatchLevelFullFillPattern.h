@@ -119,7 +119,7 @@ public:
 private:
    PatchLevelFullFillPattern(
       const PatchLevelFullFillPattern&);             // not implemented
-   void
+   PatchLevelFullFillPattern&
    operator = (
       const PatchLevelFullFillPattern&);             // not implemented
 

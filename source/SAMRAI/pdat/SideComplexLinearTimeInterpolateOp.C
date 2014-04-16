@@ -7,10 +7,6 @@
  * Description:   Linear time interp operator for side-centered complex data.
  *
  ************************************************************************/
-
-#ifndef included_pdat_SideComplexLinearTimeInterpolateOp_C
-#define included_pdat_SideComplexLinearTimeInterpolateOp_C
-
 #include "SAMRAI/pdat/SideComplexLinearTimeInterpolateOp.h"
 #include "SAMRAI/tbox/Complex.h"
 
@@ -181,7 +177,7 @@ SideComplexLinearTimeInterpolateOp::timeInterpolate(
       tfrac = 0.0;
    }
 
-   for (int d = 0; d < dst_dat->getDepth(); d++) {
+   for (int d = 0; d < dst_dat->getDepth(); ++d) {
       if (dim == tbox::Dimension(1)) {
          if (directions(0)) {
             SAMRAI_F77_FUNC(lintimeintsidecmplx1d, LINTIMEINTSIDECMPLX1D) (ifirst(0),
@@ -273,4 +269,3 @@ SideComplexLinearTimeInterpolateOp::timeInterpolate(
 
 }
 }
-#endif

@@ -7,9 +7,6 @@
  * Description:   Globally unique identifier that can be locally determined.
  *
  ************************************************************************/
-#ifndef included_hier_GlobalId_C
-#define included_hier_GlobalId_C
-
 #include "SAMRAI/hier/GlobalId.h"
 
 #include <iostream>
@@ -69,4 +66,3 @@ operator << (
 
 }
 }
-#endif

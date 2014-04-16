@@ -51,7 +51,7 @@ PatchFaceDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 
    int retval = 1;
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box =
             pdat::FaceGeometry::toFaceBox(box, d);
          retval = tbox::MathUtilities<int>::Min(retval,
@@ -61,7 +61,7 @@ PatchFaceDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
                   face_box));
       }
    } else {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box =
             pdat::FaceGeometry::toFaceBox(box, d);
          retval = tbox::MathUtilities<int>::Min(retval,
@@ -89,7 +89,7 @@ PatchFaceDataMiscellaneousOpsReal<TYPE>::compareToScalar(
    int dimVal = dst->getDim().getValue();
 
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          d_array_ops.compareToScalar(dst->getArrayData(d),
             src->getArrayData(d),
@@ -97,7 +97,7 @@ PatchFaceDataMiscellaneousOpsReal<TYPE>::compareToScalar(
             face_box);
       }
    } else {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          d_array_ops.compareToScalarWithControlVolume(dst->getArrayData(d),
             src->getArrayData(d),
@@ -122,7 +122,7 @@ PatchFaceDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 
    int retval = 1;
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box =
             pdat::FaceGeometry::toFaceBox(box, d);
          retval = tbox::MathUtilities<int>::Min(retval,
@@ -132,7 +132,7 @@ PatchFaceDataMiscellaneousOpsReal<TYPE>::testReciprocal(
                   face_box));
       }
    } else {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box =
             pdat::FaceGeometry::toFaceBox(box, d);
          retval = tbox::MathUtilities<int>::Min(retval,
@@ -158,7 +158,7 @@ PatchFaceDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
    int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box =
          pdat::FaceGeometry::toFaceBox(box, d);
       TYPE dirval = d_array_ops.maxPointwiseDivide(numer->getArrayData(d),
@@ -181,7 +181,7 @@ PatchFaceDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
    int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       TYPE dirval = d_array_ops.minPointwiseDivide(numer->getArrayData(d),
             denom->getArrayData(d),

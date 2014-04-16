@@ -245,10 +245,10 @@ public:
 private:
    // The following are not implemented:
    PatchEdgeDataBasicOps(
-      const PatchEdgeDataBasicOps<TYPE>&);
-   void
+      const PatchEdgeDataBasicOps&);
+   PatchEdgeDataBasicOps&
    operator = (
-      const PatchEdgeDataBasicOps<TYPE>&);
+      const PatchEdgeDataBasicOps&);
 
    ArrayDataBasicOps<TYPE> d_array_ops;
 };

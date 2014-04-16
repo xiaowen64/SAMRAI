@@ -58,7 +58,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
    int dst_w[SAMRAI::MAX_DIM_VAL];
    int src_w[SAMRAI::MAX_DIM_VAL];
    int dim_counter[SAMRAI::MAX_DIM_VAL];
-   for (int i = 0; i < dim.getValue(); i++) {
+   for (int i = 0; i < dim.getValue(); ++i) {
       box_w[i] = opbox.numberCells(i);
       dst_w[i] = dst_box.numberCells(i);
       src_w[i] = src_box.numberCells(i);
@@ -96,7 +96,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
 
       int dst_b[SAMRAI::MAX_DIM_VAL];
       int src_b[SAMRAI::MAX_DIM_VAL];
-      for (int nd = 0; nd < dim.getValue(); nd++) {
+      for (int nd = 0; nd < dim.getValue(); ++nd) {
          dst_b[nd] = dst_counter;
          src_b[nd] = src_counter;
       }
@@ -105,9 +105,9 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
        * Loop over each contiguous block of data.
        */
 
-      for (int nb = 0; nb < num_d0_blocks; nb++) {
+      for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-         for (int i0 = 0; i0 < box_w[0]; i0++) {
+         for (int i0 = 0; i0 < box_w[0]; ++i0) {
             op(dst_ptr[dst_counter + i0], src_ptr[src_counter + i0]);
          }
          int dim_jump = 0;
@@ -117,7 +117,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
           * beginning array index for the next block.
           */
 
-         for (int j = 1; j < dim.getValue(); j++) {
+         for (int j = 1; j < dim.getValue(); ++j) {
             if (dim_counter[j] < box_w[j] - 1) {
                ++dim_counter[j];
                dim_jump = j;
@@ -131,14 +131,14 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
 
             int dst_step = 1;
             int src_step = 1;
-            for (int k = 0; k < dim_jump; k++) {
+            for (int k = 0; k < dim_jump; ++k) {
                dst_step *= dst_w[k];
                src_step *= src_w[k];
             }
             dst_counter = dst_b[dim_jump - 1] + dst_step;
             src_counter = src_b[dim_jump - 1] + src_step;
 
-            for (int m = 0; m < dim_jump; m++) {
+            for (int m = 0; m < dim_jump; ++m) {
                dst_b[m] = dst_counter;
                src_b[m] = src_counter;
             }
@@ -195,7 +195,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
    int box_w[SAMRAI::MAX_DIM_VAL];
    int dat_w[SAMRAI::MAX_DIM_VAL];
    int dim_counter[SAMRAI::MAX_DIM_VAL];
-   for (int i = 0; i < dim.getValue(); i++) {
+   for (int i = 0; i < dim.getValue(); ++i) {
       box_w[i] = opbox.numberCells(i);
       dat_w[i] = array_d_box.numberCells(i);
       dim_counter[i] = 0;
@@ -223,7 +223,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
     * Loop over the depth sections of the data arrays.
     */
 
-   for (int d = 0; d < array_d_depth; d++) {
+   for (int d = 0; d < array_d_depth; ++d) {
 
       int dat_counter = dat_begin;
       int buf_counter = buf_begin;
@@ -232,7 +232,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
       int& src_counter = (src_is_buffer ? buf_counter : dat_counter);
 
       int dat_b[SAMRAI::MAX_DIM_VAL];
-      for (int nd = 0; nd < dim.getValue(); nd++) {
+      for (int nd = 0; nd < dim.getValue(); ++nd) {
          dat_b[nd] = dat_counter;
       }
 
@@ -240,9 +240,9 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
        * Loop over each contiguous block of data.
        */
 
-      for (int nb = 0; nb < num_d0_blocks; nb++) {
+      for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-         for (int i0 = 0; i0 < box_w[0]; i0++) {
+         for (int i0 = 0; i0 < box_w[0]; ++i0) {
             op(dst_ptr[dst_counter + i0], src_ptr[src_counter + i0]);
          }
          int dim_jump = 0;
@@ -252,7 +252,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
           * beginning array index for the next block.
           */
 
-         for (int j = 1; j < dim.getValue(); j++) {
+         for (int j = 1; j < dim.getValue(); ++j) {
             if (dim_counter[j] < box_w[j] - 1) {
                ++dim_counter[j];
                dim_jump = j;
@@ -265,12 +265,12 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
          if (dim_jump > 0) {
 
             int dat_step = 1;
-            for (int k = 0; k < dim_jump; k++) {
+            for (int k = 0; k < dim_jump; ++k) {
                dat_step *= dat_w[k];
             }
             dat_counter = dat_b[dim_jump - 1] + dat_step;
 
-            for (int m = 0; m < dim_jump; m++) {
+            for (int m = 0; m < dim_jump; ++m) {
                dat_b[m] = dat_counter;
             }
 

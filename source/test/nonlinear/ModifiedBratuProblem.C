@@ -394,7 +394,7 @@ void ModifiedBratuProblem::setVectorWeights(
 {
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
 
       /*
        * On every level, first assign cell volume to vector weight.
@@ -406,8 +406,8 @@ void ModifiedBratuProblem::setVectorWeights(
            p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
          boost::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
-            patch->getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geometry);
          const double* dx = patch_geometry->getDx();
          double cell_vol = dx[0];
@@ -418,8 +418,8 @@ void ModifiedBratuProblem::setVectorWeights(
             cell_vol *= dx[2];
          }
          boost::shared_ptr<pdat::CellData<double> > w(
-            patch->getPatchData(d_weight_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_weight_id)));
          TBOX_ASSERT(w);
          w->fillAll(cell_vol);
       }
@@ -461,8 +461,8 @@ void ModifiedBratuProblem::setVectorWeights(
                hier::Box intersection = coarse_box * patch->getBox();
                if (!intersection.empty()) {
                   boost::shared_ptr<pdat::CellData<double> > w(
-                     patch->getPatchData(d_weight_id),
-                     BOOST_CAST_TAG);
+                     BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+                        patch->getPatchData(d_weight_id)));
                   TBOX_ASSERT(w);
                   w->fillAll(0.0, intersection);
 
@@ -501,7 +501,7 @@ void ModifiedBratuProblem::setInitialGuess(
    boost::shared_ptr<hier::PatchHierarchy> hierarchy(
       d_solution_vector->getPatchHierarchy());
 
-   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       hierarchy->getPatchLevel(ln)->
       allocatePatchData(d_jacobian_data);
       hierarchy->getPatchLevel(ln)->
@@ -512,7 +512,7 @@ void ModifiedBratuProblem::setInitialGuess(
 
       for (int amr_level = 0;
            amr_level < hierarchy->getNumberOfLevels();
-           amr_level++) {
+           ++amr_level) {
 
          boost::shared_ptr<hier::PatchLevel> patch_level(
             hierarchy->getPatchLevel(amr_level));
@@ -521,11 +521,11 @@ void ModifiedBratuProblem::setInitialGuess(
             const boost::shared_ptr<hier::Patch>& patch = *p;
 
             boost::shared_ptr<pdat::CellData<double> > y_cur(
-               patch->getPatchData(d_solution, d_current),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+                  patch->getPatchData(d_solution, d_current)));
             boost::shared_ptr<pdat::CellData<double> > y_new(
-               patch->getPatchData(d_solution, d_new),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+                  patch->getPatchData(d_solution, d_new)));
             TBOX_ASSERT(y_cur);
             TBOX_ASSERT(y_new);
             y_new->copy(*y_cur);
@@ -535,8 +535,8 @@ void ModifiedBratuProblem::setInitialGuess(
             patch->getPatchData(d_solution, d_scratch)->setTime(d_new_time);
 
             boost::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
-               patch->getPatchGeometry(),
-               BOOST_CAST_TAG);
+               BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+                  patch->getPatchGeometry()));
             TBOX_ASSERT(patch_geometry);
             const double* dx = patch_geometry->getDx();
             const double* xlo = patch_geometry->getXLower();
@@ -545,8 +545,8 @@ void ModifiedBratuProblem::setInitialGuess(
             const hier::Index ilast = patch->getBox().upper();
 
             boost::shared_ptr<pdat::SideData<double> > diffusion(
-               patch->getPatchData(d_diffusion_coef, d_scratch),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+                  patch->getPatchData(d_diffusion_coef, d_scratch)));
             TBOX_ASSERT(diffusion);
 
             if (d_dim == tbox::Dimension(1)) {
@@ -576,7 +576,7 @@ void ModifiedBratuProblem::setInitialGuess(
 
       for (int amr_level = 0;
            amr_level < hierarchy->getNumberOfLevels();
-           amr_level++) {
+           ++amr_level) {
 
          boost::shared_ptr<hier::PatchLevel> patch_level(
             hierarchy->getPatchLevel(amr_level));
@@ -585,11 +585,11 @@ void ModifiedBratuProblem::setInitialGuess(
             const boost::shared_ptr<hier::Patch>& patch = *p;
 
             boost::shared_ptr<pdat::CellData<double> > y_cur(
-               patch->getPatchData(d_solution, d_current),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+                  patch->getPatchData(d_solution, d_current)));
             boost::shared_ptr<pdat::CellData<double> > y_new(
-               patch->getPatchData(d_solution, d_new),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+                  patch->getPatchData(d_solution, d_new)));
             TBOX_ASSERT(y_cur);
             TBOX_ASSERT(y_new);
             y_new->copy(*y_cur);
@@ -599,8 +599,8 @@ void ModifiedBratuProblem::setInitialGuess(
             patch->getPatchData(d_solution, d_scratch)->setTime(d_new_time);
 
             boost::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
-               patch->getPatchGeometry(),
-               BOOST_CAST_TAG);
+               BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+                  patch->getPatchGeometry()));
             TBOX_ASSERT(patch_geometry);
             const double* dx = patch_geometry->getDx();
             const double* xlo = patch_geometry->getXLower();
@@ -609,8 +609,8 @@ void ModifiedBratuProblem::setInitialGuess(
             const hier::Index ilast = patch->getBox().upper();
 
             boost::shared_ptr<pdat::SideData<double> > diffusion(
-               patch->getPatchData(d_diffusion_coef, d_scratch),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+                  patch->getPatchData(d_diffusion_coef, d_scratch)));
             TBOX_ASSERT(diffusion);
             if (d_dim == tbox::Dimension(1)) {
                FORT_EVALDIFFUSION1D(ifirst(0), ilast(0),
@@ -718,7 +718,7 @@ bool ModifiedBratuProblem::checkNewSolution(
       d_solution_vector->getPatchHierarchy());
    for (int amr_level = 0;
         amr_level < hierarchy->getNumberOfLevels();
-        amr_level++) {
+        ++amr_level) {
       boost::shared_ptr<hier::PatchLevel> patch_level(
          hierarchy->getPatchLevel(amr_level));
       double levelerror = 0.0;
@@ -729,18 +729,18 @@ bool ModifiedBratuProblem::checkNewSolution(
          const hier::Index ifirst = patch->getBox().lower();
          const hier::Index ilast = patch->getBox().upper();
          boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            patch->getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
          const double* dx = patch_geom->getDx();
          const double* xlo = patch_geom->getXLower();
          const double* xhi = patch_geom->getXUpper();
          boost::shared_ptr<pdat::CellData<double> > u(
-            patch->getPatchData(d_solution, d_new),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_solution, d_new)));
          boost::shared_ptr<pdat::CellData<double> > w(
-            patch->getPatchData(d_weight_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_weight_id)));
          TBOX_ASSERT(u);
          TBOX_ASSERT(w);
 
@@ -808,7 +808,7 @@ void ModifiedBratuProblem::updateSolution(
 
    for (int amr_level = 0;
         amr_level < hierarchy->getNumberOfLevels();
-        amr_level++) {
+        ++amr_level) {
 
       boost::shared_ptr<hier::PatchLevel> patch_level(
          hierarchy->getPatchLevel(amr_level));
@@ -817,11 +817,11 @@ void ModifiedBratuProblem::updateSolution(
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          boost::shared_ptr<pdat::CellData<double> > y_cur(
-            patch->getPatchData(d_solution, d_current),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_solution, d_current)));
          boost::shared_ptr<pdat::CellData<double> > y_new(
-            patch->getPatchData(d_solution, d_new),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_solution, d_new)));
          TBOX_ASSERT(y_cur);
          TBOX_ASSERT(y_new);
          y_cur->copy(*y_new);
@@ -909,16 +909,16 @@ void ModifiedBratuProblem::initializeLevelData(
       if (initial_time) {
 
          boost::shared_ptr<pdat::CellData<double> > u(
-            patch->getPatchData(d_solution, d_current),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_solution, d_current)));
          TBOX_ASSERT(u);
          u->fillAll(0.0);
 
       }
 
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
-         patch->getPatchGeometry(),
-         BOOST_CAST_TAG);
+         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            patch->getPatchGeometry()));
       TBOX_ASSERT(patch_geometry);
       const double* dx = patch_geometry->getDx();
       const double* xlo = patch_geometry->getXLower();
@@ -927,8 +927,8 @@ void ModifiedBratuProblem::initializeLevelData(
       const hier::Index ilast = patch->getBox().upper();
 
       boost::shared_ptr<pdat::SideData<double> > diffusion(
-         patch->getPatchData(d_diffusion_coef, d_scratch),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+            patch->getPatchData(d_diffusion_coef, d_scratch)));
       TBOX_ASSERT(diffusion);
       if (d_dim == tbox::Dimension(1)) {
          FORT_EVALDIFFUSION1D(ifirst(0), ilast(0),
@@ -978,7 +978,7 @@ void ModifiedBratuProblem::resetHierarchyConfiguration(
       && (coarsest_level <= finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int ln0 = 0; ln0 <= finest_level; ln0++) {
+   for (int ln0 = 0; ln0 <= finest_level; ++ln0) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln0));
    }
 #endif
@@ -1262,7 +1262,7 @@ void ModifiedBratuProblem::evaluateBratuFunction(
    int amr_level = 0;
    for (amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
       boost::shared_ptr<hier::PatchLevel> finer_level(
@@ -1286,7 +1286,7 @@ void ModifiedBratuProblem::evaluateBratuFunction(
 
    for (amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
 
@@ -1306,25 +1306,25 @@ void ModifiedBratuProblem::evaluateBratuFunction(
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            patch->getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
          const double* dx = patch_geom->getDx();
          const hier::Index ifirst = patch->getBox().lower();
          const hier::Index ilast = patch->getBox().upper();
 
          boost::shared_ptr<pdat::CellData<double> > u(
-            patch->getPatchData(d_solution, d_scratch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_solution, d_scratch)));
          boost::shared_ptr<pdat::SideData<double> > diffusion(
-            patch->getPatchData(d_diffusion_coef, d_scratch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+               patch->getPatchData(d_diffusion_coef, d_scratch)));
          boost::shared_ptr<pdat::SideData<double> > flux(
-            patch->getPatchData(d_flux_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+               patch->getPatchData(d_flux_id)));
          boost::shared_ptr<pdat::OutersideData<double> > coarse_fine_flux(
-            patch->getPatchData(d_coarse_fine_flux_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+               patch->getPatchData(d_coarse_fine_flux_id)));
          TBOX_ASSERT(u);
          TBOX_ASSERT(diffusion);
          TBOX_ASSERT(flux);
@@ -1377,7 +1377,7 @@ void ModifiedBratuProblem::evaluateBratuFunction(
                patch_geom->getFaceBoundaries();
          }
 #endif
-         for (int i = 0; i < static_cast<int>(bdry_faces.size()); i++) {
+         for (int i = 0; i < static_cast<int>(bdry_faces.size()); ++i) {
 
             hier::Box bbox = bdry_faces[i].getBox();
             const hier::Index ibeg = bbox.lower();
@@ -1449,7 +1449,7 @@ void ModifiedBratuProblem::evaluateBratuFunction(
 
             TBOX_ASSERT(coarse_fine_flux);
 
-            for (int side = 0; side < 2; side++) {
+            for (int side = 0; side < 2; ++side) {
                if (d_dim == tbox::Dimension(1)) {
                   FORT_EWFLUXCOPY1D(ifirst(0), ilast(0),
                      flux->getPointer(0),
@@ -1520,8 +1520,8 @@ void ModifiedBratuProblem::evaluateBratuFunction(
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            patch->getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
 
          const double* dx = patch_geom->getDx();
@@ -1531,26 +1531,26 @@ void ModifiedBratuProblem::evaluateBratuFunction(
          const hier::Index ilast = patch->getBox().upper();
 
          boost::shared_ptr<pdat::CellData<double> > u(
-            patch->getPatchData(d_solution, d_scratch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_solution, d_scratch)));
          boost::shared_ptr<pdat::CellData<double> > u_cur(
-            patch->getPatchData(d_solution, d_current),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_solution, d_current)));
          boost::shared_ptr<pdat::CellData<double> > source(
-            patch->getPatchData(d_source_term, d_scratch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_source_term, d_scratch)));
          boost::shared_ptr<pdat::CellData<double> > exponential(
-            patch->getPatchData(d_exponential_term, d_scratch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_exponential_term, d_scratch)));
          boost::shared_ptr<pdat::SideData<double> > flux(
-            patch->getPatchData(d_flux_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+               patch->getPatchData(d_flux_id)));
          boost::shared_ptr<pdat::CellData<double> > fcur(
-            f->getComponentPatchData(0, *patch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               f->getComponentPatchData(0, *patch)));
          boost::shared_ptr<pdat::CellData<double> > xdat(
-            x->getComponentPatchData(0, *patch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               x->getComponentPatchData(0, *patch)));
          TBOX_ASSERT(u);
          TBOX_ASSERT(u_cur);
          TBOX_ASSERT(source);
@@ -1644,7 +1644,7 @@ void ModifiedBratuProblem::evaluateBratuFunction(
       d_soln_coarsen_op);
    for (amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
       boost::shared_ptr<hier::PatchLevel> finer_level(
@@ -1695,7 +1695,7 @@ ModifiedBratuProblem::jacobianTimesVector(
 
    for (int amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
 
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
@@ -1740,7 +1740,7 @@ ModifiedBratuProblem::jacobianTimesVector(
 
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
 
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
@@ -1780,23 +1780,23 @@ ModifiedBratuProblem::jacobianTimesVector(
          const hier::Index ilast = patch->getBox().upper();
 
          boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            patch->getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
          const double* dx = patch_geom->getDx();
 
          boost::shared_ptr<pdat::CellData<double> > vdat(
-            patch->getPatchData(d_soln_scratch_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_soln_scratch_id)));
          boost::shared_ptr<pdat::SideData<double> > diffusion(
-            patch->getPatchData(d_diffusion_coef, d_scratch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+               patch->getPatchData(d_diffusion_coef, d_scratch)));
          boost::shared_ptr<pdat::SideData<double> > flux(
-            patch->getPatchData(d_flux_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+               patch->getPatchData(d_flux_id)));
          boost::shared_ptr<pdat::OutersideData<double> > coarse_fine_flux(
-            patch->getPatchData(d_coarse_fine_flux_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+               patch->getPatchData(d_coarse_fine_flux_id)));
          TBOX_ASSERT(vdat);
          TBOX_ASSERT(diffusion);
          TBOX_ASSERT(flux);
@@ -1858,7 +1858,7 @@ ModifiedBratuProblem::jacobianTimesVector(
                patch_geom->getFaceBoundaries();
          }
 #endif
-         for (int i = 0; i < static_cast<int>(bdry_faces.size()); i++) {
+         for (int i = 0; i < static_cast<int>(bdry_faces.size()); ++i) {
 
             hier::Box bbox = bdry_faces[i].getBox();
             const hier::Index ibeg = bbox.lower();
@@ -1933,7 +1933,7 @@ ModifiedBratuProblem::jacobianTimesVector(
 
          if (amr_level > 0) {
             TBOX_ASSERT(coarse_fine_flux);
-            for (int side = 0; side < 2; side++) {
+            for (int side = 0; side < 2; ++side) {
                if (d_dim == tbox::Dimension(1)) {
                   FORT_EWFLUXCOPY1D(ifirst(0), ilast(0),
                      flux->getPointer(0),
@@ -2004,8 +2004,8 @@ ModifiedBratuProblem::jacobianTimesVector(
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            patch->getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
 
          const hier::Index ifirst = patch->getBox().lower();
@@ -2014,17 +2014,17 @@ ModifiedBratuProblem::jacobianTimesVector(
          const double* dx = patch_geom->getDx();
 
          boost::shared_ptr<pdat::CellData<double> > jac_a(
-            patch->getPatchData(d_jacobian_a_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_jacobian_a_id)));
          boost::shared_ptr<pdat::CellData<double> > Jvdat(
-            Jv->getComponentPatchData(0, *patch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               Jv->getComponentPatchData(0, *patch)));
          boost::shared_ptr<pdat::CellData<double> > vdat(
-            patch->getPatchData(d_soln_scratch_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_soln_scratch_id)));
          boost::shared_ptr<pdat::SideData<double> > flux(
-            patch->getPatchData(d_flux_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+               patch->getPatchData(d_flux_id)));
          TBOX_ASSERT(jac_a);
          TBOX_ASSERT(Jvdat);
          TBOX_ASSERT(vdat);
@@ -2126,7 +2126,7 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
 
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
 
@@ -2139,8 +2139,8 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            patch->getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
 
          const hier::Index ifirst = patch->getBox().lower();
@@ -2157,24 +2157,24 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
             cell_vol *= dx[2];
          }
          boost::shared_ptr<pdat::CellData<double> > u(
-            patch->getPatchData(d_solution, d_scratch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_solution, d_scratch)));
          boost::shared_ptr<pdat::CellData<double> > exponential(
-            patch->getPatchData(d_exponential_term, d_scratch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_exponential_term, d_scratch)));
          boost::shared_ptr<pdat::CellData<double> > source(
-            patch->getPatchData(d_source_term, d_scratch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_source_term, d_scratch)));
          boost::shared_ptr<pdat::SideData<double> > diffusion(
-            patch->getPatchData(d_diffusion_coef, d_scratch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+               patch->getPatchData(d_diffusion_coef, d_scratch)));
 
          boost::shared_ptr<pdat::CellData<double> > a(
-            patch->getPatchData(d_precond_a_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_precond_a_id)));
          boost::shared_ptr<pdat::FaceData<double> > b(
-            patch->getPatchData(d_precond_b_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+               patch->getPatchData(d_precond_b_id)));
 
          TBOX_ASSERT(exponential);
          TBOX_ASSERT(source);
@@ -2368,7 +2368,7 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
 
    for (int amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
       boost::shared_ptr<hier::PatchLevel> finer_level(
@@ -2406,7 +2406,7 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
 
    for (int amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
       boost::shared_ptr<hier::PatchLevel> finer_level(
@@ -2419,7 +2419,7 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
 
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
 
@@ -2428,11 +2428,11 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          boost::shared_ptr<pdat::CellData<double> > src_data(
-            patch->getPatchData(d_soln_scratch_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_soln_scratch_id)));
          boost::shared_ptr<pdat::CellData<double> > dst_data(
-            patch->getPatchData(z_indx),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(z_indx)));
          TBOX_ASSERT(src_data);
          TBOX_ASSERT(dst_data);
 
@@ -2465,7 +2465,7 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
 
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
             amr_level));
 
@@ -2478,8 +2478,8 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
          const boost::shared_ptr<hier::Patch>& patch = *p;
 
          const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            patch->getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
 
          const hier::Index ifirst = patch->getBox().lower();
@@ -2497,24 +2497,24 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
          }
 
          boost::shared_ptr<pdat::CellData<double> > u(
-            patch->getPatchData(d_solution, d_scratch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_solution, d_scratch)));
          boost::shared_ptr<pdat::CellData<double> > exponential(
-            patch->getPatchData(d_exponential_term, d_scratch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_exponential_term, d_scratch)));
          boost::shared_ptr<pdat::CellData<double> > source(
-            patch->getPatchData(d_source_term, d_scratch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_source_term, d_scratch)));
          boost::shared_ptr<pdat::SideData<double> > diffusion(
-            patch->getPatchData(d_diffusion_coef, d_scratch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+               patch->getPatchData(d_diffusion_coef, d_scratch)));
 
          boost::shared_ptr<pdat::CellData<double> > a(
-            patch->getPatchData(d_jacobian_a_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_jacobian_a_id)));
          boost::shared_ptr<pdat::FaceData<double> > b(
-            patch->getPatchData(d_jacobian_b_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+               patch->getPatchData(d_jacobian_b_id)));
          TBOX_ASSERT(u);
          TBOX_ASSERT(exponential);
          TBOX_ASSERT(source);
@@ -2625,8 +2625,8 @@ void ModifiedBratuProblem::setPhysicalBoundaryConditions(
     */
 
    boost::shared_ptr<pdat::CellData<double> > u(
-      patch.getPatchData(d_soln_scratch_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_soln_scratch_id)));
    TBOX_ASSERT(u);
 
    const hier::Index ifirst = patch.getBox().lower();
@@ -2637,8 +2637,8 @@ void ModifiedBratuProblem::setPhysicalBoundaryConditions(
     */
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const std::vector<hier::BoundaryBox>& boundary =
       patch_geom->getCodimensionBoundaries(1);
@@ -2663,7 +2663,7 @@ void ModifiedBratuProblem::setPhysicalBoundaryConditions(
     */
 
    int face;
-   for (int i = 0; i < static_cast<int>(boundary.size()); i++) {
+   for (int i = 0; i < static_cast<int>(boundary.size()); ++i) {
       hier::Box bbox = hier::Box(boundary[i].getBox());
       face = boundary[i].getLocationIndex();
       if (d_dim == tbox::Dimension(1)) {
@@ -2851,12 +2851,12 @@ void ModifiedBratuProblem::getLevelEdges(
     */
 
    boost::shared_ptr<geom::CartesianPatchGeometry> geometry(
-      patch->getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch->getPatchGeometry()));
    TBOX_ASSERT(geometry);
    const std::vector<hier::BoundaryBox>& boundary_boxes =
       geometry->getCodimensionBoundaries(1);
-   for (int i = 0; i < static_cast<int>(boundary_boxes.size()); i++) {
+   for (int i = 0; i < static_cast<int>(boundary_boxes.size()); ++i) {
       boxes.removeIntersections(boundary_boxes[i].getBox());
    }
 
@@ -2874,8 +2874,8 @@ void ModifiedBratuProblem::correctLevelFlux(
       const boost::shared_ptr<hier::Patch>& patch = *p;
       const hier::Box box = patch->getBox();
       boost::shared_ptr<pdat::SideData<double> > flux_data(
-         patch->getPatchData(d_flux_id),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+            patch->getPatchData(d_flux_id)));
       TBOX_ASSERT(flux_data);
 
       /*
@@ -2886,8 +2886,8 @@ void ModifiedBratuProblem::correctLevelFlux(
        * is used to fill the ghost cells.
        */
 
-      for (int d = 0; d < d_dim.getValue(); d++) {
-         for (int s = 0; s <= 1; s++) {
+      for (int d = 0; d < d_dim.getValue(); ++d) {
+         for (int s = 0; s <= 1; ++s) {
             hier::Index delta(d_dim, 0);
             delta(d) = ((s == 0) ? 1 : -1);
             hier::Index twodelta(d_dim, 0);
@@ -2915,17 +2915,17 @@ void ModifiedBratuProblem::correctPatchFlux(
 {
    const hier::Box box = patch->getBox();
    boost::shared_ptr<pdat::SideData<double> > flux_data(
-      patch->getPatchData(d_flux_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         patch->getPatchData(d_flux_id)));
    const boost::shared_ptr<geom::CartesianPatchGeometry> geometry(
-      patch->getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch->getPatchGeometry()));
    TBOX_ASSERT(flux_data);
    TBOX_ASSERT(geometry);
    const double* dx = geometry->getDx();
 
-   for (int d = 0; d < d_dim.getValue(); d++) {
-      for (int s = 0; s <= 1; s++) {
+   for (int d = 0; d < d_dim.getValue(); ++d) {
+      for (int s = 0; s <= 1; ++s) {
          hier::Index delta1(d_dim, 0);
          delta1(d) = ((s == 0) ? 1 : -1);
          hier::Index delta2(d_dim, 0);

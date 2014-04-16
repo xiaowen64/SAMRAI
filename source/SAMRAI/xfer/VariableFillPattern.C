@@ -7,10 +7,6 @@
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
-
-#ifndef included_xfer_VariableFillPattern_C
-#define included_xfer_VariableFillPattern_C
-
 #include "SAMRAI/xfer/VariableFillPattern.h"
 
 namespace SAMRAI {
@@ -42,4 +38,3 @@ VariableFillPattern::~VariableFillPattern()
 
 }
 }
-#endif

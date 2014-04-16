@@ -82,10 +82,10 @@ public:
 private:
    // neither of the following functions are implemented
    OuteredgeVariable(
-      const OuteredgeVariable<TYPE>&);
-   void
+      const OuteredgeVariable&);
+   OuteredgeVariable&
    operator = (
-      const OuteredgeVariable<TYPE>&);
+      const OuteredgeVariable&);
 
 };
 

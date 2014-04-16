@@ -7,10 +7,6 @@
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
-
-#ifndef included_xfer_SingularityPatchStrategy_C
-#define included_xfer_SingularityPatchStrategy_C
-
 #include "SAMRAI/xfer/SingularityPatchStrategy.h"
 
 namespace SAMRAI {
@@ -31,4 +27,3 @@ SingularityPatchStrategy::~SingularityPatchStrategy()
 
 }
 }
-#endif

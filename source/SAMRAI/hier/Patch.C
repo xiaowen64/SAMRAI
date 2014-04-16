@@ -7,10 +7,6 @@
  * Description:   Patch container class for patch data objects
  *
  ************************************************************************/
-
-#ifndef included_hier_Patch_C
-#define included_hier_Patch_C
-
 #include "SAMRAI/hier/Patch.h"
 
 #include <typeinfo>
@@ -71,7 +67,7 @@ Patch::getSizeOfPatchData(
    size_t size = 0;
    const int max_set_component = components.getMaxIndex();
 
-   for (int i = 0; i < max_set_component && components.isSet(i); i++) {
+   for (int i = 0; i < max_set_component && components.isSet(i); ++i) {
       size += d_descriptor->getPatchDataFactory(i)->getSizeOfMemory(
             d_box);
    }
@@ -117,7 +113,7 @@ Patch::allocatePatchData(
       d_patch_data.resize(ncomponents);
    }
 
-   for (int i = 0; i < ncomponents; i++) {
+   for (int i = 0; i < ncomponents; ++i) {
       if (components.isSet(i)) {
          if (!checkAllocated(i)) {
             d_patch_data[i] =
@@ -141,7 +137,7 @@ Patch::deallocatePatchData(
    const ComponentSelector& components)
 {
    const int ncomponents = static_cast<int>(d_patch_data.size());
-   for (int i = 0; i < ncomponents; i++) {
+   for (int i = 0; i < ncomponents; ++i) {
       if (components.isSet(i)) {
          d_patch_data[i].reset();
       }
@@ -162,7 +158,7 @@ Patch::setTime(
    const ComponentSelector& components)
 {
    const int ncomponents = static_cast<int>(d_patch_data.size());
-   for (int i = 0; i < ncomponents; i++) {
+   for (int i = 0; i < ncomponents; ++i) {
       if (components.isSet(i) && d_patch_data[i]) {
          d_patch_data[i]->setTime(timestamp);
       }
@@ -174,7 +170,7 @@ Patch::setTime(
    const double timestamp)
 {
    const int ncomponents = static_cast<int>(d_patch_data.size());
-   for (int i = 0; i < ncomponents; i++) {
+   for (int i = 0; i < ncomponents; ++i) {
       if (d_patch_data[i]) {
          d_patch_data[i]->setTime(timestamp);
       }
@@ -226,7 +222,7 @@ Patch::getFromRestart(
 
    ComponentSelector local_selector(component_selector);
 
-   for (int i = 0; i < static_cast<int>(patch_data_namelist.size()); i++) {
+   for (int i = 0; i < static_cast<int>(patch_data_namelist.size()); ++i) {
       std::string& patch_data_name = patch_data_namelist[i];
       int patch_data_index;
 
@@ -296,16 +292,16 @@ Patch::putToRestart(
    restart_db->putBool("d_patch_in_hierarchy", d_patch_in_hierarchy);
 
    int namelist_count = 0;
-   for (i = 0; i < static_cast<int>(d_patch_data.size()); i++) {
+   for (i = 0; i < static_cast<int>(d_patch_data.size()); ++i) {
       if (patchdata_write_table.isSet(i) && checkAllocated(i)) {
-         namelist_count++;
+         ++namelist_count;
       }
    }
 
    std::string patch_data_name;
    std::vector<std::string> patch_data_namelist(namelist_count);
    namelist_count = 0;
-   for (i = 0; i < static_cast<int>(d_patch_data.size()); i++) {
+   for (i = 0; i < static_cast<int>(d_patch_data.size()); ++i) {
       if (patchdata_write_table.isSet(i) && checkAllocated(i)) {
          patch_data_namelist[namelist_count++] =
             patch_data_name = d_descriptor->mapIndexToName(i);
@@ -365,7 +361,7 @@ operator << (
    << std::endl << std::flush;
    s << "Patch::number_components = " << ncomponents
    << std::endl << std::flush;
-   for (int i = 0; i < ncomponents; i++) {
+   for (int i = 0; i < ncomponents; ++i) {
       s << "Component(" << i << ")=";
       if (!patch.d_patch_data[i]) {
          s << "NULL\n";
@@ -379,4 +375,3 @@ operator << (
 
 }
 }
-#endif

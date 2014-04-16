@@ -381,6 +381,18 @@ protected:
       Timer* timer);
 
 private:
+   // Unimplemented default constructor.
+   TimerManager();
+
+   // Unimplemented copy constructor.
+   TimerManager(
+      const TimerManager& other);
+
+   // Unimplemented assignment operator.
+   TimerManager&
+   operator = (
+      const TimerManager& rhs);
+
    /**
     * Based on the values a user specified in the input database control
     * activate any existing timers that have already been registered.

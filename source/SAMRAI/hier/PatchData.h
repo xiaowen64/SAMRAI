@@ -277,7 +277,7 @@ private:
 
    PatchData(
       const PatchData&);        // not implemented
-   void
+   PatchData&
    operator = (
       const PatchData&);                // not implemented
 

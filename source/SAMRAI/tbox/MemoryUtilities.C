@@ -171,7 +171,7 @@ MemoryUtilities::printMaxMemory(
    int maxmem = 0;
    int len = 1;
    SAMRAI_MPI::Status status;
-   for (int p = 0; p < mpi.getSize(); p++) {
+   for (int p = 0; p < mpi.getSize(); ++p) {
       if (mpi.getSize() > 1) {
          if (mpi.getRank() == p) {
             maxmem = static_cast<int>(s_max_memory);

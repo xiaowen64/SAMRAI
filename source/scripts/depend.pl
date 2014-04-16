@@ -12,19 +12,14 @@
 
 # Output a Makefile.depend file for .C src files.  A dependency is
 # created for each .C, .h, and .I recursively included file.
-# In order to speed compilation the makefile flag 
-# DEPENDS_ON_TEMPLATE_IMPLEMENTATION is used to control dependency
-# on .C files.  The rules for determining dependency are: 
+# The rules for determining dependency are: 
 # 
 # .h and .I files always included in the dependency
 #
-#  The src file is always included in the dependency.
+# The src file is always included in the dependency.
 #
-#  .C files included directly by the src file are always included in 
-#  the dependency.  
-#
-#  .C files that are recursively included are ONLY included in the 
-#  dependency if DEPENDS_ON_TEMPLATE_IMPLEMENTATION is "yes".
+# .C files included directly by the src file are always included in 
+# the dependency.  
 #
 
 use File::Basename;
@@ -246,12 +241,11 @@ sub printDependencies {
    print OUTFILE "DEPENDS_$FILENUMBER:=\\\n";
    printTabbedFiles(@OTHER_DEPS);
    print OUTFILE "\n";
-   print OUTFILE "ifeq (\${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)\n";
    print OUTFILE "DEPENDS_$FILENUMBER +=\\\n";
    printTabbedFiles(@C_SOURCE_DEPS);
-   print OUTFILE "endif\n\n";
+   print OUTFILE "\n\n";
    
-   $LIBLINE="\${FILE_$FILENUMBER:X.o=\${NDIM}.o}: \${DEPENDS_$FILENUMBER}";
+   $LIBLINE="\${FILE_$FILENUMBER}: \${DEPENDS_$FILENUMBER}";
    print OUTFILE "$LIBLINE\n\n";
 }
 

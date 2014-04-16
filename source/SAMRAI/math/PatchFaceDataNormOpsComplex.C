@@ -7,10 +7,6 @@
  * Description:   Norm operations for complex face-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchFaceDataNormOpsComplex_C
-#define included_math_PatchFaceDataNormOpsComplex_C
-
 #include "SAMRAI/math/PatchFaceDataNormOpsComplex.h"
 #include "SAMRAI/pdat/FaceGeometry.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -48,7 +44,7 @@ PatchFaceDataNormOpsComplex::numberOfEntries(
    int retval = 0;
    const hier::Box ibox = box * data->getGhostBox();
    const int data_depth = data->getDepth();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       retval += ((pdat::FaceGeometry::toFaceBox(ibox, d).size()) * data_depth);
    }
    return retval;
@@ -72,7 +68,7 @@ PatchFaceDataNormOpsComplex::sumControlVolumes(
 
    int dimVal = box.getDim().getValue();
    double retval = 0.0;
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       retval += d_array_ops.sumControlVolumes(data->getArrayData(d),
             cvol->getArrayData(d),
             pdat::FaceGeometry::toFaceBox(box, d));
@@ -90,7 +86,7 @@ PatchFaceDataNormOpsComplex::abs(
    TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = box.getDim().getValue();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       d_array_ops.abs(dst->getArrayData(d),
          src->getArrayData(d),
          pdat::FaceGeometry::toFaceBox(box, d));
@@ -110,14 +106,14 @@ PatchFaceDataNormOpsComplex::L1Norm(
 
    double retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          retval += d_array_ops.L1Norm(data->getArrayData(d), face_box);
       }
    } else {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          retval += d_array_ops.L1NormWithControlVolume(data->getArrayData(d),
                cvol->getArrayData(d),
@@ -140,7 +136,7 @@ PatchFaceDataNormOpsComplex::L2Norm(
 
    double retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          double aval = d_array_ops.L2Norm(data->getArrayData(d), face_box);
          retval += aval * aval;
@@ -148,7 +144,7 @@ PatchFaceDataNormOpsComplex::L2Norm(
    } else {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          double aval = d_array_ops.L2NormWithControlVolume(
                data->getArrayData(d),
@@ -174,7 +170,7 @@ PatchFaceDataNormOpsComplex::weightedL2Norm(
 
    double retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          double aval = d_array_ops.weightedL2Norm(data->getArrayData(d),
                weight->getArrayData(d),
@@ -184,7 +180,7 @@ PatchFaceDataNormOpsComplex::weightedL2Norm(
    } else {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          double aval = d_array_ops.weightedL2NormWithControlVolume(
                data->getArrayData(d),
@@ -244,14 +240,14 @@ PatchFaceDataNormOpsComplex::maxNorm(
 
    double retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box =
             pdat::FaceGeometry::toFaceBox(box, d);
          retval = tbox::MathUtilities<double>::Max(retval,
                d_array_ops.maxNorm(data->getArrayData(d), face_box));
       }
    } else {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box =
             pdat::FaceGeometry::toFaceBox(box, d);
          retval = tbox::MathUtilities<double>::Max(retval,
@@ -275,14 +271,14 @@ PatchFaceDataNormOpsComplex::dot(
 
    dcomplex retval = dcomplex(0.0, 0.0);
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          retval += d_array_ops.dot(data1->getArrayData(d),
                data2->getArrayData(d),
                face_box);
       }
    } else {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          retval += d_array_ops.dotWithControlVolume(
                data1->getArrayData(d),
@@ -304,7 +300,7 @@ PatchFaceDataNormOpsComplex::integral(
 
    int dimVal = box.getDim().getValue();
    dcomplex retval = dcomplex(0.0, 0.0);
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       retval += d_array_ops.integral(data->getArrayData(d),
             vol->getArrayData(d),
             pdat::FaceGeometry::toFaceBox(box, d));
@@ -314,4 +310,3 @@ PatchFaceDataNormOpsComplex::integral(
 
 }
 }
-#endif

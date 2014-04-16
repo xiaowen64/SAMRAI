@@ -7,9 +7,6 @@
  * Description:   Hypre solver interface for diffusion-like elliptic problems.
  *
  ************************************************************************/
-#ifndef included_solv_CellPoissonHypreSolver_C
-#define included_solv_CellPoissonHypreSolver_C
-
 #include "SAMRAI/solv/CellPoissonHypreSolver.h"
 
 #ifdef HAVE_HYPRE
@@ -452,8 +449,8 @@ CellPoissonHypreSolver::allocateHypreData()
 
    boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
-      d_hierarchy->getGridGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+         d_hierarchy->getGridGeometry()));
 
    TBOX_ASSERT(grid_geometry);
 
@@ -530,7 +527,7 @@ CellPoissonHypreSolver::allocateHypreData()
             { -1 }, { 0 }
          };
          HYPRE_StructStencilCreate(d_dim.getValue(), stencil_size, &d_stencil);
-         for (int s = 0; s < stencil_size; s++) {
+         for (int s = 0; s < stencil_size; ++s) {
             HYPRE_StructStencilSetElement(d_stencil, s,
                stencil_offsets[s]);
          }
@@ -540,7 +537,7 @@ CellPoissonHypreSolver::allocateHypreData()
             { -1, 0 }, { 0, -1 }, { 0, 0 }
          };
          HYPRE_StructStencilCreate(d_dim.getValue(), stencil_size, &d_stencil);
-         for (int s = 0; s < stencil_size; s++) {
+         for (int s = 0; s < stencil_size; ++s) {
             HYPRE_StructStencilSetElement(d_stencil, s,
                stencil_offsets[s]);
          }
@@ -550,7 +547,7 @@ CellPoissonHypreSolver::allocateHypreData()
             { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 }, { 0, 0, 0 }
          };
          HYPRE_StructStencilCreate(d_dim.getValue(), stencil_size, &d_stencil);
-         for (int s = 0; s < stencil_size; s++) {
+         for (int s = 0; s < stencil_size; ++s) {
             HYPRE_StructStencilSetElement(d_stencil, s,
                stencil_offsets[s]);
          }
@@ -778,8 +775,8 @@ CellPoissonHypreSolver::setMatrixCoefficients(
       hier::Patch& patch = **pi;
 
       boost::shared_ptr<geom::CartesianPatchGeometry> pg(
-         patch.getPatchGeometry(),
-         BOOST_CAST_TAG);
+         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            patch.getPatchGeometry()));
 
       TBOX_ASSERT(pg);
 
@@ -996,7 +993,7 @@ CellPoissonHypreSolver::setMatrixCoefficients(
       int stencil_indices[stencil_size];
       double mat_entries[stencil_size];
 
-      for (i = 0; i < stencil_size; i++) stencil_indices[i] = i;
+      for (i = 0; i < stencil_size; ++i) stencil_indices[i] = i;
 
       pdat::CellIterator ic(pdat::CellGeometry::begin(patch_box));
       pdat::CellIterator icend(pdat::CellGeometry::end(patch_box));
@@ -1079,8 +1076,8 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
     * to rhs.
     */
    boost::shared_ptr<pdat::OutersideData<double> >Ak0(
-      patch.getPatchData(d_Ak0_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+         patch.getPatchData(d_Ak0_id)));
 
    TBOX_ASSERT(Ak0);
 
@@ -1291,8 +1288,8 @@ CellPoissonHypreSolver::solveSystem(
        * Set up variable data needed to prepare linear system solver.
        */
       boost::shared_ptr<pdat::CellData<double> > u_data_(
-         patch->getPatchData(u),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch->getPatchData(u)));
       TBOX_ASSERT(u_data_);
       pdat::CellData<double>& u_data = *u_data_;
       pdat::CellData<double> rhs_data(box, 1, no_ghosts);
@@ -1385,8 +1382,8 @@ CellPoissonHypreSolver::solveSystem(
         ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
       boost::shared_ptr<pdat::CellData<double> > u_data_(
-         patch->getPatchData(u),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch->getPatchData(u)));
 
       TBOX_ASSERT(u_data_);
 
@@ -1591,5 +1588,4 @@ CellPoissonHypreSolver::finalizeCallback()
 }
 }
 
-#endif
 #endif

@@ -322,7 +322,7 @@ public:
 private:
    CoarsenAlgorithm(
       const CoarsenAlgorithm&);               // not implemented
-   void
+   CoarsenAlgorithm&
    operator = (
       const CoarsenAlgorithm&);                   // not implemented
 

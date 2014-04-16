@@ -130,7 +130,7 @@ private:
 
    OutersideGeometry(
       const OutersideGeometry&);                // not implemented
-   void
+   OutersideGeometry&
    operator = (
       const OutersideGeometry&);                    // not implemented
 

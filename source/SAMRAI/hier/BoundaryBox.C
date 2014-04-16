@@ -7,10 +7,6 @@
  * Description:   BoundaryBox representing a portion of the physical boundary
  *
  ************************************************************************/
-
-#ifndef included_hier_BoundaryBox_C
-#define included_hier_BoundaryBox_C
-
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/BoundaryLookupTable.h"
@@ -93,5 +89,3 @@ BoundaryBox::getBoundaryOrientation(
 
 }
 }
-
-#endif

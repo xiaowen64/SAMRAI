@@ -327,6 +327,18 @@ protected:
       const Timer& timer) const;
 
 private:
+   // Unimplemented default constructor.
+   Timer();
+
+   // Unimplemented copy constructor.
+   Timer(
+      const Timer& other);
+
+   // Unimplemented assignment operator.
+   Timer&
+   operator = (
+      const Timer& rhs);
+
    /*
     * Class name, id, and concurrent timer flag.
     */

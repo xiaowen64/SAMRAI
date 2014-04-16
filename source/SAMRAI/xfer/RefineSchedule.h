@@ -289,7 +289,7 @@ private:
 
    RefineSchedule(
       const RefineSchedule&);                   // not implemented
-   void
+   RefineSchedule&
    operator = (
       const RefineSchedule&);                   // not implemented
 
@@ -705,6 +705,24 @@ private:
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
    /*!
+    * @brief make an unfilled box level consisting of node-centered boxes
+    *
+    * When this is called, there already exists a cell-centered unfilled
+    * box level, which is the first argument passed in here.
+    * This method creates a node-centered unfilled box level, consisting of
+    * the boxes in the cell-centered unfilled level converted to a node
+    * centering, with any nodes that can be filled by this schedule's source
+    * level removed.
+    *
+    * @param[in] unfilled_box_level  Cell-centered unfilled level
+    * @param[in] dst_to_unfiled      Connector from destination to unfilled
+    */
+   void
+   makeNodeCenteredUnfilledBoxLevel( 
+      const hier::BoxLevel& unfilled_box_level,
+      const hier::Connector& dst_to_unfilled);
+
+   /*!
     * @brief Set up a coarse interpolation BoxLevel and related data.
     *
     * Also sets up dst_to_coarse_interp, coarse_interp_to_dst and
@@ -1082,6 +1100,7 @@ private:
     * filled using a coarse interpolation schedule, d_coarse_interp_schedule.
     */
    boost::shared_ptr<hier::BoxLevel> d_unfilled_box_level;
+   boost::shared_ptr<hier::BoxLevel> d_unfilled_node_box_level;
 
    /*!
     * @brief Describes remaining unfilled boxes of d_encon_level after
@@ -1113,6 +1132,8 @@ private:
     * @brief Connector from d_encon_level to d_coarse_interp_encon_level.
     */
    boost::shared_ptr<hier::Connector> d_encon_to_coarse_interp_encon;
+
+   boost::shared_ptr<hier::Connector> d_unfilled_to_unfilled_node;
 
    /*!
     * @brief Connector d_coarse_interp_level to d_unfilled_box_level.

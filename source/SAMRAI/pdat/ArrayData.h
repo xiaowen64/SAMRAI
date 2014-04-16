@@ -614,12 +614,12 @@ private:
 
    // Unimplemented copy constructor.
    ArrayData(
-      const ArrayData<TYPE>&);
+      const ArrayData&);
 
    // Unimplemented assignment operator.
-   void
+   ArrayData&
    operator = (
-      const ArrayData<TYPE>&);
+      const ArrayData&);
 
    /*
     * Static integer constant describing this class's version number.

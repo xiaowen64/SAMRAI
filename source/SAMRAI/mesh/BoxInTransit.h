@@ -36,7 +36,7 @@ struct BoxInTransit {
     *
     * @param[in] dim
     */
-   BoxInTransit(const tbox::Dimension& dim) :
+   explicit BoxInTransit(const tbox::Dimension& dim) :
       d_box(dim),
       d_orig_box(dim) {}
 

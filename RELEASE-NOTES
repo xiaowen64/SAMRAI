@@ -1,10 +1,10 @@
 *****************************************************************************
-  Copyright 1997-2013
+  Copyright 1997-2014
   Lawrence Livermore National Security, LLC.
   All rights reserved.
 *****************************************************************************
 
-                     Release Notes for SAMRAI v3.6.1
+                     Release Notes for SAMRAI v3.7.0
 
      (notes for previous releases may be found in /SAMRAI/docs/release)
 
@@ -36,8 +36,12 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
                 Significant bug fixes
 ----------------------------------------------------------------------------
 
-1) Box transformations have been fixed so that 1D Boxes transform properly.
+1) The MappingConnector assignment operator now returns a non-const
+   MappingConnector as it should.
 
+2) A bug in some VariableFillPatterns that caused interpolated data to
+   overwrite communicated data has been fixed.  See "what's changed" for
+   more info.
      
 *****************************************************************************
 
@@ -48,25 +52,24 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
 This section contains a summary of additions to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
 
-1) The class MappingConnector which is derived from Connector has been
-   introduced.  The concept of a MappingConnector which is distinct from an
-   OverlapConnector has always been implied but never actually introduced.  In
-   places where a Connector represents a mapping a MappingConnector is now
-   used.
+1) There is now a new configure option, --enable-threading, which will add
+   the appropriate compiler directive to enable the parallelizer to generate
+   multi-threaded code based on the OpenMP directives.  The construction of
+   messages sent to other processors by the various bridge() and modify()
+   methods in the OverlapConnectorAlgorithm and MappingConnectorAlgorithm
+   respectively is now threaded.
 
-2) Both Connector and MappingConnector hold pointers to their transposes.  Hence
-   one Connector can now be used where 2--the Connector and its transpose--
-   were previously required.
+2) It is now possible to run on problems with a global cell count in excess
+   of 2G.
 
-3) A new PatchLevel constructor which acquires a supplied BoxLevel has been
-   introduced.  The existing constructor which copies a supplied BoxLevel is
-   unchanged.
+3) Side-centered patch data classes have new constructors that provide
+   a simpler way to allocate data in all normal directions.
 
-4) Dynamic control of refinement criteria via the following methods of
-   mesh::StandardTagAndInitialize has been added:
-   turnOnGradientDetector, turnOffGradientDetector,
-   turnOnRichardsonExtrapolation, turnOffRichardsonExtrapolation,
-   turnOnRefineBoxes, and turnOffRefineBoxes.
+4) New interfaces in TagAndInitializeStrategy and
+   StandardTagAndInitStrategy allow for callbacks to user code before 
+   a PatchLevel is removed from a PatchHierarchy or replaced by a new
+   PatchLevel during regridding.
+   
 
 -----------------------------------------------------------------------------
                 Summary of what's changed
@@ -75,39 +78,24 @@ descriptions of items in the following list are provided below.
 This section contains a summary of changes to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
 
-1) If using PETSc, 3.2.0 is now required.
+1) The efficiency_tolerance and combine_efficiency input parameters have
+   been removed from GriddingAlgorithm and moved to BergerRigoutsos.  The
+   corresponding args have been removed from findBoxesContainingTags().
 
-2) All injection coarsening clases are now consistently named as injections.
+2) Begining with Boost 1.53, the static_cast_tag and dynamic_cast_tag and
+   the constructors using them have been removed from shared_ptr.  We have
+   therefore eliminated our use of them and the macro, BOOST_CAST_TAG from
+   the library.
 
-3) Instantiation of Connectors and BoxLevels now occurs in the methods that
-   know how to build them.
+3) The input format for identifying multiblock singularities has
+   been simplified.
 
-4) BoxIterators are now accessed through the begin and end methods on class
-   Box.  The BoxIterator constructor itself is now private.
+4) A bug fix for certain VariableFillPattern classes has added an
+   argument to pure virtual method
+   VariableFillPattern::computeFillBoxesOverlap.
 
-5) Cell/Edge/Face/Node/SideIterators are now accessed through the static
-   begin and end methods on Cell/Edge/Face/Node/SideGeometry respectively.
-   The Iterator constructors themselves are now private.
+5) Rename test directory FAC_nonadaptive to FAC_staticrefinement.
 
-6) BoxContainerIterator (aka BoxContainer::iterator) and
-   BoxContainerConstIterator (aka BoxContainer::const_iterator) are now
-   accessed through the begin and end methods on class BoxContainer.  The
-   constructors for each iterator are now private.
-
-7) The restart-redistribute tool is now parallel.
-
-8) The input to mesh::StandardTagAndInitialize for REFINE_BOXES tagging
-   criteria has been modified to support multiblock.
-
-9) Use of class Array has been replaced throughout the library and tests with
-   std::vector.
-
-10) Access to stored Connectors has been changed.
-
-11) TreeLoadBalancer parameter affecting number of boxes generated has changed.
-
-12) Removed some unnecessary arguments from
-    PatchLevelFillPattern::computeFillBoxesAndNeighborhoodSets().
 
 *****************************************************************************
 
@@ -115,169 +103,110 @@ descriptions of items in the following list are provided below.
                 Details about what's new
 -----------------------------------------------------------------------------
 
-1) Class Connector describes Box overlaps between two BoxLevels.  It
-   corresponds to the OverlapConnector concept.  Class MappingConnector is
-   derived from Connector and hence it also describes Box overlaps between two
-   BoxLevels.  However, it describes these overlaps in a specific context--
-   when the base BoxLevel has undergone a transition resulting in the head
-   BoxLevel.  Hence it describes how the Boxes in the original BoxLevel (i.e.
-   the base) map onto the Boxes in the modified BoxLevel (i.e. the head).
+1) The --enable-threading configuration option should be used with caution.
+   If used one should first ensure that their application is thread safe.
+   Also, one should ensure that threading will provide a performance
+   advantage on the target platform.  On some platforms we have seen
+   significant performance degradation simply from enabling threading.
 
-   Previously, there was no distinction between these Connector concepts.  They
-   were both embodied in class Connector and there was to way to distinguish
-   one from another.  Hence there was no way to ensure that any given Connector
-   was being used in the proper context.
+2) The global number of cells held by BoxLevel is now a long.
 
-   The library now constructs and uses MappingConnectors where connectors
-   describing how BoxLevels have changed are needed.  This provides both type
-   safety and added clarity as to how methods taking various Connectors are to
-   be used.
+3) SideData and associated classes for side-centered data now have constructors
+   that take no "directions" vector.  This provides a default case where
+   data is allocated in all normal directions.
 
-2) Many interfaces have been simplified as a single Connector object can now
-   be used to refer to both the Connector and its transpose.  In particular,
-   there is now only 1 modify method and 3 bridge methods as the other
-   overloaded versions which existed were degenerate cases.  Note that in the
-   case of bridgeWithNesting() and the 2 bridge() methods which create the
-   result it is now necessary to specify whether or not the tranpose bridge
-   should be computed.
+4) New interfaces in TagAndInitializeStrategy and
+   StandardTagAndInitStrategy allow for callbacks to user code before
+   a PatchLevel is removed from a PatchHierarchy or replaced by a new
+   PatchLevel during regridding.
 
-   Several convenience methods have been added to find/create both a Connector
-   and its transpose.  These are PatchHierarchy::getConnectorWithTranspose(),
-   OverlapConnectorAlgorithm::findOverlapsWithTranspose(),
-   PersistentOverlapConnectors::createConnectorWithTranspose(),
-   PersistentOverlapConnectors::findConnectorWithTranspose(), and
-   PersistentOverlapConnectors::findOrCreateConnectorWithTranspose().
+   processLevelBeforeRemoval is called before the finest PatchLevel in 
+   a hierarchy is to be removed--that is the total number of levels is being
+   reduced.  This interface provides user code an opportunity to extract
+   any needed data from the PatchLevel before it is destroyed.
 
-3) The BoxLevel contained in a PatchLevel may not be modified.  Therefore, the
-   existing PatchLevel constructor copied the supplied BoxLevel.  However, this
-   means a BoxLevel copy for each PatchLevel constructed.  It the client code
-   will never modify the supplied BoxLevel, it is not necessary for the new
-   PatchLevel to copy the BoxLevel.  Therefore a new PatchLevel constructor has
-   been introduced so that the constructed PatchLevel acquires the supplied
-   BoxLevel.  To guarantee that client code does not accidentally modify the
-   now shared BoxLevel, this constructor locks it so that any subsequent call
-   to a non-const method on that BoxLevel results in a run-time error.  The
-   library now makes use of this new PatchLevel constructor wherever possible
-   to avoid the overhead of the old constructor.
+   processHierarchyBeforeAddingNewLevel is called both before adding an
+   entirely new PatchLevel at a new level of resolution to the hierarchy,
+   as well as before swapping an old PatchLevel for a new PatchLevel during
+   regridding.  This allows user code an opportunity to do any needed
+   processing of the hierarchy while the old level still exists and the new
+   level is known.
 
-   To make use of this new constructor there is are new versions of
-   PatchHierarchy::makeNewPatchLevel and PatchLevelFactory::allocate.
+   The most common use case for these interfaces is in user classes that
+   derive from StandardTagAndInitStrategy.  These interfaces are provided
+   as virtual methods with default no-op implementations in
+   StandardTagAndInitStrategy.
 
-4) The ability to dynamically control refinement criteria from an application
-   has been restored.  It is still possible to statically control refinement
-   criteria via an input file.  It is possible to mix static and dynamic
-   control however caution should be exercised if this is done as these two
-   separate controls can override one another and yield unintended behavior.
+5) Rename test directory FAC_nonadaptive to FAC_staticrefinement.
+   The old name caused led some to believe it didn't use AMR.
+
+
+
+
 
 -----------------------------------------------------------------------------
                 Details about what's changed
 -----------------------------------------------------------------------------
 
-1) SAMRAI has been converted to work with PETSc 3.2.0.
+1) The notions of efficiency_tolerance and combine_efficiency do not apply
+   to box generators in general.  In SAMRAI the only box generator to which
+   they apply is BergerRigoutsos.  Therefore the signature of the abstract
+   box generator method, findBoxesContainingTags, has been changed to
+   eliminate these args.  This method is called from GriddingAlgorithm which
+   held these parameters so it no longer makes sense for the parameters to be
+   associated with GriddingAlgorithm.  Instead they are associated with
+   BergerRigoutsos and this class' findBoxesContainingTags simply uses them
+   as needed.
 
-2) Class pdat::OuternodeDoubleConstantCoarsen has been changed to
-   pdat::OuternodeDoubleInjection to be consistent with injections for other
-   data centerings and types.
+2) If you have used the BOOST_CAST_TAG you will need to use the equivalent
+   but less compact construct.  For example if you had:
 
-3) Previous practice was to instantiate Connectors and BoxLevels in high level
-   library routines or client code and pass these objects through multiple
-   levels of library methods to the method that ultimately knows how to build
-   them.  However, until these Connectors and BoxLevels were finally built,
-   they were in a very ill defined state.  This resulted in many ill defined
-   objects exsiting in the code at any given time.
+   boost::shared_ptr<BaseClass> base = ...;
+   ...
+   boost::shared_ptr<DerivedClass> derived(base, BOOST_CAST_TAG);
 
-   Practice is now for the methods that know how to build Connectors and
-   BoxLevels to also instantiate them.  Thus, boost::shared_ptrs to these
-   objects are typically now created either in client code or high level
-   library routines and passed along to the method that actaully instantiates
-   and builds the objects.  The shared_ptrs are either null or point to fully
-   constructed objects.  This results in a number of API changes in which
-   Connector and BoxLevel references are replaced by shared_ptrs to Connectors
-   and BoxLevels.
+   it will need to be replaced with:
 
-4) Use of BoxIterator now follows the well established pattern of requesting
-   the iterator through begin and end methods on Box.  These methods are also
-   simpler to use than the BoxIterator constructor which is now private.
+   boost::shared_ptr<BaseClass> base = ...;
+   ...
+   boost::shared_ptr<DerivedClass> derived(
+      BOOST_CAST<DerivedClass, BaseClass>(base));
 
-5) Use of Cell/Edge/Face/Node/SideIterator now follows the well established
-   pattern of requesting the iterators through begin and end methods.  These
-   are static methods on Cell/Edge/Face/Node/SideGeometry respectively.  The
-   begin and end methods are simpler to use that the iterator constructors
-   which are now private.
+3) The input format for identifying multiblock singularities has
+   been simplified.  All that is now required for each singularity in
+   a multiblock mesh is the "blocks" entry within each SingularityN
+   input section, taking a list of integers representing the block numbers
+   of the blocks that touch that singularity, whether it be a point or a
+   line.
 
-6) Use of BoxContainerIterator and BoxContainerConstIterator now follows the
-   well established pattern of requesting the iterators through begin and end
-   methods on BoxContainer.  These methods are also simpler to use than the
-   constructors for these iterators which are now private.
+   Singularity0 {
+      blocks = 0,1,2,4,6
+   }
 
-7) The restart-redistribute tool has been parallelized on the smaller of the
-   number of input files and the number of output files.  You may run the
-   tool with any number of processors up to the smaller of the number of
-   input and the number output files.  Invocation of the tool is via mpirun
-   or the appropriate parallel program launcher for your platform.  No
-   arguments to the tool have changed.
+   Additionally, the BlockNeighbors input sections no longer require an
+   "is_singularity" input option for neighboring blocks that touch across
+   an enhanced connectivity singularity.  The library now determines this
+   information internally.
 
-8) In all previous versions of SAMRAI, input for the REFINE_BOXES tagging
-   criteria consisted only of a level number and the boxes on that level.
-   There was no way to specify the block these boxes come from.  The result was
-   that the code read the refine boxes as being from block 0 and only that
-   block.  We have expanded the input for REFINE_BOXES to include block numbers
-   so that boxes from multiple blocks in any given level may be specified for
-   tagging.  In addition, there was some redundancy concerning the
-   specification of the level which has been removed.  Needing a level_n
-   database followed by a "level" input parameter was clearly unnecessary.  See
-   the docuementation for mesh::StandardTagAndInitialize for specifics of this
-   new syntax.
+4) A bug fix for certain VariableFillPattern classes has added an
+   argument to pure virtual method
+   VariableFillPattern::computeFillBoxesOverlap.
 
-   Any input files using REFINE_BOXES will need to be modified.
+   The bug was that computeFillBoxesOverlap provided only a cell-centered
+   fill_boxes BoxContainer, which gave no way for concrete fill pattern
+   implementation for node-centered data or other data with centerings on
+   the boundary of a cell to distinguish data points that need filling
+   by interpolation from data points that can be filled from the source level.
+   A new argument, node_fill_boxes, has been added to computeFillBoxesOverlap
+   consisting of a BoxContainer of node-centered fill boxes.  These boxes are
+   made by transforming the cell-centered fill boxes to a node centering and
+   then removing any nodes that can be filled from the source level.
 
-9) Class Array is essentially a vector in which the storage is reference
-   counted and may be shared.  The reference counter was not thread safe
-   however and there was no use anywhere in the library in which the contents
-   of the Array were actually shared.  Therefore all use of Array in the
-   library and tests have been converted to std::vector.  A few interfaces have
-   changed and will require client code to use std::vector for arguments which
-   had been Arrays.  Class Array is still part of the distribution.  However,
-   we suggest that users begin to migrate their codes to use std::vector as in
-   some future release Array will likely be removed.
+   Only certain specialized implementations of VariableFillPattern need this
+   new argument.  When not needed, it should be ignored.
 
-10) In the past, in order to access persistent Connectors it was necessary to
-    to chase pointers until one obtained a PersistentOverlapConnectors object.
-    Now, the accessors (findConnector, findConnectorWithTranspose,
-    createConnector, createConnectorWithTranspose, cacheConnector, and
-    hasConnector) have been exported to classes BoxLevel and PatchLevel so
-    that Connectors are accessed directly from instances of these classes.  In
-    addition, BoxLevel::getPersistentOverlapConnectors() is now private and
-    there is now no public interface to class PersistentOverlapConnectors as
-    this class is purely an implementation detail and should not be visible to
-    client code.  Hence, client code will need to be changed (simplified) to
-    use the new Connector accessors in BoxLevel and PatchLevel.
 
-    In addition to these changes, client code now specifies an action to take
-    when a requested Connector is not found.  The 3 actions are
-    hier::CONNECTOR_ERROR, hier::CONNECTOR_CREATE,
-    and hier::CONNECTOR_IMPLICIT_CREATION_RULE.  This allows for more explicit
-    and greater control of the action to take when a Connector is not found.
-    One implication of this change is that findOrCreateConnector has been
-    eliminated.  It's functionality is equivalent to findConnector called with
-    hier::CONNECTOR_CREATE.  Clients may use
-    hier::CONNECTOR_IMPLICIT_CREATION_RULE in calls to findConnector while
-    developing their application and later change these when their application
-    has actually stored these Connectors.
 
-11) TreeLoadBalancer parameter affecting number of boxes generated has changed.
-    TreeLoadBalancer's min_load_fraction_per_box has been removed.
-    If you get too many small boxes in the hierarchy, try increasing
-    TreeLoadBalancer's flexible_load_tolerance input parameter.
-
-12) The Connector arguments of
-    PatchLevelFillPattern::computeFillBoxesAndNeighborhoodSets() (a pure
-    virtual method) were removed.  In most concrete implementations of
-    PatchLevelFillPattern, these arguments were unneeded.  If a fill pattern
-    child class does need one of these Connectors, it can be retrieved
-    from the BoxLevel that is passed in.  See
-    PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets() for
-    and example of the usage to retrieve a Connector for this purpose.
 
 =============================================================================
 =============================================================================

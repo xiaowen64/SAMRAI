@@ -132,7 +132,7 @@ ParallelBuffer::outputString(
        */
 
       int eol_ptr = 0;
-      for ( ; (eol_ptr < length) && (text[eol_ptr] != '\n'); eol_ptr++)
+      for ( ; (eol_ptr < length) && (text[eol_ptr] != '\n'); ++eol_ptr)
          NULL_STATEMENT;
 
       /*

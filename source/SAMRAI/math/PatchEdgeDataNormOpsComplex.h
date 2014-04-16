@@ -238,7 +238,7 @@ private:
    // The following are not implemented:
    PatchEdgeDataNormOpsComplex(
       const PatchEdgeDataNormOpsComplex&);
-   void
+   PatchEdgeDataNormOpsComplex&
    operator = (
       const PatchEdgeDataNormOpsComplex&);
 

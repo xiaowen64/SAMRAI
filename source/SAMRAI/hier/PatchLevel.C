@@ -7,10 +7,6 @@
  * Description:   A collection of patches at one level of the AMR hierarchy
  *
  ************************************************************************/
-
-#ifndef included_hier_PatchLevel_C
-#define included_hier_PatchLevel_C
-
 #include "SAMRAI/hier/PatchLevel.h"
 
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -35,13 +31,13 @@ namespace hier {
 
 const int PatchLevel::HIER_PATCH_LEVEL_VERSION = 3;
 
-static boost::shared_ptr<tbox::Timer> t_level_constructor;
-static boost::shared_ptr<tbox::Timer> t_constructor_setup;
-static boost::shared_ptr<tbox::Timer> t_constructor_phys_domain;
-static boost::shared_ptr<tbox::Timer> t_constructor_touch_boundaries;
-static boost::shared_ptr<tbox::Timer> t_constructor_set_geometry;
-static boost::shared_ptr<tbox::Timer> t_set_patch_touches;
-static boost::shared_ptr<tbox::Timer> t_constructor_compute_shifts;
+boost::shared_ptr<tbox::Timer> PatchLevel::t_level_constructor;
+boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_setup;
+boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_phys_domain;
+boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_touch_boundaries;
+boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_set_geometry;
+boost::shared_ptr<tbox::Timer> PatchLevel::t_set_patch_touches;
+boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_compute_shifts;
 
 tbox::StartupShutdownManager::Handler
 PatchLevel::s_initialize_finalize_handler(
@@ -118,7 +114,7 @@ PatchLevel::PatchLevel(
    TBOX_ASSERT(box_level.getRefinementRatio() != IntVector::getZero(getDim()));
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (getDim().getValue() > 1) {
-      for (int i = 0; i < getDim().getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); ++i) {
          TBOX_ASSERT((box_level.getRefinementRatio()(i) *
                       box_level.getRefinementRatio()(
                          (i + 1) % getDim().getValue()) > 0) ||
@@ -157,7 +153,7 @@ PatchLevel::PatchLevel(
    t_constructor_setup->stop();
 
    t_constructor_phys_domain->start();
-   for (int nb = 0; nb < d_number_blocks; nb++) {
+   for (int nb = 0; nb < d_number_blocks; ++nb) {
       grid_geometry->computePhysicalDomain(d_physical_domain[nb],
          d_ratio_to_level_zero, BlockId(nb));
    }
@@ -229,7 +225,7 @@ PatchLevel::PatchLevel(
    TBOX_ASSERT(box_level->getRefinementRatio() != IntVector::getZero(getDim()));
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (getDim().getValue() > 1) {
-      for (int i = 0; i < getDim().getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); ++i) {
          TBOX_ASSERT((box_level->getRefinementRatio()(i) *
                       box_level->getRefinementRatio()(
                          (i + 1) % getDim().getValue()) > 0) ||
@@ -268,7 +264,7 @@ PatchLevel::PatchLevel(
    t_constructor_setup->stop();
 
    t_constructor_phys_domain->start();
-   for (int nb = 0; nb < d_number_blocks; nb++) {
+   for (int nb = 0; nb < d_number_blocks; ++nb) {
       grid_geometry->computePhysicalDomain(d_physical_domain[nb],
          d_ratio_to_level_zero, BlockId(nb));
    }
@@ -415,7 +411,7 @@ PatchLevel::setRefinedPatchLevel(
       d_geometry = coarse_level->d_geometry;
 
       const IntVector& coarse_ratio = coarse_level->getRatioToLevelZero();
-      for (int i = 0; i < getDim().getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); ++i) {
          int coarse_rat = coarse_ratio(i);
          int refine_rat = refine_ratio(i);
          if (coarse_rat < 0) {
@@ -463,7 +459,7 @@ PatchLevel::setRefinedPatchLevel(
    d_number_blocks = coarse_level->d_number_blocks;
 
    d_physical_domain.resize(d_number_blocks);
-   for (int nb = 0; nb < d_number_blocks; nb++) {
+   for (int nb = 0; nb < d_number_blocks; ++nb) {
       d_physical_domain[nb] = coarse_level->d_physical_domain[nb];
       d_physical_domain[nb].refine(refine_ratio);
    }
@@ -487,7 +483,7 @@ PatchLevel::setRefinedPatchLevel(
 
    std::map<BoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
 
-   for (iterator ip(coarse_level->begin()); ip != coarse_level->end(); ip++) {
+   for (iterator ip(coarse_level->begin()); ip != coarse_level->end(); ++ip) {
       boost::shared_ptr<PatchGeometry> coarse_pgeom((*ip)->getPatchGeometry());
 
       /* If map does not contain values create them */
@@ -504,8 +500,8 @@ PatchLevel::setRefinedPatchLevel(
       PatchGeometry::TwoDimBool&
       touches_regular_bdry_ip((*iter_touches_regular_bdry).second);
 
-      for (int axis = 0; axis < getDim().getValue(); axis++) {
-         for (int side = 0; side < 2; side++) {
+      for (int axis = 0; axis < getDim().getValue(); ++axis) {
+         for (int side = 0; side < 2; ++side) {
             touches_regular_bdry_ip(axis, side) =
                coarse_pgeom->getTouchesRegularBoundary(axis, side);
          }
@@ -577,7 +573,7 @@ PatchLevel::setCoarsenedPatchLevel(
       const IntVector& fine_ratio =
          fine_level->d_ratio_to_level_zero;
 
-      for (int i = 0; i < getDim().getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); ++i) {
          int fine_rat = fine_ratio(i);
          int coarsen_rat = coarsen_ratio(i);
          if (fine_rat > 0) {
@@ -630,7 +626,7 @@ PatchLevel::setCoarsenedPatchLevel(
    d_number_blocks = fine_level->d_number_blocks;
 
    d_physical_domain.resize(d_number_blocks);
-   for (int nb = 0; nb < d_number_blocks; nb++) {
+   for (int nb = 0; nb < d_number_blocks; ++nb) {
       d_physical_domain[nb] = fine_level->d_physical_domain[nb];
       d_physical_domain[nb].coarsen(coarsen_ratio);
    }
@@ -656,7 +652,7 @@ PatchLevel::setCoarsenedPatchLevel(
 
    std::map<BoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
 
-   for (iterator ip(fine_level->begin()); ip != fine_level->end(); ip++) {
+   for (iterator ip(fine_level->begin()); ip != fine_level->end(); ++ip) {
       boost::shared_ptr<PatchGeometry> fine_pgeom((*ip)->getPatchGeometry());
 
       /* If map does not contain values create them */
@@ -673,8 +669,8 @@ PatchLevel::setCoarsenedPatchLevel(
       PatchGeometry::TwoDimBool&
       touches_regular_bdry_ip((*iter_touches_regular_bdry).second);
 
-      for (int axis = 0; axis < getDim().getValue(); axis++) {
-         for (int side = 0; side < 2; side++) {
+      for (int axis = 0; axis < getDim().getValue(); ++axis) {
+         for (int side = 0; side < 2; ++side) {
             touches_regular_bdry_ip(axis, side) =
                fine_pgeom->getTouchesRegularBoundary(axis, side);
          }
@@ -753,7 +749,7 @@ PatchLevel::getFromRestart(
    d_number_blocks = restart_db->getInteger("d_number_blocks");
 
    d_physical_domain.resize(d_number_blocks);
-   for (int nb = 0; nb < d_number_blocks; nb++) {
+   for (int nb = 0; nb < d_number_blocks; ++nb) {
       std::string domain_name = "d_physical_domain_"
          + tbox::Utilities::blockToString(nb);
       std::vector<tbox::DatabaseBox> db_box_vector =
@@ -860,7 +856,7 @@ PatchLevel::putToRestart(
 
    restart_db->putInteger("d_number_blocks", d_number_blocks);
 
-   for (int nb = 0; nb < d_number_blocks; nb++) {
+   for (int nb = 0; nb < d_number_blocks; ++nb) {
       std::vector<tbox::DatabaseBox> temp_domain = d_physical_domain[nb];
       std::string domain_name = "d_physical_domain_"
          + tbox::Utilities::blockToString(nb);
@@ -883,7 +879,7 @@ PatchLevel::putToRestart(
       restart_db->putDatabase("mapped_box_level"));
    d_box_level->putToRestart(mbl_database);
 
-   for (iterator ip(begin()); ip != end(); ip++) {
+   for (iterator ip(begin()); ip != end(); ++ip) {
 
       std::string patch_name = "level_" + tbox::Utilities::levelToString(
             d_level_number)
@@ -920,7 +916,7 @@ PatchLevel::recursivePrint(
    os << getBoxLevel()->format(border, 2) << std::endl;
 
    if (depth > 0) {
-      for (iterator pi(begin()); pi != end(); pi++) {
+      for (iterator pi(begin()); pi != end(); ++pi) {
          const boost::shared_ptr<Patch>& patch = *pi;
          os << border << "Patch " << patch->getLocalId() << '/' << npatch << "\n";
          patch->recursivePrint(os, border + "\t", depth - 1);
@@ -1044,6 +1040,4 @@ PatchLevel::Iterator::Iterator(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

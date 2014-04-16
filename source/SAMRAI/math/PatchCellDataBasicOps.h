@@ -238,10 +238,10 @@ public:
 private:
    // The following are not implemented:
    PatchCellDataBasicOps(
-      const PatchCellDataBasicOps<TYPE>&);
-   void
+      const PatchCellDataBasicOps&);
+   PatchCellDataBasicOps&
    operator = (
-      const PatchCellDataBasicOps<TYPE>&);
+      const PatchCellDataBasicOps&);
 
    ArrayDataBasicOps<TYPE> d_array_ops;
 

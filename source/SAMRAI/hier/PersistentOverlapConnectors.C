@@ -7,13 +7,11 @@
  * Description:   Registry of PersistentOverlapConnectorss incident from a common BoxLevel.
  *
  ************************************************************************/
-#ifndef included_hier_PersistentOverlapConnectors_C
-#define included_hier_PersistentOverlapConnectors_C
-
 #include "SAMRAI/hier/PersistentOverlapConnectors.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
+#include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/InputManager.h"
 
 #include <ctype.h>
@@ -573,7 +571,8 @@ PersistentOverlapConnectors::postprocessForEmptyNeighborContainers(
 {
    if ( s_create_empty_neighbor_containers ) {
       const BoxContainer &base_boxes = connector.getBase().getBoxes();
-      for ( BoxContainer::const_iterator bi=base_boxes.begin(); bi!=base_boxes.end(); ++bi ) {
+      for ( RealBoxConstIterator bi(base_boxes.realBegin());
+            bi != base_boxes.realEnd(); ++bi ) {
          connector.makeEmptyLocalNeighborhood(bi->getBoxId());
       }
    }
@@ -588,4 +587,3 @@ PersistentOverlapConnectors::postprocessForEmptyNeighborContainers(
 
 }
 }
-#endif

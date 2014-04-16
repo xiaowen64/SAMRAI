@@ -8,10 +8,6 @@
  *                a Cartesian mesh.
  *
  ************************************************************************/
-
-#ifndef included_geom_CartesianSideFloatWeightedAverage_C
-#define included_geom_CartesianSideFloatWeightedAverage_C
-
 #include "SAMRAI/geom/CartesianSideFloatWeightedAverage.h"
 
 #include <float.h>
@@ -126,11 +122,11 @@ CartesianSideFloatWeightedAverage::coarsen(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, coarse_box, ratio);
 
    boost::shared_ptr<pdat::SideData<float> > fdata(
-      fine.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::SideData<float>, hier::PatchData>(
+         fine.getPatchData(src_component)));
    boost::shared_ptr<pdat::SideData<float> > cdata(
-      coarse.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::SideData<float>, hier::PatchData>(
+         coarse.getPatchData(dst_component)));
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
@@ -144,11 +140,11 @@ CartesianSideFloatWeightedAverage::coarsen(
    const hier::Index cihi = cdata->getGhostBox().upper();
 
    const boost::shared_ptr<CartesianPatchGeometry> fgeom(
-      fine.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+         fine.getPatchGeometry()));
    const boost::shared_ptr<CartesianPatchGeometry> cgeom(
-      coarse.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+         coarse.getPatchGeometry()));
 
    TBOX_ASSERT(fgeom);
    TBOX_ASSERT(cgeom);
@@ -156,7 +152,7 @@ CartesianSideFloatWeightedAverage::coarsen(
    const hier::Index ifirstc = coarse_box.lower();
    const hier::Index ilastc = coarse_box.upper();
 
-   for (int d = 0; d < cdata->getDepth(); d++) {
+   for (int d = 0; d < cdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {
          if (directions(0)) {
             SAMRAI_F77_FUNC(cartwgtavgsideflot1d, CARTWGTAVGSIDEFLOT1D) (ifirstc(0),
@@ -244,4 +240,3 @@ CartesianSideFloatWeightedAverage::coarsen(
 
 }
 }
-#endif

@@ -72,6 +72,18 @@ public:
    }
 
 private:
+   // Unimplemented default constructor.
+   Tracer();
+
+   // Unimplemented copy constructor.
+   Tracer(
+      const Tracer& other);
+
+   // Unimplemented assignment operator.
+   Tracer&
+   operator = (
+      const Tracer& rhs);
+
    std::string d_message;
    static std::ostream* s_stream;
 };

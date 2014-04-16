@@ -8,10 +8,6 @@
  *                refine schedules.
  *
  ************************************************************************/
-
-#ifndef included_xfer_RefineTransactionFactory_C
-#define included_xfer_RefineTransactionFactory_C
-
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
 
 namespace SAMRAI {
@@ -50,4 +46,3 @@ RefineTransactionFactory::setTransactionTime(
 
 }
 }
-#endif

@@ -261,8 +261,8 @@ void LinAdv::setupLoadBalancer(
 
    if (d_use_nonuniform_workload && gridding_algorithm) {
       boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
-         gridding_algorithm->getLoadBalanceStrategy(),
-         boost::detail::dynamic_cast_tag());
+         boost::dynamic_pointer_cast<mesh::TreeLoadBalancer, mesh::LoadBalanceStrategy>(
+            gridding_algorithm->getLoadBalanceStrategy()));
 
       if (load_balancer) {
          d_workload_variable.reset(new pdat::CellVariable<double>(
@@ -311,13 +311,13 @@ void LinAdv::initializeDataOnPatch(
 
       t_init_first_time->start();
       const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-         patch.getPatchGeometry(),
-         BOOST_CAST_TAG);
+         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            patch.getPatchGeometry()));
       TBOX_ASSERT(pgeom);
 
       boost::shared_ptr<pdat::CellData<double> > uval(
-         patch.getPatchData(d_uval, getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_uval, getDataContext())));
 
       TBOX_ASSERT(uval);
 
@@ -334,8 +334,8 @@ void LinAdv::initializeDataOnPatch(
          patch.allocatePatchData(d_workload_data_id);
       }
       boost::shared_ptr<pdat::CellData<double> > workload_data(
-         patch.getPatchData(d_workload_data_id),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_workload_data_id)));
       TBOX_ASSERT(workload_data);
       workload_data->fillAll(1.0);
    }
@@ -367,8 +367,8 @@ double LinAdv::computeStableDtOnPatch(
    NULL_USE(dt_time);
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
@@ -376,8 +376,8 @@ double LinAdv::computeStableDtOnPatch(
    const hier::Index ilast = patch.getBox().upper();
 
    boost::shared_ptr<pdat::CellData<double> > uval(
-      patch.getPatchData(d_uval, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_uval, getDataContext())));
 
    TBOX_ASSERT(uval);
 
@@ -441,8 +441,8 @@ void LinAdv::computeFluxesOnPatch(
       TBOX_ASSERT(CELLG == FACEG);
 
       const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-         patch.getPatchGeometry(),
-         BOOST_CAST_TAG);
+         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            patch.getPatchGeometry()));
       TBOX_ASSERT(patch_geom);
       const double* dx = patch_geom->getDx();
 
@@ -451,11 +451,11 @@ void LinAdv::computeFluxesOnPatch(
       const hier::Index ilast = patch.getBox().upper();
 
       boost::shared_ptr<pdat::CellData<double> > uval(
-         patch.getPatchData(d_uval, getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_uval, getDataContext())));
       boost::shared_ptr<pdat::FaceData<double> > flux(
-         patch.getPatchData(d_flux, getDataContext()),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+            patch.getPatchData(d_flux, getDataContext())));
 
       /*
        * Verify that the integrator providing the context correctly
@@ -492,7 +492,7 @@ void LinAdv::computeFluxesOnPatch(
           * Prepare temporary data for characteristic tracing.
           */
          int Mcells = 0;
-         for (int k = 0; k < d_dim.getValue(); k++) {
+         for (int k = 0; k < d_dim.getValue(); ++k) {
             Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
          }
 
@@ -615,8 +615,8 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    TBOX_ASSERT(CELLG == FACEG);
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
@@ -625,11 +625,11 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    const hier::Index ilast = patch.getBox().upper();
 
    boost::shared_ptr<pdat::CellData<double> > uval(
-      patch.getPatchData(d_uval, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_uval, getDataContext())));
    boost::shared_ptr<pdat::FaceData<double> > flux(
-      patch.getPatchData(d_flux, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+         patch.getPatchData(d_flux, getDataContext())));
 
    TBOX_ASSERT(uval);
    TBOX_ASSERT(flux);
@@ -670,7 +670,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
        * Prepare temporary data for characteristic tracing.
        */
       int Mcells = 0;
-      for (int k = 0; k < d_dim.getValue(); k++) {
+      for (int k = 0; k < d_dim.getValue(); ++k) {
          Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
@@ -912,8 +912,8 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
    TBOX_ASSERT(CELLG == FACEG);
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
@@ -922,11 +922,11 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
    const hier::Index ilast = patch.getBox().upper();
 
    boost::shared_ptr<pdat::CellData<double> > uval(
-      patch.getPatchData(d_uval, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_uval, getDataContext())));
    boost::shared_ptr<pdat::FaceData<double> > flux(
-      patch.getPatchData(d_flux, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+         patch.getPatchData(d_flux, getDataContext())));
 
    TBOX_ASSERT(uval);
    TBOX_ASSERT(flux);
@@ -988,7 +988,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
        * Prepare temporary data for characteristic tracing.
        */
       int Mcells = 0;
-      for (int k = 0; k < d_dim.getValue(); k++) {
+      for (int k = 0; k < d_dim.getValue(); ++k) {
          Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
@@ -1044,7 +1044,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
 
    } //  if (d_godunov_order > 1) ...
 
-   for (int idir = 0; idir < d_dim.getValue(); idir++) {
+   for (int idir = 0; idir < d_dim.getValue(); ++idir) {
 
       /*
        *    Approximate traces at cell centers (in idir direction) - denoted
@@ -1143,8 +1143,8 @@ void LinAdv::conservativeDifferenceOnPatch(
    NULL_USE(at_syncronization);
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
@@ -1152,11 +1152,11 @@ void LinAdv::conservativeDifferenceOnPatch(
    const hier::Index ilast = patch.getBox().upper();
 
    boost::shared_ptr<pdat::CellData<double> > uval(
-      patch.getPatchData(d_uval, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_uval, getDataContext())));
    boost::shared_ptr<pdat::FaceData<double> > flux(
-      patch.getPatchData(d_flux, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+         patch.getPatchData(d_flux, getDataContext())));
 
    TBOX_ASSERT(uval);
    TBOX_ASSERT(flux);
@@ -1202,15 +1202,15 @@ void LinAdv::setPhysicalBoundaryConditions(
    NULL_USE(fill_time);
 
    boost::shared_ptr<pdat::CellData<double> > uval(
-      patch.getPatchData(d_uval, getDataContext()),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_uval, getDataContext())));
 
    TBOX_ASSERT(uval);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    const double* dx = pgeom->getDx();
    const double* xlo = pgeom->getXLower();
 
@@ -1262,8 +1262,8 @@ void LinAdv::tagRichardsonExtrapolationCells(
    hier::Box pbox = patch.getBox();
 
    boost::shared_ptr<pdat::CellData<int> > tags(
-      patch.getPatchData(tag_index),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+         patch.getPatchData(tag_index)));
    TBOX_ASSERT(tags);
 
    /*
@@ -1276,7 +1276,7 @@ void LinAdv::tagRichardsonExtrapolationCells(
     * the level.
     */
    for (int ncrit = 0;
-        ncrit < static_cast<int>(d_refinement_criteria.size()); ncrit++) {
+        ncrit < static_cast<int>(d_refinement_criteria.size()); ++ncrit) {
 
       string ref = d_refinement_criteria[ncrit];
       boost::shared_ptr<pdat::CellData<double> > coarsened_fine_var;
@@ -1328,7 +1328,7 @@ void LinAdv::tagRichardsonExtrapolationCells(
             const double* xdomainhi = d_grid_geometry->getXUpper();
             double max_length = 0.;
             double max_wave_speed = 0.;
-            for (int idir = 0; idir < d_dim.getValue(); idir++) {
+            for (int idir = 0; idir < d_dim.getValue(); ++idir) {
                double length = xdomainhi[idir] - xdomainlo[idir];
                if (length > max_length) max_length = length;
 
@@ -1437,14 +1437,14 @@ void LinAdv::tagGradientDetectorCells(
    const int error_level_number = patch.getPatchLevelNumber();
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
    boost::shared_ptr<pdat::CellData<int> > tags(
-      patch.getPatchData(tag_indx),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+         patch.getPatchData(tag_indx)));
    TBOX_ASSERT(tags);
 
    hier::Box pbox = patch.getBox();
@@ -1483,12 +1483,12 @@ void LinAdv::tagGradientDetectorCells(
        * the level.
        */
       for (int ncrit = 0;
-           ncrit < static_cast<int>(d_refinement_criteria.size()); ncrit++) {
+           ncrit < static_cast<int>(d_refinement_criteria.size()); ++ncrit) {
 
          string ref = d_refinement_criteria[ncrit];
          boost::shared_ptr<pdat::CellData<double> > var(
-            patch.getPatchData(d_uval, getDataContext()),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch.getPatchData(d_uval, getDataContext())));
 
          TBOX_ASSERT(var);
 
@@ -1737,7 +1737,7 @@ void LinAdv::printClassData(
 
    os << "Parameters for numerical method ..." << endl;
    os << "   d_advection_velocity = ";
-   for (j = 0; j < d_dim.getValue(); j++) os << d_advection_velocity[j] << " ";
+   for (j = 0; j < d_dim.getValue(); ++j) os << d_advection_velocity[j] << " ";
    os << endl;
    os << "   d_godunov_order = " << d_godunov_order << endl;
    os << "   d_corner_transport = " << d_corner_transport << endl;
@@ -1747,76 +1747,76 @@ void LinAdv::printClassData(
 
    os << "   Refinement criteria parameters " << endl;
 
-   for (j = 0; j < static_cast<int>(d_refinement_criteria.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_refinement_criteria.size()); ++j) {
       os << "       d_refinement_criteria[" << j << "] = "
          << d_refinement_criteria[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_dev_tol.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_dev_tol.size()); ++j) {
       os << "       d_dev_tol[" << j << "] = "
          << d_dev_tol[j] << endl;
    }
-   for (j = 0; j < static_cast<int>(d_dev.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_dev.size()); ++j) {
       os << "       d_dev[" << j << "] = "
          << d_dev[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_dev_time_max.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_dev_time_max.size()); ++j) {
       os << "       d_dev_time_max[" << j << "] = "
          << d_dev_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_dev_time_min.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_dev_time_min.size()); ++j) {
       os << "       d_dev_time_min[" << j << "] = "
          << d_dev_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_grad_tol.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_grad_tol.size()); ++j) {
       os << "       d_grad_tol[" << j << "] = "
          << d_grad_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_grad_time_max.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_grad_time_max.size()); ++j) {
       os << "       d_grad_time_max[" << j << "] = "
          << d_grad_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_grad_time_min.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_grad_time_min.size()); ++j) {
       os << "       d_grad_time_min[" << j << "] = "
          << d_grad_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_shock_onset.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_onset.size()); ++j) {
       os << "       d_shock_onset[" << j << "] = "
          << d_shock_onset[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_shock_tol.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_tol.size()); ++j) {
       os << "       d_shock_tol[" << j << "] = "
          << d_shock_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_shock_time_max.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_time_max.size()); ++j) {
       os << "       d_shock_time_max[" << j << "] = "
          << d_shock_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_shock_time_min.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_time_min.size()); ++j) {
       os << "       d_shock_time_min[" << j << "] = "
          << d_shock_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_rich_tol.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_rich_tol.size()); ++j) {
       os << "       d_rich_tol[" << j << "] = "
          << d_rich_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_rich_time_max.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_rich_time_max.size()); ++j) {
       os << "       d_rich_time_max[" << j << "] = "
          << d_rich_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_rich_time_min.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_rich_time_min.size()); ++j) {
       os << "       d_rich_time_min[" << j << "] = "
          << d_rich_time_min[j] << endl;
    }
@@ -1909,7 +1909,7 @@ void LinAdv::getFromInput(
       std::vector<string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
       boost::shared_ptr<tbox::Database> error_db;
-      for (int i = 0; i < num_keys; i++) {
+      for (int i = 0; i < num_keys; ++i) {
 
          string error_key = refinement_keys[i];
          error_db.reset();
@@ -1928,7 +1928,7 @@ void LinAdv::getFromInput(
             } else {
                error_db = refine_db->getDatabase(error_key);
                ref_keys_defined[def_key_cnt] = error_key;
-               def_key_cnt++;
+               ++def_key_cnt;
             }
 
             if (error_db && error_key == "UVAL_DEVIATION") {
@@ -2065,10 +2065,10 @@ void LinAdv::getFromInput(
        * Check that input is found for each string identifier in key list.
        */
       for (int k0 = 0;
-           k0 < static_cast<int>(d_refinement_criteria.size()); k0++) {
+           k0 < static_cast<int>(d_refinement_criteria.size()); ++k0) {
          string use_key = d_refinement_criteria[k0];
          bool key_found = false;
-         for (int k1 = 0; k1 < def_key_cnt; k1++) {
+         for (int k1 = 0; k1 < def_key_cnt; ++k1) {
             string def_key = ref_keys_defined[k1];
             if (def_key == use_key) key_found = true;
          }
@@ -2086,8 +2086,8 @@ void LinAdv::getFromInput(
    hier::IntVector periodic(
       d_grid_geometry->getPeriodicShift(hier::IntVector(d_dim, 1)));
    int num_per_dirs = 0;
-   for (int id = 0; id < d_dim.getValue(); id++) {
-      if (periodic(id)) num_per_dirs++;
+   for (int id = 0; id < d_dim.getValue(); ++id) {
+      if (periodic(id)) ++num_per_dirs;
    }
 
 }
@@ -2122,7 +2122,7 @@ void LinAdv::putToRestart(
       restart_db->putStringVector("d_refinement_criteria",
          d_refinement_criteria);
    }
-   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); ++i) {
 
       if (d_refinement_criteria[i] == "UVAL_DEVIATION") {
          restart_db->putDoubleVector("d_dev_tol", d_dev_tol);
@@ -2196,7 +2196,7 @@ void LinAdv::getFromRestart()
    if (db->keyExists("d_refinement_criteria")) {
       d_refinement_criteria = db->getStringVector("d_refinement_criteria");
    }
-   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); ++i) {
 
       if (d_refinement_criteria[i] == "UVAL_DEVIATION") {
          d_dev_tol = db->getDoubleVector("d_dev_tol");

@@ -7,10 +7,6 @@
  * Description:   Abstract base class for spatial refinement operators.
  *
  ************************************************************************/
-
-#ifndef included_hier_RefineOperator_C
-#define included_hier_RefineOperator_C
-
 #include "SAMRAI/hier/RefineOperator.h"
 
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -126,4 +122,3 @@ RefineOperator::finalizeCallback()
 
 }
 }
-#endif

@@ -368,6 +368,8 @@ TileClustering::findBoxesContainingTags(
    if (d_barrier_and_time) {
       d_object_timers->t_find_boxes_containing_tags->barrierAndStop();
    }
+
+   return;
 }
 
 
@@ -405,8 +407,10 @@ TileClustering::clusterWithinProcessBoundaries(
    /*
     * Generate new_box_level and Connectors
     */
+#ifdef _OPENMP
 #pragma omp parallel if ( tag_level->getLocalNumberOfPatches() > 4*omp_get_max_threads() )
 #pragma omp for schedule(dynamic)
+#endif
    for ( int pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
 
       hier::Patch &patch = *tag_level->getPatch(pi);
@@ -980,8 +984,10 @@ TileClustering::findTilesContainingTags(
 
    const int num_coarse_cells = coarsened_box.size();
 
+#ifdef _OPENMP
 #pragma omp parallel
 #pragma omp for schedule(dynamic)
+#endif
    for ( int coarse_offset=0; coarse_offset<num_coarse_cells; ++coarse_offset ) {
       const pdat::CellIndex coarse_cell_index(coarsened_box.index(coarse_offset));
 
@@ -1076,8 +1082,6 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
    size_t coarse_tag_count = 0;
 
    const int num_coarse_cells = coarsened_box.size();
-#pragma omp parallel
-#pragma omp for schedule(dynamic)
    for ( int offset=0; offset<num_coarse_cells; ++offset ) {
       const pdat::CellIndex coarse_cell_index(coarsened_box.index(offset));
 
@@ -1265,8 +1269,6 @@ TileClustering::coalesceClusters(
 
       const int nblocks = tile_box_level.getGridGeometry()->getNumberBlocks();
 
-#pragma omp parallel
-#pragma omp for schedule(dynamic)
       for (int b = 0; b < nblocks; ++b) {
          hier::BlockId block_id(b);
 
@@ -1321,8 +1323,6 @@ TileClustering::coalesceClusters(
        * tile--->tag edges.
        */
       const int rank = tile_box_level.getMPI().getRank();
-#pragma omp parallel
-#pragma omp for schedule(dynamic)
       for ( size_t i=0; i<box_vector.size(); ++i ) {
 
          box_vector[i].setId(hier::BoxId(hier::LocalId(static_cast<int>(i)),rank));

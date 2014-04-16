@@ -20,7 +20,7 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA	= -DDISPLAY -DNDIM=$(PDIM)  -DTESTING=1
+CPPFLAGS_EXTRA	= -DDISPLAY -DTESTING=1
 
 ifneq (,$(findstring libdcomplex, $(SAMRAI_LIBRARY_TARGETS)))
   NUM_TESTS = 24
@@ -284,11 +284,12 @@ everything:
 	$(MAKE) examples
 	$(MAKE) perf
 
-clean-check:
-	$(SAMCLEAN)
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
 
-clean:	clean-check
-	$(RM) *_hiertest* *_cplxtest* *_patchtest* *_dataops*
+clean:	checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) *_hiertest *_cplxtest *_patchtest *_dataops
 
 
 include $(SRCDIR)/Makefile.depend

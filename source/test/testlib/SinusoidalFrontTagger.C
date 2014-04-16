@@ -205,11 +205,11 @@ void SinusoidalFrontTagger::initializePatchData(
             patch.allocatePatchData(d_tag_id);
          }
          boost::shared_ptr<pdat::NodeData<double> > dist_data(
-            patch.getPatchData(d_dist_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+               patch.getPatchData(d_dist_id)));
          boost::shared_ptr<pdat::CellData<int> > tag_data(
-            patch.getPatchData(d_tag_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+               patch.getPatchData(d_tag_id)));
          TBOX_ASSERT(dist_data);
          TBOX_ASSERT(tag_data);
          computePatchData(patch, init_data_time,
@@ -254,20 +254,15 @@ void SinusoidalFrontTagger::applyGradientDetector(
         pi != level.end(); ++pi) {
       hier::Patch& patch = **pi;
 
-      boost::shared_ptr<hier::PatchData> tag_data(
-         patch.getPatchData(tag_index),
-         BOOST_CAST_TAG);
-      TBOX_ASSERT(tag_data);
       boost::shared_ptr<pdat::CellData<int> > tag_cell_data_(
-         tag_data,
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            patch.getPatchData(tag_index)));
       TBOX_ASSERT(tag_cell_data_);
 
       if (d_allocate_data) {
          // Use internally stored data.
-         boost::shared_ptr<hier::PatchData> saved_tag_data(
-            patch.getPatchData(d_tag_id),
-            BOOST_CAST_TAG);
+         boost::shared_ptr<hier::PatchData> saved_tag_data =
+            patch.getPatchData(d_tag_id);
          TBOX_ASSERT(saved_tag_data);
          tag_cell_data_->copy(*saved_tag_data);
       } else {
@@ -357,13 +352,15 @@ void SinusoidalFrontTagger::computeLevelData(
       hier::Patch& patch = **pi;
       boost::shared_ptr<pdat::NodeData<double> > dist_data;
       if (dist_id >= 0) {
-         dist_data = boost::dynamic_pointer_cast<pdat::NodeData<double>,
-                                                 hier::PatchData>(patch.getPatchData(dist_id));
+         dist_data =
+            boost::dynamic_pointer_cast<pdat::NodeData<double>, hier::PatchData>(
+               patch.getPatchData(dist_id));
       }
       boost::shared_ptr<pdat::CellData<int> > tag_data;
       if (tag_id >= 0) {
-         tag_data = boost::dynamic_pointer_cast<pdat::CellData<int>,
-                                                hier::PatchData>(patch.getPatchData(tag_id));
+         tag_data =
+            boost::dynamic_pointer_cast<pdat::CellData<int>, hier::PatchData>(
+               patch.getPatchData(tag_id));
       }
       computePatchData(patch, time,
                        dist_data.get(),
@@ -397,8 +394,8 @@ void SinusoidalFrontTagger::computePatchData(
    const hier::IntVector& ratio(level->getRatioToLevelZero());
 
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
 
    TBOX_ASSERT(patch_geom);
 

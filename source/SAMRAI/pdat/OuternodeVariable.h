@@ -82,11 +82,11 @@ public:
 
 private:
    // neither of the following functions are implemented
-   OuternodeVariable<TYPE>(
-      const OuternodeVariable<TYPE>&);
-   void
+   OuternodeVariable(
+      const OuternodeVariable&);
+   OuternodeVariable&
    operator = (
-      const OuternodeVariable<TYPE>&);
+      const OuternodeVariable&);
 
 };
 

@@ -23,10 +23,11 @@
 /*!
  * @brief Enumeration to define MPI constants when compiling without MPI.
  *
- * These are defined in the global namespace, and it does not matter
- * what values these take because they are not used.  (They are just place
- * holders to let code compile without MPI without adding excessive
- * preprocessor guards to the code.)
+ * These are defined in the global namespace because that's where MPI
+ * defines them.  It does not matter what values these take because
+ * they are not used.  (They are just place holders to let code
+ * compile without MPI without adding excessive preprocessor guards to
+ * the code.)
  *
  * This is not a complete set.  Developers should add as needed to extend
  * SAMRAI_MPI's functionality.
@@ -37,6 +38,7 @@ enum {
    // Special values:
    MPI_SUCCESS = 0,
    MPI_CONGRUENT,
+   MPI_IDENT,
    MPI_REQUEST_NULL,
    MPI_ERR_IN_STATUS,
    MPI_UNDEFINED,
@@ -48,6 +50,7 @@ enum {
    MPI_DOUBLE,
    MPI_FLOAT,
    MPI_INT,
+   MPI_LONG,
    MPI_C_DOUBLE_COMPLEX,
    MPI_2INT,
    MPI_DOUBLE_INT,
@@ -136,11 +139,9 @@ public:
    };
 #endif
 
-   /*!
-    * @brief MPI communicator constants
-    */
-   static Comm commWorld;
-   static Comm commNull;
+   // Obsolete and should be removed.
+   static const Comm commWorld; // Should use MPI_COMM_WORLD directly.
+   static const Comm commNull; // Should use MPI_COMM_NULL directly.
 
    /*!
     * @brief Get the primary SAMRAI_MPI object owned by SAMRAI.
@@ -153,6 +154,10 @@ public:
     *
     * The use of this object outside of the SAMRAI library should be
     * carefully limited to avoid mixing messages.
+    *
+    * After SAMRAI_MPI::init() and before SAMRAI_MPI::finalize(), the
+    * object returned is useable.  Otherwise it is intentionally
+    * invalid.
     *
     * @see init()
     */
@@ -193,6 +198,12 @@ public:
     */
    explicit SAMRAI_MPI(
       const Comm& comm);
+
+   /*!
+    * @brief Copy constructor.
+    */
+   SAMRAI_MPI(
+      const SAMRAI_MPI& other);
 
    /*!
     * @brief Get the local process rank from the last time the
@@ -265,7 +276,7 @@ public:
     *
     * @param[in] rhs
     */
-   const SAMRAI_MPI&
+   SAMRAI_MPI&
    operator = (
       const SAMRAI_MPI& rhs)
    {
@@ -313,6 +324,16 @@ public:
     *
     * @pre s_mpi_is_initialized
     */
+
+   static int
+   Comm_rank(
+      Comm comm,
+      int* rank);
+
+   static int
+   Comm_size(
+      Comm comm,
+      int* size);
 
    static int
    Comm_compare(
@@ -723,7 +744,8 @@ public:
    disableMPI();
 
    /*!
-    * @brief Whether SAMRAI is using MPI.
+    * @brief Whether SAMRAI is using MPI (configured, compiled and
+    * initialized).
     *
     * @see disableMPI().
     */
@@ -785,6 +807,9 @@ public:
    finalize();
 
 private:
+   // Unimplemented default constructor.
+   SAMRAI_MPI();
+
    //@{
 
    /*!
@@ -828,7 +853,7 @@ private:
    int d_size;
 
    /*!
-    * @brief Whether MPI is initialized.
+    * @brief Whether the actual MPI library (not this wrapper) is initialized.
     */
    static bool s_mpi_is_initialized;
 

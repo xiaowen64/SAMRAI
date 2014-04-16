@@ -102,8 +102,8 @@ SparseDataFactory<BOX_GEOMETRY>::validCopyTo(
    if (!valid_copy) {
 
       boost::shared_ptr<SparseDataFactory<BOX_GEOMETRY> > idf(
-         dst_pdf,
-         boost::detail::dynamic_cast_tag());
+         boost::dynamic_pointer_cast<SparseDataFactory<BOX_GEOMETRY>,
+                                     hier::PatchDataFactory>(dst_pdf));
 
       if (idf) {
          valid_copy = true;

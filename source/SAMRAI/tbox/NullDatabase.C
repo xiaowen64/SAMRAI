@@ -132,7 +132,7 @@ NullDatabase::getArrayType(
  *************************************************************************
  */
 
-int
+size_t
 NullDatabase::getArraySize(
    const std::string& key)
 {
@@ -192,7 +192,7 @@ void
 NullDatabase::putBoolArray(
    const std::string& key,
    const bool * const data,
-   const int nelements)
+   const size_t nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -228,7 +228,7 @@ void
 NullDatabase::putDatabaseBoxArray(
    const std::string& key,
    const DatabaseBox * const data,
-   const int nelements)
+   const size_t nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -265,7 +265,7 @@ void
 NullDatabase::putCharArray(
    const std::string& key,
    const char * const data,
-   const int nelements)
+   const size_t nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -304,7 +304,7 @@ void
 NullDatabase::putComplexArray(
    const std::string& key,
    const dcomplex * const data,
-   const int nelements)
+   const size_t nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -342,7 +342,7 @@ void
 NullDatabase::putDoubleArray(
    const std::string& key,
    const double * const data,
-   const int nelements)
+   const size_t nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -380,7 +380,7 @@ void
 NullDatabase::putFloatArray(
    const std::string& key,
    const float * const data,
-   const int nelements)
+   const size_t nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -417,7 +417,7 @@ void
 NullDatabase::putIntegerArray(
    const std::string& key,
    const int * const data,
-   const int nelements)
+   const size_t nelements)
 {
    NULL_USE(key);
    NULL_USE(data);
@@ -454,7 +454,7 @@ void
 NullDatabase::putStringArray(
    const std::string& key,
    const std::string * const data,
-   const int nelements)
+   const size_t nelements)
 {
    NULL_USE(key);
    NULL_USE(data);

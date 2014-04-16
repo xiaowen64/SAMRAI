@@ -52,8 +52,7 @@ public:
     */
    void
    setRefineItems(
-      const xfer::RefineClasses::Data *const* refine_items,
-      int num_refine_items);
+      const xfer::RefineClasses::Data *const* refine_items);
 
    /*!
     * @brief Clear the array of xfer::RefineClasses::Data items used by the
@@ -150,12 +149,11 @@ private:
    // The following two functions are not implemented
    OuternodeSumTransactionFactory(
       const OuternodeSumTransactionFactory&);
-   void
+   OuternodeSumTransactionFactory&
    operator = (
       const OuternodeSumTransactionFactory&);
 
    const xfer::RefineClasses::Data*const* d_refine_items;
-   int d_number_refine_items;
 
 };
 

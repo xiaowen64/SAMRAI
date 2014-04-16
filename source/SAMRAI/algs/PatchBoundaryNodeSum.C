@@ -7,10 +7,6 @@
  * Description:   Routines for summing node data at patch boundaries
  *
  ************************************************************************/
-
-#ifndef included_algs_PatchBoundaryNodeSum_C
-#define included_algs_PatchBoundaryNodeSum_C
-
 #include "SAMRAI/algs/PatchBoundaryNodeSum.h"
 
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -139,7 +135,7 @@ PatchBoundaryNodeSum::PatchBoundaryNodeSum(
 
    d_object_name = object_name;
 
-   s_instance_counter++;
+   ++s_instance_counter;
 }
 
 /*
@@ -154,16 +150,16 @@ PatchBoundaryNodeSum::PatchBoundaryNodeSum(
 PatchBoundaryNodeSum::~PatchBoundaryNodeSum()
 {
 
-   s_instance_counter--;
+   --s_instance_counter;
    if (s_instance_counter == 0) {
       const int arr_length_depth =
          static_cast<int>(s_onode_src_id_array.size());
 
-      for (int id = 0; id < arr_length_depth; id++) {
+      for (int id = 0; id < arr_length_depth; ++id) {
          const int arr_length_nvar =
             static_cast<int>(s_onode_src_id_array[id].size());
 
-         for (int iv = 0; iv < arr_length_nvar; iv++) {
+         for (int iv = 0; iv < arr_length_nvar; ++iv) {
 
             if (s_onode_src_id_array[id][iv] >= 0) {
                hier::VariableDatabase::getDatabase()->
@@ -222,8 +218,8 @@ PatchBoundaryNodeSum::registerSum(
    hier::VariableDatabase* var_db = hier::VariableDatabase::getDatabase();
 
    boost::shared_ptr<pdat::NodeDataFactory<double> > node_factory(
-      var_db->getPatchDescriptor()->getPatchDataFactory(node_data_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::NodeDataFactory<double>, hier::PatchDataFactory>(
+         var_db->getPatchDescriptor()->getPatchDataFactory(node_data_id)));
 
    TBOX_ASSERT(node_factory);
 
@@ -236,7 +232,7 @@ PatchBoundaryNodeSum::registerSum(
 
    const int reg_sum_id = d_num_reg_sum;
 
-   d_num_reg_sum++;
+   ++d_num_reg_sum;
 
    d_user_node_data_id.resize(d_num_reg_sum);
    d_user_node_data_id[reg_sum_id] = ID_UNDEFINED;
@@ -259,7 +255,7 @@ PatchBoundaryNodeSum::registerSum(
       const int new_size = array_by_depth_size;
 
       d_num_registered_data_by_depth.resize(new_size);
-      for (int i = old_size; i < new_size; i++) {
+      for (int i = old_size; i < new_size; ++i) {
          d_num_registered_data_by_depth[i] = 0;
       }
    }
@@ -280,7 +276,7 @@ PatchBoundaryNodeSum::registerSum(
 
       s_onode_src_id_array[data_depth].resize(new_size);
       s_onode_dst_id_array[data_depth].resize(new_size);
-      for (int i = old_size; i < new_size; i++) {
+      for (int i = old_size; i < new_size; ++i) {
          s_onode_src_id_array[data_depth][i] = ID_UNDEFINED;
          s_onode_dst_id_array[data_depth][i] = ID_UNDEFINED;
       }
@@ -370,7 +366,7 @@ PatchBoundaryNodeSum::setupSum(
       // Communication algorithm for summing outernode values on a level
       xfer::RefineAlgorithm single_level_sum_algorithm;
 
-      for (int i = 0; i < d_num_reg_sum; i++) {
+      for (int i = 0; i < d_num_reg_sum; ++i) {
          single_level_sum_algorithm.registerRefine(d_onode_dst_id[i],  // dst data
             d_onode_src_id[i],                                         // src data
             d_onode_dst_id[i],                                         // scratch data
@@ -447,7 +443,7 @@ PatchBoundaryNodeSum::setupSum(
       boost::shared_ptr<pdat::OuternodeDoubleInjection> coarsen_op(
          boost::make_shared<pdat::OuternodeDoubleInjection>());
 
-      for (int i = 0; i < d_num_reg_sum; i++) {
+      for (int i = 0; i < d_num_reg_sum; ++i) {
          single_level_sum_algorithm.registerRefine(d_onode_dst_id[i],  // dst data
             d_onode_src_id[i],                                         // src data
             d_onode_dst_id[i],                                         // scratch data
@@ -469,7 +465,7 @@ PatchBoundaryNodeSum::setupSum(
             0,
             d_sum_transaction_factory);
 
-      for (int ln = d_coarsest_level + 1; ln <= d_finest_level; ln++) {
+      for (int ln = d_coarsest_level + 1; ln <= d_finest_level; ++ln) {
 
          const int crse_level_num = ln - 1;
          const int fine_level_num = ln;
@@ -586,7 +582,7 @@ PatchBoundaryNodeSum::computeSum(
 
       int ln;
 
-      for (ln = d_coarsest_level; ln <= d_finest_level; ln++) {
+      for (ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
 
          boost::shared_ptr<hier::PatchLevel> level(
             d_hierarchy->getPatchLevel(ln));
@@ -598,7 +594,7 @@ PatchBoundaryNodeSum::computeSum(
 
       }
 
-      for (ln = d_coarsest_level + 1; ln <= d_finest_level; ln++) {
+      for (ln = d_coarsest_level + 1; ln <= d_finest_level; ++ln) {
 
          boost::shared_ptr<hier::PatchLevel> level(
             d_hierarchy->getPatchLevel(ln));
@@ -617,7 +613,7 @@ PatchBoundaryNodeSum::computeSum(
 
       }
 
-      for (ln = d_finest_level; ln > d_coarsest_level; ln--) {
+      for (ln = d_finest_level; ln > d_coarsest_level; --ln) {
 
          boost::shared_ptr<hier::PatchLevel> level(
             d_hierarchy->getPatchLevel(ln));
@@ -700,7 +696,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
    TBOX_ASSERT(coarsened_fine_level);
    TBOX_ASSERT(node_data_id.size() == onode_data_id.size());
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int i = 0; i < static_cast<int>(node_data_id.size()); i++) {
+   for (int i = 0; i < static_cast<int>(node_data_id.size()); ++i) {
       TBOX_ASSERT(fine_level->checkAllocated(node_data_id[i]));
       TBOX_ASSERT(coarsened_fine_level->checkAllocated(onode_data_id[i]));
    }
@@ -731,14 +727,14 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
          const hier::Index& cihi = cfpatch->getBox().upper();
 
          int node_data_id_size = static_cast<int>(node_data_id.size());
-         for (int i = 0; i < node_data_id_size; i++) {
+         for (int i = 0; i < node_data_id_size; ++i) {
 
             boost::shared_ptr<pdat::NodeData<double> > node_data(
-               fpatch->getPatchData(node_data_id[i]),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+                  fpatch->getPatchData(node_data_id[i])));
             boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
-               cfpatch->getPatchData(onode_data_id[i]),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+                  cfpatch->getPatchData(onode_data_id[i])));
 
             TBOX_ASSERT(node_data);
             TBOX_ASSERT(onode_data);
@@ -751,7 +747,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
 
             // Copy "coarse" node values on coarse-fine boundary to
             // temporary outernode data arrays.
-            for (int ibb0 = 0; ibb0 < num_bdry_boxes; ibb0++) {
+            for (int ibb0 = 0; ibb0 < num_bdry_boxes; ++ibb0) {
 
                const hier::BoundaryBox& bbox = pboundaries[ibb0];
                const int bbox_loc = bbox.getLocationIndex();
@@ -1033,7 +1029,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
             // coarse-fine boundary.
             if (fill_hanging_nodes) {
 
-               for (int ibb1 = 0; ibb1 < num_bdry_boxes; ibb1++) {
+               for (int ibb1 = 0; ibb1 < num_bdry_boxes; ++ibb1) {
 
                   const hier::BoundaryBox& bbox = pboundaries[ibb1];
                   const hier::Index& bboxilo = bbox.getBox().lower();
@@ -1106,13 +1102,13 @@ PatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       int node_data_id_size = static_cast<int>(node_data_id.size());
-      for (int i = 0; i < node_data_id_size; i++) {
+      for (int i = 0; i < node_data_id_size; ++i) {
          boost::shared_ptr<pdat::NodeData<double> > node_data(
-            patch->getPatchData(node_data_id[i]),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+               patch->getPatchData(node_data_id[i])));
          boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
-            patch->getPatchData(onode_data_id[i]),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+               patch->getPatchData(onode_data_id[i])));
 
          TBOX_ASSERT(node_data);
          TBOX_ASSERT(onode_data);
@@ -1137,13 +1133,13 @@ PatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       int node_data_id_size = static_cast<int>(node_data_id.size());
-      for (int i = 0; i < node_data_id_size; i++) {
+      for (int i = 0; i < node_data_id_size; ++i) {
          boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
-            patch->getPatchData(onode_data_id[i]),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+               patch->getPatchData(onode_data_id[i])));
          boost::shared_ptr<pdat::NodeData<double> > node_data(
-            patch->getPatchData(node_data_id[i]),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+               patch->getPatchData(node_data_id[i])));
 
          TBOX_ASSERT(node_data);
          TBOX_ASSERT(onode_data);
@@ -1156,5 +1152,3 @@ PatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
 
 }
 }
-
-#endif

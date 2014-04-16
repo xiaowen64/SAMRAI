@@ -20,7 +20,7 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA= -DDISPLAY -DNDIM=$(PDIM)  -DTESTING=1
+CPPFLAGS_EXTRA= -DDISPLAY -DTESTING=1
 
 CXX_OBJS      = main.o ModifiedBratuProblem.o
 F_OBJS      =	\
@@ -84,12 +84,13 @@ everything:
 	$(MAKE) examples
 	$(MAKE) perf
 
-clean-check:
-	$(SAMCLEAN)
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
+	$(RM) nkLog.32x32.8 *.timing*
 
-clean:		clean-check
-	$(RM) *.o *.f main
-	$(RM) *visit nkLog.32x32.8 *.timing*
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) main
 
 include $(SRCDIR)/Makefile.depend
 

@@ -7,10 +7,6 @@
  * Description:   Iterator for array patch data types
  *
  ************************************************************************/
-
-#ifndef included_pdat_ArrayDataIterator_C
-#define included_pdat_ArrayDataIterator_C
-
 #include "SAMRAI/pdat/ArrayDataIterator.h"
 
 namespace SAMRAI {
@@ -43,11 +39,11 @@ ArrayDataIterator&
 ArrayDataIterator::operator ++ ()
 {
    const tbox::Dimension& dim(d_box.getDim());
-   d_index(0)++;
-   for (int i = 0; i < dim.getValue() - 1; i++) {
+   ++d_index(0);
+   for (int i = 0; i < dim.getValue() - 1; ++i) {
       if (d_index(i) > d_box.upper(i)) {
          d_index(i) = d_box.lower(i);
-         d_index(i + 1)++;
+         ++d_index(i + 1);
       } else {
          break;
       }
@@ -61,11 +57,11 @@ ArrayDataIterator::operator ++ (
 {
    ArrayDataIterator tmp = *this;
    const tbox::Dimension& dim(d_box.getDim());
-   d_index(0)++;
-   for (int i = 0; i < dim.getValue() - 1; i++) {
+   ++d_index(0);
+   for (int i = 0; i < dim.getValue() - 1; ++i) {
       if (d_index(i) > d_box.upper(i)) {
          d_index(i) = d_box.lower(i);
-         d_index(i + 1)++;
+         ++d_index(i + 1);
       } else {
          break;
       }
@@ -75,5 +71,3 @@ ArrayDataIterator::operator ++ (
 
 }
 }
-
-#endif

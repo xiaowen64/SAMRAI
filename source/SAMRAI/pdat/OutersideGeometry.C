@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_OutersideGeometry_C
-#define included_pdat_OutersideGeometry_C
-
 #include "SAMRAI/pdat/OutersideGeometry.h"
 #include "SAMRAI/pdat/SideGeometry.h"
 #include "SAMRAI/hier/BoxContainer.h"
@@ -144,7 +140,7 @@ OutersideGeometry::doOverlap(
       hier::Box mask_shift(src_mask);
       transformation.transform(mask_shift);
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
 
          const hier::Box msk_side(
             SideGeometry::toSideBox(mask_shift, d));
@@ -220,7 +216,7 @@ OutersideGeometry::setUpOverlap(
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          hier::Box side_box(SideGeometry::toSideBox(*b, d));
          dst_boxes[d].pushBack(side_box);
       }
@@ -233,4 +229,3 @@ OutersideGeometry::setUpOverlap(
 
 }
 }
-#endif

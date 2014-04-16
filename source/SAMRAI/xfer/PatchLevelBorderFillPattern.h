@@ -130,7 +130,7 @@ public:
 private:
    PatchLevelBorderFillPattern(
       const PatchLevelBorderFillPattern&);            // not implemented
-   void
+   PatchLevelBorderFillPattern&
    operator = (
       const PatchLevelBorderFillPattern&);            // not implemented
 

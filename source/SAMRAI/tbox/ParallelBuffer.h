@@ -149,6 +149,15 @@ public:
 #endif
 
 private:
+   // Unimplemented copy constructor.
+   ParallelBuffer(
+      const ParallelBuffer& other);
+
+   // Unimplemented assignment operator.
+   ParallelBuffer&
+   operator = (
+      const ParallelBuffer& rhs);
+
    void
    copyToBuffer(
       const std::string& text,

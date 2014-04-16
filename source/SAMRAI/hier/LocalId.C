@@ -7,10 +7,6 @@
  * Description:   Generic identifier used on a single process.
  *
  ************************************************************************/
-
-#ifndef included_hier_LocalId_C
-#define included_hier_LocalId_C
-
 #include "SAMRAI/hier/LocalId.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
@@ -76,4 +72,3 @@ operator << (
 
 }
 }
-#endif

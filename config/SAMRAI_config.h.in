@@ -7,11 +7,14 @@
 
 #define SAMRAI_VERSION_MAJOR 3
 #define SAMRAI_VERSION_MINOR 7
-#define SAMRAI_VERSION_PATCHLEVEL 0
+#define SAMRAI_VERSION_PATCHLEVEL 3
 
 
 /* Define if bool type is not properly supported */
 #undef BOOL_IS_BROKEN
+
+/* Enable Box counting */
+#undef BOX_TELEMETRY
 
 /* Define if std::fill_n returns void */
 #undef CASC_STD_FILL_N_RETURNS_VOID
@@ -129,6 +132,9 @@
 /* HAVE_NEW_PLACEMENT_OPERATOR */
 #undef HAVE_NEW_PLACEMENT_OPERATOR
 
+/* OPENMP is available */
+#undef HAVE_OPENMP
+
 /* PETSC library is available so use it */
 #undef HAVE_PETSC
 
@@ -206,9 +212,6 @@
 
 /* "Compiling without deprecated features" */
 #undef INCLUDE_DEPRECATED
-
-/* INCLUDE_TEMPLATE_IMPLEMENTATION */
-#undef INCLUDE_TEMPLATE_IMPLEMENTATION
 
 /* Header file for iomanip */
 #undef IOMANIP_HEADER_FILE

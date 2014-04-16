@@ -7,10 +7,6 @@
  * Description:   Simple structure for managing coarsening data in equivalence classes.
  *
  ************************************************************************/
-
-#ifndef included_xfer_CoarsenClasses_C
-#define included_xfer_CoarsenClasses_C
-
 #include "SAMRAI/xfer/CoarsenClasses.h"
 
 #include "SAMRAI/hier/IntVector.h"
@@ -94,7 +90,7 @@ CoarsenClasses::insertEquivalenceClassItem(
 
       d_equivalence_class_indices[eq_index].push_back(d_num_coarsen_items);
 
-      d_num_coarsen_items++;
+      ++d_num_coarsen_items;
    }
 
 }
@@ -225,7 +221,7 @@ CoarsenClasses::classesMatch(
 
          } // if number of items in equivalence class match
 
-         eq_index++;
+         ++eq_index;
 
       } // while equivalence classes match
 
@@ -296,19 +292,19 @@ CoarsenClasses::printClassData(
 {
    stream << "CoarsenClasses::printClassData()\n";
    stream << "--------------------------------------\n";
-   for (int i = 0; i < static_cast<int>(d_equivalence_class_indices.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_equivalence_class_indices.size()); ++i) {
       stream << "EQUIVALENCE CLASS # " << i << std::endl;
       int j = 0;
       const std::list<int>& indices = d_equivalence_class_indices[i];
       for (std::list<int>::const_iterator li(indices.begin());
-           li != indices.end(); li++) {
+           li != indices.end(); ++li) {
 
          stream << "Item # " << j << std::endl;
          stream << "-----------------------------\n";
 
          printCoarsenItem(stream, d_coarsen_classes_data_items[*li]);
 
-         j++;
+         ++j;
       }
       stream << std::endl;
    }
@@ -418,7 +414,7 @@ CoarsenClasses::getEquivalenceClassIndex(
          eq_index = check_index;
       }
 
-      check_index++;
+      ++check_index;
    }
 
    return eq_index;
@@ -438,4 +434,3 @@ CoarsenClasses::Data::Data(
 
 }
 }
-#endif

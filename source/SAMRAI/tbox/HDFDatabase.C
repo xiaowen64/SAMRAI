@@ -403,9 +403,9 @@ HDFDatabase::getAllKeys()
 
    int k = 0;
    for (std::list<KeyData>::iterator i = d_keydata.begin();
-        i != d_keydata.end(); i++) {
+        i != d_keydata.end(); ++i) {
       tmp_keys[k] = i->d_key;
-      k++;
+      ++k;
    }
 
    cleanupKeySearch();
@@ -519,7 +519,7 @@ HDFDatabase::getArrayType(
  *************************************************************************
  */
 
-int
+size_t
 HDFDatabase::getArraySize(
    const std::string& key)
 {
@@ -717,7 +717,7 @@ void
 HDFDatabase::putBoolArray(
    const std::string& key,
    const bool * const data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(data != 0);
@@ -742,7 +742,7 @@ HDFDatabase::putBoolArray(
        * type.
        */
       std::vector<int> data1(nelements);
-      for (int i = 0; i < nelements; ++i) data1[i] = data[i];
+      for (size_t i = 0; i < nelements; ++i) data1[i] = data[i];
 
 #if (H5_VERS_MAJOR > 1) || ((H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 6))
       hid_t dataset = H5Dcreate(d_group_id, key.c_str(), H5T_SAMRAI_BOOL,
@@ -899,7 +899,7 @@ void
 HDFDatabase::putDatabaseBoxArray(
    const std::string& key,
    const DatabaseBox * const data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(data != 0);
@@ -1116,7 +1116,7 @@ void
 HDFDatabase::putCharArray(
    const std::string& key,
    const char * const data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(data != 0);
@@ -1139,7 +1139,7 @@ HDFDatabase::putCharArray(
       errf = H5Tset_strpad(atype, H5T_STR_NULLTERM);
       TBOX_ASSERT(errf >= 0);
 
-      for (int i = 0; i < nelements; i++) {
+      for (size_t i = 0; i < nelements; ++i) {
          local_buf[i] = data[i];
       }
 
@@ -1298,7 +1298,7 @@ void
 HDFDatabase::putComplexArray(
    const std::string& key,
    const dcomplex * const data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(data != 0);
@@ -1506,7 +1506,7 @@ void
 HDFDatabase::putDoubleArray(
    const std::string& key,
    const double * const data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(data != 0);
@@ -1662,7 +1662,7 @@ void
 HDFDatabase::putFloatArray(
    const std::string& key,
    const float * const data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(data != 0);
@@ -1821,7 +1821,7 @@ void
 HDFDatabase::putIntegerArray(
    const std::string& key,
    const int * const data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(data != 0);
@@ -1978,7 +1978,7 @@ void
 HDFDatabase::putStringArray(
    const std::string& key,
    const std::string * const data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(data != 0);
@@ -1990,14 +1990,14 @@ HDFDatabase::putStringArray(
 
       int maxlen = 0;
       int current, data_size;
-      int i;
-      for (i = 0; i < nelements; i++) {
+      size_t i;
+      for (i = 0; i < nelements; ++i) {
          current = static_cast<int>(data[i].size());
          if (current > maxlen) maxlen = current;
       }
 
       char* local_buf = new char[nelements * (maxlen + 1)];
-      for (i = 0; i < nelements; i++) {
+      for (i = 0; i < nelements; ++i) {
          strcpy(&local_buf[i * (maxlen + 1)], data[i].c_str());
          data_size = static_cast<int>(data[i].size());
          if (data_size < maxlen) {
@@ -2083,7 +2083,6 @@ HDFDatabase::getStringVector(
    hsize_t nsel;
    size_t dsize;
    hid_t dset, dspace, dtype;
-   char* local_buf;
 
 #if (H5_VERS_MAJOR > 1) || ((H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 6))
    dset = H5Dopen(d_group_id, key.c_str(), H5P_DEFAULT);
@@ -2101,16 +2100,19 @@ HDFDatabase::getStringVector(
    dsize = H5Tget_size(dtype);
    nsel = H5Sget_select_npoints(dspace);
 
-   local_buf = new char[nsel * dsize];
-
-   errf = H5Dread(dset, dtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, local_buf);
-   TBOX_ASSERT(errf >= 0);
-
    std::vector<std::string> stringArray(static_cast<int>(nsel));
 
-   for (int i = 0; i < static_cast<int>(nsel); i++) {
-      std::string* locPtr = &stringArray[i];
-      *locPtr = &local_buf[i * dsize];
+   if (nsel > 0) {
+      char* local_buf = new char[nsel * dsize];
+
+      errf = H5Dread(dset, dtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, local_buf);
+      TBOX_ASSERT(errf >= 0);
+
+      for (int i = 0; i < static_cast<int>(nsel); ++i) {
+         std::string* locPtr = &stringArray[i];
+         *locPtr = &local_buf[i * dsize];
+      }
+      delete[] local_buf;
    }
 
    errf = H5Sclose(dspace);
@@ -2122,7 +2124,6 @@ HDFDatabase::getStringVector(
    errf = H5Dclose(dset);
    TBOX_ASSERT(errf >= 0);
 
-   delete[] local_buf;
    return stringArray;
 }
 
@@ -2202,7 +2203,7 @@ HDFDatabase::printClassData(
    }
 
    for (std::list<KeyData>::iterator i = d_keydata.begin();
-        i != d_keydata.end(); i++) {
+        i != d_keydata.end(); ++i) {
       int t = i->d_type;
       switch (MathUtilities<int>::Abs(t)) {
          case KEY_DATABASE: {
@@ -2406,7 +2407,7 @@ HDFDatabase::insertArray(
 
 #else
    size_t newdim[H5S_MAX_RANK];
-   for (int i = 0; i < ndims; i++) {
+   for (int i = 0; i < ndims; ++i) {
       newdim[i] = dim[i];
    }
 

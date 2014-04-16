@@ -176,8 +176,8 @@ CartesianBoundaryUtilities2::fillEdgeBoundaryData(
    }
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
 
@@ -192,7 +192,7 @@ CartesianBoundaryUtilities2::fillEdgeBoundaryData(
 
    const std::vector<hier::BoundaryBox>& edge_bdry =
       pgeom->getCodimensionBoundaries(Bdry::EDGE2D);
-   for (int i = 0; i < static_cast<int>(edge_bdry.size()); i++) {
+   for (int i = 0; i < static_cast<int>(edge_bdry.size()); ++i) {
 
       TBOX_ASSERT(edge_bdry[i].getBoundaryType() == Bdry::EDGE2D);
 
@@ -259,8 +259,8 @@ CartesianBoundaryUtilities2::fillNodeBoundaryData(
    }
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
 
@@ -275,7 +275,7 @@ CartesianBoundaryUtilities2::fillNodeBoundaryData(
 
    const std::vector<hier::BoundaryBox>& node_bdry =
       pgeom->getCodimensionBoundaries(Bdry::NODE2D);
-   for (int i = 0; i < static_cast<int>(node_bdry.size()); i++) {
+   for (int i = 0; i < static_cast<int>(node_bdry.size()); ++i) {
 
       TBOX_ASSERT(node_bdry[i].getBoundaryType() == Bdry::NODE2D);
 
@@ -406,13 +406,13 @@ CartesianBoundaryUtilities2::checkBdryData(
    int bloc = bbox.getLocationIndex();
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      patch.getPatchGeometry(),
-      BOOST_CAST_TAG);
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
 
    boost::shared_ptr<pdat::CellData<double> > vardata(
-      patch.getPatchData(data_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(data_id)));
    TBOX_ASSERT(vardata);
 
    std::string bdry_type_str;
@@ -524,14 +524,14 @@ CartesianBoundaryUtilities2::checkBdryData(
         ic != icend; ++ic) {
       double checkval = valfact * (*vardata)(*id, depth) + constval;
       pdat::CellIndex check = *ic;
-      for (int p = 0; p < gbox_to_check.numberCells(idir); p++) {
+      for (int p = 0; p < gbox_to_check.numberCells(idir); ++p) {
          double offcheckval = checkval + dxfact * (p + 1);
 
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:1572)
 #endif
          if ((*vardata)(check, depth) != offcheckval) {
-            num_bad_values++;
+            ++num_bad_values;
             TBOX_WARNING("Bad " << bdry_type_str
                                 << " boundary value for " << varname
                                 << " found in cell " << check
@@ -565,13 +565,13 @@ CartesianBoundaryUtilities2::read2dBdryEdges(
    TBOX_ASSERT(static_cast<int>(edge_conds.size()) == NUM_2D_EDGES);
 
    int num_per_dirs = 0;
-   for (int id = 0; id < 2; id++) {
-      if (periodic(id)) num_per_dirs++;
+   for (int id = 0; id < 2; ++id) {
+      if (periodic(id)) ++num_per_dirs;
    }
 
    if (num_per_dirs < 2) { // face boundary input required
 
-      for (int s = 0; s < NUM_2D_EDGES; s++) {
+      for (int s = 0; s < NUM_2D_EDGES; ++s) {
 
          std::string bdry_loc_str;
          switch (s) {
@@ -648,13 +648,13 @@ CartesianBoundaryUtilities2::read2dBdryNodes(
    TBOX_ASSERT(static_cast<int>(node_conds.size()) == NUM_2D_NODES);
 
    int num_per_dirs = 0;
-   for (int id = 0; id < 2; id++) {
-      if (periodic(id)) num_per_dirs++;
+   for (int id = 0; id < 2; ++id) {
+      if (periodic(id)) ++num_per_dirs;
    }
 
    if (num_per_dirs < 1) { // node boundary data required
 
-      for (int s = 0; s < NUM_2D_NODES; s++) {
+      for (int s = 0; s < NUM_2D_NODES; ++s) {
 
          std::string bdry_loc_str;
          switch (s) {

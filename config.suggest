@@ -59,38 +59,51 @@ case $1 in
 
 bgq_mpixlcxx) # BG/Q, using mpixlcxx
 cat <<-EOF
-	--with-CXX=mpixlcxx
-	--with-CC=mpixlc
-	--with-F77=mpixlf77
+	--with-CXX=mpixlcxx-fastmpi
+	--with-CC=mpixlc-fastmpi
+	--with-F77=mpif77
 	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.8.5/parallel
-	--with-boost=/collab/usr/gapps/samrai/apps/sles/boost/1.45.0
+	--with-boost=/collab/usr/gapps/samrai/apps/sles/boost/1.55.0
 	--with-hypre=no
 	--without-sundials
 	--without-petsc
 	--without-x
 	--enable-rpath=no
-	--disable-openmp
 EOF
 # Maintained by Brian Gunney
 ;;
 
-bgq_mpixlcxx_r) # BG/Q, using threaded mpixlcxx_r and OpenMP
+seq_mpixlcxx) # Sequoia, using mpixlcxx
 cat <<-EOF
-	--with-CXX=mpixlcxx_r
-	--with-CC=mpixlc_r
-	--with-F77=mpixlf77_r
-	FFLAGS=-qnosave LLNL_CHECK_COMPILE_LINE=Warning
-	--enable-openmp
+	--with-CXX=mpixlcxx-fastmpi
+	--with-CC=mpixlc-fastmpi
+	--with-F77=mpif77
 	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.8.5/parallel
-	--with-boost=/collab/usr/gapps/samrai/apps/sles/boost/1.45.0
+	--with-boost=/collab/usr/gapps/samrai/apps/sles/boost/1.55.0
 	--with-hypre=no
 	--without-sundials
 	--without-petsc
 	--without-x
 	--enable-rpath=no
-	--enable-openmp
 EOF
-# Maintained by Brian Gunney
+#
+;;
+
+seq_thread_mpixlcxx) # Sequoia, threaded using mpixlcxx
+cat <<-EOF
+	--with-CXX=/usr/local/tools/compilers/ibm/mpixlcxx_r-lompbeta2-fastmpi
+	--with-CC=/usr/local/tools/compilers/ibm/mpixlc_r-lompbeta2-fastmpi
+	--with-F77=mpif77
+	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.8.5/parallel
+	--with-boost=/collab/usr/gapps/samrai/apps/sles/boost/1.55.0
+	--with-hypre=no
+	--without-sundials
+	--without-petsc
+	--without-x
+	--enable-rpath=no
+	--enable-threading
+EOF
+#
 ;;
 
 chaos5_mpiicc) # CHAOS5, Intel compilers with LLNL mpiicpc front ends
@@ -102,12 +115,12 @@ cat <<-EOF
 	--without-x
 	--without-sundials
 	--disable-shared
-	--disable-rpath
+	--enable-rpath=-Wl,-R
 	--with-zlib
-	--with-hdf5=/usr/local/tools/hdf5-intel-parallel-1.8.8
-	--without-silo
+	--with-hdf5=/usr/local/tools/hdf5-intel-parallel-1.8.5
+	--with-silo=/usr/gapps/silo/4.6.2/chaos_4_x86_64_ib
 	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
-	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.45.0
+	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.55.0
 	--without-tbb
 EOF
 # Maintained by Noah Elliott
@@ -121,7 +134,7 @@ cat <<-EOF
 	--with-silo=/usr/gapps/silo/4.6.2/chaos_4_x86_64
 	--with-hdf5=/usr/gapps/silo/hdf5/1.8.4/chaos_4_x86_64
 	--with-szlib=/usr/gapps/silo/szip/2.1/chaos_4_x86_64
-	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.45.0
+	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.55.0
 	--with-zlib
 	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
 EOF
@@ -162,7 +175,7 @@ cat <<-EOF
 	--with-CC=/usr/bin/gcc
 	--with-F77=/usr/bin/gfortran
 	--with-hdf5=/usr/casc/samrai/apps/rh5/hdf5/1.8.5p1
-	--with-boost=/usr/casc/samrai/apps/rh5/boost/1.45.0
+	--with-boost=/usr/casc/samrai/apps/rh5/boost/1.55.0
 	--with-silo=/usr/casc/samrai/apps/rh5/silo/4.7.2_opt
 	--with-mpi-include=/usr/apps/mpich2/1.3.2/include
 	--with-mpi-lib-dirs=/usr/apps/mpich2/1.3.2/lib
@@ -188,7 +201,7 @@ cat <<-EOF
 	--with-CC="/usr/apps/insure++/7.1.7/bin/insure /usr/bin/gcc"
 	--with-F77=/usr/bin/gfortran
 	--with-hdf5=/nfs/casc/samrai/apps/rh5/hdf5/1.8.5p1
-	--with-boost=/usr/casc/samrai/apps/rh5/boost/1.45.0
+	--with-boost=/usr/casc/samrai/apps/rh5/boost/1.55.0
 	--with-silo=/nfs/casc/samrai/apps/rh5/silo/4.7.2_opt
 	--with-mpi-include=/usr/apps/mpich2/1.3.2/include
 	--with-mpi-lib-dirs=/usr/apps/mpich2/1.3.2/lib
@@ -202,20 +215,19 @@ cat <<-EOF
 	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-3.2-p7.gcc.4.1.2
 	--with-sundials=/usr/casc/samrai/apps/rh5/sundials/2.3.0_gcc.4.1.2
 	--enable-rpath=-Wl,-R
-	--disable-openmp
 EOF
 #
 ;;
 
 casc_rh5_icc_x64) # CASC RedHat 5, Intel v12.0 compilers, x86_64
 cat <<-EOF
-	--with-CXX="/nfs/apps/intel/13.4.183/bin/icpc -Kc++ -gcc-name=/usr/bin/gcc"
-	--with-CC="/nfs/apps/intel/13.4.183/bin/icc -gcc-name=/usr/bin/gcc"
-	--with-F77=/nfs/apps/intel/13.4.183/bin/ifort
+	--with-CXX="/nfs/apps/intel/12.0.191/bin/icpc -Kc++ -gcc-name=/usr/bin/gcc"
+	--with-CC="/nfs/apps/intel/12.0.191/bin/icc -gcc-name=/usr/bin/gcc"
+	--with-F77=/nfs/apps/intel/12.0.191/bin/ifort
 	--with-extra-ld-flags="-shared-intel"
 	--enable-rpath=-Wl,-R
 	--with-hdf5=/usr/casc/samrai/apps/rh5/hdf5/1.8.5p1
-	--with-boost=/usr/casc/samrai/apps/rh5/boost/1.45.0
+	--with-boost=/usr/casc/samrai/apps/rh5/boost/1.55.0
 	--with-silo=/usr/casc/samrai/apps/rh5/silo/4.7.2_opt
 	--with-mpi-include=/usr/apps/mpich2/latest/include
 	--with-mpi-lib-dirs=/usr/apps/mpich2/latest/lib
@@ -234,7 +246,7 @@ cat <<-EOF
 	--with-CC=/nfs/apps/gcc/4.5.0/bin/gcc
 	--with-F77=/nfs/apps/gcc/4.5.0/bin/gfortran
 	--with-hdf5=/usr/casc/samrai/apps/rh5/hdf5/1.8.5p1
-	--with-boost=/usr/casc/samrai/apps/rh5/boost/1.45.0
+	--with-boost=/usr/casc/samrai/apps/rh5/boost/1.55.0
 	--with-silo=/usr/casc/samrai/apps/rh5/silo/4.7.2_opt
 	--with-mpi-include=/nfs/casc/samrai/apps/rh5/openmpi/1.5-gcc-4.5.0.opt/include
 	--with-mpi-lib-dirs=/nfs/casc/samrai/apps/rh5/openmpi/1.5-gcc-4.5.0.opt/lib
@@ -282,7 +294,7 @@ cat <<-EOF
 	--with-CC=/usr/casc/samrai/apps/rh5/gcc/4.6.0/bin/gcc
 	--with-F77=/usr/casc/samrai/apps/rh5/gcc/4.6.0/bin/gfortran
 	--with-hdf5=/usr/casc/samrai/apps/rh5/hdf5/1.8.5p1
-	--with-boost=/usr/casc/samrai/apps/rh5/boost/1.45.0
+	--with-boost=/usr/casc/samrai/apps/rh5/boost/1.55.0
 	--with-silo=/usr/casc/samrai/apps/rh5/silo/4.7.2_opt
 	--with-mpi-include=/nfs/casc/samrai/apps/rh5/openmpi/1.5-gcc-4.5.0.opt/include
 	--with-mpi-lib-dirs=/nfs/casc/samrai/apps/rh5/openmpi/1.5-gcc-4.5.0.opt/lib
@@ -299,6 +311,61 @@ cat <<-EOF
 EOF
 # Maintained by Steven Smith
 ;;
+
+# CASC RedHat 6, default GNU compilers, x86_64. The only reason this
+# is different from Redhat 5 is that things hosted on /usr/apps have
+# different versions installed.
+
+casc_rh6_gnu_x64)  # CASC RedHat 6, default GNU compilers
+cat <<-EOF
+	--with-CXX=/usr/bin/g++
+	--with-CC=/usr/bin/gcc
+	--with-F77=/usr/bin/gfortran
+	--with-hdf5=/usr/casc/samrai/apps/rh5/hdf5/1.8.5p1
+	--with-boost=/usr/casc/samrai/apps/rh5/boost/1.55.0
+	--with-silo=/usr/casc/samrai/apps/rh5/silo/4.7.2_opt
+	--with-mpi-include=/usr/apps/mpich2/latest/include
+	--with-mpi-lib-dirs=/usr/apps/mpich2/latest/lib
+	--with-mpi-libs="mpich mpl rt pthread"
+	--with-parallel-run-bin=/usr/apps/mpich2/latest/bin/mpirun
+	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.6.0b.gcc.4.1.2.opt
+	--with-lapack=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
+	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -llapack"
+	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
+	--with-blas-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -lf77blas -lcblas -latlas"
+	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-3.2-p7.gcc.4.1.2
+	--with-sundials=/usr/casc/samrai/apps/rh5/sundials/2.3.0_gcc.4.1.2
+	--enable-rpath=-Wl,-R
+EOF
+#
+;;
+
+
+casc_rh6_gnu48_x64)   # CASC RedHat 6, GNU-4.8.1 compilers
+cat <<-EOF
+	--with-CXX=/usr/apps/gcc/4.8.1/bin/g++
+	--with-CC=/usr/apps/gcc/4.8.1/bin/gcc	
+	--with-extra-cxx-flags="-Wno-unused-local-typedefs"
+	--with-F77=/usr/apps/gcc/4.8.1/bin/gfortran
+	--with-hdf5=/usr/casc/samrai/apps/rh5/hdf5/1.8.5p1
+	--with-boost=/usr/casc/samrai/apps/rh5/boost/1.55.0
+	--with-silo=/usr/casc/samrai/apps/rh5/silo/4.7.2_opt
+	--with-mpi-include=/usr/apps/mpich2/latest/include
+	--with-mpi-lib-dirs=/usr/apps/mpich2/latest/lib
+	--with-mpi-libs="mpich mpl rt pthread"
+	--with-parallel-run-bin=/usr/apps/mpich2/latest/bin/mpirun
+	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.6.0b.gcc.4.1.2.opt
+	--with-lapack=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
+	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -llapack"
+	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
+	--with-blas-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -lf77blas -lcblas -latlas"
+	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-3.2-p7.gcc.4.1.2
+	--with-sundials=/usr/casc/samrai/apps/rh5/sundials/2.3.0_gcc.4.1.2
+	--enable-rpath=-Wl,-R
+EOF
+#
+;;
+
 
 #-----------------------------------------------------------------------------
 # Misc other machines

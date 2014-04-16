@@ -40,7 +40,7 @@ public:
    /*!
     * @brief Constructor.
     */
-   RankTreeStrategy() {};
+   RankTreeStrategy();
 
    /*!
     * @brief Destructor.
@@ -147,6 +147,14 @@ public:
    }
 
 private:
+   // Unimplemented copy constructor.
+   RankTreeStrategy(
+      const RankTreeStrategy& other);
+
+   // Unimplemented assignment opperator.
+   RankTreeStrategy&
+   operator = (
+      const RankTreeStrategy& rhs);
 
    static const int s_invalid_rank;
    static const unsigned int s_invalid_child_number;

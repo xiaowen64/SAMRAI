@@ -55,7 +55,7 @@ public:
    ~SequentialLocalIdGenerator() {}
 
    /*!
-    * @brief Return a LocalId that is greater than the last
+    * @brief Return a LocalId that is greater than the previous
     * value by the increment value.
     */
    LocalId nextValue() {

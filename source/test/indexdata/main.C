@@ -18,7 +18,6 @@
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/pdat/CellData.C"
-#include "SAMRAI/pdat/CellGeometry.C"
 #include "SAMRAI/pdat/IndexData.h"
 #include "SAMRAI/pdat/IndexData.C"
 #include "SAMRAI/pdat/IndexDataFactory.h"
@@ -55,7 +54,7 @@ public:
    {
       NULL_USE(idx);
       NULL_USE(src_offset);
-      for (int n = 0; n < NN; n++) {
+      for (int n = 0; n < NN; ++n) {
          x[n] = src_item.x[n];
       }
    }
@@ -92,30 +91,6 @@ public:
 
    double x[NN];
 };
-
-/*
- * SGH: BG{L,P} et. al. do not like to have explicit template instantiations
- * outside of the namespace in which the template is defined.  This causes
- * a compile-time error, so we'll just avoid this on BG{L,P} platforms.
- *
- * Reference:  XL C/C++ V9.0 for Linux documentation, i
- * section: Templates
- * subsection: Explicit instantiation
- * URL:
- * http://publib.boulder.ibm.com/infocenter/lnxpcomp/v9v111/index.jsp?topic=/com.ibm.xlcpp9.linux.doc/language_ref/templates.htm
- *
- */
-#ifndef __xlC__
-template class pdat::IndexData<Item, pdat::CellGeometry>;
-template class pdat::IndexDataFactory<Item, pdat::CellGeometry>;
-template class pdat::IndexDataNode<Item, pdat::CellGeometry>;
-template class pdat::IndexIterator<Item, pdat::CellGeometry>;
-template class pdat::IndexVariable<Item, pdat::CellGeometry>;
-
-template class boost::shared_ptr<pdat::IndexData<Item, pdat::CellGeometry> >;
-template class boost::shared_ptr<pdat::IndexVariable<Item, pdat::CellGeometry> >;
-template class boost::shared_ptr<pdat::IndexDataFactory<Item, pdat::CellGeometry> >;
-#endif
 
 int main(
    int argc,
@@ -568,7 +543,7 @@ int main(
          IndexIterator<Item, pdat::CellGeometry> itend(data, false);
          for (IndexIterator<Item, pdat::CellGeometry> it(data, true);
               it != itend; ++it) {
-            count++;
+            ++count;
          }
          assert(3 == count);
       }
@@ -667,7 +642,7 @@ int main(
 
          timer->start();
 
-         for (int n = 0; n < num_inserts; n++) {
+         for (int n = 0; n < num_inserts; ++n) {
             int i = rand() % size;
             int j = rand() % size;
 
@@ -707,7 +682,7 @@ int main(
 
          timer->start();
 
-         for (int n = 0; n < num_inserts; n++) {
+         for (int n = 0; n < num_inserts; ++n) {
             int i = rand() % size;
             int j = rand() % size;
 
@@ -746,7 +721,7 @@ int main(
 
          timer->start();
 
-         for (int n = 0; n < num_inserts; n++) {
+         for (int n = 0; n < num_inserts; ++n) {
             int i = rand() % size;
             int j = rand() % size;
 

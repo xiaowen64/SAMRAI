@@ -7,10 +7,6 @@
  * Description:   Communication transaction for data copies during data refining
  *
  ************************************************************************/
-
-#ifndef included_xfer_RefineCopyTransaction_C
-#define included_xfer_RefineCopyTransaction_C
-
 #include "SAMRAI/xfer/RefineCopyTransaction.h"
 
 #include "SAMRAI/hier/Patch.h"
@@ -29,7 +25,6 @@ namespace SAMRAI {
 namespace xfer {
 
 const RefineClasses::Data *const* RefineCopyTransaction::s_refine_items = 0;
-int RefineCopyTransaction::s_num_refine_items = 0;
 
 /*
  *************************************************************************
@@ -173,7 +168,6 @@ RefineCopyTransaction::printClassData(
    stream << "Refine Copy Transaction" << std::endl;
    stream << "   refine item array:        "
           << (RefineClasses::Data **)s_refine_items << std::endl;
-   stream << "   num refine items:       " << s_num_refine_items << std::endl;
    stream << "   destination patch rank:       " << d_dst_patch_rank
           << std::endl;
    stream << "   source patch rank:            " << d_src_patch_rank
@@ -204,6 +198,4 @@ RefineCopyTransaction::printClassData(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

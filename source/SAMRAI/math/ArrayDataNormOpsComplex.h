@@ -240,7 +240,7 @@ private:
    // The following are not implemented:
    ArrayDataNormOpsComplex(
       const ArrayDataNormOpsComplex&);
-   void
+   ArrayDataNormOpsComplex&
    operator = (
       const ArrayDataNormOpsComplex&);
 };

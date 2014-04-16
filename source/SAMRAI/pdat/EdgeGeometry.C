@@ -7,10 +7,6 @@
  * Description:   hier
  *
  ************************************************************************/
-
-#ifndef included_pdat_EdgeGeometry_C
-#define included_pdat_EdgeGeometry_C
-
 #include "SAMRAI/pdat/EdgeGeometry.h"
 #include "SAMRAI/pdat/EdgeIterator.h"
 #include "SAMRAI/pdat/EdgeOverlap.h"
@@ -93,7 +89,7 @@ EdgeGeometry::calculateOverlap(
 /*
  *************************************************************************
  *
- * Compute the boxes that will be used to contstruct an overlap object
+ * Compute the boxes that will be used to construct an overlap object
  *
  *************************************************************************
  */
@@ -128,7 +124,7 @@ EdgeGeometry::computeDestinationBoxes(
 
    if (!quick_check.empty()) {
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
 
          const hier::Box dst_edge(toEdgeBox(dst_ghost, d));
          const hier::Box src_edge(toEdgeBox(src_shift, d));
@@ -182,7 +178,7 @@ EdgeGeometry::toEdgeBox(
 
    if (!box.empty()) {
       edge_box = box;
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dim.getValue(); ++i) {
          if (axis != i) {
             edge_box.upper(i) += 1;
          }
@@ -248,7 +244,7 @@ EdgeGeometry::setUpOverlap(
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          hier::Box edge_box(EdgeGeometry::toEdgeBox(*b, d));
          dst_boxes[d].pushBack(edge_box);
       }
@@ -291,7 +287,7 @@ EdgeGeometry::transform(
 
       } else {
 
-         for (int d = 0; d < dim.getValue(); d++) {
+         for (int d = 0; d < dim.getValue(); ++d) {
             if (d != axis_direction) {
                box.upper() (d) -= 1;
             }
@@ -408,7 +404,7 @@ EdgeGeometry::transform(
             }
          }
 
-         for (int d = 0; d < dim.getValue(); d++) {
+         for (int d = 0; d < dim.getValue(); ++d) {
             if (d != axis_direction) {
                box.upper() (d) += 1;
             }
@@ -442,9 +438,9 @@ EdgeGeometry::transform(
 
    const int axis_direction = index.getAxis();
 
-   for (int i = 0; i < dim.getValue(); i++) {
+   for (int i = 0; i < dim.getValue(); ++i) {
       if (i == axis_direction && index(i) >= 0) {
-         index(i)++;
+         ++index(i);
       }
    }
 
@@ -458,7 +454,7 @@ EdgeGeometry::transform(
       if (rotation_num) {
 
          EdgeIndex tmp_index(dim);
-         for (int r = 0; r < rotation_num; r++) {
+         for (int r = 0; r < rotation_num; ++r) {
             tmp_index = index;
             index(0) = tmp_index(1);
             index(1) = -tmp_index(0);
@@ -591,9 +587,9 @@ EdgeGeometry::transform(
 
    }
 
-   for (int i = 0; i < dim.getValue(); i++) {
+   for (int i = 0; i < dim.getValue(); ++i) {
       if (i == new_axis_direction && index(i) > 0) {
-         index(i)--;
+         --index(i);
       }
    }
 
@@ -610,7 +606,7 @@ EdgeGeometry::rotateAboutAxis(EdgeIndex& index,
    const int b = (axis + 2) % dim.getValue();
 
    EdgeIndex tmp_index(dim);
-   for (int j = 0; j < num_rotations; j++) {
+   for (int j = 0; j < num_rotations; ++j) {
       tmp_index = index;
       index(a) = tmp_index(b);
       index(b) = -tmp_index(a);
@@ -618,7 +614,7 @@ EdgeGeometry::rotateAboutAxis(EdgeIndex& index,
 
    int new_axis_direction = index.getAxis();
    if (new_axis_direction != axis) {
-      for (int j = 0; j < num_rotations; j++) {
+      for (int j = 0; j < num_rotations; ++j) {
          new_axis_direction = new_axis_direction == a ? b : a;
       }
    }
@@ -643,4 +639,3 @@ EdgeGeometry::end(
 
 }
 }
-#endif

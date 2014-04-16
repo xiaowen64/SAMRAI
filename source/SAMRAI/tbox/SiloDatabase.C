@@ -63,7 +63,7 @@ SiloDatabase::nameMangle(
    std::string name) {
    std::stringstream mangled_name;
 
-   for (std::string::size_type i = 0; i < name.size(); i++) {
+   for (std::string::size_type i = 0; i < name.size(); ++i) {
       if (IsValid(name[i])) {
          mangled_name << name[i];
       } else {
@@ -352,11 +352,11 @@ SiloDatabase::getAllKeys()
 
       tmp_keys.resize(toc->nvar + toc->ndir);
 
-      for (int i = 0; i < toc->nvar; i++) {
+      for (int i = 0; i < toc->nvar; ++i) {
          tmp_keys[i] = toc->var_names[i];
       }
 
-      for (int i = 0; i < toc->ndir; i++) {
+      for (int i = 0; i < toc->ndir; ++i) {
          tmp_keys[i + toc->nvar] = toc->dir_names[i];
       }
 
@@ -453,7 +453,7 @@ SiloDatabase::getArrayType(
  *************************************************************************
  */
 
-int
+size_t
 SiloDatabase::getArraySize(
    const std::string& key)
 {
@@ -609,14 +609,14 @@ void
 SiloDatabase::putBoolArray(
    const std::string& key,
    const bool * const data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(data != 0);
 
    short temp_array[nelements];
 
-   for (int i = 0; i < nelements; i++) {
+   for (size_t i = 0; i < nelements; ++i) {
       temp_array[i] = data[i];
    }
 
@@ -652,7 +652,7 @@ SiloDatabase::getBoolVector(
 
    getSiloSimpleType(key, temp_array);
 
-   for (int i = 0; i < getSiloSimpleTypeLength(key); i++) {
+   for (int i = 0; i < getSiloSimpleTypeLength(key); ++i) {
       boolArray[i] = temp_array[i];
    }
 
@@ -710,7 +710,7 @@ void
 SiloDatabase::putDatabaseBoxArray(
    const std::string& key,
    const DatabaseBox * const data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(data != 0);
@@ -723,23 +723,23 @@ SiloDatabase::putDatabaseBoxArray(
    elemnames[2] = "lo";
 
    int size = 0;
-   for (int i = 0; i < nelements; i++) {
+   for (size_t i = 0; i < nelements; ++i) {
       size += data[i].d_data.d_dimension;
    }
 
-   elemlengths[0] = nelements;
-   elemlengths[1] = size;
-   elemlengths[2] = size;
+   elemlengths[0] = static_cast<int>(nelements);
+   elemlengths[1] = static_cast<int>(size);
+   elemlengths[2] = static_cast<int>(size);
 
    std::vector<int> values(nelements + size * 2);
 
-   int offset = nelements;
-   for (int i = 0; i < nelements; i++) {
+   size_t offset = nelements;
+   for (size_t i = 0; i < nelements; ++i) {
       values[i] = data[i].d_data.d_dimension;
-      for (int d = 0; d < data[i].d_data.d_dimension; d++) {
+      for (int d = 0; d < data[i].d_data.d_dimension; ++d) {
          values[offset] = data[i].d_data.d_lo[d];
          values[offset + size] = data[i].d_data.d_hi[d];
-         offset++;
+         ++offset;
       }
    }
 
@@ -792,17 +792,17 @@ SiloDatabase::getDatabaseBoxVector(
 
    int* values = static_cast<int *>(ca->values);
    int offset = ca->elemlengths[0];
-   for (int i = 0; i < (ca->elemlengths[0]); i++) {
+   for (int i = 0; i < (ca->elemlengths[0]); ++i) {
       boxVector[i].d_data.d_dimension = values[i];
       /*
        * This preserves old behavior where boxes can be different dims but is
        * likely not supported anywhere else in the library.
        */
       boxVector[i].setDim(Dimension((unsigned short)values[i]));
-      for (int d = 0; d < boxVector[i].d_data.d_dimension; d++) {
+      for (int d = 0; d < boxVector[i].d_data.d_dimension; ++d) {
          boxVector[i].d_data.d_lo[d] = values[offset];
          boxVector[i].d_data.d_hi[d] = values[offset + ca->elemlengths[1]];
-         offset++;
+         ++offset;
       }
    }
 
@@ -842,7 +842,7 @@ void
 SiloDatabase::putCharArray(
    const std::string& key,
    const char * const data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(data != 0);
@@ -933,7 +933,7 @@ void
 SiloDatabase::putComplexArray(
    const std::string& key,
    const dcomplex * const data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(data != 0);
@@ -945,10 +945,10 @@ SiloDatabase::putComplexArray(
    elemnames[0] = "real";
    elemnames[1] = "imag";
 
-   elemlengths[0] = nelements;
-   elemlengths[1] = nelements;
+   elemlengths[0] = static_cast<int>(nelements);
+   elemlengths[1] = static_cast<int>(nelements);
 
-   for (int i = 0; i < nelements; i++) {
+   for (size_t i = 0; i < nelements; ++i) {
       values[i] = data[i].real();
       values[i + nelements] = data[i].imag();
    }
@@ -1005,7 +1005,7 @@ SiloDatabase::getComplexVector(
 
    std::vector<dcomplex> complexArray(ca->elemlengths[0]);
 
-   for (int i = 0; i < ca->elemlengths[0]; i++) {
+   for (int i = 0; i < ca->elemlengths[0]; ++i) {
       complexArray[i] = dcomplex(static_cast<double *>(ca->values)[i],
             static_cast<double *>(ca->values)[i + ca->elemlengths[0]]);
    }
@@ -1046,7 +1046,7 @@ void
 SiloDatabase::putDoubleArray(
    const std::string& key,
    const double * const data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(data != 0);
@@ -1115,7 +1115,7 @@ void
 SiloDatabase::putFloatArray(
    const std::string& key,
    const float * const data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(data != 0);
@@ -1185,7 +1185,7 @@ void
 SiloDatabase::putIntegerArray(
    const std::string& key,
    const int * const data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(data != 0);
@@ -1276,7 +1276,7 @@ void
 SiloDatabase::putStringArray(
    const std::string& key,
    const std::string * const data,
-   const int nelements)
+   const size_t nelements)
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(data != 0);
@@ -1286,8 +1286,8 @@ SiloDatabase::putStringArray(
    std::string values;
    int elemlengths[nelements];
 
-   for (int i = 0; i < nelements; i++) {
-      strings[i] = Utilities::intToString(i);
+   for (size_t i = 0; i < nelements; ++i) {
+      strings[i] = Utilities::sizetToString(i);
       elemnames[i] = strings[i].c_str();
       elemlengths[i] = static_cast<int>(data[i].size());
       values.append(data[i]);
@@ -1308,7 +1308,7 @@ SiloDatabase::putStringArray(
 
    DBPutCompoundarray(d_file, path.c_str(),
       const_cast<char **>(elemnames), elemlengths,
-      nelements, const_cast<char *>(values.c_str()),
+      static_cast<int>(nelements), const_cast<char *>(values.c_str()),
       static_cast<int>(values.size() + 1),
       DB_CHAR, 0);
    if (err < 0) {
@@ -1352,7 +1352,7 @@ SiloDatabase::getStringVector(
    std::string values = static_cast<char *>(ca->values);
 
    std::string::size_type start = 0;
-   for (int i = 0; i < ca->nelems; i++) {
+   for (int i = 0; i < ca->nelems; ++i) {
       stringArray[i] = values.substr(start, ca->elemlengths[i]);
       start = start + ca->elemlengths[i];
    }
@@ -1387,7 +1387,7 @@ SiloDatabase::printClassData(
          << d_database_name << "'..." << std::endl;
    }
 
-   for (int i = 0; i < static_cast<int>(keys.size()); i++) {
+   for (int i = 0; i < static_cast<int>(keys.size()); ++i) {
       switch (getArrayType(keys[i])) {
          case Database::SAMRAI_INVALID: {
             os << "   Data entry `" << keys[i] << "' is"
@@ -1498,7 +1498,7 @@ bool
 SiloDatabase::putSiloSimpleType(
    const std::string& key,
    const void* data,
-   const int nelements,
+   const size_t nelements,
    const int simple_type)
 {
    TBOX_ASSERT(!key.empty());
@@ -1510,7 +1510,7 @@ SiloDatabase::putSiloSimpleType(
    path = nameMangle(path);
 
    int dims[1];
-   dims[0] = nelements;
+   dims[0] = static_cast<int>(nelements);
 
    err = DBWrite(d_file,
          path.c_str(), const_cast<void *>(data), dims, 1, simple_type);

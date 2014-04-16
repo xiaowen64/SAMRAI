@@ -90,7 +90,7 @@ public:
     * following example:
     *
     * \code
-    * for(int i = 0; i < d_elements; i++) {
+    * for(int i = 0; i < d_elements; ++i) {
     *       void *p = &d_objects[i];
     *       (void) new (p) TYPE(arg1, arg2);
     *    }
@@ -112,7 +112,7 @@ public:
       const typename Array::DoNotInitialize& do_not_initialize_flag);
 
    /**
-    * Const constructor for the array.  This creates an alias to the
+    * Copy constructor for the array.  This creates an alias to the
     * right hand side and increments the reference count.
     *
     * CAUTION: invoking resizeArray() forces a deep copy.
@@ -122,7 +122,7 @@ public:
     * of by value.
     */
    Array(
-      const Array<TYPE>& rhs);
+      const Array& rhs);
 
    /**
     * Destructor for the array.  If the reference count for the array data
@@ -140,9 +140,9 @@ public:
     * to one Array object container will not necessarily be reflected in the
     * other container.
     */
-   Array<TYPE>&
+   Array&
    operator = (
-      const Array<TYPE>& rhs);
+      const Array& rhs);
 
    /**
     * Non-const array subscripting.  Return a reference the object at array

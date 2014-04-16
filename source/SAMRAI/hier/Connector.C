@@ -8,9 +8,6 @@
  *                box graph.
  *
  ************************************************************************/
-#ifndef included_hier_Connector_C
-#define included_hier_Connector_C
-
 #include "SAMRAI/hier/Connector.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -65,7 +62,7 @@ Connector::Connector(
    d_head_coarser(false),
    d_relationships(),
    d_global_relationships(),
-   d_mpi(tbox::SAMRAI_MPI::commNull),
+   d_mpi(MPI_COMM_NULL),
    d_parallel_state(BoxLevel::DISTRIBUTED),
    d_finalized(false),
    d_global_number_of_neighbor_sets(0),
@@ -92,7 +89,7 @@ Connector::Connector(
    d_head_coarser(false),
    d_relationships(),
    d_global_relationships(),
-   d_mpi(tbox::SAMRAI_MPI::commNull),
+   d_mpi(MPI_COMM_NULL),
    d_parallel_state(BoxLevel::DISTRIBUTED),
    d_finalized(false),
    d_global_number_of_neighbor_sets(0),
@@ -1479,7 +1476,9 @@ Connector::checkTransposeCorrectness(
    }
 
    int global_err_count = static_cast<int>(err_count);
-   getMPI().AllReduce( &global_err_count, 1, MPI_SUM );
+   if ( getMPI().getSize() > 1 ) {
+      getMPI().AllReduce( &global_err_count, 1, MPI_SUM );
+   }
 
    return static_cast<size_t>(global_err_count);
 }
@@ -1594,7 +1593,7 @@ Connector::computeNeighborhoodDifferences(
 void
 Connector::assertConsistencyWithHead() const
 {
-   const int number_of_inconsistencies = checkConsistencyWithHead();
+   const size_t number_of_inconsistencies = checkConsistencyWithHead();
    if (number_of_inconsistencies > 0) {
       TBOX_ERROR(
          "Connector::assertConsistencyWithHead() found inconsistencies.\n"
@@ -2230,6 +2229,4 @@ Connector::findOverlaps_rbbt(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

@@ -7,10 +7,6 @@
  * Description:   Singleton registry for all tranfer operators.
  *
  ************************************************************************/
-
-#ifndef included_hier_TransferOperatorRegistry_C
-#define included_hier_TransferOperatorRegistry_C
-
 #include "SAMRAI/hier/TransferOperatorRegistry.h"
 #include "SAMRAI/hier/BaseGridGeometry.h"
 
@@ -330,4 +326,3 @@ TransferOperatorRegistry::printClassData(
 
 }
 }
-#endif

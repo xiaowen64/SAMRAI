@@ -7,9 +7,6 @@
  * Description:   Statistical characteristics of a BoxLevel.
  *
  ************************************************************************/
-#ifndef included_hier_BoxLevelStatistics_C
-#define included_hier_BoxLevelStatistics_C
-
 #include "SAMRAI/hier/BoxLevelStatistics.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 
@@ -296,6 +293,4 @@ BoxLevelStatistics::finalizeCallback()
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

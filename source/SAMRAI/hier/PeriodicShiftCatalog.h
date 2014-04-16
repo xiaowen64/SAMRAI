@@ -49,7 +49,7 @@ public:
     *
     * @param[in] dim Get the catalog for this dimension.
     */
-   static const PeriodicShiftCatalog *
+   static PeriodicShiftCatalog *
    getCatalog(
       const tbox::Dimension& dim);
 
@@ -171,11 +171,8 @@ public:
     *
     * @param[in] shift_distance_along_index_directions The periodic
     * shift distance in each index direction.
-    *
-    * TODO: possible refactor?  This method should probably be changed
-    * to a regular member method, for conformity to other singletons.
     */
-   static void
+   void
    initializeShiftsByIndexDirections(
       const IntVector& shift_distance_along_index_directions);
 

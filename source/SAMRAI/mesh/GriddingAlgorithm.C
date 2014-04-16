@@ -7,10 +7,6 @@
  * Description:   AMR hierarchy generation and regridding routines.
  *
  ************************************************************************/
-
-#ifndef included_mesh_GriddingAlgorithm_C
-#define included_mesh_GriddingAlgorithm_C
-
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 
 #include "SAMRAI/tbox/IEEE.h"
@@ -21,7 +17,6 @@
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/math/PatchCellDataBasicOps.h"
-#include "SAMRAI/math/PatchCellDataOpsInteger.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 
 #include <stdio.h>
@@ -60,14 +55,6 @@ GriddingAlgorithm::s_startup_shutdown_handler(
    GriddingAlgorithm::shutdownCallback,
    0,
    tbox::StartupShutdownManager::priorityListElements);
-
-tbox::StartupShutdownManager::Handler
-GriddingAlgorithm::s_initialize_handler(
-   GriddingAlgorithm::initializeCallback,
-   0,
-   0,
-   GriddingAlgorithm::finalizeCallback,
-   tbox::StartupShutdownManager::priorityTimers);
 
 /*
  *************************************************************************
@@ -222,8 +209,8 @@ GriddingAlgorithm::GriddingAlgorithm(
    }
    if (d_tag_init_strategy->getErrorCoarsenRatio() > 1) {
       boost::shared_ptr<StandardTagAndInitialize> std_tag_init(
-         d_tag_init_strategy,
-         boost::detail::dynamic_cast_tag());
+         boost::dynamic_pointer_cast<StandardTagAndInitialize, TagAndInitializeStrategy>(
+            d_tag_init_strategy));
       if (std_tag_init) {
          d_hierarchy->registerConnectorWidthRequestor(
             std_tag_init->getConnectorWidthRequestor());
@@ -376,7 +363,7 @@ GriddingAlgorithm::makeCoarsestLevel(
     */
    if (!level_zero_exists) {
       for (int b = 0; b < d_hierarchy->getGridGeometry()->getNumberBlocks();
-           b++) {
+           ++b) {
          hier::BoxContainer domain_boxes(
             d_hierarchy->getGridGeometry()->getPhysicalDomain(),
             hier::BlockId(b));
@@ -992,7 +979,7 @@ GriddingAlgorithm::regridAllFinerLevels(
    TBOX_ASSERT(static_cast<int>(tag_buffer.size()) >= level_number + 1);
 #ifdef DEBUG_CHECK_ASSERTIONS
    int array_size = static_cast<int>(tag_buffer.size());
-   for (int i = 0; i < array_size; i++) {
+   for (int i = 0; i < array_size; ++i) {
       TBOX_ASSERT(tag_buffer[i] >= 0);
    }
 #endif
@@ -1025,7 +1012,7 @@ GriddingAlgorithm::regridAllFinerLevels(
        */
       if (d_tag_init_strategy->usesTimeIntegration(cycle, level_time)) {
          for (int ln = level_number;
-              ln <= d_hierarchy->getFinestLevelNumber(); ln++) {
+              ln <= d_hierarchy->getFinestLevelNumber(); ++ln) {
             if (d_hierarchy->levelCanBeRefined(ln)) {
                bool initial_time = false;
                double level_regrid_start_time = 0.;
@@ -1162,7 +1149,7 @@ GriddingAlgorithm::regridFinerLevel(
    TBOX_ASSERT(static_cast<int>(tag_buffer.size()) >= tag_ln + 1);
 #ifdef DEBUG_CHECK_ASSERTIONS
    int array_size = static_cast<int>(tag_buffer.size());
-   for (int i = 0; i < array_size; i++) {
+   for (int i = 0; i < array_size; ++i) {
       TBOX_ASSERT(tag_buffer[i] >= 0);
    }
 #endif
@@ -2108,7 +2095,7 @@ GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes) cons
         itr != domain_boxes.end(); ++itr, ++i) {
 
       hier::Box test_box = *itr;
-      for (int dir = 0; dir < dim.getValue(); dir++) {
+      for (int dir = 0; dir < dim.getValue(); ++dir) {
 
          if (test_box.numberCells(dir) < smallest_patch(dir)) {
 
@@ -2400,14 +2387,13 @@ GriddingAlgorithm::checkNonrefinedTags(
     * Check for user-tagged cells in the violating parts of the tag level.
     */
    math::PatchCellDataBasicOps<int> dataop;
-   math::PatchCellDataOpsInteger dataopi;
    int maxval = 0;
    for (hier::Connector::ConstNeighborhoodIterator ei = tag_to_violator->begin();
         ei != tag_to_violator->end(); ++ei) {
       const hier::BoxId& box_id = *ei;
       boost::shared_ptr<pdat::CellData<int> > tag_data(
-         level.getPatch(box_id)->getPatchData(d_tag_indx),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            level.getPatch(box_id)->getPatchData(d_tag_indx)));
       TBOX_ASSERT(tag_data);
       for (hier::Connector::ConstNeighborIterator na = tag_to_violator->begin(ei);
            na != tag_to_violator->end(ei); ++na) {
@@ -2737,8 +2723,8 @@ GriddingAlgorithm::fillTags(
 
       const boost::shared_ptr<hier::Patch>& patch = *ip;
       boost::shared_ptr<pdat::CellData<int> > tag_data(
-         patch->getPatchData(tag_index),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            patch->getPatchData(tag_index)));
       TBOX_ASSERT(tag_data);
 
       tag_data->fill(tag_value);
@@ -2791,8 +2777,8 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       boost::shared_ptr<pdat::CellData<int> > tag_data(
-         patch->getPatchData(tag_index),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            patch->getPatchData(tag_index)));
 
       TBOX_ASSERT(tag_data);
 
@@ -2874,11 +2860,11 @@ GriddingAlgorithm::bufferTagsOnLevel(
       const boost::shared_ptr<hier::Patch>& patch = *ip1;
 
       boost::shared_ptr<pdat::CellData<int> > buf_tag_data(
-         patch->getPatchData(d_buf_tag_indx),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            patch->getPatchData(d_buf_tag_indx)));
       boost::shared_ptr<pdat::CellData<int> > tag_data(
-         patch->getPatchData(d_tag_indx),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            patch->getPatchData(d_tag_indx)));
 
       TBOX_ASSERT(buf_tag_data);
       TBOX_ASSERT(tag_data);
@@ -2914,11 +2900,11 @@ GriddingAlgorithm::bufferTagsOnLevel(
       const boost::shared_ptr<hier::Patch>& patch = *ip2;
 
       boost::shared_ptr<pdat::CellData<int> > buf_tag_data(
-         patch->getPatchData(d_buf_tag_indx),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            patch->getPatchData(d_buf_tag_indx)));
       boost::shared_ptr<pdat::CellData<int> > tag_data(
-         patch->getPatchData(d_tag_indx),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            patch->getPatchData(d_tag_indx)));
 
       TBOX_ASSERT(buf_tag_data);
       TBOX_ASSERT(tag_data);
@@ -3139,7 +3125,7 @@ GriddingAlgorithm::findRefinementBoxes(
 
          bool need_to_grow = false;
          hier::IntVector min_size(hier::IntVector::getOne(dim));
-         for (int i = 0; i < dim.getValue(); i++) {
+         for (int i = 0; i < dim.getValue(); ++i) {
             if (periodic_dirs(i)) {
                need_to_grow = true;
                min_size(i) = smallest_box_to_refine(i);
@@ -4283,7 +4269,7 @@ GriddingAlgorithm::getGriddingParameters(
          d_hierarchy->getGridGeometry()->getPeriodicShift(hier::IntVector::getOne(
                dim)));
 
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dim.getValue(); ++i) {
          if (periodic_dirs(i)) {
             smallest_patch(i) =
                tbox::MathUtilities<int>::Max(smallest_patch(i), max_ghosts(i));
@@ -4427,7 +4413,7 @@ GriddingAlgorithm::printClassData(
 {
    os << "\nGriddingAlgorithm::printClassData..." << std::endl;
    os << "   static data members:" << std::endl;
-   for (int d = 0; d < SAMRAI::MAX_DIM_VAL; d++) {
+   for (int d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       os << "      (*s_tag_indx)[" << d << "] = "
          << (*s_tag_indx)[d] << std::endl;
       os << "      (*s_buf_tag_indx)[" << d << "] = "
@@ -4818,6 +4804,4 @@ GriddingAlgorithm::allocateTimers()
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

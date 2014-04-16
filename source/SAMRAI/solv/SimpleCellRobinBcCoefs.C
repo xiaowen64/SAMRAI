@@ -7,9 +7,6 @@
  * Description:   Level solver for diffusion-like elliptic problems.
  *
  ************************************************************************/
-#ifndef included_solv_SimpleCellRobinBcCoefs_C
-#define included_solv_SimpleCellRobinBcCoefs_C
-
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/math/ArrayDataBasicOps.h"
 #include "SAMRAI/pdat/CellData.h"
@@ -101,7 +98,7 @@ SimpleCellRobinBcCoefs::setBoundaries(
    if (boundary_type == "Dirichlet") {
       d_flux_id = -1;
       d_flag_id = -1;
-      for (k = 0; k < 2 * d_dim.getValue(); k++) {
+      for (k = 0; k < 2 * d_dim.getValue(); ++k) {
          d_bdry_types[k] = DIRICHLET;
       }
    } else if (boundary_type == "Neumann") {
@@ -113,7 +110,7 @@ SimpleCellRobinBcCoefs::setBoundaries(
                           << ") for Neumann boundary condition.\n");
       }
 #endif
-      for (k = 0; k < 2 * d_dim.getValue(); k++) {
+      for (k = 0; k < 2 * d_dim.getValue(); ++k) {
          d_bdry_types[k] = NEUMANN;
       }
       d_flux_id = fluxes;
@@ -136,11 +133,11 @@ SimpleCellRobinBcCoefs::setBoundaries(
       d_flux_id = fluxes;
       d_flag_id = flags;
       if (bdry_types != 0) {
-         for (k = 0; k < 2 * d_dim.getValue(); k++) {
+         for (k = 0; k < 2 * d_dim.getValue(); ++k) {
             d_bdry_types[k] = bdry_types[k];
          }
       } else {
-         for (k = 0; k < 2 * d_dim.getValue(); k++) {
+         for (k = 0; k < 2 * d_dim.getValue(); ++k) {
             d_bdry_types[k] = MIXED;
          }
       }
@@ -296,8 +293,8 @@ SimpleCellRobinBcCoefs::setBcCoefs(
       if (gcoef_data) {
 
          boost::shared_ptr<geom::CartesianPatchGeometry> pg(
-            patch.getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               patch.getPatchGeometry()));
 
          TBOX_ASSERT(pg);
 
@@ -415,8 +412,8 @@ SimpleCellRobinBcCoefs::setBcCoefs(
 
       if (gcoef_data) {
          boost::shared_ptr<geom::CartesianPatchGeometry> pg(
-            patch.getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               patch.getPatchGeometry()));
 
          TBOX_ASSERT(pg);
 
@@ -538,8 +535,8 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
          const hier::GlobalId& global_id = patch.getGlobalId();
          hier::BoxId box_id(global_id);
          boost::shared_ptr<geom::CartesianPatchGeometry> pg(
-            patch.getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               patch.getPatchGeometry()));
 
          TBOX_ASSERT(pg);
 
@@ -559,11 +556,11 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
          const hier::GlobalId& global_id = patch.getGlobalId();
          hier::BoxId box_id(global_id);
          boost::shared_ptr<pdat::CellData<double> > cell_data(
-            patch.getPatchData(dirichlet_data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch.getPatchData(dirichlet_data_id)));
          boost::shared_ptr<geom::CartesianPatchGeometry> pg(
-            patch.getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry,
+               hier::PatchGeometry>(patch.getPatchGeometry()));
 
          TBOX_ASSERT(cell_data);
          TBOX_ASSERT(pg);
@@ -616,11 +613,11 @@ SimpleCellRobinBcCoefs::restoreDirichletData(
          const hier::GlobalId& global_id = patch.getGlobalId();
          hier::BoxId box_id(global_id);
          boost::shared_ptr<pdat::CellData<double> > cell_data(
-            patch.getPatchData(dirichlet_data_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch.getPatchData(dirichlet_data_id)));
          boost::shared_ptr<geom::CartesianPatchGeometry> pg(
-            patch.getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               patch.getPatchGeometry()));
 
          TBOX_ASSERT(cell_data);
          TBOX_ASSERT(pg);
@@ -685,6 +682,4 @@ SimpleCellRobinBcCoefs::makeSideBoundaryBox(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

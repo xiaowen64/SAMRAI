@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_CellDoubleConstantRefine_C
-#define included_pdat_CellDoubleConstantRefine_C
-
 #include "SAMRAI/pdat/CellDoubleConstantRefine.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
@@ -122,11 +118,11 @@ CellDoubleConstantRefine::refine(
    const hier::IntVector& ratio) const
 {
    boost::shared_ptr<CellData<double> > cdata(
-      coarse.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CellData<double>, hier::PatchData>(
+         coarse.getPatchData(src_component)));
    boost::shared_ptr<CellData<double> > fdata(
-      fine.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CellData<double>, hier::PatchData>(
+         fine.getPatchData(dst_component)));
 
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
@@ -146,7 +142,7 @@ CellDoubleConstantRefine::refine(
    const hier::Index ifirstf = fine_box.lower();
    const hier::Index ilastf = fine_box.upper();
 
-   for (int d = 0; d < fdata->getDepth(); d++) {
+   for (int d = 0; d < fdata->getDepth(); ++d) {
       if (fine.getDim() == tbox::Dimension(1)) {
          SAMRAI_F77_FUNC(conrefcelldoub1d, CONREFCELLDOUB1D) (ifirstc(0), ilastc(0),
             ifirstf(0), ilastf(0),
@@ -187,4 +183,3 @@ CellDoubleConstantRefine::refine(
 
 }
 }
-#endif

@@ -126,12 +126,12 @@ private:
 
    // Unimplemented copy constructor
    SideVariable(
-      const SideVariable<TYPE>&);
+      const SideVariable&);
 
    // Unimplemented assignment operator
-   void
+   SideVariable&
    operator = (
-      const SideVariable<TYPE>&);
+      const SideVariable&);
 
 };
 

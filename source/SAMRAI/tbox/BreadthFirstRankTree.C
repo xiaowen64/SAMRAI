@@ -7,9 +7,6 @@
  * Description:   Utility for building efficient communication tree.
  *
  ************************************************************************/
-#ifndef included_tbox_BreadthFirstRankTree_C
-#define included_tbox_BreadthFirstRankTree_C
-
 #include "SAMRAI/tbox/BreadthFirstRankTree.h"
 
 #include "SAMRAI/tbox/PIO.h"
@@ -142,6 +139,4 @@ BreadthFirstRankTree::setupTreeForContiguousRanks(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

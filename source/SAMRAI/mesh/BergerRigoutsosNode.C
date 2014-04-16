@@ -7,9 +7,6 @@
  * Description:   Node in asynchronous Berger-Rigoutsos tree
  *
  ************************************************************************/
-#ifndef included_mesh_BergerRigoutsosNode_C
-#define included_mesh_BergerRigoutsosNode_C
-
 #include <cstring>
 #include <algorithm>
 
@@ -1214,8 +1211,8 @@ BergerRigoutsosNode::makeLocalTagHistogram()
          if (!(intersection.empty())) {
 
             boost::shared_ptr<pdat::CellData<int> > tag_data_(
-               patch.getPatchData(d_common->d_tag_data_index),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+                  patch.getPatchData(d_common->d_tag_data_index)));
 
             TBOX_ASSERT(tag_data_);
 
@@ -1417,11 +1414,11 @@ BergerRigoutsosNode::acceptOrSplitBox()
        * favor the direction with the greatest cut_margin.
        */
       int dim;
-      for (dim = 0; dim < d_common->getDim().getValue(); dim++) {
+      for (dim = 0; dim < d_common->getDim().getValue(); ++dim) {
          sorted_margins(dim) = dim;
       }
-      for (int d0 = 0; d0 < d_common->getDim().getValue() - 1; d0++) {
-         for (int d1 = d0 + 1; d1 < d_common->getDim().getValue(); d1++) {
+      for (int d0 = 0; d0 < d_common->getDim().getValue() - 1; ++d0) {
+         for (int d1 = d0 + 1; d1 < d_common->getDim().getValue(); ++d1) {
             if (cut_margin(sorted_margins(d0)) <
                 cut_margin(sorted_margins(d1))) {
                int tmp_dim = sorted_margins(d0);
@@ -1431,7 +1428,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
          }
       }
 #ifdef DEBUG_CHECK_ASSERTIONS
-      for (dim = 0; dim < d_common->getDim().getValue() - 1; dim++) {
+      for (dim = 0; dim < d_common->getDim().getValue() - 1; ++dim) {
          TBOX_ASSERT(cut_margin(sorted_margins(dim)) >=
                      cut_margin(sorted_margins(dim + 1)));
       }
@@ -1449,7 +1446,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
        * according to the cut_margin.
        */
       for (num_cuttable_dim = 0; num_cuttable_dim < d_common->getDim().getValue();
-           num_cuttable_dim++) {
+           ++num_cuttable_dim) {
          if (cut_margin(sorted_margins(num_cuttable_dim)) < 0) {
             break;
          }
@@ -1474,7 +1471,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
       hier::Index lft_hi(box_hi);
       hier::Index rht_lo(box_lo);
 
-      for (dir = 0; dir < d_common->getDim().getValue(); dir++) {
+      for (dir = 0; dir < d_common->getDim().getValue(); ++dir) {
          cut_dir = sorted_margins(dir);
          if (cut_margin(cut_dir) < 0) {
             continue;  // This direction is too small to cut.
@@ -2441,6 +2438,4 @@ BergerRigoutsosNode::printNodeState(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

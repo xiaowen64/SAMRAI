@@ -15,7 +15,7 @@ VPATH	      =	@srcdir@
 OBJECT        = ../../..
 REPORT        = $(OBJECT)/report.xml
 
-CPPFLAGS_EXTRA= -DNDIM=$(PDIM)  -DTESTING=1
+CPPFLAGS_EXTRA= -DTESTING=1
 
 default: check
 
@@ -79,11 +79,11 @@ everything:
 	$(MAKE) examples
 	$(MAKE) perf
 
-clean-check:
-	$(SAMCLEAN)
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
 
-clean:
-	$(SAMCLEAN)
-	$(RM) *.f main *visit
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) main
 
 include $(SRCDIR)/Makefile.depend

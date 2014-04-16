@@ -122,7 +122,7 @@ int AutoTester::evalTestData(
          } else {
             tbox::perr << "Test 0 FAILED: Check Time Refinement Integrator"
                        << std::endl;
-            num_failures++;
+            ++num_failures;
          }
       }
 
@@ -145,7 +145,7 @@ int AutoTester::evalTestData(
          } else {
             tbox::perr << "Test 1 FAILED: Check Time Refinement Integrator"
                        << std::endl;
-            num_failures++;
+            ++num_failures;
          }
       }
 
@@ -169,7 +169,7 @@ int AutoTester::evalTestData(
          } else {
             tbox::perr << "Test 2 FAILED: Check Hyperbolic Level Integrator"
                        << std::endl;
-            num_failures++;
+            ++num_failures;
          }
       }
 
@@ -188,7 +188,7 @@ int AutoTester::evalTestData(
                     << std::endl;
       } else {
          tbox::perr << "Test 3 FAILED: Check Gridding Algorithm" << std::endl;
-         num_failures++;
+         ++num_failures;
       }
 
    }
@@ -220,7 +220,7 @@ int AutoTester::evalTestData(
           * We should be checking against base runs with the same number of processors,
           * compare different data.
           */
-         for (int ln = 0; ln < num_levels; ln++) {
+         for (int ln = 0; ln < num_levels; ++ln) {
 
             const std::string level_name =
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
@@ -248,7 +248,7 @@ int AutoTester::evalTestData(
          boost::shared_ptr<tbox::Database> step_db(
             d_hdf_db.putDatabase(step_name));
 
-         for (int ln = 0; ln < num_levels; ln++) {
+         for (int ln = 0; ln < num_levels; ++ln) {
             boost::shared_ptr<hier::PatchLevel> level(
                hierarchy->getPatchLevel(ln));
 
@@ -265,7 +265,7 @@ int AutoTester::evalTestData(
       }
 #endif
 
-      d_test_patch_boxes_step_count++;
+      ++d_test_patch_boxes_step_count;
 
    }
 
@@ -328,7 +328,7 @@ int AutoTester::evalTestData(
          } else {
             tbox::perr << "Test 0 FAILED: Simulation time incorrect"
                        << std::endl;
-            num_failures++;
+            ++num_failures;
          }
       }
 
@@ -350,7 +350,7 @@ int AutoTester::evalTestData(
          } else {
             tbox::perr << "Test 1 FAILED: Check Method of Lines Integrator"
                        << std::endl;
-            num_failures++;
+            ++num_failures;
          }
       }
 
@@ -368,7 +368,7 @@ int AutoTester::evalTestData(
          tbox::plog << "Test 2: Gridding Alg check successful" << std::endl;
       } else {
          tbox::perr << "Test 2 FAILED: Check Gridding Algorithm" << std::endl;
-         num_failures++;
+         ++num_failures;
       }
 
    }
@@ -393,7 +393,7 @@ int AutoTester::evalTestData(
          boost::shared_ptr<tbox::Database> step_db(
             d_hdf_db.getDatabase(step_name));
 
-         for (int ln = 0; ln < num_levels; ln++) {
+         for (int ln = 0; ln < num_levels; ++ln) {
 
             const std::string level_name =
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
@@ -425,7 +425,7 @@ int AutoTester::evalTestData(
          boost::shared_ptr<tbox::Database> step_db(
             d_hdf_db.putDatabase(step_name));
 
-         for (int ln = 0; ln < num_levels; ln++) {
+         for (int ln = 0; ln < num_levels; ++ln) {
             boost::shared_ptr<hier::PatchLevel> level(
                hierarchy->getPatchLevel(ln));
 
@@ -439,7 +439,7 @@ int AutoTester::evalTestData(
       }
 #endif
 
-      d_test_patch_boxes_step_count++;
+      ++d_test_patch_boxes_step_count;
 
    }
 
@@ -588,7 +588,7 @@ int AutoTester::checkHierarchyBoxes(
                  << computed_minus_correct.format("\t");
       tbox::plog << " correct_box_level:\n" << correct_box_level.format(" ",2) << '\n'
                  << " box_level:\n" << box_level.format(" ",2) << "\n\n";
-      num_failures++;
+      ++num_failures;
    }
 
    if (d_output_correct) {

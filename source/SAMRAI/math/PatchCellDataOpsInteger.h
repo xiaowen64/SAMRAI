@@ -163,7 +163,7 @@ private:
    // The following are not implemented:
    PatchCellDataOpsInteger(
       const PatchCellDataOpsInteger&);
-   void
+   PatchCellDataOpsInteger&
    operator = (
       const PatchCellDataOpsInteger&);
 

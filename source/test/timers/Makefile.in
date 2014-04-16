@@ -84,9 +84,12 @@ everything:
 	$(MAKE) examples
 	$(MAKE) perf
 
-clean:
-	$(SAMCLEAN)
-	$(RM) timertest statstest timermaxtest example
-	$(RM) *.log.* stats *.txt restart
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
+	$(RM) *.txt restart
+
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) timertest statstest example
 
 include $(SRCDIR)/Makefile.depend

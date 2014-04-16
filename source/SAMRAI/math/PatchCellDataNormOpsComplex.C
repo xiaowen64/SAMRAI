@@ -7,10 +7,6 @@
  * Description:   Norm operations for complex cell-centered patch data.
  *
  ************************************************************************/
-
-#ifndef included_math_PatchCellDataNormOpsComplex_C
-#define included_math_PatchCellDataNormOpsComplex_C
-
 #include "SAMRAI/math/PatchCellDataNormOpsComplex.h"
 
 #include <cmath>
@@ -189,4 +185,3 @@ PatchCellDataNormOpsComplex::dot(
 
 }
 }
-#endif

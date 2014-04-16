@@ -7,9 +7,6 @@
  * Description:   Algorithms for working with overlap Connectors.
  *
  ************************************************************************/
-#ifndef included_hier_OverlapConnectorAlgorithm_C
-#define included_hier_OverlapConnectorAlgorithm_C
-
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxContainerUtils.h"
@@ -34,6 +31,7 @@ namespace hier {
 
 const std::string OverlapConnectorAlgorithm::s_default_timer_prefix("hier::OverlapConnectorAlgorithm");
 std::map<std::string, OverlapConnectorAlgorithm::TimerStruct> OverlapConnectorAlgorithm::s_static_timers;
+char OverlapConnectorAlgorithm::s_ignore_external_timer_prefix('n');
 
 char OverlapConnectorAlgorithm::s_print_steps = '\0';
 
@@ -44,8 +42,7 @@ int OverlapConnectorAlgorithm::s_operation_mpi_tag = 0;
  * with reused tags anyway.
  */
 
-tbox::SAMRAI_MPI OverlapConnectorAlgorithm::s_class_mpi(
-   tbox::SAMRAI_MPI::commNull);
+tbox::SAMRAI_MPI OverlapConnectorAlgorithm::s_class_mpi(MPI_COMM_NULL);
 
 tbox::StartupShutdownManager::Handler
 OverlapConnectorAlgorithm::s_initialize_finalize_handler(
@@ -67,22 +64,8 @@ OverlapConnectorAlgorithm::OverlapConnectorAlgorithm():
    d_sanity_check_method_preconditions(false),
    d_sanity_check_method_postconditions(false)
 {
-   /*
-    * While we figure out how to use multiple communicators in SAMRAI,
-    * we are still assuming that all communications use congruent
-    * communicators.  This class just makes a duplicate communicator
-    * to protect itself from unrelated communications in shared
-    * communicators.
-    */
-   if (s_class_mpi.getCommunicator() == tbox::SAMRAI_MPI::commNull) {
-      if (tbox::SAMRAI_MPI::usingMPI()) {
-         const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-         s_class_mpi.dupCommunicator(mpi);
-      }
-   }
-   setTimerPrefix(s_default_timer_prefix);
-
    getFromInput();
+   setTimerPrefix(s_default_timer_prefix);
 }
 
 /*
@@ -98,6 +81,7 @@ OverlapConnectorAlgorithm::~OverlapConnectorAlgorithm()
  ***********************************************************************
  ***********************************************************************
  */
+
 void
 OverlapConnectorAlgorithm::getFromInput()
 {
@@ -107,12 +91,19 @@ OverlapConnectorAlgorithm::getFromInput()
          boost::shared_ptr<tbox::Database> idb(
             tbox::InputManager::getInputDatabase());
          if (idb->isDatabase("OverlapConnectorAlgorithm")) {
-            boost::shared_ptr<tbox::Database> ocu_db(
+            boost::shared_ptr<tbox::Database> oca_db(
                idb->getDatabase("OverlapConnectorAlgorithm"));
             s_print_steps =
-               ocu_db->getCharWithDefault("DEV_print_bridge_steps", 'n');
+               oca_db->getCharWithDefault("DEV_print_bridge_steps", 'n');
             if (!(s_print_steps == 'n' || s_print_steps == 'y')) {
                INPUT_VALUE_ERROR("DEV_print_bridge_steps");
+            }
+            s_ignore_external_timer_prefix =
+               oca_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
+                                          'n');
+            if (!(s_ignore_external_timer_prefix == 'n' ||
+                  s_ignore_external_timer_prefix == 'y')) {
+               INPUT_VALUE_ERROR("DEV_ignore_external_timer_prefix");
             }
          }
       }
@@ -946,7 +937,9 @@ OverlapConnectorAlgorithm::privateBridge(
 
    d_object_timers->t_bridge_share->stop();
 
-   delete[] all_comms;
+   if (all_comms) {
+      delete[] all_comms;
+   }
 
    if (d_sanity_check_method_postconditions) {
       west_to_east.assertConsistencyWithBase();
@@ -1179,9 +1172,11 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
         outgoing_ranks_itr != outgoing_ranks.end(); ++outgoing_ranks_itr) {
       another_outgoing_ranks[i++] = *outgoing_ranks_itr;
    }
-#pragma omp parallel private(i)
+#ifdef HAVE_OPENMP
+#pragma omp parallel private(i) num_threads(4)
 {
 #pragma omp for schedule(dynamic) nowait
+#endif
    for (i = 0; i < imax; ++i) {
       BoxId outgoing_proc_start_id(
          LocalId::getZero(),
@@ -1206,7 +1201,9 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
          compute_transpose,
          rank);
    }
+#ifdef HAVE_OPENMP
 }
+#endif
 
    /*
     * Send all non-local overlap messages.
@@ -1601,20 +1598,23 @@ OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
 void
 OverlapConnectorAlgorithm::initializeCallback()
 {
-
-   if (s_print_steps == '\0') {
-      if (tbox::InputManager::inputDatabaseExists()) {
-         s_print_steps = 'n';
-         boost::shared_ptr<tbox::Database> idb(
-            tbox::InputManager::getInputDatabase());
-         if (idb->isDatabase("OverlapConnectorAlgorithm")) {
-            boost::shared_ptr<tbox::Database> ocu_db(
-               idb->getDatabase("OverlapConnectorAlgorithm"));
-            s_print_steps = ocu_db->getCharWithDefault("print_bridge_steps",
-                  s_print_steps);
-         }
+   /*
+    * While we figure out how to use multiple communicators in SAMRAI,
+    * we are still assuming that all communications use congruent
+    * communicators.  This class just makes a duplicate communicator
+    * to protect itself from unrelated communications in shared
+    * communicators.
+    */
+   if (s_class_mpi.getCommunicator() == MPI_COMM_NULL) {
+      if (tbox::SAMRAI_MPI::usingMPI()) {
+         const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+         s_class_mpi.dupCommunicator(mpi);
       }
    }
+
+   // Initialize timers with default prefix.
+   getAllTimers(s_default_timer_prefix,
+                s_static_timers[s_default_timer_prefix]);
 }
 
 /*
@@ -1627,7 +1627,7 @@ OverlapConnectorAlgorithm::initializeCallback()
 void
 OverlapConnectorAlgorithm::finalizeCallback()
 {
-   if (s_class_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
+   if (s_class_mpi.getCommunicator() != MPI_COMM_NULL) {
       s_class_mpi.freeCommunicator();
    }
 
@@ -1641,11 +1641,18 @@ void
 OverlapConnectorAlgorithm::setTimerPrefix(
    const std::string& timer_prefix)
 {
+   std::string timer_prefix_used;
+   if (s_ignore_external_timer_prefix == 'y') {
+      timer_prefix_used = s_default_timer_prefix;
+   }
+   else {
+      timer_prefix_used = timer_prefix;
+   }
    std::map<std::string, TimerStruct>::iterator ti(
-      s_static_timers.find(timer_prefix));
+      s_static_timers.find(timer_prefix_used));
    if (ti == s_static_timers.end()) {
-      d_object_timers = &s_static_timers[timer_prefix];
-      getAllTimers(timer_prefix, *d_object_timers);
+      d_object_timers = &s_static_timers[timer_prefix_used];
+      getAllTimers(timer_prefix_used, *d_object_timers);
    } else {
       d_object_timers = &(ti->second);
    }
@@ -1693,6 +1700,4 @@ OverlapConnectorAlgorithm::getAllTimers(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

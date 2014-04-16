@@ -162,14 +162,14 @@ CVODEModel::CVODEModel(
     */
    if (d_dim == Dimension(2)) {
       d_scalar_bdry_edge_conds.resize(NUM_2D_EDGES);
-      for (int ei = 0; ei < NUM_2D_EDGES; ei++) {
+      for (int ei = 0; ei < NUM_2D_EDGES; ++ei) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
       }
 
       d_scalar_bdry_node_conds.resize(NUM_2D_NODES);
       d_node_bdry_edge.resize(NUM_2D_NODES);
 
-      for (int ni = 0; ni < NUM_2D_NODES; ni++) {
+      for (int ni = 0; ni < NUM_2D_NODES; ++ni) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
          d_node_bdry_edge[ni] = BOGUS_BDRY_DATA;
       }
@@ -179,13 +179,13 @@ CVODEModel::CVODEModel(
    }
    else if (d_dim == Dimension(3)) {
       d_scalar_bdry_face_conds.resize(NUM_3D_FACES);
-      for (int fi = 0; fi < NUM_3D_FACES; fi++) {
+      for (int fi = 0; fi < NUM_3D_FACES; ++fi) {
          d_scalar_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
       }
 
       d_scalar_bdry_edge_conds.resize(NUM_3D_EDGES);
       d_edge_bdry_face.resize(NUM_3D_EDGES);
-      for (int ei = 0; ei < NUM_3D_EDGES; ei++) {
+      for (int ei = 0; ei < NUM_3D_EDGES; ++ei) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_edge_bdry_face[ei] = BOGUS_BDRY_DATA;
       }
@@ -193,7 +193,7 @@ CVODEModel::CVODEModel(
       d_scalar_bdry_node_conds.resize(NUM_3D_NODES);
       d_node_bdry_face.resize(NUM_3D_NODES);
 
-      for (int ni = 0; ni < NUM_3D_NODES; ni++) {
+      for (int ni = 0; ni < NUM_3D_NODES; ++ni) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
          d_node_bdry_face[ni] = BOGUS_BDRY_DATA;
       }
@@ -234,14 +234,14 @@ CVODEModel::CVODEModel(
     *  bdry_types holds a flag where 0 = dirichlet, 1 = neumann
     */
    if (d_dim == Dimension(2)) {
-      for (int i = 0; i < NUM_2D_EDGES; i++) {
+      for (int i = 0; i < NUM_2D_EDGES; ++i) {
          d_bdry_types[i] = 0;
          if (d_scalar_bdry_edge_conds[i] == BdryCond::DIRICHLET) d_bdry_types[i] = 0;
          if (d_scalar_bdry_edge_conds[i] == BdryCond::NEUMANN) d_bdry_types[i] = 1;
       }
    }
    else if (d_dim == Dimension(3)) {
-      for (int i = 0; i < NUM_3D_FACES; i++) {
+      for (int i = 0; i < NUM_3D_FACES; ++i) {
          d_bdry_types[i] = 0;
          if (d_scalar_bdry_face_conds[i] == BdryCond::DIRICHLET) d_bdry_types[i] = 0;
          if (d_scalar_bdry_face_conds[i] == BdryCond::NEUMANN) d_bdry_types[i] = 1;
@@ -255,13 +255,13 @@ CVODEModel::CVODEModel(
     * so we reset them to BdryCond::FLOW.
     */
    if (d_dim == Dimension(2)) {
-      for (int i = 0; i < NUM_2D_EDGES; i++) {
+      for (int i = 0; i < NUM_2D_EDGES; ++i) {
          if (d_scalar_bdry_edge_conds[i] == BdryCond::REFLECT) {
             d_scalar_bdry_edge_conds[i] = BdryCond::FLOW;
          }
       }
 
-      for (int i = 0; i < NUM_2D_NODES; i++) {
+      for (int i = 0; i < NUM_2D_NODES; ++i) {
          if (d_scalar_bdry_node_conds[i] == BdryCond::XREFLECT) {
             d_scalar_bdry_node_conds[i] = BdryCond::XFLOW;
          }
@@ -277,13 +277,13 @@ CVODEModel::CVODEModel(
       }
    }
    else if (d_dim == Dimension(3)) {
-      for (int i = 0; i < NUM_3D_FACES; i++) {
+      for (int i = 0; i < NUM_3D_FACES; ++i) {
          if (d_scalar_bdry_face_conds[i] == BdryCond::REFLECT) {
             d_scalar_bdry_face_conds[i] = BdryCond::FLOW;
          }
       }
 
-      for (int i = 0; i < NUM_3D_EDGES; i++) {
+      for (int i = 0; i < NUM_3D_EDGES; ++i) {
          if (d_scalar_bdry_edge_conds[i] == BdryCond::XREFLECT) {
             d_scalar_bdry_edge_conds[i] = BdryCond::XFLOW;
          }
@@ -301,7 +301,7 @@ CVODEModel::CVODEModel(
          }
       }
 
-      for (int i = 0; i < NUM_3D_NODES; i++) {
+      for (int i = 0; i < NUM_3D_NODES; ++i) {
          if (d_scalar_bdry_node_conds[i] == BdryCond::XREFLECT) {
             d_scalar_bdry_node_conds[i] = BdryCond::XFLOW;
          }
@@ -416,8 +416,8 @@ CVODEModel::applyGradientDetector(
       const boost::shared_ptr<Patch>& patch = *p;
 
       boost::shared_ptr<CellData<int> > tag_data(
-         patch->getPatchData(tag_index),
-         BOOST_CAST_TAG);
+         BOOST_CAST<CellData<int>, PatchData>(
+            patch->getPatchData(tag_index)));
       TBOX_ASSERT(tag_data);
 
       // dumb implementation that tags all cells.
@@ -442,8 +442,8 @@ CVODEModel::setPhysicalBoundaryConditions(
    NULL_USE(time);
 
    boost::shared_ptr<CellData<double> > soln_data(
-      patch.getPatchData(d_soln_scr_id),
-      BOOST_CAST_TAG);
+      BOOST_CAST<CellData<double>, PatchData>(
+         patch.getPatchData(d_soln_scr_id)));
 
    TBOX_ASSERT(soln_data);
 
@@ -625,7 +625,7 @@ CVODEModel::evaluateRHSFunction(
       d_soln_scr_id,                            // scratch
       refine_op);
 
-   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
       if (!level->checkAllocated(d_soln_scr_id)) {
          level->allocatePatchData(d_soln_scr_id);
@@ -645,21 +645,21 @@ CVODEModel::evaluateRHSFunction(
    /*
     * Step through the levels and compute rhs
     */
-   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       for (PatchLevel::iterator ip(level->begin()); ip != level->end(); ++ip) {
          const boost::shared_ptr<Patch>& patch = *ip;
 
          boost::shared_ptr<CellData<double> > y(
-            patch->getPatchData(d_soln_scr_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<CellData<double>, PatchData>(
+               patch->getPatchData(d_soln_scr_id)));
          boost::shared_ptr<SideData<double> > diff(
-            patch->getPatchData(d_diff_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<SideData<double>, PatchData>(
+               patch->getPatchData(d_diff_id)));
          boost::shared_ptr<CellData<double> > rhs(
-            patch->getPatchData(y_dot_samvect->getComponentDescriptorIndex(0)),
-            BOOST_CAST_TAG);
+            BOOST_CAST<CellData<double>, PatchData>(
+               patch->getPatchData(y_dot_samvect->getComponentDescriptorIndex(0))));
          TBOX_ASSERT(y);
          TBOX_ASSERT(diff);
          TBOX_ASSERT(rhs);
@@ -668,8 +668,8 @@ CVODEModel::evaluateRHSFunction(
          const Index ilast(patch->getBox().upper());
 
          const boost::shared_ptr<CartesianPatchGeometry> patch_geom(
-            patch->getPatchGeometry(),
-            BOOST_CAST_TAG);
+            BOOST_CAST<CartesianPatchGeometry, PatchGeometry>(
+               patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
          const double* dx = patch_geom->getDx();
 
@@ -709,7 +709,7 @@ CVODEModel::evaluateRHSFunction(
    /*
     * Deallocate scratch space.
     */
-   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       hierarchy->getPatchLevel(ln)->deallocatePatchData(d_soln_scr_id);
    }
 
@@ -718,7 +718,7 @@ CVODEModel::evaluateRHSFunction(
     * evaluations.
     */
    d_current_soln_time = time;
-   d_number_rhs_eval++;
+   ++d_number_rhs_eval;
 
    return 0;
 }
@@ -798,7 +798,7 @@ int CVODEModel::CVSpgmrPrecondSet(
     */
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<PatchLevel> level(
          hierarchy->getPatchLevel(amr_level));
 
@@ -836,8 +836,8 @@ int CVODEModel::CVSpgmrPrecondSet(
          const Index ilast(patch->getBox().upper());
 
          boost::shared_ptr<SideData<double> > diffusion(
-            patch->getPatchData(d_diff_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<SideData<double>, PatchData>(
+               patch->getPatchData(d_diff_id)));
          TBOX_ASSERT(diffusion);
 
          diffusion->fillAll(1.0);
@@ -850,11 +850,11 @@ int CVODEModel::CVSpgmrPrecondSet(
          if (d_use_neumann_bcs) {
 
             boost::shared_ptr<OuterfaceData<int> > flag_data(
-               patch->getPatchData(d_flag_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<OuterfaceData<int>, PatchData>(
+                  patch->getPatchData(d_flag_id)));
             boost::shared_ptr<OuterfaceData<double> > neuf_data(
-               patch->getPatchData(d_neuf_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<OuterfaceData<double>, PatchData>(
+                  patch->getPatchData(d_neuf_id)));
             TBOX_ASSERT(flag_data);
             TBOX_ASSERT(neuf_data);
 
@@ -924,7 +924,7 @@ int CVODEModel::CVSpgmrPrecondSet(
    /*
     * increment counter for number of precond setup calls
     */
-   d_number_precond_setup++;
+   ++d_number_precond_setup;
 
 #endif
    /*
@@ -1009,7 +1009,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
     * solution scratch context.
     */
    int ln;
-   for (ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       if (!level->checkAllocated(d_soln_scr_id)) {
@@ -1021,8 +1021,8 @@ int CVODEModel::CVSpgmrPrecondSolve(
          const boost::shared_ptr<Patch>& patch = *p;
 
          boost::shared_ptr<CellData<double> > z_data(
-            patch->getPatchData(z_indx),
-            BOOST_CAST_TAG);
+            BOOST_CAST<CellData<double>, PatchData>(
+               patch->getPatchData(z_indx)));
          TBOX_ASSERT(z_data);
 
          /*
@@ -1035,8 +1035,8 @@ int CVODEModel::CVSpgmrPrecondSolve(
           */
          PatchCellDataOpsReal<double> math_ops;
          boost::shared_ptr<CellData<double> > r_data(
-            patch->getPatchData(r_indx),
-            BOOST_CAST_TAG);
+            BOOST_CAST<CellData<double>, PatchData>(
+               patch->getPatchData(r_indx)));
          TBOX_ASSERT(r_data);
          math_ops.scale(r_data, 1.0 / gamma, r_data, r_data->getBox());
 
@@ -1044,8 +1044,8 @@ int CVODEModel::CVSpgmrPrecondSolve(
           * Copy interior data from z vector to soln_scratch
           */
          boost::shared_ptr<CellData<double> > z_scr_data(
-            patch->getPatchData(d_soln_scr_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<CellData<double>, PatchData>(
+               patch->getPatchData(d_soln_scr_id)));
          TBOX_ASSERT(z_scr_data);
          z_scr_data->copy(*z_data);
       }
@@ -1120,18 +1120,18 @@ int CVODEModel::CVSpgmrPrecondSolve(
    * into the z vector.
    *
    ******************************************************************/
-   for (ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       for (PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
          const boost::shared_ptr<Patch>& patch = *p;
 
          boost::shared_ptr<CellData<double> > soln_scratch(
-            patch->getPatchData(d_soln_scr_id),
-            BOOST_CAST_TAG);
+            BOOST_CAST<CellData<double>, PatchData>(
+               patch->getPatchData(d_soln_scr_id)));
          boost::shared_ptr<CellData<double> > z(
-            patch->getPatchData(z_indx),
-            BOOST_CAST_TAG);
+            BOOST_CAST<CellData<double>, PatchData>(
+               patch->getPatchData(z_indx)));
          TBOX_ASSERT(soln_scratch);
          TBOX_ASSERT(z);
 
@@ -1158,7 +1158,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
    /*
     * Increment counter for number of precond solves
     */
-   d_number_precond_solve++;
+   ++d_number_precond_solve;
 
    return ret_val;
 
@@ -1203,7 +1203,7 @@ CVODEModel::setupSolutionVector(
 
    const int nlevels = hierarchy->getNumberOfLevels();
 
-   for (int ln = 0; ln < nlevels; ln++) {
+   for (int ln = 0; ln < nlevels; ++ln) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
       TBOX_ASSERT(level);
       level->allocatePatchData(d_diff_id);
@@ -1252,8 +1252,8 @@ CVODEModel::setInitialConditions(
              * Set initial conditions for y
              */
             boost::shared_ptr<CellData<double> > y_init(
-               soln_init_samvect->getComponentPatchData(cn, *patch),
-               BOOST_CAST_TAG);
+               BOOST_CAST<CellData<double>, PatchData>(
+                  soln_init_samvect->getComponentPatchData(cn, *patch)));
             TBOX_ASSERT(y_init);
             y_init->fillAll(d_initial_value);
 
@@ -1264,8 +1264,8 @@ CVODEModel::setInitialConditions(
              * approach and set it to 1.
              */
             boost::shared_ptr<SideData<double> > diffusion(
-               patch->getPatchData(d_diff_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<SideData<double>, PatchData>(
+                  patch->getPatchData(d_diff_id)));
             TBOX_ASSERT(diffusion);
 
             diffusion->fillAll(1.0);
@@ -1315,8 +1315,8 @@ CVODEModel::getFromInput(
    IntVector periodic(d_grid_geometry->getPeriodicShift(IntVector(d_dim,
                             1)));
    int num_per_dirs = 0;
-   for (int id = 0; id < d_dim.getValue(); id++) {
-      if (periodic(id)) num_per_dirs++;
+   for (int id = 0; id < d_dim.getValue(); ++id) {
+      if (periodic(id)) ++num_per_dirs;
    }
 
    if (input_db->keyExists("Boundary_data")) {
@@ -1526,7 +1526,7 @@ void CVODEModel::printClassData(
 
    os << "Boundary Condition data..." << endl;
    if (d_dim == Dimension(2)) {
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
             << d_scalar_bdry_edge_conds[j] << endl;
          if (d_scalar_bdry_edge_conds[j] == BdryCond::DIRICHLET) {
@@ -1535,7 +1535,7 @@ void CVODEModel::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
             << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_edge[" << j << "] = "
@@ -1543,7 +1543,7 @@ void CVODEModel::printClassData(
       }
    }
    else if (d_dim == Dimension(3)) {
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_face_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_face_conds.size()); ++j) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
             << d_scalar_bdry_face_conds[j] << endl;
          if (d_scalar_bdry_face_conds[j] == BdryCond::DIRICHLET) {
@@ -1552,14 +1552,14 @@ void CVODEModel::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
             << d_scalar_bdry_edge_conds[j] << endl;
          os << "       d_edge_bdry_face[" << j << "] = "
             << d_edge_bdry_face[j] << endl;
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
             << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_face[" << j << "] = "

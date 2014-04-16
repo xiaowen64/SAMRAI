@@ -146,7 +146,7 @@ private:
     */
    PatchLevelFactory(
       const PatchLevelFactory&);
-   void
+   PatchLevelFactory&
    operator = (
       const PatchLevelFactory&);
 

@@ -7,10 +7,6 @@
  * Description:   A class describing the adjacency of Boxes.
  *
  ************************************************************************/
-
-#ifndef included_hier_BoxNeighborhoodCollection_C
-#define included_hier_BoxNeighborhoodCollection_C
-
 #include "SAMRAI/hier/BoxNeighborhoodCollection.h"
 #include "SAMRAI/hier/BoxContainer.h"
 
@@ -956,5 +952,3 @@ BoxNeighborhoodCollection::ConstNeighborIterator::~ConstNeighborIterator()
 
 }
 }
-
-#endif

@@ -86,7 +86,7 @@ int main(
       hier::Index flo1(dim);
       hier::Index fhi1(dim);
 
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dim.getValue(); ++i) {
          lo[i] = 0.0;
          clo0(i) = 0;
          flo0(i) = 4;
@@ -205,7 +205,7 @@ int main(
        */
       int counter = 0;
       std::ostream& os = tbox::plog;
-      for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+      for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
 
@@ -222,8 +222,9 @@ int main(
             // access sample data from patch
             boost::shared_ptr<pdat::IndexData<SampleIndexData,
                               pdat::CellGeometry> > sample(
-               patch->getPatchData(data_id),
-               BOOST_CAST_TAG);
+               BOOST_CAST<pdat::IndexData<SampleIndexData, pdat::CellGeometry>,
+                          hier::PatchData>(
+                  patch->getPatchData(data_id)));
             TBOX_ASSERT(sample);
 
             // iterate over cells of patch and invoke one "SampleIndexData"

@@ -7,10 +7,6 @@
  * Description:   Refine algorithm for data transfer between AMR levels
  *
  ************************************************************************/
-
-#ifndef included_xfer_RefineAlgorithm_C
-#define included_xfer_RefineAlgorithm_C
-
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 
 #include "SAMRAI/xfer/BoxGeometryVariableFillPattern.h"
@@ -592,4 +588,3 @@ RefineAlgorithm::printClassData(
 
 }
 }
-#endif

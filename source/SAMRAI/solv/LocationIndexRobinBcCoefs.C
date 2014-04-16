@@ -7,9 +7,6 @@
  * Description:   Robin boundary condition support on cartesian grids.
  *
  ************************************************************************/
-#ifndef included_solv_LocationIndexRobinBcCoefs_C
-#define included_solv_LocationIndexRobinBcCoefs_C
-
 #include <stdlib.h>
 
 #include "SAMRAI/solv/LocationIndexRobinBcCoefs.h"
@@ -66,8 +63,7 @@ LocationIndexRobinBcCoefs::getFromInput(
    const boost::shared_ptr<tbox::Database>& input_db)
 {
    if (!input_db) {
-      TBOX_ERROR(": LocationIndexRobinBcCoefs::getFromInput()\n"
-         << "no input database supplied" << std::endl);
+      return;
    }
 
    for (int i = 0; i < 2 * d_dim.getValue(); ++i) {
@@ -176,7 +172,7 @@ LocationIndexRobinBcCoefs::numberOfExtensionsFillable() const
  ************************************************************************
  */
 
-const LocationIndexRobinBcCoefs&
+LocationIndexRobinBcCoefs&
 LocationIndexRobinBcCoefs::operator = (
    const LocationIndexRobinBcCoefs& r)
 {
@@ -191,4 +187,3 @@ LocationIndexRobinBcCoefs::operator = (
 
 }
 }
-#endif

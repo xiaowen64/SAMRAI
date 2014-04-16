@@ -95,12 +95,12 @@ everything:
 	$(MAKE) examples
 	$(MAKE) perf
 
-clean-check:
-	$(SAMCLEAN)
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
 
-clean:		clean-check
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
 	$(RM) main
-	$(RM) *visit
 
 include $(SRCDIR)/Makefile.depend
 

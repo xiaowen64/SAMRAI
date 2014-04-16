@@ -7,10 +7,6 @@
  * Description:   Strategy interface for params, tagging, init for gridding.
  *
  ************************************************************************/
-
-#ifndef included_mesh_TagAndInitializeStrategy_C
-#define included_mesh_TagAndInitializeStrategy_C
-
 #include "SAMRAI/mesh/TagAndInitializeStrategy.h"
 
 #include "SAMRAI/tbox/Utilities.h"
@@ -32,4 +28,3 @@ TagAndInitializeStrategy::~TagAndInitializeStrategy()
 
 }
 }
-#endif

@@ -7,10 +7,6 @@
  * Description:   Iterator for side centered patch data types
  *
  ************************************************************************/
-
-#ifndef included_pdat_SideIterator_C
-#define included_pdat_SideIterator_C
-
 #include "SAMRAI/pdat/SideIterator.h"
 #include "SAMRAI/pdat/SideGeometry.h"
 
@@ -44,11 +40,11 @@ SideIterator::~SideIterator()
 SideIterator&
 SideIterator::operator ++ ()
 {
-   d_index(0)++;
-   for (int i = 0; i < d_box.getDim().getValue() - 1; i++) {
+   ++d_index(0);
+   for (int i = 0; i < d_box.getDim().getValue() - 1; ++i) {
       if (d_index(i) > d_box.upper(i)) {
          d_index(i) = d_box.lower(i);
-         d_index(i + 1)++;
+         ++d_index(i + 1);
       } else {
          break;
       }
@@ -61,11 +57,11 @@ SideIterator::operator ++ (
    int)
 {
    SideIterator tmp = *this;
-   d_index(0)++;
-   for (int i = 0; i < d_box.getDim().getValue() - 1; i++) {
+   ++d_index(0);
+   for (int i = 0; i < d_box.getDim().getValue() - 1; ++i) {
       if (d_index(i) > d_box.upper(i)) {
          d_index(i) = d_box.lower(i);
-         d_index(i + 1)++;
+         ++d_index(i + 1);
       } else {
          break;
       }
@@ -75,4 +71,3 @@ SideIterator::operator ++ (
 
 }
 }
-#endif

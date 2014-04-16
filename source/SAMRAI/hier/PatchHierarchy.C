@@ -7,10 +7,6 @@
  * Description:   An AMR hierarchy of patch levels
  *
  ************************************************************************/
-
-#ifndef included_hier_PatchHierarchy_C
-#define included_hier_PatchHierarchy_C
-
 #include "SAMRAI/hier/PatchHierarchy.h"
 
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
@@ -30,8 +26,8 @@ std::vector<const PatchHierarchy::ConnectorWidthRequestorStrategy *>
 PatchHierarchy::s_class_cwrs;
 
 tbox::StartupShutdownManager::Handler
-PatchHierarchy::s_initialize_finalize_handler(
-   PatchHierarchy::initializeCallback,
+PatchHierarchy::s_finalize_handler(
+   0,
    0,
    0,
    PatchHierarchy::finalizeCallback,
@@ -240,7 +236,7 @@ PatchHierarchy::getFromInput(
                d_proper_nesting_buffer.push_back(d_proper_nesting_buffer[ln - 1]);
             }
          }
-         for (size_t ln = 0; ln < d_proper_nesting_buffer.size(); ln++) {
+         for (size_t ln = 0; ln < d_proper_nesting_buffer.size(); ++ln) {
             if (d_proper_nesting_buffer[ln] < 0) {
                TBOX_ERROR(
                   d_object_name << ":  "
@@ -635,7 +631,7 @@ PatchHierarchy::makeRefinedPatchHierarchy(
    fine_hierarchy->d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps =
       d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps;
 
-   for (int ln = 0; ln < d_number_levels; ln++) {
+   for (int ln = 0; ln < d_number_levels; ++ln) {
       BoxContainer refined_boxes(d_patch_levels[ln]->getBoxLevel()->getBoxes());
       refined_boxes.refine(refine_ratio);
       boost::shared_ptr<BoxLevel> refined_box_level(
@@ -695,7 +691,7 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
    coarse_hierarchy->d_individual_cwrs = d_individual_cwrs;
    coarse_hierarchy->d_proper_nesting_buffer = d_proper_nesting_buffer;
 
-   for (int ln = 0; ln < d_number_levels; ln++) {
+   for (int ln = 0; ln < d_number_levels; ++ln) {
       BoxContainer coarsened_boxes(d_patch_levels[ln]->getBoxLevel()->getBoxes());
       coarsened_boxes.coarsen(coarsen_ratio);
       boost::shared_ptr<BoxLevel> coarsened_box_level(
@@ -756,6 +752,12 @@ PatchHierarchy::makeNewPatchLevel(
             << new_box_level.getRefinementRatio()
             << ", it should be " << expected_ratio << std::endl);
       }
+   }
+   if (d_patch_levels.size() > ln && d_patch_levels[ln].get() != 0) {
+      TBOX_ERROR("PatchHierarchy::makeNewPatchLevel: patch level "
+         << ln << " already exists. "
+         << "Remove old level from the hierarchy before making "
+         << "a new level in its place." << std::endl);
    }
 
    if (ln >= d_number_levels) {
@@ -824,6 +826,12 @@ PatchHierarchy::makeNewPatchLevel(
             << ", it should be " << expected_ratio << std::endl);
       }
    }
+   if (d_patch_levels.size() > ln && d_patch_levels[ln].get() != 0) {
+      TBOX_ERROR("PatchHierarchy::makeNewPatchLevel: patch level "
+         << ln << " already exists. "
+         << "Remove old level from the hierarchy before making "
+         << "a new level in its place." << std::endl);
+   }
 
    if (ln >= d_number_levels) {
       d_number_levels = ln + 1;
@@ -867,7 +875,7 @@ PatchHierarchy::removePatchLevel(
 
    d_patch_levels[l].reset();
    if (d_number_levels == l + 1) {
-      d_number_levels--;
+      --d_number_levels;
    }
 }
 
@@ -1065,7 +1073,7 @@ PatchHierarchy::putToRestart(
          d_dim.getValue());
    }
 
-   for (int i = 0; i < d_number_levels; i++) {
+   for (int i = 0; i < d_number_levels; ++i) {
 
      boost::shared_ptr<tbox::Database> level_database(
          restart_db->putDatabase(level_names[i]));
@@ -1215,7 +1223,7 @@ PatchHierarchy::initializeHierarchy()
       VariableDatabase::getDatabase()->getPatchDataRestartTable();
 
    d_patch_levels.resize(d_number_levels);
-   for (int i = 0; i < d_number_levels; i++) {
+   for (int i = 0; i < d_number_levels; ++i) {
       std::string level_name = "level_" + tbox::Utilities::levelToString(i);
 
       boost::shared_ptr<tbox::Database> level_database(
@@ -1282,5 +1290,3 @@ PatchHierarchy::ConnectorWidthRequestorStrategy::~ConnectorWidthRequestorStrateg
 
 }
 }
-
-#endif

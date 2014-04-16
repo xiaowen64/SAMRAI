@@ -68,8 +68,7 @@ public:
     */
    virtual void
    setRefineItems(
-      const RefineClasses::Data *const* refine_items,
-      int num_refine_items) = 0;
+      const RefineClasses::Data *const* refine_items) = 0;
 
    /*!
     * @brief Pure virtual function to clear the array of RefineClass::Data items
@@ -167,7 +166,7 @@ private:
    // The following two functions are not implemented
    RefineTransactionFactory(
       const RefineTransactionFactory&);
-   void
+   RefineTransactionFactory&
    operator = (
       const RefineTransactionFactory&);
 

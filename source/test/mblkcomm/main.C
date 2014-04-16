@@ -360,13 +360,13 @@ int main(
 
       int nlevels = patch_hierarchy->getNumberOfLevels();
 
-      for (int n = 0; n < ntimes_run; n++) {
+      for (int n = 0; n < ntimes_run; ++n) {
 
          /*
           * Create communication schedules for data refine tests.
           */
          refine_create_time->start();
-         for (int i = 0; i < nlevels; i++) {
+         for (int i = 0; i < nlevels; ++i) {
             comm_tester->createRefineSchedule(i);
          }
          refine_create_time->stop();
@@ -375,7 +375,7 @@ int main(
           * Perform refine data communication operations.
           */
          refine_comm_time->start();
-         for (int j = 0; j < nlevels; j++) {
+         for (int j = 0; j < nlevels; ++j) {
             comm_tester->performRefineOperations(j);
          }
          refine_comm_time->stop();

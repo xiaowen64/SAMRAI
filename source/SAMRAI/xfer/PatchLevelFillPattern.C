@@ -7,10 +7,6 @@
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
-
-#ifndef included_xfer_PatchLevelFillPattern_C
-#define included_xfer_PatchLevelFillPattern_C
-
 #include "SAMRAI/xfer/PatchLevelFillPattern.h"
 
 namespace SAMRAI {
@@ -42,4 +38,3 @@ PatchLevelFillPattern::~PatchLevelFillPattern()
 
 }
 }
-#endif

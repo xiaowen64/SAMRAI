@@ -7,10 +7,6 @@
  * Description:   RefineSchedule's implementation of PatchHierarchy
  *
  ************************************************************************/
-
-#ifndef included_xfer_RefineScheduleConnectorWidthRequestor_C
-#define included_xfer_RefineScheduleConnectorWidthRequestor_C
-
 #include "SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 
@@ -182,6 +178,4 @@ RefineScheduleConnectorWidthRequestor::computeRequiredFineConnectorWidthsForRecu
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

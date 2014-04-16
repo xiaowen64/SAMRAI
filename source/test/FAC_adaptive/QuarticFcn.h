@@ -32,7 +32,7 @@ public:
     *
     * Construct a trivial polynomial function.
     */
-   QuarticFcn(
+   explicit QuarticFcn(
       const tbox::Dimension& dim);
 
    /*!

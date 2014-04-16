@@ -109,10 +109,10 @@ private:
    ArrayDataOperationUtilities();
    ~ArrayDataOperationUtilities();
    ArrayDataOperationUtilities(
-      const ArrayDataOperationUtilities<TYPE, OP>&);
-   void
+      const ArrayDataOperationUtilities&);
+   ArrayDataOperationUtilities&
    operator = (
-      const ArrayDataOperationUtilities<TYPE, OP>&);
+      const ArrayDataOperationUtilities&);
 
 };
 

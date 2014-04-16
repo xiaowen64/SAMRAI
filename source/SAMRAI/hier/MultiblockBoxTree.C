@@ -7,10 +7,6 @@
  * Description:   Multiblock binary trees of Boxes for overlap searches.
  *
  ************************************************************************/
-
-#ifndef included_hier_MultiblockBoxTree_C
-#define included_hier_MultiblockBoxTree_C
-
 #include "SAMRAI/hier/MultiblockBoxTree.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
@@ -123,14 +119,14 @@ MultiblockBoxTree::findOverlapBoxes(
     * Search in the index spaces neighboring block_id for overlaps.
     */
 
-   const std::list<BaseGridGeometry::Neighbor>& block_neighbors(
+   const std::map<BlockId,BaseGridGeometry::Neighbor>& block_neighbors(
       d_grid_geometry->getNeighbors(block_id));
 
-   for (std::list<BaseGridGeometry::Neighbor>::const_iterator ni =
+   for (std::map<BlockId,BaseGridGeometry::Neighbor>::const_iterator ni =
         block_neighbors.begin();
-        ni != block_neighbors.end(); ni++) {
+        ni != block_neighbors.end(); ++ni) {
 
-      const BaseGridGeometry::Neighbor& neighbor(*ni);
+      const BaseGridGeometry::Neighbor& neighbor(ni->second);
 
       if (!include_singularity_block_neighbors && neighbor.isSingularity()) {
          continue;
@@ -188,14 +184,14 @@ MultiblockBoxTree::findOverlapBoxes(
     * Search in the index spaces neighboring block_id for overlaps.
     */
 
-   const std::list<BaseGridGeometry::Neighbor>& block_neighbors(
+   const std::map<BlockId,BaseGridGeometry::Neighbor>& block_neighbors(
       d_grid_geometry->getNeighbors(block_id));
 
-   for (std::list<BaseGridGeometry::Neighbor>::const_iterator ni =
+   for (std::map<BlockId,BaseGridGeometry::Neighbor>::const_iterator ni =
         block_neighbors.begin();
-        ni != block_neighbors.end(); ni++) {
+        ni != block_neighbors.end(); ++ni) {
 
-      const BaseGridGeometry::Neighbor& neighbor(*ni);
+      const BaseGridGeometry::Neighbor& neighbor(ni->second);
 
       if (!include_singularity_block_neighbors && neighbor.isSingularity()) {
          continue;
@@ -272,6 +268,4 @@ MultiblockBoxTree::findOverlapBoxes(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

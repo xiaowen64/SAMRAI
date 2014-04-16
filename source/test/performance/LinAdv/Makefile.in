@@ -41,9 +41,13 @@ main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND) $(TESTLIB)
 # Prevents "No rule to make target" error.  Built in the rule for main.
 $(TESTLIB):
 
-clean:
-	$(SAMCLEAN)
-	$(RM) *.f main *.timing*
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
+	$(RM) *.timing*
+
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) main
 
 check:	main
 	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \

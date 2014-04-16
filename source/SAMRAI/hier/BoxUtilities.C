@@ -7,10 +7,6 @@
  * Description:   Routines for processing boxes within a domain of index space.
  *
  ************************************************************************/
-
-#ifndef included_hier_BoxUtilities_C
-#define included_hier_BoxUtilities_C
-
 #include "SAMRAI/hier/BoxUtilities.h"
 
 #include "SAMRAI/hier/BoxContainer.h" 
@@ -68,14 +64,14 @@ BoxUtilities::findBadCutPointsForBorderAndDirection(
             tbox::MathUtilities<int>::Max(ilo, (mark - bad_interval + 1)) - ilo;
          ichi =
             tbox::MathUtilities<int>::Min(ihi, (mark - 1)) - ilo + 1;
-         for (ic = iclo; ic < ichi; ic++) bad_cuts[ic] = true;
+         for (ic = iclo; ic < ichi; ++ic) bad_cuts[ic] = true;
 
          iclo =
             tbox::MathUtilities<int>::Max(ilo, (mark + 1)) - ilo;
          ichi =
             tbox::MathUtilities<int>::Min(ihi,
                (mark + bad_interval - 1)) - ilo + 1;
-         for (ic = iclo; ic < ichi; ic++) bad_cuts[ic] = true;
+         for (ic = iclo; ic < ichi; ++ic) bad_cuts[ic] = true;
 
       }
 
@@ -89,14 +85,14 @@ BoxUtilities::findBadCutPointsForBorderAndDirection(
             tbox::MathUtilities<int>::Max(ilo, (mark - bad_interval + 1)) - ilo;
          ichi =
             tbox::MathUtilities<int>::Min(ihi, (mark - 1)) - ilo + 1;
-         for (ic = iclo; ic < ichi; ic++) bad_cuts[ic] = true;
+         for (ic = iclo; ic < ichi; ++ic) bad_cuts[ic] = true;
 
          iclo =
             tbox::MathUtilities<int>::Max(ilo, (mark + 1)) - ilo;
          ichi =
             tbox::MathUtilities<int>::Min(ihi,
                (mark + bad_interval - 1)) - ilo + 1;
-         for (ic = iclo; ic < ichi; ic++) bad_cuts[ic] = true;
+         for (ic = iclo; ic < ichi; ++ic) bad_cuts[ic] = true;
 
       }
 
@@ -140,7 +136,7 @@ BoxUtilities::checkBoxConstraints(
     */
    std::vector<bool> min_is_bad(dim.getValue());
    bool min_violation = false;
-   for (id = 0; id < dim.getValue(); id++) {
+   for (id = 0; id < dim.getValue(); ++id) {
       if (box.numberCells(id) < min_size(id)) {
          min_is_bad[id] = true;
          min_violation = true;
@@ -152,7 +148,7 @@ BoxUtilities::checkBoxConstraints(
    if (min_violation) {
       tbox::perr << "\nBox = " << box << " -- minimum size = " << min_size
                  << std::endl;
-      for (id = 0; id < dim.getValue(); id++) {
+      for (id = 0; id < dim.getValue(); ++id) {
          if (min_is_bad[id]) {
             tbox::perr << "min size violated in direction " << id << std::endl;
          }
@@ -166,7 +162,7 @@ BoxUtilities::checkBoxConstraints(
     */
    std::vector<bool> factor_is_bad(dim.getValue());
    bool factor_violation = false;
-   for (id = 0; id < dim.getValue(); id++) {
+   for (id = 0; id < dim.getValue(); ++id) {
       if ((box.numberCells(id) % cut_factor(id)) != 0) {
          factor_is_bad[id] = true;
          factor_violation = true;
@@ -178,7 +174,7 @@ BoxUtilities::checkBoxConstraints(
    if (factor_violation) {
       tbox::perr << "\nBox = " << box << " -- cut factor = " << cut_factor
                  << std::endl;
-      for (id = 0; id < dim.getValue(); id++) {
+      for (id = 0; id < dim.getValue(); ++id) {
          if (factor_is_bad[id]) {
             tbox::perr << "factor bad in direction " << id << std::endl;
          }
@@ -190,7 +186,7 @@ BoxUtilities::checkBoxConstraints(
    if (!physical_boxes.isEmpty()) {
 
       std::vector<bool> cut_is_bad(dim.getValue());
-      for (id = 0; id < dim.getValue(); id++) {
+      for (id = 0; id < dim.getValue(); ++id) {
          cut_is_bad[id] = false;
       }
 
@@ -269,7 +265,7 @@ BoxUtilities::checkBoxConstraints(
 
             }
 
-            id++;
+            ++id;
          }
 
       }
@@ -277,7 +273,7 @@ BoxUtilities::checkBoxConstraints(
       if (bad_cut_violation) {
 
          tbox::perr << "Box violates bad cut restriction in directions...";
-         for (id = 0; id < dim.getValue(); id++) {
+         for (id = 0; id < dim.getValue(); ++id) {
             if (cut_is_bad[id]) tbox::perr << "\n" << id;
          }
          tbox::perr << "\nBox = " << box << " -- bad cut interval = "
@@ -365,7 +361,7 @@ BoxUtilities::chopBoxes(
          TBOX_ASSERT(box.getBlockId().isValid());
          BoxContainer phys_block_boxes(physical_boxes, box.getBlockId());
 
-         for (int id = 0; id < dim.getValue(); id++) {
+         for (int id = 0; id < dim.getValue(); ++id) {
 
             if (!cut_points[id].empty()) {
 
@@ -429,7 +425,7 @@ BoxUtilities::chopBox(
       boxes.pushBack(box);
 
       BoxContainer tmp_boxes;
-      for (int id = 0; id < dim.getValue(); id++) {
+      for (int id = 0; id < dim.getValue(); ++id) {
 
          tmp_boxes.clear();
 
@@ -463,7 +459,7 @@ BoxUtilities::chopBox(
                      tmp_boxes.pushBack(new_box);
                      ilo(id) = cut_val;
                   }
-                  cut++;
+                  ++cut;
                }
 
                ihi(id) = chop_box.upper(id);
@@ -557,7 +553,7 @@ BoxUtilities::extendBoxToDomainBoundary(
 
       if (!outside_domain.isEmpty()) {
 
-         for (id = 0; id < dim.getValue(); id++) {
+         for (id = 0; id < dim.getValue(); ++id) {
             BoxContainer outside_boxes;
 
             // Test whether lower end of ghost box extends outside domain
@@ -653,7 +649,7 @@ BoxUtilities::growBoxesWithinDomain(
          Box try_box = boxes.front();
          boxes.popFront();
 
-         for (id = 0; id < dim.getValue(); id++) {
+         for (id = 0; id < dim.getValue(); ++id) {
 
             int grow = min_size(id) - try_box.numberCells(id);
 
@@ -748,7 +744,7 @@ BoxUtilities::growBoxWithinDomain(
 
    Box try_box = box;
 
-   for (id = 0; id < dim.getValue(); id++) {
+   for (id = 0; id < dim.getValue(); ++id) {
 
       int grow = min_size(id) - try_box.numberCells(id);
 
@@ -854,7 +850,7 @@ BoxUtilities::findBestCutPointsGivenMax(
 
    cut_points.resize(dim.getValue());
 
-   for (id = 0; id < dim.getValue(); id++) {
+   for (id = 0; id < dim.getValue(); ++id) {
       if (findBestCutPointsForDirectionGivenMax(id,
              cut_points[id],
              box,
@@ -955,12 +951,12 @@ BoxUtilities::findBestCutPointsForDirectionGivenMax(
       if (num_boxes > 1) {
          int mark = box.lower(idir);
          int wide_count = 0;
-         for (int ic = 0; ic < num_boxes - 1; ic++) {
+         for (int ic = 0; ic < num_boxes - 1; ++ic) {
             int width = ((wide_count < num_wide_boxes)
                          ? max_width : min_width);
             mark += width;
             cut_points.push_back(mark);
-            wide_count++;
+            ++wide_count;
          }
 
          chop_ok = true;
@@ -1012,7 +1008,7 @@ BoxUtilities::findBestCutPointsGivenNumber(
    cut_points.resize(dim.getValue());
 
    std::vector<bool> chop_dir(dim.getValue());
-   for (id = 0; id < dim.getValue(); id++) {
+   for (id = 0; id < dim.getValue(); ++id) {
       cut_points[id].clear();
       chop_dir[id] = (((number_boxes(id) <= 1)
                        || (box.numberCells(id) % cut_factor(id))
@@ -1024,7 +1020,7 @@ BoxUtilities::findBestCutPointsGivenNumber(
 
    bool chop_ok = false;
 
-   for (id = 0; id < dim.getValue(); id++) {
+   for (id = 0; id < dim.getValue(); ++id) {
 
       if (chop_dir[id]) {
 
@@ -1116,12 +1112,12 @@ BoxUtilities::findBestCutPointsForDirectionGivenNumber(
       if (num_boxes > 1) {
          int mark = box.lower(idir);
          int wide_count = 0;
-         for (int ic = 0; ic < num_boxes - 1; ic++) {
+         for (int ic = 0; ic < num_boxes - 1; ++ic) {
             int width = ((wide_count < num_wide_boxes)
                          ? max_width : min_width);
             mark += width;
             cut_points.push_back(mark);
-            wide_count++;
+            ++wide_count;
          }
 
          chop_ok = true;
@@ -1162,7 +1158,7 @@ BoxUtilities::checkBoxForBadCutPoints(
    int id;
 
    bad_cut_information = IntVector::getZero(dim);
-   for (id = 0; id < dim.getValue(); id++) {
+   for (id = 0; id < dim.getValue(); ++id) {
       if (checkBoxForBadCutPointsInDirection(id,
              box,
              physical_boxes,
@@ -1255,7 +1251,7 @@ BoxUtilities::checkBoxForBadCutPointsInDirection(
             }
 
          }
-         id2++;
+         ++id2;
       }
 
    }
@@ -1289,7 +1285,7 @@ BoxUtilities::findBadCutPoints(
    TBOX_ASSERT(!box.empty());
    TBOX_ASSERT(static_cast<int>(bad_cuts.size()) == dim.getValue());
 
-   for (int id = 0; id < dim.getValue(); id++) {
+   for (int id = 0; id < dim.getValue(); ++id) {
       findBadCutPointsForDirection(id,
          bad_cuts[id],
          box,
@@ -1339,7 +1335,7 @@ BoxUtilities::findBadCutPointsForDirection(
     */
    const int ncells = box.numberCells(id);
    bad_cuts.resize(ncells);
-   for (ic = 0; ic < ncells; ic++) {
+   for (ic = 0; ic < ncells; ++ic) {
       bad_cuts[ic] = false;
    }
 
@@ -1360,7 +1356,7 @@ BoxUtilities::findBadCutPointsForDirection(
 
    Box level_bounding_box = physical_boxes.getBoundingBox(box.getBlockId());
 
-   for (int id2 = 0; id2 < dim.getValue(); id2++) {
+   for (int id2 = 0; id2 < dim.getValue(); ++id2) {
 
       if (((dim.getValue() == 1) && id2 == id) ||
           ((dim.getValue() != 1) && (id2 != id))) {
@@ -1470,7 +1466,7 @@ BoxUtilities::fixBadCutPoints(
    TBOX_ASSERT(static_cast<int>(cuts.size()) == dim.getValue());
    TBOX_ASSERT(static_cast<int>(bad_cuts.size()) == dim.getValue());
    bool bad_cuts_ok = true;
-   for (int id = 0; id < dim.getValue(); id++) {
+   for (int id = 0; id < dim.getValue(); ++id) {
       bad_cuts_ok = bad_cuts_ok &&
          (static_cast<int>(bad_cuts[id].size()) == box.numberCells(id));
    }
@@ -1480,7 +1476,7 @@ BoxUtilities::fixBadCutPoints(
    TBOX_ASSERT(cut_factor > IntVector::getZero(dim));
 #endif
 
-   for (int id = 0; id < dim.getValue(); id++) {
+   for (int id = 0; id < dim.getValue(); ++id) {
       fixBadCutPointsForDirection(id,
          cuts[id],
          bad_cuts[id],
@@ -1521,13 +1517,13 @@ BoxUtilities::fixBadCutPointsForDirection(
    bool cuts_strictly_increase = true;
    if (cut != cuts.end()) {
       int prev = *cut;
-      cut++;
+      ++cut;
       while (cut != cuts.end() && cuts_strictly_increase) {
          if (*cut <= prev) {
             cuts_strictly_increase = false;
          }
          prev = *cut;
-         cut++;
+         ++cut;
       }
    }
    TBOX_ASSERT(cuts_strictly_increase);
@@ -1540,7 +1536,7 @@ BoxUtilities::fixBadCutPointsForDirection(
       if ((((*cut) - box.lower(id)) % fact) != 0) {
          cuts_satisfy_factor = false;
       }
-      cut++;
+      ++cut;
    }
    TBOX_ASSERT(cuts_satisfy_factor);
 #endif
@@ -1551,7 +1547,7 @@ BoxUtilities::fixBadCutPointsForDirection(
     */
    bool bad_point_exists = false;
    const int ncells = box.numberCells(id);
-   for (int ic = 0; ic < ncells; ic++) {
+   for (int ic = 0; ic < ncells; ++ic) {
       if (bad_cuts[ic]) {
          bad_point_exists = true;
       }
@@ -1575,7 +1571,7 @@ BoxUtilities::fixBadCutPointsForDirection(
 
          int foo = 0;
          std::list<int>::iterator cuthi = cuts.insert(cuts.end(), foo);
-         cuthi--;
+         --cuthi;
          cuts.pop_back();
 
          while (cutlo != cuts.end() && cuthi != cuts.end() &&
@@ -1592,8 +1588,8 @@ BoxUtilities::fixBadCutPointsForDirection(
                   bad_cut_val = *cutlo;
                   std::list<int>::iterator tmplo = cutlo;
                   std::list<int>::iterator tmphi = cutlo;
-                  tmplo--;
-                  tmphi++;
+                  --tmplo;
+                  ++tmphi;
                   cuts.erase(cutlo);
 
                   below = (tmplo != cuts.end() ? *tmplo : ilo);
@@ -1608,15 +1604,15 @@ BoxUtilities::fixBadCutPointsForDirection(
                      found_good_cut = true;
                      if (tmplo != cuts.end()) {
                         std::list<int>::iterator tmp = tmplo;
-                        tmp++;
+                        ++tmp;
                         cuts.insert(tmp, try_cut);
                         cutlo = tmplo;
-                        cutlo++;
+                        ++cutlo;
                      } else {
                         cuts.push_front(try_cut);
                         cutlo = cuts.begin();
                      }
-                     cutlo++;
+                     ++cutlo;
                   } else {
                      cutlo = tmphi;
                   }
@@ -1634,20 +1630,20 @@ BoxUtilities::fixBadCutPointsForDirection(
                         if (tmphi != cuts.end()) {
                            cuts.insert(tmphi, try_cut);
                            cuthi = tmphi;
-                           cuthi--;
+                           --cuthi;
                         } else {
                            cuthi = cuts.insert(cuts.end(), try_cut);
                         }
-                        cuthi--;
+                        --cuthi;
                      } else {
                         cuthi = tmplo;
                      }
                   }
 
                } else {
-                  cutlo++;
+                  ++cutlo;
                   if (cuthi != cuts.begin()) {
-                     cuthi--;
+                     --cuthi;
                   }
                }
 
@@ -1657,7 +1653,7 @@ BoxUtilities::fixBadCutPointsForDirection(
 
                   bad_cut_val = *cutlo;
                   std::list<int>::iterator tmplo = cutlo;
-                  tmplo--;
+                  --tmplo;
                   cuts.erase(cutlo);
 
                   below = (tmplo != cuts.end() ? *tmplo : ilo);
@@ -1671,33 +1667,33 @@ BoxUtilities::fixBadCutPointsForDirection(
                   if (try_cut >= (below + min)) {
                      if (tmplo != cuts.end()) {
                         std::list<int>::iterator tmp = tmplo;
-                        tmp++;
+                        ++tmp;
                         cuts.insert(tmplo, try_cut);
                         cutlo = tmplo;
-                        cutlo++;
+                        ++cutlo;
                      } else {
                         cuts.push_front(try_cut);
                         cutlo = cuts.begin();
                      }
-                     cutlo++;
+                     ++cutlo;
                   } else {
                      if (tmplo != cuts.end()) {
                         cutlo = tmplo;
-                        cutlo++;
+                        ++cutlo;
                      } else {
                         cutlo = cuts.begin();
                      }
                   }
 
                } else {
-                  cutlo++;
+                  ++cutlo;
                }
 
                if (bad_cuts[*cuthi - offset]) {
 
                   bad_cut_val = *cuthi;
                   std::list<int>::iterator tmphi = cuthi;
-                  tmphi++;
+                  ++tmphi;
                   cuts.erase(cuthi);
 
                   above = (tmphi != cuts.end() ? *tmphi : ihi);
@@ -1712,24 +1708,24 @@ BoxUtilities::fixBadCutPointsForDirection(
                      if (tmphi != cuts.end()) {
                         cuts.insert(tmphi, try_cut);
                         cuthi = tmphi;
-                        cuthi--;
+                        --cuthi;
                      } else {
                         cuthi = cuts.insert(cuts.end(), try_cut);
                      }
-                     cuthi--;
+                     --cuthi;
                   } else {
                      if (tmphi != cuts.end()) {
                         cuthi = tmphi;
-                        cuthi--;
+                        --cuthi;
                      } else {
                         cuthi = cuts.insert(cuts.end(), foo);
-                        cuthi--;
+                        --cuthi;
                         cuts.pop_back();
                      }
                   }
 
                } else {
-                  cuthi--;
+                  --cuthi;
                }
 
             }
@@ -1758,7 +1754,7 @@ BoxUtilities::makeNonOverlappingBoxContainers(
 {
    const int nb = boxes.size();
 
-   for (int i = 0; i < static_cast<int>(box_list_array.size()); i++) {
+   for (int i = 0; i < static_cast<int>(box_list_array.size()); ++i) {
       box_list_array[i].clear();
    }
 
@@ -1788,5 +1784,3 @@ BoxUtilities::makeNonOverlappingBoxContainers(
 
 }
 }
-
-#endif

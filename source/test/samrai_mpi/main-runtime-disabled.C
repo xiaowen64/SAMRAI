@@ -33,7 +33,7 @@ int main(
    mpiInterfaceTests(argc, argv, fail_count, runtime_mpi, disable_mpi);
 
    if (fail_count == 0) {
-      tbox::pout << "\nPASSED:  " << argv[0] << std::endl;
+      std::cout << "\nPASSED:  " << argv[0] << std::endl;
    }
 
    return fail_count;

@@ -329,14 +329,14 @@ void AdaptivePoisson::initializeLevelData(
       hier::Box pbox = patch.getBox();
 
       boost::shared_ptr<pdat::SideData<double> > diffcoef_data(
-         patch.getPatchData(d_diffcoef_persistent),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+            patch.getPatchData(d_diffcoef_persistent)));
       boost::shared_ptr<pdat::CellData<double> > exact_data(
-         patch.getPatchData(d_exact_persistent),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_exact_persistent)));
       boost::shared_ptr<pdat::CellData<double> > source_data(
-         patch.getPatchData(d_constant_source_persistent),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_constant_source_persistent)));
       TBOX_ASSERT(exact_data);
       TBOX_ASSERT(source_data);
 
@@ -375,8 +375,8 @@ void AdaptivePoisson::initializeLevelData(
    {
       xfer::RefineAlgorithm refiner;
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry_(
-         patch_hierarchy->getGridGeometry(),
-         BOOST_CAST_TAG);
+         BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+            patch_hierarchy->getGridGeometry()));
       TBOX_ASSERT(grid_geometry_);
       geom::CartesianGridGeometry& grid_geometry = *grid_geometry_;
       boost::shared_ptr<hier::RefineOperator> accurate_refine_op =
@@ -488,8 +488,7 @@ void AdaptivePoisson::applyGradientDetector(
             "Data index " << tag_index << " does not exist for patch.\n");
       }
       boost::shared_ptr<pdat::CellData<int> > tag_cell_data_(
-         tag_data,
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(tag_data));
       TBOX_ASSERT(tag_cell_data_);
       boost::shared_ptr<hier::PatchData> soln_data(
          patch.getPatchData(d_scalar_persistent));
@@ -498,8 +497,7 @@ void AdaptivePoisson::applyGradientDetector(
                                   << " does not exist for patch.\n");
       }
       boost::shared_ptr<pdat::CellData<double> > soln_cell_data_(
-         soln_data,
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(soln_data));
       TBOX_ASSERT(soln_cell_data_);
       pdat::CellData<double>& soln_cell_data = *soln_cell_data_;
       pdat::CellData<int>& tag_cell_data = *tag_cell_data_;
@@ -584,8 +582,8 @@ bool AdaptivePoisson::packDerivedDataIntoDoubleBuffer(
 
    if (variable_name == "Gradient Function") {
       boost::shared_ptr<pdat::CellData<double> > soln_cell_data_(
-         patch.getPatchData(d_scalar_persistent),
-         BOOST_CAST_TAG);
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(d_scalar_persistent)));
       TBOX_ASSERT(soln_cell_data_);
       const pdat::CellData<double>& soln_cell_data = *soln_cell_data_;
       pdat::CellData<double> estimate_data(region,
@@ -744,14 +742,14 @@ int AdaptivePoisson::computeError(
           * Get the patch data.
           */
          boost::shared_ptr<pdat::CellData<double> > current_solution(
-            patch->getPatchData(d_scalar_persistent),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_scalar_persistent)));
          boost::shared_ptr<pdat::CellData<double> > exact_solution(
-            patch->getPatchData(d_exact_persistent),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_exact_persistent)));
          boost::shared_ptr<pdat::CellData<double> > weight(
-            patch->getPatchData(d_weight_persistent),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_weight_persistent)));
          TBOX_ASSERT(current_solution);
          TBOX_ASSERT(exact_solution);
          TBOX_ASSERT(weight);
@@ -900,11 +898,11 @@ int AdaptivePoisson::solvePoisson(
          const hier::Box& box = patch->getBox();
 
          boost::shared_ptr<pdat::CellData<double> > source_data(
-            patch->getPatchData(d_constant_source_persistent),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_constant_source_persistent)));
          boost::shared_ptr<pdat::CellData<double> > rhs_data(
-            patch->getPatchData(d_rhs_scratch),
-            BOOST_CAST_TAG);
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch->getPatchData(d_rhs_scratch)));
          TBOX_ASSERT(source_data);
          TBOX_ASSERT(rhs_data);
          math::PatchCellDataOpsReal<double> cell_ops;
@@ -987,8 +985,8 @@ int AdaptivePoisson::solvePoisson(
    {
       xfer::RefineAlgorithm refiner;
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry_(
-         hierarchy->getGridGeometry(),
-         BOOST_CAST_TAG);
+         BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+            hierarchy->getGridGeometry()));
       TBOX_ASSERT(grid_geometry_);
       geom::CartesianGridGeometry& grid_geometry = *grid_geometry_;
       boost::shared_ptr<hier::RefineOperator> accurate_refine_op(

@@ -102,7 +102,7 @@ public:
 private:
    BoxOverlap(
       const BoxOverlap&);               // not implemented
-   void
+   BoxOverlap&
    operator = (
       const BoxOverlap&);               // not implemented
 

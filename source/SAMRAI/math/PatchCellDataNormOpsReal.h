@@ -238,10 +238,10 @@ public:
 private:
    // The following are not implemented:
    PatchCellDataNormOpsReal(
-      const PatchCellDataNormOpsReal<TYPE>&);
-   void
+      const PatchCellDataNormOpsReal&);
+   PatchCellDataNormOpsReal&
    operator = (
-      const PatchCellDataNormOpsReal<TYPE>&);
+      const PatchCellDataNormOpsReal&);
 
    ArrayDataNormOpsReal<TYPE> d_array_ops;
 

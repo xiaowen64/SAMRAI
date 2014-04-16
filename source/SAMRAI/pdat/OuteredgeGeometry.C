@@ -7,10 +7,6 @@
  * Description:   Box geometry information for outeredge centered objects
  *
  ************************************************************************/
-
-#ifndef included_pdat_OuteredgeGeometry_C
-#define included_pdat_OuteredgeGeometry_C
-
 #include "SAMRAI/pdat/OuteredgeGeometry.h"
 
 #include "SAMRAI/pdat/EdgeGeometry.h"
@@ -439,7 +435,7 @@ OuteredgeGeometry::setUpOverlap(
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          hier::Box edge_box(EdgeGeometry::toEdgeBox(*b, d));
          dst_boxes[d].pushBack(edge_box);
       }
@@ -452,4 +448,3 @@ OuteredgeGeometry::setUpOverlap(
 
 }
 }
-#endif

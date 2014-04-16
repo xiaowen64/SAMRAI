@@ -92,7 +92,8 @@ public:
    LocationIndexRobinBcCoefs(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const boost::shared_ptr<tbox::Database>& input_db =
+         boost::shared_ptr<tbox::Database>() );
 
    /*!
     * @brief Destructor.
@@ -268,7 +269,7 @@ public:
    /*!
     * @brief Assignment operator.
     */
-   const LocationIndexRobinBcCoefs&
+   LocationIndexRobinBcCoefs&
    operator = (
       const LocationIndexRobinBcCoefs& r);
 

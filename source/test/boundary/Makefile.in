@@ -21,7 +21,7 @@ default: check
 include $(OBJECT)/config/Makefile.config
 
 AUTOTEST      = $(SAMRAI)/source/test/boundary
-CPPFLAGS_EXTRA= -I$(AUTOTEST) -DNDIM=$(PDIM) -DTESTING=1
+CPPFLAGS_EXTRA= -I$(AUTOTEST) -DTESTING=1
 
 NUM_TESTS = 13
 
@@ -78,10 +78,11 @@ everything:
 	$(MAKE) examples
 	$(MAKE) perf
 
-clean-check:
-	$(SAMCLEAN)
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
 
-clean:		clean-check
-	$(RM) *main* 
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) main
 
 include $(SRCDIR)/Makefile.depend

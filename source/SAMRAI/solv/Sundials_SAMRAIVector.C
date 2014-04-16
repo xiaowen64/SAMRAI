@@ -7,10 +7,6 @@
  * Description:   "Glue code" between SAMRAI vector object and Sundials vector.
  *
  ************************************************************************/
-
-#ifndef included_solv_Sundials_SAMRAIVector_C
-#define included_solv_Sundials_SAMRAIVector_C
-
 #include "SAMRAI/solv/Sundials_SAMRAIVector.h"
 
 #ifdef HAVE_SUNDIALS
@@ -252,5 +248,4 @@ Sundials_SAMRAIVector::testReciprocal(
 }
 }
 
-#endif
 #endif

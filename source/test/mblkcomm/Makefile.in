@@ -20,9 +20,9 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA= -DNDIM=$(PDIM)  -DTESTING=1
+CPPFLAGS_EXTRA= -DTESTING=1
 
-NUM_TESTS = 25
+NUM_TESTS = 27
 
 TEST_NPROCS = @TEST_NPROCS@
 QUOTE = \"
@@ -85,10 +85,11 @@ everything:
 	$(MAKE) examples
 	$(MAKE) perf
 
-clean-check:
-	$(SAMCLEAN)
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
 
-clean:	clean-check
+clean:	checkclean
+	$(CLEAN_COMMON_TEST_FILES)
 	$(RM) main
 
 include $(SRCDIR)/Makefile.depend

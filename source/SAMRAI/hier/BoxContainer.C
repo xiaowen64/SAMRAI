@@ -7,10 +7,6 @@
  * Description:   A container of boxes with basic domain calculus operations
  *
  ************************************************************************/
-
-#ifndef included_hier_BoxContainer_C
-#define included_hier_BoxContainer_C
-
 #include "SAMRAI/hier/BoxContainer.h"
 
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
@@ -132,7 +128,7 @@ BoxContainer::BoxContainer(
    d_ordered(false)
 {
    const int n = static_cast<int>(other.size());
-   for (int j = 0; j < n; j++) {
+   for (int j = 0; j < n; ++j) {
       pushBack(Box(other[j]));
    }
 }
@@ -172,7 +168,7 @@ BoxContainer::operator = (
    clear();
 
    const int n = static_cast<int>(rhs.size());
-   for (int j = 0; j < n; j++) {
+   for (int j = 0; j < n; ++j) {
       pushBack(Box(rhs[j]));
    }
    d_ordered = false;
@@ -190,22 +186,57 @@ bool
 BoxContainer::operator == (
    const BoxContainer& rhs) const
 {
-   bool isEqual = (d_ordered && rhs.d_ordered); 
-   if (isEqual) {
-      isEqual = size() == rhs.size();
-   }
-   if (isEqual) {
-      if (!d_ordered) { 
-         isEqual = std::equal(d_list.begin(), d_list.end(),
-                      rhs.d_list.begin(), Box::box_equality());
+   bool is_equal = (d_ordered == rhs.d_ordered); 
+   if (is_equal) {
+      if (!d_ordered) {
+         is_equal = isSpatiallyEqual(rhs);
       } else {
-         isEqual = std::equal(d_set.begin(), d_set.end(),
-                      rhs.d_set.begin(), Box::id_equal());
+         is_equal = isIdEqual(rhs);
+         if (is_equal) {
+            is_equal = isSpatiallyEqual(rhs);
+         }
       }
    }
 
-   return isEqual;
+   return is_equal;
 }
+
+bool
+BoxContainer::isIdEqual(
+   const BoxContainer& other) const
+{
+   if (!d_ordered || !other.d_ordered) {
+      TBOX_ERROR("isIdEqual called on unordered container." << std::endl);
+   }
+
+   bool is_equal = (size() == other.size());
+   if (is_equal) {
+      is_equal = std::equal(d_set.begin(), d_set.end(),
+                    other.d_set.begin(), Box::id_equal());
+   } 
+ 
+   return is_equal;
+}
+
+bool
+BoxContainer::isSpatiallyEqual(
+   const BoxContainer& other) const
+{
+
+   bool is_equal = (size() == other.size());
+   if (is_equal) {
+      if (d_ordered && other.d_ordered) {
+         is_equal = std::equal(d_set.begin(), d_set.end(),
+                       other.d_set.begin(), Box::box_equality());
+      } else {
+         is_equal = std::equal(d_list.begin(), d_list.end(),
+                       other.d_list.begin(), Box::box_equality());
+      }
+   }
+
+   return is_equal;
+}
+
 
 /*
  *************************************************************************
@@ -395,7 +426,7 @@ BoxContainer::simplify()
       const tbox::Dimension dim(d_list.front().getDim());
 
       BoxContainer notCanonical;
-      for (int d = dim.getValue() - 1; d >= 0; d--) {
+      for (int d = dim.getValue() - 1; d >= 0; --d) {
          notCanonical.spliceBack(*this);
          while (!notCanonical.isEmpty()) {
             Box tryMe = notCanonical.front();
@@ -416,7 +447,7 @@ BoxContainer::simplify()
                   const Index& bh = tryMe.upper();
 
                   combineDaPuppies = true;
-                  for (int du = d + 1; du < dim.getValue(); du++) {
+                  for (int du = d + 1; du < dim.getValue(); ++du) {
                      if ((al(du) != bl(du)) || (ah(du) != bh(du))) {
                         combineDaPuppies = false;
                         break;
@@ -426,7 +457,7 @@ BoxContainer::simplify()
                      if ((bl(d) > ah(d) + 1) || (bh(d) < al(d) - 1)) {
                         combineDaPuppies = false;
                      } else {
-                        for (int dl = 0; dl < d; dl++) {
+                        for (int dl = 0; dl < d; ++dl) {
                            if ((bl(dl) > ah(dl)) || (bh(dl) < al(dl))) {
                               combineDaPuppies = false;
                               break;
@@ -452,7 +483,7 @@ BoxContainer::simplify()
                   const Index& bh = tryMe.upper();
                   Index il = andMe.lower();
                   Index ih = andMe.upper();
-                  for (int dl = 0; dl < d; dl++) {
+                  for (int dl = 0; dl < d; ++dl) {
                      if (il(dl) < bl(dl)) {
                         il(dl) = bl(dl);
                      }
@@ -1252,7 +1283,7 @@ BoxContainer::burstBoxes(
 
    // Break bursty region against solid region along low directions first
 
-   for (int d = 0; d < dimension; d++) {
+   for (int d = 0; d < dimension; ++d) {
       if (bursth(d) > solidh(d)) {
          Index newl = burstl;
          newl(d) = solidh(d) + 1;
@@ -1299,7 +1330,7 @@ BoxContainer::burstBoxes(
 
    // Break bursty region against solid region along low directions first
 
-   for (int d = 0; d < direction; d++) {
+   for (int d = 0; d < direction; ++d) {
       if (bursth(d) > solidh(d)) {
          Index newl = burstl;
          newl(d) = solidh(d) + 1;
@@ -1835,6 +1866,29 @@ BoxContainer::findOverlapBoxes(
                             include_singularity_block_neighbors); 
 }
 
+void
+BoxContainer::findOverlapBoxes(
+   std::vector<const Box*>& overlap_boxes,
+   const Box& box,
+   const IntVector& refinement_ratio,
+   bool include_singularity_block_neighbors) const
+{
+   if (isEmpty()) {
+      return;
+   }
+
+   if (!d_tree) {
+      TBOX_ERROR("Must call makeTree before calling findOverlapBoxes with refinement ratio argument."
+         << std::endl);
+   }
+
+   d_tree->findOverlapBoxes(overlap_boxes,
+                            box,
+                            refinement_ratio,
+                            include_singularity_block_neighbors);
+}
+
+
 
 bool
 BoxContainer::hasOverlap(
@@ -1980,6 +2034,4 @@ BoxContainer::BoxContainerConstIterator::~BoxContainerConstIterator()
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
 #endif

@@ -17,6 +17,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/pdat/CellOverlap.h"
+#include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -32,6 +33,10 @@ namespace pdat {
 
 template<class TYPE>
 const int CellData<TYPE>::PDAT_CELLDATA_VERSION = 1;
+
+template<class TYPE>
+boost::shared_ptr<tbox::Timer> CellData<TYPE>::t_copy;
+
 
 /*
  *************************************************************************
@@ -76,6 +81,9 @@ CellData<TYPE>::CellData(
    TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
+
+   t_copy = tbox::TimerManager::getManager()->
+      getTimer("pdat::CellData::copy");
 
    d_data.reset(new ArrayData<TYPE>(getGhostBox(), depth));
 }
@@ -209,6 +217,7 @@ CellData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
+   t_copy->start();
    const CellData<TYPE>* t_src = dynamic_cast<const CellData<TYPE> *>(&src);
 
    const CellOverlap* t_overlap = dynamic_cast<const CellOverlap *>(&overlap);
@@ -225,6 +234,7 @@ CellData<TYPE>::copy(
          copyWithRotation(*t_src, *t_overlap);
       }
    }
+   t_copy->stop();
 }
 
 template<class TYPE>
@@ -306,7 +316,7 @@ CellData<TYPE>::copyWithRotation(
             hier::Transformation::rotateIndex(src_index, back_rotate);
             src_index += back_shift;
 
-            for (int d = 0; d < depth; d++) {
+            for (int d = 0; d < depth; ++d) {
                (*d_data)(dst_index, d) = (*src.d_data)(src_index, d);
             }
          }
@@ -438,7 +448,7 @@ CellData<TYPE>::packWithRotation(
 
       if (!copybox.empty()) {
 
-         for (int d = 0; d < depth; d++) {
+         for (int d = 0; d < depth; ++d) {
             CellData<double>::iterator ciend(CellGeometry::end(copybox));
             for (CellData<double>::iterator ci(CellGeometry::begin(copybox));
                  ci != ciend; ++ci) {
@@ -448,7 +458,7 @@ CellData<TYPE>::packWithRotation(
                src_index += back_shift;
 
                buffer[i] = (*d_data)(src_index, d);
-               i++;
+               ++i;
             }
          }
       }
@@ -539,7 +549,7 @@ void CellData<TYPE>::unpackStreamAndSum(
       t_overlap->getDestinationBoxContainer() );
    const hier::IntVector& src_offset( t_overlap->getSourceOffset() );
    for (hier::BoxContainer::const_iterator dst_box(dst_boxes.begin());
-        dst_box != dst_boxes.end(); dst_box++) {
+        dst_box != dst_boxes.end(); ++dst_box) {
       const hier::Box intersect( *dst_box * d_data->getBox() );
       if (!intersect.empty()) {
          d_data->unpackStreamAndSum( stream, intersect, src_offset );
@@ -607,7 +617,7 @@ CellData<TYPE>::print(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   for (int d = 0; d < d_depth; d++) {
+   for (int d = 0; d < d_depth; ++d) {
       os << "Array depth = " << d << std::endl;
       print(box, d, os, prec);
    }

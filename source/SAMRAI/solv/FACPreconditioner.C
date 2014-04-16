@@ -7,10 +7,6 @@
  * Description:   FAC algorithm for solving linear equations on a hierarchy
  *
  ************************************************************************/
-
-#ifndef included_solv_FACPreconditioner_C
-#define included_solv_FACPreconditioner_C
-
 #include "SAMRAI/math/HierarchyDataOpsManager.h"
 #include "SAMRAI/solv/FACPreconditioner.h"
 #include "SAMRAI/tbox/Timer.h"
@@ -223,7 +219,7 @@ FACPreconditioner::initializeSolverState(
                                << "level.\n");
    }
 #endif
-   for (int ln = d_coarsest_ln; ln <= d_finest_ln; ln++) {
+   for (int ln = d_coarsest_ln; ln <= d_finest_ln; ++ln) {
       if (!d_patch_hierarchy->getPatchLevel(ln)) {
          TBOX_ERROR("FACPreconditioner::initializeSolverState error ..."
             << "\n   object name = " << d_object_name
@@ -873,4 +869,3 @@ FACPreconditioner::setAlgorithmChoice(
 
 }
 }
-#endif

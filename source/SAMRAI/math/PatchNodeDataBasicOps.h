@@ -238,10 +238,10 @@ public:
 private:
    // The following are not implemented:
    PatchNodeDataBasicOps(
-      const PatchNodeDataBasicOps<TYPE>&);
-   void
+      const PatchNodeDataBasicOps&);
+   PatchNodeDataBasicOps&
    operator = (
-      const PatchNodeDataBasicOps<TYPE>&);
+      const PatchNodeDataBasicOps&);
 
    ArrayDataBasicOps<TYPE> d_array_ops;
 };

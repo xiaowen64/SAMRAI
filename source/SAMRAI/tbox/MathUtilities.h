@@ -293,6 +293,18 @@ public:
       const TYPE& width);
 
 private:
+   // Unimplemented default constructor.
+   MathUtilities();
+
+   // Unimplemented copy constructor.
+   MathUtilities(
+      const MathUtilities& other);
+
+   // Unimplemented assignment operator.
+   MathUtilities&
+   operator = (
+      const MathUtilities& rhs);
+
    static TYPE s_zero;
    static TYPE s_one;
 };

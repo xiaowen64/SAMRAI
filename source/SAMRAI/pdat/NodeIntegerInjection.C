@@ -8,10 +8,6 @@
  *                a  mesh.
  *
  ************************************************************************/
-
-#ifndef included_pdat_NodeIntegerInjection_C
-#define included_pdat_NodeIntegerInjection_C
-
 #include "SAMRAI/pdat/NodeIntegerInjection.h"
 
 #include <float.h>
@@ -93,11 +89,11 @@ NodeIntegerInjection::coarsen(
    const hier::IntVector& ratio) const
 {
    boost::shared_ptr<NodeData<int> > fdata(
-      fine.getPatchData(src_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<NodeData<int>, hier::PatchData>(
+         fine.getPatchData(src_component)));
    boost::shared_ptr<NodeData<int> > cdata(
-      coarse.getPatchData(dst_component),
-      BOOST_CAST_TAG);
+      BOOST_CAST<NodeData<int>, hier::PatchData>(
+         coarse.getPatchData(dst_component)));
 
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
@@ -112,7 +108,7 @@ NodeIntegerInjection::coarsen(
    const hier::Index ifirstc = coarse_box.lower();
    const hier::Index ilastc = coarse_box.upper();
 
-   for (int d = 0; d < cdata->getDepth(); d++) {
+   for (int d = 0; d < cdata->getDepth(); ++d) {
       if (fine.getDim() == tbox::Dimension(1)) {
          SAMRAI_F77_FUNC(conavgnodeintg1d, CONAVGNODEINTG1D) (ifirstc(0), ilastc(0),
             filo(0), fihi(0),
@@ -149,4 +145,3 @@ NodeIntegerInjection::coarsen(
 
 }
 }
-#endif
