@@ -17,6 +17,7 @@
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/MappingConnector.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
+#include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -1772,6 +1773,94 @@ BalanceUtilities::computeLoadBalanceEfficiency(
  *************************************************************************
  */
 
+void
+BalanceUtilities::findSmallBoxesInPostbalance(
+   std::ostream &co,
+   const std::string &border,
+   const hier::MappingConnector &post_to_pre,
+   const hier::IntVector &min_width,
+   size_t min_cells )
+{
+   const hier::BoxLevel &post = post_to_pre.getBase();
+   const hier::BoxContainer &post_boxes = post.getBoxes();
+
+   int local_new_min_count = 0;
+   for ( hier::BoxContainer::const_iterator bi=post_boxes.begin(); bi!=post_boxes.end(); ++bi ) {
+
+      const hier::Box &post_box = *bi;
+
+      if ( post_box.numberCells() >= min_width && static_cast<size_t>(post_box.size()) >= min_cells ) {
+         continue;
+      }
+
+      if ( post_to_pre.hasNeighborSet(post_box.getBoxId()) ) {
+         hier::BoxContainer pre_neighbors;
+         post_to_pre.getLocalNeighbors(pre_neighbors);
+
+         bool small_width = true;
+         bool small_cells = true;
+         for ( hier::BoxContainer::const_iterator na=pre_neighbors.begin();
+               na!=pre_neighbors.end(); ++na ) {
+            if ( !(na->numberCells() >= min_width) ) {
+               small_width = false;
+            }
+            if ( !(static_cast<size_t>(na->size()) >= min_cells) ) {
+               small_cells = false;
+            }
+         }
+         if ( small_width || small_cells ) {
+            ++local_new_min_count;
+            co << border << "Post-box small_width=" << small_width
+               << " small_cells=" << small_cells
+               << ": " << post_box
+               << post_box.numberCells() << '|' << post_box.size()
+               << " from " << pre_neighbors.format(border,2);
+         }
+
+      }
+
+   }
+
+   int global_new_min_count = local_new_min_count;
+   post.getMPI().AllReduce( &global_new_min_count, 1, MPI_SUM );
+
+   co << border
+      << "  Total of " << local_new_min_count << " / "
+      << global_new_min_count << " new minimums." << std::endl;
+
+   return;
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+
+void
+BalanceUtilities::findSmallBoxesInPostbalance(
+   std::ostream &co,
+   const std::string &border,
+   const hier::BoxLevel &post,
+   const hier::BoxLevel &pre,
+   const hier::IntVector &min_width,
+   size_t min_cells )
+{
+   hier::MappingConnector post_to_pre( post, pre, hier::IntVector::getZero(post.getDim()) );
+   hier::OverlapConnectorAlgorithm oca;
+   oca.findOverlaps(post_to_pre);
+   findSmallBoxesInPostbalance( co, border, post_to_pre, min_width, min_cells );
+   return;
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+
 bool
 BalanceUtilities::compareLoads(
    int flags[],
@@ -1796,6 +1885,8 @@ BalanceUtilities::compareLoads(
       ( new_diff > cur_diff ? -1 : 0 );
 
    flags[2] = flags[0] != 0 ? flags[0] : ( flags[1] != 0 ? flags[1] : 0 );
+
+   flags[3] = (new_load <= high_load && new_load >= low_load);
 
    return flags[2] == 1;
 }

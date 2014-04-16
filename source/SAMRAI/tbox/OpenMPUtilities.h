@@ -39,6 +39,34 @@
 #define TBOX_omp_get_num_threads() omp_get_num_threads()
 #define TBOX_omp_get_max_threads() omp_get_max_threads()
 
+#define TBOX_IF_SINGLE_THREAD(CODE) {	\
+   if ( omp_get_num_threads() == 1 ) {	\
+      CODE	\
+   }	\
+}
+
+#define TBOX_IF_MULTI_THREAD(CODE) {	\
+   if ( omp_get_num_threads() > 1 ) {	\
+      CODE	\
+   }	\
+}
+
+#define TBOX_IF_IN_PARALLEL_REGION(CODE) {	\
+   if ( omp_in_parallel() ) {                \
+      CODE	\
+   }	\
+}
+
+#define TBOX_IF_NOT_IN_PARALLEL_REGION(CODE) {	\
+   if ( !omp_in_parallel() ) {                \
+      CODE	\
+   }	\
+}
+
+#define TBOX_IF_HAVE_OPENMP(CODE) { CODE }
+
+#define TBOX_IF_NOT_HAVE_OPENMP(CODE)
+
 #else
 
 #define TBOX_omp_version 0
@@ -53,6 +81,18 @@
 
 #define TBOX_omp_get_num_threads() (1)
 #define TBOX_omp_get_max_threads() (1)
+
+#define TBOX_IF_SINGLE_THREAD(CODE) { CODE }
+
+#define TBOX_IF_MULTI_THREAD(CODE)
+
+#define TBOX_IF_IN_PARALLEL_REGION(CODE)
+
+#define TBOX_IF_NOT_IN_PARALLEL_REGION(CODE) { CODE }
+
+#define TBOX_IF_HAVE_OPENMP(CODE)
+
+#define TBOX_IF_NOT_HAVE_OPENMP(CODE) { CODE }
 
 #endif
 

@@ -28,6 +28,7 @@ namespace SAMRAI {
 namespace hier {
 
 boost::shared_ptr<tbox::Timer> BoxTree::t_build_tree[SAMRAI::MAX_DIM_VAL];
+boost::shared_ptr<tbox::Timer> BoxTree::t_search[SAMRAI::MAX_DIM_VAL];
 unsigned int BoxTree::s_num_build[SAMRAI::MAX_DIM_VAL] =
 { 0 };
 unsigned int BoxTree::s_num_generate[SAMRAI::MAX_DIM_VAL]
@@ -93,7 +94,9 @@ BoxTree::BoxTree(
    s_max_sorted_box[d_dim.getValue() - 1] = tbox::MathUtilities<int>::Max(
          s_max_sorted_box[d_dim.getValue() - 1],
          static_cast<int>(boxes.size()));
+#ifndef _OPENMP
    t_build_tree[d_dim.getValue() - 1]->start();
+#endif
    min_number = (min_number < 1) ? 1 : min_number;
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -194,7 +197,9 @@ BoxTree::BoxTree(
          static_cast<unsigned int>(d_boxes.size());
    }
 
+#ifndef _OPENMP
    t_build_tree[d_dim.getValue() - 1]->stop();
+#endif
 }
 
 BoxTree::BoxTree(
@@ -210,12 +215,16 @@ BoxTree::BoxTree(
    s_max_sorted_box[d_dim.getValue() - 1] = tbox::MathUtilities<int>::Max(
          s_max_sorted_box[d_dim.getValue() - 1],
          static_cast<int>(boxes.size()));
+#ifndef _OPENMP
    t_build_tree[d_dim.getValue() - 1]->start();
+#endif
    min_number = (min_number < 1) ? 1 : min_number;
 
    privateGenerateTree(min_number);
 
+#ifndef _OPENMP
    t_build_tree[d_dim.getValue() - 1]->stop();
+#endif
 }
 
 
@@ -446,6 +455,9 @@ BoxTree::findOverlapBoxes(
    if (!recursive_call) {
       ++s_num_search[d_dim.getValue() - 1];
       num_found_box = static_cast<int>(overlap_boxes.size());
+#ifndef _OPENMP
+      t_search[d_dim.getValue() - 1]->start();
+#endif
    }
 
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
@@ -475,6 +487,9 @@ BoxTree::findOverlapBoxes(
    }
 
    if (!recursive_call) {
+#ifndef _OPENMP
+      t_search[d_dim.getValue() - 1]->stop();
+#endif
       num_found_box = static_cast<int>(overlap_boxes.size())
          - num_found_box;
       s_max_found_box[d_dim.getValue() - 1] =
@@ -499,6 +514,9 @@ BoxTree::findOverlapBoxes(
    if (!recursive_call) {
       ++s_num_search[d_dim.getValue() - 1];
       num_found_box = static_cast<int>(overlap_boxes.size());
+#ifndef _OPENMP
+      t_search[d_dim.getValue() - 1]->start();
+#endif
    }
 
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
@@ -539,6 +557,9 @@ BoxTree::findOverlapBoxes(
 
 
    if (!recursive_call) {
+#ifndef _OPENMP
+      t_search[d_dim.getValue() - 1]->stop();
+#endif
       num_found_box = static_cast<int>(overlap_boxes.size()) - num_found_box;
       s_max_found_box[d_dim.getValue() - 1] =
          tbox::MathUtilities<int>::Max(s_max_found_box[d_dim.getValue() - 1],
@@ -558,6 +579,8 @@ BoxTree::initializeCallback()
       const std::string dim_str(tbox::Utilities::intToString(i + 1));
       t_build_tree[i] = tbox::TimerManager::getManager()->
          getTimer(std::string("hier::BoxTree::build_tree[") + dim_str + "]");
+      t_search[i] = tbox::TimerManager::getManager()->
+         getTimer(std::string("hier::BoxTree::search[") + dim_str + "]");
    }
 }
 
@@ -572,6 +595,7 @@ BoxTree::finalizeCallback()
 {
    for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
       t_build_tree[i].reset();
+      t_search[i].reset();
    }
 }
 

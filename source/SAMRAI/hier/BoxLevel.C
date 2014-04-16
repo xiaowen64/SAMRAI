@@ -1111,6 +1111,7 @@ void
 BoxLevel::addBox(
    const Box& box)
 {
+   TBOX_ASSERT( box.getLocalId().isValid() );
    if (locked()) {
       TBOX_ERROR("BoxLevel::addBox(): operating on locked BoxLevel."
          << std::endl);

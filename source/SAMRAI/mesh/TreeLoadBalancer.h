@@ -12,10 +12,10 @@
 #define included_mesh_TreeLoadBalancer
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/mesh/BalanceUtilities.h"
+#include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
-#include "SAMRAI/mesh/BoxTransitSet.h"
+#include "SAMRAI/mesh/TransitLoad.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
 #include "SAMRAI/tbox/CommGraphWriter.h"
@@ -23,15 +23,12 @@
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/RankGroup.h"
 #include "SAMRAI/tbox/RankTreeStrategy.h"
-#include "SAMRAI/tbox/Statistic.h"
-#include "SAMRAI/tbox/Statistician.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <vector>
-#include <set>
 
 namespace SAMRAI {
 namespace mesh {
@@ -84,7 +81,7 @@ namespace mesh {
  *   <tr>
  *     <td>flexible_load_tolerance</td>
  *     <td>double</td>
- *     <td>0.0</td>
+ *     <td>0.05</td>
  *     <td>0-1</td>
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
@@ -92,7 +89,7 @@ namespace mesh {
  *   <tr>
  *     <td>max_cycle_spread_procs</td>
  *     <td>int</td>
- *     <td>1000000</td>
+ *     <td>500</td>
  *     <td> > 1</td>
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
@@ -101,6 +98,10 @@ namespace mesh {
  *
  * @internal The following are developer inputs.  Defaults listed
  * in parenthesis:
+ *
+ * @internal DEV_voucher_mode (false)
+ * bool
+ * Whether to use experimental voucher mode.
  *
  * @internal DEV_allow_box_breaking (true)
  * bool
@@ -255,12 +256,7 @@ public:
     */
    void
    printStatistics(
-      std::ostream& output_stream = tbox::plog) const
-   {
-      BalanceUtilities::gatherAndReportLoadBalance(d_load_stat,
-         tbox::SAMRAI_MPI::getSAMRAIWorld(),
-         output_stream);
-   }
+      std::ostream& output_stream = tbox::plog) const;
 
 
    /*!
@@ -324,7 +320,10 @@ private:
 
    public:
       //! @brief Constructor.
-      BranchData( const PartitioningParams &pparams );
+      BranchData( const PartitioningParams &pparams,
+                  const TransitLoad &transit_load_prototype );
+      //! @brief Copy constructor.
+      BranchData( const BranchData &other );
 
       /*!
        * @brief Set the starting ideal, current and upper limit of the
@@ -377,13 +376,13 @@ private:
       //! @name Information on work shipped
       //! @brief Get amount of work shipped.
       LoadType getShipmentLoad() const
-         { return d_shipment.getSumLoad(); }
+         { return d_shipment->getSumLoad(); }
       //! @brief Get count of work shipped.
       size_t getShipmentPackageCount() const
-         { return d_shipment.getNumberOfItems(); }
+         { return d_shipment->getNumberOfItems(); }
       //! @brief Get count of originators of the work shipped.
       size_t getShipmentOriginatorCount() const
-         { return d_shipment.getNumberOfOriginatingProcesses(); }
+         { return d_shipment->getNumberOfOriginatingProcesses(); }
       //@}
 
 
@@ -395,13 +394,13 @@ private:
        */
       LoadType
       adjustOutboundLoad(
-         BoxTransitSet& reserve,
+         TransitLoad& reserve,
          LoadType ideal_load,
          LoadType low_load,
          LoadType high_load );
 
       //! @brief Move inbound load to the given reserve container.
-      void moveInboundLoadToReserve( BoxTransitSet &reserve );
+      void moveInboundLoadToReserve( TransitLoad &reserve );
 
       /*!
        * @brief Incorporate child branch into this branch.
@@ -493,7 +492,7 @@ private:
        * If this object is for the local process, shipment is to or
        * from the process's *parent*.
        */
-      BoxTransitSet d_shipment;
+      boost::shared_ptr<TransitLoad> d_shipment;
 
       /*!
        * @brief Whether branch expects its parent to send work down.
@@ -597,12 +596,12 @@ private:
     * @brief Distribute load across the rank group using the tree
     * algorithm.
     *
-    * Initial work is give in unbalanced_box_level.  Put the final
+    * Initial work is given in unbalanced_box_level.  Put the final
     * local work in balanced_work.
     */
    void
    distributeLoadAcrossRankGroup(
-      BoxTransitSet &balanced_work,
+      TransitLoad &balanced_work,
       const hier::BoxLevel &unbalanced_box_level,
       const tbox::RankGroup& rank_group,
       double group_sum_load ) const;
@@ -692,6 +691,9 @@ private:
    //! @brief Max number of processes the a single process may spread load to per cycle.
    int d_max_cycle_spread_procs;
 
+   //! @brief Whether to move load via vouchers.
+   bool d_voucher_mode;
+
    //! @brief Whether to allow box breaking.
    bool d_allow_box_breaking;
 
@@ -718,6 +720,11 @@ private:
     * See input parameter "flexible_load_tolerance".
     */
    double d_flexible_load_tol;
+
+   /*!
+    * @brief Metadata operations with timers set according to this object.
+    */
+   hier::MappingConnectorAlgorithm d_mca;
 
    //@{
    //! @name Data shared with private methods during balancing.
@@ -757,11 +764,13 @@ private:
    boost::shared_ptr<tbox::Timer> t_compute_global_load;
    boost::shared_ptr<tbox::Timer> t_compute_tree_load;
    std::vector<boost::shared_ptr<tbox::Timer> > t_compute_tree_load_for_cycle;
+   std::vector<boost::shared_ptr<tbox::Timer> > t_load_balance_for_cycle;
    boost::shared_ptr<tbox::Timer> t_send_load_to_children;
    boost::shared_ptr<tbox::Timer> t_send_load_to_parent;
    boost::shared_ptr<tbox::Timer> t_get_load_from_children;
    boost::shared_ptr<tbox::Timer> t_get_load_from_parent;
    boost::shared_ptr<tbox::Timer> t_post_load_distribution_barrier;
+   boost::shared_ptr<tbox::Timer> t_assign_to_local_and_populate_maps;
    boost::shared_ptr<tbox::Timer> t_report_loads;
    boost::shared_ptr<tbox::Timer> t_local_load_moves;
    boost::shared_ptr<tbox::Timer> t_finish_sends;
@@ -782,10 +791,6 @@ private:
 
    // Extra checks independent of optimization/debug.
    char d_print_steps;
-   char d_print_pop_steps;
-   char d_print_break_steps;
-   char d_print_swap_steps;
-   char d_print_edge_steps;
    char d_check_connectivity;
    char d_check_map;
 

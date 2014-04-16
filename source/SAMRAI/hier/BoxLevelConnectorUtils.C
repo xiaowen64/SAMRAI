@@ -1076,6 +1076,8 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
  * Given a mapping from an original BoxLevel to parts to be
  * removed, construct the remainder BoxLevel and the mapping from
  * the original to a remainder.
+ *
+ * This method does no communication.
  *************************************************************************
  */
 

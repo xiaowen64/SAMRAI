@@ -26,7 +26,7 @@ namespace tbox {
 /*!
  * @brief Stage multiple non-blocking MPI communications so that codes
  * waiting for them to complete can advance as their respective MPI
- * requests are completed.
+ * communication operations are completed.
  *
  * An AsyncCommStage object manages multiple non-blocking MPI
  * communications carried out by AsyncCommStage::Member objects.
@@ -420,7 +420,8 @@ private:
     * queue.
     *
     * Members that completed their communication operation through
-    * advanceAny(), advanceSome() or advanceAll() can be accessed
+    * advanceAny(), advanceSome() or advanceAll(), and members manually
+    * pushed onto the queue by pushToCompletionQueue(), can be accessed
     * through popCompletionQueue().  This method gives the size of
     * that queue.
     */

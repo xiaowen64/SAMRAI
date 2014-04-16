@@ -60,6 +60,7 @@ BergerRigoutsos {
    sort_output_nodes = TRUE
    efficiency_tolerance = 0.80
    combine_efficiency = 0.80
+   DEV_build_zero_width_connector = TRUE
    DEV_log_node_history = FALSE
    DEV_log_cluster_summary = FALSE
    DEV_log_cluster = FALSE
@@ -70,7 +71,7 @@ BergerRigoutsos {
 
 TreeLoadBalancer {
   DEV_report_load_balance = FALSE // Reported in main
-  max_cycle_spread_ratio = 1000000
+  max_cycle_spread_procs = 1000000
   flexible_load_tolerance = 0.05
 
   // Debugging options

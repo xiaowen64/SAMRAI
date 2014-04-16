@@ -44,6 +44,10 @@ using namespace std;
 #include "MblkHyperbolicLevelIntegrator.h"
 #include "MblkLinAdv.h"
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 // Classes for run-time plotting and autotesting.
 
 #if (TESTING == 1)
@@ -257,6 +261,14 @@ int main(
       } else {
          tbox::PIO::logOnlyNodeZero(log_file_name);
       }
+
+#ifdef _OPENMP
+      tbox::plog << "Compiled with OpenMP version " << _OPENMP
+                 << ".  Running with " << omp_get_max_threads() << " threads."
+                 << std::endl;
+#else
+      tbox::plog << "Compiled without OpenMP.\n";
+#endif
 
       int viz_dump_interval = 0;
       if (main_db->keyExists("viz_dump_interval")) {

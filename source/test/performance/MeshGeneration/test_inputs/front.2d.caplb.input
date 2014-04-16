@@ -36,6 +36,8 @@ Main {
 
    load_balance = TRUE, TRUE
 
+   write_comm_graph = FALSE
+
    mesh_generator_name = "SinusoidalFrontGenerator"
 
    SinusoidalFrontGenerator {
@@ -55,6 +57,7 @@ TileClustering {
   coalesce_boxes = FALSE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
+  DEV_debug_checks = TRUE
 }
 
 

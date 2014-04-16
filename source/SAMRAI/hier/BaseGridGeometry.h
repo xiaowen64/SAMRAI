@@ -1419,6 +1419,7 @@ private:
    static boost::shared_ptr<tbox::Timer> t_set_geometry_data_on_patches;
    static boost::shared_ptr<tbox::Timer> t_compute_boundary_boxes_on_level;
    static boost::shared_ptr<tbox::Timer> t_get_boundary_boxes;
+   static boost::shared_ptr<tbox::Timer> t_adjust_multiblock_patch_level_boundaries;
 
    /*
     * Static initialization and cleanup handler.

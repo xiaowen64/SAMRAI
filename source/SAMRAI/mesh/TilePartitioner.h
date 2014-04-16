@@ -13,6 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
+#include "SAMRAI/mesh/CascadePartitioner.h"
 #include "SAMRAI/mesh/GraphLoadBalancer.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
@@ -53,6 +54,9 @@ namespace mesh {
  *   - @b TreeLoadBalancer { ... }
  *   Input for internal TreeLoadBalancer, required if internal_load_balancer = "TreeLoadBalancer".
  *
+ *   - @b CascadePartitioner { ... }
+ *   Input for internal CascadePartitioner, required if internal_load_balancer = "CascadePartitioner".
+ *
  *   - @b ChopAndPackLoadBalancer { ... }
  *   Input for internal ChopAndPackLoadBalancer, required if internal_load_balancer = "ChopAndPackLoadBalancer".
  *
@@ -78,7 +82,7 @@ namespace mesh {
  *     <td>internal_load_balancer</td>
  *     <td>string</td>
  *     <td>"TreeLoadBalancer"</td>
- *     <td>"TreeLoadBalancer", "ChopAndPackLoadBalancer"</td>
+ *     <td>"TreeLoadBalancer", "ChopAndPackLoadBalancer", "CascadePartitioner"</td>
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
@@ -92,6 +96,14 @@ namespace mesh {
  *   </tr>
  *   <tr>
  *     <td>ChopAndPackLoadBalancer</td>
+ *     <td>database</td>
+ *     <td>NULL</td>
+ *     <td></td>
+ *     <td>conditionally req</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>CascadePartitioner</td>
  *     <td>database</td>
  *     <td>NULL</td>
  *     <td></td>
@@ -234,12 +246,14 @@ private:
 
    ChopAndPackLoadBalancer d_cap;
    TreeLoadBalancer d_tlb;
+   CascadePartitioner d_cp;
    GraphLoadBalancer d_graphlb;
 
    /*
     * @brief Which internal load balancer to use.
     *
     * 'c' = ChopAndPackLoadBalancer
+    * 'd' = CascadePartitioner
     * 't' = TreeLoadBalancer
     * 'g' = GraphLoadBalancer
     */

@@ -447,6 +447,22 @@ public:
    }
 
    /*!
+    * @brief When @c print_steps is true, print what the code is
+    * doing.
+    *
+    * @note Step printing may be expensive and and is meant mainly for
+    * debugging.
+    *
+    * @param[in] print_steps
+    */
+   void
+   setPrintSteps(
+      bool print_steps)
+   {
+      d_print_steps = print_steps;
+   }
+
+   /*!
     * @brief Setup names of timers.
     *
     * By default, timers are named
@@ -707,6 +723,7 @@ private:
 
    //@}
 
+   bool d_print_steps;
    bool d_barrier_before_communication;
    bool d_sanity_check_method_preconditions;
    bool d_sanity_check_method_postconditions;

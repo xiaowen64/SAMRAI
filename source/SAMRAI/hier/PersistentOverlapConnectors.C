@@ -23,6 +23,7 @@ char PersistentOverlapConnectors::s_check_created_connectors('\0');
 char PersistentOverlapConnectors::s_check_accessed_connectors('\0');
 bool PersistentOverlapConnectors::s_create_empty_neighbor_containers(false);
 char PersistentOverlapConnectors::s_implicit_connector_creation_rule('w');
+size_t PersistentOverlapConnectors::s_num_implicit_global_searches(0);
 
 /*
  ************************************************************************
@@ -456,11 +457,13 @@ PersistentOverlapConnectors::doFindConnectorWork(
                     << "PersistentOverlapConnectors input database.");
       }
       else if (create) {
+         ++s_num_implicit_global_searches;
          if (warn) {
             TBOX_WARNING("PersistentOverlapConnectors::findConnector is resorting\n"
                          << "to a global search to find overlaps between "
                          << &d_my_box_level << " and " << &head << ".\n"
-                         << "This relies on unscalable data or triggers unscalable operations.\n");
+                         << "This relies on unscalable data or triggers unscalable operations.\n"
+                         << "Number of implicit global searches: " << s_num_implicit_global_searches << '\n');
          }
 
          createConnector( head, min_connector_width );

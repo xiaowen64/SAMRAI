@@ -2468,7 +2468,7 @@ HyperbolicLevelIntegrator::printStatistics(
          }
          s
          <<
-         " Seq#  SimTime       C-Sum      C-Avg      C-Min   ->    C-Max  C-NormDiff  B-Sum B-Avg B-Min -> B-Max B-NormDiff C/B-Avg\n";
+         " Seq#  SimTime       C-Sum      C-Avg      C-Min   ->    C-Max  C-MaxNorm   B-Sum B-Avg B-Min -> B-Max B-MaxNorm  C/B-Avg\n";
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:1572)
 #endif
@@ -2479,14 +2479,16 @@ HyperbolicLevelIntegrator::printStatistics(
                      ), sn);
             const double cmin = statn->getGlobalProcStatMin(cstat.getInstanceId(
                      ), sn);
-            const double cdiffnorm = cmax != 0 ? 1.0 - cmin / cmax : 0;
+            const double cavg = csum/mpi.getSize();
+            const double cmaxnorm = cavg != 0 ? cmax/cavg - 1: 0;
             const double bsum = statn->getGlobalProcStatSum(bstat.getInstanceId(
                      ), sn);
             const double bmax = statn->getGlobalProcStatMax(bstat.getInstanceId(
                      ), sn);
             const double bmin = statn->getGlobalProcStatMin(bstat.getInstanceId(
                      ), sn);
-            const double bdiffnorm = bmax != 0 ? 1.0 - bmin / bmax : 0;
+            const double bavg = bsum/mpi.getSize();
+            const double bmaxnorm = bavg != 0 ? bmax/bavg - 1: 0;
             const double stime = statn->getGlobalProcStatMin(
                   tstat.getInstanceId(),
                   sn);
@@ -2499,14 +2501,14 @@ HyperbolicLevelIntegrator::printStatistics(
               << std::setw(10) << csum / mpi.getSize() << " "
               << std::setw(10) << cmin << " -> "
               << std::setw(10) << cmax
-              << "  " << std::setw(4) << std::setprecision(4) << cdiffnorm
+              << "  " << std::setw(4) << std::setprecision(4) << cmaxnorm
               << "  "
               << std::fixed << std::setprecision(0)
               << std::setw(6) << bsum << " "
               << std::setw(5) << bsum / mpi.getSize() << " "
               << std::setw(5) << bmin << "  ->"
               << std::setw(5) << bmax
-              << "   " << std::setw(4) << std::setprecision(4) << bdiffnorm
+              << "   " << std::setw(4) << std::setprecision(4) << bmaxnorm
               << std::setw(10) << std::setprecision(0)
               << (bsum != 0 ? csum / bsum : 0)
               << std::endl;

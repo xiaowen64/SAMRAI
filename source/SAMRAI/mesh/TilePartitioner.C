@@ -49,6 +49,10 @@ TilePartitioner::TilePartitioner(
          database ? database->getDatabaseWithDefault("TreeLoadBalancer",
                                                      boost::shared_ptr<tbox::Database>())
          : boost::shared_ptr<tbox::Database>()),
+   d_cp(dim, name + ":CascadePartitioner",
+         database ? database->getDatabaseWithDefault("CascadePartitioner",
+                                                     boost::shared_ptr<tbox::Database>())
+         : boost::shared_ptr<tbox::Database>()),
    d_graphlb(dim, name + ":GraphLoadBalancer",
          database ? database->getDatabaseWithDefault("GraphLoadBalancer",
                                                      boost::shared_ptr<tbox::Database>())
@@ -167,6 +171,19 @@ TilePartitioner::loadBalanceBoxLevel(
    hier::IntVector tile_cut_factor = d_box_size;
 
    switch (d_internal_load_balancer) {
+   case 'd':
+      d_cp.loadBalanceBoxLevel(
+         balance_box_level,
+         balance_to_anchor,
+         hierarchy,
+         level_number,
+         min_size,
+         max_size,
+         domain_box_level,
+         bad_interval,
+         tile_cut_factor,
+         rank_group);
+      break;
    case 'g':
       d_graphlb.loadBalanceBoxLevel(
          balance_box_level,
@@ -196,7 +213,7 @@ TilePartitioner::loadBalanceBoxLevel(
    case 'c':
       /*
        * TODO: There may be a bug in the ChopAndPackLoadBalancer.
-       * Its cuts cann fall off the tile boundaries.
+       * Its cuts can fall off the tile boundaries.
        */
       TBOX_WARNING("TilePartitioner: Warning: using the \"ChopAndPackLoadBalancer\"\n"
                    <<"internal load balancer may produce cuts that fall off of\n"
@@ -263,15 +280,25 @@ TilePartitioner::getFromInput(
          std::string internal_load_balancer =
             database->getString("internal_load_balancer");
 
-         if ( internal_load_balancer != "ChopAndPackLoadBalancer" &&
-              internal_load_balancer != "TreeLoadBalancer" &&
-              internal_load_balancer != "GraphLoadBalancer" ) {
+         if ( internal_load_balancer == "ChopAndPackLoadBalancer" ) {
+            d_internal_load_balancer = 'c';
+         }
+         else if ( internal_load_balancer == "CascadePartitioner" ) {
+            d_internal_load_balancer = 'd';
+         }
+         else if ( internal_load_balancer == "TreeLoadBalancer" ) {
+            d_internal_load_balancer = 't';
+         }
+         else if ( internal_load_balancer == "GraphLoadBalancer" ) {
+            d_internal_load_balancer = 'g';
+         }
+         else {
             TBOX_ERROR("TilePartitioner::getFromInput error:\n"
                        <<"internal_load_balancer must be set to\n"
-                       <<"\"ChopAndPackLoadBalancer\" or \"TreeLoadBalancer\".\n");
+                       <<"\"ChopAndPackLoadBalancer\" or \"TreeLoadBalancer\" or \"CascadePartitioner\".\n"
+                       <<"You specified \"" << internal_load_balancer << "\".");
          }
 
-         d_internal_load_balancer = char(tolower(internal_load_balancer[0]));
       }
 
       d_print_steps = database->getBoolWithDefault("DEV_print_steps", d_print_steps);

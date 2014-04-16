@@ -738,7 +738,11 @@ MappingConnectorAlgorithm::privateModify_checkParameters(
       size_t nerrs = old_to_new.findMappingErrors();
       if (nerrs != 0) {
          TBOX_ERROR("MappingConnectorUtil::privateModify: found errors in\n"
-            << "mapping Connector." << std::endl);
+                    << "mapping Connector.\n"
+                    << "old:\n" << old_to_new.getBase().format("OLD: ")
+                    << "new:\n" << old_to_new.getHead().format("NEW: ")
+                    << "old_to_new:\n" << old_to_new.format("O->N: ")
+                    << std::endl);
       }
    }
 }

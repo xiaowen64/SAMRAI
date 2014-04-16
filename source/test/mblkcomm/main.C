@@ -34,6 +34,10 @@
 
 #include "boost/shared_ptr.hpp"
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 using namespace SAMRAI;
 
 /*
@@ -218,6 +222,14 @@ int main(
       } else {
          tbox::PIO::logOnlyNodeZero(log_file_name);
       }
+
+#ifdef _OPENMP
+      tbox::plog << "Compiled with OpenMP version " << _OPENMP
+                 << ".  Running with " << omp_get_max_threads() << " threads."
+                 << std::endl;
+#else
+      tbox::plog << "Compiled without OpenMP.\n";
+#endif
 
       int ntimes_run = 1;
       if (main_db->keyExists("ntimes_run")) {

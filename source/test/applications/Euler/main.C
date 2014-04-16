@@ -59,6 +59,10 @@ using namespace std;
 
 #include <sys/stat.h>
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 // Classes for autotesting.
 
 #if (TESTING == 1)
@@ -288,6 +292,14 @@ int main(
       } else {
          tbox::PIO::logOnlyNodeZero(log_filename);
       }
+
+#ifdef _OPENMP
+      tbox::plog << "Compiled with OpenMP version " << _OPENMP
+                 << ".  Running with " << omp_get_max_threads() << " threads."
+                 << std::endl;
+#else
+      tbox::plog << "Compiled without OpenMP.\n";
+#endif
 
       int viz_dump_interval = 0;
       if (main_db->keyExists("viz_dump_interval")) {
@@ -666,6 +678,9 @@ int main(
 #endif
 
       }
+
+      tbox::plog << "GriddingAlgorithm statistics:\n";
+      gridding_algorithm->printStatistics();
 
       /*
        * Output timer results.

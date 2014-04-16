@@ -296,7 +296,7 @@ TileClustering::findBoxesContainingTags(
                  << "\tNew box_level clustered by TileClustering:\n" << new_box_level->format("\t\t",
                                                                                               2)
                  << "\tTileClustering tag_to_new:\n" << tag_to_new->format("\t\t", 2)
-                 << "\tTileClustering new_to_tag:\n" << new_to_tag->format("\t\t", 2);
+                 << "\tTileClustering new_to_tag:\n" << tag_to_new->getTranspose().format("\t\t", 2);
    }
    if (d_log_cluster_summary) {
       /*
@@ -327,8 +327,8 @@ TileClustering::findBoxesContainingTags(
                  << "-" << new_box_level->getMaxNumberOfBoxes() << "]\n"
                  << "\tTileClustering new_level summary:\n" << new_box_level->format("\t\t",0)
                  << "\tTileClustering new_level statistics:\n" << new_box_level->formatStatistics("\t\t")
-                 << "\tTileClustering new_to_tag summary:\n" << new_to_tag->format("\t\t",0)
-                 << "\tTileClustering new_to_tag statistics:\n" << new_to_tag->formatStatistics("\t\t")
+                 << "\tTileClustering new_to_tag summary:\n" << tag_to_new->getTranspose().format("\t\t",0)
+                 << "\tTileClustering new_to_tag statistics:\n" << tag_to_new->getTranspose().formatStatistics("\t\t")
                  << "\tTileClustering tag_to_new summary:\n" << tag_to_new->format("\t\t",0)
                  << "\tTileClustering tag_to_new statistics:\n" << tag_to_new->formatStatistics("\t\t")
                  << "\n";
@@ -368,6 +368,8 @@ TileClustering::findBoxesContainingTags(
    if (d_barrier_and_time) {
       d_object_timers->t_find_boxes_containing_tags->barrierAndStop();
    }
+
+   return;
 }
 
 
@@ -515,7 +517,7 @@ TileClustering::clusterWholeTiles(
    local_tiles_have_remote_extent = 0;
 
    if (d_print_steps) {
-      tbox::plog << "TileClusteringclusterWholeTiles: creating whole tiles\n";
+      tbox::plog << "TileClustering::clusterWholeTiles: creating whole tiles\n";
    }
 
    for ( int pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
@@ -525,7 +527,7 @@ TileClustering::clusterWholeTiles(
       const hier::BlockId &block_id = patch_box.getBlockId();
 
       if (d_print_steps) {
-         tbox::plog << "TileClusteringclusterWholeTiles: working patch " << patch_box << "\n";
+         tbox::plog << "TileClustering::clusterWholeTiles: working patch " << patch_box << "\n";
       }
 
       TBOX_ASSERT( bound_boxes.begin(block_id) != bound_boxes.end(block_id) );
@@ -537,7 +539,7 @@ TileClustering::clusterWholeTiles(
          BOOST_CAST<pdat::CellData<int>, hier::PatchData>(patch.getPatchData(tag_data_index)));
 
       if (d_print_steps) {
-         tbox::plog << "TileClusteringclusterWholeTiles: making coarsened tags." << std::endl;
+         tbox::plog << "TileClustering::clusterWholeTiles: making coarsened tags." << std::endl;
       }
 
       boost::shared_ptr<pdat::CellData<int> > coarsened_tag_data =
@@ -549,7 +551,7 @@ TileClustering::clusterWholeTiles(
       hier::BoxContainer coalescibles; // Hold space for coalescible tiles.
 
       if (d_print_steps) {
-         tbox::plog << "TileClusteringclusterWholeTiles: processing coarsened tags." << std::endl;
+         tbox::plog << "TileClustering::clusterWholeTiles: processing coarsened tags." << std::endl;
       }
 
       for ( int coarse_offset=0; coarse_offset<num_coarse_cells; ++coarse_offset ) {
@@ -600,7 +602,7 @@ TileClustering::clusterWholeTiles(
 
       if ( d_coalesce_boxes_from_same_patch ) {
          if (d_print_steps) {
-            tbox::plog << "TileClusteringclusterWholeTiles: coalesce tiles." << std::endl;
+            tbox::plog << "TileClustering::clusterWholeTiles: coalesce tiles." << std::endl;
          }
          d_object_timers->t_coalesce->start();
          coalescibles.coalesce();
@@ -608,7 +610,7 @@ TileClustering::clusterWholeTiles(
       }
 
       if (d_print_steps) {
-         tbox::plog << "TileClusteringclusterWholeTiles: creating tiles from coalescibles." << std::endl;
+         tbox::plog << "TileClustering::clusterWholeTiles: creating tiles from coalescibles." << std::endl;
       }
       for ( hier::BoxContainer::iterator bi=coalescibles.begin();
             bi!=coalescibles.end(); ++bi ) {
@@ -1080,8 +1082,6 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
    size_t coarse_tag_count = 0;
 
    const int num_coarse_cells = coarsened_box.size();
-// #pragma omp parallel
-// #pragma omp for schedule(dynamic)
    for ( int offset=0; offset<num_coarse_cells; ++offset ) {
       const pdat::CellIndex coarse_cell_index(coarsened_box.index(offset));
 
@@ -1163,7 +1163,7 @@ TileClustering::coalesceClusters(
 
 
    if ( d_print_steps ) {
-      tbox::plog << "TileClustering coalesced "
+      tbox::plog << "TileClustering::coalesceClusters: coalesced "
                  << tile_box_level.getLocalNumberOfBoxes()
                  << " tiles into " << post_boxes.size() << "\n";
    }
@@ -1269,8 +1269,6 @@ TileClustering::coalesceClusters(
 
       const int nblocks = tile_box_level.getGridGeometry()->getNumberBlocks();
 
-// #pragma omp parallel
-// #pragma omp for schedule(dynamic)
       for (int b = 0; b < nblocks; ++b) {
          hier::BlockId block_id(b);
 
@@ -1290,7 +1288,8 @@ TileClustering::coalesceClusters(
    }
 
    if ( d_print_steps ) {
-      tbox::plog << "TileClustering coalesced " << tile_box_level.getLocalNumberOfBoxes()
+      tbox::plog << "TileClustering::coalesceClusters: coalesced "
+                 << tile_box_level.getLocalNumberOfBoxes()
                  << " tiles into " << box_vector.size() << "\n";
    }
 
@@ -1324,8 +1323,6 @@ TileClustering::coalesceClusters(
        * tile--->tag edges.
        */
       const int rank = tile_box_level.getMPI().getRank();
-// #pragma omp parallel
-// #pragma omp for schedule(dynamic)
       for ( size_t i=0; i<box_vector.size(); ++i ) {
 
          box_vector[i].setId(hier::BoxId(hier::LocalId(static_cast<int>(i)),rank));

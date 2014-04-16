@@ -22,6 +22,7 @@
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
+#include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Timer.h"
@@ -834,24 +835,20 @@ private:
     *
     * @param[in,out] new_box_level
     *
-    * @param[in,out] tag_to_new
+    * @param[in,out] ref_to_new
     *
     * @param[in] sort_by_corners
     *
     * @param[in] sequentialize_global_indices
-    *
-    * @param[in] mca MappingConnectorAlgorithm with timer set
-    * in the calling context.
     *
     * @pre d_hierarchy->getDim() == new_box_level.getDim()
     */
    void
    renumberBoxes(
       hier::BoxLevel& new_box_level,
-      hier::Connector& tag_to_new,
+      hier::Connector& ref_to_new,
       bool sort_by_corners,
-      bool sequentialize_global_indices,
-      const hier::MappingConnectorAlgorithm &mca) const;
+      bool sequentialize_global_indices ) const;
 
    /*!
     * @brief Buffer each integer tag on patch level matching given tag
@@ -1064,15 +1061,6 @@ private:
    allocateTimers();
 
    /*!
-    * @brief Log metadata statistics after generating a new level.
-    */
-   void logMetadataStatistics(
-      const char *caller_name,
-      int ln,
-      bool log_fine_connector,
-      bool log_coarse_connector) const;
-
-   /*!
     * @brief Initialize static objects and register shutdown routine.
     *
     * Only called by StartupShutdownManager.
@@ -1262,18 +1250,30 @@ private:
    mutable hier::MappingConnectorAlgorithm d_mca;
 
    /*!
+    * @brief BoxLevelConnectorUtils object used for regrid.
+    */
+   mutable hier::BoxLevelConnectorUtils d_blcu;
+
+   /*!
     * @brief OverlapConnectorAlgorithm object used for initial mesh
-    * construction, sanity checks and other operations that are not
-    * expected to scale well.
+    * construction and other one-time operations that are not expected
+    * to scale well.
     */
    mutable hier::OverlapConnectorAlgorithm d_oca0;
 
    /*!
     * @brief MappingConnectorAlgorithm object used for initial mesh
-    * construction, sanity checks and other operations that are not
-    * expected to scale well.
+    * construction and other one-time operations that are not expected
+    * to scale well.
     */
    mutable hier::MappingConnectorAlgorithm d_mca0;
+
+   /*!
+    * @brief BoxLevelConnectorUtils object used for initial mesh
+    * construction and other one-time operations that are not expected
+    * to scale well.
+    */
+   mutable hier::BoxLevelConnectorUtils d_blcu0;
 
    /*
     * Switches for massaging boxes after clustering.  Should be on for
@@ -1328,7 +1328,7 @@ private:
    boost::shared_ptr<tbox::Timer> t_extend_to_domain_boundary;
    boost::shared_ptr<tbox::Timer> t_extend_within_domain;
    boost::shared_ptr<tbox::Timer> t_grow_boxes_within_domain;
-   boost::shared_ptr<tbox::Timer> t_sort_nodes;
+   boost::shared_ptr<tbox::Timer> t_renumber_boxes;
    boost::shared_ptr<tbox::Timer> t_make_domain;
    boost::shared_ptr<tbox::Timer> t_make_new;
    boost::shared_ptr<tbox::Timer> t_process_error;

@@ -749,7 +749,7 @@ public:
    /*
     * @brief Sort the given IntVector the smallest to the largest value.
     *
-    * Set the ith entry of this to the position of the ith largest
+    * Set the ith entry of this to the position of the ith smallest
     * value in the given IntVector.
     */
    void

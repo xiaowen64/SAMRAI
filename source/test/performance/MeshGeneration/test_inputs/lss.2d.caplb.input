@@ -28,13 +28,15 @@ Main {
 
    enforce_nesting = TRUE, TRUE, TRUE
 
-   autoscale_base_nprocs = 1
+   autoscale_base_nprocs = 4
 
    box_generator_type = "BergerRigoutsos"
 
    load_balancer_type = "ChopAndPackLoadBalancer"
 
    load_balance = TRUE, TRUE
+
+   write_comm_graph = FALSE
 
    mesh_generator_name = "SphericalShellGenerator"
 
@@ -53,6 +55,7 @@ TileClustering {
   coalesce_boxes = FALSE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
+  DEV_debug_checks = TRUE
 }
 
 

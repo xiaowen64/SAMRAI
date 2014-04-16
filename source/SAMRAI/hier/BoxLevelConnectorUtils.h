@@ -416,6 +416,8 @@ public:
     * to be removed (rejected), construct the remainder BoxLevel
     * and the mapping from the original to a remainder.
     *
+    * This method does no communication.
+    *
     * @see MappingConnectorAlgorithm.
     *
     * @param[out] remainder The new BoxLevel resulting from

@@ -59,6 +59,7 @@ OverlapConnectorAlgorithm::s_initialize_finalize_handler(
 
 OverlapConnectorAlgorithm::OverlapConnectorAlgorithm():
    d_object_timers(NULL),
+   d_print_steps(s_print_steps == 'y'),
    d_barrier_before_communication(false),
    d_sanity_check_method_preconditions(false),
    d_sanity_check_method_postconditions(false)
@@ -678,7 +679,7 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
    NeighborSet& visible_east_nabrs) const
 {
 
-   if (s_print_steps == 'y') {
+   if (d_print_steps) {
       std::string dbgbord("bridge->  ");
       tbox::plog
       << "bridge west:\n" << west_to_cent.getBase().format(dbgbord, 3)
@@ -889,7 +890,7 @@ OverlapConnectorAlgorithm::privateBridge(
       outgoing_ranks,
       d_object_timers->t_bridge_MPI_wait,
       s_operation_mpi_tag,
-      s_print_steps == 'y');
+      d_print_steps);
 
    d_object_timers->t_bridge_setup_comm->stop();
    d_object_timers->t_bridge_share->stop();
@@ -932,7 +933,7 @@ OverlapConnectorAlgorithm::privateBridge(
       all_comms,
       comm_stage,
       d_object_timers->t_bridge_receive_and_unpack,
-      s_print_steps == 'y');
+      d_print_steps);
 
    d_object_timers->t_bridge_share->stop();
 
@@ -1093,13 +1094,17 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
 
    d_object_timers->t_bridge_discover_and_send->start();
 
-   if (s_print_steps == 'y') {
+   if (d_print_steps) {
       tbox::plog << "Before building RBBTs:\n"
                  << "visible_west_nabrs:"
                  << visible_west_nabrs.format("\n  ")
                  << "visible_east_nabrs:"
-                 << visible_east_nabrs.format("\n  ")
-                 << std::endl;
+                 << visible_east_nabrs.format("\n  ");
+      tbox::plog << "\nincoming ranks (" << incoming_ranks.size() <<"): ";
+      copy(incoming_ranks.begin(), incoming_ranks.end(), std::ostream_iterator<int>(tbox::plog, " "));
+      tbox::plog << "\noutgoing ranks (" << outgoing_ranks.size() <<"): ";
+      copy(outgoing_ranks.begin(), outgoing_ranks.end(), std::ostream_iterator<int>(tbox::plog, " "));
+      tbox::plog << std::endl;
    }
 
    bool compute_transpose =
@@ -1456,7 +1461,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
    while (base_ni != visible_base_nabrs.end() &&
           base_ni->getOwnerRank() == owner_rank) {
       const Box& visible_base_nabrs_box = *base_ni;
-      if (s_print_steps == 'y') {
+      if (d_print_steps) {
          tbox::plog << "Finding neighbors for non-periodic visible_base_nabrs_box "
                     << visible_base_nabrs_box << std::endl;
       }
@@ -1472,7 +1477,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
       head_rbbt.findOverlapBoxes(found_nabrs, base_box, // base_box.getBlockId(),
                                  head_refinement_ratio,
                                  true /* include singularity block neighbors */ );
-      if (s_print_steps == 'y') {
+      if (d_print_steps) {
          tbox::plog << "Found " << found_nabrs.size() << " neighbors:";
          found_nabrs.print(tbox::plog);
          //BoxContainerUtils::recursivePrintBoxVector(found_nabrs, tbox::plog, "\n ");
@@ -1528,7 +1533,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
             }
          }
       }
-      if (s_print_steps == 'y') {
+      if (d_print_steps) {
          tbox::plog << "Erasing visible base nabr " << (*base_ni) << std::endl;
       }
       ++base_ni;

@@ -27,6 +27,7 @@
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/InputManager.h"
+#include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -52,6 +53,8 @@ boost::shared_ptr<tbox::Timer> RefineSchedule::t_refine_schedule;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_data;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_data_nonrecursive;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_data_recursive;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_physical_boundaries;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_singularity_boundaries;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_refine_scratch_data;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_finish_sched_const;
 boost::shared_ptr<tbox::Timer> RefineSchedule::t_finish_sched_const_recurse;
@@ -2103,6 +2106,7 @@ RefineSchedule::fillPhysicalBoundaries(
    double fill_time) const
 {
    TBOX_ASSERT(d_dst_level);
+   t_fill_physical_boundaries->start();
 
    d_dst_level->setBoundaryBoxes();
 
@@ -2118,6 +2122,7 @@ RefineSchedule::fillPhysicalBoundaries(
          }
       }
    }
+   t_fill_physical_boundaries->stop();
 }
 
 /*
@@ -2133,6 +2138,7 @@ RefineSchedule::fillSingularityBoundaries(
    double fill_time) const
 {
    TBOX_ASSERT(d_dst_level);
+   t_fill_singularity_boundaries->start();
 
    NULL_USE(fill_time);
 
@@ -2234,6 +2240,7 @@ RefineSchedule::fillSingularityBoundaries(
          }
       }
    }
+   t_fill_singularity_boundaries->stop();
 }
 
 /*
@@ -2329,33 +2336,43 @@ RefineSchedule::refineScratchData(
 {
    t_refine_scratch_data->start();
 
+   if ( d_refine_patch_strategy ) {
+      d_refine_patch_strategy->preprocessRefineLevel(
+         *fine_level,
+         *coarse_level,
+         coarse_to_fine,
+         coarse_to_unfilled,
+         overlaps,
+         d_refine_items);
+   }
+
    const hier::IntVector ratio(fine_level->getRatioToLevelZero()
                                / coarse_level->getRatioToLevelZero());
-
-   std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >::const_iterator
-   overlap_iter(overlaps.begin());
 
    /*
     * Loop over all the coarse patches and find the corresponding
     * destination patch and destination fill boxes.
     */
 
-   for ( hier::PatchLevel::iterator crse_itr(coarse_level->begin());
-         crse_itr != coarse_level->end(); ++crse_itr, ++overlap_iter )
+#ifdef _OPENMP
+#pragma omp parallel shared(coarse_level)
+#pragma omp for schedule(dynamic)
+#endif
+   for ( int pi=0; pi<coarse_level->getLocalNumberOfPatches(); ++pi )
    {
-      const hier::Box& crse_box = crse_itr->getBox();
+      const hier::Box& crse_box = coarse_level->getPatch(pi)->getBox();
+
       hier::Connector::ConstNeighborhoodIterator dst_nabrs =
          coarse_to_fine.find(crse_box.getBoxId());
-      hier::Connector::ConstNeighborIterator na =
-         coarse_to_fine.begin(dst_nabrs);
-      const hier::Box& dst_box = *na;
+      const hier::Box& dst_box = *coarse_to_fine.begin(dst_nabrs);
 #ifdef DEBUG_CHECK_ASSERTIONS
       /*
        * Each crse_box can point back to just one dst_box.
        * All other boxes in dst_nabrs must be a periodic image of
        * the same dst_box.
        */
-      for (; na != coarse_to_fine.end(dst_nabrs); ++na) {
+      for (hier::Connector::ConstNeighborIterator na=coarse_to_fine.begin(dst_nabrs);
+           na != coarse_to_fine.end(dst_nabrs); ++na) {
          TBOX_ASSERT(na->isPeriodicImage() ||
                      na == coarse_to_fine.begin(dst_nabrs));
          TBOX_ASSERT(na->getGlobalId() == dst_box.getGlobalId());
@@ -2366,8 +2383,7 @@ RefineSchedule::refineScratchData(
       boost::shared_ptr<hier::Patch> crse_patch(coarse_level->getPatch(
                                                 crse_box.getGlobalId()));
 
-      TBOX_ASSERT(coarse_to_unfilled.numLocalNeighbors(
-         crse_box.getBoxId()) == 1);
+      TBOX_ASSERT(coarse_to_unfilled.numLocalNeighbors(crse_box.getBoxId()) == 1);
       hier::Connector::ConstNeighborhoodIterator unfilled_nabrs =
          coarse_to_unfilled.find(crse_box.getBoxId());
       const hier::Box& unfilled_nabr =
@@ -2387,7 +2403,7 @@ RefineSchedule::refineScratchData(
          if (ref_item->d_oprefine) {
 
             boost::shared_ptr<hier::BoxOverlap> refine_overlap =
-               (*overlap_iter)[ref_item->d_class_index];
+               (overlaps[pi])[ref_item->d_class_index];
 
             const int scratch_id = ref_item->d_scratch;
 
@@ -2398,6 +2414,14 @@ RefineSchedule::refineScratchData(
          }
       }
 
+/*
+Problem: This loop reaches this point with the same fine_patch
+multiple times.  That is probably not intended.  We shouldn't be
+calling postprocessRefineBoxes multiple times on the same fine_patch.
+We should be looping through fine_to_coarse, then coarse boxes, then
+unfilled boxes.  That would pass this point only once for each fine
+patch.  Talk with Rich and Bob about this.
+*/
       if (d_refine_patch_strategy) {
          d_refine_patch_strategy->postprocessRefineBoxes(*fine_patch,
             *crse_patch,
@@ -2405,6 +2429,14 @@ RefineSchedule::refineScratchData(
             ratio);
       }
 
+   }
+
+   if ( d_refine_patch_strategy ) {
+      d_refine_patch_strategy->postprocessRefineLevel(
+         *fine_level,
+         *coarse_level,
+         coarse_to_fine,
+         coarse_to_unfilled);
    }
 
    t_refine_scratch_data->stop();
@@ -4549,6 +4581,10 @@ RefineSchedule::initializeCallback()
       getTimer("xfer::RefineSchedule::fillData()_nonrecursive");
    t_fill_data_recursive = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::fillData()_recursive");
+   t_fill_physical_boundaries = tbox::TimerManager::getManager()->
+      getTimer("xfer::RefineSchedule::fillPhysicalBoundaries()");
+   t_fill_singularity_boundaries = tbox::TimerManager::getManager()->
+      getTimer("xfer::RefineSchedule::fillSingularityBoundaries()");
    t_refine_scratch_data = tbox::TimerManager::getManager()->
       getTimer("xfer::RefineSchedule::refineScratchData()");
    t_finish_sched_const = tbox::TimerManager::getManager()->

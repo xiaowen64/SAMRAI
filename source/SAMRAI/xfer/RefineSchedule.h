@@ -1228,6 +1228,8 @@ private:
    static boost::shared_ptr<tbox::Timer> t_fill_data;
    static boost::shared_ptr<tbox::Timer> t_fill_data_nonrecursive;
    static boost::shared_ptr<tbox::Timer> t_fill_data_recursive;
+   static boost::shared_ptr<tbox::Timer> t_fill_physical_boundaries;
+   static boost::shared_ptr<tbox::Timer> t_fill_singularity_boundaries;
    static boost::shared_ptr<tbox::Timer> t_refine_scratch_data;
    static boost::shared_ptr<tbox::Timer> t_finish_sched_const;
    static boost::shared_ptr<tbox::Timer> t_finish_sched_const_recurse;

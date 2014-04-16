@@ -13,6 +13,8 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/tbox/OpenMPUtilities.h"
+
 #include <iostream>
 #include <string>
 
@@ -170,6 +172,7 @@ private:
    char* d_buffer;              // internal buffer to store accumulated string
    int d_buffer_size;           // size of the internal output buffer
    int d_buffer_ptr;            // number of charcters in the output buffer
+   TBOX_omp_lock_t l_buffer;    // OpenMP lock for buffer operations.
 
    static const int DEFAULT_BUFFER_SIZE;
 };

@@ -26,6 +26,7 @@
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/mesh/BalanceUtilities.h"
+#include "SAMRAI/mesh/CascadePartitioner.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/mesh/TilePartitioner.h"
 #include "SAMRAI/mesh/TileClustering.h"
@@ -471,6 +472,7 @@ int main(
       const bool write_comm_graph = main_db->getBoolWithDefault("write_comm_graph", false);
       if ( write_comm_graph ) {
          comm_graph_writer.reset( new CommGraphWriter );
+         comm_graph_writer->setWriteFullGraph( mpi.getSize() <= 16 );
       }
 
 
@@ -563,6 +565,7 @@ int main(
          outputPostbalance( *L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0,0), "L0: " );
 
          if ( comm_graph_writer ) {
+            tbox::pout << "\tWriting communication graph..." << std::endl;
             tbox::plog << "\nCommunication Graph for balancing L0:\n";
             for ( ; num_records_written<comm_graph_writer->getNumberOfRecords(); ++num_records_written ) {
                comm_graph_writer->writeGraphToTextStream( num_records_written, tbox::plog );
@@ -713,6 +716,7 @@ int main(
             L1->getMPI());
 
          if ( comm_graph_writer ) {
+            tbox::pout << "\tWriting communication graph..." << std::endl;
             tbox::plog << "\nCommunication Graph for balancing L1:\n";
             for ( ; num_records_written<comm_graph_writer->getNumberOfRecords(); ++num_records_written ) {
                comm_graph_writer->writeGraphToTextStream( num_records_written, tbox::plog );
@@ -867,6 +871,7 @@ int main(
             L2->getMPI());
 
          if ( comm_graph_writer ) {
+            tbox::pout << "\tWriting communication graph..." << std::endl;
             tbox::plog << "\nCommunication Graph for balancing L2:\n";
             for ( ; num_records_written<comm_graph_writer->getNumberOfRecords(); ++num_records_written ) {
                comm_graph_writer->writeGraphToTextStream( num_records_written, tbox::plog );
@@ -1213,6 +1218,16 @@ createLoadBalancer(
       tree_lb->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
       tree_lb->setCommGraphWriter(comm_graph_writer);
       return tree_lb;
+
+   } else if (lb_type == "CascadePartitioner") {
+
+      boost::shared_ptr<mesh::CascadePartitioner>
+         cascade_lb(new mesh::CascadePartitioner(
+            dim,
+            std::string("mesh::CascadePartitioner") + tbox::Utilities::intToString(ln),
+            input_db->getDatabaseWithDefault("CascadePartitioner",
+                                             boost::shared_ptr<tbox::Database>())));
+      return cascade_lb;
 
    } else if (lb_type == "TilePartitioner") {
 

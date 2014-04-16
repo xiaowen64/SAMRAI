@@ -97,9 +97,7 @@ void BoxLevelStatistics::computeLocalBoxLevelStatistics( const BoxLevel &box_lev
    d_sq.d_values[MAX_BOX_VOL] = 0;
    d_sq.d_values[MIN_BOX_VOL] = tbox::MathUtilities<double>::getMax();
    d_sq.d_values[MAX_BOX_LEN] = 0;
-   d_sq.d_values[MIN_BOX_LEN] =
-      (box_level.getLocalNumberOfBoxes() == 0 ?
-       0 : tbox::MathUtilities<double>::getMax());
+   d_sq.d_values[MIN_BOX_LEN] = tbox::MathUtilities<double>::getMax();
    d_sq.d_values[MAX_ASPECT_RATIO] = 0;
    d_sq.d_values[SUM_ASPECT_RATIO] = 0;
    d_sq.d_values[SUM_SURFACE_AREA] = 0.;
@@ -212,15 +210,17 @@ void BoxLevelStatistics::printBoxStats(
     * Smallest surface area possible for the number of cells perfectly
     * distributed in d_mpi.
     */
-   const double ideal_surfarea =
-      2*d_dim.getValue() *
+   const double ideal_width =
       pow(d_sq_sum.d_values[NUMBER_OF_CELLS] / d_mpi.getSize(),
-          double(d_dim.getValue() - 1) / d_dim.getValue());
+          1.0 / d_dim.getValue());
+   const double ideal_surfarea = 2*d_dim.getValue() *
+      pow( ideal_width, double(d_dim.getValue() - 1) );
 
    co << border << "N = " << d_sq_sum.d_values[NUMBER_OF_BOXES]
       << " (global number of boxes)\n"
       << border << "P = " << d_mpi.getSize() << " (number of processes)\n"
-      << border << "Ideal surface area (A) is " << ideal_surfarea << " for "
+      << border << "Ideal width (W) is " << ideal_width
+      << ", surface area (A) is " << ideal_surfarea << " for "
       << (d_sq_sum.d_values[NUMBER_OF_CELLS]/d_mpi.getSize()) << " cells\n"
       << border << std::setw(s_longest_length) << std::string()
       << "    local        min               max             sum    sum/N    sum/P\n";

@@ -113,6 +113,16 @@ public:
    createLocalTranspose() const;
 
    /*!
+    * @brief Create and return this MappingConnector's transpose.
+    *
+    * Similar to createLocalTranspose(), but this method allows
+    * non-local edges.  Global data is required, so this method
+    * is not scalable.
+    */
+   virtual MappingConnector*
+   createTranspose() const;
+
+   /*!
     * @brief Types of mappings for use in findMappingErrors() and
     *        assertMappingValidity().
     */

@@ -34,10 +34,14 @@ OBJS = 	\
 	TreeLoadBalancer.o \
 	GraphLoadBalancer.o \
 	ChopAndPackLoadBalancer.o \
+	CascadePartitioner.o \
+	CascadePartitionerTree.o \
 	TilePartitioner.o \
 	LoadBalanceStrategy.o \
 	BalanceBoxBreaker.o \
 	BoxTransitSet.o \
+	VoucherTransitLoad.o \
+	TransitLoad.o \
 	GriddingAlgorithmStrategy.o \
 	BergerRigoutsos.o \
 	BergerRigoutsosNode.o \

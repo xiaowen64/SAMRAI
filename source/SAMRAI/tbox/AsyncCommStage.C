@@ -822,12 +822,10 @@ AsyncCommStage::Member::getRequestPointer() const
 {
    if (!hasStage()) {
       TBOX_ERROR("AssyncCommStage::Member::getRequestPointer():\n"
-         << "Empty stage encountered!\n"
-         << "This probably means that the stage that allocated\n"
-         << "your AsyncCommGroup has been deallocated.\n"
-         << "(and your AssyncCommGroup deallocated too!).\n"
-         << "It is an error to deallocate a stage and still\n"
-         << "use the Member it allocated.\n");
+                 << "Empty stage encountered!\n"
+                 << "This probably means the stage Member has not been placed on a stage.\n"
+                 << "See documentation for the Membmber's concrete implementation for how\n"
+                 << "to place the Member on the stage.");
 
    }
    return d_stage->lookupRequestPointer(d_index_on_stage);
@@ -842,12 +840,10 @@ AsyncCommStage::Member::getStatusPointer() const
 {
    if (!hasStage()) {
       TBOX_ERROR("AssyncCommStage::Member::getStatusPointer():\n"
-         << "Empty stage encountered!\n"
-         << "This probably means that the stage that allocated\n"
-         << "your AsyncCommGroup has been deallocated.\n"
-         << "(and your AssyncCommGroup deallocated too!).\n"
-         << "It is an error to deallocate a stage and still\n"
-         << "use the Member it allocated.\n");
+                 << "Empty stage encountered!\n"
+                 << "This probably means the stage Member has not been placed on a stage.\n"
+                 << "See documentation for the Membmber's concrete implementation for how\n"
+                 << "to place the Member on the stage.");
 
    }
    return d_stage->lookupStatusPointer(d_index_on_stage);

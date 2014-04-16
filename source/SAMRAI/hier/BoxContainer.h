@@ -687,6 +687,19 @@ public:
    }
 
    /*!
+    * @brief Returns true if there are no boxes in the container
+    *
+    * This version follows the naming standards used in STL.
+    *
+    * @return True if the container is empty.
+    */
+   bool
+   empty() const
+   {
+      return d_list.empty();
+   }
+
+   /*!
     * @brief Return a const_iterator pointing to the start of the container.
     *
     * @return An immutable iterator pointing to the first box.
@@ -1078,6 +1091,26 @@ public:
       if (d_tree) {
          d_tree.reset();
       }
+   }
+
+   /*!
+    * @brief STL-named version of pushFront().
+    */
+   void
+   push_front(
+      const Box& item)
+   {
+      pushFront(item);
+   }
+
+   /*!
+    * @brief STL-named version of pushBack().
+    */
+   void
+   push_back(
+      const Box& item)
+   {
+      pushBack(item);
    }
 
    /*!
@@ -1769,10 +1802,12 @@ public:
     * @brief Print each box in the container to the specified output stream.
     *
     * @param[in] os
+    * @param[in] border
     */
    void
    print(
-      std::ostream& os = tbox::plog) const;
+      std::ostream& os = tbox::plog,
+      const std::string &border=std::string() ) const;
 
    /*!
     * @brief Intermediary between BoxContainer and output streams,

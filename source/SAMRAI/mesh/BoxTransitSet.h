@@ -17,7 +17,9 @@
 #include "SAMRAI/hier/MappingConnector.h"
 #include "SAMRAI/hier/SequentialLocalIdGenerator.h"
 #include "SAMRAI/mesh/BalanceBoxBreaker.h"
+#include "SAMRAI/mesh/BoxInTransit.h"
 #include "SAMRAI/mesh/PartitioningParams.h"
+#include "SAMRAI/mesh/TransitLoad.h"
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
@@ -29,88 +31,119 @@ namespace mesh {
 
 
 /*
- * @brief Implementation of TreeLoadBalancer::TransitSet, representing
- * the load with a set of boxes, sorted from highest load to lowest
- * load.
+ * @brief Implementation of TransitLoad, representing the load with a
+ * set of boxes, each of which represents a load and knows the origin
+ * of its load.
  *
  * As a container, this class is identical to
  * std::set<BoxInTransit,BoxInTransitMoreLoad>.
  */
 
-class BoxTransitSet {
+class BoxTransitSet : public TransitLoad {
 
 public:
 
    typedef double LoadType;
 
+   //! @name Constructor
    BoxTransitSet( const PartitioningParams &pparams );
 
-   //! @brief Return the total load contained.
-   LoadType getSumLoad() const { return d_sumload; }
-
-   //! @brief Insert all boxes from the given BoxContainer.
-   void insertAll( const hier::BoxContainer &other );
-
-   //! @brief Insert all boxes from the given BoxTransitSet.
-   void insertAll( const BoxTransitSet &other );
-
-   //! @brief Return number of items in this container.
-   size_t getNumberOfItems() const;
-
-   //! @brief Return number of processes contributing to the contents.
-   size_t getNumberOfOriginatingProcesses() const;
+   /*!
+    * @name Copy constructor
+    *
+    * The content may be omitted from the copy, using the flag copy_load.
+    */
+   BoxTransitSet( const BoxTransitSet &other, bool copy_load = true );
 
    //@{
-   //! @name Packing/unpacking for communication.
+   //! @name TransitLoad abstract interfaces
 
+   //! @copydoc TransitLoad::clone()
+   BoxTransitSet* clone() const;
+
+   //! @copydoc TransitLoad::initialize()
+   void initialize();
+
+   //! @copydoc TransitLoad::getSumLoad()
+   LoadType getSumLoad() const { return d_sumload; }
+
+   //! @copydoc TransitLoad::insertAll( const hier::BoxContainer & )
+   void insertAll( const hier::BoxContainer &box_container );
+
+   //! @copydoc TransitLoad::insertAll( const TransitLoad & )
+   void insertAll( TransitLoad &other );
+
+   //! @copydoc TransitLoad::getNumberOfItems()
+   size_t getNumberOfItems() const;
+
+   //! @copydoc TransitLoad::getNumberOfOriginatingProcesses()
+   size_t getNumberOfOriginatingProcesses() const;
+
+   //! @copydoc TransitLoad::putToMessageStream()
    void putToMessageStream( tbox::MessageStream &msg ) const;
 
+   //! @copydoc TransitLoad::getFromMessageStream()
    void getFromMessageStream( tbox::MessageStream &msg );
-   //@}
 
 
    /*!
-    * @brief Adjust the load in this BoxTransitSet by moving work
-    * between it and another BoxTransitSet.
-    *
-    * @param[in,out] hold_bin Holding bin for reserve load.
-    *
-    * @param[in] ideal_load The load that this bin should have.
-    *
-    * @param[in] low_load Return when this bin's load is in the range
-    * [low_load,high_load]
-    *
-    * @param[in] high_load Return when this bin's load is in the range
-    * [low_load,high_load]
-    *
-    * @return Net load added to this BoxTransitSet.  If negative, load
-    * decreased.
+    * @copydoc TransitLoad::adjustLoad()
     */
    LoadType
    adjustLoad(
-      BoxTransitSet& hold_bin,
+      TransitLoad& hold_bin,
       LoadType ideal_load,
       LoadType low_load,
       LoadType high_load );
 
 
    /*!
-    * @brief Assign unassigned boxes to local process and generate
-    * balanced<==>unbalanced map.
+    * @copydoc TransitLoad::assignToLocalAndPopulateMaps()
     *
-    * This method uses communication to set up the map.
+    * This method uses communication to populate the map.
     */
    void
-   assignContentToLocalProcessAndGenerateMap(
+   assignToLocalAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced ) const;
+      hier::MappingConnector &unbalanced_to_balanced,
+      double flexible_load_tol = 0.0 );
+
+   //@}
 
 
-   //! @brief Allow box breaking when adjusting load.
-   void allowBoxBreaking() {
-      d_allow_box_breaking = true;
-   }
+   /*
+    * @brief Reassign the boxes to the new owner.
+    *
+    * Any box that isn't already owned by the new owner or doesn't
+    * have a valid LocalId, is given one by the
+    * SequentialLocalIdGenerator.
+    */
+   void
+   reassignOwnership(
+      hier::SequentialLocalIdGenerator &id_gen,
+      int new_owner_rank );
+
+
+   /*!
+    * @brief Put local Boxes into a BoxLevel.
+    */
+   void
+   putInBoxLevel(
+      hier::BoxLevel &box_level ) const;
+
+
+   /*!
+    * @brief Generate unbalanced<==>balanced edges incident from
+    * local boxes.
+    *
+    * This method does no communication.  Semilocal edges not incident
+    * from remote Boxes are not communicated.
+    */
+   void
+   generateLocalBasedMapEdges(
+      hier::MappingConnector &unbalanced_to_balanced,
+      hier::MappingConnector &balanced_to_unbalanced ) const;
 
    /*!
     * @brief Setup names of timers.
@@ -131,119 +164,73 @@ public:
       const std::string &border=std::string(),
       int detail_depth=1 ) const;
 
+   /*!
+    * @brief Intermediary between BoxTransitSet and output streams,
+    * adding ability to control the output.  See
+    * BoxTransitSet::format().
+    */
+   class Outputter
+   {
+
+      //! @brief Insert a BoxTransitSet to the stream according to Outputter settings.
+      friend std::ostream&
+      operator << ( std::ostream& s,
+                    const Outputter& f)
+         {
+            f.d_boxes.recursivePrint(s, f.d_border, f.d_detail_depth);
+            return s;
+         }
+
+private:
+      friend class BoxTransitSet;
+      /*!
+       * @brief Construct the Outputter with a BoxTransitSet and the
+       * parameters needed to output the BoxTransitSet to a stream.
+       */
+      Outputter(
+         const BoxTransitSet& boxes,
+         const std::string& border,
+         int detail_depth = 2) :
+         d_boxes(boxes),
+         d_border(border),
+         d_detail_depth(detail_depth)
+         {}
+
+      void operator = (const Outputter& rhs); // Unimplemented private.
+      const BoxTransitSet& d_boxes;
+      const std::string d_border;
+      const int d_detail_depth;
+   };
+
+   /*!
+    * @brief Return a object to that can format the BoxTransitSet for
+    * inserting into output streams.
+    *
+    * Usage example (printing with a tab indentation):
+    * @verbatim
+    *    cout << "my boxes:\n" << boxes.format("\t") << endl;
+    * @endverbatim
+    *
+    * @param[in] border Left border of the output
+    *
+    * @param[in] detail_depth How much detail to print.
+    */
+   Outputter
+   format(
+      const std::string& border = std::string(),
+      int detail_depth = 2) const
+      {
+         return Outputter(*this, border, detail_depth);
+      }
+
+   //@}
+
 
 private:
 
    static const int BoxTransitSet_EDGETAG0 = 3;
    static const int BoxTransitSet_EDGETAG1 = 4;
-
-
-   /*!
-    * @brief Data to save for each Box that gets passed along the tree
-    * edges.
-    *
-    * The purpose of the BoxInTransit is to associate extra data with
-    * a Box as it is broken up and passed from process to process.  A
-    * BoxInTransit is a Box going through these changes.  It has a
-    * current work load and an orginating Box.
-    */
-   struct BoxInTransit {
-
-      /*!
-       * @brief Constructor
-       *
-       * @param[in] dim
-       */
-      explicit BoxInTransit(const tbox::Dimension& dim) :
-         d_box(dim),
-         d_orig_box(dim) {}
-
-
-      /*!
-       * @brief Construct a new BoxInTransit from an originating box.
-       *
-       * @param[in] origin
-       */
-      BoxInTransit( const hier::Box& origin ):
-         d_box(origin),
-         d_orig_box(origin),
-         d_boxload(origin.size()) {}
-
-      /*!
-       * @brief Construct new object having the originator of an existing object.
-       *
-       * @param[in] other
-       * @param[in] box
-       * @param[in] rank
-       * @param[in] local_id
-       */
-      BoxInTransit(
-         const BoxInTransit& other,
-         const hier::Box& box,
-         int rank,
-         hier::LocalId local_id) :
-         d_box(box, local_id, rank),
-         d_orig_box(other.d_orig_box),
-         d_boxload(d_box.size()) {}
-
-      /*!
-       * @brief Assignment operator
-       *
-       * @param[in] other
-       */
-      BoxInTransit&
-      operator = (
-         const BoxInTransit& other) {
-         d_box = other.d_box;
-         d_orig_box = other.d_orig_box;
-         d_boxload = other.d_boxload;
-         return *this;
-      }
-
-      //! @brief Return the owner rank.
-      int getOwnerRank() const {
-         return d_box.getOwnerRank();
-      }
-
-      //! @brief Return the LocalId.
-      hier::LocalId getLocalId() const {
-         return d_box.getLocalId();
-      }
-
-      //! @brief Return the Box.
-      hier::Box& getBox() {
-         return d_box;
-      }
-
-      //! @brief Return the Box.
-      const hier::Box& getBox() const {
-         return d_box;
-      }
-
-      //! @brief Put self into a MessageStream.
-      void putToMessageStream(tbox::MessageStream &mstream) const {
-         d_box.putToMessageStream(mstream);
-         d_orig_box.putToMessageStream(mstream);
-         mstream << d_boxload;
-         return;
-      }
-
-      //! @brief Set attributes according to data in a MessageStream.
-      void getFromMessageStream(tbox::MessageStream &mstream) {
-         d_box.getFromMessageStream(mstream);
-         d_orig_box.getFromMessageStream(mstream);
-         mstream >> d_boxload;
-         return;
-      }
-
-      hier::Box d_box;
-
-      //! @brief Originating Box (the oldest one leading to this one).
-      hier::Box d_orig_box;
-
-      //! @brief Work load in this d_box.
-      LoadType d_boxload;
-   };
+   static const int BoxTransitSet_FIRSTDATALEN = 1000;
 
 
    /*!
@@ -260,7 +247,7 @@ private:
          const BoxInTransit& a,
          const BoxInTransit& b) const {
          if (a.getBox().size() != b.getBox().size()) {
-            return a.d_boxload > b.d_boxload;
+            return a.getLoad() > b.getLoad();
          }
          if ( a.getBox().getBlockId() != b.getBox().getBlockId() ) {
             return a.getBox().getBlockId() < b.getBox().getBlockId();
@@ -271,7 +258,7 @@ private:
          if ( a.getBox().upper() != b.getBox().upper() ) {
             return lexicalIndexLessThan(a.getBox().upper(), b.getBox().upper());
          }
-         return a.d_orig_box.getBoxId() < b.d_orig_box.getBoxId();
+         return a.getOrigBox().getBoxId() < b.getOrigBox().getBoxId();
       }
    private:
       bool lexicalIndexLessThan( const hier::IntVector &a,
@@ -283,6 +270,7 @@ private:
       }
    };
 
+public:
 
    //@{
    //! @name Interfaces like the C++ standard stl::set, to help readability.
@@ -300,13 +288,13 @@ private:
    size_t size() const { return d_set.size(); }
    std::pair<iterator, bool> insert( const value_type &x ) {
       std::pair<iterator,bool> rval = d_set.insert(x);
-      if ( rval.second ) d_sumload += x.d_boxload;
+      if ( rval.second ) d_sumload += x.getLoad();
       return rval;
    }
-   void erase(iterator pos) { d_sumload -= pos->d_boxload; d_set.erase(pos); }
+   void erase(iterator pos) { d_sumload -= pos->getLoad(); d_set.erase(pos); }
    size_t erase(const key_type &k) {
       const size_t num_erased = d_set.erase(k);
-      if ( num_erased ) d_sumload -= k.d_boxload;
+      if ( num_erased ) d_sumload -= k.getLoad();
       return num_erased;
    }
    bool empty() const { return d_set.empty(); }
@@ -321,20 +309,7 @@ private:
    iterator upper_bound( const key_type &k ) const { return d_set.upper_bound(k); }
    //@}
 
-
-   /*!
-    * @brief Insert BoxInTransit into an output stream.
-    */
-   friend std::ostream& operator << ( std::ostream& co,
-                                      const BoxInTransit& r) {
-      co << r.d_box
-         << r.d_box.numberCells() << '|'
-         << r.d_box.numberCells().getProduct();
-      co << '-' << r.d_orig_box
-         << r.d_box.numberCells() << '|'
-         << r.d_box.numberCells().getProduct();
-      return co;
-   }
+private:
 
 
    //@{ @name Load adjustment methods
@@ -442,20 +417,41 @@ private:
 
 
    /*!
-    * @brief Construct semilocal relationships in
-    * unbalanced--->balanced Connector.
+    * @brief Communicate semilocal relationships to load donors and
+    * fill in unbalanced--->balanced Connectors.
     *
-    * Constructing semilocal unbalanced--->balanced relationships
-    * require communication to determine where exported work ended up.
+    * These relationships must be represented by this object.
+    * Semilocal means the local process owns either Box or
+    * the orginal box (not both!) of each item in this BoxTransitSet.
     *
-    * @param [out] unbalanced_to_balanced Connector to store
-    * relationships in.
+    * Recall that semi-local relationships are those where the base
+    * and head boxes are owned by different processes.  These edges
+    * require communication to set up.
     *
-    * @param [in] kept_imports Work that was imported and locally kept.
+    * @param [out] unbalanced_to_balanced
     */
    void constructSemilocalUnbalancedToBalanced(
-      hier::MappingConnector &unbalanced_to_balanced,
-      const BoxTransitSet &kept_imports ) const;
+      hier::MappingConnector &unbalanced_to_balanced ) const;
+
+
+   /*!
+    * @brief Re-cast a TransitLoad object to a BoxTransitSet.
+    */
+   const BoxTransitSet &recastTransitLoad( const TransitLoad &transit_load ) {
+      const BoxTransitSet *ptr = static_cast<const BoxTransitSet*>(&transit_load);
+      TBOX_ASSERT(ptr);
+      return *ptr;
+   }
+
+
+   /*!
+    * @brief Re-cast a TransitLoad object to a BoxTransitSet.
+    */
+   BoxTransitSet &recastTransitLoad( TransitLoad &transit_load ) {
+      BoxTransitSet *ptr = static_cast<BoxTransitSet*>(&transit_load);
+      TBOX_ASSERT(ptr);
+      return *ptr;
+   }
 
 
    /*!
@@ -495,6 +491,13 @@ private:
       return double((box * restriction).size());
    }
 
+   /*!
+    * @brief Look for an input database called "BoxTransitSet" and
+    * read parameters if it exists.
+    */
+   void
+   getFromInput();
+
 
    //! @brief Balance penalty is proportional to imbalance.
    double computeBalancePenalty( double imbalance) const {
@@ -508,8 +511,6 @@ private:
    const PartitioningParams *d_pparams;
 
    BalanceBoxBreaker d_box_breaker;
-
-   bool d_allow_box_breaking;
 
 
    //@{
@@ -545,7 +546,6 @@ private:
       boost::shared_ptr<tbox::Timer> t_construct_semilocal_send_edges;
       boost::shared_ptr<tbox::Timer> t_pack_edge;
       boost::shared_ptr<tbox::Timer> t_unpack_edge;
-      boost::shared_ptr<tbox::Timer> t_post_load_distribution_barrier;
    };
 
    //! @brief Default prefix for Timers.
