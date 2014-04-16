@@ -407,8 +407,10 @@ TileClustering::clusterWithinProcessBoundaries(
    /*
     * Generate new_box_level and Connectors
     */
+#ifdef _OPENMP
 #pragma omp parallel if ( tag_level->getLocalNumberOfPatches() > 4*omp_get_max_threads() )
 #pragma omp for schedule(dynamic)
+#endif
    for ( int pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
 
       hier::Patch &patch = *tag_level->getPatch(pi);
@@ -421,7 +423,7 @@ TileClustering::clusterWithinProcessBoundaries(
       if ( patch.getBox().intersects(bounding_box) ) {
 
          boost::shared_ptr<pdat::CellData<int> > tag_data(
-            patch.getPatchData(tag_data_index), boost::detail::dynamic_cast_tag());
+            BOOST_CAST<pdat::CellData<int>, hier::PatchData>(patch.getPatchData(tag_data_index)));
 
          hier::BoxContainer tiles;
          int num_coarse_tags =
@@ -534,7 +536,7 @@ TileClustering::clusterWholeTiles(
       if ( !patch.getBox().intersects(bounding_box) ) { continue; }
 
       boost::shared_ptr<pdat::CellData<int> > tag_data(
-         patch.getPatchData(tag_data_index), boost::detail::dynamic_cast_tag());
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(patch.getPatchData(tag_data_index)));
 
       if (d_print_steps) {
          tbox::plog << "TileClustering::clusterWholeTiles: making coarsened tags." << std::endl;
@@ -982,8 +984,10 @@ TileClustering::findTilesContainingTags(
 
    const int num_coarse_cells = coarsened_box.size();
 
+#ifdef _OPENMP
 #pragma omp parallel
 #pragma omp for schedule(dynamic)
+#endif
    for ( int coarse_offset=0; coarse_offset<num_coarse_cells; ++coarse_offset ) {
       const pdat::CellIndex coarse_cell_index(coarsened_box.index(coarse_offset));
 

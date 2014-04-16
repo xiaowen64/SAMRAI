@@ -59,9 +59,9 @@ case $1 in
 
 bgq_mpixlcxx) # BG/Q, using mpixlcxx
 cat <<-EOF
-	--with-CXX=mpixlcxx
-	--with-CC=mpixlc
-	--with-F77=mpixlf77
+	--with-CXX=mpixlcxx-fastmpi
+	--with-CC=mpixlc-fastmpi
+	--with-F77=mpif77
 	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.8.5/parallel
 	--with-boost=/collab/usr/gapps/samrai/apps/sles/boost/1.55.0
 	--with-hypre=no
@@ -69,26 +69,6 @@ cat <<-EOF
 	--without-petsc
 	--without-x
 	--enable-rpath=no
-	--disable-openmp
-EOF
-# Maintained by Brian Gunney
-;;
-
-bgq_mpixlcxx_r) # BG/Q, using threaded mpixlcxx_r and OpenMP
-cat <<-EOF
-	--with-CXX=mpixlcxx_r
-	--with-CC=mpixlc_r
-	--with-F77=mpixlf77_r
-	FFLAGS=-qnosave LLNL_CHECK_COMPILE_LINE=Warning
-	--enable-openmp
-	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.8.5/parallel
-	--with-boost=/collab/usr/gapps/samrai/apps/sles/boost/1.55.0
-	--with-hypre=no
-	--without-sundials
-	--without-petsc
-	--without-x
-	--enable-rpath=no
-	--enable-openmp
 EOF
 # Maintained by Brian Gunney
 ;;
@@ -235,16 +215,15 @@ cat <<-EOF
 	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-3.2-p7.gcc.4.1.2
 	--with-sundials=/usr/casc/samrai/apps/rh5/sundials/2.3.0_gcc.4.1.2
 	--enable-rpath=-Wl,-R
-	--disable-openmp
 EOF
 #
 ;;
 
 casc_rh5_icc_x64) # CASC RedHat 5, Intel v12.0 compilers, x86_64
 cat <<-EOF
-	--with-CXX="/nfs/apps/intel/13.4.183/bin/icpc -Kc++ -gcc-name=/usr/bin/gcc"
-	--with-CC="/nfs/apps/intel/13.4.183/bin/icc -gcc-name=/usr/bin/gcc"
-	--with-F77=/nfs/apps/intel/13.4.183/bin/ifort
+	--with-CXX="/nfs/apps/intel/12.0.191/bin/icpc -Kc++ -gcc-name=/usr/bin/gcc"
+	--with-CC="/nfs/apps/intel/12.0.191/bin/icc -gcc-name=/usr/bin/gcc"
+	--with-F77=/nfs/apps/intel/12.0.191/bin/ifort
 	--with-extra-ld-flags="-shared-intel"
 	--enable-rpath=-Wl,-R
 	--with-hdf5=/usr/casc/samrai/apps/rh5/hdf5/1.8.5p1

@@ -920,7 +920,8 @@ public:
     * @brief Create new local Box from given Box and add it to this
     * level.
     *
-    * The new Box will be assigned an unused local index.  To be
+    * The new Box will be assigned an unused local index, so the input
+    * box need not have a valid one.  To be
     * efficient, no communication will be used.  Therefore, the state
     * must be distributed.
     *

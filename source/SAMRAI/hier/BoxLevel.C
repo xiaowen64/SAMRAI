@@ -994,7 +994,6 @@ BoxLevel::addBox(
    const Box& box,
    const BlockId& block_id)
 {
-   TBOX_ASSERT( box.getLocalId() >= 0 );
    if (locked()) {
       TBOX_ERROR("BoxLevel::addBox(): operating on locked BoxLevel."
          << std::endl);
@@ -1112,7 +1111,7 @@ void
 BoxLevel::addBox(
    const Box& box)
 {
-   TBOX_ASSERT( box.getLocalId() >= 0 );
+   TBOX_ASSERT( box.getLocalId().isValid() );
    if (locked()) {
       TBOX_ERROR("BoxLevel::addBox(): operating on locked BoxLevel."
          << std::endl);
