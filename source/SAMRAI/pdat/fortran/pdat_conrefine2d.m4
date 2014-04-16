@@ -1,7 +1,7 @@
 c
 c  File:        $URL$
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2014 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Description: FORTRAN routines for spatial refining of 2d patch data
 c               on a regular Cartesian mesh.
