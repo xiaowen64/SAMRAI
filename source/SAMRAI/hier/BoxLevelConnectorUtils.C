@@ -387,12 +387,15 @@ BoxLevelConnectorUtils::makeSortingMap(
    if (sequentialize_global_indices) {
       // Increase last_index by the box count of all lower MPI ranks.
 
-      int box_count =
+      int local_box_count =
          static_cast<int>(unsorted_box_level.getLocalNumberOfBoxes());
-      unsorted_box_level.getMPI().parallelPrefixSum(&box_count, 1, 0);
-      box_count -= static_cast<int>(unsorted_box_level.getLocalNumberOfBoxes());
+      int scanned_box_count = -1;
+      unsorted_box_level.getMPI().Scan(&local_box_count,
+                                       &scanned_box_count,
+                                       1, MPI_INT, MPI_SUM);
+      scanned_box_count -= static_cast<int>(local_box_count);
 
-      last_index += box_count;
+      last_index += scanned_box_count;
    }
 
    std::vector<Box> real_box_vector;
