@@ -67,9 +67,9 @@ CascadePartitioner::CascadePartitioner(
    d_mpi_is_dupe(false),
    d_master_workload_data_id(s_default_data_id),
    d_limit_supply_to_surplus(true),
-   d_flexible_load_tol(0.05),
    d_balance_intermediate_groups(false),
    d_reset_obligations(true),
+   d_flexible_load_tol(0.05),
    d_mca(),
    // Shared data.
    d_comm_stage(),
@@ -294,8 +294,7 @@ CascadePartitioner::loadBalanceBoxLevel(
    // Run the partitioning algorithm.
    partitionByCascade(
       balance_box_level,
-      balance_to_reference,
-      global_sum_load );
+      balance_to_reference );
 
 
    /*
@@ -366,9 +365,7 @@ CascadePartitioner::loadBalanceBoxLevel(
 void
 CascadePartitioner::partitionByCascade(
    hier::BoxLevel& balance_box_level,
-   hier::Connector* balance_to_reference,
-   double global_sum_load
-   ) const
+   hier::Connector* balance_to_reference ) const
 {
    if ( d_print_steps ) {
       tbox::plog << "CascadePartitioner::partitionByCascade: entered" << std::endl;
@@ -402,10 +399,6 @@ CascadePartitioner::partitionByCascade(
          hier::IntVector::getZero(d_dim));
    unbalanced_to_balanced.setTranspose(&balanced_to_unbalanced, false);
 
-
-   double group_load = local_work.getSumLoad();
-
-   const int lg_size = lgInt(d_mpi.getSize());
 
    t_get_map->start();
 
