@@ -2346,7 +2346,7 @@ void BaseGridGeometry::findSingularities(
 
          if (is_face) {
             TBOX_ASSERT(face_num >= 0);
-            face_neighbors[base_id].insert(std::make_pair<BoxId,int>(nbr_id, face_num));
+            face_neighbors[base_id].insert(std::make_pair(nbr_id, face_num));
 
             Box transformed_base_box(base_box);
             if (nbr_block != base_block) {
@@ -2388,7 +2388,7 @@ void BaseGridGeometry::findSingularities(
                   TBOX_ERROR("BaseGridGeometry::findSingularities: Face found on one side of block boundary but not the other.");
                } 
 
-               face_neighbors[nbr_id].insert(std::make_pair<BoxId,int>(base_id, face_num));
+               face_neighbors[nbr_id].insert(std::make_pair(base_id, face_num));
             }
          }
       }
