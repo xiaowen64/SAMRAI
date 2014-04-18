@@ -212,15 +212,27 @@ BoxTransitSet::assignToLocalAndPopulateMaps(
    hier::SequentialLocalIdGenerator id_gen(
       unbalanced_to_balanced.getBase().getLastLocalId() );
 
+   if ( d_print_steps || d_print_edge_steps ) {
+      tbox::plog << "BoxTransitSet::assignToLocalAndPopulateMaps: calling reassignOwnership." << std::endl;
+   }
    reassignOwnership( id_gen, balanced_box_level.getMPI().getRank() );
 
+   if ( d_print_steps || d_print_edge_steps ) {
+      tbox::plog << "BoxTransitSet::assignToLocalAndPopulateMaps: calling putInBoxLevel." << std::endl;
+   }
    putInBoxLevel(balanced_box_level);
 
    /*
     * Generate balanced<==>unbalanced
     */
+   if ( d_print_steps || d_print_edge_steps ) {
+      tbox::plog << "BoxTransitSet::assignToLocalAndPopulateMaps: calling generateLocalBasedMapEdges." << std::endl;
+   }
    generateLocalBasedMapEdges( unbalanced_to_balanced, balanced_to_unbalanced );
 
+   if ( d_print_steps || d_print_edge_steps ) {
+      tbox::plog << "BoxTransitSet::assignToLocalAndPopulateMaps: calling constructSemilocalUnbalancedToBalanced." << std::endl;
+   }
    constructSemilocalUnbalancedToBalanced( unbalanced_to_balanced );
 
    if ( d_print_steps || d_print_edge_steps ) {
@@ -1513,6 +1525,23 @@ BoxTransitSet::swapLoadPair(
 
    d_object_timers->t_find_swap_pair->stop();
    return found_swap;
+}
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+BoxTransitSet::setPrintFlags(
+   bool steps, bool pop_steps, bool swap_steps, bool break_steps, bool edge_steps )
+{
+   d_print_steps = steps;
+   d_print_pop_steps = pop_steps;
+   d_print_swap_steps = swap_steps;
+   d_print_break_steps = break_steps;
+   d_print_edge_steps = edge_steps;
 }
 
 

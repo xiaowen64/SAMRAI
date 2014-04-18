@@ -159,6 +159,12 @@ public:
    setTimerPrefix(
       const std::string& timer_prefix);
 
+   /*!
+    * @brief Set print flags for individual object.
+    */
+   void
+   setPrintFlags( bool steps, bool pop_steps, bool swap_steps, bool break_steps, bool edge_steps );
+
    void recursivePrint(
       std::ostream &co=tbox::plog,
       const std::string &border=std::string(),
