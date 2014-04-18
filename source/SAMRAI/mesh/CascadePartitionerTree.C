@@ -237,7 +237,8 @@ void CascadePartitionerTree::distributeLoad()
          if ( d_common->d_reset_obligations &&
               current_group == top_group && top_group->d_gen_num != 0 ) {
             const double old_obligation = top_group->d_obligation;
-            top_group->resetObligation( top_group->d_work/top_group->size() );
+            top_group->resetObligation(
+               top_group->d_work/static_cast<double>(top_group->size()) );
             if ( d_common->d_print_steps ) {
                tbox::plog << "\nCascadePartitionerTree::distributeLoad generation "
                           << top_group->d_gen_num << " reset obligation from "
@@ -313,7 +314,7 @@ CascadePartitionerTree::combineChildren()
                                                CascadePartitionerTree_TAG_InfoExchange1 );
          d_common->d_comm_peer[2+i].limitFirstDataLength( send_msg.getCurrentSize() );
          d_common->d_comm_peer[2+i].beginSend( static_cast<const char*>(send_msg.getBufferStart()),
-                                               send_msg.getCurrentSize(), true );
+                                               static_cast<int>(send_msg.getCurrentSize()), true );
 
       }
    }
@@ -326,7 +327,7 @@ CascadePartitionerTree::combineChildren()
       tbox::AsyncCommPeer<char> *completed = static_cast<tbox::AsyncCommPeer<char>*>(
          d_common->d_comm_stage.popCompletionQueue() );
 
-      const int i = completed - d_common->d_comm_peer;
+      const int i = static_cast<int>(completed - d_common->d_comm_peer);
       TBOX_ASSERT(i >= 0 && i < 4 );
       if ( i < 2 ) {
          // This was a receive.
@@ -624,7 +625,8 @@ CascadePartitionerTree::sendShipment( int taker )
    d_common->d_comm_peer[0].setMPITag( CascadePartitionerTree_TAG_LoadTransfer0,
                                        CascadePartitionerTree_TAG_LoadTransfer1 );
    d_common->d_comm_peer[0].beginSend( (const char*)(msg.getBufferStart()),
-                                       msg.getCurrentSize(), true );
+                                       static_cast<int>(msg.getCurrentSize()),
+                                       true );
    d_common->d_shipment->clear();
 
    d_common->t_send_shipment->stop();

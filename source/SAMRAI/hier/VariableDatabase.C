@@ -127,41 +127,6 @@ VariableDatabase::getNumberOfRegisteredVariableContexts() const
 /*
  *************************************************************************
  *
- * Accessory functions to manage patch data ids for restart.
- *
- *************************************************************************
- */
-
-ComponentSelector
-VariableDatabase::getPatchDataRestartTable() const
-{
-   return d_patchdata_restart_table;
-}
-
-bool
-VariableDatabase::isPatchDataRegisteredForRestart(
-   int index) const
-{
-   return d_patchdata_restart_table.isSet(index);
-}
-
-void
-VariableDatabase::registerPatchDataForRestart(
-   int index)
-{
-   d_patchdata_restart_table.setFlag(index);
-}
-
-void
-VariableDatabase::unregisterPatchDataForRestart(
-   int index)
-{
-   d_patchdata_restart_table.clrFlag(index);
-}
-
-/*
- *************************************************************************
- *
  * Return the context in the database with the given name, or add a
  * context to the database with that name if no such context exists.
  *

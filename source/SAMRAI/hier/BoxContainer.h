@@ -1802,12 +1802,10 @@ public:
     * @brief Print each box in the container to the specified output stream.
     *
     * @param[in] os
-    * @param[in] border
     */
    void
    print(
-      std::ostream& os = tbox::plog,
-      const std::string &border=std::string() ) const;
+      std::ostream& os = tbox::plog ) const;
 
    /*!
     * @brief Intermediary between BoxContainer and output streams,

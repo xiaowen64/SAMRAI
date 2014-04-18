@@ -25,6 +25,7 @@
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/InputDatabase.h"
+#include "SAMRAI/hier/PatchDataRestartManager.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/tbox/RestartManager.h"
@@ -170,6 +171,8 @@ int main(
        */
       hier::VariableDatabase* variable_db =
          hier::VariableDatabase::getDatabase();
+      hier::PatchDataRestartManager* pdrm =
+         hier::PatchDataRestartManager::getManager();
       boost::shared_ptr<hier::VariableContext> cxt(
             variable_db->getContext("dummy"));
       const hier::IntVector no_ghosts(dim, 0);
@@ -193,8 +196,8 @@ int main(
             data2, cxt, no_ghosts);
 
       // set us up for restart.
-      variable_db->registerPatchDataForRestart(data_id1);
-      variable_db->registerPatchDataForRestart(data_id2);
+      pdrm->registerPatchDataForRestart(data_id1);
+      pdrm->registerPatchDataForRestart(data_id2);
 
       for (int i = 0; i < 2; ++i) {
          // allocate "sample" data

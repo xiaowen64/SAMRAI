@@ -315,8 +315,7 @@ private:
    void
    partitionByCascade(
       hier::BoxLevel& balance_box_level,
-      hier::Connector* balance_to_reference,
-      double global_sum_load ) const;
+      hier::Connector* balance_to_reference ) const;
 
    /*!
     * @brief Executes a single cascade cycle.
