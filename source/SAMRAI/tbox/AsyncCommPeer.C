@@ -920,6 +920,9 @@ AsyncCommPeer<TYPE>::getRecvData() const
       TBOX_ERROR("AsyncCommPeer::getRecvData() called without a\n"
          << "corresponding receive.");
    }
+   if (!d_internal_buf) {
+      TBOX_ERROR("AsyncCommPeer::getRecvData() after clearRecvData().\n");
+   }
    return &d_internal_buf[0].t;
 }
 
@@ -935,7 +938,10 @@ AsyncCommPeer<TYPE>::clearRecvData()
       TBOX_ERROR("AsyncCommPeer::clearRecvData() called during an\n"
          << "operation.");
    }
-   // d_internal_buf.clear();
+   if (d_internal_buf) {
+      free(d_internal_buf);
+      d_internal_buf = 0;
+   }
 }
 
 
