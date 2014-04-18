@@ -1221,6 +1221,37 @@ SAMRAI_MPI::Sendrecv(
 
 /*
  *****************************************************************************
+ *****************************************************************************
+ */
+int
+SAMRAI_MPI::Scan(
+   void* sendbuf,
+   void* recvbuf,
+   int count,
+   Datatype datatype,
+   Op op) const
+{
+#ifndef HAVE_MPI
+   NULL_USE(sendbuf);
+   NULL_USE(recvbuf);
+   NULL_USE(count);
+   NULL_USE(datatype);
+   NULL_USE(op);
+#endif
+   int rval = MPI_SUCCESS;
+   if (!s_mpi_is_initialized) {
+      TBOX_ERROR("SAMRAI_MPI::Scan is a no-op without run-time MPI!");
+   }
+#ifdef HAVE_MPI
+   else {
+      rval = MPI_Scan(sendbuf, recvbuf, count, datatype, op, d_comm);
+   }
+#endif
+   return rval;
+}
+
+/*
+ *****************************************************************************
  *
  * Methods named like MPI's native interfaces (without the MPI_ prefix)
  * are wrappers for the native interfaces.  The SAMRAI_MPI versions

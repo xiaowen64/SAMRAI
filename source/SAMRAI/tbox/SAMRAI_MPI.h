@@ -575,6 +575,10 @@ public:
       void *recvbuf, int recvcount, Datatype recvtype, int source, int recvtag,
       Status *status ) const;
 
+   int Scan(
+      void *sendbuf, void *recvbuf, int count,
+      Datatype datatype, Op op ) const;
+
    //@}
 
    //@{
