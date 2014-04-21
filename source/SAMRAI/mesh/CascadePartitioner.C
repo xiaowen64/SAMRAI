@@ -66,6 +66,7 @@ CascadePartitioner::CascadePartitioner(
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_mpi_is_dupe(false),
    d_master_workload_data_id(s_default_data_id),
+   d_tile_size(dim,1),
    d_limit_supply_to_surplus(true),
    d_balance_intermediate_groups(false),
    d_reset_obligations(true),
@@ -230,6 +231,21 @@ CascadePartitioner::loadBalanceBoxLevel(
    }
 
 
+   // Set effective_cut_factor to least common multiple of cut_factor and d_tile_size.
+   hier::IntVector effective_cut_factor = cut_factor;
+   if ( d_tile_size != hier::IntVector::getOne(d_dim) ) {
+      for ( int d=0; d<d_dim.getValue(); ++d ) {
+         while ( effective_cut_factor[d]/d_tile_size[d]*d_tile_size[d] != effective_cut_factor[d] ) {
+            effective_cut_factor[d] += cut_factor[d];
+         }
+      }
+      if (d_print_steps) {
+         tbox::plog << "CascadePartitioner::loadBalanceBoxLevel effective_cut_factor = "
+                    << effective_cut_factor << std::endl;
+      }
+   }
+
+
    /*
     * Periodic image Box should be ignored during load balancing
     * because they have no real work.  The load-balanced results
@@ -253,7 +269,7 @@ CascadePartitioner::loadBalanceBoxLevel(
    d_pparams = boost::make_shared<PartitioningParams>(
       *balance_box_level.getGridGeometry(),
       balance_box_level.getRefinementRatio(),
-      min_size, max_size, bad_interval, cut_factor,
+      min_size, max_size, bad_interval, effective_cut_factor,
       d_flexible_load_tol);
 
    LoadType local_load = computeLocalLoad(balance_box_level);
@@ -616,6 +632,16 @@ CascadePartitioner::getFromInput(
       d_flexible_load_tol =
          input_db->getDoubleWithDefault("flexible_load_tolerance",
             d_flexible_load_tol);
+
+      if ( input_db->isInteger("tile_size") ) {
+         input_db->getIntegerArray("tile_size", &d_tile_size[0], d_tile_size.getDim().getValue());
+         for (int i = 0; i < d_dim.getValue(); ++i) {
+            if ( !(d_tile_size[i] >= 1) ) {
+               TBOX_ERROR("CascadePartitioner tile_size must be >= 1 in all directions.\n"
+                          << "Input tile_size is " << d_tile_size );
+            }
+         }
+      }
 
    }
 }

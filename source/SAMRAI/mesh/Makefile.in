@@ -36,7 +36,6 @@ OBJS = 	\
 	ChopAndPackLoadBalancer.o \
 	CascadePartitioner.o \
 	CascadePartitionerTree.o \
-	TilePartitioner.o \
 	LoadBalanceStrategy.o \
 	BalanceBoxBreaker.o \
 	BoxTransitSet.o \

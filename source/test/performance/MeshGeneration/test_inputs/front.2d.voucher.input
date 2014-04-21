@@ -83,25 +83,6 @@ BergerRigoutsos {
 }
 
 
-// Used if load_balancer_type is TilePartitioner.  Refer to mesh::TilePartitioner for input.
-TilePartitioner {
-  box_size = 21, 21
-
-  TreeLoadBalancer {
-    DEV_voucher_mode = TRUE
-    DEV_allow_box_breaking = TRUE
-    // Debugging options
-    DEV_check_map = TRUE
-    DEV_check_connectivity = FALSE
-    DEV_print_steps = FALSE
-    DEV_print_swap_steps = TRUE
-    DEV_print_break_steps = TRUE
-    DEV_print_edge_steps = FALSE
-    DEV_summarize_map = TRUE
-  }
-}
-
-
 // Used if load_balancer_type is TreeLoadBalancer.  Refer to mesh::TreeLoadBalancer for input.
 TreeLoadBalancer {
   flexible_load_tolerance = 0.03

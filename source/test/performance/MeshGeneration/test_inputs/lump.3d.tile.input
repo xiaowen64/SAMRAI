@@ -32,7 +32,7 @@ Main {
 
    box_generator_type = "TileClustering"
 
-   load_balancer_type = "TreeLoadBalancer", "TilePartitioner"
+   load_balancer_type = "TreeLoadBalancer", "TreeLoadBalancer"
 
    load_balance = TRUE, TRUE, TRUE
 
@@ -97,24 +97,6 @@ TilePartitioner {
   }
 }
 
-
-TreeLoadBalancer {
-  flexible_load_tolerance = 0.00
-  DEV_report_load_balance = TRUE // Reported in main
-  DEV_balance_penalty_wt = 1.0
-  DEV_surface_penalty_wt = 1.0
-  DEV_slender_penalty_wt = 1.0
-  DEV_precut_penalty_wt = 1.0
-
-  // Debugging options
-  DEV_check_map = TRUE
-  DEV_check_connectivity = TRUE
-  DEV_print_steps = FALSE
-  DEV_print_swap_steps = FALSE
-  DEV_print_break_steps = FALSE
-  DEV_print_edge_steps = FALSE
-  DEV_summarize_map = TRUE
-}
 
 TimerManager {
 //   print_exclusive      = TRUE

@@ -28,7 +28,7 @@
 #include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/mesh/CascadePartitioner.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
-#include "SAMRAI/mesh/TilePartitioner.h"
+#include "SAMRAI/mesh/GraphLoadBalancer.h"
 #include "SAMRAI/mesh/TileClustering.h"
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -540,11 +540,8 @@ int main(
       /*
        * Skip GraphLoadBalancer test if PT-Scotch is not available.
        */ 
-      if (load_balancer_type == "TilePartitioner") {
-         std::string graphstr = "graph";
-         if (base_name.find(graphstr) != std::string::npos) { 
-            do_test = false;
-         }
+      if (load_balancer_type == "GraphLoadBalancer") {
+         do_test = false;
       }
 #endif
       /*
@@ -1436,21 +1433,21 @@ createLoadBalancer(
       }
       return tree_lb;
 
-   } else if (lb_type == "TilePartitioner") {
+   } else if (lb_type == "GraphLoadBalancer") {
 
       const boost::shared_ptr<tbox::Database> db =
-         input_db->getDatabaseWithDefault("TilePartitioner",
+         input_db->getDatabaseWithDefault("GraphLoadBalancer",
                                           boost::shared_ptr<tbox::Database>());
-      boost::shared_ptr<mesh::TilePartitioner>
-         tile_lb(new mesh::TilePartitioner(
+      boost::shared_ptr<mesh::GraphLoadBalancer>
+         graph_lb(new mesh::GraphLoadBalancer(
             dim,
-            std::string("mesh::TilePartitioner") + tbox::Utilities::intToString(ln),
+            std::string("mesh::GraphLoadBalancer") + tbox::Utilities::intToString(ln),
             db ));
       if ( db ) {
-         tbox::plog << "TilePartitioner created with this input database:\n";
+         tbox::plog << "GraphLoadBalancer created with this input database:\n";
          db->printClassData(plog);
       }
-      return tile_lb;
+      return graph_lb;
 
    } else if (lb_type == "ChopAndPackLoadBalancer") {
 

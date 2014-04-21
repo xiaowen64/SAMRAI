@@ -32,7 +32,7 @@ Main {
 
    box_generator_type = "TileClustering"
 
-   load_balancer_type = "TilePartitioner"
+   load_balancer_type = "TreeLoadBalancer"
 
    load_balance = TRUE, TRUE, TRUE
 
@@ -81,38 +81,16 @@ BergerRigoutsos {
 }
 
 
-TilePartitioner {
-  box_size = 21, 21
-
-  TreeLoadBalancer {
-    flexible_load_tolerance = 0.03
-    DEV_allow_box_breaking = TRUE
-    // Debugging options
-    DEV_check_map = TRUE
-    DEV_check_connectivity = FALSE
-    DEV_print_steps = FALSE
-    DEV_print_swap_steps = TRUE
-    DEV_print_break_steps = TRUE
-    DEV_print_edge_steps = FALSE
-    DEV_summarize_map = TRUE
-  }
-}
-
-
 TreeLoadBalancer {
+  tile_size = 21, 21
   flexible_load_tolerance = 0.03
-  DEV_report_load_balance = TRUE // Reported in main
-  DEV_balance_penalty_wt = 1.0
-  DEV_surface_penalty_wt = 1.0
-  DEV_slender_penalty_wt = 1.0
-  DEV_precut_penalty_wt = 1.0
-
+  DEV_allow_box_breaking = TRUE
   // Debugging options
   DEV_check_map = TRUE
-  DEV_check_connectivity = TRUE
+  DEV_check_connectivity = FALSE
   DEV_print_steps = FALSE
-  DEV_print_swap_steps = FALSE
-  DEV_print_break_steps = FALSE
+  DEV_print_swap_steps = TRUE
+  DEV_print_break_steps = TRUE
   DEV_print_edge_steps = FALSE
   DEV_summarize_map = TRUE
 }
