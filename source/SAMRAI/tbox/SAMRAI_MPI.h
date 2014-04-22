@@ -124,7 +124,7 @@ public:
    typedef int Group;
    typedef int Op;
    typedef int Request;
-
+   
    /*!
     * @brief Dummy definition of Status to match the MPI standard.
     *
@@ -137,6 +137,9 @@ public:
       int MPI_TAG;
       int MPI_ERROR;
    };
+
+#define MPI_STATUS_IGNORE (tbox::SAMRAI_MPI::Status *)1
+   
 #endif
 
    // Obsolete and should be removed.
