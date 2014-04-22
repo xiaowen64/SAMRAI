@@ -120,7 +120,7 @@ ChopAndPackLoadBalancer {
 
 // Used if box_generator_type is TileClustering.  Refer to mesh::TileClustering for input.
 TileClustering {
-  box_size = 8, 8, 8
+  tile_size = 8, 8, 8
   coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE

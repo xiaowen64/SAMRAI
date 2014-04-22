@@ -478,6 +478,7 @@ int main(
          load_balancer0 = cap_load_balancer;
       }
 
+
       boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
             patch_hierarchy,

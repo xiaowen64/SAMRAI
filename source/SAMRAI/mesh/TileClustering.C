@@ -37,7 +37,7 @@ TileClustering::TileClustering(
    const tbox::Dimension& dim,
    const boost::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
-   d_box_size(hier::IntVector(d_dim, 8)),
+   d_tile_size(hier::IntVector(d_dim, 8)),
    d_allow_remote_tile_extent(true),
    d_coalesce_boxes(true),
    d_coalesce_boxes_from_same_patch(false),
@@ -67,9 +67,9 @@ TileClustering::getFromInput(
 {
    if (input_db) {
 
-      if (input_db->isInteger("box_size")) {
-         input_db->getIntegerArray("box_size",
-            &d_box_size[0],
+      if (input_db->isInteger("tile_size")) {
+         input_db->getIntegerArray("tile_size",
+            &d_tile_size[0],
             d_dim.getValue());
       }
 
@@ -303,7 +303,7 @@ TileClustering::findBoxesContainingTags(
        * Log summary of clustering.
        */
       tbox::plog << "TileClustering summary:\n"
-                 << "\tClustered with box_size = " << d_box_size << '\n';
+                 << "\tClustered with tile_size = " << d_tile_size << '\n';
 
       for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
            bi != bound_boxes.end(); ++bi) {
@@ -395,7 +395,7 @@ TileClustering::clusterWithinProcessBoundaries(
    int max_tiles_for_any_patch = 0;
    for ( int pi=0; pi<tag_level->getLocalNumberOfPatches(); ++pi ) {
       hier::Box coarsened_box = tag_level->getPatch(pi)->getBox();
-      coarsened_box.coarsen(d_box_size);
+      coarsened_box.coarsen(d_tile_size);
       hier::IntVector number_tiles = coarsened_box.numberCells();
       number_tiles *= 3; // Possible merging of smaller tiles on either side of it.
       max_tiles_for_any_patch = tbox::MathUtilities<int>::Max(
@@ -495,7 +495,7 @@ TileClustering::clusterWholeTiles(
 
    const hier::BoxLevel &tag_box_level = *tag_level->getBoxLevel();
    const hier::Connector &tag_to_tag = tag_box_level.findConnector(
-      tag_box_level, d_box_size, hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
+      tag_box_level, d_tile_size, hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
 
    hier::BoxContainer visible_tag_boxes(true); // Ordering is precondition for removePeriodicImageBoxes.
    tag_to_tag.getLocalNeighbors(visible_tag_boxes);
@@ -561,7 +561,7 @@ TileClustering::clusterWholeTiles(
 
             hier::Box whole_tile(coarse_cell_index,coarse_cell_index,
                                  patch_box.getBlockId());
-            whole_tile.refine(d_box_size);
+            whole_tile.refine(d_tile_size);
 
             hier::BoxContainer overlapping_tag_boxes;
             visible_tag_boxes.findOverlapBoxes( overlapping_tag_boxes,
@@ -838,7 +838,7 @@ TileClustering::detectSemilocalEdges(
 
    const hier::BoxLevel &tag_box_level = tag_to_tile->getBase();
    hier::Connector tag_to_tag = tag_box_level.findConnector(
-      tag_box_level, d_box_size, hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
+      tag_box_level, d_tile_size, hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
    /*
     * We don't want to introduce periodic relationships yet, so remove
     * them from the tag<==>tag leg of the bridge.  tag_to_tag doesn't
@@ -980,7 +980,7 @@ TileClustering::findTilesContainingTags(
    tiles.unorder();
 
    hier::Box coarsened_box(tag_data.getBox());
-   coarsened_box.coarsen(d_box_size);
+   coarsened_box.coarsen(d_tile_size);
 
    const int num_coarse_cells = coarsened_box.size();
 
@@ -1002,7 +1002,7 @@ TileClustering::findTilesContainingTags(
        * coincide with the tile cuts.
        */
       hier::Box tile_box(coarse_cell_index,coarse_cell_index,coarsened_box.getBlockId());
-      tile_box.refine(d_box_size);
+      tile_box.refine(d_tile_size);
       tile_box *= tag_data.getBox();
 
       /*
@@ -1071,7 +1071,7 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
                                      int tag_val) const
 {
    hier::Box coarsened_box(tag_data.getBox());
-   coarsened_box.coarsen(d_box_size);
+   coarsened_box.coarsen(d_tile_size);
 
    boost::shared_ptr<pdat::CellData<int> > coarsened_tag_data(
       new pdat::CellData<int>(coarsened_box,
@@ -1086,7 +1086,7 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
       const pdat::CellIndex coarse_cell_index(coarsened_box.index(offset));
 
       hier::Box fine_cells_box(coarse_cell_index,coarse_cell_index,coarsened_box.getBlockId());
-      fine_cells_box.refine(d_box_size);
+      fine_cells_box.refine(d_tile_size);
       fine_cells_box *= tag_data.getBox();
 
       pdat::CellIterator finecend(pdat::CellGeometry::end(fine_cells_box));

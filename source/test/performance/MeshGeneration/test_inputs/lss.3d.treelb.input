@@ -65,7 +65,7 @@ Main {
 
 // Used if box_generator_type is TileClustering.  Refer to mesh::TileClustering for input.
 TileClustering {
-  box_size = 4, 4, 4
+  tile_size = 4, 4, 4
   allow_remote_tile_extent = TRUE
   coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE

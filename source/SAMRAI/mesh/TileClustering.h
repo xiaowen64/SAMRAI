@@ -35,8 +35,8 @@ namespace mesh {
  *
  * <b> Definitions: </b>
  *
- *   - \b box_size
- *   Box size in the index space of the tag level.
+ *   - \b tile_size
+ *   Tile size in the index space of the tag level.
  *
  *   - \b coalesce_boxes
  *   Whether to coalesce boxes after clustering.  This can lead to
@@ -70,7 +70,7 @@ namespace mesh {
  *     <th>behavior on restart</th>
  *   </tr>
  *   <tr>
- *     <td>box_size</td>
+ *     <td>tile_size</td>
  *     <td>int[]</td>
  *     <td>all values are 8</td>
  *     <td>????????</td>
@@ -271,8 +271,8 @@ private:
 
    const tbox::Dimension d_dim;
 
-   //! @brief Box size constraint.
-   hier::IntVector d_box_size;
+   //! @brief Tile size constraint.
+   hier::IntVector d_tile_size;
 
    /*!
     * @brief Whether to allow tiles to have remote extents.
