@@ -1150,6 +1150,11 @@ else
          CONFIGURED_WITH_MPI="with_mpi"
          AC_SUBST(CONFIGURED_WITH_MPI)
       fi
+   else
+      with_mpi=yes
+      AC_DEFINE([HAVE_MPI],[1],[MPI library is present])
+      CONFIGURED_WITH_MPI="with_mpi"
+      AC_SUBST(CONFIGURED_WITH_MPI)
    fi
 fi
 CASC_AC_LOG_VAR(with_mpi)
