@@ -257,7 +257,7 @@ public:
       const hier::Connector &coarse_to_fine,
       const hier::Connector &coarse_to_unfilled,
       const std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
-      const std::vector<const RefineClasses::Data*> &refine_items ) {
+      const RefineClasses::Data** refine_items ) {
       NULL_USE( fine_level );
       NULL_USE( coarse_level );
       NULL_USE( coarse_to_fine );
