@@ -477,7 +477,9 @@ CascadePartitionerTree::balanceChildren()
       }
    }
    else {
-      tbox::plog << "CascadePartitionerTree::balanceChildren: not supplying or demanding\n";
+      if ( d_common->d_print_steps ) {
+         tbox::plog << "CascadePartitionerTree::balanceChildren: not supplying or demanding\n";
+      }
    }
 
    // Complete the load send, if there was any.
