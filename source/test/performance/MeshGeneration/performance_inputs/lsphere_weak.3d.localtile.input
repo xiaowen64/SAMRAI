@@ -45,7 +45,7 @@ Main {
 
    box_generator_type = "TileClustering"
 
-   load_balancer_type = "TilePartitioner"
+   load_balancer_type = "TreeLoadBalancer"
 
    load_balance = TRUE, TRUE
 
@@ -119,7 +119,7 @@ ChopAndPackLoadBalancer {
 
 // Used if box_generator_type is TileClustering.  Refer to mesh::TileClustering for input.
 TileClustering {
-  box_size = 8, 8, 8
+  tile_size = 8, 8, 8
   coalesce_boxes = TRUE
   allow_remote_tile_extent = FALSE
   DEV_barrier_and_time = TRUE
@@ -128,22 +128,19 @@ TileClustering {
 }
 
 
-// Used if load_balancer_type is TilePartitioner.  Refer to mesh::TilePartitioner for input.
-TilePartitioner {
-  box_size = 16, 16, 16
-
-  TreeLoadBalancer {
-    DEV_report_load_balance = FALSE // Reported in main
-    DEV_allow_box_breaking = TRUE
-    // Debugging options
-    DEV_check_map = FALSE
-    DEV_check_connectivity = FALSE
-    DEV_print_steps = FALSE
-    DEV_print_swap_steps = FALSE
-    DEV_print_break_steps = FALSE
-    DEV_print_edge_steps = FALSE
-    DEV_summarize_map = TRUE
-  }
+// Used if load_balancer_type is TreeLoadBalancer.  Refer to mesh::TreeLoadBalancer for input.
+TreeLoadBalancer {
+  tile_size = 16, 16, 16
+  DEV_report_load_balance = FALSE // Reported in main
+  DEV_allow_box_breaking = TRUE
+  // Debugging options
+  DEV_check_map = FALSE
+  DEV_check_connectivity = FALSE
+  DEV_print_steps = FALSE
+  DEV_print_swap_steps = FALSE
+  DEV_print_break_steps = FALSE
+  DEV_print_edge_steps = FALSE
+  DEV_summarize_map = TRUE
 }
 
 // Refer to tbox::TimerManager for input.

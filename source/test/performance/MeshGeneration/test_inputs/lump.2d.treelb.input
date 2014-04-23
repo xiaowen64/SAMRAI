@@ -51,7 +51,7 @@ Main {
 
 
 TileClustering {
-  box_size = 7, 7
+  tile_size = 7, 7
   allow_remote_tile_extent = TRUE
   coalesce_boxes = TRUE
   DEV_print_steps = TRUE
@@ -76,23 +76,6 @@ BergerRigoutsos {
   DEV_log_cluster = FALSE
   // DEV_owner_mode = "SINGLE_OWNER"
   // DEV_algo_advance_mode = "SYNCHRONOUS"
-}
-
-
-TilePartitioner {
-  box_size = 21, 21
-
-  TreeLoadBalancer {
-    flexible_load_tolerance = 0.05
-    // max_cycle_spread_procs = 8
-    DEV_voucher_mode = FALSE
-    DEV_allow_box_breaking = TRUE
-    // Debugging options
-    DEV_check_map = TRUE
-    DEV_check_connectivity = FALSE
-    DEV_print_steps = FALSE
-    DEV_summarize_map = TRUE
-  }
 }
 
 

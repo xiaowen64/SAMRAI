@@ -8,6 +8,7 @@
  *
  ************************************************************************/
 #include "SAMRAI/hier/Patch.h"
+#include "SAMRAI/hier/PatchDataRestartManager.h"
 
 #include <typeinfo>
 #include <string>
@@ -189,8 +190,7 @@ Patch::setTime(
 
 void
 Patch::getFromRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db,
-   const ComponentSelector& component_selector)
+   const boost::shared_ptr<tbox::Database>& restart_db)
 {
    TBOX_ASSERT(restart_db);
 
@@ -220,7 +220,8 @@ Patch::getFromRestart(
       patch_data_namelist = restart_db->getStringVector("patch_data_namelist");
    }
 
-   ComponentSelector local_selector(component_selector);
+   PatchDataRestartManager* pdrm = PatchDataRestartManager::getManager();
+   ComponentSelector patch_data_read;
 
    for (int i = 0; i < static_cast<int>(patch_data_namelist.size()); ++i) {
       std::string& patch_data_name = patch_data_namelist[i];
@@ -237,17 +238,16 @@ Patch::getFromRestart(
       patch_data_index = d_descriptor->mapNameToIndex(patch_data_name);
 
       if ((patch_data_index >= 0) &&
-          (local_selector.isSet(patch_data_index))) {
+          (pdrm->isPatchDataRegisteredForRestart(patch_data_index))) {
          boost::shared_ptr<PatchDataFactory> patch_data_factory(
             d_descriptor->getPatchDataFactory(patch_data_index));
          d_patch_data[patch_data_index] = patch_data_factory->allocate(*this);
          d_patch_data[patch_data_index]->getFromRestart(patch_data_database);
-
-         local_selector.clrFlag(patch_data_index);
+         patch_data_read.setFlag(patch_data_index);
       }
    }
 
-   if (local_selector.any()) {
+   if (!pdrm->registeredPatchDataMatches(patch_data_read)) {
       TBOX_WARNING("Patch::getFromRestart() warning...\n"
          << "   Some requested patch data components not "
          << "found in restart database" << std::endl);
@@ -269,15 +269,14 @@ Patch::getFromRestart(
  * are stored by the patch descriptor.  In addition a list of the
  * patch_data names ("patch_data_namelist") and the number of patch data
  * items saved ("namelist_count") are also written to the database.
- * The patchdata_write_table determines which patchdata are written to
+ * The PatchDataRestartManager determines which patchdata are written to
  * the database.
  *
  *************************************************************************
  */
 void
 Patch::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db,
-   const ComponentSelector& patchdata_write_table) const
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -292,8 +291,9 @@ Patch::putToRestart(
    restart_db->putBool("d_patch_in_hierarchy", d_patch_in_hierarchy);
 
    int namelist_count = 0;
+   const PatchDataRestartManager* pdrm = PatchDataRestartManager::getManager();
    for (i = 0; i < static_cast<int>(d_patch_data.size()); ++i) {
-      if (patchdata_write_table.isSet(i) && checkAllocated(i)) {
+      if (pdrm->isPatchDataRegisteredForRestart(i) && checkAllocated(i)) {
          ++namelist_count;
       }
    }
@@ -302,7 +302,7 @@ Patch::putToRestart(
    std::vector<std::string> patch_data_namelist(namelist_count);
    namelist_count = 0;
    for (i = 0; i < static_cast<int>(d_patch_data.size()); ++i) {
-      if (patchdata_write_table.isSet(i) && checkAllocated(i)) {
+      if (pdrm->isPatchDataRegisteredForRestart(i) && checkAllocated(i)) {
          patch_data_namelist[namelist_count++] =
             patch_data_name = d_descriptor->mapIndexToName(i);
          boost::shared_ptr<tbox::Database> patch_data_database(

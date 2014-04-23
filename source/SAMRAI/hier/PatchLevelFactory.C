@@ -61,7 +61,6 @@ PatchLevelFactory::allocate(
    const boost::shared_ptr<tbox::Database>& database,
    const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
    const boost::shared_ptr<PatchDescriptor>& descriptor,
-   const ComponentSelector& component_selector,
    const boost::shared_ptr<PatchFactory>& factory,
    const bool defer_boundary_box_creation) const
 {
@@ -71,7 +70,6 @@ PatchLevelFactory::allocate(
          grid_geometry,
          descriptor,
          factory,
-         component_selector,
          defer_boundary_box_creation));
    return pl;
 }

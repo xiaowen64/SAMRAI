@@ -75,6 +75,10 @@ namespace mesh {
  *   boxes. This option can be invoked to spatially merge those boxes where
  *   possible.
  *
+ *   - \b tile_size
+ *   Tile size when using tile mode.  Tile mode restricts box cuts
+ *   to tile boundaries.  Default is 1, which is equivalent to no restriction.
+ *
  * <b> Details: </b> <br>
  * <table>
  *   <tr>
@@ -98,6 +102,14 @@ namespace mesh {
  *     <td>bool</td>
  *     <td>true</td>
  *     <td>true/false</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>tile_size</td>
+ *     <td>IntVector</td>
+ *     <td>1</td>
+ *     <td>1-</td>
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
@@ -423,6 +435,12 @@ private:
    hier::IntVector d_target_box_size;
 
    bool d_coalesce_boxes;
+
+   /*!
+    * @brief Tile size, when restricting cuts to tile boundaries,
+    * Set to 1 when not restricting.
+    */
+   hier::IntVector d_tile_size;
 
    mutable hier::IntVector d_min_size;
    mutable hier::IntVector d_cut_factor;

@@ -147,19 +147,13 @@ public:
     *
     * The box, mapping, and ratio to level zero data which are normally
     * passed in during the construction of a new patch level are
-    * retrieved from the specified restart database.  The component_selector
-    * argument specifies which patch data components should be allocated
-    * and read in from the restart_database.  By default, all bits in the
-    * component selector are set to false so that no patch data are
-    * allocated.
+    * retrieved from the specified restart database.
     *
     * @param[in]  restart_database
     * @param[in]  grid_geometry
     * @param[in]  descriptor The PatchDescriptor used to allocate patch
     *             data.
     * @param[in]  factory
-    * @param[in]  component_selector Optional ComponentSelector. @b Default:
-    *             a ComponentSelector with all elements set to false
     * @param[in]  defer_boundary_box_creation Flag to indicate suppressing
     *             construction of the boundary boxes.  @b Default: false
     *
@@ -172,8 +166,6 @@ public:
       const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
       const boost::shared_ptr<PatchDescriptor>& descriptor,
       const boost::shared_ptr<PatchFactory>& factory,
-      const ComponentSelector& component_selector =
-         *(new ComponentSelector(false)),
       bool defer_boundary_box_creation = false);
 
    /*!
@@ -1088,14 +1080,12 @@ public:
     * level are equal.
     *
     * @param[in,out] restart_db
-    * @param[in]     component_selector
     *
     * @pre restart_db
     */
    void
    getFromRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db,
-      const ComponentSelector& component_selector);
+      const boost::shared_ptr<tbox::Database>& restart_db);
 
    /*!
     * @brief Write data to the restart database.
@@ -1105,15 +1095,12 @@ public:
     * the restart database.
     *
     * @param[in,out]  restart_db
-    * @param[in]      patchdata_write_table The ComponentSelector specifying
-    *                 which patch data to write to the database
     *
     * @pre restart_db
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db,
-      const ComponentSelector& patchdata_write_table) const;
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * @brief Print a patch level to varying details.

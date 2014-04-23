@@ -50,7 +50,7 @@ BergerRigoutsos {
 }
 
 TileClustering {
-   box_size = 8,8,8
+   tile_size = 8,8,8
    DEV_log_cluster_summary = TRUE
    DEV_log_cluster = FALSE
    DEV_barrier_and_time = TRUE
@@ -178,7 +178,7 @@ TreeLoadBalancer {
 }
 
 TilePartitioner {
-  box_size = 16,16,16
+  tile_size = 16,16,16
   DEV_report_load_balance = FALSE
   DEV_barrier_before = TRUE
   DEV_barrier_after = TRUE

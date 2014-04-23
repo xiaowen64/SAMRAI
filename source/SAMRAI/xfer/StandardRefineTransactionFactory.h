@@ -49,20 +49,6 @@ public:
    virtual ~StandardRefineTransactionFactory();
 
    /*!
-    * @brief Set the array of RefineClass::Data items used by the transactions.
-    */
-   virtual void
-   setRefineItems(
-      const RefineClasses::Data *const* refine_items);
-
-   /*!
-    * @brief Clear the array of RefineClass::Data items used by the
-    * transactions.
-    */
-   virtual void
-   unsetRefineItems();
-
-   /*!
     * @brief Set simulation time used by the refine time transaction objects.
     */
    virtual void
@@ -81,7 +67,8 @@ public:
     *                       patches.
     * @param dst_box        Destination Box in destination patch level.
     * @param src_box        Source Box in source patch level.
-    * @param ritem_id       Integer index of RefineClass::Data item associated
+    * @param refine_data    Pointer to array of refine data items.
+    * @param item_id        Integer index of RefineClass::Data item associated
     *                       with transaction.
     * @param box            Optional const reference to box defining region of
     *                       refine transaction.  Default is an empty box.
@@ -101,7 +88,8 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_box,
       const hier::Box& src_box,
-      int ritem_id,
+      const RefineClasses::Data** refine_data,
+      int item_id,
       const hier::Box& box,       // Default in v 2.x  = hier::Box()
       bool use_time_interpolation = false) const;
 
@@ -132,8 +120,6 @@ private:
    StandardRefineTransactionFactory&
    operator = (
       const StandardRefineTransactionFactory&);
-
-   const RefineClasses::Data*const* d_refine_items;
 
 };
 

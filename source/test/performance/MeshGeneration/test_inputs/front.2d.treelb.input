@@ -56,7 +56,7 @@ Main {
 
 // Used if box_generator_type is TileClustering.  Refer to mesh::TileClustering for input.
 TileClustering {
-  box_size = 7, 7
+  tile_size = 7, 7
   coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
@@ -80,24 +80,6 @@ BergerRigoutsos {
   DEV_log_cluster = FALSE
   // DEV_owner_mode = "SINGLE_OWNER"
   // DEV_algo_advance_mode = "SYNCHRONOUS"
-}
-
-
-// Used if load_balancer_type is TilePartitioner.  Refer to mesh::TilePartitioner for input.
-TilePartitioner {
-  box_size = 21, 21
-
-  TreeLoadBalancer {
-    DEV_allow_box_breaking = TRUE
-    // Debugging options
-    DEV_check_map = TRUE
-    DEV_check_connectivity = FALSE
-    DEV_print_steps = FALSE
-    DEV_print_swap_steps = TRUE
-    DEV_print_break_steps = TRUE
-    DEV_print_edge_steps = FALSE
-    DEV_summarize_map = TRUE
-  }
 }
 
 

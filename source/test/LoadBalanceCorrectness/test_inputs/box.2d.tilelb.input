@@ -38,7 +38,7 @@ Main {
 
    box_generator_type = "TileClustering"
 
-   load_balancer_type = "TilePartitioner"
+   load_balancer_type = "TreeLoadBalancer"
 
    mesh_generator_name = "ShrunkenLevelGenerator"
 
@@ -52,7 +52,7 @@ Main {
 
 
 TileClustering {
-  box_size = 10, 10
+  tile_size = 10, 10
   allow_remote_tile_extent = TRUE
   coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE
@@ -71,43 +71,18 @@ BergerRigoutsos {
 }
 
 
-TilePartitioner {
-  box_size = 10, 10
-  internal_load_balancer = "TreeLoadBalancer"
-
-  CascadePartitioner {
-    flexible_load_tolerance = 0.05
-    // Debugging options
-    DEV_check_map = TRUE
-    DEV_check_connectivity = FALSE
-    DEV_print_steps = FALSE
-    DEV_summarize_map = TRUE
-  }
-  TreeLoadBalancer {
-    // Debugging options
-    DEV_check_map = TRUE
-    DEV_check_connectivity = FALSE
-    DEV_print_steps = FALSE
-    DEV_print_swap_steps = TRUE
-    DEV_print_break_steps = TRUE
-    DEV_print_edge_steps = FALSE
-    DEV_summarize_map = TRUE
-  }
-}
-
-
 TreeLoadBalancer {
-  DEV_report_load_balance = TRUE // Reported in main
-
+  tile_size = 10, 10
   // Debugging options
   DEV_check_map = TRUE
-  DEV_check_connectivity = TRUE
+  DEV_check_connectivity = FALSE
   DEV_print_steps = FALSE
-  DEV_print_swap_steps = FALSE
-  DEV_print_break_steps = FALSE
+  DEV_print_swap_steps = TRUE
+  DEV_print_break_steps = TRUE
   DEV_print_edge_steps = FALSE
   DEV_summarize_map = TRUE
 }
+
 
 TimerManager {
 //   print_exclusive      = TRUE

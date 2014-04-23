@@ -39,7 +39,7 @@ Main {
 
    box_generator_type = "TileClustering"
 
-   load_balancer_type = "TilePartitioner"
+   load_balancer_type = "TreeLoadBalancer"
 
    mesh_generator_name = "SinusoidalFrontGenerator"
 
@@ -56,7 +56,7 @@ Main {
 
 
 TileClustering {
-  box_size = 2, 2, 2
+  tile_size = 2, 2, 2
   allow_remote_tile_extent = TRUE
   coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE
@@ -75,34 +75,18 @@ BergerRigoutsos {
 }
 
 
-TilePartitioner {
-  box_size = 6, 6, 6
-
-  TreeLoadBalancer {
-    // Debugging options
-    DEV_check_map = TRUE
-    DEV_check_connectivity = FALSE
-    DEV_print_steps = FALSE
-    DEV_print_swap_steps = FALSE
-    DEV_print_break_steps = TRUE
-    DEV_print_edge_steps = FALSE
-    DEV_summarize_map = TRUE
-  }
-}
-
-
 TreeLoadBalancer {
-  DEV_report_load_balance = TRUE // Reported in main
-
+  tile_size = 6, 6, 6
   // Debugging options
   DEV_check_map = TRUE
-  DEV_check_connectivity = TRUE
+  DEV_check_connectivity = FALSE
   DEV_print_steps = FALSE
   DEV_print_swap_steps = FALSE
-  DEV_print_break_steps = FALSE
+  DEV_print_break_steps = TRUE
   DEV_print_edge_steps = FALSE
   DEV_summarize_map = TRUE
 }
+
 
 CenteredRankTree {
   make_first_rank_the_root = FALSE

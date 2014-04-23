@@ -36,27 +36,6 @@ OuternodeSumTransactionFactory::~OuternodeSumTransactionFactory()
 /*
  *************************************************************************
  *
- * Set/unset information for transactions managed by this factory class.
- *
- *************************************************************************
- */
-
-void OuternodeSumTransactionFactory::setRefineItems(
-   const xfer::RefineClasses::Data*const* refine_items)
-{
-   OuternodeSumTransaction::setRefineItems(refine_items);
-   d_refine_items = refine_items;
-}
-
-void OuternodeSumTransactionFactory::unsetRefineItems()
-{
-   OuternodeSumTransaction::unsetRefineItems();
-   d_refine_items = 0;
-}
-
-/*
- *************************************************************************
- *
  * Allocate outernode sum transaction object.
  *
  *************************************************************************
@@ -69,7 +48,8 @@ OuternodeSumTransactionFactory::allocate(
    const boost::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_node,
    const hier::Box& src_node,
-   int ritem_id,
+   const xfer::RefineClasses::Data** refine_data,
+   int item_id,
    const hier::Box& box,
    bool use_time_interpolation) const
 {
@@ -81,7 +61,7 @@ OuternodeSumTransactionFactory::allocate(
    TBOX_ASSERT(overlap);
    TBOX_ASSERT(dst_node.getLocalId() >= 0);
    TBOX_ASSERT(src_node.getLocalId() >= 0);
-   TBOX_ASSERT(ritem_id >= 0);
+   TBOX_ASSERT(refine_data != 0);
    TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level, *src_level, dst_node, src_node);
 
    return boost::make_shared<OuternodeSumTransaction>(dst_level,
@@ -89,7 +69,8 @@ OuternodeSumTransactionFactory::allocate(
       overlap,
       dst_node,
       src_node,
-      ritem_id);
+      refine_data,
+      item_id);
 }
 
 boost::shared_ptr<tbox::Transaction>
@@ -99,14 +80,15 @@ OuternodeSumTransactionFactory::allocate(
    const boost::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_node,
    const hier::Box& src_node,
-   int ritem_id) const
+   const xfer::RefineClasses::Data** refine_data,
+   int item_id) const
 {
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
    TBOX_ASSERT(overlap);
    TBOX_ASSERT(dst_node.getLocalId() >= 0);
    TBOX_ASSERT(src_node.getLocalId() >= 0);
-   TBOX_ASSERT(ritem_id >= 0);
+   TBOX_ASSERT(refine_data >= 0);
    TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level, *src_level, dst_node, src_node);
 
    return allocate(dst_level,
@@ -114,7 +96,8 @@ OuternodeSumTransactionFactory::allocate(
       overlap,
       dst_node,
       src_node,
-      ritem_id,
+      refine_data,
+      item_id,
       hier::Box(dst_level->getDim()),
       false);
 }

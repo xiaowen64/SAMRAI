@@ -44,6 +44,7 @@ d_dim(dim),
 d_object_name(name),
 d_target_box_size(dim, 0),
 d_coalesce_boxes(true),
+d_tile_size(dim,1),
 d_min_size(dim),
 d_cut_factor(dim),
 d_bad_interval(dim)
@@ -81,10 +82,22 @@ GraphLoadBalancer::loadBalanceBoxLevel(
    const tbox::RankGroup& rank_group) const
 {
    NULL_USE(rank_group);
+
+
+   // Set effective_cut_factor to least common multiple of cut_factor and d_tile_size.
+   hier::IntVector effective_cut_factor = cut_factor;
+   if ( d_tile_size != hier::IntVector::getOne(d_dim) ) {
+      for ( int d=0; d<d_dim.getValue(); ++d ) {
+         while ( effective_cut_factor[d]/d_tile_size[d]*d_tile_size[d] != effective_cut_factor[d] ) {
+            effective_cut_factor[d] += cut_factor[d];
+         }
+      }
+   }
+
 #ifdef HAVE_PTSCOTCH
    d_min_size = min_size;
    d_bad_interval = bad_interval;
-   d_cut_factor = cut_factor;
+   d_cut_factor = effective_cut_factor;
    d_block_domain_boxes.clear();
    int nblocks =
       domain_box_level.getGridGeometry()->getNumberBlocks();
@@ -1074,6 +1087,17 @@ GraphLoadBalancer::getFromInput(
       }
 
       d_coalesce_boxes = input_db->getBoolWithDefault("coalesce_boxes", true);
+
+      if ( input_db->isInteger("tile_size") ) {
+         input_db->getIntegerArray("tile_size", &d_tile_size[0], d_tile_size.getDim().getValue());
+         for (int i = 0; i < d_dim.getValue(); ++i) {
+            if ( !(d_tile_size[i] >= 1) ) {
+               TBOX_ERROR("CascadePartitioner tile_size must be >= 1 in all directions.\n"
+                          << "Input tile_size is " << d_tile_size );
+            }
+         }
+      }
+
    }
 }
 

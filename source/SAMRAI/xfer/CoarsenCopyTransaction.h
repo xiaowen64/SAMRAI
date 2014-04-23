@@ -43,35 +43,6 @@ namespace xfer {
 class CoarsenCopyTransaction:public tbox::Transaction
 {
 public:
-   /*!
-    * Static member function to set the array of coarsen class data items that
-    * is shared by all object instances of this copy transaction class during
-    * data transfers.  The array must be set before any transactions are
-    * executed.  The array is set in the CoarsenSchedule class.
-    *
-    * @pre coarsen_items != 0
-    * @pre num_coarsen_items >= 0
-    */
-   static void
-   setCoarsenItems(
-      const CoarsenClasses::Data** coarsen_items)
-   {
-      TBOX_ASSERT(coarsen_items != 0);
-      s_coarsen_items = coarsen_items;
-   }
-
-   /*!
-    * Static member function to unset the array of coarsen class data items
-    * that is shared by all object instances of this copy transaction class
-    * during data transfers.  The unset function is used to prevent erroneous
-    * execution of different schedules.  The array is unset in the
-    * CoarsenSchedule class.
-    */
-   static void
-   unsetCoarsenItems()
-   {
-      s_coarsen_items = 0;
-   }
 
    /*!
     * Construct a transaction with the specified source and destination
@@ -89,7 +60,8 @@ public:
     *                         patches.
     * @param dst_box          Destination Box in destination patch level.
     * @param src_box          Source Box in source patch level.
-    * @param coarsen_item_id  Integer id of coarsen data item owned by coarsen
+    * @param coarsen_data     Pointer to array of coarsen data items
+    * @param item_id          Integer id of coarsen data item owned by coarsen
     *                         schedule.
     *
     * @pre dst_level
@@ -100,7 +72,8 @@ public:
     *      (dst_level->getDim() == src_box.getDim())
     * @pre dst_box.getLocalId() >= 0
     * @pre src_box.getLocalId() >= 0
-    * @pre coarsen_item_id >= 0
+    * @pre coarsen_data != 0
+    * @pre item_id >= 0
     */
    CoarsenCopyTransaction(
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
@@ -108,7 +81,8 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_box,
       const hier::Box& src_box,
-      const int coarsen_item_id);
+      const CoarsenClasses::Data** coarsen_data,
+      int item_id);
 
    /*!
     * The virtual destructor for the copy transaction releases all
@@ -186,14 +160,13 @@ private:
    operator = (
       const CoarsenCopyTransaction&);                   // not implemented
 
-   static const CoarsenClasses::Data** s_coarsen_items;
-
    boost::shared_ptr<hier::Patch> d_dst_patch;
    int d_dst_patch_rank;
    boost::shared_ptr<hier::Patch> d_src_patch;
    int d_src_patch_rank;
    boost::shared_ptr<hier::BoxOverlap> d_overlap;
-   int d_coarsen_item_id;
+   const CoarsenClasses::Data** d_coarsen_data;
+   int d_item_id;
    int d_incoming_bytes;
    int d_outgoing_bytes;
 

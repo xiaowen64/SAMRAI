@@ -1054,21 +1054,6 @@ private:
    computeRequiredConnectorWidths() const;
 
    /*!
-    * @brief Writes the state of the PatchHierarchy object and the PatchLevels
-    * it contains to the restart database.
-    *
-    * Only those patch data indicated in the ComponentSelector are written to
-    * the specified database.
-    *
-    * @param[out] restart_db
-    * @param[in]  patchdata_write_table
-    */
-   void
-   putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db,
-      const ComponentSelector& patchdata_write_table) const;
-
-   /*!
     * @brief Read input data from specified database and initialize
     * class members.
     *

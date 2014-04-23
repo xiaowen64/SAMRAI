@@ -34,31 +34,6 @@ StandardRefineTransactionFactory::~StandardRefineTransactionFactory()
 {
 }
 
-/*
- *************************************************************************
- *
- * Set/unset information for transactions managed by this factory class.
- *
- *************************************************************************
- */
-
-void
-StandardRefineTransactionFactory::setRefineItems(
-   const RefineClasses::Data*const* refine_items)
-{
-   RefineCopyTransaction::setRefineItems(refine_items);
-   RefineTimeTransaction::setRefineItems(refine_items);
-   d_refine_items = refine_items;
-}
-
-void
-StandardRefineTransactionFactory::unsetRefineItems()
-{
-   RefineCopyTransaction::unsetRefineItems();
-   RefineTimeTransaction::unsetRefineItems();
-   d_refine_items = 0;
-}
-
 void
 StandardRefineTransactionFactory::setTransactionTime(
    double fill_time)
@@ -81,7 +56,8 @@ StandardRefineTransactionFactory::allocate(
    const boost::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_box,
    const hier::Box& src_box,
-   int ritem_id,
+   const RefineClasses::Data** refine_data,
+   int item_id,
    const hier::Box& box,
    bool use_time_interpolation) const
 {
@@ -100,7 +76,8 @@ StandardRefineTransactionFactory::allocate(
          dst_box,
          src_box,
          box,
-         ritem_id);
+         refine_data,
+         item_id);
 
    } else {
 
@@ -110,7 +87,8 @@ StandardRefineTransactionFactory::allocate(
          overlap,
          dst_box,
          src_box,
-         ritem_id);
+         refine_data,
+         item_id);
 
    }
 }

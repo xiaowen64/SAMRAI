@@ -28,7 +28,6 @@
 #include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/mesh/CascadePartitioner.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
-#include "SAMRAI/mesh/TilePartitioner.h"
 #include "SAMRAI/mesh/TileClustering.h"
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -1228,17 +1227,6 @@ createLoadBalancer(
             input_db->getDatabaseWithDefault("CascadePartitioner",
                                              boost::shared_ptr<tbox::Database>())));
       return cascade_lb;
-
-   } else if (lb_type == "TilePartitioner") {
-
-      boost::shared_ptr<mesh::TilePartitioner>
-         tile_lb(new mesh::TilePartitioner(
-            dim,
-            std::string("mesh::TilePartitioner") + tbox::Utilities::intToString(ln),
-            input_db->getDatabaseWithDefault("TilePartitioner",
-                                             boost::shared_ptr<tbox::Database>())));
-      tile_lb->setCommGraphWriter(comm_graph_writer);
-      return tile_lb;
 
    } else if (lb_type == "ChopAndPackLoadBalancer") {
 

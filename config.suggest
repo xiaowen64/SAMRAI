@@ -118,13 +118,37 @@ cat <<-EOF
 	--enable-rpath=-Wl,-R
 	--with-zlib
 	--with-hdf5=/usr/local/tools/hdf5-intel-parallel-1.8.5
-	--with-silo=/usr/gapps/silo/4.6.2/chaos_4_x86_64_ib
+	--with-silo=/usr/gapps/silo/4.8/chaos_5_x86_64_ib
 	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
 	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.55.0
 	--without-tbb
 EOF
 # Maintained by Noah Elliott
 ;;
+
+chaos5_mpiicc14_cxx11_mpi2) # CHAOS5, Intel v. 14 compilers with LLNL mpiicpc front ends, using C++ 11 standard and MPI2
+cat <<-EOF
+	--with-CC=mpiicc
+	--with-CXX=mpiicpc
+	--with-F77=mpiifort
+	--without-petsc
+	--without-x
+	--without-sundials
+	--disable-shared
+	--enable-rpath=-Wl,-R
+	--with-zlib
+	--with-hdf5=/usr/gapps/samrai/apps/chaos/hdf5/1.8.5p1-serial
+	--with-silo=/usr/gapps/silo/4.8/chaos_5_x86_64_ib
+	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
+	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.55.0
+	--without-tbb
+EOF
+# Maintained by Noah Elliott
+;;
+# With the above configure options, these "use" commands must precede the
+# use of configure
+# % use ic-14.0.144
+# % use gcc-4.6.1 
 
 edge_gcc) # Edge with default GNU GCC compilers
 cat <<-EOF

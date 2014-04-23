@@ -53,7 +53,7 @@ Main {
 
 
 TileClustering {
-  box_size = 8, 8, 8
+  tile_size = 8, 8, 8
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
   DEV_debug_checks = TRUE
@@ -70,34 +70,18 @@ BergerRigoutsos {
 }
 
 
-TilePartitioner {
-  box_size = 16, 16, 16
-
-  TreeLoadBalancer {
-    // Debugging options
-    DEV_check_map = TRUE
-    DEV_check_connectivity = FALSE
-    DEV_print_steps = FALSE
-    DEV_print_swap_steps = FALSE
-    DEV_print_break_steps = TRUE
-    DEV_print_edge_steps = FALSE
-    DEV_summarize_map = TRUE
-  }
-}
-
-
 TreeLoadBalancer {
-  DEV_report_load_balance = TRUE // Reported in main
-
+  tile_size = 16, 16, 16
   // Debugging options
   DEV_check_map = TRUE
-  DEV_check_connectivity = TRUE
+  DEV_check_connectivity = FALSE
   DEV_print_steps = FALSE
   DEV_print_swap_steps = FALSE
-  DEV_print_break_steps = FALSE
+  DEV_print_break_steps = TRUE
   DEV_print_edge_steps = FALSE
   DEV_summarize_map = TRUE
 }
+
 
 CenteredRankTree {
   make_first_rank_the_root = FALSE

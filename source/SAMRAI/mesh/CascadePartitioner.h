@@ -56,6 +56,10 @@ namespace mesh {
  *   tolerance can still result due to other constraints, such as
  *   minimum box size.
  *
+ *   - \b tile_size
+ *   Tile size when using tile mode.  Tile mode restricts box cuts
+ *   to tile boundaries.  Default is 1, which is equivalent to no restriction.
+ *
  * <b> Details: </b> <br>
  * <table>
  *   <tr>
@@ -71,6 +75,14 @@ namespace mesh {
  *     <td>double</td>
  *     <td>0.05</td>
  *     <td>0-1</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>tile_size</td>
+ *     <td>IntVector</td>
+ *     <td>1</td>
+ *     <td>1-</td>
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
@@ -315,8 +327,7 @@ private:
    void
    partitionByCascade(
       hier::BoxLevel& balance_box_level,
-      hier::Connector* balance_to_reference,
-      double global_sum_load ) const;
+      hier::Connector* balance_to_reference ) const;
 
    /*!
     * @brief Executes a single cascade cycle.
@@ -370,6 +381,12 @@ private:
    std::vector<int> d_workload_data_id;
 
    int d_master_workload_data_id;
+
+   /*!
+    * @brief Tile size, when restricting cuts to tile boundaries,
+    * Set to 1 when not restricting.
+    */
+   hier::IntVector d_tile_size;
 
    /*!
     * @brief Whether to limit what a process can give to its surplus.

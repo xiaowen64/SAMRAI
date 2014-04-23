@@ -39,7 +39,7 @@ Main {
 
    box_generator_type = "TileClustering"
 
-   load_balancer_type = "TilePartitioner"
+   load_balancer_type = "GraphLoadBalancer"
 
    mesh_generator_name = "SinusoidalFrontGenerator"
 
@@ -56,7 +56,7 @@ Main {
 
 
 TileClustering {
-  box_size = 2, 2, 2
+  tile_size = 2, 2, 2
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
   DEV_debug_checks = TRUE
@@ -73,13 +73,10 @@ BergerRigoutsos {
 }
 
 
-TilePartitioner {
-  box_size = 6, 6, 6
-  internal_load_balancer = "GraphLoadBalancer"
-  GraphLoadBalancer {
-    target_box_size = 6, 6, 6
-    coalesce_boxes = TRUE
-  } 
+GraphLoadBalancer {
+  tile_size = 6, 6, 6
+  target_box_size = 6, 6, 6
+  coalesce_boxes = TRUE
 }
 
 CenteredRankTree {

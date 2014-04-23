@@ -39,7 +39,7 @@ Main {
 
    box_generator_type = "TileClustering"
 
-   load_balancer_type = "TilePartitioner"
+   load_balancer_type = "GraphLoadBalancer"
 
    ghost_cell_width = 4, 4, 4
 
@@ -55,7 +55,7 @@ Main {
 
 
 TileClustering {
-  box_size = 4, 4, 4
+  tile_size = 4, 4, 4
   coalesce_boxes = FALSE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
@@ -73,14 +73,10 @@ BergerRigoutsos {
 }
 
 
-TilePartitioner {
-  box_size = 8, 8, 8
-  internal_load_balancer = "GraphLoadBalancer"
-
-  GraphLoadBalancer {
-    target_box_size = 8, 8, 8
-    coalesce_boxes = TRUE
-  }
+GraphLoadBalancer {
+  tile_size = 8, 8, 8
+  target_box_size = 8, 8, 8
+  coalesce_boxes = TRUE
 }
 
 

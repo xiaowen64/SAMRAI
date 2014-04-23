@@ -47,7 +47,6 @@ using namespace std;
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/mesh/CascadePartitioner.h"
-#include "SAMRAI/mesh/TilePartitioner.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/algs/TimeRefinementIntegrator.h"
@@ -478,23 +477,6 @@ int main(
          load_balancer = cap_load_balancer;
          load_balancer0 = cap_load_balancer;
       }
-      else if ( load_balancer_type == "TilePartitioner" ) {
-
-         boost::shared_ptr<mesh::TilePartitioner> tile_load_balancer(
-            new mesh::TilePartitioner(
-               dim,
-               "mesh::TilePartitioner",
-               input_db->getDatabase("TilePartitioner")));
-
-         boost::shared_ptr<mesh::TilePartitioner> tile_load_balancer0(
-            new mesh::TilePartitioner(
-               dim,
-               "mesh::TilePartitioner0",
-               input_db->getDatabase("TilePartitioner")));
-
-         load_balancer = tile_load_balancer;
-         load_balancer0 = tile_load_balancer0;
-      }
 
 
       boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
@@ -669,17 +651,6 @@ int main(
          TBOX_ASSERT(cascade_partitioner);
          tbox::plog << "\n\nLoad balancing results:\n";
          cascade_partitioner->printStatistics(tbox::plog);
-      }
-      else if ( load_balancer_type == "TilePartitioner" ) {
-         /*
-          * Output load balancing results for TilePartitioner.
-          */
-         boost::shared_ptr<mesh::TilePartitioner> tile_partitioner(
-            BOOST_CAST<mesh::TilePartitioner, mesh::LoadBalanceStrategy>(
-               load_balancer));
-         TBOX_ASSERT(tile_partitioner);
-         tbox::plog << "\n\nLoad balancing results:\n";
-         tile_partitioner->printStatistics(tbox::plog);
       }
 
       /*
