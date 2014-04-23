@@ -53,7 +53,8 @@ public:
     *                       patches.
     * @param dst_node       Destination Box in destination patch level.
     * @param src_node       Source Box in source patch level.
-    * @param ritem_id       Integer index of xfer::RefineClasses::Data item
+    * @param refine_data    Pointer to array of refine data items
+    * @param item_id        Integer index of xfer::RefineClasses::Data item
     *                       associated with transaction.
     * @param box            Optional const reference to box defining region of
     *                       refine transaction.  Use next method if not
@@ -67,7 +68,7 @@ public:
     * @pre overlap
     * @pre dst_node.getLocalId() >= 0
     * @pre src_node.getLocalId() >= 0
-    * @pre ritem_id >= 0
+    * @pre item_id >= 0
     * @pre (dst_level->getDim() == src_level->getDim()) &&
     *      (dst_level->getDim() == dst_node.getDim()) &&
     *      (dst_level->getDim() == src_node.getDim())

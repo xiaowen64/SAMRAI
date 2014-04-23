@@ -67,6 +67,7 @@ public:
     * @param overlap        boost::shared_ptr to overlap region between patches.
     * @param dst_box        Destination Box in destination patch level.
     * @param src_box        Source Box in source patch level.
+    * @param coarsen_data   Pointer to array of coarsen data items
     * @param item_id        Integer index of CoarsenClass::Data item associated
     *                       with transaction.
     */

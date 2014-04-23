@@ -61,7 +61,8 @@ public:
     *                         patches.
     * @param dst_node         Destination box.
     * @param src_node         Source box.
-    * @param refine_item_id   Integer id of refine data item owned by refine
+    * @param refine_data      Pointer to array of refine data items
+    * @param item_id          Integer id of refine data item owned by refine
     *                         schedule.
     *
     * @pre dst_level
@@ -69,7 +70,8 @@ public:
     * @pre overlap
     * @pre dst_node.getLocalId() >= 0
     * @pre src_node.getLocalId() >= 0
-    * @pre refine_item_id >= 0
+    * @pre refine_data != 0
+    * @pre item_id >= 0
     * @pre (dst_level->getDim() == src_level->getDim()) &&
     *      (dst_level->getDim() == dst_node.getDim()) &&
     *      (dst_level->getDim() == src_node.getDim())

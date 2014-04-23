@@ -60,7 +60,8 @@ public:
     *                         patches.
     * @param dst_box          Destination Box in destination patch level.
     * @param src_box          Source Box in source patch level.
-    * @param coarsen_item_id  Integer id of coarsen data item owned by coarsen
+    * @param coarsen_data     Pointer to array of coarsen data items
+    * @param item_id          Integer id of coarsen data item owned by coarsen
     *                         schedule.
     *
     * @pre dst_level
@@ -71,7 +72,8 @@ public:
     *      (dst_level->getDim() == src_box.getDim())
     * @pre dst_box.getLocalId() >= 0
     * @pre src_box.getLocalId() >= 0
-    * @pre coarsen_item_id >= 0
+    * @pre coarsen_data != 0
+    * @pre item_id >= 0
     */
    CoarsenCopyTransaction(
       const boost::shared_ptr<hier::PatchLevel>& dst_level,

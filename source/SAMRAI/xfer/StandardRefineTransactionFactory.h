@@ -67,7 +67,8 @@ public:
     *                       patches.
     * @param dst_box        Destination Box in destination patch level.
     * @param src_box        Source Box in source patch level.
-    * @param ritem_id       Integer index of RefineClass::Data item associated
+    * @param refine_data    Pointer to array of refine data items.
+    * @param item_id        Integer index of RefineClass::Data item associated
     *                       with transaction.
     * @param box            Optional const reference to box defining region of
     *                       refine transaction.  Default is an empty box.
