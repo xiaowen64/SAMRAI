@@ -286,7 +286,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    const hier::BoxLevel &balanced_box_level = unbalanced_to_balanced.getHead();
    const tbox::SAMRAI_MPI &mpi = unbalanced_box_level.getMPI();
 
-   int num_cells_imported = 0;
+   size_t num_cells_imported = 0;
 
    // Stuff the imported boxes into buffers by their original owners.
    d_object_timers->t_pack_edge->start();
@@ -321,12 +321,12 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
       recip_itr = outgoing_messages.begin();
    }
 
-   int outgoing_messages_size = static_cast<int>(outgoing_messages.size());
+   size_t outgoing_messages_size = static_cast<int>(outgoing_messages.size());
    std::vector<tbox::SAMRAI_MPI::Request>
       send_requests( outgoing_messages_size, MPI_REQUEST_NULL );
 
    d_object_timers->t_construct_semilocal_send_edges->start();
-   for ( int send_number = 0; send_number < outgoing_messages_size; ++send_number ) {
+   for ( size_t send_number = 0; send_number < outgoing_messages_size; ++send_number ) {
 
       int recipient = recip_itr->first;
       tbox::MessageStream &mstream = *recip_itr->second;
@@ -352,9 +352,9 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    d_object_timers->t_construct_semilocal_send_edges->stop();
 
 
-   int num_unaccounted_cells = static_cast<int>(
+   size_t num_unaccounted_cells =
       unbalanced_box_level.getLocalNumberOfCells() + num_cells_imported
-      - balanced_box_level.getLocalNumberOfCells() );
+      - balanced_box_level.getLocalNumberOfCells();
 
    if ( d_print_edge_steps ) {
       tbox::plog << num_unaccounted_cells << " unaccounted cells." << std::endl;
@@ -394,7 +394,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
                                tbox::MessageStream::Read,
                                static_cast<void*>(&incoming_message[0]),
                                false );
-      const int old_count = num_unaccounted_cells;
+      const size_t old_count = num_unaccounted_cells;
       d_object_timers->t_unpack_edge->start();
       while ( !msg.endOfData() ) {
 
@@ -1611,7 +1611,7 @@ BoxTransitSet::getAllTimers(
 void
 BoxTransitSet::putToMessageStream( tbox::MessageStream &msg ) const
 {
-   msg << static_cast<int>(size());
+   msg << size();
    for (const_iterator ni = begin(); ni != end(); ++ni) {
       const BoxInTransit& box_in_transit = *ni;
       box_in_transit.putToMessageStream(msg);
@@ -1631,10 +1631,10 @@ BoxTransitSet::getFromMessageStream( tbox::MessageStream &msg )
     * As we pull each BoxInTransit out, give it a new id that reflects
     * its new owner.
     */
-   int num_boxes = 0;
+   size_t num_boxes = 0;
    msg >> num_boxes;
    BoxInTransit received_box(d_pparams->getDim());
-   for (int i = 0; i < num_boxes; ++i) {
+   for (size_t i = 0; i < num_boxes; ++i) {
       received_box.getFromMessageStream(msg);
       insert(received_box);
    }
