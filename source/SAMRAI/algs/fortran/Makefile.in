@@ -8,10 +8,10 @@
 ##
 #########################################################################
 
-SAMRAI	      =	@top_srcdir@
-SRCDIR	      =	@srcdir@
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
 SUBDIR        = source/SAMRAI/algs/fortran
-VPATH	      =	@srcdir@
+VPATH         = @srcdir@
 OBJECT        = ../../../..
 
 OBJS= 	 algs_upfluxsum1d.o algs_upfluxsum2d.o algs_upfluxsum3d.o\

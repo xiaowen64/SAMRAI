@@ -8,10 +8,10 @@
 ##
 #########################################################################
 
-SAMRAI	      =	@top_srcdir@
-SRCDIR	      =	@srcdir@
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
 SUBDIR        = source/test/performance/treesearch
-VPATH	      =	@srcdir@
+VPATH         = @srcdir@
 OBJECT        = ../../../..
 REPORT        = $(OBJECT)/report.xml
 
@@ -69,7 +69,7 @@ examples:
 perf:
 
 everything:
-	$(MAKE) checkcompile
+	$(MAKE) checkcompile || exit 1
 	$(MAKE) checktest
 	$(MAKE) examples
 	$(MAKE) perf

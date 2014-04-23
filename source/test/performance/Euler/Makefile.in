@@ -69,7 +69,7 @@ perf:	main
 	done
 
 everything:
-	$(MAKE) checkcompile
+	$(MAKE) checkcompile || exit 1
 	$(MAKE) checktest
 	$(MAKE) examples
 	$(MAKE) perf

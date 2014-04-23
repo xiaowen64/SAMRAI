@@ -8,10 +8,10 @@
 ##
 #########################################################################
 
-SAMRAI	      =	@top_srcdir@
-SRCDIR	      =	@srcdir@
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
 SUBDIR        = source/SAMRAI/mesh/fortran
-VPATH	      =	@srcdir@
+VPATH         = @srcdir@
 OBJECT        = ../../../..
 
 # For classes that are non-dimensional.

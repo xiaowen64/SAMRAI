@@ -8,17 +8,17 @@
 ##
 #########################################################################
 
-SAMRAI	      =	@top_srcdir@
-SRCDIR	      =	@srcdir@
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
 SUBDIR        = source/test/restartdb
-VPATH	      =	@srcdir@
+VPATH         = @srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
 REPORT        = $(OBJECT)/report.xml
 
 CPPFLAGS_EXTRA =  -DTESTING=1
 
-default: check	
+default: check
 
 include $(OBJECT)/config/Makefile.config
 
@@ -100,7 +100,7 @@ examples:
 perf:
 
 everything:
-	$(MAKE) checkcompile
+	$(MAKE) checkcompile || exit 1
 	$(MAKE) checktest
 	$(MAKE) examples
 	$(MAKE) perf

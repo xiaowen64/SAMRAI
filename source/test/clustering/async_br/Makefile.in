@@ -8,10 +8,10 @@
 ##
 #########################################################################
 
-SAMRAI	      = @top_srcdir@
+SAMRAI        = @top_srcdir@
 SRCDIR        = @srcdir@
 SUBDIR        = source/test/clustering/async_br
-VPATH         = @top_srcdir@/source/test/clustering/async_br
+VPATH         = @srcdir@
 TESTTOOLS     = ../../testtools
 OBJECT        = ../../../..
 REPORT        = $(OBJECT)/report.xml
@@ -80,7 +80,7 @@ examples:
 perf:
 
 everything:
-	$(MAKE) checkcompile
+	$(MAKE) checkcompile || exit 1
 	$(MAKE) checktest
 	$(MAKE) examples
 	$(MAKE) perf

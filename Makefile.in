@@ -217,7 +217,7 @@ perf:
 # Run the SAMRAI example problems
 # Run the SAMRAI performance tests
 everything:
-	(cd source/test; $(MAKE) checkcompile)
+	(cd source/test; $(MAKE) checkcompile || exit 1)
 	(cd source/test; $(MAKE) checktest)
 	(cd source/test; $(MAKE) examples)
 	(cd source/test; $(MAKE) perf)

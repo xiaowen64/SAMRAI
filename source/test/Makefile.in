@@ -78,7 +78,7 @@ check3d:
 
 checkcompile:
 	@echo "Starting " $@ " in source/test at `date`"
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
 	@echo "Completed " $@ " in source/test at `date`"
 
 checktest:
@@ -100,7 +100,7 @@ perf:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 
 everything:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) checkcompile); done
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) checkcompile) || exit 1; done
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) checktest); done
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) examples); done
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) perf); done
