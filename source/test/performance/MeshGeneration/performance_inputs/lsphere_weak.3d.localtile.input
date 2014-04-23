@@ -82,21 +82,6 @@ BergerRigoutsos {
    // DEV_algo_advance_mode = "SYNCHRONOUS"
 }
 
-// Used if load_balancer_type is TreeLoadBalancer.  Refer to mesh::TreeLoadBalancer for input.
-TreeLoadBalancer {
-  DEV_report_load_balance = FALSE // Reported in main
-  max_cycle_spread_procs = 1000000
-  flexible_load_tolerance = 0.05
-
-  // Debugging options
-  DEV_check_map = FALSE
-  DEV_check_connectivity = FALSE
-  DEV_print_steps = FALSE
-  DEV_print_swap_steps = FALSE
-  DEV_print_break_steps = FALSE
-  DEV_print_edge_steps = FALSE
-}
-
 CenteredRankTree { // Parameters for BalancedDepthFirstTree in getRankTree()
   make_first_rank_the_root = TRUE
 }
