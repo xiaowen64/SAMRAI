@@ -19,7 +19,8 @@ AutoTester::AutoTester(
    const std::string& object_name,
    const tbox::Dimension& dim,
    boost::shared_ptr<tbox::Database> input_db):
-   d_dim(dim)
+   d_dim(dim),
+   d_base_name("unnamed")
 #ifdef HAVE_HDF5
    ,
    d_hdf_db("AutoTesterDatabase")
@@ -38,8 +39,14 @@ AutoTester::AutoTester(
 
    getFromInput(input_db);
 
+   std::string test_patch_boxes_filename = "test_inputs/";
+#if defined(__xlC__)
+   test_patch_boxes_filename += "xlC/";
+#endif
+   test_patch_boxes_filename += d_base_name + ".boxes";
+
    const std::string hdf_filename =
-      d_test_patch_boxes_filename
+      test_patch_boxes_filename
       + "." + tbox::Utilities::nodeToString(mpi.getSize())
       + "." + tbox::Utilities::processorToString(mpi.getRank());
 
@@ -459,6 +466,8 @@ void AutoTester::getFromInput(
 {
    boost::shared_ptr<tbox::Database> tester_db(
       input_db->getDatabase(d_object_name));
+   boost::shared_ptr<tbox::Database> main_db(
+      input_db->getDatabase("Main"));
 
    /*
     * Read testing parameters from testing_db
@@ -482,6 +491,7 @@ void AutoTester::getFromInput(
                  << "Cannot 'read_patch_boxes' and 'write_patch_boxes' \n"
                  << "at the same time." << std::endl;
    }
+   d_base_name = main_db->getStringWithDefault("base_name", d_base_name);
    if (d_read_patch_boxes || d_write_patch_boxes) {
       if (!tester_db->keyExists("test_patch_boxes_at_steps")) {
          tbox::perr << "FAILED: - AutoTester " << d_object_name << "\n"
@@ -490,14 +500,6 @@ void AutoTester::getFromInput(
       } else {
          d_test_patch_boxes_at_steps =
             tester_db->getIntegerVector("test_patch_boxes_at_steps");
-      }
-      if (!tester_db->keyExists("test_patch_boxes_filename")) {
-         tbox::perr << "FAILED: - AutoTester " << d_object_name << "\n"
-                    << "Must provide 'test_patch_boxes_filename' data."
-                    << std::endl;
-      } else {
-         d_test_patch_boxes_filename =
-            tester_db->getString("test_patch_boxes_filename");
       }
    }
 
