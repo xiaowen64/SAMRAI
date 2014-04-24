@@ -150,6 +150,12 @@ private:
     */
    void resetObligation( double avg_load );
 
+   /*!
+    * @brief Compute interval for updating Connector during load
+    * distribution.
+    */
+   double computeConnectorUpdateInterval() const;
+
 
    //! @brief Data the main CascadePartitioner shares with all parts of the tree.
    const CascadePartitioner *d_common;

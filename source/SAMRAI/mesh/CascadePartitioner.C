@@ -67,12 +67,21 @@ CascadePartitioner::CascadePartitioner(
    d_mpi_is_dupe(false),
    d_master_workload_data_id(s_default_data_id),
    d_tile_size(dim,1),
+   d_max_cycle_spread_procs(500),
    d_limit_supply_to_surplus(true),
    d_balance_intermediate_groups(false),
    d_reset_obligations(true),
    d_flexible_load_tol(0.05),
    d_mca(),
    // Shared data.
+   d_balance_box_level(0),
+   d_balance_to_reference(0),
+   d_global_work_sum(-1),
+   d_global_work_avg(-1),
+   d_min_load(-1),
+   d_num_initial_owners(0),
+   d_local_load(0),
+   d_shipment(0),
    d_comm_stage(),
    // Performance evaluation.
    d_barrier_before(false),
@@ -274,38 +283,9 @@ CascadePartitioner::loadBalanceBoxLevel(
 
    LoadType local_load = computeLocalLoad(balance_box_level);
 
-   LoadType global_sum_load = local_load;
+   globalWorkReduction( local_load, (balance_box_level.getLocalNumberOfBoxes() != 0) );
 
-
-   /*
-    * Determine the total load and number of processes that has any
-    * initial load.
-    */
-   t_get_global_load->start();
-   global_sum_load = local_load;
-   double tmp_double[2];
-   tmp_double[0] = local_load;
-   tmp_double[1] = static_cast<double>(balance_box_level.getBoxes().size() > 0);
-   if (d_mpi.getSize() > 1) {
-      d_mpi.AllReduce( tmp_double, 2, MPI_SUM );
-   }
-   global_sum_load = tmp_double[0];
-   int num_procs_with_load = static_cast<int>(tmp_double[1] + 0.5);
-   t_get_global_load->stop();
-
-   if (d_print_steps) {
-      tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
-      tbox::plog.precision(6);
-      tbox::plog << "CascadePartitioner::loadBalanceBoxLevel"
-                 << " global_sum_load=" << global_sum_load
-                 << " (initially born across " << num_procs_with_load << " of " << d_mpi.getSize()
-                 << " procs, averaging " << global_sum_load / d_mpi.getSize()
-                 << " or " << pow(global_sum_load / d_mpi.getSize(), 1.0 / d_dim.getValue())
-                 << "^" << d_dim << " per proc." << std::endl;
-   }
-
-
-   d_global_load_avg = global_sum_load / rank_group.size();
+   d_global_work_avg = d_global_work_sum / rank_group.size();
 
    // Run the partitioning algorithm.
    partitionByCascade(
@@ -387,58 +367,76 @@ CascadePartitioner::partitionByCascade(
       tbox::plog << "CascadePartitioner::partitionByCascade: entered" << std::endl;
    }
 
-   BoxTransitSet local_work(*d_pparams), shipment(*d_pparams);
-   local_work.setAllowBoxBreaking(true);
+   BoxTransitSet local_load(*d_pparams), shipment(*d_pparams);
+   local_load.setAllowBoxBreaking(true);
 
-   const double ideal_box_width = pow(d_global_load_avg, 1.0/d_dim.getValue());
-   local_work.setThresholdWidth( ideal_box_width );
+   const double ideal_box_width = pow(d_global_work_avg, 1.0/d_dim.getValue());
+   local_load.setThresholdWidth( ideal_box_width );
    shipment.setThresholdWidth( ideal_box_width );
 
-   local_work.insertAll( balance_box_level.getBoxes() );
+   local_load.insertAll( balance_box_level.getBoxes() );
 
-   d_local_load = &local_work;
+   // Set up temporaries shared with the process groups.
+   d_balance_box_level = &balance_box_level;
+   d_balance_to_reference = balance_to_reference;
+   d_local_load = &local_load;
    d_shipment = &shipment;
+
+   CascadePartitionerTree groups(*this);
+   groups.distributeLoad();
+
+   d_balance_box_level = 0;
+   d_balance_to_reference = 0;
+   d_local_load = 0;
+   d_shipment = 0;
+   d_global_work_sum = -1;
+   d_global_work_avg = -1;
+   d_min_load = -1;
+   d_num_initial_owners = 0;
+
+   if ( d_print_steps ) {
+      tbox::plog << "CascadePartitioner::partitionByCascade: leaving" << std::endl;
+   }
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void CascadePartitioner::updateConnectors() const
+{
+   t_update_connectors->start();
+
+   if ( d_print_steps ) {
+      tbox::plog
+         << "CascadePartitioner::updateConnectors constructing unbalanced<==>balanced.\n";
+   }
 
    /*
     * Initialize empty balanced_box_level and mappings so they are
     * ready to be populated.
     */
    hier::BoxLevel balanced_box_level(
-      balance_box_level.getRefinementRatio(),
-      balance_box_level.getGridGeometry(),
-      balance_box_level.getMPI());
+      d_balance_box_level->getRefinementRatio(),
+      d_balance_box_level->getGridGeometry(),
+      d_balance_box_level->getMPI());
    hier::MappingConnector balanced_to_unbalanced(balanced_box_level,
-         balance_box_level,
+         *d_balance_box_level,
          hier::IntVector::getZero(d_dim));
-   hier::MappingConnector unbalanced_to_balanced(balance_box_level,
+   hier::MappingConnector unbalanced_to_balanced(*d_balance_box_level,
          balanced_box_level,
          hier::IntVector::getZero(d_dim));
    unbalanced_to_balanced.setTranspose(&balanced_to_unbalanced, false);
 
-
-   t_get_map->start();
-
-
-   CascadePartitionerTree groups(*this);
-   groups.distributeLoad();
-
-
-   if ( d_print_steps ) {
-      tbox::plog << "CascadePartitioner: local_work after load distribution:\n";
-      local_work.recursivePrint(tbox::plog, "LL->\t", 2);
-      tbox::plog
-         << "CascadePartitioner::partitionByCascade constructing unbalanced<==>balanced.\n";
-   }
-
    t_assign_to_local_and_populate_maps->start();
-   local_work.assignToLocalAndPopulateMaps(
+   d_local_load->assignToLocalAndPopulateMaps(
       balanced_box_level,
       balanced_to_unbalanced,
       unbalanced_to_balanced,
       d_flexible_load_tol );
    t_assign_to_local_and_populate_maps->stop();
-
-   t_get_map->stop();
 
    if ( d_summarize_map ) {
       tbox::plog << "CascadePartitioner::partitionByCascade unbalanced--->balanced map:\n"
@@ -474,29 +472,76 @@ CascadePartitioner::partitionByCascade(
    }
 
 
-   if (balance_to_reference && balance_to_reference->hasTranspose()) {
+   if (d_balance_to_reference && d_balance_to_reference->hasTranspose()) {
+      if ( d_print_steps ) {
+         tbox::plog
+            << "CascadePartitioner::partitionByCascade applying unbalanced<==>balanced.\n";
+      }
       t_use_map->barrierAndStart();
       d_mca.modify(
-         balance_to_reference->getTranspose(),
+         d_balance_to_reference->getTranspose(),
          unbalanced_to_balanced,
-         &balance_box_level,
+         d_balance_box_level,
          &balanced_box_level);
       t_use_map->barrierAndStop();
    } else {
-      hier::BoxLevel::swap(balance_box_level, balanced_box_level);
+      hier::BoxLevel::swap(*d_balance_box_level, balanced_box_level);
    }
 
    if ( d_print_steps ) {
       tbox::plog
-         << "CascadePartitioner::partitionByCascade finished constructing unbalanced<==>balanced.\n";
+         << "CascadePartitioner::partitionByCascade leaving.\n";
    }
 
-   d_local_load = 0;
-   d_shipment = 0;
+   t_update_connectors->stop();
+}
 
-   if ( d_print_steps ) {
-      tbox::plog << "CascadePartitioner::partitionByCascade: leaving" << std::endl;
+
+
+/*
+ *************************************************************************
+ * Set d_global_work_sum, d_num_initial_owners.
+ *************************************************************************
+ */
+void CascadePartitioner::globalWorkReduction(
+   LoadType local_work,
+   bool has_any_load ) const
+{
+   t_global_work_reduction->start();
+
+   d_global_work_sum = d_local_work_max = local_work;
+   d_num_initial_owners = static_cast<size_t>(has_any_load);
+
+   if (d_mpi.getSize() > 1) {
+      double dtmp[2], dtmp_sum[2], dtmp_max[2];
+
+      dtmp[0] = local_work;
+      dtmp[1] = static_cast<double>(d_num_initial_owners);
+
+      d_mpi.Allreduce(dtmp, dtmp_sum, 2, MPI_DOUBLE, MPI_SUM);
+      d_global_work_sum = dtmp_sum[0];
+      d_num_initial_owners = static_cast<size_t>(dtmp_sum[1]);
+
+      d_mpi.Allreduce(dtmp, dtmp_max, 1, MPI_DOUBLE, MPI_MAX);
+      d_local_work_max = dtmp_max[0];
+
    }
+
+   if (d_print_steps) {
+      tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
+      tbox::plog.precision(6);
+      tbox::plog << "CascadePartitioner::globalWorkReduction"
+                 << " d_local_work_max=" << d_local_work_max
+                 << " d_global_work_sum=" << d_global_work_sum
+                 << " (initially born on "
+                 << d_num_initial_owners << " procs) across all "
+                 << d_mpi.getSize()
+                 << " procs, averaging " << d_global_work_sum / d_mpi.getSize()
+                 << " or " << pow(d_global_work_sum / d_mpi.getSize(), 1.0 / d_dim.getValue())
+                 << "^" << d_dim << " per proc." << std::endl;
+   }
+
+   t_global_work_reduction->stop();
 }
 
 
@@ -617,6 +662,10 @@ CascadePartitioner::getFromInput(
       d_barrier_after = input_db->getBoolWithDefault("DEV_barrier_after",
          d_barrier_after);
 
+      d_max_cycle_spread_procs =
+         input_db->getIntegerWithDefault("max_cycle_spread_procs",
+            d_max_cycle_spread_procs);
+
       d_limit_supply_to_surplus =
          input_db->getBoolWithDefault("DEV_limit_supply_to_surplus",
             d_limit_supply_to_surplus);
@@ -711,16 +760,17 @@ CascadePartitioner::setTimers()
       t_load_balance_box_level = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::loadBalanceBoxLevel()");
 
-      t_get_map = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::get_map");
       t_use_map = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::use_map");
 
+      t_update_connectors = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::updateConnectors()");
+
+      t_global_work_reduction = tbox::TimerManager::getManager()->
+         getTimer(d_object_name + "::globalWorkReduction()");
+
       t_assign_to_local_and_populate_maps = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::assign_to_local_and_populate_maps");
-
-      t_get_global_load = tbox::TimerManager::getManager()->
-         getTimer(d_object_name + "::get_global_load");
 
       t_communication_wait = tbox::TimerManager::getManager()->
          getTimer(d_object_name + "::communication_wait");
