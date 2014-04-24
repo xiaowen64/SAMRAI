@@ -373,13 +373,13 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       max_local_load/d_global_avg_load : 1.0;
    const int number_of_cycles = !rank_group.containsAllRanks() ? 1 :
       int(ceil( log(fanout_size)/log(static_cast<double>(d_max_cycle_spread_procs)) ));
-      if (d_print_steps) {
-         tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel"
-                    << " max_cycle_spread_procs=" << d_max_cycle_spread_procs
-                    << " fanout_size=" << fanout_size
-                    << " number_of_cycles=" << number_of_cycles
-                    << std::endl;
-      }
+   if (d_print_steps) {
+      tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel"
+                 << " max_cycle_spread_procs=" << d_max_cycle_spread_procs
+                 << " fanout_size=" << fanout_size
+                 << " number_of_cycles=" << number_of_cycles
+                 << std::endl;
+   }
 
 
 
