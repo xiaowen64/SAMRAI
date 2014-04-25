@@ -47,7 +47,7 @@ CascadePartitionerTree::CascadePartitionerTree(
    d_leaf(0),
 
    d_work(partitioner.d_local_load->getSumLoad()),
-   d_obligation(d_common->d_global_load_avg*d_common->d_mpi.getSize()),
+   d_obligation(d_common->d_global_work_avg*d_common->d_mpi.getSize()),
    d_group_may_supply(false)
 {
    d_children[0] = d_children[1] = 0;
@@ -127,7 +127,7 @@ CascadePartitionerTree::CascadePartitionerTree(
          relative_rank + d_parent->d_begin, upper_begin-1 );
    }
 
-   d_obligation = d_common->d_global_load_avg*(d_end-d_begin);
+   d_obligation = d_common->d_global_work_avg*(d_end-d_begin);
 
    if ( containsRank(d_common->d_mpi.getRank()) ) {
       makeChildren();
@@ -205,6 +205,8 @@ void CascadePartitionerTree::distributeLoad()
 {
    d_common->t_distribute_load->start();
 
+   const double connector_update_interval = computeConnectorUpdateInterval();
+
    for ( CascadePartitionerTree *top_group=this; top_group!=d_leaf;
          top_group = top_group->d_near ) {
 
@@ -237,8 +239,7 @@ void CascadePartitionerTree::distributeLoad()
          if ( d_common->d_reset_obligations &&
               current_group == top_group && top_group->d_gen_num != 0 ) {
             const double old_obligation = top_group->d_obligation;
-            top_group->resetObligation(
-               top_group->d_work/static_cast<double>(top_group->size()) );
+            top_group->resetObligation( top_group->d_work/top_group->size() );
             if ( d_common->d_print_steps ) {
                tbox::plog << "\nCascadePartitionerTree::distributeLoad generation "
                           << top_group->d_gen_num << " reset obligation from "
@@ -248,7 +249,7 @@ void CascadePartitionerTree::distributeLoad()
          }
 
          /*
-          * Balance the children is needed only for top_gorup, but we
+          * Balance the children is needed only for top_group, but we
           * optionally also balance intermediate children.
           */
          if ( d_common->d_balance_intermediate_groups || current_group == top_group ) {
@@ -267,6 +268,24 @@ void CascadePartitionerTree::distributeLoad()
          }
 
       } // Inner loop, current_group
+
+
+      if ( static_cast<int>(top_group->d_gen_num/connector_update_interval) !=
+           static_cast<int>((top_group->d_gen_num+1)/connector_update_interval) ||
+           top_group == d_leaf->d_parent ) {
+         // Update Connectors.
+         if ( d_common->d_print_steps ) {
+            tbox::plog << "\nCascadePartitionerTree::distributeLoad updating Connectors after balancing generation "
+                       << top_group->d_gen_num << std::endl;
+         }
+         d_common->t_distribute_load->stop();
+         d_common->updateConnectors();
+         d_common->t_distribute_load->start();
+         if ( top_group != d_leaf->d_parent ) {
+            d_common->d_local_load->clear();
+            d_common->d_local_load->insertAll(d_common->d_balance_box_level->getBoxes());
+         }
+      }
 
    } // Outer loop, top_group
 
@@ -559,7 +578,7 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
          if ( containsRank(d_common->d_mpi.getRank()) ) {
             // This is a near leaf group: apportion the load shipment.
             TBOX_ASSERT( size() == 1 );
-            const double tolerance = d_common->d_flexible_load_tol*d_common->d_global_load_avg;
+            const double tolerance = d_common->d_flexible_load_tol*d_common->d_global_work_avg;
             d_common->d_shipment->adjustLoad(
                *d_common->d_local_load,
                est_work_supplied,
@@ -626,9 +645,8 @@ CascadePartitionerTree::sendShipment( int taker )
    d_common->d_comm_peer[0].setPeerRank(taker);
    d_common->d_comm_peer[0].setMPITag( CascadePartitionerTree_TAG_LoadTransfer0,
                                        CascadePartitionerTree_TAG_LoadTransfer1 );
-   d_common->d_comm_peer[0].beginSend( (const char*)(msg.getBufferStart()),
-                                       static_cast<int>(msg.getCurrentSize()),
-                                       true );
+   d_common->d_comm_peer[0].beginSend( static_cast<const char*>(msg.getBufferStart()),
+                                       static_cast<int>(msg.getCurrentSize()), true );
    d_common->d_shipment->clear();
 
    d_common->t_send_shipment->stop();
@@ -718,6 +736,31 @@ CascadePartitionerTree::resetObligation( double avg_load )
  *************************************************************************
  *************************************************************************
  */
+double
+CascadePartitionerTree::computeConnectorUpdateInterval() const
+{
+   const double fanout_size = d_common->d_global_work_avg > d_common->d_pparams->getLoadComparisonTol() ?
+      d_common->d_local_work_max/d_common->d_global_work_avg : 1.0;
+   const int number_of_updates =
+      static_cast<int>(ceil( log(fanout_size)/log(static_cast<double>(d_common->d_max_spread_procs)) ));
+   const double update_interval = static_cast<double>(d_leaf->generationNum())/number_of_updates;
+   if (d_common->d_print_steps) {
+      tbox::plog << "CascadePartitionerTree::computeConnectorUpdateInterval"
+                 << "  max_spread_procs=" << d_common->d_max_spread_procs
+                 << "  fanout_size=" << fanout_size
+                 << "  number_of_updates=" << number_of_updates
+                 << "  update_interval=" << update_interval
+                 << std::endl;
+   }
+   return update_interval;
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
 void
 CascadePartitionerTree::printClassData( std::ostream &co, const std::string &border ) const
 {
@@ -729,9 +772,9 @@ CascadePartitionerTree::printClassData( std::ostream &co, const std::string &bor
       << "  near=" << d_near << "  far=" << d_far
       << '\n' << indent
       << "contact=" << d_contact[0] << ',' << d_contact[1]
-      << "  work=" << d_work << '/' << d_obligation << " (" << size()*d_common->d_global_load_avg
+      << "  work=" << d_work << '/' << d_obligation << " (" << size()*d_common->d_global_work_avg
       << ")  estimated surplus=" << estimatedSurplus()
-      << " (" << d_work-(size()*d_common->d_global_load_avg)
+      << " (" << d_work-(size()*d_common->d_global_work_avg)
       << ")  local_load=" << d_common->d_local_load->getSumLoad()
       << '\n' << indent
       << "group_may_supply=" << d_group_may_supply

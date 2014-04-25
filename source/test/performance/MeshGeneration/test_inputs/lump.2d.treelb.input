@@ -81,7 +81,7 @@ BergerRigoutsos {
 
 TreeLoadBalancer {
   flexible_load_tolerance = 0.05
-  // max_cycle_spread_procs = 8
+  // max_spread_procs = 8
   DEV_voucher_mode = FALSE
   DEV_report_load_balance = TRUE // Reported in main
 

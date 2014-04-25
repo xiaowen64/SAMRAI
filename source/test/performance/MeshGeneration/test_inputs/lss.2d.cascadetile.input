@@ -8,7 +8,7 @@
  *
  ************************************************************************/
 
-// Mesh configuration: Single disc (lump).
+// Mesh configuration: Lump with 2 shells.
 
 // Refer to lss.2d.treelb.input for full description of all input parameters
 // specific to this problem.
@@ -16,7 +16,7 @@
 Main {
    dim = 2
 
-   base_name = "lump.2d.tile"
+   base_name = "lss.2d.cascadetile"
 
    write_visit = TRUE
 
@@ -32,7 +32,7 @@ Main {
 
    box_generator_type = "TileClustering"
 
-   load_balancer_type = "TreeLoadBalancer", "TreeLoadBalancer"
+   load_balancer_type = "CascadePartitioner"
 
    load_balance = TRUE, TRUE, TRUE
 
@@ -41,7 +41,7 @@ Main {
    mesh_generator_name = "SphericalShellGenerator"
 
    SphericalShellGenerator {
-      radii = 0.0, 0.65
+      radii = 0.0, 0.35,    0.60, 0.65,    0.95, 0.97
 
       buffer_distance_0 = 0.04, 0.04
       buffer_distance_1 = 0.00, 0.00
@@ -79,6 +79,20 @@ BergerRigoutsos {
 }
 
 
+CascadePartitioner {
+  tile_size = 21, 21
+  flexible_load_tolerance = 0.05
+  // max_spread_procs = 8
+  DEV_allow_box_breaking = TRUE
+  // Debugging options
+  DEV_check_map = TRUE
+  DEV_check_connectivity = FALSE
+  DEV_print_steps = FALSE
+  DEV_print_edge_steps = FALSE
+  DEV_summarize_map = TRUE
+}
+
+
 TreeLoadBalancer {
   tile_size = 21, 21
   flexible_load_tolerance = 0.05
@@ -89,15 +103,20 @@ TreeLoadBalancer {
   DEV_check_map = TRUE
   DEV_check_connectivity = FALSE
   DEV_print_steps = FALSE
+  DEV_print_swap_steps = FALSE
+  DEV_print_break_steps = FALSE
+  DEV_print_edge_steps = FALSE
   DEV_summarize_map = TRUE
 }
 
 
 BoxTransitSet {
+  DEV_print_steps = FALSE
   DEV_print_pop_steps = FALSE
   DEV_print_swap_steps = FALSE
   DEV_print_break_steps = FALSE
   DEV_print_edge_steps = FALSE
+  DEV_summarize_map = TRUE
 }
 
 
@@ -116,9 +135,7 @@ TimerManager {
 
 PatchHierarchy {
 
-   /*
-     Specify number of levels (1, 2 or 3 for this test).
-   */
+   // Specify number of levels (1, 2 or 3 for this test).
    max_levels = 3
 
    largest_patch_size {
