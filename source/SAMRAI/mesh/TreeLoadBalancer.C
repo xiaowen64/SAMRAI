@@ -68,7 +68,7 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_mpi_is_dupe(false),
    d_tile_size(dim,1),
-   d_max_cycle_spread_procs(500),
+   d_max_spread_procs(500),
    d_voucher_mode(false),
    d_allow_box_breaking(true),
    d_rank_tree(rank_tree ? rank_tree : boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::CenteredRankTree) ),
@@ -355,7 +355,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    /*
     * Compute how many balancing cycles to use based on severity of
     * imbalance, using formula
-    * d_max_cycle_spread_procs^number_of_cycles >= fanout_size.
+    * d_max_spread_procs^number_of_cycles >= fanout_size.
     *
     * The objective of balancing over multiple cycles is to avoid
     * unscalable performance in cases where just a few processes own
@@ -372,10 +372,10 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    const double fanout_size = d_global_avg_load > d_pparams->getLoadComparisonTol() ?
       max_local_load/d_global_avg_load : 1.0;
    const int number_of_cycles = !rank_group.containsAllRanks() ? 1 :
-      int(ceil( log(fanout_size)/log(static_cast<double>(d_max_cycle_spread_procs)) ));
+      int(ceil( log(fanout_size)/log(static_cast<double>(d_max_spread_procs)) ));
    if (d_print_steps) {
       tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel"
-                 << " max_cycle_spread_procs=" << d_max_cycle_spread_procs
+                 << " max_spread_procs=" << d_max_spread_procs
                  << " fanout_size=" << fanout_size
                  << " number_of_cycles=" << number_of_cycles
                  << std::endl;
@@ -1671,9 +1671,9 @@ TreeLoadBalancer::getFromInput(
       d_barrier_after = input_db->getBoolWithDefault("DEV_barrier_after",
          d_barrier_after);
 
-      d_max_cycle_spread_procs =
-         input_db->getIntegerWithDefault("max_cycle_spread_procs",
-            d_max_cycle_spread_procs);
+      d_max_spread_procs =
+         input_db->getIntegerWithDefault("max_spread_procs",
+            d_max_spread_procs);
 
       d_flexible_load_tol =
          input_db->getDoubleWithDefault("flexible_load_tolerance",

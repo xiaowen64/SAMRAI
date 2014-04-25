@@ -85,7 +85,7 @@ BergerRigoutsos {
 // Used if load_balancer_type is TreeLoadBalancer.  Refer to mesh::TreeLoadBalancer for input.
 TreeLoadBalancer {
   DEV_report_load_balance = FALSE // Reported in main
-  max_cycle_spread_procs = 1000000
+  max_spread_procs = 1000000
   flexible_load_tolerance = 0.05
 
   // Debugging options

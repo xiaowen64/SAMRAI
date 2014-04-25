@@ -60,7 +60,7 @@ namespace mesh {
  *   Tile size when using tile mode.  Tile mode restricts box cuts
  *   to tile boundaries.  Default is 1, which is equivalent to no restriction.
  *
- *   - \b max_cycle_spread_procs
+ *   - \b max_spread_procs
  *   This parameter limits how many processes may receive the load of one
  *   process before updating Connectors.  If a process has too much
  *   initial load, this limit causes the Connector to be updated gradually,
@@ -94,7 +94,7 @@ namespace mesh {
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
  *   <tr>
- *     <td>max_cycle_spread_procs</td>
+ *     <td>max_spread_procs</td>
  *     <td>int</td>
  *     <td>500</td>
  *     <td> > 1</td>
@@ -409,7 +409,7 @@ private:
     * @brief Max number of processes the a single process may spread
     * load before updating Connectors.
     */
-   int d_max_cycle_spread_procs;
+   int d_max_spread_procs;
 
    /*!
     * @brief Whether to limit what a process can give to its surplus.

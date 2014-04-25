@@ -67,7 +67,7 @@ CascadePartitioner::CascadePartitioner(
    d_mpi_is_dupe(false),
    d_master_workload_data_id(s_default_data_id),
    d_tile_size(dim,1),
-   d_max_cycle_spread_procs(500),
+   d_max_spread_procs(500),
    d_limit_supply_to_surplus(true),
    d_balance_intermediate_groups(false),
    d_reset_obligations(true),
@@ -662,9 +662,9 @@ CascadePartitioner::getFromInput(
       d_barrier_after = input_db->getBoolWithDefault("DEV_barrier_after",
          d_barrier_after);
 
-      d_max_cycle_spread_procs =
-         input_db->getIntegerWithDefault("max_cycle_spread_procs",
-            d_max_cycle_spread_procs);
+      d_max_spread_procs =
+         input_db->getIntegerWithDefault("max_spread_procs",
+            d_max_spread_procs);
 
       d_limit_supply_to_surplus =
          input_db->getBoolWithDefault("DEV_limit_supply_to_surplus",

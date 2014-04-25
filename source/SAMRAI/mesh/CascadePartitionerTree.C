@@ -249,7 +249,7 @@ void CascadePartitionerTree::distributeLoad()
          }
 
          /*
-          * Balance the children is needed only for top_gorup, but we
+          * Balance the children is needed only for top_group, but we
           * optionally also balance intermediate children.
           */
          if ( d_common->d_balance_intermediate_groups || current_group == top_group ) {
@@ -271,12 +271,20 @@ void CascadePartitionerTree::distributeLoad()
 
 
       if ( static_cast<int>(top_group->d_gen_num/connector_update_interval) !=
-           static_cast<int>((top_group->d_gen_num-1)/connector_update_interval) ||
+           static_cast<int>((top_group->d_gen_num+1)/connector_update_interval) ||
            top_group == d_leaf->d_parent ) {
          // Update Connectors.
+         if ( d_common->d_print_steps ) {
+            tbox::plog << "\nCascadePartitionerTree::distributeLoad updating Connectors after balancing generation "
+                       << top_group->d_gen_num << std::endl;
+         }
          d_common->t_distribute_load->stop();
          d_common->updateConnectors();
          d_common->t_distribute_load->start();
+         if ( top_group != d_leaf->d_parent ) {
+            d_common->d_local_load->clear();
+            d_common->d_local_load->insertAll(d_common->d_balance_box_level->getBoxes());
+         }
       }
 
    } // Outer loop, top_group
@@ -733,15 +741,15 @@ CascadePartitionerTree::computeConnectorUpdateInterval() const
 {
    const double fanout_size = d_common->d_global_work_avg > d_common->d_pparams->getLoadComparisonTol() ?
       d_common->d_local_work_max/d_common->d_global_work_avg : 1.0;
-   const double number_of_updates =
-      log(fanout_size)/log(static_cast<double>(d_common->d_max_cycle_spread_procs));
-   const double update_interval = d_leaf->generationNum()/number_of_updates;
+   const int number_of_updates =
+      static_cast<int>(ceil( log(fanout_size)/log(static_cast<double>(d_common->d_max_spread_procs)) ));
+   const double update_interval = static_cast<double>(d_leaf->generationNum())/number_of_updates;
    if (d_common->d_print_steps) {
       tbox::plog << "CascadePartitionerTree::computeConnectorUpdateInterval"
-                 << " max_cycle_spread_procs=" << d_common->d_max_cycle_spread_procs
-                 << " fanout_size=" << fanout_size
-                 << " number_of_updates=" << number_of_updates
-                 << " update_interval=" << update_interval
+                 << "  max_spread_procs=" << d_common->d_max_spread_procs
+                 << "  fanout_size=" << fanout_size
+                 << "  number_of_updates=" << number_of_updates
+                 << "  update_interval=" << update_interval
                  << std::endl;
    }
    return update_interval;
