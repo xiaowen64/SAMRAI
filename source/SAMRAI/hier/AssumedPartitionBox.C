@@ -25,7 +25,7 @@ AssumedPartitionBox::AssumedPartitionBox(
    const Box& box,
    int rank_begin,
    int rank_end,
-   int first_index):
+   int index_begin):
    d_box(box),
    d_rank_begin(rank_begin),
    d_rank_end(rank_end),
@@ -33,7 +33,7 @@ AssumedPartitionBox::AssumedPartitionBox(
    d_partition_grid_size(box.getDim()),
    d_major(box.getDim()),
    d_index_stride(box.getDim()),
-   d_first_index(first_index)
+   d_index_begin(index_begin)
 {
    computeLayout();
 
@@ -65,15 +65,15 @@ AssumedPartitionBox::AssumedPartitionBox(
    if ( d_partition_grid_size.getProduct() <= d_rank_end-d_rank_begin ) {
       d_first_rank_with_1 = d_rank_begin;
       d_first_rank_with_0 = d_rank_end;
-      d_first_index_with_1 = d_first_index_with_2 = d_first_index;
+      d_first_index_with_1 = d_first_index_with_2 = d_index_begin;
    }
    else {
-      d_first_index_with_2 = d_first_index;
+      d_first_index_with_2 = d_index_begin;
       d_first_rank_with_1 = d_partition_grid_size.getProduct() % (d_rank_end-d_rank_begin);
       d_first_index_with_1 = 2*(d_first_rank_with_1 - d_rank_begin);
       d_first_rank_with_0 = d_rank_end;
    }
-   d_first_index_with_0 = d_first_index + getNumberOfParts();
+   d_first_index_with_0 = d_index_begin + getNumberOfParts();
 
    d_major.sortIntVector(d_partition_grid_size);
 
@@ -103,7 +103,7 @@ AssumedPartitionBox::beginOfRank(int rank) const
                 + rank < d_first_rank_with_0 ? d_first_index_with_1 + (rank-d_first_rank_with_0)   : 0;
       return index;
    }
-   return d_first_index + d_partition_grid_size.getProduct();
+   return d_index_begin + d_partition_grid_size.getProduct();
 }
 
 
@@ -129,11 +129,11 @@ AssumedPartitionBox::endOfRank(int rank) const
 int
 AssumedPartitionBox::getOwner(int box_index) const
 {
-   TBOX_ASSERT( box_index >= d_first_index );
-   TBOX_ASSERT( box_index < d_first_index + getNumberOfParts() );
+   TBOX_ASSERT( box_index >= d_index_begin );
+   TBOX_ASSERT( box_index < d_index_begin + getNumberOfParts() );
 
    int owner = tbox::SAMRAI_MPI::getInvalidRank();
-   if ( box_index < d_first_index || box_index >= d_first_index_with_0 ) {
+   if ( box_index < d_index_begin || box_index >= d_first_index_with_0 ) {
       // Not an index in this object.  Return invalid owner.
    }
    if ( box_index < d_first_index_with_1 ) {
@@ -155,10 +155,10 @@ AssumedPartitionBox::getOwner(int box_index) const
 Box
 AssumedPartitionBox::getBox(int box_index) const
 {
-   TBOX_ASSERT( box_index >= d_first_index );
-   TBOX_ASSERT( box_index < d_first_index + d_partition_grid_size.getProduct() );
+   TBOX_ASSERT( box_index >= d_index_begin );
+   TBOX_ASSERT( box_index < d_index_begin + d_partition_grid_size.getProduct() );
 
-   box_index -= d_first_index;
+   box_index -= d_index_begin;
    Index lower( d_box.getDim(), 0 );
    for ( int d=d_box.getDim().getValue()-1; d>=0; ++d ) {
       int dir = d_major[d];
@@ -183,7 +183,7 @@ AssumedPartitionBox::getBox(const IntVector &position) const
    TBOX_ASSERT( position >= hier::IntVector::getZero(d_box.getDim()) );
    TBOX_ASSERT( position < d_partition_grid_size );
 
-   int box_index = d_first_index;
+   int box_index = d_index_begin;
    for ( int d=0; d<d_box.getDim().getValue(); ++d ) {
       box_index += position[d]*d_index_stride[d];
    }
@@ -219,6 +219,67 @@ AssumedPartitionBox::findOverlaps(
       overlapping_boxes.insert( getBox(*ci) );
    }
    return !coarsened_box.empty();
+}
+
+
+
+/*
+***************************************************************************************
+* Check the assumed partition for errors and inconsistencies.  Write
+* error diagnostics to plog.
+*
+* Failure indicates a bug in this class.
+***************************************************************************************
+*/
+size_t
+AssumedPartitionBox::selfCheck() const
+{
+   size_t nerr = 0;
+
+   BoxContainer tmp_boxes;
+
+   BoxContainer all_parts;
+   for ( int box_index=begin(); box_index!=end(); ++box_index ) {
+      all_parts.pushBack( getBox(box_index) );
+   }
+   all_parts.makeTree();
+
+
+   // Make sure no part intersects others.
+   tmp_boxes.clear();
+   for ( BoxContainer::const_iterator bi=all_parts.begin(); bi!=all_parts.end(); ++bi ) {
+      const Box &box = *bi;
+      all_parts.findOverlapBoxes( tmp_boxes, box );
+      if ( !tmp_boxes.empty() ) {
+         nerr += tmp_boxes.size();
+         tbox::plog << "AssumedPartitionerBox::selfCheck(): Box "
+                    << box << " unexpectedly overlaps these:\n"
+                    << tmp_boxes.format("\t") << std::endl;
+         tmp_boxes.clear();
+      }
+   }
+
+   // Part should cover all of d_box.
+   BoxContainer box_leftover(d_box);
+   box_leftover.removeIntersections(all_parts);
+   if ( !box_leftover.empty() ) {
+      nerr += box_leftover.size();
+      tbox::plog << "AssumedPartitionerBox::selfCheck(): Partitions fail to cover box "
+                 << d_box << "  Uncovered parts:\n"
+                 << box_leftover.format("\t") << std::endl;
+   }
+
+   // Parts shoud cover no more than d_box.
+   BoxContainer parts_leftover = all_parts;
+   parts_leftover.removeIntersections(d_box);
+   if ( !parts_leftover.empty() ) {
+      nerr += parts_leftover.size();
+      tbox::plog << "AssumedPartitionerBox::selfCheck(): Partitions overflow  box "
+                 << d_box << "  Overflow parts:\n"
+                 << parts_leftover.format("\t") << std::endl;
+   }
+
+   return nerr;
 }
 
 

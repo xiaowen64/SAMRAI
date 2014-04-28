@@ -42,18 +42,18 @@ public:
     *
     * @param[in] rank_end One past last rank
     *
-    * @param[in] first_index
+    * @param[in] index_begin
     */
    AssumedPartitionBox(
       const Box& box,
       int rank_begin,
       int rank_end,
-      int first_index = 0 );
+      int index_begin = 0 );
 
    /*!
     * @brief Destructor.
     */
-   ~AssumedPartitionBox();
+   ~AssumedPartitionBox() {}
 
    //! @brief Number of box partitions.
    size_t getNumberOfParts() const {
@@ -69,11 +69,29 @@ public:
    //! @brief Return box for given partition's position in the partition grid.
    Box getBox(const IntVector &position) const;
 
+   //! @brief Return index of first box.
+   int begin() const {
+      return d_first_index_with_2;
+   }
+
+   //! @brief Return one past index of last box.
+   int end() const {
+      return d_first_index_with_0;
+   }
+
    //! @brief Return index of first box assigned to given rank.
    int beginOfRank(int rank) const;
 
    //! @brief Return one past index of last box assigned to given rank.
    int endOfRank(int rank) const;
+
+   /*!
+    * @brief Check the assumed partition for errors and
+    * inconsistencies.  Write error diagnostics to plog.
+    *
+    * Failure indicates a bug in this class.
+    */
+   size_t selfCheck() const;
 
    /*!
     * @brief Find partitions overlapping the given box.
@@ -100,7 +118,7 @@ private:
    //! @brief One past last rank.
    int d_rank_end;
    //! @brief Index for first box.
-   int d_first_index;
+   int d_index_begin;
 
    //! @brief Size of each uniform partition.
    IntVector d_uniform_partition_size;
