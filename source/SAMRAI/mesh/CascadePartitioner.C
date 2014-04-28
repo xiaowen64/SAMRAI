@@ -551,7 +551,7 @@ CascadePartitioner::setSAMRAI_MPI(
 void
 CascadePartitioner::freeMPICommunicator()
 {
-   if ( d_mpi_is_dupe ) {
+   if ( d_mpi_is_dupe && d_mpi.getCommunicator() != MPI_COMM_NULL ) {
       // Free the private communicator (if MPI has not been finalized).
       int flag;
       tbox::SAMRAI_MPI::Finalized(&flag);
