@@ -31,9 +31,9 @@ struct CommonTestParams {
    int index_begin;
    CommonTestParams( const tbox::Dimension &dim ) :
       box(dim),
-      rank_begin(-1),
-      rank_end(-1),
-      index_begin(-1) {}
+      rank_begin(0),
+      rank_end(1),
+      index_begin(0) {}
    CommonTestParams( const CommonTestParams &other ) :
       box(other.box),
       rank_begin(other.rank_begin),
@@ -141,8 +141,8 @@ CommonTestParams getTestParametersFromDatabase( tbox::Database &test_db )
    const tbox::Dimension dim(test_db.getInteger("dim"));
    CommonTestParams ctp( dim );
    ctp.box = test_db.getDatabaseBox("box");
-   ctp.rank_begin = test_db.getInteger("rank_begin");
-   ctp.rank_end = test_db.getInteger("rank_end");
-   ctp.index_begin = test_db.getInteger("index_begin");
+   ctp.rank_begin = test_db.getIntegerWithDefault("rank_begin", ctp.rank_begin);
+   ctp.rank_end = test_db.getIntegerWithDefault("rank_end", ctp.rank_end);
+   ctp.index_begin = test_db.getIntegerWithDefault("index_begin", ctp.index_begin);
    return ctp;
 }

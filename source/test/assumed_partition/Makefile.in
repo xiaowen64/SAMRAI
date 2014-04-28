@@ -33,11 +33,13 @@ QUOTE = \"
 checkcompile: main
 
 check:  checkcompile
-	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-	  echo "    <testcase classname=\"transformation\" name=$(QUOTE)$$p procs$(QUOTE)>" >> $(REPORT); \
-	  $(OBJECT)/config/serpa-run $$p ./main | $(TEE) foo; \
-	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
-	  echo "    </testcase>" >> $(REPORT); \
+	@for i in test_inputs/*.input ; do	\
+	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
+	    echo "    <testcase classname=\"assumed_partition\" name=$(QUOTE)$$i $$p procs$(QUOTE)>" >> $(REPORT); \
+	    $(OBJECT)/config/serpa-run $$p ./main $${i} | $(TEE) foo; \
+	    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
+	    echo "    </testcase>" >> $(REPORT); \
+	  done \
 	done; \
 	$(RM) foo
 
