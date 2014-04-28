@@ -128,6 +128,16 @@ private:
       const hier::Transformation& transformation,
       const hier::BoxContainer& dst_restrict_boxes);
 
+   static boost::shared_ptr<hier::BoxOverlap>
+   doOverlap(
+      const OutersideGeometry& dst_geometry,
+      const OutersideGeometry& src_geometry,
+      const hier::Box& src_mask,
+      const hier::Box& fill_box,
+      const bool overwrite_interior,
+      const hier::Transformation& transformation,
+      const hier::BoxContainer& dst_restrict_boxes);
+
    OutersideGeometry(
       const OutersideGeometry&);                // not implemented
    OutersideGeometry&

@@ -218,10 +218,42 @@ OutersideData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
-   NULL_USE(src);
-   NULL_USE(overlap);
 
-   TBOX_ERROR("Copy with outerside as destination is not defined yet...");
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
+
+   const SideOverlap* t_overlap = CPP_CAST<const SideOverlap *>(&overlap);
+
+   TBOX_ASSERT(t_overlap != 0);
+
+   const OutersideData<TYPE>* t_oside_src =
+      dynamic_cast<const OutersideData<TYPE> *>(&src);
+   const SideData<TYPE>* t_side_src =
+      dynamic_cast<const SideData<TYPE> *>(&src);
+
+   TBOX_ASSERT(t_oside_src == 0 || t_side_src == 0);
+   TBOX_ASSERT(t_oside_src != 0 || t_side_src != 0);
+
+   const hier::IntVector& src_offset = t_overlap->getSourceOffset();
+   if (t_oside_src != 0) {
+      for (int d = 0; d < getDim().getValue(); ++d) {
+         const hier::BoxContainer& box_list =
+            t_overlap->getDestinationBoxContainer(d);
+         d_data[d][0]->copy(t_oside_src->getArrayData(d,0), box_list, src_offset);
+         d_data[d][0]->copy(t_oside_src->getArrayData(d,1), box_list, src_offset);
+         d_data[d][1]->copy(t_oside_src->getArrayData(d,0), box_list, src_offset);
+         d_data[d][1]->copy(t_oside_src->getArrayData(d,1), box_list, src_offset);
+      }
+   } else if (t_side_src != 0) {
+      for (int d = 0; d < getDim().getValue(); ++d) {
+         const hier::BoxContainer& box_list =
+            t_overlap->getDestinationBoxContainer(d);
+         d_data[d][0]->copy(t_side_src->getArrayData(d), box_list, src_offset);
+         d_data[d][1]->copy(t_side_src->getArrayData(d), box_list, src_offset);
+      }
+   } else {
+      TBOX_ERROR("OutersideData<TYPE>::copy error...\n"
+         << " : Cannot copy from type other than SideData or OutersideData " << std::endl);
+   }
 }
 
 template<class TYPE>

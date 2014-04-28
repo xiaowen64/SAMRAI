@@ -144,8 +144,6 @@ void OuterfaceDataTest::registerVariables(
 {
    TBOX_ASSERT(commtest != 0);
 
-   const tbox::Dimension dim(d_dim);
-
    int nvars = static_cast<int>(d_variable_src_name.size());
 
    d_variables_src.resize(nvars);
@@ -153,15 +151,24 @@ void OuterfaceDataTest::registerVariables(
 
    for (int i = 0; i < nvars; ++i) {
       d_variables_src[i].reset(
-         new pdat::OuterfaceVariable<double>(dim,
+         new pdat::OuterfaceVariable<double>(d_dim,
                                              d_variable_src_name[i],
                                              d_variable_depth[i]));
 
-      d_variables_dst[i].reset(
-         new pdat::FaceVariable<double>(dim,
-                                        d_variable_dst_name[i],
-                                        d_variable_depth[i],
-                                        d_use_fine_value_at_interface[i]));
+      if (i % 2 == 0) {
+         d_variables_dst[i].reset(
+            new pdat::FaceVariable<double>(
+               d_dim,
+               d_variable_dst_name[i],
+               d_variable_depth[i],
+               d_use_fine_value_at_interface[i]));
+      } else {
+         d_variables_dst[i].reset(
+            new pdat::OuterfaceVariable<double>(
+               d_dim,
+               d_variable_dst_name[i],
+               d_variable_depth[i]));
+      } 
 
       if (d_do_refine) {
          commtest->registerVariable(d_variables_src[i],
@@ -507,35 +514,89 @@ bool OuterfaceDataTest::verifyResults(
 
       for (int i = 0; i < static_cast<int>(d_variables_dst.size()); ++i) {
 
-         boost::shared_ptr<pdat::FaceData<double> > face_data(
-            BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
-               patch.getPatchData(d_variables_dst[i], getDataContext())));
-         TBOX_ASSERT(face_data);
-         int depth = face_data->getDepth();
-         hier::Box dbox = face_data->getGhostBox();
+         if (i % 2 == 0) {
+            boost::shared_ptr<pdat::FaceData<double> > face_data(
+               BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+                  patch.getPatchData(d_variables_dst[i], getDataContext())));
+            TBOX_ASSERT(face_data);
+            int depth = face_data->getDepth();
+            hier::Box dbox = face_data->getGhostBox();
 
-         for (int id = 0; id < d_dim.getValue(); ++id) {
-            pdat::FaceIterator fiend(pdat::FaceGeometry::end(dbox, id));
-            for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(dbox, id));
-                 fi != fiend; ++fi) {
-               double correct = (*solution)(*fi);
-               for (int d = 0; d < depth; ++d) {
-                  double result = (*face_data)(*fi, d);
-                  if (!tbox::MathUtilities<double>::equalEps(correct,
-                         result)) {
-                     tbox::perr << "Test FAILED: ...."
-                                << " : face_data index = " << *fi << endl;
-                     tbox::perr << "    hier::Variable = "
-                                << d_variable_src_name[i]
-                                << " : depth index = " << d << endl;
-                     tbox::perr << "    result = " << result
-                                << " : correct = " << correct << endl;
-                     test_failed = true;
+            for (int id = 0; id < d_dim.getValue(); ++id) {
+               pdat::FaceIterator fiend(pdat::FaceGeometry::end(dbox, id));
+               for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(dbox, id));
+                    fi != fiend; ++fi) {
+                  double correct = (*solution)(*fi);
+                  for (int d = 0; d < depth; ++d) {
+                     double result = (*face_data)(*fi, d);
+                     if (!tbox::MathUtilities<double>::equalEps(correct,
+                            result)) {
+                        tbox::perr << "Test FAILED: ...."
+                                   << " : face_data index = " << *fi << endl;
+                        tbox::perr << "    hier::Variable = "
+                                   << d_variable_src_name[i]
+                                   << " : depth index = " << d << endl;
+                        tbox::perr << "    result = " << result
+                                   << " : correct = " << correct << endl;
+                        test_failed = true;
+                     }
+                  }
+               }
+            }
+         } else {
+            boost::shared_ptr<pdat::OuterfaceData<double> > oface_data(
+               BOOST_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
+                  patch.getPatchData(d_variables_dst[i], getDataContext())));
+            TBOX_ASSERT(oface_data);
+            int depth = oface_data->getDepth();
+            hier::Box dbox = oface_data->getGhostBox();
+
+            for (int id = 0; id < d_dim.getValue(); ++id) {
+               hier::Box dbox_lo(dbox);
+               dbox_lo.upper(id) = dbox_lo.lower(id);
+               hier::BoxIterator loend(dbox_lo.end());
+               for (hier::BoxIterator si(dbox_lo.begin()); si != loend; ++si) {
+                  pdat::FaceIndex fndx(*si, id, 0); 
+                  double correct = (*solution)(fndx);
+                  for (int d = 0; d < depth; ++d) {
+                     double result = (*oface_data)(fndx, 0, d);
+                     if (!tbox::MathUtilities<double>::equalEps(correct,
+                            result)) {
+                        tbox::perr << "Test FAILED: ...."
+                                   << " : oface_data index = " << fndx << endl;
+                        tbox::perr << "    hier::Variable = "
+                                   << d_variable_src_name[i]
+                                   << " : depth index = " << d << endl;
+                        tbox::perr << "    result = " << result
+                                   << " : correct = " << correct << endl;
+                        test_failed = true;
+                     }
+                  }
+               }
+
+               hier::Box dbox_hi(dbox);
+               dbox_hi.lower(id) = dbox_hi.upper(id);
+               hier::BoxIterator hiend(dbox_hi.end());
+               for (hier::BoxIterator si(dbox_hi.begin()); si != hiend; ++si) {
+                  pdat::FaceIndex fndx(*si, id, 1); 
+                  double correct = (*solution)(fndx);
+                  for (int d = 0; d < depth; ++d) {
+                     double result = (*oface_data)(fndx, 1, d);
+                     if (!tbox::MathUtilities<double>::equalEps(correct,
+                            result)) {
+                        tbox::perr << "Test FAILED: ...."
+                                   << " : oface_data index = " << fndx << endl;
+                        tbox::perr << "    hier::Variable = "
+                                   << d_variable_src_name[i]
+                                   << " : depth index = " << d << endl;
+                        tbox::perr << "    result = " << result
+                                   << " : correct = " << correct << endl;
+                        test_failed = true;
+                     }
                   }
                }
             }
          }
-
       }
       if (!test_failed) {
          tbox::plog << "Outerface test Successful!" << endl;

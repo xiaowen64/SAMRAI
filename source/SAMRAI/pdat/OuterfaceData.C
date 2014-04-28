@@ -218,11 +218,42 @@ OuterfaceData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
-   NULL_USE(src);
-   NULL_USE(overlap);
+   const FaceOverlap* t_overlap = CPP_CAST<const FaceOverlap *>(&overlap);
 
-   TBOX_ERROR("Copy with outerface as destination is not defined yet...");
+   TBOX_ASSERT(t_overlap != 0);
+
+   const OuterfaceData<TYPE>* t_oface_src =
+      dynamic_cast<const OuterfaceData<TYPE> *>(&src);
+   const FaceData<TYPE>* t_face_src =
+      dynamic_cast<const FaceData<TYPE> *>(&src);
+
+   TBOX_ASSERT(t_oface_src == 0 || t_face_src == 0);
+   TBOX_ASSERT(t_oface_src != 0 || t_face_src != 0);
+
+   const hier::IntVector& src_offset = t_overlap->getSourceOffset();
+   if (t_oface_src != 0) {
+      for (int d = 0; d < getDim().getValue(); ++d) {
+         const hier::BoxContainer& box_list =
+            t_overlap->getDestinationBoxContainer(d);
+         d_data[d][0]->copy(t_oface_src->getArrayData(d,0), box_list, src_offset);
+         d_data[d][0]->copy(t_oface_src->getArrayData(d,1), box_list, src_offset);
+         d_data[d][1]->copy(t_oface_src->getArrayData(d,0), box_list, src_offset);
+         d_data[d][1]->copy(t_oface_src->getArrayData(d,1), box_list, src_offset);
+      }
+   } else if (t_face_src != 0) {
+      for (int d = 0; d < getDim().getValue(); ++d) {
+         const hier::BoxContainer& box_list =
+            t_overlap->getDestinationBoxContainer(d);
+         d_data[d][0]->copy(t_face_src->getArrayData(d), box_list, src_offset);
+         d_data[d][1]->copy(t_face_src->getArrayData(d), box_list, src_offset);
+      }
+   } else {
+      TBOX_ERROR("OuterfaceData<TYPE>::copy error...\n"
+         << " : Cannot copy from type other than FaceData or OuterfaceData " << std::endl);
+   }
+
 }
 
 template<class TYPE>

@@ -160,14 +160,21 @@ void OutersideDataTest::registerVariables(
             d_dim,
             d_variable_src_name[i],
             d_variable_depth[i]));
-      d_variables_dst[i].reset(
-         new pdat::SideVariable<double>(
-            d_dim,
-            d_variable_dst_name[i],
-            hier::IntVector::getOne(d_dim),
-            d_variable_depth[i],
-            d_use_fine_value_at_interface[i]));
-
+      if (i % 2 == 0) {
+         d_variables_dst[i].reset(
+            new pdat::SideVariable<double>(
+               d_dim,
+               d_variable_dst_name[i],
+               hier::IntVector::getOne(d_dim),
+               d_variable_depth[i],
+               d_use_fine_value_at_interface[i]));
+      } else {
+         d_variables_dst[i].reset(
+            new pdat::OutersideVariable<double>(
+               d_dim,
+               d_variable_dst_name[i],
+               d_variable_depth[i]));
+      } 
       if (d_do_refine) {
          commtest->registerVariable(d_variables_src[i],
             d_variables_dst[i],
@@ -500,27 +507,82 @@ bool OutersideDataTest::verifyResults(
 
       for (int i = 0; i < static_cast<int>(d_variables_dst.size()); ++i) {
 
-         boost::shared_ptr<pdat::SideData<double> > side_data(
-            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
-               patch.getPatchData(d_variables_dst[i], getDataContext())));
-         TBOX_ASSERT(side_data);
-         int depth = side_data->getDepth();
-         hier::Box dbox = side_data->getGhostBox();
+         if (i % 2 == 0) {
+            boost::shared_ptr<pdat::SideData<double> > side_data(
+               BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+                  patch.getPatchData(d_variables_dst[i], getDataContext())));
+            TBOX_ASSERT(side_data);
+            int depth = side_data->getDepth();
+            hier::Box dbox = side_data->getGhostBox();
 
-         hier::IntVector directions(side_data->getDirectionVector());
+            hier::IntVector directions(side_data->getDirectionVector());
 
-         for (int id = 0; id < d_dim.getValue(); ++id) {
-            if (directions(id)) {
-               pdat::SideIterator siend(pdat::SideGeometry::end(dbox, id));
-               for (pdat::SideIterator si(pdat::SideGeometry::begin(dbox, id));
-                    si != siend; ++si) {
-                  double correct = (*solution)(*si);
+            for (int id = 0; id < d_dim.getValue(); ++id) {
+               if (directions(id)) {
+                  pdat::SideIterator siend(pdat::SideGeometry::end(dbox, id));
+                  for (pdat::SideIterator si(pdat::SideGeometry::begin(dbox, id));
+                       si != siend; ++si) {
+                     double correct = (*solution)(*si);
+                     for (int d = 0; d < depth; ++d) {
+                        double result = (*side_data)(*si, d);
+                        if (!tbox::MathUtilities<double>::equalEps(correct,
+                               result)) {
+                           tbox::perr << "Test FAILED: ...."
+                                      << " : side_data index = " << *si << endl;
+                           tbox::perr << "    hier::Variable = "
+                                      << d_variable_src_name[i]
+                                      << " : depth index = " << d << endl;
+                           tbox::perr << "    result = " << result
+                                      << " : correct = " << correct << endl;
+                           test_failed = true;
+                        }
+                     }
+                  }
+               }
+            }
+         } else {
+            boost::shared_ptr<pdat::OutersideData<double> > oside_data(
+               BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+                  patch.getPatchData(d_variables_dst[i], getDataContext())));
+            TBOX_ASSERT(oside_data);
+            int depth = oside_data->getDepth();
+            hier::Box dbox = oside_data->getGhostBox();
+
+            for (int id = 0; id < d_dim.getValue(); ++id) {
+               hier::Box dbox_lo(dbox);
+               dbox_lo.upper(id) = dbox_lo.lower(id);
+               hier::BoxIterator loend(dbox_lo.end());
+               for (hier::BoxIterator si(dbox_lo.begin()); si != loend; ++si) {
+                  pdat::SideIndex sndx(*si, id, 0); 
+                  double correct = (*solution)(sndx);
                   for (int d = 0; d < depth; ++d) {
-                     double result = (*side_data)(*si, d);
+                     double result = (*oside_data)(sndx, 0, d);
                      if (!tbox::MathUtilities<double>::equalEps(correct,
                             result)) {
                         tbox::perr << "Test FAILED: ...."
-                                   << " : side_data index = " << *si << endl;
+                                   << " : oside_data index = " << sndx << endl;
+                        tbox::perr << "    hier::Variable = "
+                                   << d_variable_src_name[i]
+                                   << " : depth index = " << d << endl;
+                        tbox::perr << "    result = " << result
+                                   << " : correct = " << correct << endl;
+                        test_failed = true;
+                     }
+                  }
+               }
+
+               hier::Box dbox_hi(dbox);
+               dbox_hi.lower(id) = dbox_hi.upper(id);
+               hier::BoxIterator hiend(dbox_hi.end());
+               for (hier::BoxIterator si(dbox_hi.begin()); si != hiend; ++si) {
+                  pdat::SideIndex sndx(*si, id, 1); 
+                  double correct = (*solution)(sndx);
+                  for (int d = 0; d < depth; ++d) {
+                     double result = (*oside_data)(sndx, 1, d);
+                     if (!tbox::MathUtilities<double>::equalEps(correct,
+                            result)) {
+                        tbox::perr << "Test FAILED: ...."
+                                   << " : oside_data index = " << sndx << endl;
                         tbox::perr << "    hier::Variable = "
                                    << d_variable_src_name[i]
                                    << " : depth index = " << d << endl;

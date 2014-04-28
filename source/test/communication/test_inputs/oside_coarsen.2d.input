@@ -118,6 +118,28 @@ OutersidePatchDataTest {
          use_fine_value_at_interface = TRUE
       }
 
+      variable_3 {
+         src_name = "src_var3"
+         dst_name = "dst_var3"
+         depth = 1
+         src_ghosts = 0,0
+         dst_ghosts = 2,2
+         coarsen_operator = "CONSERVATIVE_COARSEN"
+         refine_operator = "CONSERVATIVE_LINEAR_REFINE"
+         use_fine_value_at_interface = TRUE
+      }
+
+      variable_4 {
+         src_name = "src_var4"
+         dst_name = "dst_var4"
+         depth = 2
+         src_ghosts = 0,0
+         dst_ghosts = 0,0
+         coarsen_operator = "CONSERVATIVE_COARSEN"
+         refine_operator = "CONSERVATIVE_LINEAR_REFINE"
+         use_fine_value_at_interface = TRUE
+      }
+
    }
 
 }
