@@ -1,0 +1,52 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Description:   Input file for assumed_partition tests.
+ *
+ ************************************************************************/
+
+
+Main {
+
+  // Base name for output files.
+  base_name = "single"
+
+  // Whether to log all nodes.
+  log_all_nodes = FALSE
+
+}
+
+/*
+ * Define test for AssumedPartitionBox using databases named SingleBoxTest##,
+ * where ## is a 2-digit integer, sequentially from 0
+ */
+
+SingleBoxTest00 {
+  nickname = "11x11, 4 owners" // Nick name of test.
+  dim = 2
+  box = [(0,0),(10,10)]
+  rank_begin = 0
+  rank_end = 4
+  index_begin = 0
+}
+
+SingleBoxTest01 {
+  nickname = "11x11, 2 owners" // Nick name of test.
+  dim = 2
+  box = [(0,0),(10,10)]
+  rank_begin = 0
+  rank_end = 2
+  index_begin = 0
+}
+
+SingleBoxTest02 {
+  nickname = "11x11, 13 owners" // Nick name of test.
+  dim = 2
+  box = [(0,0),(10,10)]
+  rank_begin = 0
+  rank_end = 13
+  index_begin = 0
+}

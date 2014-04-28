@@ -46,8 +46,7 @@ AssumedPartitionBox::AssumedPartitionBox(
     * more parts than ranks, lower ranks have 2 parts and higher ranks
     * have 1.  In second case, index vs rank looks like this:
     *
-    *       ^
-    * index |
+    * index ^
     *       |
     *    i0 |             ......
     *       |          .
@@ -77,11 +76,11 @@ AssumedPartitionBox::AssumedPartitionBox(
 
    d_major.sortIntVector(d_partition_grid_size);
 
-   for ( int d=d_box.getDim().getValue()-1; d>=0; ++d ) {
+   for ( int d=0; d<d_box.getDim().getValue(); ++d ) {
       int dir = d_major[d];
       d_index_stride[dir] = 1;
-      for ( int j=d-1; j>=0; ++d ) {
-         d_index_stride[dir] *= d_partition_grid_size[dir];
+      for ( int d1=d-1; d1>=0; --d1 ) {
+         d_index_stride[dir] *= d_partition_grid_size[d_major[d1]];
       }
    }
 
@@ -140,7 +139,7 @@ AssumedPartitionBox::getOwner(int box_index) const
       owner = d_rank_begin + (box_index - d_first_index_with_2)/2;
    }
    else if ( box_index < d_first_index_with_0 ) {
-      owner = d_rank_begin + (box_index - d_first_index_with_1);
+      owner = d_first_rank_with_1 + (box_index - d_first_index_with_1);
    }
    return owner;
 }
@@ -158,16 +157,21 @@ AssumedPartitionBox::getBox(int box_index) const
    TBOX_ASSERT( box_index >= d_index_begin );
    TBOX_ASSERT( box_index < d_index_begin + d_partition_grid_size.getProduct() );
 
-   box_index -= d_index_begin;
-   Index lower( d_box.getDim(), 0 );
-   for ( int d=d_box.getDim().getValue()-1; d>=0; ++d ) {
+   Box part(d_box);
+   int box_index_diff = box_index - d_index_begin;
+   for ( int d=d_box.getDim().getValue()-1; d>=0; --d ) {
       int dir = d_major[d];
-      lower[dir] = box_index/d_index_stride[dir];
-      box_index -= lower[dir]*d_index_stride[dir];
+      part.lower()[dir] = box_index_diff/d_index_stride[dir];
+      box_index_diff -= part.lower()[dir]*d_index_stride[dir];
    }
-   const Index upper = lower + d_uniform_partition_size - IntVector::getOne(d_box.getDim());
+   part.lower() *= d_uniform_partition_size;
+   part.upper() = part.lower() + d_uniform_partition_size - IntVector::getOne(d_box.getDim());
+   part *= d_box;
+
    const int owner = getOwner(box_index);
-   return Box(lower, upper, d_box.getBlockId(), LocalId(box_index), owner) * d_box;
+   part.initialize( part, LocalId(box_index), owner );
+
+   return part;
 }
 
 
@@ -241,7 +245,9 @@ AssumedPartitionBox::selfCheck() const
    BoxContainer all_parts;
    for ( int box_index=begin(); box_index!=end(); ++box_index ) {
       all_parts.pushBack( getBox(box_index) );
+      tbox::plog << "Added box " << all_parts.back() << std::endl;
    }
+   tbox::plog << "all_parts:\n" << all_parts.format();
    all_parts.makeTree();
 
 
@@ -249,13 +255,20 @@ AssumedPartitionBox::selfCheck() const
    tmp_boxes.clear();
    for ( BoxContainer::const_iterator bi=all_parts.begin(); bi!=all_parts.end(); ++bi ) {
       const Box &box = *bi;
+      tmp_boxes.clear();
       all_parts.findOverlapBoxes( tmp_boxes, box );
+      tmp_boxes.order();
+      if ( !tmp_boxes.empty() ) {
+         BoxContainer::iterator self = tmp_boxes.find(box);
+         if ( self != tmp_boxes.end() ) {
+            tmp_boxes.erase(self);
+         }
+      }
       if ( !tmp_boxes.empty() ) {
          nerr += tmp_boxes.size();
          tbox::plog << "AssumedPartitionerBox::selfCheck(): Box "
                     << box << " unexpectedly overlaps these:\n"
                     << tmp_boxes.format("\t") << std::endl;
-         tmp_boxes.clear();
       }
    }
 
@@ -310,20 +323,51 @@ AssumedPartitionBox::computeLayout()
    int parts_count = d_partition_grid_size.getProduct();
    IntVector num_parts_can_increase(d_box.getDim(), 1);
    IntVector sorter(d_box.getDim());
-   while ( parts_count < num_ranks ) {
+   while ( parts_count < num_ranks &&
+           num_parts_can_increase != hier::IntVector::getZero(d_box.getDim()) ) {
       sorter.sortIntVector(d_uniform_partition_size);
-      int inc_dir;
-      for ( inc_dir=0; inc_dir<d_box.getDim().getValue(); ++inc_dir ) {
-         if ( num_parts_can_increase[inc_dir] ) break;
+      int inc_dir = 0;
+      for ( inc_dir=d_box.getDim().getValue()-1; inc_dir>=0; --inc_dir ) {
+         if ( num_parts_can_increase[sorter[inc_dir]] ) break;
       }
+      inc_dir = sorter[inc_dir];
       int factor = tbox::MathUtilities<int>::Min( 2, (num_ranks+parts_count-1)/parts_count );
       parts_count *= factor;
       d_partition_grid_size[inc_dir] *= factor;
       d_uniform_partition_size = IntVector::ceilingDivide(box_size, d_partition_grid_size);
-      num_parts_can_increase[inc_dir] = d_uniform_partition_size[inc_dir] < 2;
+      num_parts_can_increase[inc_dir] = d_uniform_partition_size[inc_dir] > 1;
    }
    TBOX_ASSERT( parts_count == d_partition_grid_size.getProduct() );
    TBOX_ASSERT( d_uniform_partition_size.getProduct() > 0 );
+
+   return;
+}
+
+
+
+/*
+***************************************************************************************
+***************************************************************************************
+*/
+void
+AssumedPartitionBox::recursivePrint(
+   std::ostream &co,
+   const std::string& border,
+   int detail_depth) const
+{
+   const char *to = "..";
+   co << border << "d_box = " << d_box
+      << '\n' << border
+      << "d_uniform_partition_size = " << d_uniform_partition_size
+      << "  d_partition_grid_size = " << d_partition_grid_size
+      << '\n' << border
+      << "indices = " << d_index_begin << to << d_index_begin+d_partition_grid_size.getProduct()-1
+      << "  ranks = " << d_rank_begin << to << d_rank_end-1
+      << '\n' << border
+      << d_first_rank_with_1-d_rank_begin << " ranks with 2 parts: " << d_rank_begin << to << d_first_rank_with_1-1
+      << "  " << d_first_rank_with_0-d_first_rank_with_1 << " ranks with 1 parts: " << d_first_rank_with_1 << to << d_first_rank_with_0-1
+      << "  " << d_rank_end-d_first_rank_with_0 << " ranks with 0 parts: " << d_first_rank_with_0 << to << d_rank_end-1
+      << std::endl;
 
    return;
 }

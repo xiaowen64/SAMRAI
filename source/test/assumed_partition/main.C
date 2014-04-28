@@ -15,6 +15,7 @@
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/MemoryDatabase.h"
+#include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/AssumedPartitionBox.h"
@@ -82,6 +83,25 @@ int main(
       boost::shared_ptr<tbox::MemoryDatabase> input_db(new tbox::MemoryDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
+
+      boost::shared_ptr<tbox::Database> main_db = input_db->getDatabase("Main");
+
+      std::string base_name = "unnamed";
+      base_name = main_db->getStringWithDefault("base_name", base_name);
+
+      /*
+       * Start logging.
+       */
+      const std::string log_file_name = base_name + ".log";
+      bool log_all_nodes = false;
+      log_all_nodes = main_db->getBoolWithDefault("log_all_nodes",
+            log_all_nodes);
+      if (log_all_nodes) {
+         tbox::PIO::logAllNodes(log_file_name);
+      } else {
+         tbox::PIO::logOnlyNodeZero(log_file_name);
+      }
+
       {
          /*
           * Test single-box assumed partitions.
@@ -109,6 +129,9 @@ int main(
             CommonTestParams ctp = getTestParametersFromDatabase( *test_db );
 
             hier::AssumedPartitionBox apb( ctp.box, ctp.rank_begin, ctp.rank_end, ctp.index_begin );
+            tbox::plog << "AssumedPartitionBox:\n";
+            apb.recursivePrint(tbox::plog, "\t");
+
             fail_count += apb.selfCheck();
 
             ++test_number;
@@ -141,6 +164,7 @@ CommonTestParams getTestParametersFromDatabase( tbox::Database &test_db )
    const tbox::Dimension dim(test_db.getInteger("dim"));
    CommonTestParams ctp( dim );
    ctp.box = test_db.getDatabaseBox("box");
+   ctp.box.setBlockId(hier::BlockId(0));
    ctp.rank_begin = test_db.getIntegerWithDefault("rank_begin", ctp.rank_begin);
    ctp.rank_end = test_db.getIntegerWithDefault("rank_end", ctp.rank_end);
    ctp.index_begin = test_db.getIntegerWithDefault("index_begin", ctp.index_begin);

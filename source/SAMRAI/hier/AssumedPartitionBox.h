@@ -105,6 +105,19 @@ public:
       BoxContainer &overlapping_boxes,
       const Box &box ) const;
 
+   /*!
+    * @brief Print info from this object
+    *
+    * @param[in,out] os The output stream
+    * @param[in] border
+    * @param[in] detail_depth
+    */
+   void
+   recursivePrint(
+      std::ostream& os,
+      const std::string& border,
+      int detail_depth = 2) const;
+
 
 private:
 
