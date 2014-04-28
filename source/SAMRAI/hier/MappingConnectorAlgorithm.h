@@ -290,7 +290,7 @@ private:
       Connector* new_to_anchor,
       const std::set<int>& incoming_ranks,
       const std::set<int>& outoing_ranks,
-      tbox::AsyncCommPeer<int> all_comms[],
+      tbox::AsyncCommPeer<int>* all_comms,
       BoxContainer& visible_new_nabrs,
       BoxContainer& visible_anchor_nabrs,
       const InvertedNeighborhoodSet& anchor_eto_old,
