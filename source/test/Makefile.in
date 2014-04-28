@@ -30,6 +30,7 @@ SUBDIRS = \
    async_comm \
    mapped_box_set_iterators \
    hierarchy \
+   assumed_partition \
    MappingConnector \
    mblktree \
    MappedBoxLevelConnectorUtilsTests \

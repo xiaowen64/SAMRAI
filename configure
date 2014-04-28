@@ -16003,6 +16003,7 @@ source/test/applications
 source/test/applications/ConvDiff
 source/test/applications/Euler
 source/test/applications/LinAdv
+source/test/assumed_partition
 source/test/async_comm
 source/test/boundary
 source/test/clustering
@@ -16063,7 +16064,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:16066:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:16067:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -16077,7 +16078,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:16080:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:16081:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -17486,6 +17487,7 @@ then
 source/test/applications/Euler/README
 source/test/applications/Euler/README-RP_test
 source/test/applications/LinAdv/README
+source/test/assumed_partition/README
 source/test/async_comm/README
 source/test/boundary/README
 source/test/clustering/async_br/README
