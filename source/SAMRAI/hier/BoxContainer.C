@@ -1746,7 +1746,7 @@ BoxContainer::print(
 {
    co << size() << " boxes, " << (d_ordered?"ordered":"unordered") << '\n';
    for (const_iterator bi = begin(); bi != end(); ++bi) {
-      Box box(*bi);
+      const Box &box(*bi);
       co << border << "    "
          << box << "   "
          << box.numberCells() << '|'
