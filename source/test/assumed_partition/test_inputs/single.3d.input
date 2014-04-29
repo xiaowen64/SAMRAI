@@ -12,7 +12,7 @@
 Main {
 
   // Base name for output files.
-  base_name = "single.2d"
+  base_name = "single.3d"
 
   // Whether to log all nodes.
   log_all_nodes = FALSE
@@ -25,18 +25,18 @@ Main {
  */
 
 SingleBoxTest00 {
-  nickname = "11x11, 4 owners" // Nick name of test.
-  dim = 2
-  box = [(0,0),(10,10)]
+  nickname = "11x11x11, 4 owners" // Nick name of test.
+  dim = 3
+  box = [(0,0,0),(10,10,10)]
   rank_begin = 0
   rank_end = 4
   index_begin = 0
 }
 
 SingleBoxTest01 {
-  nickname = "11x11, 4 owners, starting not at (0,0)" // Nick name of test.
-  dim = 2
-  box = [(150,250),(160,260)]
+  nickname = "11x11x11, 4 owners, starting not at (0,0)" // Nick name of test.
+  dim = 3
+  box = [(150,250,350),(160,260,360)]
   rank_begin = 0
   rank_end = 4
   index_begin = 0
@@ -44,8 +44,8 @@ SingleBoxTest01 {
 
 SingleBoxTest02 {
   nickname = "11x11, 2 owners" // Nick name of test.
-  dim = 2
-  box = [(10,10),(20,20)]
+  dim = 3
+   box = [(10,10,10),(20,20,20)]
   rank_begin = 0
   rank_end = 2
   index_begin = 0
@@ -53,8 +53,8 @@ SingleBoxTest02 {
 
 SingleBoxTest03 {
   nickname = "11x11, 13 owners" // Nick name of test.
-  dim = 2
-  box = [(10,10),(20,20)]
+  dim = 3
+  box = [(10,10,10),(20,20,20)]
   rank_begin = 0
   rank_end = 13
   index_begin = 0
@@ -62,8 +62,8 @@ SingleBoxTest03 {
 
 SingleBoxTest04 {
   nickname = "long box, 3 owners" // Nick name of test.
-  dim = 2
-  box = [(100,100),(110,180)]
+  dim = 3
+   box = [(100,100,100),(110,180,140)]
   rank_begin = 0
   rank_end = 3
   index_begin = 0
@@ -71,8 +71,8 @@ SingleBoxTest04 {
 
 SingleBoxTest05 {
   nickname = "long box, more owners" // Nick name of test.
-  dim = 2
-  box = [(100,100),(110,180)]
+  dim = 3
+  box = [(100,100,100),(110,180,140)]
   rank_begin = 0
   rank_end = 10
   index_begin = 0

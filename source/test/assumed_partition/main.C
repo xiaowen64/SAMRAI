@@ -10,7 +10,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-// Headers for basic SAMRAI objects used in this code.
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/InputManager.h"
@@ -148,7 +147,7 @@ int main(
    }
 
    if (fail_count == 0) {
-      tbox::pout << "\nPASSED:  transformation" << std::endl;
+      tbox::pout << "\nPASSED:  assumed_partition" << std::endl;
    }
 
    tbox::SAMRAIManager::shutdown();
