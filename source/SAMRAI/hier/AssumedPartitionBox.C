@@ -36,54 +36,7 @@ AssumedPartitionBox::AssumedPartitionBox(
    d_index_begin(index_begin)
 {
    computeLayout();
-
-   // There should not be more than 2 partitions per rank.
-   TBOX_ASSERT( d_partition_grid_size.getProduct() <= 2*(d_rank_end-d_rank_begin) );
-
-   /*
-    * If there are more ranks than parts, the first getNumberOfParts()
-    * ranks have 1 part each and the rest have none.  If there are
-    * more parts than ranks, lower ranks have 2 parts and higher ranks
-    * have 1.  In second case, index vs rank looks like this:
-    *
-    * index ^
-    *       |
-    *    i0 |             ......
-    *       |          .
-    *       |       .
-    *    i1 |    .
-    *       |   .
-    *       |  .
-    *       | .
-    *       |.
-    *    i2 +-----------------------> rank
-    *       r2   r1       r0
-    *
-    * (In the first case, the figure degenerates with r2=r1 and i2=i1.)
-    */
-   if ( d_partition_grid_size.getProduct() <= d_rank_end-d_rank_begin ) {
-      d_first_rank_with_1 = d_rank_begin;
-      d_first_rank_with_0 = d_rank_begin + d_partition_grid_size.getProduct();
-      d_first_index_with_1 = d_first_index_with_2 = d_index_begin;
-   }
-   else {
-      d_first_index_with_2 = d_index_begin;
-      d_first_rank_with_1 = d_partition_grid_size.getProduct() % (d_rank_end-d_rank_begin);
-      d_first_index_with_1 = 2*(d_first_rank_with_1 - d_rank_begin);
-      d_first_rank_with_0 = d_rank_end;
-   }
-   d_first_index_with_0 = d_index_begin + getNumberOfParts();
-
-   d_major.sortIntVector(d_partition_grid_size);
-
-   for ( int d=0; d<d_box.getDim().getValue(); ++d ) {
-      int dir = d_major[d];
-      d_index_stride[dir] = 1;
-      for ( int d1=d-1; d1>=0; --d1 ) {
-         d_index_stride[dir] *= d_partition_grid_size[d_major[d1]];
-      }
-   }
-
+   assignToRanks();
    return;
 }
 
@@ -348,6 +301,66 @@ AssumedPartitionBox::computeLayout()
 
    // There can be partitions completele outside d_box.  Remove them.
    d_partition_grid_size = IntVector::ceilingDivide( box_size, d_uniform_partition_size );
+
+   return;
+}
+
+
+
+/*
+***************************************************************************************
+* Compute rank assignment for the partition lay-out.
+***************************************************************************************
+*/
+void
+AssumedPartitionBox::assignToRanks()
+{
+   // There should not be more than 2 partitions per rank.
+   TBOX_ASSERT( d_partition_grid_size.getProduct() <= 2*(d_rank_end-d_rank_begin) );
+
+   /*
+    * If there are more ranks than parts, the first getNumberOfParts()
+    * ranks have 1 part each and the rest have none.  If there are
+    * more parts than ranks, lower ranks have 2 parts and higher ranks
+    * have 1.  In second case, index vs rank looks like this:
+    *
+    * index ^
+    *       |
+    *    i0 |             ......
+    *       |          .
+    *       |       .
+    *    i1 |    .
+    *       |   .
+    *       |  .
+    *       | .
+    *       |.
+    *    i2 +-----------------------> rank
+    *       r2   r1       r0
+    *
+    * (In the first case, the figure degenerates with r2=r1 and i2=i1.)
+    */
+   if ( d_partition_grid_size.getProduct() <= d_rank_end-d_rank_begin ) {
+      d_first_rank_with_1 = d_rank_begin;
+      d_first_rank_with_0 = d_rank_begin + d_partition_grid_size.getProduct();
+      d_first_index_with_1 = d_first_index_with_2 = d_index_begin;
+   }
+   else {
+      d_first_index_with_2 = d_index_begin;
+      d_first_rank_with_1 = d_partition_grid_size.getProduct() % (d_rank_end-d_rank_begin);
+      d_first_index_with_1 = 2*(d_first_rank_with_1 - d_rank_begin);
+      d_first_rank_with_0 = d_rank_end;
+   }
+   d_first_index_with_0 = d_index_begin + getNumberOfParts();
+
+   d_major.sortIntVector(d_partition_grid_size);
+
+   for ( int d=0; d<d_box.getDim().getValue(); ++d ) {
+      int dir = d_major[d];
+      d_index_stride[dir] = 1;
+      for ( int d1=d-1; d1>=0; --d1 ) {
+         d_index_stride[dir] *= d_partition_grid_size[d_major[d1]];
+      }
+   }
 
    return;
 }

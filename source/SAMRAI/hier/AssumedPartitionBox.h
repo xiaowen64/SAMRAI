@@ -124,6 +124,9 @@ private:
    //! @brief Compute the partition lay-out.
    void computeLayout();
 
+   //! @brief Compute rank assignment for the partition lay-out.
+   void assignToRanks();
+
    //! @brief Box partitioned.
    Box d_box;
    //! @brief First rank.
