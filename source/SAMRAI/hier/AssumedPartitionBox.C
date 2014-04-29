@@ -63,7 +63,7 @@ AssumedPartitionBox::AssumedPartitionBox(
     */
    if ( d_partition_grid_size.getProduct() <= d_rank_end-d_rank_begin ) {
       d_first_rank_with_1 = d_rank_begin;
-      d_first_rank_with_0 = d_rank_end;
+      d_first_rank_with_0 = d_rank_begin + d_partition_grid_size.getProduct();
       d_first_index_with_1 = d_first_index_with_2 = d_index_begin;
    }
    else {
@@ -329,14 +329,24 @@ AssumedPartitionBox::computeLayout()
          if ( num_parts_can_increase[sorter[inc_dir]] ) break;
       }
       inc_dir = sorter[inc_dir];
-      int factor = tbox::MathUtilities<int>::Min( 2, (num_ranks+parts_count-1)/parts_count );
-      parts_count *= factor;
-      d_partition_grid_size[inc_dir] *= factor;
+
+      if ( 2*parts_count > num_ranks ) {
+         const int cross_section = parts_count/d_partition_grid_size[inc_dir];
+         d_partition_grid_size[inc_dir] = (num_ranks+cross_section-1)/cross_section;
+         parts_count = d_partition_grid_size.getProduct();
+      } else {
+         d_partition_grid_size[inc_dir] *= 2;
+         parts_count *= 2;
+      }
+
       d_uniform_partition_size = IntVector::ceilingDivide(box_size, d_partition_grid_size);
       num_parts_can_increase[inc_dir] = d_uniform_partition_size[inc_dir] > 1;
    }
    TBOX_ASSERT( parts_count == d_partition_grid_size.getProduct() );
    TBOX_ASSERT( d_uniform_partition_size.getProduct() > 0 );
+
+   // There can be partitions completele outside d_box.  Remove them.
+   d_partition_grid_size = IntVector::ceilingDivide( box_size, d_uniform_partition_size );
 
    return;
 }
@@ -359,19 +369,23 @@ AssumedPartitionBox::recursivePrint(
       << "d_uniform_partition_size = " << d_uniform_partition_size
       << "  d_partition_grid_size = " << d_partition_grid_size
       << '\n' << border
-      << "indices = " << d_index_begin << to << d_index_begin+d_partition_grid_size.getProduct()-1
-      << "  ranks = " << d_rank_begin << to << d_rank_end-1
+      << "indices (" << d_partition_grid_size.getProduct() << "): "
+      << d_index_begin << to << d_index_begin+d_partition_grid_size.getProduct()-1
+      << "    ranks (" << d_rank_end-d_rank_begin << "): "
+      << d_rank_begin << to << d_rank_end-1
       << '\n' << border
-      << d_first_rank_with_1-d_rank_begin << " ranks with 2 parts: " << d_rank_begin << to << d_first_rank_with_1-1
-      << "  " << d_first_rank_with_0-d_first_rank_with_1 << " ranks with 1 parts: " << d_first_rank_with_1 << to << d_first_rank_with_0-1
-      << "  " << d_rank_end-d_first_rank_with_0 << " ranks with 0 parts: " << d_first_rank_with_0 << to << d_rank_end-1
+      << "ranks with 2 parts (" << d_first_rank_with_1-d_rank_begin << "): "
+      << d_rank_begin << to << d_first_rank_with_1-1
+      << "    ranks with 1 parts (" << d_first_rank_with_0-d_first_rank_with_1 << "): "
+      << d_first_rank_with_1 << to << d_first_rank_with_0-1
+      << "    ranks with 0 parts (" << d_rank_end-d_first_rank_with_0 << "): "
+      << d_first_rank_with_0 << to << d_rank_end-1
       << std::endl;
    if ( detail_depth > 0 ) {
       BoxContainer parts;
       for ( int box_index=begin(); box_index!=end(); ++box_index ) {
          parts.pushBack( getBox(box_index) );
       }
-      const std::string border1 = border + "\t";
       co << border << "Parts:" << parts.format(border);
    }
 
