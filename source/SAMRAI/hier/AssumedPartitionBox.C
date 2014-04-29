@@ -245,9 +245,7 @@ AssumedPartitionBox::selfCheck() const
    BoxContainer all_parts;
    for ( int box_index=begin(); box_index!=end(); ++box_index ) {
       all_parts.pushBack( getBox(box_index) );
-      tbox::plog << "Added box " << all_parts.back() << std::endl;
    }
-   tbox::plog << "all_parts:\n" << all_parts.format();
    all_parts.makeTree();
 
 
@@ -368,6 +366,14 @@ AssumedPartitionBox::recursivePrint(
       << "  " << d_first_rank_with_0-d_first_rank_with_1 << " ranks with 1 parts: " << d_first_rank_with_1 << to << d_first_rank_with_0-1
       << "  " << d_rank_end-d_first_rank_with_0 << " ranks with 0 parts: " << d_first_rank_with_0 << to << d_rank_end-1
       << std::endl;
+   if ( detail_depth > 0 ) {
+      BoxContainer parts;
+      for ( int box_index=begin(); box_index!=end(); ++box_index ) {
+         parts.pushBack( getBox(box_index) );
+      }
+      const std::string border1 = border + "\t";
+      co << border << "Parts:" << parts.format(border);
+   }
 
    return;
 }
