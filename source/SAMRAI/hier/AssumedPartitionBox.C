@@ -165,6 +165,7 @@ AssumedPartitionBox::getBox(int box_index) const
       box_index_diff -= part.lower()[dir]*d_index_stride[dir];
    }
    part.lower() *= d_uniform_partition_size;
+   part.lower() += d_box.lower();
    part.upper() = part.lower() + d_uniform_partition_size - IntVector::getOne(d_box.getDim());
    part *= d_box;
 
