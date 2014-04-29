@@ -124,7 +124,7 @@ int main(
             const std::string nickname =
                test_db->getStringWithDefault("nickname", test_name);
 
-            tbox::plog << "\n\n\nStarting test " << test_name << " (" << nickname << ")\n";
+            tbox::plog << "\n\nStarting test " << test_name << " (" << nickname << ")\n";
 
             CommonTestParams ctp = getTestParametersFromDatabase( *test_db );
 
@@ -132,7 +132,12 @@ int main(
             tbox::plog << "AssumedPartitionBox:\n";
             apb.recursivePrint(tbox::plog, "\t");
 
-            fail_count += apb.selfCheck();
+            size_t test_fail_count = apb.selfCheck();
+            fail_count += test_fail_count;
+            if ( test_fail_count ) {
+               tbox::pout << "FAILED: selfCheck found " << fail_count << " problems in test "
+                          << test_name << " (" << nickname << ')' << std::endl;
+            }
 
             ++test_number;
 

@@ -50,3 +50,23 @@ SingleBoxTest02 {
   rank_end = 13
   index_begin = 0
 }
+
+SingleBoxTest03 {
+  nickname = "long box, 3 owners" // Nick name of test.
+  dim = 2
+  box = [(0,0),(10,80)]
+  rank_begin = 0
+  rank_end = 3
+  index_begin = 0
+}
+
+SingleBoxTest04 {
+  nickname = "long box, more owners" // Nick name of test.
+  dim = 2
+  box = [(0,0),(10,80)]
+  rank_begin = 0
+  rank_end = 10
+  index_begin = 0
+}
+
+// Need check for boxes not starting at (0,0).
