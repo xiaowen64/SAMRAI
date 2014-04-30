@@ -320,7 +320,7 @@ private:
 
       boost::shared_ptr<tbox::MessageStream> d_msg;
       tbox::SAMRAI_MPI d_mpi;
-      MPI_Request d_mpi_request;
+      tbox::SAMRAI_MPI::Request d_mpi_request;
    };
 
 

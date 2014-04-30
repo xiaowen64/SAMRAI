@@ -124,7 +124,7 @@ public:
    typedef int Group;
    typedef int Op;
    typedef int Request;
-
+   
    /*!
     * @brief Dummy definition of Status to match the MPI standard.
     *
@@ -137,6 +137,7 @@ public:
       int MPI_TAG;
       int MPI_ERROR;
    };
+
 #endif
 
    // Obsolete and should be removed.
