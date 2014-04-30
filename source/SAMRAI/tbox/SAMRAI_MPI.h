@@ -138,8 +138,6 @@ public:
       int MPI_ERROR;
    };
 
-#define MPI_STATUS_IGNORE (tbox::SAMRAI_MPI::Status *)1
-   
 #endif
 
    // Obsolete and should be removed.

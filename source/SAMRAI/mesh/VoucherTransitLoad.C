@@ -707,7 +707,8 @@ void VoucherTransitLoad::VoucherRedemption::fulfillLocalRedemption(
 void VoucherTransitLoad::VoucherRedemption::finishSendRequest()
 {
    if ( d_mpi_request != MPI_REQUEST_NULL ) {
-      tbox::SAMRAI_MPI::Wait( &d_mpi_request, MPI_STATUS_IGNORE );
+      tbox::SAMRAI_MPI::Status mpi_status;
+      tbox::SAMRAI_MPI::Wait( &d_mpi_request, &mpi_status );
    }
    TBOX_ASSERT( d_mpi_request == MPI_REQUEST_NULL );
 }
