@@ -338,7 +338,7 @@ private:
       const Connector& unmapped_connector_transpose,
       const Connector& mapping_connector,
       const InvertedNeighborhoodSet& inverted_nbrhd,
-      const IntVector& refinement_ratio) const;
+      const MultiIntVector& refinement_ratio) const;
 
    /*!
     * @brief Read extra debugging flag from input database.

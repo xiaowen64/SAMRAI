@@ -70,6 +70,7 @@ OBJS = 	\
 	Box.o \
 	Index.o \
 	IntVector.o \
+	MultiIntVector.o \
 	GlobalId.o \
 	BoxId.o \
 	ProcessorMapping.o \

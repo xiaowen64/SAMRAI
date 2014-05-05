@@ -92,10 +92,10 @@ ConnectorStatistics::computeLocalConnectorStatistics( const Connector &connector
     * calculus.
     */
    const bool refine_head = connector.getHeadCoarserFlag() &&
-      ( connector.getRatio() != IntVector::getOne(dim) ||
+      ( !connector.getRatio().isOne(dim) ||
         !connector.ratioIsExact() );
    const bool coarsen_head = !connector.getHeadCoarserFlag() &&
-      ( connector.getRatio() != IntVector::getOne(dim) ||
+      ( !connector.getRatio().isOne(dim) ||
         !connector.ratioIsExact() );
 
 
@@ -145,7 +145,7 @@ ConnectorStatistics::computeLocalConnectorStatistics( const Connector &connector
             static_cast<double>(num_relations));
 
       Box base_box = *base.getBoxStrict(*nbi);
-      base_box.grow(connector.getConnectorWidth());
+      base_box.grow(connector.getConnectorWidth().getBlockVector(base_box.getBlockId()));
 
       for ( Connector::ConstNeighborIterator ni = connector.begin(nbi);
             ni != connector.end(nbi); ++ni ) {
@@ -153,10 +153,10 @@ ConnectorStatistics::computeLocalConnectorStatistics( const Connector &connector
          visible_neighbors.insert(*ni);
          Box neighbor = *ni;
          if ( refine_head ) {
-            neighbor.refine(connector.getRatio());
+            neighbor.refine(connector.getRatio().getBlockVector(neighbor.getBlockId()));
          }
          else if ( coarsen_head ) {
-            neighbor.coarsen(connector.getRatio());
+            neighbor.coarsen(connector.getRatio().getBlockVector(neighbor.getBlockId()));
          }
          if ( neighbor.getBlockId() != base_box.getBlockId() ) {
             base.getGridGeometry()->transformBox( neighbor,

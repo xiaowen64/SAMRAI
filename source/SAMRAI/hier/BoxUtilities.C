@@ -635,12 +635,12 @@ BoxUtilities::growBoxesWithinDomain(
          Box big_box(boxes.getBoundingBox());
          big_box.grow(min_size);
          outside_domain.pushBack(big_box);
-         outside_domain.grow(IntVector::getOne(dim));
+         outside_domain.grow(MultiIntVector(IntVector::getOne(dim)));
          outside_domain.removeIntersections(big_box);
       } else {
          outside_domain = domain;
          outside_domain.unorder();
-         outside_domain.grow(IntVector::getOne(dim));
+         outside_domain.grow(MultiIntVector(IntVector::getOne(dim)));
          outside_domain.removeIntersections(domain);
       }
 

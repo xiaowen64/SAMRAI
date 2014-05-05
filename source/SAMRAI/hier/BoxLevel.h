@@ -144,7 +144,7 @@ public:
     * @param[in] parallel_state
     */
    BoxLevel(
-      const IntVector& ratio,
+      const MultiIntVector& ratio,
       const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
@@ -175,7 +175,7 @@ public:
     */
    void
    initialize(
-      const IntVector& ratio,
+      const MultiIntVector& ratio,
       const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
@@ -207,7 +207,7 @@ public:
    void
    swapInitialize(
       BoxContainer& boxes,
-      const IntVector& ratio,
+      const MultiIntVector& ratio,
       const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
@@ -227,7 +227,11 @@ public:
    bool
    isInitialized() const
    {
-      return d_ratio(0) != 0;
+      if (d_ratio.empty()) {
+         return false;
+      } else { 
+         return d_ratio.getBlockVector(BlockId(0))(0) != 0;
+      }
    }
 
    /*!
@@ -559,7 +563,7 @@ public:
     * @brief Get const access to BoxLevel's refinement ratio
     * (with respect to a reference level).
     */
-   const IntVector&
+   const MultiIntVector&
    getRefinementRatio() const
    {
       return d_ratio;
@@ -859,8 +863,8 @@ public:
    void
    refineBoxes(
       BoxLevel& finer,
-      const IntVector& ratio,
-      const IntVector& final_ratio) const
+      const MultiIntVector& ratio,
+      const MultiIntVector& final_ratio) const
    {
       finer.detachMyHandle();
       if ( finer.d_globalized_version ) {
@@ -890,8 +894,8 @@ public:
    void
    coarsenBoxes(
       BoxLevel& coarser,
-      const IntVector& ratio,
-      const IntVector& final_ratio) const
+      const MultiIntVector& ratio,
+      const MultiIntVector& final_ratio) const
    {
       coarser.detachMyHandle();
       if ( coarser.d_globalized_version ) {
@@ -1363,7 +1367,7 @@ public:
    const Connector&
    findConnector(
       const BoxLevel& head,
-      const IntVector& min_connector_width,
+      const MultiIntVector& min_connector_width,
       ConnectorNotFoundAction not_found_action,
       bool exact_width_only = false) const
    {
@@ -1399,8 +1403,8 @@ public:
    const Connector&
    findConnectorWithTranspose(
       const BoxLevel& head,
-      const IntVector& min_connector_width,
-      const IntVector& transpose_min_connector_width,
+      const MultiIntVector& min_connector_width,
+      const MultiIntVector& transpose_min_connector_width,
       ConnectorNotFoundAction not_found_action,
       bool exact_width_only = false) const
    {
@@ -1432,7 +1436,7 @@ public:
    const Connector&
    createConnector(
       const BoxLevel& head,
-      const IntVector& connector_width) const
+      const MultiIntVector& connector_width) const
    {
       return getPersistentOverlapConnectors().createConnector(head,
          connector_width);
@@ -1460,8 +1464,8 @@ public:
    const Connector&
    createConnectorWithTranspose(
       const BoxLevel& head,
-      const IntVector& connector_width,
-      const IntVector& transpose_connector_width) const
+      const MultiIntVector& connector_width,
+      const MultiIntVector& transpose_connector_width) const
    {
       return getPersistentOverlapConnectors().createConnectorWithTranspose(head,
          connector_width,
@@ -1506,7 +1510,7 @@ public:
    bool
    hasConnector(
       const BoxLevel& head,
-      const IntVector& min_connector_width,
+      const MultiIntVector& min_connector_width,
       bool exact_width_only = false) const
    {
       return getPersistentOverlapConnectors().hasConnector(head,
@@ -1823,7 +1827,7 @@ private:
     */
    void
    initializePrivate(
-      const IntVector& ratio,
+      const MultiIntVector& ratio,
       const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
@@ -1908,7 +1912,7 @@ private:
     *
     * If d_ratio(0) == 0, the object is in uninitialized state.
     */
-   IntVector d_ratio;
+   MultiIntVector d_ratio;
 
    /*!
     * @brief Local cell count, excluding periodic images.

@@ -56,8 +56,8 @@ Connector::Connector(
    const tbox::Dimension& dim):
    d_base_handle(),
    d_head_handle(),
-   d_base_width(dim),
-   d_ratio(dim),
+   d_base_width(IntVector(dim)),
+   d_ratio(IntVector(dim)),
    d_ratio_is_exact(false),
    d_head_coarser(false),
    d_relationships(),
@@ -83,8 +83,8 @@ Connector::Connector(
    tbox::Database& restart_db):
    d_base_handle(),
    d_head_handle(),
-   d_base_width(dim),
-   d_ratio(dim),
+   d_base_width(IntVector(dim)),
+   d_ratio(IntVector(dim)),
    d_ratio_is_exact(false),
    d_head_coarser(false),
    d_relationships(),
@@ -135,10 +135,10 @@ Connector::Connector(
 Connector::Connector(
    const BoxLevel& base_box_level,
    const BoxLevel& head_box_level,
-   const IntVector& base_width,
+   const MultiIntVector& base_width,
    const BoxLevel::ParallelState parallel_state):
-   d_base_width(base_width.getDim(), 0),
-   d_ratio(base_width.getDim(), 0),
+   d_base_width(IntVector::getZero(base_width.getDim())),
+   d_ratio(IntVector::getZero(base_width.getDim())),
    d_head_coarser(false),
    d_relationships(),
    d_global_relationships(),
@@ -352,7 +352,7 @@ Connector::eraseNeighbor(
  */
 void
 Connector::shrinkWidth(
-const IntVector& new_width)
+const MultiIntVector& new_width)
 {
    if (!(new_width <= getConnectorWidth())) {
       TBOX_ERROR("Connector::shrinkWidth: new ghost cell\n"
@@ -384,9 +384,10 @@ const IntVector& new_width)
       const BoxId& box_id = *ei;
       const Box& box = *getBase().getBoxStrict(box_id);
       Box box_box = box;
-      box_box.grow(new_width);
+      const BlockId& block_id = box_box.getBlockId();
+      box_box.grow(new_width.getBlockVector(block_id));
       if (base_coarser) {
-         box_box.refine(getRatio());
+         box_box.refine(getRatio().getBlockVector(block_id));
       }
       for (NeighborIterator na = begin(ei);
            na != end(ei); /* incremented in loop */) {
@@ -399,7 +400,7 @@ const IntVector& new_width)
                nabr.getBlockId());
          }
          if (head_coarser) {
-            nabr_box.refine(getRatio());
+            nabr_box.refine(getRatio().getBlockVector(nabr_box.getBlockId()));
          }
          ++na;
          if (!box_box.intersects(nabr_box)) {
@@ -551,8 +552,8 @@ Connector::finalizeContext()
 
    const BoxLevel& base = d_base_handle->getBoxLevel();
    const BoxLevel& head = d_head_handle->getBoxLevel();
-   const IntVector& baseRefinementRatio = base.getRefinementRatio();
-   const IntVector& headRefinementRatio = head.getRefinementRatio();
+   const MultiIntVector& baseRefinementRatio = base.getRefinementRatio();
+   const MultiIntVector& headRefinementRatio = head.getRefinementRatio();
 
    if (base.getGridGeometry() != head.getGridGeometry()) {
       TBOX_ERROR("Connector::finalizeContext():\n"
@@ -677,10 +678,10 @@ Connector::setHead(
  */
 void
 Connector::setWidth(
-   const IntVector& new_width,
+   const MultiIntVector& new_width,
    bool finalize_context)
 {
-   if (!(new_width >= IntVector::getZero(new_width.getDim()))) {
+   if (!(new_width >= MultiIntVector(IntVector::getZero(new_width.getDim())))) {
       TBOX_ERROR("Connector::setWidth():\n"
          << "Invalid ghost cell width: "
          << new_width << "\n");
@@ -700,9 +701,9 @@ Connector::setWidth(
 
 void
 Connector::computeRatioInfo(
-   const IntVector& baseRefinementRatio,
-   const IntVector& headRefinementRatio,
-   IntVector& ratio,
+   const MultiIntVector& baseRefinementRatio,
+   const MultiIntVector& headRefinementRatio,
+   MultiIntVector& ratio,
    bool& head_coarser,
    bool& ratio_is_exact)
 {
@@ -717,7 +718,7 @@ Connector::computeRatioInfo(
       ratio_is_exact = (ratio * headRefinementRatio) == baseRefinementRatio;
    }
    if (baseRefinementRatio * headRefinementRatio <
-       IntVector::getZero(baseRefinementRatio.getDim())) {
+       MultiIntVector(IntVector::getZero(baseRefinementRatio.getDim()))) {
       // Note that negative ratios like -N really mean 1/N (negative reciprocal).
       ratio = -headRefinementRatio * baseRefinementRatio;
       ratio_is_exact = true;
@@ -782,7 +783,7 @@ Connector::writeNeighborhoodToStream(
 Connector*
 Connector::createLocalTranspose() const
 {
-   const IntVector transpose_gcw = convertHeadWidthToBase(
+   const MultiIntVector transpose_gcw = convertHeadWidthToBase(
          getHead().getRefinementRatio(),
          getBase().getRefinementRatio(),
          getConnectorWidth());
@@ -855,7 +856,7 @@ Connector::doLocalTransposeWork(
                my_head_box,
                shift_catalog->getOppositeShiftNumber(
                   my_base_box.getPeriodicId()),
-               transpose->getHead().getRefinementRatio());
+               transpose->getHead().getRefinementRatio().getBlockVector(my_base_box.getBlockId()));
             if (transpose->getHead().hasBox(my_shifted_head_box)) {
                BoxId base_non_per_id(
                   my_base_box.getGlobalId(),
@@ -949,13 +950,13 @@ Connector::isTransposeOf(
    if (d_base_handle == other.d_head_handle &&
        d_head_handle == other.d_base_handle) {
       if (d_head_coarser) {
-         IntVector transpose_base_width = convertHeadWidthToBase(
+         MultiIntVector transpose_base_width = convertHeadWidthToBase(
                getHead().getRefinementRatio(),
                getBase().getRefinementRatio(),
                d_base_width);
          rval = other.d_base_width == transpose_base_width;
       } else {
-         IntVector transpose_base_width = convertHeadWidthToBase(
+         MultiIntVector transpose_base_width = convertHeadWidthToBase(
                other.getHead().getRefinementRatio(),
                other.getBase().getRefinementRatio(),
                other.d_base_width);
@@ -1022,11 +1023,11 @@ Connector::cacheGlobalReducedData() const
  ***********************************************************************
  */
 
-IntVector
+MultiIntVector
 Connector::convertHeadWidthToBase(
-   const IntVector& base_refinement_ratio,
-   const IntVector& head_refinement_ratio,
-   const IntVector& head_gcw)
+   const MultiIntVector& base_refinement_ratio,
+   const MultiIntVector& head_refinement_ratio,
+   const MultiIntVector& head_gcw)
 {
    if (!(base_refinement_ratio >= head_refinement_ratio ||
          base_refinement_ratio <= head_refinement_ratio)) {
@@ -1038,10 +1039,10 @@ Connector::convertHeadWidthToBase(
 
    tbox::Dimension dim(head_refinement_ratio.getDim());
 
-   IntVector ratio(dim); // Ratio between head and base.
+   MultiIntVector ratio(IntVector::getZero(dim)); // Ratio between head and base.
 
    if (head_refinement_ratio * base_refinement_ratio >
-       IntVector::getZero(dim)) {
+       MultiIntVector(IntVector::getZero(dim))) {
       // Same signs for both ratios -> simple to compute head-base ratio.
       if (base_refinement_ratio >= head_refinement_ratio) {
          ratio = base_refinement_ratio / head_refinement_ratio;
@@ -1052,11 +1053,11 @@ Connector::convertHeadWidthToBase(
       // Note that negative ratios like -N really mean 1/N (negative reciprocal).
       ratio = -base_refinement_ratio * head_refinement_ratio;
    }
-   TBOX_ASSERT(ratio >= IntVector::getOne(dim));
+   TBOX_ASSERT(ratio >= MultiIntVector(IntVector::getOne(dim)));
 
-   const IntVector base_width =
+   const MultiIntVector base_width =
       (base_refinement_ratio >= head_refinement_ratio) ?
-      (head_gcw * ratio) : IntVector::ceilingDivide(head_gcw, ratio);
+      (head_gcw * ratio) : MultiIntVector::ceilingDivide(head_gcw, ratio);
 
    return base_width;
 }
@@ -1081,7 +1082,7 @@ Connector::recursivePrint(
       return;
    }
    bool head_coarser = d_head_coarser;
-   const IntVector head_gcw =
+   const MultiIntVector head_gcw =
       convertHeadWidthToBase(
          getHead().getRefinementRatio(),
          getBase().getRefinementRatio(),
@@ -1137,13 +1138,13 @@ Connector::recursivePrint(
                            i_nabr->getBlockId());
                   }
                   if (head_coarser) {
-                     ovlap.refine(d_ratio);
+                     ovlap.refine(d_ratio.getBlockVector(ovlap.getBlockId()));
                   }
-                  else if (d_ratio != 1) {
-                     ovlap.coarsen(d_ratio);
+                  else if (!d_ratio.isOne(d_ratio.getDim())) {
+                     ovlap.coarsen(d_ratio.getBlockVector(ovlap.getBlockId()));
                   }
                   Box ghost_box = (*ni);
-                  ghost_box.grow(d_base_width);
+                  ghost_box.grow(d_base_width.getBlockVector(ghost_box.getBlockId()));
                   ovlap = ovlap * ghost_box;
                   os << "\tov" << ovlap << "_" << ovlap.numberCells();
                }
@@ -1315,7 +1316,7 @@ Connector::checkTransposeCorrectness(
             shifted_box.initialize(
                box,
                shift_catalog->getOppositeShiftNumber(nabr.getPeriodicId()),
-               getBase().getRefinementRatio());
+               getBase().getRefinementRatio().getBlockVector(box.getBlockId()));
             nabr_has_box =
                tran_relationships.hasNeighbor(cn, shifted_box);
          } else {
@@ -1447,7 +1448,7 @@ Connector::checkTransposeCorrectness(
                   unshifted_box.initialize(
                      nabr,
                      shift_catalog->getZeroShiftNumber(),
-                     getBase().getRefinementRatio());
+                     getBase().getRefinementRatio().getBlockVector(nabr.getBlockId()));
                   tbox::perr << unshifted_box;
                }
                tbox::perr << ":" << std::endl;
@@ -1632,7 +1633,7 @@ Connector::checkConsistencyWithHead() const
 
          const Box& nabr = *na;
          const Box unshifted_nabr(
-            nabr, PeriodicId::zero(), head_box_level.getRefinementRatio());
+            nabr, PeriodicId::zero(), head_box_level.getRefinementRatio().getBlockVector(nabr.getBlockId()));
 
          BoxContainer::const_iterator na_in_head =
             head_boxes.find(unshifted_nabr);
@@ -1836,6 +1837,8 @@ Connector::checkOverlapCorrectness(
       missing->eraseEmptyNeighborSets();
    }
 
+   const tbox::Dimension& dim(d_ratio.getDim());
+
    const BoxId dummy_box_id;
 
    /*
@@ -1876,15 +1879,16 @@ Connector::checkOverlapCorrectness(
                        << numLocalNeighbors(*it) << "):"
                        << std::endl;
             Box ghost_box = box;
-            ghost_box.grow(getConnectorWidth());
+            ghost_box.grow(getConnectorWidth().getBlockVector(box.getBlockId()));
             for (Connector::ConstNeighborIterator na = begin(it);
                  na != end(it); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
+               const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
-                  nabr_box.refine(getRatio());
-               } else if (getRatio() != 1) {
-                  nabr_box.coarsen(getRatio());
+                  nabr_box.refine(getRatio().getBlockVector(block_id));
+               } else if (!getRatio().isOne(dim)) {
+                  nabr_box.coarsen(getRatio().getBlockVector(block_id));
                }
                if ( nabr_box.getBlockId() != box.getBlockId() ) {
                   getBase().getGridGeometry()->transformBox(nabr_box,
@@ -1903,15 +1907,16 @@ Connector::checkOverlapCorrectness(
                        << missing->numLocalNeighbors(*im) << "):"
                        << std::endl;
             Box ghost_box = box;
-            ghost_box.grow(getConnectorWidth());
+            ghost_box.grow(getConnectorWidth().getBlockVector(box.getBlockId()));
             for (Connector::ConstNeighborIterator na = missing->begin(im);
                  na != missing->end(im); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
+               const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
-                  nabr_box.refine(getRatio());
-               } else if (getRatio() != 1) {
-                  nabr_box.coarsen(getRatio());
+                  nabr_box.refine(getRatio().getBlockVector(block_id));
+               } else if (!getRatio().isOne(dim)) {
+                  nabr_box.coarsen(getRatio().getBlockVector(block_id));
                }
                if ( nabr_box.getBlockId() != box.getBlockId() ) {
                   getBase().getGridGeometry()->transformBox(nabr_box,
@@ -1930,15 +1935,16 @@ Connector::checkOverlapCorrectness(
                        << extra->numLocalNeighbors(*ie) << "):"
                        << std::endl;
             Box ghost_box = box;
-            ghost_box.grow(getConnectorWidth());
+            ghost_box.grow(getConnectorWidth().getBlockVector(box.getBlockId()));
             for (Connector::ConstNeighborIterator na = extra->begin(ie);
                  na != extra->end(ie); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
+               const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
-                  nabr_box.refine(getRatio());
-               } else if (getRatio() != 1) {
-                  nabr_box.coarsen(getRatio());
+                  nabr_box.refine(getRatio().getBlockVector(block_id));
+               } else if (!getRatio().isOne(dim)) {
+                  nabr_box.coarsen(getRatio().getBlockVector(block_id));
                }
                if ( nabr_box.getBlockId() != box.getBlockId() ) {
                   getBase().getGridGeometry()->transformBox(nabr_box,
@@ -1975,15 +1981,16 @@ Connector::checkOverlapCorrectness(
                        << numLocalNeighbors(*it) << "):"
                        << std::endl;
             Box ghost_box = box;
-            ghost_box.grow(getConnectorWidth());
+            ghost_box.grow(getConnectorWidth().getBlockVector(box.getBlockId()));
             for (Connector::ConstNeighborIterator na = begin(it);
                  na != end(it); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
+               const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
-                  nabr_box.refine(getRatio());
-               } else if (getRatio() != 1) {
-                  nabr_box.coarsen(getRatio());
+                  nabr_box.refine(getRatio().getBlockVector(block_id));
+               } else if (!getRatio().isOne(dim)) {
+                  nabr_box.coarsen(getRatio().getBlockVector(block_id));
                }
                Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
@@ -1996,15 +2003,16 @@ Connector::checkOverlapCorrectness(
                        << missing->numLocalNeighbors(*im) << "):"
                        << std::endl;
             Box ghost_box = box;
-            ghost_box.grow(getConnectorWidth());
+            ghost_box.grow(getConnectorWidth().getBlockVector(box.getBlockId()));
             for (Connector::ConstNeighborIterator na = missing->begin(im);
                  na != missing->end(im); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
+               const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
-                  nabr_box.refine(getRatio());
-               } else if (getRatio() != 1) {
-                  nabr_box.coarsen(getRatio());
+                  nabr_box.refine(getRatio().getBlockVector(block_id));
+               } else if (!getRatio().isOne(dim)) {
+                  nabr_box.coarsen(getRatio().getBlockVector(block_id));
                }
                if ( nabr_box.getBlockId() != box.getBlockId() ) {
                   getBase().getGridGeometry()->transformBox(nabr_box,
@@ -2039,15 +2047,16 @@ Connector::checkOverlapCorrectness(
                        << numLocalNeighbors(*it) << "):"
                        << std::endl;
             Box ghost_box = box;
-            ghost_box.grow(getConnectorWidth());
+            ghost_box.grow(getConnectorWidth().getBlockVector(box.getBlockId()));
             for (Connector::ConstNeighborIterator na = begin(it);
                  na != end(it); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
+               const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
-                  nabr_box.refine(getRatio());
-               } else if (getRatio() != 1) {
-                  nabr_box.coarsen(getRatio());
+                  nabr_box.refine(getRatio().getBlockVector(block_id));
+               } else if (!getRatio().isOne(dim)) {
+                  nabr_box.coarsen(getRatio().getBlockVector(block_id));
                }
                if ( nabr_box.getBlockId() != box.getBlockId() ) {
                   getBase().getGridGeometry()->transformBox(nabr_box,
@@ -2066,15 +2075,16 @@ Connector::checkOverlapCorrectness(
                        << extra->numLocalNeighbors(*ie) << "):"
                        << std::endl;
             Box ghost_box = box;
-            ghost_box.grow(getConnectorWidth());
+            ghost_box.grow(getConnectorWidth().getBlockVector(box.getBlockId()));
             for (Connector::ConstNeighborIterator na = extra->begin(ie);
                  na != extra->end(ie); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
+               const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
-                  nabr_box.refine(getRatio());
-               } else if (getRatio() != 1) {
-                  nabr_box.coarsen(getRatio());
+                  nabr_box.refine(getRatio().getBlockVector(block_id));
+               } else if (!getRatio().isOne(dim)) {
+                  nabr_box.coarsen(getRatio().getBlockVector(block_id));
                }
                if ( nabr_box.getBlockId() != box.getBlockId() ) {
                   getBase().getGridGeometry()->transformBox(nabr_box,
@@ -2188,11 +2198,12 @@ Connector::findOverlaps_rbbt(
 
       // Grow the base_box and put it in the head refinement ratio.
       Box box = base_box;
-      box.grow(getConnectorWidth());
+      const BlockId& block_id = box.getBlockId();
+      box.grow(getConnectorWidth().getBlockVector(block_id));
       if (head_is_finer) {
-         box.refine(getRatio());
+         box.refine(getRatio().getBlockVector(block_id));
       } else if (base_is_finer) {
-         box.coarsen(getRatio());
+         box.coarsen(getRatio().getBlockVector(block_id));
       }
 
       // Add found overlaps to neighbor set for box.

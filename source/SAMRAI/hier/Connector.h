@@ -134,7 +134,7 @@ public:
    Connector(
       const BoxLevel& base_box_level,
       const BoxLevel& head_box_level,
-      const IntVector& base_width,
+      const MultiIntVector& base_width,
       const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED);
 
    /*!
@@ -154,7 +154,8 @@ public:
          d_mpi.setCommunicator(MPI_COMM_NULL);
          d_base_handle.reset();
          d_head_handle.reset();
-         d_base_width(0) = d_ratio(0) = 0;
+         d_ratio.clear();
+         d_base_width.clear();
          d_parallel_state = BoxLevel::DISTRIBUTED;
       }
    }
@@ -781,7 +782,7 @@ public:
     *
     * @pre isFinalized()
     */
-   const IntVector&
+   const MultiIntVector&
    getRatio() const
    {
       TBOX_ASSERT(isFinalized());
@@ -951,7 +952,7 @@ public:
     */
    void
    setWidth(
-      const IntVector& new_width,
+      const MultiIntVector& new_width,
       bool finalize_context = false);
 
    /*!
@@ -965,11 +966,18 @@ public:
     *
     * @pre isFinalized().
     */
-   const IntVector&
+   const MultiIntVector&
    getConnectorWidth() const
    {
       TBOX_ASSERT(isFinalized());
       return d_base_width;
+   }
+
+   const IntVector&
+   getConnectorWidth(const BlockId& block_id) const
+   {
+      TBOX_ASSERT(isFinalized());
+      return d_base_width.getBlockVector(block_id);
    }
 
    /*!
@@ -983,7 +991,7 @@ public:
     */
    void
    shrinkWidth(
-      const IntVector& new_width);
+      const MultiIntVector& new_width);
 
    //@{
    /*!
@@ -1046,11 +1054,11 @@ public:
     * @pre (base_refinement_ratio >= head_refinement_ratio) ||
     *      (base_refinement_ratio <= head_refinement_ratio)
     */
-   static IntVector
+   static MultiIntVector
    convertHeadWidthToBase(
-      const IntVector& base_refinement_ratio,
-      const IntVector& head_refinement_ratio,
-      const IntVector& head_gcw);
+      const MultiIntVector& base_refinement_ratio,
+      const MultiIntVector& head_refinement_ratio,
+      const MultiIntVector& head_gcw);
 
    // TODO: refactor use of size_t as return type.  This could be
    // problematic.
@@ -1379,9 +1387,9 @@ public:
     */
    static void
    computeRatioInfo(
-      const IntVector& baseRefinementRatio,
-      const IntVector& headRefinementRatio,
-      IntVector& ratio,
+      const MultiIntVector& baseRefinementRatio,
+      const MultiIntVector& headRefinementRatio,
+      MultiIntVector& ratio,
       bool& head_coarser,
       bool& ratio_is_exact);
 
@@ -1688,7 +1696,7 @@ private:
     * This is the amount of growth applied to a box in the base BoxLevel
     * before checking if the box overlaps a box in the head BoxLevel.
     */
-   IntVector d_base_width;
+   MultiIntVector d_base_width;
 
    /*!
     * @brief Refinement ratio between base and head.
@@ -1701,7 +1709,7 @@ private:
     * This is redundant information.  You can compute it
     * from the base and head BoxLevels.
     */
-   IntVector d_ratio;
+   MultiIntVector d_ratio;
 
    /*!
     * @brief Whether the ratio between the base and head

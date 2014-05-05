@@ -104,7 +104,7 @@ PersistentOverlapConnectors::getFromInput()
 const Connector&
 PersistentOverlapConnectors::createConnector(
    const BoxLevel& head,
-   const IntVector& connector_width)
+   const MultiIntVector& connector_width)
 {
    TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
@@ -141,8 +141,8 @@ PersistentOverlapConnectors::createConnector(
 const Connector&
 PersistentOverlapConnectors::createConnectorWithTranspose(
    const BoxLevel& head,
-   const IntVector& connector_width,
-   const IntVector& transpose_connector_width)
+   const MultiIntVector& connector_width,
+   const MultiIntVector& transpose_connector_width)
 {
    TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
@@ -197,7 +197,7 @@ PersistentOverlapConnectors::cacheConnector(
 const Connector&
 PersistentOverlapConnectors::findConnector(
    const BoxLevel& head,
-   const IntVector& min_connector_width,
+   const MultiIntVector& min_connector_width,
    ConnectorNotFoundAction not_found_action,
    bool exact_width_only)
 {
@@ -230,8 +230,8 @@ PersistentOverlapConnectors::findConnector(
 const Connector&
 PersistentOverlapConnectors::findConnectorWithTranspose(
    const BoxLevel& head,
-   const IntVector& min_connector_width,
-   const IntVector& transpose_min_connector_width,
+   const MultiIntVector& min_connector_width,
+   const MultiIntVector& transpose_min_connector_width,
    ConnectorNotFoundAction not_found_action,
    bool exact_width_only)
 {
@@ -266,7 +266,7 @@ PersistentOverlapConnectors::findConnectorWithTranspose(
 bool
 PersistentOverlapConnectors::hasConnector(
    const BoxLevel& head,
-   const IntVector& min_connector_width,
+   const MultiIntVector& min_connector_width,
    bool exact_width_only) const
 {
    if (exact_width_only) {
@@ -371,7 +371,7 @@ PersistentOverlapConnectors::clear()
 boost::shared_ptr<Connector>
 PersistentOverlapConnectors::doFindConnectorWork(
    const BoxLevel& head,
-   const IntVector& min_connector_width,
+   const MultiIntVector& min_connector_width,
    ConnectorNotFoundAction not_found_action,
    bool exact_width_only)
 {
@@ -394,15 +394,20 @@ PersistentOverlapConnectors::doFindConnectorWork(
             if (!found) {
                found = d_cons_from_me[i];
             } else {
-               IntVector vdiff =
+               MultiIntVector vdiff =
                   d_cons_from_me[i]->getConnectorWidth()
                   - found->getConnectorWidth();
 
-               TBOX_ASSERT(vdiff != IntVector::getZero(vdiff.getDim()));
+               TBOX_ASSERT(!vdiff.isZero(vdiff.getDim()));
 
+               int nblocks = head.getGridGeometry()->getNumberBlocks();
                int diff = 0;
-               for (int j = 0; j < vdiff.getDim().getValue(); ++j) {
-                  diff += vdiff(j);
+               for (int b = 0; b < nblocks; ++b) {
+                  BlockId block_id(b);
+                  const IntVector& block_vec = vdiff.getBlockVector(block_id);
+                  for (int j = 0; j < vdiff.getDim().getValue(); ++j) {
+                     diff += block_vec[j];
+                  }
                }
                if (diff < 0) {
                   found = d_cons_from_me[i];

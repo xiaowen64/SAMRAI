@@ -16,6 +16,7 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
+#include "SAMRAI/hier/MultiIntVector.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <iostream>
@@ -912,7 +913,7 @@ public:
     */
    void
    grow(
-      const IntVector& ghosts);
+      const MultiIntVector& ghosts);
 
    /*!
     * @brief Shift boxes in the container by the specified offset.
@@ -930,7 +931,7 @@ public:
     */
    void
    refine(
-      const IntVector& ratio);
+      const MultiIntVector& ratio);
 
    /*!
     * @brief Coarsen boxes in container by the specified coarsening ratio.
@@ -939,7 +940,7 @@ public:
     */
    void
    coarsen(
-      const IntVector& ratio);
+      const MultiIntVector& ratio);
 
    /*!
     * @brief Count total number of indices in the boxes in the container.
@@ -1389,7 +1390,7 @@ public:
     */
    void
    removeIntersections(
-      const IntVector& refinement_ratio,
+      const MultiIntVector& refinement_ratio,
       const BoxContainer& takeaway,
       const bool include_singularity_block_neighbors = false);
 
@@ -1472,7 +1473,7 @@ public:
     */
    void
    intersectBoxes(
-      const IntVector& refinement_ratio,
+      const MultiIntVector& refinement_ratio,
       const BoxContainer& keep,
       bool include_singularity_block_neighbors = false);
 
@@ -2006,14 +2007,14 @@ private:
    findOverlapBoxes(
       BoxContainer& overlap_boxes,
       const Box& box,
-      const IntVector& refinement_ratio,
+      const MultiIntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
 
    void
    findOverlapBoxes(
       std::vector<const Box*>& overlap_boxes,
       const Box& box,
-      const IntVector& refinement_ratio,
+      const MultiIntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
 
    /*!

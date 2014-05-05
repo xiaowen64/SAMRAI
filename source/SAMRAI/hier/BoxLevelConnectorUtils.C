@@ -98,7 +98,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
    const BoxLevel& head,
    const IntVector& base_swell,
    const IntVector& head_swell,
-   const IntVector& head_nesting_margin,
+   const MultiIntVector& head_nesting_margin,
    const BoxContainer* domain) const
 {
 
@@ -112,19 +112,19 @@ BoxLevelConnectorUtils::baseNestsInHead(
    const IntVector& zero_vector(IntVector::getZero(dim));
    TBOX_ASSERT(base_swell >= zero_vector);
    TBOX_ASSERT(head_swell >= zero_vector);
-   TBOX_ASSERT(head_nesting_margin >= zero_vector);
+   TBOX_ASSERT(head_nesting_margin >= MultiIntVector(zero_vector));
 #endif
 
-   IntVector required_gcw = base_swell;
+   MultiIntVector required_gcw(base_swell);
    if (head.getRefinementRatio() <= base.getRefinementRatio()) {
-      const IntVector ratio = base.getRefinementRatio()
+      const MultiIntVector ratio = base.getRefinementRatio()
          / head.getRefinementRatio();
-      required_gcw += (head_swell + head_nesting_margin) * ratio;
+      required_gcw += (MultiIntVector(head_swell) + head_nesting_margin) * ratio;
    } else if (head.getRefinementRatio() >= base.getRefinementRatio()) {
-      const IntVector ratio = head.getRefinementRatio()
+      const MultiIntVector ratio = head.getRefinementRatio()
          / base.getRefinementRatio();
-      required_gcw += IntVector::ceilingDivide(
-         (head_swell + head_nesting_margin),
+      required_gcw += MultiIntVector::ceilingDivide(
+         MultiIntVector(head_swell) + head_nesting_margin,
          ratio);
    } else {
       TBOX_ERROR("BoxLevelConnectorUtils::baseNestsInHead: head index space\n"
@@ -173,7 +173,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
    const Connector& connector,
    const IntVector& base_swell,
    const IntVector& head_swell,
-   const IntVector& head_nesting_margin,
+   const MultiIntVector& head_nesting_margin,
    const BoxContainer* domain) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(
@@ -181,21 +181,21 @@ BoxLevelConnectorUtils::baseNestsInHead(
    TBOX_ASSERT(connector.isFinalized());
    const tbox::Dimension& dim(connector.getBase().getDim());
    TBOX_ASSERT(base_swell >= IntVector::getZero(dim));
-   TBOX_ASSERT(head_nesting_margin >= IntVector::getZero(dim));
+   TBOX_ASSERT(head_nesting_margin >= MultiIntVector(IntVector::getZero(dim)));
 
    /*
     * To ensure correct results, connector must be sufficiently wide.
     * It should be at least as wide as the combination of base_swell,
     * head_swell and head_nesting_margin.
     */
-   const IntVector required_gcw =
-      base_swell
+   const MultiIntVector required_gcw =
+      MultiIntVector(base_swell)
       + (connector.getHeadCoarserFlag() ?
-         head_swell * connector.getRatio() :
-         IntVector::ceilingDivide(head_swell, connector.getRatio()))
+         MultiIntVector(head_swell) * connector.getRatio() :
+         MultiIntVector::ceilingDivide(MultiIntVector(head_swell), connector.getRatio()))
       + (connector.getHeadCoarserFlag() ?
-         head_nesting_margin * connector.getRatio() :
-         IntVector::ceilingDivide(head_nesting_margin, connector.getRatio()))
+         MultiIntVector(head_nesting_margin) * connector.getRatio() :
+         MultiIntVector::ceilingDivide(MultiIntVector(head_nesting_margin), connector.getRatio()))
    ;
    if (!(connector.getConnectorWidth() >= required_gcw)) {
       TBOX_ERROR("BoxLevelConnectorUtils::baseNestsInHead: connector lacks\n"
@@ -261,7 +261,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
    swelledbase_to_swelledhead.setBase(*swelledbase);
    swelledbase_to_swelledhead.setHead(*swelledhead);
    swelledbase_to_swelledhead.setWidth(
-      connector.getConnectorWidth() - base_swell,
+      connector.getConnectorWidth() - MultiIntVector(base_swell),
       true);
 
    swelledbase_to_swelledhead.growLocalNeighbors(head_swell);
@@ -303,7 +303,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
        */
       MappingConnectorAlgorithm mca;
       BoxLevel domain_box_level(
-         IntVector::getOne(dim),
+         MultiIntVector(IntVector::getOne(dim)),
          grid_geom,
          connector.getMPI(),
          BoxLevel::GLOBALIZED);
@@ -316,14 +316,14 @@ BoxLevelConnectorUtils::baseNestsInHead(
       oca.findOverlaps(external_to_domain,
          *external,
          domain_box_level,
-         base_swell);
+         MultiIntVector(base_swell));
       boost::shared_ptr<BoxLevel> finalexternal;
       boost::shared_ptr<MappingConnector> external_to_finalexternal;
       computeInternalParts(
          finalexternal,
          external_to_finalexternal,
          *external_to_domain,
-         IntVector::getZero(dim),
+         MultiIntVector(IntVector::getZero(dim)),
          *domain);
       mca.modify(*swelledbase_to_external,
          *external_to_finalexternal,
@@ -374,7 +374,7 @@ BoxLevelConnectorUtils::makeSortingMap(
       sorted_box_level.reset(new BoxLevel(unsorted_box_level));
       output_map.reset(new MappingConnector(unsorted_box_level,
          *sorted_box_level,
-         IntVector::getZero(dim)));
+         MultiIntVector(IntVector::getZero(dim))));
       return;
    }
 
@@ -418,7 +418,7 @@ BoxLevelConnectorUtils::makeSortingMap(
       unsorted_box_level.getMPI()));
    output_map.reset(new MappingConnector(unsorted_box_level,
       *sorted_box_level,
-      IntVector::getZero(dim)));
+      MultiIntVector(IntVector::getZero(dim))));
 
    for (std::vector<Box>::const_iterator ni = real_box_vector.begin();
         ni != real_box_vector.end(); ++ni) {
@@ -567,7 +567,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
    boost::shared_ptr<MappingConnector>& input_to_parts,
    char internal_or_external,
    const Connector& input_to_reference,
-   const IntVector& nesting_width,
+   const MultiIntVector& nesting_width,
    const BoxContainer& domain) const
 {
    d_object_timers->t_compute_internal_or_external_parts->start();
@@ -578,8 +578,8 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
       input.getGridGeometry());
 
    const tbox::Dimension& dim(input.getDim());
-   const IntVector& zero_vec(IntVector::getZero(input.getDim()));
-   const IntVector& one_vec(IntVector::getOne(dim));
+   const MultiIntVector zero_vec(IntVector::getZero(input.getDim()));
+   MultiIntVector one_vec(IntVector::getOne(dim));
 
    const bool nonnegative_nesting_width = nesting_width >= zero_vec;
 
@@ -612,7 +612,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
    }
 
    if ( !( input_to_reference.getConnectorWidth() >=
-          (nonnegative_nesting_width ? nesting_width : -nesting_width)) ) {
+          MultiIntVector(nonnegative_nesting_width ? nesting_width : -nesting_width)) ) {
       TBOX_ERROR(
          "BoxLevelConnectorUtils::computeInternalOrExternalParts:"
          << caller << ": error:\n"
@@ -637,7 +637,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
     * Bring reference_box_list into refinement ratio of input
     * (for intersection checks).
     */
-   if (input_to_reference.getRatio() != IntVector::getOne(dim)) {
+   if (!input_to_reference.getRatio().isOne(dim)) {
       if (input_to_reference.getHeadCoarserFlag()) {
          reference_box_list.refine(input_to_reference.getRatio());
       } else {
@@ -686,7 +686,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
       if (!domain.isEmpty()) {
 
-         if (input.getRefinementRatio() == one_vec) {
+         if (input.getRefinementRatio().isOne(dim)) {
             reference_box_list.intersectBoxes(
                input.getRefinementRatio(),
                domain);
@@ -724,7 +724,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
     * means that no Box is mapped to something outside its
     * extent.
     */
-   input_to_parts.reset(new MappingConnector(input, *parts, zero_vec));
+   input_to_parts.reset(new MappingConnector(input, *parts, MultiIntVector(zero_vec)));
 
    const bool compute_overlaps =
       search_tree_represents_internal == (internal_or_external == 'i');
@@ -875,7 +875,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
 void
 BoxLevelConnectorUtils::computeBoxesAroundBoundary(
    BoxContainer& boundary,
-   const IntVector& refinement_ratio,
+   const MultiIntVector& refinement_ratio,
    const boost::shared_ptr<const BaseGridGeometry>& grid_geometry,
    const bool simplify_boundary_boxes) const
 {
@@ -897,7 +897,7 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
 
    // Boundary starts as R
 
-   boundary.grow(one_vec);
+   boundary.grow(MultiIntVector(one_vec));
    // ... boundary is now (R^1)
 
    /*
@@ -989,7 +989,7 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
          }
 
          if (!reduced_connectivity_singularity_boxes.isEmpty()) {
-            if (refinement_ratio != one_vec) {
+            if (!refinement_ratio.isOne(dim)) {
                reduced_connectivity_singularity_boxes.refine(refinement_ratio);
             }
             bi->second.removeIntersections(
@@ -1006,7 +1006,7 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
           */
          BoxContainer singularity_boxes(
             grid_geometry->getSingularityBoxContainer(block_id));
-         if (refinement_ratio != one_vec) {
+         if (!refinement_ratio.isOne(dim)) {
             singularity_boxes.refine(refinement_ratio);
          }
 
@@ -1107,7 +1107,7 @@ BoxLevelConnectorUtils::makeRemainderMap(
 
    orig_to_remainder.reset(new MappingConnector(orig,
       *remainder,
-      IntVector::getZero(dim)));
+      MultiIntVector(IntVector::getZero(dim))));
 
    /*
     * Track last used index to ensure we use unique indices for new
@@ -1237,7 +1237,7 @@ BoxLevelConnectorUtils::addPeriodicImages(
       for (int s = 1; s < shift_catalog->getNumberOfShifts(); ++s) {
          PeriodicId id(s);
          const IntVector try_shift =
-            shift_catalog->shiftNumberToShiftDistance(id) * box_level.getRefinementRatio();
+            shift_catalog->shiftNumberToShiftDistance(id) * box_level.getRefinementRatio().getBlockVector(level_box.getBlockId());
          Box box = level_box;
          box.shift(try_shift);
          box.grow(box_level_growth);
@@ -1339,7 +1339,7 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
       }
       const BoxContainer& domain_tree = domain_tree_for_box_level;
 
-      const IntVector& box_level_growth = box_level_to_anchor.getConnectorWidth();
+      const MultiIntVector& box_level_growth = box_level_to_anchor.getConnectorWidth();
 
       const BoxContainer& level_boxes(box_level.getBoxes());
       for (RealBoxConstIterator ni(level_boxes.realBegin());
@@ -1347,12 +1347,12 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
 
          const Box& level_box = *ni;
          Box grown_box = level_box;
-         grown_box.grow(box_level_growth);
+         grown_box.grow(box_level_growth.getBlockVector(level_box.getBlockId()));
          bool images_added(false);
          for (int s = 1; s < shift_catalog->getNumberOfShifts(); ++s) {
             PeriodicId id(s);
             const IntVector try_shift =
-               shift_catalog->shiftNumberToShiftDistance(id) * box_level.getRefinementRatio();
+               shift_catalog->shiftNumberToShiftDistance(id) * box_level.getRefinementRatio().getBlockVector(level_box.getBlockId());
             Box box = grown_box;
             box.shift(try_shift);
             if (domain_tree.hasOverlap(box)) {
@@ -1395,7 +1395,7 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
          3);
    }
 
-   IntVector width_limit =
+   MultiIntVector width_limit =
       anchor_to_box_level.getHeadCoarserFlag() ?
       box_level_to_anchor.getConnectorWidth() :
       anchor_to_box_level.getConnectorWidth();
@@ -1498,12 +1498,11 @@ BoxLevelConnectorUtils::computeNonIntersectingParts(
    computeExternalParts(remainder,
                         i_to_r_map,
                         input_to_takeaway,
-                        IntVector::getZero(dim));
+                        MultiIntVector(IntVector::getZero(dim)));
 
    input_to_remainder = boost::static_pointer_cast<Connector>(i_to_r_map);
 
-   TBOX_ASSERT(input_to_remainder->getConnectorWidth() ==
-               IntVector::getZero(dim)); 
+   TBOX_ASSERT(input_to_remainder->getConnectorWidth().isZero(dim));
 
    const BoxContainer& remainder_boxes = remainder->getBoxes();
    const BoxContainer& input_boxes =

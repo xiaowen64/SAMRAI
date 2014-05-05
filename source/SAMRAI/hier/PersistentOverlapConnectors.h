@@ -12,6 +12,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/IntVector.h"
+#include "SAMRAI/hier/MultiIntVector.h"
 
 #include <vector>
 
@@ -134,7 +135,7 @@ private:
    const Connector&
    createConnector(
       const BoxLevel& head,
-      const IntVector& connector_width);
+      const MultiIntVector& connector_width);
 
    /*!
     * @brief Create an overlap Connector with its transpose, computing
@@ -158,8 +159,8 @@ private:
    const Connector&
    createConnectorWithTranspose(
       const BoxLevel& head,
-      const IntVector& connector_width,
-      const IntVector& transpose_connector_width);
+      const MultiIntVector& connector_width,
+      const MultiIntVector& transpose_connector_width);
 
    /*!
     * @brief Cache the supplied overlap Connector and its transpose
@@ -212,7 +213,7 @@ private:
    const Connector&
    findConnector(
       const BoxLevel& head,
-      const IntVector& min_connector_width,
+      const MultiIntVector& min_connector_width,
       ConnectorNotFoundAction not_found_action,
       bool exact_width_only = false);
 
@@ -255,8 +256,8 @@ private:
    const Connector&
    findConnectorWithTranspose(
       const BoxLevel& head,
-      const IntVector& min_connector_width,
-      const IntVector& transpose_min_connector_width,
+      const MultiIntVector& min_connector_width,
+      const MultiIntVector& transpose_min_connector_width,
       ConnectorNotFoundAction not_found_action,
       bool exact_width_only = false);
 
@@ -282,7 +283,7 @@ private:
    bool
    hasConnector(
       const BoxLevel& head,
-      const IntVector& min_connector_width,
+      const MultiIntVector& min_connector_width,
       bool exact_width_only = false) const;
 
    /*!
@@ -324,7 +325,7 @@ private:
    boost::shared_ptr<Connector>
    doFindConnectorWork(
       const BoxLevel& head,
-      const IntVector& min_connector_width,
+      const MultiIntVector& min_connector_width,
       ConnectorNotFoundAction not_found_action,
       bool exact_width_only);
 

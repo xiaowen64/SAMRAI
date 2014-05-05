@@ -68,7 +68,7 @@ public:
       boost::shared_ptr<Connector>& connector,
       const BoxLevel& base_box_level,
       const BoxLevel& head_box_level,
-      const IntVector& base_width,
+      const MultiIntVector& base_width,
       const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED,
       const bool ignore_self_overlap = false) const;
 
@@ -96,8 +96,8 @@ public:
       boost::shared_ptr<Connector>& connector,
       const BoxLevel& base_box_level,
       const BoxLevel& head_box_level,
-      const IntVector& base_width,
-      const IntVector& transpose_base_width,
+      const MultiIntVector& base_width,
+      const MultiIntVector& transpose_base_width,
       const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED,
       const bool ignore_self_overlap = false) const;
 
@@ -153,9 +153,9 @@ public:
     * @param[out] neighbors
     * @param[in] connector
     * @param[in] box_id
-    * @param[in] gcw
+    * @param[in] width
     *
-    * @pre gcw <= connector.getConnectorWidth()
+    * @pre width <= connector.getConnectorWidth()
     * @pre (connector.getParallelState() == BoxLevel::GLOBALIZED) ||
     *      (box_id.getOwnerRank() == connector.getMPI().getRank())
     * @pre connector.getBase().hasBox(box_id)
@@ -165,7 +165,7 @@ public:
       Connector::NeighborSet& neighbors,
       const Connector& connector,
       const BoxId& box_id,
-      const IntVector& gcw) const;
+      const MultiIntVector& width) const;
 
    /*!
     * @brief Like extractNeighbors above except that it computes all
@@ -173,9 +173,9 @@ public:
     *
     * @param[out] other
     * @param[in] connector
-    * @param[in] gcw
+    * @param[in] width
     *
-    * @pre gcw <= connector.getConnectorWidth()
+    * @pre width <= connector.getConnectorWidth()
     * @pre for the box_id of each neighborhood base box in connector,
     *      (connector.getParallelState() == BoxLevel::GLOBALIZED) ||
     *      (box_id.getOwnerRank() == connector.getMPI().getRank())
@@ -186,7 +186,7 @@ public:
    extractNeighbors(
       Connector& other,
       const Connector& connector,
-      const IntVector& gcw) const;
+      const MultiIntVector& width) const;
 
    /*!
     * @brief Compute the overlap Connectors between BoxLevels
@@ -312,7 +312,7 @@ public:
       const Connector& center_to_east,
       const IntVector& center_growth_to_nest_west,
       const IntVector& center_growth_to_nest_east,
-      const IntVector& connector_width_limit,
+      const MultiIntVector& connector_width_limit,
       bool compute_transpose) const;
 
    /*!
@@ -343,7 +343,7 @@ public:
       boost::shared_ptr<Connector>& west_to_east,
       const Connector& west_to_center,
       const Connector& center_to_east,
-      const IntVector& connector_width_limit,
+      const MultiIntVector& connector_width_limit,
       bool compute_transpose) const;
 
    /*!
@@ -394,7 +394,7 @@ public:
    bridge(
       Connector& west_to_center,
       const Connector& center_to_east,
-      const IntVector& connector_width_limit) const;
+      const MultiIntVector& connector_width_limit) const;
 
    /*!
     * @brief Set whether to barrier before potential major
@@ -499,10 +499,10 @@ private:
       const IntVector& cent_growth_to_nest_west,
       bool east_nesting_is_known,
       const IntVector& cent_growth_to_nest_east,
-      const IntVector& connector_width_limit,
+      const MultiIntVector& connector_width_limit,
       bool compute_transpose,
-      IntVector& west_to_east_width,
-      IntVector& east_to_west_width,
+      MultiIntVector& west_to_east_width,
+      MultiIntVector& east_to_west_width,
       std::set<int>& incoming_ranks,
       std::set<int>& outgoing_ranks,
       NeighborSet& visible_west_nabrs,
@@ -618,9 +618,7 @@ private:
       const Box& box,
       BoxContainer& neighbors,
       BoxContainer& scratch_space,
-      //std::vector<Box>& neighbors,
-      //std::vector<Box>& scratch_space,
-      const IntVector& neighbor_refinement_ratio) const;
+      const MultiIntVector& neighbor_refinement_ratio) const;
 
    /*!
     * @brief Read extra debugging flag from input database.

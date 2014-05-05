@@ -862,7 +862,7 @@ BoxContainer::removeIntersections(
  */
 void
 BoxContainer::removeIntersections(
-   const IntVector& refinement_ratio,
+   const MultiIntVector& refinement_ratio,
    const BoxContainer& takeaway,
    const bool include_singularity_block_neighbors)
 {
@@ -1167,7 +1167,7 @@ BoxContainer::intersectBoxes(
 
 void
 BoxContainer::intersectBoxes(
-   const IntVector& refinement_ratio,
+   const MultiIntVector& refinement_ratio,
    const BoxContainer& keep,
    const bool include_singularity_block_neighbors)
 {
@@ -1566,13 +1566,28 @@ BoxContainer::contains(
  * Spatial manipulation of Boxes
  ************************************************************************
  */
-
+/*
 void
 BoxContainer::grow(
    const IntVector& ghosts)
 {
    for (iterator i = begin(); i != end(); ++i) {
+      TBOX_ASSERT(i->getBlockId() == begin()->getBlockId());
       i->grow(ghosts);
+   }
+
+   if (d_tree) {
+      d_tree.reset();
+   }
+}
+*/
+
+void
+BoxContainer::grow(
+   const MultiIntVector& ghosts)
+{
+   for (iterator i = begin(); i != end(); ++i) {
+      i->grow(ghosts.getBlockVector(i->getBlockId()));
    }
 
    if (d_tree) {
@@ -1595,10 +1610,10 @@ BoxContainer::shift(
 
 void
 BoxContainer::refine(
-   const IntVector& ratio)
+   const MultiIntVector& ratio)
 {
    for (iterator i = begin(); i != end(); ++i) {
-      i->refine(ratio);
+      i->refine(ratio.getBlockVector(i->getBlockId()));
    }
    if (d_tree) {
       d_tree.reset();
@@ -1607,10 +1622,10 @@ BoxContainer::refine(
 
 void
 BoxContainer::coarsen(
-   const IntVector& ratio)
+   const MultiIntVector& ratio)
 {
    for (iterator i = begin(); i != end(); ++i) {
-      i->coarsen(ratio);
+      i->coarsen(ratio.getBlockVector(i->getBlockId()));
    }
    if (d_tree) {
       d_tree.reset();
@@ -1847,7 +1862,7 @@ void
 BoxContainer::findOverlapBoxes(
    BoxContainer& overlap_boxes,
    const Box& box,
-   const IntVector& refinement_ratio,
+   const MultiIntVector& refinement_ratio,
    bool include_singularity_block_neighbors) const
 {
    if (isEmpty()) {
@@ -1869,7 +1884,7 @@ void
 BoxContainer::findOverlapBoxes(
    std::vector<const Box*>& overlap_boxes,
    const Box& box,
-   const IntVector& refinement_ratio,
+   const MultiIntVector& refinement_ratio,
    bool include_singularity_block_neighbors) const
 {
    if (isEmpty()) {

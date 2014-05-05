@@ -156,7 +156,7 @@ public:
       TwoDimBool& touches_regular_bdry,
       TwoDimBool& touches_periodic_bdry,
       const Box& box,
-      const IntVector &refinement_ratio,
+      const MultiIntVector &refinement_ratio,
       const BoxContainer& refined_periodic_domain_tree) const;
 
    /*!
@@ -188,7 +188,7 @@ public:
    virtual void
    setGeometryOnPatches(
       PatchLevel& level,
-      const IntVector& ratio_to_level_zero,
+      const MultiIntVector& ratio_to_level_zero,
       const std::map<BoxId, TwoDimBool>& touches_regular_bdry,
       const bool defer_boundary_box_creation);
 
@@ -231,13 +231,13 @@ public:
    void
    computePhysicalDomain(
       BoxContainer& domain,
-      const IntVector& ratio_to_level_zero,
+      const MultiIntVector& ratio_to_level_zero,
       const BlockId& block_id) const;
 
    void
    computePhysicalDomainWithPeriodicImages(
       BoxContainer& domain,
-      const IntVector& ratio_to_level_zero,
+      const MultiIntVector& ratio_to_level_zero,
       const BlockId& block_id) const;
 
    /*!
@@ -261,7 +261,7 @@ public:
    void
    computePhysicalDomain(
       BoxLevel& box_level,
-      const IntVector& ratio_to_level_zero,
+      const MultiIntVector& ratio_to_level_zero,
       const BlockId& block_id) const;
 
    /*!
@@ -283,7 +283,7 @@ public:
    void
    computePhysicalDomain(
       BoxContainer& domain_boxes,
-      const IntVector& ratio_to_level_zero) const;
+      const MultiIntVector& ratio_to_level_zero) const;
 
    /*!
     * @brief Compute the BoxLevel describing the complete physical
@@ -304,7 +304,7 @@ public:
    void
    computePhysicalDomain(
       BoxLevel& box_level,
-      const IntVector& ratio_to_level_zero) const;
+      const MultiIntVector& ratio_to_level_zero) const;
 
    /*!
     * @brief Set the physical domain (for level zero)
@@ -422,7 +422,7 @@ public:
     */
    IntVector
    getPeriodicShift(
-      const IntVector& ratio_to_level_zero) const;
+      const MultiIntVector& ratio_to_level_zero) const;
 
    /*!
     * @brief Get the number of blocks in the geometry.
@@ -464,7 +464,7 @@ public:
    virtual boost::shared_ptr<BaseGridGeometry>
    makeRefinedGridGeometry(
       const std::string& fine_geom_name,
-      const IntVector& refine_ratio) const = 0;
+      const MultiIntVector& refine_ratio) const = 0;
 
    /*!
     * @brief Create a pointer to a coarsened version of this grid geometry
@@ -481,7 +481,7 @@ public:
    virtual boost::shared_ptr<BaseGridGeometry>
    makeCoarsenedGridGeometry(
       const std::string& coarse_geom_name,
-      const IntVector& coarsen_ratio) const = 0;
+      const MultiIntVector& coarsen_ratio) const = 0;
 
    /*!
     * @brief Compute and set grid data for patch.
@@ -505,7 +505,7 @@ public:
    virtual void
    setGeometryDataOnPatch(
       Patch& patch,
-      const IntVector& ratio_to_level_zero,
+      const MultiIntVector& ratio_to_level_zero,
       const TwoDimBool& touches_regular_bdry) const;
 
    /*!
@@ -1011,7 +1011,7 @@ private:
    bool
    transformBox(
       Box& box,
-      const IntVector& ratio,
+      const MultiIntVector& ratio,
       const BlockId& output_block,
       const BlockId& input_block) const;
 
@@ -1036,7 +1036,7 @@ private:
    bool
    transformBoxContainer(
       BoxContainer& boxes,
-      const IntVector& ratio,
+      const MultiIntVector& ratio,
       const BlockId& output_block,
       const BlockId& input_block) const;
 

@@ -55,7 +55,7 @@ BoxLevel::BoxLevel(
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom):
 
    d_mpi(tbox::SAMRAI_MPI::getSAMRAIWorld()),
-   d_ratio(dim, 0),
+   d_ratio(IntVector::getZero(dim)),
 
    d_local_number_of_cells(0),
    d_global_number_of_cells(-1),
@@ -125,7 +125,7 @@ BoxLevel::BoxLevel(
 }
 
 BoxLevel::BoxLevel(
-   const IntVector& ratio,
+   const MultiIntVector& ratio,
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state):
@@ -223,7 +223,7 @@ BoxLevel::operator = (
 
 void
 BoxLevel::initialize(
-   const IntVector& ratio,
+   const MultiIntVector& ratio,
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
@@ -245,7 +245,7 @@ BoxLevel::initialize(
 void
 BoxLevel::swapInitialize(
    BoxContainer& boxes,
-   const IntVector& ratio,
+   const MultiIntVector& ratio,
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
@@ -286,7 +286,7 @@ BoxLevel::finalize()
 
 void
 BoxLevel::initializePrivate(
-   const IntVector& ratio,
+   const MultiIntVector& ratio,
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
@@ -416,7 +416,7 @@ BoxLevel::clear()
       d_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL);
       d_boxes.clear();
       d_global_boxes.clear();
-      d_ratio(0) = 0;
+      d_ratio.clear();
       d_local_number_of_cells = 0;
       d_global_number_of_cells = -1;
       d_local_number_of_boxes = 0;
@@ -467,7 +467,6 @@ BoxLevel::swap(
 
       int tmpint;
       bool tmpbool;
-      IntVector tmpvec(level_a.getDim());
       Box tmpbox(level_a.getDim());
       ParallelState tmpstate;
       const BoxLevel* tmpmbl;
@@ -483,7 +482,7 @@ BoxLevel::swap(
       level_a.d_mpi = level_b.d_mpi;
       level_b.d_mpi = tmpmpi;
 
-      tmpvec = level_a.d_ratio;
+      MultiIntVector tmpvec = level_a.d_ratio;
       level_a.d_ratio = level_b.d_ratio;
       level_b.d_ratio = tmpvec;
 
@@ -1071,7 +1070,7 @@ BoxLevel::addPeriodicBox(
 
    clearForBoxChanges(false);
 
-   Box image_box(ref_box, shift_number, d_ratio);
+   Box image_box(ref_box, shift_number, d_ratio.getBlockVector(ref_box.getBlockId()));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    BoxContainer& boxes =
@@ -1471,9 +1470,13 @@ BoxLevel::putToRestart(
    restart_db->putInteger("d_nproc", d_mpi.getSize());
    restart_db->putInteger("d_rank", d_mpi.getRank());
    restart_db->putInteger("dim", d_ratio.getDim().getValue());
-   restart_db->putIntegerArray("d_ratio",
-      &d_ratio[0],
-      d_ratio.getDim().getValue());
+   const int nblocks = d_grid_geometry->getNumberBlocks();
+   for (int b =0; b < nblocks; ++b) {
+      std::string ratio_name = "d_ratio_" + tbox::Utilities::intToString(b); 
+      restart_db->putIntegerArray(ratio_name,
+         &(d_ratio.getBlockVector(BlockId(b))[0]),
+         d_ratio.getDim().getValue());
+   }
    getBoxes().putToRestart(restart_db->putDatabase("mapped_boxes"));
 }
 
@@ -1493,15 +1496,21 @@ BoxLevel::getFromRestart(
       restart_db.getInteger("dim")));
    TBOX_ASSERT(getDim() == dim);
 
-   IntVector ratio(dim);
-   restart_db.getIntegerArray("d_ratio", &ratio[0], dim.getValue());
+   const int nblocks = grid_geom->getNumberBlocks();
 
+   std::vector<IntVector> ratio_vec(nblocks, IntVector::getZero(dim));
+   for (int b = 0; b < nblocks; ++b) {
+      std::string ratio_name = "d_ratio_" + tbox::Utilities::intToString(b);
+      restart_db.getIntegerArray(ratio_name, &ratio_vec[b][0], dim.getValue());
+   }
+   MultiIntVector ratio(ratio_vec);
+ 
 #ifdef DEBUG_CHECK_ASSERTIONS
    const int version = restart_db.getInteger("HIER_MAPPED_BOX_LEVEL_VERSION");
    const int nproc = restart_db.getInteger("d_nproc");
    const int rank = restart_db.getInteger("d_rank");
 #endif
-   TBOX_ASSERT(ratio >= IntVector::getOne(dim));
+   TBOX_ASSERT(ratio >= MultiIntVector(IntVector::getOne(dim)));
    TBOX_ASSERT(version <= HIER_BOX_LEVEL_VERSION);
 
    initialize(ratio, grid_geom);

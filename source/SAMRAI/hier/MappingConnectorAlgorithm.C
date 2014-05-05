@@ -356,9 +356,9 @@ MappingConnectorAlgorithm::privateModify(
    const BoxLevel& old = old_to_anchor.getBase();
    const BoxLevel& anchor = anchor_to_old.getBase();
    const BoxLevel& new_level = old_to_new.getHead();
-   const IntVector& old_ratio = old.getRefinementRatio();
-   const IntVector& anchor_ratio = anchor.getRefinementRatio();
-   const IntVector& new_ratio = new_level.getRefinementRatio();
+   const MultiIntVector& old_ratio = old.getRefinementRatio();
+   const MultiIntVector& anchor_ratio = anchor.getRefinementRatio();
+   const MultiIntVector& new_ratio = new_level.getRefinementRatio();
 
    const tbox::Dimension dim(old.getDim());
    const tbox::SAMRAI_MPI& mpi(old.getMPI());
@@ -377,19 +377,19 @@ MappingConnectorAlgorithm::privateModify(
     * Calls to Connector::convertHeadWidthToBase() perform the
     * conversions.
     */
-   const IntVector shrinkage_in_new_index_space =
+   const MultiIntVector shrinkage_in_new_index_space =
       Connector::convertHeadWidthToBase(
          old_ratio,
          new_ratio,
          old_to_new.getConnectorWidth());
-   const IntVector shrinkage_in_anchor_index_space =
+   const MultiIntVector shrinkage_in_anchor_index_space =
       Connector::convertHeadWidthToBase(
          anchor_ratio,
          new_ratio,
          shrinkage_in_new_index_space);
-   const IntVector anchor_to_new_width =
+   const MultiIntVector anchor_to_new_width =
       anchor_to_old.getConnectorWidth() - shrinkage_in_anchor_index_space;
-   if (!(anchor_to_new_width >= IntVector::getZero(dim))) {
+   if (!(anchor_to_new_width >= MultiIntVector(IntVector::getZero(dim)))) {
       TBOX_ERROR(
          "MappingConnectorAlgorithm::privateModify error:\n"
          << "Mapping connector allows mapped BoxLevel to grow\n"
@@ -402,7 +402,7 @@ MappingConnectorAlgorithm::privateModify(
          << "by " << shrinkage_in_anchor_index_space << " which\n"
          << "will result in a non-positive width." << std::endl);
    }
-   const IntVector new_to_anchor_width =
+   const MultiIntVector new_to_anchor_width =
       Connector::convertHeadWidthToBase(
          new_ratio,
          anchor.getRefinementRatio(),
@@ -1249,7 +1249,7 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const Connector& unmapped_connector_transpose,
    const Connector& mapping_connector,
    const InvertedNeighborhoodSet& inverted_nbrhd,
-   const IntVector& head_refinement_ratio) const
+   const MultiIntVector& head_refinement_ratio) const
 {
    const BoxLevel& old = mapping_connector.getBase();
    const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
@@ -1264,12 +1264,13 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
                     << base_box << std::endl;
       }
       Box compare_box = base_box;
-      compare_box.grow(mapped_connector.getConnectorWidth());
+      const BlockId& block_id = compare_box.getBlockId();
+      compare_box.grow(mapped_connector.getConnectorWidth().getBlockVector(block_id));
       if (unmapped_connector.getHeadCoarserFlag()) {
-         compare_box.coarsen(unmapped_connector.getRatio());
+         compare_box.coarsen(unmapped_connector.getRatio().getBlockVector(block_id));
       }
       else if (unmapped_connector_transpose.getHeadCoarserFlag()) {
-         compare_box.refine(unmapped_connector_transpose.getRatio());
+         compare_box.refine(unmapped_connector_transpose.getRatio().getBlockVector(block_id));
       }
 
       BlockId compare_box_block_id(base_box.getBlockId());
