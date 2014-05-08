@@ -445,7 +445,7 @@ AssumedPartitionBox::recursivePrint(
       for ( int box_index=begin(); box_index!=end(); ++box_index ) {
          parts.pushBack( getBox(box_index) );
       }
-      co << border << "Parts:" << parts.format(border);
+      co << border << "Parts: " << parts.format(border);
    }
 
    return;

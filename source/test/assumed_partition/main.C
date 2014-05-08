@@ -18,6 +18,8 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/AssumedPartitionBox.h"
+#include "SAMRAI/hier/AssumedPartition.h"
+#include "SAMRAI/geom/GridGeometry.h"
 
 using namespace std;
 
@@ -26,6 +28,7 @@ using namespace SAMRAI;
 
 struct CommonTestParams {
    hier::Box box;
+   boost::shared_ptr<hier::BaseGridGeometry> geometry;
    int rank_begin;
    int rank_end;
    int index_begin;
@@ -110,7 +113,7 @@ int main(
 
          while (true) {
 
-            std::string test_name("SingleBoxTest");
+            std::string test_name("Test");
             test_name += tbox::Utilities::intToString(test_number, 2);
 
             boost::shared_ptr<tbox::Database> test_db =
@@ -127,11 +130,26 @@ int main(
 
             CommonTestParams ctp = getTestParametersFromDatabase( *test_db );
 
-            hier::AssumedPartitionBox apb( ctp.box, ctp.rank_begin, ctp.rank_end, ctp.index_begin );
-            tbox::plog << "AssumedPartitionBox:\n";
-            apb.recursivePrint(tbox::plog, "\t");
+            size_t test_fail_count = 0;
+            if ( ctp.geometry ) {
+               hier::AssumedPartition ap( ctp.geometry->getPhysicalDomain(),
+                                          ctp.rank_begin,
+                                          ctp.rank_end,
+                                          ctp.index_begin );
+               tbox::plog << "AssumedPartition:\n";
+               ap.recursivePrint(tbox::plog, "\t");
+               test_fail_count = ap.selfCheck();
+            }
+            else {
+               hier::AssumedPartitionBox apb( ctp.box,
+                                              ctp.rank_begin,
+                                              ctp.rank_end,
+                                              ctp.index_begin );
+               tbox::plog << "AssumedPartitionBox:\n";
+               apb.recursivePrint(tbox::plog, "\t");
+               test_fail_count = apb.selfCheck();
+            }
 
-            size_t test_fail_count = apb.selfCheck();
             fail_count += test_fail_count;
             if ( test_fail_count ) {
                tbox::pout << "FAILED: selfCheck found " << fail_count << " problems in test "
@@ -167,8 +185,20 @@ CommonTestParams getTestParametersFromDatabase( tbox::Database &test_db )
 {
    const tbox::Dimension dim(test_db.getInteger("dim"));
    CommonTestParams ctp( dim );
-   ctp.box = test_db.getDatabaseBox("box");
-   ctp.box.setBlockId(hier::BlockId(0));
+   if ( test_db.isDatabaseBox("box") ) {
+      ctp.box = test_db.getDatabaseBox("box");
+      ctp.box.setBlockId(hier::BlockId(0));
+   } else if ( test_db.isDatabase("BlockGeometry") ) {
+      ctp.geometry.reset(
+         new geom::GridGeometry(
+            dim,
+            "BlockGeometry",
+            test_db.getDatabase("BlockGeometry")));
+   }
+   else {
+      TBOX_ERROR("getTestParametersFromDatabase: You must specify either \"box\"\n"
+                 <<"or \"BlockGeometry\" in each test.");
+   }
    ctp.rank_begin = test_db.getIntegerWithDefault("rank_begin", ctp.rank_begin);
    ctp.rank_end = test_db.getIntegerWithDefault("rank_end", ctp.rank_end);
    ctp.index_begin = test_db.getIntegerWithDefault("index_begin", ctp.index_begin);

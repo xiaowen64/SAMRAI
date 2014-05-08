@@ -20,11 +20,11 @@ Main {
 }
 
 /*
- * Define test for AssumedPartitionBox using databases named SingleBoxTest##,
+ * Define test for AssumedPartitionBox using databases named Test##,
  * where ## is a 2-digit integer, sequentially from 0
  */
 
-SingleBoxTest00 {
+Test00 {
   nickname = "11x11x11, 4 owners" // Nick name of test.
   dim = 3
   box = [(0,0,0),(10,10,10)]
@@ -33,7 +33,7 @@ SingleBoxTest00 {
   index_begin = 0
 }
 
-SingleBoxTest01 {
+Test01 {
   nickname = "11x11x11, 4 owners, starting not at (0,0)" // Nick name of test.
   dim = 3
   box = [(150,250,350),(160,260,360)]
@@ -42,7 +42,7 @@ SingleBoxTest01 {
   index_begin = 0
 }
 
-SingleBoxTest02 {
+Test02 {
   nickname = "11x11, 2 owners" // Nick name of test.
   dim = 3
    box = [(10,10,10),(20,20,20)]
@@ -51,7 +51,7 @@ SingleBoxTest02 {
   index_begin = 0
 }
 
-SingleBoxTest03 {
+Test03 {
   nickname = "11x11, 13 owners" // Nick name of test.
   dim = 3
   box = [(10,10,10),(20,20,20)]
@@ -60,7 +60,7 @@ SingleBoxTest03 {
   index_begin = 0
 }
 
-SingleBoxTest04 {
+Test04 {
   nickname = "long box, 3 owners" // Nick name of test.
   dim = 3
    box = [(100,100,100),(110,180,140)]
@@ -69,7 +69,7 @@ SingleBoxTest04 {
   index_begin = 0
 }
 
-SingleBoxTest05 {
+Test05 {
   nickname = "long box, more owners" // Nick name of test.
   dim = 3
   box = [(100,100,100),(110,180,140)]
