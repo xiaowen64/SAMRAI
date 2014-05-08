@@ -21,6 +21,10 @@ namespace SAMRAI {
 namespace hier {
 
 
+/*
+***************************************************************************************
+***************************************************************************************
+*/
 AssumedPartitionBox::AssumedPartitionBox(
    const Box& box,
    int rank_begin,
@@ -29,12 +33,53 @@ AssumedPartitionBox::AssumedPartitionBox(
    d_box(box),
    d_rank_begin(rank_begin),
    d_rank_end(rank_end),
+   d_index_begin(index_begin),
    d_uniform_partition_size(box.getDim()),
    d_partition_grid_size(box.getDim()),
    d_major(box.getDim()),
-   d_index_stride(box.getDim()),
-   d_index_begin(index_begin)
+   d_index_stride(box.getDim())
 {
+   computeLayout();
+   assignToRanks();
+   return;
+}
+
+
+/*
+***************************************************************************************
+***************************************************************************************
+*/
+AssumedPartitionBox::AssumedPartitionBox(
+   const tbox::Dimension& dim):
+   d_box(dim),
+   d_rank_begin(-1),
+   d_rank_end(-1),
+   d_index_begin(-1),
+   d_uniform_partition_size(dim),
+   d_partition_grid_size(dim),
+   d_major(dim),
+   d_index_stride(dim)
+{
+   return;
+}
+
+
+/*
+***************************************************************************************
+* Create a partitioning.
+***************************************************************************************
+*/
+void
+AssumedPartitionBox::createPartition(
+   const Box& box,
+   int rank_begin,
+   int rank_end,
+   int index_begin)
+{
+   d_box = box;
+   d_rank_begin = rank_begin;
+   d_rank_end = rank_end;
+   d_index_begin = index_begin;
    computeLayout();
    assignToRanks();
    return;
@@ -186,7 +231,7 @@ AssumedPartitionBox::findOverlaps(
 * Check the assumed partition for errors and inconsistencies.  Write
 * error diagnostics to plog.
 *
-* Failure indicates a bug in this class.
+* Return number of errors found.  Errors indicate a bug in this class.
 ***************************************************************************************
 */
 size_t
@@ -194,7 +239,6 @@ AssumedPartitionBox::selfCheck() const
 {
    size_t nerr = 0;
 
-   BoxContainer tmp_boxes;
 
    BoxContainer all_parts;
    for ( int box_index=begin(); box_index!=end(); ++box_index ) {
@@ -203,11 +247,10 @@ AssumedPartitionBox::selfCheck() const
    all_parts.makeTree();
 
 
-   // Make sure no part intersects others.
-   tmp_boxes.clear();
+   // Parts should not overlap each other.
+   BoxContainer tmp_boxes;
    for ( BoxContainer::const_iterator bi=all_parts.begin(); bi!=all_parts.end(); ++bi ) {
       const Box &box = *bi;
-      tmp_boxes.clear();
       all_parts.findOverlapBoxes( tmp_boxes, box );
       tmp_boxes.order();
       if ( !tmp_boxes.empty() ) {
@@ -222,9 +265,10 @@ AssumedPartitionBox::selfCheck() const
                     << box << " unexpectedly overlaps these:\n"
                     << tmp_boxes.format("\t") << std::endl;
       }
+      tmp_boxes.clear();
    }
 
-   // Part should cover all of d_box.
+   // Parts should cover no less than d_box.
    BoxContainer box_leftover(d_box);
    box_leftover.removeIntersections(all_parts);
    if ( !box_leftover.empty() ) {
@@ -378,7 +422,8 @@ AssumedPartitionBox::recursivePrint(
    int detail_depth) const
 {
    const char *to = "..";
-   co << border << "d_box = " << d_box
+   co << border << "d_box = " << d_box << "    "
+      << d_box.numberCells() << "|" << d_box.size()
       << '\n' << border
       << "d_uniform_partition_size = " << d_uniform_partition_size
       << "  d_partition_grid_size = " << d_partition_grid_size

@@ -51,9 +51,35 @@ public:
       int index_begin = 0 );
 
    /*!
+    * @brief Nearly default constructor.
+    */
+   AssumedPartitionBox( const tbox::Dimension &dim );
+
+   /*!
+    * @brief Create partition for the given box.
+    *
+    * @param[in] in_box Incoming box
+    *
+    * @param[in] rank_begin First rank
+    *
+    * @param[in] rank_end One past last rank
+    *
+    * @param[in] index_begin
+    */
+   void createPartition(
+      const Box& box,
+      int rank_begin,
+      int rank_end,
+      int index_begin = 0 );
+
+   /*!
     * @brief Destructor.
     */
    ~AssumedPartitionBox() {}
+
+   //! @brief Return the original unpartitioned box.
+   const Box &getUnpartitionedBox() const
+      { return d_box; }
 
    //! @brief Number of box partitions.
    size_t getNumberOfParts() const {
@@ -71,7 +97,7 @@ public:
 
    //! @brief Return index of first box.
    int begin() const {
-      return d_first_index_with_2;
+      return d_index_begin;
    }
 
    //! @brief Return one past index of last box.
