@@ -150,14 +150,14 @@ GridGeometry::~GridGeometry()
 boost::shared_ptr<hier::BaseGridGeometry>
 GridGeometry::makeCoarsenedGridGeometry(
    const std::string& coarse_geom_name,
-   const hier::IntVector& coarsen_ratio) const
+   const hier::MultiIntVector& coarsen_ratio) const
 {
    const tbox::Dimension& dim(getDim());
 
    TBOX_ASSERT(!coarse_geom_name.empty());
    TBOX_ASSERT(coarse_geom_name != getObjectName());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, coarsen_ratio);
-   TBOX_ASSERT(coarsen_ratio > hier::IntVector::getZero(dim));
+   TBOX_ASSERT(coarsen_ratio > hier::MultiIntVector(hier::IntVector::getZero(dim)));
 
    hier::BoxContainer coarse_domain;
 
@@ -172,7 +172,10 @@ GridGeometry::makeCoarsenedGridGeometry(
    hier::BoxContainer::const_iterator coarse_domain_itr = coarse_domain.begin();
    hier::BoxContainer::const_iterator fine_domain_itr = fine_domain.begin();
    for (int ib = 0; ib < nboxes; ++ib, ++coarse_domain_itr, ++fine_domain_itr) {
-      hier::Box testbox = hier::Box::refine(*coarse_domain_itr, coarsen_ratio);
+      hier::Box testbox =
+         hier::Box::refine(*coarse_domain_itr,
+                           coarsen_ratio.getBlockVector(
+                              coarse_domain_itr->getBlockId()));
       if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
 #ifdef DEBUG_CHECK_ASSERTIONS
          tbox::plog
@@ -214,14 +217,14 @@ GridGeometry::makeCoarsenedGridGeometry(
 boost::shared_ptr<hier::BaseGridGeometry>
 GridGeometry::makeRefinedGridGeometry(
    const std::string& fine_geom_name,
-   const hier::IntVector& refine_ratio) const
+   const hier::MultiIntVector& refine_ratio) const
 {
    const tbox::Dimension& dim(getDim());
 
    TBOX_ASSERT(!fine_geom_name.empty());
    TBOX_ASSERT(fine_geom_name != getObjectName());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, refine_ratio);
-   TBOX_ASSERT(refine_ratio > hier::IntVector::getZero(dim));
+   TBOX_ASSERT(refine_ratio > hier::MultiIntVector(hier::IntVector::getZero(dim)));
 
    hier::BoxContainer fine_domain(getPhysicalDomain());
    fine_domain.refine(refine_ratio);

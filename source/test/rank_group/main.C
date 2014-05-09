@@ -208,7 +208,8 @@ int main(
          main_db->getIntegerArray("max_size", &max_size[0], dimval);
       }
       hier::IntVector bad_interval(dim, 2);
-      hier::IntVector cut_factor(dim, 1);
+      hier::MultiIntVector::setNumberBlocks(1);
+      hier::MultiIntVector cut_factor(dim, 1);
 
       hier::OverlapConnectorAlgorithm oca;
 
@@ -251,7 +252,7 @@ int main(
       hierarchy->setMaxNumberOfLevels(2);
 
       hier::BoxLevel domain_box_level(
-         hier::IntVector(dim, 1),
+         hier::MultiIntVector(dim, 1),
          grid_geometry,
          mpi,
          hier::BoxLevel::GLOBALIZED);
@@ -302,7 +303,7 @@ int main(
        */
       boost::shared_ptr<hier::BoxLevel> anchor_box_level(
          boost::make_shared<hier::BoxLevel>(
-            hier::IntVector(dim, 1), grid_geometry));
+            hier::MultiIntVector(dim, 1), grid_geometry));
       boost::shared_ptr<hier::BoxLevel> balance_box_level;
       boost::shared_ptr<hier::Connector> anchor_to_balance;
       boost::shared_ptr<hier::Connector> balance_to_balance;
@@ -342,8 +343,8 @@ int main(
          oca.findOverlapsWithTranspose(domain_to_anchor,
             domain_box_level,
             *anchor_box_level,
-            hier::IntVector(dim, 2),
-            hier::IntVector(dim, 2));
+            hier::MultiIntVector(dim, 2),
+            hier::MultiIntVector(dim, 2));
          hier::Connector* anchor_to_domain = &domain_to_anchor->getTranspose();
 
          tbox::plog << "\n\n\ninitial anchor loads:\n";
@@ -704,8 +705,8 @@ void generatePrebalanceByUserShells(
       tag_id,
       tag_val,
       hier::BoxContainer(anchor_box_level->getGlobalBoundingBox(0)),
-      min_size,
-      max_gcw);
+      hier::MultiIntVector(min_size),
+      hier::MultiIntVector(max_gcw));
 
    hier::Connector& balance_to_anchor = anchor_to_balance->getTranspose();
 
@@ -746,7 +747,7 @@ void generatePrebalanceByUserBoxes(
    initial_owners[0] = 0;
    initial_owners = database->getIntegerVector("initial_owners");
 
-   balance_box_level.reset(new hier::BoxLevel(hier::IntVector(dim, 1),
+   balance_box_level.reset(new hier::BoxLevel(hier::MultiIntVector(dim, 1),
       hierarchy->getGridGeometry(),
       anchor_box_level.getMPI()));
    hier::BoxContainer::iterator balance_boxes_itr = balance_boxes.begin();
@@ -762,8 +763,8 @@ void generatePrebalanceByUserBoxes(
    oca.findOverlapsWithTranspose(anchor_to_balance,
       anchor_box_level,
       *balance_box_level,
-      max_gcw,
-      max_gcw);
+      hier::MultiIntVector(max_gcw),
+      hier::MultiIntVector(max_gcw));
 }
 
 /*

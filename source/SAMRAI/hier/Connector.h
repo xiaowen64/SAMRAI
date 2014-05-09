@@ -667,7 +667,7 @@ public:
     */
    void
    coarsenLocalNeighbors(
-      const IntVector& ratio)
+      const MultiIntVector& ratio)
    {
       d_relationships.coarsenNeighbors(ratio);
       return;
@@ -680,7 +680,7 @@ public:
     */
    void
    refineLocalNeighbors(
-      const IntVector& ratio)
+      const MultiIntVector& ratio)
    {
       d_relationships.refineNeighbors(ratio);
       return;
@@ -693,7 +693,7 @@ public:
     */
    void
    growLocalNeighbors(
-      const IntVector& growth)
+      const MultiIntVector& growth)
    {
       d_relationships.growNeighbors(growth);
       return;
@@ -1046,7 +1046,7 @@ public:
     *
     * @param[in] base_refinement_ratio
     * @param[in] head_refinement_ratio
-    * @param[in] head_gcw The connector width in the head index space.
+    * @param[in] head_width The connector width in the head index space.
     *
     * @return A copy of the connector width converted to the base index
     * space.
@@ -1058,7 +1058,7 @@ public:
    convertHeadWidthToBase(
       const MultiIntVector& base_refinement_ratio,
       const MultiIntVector& head_refinement_ratio,
-      const MultiIntVector& head_gcw);
+      const MultiIntVector& head_width);
 
    // TODO: refactor use of size_t as return type.  This could be
    // problematic.

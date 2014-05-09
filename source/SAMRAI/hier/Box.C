@@ -648,6 +648,15 @@ Box::refine(
    }
 }
 
+void
+Box::refine(
+   const MultiIntVector& ratio)
+{
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
+
+   refine(ratio.getBlockVector(d_block_id));
+}
+
 /*
  *************************************************************************
  *

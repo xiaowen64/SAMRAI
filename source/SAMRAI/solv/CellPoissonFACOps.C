@@ -1522,7 +1522,7 @@ CellPoissonFACOps::ewingFixFlux(
    const hier::Patch& patch,
    const pdat::CellData<double>& soln_data,
    pdat::SideData<double>& flux_data,
-   const hier::IntVector& ratio_to_coarser) const
+   const hier::MultiIntVector& ratio_to_coarser) const
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(d_dim, patch, soln_data, flux_data,
       ratio_to_coarser);
@@ -1537,6 +1537,9 @@ CellPoissonFACOps::ewingFixFlux(
    const hier::Box& patch_box(patch.getBox());
    const hier::Index& plower = patch_box.lower();
    const hier::Index& pupper = patch_box.upper();
+
+   const hier::IntVector& block_ratio =
+      ratio_to_coarser.getBlockVector(patch_box.getBlockId());
 
    const std::vector<hier::BoundaryBox>& bboxes =
       d_cf_boundary[patch_ln]->getBoundaries(id, 1);
@@ -1572,7 +1575,7 @@ CellPoissonFACOps::ewingFixFlux(
                &soln_data.getGhostCellWidth()[1],
                &plower[0], &pupper[0], &plower[1], &pupper[1],
                &location_index,
-               &ratio_to_coarser[0],
+               &block_ratio[0],
                &blower[0], &bupper[0],
                dx);
          } else if (d_dim == tbox::Dimension(3)) {
@@ -1597,7 +1600,7 @@ CellPoissonFACOps::ewingFixFlux(
                &plower[1], &pupper[1],
                &plower[2], &pupper[2],
                &location_index,
-               &ratio_to_coarser[0],
+               &block_ratio[0],
                &blower[0], &bupper[0],
                dx);
          } else {
@@ -1630,7 +1633,7 @@ CellPoissonFACOps::ewingFixFlux(
                &plower[0], &pupper[0],
                &plower[1], &pupper[1],
                &location_index,
-               &ratio_to_coarser[0],
+               &block_ratio[0],
                &blower[0], &bupper[0],
                dx);
          } else if (d_dim == tbox::Dimension(3)) {
@@ -1650,7 +1653,7 @@ CellPoissonFACOps::ewingFixFlux(
                &plower[1], &pupper[1],
                &plower[2], &pupper[2],
                &location_index,
-               &ratio_to_coarser[0],
+               &block_ratio[0],
                &blower[0], &bupper[0],
                dx);
          }
@@ -2057,7 +2060,7 @@ CellPoissonFACOps::computeVectorWeights(
          boost::shared_ptr<hier::PatchLevel> next_finer_level(
             hierarchy->getPatchLevel(ln + 1));
          hier::BoxContainer coarsened_boxes = next_finer_level->getBoxes();
-         hier::IntVector coarsen_ratio(next_finer_level->getRatioToLevelZero());
+         hier::MultiIntVector coarsen_ratio(next_finer_level->getRatioToLevelZero());
          coarsen_ratio /= level->getRatioToLevelZero();
          coarsened_boxes.coarsen(coarsen_ratio);
 
@@ -2144,7 +2147,7 @@ CellPoissonFACOps::checkInputPatchDataIndices() const
 void
 CellPoissonFACOps::computeFluxOnPatch(
    const hier::Patch& patch,
-   const hier::IntVector& ratio_to_coarser_level,
+   const hier::MultiIntVector& ratio_to_coarser_level,
    const pdat::CellData<double>& w_data,
    pdat::SideData<double>& Dgradw_data) const
 {

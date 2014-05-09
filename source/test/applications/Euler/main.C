@@ -783,9 +783,9 @@ static void dumpMatlabData1dPencil(
 
          boost::shared_ptr<hier::PatchLevel> finer_level(
             hierarchy->getPatchLevel(l1 + 1));
-         hier::IntVector coarsen_ratio =
+         hier::MultiIntVector coarsen_ratio =
             finer_level->getRatioToCoarserLevel();
-         hier::BoxContainer takeaway = hier::BoxContainer(finer_level->getBoxes());
+         hier::BoxContainer takeaway(finer_level->getBoxes());
          takeaway.coarsen(coarsen_ratio);
          outboxes[l1].removeIntersections(takeaway);
       }

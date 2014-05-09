@@ -19,11 +19,11 @@ namespace mesh {
 
 PartitioningParams::PartitioningParams(
    const hier::BaseGridGeometry &grid_geometry,
-   const hier::IntVector &ratio_to_level_zero,
+   const hier::MultiIntVector &ratio_to_level_zero,
    const hier::IntVector &min_size,
    const hier::IntVector &max_size,
    const hier::IntVector &bad_interval,
-   const hier::IntVector &cut_factor,
+   const hier::MultiIntVector &cut_factor,
    double flexible_load_tol ) :
    d_min_size(min_size),
    d_max_size(max_size),

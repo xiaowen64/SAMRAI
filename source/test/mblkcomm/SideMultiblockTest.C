@@ -387,7 +387,7 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
                   offset = itr->second.getShift();
                }
 
-               offset *= patch.getPatchGeometry()->getRatio();
+               offset *= patch.getPatchGeometry()->getRatio().getBlockVector(patch_blk_id);
 
                hier::Transformation transformation(rotation, offset,
                                                    encon_blk_id,
@@ -561,7 +561,7 @@ bool SideMultiblockTest::verifyResults(
    hier::BoxContainer singularity(
       hierarchy->getGridGeometry()->getSingularityBoxContainer(block_id));
 
-   hier::IntVector ratio =
+   hier::MultiIntVector ratio =
       hierarchy->getPatchLevel(level_number)->getRatioToLevelZero();
 
    singularity.refine(ratio);

@@ -216,7 +216,7 @@ public:
       const hier::IntVector& max_size,
       const hier::BoxLevel& domain_box_level,
       const hier::IntVector& bad_interval,
-      const hier::IntVector& cut_factor,
+      const hier::MultiIntVector& cut_factor,
       const tbox::RankGroup& rank_group = tbox::RankGroup()) const;
 
    /*!
@@ -443,7 +443,7 @@ private:
    hier::IntVector d_tile_size;
 
    mutable hier::IntVector d_min_size;
-   mutable hier::IntVector d_cut_factor;
+   mutable hier::MultiIntVector d_cut_factor;
    mutable hier::IntVector d_bad_interval;
    mutable std::vector<hier::BoxContainer> d_block_domain_boxes;
 

@@ -1713,7 +1713,7 @@ public:
    void
    unshiftPeriodicImageBoxes(
       BoxContainer& output_boxes,
-      const IntVector& refinement_ratio) const;
+      const MultiIntVector& refinement_ratio) const;
 
    //@}
 

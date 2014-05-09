@@ -51,8 +51,8 @@ public:
     */
    void
    computeRequiredConnectorWidths(
-      std::vector<hier::IntVector>& self_connector_widths,
-      std::vector<hier::IntVector>& fine_connector_widths,
+      std::vector<hier::MultiIntVector>& self_connector_widths,
+      std::vector<hier::MultiIntVector>& fine_connector_widths,
       const hier::PatchHierarchy& patch_hierarchy) const;
 
    /*!
@@ -107,8 +107,8 @@ public:
     */
    void
    computeRequiredFineConnectorWidthsForRecursiveRefinement(
-      std::vector<hier::IntVector>& fine_connector_widths,
-      const hier::IntVector& data_gcw_on_initial_dst_ln,
+      std::vector<hier::MultiIntVector>& fine_connector_widths,
+      const hier::MultiIntVector& data_gcw_on_initial_dst_ln,
       const hier::IntVector& max_stencil_width,
       const hier::PatchHierarchy& patch_hierarchy,
       int initial_dst_ln) const;

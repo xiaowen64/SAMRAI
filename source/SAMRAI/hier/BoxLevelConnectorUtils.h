@@ -123,8 +123,8 @@ public:
    baseNestsInHead(
       bool* locally_nests,
       const Connector& connector,
-      const IntVector& base_swell,
-      const IntVector& head_swell,
+      const MultiIntVector& base_swell,
+      const MultiIntVector& head_swell,
       const MultiIntVector& head_nesting_margin,
       const BoxContainer* domain = 0) const;
 
@@ -178,8 +178,8 @@ public:
       bool* locally_nests,
       const BoxLevel& base,
       const BoxLevel& head,
-      const IntVector& base_swell,
-      const IntVector& head_swell,
+      const MultiIntVector& base_swell,
+      const MultiIntVector& head_swell,
       const MultiIntVector& head_margin,
       const BoxContainer* domain = 0) const;
 
@@ -465,7 +465,7 @@ public:
    addPeriodicImages(
       BoxLevel& box_level,
       const BoxContainer& domain_search_tree,
-      const IntVector& threshold_distance) const;
+      const MultiIntVector& threshold_distance) const;
 
    /*!
     * @brief Add periodic images to a BoxLevel and add new

@@ -125,16 +125,16 @@ int main(
          new hier::PatchHierarchy("PatchHierarchy", geometry));
 
       hierarchy->setMaxNumberOfLevels(2);
-      hierarchy->setRatioToCoarserLevel(ratio, 1);
+      hierarchy->setRatioToCoarserLevel(hier::MultiIntVector(ratio), 1);
 
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_domain.size();
 
       boost::shared_ptr<hier::BoxLevel> layer0(
          boost::make_shared<hier::BoxLevel>(
-            hier::IntVector(dim, 1), geometry));
+            hier::MultiIntVector(hier::IntVector(dim, 1)), geometry));
       boost::shared_ptr<hier::BoxLevel> layer1(
-         boost::make_shared<hier::BoxLevel>(ratio, geometry));
+         boost::make_shared<hier::BoxLevel>(hier::MultiIntVector(ratio), geometry));
 
       hier::BoxContainer::iterator coarse_domain_itr = coarse_domain.begin();
       for (int ib = 0; ib < n_coarse_boxes; ++ib, ++coarse_domain_itr) {

@@ -404,7 +404,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
     * between the regrid_start_time and the regrid_time.
     */
    double dt = (regrid_time - regrid_start_time)
-      / (double)(d_error_coarsen_ratio - 1);
+      / static_cast<double>(d_error_coarsen_ratio - 1);
 
    /*
     * Determine number of advance steps for time integration on the level.
@@ -686,7 +686,7 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
     * between the regrid_start_time and the regrid_time.
     */
    double dt = (regrid_time - regrid_start_time)
-      / (double)(d_error_coarsen_ratio - 1);
+      / static_cast<double>(d_error_coarsen_ratio - 1);
 
    /*
     * Determine start and end times for integration on the coarsened level.
@@ -728,7 +728,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
 
    boost::shared_ptr<hier::PatchLevel> coarsened_level(
       boost::make_shared<hier::PatchLevel>(dim));
-   hier::IntVector coarsen_ratio(dim, d_error_coarsen_ratio);
+   hier::MultiIntVector coarsen_ratio(
+      hier::IntVector(dim, d_error_coarsen_ratio));
    coarsened_level->setCoarsenedPatchLevel(patch_level, coarsen_ratio);
 
    if ((level_number > 0)
@@ -744,7 +745,7 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
     * transfer, these Connectors should have widths equivalent to
     * patch_level<==>patch_level.
     */
-   const hier::IntVector level_to_level_width =
+   const hier::MultiIntVector level_to_level_width =
       hierarchy->getRequiredConnectorWidth(level_number,
          level_number);
 
@@ -758,7 +759,7 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
    tmp_coarsened->setBase(*coarsened_level->getBoxLevel());
    tmp_coarsened->setHead(*coarsened_level->getBoxLevel());
    tmp_coarsened->setWidth(
-      hier::IntVector::ceilingDivide(level_to_level_width, coarsen_ratio), true);
+      hier::MultiIntVector::ceilingDivide(level_to_level_width, coarsen_ratio), true);
    tmp_coarsened->coarsenLocalNeighbors(coarsen_ratio);
    tmp_coarsened->setTranspose(0, false);
 
@@ -795,7 +796,7 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
       coarsened_to_level.setBase(*coarsened_level->getBoxLevel());
       coarsened_to_level.setHead(*patch_level->getBoxLevel());
       coarsened_to_level.setWidth(
-         hier::IntVector::ceilingDivide(level_to_level_width, coarsen_ratio),
+         hier::MultiIntVector::ceilingDivide(level_to_level_width, coarsen_ratio),
          true);
       level_to_coarsened->setTranspose(&coarsened_to_level, false);
 
@@ -928,7 +929,7 @@ StandardTagAndInitialize::coarsestLevelBoxesOK(
 
 void
 StandardTagAndInitialize::checkCoarsenRatios(
-   const std::vector<hier::IntVector>& ratio_to_coarser)
+   const std::vector<hier::MultiIntVector>& ratio_to_coarser)
 {
    if (everUsesRichardsonExtrapolation()) {
       const tbox::Dimension& dim = ratio_to_coarser[1].getDim();
@@ -937,7 +938,7 @@ StandardTagAndInitialize::checkCoarsenRatios(
        * Compute GCD on first coordinate direction of level 1
        */
       int error_coarsen_ratio = 0;
-      int gcd_level1 = ratio_to_coarser[1](0);
+      int gcd_level1 = ratio_to_coarser[1].getBlockVector(hier::BlockId(0))(0);
       if ((gcd_level1 % 2) == 0) {
          error_coarsen_ratio = 2;
       } else if ((gcd_level1 % 3) == 0) {
@@ -956,9 +957,9 @@ StandardTagAndInitialize::checkCoarsenRatios(
       for (int ln = 1; ln < static_cast<int>(ratio_to_coarser.size()); ++ln) {
 
          for (int d = 0; d < dim.getValue(); ++d) {
-            int gcd = GCD(error_coarsen_ratio, ratio_to_coarser[ln](d));
+            int gcd = GCD(error_coarsen_ratio, ratio_to_coarser[ln].getBlockVector(hier::BlockId(0))(d));
             if ((gcd % error_coarsen_ratio) != 0) {
-               gcd = ratio_to_coarser[ln](d);
+               gcd = ratio_to_coarser[ln].getBlockVector(hier::BlockId(0))(d);
                TBOX_ERROR(
                   getObjectName() << "\n"
                                   << "Unable to perform Richardson extrapolation because\n"

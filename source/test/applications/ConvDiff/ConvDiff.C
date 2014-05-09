@@ -989,7 +989,7 @@ void ConvDiff::getFromInput(
                           << endl);
       }
 
-      const hier::IntVector one_vec = hier::IntVector::getOne(d_dim);
+      const hier::IntVector& one_vec(hier::IntVector::getOne(d_dim));
       hier::IntVector periodic = d_grid_geometry->getPeriodicShift(one_vec);
       int num_per_dirs = 0;
       for (int id = 0; id < d_dim.getValue(); ++id) {

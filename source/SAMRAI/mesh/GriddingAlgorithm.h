@@ -622,7 +622,7 @@ private:
       const int index,
       const hier::Connector& tag_level_to_fill_box_level,
       const bool interior_only,
-      const hier::IntVector& fill_box_growth) const;
+      const hier::MultiIntVector& fill_box_growth) const;
 
 
    /*!
@@ -760,7 +760,7 @@ private:
       hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
       const std::vector<hier::BoxContainer>& physical_domain_array,
-      const hier::IntVector& extend_ghosts) const;
+      const hier::MultiIntVector& extend_ghosts) const;
 
    /*!
     * @brief Precompute data used to define proper nesting.
@@ -801,7 +801,7 @@ private:
    growBoxesWithinNestingDomain(
       hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
-      const hier::IntVector& min_size,
+      const hier::MultiIntVector& min_size,
       const int tag_ln) const;
 
    /*!
@@ -821,7 +821,7 @@ private:
    refineNewBoxLevel(
       hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
-      const hier::IntVector& ratio) const;
+      const hier::MultiIntVector& ratio) const;
 
    /*!
     * @brief Renumber Boxes in a BoxLevel.
@@ -943,7 +943,7 @@ private:
    void
    getGriddingParameters(
       hier::IntVector& smallest_patch,
-      hier::IntVector& smallest_box_to_refine,
+      hier::MultiIntVector& smallest_box_to_refine,
       hier::IntVector& largest_patch,
       hier::IntVector& extend_ghosts,
       const int level_number,
@@ -969,7 +969,7 @@ private:
    void
    checkNonnestingUserBoxes(
       const hier::Connector& new_to_tag,
-      const hier::IntVector& nesting_buffer) const;
+      const hier::MultiIntVector& nesting_buffer) const;
 
    /*!
     * @brief Check for boxes that are too close to the physical
@@ -1177,7 +1177,7 @@ private:
    /*!
     * @brief Connector widths to use when clustering.
     */
-   std::vector<hier::IntVector> d_tag_to_cluster_width;
+   std::vector<hier::MultiIntVector> d_tag_to_cluster_width;
 
    /*
     * @brief When regridding level ln+1, the new level ln must not flow into

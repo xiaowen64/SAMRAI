@@ -325,7 +325,7 @@ BoxUtilities::chopBoxes(
    BoxContainer& boxes,
    const IntVector& max_size,
    const IntVector& min_size,
-   const IntVector& cut_factor,
+   const MultiIntVector& cut_factor,
    const IntVector& bad_interval,
    const BoxContainer& physical_boxes)
 {
@@ -333,7 +333,7 @@ BoxUtilities::chopBoxes(
 
    TBOX_ASSERT(min_size > IntVector::getZero(min_size.getDim()));
    TBOX_ASSERT(max_size >= min_size);
-   TBOX_ASSERT(cut_factor > IntVector::getZero(min_size.getDim()));
+   TBOX_ASSERT(cut_factor > MultiIntVector(min_size.getDim(),0));
    TBOX_ASSERT(bad_interval >= IntVector::getZero(min_size.getDim()));
    TBOX_ASSERT(!physical_boxes.isEmpty());
    TBOX_ASSERT(!boxes.isOrdered());
@@ -355,11 +355,13 @@ BoxUtilities::chopBoxes(
             box,
             max_size,
             min_size,
-            cut_factor);
+            cut_factor.getBlockVector(box.getBlockId()));
 
       if (chop_box) {
          TBOX_ASSERT(box.getBlockId().isValid());
          BoxContainer phys_block_boxes(physical_boxes, box.getBlockId());
+         const IntVector& block_cut_factor =
+            cut_factor.getBlockVector(box.getBlockId());
 
          for (int id = 0; id < dim.getValue(); ++id) {
 
@@ -377,7 +379,7 @@ BoxUtilities::chopBoxes(
                   bad_cut_points,
                   box,
                   min_size(id),
-                  cut_factor(id));
+                  block_cut_factor(id));
 
             }
 
@@ -502,10 +504,10 @@ bool
 BoxUtilities::extendBoxesToDomainBoundary(
    BoxContainer& boxes,
    const BoxContainer& domain,
-   const IntVector& ext_ghosts)
+   const MultiIntVector& ext_ghosts)
 {
    TBOX_ASSERT(!domain.isEmpty());
-   TBOX_ASSERT(ext_ghosts >= IntVector::getZero(ext_ghosts.getDim()));
+   TBOX_ASSERT(ext_ghosts >= hier::MultiIntVector(IntVector::getZero(ext_ghosts.getDim())));
 
    bool out_val = false;
 
@@ -532,11 +534,11 @@ bool
 BoxUtilities::extendBoxToDomainBoundary(
    Box& box,
    const BoxContainer& domain,
-   const IntVector& ext_ghosts)
+   const MultiIntVector& ext_ghosts)
 {
 
    TBOX_ASSERT(!domain.isEmpty());
-   TBOX_ASSERT(ext_ghosts >= IntVector::getZero(ext_ghosts.getDim()));
+   TBOX_ASSERT(ext_ghosts >= hier::MultiIntVector(IntVector::getZero(ext_ghosts.getDim())));
 
    const tbox::Dimension& dim(box.getDim());
 
@@ -546,7 +548,7 @@ BoxUtilities::extendBoxToDomainBoundary(
    if (!box.empty()) {
 
       Box test_ghost_box = box;
-      test_ghost_box.grow(ext_ghosts);
+      test_ghost_box.grow(ext_ghosts.getBlockVector(box.getBlockId()));
 
       BoxContainer outside_domain(test_ghost_box);
       outside_domain.removeIntersections(domain);

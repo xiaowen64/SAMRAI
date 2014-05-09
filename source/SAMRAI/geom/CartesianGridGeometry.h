@@ -207,7 +207,7 @@ public:
    boost::shared_ptr<hier::BaseGridGeometry>
    makeRefinedGridGeometry(
       const std::string& fine_geom_name,
-      const hier::IntVector& refine_ratio) const;
+      const hier::MultiIntVector& refine_ratio) const;
 
    /**
     * Create and return a pointer to a coarsened version of this Cartesian grid
@@ -220,7 +220,7 @@ public:
    boost::shared_ptr<hier::BaseGridGeometry>
    makeCoarsenedGridGeometry(
       const std::string& coarse_geom_name,
-      const hier::IntVector& coarsen_ratio) const;
+      const hier::MultiIntVector& coarsen_ratio) const;
 
    /*
     * Compute grid data for patch and assign new geom_CartesianPatchGeometry
@@ -233,7 +233,7 @@ public:
    void
    setGeometryDataOnPatch(
       hier::Patch& patch,
-      const hier::IntVector& ratio_to_level_zero,
+      const hier::MultiIntVector& ratio_to_level_zero,
       const TwoDimBool& touches_regular_bdry) const;
 
    /**

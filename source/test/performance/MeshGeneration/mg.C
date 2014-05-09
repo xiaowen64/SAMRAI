@@ -76,24 +76,24 @@ void
 refineHead(
    hier::BoxLevel& head,
    hier::Connector& ref_to_head,
-   const hier::IntVector &refinement_ratio);
+   const hier::MultiIntVector &refinement_ratio);
 
 void outputPostcluster(
    const hier::BoxLevel &cluster,
    const hier::BoxLevel &ref,
-   const hier::IntVector &ref_to_cluster_width,
+   const hier::MultiIntVector &ref_to_cluster_width,
    const std::string &border );
 
 void outputPrebalance(
    const hier::BoxLevel &pre,
    const hier::BoxLevel &ref,
-   const hier::IntVector &pre_width,
+   const hier::MultiIntVector &pre_width,
    const std::string &border );
 
 void outputPostbalance(
    const hier::BoxLevel &post,
    const hier::BoxLevel &ref,
-   const hier::IntVector &post_width,
+   const hier::MultiIntVector &post_width,
    const std::string &border );
 
 boost::shared_ptr<mesh::BoxGeneratorStrategy>
@@ -132,13 +132,13 @@ class NestingLevelConnectorWidthRequestor :
 public:
    virtual void
    computeRequiredConnectorWidths(
-      std::vector<hier::IntVector>& self_connector_widths,
-      std::vector<hier::IntVector>& fine_connector_widths,
+      std::vector<hier::MultiIntVector>& self_connector_widths,
+      std::vector<hier::MultiIntVector>& fine_connector_widths,
       const hier::PatchHierarchy& patch_hierarchy) const
       {
          self_connector_widths.clear();
          self_connector_widths.reserve(patch_hierarchy.getMaxNumberOfLevels());
-         const hier::IntVector &one = hier::IntVector::getOne((patch_hierarchy.getDim()));
+         hier::MultiIntVector one(patch_hierarchy.getDim(), 1);
          for ( int ln=0; ln<patch_hierarchy.getMaxNumberOfLevels(); ++ln ) {
             self_connector_widths.push_back(
                one * patch_hierarchy.getProperNestingBuffer(ln));
@@ -244,7 +244,8 @@ int main(
       const tbox::Dimension
          dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
-      const hier::IntVector &zero_vec = hier::IntVector::getZero(dim);
+      hier::MultiIntVector::setNumberBlocks(1);
+      hier::MultiIntVector zero_vec(hier::IntVector::getZero(dim));
 
       std::string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
@@ -426,7 +427,7 @@ int main(
       const int max_levels = hierarchy->getMaxNumberOfLevels();
 
       hier::BoxLevel domain_box_level(
-         hier::IntVector(dim, 1),
+         hier::MultiIntVector(dim, 1),
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
          hier::BoxLevel::GLOBALIZED);
@@ -488,7 +489,7 @@ int main(
 
       boost::shared_ptr<hier::BoxLevel> L0(
          boost::make_shared<hier::BoxLevel>(
-            hier::IntVector(dim, 1), grid_geometry));
+            hier::MultiIntVector(dim, 1), grid_geometry));
 
       {
 
@@ -522,8 +523,8 @@ int main(
          oca.findOverlapsWithTranspose(domain_to_L0,
             domain_box_level,
             *L0,
-            hier::IntVector(dim, 2),
-            hier::IntVector(dim, 2));
+            hier::MultiIntVector(dim, 2),
+            hier::MultiIntVector(dim, 2));
          hier::Connector* L0_to_domain = &domain_to_L0->getTranspose();
 
          boost::shared_ptr<mesh::LoadBalanceStrategy> lb0 =
@@ -548,7 +549,7 @@ int main(
                hierarchy->getLargestPatchSize(0),
                domain_box_level,
                hier::IntVector::getOne(dim),
-               hier::IntVector::getOne(dim));
+               hier::MultiIntVector(hier::IntVector::getOne(dim)));
          }
 
          sortNodes(*L0,
@@ -596,11 +597,12 @@ int main(
          const int finer_ln = coarser_ln + 1;
 
          // Get the prebalanced L1:
-         const hier::IntVector required_connector_width =
+         const hier::MultiIntVector required_connector_width =
             hierarchy->getRequiredConnectorWidth(coarser_ln, finer_ln);
-         const hier::IntVector min_size = hier::IntVector::ceilingDivide(
-            hierarchy->getSmallestPatchSize(finer_ln),
-            hierarchy->getRatioToCoarserLevel(finer_ln) );
+         const hier::MultiIntVector min_size =
+            hier::MultiIntVector::ceilingDivide(
+               hier::MultiIntVector(hierarchy->getSmallestPatchSize(finer_ln)),
+               hierarchy->getRatioToCoarserLevel(finer_ln) );
 
 
          /*
@@ -688,6 +690,7 @@ int main(
             L1->getMPI());
 
          if ( load_balance[finer_ln] ) {
+            TBOX_ASSERT(hierarchy->getGridGeometry()->getNumberBlocks() == 1);
             tbox::pout << "\tPartitioning..." << std::endl;
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             lb1->loadBalanceBoxLevel(
@@ -698,7 +701,7 @@ int main(
                hierarchy->getSmallestPatchSize(finer_ln),
                hierarchy->getLargestPatchSize(finer_ln),
                domain_box_level,
-               hierarchy->getRatioToCoarserLevel(finer_ln),
+               hierarchy->getRatioToCoarserLevel(finer_ln).getBlockVector(hier::BlockId(0)),
                hierarchy->getRatioToCoarserLevel(finer_ln));
          }
 
@@ -750,11 +753,12 @@ int main(
          const int finer_ln = coarser_ln + 1;
 
          // Get the prebalanced L2:
-         const hier::IntVector required_connector_width =
+         const hier::MultiIntVector required_connector_width =
             hierarchy->getRequiredConnectorWidth(coarser_ln, finer_ln);
-         const hier::IntVector min_size = hier::IntVector::ceilingDivide(
-            hierarchy->getSmallestPatchSize(finer_ln),
-            hierarchy->getRatioToCoarserLevel(finer_ln) );
+         const hier::MultiIntVector min_size =
+            hier::MultiIntVector::ceilingDivide(
+               hier::MultiIntVector(hierarchy->getSmallestPatchSize(finer_ln)),
+               hierarchy->getRatioToCoarserLevel(finer_ln) );
 
 
          /*
@@ -853,7 +857,7 @@ int main(
                hierarchy->getSmallestPatchSize(finer_ln),
                hierarchy->getLargestPatchSize(finer_ln),
                domain_box_level,
-               hierarchy->getRatioToCoarserLevel(finer_ln),
+               hierarchy->getRatioToCoarserLevel(finer_ln).getBlockVector(hier::BlockId(0)),
                hierarchy->getRatioToCoarserLevel(finer_ln));
          }
 
@@ -983,12 +987,12 @@ int main(
 void outputPostcluster(
    const hier::BoxLevel &cluster,
    const hier::BoxLevel &ref,
-   const hier::IntVector &ref_to_cluster_width,
+   const hier::MultiIntVector &ref_to_cluster_width,
    const std::string &border )
 {
    cluster.cacheGlobalReducedData();
 
-   const hier::IntVector cluster_to_ref_width =
+   const hier::MultiIntVector cluster_to_ref_width =
       hier::Connector::convertHeadWidthToBase(
          cluster.getRefinementRatio(),
          ref.getRefinementRatio(),
@@ -1031,12 +1035,12 @@ void outputPostcluster(
 void outputPrebalance(
    const hier::BoxLevel &pre,
    const hier::BoxLevel &ref,
-   const hier::IntVector &pre_width,
+   const hier::MultiIntVector &pre_width,
    const std::string &border )
 {
    pre.cacheGlobalReducedData();
 
-   const hier::IntVector ref_width =
+   const hier::MultiIntVector ref_width =
       hier::Connector::convertHeadWidthToBase(
          ref.getRefinementRatio(),
          pre.getRefinementRatio(),
@@ -1076,12 +1080,12 @@ void outputPrebalance(
 void outputPostbalance(
    const hier::BoxLevel &post,
    const hier::BoxLevel &ref,
-   const hier::IntVector &post_width,
+   const hier::MultiIntVector &post_width,
    const std::string &border )
 {
    post.cacheGlobalReducedData();
 
-   const hier::IntVector ref_width =
+   const hier::MultiIntVector ref_width =
       hier::Connector::convertHeadWidthToBase(
          ref.getRefinementRatio(),
          post.getRefinementRatio(),
@@ -1171,7 +1175,7 @@ void sortNodes(
 void refineHead(
    hier::BoxLevel& head,
    hier::Connector& ref_to_head,
-   const hier::IntVector &refinement_ratio )
+   const hier::MultiIntVector &refinement_ratio )
 {
    hier::Connector& head_to_ref = ref_to_head.getTranspose();
 
@@ -1181,7 +1185,7 @@ void refineHead(
       head.getRefinementRatio()*refinement_ratio);
    head.finalize();
 
-   const hier::IntVector& head_to_ref_width =
+   hier::MultiIntVector head_to_ref_width =
       refinement_ratio * head_to_ref.getConnectorWidth();
    head_to_ref.setBase(head);
    head_to_ref.setWidth(head_to_ref_width, true);
@@ -1386,10 +1390,12 @@ void enforceNesting(
    /*
     * Make L1 nest inside L0 by nesting_width.
     */
-   const hier::IntVector nesting_width(dim, hierarchy->getProperNestingBuffer(coarser_ln));
-   const hier::IntVector nesting_width_transpose = hier::Connector::convertHeadWidthToBase(L0.getRefinementRatio(),
-                                                                                           L1.getRefinementRatio(),
-                                                                                           nesting_width);
+   const hier::MultiIntVector nesting_width(dim, hierarchy->getProperNestingBuffer(coarser_ln));
+   const hier::MultiIntVector nesting_width_transpose =
+      hier::Connector::convertHeadWidthToBase(
+         L0.getRefinementRatio(),
+         L1.getRefinementRatio(),
+         nesting_width);
    boost::shared_ptr<hier::BoxLevel> L1nested;
    boost::shared_ptr<hier::MappingConnector> L1_to_L1nested;
    hier::BoxLevelConnectorUtils blcu;
@@ -1413,7 +1419,7 @@ void enforceNesting(
    blcu.computeInternalParts( L1nested,
                               L1_to_L1nested,
                               L0_to_L1.getTranspose(),
-                              hier::IntVector::getZero(dim),
+                              hier::MultiIntVector(dim,0),
                               hierarchy->getGridGeometry()->getDomainSearchTree() );
    mca.modify( L0_to_L1,
                *L1_to_L1nested,

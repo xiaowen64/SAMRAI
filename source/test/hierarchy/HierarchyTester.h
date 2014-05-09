@@ -135,7 +135,7 @@ private:
    /*
     * Ratio to coarsen/refine hierarchy during test.
     */
-   IntVector d_ratio;
+   MultiIntVector d_ratio;
 
    /*
     * Initial patch hierarchy set up based on input data and second hierarchy

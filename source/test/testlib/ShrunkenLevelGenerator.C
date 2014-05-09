@@ -103,7 +103,7 @@ void ShrunkenLevelGenerator::setTags(
       hierarchy,
       tag_ln,
       tag_data_id,
-      hier::IntVector::getZero(d_dim),
+      hier::MultiIntVector(hier::IntVector::getZero(d_dim)),
       &d_shrink_distance[1][0]);
    exact_tagging = true;
    return;
@@ -207,7 +207,7 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int tag_ln,
    int tag_data_id,
-   const hier::IntVector &shrink_cells,
+   const hier::MultiIntVector &shrink_cells,
    const double *shrink_distance )
 {
 
@@ -231,17 +231,24 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
     * the largest of properly converted values for shrink_cells,
     * shrink_distance and nesting width.
     */
-   hier::IntVector shrink_width(dim, hierarchy->getProperNestingBuffer(tag_ln));
+   hier::MultiIntVector shrink_width(hier::IntVector(dim,hierarchy->getProperNestingBuffer(tag_ln)));
    shrink_width.max(shrink_cells);
 
+   const int nblocks = hierarchy->getGridGeometry()->getNumberBlocks();
+   std::vector<hier::IntVector> shrink_vector(nblocks, hier::IntVector::getZero(dim));
    const double *ref_dx = grid_geometry->getDx();
-   for ( int i=0; i<dim.getValue(); ++i ) {
-      double h = ref_dx[i]/Ltag.getRefinementRatio()(i);
-      shrink_width(i) = tbox::MathUtilities<int>::Max(
-         static_cast<int>(0.5 + shrink_distance[i]/h),
-         shrink_width(i) );
+   for (int b = 0; b < nblocks; ++b) {
+      hier::BlockId block_id(b);
+      const hier::IntVector& ref_ratio = Ltag.getRefinementRatio().getBlockVector(block_id);
+      const hier::IntVector& block_shrink = shrink_width.getBlockVector(block_id);
+      for ( int i=0; i<dim.getValue(); ++i ) {
+         double h = ref_dx[i]/ref_ratio(i);
+         shrink_vector[b](i) = tbox::MathUtilities<int>::Max(
+            static_cast<int>(0.5 + shrink_distance[i]/h),
+            block_shrink(i) );
+      }
    }
-
+   shrink_width = hier::MultiIntVector(shrink_vector);
 
    boost::shared_ptr<hier::BoxLevel> tagfootprint;
    boost::shared_ptr<hier::MappingConnector> Ltag_to_tagfootprint;

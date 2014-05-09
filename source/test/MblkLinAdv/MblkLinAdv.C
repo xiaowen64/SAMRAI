@@ -1997,7 +1997,7 @@ void MblkLinAdv::setMappedGridOnPatch(
    // compute level domain
    const boost::shared_ptr<hier::PatchGeometry> patch_geom(
       patch.getPatchGeometry());
-   hier::IntVector ratio = patch_geom->getRatio();
+   hier::MultiIntVector ratio = patch_geom->getRatio();
    hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
       hier::BlockId(block_number));

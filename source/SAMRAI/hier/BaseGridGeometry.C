@@ -129,6 +129,8 @@ BaseGridGeometry::BaseGridGeometry(
       itr->setId(box_id);
    }
    d_number_blocks = static_cast<int>(block_numbers.size());
+   MultiIntVector::setNumberBlocks(d_number_blocks);
+
    d_block_neighbors.resize(d_number_blocks);
 
    setPhysicalDomain(domain, d_number_blocks);
@@ -163,6 +165,7 @@ BaseGridGeometry::BaseGridGeometry(
       itr->setId(box_id);
    }
    d_number_blocks = static_cast<int>(block_numbers.size());
+   MultiIntVector::setNumberBlocks(d_number_blocks);
    d_block_neighbors.resize(d_number_blocks);
 
    setPhysicalDomain(domain, d_number_blocks);
@@ -512,11 +515,10 @@ BaseGridGeometry::setBoundaryBoxes(
 
    d_max_data_ghost_width = ghost_width;
 
-   MultiIntVector one_ratio(IntVector::getOne(d_dim), BlockId(d_number_blocks-1));
    computeBoundaryBoxesOnLevel(
       boundaries,
       level,
-      getPeriodicShift(one_ratio),
+      getPeriodicShift(IntVector::getOne(d_dim)),
       d_max_data_ghost_width,
       domain);
 
@@ -613,7 +615,7 @@ BaseGridGeometry::getFromRestart()
    }
 
    d_number_blocks = db->getInteger("num_blocks");
-
+   MultiIntVector::setNumberBlocks(d_number_blocks);
    d_singularity.resize(d_number_blocks);
    d_block_neighbors.resize(d_number_blocks);
 
@@ -725,6 +727,8 @@ BaseGridGeometry::getFromInput(
             << "num_blocks is >1 for an inherently single block grid geometry."
             << std::endl);
       }
+
+      MultiIntVector::setNumberBlocks(d_number_blocks); 
 
       std::string domain_name;
       BoxContainer domain;
@@ -882,8 +886,7 @@ BaseGridGeometry::putToRestart(
    restart_db->putInteger("d_number_of_block_singularities",
       d_number_of_block_singularities);
 
-   MultiIntVector one_ratio(IntVector::getOne(dim), BlockId(d_number_blocks-1));
-   IntVector level0_shift(getPeriodicShift(one_ratio));
+   IntVector level0_shift(getPeriodicShift(IntVector::getOne(dim)));
    int* temp_shift = &level0_shift[0];
    restart_db->putIntegerArray("periodic_dimension",
       temp_shift,
@@ -1235,9 +1238,9 @@ BaseGridGeometry::computePhysicalDomain(
          tmp_rat(id) = abs(block_ratio(id));
       }
       if (coarsen) {
-         domain_boxes.coarsen(MultiIntVector(tmp_rat, block_id));
+         domain_boxes.coarsen(MultiIntVector(tmp_rat));
       } else {
-         domain_boxes.refine(MultiIntVector(tmp_rat, block_id));
+         domain_boxes.refine(MultiIntVector(tmp_rat));
       }
    }
 }
@@ -1299,9 +1302,9 @@ BaseGridGeometry::computePhysicalDomain(
          tmp_rat(id) = abs(block_ratio(id));
       }
       if (coarsen) {
-         box_level.coarsenBoxes(box_level, MultiIntVector(tmp_rat, block_id), MultiIntVector(IntVector::getOne(d_dim),block_id));
+         box_level.coarsenBoxes(box_level, MultiIntVector(tmp_rat), MultiIntVector(IntVector::getOne(d_dim)));
       } else {
-         box_level.refineBoxes(box_level, MultiIntVector(tmp_rat,block_id), MultiIntVector(IntVector::getOne(d_dim),block_id));
+         box_level.refineBoxes(box_level, MultiIntVector(tmp_rat), MultiIntVector(IntVector::getOne(d_dim)));
       }
    }
 }
@@ -1465,6 +1468,7 @@ BaseGridGeometry::setPhysicalDomain(
 
    d_domain_is_single_box.resize(number_blocks);
    d_number_blocks = number_blocks;
+   MultiIntVector::setNumberBlocks(d_number_blocks);
    LocalId local_id(0);
 
    for (int b = 0; b < number_blocks; ++b) {
@@ -1613,7 +1617,7 @@ BaseGridGeometry::initializePeriodicShift(
 
 IntVector
 BaseGridGeometry::getPeriodicShift(
-   const MultiIntVector& ratio_to_level_zero) const
+   const IntVector& ratio_to_level_zero) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio_to_level_zero);
 
@@ -1631,7 +1635,7 @@ BaseGridGeometry::getPeriodicShift(
        * This is single-block, so only use zero BlockId.
        */
       const IntVector& block_ratio =
-         ratio_to_level_zero.getBlockVector(BlockId(0));
+         ratio_to_level_zero;
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       /*
@@ -2331,7 +2335,7 @@ void BaseGridGeometry::findSingularities(
       grow_base.grow(IntVector::getOne(d_dim));
 
       std::vector<const Box*> nbr_boxes;
-      chopped_domain.findOverlapBoxes(nbr_boxes, grow_base, MultiIntVector(IntVector::getOne(d_dim), base_block));
+      chopped_domain.findOverlapBoxes(nbr_boxes, grow_base, MultiIntVector(IntVector::getOne(d_dim)));
 
       const std::map<BlockId,Neighbor>& nbrs_of_base =
          d_block_neighbors[base_block.getBlockValue()];
@@ -2366,7 +2370,7 @@ void BaseGridGeometry::findSingularities(
          Box transformed_nbr_box(nbr_box);
          if (nbr_block != base_block) {
             transformBox(transformed_nbr_box,
-                         MultiIntVector(IntVector::getOne(d_dim), nbr_block),
+                         MultiIntVector(IntVector::getOne(d_dim)),
                          base_block,
                          nbr_block);
          }
@@ -2409,7 +2413,7 @@ void BaseGridGeometry::findSingularities(
             Box transformed_base_box(base_box);
             if (nbr_block != base_block) {
                transformBox(transformed_base_box,
-                            MultiIntVector(IntVector::getOne(d_dim), nbr_block),
+                            MultiIntVector(IntVector::getOne(d_dim)),
                             nbr_block,
                             base_block);
             }
@@ -2588,7 +2592,7 @@ BaseGridGeometry::chopDomain(
 
                      Box nbr_box(*ni);
                      transformBox(nbr_box,
-                                  MultiIntVector(IntVector::getOne(d_dim), nbr_block),
+                                  MultiIntVector(IntVector::getOne(d_dim)),
                                   base_block,
                                   nbr_block);
                      Box nbr_node_box(nbr_box);

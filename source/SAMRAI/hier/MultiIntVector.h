@@ -23,15 +23,27 @@ class MultiIntVector
 {
 public:
 
-   MultiIntVector(
-      const IntVector& ratio,
-      const BlockId& block_id);
+//   MultiIntVector(
+//      const IntVector& ratio,
+//      const BlockId& block_id);
+   static void setNumberBlocks(int number_blocks) {
+      s_max_blocks = number_blocks;
+   }
 
    explicit MultiIntVector(
       const IntVector& ratio); 
 
    explicit MultiIntVector(
       const std::vector<IntVector>& ratio);
+
+   MultiIntVector(
+      const tbox::Dimension& dim,
+      int value);
+
+   MultiIntVector(
+      const tbox::Dimension& dim,
+      int value,
+      int nblocks);
 
    /*!
     * @brief Copy constructor 
@@ -44,12 +56,29 @@ public:
    void clear()
    {
       d_ratio.clear();
-      d_is_multiblock = false;
    }
 
    bool empty() const
    {
       return d_ratio.empty();
+   }
+
+   void set(const std::vector<IntVector>& ratio)
+   {
+      clear();
+      d_ratio = ratio;
+      if (d_ratio.size() > s_max_blocks) {
+         s_max_blocks = d_ratio.size();
+      } 
+   }
+
+   void setAll(const IntVector& ratio)
+   {
+      TBOX_ASSERT(s_max_blocks >= 1);
+      d_ratio.resize(s_max_blocks, ratio);
+      for (int b = 0; b < d_ratio.size(); ++b) {
+         d_ratio[b] = ratio;
+      }
    }
 
    const tbox::Dimension& getDim() const
@@ -83,10 +112,6 @@ public:
       return (d_ratio[block_id.getBlockValue()]);
    }  
 
-   bool isMultiblock() const
-   {
-      return d_is_multiblock;
-   }
 
    /**
     * @brief Return the component-wise minimum of two integer vector objects.
@@ -295,6 +320,17 @@ public:
       return tmp;
    }
 
+   MultiIntVector
+   operator * (
+      const int& rhs) const
+   {
+      MultiIntVector tmp = *this;
+      for (int b = 0; b < d_ratio.size(); ++b) {
+         tmp.d_ratio[b] *= rhs;
+      }
+      return tmp;
+   }
+
    void
    ceilingDivide(const MultiIntVector& rhs)
    {
@@ -337,6 +373,18 @@ public:
       }
       return *this;
    }
+
+   MultiIntVector
+   operator / (
+      const int& rhs) const
+   {
+      MultiIntVector tmp = *this;
+      for (int b = 0; b < d_ratio.size(); ++b) {
+         tmp.d_ratio[b] /= rhs;
+      }
+      return tmp;
+   }
+
 
    /**
     * @brief Returns true if each integer in vector is less or equal to
@@ -469,7 +517,6 @@ private:
 
    std::vector<IntVector> d_ratio;
 
-   bool d_is_multiblock; 
 
 };
 

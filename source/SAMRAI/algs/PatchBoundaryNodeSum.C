@@ -485,7 +485,7 @@ PatchBoundaryNodeSum::setupSum(
          d_cfbdry_tmp_level[fine_level_num]->
             setCoarsenedPatchLevel(fine_level,
                fine_level->getRatioToCoarserLevel());
-         hier::IntVector crse_tmp_gcw =
+         hier::MultiIntVector crse_tmp_gcw =
             d_hierarchy->getPatchLevel(crse_level_num)->findConnector(
                *d_hierarchy->getPatchLevel(fine_level_num),
                d_hierarchy->getRequiredConnectorWidth(crse_level_num, fine_level_num, true),
@@ -500,11 +500,11 @@ PatchBoundaryNodeSum::setupSum(
          const hier::Connector& crse_to_domain =
             d_cfbdry_tmp_level[fine_level_num]->getBoxLevel()->createConnector(
                   d_hierarchy->getDomainBoxLevel(),
-                  hier::IntVector::getZero(dim));
+                  hier::MultiIntVector(hier::IntVector::getZero(dim)));
          const hier::Connector& crse_to_crse =
             d_cfbdry_tmp_level[fine_level_num]->createConnector(
                   *d_cfbdry_tmp_level[fine_level_num],
-                  hier::IntVector::getOne(dim));
+                  hier::MultiIntVector(hier::IntVector::getOne(dim)));
 
          d_cfbdry_copy_schedule[fine_level_num] =
             cfbdry_copy_algorithm.createSchedule(
@@ -705,7 +705,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
 
    const tbox::Dimension& dim(fine_level->getDim());
 
-   const hier::IntVector& ratio(fine_level->getRatioToCoarserLevel());
+   const hier::MultiIntVector& ratio(fine_level->getRatioToCoarserLevel());
    const int level_number(fine_level->getLevelNumber());
 
    for (hier::PatchLevel::iterator ip(fine_level->begin());
@@ -720,6 +720,9 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
          const boost::shared_ptr<hier::Patch>& fpatch = *ip;
          boost::shared_ptr<hier::Patch> cfpatch(
             coarsened_fine_level->getPatch(fpatch->getGlobalId()));
+
+         const hier::IntVector& fpatch_ratio =
+            ratio.getBlockVector(fpatch->getBox().getBlockId());
 
          const hier::Index& filo = fpatch->getBox().lower();
          const hier::Index& fihi = fpatch->getBox().upper();
@@ -953,7 +956,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
                   fihi(0), fihi(1),
                   cilo(0), cilo(1),
                   cihi(0), cihi(1),
-                  &ratio[0],
+                  &fpatch_ratio[0],
                   node_data->getDepth(),
                   node_gcw(0), node_gcw(1),
                   node_data->getPointer(),     // node data dst
@@ -1011,7 +1014,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
                   fihi(0), fihi(1), fihi(2),
                   cilo(0), cilo(1), cilo(2),
                   cihi(0), cihi(1), cihi(2),
-                  &ratio[0],
+                  &fpatch_ratio[0],
                   node_data->getDepth(),
                   node_gcw(0), node_gcw(1), node_gcw(2),
                   node_data->getPointer(),     // node data dst
@@ -1046,7 +1049,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
                         bboxilo(0), bboxilo(1),
                         bboxihi(0), bboxihi(1),
                         bbox_loc,
-                        &ratio[0],
+                        &fpatch_ratio[0],
                         node_data->getDepth(),
                         node_gcw(0), node_gcw(1),
                         node_data->getPointer());
@@ -1061,7 +1064,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
                         bboxilo(0), bboxilo(1), bboxilo(2),
                         bboxihi(0), bboxihi(1), bboxihi(2),
                         bbox_loc,
-                        &ratio[0],
+                        &fpatch_ratio[0],
                         node_data->getDepth(),
                         node_gcw(0), node_gcw(1), node_gcw(2),
                         node_data->getPointer());

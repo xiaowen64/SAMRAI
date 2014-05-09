@@ -58,8 +58,8 @@ public:
     */
    void
    computeRequiredConnectorWidths(
-      std::vector<hier::IntVector>& self_connector_widths,
-      std::vector<hier::IntVector>& fine_connector_widths,
+      std::vector<hier::MultiIntVector>& self_connector_widths,
+      std::vector<hier::MultiIntVector>& fine_connector_widths,
       const hier::PatchHierarchy& patch_hierarchy) const;
 
 private:
@@ -76,7 +76,7 @@ private:
     */
    int
    computeCoarsenRatio(
-      const std::vector<hier::IntVector>& ratios_to_coarser) const;
+      const std::vector<hier::MultiIntVector>& ratios_to_coarser) const;
 
 };
 

@@ -38,8 +38,8 @@ GriddingAlgorithmConnectorWidthRequestor::GriddingAlgorithmConnectorWidthRequest
  */
 void
 GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
-   std::vector<hier::IntVector>& self_connector_widths,
-   std::vector<hier::IntVector>& fine_connector_widths,
+   std::vector<hier::MultiIntVector>& self_connector_widths,
+   std::vector<hier::MultiIntVector>& fine_connector_widths,
    const hier::PatchHierarchy& patch_hierarchy) const
 {
    if ( !d_tag_to_cluster_width.empty() ) {
@@ -56,8 +56,11 @@ GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
    const hier::IntVector max_stencil_width(
       patch_hierarchy.getGridGeometry()->getMaxTransferOpStencilWidth(dim));
 
-   fine_connector_widths.resize(max_levels - 1, hier::IntVector(dim));
-   self_connector_widths.resize(max_levels, hier::IntVector(dim));
+   fine_connector_widths.resize(max_levels - 1,
+      hier::MultiIntVector(hier::IntVector::getZero(dim)));
+   self_connector_widths.resize(max_levels,
+      hier::MultiIntVector(hier::IntVector::getZero(dim)));
+
 
    /*
     * Compute the Connector width needed to ensure all edges are found
@@ -71,7 +74,7 @@ GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
     * computeCoarserLevelConnectorWidthsFromFines() once the finer
     * level's Connector widths are computed.
     */
-   self_connector_widths[max_levels - 1] = max_ghost_width;
+   self_connector_widths[max_levels - 1].setAll(max_ghost_width);
    for (int ln = max_levels - 2; ln > -1; --ln) {
 
       computeCoarserLevelConnectorWidthsFromFines(
@@ -87,7 +90,8 @@ GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
        * Must be big enough for GriddingAlgorithm::computeProperNestingData().
        */
       self_connector_widths[ln].max(
-         hier::IntVector(dim,patch_hierarchy.getProperNestingBuffer(ln)));
+         hier::MultiIntVector(
+            hier::IntVector(dim,patch_hierarchy.getProperNestingBuffer(ln))));
 
       /*
        * Must be big enough for GriddingAlgorithm to guarantee that
@@ -124,10 +128,10 @@ GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
 
 void
 GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFromFines(
-   hier::IntVector& coarse_to_fine_width,
-   hier::IntVector& coarse_to_coarse_width,
-   const hier::IntVector& fine_to_fine_width,
-   const hier::IntVector& fine_to_coarse_ratio,
+   hier::MultiIntVector& coarse_to_fine_width,
+   hier::MultiIntVector& coarse_to_coarse_width,
+   const hier::MultiIntVector& fine_to_fine_width,
+   const hier::MultiIntVector& fine_to_coarse_ratio,
    const hier::IntVector& nesting_buffer_at_fine,
    const hier::IntVector& max_stencil_width_at_coarse,
    const hier::IntVector& max_ghost_width_at_coarse) const
@@ -154,7 +158,7 @@ GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFrom
     * width.
     */
    coarse_to_fine_width =
-      hier::IntVector::ceilingDivide(fine_to_fine_width, fine_to_coarse_ratio);
+      hier::MultiIntVector::ceilingDivide(fine_to_fine_width, fine_to_coarse_ratio);
    /*
     * Coarse-to-fine width must be big enough for the [ln] -> [ln+1]
     * Connector to see all the [ln+1] Boxes that are used to add
@@ -183,7 +187,8 @@ GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFrom
     * be have at least a 2-cell GCW (in L2 index space).
     */
    coarse_to_fine_width.max(
-      hier::IntVector::ceilingDivide(nesting_buffer_at_fine, fine_to_coarse_ratio));
+      hier::MultiIntVector::ceilingDivide(
+         hier::MultiIntVector(nesting_buffer_at_fine), fine_to_coarse_ratio));
 
    /*
     * Coarse-to-coarse Connectors must cover all data that the finer
@@ -194,7 +199,7 @@ GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFrom
    /*
     * Must cover coarse level's own ghost cells.
     */
-   coarse_to_coarse_width.max(max_ghost_width_at_coarse);
+   coarse_to_coarse_width.max(hier::MultiIntVector(max_ghost_width_at_coarse));
 }
 
 
@@ -205,7 +210,7 @@ GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFrom
  */
 void
 GriddingAlgorithmConnectorWidthRequestor::setTagToClusterWidth(
-      std::vector<hier::IntVector> &tag_to_cluster_width)
+      std::vector<hier::MultiIntVector> &tag_to_cluster_width)
 {
    d_tag_to_cluster_width = tag_to_cluster_width;
 }

@@ -1535,7 +1535,7 @@ class BoxNeighborhoodCollection
        */
       void
       coarsenNeighbors(
-         const IntVector& ratio);
+         const MultiIntVector& ratio);
 
       /*!
        * @brief Refines the neighbors of each base Box by the given ratio.
@@ -1544,7 +1544,7 @@ class BoxNeighborhoodCollection
        */
       void
       refineNeighbors(
-         const IntVector& ratio);
+         const MultiIntVector& ratio);
 
       /*!
        * @brief Grows the neighbors of each base Box by the given amount.
@@ -1553,7 +1553,7 @@ class BoxNeighborhoodCollection
        */
       void
       growNeighbors(
-         const IntVector& growth);
+         const MultiIntVector& growth);
 
       //@}
 

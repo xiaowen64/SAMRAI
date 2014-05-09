@@ -66,7 +66,7 @@ PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
 
    dst_to_fill.reset(new hier::Connector(dst_box_level,
                                          *fill_box_level,
-                                         fill_ghost_width));
+                                         hier::MultiIntVector(fill_ghost_width)));
 
    const hier::BoxContainer& dst_boxes = dst_box_level.getBoxes();
 
@@ -77,7 +77,7 @@ PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
 
    const hier::Connector& dst_to_dst =
       dst_box_level.findConnector(dst_box_level,
-         dst_to_dst_width,
+         hier::MultiIntVector(dst_to_dst_width),
          hier::CONNECTOR_IMPLICIT_CREATION_RULE,
          true);
 
@@ -113,7 +113,7 @@ PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
             hier::IntVector offset(
                grid_geometry->getOffset(dst_block_id, nbr_block_id));
 
-            offset *= (dst_box_level.getRefinementRatio());
+            offset *= dst_box_level.getRefinementRatio().getBlockVector(dst_block_id);
 
             hier::Transformation transformation(rotation, offset,
                                                 nbr_block_id, dst_block_id);

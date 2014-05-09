@@ -1210,7 +1210,7 @@ private:
     * tbox::Array of mesh-scaling ratios from each level to reference level
     * (i.e., coarsest level).
     */
-   std::vector<hier::IntVector> d_scaling_ratios;
+   std::vector<hier::MultiIntVector> d_scaling_ratios;
 
    /*
     * Default data writer for user defined data.

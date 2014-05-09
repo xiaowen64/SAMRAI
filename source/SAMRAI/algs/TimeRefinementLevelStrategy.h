@@ -106,7 +106,7 @@ public:
    getMaxFinerLevelDt(
       const int finer_level_number,
       const double coarse_dt,
-      const hier::IntVector& ratio) = 0;
+      const hier::MultiIntVector& ratio) = 0;
 
    /**
     * Advance data on all patches on specified patch level from current time

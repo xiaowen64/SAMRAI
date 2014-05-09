@@ -391,7 +391,7 @@ void SinusoidalFrontTagger::computePatchData(
    const int ln = patch.getPatchLevelNumber();
    const boost::shared_ptr<hier::PatchLevel> level(
       d_hierarchy->getPatchLevel(ln));
-   const hier::IntVector& ratio(level->getRatioToLevelZero());
+   const hier::MultiIntVector& ratio(level->getRatioToLevelZero());
 
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
@@ -419,7 +419,7 @@ void SinusoidalFrontTagger::computePatchData(
          }
       }
    }
-   buffer *= ratio;
+   buffer *= ratio.getBlockVector(patch.getBox().getBlockId());
 
    t_setup->stop();
 

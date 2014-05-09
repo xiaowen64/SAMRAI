@@ -1385,7 +1385,7 @@ BoxContainer::getOwners(
 void
 BoxContainer::unshiftPeriodicImageBoxes(
    BoxContainer& output_boxes,
-   const IntVector& refinement_ratio) const
+   const MultiIntVector& refinement_ratio) const
 {
    if (!d_ordered) {
       TBOX_ERROR("unshiftPeriodicImageBoxes called on unordered container."
@@ -1403,7 +1403,8 @@ BoxContainer::unshiftPeriodicImageBoxes(
 
       for (const_iterator na = begin(); na != end(); ++na) {
          if (na->isPeriodicImage()) {
-            const Box unshifted_box(*na, zero_shift_number, refinement_ratio);
+            const Box unshifted_box(*na, zero_shift_number,
+                                    refinement_ratio.getBlockVector(na->getBlockId()));
             hint = output_boxes.insert(hint, unshifted_box);
          } else {
             hint = output_boxes.insert(hint, *na);

@@ -167,7 +167,7 @@ int main(
       plog << "Input database after running..." << std::endl;
       input_db->printClassData(plog);
 
-      const hier::IntVector& one_vector(hier::IntVector::getOne(dim));
+      hier::MultiIntVector one_vector(hier::IntVector::getOne(dim));
       const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
 
       hier::BoxLevel domain_box_level(
@@ -177,7 +177,7 @@ int main(
          hier::BoxLevel::GLOBALIZED);
       grid_geometry->computePhysicalDomain(
          domain_box_level,
-         hier::IntVector::getOne(dim));
+         one_vector);
       domain_box_level.finalize();
 
       /*
@@ -204,14 +204,15 @@ int main(
        */
 
       hier::IntVector base_width_a(zero_vector);
-      hier::IntVector base_width_b(zero_vector);
       if (main_db->isInteger("base_width_a")) {
          main_db->getIntegerArray("base_width_a", &base_width_a[0], dim.getValue());
       }
-      base_width_b = hier::Connector::convertHeadWidthToBase(
+      hier::MultiIntVector width_a(base_width_a);
+      hier::MultiIntVector width_b(
+         hier::Connector::convertHeadWidthToBase(
             box_level_b.getRefinementRatio(),
             box_level_a.getRefinementRatio(),
-            base_width_a);
+            width_a));
 
       boost::shared_ptr<hier::Connector> a_to_b;
 
@@ -219,8 +220,8 @@ int main(
       oca.findOverlapsWithTranspose(a_to_b,
          box_level_a,
          box_level_b,
-         base_width_a,
-         base_width_b);
+         width_a,
+         width_b);
       hier::Connector& b_to_a = a_to_b->getTranspose();
       // tbox::pout << "a_to_b:\n" << a_to_b->format("AB: ",2) << std::endl;
       // tbox::pout << "b_to_a:\n" << b_to_a.format("BA: ",2) << std::endl;
@@ -332,9 +333,10 @@ void breakUpBoxes(
    }
 
    if (refinement_ratio != hier::IntVector::getOne(dim)) {
+      hier::MultiIntVector ratio(refinement_ratio);
       box_level.refineBoxes(box_level,
-         refinement_ratio,
-         box_level.getRefinementRatio()*refinement_ratio);
+         ratio,
+         box_level.getRefinementRatio()*ratio);
       box_level.finalize();
    }
 
@@ -356,7 +358,7 @@ void breakUpBoxes(
    hier::Connector* dummy_connector = 0;
 
    const hier::IntVector bad_interval(dim, 1);
-   const hier::IntVector cut_factor(dim, 1);
+   const hier::MultiIntVector cut_factor(hier::IntVector::getOne(dim));
 
    load_balancer.loadBalanceBoxLevel(
       box_level,
@@ -397,11 +399,11 @@ void alterAndGenerateMapping(
 
    b_to_c.reset(new hier::MappingConnector(box_level_b,
       *box_level_c,
-      hier::IntVector::getZero(dim)));
+      hier::MultiIntVector(hier::IntVector::getZero(dim))));
    hier::MappingConnector* c_to_b =
       new hier::MappingConnector(*box_level_c,
          box_level_b,
-         hier::IntVector::getZero(dim));
+         hier::MultiIntVector(hier::IntVector::getZero(dim)));
    b_to_c->setTranspose(c_to_b, true);
    for (hier::BoxContainer::const_iterator bi = boxes_b.begin();
         bi != boxes_b.end(); ++bi) {

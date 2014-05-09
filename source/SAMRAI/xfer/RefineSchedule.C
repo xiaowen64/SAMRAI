@@ -159,7 +159,7 @@ RefineSchedule::RefineSchedule(
     */
    initializeDomainAndGhostInformation();
 
-   hier::IntVector min_connector_width = getMinConnectorWidth();
+   hier::MultiIntVector min_connector_width(getMinConnectorWidth());
 
    d_dst_to_src = &d_dst_level->findConnectorWithTranspose(*d_src_level,
       min_connector_width,
@@ -173,8 +173,8 @@ RefineSchedule::RefineSchedule(
 
    TBOX_ASSERT(d_dst_to_src->getBase() == *d_dst_level->getBoxLevel());
    TBOX_ASSERT(src_to_dst.getHead() == *d_dst_level->getBoxLevel());
-   TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= d_max_scratch_gcw);
-   TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= d_boundary_fill_ghost_width);
+   TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= hier::MultiIntVector(d_max_scratch_gcw));
+   TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= hier::MultiIntVector(d_boundary_fill_ghost_width));
 
    if (s_extra_debug) {
       /*
@@ -339,12 +339,12 @@ RefineSchedule::RefineSchedule(
     */
    initializeDomainAndGhostInformation();
 
-   hier::IntVector min_connector_width = getMinConnectorWidth();
+   hier::MultiIntVector min_connector_width(getMinConnectorWidth());
 
    if ( d_src_level &&
         d_src_level->getRatioToLevelZero() != d_dst_level->getRatioToLevelZero() ) {
       if ( d_src_level->getRatioToLevelZero() >= d_dst_level->getRatioToLevelZero() ) {
-         const hier::IntVector src_dst_ratio =
+         const hier::MultiIntVector src_dst_ratio =
             d_src_level->getRatioToLevelZero() / d_dst_level->getRatioToLevelZero();
          if ( d_dst_level->getRatioToLevelZero() * src_dst_ratio != d_src_level->getRatioToLevelZero() ) {
             TBOX_ERROR("RefineSchedule::RefineSchedule error: source and destination\n"
@@ -373,11 +373,16 @@ RefineSchedule::RefineSchedule(
       if ( hierarchy->getNumberOfLevels() > next_coarser_ln + 1 ) {
          if ( d_dst_level->getRatioToLevelZero() !=
               hierarchy->getPatchLevel(next_coarser_ln+1)->getRatioToLevelZero() ) {
-            hier::IntVector expansion_ratio =
+            hier::MultiIntVector expansion_ratio =
                hierarchy->getPatchLevel(next_coarser_ln+1)->getRatioToLevelZero() / d_dst_level->getRatioToLevelZero();
+            int expansion = expansion_ratio.getBlockVector(hier::BlockId(0))[0];
+#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT( expansion_ratio * d_dst_level->getRatioToLevelZero() == hierarchy->getPatchLevel(next_coarser_ln+1)->getRatioToLevelZero() );
-            TBOX_ASSERT( hier::IntVector(dim,expansion_ratio(0)) == expansion_ratio );
-            rscwr.setGhostCellWidthFactor(expansion_ratio(0));
+            // All values in expansion_ratio must be identical.
+            hier::MultiIntVector exp_test(dim,expansion);
+            TBOX_ASSERT( exp_test == expansion_ratio );
+#endif
+            rscwr.setGhostCellWidthFactor(expansion);
          }
       }
       rscwr.computeRequiredFineConnectorWidthsForRecursiveRefinement(
@@ -393,7 +398,7 @@ RefineSchedule::RefineSchedule(
 
    if (d_src_level) {
 
-     hier::IntVector transpose_min_connector_width =
+     hier::MultiIntVector transpose_min_connector_width =
         hier::Connector::convertHeadWidthToBase(
            d_src_level->getBoxLevel()->getRefinementRatio(),
            dst_level->getBoxLevel()->getRefinementRatio(),
@@ -406,8 +411,8 @@ RefineSchedule::RefineSchedule(
 
       TBOX_ASSERT(d_dst_to_src->getBase() == *dst_level->getBoxLevel());
       TBOX_ASSERT(d_dst_to_src->getTranspose().getHead() == *dst_level->getBoxLevel());
-      TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= d_max_scratch_gcw);
-      TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= d_boundary_fill_ghost_width);
+      TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= hier::MultiIntVector(d_max_scratch_gcw));
+      TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= hier::MultiIntVector(d_boundary_fill_ghost_width));
    }
    else {
       dummy_connector->setTranspose(dummy_connector.get(), false);
@@ -442,7 +447,7 @@ RefineSchedule::RefineSchedule(
    finishScheduleConstruction(
       next_coarser_ln,
       hierarchy,
-      dummy_intvector,
+      hier::MultiIntVector(dummy_intvector),
       *dst_to_fill,
       dst_to_fill_on_src_proc,
       use_time_refinement,
@@ -490,7 +495,7 @@ RefineSchedule::RefineSchedule(
    int next_coarser_ln,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const hier::Connector& dst_to_src,
-   const hier::IntVector& src_growth_to_nest_dst,
+   const hier::MultiIntVector& src_growth_to_nest_dst,
    const boost::shared_ptr<RefineClasses>& refine_classes,
    const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
    RefinePatchStrategy* patch_strategy,
@@ -700,7 +705,7 @@ void
 RefineSchedule::finishScheduleConstruction(
    int next_coarser_ln,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-   const hier::IntVector& src_growth_to_nest_dst,
+   const hier::MultiIntVector& src_growth_to_nest_dst,
    const hier::Connector& dst_to_fill,
    const hier::BoxNeighborhoodCollection& dst_to_fill_on_src_proc,
    bool use_time_interpolation,
@@ -854,7 +859,7 @@ RefineSchedule::finishScheduleConstruction(
       /*
        * Ratio to the next coarser level in the hierarchy.
        */
-      const hier::IntVector dst_hiercoarse_ratio(
+      const hier::MultiIntVector dst_hiercoarse_ratio(
          d_dst_level->getRatioToLevelZero()
          / hiercoarse_level->getRatioToLevelZero());
 
@@ -900,7 +905,8 @@ RefineSchedule::finishScheduleConstruction(
        * assumptions about where dst came from in order to determine
        * how its fill boxes nest in hiercoarse.
        */
-      hier::IntVector hiercoarse_growth_to_nest_coarse_interp(dim);
+      hier::MultiIntVector hiercoarse_growth_to_nest_coarse_interp(
+         hier::IntVector::getZero(dim));
       const bool dst_is_coarse_interp_level = this != d_top_refine_schedule;
       if (dst_is_coarse_interp_level) {
          /*
@@ -1012,7 +1018,7 @@ void
 RefineSchedule::createEnconFillSchedule(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const boost::shared_ptr<hier::PatchLevel>& hiercoarse_level,
-   const hier::IntVector& src_growth_to_nest_dst,
+   const hier::MultiIntVector& src_growth_to_nest_dst,
    const hier::Connector& encon_to_unfilled_encon)
 {
    const hier::BoxLevel &hiercoarse_box_level(
@@ -1023,7 +1029,7 @@ RefineSchedule::createEnconFillSchedule(
    /*
     * Ratio to the next coarser level in the hierarchy.
     */
-   const hier::IntVector dst_hiercoarse_ratio(
+   const hier::MultiIntVector dst_hiercoarse_ratio(
       d_dst_level->getRatioToLevelZero()
       / hiercoarse_level->getRatioToLevelZero());
 
@@ -1051,8 +1057,8 @@ RefineSchedule::createEnconFillSchedule(
    /*
     * Compute this nesting value the same as for coarse_interp
     */
-   hier::IntVector hiercoarse_growth_to_nest_coarse_interp_encon(
-      hiercoarse_level->getDim());
+   hier::MultiIntVector hiercoarse_growth_to_nest_coarse_interp_encon(
+      hier::IntVector::getZero(hiercoarse_level->getDim()));
    const bool dst_is_coarse_interp_level = this != d_top_refine_schedule;
    if (dst_is_coarse_interp_level) {
       hiercoarse_growth_to_nest_coarse_interp_encon =
@@ -1149,7 +1155,7 @@ RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
       sheared_box_level,
       unfilled_to_sheared,
       unfilled_to_periodic_domain,
-      hier::IntVector::getZero(dim));
+      hier::MultiIntVector(hier::IntVector::getZero(dim)));
 
    hier::MappingConnectorAlgorithm mca;
    mca.setTimerPrefix("xfer::RefineSchedule_build");
@@ -1183,7 +1189,7 @@ RefineSchedule::makeNodeCenteredUnfilledBoxLevel(
    d_unfilled_to_unfilled_node.reset(new hier::Connector(
          unfilled_box_level,
          *d_unfilled_node_box_level,
-         hier::IntVector::getZero(unfilled_box_level.getDim())));
+         hier::MultiIntVector(hier::IntVector::getZero(unfilled_box_level.getDim()))));
 
    const hier::BoxLevel& dst_box_level = dst_to_unfilled.getBase();
 
@@ -1306,7 +1312,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
 
    const tbox::Dimension& dim(dst_to_unfilled.getBase().getDim());
 
-   const hier::IntVector dst_hiercoarse_ratio(
+   const hier::MultiIntVector dst_hiercoarse_ratio(
       d_dst_level->getRatioToLevelZero()
       / hiercoarse_box_level.getRefinementRatio());
 
@@ -1325,6 +1331,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
          }
       }
    }
+   hier::MultiIntVector multi_big_grow(big_grow_vector);
 
    std::vector<hier::BoxContainer> coarser_physical_domain(nblocks);
    std::vector<hier::BoxContainer> coarser_shear_domain(nblocks);
@@ -1343,7 +1350,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
          coarser_shear_domain[b] = coarser_physical_domain[b];
 
          if (d_num_periodic_directions > 0) {
-            coarser_shear_domain[b].grow(big_grow_vector);
+            coarser_shear_domain[b].grow(multi_big_grow);
          }
 
          coarser_shear_domain[b].unorder();
@@ -1370,9 +1377,9 @@ RefineSchedule::setupCoarseInterpBoxLevel(
     * coarse interpolation boxes, including the ghost cells in the
     * coarse interpolation boxes.
     */
-   const hier::IntVector dst_to_coarse_interp_width =
-      (hier::IntVector::ceilingDivide(dst_to_unfilled.getConnectorWidth(),
-          dst_hiercoarse_ratio) + d_max_stencil_width)
+   const hier::MultiIntVector dst_to_coarse_interp_width =
+      (hier::MultiIntVector::ceilingDivide(dst_to_unfilled.getConnectorWidth(),
+          dst_hiercoarse_ratio) + hier::MultiIntVector(d_max_stencil_width))
       * dst_hiercoarse_ratio;
 
    dst_to_coarse_interp.reset(new hier::Connector(dst_to_unfilled.getBase(),
@@ -1382,7 +1389,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
    coarse_interp_to_unfilled.reset(new hier::Connector(
       *coarse_interp_box_level,
       dst_to_unfilled.getHead(),
-      hier::IntVector::getZero(dim)));
+      hier::MultiIntVector(hier::IntVector::getZero(dim))));
 
    /*
     * This loop builds up coarse_interp_box_level.  It also builds up
@@ -1408,10 +1415,11 @@ RefineSchedule::setupCoarseInterpBoxLevel(
           * restrictions.
           */
          const hier::Box& unfilled_box = *ni;
-         const int dst_blk = unfilled_box.getBlockId().getBlockValue();
+         const hier::BlockId& dst_blk_id = unfilled_box.getBlockId();
+         const int dst_blk = dst_blk_id.getBlockValue();
 
          hier::Box coarse_interp_box(unfilled_box);
-         coarse_interp_box.coarsen(dst_hiercoarse_ratio);
+         coarse_interp_box.coarsen(dst_hiercoarse_ratio.getBlockVector(dst_blk_id));
 
          hier::BoxContainer sheared_coarse_interp_boxes(coarse_interp_box);
 
@@ -1424,7 +1432,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
          (void)hier::BoxUtilities::extendBoxesToDomainBoundary(
             sheared_coarse_interp_boxes,
             coarser_physical_domain[dst_blk],
-            d_max_stencil_width);
+            hier::MultiIntVector(d_max_stencil_width));
 
          if (!sheared_coarse_interp_boxes.isEmpty() > 0) {
 
@@ -1498,6 +1506,9 @@ RefineSchedule::createCoarseInterpPatchLevel(
    const hier::BoxLevel& hiercoarse_box_level(
       *hiercoarse_level->getBoxLevel());
 
+   hier::MultiIntVector zero_vec(hier::IntVector::getZero(dim));
+   hier::MultiIntVector one_vec(hier::IntVector::getOne(dim));
+
    /*
     * To compute coarse_interp<==>hiercoarse, we will perform this bridge:
     * coarse_interp<==>dst<==>hiercoarse.
@@ -1516,9 +1527,9 @@ RefineSchedule::createCoarseInterpPatchLevel(
     */
 
    // Required hiercoarse<==>dst width for recursion:
-   const hier::IntVector& hiercoarse_to_dst_width(
+   const hier::MultiIntVector& hiercoarse_to_dst_width(
       d_top_refine_schedule->d_fine_connector_widths[next_coarser_ln]);
-   const hier::IntVector dst_to_hiercoarse_width(
+   const hier::MultiIntVector dst_to_hiercoarse_width(
       hier::Connector::convertHeadWidthToBase(
          dst_level->getBoxLevel()->getRefinementRatio(),
          hiercoarse_box_level.getRefinementRatio(),
@@ -1581,9 +1592,9 @@ RefineSchedule::createCoarseInterpPatchLevel(
 
       const hier::BoxLevel& dst_box_level = dst_to_src.getBase();
 
-      const hier::IntVector& hiercoarse_to_src_width =
+      const hier::MultiIntVector& hiercoarse_to_src_width =
          d_top_refine_schedule->d_fine_connector_widths[next_coarser_ln];
-      hier::IntVector src_to_hiercoarse_width =
+      hier::MultiIntVector src_to_hiercoarse_width =
          hiercoarse_to_src_width * d_src_level->getRatioToCoarserLevel();
 
       /*
@@ -1616,11 +1627,11 @@ RefineSchedule::createCoarseInterpPatchLevel(
             hier::CONNECTOR_IMPLICIT_CREATION_RULE,
             true);
 
-      const hier::IntVector& src_to_dst_width =
+      const hier::MultiIntVector& src_to_dst_width =
          dst_to_src.getTranspose().getConnectorWidth();
-      const hier::IntVector& dst_to_src_width = dst_to_src.getConnectorWidth();
-      if (src_to_dst_width > hier::IntVector::getZero(dim) &&
-          dst_to_src_width > hier::IntVector::getZero(dim)) {
+      const hier::MultiIntVector& dst_to_src_width = dst_to_src.getConnectorWidth();
+      if (src_to_dst_width > zero_vec &&
+          dst_to_src_width > zero_vec) {
 
          if (s_barrier_and_time) {
             t_bridge_dst_hiercoarse->barrierAndStart();
@@ -1642,11 +1653,11 @@ RefineSchedule::createCoarseInterpPatchLevel(
           * enhanced connectivity. 
           */
  
-         hier::IntVector transpose_connector_width(src_to_dst_width); 
-         transpose_connector_width.max(hier::IntVector::getOne(dim));
+         hier::MultiIntVector transpose_connector_width(src_to_dst_width); 
+         transpose_connector_width.max(one_vec);
 
-         hier::IntVector connector_width(dst_to_src_width);
-         connector_width.max(hier::IntVector::getOne(dim));
+         hier::MultiIntVector connector_width(dst_to_src_width);
+         connector_width.max(one_vec);
          const hier::Connector& found_dst_to_src =
             dst_box_level.findConnectorWithTranspose(
                src_box_level,
@@ -1691,11 +1702,6 @@ RefineSchedule::createCoarseInterpPatchLevel(
       t_bridge_coarse_interp_hiercoarse->barrierAndStart();
    }
 
-   const hier::IntVector neg1(-hier::IntVector::getOne(hierarchy->getDim()));
-   const hier::IntVector dst_growth_to_nest_coarse_interp =
-      dst_to_coarse_interp.getConnectorWidth() -
-      (d_max_stencil_width * dst_to_hiercoarse->getRatio());
-
    oca.bridge(
       coarse_interp_to_hiercoarse,
       dst_to_coarse_interp.getTranspose(),
@@ -1704,8 +1710,8 @@ RefineSchedule::createCoarseInterpPatchLevel(
       true);
    hier::Connector& hiercoarse_to_coarse_interp =
       coarse_interp_to_hiercoarse->getTranspose();
-   TBOX_ASSERT( coarse_interp_to_hiercoarse->getConnectorWidth() >= d_max_stencil_width );
-   TBOX_ASSERT( hiercoarse_to_coarse_interp.getConnectorWidth() >= d_max_stencil_width );
+   TBOX_ASSERT( coarse_interp_to_hiercoarse->getConnectorWidth() >= hier::MultiIntVector(d_max_stencil_width) );
+   TBOX_ASSERT( hiercoarse_to_coarse_interp.getConnectorWidth() >= hier::MultiIntVector(d_max_stencil_width) );
    if (s_barrier_and_time) {
       t_bridge_coarse_interp_hiercoarse->stop();
    }
@@ -1802,6 +1808,8 @@ RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
    hier::OverlapConnectorAlgorithm oca;
    oca.setTimerPrefix("xfer::RefineSchedule_build");
 
+   hier::MultiIntVector multi_max_stencil(d_max_stencil_width);
+
    /*
     * To work properly, we must ensure that
     * coarse_interp^d_max_stencil_width nests in
@@ -1819,7 +1827,7 @@ RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
    oca.findOverlaps(wider_coarse_interp_to_hiercoarse,
       coarse_interp_to_hiercoarse.getBase(),
       coarse_interp_to_hiercoarse.getHead(),
-      d_top_refine_schedule->d_fine_connector_widths[next_coarser_ln] - d_max_stencil_width);
+      d_top_refine_schedule->d_fine_connector_widths[next_coarser_ln] - multi_max_stencil);
 
 
    boost::shared_ptr<hier::BoxLevel> external;
@@ -1829,7 +1837,7 @@ RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
       external,
       coarse_interp_to_external,
       *wider_coarse_interp_to_hiercoarse,
-      d_top_refine_schedule->d_fine_connector_widths[next_coarser_ln] - d_max_stencil_width,
+      d_top_refine_schedule->d_fine_connector_widths[next_coarser_ln] - multi_max_stencil,
       hierarchy->getGridGeometry()->getPeriodicDomainSearchTree());
    coarse_interp_to_external->eraseEmptyNeighborSets();
 
@@ -2147,7 +2155,7 @@ RefineSchedule::fillSingularityBoundaries(
 
       const tbox::Dimension& dim(d_dst_level->getDim());
 
-      hier::IntVector ratio(d_dst_level->getRatioToLevelZero());
+      const hier::MultiIntVector& ratio = d_dst_level->getRatioToLevelZero();
 
       if (d_singularity_patch_strategy) {
 
@@ -2161,7 +2169,7 @@ RefineSchedule::fillSingularityBoundaries(
                  sb != sing_boxes.end(); ++sb) {
 
                hier::Box singularity(*sb);
-               singularity.refine(ratio);
+               singularity.refine(ratio.getBlockVector(singularity.getBlockId()));
 
                const hier::BoxContainer& level_boxes(
                   d_dst_level->getBoxLevel()->getBoxes());
@@ -2342,7 +2350,7 @@ RefineSchedule::refineScratchData(
          d_refine_items);
    }
 
-   const hier::IntVector ratio(fine_level->getRatioToLevelZero()
+   const hier::MultiIntVector ratio(fine_level->getRatioToLevelZero()
                                / coarse_level->getRatioToLevelZero());
 
    /*
@@ -2379,6 +2387,9 @@ RefineSchedule::refineScratchData(
       boost::shared_ptr<hier::Patch> crse_patch(coarse_level->getPatch(
                                                 crse_box.getGlobalId()));
 
+      const hier::BlockId& block_id = fine_patch->getBox().getBlockId();
+      const hier::IntVector& local_ratio = ratio.getBlockVector(block_id);
+
       TBOX_ASSERT(coarse_to_unfilled.numLocalNeighbors(crse_box.getBoxId()) == 1);
       hier::Connector::ConstNeighborhoodIterator unfilled_nabrs =
          coarse_to_unfilled.find(crse_box.getBoxId());
@@ -2390,7 +2401,7 @@ RefineSchedule::refineScratchData(
          d_refine_patch_strategy->preprocessRefineBoxes(*fine_patch,
             *crse_patch,
             fill_boxes,
-            ratio);
+            local_ratio);
       }
 
       for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
@@ -2405,7 +2416,7 @@ RefineSchedule::refineScratchData(
 
             ref_item->d_oprefine->refine(*fine_patch, *crse_patch,
                scratch_id, scratch_id,
-               *refine_overlap, ratio);
+               *refine_overlap, local_ratio);
 
          }
       }
@@ -2422,7 +2433,7 @@ patch.  Talk with Rich and Bob about this.
          d_refine_patch_strategy->postprocessRefineBoxes(*fine_patch,
             *crse_patch,
             fill_boxes,
-            ratio);
+            local_ratio);
       }
 
    }
@@ -3106,8 +3117,8 @@ RefineSchedule::reorderNeighborhoodSetsByDstNodes(
    const hier::PeriodicShiftCatalog* shift_catalog =
       hier::PeriodicShiftCatalog::getCatalog(dim);
    const hier::BoxLevel& src_box_level = src_to_dst.getBase();
-   const hier::IntVector& src_ratio = src_box_level.getRefinementRatio();
-   const hier::IntVector& dst_ratio = src_to_dst.getHead().getRefinementRatio();
+   const hier::MultiIntVector& src_ratio = src_box_level.getRefinementRatio();
+   const hier::MultiIntVector& dst_ratio = src_to_dst.getHead().getRefinementRatio();
 
    /*
     * These are the counterparts to shifted dst boxes and unshifted src boxes.
@@ -3125,11 +3136,11 @@ RefineSchedule::reorderNeighborhoodSetsByDstNodes(
             shifted_box.initialize(
                src_box,
                shift_catalog->getOppositeShiftNumber(nabr.getPeriodicId()),
-               src_ratio);
+               src_ratio.getBlockVector(src_box.getBlockId()));
             unshifted_nabr.initialize(
                nabr,
                shift_catalog->getZeroShiftNumber(),
-               dst_ratio);
+               dst_ratio.getBlockVector(nabr.getBlockId()));
             full_inverted_edges[unshifted_nabr].insert(shifted_box);
          } else {
             full_inverted_edges[nabr].insert(src_box);
@@ -3257,7 +3268,7 @@ RefineSchedule::setDefaultFillBoxLevel(
           * This part assumes src-dst ratio is one.
           * Should be modified if the assumption does not hold.
           */
-         TBOX_ASSERT(d_dst_to_src->getRatio() == hier::IntVector::getOne(dim));
+         TBOX_ASSERT(d_dst_to_src->getRatio().isOne(dim));
 
          /*
           * For these fill_pattern, the src owner could not compute fill boxes
@@ -3369,7 +3380,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                   hier::Transformation::RotationIdentifier rotation =
                      ni->second.getRotationIdentifier();
                   hier::IntVector offset(ni->second.getShift());
-                  offset *= (d_dst_level->getRatioToLevelZero());
+                  offset *= (d_dst_level->getRatioToLevelZero().getBlockVector(block_id));
 
                   hier::Transformation transformation(rotation, offset,
                                                       nbr_id, block_id);
@@ -3409,7 +3420,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                          * boundary.
                          */
                         hier::BoxContainer encon_test_list(patch->getBox());
-                        encon_test_list.grow(encon_gcw);
+                        encon_test_list.grow(hier::MultiIntVector(encon_gcw));
                         encon_test_list.intersectBoxes(trans_neighbor_list);
 
                         if (!encon_test_list.isEmpty()) {
@@ -3475,6 +3486,8 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
     */
    encon_box_level->finalize();
 
+   hier::MultiIntVector one_vec(hier::IntVector::getOne(dim)); 
+
    d_encon_level.reset(new hier::PatchLevel(encon_box_level,
          grid_geometry,
          d_dst_level->getPatchDescriptor(),
@@ -3484,13 +3497,13 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
    d_encon_level->setLevelNumber(d_dst_level->getLevelNumber());
 
    d_dst_to_encon->setHead(*(d_encon_level->getBoxLevel()));
-   d_dst_to_encon->setWidth(hier::IntVector::getOne(dim), true);
+   d_dst_to_encon->setWidth(one_vec, true);
 
    if (d_src_level) {
       const hier::Connector& dst_to_src =
          d_dst_level->findConnectorWithTranspose(*d_src_level,
-            hier::IntVector::getOne(dim),
-            hier::IntVector::getOne(dim),
+            one_vec,
+            one_vec,
             hier::CONNECTOR_IMPLICIT_CREATION_RULE,
             true);
 
@@ -3508,7 +3521,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
          d_encon_to_src,
          *encon_to_dst,
          dst_to_src,
-         hier::IntVector::getZero(dim),
+         hier::MultiIntVector(hier::IntVector::getZero(dim)),
          true);
 
       d_dst_to_encon->setTranspose(0, false);
@@ -3944,26 +3957,29 @@ RefineSchedule::constructScheduleTransactions(
    hier::IntVector dst_shift(dim, 0);
    hier::Box unshifted_src_box = src_box;
    hier::Box unshifted_dst_box = dst_box;
+   const hier::BlockId& dst_block_id = dst_box.getBlockId();
+   const hier::BlockId& src_block_id = src_box.getBlockId();
+
    if (src_box.isPeriodicImage()) {
       TBOX_ASSERT(!dst_box.isPeriodicImage());
+      const hier::IntVector& src_ratio =
+         d_src_level->getRatioToLevelZero().getBlockVector(src_block_id);
       src_shift = shift_catalog->shiftNumberToShiftDistance(
             src_box.getPeriodicId());
-      src_shift = (d_src_level->getRatioToLevelZero() >
-                   constant_zero_intvector) ?
-         (src_shift * d_src_level->getRatioToLevelZero()) :
-         hier::IntVector::ceilingDivide(src_shift,
-            -d_src_level->getRatioToLevelZero());
+      src_shift = (src_ratio > constant_zero_intvector) ?
+         (src_shift * src_ratio) :
+         hier::IntVector::ceilingDivide(src_shift, -src_ratio);
       unshifted_src_box.shift(-src_shift);
    }
    if (dst_box.isPeriodicImage()) {
       TBOX_ASSERT(!src_box.isPeriodicImage());
+      const hier::IntVector& dst_ratio =
+         d_dst_level->getRatioToLevelZero().getBlockVector(dst_block_id);
       dst_shift = shift_catalog->shiftNumberToShiftDistance(
             dst_box.getPeriodicId());
-      dst_shift = (d_dst_level->getRatioToLevelZero() >
-                   constant_zero_intvector) ?
-         (dst_shift * d_dst_level->getRatioToLevelZero()) :
-         hier::IntVector::ceilingDivide(dst_shift,
-            -d_dst_level->getRatioToLevelZero());
+      dst_shift = (dst_ratio > constant_zero_intvector) ?
+         (dst_shift * dst_ratio) :
+         hier::IntVector::ceilingDivide(dst_shift, -dst_ratio);
       unshifted_dst_box.shift(-dst_shift);
    }
    if (s_extra_debug) {
@@ -3995,9 +4011,7 @@ RefineSchedule::constructScheduleTransactions(
     * dst touch at an enhance connectivity singularity.
     */
    bool is_singularity = false;
-   if (src_box.getBlockId() != dst_box.getBlockId()) {
-      const hier::BlockId& dst_block_id = dst_box.getBlockId();
-      const hier::BlockId& src_block_id = src_box.getBlockId();
+   if (src_block_id != dst_block_id) {
 
       boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
          d_dst_level->getGridGeometry());
@@ -4008,7 +4022,7 @@ RefineSchedule::constructScheduleTransactions(
       hier::IntVector offset(
          grid_geometry->getOffset(dst_block_id, src_block_id));
 
-      offset *= d_dst_level->getRatioToLevelZero();
+      offset *= d_dst_level->getRatioToLevelZero().getBlockVector(dst_block_id);
 
       is_singularity = grid_geometry->areSingularityNeighbors(dst_block_id,
             src_block_id);
@@ -4383,14 +4397,20 @@ RefineSchedule::initializeDomainAndGhostInformation()
 
    boost::shared_ptr<hier::BaseGridGeometry> grid_geom(
       d_dst_level->getGridGeometry());
-   const hier::IntVector& ratio_to_level_zero =
+   const hier::MultiIntVector& ratio_to_level_zero =
       d_dst_level->getRatioToLevelZero();
 
    for (int b = 0; b < grid_geom->getNumberBlocks(); ++b) {
       d_domain_is_one_box[b] = grid_geom->getDomainIsSingleBox(hier::BlockId(b));
    }
 
-   d_periodic_shift = grid_geom->getPeriodicShift(ratio_to_level_zero);
+   if (grid_geom->getNumberBlocks() > 1) {
+      d_periodic_shift = hier::IntVector::getZero(dim);
+   } else {
+      d_periodic_shift =
+         grid_geom->getPeriodicShift(
+            ratio_to_level_zero.getBlockVector(hier::BlockId(0)));
+   }
 
    d_num_periodic_directions = 0;
    for (int d = 0; d < dim.getValue(); ++d) {

@@ -783,12 +783,12 @@ Connector::writeNeighborhoodToStream(
 Connector*
 Connector::createLocalTranspose() const
 {
-   const MultiIntVector transpose_gcw = convertHeadWidthToBase(
+   const MultiIntVector transpose_width = convertHeadWidthToBase(
          getHead().getRefinementRatio(),
          getBase().getRefinementRatio(),
          getConnectorWidth());
 
-   Connector* transpose = new Connector(getHead(), getBase(), transpose_gcw);
+   Connector* transpose = new Connector(getHead(), getBase(), transpose_width);
    doLocalTransposeWork(transpose);
    return transpose;
 }
@@ -1027,7 +1027,7 @@ MultiIntVector
 Connector::convertHeadWidthToBase(
    const MultiIntVector& base_refinement_ratio,
    const MultiIntVector& head_refinement_ratio,
-   const MultiIntVector& head_gcw)
+   const MultiIntVector& head_width)
 {
    if (!(base_refinement_ratio >= head_refinement_ratio ||
          base_refinement_ratio <= head_refinement_ratio)) {
@@ -1057,7 +1057,7 @@ Connector::convertHeadWidthToBase(
 
    const MultiIntVector base_width =
       (base_refinement_ratio >= head_refinement_ratio) ?
-      (head_gcw * ratio) : MultiIntVector::ceilingDivide(head_gcw, ratio);
+      (head_width * ratio) : MultiIntVector::ceilingDivide(head_width, ratio);
 
    return base_width;
 }
@@ -1082,7 +1082,7 @@ Connector::recursivePrint(
       return;
    }
    bool head_coarser = d_head_coarser;
-   const MultiIntVector head_gcw =
+   const MultiIntVector head_width =
       convertHeadWidthToBase(
          getHead().getRefinementRatio(),
          getBase().getRefinementRatio(),
@@ -1101,7 +1101,7 @@ Connector::recursivePrint(
       << getHead().getRefinementRatio() << ", "
       << d_ratio << (d_head_coarser ? " (head coarser)" : "") << '\n'
       << border << "Base,head widths   : " << d_base_width << ", "
-      << head_gcw << '\n'
+      << head_width << '\n'
       << border << "Box count    : " << getBase().getLocalNumberOfBoxes()
       << " (" << getLocalNumberOfNeighborSets() << " with neighbor lists)\n"
    ;

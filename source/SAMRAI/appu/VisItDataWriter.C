@@ -140,7 +140,7 @@ VisItDataWriter::VisItDataWriter(
    d_my_rank_in_file_cluster = VISIT_UNDEFINED_INDEX;
    d_number_files_this_file_cluster = VISIT_UNDEFINED_INDEX;
 
-   d_scaling_ratios.resize(1, hier::IntVector::getOne(dim));
+   d_scaling_ratios.resize(1, hier::MultiIntVector(hier::IntVector::getOne(dim)));
 
    d_number_visit_variables = 0;
    d_number_visit_variables_plus_depth = 0;
@@ -1398,7 +1398,7 @@ VisItDataWriter::writePlotData(
    d_number_levels = hierarchy->getNumberOfLevels();
 
    if (d_number_levels > static_cast<int>(d_scaling_ratios.size())) {
-      d_scaling_ratios.resize(d_number_levels, hier::IntVector(d_dim));
+      d_scaling_ratios.resize(d_number_levels, hier::MultiIntVector(hier::IntVector::getOne(d_dim)));
    }
 
    for (int ln = 1; ln <= hierarchy->getFinestLevelNumber(); ++ln) {
@@ -1772,7 +1772,7 @@ VisItDataWriter::writeVisItVariablesToHDFFile(
       boost::shared_ptr<hier::PatchLevel> patch_level(
          hierarchy->getPatchLevel(ln));
 
-      hier::IntVector coarsen_ratio(patch_level->getRatioToCoarserLevel());
+      hier::MultiIntVector coarsen_ratio(patch_level->getRatioToCoarserLevel());
 
       for (hier::PatchLevel::iterator ip(patch_level->begin());
            ip != patch_level->end(); ++ip) {
@@ -2886,7 +2886,7 @@ VisItDataWriter::writeSummaryToHDFFile(
             if (ln == 0) {
                rtcl[idx] = VISIT_UNDEFINED_INDEX;
             } else {
-               rtcl[idx] = d_scaling_ratios[ln](i);
+               rtcl[idx] = d_scaling_ratios[ln].getBlockVector(hier::BlockId(0))(i);
             }
          }
       }
@@ -3139,7 +3139,9 @@ VisItDataWriter::writeSummaryToHDFFile(
                      dx_curr_lev[i] = ggeom->getDx()[i]; // coarsest level dx
                      dx[next] = dx_curr_lev[i];
                   } else {
-                     double scale_ratio = (double)d_scaling_ratios[ln](i);
+                     double scale_ratio =
+                        static_cast<double>(
+                           d_scaling_ratios[ln].getBlockVector(hier::BlockId(0))(i));
                      dx_curr_lev[i] = dx_curr_lev[i] / scale_ratio;
                      dx[next] = dx_curr_lev[i];
                   }
@@ -3273,7 +3275,9 @@ VisItDataWriter::writeSummaryToHDFFile(
           * Set the dx for the next level
           */
          for (i = 0; i < d_dim.getValue(); ++i) {
-            double scale_ratio = (double)d_scaling_ratios[ln](i);
+            double scale_ratio =
+               static_cast<double>(
+                  d_scaling_ratios[ln].getBlockVector(hier::BlockId(0))(i));
             dx_curr_lev[i] = dx_curr_lev[i] / scale_ratio;
          }
 
@@ -3647,7 +3651,7 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
          hierarchy->getPatchLevel(ln)->getBoxLevel()->getGlobalizedVersion().getGlobalBoxes();
 
       boost::shared_ptr<hier::BoxContainer> child_box_tree;
-      hier::IntVector ratio(d_dim);
+      hier::MultiIntVector ratio(hier::IntVector::getZero(d_dim));
 
       if (ln != finest_level) {
          boost::shared_ptr<hier::PatchLevel> child_patch_level(
@@ -3695,7 +3699,7 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
          } else {
             hier::BlockId block_id(bi->getBlockId());
             hier::Box compare_box(*bi);
-            compare_box.refine(ratio);
+            compare_box.refine(ratio.getBlockVector(block_id));
 
             hier::BoxContainer overlap_boxes;
 

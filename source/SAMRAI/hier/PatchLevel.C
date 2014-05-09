@@ -59,11 +59,11 @@ PatchLevel::PatchLevel(
    const tbox::Dimension& dim):
    d_dim(dim),
    d_has_globalized_data(false),
-   d_ratio_to_level_zero(IntVector::getZero(dim), BlockId(0)),
+   d_ratio_to_level_zero(IntVector::getZero(dim)),
    d_factory(boost::make_shared<PatchFactory>()),
    d_local_number_patches(0),
    d_physical_domain(0),
-   d_ratio_to_coarser_level(IntVector::getZero(dim), BlockId(0)),
+   d_ratio_to_coarser_level(IntVector::getZero(dim)),
    d_level_number(-1),
    d_next_coarser_level_number(-1),
    d_in_hierarchy(false)
@@ -96,7 +96,7 @@ PatchLevel::PatchLevel(
    d_ratio_to_level_zero(d_box_level->getRefinementRatio()),
    d_factory(factory ? factory : boost::make_shared<PatchFactory>()),
    d_physical_domain(grid_geometry->getNumberBlocks()),
-   d_ratio_to_coarser_level(IntVector::getZero(grid_geometry->getDim()), BlockId(0))
+   d_ratio_to_coarser_level(IntVector::getZero(grid_geometry->getDim()))
 
 {
    d_number_blocks = grid_geometry->getNumberBlocks();
@@ -209,7 +209,7 @@ PatchLevel::PatchLevel(
    d_ratio_to_level_zero(d_box_level->getRefinementRatio()),
    d_factory(factory ? factory : boost::make_shared<PatchFactory>()),
    d_physical_domain(grid_geometry->getNumberBlocks()),
-   d_ratio_to_coarser_level(IntVector::getZero(grid_geometry->getDim()), BlockId(0))
+   d_ratio_to_coarser_level(IntVector::getZero(grid_geometry->getDim()))
 
 {
    d_box_level->lock();
@@ -317,13 +317,11 @@ PatchLevel::PatchLevel(
    d_dim(grid_geometry->getDim()),
    d_has_globalized_data(false),
    d_ratio_to_level_zero(IntVector(grid_geometry->getDim(),
-                                   tbox::MathUtilities<int>::getMax()),
-                                   BlockId(0)),
+                                   tbox::MathUtilities<int>::getMax())),
    d_factory(factory ? factory : boost::make_shared<PatchFactory>()),
    d_physical_domain(grid_geometry->getNumberBlocks()),
    d_ratio_to_coarser_level(IntVector(grid_geometry->getDim(),
-                                      tbox::MathUtilities<int>::getMax()),
-                                      BlockId(0))
+                                      tbox::MathUtilities<int>::getMax()))
 {
    d_number_blocks = grid_geometry->getNumberBlocks();
 
@@ -393,6 +391,8 @@ PatchLevel::setRefinedPatchLevel(
    }
 #endif
 
+   d_number_blocks = coarse_level->d_number_blocks;
+
    /*
     * The basic state of the new patch level is initialized from the state of
     * the given existing patch level.
@@ -421,9 +421,12 @@ PatchLevel::setRefinedPatchLevel(
       std::vector<IntVector> block_ratio(d_number_blocks, IntVector::getZero(getDim()));
       for (int b = 0; b < d_number_blocks; ++b) {
          BlockId block_id(b);
+         const hier::IntVector& block_fine = refine_ratio.getBlockVector(block_id);
+         const hier::IntVector& block_crse = coarse_ratio.getBlockVector(block_id);
+
          for (int i = 0; i < getDim().getValue(); ++i) {
-            int coarse_rat = coarse_ratio.getBlockVector(block_id)(i);
-            int refine_rat = refine_ratio.getBlockVector(block_id)(i);
+            int coarse_rat = block_crse(i);
+            int refine_rat = block_fine(i);
             if (coarse_rat < 0) {
                if (tbox::MathUtilities<int>::Abs(coarse_rat) >= refine_rat) {
                   block_ratio[b](i) =
@@ -437,7 +440,7 @@ PatchLevel::setRefinedPatchLevel(
             }
          }
       }
-      d_ratio_to_level_zero = MultiIntVector(block_ratio);
+      d_ratio_to_level_zero.set(block_ratio);
 
    } else {
 
@@ -467,7 +470,6 @@ PatchLevel::setRefinedPatchLevel(
       d_box_level->finalize();
    }
    d_local_number_patches = coarse_level->getLocalNumberOfPatches();
-   d_number_blocks = coarse_level->d_number_blocks;
 
    d_physical_domain.resize(d_number_blocks);
    for (int nb = 0; nb < d_number_blocks; ++nb) {
@@ -567,6 +569,8 @@ PatchLevel::setCoarsenedPatchLevel(
    d_factory = fine_level->d_factory;
    // d_mapping.setProcessorMapping( (fine_level->d_mapping).getProcessorMapping() );
 
+   d_number_blocks = fine_level->d_number_blocks;
+
    /*
     * Compute the ratio to coarsest level (reference level in hierarchy --
     * usually level zero) and set grid geometry for this (coarse) level.  If
@@ -586,9 +590,11 @@ PatchLevel::setCoarsenedPatchLevel(
       std::vector<IntVector> block_ratio(d_number_blocks, IntVector::getZero(getDim()));
       for (int b = 0; b < d_number_blocks; ++b) {
          BlockId block_id(b);
+         const hier::IntVector& block_fine = fine_ratio.getBlockVector(block_id);
+         const hier::IntVector& block_crse = coarsen_ratio.getBlockVector(block_id);
          for (int i = 0; i < getDim().getValue(); ++i) {
-            int fine_rat = fine_ratio.getBlockVector(block_id)(i);
-            int coarsen_rat = coarsen_ratio.getBlockVector(block_id)(i);
+            int fine_rat = block_fine(i);
+            int coarsen_rat = block_crse(i);
             if (fine_rat > 0) {
                if (fine_rat >= coarsen_rat) {
                   block_ratio[b](i) = fine_rat / coarsen_rat;
@@ -602,7 +608,7 @@ PatchLevel::setCoarsenedPatchLevel(
             }
          }
       }
-      d_ratio_to_level_zero = MultiIntVector(block_ratio);
+      d_ratio_to_level_zero.set(block_ratio);
 
    } else {
 
@@ -638,7 +644,6 @@ PatchLevel::setCoarsenedPatchLevel(
       d_ratio_to_level_zero);
    d_box_level->finalize();
    d_local_number_patches = fine_level->getNumberOfPatches();
-   d_number_blocks = fine_level->d_number_blocks;
 
    d_physical_domain.resize(d_number_blocks);
    for (int nb = 0; nb < d_number_blocks; ++nb) {
@@ -766,7 +771,7 @@ PatchLevel::getFromRestart(
          ++i;
       }
    } 
-   d_ratio_to_level_zero = MultiIntVector(block_ratio);
+   d_ratio_to_level_zero.set(block_ratio);
 
    d_number_blocks = restart_db->getInteger("d_number_blocks");
 
@@ -799,7 +804,7 @@ PatchLevel::getFromRestart(
          ++i;
       }
    }
-   d_ratio_to_coarser_level = MultiIntVector(block_ratio);
+   d_ratio_to_coarser_level.set(block_ratio);
 
 
    /*

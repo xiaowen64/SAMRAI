@@ -67,8 +67,8 @@ public:
       const int tag_data_index,
       const int tag_val,
       const hier::BoxContainer& bound_boxes,
-      const hier::IntVector& min_box,
-      const hier::IntVector& tag_to_new_width) = 0;
+      const hier::MultiIntVector& min_box,
+      const hier::MultiIntVector& tag_to_new_width) = 0;
 
 private:
    // The following are not implemented:

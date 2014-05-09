@@ -271,7 +271,7 @@ public:
    getMaxFinerLevelDt(
       const int finer_level_number,
       const double coarse_dt,
-      const hier::IntVector& ratio_to_coarser);
+      const hier::MultiIntVector& ratio_to_coarser);
 
    /**
     * Integrate data on all patches on the given patch level from current

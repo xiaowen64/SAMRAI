@@ -397,8 +397,8 @@ OverlapConnectorAlgorithm::bridgeWithNesting(
    TBOX_ASSERT(west_to_cent.hasTranspose());
    TBOX_ASSERT(cent_to_east.hasTranspose());
    const tbox::Dimension& dim(connector_width_limit.getDim());
-   MultiIntVector west_to_east_width(IntVector(dim,-1));
-   MultiIntVector east_to_west_width(IntVector(dim,-1));
+   MultiIntVector west_to_east_width(dim,-1);
+   MultiIntVector east_to_west_width(dim,-1);
    std::set<int> incoming_ranks,  outgoing_ranks;
    bool ordered = true;
    NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);
@@ -468,8 +468,8 @@ OverlapConnectorAlgorithm::bridge(
    TBOX_ASSERT(cent_to_east.hasTranspose());
    const tbox::Dimension& dim(connector_width_limit.getDim());
    const IntVector& zero_vector(IntVector::getZero(dim));
-   MultiIntVector west_to_east_width(IntVector(dim,-1));
-   MultiIntVector east_to_west_width(IntVector(dim,-1));
+   MultiIntVector west_to_east_width(dim,-1);
+   MultiIntVector east_to_west_width(dim,-1);
    std::set<int> incoming_ranks,  outgoing_ranks;
    bool ordered = true;
    NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);
@@ -538,9 +538,9 @@ OverlapConnectorAlgorithm::bridge(
    TBOX_ASSERT(cent_to_east.hasTranspose());
    const tbox::Dimension& dim(cent_to_east.getConnectorWidth().getDim());
    const IntVector& zero_vector(IntVector::getZero(dim));
-   const MultiIntVector connector_width_limit(IntVector(dim, -1)); // No user-imposed limit.
-   MultiIntVector west_to_east_width(IntVector(dim,-1));
-   MultiIntVector east_to_west_width(IntVector(dim,-1));
+   const MultiIntVector connector_width_limit(dim, -1); // No user-imposed limit.
+   MultiIntVector west_to_east_width(dim,-1);
+   MultiIntVector east_to_west_width(dim,-1);
    std::set<int> incoming_ranks,  outgoing_ranks;
    bool ordered = true;
    NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);
@@ -610,8 +610,8 @@ OverlapConnectorAlgorithm::bridge(
    const tbox::Dimension& dim(connector_width_limit.getDim());
    const IntVector& zero_vector(
       IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
-   MultiIntVector west_to_east_width(IntVector(dim,-1));
-   MultiIntVector east_to_west_width(IntVector(dim,-1));
+   MultiIntVector west_to_east_width(dim,-1);
+   MultiIntVector east_to_west_width(dim,-1);
    std::set<int> incoming_ranks,  outgoing_ranks;
    bool ordered = true;
    NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);

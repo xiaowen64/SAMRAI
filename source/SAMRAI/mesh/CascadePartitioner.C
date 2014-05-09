@@ -172,7 +172,7 @@ CascadePartitioner::loadBalanceBoxLevel(
    const hier::IntVector& max_size,
    const hier::BoxLevel& domain_box_level,
    const hier::IntVector& bad_interval,
-   const hier::IntVector& cut_factor,
+   const hier::MultiIntVector& cut_factor,
    const tbox::RankGroup& rank_group) const
 {
    NULL_USE(hierarchy);
@@ -232,13 +232,22 @@ CascadePartitioner::loadBalanceBoxLevel(
 
 
    // Set effective_cut_factor to least common multiple of cut_factor and d_tile_size.
-   hier::IntVector effective_cut_factor = cut_factor;
+   hier::MultiIntVector effective_cut_factor = cut_factor;
    if ( d_tile_size != hier::IntVector::getOne(d_dim) ) {
-      for ( int d=0; d<d_dim.getValue(); ++d ) {
-         while ( effective_cut_factor[d]/d_tile_size[d]*d_tile_size[d] != effective_cut_factor[d] ) {
-            effective_cut_factor[d] += cut_factor[d];
+      const int nblocks = hierarchy->getGridGeometry()->getNumberBlocks();
+      std::vector<hier::IntVector> effective_vector(
+         nblocks, hier::IntVector::getZero(d_dim));
+      for (int b = 0; b < nblocks; ++b) {
+         hier::BlockId block_id(b);
+         effective_vector[b] = effective_cut_factor.getBlockVector(block_id);
+         const hier::IntVector& block_cut = cut_factor.getBlockVector(block_id); 
+         for ( int d=0; d<d_dim.getValue(); ++d ) {
+            while ( effective_vector[b][d]/d_tile_size[d]*d_tile_size[d] != effective_vector[b][d] ) {
+               effective_vector[b][d] += block_cut[d];
+            }
          }
       }
+      effective_cut_factor.set(effective_vector);
       if (d_print_steps) {
          tbox::plog << "CascadePartitioner::loadBalanceBoxLevel effective_cut_factor = "
                     << effective_cut_factor << std::endl;
@@ -403,16 +412,17 @@ CascadePartitioner::partitionByCascade(
     * Initialize empty balanced_box_level and mappings so they are
     * ready to be populated.
     */
+   hier::MultiIntVector zero_vector(hier::IntVector::getZero(d_dim));
    hier::BoxLevel balanced_box_level(
       balance_box_level.getRefinementRatio(),
       balance_box_level.getGridGeometry(),
       balance_box_level.getMPI());
    hier::MappingConnector balanced_to_unbalanced(balanced_box_level,
          balance_box_level,
-         hier::IntVector::getZero(d_dim));
+         zero_vector);
    hier::MappingConnector unbalanced_to_balanced(balance_box_level,
          balanced_box_level,
-         hier::IntVector::getZero(d_dim));
+         zero_vector);
    unbalanced_to_balanced.setTranspose(&balanced_to_unbalanced, false);
 
 

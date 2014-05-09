@@ -123,7 +123,7 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
       if (max_levels > 1) {
 
          for (level_number = 1; level_number < max_levels; ++level_number) {
-            const hier::IntVector ratio(d_patch_hierarchy->
+            const hier::MultiIntVector ratio(d_patch_hierarchy->
                                         getRatioToCoarserLevel(level_number));
 
             if (((ratio.max() % 2) == 0) || (ratio.max() == 1)) {

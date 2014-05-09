@@ -552,12 +552,12 @@ HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
 
    t_coarsen_rich_extrap->start();
 
-   const hier::IntVector& zero_vector(hier::IntVector::getZero(hierarchy->getDim()));
+   hier::MultiIntVector zero_vector(hier::IntVector::getZero(hierarchy->getDim()));
 
    boost::shared_ptr<hier::PatchLevel> hier_level(
       hierarchy->getPatchLevel(level_number));
 
-   hier::IntVector coarsen_ratio(hierarchy->getDim());
+   hier::MultiIntVector coarsen_ratio(zero_vector);
    if (coarse_level->getRatioToLevelZero() < zero_vector) {
       if (hier_level->getRatioToLevelZero() < zero_vector) {
          coarsen_ratio = coarse_level->getRatioToLevelZero()
@@ -588,14 +588,14 @@ HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
     * level.  We just have to convert the width to the correct refinement
     * ratio before initializing the Connectors.
     */
-   const hier::IntVector peer_connector_width =
+   const hier::MultiIntVector peer_connector_width =
       hierarchy->getRequiredConnectorWidth(
          level_number,
          level_number, true);
 
    coarse_level->findConnectorWithTranspose(
       *hier_level,
-      hier::IntVector::ceilingDivide(peer_connector_width, coarsen_ratio),
+      hier::MultiIntVector::ceilingDivide(peer_connector_width, coarsen_ratio),
       peer_connector_width,
       hier::CONNECTOR_CREATE);
 #endif
@@ -888,16 +888,11 @@ double
 HyperbolicLevelIntegrator::getMaxFinerLevelDt(
    const int finer_level_number,
    const double coarse_dt,
-   const hier::IntVector& ratio)
+   const hier::MultiIntVector& ratio)
 {
    NULL_USE(finer_level_number);
 
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   for (int id = 0; id < ratio.getDim().getValue(); ++id) {
-      TBOX_ASSERT(ratio(id) > 0);
-   }
-#endif
+   TBOX_ASSERT(ratio.min() > 0);
    return coarse_dt / double(ratio.max());
 }
 

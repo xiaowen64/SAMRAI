@@ -53,14 +53,14 @@ PatchHierarchy::PatchHierarchy(
    d_patch_factory(new PatchFactory),
    d_patch_level_factory(new PatchLevelFactory),
    d_max_levels(1),
-   d_ratio_to_coarser(1, MultiIntVector(IntVector::getOne(d_dim), BlockId(0))),
+   d_ratio_to_coarser(1, MultiIntVector(IntVector::getOne(d_dim))),
    d_proper_nesting_buffer(d_max_levels - 1, 1),
    d_smallest_patch_size(1, IntVector(d_dim, 1)),
    d_largest_patch_size(1, IntVector(d_dim, tbox::MathUtilities<int>::getMax())),
    d_allow_patches_smaller_than_ghostwidth(false),
    d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps(false),
-   d_self_connector_widths(1, MultiIntVector(IntVector::getOne(d_dim), BlockId(0))),
-   d_fine_connector_widths(1, MultiIntVector(IntVector::getOne(d_dim), BlockId(0))),
+   d_self_connector_widths(1, MultiIntVector(IntVector::getOne(d_dim))),
+   d_fine_connector_widths(1, MultiIntVector(IntVector::getOne(d_dim))),
    d_connector_widths_committed(false),
    d_individual_cwrs()
 {
@@ -76,12 +76,12 @@ PatchHierarchy::PatchHierarchy(
     * grid geometry and set up domain data dependent on it.
     */
    d_domain_box_level.reset(new BoxLevel(
-      MultiIntVector(IntVector::getOne(d_dim), BlockId(d_number_blocks-1)),
+      MultiIntVector(IntVector::getOne(d_dim)),
       getGridGeometry(),
       tbox::SAMRAI_MPI::getSAMRAIWorld(),
       BoxLevel::GLOBALIZED));
    d_grid_geometry->computePhysicalDomain(*d_domain_box_level,
-      MultiIntVector(IntVector::getOne(d_dim), BlockId(d_number_blocks-1)));
+      MultiIntVector(IntVector::getOne(d_dim)));
    d_domain_box_level->finalize();
 
    d_individual_cwrs = s_class_cwrs;
@@ -155,8 +155,7 @@ PatchHierarchy::getFromInput(
          }
 
          // Read in ratio_to_coarser.
-         d_ratio_to_coarser[0] = MultiIntVector(IntVector::getOne(d_dim),
-                                                 BlockId(d_number_blocks-1));
+         d_ratio_to_coarser[0].setAll(IntVector::getOne(d_dim));
          if (d_number_blocks == 1) {
             if (input_db->isDatabase("ratio_to_coarser")) {
                const boost::shared_ptr<tbox::Database> tmp_db(
@@ -173,7 +172,7 @@ PatchHierarchy::getFromInput(
                            INPUT_RANGE_ERROR("ratio_to_coarser");
                         }
                      }
-                     d_ratio_to_coarser[ln] = MultiIntVector(read_vector, BlockId(0));
+                     d_ratio_to_coarser[ln].setAll(read_vector);
                   } else {
                      d_ratio_to_coarser[ln] = d_ratio_to_coarser[ln - 1];
                   }
@@ -204,12 +203,30 @@ PatchHierarchy::getFromInput(
                         block_ratio[ln][b] = block_ratio[ln-1][b];
                      }
                   }
+               } else if (input_db->isDatabase("ratio_to_coarser")) {
+                  const boost::shared_ptr<tbox::Database> tmp_db(
+                     input_db->getDatabase("ratio_to_coarser"));
+                  for (int ln = 1; ln < d_max_levels; ++ln) {
+                     if (tmp_db->isInteger(level_names[ln])) {
+                        tmp_db->getIntegerArray(level_names[ln],
+                           &block_ratio[ln][b][0],
+                           d_dim.getValue());
+                        for (int i = 0; i < d_dim.getValue(); ++i) {
+                           if (!(block_ratio[ln][b][i] > 0)) {
+                              INPUT_RANGE_ERROR("name");
+                           }
+                        }
+                     } else {
+                        block_ratio[ln][b] = block_ratio[ln-1][b];
+                     }
+                  }
                } else {
+
                   TBOX_ERROR(" "); 
                }
             }
             for (int ln = 1; ln < d_max_levels; ++ln) {
-               d_ratio_to_coarser[ln] = MultiIntVector(block_ratio[ln]);
+               d_ratio_to_coarser[ln].set(block_ratio[ln]);
             }
          } 
 
@@ -584,17 +601,17 @@ PatchHierarchy::getRequiredConnectorWidth(
 void
 PatchHierarchy::computeRequiredConnectorWidths() const
 {
-   const IntVector& zero_vector(IntVector::getZero(d_dim));
+   const IntVector& zero_vector = IntVector::getZero(d_dim);
    d_self_connector_widths.clear();
-   d_self_connector_widths.resize(d_max_levels, MultiIntVector(zero_vector, BlockId(d_number_blocks-1)));
+   d_self_connector_widths.resize(d_max_levels, MultiIntVector(zero_vector));
    for (int ln = 0; ln < d_max_levels; ++ln) {
-      d_self_connector_widths[ln] = MultiIntVector(zero_vector, BlockId(d_number_blocks-1));
+      d_self_connector_widths[ln].setAll(zero_vector);
    }
    d_fine_connector_widths.clear();
    if (d_max_levels > 1) {
-      d_fine_connector_widths.resize(d_max_levels - 1, MultiIntVector(zero_vector, BlockId(d_number_blocks-1)));
+      d_fine_connector_widths.resize(d_max_levels - 1, MultiIntVector(zero_vector));
       for (int ln = 0; ln < d_max_levels-1; ++ln) {
-         d_fine_connector_widths[ln] = MultiIntVector(zero_vector, BlockId(d_number_blocks-1));
+         d_fine_connector_widths[ln].setAll(zero_vector);
       }
    }
 
@@ -1112,11 +1129,10 @@ PatchHierarchy::putToRestart(
 
    boost::shared_ptr<tbox::Database> self_connector_widths_db(
       restart_db->putDatabase("d_self_connector_widths"));
-   d_self_connector_widths.resize(d_max_levels, MultiIntVector(
-         IntVector::getOne(d_dim), BlockId(d_number_blocks-1))); 
+   d_self_connector_widths.resize(d_max_levels, MultiIntVector(d_dim, 1));
    for (int ln = 0; ln < d_max_levels; ++ln) {
-      d_self_connector_widths[ln] = MultiIntVector(
-         IntVector::getOne(d_dim), BlockId(d_number_blocks-1));
+      d_self_connector_widths[ln].setAll(
+         IntVector::getOne(d_dim));
 
       std::vector<int> put_self_widths(d_number_blocks * d_dim.getValue());
       int ic = 0;
@@ -1133,11 +1149,9 @@ PatchHierarchy::putToRestart(
 
    boost::shared_ptr<tbox::Database> fine_connector_widths_db(
       restart_db->putDatabase("d_fine_connector_widths"));
-   d_fine_connector_widths.resize(d_max_levels-1, MultiIntVector(
-         IntVector::getOne(d_dim), BlockId(d_number_blocks-1)));
+   d_fine_connector_widths.resize(d_max_levels-1, MultiIntVector(d_dim, 1));
    for (int ln = 0; ln < d_max_levels - 1; ++ln) {
-      d_fine_connector_widths[ln] = MultiIntVector(
-         IntVector::getOne(d_dim), BlockId(d_number_blocks-1));
+      d_fine_connector_widths[ln].setAll(IntVector::getOne(d_dim));
 
       std::vector<int> put_fine_widths(d_number_blocks * d_dim.getValue());
       int ic = 0;
@@ -1228,7 +1242,7 @@ PatchHierarchy::getFromRestart()
             &block_ratio[b][0],
             d_dim.getValue());
       }
-      d_ratio_to_coarser[ln] = MultiIntVector(block_ratio);
+      d_ratio_to_coarser[ln].set(block_ratio);
    }
 
    boost::shared_ptr<tbox::Database> smallest_patch_db(
@@ -1272,7 +1286,7 @@ PatchHierarchy::getFromRestart()
 
    boost::shared_ptr<tbox::Database> self_connector_widths_db(
       database->getDatabase("d_self_connector_widths"));
-   d_self_connector_widths.resize(d_max_levels, MultiIntVector(IntVector::getOne(d_dim), BlockId(d_number_blocks-1)));
+   d_self_connector_widths.resize(d_max_levels, MultiIntVector(d_dim, 1));
    for (int ln = 0; ln < d_max_levels; ++ln) {
       std::vector<int> get_self_widths =
          self_connector_widths_db->getIntegerVector(level_names[ln]);
@@ -1285,12 +1299,12 @@ PatchHierarchy::getFromRestart()
             ++ic;
          }
       }
-      d_self_connector_widths[ln] = MultiIntVector(tmp_self_widths);
+      d_self_connector_widths[ln].set(tmp_self_widths);
    }
 
    boost::shared_ptr<tbox::Database> fine_connector_widths_db(
       database->getDatabase("d_fine_connector_widths"));
-   d_fine_connector_widths.resize(d_max_levels - 1, MultiIntVector(IntVector::getOne(d_dim), BlockId(d_number_blocks-1)));
+   d_fine_connector_widths.resize(d_max_levels - 1, MultiIntVector(d_dim, 1));
    for (int ln = 0; ln < d_max_levels - 1; ++ln) {
       std::vector<int> get_fine_widths =
          fine_connector_widths_db->getIntegerVector(level_names[ln]);
@@ -1303,7 +1317,7 @@ PatchHierarchy::getFromRestart()
             ++ic;
          }
       }
-      d_fine_connector_widths[ln] = MultiIntVector(tmp_fine_widths);
+      d_fine_connector_widths[ln].set(tmp_fine_widths);
    }
 }
 

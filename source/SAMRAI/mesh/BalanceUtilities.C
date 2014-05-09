@@ -372,7 +372,7 @@ BalanceUtilities::privateInitializeBadCutPointsForBox(
          getPatchDescriptor()->getMaxGhostWidth(dim);
 
       hier::BoxContainer bdry_list(box);
-      bdry_list.grow(tmp_max_gcw);
+      bdry_list.grow(hier::MultiIntVector(tmp_max_gcw));
       bdry_list.removeIntersections(physical_domain);
       if (!bdry_list.isEmpty()) {
          set_dummy_cut_points = false;
@@ -1247,7 +1247,7 @@ BalanceUtilities::recursiveBisectionUniform(
    const double ideal_workload,
    const double workload_tolerance,
    const hier::IntVector& min_size,
-   const hier::IntVector& cut_factor,
+   const hier::MultiIntVector& cut_factor,
    const hier::IntVector& bad_interval,
    const hier::BoxContainer& physical_domain)
 {
@@ -1258,7 +1258,7 @@ BalanceUtilities::recursiveBisectionUniform(
    TBOX_ASSERT(ideal_workload > 0);
    TBOX_ASSERT((workload_tolerance >= 0) && (workload_tolerance < 1.0));
    TBOX_ASSERT(min_size > hier::IntVector::getZero(dim));
-   TBOX_ASSERT(cut_factor > hier::IntVector::getZero(dim));
+   TBOX_ASSERT(cut_factor > hier::MultiIntVector(dim,0));
    TBOX_ASSERT(bad_interval >= hier::IntVector::getZero(dim));
    TBOX_ASSERT(!physical_domain.isEmpty());
 
@@ -1275,7 +1275,10 @@ BalanceUtilities::recursiveBisectionUniform(
 
       TBOX_ASSERT(!box2chop.empty());
 
-      double boxwork = (double)box2chop.size();
+      double boxwork = static_cast<double>(box2chop.size());
+
+      const hier::IntVector& box_cut_factor =
+         cut_factor.getBlockVector(box2chop.getBlockId());
 
       if (boxwork <= ((1.0 + workload_tolerance) * ideal_workload)) {
 
@@ -1302,7 +1305,7 @@ BalanceUtilities::recursiveBisectionUniform(
             ideal_workload,
             workload_tolerance,
             min_size,
-            cut_factor,
+            box_cut_factor,
             bad_cut_points);
 
          out_boxes.spliceBack(tempboxes);
@@ -1334,7 +1337,7 @@ BalanceUtilities::recursiveBisectionNonuniform(
    double ideal_workload,
    const double workload_tolerance,
    const hier::IntVector& min_size,
-   const hier::IntVector& cut_factor,
+   const hier::MultiIntVector& cut_factor,
    const hier::IntVector& bad_interval,
    const hier::BoxContainer& physical_domain)
 {
@@ -1345,7 +1348,7 @@ BalanceUtilities::recursiveBisectionNonuniform(
    TBOX_ASSERT(ideal_workload > 0);
    TBOX_ASSERT((workload_tolerance >= 0) && (workload_tolerance < 1.0));
    TBOX_ASSERT(min_size > hier::IntVector::getZero(dim));
-   TBOX_ASSERT(cut_factor > hier::IntVector::getZero(dim));
+   TBOX_ASSERT(cut_factor > hier::MultiIntVector(dim,0));
    TBOX_ASSERT(bad_interval >= hier::IntVector::getZero(dim));
    TBOX_ASSERT(!physical_domain.isEmpty());
 
@@ -1392,7 +1395,7 @@ BalanceUtilities::recursiveBisectionNonuniform(
             ideal_workload,
             workload_tolerance,
             min_size,
-            cut_factor,
+            cut_factor.getBlockVector(box2chop.getBlockId()),
             bad_cut_points);
 
          out_boxes.spliceBack(tempboxes);
@@ -1847,7 +1850,7 @@ BalanceUtilities::findSmallBoxesInPostbalance(
    const hier::IntVector &min_width,
    size_t min_cells )
 {
-   hier::MappingConnector post_to_pre( post, pre, hier::IntVector::getZero(post.getDim()) );
+   hier::MappingConnector post_to_pre( post, pre, hier::MultiIntVector(hier::IntVector::getZero(post.getDim())) );
    hier::OverlapConnectorAlgorithm oca;
    oca.findOverlaps(post_to_pre);
    findSmallBoxesInPostbalance( co, border, post_to_pre, min_width, min_cells );
@@ -2121,7 +2124,7 @@ BalanceUtilities::constrainMaxBoxSizes(
 {
    TBOX_ASSERT(!anchor_to_level || anchor_to_level->hasTranspose());
 
-   const hier::IntVector& zero_vector(hier::IntVector::getZero(box_level.getDim()));
+   hier::MultiIntVector zero_vector(hier::IntVector::getZero(box_level.getDim()));
 
    hier::BoxLevel constrained(box_level.getRefinementRatio(),
       box_level.getGridGeometry(),
@@ -2338,15 +2341,16 @@ BalanceUtilities::prebalanceBoxLevel(
     * so that on return from this method, they will be correct for the new
     * balance_box_level.
     */
+   hier::MultiIntVector zero_vector(hier::IntVector::getZero(balance_box_level.getDim()));
    hier::MappingConnector balance_to_tmp(
       balance_box_level,
       tmp_box_level,
-      hier::IntVector::getZero(balance_box_level.getDim()));
+      zero_vector);
 
    hier::MappingConnector tmp_to_balance(
       tmp_box_level,
       balance_box_level,
-      hier::IntVector::getZero(balance_box_level.getDim()));
+      zero_vector);
 
    balance_to_tmp.setTranspose(&tmp_to_balance, false);
 

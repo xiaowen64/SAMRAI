@@ -119,8 +119,8 @@ TileClustering::findBoxesContainingTags(
    const int tag_data_index,
    const int tag_val,
    const hier::BoxContainer& bound_boxes,
-   const hier::IntVector& min_box,
-   const hier::IntVector& max_gcw)
+   const hier::MultiIntVector& min_box,
+   const hier::MultiIntVector& max_gcw)
 {
    NULL_USE(min_box);
    NULL_USE(max_gcw);
@@ -138,7 +138,7 @@ TileClustering::findBoxesContainingTags(
 
    d_object_timers->t_cluster_setup->start();
 
-   const hier::IntVector &zero_vector = hier::IntVector::getZero(tag_level->getDim());
+   const hier::MultiIntVector zero_vector(hier::IntVector::getZero(tag_level->getDim()));
 
    for (hier::BoxContainer::const_iterator bb_itr = bound_boxes.begin();
         bb_itr != bound_boxes.end(); ++bb_itr) {
@@ -499,7 +499,7 @@ TileClustering::clusterWholeTiles(
 
    const hier::BoxLevel &tag_box_level = *tag_level->getBoxLevel();
    const hier::Connector &tag_to_tag = tag_box_level.findConnector(
-      tag_box_level, d_tile_size, hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
+      tag_box_level, hier::MultiIntVector(d_tile_size), hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
 
    hier::BoxContainer visible_tag_boxes(true); // Ordering is precondition for removePeriodicImageBoxes.
    tag_to_tag.getLocalNeighbors(visible_tag_boxes);
@@ -842,7 +842,7 @@ TileClustering::detectSemilocalEdges(
 
    const hier::BoxLevel &tag_box_level = tag_to_tile->getBase();
    hier::Connector tag_to_tag = tag_box_level.findConnector(
-      tag_box_level, d_tile_size, hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
+      tag_box_level, hier::MultiIntVector(d_tile_size), hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
    /*
     * We don't want to introduce periodic relationships yet, so remove
     * them from the tag<==>tag leg of the bridge.  tag_to_tag doesn't
@@ -864,7 +864,7 @@ TileClustering::detectSemilocalEdges(
    d_oca.bridge( tag_to_tile,
                  tag_to_tag,
                  hier::Connector(*tag_to_tile),
-                 hier::IntVector::getZero(d_dim),
+                 hier::MultiIntVector(hier::IntVector::getZero(d_dim)),
                  true /* compute transpose */ );
 
    if (d_print_steps) {
@@ -909,7 +909,7 @@ TileClustering::shearTilesAtBlockBoundaries(
                                           tile_box_level.getGridGeometry() );
    hier::MappingConnector tile_to_sheared( tile_box_level,
                                            sheared_tile_box_level,
-                                           hier::IntVector::getZero(d_dim) );
+                                           hier::MultiIntVector(hier::IntVector::getZero(d_dim)) );
 
    for ( hier::BoxContainer::const_iterator ti=tiles.begin();
          ti!=tiles.end(); ++ti ) {
@@ -1179,7 +1179,7 @@ TileClustering::coalesceClusters(
    /*
     * Build a map that represents the changes from pre- to post-coalesce.
     */
-   const hier::IntVector &zero_vector = hier::IntVector::getZero(d_dim);
+   const hier::MultiIntVector zero_vector(hier::IntVector::getZero(d_dim));
    hier::BoxLevel tmp_tile_box_level(
       tile_box_level.getRefinementRatio(),
       tile_box_level.getGridGeometry(),
@@ -1307,7 +1307,7 @@ TileClustering::coalesceClusters(
        * Coalesce changed the tiles, so rebuild tile_box_level and
        * Connectors.
        */
-      const hier::IntVector &zero_vector = hier::IntVector::getZero(d_dim);
+      hier::MultiIntVector zero_vector(hier::IntVector::getZero(d_dim));
       tile_box_level.initialize( tile_box_level.getRefinementRatio(),
                                  tile_box_level.getGridGeometry(),
                                  tile_box_level.getMPI() );

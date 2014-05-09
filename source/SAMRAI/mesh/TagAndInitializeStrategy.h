@@ -249,7 +249,7 @@ public:
     */
    virtual void
    checkCoarsenRatios(
-      const std::vector<hier::IntVector>& ratio_to_coarser) = 0;
+      const std::vector<hier::MultiIntVector>& ratio_to_coarser) = 0;
 
    /*!
     * Return whether refinement is being performed using ONLY

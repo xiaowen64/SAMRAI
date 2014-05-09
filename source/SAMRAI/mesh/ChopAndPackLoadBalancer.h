@@ -401,7 +401,7 @@ public:
       const hier::IntVector& max_size,
       const hier::BoxLevel& domain_box_level,
       const hier::IntVector& bad_interval,
-      const hier::IntVector& cut_factor, // Default v2.x.x = hier::IntVector::getOne(tbox::Dimension(DIM))
+      const hier::MultiIntVector& cut_factor,
       const tbox::RankGroup& rank_group = tbox::RankGroup()) const;
 
    /*!
@@ -503,10 +503,10 @@ private:
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int level_number,
       const hier::BoxContainer& physical_domain,
-      const hier::IntVector& ratio_to_hierarchy_level_zero,
+      const hier::MultiIntVector& ratio_to_hierarchy_level_zero,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
-      const hier::IntVector& cut_factor,
+      const hier::MultiIntVector& cut_factor,
       const hier::IntVector& bad_interval) const;
 
    /*
@@ -519,7 +519,7 @@ private:
       const hier::Box& in_box,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
-      const hier::IntVector& cut_factor,
+      const hier::MultiIntVector& cut_factor,
       const hier::IntVector& bad_interval,
       const hier::BoxContainer& physical_domain,
       const tbox::SAMRAI_MPI& mpi) const;
@@ -536,7 +536,7 @@ private:
       int level_number,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
-      const hier::IntVector& cut_factor,
+      const hier::MultiIntVector& cut_factor,
       const hier::IntVector& bad_interval,
       const hier::BoxContainer& physical_domain,
       const tbox::SAMRAI_MPI& mpi) const;
@@ -551,11 +551,11 @@ private:
       const hier::BoxContainer& in_boxes,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int level_number,
-      const hier::IntVector& ratio_to_coarsest_hierarchy_level,
+      const hier::MultiIntVector& ratio_to_coarsest_hierarchy_level,
       int wrk_indx,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
-      const hier::IntVector& cut_factor,
+      const hier::MultiIntVector& cut_factor,
       const hier::IntVector& bad_interval,
       const hier::BoxContainer& physical_domain,
       const tbox::SAMRAI_MPI& mpi) const;

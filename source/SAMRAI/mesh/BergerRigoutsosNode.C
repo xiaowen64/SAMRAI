@@ -935,7 +935,7 @@ BergerRigoutsosNode::broadcastAcceptability_check()
           * check should be done outside of this class in order to
           * have flexibility regarding how to handle it.
           */
-         TBOX_ASSERT(d_parent == 0 || d_box.numberCells() >= d_common->d_min_box);
+         TBOX_ASSERT(d_parent == 0 || d_box.numberCells() >= d_common->d_min_box.getBlockVector(d_box.getBlockId()));
       }
 
       if (boxRejected()) {
@@ -959,9 +959,9 @@ BergerRigoutsosNode::broadcastAcceptability_check()
          d_rht_child->d_mpi_tag = *(ptr++);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         if (d_box.numberCells() >= d_common->d_min_box) {
-            TBOX_ASSERT(d_lft_child->d_box.numberCells() >= d_common->d_min_box);
-            TBOX_ASSERT(d_rht_child->d_box.numberCells() >= d_common->d_min_box);
+         if (d_box.numberCells() >= d_common->d_min_box.getBlockVector(d_box.getBlockId())) {
+            TBOX_ASSERT(d_lft_child->d_box.numberCells() >= d_common->d_min_box.getBlockVector(d_box.getBlockId()));
+            TBOX_ASSERT(d_rht_child->d_box.numberCells() >= d_common->d_min_box.getBlockVector(d_box.getBlockId()));
          }
 #endif
          TBOX_ASSERT(d_lft_child->d_mpi_tag > -1);
@@ -1167,7 +1167,7 @@ BergerRigoutsosNode::broadcastToDropouts_check()
           * check should be done outside of this class in order to
           * have flexibility regarding how to handle it.
           */
-         TBOX_ASSERT(d_parent == 0 || d_box.numberCells() >= d_common->d_min_box);
+         TBOX_ASSERT(d_parent == 0 || d_box.numberCells() >= d_common->d_min_box.getBlockVector(d_box.getBlockId()));
          d_box.initialize( d_box, accepted_box_local_id, d_box.getOwnerRank() ); // Reset local id.
       }
    }
@@ -1250,7 +1250,7 @@ BergerRigoutsosNode::computeMinimalBoundingBoxForTags()
    hier::Index new_lower = d_box.lower();
    hier::Index new_upper = d_box.upper();
 
-   const hier::IntVector& min_box = d_common->d_min_box;
+   const hier::IntVector& min_box = d_common->d_min_box.getBlockVector(d_box.getBlockId());
    hier::IntVector box_size = d_box.numberCells();
 
    /*
@@ -1285,7 +1285,7 @@ BergerRigoutsosNode::computeMinimalBoundingBoxForTags()
        * check should be done outside of this class in order to
        * have flexibility regarding how to handle it.
        */
-      TBOX_ASSERT(d_parent == 0 || new_box.numberCells() >= d_common->d_min_box);
+      TBOX_ASSERT(d_parent == 0 || new_box.numberCells() >= d_common->d_min_box.getBlockVector(d_box.getBlockId()));
       /*
        * Save tagged part of the current histogram and reset the box.
        * Is this step really required?  No, we can just keep the
@@ -1395,7 +1395,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
     * If cut_margin is negative in any direction, we cannot cut d_box
     * across that direction without violating min_box.
     */
-   hier::IntVector min_size = d_common->d_min_box;
+   hier::IntVector min_size = d_common->d_min_box.getBlockVector(d_box.getBlockId());
    min_size.max( d_common->d_min_box_size_from_cutting );
    const hier::IntVector cut_margin = boxdims - min_size * 2;
 
@@ -1570,9 +1570,9 @@ BergerRigoutsosNode::acceptOrSplitBox()
       d_lft_child->d_box = hier::Box(box_lo, lft_hi, d_box.getBlockId());
       d_rht_child->d_box = hier::Box(rht_lo, box_hi, d_box.getBlockId());
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (d_box.numberCells() >= d_common->d_min_box) {
-         TBOX_ASSERT(d_lft_child->d_box.numberCells() >= d_common->d_min_box);
-         TBOX_ASSERT(d_rht_child->d_box.numberCells() >= d_common->d_min_box);
+      if (d_box.numberCells() >= d_common->d_min_box.getBlockVector(d_box.getBlockId())) {
+         TBOX_ASSERT(d_lft_child->d_box.numberCells() >= d_common->d_min_box.getBlockVector(d_box.getBlockId()));
+         TBOX_ASSERT(d_rht_child->d_box.numberCells() >= d_common->d_min_box.getBlockVector(d_box.getBlockId()));
       }
 #endif
 
@@ -1633,8 +1633,8 @@ BergerRigoutsosNode::findZeroCutSwath(
    const int lo = d_box.lower(dim);
    const int hi = d_box.upper(dim);
    // Compute the limit for the swath.
-   const int cut_lo_lim = lo + d_common->d_min_box(dim);
-   const int cut_hi_lim = hi - d_common->d_min_box(dim);
+   const int cut_lo_lim = lo + d_common->d_min_box.getBlockVector(d_box.getBlockId())(dim);
+   const int cut_hi_lim = hi - d_common->d_min_box.getBlockVector(d_box.getBlockId())(dim);
 
    /*
     * Start in the middle of the box.
@@ -1655,8 +1655,8 @@ BergerRigoutsosNode::findZeroCutSwath(
             --cut_lo;
          }
          TBOX_ASSERT(cut_hi >= cut_lo);
-         TBOX_ASSERT(cut_lo - lo >= d_common->d_min_box(dim));
-         TBOX_ASSERT(hi - cut_hi >= d_common->d_min_box(dim));
+         TBOX_ASSERT(cut_lo - lo >= d_common->d_min_box.getBlockVector(d_box.getBlockId())(dim));
+         TBOX_ASSERT(hi - cut_hi >= d_common->d_min_box.getBlockVector(d_box.getBlockId())(dim));
 #ifdef DEBUG_CHECK_ASSERTIONS
          for (int i = cut_lo; i <= cut_hi; ++i) {
             TBOX_ASSERT(d_histogram[dim][i - lo] == 0);
@@ -1674,8 +1674,8 @@ BergerRigoutsosNode::findZeroCutSwath(
             ++cut_hi;
          }
          TBOX_ASSERT(cut_hi >= cut_lo);
-         TBOX_ASSERT(cut_lo - lo >= d_common->d_min_box(dim));
-         TBOX_ASSERT(hi - cut_hi >= d_common->d_min_box(dim));
+         TBOX_ASSERT(cut_lo - lo >= d_common->d_min_box.getBlockVector(d_box.getBlockId())(dim));
+         TBOX_ASSERT(hi - cut_hi >= d_common->d_min_box.getBlockVector(d_box.getBlockId())(dim));
 #ifdef DEBUG_CHECK_ASSERTIONS
          for (int i = cut_lo; i <= cut_hi; ++i) {
             TBOX_ASSERT(d_histogram[dim][i - lo] == 0);
@@ -1746,7 +1746,7 @@ BergerRigoutsosNode::cutAtInflection(
    }
 
    const int min_box_size =
-      tbox::MathUtilities<int>::Max( d_common->d_min_box(dim),
+      tbox::MathUtilities<int>::Max( d_common->d_min_box.getBlockVector(d_box.getBlockId())(dim),
                                      d_common->d_min_box_size_from_cutting(dim) );
 
    const int box_lo = 0;
@@ -1862,9 +1862,9 @@ BergerRigoutsosNode::countOverlapWithLocalPatches()
     * Remove the child if it has zero overlap.
     */
    hier::Box lft_grown_box = d_lft_child->d_box;
-   lft_grown_box.grow(d_common->d_tag_to_new_width);
+   lft_grown_box.grow(d_common->d_tag_to_new_width.getBlockVector(lft_grown_box.getBlockId()));
    hier::Box rht_grown_box = d_rht_child->d_box;
-   rht_grown_box.grow(d_common->d_tag_to_new_width);
+   rht_grown_box.grow(d_common->d_tag_to_new_width.getBlockVector(rht_grown_box.getBlockId()));
    int& lft_overlap = d_lft_child->d_overlap;
    int& rht_overlap = d_rht_child->d_overlap;
    lft_overlap = rht_overlap = 0;
@@ -2095,7 +2095,7 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
     * check should be done outside of this class in order to
     * have flexibility regarding how to handle it.
     */
-   TBOX_ASSERT(d_parent == 0 || d_box.numberCells() >= d_common->d_min_box);
+   TBOX_ASSERT(d_parent == 0 || d_box.numberCells() >= d_common->d_min_box.getBlockVector(d_box.getBlockId()));
    /*
     * We should not compute nabrs if we got the node
     * by a dropout broadcast because we already know
@@ -2105,7 +2105,7 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
 
    // Create an expanded box for intersection check.
    hier::Box grown_box = d_box;
-   grown_box.grow(d_common->d_tag_to_new_width);
+   grown_box.grow(d_common->d_tag_to_new_width.getBlockVector(d_box.getBlockId()));
 
    /*
     * On the owner process, we store the neighbors of the new node.

@@ -145,7 +145,7 @@ struct BalanceUtilities {
       double ideal_workload,
       const double workload_tolerance,
       const hier::IntVector& min_size,
-      const hier::IntVector& cut_factor,
+      const hier::MultiIntVector& cut_factor,
       const hier::IntVector& bad_interval,
       const hier::BoxContainer& physical_domain);
 
@@ -212,7 +212,7 @@ struct BalanceUtilities {
       double ideal_workload,
       const double workload_tolerance,
       const hier::IntVector& min_size,
-      const hier::IntVector& cut_factor,
+      const hier::MultiIntVector& cut_factor,
       const hier::IntVector& bad_interval,
       const hier::BoxContainer& physical_domain);
 

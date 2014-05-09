@@ -422,7 +422,7 @@ public:
     */
    IntVector
    getPeriodicShift(
-      const MultiIntVector& ratio_to_level_zero) const;
+      const IntVector& ratio_to_level_zero) const;
 
    /*!
     * @brief Get the number of blocks in the geometry.

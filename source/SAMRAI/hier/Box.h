@@ -13,9 +13,10 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/hier/BoxId.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/hier/BoxId.h"
+#include "SAMRAI/hier/MultiIntVector.h"
 #include "SAMRAI/hier/Transformation.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -1093,6 +1094,10 @@ public:
    refine(
       const IntVector& ratio);
 
+   void
+   refine(
+      const MultiIntVector& ratio);
+
    /*!
     * @brief Coarsen the index space of a box by specified vector ratio.
     *
@@ -1115,6 +1120,14 @@ public:
          d_lo(i) = coarsen(d_lo(i), ratio(i));
          d_hi(i) = coarsen(d_hi(i), ratio(i));
       }
+   }
+
+   void
+   coarsen(
+      const MultiIntVector& ratio)
+   {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
+      coarsen(ratio.getBlockVector(d_block_id));
    }
 
    /*!

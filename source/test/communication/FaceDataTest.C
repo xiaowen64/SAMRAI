@@ -245,7 +245,7 @@ void FaceDataTest::setConservativeData(
        * is the vector between the coarse and fine cell face centers.
        */
 
-      hier::IntVector ratio(level->getRatioToLevelZero());
+      hier::IntVector ratio(level->getRatioToLevelZero().getBlockVector(hier::BlockId(0)));
       const int max_ratio = ratio.max();
 
       boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(

@@ -49,8 +49,9 @@ public:
     * @pre x_up != 0
     */
    CartesianPatchGeometry(
-      const hier::IntVector& ratio_to_level_zero,
+      const hier::MultiIntVector& ratio_to_level_zero,
       const TwoDimBool& touches_regular_bdry,
+      const hier::BlockId& block_id,
       const double * dx,
       const double * x_lo,
       const double * x_hi);

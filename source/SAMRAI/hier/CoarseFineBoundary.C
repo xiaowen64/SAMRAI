@@ -134,7 +134,8 @@ CoarseFineBoundary::computeFromLevel(
    /*
     * Get the domain's periodic shift.
     */
-   const IntVector periodic_shift(grid_geometry->getPeriodicShift(ratio));
+   const IntVector periodic_shift(grid_geometry->getPeriodicShift(
+      ratio.getBlockVector(BlockId(0))));
 
    bool is_periodic = false;
    for (int i = 0; i < d_dim.getValue(); ++i) {
@@ -286,7 +287,7 @@ CoarseFineBoundary::computeFromMultiblockLevel(
          if (block_id != ni->getBlockId()) {
             Box transform_box(*ni);
             grid_geometry->transformBox(transform_box,
-                                        MultiIntVector(IntVector::getOne(d_dim), ni->getBlockId()),
+                                        MultiIntVector(IntVector::getOne(d_dim)),
                                         block_id,
                                         ni->getBlockId());
             refined_domain_nabrs.pushBack(transform_box);
