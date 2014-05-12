@@ -256,6 +256,7 @@ BoxLevel::swapInitialize(
    }
    TBOX_ASSERT(&boxes != &d_boxes);   // Library error if this fails.
    d_boxes.swap(boxes);
+   d_boxes.order();
    initializePrivate(ratio,
       grid_geom,
       mpi,
