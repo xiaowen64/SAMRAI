@@ -27,7 +27,7 @@ main:  main.o $(LIBSAMRAIDEPEND)
 
 NUM_TESTS = 1
 
-TEST_NPROCS = 1
+TEST_NPROCS = @TEST_NPROCS@
 QUOTE = \"
 
 checkcompile: main
