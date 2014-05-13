@@ -24,8 +24,10 @@ namespace hier {
  * partition should very fast to create and query and requires minimal
  * storage.
  *
- * Each box is given a rank range and is individually partitioned
- * among those ranks.
+ * An assumed partition should avoid extreme imbalances, but its
+ * purpose is not fine load balancing.
+ *
+ * See also AssumedPartitionBox.
  */
 class AssumedPartition
 {
@@ -40,9 +42,6 @@ public:
     * @param[in] rank_begin First rank
     *
     * @param[in] rank_end One past last rank
-    *
-    * @param[in] partition_bounding_boxes Whether to partition the bounding boxes
-    * (one per block) or the individual boxes.
     */
    AssumedPartition(
       const BoxContainer& boxes,
@@ -55,10 +54,28 @@ public:
     */
    ~AssumedPartition() {}
 
+   /*!
+    * @brief Partition a set of boxes.
+    *
+    * @param[in] boxes Incoming boxes
+    *
+    * @param[in] rank_begin First rank
+    *
+    * @param[in] rank_end One past last rank
+    */
+   void partition(
+      const BoxContainer& boxes,
+      int rank_begin,
+      int rank_end,
+      int index_begin = 0 );
+
    //! @brief Number of box partitions.
    size_t getNumberOfParts() const {
       return d_index_end - d_index_begin;
    }
+
+   //! @brief Return the owner for a box.
+   int getOwner(int box_index) const;
 
    //! @brief Return box for given index.
    Box getBox(int box_index) const;

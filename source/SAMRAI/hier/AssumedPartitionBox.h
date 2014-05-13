@@ -25,8 +25,8 @@ namespace hier {
  * partition should very fast to create and query and requires minimal
  * storage.
  *
- * An assumed partition should avoid extreme imalances, but it is not
- * meant for partitioning a PatchLevel.
+ * An assumed partition should avoid extreme imbalances, but its
+ * purpose is not fine load balancing.
  */
 class AssumedPartitionBox
 {
@@ -56,7 +56,7 @@ public:
    AssumedPartitionBox( const tbox::Dimension &dim );
 
    /*!
-    * @brief Create partition for the given box.
+    * @brief Partition the given box.
     *
     * @param[in] in_box Incoming box
     *
@@ -66,7 +66,7 @@ public:
     *
     * @param[in] index_begin
     */
-   void createPartition(
+   void partition(
       const Box& box,
       int rank_begin,
       int rank_end,

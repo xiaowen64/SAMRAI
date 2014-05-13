@@ -66,11 +66,11 @@ AssumedPartitionBox::AssumedPartitionBox(
 
 /*
 ***************************************************************************************
-* Create a partitioning.
+* Partition the given box.
 ***************************************************************************************
 */
 void
-AssumedPartitionBox::createPartition(
+AssumedPartitionBox::partition(
    const Box& box,
    int rank_begin,
    int rank_end,
@@ -96,8 +96,8 @@ int
 AssumedPartitionBox::beginOfRank(int rank) const
 {
    if ( rank >= d_rank_begin && rank < d_rank_end ) {
-      int index = rank < d_first_rank_with_1 ? d_first_index_with_2 + (rank-d_first_rank_with_1)*2 : 0
-                + rank < d_first_rank_with_0 ? d_first_index_with_1 + (rank-d_first_rank_with_0)   : 0;
+      int index = ( rank < d_first_rank_with_1 ? d_first_index_with_2 + (rank-d_rank_begin       )*2 : 0 )
+                + ( rank < d_first_rank_with_0 ? d_first_index_with_1 + (rank-d_first_rank_with_1)   : 0 );
       return index;
    }
    return d_index_begin + d_partition_grid_size.getProduct();

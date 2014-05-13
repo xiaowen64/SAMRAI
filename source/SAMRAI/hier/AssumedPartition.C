@@ -37,6 +37,29 @@ AssumedPartition::AssumedPartition(
    d_index_begin(index_begin),
    d_index_end(index_begin)
 {
+   partition(boxes, rank_begin, rank_end, index_begin);
+}
+
+
+/*
+***************************************************************************************
+* Partition the given boxes.
+***************************************************************************************
+*/
+void
+AssumedPartition::partition(
+   const BoxContainer& boxes,
+   int rank_begin,
+   int rank_end,
+   int index_begin )
+{
+   TBOX_ASSERT( rank_end > rank_begin );
+   d_parted_boxes.clear();
+   d_rank_begin = rank_begin;
+   d_rank_end = rank_end;
+   d_index_begin = index_begin;
+   d_index_end = index_begin;
+
    size_t num_cells = 0;
    for ( BoxContainer::const_iterator bi=boxes.begin(); bi!=boxes.end(); ++bi ) {
       num_cells += bi->size();
@@ -108,6 +131,30 @@ AssumedPartition::endOfRank(int rank) const
       }
    }
    return d_index_end;
+}
+
+
+
+/*
+***************************************************************************************
+* Compute the box with the given index.
+***************************************************************************************
+*/
+int
+AssumedPartition::getOwner(int box_index) const
+{
+   TBOX_ASSERT( box_index >= d_index_begin );
+   TBOX_ASSERT( box_index < d_index_end );
+
+   for ( size_t i=0; i<d_parted_boxes.size(); ++i ) {
+      if ( box_index >= d_parted_boxes[i].begin() &&
+           box_index < d_parted_boxes[i].end() ) {
+         return d_parted_boxes[i].getOwner(box_index);
+      }
+   }
+
+   TBOX_ERROR("AssumedPartition::getBox(): Should never be here.");
+   return tbox::SAMRAI_MPI::getInvalidRank();
 }
 
 
