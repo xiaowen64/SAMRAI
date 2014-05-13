@@ -1,0 +1,75 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Description:   Input file for OverlapConnectorAlgorithm tests.
+ *
+ ************************************************************************/
+
+
+Main {
+
+  // Base name for output files.
+  base_name = "default.2d"
+
+  // Whether to log all nodes.
+  log_all_nodes = FALSE
+
+  dim = 2
+
+  width = 1,1
+}
+
+
+BlockGeometry {
+   num_blocks = 3
+   domain_boxes_0 = [ (0,0) , (20,13) ]
+   domain_boxes_1 = [ (0,0) , (25,13) ]
+   domain_boxes_2 = [ (0,0) , (20,25) ]
+
+   BlockNeighbors0 {
+      block_a = 0
+      block_b = 1
+
+      rotation_b_to_a = "I_UP", "J_UP"
+      point_in_a_space = 21,0
+      point_in_b_space = 0,0
+   }
+
+   BlockNeighbors1 {
+      block_a = 0
+      block_b = 2
+
+      rotation_b_to_a = "I_UP", "J_UP"
+      point_in_a_space = 0,14
+      point_in_b_space = 0,0
+
+   }
+
+   BlockNeighbors2 {
+      block_a = 1
+      block_b = 2
+
+      rotation_b_to_a = "J_UP", "I_DOWN"
+      point_in_a_space = 0,14
+      point_in_b_space = 20,0
+
+   }
+
+}
+
+
+PrimitiveBoxGen1 {
+  rank_begin = 0
+  rank_end = 4
+  index_begin = 0
+}
+
+
+PrimitiveBoxGen2 {
+  rank_begin = 0
+  rank_end = 4
+  index_begin = 0
+}
