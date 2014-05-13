@@ -1682,10 +1682,13 @@ StandardTagAndInitialize::turnOffRefineBoxes(
       if (i->d_time <= time) {
          std::vector<TagCriteria>& tag_crits =
             const_cast<std::vector<TagCriteria>& >(i->d_tag_criteria);
-         for (std::vector<TagCriteria>::iterator j = tag_crits.begin();
-              j != tag_crits.end(); ++j) {
+         std::vector<TagCriteria>::iterator j = tag_crits.begin();
+         while (j != tag_crits.end()) {
             if (j->d_tagging_method == "REFINE_BOXES") {;
                tag_crits.erase(j);
+            }
+            else {
+               ++j;
             }
          }
          break;
@@ -1742,10 +1745,13 @@ StandardTagAndInitialize::turnOffGradientDetector(
       if (i->d_time <= time) {
          std::vector<TagCriteria>& tag_crits =
             const_cast<std::vector<TagCriteria>& >(i->d_tag_criteria);
-         for (std::vector<TagCriteria>::iterator j = tag_crits.begin();
-              j != tag_crits.end(); ++j) {
+         std::vector<TagCriteria>::iterator j = tag_crits.begin();
+         while (j != tag_crits.end()) {
             if (j->d_tagging_method == "GRADIENT_DETECTOR") {
                tag_crits.erase(j);
+            }
+            else {
+               ++j;
             }
          }
          break;
@@ -1803,10 +1809,13 @@ StandardTagAndInitialize::turnOffRichardsonExtrapolation(
       if (i->d_time <= time) {
          std::vector<TagCriteria>& tag_crits =
             const_cast<std::vector<TagCriteria>& >(i->d_tag_criteria);
-         for (std::vector<TagCriteria>::iterator j = tag_crits.begin();
-              j != tag_crits.end(); ++j) {
+         std::vector<TagCriteria>::iterator j = tag_crits.begin();
+         while (j != tag_crits.end()) {
             if (j->d_tagging_method == "RICHARDSON_EXTRAPOLATION") {
                tag_crits.erase(j);
+            }
+            else {
+               ++j;
             }
          }
          break;
