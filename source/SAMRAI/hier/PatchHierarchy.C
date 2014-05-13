@@ -1131,8 +1131,6 @@ PatchHierarchy::putToRestart(
       restart_db->putDatabase("d_self_connector_widths"));
    d_self_connector_widths.resize(d_max_levels, MultiIntVector(d_dim, 1));
    for (int ln = 0; ln < d_max_levels; ++ln) {
-      d_self_connector_widths[ln].setAll(
-         IntVector::getOne(d_dim));
 
       std::vector<int> put_self_widths(d_number_blocks * d_dim.getValue());
       int ic = 0;
@@ -1151,7 +1149,6 @@ PatchHierarchy::putToRestart(
       restart_db->putDatabase("d_fine_connector_widths"));
    d_fine_connector_widths.resize(d_max_levels-1, MultiIntVector(d_dim, 1));
    for (int ln = 0; ln < d_max_levels - 1; ++ln) {
-      d_fine_connector_widths[ln].setAll(IntVector::getOne(d_dim));
 
       std::vector<int> put_fine_widths(d_number_blocks * d_dim.getValue());
       int ic = 0;

@@ -771,14 +771,24 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    bool is_mapped_box_level = level_in_dbs[0]->getBool("d_is_mapped_box_level");
    int version = level_in_dbs[0]->getInteger("HIER_MAPPED_BOX_LEVEL_VERSION");
    int dim = level_in_dbs[0]->getInteger("dim");
-   std::vector<int> ratio = level_in_dbs[0]->getIntegerVector("d_ratio");
-
+   std::vector<std::vector<int> > ratio;
+   int b = 0;
+   for ( ; ; ++b ) {   
+      string ratio_name = "d_ratio_" + tbox::Utilities::intToString(b);
+      if (level_in_dbs[0]->isInteger(ratio_name)) {
+         ratio.push_back(level_in_dbs[0]->getIntegerVector(ratio_name));
+      } else {
+         break;
+      }
+   }
    for (int i = 0; i < out_size; ++i) {
       level_out_dbs[i]->putBool("d_is_mapped_box_level", is_mapped_box_level);
       level_out_dbs[i]->putInteger("HIER_MAPPED_BOX_LEVEL_VERSION", version);
       level_out_dbs[i]->putInteger("dim", dim);
-      level_out_dbs[i]->putIntegerVector("d_ratio", ratio);
-
+      for (int nb = 0; nb < ratio.size(); ++nb) {
+         string ratio_name = "d_ratio_" + tbox::Utilities::intToString(nb);
+         level_out_dbs[i]->putIntegerVector(ratio_name, ratio[nb]);
+      }
       level_out_dbs[i]->putInteger("d_nproc", total_output_files);
       level_out_dbs[i]->putInteger("d_rank", num_files_written + i);
    }

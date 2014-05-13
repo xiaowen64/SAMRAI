@@ -55,42 +55,42 @@ public:
 
    void clear()
    {
-      d_ratio.clear();
+      d_vector.clear();
    }
 
    bool empty() const
    {
-      return d_ratio.empty();
+      return d_vector.empty();
    }
 
    void set(const std::vector<IntVector>& ratio)
    {
       clear();
-      d_ratio = ratio;
-      if (d_ratio.size() > s_max_blocks) {
-         s_max_blocks = d_ratio.size();
+      d_vector = ratio;
+      if (d_vector.size() > s_max_blocks) {
+         s_max_blocks = d_vector.size();
       } 
    }
 
    void setAll(const IntVector& ratio)
    {
       TBOX_ASSERT(s_max_blocks >= 1);
-      d_ratio.resize(s_max_blocks, ratio);
-      for (int b = 0; b < d_ratio.size(); ++b) {
-         d_ratio[b] = ratio;
+      d_vector.resize(s_max_blocks, ratio);
+      for (int b = 0; b < d_vector.size(); ++b) {
+         d_vector[b] = ratio;
       }
    }
 
    const tbox::Dimension& getDim() const
    {
-      TBOX_ASSERT(d_ratio.size() > 0);
+      TBOX_ASSERT(d_vector.size() > 0);
 
-      return (d_ratio[0].getDim());
+      return (d_vector[0].getDim());
    }
 
    bool isOne(const tbox::Dimension& dim) const {
-      for (int b = 0; b < d_ratio.size(); ++b) {
-         if (d_ratio[b] != IntVector::getOne(dim)) {
+      for (int b = 0; b < d_vector.size(); ++b) {
+         if (d_vector[b] != IntVector::getOne(dim)) {
             return false;
          }
       }
@@ -98,8 +98,8 @@ public:
    }
 
    bool isZero(const tbox::Dimension& dim) const {
-      for (int b = 0; b < d_ratio.size(); ++b) {
-         if (d_ratio[b] != IntVector::getZero(dim)) {
+      for (int b = 0; b < d_vector.size(); ++b) {
+         if (d_vector[b] != IntVector::getZero(dim)) {
             return false;
          }
       }
@@ -108,8 +108,8 @@ public:
 
    const IntVector& getBlockVector(const BlockId& block_id) const
    {
-      TBOX_ASSERT(block_id.getBlockValue() < d_ratio.size());
-      return (d_ratio[block_id.getBlockValue()]);
+      TBOX_ASSERT(block_id.getBlockValue() < d_vector.size());
+      return (d_vector[block_id.getBlockValue()]);
    }  
 
 
@@ -120,8 +120,9 @@ public:
    min(
       const MultiIntVector& rhs)
    {
-      for (int b = 0; b < d_ratio.size(); ++b) {
-         d_ratio[b].min(rhs.d_ratio[b]);
+      TBOX_ASSERT(d_vector.size() == rhs.d_vector.size());
+      for (int b = 0; b < d_vector.size(); ++b) {
+         d_vector[b].min(rhs.d_vector[b]);
       }
    }
 
@@ -132,11 +133,11 @@ public:
    int
    min() const
    {
-      int min = d_ratio[0][0];
-      for (int b = 0; b < d_ratio.size(); ++b) {
+      int min = d_vector[0][0];
+      for (int b = 0; b < d_vector.size(); ++b) {
          for (int i = 1; i < getDim().getValue(); ++i) {
-            if (d_ratio[b][i] > min) {
-               min = d_ratio[b][i];
+            if (d_vector[b][i] > min) {
+               min = d_vector[b][i];
             }
          }
       }
@@ -168,8 +169,9 @@ public:
    max(
       const MultiIntVector& rhs)
    {
-      for (int b = 0; b < d_ratio.size(); ++b) {
-         d_ratio[b].max(rhs.d_ratio[b]);
+      TBOX_ASSERT(d_vector.size() == rhs.d_vector.size());
+      for (int b = 0; b < d_vector.size(); ++b) {
+         d_vector[b].max(rhs.d_vector[b]);
       }
    }
 
@@ -180,11 +182,11 @@ public:
    int
    max() const
    {
-      int max = d_ratio[0][0];
-      for (int b = 0; b < d_ratio.size(); ++b) {
+      int max = d_vector[0][0];
+      for (int b = 0; b < d_vector.size(); ++b) {
          for (int i = 1; i < getDim().getValue(); ++i) {
-            if (d_ratio[b][i] > max) {
-               max = d_ratio[b][i];
+            if (d_vector[b][i] > max) {
+               max = d_vector[b][i];
             }
          }
       }
@@ -221,8 +223,9 @@ public:
       const MultiIntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      for (int b = 0; b < d_ratio.size(); ++b) {
-         d_ratio[b] += rhs.d_ratio[b];
+      TBOX_ASSERT(d_vector.size() == rhs.d_vector.size());
+      for (int b = 0; b < d_vector.size(); ++b) {
+         d_vector[b] += rhs.d_vector[b];
       }
       return *this;
    }
@@ -237,6 +240,7 @@ public:
       const MultiIntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(d_vector.size() == rhs.d_vector.size());
       MultiIntVector tmp = *this;
       tmp += rhs;
       return tmp;
@@ -253,8 +257,9 @@ public:
       const MultiIntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      for (int b = 0; b < d_ratio.size(); ++b) {
-         d_ratio[b] -= rhs.d_ratio[b];
+      TBOX_ASSERT(d_vector.size() == rhs.d_vector.size());
+      for (int b = 0; b < d_vector.size(); ++b) {
+         d_vector[b] -= rhs.d_vector[b];
       }
       return *this;
    }
@@ -269,6 +274,7 @@ public:
       const MultiIntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(d_vector.size() == rhs.d_vector.size());
       MultiIntVector tmp = *this;
       tmp -= rhs;
       return tmp;
@@ -281,8 +287,8 @@ public:
    operator - () const
    {
       MultiIntVector tmp(*this);
-      for (int b = 0; b < d_ratio.size(); ++b) {
-         tmp.d_ratio[b] = -d_ratio[b];
+      for (int b = 0; b < d_vector.size(); ++b) {
+         tmp.d_vector[b] = -d_vector[b];
       }
       return tmp;
    }
@@ -299,8 +305,9 @@ public:
       const MultiIntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      for (int b = 0; b < d_ratio.size(); ++b) {
-         d_ratio[b] *= rhs.d_ratio[b];
+      TBOX_ASSERT(d_vector.size() == rhs.d_vector.size());
+      for (int b = 0; b < d_vector.size(); ++b) {
+         d_vector[b] *= rhs.d_vector[b];
       }
       return *this;
    }
@@ -315,6 +322,7 @@ public:
       const MultiIntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(d_vector.size() == rhs.d_vector.size());
       MultiIntVector tmp = *this;
       tmp *= rhs;
       return tmp;
@@ -325,8 +333,8 @@ public:
       const int& rhs) const
    {
       MultiIntVector tmp = *this;
-      for (int b = 0; b < d_ratio.size(); ++b) {
-         tmp.d_ratio[b] *= rhs;
+      for (int b = 0; b < d_vector.size(); ++b) {
+         tmp.d_vector[b] *= rhs;
       }
       return tmp;
    }
@@ -334,8 +342,9 @@ public:
    void
    ceilingDivide(const MultiIntVector& rhs)
    {
-      for (int b = 0; b < d_ratio.size(); ++b) {
-         d_ratio[b].ceilingDivide(rhs.d_ratio[b]);
+      TBOX_ASSERT(d_vector.size() == rhs.d_vector.size());
+      for (int b = 0; b < d_vector.size(); ++b) {
+         d_vector[b].ceilingDivide(rhs.d_vector[b]);
       }
    }
 
@@ -359,6 +368,7 @@ public:
       const MultiIntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(d_vector.size() == rhs.d_vector.size());
       MultiIntVector tmp = *this;
       tmp /= rhs;
       return tmp;
@@ -368,8 +378,9 @@ public:
    operator /= (
       const MultiIntVector rhs)
    {
-      for (int b = 0; b < d_ratio.size(); ++b) {
-         d_ratio[b] /= rhs.d_ratio[b];
+      TBOX_ASSERT(d_vector.size() == rhs.d_vector.size());
+      for (int b = 0; b < d_vector.size(); ++b) {
+         d_vector[b] /= rhs.d_vector[b];
       }
       return *this;
    }
@@ -379,8 +390,8 @@ public:
       const int& rhs) const
    {
       MultiIntVector tmp = *this;
-      for (int b = 0; b < d_ratio.size(); ++b) {
-         tmp.d_ratio[b] /= rhs;
+      for (int b = 0; b < d_vector.size(); ++b) {
+         tmp.d_vector[b] /= rhs;
       }
       return tmp;
    }
@@ -397,9 +408,10 @@ public:
       const MultiIntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(d_vector.size() == rhs.d_vector.size());
       bool result = true;
-      for (int b = 0; result && (b < d_ratio.size()); ++b) {
-         result = result && (d_ratio[b] <= rhs.d_ratio[b]);
+      for (int b = 0; result && (b < d_vector.size()); ++b) {
+         result = result && (d_vector[b] <= rhs.d_vector[b]);
       }
       return result;
    }
@@ -415,9 +427,10 @@ public:
       const MultiIntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(d_vector.size() == rhs.d_vector.size());
       bool result = true;
-      for (int b = 0; result && (b < d_ratio.size()); ++b) {
-         result = result && (d_ratio[b] < rhs.d_ratio[b]);
+      for (int b = 0; result && (b < d_vector.size()); ++b) {
+         result = result && (d_vector[b] < rhs.d_vector[b]);
       }
       return result;
    }
@@ -433,9 +446,10 @@ public:
       const MultiIntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(d_vector.size() == rhs.d_vector.size());
       bool result = true;
-      for (int b = 0; result && (b < d_ratio.size()); ++b) {
-         result = result && (d_ratio[b] >= rhs.d_ratio[b]);
+      for (int b = 0; result && (b < d_vector.size()); ++b) {
+         result = result && (d_vector[b] >= rhs.d_vector[b]);
       }
       return result;
    }
@@ -445,9 +459,10 @@ public:
       const MultiIntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(d_vector.size() == rhs.d_vector.size());
       bool result = true;
-      for (int b = 0; result && (b < d_ratio.size()); ++b) {
-         result = result && (d_ratio[b] > rhs.d_ratio[b]);
+      for (int b = 0; result && (b < d_vector.size()); ++b) {
+         result = result && (d_vector[b] > rhs.d_vector[b]);
       }
       return result;
    }
@@ -463,9 +478,9 @@ public:
       const MultiIntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      bool result = (d_ratio.size() == rhs.d_ratio.size());
-      for (int b = 0; result && (b < d_ratio.size()); ++b) {
-         result = result && (d_ratio[b] == rhs.d_ratio[b]);
+      bool result = (d_vector.size() == rhs.d_vector.size());
+      for (int b = 0; result && (b < d_vector.size()); ++b) {
+         result = result && (d_vector[b] == rhs.d_vector[b]);
       }
       return result;
    }
@@ -515,7 +530,7 @@ private:
 
    static int s_max_blocks;
 
-   std::vector<IntVector> d_ratio;
+   std::vector<IntVector> d_vector;
 
 
 };
