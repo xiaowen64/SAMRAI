@@ -423,7 +423,7 @@ const IntVector& new_width)
 * Two communication patterns executed simultaneously: edge info and
 * termination messages.  For edge info, head box owners send edge data
 * to base box owners, who responds with an acknowledgement message.
-* Termination messages are propageted up then down a rank tree.
+* Termination messages are propagated up then down a rank tree.
 * Upward messages inform processes that their descendents have
 * received all needed acknowledgements.  Downward messages inform
 * processes that the entire tree completed its acknowledgements.  They
@@ -434,6 +434,8 @@ const IntVector& new_width)
 void
 Connector::setToTransposeOf( const Connector &other )
 {
+tbox::plog << "Transposing " << other.format() << std::endl;
+
    // Order locally visible edges by owners who need to know about them.
    typedef std::map<hier::Box, hier::BoxContainer, hier::Box::id_less> FullNeighborhoodSet;
    FullNeighborhoodSet reordered_relationships;
@@ -452,6 +454,7 @@ Connector::setToTransposeOf( const Connector &other )
     * but differentiate messages by embedding a type in each.
     */
    const int mpi_tag = 0;
+   int mpi_err;
    char edge_msg_type = 1;
    char ack_msg_type = 2;
    char upward_term_msg_type = 3;
@@ -490,18 +493,31 @@ Connector::setToTransposeOf( const Connector &other )
          if ( nextrr != reordered_relationships.end() ||
               nextrr->first.getOwnerRank() != base_box.getOwnerRank() ) {
             requests.push_back(tbox::SAMRAI_MPI::Request());
-            mpi.Isend( (void*)mstream->getBufferStart(), mstream->getCurrentSize(), MPI_CHAR,
-                       base_box.getOwnerRank(), mpi_tag, &requests.back() );
+            mpi_err = mpi.Isend( (void*)mstream->getBufferStart(),
+                                 mstream->getCurrentSize(), MPI_CHAR,
+                                 base_box.getOwnerRank(), mpi_tag,
+                                 &requests.back() );
+            TBOX_ASSERT( mpi_err == MPI_SUCCESS );
             ack_needed.insert(base_box.getOwnerRank());
          }
       }
    }
 
 
-   // Communication data for propgating termination messages.
+   // Data for propgating termination messages on the tree.
    tbox::CenteredRankTree rank_tree( 0, mpi.getSize()-1, mpi.getRank() );
    size_t child_term_needed = rank_tree.getNumberOfChildren();
    bool send_upward_term_msg = true;
+
+   if ( send_upward_term_msg && ack_needed.empty() && child_term_needed == 0 ) {
+      // Leaves of the tree initiate upward termination message if no edge communication.
+      requests.push_back(tbox::SAMRAI_MPI::Request());
+      mpi_err = mpi.Isend( &upward_term_msg_type, 1, MPI_CHAR,
+                           rank_tree.getParentRank(), mpi_tag,
+                           &requests.back() );
+      TBOX_ASSERT( mpi_err == MPI_SUCCESS );
+      send_upward_term_msg = false;
+   }
 
 
    /*
@@ -518,13 +534,16 @@ Connector::setToTransposeOf( const Connector &other )
    Box tmp_box(getBase().getDim());
    BoxContainer tmp_boxes;
    char msg_type = mpi.getSize() == 1 ? downward_term_msg_type : 0;
+
    while (msg_type != downward_term_msg_type) {
 
-      mpi.Probe( MPI_ANY_SOURCE, mpi_tag, &tmp_status );
+      mpi_err = mpi.Probe( MPI_ANY_SOURCE, mpi_tag, &tmp_status );
+      TBOX_ASSERT( mpi_err == MPI_SUCCESS );
       tbox::SAMRAI_MPI::Get_count( &tmp_status, MPI_CHAR, &msg_length );
       recv_buffer.resize(msg_length);
-      mpi.Recv( &recv_buffer[0], msg_length, MPI_CHAR,
-                tmp_status.MPI_SOURCE, mpi_tag, &tmp_status );
+      mpi_err = mpi.Recv( &recv_buffer[0], msg_length, MPI_CHAR,
+                          tmp_status.MPI_SOURCE, mpi_tag, &tmp_status );
+      TBOX_ASSERT( mpi_err == MPI_SUCCESS );
 
       tbox::MessageStream mstream( recv_buffer.size(), tbox::MessageStream::Read,
                                    &recv_buffer[0], false );
@@ -534,8 +553,9 @@ Connector::setToTransposeOf( const Connector &other )
 
          // Edge messages require acknowledgement and unpacking.
          requests.push_back(tbox::SAMRAI_MPI::Request());
-         mpi.Isend( static_cast<void*>(&ack_msg_type), 1, MPI_CHAR,
-                    tmp_status.MPI_SOURCE, mpi_tag, &requests.back() );
+         mpi_err = mpi.Isend( static_cast<void*>(&ack_msg_type), 1, MPI_CHAR,
+                              tmp_status.MPI_SOURCE, mpi_tag, &requests.back() );
+         TBOX_ASSERT( mpi_err == MPI_SUCCESS );
          do {
             LocalId lid; size_t num_nabrs;
             mstream >> lid >> num_nabrs;
@@ -560,18 +580,33 @@ Connector::setToTransposeOf( const Connector &other )
          // Propagate termination message downward.
          for ( int ci=0; ci<rank_tree.getNumberOfChildren(); ++ci ) {
             requests.push_back(tbox::SAMRAI_MPI::Request());
-            mpi.Isend( &downward_term_msg_type, 1, MPI_CHAR,
-                       rank_tree.getChildRank(ci), mpi_tag, &requests.back() );
+            mpi_err = mpi.Isend( &downward_term_msg_type, 1, MPI_CHAR,
+                                 rank_tree.getChildRank(ci), mpi_tag,
+                                 &requests.back() );
+            TBOX_ASSERT( mpi_err == MPI_SUCCESS );
          }
       }
 
-      if ( send_upward_term_msg &&
-           ack_needed.empty() &&
-           child_term_needed == 0 ) {
-         // Propagate termination message upward.
-         requests.push_back(tbox::SAMRAI_MPI::Request());
-         mpi.Isend( &upward_term_msg_type, 1, MPI_CHAR,
-                    rank_tree.getParentRank(), mpi_tag, &requests.back() );
+      if ( send_upward_term_msg && ack_needed.empty() && child_term_needed == 0 ) {
+         if ( rank_tree.isRoot() ) {
+            // Initiate downward termination message.
+            for ( int ci=0; ci<rank_tree.getNumberOfChildren(); ++ci ) {
+               requests.push_back(tbox::SAMRAI_MPI::Request());
+               mpi_err = mpi.Isend( &downward_term_msg_type, 1, MPI_CHAR,
+                                    rank_tree.getChildRank(ci), mpi_tag,
+                                    &requests.back() );
+               TBOX_ASSERT( mpi_err == MPI_SUCCESS );
+            }
+            msg_type = downward_term_msg_type;
+         }
+         else {
+            // Propagate upward termination message.
+            requests.push_back(tbox::SAMRAI_MPI::Request());
+            mpi_err = mpi.Isend( &upward_term_msg_type, 1, MPI_CHAR,
+                                 rank_tree.getParentRank(), mpi_tag,
+                                 &requests.back() );
+            TBOX_ASSERT( mpi_err == MPI_SUCCESS );
+         }
          send_upward_term_msg = false;
       }
 
