@@ -165,7 +165,7 @@ int main(
 
          PrimitiveBoxGen pb2( *input_db->getDatabase("PrimitiveBoxGen2"), grid_geom );
          BoxContainer boxes2;
-         pb1.getBoxes(boxes2);
+         pb2.getBoxes(boxes2);
          hier::BoxLevel l2(boxes2, hier::IntVector::getOne(pb2.d_geom->getDim()), pb2.d_geom);
          l2.cacheGlobalReducedData();
 
