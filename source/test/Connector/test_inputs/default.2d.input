@@ -15,11 +15,9 @@ Main {
   base_name = "default.2d"
 
   // Whether to log all nodes.
-  log_all_nodes = FALSE
+  log_all_nodes = TRUE
 
   dim = 2
-
-  width = 1,1
 }
 
 
@@ -62,14 +60,27 @@ BlockGeometry {
 
 
 PrimitiveBoxGen1 {
-  rank_begin = 0
-  rank_end = 4
-  index_begin = 0
+  index_filter = "ALL"
+  num_keep = 2
+  num_discard = 1
+  frac = 0.5
 }
 
 
 PrimitiveBoxGen2 {
-  rank_begin = 0
-  rank_end = 4
-  index_begin = 0
+  index_filter = "ALL"
+  num_keep = 2
+  num_discard = 1
+  frac = 0.5
+}
+
+
+ConnectorContrivance {
+  // For method "mod"
+  denom = 1
+
+  // For method "near"
+  begin_shift = -2
+  end_shift = 8
+  inc = 1
 }

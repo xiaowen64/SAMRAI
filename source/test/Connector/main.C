@@ -26,6 +26,7 @@
 using namespace std;
 
 using namespace SAMRAI;
+using namespace hier;
 
 
 /*!
@@ -36,30 +37,23 @@ using namespace SAMRAI;
 struct PrimitiveBoxGen {
    boost::shared_ptr<hier::BaseGridGeometry> d_geom;
    hier::AssumedPartition d_ap;
-   // Assumed partition parameters.
-   int d_rank_begin;
-   int d_rank_end;
-   int d_index_begin;
-   enum IndexFilter { ALL	/* Keep all boxes */,
-                      INTERVAL	/* Keep d_num_keep, discard d_num_discard */,
-                      LOWER	/* Keep indices below d_frac */,
-                      UPPER	/* Keep indices above d_frac */
-   };
    // Index filtering parameters.
+   enum IndexFilter { ALL = 0	/* Keep all boxes */,
+                      INTERVAL = 1	/* Keep d_num_keep, discard d_num_discard */,
+                      LOWER = 2	/* Keep indices below d_frac */,
+                      UPPER = 3	/* Keep indices above d_frac */
+   };
    int d_index_filter;
    int d_num_keep;
    int d_num_discard;
    double d_frac;
-   PrimitiveBoxGen( const boost::shared_ptr<hier::BaseGridGeometry> &geom,
-                    int rank_begin,
-                    int rank_end,
-                    int index_begin ) :
-      d_geom(geom),
-      d_ap(geom->getPhysicalDomain(), rank_begin, rank_end, index_begin),
-      d_index_filter(ALL),
-      d_num_keep(1),
-      d_num_discard(0),
-      d_frac(0.5) {}
+   PrimitiveBoxGen(
+      tbox::Database &database,
+      const boost::shared_ptr<hier::BaseGridGeometry> &geom)
+      {
+         d_geom = geom;
+         getFromInput(database);
+      }
    PrimitiveBoxGen( const PrimitiveBoxGen &other ) :
       d_geom(other.d_geom),
       d_ap(other.d_ap),
@@ -67,7 +61,8 @@ struct PrimitiveBoxGen {
       d_num_keep(other.d_num_keep),
       d_num_discard(other.d_num_discard),
       d_frac(other.d_frac) {}
-   void getBoxLevel( hier::BoxLevel &box_level );
+   void getFromInput( tbox::Database &input_db );
+   void getBoxes( hier::BoxContainer &boxes );
 };
 
 
@@ -79,13 +74,15 @@ struct CommonTestParams {
 };
 
 
-PrimitiveBoxGen getPrimitiveBoxGenFromInput(
-   tbox::Database &test_db,
-   const boost::shared_ptr<hier::BaseGridGeometry> &grid_geom);
-
-
 CommonTestParams getTestParametersFromDatabase(
    tbox::Database &test_db );
+
+
+void contriveConnector( Connector &conn,
+                        const PrimitiveBoxGen &pb1,
+                        const PrimitiveBoxGen &pb2,
+                        const std::string &method,
+                        tbox::Database &contrivance_db );
 
 
 int main(
@@ -108,8 +105,8 @@ int main(
 
    if (argc < 2) {
       TBOX_ERROR("USAGE:  " << argv[0] << " <input file> [case name]\n"
-                            << "  options:\n"
-                            << "  none at this time" << std::endl);
+                 << "  options:\n"
+                 << "  none at this time" << std::endl);
    } else {
       input_filename = argv[1];
    }
@@ -137,7 +134,7 @@ int main(
       const std::string log_file_name = base_name + ".log";
       bool log_all_nodes = false;
       log_all_nodes = main_db->getBoolWithDefault("log_all_nodes",
-            log_all_nodes);
+                                                  log_all_nodes);
       if (log_all_nodes) {
          tbox::PIO::logAllNodes(log_file_name);
       } else {
@@ -160,31 +157,33 @@ int main(
                "BlockGeometry",
                input_db->getDatabase("BlockGeometry"));
 
-         PrimitiveBoxGen pb1 = getPrimitiveBoxGenFromInput(
-            *input_db->getDatabase("PrimitiveBoxGen1"),
-            grid_geom );
-         hier::BoxLevel l1(hier::IntVector::getOne(pb1.d_geom->getDim()), pb1.d_geom);
-         pb1.getBoxLevel(l1);
+         PrimitiveBoxGen pb1( *input_db->getDatabase("PrimitiveBoxGen1"), grid_geom );
+         BoxContainer boxes1;
+         pb1.getBoxes(boxes1);
+         hier::BoxLevel l1(boxes1, hier::IntVector::getOne(pb1.d_geom->getDim()), pb1.d_geom);
 
-         PrimitiveBoxGen pb2 = getPrimitiveBoxGenFromInput(
-            *input_db->getDatabase("PrimitiveBoxGen2"),
-            grid_geom );
-         hier::BoxLevel l2(hier::IntVector::getOne(pb2.d_geom->getDim()), pb2.d_geom);
-         pb2.getBoxLevel(l2);
+         PrimitiveBoxGen pb2( *input_db->getDatabase("PrimitiveBoxGen2"), grid_geom );
+         BoxContainer boxes2;
+         pb1.getBoxes(boxes2);
+         hier::BoxLevel l2(boxes2, hier::IntVector::getOne(pb2.d_geom->getDim()), pb2.d_geom);
 
          /*
           * Rig up edges in l1_to_l2 by various contrivances and
           * compute transpose l2_to_l1.  Then check transpose
           * correctness.
           */
-
-         {
+         char *contrivance_methods[] = { "mod", "near" };
+         const size_t num_methods = 2;
+         for ( size_t mi=0; mi<num_methods; ++mi ) {
             hier::Connector l1_to_l2(l1, l2, hier::IntVector::getZero(dim));
-            for ( int i=pb1.d_ap.beginOfRank(rank); i<pb1.d_ap.endOfRank(rank); ++i ) {
-               hier::Box l2box = pb2.d_ap.getBox(i);
-               hier::Box l1box = pb1.d_ap.getBox(i);
-               l1_to_l2.insertLocalNeighbor(l2box, l1box.getBoxId());
-            }
+            contriveConnector( l1_to_l2, pb1, pb2, contrivance_methods[mi],
+                               *input_db->getDatabase("ConnectorContrivance") );
+
+            tbox::plog << "Testing with connector contrived by " << contrivance_methods[mi]
+                       << "\nl1:\n" << l1.format("\t")
+                       << "\nl2:\n" << l2.format("\t")
+                       << "\nl1_to_l2:\n" << l1_to_l2.format("\t")
+                       << std::endl;
 
             hier::Connector l2_to_l1(l2, l1, hier::IntVector::getZero(dim));
             l2_to_l1.setToTransposeOf(l1_to_l2);
@@ -192,7 +191,8 @@ int main(
             size_t test_fail_count = l1_to_l2.checkTransposeCorrectness(l2_to_l1);
             fail_count += test_fail_count;
             if ( test_fail_count ) {
-               tbox::pout << "FAILED: " << test_fail_count << " problems in overlap correctness\n";
+               tbox::pout << "FAILED: " << test_fail_count << " with "
+                          << contrivance_methods[mi] << "-contrived Connector.\n";
             }
          }
 
@@ -214,21 +214,55 @@ int main(
 
 
 
-
 /*
  *************************************************************************
  *************************************************************************
  */
-PrimitiveBoxGen getPrimitiveBoxGenFromInput(
-   tbox::Database &test_db,
-   const boost::shared_ptr<hier::BaseGridGeometry> &grid_geom)
+void contriveConnector( Connector &conn,
+                        const PrimitiveBoxGen &pb1,
+                        const PrimitiveBoxGen &pb2,
+                        const std::string &method,
+                        tbox::Database &contrivance_db )
 {
-   int rank_begin = test_db.getIntegerWithDefault("rank_begin", 0);
-   int rank_end = test_db.getIntegerWithDefault("rank_end", tbox::SAMRAI_MPI::getSAMRAIWorld().getSize());
-   int index_begin = test_db.getIntegerWithDefault("index_begin", 0);
-   int index_filter = test_db.getIntegerWithDefault("index_filter", PrimitiveBoxGen::ALL);
+   const int rank = conn.getBase().getMPI().getRank();
 
-   return PrimitiveBoxGen( grid_geom, rank_begin, rank_end, index_begin );
+   if ( method == "mod" ) {
+      const int denom = contrivance_db.getInteger("denom");
+      for ( int i=pb1.d_ap.beginOfRank(rank); i<pb1.d_ap.endOfRank(rank); ++i ) {
+         hier::Box l1box = pb1.d_ap.getBox(i);
+         for ( int j=pb2.d_ap.begin(); j<pb2.d_ap.end(); ++j ) {
+            hier::Box l2box = pb2.d_ap.getBox(i);
+            if ( (i+j)%denom == 0 ) {
+               conn.insertLocalNeighbor(l2box, l1box.getBoxId());
+            }
+         }
+      }
+   }
+
+   else if ( method == "near" ) {
+      int begin_shift = contrivance_db.getInteger("begin_shift");
+      int end_shift = contrivance_db.getInteger("end_shift");
+      int inc = contrivance_db.getInteger("inc");
+      for ( int i=pb1.d_ap.beginOfRank(rank); i<pb1.d_ap.endOfRank(rank); ++i ) {
+         hier::Box l1box = pb1.d_ap.getBox(i);
+
+         int begin = l1box.getLocalId().getValue() + begin_shift;
+         int end = l1box.getLocalId().getValue() + end_shift;
+         begin = tbox::MathUtilities<int>::Max(begin, pb2.d_ap.begin());
+         end = tbox::MathUtilities<int>::Min(end, pb2.d_ap.end());
+
+         for ( int j=begin; j<end; j+=inc ) {
+            hier::Box l2box = pb2.d_ap.getBox(i);
+            conn.insertLocalNeighbor(l2box, l1box.getBoxId());
+         }
+      }
+   }
+
+   else {
+      TBOX_ERROR("Contrivance method must be one of these: mod, forward, backward.");
+   }
+
+   return;
 }
 
 
@@ -238,15 +272,43 @@ PrimitiveBoxGen getPrimitiveBoxGenFromInput(
  *************************************************************************
  *************************************************************************
  */
-void PrimitiveBoxGen::getBoxLevel( hier::BoxLevel &box_level )
+void PrimitiveBoxGen::getFromInput( tbox::Database &test_db )
 {
-   hier::BoxContainer boxes;
+   int rank_begin = 0;
+   int rank_end = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
+   int index_begin = test_db.getIntegerWithDefault("index_begin", 0);
+   d_ap.partition( d_geom->getPhysicalDomain(), rank_begin, rank_end, index_begin );
 
+   std::string index_filter = test_db.getStringWithDefault("index_filter", "ALL");
+   if ( index_filter == "ALL" ) {
+      d_index_filter = PrimitiveBoxGen::ALL;
+   }
+   else if ( index_filter == "INTERVAL" ) {
+      d_index_filter = PrimitiveBoxGen::INTERVAL;
+   }
+   else if ( index_filter == "LOWER" ) {
+      d_index_filter = PrimitiveBoxGen::LOWER;
+   }
+   else if ( index_filter == "UPPER" ) {
+      d_index_filter = PrimitiveBoxGen::UPPER;
+   }
+   return;
+}
+
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void PrimitiveBoxGen::getBoxes( hier::BoxContainer &boxes )
+{
    const int rank = tbox::SAMRAI_MPI::getSAMRAIWorld().getRank();
 
    if (d_index_filter == ALL) {
-      int idbegin = d_ap.beginOfRank( rank );
-      int idend = d_ap.endOfRank( rank );
+      int idbegin = d_ap.begin();
+      int idend = d_ap.end();
       for ( int id=idbegin; id<idend; ++id ) {
          boxes.push_back( d_ap.getBox(id) );
       }
@@ -257,29 +319,30 @@ void PrimitiveBoxGen::getBoxLevel( hier::BoxLevel &box_level )
       int interval = d_num_keep + d_num_discard;
       for ( int id=idbegin; id<idend; ++id ) {
          int interval_id = id%interval;
-         if ( interval_id < d_num_keep && d_ap.getOwner(id) == rank ) {
+         if ( interval_id < d_num_keep ) {
             boxes.push_back( d_ap.getBox(id) );
          }
       }
    }
    else if (d_index_filter == LOWER) {
       int threshold = d_ap.begin() + static_cast<int>( d_frac*(d_ap.end() - d_ap.begin()) );
-      int idbegin = d_ap.beginOfRank( rank );
-      int idend = tbox::MathUtilities<int>::Max( threshold, d_ap.endOfRank( rank ) );
+      int idbegin = d_ap.begin();
+      int idend = tbox::MathUtilities<int>::Max( threshold, d_ap.end() );
       for ( int id=idbegin; id<idend; ++id ) {
          boxes.push_back( d_ap.getBox(id) );
       }
    }
    else if (d_index_filter == UPPER) {
       int threshold = d_ap.begin() + static_cast<int>( d_frac*(d_ap.end() - d_ap.begin()) );
-      int idbegin = tbox::MathUtilities<int>::Min( threshold, d_ap.beginOfRank( rank ) );
-      int idend = d_ap.endOfRank( rank );
+      int idbegin = tbox::MathUtilities<int>::Min( threshold, d_ap.begin() );
+      int idend = d_ap.end();
       for ( int id=idbegin; id<idend; ++id ) {
          boxes.push_back( d_ap.getBox(id) );
       }
    }
-
-   box_level.swapInitialize( boxes, box_level.getRefinementRatio(), d_geom );
+   else {
+      TBOX_ERROR("Invalid value of index_filter: " << d_index_filter);
+   }
 
    return;
 }
