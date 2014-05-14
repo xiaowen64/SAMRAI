@@ -161,11 +161,13 @@ int main(
          BoxContainer boxes1;
          pb1.getBoxes(boxes1);
          hier::BoxLevel l1(boxes1, hier::IntVector::getOne(pb1.d_geom->getDim()), pb1.d_geom);
+         l1.cacheGlobalReducedData();
 
          PrimitiveBoxGen pb2( *input_db->getDatabase("PrimitiveBoxGen2"), grid_geom );
          BoxContainer boxes2;
          pb1.getBoxes(boxes2);
          hier::BoxLevel l2(boxes2, hier::IntVector::getOne(pb2.d_geom->getDim()), pb2.d_geom);
+         l2.cacheGlobalReducedData();
 
          /*
           * Rig up edges in l1_to_l2 by various contrivances and
@@ -231,7 +233,7 @@ void contriveConnector( Connector &conn,
       for ( int i=pb1.d_ap.beginOfRank(rank); i<pb1.d_ap.endOfRank(rank); ++i ) {
          hier::Box l1box = pb1.d_ap.getBox(i);
          for ( int j=pb2.d_ap.begin(); j<pb2.d_ap.end(); ++j ) {
-            hier::Box l2box = pb2.d_ap.getBox(i);
+            hier::Box l2box = pb2.d_ap.getBox(j);
             if ( (i+j)%denom == 0 ) {
                conn.insertLocalNeighbor(l2box, l1box.getBoxId());
             }
@@ -252,7 +254,7 @@ void contriveConnector( Connector &conn,
          end = tbox::MathUtilities<int>::Min(end, pb2.d_ap.end());
 
          for ( int j=begin; j<end; j+=inc ) {
-            hier::Box l2box = pb2.d_ap.getBox(i);
+            hier::Box l2box = pb2.d_ap.getBox(j);
             conn.insertLocalNeighbor(l2box, l1box.getBoxId());
          }
       }
