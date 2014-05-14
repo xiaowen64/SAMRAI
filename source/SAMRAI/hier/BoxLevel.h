@@ -150,6 +150,25 @@ public:
       const ParallelState parallel_state = DISTRIBUTED);
 
    /*!
+    * @brief Constructs a populated object.
+    *
+    * @see addBox()
+    * @see initialize()
+    *
+    * @param[in] boxes
+    * @param[in] ratio
+    * @param[in] grid_geom
+    * @param[in] mpi
+    * @param[in] parallel_state
+    */
+   BoxLevel(
+      const BoxContainer& boxes,
+      const IntVector& ratio,
+      const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+      const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
+      const ParallelState parallel_state = DISTRIBUTED);
+
+   /*!
     * @brief Destructor.
     *
     * Deallocate internal data.
@@ -160,7 +179,7 @@ public:
    //! @name Initialization and clearing methods
 
    /*!
-    * @brief Initialize the BoxLevel without and Boxes
+    * @brief Initialize the BoxLevel
     *
     * The content and state of the object before calling this function
     * is discarded.
@@ -168,6 +187,7 @@ public:
     * @see addBox()
     * @see initialize(const BoxContainer&, const IntVector&, const tbox::SAMRAI_MPI&, const ParallelState)
     *
+    * @param[in] boxes
     * @param[in] ratio
     * @param[in] grid_geom
     * @param[in] mpi
@@ -175,6 +195,7 @@ public:
     */
    void
    initialize(
+      const BoxContainer& boxes,
       const IntVector& ratio,
       const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
