@@ -102,6 +102,7 @@ AssumedPartition::partition(
       if ( box_rank_end == box_rank_begin ) {
          const double midpoint = 0.5*(rank_space_cut_lo + rank_space_cut_hi);
          box_rank_begin = static_cast<int>(midpoint * num_ranks + 0.5);
+         box_rank_begin = tbox::MathUtilities<int>::Min( box_rank_begin, d_rank_end-1 );
          box_rank_end = box_rank_begin + 1;
       }
 
