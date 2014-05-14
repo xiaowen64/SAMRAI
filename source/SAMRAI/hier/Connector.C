@@ -434,8 +434,6 @@ const IntVector& new_width)
 void
 Connector::setToTransposeOf( const Connector &other )
 {
-tbox::plog << "Transposing " << other.format() << std::endl;
-
    // Order locally visible edges by owners who need to know about them.
    typedef std::map<hier::Box, hier::BoxContainer, hier::Box::id_less> FullNeighborhoodSet;
    FullNeighborhoodSet reordered_relationships;
@@ -483,7 +481,7 @@ tbox::plog << "Transposing " << other.format() << std::endl;
             mstream.reset( new tbox::MessageStream );
             *mstream << edge_msg_type;
          }
-         *mstream << base_box.getLocalId() << head_nabrs.size();
+         *mstream << base_box.getLocalId() << static_cast<size_t>(head_nabrs.size());
          for ( BoxContainer::const_iterator bi=head_nabrs.begin(); bi!=head_nabrs.end(); ++bi ) {
             *mstream << *bi;
          }
