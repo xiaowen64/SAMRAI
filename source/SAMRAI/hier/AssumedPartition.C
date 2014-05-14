@@ -26,18 +26,34 @@ namespace hier {
 ***************************************************************************************
 ***************************************************************************************
 */
+AssumedPartition::AssumedPartition() :
+   d_parted_boxes(),
+   d_rank_begin(0),
+   d_rank_end(0),
+   d_index_begin(0),
+   d_index_end(0)
+{
+}
+
+
+/*
+***************************************************************************************
+***************************************************************************************
+*/
 AssumedPartition::AssumedPartition(
    const BoxContainer& boxes,
    int rank_begin,
    int rank_end,
-   int index_begin ) :
+   int index_begin,
+   double parts_per_rank,
+   bool interleave) :
    d_parted_boxes(),
    d_rank_begin(rank_begin),
    d_rank_end(rank_end),
    d_index_begin(index_begin),
    d_index_end(index_begin)
 {
-   partition(boxes, rank_begin, rank_end, index_begin);
+   partition(boxes, rank_begin, rank_end, index_begin, parts_per_rank, interleave);
 }
 
 
@@ -51,7 +67,9 @@ AssumedPartition::partition(
    const BoxContainer& boxes,
    int rank_begin,
    int rank_end,
-   int index_begin )
+   int index_begin,
+   double parts_per_rank,
+   bool interleave)
 {
    TBOX_ASSERT( rank_end > rank_begin );
    d_parted_boxes.clear();
@@ -87,7 +105,9 @@ AssumedPartition::partition(
          box_rank_end = box_rank_begin + 1;
       }
 
-      d_parted_boxes.push_back( AssumedPartitionBox(*bi, box_rank_begin, box_rank_end, d_index_end) );
+      d_parted_boxes.push_back(
+         AssumedPartitionBox(*bi, box_rank_begin, box_rank_end, d_index_end,
+                             parts_per_rank, interleave) );
       d_index_end = d_parted_boxes.back().end();
    }
 
@@ -179,6 +199,40 @@ AssumedPartition::getBox(int box_index) const
 
    TBOX_ERROR("AssumedPartition::getBox(): Should never be here.");
    return Box(tbox::Dimension(1));
+}
+
+
+
+/*
+***************************************************************************************
+* Compute the box with the given index.
+***************************************************************************************
+*/
+void
+AssumedPartition::getAllBoxes(BoxContainer &all_boxes) const
+{
+   for ( int id=d_index_begin; id<d_index_end; ++id ) {
+      d_parted_boxes[id].getAllBoxes(all_boxes);
+   }
+   return;
+}
+
+
+
+/*
+***************************************************************************************
+* Compute the box with the given index.
+***************************************************************************************
+*/
+void
+AssumedPartition::getAllBoxes(BoxContainer &all_boxes, int rank) const
+{
+   const int id_begin = beginOfRank(rank);
+   const int id_end = endOfRank(rank);
+   for ( int id=id_begin; id<id_end; ++id ) {
+      all_boxes.push_back(getBox(id));
+   }
+   return;
 }
 
 

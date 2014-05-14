@@ -36,19 +36,25 @@ public:
    /*!
     * @brief Construct AssumedPartition from a box.
     *
-    * @param[in] in_box Incoming box
+    * @param[in] box Incoming box
     *
     * @param[in] rank_begin First rank
     *
     * @param[in] rank_end One past last rank
     *
     * @param[in] index_begin
+    *
+    * @param[in] parts_per_rank See partition()
+    *
+    * @param[in] interleave See partition()
     */
    AssumedPartitionBox(
       const Box& box,
       int rank_begin,
       int rank_end,
-      int index_begin = 0 );
+      int index_begin = 0,
+      double parts_per_rank = 1.0,
+      bool interleave = false );
 
    /*!
     * @brief Nearly default constructor.
@@ -58,19 +64,25 @@ public:
    /*!
     * @brief Partition the given box.
     *
-    * @param[in] in_box Incoming box
-    *
+    * @param[in] box Incoming box
     * @param[in] rank_begin First rank
-    *
     * @param[in] rank_end One past last rank
-    *
     * @param[in] index_begin
+    *
+    * @param[in] parts_per_rank Algorithm normally tries to get one partition
+    *   per rank.  This parameter is a request to change that.
+    *
+    * @param[in] interleave Algorithm normally assign consecutive box indices
+    *   to a process.  This flag causes it to interleave (round-robin) the
+    *   box assignments.
     */
    void partition(
       const Box& box,
       int rank_begin,
       int rank_end,
-      int index_begin = 0 );
+      int index_begin = 0,
+      double parts_per_rank = 1.0,
+      bool interleave = false );
 
    /*!
     * @brief Destructor.
@@ -83,7 +95,7 @@ public:
 
    //! @brief Number of box partitions.
    size_t getNumberOfParts() const {
-      return d_partition_grid_size.getProduct();
+      return d_index_end-d_index_begin;
    }
 
    //! @brief Return the owner for a box.
@@ -95,6 +107,12 @@ public:
    //! @brief Return box for given partition's position in the partition grid.
    Box getBox(const IntVector &position) const;
 
+   //! @brief Get all boxes.
+   void getAllBoxes( BoxContainer &all_boxes ) const;
+
+   //! @brief Get all boxes for a given rank.
+   void getAllBoxes( BoxContainer &all_boxes, int rank ) const;
+
    //! @brief Return index of first box.
    int begin() const {
       return d_index_begin;
@@ -102,7 +120,7 @@ public:
 
    //! @brief Return one past index of last box.
    int end() const {
-      return d_first_index_with_0;
+      return d_index_end;
    }
 
    //! @brief Return index of first box assigned to given rank.
@@ -148,10 +166,13 @@ public:
 private:
 
    //! @brief Compute the partition lay-out.
-   void computeLayout();
+   void computeLayout( double parts_per_rank );
 
    //! @brief Compute rank assignment for the partition lay-out.
    void assignToRanks();
+
+   //! @brief Compute rank assignment for the partition lay-out, using contiguous index assignments.
+   void assignToRanks_contiguous();
 
    //! @brief Box partitioned.
    Box d_box;
@@ -161,6 +182,8 @@ private:
    int d_rank_end;
    //! @brief Index for first box.
    int d_index_begin;
+   //! @brief One past index of last box.
+   int d_index_end;
 
    //! @brief Size of each uniform partition.
    IntVector d_uniform_partition_size;
@@ -171,6 +194,9 @@ private:
    IntVector d_major;
    //! @brief Box index stride in each direction.
    IntVector d_index_stride;
+
+   //! @brief Whether box assignments are interleaved using round-robin assignment.
+   bool d_interleave;
 
    /*
     * Each rank has 0, 1 or 2 partitions.  Lower ranks have more than higher ranks.
@@ -189,9 +215,6 @@ private:
 
    //! @brief First index for ranks that own 1 partition each
    int d_first_index_with_1;
-
-   //! @brief First index for ranks that own 0 partition each
-   int d_first_index_with_0;
 
 };
 

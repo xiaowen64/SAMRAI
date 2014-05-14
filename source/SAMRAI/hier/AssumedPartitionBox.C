@@ -29,17 +29,21 @@ AssumedPartitionBox::AssumedPartitionBox(
    const Box& box,
    int rank_begin,
    int rank_end,
-   int index_begin):
+   int index_begin,
+   double parts_per_rank,
+   bool interleave) :
    d_box(box),
    d_rank_begin(rank_begin),
    d_rank_end(rank_end),
    d_index_begin(index_begin),
+   d_index_end(-1),
    d_uniform_partition_size(box.getDim()),
    d_partition_grid_size(box.getDim()),
    d_major(box.getDim()),
-   d_index_stride(box.getDim())
+   d_index_stride(box.getDim()),
+   d_interleave(interleave)
 {
-   computeLayout();
+   computeLayout(parts_per_rank);
    assignToRanks();
    return;
 }
@@ -55,10 +59,12 @@ AssumedPartitionBox::AssumedPartitionBox(
    d_rank_begin(-1),
    d_rank_end(-1),
    d_index_begin(-1),
+   d_index_end(-1),
    d_uniform_partition_size(dim),
    d_partition_grid_size(dim),
    d_major(dim),
-   d_index_stride(dim)
+   d_index_stride(dim),
+   d_interleave(false)
 {
    return;
 }
@@ -74,13 +80,16 @@ AssumedPartitionBox::partition(
    const Box& box,
    int rank_begin,
    int rank_end,
-   int index_begin)
+   int index_begin,
+   double parts_per_rank,
+   bool interleave)
 {
    d_box = box;
    d_rank_begin = rank_begin;
    d_rank_end = rank_end;
    d_index_begin = index_begin;
-   computeLayout();
+   d_interleave = interleave;
+   computeLayout(parts_per_rank);
    assignToRanks();
    return;
 }
@@ -130,14 +139,22 @@ AssumedPartitionBox::getOwner(int box_index) const
    TBOX_ASSERT( box_index < d_index_begin + getNumberOfParts() );
 
    int owner = tbox::SAMRAI_MPI::getInvalidRank();
-   if ( box_index < d_index_begin || box_index >= d_first_index_with_0 ) {
-      // Not an index in this object.  Return invalid owner.
+
+   if ( d_interleave ) {
+      if ( box_index >= d_index_begin && box_index < d_index_end ) {
+         owner = d_rank_begin + (box_index-d_rank_begin)/(d_rank_end-d_rank_begin);
+      }
    }
-   if ( box_index < d_first_index_with_1 ) {
-      owner = d_rank_begin + (box_index - d_first_index_with_2)/2;
-   }
-   else if ( box_index < d_first_index_with_0 ) {
-      owner = d_first_rank_with_1 + (box_index - d_first_index_with_1);
+   else {
+      if ( box_index < d_index_begin || box_index >= d_index_end ) {
+         // Not an index in this object.  Return invalid owner.
+      }
+      else if ( box_index < d_first_index_with_1 ) {
+         owner = d_rank_begin + (box_index - d_first_index_with_2)/2;
+      }
+      else if ( box_index < d_index_end ) {
+         owner = d_first_rank_with_1 + (box_index - d_first_index_with_1);
+      }
    }
    return owner;
 }
@@ -199,6 +216,42 @@ AssumedPartitionBox::getBox(const IntVector &position) const
    box.coarsen(d_uniform_partition_size);
    box *= d_box;
    return box;
+}
+
+
+
+/*
+***************************************************************************************
+* Compute the box with the given index.
+***************************************************************************************
+*/
+void
+AssumedPartitionBox::getAllBoxes(BoxContainer &all_boxes) const
+{
+   const int id_begin = begin();
+   const int id_end = end();
+   for ( int id=id_begin; id<id_end; ++id ) {
+      all_boxes.push_back( getBox(id) );
+   }
+   return;
+}
+
+
+
+/*
+***************************************************************************************
+* Compute the box with the given index.
+***************************************************************************************
+*/
+void
+AssumedPartitionBox::getAllBoxes(BoxContainer &all_boxes, int rank) const
+{
+   const int id_begin = beginOfRank(rank);
+   const int id_end = endOfRank(rank);
+   for ( int id=id_begin; id<id_end; ++id ) {
+      all_boxes.push_back( getBox(id) );
+   }
+   return;
 }
 
 
@@ -299,11 +352,11 @@ AssumedPartitionBox::selfCheck() const
 * partitions whose union covers d_box and as little else as possible.
 *
 * TODO: experiment with other layouts that minimize overflowing d_box
-* and have minimum aspect ratio in the partition size.
+* and have minimum aspect ratio in the uniform partition size.
 ***************************************************************************************
 */
 void
-AssumedPartitionBox::computeLayout()
+AssumedPartitionBox::computeLayout( double parts_per_rank )
 {
    const IntVector box_size = d_box.numberCells();
 
@@ -319,7 +372,7 @@ AssumedPartitionBox::computeLayout()
    int parts_count = d_partition_grid_size.getProduct();
    IntVector num_parts_can_increase(d_box.getDim(), 1);
    IntVector sorter(d_box.getDim());
-   while ( parts_count < num_ranks &&
+   while ( parts_count < num_ranks*parts_per_rank &&
            num_parts_can_increase != hier::IntVector::getZero(d_box.getDim()) ) {
       sorter.sortIntVector(d_uniform_partition_size);
       int inc_dir = 0;
@@ -328,6 +381,7 @@ AssumedPartitionBox::computeLayout()
       }
       inc_dir = sorter[inc_dir];
 
+      // Double partition grid size, unless it causes more partitions than ranks.
       if ( 2*parts_count > num_ranks ) {
          const int cross_section = parts_count/d_partition_grid_size[inc_dir];
          d_partition_grid_size[inc_dir] = (num_ranks+cross_section-1)/cross_section;
@@ -346,6 +400,8 @@ AssumedPartitionBox::computeLayout()
    // There can be partitions completele outside d_box.  Remove them.
    d_partition_grid_size = IntVector::ceilingDivide( box_size, d_uniform_partition_size );
 
+   d_index_end = d_index_begin + d_partition_grid_size.getProduct();
+
    return;
 }
 
@@ -358,6 +414,26 @@ AssumedPartitionBox::computeLayout()
 */
 void
 AssumedPartitionBox::assignToRanks()
+{
+   if ( d_interleave ) {
+      // No special settings needed.
+   }
+   else {
+      assignToRanks_contiguous();
+   }
+   return;
+}
+
+
+
+
+/*
+***************************************************************************************
+* Compute rank assignment for the partition lay-out.
+***************************************************************************************
+*/
+void
+AssumedPartitionBox::assignToRanks_contiguous()
 {
    // There should not be more than 2 partitions per rank.
    TBOX_ASSERT( d_partition_grid_size.getProduct() <= 2*(d_rank_end-d_rank_begin) );
@@ -394,7 +470,6 @@ AssumedPartitionBox::assignToRanks()
       d_first_index_with_1 = 2*(d_first_rank_with_1 - d_rank_begin);
       d_first_rank_with_0 = d_rank_end;
    }
-   d_first_index_with_0 = d_index_begin + getNumberOfParts();
 
    d_major.sortIntVector(d_partition_grid_size);
 
