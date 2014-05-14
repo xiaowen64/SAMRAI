@@ -81,7 +81,6 @@ CommonTestParams getTestParametersFromDatabase(
 void contriveConnector( Connector &conn,
                         const PrimitiveBoxGen &pb1,
                         const PrimitiveBoxGen &pb2,
-                        const std::string &method,
                         tbox::Database &contrivance_db );
 
 
@@ -169,19 +168,34 @@ int main(
          hier::BoxLevel l2(boxes2, hier::IntVector::getOne(pb2.d_geom->getDim()), pb2.d_geom);
          l2.cacheGlobalReducedData();
 
-         /*
-          * Rig up edges in l1_to_l2 by various contrivances and
-          * compute transpose l2_to_l1.  Then check transpose
-          * correctness.
-          */
-         char *contrivance_methods[] = { "mod", "near" };
-         const size_t num_methods = 2;
-         for ( size_t mi=0; mi<num_methods; ++mi ) {
-            hier::Connector l1_to_l2(l1, l2, hier::IntVector::getZero(dim));
-            contriveConnector( l1_to_l2, pb1, pb2, contrivance_methods[mi],
-                               *input_db->getDatabase("ConnectorContrivance") );
+         int test_number = 0;
+         while (true) {
 
-            tbox::plog << "Testing with connector contrived by " << contrivance_methods[mi]
+            std::string test_name("Test");
+            test_name += tbox::Utilities::intToString(test_number++, 2);
+
+            boost::shared_ptr<tbox::Database> test_db =
+               input_db->getDatabaseWithDefault(test_name, boost::shared_ptr<tbox::Database>());
+
+            if ( !test_db ) {
+               break;
+            }
+
+            const std::string nickname =
+               test_db->getStringWithDefault("nickname", test_name);
+
+            tbox::pout << "\nTest " << test_name << " (" << nickname << ")\n";
+
+            /*
+             * Set up edges in l1_to_l2 by the contrivance specified
+             * in the test database.  Then check transpose
+             * correctness.
+             */
+
+            hier::Connector l1_to_l2(l1, l2, hier::IntVector::getZero(dim));
+            contriveConnector( l1_to_l2, pb1, pb2, *test_db );
+
+            tbox::plog << "Testing with:"
                        << "\nl1:\n" << l1.format("\t")
                        << "\nl2:\n" << l2.format("\t")
                        << "\nl1_to_l2:\n" << l1_to_l2.format("\t")
@@ -189,18 +203,23 @@ int main(
 
             hier::Connector l2_to_l1(l2, l1, hier::IntVector::getZero(dim));
             l2_to_l1.setToTransposeOf(l1_to_l2);
+            tbox::plog << "Computed:\nl2_to_l1:\n" << l2_to_l1.format("\t")
+                       << std::endl;
 
             size_t test_fail_count = l1_to_l2.checkTransposeCorrectness(l2_to_l1);
             fail_count += test_fail_count;
             if ( test_fail_count ) {
-               tbox::pout << "FAILED: " << test_fail_count << " with "
-                          << contrivance_methods[mi] << "-contrived Connector.\n";
+               tbox::pout << "FAILED: " << test_name << " (" << nickname << ')' << std::endl;
+               tbox::plog << "FAILED: " << test_name << " (" << nickname << ')' << std::endl;
+            }
+            else {
+               tbox::plog << "PASSED: " << test_name << " (" << nickname << ')' << std::endl;
             }
          }
 
-
       }
 
+      input_db->printClassData(tbox::plog);
 
    }
 
@@ -223,10 +242,11 @@ int main(
 void contriveConnector( Connector &conn,
                         const PrimitiveBoxGen &pb1,
                         const PrimitiveBoxGen &pb2,
-                        const std::string &method,
                         tbox::Database &contrivance_db )
 {
    const int rank = conn.getBase().getMPI().getRank();
+
+   const std::string method = contrivance_db.getString("method");
 
    if ( method == "mod" ) {
       const int denom = contrivance_db.getInteger("denom");
@@ -239,6 +259,9 @@ void contriveConnector( Connector &conn,
             }
          }
       }
+      tbox::plog << "Contrived connector using 'mod':"
+                 << "  denom=" << denom
+                 << std::endl;
    }
 
    else if ( method == "near" ) {
@@ -258,6 +281,11 @@ void contriveConnector( Connector &conn,
             conn.insertLocalNeighbor(l2box, l1box.getBoxId());
          }
       }
+      tbox::plog << "Contrived connector using 'near':"
+                 << "  begin_shift=" << begin_shift
+                 << "  end_shift=" << end_shift
+                 << "  inc=" << inc
+                 << std::endl;
    }
 
    else {

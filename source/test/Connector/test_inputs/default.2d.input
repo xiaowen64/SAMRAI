@@ -75,11 +75,15 @@ PrimitiveBoxGen2 {
 }
 
 
-ConnectorContrivance {
-  // For method "mod"
+Test00 {
+  nickname = "full connectivity"
+  method = "mod"
   denom = 1
+}
 
-  // For method "near"
+Test01 {
+  nickname = "sparse connectivity"
+  method = "near"
   begin_shift = -2
   end_shift = 8
   inc = 1
