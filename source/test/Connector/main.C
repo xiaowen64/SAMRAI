@@ -92,6 +92,8 @@ int main(
    tbox::SAMRAIManager::initialize();
    tbox::SAMRAIManager::startup();
 
+   const tbox::SAMRAI_MPI &mpi = tbox::SAMRAI_MPI::getSAMRAIWorld();
+
    int fail_count = 0;
 
    /*
@@ -128,19 +130,26 @@ int main(
       base_name = main_db->getStringWithDefault("base_name", base_name);
 
       /*
+       * Modify basename for this particular run.
+       * Add the number of processes and the case name.
+       */
+      std::string base_name_ext = base_name;
+      base_name_ext = base_name_ext + '-' +
+           tbox::Utilities::nodeToString(mpi.getSize());
+
+      /*
        * Start logging.
        */
-      const std::string log_file_name = base_name + ".log";
+      const std::string log_file_name = base_name_ext + ".log";
       bool log_all_nodes = false;
-      log_all_nodes = main_db->getBoolWithDefault("log_all_nodes",
-                                                  log_all_nodes);
+      log_all_nodes = main_db->getBoolWithDefault("log_all_nodes", log_all_nodes);
       if (log_all_nodes) {
          tbox::PIO::logAllNodes(log_file_name);
       } else {
          tbox::PIO::logOnlyNodeZero(log_file_name);
       }
 
-      const int rank = tbox::SAMRAI_MPI::getSAMRAIWorld().getRank();
+      const int rank = mpi.getRank();
 
       {
 
@@ -184,7 +193,8 @@ int main(
             const std::string nickname =
                test_db->getStringWithDefault("nickname", test_name);
 
-            tbox::pout << "\nTest " << test_name << " (" << nickname << ")\n";
+            tbox::plog << "\n\n";
+            tbox::pout << "Running test " << test_name << " (" << nickname << ")\n";
 
             /*
              * Set up edges in l1_to_l2 by the contrivance specified
@@ -252,8 +262,11 @@ void contriveConnector( Connector &conn,
       const int denom = contrivance_db.getInteger("denom");
       for ( int i=pb1.d_ap.beginOfRank(rank); i<pb1.d_ap.endOfRank(rank); ++i ) {
          hier::Box l1box = pb1.d_ap.getBox(i);
+         TBOX_ASSERT( l1box.getOwnerRank() == rank );
          for ( int j=pb2.d_ap.begin(); j<pb2.d_ap.end(); ++j ) {
             hier::Box l2box = pb2.d_ap.getBox(j);
+            TBOX_ASSERT( l2box.getOwnerRank() >= 0 &&
+                         l2box.getOwnerRank() < conn.getBase().getMPI().getSize() );
             if ( (i+j)%denom == 0 ) {
                conn.insertLocalNeighbor(l2box, l1box.getBoxId());
             }
@@ -270,6 +283,7 @@ void contriveConnector( Connector &conn,
       int inc = contrivance_db.getInteger("inc");
       for ( int i=pb1.d_ap.beginOfRank(rank); i<pb1.d_ap.endOfRank(rank); ++i ) {
          hier::Box l1box = pb1.d_ap.getBox(i);
+         TBOX_ASSERT( l1box.getOwnerRank() == rank );
 
          int begin = l1box.getLocalId().getValue() + begin_shift;
          int end = l1box.getLocalId().getValue() + end_shift;
@@ -278,6 +292,8 @@ void contriveConnector( Connector &conn,
 
          for ( int j=begin; j<end; j+=inc ) {
             hier::Box l2box = pb2.d_ap.getBox(j);
+            TBOX_ASSERT( l2box.getOwnerRank() >= 0 &&
+                         l2box.getOwnerRank() < conn.getBase().getMPI().getSize() );
             conn.insertLocalNeighbor(l2box, l1box.getBoxId());
          }
       }
@@ -308,6 +324,11 @@ void PrimitiveBoxGen::getFromInput( tbox::Database &test_db )
    int rank_end = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
    int index_begin = test_db.getIntegerWithDefault("index_begin", 0);
    d_ap.partition( d_geom->getPhysicalDomain(), rank_begin, rank_end, index_begin );
+   tbox::plog << "PrimitiveBoxGen::getFromInput() generated AssumedPartition:\n";
+   d_ap.recursivePrint(tbox::plog, "\t", 3);
+   if ( d_ap.selfCheck() ) {
+      TBOX_ERROR("Error in setting up AssumedPartition d_ap (selfCheck failed).\n");
+   }
 
    std::string index_filter = test_db.getStringWithDefault("index_filter", "ALL");
    if ( index_filter == "ALL" ) {
