@@ -15,7 +15,7 @@ Main {
   base_name = "single.2d"
 
   // Whether to log all nodes.
-  log_all_nodes = FALSE
+  log_all_nodes = TRUE
 
 }
 
@@ -84,5 +84,14 @@ Test06 {
   box = [(100,100),(105,102)]
   rank_begin = 0
   rank_end = 30
+  index_begin = 1000
+}
+
+Test07 {
+  nickname = "as many ownwers as MPI tassks" // Nick name of test.
+  dim = 2
+  box = [(100,100),(105,102)]
+  rank_begin = 0
+  rank_end = 3
   index_begin = 1000
 }

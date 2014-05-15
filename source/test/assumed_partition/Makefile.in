@@ -33,7 +33,7 @@ QUOTE = \"
 checkcompile: main
 
 check:  checkcompile
-	@for i in test_inputs/*.input ; do	\
+	@for i in test_inputs/single.*.input test_inputs/multi.*.input; do	\
 	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
 	    echo "    <testcase classname=\"assumed_partition\" name=$(QUOTE)$$i $$p procs$(QUOTE)>" >> $(REPORT); \
 	    $(OBJECT)/config/serpa-run $$p ./main $${i} | $(TEE) foo; \

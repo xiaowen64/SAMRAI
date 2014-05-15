@@ -35,7 +35,7 @@ struct CommonTestParams {
    CommonTestParams( const tbox::Dimension &dim ) :
       box(dim),
       rank_begin(0),
-      rank_end(1),
+      rank_end(tbox::SAMRAI_MPI::getSAMRAIWorld().getSize()),
       index_begin(0) {}
    CommonTestParams( const CommonTestParams &other ) :
       box(other.box),
@@ -55,6 +55,8 @@ int main(
    tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::initialize();
    tbox::SAMRAIManager::startup();
+
+   const tbox::SAMRAI_MPI &mpi = tbox::SAMRAI_MPI::getSAMRAIWorld();
 
    int fail_count = 0;
 
@@ -92,9 +94,17 @@ int main(
       base_name = main_db->getStringWithDefault("base_name", base_name);
 
       /*
+       * Modify basename for this particular run.
+       * Add the number of processes and the case name.
+       */
+      std::string base_name_ext = base_name;
+      base_name_ext = base_name_ext + '-' +
+           tbox::Utilities::nodeToString(mpi.getSize());
+
+      /*
        * Start logging.
        */
-      const std::string log_file_name = base_name + ".log";
+      const std::string log_file_name = base_name_ext + ".log";
       bool log_all_nodes = false;
       log_all_nodes = main_db->getBoolWithDefault("log_all_nodes",
             log_all_nodes);
@@ -126,7 +136,8 @@ int main(
             const std::string nickname =
                test_db->getStringWithDefault("nickname", test_name);
 
-            tbox::plog << "\n\nStarting test " << test_name << " (" << nickname << ")\n";
+            tbox::plog << "\n\n";
+            tbox::pout << "Running test " << test_name << " (" << nickname << ")\n";
 
             CommonTestParams ctp = getTestParametersFromDatabase( *test_db );
 
