@@ -562,6 +562,7 @@ Connector::setToTransposeOf( const Connector &other )
                tmp_boxes.insert(tmp_box);
             }
             insertNeighbors( tmp_boxes, BoxId( lid, mpi.getRank() ) );
+            tmp_boxes.clear();
          } while ( !mstream.endOfData() );
 
       }
