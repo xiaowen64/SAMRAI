@@ -1393,16 +1393,21 @@ Connector::recursivePrint(
                            ni->getBlockId(),
                            i_nabr->getBlockId());
                   }
-                  if (head_coarser) {
-                     ovlap.refine(d_ratio);
+                  if ( ovlap.getBlockId() != ni->getBlockId() ) {
+                     os << "\tov undefined (non-touching blocks.";
                   }
-                  else if (d_ratio != 1) {
-                     ovlap.coarsen(d_ratio);
+                  else {
+                     if (head_coarser) {
+                        ovlap.refine(d_ratio);
+                     }
+                     else if (d_ratio != 1) {
+                        ovlap.coarsen(d_ratio);
+                     }
+                     Box ghost_box = (*ni);
+                     ghost_box.grow(d_base_width);
+                     ovlap = ovlap * ghost_box;
+                     os << "\tov" << ovlap << "_" << ovlap.numberCells();
                   }
-                  Box ghost_box = (*ni);
-                  ghost_box.grow(d_base_width);
-                  ovlap = ovlap * ghost_box;
-                  os << "\tov" << ovlap << "_" << ovlap.numberCells();
                }
                os << '\n';
             }
