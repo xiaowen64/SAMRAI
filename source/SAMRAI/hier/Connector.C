@@ -488,7 +488,7 @@ Connector::setToTransposeOf( const Connector &other )
 
          FullNeighborhoodSet::iterator nextrr = rr;
          ++nextrr;
-         if ( nextrr != reordered_relationships.end() ||
+         if ( nextrr == reordered_relationships.end() ||
               nextrr->first.getOwnerRank() != base_box.getOwnerRank() ) {
             requests.push_back(tbox::SAMRAI_MPI::Request());
             mpi_err = mpi.Isend( (void*)mstream->getBufferStart(),
