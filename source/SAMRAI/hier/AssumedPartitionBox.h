@@ -123,10 +123,18 @@ public:
       return d_index_end;
    }
 
-   //! @brief Return index of first box assigned to given rank.
+   /*!
+    * @brief Return index of first box in the contiguous index range assigned to given rank.
+    *
+    * This method should not be used for objects when the ranks are interleaved.
+    */
    int beginOfRank(int rank) const;
 
-   //! @brief Return one past index of last box assigned to given rank.
+   /*!
+    * @brief Return one past index of last box in the contiguous index range assigned to given rank.
+    *
+    * This method should not be used for objects when the ranks are interleaved.
+    */
    int endOfRank(int rank) const;
 
    /*!
