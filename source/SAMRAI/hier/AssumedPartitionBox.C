@@ -350,8 +350,8 @@ AssumedPartitionBox::selfCheck() const
    box_leftover.removeIntersections(all_parts);
    if ( !box_leftover.empty() ) {
       nerr += box_leftover.size();
-      tbox::plog << "AssumedPartitionerBox::selfCheck(): Partitions fail to cover box "
-                 << d_box << "  Uncovered parts:\n"
+      tbox::plog << "AssumedPartitionerBox::selfCheck(): Partitions cover less than box "
+                 << d_box << "  Portions not covered by partitions:\n"
                  << box_leftover.format("\t") << std::endl;
    }
 
@@ -360,8 +360,8 @@ AssumedPartitionBox::selfCheck() const
    parts_leftover.removeIntersections(d_box);
    if ( !parts_leftover.empty() ) {
       nerr += parts_leftover.size();
-      tbox::plog << "AssumedPartitionerBox::selfCheck(): Partitions overflow  box "
-                 << d_box << "  Overflow parts:\n"
+      tbox::plog << "AssumedPartitionerBox::selfCheck(): Partitions cover more than box "
+                 << d_box << "  Portions outside the box:\n"
                  << parts_leftover.format("\t") << std::endl;
    }
 
