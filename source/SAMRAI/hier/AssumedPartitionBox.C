@@ -105,16 +105,16 @@ int
 AssumedPartitionBox::beginOfRank(int rank) const
 {
    if ( d_interleave ) {
-      TBOX_ERROR("AssumedPartitionBox::beginOfRank: You may not call beginOfRank()\n"
+      TBOX_ERROR("AssumedPartitionBox::beginOfRank: You should not use beginOfRank()\n"
                  << " or endOfRank() for an interleaved AsssumedPartitionBox object\n"
                  << " because indices owned by the same rank are not contiguous.\n");
    }
-   if ( rank >= d_rank_begin && rank < d_rank_end ) {
-      int index = ( rank < d_first_rank_with_1 ? d_first_index_with_2 + (rank-d_rank_begin       )*2 : 0 )
-                + ( rank < d_first_rank_with_0 ? d_first_index_with_1 + (rank-d_first_rank_with_1)   : 0 );
-      return index;
-   }
-   return d_index_end;
+   int index =
+      rank < d_rank_begin ? d_index_begin :
+      rank < d_first_rank_with_1 ? d_first_index_with_2 + (rank-d_rank_begin       )*2 :
+      rank < d_first_rank_with_0 ? d_first_index_with_1 + (rank-d_first_rank_with_1) :
+      d_index_end;
+   return index;
 }
 
 
@@ -128,15 +128,16 @@ int
 AssumedPartitionBox::endOfRank(int rank) const
 {
    if ( d_interleave ) {
-      TBOX_ERROR("AssumedPartitionBox::beginOfRank: You may not call beginOfRank()\n"
+      TBOX_ERROR("AssumedPartitionBox::beginOfRank: You should not use beginOfRank()\n"
                  << " or endOfRank() for an interleaved AsssumedPartitionBox object\n"
                  << " because indices owned by the same rank are not contiguous.\n");
    }
-   if ( rank >= d_rank_begin && rank < d_rank_end ) {
-      int index = beginOfRank(rank) + ( rank < d_first_rank_with_1 ? 2 : rank < d_first_rank_with_0 ? 1 : 0 );
-      return index;
-   }
-   return d_index_begin;
+   int index =
+      rank < d_rank_begin ? d_index_begin :
+      rank < d_first_rank_with_1 ? d_first_index_with_2 + (1+rank-d_rank_begin       )*2 :
+      rank < d_first_rank_with_0 ? d_first_index_with_1 + (1+rank-d_first_rank_with_1) :
+      d_index_end;
+   return index;
 }
 
 
