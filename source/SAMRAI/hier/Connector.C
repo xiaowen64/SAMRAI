@@ -434,11 +434,6 @@ const IntVector& new_width)
 void
 Connector::setToTransposeOf( const Connector &other )
 {
-   // Order locally visible edges by owners who need to know about them.
-   typedef std::map<hier::Box, hier::BoxContainer, hier::Box::id_less> FullNeighborhoodSet;
-   FullNeighborhoodSet reordered_relationships;
-   other.reorderRelationshipsByHead(reordered_relationships);
-
    *this = Connector( other.getHead(), other.getBase(),
                       convertHeadWidthToBase( other.getHead().getRefinementRatio(),
                                               other.getBase().getRefinementRatio(),
@@ -446,13 +441,17 @@ Connector::setToTransposeOf( const Connector &other )
 
    const tbox::SAMRAI_MPI &mpi = getBase().getMPI();
 
+   // Order locally visible edges by owners who need to know about them.
+   typedef std::map<hier::Box, hier::BoxContainer, hier::Box::id_less> FullNeighborhoodSet;
+   FullNeighborhoodSet reordered_relationships;
+   other.reorderRelationshipsByHead(reordered_relationships);
+
    /*
     * We receive different types of messages from different sources
     * without knowing which one is next, so we use the same MPI tag
     * but differentiate messages by embedding a type in each.
     */
    const int mpi_tag = 0;
-   int mpi_err;
    char edge_msg_type = 1;
    char ack_msg_type = 2;
    char upward_term_msg_type = 3;
@@ -461,6 +460,7 @@ Connector::setToTransposeOf( const Connector &other )
    std::map<int,boost::shared_ptr<tbox::MessageStream> > messages;
    std::vector<tbox::SAMRAI_MPI::Request> requests;
    tbox::SAMRAI_MPI::Status tmp_status;
+   int mpi_err;
 
    // Send edge messages and remember to get receivers' acknowledgements.
    std::set<int> ack_needed;
@@ -503,7 +503,7 @@ Connector::setToTransposeOf( const Connector &other )
 
 
    // Data for propgating termination messages on the tree.
-   tbox::CenteredRankTree rank_tree( 0, mpi.getSize()-1, mpi.getRank() );
+   tbox::CenteredRankTree rank_tree(mpi);
    size_t child_term_needed = rank_tree.getNumberOfChildren();
    bool send_upward_term_msg = true;
 

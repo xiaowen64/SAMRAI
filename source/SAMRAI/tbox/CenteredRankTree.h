@@ -80,6 +80,20 @@ public:
     *
     * @see setupTree()
     *
+    * @param[in] mpi
+    * @param[in] make_first_rank_the_root See makeFirstRankTheRoot()
+    *
+    * @see initialize().
+    */
+   CenteredRankTree(
+      const SAMRAI_MPI &mpi,
+      bool make_first_rank_the_root = true);
+
+   /*!
+    * @brief Initializing constructor.
+    *
+    * @see setupTree()
+    *
     * @param[in] first_rank
     * @param[in] last_rank
     * @param[in] rank
