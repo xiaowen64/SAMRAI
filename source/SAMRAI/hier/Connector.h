@@ -143,6 +143,23 @@ public:
    virtual ~Connector();
 
    /*!
+    * @brief Set this to the transpose of another Connector.
+    *
+    * This method uses communication to acquire the transpose edges.
+    *
+    * @param other [i]
+    */
+   void setToTransposeOf( const Connector &other );
+
+   /*!
+    * @brief Transpose the visible relationships so that they point from
+    * each visible head box to a set of local base boxes.
+    */
+   void
+   reorderRelationshipsByHead(
+      std::map<Box, BoxContainer, Box::id_less>& relationships_by_head) const;
+
+   /*!
     * @brief Clear the Connector, putting it into an uninitialized state.
     */
    void

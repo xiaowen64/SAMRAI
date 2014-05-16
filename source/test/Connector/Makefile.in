@@ -10,7 +10,7 @@
 
 SAMRAI        = @top_srcdir@
 SRCDIR        = @srcdir@
-SUBDIR        = source/test/assumed_partition
+SUBDIR        = source/test/Connector
 VPATH         = @srcdir@
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..
@@ -25,17 +25,17 @@ CPPFLAGS_EXTRA= -DTESTING=1
 main:  main.o $(LIBSAMRAIDEPEND)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) main.o $(LIBSAMRAI) $(LDLIBS) -o main
 
-NUM_TESTS = 4
+NUM_TESTS = 2
 
-TEST_NPROCS = 1
+TEST_NPROCS = @TEST_NPROCS@
 QUOTE = \"
 
 checkcompile: main
 
 check:  checkcompile
-	@for i in test_inputs/single.*.input test_inputs/multi.*.input; do	\
+	@for i in test_inputs/*.input ; do	\
 	  for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
-	    echo "    <testcase classname=\"assumed_partition\" name=$(QUOTE)$$i $$p procs$(QUOTE)>" >> $(REPORT); \
+	    echo "    <testcase classname=\"OverlapConnectorAlgorithm\" name=$(QUOTE)$$i $$p procs$(QUOTE)>" >> $(REPORT); \
 	    $(OBJECT)/config/serpa-run $$p ./main $${i} | $(TEE) foo; \
 	    if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
 	    echo "    </testcase>" >> $(REPORT); \

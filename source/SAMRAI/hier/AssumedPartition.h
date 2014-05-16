@@ -42,12 +42,25 @@ public:
     * @param[in] rank_begin First rank
     *
     * @param[in] rank_end One past last rank
+    *
+    * @param[in] index_begin
+    *
+    * @param[in] parts_per_rank See partition()
+    *
+    * @param[in] interleave See partition()
     */
    AssumedPartition(
       const BoxContainer& boxes,
       int rank_begin,
       int rank_end,
-      int index_begin = 0 );
+      int index_begin = 0,
+      double parts_per_rank = 1.0,
+      bool interleave = false );
+
+   /*!
+    * @brief Construct an empty AssumedPartition.
+    */
+   AssumedPartition();
 
    /*!
     * @brief Destructor.
@@ -62,12 +75,21 @@ public:
     * @param[in] rank_begin First rank
     *
     * @param[in] rank_end One past last rank
+    *
+    * @param[in] parts_per_rank Algorithm normally tries to get one partition
+    *   per rank.  This parameter is a request to change that.
+    *
+    * @param[in] interleave Algorithm normally assign consecutive box indices
+    *   to a process.  This flag causes it to interleave (round-robin) the
+    *   box assignments.
     */
    void partition(
       const BoxContainer& boxes,
       int rank_begin,
       int rank_end,
-      int index_begin = 0 );
+      int index_begin = 0,
+      double parts_per_rank = 1.0,
+      bool interleave = false );
 
    //! @brief Number of box partitions.
    size_t getNumberOfParts() const {
@@ -79,6 +101,12 @@ public:
 
    //! @brief Return box for given index.
    Box getBox(int box_index) const;
+
+   //! @brief Get all boxes.
+   void getAllBoxes( BoxContainer &all_boxes ) const;
+
+   //! @brief Get all boxes for a given rank.
+   void getAllBoxes( BoxContainer &all_boxes, int rank ) const;
 
    //! @brief Return index of first box.
    int begin() const {

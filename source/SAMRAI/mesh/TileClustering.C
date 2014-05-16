@@ -1304,7 +1304,8 @@ TileClustering::coalesceClusters(
        * Connectors.
        */
       const hier::IntVector &zero_vector = hier::IntVector::getZero(d_dim);
-      tile_box_level.initialize( tile_box_level.getRefinementRatio(),
+      tile_box_level.initialize( hier::BoxContainer(),
+                                 tile_box_level.getRefinementRatio(),
                                  tile_box_level.getGridGeometry(),
                                  tile_box_level.getMPI() );
       tag_to_tile.reset( new hier::Connector( tag_to_tile->getBase(),
