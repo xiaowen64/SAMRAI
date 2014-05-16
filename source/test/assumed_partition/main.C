@@ -137,7 +137,7 @@ int main(
                test_db->getStringWithDefault("nickname", test_name);
 
             tbox::plog << "\n\n";
-            tbox::pout << "Running test " << test_name << " (" << nickname << ")\n";
+            tbox::pout << "Running " << test_name << " (" << nickname << ")\n";
 
             CommonTestParams ctp = getTestParametersFromDatabase( *test_db );
 
