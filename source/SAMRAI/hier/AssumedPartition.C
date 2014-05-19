@@ -45,7 +45,7 @@ AssumedPartition::AssumedPartition(
    int rank_begin,
    int rank_end,
    int index_begin,
-   double parts_per_rank,
+   double avg_parts_per_rank,
    bool interleave) :
    d_parted_boxes(),
    d_rank_begin(rank_begin),
@@ -53,7 +53,7 @@ AssumedPartition::AssumedPartition(
    d_index_begin(index_begin),
    d_index_end(index_begin)
 {
-   partition(boxes, rank_begin, rank_end, index_begin, parts_per_rank, interleave);
+   partition(boxes, rank_begin, rank_end, index_begin, avg_parts_per_rank, interleave);
 }
 
 
@@ -68,7 +68,7 @@ AssumedPartition::partition(
    int rank_begin,
    int rank_end,
    int index_begin,
-   double parts_per_rank,
+   double avg_parts_per_rank,
    bool interleave)
 {
    TBOX_ASSERT( rank_end > rank_begin );
@@ -108,7 +108,7 @@ AssumedPartition::partition(
 
       d_parted_boxes.push_back(
          AssumedPartitionBox(*bi, box_rank_begin, box_rank_end, d_index_end,
-                             parts_per_rank, interleave) );
+                             avg_parts_per_rank, interleave) );
       d_index_end = d_parted_boxes.back().end();
    }
 
@@ -290,7 +290,9 @@ AssumedPartition::findOverlaps(
 * Check the assumed partition for errors and inconsistencies.  Write
 * error diagnostics to plog.
 *
-* Return number of errors found.  Errors indicate a bug in this class.
+* Return number of errors found.  This class should prevent (or at
+* least catch) user errors, so any error found here indicates a bug in
+* the class.
 ***************************************************************************************
 */
 size_t
@@ -333,7 +335,7 @@ AssumedPartition::recursivePrint(
       << '\n';
    co << border << d_parted_boxes.size() << " pre-partition boxes:\n";
    for ( size_t i=0; i<d_parted_boxes.size(); ++i ) {
-      co << border << "  pre-partition box " << i << ":\n";
+      co << border << "  d_parted_boxes[" << i << "]:\n";
       d_parted_boxes[i].recursivePrint(co, border+"    ", detail_depth-1);
    }
    return;

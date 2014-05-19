@@ -32,16 +32,19 @@ struct CommonTestParams {
    int rank_begin;
    int rank_end;
    int index_begin;
+   double avg_parts_per_rank;
    CommonTestParams( const tbox::Dimension &dim ) :
       box(dim),
       rank_begin(0),
       rank_end(tbox::SAMRAI_MPI::getSAMRAIWorld().getSize()),
-      index_begin(0) {}
+      index_begin(0),
+      avg_parts_per_rank(1.0) {}
    CommonTestParams( const CommonTestParams &other ) :
       box(other.box),
       rank_begin(other.rank_begin),
       rank_end(other.rank_end),
-      index_begin(other.index_begin) {}
+      index_begin(other.index_begin),
+      avg_parts_per_rank(other.avg_parts_per_rank)  {}
 };
 
 CommonTestParams getTestParametersFromDatabase(
@@ -115,9 +118,6 @@ int main(
       }
 
       {
-         /*
-          * Test single-box assumed partitions.
-          */
 
          int test_number = 0;
 
@@ -143,19 +143,23 @@ int main(
 
             size_t test_fail_count = 0;
             if ( ctp.geometry ) {
+               // Test multi-box assumed partitions.
                hier::AssumedPartition ap( ctp.geometry->getPhysicalDomain(),
                                           ctp.rank_begin,
                                           ctp.rank_end,
-                                          ctp.index_begin );
+                                          ctp.index_begin,
+                                          ctp.avg_parts_per_rank );
                tbox::plog << "AssumedPartition:\n";
                ap.recursivePrint(tbox::plog, "\t");
                test_fail_count = ap.selfCheck();
             }
             else {
+               // Test single-box assumed partitions.
                hier::AssumedPartitionBox apb( ctp.box,
                                               ctp.rank_begin,
                                               ctp.rank_end,
-                                              ctp.index_begin );
+                                              ctp.index_begin,
+                                              ctp.avg_parts_per_rank  );
                tbox::plog << "AssumedPartitionBox:\n";
                apb.recursivePrint(tbox::plog, "\t");
                test_fail_count = apb.selfCheck();
@@ -200,6 +204,7 @@ CommonTestParams getTestParametersFromDatabase( tbox::Database &test_db )
       ctp.box = test_db.getDatabaseBox("box");
       ctp.box.setBlockId(hier::BlockId(0));
    } else if ( test_db.isDatabase("BlockGeometry") ) {
+      // Note: Using GridGeometry only because BaseGridGeometry can't be instanstiated.
       ctp.geometry.reset(
          new geom::GridGeometry(
             dim,
@@ -213,5 +218,6 @@ CommonTestParams getTestParametersFromDatabase( tbox::Database &test_db )
    ctp.rank_begin = test_db.getIntegerWithDefault("rank_begin", ctp.rank_begin);
    ctp.rank_end = test_db.getIntegerWithDefault("rank_end", ctp.rank_end);
    ctp.index_begin = test_db.getIntegerWithDefault("index_begin", ctp.index_begin);
+   ctp.avg_parts_per_rank = test_db.getDoubleWithDefault("avg_parts_per_rank", ctp.avg_parts_per_rank);
    return ctp;
 }

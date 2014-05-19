@@ -24,8 +24,8 @@ namespace hier {
  * partition should very fast to create and query and requires minimal
  * storage.
  *
- * An assumed partition should avoid extreme imbalances, but its
- * purpose is not fine load balancing.
+ * An assumed partition avoids extreme imbalances, but its purpose is
+ * not fine load balancing.
  *
  * See also AssumedPartitionBox.
  */
@@ -45,7 +45,7 @@ public:
     *
     * @param[in] index_begin
     *
-    * @param[in] parts_per_rank See partition()
+    * @param[in] avg_parts_per_rank See partition()
     *
     * @param[in] interleave See partition()
     */
@@ -54,7 +54,7 @@ public:
       int rank_begin,
       int rank_end,
       int index_begin = 0,
-      double parts_per_rank = 1.0,
+      double avg_parts_per_rank = 1.0,
       bool interleave = false );
 
    /*!
@@ -76,19 +76,20 @@ public:
     *
     * @param[in] rank_end One past last rank
     *
-    * @param[in] parts_per_rank Algorithm normally tries to get one partition
-    *   per rank.  This parameter is a request to change that.
+    * @param[in] avg_parts_per_rank Algorithm normally tries to
+    * average one partition per rank.  This parameter is a request to
+    * change that.
     *
-    * @param[in] interleave Algorithm normally assign consecutive box indices
-    *   to a process.  This flag causes it to interleave (round-robin) the
-    *   box assignments.
+    * @param[in] interleave Algorithm normally assign consecutive box
+    * indices to a process.  This flag causes it to interleave
+    * (round-robin) the box assignments.
     */
    void partition(
       const BoxContainer& boxes,
       int rank_begin,
       int rank_end,
       int index_begin = 0,
-      double parts_per_rank = 1.0,
+      double avg_parts_per_rank = 1.0,
       bool interleave = false );
 
    //! @brief Number of box partitions.

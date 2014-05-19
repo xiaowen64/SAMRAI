@@ -30,7 +30,7 @@ AssumedPartitionBox::AssumedPartitionBox(
    int rank_begin,
    int rank_end,
    int index_begin,
-   double parts_per_rank,
+   double avg_parts_per_rank,
    bool interleave) :
    d_box(box),
    d_rank_begin(rank_begin),
@@ -43,7 +43,7 @@ AssumedPartitionBox::AssumedPartitionBox(
    d_index_stride(box.getDim()),
    d_interleave(interleave)
 {
-   computeLayout(parts_per_rank);
+   computeLayout(avg_parts_per_rank);
    assignToRanks();
    return;
 }
@@ -81,7 +81,7 @@ AssumedPartitionBox::partition(
    int rank_begin,
    int rank_end,
    int index_begin,
-   double parts_per_rank,
+   double avg_parts_per_rank,
    bool interleave)
 {
    d_box = box;
@@ -89,7 +89,7 @@ AssumedPartitionBox::partition(
    d_rank_end = rank_end;
    d_index_begin = index_begin;
    d_interleave = interleave;
-   computeLayout(parts_per_rank);
+   computeLayout(avg_parts_per_rank);
    assignToRanks();
    return;
 }
@@ -111,8 +111,8 @@ AssumedPartitionBox::beginOfRank(int rank) const
    }
    int index =
       rank < d_rank_begin ? d_index_begin :
-      rank < d_first_rank_with_1 ? d_first_index_with_2 + (rank-d_rank_begin       )*2 :
-      rank < d_first_rank_with_0 ? d_first_index_with_1 + (rank-d_first_rank_with_1) :
+      rank < d_first_rank_with_1 ? d_first_index_with_2 + (rank-d_rank_begin       )*(1+d_parts_per_rank) :
+      rank < d_first_rank_with_0 ? d_first_index_with_1 + (rank-d_first_rank_with_1)*d_parts_per_rank :
       d_index_end;
    return index;
 }
@@ -134,8 +134,8 @@ AssumedPartitionBox::endOfRank(int rank) const
    }
    int index =
       rank < d_rank_begin ? d_index_begin :
-      rank < d_first_rank_with_1 ? d_first_index_with_2 + (1+rank-d_rank_begin       )*2 :
-      rank < d_first_rank_with_0 ? d_first_index_with_1 + (1+rank-d_first_rank_with_1) :
+      rank < d_first_rank_with_1 ? d_first_index_with_2 + (1+rank-d_rank_begin       )*(1+d_parts_per_rank) :
+      rank < d_first_rank_with_0 ? d_first_index_with_1 + (1+rank-d_first_rank_with_1)*d_parts_per_rank :
       d_index_end;
    return index;
 }
@@ -165,10 +165,10 @@ AssumedPartitionBox::getOwner(int box_index) const
          // Not an index in this object.  Return invalid owner.
       }
       else if ( box_index < d_first_index_with_1 ) {
-         owner = d_rank_begin + (box_index - d_first_index_with_2)/2;
+         owner = d_rank_begin + (box_index - d_first_index_with_2)/(1+d_parts_per_rank);
       }
       else if ( box_index < d_index_end ) {
-         owner = d_first_rank_with_1 + (box_index - d_first_index_with_1);
+         owner = d_first_rank_with_1 + (box_index - d_first_index_with_1)/d_parts_per_rank;
       }
    }
    return owner;
@@ -299,7 +299,9 @@ AssumedPartitionBox::findOverlaps(
 * Check the assumed partition for errors and inconsistencies.  Write
 * error diagnostics to plog.
 *
-* Return number of errors found.  Errors indicate a bug in this class.
+* Return number of errors found.  This class should prevent (or at
+* least catch) user errors, so any error found here indicates a bug in
+* the class.
 ***************************************************************************************
 */
 size_t
@@ -355,7 +357,7 @@ AssumedPartitionBox::selfCheck() const
                  << box_leftover.format("\t") << std::endl;
    }
 
-   // Parts shoud cover no more than d_box.
+   // Parts should cover no more than d_box.
    BoxContainer parts_leftover = all_parts;
    parts_leftover.removeIntersections(d_box);
    if ( !parts_leftover.empty() ) {
@@ -363,6 +365,41 @@ AssumedPartitionBox::selfCheck() const
       tbox::plog << "AssumedPartitionerBox::selfCheck(): Partitions cover more than box "
                  << d_box << "  Portions outside the box:\n"
                  << parts_leftover.format("\t") << std::endl;
+   }
+
+   if ( !d_interleave ) {
+      for ( int rank=d_rank_begin; rank<d_rank_end; ++rank ) {
+         const int ibegin = beginOfRank(rank);
+         const int iend = endOfRank(rank);
+         if ( rank > d_rank_begin ) {
+            if ( ibegin < endOfRank(rank-1) ) {
+               ++nerr;
+               tbox::plog << "AssumedPartitionBox::selfCheck(): Index ranges overlap.\n"
+                          << "Rank " << rank << " has [" << ibegin << ',' << iend << ")\n"
+                          << "Rank " << rank-1 << " has [" << beginOfRank(rank-1)
+                          << ',' << endOfRank(rank-1) << ")\n";
+            }
+         }
+         const int number_owned = iend-ibegin;
+         const int expected_number =
+            rank < d_first_rank_with_1 ? d_parts_per_rank+1 :
+            rank < d_first_rank_with_0 ? d_parts_per_rank : 0;
+         if ( number_owned != expected_number ) {
+            ++nerr;
+            tbox::plog << "AssumedPartition::selfCheck(): Wrong parts count for rank " << rank << ".\n"
+                       << "It should own " << expected_number << ", but it owns " << number_owned
+                       << ".\n";
+         }
+         for ( int id=ibegin; id<iend; ++id ) {
+            const int owner = getOwner(id);
+            if ( owner != rank ) {
+               ++nerr;
+               tbox::plog << "AssumedPartition::selfCheck(): Wrong owner for id " << id << ".\n"
+                          << "Id " << id << " is owned by " << owner << " but rank " << rank
+                          << " is assined the range (" << ibegin << ',' << iend << ").\n";
+            }
+         }
+      }
    }
 
    return nerr;
@@ -380,7 +417,7 @@ AssumedPartitionBox::selfCheck() const
 ***************************************************************************************
 */
 void
-AssumedPartitionBox::computeLayout( double parts_per_rank )
+AssumedPartitionBox::computeLayout( double avg_parts_per_rank )
 {
    const IntVector box_size = d_box.numberCells();
 
@@ -391,12 +428,13 @@ AssumedPartitionBox::computeLayout( double parts_per_rank )
     * direction.  There isn't one correct lay-out, but we try to avoid
     * excessive aspect ratios.
     */
+   const int target_parts_count = static_cast<int>(num_ranks*avg_parts_per_rank + 0.5);
    d_uniform_partition_size = box_size;
    d_partition_grid_size = hier::IntVector::getOne(d_box.getDim());
    int parts_count = d_partition_grid_size.getProduct();
    IntVector num_parts_can_increase(d_box.getDim(), 1);
    IntVector sorter(d_box.getDim());
-   while ( parts_count < num_ranks*parts_per_rank &&
+   while ( parts_count < target_parts_count &&
            num_parts_can_increase != hier::IntVector::getZero(d_box.getDim()) ) {
       sorter.sortIntVector(d_uniform_partition_size);
       int inc_dir = 0;
@@ -405,10 +443,10 @@ AssumedPartitionBox::computeLayout( double parts_per_rank )
       }
       inc_dir = sorter[inc_dir];
 
-      // Double partition grid size, unless it causes more partitions than ranks.
-      if ( 2*parts_count > num_ranks ) {
+      // Double partition grid size, unless it causes too many partitions.
+      if ( 2*parts_count > target_parts_count ) {
          const int cross_section = parts_count/d_partition_grid_size[inc_dir];
-         d_partition_grid_size[inc_dir] = (num_ranks+cross_section-1)/cross_section;
+         d_partition_grid_size[inc_dir] = (target_parts_count+cross_section-1)/cross_section;
          parts_count = d_partition_grid_size.getProduct();
       } else {
          d_partition_grid_size[inc_dir] *= 2;
@@ -425,6 +463,16 @@ AssumedPartitionBox::computeLayout( double parts_per_rank )
    d_partition_grid_size = IntVector::ceilingDivide( box_size, d_uniform_partition_size );
 
    d_index_end = d_index_begin + d_partition_grid_size.getProduct();
+
+   d_major.sortIntVector(d_partition_grid_size);
+
+   for ( int d=0; d<d_box.getDim().getValue(); ++d ) {
+      int dir = d_major[d];
+      d_index_stride[dir] = 1;
+      for ( int d1=d-1; d1>=0; --d1 ) {
+         d_index_stride[dir] *= d_partition_grid_size[d_major[d1]];
+      }
+   }
 
    return;
 }
@@ -453,56 +501,51 @@ AssumedPartitionBox::assignToRanks()
 
 /*
 ***************************************************************************************
-* Compute rank assignment for the partition lay-out.
+* Compute rank assignment for the partition lay-out where each rank in
+* [d_rank_begin,d_rank_end) gets a contiguous set of box indices in
+* [d_index_begin,d_index_end).
 ***************************************************************************************
 */
 void
 AssumedPartitionBox::assignToRanks_contiguous()
 {
-   // There should not be more than 2 partitions per rank.
-   TBOX_ASSERT( d_partition_grid_size.getProduct() <= 2*(d_rank_end-d_rank_begin) );
+   TBOX_ASSERT( d_index_end-d_index_begin == d_partition_grid_size.getProduct() );
 
    /*
     * If there are more ranks than parts, the first getNumberOfParts()
     * ranks have 1 part each and the rest have none.  If there are
-    * more parts than ranks, lower ranks have 2 parts and higher ranks
-    * have 1.  In second case, index vs rank looks like this:
+    * more parts than ranks, lower ranks have (d_parts_per_rank_1+1)
+    * parts each and higher ranks have d_parts_per_rank each.  In
+    * second case, index vs rank looks like this:
     *
     * index ^
     *       |
-    *    i0 |             ......
+    *    i0 |                ......
+    *       |             .
     *       |          .
-    *       |       .        (r2,i2) = first rank with 2 parts, its first index
-    *    i1 |    .           (r1,i1) = first rank with 1 parts, its first index
-    *       |   .            (r0,i0) = first rank with 0 parts, d_index_end
-    *       |  .             if r1==r2, no rank has 2 parts
-    *       | .              if r0==r1, no rank has 1 parts
+    *       |       .    (r2,i2) = first rank with 1+d_parts_per_rank  parts, its first index
+    *    i1 |    .       (r1,i1) = first rank with d_parts_per_rank  parts, its first index
+    *       |   .        (r0,i0) = first rank with 0 parts, d_index_end
+    *       |  .         if r1==r2, no rank has 1+d_parts_per_rank parts
+    *       | .          if r0==r1, no rank has d_parts_per_rank parts
     *       |.
     *    i2 +-----------------------> rank
     *       r2   r1       r0
     *
     * (In the first case, the figure degenerates with r2=r1 and i2=i1.)
     */
-   if ( d_partition_grid_size.getProduct() <= d_rank_end-d_rank_begin ) {
+   if ( d_index_end-d_index_begin <= d_rank_end-d_rank_begin ) {
+      d_parts_per_rank = 1;
       d_first_rank_with_1 = d_rank_begin;
       d_first_rank_with_0 = d_rank_begin + d_partition_grid_size.getProduct();
       d_first_index_with_1 = d_first_index_with_2 = d_index_begin;
    }
    else {
+      d_parts_per_rank = (d_index_end-d_index_begin) / (d_rank_end-d_rank_begin);
       d_first_index_with_2 = d_index_begin;
       d_first_rank_with_1 = d_rank_begin + (d_index_end-d_index_begin) % (d_rank_end-d_rank_begin);
-      d_first_index_with_1 = d_first_index_with_2 + 2*(d_first_rank_with_1 - d_rank_begin);
+      d_first_index_with_1 = d_first_index_with_2 + (1+d_parts_per_rank)*(d_first_rank_with_1 - d_rank_begin);
       d_first_rank_with_0 = d_rank_end;
-   }
-
-   d_major.sortIntVector(d_partition_grid_size);
-
-   for ( int d=0; d<d_box.getDim().getValue(); ++d ) {
-      int dir = d_major[d];
-      d_index_stride[dir] = 1;
-      for ( int d1=d-1; d1>=0; --d1 ) {
-         d_index_stride[dir] *= d_partition_grid_size[d_major[d1]];
-      }
    }
 
    return;
@@ -533,13 +576,16 @@ AssumedPartitionBox::recursivePrint(
       << d_index_begin << to << d_index_begin+d_partition_grid_size.getProduct()-1
       << "    ranks (" << d_rank_end-d_rank_begin << "): "
       << d_rank_begin << to << d_rank_end-1
+      << "    parts_per_rank=" << d_parts_per_rank
       << "    interleave=" << d_interleave
       << '\n' << border
-      << "ranks with 2 parts (" << d_first_rank_with_1-d_rank_begin << "): "
+      << "ranks with " << d_parts_per_rank+1 << " parts (" << d_first_rank_with_1-d_rank_begin << "): "
       << d_rank_begin << to << d_first_rank_with_1-1
-      << "    ranks with 1 parts (" << d_first_rank_with_0-d_first_rank_with_1 << "): "
+      << '\n' << border
+      << "ranks with " << d_parts_per_rank << " parts (" << d_first_rank_with_0-d_first_rank_with_1 << "): "
       << d_first_rank_with_1 << to << d_first_rank_with_0-1
-      << "    ranks with 0 parts (" << d_rank_end-d_first_rank_with_0 << "): "
+      << '\n' << border
+      << "ranks with 0 parts (" << d_rank_end-d_first_rank_with_0 << "): "
       << d_first_rank_with_0 << to << d_rank_end-1
       << '\n' << border
       << "d_first_rank_with_1=" << d_first_rank_with_1

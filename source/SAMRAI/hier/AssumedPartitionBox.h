@@ -25,8 +25,8 @@ namespace hier {
  * partition should very fast to create and query and requires minimal
  * storage.
  *
- * An assumed partition should avoid extreme imbalances, but its
- * purpose is not fine load balancing.
+ * An assumed partition avoids extreme imbalances, but its purpose is
+ * not fine load balancing.
  */
 class AssumedPartitionBox
 {
@@ -44,7 +44,7 @@ public:
     *
     * @param[in] index_begin
     *
-    * @param[in] parts_per_rank See partition()
+    * @param[in] avg_parts_per_rank See partition()
     *
     * @param[in] interleave See partition()
     */
@@ -53,7 +53,7 @@ public:
       int rank_begin,
       int rank_end,
       int index_begin = 0,
-      double parts_per_rank = 1.0,
+      double avg_parts_per_rank = 1.0,
       bool interleave = false );
 
    /*!
@@ -69,19 +69,20 @@ public:
     * @param[in] rank_end One past last rank
     * @param[in] index_begin
     *
-    * @param[in] parts_per_rank Algorithm normally tries to get one partition
-    *   per rank.  This parameter is a request to change that.
+    * @param[in] avg_parts_per_rank Algorithm normally tries to get
+    * one partition per rank.  This parameter is a request to change
+    * that.
     *
-    * @param[in] interleave Algorithm normally assign consecutive box indices
-    *   to a process.  This flag causes it to interleave (round-robin) the
-    *   box assignments.
+    * @param[in] interleave Algorithm normally assign consecutive box
+    * indices to a process.  This flag causes it to interleave
+    * (round-robin) the box assignments.
     */
    void partition(
       const Box& box,
       int rank_begin,
       int rank_end,
       int index_begin = 0,
-      double parts_per_rank = 1.0,
+      double avg_parts_per_rank = 1.0,
       bool interleave = false );
 
    /*!
@@ -174,7 +175,7 @@ public:
 private:
 
    //! @brief Compute the partition lay-out.
-   void computeLayout( double parts_per_rank );
+   void computeLayout( double avg_parts_per_rank );
 
    //! @brief Compute rank assignment for the partition lay-out.
    void assignToRanks();
@@ -206,6 +207,11 @@ private:
    //! @brief Whether box assignments are interleaved using round-robin assignment.
    bool d_interleave;
 
+   //@{
+   //! @name Parameters for partition assignment in non-interleaved mode
+
+   //@ @brief Min (or max) parts per rank when there are more (fewer) parts than ranks.
+   size_t d_parts_per_rank;
    /*
     * Each rank has 0, 1 or 2 partitions.  Lower ranks have more than higher ranks.
     * Ranks in [d_rank_begin,d_first_rank_with_1) have 2 partitions each.
@@ -223,6 +229,8 @@ private:
 
    //! @brief First index for ranks that own 1 partition each
    int d_first_index_with_1;
+
+   //@}
 
 };
 
