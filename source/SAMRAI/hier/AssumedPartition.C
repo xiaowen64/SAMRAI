@@ -258,7 +258,9 @@ AssumedPartition::findOverlaps(
                                  refinement_ratio,
                                  pi->getUnpartitionedBox().getBlockId(),
                                  box.getBlockId());
-      pi->findOverlaps(overlapping_boxes, transformed_box);
+      if ( transformed_box.getBlockId() == pi->getUnpartitionedBox().getBlockId() ) {
+         pi->findOverlaps(overlapping_boxes, transformed_box);
+      }
    }
 
    return overlapping_boxes.size() > old_count;
