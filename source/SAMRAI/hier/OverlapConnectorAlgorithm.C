@@ -492,6 +492,7 @@ OverlapConnectorAlgorithm::findOverlapsByAssumedPartition(
                       IntVector(dim, -1),
                       false );
    conn = *tmp_conn;
+   conn.setTranspose(&conn, false);
 
    d_object_timers->t_find_overlaps_assumed_partition->stop();
 }

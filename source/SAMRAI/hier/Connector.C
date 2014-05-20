@@ -198,7 +198,7 @@ Connector::operator = (
       d_head_coarser = rhs.d_head_coarser;
       d_parallel_state = rhs.d_parallel_state;
       d_finalized = rhs.d_finalized;
-      d_transpose = rhs.d_transpose;
+      d_transpose = rhs.d_transpose; // TODO: This leads to a memory error.
       d_owns_transpose = false;
    }
    return *this;

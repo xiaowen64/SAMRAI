@@ -1579,6 +1579,8 @@ ${FILE_34}: ${DEPENDS_34}
 FILE_35=OverlapConnectorAlgorithm.o
 DEPENDS_35:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/AssumedPartition.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/AssumedPartitionBox.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
