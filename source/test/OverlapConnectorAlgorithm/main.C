@@ -40,17 +40,17 @@ struct PrimitiveBoxGen {
    AssumedPartition d_ap;
    // Index filtering parameters.
    enum IndexFilter { ALL = 0	/* Keep all boxes */,
-                      INTERVAL = 1	/* Keep d_num_keep, discard d_num_discard */,
-                      LOWER = 2	/* Keep indices below d_frac */,
-                      UPPER = 3	/* Keep indices above d_frac */
+                      INTERVAL = 1	/* Keep d_num_keep, discard d_num_discard */
    };
    int d_index_filter;
    int d_num_keep;
    int d_num_discard;
-   double d_frac;
    PrimitiveBoxGen(
       tbox::Database &database,
-      const boost::shared_ptr<BaseGridGeometry> &geom)
+      const boost::shared_ptr<BaseGridGeometry> &geom) :
+      d_index_filter(ALL),
+      d_num_keep(1),
+      d_num_discard(0)
       {
          d_geom = geom;
          getFromInput(database);
@@ -60,8 +60,7 @@ struct PrimitiveBoxGen {
       d_ap(other.d_ap),
       d_index_filter(other.d_index_filter),
       d_num_keep(other.d_num_keep),
-      d_num_discard(other.d_num_discard),
-      d_frac(other.d_frac) {}
+      d_num_discard(other.d_num_discard) {}
    void getFromInput( tbox::Database &input_db );
    void getBoxes( BoxContainer &boxes, int rank );
    void populateBoxLevel( BoxLevel &box_level );
@@ -277,12 +276,8 @@ void PrimitiveBoxGen::getFromInput( tbox::Database &database )
    else if ( index_filter == "INTERVAL" ) {
       d_index_filter = PrimitiveBoxGen::INTERVAL;
    }
-   else if ( index_filter == "LOWER" ) {
-      d_index_filter = PrimitiveBoxGen::LOWER;
-   }
-   else if ( index_filter == "UPPER" ) {
-      d_index_filter = PrimitiveBoxGen::UPPER;
-   }
+   d_num_keep = database.getIntegerWithDefault("num_keep", d_num_keep);
+   d_num_discard = database.getIntegerWithDefault("num_discard", d_num_discard);
    return;
 }
 

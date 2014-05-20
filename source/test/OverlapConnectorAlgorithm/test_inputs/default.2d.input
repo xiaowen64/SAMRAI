@@ -75,17 +75,19 @@ Test00 {
   }
 }
 
-xTest01 {
+Test01 {
   nickname = "sparse l1, full l2"
   PrimitiveBoxGen1 {
     index_filter = "INTERVAL"
     num_keep = 2
     num_discard = 1
+    parts_per_rank = 10
   }
   PrimitiveBoxGen2 {
     index_filter = "ALL"
     num_keep = 2
-    num_discard = 1
+    num_discard = 2
+    parts_per_rank = 20
   }
 }
 
@@ -95,10 +97,12 @@ Test02 {
     index_filter = "ALL"
     num_keep = 2
     num_discard = 1
+    parts_per_rank = 10
   }
   PrimitiveBoxGen2 {
     index_filter = "INTERVAL"
     num_keep = 2
-    num_discard = 1
+    num_discard = 2
+    parts_per_rank = 20
   }
 }
