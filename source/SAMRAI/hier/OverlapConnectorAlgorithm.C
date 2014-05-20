@@ -8,6 +8,7 @@
  *
  ************************************************************************/
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
+#include "SAMRAI/hier/AssumedPartition.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxContainerUtils.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
@@ -372,6 +373,127 @@ OverlapConnectorAlgorithm::findOverlaps(
       ignore_self_overlap,
       d_sanity_check_method_postconditions);
    d_object_timers->t_find_overlaps_rbbt->stop();
+}
+
+
+
+/*
+ ***********************************************************************
+ * Find overlaps using the assumed partition algorithm.  In SAMRAI
+ * terms, we create a center BoxLevel from the assumed partition,
+ * connect two BoxLevels to it, then bridge across the assumed
+ * partition center.
+ *
+ * 1. Get bounding boxes for base or head (which ever has smaller
+ * bounding boxes).
+ *
+ * 2. Create a reasonably balanced center BoxLevel from an
+ * AssumedPartition of the bounding boxes.
+ *
+ * 3. Compute head--->center and base--->center.
+ *
+ * 4. Compute transposes center--->head and center--->base.  This is
+ * implemented in the Connector's setToTransposeOf() method.
+ *
+ * 5. Bridge base<==>center<==>head.
+ ***********************************************************************
+ */
+void
+OverlapConnectorAlgorithm::findOverlapsByAssumedPartition(
+   Connector& conn) const
+{
+   d_object_timers->t_find_overlaps_assumed_partition->start();
+
+   const BoxLevel &base = conn.getBase();
+   const BoxLevel &head = conn.getHead();
+   const BoxContainer &head_boxes = head.getBoxes();
+   const BoxContainer &base_boxes = base.getBoxes();
+
+   const IntVector &width_in_base_resolution = conn.getConnectorWidth();
+   const IntVector width_in_head_resolution =
+      Connector::convertHeadWidthToBase( head.getRefinementRatio(),
+                                         base.getRefinementRatio(),
+                                         width_in_base_resolution );
+
+   const tbox::Dimension &dim = base.getDim();
+   const tbox::SAMRAI_MPI &mpi = base.getMPI();
+   const boost::shared_ptr<const BaseGridGeometry> &geom = base.getGridGeometry();
+
+
+   BoxContainer base_bounding_boxes, head_bounding_boxes;
+   size_t base_cell_count=0, head_cell_count=0;
+   for ( int bn=0; bn<geom->getNumberBlocks(); ++bn ) {
+      base_bounding_boxes.push_back( base.getGlobalBoundingBox(bn) );
+      head_bounding_boxes.push_back( head.getGlobalBoundingBox(bn) );
+      base_cell_count += base_bounding_boxes.back().size();
+      head_cell_count += head_bounding_boxes.back().size();
+   }
+   const BoxContainer &bounding_boxes = head_cell_count < base_cell_count ?
+      head_bounding_boxes : base_bounding_boxes;
+   const IntVector &center_refinement_ratio =  head_cell_count < base_cell_count ?
+      head.getRefinementRatio() : base.getRefinementRatio();
+   const AssumedPartition center_ap( bounding_boxes, 0, mpi.getSize() );
+   base_bounding_boxes.clear();
+   head_bounding_boxes.clear();
+   BoxContainer center_boxes;
+   center_ap.getAllBoxes(center_boxes, mpi.getRank());
+   const BoxLevel center( center_boxes, center_refinement_ratio, geom, mpi );
+
+   Connector base_to_center( base, center, width_in_base_resolution );
+   BoxContainer base_boxes_mod(base_boxes);
+   base_boxes_mod.grow(width_in_base_resolution);
+   if ( base.getRefinementRatio() != center_refinement_ratio ) {
+      if ( base.getRefinementRatio() >= center_refinement_ratio ) {
+         base_boxes_mod.refine(conn.getRatio());
+      } else {
+         base_boxes_mod.coarsen(conn.getRatio());
+      }
+   }
+   for ( BoxContainer::const_iterator bi=base_boxes_mod.begin(); bi!=base_boxes_mod.end(); ++bi ) {
+      Box compare_box = *bi;
+      BoxContainer neighbors;
+      center_ap.findOverlaps( neighbors, compare_box, *geom, center_refinement_ratio );
+      base_to_center.insertNeighbors( neighbors, bi->getBoxId() );
+   }
+   base_boxes_mod.clear();
+   Connector center_to_base(dim);
+   center_to_base.setToTransposeOf(base_to_center);
+
+
+   Connector head_to_center( head, center, width_in_head_resolution );
+   BoxContainer head_boxes_mod(head_boxes);
+   head_boxes_mod.grow(width_in_head_resolution);
+   if ( head.getRefinementRatio() != center_refinement_ratio ) {
+      if ( head.getRefinementRatio() >= center_refinement_ratio ) {
+         head_boxes_mod.refine(conn.getRatio());
+      } else {
+         head_boxes_mod.coarsen(conn.getRatio());
+      }
+   }
+   for ( BoxContainer::const_iterator bi=head_boxes_mod.begin(); bi!=head_boxes_mod.end(); ++bi ) {
+      Box compare_box = *bi;
+      BoxContainer neighbors;
+      center_ap.findOverlaps( neighbors, compare_box, *geom, center_refinement_ratio );
+      head_to_center.insertNeighbors( neighbors, bi->getBoxId() );
+   }
+   head_boxes_mod.clear();
+   Connector center_to_head(dim);
+   center_to_head.setToTransposeOf(head_to_center);
+
+
+   base_to_center.setTranspose(&center_to_base, false);
+   head_to_center.setTranspose(&center_to_head, false);
+   boost::shared_ptr<Connector> tmp_conn;
+   bridgeWithNesting( tmp_conn,
+                      base_to_center,
+                      center_to_head,
+                      hier::IntVector::getZero(dim),
+                      IntVector(dim, tbox::MathUtilities<int>::getMax()),
+                      IntVector(dim, -1),
+                      false );
+   conn = *tmp_conn;
+
+   d_object_timers->t_find_overlaps_assumed_partition->stop();
 }
 
 /*
@@ -1669,6 +1791,8 @@ OverlapConnectorAlgorithm::getAllTimers(
 {
    timers.t_find_overlaps_rbbt = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::findOverlaps_rbbt()");
+   timers.t_find_overlaps_assumed_partition = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::findOverlaps_assumedPartition()");
    timers.t_bridge = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::privateBridge()");
    timers.t_bridge_setup_comm = tbox::TimerManager::getManager()->
