@@ -463,10 +463,9 @@ GriddingAlgorithm::makeCoarsestLevel(
          t_find_new_to_new->barrierAndStart();
       }
 
-      d_oca0.findOverlaps(new_to_new,
-         *new_box_level,
-         *new_box_level,
-         d_hierarchy->getRequiredConnectorWidth(0, 0, true));
+      new_to_new.reset(new hier::Connector( *new_box_level, *new_box_level,
+                                            d_hierarchy->getRequiredConnectorWidth(0, 0, true) ) );
+      d_oca0.findOverlapsByAssumedPartition(*new_to_new);
 
       if (d_barrier_and_time) {
          t_find_new_to_new->stop();
