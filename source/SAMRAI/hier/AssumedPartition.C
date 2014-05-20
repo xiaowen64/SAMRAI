@@ -246,25 +246,6 @@ AssumedPartition::getAllBoxes(BoxContainer &all_boxes, int rank) const
 bool
 AssumedPartition::findOverlaps(
    BoxContainer &overlapping_boxes,
-   const Box &box ) const
-{
-   TBOX_ASSERT( d_parted_boxes.size() < 2 );
-   if ( !d_parted_boxes.empty() ) {
-      return d_parted_boxes[0].findOverlaps(overlapping_boxes, box);
-   }
-   return false;
-}
-
-
-
-/*
-***************************************************************************************
-* Find all boxes intersecting the given box.  Return whether any boxes overlap.
-***************************************************************************************
-*/
-bool
-AssumedPartition::findOverlaps(
-   BoxContainer &overlapping_boxes,
    const Box &box,
    const BaseGridGeometry &grid_geometry,
    const IntVector &refinement_ratio ) const
@@ -281,6 +262,29 @@ AssumedPartition::findOverlaps(
    }
 
    return overlapping_boxes.size() > old_count;
+}
+
+
+
+/*
+***************************************************************************************
+* Find all boxes intersecting the given box.  Return whether any boxes overlap.
+***************************************************************************************
+*/
+bool
+AssumedPartition::findOverlaps(
+   BoxContainer &overlapping_boxes,
+   const Box &box ) const
+{
+   if ( d_parted_boxes.size() > 1 ) {
+      TBOX_ERROR("AssumedPartition::findOverlaps: This method may be used only\n"
+                 <<"for AssumedPartitions with just one block.  For multiple blocks,\n"
+                 <<"use the version that requires a BaseGridGeometry.\n");
+   }
+   if ( !d_parted_boxes.empty() ) {
+      return d_parted_boxes[0].findOverlaps(overlapping_boxes, box);
+   }
+   return false;
 }
 
 

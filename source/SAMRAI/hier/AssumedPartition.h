@@ -126,20 +126,6 @@ public:
    int endOfRank(int rank) const;
 
    /*!
-    * @brief Find partitions overlapping the given box, when there is
-    * at most one original box, assuming all boxes are in the same
-    * block.
-    *
-    * @param[o] overlapping_boxes
-    * @param[i] box
-    *
-    * @return Whether any partitions are found.
-    */
-   bool findOverlaps(
-      BoxContainer &overlapping_boxes,
-      const Box &box ) const;
-
-   /*!
     * @brief Find partitions overlapping the given box.
     *
     * @param[o] overlapping_boxes
@@ -154,6 +140,22 @@ public:
       const Box &box,
       const BaseGridGeometry &grid_geometry,
       const IntVector &refinement_ratio ) const;
+
+   /*!
+    * @brief Find partitions overlapping the given box, when there is
+    * at most one original box, assuming all boxes are in the same
+    * block.
+    *
+    * An unrecoverable error will be thrown if there are multiple blocks.
+    *
+    * @param[o] overlapping_boxes
+    * @param[i] box
+    *
+    * @return Whether any partitions are found.
+    */
+   bool findOverlaps(
+      BoxContainer &overlapping_boxes,
+      const Box &box ) const;
 
    /*!
     * @brief Check the assumed partition for errors and
