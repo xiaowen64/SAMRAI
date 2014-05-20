@@ -423,44 +423,48 @@ AssumedPartitionBox::computeLayout( double avg_parts_per_rank )
 
    const int num_ranks = d_rank_end - d_rank_begin;
 
-   /*
-    * Compute uniform partition size and how many partitions in each
-    * direction.  There isn't one correct lay-out, but we try to avoid
-    * excessive aspect ratios.
-    */
-   const int target_parts_count = static_cast<int>(num_ranks*avg_parts_per_rank + 0.5);
-   d_uniform_partition_size = box_size;
-   d_partition_grid_size = hier::IntVector::getOne(d_box.getDim());
-   int parts_count = d_partition_grid_size.getProduct();
-   IntVector num_parts_can_increase(d_box.getDim(), 1);
-   IntVector sorter(d_box.getDim());
-   while ( parts_count < target_parts_count &&
-           num_parts_can_increase != hier::IntVector::getZero(d_box.getDim()) ) {
-      sorter.sortIntVector(d_uniform_partition_size);
-      int inc_dir = 0;
-      for ( inc_dir=d_box.getDim().getValue()-1; inc_dir>=0; --inc_dir ) {
-         if ( num_parts_can_increase[sorter[inc_dir]] ) break;
-      }
-      inc_dir = sorter[inc_dir];
-
-      // Double partition grid size, unless it causes too many partitions.
-      if ( 2*parts_count > target_parts_count ) {
-         const int cross_section = parts_count/d_partition_grid_size[inc_dir];
-         d_partition_grid_size[inc_dir] = (target_parts_count+cross_section-1)/cross_section;
-         parts_count = d_partition_grid_size.getProduct();
-      } else {
-         d_partition_grid_size[inc_dir] *= 2;
-         parts_count *= 2;
-      }
-
-      d_uniform_partition_size = IntVector::ceilingDivide(box_size, d_partition_grid_size);
-      num_parts_can_increase[inc_dir] = d_uniform_partition_size[inc_dir] > 1;
+   if ( box_size == 0 ) {
+      d_uniform_partition_size = d_partition_grid_size = IntVector::getZero(d_box.getDim());
    }
-   TBOX_ASSERT( parts_count == d_partition_grid_size.getProduct() );
-   TBOX_ASSERT( d_uniform_partition_size.getProduct() > 0 );
+   else {
+      /*
+       * Compute uniform partition size and how many partitions in each
+       * direction.  There isn't one correct lay-out, but we try to avoid
+       * excessive aspect ratios.
+       */
+      const int target_parts_count = static_cast<int>(num_ranks*avg_parts_per_rank + 0.5);
+      d_uniform_partition_size = box_size;
+      d_partition_grid_size = hier::IntVector::getOne(d_box.getDim());
+      int parts_count = d_partition_grid_size.getProduct();
+      IntVector num_parts_can_increase(d_box.getDim(), 1);
+      IntVector sorter(d_box.getDim());
+      while ( parts_count < target_parts_count &&
+              num_parts_can_increase != hier::IntVector::getZero(d_box.getDim()) ) {
+         sorter.sortIntVector(d_uniform_partition_size);
+         int inc_dir = 0;
+         for ( inc_dir=d_box.getDim().getValue()-1; inc_dir>=0; --inc_dir ) {
+            if ( num_parts_can_increase[sorter[inc_dir]] ) break;
+         }
+         inc_dir = sorter[inc_dir];
 
-   // There can be partitions completele outside d_box.  Remove them.
-   d_partition_grid_size = IntVector::ceilingDivide( box_size, d_uniform_partition_size );
+         // Double partition grid size, unless it causes too many partitions.
+         if ( 2*parts_count > target_parts_count ) {
+            const int cross_section = parts_count/d_partition_grid_size[inc_dir];
+            d_partition_grid_size[inc_dir] = (target_parts_count+cross_section-1)/cross_section;
+            parts_count = d_partition_grid_size.getProduct();
+         } else {
+            d_partition_grid_size[inc_dir] *= 2;
+            parts_count *= 2;
+         }
+
+         d_uniform_partition_size = IntVector::ceilingDivide(box_size, d_partition_grid_size);
+         num_parts_can_increase[inc_dir] = d_uniform_partition_size[inc_dir] > 1;
+      }
+      TBOX_ASSERT( parts_count == d_partition_grid_size.getProduct() );
+
+      // There can be partitions completele outside d_box.  Remove them.
+      d_partition_grid_size = IntVector::ceilingDivide( box_size, d_uniform_partition_size );
+   }
 
    d_index_end = d_index_begin + d_partition_grid_size.getProduct();
 

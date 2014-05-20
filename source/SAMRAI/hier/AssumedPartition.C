@@ -253,13 +253,15 @@ AssumedPartition::findOverlaps(
    size_t old_count = overlapping_boxes.size();
 
    for ( PartedBoxes::const_iterator pi=d_parted_boxes.begin(); pi!=d_parted_boxes.end(); ++pi ) {
-      Box transformed_box = box;
-      grid_geometry.transformBox(transformed_box,
-                                 refinement_ratio,
-                                 pi->getUnpartitionedBox().getBlockId(),
-                                 box.getBlockId());
-      if ( transformed_box.getBlockId() == pi->getUnpartitionedBox().getBlockId() ) {
-         pi->findOverlaps(overlapping_boxes, transformed_box);
+      if ( pi->getNumberOfParts() != 0 ) {
+         Box transformed_box = box;
+         grid_geometry.transformBox(transformed_box,
+                                    refinement_ratio,
+                                    pi->getUnpartitionedBox().getBlockId(),
+                                    box.getBlockId());
+         if ( transformed_box.getBlockId() == pi->getUnpartitionedBox().getBlockId() ) {
+            pi->findOverlaps(overlapping_boxes, transformed_box);
+         }
       }
    }
 

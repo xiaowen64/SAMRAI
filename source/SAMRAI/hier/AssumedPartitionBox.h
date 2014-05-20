@@ -64,6 +64,9 @@ public:
    /*!
     * @brief Partition the given box.
     *
+    * The partition should degerate correctly if the box is empty, i.e.,
+    * the partition size and count should be zero.
+    *
     * @param[in] box Incoming box
     * @param[in] rank_begin First rank
     * @param[in] rank_end One past last rank
