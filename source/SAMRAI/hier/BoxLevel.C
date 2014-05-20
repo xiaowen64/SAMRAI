@@ -159,7 +159,46 @@ BoxLevel::BoxLevel(
    d_grid_geometry(),
    d_locked(false)
 {
-   initialize(ratio, grid_geom, mpi, parallel_state);
+   initialize(BoxContainer(), ratio, grid_geom, mpi, parallel_state);
+}
+
+BoxLevel::BoxLevel(
+   const BoxContainer &boxes,
+   const IntVector& ratio,
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+   const tbox::SAMRAI_MPI& mpi,
+   const ParallelState parallel_state):
+   d_mpi(MPI_COMM_NULL),
+   d_ratio(ratio),
+
+   d_local_number_of_cells(0),
+   d_global_number_of_cells(-1),
+   d_local_number_of_boxes(0),
+   d_global_number_of_boxes(-1),
+
+   d_max_number_of_boxes(-1),
+   d_min_number_of_boxes(-1),
+   d_max_number_of_cells(-1),
+   d_min_number_of_cells(-1),
+
+   d_local_max_box_size(),
+   d_global_max_box_size(),
+   d_local_min_box_size(),
+   d_global_min_box_size(),
+
+   d_local_bounding_box(),
+   d_local_bounding_box_up_to_date(false),
+   d_global_bounding_box(),
+   d_global_data_up_to_date(false),
+
+   d_parallel_state(DISTRIBUTED),
+   d_globalized_version(0),
+   d_persistent_overlap_connectors(0),
+   d_handle(),
+   d_grid_geometry(),
+   d_locked(false)
+{
+   initialize(boxes, ratio, grid_geom, mpi, parallel_state);
 }
 
 BoxLevel::~BoxLevel()
@@ -223,6 +262,7 @@ BoxLevel::operator = (
 
 void
 BoxLevel::initialize(
+   const BoxContainer& boxes,
    const IntVector& ratio,
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
@@ -233,7 +273,7 @@ BoxLevel::initialize(
          << std::endl);
    }
 
-   d_boxes.clear();
+   d_boxes = boxes;
    d_boxes.order();
    initializePrivate(
       ratio,
@@ -256,6 +296,7 @@ BoxLevel::swapInitialize(
    }
    TBOX_ASSERT(&boxes != &d_boxes);   // Library error if this fails.
    d_boxes.swap(boxes);
+   d_boxes.order();
    initializePrivate(ratio,
       grid_geom,
       mpi,
@@ -1504,7 +1545,7 @@ BoxLevel::getFromRestart(
    TBOX_ASSERT(ratio >= IntVector::getOne(dim));
    TBOX_ASSERT(version <= HIER_BOX_LEVEL_VERSION);
 
-   initialize(ratio, grid_geom);
+   initialize(BoxContainer(), ratio, grid_geom);
 
    /*
     * Failing these asserts means that we don't have a compatible

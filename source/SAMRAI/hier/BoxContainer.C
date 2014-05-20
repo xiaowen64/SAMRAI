@@ -1736,17 +1736,18 @@ BoxContainer::getFromRestart(
 
 /*
  ***********************************************************************
- * Prind contents of the BoxContainer
+ * Print contents of the BoxContainer
  ***********************************************************************
  */
 void
 BoxContainer::print(
-   std::ostream& co ) const
+   std::ostream& co,
+   const std::string &border ) const
 {
    co << size() << " boxes, " << (d_ordered?"ordered":"unordered") << '\n';
    for (const_iterator bi = begin(); bi != end(); ++bi) {
-      Box box(*bi);
-      co << "    "
+      const Box &box(*bi);
+      co << border << "    "
          << box << "   "
          << box.numberCells() << '|'
          << box.size() << '\n';
@@ -1780,7 +1781,7 @@ operator << (
    std::ostream& s,
    const BoxContainer::Outputter& format)
 {
-   format.d_set.print(s);
+   format.d_set.print(s, format.d_border);
    return s;
 }
 

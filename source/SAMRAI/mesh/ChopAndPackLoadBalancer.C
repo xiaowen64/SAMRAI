@@ -312,6 +312,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
 
    // Build up balance_box_level from old-style data.
    balance_box_level.initialize(
+      hier::BoxContainer(),
       balance_box_level.getRefinementRatio(),
       balance_box_level.getGridGeometry(),
       balance_box_level.getMPI(),
