@@ -627,6 +627,7 @@ AC_ARG_ENABLE([opt],
 [case "$enable_opt" in
    no) opt_switches= ;;
    yes)
+      AC_DEFINE([OPT_BUILD],[1],[Optimized build])
       case $CXX_ID in
          gnu)   opt_switches="-O2" ;;
          intel) opt_switches="-O3" ;;

@@ -303,6 +303,9 @@
 /* Define if NAN is not in float.h */
 #undef NAN_IS_BROKEN
 
+/* Optimized build */
+#undef OPT_BUILD
+
 /* The type ostringstream is broken */
 #undef OSTRINGSTREAM_TYPE_IS_BROKEN
 
@@ -320,9 +323,6 @@
 
 /* Define to the one symbol short name of this package. */
 // Removed due to name conflict #undef PACKAGE_TARNAME
-
-/* Define to the home page for this package. */
-// Removed due to name conflict #undef PACKAGE_URL
 
 /* Define to the version of this package. */
 // Removed due to name conflict #undef PACKAGE_VERSION

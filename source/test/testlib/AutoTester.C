@@ -41,7 +41,11 @@ AutoTester::AutoTester(
 
    std::string test_patch_boxes_filename = "test_inputs/";
 #if defined(__xlC__)
+#ifdef OPT_BUILD
    test_patch_boxes_filename += "xlC/";
+#else
+   test_patch_boxes_filename += "xlC_debug/";
+#endif
 #endif
    test_patch_boxes_filename += d_base_name + ".boxes";
 
