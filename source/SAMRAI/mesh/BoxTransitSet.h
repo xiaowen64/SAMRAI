@@ -98,6 +98,17 @@ public:
 
 
    /*!
+    * @copydoc TransitLoad::assignToLocal()
+    */
+   void
+   assignToLocal(
+      hier::BoxLevel& balanced_box_level,
+      const hier::BoxLevel& unbalanced_box_level,
+      double flexible_load_tol = 0.0,
+      const tbox::SAMRAI_MPI &alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL) );
+
+
+   /*!
     * @copydoc TransitLoad::assignToLocalAndPopulateMaps()
     *
     * This method uses communication to populate the map.
@@ -234,6 +245,12 @@ private:
 
 
 private:
+
+   void
+   populateMaps(
+      hier::MappingConnector &balanced_to_unbalanced,
+      hier::MappingConnector &unbalanced_to_balanced,
+      const tbox::SAMRAI_MPI &alt_mpi  ) const;
 
    static const int BoxTransitSet_EDGETAG0 = 3;
    static const int BoxTransitSet_EDGETAG1 = 4;
@@ -548,7 +565,8 @@ private:
       boost::shared_ptr<tbox::Timer> t_adjust_load_by_swapping;
       boost::shared_ptr<tbox::Timer> t_shift_loads_by_breaking;
       boost::shared_ptr<tbox::Timer> t_find_swap_pair;
-      boost::shared_ptr<tbox::Timer> t_assign_content_to_local_process_and_generate_map;
+      boost::shared_ptr<tbox::Timer> t_assign_to_local_process_and_populate_maps;
+      boost::shared_ptr<tbox::Timer> t_populate_maps;
       boost::shared_ptr<tbox::Timer> t_construct_semilocal;
       boost::shared_ptr<tbox::Timer> t_construct_semilocal_comm_wait;
       boost::shared_ptr<tbox::Timer> t_construct_semilocal_send_edges;

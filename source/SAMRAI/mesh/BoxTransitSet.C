@@ -199,50 +199,82 @@ BoxTransitSet::assignToLocalAndPopulateMaps(
 {
    NULL_USE(flexible_load_tol);
 
-   d_object_timers->t_assign_content_to_local_process_and_generate_map->start();
+   d_object_timers->t_assign_to_local_process_and_populate_maps->start();
 
    if ( d_print_steps || d_print_edge_steps ) {
       tbox::plog << "BoxTransitSet::assignToLocalAndPopulateMaps: entered." << std::endl;
    }
 
-   /*
-    * Reassign contents to local process, assigning IDs that don't
-    * conflict with current Boxes.
-    */
-
-   hier::SequentialLocalIdGenerator id_gen(
-      unbalanced_to_balanced.getBase().getLastLocalId() );
-
-   if ( d_print_steps || d_print_edge_steps ) {
-      tbox::plog << "BoxTransitSet::assignToLocalAndPopulateMaps: calling reassignOwnership." << std::endl;
-   }
-   reassignOwnership( id_gen, balanced_box_level.getMPI().getRank() );
-
-   if ( d_print_steps || d_print_edge_steps ) {
-      tbox::plog << "BoxTransitSet::assignToLocalAndPopulateMaps: calling putInBoxLevel." << std::endl;
-   }
-   putInBoxLevel(balanced_box_level);
-
-   /*
-    * Generate balanced<==>unbalanced
-    */
-   if ( d_print_steps || d_print_edge_steps ) {
-      tbox::plog << "BoxTransitSet::assignToLocalAndPopulateMaps: calling generateLocalBasedMapEdges." << std::endl;
-   }
-   generateLocalBasedMapEdges( unbalanced_to_balanced, balanced_to_unbalanced );
-
-   if ( d_print_steps || d_print_edge_steps ) {
-      tbox::plog << "BoxTransitSet::assignToLocalAndPopulateMaps: calling constructSemilocalUnbalancedToBalanced." << std::endl;
-   }
-   constructSemilocalUnbalancedToBalanced( unbalanced_to_balanced,
-                                           alt_mpi.getCommunicator() == MPI_COMM_NULL ?
-                                           balanced_box_level.getMPI() : alt_mpi );
+   assignToLocal( balanced_box_level, unbalanced_to_balanced.getBase(), flexible_load_tol );
+   populateMaps(balanced_to_unbalanced, unbalanced_to_balanced, alt_mpi );
 
    if ( d_print_steps || d_print_edge_steps ) {
       tbox::plog << "BoxTransitSet::assignToLocalAndPopulateMaps: exiting." << std::endl;
    }
 
-   d_object_timers->t_assign_content_to_local_process_and_generate_map->stop();
+   d_object_timers->t_assign_to_local_process_and_populate_maps->stop();
+}
+
+
+/*
+ *************************************************************************
+ * Assign boxes to local process (put them in the balanced_box_level).
+ */
+void
+BoxTransitSet::assignToLocal(
+   hier::BoxLevel& balanced_box_level,
+   const hier::BoxLevel &unbalanced_box_level,
+   double flexible_load_tol,
+   const tbox::SAMRAI_MPI &alt_mpi )
+{
+   NULL_USE(alt_mpi);
+   /*
+    * Reassign contents to local process, assigning IDs that don't
+    * conflict with current Boxes.
+    */
+   hier::SequentialLocalIdGenerator id_gen(
+      unbalanced_box_level.getLastLocalId() );
+   reassignOwnership( id_gen, balanced_box_level.getMPI().getRank() );
+
+   putInBoxLevel(balanced_box_level);
+
+   return;
+}
+
+
+/*
+ *************************************************************************
+ * We can generate balanced--->unbalanced edges for all boxes because
+ * we have their origin info.  If the box originated locally, we can
+ * generate the unbalanced--->balanced edge for them as well.
+ * However, we can't generate these edges for boxes originating
+ * remotely.  They are generated in
+ * constructSemilocalUnbalancedToBalanced, which uses communication.
+ */
+void
+BoxTransitSet::populateMaps(
+   hier::MappingConnector &balanced_to_unbalanced,
+   hier::MappingConnector &unbalanced_to_balanced,
+   const tbox::SAMRAI_MPI &alt_mpi ) const
+{
+   d_object_timers->t_populate_maps->start();
+
+   if ( d_print_steps || d_print_edge_steps ) {
+      tbox::plog << "BoxTransitSet::populateMaps: entered." << std::endl;
+   }
+
+   generateLocalBasedMapEdges( unbalanced_to_balanced, balanced_to_unbalanced );
+
+   constructSemilocalUnbalancedToBalanced(
+      unbalanced_to_balanced,
+      alt_mpi.getCommunicator() == MPI_COMM_NULL ?
+      unbalanced_to_balanced.getBase().getMPI() : alt_mpi );
+
+   if ( d_print_steps || d_print_edge_steps ) {
+      tbox::plog << "BoxTransitSet::populateMaps: exiting." << std::endl;
+   }
+
+   d_object_timers->t_populate_maps->stop();
 }
 
 
@@ -282,7 +314,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    d_object_timers->t_construct_semilocal->start();
 
    if ( d_print_steps || d_print_edge_steps ) {
-      tbox::plog << "BoxTransitSet::constructSemilocalToDonors: entered."
+      tbox::plog << "BoxTransitSet::constructSemilocalUnbalancedToBalanced: entered."
                  << std::endl;
    }
 
@@ -434,7 +466,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    }
 
    if ( d_print_steps || d_print_edge_steps ) {
-      tbox::plog << "BoxTransitSet::constructSemilocalToDonors: exiting."
+      tbox::plog << "BoxTransitSet::constructSemilocalUnbalancedToBalanced: exiting."
                  << std::endl;
    }
 
@@ -504,10 +536,9 @@ BoxTransitSet::putInBoxLevel(
 
 /*
 *************************************************************************
-* Put all d_box into balanced BoxLevel.  Generate all
-* d_box<==>getOrigBox() mapping edges, except for those that cannot be
-* set up without communication.  These semilocal edges have either a
-* remote d_box or a remote getOrigBox().
+* Generate all d_box<==>getOrigBox() mapping edges, except for those
+* that cannot be set up without communication.  These semilocal edges
+* have either a remote d_box or a remote getOrigBox().
 *
 * Each d_box must have a valid BoxId.
 *************************************************************************
@@ -1589,9 +1620,11 @@ BoxTransitSet::getAllTimers(
    timers.t_find_swap_pair = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::swapLoadPair()");
 
-   timers.t_assign_content_to_local_process_and_generate_map = tbox::TimerManager::getManager()->
+   timers.t_assign_to_local_process_and_populate_maps = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::assignToLocalAndPopulateMaps()");
 
+   timers.t_populate_maps = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::populateMaps()");
    timers.t_construct_semilocal = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::constructSemilocalUnbalancedToBalanced()");
    timers.t_construct_semilocal_comm_wait = tbox::TimerManager::getManager()->

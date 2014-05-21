@@ -73,6 +73,8 @@ public:
     *  some given "anchor box_level".
     *  This must be accurate on input.  On putput, connects the newly
     *  balanced balance_box_level to the anchor box_level.
+    *  If set to NULL, this parameter is ignored and Connector update
+    *  is skipped.
     *
     * @param[in] hierarchy The hierarchy where the work distribution
     * data lives.

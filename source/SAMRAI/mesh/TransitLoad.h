@@ -155,10 +155,31 @@ public:
 
 
    /*!
+    * @brief Assign contents to local process.
+    *
+    * This method may use communication.
+    *
+    * @param balanced_box_level [io] Empty BoxLevel to populate with
+    * the contents of this TransitLoad.
+    *
+    * @param [i] flexible_load_tol
+    *
+    * @param [i] mpi Alternate SAMRAI_MPI to use for communication if
+    * needed, overriding that in balanced_box_level.
+    */
+   virtual void
+   assignToLocal(
+      hier::BoxLevel& balanced_box_level,
+      const hier::BoxLevel& unbalanced_box_level,
+      double flexible_load_tol = 0.0,
+      const tbox::SAMRAI_MPI &alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL) ) = 0;
+
+
+   /*!
     * @brief Assign contents to local process and populate the
     * balanced<==>unbalanced maps.
     *
-    * This method uses communication to set up the map.
+    * This method may use communication.
     *
     * @param balanced_box_level [io] Empty BoxLevel to populate with
     * the contents of this TransitLoad.
@@ -171,8 +192,8 @@ public:
     *
     * @param [i] flexible_load_tol
     *
-    * @param [i] mpi Alternate SAMRAI_MPI to use, overriding that in
-    * balanced_box_level.
+    * @param [i] mpi Alternate SAMRAI_MPI to use for communication if
+    * needed, overriding that in balanced_box_level.
     */
    virtual void
    assignToLocalAndPopulateMaps(
