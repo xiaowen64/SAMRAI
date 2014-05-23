@@ -42,6 +42,9 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
 2) A bug in some VariableFillPatterns that caused interpolated data to
    overwrite communicated data has been fixed.  See "what's changed" for
    more info.
+
+3) Bugs that were preventing ChopAndPackLoadBalancer from being used on
+   multiblock meshes have been fixed.
      
 *****************************************************************************
 
@@ -70,6 +73,8 @@ descriptions of items in the following list are provided below.
    a PatchLevel is removed from a PatchHierarchy or replaced by a new
    PatchLevel during regridding.
    
+8) OuterfaceData and OutersideData can now copy to themselves
+   rather than just to FaceData or SideData.
 
 -----------------------------------------------------------------------------
                 Summary of what's changed
@@ -95,6 +100,17 @@ descriptions of items in the following list are provided below.
    VariableFillPattern::computeFillBoxesOverlap.
 
 5) Rename test directory FAC_nonadaptive to FAC_staticrefinement.
+
+6) Bugs that were preventing ChopAndPackLoadBalancer from being used on
+   multiblock meshes have been fixed.
+
+7) Input requirements for setting up Multiblock meshes have been simplified.
+   It is no longer necessary to provide Singularity information in the
+   input files.
+
+8) The Neighbor objects in BaseGridGeometry, which provide information
+   about neighboring blocks in multiblock meshes, are now stored in
+   STL maps.
 
 
 *****************************************************************************
@@ -137,9 +153,10 @@ descriptions of items in the following list are provided below.
    as virtual methods with default no-op implementations in
    StandardTagAndInitStrategy.
 
-5) Rename test directory FAC_nonadaptive to FAC_staticrefinement.
-   The old name caused led some to believe it didn't use AMR.
-
+8) OuterfaceData and OutersideData can now copy to themselves
+   rather than just to FaceData or SideData.  Previously copy methods
+   were only implement for copies of OuterfaceData -> FaceData and
+   OutersideData -> SideData.
 
 
 
@@ -205,7 +222,24 @@ descriptions of items in the following list are provided below.
    Only certain specialized implementations of VariableFillPattern need this
    new argument.  When not needed, it should be ignored.
 
+5) Rename test directory FAC_nonadaptive to FAC_staticrefinement.
+   The old name caused led some to believe it didn't use AMR.
 
+6) Bugs that were preventing ChopAndPackLoadBalancer from being used on
+   multiblock meshes have been fixed.  ChopAndPackLoadBalancer can be used
+   for spatially-based load-balancing and non-uniform load balancing, though
+   it is not recommended for problems running at very large parallel
+   processor counts.
+
+7) Input requirements for setting up Multiblock meshes have been simplified.
+   It is no longer necessary to provide Singularity information in the
+   input files.  Singularities are now found computationally by the code.
+
+8) The Neighbor objects in BaseGridGeometry, which provide information
+   about neighboring blocks in multiblock meshes, are now stored in
+   STL maps instead of lists.  Some interfaces and usage patterns have changed
+   to reflect this.
+   
 
 
 =============================================================================
