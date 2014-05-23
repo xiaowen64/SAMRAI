@@ -91,7 +91,7 @@ GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
        */
       self_connector_widths[ln].max(
          hier::MultiIntVector(
-            hier::IntVector(dim,patch_hierarchy.getProperNestingBuffer(ln))));
+            dim,patch_hierarchy.getProperNestingBuffer(ln)));
 
       /*
        * Must be big enough for GriddingAlgorithm to guarantee that

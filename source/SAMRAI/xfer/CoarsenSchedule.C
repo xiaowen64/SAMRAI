@@ -819,9 +819,7 @@ CoarsenSchedule::constructScheduleTransactions(
          grid_geometry->getRotationIdentifier(dst_block_id,
             src_block_id);
       hier::IntVector offset(
-         grid_geometry->getOffset(dst_block_id, src_block_id));
-
-      offset *= d_crse_level->getRatioToLevelZero().getBlockVector(dst_block_id);
+         grid_geometry->getOffset(dst_block_id, src_block_id, d_crse_level->getLevelNumber()));
 
       transformation = hier::Transformation(rotation, offset,
                                             src_block_id, dst_block_id);
@@ -1118,7 +1116,7 @@ CoarsenSchedule::initialCheckCoarsenClassItems() const
             << "\n data ghost cell width = " << dst_gcw << std::endl);
       }
 
-      if ((hier::MultiIntVector(crs_item->d_gcw_to_coarsen) * d_ratio_between_levels) > hier::MultiIntVector(src_gcw)) {
+      if (d_ratio_between_levels * crs_item->d_gcw_to_coarsen > src_gcw) {
          TBOX_ERROR("Bad data given to CoarsenSchedule...\n"
             << "`Source' patch data " << pd->mapIndexToName(src_id)
             << " has ghost cell width too small to support the\n"
@@ -1128,7 +1126,7 @@ CoarsenSchedule::initialCheckCoarsenClassItems() const
             << "d_gcw_to_coarsen = " << crs_item->d_gcw_to_coarsen
             << "\nratio between levels = " << d_ratio_between_levels
             << "\n Thus, data ghost width must be >= "
-            << hier::MultiIntVector(crs_item->d_gcw_to_coarsen) * d_ratio_between_levels
+            << d_ratio_between_levels * crs_item->d_gcw_to_coarsen
             << std::endl);
       }
 

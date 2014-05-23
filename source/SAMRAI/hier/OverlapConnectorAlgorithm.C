@@ -168,26 +168,47 @@ OverlapConnectorAlgorithm::extractNeighbors(
          }
       }
       else {
-         Box grown_box = box;
-         grown_box.grow(width.getBlockVector(block_id));
-         if (connector.getHeadCoarserFlag() == false) {
-            grown_box.refine(connector.getRatio().getBlockVector(block_id));
+         //Box grown_box = box;
+         BoxContainer grown_boxes;
+         if (grid_geom->getNumberBlocks() == 1) {
+            Box grown_box = box;
+            grown_box.grow(width.getBlockVector(block_id));
+            if (connector.getHeadCoarserFlag() == false) {
+               grown_box.refine(connector.getRatio());
+            }
+            grown_boxes.pushBack(grown_box);
+         } else {
+            connector.growBaseBoxForMultiblock(
+               grown_boxes,
+               box,
+               grid_geom,
+               connector.getBase().getRefinementRatio(),
+               connector.getRatio(),
+               width, 
+               !connector.getHeadCoarserFlag(),
+               false);
          }
-         for (Connector::ConstNeighborIterator ni = connector.begin(ins);
-              ni != connector.end(ins); ++ni) {
-            const Box& neighbor(*ni);
-            Box nabr_box(neighbor);
-            if (neighbor.getBlockId() != block_id) {
-               grid_geom->transformBox(nabr_box,
-                  connector.getHead().getRefinementRatio(),
-                  block_id,
-                  neighbor.getBlockId());
-            }
-            if (connector.getHeadCoarserFlag() == true) {
-               nabr_box.refine(connector.getRatio().getBlockVector(nabr_box.getBlockId()));
-            }
-            if (grown_box.intersects(nabr_box)) {
-               neighbors.insert(neighbors.end(), neighbor);
+         for (BoxContainer::iterator g_itr = grown_boxes.begin();
+              g_itr != grown_boxes.end(); ++g_itr) {
+
+            const Box& g_box = *g_itr;
+            const BlockId& g_block_id = g_box.getBlockId();
+            for (Connector::ConstNeighborIterator ni = connector.begin(ins);
+                 ni != connector.end(ins); ++ni) {
+               const Box& neighbor(*ni);
+               Box nabr_box(neighbor);
+               if (neighbor.getBlockId() != g_block_id) {
+                  grid_geom->transformBox(nabr_box,
+                     connector.getHead().getRefinementRatio(),
+                     g_block_id,
+                     neighbor.getBlockId(),3.7);
+               }
+               if (connector.getHeadCoarserFlag() == true) {
+                  nabr_box.refine(connector.getRatio());
+               }
+               if (g_box.intersects(nabr_box)) {
+                  neighbors.insert(neighbors.end(), neighbor);
+               }
             }
          }
       }
@@ -258,26 +279,46 @@ OverlapConnectorAlgorithm::extractNeighbors(
             other.insertLocalNeighbor(*si, base_box_itr);
          }
       } else {
-         Box grown_box = box;
-         grown_box.grow(width.getBlockVector(box.getBlockId()));
-         if (connector.getHeadCoarserFlag() == false) {
-            grown_box.refine(connector.getRatio().getBlockVector(box.getBlockId()));
+//         Box grown_box = box;
+         BoxContainer grown_boxes;
+         if (grid_geom->getNumberBlocks() == 1) {
+            Box grown_box = box;
+            grown_box.grow(width.getBlockVector(box.getBlockId()));
+            if (connector.getHeadCoarserFlag() == false) {
+               grown_box.refine(connector.getRatio());
+            }
+            grown_boxes.pushBack(grown_box);
+         } else {
+            connector.growBaseBoxForMultiblock(
+               grown_boxes,
+               box,
+               grid_geom,
+               connector.getBase().getRefinementRatio(),
+               connector.getRatio(),
+               width,
+               !connector.getHeadCoarserFlag(),
+               false);
          }
-         for (Connector::ConstNeighborIterator si = connector.begin(ni);
-              si != connector.end(ni); ++si) {
-            const Box& neighbor = *si;
-            Box nabr_box(neighbor);
-            if (neighbor.getBlockId() != box.getBlockId()) {
-               grid_geom->transformBox(nabr_box,
-                  connector.getHead().getRefinementRatio(),
-                  box.getBlockId(),
-                  neighbor.getBlockId());
-            }
-            if (connector.getHeadCoarserFlag() == true) {
-               nabr_box.refine(connector.getRatio().getBlockVector(nabr_box.getBlockId()));
-            }
-            if (grown_box.intersects(nabr_box)) {
-               other.insertLocalNeighbor(neighbor, base_box_itr);
+         for (BoxContainer::iterator g_itr = grown_boxes.begin();
+              g_itr != grown_boxes.end(); ++g_itr) {
+            const Box& g_box = *g_itr;
+            const BlockId& g_block_id = g_box.getBlockId();
+            for (Connector::ConstNeighborIterator si = connector.begin(ni);
+                 si != connector.end(ni); ++si) {
+               const Box& neighbor = *si;
+               Box nabr_box(neighbor);
+               if (neighbor.getBlockId() != g_block_id) {
+                  grid_geom->transformBox(nabr_box,
+                     connector.getHead().getRefinementRatio(),
+                     g_block_id,
+                     neighbor.getBlockId(),3.7);
+               }
+               if (connector.getHeadCoarserFlag() == true) {
+                  nabr_box.refine(connector.getRatio());
+               }
+               if (g_box.intersects(nabr_box)) {
+                  other.insertLocalNeighbor(neighbor, base_box_itr);
+               }
             }
          }
       }
@@ -1467,19 +1508,38 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
          tbox::plog << "Finding neighbors for non-periodic visible_base_nabrs_box "
                     << visible_base_nabrs_box << std::endl;
       }
-      Box base_box = visible_base_nabrs_box;
-      const BlockId& block_id = base_box.getBlockId();
-      base_box.grow(bridging_connector.getConnectorWidth().getBlockVector(block_id));
-      if (refine_base) {
-         base_box.refine(bridging_connector.getRatio().getBlockVector(block_id));
+      BoxContainer grown_boxes;
+      if (bridging_connector.getBase().getGridGeometry()->getNumberBlocks() == 1) {
+         Box base_box = visible_base_nabrs_box;
+         const BlockId& block_id = base_box.getBlockId();
+         base_box.grow(bridging_connector.getConnectorWidth().getBlockVector(block_id));
+         if (refine_base) {
+            base_box.refine(bridging_connector.getRatio());
+         }
+         else if (coarsen_base) {
+            base_box.coarsen(bridging_connector.getRatio());
+         }
+         grown_boxes.pushBack(base_box);
+      } else {
+         bridging_connector.growBaseBoxForMultiblock(
+            grown_boxes,
+            visible_base_nabrs_box,
+            bridging_connector.getBase().getGridGeometry(),
+            bridging_connector.getBase().getRefinementRatio(),
+            bridging_connector.getRatio(),
+            bridging_connector.getConnectorWidth(),
+            refine_base,
+            coarsen_base);
       }
-      else if (coarsen_base) {
-         base_box.coarsen(bridging_connector.getRatio().getBlockVector(block_id));
-      }
+
       found_nabrs.clear();
-      head_rbbt.findOverlapBoxes(found_nabrs, base_box, // base_box.getBlockId(),
-                                 head_refinement_ratio,
-                                 true /* include singularity block neighbors */ );
+      for (BoxContainer::iterator g_itr = grown_boxes.begin();
+           g_itr != grown_boxes.end(); ++g_itr) {
+
+         head_rbbt.findOverlapBoxes(found_nabrs, *g_itr,
+                                    head_refinement_ratio,
+                                    true /* include singularity block neighbors */ );
+      }
       if (d_print_steps) {
          tbox::plog << "Found " << found_nabrs.size() << " neighbors:";
          found_nabrs.print(tbox::plog);

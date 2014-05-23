@@ -345,7 +345,7 @@ CartesianGridGeometry::setGeometryDataOnPatch(
     * All components of ratio must be nonzero.  Additionally,
     * all components not equal to 1 must have the same sign.
     */
-   TBOX_ASSERT(!ratio_to_level_zero.isZero(dim));
+   TBOX_ASSERT(!ratio_to_level_zero.isZero());
 
    if (dim > tbox::Dimension(1)) {
       for (int i = 0; i < dim.getValue(); ++i) {

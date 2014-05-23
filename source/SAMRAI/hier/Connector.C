@@ -397,7 +397,7 @@ const MultiIntVector& new_width)
             grid_geom->transformBox(nabr_box,
                getHead().getRefinementRatio(),
                box.getBlockId(),
-               nabr.getBlockId());
+               nabr.getBlockId(),3.7);
          }
          if (head_coarser) {
             nabr_box.refine(getRatio().getBlockVector(nabr_box.getBlockId()));
@@ -681,7 +681,7 @@ Connector::setWidth(
    const MultiIntVector& new_width,
    bool finalize_context)
 {
-   if (!(new_width >= MultiIntVector(IntVector::getZero(new_width.getDim())))) {
+   if (!(new_width >= IntVector::getZero(new_width.getDim()))) {
       TBOX_ERROR("Connector::setWidth():\n"
          << "Invalid ghost cell width: "
          << new_width << "\n");
@@ -718,7 +718,7 @@ Connector::computeRatioInfo(
       ratio_is_exact = (ratio * headRefinementRatio) == baseRefinementRatio;
    }
    if (baseRefinementRatio * headRefinementRatio <
-       MultiIntVector(IntVector::getZero(baseRefinementRatio.getDim()))) {
+       IntVector::getZero(baseRefinementRatio.getDim())) {
       // Note that negative ratios like -N really mean 1/N (negative reciprocal).
       ratio = -headRefinementRatio * baseRefinementRatio;
       ratio_is_exact = true;
@@ -1042,7 +1042,7 @@ Connector::convertHeadWidthToBase(
    MultiIntVector ratio(IntVector::getZero(dim)); // Ratio between head and base.
 
    if (head_refinement_ratio * base_refinement_ratio >
-       MultiIntVector(IntVector::getZero(dim))) {
+       IntVector::getZero(dim)) {
       // Same signs for both ratios -> simple to compute head-base ratio.
       if (base_refinement_ratio >= head_refinement_ratio) {
          ratio = base_refinement_ratio / head_refinement_ratio;
@@ -1053,7 +1053,7 @@ Connector::convertHeadWidthToBase(
       // Note that negative ratios like -N really mean 1/N (negative reciprocal).
       ratio = -base_refinement_ratio * head_refinement_ratio;
    }
-   TBOX_ASSERT(ratio >= MultiIntVector(IntVector::getOne(dim)));
+   TBOX_ASSERT(ratio >= IntVector::getOne(dim));
 
    const MultiIntVector base_width =
       (base_refinement_ratio >= head_refinement_ratio) ?
@@ -1135,12 +1135,12 @@ Connector::recursivePrint(
                            ovlap,
                            d_head_handle->getBoxLevel().getRefinementRatio(),
                            ni->getBlockId(),
-                           i_nabr->getBlockId());
+                           i_nabr->getBlockId(),3.7);
                   }
                   if (head_coarser) {
                      ovlap.refine(d_ratio.getBlockVector(ovlap.getBlockId()));
                   }
-                  else if (!d_ratio.isOne(d_ratio.getDim())) {
+                  else if (!d_ratio.isOne()) {
                      ovlap.coarsen(d_ratio.getBlockVector(ovlap.getBlockId()));
                   }
                   Box ghost_box = (*ni);
@@ -1887,14 +1887,14 @@ Connector::checkOverlapCorrectness(
                const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio().getBlockVector(block_id));
-               } else if (!getRatio().isOne(dim)) {
+               } else if (!getRatio().isOne()) {
                   nabr_box.coarsen(getRatio().getBlockVector(block_id));
                }
                if ( nabr_box.getBlockId() != box.getBlockId() ) {
                   getBase().getGridGeometry()->transformBox(nabr_box,
                      getBase().getRefinementRatio(),
                      box.getBlockId(),
-                     nabr.getBlockId() );
+                     nabr.getBlockId(),3.7 );
                }
                Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
@@ -1915,14 +1915,14 @@ Connector::checkOverlapCorrectness(
                const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio().getBlockVector(block_id));
-               } else if (!getRatio().isOne(dim)) {
+               } else if (!getRatio().isOne()) {
                   nabr_box.coarsen(getRatio().getBlockVector(block_id));
                }
                if ( nabr_box.getBlockId() != box.getBlockId() ) {
                   getBase().getGridGeometry()->transformBox(nabr_box,
                      getBase().getRefinementRatio(),
                      box.getBlockId(),
-                     nabr.getBlockId() );
+                     nabr.getBlockId(),3.7 );
                }
                Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
@@ -1943,14 +1943,14 @@ Connector::checkOverlapCorrectness(
                const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio().getBlockVector(block_id));
-               } else if (!getRatio().isOne(dim)) {
+               } else if (!getRatio().isOne()) {
                   nabr_box.coarsen(getRatio().getBlockVector(block_id));
                }
                if ( nabr_box.getBlockId() != box.getBlockId() ) {
                   getBase().getGridGeometry()->transformBox(nabr_box,
                      getBase().getRefinementRatio(),
                      box.getBlockId(),
-                     nabr.getBlockId() );
+                     nabr.getBlockId(),3.7 );
                }
                Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
@@ -1989,7 +1989,7 @@ Connector::checkOverlapCorrectness(
                const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio().getBlockVector(block_id));
-               } else if (!getRatio().isOne(dim)) {
+               } else if (!getRatio().isOne()) {
                   nabr_box.coarsen(getRatio().getBlockVector(block_id));
                }
                Box ovlap = nabr_box * ghost_box;
@@ -2011,14 +2011,14 @@ Connector::checkOverlapCorrectness(
                const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio().getBlockVector(block_id));
-               } else if (!getRatio().isOne(dim)) {
+               } else if (!getRatio().isOne()) {
                   nabr_box.coarsen(getRatio().getBlockVector(block_id));
                }
                if ( nabr_box.getBlockId() != box.getBlockId() ) {
                   getBase().getGridGeometry()->transformBox(nabr_box,
                      getBase().getRefinementRatio(),
                      box.getBlockId(),
-                     nabr.getBlockId() );
+                     nabr.getBlockId(),3.7 );
                }
                Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
@@ -2055,14 +2055,14 @@ Connector::checkOverlapCorrectness(
                const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio().getBlockVector(block_id));
-               } else if (!getRatio().isOne(dim)) {
+               } else if (!getRatio().isOne()) {
                   nabr_box.coarsen(getRatio().getBlockVector(block_id));
                }
                if ( nabr_box.getBlockId() != box.getBlockId() ) {
                   getBase().getGridGeometry()->transformBox(nabr_box,
                      getBase().getRefinementRatio(),
                      box.getBlockId(),
-                     nabr.getBlockId() );
+                     nabr.getBlockId(),3.7 );
                }
                Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
@@ -2083,14 +2083,14 @@ Connector::checkOverlapCorrectness(
                const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio().getBlockVector(block_id));
-               } else if (!getRatio().isOne(dim)) {
+               } else if (!getRatio().isOne()) {
                   nabr_box.coarsen(getRatio().getBlockVector(block_id));
                }
                if ( nabr_box.getBlockId() != box.getBlockId() ) {
                   getBase().getGridGeometry()->transformBox(nabr_box,
                      getBase().getRefinementRatio(),
                      box.getBlockId(),
-                     nabr.getBlockId() );
+                     nabr.getBlockId(),3.7 );
                }
                Box ovlap = nabr_box * ghost_box;
                tbox::perr << "    " << nabr << '_' << nabr.numberCells()
@@ -2198,20 +2198,43 @@ Connector::findOverlaps_rbbt(
 
       // Grow the base_box and put it in the head refinement ratio.
       Box box = base_box;
-      const BlockId& block_id = box.getBlockId();
-      box.grow(getConnectorWidth().getBlockVector(block_id));
-      if (head_is_finer) {
-         box.refine(getRatio().getBlockVector(block_id));
-      } else if (base_is_finer) {
-         box.coarsen(getRatio().getBlockVector(block_id));
-      }
 
-      // Add found overlaps to neighbor set for box.
-      rbbt.findOverlapBoxes(nabrs_for_box,
-         box,
-                            // base_box.getBlockId(),
-         head.getRefinementRatio(),
-         true);
+      if (base.getGridGeometry()->getNumberBlocks() == 1) {
+         const BlockId& block_id = box.getBlockId();
+         box.grow(getConnectorWidth().getBlockVector(block_id));
+
+         if (head_is_finer) {
+            box.refine(getRatio());
+         } else if (base_is_finer) {
+            box.coarsen(getRatio());
+         }
+
+         // Add found overlaps to neighbor set for box.
+         rbbt.findOverlapBoxes(nabrs_for_box,
+            box,
+            head.getRefinementRatio(),
+            true);
+      } else {
+         BoxContainer grown_boxes;
+         growBaseBoxForMultiblock(grown_boxes,
+            box,
+            base.getGridGeometry(),
+            base.getRefinementRatio(),
+            getRatio(),
+            getConnectorWidth(), 
+            head_is_finer,
+            base_is_finer);
+
+         for (BoxContainer::iterator b_itr = grown_boxes.begin();
+              b_itr != grown_boxes.end(); ++b_itr) {
+
+            // Add found overlaps to neighbor set for box.
+            rbbt.findOverlapBoxes(nabrs_for_box,
+               *b_itr,
+               head.getRefinementRatio(),
+               true);
+         }
+      }
       if (discard_self_overlap) {
          nabrs_for_box.order();
          nabrs_for_box.erase(base_box);
@@ -2230,6 +2253,81 @@ Connector::findOverlaps_rbbt(
 
    t_find_overlaps_rbbt->stop();
 }
+
+void
+Connector::growBaseBoxForMultiblock(
+   BoxContainer& grown_boxes,
+   const Box& base_box,
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+   const MultiIntVector& ratio_to_level_zero,
+   const MultiIntVector& connector_ratio,
+   const MultiIntVector& grow_width,
+   bool head_is_finer,
+   bool base_is_finer) const
+{
+   const int nblocks = grid_geom->getNumberBlocks();
+   const BlockId& base_block = base_box.getBlockId();
+
+   Box grow_box(base_box);
+   grow_box.grow(getConnectorWidth().getBlockVector(base_block)); 
+
+   /*
+    * Grow within base block
+    */
+   BoxContainer base_block_boxes;
+   grid_geom->computePhysicalDomain(
+      base_block_boxes,
+      ratio_to_level_zero,
+      base_block);
+   base_block_boxes.unorder();
+   base_block_boxes.intersectBoxes(grow_box);
+
+   if (head_is_finer) {
+      base_block_boxes.refine(connector_ratio);
+   } else if (base_is_finer) {
+      base_block_boxes.coarsen(connector_ratio);
+   }
+
+   grown_boxes.spliceBack(base_block_boxes);
+
+   /*
+    * Grow into neighbors.
+    */
+   const std::map<BlockId, BaseGridGeometry::Neighbor>& neighbors =
+      grid_geom->getNeighbors(base_block);
+   for (std::map<BlockId,BaseGridGeometry::Neighbor>::const_iterator ni =
+        neighbors.begin(); ni != neighbors.end(); ++ni) {
+      const BaseGridGeometry::Neighbor& neighbor(ni->second);
+      const BlockId& nbr_block = neighbor.getBlockId();
+
+      BoxContainer nbr_block_boxes;
+      grid_geom->computePhysicalDomain(
+         nbr_block_boxes,
+         ratio_to_level_zero,
+         nbr_block);
+
+      Box nbr_grow_box(grow_box);
+      grid_geom->transformBox(nbr_grow_box,
+                              ratio_to_level_zero,
+                              nbr_block,
+                              base_block,3.7);
+
+      nbr_block_boxes.unorder();
+      nbr_block_boxes.intersectBoxes(nbr_grow_box);
+
+      if (!nbr_block_boxes.isEmpty()) {
+         if (head_is_finer) {
+            nbr_block_boxes.refine(connector_ratio);
+         } else if (base_is_finer) {
+            nbr_block_boxes.coarsen(connector_ratio);
+         }
+
+         grown_boxes.spliceBack(nbr_block_boxes);
+      }
+   }
+
+}
+
 
 }
 }

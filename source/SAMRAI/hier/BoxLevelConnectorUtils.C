@@ -180,8 +180,8 @@ BoxLevelConnectorUtils::baseNestsInHead(
       connector.getBase(), base_swell, head_nesting_margin);
    TBOX_ASSERT(connector.isFinalized());
    const tbox::Dimension& dim(connector.getBase().getDim());
-   TBOX_ASSERT(base_swell >= MultiIntVector(IntVector::getZero(dim)));
-   TBOX_ASSERT(head_nesting_margin >= MultiIntVector(IntVector::getZero(dim)));
+   TBOX_ASSERT(base_swell >= IntVector::getZero(dim));
+   TBOX_ASSERT(head_nesting_margin >= IntVector::getZero(dim));
 
    /*
     * To ensure correct results, connector must be sufficiently wide.
@@ -219,7 +219,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
     */
 
    boost::shared_ptr<BoxLevel> swelledbase;
-   if (base_swell.isZero(dim)) {
+   if (base_swell.isZero()) {
       swelledbase.reset(new BoxLevel(base));
    } else {
       const BoxContainer& base_boxes = base.getBoxes();
@@ -237,7 +237,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
    }
 
    boost::shared_ptr<BoxLevel> swelledhead;
-   if (head_swell.isZero(dim)) {
+   if (head_swell.isZero()) {
       swelledhead.reset(new BoxLevel(head));
    } else {
       const BoxContainer& head_boxes = head.getBoxes();
@@ -267,7 +267,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
    swelledbase_to_swelledhead.growLocalNeighbors(head_swell);
 
    if (d_sanity_check_precond &&
-       head_swell.isZero(dim)) {
+       head_swell.isZero()) {
       /*
        * If head was swelled, it may generate undetected overlaps that
        * cannot be compensated for by shrinking the connector width.
@@ -612,7 +612,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
    }
 
    if ( !( input_to_reference.getConnectorWidth() >=
-          MultiIntVector(nonnegative_nesting_width ? nesting_width : -nesting_width)) ) {
+          (nonnegative_nesting_width ? nesting_width : -nesting_width)) ) {
       TBOX_ERROR(
          "BoxLevelConnectorUtils::computeInternalOrExternalParts:"
          << caller << ": error:\n"
@@ -637,7 +637,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
     * Bring reference_box_list into refinement ratio of input
     * (for intersection checks).
     */
-   if (!input_to_reference.getRatio().isOne(dim)) {
+   if (!input_to_reference.getRatio().isOne()) {
       if (input_to_reference.getHeadCoarserFlag()) {
          reference_box_list.refine(input_to_reference.getRatio());
       } else {
@@ -686,7 +686,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
       if (!domain.isEmpty()) {
 
-         if (input.getRefinementRatio().isOne(dim)) {
+         if (input.getRefinementRatio().isOne()) {
             reference_box_list.intersectBoxes(
                input.getRefinementRatio(),
                domain);
@@ -989,7 +989,7 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
          }
 
          if (!reduced_connectivity_singularity_boxes.isEmpty()) {
-            if (!refinement_ratio.isOne(dim)) {
+            if (!refinement_ratio.isOne()) {
                reduced_connectivity_singularity_boxes.refine(refinement_ratio);
             }
             bi->second.removeIntersections(
@@ -1006,7 +1006,7 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
           */
          BoxContainer singularity_boxes(
             grid_geometry->getSingularityBoxContainer(block_id));
-         if (!refinement_ratio.isOne(dim)) {
+         if (!refinement_ratio.isOne()) {
             singularity_boxes.refine(refinement_ratio);
          }
 
@@ -1502,7 +1502,7 @@ BoxLevelConnectorUtils::computeNonIntersectingParts(
 
    input_to_remainder = boost::static_pointer_cast<Connector>(i_to_r_map);
 
-   TBOX_ASSERT(input_to_remainder->getConnectorWidth().isZero(dim));
+   TBOX_ASSERT(input_to_remainder->getConnectorWidth().isZero());
 
    const BoxContainer& remainder_boxes = remainder->getBoxes();
    const BoxContainer& input_boxes =

@@ -2519,7 +2519,7 @@ GriddingAlgorithm::checkOverlappingPatches(
                grid_geom.transformBox(nabr_box,
                   ratio,
                   box.getBlockId(),
-                  nabr.getBlockId());
+                  nabr.getBlockId(),3.7);
                has_overlap = nabr_box.intersects(box);
             }
          }
@@ -2804,7 +2804,7 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
          box.coarsen(ratio.getBlockVector(box.getBlockId()));
          if (neighbor.getBlockId() != patch->getBox().getBlockId()) {
             grid_geom->transformBox(box,
-               tag_level->getRatioToLevelZero(),
+               tag_level->getLevelNumber(),
                patch->getBox().getBlockId(),
                neighbor.getBlockId());
          }
@@ -3798,8 +3798,8 @@ GriddingAlgorithm::computeNestingViolator(
    hier::MultiIntVector zero_vector(hier::IntVector::getZero(dim));
 
    // Check requirements on arguments.
-   TBOX_ASSERT(candidate_to_hierarchy.getRatio().isOne(dim));
-   TBOX_ASSERT(candidate_to_hierarchy.getTranspose().getRatio().isOne(dim));
+   TBOX_ASSERT(candidate_to_hierarchy.getRatio().isOne());
+   TBOX_ASSERT(candidate_to_hierarchy.getTranspose().getRatio().isOne());
 
    const hier::BaseGridGeometry& grid_geometry(
       *d_hierarchy->getGridGeometry());

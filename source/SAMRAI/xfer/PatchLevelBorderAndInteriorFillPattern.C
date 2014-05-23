@@ -74,6 +74,9 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
       dst_to_dst_width += hier::IntVector::getOne(fill_ghost_width.getDim());
    }
 
+   const int dst_level_num = dst_box_level.getGridGeometry()->
+      getEquivalentLevelNumber(dst_box_level.getRefinementRatio());
+
    const hier::Connector& dst_to_dst =
       dst_box_level.findConnector(dst_box_level,
          hier::MultiIntVector(dst_to_dst_width),
@@ -117,7 +120,7 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
                   grid_geometry->getRotationIdentifier(dst_block_id,
                      nbr_block_id);
                hier::IntVector offset(
-                  grid_geometry->getOffset(dst_block_id, nbr_block_id));
+                  grid_geometry->getOffset(dst_block_id, nbr_block_id, dst_level_num));
 
                offset *= dst_box_level.getRefinementRatio().getBlockVector(dst_block_id);
 

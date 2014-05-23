@@ -1374,6 +1374,17 @@ public:
       return;
    }
 
+void growBaseBoxForMultiblock(
+   BoxContainer& grown_boxes,
+   const Box& base_box,
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+   const MultiIntVector& ratio_to_level_zero,
+   const MultiIntVector& connector_ratio,
+   const MultiIntVector& grow_width,
+   bool head_is_finer,
+   bool base_is_finer) const;
+
+
    /*!
     *
     * @brief Computes refinement ratio between head and base, whether that

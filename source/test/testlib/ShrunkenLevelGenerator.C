@@ -231,7 +231,7 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
     * the largest of properly converted values for shrink_cells,
     * shrink_distance and nesting width.
     */
-   hier::MultiIntVector shrink_width(hier::IntVector(dim,hierarchy->getProperNestingBuffer(tag_ln)));
+   hier::MultiIntVector shrink_width(dim,hierarchy->getProperNestingBuffer(tag_ln));
    shrink_width.max(shrink_cells);
 
    const int nblocks = hierarchy->getGridGeometry()->getNumberBlocks();
@@ -248,7 +248,7 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
             block_shrink(i) );
       }
    }
-   shrink_width = hier::MultiIntVector(shrink_vector);
+   shrink_width.set(shrink_vector);
 
    boost::shared_ptr<hier::BoxLevel> tagfootprint;
    boost::shared_ptr<hier::MappingConnector> Ltag_to_tagfootprint;

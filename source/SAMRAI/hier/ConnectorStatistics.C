@@ -92,10 +92,10 @@ ConnectorStatistics::computeLocalConnectorStatistics( const Connector &connector
     * calculus.
     */
    const bool refine_head = connector.getHeadCoarserFlag() &&
-      ( !connector.getRatio().isOne(dim) ||
+      ( !connector.getRatio().isOne() ||
         !connector.ratioIsExact() );
    const bool coarsen_head = !connector.getHeadCoarserFlag() &&
-      ( !connector.getRatio().isOne(dim) ||
+      ( !connector.getRatio().isOne() ||
         !connector.ratioIsExact() );
 
 
@@ -162,7 +162,7 @@ ConnectorStatistics::computeLocalConnectorStatistics( const Connector &connector
             base.getGridGeometry()->transformBox( neighbor,
                                                   base.getRefinementRatio(),
                                                   base_box.getBlockId(),
-                                                  neighbor.getBlockId() );
+                                                  neighbor.getBlockId(),3.7 );
          }
          neighbor *= base_box;
          const int size = neighbor.size();

@@ -173,8 +173,8 @@ RefineSchedule::RefineSchedule(
 
    TBOX_ASSERT(d_dst_to_src->getBase() == *d_dst_level->getBoxLevel());
    TBOX_ASSERT(src_to_dst.getHead() == *d_dst_level->getBoxLevel());
-   TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= hier::MultiIntVector(d_max_scratch_gcw));
-   TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= hier::MultiIntVector(d_boundary_fill_ghost_width));
+   TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= d_max_scratch_gcw);
+   TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= d_boundary_fill_ghost_width);
 
    if (s_extra_debug) {
       /*
@@ -411,8 +411,8 @@ RefineSchedule::RefineSchedule(
 
       TBOX_ASSERT(d_dst_to_src->getBase() == *dst_level->getBoxLevel());
       TBOX_ASSERT(d_dst_to_src->getTranspose().getHead() == *dst_level->getBoxLevel());
-      TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= hier::MultiIntVector(d_max_scratch_gcw));
-      TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= hier::MultiIntVector(d_boundary_fill_ghost_width));
+      TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= d_max_scratch_gcw);
+      TBOX_ASSERT(d_dst_to_src->getConnectorWidth() >= d_boundary_fill_ghost_width);
    }
    else {
       dummy_connector->setTranspose(dummy_connector.get(), false);
@@ -1238,7 +1238,7 @@ RefineSchedule::makeNodeCenteredUnfilledBoxLevel(
                } else if (grid_geometry->areNeighbors(src_block, dst_block)) {
                   grid_geometry->transformBox(
                      src_node_box,
-                     d_dst_level->getRatioToLevelZero(),
+                     d_dst_level->getLevelNumber(),
                      dst_block,
                      src_block);
                   src_node_box.upper() += hier::IntVector::getOne(dim);
@@ -1710,8 +1710,8 @@ RefineSchedule::createCoarseInterpPatchLevel(
       true);
    hier::Connector& hiercoarse_to_coarse_interp =
       coarse_interp_to_hiercoarse->getTranspose();
-   TBOX_ASSERT( coarse_interp_to_hiercoarse->getConnectorWidth() >= hier::MultiIntVector(d_max_stencil_width) );
-   TBOX_ASSERT( hiercoarse_to_coarse_interp.getConnectorWidth() >= hier::MultiIntVector(d_max_stencil_width) );
+   TBOX_ASSERT( coarse_interp_to_hiercoarse->getConnectorWidth() >= d_max_stencil_width );
+   TBOX_ASSERT( hiercoarse_to_coarse_interp.getConnectorWidth() >= d_max_stencil_width );
    if (s_barrier_and_time) {
       t_bridge_coarse_interp_hiercoarse->stop();
    }
@@ -2789,7 +2789,7 @@ RefineSchedule::generateCommunicationSchedule(
 
                      grid_geometry->transformBox(
                         transformed_src_box,
-                        d_dst_level->getRatioToLevelZero(),
+                        d_dst_level->getLevelNumber(),
                         dst_block_id,
                         src_block_id);
 
@@ -3015,7 +3015,7 @@ RefineSchedule::findEnconUnfilledBoxes(
 
                   hier::Box transformed_src_box(src_box);
                   grid_geometry->transformBox(transformed_src_box,
-                     d_dst_level->getRatioToLevelZero(),
+                     d_dst_level->getLevelNumber(),
                      dst_block_id,
                      src_block_id);
 
@@ -3066,7 +3066,7 @@ RefineSchedule::findEnconUnfilledBoxes(
                   hier::Box unfilled_box(*bi);
                   grid_geometry->transformBox(
                      unfilled_box,
-                     d_dst_level->getRatioToLevelZero(),
+                     d_dst_level->getLevelNumber(),
                      nbr_block_id,
                      dst_block_id);
 
@@ -3268,7 +3268,7 @@ RefineSchedule::setDefaultFillBoxLevel(
           * This part assumes src-dst ratio is one.
           * Should be modified if the assumption does not hold.
           */
-         TBOX_ASSERT(d_dst_to_src->getRatio().isOne(dim));
+         TBOX_ASSERT(d_dst_to_src->getRatio().isOne());
 
          /*
           * For these fill_pattern, the src owner could not compute fill boxes
@@ -3379,8 +3379,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                    */
                   hier::Transformation::RotationIdentifier rotation =
                      ni->second.getRotationIdentifier();
-                  hier::IntVector offset(ni->second.getShift());
-                  offset *= (d_dst_level->getRatioToLevelZero().getBlockVector(block_id));
+                  hier::IntVector offset(ni->second.getShift(d_dst_level->getLevelNumber()));
 
                   hier::Transformation transformation(rotation, offset,
                                                       nbr_id, block_id);
@@ -4020,9 +4019,9 @@ RefineSchedule::constructScheduleTransactions(
          grid_geometry->getRotationIdentifier(dst_block_id,
             src_block_id);
       hier::IntVector offset(
-         grid_geometry->getOffset(dst_block_id, src_block_id));
+         grid_geometry->getOffset(dst_block_id, src_block_id, d_dst_level->getLevelNumber()));
 
-      offset *= d_dst_level->getRatioToLevelZero().getBlockVector(dst_block_id);
+//      offset *= d_dst_level->getRatioToLevelZero().getBlockVector(dst_block_id);
 
       is_singularity = grid_geometry->areSingularityNeighbors(dst_block_id,
             src_block_id);

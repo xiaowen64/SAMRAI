@@ -96,6 +96,12 @@ PatchHierarchy::PatchHierarchy(
    }
    getFromInput(input_db, is_from_restart);
 
+   d_grid_geometry->setUpRatios(d_ratio_to_coarser);
+   if (d_max_levels > 1) {
+      d_grid_geometry->setUpFineLevelMultiblockData(
+         d_ratio_to_coarser);
+   }
+
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 }
 
@@ -575,13 +581,7 @@ PatchHierarchy::getRequiredConnectorWidth(
          return d_fine_connector_widths[base_ln];
       } else if (base_ln == head_ln + 1) {
          // Width is for coarse Connector.
-         std::vector<IntVector> refined_width(d_number_blocks, IntVector::getZero(d_dim));
-         for (int b = 0; b < d_number_blocks; ++b) {
-            BlockId block_id(b);
-            refined_width[b] = d_fine_connector_widths[head_ln].getBlockVector(block_id) *
-               d_ratio_to_coarser[base_ln].getBlockVector(block_id);
-         }
-         return MultiIntVector(refined_width);
+         return d_fine_connector_widths[head_ln] * d_ratio_to_coarser[base_ln];
       }
       TBOX_ERROR("PatchHierarchy::getRequiredConnectorWidth: base_ln and\n"
          << "head_ln should differ by at most 1.\n"
@@ -674,7 +674,7 @@ PatchHierarchy::makeRefinedPatchHierarchy(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, refine_ratio);
    TBOX_ASSERT(!fine_hierarchy_name.empty());
    TBOX_ASSERT(fine_hierarchy_name != d_object_name);
-//   TBOX_ASSERT(refine_ratio > IntVector::getZero(refine_ratio.getDim()));
+   TBOX_ASSERT(refine_ratio > IntVector::getZero(refine_ratio.getDim()));
 
    boost::shared_ptr<BaseGridGeometry> fine_geometry(
       d_grid_geometry->makeRefinedGridGeometry(
@@ -738,7 +738,7 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, coarsen_ratio);
    TBOX_ASSERT(!coarse_hierarchy_name.empty());
    TBOX_ASSERT(coarse_hierarchy_name != d_object_name);
-//   TBOX_ASSERT(coarsen_ratio > IntVector::getZero(coarsen_ratio.getDim()));
+   TBOX_ASSERT(coarsen_ratio > IntVector::getZero(coarsen_ratio.getDim()));
 
    boost::shared_ptr<BaseGridGeometry> coarse_geometry(
       d_grid_geometry->makeCoarsenedGridGeometry(
@@ -796,7 +796,7 @@ PatchHierarchy::makeNewPatchLevel(
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, new_box_level);
    TBOX_ASSERT(ln >= 0);
-//   TBOX_ASSERT(new_box_level.getRefinementRatio() > IntVector::getZero(d_dim));
+   TBOX_ASSERT(new_box_level.getRefinementRatio() > IntVector::getZero(d_dim));
    TBOX_ASSERT( new_box_level.getGridGeometry() == d_grid_geometry );
    TBOX_ASSERT( d_domain_box_level->getGridGeometry() == d_grid_geometry );
 
@@ -855,13 +855,9 @@ PatchHierarchy::makeNewPatchLevel(
    d_patch_levels[ln]->setLevelInHierarchy(true);
 
    if ((ln > 0) && d_patch_levels[ln - 1]) {
-      std::vector<IntVector> block_ratio(d_number_blocks, IntVector::getZero(d_dim));
-      for (int b = 0; b < d_number_blocks; ++b) {
-         BlockId block_id(b);
-         block_ratio[b] = d_patch_levels[ln]->getRatioToLevelZero().getBlockVector(block_id) /
-                          d_patch_levels[ln-1]->getRatioToLevelZero().getBlockVector(block_id);
-      }
-      d_patch_levels[ln]->setRatioToCoarserLevel(MultiIntVector(block_ratio));
+      MultiIntVector ratio = d_patch_levels[ln]->getRatioToLevelZero() /
+         d_patch_levels[ln-1]->getRatioToLevelZero();
+      d_patch_levels[ln]->setRatioToCoarserLevel(ratio);
    }
 
 }
@@ -882,7 +878,7 @@ PatchHierarchy::makeNewPatchLevel(
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *new_box_level);
    TBOX_ASSERT(ln >= 0);
-//   TBOX_ASSERT(new_box_level->getRefinementRatio() > IntVector::getZero(d_dim));
+   TBOX_ASSERT(new_box_level->getRefinementRatio() > IntVector::getZero(d_dim));
    TBOX_ASSERT(new_box_level->getGridGeometry() == d_grid_geometry);
    TBOX_ASSERT(d_domain_box_level->getGridGeometry() == d_grid_geometry);
 
@@ -940,13 +936,9 @@ PatchHierarchy::makeNewPatchLevel(
    d_patch_levels[ln]->setLevelInHierarchy(true);
 
    if ((ln > 0) && d_patch_levels[ln - 1]) {
-      std::vector<IntVector> block_ratio(d_number_blocks, IntVector::getZero(d_dim));
-      for (int b = 0; b < d_number_blocks; ++b) {
-         BlockId block_id(b);
-         block_ratio[b] = d_patch_levels[ln]->getRatioToLevelZero().getBlockVector(block_id) /
-                          d_patch_levels[ln-1]->getRatioToLevelZero().getBlockVector(block_id);
-      }
-      d_patch_levels[ln]->setRatioToCoarserLevel(MultiIntVector(block_ratio));
+      MultiIntVector ratio = d_patch_levels[ln]->getRatioToLevelZero() /
+         d_patch_levels[ln-1]->getRatioToLevelZero();
+      d_patch_levels[ln]->setRatioToCoarserLevel(ratio);
    }
 
 }

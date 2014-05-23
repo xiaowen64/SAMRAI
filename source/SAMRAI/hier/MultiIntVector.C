@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
- * Description:   A n-dimensional integer vector
+ * Description:   A container of IntVectors
  *
  ************************************************************************/
 #include "SAMRAI/hier/MultiIntVector.h"
@@ -12,78 +12,54 @@
 namespace SAMRAI {
 namespace hier {
 
-int MultiIntVector::s_max_blocks = 0;
-/*
+int MultiIntVector::s_num_blocks = 1;
+
+
 MultiIntVector::MultiIntVector(
-   const IntVector& ratio,
-   const BlockId& block_id):
-   d_vector(1, ratio)
+   const std::vector<IntVector>& vector):
+   d_vector(vector),
+   d_dim(vector[0].getDim())
 {
-   if (s_max_blocks < block_id.getBlockValue() + 1) {
-      s_max_blocks = block_id.getBlockValue() + 1;
-   }
-   for (int b = 0; b < s_max_blocks; ++b) {
-      d_vector[b] = hier::IntVector::getOne(ratio.getDim());
-   }
-   d_vector[block_id.getBlockValue()] = ratio;
-}
-*/
-MultiIntVector::MultiIntVector(
-   const IntVector& ratio):
-   d_vector(1, ratio)
-{
-   TBOX_ASSERT(s_max_blocks >= 1);
-   if (d_vector.size() != s_max_blocks) {
-      d_vector.resize(s_max_blocks, ratio);
-   }
-   for (int b = 0; b < s_max_blocks; ++b) {
-      d_vector[b] = ratio;
+   TBOX_ASSERT(!vector.empty());
+   TBOX_ASSERT(s_num_blocks == 1 || s_num_blocks == d_vector.size());
+   if (s_num_blocks == 1) {
+      s_num_blocks = d_vector.size();
    }
 }
 
 MultiIntVector::MultiIntVector(
-   const std::vector<IntVector>& ratio):
-   d_vector(ratio)
+   const IntVector& vector):
+   d_vector(1, vector),
+   d_dim(vector.getDim())
 {
-   if (d_vector.size() > s_max_blocks) {
-      s_max_blocks = d_vector.size();
+   TBOX_ASSERT(s_num_blocks > 0);
+   if (d_vector.size() != s_num_blocks) {
+      d_vector.resize(s_num_blocks, vector);
+   }
+   for (int b = 0; b < s_num_blocks; ++b) {
+      d_vector[b] = vector;
    }
 }
 
 MultiIntVector::MultiIntVector(
    const tbox::Dimension& dim,
-   int value)
+   int value):
+   d_vector(1, IntVector(dim, value)),
+   d_dim(dim)
 {
-   TBOX_ASSERT(s_max_blocks >= 1);
-   IntVector tmp(dim, value);
-   if (d_vector.size() != s_max_blocks) {
-      d_vector.resize(s_max_blocks, tmp);
+   TBOX_ASSERT(s_num_blocks > 0);
+   if (d_vector.size() != s_num_blocks) {
+      d_vector.resize(s_num_blocks, d_vector[0]);
    }
-   for (int b = 0; b < s_max_blocks; ++b) {
-      d_vector[b] = tmp;
+   for (int b = 1; b < s_num_blocks; ++b) {
+      d_vector[b] = d_vector[0];
    }
 }
 
 MultiIntVector::MultiIntVector(
-   const tbox::Dimension& dim,
-   int value,
-   int nblocks)
-{
-   if (nblocks > s_max_blocks) {
-      s_max_blocks = nblocks; 
-   }
-   IntVector tmp(dim, value);
-   d_vector.resize(nblocks, tmp);
-   for (int b = 0; b < s_max_blocks; ++b) {
-      d_vector[b] = tmp;
-   }
-}
-
-
-
-MultiIntVector::MultiIntVector(
-   const MultiIntVector& rhs):
-   d_vector(rhs.d_vector)
+   const MultiIntVector& copy_vector):
+   d_vector(copy_vector.d_vector),
+   d_dim(copy_vector.d_dim)
 {
 }
 
@@ -107,6 +83,23 @@ std::ostream& operator << (
    return s;
 }
 
+std::istream&
+operator >> (
+   std::istream& s,
+   MultiIntVector& rhs)
+{
+   while (s.get() != '(') ;
+
+   for (int b = 0; b < rhs.d_vector.size(); ++b) {
+      s >> rhs.d_vector[b];
+      if (b < rhs.d_vector.size() - 1)
+         while (s.get() != ',') ;
+   }
+
+   while (s.get() != ')') ;
+
+   return s;
+}
 
 
 }

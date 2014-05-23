@@ -792,7 +792,7 @@ public:
       Neighbor(
          const BlockId& block_id,
          const BoxContainer& domain,
-         const Transformation& transformation);
+         const std::vector<Transformation>& transformation);
 
       /*!
        * @brief Get the block number of the neighboring block.
@@ -817,9 +817,9 @@ public:
        * @brief Get the Transformation for the neighbor relationship.
        */
       const Transformation&
-      getTransformation() const
+      getTransformation(const int level_num) const
       {
-         return d_transformation;
+         return d_transformation[level_num];
       }
 
       /*!
@@ -828,16 +828,24 @@ public:
       Transformation::RotationIdentifier
       getRotationIdentifier() const
       {
-         return d_transformation.getRotation();
+         return d_transformation[0].getRotation();
       }
 
       /*!
        * @brief Get the shift for the neighbor relationship.
        */
       const IntVector&
-      getShift() const
+      getShift(const int level_num) const
       {
-         return d_transformation.getOffset();
+         return d_transformation[level_num].getOffset();
+      }
+
+      void
+      addTransformation(const Transformation& transformation,
+                        int level_num)
+      {
+         TBOX_ASSERT(level_num == d_transformation.size());
+         d_transformation.push_back(transformation);
       }
 
       /*!
@@ -876,7 +884,7 @@ private:
        * @brief The transformation to transform the neighboring block's
        * coordinate system into the current coordinate system.
        */
-      Transformation d_transformation;
+      std::vector<Transformation> d_transformation;
 
       /*!
        * True if the current block and the neighboring block abut at a
@@ -1013,6 +1021,12 @@ private:
       Box& box,
       const MultiIntVector& ratio,
       const BlockId& output_block,
+      const BlockId& input_block, double dummy) const;
+   bool
+   transformBox(
+      Box& box,
+      int level_number,
+      const BlockId& output_block,
       const BlockId& input_block) const;
 
    /*!
@@ -1140,7 +1154,8 @@ private:
    const IntVector&
    getOffset(
       const BlockId& dst,
-      const BlockId& src) const;
+      const BlockId& src,
+      int level_num) const;
 
    /*!
     * @brief Query if the geometry has enhanced connectivity.
@@ -1151,6 +1166,30 @@ private:
       return d_has_enhanced_connectivity;
    }
 
+   void
+   setUpRatios(
+      const std::vector<MultiIntVector>& ratio_to_coarser);
+
+   void
+   setUpFineLevelMultiblockData(
+      const std::vector<MultiIntVector>& ratio_to_coarser);
+
+   int
+   getEquivalentLevelNumber(const MultiIntVector& ratio_to_level_zero) const
+   {
+      int level_num = -1;
+      for (int i = 0; i < d_ratio_to_level_zero.size(); ++i) {
+         if (d_ratio_to_level_zero[i] == ratio_to_level_zero) {
+            level_num = i;
+         }
+      }
+      if (level_num == -1) {
+         TBOX_ERROR(" ");
+      }
+
+      return level_num;
+   }
+       
    /*!
     * @brief Print object data to the specified output stream.
     *
@@ -1404,6 +1443,8 @@ private:
     * block touches.
     */
    std::vector<BoxContainer> d_singularity;
+
+   std::vector<MultiIntVector> d_ratio_to_level_zero;
 
    /*!
     * @brief Tell whether there is enhanced connectivity anywhere in the

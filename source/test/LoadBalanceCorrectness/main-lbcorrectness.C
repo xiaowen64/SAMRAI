@@ -783,7 +783,7 @@ int main(
                coarser_ln);
          }
 
-         if ( !hierarchy->getRatioToCoarserLevel(1).isZero(dim) ) {
+         if ( !hierarchy->getRatioToCoarserLevel(1).isZero() ) {
             refineHead(
                *L1,
                *L0_to_L1,
@@ -977,7 +977,7 @@ int main(
                coarser_ln);
          }
 
-         if ( !hierarchy->getRatioToCoarserLevel(2).isZero(dim) ) {
+         if ( !hierarchy->getRatioToCoarserLevel(2).isZero() ) {
             refineHead(
                *L2,
                *L1_to_L2,

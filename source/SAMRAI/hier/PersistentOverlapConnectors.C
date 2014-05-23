@@ -398,7 +398,7 @@ PersistentOverlapConnectors::doFindConnectorWork(
                   d_cons_from_me[i]->getConnectorWidth()
                   - found->getConnectorWidth();
 
-               TBOX_ASSERT(!vdiff.isZero(vdiff.getDim()));
+               TBOX_ASSERT(!vdiff.isZero());
 
                int nblocks = head.getGridGeometry()->getNumberBlocks();
                int diff = 0;

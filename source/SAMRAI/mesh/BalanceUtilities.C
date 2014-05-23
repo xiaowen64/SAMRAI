@@ -1258,7 +1258,7 @@ BalanceUtilities::recursiveBisectionUniform(
    TBOX_ASSERT(ideal_workload > 0);
    TBOX_ASSERT((workload_tolerance >= 0) && (workload_tolerance < 1.0));
    TBOX_ASSERT(min_size > hier::IntVector::getZero(dim));
-   TBOX_ASSERT(cut_factor > hier::MultiIntVector(dim,0));
+   TBOX_ASSERT(cut_factor > hier::IntVector::getZero(dim));
    TBOX_ASSERT(bad_interval >= hier::IntVector::getZero(dim));
    TBOX_ASSERT(!physical_domain.isEmpty());
 
@@ -1348,7 +1348,7 @@ BalanceUtilities::recursiveBisectionNonuniform(
    TBOX_ASSERT(ideal_workload > 0);
    TBOX_ASSERT((workload_tolerance >= 0) && (workload_tolerance < 1.0));
    TBOX_ASSERT(min_size > hier::IntVector::getZero(dim));
-   TBOX_ASSERT(cut_factor > hier::MultiIntVector(dim,0));
+   TBOX_ASSERT(cut_factor > hier::IntVector::getZero(dim));
    TBOX_ASSERT(bad_interval >= hier::IntVector::getZero(dim));
    TBOX_ASSERT(!physical_domain.isEmpty());
 

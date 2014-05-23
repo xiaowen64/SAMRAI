@@ -259,6 +259,7 @@ CoarseFineBoundary::computeFromMultiblockLevel(
 
    const BoxLevel& box_level = *level.getBoxLevel();
    const MultiIntVector& ratio = level.getRatioToLevelZero();
+   const int level_number = level.getLevelNumber();
 
    /*
     * Get the number of blocks from the grid geometry.
@@ -287,7 +288,7 @@ CoarseFineBoundary::computeFromMultiblockLevel(
          if (block_id != ni->getBlockId()) {
             Box transform_box(*ni);
             grid_geometry->transformBox(transform_box,
-                                        MultiIntVector(IntVector::getOne(d_dim)),
+                                        0,
                                         block_id,
                                         ni->getBlockId());
             refined_domain_nabrs.pushBack(transform_box);
@@ -314,7 +315,7 @@ CoarseFineBoundary::computeFromMultiblockLevel(
          if (block_id != ni->getBlockId()) {
             Box transform_box(*ni);
             grid_geometry->transformBox(transform_box,
-                                        ratio,
+                                        level_number,
                                         block_id,
                                         ni->getBlockId());
             level_nabrs.pushBack(transform_box);

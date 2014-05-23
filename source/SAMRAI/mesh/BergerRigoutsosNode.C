@@ -1890,7 +1890,7 @@ BergerRigoutsosNode::countOverlapWithLocalPatches()
          bool transformed =
             d_common->d_tag_level->getGridGeometry()->transformBox(
                transform_box,
-               d_common->d_tag_level->getRatioToLevelZero(),
+               d_common->d_tag_level->getLevelNumber(),
                d_box.getBlockId(),
                block_id);
 
@@ -2155,7 +2155,7 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
          bool transformed =
             d_common->d_tag_level->getGridGeometry()->transformBox(
                transform_box,
-               d_common->d_tag_level->getRatioToLevelZero(),
+               d_common->d_tag_level->getLevelNumber(),
                d_box.getBlockId(),
                tag_box.getBlockId());
          if (transformed) {

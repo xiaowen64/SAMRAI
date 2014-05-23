@@ -58,7 +58,7 @@ HierarchyTester::HierarchyTester(
             std::vector<int> tmp_ratio =
                hier_test_db->getIntegerVector("ratio");
             tbox::plog << "with ratio = " << hier::IntVector(tmp_ratio) << std::endl;
-            d_ratio = hier::MultiIntVector(hier::IntVector(tmp_ratio));
+            d_ratio.setAll(hier::IntVector(tmp_ratio));
          } else {
             TBOX_ERROR(
                "HierarchyTester input error: no 'ratio' found in input"
@@ -77,7 +77,7 @@ HierarchyTester::HierarchyTester(
             std::vector<int> tmp_ratio =
                hier_test_db->getIntegerVector("ratio");
             tbox::plog << "with ratio = " << hier::IntVector(tmp_ratio) << std::endl;
-            d_ratio = hier::MultiIntVector(hier::IntVector(tmp_ratio));
+            d_ratio.setAll(hier::IntVector(tmp_ratio));
          } else {
             TBOX_ERROR(
                "HierarchyTester input error: no 'ratio' found in input"

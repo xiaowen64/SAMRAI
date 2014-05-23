@@ -728,8 +728,7 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
 
    boost::shared_ptr<hier::PatchLevel> coarsened_level(
       boost::make_shared<hier::PatchLevel>(dim));
-   hier::MultiIntVector coarsen_ratio(
-      hier::IntVector(dim, d_error_coarsen_ratio));
+   hier::MultiIntVector coarsen_ratio(dim, d_error_coarsen_ratio);
    coarsened_level->setCoarsenedPatchLevel(patch_level, coarsen_ratio);
 
    if ((level_number > 0)

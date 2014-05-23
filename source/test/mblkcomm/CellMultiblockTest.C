@@ -293,10 +293,10 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
                   const_iterator itr = neighbors.find(encon_blk_id);
                if (itr != neighbors.end()) {
                   rotation = itr->second.getRotationIdentifier();
-                  offset = itr->second.getShift();
+                  offset = itr->second.getShift(encon_level.getLevelNumber());
                }
 
-               offset *= patch.getPatchGeometry()->getRatio().getBlockVector(patch_blk_id);
+//               offset *= patch.getPatchGeometry()->getRatio().getBlockVector(patch_blk_id);
 
                hier::Transformation transformation(rotation, offset,
                                                    encon_blk_id,

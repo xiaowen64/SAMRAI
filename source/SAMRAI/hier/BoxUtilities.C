@@ -333,7 +333,7 @@ BoxUtilities::chopBoxes(
 
    TBOX_ASSERT(min_size > IntVector::getZero(min_size.getDim()));
    TBOX_ASSERT(max_size >= min_size);
-   TBOX_ASSERT(cut_factor > MultiIntVector(min_size.getDim(),0));
+   TBOX_ASSERT(cut_factor > IntVector::getZero(min_size.getDim()));
    TBOX_ASSERT(bad_interval >= IntVector::getZero(min_size.getDim()));
    TBOX_ASSERT(!physical_boxes.isEmpty());
    TBOX_ASSERT(!boxes.isOrdered());
@@ -507,7 +507,7 @@ BoxUtilities::extendBoxesToDomainBoundary(
    const MultiIntVector& ext_ghosts)
 {
    TBOX_ASSERT(!domain.isEmpty());
-   TBOX_ASSERT(ext_ghosts >= hier::MultiIntVector(IntVector::getZero(ext_ghosts.getDim())));
+   TBOX_ASSERT(ext_ghosts >= IntVector::getZero(ext_ghosts.getDim()));
 
    bool out_val = false;
 
@@ -538,7 +538,7 @@ BoxUtilities::extendBoxToDomainBoundary(
 {
 
    TBOX_ASSERT(!domain.isEmpty());
-   TBOX_ASSERT(ext_ghosts >= hier::MultiIntVector(IntVector::getZero(ext_ghosts.getDim())));
+   TBOX_ASSERT(ext_ghosts >= IntVector::getZero(ext_ghosts.getDim()));
 
    const tbox::Dimension& dim(box.getDim());
 

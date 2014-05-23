@@ -554,7 +554,7 @@ SingularityFinder::findCoincidentEdges(
       if (a_box.getBlockId() != b_box.getBlockId()) {
          MultiIntVector one_ratio(IntVector::getOne(d_dim));
          bool transformed = grid_geometry.transformBox(edge_box,
-                                                       one_ratio,
+                                                       0,
                                                        b_box.getBlockId(),
                                                        a_box.getBlockId());
          TBOX_ASSERT(transformed);
@@ -794,7 +794,7 @@ SingularityFinder::findCoincidentPoints(
       if (a_box.getBlockId() != b_box.getBlockId()) {
          MultiIntVector one_ratio(IntVector::getOne(d_dim)); 
          bool transformed = grid_geometry.transformBox(point_box,
-                                                       one_ratio,
+                                                       0,
                                                        b_box.getBlockId(),
                                                        a_box.getBlockId());
          TBOX_ASSERT(transformed);

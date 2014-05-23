@@ -915,7 +915,7 @@ BoxContainer::removeIntersections(
                grid_geometry.transformBox(overlap_box,
                   refinement_ratio,
                   sublist_start->getBlockId(),
-                  overlap_box_block_id);
+                  overlap_box_block_id,3.7);
                removeIntersectionsFromSublist(
                   overlap_box,
                   sublist_start,
@@ -1213,7 +1213,7 @@ BoxContainer::intersectBoxes(
             grid_geometry.transformBox(overlap_box,
                refinement_ratio,
                tryme.getBlockId(),
-               overlap_box_block_id);
+               overlap_box_block_id,3.7);
             tryme.intersect(overlap_box, overlap);
             if (!overlap.empty()) {
                insertAfter(insertion_pt, overlap);

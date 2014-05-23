@@ -1510,7 +1510,7 @@ BoxLevel::getFromRestart(
    const int nproc = restart_db.getInteger("d_nproc");
    const int rank = restart_db.getInteger("d_rank");
 #endif
-   TBOX_ASSERT(ratio >= MultiIntVector(IntVector::getOne(dim)));
+   TBOX_ASSERT(ratio >= IntVector::getOne(dim));
    TBOX_ASSERT(version <= HIER_BOX_LEVEL_VERSION);
 
    initialize(ratio, grid_geom);

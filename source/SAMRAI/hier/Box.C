@@ -314,6 +314,8 @@ Box::operator = (
       if (!d_id_locked) {
          d_block_id = rhs.d_block_id;
          d_id = rhs.d_id;
+      } else if (d_block_id == rhs.d_block_id && d_id == rhs.d_id) {
+         //No operation needed, the id objects were already equal. 
       } else {
          TBOX_ERROR("Attempted to change BoxId that is locked in an ordered BoxContainer.");
       }

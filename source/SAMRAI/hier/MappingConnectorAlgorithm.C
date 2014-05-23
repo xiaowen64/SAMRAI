@@ -389,7 +389,7 @@ MappingConnectorAlgorithm::privateModify(
          shrinkage_in_new_index_space);
    const MultiIntVector anchor_to_new_width =
       anchor_to_old.getConnectorWidth() - shrinkage_in_anchor_index_space;
-   if (!(anchor_to_new_width >= MultiIntVector(IntVector::getZero(dim)))) {
+   if (!(anchor_to_new_width >= IntVector::getZero(dim))) {
       TBOX_ERROR(
          "MappingConnectorAlgorithm::privateModify error:\n"
          << "Mapping connector allows mapped BoxLevel to grow\n"
@@ -1264,51 +1264,70 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
                     << base_box << std::endl;
       }
       Box compare_box = base_box;
-      const BlockId& block_id = compare_box.getBlockId();
-      compare_box.grow(mapped_connector.getConnectorWidth().getBlockVector(block_id));
-      if (unmapped_connector.getHeadCoarserFlag()) {
-         compare_box.coarsen(unmapped_connector.getRatio().getBlockVector(block_id));
-      }
-      else if (unmapped_connector_transpose.getHeadCoarserFlag()) {
-         compare_box.refine(unmapped_connector_transpose.getRatio().getBlockVector(block_id));
-      }
+      BoxContainer compare_boxes;
 
-      BlockId compare_box_block_id(base_box.getBlockId());
-      Box transformed_compare_box(compare_box);
+      if (grid_geometry->getNumberBlocks() == 1) {
+         const BlockId& block_id = compare_box.getBlockId();
+         compare_box.grow(mapped_connector.getConnectorWidth().getBlockVector(block_id));
+         if (unmapped_connector.getHeadCoarserFlag()) {
+            compare_box.coarsen(unmapped_connector.getRatio());
+         }
+         else if (unmapped_connector_transpose.getHeadCoarserFlag()) {
+            compare_box.refine(unmapped_connector_transpose.getRatio());
+         }
+         compare_boxes.push_back(compare_box);
+      } else {
+         TBOX_ASSERT(unmapped_connector.getRatio() ==
+                     unmapped_connector_transpose.getRatio());
+         unmapped_connector.growBaseBoxForMultiblock(
+            compare_boxes,
+            compare_box,
+            grid_geometry,
+            mapped_connector.getBase().getRefinementRatio(),
+            unmapped_connector.getRatio(),
+            mapped_connector.getConnectorWidth(), 
+            unmapped_connector_transpose.getHeadCoarserFlag(),
+            unmapped_connector.getHeadCoarserFlag());
+      }
 
       std::vector<Box> found_nabrs;
-      InvertedNeighborhoodSet::const_iterator ini =
-         inverted_nbrhd.find(base_box);
-      if (ini != inverted_nbrhd.end()) {
-         const BoxIdSet& old_indices = ini->second;
+      for (BoxContainer::iterator c_itr = compare_boxes.begin();
+           c_itr != compare_boxes.end(); ++c_itr) {
+         const Box& comp_box = *c_itr;
+         BlockId compare_box_block_id(comp_box.getBlockId());
+         Box transformed_compare_box(comp_box);
 
-         for (BoxIdSet::const_iterator na = old_indices.begin();
-              na != old_indices.end(); ++na) {
-            Connector::ConstNeighborhoodIterator nbrhd =
-               mapping_connector.findLocal(*na);
-            if (nbrhd != mapping_connector.end()) {
-               /*
-                * There are anchor Boxes with relationships to
-                * the old Box identified by *na.
-                */
-               for (Connector::ConstNeighborIterator naa =
-                    mapping_connector.begin(nbrhd);
-                    naa != mapping_connector.end(nbrhd); ++naa) {
-                  const Box& new_nabr(*naa);
-                  if (compare_box_block_id != new_nabr.getBlockId()) {
-                     // Re-transform compare_box and note its new BlockId.
-                     transformed_compare_box = compare_box;
-                     compare_box_block_id = new_nabr.getBlockId();
-                     if (compare_box_block_id != base_box.getBlockId()) {
+         //std::vector<Box> found_nabrs;
+         InvertedNeighborhoodSet::const_iterator ini =
+            inverted_nbrhd.find(base_box);
+         if (ini != inverted_nbrhd.end()) {
+            const BoxIdSet& old_indices = ini->second;
+
+            for (BoxIdSet::const_iterator na = old_indices.begin();
+                 na != old_indices.end(); ++na) {
+               Connector::ConstNeighborhoodIterator nbrhd =
+                  mapping_connector.findLocal(*na);
+               if (nbrhd != mapping_connector.end()) {
+                  /*
+                   * There are anchor Boxes with relationships to
+                   * the old Box identified by *na.
+                   */
+                  for (Connector::ConstNeighborIterator naa =
+                       mapping_connector.begin(nbrhd);
+                       naa != mapping_connector.end(nbrhd); ++naa) {
+                     const Box& new_nabr(*naa);
+                     transformed_compare_box = comp_box;
+                     if (compare_box_block_id != new_nabr.getBlockId()) {
+                        // Re-transform compare_box and note its new BlockId.
                         grid_geometry->transformBox(
                            transformed_compare_box,
                            head_refinement_ratio,
                            new_nabr.getBlockId(),
-                           base_box.getBlockId());
+                           compare_box_block_id,3.7);
                      }
-                  }
-                  if (transformed_compare_box.intersects(new_nabr)) {
-                     found_nabrs.insert(found_nabrs.end(), *naa);
+                     if (transformed_compare_box.intersects(new_nabr)) {
+                        found_nabrs.insert(found_nabrs.end(), *naa);
+                     }
                   }
                }
             }

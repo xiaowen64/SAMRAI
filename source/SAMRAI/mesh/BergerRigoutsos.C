@@ -263,7 +263,7 @@ BergerRigoutsos::findBoxesContainingTags(
       *(bound_boxes.begin()),
       min_box,
       tag_to_new_width);
-   TBOX_ASSERT(tag_to_new_width >= hier::MultiIntVector(hier::IntVector::getZero(tag_to_new_width.getDim())));
+   TBOX_ASSERT(tag_to_new_width >= hier::IntVector::getZero(tag_to_new_width.getDim()));
 
    tbox::SAMRAI_MPI mpi(tag_level->getBoxLevel()->getMPI());
 
