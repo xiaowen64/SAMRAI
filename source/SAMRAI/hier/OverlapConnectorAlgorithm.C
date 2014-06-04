@@ -491,8 +491,15 @@ OverlapConnectorAlgorithm::findOverlapsByAssumedPartition(
                       IntVector(dim, tbox::MathUtilities<int>::getMax()),
                       IntVector(dim, -1),
                       false );
-   conn = *tmp_conn;
-   conn.setTranspose(&conn, false);
+   conn.clear();
+   conn.setBase(tmp_conn->getBase());
+   conn.setHead(tmp_conn->getHead());
+   conn.setWidth(tmp_conn->getConnectorWidth(), true);
+   for ( Connector::NeighborhoodIterator ni=tmp_conn->begin(); ni!=tmp_conn->end(); ++ni ) {
+      for ( Connector::NeighborIterator na=tmp_conn->begin(ni); na!=tmp_conn->end(ni); ++na ) {
+         conn.insertLocalNeighbor(*na, *ni);
+      }
+   }
 
    d_object_timers->t_find_overlaps_assumed_partition->stop();
 }
