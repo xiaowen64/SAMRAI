@@ -509,7 +509,10 @@ GriddingAlgorithm::makeCoarsestLevel(
        * Add computed Connectors to new level's collection of
        * persistent overlap Connectors.
        */
-      new_box_level->cacheConnector(new_to_new);
+      if ( !new_box_level->hasConnector( new_to_new->getHead(),
+                                         new_to_new->getConnectorWidth() ) ) {
+         new_box_level->cacheConnector(new_to_new);
+      }
 
       d_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(
          *d_hierarchy->getPatchLevel(ln));
