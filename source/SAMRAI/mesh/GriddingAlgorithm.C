@@ -3323,8 +3323,8 @@ GriddingAlgorithm::renumberBoxes(
 
    /*
     * Modify works well in most cases, but if ref is actually the
-    * domain its cost is O(N^2).  In such a case, the O(N*lg(N))
-    * search scales bettter.
+    * domain its cost is O(N^2).  In such a case, recompute instead
+    * of modify.
     */
    if ( &ref_to_new.getBase() != &d_hierarchy->getDomainBoxLevel() ) {
       mca->modify(ref_to_new,
@@ -3336,8 +3336,16 @@ GriddingAlgorithm::renumberBoxes(
       ref_to_new.getTranspose().clearNeighborhoods();
       ref_to_new.setHead(new_box_level, true);
       ref_to_new.getTranspose().setBase(new_box_level, true);
-      oca->findOverlaps(ref_to_new);
-      oca->findOverlaps(ref_to_new.getTranspose());
+      oca->findOverlapsByAssumedPartition(ref_to_new);
+      ref_to_new.removePeriodicRelationships();
+      hier::Connector *new_to_ref = new hier::Connector(ref_to_new.getHead(),
+                                                        ref_to_new.getBase(),
+                                                        hier::Connector::convertHeadWidthToBase(
+                                                           ref_to_new.getHead().getRefinementRatio(),
+                                                           ref_to_new.getBase().getRefinementRatio(),
+                                                           ref_to_new.getConnectorWidth() ));
+      oca->findOverlaps(*new_to_ref);
+      ref_to_new.setTranspose(new_to_ref, true);
    }
 
    t_renumber_boxes->stop();
