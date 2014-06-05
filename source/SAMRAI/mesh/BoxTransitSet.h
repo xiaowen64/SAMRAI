@@ -70,7 +70,7 @@ public:
    //! @copydoc TransitLoad::insertAll( const hier::BoxContainer & )
    void insertAll( const hier::BoxContainer &box_container );
 
-   //! @copydoc TransitLoad::insertAll( const TransitLoad & )
+   //! @copydoc TransitLoad::insertAll( TransitLoad & )
    void insertAll( TransitLoad &other );
 
    //! @copydoc TransitLoad::getNumberOfItems()

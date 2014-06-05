@@ -160,16 +160,16 @@ public:
     *
     * This method uses communication to set up the map.
     *
-    * @param balanced_box_level [io] Empty BoxLevel to populate with
+    * @param [in,out] balanced_box_level Empty BoxLevel to populate with
     * the contents of this TransitLoad.
     *
-    * @param balanced_to_unalanced [io] Empty Connector to populate
+    * @param [in,out] balanced_to_unalanced Empty Connector to populate
     * with the balanced--->unbalanced edges.
     *
-    * @param unbalanced_to_alanced [io] Empty Connector to populate
+    * @param [in,out] unbalanced_to_balanced Empty Connector to populate
     * with the unbalanced--->balanced edges.
     *
-    * @param [i] flexible_load_tol
+    * @param [in] flexible_load_tol
     */
    virtual void
    assignToLocalAndPopulateMaps(

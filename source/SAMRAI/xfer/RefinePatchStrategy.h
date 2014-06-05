@@ -242,8 +242,8 @@ public:
     * This member function is called before standard refine operations
     * (expressed using concrete subclasses of the RefineOperator base class).
     *
-    * @param[out] fine     Fine patch containing destination data.
-    * @param[in] coarse    Coarse patch containing source data.
+    * @param[out] fine_level     Fine patch level containing destination data.
+    * @param[in] coarse_level    Coarse patch level containing source data.
     * @param[in] coarse_to_fine      Connector coarse to fine
     * @param[in] coarse_to_unfilled  Connector coarse to level representing
     *                                boxes that need to be filled.
@@ -273,8 +273,8 @@ public:
     * This member function is called after standard refine operations
     * (expressed using concrete subclasses of the RefineOperator base class).
     *
-    * @param[out] fine     Fine patch containing destination data.
-    * @param[in] coarse    Coarse patch containing source data.
+    * @param[out] fine_level     Fine patch level containing destination data.
+    * @param[in] coarse_level    Coarse patch level containing source data.
     * @param[in] coarse_to_fine      Connector coarse to fine
     * @param[in] coarse_to_unfilled  Connector coarse to level representing
     *                                boxes that need to be filled.

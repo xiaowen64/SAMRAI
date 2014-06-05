@@ -628,7 +628,7 @@ private:
    /*!
     * @brief Enforce proper nesting.
     *
-    * @param[in/out] new_box_level
+    * @param[in,out] new_box_level
     *
     * @param[in,out] tag_to_new
     *
@@ -676,7 +676,7 @@ private:
    /*!
     * @brief Enforce overflow nesting.
     *
-    * @param[in/out] new_box_level
+    * @param[in,out] new_box_level
     *
     * @param[in,out] tag_to_new
     */

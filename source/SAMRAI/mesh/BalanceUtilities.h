@@ -307,12 +307,12 @@ struct BalanceUtilities {
     *
     * @param border Left border in report output
     *
-    * @param [i] post_to_pre
+    * @param [in] post_to_pre
     *
-    * @param [i] min_width Report post-balance boxes smaller than
+    * @param [in] min_width Report post-balance boxes smaller than
     * min_width in any direction.
     *
-    * @param [i] min_vol Report post-balance boxes with fewer cells
+    * @param [in] min_vol Report post-balance boxes with fewer cells
     * than this.
     */
    static void findSmallBoxesInPostbalance(
@@ -333,14 +333,14 @@ struct BalanceUtilities {
     *
     * @param border Left border in report output
     *
-    * @param [i] pre Pre-balance BoxLevel
+    * @param [in] pre Pre-balance BoxLevel
     *
-    * @param [i] post Post-balance BoxLevel
+    * @param [in] post Post-balance BoxLevel
     *
-    * @param [i] min_width Report post-balance boxes smaller than
+    * @param [in] min_width Report post-balance boxes smaller than
     * min_width in any direction.
     *
-    * @param [i] min_vol Report post-balance boxes with fewer cells
+    * @param [in] min_vol Report post-balance boxes with fewer cells
     * than this.
     */
    static void findSmallBoxesInPostbalance(

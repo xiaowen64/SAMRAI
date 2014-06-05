@@ -125,9 +125,6 @@ public:
     * parameters from input file.  This pointer may be null indicating
     * no input is used.
     *
-    * @param[in] rank_tree How to arange a contiguous range of MPI ranks
-    * into a tree.  If omitted, we use a tbox::CenteredRankTree.
-    *
     * @pre !name.empty()
     */
    CascadePartitioner(
