@@ -1594,6 +1594,30 @@ SAMRAI_MPI::freeCommunicator()
  **************************************************************************
  **************************************************************************
  */
+int
+SAMRAI_MPI::compareCommunicator(
+   const SAMRAI_MPI& r) const
+{
+#ifdef HAVE_MPI
+   int compare_result;
+   int mpi_err = Comm_compare(
+      d_comm,
+      r.d_comm,
+      &compare_result);
+   if ( mpi_err != MPI_SUCCESS ) {
+      TBOX_ERROR("SAMRAI_MPI::compareCommunicator: Error comparing two communicators.");
+   }
+   return compare_result;
+#else
+   NULL_USE(r);
+   return d_comm == r.d_comm ? MPI_IDENT : MPI_CONGRUENT;
+#endif
+}
+
+/*
+ **************************************************************************
+ **************************************************************************
+ */
 void
 SAMRAI_MPI::setCommunicator(
    const Comm& comm)

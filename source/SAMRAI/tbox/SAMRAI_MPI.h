@@ -26,8 +26,8 @@
  * These are defined in the global namespace because that's where MPI
  * defines them.  It does not matter what values these take because
  * they are not used.  (They are just place holders to let code
- * compile without MPI without adding excessive preprocessor guards to
- * the code.)
+ * compile without MPI without requiring excessive preprocessor guards
+ * in the code.)
  *
  * This is not a complete set.  Developers should add as needed to extend
  * SAMRAI_MPI's functionality.
@@ -270,6 +270,33 @@ public:
     */
    void
    freeCommunicator();
+
+   /*!
+    * @brief Compare with another SAMRAI_MPI's communicator.
+    *
+    * If MPI is enabled, compare using Comm_compare, and return the result.
+    * Otherwise, return MPI_IDENT if the two communicators are the same
+    * and MPI_CONGRUENT if they are not.  (No other choice makes sense
+    * when MPI is disabled.)
+    */
+   int compareCommunicator( const SAMRAI_MPI &other) const;
+
+   /*!
+    * @brief Whether the communicator is MPI_COMM_NULL.
+    */
+   bool hasNullCommunicator() const
+   {
+      return d_comm == MPI_COMM_NULL;
+   }
+
+   /*!
+    * @brief Whether the communicator is congruent with another's.
+    */
+   bool isCongruentWith( const SAMRAI_MPI &other ) const
+   {
+      int compare_result = compareCommunicator(other);
+      return compare_result == MPI_CONGRUENT || compare_result == MPI_IDENT;
+   }
 
    /*!
     * @brief Assignment operator.
