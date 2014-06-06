@@ -429,14 +429,15 @@ void CascadePartitioner::updateConnectors() const
       balanced_box_level,
       balanced_to_unbalanced,
       unbalanced_to_balanced,
-      d_flexible_load_tol );
+      d_flexible_load_tol,
+      d_mpi);
    t_assign_to_local_and_populate_maps->stop();
 
    if ( d_summarize_map ) {
-      tbox::plog << "CascadePartitioner::partitionByCascade unbalanced--->balanced map:\n"
+      tbox::plog << "CascadePartitioner::updateConnectors unbalanced--->balanced map:\n"
                  << unbalanced_to_balanced.format("\t",0)
                  << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
-                 << "CascadePartitioner::partitionByCascade balanced--->unbalanced map:\n"
+                 << "CascadePartitioner::updateConnectors balanced--->unbalanced map:\n"
                  << balanced_to_unbalanced.format("\t",0)
                  << "Map statistics:\n" << balanced_to_unbalanced.formatStatistics("\t")
                  << '\n';
@@ -445,21 +446,21 @@ void CascadePartitioner::updateConnectors() const
    if (d_check_map) {
       if (unbalanced_to_balanced.findMappingErrors() != 0) {
          TBOX_ERROR(
-            "CascadePartitioner::partitionByCascade Mapping errors found in unbalanced_to_balanced!");
+            "CascadePartitioner::updateConnectors Mapping errors found in unbalanced_to_balanced!");
       }
       if (unbalanced_to_balanced.checkTransposeCorrectness(
              balanced_to_unbalanced)) {
          TBOX_ERROR(
-            "CascadePartitioner::partitionByCascade Transpose errors found!");
+            "CascadePartitioner::updateConnectors Transpose errors found!");
       }
    }
 
 
    if ( d_summarize_map ) {
-      tbox::plog << "CascadePartitioner::partitionByCascade: unbalanced--->balanced map:\n"
+      tbox::plog << "CascadePartitioner::updateConnectors: unbalanced--->balanced map:\n"
                  << unbalanced_to_balanced.format("\t",0)
                  << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
-                 << "CascadePartitioner::partitionByCascade: balanced--->unbalanced map:\n"
+                 << "CascadePartitioner::updateConnectors: balanced--->unbalanced map:\n"
                  << balanced_to_unbalanced.format("\t",0)
                  << "Map statistics:\n" << balanced_to_unbalanced.formatStatistics("\t")
                  << '\n';
@@ -469,7 +470,7 @@ void CascadePartitioner::updateConnectors() const
    if (d_balance_to_reference && d_balance_to_reference->hasTranspose()) {
       if ( d_print_steps ) {
          tbox::plog
-            << "CascadePartitioner::partitionByCascade applying unbalanced<==>balanced.\n";
+            << "CascadePartitioner::updateConnectors applying unbalanced<==>balanced.\n";
       }
       t_use_map->barrierAndStart();
       d_mca.modify(
@@ -484,7 +485,7 @@ void CascadePartitioner::updateConnectors() const
 
    if ( d_print_steps ) {
       tbox::plog
-         << "CascadePartitioner::partitionByCascade leaving.\n";
+         << "CascadePartitioner::updateConnectors leaving.\n";
    }
 
    t_update_connectors->stop();
@@ -578,6 +579,8 @@ CascadePartitioner::setSAMRAI_MPI(
    // Enable private communicator.
    d_mpi.dupCommunicator(samrai_mpi);
    d_mpi_is_dupe = true;
+
+   d_mca.setSAMRAI_MPI(d_mpi);
 }
 
 

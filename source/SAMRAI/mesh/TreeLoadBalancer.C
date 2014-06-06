@@ -665,7 +665,8 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
          balanced_box_level,
          balanced_to_unbalanced,
          unbalanced_to_balanced,
-         d_flexible_load_tol );
+         d_flexible_load_tol,
+         d_mpi );
       t_assign_to_local_and_populate_maps->stop();
       if ( d_print_steps ) {
          tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup finished constructing unbalanced<==>balanced.\n";
@@ -1430,6 +1431,8 @@ TreeLoadBalancer::setSAMRAI_MPI(
    // Enable private communicator.
    d_mpi.dupCommunicator(samrai_mpi);
    d_mpi_is_dupe = true;
+
+   d_mca.setSAMRAI_MPI(d_mpi, true);
 }
 
 

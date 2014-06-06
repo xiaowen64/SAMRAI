@@ -37,8 +37,6 @@ int MappingConnectorAlgorithm::s_operation_mpi_tag = 0;
  * with reused tags anyway.
  */
 
-tbox::SAMRAI_MPI MappingConnectorAlgorithm::s_class_mpi(MPI_COMM_NULL);
-
 tbox::StartupShutdownManager::Handler
 MappingConnectorAlgorithm::s_initialize_finalize_handler(
    MappingConnectorAlgorithm::initializeCallback,
@@ -53,6 +51,8 @@ MappingConnectorAlgorithm::s_initialize_finalize_handler(
  */
 
 MappingConnectorAlgorithm::MappingConnectorAlgorithm():
+   d_mpi(MPI_COMM_NULL),
+   d_mpi_is_exclusive(false),
    d_object_timers(NULL),
    d_barrier_before_communication(false),
    d_sanity_check_inputs(false),
@@ -69,6 +69,27 @@ MappingConnectorAlgorithm::MappingConnectorAlgorithm():
 
 MappingConnectorAlgorithm::~MappingConnectorAlgorithm()
 {
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void MappingConnectorAlgorithm::setSAMRAI_MPI(
+   const tbox::SAMRAI_MPI &mpi,
+   bool make_duplicate )
+{
+   if ( d_mpi_is_exclusive ) {
+      d_mpi.freeCommunicator();
+      d_mpi_is_exclusive = false;
+   }
+   if ( make_duplicate ) {
+      d_mpi.dupCommunicator(mpi);
+      d_mpi_is_exclusive = true;
+   }
+   else {
+      d_mpi = mpi;
+   }
 }
 
 /*
@@ -138,6 +159,12 @@ MappingConnectorAlgorithm::modify(
    const Connector& anchor_to_old = anchor_to_mapped;
 
    const BoxLevel* old = &old_to_new.getBase();
+
+   if ( !d_mpi.hasNullCommunicator() && !d_mpi.isCongruentWith(old->getMPI()) ) {
+      TBOX_ERROR("MappingConnectorAlgorithm::modify input error: Input BoxLevel\n"
+                 <<"has SAMRAI_MPI that is incongruent with MappingConnectorAlgorithm's.\n"
+                 <<"See MappingConnectorAlgorithm::setSAMRAI_MPI.\n");
+   }
 
    if ((new_to_old && (old != &new_to_old->getHead())) ||
        old != &anchor_to_mapped.getHead() ||
@@ -304,8 +331,11 @@ MappingConnectorAlgorithm::privateModify(
    BoxLevel* mutable_new,
    BoxLevel* mutable_old) const
 {
+   const tbox::SAMRAI_MPI& mpi = d_mpi.getCommunicator() == MPI_COMM_NULL ?
+      old_to_new.getBase().getMPI() : d_mpi;
+
    if ( d_barrier_before_communication ) {
-      old_to_new.getBase().getMPI().Barrier();
+      mpi.Barrier();
    }
    d_object_timers->t_modify->start();
    d_object_timers->t_modify_misc->start();
@@ -361,7 +391,6 @@ MappingConnectorAlgorithm::privateModify(
    const IntVector& new_ratio = new_level.getRefinementRatio();
 
    const tbox::Dimension dim(old.getDim());
-   const tbox::SAMRAI_MPI& mpi(old.getMPI());
 
    /*
     * The width of old-->new indicates the maximum amount of box
@@ -494,7 +523,7 @@ MappingConnectorAlgorithm::privateModify(
    setupCommunication(
       all_comms,
       comm_stage,
-      anchor.getMPI(),
+      mpi,
       incoming_ranks,
       outgoing_ranks,
       d_object_timers->t_modify_MPI_wait,
@@ -763,7 +792,8 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
    d_object_timers->t_modify_remove_and_cache->start();
 
    const tbox::Dimension& dim(old_to_new.getBase().getDim());
-   const tbox::SAMRAI_MPI& mpi(old_to_new.getBase().getMPI());
+   const tbox::SAMRAI_MPI& mpi = d_mpi.getCommunicator() == MPI_COMM_NULL ?
+      old_to_new.getBase().getMPI() : d_mpi;
    const int rank(mpi.getRank());
 
    /*
@@ -921,7 +951,9 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
    const BoxLevel& old(old_to_new.getBase());
 
    const tbox::Dimension& dim(old.getDim());
-   const int rank = old.getMPI().getRank();
+   const tbox::SAMRAI_MPI& mpi = d_mpi.getCommunicator() == MPI_COMM_NULL ?
+      old_to_new.getBase().getMPI() : d_mpi;
+   const int rank = mpi.getRank();
 
    /*
     * Local process can find some neighbors for the (local and
@@ -1254,7 +1286,8 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const BoxLevel& old = mapping_connector.getBase();
    const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
       old.getGridGeometry());
-   const int rank = old.getMPI().getRank();
+   const tbox::SAMRAI_MPI& mpi = d_mpi.getCommunicator() == MPI_COMM_NULL ? old.getMPI() : d_mpi;
+   const int rank = mpi.getRank();
 
    while (base_ni != visible_base_nabrs.end() &&
           base_ni->getOwnerRank() == owner_rank) {
@@ -1380,18 +1413,6 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
 void
 MappingConnectorAlgorithm::initializeCallback()
 {
-   /*
-    * While we figure out how to use multiple communicators in SAMRAI,
-    * we are still assuming that all communications use congruent
-    * communicators.  This class just makes a duplicate communicator
-    * to protect itself from unrelated communications in shared
-    * communicators.
-    */
-   if (tbox::SAMRAI_MPI::usingMPI()) {
-      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-      s_class_mpi.dupCommunicator(mpi);
-   }
-
    // Initialize timers with default prefix.
    getAllTimers(s_default_timer_prefix,
                 s_static_timers[s_default_timer_prefix]);
@@ -1408,9 +1429,7 @@ MappingConnectorAlgorithm::initializeCallback()
 void
 MappingConnectorAlgorithm::finalizeCallback()
 {
-   if (s_class_mpi.getCommunicator() != MPI_COMM_NULL) {
-      s_class_mpi.freeCommunicator();
-   }
+   s_static_timers.clear();
 }
 
 /*
