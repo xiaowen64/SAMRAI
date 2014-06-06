@@ -811,6 +811,10 @@ Connector::finalizeContext()
    const IntVector& baseRefinementRatio = base.getRefinementRatio();
    const IntVector& headRefinementRatio = head.getRefinementRatio();
 
+   if (!base.getMPI().isCongruentWith(head.getMPI())) {
+      TBOX_ERROR("Connector::finalizeContext()\n"
+                 "base and head MPI communicators must be congruent.");
+   }
    if (base.getGridGeometry() != head.getGridGeometry()) {
       TBOX_ERROR("Connector::finalizeContext():\n"
          << "Connector must be finalized with\n"
