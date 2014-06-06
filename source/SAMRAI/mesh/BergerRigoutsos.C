@@ -944,7 +944,6 @@ BergerRigoutsos::useDuplicateMPI(
 /*
  **************************************************************************
  * Check the congruency between d_mpi and d_tag_level's MPI.
- * Writes out warning in log if not congruent.
  * Returns whether the two are congruent.
  *
  * Note: Sequential runs (no MPI or MPI with 1 process) always means
@@ -955,41 +954,13 @@ BergerRigoutsos::useDuplicateMPI(
 bool
 BergerRigoutsos::checkMPICongruency() const
 {
-
    if ( !tbox::SAMRAI_MPI::usingMPI() ||
         ( d_mpi.getCommunicator() == MPI_COMM_NULL ) ||
         ( d_mpi.getSize() == 1 &&
           d_tag_level->getBoxLevel()->getMPI().getSize() == 1 ) ) {
       return true;
    }
-
-   /*
-    * If a valid MPI communicator is given, use it instead of the
-    * tag BoxLevel's communicator.  It must be congruent with
-    * the tag BoxLevel's.
-    */
-
-   bool is_congruent = true;
-   /*
-    * Make sure mpi_object is compatible with the BoxLevel
-    * involved.
-    */
-   tbox::SAMRAI_MPI mpi1(d_mpi);
-   tbox::SAMRAI_MPI mpi2(d_tag_level->getBoxLevel()->getMPI());
-   TBOX_ASSERT(mpi1.getSize() == mpi2.getSize());
-   TBOX_ASSERT(mpi1.getRank() == mpi2.getRank());
-   if (mpi1.getSize() > 1) {
-      int compare_result;
-      tbox::SAMRAI_MPI::Comm_compare(
-         d_mpi.getCommunicator(),
-         d_tag_level->getBoxLevel()->getMPI().getCommunicator(),
-         &compare_result);
-      is_congruent =
-         (compare_result == MPI_CONGRUENT) ||
-         (compare_result == MPI_IDENT);
-   }
-
-   return is_congruent;
+   return d_mpi.isCongruentWith(d_tag_level->getBoxLevel()->getMPI());
 }
 
 /*

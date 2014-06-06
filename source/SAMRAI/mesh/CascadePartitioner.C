@@ -209,19 +209,13 @@ CascadePartitioner::loadBalanceBoxLevel(
       TBOX_ASSERT(d_mpi.getSize() == balance_box_level.getMPI().getSize());
       TBOX_ASSERT(d_mpi.getRank() == balance_box_level.getMPI().getRank());
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (d_mpi.getSize() > 1) {
-         int compare_result;
-         tbox::SAMRAI_MPI::Comm_compare(
-            d_mpi.getCommunicator(),
-            balance_box_level.getMPI().getCommunicator(),
-            &compare_result);
-         if (compare_result != MPI_CONGRUENT) {
-            TBOX_ERROR("CascadePartitioner::loadBalanceBoxLevel:\n"
-               << "The input balance_box_level has a SAMRAI_MPI that is\n"
-               << "not congruent with the one set with setSAMRAI_MPI().\n"
-               << "You must use freeMPICommunicator() before balancing\n"
-               << "a BoxLevel with an incongruent SAMRAI_MPI.");
-         }
+      if (d_mpi.getSize() > 1 &&
+          !d_mpi.isCongruentWith(balance_box_level.getMPI()) ) {
+         TBOX_ERROR("CascadePartitioner::loadBalanceBoxLevel:\n"
+                    << "The input balance_box_level has a SAMRAI_MPI that is\n"
+                    << "not congruent with the one set with setSAMRAI_MPI().\n"
+                    << "You must use freeMPICommunicator() before balancing\n"
+                    << "a BoxLevel with an incongruent SAMRAI_MPI.");
       }
 #endif
    }
