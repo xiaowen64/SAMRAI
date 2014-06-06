@@ -213,7 +213,8 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
    hier::BoxLevel& balanced_box_level,
    hier::MappingConnector &balanced_to_unbalanced,
    hier::MappingConnector &unbalanced_to_balanced,
-   double flexible_load_tol )
+   double flexible_load_tol,
+   const tbox::SAMRAI_MPI &alt_mpi )
 {
    d_object_timers->t_assign_to_local_and_populate_maps->start();
 

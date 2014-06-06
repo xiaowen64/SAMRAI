@@ -194,7 +194,8 @@ BoxTransitSet::assignToLocalAndPopulateMaps(
    hier::BoxLevel& balanced_box_level,
    hier::MappingConnector &balanced_to_unbalanced,
    hier::MappingConnector &unbalanced_to_balanced,
-   double flexible_load_tol )
+   double flexible_load_tol,
+   const tbox::SAMRAI_MPI &alt_mpi )
 {
    NULL_USE(flexible_load_tol);
 
@@ -233,7 +234,9 @@ BoxTransitSet::assignToLocalAndPopulateMaps(
    if ( d_print_steps || d_print_edge_steps ) {
       tbox::plog << "BoxTransitSet::assignToLocalAndPopulateMaps: calling constructSemilocalUnbalancedToBalanced." << std::endl;
    }
-   constructSemilocalUnbalancedToBalanced( unbalanced_to_balanced );
+   constructSemilocalUnbalancedToBalanced( unbalanced_to_balanced,
+                                           alt_mpi.getCommunicator() == MPI_COMM_NULL ?
+                                           balanced_box_level.getMPI() : alt_mpi );
 
    if ( d_print_steps || d_print_edge_steps ) {
       tbox::plog << "BoxTransitSet::assignToLocalAndPopulateMaps: exiting." << std::endl;
@@ -273,7 +276,8 @@ BoxTransitSet::assignToLocalAndPopulateMaps(
  */
 void
 BoxTransitSet::constructSemilocalUnbalancedToBalanced(
-   hier::MappingConnector &unbalanced_to_balanced ) const
+   hier::MappingConnector &unbalanced_to_balanced,
+   const tbox::SAMRAI_MPI &mpi ) const
 {
    d_object_timers->t_construct_semilocal->start();
 
@@ -284,11 +288,10 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
 
    const hier::BoxLevel &unbalanced_box_level = unbalanced_to_balanced.getBase();
    const hier::BoxLevel &balanced_box_level = unbalanced_to_balanced.getHead();
-   const tbox::SAMRAI_MPI &mpi = unbalanced_box_level.getMPI();
 
    size_t num_cells_imported = 0;
 
-   // Stuff the imported boxes into buffers by their original owners.
+   // Pack the imported boxes into buffers by their original owners.
    d_object_timers->t_pack_edge->start();
    std::map<int,boost::shared_ptr<tbox::MessageStream> > outgoing_messages;
    for ( const_iterator bi=begin(); bi!=end(); ++bi ) {
@@ -515,7 +518,7 @@ BoxTransitSet::generateLocalBasedMapEdges(
    hier::MappingConnector &balanced_to_unbalanced ) const
 {
 
-   tbox::SAMRAI_MPI mpi = unbalanced_to_balanced.getBase().getMPI();
+   tbox::SAMRAI_MPI mpi = balanced_to_unbalanced.getBase().getMPI();
 
    for (iterator ni = begin(); ni != end(); ++ni ) {
 

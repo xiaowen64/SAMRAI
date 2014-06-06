@@ -170,13 +170,17 @@ public:
     * with the unbalanced--->balanced edges.
     *
     * @param [i] flexible_load_tol
+    *
+    * @param [i] mpi Alternate SAMRAI_MPI to use, overriding that in
+    * balanced_box_level.
     */
    virtual void
    assignToLocalAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector &balanced_to_unbalanced,
       hier::MappingConnector &unbalanced_to_balanced,
-      double flexible_load_tol = 0.0 ) = 0;
+      double flexible_load_tol = 0.0,
+      const tbox::SAMRAI_MPI &alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL) ) = 0;
 
 
    //@{

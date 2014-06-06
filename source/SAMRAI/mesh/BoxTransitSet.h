@@ -107,7 +107,8 @@ public:
       hier::BoxLevel& balanced_box_level,
       hier::MappingConnector &balanced_to_unbalanced,
       hier::MappingConnector &unbalanced_to_balanced,
-      double flexible_load_tol = 0.0 );
+      double flexible_load_tol = 0.0,
+      const tbox::SAMRAI_MPI &alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL) );
 
    //@}
 
@@ -437,7 +438,8 @@ private:
     * @param [out] unbalanced_to_balanced
     */
    void constructSemilocalUnbalancedToBalanced(
-      hier::MappingConnector &unbalanced_to_balanced ) const;
+      hier::MappingConnector &unbalanced_to_balanced,
+      const tbox::SAMRAI_MPI &mpi ) const;
 
 
    /*!
