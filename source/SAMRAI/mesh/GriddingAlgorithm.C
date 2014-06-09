@@ -3601,28 +3601,11 @@ GriddingAlgorithm::enforceOverflowNesting(
       unnested_to_nested,
       new_box_level,
       tag_to_new.getTranspose());
-   if (d_print_steps) {
-      tbox::plog << "GriddingAlgorithm::enforceOverflowNesting: applying overflow nesting map.\n"
-                 << "Overflow nesting map:\n" << unnested_to_nested->format("MAP: ", 3)
-                 << "Before overflow nesting enforcement:\n"
-                 << "tag:\n" << tag_to_new.getBase().format("T: ")
-                 << "new:\n" << tag_to_new.getHead().format("N: ")
-                 << "tag--->new:\n" << tag_to_new.format("TN: ")
-                 << "new--->tag:\n" << tag_to_new.getTranspose().format("NT: ");
-   }
    t_use_overflow_map->start();
    d_mca.modify(tag_to_new,
                 *unnested_to_nested,
                 &new_box_level);
    t_use_overflow_map->stop();
-   if (d_print_steps) {
-      tbox::plog << "GriddingAlgorithm::enforceOverflowNesting: finished applying overflow nesting map.\n"
-                 << "After overflow nesting enforcement:\n"
-                 << "tag:\n" << tag_to_new.getBase().format("T: ")
-                 << "new:\n" << tag_to_new.getHead().format("N: ")
-                 << "tag--->new:\n" << tag_to_new.format("TN: ")
-                 << "new--->tag:\n" << tag_to_new.getTranspose().format("NT: ");
-   }
 
    if (d_check_overflow_nesting) {
       if (d_print_steps) {
