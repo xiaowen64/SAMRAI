@@ -182,6 +182,9 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    const hier::IntVector& cut_factor,
    const tbox::RankGroup& rank_group) const
 {
+#ifndef DEBUG_CHECK_DIM_ASSERTIONS
+   NULL_USE(domain_box_level);
+#endif
    NULL_USE(hierarchy);
    NULL_USE(level_number);
    TBOX_ASSERT(!balance_to_reference || balance_to_reference->hasTranspose());

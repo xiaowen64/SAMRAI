@@ -245,7 +245,9 @@ private:
    }
    void erase( iterator pos) {
       d_sumload -= pos->d_load;
+#ifdef DEBUG_CHECK_ASSERTIONS
       size_t old_size = d_vouchers.size();
+#endif
       d_vouchers.erase(pos);
       TBOX_ASSERT( d_vouchers.size() == old_size - 1 );
       return;

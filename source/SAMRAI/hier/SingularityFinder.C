@@ -556,6 +556,9 @@ SingularityFinder::findCoincidentEdges(
                                                        IntVector::getOne(d_dim),
                                                        b_box.getBlockId(),
                                                        a_box.getBlockId());
+#ifndef DEBUG_CHECK_ASSERTIONS
+         NULL_USE(transformed);
+#endif
          TBOX_ASSERT(transformed);
       }
       edge_box.upper() += IntVector::getOne(d_dim);
@@ -795,6 +798,9 @@ SingularityFinder::findCoincidentPoints(
                                                        IntVector::getOne(d_dim),
                                                        b_box.getBlockId(),
                                                        a_box.getBlockId());
+#ifndef DEBUG_CHECK_ASSERTIONS
+         NULL_USE(transformed);
+#endif
          TBOX_ASSERT(transformed);
       }
 
