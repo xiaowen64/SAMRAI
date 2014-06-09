@@ -146,7 +146,7 @@ public:
     * For the assumed partition algorithm, see Allison Baker's paper.
     */
    void
-   findOverlapsByAssumedPartition(
+   findOverlaps_assumedPartition(
       Connector& connector) const;
 
    /*!

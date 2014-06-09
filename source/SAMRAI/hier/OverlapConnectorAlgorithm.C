@@ -399,7 +399,7 @@ OverlapConnectorAlgorithm::findOverlaps(
  ***********************************************************************
  */
 void
-OverlapConnectorAlgorithm::findOverlapsByAssumedPartition(
+OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    Connector& conn) const
 {
    d_object_timers->t_find_overlaps_assumed_partition->start();

@@ -200,8 +200,8 @@ int main(
             Connector l1_to_l2(l1, l2, IntVector::getZero(dim));
             Connector l2_to_l1(l2, l1, IntVector::getZero(dim));
             OverlapConnectorAlgorithm oca;
-            oca.findOverlapsByAssumedPartition(l1_to_l2);
-            oca.findOverlapsByAssumedPartition(l2_to_l1);
+            oca.findOverlaps_assumedPartition(l1_to_l2);
+            oca.findOverlaps_assumedPartition(l2_to_l1);
 
             tbox::plog << "Testing with:"
                        << "\nl1:\n" << l1.format("\t")

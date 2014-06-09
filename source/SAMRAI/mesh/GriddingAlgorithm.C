@@ -461,7 +461,7 @@ GriddingAlgorithm::makeCoarsestLevel(
 
       new_to_new.reset(new hier::Connector( *new_box_level, *new_box_level,
                                             d_hierarchy->getRequiredConnectorWidth(0, 0, true) ) );
-      d_oca0.findOverlapsByAssumedPartition(*new_to_new);
+      d_oca0.findOverlaps_assumedPartition(*new_to_new);
 
       if (d_barrier_and_time) {
          t_find_new_to_new->stop();
@@ -3335,7 +3335,7 @@ GriddingAlgorithm::renumberBoxes(
       ref_to_new->getTranspose().clearNeighborhoods();
       ref_to_new->setHead(new_box_level, true);
       ref_to_new->getTranspose().setBase(new_box_level, true);
-      oca->findOverlapsByAssumedPartition(*ref_to_new);
+      oca->findOverlaps_assumedPartition(*ref_to_new);
       ref_to_new->removePeriodicRelationships();
       hier::Connector *new_to_ref = new hier::Connector(ref_to_new->getHead(),
                                                         ref_to_new->getBase(),
