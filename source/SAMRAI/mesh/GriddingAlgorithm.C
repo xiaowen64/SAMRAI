@@ -419,7 +419,7 @@ GriddingAlgorithm::makeCoarsestLevel(
 
    d_load_balancer0->loadBalanceBoxLevel(
       *new_box_level,
-      &new_to_domain,
+      0,
       d_hierarchy,
       ln,
       smallest_patch,
@@ -433,19 +433,15 @@ GriddingAlgorithm::makeCoarsestLevel(
    }
 
    if (d_sequentialize_patch_indices) {
-      renumberBoxes(*new_box_level, domain_to_new, false, true);
+      renumberBoxes(*new_box_level, 0, false, true);
    }
 
-   d_blcu0.addPeriodicImagesAndRelationships(
+   d_blcu0.addPeriodicImages(
       *new_box_level,
-      new_to_domain,
       d_hierarchy->getGridGeometry()->getDomainSearchTree(),
-      *domain_to_domain);
-
-   if (d_check_connectors) {
-      TBOX_ASSERT(new_to_domain.checkOverlapCorrectness() == 0);
-      TBOX_ASSERT(domain_to_new.checkOverlapCorrectness() == 0);
-   }
+      hier::IntVector::max(
+         hier::IntVector::getOne(dim),
+         d_hierarchy->getRequiredConnectorWidth(0, 0, true)));
 
    boost::shared_ptr<hier::Connector> new_to_new;
    if (domain_box_level.getLocalNumberOfBoxes(0) ==
@@ -2689,7 +2685,7 @@ GriddingAlgorithm::readLevelBoxes(
       t_load_balance0->stop();
 
       if (d_sequentialize_patch_indices) {
-         renumberBoxes(*new_box_level, *coarser_to_new, false, true);
+         renumberBoxes(*new_box_level, coarser_to_new.get(), false, true);
       }
 
       d_blcu0.addPeriodicImages(
@@ -3233,7 +3229,7 @@ GriddingAlgorithm::findRefinementBoxes(
          if (d_print_steps) {
             tbox::plog << "GriddingAlgorithm::findRefinementBoxes: begin sorting boxes." << std::endl;
          }
-         renumberBoxes(*new_box_level, *tag_to_new, false, true);
+         renumberBoxes(*new_box_level, tag_to_new.get(), false, true);
          if (d_print_steps) {
             tbox::plog << "GriddingAlgorithm::findRefinementBoxes: end sorting boxes." << std::endl;
          }
@@ -3292,7 +3288,7 @@ GriddingAlgorithm::findRefinementBoxes(
 void
 GriddingAlgorithm::renumberBoxes(
    hier::BoxLevel& new_box_level,
-   hier::Connector& ref_to_new,
+   hier::Connector *ref_to_new,
    bool sort_by_corners,
    bool sequentialize_global_indices ) const
 {
@@ -3306,7 +3302,7 @@ GriddingAlgorithm::renumberBoxes(
    const hier::OverlapConnectorAlgorithm *oca = &d_oca;
    const hier::MappingConnectorAlgorithm *mca = &d_mca;
    const hier::BoxLevelConnectorUtils *blcu = &d_blcu;
-   if ( &ref_to_new.getBase() == &d_hierarchy->getDomainBoxLevel() ) {
+   if ( ref_to_new && &ref_to_new->getBase() == &d_hierarchy->getDomainBoxLevel() ) {
       oca = &d_oca0;
       mca = &d_mca0;
       blcu = &d_blcu0;
@@ -3326,26 +3322,29 @@ GriddingAlgorithm::renumberBoxes(
     * domain its cost is O(N^2).  In such a case, recompute instead
     * of modify.
     */
-   if ( &ref_to_new.getBase() != &d_hierarchy->getDomainBoxLevel() ) {
-      mca->modify(ref_to_new,
+   if ( ref_to_new == 0 ) {
+      hier::BoxLevel::swap(new_box_level,*seq_box_level);
+   }
+   else if ( &ref_to_new->getBase() != &d_hierarchy->getDomainBoxLevel() ) {
+      mca->modify(*ref_to_new,
                   *sorting_map,
                   &new_box_level);
    } else {
       hier::BoxLevel::swap(new_box_level,*seq_box_level);
-      ref_to_new.clearNeighborhoods();
-      ref_to_new.getTranspose().clearNeighborhoods();
-      ref_to_new.setHead(new_box_level, true);
-      ref_to_new.getTranspose().setBase(new_box_level, true);
-      oca->findOverlapsByAssumedPartition(ref_to_new);
-      ref_to_new.removePeriodicRelationships();
-      hier::Connector *new_to_ref = new hier::Connector(ref_to_new.getHead(),
-                                                        ref_to_new.getBase(),
+      ref_to_new->clearNeighborhoods();
+      ref_to_new->getTranspose().clearNeighborhoods();
+      ref_to_new->setHead(new_box_level, true);
+      ref_to_new->getTranspose().setBase(new_box_level, true);
+      oca->findOverlapsByAssumedPartition(*ref_to_new);
+      ref_to_new->removePeriodicRelationships();
+      hier::Connector *new_to_ref = new hier::Connector(ref_to_new->getHead(),
+                                                        ref_to_new->getBase(),
                                                         hier::Connector::convertHeadWidthToBase(
-                                                           ref_to_new.getHead().getRefinementRatio(),
-                                                           ref_to_new.getBase().getRefinementRatio(),
-                                                           ref_to_new.getConnectorWidth() ));
+                                                           ref_to_new->getHead().getRefinementRatio(),
+                                                           ref_to_new->getBase().getRefinementRatio(),
+                                                           ref_to_new->getConnectorWidth() ));
       oca->findOverlaps(*new_to_ref);
-      ref_to_new.setTranspose(new_to_ref, true);
+      ref_to_new->setTranspose(new_to_ref, true);
    }
 
    t_renumber_boxes->stop();

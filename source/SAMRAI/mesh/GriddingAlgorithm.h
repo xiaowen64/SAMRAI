@@ -846,7 +846,7 @@ private:
    void
    renumberBoxes(
       hier::BoxLevel& new_box_level,
-      hier::Connector& ref_to_new,
+      hier::Connector* ref_to_new,
       bool sort_by_corners,
       bool sequentialize_global_indices ) const;
 
