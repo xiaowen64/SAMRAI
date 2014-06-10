@@ -872,7 +872,7 @@ protected:
     */
    void
    registerSingletonSubclassInstance(
-      Statistician* subclass_instance);
+      Statistician * subclass_instance);
 
    /**
     * During finalize() check statistic information on all processors

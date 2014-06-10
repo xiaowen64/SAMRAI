@@ -49,7 +49,7 @@ public:
     * The ghost cell width, depth (number of components), and fine boundary
     * representation arguments give the defaults for all edge data objects
     * created with this factory.
-    * 
+    *
     * The directions vector describes the coordinate directions for which
     * data will be allocated on the sides of cells in the grid. A value of
     * 1 indicates that data will be allocated for that coordinate direction,

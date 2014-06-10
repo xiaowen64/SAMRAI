@@ -289,7 +289,7 @@ public:
     * data interpolation operations.  Default is to return
     * zero, assuming no user-defined operations provided.
     */
-   virtual IntVector getRefineOpStencilWidth( const Dimension &dim ) const
+   virtual IntVector getRefineOpStencilWidth(const Dimension& dim) const
    {
       return IntVector(dim, 0);
    }
@@ -333,7 +333,7 @@ public:
     * data interpolation operations.  Default is to return
     * zero, assuming no user-defined operations provided.
     */
-   virtual IntVector getCoarsenOpStencilWidth( const Dimension &dim ) const
+   virtual IntVector getCoarsenOpStencilWidth(const Dimension& dim) const
    {
       return IntVector(dim, 0);
    }

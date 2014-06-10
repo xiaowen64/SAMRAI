@@ -78,7 +78,7 @@ void
 Transformation::transform(Box& box) const
 {
    TBOX_ASSERT(box.getBlockId() == d_begin_block ||
-               d_begin_block == BlockId::invalidId());
+      d_begin_block == BlockId::invalidId());
    box.rotate(d_rotation);
    box.shift(d_offset);
    if (d_begin_block != d_end_block) {
@@ -98,7 +98,7 @@ Transformation::inverseTransform(
    Box& box) const
 {
    TBOX_ASSERT(box.getBlockId() == d_end_block ||
-               d_end_block == BlockId::invalidId());
+      d_end_block == BlockId::invalidId());
    IntVector reverse_offset(d_offset.getDim());
    calculateReverseShift(reverse_offset, d_offset, d_rotation);
 
@@ -124,12 +124,12 @@ Transformation::getInverseTransformation() const
    calculateReverseShift(inv_offset, d_offset, d_rotation);
 
    RotationIdentifier inv_rotate =
-       getReverseRotationIdentifier(d_rotation, dim);
+      getReverseRotationIdentifier(d_rotation, dim);
 
-   return (Transformation(inv_rotate,
-                          inv_offset,
-                          d_end_block,
-                          d_begin_block));
+   return Transformation(inv_rotate,
+      inv_offset,
+      d_end_block,
+      d_begin_block);
 }
 
 /*
@@ -160,7 +160,7 @@ Transformation::getRotationIdentifier(
       }
       if (is_error) {
          TBOX_ERROR("Rotation_input " << rotation_string[0]
-            << " is invalid.\n");
+                                      << " is invalid.\n");
       }
    } else if (dim.getValue() == 2) {
       if (rotation_string[0] == "I_UP") {
@@ -192,9 +192,9 @@ Transformation::getRotationIdentifier(
       }
       if (is_error) {
          TBOX_ERROR("Transformation::getRotationIdentifier "
-                                      << rotation_string[0] << " "
-                                      << rotation_string[1] << " "
-                                      << " is invalid.\n");
+            << rotation_string[0] << " "
+            << rotation_string[1] << " "
+            << " is invalid.\n");
       }
 
    } else if (dim.getValue() == 3) {
@@ -372,10 +372,10 @@ Transformation::getRotationIdentifier(
 
       if (is_error) {
          TBOX_ERROR("Transformation::getRotationIdentifier "
-                                      << rotation_string[0] << " "
-                                      << rotation_string[1] << " "
-                                      << rotation_string[2]
-                                      << " is invalid.\n");
+            << rotation_string[0] << " "
+            << rotation_string[1] << " "
+            << rotation_string[2]
+            << " is invalid.\n");
       }
    } else {
       TBOX_ERROR(
@@ -544,11 +544,9 @@ Transformation::calculateReverseShift(
    } else if (dim.getValue() == 1) {
       if (rotation == IUP) {
          back_shift = -shift;
-      }
-      else if (rotation == IDOWN) {
+      } else if (rotation == IDOWN) {
          back_shift = shift;
-      }
-      else {
+      } else {
          TBOX_ERROR("Transformation::calculateReverseShift error...\n"
             << " Invalid RotationIdentifier value given" << std::endl);
       }
@@ -695,8 +693,7 @@ Transformation::rotateIndex(
    if (dim.getValue() == 1) {
       if (rotation == IUP) {
          return;
-      }
-      else if (rotation == IDOWN) {
+      } else if (rotation == IDOWN) {
          index[0] = -index[0] - 1;
       }
    } else if (dim.getValue() == 2) {

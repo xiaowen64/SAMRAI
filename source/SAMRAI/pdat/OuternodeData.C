@@ -104,7 +104,7 @@ OuternodeData<TYPE>::dataExists(
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 OuternodeData<TYPE>::getPointer(
    int face_normal,
    int side,
@@ -118,7 +118,7 @@ OuternodeData<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 OuternodeData<TYPE>::getPointer(
    int face_normal,
    int side,

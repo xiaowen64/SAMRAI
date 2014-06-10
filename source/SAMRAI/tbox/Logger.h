@@ -236,7 +236,7 @@ private:
 
    // Unimplemented assignment operator.
    Logger&
-      operator = (
+   operator = (
       const Logger& rhs);
 
    /*!

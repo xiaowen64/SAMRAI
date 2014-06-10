@@ -159,8 +159,7 @@ ConvDiff::ConvDiff(
 
       d_bdry_edge_val.resize(NUM_2D_EDGES);
       tbox::MathUtilities<double>::setVectorToSignalingNaN(d_bdry_edge_val);
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       d_scalar_bdry_face_conds.resize(NUM_3D_FACES);
       for (int fi = 0; fi < NUM_3D_FACES; ++fi) {
          d_scalar_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
@@ -234,8 +233,7 @@ ConvDiff::ConvDiff(
                   i, d_scalar_bdry_node_conds[i]);
          }
       }
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       for (int i = 0; i < NUM_3D_FACES; ++i) {
          if (d_scalar_bdry_face_conds[i] == BdryCond::REFLECT) {
             d_scalar_bdry_face_conds[i] = BdryCond::FLOW;
@@ -420,8 +418,7 @@ void ConvDiff::initializeDataOnPatch(
             d_val_outside,
             d_center, d_radius,
             NEQU);
-      }
-      else if (d_dim == tbox::Dimension(3)) {
+      } else if (d_dim == tbox::Dimension(3)) {
          SAMRAI_F77_FUNC(initsphere3d, INITSPHERE3D) (dx, xlo, xhi,
             ifirst(0), ilast(0), ifirst(1), ilast(1),
             ifirst(2), ilast(2),
@@ -472,8 +469,7 @@ double ConvDiff::computeStableDtOnPatch(
 
    if (d_dim == tbox::Dimension(2)) {
       stabdt = d_cfl * ((*dx) * (*dx));
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       stabdt = d_cfl * ((*dx) * (*dx) * (*dx));
    }
 
@@ -551,8 +547,7 @@ void ConvDiff::singleStep(
          prim_var_updated->getPointer(),
          function_eval->getPointer(),
          NEQU);
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       SAMRAI_F77_FUNC(computerhs3d, COMPUTERHS3D) (ifirst(0), ilast(0), ifirst(1),
          ilast(1),
          ifirst(2), ilast(2),
@@ -583,8 +578,7 @@ void ConvDiff::singleStep(
          prim_var_fixed->getPointer(),
          function_eval->getPointer(),
          NEQU);
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       SAMRAI_F77_FUNC(rkstep3d, RKSTEP3D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          d_nghosts(0), d_nghosts(1),
@@ -644,8 +638,7 @@ void ConvDiff::tagGradientDetectorCells(
          true,
          d_tolerance,
          NEQU);
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       SAMRAI_F77_FUNC(tagcells3d, TAGCELLS3D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          var_ghosts(0), var_ghosts(1),
@@ -849,8 +842,7 @@ void ConvDiff::printClassData(
          os << "       d_node_bdry_edge[" << j << "] = "
             << d_node_bdry_edge[j] << endl;
       }
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       for (j = 0; j < static_cast<int>(d_scalar_bdry_face_conds.size()); ++j) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
             << d_scalar_bdry_face_conds[j] << endl;
@@ -1006,8 +998,7 @@ void ConvDiff::getFromInput(
                d_scalar_bdry_edge_conds,
                d_scalar_bdry_node_conds,
                periodic);
-         }
-         else if (d_dim == tbox::Dimension(3)) {
+         } else if (d_dim == tbox::Dimension(3)) {
             appu::CartesianBoundaryUtilities3::getFromInput(this,
                boundary_db,
                d_scalar_bdry_face_conds,
@@ -1063,8 +1054,7 @@ void ConvDiff::putToRestart(
 
    if (d_dim == tbox::Dimension(2)) {
       restart_db->putDoubleVector("d_bdry_edge_val", d_bdry_edge_val);
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       restart_db->putIntegerVector("d_scalar_bdry_face_conds",
          d_scalar_bdry_face_conds);
       restart_db->putDoubleVector("d_bdry_face_val", d_bdry_face_val);
@@ -1116,8 +1106,7 @@ void ConvDiff::getFromRestart()
 
    if (d_dim == tbox::Dimension(2)) {
       d_bdry_edge_val = db->getDoubleVector("d_bdry_edge_val");
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       d_scalar_bdry_face_conds =
          db->getIntegerVector("d_scalar_bdry_face_conds");
 
@@ -1147,8 +1136,7 @@ void ConvDiff::readDirichletBoundaryDataEntry(
          db_name,
          bdry_location_index,
          d_bdry_edge_val);
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       readStateDataEntry(db,
          db_name,
          bdry_location_index,
@@ -1169,8 +1157,7 @@ void ConvDiff::readNeumannBoundaryDataEntry(
          db_name,
          bdry_location_index,
          d_bdry_edge_val);
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       readStateDataEntry(db,
          db_name,
          bdry_location_index,
@@ -1217,8 +1204,7 @@ void ConvDiff::checkBoundaryData(
    if (d_dim == tbox::Dimension(2)) {
       TBOX_ASSERT(btype == Bdry::EDGE2D ||
          btype == Bdry::NODE2D);
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       TBOX_ASSERT(btype == Bdry::FACE3D ||
          btype == Bdry::EDGE3D ||
          btype == Bdry::NODE3D);
@@ -1243,30 +1229,29 @@ void ConvDiff::checkBoundaryData(
       if (d_dim == tbox::Dimension(2)) {
          if (btype == Bdry::EDGE2D) {
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_2D_EDGES);
+               NUM_2D_EDGES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else { // btype == Bdry::NODE2D
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_2D_NODES);
+               NUM_2D_NODES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_edge[bloc];
          }
-      }
-      else if (d_dim == tbox::Dimension(3)) {
+      } else if (d_dim == tbox::Dimension(3)) {
          if (btype == Bdry::FACE3D) {
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_3D_FACES);
+               NUM_3D_FACES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else if (btype == Bdry::EDGE3D) {
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_3D_EDGES);
+               NUM_3D_EDGES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_edge_bdry_face[bloc];
          } else { // btype == Bdry::NODE3D
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_3D_NODES);
+               NUM_3D_NODES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_face[bloc];
          }
@@ -1286,8 +1271,7 @@ void ConvDiff::checkBoundaryData(
                bbox,
                bscalarcase,
                d_bdry_edge_val[refbdryloc]);
-      }
-      else if (d_dim == tbox::Dimension(3)) {
+      } else if (d_dim == tbox::Dimension(3)) {
          num_bad_values =
             appu::CartesianBoundaryUtilities3::checkBdryData(
                d_primitive_vars->getName(),

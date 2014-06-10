@@ -333,7 +333,7 @@ public:
       const hier::BoxOverlap& overlap);
 
    /*!
-    * @brief Unpack data from stream and add into this patch data object 
+    * @brief Unpack data from stream and add into this patch data object
     * over the specified box overlap region.  The overlap must be an
     * CellOverlap of the same DIM.
     */

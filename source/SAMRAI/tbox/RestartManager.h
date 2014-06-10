@@ -270,7 +270,7 @@ protected:
     */
    void
    registerSingletonSubclassInstance(
-      RestartManager* subclass_instance);
+      RestartManager * subclass_instance);
 
 private:
    // Unimplemented copy constructor.

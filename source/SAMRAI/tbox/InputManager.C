@@ -42,7 +42,7 @@ StartupShutdownManager::Handler InputManager::s_finalize_handler(
  *************************************************************************
  */
 
-InputManager*
+InputManager *
 InputManager::getManager()
 {
    if (!s_manager_instance) {

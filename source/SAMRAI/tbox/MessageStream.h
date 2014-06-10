@@ -69,7 +69,7 @@ public:
    MessageStream(
       const size_t num_bytes,
       const StreamMode mode,
-      const void *data_to_read = 0,
+      const void* data_to_read = 0,
       bool deep_copy = true);
 
    /*!
@@ -113,8 +113,7 @@ public:
    {
       if (d_mode == Read) {
          return static_cast<const void *>(d_read_buffer);
-      }
-      else {
+      } else {
          return &d_write_buffer[0];
       }
    }
@@ -141,7 +140,6 @@ public:
    {
       TBOX_ASSERT(writeMode());
       d_grow_as_needed = true;
-      return;
    }
 
    /*!
@@ -207,11 +205,11 @@ public:
     */
    void
    pack(
-      const MessageStream &other )
+      const MessageStream& other)
    {
       TBOX_ASSERT(writeMode());
       if (other.getCurrentSize() > 0) {
-         copyDataIn( other.getBufferStart(), other.getCurrentSize() );
+         copyDataIn(other.getBufferStart(), other.getCurrentSize());
       }
    }
 
@@ -248,7 +246,7 @@ public:
    template<typename DATA_TYPE>
    void
    unpack(
-      DATA_TYPE * data,
+      DATA_TYPE* data,
       unsigned int size = 1)
    {
       TBOX_ASSERT(readMode());
@@ -315,7 +313,6 @@ public:
    }
 
 private:
-
    /*!
     * @brief Copy data into the stream, advancing the stream pointer.
     *
@@ -325,20 +322,19 @@ private:
     * @pre growAsNeeded() || canCopyIn(num_bytes)
     */
    void copyDataIn(
-      const void *input_data,
+      const void* input_data,
       const size_t num_bytes)
    {
-      if ( !growAsNeeded() ) {
+      if (!growAsNeeded()) {
          TBOX_ASSERT(canCopyIn(num_bytes));
       }
-      if ( num_bytes > 0 ) {
-         d_write_buffer.insert( d_write_buffer.end(),
-                                static_cast<const char*>(input_data),
-                                static_cast<const char*>(input_data) + num_bytes );
+      if (num_bytes > 0) {
+         d_write_buffer.insert(d_write_buffer.end(),
+            static_cast<const char *>(input_data),
+            static_cast<const char *>(input_data) + num_bytes);
          d_buffer_size = d_write_buffer.size();
          d_buffer_index += num_bytes;
       }
-      return;
    }
 
    /*!
@@ -350,13 +346,12 @@ private:
     * @pre canCopyOut(num_bytes)
     */
    void copyDataOut(
-      void *output_data,
+      void* output_data,
       const size_t num_bytes)
    {
       TBOX_ASSERT(canCopyOut(num_bytes));
       memcpy(output_data, &d_read_buffer[d_buffer_index], num_bytes);
       d_buffer_index += num_bytes;
-      return;
    }
 
    MessageStream(
@@ -380,7 +375,7 @@ private:
     * shallow-copy Read mode, or the internal copy of the externally supplied
     * memory to read from in deep-copy Read mode.
     */
-   const char *d_read_buffer;
+   const char* d_read_buffer;
 
    /*!
     * @brief Number of bytes in the buffer.

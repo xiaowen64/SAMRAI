@@ -140,7 +140,7 @@ CartesianFaceDoubleWeightedAverage::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianFaceDoubleWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const
+CartesianFaceDoubleWeightedAverage::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }

@@ -67,7 +67,7 @@ EdgeData<TYPE>::getDepth() const
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 EdgeData<TYPE>::getPointer(
    int axis,
    int depth)
@@ -79,7 +79,7 @@ EdgeData<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 EdgeData<TYPE>::getPointer(
    int axis,
    int depth) const
@@ -300,7 +300,6 @@ EdgeData<TYPE>::copyWithRotation(
    hier::Transformation back_trans(back_rotate, back_shift,
                                    rotatebox.getBlockId(),
                                    getBox().getBlockId());
-
 
    for (int i = 0; i < dim.getValue(); ++i) {
       const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);

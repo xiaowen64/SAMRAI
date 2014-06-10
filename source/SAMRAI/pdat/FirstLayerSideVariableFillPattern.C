@@ -173,7 +173,7 @@ FirstLayerSideVariableFillPattern::computeFillBoxesOverlap(
    computeStencilBoxes(stencil_boxes, patch_box);
 
    std::vector<hier::BoxContainer> overlap_boxes(dim.getValue());
-   for (int d = 0; d < dim.getValue(); ++d) {  
+   for (int d = 0; d < dim.getValue(); ++d) {
 
       /*
        * This is the equivalent of converting every box in overlap_boxes
@@ -199,8 +199,8 @@ FirstLayerSideVariableFillPattern::computeFillBoxesOverlap(
    }
 
    return boost::make_shared<SideOverlap>(
-      overlap_boxes,
-      hier::Transformation(hier::IntVector::getZero(dim)));
+             overlap_boxes,
+             hier::Transformation(hier::IntVector::getZero(dim)));
 }
 
 }

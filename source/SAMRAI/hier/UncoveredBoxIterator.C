@@ -16,7 +16,7 @@ namespace hier {
 
 UncoveredBoxIterator::UncoveredBoxIterator(
    const PatchHierarchy* hierarchy,
-   bool begin) :
+   bool begin):
    d_hierarchy(hierarchy),
    d_uncovered_boxes_itr(d_uncovered_boxes.begin()),
    d_uncovered_boxes_itr_end(d_uncovered_boxes.end()),
@@ -32,8 +32,7 @@ UncoveredBoxIterator::UncoveredBoxIterator(
       // for uncovered boxes from level 0.
       d_level_num = -1;
       findNextFinestUncoveredBoxes();
-   }
-   else {
+   } else {
       // The iterator ends at the end of the boxes on the finest level which,
       // by definition, are uncovered.
       d_level_num = d_finest_level_num;
@@ -45,7 +44,7 @@ UncoveredBoxIterator::UncoveredBoxIterator(
 }
 
 UncoveredBoxIterator::UncoveredBoxIterator(
-   const UncoveredBoxIterator& other) :
+   const UncoveredBoxIterator& other):
    d_hierarchy(other.d_hierarchy),
    d_level_num(other.d_level_num),
    d_uncovered_boxes(other.d_uncovered_boxes),
@@ -92,7 +91,7 @@ UncoveredBoxIterator::operator * () const
    return *d_item;
 }
 
-const std::pair<boost::shared_ptr<Patch>, Box>*
+const std::pair<boost::shared_ptr<Patch>, Box> *
 UncoveredBoxIterator::operator -> () const
 {
    return d_item;
@@ -105,7 +104,7 @@ UncoveredBoxIterator::operator == (
    // Frist check and see if the iterators are working on the same hierarchies
    // and levels.  If not then they are not equal.
    bool result = d_hierarchy == rhs.d_hierarchy &&
-                 d_level_num == rhs.d_level_num;
+      d_level_num == rhs.d_level_num;
    if (result) {
       // Now check if the iterators are at the same point in the level.  If
       // they are both at the end of the level, then they are equal.  If they
@@ -114,16 +113,14 @@ UncoveredBoxIterator::operator == (
       // they are not equal.
       if (d_uncovered_boxes_itr == d_uncovered_boxes_itr_end &&
           rhs.d_uncovered_boxes_itr == rhs.d_uncovered_boxes_itr_end) {
-      }
-      else if (d_uncovered_boxes_itr != d_uncovered_boxes_itr_end &&
-               rhs.d_uncovered_boxes_itr != rhs.d_uncovered_boxes_itr_end) {
+      } else if (d_uncovered_boxes_itr != d_uncovered_boxes_itr_end &&
+                 rhs.d_uncovered_boxes_itr != rhs.d_uncovered_boxes_itr_end) {
          result =
             (d_cur_overlapping_level_box->isSpatiallyEqual(
-               *rhs.d_cur_overlapping_level_box)) &&
+                *rhs.d_cur_overlapping_level_box)) &&
             (d_uncovered_boxes_itr->isSpatiallyEqual(
-               *rhs.d_uncovered_boxes_itr));
-      }
-      else {
+                *rhs.d_uncovered_boxes_itr));
+      } else {
          result = false;
       }
    }
@@ -173,15 +170,13 @@ UncoveredBoxIterator::incrementIterator()
       d_item->first =
          d_hierarchy->getPatchLevel(d_level_num)->getPatch(
             d_cur_overlapping_level_box->getBoxId());
-   }
-   else {
+   } else {
       ++d_uncovered_boxes_itr;
       if (d_uncovered_boxes_itr == d_uncovered_boxes_itr_end) {
          if (d_level_num != d_finest_level_num) {
             findNextFinestUncoveredBoxes();
          }
-      }
-      else {
+      } else {
          findOverlappedPatch();
       }
    }
@@ -212,7 +207,7 @@ UncoveredBoxIterator::findNextFinestUncoveredBoxes()
       // next.  Use a width of 0 to get actual overlaps.
       IntVector width(d_hierarchy->getDim(), 0);
       boost::shared_ptr<PatchLevel> next_level =
-         d_hierarchy->getPatchLevel(d_level_num+1);
+         d_hierarchy->getPatchLevel(d_level_num + 1);
       const Connector& this_to_next =
          this_level->findConnector(
             *next_level,
@@ -304,23 +299,20 @@ UncoveredBoxIterator::findOverlappedPatch()
       bool skip_box = false;
       BoxContainer::const_iterator future = d_uncovered_boxes_itr;
       ++future;
-      for (; future != d_uncovered_boxes_itr_end; ++future) {
+      for ( ; future != d_uncovered_boxes_itr_end; ++future) {
          if (future->isSpatiallyEqual(cur_box)) {
             skip_box = true;
             break;
-         }
-         else if (future->intersects(cur_box)) {
+         } else if (future->intersects(cur_box)) {
             BoxContainer cur(cur_box);
             BoxContainer fut(*future);
             cur.removeIntersections(fut);
             if (cur.isEmpty()) {
                skip_box = true;
                break;
-            }
-            else if (cur.size() == 1) {
+            } else if (cur.size() == 1) {
                cur_box = cur.front();
-            }
-            else {
+            } else {
                cur_box = cur.front();
                cur.popFront();
                for (BoxContainer::const_iterator cur_itr(cur.begin());
@@ -343,8 +335,7 @@ UncoveredBoxIterator::findOverlappedPatch()
          while (true) {
             if (next == d_end_overlapping_level_boxes) {
                break;
-            }
-            else {
+            } else {
                ++d_cur_overlapping_level_box;
                next = d_cur_overlapping_level_box;
                ++next;
@@ -352,8 +343,7 @@ UncoveredBoxIterator::findOverlappedPatch()
          }
          incrementIterator();
          return;
-      }
-      else {
+      } else {
          d_overlapping_level_boxes.clear();
          d_level_boxes.findOverlapBoxes(d_overlapping_level_boxes, cur_box);
       }
@@ -366,8 +356,7 @@ UncoveredBoxIterator::findOverlappedPatch()
       d_item->first =
          this_level->getPatch(d_cur_overlapping_level_box->getBoxId());
       d_item->second = cur_box;
-   }
-   else {
+   } else {
       d_item =
          new std::pair<boost::shared_ptr<Patch>, Box>(
             this_level->getPatch(d_cur_overlapping_level_box->getBoxId()),

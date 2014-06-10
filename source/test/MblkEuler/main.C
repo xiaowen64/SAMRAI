@@ -109,11 +109,11 @@ int main(
    }
 
 #ifdef _OPENMP
-      tbox::plog << "Compiled with OpenMP version " << _OPENMP
-                 << ".  Running with " << omp_get_max_threads() << " threads."
-                 << std::endl;
+   tbox::plog << "Compiled with OpenMP version " << _OPENMP
+              << ".  Running with " << omp_get_max_threads() << " threads."
+              << std::endl;
 #else
-      tbox::plog << "Compiled without OpenMP.\n";
+   tbox::plog << "Compiled without OpenMP.\n";
 #endif
 
    tbox::plog << "input_filename       = " << input_filename << endl;
@@ -280,8 +280,8 @@ int main(
          input_db->getDatabase("StandardTagAndInitialize")));
 
    boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
-     new mesh::BergerRigoutsos(dim,
-     input_db->getDatabase("BergerRigoutsos")));
+      new mesh::BergerRigoutsos(dim,
+         input_db->getDatabase("BergerRigoutsos")));
 
    boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
       new mesh::TreeLoadBalancer(

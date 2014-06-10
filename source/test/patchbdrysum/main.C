@@ -233,7 +233,7 @@ int main(
        */
       boost::shared_ptr<BergerRigoutsos> box_generator(
          new BergerRigoutsos(dim,
-         input_db->getDatabase("BergerRigoutsos")));
+            input_db->getDatabase("BergerRigoutsos")));
 
       boost::shared_ptr<TreeLoadBalancer> load_balancer(
          new TreeLoadBalancer(dim,

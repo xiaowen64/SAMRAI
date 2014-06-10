@@ -178,8 +178,7 @@ CellGeometry::transform(
          CellIndex tmp_index(index);
          index(0) = -tmp_index(0) - 1;
       }
-   }
-   else if (dim.getValue() == 2) {
+   } else if (dim.getValue() == 2) {
       const int rotation_num = static_cast<int>(rotation);
       if (rotation_num > 3) {
          TBOX_ERROR("CellGeometry::transform invalid 2D RotationIdentifier.");

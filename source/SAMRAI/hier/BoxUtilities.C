@@ -9,7 +9,7 @@
  ************************************************************************/
 #include "SAMRAI/hier/BoxUtilities.h"
 
-#include "SAMRAI/hier/BoxContainer.h" 
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -17,7 +17,6 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #include <vector>
-
 
 namespace SAMRAI {
 namespace hier {
@@ -249,7 +248,7 @@ BoxUtilities::checkBoxConstraints(
 
                test_box.lower(id) = box.upper(id) + 1;
 
-               test_boxes = BoxContainer(test_box); 
+               test_boxes = BoxContainer(test_box);
                test_boxes.intersectBoxes(border_boxes);
                test_boxes.simplify();
 
@@ -762,7 +761,7 @@ BoxUtilities::growBoxWithinDomain(
          outside_boxes.unorder();
          outside_boxes.intersectBoxes(test_region);
 
-         BoxContainer::iterator lb = outside_boxes.begin(); 
+         BoxContainer::iterator lb = outside_boxes.begin();
          int grow_lo = try_box.lower(id) - grow;
          for ( ; lb != outside_boxes.end(); ++lb) {
             grow_lo =

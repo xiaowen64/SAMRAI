@@ -356,7 +356,6 @@ public:
    }
 
 private:
-
    boost::shared_ptr<hier::VariableContext> d_data_context;
 };
 

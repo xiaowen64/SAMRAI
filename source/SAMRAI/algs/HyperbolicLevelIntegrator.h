@@ -30,7 +30,6 @@
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/tbox/Timer.h"
 
-
 #include "boost/shared_ptr.hpp"
 #include <list>
 #include <vector>

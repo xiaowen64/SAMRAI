@@ -27,7 +27,8 @@ RefineOperator::s_finalize_handler(
    RefineOperator::finalizeCallback,
    tbox::StartupShutdownManager::priorityList);
 
-RefineOperator::RefineOperator(const std::string& name):
+RefineOperator::RefineOperator(
+   const std::string& name):
    d_name(name)
 {
    registerInLookupTable(name);
@@ -37,8 +38,6 @@ RefineOperator::~RefineOperator()
 {
    removeFromLookupTable(d_name);
 }
-
-
 
 void
 RefineOperator::registerInLookupTable(

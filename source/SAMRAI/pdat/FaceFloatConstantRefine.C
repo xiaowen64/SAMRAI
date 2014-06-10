@@ -105,7 +105,7 @@ FaceFloatConstantRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-FaceFloatConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
+FaceFloatConstantRefine::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }

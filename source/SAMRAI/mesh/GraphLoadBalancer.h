@@ -35,10 +35,6 @@
 namespace SAMRAI {
 namespace mesh {
 
-
-
-
-
 /*!
  * @brief A graph-based load balance using PT-Scotch to partition patches
  * on a level.
@@ -229,9 +225,8 @@ public:
    }
 
 private:
-
    /*!
-    * @brief Struct to store state of a box before and after communication. 
+    * @brief Struct to store state of a box before and after communication.
     */
 
    struct BoxInTransit {
@@ -243,8 +238,8 @@ private:
        *
        * @param[in] dim
        */
-      explicit BoxInTransit(const tbox::Dimension& dim);
-
+      explicit BoxInTransit(
+         const tbox::Dimension& dim);
 
       /*!
        * @brief Construct new object having the history an existing
@@ -254,7 +249,7 @@ private:
        *
        * @param[in] box         Provides spatial coordinates for new box
        *
-       * @param[in] rank        Rank of new box 
+       * @param[in] rank        Rank of new box
        *
        * @param[in] local_id    LocalId for new box
        */
@@ -268,7 +263,7 @@ private:
        * @brief Assignment operator
        *
        * @param[in] other
-       */      
+       */
       BoxInTransit&
       operator = (
          const BoxInTransit& other)
@@ -313,7 +308,7 @@ private:
        */
       void
       putToMessageStream(
-         tbox::MessageStream &msg) const;
+         tbox::MessageStream& msg) const;
 
       /*!
        * @brief Set attributes according to data in a MessageStream.
@@ -322,7 +317,7 @@ private:
        */
       void
       getFromMessageStream(
-         tbox::MessageStream &msg);
+         tbox::MessageStream& msg);
 
       hier::Box d_box;
       hier::Box d_orig_box;
@@ -350,7 +345,7 @@ private:
    renumberBoxes(
       hier::BoxLevel& balance_box_level,
       hier::Connector& anchor_to_balance,
-      const hier::MappingConnectorAlgorithm &mca) const;
+      const hier::MappingConnectorAlgorithm& mca) const;
 
    /*!
     * @brief Chop Boxes in a box_level.
@@ -366,7 +361,8 @@ private:
     * @param[in] mca MappingConnectorAlgorithm with timer set
     * in the calling context.
     */
-   void chopBoxes(
+   void
+   chopBoxes(
       hier::BoxLevel& box_level,
       hier::Connector* anchor_to_level,
       const hier::IntVector& max_size) const;
@@ -384,10 +380,11 @@ private:
     * @param[in] mca MappingConnectorAlgorithm with timer set
     * in the calling context.
     */
-   void coalesceBoxLevel(
+   void
+   coalesceBoxLevel(
       hier::BoxLevel& box_level,
       hier::Connector& anchor_to_level,
-      const hier::MappingConnectorAlgorithm &mca) const;
+      const hier::MappingConnectorAlgorithm& mca) const;
 
    /*!
     * @brief Set up the asynchronous communication objects for communicating
@@ -408,12 +405,13 @@ private:
     * @param [in] my_rank
     * @param [in] mpi
     */
-   void setupAsyncCommObjects(
+   void
+   setupAsyncCommObjects(
       tbox::AsyncCommStage& send_stage,
-      std::map<int, tbox::AsyncCommPeer<char>* >& send_comms,
+      std::map<int, tbox::AsyncCommPeer<char> *>& send_comms,
       std::set<int>& send_procs,
       tbox::AsyncCommStage& recv_stage,
-      std::map<int, tbox::AsyncCommPeer<char>* >& recv_comms,
+      std::map<int, tbox::AsyncCommPeer<char> *>& recv_comms,
       const int* old_partition,
       const int* new_partition,
       const int num_boxes,
@@ -426,7 +424,6 @@ private:
    void
    getFromInput(
       const boost::shared_ptr<tbox::Database>& input_db);
-
 
    tbox::Dimension d_dim;
 

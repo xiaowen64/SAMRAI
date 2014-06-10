@@ -828,7 +828,7 @@ void
 VisItDataWriter::registerSparseMaterialNames(
    const std::vector<std::string>& material_names)
 {
-  TBOX_ASSERT(material_names.size() > 0);
+   TBOX_ASSERT(material_names.size() > 0);
 
    /*
     * Check if we have already tried to register materials.
@@ -1622,10 +1622,9 @@ VisItDataWriter::writeHDFFiles(
    d_current_dump_directory_name = "visit_dump.";
    d_current_dump_directory_name += temp_buf;
    if (!d_top_level_directory_name.empty() &&
-       d_top_level_directory_name[d_top_level_directory_name.length()-1] == '/') {
+       d_top_level_directory_name[d_top_level_directory_name.length() - 1] == '/') {
       dump_dirname = d_top_level_directory_name;
-   }
-   else {
+   } else {
       dump_dirname = d_top_level_directory_name + "/";
    }
    dump_dirname = dump_dirname + d_current_dump_directory_name;
@@ -3180,7 +3179,7 @@ VisItDataWriter::writeSummaryToHDFFile(
       boost::shared_ptr<tbox::Database> extents_HDFGroup(
          summary_HDFFilePointer->putDatabase(std::string(temp_buf)));
       hdf_database =
-        BOOST_CAST<tbox::HDFDatabase, tbox::Database>(extents_HDFGroup);
+         BOOST_CAST<tbox::HDFDatabase, tbox::Database>(extents_HDFGroup);
       TBOX_ASSERT(hdf_database);
       hid_t extents_group_id = hdf_database->getGroupId();
 
@@ -3342,7 +3341,7 @@ VisItDataWriter::writeSummaryToHDFFile(
 
                key_string = ipi->d_material_name;
                boost::shared_ptr<tbox::Database>
-                  extents_material_name_HDFGroup;
+               extents_material_name_HDFGroup;
                if (!(ipi->d_is_material_state_variable)) {
                   std::string mname = ipi->d_material_name;
                   // material_name group
@@ -3422,10 +3421,9 @@ VisItDataWriter::writeSummaryToHDFFile(
       if (d_time_step_number == 0) s_summary_file_opened = false;
       std::string path;
       if (!d_top_level_directory_name.empty() &&
-          d_top_level_directory_name[d_top_level_directory_name.length()-1] == '/') {
+          d_top_level_directory_name[d_top_level_directory_name.length() - 1] == '/') {
          path = d_top_level_directory_name + "dumps.visit";
-      }
-      else {
+      } else {
          path = d_top_level_directory_name + "/dumps.visit";
       }
       std::string file = d_current_dump_directory_name + "/"
@@ -3726,7 +3724,7 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
                }
 
                for (hier::BoxContainer::iterator ob_itr = overlap_boxes.begin();
-                    ob_itr != overlap_boxes.end(); ++ob_itr) { 
+                    ob_itr != overlap_boxes.end(); ++ob_itr) {
                   child_parent[child_parent_idx].child =
                      getGlobalPatchNumber(hierarchy, ln + 1,
                         ob_itr->getLocalId().getValue());

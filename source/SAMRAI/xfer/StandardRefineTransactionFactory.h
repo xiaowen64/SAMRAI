@@ -88,7 +88,7 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_box,
       const hier::Box& src_box,
-      const RefineClasses::Data** refine_data,
+      const RefineClasses::Data ** refine_data,
       int item_id,
       const hier::Box& box,       // Default in v 2.x  = hier::Box()
       bool use_time_interpolation = false) const;

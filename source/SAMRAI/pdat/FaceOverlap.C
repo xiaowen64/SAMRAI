@@ -55,7 +55,7 @@ FaceOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
 {
    TBOX_ASSERT(src_boxes.isEmpty());
    TBOX_ASSERT(normal_direction >= 0 &&
-               normal_direction < static_cast<int>(d_dst_boxes.size()));
+      normal_direction < static_cast<int>(d_dst_boxes.size()));
 
    src_boxes = d_dst_boxes[normal_direction];
    int transform_normal = normal_direction;
@@ -72,7 +72,7 @@ FaceOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
             inverse_transform.getOffset();
          for (int d = 0; d < dim.getValue(); ++d) {
             face_inverse_offset[d] =
-               inverse_offset[(normal_direction+d)%dim.getValue()];
+               inverse_offset[(normal_direction + d) % dim.getValue()];
          }
       }
 
@@ -84,15 +84,15 @@ FaceOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
          } else {
             transform_normal = normal_direction;
             FaceGeometry::transform(*bi,
-                                    transform_normal,
-                                    inverse_transform);
+               transform_normal,
+               inverse_transform);
          }
       }
    }
 
    normal_direction = transform_normal;
    TBOX_ASSERT(normal_direction >= 0 &&
-               normal_direction < static_cast<int>(d_dst_boxes.size()));
+      normal_direction < static_cast<int>(d_dst_boxes.size()));
 
 }
 

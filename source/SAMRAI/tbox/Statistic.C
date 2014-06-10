@@ -60,8 +60,7 @@ Statistic::Statistic(
 
    if (stat_type == "PROC_STAT") {
       d_stat_type = PROC_STAT;
-   }
-   else if (stat_type == "PATCH_STAT") {
+   } else if (stat_type == "PATCH_STAT") {
       d_stat_type = PATCH_STAT;
    }
 
@@ -388,7 +387,7 @@ Statistic::printClassData(
          stream << "     sequence[" << is
                 << "]" << std::endl;
 
-         const std::list<Statistic::PatchStatRecord>& psrl = 
+         const std::list<Statistic::PatchStatRecord>& psrl =
             d_patch_array[is].patch_records;
          std::list<Statistic::PatchStatRecord>::const_iterator ilr =
             psrl.begin();

@@ -154,7 +154,7 @@ void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
    TBOX_ASSERT(vardata);
    TBOX_ASSERT(static_cast<int>(bdry_edge_conds.size()) == NUM_2D_EDGES);
    TBOX_ASSERT(static_cast<int>(bdry_edge_values.size()) ==
-               NUM_2D_EDGES * (vardata->getDepth()));
+      NUM_2D_EDGES * (vardata->getDepth()));
 
    if (!s_fortran_constants_stuffed) {
       stuff2dBdryFortConst();
@@ -231,7 +231,7 @@ void SkeletonBoundaryUtilities2::fillNodeBoundaryData(
    TBOX_ASSERT(vardata);
    TBOX_ASSERT(static_cast<int>(bdry_node_conds.size()) == NUM_2D_NODES);
    TBOX_ASSERT(static_cast<int>(bdry_edge_values.size()) ==
-               NUM_2D_EDGES * (vardata->getDepth()));
+      NUM_2D_EDGES * (vardata->getDepth()));
 
    if (!s_fortran_constants_stuffed) {
       stuff2dBdryFortConst();

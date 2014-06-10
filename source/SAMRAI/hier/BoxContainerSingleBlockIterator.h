@@ -29,7 +29,7 @@ namespace hier {
  */
 class BoxContainerSingleBlockIterator
 {
-friend class BoxContainer;
+   friend class BoxContainer;
 
 public:
    //! @brief Destructor

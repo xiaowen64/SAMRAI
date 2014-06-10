@@ -78,7 +78,7 @@ AsyncCommPeer<TYPE>::AsyncCommPeer():
    t_wait_timer(t_default_wait_timer)
 {
    d_report_send_completion[0] = d_report_send_completion[1] = false;
-   if ( ! t_default_wait_timer ) {
+   if (!t_default_wait_timer) {
       /*
        * This should not be needed, but somehow initializeCallback()
        * may not have called yet.
@@ -118,7 +118,7 @@ AsyncCommPeer<TYPE>::AsyncCommPeer(
    t_wait_timer(t_default_wait_timer)
 {
    d_report_send_completion[0] = d_report_send_completion[1] = false;
-   if ( ! t_default_wait_timer ) {
+   if (!t_default_wait_timer) {
       /*
        * This should not be needed, but somehow initializeCallback()
        * may not have called yet.
@@ -245,7 +245,7 @@ bool
 AsyncCommPeer<TYPE>::beginSend(
    const TYPE* buffer,
    int size,
-   bool automatic_push_to_completion_queue )
+   bool automatic_push_to_completion_queue)
 {
    if (getNextTaskOp() != none) {
       TBOX_ERROR("Cannot begin communication while another is in progress.\n"
@@ -270,13 +270,14 @@ void
 AsyncCommPeer<TYPE>::resizeBuffer(
    size_t size)
 {
-   TBOX_ASSERT( !hasPendingRequests() );
+   TBOX_ASSERT(!hasPendingRequests());
 
    if (d_internal_buf_size < size) {
       if (d_internal_buf) {
          d_internal_buf = (FlexData *)realloc(d_internal_buf, size * sizeof(FlexData));
 #ifdef DEBUG_INITIALIZE_UNDEFINED
-         memset(d_internal_buf + d_internal_buf_size, 0, (size - d_internal_buf_size) * sizeof(FlexData));
+         memset(d_internal_buf + d_internal_buf_size, 0,
+            (size - d_internal_buf_size) * sizeof(FlexData));
 #endif
       } else {
 #ifdef DEBUG_INITIALIZE_UNDEFINED
@@ -303,7 +304,7 @@ AsyncCommPeer<TYPE>::resizeBuffer(
 template<class TYPE>
 bool
 AsyncCommPeer<TYPE>::checkSend(
-   bool automatic_push_to_completion_queue )
+   bool automatic_push_to_completion_queue)
 {
    if (getBaseOp() != send) {
       TBOX_ERROR("Cannot check nonexistent send operation.\n"
@@ -483,7 +484,7 @@ AsyncCommPeer<TYPE>::checkSend(
          << ",  mpi_tag = " << d_tag0);
    }
 
-   if ( automatic_push_to_completion_queue && d_next_task_op == none ) {
+   if (automatic_push_to_completion_queue && d_next_task_op == none) {
       pushToCompletionQueue();
    }
 
@@ -499,7 +500,7 @@ AsyncCommPeer<TYPE>::checkSend(
 template<class TYPE>
 bool
 AsyncCommPeer<TYPE>::beginRecv(
-   bool automatic_push_to_completion_queue )
+   bool automatic_push_to_completion_queue)
 {
    if (getNextTaskOp() != none) {
       TBOX_ERROR("Cannot begin communication while another is in progress.\n"
@@ -529,7 +530,7 @@ AsyncCommPeer<TYPE>::beginRecv(
 template<class TYPE>
 bool
 AsyncCommPeer<TYPE>::checkRecv(
-   bool automatic_push_to_completion_queue )
+   bool automatic_push_to_completion_queue)
 {
    if (getBaseOp() != recv) {
       TBOX_ERROR("Cannot check nonexistent receive operation.\n"
@@ -772,7 +773,7 @@ AsyncCommPeer<TYPE>::checkRecv(
          << ",  mpi_tag = " << d_tag0);
    }
 
-   if ( automatic_push_to_completion_queue && d_next_task_op == none ) {
+   if (automatic_push_to_completion_queue && d_next_task_op == none) {
       pushToCompletionQueue();
    }
 
@@ -913,7 +914,7 @@ AsyncCommPeer<TYPE>::getRecvSize() const
  ***********************************************************************
  */
 template<class TYPE>
-const TYPE*
+const TYPE *
 AsyncCommPeer<TYPE>::getRecvData() const
 {
    if (getBaseOp() != recv) {
@@ -938,8 +939,6 @@ AsyncCommPeer<TYPE>::clearRecvData()
    // d_internal_buf.clear();
 }
 
-
-
 /*
  ***********************************************************************
  ***********************************************************************
@@ -947,13 +946,10 @@ AsyncCommPeer<TYPE>::clearRecvData()
 template<class TYPE>
 void
 AsyncCommPeer<TYPE>::setSendTimer(
-   const boost::shared_ptr<Timer> &send_timer )
+   const boost::shared_ptr<Timer>& send_timer)
 {
    t_send_timer = send_timer ? send_timer : t_default_send_timer;
-   return;
 }
-
-
 
 /*
  ***********************************************************************
@@ -962,13 +958,10 @@ AsyncCommPeer<TYPE>::setSendTimer(
 template<class TYPE>
 void
 AsyncCommPeer<TYPE>::setRecvTimer(
-   const boost::shared_ptr<Timer> &recv_timer )
+   const boost::shared_ptr<Timer>& recv_timer)
 {
    t_recv_timer = recv_timer ? recv_timer : t_default_recv_timer;
-   return;
 }
-
-
 
 /*
  ***********************************************************************
@@ -977,13 +970,10 @@ AsyncCommPeer<TYPE>::setRecvTimer(
 template<class TYPE>
 void
 AsyncCommPeer<TYPE>::setWaitTimer(
-   const boost::shared_ptr<Timer> &wait_timer )
+   const boost::shared_ptr<Timer>& wait_timer)
 {
    t_wait_timer = wait_timer ? wait_timer : t_default_wait_timer;
-   return;
 }
-
-
 
 template<class TYPE>
 bool

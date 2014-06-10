@@ -163,7 +163,7 @@ public:
       TBOX_ASSERT((equiv_class_index >= 0) &&
          (equiv_class_index < getNumberOfEquivalenceClasses()));
       return d_refine_classes_data_items[
-         d_equivalence_class_indices[equiv_class_index].front()];
+                d_equivalence_class_indices[equiv_class_index].front()];
    }
 
    /*!

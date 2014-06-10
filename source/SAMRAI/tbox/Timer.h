@@ -131,8 +131,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_system_total / Clock::getClockCycle();
+
 #else
       return 0.0;
+
 #endif
    }
 
@@ -144,8 +146,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_user_total / Clock::getClockCycle();
+
 #else
       return 0.0;
+
 #endif
    }
 
@@ -157,8 +161,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_wallclock_total;
+
 #else
       return 0.0;
+
 #endif
    }
 
@@ -170,8 +176,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_max_wallclock;
+
 #else
       return 0.0;
+
 #endif
    }
 
@@ -183,8 +191,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_system_exclusive / Clock::getClockCycle();
+
 #else
       return 0.0;
+
 #endif
    }
 
@@ -196,8 +206,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_user_exclusive / Clock::getClockCycle();
+
 #else
       return 0.0;
+
 #endif
    }
 
@@ -209,8 +221,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_wallclock_exclusive;
+
 #else
       return 0.0;
+
 #endif
    }
 
@@ -222,8 +236,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_is_active;
+
 #else
       return false;
+
 #endif
    }
 
@@ -235,8 +251,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_is_running;
+
 #else
       return false;
+
 #endif
    }
 
@@ -249,8 +267,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_accesses;
+
 #else
       return 0;
+
 #endif
    }
 

@@ -600,7 +600,7 @@ private:
    int d_depth;
    hier::IntVector d_directions;
 
-   boost::shared_ptr<ArrayData<TYPE> > d_data [SAMRAI::MAX_DIM_VAL];
+   boost::shared_ptr<ArrayData<TYPE> > d_data[SAMRAI::MAX_DIM_VAL];
 };
 
 }

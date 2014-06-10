@@ -172,7 +172,7 @@ int main(
          if (nproc > 1) {
             if (ib == layer0->getMPI().getRank()) {
                layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
-                  layer0->getMPI().getRank()));
+                     layer0->getMPI().getRank()));
             }
          } else {
             layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
@@ -184,7 +184,7 @@ int main(
          if (nproc > 1) {
             if (ib == layer1->getMPI().getRank()) {
                layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib),
-                  layer1->getMPI().getRank()));
+                     layer1->getMPI().getRank()));
             }
          } else {
             layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
@@ -253,7 +253,7 @@ int main(
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            boost::shared_ptr<geom::CartesianPatchGeometry>pgeom(
+            boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
                BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
@@ -262,7 +262,7 @@ int main(
             for (int i = 1; i < dim.getValue(); ++i) {
                face_vol *= dx[i];
             }
-            boost::shared_ptr<pdat::FaceData<double> >data(
+            boost::shared_ptr<pdat::FaceData<double> > data(
                BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
                   patch->getPatchData(fwgt_id)));
             TBOX_ASSERT(data);
@@ -284,21 +284,21 @@ int main(
                      for (ic = plo0; ic <= phi0; ++ic) {
                         int array_lo[2] = { ic, plo1 };
                         fi = pdat::FaceIndex(hier::Index(dim, array_lo),
-                                pdat::FaceIndex::Y,
-                                pdat::FaceIndex::Lower);
+                              pdat::FaceIndex::Y,
+                              pdat::FaceIndex::Lower);
                         (*data)(fi) *= 0.5;
                      }
                      // left and right face boundaries
                      for (ic = plo1; ic <= phi1; ++ic) {
                         int array_lo[2] = { plo0, ic };
                         fi = pdat::FaceIndex(hier::Index(dim, array_lo),
-                                pdat::FaceIndex::X,
-                                pdat::FaceIndex::Lower);
+                              pdat::FaceIndex::X,
+                              pdat::FaceIndex::Lower);
                         (*data)(fi) *= 0.5;
                         int array_up[2] = { phi0, ic };
                         fi = pdat::FaceIndex(hier::Index(dim, array_up),
-                                pdat::FaceIndex::X,
-                                pdat::FaceIndex::Upper);
+                              pdat::FaceIndex::X,
+                              pdat::FaceIndex::Upper);
                         (*data)(fi) *= 0.5;
                      }
                   } else {
@@ -306,26 +306,26 @@ int main(
                      for (ic = plo0; ic <= phi0; ++ic) {
                         int array_lo[2] = { ic, plo1 };
                         fi = pdat::FaceIndex(hier::Index(dim, array_lo),
-                                pdat::FaceIndex::Y,
-                                pdat::FaceIndex::Lower);
+                              pdat::FaceIndex::Y,
+                              pdat::FaceIndex::Lower);
                         (*data)(fi) = 0.0;
                         int array_up[2] = { ic, phi1 };
                         fi = pdat::FaceIndex(hier::Index(dim, array_up),
-                                pdat::FaceIndex::Y,
-                                pdat::FaceIndex::Upper);
+                              pdat::FaceIndex::Y,
+                              pdat::FaceIndex::Upper);
                         (*data)(fi) *= 0.5;
                      }
                      // left and right face boundaries
                      for (ic = plo1; ic <= phi1; ++ic) {
                         int array_lo[2] = { plo0, ic };
                         fi = pdat::FaceIndex(hier::Index(dim, array_lo),
-                                pdat::FaceIndex::X,
-                                pdat::FaceIndex::Lower);
+                              pdat::FaceIndex::X,
+                              pdat::FaceIndex::Lower);
                         (*data)(fi) *= 0.5;
                         int array_up[2] = { phi0, ic };
                         fi = pdat::FaceIndex(hier::Index(dim, array_up),
-                                pdat::FaceIndex::X,
-                                pdat::FaceIndex::Upper);
+                              pdat::FaceIndex::X,
+                              pdat::FaceIndex::Upper);
                         (*data)(fi) *= 0.5;
                      }
                   }
@@ -335,21 +335,21 @@ int main(
                      for (ic = plo0; ic <= phi0; ++ic) {
                         int array_lo[2] = { ic, plo1 };
                         fi = pdat::FaceIndex(hier::Index(dim, array_lo),
-                                pdat::FaceIndex::Y,
-                                pdat::FaceIndex::Lower);
+                              pdat::FaceIndex::Y,
+                              pdat::FaceIndex::Lower);
                         (*data)(fi) *= 1.5;
                         int array_up[2] = { ic, phi1 };
                         fi = pdat::FaceIndex(hier::Index(dim, array_up),
-                                pdat::FaceIndex::Y,
-                                pdat::FaceIndex::Upper);
+                              pdat::FaceIndex::Y,
+                              pdat::FaceIndex::Upper);
                         (*data)(fi) *= 1.5;
                      }
                      // left coarse-fine face boundaries
                      for (ic = plo1; ic <= phi1; ++ic) {
                         int array_lo[2] = { plo0, ic };
                         fi = pdat::FaceIndex(hier::Index(dim, array_lo),
-                                pdat::FaceIndex::X,
-                                pdat::FaceIndex::Lower);
+                              pdat::FaceIndex::X,
+                              pdat::FaceIndex::Lower);
                         (*data)(fi) *= 1.5;
                      }
                   } else {
@@ -357,32 +357,31 @@ int main(
                      for (ic = plo0; ic <= phi0; ++ic) {
                         int array_lo[2] = { ic, plo1 };
                         fi = pdat::FaceIndex(hier::Index(dim, array_lo),
-                                pdat::FaceIndex::Y,
-                                pdat::FaceIndex::Lower);
+                              pdat::FaceIndex::Y,
+                              pdat::FaceIndex::Lower);
                         (*data)(fi) *= 1.5;
                         int array_up[2] = { ic, phi1 };
                         fi = pdat::FaceIndex(hier::Index(dim, array_up),
-                                pdat::FaceIndex::Y,
-                                pdat::FaceIndex::Upper);
+                              pdat::FaceIndex::Y,
+                              pdat::FaceIndex::Upper);
                         (*data)(fi) *= 1.5;
                      }
                      // left and right coarse-fine face boundaries
                      for (ic = plo1; ic <= phi1; ++ic) {
                         int array_lo[2] = { plo0, ic };
                         fi = pdat::FaceIndex(hier::Index(dim, array_lo),
-                                pdat::FaceIndex::X,
-                                pdat::FaceIndex::Lower);
+                              pdat::FaceIndex::X,
+                              pdat::FaceIndex::Lower);
                         (*data)(fi) = 0.0;
                         int array_up[2] = { phi0, ic };
                         fi = pdat::FaceIndex(hier::Index(dim, array_up),
-                                pdat::FaceIndex::X,
-                                pdat::FaceIndex::Upper);
+                              pdat::FaceIndex::X,
+                              pdat::FaceIndex::Upper);
                         (*data)(fi) *= 1.5;
                      }
                   }
                }
-            }
-            else {
+            } else {
                int plo0 = patch->getBox().lower(0);
                int phi0 = patch->getBox().upper(0);
                int plo1 = patch->getBox().lower(1);
@@ -398,178 +397,175 @@ int main(
                      // front and back boundary faces
                      for (ic0 = plo0; ic0 <= phi0; ++ic0) {
                         for (ic1 = plo1; ic1 <= phi1; ++ic1) {
-                           int array_front[3] = {ic0, ic1, phi2};
+                           int array_front[3] = { ic0, ic1, phi2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_front),
-                                   pdat::FaceIndex::Z,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::Z,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 0.5;
-                           int array_back[3] = {ic0, ic1, plo2};
+                           int array_back[3] = { ic0, ic1, plo2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_back),
-                                   pdat::FaceIndex::Z,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::Z,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 0.5;
                         }
                      }
                      // bottom boundary faces
                      for (ic0 = plo0; ic0 <= phi0; ++ic0) {
                         for (ic2 = plo2; ic2 <= phi2; ++ic2) {
-                           int array_bottom[3] = {ic0, plo1, ic2};
+                           int array_bottom[3] = { ic0, plo1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_bottom),
-                                   pdat::FaceIndex::Y,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::Y,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 0.5;
                         }
                      }
                      // left and right boundary faces
                      for (ic1 = plo1; ic1 <= phi1; ++ic1) {
                         for (ic2 = plo2; ic2 <= phi2; ++ic2) {
-                           int array_left[3] = {plo0, ic1, ic2};
+                           int array_left[3] = { plo0, ic1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_left),
-                                   pdat::FaceIndex::X,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::X,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 0.5;
-                           int array_right[3] = {phi0, ic1, ic2};
+                           int array_right[3] = { phi0, ic1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_right),
-                                   pdat::FaceIndex::X,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::X,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 0.5;
                         }
                      }
-                  }
-                  else {
+                  } else {
                      // front and back boundary faces
                      for (ic0 = plo0; ic0 <= phi0; ++ic0) {
                         for (ic1 = plo1; ic1 <= phi1; ++ic1) {
-                           int array_front[3] = {ic0, ic1, phi2};
+                           int array_front[3] = { ic0, ic1, phi2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_front),
-                                   pdat::FaceIndex::Z,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::Z,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 0.5;
-                           int array_back[3] = {ic0, ic1, plo2};
+                           int array_back[3] = { ic0, ic1, plo2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_back),
-                                   pdat::FaceIndex::Z,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::Z,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 0.5;
                         }
                      }
                      // top and bottom boundary faces
                      for (ic0 = plo0; ic0 <= phi0; ++ic0) {
                         for (ic2 = plo2; ic2 <= phi2; ++ic2) {
-                           int array_top[3] = {ic0, phi1, ic2};
+                           int array_top[3] = { ic0, phi1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_top),
-                                   pdat::FaceIndex::Y,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::Y,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 0.5;
-                           int array_bottom[3] = {ic0, plo1, ic2};
+                           int array_bottom[3] = { ic0, plo1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_bottom),
-                                   pdat::FaceIndex::Y,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::Y,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) = 0.0;
                         }
                      }
                      // left and right boundary faces
                      for (ic1 = plo1; ic1 <= phi1; ++ic1) {
                         for (ic2 = plo2; ic2 <= phi2; ++ic2) {
-                           int array_left[3] = {plo0, ic1, ic2};
+                           int array_left[3] = { plo0, ic1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_left),
-                                   pdat::FaceIndex::X,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::X,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 0.5;
-                           int array_right[3] = {phi0, ic1, ic2};
+                           int array_right[3] = { phi0, ic1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_right),
-                                   pdat::FaceIndex::X,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::X,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 0.5;
                         }
                      }
                   }
-               }
-               else {
+               } else {
                   if (patch->getLocalId() == 0) {
                      // front and back boundary faces
                      for (ic0 = plo0; ic0 <= phi0; ++ic0) {
                         for (ic1 = plo1; ic1 <= phi1; ++ic1) {
-                           int array_front[3] = {ic0, ic1, phi2};
+                           int array_front[3] = { ic0, ic1, phi2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_front),
-                                   pdat::FaceIndex::Z,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::Z,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 1.5;
-                           int array_back[3] = {ic0, ic1, plo2};
+                           int array_back[3] = { ic0, ic1, plo2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_back),
-                                   pdat::FaceIndex::Z,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::Z,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 1.5;
                         }
                      }
                      // top and bottom boundary faces
                      for (ic0 = plo0; ic0 <= phi0; ++ic0) {
                         for (ic2 = plo2; ic2 <= phi2; ++ic2) {
-                           int array_top[3] = {ic0, phi1, ic2};
+                           int array_top[3] = { ic0, phi1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_top),
-                                   pdat::FaceIndex::Y,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::Y,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 1.5;
-                           int array_bottom[3] = {ic0, plo1, ic2};
+                           int array_bottom[3] = { ic0, plo1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_bottom),
-                                   pdat::FaceIndex::Y,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::Y,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 1.5;
                         }
                      }
                      // left boundary faces
                      for (ic1 = plo1; ic1 <= phi1; ++ic1) {
                         for (ic2 = plo2; ic2 <= phi2; ++ic2) {
-                           int array_left[3] = {plo0, ic1, ic2};
+                           int array_left[3] = { plo0, ic1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_left),
-                                   pdat::FaceIndex::X,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::X,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 1.5;
                         }
                      }
-                  }
-                  else {
+                  } else {
                      // front and back boundary faces
                      for (ic0 = plo0; ic0 <= phi0; ++ic0) {
                         for (ic1 = plo1; ic1 <= phi1; ++ic1) {
-                           int array_front[3] = {ic0, ic1, phi2};
+                           int array_front[3] = { ic0, ic1, phi2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_front),
-                                   pdat::FaceIndex::Z,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::Z,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 1.5;
-                           int array_back[3] = {ic0, ic1, plo2};
+                           int array_back[3] = { ic0, ic1, plo2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_back),
-                                   pdat::FaceIndex::Z,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::Z,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 1.5;
                         }
                      }
                      // top and bottom boundary faces
                      for (ic0 = plo0; ic0 <= phi0; ++ic0) {
                         for (ic2 = plo2; ic2 <= phi2; ++ic2) {
-                           int array_top[3] = {ic0, phi1, ic2};
+                           int array_top[3] = { ic0, phi1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_top),
-                                   pdat::FaceIndex::Y,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::Y,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 1.5;
-                           int array_bottom[3] = {ic0, plo1, ic2};
+                           int array_bottom[3] = { ic0, plo1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_bottom),
-                                   pdat::FaceIndex::Y,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::Y,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 1.5;
                         }
                      }
                      // left and right boundary faces
                      for (ic1 = plo1; ic1 <= phi1; ++ic1) {
                         for (ic2 = plo2; ic2 <= phi2; ++ic2) {
-                           int array_left[3] = {plo0, ic1, ic2};
+                           int array_left[3] = { plo0, ic1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_left),
-                                   pdat::FaceIndex::X,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::X,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) = 0.0;
-                           int array_right[3] = {phi0, ic1, ic2};
+                           int array_right[3] = { phi0, ic1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_right),
-                                   pdat::FaceIndex::X,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::X,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 1.5;
                         }
                      }
@@ -636,8 +632,7 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 1.0;
-         }
-         else {
+         } else {
             compare = 1.5;
          }
          if (!tbox::MathUtilities<double>::equalEps(norm, compare)) {
@@ -656,8 +651,7 @@ int main(
          int compare;
          if (dim.getValue() == 2) {
             compare = 209;
-         }
-         else {
+         } else {
             compare = 2276;
          }
          if (num_data_points != compare) {
@@ -963,8 +957,7 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 1984.0;
-         }
-         else {
+         } else {
             compare = 10660.0;
          }
          if (!tbox::MathUtilities<double>::equalEps(bogus_l1_norm, compare)) {
@@ -984,8 +977,7 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 4.0;
-         }
-         else {
+         } else {
             compare = 6.0;
          }
          if (!tbox::MathUtilities<double>::equalEps(correct_l1_norm, compare)) {
@@ -1005,8 +997,7 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 4.0;
-         }
-         else {
+         } else {
             compare = 4.89897948557;
          }
          if (!tbox::MathUtilities<double>::equalEps(l2_norm, compare)) {
@@ -1078,8 +1069,7 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 17.5;
-         }
-         else {
+         } else {
             compare = 26.25;
          }
          if (!tbox::MathUtilities<double>::equalEps(cdot, compare)) {
@@ -1098,8 +1088,7 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 17.5;
-         }
-         else {
+         } else {
             compare = 26.25;
          }
          if (!tbox::MathUtilities<double>::equalEps(cdot, compare)) {

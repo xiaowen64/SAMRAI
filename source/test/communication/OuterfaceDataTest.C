@@ -152,8 +152,8 @@ void OuterfaceDataTest::registerVariables(
    for (int i = 0; i < nvars; ++i) {
       d_variables_src[i].reset(
          new pdat::OuterfaceVariable<double>(d_dim,
-                                             d_variable_src_name[i],
-                                             d_variable_depth[i]));
+            d_variable_src_name[i],
+            d_variable_depth[i]));
 
       if (i % 2 == 0) {
          d_variables_dst[i].reset(
@@ -168,7 +168,7 @@ void OuterfaceDataTest::registerVariables(
                d_dim,
                d_variable_dst_name[i],
                d_variable_depth[i]));
-      } 
+      }
 
       if (d_do_refine) {
          commtest->registerVariable(d_variables_src[i],
@@ -556,7 +556,7 @@ bool OuterfaceDataTest::verifyResults(
                dbox_lo.upper(id) = dbox_lo.lower(id);
                hier::BoxIterator loend(dbox_lo.end());
                for (hier::BoxIterator si(dbox_lo.begin()); si != loend; ++si) {
-                  pdat::FaceIndex fndx(*si, id, 0); 
+                  pdat::FaceIndex fndx(*si, id, 0);
                   double correct = (*solution)(fndx);
                   for (int d = 0; d < depth; ++d) {
                      double result = (*oface_data)(fndx, 0, d);
@@ -578,7 +578,7 @@ bool OuterfaceDataTest::verifyResults(
                dbox_hi.lower(id) = dbox_hi.upper(id);
                hier::BoxIterator hiend(dbox_hi.end());
                for (hier::BoxIterator si(dbox_hi.begin()); si != hiend; ++si) {
-                  pdat::FaceIndex fndx(*si, id, 1); 
+                  pdat::FaceIndex fndx(*si, id, 1);
                   double correct = (*solution)(fndx);
                   for (int d = 0; d < depth; ++d) {
                      double result = (*oface_data)(fndx, 1, d);

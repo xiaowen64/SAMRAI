@@ -24,7 +24,6 @@ class ConnectorStatistics
 {
 
 public:
-
    /*!
     * @brief Constructor.
     *
@@ -39,7 +38,7 @@ public:
     * @pre connector.isFinalized()
     */
    explicit ConnectorStatistics(
-      const Connector &connector);
+      const Connector& connector);
 
    /*!
     * @brief Print out local and globally reduced statistics on the
@@ -55,9 +54,7 @@ public:
       std::ostream& os,
       const std::string& border) const;
 
-
 private:
-
    /*!
     * @brief Set up things for the entire class.
     *
@@ -124,7 +121,8 @@ private:
    };
 
    void
-   computeLocalConnectorStatistics( const Connector &connector );
+   computeLocalConnectorStatistics(
+      const Connector& connector);
 
    void
    reduceStatistics();
@@ -155,7 +153,6 @@ private:
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;
-
 
 };
 

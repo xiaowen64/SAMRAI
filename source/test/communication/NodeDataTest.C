@@ -130,8 +130,8 @@ void NodeDataTest::registerVariables(
    for (int i = 0; i < nvars; ++i) {
       d_variables[i].reset(
          new pdat::NodeVariable<double>(d_dim,
-                                        d_variable_src_name[i],
-                                        d_variable_depth[i]));
+            d_variable_src_name[i],
+            d_variable_depth[i]));
 
       if (d_do_refine) {
          commtest->registerVariable(d_variables[i],
@@ -362,12 +362,12 @@ void NodeDataTest::setPhysicalBoundaryConditions(
    std::vector<hier::BoundaryBox> empty_vector(0, hier::BoundaryBox(d_dim));
    const std::vector<hier::BoundaryBox>& edge_bdry =
       d_dim > tbox::Dimension(1) ?
-         pgeom->getCodimensionBoundaries(d_dim.getValue() - 1) : empty_vector;
+      pgeom->getCodimensionBoundaries(d_dim.getValue() - 1) : empty_vector;
    const int num_edge_bdry_boxes = static_cast<int>(edge_bdry.size());
 
    const std::vector<hier::BoundaryBox>& face_bdry =
       d_dim == tbox::Dimension(3) ?
-         pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
+      pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
    const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {

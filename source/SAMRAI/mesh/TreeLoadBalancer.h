@@ -33,10 +33,6 @@
 namespace SAMRAI {
 namespace mesh {
 
-
-
-
-
 /*!
  * @brief Provides load balancing routines for AMR hierarchy by
  * implemementing the LoadBalancerStrategy.
@@ -150,7 +146,7 @@ public:
       const std::string& name,
       const boost::shared_ptr<tbox::Database>& input_db =
          boost::shared_ptr<tbox::Database>(),
-      const boost::shared_ptr<tbox::RankTreeStrategy> &rank_tree =
+      const boost::shared_ptr<tbox::RankTreeStrategy>& rank_tree =
          boost::shared_ptr<tbox::RankTreeStrategy>());
 
    /*!
@@ -270,7 +266,6 @@ public:
    printStatistics(
       std::ostream& output_stream = tbox::plog) const;
 
-
    /*!
     * @brief Enable or disable saving of tree data for diagnostics.
     *
@@ -280,11 +275,10 @@ public:
     */
    void
    setCommGraphWriter(
-      const boost::shared_ptr<tbox::CommGraphWriter> &comm_graph_writer )
+      const boost::shared_ptr<tbox::CommGraphWriter>& comm_graph_writer)
    {
       d_comm_graph_writer = comm_graph_writer;
    }
-
 
    /*!
     * @brief Get the name of this object.
@@ -296,9 +290,7 @@ public:
    }
 
 private:
-
    typedef double LoadType;
-
 
    /*
     * Static integer constants.  Tags are for isolating messages
@@ -318,7 +310,6 @@ private:
    operator = (
       const TreeLoadBalancer&);
 
-
    /*!
     * @brief Data to save for each sending/receiving process and the
     * branch at that process.
@@ -328,75 +319,108 @@ private:
     * parts are not counted in the "effective" tree for the purpose of
     * distributing work on the branch.
     */
-   class BranchData {
+   class BranchData
+   {
 
-   public:
+public:
       //! @brief Constructor.
-      BranchData( const PartitioningParams &pparams,
-                  const TransitLoad &transit_load_prototype );
+      BranchData(
+         const PartitioningParams& pparams,
+         const TransitLoad& transit_load_prototype);
       //! @brief Copy constructor.
-      BranchData( const BranchData &other );
+      BranchData(
+         const BranchData& other);
 
       /*!
        * @brief Set the starting ideal, current and upper limit of the
        * load for the branch, which includes just the values from
        * local process.
        */
-      void setStartingLoad(
+      void
+      setStartingLoad(
          LoadType ideal,
          LoadType current,
-         LoadType upperlimit );
+         LoadType upperlimit);
 
       //! @brief Number of processes in branch.
       int numProcs() const
-         { return d_num_procs; }
+      {
+         return d_num_procs;
+      }
       //! @brief Number of processes in effective branch.
       int numProcsEffective() const
-         { return d_eff_num_procs; }
+      {
+         return d_eff_num_procs;
+      }
 
       //@{
       //! @name Amount of work in branch, compared to various references.
       // surplus and deficit are current load compared to ideal.
       LoadType surplus() const
-         { return d_branch_load_current - d_branch_load_ideal; }
+      {
+         return d_branch_load_current - d_branch_load_ideal;
+      }
       LoadType deficit() const
-         { return d_branch_load_ideal - d_branch_load_current; }
+      {
+         return d_branch_load_ideal - d_branch_load_current;
+      }
       LoadType effSurplus() const
-         { return d_eff_load_current - d_eff_load_ideal; }
+      {
+         return d_eff_load_current - d_eff_load_ideal;
+      }
       LoadType effDeficit() const
-         { return d_eff_load_ideal - d_eff_load_current; }
+      {
+         return d_eff_load_ideal - d_eff_load_current;
+      }
       // excess and margin are current load compared to upper limit.
       LoadType excess() const
-         { return d_branch_load_current - d_branch_load_upperlimit; }
+      {
+         return d_branch_load_current - d_branch_load_upperlimit;
+      }
       LoadType margin() const
-         { return d_branch_load_upperlimit - d_branch_load_current; }
+      {
+         return d_branch_load_upperlimit - d_branch_load_current;
+      }
       LoadType effExcess() const
-         { return d_eff_load_current - d_eff_load_upperlimit; }
+      {
+         return d_eff_load_current - d_eff_load_upperlimit;
+      }
       LoadType effMargin() const
-         { return d_eff_load_upperlimit - d_eff_load_current; }
+      {
+         return d_eff_load_upperlimit - d_eff_load_current;
+      }
       //@}
 
       //! @brief Tell this tree to eventually ask for work from its parent.
       void setWantsWorkFromParent()
-         { d_wants_work_from_parent = true; }
+      {
+         d_wants_work_from_parent = true;
+      }
 
       //! @brief Get whether this branch want work from its parents.
       bool getWantsWorkFromParent() const
-         { return d_wants_work_from_parent; }
+      {
+         return d_wants_work_from_parent;
+      }
 
       //@{
       //! @name Information on work shipped
       //! @brief Get amount of work shipped.
       LoadType getShipmentLoad() const
-         { return d_shipment->getSumLoad(); }
+      {
+         return d_shipment->getSumLoad();
+      }
       //! @brief Get count of work shipped.
       size_t getShipmentPackageCount() const
-         { return d_shipment->getNumberOfItems(); }
+      {
+         return d_shipment->getNumberOfItems();
+      }
       //! @brief Get count of originators of the work shipped.
       size_t getShipmentOriginatorCount() const
-         { return d_shipment->getNumberOfOriginatingProcesses(); }
+      {
+         return d_shipment->getNumberOfOriginatingProcesses();
+      }
       //@}
-
 
       //@{
       //! @name Methods supporting load import/export.
@@ -409,53 +433,65 @@ private:
          TransitLoad& reserve,
          LoadType ideal_load,
          LoadType low_load,
-         LoadType high_load );
+         LoadType high_load);
 
       //! @brief Move inbound load to the given reserve container.
-      void moveInboundLoadToReserve( TransitLoad &reserve );
+      void
+      moveInboundLoadToReserve(
+         TransitLoad& reserve);
 
       /*!
        * @brief Incorporate child branch into this branch.
        */
-      void incorporateChild( const BranchData &child );
+      void
+      incorporateChild(
+         const BranchData& child);
       //@}
-
 
       //@{
       //! @name Packing/unpacking for communication up and down the tree.
 
       //! @brief Pack load/boxes for sending up to parent.
       void
-      packDataToParent( tbox::MessageStream &msg) const;
+      packDataToParent(
+         tbox::MessageStream& msg) const;
 
       //! @brief Unpack load/boxes received from child.
       void
-      unpackDataFromChild( tbox::MessageStream &msg );
+      unpackDataFromChild(
+         tbox::MessageStream& msg);
 
       //! @brief Pack load/boxes for sending down to child.
       void
-      packDataToChild( tbox::MessageStream &msg) const;
+      packDataToChild(
+         tbox::MessageStream& msg) const;
 
       //! @brief Unpack load/boxes received from parent.
       void
-      unpackDataFromParentAndIncorporate( tbox::MessageStream &msg );
+      unpackDataFromParentAndIncorporate(
+         tbox::MessageStream& msg);
 
       //@}
 
       //! @brief Diagnostic printing.
-      void recursivePrint( std::ostream &os,
-                           const std::string &border=std::string(),
-                           int detail_depth=2 ) const;
+      void
+      recursivePrint(
+         std::ostream& os,
+         const std::string& border = std::string(),
+         int detail_depth = 2) const;
 
       //! @brief Setup names of timers.
-      void setTimerPrefix(const std::string& timer_prefix);
+      void
+      setTimerPrefix(
+         const std::string& timer_prefix);
 
       //! @brief Whether to print steps for debugging.
       void setPrintSteps(bool print_steps)
-         { d_print_steps = print_steps; }
+      {
+         d_print_steps = print_steps;
+      }
 
-   private:
-
+private:
       /*!
        * @brief Number of processes in branch
        */
@@ -512,7 +548,7 @@ private:
       bool d_wants_work_from_parent;
 
       //! @brief Common partitioning parameters.
-      const PartitioningParams *d_pparams;
+      const PartitioningParams* d_pparams;
 
       //@{
       //! @name Debugging and diagnostic data.
@@ -547,9 +583,9 @@ private:
       int level_number) const
    {
       TBOX_ASSERT(level_number >= 0);
-      return (level_number < static_cast<int>(d_workload_data_id.size()) ?
-         d_workload_data_id[level_number] :
-         d_master_workload_data_id);
+      return level_number < static_cast<int>(d_workload_data_id.size()) ?
+             d_workload_data_id[level_number] :
+             d_master_workload_data_id;
    }
 
    /*!
@@ -602,7 +638,7 @@ private:
       hier::BoxLevel& balance_box_level,
       hier::Connector* balance_to_reference,
       const tbox::RankGroup& rank_group,
-      const double group_sum_load ) const;
+      const double group_sum_load) const;
 
    /*!
     * @brief Distribute load across the rank group using the tree
@@ -613,10 +649,10 @@ private:
     */
    void
    distributeLoadAcrossRankGroup(
-      TransitLoad &balanced_work,
-      const hier::BoxLevel &unbalanced_box_level,
+      TransitLoad& balanced_work,
+      const hier::BoxLevel& unbalanced_box_level,
       const tbox::RankGroup& rank_group,
-      double group_sum_load ) const;
+      double group_sum_load) const;
 
    /*!
     * @brief Compute surplus load per descendent who is still waiting
@@ -624,10 +660,10 @@ private:
     */
    LoadType
    computeSurplusPerEffectiveDescendent(
-      const LoadType &unassigned_load,
-      const LoadType &group_avg_load,
-      const std::vector<BranchData> &child_branches,
-      int first_child ) const;
+      const LoadType& unassigned_load,
+      const LoadType& group_avg_load,
+      const std::vector<BranchData>& child_branches,
+      int first_child) const;
 
    /*!
     * @brief Create the cycle-based RankGroups the local process
@@ -645,9 +681,9 @@ private:
     */
    void
    createBalanceRankGroupBasedOnCycles(
-      tbox::RankGroup &rank_group,
-      int &num_groups,
-      int &group_num,
+      tbox::RankGroup& rank_group,
+      int& num_groups,
+      int& group_num,
       double cycle_fraction) const;
 
    /*!
@@ -666,7 +702,7 @@ private:
       tbox::AsyncCommPeer<char> *& child_comms,
       tbox::AsyncCommStage& parent_stage,
       tbox::AsyncCommPeer<char> *& parent_comm,
-      const tbox::RankGroup &rank_group ) const;
+      const tbox::RankGroup& rank_group) const;
 
    /*
     * @brief Undo the set-up done by setupAsyncCommObjects.

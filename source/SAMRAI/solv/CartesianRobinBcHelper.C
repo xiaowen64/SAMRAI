@@ -133,7 +133,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
 
    NULL_USE(fill_time);
 
-   const tbox::Dimension &dim(patch.getDim());
+   const tbox::Dimension& dim(patch.getDim());
 
    t_set_boundary_values_in_cells->start();
 
@@ -235,7 +235,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
             boost::make_shared<pdat::ArrayData<double> >(coefbox, 1));
          boost::shared_ptr<pdat::ArrayData<double> > bcoef_data(
             boost::make_shared<pdat::ArrayData<double> >(coefbox, 1));
-         boost::shared_ptr<pdat::ArrayData<double> >gcoef_data(
+         boost::shared_ptr<pdat::ArrayData<double> > gcoef_data(
             homogeneous_bc ? 0 :
             new pdat::ArrayData<double>(coefbox, 1));
          t_use_set_bc_coefs->start();
@@ -661,7 +661,7 @@ CartesianRobinBcHelper::setPhysicalBoundaryConditions(
 }
 
 hier::IntVector
-CartesianRobinBcHelper::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
+CartesianRobinBcHelper::getRefineOpStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }

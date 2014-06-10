@@ -297,7 +297,7 @@ public:
    /*!
     * @brief Process a level before it is removed from the hierarchy during
     * regrid.
-    * 
+    *
     * In some cases user code may wish to process a PatchLevel before it is
     * removed from the hierarchy.  For example, data may exist only on a given
     * PatchLevel such as the finest level.  If that level were to be removed

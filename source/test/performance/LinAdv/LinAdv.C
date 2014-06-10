@@ -129,7 +129,7 @@ LinAdv::LinAdv(
    d_use_nonuniform_workload(false),
    d_uval(new pdat::CellVariable<double>(dim, "uval", 1)),
    d_flux(new pdat::FaceVariable<double>(dim, "flux", 1)),
-   d_godunov_order (1),
+   d_godunov_order(1),
    d_corner_transport("CORNER_TRANSPORT_1"),
    d_nghosts(hier::IntVector(dim, CELLG)),
    d_fluxghosts(hier::IntVector(dim, FLUXG))
@@ -578,7 +578,6 @@ void LinAdv::computeFluxesOnPatch(
             traced_right.getPointer(0),
             traced_right.getPointer(1));
 
-
 /*
  *  Re-compute fluxes with updated traces.
  *  Inputs: w^L, w^R (traced_left/right)
@@ -780,7 +779,6 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
       temp_traced_right.getPointer(1),
       temp_traced_right.getPointer(2));
 
-
    /*
     *  Compute fluxes with partially-corrected trace states.  Store result in
     *  temporary flux vector.
@@ -826,7 +824,6 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
       temp_traced_right.getPointer(0),
       temp_traced_right.getPointer(1),
       temp_traced_right.getPointer(2));
-
 
    /*
     *  Compute final predicted fluxes with both sets of transverse flux
@@ -1102,7 +1099,6 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
 
    } // loop over directions...
 
-
    /*
     *  Final flux calculation using corrected trace states.
     *  Inputs:  w^L, w^R (traced_left/right)
@@ -1217,22 +1213,21 @@ void LinAdv::setPhysicalBoundaryConditions(
    const double* dx = pgeom->getDx();
    const double* xlo = pgeom->getXLower();
 
+   for (int codim = 1; codim <= patch.getDim().getValue(); ++codim) {
 
-   for ( int codim=1; codim<=patch.getDim().getValue(); ++codim ) {
-
-      const std::vector<hier::BoundaryBox> &boundary_boxes =
+      const std::vector<hier::BoundaryBox>& boundary_boxes =
          pgeom->getCodimensionBoundaries(codim);
 
-      for ( int bn=0; bn<static_cast<int>(boundary_boxes.size()); ++bn ) {
+      for (int bn = 0; bn < static_cast<int>(boundary_boxes.size()); ++bn) {
 
          const hier::Box fill_box =
             pgeom->getBoundaryFillBox(boundary_boxes[bn],
-                                      patch.getBox(),
-                                      ghost_width_to_fill);
+               patch.getBox(),
+               ghost_width_to_fill);
 
          d_analytical_tagger->computeFrontsData(
             0, uval.get(), 0,
-            fill_box, hier::IntVector::getZero(d_dim), xlo, dx, fill_time );
+            fill_box, hier::IntVector::getZero(d_dim), xlo, dx, fill_time);
 
       }
 
@@ -2085,7 +2080,6 @@ void LinAdv::getFromInput(
 
    } // refine db entry exists
 
-
    hier::IntVector periodic(
       d_grid_geometry->getPeriodicShift(hier::IntVector(d_dim, 1)));
    int num_per_dirs = 0;
@@ -2223,7 +2217,6 @@ void LinAdv::getFromRestart()
    }
 
 }
-
 
 void LinAdv::readStateDataEntry(
    boost::shared_ptr<tbox::Database> db,

@@ -70,25 +70,25 @@ StandardRefineTransactionFactory::allocate(
    if (use_time_interpolation) {
 
       return boost::make_shared<RefineTimeTransaction>(
-         dst_level,
-         src_level,
-         overlap,
-         dst_box,
-         src_box,
-         box,
-         refine_data,
-         item_id);
+                dst_level,
+                src_level,
+                overlap,
+                dst_box,
+                src_box,
+                box,
+                refine_data,
+                item_id);
 
    } else {
 
       return boost::make_shared<RefineCopyTransaction>(
-         dst_level,
-         src_level,
-         overlap,
-         dst_box,
-         src_box,
-         refine_data,
-         item_id);
+                dst_level,
+                src_level,
+                overlap,
+                dst_box,
+                src_box,
+                refine_data,
+                item_id);
 
    }
 }

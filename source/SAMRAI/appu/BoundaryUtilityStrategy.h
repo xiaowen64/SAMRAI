@@ -65,7 +65,8 @@ public:
     * @param bdry_location_index Integer index for location of edge (in 2d)
     *                            or face (in 3d) boundary.
     */
-   virtual void readDirichletBoundaryDataEntry(
+   virtual void
+   readDirichletBoundaryDataEntry(
       const boost::shared_ptr<tbox::Database>& db,
       std::string& db_name,
       int bdry_location_index) = 0;
@@ -79,7 +80,8 @@ public:
     * @param bdry_location_index Integer index for location of edge (in 2d)
     *                            or face (in 3d) boundary.
     */
-   virtual void readNeumannBoundaryDataEntry(
+   virtual void
+   readNeumannBoundaryDataEntry(
       const boost::shared_ptr<tbox::Database>& db,
       std::string& db_name,
       int bdry_location_index) = 0;

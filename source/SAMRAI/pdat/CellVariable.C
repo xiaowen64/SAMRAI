@@ -36,7 +36,7 @@ CellVariable<TYPE>::CellVariable(
    int depth):
    hier::Variable(name,
                   boost::make_shared<CellDataFactory<TYPE> >(depth,
-                     hier::IntVector::getZero(dim))) // default zero ghost cells
+                                                             hier::IntVector::getZero(dim))) // default zero ghost cells
 {
 }
 

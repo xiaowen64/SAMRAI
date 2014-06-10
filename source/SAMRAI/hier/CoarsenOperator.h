@@ -74,7 +74,8 @@ public:
     * registered under this name with the hier::TransferOperatorRegistry class.
     * The name must be unique, as duplicate names are not allowed.
     */
-   CoarsenOperator(const std::string& name);
+   CoarsenOperator(
+      const std::string& name);
 
    /**
     * The virtual destructor for the coarsening operator does
@@ -109,7 +110,8 @@ public:
     * zero.
     */
    virtual IntVector
-   getStencilWidth( const tbox::Dimension &dim ) const = 0;
+   getStencilWidth(
+      const tbox::Dimension& dim) const = 0;
 
    /**
     * Coarsen the source component on the fine patch to the destination

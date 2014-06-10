@@ -63,8 +63,8 @@ IndexIterator<TYPE, BOX_GEOMETRY>::getNode()
 template<class TYPE, class BOX_GEOMETRY>
 IndexIterator<TYPE, BOX_GEOMETRY>::IndexIterator(
    const IndexData<TYPE, BOX_GEOMETRY>& index_data,
-   bool begin) :
-   d_index_data(const_cast<IndexData<TYPE, BOX_GEOMETRY>*>(&index_data)),
+   bool begin):
+   d_index_data(const_cast<IndexData<TYPE, BOX_GEOMETRY> *>(&index_data)),
    d_node(begin ? d_index_data->d_list_head : 0)
 {
 }
@@ -72,7 +72,7 @@ IndexIterator<TYPE, BOX_GEOMETRY>::IndexIterator(
 template<class TYPE, class BOX_GEOMETRY>
 IndexIterator<TYPE, BOX_GEOMETRY>::IndexIterator(
    IndexData<TYPE, BOX_GEOMETRY>* index_data,
-   IndexDataNode<TYPE, BOX_GEOMETRY>* node) :
+   IndexDataNode<TYPE, BOX_GEOMETRY>* node):
    d_index_data(index_data),
    d_node(node)
 {
@@ -80,7 +80,7 @@ IndexIterator<TYPE, BOX_GEOMETRY>::IndexIterator(
 
 template<class TYPE, class BOX_GEOMETRY>
 IndexIterator<TYPE, BOX_GEOMETRY>::IndexIterator(
-   const IndexIterator<TYPE, BOX_GEOMETRY>& iter) :
+   const IndexIterator<TYPE, BOX_GEOMETRY>& iter):
    d_index_data(iter.d_index_data),
    d_node(iter.d_node)
 {
@@ -123,14 +123,14 @@ IndexIterator<TYPE, BOX_GEOMETRY>::getIndex() const
 }
 
 template<class TYPE, class BOX_GEOMETRY>
-TYPE*
+TYPE *
 IndexIterator<TYPE, BOX_GEOMETRY>::operator -> ()
 {
    return d_node->d_item;
 }
 
 template<class TYPE, class BOX_GEOMETRY>
-const TYPE*
+const TYPE *
 IndexIterator<TYPE, BOX_GEOMETRY>::operator -> () const
 {
    return d_node->d_item;
@@ -984,7 +984,7 @@ IndexData<TYPE, BOX_GEOMETRY>::putToRestart(
 }
 
 template<class TYPE, class BOX_GEOMETRY>
-TYPE*
+TYPE *
 IndexData<TYPE, BOX_GEOMETRY>::getItem(
    const hier::Index& index) const
 {

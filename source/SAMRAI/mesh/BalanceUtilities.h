@@ -315,12 +315,13 @@ struct BalanceUtilities {
     * @param [in] min_vol Report post-balance boxes with fewer cells
     * than this.
     */
-   static void findSmallBoxesInPostbalance(
-      std::ostream &co,
-      const std::string &border,
-      const hier::MappingConnector &post_to_pre,
-      const hier::IntVector &min_width,
-      size_t min_vol );
+   static void
+   findSmallBoxesInPostbalance(
+      std::ostream& co,
+      const std::string& border,
+      const hier::MappingConnector& post_to_pre,
+      const hier::IntVector& min_width,
+      size_t min_vol);
 
    /*!
     * @brief Find small boxes in a post-balance BoxLevel that are not
@@ -343,13 +344,14 @@ struct BalanceUtilities {
     * @param [in] min_vol Report post-balance boxes with fewer cells
     * than this.
     */
-   static void findSmallBoxesInPostbalance(
-      std::ostream &co,
-      const std::string &border,
-      const hier::BoxLevel &pre,
-      const hier::BoxLevel &post,
-      const hier::IntVector &min_width,
-      size_t min_vol );
+   static void
+   findSmallBoxesInPostbalance(
+      std::ostream& co,
+      const std::string& border,
+      const hier::BoxLevel& pre,
+      const hier::BoxLevel& post,
+      const hier::IntVector& min_width,
+      size_t min_vol);
 
    /*!
     * @brief Evaluate whether a new load is an improvement over a
@@ -466,17 +468,17 @@ struct BalanceUtilities {
 
    //@}
 
-
    /*
     * Constrain maximum box sizes in the given BoxLevel and
     * update given Connectors to the changed BoxLevel.
     *
     * @pre !anchor_to_level || anchor_to_level->hasTranspose()
     */
-   static void constrainMaxBoxSizes(
+   static void
+   constrainMaxBoxSizes(
       hier::BoxLevel& box_level,
       hier::Connector* anchor_to_level,
-      const PartitioningParams &pparams );
+      const PartitioningParams& pparams);
 
    static const int BalanceUtilities_PREBALANCE0 = 5;
    static const int BalanceUtilities_PREBALANCE1 = 6;
@@ -496,9 +498,7 @@ struct BalanceUtilities {
       hier::Connector* balance_to_anchor,
       const tbox::RankGroup& rank_group);
 
-
 private:
-
    struct RankAndLoad {
       int rank;
       double load;

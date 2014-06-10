@@ -332,7 +332,6 @@ int main(
             mpi.getSize());
       }
 
-
       /*
        * Create major algorithm and data objects which comprise application.
        * Each object will be initialized either from input data or restart
@@ -374,14 +373,14 @@ int main(
 
       boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
          new mesh::BergerRigoutsos(dim,
-         input_db->getDatabase("BergerRigoutsos")));
+            input_db->getDatabase("BergerRigoutsos")));
 
       boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(
             dim,
             "TreeLoadBalancer",
             input_db->getDatabaseWithDefault("TreeLoadBalancer",
-                                             boost::shared_ptr<tbox::Database>())));
+               boost::shared_ptr<tbox::Database>())));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       boost::shared_ptr<mesh::GriddingAlgorithm> mblk_gridding_algorithm(

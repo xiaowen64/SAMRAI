@@ -54,7 +54,6 @@ NodeOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes) const
    }
 }
 
-
 const hier::IntVector&
 NodeOverlap::getSourceOffset() const
 {

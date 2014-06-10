@@ -20,8 +20,7 @@ BoxContainerSingleOwnerIterator::BoxContainerSingleOwnerIterator(
    d_owner_rank(owner_rank),
    d_iter(begin ? d_boxes->begin() : d_boxes->end())
 {
-   if (begin)
-   {
+   if (begin) {
       while (d_iter != d_boxes->end() &&
              d_iter->getOwnerRank() != d_owner_rank) {
          ++d_iter;

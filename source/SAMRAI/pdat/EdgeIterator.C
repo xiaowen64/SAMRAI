@@ -20,8 +20,8 @@ EdgeIterator::EdgeIterator(
    d_box(EdgeGeometry::toEdgeBox(box, axis))
 {
    if (!d_box.empty() && !begin) {
-      d_index(d_box.getDim().getValue()-1) =
-         d_box.upper(d_box.getDim().getValue()-1) + 1;
+      d_index(d_box.getDim().getValue() - 1) =
+         d_box.upper(d_box.getDim().getValue() - 1) + 1;
    }
 }
 

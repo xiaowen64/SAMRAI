@@ -24,7 +24,7 @@ namespace solv {
  *************************************************************************
  */
 
-SundialsAbstractVector*
+SundialsAbstractVector *
 Sundials_SAMRAIVector::createSundialsVector(
    const boost::shared_ptr<SAMRAIVectorReal<double> >& samrai_vec)
 {
@@ -89,7 +89,7 @@ Sundials_SAMRAIVector::~Sundials_SAMRAIVector()
  *************************************************************************
  */
 
-SundialsAbstractVector*
+SundialsAbstractVector *
 Sundials_SAMRAIVector::makeNewVector()
 {
    Sundials_SAMRAIVector* out_vec =

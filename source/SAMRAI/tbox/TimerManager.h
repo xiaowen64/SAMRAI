@@ -354,7 +354,7 @@ protected:
     */
    void
    registerSingletonSubclassInstance(
-      TimerManager* subclass_instance);
+      TimerManager * subclass_instance);
 
    /*!
     * Mark given timer as running in timer database.
@@ -366,7 +366,7 @@ protected:
     */
    void
    startTime(
-      Timer* timer);
+      Timer * timer);
 
    /*!
     * Mark given timer as not running in timer database.
@@ -378,7 +378,7 @@ protected:
     */
    void
    stopTime(
-      Timer* timer);
+      Timer * timer);
 
 private:
    // Unimplemented default constructor.
@@ -472,7 +472,7 @@ private:
    buildTimerArrays(
       double timer_values[][18],
       int max_processor_id[][2],
-      std::vector<std::string>& timer_names);
+      std::vector<std::string>&timer_names);
 
    /*
     * Build an ordered list array, organizing timers largest to smallest.
@@ -522,8 +522,8 @@ private:
     */
    static void
    quicksort(const std::vector<double>&a,
-      int index[],
-      int lo, int hi);
+             int index[],
+             int lo, int hi);
 
    /*
     * Simple methods to compute percentages, given two doubles.

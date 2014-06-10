@@ -72,14 +72,14 @@ AdaptivePoisson::AdaptivePoisson(
    d_context_persistent(new hier::VariableContext("PERSISTENT")),
    d_context_scratch(new hier::VariableContext("SCRATCH")),
    d_diffcoef(new pdat::SideVariable<double>(d_dim, "solution:diffcoef",
-      hier::IntVector::getOne(d_dim), 1)),
+                                             hier::IntVector::getOne(d_dim), 1)),
    d_flux(new pdat::SideVariable<double>(d_dim, "flux",
-      hier::IntVector::getOne(d_dim), 1)),
+                                         hier::IntVector::getOne(d_dim), 1)),
    d_scalar(new pdat::CellVariable<double>(d_dim, "solution:scalar", 1)),
    d_constant_source(new pdat::CellVariable<double>(
-      d_dim, "poisson source", 1)),
+                        d_dim, "poisson source", 1)),
    d_ccoef(new pdat::CellVariable<double>(
-      d_dim, "linear source coefficient", 1)),
+              d_dim, "linear source coefficient", 1)),
    d_rhs(new pdat::CellVariable<double>(d_dim, "linear system rhs", 1)),
    d_exact(new pdat::CellVariable<double>(d_dim, "solution:exact", 1)),
    d_resid(new pdat::CellVariable<double>(d_dim, object_name + "residual")),
@@ -889,7 +889,7 @@ int AdaptivePoisson::solvePoisson(
     * Fill the boundary condition coefficient data.
     */
    for (int ln = coarsest_ln; ln <= finest_ln; ++ln) {
-     boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       for (hier::PatchLevel::iterator pi(level->begin());
            pi != level->end(); ++pi) {

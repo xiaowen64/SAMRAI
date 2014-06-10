@@ -443,9 +443,9 @@ MblkLinAdv::MblkLinAdv(
    d_number_of_intervals(0),
    d_amplitude(0.),
    d_mblk_geometry(new MblkGeometry("MblkGeometry",
-         dim,
-         input_db,
-         *grid_geoms))
+                                    dim,
+                                    input_db,
+                                    *grid_geoms))
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
@@ -2046,9 +2046,9 @@ void MblkLinAdv::tagGradientDetectorCells(
              * RICHARDSON_NEWLY_TAGGED since these were set most recently
              * by Richardson extrapolation.
              */
-           pdat::CellIterator icend(pdat::CellGeometry::end(pbox));
-           for (pdat::CellIterator ic(pdat::CellGeometry::begin(pbox));
-                ic != icend; ++ic) {
+            pdat::CellIterator icend(pdat::CellGeometry::end(pbox));
+            for (pdat::CellIterator ic(pdat::CellGeometry::begin(pbox));
+                 ic != icend; ++ic) {
                double locden = tol;
                int tag_val = (*tags)(*ic, 0);
                if (tag_val) {

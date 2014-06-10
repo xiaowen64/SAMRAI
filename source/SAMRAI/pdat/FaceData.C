@@ -67,7 +67,7 @@ FaceData<TYPE>::getDepth() const
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 FaceData<TYPE>::getPointer(
    int face_normal,
    int depth)
@@ -79,7 +79,7 @@ FaceData<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 FaceData<TYPE>::getPointer(
    int face_normal,
    int depth) const
@@ -492,7 +492,6 @@ FaceData<TYPE>::packWithRotation(
 
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
-
 
    hier::Box rotatebox(getGhostBox());
    overlap.getTransformation().transform(rotatebox);

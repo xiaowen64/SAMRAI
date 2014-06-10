@@ -56,7 +56,7 @@ namespace solv {
  * -# After solving, get solver statistics by viewing the log information
  *    and calling getNumberOfIterations(), getResidualNorm() functions
  *    if desired.
- * 
+ *
  * <b> Input Parameters </b>
  *
  * <b> Definitions: </b>
@@ -78,7 +78,7 @@ namespace solv {
  *     <th>default</th>
  *     <th>range</th>
  *     <th>opt/req</th>
-       <th>behavior on restart</th>
+ *     <th>behavior on restart</th>
  *   </tr>
  *   <tr>
  *     <td>max_cycles</td>

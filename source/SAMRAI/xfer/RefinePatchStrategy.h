@@ -124,7 +124,8 @@ public:
     * zero.
     */
    virtual hier::IntVector
-   getRefineOpStencilWidth( const tbox::Dimension &dim ) const = 0;
+   getRefineOpStencilWidth(
+      const tbox::Dimension& dim) const = 0;
 
    /*!
     * @brief Perform user-defined patch data refinement operations.
@@ -254,16 +255,16 @@ public:
    preprocessRefineLevel(
       hier::PatchLevel& fine_level,
       const hier::PatchLevel& coarse_level,
-      const hier::Connector &coarse_to_fine,
-      const hier::Connector &coarse_to_unfilled,
+      const hier::Connector& coarse_to_fine,
+      const hier::Connector& coarse_to_unfilled,
       const std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
-      const RefineClasses::Data** refine_items ) {
-      NULL_USE( fine_level );
-      NULL_USE( coarse_level );
-      NULL_USE( coarse_to_fine );
-      NULL_USE( coarse_to_unfilled );
-      NULL_USE( overlaps );
-      NULL_USE( refine_items );
+      const RefineClasses::Data** refine_items) {
+      NULL_USE(fine_level);
+      NULL_USE(coarse_level);
+      NULL_USE(coarse_to_fine);
+      NULL_USE(coarse_to_unfilled);
+      NULL_USE(overlaps);
+      NULL_USE(refine_items);
    }
 
    /*!
@@ -283,12 +284,12 @@ public:
    postprocessRefineLevel(
       hier::PatchLevel& fine_level,
       const hier::PatchLevel& coarse_level,
-      const hier::Connector &coarse_to_fine,
-      const hier::Connector &coarse_to_unfilled) {
-      NULL_USE( fine_level );
-      NULL_USE( coarse_level );
-      NULL_USE( coarse_to_fine );
-      NULL_USE( coarse_to_unfilled );
+      const hier::Connector& coarse_to_fine,
+      const hier::Connector& coarse_to_unfilled) {
+      NULL_USE(fine_level);
+      NULL_USE(coarse_level);
+      NULL_USE(coarse_to_fine);
+      NULL_USE(coarse_to_unfilled);
    }
 
 private:

@@ -26,8 +26,8 @@ MemoryDatabaseFactory::~MemoryDatabaseFactory()
 }
 
 MemoryDatabaseFactory::MemoryDatabaseFactory(
-   const MemoryDatabaseFactory& other)
-   : DatabaseFactory()
+   const MemoryDatabaseFactory& other):
+   DatabaseFactory()
 {
    NULL_USE(other);
 }

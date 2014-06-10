@@ -321,7 +321,7 @@ public:
     *
     * @param[out] remainder  The non-intersecting parts of input level
     * @param[out] input_to_remainder  Overlap connector with width zero
-    * @param[in] input_to_takeaway    Overlap connector, may have any width 
+    * @param[in] input_to_takeaway    Overlap connector, may have any width
     *
     * @pre  input_to_takeaway is a complete overlap connector
     * @post input_to_remainder.isLocal()
@@ -574,7 +574,6 @@ private:
    static void
    initializeCallback();
 
-
    //@{
    //! @name Timer data for this class.
 
@@ -626,10 +625,9 @@ private:
 
    //@}
 
-
    bool d_sanity_check_precond;
    bool d_sanity_check_postcond;
- 
+
    static tbox::StartupShutdownManager::Handler s_initialize_handler;
 
 };

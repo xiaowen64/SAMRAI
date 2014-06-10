@@ -133,10 +133,11 @@ Euler::Euler(
    d_use_nonuniform_workload(false),
    d_density(new pdat::CellVariable<double>(dim, "density", 1)),
    d_velocity(new pdat::CellVariable<double>(
-      dim, "velocity", d_dim.getValue())),
+                 dim, "velocity", d_dim.getValue())),
    d_pressure(new pdat::CellVariable<double>(dim, "pressure", 1)),
    d_flux(new pdat::FaceVariable<double>(dim, "flux", NEQU)),
-   d_gamma(1.4),  // specific heat ratio for ideal diatomic gas (e.g., air)
+   d_gamma(1.4),
+   // specific heat ratio for ideal diatomic gas (e.g., air)
    d_riemann_solve("APPROX_RIEM_SOLVE"),
    d_godunov_order(1),
    d_corner_transport("CORNER_TRANSPORT_1"),
@@ -1942,8 +1943,7 @@ void Euler::postprocessRefine(
       delete[] tdensc;
       delete[] tpresc;
       delete[] tvelc;
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       pdat::CellData<double> flat0(coarse_box, 1, tmp_ghosts);
       pdat::CellData<double> flat1(coarse_box, 1, tmp_ghosts);
       pdat::CellData<double> flat2(coarse_box, 1, tmp_ghosts);
@@ -2090,8 +2090,7 @@ void Euler::postprocessCoarsen(
          cvelocity->getPointer(),                               /* output */
          cpressure->getPointer(),
          conserved.getPointer());                              /* temporary */
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       SAMRAI_F77_FUNC(conservavg3d, CONSERVAVG3D) (ifirstf(0), ifirstf(1), ifirstf(2),       /* input */
          ilastf(0), ilastf(1), ilastf(2),
          ifirstc(0), ifirstc(1), ifirstc(2),
@@ -2445,7 +2444,7 @@ void Euler::tagGradientDetectorCells(
 
       if (ref == "DENSITY_DEVIATION") {
          var = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
-            patch.getPatchData(d_density, getDataContext()));
+               patch.getPatchData(d_density, getDataContext()));
          size = static_cast<int>(d_density_dev_tol.size());
          tol = ((error_level_number < size)
                 ? d_density_dev_tol[error_level_number]
@@ -2463,10 +2462,9 @@ void Euler::tagGradientDetectorCells(
                             ? d_density_dev_time_max[error_level_number]
                             : d_density_dev_time_max[size - 1]);
          time_allowed = (time_min <= regrid_time) && (time_max > regrid_time);
-      }
-      else if (ref == "DENSITY_GRADIENT") {
+      } else if (ref == "DENSITY_GRADIENT") {
          var = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
-            patch.getPatchData(d_density, getDataContext()));
+               patch.getPatchData(d_density, getDataContext()));
          size = static_cast<int>(d_density_grad_tol.size());
          tol = ((error_level_number < size)
                 ? d_density_grad_tol[error_level_number]
@@ -2480,10 +2478,9 @@ void Euler::tagGradientDetectorCells(
                             ? d_density_grad_time_max[error_level_number]
                             : d_density_grad_time_max[size - 1]);
          time_allowed = (time_min <= regrid_time) && (time_max > regrid_time);
-      }
-      else if (ref == "DENSITY_SHOCK") {
+      } else if (ref == "DENSITY_SHOCK") {
          var = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
-            patch.getPatchData(d_density, getDataContext()));
+               patch.getPatchData(d_density, getDataContext()));
          size = static_cast<int>(d_density_shock_tol.size());
          tol = ((error_level_number < size)
                 ? d_density_shock_tol[error_level_number]
@@ -2501,10 +2498,9 @@ void Euler::tagGradientDetectorCells(
                             ? d_density_shock_time_max[error_level_number]
                             : d_density_shock_time_max[size - 1]);
          time_allowed = (time_min <= regrid_time) && (time_max > regrid_time);
-      }
-      else if (ref == "PRESSURE_DEVIATION") {
+      } else if (ref == "PRESSURE_DEVIATION") {
          var = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
-            patch.getPatchData(d_pressure, getDataContext()));
+               patch.getPatchData(d_pressure, getDataContext()));
          size = static_cast<int>(d_pressure_dev_tol.size());
          tol = ((error_level_number < size)
                 ? d_pressure_dev_tol[error_level_number]
@@ -2522,10 +2518,9 @@ void Euler::tagGradientDetectorCells(
                             ? d_pressure_dev_time_max[error_level_number]
                             : d_pressure_dev_time_max[size - 1]);
          time_allowed = (time_min <= regrid_time) && (time_max > regrid_time);
-      }
-      else if (ref == "PRESSURE_GRADIENT") {
+      } else if (ref == "PRESSURE_GRADIENT") {
          var = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
-            patch.getPatchData(d_pressure, getDataContext()));
+               patch.getPatchData(d_pressure, getDataContext()));
          size = static_cast<int>(d_pressure_grad_tol.size());
          tol = ((error_level_number < size)
                 ? d_pressure_grad_tol[error_level_number]
@@ -2539,10 +2534,9 @@ void Euler::tagGradientDetectorCells(
                             ? d_pressure_grad_time_max[error_level_number]
                             : d_pressure_grad_time_max[size - 1]);
          time_allowed = (time_min <= regrid_time) && (time_max > regrid_time);
-      }
-      else if (ref == "PRESSURE_SHOCK") {
+      } else if (ref == "PRESSURE_SHOCK") {
          var = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
-            patch.getPatchData(d_pressure, getDataContext()));
+               patch.getPatchData(d_pressure, getDataContext()));
          size = static_cast<int>(d_pressure_shock_tol.size());
          tol = ((error_level_number < size)
                 ? d_pressure_shock_tol[error_level_number]
@@ -2592,8 +2586,7 @@ void Euler::tagGradientDetectorCells(
                   (*temp_tags)(*ic, 0) = TRUE;
                }
             }
-         }
-         else if (ref == "DENSITY_GRADIENT" || ref == "PRESSURE_GRADIENT") {
+         } else if (ref == "DENSITY_GRADIENT" || ref == "PRESSURE_GRADIENT") {
             if (d_dim == tbox::Dimension(2)) {
                SAMRAI_F77_FUNC(detectgrad2d, DETECTGRAD2D) (ifirst(0), ilast(0),
                   ifirst(1), ilast(1),
@@ -2617,8 +2610,7 @@ void Euler::tagGradientDetectorCells(
                   var->getPointer(),
                   tags->getPointer(), temp_tags->getPointer());
             }
-         }
-         else if (ref == "DENSITY_SHOCK" || ref == "PRESSURE_SHOCK") {
+         } else if (ref == "DENSITY_SHOCK" || ref == "PRESSURE_SHOCK") {
             if (d_dim == tbox::Dimension(2)) {
                SAMRAI_F77_FUNC(detectshock2d, DETECTSHOCK2D) (ifirst(0), ilast(0),
                   ifirst(1), ilast(1),
@@ -2752,8 +2744,7 @@ void Euler::tagRichardsonExtrapolationCells(
                             ? d_density_rich_time_max[error_level_number]
                             : d_density_rich_time_max[size - 1]);
          time_allowed = (time_min <= regrid_time) && (time_max > regrid_time);
-      }
-      else if (ref == "PRESSURE_RICHARDSON") {
+      } else if (ref == "PRESSURE_RICHARDSON") {
          coarsened_fine_var =
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_pressure, coarsened_fine));
@@ -4575,18 +4566,18 @@ void Euler::checkBoundaryData(
       if (d_dim == tbox::Dimension(2)) {
          if (btype == Bdry::EDGE2D) {
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_2D_EDGES);
+               NUM_2D_EDGES);
             TBOX_ASSERT(static_cast<int>(vector_bconds.size()) ==
-                        NUM_2D_EDGES);
+               NUM_2D_EDGES);
 
             bscalarcase = scalar_bconds[bloc];
             bvelocitycase = vector_bconds[bloc];
             refbdryloc = bloc;
          } else { // btype == Bdry::NODE2D
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_2D_NODES);
+               NUM_2D_NODES);
             TBOX_ASSERT(static_cast<int>(vector_bconds.size()) ==
-                        NUM_2D_NODES);
+               NUM_2D_NODES);
 
             bscalarcase = scalar_bconds[bloc];
             bvelocitycase = vector_bconds[bloc];
@@ -4596,27 +4587,27 @@ void Euler::checkBoundaryData(
       if (d_dim == tbox::Dimension(3)) {
          if (btype == Bdry::FACE3D) {
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_3D_FACES);
+               NUM_3D_FACES);
             TBOX_ASSERT(static_cast<int>(vector_bconds.size()) ==
-                        NUM_3D_FACES);
+               NUM_3D_FACES);
 
             bscalarcase = scalar_bconds[bloc];
             bvelocitycase = vector_bconds[bloc];
             refbdryloc = bloc;
          } else if (btype == Bdry::EDGE3D) {
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_3D_EDGES);
+               NUM_3D_EDGES);
             TBOX_ASSERT(static_cast<int>(vector_bconds.size()) ==
-                        NUM_3D_EDGES);
+               NUM_3D_EDGES);
 
             bscalarcase = scalar_bconds[bloc];
             bvelocitycase = vector_bconds[bloc];
             refbdryloc = d_edge_bdry_face[bloc];
          } else { // btype == Bdry::NODE3D
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_3D_NODES);
+               NUM_3D_NODES);
             TBOX_ASSERT(static_cast<int>(vector_bconds.size()) ==
-                        NUM_3D_NODES);
+               NUM_3D_NODES);
 
             bscalarcase = scalar_bconds[bloc];
             bvelocitycase = vector_bconds[bloc];

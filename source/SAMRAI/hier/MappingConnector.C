@@ -31,7 +31,7 @@ namespace hier {
  */
 
 MappingConnector::MappingConnector(
-   const tbox::Dimension& dim): Connector(dim)
+   const tbox::Dimension& dim):Connector(dim)
 {
 }
 
@@ -42,7 +42,7 @@ MappingConnector::MappingConnector(
 
 MappingConnector::MappingConnector(
    const tbox::Dimension& dim,
-   tbox::Database& restart_db): Connector(dim, restart_db)
+   tbox::Database& restart_db):Connector(dim, restart_db)
 {
 }
 
@@ -52,7 +52,7 @@ MappingConnector::MappingConnector(
  */
 
 MappingConnector::MappingConnector(
-   const MappingConnector& other): Connector(other)
+   const MappingConnector& other):Connector(other)
 {
 }
 
@@ -67,9 +67,9 @@ MappingConnector::MappingConnector(
    const IntVector& base_width,
    const BoxLevel::ParallelState parallel_state):
    Connector(base_box_level,
-      head_box_level,
-      base_width,
-      parallel_state)
+             head_box_level,
+             base_width,
+             parallel_state)
 {
 }
 
@@ -90,7 +90,7 @@ MappingConnector&
 MappingConnector::operator = (
    const MappingConnector& rhs)
 {
-   Connector::operator=(rhs);
+   Connector::operator = (rhs);
    return *this;
 }
 
@@ -99,7 +99,7 @@ MappingConnector::operator = (
  ***********************************************************************
  */
 
-MappingConnector*
+MappingConnector *
 MappingConnector::createLocalTranspose() const
 {
    const IntVector transpose_gcw = convertHeadWidthToBase(
@@ -108,8 +108,8 @@ MappingConnector::createLocalTranspose() const
          getConnectorWidth());
 
    MappingConnector* transpose = new MappingConnector(getHead(),
-      getBase(),
-      transpose_gcw);
+         getBase(),
+         transpose_gcw);
    doLocalTransposeWork(transpose);
    return transpose;
 }
@@ -119,15 +119,15 @@ MappingConnector::createLocalTranspose() const
  ***********************************************************************
  */
 
-MappingConnector*
+MappingConnector *
 MappingConnector::createTranspose() const
 {
-   MappingConnector *transpose =
-      new MappingConnector( getHead(),
-                            getBase(),
-                            convertHeadWidthToBase(getBase().getRefinementRatio(),
-                                                   getHead().getRefinementRatio(),
-                                                   getConnectorWidth()) );
+   MappingConnector* transpose =
+      new MappingConnector(getHead(),
+         getBase(),
+         convertHeadWidthToBase(getBase().getRefinementRatio(),
+            getHead().getRefinementRatio(),
+            getConnectorWidth()));
 
    doTransposeWork(transpose);
    return transpose;
@@ -297,13 +297,13 @@ MappingConnector::findMappingErrors(
    BoxLevelConnectorUtils blcu;
    boost::shared_ptr<BoxLevel> bad_parts;
    boost::shared_ptr<MappingConnector> pre_to_bad;
-   const Connector *transpose = createTranspose();
-   blcu.computeExternalParts( bad_parts,
-                              pre_to_bad,
-                              *transpose,
-                              getConnectorWidth() );
+   const Connector* transpose = createTranspose();
+   blcu.computeExternalParts(bad_parts,
+      pre_to_bad,
+      *transpose,
+      getConnectorWidth());
 
-   if ( pre_to_bad->getLocalNumberOfRelationships() > 0 ) {
+   if (pre_to_bad->getLocalNumberOfRelationships() > 0) {
       tbox::perr << "MappingConnector::findMappingErrors() found bad nesting.\n"
                  << "Valid maps' head must nest in base, grown by\n"
                  << "the mapping Connector width.\n"

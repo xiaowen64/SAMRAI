@@ -54,7 +54,7 @@ EdgeOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
 {
    TBOX_ASSERT(src_boxes.isEmpty());
    TBOX_ASSERT(axis_direction >= 0 &&
-               axis_direction < static_cast<int>(d_dst_boxes.size()));
+      axis_direction < static_cast<int>(d_dst_boxes.size()));
 
    src_boxes = d_dst_boxes[axis_direction];
    int transform_direction = axis_direction;
@@ -65,15 +65,15 @@ EdgeOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
            bi != src_boxes.end(); ++bi) {
          transform_direction = axis_direction;
          EdgeGeometry::transform(*bi,
-                                 transform_direction,
-                                 inverse_transform);
+            transform_direction,
+            inverse_transform);
       }
    }
 
    axis_direction = transform_direction;
 
    TBOX_ASSERT(axis_direction >= 0 &&
-               axis_direction < static_cast<int>(d_dst_boxes.size()));
+      axis_direction < static_cast<int>(d_dst_boxes.size()));
 
 }
 

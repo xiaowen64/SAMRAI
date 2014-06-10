@@ -203,7 +203,7 @@ HierarchyEdgeDataOpsComplex::printData(
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
       s << "Level number = " << ln << std::endl;
-       boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
@@ -744,9 +744,9 @@ HierarchyEdgeDataOpsComplex::numberOfEntries(
 
    if (interior_only) {
 
-     boost::shared_ptr<pdat::EdgeDataFactory<dcomplex> > dfact(
-        BOOST_CAST<pdat::EdgeDataFactory<dcomplex>, hier::PatchDataFactory>(
-           d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id)));
+      boost::shared_ptr<pdat::EdgeDataFactory<dcomplex> > dfact(
+         BOOST_CAST<pdat::EdgeDataFactory<dcomplex>, hier::PatchDataFactory>(
+            d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id)));
 
       TBOX_ASSERT(dfact);
 
@@ -765,7 +765,7 @@ HierarchyEdgeDataOpsComplex::numberOfEntries(
                hier::BoxContainer::const_iterator lb =
                   ((d_nonoverlapping_edge_boxes[eb][ln])[il]).begin();
                for ( ; lb != ((d_nonoverlapping_edge_boxes[eb][ln])[il]).end();
-                    ++lb) {
+                     ++lb) {
                   entries += lb->size();
                }
             }
@@ -1104,8 +1104,7 @@ HierarchyEdgeDataOpsComplex::dot(
       mpi.Allreduce(&imag_part, &global_imag_part, 1, MPI_DOUBLE, MPI_SUM);
       dcomplex global_dot(global_real_part, global_imag_part);
       return global_dot;
-   }
-   else {
+   } else {
       return dprod;
    }
 }
@@ -1160,8 +1159,7 @@ HierarchyEdgeDataOpsComplex::integral(
       mpi.Allreduce(&imag_part, &global_imag_part, 1, MPI_DOUBLE, MPI_SUM);
       dcomplex global_integral(global_real_part, global_imag_part);
       return global_integral;
-   }
-   else {
+   } else {
       return local_integral;
    }
 }

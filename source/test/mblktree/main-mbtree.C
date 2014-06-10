@@ -318,7 +318,7 @@ int main(
          }
 
          if (!connector.localNeighborhoodsEqual(
-                 connector_from_exhaustive_search)) {
+                connector_from_exhaustive_search)) {
 
             tbox::perr << "Failed verification in baseline generation:\n"
                        << "Neighborhoods from the tree search do not match\n"
@@ -496,7 +496,7 @@ void exhaustiveFindOverlapBoxes(
          if (transformed_box.intersects(search_box)) {
             if (!has_base_box) {
                base_box_itr = overlap_connector.makeEmptyLocalNeighborhood(
-                  box_id);
+                     box_id);
                has_base_box = true;
             }
             overlap_connector.insertLocalNeighbor(

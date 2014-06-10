@@ -102,9 +102,9 @@ Box::Box(
 Box::Box(
    const tbox::DatabaseBox& box):
    d_lo(tbox::Dimension(static_cast<unsigned short>(box.getDimVal())),
-      tbox::MathUtilities<int>::getMax()),
+        tbox::MathUtilities<int>::getMax()),
    d_hi(tbox::Dimension(static_cast<unsigned short>(box.getDimVal())),
-      tbox::MathUtilities<int>::getMin()),
+        tbox::MathUtilities<int>::getMin()),
    d_id(GlobalId(), PeriodicId::zero()),
    d_id_locked(false)
 {
@@ -476,7 +476,7 @@ Box::operator * (
          both.setEmpty();
       } else {
          TBOX_ERROR("Attempted intersection of Boxes from different blocks.");
-      } 
+      }
    } else {
       both.d_lo.max(box.d_lo);
       both.d_hi.min(box.d_hi);
@@ -501,7 +501,7 @@ Box::operator *= (
       d_lo.max(box.d_lo);
       d_hi.min(box.d_hi);
    }
- 
+
    return *this;
 }
 
@@ -535,7 +535,7 @@ Box::intersects(
       if (empty() || box.empty()) {
          return false;
       } else {
-         TBOX_ERROR("Attempted intersection of Boxes from different blocks."); 
+         TBOX_ERROR("Attempted intersection of Boxes from different blocks.");
       }
    }
 
@@ -581,7 +581,7 @@ Box::operator += (
          d_hi.max(box.d_hi);
       } else {
          TBOX_ERROR("Attempted bounding box of Boxes from different blocks.");
-      } 
+      }
    }
    return *this;
 }
@@ -726,7 +726,7 @@ Box::getFromIntBuffer(
    const int* buffer)
 {
    d_block_id = BlockId(buffer[0]);
-   ++buffer; 
+   ++buffer;
 
    d_id.getFromIntBuffer(buffer);
    buffer += BoxId::commBufferSize();
@@ -741,26 +741,24 @@ Box::getFromIntBuffer(
 
 void
 Box::putToMessageStream(
-   tbox::MessageStream &msg) const
+   tbox::MessageStream& msg) const
 {
    msg << d_block_id.getBlockValue();
    d_id.putToMessageStream(msg);
-   msg.pack( &d_lo[0], d_lo.getDim().getValue() );
-   msg.pack( &d_hi[0], d_hi.getDim().getValue() );
-   return;
+   msg.pack(&d_lo[0], d_lo.getDim().getValue());
+   msg.pack(&d_hi[0], d_hi.getDim().getValue());
 }
 
 void
 Box::getFromMessageStream(
-   tbox::MessageStream &msg)
+   tbox::MessageStream& msg)
 {
    int tmpi;
    msg >> tmpi;
    d_block_id = BlockId(tmpi);
    d_id.getFromMessageStream(msg);
-   msg.unpack( &d_lo[0], d_lo.getDim().getValue() );
-   msg.unpack( &d_hi[0], d_hi.getDim().getValue() );
-   return;
+   msg.unpack(&d_lo[0], d_lo.getDim().getValue());
+   msg.unpack(&d_hi[0], d_hi.getDim().getValue());
 }
 
 /*
@@ -974,7 +972,7 @@ Box::rotate(
       return;
 
    TBOX_ASSERT(getDim().getValue() == 1 || getDim().getValue() == 2 ||
-               getDim().getValue() == 3);
+      getDim().getValue() == 3);
 
    if (getDim().getValue() == 1) {
       int rotation_number = static_cast<int>(rotation_ident);
@@ -987,8 +985,7 @@ Box::rotate(
          d_lo(0) = -tmp_hi(0) - 1;
          d_hi(0) = -tmp_lo(0) - 1;
       }
-   }
-   else if (getDim().getValue() == 2) {
+   } else if (getDim().getValue() == 2) {
       int rotation_number = static_cast<int>(rotation_ident);
       if (rotation_number > 3) {
          TBOX_ERROR("Box::rotate invalid 2D RotationIdentifier.");
@@ -1137,8 +1134,8 @@ BoxIterator::BoxIterator(
    d_box(box)
 {
    if (!d_box.empty() && !begin) {
-      d_index(d_box.getDim().getValue()-1) =
-         d_box.upper(d_box.getDim().getValue()-1) + 1;
+      d_index(d_box.getDim().getValue() - 1) =
+         d_box.upper(d_box.getDim().getValue() - 1) + 1;
    }
 }
 

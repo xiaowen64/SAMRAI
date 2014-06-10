@@ -242,8 +242,7 @@ int main(
    if (num_output_files > num_input_files) {
       smaller = num_input_files;
       larger = num_output_files;
-   }
-   else {
+   } else {
       smaller = num_output_files;
       larger = num_input_files;
    }

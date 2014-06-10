@@ -42,7 +42,7 @@ const int MemoryDatabase::PRINT_UNUSED = 4;
 const int MemoryDatabase::SSTREAM_BUFFER = 4096;
 
 MemoryDatabase::MemoryDatabase(
-   const std::string& name) :
+   const std::string& name):
    d_database_name(name)
 {
 }
@@ -149,7 +149,7 @@ MemoryDatabase::getAllKeys()
 
    int k = 0;
    for (std::list<KeyData>::iterator i = d_keyvalues.begin();
-         i != d_keyvalues.end(); ++i) {
+        i != d_keyvalues.end(); ++i) {
       keys[k++] = i->d_key;
    }
 

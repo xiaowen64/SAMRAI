@@ -125,12 +125,12 @@ CoarsenAlgorithm::createSchedule(
    }
 
    return boost::make_shared<CoarsenSchedule>(
-      crse_level,
-      fine_level,
-      d_coarsen_classes,
-      trans_factory,
-      patch_strategy,
-      d_fill_coarse_data);
+             crse_level,
+             fine_level,
+             d_coarsen_classes,
+             trans_factory,
+             patch_strategy,
+             d_fill_coarse_data);
 }
 
 void

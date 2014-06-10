@@ -222,8 +222,8 @@ HierarchyFaceDataOpsReal<TYPE>::printData(
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
          boost::shared_ptr<pdat::FaceData<TYPE> > d(
-         BOOST_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
-            p->getPatchData(data_id)));
+            BOOST_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+               p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
 
@@ -791,7 +791,7 @@ HierarchyFaceDataOpsReal<TYPE>::numberOfEntries(
                hier::BoxContainer::const_iterator lb =
                   ((d_nonoverlapping_face_boxes[eb][ln])[il]).begin();
                for ( ; lb != ((d_nonoverlapping_face_boxes[eb][ln])[il]).end();
-                    ++lb) {
+                     ++lb) {
                   entries += lb->size();
                }
             }

@@ -33,8 +33,6 @@
 namespace SAMRAI {
 namespace mesh {
 
-
-
 /*!
  * @brief Provides load balancing routines for AMR hierarchy by
  * implemementing the LoadBalancerStrategy using the cascade partitioning algorithm.
@@ -213,7 +211,6 @@ public:
    printStatistics(
       std::ostream& output_stream = tbox::plog) const;
 
-
    /*!
     * @brief Get the name of this object.
     */
@@ -261,9 +258,7 @@ public:
       int level_number) const;
 
 private:
-
    typedef double LoadType;
-
 
    /*
     * Static integer constants.  Tags are for isolating messages
@@ -282,7 +277,6 @@ private:
    void
    operator = (
       const CascadePartitioner&);
-
 
    /*
     * @brief Check if there is any pending messages for the private
@@ -306,9 +300,9 @@ private:
       int level_number) const
    {
       TBOX_ASSERT(level_number >= 0);
-      return (level_number < static_cast<int>(d_workload_data_id.size()) ?
-         d_workload_data_id[level_number] :
-         d_master_workload_data_id);
+      return level_number < static_cast<int>(d_workload_data_id.size()) ?
+             d_workload_data_id[level_number] :
+             d_master_workload_data_id;
    }
 
    /*
@@ -319,26 +313,28 @@ private:
       const hier::BoxLevel& box_level) const;
 
    /*!
-    *@brief Implements the cascade partitioner algorithm.
+    * *@brief Implements the cascade partitioner algorithm.
     */
    void
    partitionByCascade(
       hier::BoxLevel& balance_box_level,
-      hier::Connector* balance_to_reference ) const;
+      hier::Connector* balance_to_reference) const;
 
    /*!
     * @brief Executes a single cascade cycle.
     */
    void
    cascadeCycle(
-      double &group_surplus,
+      double& group_surplus,
       hier::BoxLevel& balance_box_level,
       hier::Connector* balance_to_reference,
       int outerCycle,
-      int innerCycle ) const;
+      int innerCycle) const;
 
    //! @brief Compute log-base-2 of integer, rounded up.
-   static int lgInt(int s);
+   static int
+   lgInt(
+      int s);
 
    /*!
     * @brief Set up timers for the object.
@@ -432,9 +428,9 @@ private:
    mutable LoadType d_min_load;
 
    //! @brief Local load subject to change.
-   mutable TransitLoad *d_local_load;
+   mutable TransitLoad* d_local_load;
    //! @brief Load shipment for sending and receiving.
-   mutable TransitLoad *d_shipment;
+   mutable TransitLoad* d_shipment;
    //! @brief High-level communication stage.
    mutable tbox::AsyncCommStage d_comm_stage;
    //! @brief High-level peer-to-peer communication object (2 receives, 2 sends).

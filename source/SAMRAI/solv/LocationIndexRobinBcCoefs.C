@@ -79,8 +79,7 @@ LocationIndexRobinBcCoefs::getFromInput(
                TBOX_ERROR("LocationIndexRobinBcCoefs::getFromInput error...\n"
                   << "exactly 1 value needed with \"value\" boundary specifier"
                   << std::endl);
-            }
-            else {
+            } else {
                d_g_map[i] = atof(specs[1].c_str());
             }
          } else if (specs[0] == "slope") {
@@ -90,8 +89,7 @@ LocationIndexRobinBcCoefs::getFromInput(
                TBOX_ERROR("LocationIndexRobinBcCoefs::getFromInput error...\n"
                   << "exactly 1 value needed with \"slope\" boundary specifier"
                   << std::endl);
-            }
-            else {
+            } else {
                d_g_map[i] = atof(specs[1].c_str());
             }
          } else if (specs[0] == "coefficients") {
@@ -99,8 +97,7 @@ LocationIndexRobinBcCoefs::getFromInput(
                TBOX_ERROR("LocationIndexRobinBcCoefs::getFromInput error...\n"
                   << "exactly 2 values needed with \"coefficients\" boundary specifier"
                   << std::endl);
-            }
-            else {
+            } else {
                d_a_map[i] = atof(specs[1].c_str());
                d_b_map[i] = atof(specs[2].c_str());
             }
@@ -109,8 +106,7 @@ LocationIndexRobinBcCoefs::getFromInput(
                                      << "'" << specs[0] << "'.  Use either 'value'\n"
                                      << "'slope' or 'coefficients'.\n");
          }
-      }
-      else {
+      } else {
          TBOX_ERROR(d_object_name << ": Missing boundary specifier.\n");
       }
    }

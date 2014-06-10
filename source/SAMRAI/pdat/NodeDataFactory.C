@@ -66,9 +66,9 @@ NodeDataFactory<TYPE>::cloneFactory(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
    return boost::make_shared<NodeDataFactory<TYPE> >(
-      d_depth,
-      ghosts,
-      d_fine_boundary_represents_var);
+             d_depth,
+             ghosts,
+             d_fine_boundary_represents_var);
 }
 
 /*
@@ -87,9 +87,9 @@ NodeDataFactory<TYPE>::allocate(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
    return boost::make_shared<NodeData<TYPE> >(
-      patch.getBox(),
-      d_depth,
-      d_ghosts);
+             patch.getBox(),
+             d_depth,
+             d_ghosts);
 }
 
 /*

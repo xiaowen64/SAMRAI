@@ -49,7 +49,7 @@ namespace tbox {
  * known communication networks, so this tree does not perform well.
  * It is included for comparison.
  */
-class BreadthFirstRankTree : public RankTreeStrategy
+class BreadthFirstRankTree:public RankTreeStrategy
 {
 
 public:
@@ -96,7 +96,7 @@ public:
     */
    void
    setupTree(
-      const RankGroup &rank_group,
+      const RankGroup& rank_group,
       int my_rank);
 
    /*!
@@ -127,8 +127,8 @@ public:
    getChildRank(
       unsigned int child_number) const
    {
-      return ( child_number < d_num_children ) ?
-         d_children[child_number] : getInvalidRank();
+      return (child_number < d_num_children) ?
+             d_children[child_number] : getInvalidRank();
    }
 
    unsigned int
@@ -142,34 +142,34 @@ public:
     * root of the tree.
     */
    unsigned int getChildNumber() const
-      {
-         return d_child_number;
-      }
+   {
+      return d_child_number;
+   }
 
    /*!
     * @brief Return the degree of the tree (the maximum number of
     * children each node may have).
     */
    unsigned int getDegree() const
-      {
-         return static_cast<unsigned int>(d_children.size());
-      }
+   {
+      return static_cast<unsigned int>(d_children.size());
+   }
 
    /*!
     * @brief Return the generation number.
     */
    unsigned int getGenerationNumber() const
-      {
-         return d_generation;
-      }
+   {
+      return d_generation;
+   }
 
    /*!
     * @brief Return the rank of the root of the tree.
     */
    int getRootRank() const
-      {
-         return d_root_rank;
-      }
+   {
+      return d_root_rank;
+   }
 
    /*!
     * @brief Set the degree (max number of children) of the tree.
@@ -178,13 +178,12 @@ public:
     * call must be made before setupTree().
     */
    void setTreeDegree(unsigned int tree_degree)
-      {
-         TBOX_ASSERT(d_rank == getInvalidRank());
-         d_children.resize(tree_degree, getInvalidRank());
-      }
+   {
+      TBOX_ASSERT(d_rank == getInvalidRank());
+      d_children.resize(tree_degree, getInvalidRank());
+   }
 
 private:
-
    // Unimplemented copy constructor.
    BreadthFirstRankTree(
       const BreadthFirstRankTree& other);

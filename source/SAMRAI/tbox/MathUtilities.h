@@ -109,7 +109,7 @@ public:
     */
    static void
    setArrayToSignalingNaN(
-      TYPE* array,
+      TYPE * array,
       int n = 1);
 
    /*!
@@ -158,7 +158,7 @@ public:
     */
    static void
    setArrayToMax(
-      TYPE* array,
+      TYPE * array,
       int n = 1);
 
    /*!
@@ -189,7 +189,7 @@ public:
     */
    static void
    setArrayToMin(
-      TYPE* array,
+      TYPE * array,
       int n = 1);
 
    /*!
@@ -221,7 +221,7 @@ public:
     */
    static void
    setArrayToEpsilon(
-      TYPE* array,
+      TYPE * array,
       int n = 1);
 
    /*!

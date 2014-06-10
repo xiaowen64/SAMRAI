@@ -115,12 +115,12 @@ PatchLevel::PatchLevel(
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (getDim().getValue() > 1) {
       for (int i = 0; i < getDim().getValue(); ++i) {
-         TBOX_ASSERT((box_level.getRefinementRatio()(i) *
-                      box_level.getRefinementRatio()(
+         TBOX_ASSERT((box_level.getRefinementRatio() (i)
+                      * box_level.getRefinementRatio() (
                          (i + 1) % getDim().getValue()) > 0) ||
-            (box_level.getRefinementRatio()(i) == 1) ||
-            (box_level.getRefinementRatio()(
-               (i + 1) % getDim().getValue()) == 1));
+            (box_level.getRefinementRatio() (i) == 1) ||
+            (box_level.getRefinementRatio() (
+                (i + 1) % getDim().getValue()) == 1));
       }
    }
 #endif
@@ -226,12 +226,12 @@ PatchLevel::PatchLevel(
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (getDim().getValue() > 1) {
       for (int i = 0; i < getDim().getValue(); ++i) {
-         TBOX_ASSERT((box_level->getRefinementRatio()(i) *
-                      box_level->getRefinementRatio()(
+         TBOX_ASSERT((box_level->getRefinementRatio() (i)
+                      * box_level->getRefinementRatio() (
                          (i + 1) % getDim().getValue()) > 0) ||
-            (box_level->getRefinementRatio()(i) == 1) ||
-            (box_level->getRefinementRatio()(
-               (i + 1) % getDim().getValue()) == 1));
+            (box_level->getRefinementRatio() (i) == 1) ||
+            (box_level->getRefinementRatio() (
+                (i + 1) % getDim().getValue()) == 1));
       }
    }
 #endif
@@ -1019,7 +1019,7 @@ PatchLevel::Iterator::Iterator(
    const PatchLevel* patch_level,
    bool begin):
    d_iterator(begin ? patch_level->d_patches.begin() :
-                      patch_level->d_patches.end()),
+              patch_level->d_patches.end()),
    d_patches(&patch_level->d_patches)
 {
 }

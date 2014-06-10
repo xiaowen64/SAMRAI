@@ -706,15 +706,15 @@ private:
 
    // shared data operations for variaous array-based types...
    static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
-      s_cell_ops[SAMRAI::MAX_DIM_VAL];
+   s_cell_ops[SAMRAI::MAX_DIM_VAL];
    static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
-      s_edge_ops[SAMRAI::MAX_DIM_VAL];
+   s_edge_ops[SAMRAI::MAX_DIM_VAL];
    static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
-      s_face_ops[SAMRAI::MAX_DIM_VAL];
+   s_face_ops[SAMRAI::MAX_DIM_VAL];
    static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
-      s_node_ops[SAMRAI::MAX_DIM_VAL];
+   s_node_ops[SAMRAI::MAX_DIM_VAL];
    static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
-      s_side_ops[SAMRAI::MAX_DIM_VAL];
+   s_side_ops[SAMRAI::MAX_DIM_VAL];
 
    std::string d_vector_name;
 

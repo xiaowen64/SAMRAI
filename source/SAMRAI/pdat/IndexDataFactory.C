@@ -77,8 +77,8 @@ IndexDataFactory<TYPE, BOX_GEOMETRY>::allocate(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
    return boost::make_shared<IndexData<TYPE, BOX_GEOMETRY> >(
-      patch.getBox(),
-      d_ghosts);
+             patch.getBox(),
+             d_ghosts);
 }
 
 /*

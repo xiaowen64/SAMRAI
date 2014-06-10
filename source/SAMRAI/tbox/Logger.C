@@ -135,7 +135,7 @@ Logger::finalizeCallback()
    }
 }
 
-Logger*
+Logger *
 Logger::getInstance()
 {
    if (s_instance == 0) {

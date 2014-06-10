@@ -17,10 +17,8 @@
 
 #include "boost/make_shared.hpp"
 
-
 namespace SAMRAI {
 namespace hier {
-
 
 /*!
  * @brief Class SingularityFinder implements an algorithm to find
@@ -31,8 +29,8 @@ namespace hier {
 class SingularityFinder
 {
 public:
-
-   SingularityFinder(const tbox::Dimension& dim);
+   SingularityFinder(
+      const tbox::Dimension& dim);
 
    /*!
     * @brief Destructor
@@ -70,15 +68,14 @@ public:
     * @param[in] face_neighbors Input information about face neighbor
     *                           relationships, described above.
     */
-   void findSingularities(
+   void
+   findSingularities(
       std::set<std::set<BlockId> >& singularity_blocks,
       const BoxContainer& domain_boxes,
       const BaseGridGeometry& grid_geometry,
-      const std::map< BoxId, std::map<BoxId,int> >& face_neighbors);
- 
+      const std::map<BoxId, std::map<BoxId, int> >& face_neighbors);
 
 private:
-
    struct Block;
    struct Face;
    struct Edge;
@@ -88,8 +85,9 @@ private:
     * @brief Private struct Block holds inforation about all
     * the faces, edges, and corner points of a block.
     */
-   struct Block { 
-      Block(const tbox::Dimension& dim) {
+   struct Block {
+      Block(
+         const tbox::Dimension& dim) {
 
          if (dim.getValue() == 1) {
             d_nfaces = 2;
@@ -99,7 +97,7 @@ private:
             d_nfaces = 4;
             d_nedges = 0;
             d_npoints = 4;
-         } else if (dim.getValue() == 3) { 
+         } else if (dim.getValue() == 3) {
             d_nfaces = 6;
             d_nedges = 12;
             d_npoints = 8;
@@ -143,9 +141,8 @@ private:
 
       bool d_bdry;
       std::set<int> d_blocks;
-      std::map<int,int> d_block_to_face;
+      std::map<int, int> d_block_to_face;
    };
-
 
    /*!
     * @brief Private struct Edge
@@ -162,7 +159,7 @@ private:
 
       bool d_bdry;
       std::set<int> d_blocks;
-      std::map<int,int> d_block_to_edge;
+      std::map<int, int> d_block_to_edge;
    };
 
    /*!
@@ -180,7 +177,7 @@ private:
 
       bool d_bdry;
       std::set<int> d_blocks;
-      std::map<int,int> d_block_to_point;
+      std::map<int, int> d_block_to_point;
    };
 
    /*
@@ -201,39 +198,46 @@ private:
     * @param[in] domain_boxes   Boxes for the physical domain
     * @param[in] grid_geometry
     */
-   void connect(const BoxId& id_a,
-                const BoxId& id_b,
-                int face_a,
-                int face_b,
-                const BoxContainer& domain_boxes,
-                const BaseGridGeometry& grid_geometry);
+   void
+   connect(
+      const BoxId& id_a,
+      const BoxId& id_b,
+      int face_a,
+      int face_b,
+      const BoxContainer& domain_boxes,
+      const BaseGridGeometry& grid_geometry);
 
    /*!
     * @brief Determine which block faces are not shared by two blocks.  These
     * are boundary faces and must be excluded from the singularity computation.
     */
-   void findBoundaryFaces();
+   void
+   findBoundaryFaces();
 
    /*!
     * @brief Determine which edges are shared between two boxes.
     */
-   void findCoincidentEdges(std::map<int,int>& map_of_edges,
-                            const BoxId& id_a,
-                            const BoxId& id_b,
-                            int facea,
-                            int faceb,
-                            const BoxContainer& domain_boxes,
-                            const BaseGridGeometry& grid_geometry);
+   void
+   findCoincidentEdges(
+      std::map<int, int>& map_of_edges,
+      const BoxId& id_a,
+      const BoxId& id_b,
+      int facea,
+      int faceb,
+      const BoxContainer& domain_boxes,
+      const BaseGridGeometry& grid_geometry);
 
    /*!
     * @brief Determine which corner points are shared between two boxes.
     */
-   void findCoincidentPoints(std::map<int,int>& map_of_points,
-                             const BoxId& id_a,
-                             const BoxId& id_b,
-                             int facea,
-                             const BoxContainer& domain_boxes,
-                             const BaseGridGeometry& grid_geometry);
+   void
+   findCoincidentPoints(
+      std::map<int, int>& map_of_points,
+      const BoxId& id_a,
+      const BoxId& id_b,
+      int facea,
+      const BoxContainer& domain_boxes,
+      const BaseGridGeometry& grid_geometry);
 
    tbox::Dimension d_dim;
 
@@ -246,8 +250,8 @@ private:
     * @brief Static vectors that serve as a table to map face identifiers
     * to edge and node integer identifiers.
     */
-   static std::vector< std::vector<int> > s_face_edges;
-   static std::vector< std::vector<int> > s_face_nodes;
+   static std::vector<std::vector<int> > s_face_edges;
+   static std::vector<std::vector<int> > s_face_nodes;
 
 };
 

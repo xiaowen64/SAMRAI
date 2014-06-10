@@ -592,8 +592,8 @@ int AutoTester::checkHierarchyBoxes(
                  << correct_minus_computed.format("\t");
       tbox::plog << " global box_level \\ correct_box_level:\n"
                  << computed_minus_correct.format("\t");
-      tbox::plog << " correct_box_level:\n" << correct_box_level.format(" ",2) << '\n'
-                 << " box_level:\n" << box_level.format(" ",2) << "\n\n";
+      tbox::plog << " correct_box_level:\n" << correct_box_level.format(" ", 2) << '\n'
+                 << " box_level:\n" << box_level.format(" ", 2) << "\n\n";
       ++num_failures;
    }
 

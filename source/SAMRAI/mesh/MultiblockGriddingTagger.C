@@ -48,7 +48,7 @@ MultiblockGriddingTagger::~MultiblockGriddingTagger()
 }
 
 hier::IntVector
-MultiblockGriddingTagger::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
+MultiblockGriddingTagger::getRefineOpStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getOne(dim);
 }
@@ -85,7 +85,7 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
 {
    NULL_USE(fill_time);
 
-   const tbox::Dimension &dim = patch.getDim();
+   const tbox::Dimension& dim = patch.getDim();
 
    const boost::shared_ptr<pdat::CellData<int> > tag_data(
       BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
@@ -148,7 +148,7 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
    if (grid_geometry->hasEnhancedConnectivity()) {
 
-      const std::map<hier::BlockId,hier::BaseGridGeometry::Neighbor>& neighbors =
+      const std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>& neighbors =
          grid_geometry->getNeighbors(patch_blk_id);
 
       hier::Connector::ConstNeighborhoodIterator ni =
@@ -168,8 +168,8 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
                hier::Transformation::NO_ROTATE;
             hier::IntVector offset(dim);
 
-            std::map<hier::BlockId,hier::BaseGridGeometry::Neighbor>::
-               const_iterator itr = neighbors.find(encon_blk_id);
+            std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::
+            const_iterator itr = neighbors.find(encon_blk_id);
             if (itr != neighbors.end()) {
                rotation = itr->second.getRotationIdentifier();
                offset = itr->second.getShift();

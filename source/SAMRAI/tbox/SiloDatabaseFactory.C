@@ -26,8 +26,8 @@ SiloDatabaseFactory::~SiloDatabaseFactory()
 }
 
 SiloDatabaseFactory::SiloDatabaseFactory(
-   const SiloDatabaseFactory& other)
-   : DatabaseFactory()
+   const SiloDatabaseFactory& other):
+   DatabaseFactory()
 {
    NULL_USE(other);
 }

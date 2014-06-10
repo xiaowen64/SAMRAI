@@ -122,7 +122,7 @@ public:
       const boost::shared_ptr<hier::PatchLevel>& src_level,
       const boost::shared_ptr<RefineClasses>& refine_classes,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
-      RefinePatchStrategy * patch_strategy,
+      RefinePatchStrategy* patch_strategy,
       bool use_time_interpolation = false);
 
    /*!
@@ -196,7 +196,7 @@ public:
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const boost::shared_ptr<RefineClasses>& refine_classes,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
-      RefinePatchStrategy * patch_strategy,
+      RefinePatchStrategy* patch_strategy,
       bool use_time_refinement = false);
 
    /*!
@@ -270,7 +270,9 @@ public:
     *
     * @param [in] flag
     */
-   void setDeterministicUnpackOrderingFlag( bool flag );
+   void
+   setDeterministicUnpackOrderingFlag(
+      bool flag);
 
    /*!
     * @brief Print the refine schedule data to the specified data stream.
@@ -365,7 +367,7 @@ private:
       const boost::shared_ptr<RefineClasses>& refine_classes,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
       RefinePatchStrategy* patch_strategy,
-      const RefineSchedule *top_refine_schedule);
+      const RefineSchedule* top_refine_schedule);
 
    /*!
     * @brief Read static data from input database.
@@ -718,7 +720,7 @@ private:
     * @param[in] dst_to_unfiled      Connector from destination to unfilled
     */
    void
-   makeNodeCenteredUnfilledBoxLevel( 
+   makeNodeCenteredUnfilledBoxLevel(
       const hier::BoxLevel& unfilled_box_level,
       const hier::Connector& dst_to_unfilled);
 
@@ -741,11 +743,11 @@ private:
     */
    void
    setupCoarseInterpBoxLevel(
-      boost::shared_ptr<hier::BoxLevel> &coarse_interp_box_level,
-      boost::shared_ptr<hier::Connector> &dst_to_coarse_interp,
-      boost::shared_ptr<hier::Connector> &coarse_interp_to_unfilled,
-      const hier::BoxLevel &hiercoarse_box_level,
-      const hier::Connector &dst_to_unfilled);
+      boost::shared_ptr<hier::BoxLevel>& coarse_interp_box_level,
+      boost::shared_ptr<hier::Connector>& dst_to_coarse_interp,
+      boost::shared_ptr<hier::Connector>& coarse_interp_to_unfilled,
+      const hier::BoxLevel& hiercoarse_box_level,
+      const hier::Connector& dst_to_unfilled);
 
    /*!
     * @brief Create a coarse interpolation PatchLevel and compute the
@@ -780,9 +782,9 @@ private:
       boost::shared_ptr<hier::Connector>& coarse_interp_to_hiercoarse,
       const int next_coarser_ln,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      const hier::Connector &dst_to_src,
-      const hier::Connector &dst_to_coarse_interp,
-      const boost::shared_ptr<hier::PatchLevel> &dst_level );
+      const hier::Connector& dst_to_src,
+      const hier::Connector& dst_to_coarse_interp,
+      const boost::shared_ptr<hier::PatchLevel>& dst_level);
 
    /*!
     * @brief Check that the Connectors between the coarse
@@ -1202,7 +1204,7 @@ private:
     * recursive schedules.  Unused in when there is no hierarchy for
     * recursion.
     */
-    std::vector<hier::IntVector> d_fine_connector_widths;
+   std::vector<hier::IntVector> d_fine_connector_widths;
 
    /*!
     * @brief The top RefineSchedule that led recursively to this one.
@@ -1210,7 +1212,7 @@ private:
     * The top RefineSchedule contains some parameters to be shared by
     * the recursive RefineSchedules.
     */
-   const RefineSchedule *d_top_refine_schedule;
+   const RefineSchedule* d_top_refine_schedule;
 
    /*!
     * @brief Shared debug checking flag.

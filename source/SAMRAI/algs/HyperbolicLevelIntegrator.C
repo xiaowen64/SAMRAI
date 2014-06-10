@@ -192,7 +192,7 @@ HyperbolicLevelIntegrator::HyperbolicLevelIntegrator(
    const std::string& object_name,
    const boost::shared_ptr<tbox::Database>& input_db,
    HyperbolicPatchStrategy* patch_strategy,
-   bool use_time_refinement) :
+   bool use_time_refinement):
    d_patch_strategy(patch_strategy),
    d_object_name(object_name),
    d_use_time_refinement(use_time_refinement),
@@ -678,7 +678,7 @@ HyperbolicLevelIntegrator::applyRichardsonExtrapolation(
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       d_patch_strategy->
-         tagRichardsonExtrapolationCells(*patch,
+      tagRichardsonExtrapolationCells(*patch,
          error_level_number,
          d_new,                                     //  finer context
          d_current,                                 //  coarser context
@@ -891,7 +891,6 @@ HyperbolicLevelIntegrator::getMaxFinerLevelDt(
    const hier::IntVector& ratio)
 {
    NULL_USE(finer_level_number);
-
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int id = 0; id < ratio.getDim().getValue(); ++id) {
@@ -1540,7 +1539,7 @@ HyperbolicLevelIntegrator::resetTimeDependentData(
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =
-          d_time_dep_variables.begin();
+         d_time_dep_variables.begin();
       while (time_dep_var != d_time_dep_variables.end()) {
 
          int cur_indx =
@@ -1702,7 +1701,7 @@ HyperbolicLevelIntegrator::registerVariable(
    TBOX_ASSERT(transfer_geom);
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, *var);
 
-   if ( !d_bdry_fill_advance ) {
+   if (!d_bdry_fill_advance) {
       /*
        * One-time set-up for communication algorithms.
        * We wait until this point to do this because we need a dimension.
@@ -1751,7 +1750,7 @@ HyperbolicLevelIntegrator::registerVariable(
           * Register variable and context needed for restart.
           */
          hier::PatchDataRestartManager::getManager()->
-            registerPatchDataForRestart(cur_id);
+         registerPatchDataForRestart(cur_id);
 
          /*
           * Set boundary fill schedules for time-dependent variable.
@@ -1846,7 +1845,7 @@ HyperbolicLevelIntegrator::registerVariable(
           * Register variable and context needed for restart.
           */
          hier::PatchDataRestartManager::getManager()->
-            registerPatchDataForRestart(cur_id);
+         registerPatchDataForRestart(cur_id);
 
          /*
           * Bdry algorithms for input variables will fill from current only.
@@ -1898,7 +1897,7 @@ HyperbolicLevelIntegrator::registerVariable(
           * Register variable and context needed for restart.
           */
          hier::PatchDataRestartManager::getManager()->
-            registerPatchDataForRestart(cur_id);
+         registerPatchDataForRestart(cur_id);
 
          boost::shared_ptr<hier::RefineOperator> refine_op(
             transfer_geom->lookupRefineOperator(var, refine_name));
@@ -2067,7 +2066,6 @@ HyperbolicLevelIntegrator::preprocessFluxData(
 
    TBOX_ASSERT(level);
    TBOX_ASSERT(cur_time <= new_time);
-
 
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 
@@ -2479,16 +2477,16 @@ HyperbolicLevelIntegrator::printStatistics(
                      ), sn);
             const double cmin = statn->getGlobalProcStatMin(cstat.getInstanceId(
                      ), sn);
-            const double cavg = csum/mpi.getSize();
-            const double cmaxnorm = cavg != 0 ? cmax/cavg - 1: 0;
+            const double cavg = csum / mpi.getSize();
+            const double cmaxnorm = cavg != 0 ? cmax / cavg - 1 : 0;
             const double bsum = statn->getGlobalProcStatSum(bstat.getInstanceId(
                      ), sn);
             const double bmax = statn->getGlobalProcStatMax(bstat.getInstanceId(
                      ), sn);
             const double bmin = statn->getGlobalProcStatMin(bstat.getInstanceId(
                      ), sn);
-            const double bavg = bsum/mpi.getSize();
-            const double bmaxnorm = bavg != 0 ? bmax/bavg - 1: 0;
+            const double bavg = bsum / mpi.getSize();
+            const double bmaxnorm = bavg != 0 ? bmax / bavg - 1 : 0;
             const double stime = statn->getGlobalProcStatMin(
                   tstat.getInstanceId(),
                   sn);

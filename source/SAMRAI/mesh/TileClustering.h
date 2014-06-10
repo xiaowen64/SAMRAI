@@ -173,17 +173,16 @@ protected:
       const boost::shared_ptr<tbox::Database>& input_db);
 
 private:
-
-
    /*!
     * @brief Cluster, cutting off tiles at process boundaries.
     *
     * This is a special implementation for when we do now allow tiles
     * to cross process boundaries.
     */
-   void clusterWithinProcessBoundaries(
-      hier::BoxLevel &new_box_level,
-      hier::Connector &tag_to_new,
+   void
+   clusterWithinProcessBoundaries(
+      hier::BoxLevel& new_box_level,
+      hier::Connector& tag_to_new,
       const boost::shared_ptr<hier::PatchLevel>& tag_level,
       const hier::BoxContainer& bound_boxes,
       int tag_data_index,
@@ -198,16 +197,17 @@ private:
     * is set to zero.
     */
    boost::shared_ptr<pdat::CellData<int> >
-   makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
-                        int tag_value) const;
+   makeCoarsenedTagData(
+      const pdat::CellData<int>& tag_data,
+      int tag_value) const;
 
    /*!
     * @brief Find tagged tiles in a single patch.
     */
    int
    findTilesContainingTags(
-      hier::BoxContainer &tiles,
-      const pdat::CellData<int> &tag_data,
+      hier::BoxContainer& tiles,
+      const pdat::CellData<int>& tag_data,
       int tag_val,
       int first_tile_index);
 
@@ -217,9 +217,9 @@ private:
     */
    void
    clusterWholeTiles(
-      hier::BoxLevel &new_box_level,
-      boost::shared_ptr<hier::Connector> &tag_to_new,
-      int &local_tiles_have_remote_extent,
+      hier::BoxLevel& new_box_level,
+      boost::shared_ptr<hier::Connector>& tag_to_new,
+      int& local_tiles_have_remote_extent,
       const boost::shared_ptr<hier::PatchLevel>& tag_level,
       const hier::BoxContainer& bound_boxes,
       int tag_data_index,
@@ -230,7 +230,8 @@ private:
     * clusterWholeTiles().
     */
    void
-   detectSemilocalEdges( boost::shared_ptr<hier::Connector> &tag_to_tile );
+   detectSemilocalEdges(
+      boost::shared_ptr<hier::Connector>& tag_to_tile);
 
    /*!
     * @brief Remove duplicate tiles created when a tile crosses a
@@ -238,25 +239,24 @@ private:
     */
    void
    removeDuplicateTiles(
-      hier::BoxLevel &tile_box_level,
-      hier::Connector &tag_to_tiles);
-
+      hier::BoxLevel& tile_box_level,
+      hier::Connector& tag_to_tiles);
 
    /*
     * @brief Shear tiles at block boundaries so they don't cross the boundaries.
     */
    void
    shearTilesAtBlockBoundaries(
-      hier::BoxLevel &tile_box_level,
-      hier::Connector &tag_to_tiles );
+      hier::BoxLevel& tile_box_level,
+      hier::Connector& tag_to_tiles);
 
    /*!
     * @brief Coalesce clusters (and update Connectors).
     */
    void
    coalesceClusters(
-      hier::BoxLevel &tile_box_level,
-      boost::shared_ptr<hier::Connector> &tag_to_tile,
+      hier::BoxLevel& tile_box_level,
+      boost::shared_ptr<hier::Connector>& tag_to_tile,
       int tiles_have_remote_extent);
 
    /*!
@@ -265,8 +265,8 @@ private:
     */
    void
    coalesceClusters(
-      hier::BoxLevel &tile_box_level,
-      boost::shared_ptr<hier::Connector> &tag_to_tile);
+      hier::BoxLevel& tile_box_level,
+      boost::shared_ptr<hier::Connector>& tag_to_tile);
 
    const tbox::Dimension d_dim;
 
@@ -316,7 +316,6 @@ private:
    bool d_barrier_and_time;
    bool d_print_steps;
    //@}
-
 
    //@{
    //! @name Performance timer data for this class.

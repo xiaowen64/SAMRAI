@@ -82,7 +82,7 @@ TimerManager::createManager(
    }
 }
 
-TimerManager*
+TimerManager *
 TimerManager::getManager()
 {
    if (!s_timer_manager_instance) {
@@ -126,7 +126,7 @@ TimerManager::registerSingletonSubclassInstance(
  */
 
 TimerManager::TimerManager(
-   const boost::shared_ptr<Database>& input_db) :
+   const boost::shared_ptr<Database>& input_db):
 #ifdef ENABLE_SAMRAI_TIMERS
    d_timer_active_access_time(-9999.0),
    d_timer_inactive_access_time(-9999.0),

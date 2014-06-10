@@ -16,7 +16,7 @@ namespace tbox {
 DatabaseBox::DatabaseBox()
 {
    d_data.d_dimension = 0;
-   for ( int i=0; i<MAX_DIM_VAL; ++i ) {
+   for (int i = 0; i < MAX_DIM_VAL; ++i) {
       d_data.d_lo[i] = d_data.d_hi[i] = 0;
    }
 }

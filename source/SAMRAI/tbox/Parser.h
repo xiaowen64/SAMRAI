@@ -76,7 +76,7 @@ public:
    int
    parse(
       const std::string& filename,
-      FILE * fstream,
+      FILE* fstream,
       const boost::shared_ptr<Database>& database);
 
    /**

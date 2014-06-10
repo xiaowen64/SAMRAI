@@ -129,12 +129,12 @@ RankGroup::RankGroup(
  ***********************************************************************
  */
 RankGroup::RankGroup(
-   const RankGroup& other)
-   : d_min(other.d_min),
-     d_max(other.d_max),
-     d_ranks(other.d_ranks),
-     d_storage(other.d_storage),
-     d_samrai_mpi(other.d_samrai_mpi)
+   const RankGroup& other):
+   d_min(other.d_min),
+   d_max(other.d_max),
+   d_ranks(other.d_ranks),
+   d_storage(other.d_storage),
+   d_samrai_mpi(other.d_samrai_mpi)
 {
 }
 
@@ -153,8 +153,8 @@ RankGroup::~RankGroup()
  * Assignment operator.
  ***********************************************************************
  */
- RankGroup&
- RankGroup::operator = (
+RankGroup&
+RankGroup::operator = (
    const RankGroup& rhs)
 {
    d_min = rhs.d_min;

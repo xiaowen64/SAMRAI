@@ -181,19 +181,21 @@ public:
     * so it is of more general use.  It does not require the
     * hierarchy.
     */
-   void computeFrontsData(
+   void
+   computeFrontsData(
       pdat::NodeData<double>* dist_data,
       pdat::CellData<double>* uval_data,
       pdat::CellData<int>* tag_data,
-      const hier::Box &fill_box,
-      const hier::IntVector &buffer,
+      const hier::Box& fill_box,
+      const hier::IntVector& buffer,
       const double xlo[],
       const double dx[],
-      const double time ) const;
+      const double time) const;
 
 private:
-
-   const double *getBufferSpace(int ln) const;
+   const double *
+   getBufferSpace(
+      int ln) const;
 
    std::string d_name;
 

@@ -117,7 +117,7 @@ public:
    virtual void
    loadBalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
-      hier::Connector* balance_to_reference,
+      hier::Connector* balance_to_anchor,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::IntVector& min_size,

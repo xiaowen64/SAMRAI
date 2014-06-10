@@ -162,7 +162,6 @@ void TypeIndependentTester<TYPE>::runTest(
            << "] recv fr " << std::setw(3) << peer_rank << std::endl;
    }
 
-
    /*
     * Test loop.  Each process will send and receive from every
     * member in its group num_cycles times.
@@ -186,7 +185,7 @@ void TypeIndependentTester<TYPE>::runTest(
       /*
        * Check completed members for correctness.
        */
-      while ( stage.hasCompletedMembers() ) {
+      while (stage.hasCompletedMembers()) {
 
          AsyncCommStage::Member* completed_member = stage.popCompletionQueue();
 

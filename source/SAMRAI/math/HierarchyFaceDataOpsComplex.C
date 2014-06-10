@@ -743,9 +743,9 @@ HierarchyFaceDataOpsComplex::numberOfEntries(
 
    if (interior_only) {
 
-     boost::shared_ptr<pdat::FaceDataFactory<dcomplex> > dfact(
-        BOOST_CAST<pdat::FaceDataFactory<dcomplex>, hier::PatchDataFactory>(
-           d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id)));
+      boost::shared_ptr<pdat::FaceDataFactory<dcomplex> > dfact(
+         BOOST_CAST<pdat::FaceDataFactory<dcomplex>, hier::PatchDataFactory>(
+            d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id)));
 
       TBOX_ASSERT(dfact);
 
@@ -763,7 +763,7 @@ HierarchyFaceDataOpsComplex::numberOfEntries(
                hier::BoxContainer::const_iterator lb =
                   ((d_nonoverlapping_face_boxes[eb][ln])[il]).begin();
                for ( ; lb != ((d_nonoverlapping_face_boxes[eb][ln])[il]).end();
-                    ++lb) {
+                     ++lb) {
                   entries += lb->size();
                }
             }
@@ -1028,7 +1028,7 @@ HierarchyFaceDataOpsComplex::maxNorm(
 
          boost::shared_ptr<pdat::FaceData<double> > cv(
             boost::dynamic_pointer_cast<pdat::FaceData<double>,
-               hier::PatchData>(pd));
+                                        hier::PatchData>(pd));
          norm = tbox::MathUtilities<double>::Max(norm,
                d_patch_ops.maxNorm(d, box, cv));
       }
@@ -1101,8 +1101,7 @@ HierarchyFaceDataOpsComplex::dot(
       mpi.Allreduce(&imag_part, &global_imag_part, 1, MPI_DOUBLE, MPI_SUM);
       dcomplex global_dot(global_real_part, global_imag_part);
       return global_dot;
-   }
-   else {
+   } else {
       return dprod;
    }
 }
@@ -1157,8 +1156,7 @@ HierarchyFaceDataOpsComplex::integral(
       mpi.Allreduce(&imag_part, &global_imag_part, 1, MPI_DOUBLE, MPI_SUM);
       dcomplex global_integral(global_real_part, global_imag_part);
       return global_integral;
-   }
-   else {
+   } else {
       return local_integral;
    }
 }

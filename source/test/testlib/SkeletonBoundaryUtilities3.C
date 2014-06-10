@@ -270,7 +270,7 @@ void SkeletonBoundaryUtilities3::fillEdgeBoundaryData(
    TBOX_ASSERT(vardata);
    TBOX_ASSERT(static_cast<int>(bdry_edge_conds.size()) == NUM_3D_EDGES);
    TBOX_ASSERT(static_cast<int>(bdry_face_values.size()) ==
-               NUM_3D_FACES * (vardata->getDepth()));
+      NUM_3D_FACES * (vardata->getDepth()));
 
    if (!s_fortran_constants_stuffed) {
       stuff3dBdryFortConst();
@@ -349,7 +349,7 @@ void SkeletonBoundaryUtilities3::fillNodeBoundaryData(
    TBOX_ASSERT(vardata);
    TBOX_ASSERT(static_cast<int>(bdry_node_conds.size()) == NUM_3D_NODES);
    TBOX_ASSERT(static_cast<int>(bdry_face_values.size()) ==
-               NUM_3D_FACES * (vardata->getDepth()));
+      NUM_3D_FACES * (vardata->getDepth()));
 
    if (!s_fortran_constants_stuffed) {
       stuff3dBdryFortConst();

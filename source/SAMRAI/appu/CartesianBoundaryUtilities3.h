@@ -369,7 +369,7 @@ public:
     *         (bcase == BdryCond::ZFLOW) || (bcase == BdryCond::XREFLECT) ||
     *         (bcase == BdryCond::YREFLECT) || (bcase == BdryCond::XREFLECT) ||
     *         (bcase == BdryCond::XDIRICHLET) ||
-    *         (bcase == BdryCond::YDIRICHLET) || 
+    *         (bcase == BdryCond::YDIRICHLET) ||
     *         (bcase == BdryCond::ZDIRICHLET) ||
     *         (bcase == BdryCond::XNEUMANN) || (bcase == BdryCond::YNEUMANN) ||
     *         (bcase == BdryCond::ZNEUMANN)))

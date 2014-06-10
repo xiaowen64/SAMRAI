@@ -18,8 +18,7 @@ RealBoxConstIterator::RealBoxConstIterator(
    d_boxes(&boxes),
    d_ni(begin ? d_boxes->begin() : d_boxes->end())
 {
-   if (begin)
-   {
+   if (begin) {
       while (d_ni != d_boxes->end() && d_ni->isPeriodicImage()) {
          ++d_ni;
       }

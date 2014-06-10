@@ -40,7 +40,7 @@ VariableDatabase::s_shutdown_handler(
  *************************************************************************
  */
 
-VariableDatabase*
+VariableDatabase *
 VariableDatabase::getDatabase()
 {
    if (!s_variable_database_instance) {
@@ -67,7 +67,7 @@ VariableDatabase::shutdownCallback()
  *************************************************************************
  */
 
-VariableDatabase::VariableDatabase() :
+VariableDatabase::VariableDatabase():
    d_patch_descriptor(boost::make_shared<PatchDescriptor>())
 {
    d_max_variable_id = idUndefined();

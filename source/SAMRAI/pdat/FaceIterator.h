@@ -81,7 +81,7 @@ public:
     * Extract a pointer to the face index corresponding to the iterator
     * position in the box.
     */
-   const FaceIndex*
+   const FaceIndex *
    operator -> () const
    {
       return &d_index;
@@ -125,8 +125,14 @@ public:
    }
 
 private:
-   friend FaceIterator FaceGeometry::begin(const hier::Box& box, int axis);
-   friend FaceIterator FaceGeometry::end(const hier::Box& box, int axis);
+   friend FaceIterator
+   FaceGeometry::begin(
+      const hier::Box& box,
+      int axis);
+   friend FaceIterator
+   FaceGeometry::end(
+      const hier::Box& box,
+      int axis);
 
    /**
     * Constructor for the face iterator.  The iterator will enumerate

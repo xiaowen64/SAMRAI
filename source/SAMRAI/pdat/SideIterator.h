@@ -81,7 +81,7 @@ public:
     * Extract a pointer to the side index corresponding to the iterator
     * position in the box.
     */
-   const SideIndex*
+   const SideIndex *
    operator -> () const
    {
       return &d_index;
@@ -125,8 +125,14 @@ public:
    }
 
 private:
-   friend SideIterator SideGeometry::begin(const hier::Box& box, int axis);
-   friend SideIterator SideGeometry::end(const hier::Box& box, int axis);
+   friend SideIterator
+   SideGeometry::begin(
+      const hier::Box& box,
+      int axis);
+   friend SideIterator
+   SideGeometry::end(
+      const hier::Box& box,
+      int axis);
 
    /**
     * Constructor for the side iterator.  The iterator will enumerate

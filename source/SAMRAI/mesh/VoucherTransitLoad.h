@@ -44,48 +44,64 @@ namespace mesh {
  * VoucherRedemption encapsulates the process of redeeming a voucher.
  */
 
-class VoucherTransitLoad : public TransitLoad {
+class VoucherTransitLoad:public TransitLoad
+{
 
 public:
-
    typedef double LoadType;
 
    //! @name Constructor
-   VoucherTransitLoad( const PartitioningParams &pparams );
+   VoucherTransitLoad(
+      const PartitioningParams& pparams);
 
    //! @name Copy constructor
-   VoucherTransitLoad( const VoucherTransitLoad &other, bool copy_load = true );
+   VoucherTransitLoad(
+      const VoucherTransitLoad& other,
+      bool copy_load = true);
 
    //@{
    //! @name TransitLoad abstract interfaces
 
    //! @copydoc TransitLoad::clone()
-   VoucherTransitLoad* clone() const;
+   VoucherTransitLoad *
+   clone() const;
 
    //! @copydoc TransitLoad::initialize()
-   void initialize();
+   void
+   initialize();
 
    //! @copydoc TransitLoad::getSumLoad()
-   LoadType getSumLoad() const { return d_sumload; }
+   LoadType getSumLoad() const {
+      return d_sumload;
+   }
 
    //! @copydoc TransitLoad::insertAll( const hier::BoxContainer & )
-   void insertAll( const hier::BoxContainer &box_container );
+   void
+   insertAll(
+      const hier::BoxContainer& box_container);
 
    //! @copydoc TransitLoad::insertAll( TransitLoad & )
-   void insertAll( TransitLoad &other );
+   void
+   insertAll(
+      TransitLoad& other);
 
    //! @copydoc TransitLoad::getNumberOfItems()
-   size_t getNumberOfItems() const;
+   size_t
+   getNumberOfItems() const;
 
    //! @copydoc TransitLoad::getNumberOfOriginatingProcesses()
-   size_t getNumberOfOriginatingProcesses() const;
+   size_t
+   getNumberOfOriginatingProcesses() const;
 
    //! @copydoc TransitLoad::putToMessageStream()
-   void putToMessageStream( tbox::MessageStream &msg ) const;
+   void
+   putToMessageStream(
+      tbox::MessageStream& msg) const;
 
    //! @copydoc TransitLoad::getFromMessageStream()
-   void getFromMessageStream( tbox::MessageStream &msg );
-
+   void
+   getFromMessageStream(
+      tbox::MessageStream& msg);
 
    /*!
     * @copydoc TransitLoad::adjustLoad()
@@ -95,8 +111,7 @@ public:
       TransitLoad& hold_bin,
       LoadType ideal_load,
       LoadType low_load,
-      LoadType high_load );
-
+      LoadType high_load);
 
    /*!
     * @copydoc TransitLoad::assignToLocalAndPopulateMaps()
@@ -106,12 +121,11 @@ public:
    void
    assignToLocalAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
-      hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced,
-      double flexible_load_tol = 0.0 );
+      hier::MappingConnector& balanced_to_unbalanced,
+      hier::MappingConnector& unbalanced_to_balanced,
+      double flexible_load_tol = 0.0);
 
    //@}
-
 
    /*!
     * @brief Setup names of timers.
@@ -127,55 +141,59 @@ public:
    setTimerPrefix(
       const std::string& timer_prefix);
 
-   void recursivePrint(
-      std::ostream &co=tbox::plog,
-      const std::string &border=std::string(),
-      int detail_depth=1 ) const;
-
+   void
+   recursivePrint(
+      std::ostream& co = tbox::plog,
+      const std::string& border = std::string(),
+      int detail_depth = 1) const;
 
 private:
-
    //! @brief MPI tag for demand communication.
    static const int VoucherTransitLoad_DEMANDTAG = 3;
    //! @brief MPI tag for supply communication.
    static const int VoucherTransitLoad_SUPPLYTAG = 4;
 
-
    //! @brief Voucher.
    struct Voucher {
       //! @brief Default constructor sets zero value and invalid issuer.
-      Voucher() :
+      Voucher():
          d_issuer_rank(tbox::SAMRAI_MPI::getInvalidRank()),
          d_load(0.0) {
       }
       //! @brief Initializing constructor sets voucher value and issuer.
-      Voucher( const LoadType &load, int issuer_rank ) :
+      Voucher(
+         const LoadType& load,
+         int issuer_rank):
          d_issuer_rank(issuer_rank),
          d_load(load) {
       }
       //! @brief Construct Voucher by combining two vouchers from the same issuer.
-      Voucher( const Voucher &a, const Voucher &b ) :
+      Voucher(
+         const Voucher& a,
+         const Voucher& b):
          d_issuer_rank(a.d_issuer_rank),
-         d_load( a.d_load + b.d_load ) {
-         if ( a.d_issuer_rank != b.d_issuer_rank ) {
+         d_load(a.d_load + b.d_load) {
+         if (a.d_issuer_rank != b.d_issuer_rank) {
             TBOX_ERROR("VoucherTransitLoad: Cannot combine vouchers from different issuers.");
          }
       }
       //@ @brief Construct Voucher by taking value from an existing Voucher.
-      Voucher ( LoadType load, Voucher &src ) :
+      Voucher(
+         LoadType load,
+         Voucher& src):
          d_issuer_rank(src.d_issuer_rank),
          d_load(load <= src.d_load ? load : src.d_load) {
          src.d_load -= d_load;
       }
-      friend std::ostream &operator<<( std::ostream &co, const Voucher &v ) {
+      friend std::ostream& operator << (std::ostream& co, const Voucher& v) {
          co << v.d_issuer_rank << '|' << v.d_load;
          return co;
       }
-      friend tbox::MessageStream &operator<<( tbox::MessageStream &ms, const Voucher &v ) {
+      friend tbox::MessageStream& operator << (tbox::MessageStream& ms, const Voucher& v) {
          ms << v.d_issuer_rank << v.d_load;
          return ms;
       }
-      friend tbox::MessageStream &operator>>( tbox::MessageStream &ms, Voucher &v ) {
+      friend tbox::MessageStream& operator >> (tbox::MessageStream& ms, Voucher& v) {
          ms >> v.d_issuer_rank >> v.d_load;
          return ms;
       }
@@ -186,15 +204,17 @@ private:
        * Similar to the interface defined in TransitLoad but working
        * with individual vouchers instead of containers.
        */
-      LoadType adjustLoad( Voucher &other, LoadType ideal_load );
+      LoadType
+      adjustLoad(
+         Voucher& other,
+         LoadType ideal_load);
       int d_issuer_rank;
       LoadType d_load;
    };
 
-
    //! @brief Comparison functor for sorting Vouchers by issuer rank and load.
    struct VoucherRankCompare {
-      bool operator () ( const Voucher& a, const Voucher& b) const {
+      bool operator () (const Voucher& a, const Voucher& b) const {
          if (a.d_issuer_rank != b.d_issuer_rank) {
             return a.d_issuer_rank < b.d_issuer_rank;
          }
@@ -202,57 +222,76 @@ private:
       }
    };
 
-
    //@{
    //! @name Interfaces like the C++ standard stl::set, to help readability.
-   typedef std::set<Voucher,VoucherRankCompare> RankOrderedVouchers;
+   typedef std::set<Voucher, VoucherRankCompare> RankOrderedVouchers;
    typedef RankOrderedVouchers::iterator iterator;
    typedef RankOrderedVouchers::const_iterator const_iterator;
    typedef RankOrderedVouchers::reverse_iterator reverse_iterator;
    typedef RankOrderedVouchers::key_type key_type;
    typedef RankOrderedVouchers::value_type value_type;
-   iterator begin() { return d_vouchers.begin(); }
-   iterator end() { return d_vouchers.end(); }
-   const_iterator begin() const { return d_vouchers.begin(); }
-   const_iterator end() const { return d_vouchers.end(); }
-   reverse_iterator rbegin() { return d_vouchers.rbegin(); }
-   reverse_iterator rend() { return d_vouchers.rend(); }
-   size_t size() const { return d_vouchers.size(); }
-   bool empty() const { return d_vouchers.empty(); }
-   void clear() { d_sumload = 0; d_vouchers.clear(); }
-   std::pair<iterator, bool> insert( const Voucher &v ) {
-      TBOX_ASSERT( v.d_load >= d_pparams->getLoadComparisonTol() );
-      iterator itr = d_vouchers.lower_bound( Voucher(0,v.d_issuer_rank) );
-      if ( itr != d_vouchers.end() &&
-           itr->d_issuer_rank == v.d_issuer_rank ) {
-         TBOX_ERROR("Cannot insert Voucher " << v
-                    << ".\nExisting voucher " << *itr << " is from the same issuer."
-                    << "\nTo combine the vouchers, use insertCombine().");
+   iterator begin() {
+      return d_vouchers.begin();
+   }
+   iterator end() {
+      return d_vouchers.end();
+   }
+   const_iterator begin() const {
+      return d_vouchers.begin();
+   }
+   const_iterator end() const {
+      return d_vouchers.end();
+   }
+   reverse_iterator rbegin() {
+      return d_vouchers.rbegin();
+   }
+   reverse_iterator rend() {
+      return d_vouchers.rend();
+   }
+   size_t size() const {
+      return d_vouchers.size();
+   }
+   bool empty() const {
+      return d_vouchers.empty();
+   }
+   void clear() {
+      d_sumload = 0;
+      d_vouchers.clear();
+   }
+   std::pair<iterator, bool> insert(const Voucher& v) {
+      TBOX_ASSERT(v.d_load >= d_pparams->getLoadComparisonTol());
+      iterator itr = d_vouchers.lower_bound(Voucher(0, v.d_issuer_rank));
+      if (itr != d_vouchers.end() &&
+          itr->d_issuer_rank == v.d_issuer_rank) {
+         TBOX_ERROR(
+            "Cannot insert Voucher " << v
+                                     << ".\nExisting voucher " << *itr
+                                     << " is from the same issuer."
+                                     << "\nTo combine the vouchers, use insertCombine().");
       }
-      itr = d_vouchers.insert( itr, v );
+      itr = d_vouchers.insert(itr, v);
       d_sumload += v.d_load;
       checkDupes();
-      return std::pair<iterator, bool>(itr,true);
+      return std::pair<iterator, bool>(itr, true);
    }
-   size_t erase( const Voucher &v ) {
+   size_t erase(const Voucher& v) {
       iterator vi = d_vouchers.lower_bound(v);
-      if ( vi != d_vouchers.end() ) {
+      if (vi != d_vouchers.end()) {
          d_sumload -= vi->d_load;
          erase(vi);
          return 1;
       }
       return 0;
    }
-   void erase( iterator pos) {
+   void erase(iterator pos) {
       d_sumload -= pos->d_load;
 #ifdef DEBUG_CHECK_ASSERTIONS
       size_t old_size = d_vouchers.size();
 #endif
       d_vouchers.erase(pos);
-      TBOX_ASSERT( d_vouchers.size() == old_size - 1 );
-      return;
+      TBOX_ASSERT(d_vouchers.size() == old_size - 1);
    }
-   void swap( VoucherTransitLoad &other ) {
+   void swap(VoucherTransitLoad& other) {
       const LoadType tmpload = d_sumload;
       d_sumload = other.d_sumload;
       other.d_sumload = tmpload;
@@ -260,14 +299,14 @@ private:
    }
    //@}
 
-
    //! @brief Encapsulates voucher redemption for both demander and supplier.
    struct VoucherRedemption {
-      VoucherRedemption() :
+      VoucherRedemption():
          d_demander_rank(tbox::SAMRAI_MPI::getInvalidRank()),
          d_pparams(0),
          d_mpi(MPI_COMM_NULL),
-         d_mpi_request(MPI_REQUEST_NULL) {};
+         d_mpi_request(MPI_REQUEST_NULL) {
+      }
       ~VoucherRedemption() {
          finishSendRequest();
          d_pparams = 0;
@@ -275,42 +314,50 @@ private:
 
       //@{
       //! @name Demanding and supplying work based on a voucher.
-      void sendWorkDemand(
-         const VoucherTransitLoad::const_iterator &voucher,
-         const hier::SequentialLocalIdGenerator &id_gen,
-         const tbox::SAMRAI_MPI &mpi );
+      void
+      sendWorkDemand(
+         const VoucherTransitLoad::const_iterator& voucher,
+         const hier::SequentialLocalIdGenerator& id_gen,
+         const tbox::SAMRAI_MPI& mpi);
 
-      void recvWorkDemand(
+      void
+      recvWorkDemand(
          int demander_rank,
          int message_length,
-         const tbox::SAMRAI_MPI &mpi );
+         const tbox::SAMRAI_MPI& mpi);
 
-      void sendWorkSupply(
-         BoxTransitSet &reserve,
+      void
+      sendWorkSupply(
+         BoxTransitSet& reserve,
          double flexible_load_tol,
-         const PartitioningParams &pparams,
-         bool send_all );
+         const PartitioningParams& pparams,
+         bool send_all);
 
-      void recvWorkSupply(
+      void
+      recvWorkSupply(
          int message_length,
-         const PartitioningParams &pparams );
+         const PartitioningParams& pparams);
 
-      void setLocalRedemption(
-         const VoucherTransitLoad::const_iterator &voucher,
-         const hier::SequentialLocalIdGenerator &id_gen,
-         const tbox::SAMRAI_MPI &mpi );
+      void
+      setLocalRedemption(
+         const VoucherTransitLoad::const_iterator& voucher,
+         const hier::SequentialLocalIdGenerator& id_gen,
+         const tbox::SAMRAI_MPI& mpi);
 
-      void fulfillLocalRedemption(
-         BoxTransitSet &reserve,
-         const PartitioningParams &pparams,
-         bool all );
+      void
+      fulfillLocalRedemption(
+         BoxTransitSet& reserve,
+         const PartitioningParams& pparams,
+         bool all);
       //@}
 
-      void takeWorkFromReserve(
-         BoxTransitSet &work,
-         BoxTransitSet &reserve );
+      void
+      takeWorkFromReserve(
+         BoxTransitSet& work,
+         BoxTransitSet& reserve);
 
-         void finishSendRequest();
+      void
+      finishSendRequest();
 
       Voucher d_voucher;
       int d_demander_rank;
@@ -318,65 +365,63 @@ private:
       hier::SequentialLocalIdGenerator d_id_gen;
       //! @brief Shipment of work, as boxes, sent or received.
       boost::shared_ptr<BoxTransitSet> d_box_shipment;
-      const PartitioningParams *d_pparams;
+      const PartitioningParams* d_pparams;
 
       boost::shared_ptr<tbox::MessageStream> d_msg;
       tbox::SAMRAI_MPI d_mpi;
       tbox::SAMRAI_MPI::Request d_mpi_request;
    };
 
-
    /*!
     * @brief Insert voucher, combining with existing voucher from same issuer.
     */
-   iterator insertCombine( const Voucher &v ) {
-      iterator itr = d_vouchers.lower_bound( Voucher(0.0, v.d_issuer_rank) );
-      if ( itr == d_vouchers.end() ||
-           v.d_issuer_rank != itr->d_issuer_rank ) {
+   iterator insertCombine(const Voucher& v) {
+      iterator itr = d_vouchers.lower_bound(Voucher(0.0, v.d_issuer_rank));
+      if (itr == d_vouchers.end() ||
+          v.d_issuer_rank != itr->d_issuer_rank) {
          // Safe to insert.
-         TBOX_ASSERT( v.d_load >= d_pparams->getLoadComparisonTol() );
-         itr = d_vouchers.insert( itr, v );
-      }
-      else {
+         TBOX_ASSERT(v.d_load >= d_pparams->getLoadComparisonTol());
+         itr = d_vouchers.insert(itr, v);
+      } else {
          // Create combined voucher to replace existing one.
-         Voucher combined(*itr,v);
-         TBOX_ASSERT( combined.d_load >= d_pparams->getLoadComparisonTol() );
+         Voucher combined(*itr, v);
+         TBOX_ASSERT(combined.d_load >= d_pparams->getLoadComparisonTol());
          d_vouchers.erase(itr++);
-         itr = d_vouchers.insert( itr, combined );
+         itr = d_vouchers.insert(itr, combined);
       }
       d_sumload += v.d_load;
       checkDupes();
       return itr;
    }
 
-
    /*!
     * @brief Erase voucher issued by the given process.
     *
     * @return Whether there was a Voucher to be erased.
     */
-   bool eraseIssuer( int issuer_rank );
+   bool
+   eraseIssuer(
+      int issuer_rank);
 
    //! @brief Sanity check enforcing no-duplicate-issuer rule.
    void checkDupes() const {
-      for ( const_iterator i=begin(); i!=end(); ++i ) {
+      for (const_iterator i = begin(); i != end(); ++i) {
          const_iterator i1 = i;
          ++i1;
-         if ( i1 != end() && i1->d_issuer_rank == i->d_issuer_rank ) {
+         if (i1 != end() && i1->d_issuer_rank == i->d_issuer_rank) {
          }
       }
    }
 
    //! @brief Sanity check catching extremely small vouchers.
    void checkSmallVouchers() const {
-      for ( const_iterator i=begin(); i!=end(); ++i ) {
-         if ( i->d_load < d_pparams->getLoadComparisonTol() ) {
-         TBOX_ERROR("Voucher " << *i << " is smaller than tolerance "
-                    << d_pparams->getLoadComparisonTol());
+      for (const_iterator i = begin(); i != end(); ++i) {
+         if (i->d_load < d_pparams->getLoadComparisonTol()) {
+            TBOX_ERROR("Voucher " << *i << " is smaller than tolerance "
+                                  << d_pparams->getLoadComparisonTol());
          }
       }
    }
-
 
    /*!
     * @brief Raise load of dst container by shifing load from src.
@@ -385,8 +430,7 @@ private:
    raiseDstLoad(
       VoucherTransitLoad& src,
       VoucherTransitLoad& dst,
-      LoadType ideal_dst_load );
-
+      LoadType ideal_dst_load);
 
    /*!
     * @brief Assign a reserve to a set of VoucherRedemption.
@@ -395,45 +439,45 @@ private:
     *
     * On return, work assignments will be reflected in reserve.
     */
-   void recursiveSendWorkSupply(
-   const std::map<int,VoucherRedemption>::iterator &begin,
-   const std::map<int,VoucherRedemption>::iterator &end,
-   BoxTransitSet &reserve );
-
-
-   /*!
-    * @brief Re-cast a TransitLoad object to a VoucherTransitLoad.
-    */
-   const VoucherTransitLoad &recastTransitLoad( const TransitLoad &transit_load ) {
-      const VoucherTransitLoad *ptr = static_cast<const VoucherTransitLoad*>(&transit_load);
-      TBOX_ASSERT(ptr);
-      return *ptr;
-   }
-
+   void
+   recursiveSendWorkSupply(
+      const std::map<int, VoucherRedemption>::iterator& begin,
+      const std::map<int, VoucherRedemption>::iterator& end,
+      BoxTransitSet& reserve);
 
    /*!
     * @brief Re-cast a TransitLoad object to a VoucherTransitLoad.
     */
-   VoucherTransitLoad &recastTransitLoad( TransitLoad &transit_load ) {
-      VoucherTransitLoad *ptr = static_cast<VoucherTransitLoad*>(&transit_load);
+   const VoucherTransitLoad& recastTransitLoad(const TransitLoad& transit_load) {
+      const VoucherTransitLoad* ptr = static_cast<const VoucherTransitLoad *>(&transit_load);
       TBOX_ASSERT(ptr);
       return *ptr;
    }
 
+   /*!
+    * @brief Re-cast a TransitLoad object to a VoucherTransitLoad.
+    */
+   VoucherTransitLoad& recastTransitLoad(TransitLoad& transit_load) {
+      VoucherTransitLoad* ptr = static_cast<VoucherTransitLoad *>(&transit_load);
+      TBOX_ASSERT(ptr);
+      return *ptr;
+   }
 
    /*!
     * @brief Return the Voucher issued by the given process.  If
     * Voucher isn't there, return zero-valued Voucher.
     */
-   Voucher findVoucher( int issuer_rank ) const;
-
+   Voucher
+   findVoucher(
+      int issuer_rank) const;
 
    /*!
     * @brief Yank out and return the Voucher issued by the given
     * process.  If Voucher isn't there, return zero-valued Voucher.
     */
-   Voucher yankVoucher( int issuer_rank );
-
+   Voucher
+   yankVoucher(
+      int issuer_rank);
 
    /*!
     * @brief Look for an input database called "VoucherTransitLoad"
@@ -441,7 +485,6 @@ private:
     */
    void
    getFromInput();
-
 
    /*!
     * @brief Set up things for the entire class.
@@ -453,7 +496,6 @@ private:
       getAllTimers(s_default_timer_prefix, timers);
    }
 
-
    /*!
     * Free static timers.
     *
@@ -463,13 +505,12 @@ private:
       s_static_timers.clear();
    }
 
-
    //! @brief Work load, sorted by issuer rank.
    RankOrderedVouchers d_vouchers;
 
    LoadType d_sumload;
 
-   const PartitioningParams *d_pparams;
+   const PartitioningParams* d_pparams;
 
    bool d_partition_work_supply_recursively;
 
@@ -530,8 +571,6 @@ private:
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;
 };
-
-
 
 }
 }

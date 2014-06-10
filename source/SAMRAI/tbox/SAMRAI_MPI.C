@@ -91,7 +91,7 @@ SAMRAI_MPI::SAMRAI_MPI(
  **************************************************************************
  */
 SAMRAI_MPI::SAMRAI_MPI(
-   const SAMRAI_MPI& other) :
+   const SAMRAI_MPI& other):
    d_comm(other.d_comm),
    d_rank(other.d_rank),
    d_size(other.d_size)
@@ -302,9 +302,11 @@ SAMRAI_MPI::Comm_size(
    }
 #ifdef HAVE_MPI
    return MPI_Comm_size(comm, size);
+
 #else
    *size = 1;
    return MPI_SUCCESS;
+
 #endif
 }
 
@@ -1187,9 +1189,9 @@ SAMRAI_MPI::Send(
  */
 int
 SAMRAI_MPI::Sendrecv(
-   void *sendbuf, int sendcount, Datatype sendtype, int dest, int sendtag,
-   void *recvbuf, int recvcount, Datatype recvtype, int source, int recvtag,
-   Status *status ) const
+   void* sendbuf, int sendcount, Datatype sendtype, int dest, int sendtag,
+   void* recvbuf, int recvcount, Datatype recvtype, int source, int recvtag,
+   Status* status) const
 {
 #ifndef HAVE_MPI
    NULL_USE(sendbuf);
@@ -1211,9 +1213,9 @@ SAMRAI_MPI::Sendrecv(
 #ifdef HAVE_MPI
    else {
       rval = MPI_Sendrecv(
-         sendbuf, sendcount, sendtype, dest, sendtag,
-         recvbuf, recvcount, recvtype, source, recvtag,
-         d_comm, status );
+            sendbuf, sendcount, sendtype, dest, sendtag,
+            recvbuf, recvcount, recvtype, source, recvtag,
+            d_comm, status);
    }
 #endif
    return rval;
@@ -1471,40 +1473,40 @@ SAMRAI_MPI::parallelPrefixSum(
    Status send_stat, recv_stat;
    int mpi_err = MPI_SUCCESS;
 
-   for ( int distance=1; distance < d_size; distance *= 2 ) {
+   for (int distance = 1; distance < d_size; distance *= 2) {
 
       const int recv_from = d_rank - distance;
       const int send_to = d_rank + distance;
 
-      if ( recv_from >= 0 ) {
-         mpi_err = Irecv( &recv_scr[0], count, MPI_INT, recv_from, tag, &recv_req );
-         if ( mpi_err != MPI_SUCCESS ) {
+      if (recv_from >= 0) {
+         mpi_err = Irecv(&recv_scr[0], count, MPI_INT, recv_from, tag, &recv_req);
+         if (mpi_err != MPI_SUCCESS) {
             return mpi_err;
          }
       }
 
-      if (send_to < d_size ) {
+      if (send_to < d_size) {
          send_scr.clear();
-         send_scr.insert( send_scr.end(), x, x+count );
-         mpi_err = Isend( &send_scr[0], count, MPI_INT, send_to, tag, &send_req );
-         if ( mpi_err != MPI_SUCCESS ) {
+         send_scr.insert(send_scr.end(), x, x + count);
+         mpi_err = Isend(&send_scr[0], count, MPI_INT, send_to, tag, &send_req);
+         if (mpi_err != MPI_SUCCESS) {
             return mpi_err;
          }
       }
 
-      if ( recv_from >= 0 ) {
-         mpi_err = Wait( &recv_req, &recv_stat );
-         if ( mpi_err != MPI_SUCCESS ) {
+      if (recv_from >= 0) {
+         mpi_err = Wait(&recv_req, &recv_stat);
+         if (mpi_err != MPI_SUCCESS) {
             return mpi_err;
          }
-         for ( int i=0; i<count; ++i ) {
+         for (int i = 0; i < count; ++i) {
             x[i] += recv_scr[i];
          }
       }
 
-      if ( send_to < d_size ) {
-         mpi_err = Wait( &send_req, &send_stat );
-         if ( mpi_err != MPI_SUCCESS ) {
+      if (send_to < d_size) {
+         mpi_err = Wait(&send_req, &send_stat);
+         if (mpi_err != MPI_SUCCESS) {
             return mpi_err;
          }
       }

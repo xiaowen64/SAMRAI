@@ -154,7 +154,7 @@ public:
       TwoDimBool& touches_regular_bdry,
       TwoDimBool& touches_periodic_bdry,
       const Box& box,
-      const IntVector &refinement_ratio,
+      const IntVector& refinement_ratio,
       const BoxContainer& refined_periodic_domain_tree) const;
 
    /*!
@@ -361,7 +361,7 @@ public:
     * @return The domain description as a search tree with periodic
     * images (if any).
     */
-   const BoxContainer& 
+   const BoxContainer&
    getPeriodicDomainSearchTree() const
    {
       return d_domain_with_images;
@@ -442,7 +442,7 @@ public:
     * @return The max stencil width of all transfer operators.
     */
    IntVector
-   getMaxTransferOpStencilWidth( const tbox::Dimension &dim )
+   getMaxTransferOpStencilWidth(const tbox::Dimension& dim)
    {
       return d_transfer_operator_registry->getMaxTransferOpStencilWidth(dim);
    }
@@ -493,7 +493,7 @@ public:
     * @param[in]        touches_regular_bdry Array storing which patches touch
     *                   non-periodic boundaries.
     *
-    * @pre (getDim() == patch.getDim()) && 
+    * @pre (getDim() == patch.getDim()) &&
     *      (getDim() == ratio_to_level_zero.getDim()) &&
     *      (getDim() == touches_regular_bdry.getDim())
     */
@@ -841,7 +841,7 @@ public:
       /*!
        * @brief Set the flag telling if that the neighboring blocks
        * touch each other at an enhanced connectivity singularity.
-       */ 
+       */
       void
       setSingularity(bool is_singularity)
       {
@@ -917,7 +917,9 @@ private:
     * @pre singularity_blocks.empty()
     * @pre d_number_blocks > 1
     */
-   void findSingularities(std::set<std::set<BlockId> >& singularity_blocks);
+   void
+   findSingularities(
+      std::set<std::set<BlockId> >& singularity_blocks);
 
    /*
     * @brief Chop the physical domain of this geometry into a container
@@ -936,7 +938,9 @@ private:
     *
     * @pre chopped_domain.isEmpty();
     */
-   void chopDomain(BoxContainer& chopped_domain);
+   void
+   chopDomain(
+      BoxContainer& chopped_domain);
 
    /*!
     * @brief Get a BoxContainer that contains all of the index space of all other
@@ -1089,7 +1093,7 @@ private:
       const BlockId& block_id) const
    {
       return static_cast<int>(
-         d_block_neighbors[block_id.getBlockValue()].size());
+                d_block_neighbors[block_id.getBlockValue()].size());
    }
 
    /*!

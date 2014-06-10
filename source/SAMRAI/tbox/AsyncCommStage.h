@@ -449,7 +449,7 @@ private:
    /*!
     * @brief Returns the first completed Member.
     */
-   const Member*
+   const Member *
    firstCompletedMember() const
    {
       return d_members[d_completed_members.front()];
@@ -462,7 +462,7 @@ private:
     *
     * @pre i < numManagedMembers()
     */
-   const Member*
+   const Member *
    getMember(size_t i) const
    {
       return d_members[i];
@@ -481,7 +481,7 @@ private:
     * @pre hasCompletedMembers()
     * @pre firstCompletedMember()->isDone()
     */
-   Member*
+   Member *
    popCompletionQueue();
 
    /*!
@@ -664,18 +664,18 @@ private:
     * @pre member.isDone()
     */
    void
-   privatePushToCompletionQueue( Member &member );
+   privatePushToCompletionQueue(
+      Member& member);
 
    /*!
     * @brief Yank the given Member from the stage's list of completed
     * Members.
     */
    void
-   privateYankFromCompletionQueue( Member &member );
+   privateYankFromCompletionQueue(
+      Member& member);
 
    //@}
-
-
 
    /*!
     * @brief Members managed on this stage.
@@ -684,7 +684,7 @@ private:
     * stage because they are not at the end of the vector and cannot
     * be removed from the vector.
     */
-   std::vector<Member*> d_members;
+   std::vector<Member *> d_members;
 
    /*!
     * @brief Number of members.

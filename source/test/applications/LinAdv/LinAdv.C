@@ -3036,12 +3036,12 @@ void LinAdv::checkBoundaryData(
       if (d_dim == tbox::Dimension(2)) {
          if (btype == Bdry::EDGE2D) {
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_2D_EDGES);
+               NUM_2D_EDGES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else { // btype == Bdry::NODE2D
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_2D_NODES);
+               NUM_2D_NODES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_edge[bloc];
          }
@@ -3049,17 +3049,17 @@ void LinAdv::checkBoundaryData(
       if (d_dim == tbox::Dimension(3)) {
          if (btype == Bdry::FACE3D) {
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_3D_FACES);
+               NUM_3D_FACES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else if (btype == Bdry::EDGE3D) {
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_3D_EDGES);
+               NUM_3D_EDGES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_edge_bdry_face[bloc];
          } else { // btype == Bdry::NODE3D
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_3D_NODES);
+               NUM_3D_NODES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_face[bloc];
          }
