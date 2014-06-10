@@ -100,6 +100,10 @@ descriptions of items in the following list are provided below.
    LinAdv tests, the Euler and LinAdv application tests, and the sparsedata
    test.   It is also used in several places in the libaray.
 
+3) We have new options for mesh generation using "tiles".  This should help
+   if you are scaling above 100K processor runs.  For smaller runs, the
+   older algorithms should be sufficient.
+
 
 
 
@@ -124,7 +128,14 @@ descriptions of items in the following list are provided below.
    about neighboring blocks in multiblock meshes, are now stored in
    STL maps instead of lists.  Some interfaces and usage patterns have changed
    to reflect this.
-   
+
+5) If you set up your code properly, SAMRAI's mesh management and dynamic
+   remeshing algorithms should scale well to 100K processors.  Approaching
+   1M processors, the older clustering algorithm (BergerRigoutsos) and
+   partitioner (TreeLoadBalancer) will start to slow down.  If your runs
+   are in this range, try using the TileClustering alternative.  You have
+   to specify a tile size in the TileClustering input and a corresponding
+   tile size (in the refined resolution) in the TreeLoadBalancer input.
 
 
 =============================================================================
