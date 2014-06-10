@@ -278,6 +278,9 @@ public:
     * Otherwise, return MPI_IDENT if the two communicators are the same
     * and MPI_CONGRUENT if they are not.  (No other choice makes sense
     * when MPI is disabled.)
+    *
+    * Performance of this method depends on underlying MPI implementation
+    * and may not scale.
     */
    int compareCommunicator( const SAMRAI_MPI &other) const;
 
@@ -291,6 +294,9 @@ public:
 
    /*!
     * @brief Whether the communicator is congruent with another's.
+    *
+    * Performance of this method depends on underlying MPI implementation
+    * and may not scale.
     */
    bool isCongruentWith( const SAMRAI_MPI &other ) const
    {
