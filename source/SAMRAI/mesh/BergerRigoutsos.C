@@ -944,7 +944,8 @@ BergerRigoutsos::useDuplicateMPI(
 /*
  **************************************************************************
  * Check the congruency between d_mpi and d_tag_level's MPI.
- * Returns whether the two are congruent.
+ * Returns whether the two are congruent.  Congruency checks
+ * may be expensive.
  *
  * Note: Sequential runs (no MPI or MPI with 1 process) always means
  * congruency.  d_mpi with a Null communicator indicates that we will

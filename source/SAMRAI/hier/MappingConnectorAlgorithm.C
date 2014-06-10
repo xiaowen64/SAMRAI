@@ -160,11 +160,13 @@ MappingConnectorAlgorithm::modify(
 
    const BoxLevel* old = &old_to_new.getBase();
 
+#ifdef DEBUG_CHECK_ASSERTIONS
    if ( !d_mpi.hasNullCommunicator() && !d_mpi.isCongruentWith(old->getMPI()) ) {
       TBOX_ERROR("MappingConnectorAlgorithm::modify input error: Input BoxLevel\n"
                  <<"has SAMRAI_MPI that is incongruent with MappingConnectorAlgorithm's.\n"
                  <<"See MappingConnectorAlgorithm::setSAMRAI_MPI.\n");
    }
+#endif
 
    if ((new_to_old && (old != &new_to_old->getHead())) ||
        old != &anchor_to_mapped.getHead() ||
