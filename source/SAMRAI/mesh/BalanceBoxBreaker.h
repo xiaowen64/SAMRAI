@@ -45,9 +45,6 @@ public:
    BalanceBoxBreaker(
       const BalanceBoxBreaker& other);
 
-   BalanceBoxBreaker(
-      const BalanceBoxBreaker& other);
-
    /*!
     * @brief Break off a given load size from a given Box.
     *
