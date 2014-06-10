@@ -211,7 +211,7 @@ CascadePartitioner::loadBalanceBoxLevel(
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (d_mpi.getSize() > 1 &&
           !d_mpi.isCongruentWith(balance_box_level.getMPI()) ) {
-         TBOX_ERROR("CascadePartitioner::loadBalanceBoxLevel:\n"
+         TBOX_ERROR(d_object_name << "::loadBalanceBoxLevel:\n"
                     << "The input balance_box_level has a SAMRAI_MPI that is\n"
                     << "not congruent with the one set with setSAMRAI_MPI().\n"
                     << "You must use freeMPICommunicator() before balancing\n"
@@ -224,7 +224,7 @@ CascadePartitioner::loadBalanceBoxLevel(
    }
 
    if (d_print_steps) {
-      tbox::plog << "CascadePartitioner::loadBalanceBoxLevel called with:"
+      tbox::plog << d_object_name << "::loadBalanceBoxLevel called with:"
                  << "\n  min_size = " << min_size
                  << "\n  max_size = " << max_size
                  << "\n  bad_interval = " << bad_interval
@@ -243,7 +243,7 @@ CascadePartitioner::loadBalanceBoxLevel(
          }
       }
       if (d_print_steps) {
-         tbox::plog << "CascadePartitioner::loadBalanceBoxLevel effective_cut_factor = "
+         tbox::plog << d_object_name << "::loadBalanceBoxLevel effective_cut_factor = "
                     << effective_cut_factor << std::endl;
       }
    }
@@ -306,7 +306,7 @@ CascadePartitioner::loadBalanceBoxLevel(
 
    if (d_report_load_balance) {
       tbox::plog
-         << "CascadePartitioner::loadBalanceBoxLevel results  ";
+         << d_object_name << "::loadBalanceBoxLevel results  ";
       BalanceUtilities::gatherAndReportLoadBalance(local_load,
          balance_box_level.getMPI());
    }
@@ -358,7 +358,7 @@ CascadePartitioner::partitionByCascade(
    hier::Connector* balance_to_reference ) const
 {
    if ( d_print_steps ) {
-      tbox::plog << "CascadePartitioner::partitionByCascade: entered" << std::endl;
+      tbox::plog << d_object_name << "::partitionByCascade: entered" << std::endl;
    }
 
    BoxTransitSet local_load(*d_pparams), shipment(*d_pparams);
@@ -389,7 +389,7 @@ CascadePartitioner::partitionByCascade(
    d_num_initial_owners = 0;
 
    if ( d_print_steps ) {
-      tbox::plog << "CascadePartitioner::partitionByCascade: leaving" << std::endl;
+      tbox::plog << d_object_name << "::partitionByCascade: leaving" << std::endl;
    }
 }
 
@@ -401,11 +401,11 @@ CascadePartitioner::partitionByCascade(
  */
 void CascadePartitioner::updateConnectors() const
 {
-   t_update_connectors->start();
+   t_update_connectors->barrierAndStart();
 
    if ( d_print_steps ) {
       tbox::plog
-         << "CascadePartitioner::updateConnectors constructing unbalanced<==>balanced.\n";
+         << d_object_name << "::updateConnectors constructing unbalanced<==>balanced.\n";
    }
 
    /*
@@ -434,10 +434,10 @@ void CascadePartitioner::updateConnectors() const
    t_assign_to_local_and_populate_maps->stop();
 
    if ( d_summarize_map ) {
-      tbox::plog << "CascadePartitioner::updateConnectors unbalanced--->balanced map:\n"
+      tbox::plog << d_object_name << "::updateConnectors unbalanced--->balanced map:\n"
                  << unbalanced_to_balanced.format("\t",0)
                  << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
-                 << "CascadePartitioner::updateConnectors balanced--->unbalanced map:\n"
+                 << d_object_name << "::updateConnectors balanced--->unbalanced map:\n"
                  << balanced_to_unbalanced.format("\t",0)
                  << "Map statistics:\n" << balanced_to_unbalanced.formatStatistics("\t")
                  << '\n';
@@ -446,21 +446,21 @@ void CascadePartitioner::updateConnectors() const
    if (d_check_map) {
       if (unbalanced_to_balanced.findMappingErrors() != 0) {
          TBOX_ERROR(
-            "CascadePartitioner::updateConnectors Mapping errors found in unbalanced_to_balanced!");
+            d_object_name << "::updateConnectors Mapping errors found in unbalanced_to_balanced!");
       }
       if (unbalanced_to_balanced.checkTransposeCorrectness(
              balanced_to_unbalanced)) {
          TBOX_ERROR(
-            "CascadePartitioner::updateConnectors Transpose errors found!");
+            d_object_name << "::updateConnectors Transpose errors found!");
       }
    }
 
 
    if ( d_summarize_map ) {
-      tbox::plog << "CascadePartitioner::updateConnectors: unbalanced--->balanced map:\n"
+      tbox::plog << d_object_name << "::updateConnectors: unbalanced--->balanced map:\n"
                  << unbalanced_to_balanced.format("\t",0)
                  << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
-                 << "CascadePartitioner::updateConnectors: balanced--->unbalanced map:\n"
+                 << d_object_name << "::updateConnectors: balanced--->unbalanced map:\n"
                  << balanced_to_unbalanced.format("\t",0)
                  << "Map statistics:\n" << balanced_to_unbalanced.formatStatistics("\t")
                  << '\n';
@@ -470,7 +470,7 @@ void CascadePartitioner::updateConnectors() const
    if (d_balance_to_reference && d_balance_to_reference->hasTranspose()) {
       if ( d_print_steps ) {
          tbox::plog
-            << "CascadePartitioner::updateConnectors applying unbalanced<==>balanced.\n";
+            << d_object_name << "::updateConnectors applying unbalanced<==>balanced.\n";
       }
       t_use_map->barrierAndStart();
       d_mca.modify(
@@ -485,10 +485,10 @@ void CascadePartitioner::updateConnectors() const
 
    if ( d_print_steps ) {
       tbox::plog
-         << "CascadePartitioner::updateConnectors leaving.\n";
+         << d_object_name << "::updateConnectors leaving.\n";
    }
 
-   t_update_connectors->stop();
+   t_update_connectors->barrierAndStop();
 }
 
 
@@ -525,7 +525,7 @@ void CascadePartitioner::globalWorkReduction(
    if (d_print_steps) {
       tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
       tbox::plog.precision(6);
-      tbox::plog << "CascadePartitioner::globalWorkReduction"
+      tbox::plog << d_object_name << "::globalWorkReduction"
                  << " d_local_work_max=" << d_local_work_max
                  << " d_global_work_sum=" << d_global_work_sum
                  << " (initially born on "
@@ -568,7 +568,7 @@ CascadePartitioner::setSAMRAI_MPI(
    const tbox::SAMRAI_MPI& samrai_mpi)
 {
    if (samrai_mpi.getCommunicator() == tbox::SAMRAI_MPI::commNull) {
-      TBOX_ERROR("CascadePartitioner::setSAMRAI_MPI error: Given\n"
+      TBOX_ERROR(d_object_name << "::setSAMRAI_MPI error: Given\n"
          << "communicator is invalid.");
    }
 
