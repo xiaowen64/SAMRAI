@@ -25,7 +25,7 @@ namespace SAMRAI {
 namespace mesh {
 
 
-/*
+/*!
  * @brief Implementation of TransitLoad, representing the load with a
  * set of vouchers, each of which has a work value and the rank of the
  * process that issued the voucher.

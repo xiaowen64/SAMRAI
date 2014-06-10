@@ -30,12 +30,12 @@ namespace SAMRAI {
 namespace mesh {
 
 
-/*
+/*!
  * @brief Implementation of TransitLoad, representing the load with a
  * set of boxes, each of which represents a load and knows the origin
  * of its load.
  *
- * As a container, this class is identical to
+ * As a container, this class is nearly identical to
  * std::set<BoxInTransit,BoxInTransitMoreLoad>.
  */
 

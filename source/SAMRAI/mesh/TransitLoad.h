@@ -187,6 +187,7 @@ public:
       d_allow_box_breaking = allow_box_breaking;
    }
 
+   //! @brief Whether object may break up boxes.
    bool getAllowBoxBreaking() const {
       return d_allow_box_breaking;
    }
@@ -203,6 +204,7 @@ public:
       d_threshold_width = threshold_width;
    }
 
+   //! @brief Return the threshold width for resisting small and thin boxes.
    double getThresholdWidth() const {
       return d_threshold_width;
    }

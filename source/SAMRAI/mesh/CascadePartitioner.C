@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
- * Description:   Scalable load balancer using tree algorithm.
+ * Description:   Scalable load balancer using a "cascade" algorithm.
  *
  ************************************************************************/
 

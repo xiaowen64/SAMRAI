@@ -133,7 +133,7 @@ public:
     *
     * @param[in] dim
     *
-    * @param[in] name User-defined identifier used for error reporting
+    * @param[in] name User-defined identifier used for diagnostic reports
     * and timer names.
     *
     * @param[in] input_db (optional) database pointer providing
@@ -525,21 +525,21 @@ private:
 
 
 
-   /*
+   /*!
     * @brief Check if there is any pending messages for the private
     * communication and throw an error if there is.
     */
    void
    assertNoMessageForPrivateCommunicator() const;
 
-   /*
+   /*!
     * Read parameters from input database.
     */
    void
    getFromInput(
       const boost::shared_ptr<tbox::Database>& input_db);
 
-   /*
+   /*!
     * Utility functions to determine parameter values for level.
     */
    int

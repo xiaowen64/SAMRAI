@@ -363,7 +363,7 @@ struct BalanceUtilities {
     * - [0]: -1, 0 or 1: degrades, leave-alone or improves in-range
     * - [1]: -1, 0 or 1: degrades, leave-alone or improves balance
     * - [2]: -1, 0 or 1: degrades, leave-alone or improves overall
-    * - [3]: 0 or 1: whether new within the range of [low, high]
+    * - [3]: 0 or 1: whether new_load is within the range of [low, high]
     *
     * Return whether new_load is an improvement over current_load.
     */

@@ -30,10 +30,18 @@ class BalanceBoxBreaker {
 
 public:
 
+   /*!
+    * @brief Constructor.
+    *
+    * @param[in] pparams
+    *
+    * @param[in] print_break_steps Flag for debugging this class.
+    */
    BalanceBoxBreaker(
       const PartitioningParams &pparams,
       bool print_break_steps = false );
 
+   //! @brief Copy constructor.
    BalanceBoxBreaker( const BalanceBoxBreaker &other );
 
 
@@ -76,6 +84,9 @@ public:
       double threshold_width ) const;
 
 
+   /*!
+    * @brief Set whether to print box breaking steps for debugging.
+    */
    void setPrintBreakSteps( bool print_break_steps ) {
       d_print_break_steps = print_break_steps;
    }
@@ -94,6 +105,9 @@ public:
       const hier::Box& bursty,
       const hier::Box& solid );
 
+   /*!
+    * @brief Compute the penalty associated with an imbalance.
+    */
    static double
    computeBalancePenalty(double imbalance)
    {
@@ -116,6 +130,10 @@ public:
       double threshold_width );
 
 
+private:
+
+
+   //! @brief Information regarding a potential way to break a box.
    struct TrialBreak {
       TrialBreak( const PartitioningParams &pparams,
                   double threshold_width,
@@ -139,11 +157,13 @@ public:
          std::ostream &os,
          const TrialBreak &tb );
 
-      double d_breakoff_load; // Should change to int d_breakoff_cells.  This class doesn't deal in arbitrary load types.
+      double d_breakoff_load;
       hier::BoxContainer d_breakoff;
       hier::BoxContainer d_leftover;
       const double d_ideal_load;
+      //! Part of the target break-off range [d_low_load,d_high_load]
       const double d_low_load;
+      //! Part of the target break-off range [d_low_load,d_high_load]
       const double  d_high_load;
       double d_width_score;
       double d_balance_penalty;
@@ -154,9 +174,6 @@ public:
       const hier::Box &d_whole_box;
       const std::vector<std::vector<bool> > &d_bad_cuts;
    };
-
-
-private:
 
    bool
    breakOffLoad_planar( TrialBreak &trial ) const;

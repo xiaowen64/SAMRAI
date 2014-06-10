@@ -29,7 +29,6 @@ namespace mesh {
 
 /*!
  * @brief Tiled patch clustering algorithm.
- * This is UNSUPPORTED, EXPERIMENTAL code not for general use.
  *
  * <b> Input Parameters </b>
  *
@@ -49,11 +48,11 @@ namespace mesh {
  *   tile size.
  *
  *   - \b allow_remote_tile_extent
- *   Whether to tile to extend to remote tag patches.
+ *   Whether tile may extend to remote tag patches.
  *   If false, tiles will be cut at process boundaries, resulting in
  *   completely local tiles.  If true, allow tiles to cross process
  *   boundaries where, resulting in less tile fragmentation.
- *   If false, clusters' extent can be dependent on how tag level
+ *   If false, clusters' extent can depend on how tag level
  *   is partitioned.
  *
  *   - \b DEV_debug_checks
@@ -73,7 +72,7 @@ namespace mesh {
  *     <td>tile_size</td>
  *     <td>int[]</td>
  *     <td>all values are 8</td>
- *     <td>????????</td>
+ *     <td>all values > 0</td>
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
