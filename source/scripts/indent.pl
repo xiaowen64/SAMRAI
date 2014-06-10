@@ -59,5 +59,5 @@ foreach my $file (@allfiles) {
 
     my $filebasename = basename $file;
 
-    system "/usr/gapps/samrai/apps/chaos/uncrustify/0.58/bin/uncrustify -l CPP -c source/scripts/uncrustify.cfg --replace $file";
+    system "uncrustify -l CPP -c source/scripts/uncrustify.cfg --replace $file";
 }
