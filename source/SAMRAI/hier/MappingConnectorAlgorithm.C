@@ -137,6 +137,8 @@ MappingConnectorAlgorithm::modify(
    BoxLevel* mutable_new,
    BoxLevel* mutable_old) const
 {
+   d_object_timers->t_modify_public->start();
+
    Connector* old_to_anchor = 0;
    if (anchor_to_mapped.hasTranspose()) {
       old_to_anchor = &anchor_to_mapped.getTranspose();
@@ -159,6 +161,7 @@ MappingConnectorAlgorithm::modify(
    const Connector& anchor_to_old = anchor_to_mapped;
 
    const BoxLevel* old = &old_to_new.getBase();
+
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    if ( !d_mpi.hasNullCommunicator() && !d_mpi.isCongruentWith(old->getMPI()) ) {
@@ -269,12 +272,14 @@ MappingConnectorAlgorithm::modify(
                   old_to_new.checkTransposeCorrectness(*new_to_old, true) == 0);
    }
 
+   d_object_timers->t_modify_public->stop();
    privateModify(anchor_to_mapped,
       mapped_to_anchor,
       old_to_new,
       new_to_old,
       mutable_new,
       mutable_old);
+   d_object_timers->t_modify_public->start();
 
    if (d_sanity_check_outputs) {
       anchor_to_mapped.assertTransposeCorrectness(mapped_to_anchor);
@@ -284,6 +289,8 @@ MappingConnectorAlgorithm::modify(
    if (!anchor_to_mapped.hasTranspose()) {
       delete old_to_anchor;
    }
+
+   d_object_timers->t_modify_public->stop();
 }
 
 /*
@@ -1468,6 +1475,8 @@ MappingConnectorAlgorithm::getAllTimers(
    const std::string& timer_prefix,
    TimerStruct& timers)
 {
+   timers.t_modify_public = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::modify()_public");
    timers.t_modify = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::privateModify()");
    timers.t_modify_setup_comm = tbox::TimerManager::getManager()->

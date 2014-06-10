@@ -420,6 +420,7 @@ private:
     */
    struct TimerStruct {
       boost::shared_ptr<tbox::Timer> t_modify;
+      boost::shared_ptr<tbox::Timer> t_modify_public;
       boost::shared_ptr<tbox::Timer> t_modify_setup_comm;
       boost::shared_ptr<tbox::Timer> t_modify_remove_and_cache;
       boost::shared_ptr<tbox::Timer> t_modify_discover_and_send;
