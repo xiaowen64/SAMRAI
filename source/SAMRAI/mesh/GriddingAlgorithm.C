@@ -3415,8 +3415,7 @@ GriddingAlgorithm::enforceProperNesting(
       d_oca);
 
    if (d_print_steps) {
-      tbox::plog << "GriddingAlgorithm::enforceProperNesting: applying proper nesting map.\n"
-                 << "Proper nesting map:\n" << unnested_to_nested->format("MAP: ", 3);
+      tbox::plog << "GriddingAlgorithm::enforceProperNesting: applying proper nesting map.\n";
    }
 
    t_use_nesting_map->start();

@@ -1092,7 +1092,7 @@ GraphLoadBalancer::getFromInput(
          input_db->getIntegerArray("tile_size", &d_tile_size[0], d_tile_size.getDim().getValue());
          for (int i = 0; i < d_dim.getValue(); ++i) {
             if ( !(d_tile_size[i] >= 1) ) {
-               TBOX_ERROR("CascadePartitioner tile_size must be >= 1 in all directions.\n"
+               TBOX_ERROR("GraphLoadBalancer tile_size must be >= 1 in all directions.\n"
                           << "Input tile_size is " << d_tile_size );
             }
          }
