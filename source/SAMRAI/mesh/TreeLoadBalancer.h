@@ -559,8 +559,6 @@ private:
 
    }; // BranchData declaration.
 
-
-
    /*!
     * @brief Check if there is any pending messages for the private
     * communication and throw an error if there is.

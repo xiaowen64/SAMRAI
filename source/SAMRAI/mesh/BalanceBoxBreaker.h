@@ -30,7 +30,6 @@ class BalanceBoxBreaker
 {
 
 public:
-
    /*!
     * @brief Constructor.
     *
@@ -44,7 +43,7 @@ public:
 
    //! @brief Copy constructor.
    BalanceBoxBreaker(
-      const BalanceBoxBreaker &other);
+      const BalanceBoxBreaker& other);
 
    BalanceBoxBreaker(
       const BalanceBoxBreaker& other);
@@ -87,7 +86,6 @@ public:
       double high_load,
       double threshold_width) const;
 
-
    /*!
     * @brief Set whether to print box breaking steps for debugging.
     */
@@ -126,7 +124,6 @@ public:
       const hier::IntVector& box_size,
       double threshold_width);
 
-
    /*!
     * @brief Compute a combined width score for multiple boxes.
     */
@@ -136,8 +133,6 @@ public:
       double threshold_width);
 
 private:
-
-
    //! @brief Information regarding a potential way to break a box.
    struct TrialBreak {
       TrialBreak(
