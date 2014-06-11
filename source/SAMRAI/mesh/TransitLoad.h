@@ -163,7 +163,7 @@ public:
     * @param [in,out] balanced_box_level Empty BoxLevel to populate with
     * the contents of this TransitLoad.
     *
-    * @param [in,out] balanced_to_unalanced Empty Connector to populate
+    * @param [in,out] balanced_to_unbalanced Empty Connector to populate
     * with the balanced--->unbalanced edges.
     *
     * @param [in,out] unbalanced_to_balanced Empty Connector to populate

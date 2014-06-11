@@ -69,7 +69,7 @@ public:
     * @param[in,out] balance_box_level Input BoxLevel.  On input, this is the pre-balance
     *  BoxLevel.  On output, it is the balanced BoxLevel.
     *
-    * @param[in,out] balance_to_anchor Connector between the balance_box_level and
+    * @param[in,out] balance_to_reference Connector between the balance_box_level and
     *  some given "anchor box_level".
     *  This must be accurate on input.  On putput, connects the newly
     *  balanced balance_box_level to the anchor box_level.
@@ -117,7 +117,7 @@ public:
    virtual void
    loadBalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
-      hier::Connector* balance_to_anchor,
+      hier::Connector* balance_to_reference,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::IntVector& min_size,
