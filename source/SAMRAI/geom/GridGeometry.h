@@ -134,8 +134,6 @@ namespace geom {
 class GridGeometry:
    public hier::BaseGridGeometry
 {
-   friend class TransferOperatorRegistry;
-
 public:
    /*!
     * @brief Construct a new GridGeometry object and initialize from

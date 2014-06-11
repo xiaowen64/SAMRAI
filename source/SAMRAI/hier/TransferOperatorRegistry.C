@@ -8,7 +8,6 @@
  *
  ************************************************************************/
 #include "SAMRAI/hier/TransferOperatorRegistry.h"
-#include "SAMRAI/hier/BaseGridGeometry.h"
 
 #include <typeinfo>
 

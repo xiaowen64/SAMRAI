@@ -32,8 +32,6 @@ END_BOOST_WARNING_SUPPRESSION
 namespace SAMRAI {
 namespace hier {
 
-class BaseGridGeometry;
-
 /*!
  * @brief Class TransferOperatorRegistry is intended to serve as the registry
  * for SAMRAI transfer operators.  It will be a singleton object held by class

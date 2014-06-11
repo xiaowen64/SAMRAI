@@ -61,8 +61,6 @@ class SingularityFinder;
 class BaseGridGeometry:
    public tbox::Serializable
 {
-   friend class TransferOperatorRegistry;
-
 public:
    typedef  PatchGeometry::TwoDimBool TwoDimBool;
 
