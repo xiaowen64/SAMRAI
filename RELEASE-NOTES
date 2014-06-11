@@ -79,6 +79,10 @@ descriptions of items in the following list are provided below.
    about neighboring blocks in multiblock meshes, are now stored in
    STL maps.
 
+5) We have new options for mesh generation using "tiles".  This should help
+   if you are scaling above 100K processor runs.  For smaller runs, the
+   older algorithms should be sufficient.
+
 
 *****************************************************************************
 
@@ -99,10 +103,6 @@ descriptions of items in the following list are provided below.
    this new way of putting PatchData to restart see the performance Euler and
    LinAdv tests, the Euler and LinAdv application tests, and the sparsedata
    test.   It is also used in several places in the libaray.
-
-3) We have new options for mesh generation using "tiles".  This should help
-   if you are scaling above 100K processor runs.  For smaller runs, the
-   older algorithms should be sufficient.
 
 
 
