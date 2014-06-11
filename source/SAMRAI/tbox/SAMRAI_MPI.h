@@ -256,6 +256,9 @@ public:
     * be automatically freed.  To manually free communicators, see
     * freeCommunicator().
     *
+    * If SAMRAI isn't configured with MPI, the duplicate is an
+    * identical copy.
+    *
     * @param[in] other  Contains the communicator to be duplicated.
     *
     */
@@ -300,8 +303,12 @@ public:
     */
    bool isCongruentWith( const SAMRAI_MPI &other ) const
    {
+#ifdef HAVE_MPI
       int compare_result = compareCommunicator(other);
       return compare_result == MPI_CONGRUENT || compare_result == MPI_IDENT;
+#else
+      return d_comm != MPI_COMM_NULL && d_comm == other.d_comm;
+#endif
    }
 
    /*!

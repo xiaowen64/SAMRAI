@@ -505,7 +505,7 @@ Connector::setToTransposeOf( const Connector &other )
    // Data for propgating termination messages on the tree.
    tbox::CenteredRankTree rank_tree(mpi);
    size_t child_term_needed = rank_tree.getNumberOfChildren();
-   bool send_upward_term_msg = true;
+   bool send_upward_term_msg = mpi.getSize() > 1;
 
    if ( send_upward_term_msg && ack_needed.empty() && child_term_needed == 0 ) {
       // Leaves of the tree initiate upward termination message if no edge communication.
@@ -612,9 +612,11 @@ Connector::setToTransposeOf( const Connector &other )
       recv_buffer.clear();
    }
 
-   // Compete sends before allowing memory deallocation.
-   std::vector<tbox::SAMRAI_MPI::Status> statuses(requests.size());
-   tbox::SAMRAI_MPI::Waitall( static_cast<int>(requests.size()), &requests[0], &statuses[0] );
+   if ( !requests.empty() ) {
+      // Compete sends before allowing memory deallocation.
+      std::vector<tbox::SAMRAI_MPI::Status> statuses(requests.size());
+      tbox::SAMRAI_MPI::Waitall( static_cast<int>(requests.size()), &requests[0], &statuses[0] );
+   }
 
    return;
 }

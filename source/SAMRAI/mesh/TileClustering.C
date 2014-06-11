@@ -180,7 +180,9 @@ TileClustering::findBoxesContainingTags(
          tag_data_index,
          tag_val);
 
-      new_box_level->getMPI().AllReduce( &tiles_have_remote_extent, 1, MPI_MAX );
+      if ( new_box_level->getMPI().getSize() > 1 ) {
+         new_box_level->getMPI().AllReduce( &tiles_have_remote_extent, 1, MPI_MAX );
+      }
 
       if ( tiles_have_remote_extent ) {
          detectSemilocalEdges( tag_to_new );

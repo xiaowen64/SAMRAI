@@ -366,17 +366,11 @@ int
 SAMRAI_MPI::Finalized(
    int* flag)
 {
-#ifndef HAVE_MPI
-   NULL_USE(flag);
-#endif
    int rval = MPI_SUCCESS;
-   if (!s_mpi_is_initialized) {
-      TBOX_ERROR("SAMRAI_MPI::Finalized is a no-op without run-time MPI!");
-   }
 #ifdef HAVE_MPI
-   else {
-      rval = MPI_Finalized(flag);
-   }
+   rval = MPI_Finalized(flag);
+#else
+   *flag = true;
 #endif
    return rval;
 }
@@ -1564,9 +1558,9 @@ SAMRAI_MPI::dupCommunicator(
    TBOX_ASSERT(d_rank == r.d_rank);
    TBOX_ASSERT(d_size == r.d_size);
 #else
-   NULL_USE(r);
-   d_rank = 0;
-   d_size = 1;
+   d_comm = r.d_comm;
+   d_rank = r.d_rank;
+   d_size = r.d_size;
 #endif
 }
 
