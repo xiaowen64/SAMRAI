@@ -153,10 +153,6 @@ private:
       //! @brief Swap this object with another.
       void swap( TrialBreak &other );
 
-      friend std::ostream &operator << (
-         std::ostream &os,
-         const TrialBreak &tb );
-
       double d_breakoff_load;
       hier::BoxContainer d_breakoff;
       hier::BoxContainer d_leftover;
@@ -193,6 +189,11 @@ private:
    boost::shared_ptr<tbox::Timer> t_find_bad_cuts;
 
    //@}
+
+public:
+   friend std::ostream &operator << (
+      std::ostream &os,
+      const TrialBreak &tb );
 
 };
 
