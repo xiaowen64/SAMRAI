@@ -194,7 +194,7 @@ private:
    void
    setTimers();
 
-   const PartitioningParams* d_pparams;
+   const PartitioningParams * d_pparams;
 
    //@{
    //! @name Debugging and diagnostic data
@@ -206,9 +206,10 @@ private:
    //@}
 
 public:
-   friend std::ostream &operator << (
-      std::ostream &os,
-      const TrialBreak &tb );
+   friend std::ostream&
+   operator << (
+      std::ostream& os,
+      const TrialBreak& tb);
 
 };
 
