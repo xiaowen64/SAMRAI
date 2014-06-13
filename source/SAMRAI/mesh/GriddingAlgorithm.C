@@ -317,6 +317,11 @@ void
 GriddingAlgorithm::makeCoarsestLevel(
    const double level_time)
 {
+   if (d_print_steps) {
+      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: entered with getNumberOfLevels = "
+                 << d_hierarchy->getNumberOfLevels() << "\n";
+   }
+
    const tbox::Dimension& dim = d_hierarchy->getDim();
 
    if (d_barrier_and_time) {
@@ -384,6 +389,11 @@ GriddingAlgorithm::makeCoarsestLevel(
 
    boost::shared_ptr<hier::Connector> domain_to_domain;
 
+   if (d_print_steps) {
+      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: finding domain<==>domain."
+                 << "\n";
+   }
+
    d_oca0.findOverlaps(domain_to_domain,
       domain_box_level,
       domain_box_level,
@@ -416,6 +426,10 @@ GriddingAlgorithm::makeCoarsestLevel(
    new_to_domain.setBase(*new_box_level, true);
    new_to_domain.setTranspose(&domain_to_new, false);
 
+   if (d_print_steps) {
+      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: finding partitioning domain."
+                 << "\n";
+   }
 
    d_load_balancer0->loadBalanceBoxLevel(
       *new_box_level,
@@ -433,9 +447,17 @@ GriddingAlgorithm::makeCoarsestLevel(
    }
 
    if (d_sequentialize_patch_indices) {
+      if (d_print_steps) {
+         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: renumbering boxes."
+                    << "\n";
+      }
       renumberBoxes(*new_box_level, 0, false, true);
    }
 
+   if (d_print_steps) {
+      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: adding periodic images."
+                 << "\n";
+   }
    d_blcu0.addPeriodicImages(
       *new_box_level,
       d_hierarchy->getGridGeometry()->getDomainSearchTree(),
@@ -459,6 +481,10 @@ GriddingAlgorithm::makeCoarsestLevel(
          t_find_new_to_new->barrierAndStart();
       }
 
+      if (d_print_steps) {
+         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: finding new<==>new."
+                    << "\n";
+      }
       new_to_new.reset(new hier::Connector( *new_box_level, *new_box_level,
                                             d_hierarchy->getRequiredConnectorWidth(0, 0, true) ) );
       d_oca0.findOverlaps_assumedPartition(*new_to_new);
@@ -473,6 +499,10 @@ GriddingAlgorithm::makeCoarsestLevel(
          t_bridge_new_to_new->barrierAndStart();
       }
 
+      if (d_print_steps) {
+         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: bridging for domain<==>domain."
+                    << "\n";
+      }
       d_oca0.bridgeWithNesting(
          new_to_new,
          new_to_domain,
@@ -497,6 +527,10 @@ GriddingAlgorithm::makeCoarsestLevel(
       checkOverlappingPatches(*new_to_new);
    }
 
+   if (d_print_steps) {
+      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: making level 0."
+                 << "\n";
+   }
    t_make_new->start();
    if (!level_zero_exists) {
 
@@ -581,6 +615,10 @@ GriddingAlgorithm::makeCoarsestLevel(
 
    if (d_barrier_and_time) {
       t_make_coarsest->stop();
+   }
+
+   if (d_print_steps) {
+      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: returning." << "\n";
    }
 }
 
@@ -2479,7 +2517,7 @@ GriddingAlgorithm::checkOverlappingPatches(
       box_level,
       hier::IntVector::getZero(box_level.getDim()));
    hier::OverlapConnectorAlgorithm oca;
-   oca.findOverlaps(box_level_to_self);
+   oca.findOverlaps_assumedPartition(box_level_to_self);
    checkOverlappingPatches(box_level_to_self);
 }
 

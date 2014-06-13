@@ -450,7 +450,7 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
       }
    }
    for ( BoxContainer::const_iterator bi=base_boxes_mod.begin(); bi!=base_boxes_mod.end(); ++bi ) {
-      Box compare_box = *bi;
+      const Box &compare_box = *bi;
       BoxContainer neighbors;
       center_ap.findOverlaps( neighbors, compare_box, *geom, center_refinement_ratio );
       base_to_center.insertNeighbors( neighbors, bi->getBoxId() );
