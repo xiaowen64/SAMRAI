@@ -571,7 +571,7 @@ VariableDatabase::mapIndexToVariable(
       variable = d_index2variable_map[index];
    }
 
-   return variable;
+   return variable.get();
 }
 
 /*
@@ -984,7 +984,7 @@ VariableDatabase::addVariable_Private(
    bool grow_array = false;
 
    if (var_id < static_cast<int>(d_variables.size())) {
-      var_found = d_variables[var_id];
+      var_found = d_variables[var_id].get();
    } else {
       grow_array = true;
    }
