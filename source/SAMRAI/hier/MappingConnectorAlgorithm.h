@@ -98,11 +98,11 @@ public:
     * of the SAMRAI_MPI from BoxLevels.  This protects communication
     * operations from accidentally interacting with unrelated
     * communications, but it limits operations to work only with
-    * metadata objects with comptatible (congruent or identical)
-    * SAMRAI_MPI objects.
+    * metadata objects with comptatible (congruent) SAMRAI_MPI
+    * objects.
     *
     * If make_duplicate is true, the specified SAMRAI_MPI will be
-    * duplicated for exclusife use.  The duplicate will be freed upon
+    * duplicated for exclusise use.  The duplicate will be freed upon
     * object destruction.
     */
    void setSAMRAI_MPI(
