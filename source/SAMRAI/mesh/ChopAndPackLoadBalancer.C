@@ -872,14 +872,12 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    const hier::PatchLevel& hiercoarse =
       *hierarchy->getPatchLevel(level_number - 1);
 
-   const hier::Connector* tmp_to_hiercoarse = 0;
    if (level_number != 0) {
-      tmp_to_hiercoarse =
-         &tmp_level->findConnectorWithTranspose(hiercoarse,
-            hierarchy->getRequiredConnectorWidth(level_number, level_number - 1),
-            hierarchy->getRequiredConnectorWidth(level_number - 1, level_number),
-            hier::CONNECTOR_CREATE,
-            true);
+      tmp_level->findConnectorWithTranspose(hiercoarse,
+         hierarchy->getRequiredConnectorWidth(level_number, level_number - 1),
+         hierarchy->getRequiredConnectorWidth(level_number - 1, level_number),
+         hier::CONNECTOR_CREATE,
+         true);
    }
 
    tmp_level->allocatePatchData(wrk_indx);

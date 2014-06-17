@@ -4106,7 +4106,8 @@ VisItDataWriter::HDFputIntegerArray2D(
 
    herr_t errf;
    if ((nelements0 > 0) && (nelements1 > 0)) {
-      hsize_t dim[] = { nelements0, nelements1 };
+      hsize_t dim[] = { static_cast<hsize_t>(nelements0),
+                        static_cast<hsize_t>(nelements1) };
       hid_t space = H5Screate_simple(2, dim, 0);
 
       TBOX_ASSERT(space >= 0);
@@ -4177,7 +4178,8 @@ VisItDataWriter::HDFputDoubleArray2D(
 
    herr_t errf;
    if ((nelements0 > 0) && (nelements1 > 0)) {
-      hsize_t dim[] = { nelements0, nelements1 };
+      hsize_t dim[] = { static_cast<hsize_t>(nelements0),
+                        static_cast<hsize_t>(nelements1) };
       hid_t space = H5Screate_simple(2, dim, 0);
 
       TBOX_ASSERT(space >= 0);

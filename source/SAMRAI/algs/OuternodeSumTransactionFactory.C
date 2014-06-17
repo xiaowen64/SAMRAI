@@ -88,7 +88,7 @@ OuternodeSumTransactionFactory::allocate(
    TBOX_ASSERT(overlap);
    TBOX_ASSERT(dst_node.getLocalId() >= 0);
    TBOX_ASSERT(src_node.getLocalId() >= 0);
-   TBOX_ASSERT(refine_data >= 0);
+   TBOX_ASSERT(refine_data != 0);
    TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level, *src_level, dst_node, src_node);
 
    return allocate(dst_level,
