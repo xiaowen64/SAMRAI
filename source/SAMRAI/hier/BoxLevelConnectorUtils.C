@@ -390,13 +390,14 @@ BoxLevelConnectorUtils::makeSortingMap(
       int local_box_count =
          static_cast<int>(unsorted_box_level.getLocalNumberOfBoxes());
       int scanned_box_count = -1;
-#ifdef HAVE_MPI
-      unsorted_box_level.getMPI().Scan(&local_box_count,
-                                       &scanned_box_count,
-                                       1, MPI_INT, MPI_SUM);
-#else
-      scanned_box_count = local_box_count; // Scan result for 1 proc.
-#endif
+      if ( tbox::SAMRAI_MPI::usingMPI() ) {
+         unsorted_box_level.getMPI().Scan(&local_box_count,
+                                          &scanned_box_count,
+                                          1, MPI_INT, MPI_SUM);
+      }
+      else {
+         scanned_box_count = local_box_count; // Scan result for 1 proc.
+      }
       scanned_box_count -= static_cast<int>(local_box_count);
 
       last_index += scanned_box_count;
