@@ -491,6 +491,9 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    }
    base_boxes_mod.clear();
    Connector center_to_base(dim);
+   if ( d_print_steps ) {
+      tbox::plog << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: getting center_to_base.\n";
+   }
    center_to_base.setToTransposeOf(base_to_center);
 
 
@@ -512,17 +515,27 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    }
    head_boxes_mod.clear();
    Connector center_to_head(dim);
+   if ( d_print_steps ) {
+      tbox::plog << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: getting center_to_head.\n";
+   }
    center_to_head.setToTransposeOf(head_to_center);
 
 
    base_to_center.setTranspose(&center_to_base, false);
    head_to_center.setTranspose(&center_to_head, false);
+   const IntVector center_growth_to_nest_base(
+      dim, head_cell_count < base_cell_count ? tbox::MathUtilities<int>::getMax() : 0 );
+   const IntVector center_growth_to_nest_head(
+      dim, head_cell_count < base_cell_count ? 0 : tbox::MathUtilities<int>::getMax() );
    boost::shared_ptr<Connector> tmp_conn;
+   if ( d_print_steps ) {
+      tbox::plog << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: bridging.\n";
+   }
    bridgeWithNesting( tmp_conn,
                       base_to_center,
                       center_to_head,
-                      hier::IntVector::getZero(dim),
-                      IntVector(dim, tbox::MathUtilities<int>::getMax()),
+                      center_growth_to_nest_base,
+                      center_growth_to_nest_head,
                       IntVector(dim, -1),
                       false );
    conn.clear();
