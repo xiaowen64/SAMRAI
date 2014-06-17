@@ -1215,7 +1215,7 @@ CASC_AC_LOG_VAR(
 
 # Defines ptscotch_PREFIX ptscotch_INCLUDES and ptscotch_LIBS.
 AC_ARG_WITH(ptscotch,
-[ --with-ptscotch[=PATH]  Use PT-SCOTCH and specify where PT-SCOTCH is installed.],
+[  --with-ptscotch[=PATH]  Use PT-SCOTCH and specify where PT-SCOTCH is installed.],
 , with_ptscotch=no)
 
 case "$with_ptscotch" in
