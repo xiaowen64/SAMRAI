@@ -219,6 +219,11 @@ GriddingAlgorithm::GriddingAlgorithm(
 
    d_bdry_sched_tags.resize(d_hierarchy->getMaxNumberOfLevels());
 
+   d_oca.setSAMRAI_MPI(d_hierarchy->getDomainBoxLevel().getMPI(), true);
+   d_mca.setSAMRAI_MPI(d_hierarchy->getDomainBoxLevel().getMPI(), true);
+   d_oca0.setSAMRAI_MPI(d_hierarchy->getDomainBoxLevel().getMPI(), true);
+   d_mca0.setSAMRAI_MPI(d_hierarchy->getDomainBoxLevel().getMPI(), true);
+
    warnIfDomainTooSmallInPeriodicDir();
 
    allocateTimers();
