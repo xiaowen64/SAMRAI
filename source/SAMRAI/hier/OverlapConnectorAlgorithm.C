@@ -429,6 +429,9 @@ void
 OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    Connector& conn) const
 {
+   if ( d_print_steps ) {
+      tbox::plog << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: entered.\n";
+   }
    d_object_timers->t_find_overlaps_assumed_partition->start();
 
    const BoxLevel &base = conn.getBase();
@@ -549,6 +552,9 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    }
 
    d_object_timers->t_find_overlaps_assumed_partition->stop();
+   if ( d_print_steps ) {
+      tbox::plog << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: leaving.\n";
+   }
 }
 
 /*

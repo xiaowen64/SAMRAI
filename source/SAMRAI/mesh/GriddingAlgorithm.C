@@ -395,8 +395,7 @@ GriddingAlgorithm::makeCoarsestLevel(
    boost::shared_ptr<hier::Connector> domain_to_domain;
 
    if (d_print_steps) {
-      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: finding domain<==>domain."
-                 << "\n";
+      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: finding domain<==>domain.\n";
    }
 
    d_oca0.findOverlaps(domain_to_domain,
@@ -432,8 +431,7 @@ GriddingAlgorithm::makeCoarsestLevel(
    new_to_domain.setTranspose(&domain_to_new, false);
 
    if (d_print_steps) {
-      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: finding partitioning domain."
-                 << "\n";
+      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: finding partitioning domain.\n";
    }
 
    d_load_balancer0->loadBalanceBoxLevel(
@@ -453,15 +451,13 @@ GriddingAlgorithm::makeCoarsestLevel(
 
    if (d_sequentialize_patch_indices) {
       if (d_print_steps) {
-         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: renumbering boxes."
-                    << "\n";
+         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: renumbering boxes.\n";
       }
       renumberBoxes(*new_box_level, 0, false, true);
    }
 
    if (d_print_steps) {
-      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: adding periodic images."
-                 << "\n";
+      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: adding periodic images.\n";
    }
    d_blcu0.addPeriodicImages(
       *new_box_level,
@@ -487,8 +483,7 @@ GriddingAlgorithm::makeCoarsestLevel(
       }
 
       if (d_print_steps) {
-         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: finding new<==>new."
-                    << "\n";
+         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: finding new<==>new.\n";
       }
       new_to_new.reset(new hier::Connector( *new_box_level, *new_box_level,
                                             d_hierarchy->getRequiredConnectorWidth(0, 0, true) ) );
@@ -505,8 +500,7 @@ GriddingAlgorithm::makeCoarsestLevel(
       }
 
       if (d_print_steps) {
-         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: bridging for domain<==>domain."
-                    << "\n";
+         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: bridging for domain<==>domain.\n";
       }
       d_oca0.bridgeWithNesting(
          new_to_new,
@@ -533,8 +527,7 @@ GriddingAlgorithm::makeCoarsestLevel(
    }
 
    if (d_print_steps) {
-      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: making level 0."
-                 << "\n";
+      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: making level 0.\n";
    }
    t_make_new->start();
    if (!level_zero_exists) {
@@ -552,6 +545,9 @@ GriddingAlgorithm::makeCoarsestLevel(
       d_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(
          *d_hierarchy->getPatchLevel(ln));
 
+      if (d_print_steps) {
+         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: initializing data on level 0 (a).\n";
+      }
       // "true" argument: const bool initial_time = true;
       d_tag_init_strategy->initializeLevelData(d_hierarchy,
          ln,
@@ -589,6 +585,9 @@ GriddingAlgorithm::makeCoarsestLevel(
       d_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(
          *d_hierarchy->getPatchLevel(ln));
 
+      if (d_print_steps) {
+         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: initializing data on level 0 (b).\n";
+      }
       // "false" argument: const bool initial_time = false;
       d_tag_init_strategy->initializeLevelData(d_hierarchy,
          ln,
@@ -599,6 +598,9 @@ GriddingAlgorithm::makeCoarsestLevel(
 
       old_level.reset();
 
+   }
+   if (d_print_steps) {
+      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: made level 0.\n";
    }
    t_make_new->stop();
 
@@ -623,7 +625,7 @@ GriddingAlgorithm::makeCoarsestLevel(
    }
 
    if (d_print_steps) {
-      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: returning." << "\n";
+      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: returning.\n";
    }
 }
 
