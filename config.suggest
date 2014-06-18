@@ -128,6 +128,9 @@ EOF
 
 chaos5_mpiicc14_cxx11_mpi2) # CHAOS5, Intel v. 14 compilers with LLNL mpiicpc front ends, using C++ 11 standard and MPI2
 cat <<-EOF
+	CXXFLAGS="-gcc-name=gcc-4.6.1 -gxx-name=g++-4.6.1 -std=c++0x"
+	CFLAGS="-gcc-name=gcc-4.6.1 -gxx-name=g++-4.6.1 -std=c++0x"
+	FFLAGS="-gcc-name=gcc-4.6.1"
 	--with-CC=mpiicc
 	--with-CXX=mpiicpc
 	--with-F77=mpiifort
