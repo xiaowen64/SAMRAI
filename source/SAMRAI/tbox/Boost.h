@@ -22,7 +22,7 @@
  * warning suppression mechanism.
  */
 
-#if __GNUC__ > 5 || (__GNUC__ == 4 && (__GNUC_MINOR__ > 5))
+#if __GNUC__ >= 5 || (__GNUC__ == 4 && (__GNUC_MINOR__ > 6))
 
 #define BEGIN_BOOST_WARNING_SUPPRESSION \
    _Pragma("GCC diagnostic push") \
