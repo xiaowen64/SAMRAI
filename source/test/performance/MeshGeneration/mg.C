@@ -530,8 +530,8 @@ int main(
             createLoadBalancer( input_db, load_balancer_type[0], rank_tree_type, 0, dim );
 
          tbox::plog << "\n\tL0 prebalance loads:\n";
-         mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L0->getLocalNumberOfCells(),
+         mesh::BalanceUtilities::reduceAndReportLoadBalance(
+            std::vector<double>(1,L0->getLocalNumberOfCells()),
             L0->getMPI());
 
          outputPrebalance( *L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0,0), "L0: " );
@@ -557,8 +557,8 @@ int main(
             true);
 
          tbox::plog << "\n\tL0 postbalance loads:\n";
-         mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L0->getLocalNumberOfCells(),
+         mesh::BalanceUtilities::reduceAndReportLoadBalance(
+            std::vector<double>(1,L0->getLocalNumberOfCells()),
             L0->getMPI());
 
          outputPostbalance( *L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0,0), "L0: " );
@@ -683,8 +683,8 @@ int main(
          outputPrebalance( *L1, *L0, required_connector_width, "L1: " );
 
          tbox::plog << "\n\tL1 prebalance loads:\n";
-         mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L1->getLocalNumberOfCells(),
+         mesh::BalanceUtilities::reduceAndReportLoadBalance(
+            std::vector<double>(1,L1->getLocalNumberOfCells()),
             L1->getMPI());
 
          if ( load_balance[finer_ln] ) {
@@ -710,8 +710,8 @@ int main(
          outputPostbalance( *L1, *L0, required_connector_width, "L1: " );
 
          tbox::plog << "\n\tL1 postbalance loads:\n";
-         mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L1->getLocalNumberOfCells(),
+         mesh::BalanceUtilities::reduceAndReportLoadBalance(
+            std::vector<double>(1,L1->getLocalNumberOfCells()),
             L1->getMPI());
 
          if ( comm_graph_writer ) {
@@ -838,8 +838,8 @@ int main(
          outputPrebalance( *L2, L1, required_connector_width, "L2: " );
 
          tbox::plog << "\n\tL2 prebalance loads:\n";
-         mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L2->getLocalNumberOfCells(),
+         mesh::BalanceUtilities::reduceAndReportLoadBalance(
+            std::vector<double>(1,L2->getLocalNumberOfCells()),
             L2->getMPI());
 
          if ( load_balance[finer_ln] ) {
@@ -865,8 +865,8 @@ int main(
          outputPostbalance( *L2, L1, required_connector_width, "L2: " );
 
          tbox::plog << "\n\tL2 postbalance loads:\n";
-         mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L2->getLocalNumberOfCells(),
+         mesh::BalanceUtilities::reduceAndReportLoadBalance(
+            std::vector<double>(1,L2->getLocalNumberOfCells()),
             L2->getMPI());
 
          if ( comm_graph_writer ) {

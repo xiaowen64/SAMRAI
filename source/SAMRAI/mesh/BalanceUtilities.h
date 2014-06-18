@@ -403,32 +403,14 @@ struct BalanceUtilities {
    //! @name Load balance reporting.
 
    /*!
-    * @brief Gather workloads in an MPI group and write out a summary
-    * of load balance efficiency.
-    *
-    * To be used for performance evaluation.  Not recommended for general use.
-    *
-    * @param[in] local_workload Workload of the local process
-    *
-    * @param[in] mpi Represents all processes involved in the load balancing.
-    *
-    * @param[in] output_stream
-    *
-    */
-   static void
-   gatherAndReportLoadBalance(
-      double local_workload,
-      const tbox::SAMRAI_MPI& mpi,
-      std::ostream& output_stream = tbox::plog);
-
-   /*!
-    * @brief Gather a sequence of workloads in an MPI group and write
-    * out a summary of load balance efficiency.
+    * @brief Globally reduce a sequence of workloads in an MPI group
+    * and write out a summary of load balance efficiency.
     *
     * Each value in the sequence of workloads represent a certain load
     * the local process had over a sequence of load balancings.
     *
-    * To be used for performance evaluation.  Not recommended for general use.
+    * To be used for performance evaluation.  Not recommended for
+    * general use.
     *
     * @param[in] local_loads Sequence of workloads of the local
     * process.  The size of @c local_loads is the number times load
@@ -440,29 +422,10 @@ struct BalanceUtilities {
     * @param[in] output_stream
     */
    static void
-   gatherAndReportLoadBalance(
+   reduceAndReportLoadBalance(
       const std::vector<double>& local_loads,
       const tbox::SAMRAI_MPI& mpi,
       std::ostream& output_stream = tbox::plog);
-
-   /*!
-    * @brief Write out a short report of how well load is balanced.
-    *
-    * Given the workloads of a number of processes, format and write
-    * out a brief report for assessing how well balanced the workloads
-    * are.
-    *
-    * @param[in] workloads One value for each process.  The number of
-    * processes is taken to be the size of this container.
-    *
-    * @param[in] output_stream
-    *
-    * @pre workloads.size() == tbox::SAMRAI_MPI::getSAMRAIWorld().getSize()
-    */
-   static void
-   reportLoadBalance(
-      const std::vector<double>& workloads,
-      std::ostream& output_stream);
 
    //@}
 

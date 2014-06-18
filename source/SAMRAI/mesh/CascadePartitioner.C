@@ -306,7 +306,7 @@ CascadePartitioner::loadBalanceBoxLevel(
    if (d_report_load_balance) {
       tbox::plog
          << d_object_name << "::loadBalanceBoxLevel results  ";
-      BalanceUtilities::gatherAndReportLoadBalance(local_load,
+      BalanceUtilities::reduceAndReportLoadBalance(std::vector<double>(1,local_load),
          balance_box_level.getMPI());
    }
 
@@ -800,7 +800,7 @@ void
 CascadePartitioner::printStatistics(
    std::ostream& output_stream) const
 {
-   BalanceUtilities::gatherAndReportLoadBalance(
+   BalanceUtilities::reduceAndReportLoadBalance(
       d_load_stat,
       tbox::SAMRAI_MPI::getSAMRAIWorld(),
       output_stream);
