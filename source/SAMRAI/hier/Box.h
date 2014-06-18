@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/BoxId.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/hier/MultiIntVector.h"
 #include "SAMRAI/hier/Transformation.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -627,7 +626,7 @@ public:
       if (empty()) {
          return IntVector::getZero(getDim());
       } else {
-         return d_hi - d_lo + 1;
+         return IntVector(d_hi - d_lo + 1);
       }
    }
 
@@ -889,8 +888,16 @@ public:
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
       if (!empty()) {
-         d_lo -= ghosts;
-         d_hi += ghosts;
+         if (ghosts.size() > 1) {
+            int b = d_block_id.getBlockValue();
+            for (int i = 0; i < getDim().getValue(); ++i) {
+               d_lo(i) -= ghosts(b,i);
+               d_hi(i) += ghosts(b,i);
+            }
+         } else {
+            d_lo -= ghosts;
+            d_hi += ghosts;
+         }
       }
    }
 
@@ -1094,10 +1101,6 @@ public:
    refine(
       const IntVector& ratio);
 
-   void
-   refine(
-      const MultiIntVector& ratio);
-
    /*!
     * @brief Coarsen the index space of a box by specified vector ratio.
     *
@@ -1116,18 +1119,19 @@ public:
       const IntVector& ratio)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
-      for (int i = 0; i < getDim().getValue(); ++i) {
-         d_lo(i) = coarsen(d_lo(i), ratio(i));
-         d_hi(i) = coarsen(d_hi(i), ratio(i));
+      if (ratio.size() > 1) {
+         int b = d_block_id.getBlockValue();
+         for (int i = 0; i < getDim().getValue(); ++i) {
+            d_lo(i) = coarsen(d_lo(i), ratio(b,i));
+            d_hi(i) = coarsen(d_hi(i), ratio(b,i));
+         }
+      } else {
+         for (int i = 0; i < getDim().getValue(); ++i) {
+            d_lo(i) = coarsen(d_lo(i), ratio(i));
+            d_hi(i) = coarsen(d_hi(i), ratio(i));
+         }
       }
-   }
 
-   void
-   coarsen(
-      const MultiIntVector& ratio)
-   {
-      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
-      coarsen(ratio.getBlockVector(d_block_id));
    }
 
    /*!

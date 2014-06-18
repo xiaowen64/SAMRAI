@@ -63,8 +63,8 @@ RefineScheduleConnectorWidthRequestor::setGhostCellWidthFactor(
  */
 void
 RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
-   std::vector<hier::MultiIntVector>& self_connector_widths,
-   std::vector<hier::MultiIntVector>& fine_connector_widths,
+   std::vector<hier::IntVector>& self_connector_widths,
+   std::vector<hier::IntVector>& fine_connector_widths,
    const hier::PatchHierarchy& patch_hierarchy) const
 {
    int max_levels = patch_hierarchy.getMaxNumberOfLevels();
@@ -83,7 +83,7 @@ RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
    max_stencil_width.max(
       RefinePatchStrategy::getMaxRefineOpStencilWidth(dim));
 
-   hier::MultiIntVector zero_vector(hier::IntVector::getZero(dim));
+   const hier::IntVector& zero_vector(hier::IntVector::getMultiZero(dim));
 
    /*
     * Compute the Connector width needed to ensure all edges are found
@@ -104,7 +104,9 @@ RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
     */
 
    self_connector_widths.clear();
-   self_connector_widths.resize(max_levels, hier::MultiIntVector(max_data_gcw * d_gcw_factor));
+   self_connector_widths.resize(max_levels,
+                                hier::IntVector::getMultiOne(dim) *
+                                   (max_data_gcw * d_gcw_factor));
 
    fine_connector_widths.clear();
    if (max_levels > 1) {
@@ -119,7 +121,7 @@ RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
    for (int ln = max_levels - 1; ln > -1; --ln) {
       computeRequiredFineConnectorWidthsForRecursiveRefinement(
          fine_connector_widths,
-         hier::MultiIntVector(max_data_gcw),
+         max_data_gcw,
          max_stencil_width,
          patch_hierarchy,
          ln);
@@ -135,8 +137,8 @@ RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
  */
 void
 RefineScheduleConnectorWidthRequestor::computeRequiredFineConnectorWidthsForRecursiveRefinement(
-   std::vector<hier::MultiIntVector>& fine_connector_widths,
-   const hier::MultiIntVector& data_gcw_on_initial_dst_ln,
+   std::vector<hier::IntVector>& fine_connector_widths,
+   const hier::IntVector& data_gcw_on_initial_dst_ln,
    const hier::IntVector& max_stencil_width,
    const hier::PatchHierarchy& patch_hierarchy,
    int initial_dst_ln) const
@@ -145,14 +147,17 @@ RefineScheduleConnectorWidthRequestor::computeRequiredFineConnectorWidthsForRecu
       fine_connector_widths.insert(
          fine_connector_widths.end(),
          initial_dst_ln - fine_connector_widths.size(),
-         hier::MultiIntVector(hier::IntVector::getZero(patch_hierarchy.getDim())) );
+         hier::IntVector::getMultiZero(patch_hierarchy.getDim()) );
    }
 
-   hier::MultiIntVector width_for_refining_recursively(data_gcw_on_initial_dst_ln * d_gcw_factor);
+   const int nblocks = patch_hierarchy.getGridGeometry()->getNumberBlocks();
+
+   hier::IntVector width_for_refining_recursively(
+      data_gcw_on_initial_dst_ln * d_gcw_factor, nblocks);
 
    for (int lnc = initial_dst_ln - 1; lnc > -1; --lnc) {
 
-      const hier::MultiIntVector& ratio_to_coarser =
+      const hier::IntVector& ratio_to_coarser =
          patch_hierarchy.getRatioToCoarserLevel(lnc + 1);
       width_for_refining_recursively.ceilingDivide(ratio_to_coarser);
 
@@ -162,7 +167,7 @@ RefineScheduleConnectorWidthRequestor::computeRequiredFineConnectorWidthsForRecu
        * big enough to allow coarse to bridge to fine's supplemental, and
        * the supplemental includes the stencil width at coarse.
        */
-      width_for_refining_recursively += hier::MultiIntVector(max_stencil_width);
+      width_for_refining_recursively += max_stencil_width;
 
       fine_connector_widths[lnc].max(width_for_refining_recursively);
    }

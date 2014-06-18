@@ -8,13 +8,18 @@
  *
  ************************************************************************/
 #include "SAMRAI/hier/IntVector.h"
+
+#include "SAMRAI/hier/Index.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
+
 
 namespace SAMRAI {
 namespace hier {
 
 IntVector * IntVector::s_zeros[SAMRAI::MAX_DIM_VAL];
 IntVector * IntVector::s_ones[SAMRAI::MAX_DIM_VAL];
+IntVector * IntVector::s_mb_zeros[SAMRAI::MAX_DIM_VAL];
+IntVector * IntVector::s_mb_ones[SAMRAI::MAX_DIM_VAL];
 
 tbox::StartupShutdownManager::Handler
 IntVector::s_initialize_finalize_handler(
@@ -26,68 +31,153 @@ IntVector::s_initialize_finalize_handler(
 
 IntVector::IntVector(
    const tbox::Dimension& dim):
-   d_dim(dim)
+   d_dim(dim),
+   d_size(1),
+   d_vector(new int[dim.getValue()])
 {
 #ifdef DEBUG_INITIALIZE_UNDEFINED
-   for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       d_vector[i] = tbox::MathUtilities<int>::getMin();
    }
 #endif
+}
 
+IntVector::IntVector(
+   int size,
+   const tbox::Dimension& dim):
+   d_dim(dim),
+   d_size(size),
+   d_vector(new int[dim.getValue()*size])
+{
+   TBOX_ASSERT(size >=1);
+#ifdef DEBUG_INITIALIZE_UNDEFINED
+   for (int i = 0; i < size*dim.getValue(); ++i) {
+      d_vector[i] = tbox::MathUtilities<int>::getMin();
+   }
+#endif
 }
 
 IntVector::IntVector(
    const tbox::Dimension& dim,
-   const int value):
-   d_dim(dim)
+   int value,
+   int size):
+   d_dim(dim),
+   d_size(size),
+   d_vector(new int[dim.getValue()*size])
 {
-   for (int i = 0; i < d_dim.getValue(); ++i) {
+   TBOX_ASSERT(size >=1);
+   for (int i = 0; i < size*dim.getValue(); ++i) {
       d_vector[i] = value;
    }
-
-#ifdef DEBUG_INITIALIZE_UNDEFINED
-   for (int i = d_dim.getValue(); i < SAMRAI::MAX_DIM_VAL; ++i) {
-      d_vector[i] = tbox::MathUtilities<int>::getMin();
-   }
-#endif
 }
 
 IntVector::IntVector(
-   const std::vector<int>& a):
-   d_dim(static_cast<unsigned short>(a.size()))
+   const std::vector<int>& a,
+   int size):
+   d_dim(static_cast<unsigned short>(a.size())),
+   d_size(size),
+   d_vector(new int[a.size()*size])
 {
-   for (int i = 0; i < d_dim.getValue(); ++i) {
-      d_vector[i] = a[i];
+   for (int b = 0; b < size; ++b) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
+         d_vector[b*d_dim.getValue() + i] = a[i];
+      }
    }
-
-#ifdef DEBUG_INITIALIZE_UNDEFINED
-   for (int i = d_dim.getValue(); i < SAMRAI::MAX_DIM_VAL; ++i) {
-      d_vector[i] = tbox::MathUtilities<int>::getMin();
-   }
-#endif
 }
+
+IntVector::IntVector(
+   const tbox::Dimension& dim,
+   const int array[],
+   int size):
+   d_dim(dim),
+   d_size(size),
+   d_vector(new int[dim.getValue()*size])
+{
+   for (int b = 0; b < size; ++b) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
+         d_vector[b*d_dim.getValue() + i] = array[i];
+      }
+   }
+}
+
 
 IntVector::IntVector(
    const IntVector& rhs):
-   d_dim(rhs.getDim())
+   d_dim(rhs.getDim()),
+   d_size(rhs.d_size),
+   d_vector(new int[rhs.getDim().getValue() * rhs.d_size])
 {
-   for (int i = 0; i < d_dim.getValue(); ++i) {
-      d_vector[i] = rhs.d_vector[i];
+   TBOX_ASSERT(d_size >= 1);
+   for (int b = 0; b < d_size; ++b) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
+         d_vector[b*d_dim.getValue()+i] = rhs.d_vector[b*d_dim.getValue()+i];
+      }
    }
 }
 
 IntVector::IntVector(
-   const tbox::Dimension& dim,
-   const int array[]):
-   d_dim(dim)
+   const IntVector& rhs,
+   int size):
+   d_dim(rhs.getDim()),
+   d_size(size),
+   d_vector(new int[rhs.getDim().getValue() * size])
 {
-   for (int i = 0; i < d_dim.getValue(); ++i) {
-      d_vector[i] = array[i];
+   TBOX_ASSERT(d_size >= 1);
+   TBOX_ASSERT(rhs.d_size == d_size || rhs.d_size == 1); 
+   if (rhs.d_size == 1) {
+      for (int b = 0; b < d_size; ++b) {
+         for (int i = 0; i < d_dim.getValue(); ++i) {
+            d_vector[b*d_dim.getValue() + i] = rhs.d_vector[i];
+         }
+      }
+   } else {
+      for (int b = 0; b < d_size; ++b) {
+         for (int i = 0; i < d_dim.getValue(); ++i) {
+            d_vector[b*d_dim.getValue()+i] = rhs.d_vector[b*d_dim.getValue()+i];
+         }
+      }
+   }
+}
+
+
+IntVector::IntVector(
+   const Index& rhs,
+   int size):
+   d_dim(rhs.getDim()),
+   d_size(size),
+   d_vector(new int[rhs.getDim().getValue() * size])
+{
+   TBOX_ASSERT(d_size >= 1);
+   for (int b = 0; b < size; ++b) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
+         d_vector[b*d_dim.getValue() + i] = rhs[i];
+      }
    }
 }
 
 IntVector::~IntVector()
 {
+   if (d_vector) {
+      delete[] d_vector;
+   }
+}
+
+IntVector&
+IntVector::operator = (
+   const Index& rhs)
+{
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+   TBOX_ASSERT(d_size >= 1);
+   if (d_size != 1) {
+      delete[] d_vector;
+      d_size = 1;
+      d_vector = new int[d_dim.getValue()];
+   }
+
+   for (int i = 0; i < d_dim.getValue(); ++i) {
+      d_vector[i] = rhs[i];
+   }
+   return *this;
 }
 
 std::istream&
@@ -95,15 +185,15 @@ operator >> (
    std::istream& s,
    IntVector& rhs)
 {
-   while (s.get() != '(') ;
-
-   for (int i = 0; i < rhs.getDim().getValue(); ++i) {
-      s >> rhs(i);
-      if (i < rhs.getDim().getValue() - 1)
-         while (s.get() != ',') ;
+   for (int b = 0; b < rhs.size(); ++b) {
+      while (s.get() != '(') ;
+      for (int i = 0; i < rhs.getDim().getValue(); ++i) {
+         s >> rhs(b,i);
+         if (i < rhs.getDim().getValue() - 1)
+            while (s.get() != ',') ;
+      }
+      while (s.get() != ')') ;
    }
-
-   while (s.get() != ')') ;
 
    return s;
 }
@@ -112,14 +202,16 @@ std::ostream& operator << (
    std::ostream& s,
    const IntVector& rhs)
 {
-   s << '(';
 
-   for (int i = 0; i < rhs.getDim().getValue(); ++i) {
-      s << rhs(i);
-      if (i < rhs.getDim().getValue() - 1)
-         s << ",";
+   for (int b = 0; b < rhs.size(); ++b) {
+      s << '(';
+      for (int i = 0; i < rhs.getDim().getValue(); ++i) {
+         s << rhs(b,i);
+         if (i < rhs.getDim().getValue() - 1)
+            s << ",";
+      }
+      s << ')';
    }
-   s << ')';
 
    return s;
 }
@@ -129,7 +221,13 @@ IntVector::putToRestart(
    tbox::Database& restart_db,
    const std::string& name) const
 {
-   restart_db.putIntegerArray(name, d_vector, d_dim.getValue());
+   boost::shared_ptr<tbox::Database> intvec_db =
+      restart_db.putDatabase(name);
+   intvec_db->putInteger("d_size", d_size);
+   intvec_db->putIntegerArray("d_vector",
+                              d_vector,
+                              d_size * d_dim.getValue());
+
 }
 
 void
@@ -137,9 +235,23 @@ IntVector::getFromRestart(
    tbox::Database& restart_db,
    const std::string& name)
 {
-   TBOX_ASSERT(d_dim.getValue() ==
-      static_cast<unsigned short>(restart_db.getArraySize(name)));
-   restart_db.getIntegerArray(name, d_vector, d_dim.getValue());
+   boost::shared_ptr<tbox::Database> intvec_db =
+      restart_db.getDatabase(name);
+
+   int size = intvec_db->getInteger("d_size");
+   std::vector<int> tmp_vector(size * d_dim.getValue());
+   TBOX_ASSERT(size * d_dim.getValue() == intvec_db->getArraySize("d_vector"));
+
+   if (size != d_size) {
+      delete[] d_vector;
+      d_size = size;
+      d_vector = new int[d_dim.getValue()*d_size];
+   }
+
+   intvec_db->getIntegerArray("d_vector",
+                              d_vector,
+                              d_size * d_dim.getValue());
+
 }
 
 /*
@@ -151,25 +263,25 @@ void
 IntVector::sortIntVector(
    const IntVector& values)
 {
-   const IntVector num_cells = values;
-
-   for (int d = 0; d < d_dim.getValue(); ++d) {
-      d_vector[d] = d;
-   }
-   for (int d0 = 0; d0 < d_dim.getValue() - 1; ++d0) {
-      for (int d1 = d0 + 1; d1 < d_dim.getValue(); ++d1) {
-         if (values(d_vector[d0]) > values(d_vector[d1])) {
-            int tmp_d = d_vector[d0];
-            d_vector[d0] = d_vector[d1];
-            d_vector[d1] = tmp_d;
+   for (int b = 0; b < d_size; ++b ) {
+      for (int d = 0; d < d_dim.getValue(); ++d) {
+         d_vector[b*d_dim.getValue() + d] = d;
+      }
+      for (int d0 = 0; d0 < d_dim.getValue() - 1; ++d0) {
+         for (int d1 = d0 + 1; d1 < d_dim.getValue(); ++d1) {
+            if (values(d_vector[b*d_dim.getValue() + d0]) > values(d_vector[b*d_dim.getValue() + d1])) {
+               int tmp_d = d_vector[b*d_dim.getValue() + d0];
+               d_vector[b*d_dim.getValue() + d0] = d_vector[b*d_dim.getValue() + d1];
+               d_vector[b*d_dim.getValue() + d1] = tmp_d;
+            }
          }
       }
-   }
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int d = 0; d < d_dim.getValue() - 1; ++d) {
-      TBOX_ASSERT(values(d_vector[d]) <= values(d_vector[d + 1]));
-   }
+      for (int d = 0; d < d_dim.getValue() - 1; ++d) {
+         TBOX_ASSERT(values(d_vector[b*d_dim.getValue() + d]) <= values(d_vector[b*d_dim.getValue() + d + 1]));
+      }
 #endif
+   }
 }
 
 void
@@ -178,6 +290,8 @@ IntVector::initializeCallback()
    for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       s_zeros[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 0);
       s_ones[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 1);
+      s_mb_zeros[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 0);
+      s_mb_ones[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 1);
    }
 }
 
@@ -187,6 +301,8 @@ IntVector::finalizeCallback()
    for (int d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       delete s_zeros[d];
       delete s_ones[d];
+      delete s_mb_zeros[d];
+      delete s_mb_ones[d];
    }
 }
 

@@ -50,7 +50,7 @@ void
 shrinkBoxLevel(
    boost::shared_ptr<hier::BoxLevel>& small_box_level,
    const hier::BoxLevel& big_box_level,
-   const hier::MultiIntVector& shrinkage,
+   const hier::IntVector& shrinkage,
    const std::vector<int>& unshrunken_blocks);
 
 /*
@@ -59,7 +59,7 @@ shrinkBoxLevel(
 void
 refineBoxLevel(
    hier::BoxLevel& box_level,
-   const hier::MultiIntVector& ratio);
+   const hier::IntVector& ratio);
 
 /*
  ************************************************************************
@@ -187,7 +187,7 @@ int main(
          TBOX_ERROR("BoxLevelConnectorUtils test: could not find entry GridGeometry"
             << "\nin input.");
       }
-      boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
+      boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
          new geom::GridGeometry(
             dim,
             "GridGeometry",
@@ -214,13 +214,13 @@ int main(
       plog << "Input database after initialization..." << std::endl;
       input_db->printClassData(plog);
 
-      hier::MultiIntVector one_vector(hier::IntVector::getOne(dim));
-      hier::MultiIntVector zero_vector(hier::IntVector::getZero(dim));
+      hier::IntVector one_vector(hier::IntVector::getOne(dim));
+      hier::IntVector zero_vector(hier::IntVector::getZero(dim));
 
       /*
        * How much to shrink the big BoxLevel to get the small one.
        */
-      const hier::MultiIntVector shrinkage(hier::IntVector::getOne(dim));
+      const hier::IntVector shrinkage(hier::IntVector::getOne(dim));
 
       hier::BoxLevelConnectorUtils mblcu;
 
@@ -314,6 +314,9 @@ int main(
 
       hier::BoxLevel small_domain_level = *small_box_level;
 
+      std::vector<hier::IntVector> refinement_ratios(
+         1, hier::IntVector::getMultiOne(dim));
+
       /*
        * Refine Boxlevels as user specified.
        */
@@ -322,16 +325,28 @@ int main(
          main_db->getIntegerArray("big_refinement_ratio",
             &big_refinement_ratio[0],
             dim.getValue());
-         refineBoxLevel(big_box_level, hier::MultiIntVector(big_refinement_ratio));
+         refineBoxLevel(big_box_level, big_refinement_ratio);
       }
+      refinement_ratios.push_back(big_box_level.getRefinementRatio());
 
       if (main_db->isInteger("small_refinement_ratio")) {
          hier::IntVector small_refinement_ratio(dim);
          main_db->getIntegerArray("small_refinement_ratio",
             &small_refinement_ratio[0],
             dim.getValue());
-         refineBoxLevel(*small_box_level, hier::MultiIntVector(small_refinement_ratio));
+         refineBoxLevel(*small_box_level, small_refinement_ratio);
       }
+      TBOX_ASSERT(small_box_level->getRefinementRatio() >
+                  big_box_level.getRefinementRatio());
+      refinement_ratios.push_back(small_box_level->getRefinementRatio() /
+                                  big_box_level.getRefinementRatio());
+
+      /*
+       * These steps are usually handled by PatchHierarchy, but this
+       * test does not use PatchHierarchy.
+       */
+      grid_geometry->setUpRatios(refinement_ratios);
+      grid_geometry->setUpFineLevelMultiblockData(refinement_ratios);
 
       /*
        * Partition the big and small BoxLevels.
@@ -706,7 +721,7 @@ void partitionBoxes(
    hier::Connector* dummy_connector = 0;
 
    const hier::IntVector bad_interval(dim, 1);
-   const hier::MultiIntVector cut_factor(hier::IntVector::getOne(dim));
+   const hier::IntVector cut_factor(hier::IntVector::getOne(dim));
 
    load_balancer.loadBalanceBoxLevel(
       box_level,
@@ -723,7 +738,7 @@ void partitionBoxes(
 void shrinkBoxLevel(
    boost::shared_ptr<hier::BoxLevel>& small_box_level,
    const hier::BoxLevel& big_box_level,
-   const hier::MultiIntVector& shrinkage,
+   const hier::IntVector& shrinkage,
    const std::vector<int>& unshrunken_blocks)
 {
    const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry(
@@ -801,7 +816,7 @@ void shrinkBoxLevel(
    for (hier::BoxContainer::const_iterator bi = boundary_boxes.begin();
         bi != boundary_boxes.end(); ++bi) {
       hier::Box box(*bi);
-      box.grow(shrinkage.getBlockVector(box.getBlockId()));
+      box.grow(shrinkage);
       hier::Box complement_box(
          box, ++last_local_id, local_rank);
       complement_boxes.insert(complement_box);
@@ -885,7 +900,7 @@ void shrinkBoxLevel(
  ***********************************************************************
  */
 void refineBoxLevel(hier::BoxLevel& box_level,
-                    const hier::MultiIntVector& ratio)
+                    const hier::IntVector& ratio)
 {
    box_level.refineBoxes(
      box_level,

@@ -457,36 +457,36 @@ BoxNeighborhoodCollection::clear()
 
 void
 BoxNeighborhoodCollection::coarsenNeighbors(
-   const MultiIntVector& ratio)
+   const IntVector& ratio)
 {
    for (HeadBoxPool::iterator nbr_itr(d_nbrs.begin());
         nbr_itr != d_nbrs.end(); ++nbr_itr) {
       Box& box_to_coarsen = const_cast<Box&>(*nbr_itr);
-      box_to_coarsen.coarsen(ratio.getBlockVector(box_to_coarsen.getBlockId()));
+      box_to_coarsen.coarsen(ratio);
    }
    return;
 }
 
 void
 BoxNeighborhoodCollection::refineNeighbors(
-   const MultiIntVector& ratio)
+   const IntVector& ratio)
 {
    for (HeadBoxPool::iterator nbr_itr(d_nbrs.begin());
         nbr_itr != d_nbrs.end(); ++nbr_itr) {
       Box& box_to_refine = const_cast<Box&>(*nbr_itr);
-      box_to_refine.refine(ratio.getBlockVector(box_to_refine.getBlockId()));
+      box_to_refine.refine(ratio);
    }
    return;
 }
 
 void
 BoxNeighborhoodCollection::growNeighbors(
-   const MultiIntVector& growth)
+   const IntVector& growth)
 {
    for (HeadBoxPool::iterator nbr_itr(d_nbrs.begin());
         nbr_itr != d_nbrs.end(); ++nbr_itr) {
       Box& box_to_grow = const_cast<Box&>(*nbr_itr);
-      box_to_grow.grow(growth.getBlockVector(box_to_grow.getBlockId()));
+      box_to_grow.grow(growth);
    }
    return;
 }

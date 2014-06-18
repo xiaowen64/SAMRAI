@@ -255,8 +255,8 @@ BergerRigoutsos::findBoxesContainingTags(
    const int tag_data_index,
    const int tag_val,
    const hier::BoxContainer& bound_boxes,
-   const hier::MultiIntVector& min_box,
-   const hier::MultiIntVector& tag_to_new_width)
+   const hier::IntVector& min_box,
+   const hier::IntVector& tag_to_new_width)
 {
    TBOX_ASSERT(!bound_boxes.isEmpty());
    TBOX_ASSERT_OBJDIM_EQUALITY4(*tag_level,
@@ -269,7 +269,8 @@ BergerRigoutsos::findBoxesContainingTags(
 
    for (hier::BoxContainer::const_iterator bb_itr = bound_boxes.begin();
         bb_itr != bound_boxes.end(); ++bb_itr) {
-      if (!(bb_itr->numberCells() >= min_box.getBlockVector(bb_itr->getBlockId()))) {
+      if (!(bb_itr->numberCells() >=
+          min_box.getBlockVector(bb_itr->getBlockId()))) {
          if (d_check_min_box_size == 'e') {
             TBOX_ERROR("BergerRigoutsos::findBoxesContainingTags input error:\n"
                << "Input box " << *bb_itr << " has size " << bb_itr->numberCells()
@@ -320,7 +321,7 @@ BergerRigoutsos::findBoxesContainingTags(
    d_level_number = tag_level->getLevelNumber();
 
    d_tag_to_new_width = d_build_zero_width_connector ?
-      hier::MultiIntVector(hier::IntVector::getZero(tag_to_new_width.getDim()))
+      hier::IntVector::getZero(tag_to_new_width.getDim())
       : tag_to_new_width;
 
    setComputeRelationships("BIDIRECTIONAL");

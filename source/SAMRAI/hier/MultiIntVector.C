@@ -8,7 +8,7 @@
  *
  ************************************************************************/
 #include "SAMRAI/hier/MultiIntVector.h"
-
+#if 0
 namespace SAMRAI {
 namespace hier {
 
@@ -101,6 +101,6 @@ operator >> (
    return s;
 }
 
-
 }
 }
+#endif

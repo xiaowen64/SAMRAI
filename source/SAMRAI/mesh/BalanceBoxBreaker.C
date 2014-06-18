@@ -340,8 +340,8 @@ BalanceBoxBreaker::breakOffLoad_planar( TrialBreak &trial ) const
 
    bool sufficient_brk_load = false;
    const hier::BlockId& block_id = trial.d_whole_box.getBlockId();
-   const hier::IntVector& cut_factor =
-      d_pparams->getCutFactor().getBlockVector(block_id);
+   hier::IntVector cut_factor(
+      d_pparams->getCutFactor().getBlockVector(block_id));
 
    TrialBreak trial1(trial);
 
@@ -588,8 +588,8 @@ BalanceBoxBreaker::breakOffLoad_cubic( TrialBreak &trial ) const
    double best_breakoff_load = 0;
 
    const hier::BlockId& block_id = trial.d_whole_box.getBlockId();
-   const hier::IntVector& cut_factor =
-      d_pparams->getCutFactor().getBlockVector(block_id);
+   const hier::IntVector& cut_factor(
+      d_pparams->getCutFactor().getBlockVector(block_id));
 
    /*
     * We consider 2^dim boxes grown from the incoming box's corners.

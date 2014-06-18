@@ -123,9 +123,9 @@ public:
    baseNestsInHead(
       bool* locally_nests,
       const Connector& connector,
-      const MultiIntVector& base_swell,
-      const MultiIntVector& head_swell,
-      const MultiIntVector& head_nesting_margin,
+      const IntVector& base_swell,
+      const IntVector& head_swell,
+      const IntVector& head_nesting_margin,
       const BoxContainer* domain = 0) const;
 
    /*!
@@ -178,9 +178,9 @@ public:
       bool* locally_nests,
       const BoxLevel& base,
       const BoxLevel& head,
-      const MultiIntVector& base_swell,
-      const MultiIntVector& head_swell,
-      const MultiIntVector& head_margin,
+      const IntVector& base_swell,
+      const IntVector& head_swell,
+      const IntVector& head_margin,
       const BoxContainer* domain = 0) const;
 
    /*!
@@ -232,7 +232,7 @@ public:
       boost::shared_ptr<BoxLevel>& external,
       boost::shared_ptr<MappingConnector>& input_to_external,
       const Connector& input_to_reference,
-      const MultiIntVector& nesting_width,
+      const IntVector& nesting_width,
       const BoxContainer& domain = BoxContainer()) const
    {
       d_object_timers->t_compute_external_parts->start();
@@ -295,7 +295,7 @@ public:
       boost::shared_ptr<BoxLevel>& internal,
       boost::shared_ptr<MappingConnector>& input_to_internal,
       const Connector& input_to_reference,
-      const MultiIntVector& nesting_width,
+      const IntVector& nesting_width,
       const BoxContainer& domain = BoxContainer()) const
    {
       d_object_timers->t_compute_internal_parts->start();
@@ -351,7 +351,7 @@ public:
    void
    computeBoxesAroundBoundary(
       BoxContainer& boundary,
-      const MultiIntVector& refinement_ratio,
+      const IntVector& refinement_ratio,
       const boost::shared_ptr<const BaseGridGeometry>& grid_geometry,
       const bool simplify_boundary_boxes = true) const;
 
@@ -465,7 +465,7 @@ public:
    addPeriodicImages(
       BoxLevel& box_level,
       const BoxContainer& domain_search_tree,
-      const MultiIntVector& threshold_distance) const;
+      const IntVector& threshold_distance) const;
 
    /*!
     * @brief Add periodic images to a BoxLevel and add new
@@ -549,7 +549,7 @@ private:
       boost::shared_ptr<MappingConnector>& input_to_parts,
       char internal_or_external,
       const Connector& input_to_reference,
-      const MultiIntVector& nesting_width,
+      const IntVector& nesting_width,
       const BoxContainer& domain) const;
 
    /*!

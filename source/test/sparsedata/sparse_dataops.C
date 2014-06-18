@@ -123,7 +123,7 @@ int main(
       boost::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", geometry));
 
-      hier::MultiIntVector ratio(dim, 2);
+      hier::IntVector ratio(dim, 2);
       hierarchy->setMaxNumberOfLevels(2);
       hierarchy->setRatioToCoarserLevel(ratio, 1);
 
@@ -132,7 +132,7 @@ int main(
 
       boost::shared_ptr<hier::BoxLevel> layer0(
          boost::make_shared<hier::BoxLevel>(
-            hier::MultiIntVector(dim, 1), geometry));
+            hier::IntVector(dim, 1), geometry));
       boost::shared_ptr<hier::BoxLevel> layer1(
          boost::make_shared<hier::BoxLevel>(ratio, geometry));
 

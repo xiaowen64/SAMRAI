@@ -156,7 +156,7 @@ public:
       TwoDimBool& touches_regular_bdry,
       TwoDimBool& touches_periodic_bdry,
       const Box& box,
-      const MultiIntVector &refinement_ratio,
+      const IntVector &refinement_ratio,
       const BoxContainer& refined_periodic_domain_tree) const;
 
    /*!
@@ -188,7 +188,7 @@ public:
    virtual void
    setGeometryOnPatches(
       PatchLevel& level,
-      const MultiIntVector& ratio_to_level_zero,
+      const IntVector& ratio_to_level_zero,
       const std::map<BoxId, TwoDimBool>& touches_regular_bdry,
       const bool defer_boundary_box_creation);
 
@@ -231,13 +231,13 @@ public:
    void
    computePhysicalDomain(
       BoxContainer& domain,
-      const MultiIntVector& ratio_to_level_zero,
+      const IntVector& ratio_to_level_zero,
       const BlockId& block_id) const;
 
    void
    computePhysicalDomainWithPeriodicImages(
       BoxContainer& domain,
-      const MultiIntVector& ratio_to_level_zero,
+      const IntVector& ratio_to_level_zero,
       const BlockId& block_id) const;
 
    /*!
@@ -261,7 +261,7 @@ public:
    void
    computePhysicalDomain(
       BoxLevel& box_level,
-      const MultiIntVector& ratio_to_level_zero,
+      const IntVector& ratio_to_level_zero,
       const BlockId& block_id) const;
 
    /*!
@@ -283,7 +283,7 @@ public:
    void
    computePhysicalDomain(
       BoxContainer& domain_boxes,
-      const MultiIntVector& ratio_to_level_zero) const;
+      const IntVector& ratio_to_level_zero) const;
 
    /*!
     * @brief Compute the BoxLevel describing the complete physical
@@ -304,7 +304,7 @@ public:
    void
    computePhysicalDomain(
       BoxLevel& box_level,
-      const MultiIntVector& ratio_to_level_zero) const;
+      const IntVector& ratio_to_level_zero) const;
 
    /*!
     * @brief Set the physical domain (for level zero)
@@ -464,7 +464,7 @@ public:
    virtual boost::shared_ptr<BaseGridGeometry>
    makeRefinedGridGeometry(
       const std::string& fine_geom_name,
-      const MultiIntVector& refine_ratio) const = 0;
+      const IntVector& refine_ratio) const = 0;
 
    /*!
     * @brief Create a pointer to a coarsened version of this grid geometry
@@ -481,7 +481,7 @@ public:
    virtual boost::shared_ptr<BaseGridGeometry>
    makeCoarsenedGridGeometry(
       const std::string& coarse_geom_name,
-      const MultiIntVector& coarsen_ratio) const = 0;
+      const IntVector& coarsen_ratio) const = 0;
 
    /*!
     * @brief Compute and set grid data for patch.
@@ -505,7 +505,7 @@ public:
    virtual void
    setGeometryDataOnPatch(
       Patch& patch,
-      const MultiIntVector& ratio_to_level_zero,
+      const IntVector& ratio_to_level_zero,
       const TwoDimBool& touches_regular_bdry) const;
 
    /*!
@@ -1019,9 +1019,9 @@ private:
    bool
    transformBox(
       Box& box,
-      const MultiIntVector& ratio,
+      const IntVector& ratio,
       const BlockId& output_block,
-      const BlockId& input_block, double dummy) const;
+      const BlockId& input_block) const;
    bool
    transformBox(
       Box& box,
@@ -1050,7 +1050,7 @@ private:
    bool
    transformBoxContainer(
       BoxContainer& boxes,
-      const MultiIntVector& ratio,
+      const IntVector& ratio,
       const BlockId& output_block,
       const BlockId& input_block) const;
 
@@ -1168,14 +1168,14 @@ private:
 
    void
    setUpRatios(
-      const std::vector<MultiIntVector>& ratio_to_coarser);
+      const std::vector<IntVector>& ratio_to_coarser);
 
    void
    setUpFineLevelMultiblockData(
-      const std::vector<MultiIntVector>& ratio_to_coarser);
+      const std::vector<IntVector>& ratio_to_coarser);
 
    int
-   getEquivalentLevelNumber(const MultiIntVector& ratio_to_level_zero) const
+   getEquivalentLevelNumber(const IntVector& ratio_to_level_zero) const
    {
       int level_num = -1;
       for (int i = 0; i < d_ratio_to_level_zero.size(); ++i) {
@@ -1444,7 +1444,7 @@ private:
     */
    std::vector<BoxContainer> d_singularity;
 
-   std::vector<MultiIntVector> d_ratio_to_level_zero;
+   std::vector<IntVector> d_ratio_to_level_zero;
 
    /*!
     * @brief Tell whether there is enhanced connectivity anywhere in the

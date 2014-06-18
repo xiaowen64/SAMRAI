@@ -63,7 +63,7 @@ MblkGeometry::MblkGeometry(
 
    hier::BoxContainer domain_boxes;
    grid_geom.computePhysicalDomain(domain_boxes,
-                                   hier::MultiIntVector(hier::IntVector::getOne(dim)),
+                                   hier::IntVector::getOne(dim),
                                    hier::BlockId(0));
 
    TBOX_ASSERT(domain_boxes.size() == 1);

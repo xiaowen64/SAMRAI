@@ -145,7 +145,7 @@ ConnectorStatistics::computeLocalConnectorStatistics( const Connector &connector
             static_cast<double>(num_relations));
 
       Box base_box = *base.getBoxStrict(*nbi);
-      base_box.grow(connector.getConnectorWidth().getBlockVector(base_box.getBlockId()));
+      base_box.grow(connector.getConnectorWidth());
 
       for ( Connector::ConstNeighborIterator ni = connector.begin(nbi);
             ni != connector.end(nbi); ++ni ) {
@@ -153,16 +153,16 @@ ConnectorStatistics::computeLocalConnectorStatistics( const Connector &connector
          visible_neighbors.insert(*ni);
          Box neighbor = *ni;
          if ( refine_head ) {
-            neighbor.refine(connector.getRatio().getBlockVector(neighbor.getBlockId()));
+            neighbor.refine(connector.getRatio());
          }
          else if ( coarsen_head ) {
-            neighbor.coarsen(connector.getRatio().getBlockVector(neighbor.getBlockId()));
+            neighbor.coarsen(connector.getRatio());
          }
          if ( neighbor.getBlockId() != base_box.getBlockId() ) {
             base.getGridGeometry()->transformBox( neighbor,
                                                   base.getRefinementRatio(),
                                                   base_box.getBlockId(),
-                                                  neighbor.getBlockId(),3.7 );
+                                                  neighbor.getBlockId() );
          }
          neighbor *= base_box;
          const int size = neighbor.size();

@@ -527,6 +527,11 @@ private:
    VectorOfInts d_group;
 
    /*!
+    * Minimum size of a Box that d_box can potentially be chopped into.
+    */
+   hier::IntVector d_min_box_size;
+
+   /*!
     * @brief MPI tag for message within a node.
     *
     * The tag is determined by on the process that owns the parent

@@ -134,7 +134,7 @@ public:
    Connector(
       const BoxLevel& base_box_level,
       const BoxLevel& head_box_level,
-      const MultiIntVector& base_width,
+      const IntVector& base_width,
       const BoxLevel::ParallelState parallel_state = BoxLevel::DISTRIBUTED);
 
    /*!
@@ -154,8 +154,6 @@ public:
          d_mpi.setCommunicator(MPI_COMM_NULL);
          d_base_handle.reset();
          d_head_handle.reset();
-         d_ratio.clear();
-         d_base_width.clear();
          d_parallel_state = BoxLevel::DISTRIBUTED;
       }
    }
@@ -667,7 +665,7 @@ public:
     */
    void
    coarsenLocalNeighbors(
-      const MultiIntVector& ratio)
+      const IntVector& ratio)
    {
       d_relationships.coarsenNeighbors(ratio);
       return;
@@ -680,7 +678,7 @@ public:
     */
    void
    refineLocalNeighbors(
-      const MultiIntVector& ratio)
+      const IntVector& ratio)
    {
       d_relationships.refineNeighbors(ratio);
       return;
@@ -693,7 +691,7 @@ public:
     */
    void
    growLocalNeighbors(
-      const MultiIntVector& growth)
+      const IntVector& growth)
    {
       d_relationships.growNeighbors(growth);
       return;
@@ -782,7 +780,7 @@ public:
     *
     * @pre isFinalized()
     */
-   const MultiIntVector&
+   const IntVector&
    getRatio() const
    {
       TBOX_ASSERT(isFinalized());
@@ -952,7 +950,7 @@ public:
     */
    void
    setWidth(
-      const MultiIntVector& new_width,
+      const IntVector& new_width,
       bool finalize_context = false);
 
    /*!
@@ -966,18 +964,11 @@ public:
     *
     * @pre isFinalized().
     */
-   const MultiIntVector&
+   const IntVector&
    getConnectorWidth() const
    {
       TBOX_ASSERT(isFinalized());
       return d_base_width;
-   }
-
-   const IntVector&
-   getConnectorWidth(const BlockId& block_id) const
-   {
-      TBOX_ASSERT(isFinalized());
-      return d_base_width.getBlockVector(block_id);
    }
 
    /*!
@@ -991,7 +982,7 @@ public:
     */
    void
    shrinkWidth(
-      const MultiIntVector& new_width);
+      const IntVector& new_width);
 
    //@{
    /*!
@@ -1054,11 +1045,11 @@ public:
     * @pre (base_refinement_ratio >= head_refinement_ratio) ||
     *      (base_refinement_ratio <= head_refinement_ratio)
     */
-   static MultiIntVector
+   static IntVector
    convertHeadWidthToBase(
-      const MultiIntVector& base_refinement_ratio,
-      const MultiIntVector& head_refinement_ratio,
-      const MultiIntVector& head_width);
+      const IntVector& base_refinement_ratio,
+      const IntVector& head_refinement_ratio,
+      const IntVector& head_width);
 
    // TODO: refactor use of size_t as return type.  This could be
    // problematic.
@@ -1378,9 +1369,9 @@ void growBaseBoxForMultiblock(
    BoxContainer& grown_boxes,
    const Box& base_box,
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
-   const MultiIntVector& ratio_to_level_zero,
-   const MultiIntVector& connector_ratio,
-   const MultiIntVector& grow_width,
+   const IntVector& ratio_to_level_zero,
+   const IntVector& connector_ratio,
+   const IntVector& grow_width,
    bool head_is_finer,
    bool base_is_finer) const;
 
@@ -1398,9 +1389,9 @@ void growBaseBoxForMultiblock(
     */
    static void
    computeRatioInfo(
-      const MultiIntVector& baseRefinementRatio,
-      const MultiIntVector& headRefinementRatio,
-      MultiIntVector& ratio,
+      const IntVector& baseRefinementRatio,
+      const IntVector& headRefinementRatio,
+      IntVector& ratio,
       bool& head_coarser,
       bool& ratio_is_exact);
 
@@ -1707,7 +1698,7 @@ private:
     * This is the amount of growth applied to a box in the base BoxLevel
     * before checking if the box overlaps a box in the head BoxLevel.
     */
-   MultiIntVector d_base_width;
+   IntVector d_base_width;
 
    /*!
     * @brief Refinement ratio between base and head.
@@ -1720,7 +1711,7 @@ private:
     * This is redundant information.  You can compute it
     * from the base and head BoxLevels.
     */
-   MultiIntVector d_ratio;
+   IntVector d_ratio;
 
    /*!
     * @brief Whether the ratio between the base and head

@@ -75,7 +75,7 @@ BaseGridGeometry::BaseGridGeometry(
    d_object_name(object_name),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
-   d_ratio_to_level_zero(1, MultiIntVector(d_dim, 1)),
+   d_ratio_to_level_zero(1, IntVector(d_dim, 1)),
    d_has_enhanced_connectivity(false)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -114,7 +114,7 @@ BaseGridGeometry::BaseGridGeometry(
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
-   d_ratio_to_level_zero(1, MultiIntVector(d_dim, 1)),
+   d_ratio_to_level_zero(1, IntVector(d_dim, 1)),
    d_has_enhanced_connectivity(false)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -132,8 +132,8 @@ BaseGridGeometry::BaseGridGeometry(
       itr->setId(box_id);
    }
    d_number_blocks = static_cast<int>(block_numbers.size());
-   MultiIntVector::setNumberBlocks(d_number_blocks);
-   d_ratio_to_level_zero[0].setAll(IntVector::getOne(d_dim));
+   IntVector::setNumberBlocks(d_number_blocks);
+   d_ratio_to_level_zero[0] = IntVector::getMultiOne(d_dim);
 
    d_block_neighbors.resize(d_number_blocks);
 
@@ -152,7 +152,7 @@ BaseGridGeometry::BaseGridGeometry(
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
-   d_ratio_to_level_zero(1, MultiIntVector(d_dim, 1)),
+   d_ratio_to_level_zero(1, IntVector(d_dim, 1)),
    d_has_enhanced_connectivity(false)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -170,8 +170,8 @@ BaseGridGeometry::BaseGridGeometry(
       itr->setId(box_id);
    }
    d_number_blocks = static_cast<int>(block_numbers.size());
-   MultiIntVector::setNumberBlocks(d_number_blocks);
-   d_ratio_to_level_zero[0].setAll(IntVector::getOne(d_dim));
+   IntVector::setNumberBlocks(d_number_blocks);
+   d_ratio_to_level_zero[0] = IntVector::getMultiOne(d_dim);
    d_block_neighbors.resize(d_number_blocks);
 
    setPhysicalDomain(domain, d_number_blocks);
@@ -351,7 +351,7 @@ BaseGridGeometry::computeBoxTouchingBoundaries(
    TwoDimBool& touches_regular_bdry,
    TwoDimBool& touches_periodic_bdry,
    const Box& box,
-   const MultiIntVector &refinement_ratio,
+   const IntVector &refinement_ratio,
    const BoxContainer& refined_periodic_domain_tree) const
 {
 
@@ -361,7 +361,7 @@ BaseGridGeometry::computeBoxTouchingBoundaries(
     * boxes outside the physical domain (if any) remain in the list.
     */
    BoxContainer bdry_list(box);
-   bdry_list.grow(MultiIntVector(IntVector::getOne(d_dim)));
+   bdry_list.grow(IntVector::getOne(d_dim));
    bdry_list.removeIntersections(refinement_ratio,
                                  refined_periodic_domain_tree);
    const bool touches_any_boundary = !bdry_list.isEmpty();
@@ -444,7 +444,7 @@ BaseGridGeometry::computeBoxTouchingBoundaries(
 void
 BaseGridGeometry::setGeometryOnPatches(
    PatchLevel& level,
-   const MultiIntVector& ratio_to_level_zero,
+   const IntVector& ratio_to_level_zero,
    const std::map<BoxId, TwoDimBool>& touches_regular_bdry,
    const bool defer_boundary_box_creation)
 {
@@ -460,14 +460,12 @@ BaseGridGeometry::setGeometryOnPatches(
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim.getValue() > 1) {
       for (int b = 0; b < d_number_blocks; ++b) {
-         BlockId block_id(b);
-         const IntVector& block_ratio =
-            ratio_to_level_zero.getBlockVector(block_id);
-         for (int i = 0; i < d_dim.getValue(); ++i) {
-            TBOX_ASSERT((block_ratio(i) *
-                         block_ratio((i + 1) % d_dim.getValue()) > 0) ||
-               (block_ratio(i) == 1) ||
-               (block_ratio((i + 1) % d_dim.getValue()) == 1));
+         int i;
+         for (i = 0; i < d_dim.getValue(); ++i) {
+            TBOX_ASSERT((ratio_to_level_zero(b,i) *
+                        ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0)
+               || (ratio_to_level_zero(b,i) == 1)
+               || (ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) == 1));
          }
       }
    }
@@ -549,7 +547,7 @@ BaseGridGeometry::setBoundaryBoxes(
 void
 BaseGridGeometry::setGeometryDataOnPatch(
    Patch& patch,
-   const MultiIntVector& ratio_to_level_zero,
+   const IntVector& ratio_to_level_zero,
    const PatchGeometry::TwoDimBool& touches_regular_bdry) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -563,16 +561,14 @@ BaseGridGeometry::setGeometryDataOnPatch(
     * all components not equal to 1 must have the same sign.
     */
    TBOX_ASSERT(!ratio_to_level_zero.isZero()); 
-   if (dim.getValue() > 1) {
+   if (d_dim.getValue() > 1) {
       for (int b = 0; b < d_number_blocks; ++b) {
-         BlockId block_id(b);
-         const IntVector& block_ratio =
-            ratio_to_level_zero.getBlockVector(block_id);
-         for (int i = 0; i < dim.getValue(); ++i) {
-            TBOX_ASSERT((block_ratio(i) *
-                         block_ratio((i + 1) % dim.getValue()) > 0) ||
-               (block_ratio(i) == 1) ||
-               (block_ratio((i + 1) % dim.getValue()) == 1));
+         int i;
+         for (i = 0; i < d_dim.getValue(); ++i) {
+            TBOX_ASSERT((ratio_to_level_zero(b,i) *
+                        ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0)
+               || (ratio_to_level_zero(b,i) == 1)
+               || (ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) == 1));
          }
       }
    }
@@ -621,8 +617,8 @@ BaseGridGeometry::getFromRestart()
    }
 
    d_number_blocks = db->getInteger("num_blocks");
-   MultiIntVector::setNumberBlocks(d_number_blocks);
-   d_ratio_to_level_zero[0].setAll(IntVector::getOne(d_dim));
+   IntVector::setNumberBlocks(d_number_blocks);
+   d_ratio_to_level_zero[0] = IntVector::getMultiOne(d_dim);
    d_singularity.resize(d_number_blocks);
    d_block_neighbors.resize(d_number_blocks);
 
@@ -737,8 +733,8 @@ BaseGridGeometry::getFromInput(
             << std::endl);
       }
 
-      MultiIntVector::setNumberBlocks(d_number_blocks); 
-      d_ratio_to_level_zero[0].setAll(IntVector::getOne(d_dim));
+      IntVector::setNumberBlocks(d_number_blocks); 
+      d_ratio_to_level_zero[0] = IntVector::getMultiOne(d_dim);
 
       std::string domain_name;
       BoxContainer domain;
@@ -1085,7 +1081,7 @@ BaseGridGeometry::getBoundaryBoxes(
       BoxContainer per_domain_boxes;
       if (num_per_dirs != 0) {
          per_domain_boxes = domain_boxes;
-         per_domain_boxes.grow(MultiIntVector(periodic_shift));
+         per_domain_boxes.grow(periodic_shift);
          if (per_domain_boxes.size() > 10) { 
             per_domain_boxes.makeTree(0);
          }
@@ -1206,28 +1202,29 @@ BaseGridGeometry::getBoundaryBoxes(
 void
 BaseGridGeometry::computePhysicalDomain(
    BoxContainer& domain_boxes,
-   const MultiIntVector& ratio_to_level_zero,
+   const IntVector& ratio_to_level_zero,
    const BlockId& block_id) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio_to_level_zero);
-   const IntVector& block_ratio =
-      ratio_to_level_zero.getBlockVector(block_id);
+   const int b = block_id.getBlockValue();
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    /*
     * All components of ratio must be nonzero.  Additionally, all components
     * of ratio not equal to 1 must have the same sign.
     */
-   int i;
-   for (i = 0; i < d_dim.getValue(); ++i) {
-      TBOX_ASSERT(block_ratio(i) != 0);
-   }
-   if (d_dim.getValue() > 1) {
+   if (!ratio_to_level_zero.isOne()) {
+      int i;
       for (i = 0; i < d_dim.getValue(); ++i) {
-         TBOX_ASSERT((block_ratio(i)
-                      * block_ratio((i + 1) % d_dim.getValue()) > 0)
-            || (block_ratio(i) == 1)
-            || ((block_ratio(i + 1) % d_dim.getValue()) == 1));
+         TBOX_ASSERT(ratio_to_level_zero(b,i) != 0);
+      }
+      if (d_dim.getValue() > 1) {
+         for (i = 0; i < d_dim.getValue(); ++i) {
+            TBOX_ASSERT((ratio_to_level_zero(b,i) *
+                         ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0)
+               || (ratio_to_level_zero(b,i) == 1)
+            || ((ratio_to_level_zero(b,i + 1) % d_dim.getValue()) == 1));
+            }
       }
    }
 #endif
@@ -1240,17 +1237,17 @@ BaseGridGeometry::computePhysicalDomain(
       }
    }
 
-   if (block_ratio != IntVector::getOne(d_dim)) {
+   if (!ratio_to_level_zero.isOne()) {
       bool coarsen = false;
-      IntVector tmp_rat = block_ratio;
+      IntVector tmp_rat = ratio_to_level_zero;
       for (int id = 0; id < d_dim.getValue(); ++id) {
-         if (block_ratio(id) < 0) coarsen = true;
-         tmp_rat(id) = abs(block_ratio(id));
+         if (ratio_to_level_zero(b,id) < 0) coarsen = true;
+         tmp_rat(b,id) = abs(ratio_to_level_zero(b,id));
       }
       if (coarsen) {
-         domain_boxes.coarsen(MultiIntVector(tmp_rat));
+         domain_boxes.coarsen(tmp_rat);
       } else {
-         domain_boxes.refine(MultiIntVector(tmp_rat));
+         domain_boxes.refine(tmp_rat);
       }
    }
 }
@@ -1268,28 +1265,29 @@ BaseGridGeometry::computePhysicalDomain(
 void
 BaseGridGeometry::computePhysicalDomain(
    BoxLevel& box_level,
-   const MultiIntVector& ratio_to_level_zero,
+   const IntVector& ratio_to_level_zero,
    const BlockId& block_id) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio_to_level_zero);
-   const IntVector& block_ratio =
-      ratio_to_level_zero.getBlockVector(block_id);
+   const int b = block_id.getBlockValue();
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    /*
     * All components of ratio must be nonzero.  Additionally, all components
     * of ratio not equal to 1 must have the same sign.
     */
-   int i;
-   for (i = 0; i < d_dim.getValue(); ++i) {
-      TBOX_ASSERT(block_ratio(i) != 0);
-   }
-   if (d_dim.getValue() > 1) {
+   if (!ratio_to_level_zero.isOne()) {
+      int i;
       for (i = 0; i < d_dim.getValue(); ++i) {
-         TBOX_ASSERT((block_ratio(i)
-                      * block_ratio((i + 1) % d_dim.getValue()) > 0)
-            || (block_ratio(i) == 1)
-            || (block_ratio((i + 1) % d_dim.getValue()) == 1));
+         TBOX_ASSERT(ratio_to_level_zero(b,i) != 0);
+      }
+      if (d_dim.getValue() > 1) {
+         for (i = 0; i < d_dim.getValue(); ++i) {
+            TBOX_ASSERT((ratio_to_level_zero(b,i)
+                         * ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0)
+               || (ratio_to_level_zero(b,i) == 1)
+               || (ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) == 1));
+         }
       }
    }
 #endif
@@ -1302,19 +1300,19 @@ BaseGridGeometry::computePhysicalDomain(
       }
    }
 
-   if (block_ratio != IntVector::getOne(d_dim)) {
+   if (!ratio_to_level_zero.isOne()) {
       bool coarsen = false;
-      IntVector tmp_rat = block_ratio;
+      IntVector tmp_rat = ratio_to_level_zero;
       for (int id = 0; id < d_dim.getValue(); ++id) {
-         if (block_ratio(id) < 0) {
+         if (ratio_to_level_zero(b,id) < 0) {
             coarsen = true;
          }
-         tmp_rat(id) = abs(block_ratio(id));
+         tmp_rat(id) = abs(ratio_to_level_zero(b,id));
       }
       if (coarsen) {
-         box_level.coarsenBoxes(box_level, MultiIntVector(tmp_rat), MultiIntVector(IntVector::getOne(d_dim)));
+         box_level.coarsenBoxes(box_level, tmp_rat, IntVector::getOne(d_dim));
       } else {
-         box_level.refineBoxes(box_level, MultiIntVector(tmp_rat), MultiIntVector(IntVector::getOne(d_dim)));
+         box_level.refineBoxes(box_level, tmp_rat, IntVector::getOne(d_dim));
       }
    }
 }
@@ -1332,56 +1330,50 @@ BaseGridGeometry::computePhysicalDomain(
 void
 BaseGridGeometry::computePhysicalDomain(
    BoxContainer& domain_boxes,
-   const MultiIntVector& ratio_to_level_zero) const
+   const IntVector& ratio_to_level_zero) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio_to_level_zero);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   /*
-    * All components of ratio must be nonzero.  Additionally, all components
-    * of ratio not equal to 1 must have the same sign.
-    */
-   for (int b = 0; b < d_number_blocks; ++b) {
-      BlockId block_id(b);
-      const IntVector& block_ratio = ratio_to_level_zero.getBlockVector(block_id);
-      
-      int i;
-      for (i = 0; i < d_dim.getValue(); ++i) {
-         TBOX_ASSERT(block_ratio(i) != 0);
-      }
-      if (d_dim.getValue() > 1) {
+   if (!ratio_to_level_zero.isOne()) {
+      /*
+       * All components of ratio must be nonzero.  Additionally, all components
+       * of ratio not equal to 1 must have the same sign.
+       */
+      for (int b = 0; b < d_number_blocks; ++b) {
+         int i;
          for (i = 0; i < d_dim.getValue(); ++i) {
-            TBOX_ASSERT((block_ratio(i)
-                         * block_ratio((i + 1) % d_dim.getValue()) > 0)
-               || (block_ratio(i) == 1)
-               || (block_ratio((i + 1) % d_dim.getValue()) == 1));
+            TBOX_ASSERT(ratio_to_level_zero(b,i) != 0);
+         }
+         if (d_dim.getValue() > 1) {
+            for (i = 0; i < d_dim.getValue(); ++i) {
+               TBOX_ASSERT((ratio_to_level_zero(b,i)
+                           * ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0)
+                  || (ratio_to_level_zero(b,i) == 1)
+                  || (ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) == 1));
+            }
          }
       }
-   }
+   } 
 #endif
 
    domain_boxes = d_domain_with_images;
 
    if (!ratio_to_level_zero.isOne()) {
       bool coarsen = false;
-      std::vector<IntVector> tmp_rat(d_number_blocks, IntVector::getZero(d_dim));
+      IntVector tmp_rat = ratio_to_level_zero;
       for (int b = 0; b < d_number_blocks; ++b) {
-         BlockId block_id(b);
-         const IntVector& block_ratio =
-            ratio_to_level_zero.getBlockVector(block_id);
-
-         tmp_rat[b] = block_ratio;
          for (int id = 0; id < d_dim.getValue(); ++id) {
-            if (block_ratio(id) < 0) {
+            if (ratio_to_level_zero(b,id) < 0) {
                coarsen = true;
             }
-            tmp_rat[b](id) = abs(block_ratio(id));
+            tmp_rat(b,id) = abs(ratio_to_level_zero(b,id));
          }
       }
       if (coarsen) {
-         domain_boxes.coarsen(MultiIntVector(tmp_rat));
+         domain_boxes.coarsen(tmp_rat);
       } else {
-         domain_boxes.refine(MultiIntVector(tmp_rat));
+         domain_boxes.refine(tmp_rat);
       }
    }
 
@@ -1390,7 +1382,7 @@ BaseGridGeometry::computePhysicalDomain(
 void
 BaseGridGeometry::computePhysicalDomain(
    BoxLevel& box_level,
-   const MultiIntVector& ratio_to_level_zero) const
+   const IntVector& ratio_to_level_zero) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio_to_level_zero);
 
@@ -1399,20 +1391,19 @@ BaseGridGeometry::computePhysicalDomain(
     * All components of ratio must be nonzero.  Additionally, all components
     * of ratio not equal to 1 must have the same sign.
     */
-   for (int b = 0; b < d_number_blocks; ++b) {
-      BlockId block_id(b);
-      const IntVector& block_ratio = ratio_to_level_zero.getBlockVector(block_id);
-
-      int i;
-      for (i = 0; i < d_dim.getValue(); ++i) {
-         TBOX_ASSERT(block_ratio(i) != 0);
-      }
-      if (d_dim.getValue() > 1) {
+   if (!ratio_to_level_zero.isOne()) {
+      for (int b = 0; b < d_number_blocks; ++b) {
+         int i;
          for (i = 0; i < d_dim.getValue(); ++i) {
-            TBOX_ASSERT((block_ratio(i)
-                         * block_ratio((i + 1) % d_dim.getValue()) > 0)
-               || (block_ratio(i) == 1)
-               || (block_ratio((i + 1) % d_dim.getValue()) == 1));
+            TBOX_ASSERT(ratio_to_level_zero(b,i) != 0);
+         }
+         if (d_dim.getValue() > 1) {
+            for (i = 0; i < d_dim.getValue(); ++i) {
+               TBOX_ASSERT((ratio_to_level_zero(b,i) *
+                           ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0)
+                  || (ratio_to_level_zero(b,i) == 1)
+                  || (ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) == 1));
+            }
          }
       }
    }
@@ -1422,24 +1413,19 @@ BaseGridGeometry::computePhysicalDomain(
 
    if (!ratio_to_level_zero.isOne()) {
       bool coarsen = false;
-      std::vector<IntVector> tmp_rat(d_number_blocks, IntVector::getZero(d_dim));
+      IntVector tmp_rat = ratio_to_level_zero;
       for (int b = 0; b < d_number_blocks; ++b) {
-         BlockId block_id(b);
-         const IntVector& block_ratio =
-            ratio_to_level_zero.getBlockVector(block_id);
-
-         tmp_rat[b] = block_ratio;
          for (int id = 0; id < d_dim.getValue(); ++id) {
-            if (block_ratio(id) < 0) {
+            if (ratio_to_level_zero(b,id) < 0) {
                coarsen = true;
             }
-            tmp_rat[b](id) = abs(block_ratio(id));
+            tmp_rat(b,id) = abs(ratio_to_level_zero(b,id));
          }
       }
       if (coarsen) {
-         domain_boxes.coarsen(MultiIntVector(tmp_rat));
+         domain_boxes.coarsen(tmp_rat);
       } else {
-         domain_boxes.refine(MultiIntVector(tmp_rat));
+         domain_boxes.refine(tmp_rat);
       }
    }
 
@@ -1478,8 +1464,8 @@ BaseGridGeometry::setPhysicalDomain(
 
    d_domain_is_single_box.resize(number_blocks);
    d_number_blocks = number_blocks;
-   MultiIntVector::setNumberBlocks(d_number_blocks);
-   d_ratio_to_level_zero[0].setAll(IntVector::getOne(d_dim));
+   IntVector::setNumberBlocks(d_number_blocks);
+   d_ratio_to_level_zero[0] = IntVector::getMultiOne(d_dim);
 
    LocalId local_id(0);
 
@@ -1727,7 +1713,7 @@ BaseGridGeometry::checkPeriodicValidity(
       BoxContainer dup_domain2(domain);
       IntVector grow_one(d_dim, 0);
       grow_one(i) = 1;
-      dup_domain2.grow(MultiIntVector(grow_one));
+      dup_domain2.grow(grow_one);
       dup_domain2.unorder();
       dup_domain2.removeIntersections(domain);
 
@@ -1955,7 +1941,7 @@ BaseGridGeometry::readBlockDataFromInput(
             const int& cur_block = cur_block_id.getBlockValue();
             BoxContainer cur_grow(d_physical_domain, cur_block_id);
             cur_grow.unorder();
-            cur_grow.grow(MultiIntVector(IntVector::getOne(d_dim)));
+            cur_grow.grow(IntVector::getOne(d_dim));
             cur_grow.simplify();
 
             std::map<BlockId, Neighbor>& nbr_map =
@@ -2354,7 +2340,7 @@ void BaseGridGeometry::findSingularities(
       grow_base.grow(IntVector::getOne(d_dim));
 
       std::vector<const Box*> nbr_boxes;
-      chopped_domain.findOverlapBoxes(nbr_boxes, grow_base, MultiIntVector(IntVector::getOne(d_dim)));
+      chopped_domain.findOverlapBoxes(nbr_boxes, grow_base, IntVector::getOne(d_dim));
 
       const std::map<BlockId,Neighbor>& nbrs_of_base =
          d_block_neighbors[base_block.getBlockValue()];
@@ -2722,9 +2708,9 @@ BaseGridGeometry::transformBox(
 bool
 BaseGridGeometry::transformBox(
    Box& box,
-   const MultiIntVector& ratio,
+   const IntVector& ratio,
    const BlockId& output_block,
-   const BlockId& input_block, double dummy) const
+   const BlockId& input_block) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, box, ratio);
 
@@ -2747,7 +2733,7 @@ BaseGridGeometry::transformBox(
 bool
 BaseGridGeometry::transformBoxContainer(
    BoxContainer& boxes,
-   const MultiIntVector& ratio,
+   const IntVector& ratio,
    const BlockId& output_block,
    const BlockId& input_block) const
 {
@@ -3020,13 +3006,13 @@ BaseGridGeometry::areSingularityNeighbors(
 
 void
 BaseGridGeometry::setUpRatios(
-   const std::vector<MultiIntVector>& ratio_to_coarser)
+   const std::vector<IntVector>& ratio_to_coarser)
 {
    int max_levels = ratio_to_coarser.size();
    TBOX_ASSERT(max_levels > 0);
 
-   d_ratio_to_level_zero.resize(max_levels, MultiIntVector(d_dim, 1));
-   d_ratio_to_level_zero[0].setAll(IntVector::getOne(d_dim)); 
+   d_ratio_to_level_zero.resize(max_levels, IntVector::getMultiOne(d_dim));
+   d_ratio_to_level_zero[0] = IntVector::getMultiOne(d_dim); 
    for (int ln = 1; ln < max_levels; ++ln) {
       d_ratio_to_level_zero[ln] = d_ratio_to_level_zero[ln-1] *
                                   ratio_to_coarser[ln];
@@ -3035,19 +3021,19 @@ BaseGridGeometry::setUpRatios(
 
 void
 BaseGridGeometry::setUpFineLevelMultiblockData(
-   const std::vector<MultiIntVector>& ratio_to_coarser)
+   const std::vector<IntVector>& ratio_to_coarser)
 {
    int max_levels = ratio_to_coarser.size();
 
-   hier::MultiIntVector one_vector(d_dim, 1);
+   const IntVector& one_vector = IntVector::getOne(d_dim);
 
    for (int b = 0; b < d_number_blocks; ++b) {
 
       BlockId block_id(b);
 
       BoxContainer grow_domain;
-      computePhysicalDomain(grow_domain, one_vector, block_id);
-      TBOX_ASSERT(grow_domain.size() == 1);
+      computePhysicalDomain(grow_domain, IntVector::getMultiOne(d_dim), block_id);
+      TBOX_ASSERT(d_number_blocks == 1 || grow_domain.size() == 1);
       Box domain_box(grow_domain.front());
       grow_domain.unorder();
 
@@ -3060,7 +3046,7 @@ BaseGridGeometry::setUpFineLevelMultiblockData(
       std::map<BlockId,Neighbor>& neighbors(d_block_neighbors[b]);
 
       for (int ln = 1; ln < max_levels; ++ln) {
-         const MultiIntVector& current_ratio = d_ratio_to_level_zero[ln]; 
+         const IntVector& current_ratio = d_ratio_to_level_zero[ln]; 
 
          for (std::map<BlockId,Neighbor>::iterator ni = neighbors.begin();
               ni != neighbors.end(); ++ni) {
@@ -3069,22 +3055,21 @@ BaseGridGeometry::setUpFineLevelMultiblockData(
             const BoxContainer& nbr_domain = ni->second.getTransformedDomain();
             TBOX_ASSERT(nbr_domain.size() == 1);
             const Box& nbr_box = nbr_domain.front();
-            const IntVector& nbr_ratio = current_ratio.getBlockVector(nbr_block);
 
             Box base_node_box(domain_box);
             base_node_box.upper() += IntVector::getOne(d_dim); 
             Box nbr_node_box(nbr_box);
             nbr_node_box.upper() += IntVector::getOne(d_dim);
 
-            Box shared_nodes(base_node_box*nbr_node_box);
-            IntVector shared_size(shared_nodes.numberCells());
+            Box shared_base_nodes(base_node_box*nbr_node_box);
+            IntVector shared_size(shared_base_nodes.numberCells());
 
             IntVector base_bdry_dir(IntVector::getZero(d_dim));
             for (int d = 0; d < d_dim.getValue(); ++d) {
                if (shared_size[d] == 1) {
-                  if (shared_nodes.upper(d) == base_node_box.lower(d)) {
+                  if (shared_base_nodes.upper(d) == base_node_box.lower(d)) {
                      base_bdry_dir[d] = -1;
-                  } else if (shared_nodes.lower(d) == base_node_box.upper(d)) {
+                  } else if (shared_base_nodes.lower(d) == base_node_box.upper(d)) {
                      base_bdry_dir[d] = 1;
                   }
                }
@@ -3106,16 +3091,16 @@ BaseGridGeometry::setUpFineLevelMultiblockData(
             tran_base_node.upper() += IntVector::getOne(d_dim);
             Box true_nbr_node(true_nbr_box);
             true_nbr_node.upper() += IntVector::getOne(d_dim);
-            shared_nodes = tran_base_node * true_nbr_node;
+            Box shared_nbr_nodes(tran_base_node * true_nbr_node);
 
-            shared_size = shared_nodes.numberCells();
+            shared_size = shared_nbr_nodes.numberCells();
 
             IntVector nbr_bdry_dir(IntVector::getZero(d_dim));
             for (int d = 0; d < d_dim.getValue(); ++d) {
                if (shared_size[d] == 1) {
-                  if (shared_nodes.upper(d) == true_nbr_node.lower(d)) {
+                  if (shared_nbr_nodes.upper(d) == true_nbr_node.lower(d)) {
                      nbr_bdry_dir[d] = -1;
-                  } else if (shared_nodes.lower(d) == true_nbr_node.upper(d)) {
+                  } else if (shared_nbr_nodes.lower(d) == true_nbr_node.upper(d)) {
                      nbr_bdry_dir[d] = 1;
                   }
                }
@@ -3126,6 +3111,17 @@ BaseGridGeometry::setUpFineLevelMultiblockData(
             Box refined_nbr(true_nbr_box);
             refined_nbr.refine(current_ratio);
 
+            Box refined_base_node(refined_base);
+            refined_base_node.upper() += IntVector::getOne(d_dim);
+            Box refined_nbr_node(refined_nbr);
+            refined_nbr_node.upper() += IntVector::getOne(d_dim);
+
+            shared_base_nodes.refine(current_ratio);
+            shared_nbr_nodes.refine(current_ratio);
+            shared_base_nodes *= refined_base_node;
+            shared_nbr_nodes *= refined_nbr_node;
+             
+
             Index base_cell(refined_base.lower());
             Index nbr_cell(refined_nbr.lower());
             for (int d = 0; d < d_dim.getValue(); ++d) {
@@ -3134,16 +3130,16 @@ BaseGridGeometry::setUpFineLevelMultiblockData(
                } else if (base_bdry_dir[d] == 1) {
                   base_cell[d] = refined_base.upper(d);
                } else {
-                  base_cell[d] = refined_base.lower(d) +
-                     ((refined_base.upper(d) - refined_base.lower(d)) / 2);
+                  base_cell[d] = shared_base_nodes.lower(d) +
+                     ((shared_base_nodes.upper(d) - shared_base_nodes.lower(d)) / 2);
                }
                if (nbr_bdry_dir[d] == -1) {
                   nbr_cell[d] = refined_nbr.lower(d);
                } else if (nbr_bdry_dir[d] == 1) {
                   nbr_cell[d] = refined_nbr.upper(d);
                } else {
-                  nbr_cell[d] = refined_nbr.lower(d) +
-                     ((refined_nbr.upper(d) - refined_nbr.lower(d)) / 2);
+                  nbr_cell[d] = shared_nbr_nodes.lower(d) +
+                     ((shared_nbr_nodes.upper(d) - shared_nbr_nodes.lower(d)) / 2);
                }
             }
 
@@ -3157,7 +3153,7 @@ BaseGridGeometry::setUpFineLevelMultiblockData(
 
             box_in_nbr.rotate(rotation);
 
-            IntVector test_shift = box_in_base.lower() - box_in_nbr.lower();
+            IntVector test_shift(box_in_base.lower() - box_in_nbr.lower());
 
             IntVector final_shift (d_dim);
 
@@ -3169,22 +3165,19 @@ BaseGridGeometry::setUpFineLevelMultiblockData(
             test_box.shift(test_shift);
             test_box.setBlockId(block_id);
             Box test_box_node(test_box);
-            Box refined_base_node(refined_base);
             test_box_node.upper() += IntVector::getOne(d_dim);
-            refined_base_node.upper() += IntVector::getOne(d_dim);
-            shared_nodes.refine(current_ratio);
-            IntVector sh_num_cells(shared_nodes.numberCells());
+            IntVector sh_num_cells(shared_nbr_nodes.numberCells());
             for (int d = 0; d < d_dim.getValue(); ++d) {
                if (sh_num_cells[d] ==
-                   current_ratio.getBlockVector(shared_nodes.getBlockId())[d]) {
-                  shared_nodes.lower(d) = shared_nodes.upper(d);
+                   current_ratio(shared_nbr_nodes.getBlockId().getBlockValue(),d)) {
+                  shared_nbr_nodes.lower(d) = shared_nbr_nodes.upper(d);
                } else {
-                  shared_nodes.upper(d) -=
-                  current_ratio.getBlockVector(shared_nodes.getBlockId())[d];
-                  shared_nodes.upper(d) += 1;
+//                  shared_nbr_nodes.upper(d) -=
+//                  current_ratio(shared_nbr_nodes.getBlockId().getBlockValue(),d);
+//                  shared_nbr_nodes.upper(d) += 1;
                }
             }
-            int sh_size = shared_nodes.size();
+            int sh_size = shared_nbr_nodes.size();
 
             if ((test_box_node * refined_base_node).size() == sh_size) {
                final_shift = test_shift;
@@ -3193,7 +3186,7 @@ BaseGridGeometry::setUpFineLevelMultiblockData(
                Box adj(Index(d_dim,-1),Index(d_dim,1),block_id);
                Box::iterator aend(adj.end());
                for (Box::iterator ai(adj.begin()); ai != aend; ++ai) {
-                  adj_shift = test_shift + *ai;
+                  adj_shift = test_shift + IntVector(*ai);
                   test_box_node = refined_nbr;
                   test_box_node.rotate(rotation);
                   test_box_node.shift(adj_shift);
@@ -3203,6 +3196,22 @@ BaseGridGeometry::setUpFineLevelMultiblockData(
                   if ((test_box_node * refined_base_node).size() == sh_size) {
                      final_shift = adj_shift;
                      break;
+                  }
+               }
+               if (final_shift != adj_shift) {
+                  const IntVector& coarse_shift = ni->second.getTransformation(ln-1).getOffset();;
+                  for (int i = 0; i < d_dim.getValue(); ++i) {
+                     if (coarse_shift[i] == 0) {
+                        final_shift[i] = 0;
+                     } else if (test_shift[i] % coarse_shift[i] == 0) {
+                        final_shift[i] = test_shift[i];
+                     } else if ((test_shift[i]-1) % coarse_shift[i] == 0) {
+                        final_shift[i] = test_shift[i]-1; 
+                     } else if ((test_shift[i]+1) % coarse_shift[i] == 0) {
+                        final_shift[i] = test_shift[i]+1;
+                     } else {
+                        TBOX_ERROR(" "); 
+                     }
                   }
                }
             }

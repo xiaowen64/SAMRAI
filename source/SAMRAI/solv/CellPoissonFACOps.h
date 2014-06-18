@@ -401,7 +401,7 @@ public:
    void
    computeFluxOnPatch(
       const hier::Patch& patch,
-      const hier::MultiIntVector& ratio_to_coarser_level,
+      const hier::IntVector& ratio_to_coarser_level,
       const pdat::CellData<double>& w_data,
       pdat::SideData<double>& Dgradw_data) const;
 
@@ -557,7 +557,7 @@ private:
       const hier::Patch& patch,
       const pdat::CellData<double>& soln_data,
       pdat::SideData<double>& flux_data,
-      const hier::MultiIntVector& ratio_to_coarser) const;
+      const hier::IntVector& ratio_to_coarser) const;
 
    /*!
     * @brief AMR-unaware function to compute residual on a single patch,

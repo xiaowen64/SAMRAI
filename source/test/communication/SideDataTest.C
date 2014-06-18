@@ -258,7 +258,7 @@ void SideDataTest::setConservativeData(
        * is the vector between the coarse and fine cell side centers.
        */
 
-      hier::IntVector ratio(level->getRatioToLevelZero().getBlockVector(hier::BlockId(0)));
+      hier::IntVector ratio(level->getRatioToLevelZero());
       const int max_ratio = ratio.max();
 
       boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(

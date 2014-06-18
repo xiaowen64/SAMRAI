@@ -23,7 +23,7 @@ namespace SAMRAI {
 namespace hier {
 
 PatchGeometry::PatchGeometry(
-   const MultiIntVector& ratio_to_level_zero,
+   const IntVector& ratio_to_level_zero,
    const TwoDimBool& touches_regular_bdry,
    const BlockId& block_id):
    d_dim(ratio_to_level_zero.getDim()),
@@ -43,13 +43,12 @@ PatchGeometry::PatchGeometry(
     */
    TBOX_ASSERT(!ratio_to_level_zero.isZero());
    if (d_dim.getValue() > 1) {
-      const IntVector& block_ratio =
-         ratio_to_level_zero.getBlockVector(block_id);
+      int b = block_id.getBlockValue();
       for (int i = 0; i < d_dim.getValue(); ++i) {
-         TBOX_ASSERT((block_ratio(i) *
-                      block_ratio((i + 1) % d_dim.getValue()) > 0) ||
-            (block_ratio(i) == 1) ||
-            (block_ratio((i + 1) % d_dim.getValue()) == 1));
+         TBOX_ASSERT((d_ratio_to_level_zero(b,i) *
+                     d_ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0)
+            || (d_ratio_to_level_zero(b,i) == 1)
+            || (d_ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) == 1));
       }
    }
 #endif
@@ -172,7 +171,7 @@ PatchGeometry::printClassData(
    std::ostream& stream) const
 {
    stream << "\nPatchGeometry::printClassData..." << std::endl;
-   stream << "Ratio to level zero = " << d_ratio_to_level_zero.getBlockVector(d_block_id) << std::endl;
+   stream << "Ratio to level zero = " << d_ratio_to_level_zero << std::endl;
    stream << "d_has_regular_boundary = "
           << d_has_regular_boundary << std::endl;
    stream << "Boundary boxes for patch..." << std::endl;

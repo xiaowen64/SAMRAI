@@ -800,7 +800,7 @@ double
 MblkHyperbolicLevelIntegrator::getMaxFinerLevelDt(
    const int finer_level_number,
    const double coarse_dt,
-   const hier::MultiIntVector& ratio)
+   const hier::IntVector& ratio)
 {
    NULL_USE(finer_level_number);
    TBOX_ASSERT(ratio.min() > 0);

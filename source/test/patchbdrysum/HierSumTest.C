@@ -273,7 +273,7 @@ HierSumTest::setInitialNodeValues(
          BoxContainer fine_level_boxes = fine_level->getBoxes();
          fine_level_boxes.coarsen(fine_level->getRatioToCoarserLevel());
          complement.removeIntersections(fine_level_boxes);
-         complement.grow(MultiIntVector(IntVector::getOne(d_dim)));
+         complement.grow(IntVector::getOne(d_dim));
          fine_overlap_shrunk.removeIntersections(complement);
 
          for (PatchLevel::iterator ip(level->begin());
@@ -903,7 +903,7 @@ void HierSumTest::initializeLevelData(
          hierarchy->getPatchLevel(level_number - 1));
       BoxContainer fine_level_boxes = level->getBoxes();
 
-      MultiIntVector ratio(level->getRatioToCoarserLevel());
+      IntVector ratio(level->getRatioToCoarserLevel());
       fine_level_boxes.coarsen(ratio);
 
       for (PatchLevel::iterator p1(coarser_level->begin());

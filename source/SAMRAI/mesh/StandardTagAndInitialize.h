@@ -275,7 +275,7 @@ public:
     */
    void
    checkCoarsenRatios(
-      const std::vector<hier::MultiIntVector>& ratio_to_coarser);
+      const std::vector<hier::IntVector>& ratio_to_coarser);
 
    /*!
     * Pass the request to initialize the data on a new level in the

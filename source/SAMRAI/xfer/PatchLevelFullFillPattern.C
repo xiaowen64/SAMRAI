@@ -74,7 +74,7 @@ PatchLevelFullFillPattern::computeFillBoxesAndNeighborhoodSets(
 
    dst_to_fill.reset(new hier::Connector(dst_box_level,
                                          *fill_box_level,
-                                         hier::MultiIntVector(fill_ghost_width)));
+                                         fill_ghost_width));
 
    const hier::BoxContainer& dst_boxes = dst_box_level.getBoxes();
 
@@ -108,11 +108,10 @@ PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
    TBOX_ASSERT_OBJDIM_EQUALITY2(dst_box_level, fill_ghost_width);
 
    const tbox::Dimension& dim(fill_ghost_width.getDim());
-   const hier::MultiIntVector& ratio(dst_box_level.getRefinementRatio());
+   const hier::IntVector& ratio(dst_box_level.getRefinementRatio());
 
    bool is_periodic = false;
-   if (dst_box_level.getGridGeometry()->getPeriodicShift(
-          ratio.getBlockVector(hier::BlockId(0))) != 
+   if (dst_box_level.getGridGeometry()->getPeriodicShift(ratio) !=
        hier::IntVector::getZero(dim)) {
       is_periodic = true; 
    }

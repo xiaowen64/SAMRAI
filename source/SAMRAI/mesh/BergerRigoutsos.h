@@ -249,8 +249,8 @@ public:
       const int tag_data_index,
       const int tag_val,
       const hier::BoxContainer& bound_boxes,
-      const hier::MultiIntVector& min_box,
-      const hier::MultiIntVector& tag_to_new_width);
+      const hier::IntVector& min_box,
+      const hier::IntVector& tag_to_new_width);
 
    /*!
     * @brief Duplicate the MPI communication object for private internal use.
@@ -619,8 +619,8 @@ private:
    int d_tag_data_index;
    int d_tag_val;
    int d_level_number;
-   hier::MultiIntVector d_min_box;
-   hier::MultiIntVector d_tag_to_new_width;
+   hier::IntVector d_min_box;
+   hier::IntVector d_tag_to_new_width;
    //@}
 
    /*!

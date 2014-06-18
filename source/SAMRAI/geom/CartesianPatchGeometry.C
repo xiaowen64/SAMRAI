@@ -24,7 +24,7 @@ namespace geom {
  *************************************************************************
  */
 CartesianPatchGeometry::CartesianPatchGeometry(
-   const hier::MultiIntVector& ratio_to_level_zero,
+   const hier::IntVector& ratio_to_level_zero,
    const TwoDimBool& touches_regular_bdry,
    const hier::BlockId& block_id,
    const double* dx,

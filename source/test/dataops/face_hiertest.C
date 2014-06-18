@@ -153,10 +153,8 @@ int main(
       boost::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", geometry));
 
-      hier::MultiIntVector multi_ratio(ratio);
-
       hierarchy->setMaxNumberOfLevels(2);
-      hierarchy->setRatioToCoarserLevel(multi_ratio, 1);
+      hierarchy->setRatioToCoarserLevel(ratio, 1);
 
       const int nproc = mpi.getSize();
 
@@ -165,9 +163,9 @@ int main(
 
       boost::shared_ptr<hier::BoxLevel> layer0(
          boost::make_shared<hier::BoxLevel>(
-            hier::MultiIntVector(dim, 1), geometry));
+            hier::IntVector(dim, 1), geometry));
       boost::shared_ptr<hier::BoxLevel> layer1(
-         boost::make_shared<hier::BoxLevel>(multi_ratio, geometry));
+         boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
       for (int ib = 0; ib < n_coarse_boxes; ++ib, ++coarse_itr) {

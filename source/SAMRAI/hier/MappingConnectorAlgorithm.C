@@ -356,9 +356,9 @@ MappingConnectorAlgorithm::privateModify(
    const BoxLevel& old = old_to_anchor.getBase();
    const BoxLevel& anchor = anchor_to_old.getBase();
    const BoxLevel& new_level = old_to_new.getHead();
-   const MultiIntVector& old_ratio = old.getRefinementRatio();
-   const MultiIntVector& anchor_ratio = anchor.getRefinementRatio();
-   const MultiIntVector& new_ratio = new_level.getRefinementRatio();
+   const IntVector& old_ratio = old.getRefinementRatio();
+   const IntVector& anchor_ratio = anchor.getRefinementRatio();
+   const IntVector& new_ratio = new_level.getRefinementRatio();
 
    const tbox::Dimension dim(old.getDim());
    const tbox::SAMRAI_MPI& mpi(old.getMPI());
@@ -377,17 +377,17 @@ MappingConnectorAlgorithm::privateModify(
     * Calls to Connector::convertHeadWidthToBase() perform the
     * conversions.
     */
-   const MultiIntVector shrinkage_in_new_index_space =
+   const IntVector shrinkage_in_new_index_space =
       Connector::convertHeadWidthToBase(
          old_ratio,
          new_ratio,
          old_to_new.getConnectorWidth());
-   const MultiIntVector shrinkage_in_anchor_index_space =
+   const IntVector shrinkage_in_anchor_index_space =
       Connector::convertHeadWidthToBase(
          anchor_ratio,
          new_ratio,
          shrinkage_in_new_index_space);
-   const MultiIntVector anchor_to_new_width =
+   const IntVector anchor_to_new_width =
       anchor_to_old.getConnectorWidth() - shrinkage_in_anchor_index_space;
    if (!(anchor_to_new_width >= IntVector::getZero(dim))) {
       TBOX_ERROR(
@@ -402,7 +402,7 @@ MappingConnectorAlgorithm::privateModify(
          << "by " << shrinkage_in_anchor_index_space << " which\n"
          << "will result in a non-positive width." << std::endl);
    }
-   const MultiIntVector new_to_anchor_width =
+   const IntVector new_to_anchor_width =
       Connector::convertHeadWidthToBase(
          new_ratio,
          anchor.getRefinementRatio(),
@@ -1249,7 +1249,7 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const Connector& unmapped_connector_transpose,
    const Connector& mapping_connector,
    const InvertedNeighborhoodSet& inverted_nbrhd,
-   const MultiIntVector& head_refinement_ratio) const
+   const IntVector& head_refinement_ratio) const
 {
    const BoxLevel& old = mapping_connector.getBase();
    const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
@@ -1267,8 +1267,7 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
       BoxContainer compare_boxes;
 
       if (grid_geometry->getNumberBlocks() == 1) {
-         const BlockId& block_id = compare_box.getBlockId();
-         compare_box.grow(mapped_connector.getConnectorWidth().getBlockVector(block_id));
+         compare_box.grow(mapped_connector.getConnectorWidth());
          if (unmapped_connector.getHeadCoarserFlag()) {
             compare_box.coarsen(unmapped_connector.getRatio());
          }
@@ -1317,16 +1316,20 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
                        naa != mapping_connector.end(nbrhd); ++naa) {
                      const Box& new_nabr(*naa);
                      transformed_compare_box = comp_box;
+                     bool do_intersect = true;
                      if (compare_box_block_id != new_nabr.getBlockId()) {
                         // Re-transform compare_box and note its new BlockId.
-                        grid_geometry->transformBox(
-                           transformed_compare_box,
-                           head_refinement_ratio,
-                           new_nabr.getBlockId(),
-                           compare_box_block_id,3.7);
+                        do_intersect = 
+                           grid_geometry->transformBox(
+                              transformed_compare_box,
+                              head_refinement_ratio,
+                              new_nabr.getBlockId(),
+                              compare_box_block_id);
                      }
-                     if (transformed_compare_box.intersects(new_nabr)) {
-                        found_nabrs.insert(found_nabrs.end(), *naa);
+                     if (do_intersect) {
+                        if (transformed_compare_box.intersects(new_nabr)) {
+                           found_nabrs.insert(found_nabrs.end(), *naa);
+                        }
                      }
                   }
                }

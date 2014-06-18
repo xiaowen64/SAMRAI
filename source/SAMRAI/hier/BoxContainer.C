@@ -862,7 +862,7 @@ BoxContainer::removeIntersections(
  */
 void
 BoxContainer::removeIntersections(
-   const MultiIntVector& refinement_ratio,
+   const IntVector& refinement_ratio,
    const BoxContainer& takeaway,
    const bool include_singularity_block_neighbors)
 {
@@ -915,7 +915,7 @@ BoxContainer::removeIntersections(
                grid_geometry.transformBox(overlap_box,
                   refinement_ratio,
                   sublist_start->getBlockId(),
-                  overlap_box_block_id,3.7);
+                  overlap_box_block_id);
                removeIntersectionsFromSublist(
                   overlap_box,
                   sublist_start,
@@ -1167,7 +1167,7 @@ BoxContainer::intersectBoxes(
 
 void
 BoxContainer::intersectBoxes(
-   const MultiIntVector& refinement_ratio,
+   const IntVector& refinement_ratio,
    const BoxContainer& keep,
    const bool include_singularity_block_neighbors)
 {
@@ -1213,7 +1213,7 @@ BoxContainer::intersectBoxes(
             grid_geometry.transformBox(overlap_box,
                refinement_ratio,
                tryme.getBlockId(),
-               overlap_box_block_id,3.7);
+               overlap_box_block_id);
             tryme.intersect(overlap_box, overlap);
             if (!overlap.empty()) {
                insertAfter(insertion_pt, overlap);
@@ -1385,7 +1385,7 @@ BoxContainer::getOwners(
 void
 BoxContainer::unshiftPeriodicImageBoxes(
    BoxContainer& output_boxes,
-   const MultiIntVector& refinement_ratio) const
+   const IntVector& refinement_ratio) const
 {
    if (!d_ordered) {
       TBOX_ERROR("unshiftPeriodicImageBoxes called on unordered container."
@@ -1404,7 +1404,7 @@ BoxContainer::unshiftPeriodicImageBoxes(
       for (const_iterator na = begin(); na != end(); ++na) {
          if (na->isPeriodicImage()) {
             const Box unshifted_box(*na, zero_shift_number,
-                                    refinement_ratio.getBlockVector(na->getBlockId()));
+                                    refinement_ratio);
             hint = output_boxes.insert(hint, unshifted_box);
          } else {
             hint = output_boxes.insert(hint, *na);
@@ -1567,28 +1567,12 @@ BoxContainer::contains(
  * Spatial manipulation of Boxes
  ************************************************************************
  */
-/*
 void
 BoxContainer::grow(
    const IntVector& ghosts)
 {
    for (iterator i = begin(); i != end(); ++i) {
-      TBOX_ASSERT(i->getBlockId() == begin()->getBlockId());
       i->grow(ghosts);
-   }
-
-   if (d_tree) {
-      d_tree.reset();
-   }
-}
-*/
-
-void
-BoxContainer::grow(
-   const MultiIntVector& ghosts)
-{
-   for (iterator i = begin(); i != end(); ++i) {
-      i->grow(ghosts.getBlockVector(i->getBlockId()));
    }
 
    if (d_tree) {
@@ -1611,10 +1595,10 @@ BoxContainer::shift(
 
 void
 BoxContainer::refine(
-   const MultiIntVector& ratio)
+   const IntVector& ratio)
 {
    for (iterator i = begin(); i != end(); ++i) {
-      i->refine(ratio.getBlockVector(i->getBlockId()));
+      i->refine(ratio);
    }
    if (d_tree) {
       d_tree.reset();
@@ -1623,10 +1607,10 @@ BoxContainer::refine(
 
 void
 BoxContainer::coarsen(
-   const MultiIntVector& ratio)
+   const IntVector& ratio)
 {
    for (iterator i = begin(); i != end(); ++i) {
-      i->coarsen(ratio.getBlockVector(i->getBlockId()));
+      i->coarsen(ratio);
    }
    if (d_tree) {
       d_tree.reset();
@@ -1863,7 +1847,7 @@ void
 BoxContainer::findOverlapBoxes(
    BoxContainer& overlap_boxes,
    const Box& box,
-   const MultiIntVector& refinement_ratio,
+   const IntVector& refinement_ratio,
    bool include_singularity_block_neighbors) const
 {
    if (isEmpty()) {
@@ -1885,7 +1869,7 @@ void
 BoxContainer::findOverlapBoxes(
    std::vector<const Box*>& overlap_boxes,
    const Box& box,
-   const MultiIntVector& refinement_ratio,
+   const IntVector& refinement_ratio,
    bool include_singularity_block_neighbors) const
 {
    if (isEmpty()) {

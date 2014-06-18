@@ -96,7 +96,7 @@ void
 MultiblockBoxTree::findOverlapBoxes(
    std::vector<const Box *>& overlap_boxes,
    const Box& box,
-   const MultiIntVector& refinement_ratio,
+   const IntVector& refinement_ratio,
    bool include_singularity_block_neighbors) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*d_grid_geometry, box, refinement_ratio);
@@ -145,7 +145,7 @@ MultiblockBoxTree::findOverlapBoxes(
       d_grid_geometry->transformBox(transformed_box,
          refinement_ratio,
          neighbor_block_id,
-         block_id,3.7);
+         block_id);
 
       blocki->second->findOverlapBoxes(overlap_boxes, transformed_box);
 
@@ -161,7 +161,7 @@ void
 MultiblockBoxTree::findOverlapBoxes(
    BoxContainer& overlap_boxes,
    const Box& box,
-   const MultiIntVector& refinement_ratio,
+   const IntVector& refinement_ratio,
    bool include_singularity_block_neighbors) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*d_grid_geometry, box, refinement_ratio);
@@ -210,7 +210,7 @@ MultiblockBoxTree::findOverlapBoxes(
       d_grid_geometry->transformBox(transformed_box,
          refinement_ratio,
          neighbor_block_id,
-         block_id,3.7);
+         block_id);
 
       blocki->second->findOverlapBoxes(overlap_boxes, transformed_box);
 

@@ -376,9 +376,9 @@ int HierarchyTester::runHierarchyTestAndVerify()
        **************************************************************
        */
 
-      MultiIntVector init_connector_width =
+      IntVector init_connector_width =
          d_initial_patch_hierarchy->getRequiredConnectorWidth(ln, ln);
-      MultiIntVector test_connector_width =
+      IntVector test_connector_width =
          d_test_patch_hierarchy->getRequiredConnectorWidth(ln, ln);
       if (d_do_refine_test) {
          test_connector_width = init_connector_width * d_ratio;

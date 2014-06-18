@@ -57,11 +57,8 @@ CoarseFineBoundary::CoarseFineBoundary(
 
    int number_blocks = hierarchy.getGridGeometry()->getNumberBlocks();
    const PatchLevel& level = *hierarchy.getPatchLevel(level_num);
-   std::vector<IntVector> width_vector(number_blocks, max_ghost_width);
-   for (int b = 0; b < number_blocks; ++b) {
-      width_vector[b].max(IntVector::getOne(d_dim));
-   }
-   MultiIntVector connector_width(width_vector);
+   IntVector connector_width(max_ghost_width);
+   connector_width.max(IntVector::getOne(d_dim));
    const Connector& level_to_level = level.findConnector(level,
       connector_width,
       CONNECTOR_CREATE);
@@ -127,15 +124,14 @@ CoarseFineBoundary::computeFromLevel(
    clear();
 
    const BoxLevel& box_level = *level.getBoxLevel();
-   const MultiIntVector& ratio = level.getRatioToLevelZero();
+   const IntVector& ratio = level.getRatioToLevelZero();
 
    boost::shared_ptr<BaseGridGeometry> grid_geometry (level.getGridGeometry());
 
    /*
     * Get the domain's periodic shift.
     */
-   const IntVector periodic_shift(grid_geometry->getPeriodicShift(
-      ratio.getBlockVector(BlockId(0))));
+   const IntVector periodic_shift(grid_geometry->getPeriodicShift(ratio));
 
    bool is_periodic = false;
    for (int i = 0; i < d_dim.getValue(); ++i) {
@@ -196,7 +192,7 @@ CoarseFineBoundary::computeFromLevel(
    // Add fine-fine boundaries to the fake domain.
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int b = 0; b < grid_geometry->getNumberBlocks(); ++b) {
-      TBOX_ASSERT(level_to_level.getConnectorWidth().getBlockVector(BlockId(b))
+      TBOX_ASSERT(level_to_level.getConnectorWidth()
          >= IntVector::getOne(d_dim));
    }
 #endif
@@ -258,7 +254,7 @@ CoarseFineBoundary::computeFromMultiblockLevel(
    clear();
 
    const BoxLevel& box_level = *level.getBoxLevel();
-   const MultiIntVector& ratio = level.getRatioToLevelZero();
+   const IntVector& ratio = level.getRatioToLevelZero();
    const int level_number = level.getLevelNumber();
 
    /*
@@ -298,7 +294,7 @@ CoarseFineBoundary::computeFromMultiblockLevel(
       }
       refined_domain_nabrs.refine(ratio);
       BoxContainer physical_boundary_portion(box);
-      physical_boundary_portion.grow(MultiIntVector(physical_grow_width));
+      physical_boundary_portion.grow(physical_grow_width);
       physical_boundary_portion.removeIntersections(refined_domain_nabrs);
       fake_domain_list.spliceBack(physical_boundary_portion);
    }

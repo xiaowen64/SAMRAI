@@ -467,7 +467,7 @@ private:
     * @brief Cached ratio between source (fine) level and destination (coarse)
     * level.
     */
-   hier::MultiIntVector d_ratio_between_levels;
+   hier::IntVector d_ratio_between_levels;
 
    /*!
     * @brief Source patch data indices for rapid data allocation/deallocation.

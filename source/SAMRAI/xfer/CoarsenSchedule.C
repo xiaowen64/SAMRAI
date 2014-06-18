@@ -104,7 +104,7 @@ CoarsenSchedule::CoarsenSchedule(
    d_fine_level(fine_level),
    d_coarsen_patch_strategy(patch_strategy),
    d_transaction_factory(transaction_factory),
-   d_ratio_between_levels(hier::IntVector::getZero(crse_level->getDim())),
+   d_ratio_between_levels(hier::IntVector::getMultiZero(crse_level->getDim())),
    d_fill_coarse_data(fill_coarse_data)
 {
    TBOX_ASSERT(crse_level);
@@ -126,41 +126,30 @@ CoarsenSchedule::CoarsenSchedule(
     * correctness.
     */
 
-   const hier::MultiIntVector& fine(d_fine_level->getRatioToLevelZero());
-   const hier::MultiIntVector& crse(d_crse_level->getRatioToLevelZero());
+   const hier::IntVector& fine(d_fine_level->getRatioToLevelZero());
+   const hier::IntVector& crse(d_crse_level->getRatioToLevelZero());
 
    const int nblocks = d_crse_level->getGridGeometry()->getNumberBlocks();
-   std::vector<hier::IntVector> block_ratio(
-      nblocks, hier::IntVector::getZero(crse_level->getDim()));
 
    for (int b = 0; b < nblocks; ++b) {
-      hier::BlockId block_id(b);
-      const hier::IntVector& block_fine = fine.getBlockVector(block_id);
-      const hier::IntVector& block_crse = crse.getBlockVector(block_id);
-
       for (int i = 0; i < dim.getValue(); ++i) {
-         if (block_fine(i) > 1) {
-            block_ratio[b](i) = block_fine(i) / block_crse(i);
+         if (fine(b,i) > 1) {
+            d_ratio_between_levels(b,i) = fine(b,i) / crse(b,i);
          } else {
-            block_ratio[b](i) = tbox::MathUtilities<int>::Abs(
-                                   block_crse(i) / block_fine(i));
+            d_ratio_between_levels(b,i) = tbox::MathUtilities<int>::Abs(crse(
+                     b,i) / fine(b,i));
          }
-         TBOX_ASSERT(block_ratio[b](i) != 0);
       }
    }
-   d_ratio_between_levels.set(block_ratio);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (dim > tbox::Dimension(1)) {
       for (int b = 0; b < nblocks; ++b) {
-         hier::BlockId block_id(b);
-         const hier::IntVector& local_ratio = 
-            d_ratio_between_levels.getBlockVector(block_id);
          for (int i = 0; i < dim.getValue(); ++i) {
-            if (local_ratio(i)
-                * local_ratio((i + 1) % dim.getValue()) < 0) {
-               TBOX_ASSERT((local_ratio(i) == 1) ||
-                  (local_ratio((i + 1) % dim.getValue()) == 1));
+            if (d_ratio_between_levels(b,i)
+                * d_ratio_between_levels(b,(i + 1) % dim.getValue()) < 0) {
+               TBOX_ASSERT((d_ratio_between_levels(b,i) == 1) ||
+                  (d_ratio_between_levels(b,(i + 1) % dim.getValue()) == 1));
             }
          }
       }
@@ -340,8 +329,8 @@ CoarsenSchedule::generateTemporaryLevel()
    d_temp_crse_level->setNextCoarserHierarchyLevelNumber(
       d_crse_level->getLevelNumber());
 
-   const hier::MultiIntVector min_width(getMaxGhostsToGrow());
-   const hier::MultiIntVector transpose_width =
+   const hier::IntVector min_width(getMaxGhostsToGrow());
+   const hier::IntVector transpose_width =
       hier::Connector::convertHeadWidthToBase(
          d_crse_level->getBoxLevel()->getRefinementRatio(),
          d_fine_level->getBoxLevel()->getRefinementRatio(),
@@ -383,7 +372,7 @@ CoarsenSchedule::generateTemporaryLevel()
    temp_to_coarse->setBase(*d_temp_crse_level->getBoxLevel());
    temp_to_coarse->setHead(coarse_to_fine.getBase());
    temp_to_coarse->setWidth(coarse_to_fine.getConnectorWidth(), true);
-   const hier::MultiIntVector one_vector(hier::IntVector::getOne(dim));
+   const hier::IntVector& one_vector(hier::IntVector::getOne(dim));
    d_coarse_to_temp->shrinkWidth(one_vector);
    temp_to_coarse->shrinkWidth(one_vector);
    d_coarse_to_temp->setTranspose(temp_to_coarse, true);
@@ -643,8 +632,8 @@ CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
    const hier::PeriodicShiftCatalog* shift_catalog =
       hier::PeriodicShiftCatalog::getCatalog(dim);
    const hier::BoxLevel& src_box_level = src_to_dst.getBase();
-   const hier::MultiIntVector& src_ratio(src_to_dst.getBase().getRefinementRatio());
-   const hier::MultiIntVector& dst_ratio(src_to_dst.getHead().getRefinementRatio());
+   const hier::IntVector& src_ratio(src_to_dst.getBase().getRefinementRatio());
+   const hier::IntVector& dst_ratio(src_to_dst.getHead().getRefinementRatio());
 
    /*
     * These are the counterparts to shifted dst boxes and unshifted src boxes.
@@ -662,11 +651,11 @@ CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
             shifted_box.initialize(
                box,
                shift_catalog->getOppositeShiftNumber(nabr.getPeriodicId()),
-               src_ratio.getBlockVector(box.getBlockId()));
+               src_ratio);
             unshifted_nabr.initialize(
                nabr,
                shift_catalog->getZeroShiftNumber(),
-               dst_ratio.getBlockVector(nabr.getBlockId()));
+               dst_ratio);
 
             full_inverted_edges[unshifted_nabr].insert(shifted_box);
          } else {
@@ -778,14 +767,14 @@ CoarsenSchedule::constructScheduleTransactions(
       TBOX_ASSERT(!dst_box.isPeriodicImage());
       src_shift = shift_catalog->shiftNumberToShiftDistance(
             src_box.getPeriodicId());
-      src_shift *= src_level->getRatioToLevelZero().getBlockVector(src_block_id);
+      src_shift *= src_level->getRatioToLevelZero();
       unshifted_src_box.shift(-src_shift);
    }
    if (dst_box.isPeriodicImage()) {
       TBOX_ASSERT(!src_box.isPeriodicImage());
       dst_shift = shift_catalog->shiftNumberToShiftDistance(
             dst_box.getPeriodicId());
-      dst_shift *= dst_level->getRatioToLevelZero().getBlockVector(dst_block_id);
+      dst_shift *= dst_level->getRatioToLevelZero();
       unshifted_dst_box.shift(-dst_shift);
    }
 
@@ -982,13 +971,15 @@ CoarsenSchedule::coarsenSourceData(
 
       const hier::Box& box = temp_patch->getBox();
       const hier::BlockId& block_id = box.getBlockId();
+      hier::IntVector block_ratio(
+         d_ratio_between_levels.getBlockVector(block_id));
       /*
        * Coarsen the fine space onto the temporary coarse space
        */
 
       if (patch_strategy) {
          patch_strategy->preprocessCoarsen(*temp_patch,
-            *fine_patch, box, d_ratio_between_levels.getBlockVector(block_id));
+            *fine_patch, box, block_ratio);
       }
 
       for (size_t ici = 0; ici < d_number_coarsen_items; ++ici) {
@@ -998,7 +989,7 @@ CoarsenSchedule::coarsenSourceData(
             const int source_id = crs_item->d_src;
             crs_item->d_opcoarsen->coarsen(*temp_patch, *fine_patch,
                source_id, source_id,
-               box, d_ratio_between_levels.getBlockVector(block_id));
+               box, block_ratio);
          }
       }
 
@@ -1006,7 +997,7 @@ CoarsenSchedule::coarsenSourceData(
          patch_strategy->postprocessCoarsen(*temp_patch,
             *fine_patch,
             box,
-            d_ratio_between_levels.getBlockVector(block_id));
+            block_ratio);
       }
    }
 }

@@ -203,7 +203,7 @@ public:
       const hier::IntVector& max_size,
       const hier::BoxLevel& domain_box_level,
       const hier::IntVector& bad_interval,
-      const hier::MultiIntVector& cut_factor,
+      const hier::IntVector& cut_factor,
       const tbox::RankGroup& rank_group = tbox::RankGroup()) const;
 
    /*!

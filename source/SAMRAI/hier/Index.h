@@ -31,11 +31,11 @@ namespace hier {
  * @see hier::IntVector
  */
 
-class Index:public IntVector
+class Index
 {
 public:
    /**
-    * @brief Creates an uninitialized vector.
+    * @brief Creates an uninitialized index.
     */
    explicit Index(
       const tbox::Dimension& dim);
@@ -45,7 +45,7 @@ public:
     */
    Index(
       const tbox::Dimension& dim,
-      const int i);
+      const int value);
 
    /**
     * @brief Construct a two-dimensional index with the value (i,j).
@@ -101,7 +101,9 @@ public:
       const Index& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      IntVector::operator = (rhs);
+      for (int i = 0; i < d_dim.getValue(); ++i) {
+         d_index[i] = rhs.d_index[i];
+      }
       return *this;
    }
 
@@ -116,7 +118,9 @@ public:
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      IntVector::operator = (rhs);
+      for (int i = 0; i < d_dim.getValue(); ++i) {
+         d_index[i] = rhs[i];
+      }
       return *this;
    }
 
@@ -124,6 +128,30 @@ public:
     * @brief The index destructor does nothing interesting.
     */
    virtual ~Index();
+
+   /**
+    * @brief Returns true if all components are equal to a given integer.
+    */
+   bool
+   operator == (
+      const Index& rhs) const
+   {
+      bool result = true;
+      for (int i = 0; result && (i < getDim().getValue()); ++i) {
+         result = d_index[i] == rhs.d_index[i];
+      }
+      return result;
+   }
+
+   /**
+    * @brief Returns true if some components are not equal to a given integer.
+    */
+   bool
+   operator != (
+      const Index& rhs) const
+   {
+      return !(*this == rhs);
+   }
 
    /**
     * @brief Plus-equals operator for an index and an integer vector.
@@ -135,7 +163,10 @@ public:
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      IntVector::operator += (rhs);
+      TBOX_ASSERT(rhs.size() == 1);
+      for (int i = 0; i < d_dim.getValue(); ++i) {
+         d_index[i] += rhs[i];
+      }
       return *this;
    }
 
@@ -147,6 +178,38 @@ public:
    Index
    operator + (
       const IntVector& rhs) const
+   {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(rhs.size() == 1);
+      Index tmp = *this;
+      tmp += rhs;
+      return tmp;
+   }
+
+   /**
+    * @brief Plus-equals operator for an index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
+    */
+   Index&
+   operator += (
+      const Index& rhs)
+   {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      for (int i = 0; i < d_dim.getValue(); ++i) {
+         d_index[i] += rhs.d_index[i];
+      }
+      return *this;
+   }
+
+   /**
+    * @brief Plus operator for an index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
+    */
+   Index
+   operator + (
+      const Index& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       Index tmp = *this;
@@ -161,7 +224,9 @@ public:
    operator += (
       const int rhs)
    {
-      IntVector::operator += (rhs);
+      for (int i = 0; i < d_dim.getValue(); ++i) {
+         d_index[i] += rhs;
+      }
       return *this;
    }
 
@@ -184,10 +249,44 @@ public:
     */
    Index&
    operator -= (
+      const Index& rhs)
+   {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      for (int i = 0; i < d_dim.getValue(); ++i) {
+         d_index[i] -= rhs.d_index[i];
+      }
+      return *this;
+   }
+
+   /**
+    * @brief Minus operator for an index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
+    */
+   Index
+   operator - (
+      const Index& rhs) const
+   {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      Index tmp = *this;
+      tmp -= rhs;
+      return tmp;
+   }
+
+   /**
+    * @brief Minus-equals operator for an index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
+    */
+   Index&
+   operator -= (
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      IntVector::operator -= (rhs);
+      TBOX_ASSERT(rhs.size() == 1);
+      for (int i = 0; i < d_dim.getValue(); ++i) {
+         d_index[i] -= rhs[i];
+      }
       return *this;
    }
 
@@ -201,6 +300,7 @@ public:
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(rhs.size() == 1);
       Index tmp = *this;
       tmp -= rhs;
       return tmp;
@@ -213,7 +313,9 @@ public:
    operator -= (
       const int rhs)
    {
-      IntVector::operator -= (rhs);
+      for (int i = 0; i < d_dim.getValue(); ++i) {
+         d_index[i] -= rhs;
+      }
       return *this;
    }
 
@@ -239,7 +341,10 @@ public:
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      IntVector::operator *= (rhs);
+      TBOX_ASSERT(rhs.size() == 1);
+      for (int i = 0; i < getDim().getValue(); ++i) {
+         d_index[i] *= rhs[i];
+      }
       return *this;
    }
 
@@ -253,6 +358,7 @@ public:
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(rhs.size() == 1);
       Index tmp = *this;
       tmp *= rhs;
       return tmp;
@@ -265,7 +371,9 @@ public:
    operator *= (
       const int rhs)
    {
-      IntVector::operator *= (rhs);
+      for (int i = 0; i < getDim().getValue(); ++i) {
+         d_index[i] *= rhs;
+      }
       return *this;
    }
 
@@ -291,7 +399,10 @@ public:
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      IntVector::operator /= (rhs);
+      TBOX_ASSERT(rhs.size() == 1);
+      for (int i = 0; i < getDim().getValue(); ++i) {
+         d_index[i] /= rhs[i];
+      }
       return *this;
    }
 
@@ -305,6 +416,7 @@ public:
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(rhs.size() == 1);
       Index tmp = *this;
       tmp /= rhs;
       return tmp;
@@ -317,7 +429,9 @@ public:
    operator /= (
       const int rhs)
    {
-      IntVector::operator /= (rhs);
+      for (int i = 0; i < getDim().getValue(); ++i) {
+         d_index[i] /= rhs;
+      }
       return *this;
    }
 
@@ -333,6 +447,142 @@ public:
       return tmp;
    }
 
+   /**
+    * @brief Return the specified component of the index.
+    *
+    * @pre (i >= 0) && (i < getDim().getValue())
+    */
+   int&
+   operator [] (
+      const int i)
+   {
+      TBOX_ASSERT(i >= 0 && i < getDim().getValue());
+      return d_index[i];
+   }
+
+   /**
+    * @brief Return the specified component of the vector as a const reference.
+    *
+    * @pre (i >= 0) && (i < getDim().getValue())
+    */
+   const int&
+   operator [] (
+      const int i) const
+   {
+      TBOX_ASSERT(i >= 0 && i < getDim().getValue());
+      return d_index[i];
+   }
+
+   /**
+    * @brief Return the specified component of the index.
+    *
+    * @pre (i >= 0) && (i < getDim().getValue())
+    */
+   int&
+   operator () (
+      const int i)
+   {
+      TBOX_ASSERT(i >= 0 && i < getDim().getValue());
+      return d_index[i];
+   }
+
+   /**
+    * @brief Return the specified component of the vector as a const reference.
+    *
+    * @pre (i >= 0) && (i < getDim().getValue())
+    */
+   const int&
+   operator () (
+      const int i) const
+   {
+      TBOX_ASSERT(i >= 0 && i < getDim().getValue());
+      return d_index[i];
+   }
+
+   bool
+   operator > (
+      const Index& rhs) const
+   {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      bool result = true;
+      for (int i = 0; result && (i < getDim().getValue()); ++i) {
+         result = result && (d_index[i] > rhs.d_index[i]);
+      }
+      return result;
+   }
+
+   /**
+ *     * @brief Returns true if each integer in vector is greater or equal to
+ *         *        corresponding integer in comparison vector.
+ *             *
+ *                 * @pre getDim() == rhs.getDim()
+ *                     */
+   bool
+   operator >= (
+      const Index& rhs) const
+   {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      bool result = true;
+      for (int i = 0; result && (i < getDim().getValue()); ++i) {
+         result = result && (d_index[i] >= rhs.d_index[i]);
+      }
+      return result;
+   }
+
+   bool
+   operator < (
+      const Index& rhs) const
+   {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      bool result = true;
+      for (int i = 0; result && (i < getDim().getValue()); ++i) {
+         result = result && (d_index[i] < rhs.d_index[i]);
+      }
+      return result;
+   }
+
+   /**
+ *     * @brief Returns true if each integer in vector is greater or equal to
+ *         *        corresponding integer in comparison vector.
+ *             *
+ *                 * @pre getDim() == rhs.getDim()
+ *                     */
+   bool
+   operator <= (
+      const Index& rhs) const
+   {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      bool result = true;
+      for (int i = 0; result && (i < getDim().getValue()); ++i) {
+         result = result && (d_index[i] <= rhs.d_index[i]);
+      }
+      return result;
+   }
+
+   void
+   min(
+      const Index& rhs)
+   {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      for (int i = 0; i < getDim().getValue(); ++i) {
+         if (rhs.d_index[i] < d_index[i]) {
+            d_index[i] = rhs.d_index[i];
+         }
+      }
+   }
+
+   void
+   max(
+      const Index& rhs)
+   {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      for (int i = 0; i < getDim().getValue(); ++i) {
+         if (rhs.d_index[i] > d_index[i]) {
+            d_index[i] = rhs.d_index[i];
+         }
+      }
+   }
+
    /*!
     * @brief Coarsen the Index by a given ratio.
     *
@@ -345,6 +595,7 @@ public:
       const IntVector& ratio)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
+      TBOX_ASSERT(ratio.size() == 1);
       for (int d = 0; d < getDim().getValue(); ++d) {
          (*this)(d) = coarsen((*this)(d), ratio(d));
       }
@@ -414,6 +665,7 @@ public:
       const IntVector& ratio)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(index, ratio);
+      TBOX_ASSERT(ratio.size() == 1);
       tbox::Dimension dim(index.getDim());
       Index tmp(dim);
       for (int d = 0; d < dim.getValue(); ++d) {
@@ -421,6 +673,27 @@ public:
       }
       return tmp;
    }
+
+   const tbox::Dimension&
+   getDim() const
+   {
+      return d_dim;
+   }
+
+   friend std::istream&
+   operator >> (
+      std::istream& s,
+      Index& rhs);
+
+   /**
+ *     * @brief Write an integer index into an output stream.  The format for
+ *         *        the output is (i0,...,in) for an n-dimensional index.
+ *             */
+   friend std::ostream&
+   operator << (
+      std::ostream& s,
+      const Index& rhs);
+
 
 private:
    /*
@@ -462,6 +735,11 @@ private:
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;
+
+   tbox::Dimension d_dim;
+
+   int d_index[SAMRAI::MAX_DIM_VAL];
+
 
 };
 

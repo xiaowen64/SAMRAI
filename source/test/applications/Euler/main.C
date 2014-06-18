@@ -783,7 +783,7 @@ static void dumpMatlabData1dPencil(
 
          boost::shared_ptr<hier::PatchLevel> finer_level(
             hierarchy->getPatchLevel(l1 + 1));
-         hier::MultiIntVector coarsen_ratio =
+         hier::IntVector coarsen_ratio =
             finer_level->getRatioToCoarserLevel();
          hier::BoxContainer takeaway(finer_level->getBoxes());
          takeaway.coarsen(coarsen_ratio);

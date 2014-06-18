@@ -155,7 +155,7 @@ int main(
          TBOX_ERROR("Multiblock tree search test: could not find entry GridGeometry"
             << "\nin input.");
       }
-      boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
+      boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
          new geom::GridGeometry(
             dim,
             "GridGeometry",
@@ -167,7 +167,7 @@ int main(
       plog << "Input database after running..." << std::endl;
       input_db->printClassData(plog);
 
-      hier::MultiIntVector one_vector(hier::IntVector::getOne(dim));
+      const hier::IntVector& one_vector(hier::IntVector::getOne(dim));
       const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
 
       hier::BoxLevel domain_box_level(
@@ -180,6 +180,9 @@ int main(
          one_vector);
       domain_box_level.finalize();
 
+      std::vector<hier::IntVector> refinement_ratios(
+         1, domain_box_level.getRefinementRatio());
+
       /*
        * Generate BoxLevel A from the multiblock domain description
        * using input database BoxLevelA.
@@ -188,6 +191,7 @@ int main(
       boost::shared_ptr<Database> a_db(main_db->getDatabase("BoxLevelA"));
       breakUpBoxes(box_level_a, domain_box_level, a_db);
       box_level_a.cacheGlobalReducedData();
+      refinement_ratios.push_back(box_level_a.getRefinementRatio());
 
       /*
        * Generate BoxLevel B from the multiblock domain description
@@ -197,6 +201,15 @@ int main(
       boost::shared_ptr<Database> b_db(main_db->getDatabase("BoxLevelB"));
       breakUpBoxes(box_level_b, domain_box_level, b_db);
       box_level_b.cacheGlobalReducedData();
+      refinement_ratios.push_back(box_level_b.getRefinementRatio() /
+                                  box_level_a.getRefinementRatio());
+
+      /*
+       * These steps are usually handled by PatchHierarchy, but this
+       * test does not use PatchHierarchy.
+       */
+      grid_geometry->setUpRatios(refinement_ratios);
+      grid_geometry->setUpFineLevelMultiblockData(refinement_ratios);
 
       /*
        * Generate Connector A<==>B, to be modified by the mapping
@@ -207,8 +220,8 @@ int main(
       if (main_db->isInteger("base_width_a")) {
          main_db->getIntegerArray("base_width_a", &base_width_a[0], dim.getValue());
       }
-      hier::MultiIntVector width_a(base_width_a);
-      hier::MultiIntVector width_b(
+      hier::IntVector width_a(base_width_a);
+      hier::IntVector width_b(
          hier::Connector::convertHeadWidthToBase(
             box_level_b.getRefinementRatio(),
             box_level_a.getRefinementRatio(),
@@ -333,10 +346,9 @@ void breakUpBoxes(
    }
 
    if (refinement_ratio != hier::IntVector::getOne(dim)) {
-      hier::MultiIntVector ratio(refinement_ratio);
       box_level.refineBoxes(box_level,
-         ratio,
-         box_level.getRefinementRatio()*ratio);
+         refinement_ratio,
+         box_level.getRefinementRatio()*refinement_ratio);
       box_level.finalize();
    }
 
@@ -357,8 +369,8 @@ void breakUpBoxes(
 
    hier::Connector* dummy_connector = 0;
 
-   const hier::IntVector bad_interval(dim, 1);
-   const hier::MultiIntVector cut_factor(hier::IntVector::getOne(dim));
+   const hier::IntVector bad_interval(hier::IntVector::getOne(dim));
+   const hier::IntVector cut_factor(hier::IntVector::getOne(dim));
 
    load_balancer.loadBalanceBoxLevel(
       box_level,
@@ -399,11 +411,11 @@ void alterAndGenerateMapping(
 
    b_to_c.reset(new hier::MappingConnector(box_level_b,
       *box_level_c,
-      hier::MultiIntVector(hier::IntVector::getZero(dim))));
+      hier::IntVector::getZero(dim)));
    hier::MappingConnector* c_to_b =
       new hier::MappingConnector(*box_level_c,
          box_level_b,
-         hier::MultiIntVector(hier::IntVector::getZero(dim)));
+         hier::IntVector::getZero(dim));
    b_to_c->setTranspose(c_to_b, true);
    for (hier::BoxContainer::const_iterator bi = boxes_b.begin();
         bi != boxes_b.end(); ++bi) {

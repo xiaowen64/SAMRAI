@@ -99,8 +99,6 @@ int main(
          PIO::logOnlyNodeZero(log_file_name);
       }
 
-      MultiIntVector::setNumberBlocks(1);
-
       boost::shared_ptr<HierarchyTester> hierarchy_tester(
          new HierarchyTester(
             "HierarchyTester",

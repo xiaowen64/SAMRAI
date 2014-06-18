@@ -154,7 +154,7 @@ FaceComplexConstantRefine::refine(
          const hier::Box& face_box = *b;
          TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, face_box);
 
-         hier::Box fine_box(dim);
+         hier::Box fine_box(face_box);
          for (int i = 0; i < dim.getValue(); ++i) {
             fine_box.lower((axis + i) % dim.getValue()) = face_box.lower(i);
             fine_box.upper((axis + i) % dim.getValue()) = face_box.upper(i);

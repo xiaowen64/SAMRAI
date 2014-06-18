@@ -219,7 +219,7 @@ public:
    virtual boost::shared_ptr<hier::BaseGridGeometry>
    makeRefinedGridGeometry(
       const std::string& fine_geom_name,
-      const hier::MultiIntVector& refine_ratio) const;
+      const hier::IntVector& refine_ratio) const;
 
    /*!
     * @brief Create a pointer to a coarsened version of this grid geometry
@@ -241,7 +241,7 @@ public:
    virtual boost::shared_ptr<hier::BaseGridGeometry>
    makeCoarsenedGridGeometry(
       const std::string& coarse_geom_name,
-      const hier::MultiIntVector& coarsen_ratio) const;
+      const hier::IntVector& coarsen_ratio) const;
 
 protected:
    /*!

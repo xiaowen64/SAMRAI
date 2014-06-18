@@ -255,7 +255,7 @@ void CellDataTest::setConservativeData(
        * is the vector between the coarse and fine cell centers.
        */
 
-      const hier::IntVector& ratio = level->getRatioToLevelZero().getBlockVector(hier::BlockId(0));
+      const hier::IntVector& ratio = level->getRatioToLevelZero();
 
       boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
          BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(

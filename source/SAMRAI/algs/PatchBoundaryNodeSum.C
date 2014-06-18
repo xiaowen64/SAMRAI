@@ -485,7 +485,7 @@ PatchBoundaryNodeSum::setupSum(
          d_cfbdry_tmp_level[fine_level_num]->
             setCoarsenedPatchLevel(fine_level,
                fine_level->getRatioToCoarserLevel());
-         hier::MultiIntVector crse_tmp_gcw =
+         hier::IntVector crse_tmp_gcw =
             d_hierarchy->getPatchLevel(crse_level_num)->findConnector(
                *d_hierarchy->getPatchLevel(fine_level_num),
                d_hierarchy->getRequiredConnectorWidth(crse_level_num, fine_level_num, true),
@@ -500,11 +500,11 @@ PatchBoundaryNodeSum::setupSum(
          const hier::Connector& crse_to_domain =
             d_cfbdry_tmp_level[fine_level_num]->getBoxLevel()->createConnector(
                   d_hierarchy->getDomainBoxLevel(),
-                  hier::MultiIntVector(hier::IntVector::getZero(dim)));
+                  hier::IntVector::getZero(dim));
          const hier::Connector& crse_to_crse =
             d_cfbdry_tmp_level[fine_level_num]->createConnector(
                   *d_cfbdry_tmp_level[fine_level_num],
-                  hier::MultiIntVector(hier::IntVector::getOne(dim)));
+                  hier::IntVector::getOne(dim));
 
          d_cfbdry_copy_schedule[fine_level_num] =
             cfbdry_copy_algorithm.createSchedule(
@@ -705,7 +705,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
 
    const tbox::Dimension& dim(fine_level->getDim());
 
-   const hier::MultiIntVector& ratio(fine_level->getRatioToCoarserLevel());
+   const hier::IntVector& ratio(fine_level->getRatioToCoarserLevel());
    const int level_number(fine_level->getLevelNumber());
 
    for (hier::PatchLevel::iterator ip(fine_level->begin());
@@ -721,8 +721,7 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
          boost::shared_ptr<hier::Patch> cfpatch(
             coarsened_fine_level->getPatch(fpatch->getGlobalId()));
 
-         const hier::IntVector& fpatch_ratio =
-            ratio.getBlockVector(fpatch->getBox().getBlockId());
+         const hier::IntVector& fpatch_ratio = ratio;
 
          const hier::Index& filo = fpatch->getBox().lower();
          const hier::Index& fihi = fpatch->getBox().upper();

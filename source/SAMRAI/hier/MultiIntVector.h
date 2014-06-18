@@ -28,7 +28,7 @@
 
 namespace SAMRAI {
 namespace hier {
-
+#if 0
 class MultiIntVector
 {
 public:
@@ -65,8 +65,8 @@ public:
     * @pre s_num_blocks == 0 || s_num_blocks == d_vector.size()
     *
     */
-   explicit MultiIntVector(
-      const std::vector<IntVector>& vector);
+//   explicit MultiIntVector(
+//      const std::vector<IntVector>& vector);
 
    /*!
     * @brief Construct a MultiIntVector from an IntVector.
@@ -78,8 +78,8 @@ public:
     *
     * @pre s_num_blocks > 0
     */
-   explicit MultiIntVector(
-      const IntVector& vector); 
+//   explicit MultiIntVector(
+//      const IntVector& vector); 
 
    /*!
     * @brief Construct a constant MultiIntVector from a dimension and value
@@ -91,17 +91,17 @@ public:
     *
     * @pre s_num_blocks > 0
     */
-   MultiIntVector(
-      const tbox::Dimension& dim,
-      int value);
+//   MultiIntVector(
+//      const tbox::Dimension& dim,
+//      int value);
 
    /*!
     * @brief Copy constructor 
     *
     * @param copy_vector
     */
-   MultiIntVector(
-      const MultiIntVector& copy_vector);
+//   MultiIntVector(
+//      const MultiIntVector& copy_vector);
 
    /*!
     * @brief Assignment operator
@@ -882,7 +882,7 @@ private:
 
 };
 
-
+#endif
 }
 }
 

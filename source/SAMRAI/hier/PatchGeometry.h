@@ -17,7 +17,6 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/LocalId.h"
 #include "SAMRAI/hier/PatchBoundaries.h"
-#include "SAMRAI/hier/MultiIntVector.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <iostream>
@@ -115,7 +114,7 @@ private:
     *      sign
     */
    PatchGeometry(
-      const MultiIntVector& ratio_to_level_zero,
+      const IntVector& ratio_to_level_zero,
       const TwoDimBool& touches_regular_bdry,
       const BlockId& block_id);
 
@@ -148,7 +147,7 @@ private:
    /**
     * Return const reference to ratio to level zero index space.
     */
-   const MultiIntVector&
+   const IntVector&
    getRatio() const
    {
       return d_ratio_to_level_zero;
@@ -347,7 +346,7 @@ private:
 
    bool d_has_regular_boundary;
    bool d_has_periodic_boundary;
-   MultiIntVector d_ratio_to_level_zero;
+   IntVector d_ratio_to_level_zero;
    PatchBoundaries d_patch_boundaries;
 
    TwoDimBool d_touches_regular_bdry;

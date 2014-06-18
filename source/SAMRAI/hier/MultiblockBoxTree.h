@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BoxTree.h"
-#include "SAMRAI/hier/MultiIntVector.h"
 
 #include "boost/shared_ptr.hpp"
 #include <vector>
@@ -182,7 +181,7 @@ private:
    findOverlapBoxes(
       std::vector<const Box *>& overlap_boxes,
       const Box& box,
-      const MultiIntVector& refinement_ratio,
+      const IntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
 
    /*!
@@ -240,7 +239,7 @@ private:
    findOverlapBoxes(
       BoxContainer& overlap_boxes,
       const Box& box,
-      const MultiIntVector& refinement_ratio,
+      const IntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
 
    //@}

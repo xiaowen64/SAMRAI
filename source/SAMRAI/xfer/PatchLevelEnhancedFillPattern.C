@@ -66,7 +66,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
 
    dst_to_fill.reset(new hier::Connector(dst_box_level,
                                          *fill_box_level,
-                                         hier::MultiIntVector(fill_ghost_width)));
+                                         fill_ghost_width));
 
    boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
       dst_box_level.getGridGeometry());

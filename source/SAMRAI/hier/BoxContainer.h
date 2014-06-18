@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
-#include "SAMRAI/hier/MultiIntVector.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <iostream>
@@ -913,7 +912,7 @@ public:
     */
    void
    grow(
-      const MultiIntVector& ghosts);
+      const IntVector& ghosts);
 
    /*!
     * @brief Shift boxes in the container by the specified offset.
@@ -931,7 +930,7 @@ public:
     */
    void
    refine(
-      const MultiIntVector& ratio);
+      const IntVector& ratio);
 
    /*!
     * @brief Coarsen boxes in container by the specified coarsening ratio.
@@ -940,7 +939,7 @@ public:
     */
    void
    coarsen(
-      const MultiIntVector& ratio);
+      const IntVector& ratio);
 
    /*!
     * @brief Count total number of indices in the boxes in the container.
@@ -1390,7 +1389,7 @@ public:
     */
    void
    removeIntersections(
-      const MultiIntVector& refinement_ratio,
+      const IntVector& refinement_ratio,
       const BoxContainer& takeaway,
       const bool include_singularity_block_neighbors = false);
 
@@ -1473,7 +1472,7 @@ public:
     */
    void
    intersectBoxes(
-      const MultiIntVector& refinement_ratio,
+      const IntVector& refinement_ratio,
       const BoxContainer& keep,
       bool include_singularity_block_neighbors = false);
 
@@ -1713,7 +1712,7 @@ public:
    void
    unshiftPeriodicImageBoxes(
       BoxContainer& output_boxes,
-      const MultiIntVector& refinement_ratio) const;
+      const IntVector& refinement_ratio) const;
 
    //@}
 
@@ -2007,14 +2006,14 @@ private:
    findOverlapBoxes(
       BoxContainer& overlap_boxes,
       const Box& box,
-      const MultiIntVector& refinement_ratio,
+      const IntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
 
    void
    findOverlapBoxes(
       std::vector<const Box*>& overlap_boxes,
       const Box& box,
-      const MultiIntVector& refinement_ratio,
+      const IntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
 
    /*!

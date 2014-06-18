@@ -1614,7 +1614,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
    //
    const boost::shared_ptr<hier::PatchGeometry> patch_geom(
       patch.getPatchGeometry());
-   const hier::MultiIntVector ratio = patch_geom->getRatio();
+   const hier::IntVector ratio = patch_geom->getRatio();
    hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
       patch.getBox().getBlockId());
@@ -2536,7 +2536,7 @@ void MblkEuler::setMappedGridOnPatch(
    //
    const boost::shared_ptr<hier::PatchGeometry> patch_geom(
       patch.getPatchGeometry());
-   hier::MultiIntVector ratio = patch_geom->getRatio();
+   hier::IntVector ratio = patch_geom->getRatio();
    hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
       patch.getBox().getBlockId());

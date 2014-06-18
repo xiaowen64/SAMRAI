@@ -64,7 +64,7 @@ MappingConnector::MappingConnector(
 MappingConnector::MappingConnector(
    const BoxLevel& base_box_level,
    const BoxLevel& head_box_level,
-   const MultiIntVector& base_width,
+   const IntVector& base_width,
    const BoxLevel::ParallelState parallel_state):
    Connector(base_box_level,
       head_box_level,
@@ -102,7 +102,7 @@ MappingConnector::operator = (
 MappingConnector*
 MappingConnector::createLocalTranspose() const
 {
-   const MultiIntVector transpose_gcw = convertHeadWidthToBase(
+   const IntVector transpose_gcw = convertHeadWidthToBase(
          getHead().getRefinementRatio(),
          getBase().getRefinementRatio(),
          getConnectorWidth());

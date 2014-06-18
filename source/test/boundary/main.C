@@ -151,7 +151,7 @@ int main(
          const hier::Box& dbox = domain.front();
          hier::IntVector max_size(dbox.numberCells());
          hier::IntVector min_size(dbox.numberCells() / num_boxes);
-         hier::MultiIntVector cut_factor(dim, 1);
+         hier::IntVector cut_factor(dim, 1);
          hier::IntVector bad_interval(dim, 1);
          hier::BoxUtilities::chopBoxes(boxes,
             max_size,
@@ -164,7 +164,7 @@ int main(
       hier::BoxLevelConnectorUtils edge_utils;
       boost::shared_ptr<hier::BoxLevel> layer0(
          boost::make_shared<hier::BoxLevel>(
-            hier::MultiIntVector(dim, 1), grid_geometry));
+            hier::IntVector(dim, 1), grid_geometry));
       hier::BoxContainer::const_iterator domain_boxes = domain.begin();
       int rank = mpi.getRank();
       int size = mpi.getSize();
@@ -176,14 +176,14 @@ int main(
       edge_utils.addPeriodicImages(
          *layer0,
          patch_hierarchy->getGridGeometry()->getDomainSearchTree(),
-         hier::MultiIntVector(dim, 2));
+         hier::IntVector(dim, 2));
 
       patch_hierarchy->makeNewPatchLevel(0, layer0);
 
       // Add Connector required for schedule construction.
       boost::shared_ptr<hier::PatchLevel> level0(
          patch_hierarchy->getPatchLevel(0));
-      level0->createConnector(*level0, hier::MultiIntVector(dim, 2));
+      level0->createConnector(*level0, hier::IntVector(dim, 2));
 
       /*
        * Allocate data on hierarchy and set variable data on patch interiors

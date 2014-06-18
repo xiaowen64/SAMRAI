@@ -561,7 +561,7 @@ bool FaceMultiblockTest::verifyResults(
    hier::BoxContainer singularity(
       hierarchy->getGridGeometry()->getSingularityBoxContainer(block_id));
 
-   hier::MultiIntVector ratio =
+   hier::IntVector ratio =
       hierarchy->getPatchLevel(level_number)->getRatioToLevelZero();
 
    singularity.refine(ratio);

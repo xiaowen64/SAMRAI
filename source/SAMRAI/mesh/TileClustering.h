@@ -153,8 +153,8 @@ public:
       const int tag_data_index,
       const int tag_val,
       const hier::BoxContainer& bound_boxes,
-      const hier::MultiIntVector& min_box,
-      const hier::MultiIntVector& max_gcw);
+      const hier::IntVector& min_box,
+      const hier::IntVector& max_gcw);
 
    /*!
     * @brief Setup names of timers.

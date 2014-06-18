@@ -298,8 +298,8 @@ public:
        */
       virtual void
       computeRequiredConnectorWidths(
-         std::vector<MultiIntVector>& self_connector_widths,
-         std::vector<MultiIntVector>& fine_connector_widths,
+         std::vector<IntVector>& self_connector_widths,
+         std::vector<IntVector>& fine_connector_widths,
          const PatchHierarchy& patch_hierarchy) const = 0;
    };
 
@@ -361,7 +361,7 @@ public:
    boost::shared_ptr<PatchHierarchy>
    makeRefinedPatchHierarchy(
       const std::string& fine_hierarchy_name,
-      const MultiIntVector& refine_ratio) const;
+      const IntVector& refine_ratio) const;
 
    /*!
     * @brief Create a coarsened version of this patch hierarchy.
@@ -393,7 +393,7 @@ public:
    boost::shared_ptr<PatchHierarchy>
    makeCoarsenedPatchHierarchy(
       const std::string& coarse_hierarchy_name,
-      const MultiIntVector& coarsen_ratio) const;
+      const IntVector& coarsen_ratio) const;
 
    /*!
     * @brief Construct new PatchLevel in hierarchy at given level number.
@@ -623,7 +623,7 @@ public:
     * @pre (base_ln >= 0) && (base_ln < getMaxNumberOfLevels())
     * @pre abs(base_ln - head_ln) <= 1
     */
-   MultiIntVector
+   IntVector
    getRequiredConnectorWidth(
       int base_ln,
       int head_ln,
@@ -730,7 +730,7 @@ public:
     */
    void
    setRatioToCoarserLevel(
-      const MultiIntVector& ratio,
+      const IntVector& ratio,
       int level)
    {
       TBOX_ASSERT(level > 0 && level < getMaxNumberOfLevels());
@@ -746,7 +746,7 @@ public:
     *
     * @pre level < getMaxNumberOfLevels()
     */
-   const MultiIntVector&
+   const IntVector&
    getRatioToCoarserLevel(
       int level) const
    {
@@ -1148,7 +1148,7 @@ private:
     * The vector will be sized to d_max_levels.  d_ratio_to_coarser[n] is
     * the refinement ratio betwee level @c n and level @c n-1.
     */
-   std::vector<MultiIntVector> d_ratio_to_coarser;
+   std::vector<IntVector> d_ratio_to_coarser;
 
    /*
     * @brief Proper nesting buffer for each level.
@@ -1209,7 +1209,7 @@ private:
     * 
     * See registerConnectorWidthRequestor() and getRequiredConnectorWidth().
     */
-   mutable std::vector<MultiIntVector> d_self_connector_widths;
+   mutable std::vector<IntVector> d_self_connector_widths;
 
    /*!
     * @brief Required Connector width for fine connectors.
@@ -1223,7 +1223,7 @@ private:
     *
     * See registerConnectorWidthRequestor() and getRequiredConnectorWidth().
     */
-   mutable std::vector<MultiIntVector> d_fine_connector_widths;
+   mutable std::vector<IntVector> d_fine_connector_widths;
 
    /*!
     * @brief Whether Connector widths have been cached.

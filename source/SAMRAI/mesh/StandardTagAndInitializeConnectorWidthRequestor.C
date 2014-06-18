@@ -85,8 +85,8 @@ StandardTagAndInitializeConnectorWidthRequestor::StandardTagAndInitializeConnect
  */
 void
 StandardTagAndInitializeConnectorWidthRequestor::computeRequiredConnectorWidths(
-   std::vector<hier::MultiIntVector>& self_connector_widths,
-   std::vector<hier::MultiIntVector>& fine_connector_widths,
+   std::vector<hier::IntVector>& self_connector_widths,
+   std::vector<hier::IntVector>& fine_connector_widths,
    const hier::PatchHierarchy& patch_hierarchy) const
 {
    const tbox::Dimension& dim(patch_hierarchy.getDim());
@@ -96,25 +96,13 @@ StandardTagAndInitializeConnectorWidthRequestor::computeRequiredConnectorWidths(
     * by which StandardTagAndInitialize may coarsen a level in the
     * hierarchy.  It is the growth factor for ghost data.
     */
-   std::vector<hier::MultiIntVector> ratios_to_coarser(
+   std::vector<hier::IntVector> ratios_to_coarser(
       patch_hierarchy.getMaxNumberOfLevels(),
-      hier::MultiIntVector(hier::IntVector::getZero(dim)));
+      hier::IntVector::getZero(dim));
 
    int nblocks = patch_hierarchy.getGridGeometry()->getNumberBlocks();
    for (int ln = 0; ln < patch_hierarchy.getMaxNumberOfLevels(); ++ln) {
       ratios_to_coarser[ln] = patch_hierarchy.getRatioToCoarserLevel(ln);
-
-      if (nblocks > 1) {
-         const hier::IntVector& block_zero_ratio =
-            ratios_to_coarser[ln].getBlockVector(hier::BlockId(0));
-         for (int b = 1; b < nblocks; ++b) {
-            hier::BlockId block_id(b);
-            if (ratios_to_coarser[ln].getBlockVector(block_id) !=
-                block_zero_ratio) {
-               TBOX_ERROR(" ");
-            }
-         }
-      } 
    } 
 
    int error_coarsen_ratio = computeCoarsenRatio(ratios_to_coarser);
@@ -145,16 +133,15 @@ StandardTagAndInitializeConnectorWidthRequestor::computeRequiredConnectorWidths(
 
 int
 StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
-   const std::vector<hier::MultiIntVector>& ratios_to_coarser) const
+   const std::vector<hier::IntVector>& ratios_to_coarser) const
 {
    const tbox::Dimension& dim(ratios_to_coarser[0].getDim());
 
    /*
     * Compute GCD on first coordinate direction of level 1
     */
-   hier::BlockId block_zero(0);
    int error_coarsen_ratio = 0;
-   int gcd_level1 = ratios_to_coarser[1].getBlockVector(block_zero)(0);
+   int gcd_level1 = ratios_to_coarser[1](0,0);
    if ((gcd_level1 % 2) == 0) {
       error_coarsen_ratio = 2;
    } else if ((gcd_level1 % 3) == 0) {
@@ -175,9 +162,9 @@ StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
     */
    for (int ln = 1; ln < static_cast<int>(ratios_to_coarser.size()); ++ln) {
       for (int d = 0; d < dim.getValue(); ++d) {
-         int gcd = GCD(error_coarsen_ratio, ratios_to_coarser[ln].getBlockVector(block_zero)(d));
+         int gcd = GCD(error_coarsen_ratio, ratios_to_coarser[ln](0,d));
          if ((gcd % error_coarsen_ratio) != 0) {
-            gcd = ratios_to_coarser[ln].getBlockVector(block_zero)(d);
+            gcd = ratios_to_coarser[ln](0,d);
             TBOX_ERROR(
                "StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio:\n"
                << "Unable to perform Richardson extrapolation because\n"

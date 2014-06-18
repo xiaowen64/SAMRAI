@@ -231,7 +231,7 @@ struct BoxUtilities {
       BoxContainer& boxes,
       const IntVector& max_size,
       const IntVector& min_size,
-      const MultiIntVector& cut_factor,
+      const IntVector& cut_factor,
       const IntVector& bad_interval,
       const BoxContainer& physical_boxes);
 
@@ -323,7 +323,7 @@ struct BoxUtilities {
    extendBoxToDomainBoundary(
       Box& box,
       const BoxContainer& domain,
-      const MultiIntVector& ext_ghosts);
+      const IntVector& ext_ghosts);
 
    /**
     * Same function as extendBoxToDomainBoundary() above except that it
@@ -340,7 +340,7 @@ struct BoxUtilities {
    extendBoxesToDomainBoundary(
       BoxContainer& boxes,
       const BoxContainer& domain,
-      const MultiIntVector& ext_ghosts);
+      const IntVector& ext_ghosts);
 
    /**
     * Grow each box in the list that is smaller than the specified minimum
@@ -839,7 +839,7 @@ struct BoxUtilities {
 
    /**
     *
-    * This static private member function is called by findBadCutPoints(),
+    * This function is called by findBadCutPoints(),
     * and the findBadCutPointsForDirection() member functions.  It sets bad
     * cut points near the lower and upper ends of the border box in the
     * given coordinate direction.

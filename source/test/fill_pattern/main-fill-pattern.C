@@ -343,7 +343,7 @@ bool SingleLevelTestCase(
       new hier::PatchHierarchy("hier", geom));
 
    boost::shared_ptr<hier::BoxLevel> mblevel(
-      boost::make_shared<hier::BoxLevel>(hier::MultiIntVector(dim, 1), geom));
+      boost::make_shared<hier::BoxLevel>(hier::IntVector(dim, 1), geom));
 
    const int num_nodes = mpi.getSize();
    const int num_boxes = level_boxes.size();
@@ -431,7 +431,7 @@ bool SingleLevelTestCase(
 
    // Cache Connector required for the schedule generation.
    level->findConnector(*level,
-      hier::MultiIntVector(dim, 2),
+      hier::IntVector(dim, 2),
       hier::CONNECTOR_CREATE);
 
    // Create and run comm schedule

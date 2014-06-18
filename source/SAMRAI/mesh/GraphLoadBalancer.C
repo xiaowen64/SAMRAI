@@ -78,29 +78,23 @@ GraphLoadBalancer::loadBalanceBoxLevel(
    const hier::IntVector& max_size,
    const hier::BoxLevel& domain_box_level,
    const hier::IntVector& bad_interval,
-   const hier::MultiIntVector& cut_factor,
+   const hier::IntVector& cut_factor,
    const tbox::RankGroup& rank_group) const
 {
    NULL_USE(rank_group);
 
 
    // Set effective_cut_factor to least common multiple of cut_factor and d_tile_size.
-   hier::MultiIntVector effective_cut_factor = cut_factor;
+   hier::IntVector effective_cut_factor = cut_factor;
    if ( d_tile_size != hier::IntVector::getOne(d_dim) ) {
       const int nblocks = hierarchy->getGridGeometry()->getNumberBlocks();
-      std::vector<hier::IntVector> effective_vector(
-         nblocks, hier::IntVector::getZero(d_dim));
       for (int b = 0; b < nblocks; ++b) {
-         hier::BlockId block_id(b);
-         effective_vector[b] = effective_cut_factor.getBlockVector(block_id);
-         const hier::IntVector& block_cut = cut_factor.getBlockVector(block_id); 
          for ( int d=0; d<d_dim.getValue(); ++d ) {
-            while ( effective_vector[b][d]/d_tile_size[d]*d_tile_size[d] != effective_vector[b][d] ) {
-               effective_vector[b][d] += block_cut[d];
+            while ( effective_cut_factor(b,d)/d_tile_size[d]*d_tile_size[d] != effective_cut_factor(b,d) ) {
+               effective_cut_factor(b,d) += cut_factor[d];
             }
          }
       }
-      effective_cut_factor.set(effective_vector);
    }
 
 #ifdef HAVE_PTSCOTCH
@@ -759,7 +753,7 @@ GraphLoadBalancer::coalesceBoxLevel(
       level.getMPI());
    hier::MappingConnector level_to_coalesced(level,
       coalesced,
-      hier::MultiIntVector(hier::IntVector::getZero(d_dim)));
+      hier::IntVector(hier::IntVector::getZero(d_dim)));
 
    if (!level_boxes.isEmpty()) {
 
@@ -861,7 +855,7 @@ GraphLoadBalancer::chopBoxes(
       box_level.getMPI());
    hier::MappingConnector unconstrained_to_constrained(box_level,
       constrained,
-      hier::MultiIntVector(zero_vector));
+      hier::IntVector(zero_vector));
 
    const hier::BoxContainer& unconstrained_boxes = box_level.getBoxes();
 

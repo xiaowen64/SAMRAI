@@ -120,7 +120,7 @@ OverlapConnectorAlgorithm::extractNeighbors(
    NeighborSet& neighbors,
    const Connector& connector,
    const BoxId& box_id,
-   const MultiIntVector& width) const
+   const IntVector& width) const
 {
    const tbox::Dimension& dim(width.getDim());
 
@@ -172,7 +172,7 @@ OverlapConnectorAlgorithm::extractNeighbors(
          BoxContainer grown_boxes;
          if (grid_geom->getNumberBlocks() == 1) {
             Box grown_box = box;
-            grown_box.grow(width.getBlockVector(block_id));
+            grown_box.grow(width);
             if (connector.getHeadCoarserFlag() == false) {
                grown_box.refine(connector.getRatio());
             }
@@ -197,17 +197,21 @@ OverlapConnectorAlgorithm::extractNeighbors(
                  ni != connector.end(ins); ++ni) {
                const Box& neighbor(*ni);
                Box nabr_box(neighbor);
+               bool do_intersect = true;
                if (neighbor.getBlockId() != g_block_id) {
-                  grid_geom->transformBox(nabr_box,
-                     connector.getHead().getRefinementRatio(),
-                     g_block_id,
-                     neighbor.getBlockId(),3.7);
+                  do_intersect =
+                     grid_geom->transformBox(nabr_box,
+                        connector.getHead().getRefinementRatio(),
+                        g_block_id,
+                        neighbor.getBlockId());
                }
-               if (connector.getHeadCoarserFlag() == true) {
-                  nabr_box.refine(connector.getRatio());
-               }
-               if (g_box.intersects(nabr_box)) {
-                  neighbors.insert(neighbors.end(), neighbor);
+               if (do_intersect) {
+                  if (connector.getHeadCoarserFlag() == true) {
+                     nabr_box.refine(connector.getRatio());
+                  }
+                  if (g_box.intersects(nabr_box)) {
+                     neighbors.insert(neighbors.end(), neighbor);
+                  }
                }
             }
          }
@@ -224,7 +228,7 @@ void
 OverlapConnectorAlgorithm::extractNeighbors(
    Connector& other,
    const Connector& connector,
-   const MultiIntVector& width) const
+   const IntVector& width) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (!(width <= connector.getConnectorWidth())) {
@@ -283,7 +287,7 @@ OverlapConnectorAlgorithm::extractNeighbors(
          BoxContainer grown_boxes;
          if (grid_geom->getNumberBlocks() == 1) {
             Box grown_box = box;
-            grown_box.grow(width.getBlockVector(box.getBlockId()));
+            grown_box.grow(width);
             if (connector.getHeadCoarserFlag() == false) {
                grown_box.refine(connector.getRatio());
             }
@@ -307,17 +311,20 @@ OverlapConnectorAlgorithm::extractNeighbors(
                  si != connector.end(ni); ++si) {
                const Box& neighbor = *si;
                Box nabr_box(neighbor);
+               bool do_intersect = true;
                if (neighbor.getBlockId() != g_block_id) {
-                  grid_geom->transformBox(nabr_box,
+                  do_intersect = grid_geom->transformBox(nabr_box,
                      connector.getHead().getRefinementRatio(),
                      g_block_id,
-                     neighbor.getBlockId(),3.7);
+                     neighbor.getBlockId());
                }
-               if (connector.getHeadCoarserFlag() == true) {
-                  nabr_box.refine(connector.getRatio());
-               }
-               if (g_box.intersects(nabr_box)) {
-                  other.insertLocalNeighbor(neighbor, base_box_itr);
+               if (do_intersect) {
+                  if (connector.getHeadCoarserFlag() == true) {
+                     nabr_box.refine(connector.getRatio());
+                  }
+                  if (g_box.intersects(nabr_box)) {
+                     other.insertLocalNeighbor(neighbor, base_box_itr);
+                  }
                }
             }
          }
@@ -336,7 +343,7 @@ OverlapConnectorAlgorithm::findOverlaps(
    boost::shared_ptr<Connector>& connector,
    const BoxLevel& base_box_level,
    const BoxLevel& head_box_level,
-   const MultiIntVector& base_width,
+   const IntVector& base_width,
    const BoxLevel::ParallelState parallel_state,
    const bool ignore_self_overlap) const
 {
@@ -362,8 +369,8 @@ OverlapConnectorAlgorithm::findOverlapsWithTranspose(
    boost::shared_ptr<Connector>& connector,
    const BoxLevel& base_box_level,
    const BoxLevel& head_box_level,
-   const MultiIntVector& base_width,
-   const MultiIntVector& transpose_base_width,
+   const IntVector& base_width,
+   const IntVector& transpose_base_width,
    const BoxLevel::ParallelState parallel_state,
    const bool ignore_self_overlap) const
 {
@@ -427,7 +434,7 @@ OverlapConnectorAlgorithm::bridgeWithNesting(
    const Connector& cent_to_east,
    const IntVector& cent_growth_to_nest_west,
    const IntVector& cent_growth_to_nest_east,
-   const MultiIntVector& connector_width_limit,
+   const IntVector& connector_width_limit,
    bool compute_transpose) const
 {
    if ( d_barrier_before_communication ) {
@@ -438,8 +445,8 @@ OverlapConnectorAlgorithm::bridgeWithNesting(
    TBOX_ASSERT(west_to_cent.hasTranspose());
    TBOX_ASSERT(cent_to_east.hasTranspose());
    const tbox::Dimension& dim(connector_width_limit.getDim());
-   MultiIntVector west_to_east_width(dim,-1);
-   MultiIntVector east_to_west_width(dim,-1);
+   IntVector west_to_east_width(dim,-1);
+   IntVector east_to_west_width(dim,-1);
    std::set<int> incoming_ranks,  outgoing_ranks;
    bool ordered = true;
    NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);
@@ -497,7 +504,7 @@ OverlapConnectorAlgorithm::bridge(
    boost::shared_ptr<Connector>& west_to_east,
    const Connector& west_to_cent,
    const Connector& cent_to_east,
-   const MultiIntVector& connector_width_limit,
+   const IntVector& connector_width_limit,
    bool compute_transpose) const
 {
    if ( d_barrier_before_communication ) {
@@ -509,8 +516,8 @@ OverlapConnectorAlgorithm::bridge(
    TBOX_ASSERT(cent_to_east.hasTranspose());
    const tbox::Dimension& dim(connector_width_limit.getDim());
    const IntVector& zero_vector(IntVector::getZero(dim));
-   MultiIntVector west_to_east_width(dim,-1);
-   MultiIntVector east_to_west_width(dim,-1);
+   IntVector west_to_east_width(dim,-1);
+   IntVector east_to_west_width(dim,-1);
    std::set<int> incoming_ranks,  outgoing_ranks;
    bool ordered = true;
    NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);
@@ -579,9 +586,9 @@ OverlapConnectorAlgorithm::bridge(
    TBOX_ASSERT(cent_to_east.hasTranspose());
    const tbox::Dimension& dim(cent_to_east.getConnectorWidth().getDim());
    const IntVector& zero_vector(IntVector::getZero(dim));
-   const MultiIntVector connector_width_limit(dim, -1); // No user-imposed limit.
-   MultiIntVector west_to_east_width(dim,-1);
-   MultiIntVector east_to_west_width(dim,-1);
+   const IntVector connector_width_limit(dim, -1); // No user-imposed limit.
+   IntVector west_to_east_width(dim,-1);
+   IntVector east_to_west_width(dim,-1);
    std::set<int> incoming_ranks,  outgoing_ranks;
    bool ordered = true;
    NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);
@@ -638,7 +645,7 @@ void
 OverlapConnectorAlgorithm::bridge(
    Connector& west_to_cent,
    const Connector& cent_to_east,
-   const MultiIntVector& connector_width_limit) const
+   const IntVector& connector_width_limit) const
 {
    if ( d_barrier_before_communication ) {
       west_to_cent.getBase().getMPI().Barrier();
@@ -651,8 +658,8 @@ OverlapConnectorAlgorithm::bridge(
    const tbox::Dimension& dim(connector_width_limit.getDim());
    const IntVector& zero_vector(
       IntVector::getZero(cent_to_east.getConnectorWidth().getDim()));
-   MultiIntVector west_to_east_width(dim,-1);
-   MultiIntVector east_to_west_width(dim,-1);
+   IntVector west_to_east_width(dim,-1);
+   IntVector east_to_west_width(dim,-1);
    std::set<int> incoming_ranks,  outgoing_ranks;
    bool ordered = true;
    NeighborSet visible_west_nabrs(ordered), visible_east_nabrs(ordered);
@@ -711,10 +718,10 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
    const IntVector& cent_growth_to_nest_west,
    bool east_nesting_is_known,
    const IntVector& cent_growth_to_nest_east,
-   const MultiIntVector& connector_width_limit,
+   const IntVector& connector_width_limit,
    bool compute_transpose,
-   MultiIntVector& west_to_east_width,
-   MultiIntVector& east_to_west_width,
+   IntVector& west_to_east_width,
+   IntVector& east_to_west_width,
    std::set<int>& incoming_ranks,
    std::set<int>& outgoing_ranks,
    NeighborSet& visible_west_nabrs,
@@ -742,19 +749,30 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
    const BoxLevel& cent = cent_to_west.getBase();
    const BoxLevel& west = cent_to_west.getHead();
    const BoxLevel& east = cent_to_east.getHead();
-   const MultiIntVector& cent_refinement_ratio = cent.getRefinementRatio();
-   const MultiIntVector& west_refinement_ratio = west.getRefinementRatio();
-   const MultiIntVector& east_refinement_ratio = east.getRefinementRatio();
+   const IntVector& cent_refinement_ratio = cent.getRefinementRatio();
+   const IntVector& west_refinement_ratio = west.getRefinementRatio();
+   const IntVector& east_refinement_ratio = east.getRefinementRatio();
 
    const tbox::Dimension& dim(connector_width_limit.getDim());
    const tbox::SAMRAI_MPI& mpi(cent.getMPI());
 
-   const MultiIntVector zero_vector(IntVector::getZero(dim));
+   const IntVector zero_vector(IntVector::getZero(dim));
 
-   const MultiIntVector finest_refinement_ratio =
-      MultiIntVector::max(
+   const IntVector finest_refinement_ratio =
+      IntVector::max(
          cent_refinement_ratio,
-         MultiIntVector::max(west_refinement_ratio, east_refinement_ratio));
+         IntVector::max(west_refinement_ratio, east_refinement_ratio));
+
+   IntVector width_limit(connector_width_limit);
+   if (width_limit.size() == 1 &&
+       IntVector::getMultiZero(dim).size() != 1) {
+      if (width_limit.max() == width_limit.min()) {
+         int new_size = IntVector::getMultiZero(dim).size();
+         width_limit = IntVector(width_limit, new_size);
+      } else {
+         TBOX_ERROR("Anisotropic width limit argument for bridge must be of size equal to the number of blocks." << std::endl);
+      }
+   }
 
    /*
     * Using the bridge theorem, compute the largest bridge width for
@@ -765,16 +783,16 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
     * neither is known, we assume that both east and west nest in
     * center, and just to do something reasonable.
     */
-   MultiIntVector output_width1(IntVector::getZero(dim));
-   MultiIntVector output_width2(IntVector::getZero(dim));
+   IntVector output_width1(IntVector::getZero(dim));
+   IntVector output_width2(IntVector::getZero(dim));
    if (west_nesting_is_known || east_nesting_is_known) {
       if (west_nesting_is_known) {
          output_width1 =
-            cent_to_east.getConnectorWidth() - MultiIntVector(cent_growth_to_nest_west);
+            cent_to_east.getConnectorWidth() - cent_growth_to_nest_west;
       }
       if (east_nesting_is_known) {
          output_width2 =
-            cent_to_west.getConnectorWidth() - MultiIntVector(cent_growth_to_nest_east);
+            cent_to_west.getConnectorWidth() - cent_growth_to_nest_east;
       }
       if (!(output_width1 >= zero_vector || output_width2 >= zero_vector)) {
          TBOX_ERROR("OverlapConnectorAlgorithm::privateBridge_prologue:\n"
@@ -792,8 +810,8 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
       output_width1 = cent_to_east.getConnectorWidth();
       output_width2 = cent_to_west.getConnectorWidth();
    }
-   MultiIntVector output_width_in_finest_refinement_ratio =
-      MultiIntVector::max(output_width1, output_width2) *
+   IntVector output_width_in_finest_refinement_ratio =
+      IntVector::max(output_width1, output_width2) *
       finest_refinement_ratio / cent_refinement_ratio;
 
    /*
@@ -801,11 +819,11 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
     * that the width limit is specified in the coarser of the east and
     * west refinement ratios.
     */
-   if (connector_width_limit >= zero_vector) {
-      const MultiIntVector coarser_refinement_ratio =
-         MultiIntVector::min(west_refinement_ratio, east_refinement_ratio);
-      const MultiIntVector width_limit_in_finest_refinement_ratio(
-         connector_width_limit * finest_refinement_ratio / coarser_refinement_ratio);
+   if (width_limit >= zero_vector) {
+      const IntVector coarser_refinement_ratio =
+         IntVector::min(west_refinement_ratio, east_refinement_ratio);
+      const IntVector width_limit_in_finest_refinement_ratio(
+         width_limit * finest_refinement_ratio / coarser_refinement_ratio);
       if (!(width_limit_in_finest_refinement_ratio <= output_width_in_finest_refinement_ratio)) {
          /*
           * If user specifies a width limit, he is probably assuming
@@ -815,7 +833,7 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
           * catch it immediately.
           */
          TBOX_ERROR("OverlapConnectorAlgorithm::privateBridge_prologue input error:\n"
-            << "The given connector width limit, " << connector_width_limit
+            << "The given connector width limit, " << width_limit
             << " (" << width_limit_in_finest_refinement_ratio
             << " in finest index space)\n"
             << "is not <= the maximum width of the bridge, "
@@ -826,10 +844,10 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
          width_limit_in_finest_refinement_ratio);
    }
 
-   west_to_east_width = MultiIntVector::ceilingDivide(
+   west_to_east_width = IntVector::ceilingDivide(
       output_width_in_finest_refinement_ratio,
       finest_refinement_ratio / west_refinement_ratio);
-   east_to_west_width = MultiIntVector::ceilingDivide(
+   east_to_west_width = IntVector::ceilingDivide(
       output_width_in_finest_refinement_ratio,
       finest_refinement_ratio / east_refinement_ratio);
 
@@ -894,9 +912,9 @@ OverlapConnectorAlgorithm::privateBridge(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (compute_transpose) {
-      const MultiIntVector& west_refinement_ratio =
+      const IntVector& west_refinement_ratio =
          west_to_east.getBase().getRefinementRatio();
-      const MultiIntVector& east_refinement_ratio =
+      const IntVector& east_refinement_ratio =
          west_to_east.getHead().getRefinementRatio();
       if (west_refinement_ratio / east_refinement_ratio * east_refinement_ratio == west_refinement_ratio ||
           east_refinement_ratio / west_refinement_ratio * west_refinement_ratio == east_refinement_ratio) {
@@ -1473,7 +1491,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
    NeighborSet& referenced_head_nabrs,
    const BoxContainer& head_rbbt) const
 {
-   const MultiIntVector &head_refinement_ratio(
+   const IntVector &head_refinement_ratio(
       bridging_connector.getHead().getRefinementRatio());
 
    bool refine_base = false;
@@ -1512,7 +1530,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
       if (bridging_connector.getBase().getGridGeometry()->getNumberBlocks() == 1) {
          Box base_box = visible_base_nabrs_box;
          const BlockId& block_id = base_box.getBlockId();
-         base_box.grow(bridging_connector.getConnectorWidth().getBlockVector(block_id));
+         base_box.grow(bridging_connector.getConnectorWidth());
          if (refine_base) {
             base_box.refine(bridging_connector.getRatio());
          }
@@ -1625,7 +1643,7 @@ OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
    const Box& box,
    BoxContainer& neighbors,
    BoxContainer& scratch_space,
-   const MultiIntVector& neighbor_refinement_ratio) const
+   const IntVector& neighbor_refinement_ratio) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(box, neighbor_refinement_ratio);
 
@@ -1644,7 +1662,7 @@ OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
          shift_catalog->shiftDistanceToShiftNumber(sum_shift);
       if (new_shift_number.getPeriodicValue() !=
           shift_catalog->getInvalidShiftNumber()) {
-         nabr.initialize(nabr, new_shift_number, neighbor_refinement_ratio.getBlockVector(nabr.getBlockId()));
+         nabr.initialize(nabr, new_shift_number, neighbor_refinement_ratio);
          scratch_space.pushBack(nabr);
       }
    }

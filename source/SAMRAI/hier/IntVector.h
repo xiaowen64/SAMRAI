@@ -13,6 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/hier/BlockId.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -24,6 +25,8 @@
 namespace SAMRAI {
 
 namespace hier {
+
+class Index;
 
 /**
  * Class IntVector implements a simple N-dimensional integer
@@ -41,13 +44,18 @@ public:
    explicit IntVector(
       const tbox::Dimension& dim);
 
+   IntVector(
+      int size,
+      const tbox::Dimension& dim);
+
    /**
     * @brief Construct an integer vector with all components equal to the
     *        argument.
     */
    IntVector(
       const tbox::Dimension& dim,
-      const int i);
+      int value,
+      int size = 1);
 
    /**
     * @brief Construct a n-dimensional integer vector with the value with
@@ -55,8 +63,9 @@ public:
     *
     * Dimension inferred from array size.
     */
-   explicit IntVector(
-      const std::vector<int>& a);
+   IntVector(
+      const std::vector<int>& a,
+      int size = 1);
 
    /**
     * @brief Construct a n-dimensional integer vector with
@@ -65,13 +74,22 @@ public:
     */
    IntVector(
       const tbox::Dimension& dim,
-      const int array[]);
+      const int array[],
+      int size = 1);
 
    /**
     * @brief Construct an integer vector equal to the argument.
     */
    IntVector(
       const IntVector& rhs);
+
+   IntVector(
+      const IntVector& rhs,
+      int size);
+
+   IntVector(
+      const Index& rhs,
+      int size = 1);
 
    /**
     * @brief The assignment operator sets the integer vector equal to the
@@ -84,75 +102,117 @@ public:
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      if (d_size != rhs.d_size) {
+         delete[] d_vector;
+         d_size = rhs.d_size;
+         d_vector = new int[d_dim.getValue()*d_size]; 
+      }
+
+      for (int i = 0; i < d_dim.getValue()*d_size; ++i) {
          d_vector[i] = rhs.d_vector[i];
       }
-#ifdef DEBUG_INITIALIZE_UNDEFINED
-      for (int i = getDim().getValue(); i < SAMRAI::MAX_DIM_VAL; ++i) {
-         d_vector[i] = tbox::MathUtilities<int>::getMin();
-      }
-#endif
+
       return *this;
    }
+
+   IntVector&
+   operator = (
+      const Index& rhs);
 
    /**
     * @brief The integer vector destructor does nothing interesting.
     */
    virtual ~IntVector();
 
+   int size() const
+   {
+      return d_size;
+   }
+
+   IntVector getBlockVector(const BlockId& block_id) const
+   {
+      TBOX_ASSERT(block_id.getBlockValue() < d_size);
+      IntVector block_vec(d_dim,
+                          &(d_vector[block_id.getBlockValue()*d_dim.getValue()]));
+
+      return block_vec; 
+   }
+
    /**
-    * @brief Return the specified component of the vector.  No bounds checking.
+    * @brief Return the specified component of the vector.
     *
-    * @pre (i >= 0) && (i < getDim().getValue())
+    * @pre (i >= 0) && (i < d_dim.getValue())
     */
    int&
    operator [] (
       const int i)
    {
-      TBOX_ASSERT(i >= 0 && i < getDim().getValue());
+      TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
+      TBOX_ASSERT(d_size == 1);
       return d_vector[i];
    }
 
    /**
     * @brief Return the specified component of the vector as a const integer.
-    * No bounds checking.
     *
-    * @pre (i >= 0) && (i < getDim().getValue())
+    * @pre (i >= 0) && (i < d_dim.getValue())
     */
    const int&
    operator [] (
       const int i) const
    {
-      TBOX_ASSERT(i >= 0 && i < getDim().getValue());
+      TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
+      TBOX_ASSERT(d_size == 1);
       return d_vector[i];
    }
 
 
    /**
-    * @brief Return the specified component of the vector.  No bounds checking.
+    * @brief Return the specified component of the vector.
     *
-    * @pre (i >= 0) && (i < getDim().getValue())
+    * @pre (i >= 0) && (i < d_dim.getValue())
     */
    int&
    operator () (
       const int i)
    {
-      TBOX_ASSERT(i >= 0 && i < getDim().getValue());
+      TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
+      TBOX_ASSERT(d_size == 1);
       return d_vector[i];
    }
 
    /**
     * @brief Return the specified component of the vector as a const integer.
-    * No bounds checking.
     *
-    * @pre (i >= 0) && (i < getDim().getValue())
+    * @pre (i >= 0) && (i < d_dim.getValue())
     */
    const int&
    operator () (
       const int i) const
    {
-      TBOX_ASSERT(i >= 0 && i < getDim().getValue());
+      TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
+      TBOX_ASSERT(d_size == 1);
       return d_vector[i];
+   }
+
+   int&
+   operator () (
+      const int b, 
+      const int i)
+   {
+      TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
+      TBOX_ASSERT(b >= 0 && b < d_size);
+      return d_vector[b*d_dim.getValue() + i];
+   }
+
+   const int&
+   operator () (
+      const int b, 
+      const int i) const
+   {
+      TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
+      TBOX_ASSERT(b >= 0 && b < d_size);
+      return d_vector[b*d_dim.getValue() + i];
    }
 
    /**
@@ -165,8 +225,19 @@ public:
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      for (int i = 0; i < getDim().getValue(); ++i) {
-         d_vector[i] += rhs.d_vector[i];
+      TBOX_ASSERT(d_size == rhs.d_size || rhs.d_size == 1);
+      if (rhs.d_size == 1) {
+         for (int b = 0; b < d_size; ++b) {
+            for (int i = 0; i < d_dim.getValue(); ++i) {
+               d_vector[b*d_dim.getValue() + i] += rhs.d_vector[i];
+            }
+         }
+      } else {
+         for (int b = 0; b < d_size; ++b) {
+            for (int i = 0; i < d_dim.getValue(); ++i) {
+               d_vector[b*d_dim.getValue() + i] += rhs.d_vector[b*d_dim.getValue() + i];
+            }
+         }
       }
       return *this;
    }
@@ -193,7 +264,7 @@ public:
    operator += (
       const int rhs)
    {
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (int i = 0; i < d_dim.getValue()*d_size; ++i) {
          d_vector[i] += rhs;
       }
       return *this;
@@ -206,7 +277,7 @@ public:
    operator + (
       const int rhs) const
    {
-      IntVector tmp = *this;
+      IntVector tmp(*this);
       tmp += rhs;
       return tmp;
    }
@@ -221,8 +292,19 @@ public:
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      for (int i = 0; i < getDim().getValue(); ++i) {
-         d_vector[i] -= rhs.d_vector[i];
+      TBOX_ASSERT(d_size == rhs.d_size || rhs.d_size == 1);
+      if (rhs.d_size == 1) {
+         for (int b = 0; b < d_size; ++b) {
+            for (int i = 0; i < d_dim.getValue(); ++i) {
+               d_vector[b*d_dim.getValue() + i] -= rhs.d_vector[i];
+            }
+         }
+      } else {
+         for (int b = 0; b < d_size; ++b) {
+            for (int i = 0; i < d_dim.getValue(); ++i) {
+               d_vector[b*d_dim.getValue() + i] -= rhs.d_vector[b*d_dim.getValue() + i];
+            }
+         }
       }
       return *this;
    }
@@ -237,7 +319,7 @@ public:
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      IntVector tmp = *this;
+      IntVector tmp(*this);
       tmp -= rhs;
       return tmp;
    }
@@ -249,7 +331,7 @@ public:
    operator -= (
       const int rhs)
    {
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (int i = 0; i < d_dim.getValue()*d_size; ++i) {
          d_vector[i] -= rhs;
       }
       return *this;
@@ -262,7 +344,7 @@ public:
    operator - (
       const int rhs) const
    {
-      IntVector tmp = *this;
+      IntVector tmp(*this);
       tmp -= rhs;
       return tmp;
    }
@@ -277,8 +359,19 @@ public:
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      for (int i = 0; i < getDim().getValue(); ++i) {
-         d_vector[i] *= rhs.d_vector[i];
+      TBOX_ASSERT(d_size == rhs.d_size || rhs.d_size == 1);
+      if (rhs.d_size == 1) {
+         for (int b = 0; b < d_size; ++b) {
+            for (int i = 0; i < d_dim.getValue(); ++i) {
+               d_vector[b*d_dim.getValue() + i] *= rhs.d_vector[i];
+            }
+         }
+      } else {
+         for (int b = 0; b < d_size; ++b) {
+            for (int i = 0; i < d_dim.getValue(); ++i) {
+               d_vector[b*d_dim.getValue() + i] *= rhs.d_vector[b*d_dim.getValue() + i];
+            }
+         }
       }
       return *this;
    }
@@ -293,7 +386,7 @@ public:
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      IntVector tmp = *this;
+      IntVector tmp(*this);
       tmp *= rhs;
       return tmp;
    }
@@ -305,7 +398,7 @@ public:
    operator *= (
       const int rhs)
    {
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (int i = 0; i < d_dim.getValue()*d_size; ++i) {
          d_vector[i] *= rhs;
       }
       return *this;
@@ -318,7 +411,7 @@ public:
    operator * (
       const int rhs) const
    {
-      IntVector tmp = *this;
+      IntVector tmp(*this);
       tmp *= rhs;
       return tmp;
    }
@@ -333,8 +426,19 @@ public:
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      for (int i = 0; i < getDim().getValue(); ++i) {
-         d_vector[i] /= rhs.d_vector[i];
+      TBOX_ASSERT(d_size == rhs.d_size || rhs.d_size == 1);
+      if (rhs.d_size == 1) {
+         for (int b = 0; b < d_size; ++b) {
+            for (int i = 0; i < d_dim.getValue(); ++i) {
+               d_vector[b*d_dim.getValue() + i] /= rhs.d_vector[i];
+            }
+         }
+      } else {
+         for (int b = 0; b < d_size; ++b) {
+            for (int i = 0; i < d_dim.getValue(); ++i) {
+               d_vector[b*d_dim.getValue() + i] /= rhs.d_vector[b*d_dim.getValue() + i];
+            }
+         }
       }
       return *this;
    }
@@ -350,21 +454,35 @@ public:
       const IntVector& denominator)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, denominator);
-      for (int i = 0; i < getDim().getValue(); ++i) {
-         /*
-          * This is the formula for integer divide, rounding away from
-          * zero.  It is meant as an extension of the ceilingDivide quotient of
-          * 2 positive integers.
-          *
-          * The ceilingDivide is the integer divide plus 0, -1 or 1 representing
-          * the results of rounding.
-          * - Add zero if there's no remainder to round.
-          * - Round remainder to 1 if numerator and denominator has same sign.
-          * - Round remainder to -1 if numerator and denominator has opposite sign.
-          */
-         d_vector[i] = (d_vector[i] / denominator[i]) +
-            ((d_vector[i] % denominator[i]) ?
-               ((d_vector[i] > 0) == (denominator[i] > 0) ? 1 : -1) : 0);
+      TBOX_ASSERT(d_size == denominator.d_size || denominator.d_size == 1);
+
+      /*
+       * This is the formula for integer divide, rounding away from
+       * zero.  It is meant as an extension of the ceilingDivide quotient of
+       * 2 positive integers.
+       *
+       * The ceilingDivide is the integer divide plus 0, -1 or 1 representing
+       * the results of rounding.
+       * - Add zero if there's no remainder to round.
+       * - Round remainder to 1 if numerator and denominator has same sign.
+       * - Round remainder to -1 if numerator and denominator has opposite sign.
+       */
+      if (denominator.d_size == 1) {
+         for (int b = 0; b < d_size; ++b) {
+            for (int i = 0; i < d_dim.getValue(); ++i) {
+               d_vector[b*d_dim.getValue() + i] = (d_vector[b*d_dim.getValue() + i] / denominator[i]) +
+               ((d_vector[b*d_dim.getValue() + i] % denominator[i]) ?
+                  ((d_vector[b*d_dim.getValue() + i] > 0) == (denominator[i] > 0) ? 1 : -1) : 0);
+            }
+         }
+      } else {
+         for (int b = 0; b < d_size; ++b) {
+            for (int i = 0; i < d_dim.getValue(); ++i) {
+               d_vector[b*d_dim.getValue() + i] = (d_vector[b*d_dim.getValue() + i] / denominator(b,i)) +
+               ((d_vector[b*d_dim.getValue() + i] % denominator(b,i)) ?
+                  ((d_vector[b*d_dim.getValue() + i] > 0) == (denominator(b,i) > 0) ? 1 : -1) : 0);
+            }
+         }
       }
    }
 
@@ -380,23 +498,10 @@ public:
       const IntVector& denominator)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(numerator, denominator);
-      IntVector rval(numerator.getDim());
-      for (int i = 0; i < numerator.getDim().getValue(); ++i) {
-         /*
-          * This is the formula for integer divide, rounding away from
-          * zero.  It is meant as an extension of the ceilingDivide quotient of
-          * 2 positive integers.
-          *
-          * The ceilingDivide is the integer divide plus 0, -1 or 1 representing
-          * the results of rounding.
-          * - Add zero if there's no remainder to round.
-          * - Round remainder to 1 if numerator and denominator has same sign.
-          * - Round remainder to -1 if numerator and denominator has opposite sign.
-          */
-         rval[i] = (numerator[i] / denominator[i]) +
-            ((numerator[i] % denominator[i]) ?
-               ((numerator[i] > 0) == (denominator[i] > 0) ? 1 : -1) : 0);
-      }
+      TBOX_ASSERT(numerator.d_size == denominator.d_size ||
+                  denominator.d_size == 1);
+      IntVector rval(numerator);
+      rval.ceilingDivide(denominator);
       return rval;
    }
 
@@ -410,7 +515,7 @@ public:
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      IntVector tmp = *this;
+      IntVector tmp(*this);
       tmp /= rhs;
       return tmp;
    }
@@ -422,7 +527,7 @@ public:
    operator /= (
       const int rhs)
    {
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (int i = 0; i < d_dim.getValue()*d_size; ++i) {
          d_vector[i] /= rhs;
       }
       return *this;
@@ -435,7 +540,7 @@ public:
    operator / (
       const int rhs) const
    {
-      IntVector tmp = *this;
+      IntVector tmp(*this);
       tmp /= rhs;
       return tmp;
    }
@@ -446,10 +551,8 @@ public:
    IntVector
    operator - () const
    {
-      IntVector tmp(getDim());
-      for (int i = 0; i < getDim().getValue(); ++i) {
-         tmp.d_vector[i] = -d_vector[i];
-      }
+      IntVector tmp(*this);
+      tmp *= -1; 
       return tmp;
    }
 
@@ -461,7 +564,7 @@ public:
       int rhs) const
    {
       bool result = true;
-      for (int i = 0; result && (i < getDim().getValue()); ++i) {
+      for (int i = 0; result && (i < d_dim.getValue()*d_size); ++i) {
          result = d_vector[i] == rhs;
       }
       return result;
@@ -475,7 +578,7 @@ public:
       int rhs) const
    {
       bool result = true;
-      for (int i = 0; result && (i < getDim().getValue()); ++i) {
+      for (int i = 0; result && (i < d_dim.getValue()*d_size); ++i) {
          result = d_vector[i] != rhs;
       }
       return result;
@@ -492,9 +595,20 @@ public:
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(d_size == rhs.d_size || rhs.d_size == 1);
       bool result = true;
-      for (int i = 0; result && (i < getDim().getValue()); ++i) {
-         result = result && (d_vector[i] == rhs.d_vector[i]);
+      if (rhs.d_size == 1) {
+         for (int b = 0; result && b < d_size; ++b) {
+            for (int i = 0; result && (i < d_dim.getValue()); ++i) {
+               result = result && (d_vector[b*d_dim.getValue() + i] == rhs.d_vector[i]);
+            }
+         }
+      } else {
+         for (int b = 0; result && b < d_size; ++b) {
+            for (int i = 0; result && (i < d_dim.getValue()); ++i) {
+               result = result && (d_vector[b*d_dim.getValue() + i] == rhs.d_vector[b*d_dim.getValue() + i]);
+            }
+         }
       }
       return result;
    }
@@ -524,9 +638,20 @@ public:
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(d_size == rhs.d_size || rhs.d_size == 1);
       bool result = true;
-      for (int i = 0; result && (i < getDim().getValue()); ++i) {
-         result = result && (d_vector[i] < rhs.d_vector[i]);
+      if (rhs.d_size == 1) {
+         for (int b = 0; result && b < d_size; ++b) {
+            for (int i = 0; result && (i < d_dim.getValue()); ++i) {
+               result = result && (d_vector[b*d_dim.getValue() + i] < rhs.d_vector[i]);
+            }
+         }
+      } else {
+         for (int b = 0; result && b < d_size; ++b) {
+            for (int i = 0; result && (i < d_dim.getValue()); ++i) {
+               result = result && (d_vector[b*d_dim.getValue() + i] < rhs.d_vector[b*d_dim.getValue() + i]);
+            }
+         }
       }
       return result;
    }
@@ -542,9 +667,20 @@ public:
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(d_size == rhs.d_size || rhs.d_size == 1);
       bool result = true;
-      for (int i = 0; result && (i < getDim().getValue()); ++i) {
-         result = result && (d_vector[i] <= rhs.d_vector[i]);
+      if (rhs.d_size == 1) {
+         for (int b = 0; result && b < d_size; ++b) {
+            for (int i = 0; result && (i < d_dim.getValue()); ++i) {
+               result = result && (d_vector[b*d_dim.getValue() + i] <= rhs.d_vector[i]);
+            }
+         }
+      } else {
+         for (int b = 0; result && b < d_size; ++b) {
+            for (int i = 0; result && (i < d_dim.getValue()); ++i) {
+               result = result && (d_vector[b*d_dim.getValue() + i] <= rhs.d_vector[b*d_dim.getValue() + i]);
+            }
+         }
       }
       return result;
    }
@@ -560,9 +696,20 @@ public:
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(d_size == rhs.d_size || rhs.d_size == 1);
       bool result = true;
-      for (int i = 0; result && (i < getDim().getValue()); ++i) {
-         result = result && (d_vector[i] > rhs.d_vector[i]);
+      if (rhs.d_size == 1) {
+         for (int b = 0; result && b < d_size; ++b) {
+            for (int i = 0; result && (i < d_dim.getValue()); ++i) {
+               result = result && (d_vector[b*d_dim.getValue() + i] > rhs.d_vector[i]);
+            }
+         }
+      } else {
+         for (int b = 0; result && b < d_size; ++b) {
+            for (int i = 0; result && (i < d_dim.getValue()); ++i) {
+               result = result && (d_vector[b*d_dim.getValue() + i] > rhs.d_vector[b*d_dim.getValue() + i]);
+            }
+         }
       }
       return result;
    }
@@ -578,9 +725,20 @@ public:
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(d_size == rhs.d_size || rhs.d_size == 1);
       bool result = true;
-      for (int i = 0; result && (i < getDim().getValue()); ++i) {
-         result = result && (d_vector[i] >= rhs.d_vector[i]);
+      if (rhs.d_size == 1) {
+         for (int b = 0; result && b < d_size; ++b) {
+            for (int i = 0; result && (i < d_dim.getValue()); ++i) {
+               result = result && (d_vector[b*d_dim.getValue() + i] >= rhs.d_vector[i]);
+            }
+         }
+      } else {
+         for (int b = 0; result && b < d_size; ++b) {
+            for (int i = 0; result && (i < d_dim.getValue()); ++i) {
+               result = result && (d_vector[b*d_dim.getValue() + i] >= rhs.d_vector[b*d_dim.getValue() + i]);
+            }
+         }
       }
       return result;
    }
@@ -595,9 +753,22 @@ public:
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      for (int i = 0; i < getDim().getValue(); ++i) {
-         if (rhs.d_vector[i] < d_vector[i]) {
-            d_vector[i] = rhs.d_vector[i];
+      TBOX_ASSERT(d_size == rhs.d_size || rhs.d_size == 1);
+      if (rhs.d_size == 1) {
+         for (int b = 0; b < d_size; ++b) {
+            for (int i = 0; i < d_dim.getValue(); ++i) {
+               if (rhs.d_vector[i] < d_vector[b*d_dim.getValue() + i]) {
+                  d_vector[b*d_dim.getValue() + i] = rhs.d_vector[i];
+               }
+            }
+         }
+      } else {
+         for (int b = 0; b < d_size; ++b) {
+            for (int i = 0; i < d_dim.getValue(); ++i) {
+               if (rhs.d_vector[b*d_dim.getValue() + i] < d_vector[b*d_dim.getValue() + i]) {
+                  d_vector[b*d_dim.getValue() + i] = rhs.d_vector[b*d_dim.getValue() + i];
+               }
+            }
          }
       }
    }
@@ -609,7 +780,7 @@ public:
    min() const
    {
       int min = d_vector[0];
-      for (int i = 1; i < getDim().getValue(); ++i) {
+      for (int i = 0; i < d_dim.getValue()*d_size; ++i) {
          if (d_vector[i] < min) {
             min = d_vector[i];
          }
@@ -624,9 +795,23 @@ public:
    max(
       const IntVector& rhs)
    {
-      for (int i = 0; i < getDim().getValue(); ++i) {
-         if (rhs.d_vector[i] > d_vector[i]) {
-            d_vector[i] = rhs.d_vector[i];
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      TBOX_ASSERT(d_size == rhs.d_size || rhs.d_size == 1);
+      if (rhs.d_size == 1) {
+         for (int b = 0; b < d_size; ++b) {
+            for (int i = 0; i < d_dim.getValue(); ++i) {
+               if (rhs.d_vector[i] > d_vector[b*d_dim.getValue() + i]) {
+                  d_vector[b*d_dim.getValue() + i] = rhs.d_vector[i];
+               }
+            }
+         }
+      } else {
+         for (int b = 0; b < d_size; ++b) {
+            for (int i = 0; i < d_dim.getValue(); ++i) {
+               if (rhs.d_vector[b*d_dim.getValue() + i] > d_vector[b*d_dim.getValue() + i]) {
+                  d_vector[b*d_dim.getValue() + i] = rhs.d_vector[b*d_dim.getValue() + i];
+               }
+            }
          }
       }
    }
@@ -638,7 +823,7 @@ public:
    max() const
    {
       int max = d_vector[0];
-      for (int i = 1; i < getDim().getValue(); ++i) {
+      for (int i = 0; i < d_dim.getValue()*d_size; ++i) {
          if (d_vector[i] > max) {
             max = d_vector[i];
          }
@@ -658,7 +843,7 @@ public:
       const IntVector& b)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(a, b);
-      IntVector tmp = a;
+      IntVector tmp(a);
       tmp.min(b);
       return tmp;
    }
@@ -675,9 +860,25 @@ public:
       const IntVector& b)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(a, b);
-      IntVector tmp = a;
+      IntVector tmp(a);
       tmp.max(b);
       return tmp;
+   }
+
+   void setAll(const IntVector& vector)
+   {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, vector);
+      if (vector.d_size == d_size) {
+         *this = vector;
+      } else if (d_size > 1 && vector.d_size == 1) {
+         for (int b = 0; b < d_size; ++b) {
+            for (int d = 0; d < d_dim.getValue(); ++d) {
+               d_vector[b*d_dim.getValue() + d] = vector[d];
+            }
+         }
+      } else {
+         TBOX_ERROR("IntVector::setAll() attempted with argument of non-compatible size." << std::endl);
+      }
    }
 
    /**
@@ -686,8 +887,9 @@ public:
    int
    getProduct() const
    {
+      TBOX_ASSERT(d_size == 1); 
       int prod = 1;
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
          prod *= d_vector[i];
       }
       return prod;
@@ -722,6 +924,25 @@ public:
       return d_dim;
    }
 
+   bool isOne() const {
+      for (int i = 0; i < d_dim.getValue() * d_size; ++i) {
+         if (d_vector[i] != 1) {
+            return false;
+         }
+      }
+      return true;
+   }
+
+   bool isZero() const {
+      for (int i = 0; i < d_dim.getValue() * d_size; ++i) {
+         if (d_vector[i] != 0) {
+            return false;
+         }
+      }
+      return true;
+   }
+
+
    /*!
     * @brief Return an IntVector of zeros of the specified dimension.
     *
@@ -734,6 +955,13 @@ public:
       return *(s_zeros[dim.getValue() - 1]);
    }
 
+   static const IntVector&
+   getMultiZero(
+      const tbox::Dimension& dim)
+   {
+      return *(s_mb_zeros[dim.getValue() - 1]);
+   }
+
    /*!
     * @brief Return an IntVector of ones of the specified dimension.
     *
@@ -744,6 +972,23 @@ public:
       const tbox::Dimension& dim)
    {
       return *(s_ones[dim.getValue() - 1]);
+   }
+
+   static const IntVector&
+   getMultiOne(
+      const tbox::Dimension& dim)
+   {
+      return *(s_mb_ones[dim.getValue() - 1]);
+   }
+
+   static void
+   setNumberBlocks(int num_blocks)
+   {
+      for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
+         tbox::Dimension dim(d+1);
+         *(s_mb_zeros[d]) = IntVector(dim, 0, num_blocks);
+         *(s_mb_ones[d]) = IntVector(dim, 1, num_blocks);
+      }
    }
 
    /*
@@ -799,10 +1044,14 @@ private:
 
    tbox::Dimension d_dim;
 
-   int d_vector[SAMRAI::MAX_DIM_VAL];
+   int d_size;
+
+   int* d_vector;
 
    static IntVector* s_zeros[SAMRAI::MAX_DIM_VAL];
    static IntVector* s_ones[SAMRAI::MAX_DIM_VAL];
+   static IntVector* s_mb_zeros[SAMRAI::MAX_DIM_VAL];
+   static IntVector* s_mb_ones[SAMRAI::MAX_DIM_VAL];
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

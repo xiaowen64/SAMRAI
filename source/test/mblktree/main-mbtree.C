@@ -49,7 +49,7 @@ void
 exhaustiveFindOverlapBoxes(
    hier::Connector& overlap_connector,
    const hier::Box& box,
-   const hier::MultiIntVector& refinement_ratio,
+   const hier::IntVector& refinement_ratio,
    const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry,
    const hier::BoxContainer& search_boxes);
 
@@ -195,7 +195,7 @@ int main(
       plog << "Input database after running..." << std::endl;
       input_db->printClassData(plog);
 
-      hier::MultiIntVector one_vector(hier::IntVector::getOne(dim));
+      hier::IntVector one_vector(hier::IntVector::getOne(dim));
 
       hier::BoxLevel box_level(
          one_vector,
@@ -264,9 +264,9 @@ int main(
       hier::Connector connector(
          box_level,
          box_level,
-         hier::MultiIntVector(connector_width));
+         connector_width);
 
-      const hier::MultiIntVector refinement_ratio(one_vector);
+      const hier::IntVector refinement_ratio(one_vector);
 
       for (hier::BoxContainer::const_iterator bi = box_level.getBoxes().begin();
            bi != box_level.getBoxes().end(); ++bi) {
@@ -298,7 +298,7 @@ int main(
          hier::Connector connector_from_exhaustive_search(
             box_level,
             box_level,
-            hier::MultiIntVector(connector_width));
+            connector_width);
          for (hier::BoxContainer::const_iterator bi =
                  box_level.getBoxes().begin();
               bi != box_level.getBoxes().end(); ++bi) {
@@ -436,7 +436,7 @@ void breakUpBoxes(
 
    const hier::IntVector min_size(dim, 2);
    const hier::IntVector bad_interval(dim, 1);
-   const hier::MultiIntVector cut_factor(hier::IntVector::getOne(dim));
+   const hier::IntVector cut_factor(hier::IntVector::getOne(dim));
 
    load_balancer.loadBalanceBoxLevel(
       box_level,
@@ -459,7 +459,7 @@ void breakUpBoxes(
 void exhaustiveFindOverlapBoxes(
    hier::Connector& overlap_connector,
    const hier::Box& box,
-   const hier::MultiIntVector& refinement_ratio,
+   const hier::IntVector& refinement_ratio,
    const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry,
    const hier::BoxContainer& search_boxes)
 {
@@ -486,7 +486,7 @@ void exhaustiveFindOverlapBoxes(
          bool transformed = grid_geometry->transformBox(transformed_box,
                refinement_ratio,
                search_box.getBlockId(),
-               box.getBlockId());
+               box.getBlockId(), 3.7);
          transformed_block_id = transformed ?
             search_box.getBlockId() :
             box.getBlockId();

@@ -1522,7 +1522,7 @@ CellPoissonFACOps::ewingFixFlux(
    const hier::Patch& patch,
    const pdat::CellData<double>& soln_data,
    pdat::SideData<double>& flux_data,
-   const hier::MultiIntVector& ratio_to_coarser) const
+   const hier::IntVector& ratio_to_coarser) const
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(d_dim, patch, soln_data, flux_data,
       ratio_to_coarser);
@@ -1538,8 +1538,14 @@ CellPoissonFACOps::ewingFixFlux(
    const hier::Index& plower = patch_box.lower();
    const hier::Index& pupper = patch_box.upper();
 
-   const hier::IntVector& block_ratio =
-      ratio_to_coarser.getBlockVector(patch_box.getBlockId());
+   hier::IntVector block_ratio(ratio_to_coarser);
+   if (block_ratio.size() != 1) {
+      block_ratio = hier::IntVector(d_dim);
+      int b = patch_box.getBlockId().getBlockValue();
+      for (int d = 0; d < d_dim.getValue(); ++d) {
+         block_ratio[d] = ratio_to_coarser(b,d);
+      }
+   }
 
    const std::vector<hier::BoundaryBox>& bboxes =
       d_cf_boundary[patch_ln]->getBoundaries(id, 1);
@@ -2060,7 +2066,7 @@ CellPoissonFACOps::computeVectorWeights(
          boost::shared_ptr<hier::PatchLevel> next_finer_level(
             hierarchy->getPatchLevel(ln + 1));
          hier::BoxContainer coarsened_boxes = next_finer_level->getBoxes();
-         hier::MultiIntVector coarsen_ratio(next_finer_level->getRatioToLevelZero());
+         hier::IntVector coarsen_ratio(next_finer_level->getRatioToLevelZero());
          coarsen_ratio /= level->getRatioToLevelZero();
          coarsened_boxes.coarsen(coarsen_ratio);
 
@@ -2147,7 +2153,7 @@ CellPoissonFACOps::checkInputPatchDataIndices() const
 void
 CellPoissonFACOps::computeFluxOnPatch(
    const hier::Patch& patch,
-   const hier::MultiIntVector& ratio_to_coarser_level,
+   const hier::IntVector& ratio_to_coarser_level,
    const pdat::CellData<double>& w_data,
    pdat::SideData<double>& Dgradw_data) const
 {

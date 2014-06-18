@@ -51,8 +51,8 @@ public:
     */
    void
    computeRequiredConnectorWidths(
-      std::vector<hier::MultiIntVector>& self_connector_widths,
-      std::vector<hier::MultiIntVector>& fine_connector_widths,
+      std::vector<hier::IntVector>& self_connector_widths,
+      std::vector<hier::IntVector>& fine_connector_widths,
       const hier::PatchHierarchy& patch_hierarchy) const;
 
 
@@ -64,7 +64,7 @@ public:
     */
    void
    setTagToClusterWidth(
-      std::vector<hier::MultiIntVector> &tag_to_cluster_width);
+      std::vector<hier::IntVector> &tag_to_cluster_width);
 
 private:
    /*!
@@ -102,16 +102,16 @@ private:
     */
    void
    computeCoarserLevelConnectorWidthsFromFines(
-      hier::MultiIntVector& coarse_to_fine_width,
-      hier::MultiIntVector& coarse_to_coarse_width,
-      const hier::MultiIntVector& fine_to_fine_width,
-      const hier::MultiIntVector& fine_to_coarse_ratio,
+      hier::IntVector& coarse_to_fine_width,
+      hier::IntVector& coarse_to_coarse_width,
+      const hier::IntVector& fine_to_fine_width,
+      const hier::IntVector& fine_to_coarse_ratio,
       const hier::IntVector& nesting_buffer_at_fine,
       const hier::IntVector& max_stencil_width_at_coarse,
       const hier::IntVector& max_ghost_width_at_coarse) const;
 
 
-   std::vector<hier::MultiIntVector> d_tag_to_cluster_width;
+   std::vector<hier::IntVector> d_tag_to_cluster_width;
 
 };
 

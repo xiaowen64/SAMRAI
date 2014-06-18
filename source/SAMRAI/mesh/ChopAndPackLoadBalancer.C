@@ -258,7 +258,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
    const hier::IntVector& max_size,
    const hier::BoxLevel& domain_box_level,
    const hier::IntVector& bad_interval,
-   const hier::MultiIntVector& cut_factor,
+   const hier::IntVector& cut_factor,
    const tbox::RankGroup& rank_group) const
 {
    TBOX_ASSERT(!balance_to_anchor || balance_to_anchor->hasTranspose());
@@ -398,10 +398,10 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int level_number,
    const hier::BoxContainer& physical_domain,
-   const hier::MultiIntVector& ratio_to_hierarchy_level_zero,
+   const hier::IntVector& ratio_to_hierarchy_level_zero,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
-   const hier::MultiIntVector& cut_factor,
+   const hier::IntVector& cut_factor,
    const hier::IntVector& bad_interval) const
 {
    t_load_balance_boxes->start();
@@ -417,7 +417,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
    TBOX_ASSERT(!physical_domain.isEmpty());
    TBOX_ASSERT(min_size > hier::IntVector::getZero(d_dim));
    TBOX_ASSERT(max_size >= min_size);
-   TBOX_ASSERT(cut_factor > hier::MultiIntVector(d_dim,0));
+   TBOX_ASSERT(cut_factor > hier::IntVector(d_dim,0));
    TBOX_ASSERT(bad_interval >= hier::IntVector::getZero(d_dim));
 
    /*
@@ -611,7 +611,7 @@ ChopAndPackLoadBalancer::chopUniformSingleBox(
    const hier::Box& in_box,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
-   const hier::MultiIntVector& cut_factor,
+   const hier::IntVector& cut_factor,
    const hier::IntVector& bad_interval,
    const hier::BoxContainer& physical_domain,
    const tbox::SAMRAI_MPI& mpi) const
@@ -702,7 +702,7 @@ ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
    int level_number,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
-   const hier::MultiIntVector& cut_factor,
+   const hier::IntVector& cut_factor,
    const hier::IntVector& bad_interval,
    const hier::BoxContainer& physical_domain,
    const tbox::SAMRAI_MPI& mpi) const
@@ -795,11 +795,11 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    const hier::BoxContainer& in_boxes,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int level_number,
-   const hier::MultiIntVector& ratio_to_hierarchy_level_zero,
+   const hier::IntVector& ratio_to_hierarchy_level_zero,
    int wrk_indx,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
-   const hier::MultiIntVector& cut_factor,
+   const hier::IntVector& cut_factor,
    const hier::IntVector& bad_interval,
    const hier::BoxContainer& physical_domain,
    const tbox::SAMRAI_MPI& mpi) const

@@ -104,14 +104,25 @@ PersistentOverlapConnectors::getFromInput()
 const Connector&
 PersistentOverlapConnectors::createConnector(
    const BoxLevel& head,
-   const MultiIntVector& connector_width)
+   const IntVector& connector_width)
 {
    TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
+   IntVector width(connector_width);
+   if (width.size() == 1 &&
+       IntVector::getMultiZero(width.getDim()).size() != 1) {
+      if (width.max() == width.min()) {
+         int new_size = IntVector::getMultiZero(width.getDim()).size();
+         width = IntVector(width, new_size);
+      } else {
+         TBOX_ERROR("Anisotropic head width argument for PersistentOverlapConnectors::createConnector must be of size equal to the number of blocks." << std::endl);
+      }
+   }
+
    for (int i = 0; i < static_cast<int>(d_cons_from_me.size()); ++i) {
       if (&d_cons_from_me[i]->getHead() == &head &&
-          d_cons_from_me[i]->getConnectorWidth() == connector_width) {
+          d_cons_from_me[i]->getConnectorWidth() == width) {
          TBOX_ERROR(
             "PersistentOverlapConnectors::createConnector:\n"
             << "Cannot create duplicate Connectors.");
@@ -123,7 +134,7 @@ PersistentOverlapConnectors::createConnector(
    oca.findOverlaps(new_connector,
       d_my_box_level,
       head,
-      connector_width);
+      width);
 
    postprocessForEmptyNeighborContainers(*new_connector);
 
@@ -141,8 +152,8 @@ PersistentOverlapConnectors::createConnector(
 const Connector&
 PersistentOverlapConnectors::createConnectorWithTranspose(
    const BoxLevel& head,
-   const MultiIntVector& connector_width,
-   const MultiIntVector& transpose_connector_width)
+   const IntVector& connector_width,
+   const IntVector& transpose_connector_width)
 {
    TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
@@ -197,7 +208,7 @@ PersistentOverlapConnectors::cacheConnector(
 const Connector&
 PersistentOverlapConnectors::findConnector(
    const BoxLevel& head,
-   const MultiIntVector& min_connector_width,
+   const IntVector& min_connector_width,
    ConnectorNotFoundAction not_found_action,
    bool exact_width_only)
 {
@@ -230,8 +241,8 @@ PersistentOverlapConnectors::findConnector(
 const Connector&
 PersistentOverlapConnectors::findConnectorWithTranspose(
    const BoxLevel& head,
-   const MultiIntVector& min_connector_width,
-   const MultiIntVector& transpose_min_connector_width,
+   const IntVector& min_connector_width,
+   const IntVector& transpose_min_connector_width,
    ConnectorNotFoundAction not_found_action,
    bool exact_width_only)
 {
@@ -266,20 +277,31 @@ PersistentOverlapConnectors::findConnectorWithTranspose(
 bool
 PersistentOverlapConnectors::hasConnector(
    const BoxLevel& head,
-   const MultiIntVector& min_connector_width,
+   const IntVector& min_connector_width,
    bool exact_width_only) const
 {
+   IntVector min_width(min_connector_width);
+   if (min_width.size() == 1 &&
+       IntVector::getMultiZero(min_width.getDim()).size() != 1) {
+      if (min_width.max() == min_width.min()) {
+         int new_size = IntVector::getMultiZero(min_width.getDim()).size();
+         min_width = IntVector(min_width, new_size);
+      } else {
+         TBOX_ERROR("Anisotropic head width argument for PersistentOverlapConnectors::doFindConnectorWork must be of size equal to the number of blocks." << std::endl);
+      }
+   }
+
    if (exact_width_only) {
       for (int i = 0; i < static_cast<int>(d_cons_from_me.size()); ++i) {
          if (&d_cons_from_me[i]->getHead() == &head &&
-             d_cons_from_me[i]->getConnectorWidth() == min_connector_width) {
+             d_cons_from_me[i]->getConnectorWidth() == min_width) {
             return true;
          }
       }
    } else {
       for (int i = 0; i < static_cast<int>(d_cons_from_me.size()); ++i) {
          if (&d_cons_from_me[i]->getHead() == &head &&
-             d_cons_from_me[i]->getConnectorWidth() >= min_connector_width) {
+             d_cons_from_me[i]->getConnectorWidth() >= min_width) {
             return true;
          }
       }
@@ -371,10 +393,21 @@ PersistentOverlapConnectors::clear()
 boost::shared_ptr<Connector>
 PersistentOverlapConnectors::doFindConnectorWork(
    const BoxLevel& head,
-   const MultiIntVector& min_connector_width,
+   const IntVector& min_connector_width,
    ConnectorNotFoundAction not_found_action,
    bool exact_width_only)
 {
+   IntVector min_width(min_connector_width);
+   if (min_width.size() == 1 &&
+       IntVector::getMultiZero(min_width.getDim()).size() != 1) {
+      if (min_width.max() == min_width.min()) {
+         int new_size = IntVector::getMultiZero(min_width.getDim()).size();
+         min_width = IntVector(min_width, new_size);
+      } else {
+         TBOX_ERROR("Anisotropic head width argument for PersistentOverlapConnectors::doFindConnectorWork must be of size equal to the number of blocks." << std::endl);
+      }
+   }
+
    boost::shared_ptr<Connector> found;
    for (int i = 0; i < static_cast<int>(d_cons_from_me.size()); ++i) {
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
@@ -390,11 +423,11 @@ PersistentOverlapConnectors::doFindConnectorWork(
          getBoxLevel());
 
       if (&(d_cons_from_me[i]->getHead()) == &head) {
-         if (d_cons_from_me[i]->getConnectorWidth() >= min_connector_width) {
+         if (d_cons_from_me[i]->getConnectorWidth() >= min_width) {
             if (!found) {
                found = d_cons_from_me[i];
             } else {
-               MultiIntVector vdiff =
+               IntVector vdiff =
                   d_cons_from_me[i]->getConnectorWidth()
                   - found->getConnectorWidth();
 
@@ -403,17 +436,15 @@ PersistentOverlapConnectors::doFindConnectorWork(
                int nblocks = head.getGridGeometry()->getNumberBlocks();
                int diff = 0;
                for (int b = 0; b < nblocks; ++b) {
-                  BlockId block_id(b);
-                  const IntVector& block_vec = vdiff.getBlockVector(block_id);
                   for (int j = 0; j < vdiff.getDim().getValue(); ++j) {
-                     diff += block_vec[j];
+                     diff += vdiff(b,j);
                   }
                }
                if (diff < 0) {
                   found = d_cons_from_me[i];
                }
             }
-            if (found->getConnectorWidth() == min_connector_width) {
+            if (found->getConnectorWidth() == min_width) {
                break;
             }
          }
@@ -445,7 +476,7 @@ PersistentOverlapConnectors::doFindConnectorWork(
             << "PersistentOverlapConnectors::findConnector: Failed to find Connector\n"
             << &d_my_box_level << "--->" << &head
             << " with " << (exact_width_only ? "exact" : "min")
-            << " width of " << min_connector_width << ".\n"
+            << " width of " << min_width << ".\n"
             << "base:\n" << d_my_box_level.format("B: ")
             << "head:\n" << head.format("H: ")
             << "\nThe available Connectors have these widths:\n";
@@ -471,11 +502,11 @@ PersistentOverlapConnectors::doFindConnectorWork(
                          << "Number of implicit global searches: " << s_num_implicit_global_searches << '\n');
          }
 
-         createConnector( head, min_connector_width );
+         createConnector( head, min_width );
          found = d_cons_from_me.back();
       }
    } else if (exact_width_only &&
-              found->getConnectorWidth() != min_connector_width) {
+              found->getConnectorWidth() != min_width) {
 
       /*
        * Found a sufficient Connector, but it is too wide.  Extract
@@ -487,8 +518,8 @@ PersistentOverlapConnectors::doFindConnectorWork(
       boost::shared_ptr<Connector> new_connector(boost::make_shared<Connector>(
          d_my_box_level,
          head,
-         min_connector_width));
-      oca.extractNeighbors(*new_connector, *found, min_connector_width);
+         min_width));
+      oca.extractNeighbors(*new_connector, *found, min_width);
 
       postprocessForEmptyNeighborContainers(*new_connector);
 

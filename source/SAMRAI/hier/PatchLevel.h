@@ -17,7 +17,6 @@
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchFactory.h"
 #include "SAMRAI/hier/ProcessorMapping.h"
-#include "SAMRAI/hier/MultiIntVector.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include "boost/shared_ptr.hpp"
@@ -462,7 +461,7 @@ public:
    void
    setRefinedPatchLevel(
       const boost::shared_ptr<PatchLevel>& coarse_level,
-      const MultiIntVector& refine_ratio,
+      const IntVector& refine_ratio,
       const boost::shared_ptr<BaseGridGeometry>& fine_grid_geometry =
          boost::shared_ptr<BaseGridGeometry>(),
       bool defer_boundary_box_creation = false);
@@ -516,7 +515,7 @@ public:
    void
    setCoarsenedPatchLevel(
       const boost::shared_ptr<PatchLevel>& fine_level,
-      const MultiIntVector& coarsen_ratio,
+      const IntVector& coarsen_ratio,
       const boost::shared_ptr<BaseGridGeometry>& coarse_grid_geom =
          boost::shared_ptr<BaseGridGeometry>(),
       bool defer_boundary_box_creation = false);
@@ -648,7 +647,7 @@ public:
     * space of this patch level and that of a reference level in AMR
     * hierarchy (that is, level zero).
     */
-   const MultiIntVector&
+   const IntVector&
    getRatioToLevelZero() const
    {
       return d_ratio_to_level_zero;
@@ -664,7 +663,7 @@ public:
     * @return the vector ratio between this level and the next coarser
     * level in the patch hierarchy.
     */
-   const MultiIntVector&
+   const IntVector&
    getRatioToCoarserLevel() const
    {
       return d_ratio_to_coarser_level;
@@ -680,7 +679,7 @@ public:
     */
    void
    setRatioToCoarserLevel(
-      const MultiIntVector& ratio)
+      const IntVector& ratio)
    {
       d_ratio_to_coarser_level = ratio;
    }
@@ -915,7 +914,7 @@ public:
    const Connector&
    findConnector(
       const PatchLevel& head,
-      const MultiIntVector& min_connector_width,
+      const IntVector& min_connector_width,
       ConnectorNotFoundAction not_found_action,
       bool exact_width_only = false) const
    {
@@ -952,8 +951,8 @@ public:
    const Connector&
    findConnectorWithTranspose(
       const PatchLevel& head,
-      const MultiIntVector& min_connector_width,
-      const MultiIntVector& transpose_min_connector_width,
+      const IntVector& min_connector_width,
+      const IntVector& transpose_min_connector_width,
       ConnectorNotFoundAction not_found_action,
       bool exact_width_only = false) const
    {
@@ -985,7 +984,7 @@ public:
    const Connector&
    createConnector(
       const PatchLevel& head,
-      const MultiIntVector& connector_width) const
+      const IntVector& connector_width) const
    {
       return getBoxLevel()->createConnector(*head.getBoxLevel(),
          connector_width);
@@ -1013,8 +1012,8 @@ public:
    const Connector&
    createConnectorWithTranspose(
       const PatchLevel& head,
-      const MultiIntVector& connector_width,
-      const MultiIntVector& transpose_connector_width) const
+      const IntVector& connector_width,
+      const IntVector& transpose_connector_width) const
    {
       return getBoxLevel()->createConnectorWithTranspose(*head.getBoxLevel(),
          connector_width,
@@ -1060,7 +1059,7 @@ public:
    bool
    hasConnector(
       const PatchLevel& head,
-      const MultiIntVector& min_connector_width,
+      const IntVector& min_connector_width,
       bool exact_width_only = false) const
    {
       return getBoxLevel()->hasConnector(*head.getBoxLevel(),
@@ -1334,7 +1333,7 @@ private:
    /*
     * ratio to reference level
     */
-   MultiIntVector d_ratio_to_level_zero;
+   IntVector d_ratio_to_level_zero;
 
    /*
     * Grid geometry description.
@@ -1369,7 +1368,7 @@ private:
     * but is usually a valid level number more often than level number.
     * The boolean is true when the level is in a hierarchy, false otherwise.
     */
-   MultiIntVector d_ratio_to_coarser_level;
+   IntVector d_ratio_to_coarser_level;
 
    /*
     * Level number in the hierarchy.

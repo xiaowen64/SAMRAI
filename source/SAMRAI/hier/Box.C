@@ -625,38 +625,33 @@ Box::refine(
    const IntVector& ratio)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
+   int b = ratio.size() > 1 ? d_block_id.getBlockValue() : 0;
+   TBOX_ASSERT(b < ratio.size());
 
    bool negative_ratio = false;
    for (int d = 0; d < getDim().getValue(); ++d) {
-      if (ratio(d) < 0) {
+      if (ratio(b,d) < 0) {
          negative_ratio = true;
          break;
       }
    }
 
    if (!negative_ratio) {
-      d_lo *= ratio;
-      d_hi = d_hi * ratio + (ratio - 1);
+      for (int i = 0; i < getDim().getValue(); ++i) {
+         d_lo(i) *= ratio(b,i);
+         d_hi(i) = d_hi(i) * ratio(b,i) + (ratio(b,i) - 1);
+      }
    } else {
       for (int i = 0; i < getDim().getValue(); ++i) {
-         if (ratio(i) > 0) {
-            d_lo(i) *= ratio(i);
-            d_hi(i) = d_hi(i) * ratio(i) + (ratio(i) - 1);
+         if (ratio(b,i) > 0) {
+            d_lo(i) *= ratio(b,i);
+            d_hi(i) = d_hi(i) * ratio(b,i) + (ratio(b,i) - 1);
          } else {
-            d_lo(i) = coarsen(d_lo(i), -ratio(i));
-            d_hi(i) = coarsen(d_hi(i), -ratio(i));
+            d_lo(i) = coarsen(d_lo(i), -ratio(b,i));
+            d_hi(i) = coarsen(d_hi(i), -ratio(b,i));
          }
       }
    }
-}
-
-void
-Box::refine(
-   const MultiIntVector& ratio)
-{
-   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
-
-   refine(ratio.getBlockVector(d_block_id));
 }
 
 /*

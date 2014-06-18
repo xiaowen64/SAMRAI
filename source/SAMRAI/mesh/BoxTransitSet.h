@@ -261,8 +261,8 @@ private:
          return a.getOrigBox().getBoxId() < b.getOrigBox().getBoxId();
       }
    private:
-      bool lexicalIndexLessThan( const hier::IntVector &a,
-                                 const hier::IntVector &b ) const {
+      bool lexicalIndexLessThan( const hier::Index &a,
+                                 const hier::Index &b ) const {
          for ( int i=0; i<a.getDim().getValue(); ++i ) {
             if ( a(i) != b(i) ) return a(i) < b(i);
          }

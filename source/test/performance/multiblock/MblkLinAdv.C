@@ -757,9 +757,13 @@ void MblkLinAdv::initializeDataOnPatch(
       xhi[d] = (*xyz)(phi, d);
    }
 
-   d_cell_cons_linear_refine_op->setDx(level_number, dx);
-   d_cell_cons_coarsen_op->setDx(level_number, dx);
-   d_side_cons_coarsen_op->setDx(level_number, dx);
+   for (int ln = 0; ln <= level_number; ++ln) {
+      double level_dx[SAMRAI::MAX_DIM_VAL];
+      d_mblk_geometry->getDx(ln, level_dx);
+      d_cell_cons_linear_refine_op->setDx(ln, level_dx);
+      d_cell_cons_coarsen_op->setDx(ln, level_dx);
+      d_side_cons_coarsen_op->setDx(ln, level_dx);
+   }
 
    if (initial_time) {
 
@@ -2231,7 +2235,7 @@ void MblkLinAdv::setMappedGridOnPatch(
    // compute level domain
    const boost::shared_ptr<hier::PatchGeometry> patch_geom(
       patch.getPatchGeometry());
-   hier::MultiIntVector ratio = patch_geom->getRatio();
+   const hier::IntVector& ratio = patch_geom->getRatio();
    hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
       hier::BlockId(block_number));

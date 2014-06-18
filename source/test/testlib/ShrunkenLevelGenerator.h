@@ -124,7 +124,7 @@ private:
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int tag_ln,
       int tag_data_id,
-      const hier::MultiIntVector &shrink_cells,
+      const hier::IntVector &shrink_cells,
       const double *shrink_distance );
 
    std::string d_name;

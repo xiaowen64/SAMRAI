@@ -361,7 +361,7 @@ private:
       int next_coarser_level,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const hier::Connector& dst_to_src,
-      const hier::MultiIntVector& src_growth_to_nest_dst,
+      const hier::IntVector& src_growth_to_nest_dst,
       const boost::shared_ptr<RefineClasses>& refine_classes,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
       RefinePatchStrategy* patch_strategy,
@@ -411,7 +411,7 @@ private:
    finishScheduleConstruction(
       int next_coarser_ln,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      const hier::MultiIntVector& src_growth_to_nest_dst,
+      const hier::IntVector& src_growth_to_nest_dst,
       const hier::Connector& dst_to_fill,
       const hier::BoxNeighborhoodCollection& src_owner_dst_to_fill,
       bool use_time_interpolation,
@@ -665,7 +665,7 @@ private:
    createEnconFillSchedule(
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const boost::shared_ptr<hier::PatchLevel>& hiercoarse_level,
-      const hier::MultiIntVector& src_growth_to_nest_dst,
+      const hier::IntVector& src_growth_to_nest_dst,
       const hier::Connector& encon_to_unfilled_encon);
 
    /*!
@@ -1202,7 +1202,7 @@ private:
     * recursive schedules.  Unused in when there is no hierarchy for
     * recursion.
     */
-    std::vector<hier::MultiIntVector> d_fine_connector_widths;
+    std::vector<hier::IntVector> d_fine_connector_widths;
 
    /*!
     * @brief The top RefineSchedule that led recursively to this one.
