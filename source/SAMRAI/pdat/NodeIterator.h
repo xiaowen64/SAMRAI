@@ -81,7 +81,7 @@ public:
     * Extract a pointer to the node index corresponding to the iterator
     * position in the box.
     */
-   const NodeIndex*
+   const NodeIndex *
    operator -> () const
    {
       return &d_index;
@@ -125,8 +125,12 @@ public:
    }
 
 private:
-   friend NodeIterator NodeGeometry::begin(const hier::Box& box);
-   friend NodeIterator NodeGeometry::end(const hier::Box& box);
+   friend NodeIterator
+   NodeGeometry::begin(
+      const hier::Box& box);
+   friend NodeIterator
+   NodeGeometry::end(
+      const hier::Box& box);
    /**
     * Constructor for the node iterator.  The iterator will enumerate
     * the indices in the argument box.

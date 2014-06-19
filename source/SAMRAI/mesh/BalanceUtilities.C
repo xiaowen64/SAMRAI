@@ -328,13 +328,13 @@ BalanceUtilities::privateBadCutPointsExist(
       domain_by_blocks[block_id].pushBack(*itr);
    }
    for (std::map<hier::BlockId, hier::BoxContainer>::iterator m_itr =
-        domain_by_blocks.begin(); m_itr != domain_by_blocks.end(); ++m_itr) {
+           domain_by_blocks.begin(); m_itr != domain_by_blocks.end(); ++m_itr) {
       hier::BoxContainer bounding_box(m_itr->second.getBoundingBox());
       bounding_box.removeIntersections(m_itr->second);
       if (!bounding_box.isEmpty()) {
          bad_cuts_exist = true;
       }
-   }  
+   }
 
    return bad_cuts_exist;
 }
@@ -1178,7 +1178,6 @@ BalanceUtilities::spatialBinPack(
 
    }
 
- 
    /* Find average workload */
 
    double avg_work = 0.0;
@@ -1766,8 +1765,6 @@ BalanceUtilities::computeLoadBalanceEfficiency(
 
 }
 
-
-
 /*
  *************************************************************************
  *************************************************************************
@@ -1775,46 +1772,47 @@ BalanceUtilities::computeLoadBalanceEfficiency(
 
 void
 BalanceUtilities::findSmallBoxesInPostbalance(
-   std::ostream &co,
-   const std::string &border,
-   const hier::MappingConnector &post_to_pre,
-   const hier::IntVector &min_width,
-   size_t min_cells )
+   std::ostream& co,
+   const std::string& border,
+   const hier::MappingConnector& post_to_pre,
+   const hier::IntVector& min_width,
+   size_t min_cells)
 {
-   const hier::BoxLevel &post = post_to_pre.getBase();
-   const hier::BoxContainer &post_boxes = post.getBoxes();
+   const hier::BoxLevel& post = post_to_pre.getBase();
+   const hier::BoxContainer& post_boxes = post.getBoxes();
 
    int local_new_min_count = 0;
-   for ( hier::BoxContainer::const_iterator bi=post_boxes.begin(); bi!=post_boxes.end(); ++bi ) {
+   for (hier::BoxContainer::const_iterator bi = post_boxes.begin(); bi != post_boxes.end(); ++bi) {
 
-      const hier::Box &post_box = *bi;
+      const hier::Box& post_box = *bi;
 
-      if ( post_box.numberCells() >= min_width && static_cast<size_t>(post_box.size()) >= min_cells ) {
+      if (post_box.numberCells() >= min_width && static_cast<size_t>(post_box.size()) >=
+          min_cells) {
          continue;
       }
 
-      if ( post_to_pre.hasNeighborSet(post_box.getBoxId()) ) {
+      if (post_to_pre.hasNeighborSet(post_box.getBoxId())) {
          hier::BoxContainer pre_neighbors;
          post_to_pre.getLocalNeighbors(pre_neighbors);
 
          bool small_width = true;
          bool small_cells = true;
-         for ( hier::BoxContainer::const_iterator na=pre_neighbors.begin();
-               na!=pre_neighbors.end(); ++na ) {
-            if ( !(na->numberCells() >= min_width) ) {
+         for (hier::BoxContainer::const_iterator na = pre_neighbors.begin();
+              na != pre_neighbors.end(); ++na) {
+            if (!(na->numberCells() >= min_width)) {
                small_width = false;
             }
-            if ( !(static_cast<size_t>(na->size()) >= min_cells) ) {
+            if (!(static_cast<size_t>(na->size()) >= min_cells)) {
                small_cells = false;
             }
          }
-         if ( small_width || small_cells ) {
+         if (small_width || small_cells) {
             ++local_new_min_count;
             co << border << "Post-box small_width=" << small_width
                << " small_cells=" << small_cells
                << ": " << post_box
                << post_box.numberCells() << '|' << post_box.size()
-               << " from " << pre_neighbors.format(border,2);
+               << " from " << pre_neighbors.format(border, 2);
          }
 
       }
@@ -1822,16 +1820,12 @@ BalanceUtilities::findSmallBoxesInPostbalance(
    }
 
    int global_new_min_count = local_new_min_count;
-   post.getMPI().AllReduce( &global_new_min_count, 1, MPI_SUM );
+   post.getMPI().AllReduce(&global_new_min_count, 1, MPI_SUM);
 
    co << border
       << "  Total of " << local_new_min_count << " / "
       << global_new_min_count << " new minimums." << std::endl;
-
-   return;
 }
-
-
 
 /*
  *************************************************************************
@@ -1840,21 +1834,18 @@ BalanceUtilities::findSmallBoxesInPostbalance(
 
 void
 BalanceUtilities::findSmallBoxesInPostbalance(
-   std::ostream &co,
-   const std::string &border,
-   const hier::BoxLevel &post,
-   const hier::BoxLevel &pre,
-   const hier::IntVector &min_width,
-   size_t min_cells )
+   std::ostream& co,
+   const std::string& border,
+   const hier::BoxLevel& post,
+   const hier::BoxLevel& pre,
+   const hier::IntVector& min_width,
+   size_t min_cells)
 {
-   hier::MappingConnector post_to_pre( post, pre, hier::IntVector::getZero(post.getDim()) );
+   hier::MappingConnector post_to_pre(post, pre, hier::IntVector::getZero(post.getDim()));
    hier::OverlapConnectorAlgorithm oca;
    oca.findOverlaps(post_to_pre);
-   findSmallBoxesInPostbalance( co, border, post_to_pre, min_width, min_cells );
-   return;
+   findSmallBoxesInPostbalance(co, border, post_to_pre, min_width, min_cells);
 }
-
-
 
 /*
  *************************************************************************
@@ -1869,29 +1860,27 @@ BalanceUtilities::compareLoads(
    double ideal_load,
    double low_load,
    double high_load,
-   const PartitioningParams &pparams)
+   const PartitioningParams& pparams)
 {
-   double cur_range_miss = cur_load >= high_load ? cur_load-high_load :
-      ( cur_load <= low_load ? low_load-cur_load : 0.0 );
-   double new_range_miss = new_load >= high_load ? new_load-high_load :
-      ( new_load <= low_load ? low_load-new_load : 0.0 );
-   flags[0] = new_range_miss < (cur_range_miss-pparams.getLoadComparisonTol()) ? 1 :
-      ( new_range_miss > cur_range_miss ? -1 : 0 );
+   double cur_range_miss = cur_load >= high_load ? cur_load - high_load :
+      (cur_load <= low_load ? low_load - cur_load : 0.0);
+   double new_range_miss = new_load >= high_load ? new_load - high_load :
+      (new_load <= low_load ? low_load - new_load : 0.0);
+   flags[0] = new_range_miss < (cur_range_miss - pparams.getLoadComparisonTol()) ? 1 :
+      (new_range_miss > cur_range_miss ? -1 : 0);
 
-   double cur_diff = tbox::MathUtilities<double>::Abs(cur_load-ideal_load);
-   double new_diff = tbox::MathUtilities<double>::Abs(new_load-ideal_load);
+   double cur_diff = tbox::MathUtilities<double>::Abs(cur_load - ideal_load);
+   double new_diff = tbox::MathUtilities<double>::Abs(new_load - ideal_load);
 
-   flags[1] = new_diff < (cur_diff-pparams.getLoadComparisonTol()) ? 1 :
-      ( new_diff > cur_diff ? -1 : 0 );
+   flags[1] = new_diff < (cur_diff - pparams.getLoadComparisonTol()) ? 1 :
+      (new_diff > cur_diff ? -1 : 0);
 
-   flags[2] = flags[0] != 0 ? flags[0] : ( flags[1] != 0 ? flags[1] : 0 );
+   flags[2] = flags[0] != 0 ? flags[0] : (flags[1] != 0 ? flags[1] : 0);
 
    flags[3] = (new_load <= high_load && new_load >= low_load);
 
    return flags[2] == 1;
 }
-
-
 
 /*
  *************************************************************************
@@ -1918,8 +1907,6 @@ BalanceUtilities::gatherAndReportLoadBalance(
    }
    reportLoadBalance(workloads, os);
 }
-
-
 
 /*
  *************************************************************************
@@ -1956,8 +1943,6 @@ BalanceUtilities::gatherAndReportLoadBalance(
       reportLoadBalance(workloads, os);
    }
 }
-
-
 
 /*
  *************************************************************************
@@ -2055,8 +2040,6 @@ BalanceUtilities::reportLoadBalance(
    delete[] rank_and_load;
 }
 
-
-
 /*
  *************************************************************************
  * for use when sorting loads using the C-library qsort
@@ -2079,8 +2062,6 @@ BalanceUtilities::qsortRankAndLoadCompareDescending(
 
    return 0;
 }
-
-
 
 /*
  *************************************************************************
@@ -2105,8 +2086,6 @@ BalanceUtilities::qsortRankAndLoadCompareAscending(
    return 0;
 }
 
-
-
 /*
  *************************************************************************
  * Constrain maximum box sizes in the given BoxLevel and
@@ -2117,18 +2096,18 @@ void
 BalanceUtilities::constrainMaxBoxSizes(
    hier::BoxLevel& box_level,
    hier::Connector* anchor_to_level,
-   const PartitioningParams &pparams )
+   const PartitioningParams& pparams)
 {
    TBOX_ASSERT(!anchor_to_level || anchor_to_level->hasTranspose());
 
    hier::IntVector zero_vector(hier::IntVector::getZero(box_level.getDim()));
 
    hier::BoxLevel constrained(box_level.getRefinementRatio(),
-      box_level.getGridGeometry(),
-      box_level.getMPI());
+                              box_level.getGridGeometry(),
+                              box_level.getMPI());
    hier::MappingConnector unconstrained_to_constrained(box_level,
-      constrained,
-      zero_vector);
+                                                       constrained,
+                                                       zero_vector);
 
    const hier::BoxContainer& unconstrained_boxes = box_level.getBoxes();
 
@@ -2160,7 +2139,7 @@ BalanceUtilities::constrainMaxBoxSizes(
             pparams.getCutFactor(),
             pparams.getBadInterval(),
             pparams.getDomainBoxes(box.getBlockId()));
-         TBOX_ASSERT( !chopped.isEmpty() );
+         TBOX_ASSERT(!chopped.isEmpty());
 
          if (chopped.size() != 1) {
 
@@ -2187,7 +2166,7 @@ BalanceUtilities::constrainMaxBoxSizes(
             }
 
          } else {
-            TBOX_ASSERT( box.isSpatiallyEqual( chopped.front() ) );
+            TBOX_ASSERT(box.isSpatiallyEqual(chopped.front()));
             constrained.addBox(box);
          }
 
@@ -2200,9 +2179,9 @@ BalanceUtilities::constrainMaxBoxSizes(
       hier::MappingConnectorAlgorithm mca;
       mca.setTimerPrefix("mesh::BalanceUtilities");
       mca.modify(*anchor_to_level,
-                 unconstrained_to_constrained,
-                 &box_level,
-                 &constrained);
+         unconstrained_to_constrained,
+         &box_level,
+         &constrained);
    } else {
       // Swap box_level and constrained without touching anchor<==>level.
       hier::BoxLevel::swap(box_level, constrained);
@@ -2210,18 +2189,13 @@ BalanceUtilities::constrainMaxBoxSizes(
 
 }
 
-
-
-
-
-
 /*
-**************************************************************************
-* Move Boxes in balance_box_level from ranks outside of
-* rank_group to ranks inside rank_group.  Modify the given connectors
-* to make them correct following this moving of boxes.
-**************************************************************************
-*/
+ **************************************************************************
+ * Move Boxes in balance_box_level from ranks outside of
+ * rank_group to ranks inside rank_group.  Modify the given connectors
+ * to make them correct following this moving of boxes.
+ **************************************************************************
+ */
 
 void
 BalanceUtilities::prebalanceBoxLevel(
@@ -2232,8 +2206,10 @@ BalanceUtilities::prebalanceBoxLevel(
 
    if (balance_to_anchor) {
       TBOX_ASSERT(balance_to_anchor->hasTranspose());
-      TBOX_ASSERT(balance_to_anchor->getTranspose().checkTransposeCorrectness(*balance_to_anchor) == 0);
-      TBOX_ASSERT(balance_to_anchor->checkTransposeCorrectness(balance_to_anchor->getTranspose()) == 0);
+      TBOX_ASSERT(balance_to_anchor->getTranspose().checkTransposeCorrectness(
+            *balance_to_anchor) == 0);
+      TBOX_ASSERT(balance_to_anchor->checkTransposeCorrectness(
+            balance_to_anchor->getTranspose()) == 0);
    }
 
    /*
@@ -2242,8 +2218,8 @@ BalanceUtilities::prebalanceBoxLevel(
     * specified in rank_group.
     */
    hier::BoxLevel tmp_box_level(balance_box_level.getRefinementRatio(),
-      balance_box_level.getGridGeometry(),
-      balance_box_level.getMPI());
+                                balance_box_level.getGridGeometry(),
+                                balance_box_level.getMPI());
 
    /*
     * If a rank is not in rank_group it is called a "sending" rank, as
@@ -2278,14 +2254,16 @@ BalanceUtilities::prebalanceBoxLevel(
    if (is_sending_rank) {
       box_send = new tbox::AsyncCommPeer<int>;
       box_send->initialize(&comm_stage);
-      box_send->setPeerRank(rank_group.getMappedRank(balance_box_level.getMPI().getRank() % output_nproc));
+      box_send->setPeerRank(rank_group.getMappedRank(balance_box_level.getMPI().getRank()
+            % output_nproc));
       box_send->setMPI(balance_box_level.getMPI());
       box_send->setMPITag(BalanceUtilities_PREBALANCE0 + 2 * balance_box_level.getMPI().getRank(),
          BalanceUtilities_PREBALANCE1 + 2 * balance_box_level.getMPI().getRank());
 
       id_recv = new tbox::AsyncCommPeer<int>;
       id_recv->initialize(&comm_stage);
-      id_recv->setPeerRank(rank_group.getMappedRank(balance_box_level.getMPI().getRank() % output_nproc));
+      id_recv->setPeerRank(rank_group.getMappedRank(balance_box_level.getMPI().getRank()
+            % output_nproc));
       id_recv->setMPI(balance_box_level.getMPI());
       id_recv->setMPITag(BalanceUtilities_PREBALANCE0 + 2 * balance_box_level.getMPI().getRank(),
          BalanceUtilities_PREBALANCE1 + 2 * balance_box_level.getMPI().getRank());
@@ -2499,8 +2477,10 @@ BalanceUtilities::prebalanceBoxLevel(
          &balance_box_level,
          &tmp_box_level);
 
-      TBOX_ASSERT(balance_to_anchor->getTranspose().checkTransposeCorrectness(*balance_to_anchor) == 0);
-      TBOX_ASSERT(balance_to_anchor->checkTransposeCorrectness(balance_to_anchor->getTranspose()) == 0);
+      TBOX_ASSERT(balance_to_anchor->getTranspose().checkTransposeCorrectness(
+            *balance_to_anchor) == 0);
+      TBOX_ASSERT(balance_to_anchor->checkTransposeCorrectness(
+            balance_to_anchor->getTranspose()) == 0);
    } else {
       hier::BoxLevel::swap(balance_box_level, tmp_box_level);
    }

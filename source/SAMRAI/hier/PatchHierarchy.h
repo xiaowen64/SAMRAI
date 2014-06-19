@@ -627,7 +627,7 @@ public:
    getRequiredConnectorWidth(
       int base_ln,
       int head_ln,
-      bool commit = false ) const;
+      bool commit = false) const;
 
    /*!
     * @brief Add a ConnectorWidthRequestorStrategy implementation to
@@ -703,7 +703,7 @@ public:
          d_proper_nesting_buffer.resize(
             d_max_levels - 1,
             d_proper_nesting_buffer.empty() ?
-               1 : d_proper_nesting_buffer.back());
+            1 : d_proper_nesting_buffer.back());
       }
    }
 
@@ -926,8 +926,9 @@ public:
     * @param log_fine_connector
     * @param log_coarse_connector
     */
-   void logMetadataStatistics(
-      const char *note,
+   void
+   logMetadataStatistics(
+      const char* note,
       int ln,
       int cycle,
       double level_time,

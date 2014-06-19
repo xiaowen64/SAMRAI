@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
- * Description:   Scalable load balancer using tree algorithm.
+ * Description:   Scalable load balancer using a "cascade" algorithm.
  *
  ************************************************************************/
 
@@ -41,44 +41,48 @@ class CascadePartitioner;
  * containing the local process is also known as the "near branch";
  * the one not containing the local process is the "far branch".
  */
-class CascadePartitionerTree {
+class CascadePartitionerTree
+{
 
 public:
-
    /*!
     * @brief Construct the tree for the given CascadePartitioner by
     * constructing the root and recursively constructing its children.
     */
-   CascadePartitionerTree( const CascadePartitioner &partitioner );
+   CascadePartitionerTree(
+      const CascadePartitioner& partitioner);
 
    ~CascadePartitionerTree();
 
    /*!
     * @brief Distribute the load using the cascade algorithm.
     */
-   void distributeLoad();
+   void
+   distributeLoad();
 
-   void printClassData( std::ostream &co, const std::string &border ) const;
-
+   void
+   printClassData(
+      std::ostream& co,
+      const std::string& border) const;
 
    //! @brief Generation number (generation 0 contains all ranks).
-   int generationNum() const { return d_gen_num; }
+   int generationNum() const {
+      return d_gen_num;
+   }
 
    //! @brief Size of group (number of processes in it).
    size_t size() const {
-      return d_end-d_begin;
+      return d_end - d_begin;
    }
 
    //! @brief Whether group contains a given rank.
-   bool containsRank( int rank ) const {
+   bool containsRank(int rank) const {
       return d_begin <= rank && rank < d_end;
    }
 
-
 private:
-
    //! @brief Where a group falls in the next larger group.
-   enum Position { Lower=0, Upper=1 };
+   enum Position { Lower = 0, Upper = 1 };
 
    /*
     * Static integer constants.  Tags are for isolating messages
@@ -95,25 +99,29 @@ private:
     * @param parent
     * @param group_position Position of this group in its parent.
     */
-   CascadePartitionerTree( CascadePartitionerTree &parent,
-                           Position group_position );
+   CascadePartitionerTree(
+      CascadePartitionerTree& parent,
+      Position group_position);
 
    /*!
     * @brief Allocate and set up the group's children, if any.
     */
-   void makeChildren();
+   void
+   makeChildren();
 
    /*!
     * @brief Combine near and far data for children group, to compute
     * work-related data for this group.
     */
-   void combineChildren();
+   void
+   combineChildren();
 
    /*!
     * @brief Improve balance of the children of this group by
     * supplying load from overloaded child to underloaded child.
     */
-   void balanceChildren();
+   void
+   balanceChildren();
 
    //! @brief Estimated surplus of the group.
    double estimatedSurplus() const {
@@ -135,24 +143,32 @@ private:
     * @return Estimate of the amount supplied based on available work
     * and assuming perfect load cutting.
     */
-   double supplyWork( double work_requested, int taker );
+   double
+   supplyWork(
+      double work_requested,
+      int taker);
 
-   void sendShipment( int taker );
-   void receiveAndUnpackSuppliedLoad();
+   void
+   sendShipment(
+      int taker);
+   void
+   receiveAndUnpackSuppliedLoad();
 
    //! @brief Recompute work-related data for a leaf group.
-   void recomputeLeafData();
+   void
+   recomputeLeafData();
 
    /*!
     * @brief Reset obligation recursively for all descendents.
     *
     * @param avg_load Average per-process load in the group.
     */
-   void resetObligation( double avg_load );
-
+   void
+   resetObligation(
+      double avg_load);
 
    //! @brief Data the main CascadePartitioner shares with all parts of the tree.
-   const CascadePartitioner *d_common;
+   const CascadePartitioner* d_common;
 
    //@{
    //! @brief Group specification
@@ -181,27 +197,25 @@ private:
    int d_contact[2];
 
    //! @brief Parent group.
-   CascadePartitionerTree *d_parent;
+   CascadePartitionerTree* d_parent;
 
    /*!
     * @brief Lower and upper children branches.
     *
     * Children exist iff this is a near group and not a leaf.
     */
-   CascadePartitionerTree *d_children[2];
+   CascadePartitionerTree* d_children[2];
 
    //! @brief Near child branch (branch containing local process).
-   CascadePartitionerTree *d_near;
+   CascadePartitionerTree* d_near;
 
    //! @brief Far child branch (branch not containing local process).
-   CascadePartitionerTree *d_far;
+   CascadePartitionerTree* d_far;
 
    //! @brief Group containing just the local process.
-   CascadePartitionerTree *d_leaf;
+   CascadePartitionerTree* d_leaf;
 
    //@}
-
-
 
    //@{
    //! @name Work measures
@@ -213,8 +227,6 @@ private:
    double d_obligation;
 
    //@}
-
-
 
    //@{
    //! @name For determining participation in certain group activities.

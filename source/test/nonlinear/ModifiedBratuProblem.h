@@ -341,7 +341,7 @@ public:
       NULL_USE(ratio);
    }
 
-   hier::IntVector getRefineOpStencilWidth( const tbox::Dimension &dim ) const
+   hier::IntVector getRefineOpStencilWidth(const tbox::Dimension& dim) const
    {
       return hier::IntVector(dim, 0);
    }
@@ -381,7 +381,7 @@ public:
       NULL_USE(ratio);
    }
 
-   hier::IntVector getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
+   hier::IntVector getCoarsenOpStencilWidth(const tbox::Dimension& dim) const
    {
       return hier::IntVector(dim, 0);
    }

@@ -166,7 +166,6 @@ public:
       return d_vector[i];
    }
 
-
    /**
     * @brief Return the specified component of the vector.
     *

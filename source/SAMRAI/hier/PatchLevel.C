@@ -1056,7 +1056,7 @@ PatchLevel::Iterator::Iterator(
    const PatchLevel* patch_level,
    bool begin):
    d_iterator(begin ? patch_level->d_patches.begin() :
-                      patch_level->d_patches.end()),
+              patch_level->d_patches.end()),
    d_patches(&patch_level->d_patches)
 {
 }

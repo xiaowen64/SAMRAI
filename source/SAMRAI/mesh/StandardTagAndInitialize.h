@@ -614,20 +614,17 @@ private:
    std::vector<bool> d_refine_boxes_reset;
    std::vector<hier::BoxContainer> d_reset_refine_boxes;
 
-   struct TagCriteria
-   {
+   struct TagCriteria {
       std::string d_tagging_method;
       std::map<int, hier::BoxContainer> d_level_refine_boxes;
    };
 
-   struct CycleTagCriteria
-   {
+   struct CycleTagCriteria {
       int d_cycle;
       std::vector<TagCriteria> d_tag_criteria;
    };
 
-   struct TimeTagCriteria
-   {
+   struct TimeTagCriteria {
       double d_time;
       std::vector<TagCriteria> d_tag_criteria;
    };

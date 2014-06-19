@@ -88,8 +88,8 @@ void NodeMultiblockTest::registerVariables(
    for (int i = 0; i < nvars; ++i) {
       d_variables[i].reset(
          new pdat::NodeVariable<double>(d_dim,
-                                        d_variable_src_name[i],
-                                        d_variable_depth[i]));
+            d_variable_src_name[i],
+            d_variable_depth[i]));
 
       commtest->registerVariable(d_variables[i],
          d_variables[i],
@@ -162,12 +162,12 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
    std::vector<hier::BoundaryBox> empty_vector(0, hier::BoundaryBox(d_dim));
    const std::vector<hier::BoundaryBox>& edge_bdry =
       d_dim > tbox::Dimension(1) ?
-         pgeom->getCodimensionBoundaries(d_dim.getValue() - 1) : empty_vector;
+      pgeom->getCodimensionBoundaries(d_dim.getValue() - 1) : empty_vector;
    const int num_edge_bdry_boxes = static_cast<int>(edge_bdry.size());
 
    const std::vector<hier::BoundaryBox>& face_bdry =
       d_dim == tbox::Dimension(3) ?
-         pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
+      pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
    const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
@@ -305,7 +305,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
    const hier::BoxId& dst_mb_id = patch.getBox().getBoxId();
    const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
-   const std::map<hier::BlockId,hier::BaseGridGeometry::Neighbor>& neighbors =
+   const std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>& neighbors =
       grid_geometry->getNeighbors(patch_blk_id);
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
@@ -363,8 +363,8 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                   hier::Transformation::NO_ROTATE;
                hier::IntVector offset(dim);
 
-               std::map<hier::BlockId,hier::BaseGridGeometry::Neighbor>::
-                  const_iterator itr = neighbors.find(encon_blk_id);
+               std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::
+               const_iterator itr = neighbors.find(encon_blk_id);
                if (itr != neighbors.end()) {
                   rotation = itr->second.getRotationIdentifier();
                   offset = itr->second.getShift(encon_level.getLevelNumber());
@@ -508,7 +508,7 @@ bool NodeMultiblockTest::verifyResults(
    hier::Box tbox(pbox);
    tbox.grow(tgcw);
 
-   const std::map<hier::BlockId,hier::BaseGridGeometry::Neighbor>& neighbors =
+   const std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>& neighbors =
       hierarchy->getGridGeometry()->getNeighbors(block_id);
    hier::BoxContainer singularity(
       hierarchy->getGridGeometry()->getSingularityBoxContainer(block_id));
@@ -566,7 +566,7 @@ bool NodeMultiblockTest::verifyResults(
 
       hier::BoxContainer tested_neighbors;
 
-      for (std::map<hier::BlockId,hier::BaseGridGeometry::Neighbor>::const_iterator
+      for (std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::const_iterator
            ne(neighbors.begin()); ne != neighbors.end(); ++ne) {
 
          correct = ne->second.getBlockId().getBlockValue();
@@ -593,8 +593,8 @@ bool NodeMultiblockTest::verifyResults(
          for (hier::BoxContainer::iterator ng = neighbor_node_ghost.begin();
               ng != neighbor_node_ghost.end(); ++ng) {
 
-               hier::Box::iterator ciend(ng->end());
-               for (hier::Box::iterator ci(ng->begin()); ci != ciend; ++ci) {
+            hier::Box::iterator ciend(ng->end());
+            for (hier::Box::iterator ci(ng->begin()); ci != ciend; ++ci) {
                pdat::NodeIndex ni(*ci, hier::IntVector(d_dim, 0));
                if (!patch_node_box.contains(ni)) {
                   for (int d = 0; d < depth; ++d) {
@@ -631,7 +631,7 @@ bool NodeMultiblockTest::verifyResults(
                correct = 0.0;
 
                int num_sing_neighbors = 0;
-               for (std::map<hier::BlockId,hier::BaseGridGeometry::Neighbor>::const_iterator
+               for (std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::const_iterator
                     ns(neighbors.begin()); ns != neighbors.end(); ++ns) {
                   if (ns->second.isSingularity()) {
                      hier::BoxContainer neighbor_ghost(

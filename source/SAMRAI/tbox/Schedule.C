@@ -357,7 +357,7 @@ Schedule::postSends()
       }
 
       // Pack outgoing data into a message.
-      MessageStream outgoing_stream(byte_count, MessageStream::Write) ;
+      MessageStream outgoing_stream(byte_count, MessageStream::Write);
       d_object_timers->t_pack_stream->start();
       for (ConstIterator pack = transactions.begin();
            pack != transactions.end(); ++pack) {
@@ -413,17 +413,17 @@ Schedule::processCompletedCommunications()
 {
    d_object_timers->t_process_incoming_messages->start();
 
-   if ( d_unpack_in_deterministic_order ) {
+   if (d_unpack_in_deterministic_order) {
 
       // Unpack in deterministic order.  Wait for receive as needed.
 
       int irecv = 0;
-      for ( TransactionSets::iterator recv_itr=d_recv_sets.begin();
-            recv_itr!=d_recv_sets.end(); ++recv_itr, ++irecv ) {
+      for (TransactionSets::iterator recv_itr = d_recv_sets.begin();
+           recv_itr != d_recv_sets.end(); ++recv_itr, ++irecv) {
 
          int sender = recv_itr->first;
-         AsyncCommPeer<char> &completed_comm = d_coms[irecv];
-         TBOX_ASSERT( sender == completed_comm.getPeerRank() );
+         AsyncCommPeer<char>& completed_comm = d_coms[irecv];
+         TBOX_ASSERT(sender == completed_comm.getPeerRank());
          completed_comm.completeCurrentOperation();
          completed_comm.yankFromCompletionQueue();
 
@@ -431,7 +431,7 @@ Schedule::processCompletedCommunications()
             completed_comm.getRecvSize() * sizeof(char),
             MessageStream::Read,
             completed_comm.getRecvData(),
-            false /* don't use deep copy */ );
+            false /* don't use deep copy */);
 
          d_object_timers->t_unpack_stream->start();
          for (Iterator recv = d_recv_sets[sender].begin();
@@ -445,17 +445,16 @@ Schedule::processCompletedCommunications()
 
       // Complete sends.
       d_com_stage.advanceAll();
-      while ( d_com_stage.hasCompletedMembers() ) {
+      while (d_com_stage.hasCompletedMembers()) {
          d_com_stage.popCompletionQueue();
       }
 
-   }
-   else {
+   } else {
 
       // Unpack in order of completed receives.
 
       size_t num_senders = d_recv_sets.size();
-      while ( d_com_stage.hasCompletedMembers() || d_com_stage.advanceSome() ) {
+      while (d_com_stage.hasCompletedMembers() || d_com_stage.advanceSome()) {
 
          AsyncCommPeer<char>* completed_comm =
             CPP_CAST<AsyncCommPeer<char> *>(d_com_stage.popCompletionQueue());
@@ -470,7 +469,7 @@ Schedule::processCompletedCommunications()
                completed_comm->getRecvSize() * sizeof(char),
                MessageStream::Read,
                completed_comm->getRecvData(),
-               false /* don't use deep copy */ );
+               false /* don't use deep copy */);
 
             d_object_timers->t_unpack_stream->start();
             for (Iterator recv = d_recv_sets[sender].begin();
@@ -588,7 +587,7 @@ Schedule::getFromInput()
                idb->getDatabase("Schedule"));
             s_ignore_external_timer_prefix =
                sched_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
-                                            'n');
+                  'n');
             if (!(s_ignore_external_timer_prefix == 'n' ||
                   s_ignore_external_timer_prefix == 'y')) {
                INPUT_VALUE_ERROR("DEV_ignore_external_timer_prefix");
@@ -609,8 +608,7 @@ Schedule::setTimerPrefix(
    std::string timer_prefix_used;
    if (s_ignore_external_timer_prefix == 'y') {
       timer_prefix_used = s_default_timer_prefix;
-   }
-   else {
+   } else {
       timer_prefix_used = timer_prefix;
    }
    std::map<std::string, TimerStruct>::iterator ti(

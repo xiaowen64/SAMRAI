@@ -569,7 +569,7 @@ CellPoissonFACOps::CellPoissonFACOps(
    d_hypre_solver(hypre_solver),
    d_physical_bc_coef(0),
    d_context(hier::VariableDatabase::getDatabase()->getContext(
-             object_name + "::PRIVATE_CONTEXT")),
+                object_name + "::PRIVATE_CONTEXT")),
    d_cell_scratch_id(-1),
    d_flux_scratch_id(-1),
    d_oflux_scratch_id(-1),
@@ -598,7 +598,7 @@ CellPoissonFACOps::CellPoissonFACOps(
    d_flux_id(-1),
    d_physical_bc_coef(0),
    d_context(hier::VariableDatabase::getDatabase()->getContext(
-             object_name + "::PRIVATE_CONTEXT")),
+                object_name + "::PRIVATE_CONTEXT")),
    d_cell_scratch_id(-1),
    d_flux_scratch_id(-1),
    d_oflux_scratch_id(-1),
@@ -757,11 +757,11 @@ CellPoissonFACOps::initializeOperatorState(
    d_ln_min = solution.getCoarsestLevelNumber();
    d_ln_max = solution.getFinestLevelNumber();
    d_hopscell.reset(new math::HierarchyCellDataOpsReal<double>(d_hierarchy,
-                                                               d_ln_min,
-                                                               d_ln_max));
+         d_ln_min,
+         d_ln_max));
    d_hopsside.reset(new math::HierarchySideDataOpsReal<double>(d_hierarchy,
-                                                               d_ln_min,
-                                                               d_ln_max));
+         d_ln_min,
+         d_ln_max));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
 
@@ -2457,7 +2457,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
 
    if (d_poisson_spec.cIsVariable()) {
       scalar_field_data = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
-         patch.getPatchData(d_poisson_spec.getCPatchDataId()));
+            patch.getPatchData(d_poisson_spec.getCPatchDataId()));
    } else if (d_poisson_spec.cIsConstant()) {
       scalar_field_constant = d_poisson_spec.getCConstant();
    } else {
@@ -2465,7 +2465,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
    }
    if (d_poisson_spec.dIsVariable()) {
       diffcoef_data = BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
-         patch.getPatchData(d_poisson_spec.getDPatchDataId()));
+            patch.getPatchData(d_poisson_spec.getDPatchDataId()));
    } else {
       diffcoef_constant = d_poisson_spec.getDConstant();
    }

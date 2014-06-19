@@ -88,7 +88,7 @@ Database::putBoolVector(
          bool_array[i] = data[i];
       }
       putBoolArray(key, bool_array, nbools);
-      delete [] bool_array;
+      delete[] bool_array;
    } else {
       TBOX_ERROR("Database::putBoolVector() error in database "
          << getName()

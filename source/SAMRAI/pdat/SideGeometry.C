@@ -126,7 +126,7 @@ SideGeometry::computeDestinationBoxes(
    const hier::Transformation& transformation,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS 
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const hier::IntVector& src_offset = transformation.getOffset();
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 #endif
@@ -146,8 +146,8 @@ SideGeometry::computeDestinationBoxes(
    const hier::IntVector one_vector(dim, 1);
 
    const hier::Box quick_check(
-      hier::Box::grow(src_shift, one_vector) *
-      hier::Box::grow(dst_ghost, one_vector));
+      hier::Box::grow(src_shift, one_vector)
+      * hier::Box::grow(dst_ghost, one_vector));
 
    if (!quick_check.empty()) {
 
@@ -234,7 +234,7 @@ SideGeometry::doOverlap(
    const hier::Transformation& transformation,
    const hier::BoxContainer& dst_restrict_boxes)
 {
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS 
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const hier::IntVector& src_offset = transformation.getOffset();
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 #endif
@@ -617,8 +617,8 @@ SideGeometry::transform(
 
 void
 SideGeometry::rotateAboutAxis(SideIndex& index,
-   const int axis,
-   const int num_rotations)
+                              const int axis,
+                              const int num_rotations)
 {
    const tbox::Dimension& dim = index.getDim();
    const int a = (axis + 1) % dim.getValue();

@@ -24,28 +24,26 @@
 namespace SAMRAI {
 namespace mesh {
 
-
 /*
  ***********************************************************************
  ***********************************************************************
  */
-TransitLoad::TransitLoad() :
+TransitLoad::TransitLoad():
    d_allow_box_breaking(true),
    d_threshold_width(1.0e-12)
 {
 }
 
-
 /*
  ***********************************************************************
  ***********************************************************************
  */
-TransitLoad::TransitLoad( const TransitLoad &other ) :
+TransitLoad::TransitLoad(
+   const TransitLoad& other):
    d_allow_box_breaking(other.d_allow_box_breaking),
    d_threshold_width(other.d_threshold_width)
 {
 }
-
 
 /*
  ***********************************************************************
@@ -53,16 +51,15 @@ TransitLoad::TransitLoad( const TransitLoad &other ) :
  */
 void
 TransitLoad::recursivePrint(
-   std::ostream &co,
-   const std::string &border,
-   int detail_depth ) const
+   std::ostream& co,
+   const std::string& border,
+   int detail_depth) const
 {
    NULL_USE(detail_depth);
    co << border
       << getSumLoad() << " units in " << getNumberOfItems() << " items from "
       << getNumberOfOriginatingProcesses() << " processes.\n";
 }
-
 
 }
 }

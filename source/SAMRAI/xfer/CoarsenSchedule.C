@@ -115,7 +115,7 @@ CoarsenSchedule::CoarsenSchedule(
 
    getFromInput();
 
-   if ( s_extra_debug ) {
+   if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::CoarsenSchedule " << this << " entered" << std::endl;
    }
 
@@ -169,7 +169,7 @@ CoarsenSchedule::CoarsenSchedule(
 
    generateSchedule();
 
-   if ( s_extra_debug ) {
+   if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::CoarsenSchedule " << this << " returning" << std::endl;
    }
 }
@@ -260,7 +260,7 @@ CoarsenSchedule::reset(
 void
 CoarsenSchedule::coarsenData() const
 {
-   if ( s_extra_debug ) {
+   if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::coarsenData " << this << " entered" << std::endl;
    }
    t_coarsen_data->barrierAndStart();
@@ -302,7 +302,7 @@ CoarsenSchedule::coarsenData() const
 
    t_coarsen_data->stop();
 
-   if ( s_extra_debug ) {
+   if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::coarsenData " << this << " returning" << std::endl;
    }
 }
@@ -811,7 +811,7 @@ CoarsenSchedule::constructScheduleTransactions(
          grid_geometry->getOffset(dst_block_id, src_block_id, d_crse_level->getLevelNumber()));
 
       transformation = hier::Transformation(rotation, offset,
-                                            src_block_id, dst_block_id);
+            src_block_id, dst_block_id);
       transformation.transform(transformed_src_box);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -834,7 +834,7 @@ CoarsenSchedule::constructScheduleTransactions(
 
    for (int nc = 0; nc < num_equiv_classes; ++nc) {
 
-      if ( s_extra_debug ) {
+      if (s_extra_debug) {
          tbox::plog << " equivalent class " << nc << "/" << num_equiv_classes << std::endl;
       }
       const CoarsenClasses::Data& rep_item =
@@ -864,7 +864,7 @@ CoarsenSchedule::constructScheduleTransactions(
       hier::Box src_mask(test_mask);
       transformation.inverseTransform(src_mask);
 
-      if ( s_extra_debug ) {
+      if (s_extra_debug) {
          tbox::plog << " dst_gcw = " << dst_gcw
                     << "\n dst_fill_box = " << dst_fill_box
                     << "\n test_mask = " << test_mask
@@ -872,7 +872,7 @@ CoarsenSchedule::constructScheduleTransactions(
                     << std::endl;
       }
 
-      if ( ! src_mask.empty() ) {
+      if (!src_mask.empty()) {
          // What does this block do?  Need comments!
          test_mask = unshifted_src_box;
          test_mask.grow(
@@ -882,7 +882,7 @@ CoarsenSchedule::constructScheduleTransactions(
          src_mask += test_mask;
       }
 
-      if ( s_extra_debug ) {
+      if (s_extra_debug) {
          tbox::plog << "\n src_mask (after += test_mask) = " << src_mask
                     << std::endl;
       }
@@ -903,13 +903,13 @@ CoarsenSchedule::constructScheduleTransactions(
             << "\n dst box = " << dst_box
             << "\n src mask = " << src_mask << std::endl);
       }
-      if ( s_extra_debug ) {
+      if (s_extra_debug) {
          tbox::plog << " Overlap:\n" << std::endl;
          overlap->print(tbox::plog);
       }
 
       if (!overlap->isOverlapEmpty()) {
-         if ( s_extra_debug ) {
+         if (s_extra_debug) {
             tbox::plog << " Overlap FINITE." << std::endl;
          }
          for (std::list<int>::iterator l(d_coarsen_classes->getIterator(nc));
@@ -930,9 +930,8 @@ CoarsenSchedule::constructScheduleTransactions(
                   d_coarsen_items,
                   citem_count);
          }
-      }
-      else {
-         if ( s_extra_debug ) {
+      } else {
+         if (s_extra_debug) {
             tbox::plog << " Overlap empty." << std::endl;
          }
       }
@@ -1157,23 +1156,21 @@ CoarsenSchedule::clearCoarsenItems()
    }
 }
 
-
 /*
  **************************************************************************
  **************************************************************************
  */
 
 void
-CoarsenSchedule::setDeterministicUnpackOrderingFlag( bool flag )
+CoarsenSchedule::setDeterministicUnpackOrderingFlag(bool flag)
 {
-   if ( d_schedule ) {
+   if (d_schedule) {
       d_schedule->setDeterministicUnpackOrderingFlag(flag);
    }
-   if ( d_precoarsen_refine_schedule ) {
+   if (d_precoarsen_refine_schedule) {
       d_precoarsen_refine_schedule->setDeterministicUnpackOrderingFlag(flag);
    }
 }
-
 
 /*
  * ************************************************************************

@@ -129,7 +129,7 @@ BergerRigoutsos::getFromInput(
 
       s_ignore_external_timer_prefix =
          input_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
-                                      'n');
+            'n');
       if (!(s_ignore_external_timer_prefix == 'n' ||
             s_ignore_external_timer_prefix == 'y')) {
          INPUT_VALUE_ERROR("DEV_ignore_external_timer_prefix");
@@ -148,17 +148,18 @@ BergerRigoutsos::getFromInput(
 
       d_max_inflection_cut_from_center =
          input_db->getDoubleWithDefault("DEV_max_inflection_cut_from_center",
-                                        d_max_inflection_cut_from_center);
+            d_max_inflection_cut_from_center);
       d_inflection_cut_threshold_ar =
          input_db->getDoubleWithDefault("DEV_inflection_cut_threshold_ar",
-                                        d_inflection_cut_threshold_ar);
+            d_inflection_cut_threshold_ar);
       if (input_db->isInteger("DEV_min_box_size_from_cutting")) {
          input_db->getIntegerArray("DEV_min_box_size_from_cutting",
             &d_min_box_size_from_cutting[0],
             d_dim.getValue());
       }
       d_build_zero_width_connector =
-         input_db->getBoolWithDefault("DEV_build_zero_width_connector", d_build_zero_width_connector);
+         input_db->getBoolWithDefault("DEV_build_zero_width_connector",
+            d_build_zero_width_connector);
       d_log_do_loop =
          input_db->getBoolWithDefault("DEV_log_do_loop", false);
       d_log_node_history =
@@ -231,7 +232,6 @@ BergerRigoutsos::getFromInput(
    }
 }
 
-
 /*
  ************************************************************************
  *
@@ -292,7 +292,6 @@ BergerRigoutsos::findBoxesContainingTags(
       }
    }
 
-
    if (d_barrier_before) {
       d_object_timers->t_barrier_before->start();
       mpi.Barrier();
@@ -301,14 +300,12 @@ BergerRigoutsos::findBoxesContainingTags(
 
    d_object_timers->t_find_boxes_containing_tags->start();
 
-
    /*
     * Set up some internal data then call
     * clusterAndComputeRelationships run the clustering algorithm.
     */
 
    resetCounters();
-
 
    /*
     * Set parameters received from findBoxesContainingTags() virtual
@@ -329,36 +326,33 @@ BergerRigoutsos::findBoxesContainingTags(
    d_tag_level = tag_level;
    d_root_boxes = bound_boxes;
 
-
    /*
     * If d_mpi has not been set, then user wants to do use the
     * MPI in tag_level (nothing special).  If it has been set, it is a
     * duplicate MPI, so don't change it.
     */
-   if ( d_mpi.getCommunicator() == MPI_COMM_NULL ) {
+   if (d_mpi.getCommunicator() == MPI_COMM_NULL) {
       d_mpi = d_tag_level->getBoxLevel()->getMPI();
       setupMPIDependentData();
    }
 #if defined(DEBUG_CHECK_ASSERTIONS)
    else {
-      if ( !checkMPICongruency() ) {
+      if (!checkMPICongruency()) {
          TBOX_ERROR("BergerRigoutsos::findBoxesContainingTags():\n"
-                    << "The communicator of the input tag BoxLevel ("
-                    << d_tag_level->getBoxLevel()->getMPI().getCommunicator()
-                    << " is not congruent with the MPI communicator ("
-                    << d_mpi.getCommunicator()
-                    << " duplicated in the call to useDuplicateMPI().\n"
-                    << "If you call useDuplicateMPI(), you are restricted\n"
-                    << "to using SAMRAI_MPI objects that are congruent with\n"
-                    << "the duplicated object."
-                    << std::endl);
+            << "The communicator of the input tag BoxLevel ("
+            << d_tag_level->getBoxLevel()->getMPI().getCommunicator()
+            << " is not congruent with the MPI communicator ("
+            << d_mpi.getCommunicator()
+            << " duplicated in the call to useDuplicateMPI().\n"
+            << "If you call useDuplicateMPI(), you are restricted\n"
+            << "to using SAMRAI_MPI objects that are congruent with\n"
+            << "the duplicated object."
+            << std::endl);
       }
    }
 #endif
 
-
    clusterAndComputeRelationships();
-
 
    if (d_sort_output_nodes == true) {
       /*
@@ -389,7 +383,7 @@ BergerRigoutsos::findBoxesContainingTags(
       d_object_timers->t_logging->start();
       tbox::plog << "BergerRigoutsos cluster log:\n"
                  << "\tNew box_level clustered by BergerRigoutsos:\n" << d_new_box_level->format("",
-                                                                                               2)
+         2)
                  << "\tBergerRigoutsos tag_to_new:\n" << d_tag_to_new->format("", 2)
                  << "\tBergerRigoutsos new_to_tag:\n" << d_tag_to_new->getTranspose().format("", 2);
       d_object_timers->t_logging->stop();
@@ -428,32 +422,36 @@ BergerRigoutsos::findBoxesContainingTags(
                  << d_new_box_level->getGlobalNumberOfCells()
                  << " global cells [" << d_new_box_level->getMinNumberOfCells()
                  << "-" << d_new_box_level->getMaxNumberOfCells() << "], "
-                 << "over-refinement " << double(d_new_box_level->getGlobalNumberOfCells())/d_num_tags_in_all_nodes-1 << ", "
+                 << "over-refinement " << double(d_new_box_level->getGlobalNumberOfCells())
+      / d_num_tags_in_all_nodes - 1 << ", "
                  << d_new_box_level->getGlobalNumberOfBoxes()
                  << " global boxes [" << d_new_box_level->getMinNumberOfBoxes()
                  << "-" << d_new_box_level->getMaxNumberOfBoxes() << "]\n\t"
                  << "Number of continuations: avg = "
-                 << (d_num_nodes_completed > 0 ? double(d_num_conts_to_complete)/d_num_nodes_completed : 0)
+                 << (d_num_nodes_completed > 0 ? double(d_num_conts_to_complete)
+          / d_num_nodes_completed : 0)
                  << "   max = " << d_max_conts_to_complete << '\n'
-                 << "\tBergerRigoutsos new_level summary:\n" << d_new_box_level->format("\t\t",0)
-                 << "\tBergerRigoutsos new_level statistics:\n" << d_new_box_level->formatStatistics("\t\t")
-                 << "\tBergerRigoutsos new_to_tag summary:\n" << d_tag_to_new->getTranspose().format("\t\t",0)
-                 << "\tBergerRigoutsos new_to_tag statistics:\n" << d_tag_to_new->getTranspose().formatStatistics("\t\t")
-                 << "\tBergerRigoutsos tag_to_new summary:\n" << d_tag_to_new->format("\t\t",0)
-                 << "\tBergerRigoutsos tag_to_new statistics:\n" << d_tag_to_new->formatStatistics("\t\t")
+                 << "\tBergerRigoutsos new_level summary:\n" << d_new_box_level->format("\t\t", 0)
+                 << "\tBergerRigoutsos new_level statistics:\n"
+                 << d_new_box_level->formatStatistics("\t\t")
+                 << "\tBergerRigoutsos new_to_tag summary:\n"
+                 << d_tag_to_new->getTranspose().format("\t\t", 0)
+                 << "\tBergerRigoutsos new_to_tag statistics:\n"
+                 << d_tag_to_new->getTranspose().formatStatistics("\t\t")
+                 << "\tBergerRigoutsos tag_to_new summary:\n" << d_tag_to_new->format("\t\t", 0)
+                 << "\tBergerRigoutsos tag_to_new statistics:\n" << d_tag_to_new->formatStatistics(
+         "\t\t")
                  << "\n";
       d_object_timers->t_logging->stop();
    }
 
-
-   if ( d_mpi == d_tag_level->getBoxLevel()->getMPI() ) {
+   if (d_mpi == d_tag_level->getBoxLevel()->getMPI()) {
       /*
        * We have been using an external SAMRAI_MPI.
        * Reset it to avoid mistaking it for an internal one.
        */
       d_mpi.setCommunicator(MPI_COMM_NULL);
    }
-
 
    /*
     * Set outputs.  Clear temporary parameters that are only used
@@ -464,7 +462,6 @@ BergerRigoutsos::findBoxesContainingTags(
    d_new_box_level.reset();
    d_tag_to_new.reset();
    d_tag_level.reset();
-
 
    if (d_barrier_after) {
       d_object_timers->t_barrier_after->start();
@@ -484,7 +481,6 @@ BergerRigoutsos::clusterAndComputeRelationships()
 {
    d_object_timers->t_cluster_and_compute_relationships->start();
 
-
    /*
     * During the algorithm, we kept the results in primitive
     * containers to avoid the overhead of fine-grain changes to the
@@ -493,25 +489,24 @@ BergerRigoutsos::clusterAndComputeRelationships()
     */
 
    d_new_box_level.reset(new hier::BoxLevel(
-      d_tag_level->getRatioToLevelZero(),
-      d_tag_level->getGridGeometry(),
-      d_tag_level->getBoxLevel()->getMPI()));
+         d_tag_level->getRatioToLevelZero(),
+         d_tag_level->getGridGeometry(),
+         d_tag_level->getBoxLevel()->getMPI()));
 
    if (d_compute_relationships >= 1) {
       d_tag_to_new.reset(new hier::Connector(*d_tag_level->getBoxLevel(),
-         *d_new_box_level,
-         d_tag_to_new_width));
+            *d_new_box_level,
+            d_tag_to_new_width));
    }
    if (d_compute_relationships >= 2) {
       hier::Connector* new_to_tag =
          new hier::Connector(*d_new_box_level,
-                             *d_tag_level->getBoxLevel(),
-                             d_tag_to_new_width);
+            *d_tag_level->getBoxLevel(),
+            d_tag_to_new_width);
       d_tag_to_new->setTranspose(new_to_tag, true);
    }
 
    d_object_timers->t_cluster->start();
-
 
    /*
     * Clear out accumulated communication data or it will mess up this
@@ -519,7 +514,6 @@ BergerRigoutsos::clusterAndComputeRelationships()
     */
    d_relationship_senders.clear();
    d_relationship_messages.clear();
-
 
    if (d_compute_relationships > 0) {
       /*
@@ -536,8 +530,6 @@ BergerRigoutsos::clusterAndComputeRelationships()
          d_tag_to_new->getLocalNumberOfNeighborSets());
    }
 
-
-
    {
 
       /*
@@ -550,24 +542,23 @@ BergerRigoutsos::clusterAndComputeRelationships()
        */
       hier::LocalId root_box_local_id(0);
       int root_box_owner = 0;
-      std::list< boost::shared_ptr<BergerRigoutsosNode> > block_nodes_to_delete;
+      std::list<boost::shared_ptr<BergerRigoutsosNode> > block_nodes_to_delete;
       for (hier::BoxContainer::const_iterator rb = d_root_boxes.begin();
            rb != d_root_boxes.end(); ++rb) {
-         if ( rb->empty() ) continue;
+         if (rb->empty()) continue;
 
          // TODO: can build block_box in the node instead of here!
          const hier::Box block_box(*rb,
                                    root_box_local_id,
                                    root_box_owner);
 
-         BergerRigoutsosNode *block_node(
-            new BergerRigoutsosNode( this, block_box ) );
+         BergerRigoutsosNode * block_node(
+            new BergerRigoutsosNode(this, block_box));
 
          d_relaunch_queue.push_back(block_node);
 
          block_nodes_to_delete.push_back(boost::shared_ptr<BergerRigoutsosNode>(block_node));
       }
-
 
       int n_comm_group_completed = 0;
       do {
@@ -595,14 +586,14 @@ BergerRigoutsos::clusterAndComputeRelationships()
          d_object_timers->t_comm_wait->start();
          d_comm_stage.advanceSome();
          if (d_log_do_loop) {
-            n_comm_group_completed = 
+            n_comm_group_completed =
                static_cast<int>(d_comm_stage.numberOfCompletedMembers());
          }
          d_object_timers->t_comm_wait->stop();
 
          // Continue nodes with completed messages.
          d_object_timers->t_compute->start();
-         while ( d_comm_stage.hasCompletedMembers() ) {
+         while (d_comm_stage.hasCompletedMembers()) {
             BergerRigoutsosNode* node_for_relaunch =
                (BergerRigoutsosNode *)(d_comm_stage.popCompletionQueue()->getHandler());
             if (d_log_do_loop) {
@@ -631,18 +622,18 @@ BergerRigoutsos::clusterAndComputeRelationships()
                        << d_comm_stage.numberOfPendingRequests()
                        << " pending requests." << std::endl;
          }
-      } while ( !d_relaunch_queue.empty() || d_comm_stage.hasPendingRequests() );
+      } while (!d_relaunch_queue.empty() || d_comm_stage.hasPendingRequests());
 
    }
 
-   TBOX_ASSERT( d_relaunch_queue.empty() );
-   TBOX_ASSERT( !d_comm_stage.hasPendingRequests() );
+   TBOX_ASSERT(d_relaunch_queue.empty());
+   TBOX_ASSERT(!d_comm_stage.hasPendingRequests());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_compute_relationships > 2) {
       // Each new node should have its own neighbor list.
       TBOX_ASSERT(d_new_box_level->getBoxes().size() ==
-                  d_tag_to_new->getTranspose().getLocalNumberOfNeighborSets());
+         d_tag_to_new->getTranspose().getLocalNumberOfNeighborSets());
    }
 #endif
 
@@ -661,7 +652,6 @@ BergerRigoutsos::clusterAndComputeRelationships()
       d_relationship_senders.clear();
       d_relationship_messages.clear();
    }
-
 
    d_object_timers->t_cluster_and_compute_relationships->stop();
 
@@ -808,8 +798,8 @@ BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
       std::vector<tbox::SAMRAI_MPI::Status> mpi_statuses(
          static_cast<int>(d_relationship_messages.size()));
       ierr = tbox::SAMRAI_MPI::Waitall(static_cast<int>(d_relationship_messages.size()),
-                                 &mpi_request[0],
-                                 &mpi_statuses[0]);
+            &mpi_request[0],
+            &mpi_statuses[0]);
       TBOX_ASSERT(ierr == MPI_SUCCESS);
       d_object_timers->t_share_new_relationships_send->stop();
    }
@@ -817,8 +807,6 @@ BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
    d_object_timers->t_share_new_relationships->stop();
 
 }
-
-
 
 /*
  **********************************************************************
@@ -878,7 +866,6 @@ BergerRigoutsos::setComputeRelationships(
    }
 }
 
-
 /*
  **************************************************************************
  **************************************************************************
@@ -905,7 +892,6 @@ BergerRigoutsos::resetCounters()
    d_num_nodes_existing = 0;
 }
 
-
 /*
  **************************************************************************
  **************************************************************************
@@ -928,12 +914,12 @@ void
 BergerRigoutsos::useDuplicateMPI(
    const tbox::SAMRAI_MPI& mpi_object)
 {
-   TBOX_ASSERT( !d_tag_level ); // Setting MPI during clustering makes a mess.
+   TBOX_ASSERT(!d_tag_level);   // Setting MPI during clustering makes a mess.
 
    // If needed, free current private communicator.
-   if ( d_mpi.getCommunicator() != MPI_COMM_NULL ) {
+   if (d_mpi.getCommunicator() != MPI_COMM_NULL) {
       d_mpi.freeCommunicator();
-      TBOX_ASSERT( d_mpi.getCommunicator() == MPI_COMM_NULL );
+      TBOX_ASSERT(d_mpi.getCommunicator() == MPI_COMM_NULL);
    }
 
    if (mpi_object.getCommunicator() != MPI_COMM_NULL) {
@@ -958,10 +944,10 @@ bool
 BergerRigoutsos::checkMPICongruency() const
 {
 
-   if ( !tbox::SAMRAI_MPI::usingMPI() ||
-        ( d_mpi.getCommunicator() == MPI_COMM_NULL ) ||
-        ( d_mpi.getSize() == 1 &&
-          d_tag_level->getBoxLevel()->getMPI().getSize() == 1 ) ) {
+   if (!tbox::SAMRAI_MPI::usingMPI() ||
+       (d_mpi.getCommunicator() == MPI_COMM_NULL) ||
+       (d_mpi.getSize() == 1 &&
+        d_tag_level->getBoxLevel()->getMPI().getSize() == 1)) {
       return true;
    }
 
@@ -1045,9 +1031,9 @@ BergerRigoutsos::setupMPIDependentData()
 }
 
 /*
-***********************************************************************
-***********************************************************************
-*/
+ ***********************************************************************
+ ***********************************************************************
+ */
 void
 BergerRigoutsos::sortOutputBoxes()
 {
@@ -1067,17 +1053,17 @@ BergerRigoutsos::sortOutputBoxes()
       false /* don't sequentialize indices globally */);
    hier::MappingConnectorAlgorithm mca;
    mca.modify(*d_tag_to_new,
-              *sorting_map,
-              d_new_box_level.get());
+      *sorting_map,
+      d_new_box_level.get());
 
    d_object_timers->t_sort_output_nodes->stop();
 }
 
 /*
-***************************************************************************
-*
-***************************************************************************
-*/
+ ***************************************************************************
+ *
+ ***************************************************************************
+ */
 void
 BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
 {
@@ -1088,13 +1074,13 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
     * messages that have arrived but not received.
     */
    if (d_mpi.getCommunicator() != MPI_COMM_NULL &&
-       d_mpi != d_tag_level->getBoxLevel()->getMPI() ) {
+       d_mpi != d_tag_level->getBoxLevel()->getMPI()) {
       int flag;
       tbox::SAMRAI_MPI::Status mpi_status;
       int mpi_err = d_mpi.Iprobe(MPI_ANY_SOURCE,
-                                 MPI_ANY_TAG,
-                                 &flag,
-                                 &mpi_status);
+            MPI_ANY_TAG,
+            &flag,
+            &mpi_status);
       if (mpi_err != MPI_SUCCESS) {
          TBOX_ERROR("Error probing for possible lost messages." << std::endl);
       }
@@ -1102,19 +1088,18 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
          int count = -1;
          mpi_err = tbox::SAMRAI_MPI::Get_count(&mpi_status, MPI_INT, &count);
          TBOX_ERROR("Library error!\n"
-                    << "BergerRigoutsos detected before or after\n"
-                    << "the clustering algorithm that there\n"
-                    << "is a message yet to be received.  This is\n"
-                    << "an error because all messages using the\n"
-                    << "private communicator should have been\n"
-                    << "accounted for.  Message status:\n"
-                    << "source " << mpi_status.MPI_SOURCE << '\n'
-                    << "tag " << mpi_status.MPI_TAG << '\n'
-                    << "count " << count << " (assuming integers)\n");
+            << "BergerRigoutsos detected before or after\n"
+            << "the clustering algorithm that there\n"
+            << "is a message yet to be received.  This is\n"
+            << "an error because all messages using the\n"
+            << "private communicator should have been\n"
+            << "accounted for.  Message status:\n"
+            << "source " << mpi_status.MPI_SOURCE << '\n'
+            << "tag " << mpi_status.MPI_TAG << '\n'
+            << "count " << count << " (assuming integers)\n");
       }
    }
 }
-
 
 /*
  ***********************************************************************
@@ -1127,8 +1112,7 @@ BergerRigoutsos::setTimerPrefix(
    std::string timer_prefix_used;
    if (s_ignore_external_timer_prefix == 'y') {
       timer_prefix_used = s_default_timer_prefix;
-   }
-   else {
+   } else {
       timer_prefix_used = timer_prefix;
    }
    std::map<std::string, TimerStruct>::iterator ti(
@@ -1140,7 +1124,7 @@ BergerRigoutsos::setTimerPrefix(
 
       d_object_timers = &s_static_timers[timer_prefix_used];
 
-      tbox::TimerManager *tm = tbox::TimerManager::getManager();
+      tbox::TimerManager* tm = tbox::TimerManager::getManager();
 
       d_object_timers->t_find_boxes_containing_tags = tm->
          getTimer(timer_prefix + "::findBoxesContainingTags()");
@@ -1202,7 +1186,6 @@ BergerRigoutsos::setTimerPrefix(
 
    d_comm_stage.setCommunicationWaitTimer(d_object_timers->t_MPI_wait);
 }
-
 
 }
 }

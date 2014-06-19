@@ -29,7 +29,6 @@
 namespace SAMRAI {
 namespace mesh {
 
-
 /*
  *************************************************************************
  * GraphLoadBalancer constructor.
@@ -40,17 +39,18 @@ GraphLoadBalancer::GraphLoadBalancer(
    const tbox::Dimension& dim,
    const std::string& name,
    const boost::shared_ptr<tbox::Database>& input_db):
-d_dim(dim),
-d_object_name(name),
-d_target_box_size(dim, 0),
-d_coalesce_boxes(true),
-d_tile_size(dim,1),
-d_min_size(dim),
-d_cut_factor(dim,0),
-d_bad_interval(dim)
+   d_dim(dim),
+   d_object_name(name),
+   d_target_box_size(dim, 0),
+   d_coalesce_boxes(true),
+   d_tile_size(dim, 1),
+   d_min_size(dim),
+   d_cut_factor(dim),
+   d_bad_interval(dim)
 {
 #ifndef HAVE_PTSCOTCH
-   TBOX_WARNING("SAMRAI configured without PT-Scotch.  GraphLoadBalancer will not repartition boxes.");
+   TBOX_WARNING(
+      "SAMRAI configured without PT-Scotch.  GraphLoadBalancer will not repartition boxes.");
 #endif
 
    TBOX_ASSERT(!name.empty());
@@ -83,7 +83,6 @@ GraphLoadBalancer::loadBalanceBoxLevel(
 {
    NULL_USE(rank_group);
 
-
    // Set effective_cut_factor to least common multiple of cut_factor and d_tile_size.
    hier::IntVector effective_cut_factor = cut_factor;
    if ( d_tile_size != hier::IntVector::getOne(d_dim) ) {
@@ -112,12 +111,11 @@ GraphLoadBalancer::loadBalanceBoxLevel(
    } else {
       for (int b = 0; b < nblocks; ++b) {
          d_block_domain_boxes[b] = hier::BoxContainer(
-            domain_box_level.getGlobalBoxes(), hier::BlockId(b));
+               domain_box_level.getGlobalBoxes(), hier::BlockId(b));
 
          d_block_domain_boxes[b].refine(balance_box_level.getRefinementRatio());
       }
    }
-
 
    /*
     * Periodic image Box should be ignored during load balancing
@@ -160,15 +158,15 @@ GraphLoadBalancer::loadBalanceBoxLevel(
    if (d_target_box_size == hier::IntVector::getZero(dim)) {
       /*
        * Heuristic to choose a target box size if none was given in
-       * input. 
-       */ 
+       * input.
+       */
       for (int d = 0; d < dim.getValue(); ++d) {
          std::set<int> choices;
 
          choices.insert(min_size(d) * min_size(d));
          choices.insert(max_size(d) / 2);
          choices.insert((min_size(d) + max_size(d)) / 2);
-   
+
          std::set<int>::iterator med_itr = choices.begin();
          ++med_itr;
          target_size(d) = *med_itr;
@@ -184,7 +182,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
 
    /*
     * Chop boxes to be at or under target size.
-    */ 
+    */
    chopBoxes(balance_box_level, &anchor_to_balance, target_size);
 
    const hier::MappingConnectorAlgorithm mca;
@@ -220,12 +218,12 @@ GraphLoadBalancer::loadBalanceBoxLevel(
       balance_to_balance->setHead(balance_box_level);
       balance_to_balance->setWidth(hier::IntVector::getOne(dim), true);
 
-      oca.findOverlaps(*balance_to_balance); 
+      oca.findOverlaps(*balance_to_balance);
    }
 
-   std::map<hier::BoxId,bool> has_nabrs;
+   std::map<hier::BoxId, bool> has_nabrs;
    for (hier::BoxContainer::const_iterator bi = boxes.begin();
-     bi != boxes.end(); ++bi) {
+        bi != boxes.end(); ++bi) {
       const hier::BoxId& box_id = bi->getBoxId();
 
       if (balance_to_balance->hasNeighborSet(box_id)) {
@@ -235,7 +233,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
          bool has_non_trivial = false;
 
          for (hier::Connector::ConstNeighborIterator na = balance_to_balance->begin(nh);
-           na != balance_to_balance->end(nh); ++na) {
+              na != balance_to_balance->end(nh); ++na) {
             if (na->getBoxId() != box_id) {
                has_non_trivial = true;
                break;
@@ -274,7 +272,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
          if (has_nabrs[box_id]) {
             /*
              * If the box has neighbors, create graph edges to the neighbors.
-             */ 
+             */
             for (hier::Connector::ConstNeighborIterator na = balance_to_balance->begin(ei);
                  na != balance_to_balance->end(ei); ++na) {
                const hier::Box& nbr_box = *na;
@@ -285,13 +283,13 @@ GraphLoadBalancer::loadBalanceBoxLevel(
                   node_nbr.upper() += hier::IntVector::getOne(dim);
                   SCOTCH_Num edge_wgt = 1;
                   if (node_box.getBlockId() == node_nbr.getBlockId())
-                     edge_wgt = (node_box*node_nbr).size();
+                     edge_wgt = (node_box * node_nbr).size();
                   edloloctab.push_back(edge_wgt);
                }
             }
             if (box_id == back_id && !extra_nabrs.empty()) {
                for (std::vector<SCOTCH_Num>::const_iterator extra_itr =
-                    extra_nabrs.begin(); extra_itr != extra_nabrs.end(); ++extra_itr) {
+                       extra_nabrs.begin(); extra_itr != extra_nabrs.end(); ++extra_itr) {
                   edgeloctab.push_back(*extra_itr);
                   edloloctab.push_back(1);
                }
@@ -300,7 +298,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
             /*
              * When the box has no neighbors, arbitrarily create an edge
              * to connect it to the graph.
-             */ 
+             */
             if (back_id != box_id) {
                edgeloctab.push_back(back_id.getLocalId().getValue());
                edloloctab.push_back(1);
@@ -315,8 +313,8 @@ GraphLoadBalancer::loadBalanceBoxLevel(
                vendloctab.push_back(edgeloctab.size());
 
                for (std::vector<SCOTCH_Num>::const_iterator extra_itr =
-                    extra_nabrs.begin(); extra_itr != extra_nabrs.end(); ++extra_itr) {
-                  if (*extra_itr != my_id-1) {
+                       extra_nabrs.begin(); extra_itr != extra_nabrs.end(); ++extra_itr) {
+                  if (*extra_itr != my_id - 1) {
                      edgeloctab.push_back(*extra_itr);
                      edloloctab.push_back(1);
                   }
@@ -333,7 +331,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
    vertloctab.pop_back();
    if (vertloctab.empty()) {
       vertloctab.push_back(0);
-   } 
+   }
    if (veloloctab.empty()) {
       veloloctab.push_back(0);
    }
@@ -343,10 +341,10 @@ GraphLoadBalancer::loadBalanceBoxLevel(
    int edgelocsize = edgeloctab.size();
    if (edgeloctab.empty()) {
       edgeloctab.push_back(0);
-   } 
+   }
    if (edloloctab.empty()) {
       edloloctab.push_back(0);
-   } 
+   }
 
    SCOTCH_Num* vertloc_ptr;
    SCOTCH_Num* veloloc_ptr;
@@ -379,44 +377,40 @@ GraphLoadBalancer::loadBalanceBoxLevel(
       edloloc_ptr = 0;
    }
 
-   
-
    SCOTCH_Num baseval = 0;
 
-   int nlocvert = vertloctab.size();//-1;
+   int nlocvert = vertloctab.size(); //-1;
    if (nlocvert < 0) nlocvert = 0;
    if (boxes.isEmpty()) nlocvert = 0;
 
    SCOTCH_dgraphBuild(graph,
-                      baseval,
-                      nlocvert,
-                      nlocvert,
-                      vertloc_ptr,
-                      vendloc_ptr, 
-                      veloloc_ptr, // (node weights
-                      0, // vlblocltab (labels)
-                      edgelocsize, // zero if local proc has no nodes
-                      edgeloctab.size(),
-                      edgeloc_ptr,
-                      0, // edgegsttab (ghosts)
-                      edloloc_ptr);// edge weights
-
+      baseval,
+      nlocvert,
+      nlocvert,
+      vertloc_ptr,
+      vendloc_ptr,
+      veloloc_ptr,                 // (node weights
+      0,                 // vlblocltab (labels)
+      edgelocsize,                 // zero if local proc has no nodes
+      edgeloctab.size(),
+      edgeloc_ptr,
+      0,                 // edgegsttab (ghosts)
+      edloloc_ptr);                // edge weights
 
    SCOTCH_Num partloctab[nlocvert];
 
    SCOTCH_Strat stradat;
    SCOTCH_stratInit(&stradat);
    SCOTCH_stratDgraphMapBuild(&stradat,
-                              SCOTCH_STRATBALANCE,
-                              balance_box_level.getMPI().getSize(),
-                              0,
-                              0.00);
+      SCOTCH_STRATBALANCE,
+      balance_box_level.getMPI().getSize(),
+      0,
+      0.00);
 
    int err2 = SCOTCH_dgraphPart(graph,
-                                balance_box_level.getMPI().getSize(),
-                                &stradat,
-                                partloctab);
-
+         balance_box_level.getMPI().getSize(),
+         &stradat,
+         partloctab);
 
    int num_ranks = my_mpi.getSize();
    int my_rank = my_mpi.getRank();
@@ -430,15 +424,15 @@ GraphLoadBalancer::loadBalanceBoxLevel(
    }
 
    my_mpi.AllReduce(boxes_on_rank,
-                    num_ranks,
-                    MPI_SUM);
+      num_ranks,
+      MPI_SUM);
 
    int start_box = 0;
    for (int rank = 0; rank < my_rank; ++rank) {
       start_box += boxes_on_rank[rank];
    }
 
-#ifdef DEBUG_CHECK_ASSERTIONS 
+#ifdef DEBUG_CHECK_ASSERTIONS
    if (!boxes.isEmpty()) {
       TBOX_ASSERT(start_box == boxes.begin()->getLocalId().getValue());
    }
@@ -452,18 +446,17 @@ GraphLoadBalancer::loadBalanceBoxLevel(
       old_global_partition[b] = 0;
       new_global_partition[b] = 0;
    }
-   for (int b = start_box; b < start_box+nlocvert; ++b) {
+   for (int b = start_box; b < start_box + nlocvert; ++b) {
       old_global_partition[b] = my_rank;
-      new_global_partition[b] = partloctab[b-start_box];
+      new_global_partition[b] = partloctab[b - start_box];
    }
 
    my_mpi.AllReduce(old_global_partition,
-                    global_num_boxes,
-                    MPI_SUM);
+      global_num_boxes,
+      MPI_SUM);
    my_mpi.AllReduce(new_global_partition,
-                    global_num_boxes,
-                    MPI_SUM);
-
+      global_num_boxes,
+      MPI_SUM);
 
    hier::BoxLevel graph_level(balance_box_level.getRefinementRatio(),
                               balance_box_level.getGridGeometry(),
@@ -471,10 +464,10 @@ GraphLoadBalancer::loadBalanceBoxLevel(
                               hier::BoxLevel::DISTRIBUTED);
 
    tbox::AsyncCommStage send_stage;
-   std::map<int, tbox::AsyncCommPeer<char>* > send_comms;
+   std::map<int, tbox::AsyncCommPeer<char> *> send_comms;
    std::set<int> send_procs;
    tbox::AsyncCommStage recv_stage;
-   std::map<int, tbox::AsyncCommPeer<char>* > recv_comms;
+   std::map<int, tbox::AsyncCommPeer<char> *> recv_comms;
 
    setupAsyncCommObjects(
       send_stage,
@@ -488,10 +481,9 @@ GraphLoadBalancer::loadBalanceBoxLevel(
       my_rank,
       my_mpi);
 
-
-   for (std::map<int, tbox::AsyncCommPeer<char>* >::iterator ri =
-        recv_comms.begin(); ri != recv_comms.end(); ++ri) {
-      tbox::AsyncCommPeer<char>*& recv_peer = ri->second;
+   for (std::map<int, tbox::AsyncCommPeer<char> *>::iterator ri =
+           recv_comms.begin(); ri != recv_comms.end(); ++ri) {
+      tbox::AsyncCommPeer<char> *& recv_peer = ri->second;
       recv_peer->beginRecv();
       if (recv_peer->isDone()) {
          recv_peer->pushToCompletionQueue();
@@ -512,9 +504,9 @@ GraphLoadBalancer::loadBalanceBoxLevel(
          graph_level.addBoxWithoutUpdate(*itr);
       } else {
          transit_boxes.push_back(BoxInTransit(*itr,
-                                              *itr,
-                                              new_global_partition[local_id],
-                                              hier::LocalId(local_id)));
+               *itr,
+               new_global_partition[local_id],
+               hier::LocalId(local_id)));
       }
    }
 
@@ -535,7 +527,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
    tbox::MessageStream* mstreams = new tbox::MessageStream[num_ranks];
    for (int rank = 0; rank < num_ranks; ++rank) {
       if (num_send_boxes[rank]) {
-         mstreams[rank] << num_send_boxes[rank]; 
+         mstreams[rank] << num_send_boxes[rank];
       }
    }
 
@@ -554,27 +546,26 @@ GraphLoadBalancer::loadBalanceBoxLevel(
    }
 
    int send_ct = static_cast<int>(send_procs.size());
-   std::set<int>::const_iterator si = send_procs.lower_bound(my_rank+1);
+   std::set<int>::const_iterator si = send_procs.lower_bound(my_rank + 1);
    for (int num_sent = 0; num_sent < send_ct; ++num_sent) {
       if (si == send_procs.end()) {
          si = send_procs.begin();
       }
       int send_rank = *si;
-      tbox::AsyncCommPeer<char>*& send_peer = send_comms[send_rank];
+      tbox::AsyncCommPeer<char> *& send_peer = send_comms[send_rank];
       const tbox::MessageStream& msg = mstreams[send_rank];
-      send_peer->beginSend(static_cast<const char*>(msg.getBufferStart()),
-                           static_cast<int>(msg.getCurrentSize()));
+      send_peer->beginSend(static_cast<const char *>(msg.getBufferStart()),
+         static_cast<int>(msg.getCurrentSize()));
       ++si;
    }
 
    for (si = send_procs.begin(); si != send_procs.end(); ++si) {
 
-      tbox::AsyncCommPeer<char>*& send_peer = send_comms[*si];
+      tbox::AsyncCommPeer<char> *& send_peer = send_comms[*si];
       send_peer->completeCurrentOperation();
    }
 
    delete[] mstreams;
-
 
    hier::MappingConnector balance_to_graph(dim);
    hier::MappingConnector graph_to_balance(dim);
@@ -609,7 +600,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
     * Complete receives and unpack streams.
     */
    std::list<BoxInTransit> received_transit_boxes;
-   while ( recv_stage.hasCompletedMembers() || recv_stage.advanceSome() ) {
+   while (recv_stage.hasCompletedMembers() || recv_stage.advanceSome()) {
 
       tbox::AsyncCommPeer<char>* recv_peer =
          CPP_CAST<tbox::AsyncCommPeer<char> *>(recv_stage.popCompletionQueue());
@@ -628,7 +619,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
       BoxInTransit received_box(d_dim);
       for (int i = 0; i < num_boxes; ++i) {
          received_box.getFromMessageStream(mstream);
-         received_transit_boxes.push_back(received_box); 
+         received_transit_boxes.push_back(received_box);
       }
    }
 
@@ -660,9 +651,8 @@ GraphLoadBalancer::loadBalanceBoxLevel(
     * balance_box_level modified to become the graph-based partition.
     */
    mca.modify(anchor_to_balance,
-              balance_to_graph,
-              &balance_box_level);
-
+      balance_to_graph,
+      &balance_box_level);
 
    if (d_coalesce_boxes) {
       /*
@@ -670,8 +660,8 @@ GraphLoadBalancer::loadBalanceBoxLevel(
        */
 
       coalesceBoxLevel(balance_box_level,
-                       anchor_to_balance,
-                       mca);
+         anchor_to_balance,
+         mca);
 
       hier::IntVector maxvector(d_dim, tbox::MathUtilities<int>::getMax());
       if (max_size != maxvector) {
@@ -679,13 +669,17 @@ GraphLoadBalancer::loadBalanceBoxLevel(
       }
    }
 
-   for (std::map<int, tbox::AsyncCommPeer<char>* >::iterator c_itr = send_comms.begin(); c_itr != send_comms.end(); ++c_itr) {
+   for (std::map<int, tbox::AsyncCommPeer<char> *>::iterator c_itr = send_comms.begin();
+        c_itr != send_comms.end();
+        ++c_itr) {
 
       if (c_itr->second)
          delete c_itr->second;
 
    }
-   for (std::map<int, tbox::AsyncCommPeer<char>* >::iterator c_itr = recv_comms.begin(); c_itr != recv_comms.end(); ++c_itr) {
+   for (std::map<int, tbox::AsyncCommPeer<char> *>::iterator c_itr = recv_comms.begin();
+        c_itr != recv_comms.end();
+        ++c_itr) {
 
       if (c_itr->second)
          delete c_itr->second;
@@ -702,7 +696,8 @@ GraphLoadBalancer::loadBalanceBoxLevel(
    NULL_USE(domain_box_level);
    NULL_USE(bad_interval);
    NULL_USE(cut_factor);
-   TBOX_WARNING("SAMRAI configured without PT-Scotch library:  GraphLoadBalancer calls will do nothing");
+   TBOX_WARNING(
+      "SAMRAI configured without PT-Scotch library:  GraphLoadBalancer calls will do nothing");
 
 #endif
 
@@ -717,7 +712,7 @@ void
 GraphLoadBalancer::renumberBoxes(
    hier::BoxLevel& new_box_level,
    hier::Connector& anchor_to_balance,
-   const hier::MappingConnectorAlgorithm &mca) const
+   const hier::MappingConnectorAlgorithm& mca) const
 {
    boost::shared_ptr<hier::MappingConnector> sorting_map;
    boost::shared_ptr<hier::BoxLevel> seq_box_level;
@@ -744,16 +739,16 @@ void
 GraphLoadBalancer::coalesceBoxLevel(
    hier::BoxLevel& level,
    hier::Connector& anchor_to_level,
-   const hier::MappingConnectorAlgorithm &mca) const
+   const hier::MappingConnectorAlgorithm& mca) const
 {
    const hier::BoxContainer& level_boxes = level.getBoxes();
 
    hier::BoxLevel coalesced(level.getRefinementRatio(),
-      level.getGridGeometry(),
-      level.getMPI());
+                            level.getGridGeometry(),
+                            level.getMPI());
    hier::MappingConnector level_to_coalesced(level,
-      coalesced,
-      hier::IntVector(hier::IntVector::getZero(d_dim)));
+                                             coalesced,
+                                             hier::IntVector::getZero(d_dim));
 
    if (!level_boxes.isEmpty()) {
 
@@ -795,8 +790,8 @@ GraphLoadBalancer::coalesceBoxLevel(
    }
    const tbox::SAMRAI_MPI& mpi = level.getMPI();
    mpi.AllReduce(&was_coalesced,
-                 1,
-                 MPI_SUM);
+      1,
+      MPI_SUM);
 
    if (was_coalesced != 0) {
 
@@ -820,7 +815,7 @@ GraphLoadBalancer::coalesceBoxLevel(
                      *bi,
                      base_box_itr);
 
-               }  
+               }
             }
          }
       }
@@ -830,7 +825,6 @@ GraphLoadBalancer::coalesceBoxLevel(
          &level);
    }
 }
-
 
 /*
  *  ***********************************************************************
@@ -851,11 +845,11 @@ GraphLoadBalancer::chopBoxes(
    const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
 
    hier::BoxLevel constrained(box_level.getRefinementRatio(),
-      box_level.getGridGeometry(),
-      box_level.getMPI());
+                              box_level.getGridGeometry(),
+                              box_level.getMPI());
    hier::MappingConnector unconstrained_to_constrained(box_level,
-      constrained,
-      hier::IntVector(zero_vector));
+                                                       constrained,
+                                                       zero_vector);
 
    const hier::BoxContainer& unconstrained_boxes = box_level.getBoxes();
 
@@ -887,7 +881,7 @@ GraphLoadBalancer::chopBoxes(
             d_cut_factor,
             d_bad_interval,
             d_block_domain_boxes[box.getBlockId().getBlockValue()]);
-         TBOX_ASSERT( !chopped.isEmpty() );
+         TBOX_ASSERT(!chopped.isEmpty());
 
          if (chopped.size() != 1) {
 
@@ -911,9 +905,8 @@ GraphLoadBalancer::chopBoxes(
 
             }
 
-
          } else {
-            TBOX_ASSERT( box.isSpatiallyEqual( chopped.front() ) );
+            TBOX_ASSERT(box.isSpatiallyEqual(chopped.front()));
             constrained.addBoxWithoutUpdate(box);
          }
 
@@ -929,18 +922,17 @@ GraphLoadBalancer::chopBoxes(
    }
    const tbox::SAMRAI_MPI& mpi = box_level.getMPI();
    mpi.AllReduce(&was_chopped,
-                 1,
-                 MPI_SUM);
+      1,
+      MPI_SUM);
 
    if (was_chopped != 0) {
       hier::MappingConnectorAlgorithm mca;
       mca.setTimerPrefix(d_object_name);
       mca.modify(*anchor_to_level,
-                 unconstrained_to_constrained,
-                 &box_level);
+         unconstrained_to_constrained,
+         &box_level);
    }
 }
-
 
 /*
  *  ***********************************************************************
@@ -949,7 +941,7 @@ GraphLoadBalancer::chopBoxes(
  */
 
 GraphLoadBalancer::BoxInTransit::BoxInTransit(
-   const tbox::Dimension &dim) :
+   const tbox::Dimension& dim):
    d_box(dim),
    d_orig_box(dim)
 {
@@ -974,10 +966,10 @@ GraphLoadBalancer::BoxInTransit::BoxInTransit(
 void
 GraphLoadBalancer::setupAsyncCommObjects(
    tbox::AsyncCommStage& send_stage,
-   std::map<int, tbox::AsyncCommPeer<char>* >& send_comms,
+   std::map<int, tbox::AsyncCommPeer<char> *>& send_comms,
    std::set<int>& send_procs,
    tbox::AsyncCommStage& recv_stage,
-   std::map<int, tbox::AsyncCommPeer<char>* >& recv_comms,
+   std::map<int, tbox::AsyncCommPeer<char> *>& recv_comms,
    const int* old_partition,
    const int* new_partition,
    const int num_boxes,
@@ -1005,7 +997,7 @@ GraphLoadBalancer::setupAsyncCommObjects(
    const int num_sends = static_cast<int>(send_procs.size());
    const int num_recvs = static_cast<int>(recv_procs.size());
 
-   if ( num_sends > 0 ) {
+   if (num_sends > 0) {
 
       for (std::set<int>::const_iterator s_itr = send_procs.begin();
            s_itr != send_procs.end(); ++s_itr) {
@@ -1014,16 +1006,16 @@ GraphLoadBalancer::setupAsyncCommObjects(
          send_comms[send_num]->setPeerRank(*s_itr);
          send_comms[send_num]->setMPI(mpi);
          send_comms[send_num]->setMPITag(GraphLoadBalancer_LOADTAG0,
-                                          GraphLoadBalancer_LOADTAG1);
+            GraphLoadBalancer_LOADTAG1);
          send_comms[send_num]->limitFirstDataLength(
-            sizeof(BoxInTransit)*GraphLoadBalancer_FIRSTDATALEN);
+            sizeof(BoxInTransit) * GraphLoadBalancer_FIRSTDATALEN);
 
       }
    }
 
-   if ( num_recvs > 0 ) {
+   if (num_recvs > 0) {
 
-      for (std::set<int>::const_iterator s_itr = recv_procs.begin();  
+      for (std::set<int>::const_iterator s_itr = recv_procs.begin();
            s_itr != recv_procs.end(); ++s_itr) {
 
          int recv_num = *s_itr;
@@ -1031,9 +1023,9 @@ GraphLoadBalancer::setupAsyncCommObjects(
          recv_comms[recv_num]->setPeerRank(*s_itr);
          recv_comms[recv_num]->setMPI(mpi);
          recv_comms[recv_num]->setMPITag(GraphLoadBalancer_LOADTAG0,
-                                          GraphLoadBalancer_LOADTAG1);
+            GraphLoadBalancer_LOADTAG1);
          recv_comms[recv_num]->limitFirstDataLength(
-            sizeof(BoxInTransit)*GraphLoadBalancer_FIRSTDATALEN);
+            sizeof(BoxInTransit) * GraphLoadBalancer_FIRSTDATALEN);
 
       }
 
@@ -1049,7 +1041,7 @@ GraphLoadBalancer::setupAsyncCommObjects(
 
 void
 GraphLoadBalancer::BoxInTransit::putToMessageStream(
-   tbox::MessageStream &mstream ) const
+   tbox::MessageStream& mstream) const
 {
    d_box.putToMessageStream(mstream);
    d_orig_box.putToMessageStream(mstream);
@@ -1057,7 +1049,7 @@ GraphLoadBalancer::BoxInTransit::putToMessageStream(
 
 void
 GraphLoadBalancer::BoxInTransit::getFromMessageStream(
-   tbox::MessageStream &mstream )
+   tbox::MessageStream& mstream)
 {
    d_box.getFromMessageStream(mstream);
    d_orig_box.getFromMessageStream(mstream);
@@ -1091,23 +1083,18 @@ GraphLoadBalancer::getFromInput(
 
       d_coalesce_boxes = input_db->getBoolWithDefault("coalesce_boxes", true);
 
-      if ( input_db->isInteger("tile_size") ) {
+      if (input_db->isInteger("tile_size")) {
          input_db->getIntegerArray("tile_size", &d_tile_size[0], d_tile_size.getDim().getValue());
          for (int i = 0; i < d_dim.getValue(); ++i) {
-            if ( !(d_tile_size[i] >= 1) ) {
+            if (!(d_tile_size[i] >= 1)) {
                TBOX_ERROR("CascadePartitioner tile_size must be >= 1 in all directions.\n"
-                          << "Input tile_size is " << d_tile_size );
+                  << "Input tile_size is " << d_tile_size);
             }
          }
       }
 
    }
 }
-
-
-
-
-
 
 }
 }

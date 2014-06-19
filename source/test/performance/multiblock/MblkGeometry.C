@@ -45,7 +45,7 @@ MblkGeometry::MblkGeometry(
    d_object_name = object_name;
    //tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 
-   d_nblocks = grid_geom.getNumberBlocks(); 
+   d_nblocks = grid_geom.getNumberBlocks();
 
    d_metrics_set.resize(10);
    for (int i = 0; i < 10; ++i) {
@@ -63,8 +63,8 @@ MblkGeometry::MblkGeometry(
 
    hier::BoxContainer domain_boxes;
    grid_geom.computePhysicalDomain(domain_boxes,
-                                   hier::IntVector::getOne(dim),
-                                   hier::BlockId(0));
+      hier::IntVector::getOne(dim),
+      hier::BlockId(0));
 
    TBOX_ASSERT(domain_boxes.size() == 1);
 
@@ -84,7 +84,6 @@ MblkGeometry::MblkGeometry(
          setSShellMetrics(domain_boxes.front(), 0);
       }
    }
-
 
 }
 

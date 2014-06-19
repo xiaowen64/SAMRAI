@@ -54,7 +54,7 @@ SideOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
 {
    TBOX_ASSERT(src_boxes.isEmpty());
    TBOX_ASSERT(normal_direction >= 0 &&
-               normal_direction < static_cast<int>(d_dst_boxes.size()));
+      normal_direction < static_cast<int>(d_dst_boxes.size()));
 
    src_boxes = d_dst_boxes[normal_direction];
    int transform_normal = normal_direction;
@@ -70,15 +70,15 @@ SideOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
          } else {
             transform_normal = normal_direction;
             SideGeometry::transform(*bi,
-                                    transform_normal,
-                                    inverse_transform);
+               transform_normal,
+               inverse_transform);
          }
       }
    }
    normal_direction = transform_normal;
 
    TBOX_ASSERT(normal_direction >= 0 &&
-               normal_direction < static_cast<int>(d_dst_boxes.size()));
+      normal_direction < static_cast<int>(d_dst_boxes.size()));
 
 }
 

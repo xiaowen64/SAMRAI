@@ -60,13 +60,13 @@ PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
    TBOX_ASSERT_OBJDIM_EQUALITY2(dst_box_level, fill_ghost_width);
 
    fill_box_level.reset(new hier::BoxLevel(
-      dst_box_level.getRefinementRatio(),
-      dst_box_level.getGridGeometry(),
-      dst_box_level.getMPI()));
+         dst_box_level.getRefinementRatio(),
+         dst_box_level.getGridGeometry(),
+         dst_box_level.getMPI()));
 
    dst_to_fill.reset(new hier::Connector(dst_box_level,
-                                         *fill_box_level,
-                                         fill_ghost_width));
+         *fill_box_level,
+         fill_ghost_width));
 
    const hier::BoxContainer& dst_boxes = dst_box_level.getBoxes();
 

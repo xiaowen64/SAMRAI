@@ -123,8 +123,8 @@ void HierarchyTester::setupInitialHierarchy(
          main_input_db->getDatabase("PatchHierarchy")));
 
    boost::shared_ptr<BergerRigoutsos> box_generator(new BergerRigoutsos(
-      d_dim,
-      main_input_db->getDatabase("BergerRigoutsos")));
+                                                       d_dim,
+                                                       main_input_db->getDatabase("BergerRigoutsos")));
 
    boost::shared_ptr<TreeLoadBalancer> load_balancer(
       new TreeLoadBalancer(

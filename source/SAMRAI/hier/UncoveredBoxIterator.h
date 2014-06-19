@@ -35,7 +35,7 @@ class PatchHierarchy;
  */
 class UncoveredBoxIterator
 {
-friend class PatchHierarchy;
+   friend class PatchHierarchy;
 
 public:
    /*!
@@ -69,7 +69,7 @@ public:
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
-   const std::pair<boost::shared_ptr<Patch>, Box>*
+   const std::pair<boost::shared_ptr<Patch>, Box> *
    operator -> () const;
 
    /*!

@@ -87,7 +87,7 @@ public:
       const BlockId& block_id);
 
    /*!
-    * @brief Copy constructor 
+    * @brief Copy constructor
     */
    Box(
       const Box& box);
@@ -257,7 +257,7 @@ public:
       const int owner_rank,
       const PeriodicId& periodic_id = PeriodicId::zero())
    {
-      if ( &box != this ) {
+      if (&box != this) {
          d_lo = box.d_lo;
          d_hi = box.d_hi;
          d_block_id = box.d_block_id;
@@ -265,7 +265,8 @@ public:
       if (!idLocked()) {
          d_id.initialize(local_id, owner_rank, periodic_id);
       } else {
-         TBOX_ERROR("Attempted to change BoxId that is locked in an ordered BoxContainer." << std::endl);
+         TBOX_ERROR(
+            "Attempted to change BoxId that is locked in an ordered BoxContainer." << std::endl);
       }
    }
 
@@ -329,7 +330,7 @@ public:
 
    //! @brief Set the LocalId.
    void
-   setLocalId(const LocalId &local_id)
+   setLocalId(const LocalId& local_id)
    {
       return d_id.initialize(local_id, d_id.getOwnerRank(), d_id.getPeriodicId());
    }
@@ -456,7 +457,7 @@ public:
     */
    void
    putToMessageStream(
-      tbox::MessageStream &msg) const;
+      tbox::MessageStream& msg) const;
 
    /*!
     * @brief Set attributes according to data in MessageStream.
@@ -467,7 +468,7 @@ public:
     */
    void
    getFromMessageStream(
-      tbox::MessageStream &msg);
+      tbox::MessageStream& msg);
 
    //@}
 
@@ -632,7 +633,7 @@ public:
 
    /*!
     * @brief Calculate the number of indices represented by the box.
-    * 
+    *
     * If the box is empty, then the number of index points within the box is
     * zero.
     */
@@ -781,12 +782,13 @@ public:
     * @pre (getBlockId() == box.getBlockId()) || empty() || box.empty()
     */
    Box
-   &operator *= (
+   &
+   operator *= (
       const Box& box);
 
    /*!
     * @brief Box intersection.
-    * 
+    *
     * Calculate the intersection of the index spaces of two boxes.  The
     * intersection with an empty box always yields an empty box.
     *
@@ -854,7 +856,7 @@ public:
    /*!
     * @brief Return true if this box can be coalesced with the argument box,
     * and set this box to the union of the boxes.
-    * 
+    *
     * Otherwise, return false and leave boxes as is.  Two boxes may be
     * coalesced if their union is a box (recall that index set union is not
     * closed over boxes).  If one box is empty and the other is non-empty, then
@@ -1382,7 +1384,6 @@ private:
       const int axis,
       const int num_rotations);
 
-
    /*!
     * @brief Initialize static objects and register shutdown routine.
     *
@@ -1446,7 +1447,7 @@ private:
 
 class BoxIterator
 {
-friend class Box;
+   friend class Box;
 
 public:
    /**
@@ -1486,7 +1487,7 @@ public:
     * Return a pointer to the current index in the box.  This operation is
     * undefined if the iterator is past the last Index in the box.
     */
-   const Index*
+   const Index *
    operator -> () const
    {
       return &d_index;
@@ -1570,6 +1571,5 @@ private:
 
 }
 }
-
 
 #endif

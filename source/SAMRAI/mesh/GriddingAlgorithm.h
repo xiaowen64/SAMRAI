@@ -455,9 +455,9 @@ public:
     */
    const std::string&
    getObjectName() const
-    {
-       return d_object_name;
-    }
+   {
+      return d_object_name;
+   }
 
 private:
    /*
@@ -624,11 +624,10 @@ private:
       const bool interior_only,
       const hier::IntVector& fill_box_growth) const;
 
-
    /*!
     * @brief Enforce proper nesting.
     *
-    * @param[in/out] new_box_level
+    * @param[in,out] new_box_level
     *
     * @param[in,out] tag_to_new
     *
@@ -670,13 +669,12 @@ private:
       const hier::BoxLevel& unnested_box_level,
       const hier::Connector& tag_to_unnested,
       const int unnested_ln,
-      const hier::OverlapConnectorAlgorithm &oca) const;
-
+      const hier::OverlapConnectorAlgorithm& oca) const;
 
    /*!
     * @brief Enforce overflow nesting.
     *
-    * @param[in/out] new_box_level
+    * @param[in,out] new_box_level
     *
     * @param[in,out] tag_to_new
     */
@@ -737,7 +735,7 @@ private:
       const hier::BoxLevel& candidate,
       const hier::Connector& candidate_to_hierarchy,
       const int tag_ln,
-      const hier::OverlapConnectorAlgorithm &oca) const;
+      const hier::OverlapConnectorAlgorithm& oca) const;
 
    /*!
     * @brief Extend Boxes to domain boundary if they they are too close.
@@ -778,7 +776,7 @@ private:
    void
    computeProperNestingData(
       const int ln,
-      const hier::OverlapConnectorAlgorithm &oca);
+      const hier::OverlapConnectorAlgorithm& oca);
 
    /*!
     * @brief Attempt to fix boxes that are too small by growing them
@@ -848,7 +846,7 @@ private:
       hier::BoxLevel& new_box_level,
       hier::Connector& ref_to_new,
       bool sort_by_corners,
-      bool sequentialize_global_indices ) const;
+      bool sequentialize_global_indices) const;
 
    /*!
     * @brief Buffer each integer tag on patch level matching given tag
@@ -949,7 +947,6 @@ private:
       const int level_number,
       const bool for_building_finer) const;
 
-
    /*!
     * @brief Compute d_tag_to_cluster_width.
     */
@@ -1017,7 +1014,7 @@ private:
    checkNonrefinedTags(
       const hier::PatchLevel& tag_level,
       int tag_ln,
-      const hier::OverlapConnectorAlgorithm &oca) const;
+      const hier::OverlapConnectorAlgorithm& oca) const;
 
    /*!
     * @brief Reset data that handles tag buffering.
@@ -1028,7 +1025,8 @@ private:
     * @param tag_buffer  The size of the buffer
     */
    void
-   resetTagBufferingData(const int tag_buffer);
+   resetTagBufferingData(
+      const int tag_buffer);
 
    /*!
     * @brief Check for overlapping patches within a level when you
@@ -1069,11 +1067,11 @@ private:
    startupCallback()
    {
       s_tag_indx = new std::vector<int>(
-         SAMRAI::MAX_DIM_VAL,
-         -1);
+            SAMRAI::MAX_DIM_VAL,
+            -1);
       s_buf_tag_indx = new std::vector<int>(
-         SAMRAI::MAX_DIM_VAL,
-         -1);
+            SAMRAI::MAX_DIM_VAL,
+            -1);
    }
 
    /*!

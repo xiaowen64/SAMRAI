@@ -12,7 +12,6 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-
 #include "boost/shared_ptr.hpp"
 
 #define LOOP_MAX (10000000)
@@ -30,7 +29,7 @@ Foo::~Foo()
 void Foo::timerOff()
 {
    boost::shared_ptr<tbox::Timer> timer(tbox::TimerManager::getManager()->
-      getTimer("dummy::SomeClassName::shouldBeTurnedOff"));
+                                        getTimer("dummy::SomeClassName::shouldBeTurnedOff"));
    timer->start();
 
    timer->stop();

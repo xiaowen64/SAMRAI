@@ -174,7 +174,7 @@ int main(
       hier::PatchDataRestartManager* pdrm =
          hier::PatchDataRestartManager::getManager();
       boost::shared_ptr<hier::VariableContext> cxt(
-            variable_db->getContext("dummy"));
+         variable_db->getContext("dummy"));
       const hier::IntVector no_ghosts(dim, 0);
 
       typedef pdat::SparseData<pdat::CellGeometry> LSparseData;

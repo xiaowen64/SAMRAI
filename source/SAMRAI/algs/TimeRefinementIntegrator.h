@@ -189,7 +189,7 @@ namespace algs {
  * @see mesh::GriddingAlgorithmStrategy
  */
 
-class TimeRefinementIntegrator :
+class TimeRefinementIntegrator:
    public tbox::Serializable
 {
 public:
@@ -350,8 +350,7 @@ public:
          (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
       if (level_number == 0) {
          return !d_level_0_advanced;
-      }
-      else {
+      } else {
          return d_step_level[level_number] < d_max_steps_level[level_number];
       }
    }
@@ -424,8 +423,7 @@ public:
          (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
       if (level_number == 0) {
          return d_level_0_advanced ? 1 : 0;
-      }
-      else {
+      } else {
          return d_step_level[level_number];
       }
    }
@@ -445,8 +443,7 @@ public:
          (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
       if (level_number == 0) {
          return 1;
-      }
-      else {
+      } else {
          return d_max_steps_level[level_number];
       }
    }
@@ -493,8 +490,7 @@ public:
          (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
       if (level_number == 0) {
          return !d_level_0_advanced;
-      }
-      else {
+      } else {
          return d_step_level[level_number] <= 0;
       }
    }
@@ -514,8 +510,7 @@ public:
          (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
       if (level_number == 0) {
          return d_level_0_advanced;
-      }
-      else {
+      } else {
          return d_step_level[level_number] >= d_max_steps_level[level_number];
       }
    }

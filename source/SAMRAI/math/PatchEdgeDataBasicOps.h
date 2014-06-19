@@ -83,7 +83,7 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Set dst = src1 + src2, elementwise. 
+    * Set dst = src1 + src2, elementwise.
     *
     * @pre dst && src1 && src2
     * @pre (dst->getDim() == src1->getDim()) &&
@@ -98,7 +98,7 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Set dst = src1 - src2, elementwise. 
+    * Set dst = src1 - src2, elementwise.
     *
     * @pre dst && src1 && src2
     * @pre (dst->getDim() == src1->getDim()) &&
@@ -113,7 +113,7 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Set dst = src1 * src2, elementwise. 
+    * Set dst = src1 * src2, elementwise.
     *
     * @pre dst && src1 && src2
     * @pre (dst->getDim() == src1->getDim()) &&
@@ -128,7 +128,7 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Set dst = src1 / src2, elementwise.  No check for division by zero. 
+    * Set dst = src1 / src2, elementwise.  No check for division by zero.
     *
     * @pre dst && src1 && src2
     * @pre (dst->getDim() == src1->getDim()) &&

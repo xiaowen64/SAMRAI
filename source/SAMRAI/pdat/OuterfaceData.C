@@ -71,7 +71,7 @@ OuterfaceData<TYPE>::getDepth() const
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 OuterfaceData<TYPE>::getPointer(
    int face_normal,
    int side,
@@ -85,7 +85,7 @@ OuterfaceData<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 OuterfaceData<TYPE>::getPointer(
    int face_normal,
    int side,
@@ -237,10 +237,10 @@ OuterfaceData<TYPE>::copy(
       for (int d = 0; d < getDim().getValue(); ++d) {
          const hier::BoxContainer& box_list =
             t_overlap->getDestinationBoxContainer(d);
-         d_data[d][0]->copy(t_oface_src->getArrayData(d,0), box_list, src_offset);
-         d_data[d][0]->copy(t_oface_src->getArrayData(d,1), box_list, src_offset);
-         d_data[d][1]->copy(t_oface_src->getArrayData(d,0), box_list, src_offset);
-         d_data[d][1]->copy(t_oface_src->getArrayData(d,1), box_list, src_offset);
+         d_data[d][0]->copy(t_oface_src->getArrayData(d, 0), box_list, src_offset);
+         d_data[d][0]->copy(t_oface_src->getArrayData(d, 1), box_list, src_offset);
+         d_data[d][1]->copy(t_oface_src->getArrayData(d, 0), box_list, src_offset);
+         d_data[d][1]->copy(t_oface_src->getArrayData(d, 1), box_list, src_offset);
       }
    } else if (t_face_src != 0) {
       for (int d = 0; d < getDim().getValue(); ++d) {
@@ -285,7 +285,7 @@ OuterfaceData<TYPE>::copy2(
                                           face_offset,
                                           getBox().getBlockId(),
                                           t_dst->getBox().getBlockId());
- 
+
       const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer(d);
       t_dst->getArrayData(d).copy(*(d_data[d][0]), box_list, face_transform);
       t_dst->getArrayData(d).copy(*(d_data[d][1]), box_list, face_transform);
@@ -437,7 +437,7 @@ OuterfaceData<TYPE>::packStream(
             for (int f = 0; f < 2; ++f) {
                hier::Box intersect(src_box * d_data[d][f]->getBox());
                if (!intersect.empty()) {
-                  face_transform.transform(intersect); 
+                  face_transform.transform(intersect);
                   d_data[d][f]->packStream(stream,
                      intersect,
                      face_transform);

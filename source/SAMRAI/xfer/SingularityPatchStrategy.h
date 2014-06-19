@@ -17,12 +17,12 @@
 namespace SAMRAI {
 
 namespace hier {
-   class Box;
-   class Connector;
-   class BaseGridGeometry;
-   class BoundaryBox;
-   class Patch;
-   class PatchLevel;
+class Box;
+class Connector;
+class BaseGridGeometry;
+class BoundaryBox;
+class Patch;
+class PatchLevel;
 }
 
 namespace xfer {
@@ -47,7 +47,6 @@ namespace xfer {
 class SingularityPatchStrategy
 {
 public:
-
    /*!
     * @brief Constructor.
     */

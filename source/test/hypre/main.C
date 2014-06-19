@@ -244,8 +244,8 @@ int main(
          main_db->getStringWithDefault("vis_filename", base_name);
       boost::shared_ptr<appu::VisItDataWriter> visit_writer(
          boost::make_shared<appu::VisItDataWriter>(dim,
-            "VisIt Writer",
-            vis_filename + ".visit"));
+                                                   "VisIt Writer",
+                                                   vis_filename + ".visit"));
       hypre_poisson.registerVariablesWithPlotter(*visit_writer);
 #endif
 

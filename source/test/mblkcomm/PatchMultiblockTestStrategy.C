@@ -172,7 +172,7 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
 /*
  *************************************************************************
  *
- * Blank physical boundary and pre/postprocess 
+ * Blank physical boundary and pre/postprocess
  * so tester isn't required to implement them when not needed.
  *
  *************************************************************************
@@ -215,4 +215,3 @@ void PatchMultiblockTestStrategy::postprocessRefine(
    NULL_USE(fine_box);
    NULL_USE(ratio);
 }
-

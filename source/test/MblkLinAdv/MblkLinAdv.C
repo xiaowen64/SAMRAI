@@ -138,7 +138,7 @@ MblkLinAdv::MblkLinAdv(
    d_uval(new pdat::CellVariable<double>(dim, "uval", DEPTH)),
    d_vol(new pdat::CellVariable<double>(dim, "vol", 1)),
    d_flux(new pdat::SideVariable<double>(dim, "flux",
-      hier::IntVector::getOne(dim), 1)),
+                                         hier::IntVector::getOne(dim), 1)),
    d_xyz(new pdat::NodeVariable<double>(dim, "xyz", dim.getValue())),
    d_dx_set(false),
    d_godunov_order(1),
@@ -195,8 +195,7 @@ MblkLinAdv::MblkLinAdv(
 
       d_bdry_edge_uval.resize(NUM_2D_EDGES);
       tbox::MathUtilities<double>::setVectorToSignalingNaN(d_bdry_edge_uval);
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       d_scalar_bdry_face_conds.resize(NUM_3D_FACES);
       for (int fi = 0; fi < NUM_3D_FACES; ++fi) {
          d_scalar_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
@@ -282,8 +281,7 @@ MblkLinAdv::MblkLinAdv(
                   i, d_scalar_bdry_node_conds[i]);
          }
       }
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       for (int i = 0; i < NUM_3D_FACES; ++i) {
          if (d_scalar_bdry_face_conds[i] == BdryCond::REFLECT) {
             d_scalar_bdry_face_conds[i] = BdryCond::FLOW;
@@ -2104,8 +2102,7 @@ void MblkLinAdv::printClassData(
          os << "       d_node_bdry_edge[" << j << "] = "
             << d_node_bdry_edge[j] << endl;
       }
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       for (j = 0; j < static_cast<int>(d_scalar_bdry_face_conds.size()); ++j) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
             << d_scalar_bdry_face_conds[j] << endl;
@@ -2636,8 +2633,7 @@ void MblkLinAdv::getFromInput(
             d_scalar_bdry_edge_conds,
             d_scalar_bdry_node_conds,
             periodic);
-      }
-      else if (d_dim == tbox::Dimension(3)) {
+      } else if (d_dim == tbox::Dimension(3)) {
          SkeletonBoundaryUtilities3::getFromInput(this,
             bdry_db,
             d_scalar_bdry_face_conds,
@@ -2709,8 +2705,7 @@ void MblkLinAdv::putToRestart(
 
    if (d_dim == tbox::Dimension(2)) {
       restart_db->putDoubleVector("d_bdry_edge_uval", d_bdry_edge_uval);
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       restart_db->putIntegerVector("d_scalar_bdry_face_conds",
          d_scalar_bdry_face_conds);
       restart_db->putDoubleVector("d_bdry_face_uval", d_bdry_face_uval);
@@ -2821,8 +2816,7 @@ void MblkLinAdv::getFromRestart()
 
    if (d_dim == tbox::Dimension(2)) {
       d_bdry_edge_uval = db->getDoubleVector("d_bdry_edge_uval");
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       d_scalar_bdry_face_conds =
          db->getIntegerVector("d_scalar_bdry_face_conds");
 
@@ -2878,8 +2872,7 @@ void MblkLinAdv::readDirichletBoundaryDataEntry(
          db_name,
          bdry_location_index,
          d_bdry_edge_uval);
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       readStateDataEntry(db,
          db_name,
          bdry_location_index,
@@ -2936,8 +2929,7 @@ void MblkLinAdv::checkBoundaryData(
    if (d_dim == tbox::Dimension(2)) {
       TBOX_ASSERT(btype == Bdry::EDGE2D ||
          btype == Bdry::NODE2D);
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       TBOX_ASSERT(btype == Bdry::FACE3D ||
          btype == Bdry::EDGE3D ||
          btype == Bdry::NODE3D);
@@ -2967,8 +2959,7 @@ void MblkLinAdv::checkBoundaryData(
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_edge[bloc];
          }
-      }
-      else if (d_dim == tbox::Dimension(3)) {
+      } else if (d_dim == tbox::Dimension(3)) {
          if (btype == Bdry::FACE3D) {
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) == NUM_3D_FACES);
             bscalarcase = scalar_bconds[bloc];
@@ -2992,27 +2983,26 @@ void MblkLinAdv::checkBoundaryData(
 #if (TESTING == 1)
          num_bad_values =
 #endif
-            SkeletonBoundaryUtilities2::checkBdryData(
-               d_uval->getName(),
-               patch,
-               vdb->mapVariableAndContextToIndex(d_uval, getDataContext()), 0,
-               ghost_width_to_check,
-               bbox,
-               bscalarcase,
-               d_bdry_edge_uval[refbdryloc]);
-      }
-      else if (d_dim == tbox::Dimension(3)) {
+         SkeletonBoundaryUtilities2::checkBdryData(
+            d_uval->getName(),
+            patch,
+            vdb->mapVariableAndContextToIndex(d_uval, getDataContext()), 0,
+            ghost_width_to_check,
+            bbox,
+            bscalarcase,
+            d_bdry_edge_uval[refbdryloc]);
+      } else if (d_dim == tbox::Dimension(3)) {
 #if (TESTING == 1)
          num_bad_values =
 #endif
-            SkeletonBoundaryUtilities3::checkBdryData(
-               d_uval->getName(),
-               patch,
-               vdb->mapVariableAndContextToIndex(d_uval, getDataContext()), 0,
-               ghost_width_to_check,
-               bbox,
-               bscalarcase,
-               d_bdry_face_uval[refbdryloc]);
+         SkeletonBoundaryUtilities3::checkBdryData(
+            d_uval->getName(),
+            patch,
+            vdb->mapVariableAndContextToIndex(d_uval, getDataContext()), 0,
+            ghost_width_to_check,
+            bbox,
+            bscalarcase,
+            d_bdry_face_uval[refbdryloc]);
       }
 #if (TESTING == 1)
       if (num_bad_values > 0) {

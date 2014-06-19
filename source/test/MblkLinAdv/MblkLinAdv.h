@@ -509,11 +509,11 @@ private:
     * Operators to be used with GridGeometry
     */
    boost::shared_ptr<SkeletonCellDoubleConservativeLinearRefine>
-      d_cell_cons_linear_refine_op;
+   d_cell_cons_linear_refine_op;
    boost::shared_ptr<SkeletonCellDoubleWeightedAverage> d_cell_cons_coarsen_op;
    boost::shared_ptr<hier::TimeInterpolateOperator> d_cell_time_interp_op;
    boost::shared_ptr<SkeletonOutersideDoubleWeightedAverage>
-      d_side_cons_coarsen_op;
+   d_side_cons_coarsen_op;
 
 };
 

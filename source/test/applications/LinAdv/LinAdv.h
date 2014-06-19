@@ -231,7 +231,7 @@ public:
       ghost_width_to_fill);
 
    hier::IntVector
-   getRefineOpStencilWidth( const tbox::Dimension &dim ) const {
+   getRefineOpStencilWidth(const tbox::Dimension& dim) const {
       return hier::IntVector::getZero(dim);
    }
 
@@ -272,7 +272,7 @@ public:
    ///
 
    hier::IntVector
-   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const {
+   getCoarsenOpStencilWidth(const tbox::Dimension& dim) const {
       return hier::IntVector::getZero(dim);
    }
 

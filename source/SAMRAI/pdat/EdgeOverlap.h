@@ -88,8 +88,9 @@ public:
     * @post axis_direction >= 0 && axis_direction < d_dst_boxes.size()
     */
    virtual void
-   getSourceBoxContainer(hier::BoxContainer& src_boxes,
-                         int& axis_direction) const;
+   getSourceBoxContainer(
+      hier::BoxContainer& src_boxes,
+      int& axis_direction) const;
 
    /**
     * Return the offset between the destination and source index spaces.

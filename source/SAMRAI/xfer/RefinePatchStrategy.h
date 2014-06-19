@@ -124,7 +124,8 @@ public:
     * zero.
     */
    virtual hier::IntVector
-   getRefineOpStencilWidth( const tbox::Dimension &dim ) const = 0;
+   getRefineOpStencilWidth(
+      const tbox::Dimension& dim) const = 0;
 
    /*!
     * @brief Perform user-defined patch data refinement operations.
@@ -242,8 +243,8 @@ public:
     * This member function is called before standard refine operations
     * (expressed using concrete subclasses of the RefineOperator base class).
     *
-    * @param[out] fine     Fine patch containing destination data.
-    * @param[in] coarse    Coarse patch containing source data.
+    * @param[out] fine_level     Fine patch level containing destination data.
+    * @param[in] coarse_level    Coarse patch level containing source data.
     * @param[in] coarse_to_fine      Connector coarse to fine
     * @param[in] coarse_to_unfilled  Connector coarse to level representing
     *                                boxes that need to be filled.
@@ -254,16 +255,16 @@ public:
    preprocessRefineLevel(
       hier::PatchLevel& fine_level,
       const hier::PatchLevel& coarse_level,
-      const hier::Connector &coarse_to_fine,
-      const hier::Connector &coarse_to_unfilled,
+      const hier::Connector& coarse_to_fine,
+      const hier::Connector& coarse_to_unfilled,
       const std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
-      const RefineClasses::Data** refine_items ) {
-      NULL_USE( fine_level );
-      NULL_USE( coarse_level );
-      NULL_USE( coarse_to_fine );
-      NULL_USE( coarse_to_unfilled );
-      NULL_USE( overlaps );
-      NULL_USE( refine_items );
+      const RefineClasses::Data** refine_items) {
+      NULL_USE(fine_level);
+      NULL_USE(coarse_level);
+      NULL_USE(coarse_to_fine);
+      NULL_USE(coarse_to_unfilled);
+      NULL_USE(overlaps);
+      NULL_USE(refine_items);
    }
 
    /*!
@@ -273,8 +274,8 @@ public:
     * This member function is called after standard refine operations
     * (expressed using concrete subclasses of the RefineOperator base class).
     *
-    * @param[out] fine     Fine patch containing destination data.
-    * @param[in] coarse    Coarse patch containing source data.
+    * @param[out] fine_level     Fine patch level containing destination data.
+    * @param[in] coarse_level    Coarse patch level containing source data.
     * @param[in] coarse_to_fine      Connector coarse to fine
     * @param[in] coarse_to_unfilled  Connector coarse to level representing
     *                                boxes that need to be filled.
@@ -283,12 +284,12 @@ public:
    postprocessRefineLevel(
       hier::PatchLevel& fine_level,
       const hier::PatchLevel& coarse_level,
-      const hier::Connector &coarse_to_fine,
-      const hier::Connector &coarse_to_unfilled) {
-      NULL_USE( fine_level );
-      NULL_USE( coarse_level );
-      NULL_USE( coarse_to_fine );
-      NULL_USE( coarse_to_unfilled );
+      const hier::Connector& coarse_to_fine,
+      const hier::Connector& coarse_to_unfilled) {
+      NULL_USE(fine_level);
+      NULL_USE(coarse_level);
+      NULL_USE(coarse_to_fine);
+      NULL_USE(coarse_to_unfilled);
    }
 
 private:

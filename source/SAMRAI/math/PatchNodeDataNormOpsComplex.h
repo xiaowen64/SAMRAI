@@ -76,8 +76,8 @@ public:
    {
       TBOX_ASSERT(data);
       TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
-      return (pdat::NodeGeometry::toNodeBox(box * data->getGhostBox())).size() *
-         data->getDepth();
+      return (pdat::NodeGeometry::toNodeBox(box * data->getGhostBox())).size()
+             * data->getDepth();
    }
 
    /**

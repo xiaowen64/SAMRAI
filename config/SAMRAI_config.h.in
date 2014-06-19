@@ -6,8 +6,8 @@
 #define INCLUDED_SAMRAI_CONFIG_H
 
 #define SAMRAI_VERSION_MAJOR 3
-#define SAMRAI_VERSION_MINOR 7
-#define SAMRAI_VERSION_PATCHLEVEL 3
+#define SAMRAI_VERSION_MINOR 8
+#define SAMRAI_VERSION_PATCHLEVEL 0
 
 
 /* Define if bool type is not properly supported */
@@ -303,6 +303,9 @@
 /* Define if NAN is not in float.h */
 #undef NAN_IS_BROKEN
 
+/* Optimized build */
+#undef OPT_BUILD
+
 /* The type ostringstream is broken */
 #undef OSTRINGSTREAM_TYPE_IS_BROKEN
 
@@ -320,9 +323,6 @@
 
 /* Define to the one symbol short name of this package. */
 // Removed due to name conflict #undef PACKAGE_TARNAME
-
-/* Define to the home page for this package. */
-// Removed due to name conflict #undef PACKAGE_URL
 
 /* Define to the version of this package. */
 // Removed due to name conflict #undef PACKAGE_VERSION

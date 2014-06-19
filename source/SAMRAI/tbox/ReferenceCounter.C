@@ -41,7 +41,7 @@ ReferenceCounter::~ReferenceCounter()
    }
 }
 
-void*
+void *
 ReferenceCounter::operator new (
    size_t bytes)
 {
@@ -55,7 +55,8 @@ ReferenceCounter::operator new (
       s_free_list = s_free_list->d_next;
       return node;
    } else {
-      return ::operator new (bytes);
+      return ::operator new (
+                bytes);
    }
 }
 
@@ -78,8 +79,10 @@ ReferenceCounter::finalizeCallback()
 {
    while (s_free_list) {
       void * byebye = s_free_list;
-      s_free_list = s_free_list->d_next;
-      ::operator delete (byebye);
+      s_free_list = s_free_list->d_next
+      ;
+      ::operator delete (
+         byebye);
    }
 
    s_is_finalized = true;

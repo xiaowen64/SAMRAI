@@ -165,46 +165,48 @@ MblkHyperbolicLevelIntegrator::MblkHyperbolicLevelIntegrator(
    d_have_flux_on_level_zero(false),
    d_distinguish_mpi_reduction_costs(false),
    t_advance_bdry_fill_comm(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::advance_bdry_fill_comm")),
+                            getTimer("algs::MblkHyperbolicLevelIntegrator::advance_bdry_fill_comm")),
    t_error_bdry_fill_create(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::error_bdry_fill_create")),
+                            getTimer("algs::MblkHyperbolicLevelIntegrator::error_bdry_fill_create")),
    t_error_bdry_fill_comm(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::error_bdry_fill_comm")),
+                          getTimer("algs::MblkHyperbolicLevelIntegrator::error_bdry_fill_comm")),
    t_mpi_reductions(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::mpi_reductions")),
+                    getTimer("algs::MblkHyperbolicLevelIntegrator::mpi_reductions")),
    t_initialize_level_data(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::initializeLevelData()")),
+                           getTimer("algs::MblkHyperbolicLevelIntegrator::initializeLevelData()")),
    t_fill_new_level_create(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::fill_new_level_create")),
+                           getTimer("algs::MblkHyperbolicLevelIntegrator::fill_new_level_create")),
    t_fill_new_level_comm(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::fill_new_level_comm")),
+                         getTimer("algs::MblkHyperbolicLevelIntegrator::fill_new_level_comm")),
    t_advance_bdry_fill_create(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::advance_bdry_fill_create")),
+                              getTimer(
+                                 "algs::MblkHyperbolicLevelIntegrator::advance_bdry_fill_create")),
    t_new_advance_bdry_fill_create(tbox::TimerManager::getManager()->
-      getTimer(
-         "algs::MblkHyperbolicLevelIntegrator::new_advance_bdry_fill_create")),
+                                  getTimer(
+                                     "algs::MblkHyperbolicLevelIntegrator::new_advance_bdry_fill_create")),
    t_apply_gradient_detector(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::applyGradientDetector()")),
+                             getTimer(
+                                "algs::MblkHyperbolicLevelIntegrator::applyGradientDetector()")),
    t_coarsen_rich_extrap(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_rich_extrap")),
+                         getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_rich_extrap")),
    t_get_level_dt(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::getLevelDt()")),
+                  getTimer("algs::MblkHyperbolicLevelIntegrator::getLevelDt()")),
    t_get_level_dt_sync(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::getLevelDt()_sync")),
+                       getTimer("algs::MblkHyperbolicLevelIntegrator::getLevelDt()_sync")),
    t_advance_level(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::advanceLevel()")),
+                   getTimer("algs::MblkHyperbolicLevelIntegrator::advanceLevel()")),
    t_new_advance_bdry_fill_comm(tbox::TimerManager::getManager()->
-      getTimer(
-         "algs::MblkHyperbolicLevelIntegrator::new_advance_bdry_fill_comm")),
+                                getTimer(
+                                   "algs::MblkHyperbolicLevelIntegrator::new_advance_bdry_fill_comm")),
    t_patch_num_kernel(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::patch_numerical_kernels")),
+                      getTimer("algs::MblkHyperbolicLevelIntegrator::patch_numerical_kernels")),
    t_advance_level_sync(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::advanceLevel()_sync")),
+                        getTimer("algs::MblkHyperbolicLevelIntegrator::advanceLevel()_sync")),
    t_std_level_sync(tbox::TimerManager::getManager()->
-      getTimer(
-         "algs::MblkHyperbolicLevelIntegrator::standardLevelSynchronization()")),
+                    getTimer(
+                       "algs::MblkHyperbolicLevelIntegrator::standardLevelSynchronization()")),
    t_sync_new_levels(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::synchronizeNewLevels()"))
+                     getTimer("algs::MblkHyperbolicLevelIntegrator::synchronizeNewLevels()"))
 {
    NULL_USE(mblk_hierarchy);
 
@@ -1426,9 +1428,9 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
     */
 
    boost::shared_ptr<xfer::CoarsenSchedule> sched;
-   if (d_do_coarsening) { 
+   if (d_do_coarsening) {
       t_coarsen_fluxsum_create->start();
-         sched = d_mblk_coarsen_fluxsum->createSchedule(mblk_coarse_level,
+      sched = d_mblk_coarsen_fluxsum->createSchedule(mblk_coarse_level,
             mblk_fine_level,
             0);
       t_coarsen_fluxsum_create->stop();
@@ -1491,7 +1493,7 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
       t_coarsen_sync_comm->start();
       sched->coarsenData();
       t_coarsen_sync_comm->stop();
-   
+
       d_patch_strategy->clearDataContext();
    }
 }
@@ -1713,7 +1715,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
           * Register variable and context needed for restart.
           */
          hier::PatchDataRestartManager::getManager()->
-            registerPatchDataForRestart(cur_id);
+         registerPatchDataForRestart(cur_id);
 
          /*
           * Set boundary fill schedules for time-dependent variable.
@@ -1802,7 +1804,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
           * Register variable and context needed for restart.
           */
          hier::PatchDataRestartManager::getManager()->
-            registerPatchDataForRestart(cur_id);
+         registerPatchDataForRestart(cur_id);
 
          /*
           * Bdry algorithms for input variables will fill from current only.
@@ -1851,7 +1853,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
           * Register variable and context needed for restart.
           */
          hier::PatchDataRestartManager::getManager()->
-            registerPatchDataForRestart(cur_id);
+         registerPatchDataForRestart(cur_id);
 
          d_mblk_fill_new_level->registerRefine(
             cur_id, cur_id, scr_id, refine_op);

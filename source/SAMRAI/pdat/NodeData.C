@@ -78,7 +78,7 @@ NodeData<TYPE>::getArrayData() const
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 NodeData<TYPE>::getPointer(
    int depth)
 {
@@ -88,7 +88,7 @@ NodeData<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 NodeData<TYPE>::getPointer(
    int depth) const
 {

@@ -26,7 +26,7 @@ namespace hier {
  *
  * MappingConnectorAlgorithm objects check and apply mappings.
  */
-class MappingConnectorAlgorithm : public BaseConnectorAlgorithm
+class MappingConnectorAlgorithm:public BaseConnectorAlgorithm
 {
 
 public:
@@ -299,7 +299,6 @@ private:
       const Connector& anchor_to_old,
       const MappingConnector& old_to_new) const;
 
-
    /*!
     * @brief Discover new relationships formed by mapping.
     */
@@ -391,7 +390,6 @@ private:
     * class but may not be necessary anymore.
     */
    static int s_operation_mpi_tag;
-
 
    //@{
    //! @name Timer data for this class.

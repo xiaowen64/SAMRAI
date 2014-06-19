@@ -134,7 +134,7 @@ ArrayData<TYPE>::getIndex(
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 ArrayData<TYPE>::getPointer(
    int d)
 {
@@ -144,7 +144,7 @@ ArrayData<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 ArrayData<TYPE>::getPointer(
    int d) const
 {
@@ -680,7 +680,6 @@ ArrayData<TYPE>::packStream(
 
 }
 
-
 template<class TYPE>
 void
 ArrayData<TYPE>::packStream(
@@ -707,7 +706,6 @@ ArrayData<TYPE>::packStream(
    stream.pack(&buffer[0], size);
 
 }
-
 
 /*
  *************************************************************************
@@ -1005,7 +1003,7 @@ ArrayData<TYPE>::isValid()
 {
    return !d_box.isEmpty();
 }
- 
+
 /*
  *************************************************************************
  *

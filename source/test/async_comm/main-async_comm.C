@@ -179,7 +179,6 @@ int main(
       int gi; // Group index.
       int ai; // Active group index.
 
-
       int count = 0;
       while ((sync_bcast_count < sync_bcast_cycles) ||
              (sync_sumreduce_count < sync_sumreduce_cycles) ||
@@ -311,7 +310,7 @@ int main(
              * For the synchronous (groupwise) broadcast test,
              * each group broadcasts the its group id.
              */
-            TBOX_ASSERT( !comm_stage.hasCompletedMembers() );
+            TBOX_ASSERT(!comm_stage.hasCompletedMembers());
             plog << "\n\n\n*********** Synchronous Broadcast "
                  << sync_bcast_count << " ************\n";
             for (ai = 0; ai < num_active_groups; ++ai)
@@ -345,7 +344,7 @@ int main(
          }
 
          if (sync_sumreduce_count < sync_sumreduce_cycles) {
-            TBOX_ASSERT( !comm_stage.hasCompletedMembers() );
+            TBOX_ASSERT(!comm_stage.hasCompletedMembers());
             /*
              * For the sum advanceSome reduce test,
              * each group sums up the ranks of its members, plus 1.
@@ -387,7 +386,7 @@ int main(
          }
 
          if (asyncany_bcast_count < asyncany_bcast_cycles) {
-            TBOX_ASSERT( !comm_stage.hasCompletedMembers() );
+            TBOX_ASSERT(!comm_stage.hasCompletedMembers());
             /*
              * For the advanceSome broadcast test,
              * each group broadcasts the its group id.
@@ -409,8 +408,8 @@ int main(
                } else {
                   comm_stage.advanceAny();
                }
-               if ( comm_stage.hasCompletedMembers() ) {
-                  AsyncCommGroup *completed_group =
+               if (comm_stage.hasCompletedMembers()) {
+                  AsyncCommGroup* completed_group =
                      CPP_CAST<AsyncCommGroup *>(comm_stage.popCompletionQueue());
                   TBOX_ASSERT(completed_group);
                   ai = static_cast<int>(completed_group - comm_groups);
@@ -441,7 +440,7 @@ int main(
          }
 
          if (asyncany_sumreduce_count < asyncany_sumreduce_cycles) {
-            TBOX_ASSERT( !comm_stage.hasCompletedMembers() );
+            TBOX_ASSERT(!comm_stage.hasCompletedMembers());
             /*
              * For the advanceSome broadcast test,
              * each group broadcasts the its group id.
@@ -461,13 +460,13 @@ int main(
                   }
                   ++counter;
                }
-               if ( !comm_stage.hasCompletedMembers() ) {
+               if (!comm_stage.hasCompletedMembers()) {
                   comm_stage.advanceAny();
-                  TBOX_ASSERT( comm_stage.numberOfCompletedMembers() < 2 );
+                  TBOX_ASSERT(comm_stage.numberOfCompletedMembers() < 2);
                }
-               TBOX_ASSERT( comm_stage.numberOfCompletedMembers() < 2 );
-               if ( comm_stage.hasCompletedMembers() ) {
-                  AsyncCommGroup *completed_group =
+               TBOX_ASSERT(comm_stage.numberOfCompletedMembers() < 2);
+               if (comm_stage.hasCompletedMembers()) {
+                  AsyncCommGroup* completed_group =
                      CPP_CAST<AsyncCommGroup *>(comm_stage.popCompletionQueue());
                   TBOX_ASSERT(completed_group);
                   ai = static_cast<int>(completed_group - comm_groups);
@@ -502,7 +501,7 @@ int main(
          }
 
          if (asyncsome_bcast_count < asyncsome_bcast_cycles) {
-            TBOX_ASSERT( !comm_stage.hasCompletedMembers() );
+            TBOX_ASSERT(!comm_stage.hasCompletedMembers());
             /*
              * For the advanceSome broadcast test,
              * each group broadcasts the its group id.
@@ -514,13 +513,13 @@ int main(
             for (ai = 0; ai < num_active_groups; ++ai) {
                AsyncCommGroup& comm_group = comm_groups[ai];
                comm_group.beginBcast(&bcdata[ai], 1);
-               if ( comm_group.isDone() ) {
+               if (comm_group.isDone()) {
                   comm_group.pushToCompletionQueue();
                }
             }
             plog << "Job Group Result Correct  Note\n";
-            while ( comm_stage.hasCompletedMembers() ||
-                    comm_stage.advanceSome() ) {
+            while (comm_stage.hasCompletedMembers() ||
+                   comm_stage.advanceSome()) {
                AsyncCommGroup* completed_group =
                   CPP_CAST<AsyncCommGroup *>(comm_stage.popCompletionQueue());
                TBOX_ASSERT(completed_group != 0);
@@ -530,7 +529,7 @@ int main(
                     << std::setw(5) << gi
                     << std::setw(8) << bcdata[ai]
                     << std::setw(8) << correct_bcdata[ai]
-                  ;
+               ;
                plog << "  Bcast difference = "
                     << bcdata[ai] - correct_bcdata[ai];
                if (bcdata[ai] != correct_bcdata[ai]) {
@@ -550,7 +549,7 @@ int main(
          }
 
          if (asyncsome_sumreduce_count < asyncsome_sumreduce_cycles) {
-            TBOX_ASSERT( !comm_stage.hasCompletedMembers() );
+            TBOX_ASSERT(!comm_stage.hasCompletedMembers());
             /*
              * For the sum advanceSome reduce test,
              * each group sums up the ranks of its members, plus 1.
@@ -561,13 +560,13 @@ int main(
             for (ai = 0; ai < num_active_groups; ++ai) {
                AsyncCommGroup& comm_group = comm_groups[ai];
                comm_group.beginSumReduce(&sum[ai], 1);
-               if ( comm_group.isDone() ) {
+               if (comm_group.isDone()) {
                   comm_group.pushToCompletionQueue();
                }
             }
             plog << "Job Group Result Correct  Note\n";
-            while ( comm_stage.hasCompletedMembers() ||
-                    comm_stage.advanceSome() ) {
+            while (comm_stage.hasCompletedMembers() ||
+                   comm_stage.advanceSome()) {
                AsyncCommGroup* completed_group =
                   CPP_CAST<AsyncCommGroup *>(comm_stage.popCompletionQueue());
                TBOX_ASSERT(completed_group != 0);
@@ -577,7 +576,7 @@ int main(
                     << std::setw(5) << gi
                     << std::setw(8) << sum[ai]
                     << std::setw(8) << correct_sum[ai]
-                  ;
+               ;
                if (rank == owners[gi]) {
                   plog << "  Sum reduce difference = "
                        << sum[ai] - correct_sum[ai];

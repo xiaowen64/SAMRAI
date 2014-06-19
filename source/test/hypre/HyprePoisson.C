@@ -192,8 +192,7 @@ void HyprePoisson::initializeLevelData(
             rhs_data->getPointer(),
             grid_geom->getDx(),
             patch_geom->getXLower());
-      }
-      else if (d_dim == tbox::Dimension(3)) {
+      } else if (d_dim == tbox::Dimension(3)) {
          SAMRAI_F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (
             pbox.lower()[0],
             pbox.upper()[0],
@@ -247,7 +246,7 @@ bool HyprePoisson::solvePoisson()
     * simultaneous setting the boundary values and initial guess.
     */
    boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(
-         level_number));
+                                                level_number));
    for (hier::PatchLevel::iterator ip(level->begin());
         ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
@@ -284,9 +283,9 @@ bool HyprePoisson::solvePoisson()
     * Present data on the solve.
     */
    tbox::plog << "\t" << (solver_ret ? "" : "NOT ") << "converged " << "\n"
-              << "      iterations: "<< d_poisson_hypre->getNumberOfIterations()
+              << "      iterations: " << d_poisson_hypre->getNumberOfIterations()
               << "\n"
-              << "      residual: "<< d_poisson_hypre->getRelativeResidualNorm()
+              << "      residual: " << d_poisson_hypre->getRelativeResidualNorm()
               << "\n"
               << std::flush;
 

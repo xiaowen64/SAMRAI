@@ -62,15 +62,16 @@ public:
       const std::string& object_name,
       const tbox::Dimension& dim,
       /*! Input database */
-      const boost::shared_ptr<tbox::Database> &database = boost::shared_ptr<tbox::Database>() );
+      const boost::shared_ptr<tbox::Database>& database = boost::shared_ptr<tbox::Database>());
 
    ~SinusoidalFrontGenerator();
 
    /*!
     * @brief Set tas on the tag level.
     */
-   virtual void setTags(
-      bool &exact_tagging,
+   virtual void
+   setTags(
+      bool& exact_tagging,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int tag_ln,
       int tag_data_id);
@@ -78,7 +79,6 @@ public:
    //@{ @name SAMRAI::mesh::StandardTagAndInitStrategy virtuals
 
 public:
-
    /*!
     * @brief Set the domain, possibly scaling up the specifications.
     *
@@ -91,16 +91,16 @@ public:
     * of autoscale_base_nprocs.
     */
    void setDomain(
-      hier::BoxContainer &domain,
+      hier::BoxContainer & domain,
       double xlo[],
       double xhi[],
       int autoscale_base_nprocs,
-      const tbox::SAMRAI_MPI &mpi);
+      const tbox::SAMRAI_MPI & mpi);
 
    virtual void
    resetHierarchyConfiguration(
       /*! New hierarchy */
-      const boost::shared_ptr<hier::PatchHierarchy> &new_hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
       /*! Coarsest level */ const int coarsest_level,
       /*! Finest level */ const int finest_level);
 
@@ -112,13 +112,13 @@ public:
       const double init_data_time,
       const bool initial_time,
       const bool allocate_data)
-      {
-         NULL_USE(patch);
-         NULL_USE(init_data_time);
-         NULL_USE(initial_time);
-         NULL_USE(allocate_data);
-         TBOX_ERROR("Should not be here.");
-      }
+   {
+      NULL_USE(patch);
+      NULL_USE(init_data_time);
+      NULL_USE(initial_time);
+      NULL_USE(allocate_data);
+      TBOX_ERROR("Should not be here.");
+   }
 
    bool
    packDerivedDataIntoDoubleBuffer(
@@ -129,7 +129,6 @@ public:
       int depth_index) const;
 
 public:
-
 #ifdef HAVE_HDF5
    /*!
     * @brief Tell a VisIt plotter which data to write for this class.
@@ -146,16 +145,16 @@ public:
     * so it is of more general use.  It does not require the
     * hierarchy.
     */
-   void computeFrontsData(
+   void
+   computeFrontsData(
       pdat::NodeData<double>* dist_data,
       pdat::CellData<int>* tag_data,
-      const std::vector<double> &buffer_distance,
+      const std::vector<double>& buffer_distance,
       const double xlo[],
       const double dx[],
-      const double time ) const;
+      const double time) const;
 
 private:
-
    /*!
     * @brief Compute distance and tag data for a patch.
     */
@@ -199,7 +198,7 @@ private:
    /*!
     * @brief Buffer distances for generating tags.
     */
-   std::vector<std::vector<double> >  d_buffer_distance;
+   std::vector<std::vector<double> > d_buffer_distance;
 
    boost::shared_ptr<tbox::Timer> t_setup;
    boost::shared_ptr<tbox::Timer> t_node_pos;

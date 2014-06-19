@@ -258,7 +258,7 @@ int main(
             input_db->getDatabase("GriddingAlgorithm"),
             tag_and_initializer,
             new_br,
-         tree_load_balancer));
+            tree_load_balancer));
       tbox::plog << "Gridding algorithm:" << std::endl;
       gridding_algorithm->printClassData(tbox::plog);
 

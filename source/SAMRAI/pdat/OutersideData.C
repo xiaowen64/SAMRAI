@@ -71,7 +71,7 @@ OutersideData<TYPE>::getDepth() const
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 OutersideData<TYPE>::getPointer(
    int side_normal,
    int side,
@@ -85,7 +85,7 @@ OutersideData<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 OutersideData<TYPE>::getPointer(
    int side_normal,
    int side,
@@ -238,10 +238,10 @@ OutersideData<TYPE>::copy(
       for (int d = 0; d < getDim().getValue(); ++d) {
          const hier::BoxContainer& box_list =
             t_overlap->getDestinationBoxContainer(d);
-         d_data[d][0]->copy(t_oside_src->getArrayData(d,0), box_list, src_offset);
-         d_data[d][0]->copy(t_oside_src->getArrayData(d,1), box_list, src_offset);
-         d_data[d][1]->copy(t_oside_src->getArrayData(d,0), box_list, src_offset);
-         d_data[d][1]->copy(t_oside_src->getArrayData(d,1), box_list, src_offset);
+         d_data[d][0]->copy(t_oside_src->getArrayData(d, 0), box_list, src_offset);
+         d_data[d][0]->copy(t_oside_src->getArrayData(d, 1), box_list, src_offset);
+         d_data[d][1]->copy(t_oside_src->getArrayData(d, 0), box_list, src_offset);
+         d_data[d][1]->copy(t_oside_src->getArrayData(d, 1), box_list, src_offset);
       }
    } else if (t_side_src != 0) {
       for (int d = 0; d < getDim().getValue(); ++d) {

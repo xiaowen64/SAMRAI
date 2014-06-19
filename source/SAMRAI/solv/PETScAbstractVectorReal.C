@@ -52,7 +52,7 @@ PETScAbstractVectorReal<TYPE>::PETScAbstractVectorReal(
 
    // Set PETSc vector data to this abstract vector object
    d_petsc_vector->data = this;
-   d_petsc_vector->petscnative = PETSC_FALSE; 
+   d_petsc_vector->petscnative = PETSC_FALSE;
    d_petsc_vector->map->n = 0;
    d_petsc_vector->map->N = 0;
    d_petsc_vector->map->bs = 1;

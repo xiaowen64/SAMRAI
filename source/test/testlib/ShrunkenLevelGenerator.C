@@ -25,12 +25,10 @@
 
 using namespace SAMRAI;
 
-
-
 ShrunkenLevelGenerator::ShrunkenLevelGenerator(
    const std::string& object_name,
    const tbox::Dimension& dim,
-   const boost::shared_ptr<tbox::Database> &database):
+   const boost::shared_ptr<tbox::Database>& database):
    d_name(object_name),
    d_dim(dim),
    d_hierarchy(),
@@ -44,34 +42,32 @@ ShrunkenLevelGenerator::ShrunkenLevelGenerator(
        * Input parameters to determine whether to tag by buffering
        * fronts or shrinking level, and by how much.
        */
-      const std::string sname( "shrink_distance_" );
-      for ( int ln=0; ; ++ln ) {
-         const std::string lnstr( tbox::Utilities::intToString(ln) );
+      const std::string sname("shrink_distance_");
+      for (int ln = 0; ; ++ln) {
+         const std::string lnstr(tbox::Utilities::intToString(ln));
 
          // Look for buffer input first, then shrink input.
          const std::string snameln = sname + lnstr;
 
          std::vector<double> tmpa;
 
-         if ( database->isDouble(snameln) ) {
+         if (database->isDouble(snameln)) {
             tmpa = database->getDoubleVector(snameln);
-            if ( static_cast<int>(tmpa.size()) != dim.getValue() ) {
+            if (static_cast<int>(tmpa.size()) != dim.getValue()) {
                TBOX_ERROR(snameln << " input parameter must have " << dim << " values");
             }
          }
 
-         if ( !tmpa.empty() ) {
+         if (!tmpa.empty()) {
             d_shrink_distance.resize(d_shrink_distance.size() + 1);
-            d_shrink_distance.back().insert( d_shrink_distance.back().end(),
-                                             &tmpa[0],
-                                             &tmpa[0]+static_cast<int>(tmpa.size()) );
-         }
-         else {
+            d_shrink_distance.back().insert(d_shrink_distance.back().end(),
+               &tmpa[0],
+               &tmpa[0] + static_cast<int>(tmpa.size()));
+         } else {
             break;
          }
 
       }
-
 
       d_domain_scale_method =
          database->getCharWithDefault("domain_scale_method", d_domain_scale_method);
@@ -80,24 +76,19 @@ ShrunkenLevelGenerator::ShrunkenLevelGenerator(
 
 }
 
-
-
 ShrunkenLevelGenerator::~ShrunkenLevelGenerator()
 {
 }
-
-
-
 
 /*
  ***********************************************************************
  ***********************************************************************
  */
 void ShrunkenLevelGenerator::setTags(
-   bool &exact_tagging,
+   bool& exact_tagging,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int tag_ln,
-   int tag_data_id )
+   int tag_data_id)
 {
    setTagsByShrinkingLevel(
       hierarchy,
@@ -106,39 +97,36 @@ void ShrunkenLevelGenerator::setTags(
       hier::IntVector::getZero(d_dim),
       &d_shrink_distance[1][0]);
    exact_tagging = true;
-   return;
 }
 
-
-
 void ShrunkenLevelGenerator::setDomain(
-   hier::BoxContainer &domain,
+   hier::BoxContainer& domain,
    double xlo[],
    double xhi[],
    int autoscale_base_nprocs,
-   const tbox::SAMRAI_MPI &mpi)
+   const tbox::SAMRAI_MPI& mpi)
 {
-   TBOX_ASSERT( !domain.isEmpty() );
+   TBOX_ASSERT(!domain.isEmpty());
    NULL_USE(xlo);
    NULL_USE(xhi);
 
-   if ( d_domain_scale_method == 'r' ) {
+   if (d_domain_scale_method == 'r') {
 
-      if ( domain.size() != 1 ) {
+      if (domain.size() != 1) {
          TBOX_ERROR("ShrunkenLevelGenerator resolution scaling only supports\n"
-                    << "single-box domains.");
+            << "single-box domains.");
       }
 
       hier::Box domain_box = domain.front();
       hier::IntVector tmp_intvec = domain_box.numberCells();
-      const tbox::Dimension &dim = domain_box.getDim();
+      const tbox::Dimension& dim = domain_box.getDim();
 
       double scale_factor = static_cast<double>(mpi.getSize()) / autoscale_base_nprocs;
-      double linear_scale_factor = pow( scale_factor, 1.0/dim.getValue() );
+      double linear_scale_factor = pow(scale_factor, 1.0 / dim.getValue());
 
-      for ( int d=0; d<dim.getValue(); ++d ) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          // xhi[d] = xlo[d] + linear_scale_factor*(xhi[d]-xlo[d]);
-         tmp_intvec(d) = static_cast<int>(0.5 + tmp_intvec(d)*linear_scale_factor);
+         tmp_intvec(d) = static_cast<int>(0.5 + tmp_intvec(d) * linear_scale_factor);
       }
       tmp_intvec -= hier::IntVector::getOne(domain_box.getDim());
       tbox::plog << "ShrunkenLevelGenerator::setDomain changing domain from "
@@ -149,48 +137,47 @@ void ShrunkenLevelGenerator::setDomain(
       domain.clear();
       domain.pushBack(domain_box);
 
-   }
-   else {
+   } else {
 
-      if ( mpi.getSize() < autoscale_base_nprocs ) {
+      if (mpi.getSize() < autoscale_base_nprocs) {
          TBOX_ERROR("ShrunkenLevelGenerator::setDomain: When using\n"
-                    << "domain_scale_method = 't', autoscale_base_nprocs\n"
-                    << "cannot be smaller than number of processes.\n"
-                    << "Either set domain_scale_method = 'r', increase\n"
-                    << "autoscale_base_nprocs or run with mor processes." );
+            << "domain_scale_method = 't', autoscale_base_nprocs\n"
+            << "cannot be smaller than number of processes.\n"
+            << "Either set domain_scale_method = 'r', increase\n"
+            << "autoscale_base_nprocs or run with mor processes.");
       }
 
       hier::BoxContainer::const_iterator ii = domain.begin();
       ii->getDim();
-      const tbox::Dimension &dim = domain.begin()->getDim();
+      const tbox::Dimension& dim = domain.begin()->getDim();
 
       int doubling_dir = 1;
       while (autoscale_base_nprocs < mpi.getSize()) {
-         for ( hier::BoxContainer::iterator bi=domain.begin();
-               bi!=domain.end(); ++bi ) {
-            hier::Box &input_box = *bi;
-            input_box.upper()(doubling_dir) += input_box.numberCells(doubling_dir);
+         for (hier::BoxContainer::iterator bi = domain.begin();
+              bi != domain.end(); ++bi) {
+            hier::Box& input_box = *bi;
+            input_box.upper() (doubling_dir) += input_box.numberCells(doubling_dir);
          }
          xhi[doubling_dir] += xhi[doubling_dir] - xlo[doubling_dir];
-         doubling_dir = (doubling_dir + 1)%dim.getValue();
+         doubling_dir = (doubling_dir + 1) % dim.getValue();
          autoscale_base_nprocs *= 2;
          tbox::plog << "autoscale_base_nprocs = " << autoscale_base_nprocs << std::endl
                     << domain.format("IB: ", 2) << std::endl;
       }
 
-      if ( autoscale_base_nprocs != mpi.getSize() ) {
+      if (autoscale_base_nprocs != mpi.getSize()) {
          TBOX_ERROR("If autoscale_base_nprocs (" << autoscale_base_nprocs << ") is given,\n"
-                    <<"number of processes (" << mpi.getSize() << ") must be\n"
-                    <<"a power-of-2 times the value of autoscale_base_nprocs.");
+                                                 << "number of processes (" << mpi.getSize()
+                                                 << ") must be\n"
+                                                 <<
+            "a power-of-2 times the value of autoscale_base_nprocs.");
       }
    }
 
 }
 
-
-
 void ShrunkenLevelGenerator::resetHierarchyConfiguration(
-   /*! New hierarchy */ const boost::shared_ptr<hier::PatchHierarchy> &new_hierarchy,
+   /*! New hierarchy */ const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
    /*! Coarsest level */ const int coarsest_level,
    /*! Finest level */ const int finest_level)
 {
@@ -201,14 +188,12 @@ void ShrunkenLevelGenerator::resetHierarchyConfiguration(
    TBOX_ASSERT(d_hierarchy);
 }
 
-
-
 void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int tag_ln,
    int tag_data_id,
-   const hier::IntVector &shrink_cells,
-   const double *shrink_distance )
+   const hier::IntVector& shrink_cells,
+   const double* shrink_distance)
 {
 
    const tbox::Dimension dim(hierarchy->getDim());
@@ -220,11 +205,10 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
 
    const int tag_val = 1;
 
-   const boost::shared_ptr<hier::PatchLevel> &tag_level(
+   const boost::shared_ptr<hier::PatchLevel>& tag_level(
       hierarchy->getPatchLevel(tag_ln));
 
-   const hier::BoxLevel &Ltag = *tag_level->getBoxLevel();
-
+   const hier::BoxLevel& Ltag = *tag_level->getBoxLevel();
 
    /*
     * Compute shrinkage in terms of coarse cell count.  It should be
@@ -248,17 +232,17 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
 
    boost::shared_ptr<hier::BoxLevel> tagfootprint;
    boost::shared_ptr<hier::MappingConnector> Ltag_to_tagfootprint;
-   const hier::Connector &Ltag_to_Ltag = Ltag.findConnector(Ltag,
-      shrink_width,
-      hier::CONNECTOR_CREATE);
+   const hier::Connector& Ltag_to_Ltag = Ltag.findConnector(Ltag,
+         shrink_width,
+         hier::CONNECTOR_CREATE);
 
    hier::BoxLevelConnectorUtils blcu;
-   blcu.computeInternalParts( tagfootprint,
-                              Ltag_to_tagfootprint,
-                              Ltag_to_Ltag,
-                              -shrink_width );
-   tbox::plog << "Ltag_to_tagfootprint:\n" << Ltag_to_tagfootprint->format("Ltag->tagfootprint: ", 2);
-
+   blcu.computeInternalParts(tagfootprint,
+      Ltag_to_tagfootprint,
+      Ltag_to_Ltag,
+      -shrink_width);
+   tbox::plog << "Ltag_to_tagfootprint:\n" << Ltag_to_tagfootprint->format("Ltag->tagfootprint: ",
+      2);
 
    for (hier::PatchLevel::iterator pi(tag_level->begin());
         pi != tag_level->end(); ++pi) {
@@ -271,28 +255,25 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
 
       tag_data->getArrayData().fillAll(0);
 
-      if ( !Ltag_to_tagfootprint->hasNeighborSet(patch->getBox().getBoxId()) ) {
+      if (!Ltag_to_tagfootprint->hasNeighborSet(patch->getBox().getBoxId())) {
          /*
           * Ltag_to_tagfootprint is a mapping Connector, so missing
           * neighbor set means the box has itself as its only
           * neighbor.
           */
          tag_data->getArrayData().fillAll(1);
-      }
-      else {
+      } else {
          hier::Connector::ConstNeighborhoodIterator ni =
             Ltag_to_tagfootprint->find(patch->getBox().getBoxId());
 
-         for ( hier::Connector::ConstNeighborIterator na = Ltag_to_tagfootprint->begin(ni);
-               na != Ltag_to_tagfootprint->end(ni); ++na ) {
+         for (hier::Connector::ConstNeighborIterator na = Ltag_to_tagfootprint->begin(ni);
+              na != Ltag_to_tagfootprint->end(ni); ++na) {
 
-            const hier::Box &tag_box = *na;
+            const hier::Box& tag_box = *na;
             tag_data->getArrayData().fillAll(tag_val, tag_box);
 
          }
       }
 
    }
-
-   return;
 }

@@ -264,9 +264,9 @@ int main(
                     math::HierarchyDataOpsReal<double> >(
             math::HierarchyDataOpsManager::getManager()->getOperationsDouble(fwgt, hierarchy)));
       boost::shared_ptr<math::HierarchyNodeDataOpsReal<double> > node_ops(
-          BOOST_CAST<math::HierarchyNodeDataOpsReal<double>,
+         BOOST_CAST<math::HierarchyNodeDataOpsReal<double>,
                     math::HierarchyDataOpsReal<double> >(
-             math::HierarchyDataOpsManager::getManager()->getOperationsDouble(nwgt, hierarchy)));
+            math::HierarchyDataOpsManager::getManager()->getOperationsDouble(nwgt, hierarchy)));
 
       TBOX_ASSERT(cell_ops);
       TBOX_ASSERT(face_ops);

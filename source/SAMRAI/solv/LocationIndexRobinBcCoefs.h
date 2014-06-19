@@ -93,7 +93,7 @@ public:
       const tbox::Dimension& dim,
       const std::string& object_name,
       const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>() );
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * @brief Destructor.
@@ -166,7 +166,7 @@ public:
    {
       if (location_index < 0 || location_index >= 2 * d_dim.getValue()) {
          TBOX_ERROR("Location index in " << d_dim.getValue() << "D must be\n"
-                    << "in [0," << 2 * d_dim.getValue() - 1 << ").\n");
+                                         << "in [0," << 2 * d_dim.getValue() - 1 << ").\n");
       }
       d_a_map[location_index] = 1.0;
       d_b_map[location_index] = 0.0;
@@ -188,7 +188,7 @@ public:
    {
       if (location_index < 0 || location_index >= 2 * d_dim.getValue()) {
          TBOX_ERROR("Location index in " << d_dim.getValue() << "D must be\n"
-                    << "in [0," << 2 * d_dim.getValue() - 1 << ").\n");
+                                         << "in [0," << 2 * d_dim.getValue() - 1 << ").\n");
       }
       d_a_map[location_index] = 0.0;
       d_b_map[location_index] = 1.0;
@@ -222,7 +222,7 @@ public:
    {
       if (location_index < 0 || location_index >= 2 * d_dim.getValue()) {
          TBOX_ERROR("Location index in " << d_dim.getValue() << "D must be\n"
-                    << "in [0," << 2 * d_dim.getValue() - 1 << ").\n");
+                                         << "in [0," << 2 * d_dim.getValue() - 1 << ").\n");
       }
       d_a_map[location_index] = a;
       d_b_map[location_index] = b;
@@ -248,7 +248,7 @@ public:
    {
       if (location_index < 0 || location_index >= 2 * d_dim.getValue()) {
          TBOX_ERROR("Location index in " << d_dim.getValue() << "D must be\n"
-                    << "in [0," << 2 * d_dim.getValue() - 1 << ").\n");
+                                         << "in [0," << 2 * d_dim.getValue() - 1 << ").\n");
       }
       a = d_a_map[location_index];
       b = d_b_map[location_index];

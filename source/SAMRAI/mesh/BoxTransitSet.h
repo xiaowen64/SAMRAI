@@ -29,62 +29,77 @@
 namespace SAMRAI {
 namespace mesh {
 
-
-/*
+/*!
  * @brief Implementation of TransitLoad, representing the load with a
  * set of boxes, each of which represents a load and knows the origin
  * of its load.
  *
- * As a container, this class is identical to
+ * As a container, this class is nearly identical to
  * std::set<BoxInTransit,BoxInTransitMoreLoad>.
  */
 
-class BoxTransitSet : public TransitLoad {
+class BoxTransitSet:public TransitLoad
+{
 
 public:
-
    typedef double LoadType;
 
    //! @name Constructor
-   BoxTransitSet( const PartitioningParams &pparams );
+   BoxTransitSet(
+      const PartitioningParams& pparams);
 
    /*!
     * @name Copy constructor
     *
     * The content may be omitted from the copy, using the flag copy_load.
     */
-   BoxTransitSet( const BoxTransitSet &other, bool copy_load = true );
+   BoxTransitSet(
+      const BoxTransitSet& other,
+      bool copy_load = true);
 
    //@{
    //! @name TransitLoad abstract interfaces
 
    //! @copydoc TransitLoad::clone()
-   BoxTransitSet* clone() const;
+   BoxTransitSet *
+   clone() const;
 
    //! @copydoc TransitLoad::initialize()
-   void initialize();
+   void
+   initialize();
 
    //! @copydoc TransitLoad::getSumLoad()
-   LoadType getSumLoad() const { return d_sumload; }
+   LoadType getSumLoad() const {
+      return d_sumload;
+   }
 
    //! @copydoc TransitLoad::insertAll( const hier::BoxContainer & )
-   void insertAll( const hier::BoxContainer &box_container );
+   void
+   insertAll(
+      const hier::BoxContainer& box_container);
 
-   //! @copydoc TransitLoad::insertAll( const TransitLoad & )
-   void insertAll( TransitLoad &other );
+   //! @copydoc TransitLoad::insertAll( TransitLoad & )
+   void
+   insertAll(
+      TransitLoad& other);
 
    //! @copydoc TransitLoad::getNumberOfItems()
-   size_t getNumberOfItems() const;
+   size_t
+   getNumberOfItems() const;
 
    //! @copydoc TransitLoad::getNumberOfOriginatingProcesses()
-   size_t getNumberOfOriginatingProcesses() const;
+   size_t
+   getNumberOfOriginatingProcesses() const;
 
    //! @copydoc TransitLoad::putToMessageStream()
-   void putToMessageStream( tbox::MessageStream &msg ) const;
+   void
+   putToMessageStream(
+      tbox::MessageStream& msg) const;
 
    //! @copydoc TransitLoad::getFromMessageStream()
-   void getFromMessageStream( tbox::MessageStream &msg );
-
+   void
+   getFromMessageStream(
+      tbox::MessageStream& msg);
 
    /*!
     * @copydoc TransitLoad::adjustLoad()
@@ -94,8 +109,7 @@ public:
       TransitLoad& hold_bin,
       LoadType ideal_load,
       LoadType low_load,
-      LoadType high_load );
-
+      LoadType high_load);
 
    /*!
     * @copydoc TransitLoad::assignToLocalAndPopulateMaps()
@@ -105,12 +119,11 @@ public:
    void
    assignToLocalAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
-      hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced,
-      double flexible_load_tol = 0.0 );
+      hier::MappingConnector& balanced_to_unbalanced,
+      hier::MappingConnector& unbalanced_to_balanced,
+      double flexible_load_tol = 0.0);
 
    //@}
-
 
    /*
     * @brief Reassign the boxes to the new owner.
@@ -121,17 +134,15 @@ public:
     */
    void
    reassignOwnership(
-      hier::SequentialLocalIdGenerator &id_gen,
-      int new_owner_rank );
-
+      hier::SequentialLocalIdGenerator& id_gen,
+      int new_owner_rank);
 
    /*!
     * @brief Put local Boxes into a BoxLevel.
     */
    void
    putInBoxLevel(
-      hier::BoxLevel &box_level ) const;
-
+      hier::BoxLevel& box_level) const;
 
    /*!
     * @brief Generate unbalanced<==>balanced edges incident from
@@ -142,8 +153,8 @@ public:
     */
    void
    generateLocalBasedMapEdges(
-      hier::MappingConnector &unbalanced_to_balanced,
-      hier::MappingConnector &balanced_to_unbalanced ) const;
+      hier::MappingConnector& unbalanced_to_balanced,
+      hier::MappingConnector& balanced_to_unbalanced) const;
 
    /*!
     * @brief Setup names of timers.
@@ -159,10 +170,11 @@ public:
    setTimerPrefix(
       const std::string& timer_prefix);
 
-   void recursivePrint(
-      std::ostream &co=tbox::plog,
-      const std::string &border=std::string(),
-      int detail_depth=1 ) const;
+   void
+   recursivePrint(
+      std::ostream& co = tbox::plog,
+      const std::string& border = std::string(),
+      int detail_depth = 1) const;
 
    /*!
     * @brief Intermediary between BoxTransitSet and output streams,
@@ -174,12 +186,12 @@ public:
 
       //! @brief Insert a BoxTransitSet to the stream according to Outputter settings.
       friend std::ostream&
-      operator << ( std::ostream& s,
-                    const Outputter& f)
-         {
-            f.d_boxes.recursivePrint(s, f.d_border, f.d_detail_depth);
-            return s;
-         }
+      operator << (std::ostream& s,
+                   const Outputter& f)
+      {
+         f.d_boxes.recursivePrint(s, f.d_border, f.d_detail_depth);
+         return s;
+      }
 
 private:
       friend class BoxTransitSet;
@@ -190,13 +202,16 @@ private:
       Outputter(
          const BoxTransitSet& boxes,
          const std::string& border,
-         int detail_depth = 2) :
+         int detail_depth = 2):
          d_boxes(boxes),
          d_border(border),
          d_detail_depth(detail_depth)
-         {}
+      {
+      }
 
-      void operator = (const Outputter& rhs); // Unimplemented private.
+      void
+      operator = (
+         const Outputter& rhs);               // Unimplemented private.
       const BoxTransitSet& d_boxes;
       const std::string d_border;
       const int d_detail_depth;
@@ -219,19 +234,16 @@ private:
    format(
       const std::string& border = std::string(),
       int detail_depth = 2) const
-      {
-         return Outputter(*this, border, detail_depth);
-      }
+   {
+      return Outputter(*this, border, detail_depth);
+   }
 
    //@}
 
-
 private:
-
    static const int BoxTransitSet_EDGETAG0 = 3;
    static const int BoxTransitSet_EDGETAG1 = 4;
    static const int BoxTransitSet_FIRSTDATALEN = 1000;
-
 
    /*!
     * @brief Comparison functor for sorting BoxInTransit from more to
@@ -249,13 +261,13 @@ private:
          if (a.getBox().size() != b.getBox().size()) {
             return a.getLoad() > b.getLoad();
          }
-         if ( a.getBox().getBlockId() != b.getBox().getBlockId() ) {
+         if (a.getBox().getBlockId() != b.getBox().getBlockId()) {
             return a.getBox().getBlockId() < b.getBox().getBlockId();
          }
-         if ( a.getBox().lower() != b.getBox().lower() ) {
+         if (a.getBox().lower() != b.getBox().lower()) {
             return lexicalIndexLessThan(a.getBox().lower(), b.getBox().lower());
          }
-         if ( a.getBox().upper() != b.getBox().upper() ) {
+         if (a.getBox().upper() != b.getBox().upper()) {
             return lexicalIndexLessThan(a.getBox().upper(), b.getBox().upper());
          }
          return a.getOrigBox().getBoxId() < b.getOrigBox().getBoxId();
@@ -271,7 +283,6 @@ private:
    };
 
 public:
-
    //@{
    //! @name Interfaces like the C++ standard stl::set, to help readability.
    typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::iterator iterator;
@@ -279,39 +290,63 @@ public:
    typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::reverse_iterator reverse_iterator;
    typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::key_type key_type;
    typedef std::set<BoxInTransit, BoxInTransitMoreLoad>::value_type value_type;
-   iterator begin() { return d_set.begin(); }
-   iterator end() { return d_set.end(); }
-   const_iterator begin() const { return d_set.begin(); }
-   const_iterator end() const { return d_set.end(); }
-   reverse_iterator rbegin() const { return d_set.rbegin(); }
-   reverse_iterator rend() const { return d_set.rend(); }
-   size_t size() const { return d_set.size(); }
-   std::pair<iterator, bool> insert( const value_type &x ) {
-      std::pair<iterator,bool> rval = d_set.insert(x);
-      if ( rval.second ) d_sumload += x.getLoad();
+   iterator begin() {
+      return d_set.begin();
+   }
+   iterator end() {
+      return d_set.end();
+   }
+   const_iterator begin() const {
+      return d_set.begin();
+   }
+   const_iterator end() const {
+      return d_set.end();
+   }
+   reverse_iterator rbegin() const {
+      return d_set.rbegin();
+   }
+   reverse_iterator rend() const {
+      return d_set.rend();
+   }
+   size_t size() const {
+      return d_set.size();
+   }
+   std::pair<iterator, bool> insert(const value_type& x) {
+      std::pair<iterator, bool> rval = d_set.insert(x);
+      if (rval.second) d_sumload += x.getLoad();
       return rval;
    }
-   void erase(iterator pos) { d_sumload -= pos->getLoad(); d_set.erase(pos); }
-   size_t erase(const key_type &k) {
+   void erase(iterator pos) {
+      d_sumload -= pos->getLoad();
+      d_set.erase(pos);
+   }
+   size_t erase(const key_type& k) {
       const size_t num_erased = d_set.erase(k);
-      if ( num_erased ) d_sumload -= k.getLoad();
+      if (num_erased) d_sumload -= k.getLoad();
       return num_erased;
    }
-   bool empty() const { return d_set.empty(); }
-   void clear() { d_sumload = 0; d_set.clear(); }
-   void swap( BoxTransitSet &other ) {
+   bool empty() const {
+      return d_set.empty();
+   }
+   void clear() {
+      d_sumload = 0;
+      d_set.clear();
+   }
+   void swap(BoxTransitSet& other) {
       const LoadType tl = d_sumload;
       d_sumload = other.d_sumload;
       other.d_sumload = tl;
       d_set.swap(other.d_set);
    }
-   iterator lower_bound( const key_type &k ) const { return d_set.lower_bound(k); }
-   iterator upper_bound( const key_type &k ) const { return d_set.upper_bound(k); }
+   iterator lower_bound(const key_type& k) const {
+      return d_set.lower_bound(k);
+   }
+   iterator upper_bound(const key_type& k) const {
+      return d_set.upper_bound(k);
+   }
    //@}
 
 private:
-
-
    //@{ @name Load adjustment methods
 
    /*!
@@ -331,11 +366,12 @@ private:
     * @return Net load added to this BoxTransitSet.  If negative, load
     * decreased.
     */
-   LoadType adjustLoadByPopping(
+   LoadType
+   adjustLoadByPopping(
       BoxTransitSet& hold_bin,
       LoadType ideal_load,
       LoadType low_load,
-      LoadType high_load );
+      LoadType high_load);
 
    /*!
     * @brief Adjust the load in this BoxTransitSet by swapping boxes
@@ -354,12 +390,12 @@ private:
     * @return Net load added to this BoxTransitSet.  If negative, load
     * decreased.
     */
-   LoadType adjustLoadBySwapping(
+   LoadType
+   adjustLoadBySwapping(
       BoxTransitSet& hold_bin,
       LoadType ideal_load,
       LoadType low_load,
-      LoadType high_load );
-
+      LoadType high_load);
 
    /*!
     * @brief Adjust the load in this BoxTransitSet by moving work
@@ -379,12 +415,12 @@ private:
     * @return Net load added to this BoxTransitSet.  If negative, load
     * decreased.
     */
-   LoadType adjustLoadByBreaking(
+   LoadType
+   adjustLoadByBreaking(
       BoxTransitSet& hold_bin,
       LoadType ideal_load,
       LoadType low_load,
-      LoadType high_load );
-
+      LoadType high_load);
 
    /*!
     * @brief Find a BoxInTransit in each of the source and destination
@@ -405,16 +441,16 @@ private:
     *
     * @param high_transfer
     */
-   bool swapLoadPair(
+   bool
+   swapLoadPair(
       BoxTransitSet& src,
       BoxTransitSet& dst,
       LoadType& actual_transfer,
       LoadType ideal_transfer,
       LoadType low_transfer,
-      LoadType high_transfer ) const;
+      LoadType high_transfer) const;
 
    //@}
-
 
    /*!
     * @brief Communicate semilocal relationships to load donors and
@@ -430,29 +466,27 @@ private:
     *
     * @param [out] unbalanced_to_balanced
     */
-   void constructSemilocalUnbalancedToBalanced(
-      hier::MappingConnector &unbalanced_to_balanced ) const;
-
-
-   /*!
-    * @brief Re-cast a TransitLoad object to a BoxTransitSet.
-    */
-   const BoxTransitSet &recastTransitLoad( const TransitLoad &transit_load ) {
-      const BoxTransitSet *ptr = static_cast<const BoxTransitSet*>(&transit_load);
-      TBOX_ASSERT(ptr);
-      return *ptr;
-   }
-
+   void
+   constructSemilocalUnbalancedToBalanced(
+      hier::MappingConnector& unbalanced_to_balanced) const;
 
    /*!
     * @brief Re-cast a TransitLoad object to a BoxTransitSet.
     */
-   BoxTransitSet &recastTransitLoad( TransitLoad &transit_load ) {
-      BoxTransitSet *ptr = static_cast<BoxTransitSet*>(&transit_load);
+   const BoxTransitSet& recastTransitLoad(const TransitLoad& transit_load) {
+      const BoxTransitSet* ptr = static_cast<const BoxTransitSet *>(&transit_load);
       TBOX_ASSERT(ptr);
       return *ptr;
    }
 
+   /*!
+    * @brief Re-cast a TransitLoad object to a BoxTransitSet.
+    */
+   BoxTransitSet& recastTransitLoad(TransitLoad& transit_load) {
+      BoxTransitSet* ptr = static_cast<BoxTransitSet *>(&transit_load);
+      TBOX_ASSERT(ptr);
+      return *ptr;
+   }
 
    /*!
     * @brief Set up things for the entire class.
@@ -464,7 +498,6 @@ private:
       getAllTimers(s_default_timer_prefix, timers);
    }
 
-
    /*!
     * Free static timers.
     *
@@ -474,9 +507,8 @@ private:
       s_static_timers.clear();
    }
 
-
    //! @brief Compute the load for a Box.
-   double computeLoad( const hier::Box& box) const {
+   double computeLoad(const hier::Box& box) const {
       return double(box.size());
    }
 
@@ -498,20 +530,17 @@ private:
    void
    getFromInput();
 
-
    //! @brief Balance penalty is proportional to imbalance.
-   double computeBalancePenalty( double imbalance) const {
+   double computeBalancePenalty(double imbalance) const {
       return tbox::MathUtilities<double>::Abs(imbalance);
    }
-
 
    std::set<BoxInTransit, BoxInTransitMoreLoad> d_set;
    LoadType d_sumload;
 
-   const PartitioningParams *d_pparams;
+   const PartitioningParams* d_pparams;
 
    BalanceBoxBreaker d_box_breaker;
-
 
    //@{
    //! @name Debugging stuff.
@@ -576,8 +605,6 @@ private:
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;
 };
-
-
 
 }
 }

@@ -102,7 +102,7 @@ SideData<TYPE>::getDepth() const
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 SideData<TYPE>::getPointer(
    int side_normal,
    int depth)
@@ -115,7 +115,7 @@ SideData<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 SideData<TYPE>::getPointer(
    int side_normal,
    int depth) const
@@ -268,7 +268,7 @@ SideData<TYPE>::copy(
       TBOX_ASSERT(t_src->getDirectionVector() == d_directions);
 
       const hier::Transformation& transformation =
-         t_overlap->getTransformation();         
+         t_overlap->getTransformation();
       if (transformation.getRotation() == hier::Transformation::NO_ROTATE) {
 
          for (int d = 0; d < getDim().getValue(); ++d) {

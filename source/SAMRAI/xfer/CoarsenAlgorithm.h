@@ -249,7 +249,7 @@ public:
    createSchedule(
       const boost::shared_ptr<hier::PatchLevel>& crse_level,
       const boost::shared_ptr<hier::PatchLevel>& fine_level,
-      CoarsenPatchStrategy * coarsen_strategy = 0,
+      CoarsenPatchStrategy* coarsen_strategy = 0,
       const boost::shared_ptr<CoarsenTransactionFactory>& transaction_factory =
          boost::shared_ptr<CoarsenTransactionFactory>());
 

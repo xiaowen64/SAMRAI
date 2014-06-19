@@ -248,7 +248,7 @@ OutersideGeometry::doOverlap(
    hier::Box src_shift(src_box);
    transformation.transform(src_shift);
    const hier::Box dst_ghost(
-   hier::Box::grow(dst_geometry.getBox(), dst_geometry.getGhosts()));
+      hier::Box::grow(dst_geometry.getBox(), dst_geometry.getGhosts()));
 
    // Compute the intersection (if any) for each of the side directions
 
@@ -289,14 +289,14 @@ OutersideGeometry::doOverlap(
             hier::Box low_src_side(src_side);
             low_src_side.upper(d) = low_src_side.lower(d);
 
-            hier::Box low_low_overlap(low_src_side * msk_side *
-                                      low_dst_side * fill_side);
+            hier::Box low_low_overlap(low_src_side * msk_side
+                                      * low_dst_side * fill_side);
             if (!low_low_overlap.empty()) {
                dst_boxes[d].pushBack(low_low_overlap);
             }
 
-            hier::Box low_hig_overlap(low_src_side * msk_side *
-                                      hig_dst_side * fill_side);
+            hier::Box low_hig_overlap(low_src_side * msk_side
+                                      * hig_dst_side * fill_side);
             if (!low_hig_overlap.empty()) {
                dst_boxes[d].pushBack(low_hig_overlap);
             }
@@ -305,14 +305,14 @@ OutersideGeometry::doOverlap(
             hier::Box hig_src_side(src_side);
             hig_src_side.lower(d) = hig_src_side.upper(d);
 
-            hier::Box hig_low_overlap(hig_src_side * msk_side *
-                                      low_dst_side * fill_side);
+            hier::Box hig_low_overlap(hig_src_side * msk_side
+                                      * low_dst_side * fill_side);
             if (!hig_low_overlap.empty()) {
                dst_boxes[d].pushBack(hig_low_overlap);
             }
 
-            hier::Box hig_hig_overlap(hig_src_side * msk_side *
-                                      hig_dst_side * fill_side);
+            hier::Box hig_hig_overlap(hig_src_side * msk_side
+                                      * hig_dst_side * fill_side);
             if (!hig_hig_overlap.empty()) {
                dst_boxes[d].pushBack(hig_hig_overlap);
             }
@@ -344,7 +344,6 @@ OutersideGeometry::doOverlap(
    return boost::make_shared<SideOverlap>(dst_boxes, transformation);
 
 }
-
 
 /*
  *************************************************************************

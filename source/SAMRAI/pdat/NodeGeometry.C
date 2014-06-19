@@ -223,8 +223,7 @@ NodeGeometry::transform(
          NodeIndex tmp_index(index);
          index(0) = -tmp_index(0);
       }
-   }
-   else if (dim.getValue() == 2) {
+   } else if (dim.getValue() == 2) {
       const int rotation_num = static_cast<int>(rotation);
       if (rotation_num > 3) {
          TBOX_ERROR("NodeGeometry::transform invalid 2D RotationIdentifier.");

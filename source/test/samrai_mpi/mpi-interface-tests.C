@@ -117,20 +117,21 @@ int mpiInterfaceTestParallelPrefixSum(
       data[1] = 10; // Prefix sum should yield 10*(rank+1)
       data[2] = mpi.getRank(); // Prefix sum should yield triangular numbers.
       mpi.parallelPrefixSum(data, 3, 0);
-      if (data[0] != mpi.getRank()+1) {
+      if (data[0] != mpi.getRank() + 1) {
          perr << "parallelPrefixSum test failed." << std::endl;
          rval += 1;
       }
-      if (data[1] != 10*(mpi.getRank()+1)) {
+      if (data[1] != 10 * (mpi.getRank() + 1)) {
          perr << "parallelPrefixSum test failed." << std::endl;
          rval += 1;
       }
-      if (data[2] != mpi.getRank()*(mpi.getRank()+1)/2) {
+      if (data[2] != mpi.getRank() * (mpi.getRank() + 1) / 2) {
          perr << "parallelPrefixSum test failed." << std::endl;
          rval += 1;
       }
-      for ( int i=0; i<3; ++i ) {
-         std::cout << mpi.getRank() << ": ParallelPrefixSum[" << i << "] = " << data[i] << std::endl;
+      for (int i = 0; i < 3; ++i) {
+         std::cout << mpi.getRank() << ": ParallelPrefixSum[" << i << "] = " << data[i]
+                   << std::endl;
       }
 
       fail_count += rval;

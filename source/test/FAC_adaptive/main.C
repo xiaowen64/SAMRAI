@@ -148,7 +148,7 @@ int main(
        */
       /*
        * Create a grid geometry required for the patchHierarchy object.
-          */
+       */
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             dim,
@@ -166,7 +166,7 @@ int main(
        * Create the problem-specific object implementing the required
        * SAMRAI virtual functions.
        */
- 
+
       std::string adaptive_poisson_name = "AdaptivePoisson";
       std::string fac_ops_name =
          adaptive_poisson_name + ":scalar poisson operator";
@@ -210,12 +210,12 @@ int main(
             boost::shared_ptr<tbox::Database>()));
 
       AdaptivePoisson adaptive_poisson(adaptive_poisson_name,
-         dim,
-         fac_ops,
-         fac_precond,
-         *(input_db->getDatabase("AdaptivePoisson")),
-         &tbox::pout,
-         &tbox::plog);
+                                       dim,
+                                       fac_ops,
+                                       fac_precond,
+                                       *(input_db->getDatabase("AdaptivePoisson")),
+                                       &tbox::pout,
+                                       &tbox::plog);
 
       /*
        * Create the tag-and-initializer, box-generator and load-balancer

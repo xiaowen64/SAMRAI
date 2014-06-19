@@ -174,7 +174,7 @@ void OutersideDataTest::registerVariables(
                d_dim,
                d_variable_dst_name[i],
                d_variable_depth[i]));
-      } 
+      }
       if (d_do_refine) {
          commtest->registerVariable(d_variables_src[i],
             d_variables_dst[i],
@@ -553,7 +553,7 @@ bool OutersideDataTest::verifyResults(
                dbox_lo.upper(id) = dbox_lo.lower(id);
                hier::BoxIterator loend(dbox_lo.end());
                for (hier::BoxIterator si(dbox_lo.begin()); si != loend; ++si) {
-                  pdat::SideIndex sndx(*si, id, 0); 
+                  pdat::SideIndex sndx(*si, id, 0);
                   double correct = (*solution)(sndx);
                   for (int d = 0; d < depth; ++d) {
                      double result = (*oside_data)(sndx, 0, d);
@@ -575,7 +575,7 @@ bool OutersideDataTest::verifyResults(
                dbox_hi.lower(id) = dbox_hi.upper(id);
                hier::BoxIterator hiend(dbox_hi.end());
                for (hier::BoxIterator si(dbox_hi.begin()); si != hiend; ++si) {
-                  pdat::SideIndex sndx(*si, id, 1); 
+                  pdat::SideIndex sndx(*si, id, 1);
                   double correct = (*solution)(sndx);
                   for (int d = 0; d < depth; ++d) {
                      double result = (*oside_data)(sndx, 1, d);

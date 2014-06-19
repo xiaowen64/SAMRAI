@@ -45,7 +45,6 @@ namespace xfer {
 class RefineTimeTransaction:public tbox::Transaction
 {
 public:
-
    /*!
     * Static member function to set the transaction time that will be shared
     * by all object instances of this time transaction class during time
@@ -101,7 +100,7 @@ public:
       const hier::Box& dst_box,
       const hier::Box& src_box,
       const hier::Box& box,
-      const RefineClasses::Data** refine_data,
+      const RefineClasses::Data ** refine_data,
       int item_id);
 
    /*!

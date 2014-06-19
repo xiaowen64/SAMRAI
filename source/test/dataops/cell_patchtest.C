@@ -691,7 +691,7 @@ int main(
 
       pdat::CellIterator ccend(pdat::CellGeometry::end(cvdata->getBox()));
       for (pdat::CellIterator cc(pdat::CellGeometry::begin(cvdata->getBox()));
-            cc != ccend && divide_inbox_test_passed; ++cc) {
+           cc != ccend && divide_inbox_test_passed; ++cc) {
          pdat::CellIndex cell_index = *cc;
 
          double value;
@@ -1263,7 +1263,7 @@ doubleDataSameAsValue(
 
    pdat::CellIterator cend(pdat::CellGeometry::end(cvdata->getBox()));
    for (pdat::CellIterator c(pdat::CellGeometry::begin(cvdata->getBox()));
-        c != cend&& test_passed; ++c) {
+        c != cend && test_passed; ++c) {
       pdat::CellIndex cell_index = *c;
       if (!tbox::MathUtilities<double>::equalEps((*cvdata)(cell_index),
              value)) {

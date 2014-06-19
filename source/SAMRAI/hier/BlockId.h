@@ -146,7 +146,6 @@ public:
    {
       return d_value != rhs.d_value;
    }
-   
 
    /*!
     * @brief Less-than operator.

@@ -68,7 +68,7 @@ SNES_SAMRAIContext::SNESJacobianSet(
 SNES_SAMRAIContext::SNES_SAMRAIContext(
    const std::string& object_name,
    SNESAbstractFunctions* my_functions,
-   const boost::shared_ptr<tbox::Database>& input_db) :
+   const boost::shared_ptr<tbox::Database>& input_db):
    d_object_name(object_name),
    d_context_needs_initialization(true),
    d_SNES_solver(0),
@@ -632,8 +632,7 @@ SNES_SAMRAIContext::getFromInput(
 
          d_function_evaluation_error =
             input_db->getDoubleWithDefault("function_evaluation_error", PETSC_DEFAULT);
-      }
-      else {
+      } else {
          bool read_on_restart =
             input_db->getBoolWithDefault("read_on_restart", false);
          if (!read_on_restart) {

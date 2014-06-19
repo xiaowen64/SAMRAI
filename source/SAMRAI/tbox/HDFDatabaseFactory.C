@@ -26,8 +26,8 @@ HDFDatabaseFactory::~HDFDatabaseFactory()
 }
 
 HDFDatabaseFactory::HDFDatabaseFactory(
-   const HDFDatabaseFactory& other)
-   : DatabaseFactory()
+   const HDFDatabaseFactory& other):
+   DatabaseFactory()
 {
    NULL_USE(other);
 }

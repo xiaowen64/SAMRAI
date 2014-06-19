@@ -52,7 +52,7 @@ public:
     */
    void
    setRefineItems(
-      const xfer::RefineClasses::Data *const* refine_items);
+      const xfer::RefineClasses::Data * const * refine_items);
 
    /*!
     * @brief Clear the array of xfer::RefineClasses::Data items used by the
@@ -97,7 +97,7 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_node,
       const hier::Box& src_node,
-      const xfer::RefineClasses::Data** refine_data,
+      const xfer::RefineClasses::Data ** refine_data,
       int item_id,
       const hier::Box& box,
       bool use_time_interpolation = false) const;
@@ -125,7 +125,7 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_node,
       const hier::Box& src_node,
-      const xfer::RefineClasses::Data** refine_data,
+      const xfer::RefineClasses::Data ** refine_data,
       int item_id) const;
 
    /*!
@@ -155,7 +155,6 @@ private:
    OuternodeSumTransactionFactory&
    operator = (
       const OuternodeSumTransactionFactory&);
-
 
 };
 

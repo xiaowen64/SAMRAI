@@ -88,7 +88,7 @@ public:
     * boundaries of the source box geometry and the destination box geometry.
     *
     * @pre getBox().getDim() == src_mask.getDim()
-    * @pre 
+    * @pre
     */
    virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(

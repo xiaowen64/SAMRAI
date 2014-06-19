@@ -119,8 +119,8 @@ EdgeGeometry::computeDestinationBoxes(
    const hier::IntVector one_vector(dim, 1);
 
    const hier::Box quick_check(
-      hier::Box::grow(src_shift, one_vector) *
-      hier::Box::grow(dst_ghost, one_vector));
+      hier::Box::grow(src_shift, one_vector)
+      * hier::Box::grow(dst_ghost, one_vector));
 
    if (!quick_check.empty()) {
 
@@ -303,7 +303,7 @@ EdgeGeometry::transform(
             if (axis_direction == 0) {
 
                switch (rotation) {
-   
+
                   case hier::Transformation::IUP_JUP_KUP:
                   case hier::Transformation::IDOWN_KUP_JUP:
                   case hier::Transformation::IUP_KDOWN_JUP:

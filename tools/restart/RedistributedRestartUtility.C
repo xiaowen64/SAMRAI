@@ -43,14 +43,12 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
    int num_files_written;
    if (total_input_files < total_output_files) {
       num_files_written = file_mapping[0][0];
-   }
-   else {
+   } else {
       num_files_written = output_files_per_proc * rank;
       if (extra_output_files) {
          if (rank >= extra_output_files) {
             num_files_written += extra_output_files;
-         }
-         else {
+         } else {
             num_files_written += rank;
          }
       }
@@ -92,8 +90,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
             if (extra_output_files) {
                if (rank >= extra_output_files) {
                   cur_out_file_id += extra_output_files;
-               }
-               else {
+               } else {
                   cur_out_file_id += rank;
                }
             }
@@ -137,8 +134,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
             if (extra_input_files) {
                if (rank >= extra_input_files) {
                   cur_in_file_id += extra_input_files;
-               }
-               else {
+               } else {
                   cur_in_file_id += rank;
                }
             }
@@ -265,8 +261,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
             if (extra_output_files) {
                if (rank >= extra_output_files) {
                   input_proc_num += extra_output_files;
-               }
-               else {
+               } else {
                   input_proc_num += rank;
                }
             }
@@ -307,8 +302,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
             if (extra_output_files) {
                if (rank >= extra_output_files) {
                   input_proc_num += extra_output_files;
-               }
-               else {
+               } else {
                   input_proc_num += rank;
                }
             }
@@ -580,7 +574,7 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
          bool recompute_local_patch_nums = false;
          if (local_indices_used.size() == 0) {
             for (std::list<int>::iterator ni(input_local_patch_nums.begin());
-                ni != input_local_patch_nums.end(); ++ni) {
+                 ni != input_local_patch_nums.end(); ++ni) {
                local_indices_used.push_front(*ni);
                max_index_used =
                   tbox::MathUtilities<int>::Max(max_index_used, *ni);
@@ -811,7 +805,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    //Each iteration of this loop processes the patches from one input
    //database.
    version = level_in_dbs[0]->getDatabase("mapped_boxes")->getInteger(
-      "HIER_BOX_CONTAINER_VERSION");
+         "HIER_BOX_CONTAINER_VERSION");
    for (int i = 0; i < static_cast<int>(input_proc_nums.size()); ++i) {
 
       boost::shared_ptr<tbox::Database> mapped_boxes_in_db =

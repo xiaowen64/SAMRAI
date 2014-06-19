@@ -41,7 +41,11 @@ AutoTester::AutoTester(
 
    std::string test_patch_boxes_filename = "test_inputs/";
 #if defined(__xlC__)
+#ifdef OPT_BUILD
    test_patch_boxes_filename += "xlC/";
+#else
+   test_patch_boxes_filename += "xlC_debug/";
+#endif
 #endif
    test_patch_boxes_filename += d_base_name + ".boxes";
 
@@ -588,8 +592,8 @@ int AutoTester::checkHierarchyBoxes(
                  << correct_minus_computed.format("\t");
       tbox::plog << " global box_level \\ correct_box_level:\n"
                  << computed_minus_correct.format("\t");
-      tbox::plog << " correct_box_level:\n" << correct_box_level.format(" ",2) << '\n'
-                 << " box_level:\n" << box_level.format(" ",2) << "\n\n";
+      tbox::plog << " correct_box_level:\n" << correct_box_level.format(" ", 2) << '\n'
+                 << " box_level:\n" << box_level.format(" ", 2) << "\n\n";
       ++num_failures;
    }
 

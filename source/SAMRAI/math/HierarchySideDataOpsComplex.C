@@ -769,7 +769,7 @@ HierarchySideDataOpsComplex::numberOfEntries(
                   hier::BoxContainer::const_iterator lb =
                      ((d_nonoverlapping_side_boxes[eb][ln])[il]).begin();
                   for ( ; lb != ((d_nonoverlapping_side_boxes[eb][ln])[il]).end();
-                       ++lb) {
+                        ++lb) {
                      entries += lb->size();
                   }
                }
@@ -1109,8 +1109,7 @@ HierarchySideDataOpsComplex::dot(
       mpi.Allreduce(&imag_part, &global_imag_part, 1, MPI_DOUBLE, MPI_SUM);
       dcomplex global_dot(global_real_part, global_imag_part);
       return global_dot;
-   }
-   else {
+   } else {
       return dprod;
    }
 }
@@ -1165,8 +1164,7 @@ HierarchySideDataOpsComplex::integral(
       mpi.Allreduce(&imag_part, &global_imag_part, 1, MPI_DOUBLE, MPI_SUM);
       dcomplex global_integral(global_real_part, global_imag_part);
       return global_integral;
-   }
-   else {
+   } else {
       return local_integral;
    }
 }

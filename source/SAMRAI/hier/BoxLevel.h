@@ -39,7 +39,6 @@ namespace hier {
  * }
  *****************************************************************************
  */
- 
 
 /*!
  * @brief A distributed set of Box objects which reside in the
@@ -863,20 +862,19 @@ public:
       const IntVector& final_ratio) const
    {
       finer.detachMyHandle();
-      if ( finer.d_globalized_version ) {
+      if (finer.d_globalized_version) {
          delete finer.d_globalized_version;
          finer.d_globalized_version = 0;
       }
       finer.d_boxes = d_boxes;
       finer.d_boxes.refine(ratio);
       finer.d_parallel_state = d_parallel_state;
-      if ( finer.d_parallel_state == GLOBALIZED ) {
+      if (finer.d_parallel_state == GLOBALIZED) {
          finer.d_global_boxes = d_global_boxes;
          finer.d_global_boxes.refine(ratio);
       }
       finer.d_ratio = final_ratio;
       finer.computeLocalRedundantData();
-      return;
    }
 
    /*!
@@ -894,20 +892,19 @@ public:
       const IntVector& final_ratio) const
    {
       coarser.detachMyHandle();
-      if ( coarser.d_globalized_version ) {
+      if (coarser.d_globalized_version) {
          delete coarser.d_globalized_version;
          coarser.d_globalized_version = 0;
       }
       coarser.d_boxes = d_boxes;
       coarser.d_boxes.coarsen(ratio);
       coarser.d_parallel_state = d_parallel_state;
-      if ( coarser.d_parallel_state == GLOBALIZED ) {
+      if (coarser.d_parallel_state == GLOBALIZED) {
          coarser.d_global_boxes = d_global_boxes;
          coarser.d_global_boxes.coarsen(ratio);
       }
       coarser.d_ratio = final_ratio;
       coarser.computeLocalRedundantData();
-      return;
    }
 
    //@}
@@ -998,11 +995,10 @@ public:
          TBOX_ERROR("BoxLevel::addBoxWithoutUpdate(): operating on locked BoxLevel."
             << std::endl);
       }
-     if (getParallelState() == GLOBALIZED) {
+      if (getParallelState() == GLOBALIZED) {
          d_global_boxes.insert(box);
       }
       d_boxes.insert(box);
-      return;
    }
 
    /*!
@@ -1119,7 +1115,6 @@ public:
             << std::endl);
       }
       d_boxes.erase(box);
-      return;
    }
 
    /*!

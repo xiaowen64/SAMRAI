@@ -70,13 +70,13 @@ PatchLevelInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
    TBOX_ASSERT_OBJDIM_EQUALITY2(dst_box_level, fill_ghost_width);
 
    fill_box_level.reset(new hier::BoxLevel(
-      dst_box_level.getRefinementRatio(),
-      dst_box_level.getGridGeometry(),
-      dst_box_level.getMPI()));
+         dst_box_level.getRefinementRatio(),
+         dst_box_level.getGridGeometry(),
+         dst_box_level.getMPI()));
 
    dst_to_fill.reset(new hier::Connector(dst_box_level,
-                                         *fill_box_level,
-                                         fill_ghost_width));
+         *fill_box_level,
+         fill_ghost_width));
 
    const hier::BoxContainer& dst_boxes = dst_box_level.getBoxes();
 
@@ -147,7 +147,7 @@ PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
       dst_fill_boxes_on_src_proc.insert(dst_fill_boxes_iter, *na);
       d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
             static_cast<int>(dst_fill_boxes_on_src_proc.numNeighbors(
-               dst_fill_boxes_iter)));
+                                dst_fill_boxes_iter)));
    }
 }
 

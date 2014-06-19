@@ -66,12 +66,12 @@ OuteredgeSumTransactionFactory::allocate(
    TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level, *src_level, dst_node, src_node);
 
    return boost::make_shared<OuteredgeSumTransaction>(dst_level,
-      src_level,
-      overlap,
-      dst_node,
-      src_node,
-      refine_data,
-      item_id);
+                                                      src_level,
+                                                      overlap,
+                                                      dst_node,
+                                                      src_node,
+                                                      refine_data,
+                                                      item_id);
 }
 
 boost::shared_ptr<tbox::Transaction>

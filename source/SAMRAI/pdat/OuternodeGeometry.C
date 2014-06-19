@@ -164,7 +164,7 @@ OuternodeGeometry::doOverlap(
          low_node_box.upper(d) = low_node_box.lower(d);
 
          hier::Box low_overlap(low_node_box * msk_node_box * dst_node_box
-            * fill_node_box);
+                               * fill_node_box);
          if (!low_overlap.empty()) {
             dst_boxes.pushBack(low_overlap);
          }
@@ -174,7 +174,7 @@ OuternodeGeometry::doOverlap(
          hig_node_box.lower(d) = hig_node_box.upper(d);
 
          hier::Box hig_overlap(hig_node_box * msk_node_box * dst_node_box
-            * fill_node_box);
+                               * fill_node_box);
          if (!hig_overlap.empty()) {
             dst_boxes.pushBack(hig_overlap);
          }

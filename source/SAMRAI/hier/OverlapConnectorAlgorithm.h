@@ -32,7 +32,7 @@ namespace hier {
  * OverlapConnectorAlgorithm objects create, check and operate on overlap
  * Connectors.
  */
-class OverlapConnectorAlgorithm : public BaseConnectorAlgorithm
+class OverlapConnectorAlgorithm:public BaseConnectorAlgorithm
 {
 
 public:
@@ -666,7 +666,6 @@ private:
     * class but may not be necessary anymore.
     */
    static int s_operation_mpi_tag;
-
 
    //@{
    //! @name Timer data for this class.

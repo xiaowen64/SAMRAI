@@ -117,13 +117,13 @@ SparseData<BOX_GEOMETRY>::Attributes::add(
 * non-modifying operations
 **********************************************************************/
 template<typename BOX_GEOMETRY>
-const double*
+const double *
 SparseData<BOX_GEOMETRY>::Attributes::getDoubleAttributes() const {
    return &d_dbl_attrs[0];
 }
 
 template<typename BOX_GEOMETRY>
-const int*
+const int *
 SparseData<BOX_GEOMETRY>::Attributes::getIntAttributes() const {
    return &d_int_attrs[0];
 }
@@ -733,7 +733,7 @@ SparseData<BOX_GEOMETRY>::getFromRestart(
 
    // number of double node item attributes
    TBOX_ASSERT(restart_db->getInteger("dbl_attr_item_count") ==
-               d_dbl_attr_size);
+      d_dbl_attr_size);
 
    // get the registered double keys and their associated id.
    std::string* keys = 0;
@@ -760,7 +760,7 @@ SparseData<BOX_GEOMETRY>::getFromRestart(
 
    // number of double node item attributes
    TBOX_ASSERT(restart_db->getInteger("int_attr_item_count") ==
-               d_int_attr_size);
+      d_int_attr_size);
 
    // get the registered integer keys and their associated id.
    if (d_int_attr_size > 0) {
@@ -852,8 +852,8 @@ SparseData<BOX_GEOMETRY>::getFromRestart(
       } // if (restart_db->isDatabase(...
       else {
          TBOX_ERROR("SparseData::getFromRestart error...\n"
-         << " : Restart database missing data for attribute index "
-         << index_keyword << std::endl);
+            << " : Restart database missing data for attribute index "
+            << index_keyword << std::endl);
       }
    } // for (int curr_item = ...
 }
@@ -1242,8 +1242,8 @@ SparseData<BOX_GEOMETRY>::operator != (
 }
 
 template<typename BOX_GEOMETRY>
-typename SparseData<BOX_GEOMETRY>::AttributeList&
-SparseData<BOX_GEOMETRY>::_get(
+typename SparseData<BOX_GEOMETRY>::AttributeList
+& SparseData<BOX_GEOMETRY>::_get(
    const hier::Index & index) const
 {
    typename SparseData<BOX_GEOMETRY>::AttributeList * list = 0;

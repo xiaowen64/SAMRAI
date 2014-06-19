@@ -154,7 +154,7 @@ int main(
          if (nproc > 1) {
             if (ib == layer0->getMPI().getRank()) {
                layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
-                  layer0->getMPI().getRank()));
+                     layer0->getMPI().getRank()));
             }
          } else {
             layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
@@ -166,7 +166,7 @@ int main(
          if (nproc > 1) {
             if (ib == layer1->getMPI().getRank()) {
                layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib),
-                  layer1->getMPI().getRank()));
+                     layer1->getMPI().getRank()));
             }
          } else {
             layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
@@ -221,7 +221,7 @@ int main(
 
             // access sample data from patch
             boost::shared_ptr<pdat::IndexData<SampleIndexData,
-                              pdat::CellGeometry> > sample(
+                                              pdat::CellGeometry> > sample(
                BOOST_CAST<pdat::IndexData<SampleIndexData, pdat::CellGeometry>,
                           hier::PatchData>(
                   patch->getPatchData(data_id)));

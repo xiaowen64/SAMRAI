@@ -23,7 +23,7 @@ namespace hier {
  * BoxLevels.
  */
 
-class MappingConnector: public Connector
+class MappingConnector:public Connector
 {
 public:
    /*!
@@ -109,7 +109,7 @@ public:
     * base neighbor.  This is because all relationships must be incident from a
     * real (unshifted) Box.
     */
-   MappingConnector*
+   MappingConnector *
    createLocalTranspose() const;
 
    /*!
@@ -119,14 +119,14 @@ public:
     * non-local edges.  Global data is required, so this method
     * is not scalable.
     */
-   virtual MappingConnector*
+   virtual MappingConnector *
    createTranspose() const;
 
    /*!
     * @brief Types of mappings for use in findMappingErrors() and
     *        assertMappingValidity().
     */
-   enum MappingType {LOCAL, NOT_LOCAL, UNKNOWN};
+   enum MappingType { LOCAL, NOT_LOCAL, UNKNOWN };
 
    /*!
     * @brief Check if the MappingConnector has a valid mapping.

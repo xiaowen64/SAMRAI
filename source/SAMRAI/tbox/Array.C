@@ -37,7 +37,7 @@ const typename Array<TYPE>::DoNotInitialize Array<TYPE>::UNINITIALIZED;
  */
 
 template<class TYPE>
-Array<TYPE>::Array() :
+Array<TYPE>::Array():
    d_objects(0),
    d_counter(0),
    d_elements(0)
@@ -46,7 +46,7 @@ Array<TYPE>::Array() :
 
 template<class TYPE>
 Array<TYPE>::Array(
-   const Array<TYPE>& rhs) :
+   const Array<TYPE>& rhs):
    d_objects(rhs.d_objects),
    d_counter(rhs.d_counter),
    d_elements(rhs.d_elements)
@@ -136,7 +136,9 @@ Array<TYPE>::resizeArray(
          array.d_objects[i] = d_objects[i];
       }
 
-      this->operator = (array);
+      this->
+      operator = (
+         array);
    }
 }
 
@@ -261,7 +263,7 @@ Array<TYPE>::empty() const
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 Array<TYPE>::getPointer(
    const int i)
 {
@@ -271,7 +273,7 @@ Array<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 Array<TYPE>::getPointer(
    const int i) const
 {

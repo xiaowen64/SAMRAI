@@ -13,7 +13,7 @@
 namespace SAMRAI {
 namespace hier {
 
-PatchDataRestartManager* PatchDataRestartManager::s_manager_instance = 0;
+PatchDataRestartManager * PatchDataRestartManager::s_manager_instance = 0;
 
 tbox::StartupShutdownManager::Handler
 PatchDataRestartManager::s_shutdown_handler(
@@ -32,7 +32,7 @@ PatchDataRestartManager::s_shutdown_handler(
  *************************************************************************
  */
 
-PatchDataRestartManager*
+PatchDataRestartManager *
 PatchDataRestartManager::getManager()
 {
    if (!s_manager_instance) {

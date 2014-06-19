@@ -38,17 +38,15 @@ class BoxContainer;
 class MultiblockBoxTree
 {
 
-friend class BoxContainer;
+   friend class BoxContainer;
 
 public:
-
    /*!
     * @brief Destructor.
     */
    ~MultiblockBoxTree();
 
 private:
-
    /*!
     * @brief Constructs a MultiblockBoxTree from set of Boxes.
     *
@@ -64,7 +62,7 @@ private:
     * @pre for each box in boxes, box.getBlockId().isValid()
     */
    MultiblockBoxTree(
-      const BoxContainer& boxes, 
+      const BoxContainer& boxes,
       const BaseGridGeometry* grid_geometry,
       const int min_number = 10);
 
@@ -94,7 +92,7 @@ private:
       return static_cast<int>(d_single_block_trees.size());
    }
 
-   const BaseGridGeometry*
+   const BaseGridGeometry *
    getGridGeometry() const
    {
       return d_grid_geometry;
@@ -111,7 +109,6 @@ private:
       d_single_block_trees.clear();
    }
 
-
    //@{
 
    //! @name Overlap checks
@@ -126,7 +123,8 @@ private:
     * @pre getNumberBlocksInTree() == 1
     */
    bool
-   hasOverlap(const Box& box) const; 
+   hasOverlap(
+      const Box& box) const;
 
    /*!
     * @brief Find all boxes that intersect with a given box.
@@ -146,7 +144,7 @@ private:
     */
    void
    findOverlapBoxes(
-      std::vector<const Box*>& overlap_boxes,
+      std::vector<const Box *>& overlap_boxes,
       const Box& box) const;
 
    /*!
@@ -164,7 +162,7 @@ private:
     * @param[in]  box
     *
     * @param[in]  refinement_ratio  All boxes in this BoxContainer
-    * are assumed to exist in index space that has this refinement ratio 
+    * are assumed to exist in index space that has this refinement ratio
     * relative to the coarse-level domain stored in the grid geometry.
     *
     * @param[in]  include_singularity_block_neighbors  If true, intersections
@@ -222,7 +220,7 @@ private:
     * @param[in]  box
     *
     * @param[in]  refinement_ratio  All boxes in this BoxContainer
-    * are assumed to exist in index space that has this refinement ratio 
+    * are assumed to exist in index space that has this refinement ratio
     * relative to the coarse-level domain stored in the grid geometry.
     *
     * @param[in]  include_singularity_block_neighbors  If true, intersections

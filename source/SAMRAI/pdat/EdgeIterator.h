@@ -81,7 +81,7 @@ public:
     * Extract a pointer to the edge index corresponding to the iterator
     * position in the box.
     */
-   const EdgeIndex*
+   const EdgeIndex *
    operator -> () const
    {
       return &d_index;
@@ -125,8 +125,14 @@ public:
    }
 
 private:
-   friend EdgeIterator EdgeGeometry::begin(const hier::Box& box, int axis);
-   friend EdgeIterator EdgeGeometry::end(const hier::Box& box, int axis);
+   friend EdgeIterator
+   EdgeGeometry::begin(
+      const hier::Box& box,
+      int axis);
+   friend EdgeIterator
+   EdgeGeometry::end(
+      const hier::Box& box,
+      int axis);
 
    /**
     * Constructor for the edge iterator.  The iterator will enumerate

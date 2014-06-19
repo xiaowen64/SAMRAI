@@ -788,10 +788,10 @@ HierarchyEdgeDataOpsReal<TYPE>::numberOfEntries(
          for (int il = 0; il < npatches; ++il) {
 
             for (int eb = 0; eb < dimVal; ++eb) {
-               hier::BoxContainer::const_iterator lb = 
+               hier::BoxContainer::const_iterator lb =
                   ((d_nonoverlapping_edge_boxes[eb][ln])[il]).begin();
                for ( ; lb != ((d_nonoverlapping_edge_boxes[eb][ln])[il]).end();
-                    ++lb) {
+                     ++lb) {
                   entries += lb->size();
                }
             }

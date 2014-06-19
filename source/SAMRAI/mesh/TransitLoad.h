@@ -23,7 +23,6 @@
 namespace SAMRAI {
 namespace mesh {
 
-
 /*!
  * @brief Base class for container of work in transit during
  * partitioning.
@@ -47,36 +46,42 @@ namespace mesh {
  * For usage examples, see mesh::TreeLoadBalancer.
  */
 
-class TransitLoad {
+class TransitLoad
+{
 
 public:
-
    TransitLoad();
 
-   TransitLoad( const TransitLoad &other );
+   TransitLoad(
+      const TransitLoad& other);
 
-   virtual ~TransitLoad() {}
+   virtual ~TransitLoad() {
+   }
 
    //@{
    //! @name Methods required by prototype design pattern
 
    //! @brief Clone object according to design pattern.
-   virtual TransitLoad* clone() const = 0;
+   virtual TransitLoad *
+   clone() const = 0;
 
    //! @brief Initialize object according to design pattern.
-   virtual void initialize() = 0;
+   virtual void
+   initialize() = 0;
 
    //@}
-
 
    //@{
    //! @brief Container-like characteristics
 
    //! @brief Return the total load contained.
-   virtual double getSumLoad() const = 0;
+   virtual double
+   getSumLoad() const = 0;
 
    //! @brief Insert all boxes from the given BoxContainer.
-   virtual void insertAll( const hier::BoxContainer &other ) = 0;
+   virtual void
+   insertAll(
+      const hier::BoxContainer& other) = 0;
 
    /*!
     * @brief Insert all boxes from the given TransitSet.
@@ -87,13 +92,17 @@ public:
     * @param other [i] Other TransitLoad container whose
     * implementation matches this one.
     */
-   virtual void insertAll( TransitLoad &other ) = 0;
+   virtual void
+   insertAll(
+      TransitLoad& other) = 0;
 
    //! @brief Return number of items in this container.
-   virtual size_t getNumberOfItems() const = 0;
+   virtual size_t
+   getNumberOfItems() const = 0;
 
    //! @brief Return number of processes contributing to the contents.
-   virtual size_t getNumberOfOriginatingProcesses() const = 0;
+   virtual size_t
+   getNumberOfOriginatingProcesses() const = 0;
 
    //! @brief Whether container is empty.
    virtual bool empty() const {
@@ -101,7 +110,8 @@ public:
    }
 
    //! @brief Empty the container.
-   virtual void clear() = 0;
+   virtual void
+   clear() = 0;
 
    //@}
 
@@ -109,24 +119,27 @@ public:
    //! @name Packing/unpacking for communication.
 
    //! @brief Put content into MessageStream.
-   virtual void putToMessageStream( tbox::MessageStream &msg ) const = 0;
+   virtual void
+   putToMessageStream(
+      tbox::MessageStream& msg) const = 0;
 
    //! @brief Add to content from MessageStream.
-   virtual void getFromMessageStream( tbox::MessageStream &msg ) = 0;
+   virtual void
+   getFromMessageStream(
+      tbox::MessageStream& msg) = 0;
 
-   friend tbox::MessageStream & operator << (
-      tbox::MessageStream & msg, const TransitLoad& transit_load ) {
+   friend tbox::MessageStream& operator << (
+      tbox::MessageStream& msg, const TransitLoad& transit_load) {
       transit_load.putToMessageStream(msg);
       return msg;
    }
 
-   friend tbox::MessageStream & operator >> (
-      tbox::MessageStream & msg, TransitLoad& transit_load ) {
+   friend tbox::MessageStream& operator >> (
+      tbox::MessageStream& msg, TransitLoad& transit_load) {
       transit_load.getFromMessageStream(msg);
       return msg;
    }
    //@}
-
 
    /*!
     * @brief Adjust the load in this TransitSet by moving work
@@ -151,8 +164,7 @@ public:
       TransitLoad& hold_bin,
       double ideal_load,
       double low_load,
-      double high_load ) = 0;
-
+      double high_load) = 0;
 
    /*!
     * @brief Assign contents to local process and populate the
@@ -160,33 +172,33 @@ public:
     *
     * This method uses communication to set up the map.
     *
-    * @param balanced_box_level [io] Empty BoxLevel to populate with
+    * @param [in,out] balanced_box_level Empty BoxLevel to populate with
     * the contents of this TransitLoad.
     *
-    * @param balanced_to_unalanced [io] Empty Connector to populate
+    * @param [in,out] balanced_to_unbalanced Empty Connector to populate
     * with the balanced--->unbalanced edges.
     *
-    * @param unbalanced_to_alanced [io] Empty Connector to populate
+    * @param [in,out] unbalanced_to_balanced Empty Connector to populate
     * with the unbalanced--->balanced edges.
     *
-    * @param [i] flexible_load_tol
+    * @param [in] flexible_load_tol
     */
    virtual void
    assignToLocalAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
-      hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced,
-      double flexible_load_tol = 0.0 ) = 0;
-
+      hier::MappingConnector& balanced_to_unbalanced,
+      hier::MappingConnector& unbalanced_to_balanced,
+      double flexible_load_tol = 0.0) = 0;
 
    //@{
    //! @name Parameters in box breaking
 
    //! @brief Whether to allow box breaking.
-   void setAllowBoxBreaking( bool allow_box_breaking ) {
+   void setAllowBoxBreaking(bool allow_box_breaking) {
       d_allow_box_breaking = allow_box_breaking;
    }
 
+   //! @brief Whether object may break up boxes.
    bool getAllowBoxBreaking() const {
       return d_allow_box_breaking;
    }
@@ -199,16 +211,16 @@ public:
     * direction.  Default initial threshold is very small (practically
     * unlimited).
     */
-   void setThresholdWidth( double threshold_width ) {
+   void setThresholdWidth(double threshold_width) {
       d_threshold_width = threshold_width;
    }
 
+   //! @brief Return the threshold width for resisting small and thin boxes.
    double getThresholdWidth() const {
       return d_threshold_width;
    }
 
    //@}
-
 
    //@{
    //! @name Diagnostic support
@@ -216,23 +228,23 @@ public:
    //! @brief Set prefix of internal diagnostic timer names.
    virtual void
    setTimerPrefix(
-      const std::string& ) {}
+      const std::string&) {
+   }
 
    //! @brief Object printing method to aid in debugging.
-   virtual void recursivePrint(
-      std::ostream &co=tbox::plog,
-      const std::string &border=std::string(),
-      int detail_depth=1 ) const;
+   virtual void
+   recursivePrint(
+      std::ostream& co = tbox::plog,
+      const std::string& border = std::string(),
+      int detail_depth = 1) const;
 
    //@}
 
 private:
-
    bool d_allow_box_breaking;
    double d_threshold_width;
 
 };
-
 
 }
 }

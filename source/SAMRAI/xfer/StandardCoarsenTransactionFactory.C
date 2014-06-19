@@ -57,13 +57,13 @@ StandardCoarsenTransactionFactory::allocate(
       src_box);
 
    return boost::make_shared<CoarsenCopyTransaction>(
-      dst_level,
-      src_level,
-      overlap,
-      dst_box,
-      src_box,
-      coarsen_data,
-      item_id);
+             dst_level,
+             src_level,
+             overlap,
+             dst_box,
+             src_box,
+             coarsen_data,
+             item_id);
 }
 
 }

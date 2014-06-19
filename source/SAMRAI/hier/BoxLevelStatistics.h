@@ -24,7 +24,6 @@ class BoxLevelStatistics
 {
 
 public:
-
    /*!
     * @brief Constructor.
     *
@@ -39,7 +38,7 @@ public:
     * @pre box_level.isInitialized()
     */
    explicit BoxLevelStatistics(
-      const BoxLevel &box_level);
+      const BoxLevel& box_level);
 
    /*!
     * @brief Print out local and globally reduced statistics on the
@@ -55,9 +54,7 @@ public:
       std::ostream& os,
       const std::string& border) const;
 
-
 private:
-
    /*!
     * @brief Set up things for the entire class.
     *
@@ -103,7 +100,8 @@ private:
    };
 
    void
-   computeLocalBoxLevelStatistics( const BoxLevel &box_level );
+   computeLocalBoxLevelStatistics(
+      const BoxLevel& box_level);
 
    void
    reduceStatistics();
@@ -135,7 +133,6 @@ private:
    static int s_longest_length;
 
    static tbox::StartupShutdownManager::Handler s_initialize_finalize_handler;
-
 
 };
 

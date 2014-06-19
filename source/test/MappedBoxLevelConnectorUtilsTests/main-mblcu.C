@@ -367,9 +367,9 @@ int main(
             dim.getValue());
       }
       partitionBoxes(*small_box_level, small_domain_level,
-                     max_box_size, min_box_size);
+         max_box_size, min_box_size);
       partitionBoxes(big_box_level, big_domain_level,
-                     max_box_size, min_box_size);
+         max_box_size, min_box_size);
 
       big_box_level.cacheGlobalReducedData();
       small_box_level->cacheGlobalReducedData();
@@ -467,11 +467,12 @@ int main(
                   small_to_everything->find(small_box.getBoxId());
 
                hier::BoxContainer neighbor_box_list;
-               for (hier::Connector::ConstNeighborIterator na = small_to_everything->begin(neighbors);
+               for (hier::Connector::ConstNeighborIterator na =
+                       small_to_everything->begin(neighbors);
                     na != small_to_everything->end(neighbors); ++na) {
                   if (!(*na).empty()) {
                      neighbor_box_list.pushBack(*na);
-                  
+
                      if (!small_box.contains(*na)) {
                         tbox::perr << "Mapping small_to_everyting erroneously mapped "
                                    << small_box << " to:\n" << *na
@@ -495,7 +496,7 @@ int main(
 
             if (small_to_nothing->hasNeighborSet(small_box.getBoxId())) {
                if (!small_to_nothing->isEmptyNeighborhood(
-                       small_box.getBoxId())) {
+                      small_box.getBoxId())) {
                   tbox::perr << "Mapping small_to_nothing erroneously mapped " << small_box
                              << " to:\n";
                   small_to_nothing->writeNeighborhoodToStream(
@@ -749,7 +750,7 @@ void shrinkBoxLevel(
    const hier::BoxContainer& big_boxes(big_box_level.getBoxes());
 
    const hier::Connector& big_to_big(
-         big_box_level.createConnector(big_box_level, shrinkage));
+      big_box_level.createConnector(big_box_level, shrinkage));
 
    hier::BoxContainer visible_boxes(big_boxes);
    for (hier::Connector::ConstNeighborhoodIterator mi = big_to_big.begin();
@@ -776,7 +777,7 @@ void shrinkBoxLevel(
          hier::BoxContainer bdry_list(*si);
          boundary_boxes.insert(
             std::pair<hier::BlockId, hier::BoxContainer>(si->getBlockId(),
-                                                    bdry_list));
+               bdry_list));
       }
 
    }
@@ -831,7 +832,7 @@ void shrinkBoxLevel(
       for (hier::BoxContainer::iterator bi = boundary_for_block.begin();
            bi != boundary_for_block.end(); ++bi) {
          hier::Box box(*bi);
-         assert( box.getBlockId() == block_id );
+         assert(box.getBlockId() == block_id);
          box.grow(shrinkage);
          hier::Box complement_box(
             box, ++last_local_id, local_rank);
@@ -848,9 +849,9 @@ void shrinkBoxLevel(
     */
 
    small_box_level.reset(new hier::BoxLevel(
-      big_box_level.getRefinementRatio(),
-      grid_geometry,
-      big_box_level.getMPI()));
+         big_box_level.getRefinementRatio(),
+         grid_geometry,
+         big_box_level.getMPI()));
    last_local_id = -1;
    for (hier::BoxContainer::const_iterator bi = big_boxes.begin();
         bi != big_boxes.end(); ++bi) {
@@ -885,7 +886,7 @@ void shrinkBoxLevel(
                ++last_local_id,
                box.getOwnerRank());
             TBOX_ASSERT(shrunken_box.getBlockId() ==
-                        box.getBlockId()); 
+               box.getBlockId());
 
             small_box_level->addBoxWithoutUpdate(shrunken_box);
          }
@@ -903,9 +904,8 @@ void refineBoxLevel(hier::BoxLevel& box_level,
                     const hier::IntVector& ratio)
 {
    box_level.refineBoxes(
-     box_level,
-     ratio,
-     box_level.getRefinementRatio()*ratio);
+      box_level,
+      ratio,
+      box_level.getRefinementRatio() * ratio);
    box_level.finalize();
-   return;
 }

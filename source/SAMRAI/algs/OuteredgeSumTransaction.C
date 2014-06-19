@@ -131,8 +131,8 @@ OuteredgeSumTransaction::packStream(
    tbox::MessageStream& stream)
 {
    d_src_level->getPatch(d_src_node.getGlobalId())->
-     getPatchData(d_refine_data[d_item_id]->d_src)->
-        packStream(stream, *d_overlap);
+   getPatchData(d_refine_data[d_item_id]->d_src)->
+   packStream(stream, *d_overlap);
 }
 
 void

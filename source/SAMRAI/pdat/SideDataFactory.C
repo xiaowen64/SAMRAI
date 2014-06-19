@@ -62,7 +62,6 @@ SideDataFactory<TYPE>::SideDataFactory(
    TBOX_ASSERT(ghosts.min() >= 0);
 }
 
-
 template<class TYPE>
 SideDataFactory<TYPE>::~SideDataFactory()
 {
@@ -84,10 +83,10 @@ SideDataFactory<TYPE>::cloneFactory(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
    return boost::make_shared<SideDataFactory<TYPE> >(
-      d_depth,
-      ghosts,
-      d_fine_boundary_represents_var,
-      d_directions);
+             d_depth,
+             ghosts,
+             d_fine_boundary_represents_var,
+             d_directions);
 }
 
 /*
@@ -106,10 +105,10 @@ SideDataFactory<TYPE>::allocate(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
    return boost::make_shared<SideData<TYPE> >(
-      patch.getBox(),
-      d_depth,
-      d_ghosts,
-      d_directions);
+             patch.getBox(),
+             d_depth,
+             d_ghosts,
+             d_directions);
 }
 
 /*
@@ -128,9 +127,9 @@ SideDataFactory<TYPE>::getBoxGeometry(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    return boost::make_shared<SideGeometry>(
-      box,
-      d_ghosts,
-      d_directions);
+             box,
+             d_ghosts,
+             d_directions);
 }
 
 template<class TYPE>
@@ -243,7 +242,6 @@ SideDataFactory<TYPE>::dataLivesOnPatchBorder() const
 {
    return true;
 }
-
 
 }
 }

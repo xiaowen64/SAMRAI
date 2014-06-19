@@ -162,7 +162,7 @@ OuterfaceGeometry::doOverlap(
             low_face.upper(0) = low_face.lower(0);  //+ghosts;
 
             hier::Box low_overlap(low_face * msk_face * dst_face);
-            if (!low_overlap.empty()) { 
+            if (!low_overlap.empty()) {
                dst_boxes[d].pushBack(low_overlap);
             }
 
@@ -273,7 +273,7 @@ OuterfaceGeometry::doOverlap(
             low_src_face.upper(0) = low_src_face.lower(0);
 
             hier::Box low_low_overlap(low_src_face * msk_face * low_dst_face);
-            if (!low_low_overlap.empty()) { 
+            if (!low_low_overlap.empty()) {
                dst_boxes[d].pushBack(low_low_overlap);
             }
 

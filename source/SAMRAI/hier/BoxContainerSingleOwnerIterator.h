@@ -28,7 +28,7 @@ namespace hier {
  */
 class BoxContainerSingleOwnerIterator
 {
-friend class BoxContainer;
+   friend class BoxContainer;
 
 public:
    //! @brief Destructor

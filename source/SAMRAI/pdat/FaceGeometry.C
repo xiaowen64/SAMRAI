@@ -137,7 +137,7 @@ FaceGeometry::computeDestinationBoxes(
    const hier::Transformation& transformation,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS 
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const hier::IntVector& src_offset = transformation.getOffset();
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 #endif
@@ -147,7 +147,7 @@ FaceGeometry::computeDestinationBoxes(
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
    const hier::Box src_box(
-   hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
+      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
    hier::Box src_shift(src_box);
    transformation.transform(src_shift);
    const hier::Box dst_ghost(
@@ -179,15 +179,14 @@ FaceGeometry::computeDestinationBoxes(
          if (!dst_restrict_boxes.isEmpty() && !dst_boxes[d].isEmpty()) {
             hier::BoxContainer face_restrict_boxes;
             for (hier::BoxContainer::const_iterator b = dst_restrict_boxes.begin();
-                  b != dst_restrict_boxes.end(); ++b) {
-              face_restrict_boxes.pushBack(toFaceBox(*b, d));
+                 b != dst_restrict_boxes.end(); ++b) {
+               face_restrict_boxes.pushBack(toFaceBox(*b, d));
             }
             dst_boxes[d].intersectBoxes(face_restrict_boxes);
          }
       }  // loop over dim
    }  // !quick_check.empty()
 }
-
 
 /*
  *************************************************************************
