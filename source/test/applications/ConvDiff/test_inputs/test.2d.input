@@ -105,7 +105,7 @@ ConvDiff {
          val                     = 10.
       }
       boundary_edge_xhi {
-         boundary_condition      = "DIRICHLET"
+         boundary_condition      = "FLOW"
          val                     = 10.
       }
       boundary_edge_ylo {
@@ -127,7 +127,7 @@ ConvDiff {
          boundary_condition      = "XDIRICHLET"
       }
       boundary_node_xhi_ylo {
-         boundary_condition      = "XDIRICHLET"
+         boundary_condition      = "XFLOW"
       }
       boundary_node_xlo_yhi {
          boundary_condition      = "YDIRICHLET"
