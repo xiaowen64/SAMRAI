@@ -7,7 +7,7 @@ include(FORTDIR/m4flux2d.i)dnl
       subroutine fluxcorrec(dt,
      &  ifirst0,ilast0,ifirst1,ilast1,
      &  dx,
-     &  advecspeed,uval,
+     &  advecspeed,
      &  flux0,flux1,
      &  trlft0,trlft1,
      &  trrgt0,trrgt1)
@@ -27,7 +27,6 @@ c
 c variables in 2d cell indexed         
       REAL
      &     advecspeed(0:NDIM-1),
-     &     uval(CELL2d(ifirst,ilast,CELLG)),
      &     flux0(FACE2d0(ifirst,ilast,FLUXG)),
      &     flux1(FACE2d1(ifirst,ilast,FLUXG)), 
      &     trlft0(FACE2d0(ifirst,ilast,FACEG)),
@@ -75,7 +74,6 @@ c***********************************************************************
       subroutine fluxcalculation2d(dt,extra_cell,visco,dx,
      &  ifirst0,ilast0,ifirst1,ilast1,
      &  advecspeed,
-     &  uval,
      &  flux0,flux1,
      &  trlft0,trlft1,trrgt0,trrgt1)
 c***********************************************************************
@@ -91,7 +89,6 @@ c input arrays:
 c variables in 2d cell indexed         
       REAL
      &     advecspeed(0:NDIM-1),
-     &     uval(CELL2d(ifirst,ilast,CELLG)),
 c variables in 2d side indexed         
      &     flux0(FACE2d0(ifirst,ilast,FLUXG)),
      &     flux1(FACE2d1(ifirst,ilast,FLUXG)), 

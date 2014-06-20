@@ -624,7 +624,6 @@ double LinAdv::computeStableDtOnPatch(
          ghost_cells(0),
          ghost_cells(1),
          &d_advection_velocity[0],
-         uval->getPointer(),
          stabdt);
    }
    if (d_dim == tbox::Dimension(3)) {
@@ -636,7 +635,6 @@ double LinAdv::computeStableDtOnPatch(
          ghost_cells(1),
          ghost_cells(2),
          &d_advection_velocity[0],
-         uval->getPointer(),
          stabdt);
    }
 
@@ -684,9 +682,11 @@ void LinAdv::computeFluxesOnPatch(
       const hier::Index ifirst = patch.getBox().lower();
       const hier::Index ilast = patch.getBox().upper();
 
+#ifdef DEBUG_CHECK_ASSERTIONS
       boost::shared_ptr<pdat::CellData<double> > uval(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_uval, getDataContext())));
+#endif
       boost::shared_ptr<pdat::FaceData<double> > flux(
          BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
             patch.getPatchData(d_flux, getDataContext())));
@@ -749,7 +749,6 @@ void LinAdv::computeFluxesOnPatch(
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                Mcells, dx[0], d_advection_velocity[0], d_godunov_order,
-               uval->getPointer(),
                traced_left.getPointer(0),
                traced_right.getPointer(0),
                &ttcelslp[0],
@@ -760,7 +759,6 @@ void LinAdv::computeFluxesOnPatch(
             SAMRAI_F77_FUNC(chartracing2d1, CHARTRACING2D1) (dt,
                ifirst(0), ilast(0), ifirst(1), ilast(1),
                Mcells, dx[1], d_advection_velocity[1], d_godunov_order,
-               uval->getPointer(),
                traced_left.getPointer(1),
                traced_right.getPointer(1),
                &ttcelslp[0],
@@ -783,7 +781,6 @@ void LinAdv::computeFluxesOnPatch(
          SAMRAI_F77_FUNC(fluxcalculation2d, FLUXCALCULATION2D) (dt, 1, 0, dx,
             ifirst(0), ilast(0), ifirst(1), ilast(1),
             &d_advection_velocity[0],
-            uval->getPointer(),
             flux->getPointer(0),
             flux->getPointer(1),
             traced_left.getPointer(0),
@@ -799,7 +796,6 @@ void LinAdv::computeFluxesOnPatch(
          SAMRAI_F77_FUNC(fluxcorrec, FLUXCORREC) (dt, ifirst(0), ilast(0), ifirst(1),
             ilast(1),
             dx, &d_advection_velocity[0],
-            uval->getPointer(),
             flux->getPointer(0),
             flux->getPointer(1),
             traced_left.getPointer(0),
@@ -817,7 +813,6 @@ void LinAdv::computeFluxesOnPatch(
          SAMRAI_F77_FUNC(fluxcalculation2d, FLUXCALCULATION2D) (dt, 0, 0, dx,
             ifirst(0), ilast(0), ifirst(1), ilast(1),
             &d_advection_velocity[0],
-            uval->getPointer(),
             flux->getPointer(0),
             flux->getPointer(1),
             traced_left.getPointer(0),
@@ -858,9 +853,11 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
+#ifdef DEBUG_CHECK_ASSERTIONS
    boost::shared_ptr<pdat::CellData<double> > uval(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
+#endif
    boost::shared_ptr<pdat::FaceData<double> > flux(
       BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
@@ -927,7 +924,6 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          Mcells, dx[0], d_advection_velocity[0], d_godunov_order,
-         uval->getPointer(),
          traced_left.getPointer(0),
          traced_right.getPointer(0),
          &ttcelslp[0],
@@ -940,7 +936,6 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          Mcells, dx[1], d_advection_velocity[1], d_godunov_order,
-         uval->getPointer(),
          traced_left.getPointer(1),
          traced_right.getPointer(1),
          &ttcelslp[0],
@@ -953,7 +948,6 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          Mcells, dx[2], d_advection_velocity[2], d_godunov_order,
-         uval->getPointer(),
          traced_left.getPointer(2),
          traced_right.getPointer(2),
          &ttcelslp[0],
@@ -974,7 +968,6 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 1, 0, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
-      uval->getPointer(),
       flux->getPointer(0),
       flux->getPointer(1),
       flux->getPointer(2),
@@ -994,7 +987,6 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    SAMRAI_F77_FUNC(fluxcorrec2d, FLUXCORREC2D) (dt, ifirst(0), ilast(0), ifirst(1),
       ilast(1), ifirst(2), ilast(2),
       dx, &d_advection_velocity[0], 1,
-      uval->getPointer(),
       flux->getPointer(0),
       flux->getPointer(1),
       flux->getPointer(2),
@@ -1022,7 +1014,6 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 0, 1, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
-      uval->getPointer(),
       temp_flux.getPointer(0),
       temp_flux.getPointer(1),
       temp_flux.getPointer(2),
@@ -1042,7 +1033,6 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    SAMRAI_F77_FUNC(fluxcorrec2d, FLUXCORREC2D) (dt, ifirst(0), ilast(0), ifirst(1),
       ilast(1), ifirst(2), ilast(2),
       dx, &d_advection_velocity[0], -1,
-      uval->getPointer(),
       flux->getPointer(0),
       flux->getPointer(1),
       flux->getPointer(2),
@@ -1073,7 +1063,6 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 1, 0, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
-      uval->getPointer(),
       flux->getPointer(0),
       flux->getPointer(1),
       flux->getPointer(2),
@@ -1094,7 +1083,6 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    SAMRAI_F77_FUNC(fluxcorrec3d, FLUXCORREC3D) (dt, ifirst(0), ilast(0), ifirst(1),
       ilast(1), ifirst(2), ilast(2),
       dx, &d_advection_velocity[0],
-      uval->getPointer(),
       temp_flux.getPointer(0),
       temp_flux.getPointer(1),
       temp_flux.getPointer(2),
@@ -1115,7 +1103,6 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 0, 0, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
-      uval->getPointer(),
       flux->getPointer(0),
       flux->getPointer(1),
       flux->getPointer(2),
@@ -1158,9 +1145,11 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
+#ifdef DEBUG_CHECK_ASSERTIONS
    boost::shared_ptr<pdat::CellData<double> > uval(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
+#endif
    boost::shared_ptr<pdat::FaceData<double> > flux(
       BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
@@ -1205,7 +1194,6 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
    SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 1, 1, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
-      uval->getPointer(),
       flux->getPointer(0),
       flux->getPointer(1),
       flux->getPointer(2),
@@ -1249,7 +1237,6 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          Mcells, dx[0], d_advection_velocity[0], d_godunov_order,
-         uval->getPointer(),
          traced_left.getPointer(0),
          traced_right.getPointer(0),
          &ttcelslp[0],
@@ -1261,7 +1248,6 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
          ifirst(0), ilast(0), ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          Mcells, dx[1], d_advection_velocity[1], d_godunov_order,
-         uval->getPointer(),
          traced_left.getPointer(1),
          traced_right.getPointer(1),
          &ttcelslp[0],
@@ -1272,7 +1258,6 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
       SAMRAI_F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
          ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
          Mcells, dx[2], d_advection_velocity[2], d_godunov_order,
-         uval->getPointer(),
          traced_left.getPointer(2),
          traced_right.getPointer(2),
          &ttcelslp[0],
@@ -1308,7 +1293,6 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
       SAMRAI_F77_FUNC(fluxthird3d, FLUXTHIRD3D) (dt, dx, idir,
          ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
          &d_advection_velocity[0],
-         uval->getPointer(),
          third_state.getPointer(),
          temp_flux.getPointer(0),
          temp_flux.getPointer(1),
@@ -1324,7 +1308,6 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
       SAMRAI_F77_FUNC(fluxcorrecjt3d, FLUXCORRECJT3D) (dt, dx, idir,
          ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
          &d_advection_velocity[0],
-         uval->getPointer(),
          temp_flux.getPointer(0),
          temp_flux.getPointer(1),
          temp_flux.getPointer(2),
@@ -1347,7 +1330,6 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
    SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (dt, 0, 0, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
-      uval->getPointer(),
       flux->getPointer(0),
       flux->getPointer(1),
       flux->getPointer(2),
@@ -1689,17 +1671,15 @@ void LinAdv::tagRichardsonExtrapolationCells(
         ncrit < static_cast<int>(d_refinement_criteria.size()); ++ncrit) {
 
       string ref = d_refinement_criteria[ncrit];
-      boost::shared_ptr<pdat::CellData<double> > coarsened_fine_var;
-      boost::shared_ptr<pdat::CellData<double> > advanced_coarse_var;
       int size;
       double tol;
       bool time_allowed;
 
       if (ref == "UVAL_RICHARDSON") {
-         coarsened_fine_var =
+         boost::shared_ptr<pdat::CellData<double> > coarsened_fine_var =
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_uval, coarsened_fine));
-         advanced_coarse_var =
+         boost::shared_ptr<pdat::CellData<double> > advanced_coarse_var =
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_uval, advanced_coarse));
          size = static_cast<int>(d_rich_tol.size());
