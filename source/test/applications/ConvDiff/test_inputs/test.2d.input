@@ -106,7 +106,6 @@ ConvDiff {
       }
       boundary_edge_xhi {
          boundary_condition      = "FLOW"
-         val                     = 10.
       }
       boundary_edge_ylo {
          boundary_condition      = "DIRICHLET"
