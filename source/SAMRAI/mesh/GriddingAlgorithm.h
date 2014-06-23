@@ -1061,6 +1061,13 @@ private:
    allocateTimers();
 
    /*!
+    * @brief Assert that the given SAMRAI_MPI has no message waiting
+    * to be received.
+    */
+   void
+   assertNoMessageForCommunicator( const tbox::SAMRAI_MPI &mpi ) const;
+
+   /*!
     * @brief Initialize static objects and register shutdown routine.
     *
     * Only called by StartupShutdownManager.

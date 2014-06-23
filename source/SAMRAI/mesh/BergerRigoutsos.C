@@ -1059,18 +1059,10 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
     */
    if (d_mpi.getCommunicator() != MPI_COMM_NULL &&
        d_mpi != d_tag_level->getBoxLevel()->getMPI() ) {
-      int flag;
       tbox::SAMRAI_MPI::Status mpi_status;
-      int mpi_err = d_mpi.Iprobe(MPI_ANY_SOURCE,
-                                 MPI_ANY_TAG,
-                                 &flag,
-                                 &mpi_status);
-      if (mpi_err != MPI_SUCCESS) {
-         TBOX_ERROR("Error probing for possible lost messages." << std::endl);
-      }
-      if (flag == true) {
+      if ( d_mpi.hasReceivableMessage(&mpi_status) ) {
          int count = -1;
-         mpi_err = tbox::SAMRAI_MPI::Get_count(&mpi_status, MPI_INT, &count);
+         tbox::SAMRAI_MPI::Get_count(&mpi_status, MPI_INT, &count);
          TBOX_ERROR("Library error!\n"
                     << "BergerRigoutsos detected before or after\n"
                     << "the clustering algorithm that there\n"

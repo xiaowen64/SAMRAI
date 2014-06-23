@@ -725,6 +725,28 @@ public:
       int count,
       int tag) const;
 
+   /*!
+    * @brief Check whether there a message waiting to be received.
+    *
+    * This is a convenience (non-essential) interface for use in
+    * debugging communication code.  It checks whether there are any
+    * waiting to be received.  It uses a non-blocking check; a false
+    * doesn't mean no messages are coming; it means no messages have
+    * arrived.  The checking includes a barrier, making this a
+    * collective call.
+    *
+    * @param[i/o] status
+    * @param[i] source
+    * @param[i] tag
+    *
+    * @return Whether any messages matching the source and tag are
+    * waiting to be received.
+    */
+   bool hasReceivableMessage(
+      Status *status = 0,
+      int source = MPI_ANY_SOURCE,
+      int tag = MPI_ANY_TAG ) const;
+
    // @}
 
    /*!

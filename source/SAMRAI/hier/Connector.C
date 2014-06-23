@@ -458,6 +458,10 @@ Connector::setToTransposeOf( const Connector &other,
    char upward_term_msg_type = 3;
    char downward_term_msg_type = 4;
 
+   if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, mpi_tag) ) {
+      TBOX_ERROR("Connector::setToTransposeOf: not starting clean of receivable MPI messages.");
+   }
+
    std::map<int,boost::shared_ptr<tbox::MessageStream> > messages;
    std::vector<tbox::SAMRAI_MPI::Request> requests;
    tbox::SAMRAI_MPI::Status tmp_status;
@@ -617,6 +621,10 @@ Connector::setToTransposeOf( const Connector &other,
       // Compete sends before allowing memory deallocation.
       std::vector<tbox::SAMRAI_MPI::Status> statuses(requests.size());
       tbox::SAMRAI_MPI::Waitall( static_cast<int>(requests.size()), &requests[0], &statuses[0] );
+   }
+
+   if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, mpi_tag) ) {
+      TBOX_ERROR("Connector::setToTransposeOf: not finishing clean of receivable MPI messages.");
    }
 
    return;

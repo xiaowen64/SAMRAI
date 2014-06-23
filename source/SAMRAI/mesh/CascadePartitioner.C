@@ -339,6 +339,7 @@ CascadePartitioner::loadBalanceBoxLevel(
                  << std::endl;
    }
 
+   assertNoMessageForPrivateCommunicator();
 }
 
 
@@ -710,18 +711,10 @@ CascadePartitioner::assertNoMessageForPrivateCommunicator() const
     * messages that have arrived but not received.
     */
    if (d_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
-      int flag;
       tbox::SAMRAI_MPI::Status mpi_status;
-      int mpi_err = d_mpi.Iprobe(MPI_ANY_SOURCE,
-            MPI_ANY_TAG,
-            &flag,
-            &mpi_status);
-      if (mpi_err != MPI_SUCCESS) {
-         TBOX_ERROR("Error probing for possible lost messages.");
-      }
-      if (flag == true) {
+      if ( d_mpi.hasReceivableMessage(&mpi_status) ) {
          int count = -1;
-         mpi_err = tbox::SAMRAI_MPI::Get_count(&mpi_status, MPI_INT, &count);
+         tbox::SAMRAI_MPI::Get_count(&mpi_status, MPI_INT, &count);
          TBOX_ERROR(
             "Library error!\n"
             << "CascadePartitioner detected before or\n"

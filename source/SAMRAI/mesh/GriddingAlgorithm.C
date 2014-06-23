@@ -383,6 +383,8 @@ GriddingAlgorithm::makeCoarsestLevel(
 
    const hier::BoxLevel& domain_box_level(d_hierarchy->getDomainBoxLevel());
 
+   TBOX_ASSERT( ! domain_box_level.getMPI().hasReceivableMessage() ); // Check errant messages.
+
    t_make_domain->stop();
 
    /*
@@ -434,6 +436,8 @@ GriddingAlgorithm::makeCoarsestLevel(
       tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: partitioning domain.\n";
    }
 
+   TBOX_ASSERT( ! new_box_level->getMPI().hasReceivableMessage() ); // Check errant messages.
+
    d_load_balancer0->loadBalanceBoxLevel(
       *new_box_level,
       0,
@@ -466,6 +470,8 @@ GriddingAlgorithm::makeCoarsestLevel(
          hier::IntVector::getOne(dim),
          d_hierarchy->getRequiredConnectorWidth(0, 0, true)));
 
+   TBOX_ASSERT( ! new_box_level->getMPI().hasReceivableMessage() ); // Check errant messages.
+
    boost::shared_ptr<hier::Connector> new_to_new;
    if (domain_box_level.getLocalNumberOfBoxes(0) ==
        (size_t)domain_box_level.getGlobalNumberOfBoxes()) {
@@ -487,6 +493,7 @@ GriddingAlgorithm::makeCoarsestLevel(
       }
       new_to_new.reset(new hier::Connector( *new_box_level, *new_box_level,
                                             d_hierarchy->getRequiredConnectorWidth(0, 0, true) ) );
+d_oca0.setPrintSteps(true);
       d_oca0.findOverlaps_assumedPartition(*new_to_new);
 
       if (d_barrier_and_time) {

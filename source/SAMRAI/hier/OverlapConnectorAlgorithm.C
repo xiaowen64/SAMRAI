@@ -448,6 +448,10 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    const tbox::Dimension &dim = base.getDim();
    const tbox::SAMRAI_MPI& mpi = d_mpi.hasNullCommunicator() ? base.getMPI() : d_mpi;
    const boost::shared_ptr<const BaseGridGeometry> &geom = base.getGridGeometry();
+   if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+      TBOX_ERROR("OverlapConnectorAlgorithm::findOverlaps_assumedPartition: not starting\n"
+                 << "clean of receivable MPI messages.");
+   }
 
    if ( d_sanity_check_method_preconditions ) {
       if ( !d_mpi.hasNullCommunicator() && !d_mpi.isCongruentWith(base.getMPI()) ) {
@@ -549,6 +553,11 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
       for ( Connector::NeighborIterator na=tmp_conn->begin(ni); na!=tmp_conn->end(ni); ++na ) {
          conn.insertLocalNeighbor(*na, *ni);
       }
+   }
+
+   if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+      TBOX_ERROR("OverlapConnectorAlgorithm::findOverlaps_assumedPartition: not finishing\n"
+                 << "clean of receivable MPI messages.");
    }
 
    d_object_timers->t_find_overlaps_assumed_partition->stop();
