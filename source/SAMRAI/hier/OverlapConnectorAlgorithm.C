@@ -497,7 +497,7 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    if ( d_print_steps ) {
       tbox::plog << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: getting center_to_base.\n";
    }
-   center_to_base.setToTransposeOf(base_to_center);
+   center_to_base.setToTransposeOf(base_to_center, mpi);
 
 
    Connector head_to_center( head, center, width_in_head_resolution );
@@ -521,7 +521,7 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    if ( d_print_steps ) {
       tbox::plog << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: getting center_to_head.\n";
    }
-   center_to_head.setToTransposeOf(head_to_center);
+   center_to_head.setToTransposeOf(head_to_center, mpi);
 
 
    base_to_center.setTranspose(&center_to_base, false);

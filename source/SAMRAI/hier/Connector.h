@@ -148,8 +148,13 @@ public:
     * This method uses communication to acquire the transpose edges.
     *
     * @param other [i]
+    *
+    * @param mpi SAMRAI_MPI to use for communication.  If omitted, use
+    * the other.getBase().getMPI() by default.  If specified, must be
+    * congruent with the default.
     */
-   void setToTransposeOf( const Connector &other );
+   void setToTransposeOf( const Connector &other,
+                          const tbox::SAMRAI_MPI &mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL) );
 
    /*!
     * @brief Transpose the visible relationships so that they point from
