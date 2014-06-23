@@ -431,7 +431,7 @@ GriddingAlgorithm::makeCoarsestLevel(
    new_to_domain.setTranspose(&domain_to_new, false);
 
    if (d_print_steps) {
-      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: finding partitioning domain.\n";
+      tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: partitioning domain.\n";
    }
 
    d_load_balancer0->loadBalanceBoxLevel(
