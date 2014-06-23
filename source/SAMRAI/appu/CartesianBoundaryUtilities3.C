@@ -1145,7 +1145,7 @@ CartesianBoundaryUtilities3::read3dBdryEdges(
                        bdry_cond_str == "YDIRICHLET" ||
                        bdry_cond_str == "YNEUMANN" ||
                        bdry_cond_str == "YREFLECT") {
-               if (s == EdgeBdyLoc3D::XLO_ZLO ||
+               if (s == EdgeBdyLoc3D::YLO_ZLO ||
                    s == EdgeBdyLoc3D::YLO_ZHI ||
                    s == EdgeBdyLoc3D::XLO_YLO ||
                    s == EdgeBdyLoc3D::XHI_YLO) {
@@ -1199,7 +1199,7 @@ CartesianBoundaryUtilities3::read3dBdryEdges(
                        bdry_cond_str == "ZREFLECT") {
                if (s == EdgeBdyLoc3D::XLO_ZLO ||
                    s == EdgeBdyLoc3D::YHI_ZLO ||
-                   s == EdgeBdyLoc3D::XLO_ZLO ||
+                   s == EdgeBdyLoc3D::YLO_ZLO ||
                    s == EdgeBdyLoc3D::XHI_ZLO) {
                   proper_face = "ZLO";
                   if (bdry_cond_str == "ZFLOW" &&
