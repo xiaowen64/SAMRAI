@@ -41,7 +41,7 @@ AutoTester {
 ConvDiff {
    // convection-diffusion equation coefficients
    convection_coeff =  4.0e0 , 2.0e0 , 2.0e0 // vector of length dim
-   diffusion_coeff   = 0.5                   // scalar
+   diffusion_coeff   = 0.1                   // scalar
    source_coeff      = 0.0                   // scalar
 
    // CFL condition for timestepping
@@ -68,24 +68,21 @@ ConvDiff {
          val                     = 10.
       }
       boundary_face_xhi {
-         boundary_condition      = "DIRICHLET"
-         val                     = 10.
+         boundary_condition      = "FLOW"
       }
       boundary_face_ylo {
          boundary_condition      = "DIRICHLET"
          val                     = 10.
       }
       boundary_face_yhi {
-         boundary_condition      = "DIRICHLET"
-         val                     = 10.
+         boundary_condition      = "FLOW"
       }
       boundary_face_zlo {
          boundary_condition      = "DIRICHLET"
          val                     = 100.
       }
       boundary_face_zhi {
-         boundary_condition      = "DIRICHLET"
-         val                     = 10.
+         boundary_condition      = "FLOW"
       }
 
       // IMPORTANT: If a *REFLECT, *DIRICHLET, or *FLOW condition is given
@@ -103,10 +100,10 @@ ConvDiff {
          boundary_condition      = "ZDIRICHLET"
       }
       boundary_edge_ylo_zhi { // XFLOW, XREFLECT, XDIRICHLET not allowed
-         boundary_condition      = "ZDIRICHLET"
+         boundary_condition      = "ZFLOW"
       }
       boundary_edge_yhi_zhi { // XFLOW, XREFLECT, XDIRICHLET not allowed
-         boundary_condition      = "ZDIRICHLET"
+         boundary_condition      = "ZFLOW"
       }
       boundary_edge_xlo_zlo { // YFLOW, YREFLECT, YDIRICHLET not allowed
          boundary_condition      = "XDIRICHLET"
@@ -115,10 +112,10 @@ ConvDiff {
          boundary_condition      = "XDIRICHLET"
       }
       boundary_edge_xhi_zlo { // YFLOW, YREFLECT, YDIRICHLET not allowed
-         boundary_condition      = "XDIRICHLET"
+         boundary_condition      = "XFLOW"
       }
       boundary_edge_xhi_zhi { // YFLOW, YREFLECT, YDIRICHLET not allowed
-         boundary_condition      = "XDIRICHLET"
+         boundary_condition      = "XFLOW"
       }
       boundary_edge_xlo_ylo { // ZFLOW, ZREFLECT, ZDIRICHLET not allowed
          boundary_condition      = "YDIRICHLET"
@@ -127,10 +124,10 @@ ConvDiff {
          boundary_condition      = "YDIRICHLET"
       }
       boundary_edge_xlo_yhi { // ZFLOW, ZREFLECT, ZDIRICHLET not allowed
-         boundary_condition      = "YDIRICHLET"
+         boundary_condition      = "YFLOW"
       }
       boundary_edge_xhi_yhi { // ZFLOW, ZREFLECT, ZDIRICHLET not allowed
-         boundary_condition      = "YDIRICHLET"
+         boundary_condition      = "YFLOW"
       }
 
       // IMPORTANT: If a *REFLECT, *DIRICHLET, or *FLOW condition is given
@@ -145,25 +142,25 @@ ConvDiff {
          boundary_condition      = "XDIRICHLET"
       }
       boundary_node_xhi_ylo_zlo {
-         boundary_condition      = "XDIRICHLET"
+         boundary_condition      = "XFLOW"
       }
       boundary_node_xlo_yhi_zlo {
          boundary_condition      = "XDIRICHLET"
       }
       boundary_node_xhi_yhi_zlo {
-         boundary_condition      = "XDIRICHLET"
+         boundary_condition      = "XFLOW"
       }
       boundary_node_xlo_ylo_zhi {
          boundary_condition      = "XDIRICHLET"
       }
       boundary_node_xhi_ylo_zhi {
-         boundary_condition      = "XDIRICHLET"
+         boundary_condition      = "XFLOW"
       }
       boundary_node_xlo_yhi_zhi {
          boundary_condition      = "XDIRICHLET"
       }
       boundary_node_xhi_yhi_zhi {
-         boundary_condition      = "XDIRICHLET"
+         boundary_condition      = "XFLOW"
       }
 
    }
