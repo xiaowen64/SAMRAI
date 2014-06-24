@@ -115,7 +115,8 @@ VisItDataWriter::VisItDataWriter(
    const std::string& dump_directory_name,
    int number_procs_per_file,
    bool is_multiblock):
-   d_dim(dim)
+   d_dim(dim),
+   d_mpi(MPI_COMM_NULL)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(number_procs_per_file == 1);
@@ -128,6 +129,8 @@ VisItDataWriter::VisItDataWriter(
    }
 
    d_object_name = object_name;
+
+   d_mpi.dupCommunicator(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    d_default_derived_writer = 0;
    d_materials_writer = 0;
@@ -1296,15 +1299,14 @@ VisItDataWriter::dumpWriteBarrierBegin()
       proc_before_me = (d_my_file_cluster_number * d_file_cluster_size)
          + d_my_rank_in_file_cluster - 1;
 
-      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-      if (mpi.getSize() > 1) {
+      if (d_mpi.getSize() > 1) {
          tbox::SAMRAI_MPI::Status status;
-         mpi.Recv(x,
-            len,
-            MPI_INT,
-            proc_before_me,
-            VISIT_FILE_CLUSTER_WRITE_BATON,
-            &status);
+         d_mpi.Recv(x,
+                    len,
+                    MPI_INT,
+                    proc_before_me,
+                    VISIT_FILE_CLUSTER_WRITE_BATON,
+                    &status);
       }
    }
 }
@@ -1312,19 +1314,18 @@ VisItDataWriter::dumpWriteBarrierBegin()
 void
 VisItDataWriter::dumpWriteBarrierEnd()
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    int x[1], proc_after_me;
-   int num_procs = mpi.getSize();
+   int num_procs = d_mpi.getSize();
    proc_after_me = (d_my_file_cluster_number * d_file_cluster_size)
       + d_my_rank_in_file_cluster + 1;
    x[0] = 0;
    if (proc_after_me < num_procs) {
-      if (mpi.getSize() > 1) {
-         mpi.Send(x,
-            1,
-            MPI_INT,
-            proc_after_me,
-            VISIT_FILE_CLUSTER_WRITE_BATON);
+      if (d_mpi.getSize() > 1) {
+         d_mpi.Send(x,
+                    1,
+                    MPI_INT,
+                    proc_after_me,
+                    VISIT_FILE_CLUSTER_WRITE_BATON);
       }
    }
 }
@@ -1448,7 +1449,6 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    TBOX_ASSERT(hierarchy);
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    /*
     * Compute max number of patches on this processor.
@@ -1467,8 +1467,8 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
    }
 
    int max_number_local_patches = number_local_patches;
-   if (mpi.getSize() > 1) {
-      mpi.AllReduce(&max_number_local_patches, 1, MPI_MAX);
+   if (d_mpi.getSize() > 1) {
+      d_mpi.AllReduce(&max_number_local_patches, 1, MPI_MAX);
    }
 
    /*
@@ -1476,15 +1476,15 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
     * don't want to count processor zero.
     */
    int count_me_in = 0;
-   if (number_local_patches > 0 || mpi.getRank() == VISIT_MASTER)
+   if (number_local_patches > 0 || d_mpi.getRank() == VISIT_MASTER)
       count_me_in = 1;
    d_number_working_slaves = count_me_in;
-   if (mpi.getSize() > 1) {
-      mpi.AllReduce(&d_number_working_slaves, 1, MPI_SUM);
+   if (d_mpi.getSize() > 1) {
+      d_mpi.AllReduce(&d_number_working_slaves, 1, MPI_SUM);
    }
    d_number_working_slaves -= 1;
 
-   if (mpi.getRank() != VISIT_MASTER) {
+   if (d_mpi.getRank() != VISIT_MASTER) {
 
       /*
        * Worker processor:  Allocate an array large enough to hold patch
@@ -1514,7 +1514,7 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
             VisMaterialsDataStrategy::VISIT_MIXED;
       }
 
-   } else {   // (mpi.getRank() == VISIT_MASTER)
+   } else {   // (d_mpi.getRank() == VISIT_MASTER)
 
       /*
        * Master processor:  allocate array for each plot item to hold
@@ -1580,9 +1580,8 @@ VisItDataWriter::writeHDFFiles(
    std::string dump_dirname;
    tbox::Database* visit_HDFFilePointer;
 
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-   int num_procs = mpi.getSize();
-   int my_proc = mpi.getRank();
+   int num_procs = d_mpi.getSize();
+   int my_proc = d_mpi.getRank();
 
    if (d_file_cluster_size > num_procs) {
       d_file_cluster_size = num_procs;
@@ -1837,8 +1836,6 @@ VisItDataWriter::packRegularAndDerivedData(
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
 
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-
    /*
     * Loop over variables and write out those that are NOT
     * material or species variables.
@@ -1977,7 +1974,7 @@ VisItDataWriter::packRegularAndDerivedData(
                /*
                 * Write min/max summary info
                 */
-               if (mpi.getRank() == VISIT_MASTER) {
+               if (d_mpi.getRank() == VISIT_MASTER) {
                   int gpn = getGlobalPatchNumber(hierarchy,
                         level_number,
                         patch.getLocalId().getValue());
@@ -2139,7 +2136,7 @@ VisItDataWriter::packRegularAndDerivedData(
                /*
                 * Write min/max summary info
                 */
-               if (mpi.getRank() == VISIT_MASTER) {
+               if (d_mpi.getRank() == VISIT_MASTER) {
                   int gpn = getGlobalPatchNumber(hierarchy,
                         level_number,
                         patch.getLocalId().getValue());
@@ -2195,8 +2192,6 @@ VisItDataWriter::packMaterialsData(
 {
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
-
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    /*
     * Loop over variables and pull out those that are material variables.
@@ -2471,7 +2466,7 @@ VisItDataWriter::packMaterialsData(
             /*
              * Write min/max summary info
              */
-            if (mpi.getRank() == VISIT_MASTER) {
+            if (d_mpi.getRank() == VISIT_MASTER) {
                int gpn = getGlobalPatchNumber(hierarchy,
                      level_number,
                      patch.getLocalId().getValue());
@@ -2533,8 +2528,6 @@ VisItDataWriter::packSpeciesData(
 {
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
-
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    /*
     * Loop over variables and pull out those that are material variables.
@@ -2650,7 +2643,7 @@ VisItDataWriter::packSpeciesData(
             /*
              * Write min/max summary info
              */
-            if (mpi.getRank() == VISIT_MASTER) {
+            if (d_mpi.getRank() == VISIT_MASTER) {
                int gpn = getGlobalPatchNumber(hierarchy,
                      level_number,
                      patch.getLocalId().getValue());
@@ -2763,7 +2756,6 @@ VisItDataWriter::writeSummaryToHDFFile(
    TBOX_ASSERT(coarsest_plot_level >= 0);
    TBOX_ASSERT(finest_plot_level >= 0);
 
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    int i, ln, pn;
 
    /*
@@ -2785,7 +2777,7 @@ VisItDataWriter::writeSummaryToHDFFile(
    for (ln = 0; ln < hierarchy->getNumberOfLevels(); ++ln) {
       hierarchy->getPatchLevel(ln)->getBoxes();
    }
-   int my_proc = mpi.getRank();
+   int my_proc = d_mpi.getRank();
    if (my_proc == VISIT_MASTER) {
       char temp_buf[VISIT_NAME_BUFSIZE];
       //sprintf(temp_buf, "/summary.samrai");
@@ -2843,7 +2835,7 @@ VisItDataWriter::writeSummaryToHDFFile(
       basic_HDFGroup->putInteger(key_string, d_time_step_number);
 
       key_string = "number_processors";
-      basic_HDFGroup->putInteger(key_string, mpi.getSize());
+      basic_HDFGroup->putInteger(key_string, d_mpi.getSize());
 
       key_string = "number_file_clusters";
       basic_HDFGroup->putInteger(key_string, d_number_file_clusters);
@@ -3470,8 +3462,6 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
    TBOX_ASSERT(coarsest_plot_level >= 0);
    TBOX_ASSERT(finest_plot_level >= 0);
 
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-
    /*
     * Compute max number of patches on any processor, and the total number of
     * patches in the problem.
@@ -3491,8 +3481,8 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
    }
 
    int max_number_local_patches = number_local_patches;
-   if (mpi.getSize() > 1) {
-      mpi.AllReduce(&max_number_local_patches, 1, MPI_MAX);
+   if (d_mpi.getSize() > 1) {
+      d_mpi.AllReduce(&max_number_local_patches, 1, MPI_MAX);
    }
 
    int num_items_to_plot = d_number_visit_variables_plus_depth
@@ -3502,7 +3492,7 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
    int message_size = max_number_local_patches
       * static_cast<int>(sizeof(patchMinMaxStruct)) * num_items_to_plot;
 
-   if (mpi.getRank() != VISIT_MASTER) {
+   if (d_mpi.getRank() != VISIT_MASTER) {
 
       /*
        * Worker processor:  send contents of d_worker_min_max array that
@@ -3510,16 +3500,16 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
        * master processor.
        */
       if (number_local_patches > 0) {
-         if (mpi.getSize() > 1) {
-            mpi.Send(d_worker_min_max,
-               message_size,
-               MPI_BYTE,
-               VISIT_MASTER,
-               0);
+         if (d_mpi.getSize() > 1) {
+            d_mpi.Send(d_worker_min_max,
+                       message_size,
+                       MPI_BYTE,
+                       VISIT_MASTER,
+                       0);
          }
       }
 
-   } else { // (mpi.getRank() == VISIT_MASTER)
+   } else { // (d_mpi.getRank() == VISIT_MASTER)
 
       /*
        * Master processor:  Receive the min/max information sent by the
@@ -3543,14 +3533,14 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
       int number_msgs_recvd = 0;
       while (number_msgs_recvd < d_number_working_slaves) {
          int sending_proc = -1;
-         if (mpi.getSize() > 1) {
+         if (d_mpi.getSize() > 1) {
             tbox::SAMRAI_MPI::Status status;
-            mpi.Recv(buf,
-               message_size,
-               MPI_BYTE,
-               MPI_ANY_SOURCE,
-               MPI_ANY_TAG,
-               &status);
+            d_mpi.Recv(buf,
+                       message_size,
+                       MPI_BYTE,
+                       MPI_ANY_SOURCE,
+                       MPI_ANY_TAG,
+                       &status);
             sending_proc = status.MPI_SOURCE;
          }
          ++number_msgs_recvd;
