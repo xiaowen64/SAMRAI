@@ -590,6 +590,11 @@ Connector::setToTransposeOf( const Connector &other,
             TBOX_ASSERT( mpi_err == MPI_SUCCESS );
          }
       }
+      else {
+         TBOX_ERROR("Connector::setToTransposeOf: Library error: msg_type " << msg_type
+                    << " unrecognized,\npossibly due to receiving unrelated message.");
+      }
+      TBOX_ASSERT( mstream.endOfData() );
 
       if ( send_upward_term_msg && ack_needed.empty() && child_term_needed == 0 ) {
          if ( rank_tree.isRoot() ) {

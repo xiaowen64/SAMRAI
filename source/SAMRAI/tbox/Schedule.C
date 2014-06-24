@@ -194,11 +194,17 @@ Schedule::communicate()
 void
 Schedule::beginCommunication()
 {
+   if ( d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+      TBOX_ERROR("Errant message detected.");
+   }
    d_object_timers->t_begin_communication->start();
    allocateCommunicationObjects();
    postReceives();
    postSends();
    d_object_timers->t_begin_communication->stop();
+   if ( d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+      TBOX_ERROR("Errant message detected.");
+   }
 }
 
 /*

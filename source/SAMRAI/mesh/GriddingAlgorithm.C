@@ -3307,7 +3307,7 @@ GriddingAlgorithm::findRefinementBoxes(
          d_hierarchy->getGridGeometry()->getDomainSearchTree(),
          tag_to_tag);
       if (d_print_steps) {
-         tbox::plog << "GriddingAlgorithm::findRefinementBoxes: begin adding periodic images."
+         tbox::plog << "GriddingAlgorithm::findRefinementBoxes: finished adding periodic images."
                     << std::endl;
       }
 
@@ -3330,6 +3330,12 @@ GriddingAlgorithm::findRefinementBoxes(
 
    if (d_barrier_and_time) {
       t_find_refinement->stop();
+   }
+
+   if (d_print_steps) {
+      tbox::plog
+      << "GriddingAlgorithm::findRefinementBoxes: leaving with tag_ln = "
+      << tag_ln << "\n";
    }
 }
 

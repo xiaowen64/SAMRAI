@@ -1067,6 +1067,10 @@ OverlapConnectorAlgorithm::privateBridge(
    }
 #endif
 
+   if ( d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+      TBOX_ERROR("Errant message detected.");
+   }
+
 
    /*
     * Set up communication mechanism and post receives.
@@ -1156,6 +1160,10 @@ OverlapConnectorAlgorithm::privateBridge(
          east_to_west->assertConsistencyWithHead();
          east_to_west->assertTransposeCorrectness(west_to_east, true);
       }
+   }
+
+   if ( d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+      TBOX_ERROR("Errant message detected.");
    }
 }
 
