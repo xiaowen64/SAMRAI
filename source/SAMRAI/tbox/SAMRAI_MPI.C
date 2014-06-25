@@ -1541,6 +1541,17 @@ SAMRAI_MPI::parallelPrefixSum(
 
 /*
 **************************************************************************
+* Check whether there is a receivable message, for use in guarding
+* against errant messages (message from an unrelated communication)
+* that may be mistakenly received.  This check is imperfect; it can
+* detect messages that have arrived but it can't detect messages that
+* has not arrived.
+*
+* The barriers prevents processes from starting or finishing the check
+* too early.  Early start may miss recently sent errant messages from
+* slower processes.  Early finishes can allow the process to get ahead
+* and send a valid message that may be mistaken as an errant message
+* by the receiver.
 **************************************************************************
 */
 bool
@@ -1552,11 +1563,11 @@ SAMRAI_MPI::hasReceivableMessage(
    int flag = false;
    if ( s_mpi_is_initialized ) {
       tbox::SAMRAI_MPI::Status tmp_status;
+      Barrier();
       int mpi_err = Iprobe(source, tag, &flag, status ? status : &tmp_status);
       if (mpi_err != MPI_SUCCESS) {
          TBOX_ERROR("SAMRAI_MPI::hasReceivableMessage: Error probing for message." << std::endl);
       }
-      // Barrier against getting ahead and sending a valid message that may be mistaken as errant.
       Barrier();
    }
    return flag == true;

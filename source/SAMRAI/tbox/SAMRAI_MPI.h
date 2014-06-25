@@ -732,8 +732,8 @@ public:
     * debugging communication code.  It checks whether there are any
     * waiting to be received.  It uses a non-blocking check; a false
     * doesn't mean no messages are coming; it means no messages have
-    * arrived.  The checking includes a barrier, making this a
-    * collective call.
+    * arrived.  The checking includes barriers, making this a
+    * collective operation.
     *
     * @param[i/o] status
     * @param[i] source
