@@ -67,8 +67,6 @@ public:
     * @param[in] last_rank
     * @param[in] rank
     * @param[in] degree See setTreeDegree()
-    *
-    * @see initialize().
     */
    BreadthFirstRankTree(
       int first_rank,

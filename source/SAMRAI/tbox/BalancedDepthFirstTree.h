@@ -64,8 +64,6 @@ public:
     * @param[in] last_rank
     * @param[in] rank
     * @param[in] do_left_leaf_switch See setLeftLeafSwitching()
-    *
-    * @see initialize().
     */
    BalancedDepthFirstTree(
       int first_rank,
@@ -159,9 +157,6 @@ public:
 
    /*!
     * @brief Return the rank of the root of the tree.
-    *
-    * In this implementation, the root is the first_rank argument of
-    * initialize().
     */
    int getRootRank() const {
       return d_root_rank;
@@ -217,8 +212,6 @@ private:
 
    /*!
     * @brief Initialized rank.
-    *
-    * @see initialize();
     */
    int d_rank;
 
