@@ -1549,14 +1549,16 @@ SAMRAI_MPI::hasReceivableMessage(
    int source,
    int tag ) const
 {
-   int flag;
-   tbox::SAMRAI_MPI::Status tmp_status;
-   int mpi_err = Iprobe(source, tag, &flag, status ? status : &tmp_status);
-   if (mpi_err != MPI_SUCCESS) {
-      TBOX_ERROR("SAMRAI_MPI::hasReceivableMessage: Error probing for message." << std::endl);
+   int flag = false;
+   if ( s_mpi_is_initialized ) {
+      tbox::SAMRAI_MPI::Status tmp_status;
+      int mpi_err = Iprobe(source, tag, &flag, status ? status : &tmp_status);
+      if (mpi_err != MPI_SUCCESS) {
+         TBOX_ERROR("SAMRAI_MPI::hasReceivableMessage: Error probing for message." << std::endl);
+      }
+      // Barrier against getting ahead and sending a valid message that may be mistaken as errant.
+      Barrier();
    }
-   // Barrier against getting ahead and sending a valid message that may be mistaken as errant.
-   Barrier();
    return flag == true;
 }
 

@@ -347,7 +347,7 @@ MappingConnectorAlgorithm::privateModify(
    const tbox::SAMRAI_MPI& mpi = d_mpi.getCommunicator() == MPI_COMM_NULL ?
       old_to_new.getBase().getMPI() : d_mpi;
 
-   if ( d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+   if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
       TBOX_ERROR("Errant message detected.");
    }
 
@@ -677,7 +677,7 @@ MappingConnectorAlgorithm::privateModify(
 
    d_object_timers->t_modify->stop();
 
-   if ( d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+   if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
       TBOX_ERROR("Errant message detected.");
    }
 }

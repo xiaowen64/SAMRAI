@@ -1067,10 +1067,6 @@ OverlapConnectorAlgorithm::privateBridge(
    }
 #endif
 
-   if ( d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
-      TBOX_ERROR("Errant message detected.");
-   }
-
 
    /*
     * Set up communication mechanism and post receives.
@@ -1093,6 +1089,10 @@ OverlapConnectorAlgorithm::privateBridge(
    }
 
    const tbox::SAMRAI_MPI& mpi = d_mpi.hasNullCommunicator() ? west_to_east.getBase().getMPI() : d_mpi;
+   if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+      TBOX_ERROR("Errant message detected.");
+   }
+
    setupCommunication(
       all_comms,
       comm_stage,
@@ -1162,7 +1162,7 @@ OverlapConnectorAlgorithm::privateBridge(
       }
    }
 
-   if ( d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+   if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
       TBOX_ERROR("Errant message detected.");
    }
 }
