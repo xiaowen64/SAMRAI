@@ -1547,11 +1547,11 @@ SAMRAI_MPI::parallelPrefixSum(
 * detect messages that have arrived but it can't detect messages that
 * has not arrived.
 *
-* The barriers prevents processes from starting or finishing the check
+* The barriers prevent processes from starting or finishing the check
 * too early.  Early start may miss recently sent errant messages from
 * slower processes.  Early finishes can allow the process to get ahead
 * and send a valid message that may be mistaken as an errant message
-* by the receiver.
+* by the receiver doing the Iprobe.
 **************************************************************************
 */
 bool

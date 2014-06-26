@@ -453,10 +453,10 @@ Connector::setToTransposeOf( const Connector &other,
     * but differentiate messages by embedding a type in each.
     */
    const int mpi_tag = 0;
-   char edge_msg_type = 1;
-   char ack_msg_type = 2;
-   char upward_term_msg_type = 3;
-   char downward_term_msg_type = 4;
+   char edge_msg_type = 111;
+   char ack_msg_type = edge_msg_type + 1;
+   char upward_term_msg_type = edge_msg_type + 2;
+   char downward_term_msg_type = edge_msg_type + 3;
 
    if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, mpi_tag) ) {
       TBOX_ERROR("Connector::setToTransposeOf: not starting clean of receivable MPI messages.");
@@ -476,11 +476,14 @@ Connector::setToTransposeOf( const Connector &other,
       const Box &base_box = rr->first;
       const BoxContainer &head_nabrs = rr->second;
 
+      /*
+       * If base_box is local, store the neighbors.
+       * Else, send the neighbors to its owner to store.
+       */
       if ( base_box.getOwnerRank() == mpi1.getRank() ) {
          insertNeighbors( head_nabrs, base_box.getBoxId() );
       }
       else {
-         // Send head_nabrs to base_box owner.
          boost::shared_ptr<tbox::MessageStream> &mstream = messages[base_box.getOwnerRank()];
          if ( !mstream ) {
             mstream.reset( new tbox::MessageStream );
@@ -507,7 +510,7 @@ Connector::setToTransposeOf( const Connector &other,
    }
 
 
-   // Data for propgating termination messages on the tree.
+   // Data for propgating termination messages on the rank tree.
    tbox::CenteredRankTree rank_tree(mpi1);
    size_t child_term_needed = rank_tree.getNumberOfChildren();
    bool send_upward_term_msg = mpi1.getSize() > 1;
@@ -591,7 +594,7 @@ Connector::setToTransposeOf( const Connector &other,
          }
       }
       else {
-         TBOX_ERROR("Connector::setToTransposeOf: Library error: msg_type " << msg_type
+         TBOX_ERROR("Connector::setToTransposeOf: Library error: msg_type " << static_cast<int>(msg_type)
                     << " unrecognized,\npossibly due to receiving unrelated message.");
       }
       TBOX_ASSERT( mstream.endOfData() );
