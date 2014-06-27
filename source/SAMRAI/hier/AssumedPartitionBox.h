@@ -152,6 +152,9 @@ public:
    /*!
     * @brief Find partitions overlapping the given box.
     *
+    * The search cost is proportional to number of overlapping boxes
+    * found, NOT the total number of partitions.
+    *
     * @param[o] overlapping_boxes
     * @param[i] box
     *
