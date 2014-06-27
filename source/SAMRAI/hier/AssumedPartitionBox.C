@@ -224,11 +224,12 @@ AssumedPartitionBox::getBox(const IntVector &position) const
    }
    const int owner = getOwner(box_index);
    Box box( Index(position),
-            Index(position + d_uniform_partition_size - IntVector::getOne(d_box.getDim())),
+            Index(position),
             d_box.getBlockId(),
             LocalId(box_index),
             owner );
-   box.coarsen(d_uniform_partition_size);
+   box.refine(d_uniform_partition_size);
+   box.shift(d_box.lower());
    box *= d_box;
    return box;
 }
@@ -324,6 +325,28 @@ AssumedPartitionBox::selfCheck() const
       all_parts.pushBack( getBox(box_index) );
    }
    all_parts.makeTree();
+
+
+   // All parts should match boxes gotten through partition grid indices.
+   const Box partition_grid( Index(IntVector::getZero(d_box.getDim())),
+                             Index(d_partition_grid_size - IntVector::getOne(d_box.getDim())),
+                             d_box.getBlockId() );
+   BoxContainer all_parts_by_grid;
+   for ( Box::iterator gi=partition_grid.begin(); gi!=partition_grid.end(); ++gi ) {
+      all_parts_by_grid.pushBack(getBox(*gi));
+   }
+   // all_parts_by_grid may be in different order, so sort before comparing.
+   all_parts.order();
+   all_parts_by_grid.order();
+   if ( all_parts_by_grid != all_parts ) {
+      ++nerr;
+      tbox::plog << "AssumedPartitionerBox::selfCheck(): Boxes gotten by\n"
+                 << "index loop differs from boxes gotten by grid loop.\n"
+                 << "Boxes by index loop:\n" << all_parts.format("\t") << '\n'
+                 << "Boxes by grid loop:\n" << all_parts_by_grid.format("\t") << '\n';
+   }
+   all_parts.unorder();
+   all_parts_by_grid.clear();
 
 
    // Parts should not overlap each other.
