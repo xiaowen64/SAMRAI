@@ -223,8 +223,9 @@ AssumedPartitionBox::getBox(const IntVector &position) const
       box_index += position[d]*d_index_stride[d];
    }
    const int owner = getOwner(box_index);
-   Box box( Index(position),
-            Index(position),
+   const Index tmp_index(position);
+   Box box( tmp_index,
+            tmp_index,
             d_box.getBlockId(),
             LocalId(box_index),
             owner );

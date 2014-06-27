@@ -99,7 +99,7 @@ public:
 
    //! @brief Number of box partitions.
    size_t getNumberOfParts() const {
-      return d_index_end-d_index_begin;
+      return static_cast<size_t>(d_index_end-d_index_begin);
    }
 
    //! @brief Return the owner for a box.
