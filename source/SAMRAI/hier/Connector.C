@@ -458,7 +458,7 @@ Connector::setToTransposeOf( const Connector &other,
    char upward_term_msg_type = edge_msg_type + 2;
    char downward_term_msg_type = edge_msg_type + 3;
 
-   if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, mpi_tag) ) {
+   if ( mpi1.hasReceivableMessage(0, MPI_ANY_SOURCE, mpi_tag) ) {
       TBOX_ERROR("Connector::setToTransposeOf: not starting clean of receivable MPI messages.");
    }
 
@@ -631,7 +631,7 @@ Connector::setToTransposeOf( const Connector &other,
       tbox::SAMRAI_MPI::Waitall( static_cast<int>(requests.size()), &requests[0], &statuses[0] );
    }
 
-   if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, mpi_tag) ) {
+   if ( mpi1.hasReceivableMessage(0, MPI_ANY_SOURCE, mpi_tag) ) {
       TBOX_ERROR("Connector::setToTransposeOf: not finishing clean of receivable MPI messages.");
    }
 
