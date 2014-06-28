@@ -682,11 +682,9 @@ void LinAdv::computeFluxesOnPatch(
       const hier::Index ifirst = patch.getBox().lower();
       const hier::Index ilast = patch.getBox().upper();
 
-#ifdef DEBUG_CHECK_ASSERTIONS
       boost::shared_ptr<pdat::CellData<double> > uval(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_uval, getDataContext())));
-#endif
       boost::shared_ptr<pdat::FaceData<double> > flux(
          BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
             patch.getPatchData(d_flux, getDataContext())));
@@ -853,11 +851,9 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    boost::shared_ptr<pdat::CellData<double> > uval(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
-#endif
    boost::shared_ptr<pdat::FaceData<double> > flux(
       BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
@@ -1145,11 +1141,9 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    boost::shared_ptr<pdat::CellData<double> > uval(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
-#endif
    boost::shared_ptr<pdat::FaceData<double> > flux(
       BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
