@@ -148,8 +148,8 @@ PeriodicShiftCatalog::setShifts(
    tbox::plog << "\n\nPeriodicShiftCatalog has "
               << s_periodic_shift_catalog_instance[dim_index]->d_shifts.size()
               << " shifts:\n";
-   tbox::plog << "Shift   Opposite\n";
-   tbox::plog << "Number  Shift     Shift\n";
+   tbox::plog << "Shift   Opposite  Shift\n";
+   tbox::plog << "Number  Shift     Vector\n";
    for (size_t i = 0;
         i < s_periodic_shift_catalog_instance[dim_index]->d_shifts.size();
         ++i) {

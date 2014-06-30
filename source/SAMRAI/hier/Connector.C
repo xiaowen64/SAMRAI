@@ -470,18 +470,27 @@ Connector::setToTransposeOf( const Connector &other,
    // Send edge messages and remember to get receivers' acknowledgements.
    std::set<int> ack_needed;
    size_t counter = 0;
+   BoxContainer unshifted_head_nabrs, scratch_space;
    for ( FullNeighborhoodSet::iterator rr=reordered_relationships.begin();
          rr!=reordered_relationships.end(); ++rr ) {
 
       const Box &base_box = rr->first;
       const BoxContainer &head_nabrs = rr->second;
+      if ( base_box.isPeriodicImage() ) {
+         unshifted_head_nabrs = head_nabrs;
+         unshiftOverlappingNeighbors( base_box,
+                                      unshifted_head_nabrs,
+                                      scratch_space,
+                                      getHead().getRefinementRatio() );
+      }
+      const BoxContainer &nabrs = base_box.isPeriodicImage() ? unshifted_head_nabrs : head_nabrs;
 
       /*
        * If base_box is local, store the neighbors.
        * Else, send the neighbors to its owner to store.
        */
       if ( base_box.getOwnerRank() == mpi1.getRank() ) {
-         insertNeighbors( head_nabrs, base_box.getBoxId() );
+         insertNeighbors( nabrs, base_box.getBoxId() );
       }
       else {
          boost::shared_ptr<tbox::MessageStream> &mstream = messages[base_box.getOwnerRank()];
@@ -489,8 +498,8 @@ Connector::setToTransposeOf( const Connector &other,
             mstream.reset( new tbox::MessageStream );
             *mstream << edge_msg_type;
          }
-         *mstream << base_box.getLocalId() << static_cast<size_t>(head_nabrs.size());
-         for ( BoxContainer::const_iterator bi=head_nabrs.begin(); bi!=head_nabrs.end(); ++bi ) {
+         *mstream << base_box.getLocalId() << static_cast<size_t>(nabrs.size());
+         for ( BoxContainer::const_iterator bi=nabrs.begin(); bi!=nabrs.end(); ++bi ) {
             *mstream << *bi;
          }
 
@@ -684,6 +693,50 @@ Connector::reorderRelationshipsByHead(
             relationships_by_head[nabr].insert(base_box);
          }
       }
+   }
+}
+
+
+
+
+/*
+***********************************************************************
+* Shift neighbors by amount equal and opposite of a Box's shift so that
+* they become neighbors of the unshifed box.  If this results in a
+* neighbor shift that is not in the shift catalog, discard the neighbor.
+***********************************************************************
+*/
+void
+Connector::unshiftOverlappingNeighbors(
+   const Box& box,
+   BoxContainer& neighbors,
+   BoxContainer& scratch_space,
+   const IntVector& neighbor_refinement_ratio)
+{
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, neighbor_refinement_ratio);
+
+   const PeriodicShiftCatalog* shift_catalog =
+      PeriodicShiftCatalog::getCatalog(box.getDim());
+
+   scratch_space.clear();
+//   scratch_space.reserve(neighbors.size());
+   for (BoxContainer::iterator na = neighbors.begin();
+        na != neighbors.end(); ++na) {
+      Box& nabr = *na;
+      IntVector sum_shift =
+         shift_catalog->shiftNumberToShiftDistance(nabr.getPeriodicId())
+         - shift_catalog->shiftNumberToShiftDistance(box.getPeriodicId());
+      const PeriodicId new_shift_number =
+         shift_catalog->shiftDistanceToShiftNumber(sum_shift);
+      if (new_shift_number.getPeriodicValue() !=
+          shift_catalog->getInvalidShiftNumber()) {
+         nabr.initialize(nabr, new_shift_number, neighbor_refinement_ratio);
+         scratch_space.pushBack(nabr);
+      }
+   }
+   if (scratch_space.size() != neighbors.size()) {
+      // We have discarded some neighbors due to invalid shift.
+      neighbors.swap(scratch_space);
    }
 }
 
