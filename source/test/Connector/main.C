@@ -17,6 +17,8 @@
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/BoxLevel.h"
+#include "SAMRAI/hier/BoxLevelConnectorUtils.h"
+#include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/AssumedPartition.h"
 #include "SAMRAI/geom/GridGeometry.h"
@@ -155,6 +157,13 @@ int main(
 
          const tbox::Dimension dim(main_db->getInteger("dim"));
 
+         const hier::IntVector &refinement_ratio = hier::IntVector::getOne(dim);
+
+         hier::IntVector connector_width(dim);
+         main_db->getIntegerArray( "connector_width",
+                                   &connector_width[0],
+                                   connector_width.getDim().getValue() );
+
          if ( !input_db->isDatabase("BlockGeometry") ) {
             TBOX_ERROR("getTestParametersFromDatabase: You must specify \"BlockGeometry\" in input database.");
          }
@@ -165,16 +174,20 @@ int main(
                "BlockGeometry",
                input_db->getDatabase("BlockGeometry"));
 
+         hier::BoxLevelConnectorUtils blcu;
+
          PrimitiveBoxGen pb1( *input_db->getDatabase("PrimitiveBoxGen1"), grid_geom );
          BoxContainer boxes1;
          pb1.getBoxes(boxes1);
-         hier::BoxLevel l1(boxes1, hier::IntVector::getOne(pb1.d_geom->getDim()), pb1.d_geom);
+         hier::BoxLevel l1(boxes1, refinement_ratio, pb1.d_geom);
+         blcu.addPeriodicImages( l1, l1.getGridGeometry()->getPeriodicDomainSearchTree(), connector_width );
          l1.cacheGlobalReducedData();
 
          PrimitiveBoxGen pb2( *input_db->getDatabase("PrimitiveBoxGen2"), grid_geom );
          BoxContainer boxes2;
          pb2.getBoxes(boxes2);
-         hier::BoxLevel l2(boxes2, hier::IntVector::getOne(pb2.d_geom->getDim()), pb2.d_geom);
+         hier::BoxLevel l2(boxes2, refinement_ratio, pb2.d_geom);
+         blcu.addPeriodicImages( l2, l2.getGridGeometry()->getPeriodicDomainSearchTree(), connector_width );
          l2.cacheGlobalReducedData();
 
          int test_number = 0;
@@ -202,7 +215,7 @@ int main(
              * correctness.
              */
 
-            hier::Connector l1_to_l2(l1, l2, hier::IntVector::getZero(dim));
+            hier::Connector l1_to_l2(l1, l2, connector_width);
             contriveConnector( l1_to_l2, pb1, pb2, *test_db );
 
             tbox::plog << "Testing with:"
@@ -211,7 +224,7 @@ int main(
                        << "\nl1_to_l2:\n" << l1_to_l2.format("\t")
                        << std::endl;
 
-            hier::Connector l2_to_l1(l2, l1, hier::IntVector::getZero(dim));
+            hier::Connector l2_to_l1(l2, l1, connector_width);
             l2_to_l1.setToTransposeOf(l1_to_l2);
             tbox::plog << "Computed:\nl2_to_l1:\n" << l2_to_l1.format("\t")
                        << std::endl;
@@ -277,7 +290,7 @@ void contriveConnector( Connector &conn,
                  << std::endl;
    }
 
-   else if ( method == "near" ) {
+   else if ( method == "bracket" ) {
       int begin_shift = contrivance_db.getInteger("begin_shift");
       int end_shift = contrivance_db.getInteger("end_shift");
       int inc = contrivance_db.getInteger("inc");
@@ -297,15 +310,22 @@ void contriveConnector( Connector &conn,
             conn.insertLocalNeighbor(l2box, l1box.getBoxId());
          }
       }
-      tbox::plog << "Contrived connector using 'near':"
+      tbox::plog << "Contrived connector using 'bracket':"
                  << "  begin_shift=" << begin_shift
                  << "  end_shift=" << end_shift
                  << "  inc=" << inc
                  << std::endl;
    }
 
+   else if ( method == "overlap" ) {
+      hier::OverlapConnectorAlgorithm oca;
+      oca.findOverlaps(conn);
+      tbox::plog << "Contrived connector using 'overlap':"
+                 << std::endl;
+   }
+
    else {
-      TBOX_ERROR("Contrivance method must be one of these: mod, forward, backward.");
+      TBOX_ERROR("Contrivance method must be one of these: mod, bracket.");
    }
 
    return;

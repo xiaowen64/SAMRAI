@@ -1,0 +1,80 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
+ *
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Description:   Input file for Connector tests.
+ *
+ ************************************************************************/
+
+
+Main {
+
+  // Base name for output files.
+  base_name = "periodic.2d"
+
+  // Whether to log all nodes.
+  log_all_nodes = TRUE
+
+  dim = 2
+
+  connector_width = 2,2
+}
+
+
+BlockGeometry {
+  // Domain of a single box:
+  // domain_boxes = [(0,0), (15,31)]
+  //
+  // Domain of a single box, described as 4 boxes:
+  domain_boxes = [(0,0), (7,15)], [(8,0), (15,15)], [(0,15), (7,31)], [(7,15), (15,31)]
+
+  periodic_dimension = 1, 1
+  x_lo         = 0, 0
+  x_up         = 1, 2
+}
+
+
+PrimitiveBoxGen1 {
+  index_filter = "ALL"
+  num_keep = 2
+  num_discard = 1
+  frac = 0.5
+}
+
+
+PrimitiveBoxGen2 {
+  index_filter = "ALL"
+  num_keep = 2
+  num_discard = 1
+  frac = 0.5
+}
+
+
+Test00 {
+  nickname = "full connectivity"
+  method = "mod"
+  denom = 1
+}
+
+Test01 {
+  nickname = "sparse connectivity"
+  method = "bracket"
+  begin_shift = -2
+  end_shift = 4
+  inc = 1
+}
+
+Test02 {
+  nickname = "also sparse connectivity"
+  method = "bracket"
+  begin_shift = -2
+  end_shift = 8
+  inc = 2
+}
+
+Test03 {
+  nickname = "overlap connectivity"
+  method = "overlap"
+}
