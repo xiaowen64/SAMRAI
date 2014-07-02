@@ -408,7 +408,7 @@ Box::initialize(
 
 Index
 Box::index(
-   const int offset) const
+   const unsigned long int offset) const
 {
    TBOX_ASSERT(offset >= 0);
    TBOX_ASSERT(offset <= size());
@@ -588,7 +588,7 @@ Box::operator += (
 
 void
 Box::lengthen(
-   const int direction,
+   const dir_t direction,
    const int ghosts)
 {
    TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
@@ -604,7 +604,7 @@ Box::lengthen(
 
 void
 Box::shorten(
-   const int direction,
+   const dir_t direction,
    const int ghosts)
 {
    TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
@@ -656,7 +656,7 @@ Box::refine(
  *************************************************************************
  */
 
-int
+Box::dir_t
 Box::longestDirection() const
 {
    int max = upper(0) - lower(0);
@@ -935,7 +935,7 @@ Box::coalesceWith(
 
 void
 Box::rotateAboutAxis(
-   const int axis,
+   const dir_t axis,
    const int num_rotations)
 {
    TBOX_ASSERT(axis < getDim().getValue());
