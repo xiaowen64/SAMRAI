@@ -155,11 +155,11 @@ BaseConnectorAlgorithm::packReferencedNeighbors(
    }
    if (print_steps) {
       tbox::plog << "sending " << referenced_new_base_nabrs.size()
-                 << " referenced_new_base_nabrs:"
-                 << referenced_new_base_nabrs.format("\n  ") << std::endl
+                 << " referenced_new_base_nabrs:\n"
+                 << referenced_new_base_nabrs.format("  ") << std::endl
                  << "sending " << referenced_new_head_nabrs.size()
-                 << " referenced_new_head_nabrs:"
-                 << referenced_new_head_nabrs.format("\n  ") << std::endl;
+                 << " referenced_new_head_nabrs:\n"
+                 << referenced_new_head_nabrs.format("  ") << std::endl;
    }
 
    TBOX_ASSERT(ptr == &send_mesg[send_mesg.size() - 1] + 1);
@@ -333,11 +333,11 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
 
    if (print_steps) {
       tbox::plog << "received " << n_reference_new_base_boxes
-                 << " referenced_new_base_nabrs:"
-                 << referenced_new_base_nabrs.format("\n  ") << std::endl
+                 << " referenced_new_base_nabrs:\n"
+                 << referenced_new_base_nabrs.format("  ") << std::endl
                  << "received " << n_reference_new_head_boxes
-                 << " referenced_new_head_nabrs:"
-                 << referenced_new_head_nabrs.format("\n  ") << std::endl;
+                 << " referenced_new_head_nabrs:\n"
+                 << referenced_new_head_nabrs.format("  ") << std::endl;
    }
 
    /*
