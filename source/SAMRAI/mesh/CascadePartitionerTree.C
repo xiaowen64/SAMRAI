@@ -98,7 +98,7 @@ CascadePartitionerTree::CascadePartitionerTree(
    d_obligation(-1.0),
    d_group_may_supply(false)
 {
-   if ( d_common->d_print_steps ) {
+   if ( d_common->d_print_steps && d_common->d_print_child_steps ) {
       tbox::plog << d_common->d_object_name << "::non-root constructor: entered generation "
                  << d_gen_num << "  parent ranks " << d_begin << '-' << d_end
                  << "  position " << group_position << "\n";
@@ -133,7 +133,7 @@ CascadePartitionerTree::CascadePartitionerTree(
       makeChildren();
    }
 
-   if ( d_common->d_print_steps ) {
+   if ( d_common->d_print_steps && d_common->d_print_child_steps ) {
       tbox::plog << d_common->d_object_name << "::non-root constructor: leaving\n";
       printClassData( tbox::plog, "\t" );
    }
@@ -215,6 +215,12 @@ void CascadePartitionerTree::distributeLoad()
                     << top_group->d_gen_num
                     << "  with exact local_load=" << d_common->d_local_load->getSumLoad()
                     << std::endl;
+         tbox::plog << "\ttop_group:\n";
+         top_group->printClassData( tbox::plog, "\t" );
+         tbox::plog << "\tchild 0:\n";
+         top_group->d_children[0]->printClassData( tbox::plog, "\t" );
+         tbox::plog << "\tchild 1:\n";
+         top_group->d_children[1]->printClassData( tbox::plog, "\t" );
       }
 
       d_leaf->recomputeLeafData();
@@ -224,7 +230,7 @@ void CascadePartitionerTree::distributeLoad()
             current_group = current_group->d_parent ) {
 
          current_group->combineChildren();
-         if ( d_common->d_print_steps ) {
+         if ( d_common->d_print_steps && d_common->d_print_child_steps ) {
             tbox::plog << d_common->d_object_name << "::distributeLoad outer top_group "
                        << top_group->d_gen_num << "  combined generation "
                        << current_group->d_gen_num << ".  All d_work values are exact.\n";
@@ -257,13 +263,13 @@ void CascadePartitionerTree::distributeLoad()
             if ( d_common->d_print_steps ) {
                tbox::plog << d_common->d_object_name << "::distributeLoad outer top_group "
                           << top_group->d_gen_num << "  shuffled generation "
-                          << current_group->d_gen_num << ".  d_work is exact, but childrens' are estimates.\n";
-               tbox::plog << "\tcurrent_group:\n";
-               current_group->printClassData( tbox::plog, "\t" );
+                          << top_group->d_gen_num << ".  d_work is exact, but childrens' are estimates.\n";
+               tbox::plog << "\ttop_group:\n";
+               top_group->printClassData( tbox::plog, "\t" );
                tbox::plog << "\tchild 0:\n";
-               current_group->d_children[0]->printClassData( tbox::plog, "\t" );
+               top_group->d_children[0]->printClassData( tbox::plog, "\t" );
                tbox::plog << "\tchild 1:\n";
-               current_group->d_children[1]->printClassData( tbox::plog, "\t" );
+               top_group->d_children[1]->printClassData( tbox::plog, "\t" );
             }
          }
 
@@ -545,7 +551,7 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
    TBOX_ASSERT( containsRank(d_common->d_mpi.getRank()) || d_children[0] == 0 ); // Only near groups should store children.
    TBOX_ASSERT( d_group_may_supply == (estimatedSurplus() > d_common->d_pparams->getLoadComparisonTol()) );
 
-   if ( d_common->d_print_steps ) {
+   if ( d_common->d_print_steps && d_common->d_print_child_steps ) {
       tbox::plog << d_common->d_object_name << "::supplyWork generation "
                  << d_gen_num << " [" << d_begin << ',' << d_end << ')'
                  << " attempting to supply " << work_requested << " to " << taker
@@ -573,7 +579,6 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
       else {
          // A leaf and/or a far group.  No children, and no recursion.
          est_work_supplied = allowed_supply;
-         d_work -= est_work_supplied;
 
          if ( containsRank(d_common->d_mpi.getRank()) ) {
             // This is a near leaf group: apportion the load shipment.
@@ -611,9 +616,11 @@ CascadePartitionerTree::supplyWork( double work_requested, int taker )
 
       d_group_may_supply = estimatedSurplus() > d_common->d_pparams->getLoadComparisonTol();
 
+      d_work -= est_work_supplied;
+
    } // d_group_may_supply
 
-   if ( d_common->d_print_steps ) {
+   if ( d_common->d_print_steps && d_common->d_print_child_steps ) {
       tbox::plog << d_common->d_object_name << "::supplyWork generation "
                  << d_gen_num << " [" << d_begin << ',' << d_end << ')'
                  << " supplied estimated " << est_work_supplied << " to " << taker

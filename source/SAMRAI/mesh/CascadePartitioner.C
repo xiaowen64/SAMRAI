@@ -83,12 +83,13 @@ CascadePartitioner::CascadePartitioner(
    d_local_load(0),
    d_shipment(0),
    d_comm_stage(),
-   // Performance evaluation.
+   // Performance evaluation and diagnostics.
    d_barrier_before(false),
    d_barrier_after(false),
    d_report_load_balance(false),
    d_summarize_map(false),
    d_print_steps(false),
+   d_print_child_steps(false),
    d_check_connectivity(false),
    d_check_map(false)
 {
@@ -645,7 +646,10 @@ CascadePartitioner::getFromInput(
 
    if (input_db) {
 
-      d_print_steps = input_db->getBoolWithDefault("DEV_print_steps", false);
+      d_print_steps =
+         input_db->getBoolWithDefault("DEV_print_steps", d_print_steps);
+      d_print_child_steps =
+         input_db->getBoolWithDefault("DEV_print_child_steps", d_print_child_steps);
       d_check_connectivity =
          input_db->getBoolWithDefault("DEV_check_connectivity", d_check_connectivity);
       d_check_map =

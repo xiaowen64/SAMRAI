@@ -511,6 +511,7 @@ private:
 
    // Extra checks independent of optimization/debug.
    char d_print_steps;
+   char d_print_child_steps;
    char d_check_connectivity;
    char d_check_map;
 
