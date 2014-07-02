@@ -198,30 +198,54 @@ BlockGeometry {
 }
 
 
-PrimitiveBoxGen1 {
+
+PrimitiveBoxGen0 {
+  nickname = "Full domain"
+  avg_parts_per_rank = 5
   index_filter = "ALL"
-  num_keep = 2
-  num_discard = 1
-  frac = 0.5
 }
 
+PrimitiveBoxGen1 {
+  nickname = "25% sparse domain"
+  avg_parts_per_rank = 5
+  index_filter = "INTERVAL"
+  num_keep = 1
+  num_discard = 3
+}
 
 PrimitiveBoxGen2 {
-  index_filter = "ALL"
-  num_keep = 2
-  num_discard = 1
-  frac = 0.5
+  nickname = "lower .60"
+  avg_parts_per_rank = 5
+  index_filter = "LOWER"
+  frac = 0.60
 }
+
+PrimitiveBoxGen3 {
+  nickname = "upper .60"
+  avg_parts_per_rank = 5
+  index_filter = "UPPER"
+  frac = 0.40
+}
+
+PrimitiveBoxGen4 {
+  nickname = "lower .10"
+  avg_parts_per_rank = 5
+  index_filter = "LOWER"
+  frac = 0.10
+}
+
 
 
 Test00 {
-  nickname = "full connectivity"
+  nickname = "full levels, full connectivity"
+  levels = 0, 0
   method = "mod"
   denom = 1
 }
 
 Test01 {
-  nickname = "sparse connectivity"
+  nickname = "full levels, sparse connectivity"
+  levels = 0, 0
   method = "bracket"
   begin_shift = -2
   end_shift = 4
@@ -229,9 +253,40 @@ Test01 {
 }
 
 Test02 {
-  nickname = "also sparse connectivity"
+  nickname = "full levels, also sparse connectivity"
+  levels = 0, 0
   method = "bracket"
   begin_shift = -2
   end_shift = 8
   inc = 2
+}
+
+Test03 {
+  nickname = "full levels, overlap connectivity"
+  levels = 0, 0
+  method = "overlap"
+}
+
+Test04 {
+  nickname = "sparse-to-lower, overlap connectivity"
+  levels = 1, 2
+  method = "overlap"
+}
+
+Test05 {
+  nickname = "sparse-to-upper, overlap connectivity"
+  levels = 1, 3
+  method = "overlap"
+}
+
+Test06 {
+  nickname = "full-to-tiny, overlap connectivity"
+  levels = 0, 4
+  method = "overlap"
+}
+
+Test07 {
+  nickname = "tiny-to-full, overlap connectivity"
+  levels = 4, 0
+  method = "overlap"
 }

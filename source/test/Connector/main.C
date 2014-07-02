@@ -45,13 +45,16 @@ struct PrimitiveBoxGen {
                       LOWER = 2	/* Keep indices below d_frac */,
                       UPPER = 3	/* Keep indices above d_frac */
    };
+   std::string d_nickname;
+   double d_avg_parts_per_rank;
    int d_index_filter;
    int d_num_keep;
    int d_num_discard;
    double d_frac;
    PrimitiveBoxGen(
       tbox::Database &database,
-      const boost::shared_ptr<hier::BaseGridGeometry> &geom)
+      const boost::shared_ptr<hier::BaseGridGeometry> &geom) :
+      d_avg_parts_per_rank(1.0)
       {
          d_geom = geom;
          getFromInput(database);
@@ -59,6 +62,7 @@ struct PrimitiveBoxGen {
    PrimitiveBoxGen( const PrimitiveBoxGen &other ) :
       d_geom(other.d_geom),
       d_ap(other.d_ap),
+      d_avg_parts_per_rank(other.d_avg_parts_per_rank),
       d_index_filter(other.d_index_filter),
       d_num_keep(other.d_num_keep),
       d_num_discard(other.d_num_discard),
@@ -68,22 +72,29 @@ struct PrimitiveBoxGen {
 };
 
 
+// Parameters in a specific test.
 struct CommonTestParams {
-   PrimitiveBoxGen d_boxes1;
-   PrimitiveBoxGen d_boxes2;
-   CommonTestParams( const tbox::Dimension &dim );
-   CommonTestParams( const CommonTestParams &other );
+   std::string d_nickname;
+   int d_base_num;
+   int d_head_num;
+   std::string d_method;
+   // For method mod:
+   int d_denom;
+   // For method bracket:
+   int d_begin_shift;
+   int d_end_shift;
+   int d_inc;
+   // For method overlap: (no parameter)
+   CommonTestParams( tbox::Database &test_db );
+   void contriveConnector( Connector &conn,
+                           const std::vector<PrimitiveBoxGen> &boxgens,
+                           const std::vector<hier::BoxLevel> &levels,
+                           const hier::IntVector &connector_width );
 };
 
 
 CommonTestParams getTestParametersFromDatabase(
    tbox::Database &test_db );
-
-
-void contriveConnector( Connector &conn,
-                        const PrimitiveBoxGen &pb1,
-                        const PrimitiveBoxGen &pb2,
-                        tbox::Database &contrivance_db );
 
 
 int main(
@@ -176,19 +187,45 @@ int main(
 
          hier::BoxLevelConnectorUtils blcu;
 
-         PrimitiveBoxGen pb1( *input_db->getDatabase("PrimitiveBoxGen1"), grid_geom );
-         BoxContainer boxes1;
-         pb1.getBoxes(boxes1);
-         hier::BoxLevel l1(boxes1, refinement_ratio, pb1.d_geom);
-         blcu.addPeriodicImages( l1, l1.getGridGeometry()->getPeriodicDomainSearchTree(), connector_width );
-         l1.cacheGlobalReducedData();
+         /*
+          * Generate BoxLevels and associated PrimitiveBoxGen objects.
+          */
 
-         PrimitiveBoxGen pb2( *input_db->getDatabase("PrimitiveBoxGen2"), grid_geom );
-         BoxContainer boxes2;
-         pb2.getBoxes(boxes2);
-         hier::BoxLevel l2(boxes2, refinement_ratio, pb2.d_geom);
-         blcu.addPeriodicImages( l2, l2.getGridGeometry()->getPeriodicDomainSearchTree(), connector_width );
-         l2.cacheGlobalReducedData();
+         std::vector<hier::BoxLevel> levels;
+         std::vector<PrimitiveBoxGen> boxgens;
+
+         while (true) {
+
+            std::string level_name("PrimitiveBoxGen");
+            level_name += tbox::Utilities::intToString(levels.size(), 1);
+
+            boost::shared_ptr<tbox::Database> level_db =
+               input_db->getDatabaseWithDefault(level_name, boost::shared_ptr<tbox::Database>());
+
+            if ( !level_db ) {
+               break;
+            }
+
+            PrimitiveBoxGen boxgen( *level_db, grid_geom );
+            BoxContainer boxes;
+            boxgen.getBoxes(boxes);
+            BoxLevel box_level( boxes, refinement_ratio, grid_geom );
+            blcu.addPeriodicImages( box_level, grid_geom->getPeriodicDomainSearchTree(), connector_width );
+            box_level.cacheGlobalReducedData();
+
+            boxgens.push_back(boxgen);
+            levels.push_back(box_level);
+
+            const BoxLevel &globalized = levels.back().getGlobalizedVersion();
+            if ( rank == 0 ) {
+               tbox::plog << "Globalized version of BoxLevel #" << levels.size()-1 << ":\n"
+                          << globalized.format("\t");
+            }
+         }
+
+         /*
+          * Read in and run tests.
+          */
 
          int test_number = 0;
          while (true) {
@@ -203,40 +240,39 @@ int main(
                break;
             }
 
-            const std::string nickname =
-               test_db->getStringWithDefault("nickname", test_name);
+            CommonTestParams testparams(*test_db);
 
             tbox::plog << "\n\n";
-            tbox::pout << "Running " << test_name << " (" << nickname << ")\n";
+            tbox::pout << "Running " << test_name << " (" << testparams.d_nickname << ")\n";
 
             /*
-             * Set up edges in l1_to_l2 by the contrivance specified
+             * Set up edges in forward by the contrivance specified
              * in the test database.  Then check transpose
              * correctness.
              */
 
-            hier::Connector l1_to_l2(l1, l2, connector_width);
-            contriveConnector( l1_to_l2, pb1, pb2, *test_db );
+            hier::Connector forward(dim);
+            testparams.contriveConnector( forward, boxgens, levels, connector_width );
 
             tbox::plog << "Testing with:"
-                       << "\nl1:\n" << l1.format("\t")
-                       << "\nl2:\n" << l2.format("\t")
-                       << "\nl1_to_l2:\n" << l1_to_l2.format("\t")
+                       << "\nbase:\n" << forward.getBase().format("\t")
+                       << "\nhead:\n" << forward.getHead().format("\t")
+                       << "\nforward:\n" << forward.format("\t")
                        << std::endl;
 
-            hier::Connector l2_to_l1(l2, l1, connector_width);
-            l2_to_l1.setToTransposeOf(l1_to_l2);
-            tbox::plog << "Computed:\nl2_to_l1:\n" << l2_to_l1.format("\t")
+            hier::Connector reverse(forward.getHead(), forward.getBase(), connector_width);
+            reverse.setToTransposeOf(forward);
+            tbox::plog << "Computed:\nreverse:\n" << reverse.format("\t")
                        << std::endl;
 
-            size_t test_fail_count = l1_to_l2.checkTransposeCorrectness(l2_to_l1);
+            size_t test_fail_count = forward.checkTransposeCorrectness(reverse);
             fail_count += test_fail_count;
             if ( test_fail_count ) {
-               tbox::pout << "FAILED: " << test_name << " (" << nickname << ')' << std::endl;
-               tbox::plog << "FAILED: " << test_name << " (" << nickname << ')' << std::endl;
+               tbox::pout << "FAILED: " << test_name << " (" << testparams.d_nickname << ')' << std::endl;
+               tbox::plog << "FAILED: " << test_name << " (" << testparams.d_nickname << ')' << std::endl;
             }
             else {
-               tbox::plog << "PASSED: " << test_name << " (" << nickname << ')' << std::endl;
+               tbox::plog << "PASSED: " << test_name << " (" << testparams.d_nickname << ')' << std::endl;
             }
          }
 
@@ -258,81 +294,6 @@ int main(
 
 
 
-/*
- *************************************************************************
- *************************************************************************
- */
-void contriveConnector( Connector &conn,
-                        const PrimitiveBoxGen &pb1,
-                        const PrimitiveBoxGen &pb2,
-                        tbox::Database &contrivance_db )
-{
-   const int rank = conn.getBase().getMPI().getRank();
-
-   const std::string method = contrivance_db.getString("method");
-
-   if ( method == "mod" ) {
-      const int denom = contrivance_db.getInteger("denom");
-      for ( int i=pb1.d_ap.beginOfRank(rank); i<pb1.d_ap.endOfRank(rank); ++i ) {
-         hier::Box l1box = pb1.d_ap.getBox(i);
-         TBOX_ASSERT( l1box.getOwnerRank() == rank );
-         for ( int j=pb2.d_ap.begin(); j<pb2.d_ap.end(); ++j ) {
-            hier::Box l2box = pb2.d_ap.getBox(j);
-            TBOX_ASSERT( l2box.getOwnerRank() >= 0 &&
-                         l2box.getOwnerRank() < conn.getBase().getMPI().getSize() );
-            if ( (i+j)%denom == 0 ) {
-               conn.insertLocalNeighbor(l2box, l1box.getBoxId());
-            }
-         }
-      }
-      tbox::plog << "Contrived connector using 'mod':"
-                 << "  denom=" << denom
-                 << std::endl;
-   }
-
-   else if ( method == "bracket" ) {
-      int begin_shift = contrivance_db.getInteger("begin_shift");
-      int end_shift = contrivance_db.getInteger("end_shift");
-      int inc = contrivance_db.getInteger("inc");
-      for ( int i=pb1.d_ap.beginOfRank(rank); i<pb1.d_ap.endOfRank(rank); ++i ) {
-         hier::Box l1box = pb1.d_ap.getBox(i);
-         TBOX_ASSERT( l1box.getOwnerRank() == rank );
-
-         int begin = l1box.getLocalId().getValue() + begin_shift;
-         int end = l1box.getLocalId().getValue() + end_shift;
-         begin = tbox::MathUtilities<int>::Max(begin, pb2.d_ap.begin());
-         end = tbox::MathUtilities<int>::Min(end, pb2.d_ap.end());
-
-         for ( int j=begin; j<end; j+=inc ) {
-            hier::Box l2box = pb2.d_ap.getBox(j);
-            TBOX_ASSERT( l2box.getOwnerRank() >= 0 &&
-                         l2box.getOwnerRank() < conn.getBase().getMPI().getSize() );
-            conn.insertLocalNeighbor(l2box, l1box.getBoxId());
-         }
-      }
-      tbox::plog << "Contrived connector using 'bracket':"
-                 << "  begin_shift=" << begin_shift
-                 << "  end_shift=" << end_shift
-                 << "  inc=" << inc
-                 << std::endl;
-   }
-
-   else if ( method == "overlap" ) {
-      hier::OverlapConnectorAlgorithm oca;
-      oca.findOverlaps(conn);
-      tbox::plog << "Contrived connector using 'overlap':"
-                 << std::endl;
-   }
-
-   else {
-      TBOX_ERROR("Contrivance method must be one of these: mod, bracket.");
-   }
-
-   return;
-}
-
-
-
 
 /*
  *************************************************************************
@@ -343,12 +304,10 @@ void PrimitiveBoxGen::getFromInput( tbox::Database &test_db )
    int rank_begin = 0;
    int rank_end = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
    int index_begin = test_db.getIntegerWithDefault("index_begin", 0);
-   d_ap.partition( d_geom->getPhysicalDomain(), rank_begin, rank_end, index_begin );
-   tbox::plog << "PrimitiveBoxGen::getFromInput() generated AssumedPartition:\n";
-   d_ap.recursivePrint(tbox::plog, "\t", 3);
-   if ( d_ap.selfCheck() ) {
-      TBOX_ERROR("Error in setting up AssumedPartition d_ap (selfCheck failed).\n");
-   }
+
+   d_avg_parts_per_rank = test_db.getDoubleWithDefault("avg_parts_per_rank", d_avg_parts_per_rank);
+
+   d_nickname = test_db.getString("nickname");
 
    std::string index_filter = test_db.getStringWithDefault("index_filter", "ALL");
    if ( index_filter == "ALL" ) {
@@ -356,13 +315,38 @@ void PrimitiveBoxGen::getFromInput( tbox::Database &test_db )
    }
    else if ( index_filter == "INTERVAL" ) {
       d_index_filter = PrimitiveBoxGen::INTERVAL;
+      d_num_keep = test_db.getInteger("num_keep");
+      d_num_discard = test_db.getInteger("num_discard");
    }
    else if ( index_filter == "LOWER" ) {
       d_index_filter = PrimitiveBoxGen::LOWER;
+      d_frac = test_db.getDouble("frac");
    }
    else if ( index_filter == "UPPER" ) {
       d_index_filter = PrimitiveBoxGen::UPPER;
+      d_frac = test_db.getDouble("frac");
    }
+
+   d_ap.partition( d_geom->getPhysicalDomain(),
+                   rank_begin, rank_end, index_begin,
+                   d_avg_parts_per_rank );
+
+   tbox::plog << "PrimitiveBoxGen::getFromInput():\n"
+              << "d_nickname = " << d_nickname << "\n"
+              << "d_avg_parts_per_rank = " << d_avg_parts_per_rank << "\n"
+              << "rank begin, end = " << rank_begin << "  " << rank_end << '\n'
+              << "index_begin = " << index_begin << "\n"
+              << "index_filter = " << index_filter << "\n"
+              << "d_num_keep = " << d_num_keep << "\n"
+              << "d_num_discard = " << d_num_discard << "\n"
+              << "d_frac = " << d_frac << "\n"
+              << "generated AssumedPartition:\n";
+   d_ap.recursivePrint(tbox::plog, "\t", 3);
+
+   if ( d_ap.selfCheck() ) {
+      TBOX_ERROR("Error in setting up AssumedPartition d_ap (selfCheck failed).\n");
+   }
+
    return;
 }
 
@@ -398,14 +382,14 @@ void PrimitiveBoxGen::getBoxes( hier::BoxContainer &boxes )
    else if (d_index_filter == LOWER) {
       int threshold = d_ap.begin() + static_cast<int>( d_frac*(d_ap.end() - d_ap.begin()) );
       int idbegin = d_ap.begin();
-      int idend = tbox::MathUtilities<int>::Max( threshold, d_ap.end() );
+      int idend = tbox::MathUtilities<int>::Min( threshold, d_ap.end() );
       for ( int id=idbegin; id<idend; ++id ) {
          boxes.push_back( d_ap.getBox(id) );
       }
    }
    else if (d_index_filter == UPPER) {
       int threshold = d_ap.begin() + static_cast<int>( d_frac*(d_ap.end() - d_ap.begin()) );
-      int idbegin = tbox::MathUtilities<int>::Min( threshold, d_ap.begin() );
+      int idbegin = tbox::MathUtilities<int>::Max( threshold, d_ap.begin() );
       int idend = d_ap.end();
       for ( int id=idbegin; id<idend; ++id ) {
          boxes.push_back( d_ap.getBox(id) );
@@ -418,3 +402,107 @@ void PrimitiveBoxGen::getBoxes( hier::BoxContainer &boxes )
    return;
 }
 
+
+CommonTestParams::CommonTestParams( tbox::Database &test_db )
+   : d_denom(0),
+     d_begin_shift(0),
+     d_end_shift(0),
+     d_inc(0)
+{
+   d_nickname = test_db.getString("nickname");
+   d_method = test_db.getString("method");
+
+   int level_num[2];
+   test_db.getIntegerArray("levels", level_num, 2);
+   d_base_num = level_num[0];
+   d_head_num = level_num[1];
+
+   if ( d_method == "mod" ) {
+      d_denom = test_db.getInteger("denom");
+   }
+   else if ( d_method == "bracket" ) {
+      d_begin_shift = test_db.getInteger("begin_shift");
+      d_end_shift = test_db.getInteger("end_shift");
+      d_inc = test_db.getInteger("inc");
+   }
+   else if ( d_method == "overlap" ) {
+   }
+   return;
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void CommonTestParams::contriveConnector(
+   Connector &conn,
+   const std::vector<PrimitiveBoxGen> &boxgens,
+   const std::vector<hier::BoxLevel> &levels,
+   const hier::IntVector &connector_width )
+{
+   const PrimitiveBoxGen &boxgen_base = boxgens[d_base_num];
+   const PrimitiveBoxGen &boxgen_head = boxgens[d_head_num];
+   const hier::BoxLevel &base = levels[d_base_num];
+   const hier::BoxLevel &head = levels[d_head_num];
+
+   conn = Connector( base, head, connector_width );
+
+   const int rank = conn.getBase().getMPI().getRank();
+
+   if ( d_method == "mod" ) {
+      for ( int i=boxgen_base.d_ap.beginOfRank(rank); i<boxgen_base.d_ap.endOfRank(rank); ++i ) {
+         hier::Box l1box = boxgen_base.d_ap.getBox(i);
+         TBOX_ASSERT( l1box.getOwnerRank() == rank );
+         for ( int j=boxgen_head.d_ap.begin(); j<boxgen_head.d_ap.end(); ++j ) {
+            hier::Box l2box = boxgen_head.d_ap.getBox(j);
+            TBOX_ASSERT( l2box.getOwnerRank() >= 0 &&
+                         l2box.getOwnerRank() < conn.getBase().getMPI().getSize() );
+            if ( (i+j)%d_denom == 0 ) {
+               conn.insertLocalNeighbor(l2box, l1box.getBoxId());
+            }
+         }
+      }
+      tbox::plog << "Contrived connector using 'mod':"
+                 << "  denom=" << d_denom
+                 << std::endl;
+   }
+
+   else if ( d_method == "bracket" ) {
+      for ( int i=boxgen_base.d_ap.beginOfRank(rank); i<boxgen_base.d_ap.endOfRank(rank); ++i ) {
+         hier::Box l1box = boxgen_base.d_ap.getBox(i);
+         TBOX_ASSERT( l1box.getOwnerRank() == rank );
+
+         int begin = l1box.getLocalId().getValue() + d_begin_shift;
+         int end = l1box.getLocalId().getValue() + d_end_shift;
+         begin = tbox::MathUtilities<int>::Max(begin, boxgen_head.d_ap.begin());
+         end = tbox::MathUtilities<int>::Min(end, boxgen_head.d_ap.end());
+
+         for ( int j=begin; j<end; j+=d_inc ) {
+            hier::Box l2box = boxgen_head.d_ap.getBox(j);
+            TBOX_ASSERT( l2box.getOwnerRank() >= 0 &&
+                         l2box.getOwnerRank() < conn.getBase().getMPI().getSize() );
+            conn.insertLocalNeighbor(l2box, l1box.getBoxId());
+         }
+      }
+      tbox::plog << "Contrived connector using 'bracket':"
+                 << "  begin_shift=" << d_begin_shift
+                 << "  end_shift=" << d_end_shift
+                 << "  inc=" << d_inc
+                 << std::endl;
+   }
+
+   else if ( d_method == "overlap" ) {
+      hier::OverlapConnectorAlgorithm oca;
+      oca.findOverlaps(conn);
+      tbox::plog << "Contrived connector using 'overlap':"
+                 << std::endl;
+   }
+
+   else {
+      TBOX_ERROR("Contrivance method must be one of these: mod, bracket.");
+   }
+
+   return;
+}
