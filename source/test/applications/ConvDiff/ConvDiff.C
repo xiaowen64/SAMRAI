@@ -402,8 +402,9 @@ void ConvDiff::initializeDataOnPatch(
 
       hier::IntVector ghost_cells = primitive_vars->getGhostCellWidth();
 
-      const hier::Index ifirst = patch.getBox().lower();
-      const hier::Index ilast = patch.getBox().upper();
+      const hier::Box& pbox = patch.getBox();
+      const hier::Index ifirst = pbox.lower();
+      const hier::Index ilast = pbox.upper();
 
       if (d_dim == tbox::Dimension(2)) {
          SAMRAI_F77_FUNC(initsphere2d, INITSPHERE2D) (dx, xlo, xhi,
@@ -429,7 +430,7 @@ void ConvDiff::initializeDataOnPatch(
 
       // tbox::plog << "Level:" << patch.getPatchLevelNumber() << "\n" << endl;
       // tbox::plog << "Patch:" << endl;
-      // primitive_vars->print(patch.getBox(),tbox::plog);
+      // primitive_vars->print(pbox,tbox::plog);
    }
 }
 
@@ -453,8 +454,9 @@ double ConvDiff::computeStableDtOnPatch(
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
-   const hier::Index ifirst = patch.getBox().lower();
-   const hier::Index ilast = patch.getBox().upper();
+   const hier::Box& pbox = patch.getBox();
+   const hier::Index ifirst = pbox.lower();
+   const hier::Index ilast = pbox.upper();
 
    double stabdt = 0.0;
 
@@ -516,8 +518,9 @@ void ConvDiff::singleStep(
    TBOX_ASSERT(prim_var_fixed);
    TBOX_ASSERT(function_eval);
 
-   const hier::Index ifirst = patch.getBox().lower();
-   const hier::Index ilast = patch.getBox().upper();
+   const hier::Box& pbox = patch.getBox();
+   const hier::Index ifirst = pbox.lower();
+   const hier::Index ilast = pbox.upper();
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
@@ -621,8 +624,9 @@ void ConvDiff::tagGradientDetectorCells(
    TBOX_ASSERT(tags);
    TBOX_ASSERT(primitive_vars);
 
-   const hier::Index ifirst = patch.getBox().lower();
-   const hier::Index ilast = patch.getBox().upper();
+   const hier::Box& pbox = patch.getBox();
+   const hier::Index ifirst = pbox.lower();
+   const hier::Index ilast = pbox.upper();
 
    const hier::IntVector var_ghosts = primitive_vars->getGhostCellWidth();
 
