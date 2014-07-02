@@ -623,7 +623,15 @@ CascadePartitioner::computeLocalLoad(
    for (hier::BoxContainer::const_iterator ni = boxes.begin();
         ni != boxes.end();
         ++ni) {
+#if 1
+      // Temporary work-around for integer overflow in Box::size()
+      double box_load = 1;
+      for ( int d=0; d<d_dim.getValue(); ++d ) {
+         box_load *= ni->numberCells(d);
+      }
+#else
       double box_load = double(ni->size());
+#endif
       load += box_load;
    }
    return static_cast<LoadType>(load);
