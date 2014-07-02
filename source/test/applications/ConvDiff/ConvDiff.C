@@ -402,10 +402,6 @@ void ConvDiff::initializeDataOnPatch(
 
       hier::IntVector ghost_cells = primitive_vars->getGhostCellWidth();
 
-      hier::Box pbox = patch.getBox();
-      boost::shared_ptr<pdat::CellData<double> > temp_var(
-         new pdat::CellData<double>(pbox, 1, ghost_cells));
-
       const hier::Index ifirst = patch.getBox().lower();
       const hier::Index ilast = patch.getBox().upper();
 
