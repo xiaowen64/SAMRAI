@@ -940,9 +940,9 @@ BoxTransitSet::adjustLoadByBreaking(
             breakbox.getOwnerRank(),
             hier::LocalId::getInvalidId());
          give_box_in_transit.setLoad(
-            static_cast<int>(computeLoad(
-                                give_box_in_transit.getOrigBox(),
-                                give_box_in_transit.getBox())));
+            computeLoad(
+               give_box_in_transit.getOrigBox(),
+               give_box_in_transit.getBox()));
          main_bin.insert(give_box_in_transit);
          actual_transfer += give_box_in_transit.getLoad();
       }
@@ -955,9 +955,9 @@ BoxTransitSet::adjustLoadByBreaking(
             breakbox.getOwnerRank(),
             hier::LocalId::getInvalidId());
          keep_box_in_transit.setLoad(
-            static_cast<int>(computeLoad(
-                                keep_box_in_transit.getOrigBox(),
-                                keep_box_in_transit.getBox())));
+            computeLoad(
+               keep_box_in_transit.getOrigBox(),
+               keep_box_in_transit.getBox()));
          hold_bin.insert(keep_box_in_transit);
       }
    }
