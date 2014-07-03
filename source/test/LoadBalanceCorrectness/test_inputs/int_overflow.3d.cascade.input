@@ -35,7 +35,7 @@ Main {
 
    load_balance = TRUE, TRUE, TRUE
 
-   autoscale_base_nprocs = 4
+   // autoscale_base_nprocs = 4
 
    box_generator_type = "BergerRigoutsos"
 
