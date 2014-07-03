@@ -907,14 +907,14 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    grow(
       const dir_t direction,
       const int ghosts)
    {
-      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      TBOX_ASSERT((direction < getDim().getValue()));
       if (!empty()) {
          d_lo(direction) -= ghosts;
          d_hi(direction) += ghosts;
@@ -946,14 +946,14 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    growLower(
       const dir_t direction,
       const int ghosts)
    {
-      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      TBOX_ASSERT((direction < getDim().getValue()));
       if (!empty()) {
          d_lo(direction) -= ghosts;
       }
@@ -984,14 +984,14 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    growUpper(
       const dir_t direction,
       const int ghosts)
    {
-      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      TBOX_ASSERT((direction < getDim().getValue()));
       if (!empty()) {
          d_hi(direction) += ghosts;
       }
@@ -1007,7 +1007,7 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    lengthen(
@@ -1024,7 +1024,7 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    shorten(
@@ -1058,14 +1058,14 @@ public:
     * @param direction
     * @param offset
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    shift(
       const dir_t direction,
       const int offset)
    {
-      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      TBOX_ASSERT((direction < getDim().getValue()));
       d_lo(direction) += offset;
       d_hi(direction) += offset;
    }

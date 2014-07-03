@@ -591,7 +591,7 @@ Box::lengthen(
    const dir_t direction,
    const int ghosts)
 {
-   TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+   TBOX_ASSERT((direction < getDim().getValue()));
 
    if (!empty()) {
       if (ghosts > 0) {
@@ -607,7 +607,7 @@ Box::shorten(
    const dir_t direction,
    const int ghosts)
 {
-   TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+   TBOX_ASSERT((direction < getDim().getValue()));
 
    if (!empty()) {
       if (ghosts > 0) {
