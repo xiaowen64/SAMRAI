@@ -306,7 +306,7 @@ CascadePartitioner::loadBalanceBoxLevel(
 
    if (d_report_load_balance) {
       tbox::plog
-         << d_object_name << "::loadBalanceBoxLevel results  ";
+         << d_object_name << "::loadBalanceBoxLevel results:\n";
       BalanceUtilities::reduceAndReportLoadBalance(std::vector<double>(1,local_load),
          balance_box_level.getMPI());
    }

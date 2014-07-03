@@ -642,10 +642,10 @@ public:
    unsigned long int
    size() const
    {
-      int mysize = 0;
+      unsigned long int mysize = 0;
       if (!empty()) {
-         mysize = 1;
-         for (dir_t i = 0; i < getDim().getValue(); ++i) {
+         mysize = (d_hi(0) - d_lo(0) + 1);
+         for (dir_t i = 1; i < getDim().getValue(); ++i) {
             mysize *= (d_hi(i) - d_lo(i) + 1);
          }
       }
