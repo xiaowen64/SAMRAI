@@ -420,7 +420,7 @@ Box::index(
 
    unsigned long int remainder = offset;
 
-   for (dir_t d = getDim().getValue() - 1; d > -1; --d) {
+   for (int d = getDim().getValue() - 1; d > -1; --d) {
       /* Compute the stride for indexing */
       int stride = 1;
       for (int stride_dim = 0; stride_dim < d; ++stride_dim) {
