@@ -408,7 +408,7 @@ Box::initialize(
 
 Index
 Box::index(
-   const unsigned long int offset) const
+   const size_t offset) const
 {
    TBOX_ASSERT(offset >= 0);
    TBOX_ASSERT(offset <= size());
@@ -418,7 +418,7 @@ Box::index(
 
    n = numberCells();
 
-   unsigned long int remainder = offset;
+   size_t remainder = offset;
 
    for (int d = getDim().getValue() - 1; d > -1; --d) {
       /* Compute the stride for indexing */

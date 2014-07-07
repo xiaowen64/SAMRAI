@@ -639,10 +639,10 @@ public:
     * If the box is empty, then the number of index points within the box is
     * zero.
     */
-   unsigned long int
+   size_t
    size() const
    {
-      unsigned long int mysize = 0;
+      size_t mysize = 0;
       if (!empty()) {
          mysize = (d_hi(0) - d_lo(0) + 1);
          for (dir_t i = 1; i < getDim().getValue(); ++i) {
@@ -665,11 +665,11 @@ public:
     * the indices within the box.  This operation is a convenience
     * function for array indexing operations.
     */
-   unsigned long int
+   size_t
    offset(
       const Index& p) const
    {
-      unsigned long int myoffset = 0;
+      size_t myoffset = 0;
       for (dir_t i = getDim().getValue() - 1; i > 0; --i) {
          myoffset = (d_hi(i - 1) - d_lo(i - 1) + 1) * (p(i) - d_lo(i) + myoffset);
       }
@@ -690,7 +690,7 @@ public:
     */
    Index
    index(
-      const unsigned long int offset) const;
+      const size_t offset) const;
 
    /*!
     * @brief Return an iterator pointing to the first index of this.
