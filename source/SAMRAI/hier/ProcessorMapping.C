@@ -75,11 +75,11 @@ ProcessorMapping::~ProcessorMapping()
 
 void
 ProcessorMapping::setMappingSize(
-   const int n)
+   const size_t n)
 {
    d_mapping.resize(n);
 
-   for (int i = 0; i < n; ++i) {
+   for (size_t i = 0; i < n; ++i) {
       d_mapping[i] = 0;
    }
    d_local_id_count = -1;

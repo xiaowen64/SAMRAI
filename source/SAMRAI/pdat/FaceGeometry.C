@@ -96,7 +96,7 @@ FaceGeometry::calculateOverlap(
 hier::Box
 FaceGeometry::toFaceBox(
    const hier::Box& box,
-   int face_normal)
+   tbox::Dimension::dir_t face_normal)
 {
    const tbox::Dimension& dim(box.getDim());
 
@@ -105,11 +105,11 @@ FaceGeometry::toFaceBox(
    hier::Box face_box(dim);
 
    if (!box.empty()) {
-      const int x = face_normal;
+      const tbox::Dimension::dir_t x = face_normal;
       face_box.lower(0) = box.lower(x);
       face_box.upper(0) = box.upper(x) + 1;
-      for (int i = 1; i < dim.getValue(); ++i) {
-         const int y = (face_normal + i) % dim.getValue();
+      for (tbox::Dimension::dir_t i = 1; i < dim.getValue(); ++i) {
+         const tbox::Dimension::dir_t y = (face_normal + i) % dim.getValue();
          face_box.lower(i) = box.lower(y);
          face_box.upper(i) = box.upper(y);
       }

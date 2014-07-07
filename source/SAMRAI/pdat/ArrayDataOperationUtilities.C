@@ -58,7 +58,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
    int dst_w[SAMRAI::MAX_DIM_VAL];
    int src_w[SAMRAI::MAX_DIM_VAL];
    int dim_counter[SAMRAI::MAX_DIM_VAL];
-   for (int i = 0; i < dim.getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
       box_w[i] = opbox.numberCells(i);
       dst_w[i] = dst_box.numberCells(i);
       src_w[i] = src_box.numberCells(i);

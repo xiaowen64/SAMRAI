@@ -410,7 +410,6 @@ Index
 Box::index(
    const size_t offset) const
 {
-   TBOX_ASSERT(offset >= 0);
    TBOX_ASSERT(offset <= size());
 
    IntVector n(getDim());
@@ -428,11 +427,11 @@ Box::index(
       }
 
       /* Compute the local index */
-      index[d] = remainder / stride;
+      index[d] = static_cast<int>(remainder / stride);
       remainder -= index[d] * stride;
 
       /* Compute the global index */
-      index[d] += lower(d);
+      index[d] += lower(static_cast<tbox::Dimension::dir_t>(d));
    }
 
    return Index(index);
@@ -844,8 +843,8 @@ Box::coalesceIntervals(
                low2[id2] = lo2[id2];
                high2[id2] = hi2[id2];
             }
-            for (id2 = id + 1; id2 < dim; ++id2) {
-               dir_t id1 = id2 - 1;
+            for (id2 = static_cast<tbox::Dimension::dir_t>(id + 1); id2 < dim; ++id2) {
+               dir_t id1 = static_cast<tbox::Dimension::dir_t>(id2 - 1);
                low1[id1] = lo1[id2];
                high1[id1] = hi1[id2];
                low2[id1] = lo2[id2];
@@ -1139,7 +1138,7 @@ BoxIterator::BoxIterator(
 {
    if (!d_box.empty() && !begin) {
       d_index(d_box.getDim().getValue()-1) =
-         d_box.upper(d_box.getDim().getValue()-1) + 1;
+         d_box.upper(static_cast<tbox::Dimension::dir_t>(d_box.getDim().getValue()-1)) + 1;
    }
 }
 

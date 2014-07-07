@@ -453,10 +453,10 @@ Connector::setToTransposeOf( const Connector &other,
     * but differentiate messages by embedding a type in each.
     */
    const int mpi_tag = 0;
-   char edge_msg_type = 111;
-   char ack_msg_type = edge_msg_type + 1;
-   char upward_term_msg_type = edge_msg_type + 2;
-   char downward_term_msg_type = edge_msg_type + 3;
+   char edge_msg_type = 'e';
+   char ack_msg_type = 'a';
+   char upward_term_msg_type = 'u';
+   char downward_term_msg_type = 'd';
 
    if ( mpi1.hasReceivableMessage(0, MPI_ANY_SOURCE, mpi_tag) ) {
       TBOX_ERROR("Connector::setToTransposeOf: not starting clean of receivable MPI messages.");
@@ -469,7 +469,6 @@ Connector::setToTransposeOf( const Connector &other,
 
    // Send edge messages and remember to get receivers' acknowledgements.
    std::set<int> ack_needed;
-   size_t counter = 0;
    BoxContainer unshifted_head_nabrs, scratch_space;
    for ( FullNeighborhoodSet::iterator rr=reordered_relationships.begin();
          rr!=reordered_relationships.end(); ++rr ) {
@@ -509,7 +508,7 @@ Connector::setToTransposeOf( const Connector &other,
               nextrr->first.getOwnerRank() != base_box.getOwnerRank() ) {
             requests.push_back(tbox::SAMRAI_MPI::Request());
             mpi_err = mpi1.Isend( (void*)mstream->getBufferStart(),
-                                  mstream->getCurrentSize(), MPI_CHAR,
+                                  static_cast<int>(mstream->getCurrentSize()), MPI_CHAR,
                                   base_box.getOwnerRank(), mpi_tag,
                                   &requests.back() );
             TBOX_ASSERT( mpi_err == MPI_SUCCESS );
@@ -548,7 +547,7 @@ Connector::setToTransposeOf( const Connector &other,
    std::vector<char> recv_buffer;
    Box tmp_box(getBase().getDim());
    BoxContainer tmp_boxes;
-   char msg_type = mpi1.getSize() == 1 ? downward_term_msg_type : 0;
+   char msg_type = mpi1.getSize() == 1 ? downward_term_msg_type : char(0);
 
    while (msg_type != downward_term_msg_type) {
 
@@ -594,7 +593,7 @@ Connector::setToTransposeOf( const Connector &other,
       else if ( msg_type == downward_term_msg_type ) {
          TBOX_ASSERT( child_term_needed == 0 );
          // Propagate termination message downward.
-         for ( int ci=0; ci<rank_tree.getNumberOfChildren(); ++ci ) {
+         for ( unsigned int ci=0; ci<rank_tree.getNumberOfChildren(); ++ci ) {
             requests.push_back(tbox::SAMRAI_MPI::Request());
             mpi_err = mpi1.Isend( &downward_term_msg_type, 1, MPI_CHAR,
                                   rank_tree.getChildRank(ci), mpi_tag,
@@ -611,7 +610,7 @@ Connector::setToTransposeOf( const Connector &other,
       if ( send_upward_term_msg && ack_needed.empty() && child_term_needed == 0 ) {
          if ( rank_tree.isRoot() ) {
             // Initiate downward termination message.
-            for ( int ci=0; ci<rank_tree.getNumberOfChildren(); ++ci ) {
+            for ( unsigned int ci=0; ci<rank_tree.getNumberOfChildren(); ++ci ) {
                requests.push_back(tbox::SAMRAI_MPI::Request());
                mpi_err = mpi1.Isend( &downward_term_msg_type, 1, MPI_CHAR,
                                      rank_tree.getChildRank(ci), mpi_tag,

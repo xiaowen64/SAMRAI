@@ -45,7 +45,7 @@ PatchFaceDataNormOpsComplex::numberOfEntries(
    const hier::Box ibox = box * data->getGhostBox();
    const int data_depth = data->getDepth();
    for (int d = 0; d < dimVal; ++d) {
-      retval += ((pdat::FaceGeometry::toFaceBox(ibox, d).size()) * data_depth);
+      retval += static_cast<int>((pdat::FaceGeometry::toFaceBox(ibox, d).size()) * data_depth);
    }
    return retval;
 }

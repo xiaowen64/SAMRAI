@@ -643,22 +643,16 @@ BoxLevel::cacheGlobalReducedData() const
          unsigned long int tmpa[2], tmpb[2];
          tmpa[0] = getLocalNumberOfBoxes();
          tmpa[1] = getLocalNumberOfCells();
-
-         TBOX_ASSERT(tmpa[0] >= 0);
-         TBOX_ASSERT(tmpa[1] >= 0);
-
          d_mpi.Allreduce(tmpa,
             tmpb,                        // Better to use MPI_IN_PLACE, but not some MPI's do not support.
             2,
             MPI_LONG,
             MPI_SUM);
-         d_global_number_of_boxes = static_cast<size_t>(tmpb[0]);
+         d_global_number_of_boxes = static_cast<int>(tmpb[0]);
          d_global_number_of_cells = static_cast<size_t>(tmpb[1]);
       } else {
-         d_global_number_of_boxes =
-	    static_cast<size_t>(getLocalNumberOfBoxes());
-         d_global_number_of_cells =
-	    static_cast<size_t>(getLocalNumberOfCells());
+         d_global_number_of_boxes = getLocalNumberOfBoxes();
+         d_global_number_of_cells = getLocalNumberOfCells();
       }
    }
 
@@ -736,7 +730,7 @@ BoxLevel::cacheGlobalReducedData() const
    t_cache_global_reduced_data->stop();
 }
 
-size_t
+int
 BoxLevel::getLocalNumberOfBoxes(
    int rank) const
 {
@@ -753,7 +747,7 @@ BoxLevel::getLocalNumberOfBoxes(
    if (rank == d_mpi.getRank()) {
       return d_local_number_of_boxes;
    } else {
-      size_t count = 0;
+      int count = 0;
       BoxContainerSingleOwnerIterator mbi(d_global_boxes.begin(rank));
       for ( ; mbi != d_global_boxes.end(rank); ++mbi) {
          if (!(*mbi).isPeriodicImage()) {

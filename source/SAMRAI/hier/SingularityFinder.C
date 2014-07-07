@@ -563,7 +563,7 @@ SingularityFinder::findCoincidentEdges(
       
       IntVector b_edge_dirs(b_edge.numberCells());
       int num_zero_dirs = 0;
-      for (int d = 0; d < d_dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
          TBOX_ASSERT(b_edge_dirs[d] >= 1);
          if (b_edge_dirs[d] == b_box_size[d]) {
             b_edge_dirs[d] = 0;
@@ -653,7 +653,7 @@ SingularityFinder::findCoincidentEdges(
          b_edge = *(b_edge_cntnr.begin());
          b_edge_dirs = b_edge.numberCells();
          num_zero_dirs = 0;
-         for (int d = 0; d < d_dim.getValue(); ++d) {
+         for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
             TBOX_ASSERT(b_edge_dirs[d] >= 1);
             if (b_edge_dirs[d] == b_box_size[d]) {
                b_edge_dirs[d] = 0;
@@ -781,7 +781,7 @@ SingularityFinder::findCoincidentPoints(
          corner_dirs[2] = ((pointa_idx/4) % 2 == 0) ? -1 : 1;
       }
 
-      for (int d = 0; d < d_dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
          TBOX_ASSERT(corner_dirs[d] == -1 || corner_dirs[d] == 1);
          if (corner_dirs[d] == -1) {
             point_box.upper()(d) = point_box.lower(d);

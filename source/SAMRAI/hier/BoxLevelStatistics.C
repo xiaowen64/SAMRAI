@@ -110,7 +110,7 @@ void BoxLevelStatistics::computeLocalBoxLevelStatistics( const BoxLevel &box_lev
 
       const Box& box = *ni;
       const IntVector boxdims = box.numberCells();
-      const int boxvol = boxdims.getProduct();
+      const double boxvol = static_cast<double>(boxdims.getProduct());
       const int longdim = boxdims.max();
       const int shortdim = boxdims.min();
       double aspect_ratio = 0.0;

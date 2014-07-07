@@ -387,11 +387,11 @@ OuteredgeGeometry::toOuteredgeBox(
 
       oedge_box = EdgeGeometry::toEdgeBox(box, axis);
 
-      for (int d = 0; d < dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
          if (d != axis) {    // do not trim in axis direction
 
-            for (int dh = d + 1; dh < dim.getValue(); ++dh) { // trim higher directions
+            for (tbox::Dimension::dir_t dh = d + 1; dh < dim.getValue(); ++dh) { // trim higher directions
 
                if (dh != axis && dh != face_normal) {
                   // do not trim in axis or face_normal direction

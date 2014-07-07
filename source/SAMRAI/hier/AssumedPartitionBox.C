@@ -113,7 +113,7 @@ AssumedPartitionBox::beginOfRank(int rank) const
       rank < d_rank_begin ? d_index_begin :
       rank < d_first_rank_with_1 ? d_first_index_with_2 + (rank-d_rank_begin       )*(1+d_parts_per_rank) :
       rank < d_first_rank_with_0 ? d_first_index_with_1 + (rank-d_first_rank_with_1)*d_parts_per_rank :
-      d_index_end;
+      static_cast<int>(d_index_end);
    return index;
 }
 
@@ -459,7 +459,7 @@ AssumedPartitionBox::computeLayout( double avg_parts_per_rank )
       const int target_parts_count = static_cast<int>(num_ranks*avg_parts_per_rank + 0.5);
       d_uniform_partition_size = box_size;
       d_partition_grid_size = hier::IntVector::getOne(d_box.getDim());
-      int parts_count = d_partition_grid_size.getProduct();
+      long int parts_count = d_partition_grid_size.getProduct();
       IntVector num_parts_can_increase(d_box.getDim(), 1);
       IntVector sorter(d_box.getDim());
       while ( parts_count < target_parts_count &&
@@ -473,8 +473,8 @@ AssumedPartitionBox::computeLayout( double avg_parts_per_rank )
 
          // Double partition grid size, unless it causes too many partitions.
          if ( 2*parts_count > target_parts_count ) {
-            const int cross_section = parts_count/d_partition_grid_size[inc_dir];
-            d_partition_grid_size[inc_dir] = (target_parts_count+cross_section-1)/cross_section;
+            const long int cross_section = parts_count/d_partition_grid_size[inc_dir];
+            d_partition_grid_size[inc_dir] = static_cast<int>((target_parts_count+cross_section-1)/cross_section);
             parts_count = d_partition_grid_size.getProduct();
          } else {
             d_partition_grid_size[inc_dir] *= 2;
@@ -490,7 +490,7 @@ AssumedPartitionBox::computeLayout( double avg_parts_per_rank )
       d_partition_grid_size = IntVector::ceilingDivide( box_size, d_uniform_partition_size );
    }
 
-   d_index_end = d_index_begin + d_partition_grid_size.getProduct();
+   d_index_end = d_index_begin + static_cast<int>(d_partition_grid_size.getProduct());
 
    d_major.sortIntVector(d_partition_grid_size);
 
@@ -565,7 +565,7 @@ AssumedPartitionBox::assignToRanks_contiguous()
    if ( d_index_end-d_index_begin <= d_rank_end-d_rank_begin ) {
       d_parts_per_rank = 1;
       d_first_rank_with_1 = d_rank_begin;
-      d_first_rank_with_0 = d_rank_begin + d_partition_grid_size.getProduct();
+      d_first_rank_with_0 = d_rank_begin + static_cast<int>(d_partition_grid_size.getProduct());
       d_first_index_with_1 = d_first_index_with_2 = d_index_begin;
    }
    else {

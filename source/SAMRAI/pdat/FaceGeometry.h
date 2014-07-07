@@ -62,7 +62,7 @@ public:
    static hier::Box
    toFaceBox(
       const hier::Box& box,
-      int face_normal);
+      tbox::Dimension::dir_t face_normal);
 
    /*!
     * @brief Transform a face-centered box.

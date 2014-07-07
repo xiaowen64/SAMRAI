@@ -339,7 +339,7 @@ Patch::recursivePrint(
       << d_box
       << "\tdims: " << d_box.numberCells(0)
    ;
-   for (int i = 1; i < dim.getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 1; i < dim.getValue(); ++i) {
       os << " X " << d_box.numberCells(i);
    }
    os << "\tsize: " << d_box.size()
