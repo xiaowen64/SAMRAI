@@ -100,12 +100,12 @@ public:
    static FaceIterator
    begin(
       const hier::Box& box,
-      int axis);
+      tbox::Dimension::dir_t axis);
 
    static FaceIterator
    end(
       const hier::Box& box,
-      int axis);
+      tbox::Dimension::dir_t axis);
 
    /*!
     * @brief Construct the face geometry object given an AMR index

@@ -59,7 +59,7 @@ public:
    static hier::Box
    toSideBox(
       const hier::Box& box,
-      int side_normal);
+      tbox::Dimension::dir_t side_normal);
 
    /*!
     * @brief Transform a side-centered box.
@@ -97,12 +97,12 @@ public:
    static SideIterator
    begin(
       const hier::Box& box,
-      int axis);
+      tbox::Dimension::dir_t axis);
 
    static SideIterator
    end(
       const hier::Box& box,
-      int axis);
+      tbox::Dimension::dir_t axis);
 
    /*!
     * @brief Construct the side geometry object given an AMR index
@@ -236,7 +236,7 @@ private:
    static void
    rotateAboutAxis(
       SideIndex& index,
-      const int axis,
+      const tbox::Dimension::dir_t axis,
       const int num_rotations);
 
    SideGeometry(

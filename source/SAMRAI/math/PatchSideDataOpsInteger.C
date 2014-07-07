@@ -45,7 +45,7 @@ PatchSideDataOpsInteger::numberOfEntries(
    for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          retval +=
-            ((pdat::SideGeometry::toSideBox(ibox, d).size()) * data_depth);
+            static_cast<int>((pdat::SideGeometry::toSideBox(ibox, d).size()) * data_depth);
       }
    }
    return retval;
@@ -128,7 +128,7 @@ PatchSideDataOpsInteger::abs(
 
    int dimVal = box.getDim().getValue();
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          d_array_ops.abs(dst->getArrayData(d),
             src->getArrayData(d),

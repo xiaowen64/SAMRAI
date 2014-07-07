@@ -119,16 +119,16 @@ ArrayData<TYPE>::getOffset() const
 }
 
 template<class TYPE>
-int
+size_t
 ArrayData<TYPE>::getIndex(
    const hier::Index& i,
    int d) const
 {
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
-   int index = d_box.offset(i) + d * d_offset;
+   size_t index = d_box.offset(i) + d * d_offset;
 
-   TBOX_ASSERT((index >= 0) && (index < d_depth * d_offset));
+   TBOX_ASSERT((index < d_depth * d_offset));
 
    return index;
 }
@@ -848,7 +848,7 @@ ArrayData<TYPE>::fillAll(
    const TYPE& t,
    const hier::Box& box)
 {
-   for (int d = 0; d < d_depth; ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < d_depth; ++d) {
       fill(t, box, d);
    }
 }
@@ -888,18 +888,18 @@ ArrayData<TYPE>::fill(
       int box_w[SAMRAI::MAX_DIM_VAL];
       int dst_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dim.getValue(); ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
          box_w[i] = ispace.numberCells(i);
          dst_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
       }
 
-      const int num_d0_blocks = ispace.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ispace.size() / box_w[0]);
 
-      int dst_counter = d_box.offset(ispace.lower()) + d * d_offset;
+      size_t dst_counter = d_box.offset(ispace.lower()) + d * d_offset;
 
-      int dst_b[SAMRAI::MAX_DIM_VAL];
-      for (int nd = 0; nd < dim.getValue(); ++nd) {
+      size_t dst_b[SAMRAI::MAX_DIM_VAL];
+      for (tbox::Dimension::dir_t nd = 0; nd < dim.getValue(); ++nd) {
          dst_b[nd] = dst_counter;
       }
 

@@ -78,11 +78,11 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
     * data items in each array section to be copied.
     */
 
-   const int num_d0_blocks = opbox.size() / box_w[0];
+   const int num_d0_blocks = static_cast<int>(opbox.size() / box_w[0]);
 
-   int dst_begin = dst_box.offset(opbox.lower())
+   size_t dst_begin = dst_box.offset(opbox.lower())
       + dst_start_depth * dst_offset;
-   int src_begin = src_box.offset(opbox.lower() - src_shift)
+   size_t src_begin = src_box.offset(opbox.lower() - src_shift)
       + src_start_depth * src_offset;
 
    /*
@@ -91,12 +91,12 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
 
    for (int d = 0; d < num_depth; ++d) {
 
-      int dst_counter = dst_begin;
-      int src_counter = src_begin;
+      size_t dst_counter = dst_begin;
+      size_t src_counter = src_begin;
 
-      int dst_b[SAMRAI::MAX_DIM_VAL];
-      int src_b[SAMRAI::MAX_DIM_VAL];
-      for (int nd = 0; nd < dim.getValue(); ++nd) {
+      size_t dst_b[SAMRAI::MAX_DIM_VAL];
+      size_t src_b[SAMRAI::MAX_DIM_VAL];
+      for (tbox::Dimension::dir_t nd = 0; nd < dim.getValue(); ++nd) {
          dst_b[nd] = dst_counter;
          src_b[nd] = src_counter;
       }
@@ -117,7 +117,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
           * beginning array index for the next block.
           */
 
-         for (int j = 1; j < dim.getValue(); ++j) {
+         for (tbox::Dimension::dir_t j = 1; j < dim.getValue(); ++j) {
             if (dim_counter[j] < box_w[j] - 1) {
                ++dim_counter[j];
                dim_jump = j;

@@ -63,8 +63,8 @@ public:
    static hier::Box
    toOuteredgeBox(
       const hier::Box& box,
-      int axis,
-      int face_normal,
+      tbox::Dimension::dir_t axis,
+      tbox::Dimension::dir_t face_normal,
       int side);
 
    /*!

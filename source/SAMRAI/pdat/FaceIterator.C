@@ -14,7 +14,7 @@ namespace pdat {
 
 FaceIterator::FaceIterator(
    const hier::Box& box,
-   const int axis,
+   const tbox::Dimension::dir_t axis,
    bool begin):
    d_index(box.lower(), axis, FaceIndex::Lower),
    d_box(FaceGeometry::toFaceBox(box, axis))

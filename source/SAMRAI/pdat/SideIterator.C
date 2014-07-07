@@ -15,7 +15,7 @@ namespace pdat {
 
 SideIterator::SideIterator(
    const hier::Box& box,
-   const int axis,
+   const tbox::Dimension::dir_t axis,
    bool begin):
    d_index(box.lower(), axis, SideIndex::Lower),
    d_box(SideGeometry::toSideBox(box, axis))

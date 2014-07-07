@@ -100,7 +100,7 @@ FaceGeometry::toFaceBox(
 {
    const tbox::Dimension& dim(box.getDim());
 
-   TBOX_ASSERT((face_normal >= 0) && (face_normal < dim.getValue()));
+   TBOX_ASSERT((face_normal < dim.getValue()));
 
    hier::Box face_box(dim);
 
@@ -109,7 +109,7 @@ FaceGeometry::toFaceBox(
       face_box.lower(0) = box.lower(x);
       face_box.upper(0) = box.upper(x) + 1;
       for (tbox::Dimension::dir_t i = 1; i < dim.getValue(); ++i) {
-         const tbox::Dimension::dir_t y = (face_normal + i) % dim.getValue();
+         const tbox::Dimension::dir_t y = static_cast<tbox::Dimension::dir_t>((face_normal + i) % dim.getValue());
          face_box.lower(i) = box.lower(y);
          face_box.upper(i) = box.upper(y);
       }
@@ -162,7 +162,7 @@ FaceGeometry::computeDestinationBoxes(
          one_vector));
 
    if (!quick_check.empty()) {
-      for (int d = 0; d < dim.getValue(); ++d) {
+      for ( tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
          const hier::Box dst_face(toFaceBox(dst_ghost, d));
          const hier::Box src_face(toFaceBox(src_shift, d));
          const hier::Box fill_face(toFaceBox(fill_box, d));
@@ -247,7 +247,7 @@ FaceGeometry::setUpOverlap(
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
-      for (int d = 0; d < dim.getValue(); ++d) {
+      for ( tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
          hier::Box face_box(FaceGeometry::toFaceBox(*b, d));
          dst_boxes[d].pushBack(face_box);
       }
@@ -636,7 +636,7 @@ FaceGeometry::rotateAboutAxis(FaceIndex& index,
 FaceIterator
 FaceGeometry::begin(
    const hier::Box& box,
-   int axis)
+   tbox::Dimension::dir_t axis)
 {
    return FaceIterator(box, axis, true);
 }
@@ -644,7 +644,7 @@ FaceGeometry::begin(
 FaceIterator
 FaceGeometry::end(
    const hier::Box& box,
-   int axis)
+   tbox::Dimension::dir_t axis)
 {
    return FaceIterator(box, axis, false);
 }
