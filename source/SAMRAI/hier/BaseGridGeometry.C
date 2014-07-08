@@ -365,7 +365,7 @@ BaseGridGeometry::computeBoxTouchingBoundaries(
       }
    } else {
       bool bdry_located = false;
-      for (int nd = 0; nd < d_dim.getValue(); ++nd) {
+      for (tbox::Dimension::dir_t nd = 0; nd < d_dim.getValue(); ++nd) {
          BoxContainer lower_list(bdry_list);
          BoxContainer upper_list(bdry_list);
 
@@ -401,7 +401,7 @@ BaseGridGeometry::computeBoxTouchingBoundaries(
        * concave corner of an L-shaped domain.
        */
       if (!bdry_located) {
-         for (int nd = 0; nd < d_dim.getValue(); ++nd) {
+         for (tbox::Dimension::dir_t nd = 0; nd < d_dim.getValue(); ++nd) {
             touches_periodic_bdry(nd, 0) = touches_periodic_bdry(nd, 1) = false;
 
             bool lower_side = false;
@@ -920,13 +920,13 @@ BaseGridGeometry::computeShiftsForBox(
       const std::vector<int>& location_index_max =
          blut->getMaxLocationIndices();
 
-      for (int d = 0; d < num_periodic_dirs; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < num_periodic_dirs; ++d) {
 
-         const int codim = d + 1;
+         const tbox::Dimension::dir_t codim = static_cast<tbox::Dimension::dir_t>(d + 1);
 
          for (int loc = 0; loc < location_index_max[d]; ++loc) {
 
-            const std::vector<int>& dirs = blut->getDirections(loc, codim);
+            const std::vector<tbox::Dimension::dir_t>& dirs = blut->getDirections(loc, codim);
 
             bool need_to_test = true;
             for (int k = 0; k < static_cast<int>(dirs.size()); ++k) {
@@ -942,7 +942,7 @@ BaseGridGeometry::computeShiftsForBox(
                IntVector border_shift(d_dim, 0);
 
                std::vector<bool> is_upper(codim);
-               for (int j = 0; j < codim; ++j) {
+               for (tbox::Dimension::dir_t j = 0; j < codim; ++j) {
                   if (blut->isUpper(loc, codim, j)) {
                      border.lower(dirs[j]) = box.upper(dirs[j]);
                      border.upper(dirs[j]) = box.upper(dirs[j]);
@@ -1075,15 +1075,15 @@ BaseGridGeometry::getBoundaryBoxes(
          blut->getMaxLocationIndices();
       std::vector<BoxContainer> codim_boxlist(d_dim.getValue());
 
-      for (int d = 0; d < d_dim.getValue() - num_per_dirs; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue() - num_per_dirs; ++d) {
 
-         int codim = d + 1;
+         tbox::Dimension::dir_t codim = static_cast<tbox::Dimension::dir_t>(d + 1);
 
          for (int loc = 0; loc < location_index_max[d]; ++loc) {
-            const std::vector<int>& dirs = blut->getDirections(loc, codim);
+            const std::vector<tbox::Dimension::dir_t>& dirs = blut->getDirections(loc, codim);
 
             bool all_is_per = true;
-            for (int p = 0; p < codim; ++p) {
+            for (tbox::Dimension::dir_t p = 0; p < codim; ++p) {
                if (periodic_shift(dirs[p]) == 0) {
                   all_is_per = false;
                }
@@ -1093,7 +1093,7 @@ BaseGridGeometry::getBoundaryBoxes(
                Box border(box);
                IntVector border_shift(d_dim, 0);
 
-               for (int i = 0; i < codim; ++i) {
+               for (tbox::Dimension::dir_t i = 0; i < codim; ++i) {
                   if (blut->isUpper(loc, codim, i)) {
                      border.lower(dirs[i]) = box.upper(dirs[i]);
                      border.upper(dirs[i]) = box.upper(dirs[i]);
@@ -1106,9 +1106,9 @@ BaseGridGeometry::getBoundaryBoxes(
                }
 
                // grow in non-dirs directions
-               for (int j = 0; j < d_dim.getValue(); ++j) {
+               for (tbox::Dimension::dir_t j = 0; j < d_dim.getValue(); ++j) {
                   bool dir_used = false;
-                  for (int du = 0; du < codim; ++du) {
+                  for (tbox::Dimension::dir_t du = 0; du < codim; ++du) {
                      if (dirs[du] == j) {
                         dir_used = true;
                         break;
@@ -1468,7 +1468,7 @@ BaseGridGeometry::setPhysicalDomain(
 
             Box bounding_box(d_physical_domain.getBoundingBox());
 
-            for (int id = 0; id < d_dim.getValue(); ++id) {
+            for (tbox::Dimension::dir_t id = 0; id < d_dim.getValue(); ++id) {
                d_periodic_shift(id) *= bounding_box.numberCells(id);
             }
 
@@ -1633,7 +1633,7 @@ BaseGridGeometry::checkPeriodicValidity(
 
    Box domain_box = dup_domain.getBoundingBox();
    domain_box.grow(grow_direction);
-   int i;
+   tbox::Dimension::dir_t i;
    Index min_index(d_dim, 0), max_index(d_dim, 0);
    for (i = 0; i < d_dim.getValue(); ++i) {
       //set min/max of the bounding box
@@ -1713,7 +1713,7 @@ BaseGridGeometry::checkBoundaryBox(
     */
    IntVector box_size(d_dim);
 
-   for (int i = 0; i < d_dim.getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 0; i < d_dim.getValue(); ++i) {
       box_size(i) = bbox.numberCells(i);
    }
 
@@ -1734,22 +1734,22 @@ BaseGridGeometry::checkBoundaryBox(
    if (!grow_patch_box.isSpatiallyEqual((grow_patch_box + bbox))) {
       bool valid_box = false;
       grow_patch_box = patch_box;
-      for (int j = 0; j < d_dim.getValue(); ++j) {
+      for (tbox::Dimension::dir_t j = 0; j < d_dim.getValue(); ++j) {
          if (num_per_dirs == 0) {
 
-            for (int k = 1; k < d_dim.getValue(); ++k) {
+            for (tbox::Dimension::dir_t k = 1; k < d_dim.getValue(); ++k) {
 
-               grow_patch_box.grow((j + k) % d_dim.getValue(),
-                  max_data_ghost_width((j + k) % d_dim.getValue()));
+               grow_patch_box.grow( static_cast<tbox::Dimension::dir_t>((j + k) % d_dim.getValue()),
+                                   max_data_ghost_width((j + k) % d_dim.getValue()));
 
             }
 
          } else {
 
-            for (int k = 1; k < d_dim.getValue(); ++k) {
+            for (tbox::Dimension::dir_t k = 1; k < d_dim.getValue(); ++k) {
 
-               grow_patch_box.grow((j + k) % d_dim.getValue(),
-                  2 * max_data_ghost_width((j + k) % d_dim.getValue()));
+               grow_patch_box.grow( static_cast<tbox::Dimension::dir_t>((j + k) % d_dim.getValue()),
+                                   2 * max_data_ghost_width((j + k) % d_dim.getValue()));
 
             }
 
@@ -2019,8 +2019,8 @@ BaseGridGeometry::readBlockDataFromInput(
                   Box sing_box(d_dim);
                   sing_box.setBlockId(cur_block_id); 
 
-                  int sing_size = sing_node_box.size();
- 
+                  size_t sing_size = sing_node_box.size();
+
                   if (sing_size == 1) {
 
                      /*
@@ -2040,7 +2040,7 @@ BaseGridGeometry::readBlockDataFromInput(
 
                         const hier::Box& domain_box = *cd;
 
-                        for (int d = 0; d < d_dim.getValue(); ++d) {
+                        for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
 
                            if (sing_node(d) == domain_box.lower(d)) {
                               sing_box.lower()(d) = sing_node(d) - 1;
@@ -2107,7 +2107,7 @@ BaseGridGeometry::readBlockDataFromInput(
 
                         const hier::Box& domain_box = *cd;
 
-                        for (int d = 0; d < d_dim.getValue(); ++d) {
+                        for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
 
                            if (d != long_dir) {
                               if (sing_node(d) == domain_box.lower(d)) {
@@ -2459,7 +2459,7 @@ BaseGridGeometry::chopDomain(
                         neighbors[base_id].insert(other_id);
                         neighbors[other_id].insert(base_id);
                         IntVector intersect_size(intersect.numberCells());
-                        for (int d = 0; d < d_dim.getValue(); ++d) { 
+                        for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) { 
                            if (intersect_size[d] != 1) {
                               if (intersect_size[d] != base_node_size[d]) {
                                  bool chop_low;
@@ -2541,7 +2541,7 @@ BaseGridGeometry::chopDomain(
                         neighbors[base_id].insert(other_id);
                         neighbors[other_id].insert(base_id);
                         IntVector intersect_size(intersect.numberCells());
-                        for (int d = 0; d < d_dim.getValue(); ++d) {
+                        for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
                            if (intersect_size[d] != 1) {
                               if (intersect_size[d] != base_node_size[d]) {
                                  bool chop_low;

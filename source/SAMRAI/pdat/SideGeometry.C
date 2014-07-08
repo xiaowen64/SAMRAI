@@ -152,7 +152,7 @@ SideGeometry::computeDestinationBoxes(
    if (!quick_check.empty()) {
 
       const hier::IntVector& dirs = src_geometry.getDirectionVector();
-      for (int d = 0; d < dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
          if (dirs(d)) {
             const hier::Box dst_side(toSideBox(dst_ghost, d));
             const hier::Box src_side(toSideBox(src_shift, d));
@@ -194,11 +194,11 @@ SideGeometry::computeDestinationBoxes(
 hier::Box
 SideGeometry::toSideBox(
    const hier::Box& box,
-   int side_normal)
+   tbox::Dimension::dir_t side_normal)
 {
    const tbox::Dimension& dim(box.getDim());
 
-   TBOX_ASSERT((side_normal >= 0) && (side_normal < dim.getValue()));
+   TBOX_ASSERT((side_normal < dim.getValue()));
 
    hier::Box side_box(dim);
 
@@ -275,7 +275,7 @@ SideGeometry::setUpOverlap(
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
-      for (int d = 0; d < dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
          hier::Box side_box(SideGeometry::toSideBox(*b, d));
          dst_boxes[d].pushBack(side_box);
       }
@@ -617,7 +617,7 @@ SideGeometry::transform(
 
 void
 SideGeometry::rotateAboutAxis(SideIndex& index,
-   const int axis,
+   const tbox::Dimension::dir_t axis,
    const int num_rotations)
 {
    const tbox::Dimension& dim = index.getDim();
@@ -643,7 +643,7 @@ SideGeometry::rotateAboutAxis(SideIndex& index,
 SideIterator
 SideGeometry::begin(
    const hier::Box& box,
-   int axis)
+   tbox::Dimension::dir_t axis)
 {
    return SideIterator(box, axis, true);
 }
@@ -651,7 +651,7 @@ SideGeometry::begin(
 SideIterator
 SideGeometry::end(
    const hier::Box& box,
-   int axis)
+   tbox::Dimension::dir_t axis)
 {
    return SideIterator(box, axis, false);
 }

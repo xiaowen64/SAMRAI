@@ -147,10 +147,10 @@ OuternodeGeometry::doOverlap(
       const hier::Box fill_node_box(
          NodeGeometry::toNodeBox(fill_box));
 
-      for (int d = 0; d < dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
          hier::Box trimmed_src_node_box = src_node_box;
-         for (int dh = d + 1; dh < dim.getValue(); ++dh) {
+         for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1); dh < dim.getValue(); ++dh) {
             /*
              * For directions higher than d, narrow the box down to avoid
              * representing edge and corner nodes multiple times.
@@ -254,10 +254,10 @@ OuternodeGeometry::doOverlap(
       const hier::Box fill_node_box(
          NodeGeometry::toNodeBox(fill_box));
 
-      for (int d = 0; d < dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
          hier::Box trimmed_dst_node_box(dst_node_box * fill_node_box);
-         for (int dh = d + 1; dh < dim.getValue(); ++dh) {
+         for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1); dh < dim.getValue(); ++dh) {
             /*
              * For directions higher than d, narrow the box down to avoid
              * representing edge and corner nodes multiple times.
@@ -358,12 +358,12 @@ OuternodeGeometry::doOverlap(
       const hier::Box fill_node_box =
          NodeGeometry::toNodeBox(fill_box);
 
-      int dst_d, src_d;
+      tbox::Dimension::dir_t dst_d, src_d;
 
       for (dst_d = 0; dst_d < dim.getValue(); ++dst_d) {
 
          hier::Box trimmed_dst_node_box(dst_node_box * fill_node_box);
-         for (int dh = dst_d + 1; dh < dim.getValue(); ++dh) {
+         for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(dst_d + 1); dh < dim.getValue(); ++dh) {
             ++trimmed_dst_node_box.lower(dh);
             --trimmed_dst_node_box.upper(dh);
          }
@@ -377,7 +377,7 @@ OuternodeGeometry::doOverlap(
          for (src_d = 0; src_d < dim.getValue(); ++src_d) {
 
             hier::Box trimmed_src_node_box = src_node_box;
-            for (int dh = src_d + 1; dh < dim.getValue(); ++dh) {
+            for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(src_d + 1); dh < dim.getValue(); ++dh) {
                ++trimmed_src_node_box.lower(dh);
                --trimmed_src_node_box.upper(dh);
             }

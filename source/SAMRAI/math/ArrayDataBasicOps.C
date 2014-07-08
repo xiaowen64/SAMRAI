@@ -53,7 +53,7 @@ ArrayDataBasicOps<TYPE>::scale(
 
    TBOX_ASSERT_OBJDIM_EQUALITY3(dst, src, box);
 
-   int dimVal = dst.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
 
    if (alpha == tbox::MathUtilities<TYPE>::getZero()) {
       dst.fillAll(alpha, box);
@@ -74,7 +74,7 @@ ArrayDataBasicOps<TYPE>::scale(
          int dst_w[SAMRAI::MAX_DIM_VAL];
          int src_w[SAMRAI::MAX_DIM_VAL];
          int dim_counter[SAMRAI::MAX_DIM_VAL];
-         for (int i = 0; i < dimVal; ++i) {
+         for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
             src_w[i] = src_box.numberCells(i);
@@ -99,7 +99,7 @@ ArrayDataBasicOps<TYPE>::scale(
 
             int dst_b[SAMRAI::MAX_DIM_VAL];
             int src_b[SAMRAI::MAX_DIM_VAL];
-            for (int nd = 0; nd < dimVal; ++nd) {
+            for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
                dst_b[nd] = dst_counter;
                src_b[nd] = src_counter;
             }
@@ -114,7 +114,7 @@ ArrayDataBasicOps<TYPE>::scale(
                }
                int dim_jump = 0;
 
-               for (int j = 1; j < dimVal; ++j) {
+               for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                   if (dim_counter[j] < box_w[j] - 1) {
                      ++dim_counter[j];
                      dim_jump = j;
@@ -165,7 +165,7 @@ ArrayDataBasicOps<TYPE>::addScalar(
 
    TBOX_ASSERT_OBJDIM_EQUALITY3(dst, src, box);
 
-   int dimVal = dst.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
 
    if (alpha == tbox::MathUtilities<TYPE>::getZero()) {
       dst.copy(src, box);
@@ -184,7 +184,7 @@ ArrayDataBasicOps<TYPE>::addScalar(
          int dst_w[SAMRAI::MAX_DIM_VAL];
          int src_w[SAMRAI::MAX_DIM_VAL];
          int dim_counter[SAMRAI::MAX_DIM_VAL];
-         for (int i = 0; i < dimVal; ++i) {
+         for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
             src_w[i] = src_box.numberCells(i);
@@ -194,7 +194,7 @@ ArrayDataBasicOps<TYPE>::addScalar(
          const int dst_offset = dst.getOffset();
          const int src_offset = src.getOffset();
 
-         const int num_d0_blocks = ibox.size() / box_w[0];
+         const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
          int dst_begin = dst_box.offset(ibox.lower());
          int src_begin = src_box.offset(ibox.lower());
@@ -209,7 +209,7 @@ ArrayDataBasicOps<TYPE>::addScalar(
 
             int dst_b[SAMRAI::MAX_DIM_VAL];
             int src_b[SAMRAI::MAX_DIM_VAL];
-            for (int nd = 0; nd < dimVal; ++nd) {
+            for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
                dst_b[nd] = dst_counter;
                src_b[nd] = src_counter;
             }
@@ -224,7 +224,7 @@ ArrayDataBasicOps<TYPE>::addScalar(
                }
                int dim_jump = 0;
 
-               for (int j = 1; j < dimVal; ++j) {
+               for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                   if (dim_counter[j] < box_w[j] - 1) {
                      ++dim_counter[j];
                      dim_jump = j;
@@ -270,7 +270,7 @@ ArrayDataBasicOps<TYPE>::add(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
-   int dimVal = dst.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
 
    const int ddepth = dst.getDepth();
 
@@ -288,7 +288,7 @@ ArrayDataBasicOps<TYPE>::add(
       int src1_w[SAMRAI::MAX_DIM_VAL];
       int src2_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src1_w[i] = src1_box.numberCells(i);
@@ -319,7 +319,7 @@ ArrayDataBasicOps<TYPE>::add(
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src1_b[SAMRAI::MAX_DIM_VAL];
          int src2_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; ++nd) {
+         for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
             dst_b[nd] = dst_counter;
             src1_b[nd] = src1_counter;
             src2_b[nd] = src2_counter;
@@ -336,7 +336,7 @@ ArrayDataBasicOps<TYPE>::add(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; ++j) {
+            for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -386,7 +386,7 @@ ArrayDataBasicOps<TYPE>::subtract(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
-   int dimVal = dst.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
 
    const int ddepth = dst.getDepth();
 
@@ -404,7 +404,7 @@ ArrayDataBasicOps<TYPE>::subtract(
       int src1_w[SAMRAI::MAX_DIM_VAL];
       int src2_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src1_w[i] = src1_box.numberCells(i);
@@ -435,7 +435,7 @@ ArrayDataBasicOps<TYPE>::subtract(
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src1_b[SAMRAI::MAX_DIM_VAL];
          int src2_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; ++nd) {
+         for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
             dst_b[nd] = dst_counter;
             src1_b[nd] = src1_counter;
             src2_b[nd] = src2_counter;
@@ -452,7 +452,7 @@ ArrayDataBasicOps<TYPE>::subtract(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; ++j) {
+            for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -502,7 +502,7 @@ ArrayDataBasicOps<TYPE>::multiply(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
-   int dimVal = dst.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
    const int ddepth = dst.getDepth();
 
    TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
@@ -519,7 +519,7 @@ ArrayDataBasicOps<TYPE>::multiply(
       int src1_w[SAMRAI::MAX_DIM_VAL];
       int src2_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src1_w[i] = src1_box.numberCells(i);
@@ -550,7 +550,7 @@ ArrayDataBasicOps<TYPE>::multiply(
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src1_b[SAMRAI::MAX_DIM_VAL];
          int src2_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; ++nd) {
+         for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
             dst_b[nd] = dst_counter;
             src1_b[nd] = src1_counter;
             src2_b[nd] = src2_counter;
@@ -567,7 +567,7 @@ ArrayDataBasicOps<TYPE>::multiply(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; ++j) {
+            for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -617,7 +617,7 @@ ArrayDataBasicOps<TYPE>::divide(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
-   int dimVal = dst.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
    const int ddepth = dst.getDepth();
 
    TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
@@ -634,7 +634,7 @@ ArrayDataBasicOps<TYPE>::divide(
       int src1_w[SAMRAI::MAX_DIM_VAL];
       int src2_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src1_w[i] = src1_box.numberCells(i);
@@ -665,7 +665,7 @@ ArrayDataBasicOps<TYPE>::divide(
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src1_b[SAMRAI::MAX_DIM_VAL];
          int src2_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; ++nd) {
+         for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
             dst_b[nd] = dst_counter;
             src1_b[nd] = src1_counter;
             src2_b[nd] = src2_counter;
@@ -679,7 +679,7 @@ ArrayDataBasicOps<TYPE>::divide(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; ++j) {
+            for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -728,7 +728,7 @@ ArrayDataBasicOps<TYPE>::reciprocal(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(dst, src, box);
 
-   int dimVal = dst.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
    const int ddepth = dst.getDepth();
 
    TBOX_ASSERT(ddepth == src.getDepth());
@@ -743,7 +743,7 @@ ArrayDataBasicOps<TYPE>::reciprocal(
       int dst_w[SAMRAI::MAX_DIM_VAL];
       int src_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src_w[i] = src_box.numberCells(i);
@@ -768,7 +768,7 @@ ArrayDataBasicOps<TYPE>::reciprocal(
 
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; ++nd) {
+         for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
             dst_b[nd] = dst_counter;
             src_b[nd] = src_counter;
          }
@@ -784,7 +784,7 @@ ArrayDataBasicOps<TYPE>::reciprocal(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; ++j) {
+            for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -836,7 +836,7 @@ ArrayDataBasicOps<TYPE>::linearSum(
 
    TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
-   int dimVal = dst.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
    const int ddepth = dst.getDepth();
 
    TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
@@ -871,7 +871,7 @@ ArrayDataBasicOps<TYPE>::linearSum(
          int src1_w[SAMRAI::MAX_DIM_VAL];
          int src2_w[SAMRAI::MAX_DIM_VAL];
          int dim_counter[SAMRAI::MAX_DIM_VAL];
-         for (int i = 0; i < dimVal; ++i) {
+         for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
             src1_w[i] = src1_box.numberCells(i);
@@ -902,7 +902,7 @@ ArrayDataBasicOps<TYPE>::linearSum(
             int dst_b[SAMRAI::MAX_DIM_VAL];
             int src1_b[SAMRAI::MAX_DIM_VAL];
             int src2_b[SAMRAI::MAX_DIM_VAL];
-            for (int nd = 0; nd < dimVal; ++nd) {
+            for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
                dst_b[nd] = dst_counter;
                src1_b[nd] = src1_counter;
                src2_b[nd] = src2_counter;
@@ -919,7 +919,7 @@ ArrayDataBasicOps<TYPE>::linearSum(
                }
                int dim_jump = 0;
 
-               for (int j = 1; j < dimVal; ++j) {
+               for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                   if (dim_counter[j] < box_w[j] - 1) {
                      ++dim_counter[j];
                      dim_jump = j;
@@ -971,7 +971,7 @@ ArrayDataBasicOps<TYPE>::axpy(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
-   int dimVal = dst.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
 
    if (alpha == tbox::MathUtilities<TYPE>::getZero()) {
       dst.copy(src2, box);
@@ -996,7 +996,7 @@ ArrayDataBasicOps<TYPE>::axpy(
          int src1_w[SAMRAI::MAX_DIM_VAL];
          int src2_w[SAMRAI::MAX_DIM_VAL];
          int dim_counter[SAMRAI::MAX_DIM_VAL];
-         for (int i = 0; i < dimVal; ++i) {
+         for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
             src1_w[i] = src1_box.numberCells(i);
@@ -1027,7 +1027,7 @@ ArrayDataBasicOps<TYPE>::axpy(
             int dst_b[SAMRAI::MAX_DIM_VAL];
             int src1_b[SAMRAI::MAX_DIM_VAL];
             int src2_b[SAMRAI::MAX_DIM_VAL];
-            for (int nd = 0; nd < dimVal; ++nd) {
+            for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
                dst_b[nd] = dst_counter;
                src1_b[nd] = src1_counter;
                src2_b[nd] = src2_counter;
@@ -1044,7 +1044,7 @@ ArrayDataBasicOps<TYPE>::axpy(
                }
                int dim_jump = 0;
 
-               for (int j = 1; j < dimVal; ++j) {
+               for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                   if (dim_counter[j] < box_w[j] - 1) {
                      ++dim_counter[j];
                      dim_jump = j;
@@ -1096,7 +1096,7 @@ ArrayDataBasicOps<TYPE>::axmy(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
-   int dimVal = dst.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
 
    if (alpha == tbox::MathUtilities<TYPE>::getZero()) {
       scale(dst, -tbox::MathUtilities<TYPE>::getOne(), src2, box);
@@ -1119,7 +1119,7 @@ ArrayDataBasicOps<TYPE>::axmy(
          int src1_w[SAMRAI::MAX_DIM_VAL];
          int src2_w[SAMRAI::MAX_DIM_VAL];
          int dim_counter[SAMRAI::MAX_DIM_VAL];
-         for (int i = 0; i < dimVal; ++i) {
+         for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
             src1_w[i] = src1_box.numberCells(i);
@@ -1150,7 +1150,7 @@ ArrayDataBasicOps<TYPE>::axmy(
             int dst_b[SAMRAI::MAX_DIM_VAL];
             int src1_b[SAMRAI::MAX_DIM_VAL];
             int src2_b[SAMRAI::MAX_DIM_VAL];
-            for (int nd = 0; nd < dimVal; ++nd) {
+            for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
                dst_b[nd] = dst_counter;
                src1_b[nd] = src1_counter;
                src2_b[nd] = src2_counter;
@@ -1167,7 +1167,7 @@ ArrayDataBasicOps<TYPE>::axmy(
                }
                int dim_jump = 0;
 
-               for (int j = 1; j < dimVal; ++j) {
+               for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                   if (dim_counter[j] < box_w[j] - 1) {
                      ++dim_counter[j];
                      dim_jump = j;
@@ -1216,7 +1216,7 @@ ArrayDataBasicOps<TYPE>::min(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(data, box);
 
-   int dimVal = data.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = data.getDim().getValue();
    TYPE minval = tbox::MathUtilities<TYPE>::getMax();
 
    const hier::Box d_box = data.getBox();
@@ -1226,7 +1226,7 @@ ArrayDataBasicOps<TYPE>::min(
       int box_w[SAMRAI::MAX_DIM_VAL];
       int d_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
@@ -1247,7 +1247,7 @@ ArrayDataBasicOps<TYPE>::min(
          int d_counter = d_begin;
 
          int d_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; ++nd) {
+         for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
             d_b[nd] = d_counter;
          }
 
@@ -1259,7 +1259,7 @@ ArrayDataBasicOps<TYPE>::min(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; ++j) {
+            for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -1296,7 +1296,7 @@ ArrayDataBasicOps<TYPE>::max(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(data, box);
 
-   int dimVal = data.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = data.getDim().getValue();
    TYPE maxval = -(tbox::MathUtilities<TYPE>::getMax());
 
    const hier::Box d_box = data.getBox();
@@ -1307,7 +1307,7 @@ ArrayDataBasicOps<TYPE>::max(
       int box_w[SAMRAI::MAX_DIM_VAL];
       int d_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
@@ -1328,7 +1328,7 @@ ArrayDataBasicOps<TYPE>::max(
          int d_counter = d_begin;
 
          int d_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; ++nd) {
+         for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
             d_b[nd] = d_counter;
          }
 
@@ -1340,7 +1340,7 @@ ArrayDataBasicOps<TYPE>::max(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; ++j) {
+            for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -1379,7 +1379,7 @@ ArrayDataBasicOps<TYPE>::setRandomValues(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(dst, box);
 
-   int dimVal = dst.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
    const hier::Box d_box = dst.getBox();
    const hier::Box ibox = box * d_box;
 
@@ -1388,7 +1388,7 @@ ArrayDataBasicOps<TYPE>::setRandomValues(
       int box_w[SAMRAI::MAX_DIM_VAL];
       int d_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
@@ -1409,7 +1409,7 @@ ArrayDataBasicOps<TYPE>::setRandomValues(
          int d_counter = d_begin;
 
          int d_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; ++nd) {
+         for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
             d_b[nd] = d_counter;
          }
 
@@ -1420,7 +1420,7 @@ ArrayDataBasicOps<TYPE>::setRandomValues(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; ++j) {
+            for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;

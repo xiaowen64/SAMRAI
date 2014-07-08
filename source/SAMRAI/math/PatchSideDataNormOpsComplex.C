@@ -48,7 +48,7 @@ PatchSideDataNormOpsComplex::numberOfEntries(
    for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          retval +=
-            ((pdat::SideGeometry::toSideBox(ibox, d).size()) * data_depth);
+            static_cast<int>((pdat::SideGeometry::toSideBox(ibox, d).size()) * data_depth);
       }
    }
    return retval;

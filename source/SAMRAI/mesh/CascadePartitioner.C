@@ -306,7 +306,7 @@ CascadePartitioner::loadBalanceBoxLevel(
 
    if (d_report_load_balance) {
       tbox::plog
-         << d_object_name << "::loadBalanceBoxLevel results  ";
+         << d_object_name << "::loadBalanceBoxLevel results:\n";
       BalanceUtilities::reduceAndReportLoadBalance(std::vector<double>(1,local_load),
          balance_box_level.getMPI());
    }
@@ -623,15 +623,7 @@ CascadePartitioner::computeLocalLoad(
    for (hier::BoxContainer::const_iterator ni = boxes.begin();
         ni != boxes.end();
         ++ni) {
-#if 1
-      // Temporary work-around for integer overflow in Box::size()
-      double box_load = 1;
-      for ( int d=0; d<d_dim.getValue(); ++d ) {
-         box_load *= ni->numberCells(d);
-      }
-#else
-      double box_load = double(ni->size());
-#endif
+      double box_load = static_cast<double>(ni->size());
       load += box_load;
    }
    return static_cast<LoadType>(load);

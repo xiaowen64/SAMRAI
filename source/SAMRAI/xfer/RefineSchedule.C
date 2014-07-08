@@ -4096,10 +4096,10 @@ RefineSchedule::constructScheduleTransactions(
             transaction_dst_box.setEmpty();
             transaction_dst_box.setBlockId(src_box.getBlockId());
          } else {
-            int max_nbr_size = 0;
+            size_t max_nbr_size = 0;
             for (hier::BoxContainer::iterator en = encon_nbr_choices.begin();
                  en != encon_nbr_choices.end(); ++en) {
-               const int box_size = en->size();
+               const size_t box_size = en->size();
                if (box_size > max_nbr_size) {
                   max_nbr_size = box_size;
                   transaction_dst_box = *en;

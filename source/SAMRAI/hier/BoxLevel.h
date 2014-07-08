@@ -593,7 +593,7 @@ public:
     *
     * @pre isInitialized()
     */
-   size_t
+   int
    getLocalNumberOfBoxes() const
    {
       TBOX_ASSERT(isInitialized());
@@ -611,7 +611,7 @@ public:
     * @pre (getParallelState() == GLOBALIZED) || (rank == getMPI().getRank())
     * @pre (rank >= 0) && (rank < getMPI().getSize())
     */
-   size_t
+   int
    getLocalNumberOfBoxes(
       int rank) const;
 
@@ -701,7 +701,7 @@ public:
     *
     * @pre isInitialized()
     */
-   int
+   size_t
    getMaxNumberOfCells() const
    {
       TBOX_ASSERT(isInitialized());
@@ -721,7 +721,7 @@ public:
     *
     * @pre isInitialized()
     */
-   int
+   size_t
    getMinNumberOfCells() const
    {
       TBOX_ASSERT(isInitialized());
@@ -756,7 +756,7 @@ public:
     *
     * @pre isInitialized()
     */
-   long int
+   size_t
    getGlobalNumberOfCells() const
    {
       TBOX_ASSERT(isInitialized());
@@ -1943,25 +1943,21 @@ private:
     *
     * This is mutable because it depends on the Boxes and may be
     * saved by a const object if computed.
-    *
-    * A value < 0 means it has not been computed.
     */
-   mutable long int d_global_number_of_cells;
+   mutable size_t d_global_number_of_cells;
 
    /*!
     * @brief Local Box count, excluding periodic images.
     *
     * Unlike d_global_number_of_boxes, this parameter is always current.
     */
-   size_t d_local_number_of_boxes;
+   int d_local_number_of_boxes;
 
    /*!
     * @brief Global box count, excluding periodic images.
     *
     * This is mutable because it depends on the Boxes and may be
     * saved by a const object if computed.
-    *
-    * A value < 0 means it has not been computed.
     */
    mutable int d_global_number_of_boxes;
 
@@ -1970,9 +1966,9 @@ private:
    //! @brief Global min box count on any proc, excluding periodic images.
    mutable int d_min_number_of_boxes;
    //! @brief Global max cell count on any proc, excluding periodic images.
-   mutable int d_max_number_of_cells;
+   mutable size_t d_max_number_of_cells;
    //! @brief Global min cell count on any proc, excluding periodic images.
-   mutable int d_min_number_of_cells;
+   mutable size_t d_min_number_of_cells;
 
    //! @brief Max size of largest local box, one for each block.
    std::vector<IntVector> d_local_max_box_size;

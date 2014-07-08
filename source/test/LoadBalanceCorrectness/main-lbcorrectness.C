@@ -419,7 +419,7 @@ int main(
        * Create hierarchy.
        */
 
-      tbox::plog << "Building domain with boxes " << domain_boxes.format() << std::endl;
+      tbox::plog << "Building domain with boxes:\n" << domain_boxes.format("\t") << std::endl;
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             "GridGeometry",

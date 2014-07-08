@@ -131,7 +131,7 @@ OuterfaceGeometry::doOverlap(
       hier::Box mask_shift(src_mask);
       transformation.transform(mask_shift);
 
-      for (int d = 0; d < dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
          const hier::Box msk_face(
             FaceGeometry::toFaceBox(mask_shift, d));
@@ -207,7 +207,7 @@ OuterfaceGeometry::setUpOverlap(
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
-      for (int d = 0; d < dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
          hier::Box face_box(FaceGeometry::toFaceBox(*b, d));
          dst_boxes[d].pushBack(face_box);
       }

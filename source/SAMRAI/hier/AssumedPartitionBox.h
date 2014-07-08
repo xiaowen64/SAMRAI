@@ -98,8 +98,8 @@ public:
       { return d_box; }
 
    //! @brief Number of box partitions.
-   size_t getNumberOfParts() const {
-      return static_cast<size_t>(d_index_end-d_index_begin);
+   int getNumberOfParts() const {
+      return d_index_end-d_index_begin;
    }
 
    //! @brief Return the owner for a box.
@@ -217,7 +217,7 @@ private:
    //! @name Parameters for partition assignment in non-interleaved mode
 
    //@ @brief Min (or max) parts per rank when there are more (fewer) parts than ranks.
-   size_t d_parts_per_rank;
+   int d_parts_per_rank;
    /*
     * Each rank has 0, 1 or 2 partitions.  Lower ranks have more than higher ranks.
     * Ranks in [d_rank_begin,d_first_rank_with_1) have 2 partitions each.

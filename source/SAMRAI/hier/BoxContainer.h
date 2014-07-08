@@ -946,7 +946,7 @@ public:
     *
     * @return Total number of indices of all boxes in the container.
     */
-   int
+   size_t
    getTotalSizeOfBoxes() const;
 
    /*!

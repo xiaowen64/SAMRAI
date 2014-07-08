@@ -83,14 +83,14 @@ public:
     * @pre (codim > 0) && (codim <= getDim().getValue())
     * @pre (loc >= 0) && (loc < getMaxLocationIndex(codim - 1))
     */
-   const std::vector<int>&
+   const std::vector<tbox::Dimension::dir_t>&
    getDirections(
       int loc,
-      int codim) const
+      tbox::Dimension::dir_t codim) const
    {
       TBOX_ASSERT((codim > 0) && (codim <= getDim().getValue()));
       TBOX_ASSERT((loc >= 0) && (loc < getMaxLocationIndex(codim - 1)));
-      int iloc = loc / (1 << codim);
+      tbox::Dimension::dir_t iloc = static_cast<tbox::Dimension::dir_t>(loc / (1 << codim));
       return d_table[codim - 1][iloc];
    }
 
@@ -310,7 +310,7 @@ private:
    /*!
     * @brief Data member used to store the lookup table.
     */
-   std::vector<std::vector<int> > d_table[SAMRAI::MAX_DIM_VAL];
+   std::vector<std::vector<tbox::Dimension::dir_t> > d_table[SAMRAI::MAX_DIM_VAL];
 
    /*!
     * @brief Vector to hold information about possible directions for each

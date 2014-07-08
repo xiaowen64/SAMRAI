@@ -165,14 +165,14 @@ ConnectorStatistics::computeLocalConnectorStatistics( const Connector &connector
                                                   neighbor.getBlockId() );
          }
          neighbor *= base_box;
-         const int size = neighbor.size();
+         const size_t size = neighbor.size();
 
-         d_sq.d_values[OVERLAP_SIZE] += size;
+         d_sq.d_values[OVERLAP_SIZE] += static_cast<double>(size);
          if ( neighbor.getOwnerRank() == mpi.getRank() ) {
-            d_sq.d_values[LOCAL_OVERLAP_SIZE] += size;
+            d_sq.d_values[LOCAL_OVERLAP_SIZE] += static_cast<double>(size);
          }
          else {
-            d_sq.d_values[REMOTE_OVERLAP_SIZE] += size;
+            d_sq.d_values[REMOTE_OVERLAP_SIZE] += static_cast<double>(size);
          }
 
       }

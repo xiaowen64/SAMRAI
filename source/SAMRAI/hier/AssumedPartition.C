@@ -88,14 +88,12 @@ AssumedPartition::partition(
    const int num_ranks = rank_end - rank_begin;
    double rank_space_cut_lo = 0.0;
    double rank_space_cut_hi = 0.0;
-   int box_rank_begin = rank_begin;
-   int box_rank_end = box_rank_begin;
    size_t cell_count = 0;
    for ( BoxContainer::const_iterator bi=boxes.begin(); bi!=boxes.end(); ++bi ) {
       cell_count += bi->size();
 
       rank_space_cut_lo = rank_space_cut_hi;
-      rank_space_cut_hi = static_cast<double>(cell_count)/num_cells;
+      rank_space_cut_hi = static_cast<double>(cell_count)/static_cast<double>(num_cells);
 
       int box_rank_begin = static_cast<int>(rank_space_cut_lo * num_ranks + 0.5);
       int box_rank_end   = static_cast<int>(rank_space_cut_hi * num_ranks + 0.5);
@@ -250,7 +248,7 @@ AssumedPartition::findOverlaps(
    const BaseGridGeometry &grid_geometry,
    const IntVector &refinement_ratio ) const
 {
-   size_t old_count = overlapping_boxes.size();
+   int old_count = overlapping_boxes.size();
 
    for ( PartedBoxes::const_iterator pi=d_parted_boxes.begin(); pi!=d_parted_boxes.end(); ++pi ) {
       if ( pi->getNumberOfParts() != 0 ) {

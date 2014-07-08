@@ -145,7 +145,7 @@ FaceDoubleConstantRefine::refine(
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   for (int axis = 0; axis < dim.getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < dim.getValue(); ++axis) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
 
       for (hier::BoxContainer::const_iterator b = boxes.begin();
@@ -155,9 +155,9 @@ FaceDoubleConstantRefine::refine(
          TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, face_box);
 
          hier::Box fine_box(dim);
-         for (int i = 0; i < dim.getValue(); ++i) {
-            fine_box.lower((axis + i) % dim.getValue()) = face_box.lower(i);
-            fine_box.upper((axis + i) % dim.getValue()) = face_box.upper(i);
+         for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
+            fine_box.lower( static_cast<tbox::Dimension::dir_t>( (axis + i) % dim.getValue()) ) = face_box.lower(i);
+            fine_box.upper(( static_cast<tbox::Dimension::dir_t>( axis + i) % dim.getValue()) ) = face_box.upper(i);
          }
 
          fine_box.upper(axis) -= 1;

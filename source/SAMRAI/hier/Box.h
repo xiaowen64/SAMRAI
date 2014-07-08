@@ -639,13 +639,13 @@ public:
     * If the box is empty, then the number of index points within the box is
     * zero.
     */
-   unsigned long int
+   size_t
    size() const
    {
-      int mysize = 0;
+      size_t mysize = 0;
       if (!empty()) {
-         mysize = 1;
-         for (dir_t i = 0; i < getDim().getValue(); ++i) {
+         mysize = (d_hi(0) - d_lo(0) + 1);
+         for (dir_t i = 1; i < getDim().getValue(); ++i) {
             mysize *= (d_hi(i) - d_lo(i) + 1);
          }
       }
@@ -665,12 +665,12 @@ public:
     * the indices within the box.  This operation is a convenience
     * function for array indexing operations.
     */
-   unsigned long int
+   size_t
    offset(
       const Index& p) const
    {
-      unsigned long int myoffset = 0;
-      for (dir_t i = getDim().getValue() - 1; i > 0; --i) {
+      size_t myoffset = 0;
+      for (int i = getDim().getValue() - 1; i > 0; --i) {
          myoffset = (d_hi(i - 1) - d_lo(i - 1) + 1) * (p(i) - d_lo(i) + myoffset);
       }
       myoffset += p(0) - d_lo(0);
@@ -690,7 +690,7 @@ public:
     */
    Index
    index(
-      const unsigned long int offset) const;
+      const size_t offset) const;
 
    /*!
     * @brief Return an iterator pointing to the first index of this.
@@ -907,14 +907,14 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    grow(
       const dir_t direction,
       const int ghosts)
    {
-      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      TBOX_ASSERT((direction < getDim().getValue()));
       if (!empty()) {
          d_lo(direction) -= ghosts;
          d_hi(direction) += ghosts;
@@ -946,14 +946,14 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    growLower(
       const dir_t direction,
       const int ghosts)
    {
-      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      TBOX_ASSERT((direction < getDim().getValue()));
       if (!empty()) {
          d_lo(direction) -= ghosts;
       }
@@ -984,14 +984,14 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    growUpper(
       const dir_t direction,
       const int ghosts)
    {
-      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      TBOX_ASSERT((direction < getDim().getValue()));
       if (!empty()) {
          d_hi(direction) += ghosts;
       }
@@ -1007,7 +1007,7 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    lengthen(
@@ -1024,7 +1024,7 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    shorten(
@@ -1058,14 +1058,14 @@ public:
     * @param direction
     * @param offset
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    shift(
       const dir_t direction,
       const int offset)
    {
-      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      TBOX_ASSERT((direction < getDim().getValue()));
       d_lo(direction) += offset;
       d_hi(direction) += offset;
    }
