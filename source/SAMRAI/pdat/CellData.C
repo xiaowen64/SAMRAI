@@ -366,7 +366,7 @@ CellData<TYPE>::canEstimateStreamSizeFromBox() const
 }
 
 template<class TYPE>
-int
+size_t
 CellData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
@@ -436,7 +436,7 @@ CellData<TYPE>::packWithRotation(
 
    const int depth = getDepth();
 
-   const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
+   const size_t size = depth * overlap_boxes.getTotalSizeOfBoxes();
    std::vector<TYPE> buffer(size);
 
    int i = 0;

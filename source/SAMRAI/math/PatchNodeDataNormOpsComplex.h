@@ -69,7 +69,7 @@ public:
     * @pre data
     * @pre data->getDim() == box.getDim()
     */
-   int
+   size_t
    numberOfEntries(
       const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
       const hier::Box& box) const

@@ -401,7 +401,7 @@ TileClustering::clusterWithinProcessBoundaries(
       hier::IntVector number_tiles = coarsened_box.numberCells();
       number_tiles *= 3; // Possible merging of smaller tiles on either side of it.
       max_tiles_for_any_patch = tbox::MathUtilities<int>::Max(
-         max_tiles_for_any_patch, number_tiles.getProduct() );
+         max_tiles_for_any_patch, static_cast<int>(number_tiles.getProduct()));
    }
 
    hier::Connector &tile_to_tag = tag_to_tile.getTranspose();
@@ -547,8 +547,8 @@ TileClustering::clusterWholeTiles(
       boost::shared_ptr<pdat::CellData<int> > coarsened_tag_data =
          makeCoarsenedTagData(*tag_data, tag_val);
 
-      const hier::Box &coarsened_tag_box = coarsened_tag_data->getBox();
-      const int num_coarse_cells = coarsened_tag_box.size();
+      const hier::Box& coarsened_tag_box = coarsened_tag_data->getBox();
+      const size_t num_coarse_cells = coarsened_tag_box.size();
 
       hier::BoxContainer coalescibles; // Hold space for coalescible tiles.
 
@@ -556,7 +556,7 @@ TileClustering::clusterWholeTiles(
          tbox::plog << "TileClustering::clusterWholeTiles: processing coarsened tags." << std::endl;
       }
 
-      for ( int coarse_offset=0; coarse_offset<num_coarse_cells; ++coarse_offset ) {
+      for (size_t coarse_offset = 0; coarse_offset < num_coarse_cells; ++coarse_offset) {
          const pdat::CellIndex coarse_cell_index(coarsened_tag_box.index(coarse_offset));
 
          if ( (*coarsened_tag_data)(coarse_cell_index) == tag_val ) {
@@ -984,13 +984,13 @@ TileClustering::findTilesContainingTags(
    hier::Box coarsened_box(tag_data.getBox());
    coarsened_box.coarsen(d_tile_size);
 
-   const int num_coarse_cells = coarsened_box.size();
+   const size_t num_coarse_cells = coarsened_box.size();
 
 #ifdef _OPENMP
 #pragma omp parallel
 #pragma omp for schedule(dynamic)
 #endif
-   for ( int coarse_offset=0; coarse_offset<num_coarse_cells; ++coarse_offset ) {
+   for (size_t coarse_offset = 0; coarse_offset < num_coarse_cells; ++coarse_offset) {
       const pdat::CellIndex coarse_cell_index(coarsened_box.index(coarse_offset));
 
       /*
@@ -1020,8 +1020,8 @@ TileClustering::findTilesContainingTags(
              * Choose a LocalId that is independent of ordering so that
              * results are independent of multi-threading.
              */
-            hier::LocalId local_id(first_tile_index + coarse_offset);
-            if ( local_id < hier::LocalId::getZero() ) {
+            hier::LocalId local_id(first_tile_index + static_cast<int>(coarse_offset));
+            if (local_id < hier::LocalId::getZero()) {
                TBOX_ERROR("TileClustering code cannot compute a valid non-zero\n"
                           <<"LocalId for a tile.\n");
             }
@@ -1083,8 +1083,8 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int> &tag_data,
 
    size_t coarse_tag_count = 0;
 
-   const int num_coarse_cells = coarsened_box.size();
-   for ( int offset=0; offset<num_coarse_cells; ++offset ) {
+   const size_t num_coarse_cells = coarsened_box.size();
+   for (size_t offset = 0; offset < num_coarse_cells; ++offset) {
       const pdat::CellIndex coarse_cell_index(coarsened_box.index(offset));
 
       hier::Box fine_cells_box(coarse_cell_index,coarse_cell_index,coarsened_box.getBlockId());
@@ -1297,7 +1297,7 @@ TileClustering::coalesceClusters(
 
    tile_box_level.deallocateGlobalizedVersion();
 
-   if ( box_vector.size() != tile_box_level.getLocalNumberOfBoxes() ) {
+   if ( box_vector.size() != static_cast<size_t>(tile_box_level.getLocalNumberOfBoxes()) ){
 
       d_object_timers->t_coalesce_adjustment->start();
 

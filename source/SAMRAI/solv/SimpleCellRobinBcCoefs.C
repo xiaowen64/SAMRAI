@@ -633,7 +633,7 @@ SimpleCellRobinBcCoefs::restoreDirichletData(
             hier::Box dst_box = array_data.getBox();
             if (location_index % 2 == 0) {
                shift_amount[location_index / 2] = -1;
-               dst_box.shift(location_index / 2, -1);
+               dst_box.shift(static_cast<tbox::Dimension::dir_t>(location_index / 2), -1);
             }
             cell_data->getArrayData().copy(array_data,
                dst_box,
@@ -668,7 +668,7 @@ SimpleCellRobinBcCoefs::makeSideBoundaryBox(
        * than the boundary cell indices, in the direction normal
        * to the boundary.
        */
-      face_indices.shift(location_index / 2, 1);
+      face_indices.shift(static_cast<tbox::Dimension::dir_t>(location_index / 2), 1);
    }
    return face_indices;
 }

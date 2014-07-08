@@ -353,7 +353,7 @@ public:
     * @pre (d_coarsest_level >= 0) && (d_finest_level >= d_coarsest_level) &&
     *      (d_finest_level <= getPatchHierarchy()->getFinestLevelNumber())
     */
-   int
+   size_t
    numberOfEntries(
       const int data_id,
       const bool interior_only = true) const;

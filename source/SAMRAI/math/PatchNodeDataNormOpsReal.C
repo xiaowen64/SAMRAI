@@ -39,7 +39,7 @@ PatchNodeDataNormOpsReal<TYPE>::~PatchNodeDataNormOpsReal()
  */
 
 template<class TYPE>
-int
+size_t
 PatchNodeDataNormOpsReal<TYPE>::numberOfEntries(
    const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box) const
@@ -49,7 +49,7 @@ PatchNodeDataNormOpsReal<TYPE>::numberOfEntries(
 
    const hier::Box ibox =
       pdat::NodeGeometry::toNodeBox(box * data->getGhostBox());
-   int retval = ibox.size() * data->getDepth();
+   size_t retval = ibox.size() * data->getDepth();
    return retval;
 }
 

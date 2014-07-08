@@ -99,8 +99,7 @@ public:
     * @param[in] num_items
     */
    template<typename DATA_TYPE>
-   static unsigned int getSizeof(
-      unsigned int num_items = 1)
+   static size_t getSizeof(size_t num_items = 1)
    {
       return num_items * static_cast<unsigned int>(sizeof(DATA_TYPE));
    }
@@ -170,7 +169,7 @@ public:
       const DATA_TYPE& data)
    {
       TBOX_ASSERT(writeMode());
-      static const unsigned int nbytes =
+      static const size_t nbytes =
          MessageStream::getSizeof<DATA_TYPE>(1);
       copyDataIn(static_cast<const void *>(&data), nbytes);
       return *this;
@@ -189,11 +188,11 @@ public:
    void
    pack(
       const DATA_TYPE* data,
-      unsigned int size = 1)
+      size_t size = 1)
    {
       TBOX_ASSERT(writeMode());
       if (data && (size > 0)) {
-         const unsigned int nbytes = MessageStream::getSizeof<DATA_TYPE>(size);
+         const size_t nbytes = MessageStream::getSizeof<DATA_TYPE>(size);
          copyDataIn(static_cast<const void *>(data), nbytes);
       }
    }
@@ -229,7 +228,7 @@ public:
       DATA_TYPE& data)
    {
       TBOX_ASSERT(readMode());
-      static const unsigned int nbytes =
+      static const size_t nbytes =
          MessageStream::getSizeof<DATA_TYPE>(1);
       copyDataOut(static_cast<void *>(&data), nbytes);
       return *this;
@@ -248,12 +247,12 @@ public:
    template<typename DATA_TYPE>
    void
    unpack(
-      DATA_TYPE * data,
-      unsigned int size = 1)
+      DATA_TYPE* data,
+      size_t size = 1)
    {
       TBOX_ASSERT(readMode());
-      if (data && (size > 0)) {
-         const unsigned int nbytes = MessageStream::getSizeof<DATA_TYPE>(size);
+      if (data) {
+         const size_t nbytes = MessageStream::getSizeof<DATA_TYPE>(size);
          copyDataOut(static_cast<void *>(data), nbytes);
       }
    }

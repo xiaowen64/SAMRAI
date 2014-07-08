@@ -2144,7 +2144,7 @@ GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes) cons
         itr != domain_boxes.end(); ++itr, ++i) {
 
       hier::Box test_box = *itr;
-      for (int dir = 0; dir < dim.getValue(); ++dir) {
+      for (tbox::Dimension::dir_t dir = 0; dir < dim.getValue(); ++dir) {
 
          if (test_box.numberCells(dir) < smallest_patch(dir)) {
 

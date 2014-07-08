@@ -46,7 +46,7 @@ OuterfaceData<TYPE>::OuterfaceData(
 
    TBOX_ASSERT(depth > 0);
 
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       const hier::Box& ghosts = getGhostBox();
       const hier::Box facebox = FaceGeometry::toFaceBox(ghosts, d);
       hier::Box outerfacebox = facebox;
@@ -338,7 +338,7 @@ OuterfaceData<TYPE>::canEstimateStreamSizeFromBox() const
 }
 
 template<class TYPE>
-int
+size_t
 OuterfaceData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
@@ -348,7 +348,7 @@ OuterfaceData<TYPE>::getDataStreamSize(
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
 
-   int size = 0;
+   size_t size = 0;
    for (int d = 0; d < getDim().getValue(); ++d) {
       const hier::BoxContainer& boxlist = t_overlap->getDestinationBoxContainer(d);
       hier::IntVector face_offset(offset);
@@ -468,7 +468,7 @@ OuterfaceData<TYPE>::getSizeOfData(
    TBOX_ASSERT(depth > 0);
 
    size_t size = 0;
-   for (int d = 0; d < box.getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < box.getDim().getValue(); ++d) {
       hier::Box lower = FaceGeometry::toFaceBox(box, d);
       hier::Box upper = FaceGeometry::toFaceBox(box, d);
       lower.upper(d) = box.lower(d);

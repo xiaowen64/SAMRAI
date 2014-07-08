@@ -60,7 +60,7 @@ ArrayDataBasicOps<TYPE>::scale(
    } else if (alpha == tbox::MathUtilities<TYPE>::getOne()) {
       dst.copy(src, box);
    } else {
-      const int ddepth = dst.getDepth();
+      const unsigned int ddepth = dst.getDepth();
 
       TBOX_ASSERT(ddepth == src.getDepth());
 
@@ -81,27 +81,27 @@ ArrayDataBasicOps<TYPE>::scale(
             dim_counter[i] = 0;
          }
 
-         const int dst_offset = dst.getOffset();
-         const int src_offset = src.getOffset();
+         const size_t dst_offset = dst.getOffset();
+         const size_t src_offset = src.getOffset();
 
-         const int num_d0_blocks = ibox.size() / box_w[0];
+         const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-         int dst_begin = dst_box.offset(ibox.lower());
-         int src_begin = src_box.offset(ibox.lower());
+         size_t dst_begin = dst_box.offset(ibox.lower());
+         size_t src_begin = src_box.offset(ibox.lower());
 
          TYPE* dd = dst.getPointer();
          const TYPE* sd = src.getPointer();
 
-         for (int d = 0; d < ddepth; ++d) {
+         for (unsigned int d = 0; d < ddepth; ++d) {
 
-            int dst_counter = dst_begin;
-            int src_counter = src_begin;
+            size_t dst_counter = dst_begin;
+            size_t src_counter = src_begin;
 
             int dst_b[SAMRAI::MAX_DIM_VAL];
             int src_b[SAMRAI::MAX_DIM_VAL];
             for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
-               dst_b[nd] = dst_counter;
-               src_b[nd] = src_counter;
+               dst_b[nd] = static_cast<int>(dst_counter);
+               src_b[nd] = static_cast<int>(src_counter);
             }
 
             /*
@@ -135,8 +135,8 @@ ArrayDataBasicOps<TYPE>::scale(
                   src_counter = src_b[dim_jump - 1] + src_step;
 
                   for (int m = 0; m < dim_jump; ++m) {
-                     dst_b[m] = dst_counter;
-                     src_b[m] = src_counter;
+                     dst_b[m] = static_cast<int>(dst_counter);
+                     src_b[m] = static_cast<int>(src_counter);
                   }
 
                }
@@ -170,7 +170,7 @@ ArrayDataBasicOps<TYPE>::addScalar(
    if (alpha == tbox::MathUtilities<TYPE>::getZero()) {
       dst.copy(src, box);
    } else {
-      const int ddepth = dst.getDepth();
+      const unsigned int ddepth = dst.getDepth();
 
       TBOX_ASSERT(ddepth == src.getDepth());
 
@@ -191,27 +191,27 @@ ArrayDataBasicOps<TYPE>::addScalar(
             dim_counter[i] = 0;
          }
 
-         const int dst_offset = dst.getOffset();
-         const int src_offset = src.getOffset();
+         const size_t dst_offset = dst.getOffset();
+         const size_t src_offset = src.getOffset();
 
          const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-         int dst_begin = dst_box.offset(ibox.lower());
-         int src_begin = src_box.offset(ibox.lower());
+         size_t dst_begin = dst_box.offset(ibox.lower());
+         size_t src_begin = src_box.offset(ibox.lower());
 
          TYPE* dd = dst.getPointer();
          const TYPE* sd = src.getPointer();
 
-         for (int d = 0; d < ddepth; ++d) {
+         for (unsigned int d = 0; d < ddepth; ++d) {
 
-            int dst_counter = dst_begin;
-            int src_counter = src_begin;
+            size_t dst_counter = dst_begin;
+            size_t src_counter = src_begin;
 
             int dst_b[SAMRAI::MAX_DIM_VAL];
             int src_b[SAMRAI::MAX_DIM_VAL];
             for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
-               dst_b[nd] = dst_counter;
-               src_b[nd] = src_counter;
+               dst_b[nd] = static_cast<int>(dst_counter);
+               src_b[nd] = static_cast<int>(src_counter);
             }
 
             /*
@@ -245,8 +245,8 @@ ArrayDataBasicOps<TYPE>::addScalar(
                   src_counter = src_b[dim_jump - 1] + src_step;
 
                   for (int m = 0; m < dim_jump; ++m) {
-                     dst_b[m] = dst_counter;
-                     src_b[m] = src_counter;
+                     dst_b[m] = static_cast<int>(dst_counter);
+                     src_b[m] = static_cast<int>(src_counter);
                   }
 
                }
@@ -272,7 +272,7 @@ ArrayDataBasicOps<TYPE>::add(
 
    tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
 
-   const int ddepth = dst.getDepth();
+   const unsigned int ddepth = dst.getDepth();
 
    TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
 
@@ -296,33 +296,33 @@ ArrayDataBasicOps<TYPE>::add(
          dim_counter[i] = 0;
       }
 
-      const int dst_offset = dst.getOffset();
-      const int src1_offset = src1.getOffset();
-      const int src2_offset = src2.getOffset();
+      const size_t dst_offset = dst.getOffset();
+      const size_t src1_offset = src1.getOffset();
+      const size_t src2_offset = src2.getOffset();
 
-      const int num_d0_blocks = ibox.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      int dst_begin = dst_box.offset(ibox.lower());
-      int src1_begin = src1_box.offset(ibox.lower());
-      int src2_begin = src2_box.offset(ibox.lower());
+      size_t dst_begin = dst_box.offset(ibox.lower());
+      size_t src1_begin = src1_box.offset(ibox.lower());
+      size_t src2_begin = src2_box.offset(ibox.lower());
 
       TYPE* dd = dst.getPointer();
       const TYPE* s1d = src1.getPointer();
       const TYPE* s2d = src2.getPointer();
 
-      for (int d = 0; d < ddepth; ++d) {
+      for (unsigned int d = 0; d < ddepth; ++d) {
 
-         int dst_counter = dst_begin;
-         int src1_counter = src1_begin;
-         int src2_counter = src2_begin;
+         size_t dst_counter = dst_begin;
+         size_t src1_counter = src1_begin;
+         size_t src2_counter = src2_begin;
 
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src1_b[SAMRAI::MAX_DIM_VAL];
          int src2_b[SAMRAI::MAX_DIM_VAL];
          for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
-            dst_b[nd] = dst_counter;
-            src1_b[nd] = src1_counter;
-            src2_b[nd] = src2_counter;
+            dst_b[nd] = static_cast<int>(dst_counter);
+            src1_b[nd] = static_cast<int>(src1_counter);
+            src2_b[nd] = static_cast<int>(src2_counter);
          }
 
          /*
@@ -360,9 +360,9 @@ ArrayDataBasicOps<TYPE>::add(
                src2_counter = src2_b[dim_jump - 1] + src2_step;
 
                for (int m = 0; m < dim_jump; ++m) {
-                  dst_b[m] = dst_counter;
-                  src1_b[m] = src1_counter;
-                  src2_b[m] = src2_counter;
+                  dst_b[m] = static_cast<int>(dst_counter);
+                  src1_b[m] = static_cast<int>(src1_counter);
+                  src2_b[m] = static_cast<int>(src2_counter);
                }
 
             }
@@ -388,7 +388,7 @@ ArrayDataBasicOps<TYPE>::subtract(
 
    tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
 
-   const int ddepth = dst.getDepth();
+   const unsigned int ddepth = dst.getDepth();
 
    TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
 
@@ -412,33 +412,33 @@ ArrayDataBasicOps<TYPE>::subtract(
          dim_counter[i] = 0;
       }
 
-      const int dst_offset = dst.getOffset();
-      const int src1_offset = src1.getOffset();
-      const int src2_offset = src2.getOffset();
+      const size_t dst_offset = dst.getOffset();
+      const size_t src1_offset = src1.getOffset();
+      const size_t src2_offset = src2.getOffset();
 
-      const int num_d0_blocks = ibox.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      int dst_begin = dst_box.offset(ibox.lower());
-      int src1_begin = src1_box.offset(ibox.lower());
-      int src2_begin = src2_box.offset(ibox.lower());
+      size_t dst_begin = dst_box.offset(ibox.lower());
+      size_t src1_begin = src1_box.offset(ibox.lower());
+      size_t src2_begin = src2_box.offset(ibox.lower());
 
       TYPE* dd = dst.getPointer();
       const TYPE* s1d = src1.getPointer();
       const TYPE* s2d = src2.getPointer();
 
-      for (int d = 0; d < ddepth; ++d) {
+      for (unsigned int d = 0; d < ddepth; ++d) {
 
-         int dst_counter = dst_begin;
-         int src1_counter = src1_begin;
-         int src2_counter = src2_begin;
+         size_t dst_counter = dst_begin;
+         size_t src1_counter = src1_begin;
+         size_t src2_counter = src2_begin;
 
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src1_b[SAMRAI::MAX_DIM_VAL];
          int src2_b[SAMRAI::MAX_DIM_VAL];
          for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
-            dst_b[nd] = dst_counter;
-            src1_b[nd] = src1_counter;
-            src2_b[nd] = src2_counter;
+            dst_b[nd] = static_cast<int>(dst_counter);
+            src1_b[nd] = static_cast<int>(src1_counter);
+            src2_b[nd] = static_cast<int>(src2_counter);
          }
 
          /*
@@ -476,9 +476,9 @@ ArrayDataBasicOps<TYPE>::subtract(
                src2_counter = src2_b[dim_jump - 1] + src2_step;
 
                for (int m = 0; m < dim_jump; ++m) {
-                  dst_b[m] = dst_counter;
-                  src1_b[m] = src1_counter;
-                  src2_b[m] = src2_counter;
+                  dst_b[m] = static_cast<int>(dst_counter);
+                  src1_b[m] = static_cast<int>(src1_counter);
+                  src2_b[m] = static_cast<int>(src2_counter);
                }
 
             }
@@ -503,7 +503,7 @@ ArrayDataBasicOps<TYPE>::multiply(
    TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
    tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
-   const int ddepth = dst.getDepth();
+   const unsigned int ddepth = dst.getDepth();
 
    TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
 
@@ -527,33 +527,33 @@ ArrayDataBasicOps<TYPE>::multiply(
          dim_counter[i] = 0;
       }
 
-      const int dst_offset = dst.getOffset();
-      const int src1_offset = src1.getOffset();
-      const int src2_offset = src2.getOffset();
+      const size_t dst_offset = dst.getOffset();
+      const size_t src1_offset = src1.getOffset();
+      const size_t src2_offset = src2.getOffset();
 
-      const int num_d0_blocks = ibox.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      int dst_begin = dst_box.offset(ibox.lower());
-      int src1_begin = src1_box.offset(ibox.lower());
-      int src2_begin = src2_box.offset(ibox.lower());
+      size_t dst_begin = dst_box.offset(ibox.lower());
+      size_t src1_begin = src1_box.offset(ibox.lower());
+      size_t src2_begin = src2_box.offset(ibox.lower());
 
       TYPE* dd = dst.getPointer();
       const TYPE* s1d = src1.getPointer();
       const TYPE* s2d = src2.getPointer();
 
-      for (int d = 0; d < ddepth; ++d) {
+      for (unsigned int d = 0; d < ddepth; ++d) {
 
-         int dst_counter = dst_begin;
-         int src1_counter = src1_begin;
-         int src2_counter = src2_begin;
+         size_t dst_counter = dst_begin;
+         size_t src1_counter = src1_begin;
+         size_t src2_counter = src2_begin;
 
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src1_b[SAMRAI::MAX_DIM_VAL];
          int src2_b[SAMRAI::MAX_DIM_VAL];
          for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
-            dst_b[nd] = dst_counter;
-            src1_b[nd] = src1_counter;
-            src2_b[nd] = src2_counter;
+            dst_b[nd] = static_cast<int>(dst_counter);
+            src1_b[nd] = static_cast<int>(src1_counter);
+            src2_b[nd] = static_cast<int>(src2_counter);
          }
 
          /*
@@ -591,9 +591,9 @@ ArrayDataBasicOps<TYPE>::multiply(
                src2_counter = src2_b[dim_jump - 1] + src2_step;
 
                for (int m = 0; m < dim_jump; ++m) {
-                  dst_b[m] = dst_counter;
-                  src1_b[m] = src1_counter;
-                  src2_b[m] = src2_counter;
+                  dst_b[m] = static_cast<int>(dst_counter);
+                  src1_b[m] = static_cast<int>(src1_counter);
+                  src2_b[m] = static_cast<int>(src2_counter);
                }
 
             }
@@ -618,7 +618,7 @@ ArrayDataBasicOps<TYPE>::divide(
    TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
    tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
-   const int ddepth = dst.getDepth();
+   const unsigned int ddepth = dst.getDepth();
 
    TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
 
@@ -642,33 +642,33 @@ ArrayDataBasicOps<TYPE>::divide(
          dim_counter[i] = 0;
       }
 
-      const int dst_offset = dst.getOffset();
-      const int src1_offset = src1.getOffset();
-      const int src2_offset = src2.getOffset();
+      const size_t dst_offset = dst.getOffset();
+      const size_t src1_offset = src1.getOffset();
+      const size_t src2_offset = src2.getOffset();
 
-      const int num_d0_blocks = ibox.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      int dst_begin = dst_box.offset(ibox.lower());
-      int src1_begin = src1_box.offset(ibox.lower());
-      int src2_begin = src2_box.offset(ibox.lower());
+      size_t dst_begin = dst_box.offset(ibox.lower());
+      size_t src1_begin = src1_box.offset(ibox.lower());
+      size_t src2_begin = src2_box.offset(ibox.lower());
 
       TYPE* dd = dst.getPointer();
       const TYPE* s1d = src1.getPointer();
       const TYPE* s2d = src2.getPointer();
 
-      for (int d = 0; d < ddepth; ++d) {
+      for (unsigned int d = 0; d < ddepth; ++d) {
 
-         int dst_counter = dst_begin;
-         int src1_counter = src1_begin;
-         int src2_counter = src2_begin;
+         size_t dst_counter = dst_begin;
+         size_t src1_counter = src1_begin;
+         size_t src2_counter = src2_begin;
 
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src1_b[SAMRAI::MAX_DIM_VAL];
          int src2_b[SAMRAI::MAX_DIM_VAL];
          for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
-            dst_b[nd] = dst_counter;
-            src1_b[nd] = src1_counter;
-            src2_b[nd] = src2_counter;
+            dst_b[nd] = static_cast<int>(dst_counter);
+            src1_b[nd] = static_cast<int>(src1_counter);
+            src2_b[nd] = static_cast<int>(src2_counter);
          }
 
          for (int nb = 0; nb < num_d0_blocks; ++nb) {
@@ -703,9 +703,9 @@ ArrayDataBasicOps<TYPE>::divide(
                src2_counter = src2_b[dim_jump - 1] + src2_step;
 
                for (int m = 0; m < dim_jump; ++m) {
-                  dst_b[m] = dst_counter;
-                  src1_b[m] = src1_counter;
-                  src2_b[m] = src2_counter;
+                  dst_b[m] = static_cast<int>(dst_counter);
+                  src1_b[m] = static_cast<int>(src1_counter);
+                  src2_b[m] = static_cast<int>(src2_counter);
                }
 
             }
@@ -729,7 +729,7 @@ ArrayDataBasicOps<TYPE>::reciprocal(
    TBOX_ASSERT_OBJDIM_EQUALITY3(dst, src, box);
 
    tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
-   const int ddepth = dst.getDepth();
+   const unsigned int ddepth = dst.getDepth();
 
    TBOX_ASSERT(ddepth == src.getDepth());
 
@@ -750,27 +750,27 @@ ArrayDataBasicOps<TYPE>::reciprocal(
          dim_counter[i] = 0;
       }
 
-      const int dst_offset = dst.getOffset();
-      const int src_offset = src.getOffset();
+      const size_t dst_offset = dst.getOffset();
+      const size_t src_offset = src.getOffset();
 
-      const int num_d0_blocks = ibox.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      int dst_begin = dst_box.offset(ibox.lower());
-      int src_begin = src_box.offset(ibox.lower());
+      size_t dst_begin = dst_box.offset(ibox.lower());
+      size_t src_begin = src_box.offset(ibox.lower());
 
       TYPE* dd = dst.getPointer();
       const TYPE* sd = src.getPointer();
 
-      for (int d = 0; d < ddepth; ++d) {
+      for (unsigned int d = 0; d < ddepth; ++d) {
 
-         int dst_counter = dst_begin;
-         int src_counter = src_begin;
+         size_t dst_counter = dst_begin;
+         size_t src_counter = src_begin;
 
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src_b[SAMRAI::MAX_DIM_VAL];
          for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
-            dst_b[nd] = dst_counter;
-            src_b[nd] = src_counter;
+            dst_b[nd] = static_cast<int>(dst_counter);
+            src_b[nd] = static_cast<int>(src_counter);
          }
 
          /*
@@ -805,8 +805,8 @@ ArrayDataBasicOps<TYPE>::reciprocal(
                src_counter = src_b[dim_jump - 1] + src_step;
 
                for (int m = 0; m < dim_jump; ++m) {
-                  dst_b[m] = dst_counter;
-                  src_b[m] = src_counter;
+                  dst_b[m] = static_cast<int>(dst_counter);
+                  src_b[m] = static_cast<int>(src_counter);
                }
 
             }
@@ -837,7 +837,7 @@ ArrayDataBasicOps<TYPE>::linearSum(
    TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
    tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
-   const int ddepth = dst.getDepth();
+   const unsigned int ddepth = dst.getDepth();
 
    TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
 
@@ -879,33 +879,33 @@ ArrayDataBasicOps<TYPE>::linearSum(
             dim_counter[i] = 0;
          }
 
-         const int dst_offset = dst.getOffset();
-         const int src1_offset = src1.getOffset();
-         const int src2_offset = src2.getOffset();
+         const size_t dst_offset = dst.getOffset();
+         const size_t src1_offset = src1.getOffset();
+         const size_t src2_offset = src2.getOffset();
 
-         const int num_d0_blocks = ibox.size() / box_w[0];
+         const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-         int dst_begin = dst_box.offset(ibox.lower());
-         int src1_begin = src1_box.offset(ibox.lower());
-         int src2_begin = src2_box.offset(ibox.lower());
+         size_t dst_begin = dst_box.offset(ibox.lower());
+         size_t src1_begin = src1_box.offset(ibox.lower());
+         size_t src2_begin = src2_box.offset(ibox.lower());
 
          TYPE* dd = dst.getPointer();
          const TYPE* s1d = src1.getPointer();
          const TYPE* s2d = src2.getPointer();
 
-         for (int d = 0; d < ddepth; ++d) {
+         for (unsigned int d = 0; d < ddepth; ++d) {
 
-            int dst_counter = dst_begin;
-            int src1_counter = src1_begin;
-            int src2_counter = src2_begin;
+            size_t dst_counter = dst_begin;
+            size_t src1_counter = src1_begin;
+            size_t src2_counter = src2_begin;
 
             int dst_b[SAMRAI::MAX_DIM_VAL];
             int src1_b[SAMRAI::MAX_DIM_VAL];
             int src2_b[SAMRAI::MAX_DIM_VAL];
             for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
-               dst_b[nd] = dst_counter;
-               src1_b[nd] = src1_counter;
-               src2_b[nd] = src2_counter;
+               dst_b[nd] = static_cast<int>(dst_counter);
+               src1_b[nd] = static_cast<int>(src1_counter);
+               src2_b[nd] = static_cast<int>(src2_counter);
             }
 
             /*
@@ -943,9 +943,9 @@ ArrayDataBasicOps<TYPE>::linearSum(
                   src2_counter = src2_b[dim_jump - 1] + src2_step;
 
                   for (int m = 0; m < dim_jump; ++m) {
-                     dst_b[m] = dst_counter;
-                     src1_b[m] = src1_counter;
-                     src2_b[m] = src2_counter;
+                     dst_b[m] = static_cast<int>(dst_counter);
+                     src1_b[m] = static_cast<int>(src1_counter);
+                     src2_b[m] = static_cast<int>(src2_counter);
                   }
 
                }
@@ -980,7 +980,7 @@ ArrayDataBasicOps<TYPE>::axpy(
    } else if (alpha == -tbox::MathUtilities<TYPE>::getOne()) {
       subtract(dst, src2, src1, box);
    } else {
-      const int ddepth = dst.getDepth();
+      const unsigned int ddepth = dst.getDepth();
 
       TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
 
@@ -1004,33 +1004,33 @@ ArrayDataBasicOps<TYPE>::axpy(
             dim_counter[i] = 0;
          }
 
-         const int dst_offset = dst.getOffset();
-         const int src1_offset = src1.getOffset();
-         const int src2_offset = src2.getOffset();
+         const size_t dst_offset = dst.getOffset();
+         const size_t src1_offset = src1.getOffset();
+         const size_t src2_offset = src2.getOffset();
 
-         const int num_d0_blocks = ibox.size() / box_w[0];
+         const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-         int dst_begin = dst_box.offset(ibox.lower());
-         int src1_begin = src1_box.offset(ibox.lower());
-         int src2_begin = src2_box.offset(ibox.lower());
+         size_t dst_begin = dst_box.offset(ibox.lower());
+         size_t src1_begin = src1_box.offset(ibox.lower());
+         size_t src2_begin = src2_box.offset(ibox.lower());
 
          TYPE* dd = dst.getPointer();
          const TYPE* s1d = src1.getPointer();
          const TYPE* s2d = src2.getPointer();
 
-         for (int d = 0; d < ddepth; ++d) {
+         for (unsigned int d = 0; d < ddepth; ++d) {
 
-            int dst_counter = dst_begin;
-            int src1_counter = src1_begin;
-            int src2_counter = src2_begin;
+            size_t dst_counter = dst_begin;
+            size_t src1_counter = src1_begin;
+            size_t src2_counter = src2_begin;
 
             int dst_b[SAMRAI::MAX_DIM_VAL];
             int src1_b[SAMRAI::MAX_DIM_VAL];
             int src2_b[SAMRAI::MAX_DIM_VAL];
             for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
-               dst_b[nd] = dst_counter;
-               src1_b[nd] = src1_counter;
-               src2_b[nd] = src2_counter;
+               dst_b[nd] = static_cast<int>(dst_counter);
+               src1_b[nd] = static_cast<int>(src1_counter);
+               src2_b[nd] = static_cast<int>(src2_counter);
             }
 
             /*
@@ -1068,9 +1068,9 @@ ArrayDataBasicOps<TYPE>::axpy(
                   src2_counter = src2_b[dim_jump - 1] + src2_step;
 
                   for (int m = 0; m < dim_jump; ++m) {
-                     dst_b[m] = dst_counter;
-                     src1_b[m] = src1_counter;
-                     src2_b[m] = src2_counter;
+                     dst_b[m] = static_cast<int>(dst_counter);
+                     src1_b[m] = static_cast<int>(src1_counter);
+                     src2_b[m] = static_cast<int>(src2_counter);
                   }
 
                }
@@ -1103,7 +1103,7 @@ ArrayDataBasicOps<TYPE>::axmy(
    } else if (alpha == tbox::MathUtilities<TYPE>::getOne()) {
       subtract(dst, src1, src2, box);
    } else {
-      const int ddepth = dst.getDepth();
+      const unsigned int ddepth = dst.getDepth();
 
       TBOX_ASSERT(ddepth == src1.getDepth() && ddepth == src2.getDepth());
 
@@ -1127,33 +1127,33 @@ ArrayDataBasicOps<TYPE>::axmy(
             dim_counter[i] = 0;
          }
 
-         const int dst_offset = dst.getOffset();
-         const int src1_offset = src1.getOffset();
-         const int src2_offset = src2.getOffset();
+         const size_t dst_offset = dst.getOffset();
+         const size_t src1_offset = src1.getOffset();
+         const size_t src2_offset = src2.getOffset();
 
-         const int num_d0_blocks = ibox.size() / box_w[0];
+         const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-         int dst_begin = dst_box.offset(ibox.lower());
-         int src1_begin = src1_box.offset(ibox.lower());
-         int src2_begin = src2_box.offset(ibox.lower());
+         size_t dst_begin = dst_box.offset(ibox.lower());
+         size_t src1_begin = src1_box.offset(ibox.lower());
+         size_t src2_begin = src2_box.offset(ibox.lower());
 
          TYPE* dd = dst.getPointer();
          const TYPE* s1d = src1.getPointer();
          const TYPE* s2d = src2.getPointer();
 
-         for (int d = 0; d < ddepth; ++d) {
+         for (unsigned int d = 0; d < ddepth; ++d) {
 
-            int dst_counter = dst_begin;
-            int src1_counter = src1_begin;
-            int src2_counter = src2_begin;
+            size_t dst_counter = dst_begin;
+            size_t src1_counter = src1_begin;
+            size_t src2_counter = src2_begin;
 
             int dst_b[SAMRAI::MAX_DIM_VAL];
             int src1_b[SAMRAI::MAX_DIM_VAL];
             int src2_b[SAMRAI::MAX_DIM_VAL];
             for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
-               dst_b[nd] = dst_counter;
-               src1_b[nd] = src1_counter;
-               src2_b[nd] = src2_counter;
+               dst_b[nd] = static_cast<int>(dst_counter);
+               src1_b[nd] = static_cast<int>(src1_counter);
+               src2_b[nd] = static_cast<int>(src2_counter);
             }
 
             /*
@@ -1191,9 +1191,9 @@ ArrayDataBasicOps<TYPE>::axmy(
                   src2_counter = src2_b[dim_jump - 1] + src2_step;
 
                   for (int m = 0; m < dim_jump; ++m) {
-                     dst_b[m] = dst_counter;
-                     src1_b[m] = src1_counter;
-                     src2_b[m] = src2_counter;
+                     dst_b[m] = static_cast<int>(dst_counter);
+                     src1_b[m] = static_cast<int>(src1_counter);
+                     src2_b[m] = static_cast<int>(src2_counter);
                   }
 
                }
@@ -1232,23 +1232,23 @@ ArrayDataBasicOps<TYPE>::min(
          dim_counter[i] = 0;
       }
 
-      const int d_offset = data.getOffset();
+      const size_t d_offset = data.getOffset();
 
-      int d_begin = d_box.offset(ibox.lower());
+      size_t d_begin = d_box.offset(ibox.lower());
 
-      const int num_d0_blocks = ibox.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      const int ddepth = data.getDepth();
+      const unsigned int ddepth = data.getDepth();
 
       const TYPE* dd = data.getPointer();
 
-      for (int d = 0; d < ddepth; ++d) {
+      for (unsigned int d = 0; d < ddepth; ++d) {
 
-         int d_counter = d_begin;
+         size_t d_counter = d_begin;
 
          int d_b[SAMRAI::MAX_DIM_VAL];
          for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
-            d_b[nd] = d_counter;
+            d_b[nd] = static_cast<int>(d_counter);
          }
 
          for (int nb = 0; nb < num_d0_blocks; ++nb) {
@@ -1276,7 +1276,7 @@ ArrayDataBasicOps<TYPE>::min(
                d_counter = d_b[dim_jump - 1] + d_step;
 
                for (int m = 0; m < dim_jump; ++m) {
-                  d_b[m] = d_counter;
+                  d_b[m] = static_cast<int>(d_counter);
                }
             }
          }
@@ -1313,23 +1313,23 @@ ArrayDataBasicOps<TYPE>::max(
          dim_counter[i] = 0;
       }
 
-      const int d_offset = data.getOffset();
+      const size_t d_offset = data.getOffset();
 
-      int d_begin = d_box.offset(ibox.lower());
+      size_t d_begin = d_box.offset(ibox.lower());
 
-      const int num_d0_blocks = ibox.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      const int ddepth = data.getDepth();
+      const unsigned int ddepth = data.getDepth();
 
       const TYPE* dd = data.getPointer();
 
-      for (int d = 0; d < ddepth; ++d) {
+      for (unsigned int d = 0; d < ddepth; ++d) {
 
-         int d_counter = d_begin;
+         size_t d_counter = d_begin;
 
          int d_b[SAMRAI::MAX_DIM_VAL];
          for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
-            d_b[nd] = d_counter;
+            d_b[nd] = static_cast<int>(d_counter);
          }
 
          for (int nb = 0; nb < num_d0_blocks; ++nb) {
@@ -1357,7 +1357,7 @@ ArrayDataBasicOps<TYPE>::max(
                d_counter = d_b[dim_jump - 1] + d_step;
 
                for (int m = 0; m < dim_jump; ++m) {
-                  d_b[m] = d_counter;
+                  d_b[m] = static_cast<int>(d_counter);
                }
             }
          }
@@ -1394,23 +1394,23 @@ ArrayDataBasicOps<TYPE>::setRandomValues(
          dim_counter[i] = 0;
       }
 
-      const int d_offset = dst.getOffset();
+      const size_t d_offset = dst.getOffset();
 
-      int d_begin = d_box.offset(ibox.lower());
+      size_t d_begin = d_box.offset(ibox.lower());
 
-      const int num_d0_blocks = ibox.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      const int ddepth = dst.getDepth();
+      const unsigned int ddepth = dst.getDepth();
 
       TYPE* dd = dst.getPointer();
 
-      for (int d = 0; d < ddepth; ++d) {
+      for (unsigned int d = 0; d < ddepth; ++d) {
 
-         int d_counter = d_begin;
+         size_t d_counter = d_begin;
 
          int d_b[SAMRAI::MAX_DIM_VAL];
          for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
-            d_b[nd] = d_counter;
+            d_b[nd] = static_cast<int>(d_counter);
          }
 
          for (int nb = 0; nb < num_d0_blocks; ++nb) {
@@ -1437,7 +1437,7 @@ ArrayDataBasicOps<TYPE>::setRandomValues(
                d_counter = d_b[dim_jump - 1] + d_step;
 
                for (int m = 0; m < dim_jump; ++m) {
-                  d_b[m] = d_counter;
+                  d_b[m] = static_cast<int>(d_counter);
                }
             }
          }

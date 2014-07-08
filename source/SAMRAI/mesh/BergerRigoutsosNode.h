@@ -362,13 +362,13 @@ private:
    findZeroCutSwath(
       int& cut_lo,
       int& cut_hi,
-      const int dim);
+      const tbox::Dimension::dir_t dim);
 
    void
    cutAtInflection(
       int& cut_pt,
       int& inflection,
-      const int dim);
+      const tbox::Dimension::dir_t dim);
 
    int
    getHistogramBufferSize(
@@ -376,7 +376,7 @@ private:
    {
       int size = box.numberCells(0);
       int dim_val = d_common->getDim().getValue();
-      for (int d = 1; d < dim_val; ++d) {
+      for (tbox::Dimension::dir_t d = 1; d < dim_val; ++d) {
          size += box.numberCells(d);
       }
       return size;
@@ -538,7 +538,7 @@ private:
    /*!
     * @brief Overlap count with d_box.
     */
-   int d_overlap;
+   size_t d_overlap;
 
    /*!
     * @brief Whether and how box is accepted.

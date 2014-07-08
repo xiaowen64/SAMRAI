@@ -34,17 +34,14 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
    const ArrayData<TYPE>& src,
    const hier::Box& opbox,
    const hier::IntVector& src_shift,
-   int dst_start_depth,
-   int src_start_depth,
-   int num_depth,
+   unsigned int dst_start_depth,
+   unsigned int src_start_depth,
+   unsigned int num_depth,
    const OP& op)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src, opbox, src_shift);
-   TBOX_ASSERT(num_depth >= 0);
-   TBOX_ASSERT((0 <= dst_start_depth) &&
-      (dst_start_depth + num_depth <= dst.getDepth()));
-   TBOX_ASSERT((0 <= src_start_depth) &&
-      (src_start_depth + num_depth <= src.getDepth()));
+   TBOX_ASSERT((dst_start_depth + num_depth <= dst.getDepth()));
+   TBOX_ASSERT((src_start_depth + num_depth <= src.getDepth()));
 
    const tbox::Dimension& dim(dst.getDim());
 
@@ -65,8 +62,8 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
       dim_counter[i] = 0;
    }
 
-   const int dst_offset = dst.getOffset();
-   const int src_offset = src.getOffset();
+   const size_t dst_offset = dst.getOffset();
+   const size_t src_offset = src.getOffset();
 
    /*
     * Data on the opbox can be decomposed into a set of
@@ -89,7 +86,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
     * Loop over the depth sections of the data arrays.
     */
 
-   for (int d = 0; d < num_depth; ++d) {
+   for (unsigned int d = 0; d < num_depth; ++d) {
 
       size_t dst_counter = dst_begin;
       size_t src_counter = src_begin;
@@ -190,19 +187,19 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
       (src_is_buffer ? buffer : arraydata.getPointer());
 
    const hier::Box& array_d_box(arraydata.getBox());
-   const int array_d_depth = arraydata.getDepth();
+   const unsigned int array_d_depth = arraydata.getDepth();
 
    int box_w[SAMRAI::MAX_DIM_VAL];
    int dat_w[SAMRAI::MAX_DIM_VAL];
    int dim_counter[SAMRAI::MAX_DIM_VAL];
-   for (int i = 0; i < dim.getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
       box_w[i] = opbox.numberCells(i);
       dat_w[i] = array_d_box.numberCells(i);
       dim_counter[i] = 0;
    }
 
-   const int dat_offset = arraydata.getOffset();
-   const int buf_offset = box_w[0];
+   const size_t dat_offset = arraydata.getOffset();
+   const size_t buf_offset = box_w[0];
 
    /*
     * Data on the opbox can be decomposed into a set of
@@ -214,26 +211,26 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
     * data items in each array section to be copied.
     */
 
-   const int num_d0_blocks = opbox.size() / box_w[0];
+   const int num_d0_blocks = static_cast<int>(opbox.size() / box_w[0]);
 
-   int dat_begin = array_d_box.offset(opbox.lower());
-   int buf_begin = 0;
+   size_t dat_begin = array_d_box.offset(opbox.lower());
+   size_t buf_begin = 0;
 
    /*
     * Loop over the depth sections of the data arrays.
     */
 
-   for (int d = 0; d < array_d_depth; ++d) {
+   for (unsigned int d = 0; d < array_d_depth; ++d) {
 
-      int dat_counter = dat_begin;
-      int buf_counter = buf_begin;
+      size_t dat_counter = dat_begin;
+      size_t buf_counter = buf_begin;
 
-      int& dst_counter = (src_is_buffer ? dat_counter : buf_counter);
-      int& src_counter = (src_is_buffer ? buf_counter : dat_counter);
+      size_t& dst_counter = (src_is_buffer ? dat_counter : buf_counter);
+      size_t& src_counter = (src_is_buffer ? buf_counter : dat_counter);
 
       int dat_b[SAMRAI::MAX_DIM_VAL];
-      for (int nd = 0; nd < dim.getValue(); ++nd) {
-         dat_b[nd] = dat_counter;
+      for (tbox::Dimension::dir_t nd = 0; nd < dim.getValue(); ++nd) {
+         dat_b[nd] = static_cast<int>(dat_counter);
       }
 
       /*
@@ -271,7 +268,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
             dat_counter = dat_b[dim_jump - 1] + dat_step;
 
             for (int m = 0; m < dim_jump; ++m) {
-               dat_b[m] = dat_counter;
+               dat_b[m] = static_cast<int>(dat_counter);
             }
 
          }  // if dim_jump > 0

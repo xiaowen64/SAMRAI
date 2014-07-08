@@ -215,10 +215,10 @@ Statistic::recordPatchStat(
  *************************************************************************
  */
 
-int
+size_t
 Statistic::getDataStreamSize()
 {
-   int byte_size = MessageStream::getSizeof<int>(4);
+   size_t byte_size = MessageStream::getSizeof<int>(4);
    if (d_stat_type == PROC_STAT) {
       byte_size += MessageStream::getSizeof<double>(d_seq_counter);
    } else { // d_stat_type == PATCH_STAT

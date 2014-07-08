@@ -526,7 +526,7 @@ private:
 
    static bool
    privateFindBestCutDimension(
-      int& cut_dim_out,
+      tbox::Dimension::dir_t& cut_dim_out,
       const hier::Box& in_box,
       const hier::IntVector& min_size,
       const hier::IntVector& cut_factor,
@@ -548,7 +548,7 @@ private:
       hier::Box& box_hi,
       std::vector<std::vector<bool> >& bad_cut_points_for_boxhi,
       const hier::Box& in_box,
-      int cutdim,
+      tbox::Dimension::dir_t cutdim,
       int cut_index,
       const std::vector<std::vector<bool> >& bad_cut_points);
 
