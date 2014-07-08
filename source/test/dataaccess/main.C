@@ -118,7 +118,7 @@ int main(
 
       size_t cell_data_size = box.size();
 
-      for (int i = 0; i < cell_data_size; ++i) {
+      for (size_t i = 0; i < cell_data_size; ++i) {
          cell_ptr[i] = (double)i;
       }
 
@@ -147,9 +147,9 @@ int main(
          hier::Box face_box = pdat::FaceGeometry::toFaceBox(box,
                axis);
 
-         int face_data_size = face_box.size();
+         size_t face_data_size = face_box.size();
 
-         for (int i = 0; i < face_data_size; ++i) {
+         for (size_t i = 0; i < face_data_size; ++i) {
             face_ptr[axis][i] = (double)i;
          }
 
@@ -174,10 +174,9 @@ int main(
       for (pdat::CellIterator ifc(pdat::CellGeometry::begin(box));
            ifc != ifcend; ++ifc) {
 
-         for (int a = 0; a < dim.getValue(); ++a) {
+         for (tbox::Dimension::dir_t a = 0; a < dim.getValue(); ++a) {
 
-            hier::Box face_box = pdat::FaceGeometry::toFaceBox(box,
-                  a);
+            hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, a);
             hier::Index flo = face_box.lower();
             hier::Index fhi = face_box.upper();
             for (int f = 0; f < 2; ++f) {
@@ -211,9 +210,9 @@ int main(
       hier::Index nlo = node_box.lower();
       hier::Index nhi = node_box.upper();
 
-      int node_data_size = node_box.size();
+      size_t node_data_size = node_box.size();
 
-      for (int i = 0; i < node_data_size; ++i) {
+      for (size_t i = 0; i < node_data_size; ++i) {
          node_ptr[i] = (double)i;
       }
 
@@ -285,9 +284,9 @@ int main(
 
          hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box,
                axis);
-         int edge_data_size = edge_box.size();
+         size_t edge_data_size = edge_box.size();
 
-         for (int i = 0; i < edge_data_size; ++i) {
+         for (size_t i = 0; i < edge_data_size; ++i) {
             edge_ptr[axis][i] = (double)i;
          }
 
@@ -343,15 +342,14 @@ int main(
 
       double* side_ptr[SAMRAI::MAX_DIM_VAL];
 
-      for (int axis = 0; axis < dim.getValue(); ++axis) {
+      for (tbox::Dimension::dir_t axis = 0; axis < dim.getValue(); ++axis) {
 
          side_ptr[axis] = side_data.getPointer(axis);
 
-         hier::Box side_box = pdat::SideGeometry::toSideBox(box,
-               axis);
-         int side_data_size = side_box.size();
+         hier::Box side_box = pdat::SideGeometry::toSideBox(box, axis);
+         size_t side_data_size = side_box.size();
 
-         for (int i = 0; i < side_data_size; ++i) {
+         for (size_t i = 0; i < side_data_size; ++i) {
             side_ptr[axis][i] = (double)i;
          }
 
@@ -375,10 +373,9 @@ int main(
       pdat::CellIterator iscend(pdat::CellGeometry::end(box));
       for (pdat::CellIterator isc(pdat::CellGeometry::begin(box));
            isc != iscend; ++isc) {
-         for (int a = 0; a < dim.getValue(); ++a) {
+         for (tbox::Dimension::dir_t a = 0; a < dim.getValue(); ++a) {
 
-            hier::Box side_box = pdat::SideGeometry::toSideBox(box,
-                  a);
+            hier::Box side_box = pdat::SideGeometry::toSideBox(box, a);
             hier::Index slo = side_box.lower();
             hier::Index shi = side_box.upper();
 

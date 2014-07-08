@@ -216,7 +216,7 @@ void CellDataTest::setConservativeData(
 
    const hier::BoxContainer& domain =
       level->getPhysicalDomain(hier::BlockId::zero());
-   int ncells = 0;
+   size_t ncells = 0;
    for (hier::BoxContainer::const_iterator i = domain.begin();
         i != domain.end(); ++i) {
       ncells += i->size();

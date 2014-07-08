@@ -243,9 +243,8 @@ void OuternodeDataTest::setLinearData(
 
    const int depth = data->getDepth();
 
-   int n, s;
-   for (n = 0; n < d_dim.getValue(); ++n) {
-      for (s = 0; s < 2; ++s) {
+   for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
+      for (int s = 0; s < 2; ++s) {
          const hier::Box databox = data->getDataBox(n, s);
          hier::Box::iterator biend(databox.end());
          for (hier::Box::iterator bi(databox.begin()); bi != biend; ++bi) {

@@ -254,7 +254,7 @@ private:
 
    static void
    get2dBdryDirectionCheckValues(
-      int& idir,
+      tbox::Dimension::dir_t& idir,
       int& offsign,
       int btype,
       int bloc,

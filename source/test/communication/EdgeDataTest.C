@@ -226,7 +226,7 @@ void EdgeDataTest::setConservativeData(
 
    const hier::BoxContainer& domain =
       level->getPhysicalDomain(hier::BlockId::zero());
-   int ncells = 0;
+   size_t ncells = 0;
    for (hier::BoxContainer::const_iterator i = domain.begin();
         i != domain.end(); ++i) {
       ncells += i->size();
@@ -437,7 +437,7 @@ void EdgeDataTest::setConstantBoundaryData(
 
    if (bbox.getBoundaryType() == d_dim.getValue()) {
 
-      for (int axis = 0; axis < d_dim.getValue(); ++axis) {
+      for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
          if (axis == 0) {
             if (lid % 2) {
                fillbox.growLower(axis,
@@ -468,7 +468,7 @@ void EdgeDataTest::setConstantBoundaryData(
       }
 
    } else if (bbox.getBoundaryType() == 1) {
-      for (int axis = 0; axis < d_dim.getValue(); ++axis) {
+      for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
          if (lid == 2 * axis) {
             fillbox.growLower(axis,
                tbox::MathUtilities<int>::Max(gcw(axis) - 1, 0));

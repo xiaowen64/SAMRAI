@@ -34,7 +34,7 @@ bool DerivedVisOwnerData::packDerivedDataIntoDoubleBuffer(
    if (variable_name == "Owner") {
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
       double owner = mpi.getRank();
-      int i, size = region.size();
+      size_t i, size = region.size();
       for (i = 0; i < size; ++i) buffer[i] = owner;
    } else {
       // Did not register this name.

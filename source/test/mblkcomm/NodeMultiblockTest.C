@@ -223,7 +223,7 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
                     ni != niend; ++ni) {
                   if (!patch_node_box.contains(*ni)) {
                      bool use_index = true;
-                     for (int n = 0; n < d_dim.getValue(); ++n) {
+                     for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                         if (edge_bdry[eb].getBox().numberCells(n) == 1) {
                            if ((*ni)(n) == plower(n) || (*ni)(n) ==
                                pupper(n)) {
@@ -266,7 +266,7 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
                     ni != niend; ++ni) {
                   if (!patch_node_box.contains(*ni)) {
                      bool use_index = true;
-                     for (int n = 0; n < d_dim.getValue(); ++n) {
+                     for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                         if (face_bdry[fb].getBox().numberCells(n) == 1) {
                            if ((*ni)(n) == plower(n) || (*ni)(n) ==
                                pupper(n)) {
@@ -328,7 +328,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
       for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(sing_fill_box));
            ni != niend; ++ni) {
          bool use_index = true;
-         for (int n = 0; n < d_dim.getValue(); ++n) {
+         for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
             if (bbox.getBox().numberCells(n) == 1) {
                if ((*ni)(n) == plower(n) || (*ni)(n) == pupper(n)) {
                   use_index = false;
@@ -404,7 +404,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                   for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(sing_fill_box));
                        ci != ciend; ++ci) {
                      bool use_index = true;
-                     for (int n = 0; n < d_dim.getValue(); ++n) {
+                     for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                         if (bbox.getBox().numberCells(n) == 1) {
                            if ((*ci)(n) == plower(n) || (*ci)(n) == pupper(n)) {
                               use_index = false;
@@ -431,7 +431,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
          for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(sing_fill_box));
               ci != ciend; ++ci) {
             bool use_index = true;
-            for (int n = 0; n < d_dim.getValue(); ++n) {
+            for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                if (bbox.getBox().numberCells(n) == 1) {
                   if ((*ci)(n) == plower(n) || (*ci)(n) == pupper(n)) {
                      use_index = false;
@@ -457,7 +457,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
          for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(sing_fill_box));
               ci != ciend; ++ci) {
             bool use_index = true;
-            for (int n = 0; n < d_dim.getValue(); ++n) {
+            for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                if (bbox.getBox().numberCells(n) == 1) {
                   if ((*ci)(n) == plower(n) || (*ci)(n) == pupper(n)) {
                      use_index = false;
@@ -666,7 +666,7 @@ bool NodeMultiblockTest::verifyResults(
                if (!patch_node_box.contains(*ci)) {
 
                   bool use_index = true;
-                  for (int n = 0; n < d_dim.getValue(); ++n) {
+                  for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                      if (bdry[k].getBox().numberCells(n) == 1) {
                         if ((*ci)(n) == patch_node_box.lower() (n) ||
                             (*ci)(n) == patch_node_box.upper() (n)) {
