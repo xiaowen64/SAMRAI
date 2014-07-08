@@ -361,7 +361,7 @@ BalanceUtilities::privateInitializeBadCutPointsForBox(
 
    const tbox::Dimension dim(box.getDim());
 
-   int ic, id;
+   tbox::Dimension::dir_t ic, id;
 
    bool set_dummy_cut_points = true;
 
@@ -437,7 +437,7 @@ BalanceUtilities::privateFindBestCutDimension(
 
    hier::Box size_test_box(in_box);
 
-   for (int id = 0; id < dim.getValue(); ++id) {
+   for (   tbox::Dimension::dir_t id = 0; id < dim.getValue(); ++id) {
       int ncells = in_box.numberCells(id);
       if ((ncells < 2 * min_size(id)) ||
           (ncells % cut_factor(id))) {
@@ -453,7 +453,7 @@ BalanceUtilities::privateFindBestCutDimension(
        */
 
       hier::Box test_box(size_test_box);
-      int cutdim = test_box.longestDirection();
+      tbox::Dimension::dir_t cutdim = test_box.longestDirection();
       int numcells = test_box.numberCells(cutdim);
       int cutfact = cut_factor(cutdim);
       int mincut = tbox::MathUtilities<int>::Max(min_size(cutdim), cutfact);
@@ -611,7 +611,7 @@ BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
    hier::Box& box_hi,
    std::vector<std::vector<bool> >& bad_cut_points_for_boxhi,
    const hier::Box& in_box,
-   int cutdim,
+   tbox::Dimension::dir_t cutdim,
    int cut_index,
    const std::vector<std::vector<bool> >& bad_cut_points)
 {
@@ -627,7 +627,7 @@ BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
    box_hi.lower(cutdim) = cut_index;
 
    int i;
-   for (int id = 0; id < dim.getValue(); ++id) {
+   for (tbox::Dimension::dir_t id = 0; id < dim.getValue(); ++id) {
 
       const std::vector<bool>& arr_ref_in = bad_cut_points[id];
 
@@ -716,7 +716,7 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
           */
 
          double work_in_single_slice = 1.0;
-         for (int id = 0; id < dim.getValue(); ++id) {
+         for (tbox::Dimension::dir_t id = 0; id < dim.getValue(); ++id) {
             if (id != cut_dim) {
                work_in_single_slice *= (double)in_box.numberCells(id);
             }

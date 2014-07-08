@@ -51,7 +51,7 @@ SideData<TYPE>::SideData(
 
    const tbox::Dimension& dim(box.getDim());
 
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       if (d_directions(d)) {
          const hier::Box side = SideGeometry::toSideBox(getGhostBox(), d);
          d_data[d].reset(new ArrayData<TYPE>(side, depth));
@@ -359,7 +359,7 @@ SideData<TYPE>::copyWithRotation(
                                    rotatebox.getBlockId(),
                                    getBox().getBlockId());
 
-   for (int i = 0; i < dim.getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
       if (d_directions(i)) {
          const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
@@ -440,7 +440,7 @@ SideData<TYPE>::canEstimateStreamSizeFromBox() const
 }
 
 template<class TYPE>
-int
+size_t
 SideData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
@@ -451,7 +451,7 @@ SideData<TYPE>::getDataStreamSize(
    const hier::IntVector& offset = t_overlap->getSourceOffset();
 
    int size = 0;
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       if (d_directions(d)) {
          size +=
             d_data[d]->getDataStreamSize(
@@ -530,7 +530,7 @@ SideData<TYPE>::packWithRotation(
 
    const int depth = getDepth();
 
-   for (int i = 0; i < dim.getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
       if (d_directions(i)) {
          const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
@@ -580,7 +580,7 @@ SideData<TYPE>::unpackStream(
    TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       if (d_directions(d)) {
          const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
          if (!boxes.isEmpty()) {
@@ -613,7 +613,7 @@ SideData<TYPE>::getSizeOfData(
 
    size_t size = 0;
    const hier::Box ghost_box = hier::Box::grow(box, ghosts);
-   for (int d = 0; d < box.getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < box.getDim().getValue(); ++d) {
       if (directions(d)) {
          const hier::Box side_box = SideGeometry::toSideBox(ghost_box, d);
          size += ArrayData<TYPE>::getSizeOfData(side_box, depth);

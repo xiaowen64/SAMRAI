@@ -727,7 +727,7 @@ HierarchyFaceDataOpsComplex::setRandomValues(
  *************************************************************************
  */
 
-int
+size_t
 HierarchyFaceDataOpsComplex::numberOfEntries(
    const int data_id,
    const bool interior_only) const
@@ -739,7 +739,7 @@ HierarchyFaceDataOpsComplex::numberOfEntries(
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
    int dimVal = d_hierarchy->getDim().getValue();
 
-   int entries = 0;
+   size_t entries = 0;
 
    if (interior_only) {
 
@@ -754,7 +754,7 @@ HierarchyFaceDataOpsComplex::numberOfEntries(
             d_hierarchy->getPatchLevel(ln));
          const int npatches = level->getNumberOfPatches();
 #ifdef DEBUG_CHECK_ASSERTIONS
-         for (int nd = 0; nd < dimVal; ++nd) {
+         for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
             TBOX_ASSERT(npatches == static_cast<int>(d_nonoverlapping_face_boxes[nd][ln].size()));
          }
 #endif
@@ -789,9 +789,9 @@ HierarchyFaceDataOpsComplex::numberOfEntries(
          }
       }
 
-      int global_entries = entries;
+      unsigned long int global_entries = entries;
       if (mpi.getSize() > 1) {
-         mpi.Allreduce(&entries, &global_entries, 1, MPI_INT, MPI_SUM);
+         mpi.Allreduce(&entries, &global_entries, 1, MPI_UNSIGNED_LONG, MPI_SUM);
       }
       entries = global_entries;
 

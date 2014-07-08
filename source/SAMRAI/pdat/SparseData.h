@@ -252,7 +252,7 @@ public:
     *
     * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != 0
     */
-   int
+   size_t
    getDataStreamSize(
       const hier::BoxOverlap& overlap) const;
 

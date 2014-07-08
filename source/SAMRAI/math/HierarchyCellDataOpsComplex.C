@@ -702,7 +702,7 @@ HierarchyCellDataOpsComplex::setRandomValues(
  *************************************************************************
  */
 
-int
+size_t
 HierarchyCellDataOpsComplex::numberOfEntries(
    const int data_id,
    const bool interior_only) const
@@ -714,7 +714,7 @@ HierarchyCellDataOpsComplex::numberOfEntries(
 
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
-   int entries = 0;
+   size_t entries = 0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
       boost::shared_ptr<hier::PatchLevel> level(
@@ -737,9 +737,9 @@ HierarchyCellDataOpsComplex::numberOfEntries(
       }
    }
 
-   int global_entries = entries;
+   unsigned long int global_entries = entries;
    if (mpi.getSize() > 1) {
-      mpi.Allreduce(&entries, &global_entries, 1, MPI_INT, MPI_SUM);
+      mpi.Allreduce(&entries, &global_entries, 1, MPI_UNSIGNED_LONG, MPI_SUM);
    }
    return global_entries;
 }

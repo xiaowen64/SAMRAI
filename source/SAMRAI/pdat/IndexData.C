@@ -346,7 +346,7 @@ IndexData<TYPE, BOX_GEOMETRY>::canEstimateStreamSizeFromBox() const
 }
 
 template<class TYPE, class BOX_GEOMETRY>
-int
+size_t
 IndexData<TYPE, BOX_GEOMETRY>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {

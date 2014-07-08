@@ -87,7 +87,7 @@ public:
    static size_t
    getSizeOfData(
       const hier::Box& box,
-      int depth);
+      unsigned int depth);
 
    /*!
     * Construct an array data object.
@@ -101,7 +101,7 @@ public:
     */
    ArrayData(
       const hier::Box& box,
-      int depth);
+      unsigned int depth);
 
    /*!
     * The destructor for an array data object releases all memory allocated
@@ -137,14 +137,14 @@ public:
     * Return the depth (e.g., the number of data values at each spatial
     * location) of this array.
     */
-   int
+   unsigned int
    getDepth() const;
 
    /*!
     * Return the offset (e.g., the number of data values for each
     * depth component) of this array.
     */
-   int
+   size_t
    getOffset() const;
 
    /*!
@@ -155,7 +155,7 @@ public:
     */
    TYPE *
    getPointer(
-      const int d = 0);
+      const unsigned int d = 0);
 
    /*!
     * Get a const pointer to the beginning of the given depth
@@ -165,7 +165,7 @@ public:
     */
    const TYPE *
    getPointer(
-      const int d = 0) const;
+      const unsigned int d = 0) const;
 
    /*!
     * Return reference to value in this array associated with the given
@@ -177,7 +177,7 @@ public:
    TYPE&
    operator () (
       const hier::Index& i,
-      const int d);
+      const unsigned int d);
 
    /*!
     * Return const reference to value in this array associated with the given
@@ -189,7 +189,7 @@ public:
    const TYPE&
    operator () (
       const hier::Index& i,
-      const int d) const;
+      const unsigned int d) const;
 
    /*!
     * Copy data from the source array data object to this array data object
@@ -297,9 +297,9 @@ public:
     */
    void
    copyDepth(
-      int dst_depth,
+      unsigned int dst_depth,
       const ArrayData<TYPE>& src,
-      int src_depth,
+      unsigned int src_depth,
       const hier::Box& box);
 
    /*!
@@ -387,7 +387,7 @@ public:
     *
     * @pre (getDim() == src_shift.getDim())
     */
-   int
+   size_t
    getDataStreamSize(
       const hier::BoxContainer& boxes,
       const hier::IntVector& src_shift) const;
@@ -556,7 +556,7 @@ public:
    void
    fill(
       const TYPE& t,
-      const int d = 0);
+      const unsigned int d = 0);
 
    /*!
     * Fill all array values associated with depth component d
@@ -568,7 +568,7 @@ public:
    fill(
       const TYPE& t,
       const hier::Box& box,
-      const int d = 0);
+      const unsigned int d = 0);
 
    /*!
     * Check to make sure that the class version and restart file
@@ -664,10 +664,10 @@ private:
    size_t
    getIndex(
       const hier::Index& i,
-      int d) const;
+      unsigned int d) const;
 
-   int d_depth;
-   int d_offset;
+   unsigned int d_depth;
+   size_t d_offset;
    hier::Box d_box;
    std::vector<TYPE> d_array;
 };

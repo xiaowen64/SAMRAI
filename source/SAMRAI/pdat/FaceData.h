@@ -327,7 +327,7 @@ public:
     *
     * @pre dynamic_cast<const FaceOverlap *>(&overlap) != 0
     */
-   virtual int
+   virtual size_t
    getDataStreamSize(
       const hier::BoxOverlap& overlap) const;
 

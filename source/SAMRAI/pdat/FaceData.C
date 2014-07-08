@@ -48,7 +48,7 @@ FaceData<TYPE>::FaceData(
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       const hier::Box face = FaceGeometry::toFaceBox(getGhostBox(), d);
       d_data[d].reset(new ArrayData<TYPE>(face, depth));
    }
@@ -400,7 +400,7 @@ FaceData<TYPE>::canEstimateStreamSizeFromBox() const
 }
 
 template<class TYPE>
-int
+size_t
 FaceData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {

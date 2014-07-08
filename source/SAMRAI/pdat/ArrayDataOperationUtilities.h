@@ -72,9 +72,9 @@ public:
       const ArrayData<TYPE>& src,
       const hier::Box& opbox,
       const hier::IntVector& src_shift,
-      int dst_start_depth,
-      int src_start_depth,
-      int num_depth,
+      unsigned int dst_start_depth,
+      unsigned int src_start_depth,
+      unsigned int num_depth,
       const OP& op);
 
    /*!

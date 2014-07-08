@@ -585,7 +585,7 @@ private:
       hier::Box& box_hi,
       std::vector<std::vector<bool> >& bad_cut_points_for_boxhi,
       const hier::Box& in_box,
-      int cutdim,
+      tbox::Dimension::dir_t cutdim,
       int cut_index,
       const std::vector<std::vector<bool> >& bad_cut_points);
 

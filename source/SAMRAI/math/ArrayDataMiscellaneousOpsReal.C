@@ -47,7 +47,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::computeConstrProdPosWithControlVolume(
    TBOX_ASSERT_OBJDIM_EQUALITY4(data1, data2, cvol, box);
    TBOX_ASSERT(data1.getDepth() == data2.getDepth());
 
-   int dimVal = data1.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = data1.getDim().getValue();
 
    int test = 1;
 
@@ -66,7 +66,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::computeConstrProdPosWithControlVolume(
       int d2_w[SAMRAI::MAX_DIM_VAL];
       int cv_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d1_w[i] = d1_box.numberCells(i);
          d2_w[i] = d2_box.numberCells(i);
@@ -74,15 +74,15 @@ ArrayDataMiscellaneousOpsReal<TYPE>::computeConstrProdPosWithControlVolume(
          dim_counter[i] = 0;
       }
 
-      const int d1_offset = data1.getOffset();
-      const int d2_offset = data2.getOffset();
-      const int cv_offset = ((cvdepth == 1) ? 0 : cvol.getOffset());
+      const size_t d1_offset = data1.getOffset();
+      const size_t d2_offset = data2.getOffset();
+      const size_t cv_offset = ((cvdepth == 1) ? 0 : cvol.getOffset());
 
-      const int num_d0_blocks = ibox.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      int d1_begin = d1_box.offset(ibox.lower());
-      int d2_begin = d2_box.offset(ibox.lower());
-      int cv_begin = cv_box.offset(ibox.lower());
+      size_t d1_begin = d1_box.offset(ibox.lower());
+      size_t d2_begin = d2_box.offset(ibox.lower());
+      size_t cv_begin = cv_box.offset(ibox.lower());
 
       const TYPE* dd1 = data1.getPointer();
       const TYPE* dd2 = data2.getPointer();
@@ -90,14 +90,14 @@ ArrayDataMiscellaneousOpsReal<TYPE>::computeConstrProdPosWithControlVolume(
 
       for (int d = 0; d < ddepth; ++d) {
 
-         int d1_counter = d1_begin;
-         int d2_counter = d2_begin;
-         int cv_counter = cv_begin;
+         int d1_counter = static_cast<int>(d1_begin);
+         int d2_counter = static_cast<int>(d2_begin);
+         int cv_counter = static_cast<int>(cv_begin);
 
          int d1_b[SAMRAI::MAX_DIM_VAL];
          int d2_b[SAMRAI::MAX_DIM_VAL];
          int cv_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; ++nd) {
+         for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
             d1_b[nd] = d1_counter;
             d2_b[nd] = d2_counter;
             cv_b[nd] = cv_counter;
@@ -118,7 +118,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::computeConstrProdPosWithControlVolume(
 
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; ++j) {
+            for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -170,7 +170,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
    TBOX_ASSERT_OBJDIM_EQUALITY3(data1, data2, box);
    TBOX_ASSERT(data1.getDepth() == data2.getDepth());
 
-   int dimVal = data1.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = data1.getDim().getValue();
 
    int test = 1;
 
@@ -185,32 +185,32 @@ ArrayDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
       int d1_w[SAMRAI::MAX_DIM_VAL];
       int d2_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d1_w[i] = d1_box.numberCells(i);
          d2_w[i] = d2_box.numberCells(i);
          dim_counter[i] = 0;
       }
 
-      const int d1_offset = data1.getOffset();
-      const int d2_offset = data2.getOffset();
+      const size_t d1_offset = data1.getOffset();
+      const size_t d2_offset = data2.getOffset();
 
-      const int num_d0_blocks = ibox.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      int d1_begin = d1_box.offset(ibox.lower());
-      int d2_begin = d2_box.offset(ibox.lower());
+      size_t d1_begin = d1_box.offset(ibox.lower());
+      size_t d2_begin = d2_box.offset(ibox.lower());
 
       const TYPE* dd1 = data1.getPointer();
       const TYPE* dd2 = data2.getPointer();
 
       for (int d = 0; d < ddepth; ++d) {
 
-         int d1_counter = d1_begin;
-         int d2_counter = d2_begin;
+         int d1_counter = static_cast<int>(d1_begin);
+         int d2_counter = static_cast<int>(d2_begin);
 
          int d1_b[SAMRAI::MAX_DIM_VAL];
          int d2_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; ++nd) {
+         for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
             d1_b[nd] = d1_counter;
             d2_b[nd] = d2_counter;
          }
@@ -226,7 +226,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; ++j) {
+            for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -275,7 +275,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::compareToScalarWithControlVolume(
    TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src, cvol, box);
    TBOX_ASSERT(dst.getDepth() == src.getDepth());
 
-   int dimVal = dst.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
 
    const hier::Box d_box = dst.getBox();
    const hier::Box s_box = src.getBox();
@@ -293,7 +293,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::compareToScalarWithControlVolume(
       int s_w[SAMRAI::MAX_DIM_VAL];
       int cv_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          s_w[i] = s_box.numberCells(i);
@@ -301,15 +301,15 @@ ArrayDataMiscellaneousOpsReal<TYPE>::compareToScalarWithControlVolume(
          dim_counter[i] = 0;
       }
 
-      const int d_offset = dst.getOffset();
-      const int s_offset = src.getOffset();
-      const int cv_offset = ((cvdepth == 1) ? 0 : cvol.getOffset());
+      const size_t d_offset = dst.getOffset();
+      const size_t s_offset = src.getOffset();
+      const size_t cv_offset = ((cvdepth == 1) ? 0 : cvol.getOffset());
 
-      const int num_d0_blocks = ibox.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      int d_begin = d_box.offset(ibox.lower());
-      int s_begin = s_box.offset(ibox.lower());
-      int cv_begin = cv_box.offset(ibox.lower());
+      size_t d_begin = d_box.offset(ibox.lower());
+      size_t s_begin = s_box.offset(ibox.lower());
+      size_t cv_begin = cv_box.offset(ibox.lower());
 
       TYPE* dd = dst.getPointer();
       const TYPE* sd = src.getPointer();
@@ -317,14 +317,14 @@ ArrayDataMiscellaneousOpsReal<TYPE>::compareToScalarWithControlVolume(
 
       for (int d = 0; d < ddepth; ++d) {
 
-         int d_counter = d_begin;
-         int s_counter = s_begin;
-         int cv_counter = cv_begin;
+         int d_counter = static_cast<int>(d_begin);
+         int s_counter = static_cast<int>(s_begin);
+         int cv_counter = static_cast<int>(cv_begin);
 
          int d_b[SAMRAI::MAX_DIM_VAL];
          int s_b[SAMRAI::MAX_DIM_VAL];
          int cv_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; ++nd) {
+         for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
             d_b[nd] = d_counter;
             s_b[nd] = s_counter;
             cv_b[nd] = cv_counter;
@@ -344,7 +344,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::compareToScalarWithControlVolume(
 
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; ++j) {
+            for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -394,7 +394,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::compareToScalar(
    TBOX_ASSERT_OBJDIM_EQUALITY3(dst, src, box);
    TBOX_ASSERT(dst.getDepth() == src.getDepth());
 
-   int dimVal = dst.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
 
    const hier::Box d_box = dst.getBox();
    const hier::Box s_box = src.getBox();
@@ -408,34 +408,34 @@ ArrayDataMiscellaneousOpsReal<TYPE>::compareToScalar(
       int d_w[SAMRAI::MAX_DIM_VAL];
       int s_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          s_w[i] = s_box.numberCells(i);
          dim_counter[i] = 0;
       }
 
-      const int d_offset = dst.getOffset();
-      const int s_offset = src.getOffset();
+      const size_t d_offset = dst.getOffset();
+      const size_t s_offset = src.getOffset();
 
-      const int num_d0_blocks = ibox.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      int d_begin = d_box.offset(ibox.lower());
-      int s_begin = s_box.offset(ibox.lower());
+      size_t d_begin = d_box.offset(ibox.lower());
+      size_t s_begin = s_box.offset(ibox.lower());
 
       TYPE* dd = dst.getPointer();
       const TYPE* sd = src.getPointer();
 
       for (int d = 0; d < ddepth; ++d) {
 
-         int d_counter = d_begin;
-         int s_counter = s_begin;
+         size_t d_counter = d_begin;
+         size_t s_counter = s_begin;
 
          int d_b[SAMRAI::MAX_DIM_VAL];
          int s_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; ++nd) {
-            d_b[nd] = d_counter;
-            s_b[nd] = s_counter;
+         for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
+            d_b[nd] = static_cast<int>(d_counter);
+            s_b[nd] = static_cast<int>(s_counter);
          }
 
          for (int nb = 0; nb < num_d0_blocks; ++nb) {
@@ -449,7 +449,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; ++j) {
+            for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -470,8 +470,8 @@ ArrayDataMiscellaneousOpsReal<TYPE>::compareToScalar(
                s_counter = s_b[dim_jump - 1] + s_step;
 
                for (int m = 0; m < dim_jump; ++m) {
-                  d_b[m] = d_counter;
-                  s_b[m] = s_counter;
+                  d_b[m] = static_cast<int>(d_counter);
+                  s_b[m] = static_cast<int>(s_counter);
                }
             }
          }
@@ -499,7 +499,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::testReciprocalWithControlVolume(
 #pragma warning (disable:1572)
 #endif
 
-   int dimVal = dst.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
 
    int test = 1;
 
@@ -519,7 +519,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::testReciprocalWithControlVolume(
       int s_w[SAMRAI::MAX_DIM_VAL];
       int cv_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          s_w[i] = s_box.numberCells(i);
@@ -527,15 +527,15 @@ ArrayDataMiscellaneousOpsReal<TYPE>::testReciprocalWithControlVolume(
          dim_counter[i] = 0;
       }
 
-      const int d_offset = dst.getOffset();
-      const int s_offset = src.getOffset();
-      const int cv_offset = ((cvdepth == 1) ? 0 : cvol.getOffset());
+      const size_t d_offset = dst.getOffset();
+      const size_t s_offset = src.getOffset();
+      const size_t cv_offset = ((cvdepth == 1) ? 0 : cvol.getOffset());
 
-      const int num_d0_blocks = ibox.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      int d_begin = d_box.offset(ibox.lower());
-      int s_begin = s_box.offset(ibox.lower());
-      int cv_begin = cv_box.offset(ibox.lower());
+      size_t d_begin = d_box.offset(ibox.lower());
+      size_t s_begin = s_box.offset(ibox.lower());
+      size_t cv_begin = cv_box.offset(ibox.lower());
 
       TYPE* dd = dst.getPointer();
       const TYPE* sd = src.getPointer();
@@ -543,17 +543,17 @@ ArrayDataMiscellaneousOpsReal<TYPE>::testReciprocalWithControlVolume(
 
       for (int d = 0; d < ddepth; ++d) {
 
-         int d_counter = d_begin;
-         int s_counter = s_begin;
-         int cv_counter = cv_begin;
+         size_t d_counter = d_begin;
+         size_t s_counter = s_begin;
+         size_t cv_counter = cv_begin;
 
          int d_b[SAMRAI::MAX_DIM_VAL];
          int s_b[SAMRAI::MAX_DIM_VAL];
          int cv_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; ++nd) {
-            d_b[nd] = d_counter;
-            s_b[nd] = s_counter;
-            cv_b[nd] = cv_counter;
+         for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
+            d_b[nd] = static_cast<int>(d_counter);
+            s_b[nd] = static_cast<int>(s_counter);
+            cv_b[nd] = static_cast<int>(cv_counter);
          }
 
          for (int nb = 0; nb < num_d0_blocks; ++nb) {
@@ -571,7 +571,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::testReciprocalWithControlVolume(
 
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; ++j) {
+            for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -594,9 +594,9 @@ ArrayDataMiscellaneousOpsReal<TYPE>::testReciprocalWithControlVolume(
                cv_counter = cv_b[dim_jump - 1] + cv_step;
 
                for (int m = 0; m < dim_jump; ++m) {
-                  d_b[m] = d_counter;
-                  s_b[m] = s_counter;
-                  cv_b[m] = cv_counter;
+                  d_b[m] = static_cast<int>(d_counter);
+                  s_b[m] = static_cast<int>(s_counter);
+                  cv_b[m] = static_cast<int>(cv_counter);
                }
             }
          }
@@ -626,7 +626,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::testReciprocal(
    TBOX_ASSERT_OBJDIM_EQUALITY3(dst, src, box);
    TBOX_ASSERT(dst.getDepth() == src.getDepth());
 
-   int dimVal = dst.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = dst.getDim().getValue();
 
    int test = 1;
 
@@ -641,32 +641,32 @@ ArrayDataMiscellaneousOpsReal<TYPE>::testReciprocal(
       int d_w[SAMRAI::MAX_DIM_VAL];
       int s_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          s_w[i] = s_box.numberCells(i);
          dim_counter[i] = 0;
       }
 
-      const int d_offset = dst.getOffset();
-      const int s_offset = src.getOffset();
+      const size_t d_offset = dst.getOffset();
+      const size_t s_offset = src.getOffset();
 
-      const int num_d0_blocks = ibox.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      int d_begin = d_box.offset(ibox.lower());
-      int s_begin = s_box.offset(ibox.lower());
+      size_t d_begin = d_box.offset(ibox.lower());
+      size_t s_begin = s_box.offset(ibox.lower());
 
       TYPE* dd = dst.getPointer();
       const TYPE* sd = src.getPointer();
 
       for (int d = 0; d < ddepth; ++d) {
 
-         int d_counter = d_begin;
-         int s_counter = s_begin;
+         int d_counter = static_cast<int>(d_begin);
+         int s_counter = static_cast<int>(s_begin);
 
          int d_b[SAMRAI::MAX_DIM_VAL];
          int s_b[SAMRAI::MAX_DIM_VAL];
-         for (int nd = 0; nd < dimVal; ++nd) {
+         for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
             d_b[nd] = d_counter;
             s_b[nd] = s_counter;
          }
@@ -684,7 +684,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; ++j) {
+            for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -729,7 +729,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
    TBOX_ASSERT_OBJDIM_EQUALITY3(numer, denom, box);
    TBOX_ASSERT(denom.getDepth() == numer.getDepth());
 
-   int dimVal = numer.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = numer.getDim().getValue();
 
    TYPE max = 0.0, quot;
 
@@ -744,34 +744,34 @@ ArrayDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
       int n_w[SAMRAI::MAX_DIM_VAL];
       int d_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          n_w[i] = n_box.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
       }
 
-      const int n_offset = numer.getOffset();
-      const int d_offset = denom.getOffset();
+      const size_t n_offset = numer.getOffset();
+      const size_t d_offset = denom.getOffset();
 
-      const int num_d0_blocks = ibox.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      int n_begin = n_box.offset(ibox.lower());
-      int d_begin = d_box.offset(ibox.lower());
+      size_t n_begin = n_box.offset(ibox.lower());
+      size_t d_begin = d_box.offset(ibox.lower());
 
       const TYPE* nd = numer.getPointer();
       const TYPE* dd = denom.getPointer();
 
       for (int d = 0; d < ddepth; ++d) {
 
-         int n_counter = n_begin;
-         int d_counter = d_begin;
+         size_t n_counter = n_begin;
+         size_t d_counter = d_begin;
 
          int n_b[SAMRAI::MAX_DIM_VAL];
          int d_b[SAMRAI::MAX_DIM_VAL];
-         for (int nm = 0; nm < dimVal; ++nm) {
-            n_b[nm] = n_counter;
-            d_b[nm] = d_counter;
+         for (tbox::Dimension::dir_t nm = 0; nm < dimVal; ++nm) {
+            n_b[nm] = static_cast<int>(n_counter);
+            d_b[nm] = static_cast<int>(d_counter);
          }
 
          for (int nb = 0; nb < num_d0_blocks; ++nb) {
@@ -787,7 +787,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; ++j) {
+            for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -808,8 +808,8 @@ ArrayDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
                d_counter = d_b[dim_jump - 1] + d_step;
 
                for (int m = 0; m < dim_jump; ++m) {
-                  n_b[m] = n_counter;
-                  d_b[m] = d_counter;
+                  n_b[m] = static_cast<int>(n_counter);
+                  d_b[m] = static_cast<int>(d_counter);
                }
             }
          }
@@ -833,7 +833,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
    TBOX_ASSERT_OBJDIM_EQUALITY3(numer, denom, box);
    TBOX_ASSERT(denom.getDepth() == numer.getDepth());
 
-   int dimVal = numer.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = numer.getDim().getValue();
 
    TYPE min = tbox::MathUtilities<TYPE>::getMax();
    TYPE quot = tbox::MathUtilities<TYPE>::getMax();
@@ -849,34 +849,34 @@ ArrayDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
       int n_w[SAMRAI::MAX_DIM_VAL];
       int d_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          n_w[i] = n_box.numberCells(i);
          d_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
       }
 
-      const int n_offset = numer.getOffset();
-      const int d_offset = denom.getOffset();
+      const size_t n_offset = numer.getOffset();
+      const size_t d_offset = denom.getOffset();
 
-      const int num_d0_blocks = ibox.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      int n_begin = n_box.offset(ibox.lower());
-      int d_begin = d_box.offset(ibox.lower());
+      size_t n_begin = n_box.offset(ibox.lower());
+      size_t d_begin = d_box.offset(ibox.lower());
 
       const TYPE* nd = numer.getPointer();
       const TYPE* dd = denom.getPointer();
 
       for (int d = 0; d < ddepth; ++d) {
 
-         int n_counter = n_begin;
-         int d_counter = d_begin;
+         size_t n_counter = n_begin;
+         size_t d_counter = d_begin;
 
          int n_b[SAMRAI::MAX_DIM_VAL];
          int d_b[SAMRAI::MAX_DIM_VAL];
-         for (int nm = 0; nm < dimVal; ++nm) {
-            n_b[nm] = n_counter;
-            d_b[nm] = d_counter;
+         for (tbox::Dimension::dir_t nm = 0; nm < dimVal; ++nm) {
+            n_b[nm] = static_cast<int>(n_counter);
+            d_b[nm] = static_cast<int>(d_counter);
          }
 
          for (int nb = 0; nb < num_d0_blocks; ++nb) {
@@ -889,7 +889,7 @@ ArrayDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
             }
             int dim_jump = 0;
 
-            for (int j = 1; j < dimVal; ++j) {
+            for (tbox::Dimension::dir_t j = 1; j < dimVal; ++j) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;
@@ -910,8 +910,8 @@ ArrayDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
                d_counter = d_b[dim_jump - 1] + d_step;
 
                for (int m = 0; m < dim_jump; ++m) {
-                  n_b[m] = n_counter;
-                  d_b[m] = d_counter;
+                  n_b[m] = static_cast<int>(n_counter);
+                  d_b[m] = static_cast<int>(d_counter);
                }
             }
          }

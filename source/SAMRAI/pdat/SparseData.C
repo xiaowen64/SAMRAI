@@ -383,7 +383,7 @@ SparseData<BOX_GEOMETRY>::canEstimateStreamSizeFromBox() const
  * getDataStreamSize(overlap)
  *********************************************************************/
 template<typename BOX_GEOMETRY>
-int
+size_t
 SparseData<BOX_GEOMETRY>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
