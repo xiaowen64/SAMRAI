@@ -17,6 +17,7 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/BoxId.h"
 #include "SAMRAI/hier/Transformation.h"
+#include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/MessageStream.h"
@@ -55,6 +56,8 @@ class BoxIterator;
 class Box
 {
 public:
+   typedef tbox::Dimension::dir_t dir_t;
+
    /**
     * A box iterator iterates over the elements of a box.  This class is
     * defined elsewhere, and the typedef is used to point to that class.
@@ -525,7 +528,7 @@ public:
     */
    int&
    lower(
-      const int i)
+      const dir_t i)
    {
       return d_lo(i);
    }
@@ -535,7 +538,7 @@ public:
     */
    int&
    upper(
-      const int i)
+      const dir_t i)
    {
       return d_hi(i);
    }
@@ -545,7 +548,7 @@ public:
     */
    const int&
    lower(
-      const int i) const
+      const dir_t i) const
    {
       return d_lo(i);
    }
@@ -555,7 +558,7 @@ public:
     */
    const int&
    upper(
-      const int i) const
+      const dir_t i) const
    {
       return d_hi(i);
    }
@@ -594,7 +597,7 @@ public:
    bool
    isEmpty() const
    {
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (dir_t i = 0; i < getDim().getValue(); ++i) {
          if (d_hi(i) < d_lo(i)) {
             return true;
          }
@@ -608,7 +611,7 @@ public:
     */
    int
    numberCells(
-      const int i) const
+      const dir_t i) const
    {
       if (empty()) {
          return 0;
@@ -637,13 +640,13 @@ public:
     * If the box is empty, then the number of index points within the box is
     * zero.
     */
-   int
+   size_t
    size() const
    {
-      int mysize = 0;
+      size_t mysize = 0;
       if (!empty()) {
-         mysize = 1;
-         for (int i = 0; i < getDim().getValue(); ++i) {
+         mysize = (d_hi(0) - d_lo(0) + 1);
+         for (dir_t i = 1; i < getDim().getValue(); ++i) {
             mysize *= (d_hi(i) - d_lo(i) + 1);
          }
       }
@@ -653,7 +656,7 @@ public:
    /*!
     * @brief Return the direction of the box that is longest.
     */
-   int
+   dir_t
    longestDirection() const;
 
    /*!
@@ -663,11 +666,11 @@ public:
     * the indices within the box.  This operation is a convenience
     * function for array indexing operations.
     */
-   int
+   size_t
    offset(
       const Index& p) const
    {
-      int myoffset = 0;
+      size_t myoffset = 0;
       for (int i = getDim().getValue() - 1; i > 0; --i) {
          myoffset = (d_hi(i - 1) - d_lo(i - 1) + 1) * (p(i) - d_lo(i) + myoffset);
       }
@@ -688,7 +691,7 @@ public:
     */
    Index
    index(
-      const int offset) const;
+      const size_t offset) const;
 
    /*!
     * @brief Return an iterator pointing to the first index of this.
@@ -711,7 +714,7 @@ public:
    contains(
       const Index& p) const
    {
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (dir_t i = 0; i < getDim().getValue(); ++i) {
          if ((p(i) < d_lo(i)) || (p(i) > d_hi(i))) {
             return false;
          }
@@ -906,14 +909,14 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    grow(
-      const int direction,
+      const dir_t direction,
       const int ghosts)
    {
-      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      TBOX_ASSERT((direction < getDim().getValue()));
       if (!empty()) {
          d_lo(direction) -= ghosts;
          d_hi(direction) += ghosts;
@@ -945,14 +948,14 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    growLower(
-      const int direction,
+      const dir_t direction,
       const int ghosts)
    {
-      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      TBOX_ASSERT((direction < getDim().getValue()));
       if (!empty()) {
          d_lo(direction) -= ghosts;
       }
@@ -983,14 +986,14 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    growUpper(
-      const int direction,
+      const dir_t direction,
       const int ghosts)
    {
-      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      TBOX_ASSERT((direction < getDim().getValue()));
       if (!empty()) {
          d_hi(direction) += ghosts;
       }
@@ -1006,11 +1009,11 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    lengthen(
-      const int direction,
+      const dir_t direction,
       const int ghosts);
 
    /*!
@@ -1023,11 +1026,11 @@ public:
     * @param direction
     * @param ghosts
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    shorten(
-      const int direction,
+      const dir_t direction,
       const int ghosts);
 
    /*!
@@ -1057,14 +1060,14 @@ public:
     * @param direction
     * @param offset
     *
-    * @pre (direction >= 0) && (direction < getDim().getValue())
+    * @pre (direction < getDim().getValue())
     */
    void
    shift(
-      const int direction,
+      const dir_t direction,
       const int offset)
    {
-      TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+      TBOX_ASSERT((direction < getDim().getValue()));
       d_lo(direction) += offset;
       d_hi(direction) += offset;
    }
@@ -1113,7 +1116,7 @@ public:
       const IntVector& ratio)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (dir_t i = 0; i < getDim().getValue(); ++i) {
          d_lo(i) = coarsen(d_lo(i), ratio(i));
          d_hi(i) = coarsen(d_hi(i), ratio(i));
       }
@@ -1364,7 +1367,7 @@ private:
 
    void
    rotateAboutAxis(
-      const int axis,
+      const dir_t axis,
       const int num_rotations);
 
    /*!
@@ -1433,6 +1436,7 @@ class BoxIterator
    friend class Box;
 
 public:
+   typedef tbox::Dimension::dir_t dir_t;
    /**
     * Copy constructor for the box iterator.
     */
@@ -1485,7 +1489,7 @@ public:
    {
       BoxIterator tmp = *this;
       ++d_index(0);
-      for (int i = 0; i < (d_index.getDim().getValue() - 1); ++i) {
+      for (dir_t i = 0; i < (d_index.getDim().getValue() - 1); ++i) {
          if (d_index(i) > d_box.upper(i)) {
             d_index(i) = d_box.lower(i);
             ++d_index(i + 1);
@@ -1502,7 +1506,7 @@ public:
    operator ++ ()
    {
       ++d_index(0);
-      for (int i = 0; i < (d_index.getDim().getValue() - 1); ++i) {
+      for (dir_t i = 0; i < (d_index.getDim().getValue() - 1); ++i) {
          if (d_index(i) > d_box.upper(i)) {
             d_index(i) = d_box.lower(i);
             ++d_index(i + 1);

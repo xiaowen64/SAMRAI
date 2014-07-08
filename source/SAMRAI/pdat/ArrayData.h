@@ -661,7 +661,7 @@ private:
     *
     * @post (index >= 0) && (index < getDepth() * getOffset())
     */
-   int
+   size_t
    getIndex(
       const hier::Index& i,
       int d) const;

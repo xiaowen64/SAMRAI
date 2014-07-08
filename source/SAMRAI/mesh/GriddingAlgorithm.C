@@ -460,6 +460,9 @@ GriddingAlgorithm::makeCoarsestLevel(
          t_find_new_to_new->barrierAndStart();
       }
 
+      if (d_print_steps) {
+         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: finding new<==>new.\n";
+      }
       d_oca0.findOverlaps(new_to_new,
          *new_box_level,
          *new_box_level,

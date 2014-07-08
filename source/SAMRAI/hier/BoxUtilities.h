@@ -488,7 +488,7 @@ struct BoxUtilities {
     */
    static bool
    findBestCutPointsForDirectionGivenMax(
-      const int idir,
+      const tbox::Dimension::dir_t idir,
       std::list<int>& cut_points,
       const Box& box,
       const int max_size,
@@ -586,7 +586,7 @@ struct BoxUtilities {
     */
    static bool
    findBestCutPointsForDirectionGivenNumber(
-      const int idir,
+      const tbox::Dimension::dir_t idir,
       std::list<int>& cut_points,
       const Box& box,
       const int num_boxes,
@@ -662,7 +662,7 @@ struct BoxUtilities {
     */
    static bool
    checkBoxForBadCutPointsInDirection(
-      const int dir,
+      const tbox::Dimension::dir_t dir,
       const Box& box,
       const BoxContainer& physical_boxes,
       const IntVector& bad_interval);
@@ -734,7 +734,7 @@ struct BoxUtilities {
     */
    static void
    findBadCutPointsForDirection(
-      const int dir,
+      const tbox::Dimension::dir_t dir,
       std::vector<bool>& bad_cuts,
       const Box& box,
       const BoxContainer& physical_boxes,
@@ -830,7 +830,7 @@ struct BoxUtilities {
     */
    static void
    fixBadCutPointsForDirection(
-      const int dir,
+      const tbox::Dimension::dir_t dir,
       std::list<int>& cuts,
       const std::vector<bool>& bad_cuts,
       const Box& box,
@@ -852,7 +852,7 @@ struct BoxUtilities {
     */
    static void
    findBadCutPointsForBorderAndDirection(
-      const int id,
+      const tbox::Dimension::dir_t id,
       std::vector<bool>& bad_cuts,
       const Box& box,
       const Box& border,

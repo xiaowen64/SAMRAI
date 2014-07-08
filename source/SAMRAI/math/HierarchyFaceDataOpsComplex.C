@@ -79,7 +79,7 @@ HierarchyFaceDataOpsComplex::resetLevels(
    d_coarsest_level = coarsest_level;
    d_finest_level = finest_level;
 
-   for (int d = 0; d < dimVal; ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
       d_nonoverlapping_face_boxes[d].resize(d_finest_level + 1);
    }
 
@@ -88,7 +88,7 @@ HierarchyFaceDataOpsComplex::resetLevels(
          d_hierarchy->getPatchLevel(ln));
       hier::BoxContainer face_boxes;
 
-      for (int nd = 0; nd < dimVal; ++nd) {
+      for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
          face_boxes = level->getBoxes();
          for (hier::BoxContainer::iterator i = face_boxes.begin();
               i != face_boxes.end(); ++i) {

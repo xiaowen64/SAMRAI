@@ -45,7 +45,7 @@ BoundaryLookupTable::BoundaryLookupTable(
    d_dim(dim)
 {
    if (d_table[0].empty()) {
-      const int dim_val = d_dim.getValue();
+      const tbox::Dimension::dir_t dim_val = d_dim.getValue();
       int factrl[SAMRAI::MAX_DIM_VAL + 1];
       factrl[0] = 1;
       for (int i = 1; i <= dim_val; ++i) {
@@ -54,8 +54,8 @@ BoundaryLookupTable::BoundaryLookupTable(
 
       d_ncomb.resize(dim_val);
       d_max_li.resize(dim_val);
-      for (int codim = 1; codim <= dim_val; ++codim) {
-         int cdm1 = codim - 1;
+      for (tbox::Dimension::dir_t codim = 1; codim <= dim_val; ++codim) {
+         tbox::Dimension::dir_t cdm1 = static_cast<tbox::Dimension::dir_t>(codim - 1);
          d_ncomb[cdm1] = factrl[dim_val]
             / (factrl[codim] * factrl[dim_val - codim]);
 
@@ -68,10 +68,10 @@ BoundaryLookupTable::BoundaryLookupTable(
             recursive_work_lvl, recursive_work_ptr, codim, 1);
 
          d_table[cdm1].resize(d_ncomb[cdm1]);
-         for (int j = 0; j < d_ncomb[cdm1]; ++j) {
+         for (tbox::Dimension::dir_t j = 0; j < d_ncomb[cdm1]; ++j) {
             d_table[cdm1][j].resize(codim);
-            for (int k = 0; k < codim; ++k) {
-               d_table[cdm1][j][k] = work[j * codim + k] - 1;
+            for (tbox::Dimension::dir_t k = 0; k < codim; ++k) {
+               d_table[cdm1][j][k] = static_cast<tbox::Dimension::dir_t>(work[j * codim + k] - 1);
             }
          }
 
@@ -138,12 +138,12 @@ BoundaryLookupTable::buildBoundaryDirectionVectors()
 
    d_bdry_dirs.resize(d_dim.getValue());
 
-   for (int i = 0; i < d_dim.getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 0; i < d_dim.getValue(); ++i) {
       d_bdry_dirs[i].resize(d_max_li[i], IntVector::getZero(d_dim));
-      int codim = i + 1;
+      tbox::Dimension::dir_t codim = static_cast<tbox::Dimension::dir_t>(i + 1);
 
       for (int loc = 0; loc < d_max_li[i]; ++loc) {
-         const std::vector<int>& dirs = getDirections(loc, codim);
+         const std::vector<tbox::Dimension::dir_t>& dirs = getDirections(loc, codim);
 
          for (int d = 0; d < static_cast<int>(dirs.size()); ++d) {
 

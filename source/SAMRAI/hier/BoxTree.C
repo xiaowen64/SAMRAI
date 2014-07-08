@@ -164,7 +164,7 @@ BoxTree::BoxTree(
 
       const IntVector bbsize = d_bounding_box.numberCells();
       d_partition_dir = 0;
-      for (int d = 1; d < d_dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 1; d < d_dim.getValue(); ++d) {
          if (bbsize(d_partition_dir) < bbsize(d)) {
             d_partition_dir = d;
          }
@@ -297,7 +297,7 @@ BoxTree::privateGenerateTree(
 
       const IntVector bbsize = d_bounding_box.numberCells();
       d_partition_dir = 0;
-      for (int d = 1; d < d_dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 1; d < d_dim.getValue(); ++d) {
          if (bbsize(d_partition_dir) < bbsize(d)) {
             d_partition_dir = d;
          }

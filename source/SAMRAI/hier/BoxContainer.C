@@ -1523,10 +1523,10 @@ BoxContainer::erase(
  *************************************************************************
  */
 
-int
+size_t
 BoxContainer::getTotalSizeOfBoxes() const
 {
-   int size = 0;
+   size_t size = 0;
    if (!d_ordered) {
       for (const_iterator i = begin(); i != end(); ++i) {
          size += i->size();

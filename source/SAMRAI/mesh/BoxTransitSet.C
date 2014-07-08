@@ -264,7 +264,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    const hier::BoxLevel& balanced_box_level = unbalanced_to_balanced.getHead();
    const tbox::SAMRAI_MPI& mpi = unbalanced_box_level.getMPI();
 
-   int num_cells_imported = 0;
+   size_t num_cells_imported = 0;
 
    // Stuff the imported boxes into buffers by their original owners.
    d_object_timers->t_pack_edge->start();
@@ -328,9 +328,11 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    }
    d_object_timers->t_construct_semilocal_send_edges->stop();
 
-   int num_unaccounted_cells = static_cast<int>(
+   TBOX_ASSERT( unbalanced_box_level.getLocalNumberOfCells() + num_cells_imported
+                >= balanced_box_level.getLocalNumberOfCells() );
+   size_t num_unaccounted_cells =
          unbalanced_box_level.getLocalNumberOfCells() + num_cells_imported
-         - balanced_box_level.getLocalNumberOfCells());
+         - balanced_box_level.getLocalNumberOfCells();
 
    if (d_print_edge_steps) {
       tbox::plog << num_unaccounted_cells << " unaccounted cells." << std::endl;
@@ -369,7 +371,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
                               tbox::MessageStream::Read,
                               static_cast<void *>(&incoming_message[0]),
                               false);
-      const int old_count = num_unaccounted_cells;
+      const size_t old_count = num_unaccounted_cells;
       d_object_timers->t_unpack_edge->start();
       while (!msg.endOfData()) {
 
@@ -377,6 +379,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
          unbalanced_to_balanced.insertLocalNeighbor(
             balanced_box_in_transit.getBox(),
             balanced_box_in_transit.getOrigBox().getBoxId());
+         TBOX_ASSERT( num_unaccounted_cells >= balanced_box_in_transit.getBox().size() );
          num_unaccounted_cells -= balanced_box_in_transit.getBox().size();
 
       }
@@ -854,9 +857,9 @@ BoxTransitSet::adjustLoadByBreaking(
             breakbox.getOwnerRank(),
             hier::LocalId::getInvalidId());
          give_box_in_transit.setLoad(
-            static_cast<int>(computeLoad(
-                                give_box_in_transit.getOrigBox(),
-                                give_box_in_transit.getBox())));
+            computeLoad(
+               give_box_in_transit.getOrigBox(),
+               give_box_in_transit.getBox()));
          main_bin.insert(give_box_in_transit);
          actual_transfer += give_box_in_transit.getLoad();
       }
@@ -869,9 +872,9 @@ BoxTransitSet::adjustLoadByBreaking(
             breakbox.getOwnerRank(),
             hier::LocalId::getInvalidId());
          keep_box_in_transit.setLoad(
-            static_cast<int>(computeLoad(
-                                keep_box_in_transit.getOrigBox(),
-                                keep_box_in_transit.getBox())));
+            computeLoad(
+               keep_box_in_transit.getOrigBox(),
+               keep_box_in_transit.getBox()));
          hold_bin.insert(keep_box_in_transit);
       }
    }

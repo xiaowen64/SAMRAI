@@ -150,7 +150,7 @@ OutersideGeometry::doOverlap(
       hier::Box mask_shift(src_mask);
       transformation.transform(mask_shift);
 
-      for (int d = 0; d < dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
          const hier::Box dst_side(
             SideGeometry::toSideBox(dst_ghost, d));
@@ -362,7 +362,7 @@ OutersideGeometry::setUpOverlap(
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
-      for (int d = 0; d < dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
          hier::Box side_box(SideGeometry::toSideBox(*b, d));
          dst_boxes[d].pushBack(side_box);
       }

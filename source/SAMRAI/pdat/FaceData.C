@@ -649,7 +649,7 @@ FaceData<TYPE>::fillAll(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   for (int i = 0; i < getDim().getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 0; i < getDim().getValue(); ++i) {
       d_data[i]->fillAll(t, FaceGeometry::toFaceBox(box, i));
    }
 }
@@ -672,7 +672,7 @@ FaceData<TYPE>::print(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   for (int axis = 0; axis < getDim().getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < getDim().getValue(); ++axis) {
       os << "Array face normal = " << axis << std::endl;
       printAxis(axis, box, os, prec);
    }
@@ -698,13 +698,13 @@ FaceData<TYPE>::print(
 template<class TYPE>
 void
 FaceData<TYPE>::printAxis(
-   int face_normal,
+   tbox::Dimension::dir_t face_normal,
    const hier::Box& box,
    std::ostream& os,
    int prec) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
-   TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
+   TBOX_ASSERT((face_normal < getDim().getValue()));
 
    for (int d = 0; d < d_depth; ++d) {
       os << "Array depth = " << d << std::endl;
@@ -715,7 +715,7 @@ FaceData<TYPE>::printAxis(
 template<class TYPE>
 void
 FaceData<TYPE>::printAxis(
-   int face_normal,
+   tbox::Dimension::dir_t face_normal,
    const hier::Box& box,
    int depth,
    std::ostream& os,
@@ -723,7 +723,7 @@ FaceData<TYPE>::printAxis(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
-   TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
+   TBOX_ASSERT((face_normal < getDim().getValue()));
 
    os.precision(prec);
    FaceIterator iend(FaceGeometry::end(box, face_normal));

@@ -682,7 +682,7 @@ SideData<TYPE>::fillAll(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
 
-   for (int i = 0; i < getDim().getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 0; i < getDim().getValue(); ++i) {
       if (d_directions(i)) {
          d_data[i]->fillAll(t, SideGeometry::toSideBox(box, i));
       }
@@ -707,7 +707,7 @@ SideData<TYPE>::print(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
 
-   for (int axis = 0; axis < getDim().getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < getDim().getValue(); ++axis) {
       os << "Array side normal = " << axis << std::endl;
       printAxis(axis, box, os, prec);
    }
@@ -733,13 +733,13 @@ SideData<TYPE>::print(
 template<class TYPE>
 void
 SideData<TYPE>::printAxis(
-   int side_normal,
+   tbox::Dimension::dir_t side_normal,
    const hier::Box& box,
    std::ostream& os,
    int prec) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
-   TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
+   TBOX_ASSERT((side_normal < getDim().getValue()));
 
    for (int d = 0; d < d_depth; ++d) {
       os << "Array depth = " << d << std::endl;
@@ -750,7 +750,7 @@ SideData<TYPE>::printAxis(
 template<class TYPE>
 void
 SideData<TYPE>::printAxis(
-   int side_normal,
+   tbox::Dimension::dir_t side_normal,
    const hier::Box& box,
    int depth,
    std::ostream& os,
@@ -758,7 +758,7 @@ SideData<TYPE>::printAxis(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
-   TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
+   TBOX_ASSERT((side_normal < getDim().getValue()));
 
    os.precision(prec);
    if (d_directions(side_normal)) {

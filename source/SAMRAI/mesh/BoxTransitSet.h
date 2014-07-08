@@ -272,11 +272,11 @@ private:
          }
          return a.getOrigBox().getBoxId() < b.getOrigBox().getBoxId();
       }
-private:
-      bool lexicalIndexLessThan(const hier::IntVector& a,
-                                const hier::IntVector& b) const {
-         for (int i = 0; i < a.getDim().getValue(); ++i) {
-            if (a(i) != b(i)) return a(i) < b(i);
+   private:
+      bool lexicalIndexLessThan( const hier::IntVector &a,
+                                 const hier::IntVector &b ) const {
+         for ( hier::IntVector::dir_t i=0; i<a.getDim().getValue(); ++i ) {
+            if ( a(i) != b(i) ) return a(i) < b(i);
          }
          return false;
       }
@@ -508,8 +508,8 @@ private:
    }
 
    //! @brief Compute the load for a Box.
-   double computeLoad(const hier::Box& box) const {
-      return double(box.size());
+   double computeLoad( const hier::Box& box) const {
+      return static_cast<double>(box.size());
    }
 
    /*!
@@ -520,7 +520,7 @@ private:
       const hier::Box& box,
       const hier::Box& restriction) const
    {
-      return double((box * restriction).size());
+      return static_cast<double>((box * restriction).size());
    }
 
    /*!

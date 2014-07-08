@@ -510,7 +510,7 @@ public:
     */
    void
    printAxis(
-      int side_normal,
+      tbox::Dimension::dir_t side_normal,
       const hier::Box& box,
       std::ostream& os = tbox::plog,
       int prec = 12) const;
@@ -539,7 +539,7 @@ public:
     */
    void
    printAxis(
-      int side_normal,
+      tbox::Dimension::dir_t side_normal,
       const hier::Box& box,
       int depth,
       std::ostream& os = tbox::plog,

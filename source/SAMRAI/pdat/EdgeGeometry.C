@@ -178,7 +178,7 @@ EdgeGeometry::toEdgeBox(
 
    if (!box.empty()) {
       edge_box = box;
-      for (int i = 0; i < dim.getValue(); ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
          if (axis != i) {
             edge_box.upper(i) += 1;
          }
