@@ -563,7 +563,7 @@ private:
 
    static bool
    privateFindBestCutDimension(
-      int& cut_dim_out,
+      tbox::Dimension::dir_t& cut_dim_out,
       const hier::Box& in_box,
       const hier::IntVector& min_size,
       const hier::IntVector& cut_factor,

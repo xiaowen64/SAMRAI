@@ -434,7 +434,7 @@ CartesianBoundaryUtilities2::checkBdryData(
    tbox::plog << "btype, bloc, bcase = "
               << btype << ", = " << bloc << ", = " << bcase << std::endl;
 
-   int idir;
+   tbox::Dimension::dir_t idir;
    double valfact = 0.0, constval = 0.0, dxfact = 0.0;
    int offsign;
 
@@ -830,7 +830,7 @@ CartesianBoundaryUtilities2::read2dBdryNodes(
 
 void
 CartesianBoundaryUtilities2::get2dBdryDirectionCheckValues(
-   int& idir,
+   tbox::Dimension::dir_t& idir,
    int& offsign,
    int btype,
    int bloc,

@@ -459,7 +459,7 @@ CellPoissonHypreSolver::allocateHypreData()
       grid_geometry->getPeriodicShift(ratio);
 
    int periodic_flag[SAMRAI::MAX_DIM_VAL];
-   int d;
+   tbox::Dimension::dir_t d;
    bool is_periodic = false;
    for (d = 0; d < d_dim.getValue(); ++d) {
       periodic_flag[d] = periodic_shift[d] != 0;
@@ -739,8 +739,6 @@ CellPoissonHypreSolver::setMatrixCoefficients(
 
    t_set_matrix_coefficients->start();
 
-   int i = 0;
-
    boost::shared_ptr<pdat::CellData<double> > C_data;
    boost::shared_ptr<pdat::SideData<double> > D_data;
 
@@ -828,13 +826,13 @@ CellPoissonHypreSolver::setMatrixCoefficients(
        * to our central difference formula.
        */
       if (spec.dIsConstant()) {
-         for (i = 0; i < d_dim.getValue(); ++i) {
+         for (tbox::Dimension::dir_t i = 0; i < d_dim.getValue(); ++i) {
             double dhh = spec.getDConstant() / (h[i] * h[i]);
             pdat::ArrayData<double>& off_diag_array(off_diagonal.getArrayData(i));
             off_diag_array.fill(dhh);
          }
       } else {
-         for (i = 0; i < d_dim.getValue(); ++i) {
+         for (tbox::Dimension::dir_t i = 0; i < d_dim.getValue(); ++i) {
             hier::Box sbox(patch_box);
             sbox.growUpper(i, 1);
             array_math.scale(off_diagonal.getArrayData(i),
@@ -995,7 +993,7 @@ CellPoissonHypreSolver::setMatrixCoefficients(
       int stencil_indices[stencil_size];
       double mat_entries[stencil_size];
 
-      for (i = 0; i < stencil_size; ++i) stencil_indices[i] = i;
+      for (int i = 0; i < stencil_size; ++i) stencil_indices[i] = i;
 
       pdat::CellIterator ic(pdat::CellGeometry::begin(patch_box));
       pdat::CellIterator icend(pdat::CellGeometry::end(patch_box));

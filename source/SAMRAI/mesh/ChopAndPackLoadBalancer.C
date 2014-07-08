@@ -584,7 +584,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
         itr != out_boxes.end() && local_indices_idx < num_local_indices;
         ++itr, ++idx) {
       if (local_indices[local_indices_idx] == idx) {
-         local_load += itr->size();
+         local_load += static_cast<double>(itr->size());
          ++local_indices_idx;
       }
    }
@@ -642,7 +642,7 @@ ChopAndPackLoadBalancer::chopUniformSingleBox(
     */
 
    hier::IntVector ideal_box_size(d_dim);
-   for (int i = 0; i < d_dim.getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 0; i < d_dim.getValue(); ++i) {
       ideal_box_size(i) = (int)ceil((double)in_box.numberCells(
                i) / (double)processor_distribution(i));
 
@@ -737,7 +737,7 @@ ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
    double total_work = 0.0;
    for (hier::BoxContainer::iterator ib0 = tmp_in_boxes_list.begin();
         ib0 != tmp_in_boxes_list.end(); ++ib0) {
-      total_work += ib0->size();
+      total_work += static_cast<double>(ib0->size());
    }
 
    double work_factor = getMaxWorkloadFactor(level_number);
@@ -840,7 +840,7 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    for (hier::BoxContainer::iterator i = tmp_level_boxes.begin();
         i != tmp_level_boxes.end();
         ++i, ++idx) {
-      tmp_level_workloads[idx] = i->size();
+      tmp_level_workloads[idx] = static_cast<double>(i->size());
    }
 
    hier::ProcessorMapping tmp_level_mapping;
@@ -1044,7 +1044,7 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
    int offset = 0;
    for (hier::BoxContainer::const_iterator x = box_list_in.begin();
         x != box_list_in.end(); ++x) {
-      for (int i = 0; i < d_dim.getValue(); ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < d_dim.getValue(); ++i) {
          buf_in_ptr[offset++] = x->lower(i);
          buf_in_ptr[offset++] = x->upper(i);
       }
@@ -1086,7 +1086,7 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
    offset = 0;
    for (hier::BoxContainer::iterator b = box_list_out.begin();
         b != box_list_out.end(); ++b) {
-      for (int j = 0; j < d_dim.getValue(); ++j) {
+      for (tbox::Dimension::dir_t j = 0; j < d_dim.getValue(); ++j) {
          b->lower(j) = buf_out_ptr[offset++];
          b->upper(j) = buf_out_ptr[offset++];
       }

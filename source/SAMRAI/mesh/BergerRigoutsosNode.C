@@ -724,7 +724,7 @@ BergerRigoutsosNode::runChildren_check()
    }
 
    const double combine_reduction =
-      double(d_lft_child->d_box.size() + d_rht_child->d_box.size()) / d_box.size();
+      double(d_lft_child->d_box.size() + d_rht_child->d_box.size()) / static_cast<double>(d_box.size());
    if (d_lft_child->boxAccepted() &&
        d_rht_child->boxAccepted() &&
        d_box.numberCells() <= d_common->d_max_box_size &&
@@ -995,8 +995,9 @@ BergerRigoutsosNode::gatherGroupingCriteria_start()
       d_comm_group->beginGather(&d_recv_msg[0], 4);
    } else {
       d_send_msg.resize(4, BAD_INTEGER);
-      d_send_msg[0] = d_lft_child->d_overlap;
-      d_send_msg[1] = d_rht_child->d_overlap;
+      // TODO: Change message buffers to MessageStream to avoid limiting d_overlap to integer size.
+      d_send_msg[0] = static_cast<int>(d_lft_child->d_overlap);
+      d_send_msg[1] = static_cast<int>(d_rht_child->d_overlap);
       // Use negative burden measures for uniformity of criteria comparison.
       d_send_msg[2] = -d_common->d_num_nodes_owned;
       d_send_msg[3] = -d_common->d_num_nodes_active;
@@ -1182,7 +1183,7 @@ BergerRigoutsosNode::makeLocalTagHistogram()
    /*
     * Compute the histogram size and allocate space for it.
     */
-   for (int d = 0; d < d_common->getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < d_common->getDim().getValue(); ++d) {
       TBOX_ASSERT(d_box.numberCells(d) > 0);
       d_histogram[d].clear();
       d_histogram[d].insert(d_histogram[d].end(), d_box.numberCells(d), 0);
@@ -1239,8 +1240,6 @@ BergerRigoutsosNode::computeMinimalBoundingBoxForTags()
 {
    TBOX_ASSERT(!d_box.empty());
 
-   int d;
-
    hier::Index new_lower = d_box.lower();
    hier::Index new_upper = d_box.upper();
 
@@ -1252,7 +1251,7 @@ BergerRigoutsosNode::computeMinimalBoundingBoxForTags()
     * Bring the upper side of the box down past untagged index planes.
     * Do not make the box smaller than the min_box requirement.
     */
-   for (d = 0; d < d_common->getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < d_common->getDim().getValue(); ++d) {
       TBOX_ASSERT(d_histogram[d].size() != 0);
       int* histogram_beg = &d_histogram[d][0];
       int* histogram_end = histogram_beg + d_box.numberCells(d) - 1;
@@ -1285,7 +1284,7 @@ BergerRigoutsosNode::computeMinimalBoundingBoxForTags()
        * Is this step really required?  No, we can just keep the
        * shift in a hier::IntVector and adjust.
        */
-      for (d = 0; d < d_common->getDim().getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < d_common->getDim().getValue(); ++d) {
          VectorOfInts& h = d_histogram[d];
          const int shift = new_lower(d) - d_box.lower() (d);
          if (shift > 0) {
@@ -1352,9 +1351,9 @@ BergerRigoutsosNode::acceptOrSplitBox()
          for (size_t i = 0; i < d_histogram[0].size(); ++i) {
             num_tagged += d_histogram[0][i];
          }
-         int boxsize = d_box.size();
+         size_t boxsize = d_box.size();
          double efficiency = (boxsize == 0 ? 1.e0 :
-                              ((double)num_tagged) / boxsize);
+                              ((double)num_tagged) / static_cast<double>(boxsize));
 
          if (d_common->d_max_tags_owned < num_tagged) {
             d_common->d_max_tags_owned = num_tagged;
@@ -1407,12 +1406,11 @@ BergerRigoutsosNode::acceptOrSplitBox()
        * margin.  If there are multiple cuttable directions, we will
        * favor the direction with the greatest cut_margin.
        */
-      int dim;
-      for (dim = 0; dim < d_common->getDim().getValue(); ++dim) {
+      for (tbox::Dimension::dir_t dim = 0; dim < d_common->getDim().getValue(); ++dim) {
          sorted_margins(dim) = dim;
       }
-      for (int d0 = 0; d0 < d_common->getDim().getValue() - 1; ++d0) {
-         for (int d1 = d0 + 1; d1 < d_common->getDim().getValue(); ++d1) {
+      for (tbox::Dimension::dir_t d0 = 0; d0 < d_common->getDim().getValue() - 1; ++d0) {
+         for (tbox::Dimension::dir_t d1 = static_cast<tbox::Dimension::dir_t>(d0 + 1); d1 < d_common->getDim().getValue(); ++d1) {
             if (cut_margin(sorted_margins(d0)) <
                 cut_margin(sorted_margins(d1))) {
                int tmp_dim = sorted_margins(d0);
@@ -1422,7 +1420,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
          }
       }
 #ifdef DEBUG_CHECK_ASSERTIONS
-      for (dim = 0; dim < d_common->getDim().getValue() - 1; ++dim) {
+      for (tbox::Dimension::dir_t dim = 0; dim < d_common->getDim().getValue() - 1; ++dim) {
          TBOX_ASSERT(cut_margin(sorted_margins(dim)) >=
             cut_margin(sorted_margins(dim + 1)));
       }
@@ -1458,15 +1456,15 @@ BergerRigoutsosNode::acceptOrSplitBox()
 
       int cut_lo, cut_hi;
       int cut_pt = -(tbox::MathUtilities<int>::getMax());
-      int cut_dir = -1;
-      int dir = -1;
+      tbox::Dimension::dir_t cut_dir = 0;
+      tbox::Dimension::dir_t dir = 0;
       const hier::Index box_lo(d_box.lower());
       const hier::Index box_hi(d_box.upper());
       hier::Index lft_hi(box_hi);
       hier::Index rht_lo(box_lo);
 
       for (dir = 0; dir < d_common->getDim().getValue(); ++dir) {
-         cut_dir = sorted_margins(dir);
+         cut_dir = static_cast<tbox::Dimension::dir_t>(sorted_margins(dir));
          if (cut_margin(cut_dir) < 0) {
             continue;  // This direction is too small to cut.
          }
@@ -1527,7 +1525,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
          }
 
          int inflection = -1;
-         for (int d = 0; d < d_common->getDim().getValue(); ++d) {
+         for (tbox::Dimension::dir_t d = 0; d < d_common->getDim().getValue(); ++d) {
             if (cut_margin(d) < 0 || boxdims(d) <= max_box_length_to_leave) {
                continue;  // Direction d is too small to cut.
             }
@@ -1540,7 +1538,7 @@ BergerRigoutsosNode::acceptOrSplitBox()
                inflection = try_inflection;
             }
          }
-         TBOX_ASSERT(cut_dir >= 0 && cut_dir < d_common->getDim().getValue());
+         TBOX_ASSERT(cut_dir < d_common->getDim().getValue());
 
          // Split bound box at cut_pt; cut_dir is splitting direction.
          lft_hi(cut_dir) = cut_pt - 1;
@@ -1624,7 +1622,7 @@ bool
 BergerRigoutsosNode::findZeroCutSwath(
    int& cut_lo,
    int& cut_hi,
-   const int dim)
+   const tbox::Dimension::dir_t dim)
 {
    const int lo = d_box.lower(dim);
    const int hi = d_box.upper(dim);
@@ -1706,7 +1704,7 @@ void
 BergerRigoutsosNode::cutAtInflection(
    int& cut_pt,
    int& inflection,
-   const int dim)
+   const tbox::Dimension::dir_t dim)
 {
    /*
     * New implementation prefers and possibly restricts the inflection
@@ -1861,8 +1859,8 @@ BergerRigoutsosNode::countOverlapWithLocalPatches()
    lft_grown_box.grow(d_common->d_tag_to_new_width);
    hier::Box rht_grown_box = d_rht_child->d_box;
    rht_grown_box.grow(d_common->d_tag_to_new_width);
-   int& lft_overlap = d_lft_child->d_overlap;
-   int& rht_overlap = d_rht_child->d_overlap;
+   size_t& lft_overlap = d_lft_child->d_overlap;
+   size_t& rht_overlap = d_rht_child->d_overlap;
    lft_overlap = rht_overlap = 0;
 
    const hier::PatchLevel& tag_level = *d_common->d_tag_level;
@@ -1948,8 +1946,9 @@ BergerRigoutsosNode::formChildGroups()
    int* rht_overlap = &d_recv_msg[1];
 
    const int imyself = findOwnerInGroup(d_common->d_mpi.getRank(), d_group);
-   lft_overlap[imyself * 4] = d_lft_child->d_overlap;
-   rht_overlap[imyself * 4] = d_rht_child->d_overlap;
+   // TODO: Use MessageStream instead of int* for buffer to pass values greater than int.
+   lft_overlap[imyself * 4] = static_cast<int>(d_lft_child->d_overlap);
+   rht_overlap[imyself * 4] = static_cast<int>(d_rht_child->d_overlap);
 
    int* lft_criteria = 0;
    int* rht_criteria = 0;
@@ -1963,8 +1962,8 @@ BergerRigoutsosNode::formChildGroups()
       case BergerRigoutsos::MOST_OVERLAP:
          lft_criteria = &d_recv_msg[0];
          rht_criteria = &d_recv_msg[1];
-         lft_criteria[imyself * 4] = d_lft_child->d_overlap;
-         rht_criteria[imyself * 4] = d_rht_child->d_overlap;
+         lft_criteria[imyself * 4] = static_cast<int>(d_lft_child->d_overlap);
+         rht_criteria[imyself * 4] = static_cast<int>(d_rht_child->d_overlap);
          break;
       case BergerRigoutsos::FEWEST_OWNED:
          lft_criteria = &d_recv_msg[2];
@@ -2213,7 +2212,7 @@ BergerRigoutsosNode::putHistogramToBuffer(
    int* buffer)
 {
    int dim_val = d_common->getDim().getValue();
-   for (int d = 0; d < dim_val; ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dim_val; ++d) {
       d_histogram[d].resize(d_box.numberCells(d), BAD_INTEGER);
       memcpy(buffer,
          &d_histogram[d][0],
@@ -2227,8 +2226,8 @@ int *
 BergerRigoutsosNode::getHistogramFromBuffer(
    int* buffer)
 {
-   unsigned int dim_val = d_common->getDim().getValue();
-   for (unsigned int d = 0; d < dim_val; ++d) {
+   tbox::Dimension::dir_t dim_val = d_common->getDim().getValue();
+   for (tbox::Dimension::dir_t d = 0; d < dim_val; ++d) {
       TBOX_ASSERT((int)d_histogram[d].size() == d_box.numberCells(d));
       // d_histogram[d].resizeArray( d_box.numberCells(d) );
       memcpy(&d_histogram[d][0],

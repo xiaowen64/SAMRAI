@@ -365,7 +365,7 @@ OutersideData<TYPE>::getDataStreamSize(
 
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
 
-   int size = 0;
+   size_t size = 0;
    for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       const hier::BoxContainer& boxlist = t_overlap->getDestinationBoxContainer(d);
       size += d_data[d][0]->getDataStreamSize(boxlist, src_offset);

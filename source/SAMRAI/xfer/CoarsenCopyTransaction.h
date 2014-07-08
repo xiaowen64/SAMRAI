@@ -166,8 +166,8 @@ private:
    boost::shared_ptr<hier::BoxOverlap> d_overlap;
    const CoarsenClasses::Data** d_coarsen_data;
    int d_item_id;
-   int d_incoming_bytes;
-   int d_outgoing_bytes;
+   size_t d_incoming_bytes;
+   size_t d_outgoing_bytes;
 
 };
 

@@ -176,7 +176,7 @@ CartesianSideFloatConservativeLinearRefine::refine(
    TBOX_ASSERT(cgeom);
    TBOX_ASSERT(fgeom);
 
-   for (int axis = 0; axis < dim.getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < dim.getValue(); ++axis) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
 
       for (hier::BoxContainer::const_iterator b = boxes.begin();

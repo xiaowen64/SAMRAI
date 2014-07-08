@@ -116,7 +116,7 @@ int main(
 
       double* cell_ptr = cell_data.getPointer();
 
-      int cell_data_size = box.size();
+      size_t cell_data_size = box.size();
 
       for (int i = 0; i < cell_data_size; ++i) {
          cell_ptr[i] = (double)i;
@@ -140,7 +140,7 @@ int main(
 
       double* face_ptr[SAMRAI::MAX_DIM_VAL];
 
-      for (int axis = 0; axis < dim.getValue(); ++axis) {
+      for (tbox::Dimension::dir_t axis = 0; axis < dim.getValue(); ++axis) {
 
          face_ptr[axis] = face_data.getPointer(axis);
 

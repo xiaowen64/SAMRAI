@@ -47,11 +47,11 @@ OuternodeData<TYPE>::OuternodeData(
 
    const tbox::Dimension& dim(box.getDim());
 
-   for (int d = 0; d < dim.getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
       hier::Box nodebox = NodeGeometry::toNodeBox(box);
 
-      for (int dh = d + 1; dh < dim.getValue(); ++dh) {
+      for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1); dh < dim.getValue(); ++dh) {
 
          /*
           * For directions higher than d, narrow the box down to avoid
@@ -470,10 +470,10 @@ OuternodeData<TYPE>::getDataStreamSize(
 
    TBOX_ASSERT(t_overlap != 0);
 
-   int size = 0;
+   size_t size = 0;
    const hier::BoxContainer& boxlist = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       size += d_data[d][0]->getDataStreamSize(boxlist, src_offset);
       size += d_data[d][1]->getDataStreamSize(boxlist, src_offset);
    }
@@ -597,7 +597,7 @@ OuternodeData<TYPE>::getSizeOfData(
    TBOX_ASSERT(depth > 0);
 
    size_t size = 0;
-   for (int d = 0; d < box.getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < box.getDim().getValue(); ++d) {
       hier::Box loc0 = NodeGeometry::toNodeBox(box);
       hier::Box loc1 = NodeGeometry::toNodeBox(box);
       loc0.upper(d) = box.lower(d);
@@ -605,7 +605,7 @@ OuternodeData<TYPE>::getSizeOfData(
       loc1.lower(d) = box.upper(d);
       loc1.upper(d) = box.upper(d);
 
-      for (int dh = d + 1; dh < box.getDim().getValue(); ++dh) {
+      for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1); dh < box.getDim().getValue(); ++dh) {
 
          /*
           * For directions higher than d, narrow the box down to avoid

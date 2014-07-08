@@ -386,7 +386,7 @@ EdgeData<TYPE>::getDataStreamSize(
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
 
-   int size = 0;
+   size_t size = 0;
    for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       size += d_data[d]->getDataStreamSize(
             t_overlap->getDestinationBoxContainer(d),

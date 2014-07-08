@@ -151,7 +151,7 @@ void ShrunkenLevelGenerator::setDomain(
       ii->getDim();
       const tbox::Dimension& dim = domain.begin()->getDim();
 
-      int doubling_dir = 1;
+      tbox::Dimension::dir_t doubling_dir = 1;
       while (autoscale_base_nprocs < mpi.getSize()) {
          for (hier::BoxContainer::iterator bi = domain.begin();
               bi != domain.end(); ++bi) {

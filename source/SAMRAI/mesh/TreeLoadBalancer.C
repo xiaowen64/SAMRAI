@@ -739,7 +739,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
                  << rank_group.size() << " procs, averaging " << group_avg_load
                  << " or " << pow(group_avg_load, 1.0 / d_dim.getValue())
                  << "^" << d_dim << " per proc."
-                 << "  Avg is " << group_avg_load / d_pparams->getMinBoxSize().getProduct()
+                 << "  Avg is " << group_avg_load / static_cast<double>(d_pparams->getMinBoxSize().getProduct())
                  << " times min size of " << d_pparams->getMinBoxSize()
                  << std::endl;
    }

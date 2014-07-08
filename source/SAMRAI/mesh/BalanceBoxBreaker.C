@@ -310,7 +310,7 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
 
    const hier::IntVector& box_dims = trial.d_whole_box.numberCells();
 
-   const int box_vol = box_dims.getProduct();
+   const size_t box_vol = box_dims.getProduct();
 
    if (box_vol <= trial.d_ideal_load) {
       // Easy: break off everything.
@@ -333,19 +333,20 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
 
    TrialBreak trial1(trial);
 
-   for (int d = dim.getValue() - 1; d >= 0 && !sufficient_brk_load; --d) {
+   for (tbox::Dimension::dir_t d1 = 1; d1 <= dim.getValue() && !sufficient_brk_load; ++d1 ) {
+      const tbox::Dimension::dir_t d = static_cast<tbox::Dimension::dir_t>(dim.getValue() - d1);
 
       /*
        * Search directions from longest to shortest because we prefer
        * to break across longer directions.
        */
-      const int brk_dir = sorted_dirs(d);
+      const tbox::Dimension::dir_t brk_dir = static_cast<tbox::Dimension::dir_t>(sorted_dirs(d));
 
-      const int brk_area = box_vol / box_dims(brk_dir);
+      const size_t brk_area = box_vol / box_dims(brk_dir);
 
       const std::vector<bool>& bad = trial.d_bad_cuts[brk_dir];
 
-      const double ideal_cut_length = double(trial.d_ideal_load) / brk_area;
+      const double ideal_cut_length = double(trial.d_ideal_load) / static_cast<double>(brk_area);
 
       /*
        * Try 4 different cuts for direction brk_dir:
@@ -534,7 +535,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
 
    const hier::IntVector box_dims(trial.d_whole_box.numberCells());
 
-   const double box_load(box_dims.getProduct());
+   const double box_load(static_cast<double>(box_dims.getProduct()));
 
    if (trial.d_ideal_load >= box_load) {
       // Easy: break off everything.
@@ -555,7 +556,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
       if (d_print_break_steps) {
          tbox::plog
          << "      breakOffLoad_cubic reversing direction to break "
-         << (box_dims.getProduct() - trial.d_ideal_load)
+         << (static_cast<double>(box_dims.getProduct()) - trial.d_ideal_load)
          << " instead of " << trial.d_ideal_load << " / "
          << box_dims.getProduct() << std::endl;
       }
@@ -682,7 +683,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
       }
 
       corner_box_size = corner_box.numberCells();
-      corner_box_load = corner_box.size();
+      corner_box_load = static_cast<double>(corner_box.size());
 
       if (d_print_break_steps) {
          tbox::plog << "Initial corner box " << bn << " is " << corner_box
@@ -763,7 +764,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
             growable(inc_dir) = corner_box.lower() (inc_dir) > trial.d_whole_box.lower() (inc_dir);
          }
          corner_box_size = corner_box.numberCells();
-         corner_box_load = corner_box.size();
+         corner_box_load = static_cast<double>(corner_box.size());
 
          const bool accept_break = BalanceUtilities::compareLoads(
                break_acceptance_flags, best_breakoff_load, corner_box_load,
@@ -866,7 +867,7 @@ BalanceBoxBreaker::burstBox(
        * possible.
        */
       int slab_thickness = 0;
-      for (int d = 0; d < solid_size.getDim().getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < solid_size.getDim().getValue(); ++d) {
          if (cutme.numberCells(d) > solid_size(d)) {
             const int thickness_from_upper_cut = cutme.upper() (d)
                - solid.upper() (d);
@@ -984,9 +985,9 @@ BalanceBoxBreaker::TrialBreak::TrialBreak(
    d_breakoff_load(0.0),
    d_breakoff(),
    d_leftover(),
-   d_ideal_load(orig.d_whole_box.size() - orig.d_ideal_load),
-   d_low_load(orig.d_whole_box.size() - orig.d_high_load),
-   d_high_load(orig.d_whole_box.size() - orig.d_low_load),
+   d_ideal_load(static_cast<double>(orig.d_whole_box.size()) - orig.d_ideal_load),
+   d_low_load(static_cast<double>(orig.d_whole_box.size()) - orig.d_high_load),
+   d_high_load(static_cast<double>(orig.d_whole_box.size()) - orig.d_low_load),
    d_width_score(orig.d_width_score),
    d_balance_penalty(orig.d_balance_penalty),
    d_pparams(orig.d_pparams),

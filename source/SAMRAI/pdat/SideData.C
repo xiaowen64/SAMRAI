@@ -76,7 +76,7 @@ SideData<TYPE>::SideData(
    TBOX_ASSERT(ghosts.min() >= 0);
    TBOX_ASSERT(d_directions.min() >= 0);
 
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       const hier::Box side = SideGeometry::toSideBox(getGhostBox(), d);
       d_data[d].reset(new ArrayData<TYPE>(side, depth));
    }
@@ -450,7 +450,7 @@ SideData<TYPE>::getDataStreamSize(
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
 
-   int size = 0;
+   size_t size = 0;
    for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       if (d_directions(d)) {
          size +=
@@ -528,13 +528,13 @@ SideData<TYPE>::packWithRotation(
                                    rotatebox.getBlockId(),
                                    getBox().getBlockId());
 
-   const int depth = getDepth();
+   const unsigned int depth = getDepth();
 
    for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
       if (d_directions(i)) {
          const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
-         const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
+         const size_t size = depth * overlap_boxes.getTotalSizeOfBoxes();
          std::vector<TYPE> buffer(size);
 
          hier::Box side_rotatebox(SideGeometry::toSideBox(rotatebox, i));
@@ -548,7 +548,7 @@ SideData<TYPE>::packWithRotation(
 
             if (!copybox.empty()) {
 
-               for (int d = 0; d < depth; ++d) {
+               for (unsigned int d = 0; d < depth; ++d) {
 
                   hier::Box::iterator ciend(copybox.end());
                   for (hier::Box::iterator ci(copybox.begin());
