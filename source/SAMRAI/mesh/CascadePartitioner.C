@@ -498,7 +498,7 @@ void CascadePartitioner::updateConnectors() const
 
 /*
  *************************************************************************
- * Set d_global_work_sum, d_num_initial_owners.
+ * Set d_global_work_sum, d_local_work_max, d_num_initial_owners.
  *************************************************************************
  */
 void CascadePartitioner::globalWorkReduction(

@@ -722,7 +722,9 @@ CascadePartitionerTree::recomputeLeafData()
  *
  * This method is needed after a group balances its children, and the
  * children are stuck with their load, which may be higher than the
- * global average.  Because we are stuck with this group average, we
+ * global average.  Because we are stuck with this work, we try to
+ * distribute it evenly rather than have one process absorb all the
+ * extra work.
  *************************************************************************
  */
 void
