@@ -402,7 +402,7 @@ int SkeletonBoundaryUtilities2::checkBdryData(
    tbox::plog << "btype, bloc, bcase = "
               << btype << ", = " << bloc << ", = " << bcase << endl;
 
-   int idir;
+   tbox::Dimension::dir_t idir;
    double valfact = 0.0, constval = 0.0, dxfact = 0.0;
    int offsign;
 
@@ -779,7 +779,7 @@ void SkeletonBoundaryUtilities2::read2dBdryNodes(
  */
 
 void SkeletonBoundaryUtilities2::get2dBdryDirectionCheckValues(
-   int& idir,
+   tbox::Dimension::dir_t& idir,
    int& offsign,
    int btype,
    int bloc,

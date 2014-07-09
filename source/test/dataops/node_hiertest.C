@@ -789,7 +789,7 @@ int main(
 
       // Test #2: math::HierarchyNodeDataOpsReal::numberOfEntries()
       // Expected: num_data_points = 121
-      int num_data_points = node_ops->numberOfEntries(nvindx[0]);
+      int num_data_points = static_cast<int>(node_ops->numberOfEntries(nvindx[0]));
       {
          int compare;
          if (dim.getValue() == 2) {

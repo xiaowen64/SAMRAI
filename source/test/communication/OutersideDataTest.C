@@ -272,7 +272,7 @@ void OutersideDataTest::checkPatchInteriorData(
 
    const int depth = data->getDepth();
 
-   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
       const pdat::SideIndex loweri(interior.lower(), axis, 0);
       pdat::SideIterator siend(pdat::SideGeometry::end(interior, axis));
       for (pdat::SideIterator si(pdat::SideGeometry::begin(interior, axis));
@@ -351,7 +351,7 @@ void OutersideDataTest::setLinearData(
 
    hier::IntVector directions(data->getDirectionVector());
 
-   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
       if (directions(axis)) {
          const pdat::SideIndex loweri(patch.getBox().lower(), axis, 0);
          pdat::SideIterator eiend(pdat::SideGeometry::end(sbox, axis));
@@ -509,7 +509,7 @@ bool OutersideDataTest::verifyResults(
 
          hier::IntVector directions(side_data->getDirectionVector());
 
-         for (int id = 0; id < d_dim.getValue(); ++id) {
+         for (tbox::Dimension::dir_t id = 0; id < d_dim.getValue(); ++id) {
             if (directions(id)) {
                pdat::SideIterator siend(pdat::SideGeometry::end(dbox, id));
                for (pdat::SideIterator si(pdat::SideGeometry::begin(dbox, id));

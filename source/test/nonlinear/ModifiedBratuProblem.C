@@ -2816,7 +2816,7 @@ void ModifiedBratuProblem::getLevelEdges(
    hier::BoxContainer& boxes,
    boost::shared_ptr<hier::Patch> patch,
    boost::shared_ptr<hier::PatchLevel> level,
-   const int dim,
+   const tbox::Dimension::dir_t dim,
    const int face)
 {
 
@@ -2886,7 +2886,7 @@ void ModifiedBratuProblem::correctLevelFlux(
        * is used to fill the ghost cells.
        */
 
-      for (int d = 0; d < d_dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
          for (int s = 0; s <= 1; ++s) {
             hier::Index delta(d_dim, 0);
             delta(d) = ((s == 0) ? 1 : -1);
@@ -2924,7 +2924,7 @@ void ModifiedBratuProblem::correctPatchFlux(
    TBOX_ASSERT(geometry);
    const double* dx = geometry->getDx();
 
-   for (int d = 0; d < d_dim.getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
       for (int s = 0; s <= 1; ++s) {
          hier::Index delta1(d_dim, 0);
          delta1(d) = ((s == 0) ? 1 : -1);

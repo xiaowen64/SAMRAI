@@ -495,7 +495,7 @@ void LinAdv::computeFluxesOnPatch(
           * Prepare temporary data for characteristic tracing.
           */
          int Mcells = 0;
-         for (int k = 0; k < d_dim.getValue(); ++k) {
+         for (tbox::Dimension::dir_t k = 0; k < d_dim.getValue(); ++k) {
             Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
          }
 
@@ -673,7 +673,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
        * Prepare temporary data for characteristic tracing.
        */
       int Mcells = 0;
-      for (int k = 0; k < d_dim.getValue(); ++k) {
+      for (tbox::Dimension::dir_t k = 0; k < d_dim.getValue(); ++k) {
          Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
@@ -991,7 +991,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
        * Prepare temporary data for characteristic tracing.
        */
       int Mcells = 0;
-      for (int k = 0; k < d_dim.getValue(); ++k) {
+      for (tbox::Dimension::dir_t k = 0; k < d_dim.getValue(); ++k) {
          Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
@@ -1707,7 +1707,7 @@ bool LinAdv::packDerivedDataIntoDoubleBuffer(
    if (variable_name == "Owner") {
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
       double owner = mpi.getRank();
-      int i, size = region.size();
+      size_t i, size = region.size();
       for (i = 0; i < size; ++i) buffer[i] = owner;
    } else {
       // Did not register this name.

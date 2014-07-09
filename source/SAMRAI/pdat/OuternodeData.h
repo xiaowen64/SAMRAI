@@ -179,7 +179,7 @@ public:
     */
    hier::Box
    getDataBox(
-      int face_normal,
+      tbox::Dimension::dir_t face_normal,
       int side);
 
    /*!

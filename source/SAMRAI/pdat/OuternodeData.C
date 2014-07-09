@@ -634,7 +634,7 @@ OuternodeData<TYPE>::getSizeOfData(
 template<class TYPE>
 hier::Box
 OuternodeData<TYPE>::getDataBox(
-   int face_normal,
+   tbox::Dimension::dir_t face_normal,
    int side)
 {
    if (face_normal < 0 || face_normal >= getDim().getValue() || side < 0 || side > 1) {
@@ -649,7 +649,7 @@ OuternodeData<TYPE>::getDataBox(
    hier::Box databox = NodeGeometry::toNodeBox(getBox());
    const hier::IntVector& ghosts = getGhostCellWidth();
 
-   for (int dh = face_normal + 1; dh < getDim().getValue(); ++dh) {
+   for (tbox::Dimension::dir_t dh = face_normal + 1; dh < getDim().getValue(); ++dh) {
 
       /*
        * For directions higher than d, narrow the box down to avoid

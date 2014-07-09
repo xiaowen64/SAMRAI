@@ -651,7 +651,7 @@ int main(
 
       // Test #2: math::HierarchyFaceDataOpsReal::numberOfEntries()
       // Expected: num_data_points = 209
-      int num_data_points = face_ops->numberOfEntries(fvindx[0]);
+      int num_data_points = static_cast<int>(face_ops->numberOfEntries(fvindx[0]));
       {
          int compare;
          if (dim.getValue() == 2) {

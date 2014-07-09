@@ -1148,7 +1148,7 @@ int main(
 
       // Test #2: math::HierarchyEdgeDataOpsReal::numberOfEntries()
       // Expected: num_data_points = 209
-      int num_data_points = edge_ops->numberOfEntries(svindx[0]);
+      int num_data_points = static_cast<int>(edge_ops->numberOfEntries(svindx[0]));
       {
          int compare;
          if (dim.getValue() == 2) {

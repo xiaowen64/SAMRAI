@@ -191,7 +191,7 @@ SparseDataTester::testPackStream()
 
    pdat::CellOverlap overlap(blist, trans);
 
-   int strsize = sample->getDataStreamSize(overlap);
+   size_t strsize = sample->getDataStreamSize(overlap);
 
    SparseDataType::iterator iter(sample.get());
 

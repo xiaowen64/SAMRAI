@@ -588,7 +588,7 @@ FaceData<TYPE>::getSizeOfData(
 
    size_t size = 0;
    const hier::Box ghost_box = hier::Box::grow(box, ghosts);
-   for (int d = 0; d < box.getDim().getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < box.getDim().getValue(); ++d) {
       const hier::Box face_box = FaceGeometry::toFaceBox(ghost_box, d);
       size += ArrayData<TYPE>::getSizeOfData(face_box, depth);
    }

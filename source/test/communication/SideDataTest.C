@@ -203,7 +203,7 @@ void SideDataTest::setConservativeData(
 
    const hier::BoxContainer& domain =
       level->getPhysicalDomain(hier::BlockId::zero());
-   int ncells = 0;
+   size_t ncells = 0;
    for (hier::BoxContainer::const_iterator i = domain.begin();
         i != domain.end(); ++i) {
       ncells += i->size();
@@ -402,7 +402,7 @@ void SideDataTest::checkPatchInteriorData(
 
    const hier::IntVector& directions(data->getDirectionVector());
 
-   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
       if (directions(axis)) {
          const pdat::SideIndex loweri(interior.lower(), axis, 0);
          pdat::SideIterator siend(pdat::SideGeometry::end(interior, axis));
@@ -542,7 +542,7 @@ void SideDataTest::setLinearData(
 
    hier::IntVector directions(data->getDirectionVector());
 
-   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
       if (directions(axis)) {
          const pdat::SideIndex loweri(patch.getBox().lower(), axis, 0);
          pdat::SideIterator eiend(pdat::SideGeometry::end(sbox, axis));
@@ -613,7 +613,7 @@ void SideDataTest::setPeriodicData(
 
    hier::IntVector directions(data->getDirectionVector());
 
-   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
       if (directions(axis)) {
          const pdat::SideIndex loweri(patch.getBox().lower(), axis, 0);
          pdat::SideIterator siend(pdat::SideGeometry::end(sbox, axis));
@@ -702,7 +702,7 @@ bool SideDataTest::verifyResults(
 
          hier::IntVector directions(side_data->getDirectionVector());
 
-         for (int id = 0; id < d_dim.getValue(); ++id) {
+         for (tbox::Dimension::dir_t id = 0; id < d_dim.getValue(); ++id) {
             if (directions(id)) {
                pdat::SideIterator siend(pdat::SideGeometry::end(dbox, id));
                for (pdat::SideIterator si(pdat::SideGeometry::begin(dbox, id));
