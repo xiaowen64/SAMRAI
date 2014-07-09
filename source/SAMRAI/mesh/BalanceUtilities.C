@@ -414,7 +414,7 @@ BalanceUtilities::privateInitializeBadCutPointsForBox(
  * value is true if some direction can be cut; false, otherwise.
  * If the box can be cut along some direction, then cut_dim_out is
  * set to the longest box direction that can be cut; otherwise,
- * cut_dim_out is set to -1 (an invalid box direction).
+ * cut_dim_out is set to the invalid value of SAMRAI::MAX_DIM_VAL.
  * Note no error checking is done.
  *
  *************************************************************************
@@ -433,7 +433,7 @@ BalanceUtilities::privateFindBestCutDimension(
    const tbox::Dimension& dim(in_box.getDim());
 
    bool can_cut_box = false;
-   cut_dim_out = -1;
+   cut_dim_out = SAMRAI::MAX_DIM_VAL;
 
    hier::Box size_test_box(in_box);
 
