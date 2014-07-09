@@ -245,7 +245,7 @@ void CascadePartitionerTree::distributeLoad()
          if ( d_common->d_reset_obligations &&
               current_group == top_group && top_group->d_gen_num != 0 ) {
             const double old_obligation = top_group->d_obligation;
-            top_group->resetObligation( top_group->d_work/top_group->size() );
+            top_group->resetObligation( top_group->d_work/static_cast<double>(top_group->size()) );
             if ( d_common->d_print_steps ) {
                tbox::plog << d_common->d_object_name << "::distributeLoad generation "
                           << top_group->d_gen_num << " reset obligation from "

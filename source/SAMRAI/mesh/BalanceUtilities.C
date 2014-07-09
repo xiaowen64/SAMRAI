@@ -1933,10 +1933,10 @@ BalanceUtilities::reduceAndReportLoadBalance(
    std::vector<double> total_loads(loads);
    mpi.AllReduce( &total_loads[0], static_cast<int>(total_loads.size()), MPI_SUM );
 
-   const size_t n_population_zones = ndemarks + 1;
+   const int n_population_zones = ndemarks + 1;
    std::vector<int> population( loads.size() * n_population_zones, 0 );
    for ( size_t iload=0; iload<loads.size(); ++iload ) {
-      for ( size_t izone=0; izone<n_population_zones; ++izone ) {
+      for ( int izone=0; izone<n_population_zones; ++izone ) {
          if ( loads[iload]/total_loads[iload]*mpi.getSize() < demarks[izone] ) {
             population[ iload*n_population_zones + izone ] = 1;
             break;
@@ -1978,7 +1978,7 @@ BalanceUtilities::reduceAndReportLoadBalance(
       const char space[] = "   ";
       os.setf(std::ios_base::fixed);
       os << bars;
-      for (size_t izone = 0; izone<ndemarks; ++izone) {
+      for (int izone = 0; izone<ndemarks; ++izone) {
          os << std::setw(4) << std::setprecision(2) << demarks[izone] << bars;
       }
       os << '\n';
@@ -1986,7 +1986,7 @@ BalanceUtilities::reduceAndReportLoadBalance(
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:1572)
 #endif
-      for (size_t izone=0; izone<n_population_zones; ++izone) {
+      for (int izone=0; izone<n_population_zones; ++izone) {
          const int nrank = population[iload*n_population_zones + izone];
          const double percentage = 100.0 * nrank / nproc;
          os << std::setw(5) << percentage << space;

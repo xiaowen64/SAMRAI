@@ -227,6 +227,7 @@ BoxTransitSet::assignToLocal(
    double flexible_load_tol,
    const tbox::SAMRAI_MPI &alt_mpi )
 {
+   NULL_USE(flexible_load_tol);
    NULL_USE(alt_mpi);
    /*
     * Reassign contents to local process, assigning IDs that don't
