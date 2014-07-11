@@ -629,9 +629,9 @@ int main(
 
       // Test #2: math::HierarchyFaceDataOpsComplex::numberOfEntries()
       // Expected: num_data_points = 209
-      int num_data_points = face_ops->numberOfEntries(fvindx[0]);
+      size_t num_data_points = face_ops->numberOfEntries(fvindx[0]);
       {
-         int compare;
+         size_t compare;
          if (dim.getValue() == 2) {
             compare = 209;
          }

@@ -637,7 +637,7 @@ OuternodeData<TYPE>::getDataBox(
    tbox::Dimension::dir_t face_normal,
    int side)
 {
-   if (face_normal < 0 || face_normal >= getDim().getValue() || side < 0 || side > 1) {
+   if (face_normal >= getDim().getValue() || side < 0 || side > 1) {
       TBOX_ERROR("Bad values for face_normal and/or side in\n"
          "OuternodeData<dim>::getDataBox().\n");
    }
@@ -649,7 +649,7 @@ OuternodeData<TYPE>::getDataBox(
    hier::Box databox = NodeGeometry::toNodeBox(getBox());
    const hier::IntVector& ghosts = getGhostCellWidth();
 
-   for (tbox::Dimension::dir_t dh = face_normal + 1; dh < getDim().getValue(); ++dh) {
+   for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(face_normal + 1); dh < getDim().getValue(); ++dh) {
 
       /*
        * For directions higher than d, narrow the box down to avoid

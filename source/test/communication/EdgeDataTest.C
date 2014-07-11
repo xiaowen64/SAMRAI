@@ -256,7 +256,7 @@ void EdgeDataTest::setConservativeData(
                   value += (double)((*ci)(i));
                }
             }
-            value /= ncells;
+            value /= static_cast<double>(ncells);
             if (d_dim == tbox::Dimension(1)) {
                for (int edge = 0; edge < 1; ++edge) {
                   pdat::EdgeIndex si(*ci, axis, edge);
@@ -307,7 +307,7 @@ void EdgeDataTest::setConservativeData(
       TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
 
-      int coarse_ncells = ncells;
+      size_t coarse_ncells = static_cast<size_t>(ncells);
       double* delta = new double[max_ratio * d_dim.getValue()];
       for (j = 0; j < d_dim.getValue(); ++j) {
          coarse_ncells /= ratio(j);
@@ -333,7 +333,7 @@ void EdgeDataTest::setConservativeData(
                   value += (double)(ci(i));
                }
             }
-            value /= coarse_ncells;
+            value /= static_cast<double>(coarse_ncells);
 
             for (j = 0; j < d_dim.getValue(); ++j) {
                if (j == axis) {

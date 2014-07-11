@@ -352,10 +352,10 @@ int main(
 
       // Test #2: math::HierarchyCellDataOpsComplex::numberOfEntries()
       // Expected: num_data_points = 90 in 2d, 660 in 3d
-      int num_data_points = cell_ops->numberOfEntries(cvindx[0]);
+      size_t num_data_points = cell_ops->numberOfEntries(cvindx[0]);
 
       {
-         int compare;
+         size_t compare;
          if ((dim == tbox::Dimension(2)))
             compare = 90;
          else
