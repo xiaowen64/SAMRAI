@@ -26,7 +26,7 @@ namespace tbox {
  * it does not have to work with non-POD data.)
  */
 struct DatabaseBox_POD {
-   Dimension::dir_t d_dimension;
+   int d_dimension;
    int d_lo[SAMRAI::MAX_DIM_VAL];
    int d_hi[SAMRAI::MAX_DIM_VAL];
 };
@@ -92,10 +92,10 @@ public:
    /**
     * Return the dimension of this object.
     */
-   const Dimension::dir_t&
+   Dimension::dir_t
    getDimVal() const
    {
-      return d_data.d_dimension;
+      return static_cast<Dimension::dir_t>(d_data.d_dimension);
    }
 
    void
