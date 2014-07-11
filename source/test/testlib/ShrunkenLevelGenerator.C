@@ -159,7 +159,7 @@ void ShrunkenLevelGenerator::setDomain(
             input_box.upper() (doubling_dir) += input_box.numberCells(doubling_dir);
          }
          xhi[doubling_dir] += xhi[doubling_dir] - xlo[doubling_dir];
-         doubling_dir = (doubling_dir + 1) % dim.getValue();
+         doubling_dir = static_cast<tbox::Dimension::dir_t>((doubling_dir + 1) % dim.getValue());
          autoscale_base_nprocs *= 2;
          tbox::plog << "autoscale_base_nprocs = " << autoscale_base_nprocs << std::endl
                     << domain.format("IB: ", 2) << std::endl;

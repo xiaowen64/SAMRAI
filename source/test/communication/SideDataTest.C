@@ -236,7 +236,7 @@ void SideDataTest::setConservativeData(
                      value += (double)((*ci)(i));
                   }
                }
-               value /= ncells;
+               value /= static_cast<double>(ncells);
                for (int side = pdat::SideIndex::Lower;
                     side <= pdat::SideIndex::Upper; ++side) {
                   pdat::SideIndex si(*ci, axis, side);
@@ -267,7 +267,7 @@ void SideDataTest::setConservativeData(
       TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
 
-      int coarse_ncells = ncells;
+      size_t coarse_ncells = ncells;
       double* delta = new double[max_ratio * d_dim.getValue()];
       for (j = 0; j < d_dim.getValue(); ++j) {
          coarse_ncells /= ratio(j);
@@ -277,7 +277,7 @@ void SideDataTest::setConservativeData(
          }
       }
 
-      for (int axis = 0; axis < d_dim.getValue(); ++axis) {
+      for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
          if (directions(axis)) {
             hier::IntVector ci(ratio.getDim());
             hier::IntVector del(ratio.getDim());
@@ -295,7 +295,7 @@ void SideDataTest::setConservativeData(
                      value += (double)(ci(i));
                   }
                }
-               value /= coarse_ncells;
+               value /= static_cast<double>(coarse_ncells);
 
                for (j = 0; j < d_dim.getValue(); ++j) {
                   if (j != axis) {

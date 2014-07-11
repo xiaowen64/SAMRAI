@@ -224,7 +224,7 @@ void FaceDataTest::setConservativeData(
                   value += (double)((*ci)(i));
                }
             }
-            value /= ncells;
+            value /= static_cast<double>(ncells);
             for (int face = pdat::FaceIndex::Lower;
                  face <= pdat::FaceIndex::Upper; ++face) {
                pdat::FaceIndex si(*ci, axis, face);
@@ -254,7 +254,7 @@ void FaceDataTest::setConservativeData(
       TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
 
-      int coarse_ncells = ncells;
+      size_t coarse_ncells = ncells;
       double* delta = new double[max_ratio * d_dim.getValue()];
       for (j = 0; j < d_dim.getValue(); ++j) {
          coarse_ncells /= ratio(j);
@@ -280,7 +280,7 @@ void FaceDataTest::setConservativeData(
                   value += (double)(ci(i));
                }
             }
-            value /= coarse_ncells;
+            value /= static_cast<double>(coarse_ncells);
 
             for (j = 0; j < d_dim.getValue(); ++j) {
                if (j != axis) {

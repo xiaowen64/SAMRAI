@@ -228,7 +228,7 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
                        ni != niend; ++ni) {
                      if (!patch_edge_box.contains(*ni)) {
                         bool use_index = true;
-                        for (int n = 0; n < d_dim.getValue(); ++n) {
+                        for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                            if (axis != n &&
                                edge_bdry[eb].getBox().numberCells(n) == 1) {
                               if ((*ni)(n) == plower(n) || (*ni)(n) ==
@@ -276,7 +276,7 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
                        ni != niend; ++ni) {
                      if (!patch_edge_box.contains(*ni)) {
                         bool use_index = true;
-                        for (int n = 0; n < d_dim.getValue(); ++n) {
+                        for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                            if (axis != n &&
                                face_bdry[fb].getBox().numberCells(n) == 1) {
                               if ((*ni)(n) == plower(n) || (*ni)(n) ==
@@ -340,7 +340,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
          for (pdat::EdgeIterator ni(pdat::EdgeGeometry::begin(sing_fill_box, axis));
               ni != niend; ++ni) {
             bool use_index = true;
-            for (int n = 0; n < d_dim.getValue(); ++n) {
+            for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                if (axis != n && bbox.getBox().numberCells(n) == 1) {
                   if ((*ni)(n) == plower(n) || (*ni)(n) == pupper(n)) {
                      use_index = false;
@@ -425,7 +425,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
                      for (pdat::EdgeIterator ci(pdat::EdgeGeometry::begin(sing_fill_box, axis));
                           ci != ciend; ++ci) {
                         bool use_index = true;
-                        for (int n = 0; n < d_dim.getValue(); ++n) {
+                        for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                            if (axis != n && bbox.getBox().numberCells(n) == 1) {
                               if ((*ci)(n) == plower(n) || (*ci)(n) == pupper(n)) {
                                  use_index = false;
@@ -466,7 +466,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
             for (pdat::EdgeIterator ci(pdat::EdgeGeometry::begin(sing_fill_box, axis));
                  ci != ciend; ++ci) {
                bool use_index = true;
-               for (int n = 0; n < d_dim.getValue(); ++n) {
+               for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                   if (axis != n && bbox.getBox().numberCells(n) == 1) {
                      if ((*ci)(n) == plower(n) || (*ci)(n) == pupper(n)) {
                         use_index = false;
@@ -501,7 +501,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
             for (pdat::EdgeIterator ci(pdat::EdgeGeometry::begin(sing_fill_box, axis));
                  ci != ciend; ++ci) {
                bool use_index = true;
-               for (int n = 0; n < d_dim.getValue(); ++n) {
+               for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                   if (axis != n && bbox.getBox().numberCells(n) == 1) {
                      if ((*ci)(n) == plower(n) || (*ci)(n) == pupper(n)) {
                         use_index = false;
@@ -728,7 +728,7 @@ bool EdgeMultiblockTest::verifyResults(
                   if (!patch_edge_box.contains(*ci)) {
 
                      bool use_index = true;
-                     for (int n = 0; n < d_dim.getValue(); ++n) {
+                     for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
                         if (axis != n && bdry[k].getBox().numberCells(n) ==
                             1) {
                            if ((*ci)(n) == patch_edge_box.lower() (n) ||

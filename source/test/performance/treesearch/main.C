@@ -183,7 +183,7 @@ int main(
             /*
              * Scale up the box array.
              */
-            int shift_dir = (iscale - 1) % dim.getValue();
+            tbox::Dimension::dir_t shift_dir = static_cast<tbox::Dimension::dir_t>((iscale - 1) % dim.getValue());
             /*
              * Shift distance is less than number of bounding boxes in shift_dir
              * in order to generate some non-trivial overlaps.

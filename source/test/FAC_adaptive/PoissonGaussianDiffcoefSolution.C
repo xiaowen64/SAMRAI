@@ -187,7 +187,7 @@ void PoissonGaussianDiffcoefSolution::setGridData(
    const double* h = patch_geom->getDx();
    const double* xl = patch_geom->getXLower();
    const int* il = &patch.getBox().lower()[0];
-   int axis;
+   tbox::Dimension::dir_t axis;
    {
       /* Set diffusion coefficients on each side at a time. */
       for (axis = 0; axis < d_dim.getValue(); ++axis) {

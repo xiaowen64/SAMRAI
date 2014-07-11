@@ -1036,7 +1036,7 @@ void MblkLinAdv::computeFluxesOnPatch(
           * Prepare temporary data for characteristic tracing.
           */
          int Mcells = 0;
-         for (int k = 0; k < d_dim.getValue(); ++k) {
+         for (tbox::Dimension::dir_t k = 0; k < d_dim.getValue(); ++k) {
             Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
          }
 
@@ -1217,7 +1217,7 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport1(
        * Prepare temporary data for characteristic tracing.
        */
       int Mcells = 0;
-      for (int k = 0; k < d_dim.getValue(); ++k) {
+      for (tbox::Dimension::dir_t k = 0; k < d_dim.getValue(); ++k) {
          Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
@@ -1541,7 +1541,7 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport2(
        * Prepare temporary data for characteristic tracing.
        */
       int Mcells = 0;
-      for (int k = 0; k < d_dim.getValue(); ++k) {
+      for (tbox::Dimension::dir_t k = 0; k < d_dim.getValue(); ++k) {
          Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 

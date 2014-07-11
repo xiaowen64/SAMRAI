@@ -1146,9 +1146,9 @@ int main(
 
       // Test #2: math::HierarchyEdgeDataOpsComplex::numberOfEntries()
       // Expected: num_data_points = 209
-      int num_data_points = edge_ops->numberOfEntries(svindx[0]);
+      size_t num_data_points = edge_ops->numberOfEntries(svindx[0]);
       {
-         int compare;
+         size_t compare;
          if (dim.getValue() == 2) {
             compare = 209;
          } else {

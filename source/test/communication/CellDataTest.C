@@ -239,7 +239,7 @@ void CellDataTest::setConservativeData(
          for (int d = 0; d < d_dim.getValue(); ++d) {
             value += (double)((*fi)(d));
          }
-         value /= ncells;
+         value /= static_cast<double>(ncells);
          for (int dep = 0; dep < depth; ++dep) {
             (*data)(*fi, dep) = value;
          }
@@ -263,7 +263,7 @@ void CellDataTest::setConservativeData(
       TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
 
-      int coarse_ncells = ncells;
+      size_t coarse_ncells = ncells;
       std::vector<std::vector<double> > delta(d_dim.getValue());
       for (int d = 0; d < d_dim.getValue(); ++d) {
          delta[d].resize(ratio(d), 0.0);
@@ -291,7 +291,7 @@ void CellDataTest::setConservativeData(
             del(d) = (int)delta[d][(*fi)(d) - ci(d) * ratio(d)];
             value += (double)(ci(d));
          }
-         value /= coarse_ncells;
+         value /= static_cast<double>(coarse_ncells);
 
          for (int d = 0; d < d_dim.getValue(); ++d) {
             value += ci(d) * del(d);
