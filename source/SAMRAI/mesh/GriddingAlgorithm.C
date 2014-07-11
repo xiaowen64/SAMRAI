@@ -446,7 +446,7 @@ GriddingAlgorithm::makeCoarsestLevel(
 
    boost::shared_ptr<hier::Connector> new_to_new;
    if (domain_box_level.getLocalNumberOfBoxes(0) ==
-       (size_t)domain_box_level.getGlobalNumberOfBoxes()) {
+       domain_box_level.getGlobalNumberOfBoxes()) {
       /*
        * If proc 0 owns all new boxes, it is faster find new<==>new by
        * globalizing the new boxes.
