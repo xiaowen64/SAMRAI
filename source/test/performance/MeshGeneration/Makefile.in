@@ -22,7 +22,7 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
-NUM_TESTS = 38
+NUM_TESTS = 39
 CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
 
 TEST_NPROCS = @TEST_NPROCS@
@@ -48,6 +48,7 @@ INPUTS2D =	test_inputs/front.2d.caplb.input	\
 
 
 INPUTS3D =	test_inputs/spreadby10.3d.treelb.input		\
+		performance_inputs/bigbox.3d.tile.input	\
 		performance_inputs/single_sphere.3d.caplb.input	\
 		performance_inputs/single_sphere.3d.treelb.input	\
 		performance_inputs/lsphere_weak.3d.treelb.input	\
