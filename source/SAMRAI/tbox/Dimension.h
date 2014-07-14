@@ -181,7 +181,7 @@ private:
       return *this;
    }
 
-   unsigned short d_dim;
+   dir_t d_dim;
 };
 
 }

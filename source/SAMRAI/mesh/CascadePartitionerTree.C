@@ -56,13 +56,13 @@ CascadePartitionerTree::CascadePartitionerTree(
 
    if ( d_common->d_print_steps ) {
       tbox::plog << d_common->d_object_name << "::root constructor: entered generation "
-                 << d_gen_num << "  ranks " << d_begin << '-' << d_end << "\n";
+                 << d_gen_num << "  ranks " << d_begin << '-' << d_end << std::endl;
    }
 
    makeChildren();
 
    if ( d_common->d_print_steps ) {
-      tbox::plog << d_common->d_object_name << "::root constructor: leaving\n";
+      tbox::plog << d_common->d_object_name << "::root constructor: leaving" << std::endl;
       printClassData( tbox::plog, "\t" );
    }
 }
@@ -101,7 +101,7 @@ CascadePartitionerTree::CascadePartitionerTree(
    if ( d_common->d_print_steps && d_common->d_print_child_steps ) {
       tbox::plog << d_common->d_object_name << "::non-root constructor: entered generation "
                  << d_gen_num << "  parent ranks " << d_begin << '-' << d_end
-                 << "  position " << group_position << "\n";
+                 << "  position " << group_position << std::endl;
    }
 
    d_children[0] = d_children[1] = 0;
@@ -134,7 +134,7 @@ CascadePartitionerTree::CascadePartitionerTree(
    }
 
    if ( d_common->d_print_steps && d_common->d_print_child_steps ) {
-      tbox::plog << d_common->d_object_name << "::non-root constructor: leaving\n";
+      tbox::plog << d_common->d_object_name << "::non-root constructor: leaving" << std::endl;
       printClassData( tbox::plog, "\t" );
    }
 
@@ -215,11 +215,11 @@ void CascadePartitionerTree::distributeLoad()
                     << top_group->d_gen_num
                     << "  with exact local_load=" << d_common->d_local_load->getSumLoad()
                     << std::endl;
-         tbox::plog << "\ttop_group:\n";
+         tbox::plog << "\ttop_group:" << std::endl;
          top_group->printClassData( tbox::plog, "\t" );
-         tbox::plog << "\tchild 0:\n";
+         tbox::plog << "\tchild 0:" << std::endl;
          top_group->d_children[0]->printClassData( tbox::plog, "\t" );
-         tbox::plog << "\tchild 1:\n";
+         tbox::plog << "\tchild 1:" << std::endl;
          top_group->d_children[1]->printClassData( tbox::plog, "\t" );
       }
 
@@ -233,12 +233,12 @@ void CascadePartitionerTree::distributeLoad()
          if ( d_common->d_print_steps && d_common->d_print_child_steps ) {
             tbox::plog << d_common->d_object_name << "::distributeLoad outer top_group "
                        << top_group->d_gen_num << "  combined generation "
-                       << current_group->d_gen_num << ".  All d_work values are exact.\n";
-            tbox::plog << "\tcurrent_group:\n";
+                       << current_group->d_gen_num << ".  All d_work values are exact." << std::endl;
+            tbox::plog << "\tcurrent_group:" << std::endl;
             current_group->printClassData( tbox::plog, "\t" );
-            tbox::plog << "\tchild 0:\n";
+            tbox::plog << "\tchild 0:" << std::endl;
             current_group->d_children[0]->printClassData( tbox::plog, "\t" );
-            tbox::plog << "\tchild 1:\n";
+            tbox::plog << "\tchild 1:" << std::endl;
             current_group->d_children[1]->printClassData( tbox::plog, "\t" );
          }
 
@@ -263,12 +263,12 @@ void CascadePartitionerTree::distributeLoad()
             if ( d_common->d_print_steps ) {
                tbox::plog << d_common->d_object_name << "::distributeLoad outer top_group "
                           << top_group->d_gen_num << "  shuffled generation "
-                          << top_group->d_gen_num << ".  d_work is exact, but childrens' are estimates.\n";
-               tbox::plog << "\ttop_group:\n";
+                          << top_group->d_gen_num << ".  d_work is exact, but childrens' are estimates." << std::endl;
+               tbox::plog << "\ttop_group:" << std::endl;
                top_group->printClassData( tbox::plog, "\t" );
-               tbox::plog << "\tchild 0:\n";
+               tbox::plog << "\tchild 0:" << std::endl;
                top_group->d_children[0]->printClassData( tbox::plog, "\t" );
-               tbox::plog << "\tchild 1:\n";
+               tbox::plog << "\tchild 1:" << std::endl;
                top_group->d_children[1]->printClassData( tbox::plog, "\t" );
             }
          }
@@ -403,7 +403,7 @@ CascadePartitionerTree::balanceChildren()
    d_common->t_balance_children->start();
 
    if ( d_common->d_print_steps ) {
-      tbox::plog << d_common->d_object_name << "::balanceChildren: entered\n";
+      tbox::plog << d_common->d_object_name << "::balanceChildren: entered" << std::endl;
    }
 
    TBOX_ASSERT( d_common->d_shipment->empty() );
@@ -425,7 +425,7 @@ CascadePartitionerTree::balanceChildren()
          if ( d_common->d_print_steps ) {
             tbox::plog << d_common->d_object_name << "::balanceChildren:"
                        << "  record outgoing shipment of " << work_supplied
-                       << " from our half to far half.  Send to " << d_near->d_contact[0] << "\n";
+                       << " from our half to far half.  Send to " << d_near->d_contact[0] << std::endl;
          }
 
          TBOX_ASSERT( d_near->d_contact[0] >= 0 );
@@ -462,7 +462,7 @@ CascadePartitionerTree::balanceChildren()
                           << "  d_far->size()=" << d_far->size()
                           << "  d_end=" << d_end
                           << "  d_common->d_mpi.getRank()=" << d_common->d_mpi.getRank()
-                          << "\n";
+                          << std::endl;
             }
          }
          if ( d_far->d_process_may_supply[1] ) {
@@ -478,7 +478,7 @@ CascadePartitionerTree::balanceChildren()
                           << "  d_far->size()=" << d_far->size()
                           << "  d_end=" << d_end
                           << "  d_common->d_mpi.getRank()=" << d_common->d_mpi.getRank()
-                          << "\n";
+                          << std::endl;
             }
          }
       }
@@ -494,7 +494,7 @@ CascadePartitionerTree::balanceChildren()
       if ( d_common->d_print_steps ) {
          tbox::plog << d_common->d_object_name << "::balanceChildren:"
                     << "  recorded incoming shipment of " << work_supplied
-                    << " from far half to our half.\n";
+                    << " from far half to our half." << std::endl;
       }
 
       if ( d_far->d_process_may_supply[0] || d_far->d_process_may_supply[1] ) {
@@ -503,7 +503,7 @@ CascadePartitionerTree::balanceChildren()
    }
    else {
       if ( d_common->d_print_steps ) {
-         tbox::plog << d_common->d_object_name << "::balanceChildren: not supplying or demanding\n";
+         tbox::plog << d_common->d_object_name << "::balanceChildren: not supplying or demanding" << std::endl;
       }
    }
 
@@ -516,7 +516,7 @@ CascadePartitionerTree::balanceChildren()
    d_common->t_balance_children->stop();
 
    if ( d_common->d_print_steps ) {
-      tbox::plog << d_common->d_object_name << "::balanceChildren: leaving\n";
+      tbox::plog << d_common->d_object_name << "::balanceChildren: leaving" << std::endl;
    }
    return;
 }
@@ -645,7 +645,7 @@ CascadePartitionerTree::sendShipment( int taker )
       d_common->d_shipment->recursivePrint(tbox::plog, "", 0);
       tbox::plog << " leaving d_local_load with ";
       d_common->d_local_load->recursivePrint(tbox::plog, "", 0);
-      tbox::plog << '\n';
+      tbox::plog << std::endl;
    }
    tbox::MessageStream msg;
    msg << *d_common->d_shipment;
@@ -687,7 +687,7 @@ CascadePartitionerTree::receiveAndUnpackSuppliedLoad()
          tbox::plog << " from process " << comm_peer->getPeerRank()
                     << " and updated d_local_load to ";
          d_common->d_local_load->recursivePrint(tbox::plog, "", 0);
-         tbox::plog << '\n';
+         tbox::plog << std::endl;
       }
       d_common->d_shipment->clear();
    }

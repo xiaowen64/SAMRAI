@@ -230,7 +230,8 @@ CascadePartitioner::loadBalanceBoxLevel(
                  << "\n  bad_interval = " << bad_interval
                  << "\n  cut_factor = " << cut_factor
                  << "\n  prebalance:\n"
-                 << balance_box_level.format("  ", 2);
+                 << balance_box_level.format("  ", 2)
+                 << std::flush;
    }
 
 
@@ -301,12 +302,13 @@ CascadePartitioner::loadBalanceBoxLevel(
       static_cast<int>(balance_box_level.getBoxes().size()));
 
    if (d_print_steps) {
-      tbox::plog << "Post balanced:\n" << balance_box_level.format("", 2);
+      tbox::plog << "Post balanced:\n" << balance_box_level.format("", 2)
+                 << std::flush;
    }
 
    if (d_report_load_balance) {
       tbox::plog
-         << d_object_name << "::loadBalanceBoxLevel results:\n";
+         << d_object_name << "::loadBalanceBoxLevel results:" << std::endl;
       BalanceUtilities::reduceAndReportLoadBalance(std::vector<double>(1,local_load),
          balance_box_level.getMPI());
    }
@@ -318,15 +320,15 @@ CascadePartitioner::loadBalanceBoxLevel(
       int errs = 0;
       if (reference_to_balance.checkOverlapCorrectness(false, true, true)) {
          ++errs;
-         tbox::perr << "Error found in reference_to_balance!\n";
+         tbox::perr << "Error found in reference_to_balance!" << std::endl;
       }
       if (balance_to_reference->checkOverlapCorrectness(false, true, true)) {
          ++errs;
-         tbox::perr << "Error found in balance_to_reference!\n";
+         tbox::perr << "Error found in balance_to_reference!" << std::endl;
       }
       if (reference_to_balance.checkTransposeCorrectness(*balance_to_reference)) {
          ++errs;
-         tbox::perr << "Error found in balance-reference transpose!\n";
+         tbox::perr << "Error found in balance-reference transpose!" << std::endl;
       }
       if (errs != 0) {
          TBOX_ERROR(
@@ -408,7 +410,7 @@ void CascadePartitioner::updateConnectors() const
 
    if ( d_print_steps ) {
       tbox::plog
-         << d_object_name << "::updateConnectors constructing unbalanced<==>balanced.\n";
+         << d_object_name << "::updateConnectors constructing unbalanced<==>balanced." << std::endl;
    }
 
    /*
@@ -437,13 +439,13 @@ void CascadePartitioner::updateConnectors() const
    t_assign_to_local_and_populate_maps->stop();
 
    if ( d_summarize_map ) {
-      tbox::plog << d_object_name << "::updateConnectors unbalanced--->balanced map:\n"
+      tbox::plog << d_object_name << "::updateConnectors unbalanced--->balanced map:" << std::endl
                  << unbalanced_to_balanced.format("\t",0)
-                 << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
-                 << d_object_name << "::updateConnectors balanced--->unbalanced map:\n"
+                 << "Map statistics:" << std::endl << unbalanced_to_balanced.formatStatistics("\t")
+                 << d_object_name << "::updateConnectors balanced--->unbalanced map:" << std::endl
                  << balanced_to_unbalanced.format("\t",0)
-                 << "Map statistics:\n" << balanced_to_unbalanced.formatStatistics("\t")
-                 << '\n';
+                 << "Map statistics:" << std::endl << balanced_to_unbalanced.formatStatistics("\t")
+                 << std::endl;
    }
 
    if (d_check_map) {
@@ -460,20 +462,20 @@ void CascadePartitioner::updateConnectors() const
 
 
    if ( d_summarize_map ) {
-      tbox::plog << d_object_name << "::updateConnectors: unbalanced--->balanced map:\n"
+      tbox::plog << d_object_name << "::updateConnectors: unbalanced--->balanced map:" << std::endl
                  << unbalanced_to_balanced.format("\t",0)
-                 << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
-                 << d_object_name << "::updateConnectors: balanced--->unbalanced map:\n"
+                 << "Map statistics:" << std::endl << unbalanced_to_balanced.formatStatistics("\t")
+                 << d_object_name << "::updateConnectors: balanced--->unbalanced map:" << std::endl
                  << balanced_to_unbalanced.format("\t",0)
-                 << "Map statistics:\n" << balanced_to_unbalanced.formatStatistics("\t")
-                 << '\n';
+                 << "Map statistics:" << std::endl << balanced_to_unbalanced.formatStatistics("\t")
+                 << std::endl;
    }
 
 
    if (d_balance_to_reference && d_balance_to_reference->hasTranspose()) {
       if ( d_print_steps ) {
          tbox::plog
-            << d_object_name << "::updateConnectors applying unbalanced<==>balanced.\n";
+            << d_object_name << "::updateConnectors applying unbalanced<==>balanced." << std::endl;
       }
       t_use_map->barrierAndStart();
       d_mca.modify(
@@ -488,7 +490,7 @@ void CascadePartitioner::updateConnectors() const
 
    if ( d_print_steps ) {
       tbox::plog
-         << d_object_name << "::updateConnectors leaving.\n";
+         << d_object_name << "::updateConnectors leaving." << std::endl;
    }
 
    t_update_connectors->barrierAndStop();

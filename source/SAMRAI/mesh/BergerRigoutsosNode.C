@@ -1966,8 +1966,8 @@ BergerRigoutsosNode::formChildGroups()
    case BergerRigoutsos::MOST_OVERLAP:
       lft_criteria = &d_recv_msg[0];
       rht_criteria = &d_recv_msg[1];
-      lft_criteria[imyself * 4] = d_lft_child->d_overlap;
-      rht_criteria[imyself * 4] = d_rht_child->d_overlap;
+      lft_criteria[imyself * 4] = static_cast<int>(d_lft_child->d_overlap);
+      rht_criteria[imyself * 4] = static_cast<int>(d_rht_child->d_overlap);
       break;
    case BergerRigoutsos::FEWEST_OWNED:
       lft_criteria = &d_recv_msg[2];

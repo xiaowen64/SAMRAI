@@ -52,7 +52,7 @@ BoxTransitSet::s_initialize_finalize_handler(
 BoxTransitSet::BoxTransitSet( const PartitioningParams &pparams ) :
    TransitLoad(),
    d_set(),
-   d_sumload(0),
+   d_sumload(0.0),
    d_pparams(&pparams),
    d_box_breaker(pparams),
    d_print_steps(false),
@@ -76,7 +76,7 @@ BoxTransitSet::BoxTransitSet( const PartitioningParams &pparams ) :
 BoxTransitSet::BoxTransitSet( const BoxTransitSet &other, bool copy_load ) :
    TransitLoad(other),
    d_set(),
-   d_sumload(0),
+   d_sumload(0.0),
    d_pparams(other.d_pparams),
    d_box_breaker(other.d_box_breaker),
    d_print_steps(other.d_print_steps),
@@ -294,17 +294,6 @@ BoxTransitSet::populateMaps(
  * Each process already knows the data in its BoxTransitSet,
  * obviously.  The idea is to acquire relevant data from other
  * processes.
- *
- * Sending is simple because all out-going information is locally
- * available.  Receiving is trickier because we don't know what
- * process to receive from.  The solution depends on the direction of
- * the semilocal edges.
- *
- * - For unbalanced--->balanced, we receive from any process until we
- *   account for all cells in unbalanced.
- *
- * - For balanced--->unbalanced, the owners of relevant unbalanced
- *   boxes must be provided in the origin_ranks argument.
  *************************************************************************
  */
 void
@@ -368,7 +357,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
       tbox::MessageStream &mstream = *recip_itr->second;
 
       if ( d_print_edge_steps ) {
-         tbox::plog << "Accounting for cells on proc " << recipient << '\n';
+         tbox::plog << "Accounting for cells on proc " << recipient << std::endl;
       }
 
       mpi.Isend(
@@ -389,8 +378,9 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
 
 
    size_t num_unaccounted_cells =
-      unbalanced_box_level.getLocalNumberOfCells() + num_cells_imported
-      - balanced_box_level.getLocalNumberOfCells();
+      unbalanced_box_level.getLocalNumberOfCells()
+      - balanced_box_level.getLocalNumberOfCells()
+      + num_cells_imported;
 
    if ( d_print_edge_steps ) {
       tbox::plog << num_unaccounted_cells << " unaccounted cells." << std::endl;
@@ -433,20 +423,19 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
       const size_t old_count = num_unaccounted_cells;
       d_object_timers->t_unpack_edge->start();
       while ( !msg.endOfData() ) {
-
          balanced_box_in_transit.getFromMessageStream(msg);
+         TBOX_ASSERT( balanced_box_in_transit.getBox().size() <= num_unaccounted_cells );
          unbalanced_to_balanced.insertLocalNeighbor(
             balanced_box_in_transit.getBox(),
             balanced_box_in_transit.getOrigBox().getBoxId() );
          num_unaccounted_cells -= balanced_box_in_transit.getBox().size();
-
       }
       d_object_timers->t_unpack_edge->stop();
 
       if ( d_print_edge_steps ) {
          tbox::plog << "Process " << source << " accounted for "
                     << (old_count-num_unaccounted_cells) << " cells, leaving "
-                    << num_unaccounted_cells << " unaccounted.\n";
+                    << num_unaccounted_cells << " unaccounted." << std::endl;
       }
 
       incoming_message.clear();
@@ -1149,7 +1138,7 @@ BoxTransitSet::adjustLoadByPopping(
          ++num_boxes_popped;
 
          if ( d_print_pop_steps ) {
-            tbox::plog << ", main_bin load is " << main_bin.getSumLoad() << '\n';
+            tbox::plog << ", main_bin load is " << main_bin.getSumLoad() << std::endl;
          }
       }
       if ( ( dst->getSumLoad() >= dst_low_load && dst->getSumLoad() <= high_load ) ||
