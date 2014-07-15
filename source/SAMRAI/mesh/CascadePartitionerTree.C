@@ -207,82 +207,98 @@ void CascadePartitionerTree::distributeLoad()
 
    const double connector_update_interval = computeConnectorUpdateInterval();
 
-   for ( CascadePartitionerTree *top_group=this; top_group!=d_leaf;
-         top_group = top_group->d_near ) {
+   const int tree_depth = CascadePartitioner::lgInt( d_common->d_mpi.getSize());
 
-      if ( d_common->d_print_steps ) {
-         tbox::plog << d_common->d_object_name << "::distributeLoad balancing outer top_group "
-                    << top_group->d_gen_num
-                    << "  with exact local_load=" << d_common->d_local_load->getSumLoad()
-                    << std::endl;
-         tbox::plog << "\ttop_group:" << std::endl;
-         top_group->printClassData( tbox::plog, "\t" );
-         tbox::plog << "\tchild 0:" << std::endl;
-         top_group->d_children[0]->printClassData( tbox::plog, "\t" );
-         tbox::plog << "\tchild 1:" << std::endl;
-         top_group->d_children[1]->printClassData( tbox::plog, "\t" );
-      }
+   CascadePartitionerTree *top_group = this;
 
-      d_leaf->recomputeLeafData();
+   for ( int top_gen_number = 0; top_gen_number < tree_depth-1; ++top_gen_number ) {
 
-      for ( CascadePartitionerTree *current_group = d_leaf->d_parent;
-            current_group != 0 && current_group->d_near != top_group;
-            current_group = current_group->d_parent ) {
+      /*
+       * This block combines and balances child branches and, for
+       * certain top groups, update Connectors.  Only non-leaf nodes
+       * combine and balance children but all nodes must participate
+       * in updating Connectors (or the step will hang).
+       */
+      TBOX_ASSERT( top_group->d_gen_num == top_gen_number || top_group == d_leaf );
 
-         current_group->combineChildren();
-         if ( d_common->d_print_steps && d_common->d_print_child_steps ) {
-            tbox::plog << d_common->d_object_name << "::distributeLoad outer top_group "
-                       << top_group->d_gen_num << "  combined generation "
-                       << current_group->d_gen_num << ".  All d_work values are exact." << std::endl;
-            tbox::plog << "\tcurrent_group:" << std::endl;
-            current_group->printClassData( tbox::plog, "\t" );
+      if ( top_group->d_gen_num == top_gen_number ) {
+
+         if ( d_common->d_print_steps ) {
+            tbox::plog << d_common->d_object_name << "::distributeLoad balancing outer top_group "
+                       << top_group->d_gen_num
+                       << "  with exact local_load=" << d_common->d_local_load->getSumLoad()
+                       << std::endl;
+            tbox::plog << "\ttop_group:" << std::endl;
+            top_group->printClassData( tbox::plog, "\t" );
             tbox::plog << "\tchild 0:" << std::endl;
-            current_group->d_children[0]->printClassData( tbox::plog, "\t" );
+            top_group->d_children[0]->printClassData( tbox::plog, "\t" );
             tbox::plog << "\tchild 1:" << std::endl;
-            current_group->d_children[1]->printClassData( tbox::plog, "\t" );
+            top_group->d_children[1]->printClassData( tbox::plog, "\t" );
          }
 
-         if ( d_common->d_reset_obligations &&
-              current_group == top_group && top_group->d_gen_num != 0 ) {
-            const double old_obligation = top_group->d_obligation;
-            top_group->resetObligation( top_group->d_work/static_cast<double>(top_group->size()) );
-            if ( d_common->d_print_steps ) {
-               tbox::plog << d_common->d_object_name << "::distributeLoad generation "
-                          << top_group->d_gen_num << " reset obligation from "
-                          << old_obligation << " to " << top_group->d_obligation
-                          << std::endl;
-            }
-         }
+         d_leaf->recomputeLeafData();
 
-         /*
-          * Balance the children is needed only for top_group, but we
-          * optionally also balance intermediate children.
-          */
-         if ( d_common->d_balance_intermediate_groups || current_group == top_group ) {
-            current_group->balanceChildren();
-            if ( d_common->d_print_steps ) {
+         for ( CascadePartitionerTree *current_group = d_leaf->d_parent;
+               current_group != 0 && current_group->d_near != top_group;
+               current_group = current_group->d_parent ) {
+
+            current_group->combineChildren();
+            if ( d_common->d_print_steps && d_common->d_print_child_steps ) {
                tbox::plog << d_common->d_object_name << "::distributeLoad outer top_group "
-                          << top_group->d_gen_num << "  shuffled generation "
-                          << top_group->d_gen_num << ".  d_work is exact, but childrens' are estimates." << std::endl;
-               tbox::plog << "\ttop_group:" << std::endl;
-               top_group->printClassData( tbox::plog, "\t" );
+                          << top_group->d_gen_num << "  combined generation "
+                          << current_group->d_gen_num << ".  All d_work values are exact."
+                          << std::endl;
+               tbox::plog << "\tcurrent_group:" << std::endl;
+               current_group->printClassData( tbox::plog, "\t" );
                tbox::plog << "\tchild 0:" << std::endl;
-               top_group->d_children[0]->printClassData( tbox::plog, "\t" );
+               current_group->d_children[0]->printClassData( tbox::plog, "\t" );
                tbox::plog << "\tchild 1:" << std::endl;
-               top_group->d_children[1]->printClassData( tbox::plog, "\t" );
+               current_group->d_children[1]->printClassData( tbox::plog, "\t" );
             }
+
+            if ( d_common->d_reset_obligations &&
+                 current_group == top_group && top_group->d_gen_num != 0 ) {
+               const double old_obligation = top_group->d_obligation;
+               top_group->resetObligation( top_group->d_work/static_cast<double>(top_group->size()) );
+               if ( d_common->d_print_steps ) {
+                  tbox::plog << d_common->d_object_name << "::distributeLoad generation "
+                             << top_group->d_gen_num << " reset obligation from "
+                             << old_obligation << " to " << top_group->d_obligation
+                             << std::endl;
+               }
+            }
+
+            /*
+             * Balance the children is needed only for top_group, but we
+             * optionally also balance intermediate children.
+             */
+            if ( d_common->d_balance_intermediate_groups || current_group == top_group ) {
+               current_group->balanceChildren();
+               if ( d_common->d_print_steps ) {
+                  tbox::plog << d_common->d_object_name << "::distributeLoad outer top_group "
+                             << top_group->d_gen_num << "  shuffled generation "
+                             << top_group->d_gen_num << ".  d_work is exact, but childrens' are estimates."
+                             << std::endl;
+                  tbox::plog << "\ttop_group:" << std::endl;
+                  top_group->printClassData( tbox::plog, "\t" );
+                  tbox::plog << "\tchild 0:" << std::endl;
+                  top_group->d_children[0]->printClassData( tbox::plog, "\t" );
+                  tbox::plog << "\tchild 1:" << std::endl;
+                  top_group->d_children[1]->printClassData( tbox::plog, "\t" );
+               }
+            }
+
+         } // Inner loop, current_group
+         if ( d_common->d_print_steps ) {
+            tbox::plog << d_common->d_object_name << "::distributeLoad completed inner loop for generation "
+                       << top_group->d_gen_num << std::endl;
          }
 
-      } // Inner loop, current_group
-      if ( d_common->d_print_steps ) {
-         tbox::plog << d_common->d_object_name << "::distributeLoad completed inner loop for generation "
-                    << top_group->d_gen_num << std::endl;
       }
 
-
-      if ( static_cast<int>(top_group->d_gen_num/connector_update_interval) !=
-           static_cast<int>((top_group->d_gen_num+1)/connector_update_interval) ||
-           top_group == d_leaf->d_parent ) {
+      if ( static_cast<int>(top_gen_number/connector_update_interval) !=
+           static_cast<int>((top_gen_number+1)/connector_update_interval) ||
+           top_gen_number == tree_depth-2 ) {
          // Update Connectors.
          if ( d_common->d_print_steps ) {
             tbox::plog << d_common->d_object_name << "::distributeLoad updating Connectors after balancing generation "
@@ -296,6 +312,8 @@ void CascadePartitionerTree::distributeLoad()
             d_common->d_local_load->insertAll(d_common->d_balance_box_level->getBoxes());
          }
       }
+
+      top_group = top_group->d_near;
 
    } // Outer loop, top_group
 

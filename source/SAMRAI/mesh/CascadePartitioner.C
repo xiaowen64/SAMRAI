@@ -494,6 +494,9 @@ void CascadePartitioner::updateConnectors() const
       hier::BoxLevel::swap(*d_balance_box_level, balanced_box_level);
    }
 
+   d_local_load->clear();
+   d_local_load->insertAll(d_balance_box_level->getBoxes());
+
    if ( d_print_steps ) {
       tbox::plog
          << d_object_name << "::updateConnectors leaving." << std::endl;
