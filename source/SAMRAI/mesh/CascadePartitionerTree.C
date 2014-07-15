@@ -274,6 +274,10 @@ void CascadePartitionerTree::distributeLoad()
          }
 
       } // Inner loop, current_group
+      if ( d_common->d_print_steps ) {
+         tbox::plog << d_common->d_object_name << "::distributeLoad completed inner loop for generation "
+                    << top_group->d_gen_num << std::endl;
+      }
 
 
       if ( static_cast<int>(top_group->d_gen_num/connector_update_interval) !=

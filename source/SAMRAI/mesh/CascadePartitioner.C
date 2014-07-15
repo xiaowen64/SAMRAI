@@ -401,12 +401,18 @@ CascadePartitioner::partitionByCascade(
 
 
 /*
- *************************************************************************
- *************************************************************************
- */
+*************************************************************************
+* Update connectors according to the current boxes in d_local_load.
+* Only point-to-point communication should be used.  If there are not
+* power-of-two processes in d_mpi and d_max_spread_procs is small enough
+* to cause intermediate calls to updateConnectors, it is possible that
+* a subset of processes will be calling updateConnectors().  So don't
+* use collective MPI communications in this method!
+*************************************************************************
+*/
 void CascadePartitioner::updateConnectors() const
 {
-   t_update_connectors->barrierAndStart();
+   t_update_connectors->start();
 
    if ( d_print_steps ) {
       tbox::plog
@@ -477,13 +483,13 @@ void CascadePartitioner::updateConnectors() const
          tbox::plog
             << d_object_name << "::updateConnectors applying unbalanced<==>balanced." << std::endl;
       }
-      t_use_map->barrierAndStart();
+      t_use_map->start();
       d_mca.modify(
          d_balance_to_reference->getTranspose(),
          unbalanced_to_balanced,
          d_balance_box_level,
          &balanced_box_level);
-      t_use_map->barrierAndStop();
+      t_use_map->stop();
    } else {
       hier::BoxLevel::swap(*d_balance_box_level, balanced_box_level);
    }
@@ -493,7 +499,7 @@ void CascadePartitioner::updateConnectors() const
          << d_object_name << "::updateConnectors leaving." << std::endl;
    }
 
-   t_update_connectors->barrierAndStop();
+   t_update_connectors->stop();
 }
 
 
