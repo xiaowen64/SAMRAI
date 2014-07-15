@@ -756,7 +756,8 @@ CascadePartitionerTree::computeConnectorUpdateInterval() const
       d_common->d_local_work_max/d_common->d_global_work_avg : 1.0;
    const int number_of_updates =
       static_cast<int>(ceil( log(fanout_size)/log(static_cast<double>(d_common->d_max_spread_procs)) ));
-   const double update_interval = static_cast<double>(d_leaf->generationNum())/number_of_updates;
+   const int tree_depth = CascadePartitioner::lgInt( d_common->d_mpi.getSize());
+   const double update_interval = static_cast<double>(tree_depth)/number_of_updates;
    if (d_common->d_print_steps) {
       tbox::plog << d_common->d_object_name << "::computeConnectorUpdateInterval"
                  << "  max_spread_procs=" << d_common->d_max_spread_procs
