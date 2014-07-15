@@ -22,7 +22,7 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
-NUM_TESTS = 39
+NUM_TESTS = 40
 CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
 
 TEST_NPROCS = @TEST_NPROCS@
@@ -30,7 +30,8 @@ QUOTE = \"
 
 CXX_OBJS      = mg.o
 
-INPUTS2D =	test_inputs/front.2d.caplb.input	\
+INPUTS2D =	test_inputs/small_spread.2d.tile.input	\
+		test_inputs/front.2d.caplb.input	\
 		test_inputs/front.2d.localtile.input	\
 		test_inputs/front.2d.tile.input	\
 		test_inputs/front.2d.treelb.input	\
