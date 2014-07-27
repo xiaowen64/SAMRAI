@@ -110,11 +110,6 @@ namespace mesh {
  * bool
  * Whether to reset load obligations within groups that cannot change its load average.
  *
- * @internal DEV_balance_intermediate_groups (false)
- * bool
- * Whether to balance intermediate groups instead of balancing just the top groups
- * in each cycle.
- *
  * @internal DEV_limit_supply_to_surplus (true)
  * bool
  * Whether limit work a process can supply to its surplus.  The effects on partitioning
@@ -415,17 +410,6 @@ private:
     * @brief Whether to limit what a process can give to its surplus.
     */
    bool d_limit_supply_to_surplus;
-
-   /*!
-    * @brief Whether to balance intermediate groups (vs balancing only the top
-    * group of each outer cycle).
-    *
-    * There may be performance and data locality benefits when
-    * skipping intermediate groups.  I'm exploring this.
-    *
-    * See input parameter "DEV_balance_intermediate_groups".
-    */
-   bool d_balance_intermediate_groups;
 
    /*!
     * @brief Whether to reset load obligations within groups that

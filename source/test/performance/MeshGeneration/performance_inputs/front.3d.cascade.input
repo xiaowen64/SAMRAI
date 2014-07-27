@@ -83,7 +83,6 @@ BergerRigoutsos {
 
 CascadePartitioner {
   flexible_load_tolerance = 0.05
-  DEV_balance_intermediate_groups = FALSE
   // Debugging options
   DEV_report_load_balance = TRUE
   DEV_check_map = TRUE

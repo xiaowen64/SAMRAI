@@ -272,7 +272,7 @@ void CascadePartitionerTree::distributeLoad()
              * Balance the children is needed only for top_group, but we
              * optionally also balance intermediate children.
              */
-            if ( d_common->d_balance_intermediate_groups || current_group == top_group ) {
+            if ( current_group == top_group ) {
                current_group->balanceChildren();
                if ( d_common->d_print_steps ) {
                   tbox::plog << d_common->d_object_name << "::distributeLoad outer top_group "
