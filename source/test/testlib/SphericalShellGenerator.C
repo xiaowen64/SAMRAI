@@ -166,7 +166,7 @@ void SphericalShellGenerator::setDomain(
    tmp_intvec -= hier::IntVector::getOne(domain_box.getDim());
    tbox::plog << "SphericalShellGenerator::setDomain changing domain from "
               << domain_box << " to ";
-   domain_box.upper() = domain_box.lower() + tmp_intvec;
+   domain_box.setUpper(domain_box.lower() + tmp_intvec);
    tbox::plog << domain_box << '\n';
 
    domain.clear();

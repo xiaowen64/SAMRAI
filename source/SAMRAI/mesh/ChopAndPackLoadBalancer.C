@@ -1087,8 +1087,8 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
    for (hier::BoxContainer::iterator b = box_list_out.begin();
         b != box_list_out.end(); ++b) {
       for (tbox::Dimension::dir_t j = 0; j < d_dim.getValue(); ++j) {
-         b->lower(j) = buf_out_ptr[offset++];
-         b->upper(j) = buf_out_ptr[offset++];
+         b->setLower(j, buf_out_ptr[offset++]);
+         b->setUpper(j, buf_out_ptr[offset++]);
       }
       b->setBlockId(hier::BlockId(buf_out_ptr[offset++]));
    }

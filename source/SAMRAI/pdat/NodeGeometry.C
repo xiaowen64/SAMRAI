@@ -185,9 +185,9 @@ NodeGeometry::transform(
    }
 
    if (!box.empty()) {
-      box.upper() -= hier::IntVector::getOne(box.getDim());
+      box.setUpper(box.upper() - hier::IntVector::getOne(box.getDim()));
       transformation.transform(box);
-      box.upper() += hier::IntVector::getOne(box.getDim());
+      box.setUpper(box.upper() + hier::IntVector::getOne(box.getDim()));
    }
 }
 

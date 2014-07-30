@@ -64,9 +64,11 @@ SideOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
       for (hier::BoxContainer::iterator bi = src_boxes.begin();
            bi != src_boxes.end(); ++bi) {
          if (d_transformation.getRotation() == 0) {
-            bi->upper(static_cast<tbox::Dimension::dir_t>(normal_direction)) -= 1;
+            bi->setUpper(static_cast<tbox::Dimension::dir_t>(normal_direction),
+               bi->upper(static_cast<tbox::Dimension::dir_t>(normal_direction)) - 1);
             inverse_transform.transform(*bi);
-            bi->upper(static_cast<tbox::Dimension::dir_t>(normal_direction)) += 1;
+            bi->setUpper(static_cast<tbox::Dimension::dir_t>(normal_direction),
+               bi->upper(static_cast<tbox::Dimension::dir_t>(normal_direction)) + 1);
          } else {
             transform_normal = normal_direction;
             SideGeometry::transform(*bi,

@@ -47,9 +47,9 @@ NodeOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes) const
       const tbox::Dimension& dim = src_boxes.front().getDim();
       for (hier::BoxContainer::iterator bi = src_boxes.begin();
            bi != src_boxes.end(); ++bi) {
-         bi->upper() -= hier::IntVector::getOne(dim);
+         bi->setUpper(bi->upper() - hier::IntVector::getOne(dim));
          d_transformation.inverseTransform(*bi);
-         bi->upper() += hier::IntVector::getOne(dim);
+         bi->setUpper(bi->upper() + hier::IntVector::getOne(dim));
       }
    }
 }

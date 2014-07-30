@@ -204,7 +204,7 @@ SideGeometry::toSideBox(
 
    if (!box.empty()) {
       side_box = box;
-      side_box.upper(side_normal) += 1;
+      side_box.setUpper(side_normal, side_box.upper(side_normal) + 1);
    }
 
    return side_box;
@@ -318,7 +318,8 @@ SideGeometry::transform(
 
       } else {
 
-         box.upper() (normal_direction) -= 1;
+         box.setUpper(static_cast<hier::Box::dir_t>(normal_direction),
+            box.upper(static_cast<hier::Box::dir_t>(normal_direction)) - 1);
          transformation.transform(box);
          if (dim.getValue() == 2) {
             const int rotation_num = static_cast<int>(rotation);
@@ -431,7 +432,8 @@ SideGeometry::transform(
             }
          }
 
-         box.upper() (normal_direction) += 1;
+         box.setUpper(static_cast<hier::Box::dir_t>(normal_direction),
+            box.upper(static_cast<hier::Box::dir_t>(normal_direction)) + 1);
       }
    }
 }

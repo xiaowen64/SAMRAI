@@ -195,7 +195,7 @@ int main(
             for (size_t i = 0; i < old_size; ++i) {
                boxes[i].shift(shift_dir, shift_distance);
             }
-            bounding_box.upper() (shift_dir) += shift_distance;
+            bounding_box.setUpper(shift_dir, shift_distance);
          }
 
          if (mpi.getRank() == 0) {

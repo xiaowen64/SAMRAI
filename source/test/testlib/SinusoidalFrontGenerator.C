@@ -178,7 +178,8 @@ void SinusoidalFrontGenerator::setDomain(
       for (hier::BoxContainer::iterator bi = domain.begin();
            bi != domain.end(); ++bi) {
          hier::Box& input_box = *bi;
-         input_box.upper() (doubling_dir) += input_box.numberCells(doubling_dir);
+         input_box.setUpper(doubling_dir,
+            input_box.upper(doubling_dir) + input_box.numberCells(doubling_dir));
       }
       xhi[doubling_dir] += xhi[doubling_dir] - xlo[doubling_dir];
       doubling_dir = static_cast<tbox::Dimension::dir_t>((doubling_dir + 1) % dim.getValue());
@@ -299,7 +300,8 @@ void SinusoidalFrontGenerator::computeFrontsData(
    front_box.grow(buffer_cells);
    front_box.growUpper(hier::IntVector(d_dim, 1));
    // Squash front_box to a single plane.
-   front_box.upper(0) = front_box.lower(0) = pbox.lower(0);
+   front_box.setUpper(0, pbox.lower(0));
+   front_box.setLower(0, pbox.lower(0));
    pdat::ArrayData<double> front_x(front_box, 1);
    pdat::ArrayData<int>::iterator aiend(front_x.getBox(), false);
    for (pdat::ArrayData<int>::iterator ai(front_x.getBox(), true);

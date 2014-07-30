@@ -396,8 +396,8 @@ OuteredgeGeometry::toOuteredgeBox(
                if (dh != axis && dh != face_normal) {
                   // do not trim in axis or face_normal direction
 
-                  ++oedge_box.lower(dh);
-                  --oedge_box.upper(dh);
+                  oedge_box.setLower(dh, oedge_box.lower(dh) + 1);
+                  oedge_box.setUpper(dh, oedge_box.upper(dh) - 1);
 
                }
 
@@ -408,9 +408,9 @@ OuteredgeGeometry::toOuteredgeBox(
       }
 
       if (side == 0) {   // lower side in face normal direction
-         oedge_box.upper(face_normal) = oedge_box.lower(face_normal);
+         oedge_box.setUpper(face_normal, oedge_box.lower(face_normal));
       } else {  // side == 1; upper side in face normal direction
-         oedge_box.lower(face_normal) = oedge_box.upper(face_normal);
+         oedge_box.setLower(face_normal, oedge_box.upper(face_normal));
       }
 
    }

@@ -765,8 +765,8 @@ static void dumpMatlabData1dPencil(
       indx = 0;
       for (tbox::Dimension::dir_t id = 0; id < dim.getValue(); ++id) {
          if (id != pencil_direction) {
-            pencil_box.lower(id) = tmp[indx];
-            pencil_box.upper(id) = tmp[indx];
+            pencil_box.setLower(id, tmp[indx]);
+            pencil_box.setUpper(id, tmp[indx]);
             ++indx;
          }
       }

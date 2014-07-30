@@ -131,7 +131,7 @@ void ShrunkenLevelGenerator::setDomain(
       tmp_intvec -= hier::IntVector::getOne(domain_box.getDim());
       tbox::plog << "ShrunkenLevelGenerator::setDomain changing domain from "
                  << domain_box << " to ";
-      domain_box.upper() = domain_box.lower() + tmp_intvec;
+      domain_box.setUpper(domain_box.lower() + tmp_intvec);
       tbox::plog << domain_box << '\n';
 
       domain.clear();
@@ -156,7 +156,8 @@ void ShrunkenLevelGenerator::setDomain(
          for (hier::BoxContainer::iterator bi = domain.begin();
               bi != domain.end(); ++bi) {
             hier::Box& input_box = *bi;
-            input_box.upper() (doubling_dir) += input_box.numberCells(doubling_dir);
+            input_box.setUpper(doubling_dir,
+               input_box.upper(doubling_dir) + input_box.numberCells(doubling_dir));
          }
          xhi[doubling_dir] += xhi[doubling_dir] - xlo[doubling_dir];
          doubling_dir = static_cast<tbox::Dimension::dir_t>((doubling_dir + 1) % dim.getValue());

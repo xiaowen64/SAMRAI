@@ -155,13 +155,15 @@ OuternodeGeometry::doOverlap(
              * For directions higher than d, narrow the box down to avoid
              * representing edge and corner nodes multiple times.
              */
-            ++trimmed_src_node_box.lower(dh);
-            --trimmed_src_node_box.upper(dh);
+            trimmed_src_node_box.setLower(dh,
+               trimmed_src_node_box.lower(dh) + 1);
+            trimmed_src_node_box.setUpper(dh,
+               trimmed_src_node_box.upper(dh) - 1);
          }
 
          // Add lower side intersection (if any) to the box list
          hier::Box low_node_box(trimmed_src_node_box);
-         low_node_box.upper(d) = low_node_box.lower(d);
+         low_node_box.setUpper(d, low_node_box.lower(d));
 
          hier::Box low_overlap(low_node_box * msk_node_box * dst_node_box
                                * fill_node_box);
@@ -171,7 +173,7 @@ OuternodeGeometry::doOverlap(
 
          // Add upper side intersection (if any) to the box list
          hier::Box hig_node_box(trimmed_src_node_box);
-         hig_node_box.lower(d) = hig_node_box.upper(d);
+         hig_node_box.setLower(d, hig_node_box.upper(d));
 
          hier::Box hig_overlap(hig_node_box * msk_node_box * dst_node_box
                                * fill_node_box);
@@ -262,13 +264,15 @@ OuternodeGeometry::doOverlap(
              * For directions higher than d, narrow the box down to avoid
              * representing edge and corner nodes multiple times.
              */
-            ++trimmed_dst_node_box.lower(dh);
-            --trimmed_dst_node_box.upper(dh);
+            trimmed_dst_node_box.setLower(dh,
+               trimmed_dst_node_box.lower(dh) + 1);
+            trimmed_dst_node_box.setUpper(dh,
+               trimmed_dst_node_box.upper(dh) - 1);
          }
 
          // Add lower side intersection (if any) to the box list
          hier::Box low_node_box(trimmed_dst_node_box);
-         low_node_box.upper(d) = low_node_box.lower(d);
+         low_node_box.setUpper(d, low_node_box.lower(d));
 
          hier::Box low_overlap(low_node_box * msk_node_box * src_node_box);
          if (!low_overlap.empty()) {
@@ -277,7 +281,7 @@ OuternodeGeometry::doOverlap(
 
          // Add upper side intersection (if any) to the box list
          hier::Box hig_node_box(trimmed_dst_node_box);
-         hig_node_box.lower(d) = hig_node_box.upper(d);
+         hig_node_box.setLower(d, hig_node_box.upper(d));
 
          hier::Box hig_overlap(hig_node_box * msk_node_box * src_node_box);
          if (!hig_overlap.empty()) {
@@ -364,29 +368,33 @@ OuternodeGeometry::doOverlap(
 
          hier::Box trimmed_dst_node_box(dst_node_box * fill_node_box);
          for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(dst_d + 1); dh < dim.getValue(); ++dh) {
-            ++trimmed_dst_node_box.lower(dh);
-            --trimmed_dst_node_box.upper(dh);
+            trimmed_dst_node_box.setLower(dh,
+               trimmed_dst_node_box.lower(dh) + 1);
+            trimmed_dst_node_box.setUpper(dh,
+               trimmed_dst_node_box.upper(dh) - 1);
          }
 
          hier::Box lo_dst_node_box = trimmed_dst_node_box;
-         lo_dst_node_box.upper(dst_d) = lo_dst_node_box.lower(dst_d);
+         lo_dst_node_box.setUpper(dst_d, lo_dst_node_box.lower(dst_d));
 
          hier::Box hi_dst_node_box = trimmed_dst_node_box;
-         hi_dst_node_box.lower(dst_d) = hi_dst_node_box.upper(dst_d);
+         hi_dst_node_box.setLower(dst_d, hi_dst_node_box.upper(dst_d));
 
          for (src_d = 0; src_d < dim.getValue(); ++src_d) {
 
             hier::Box trimmed_src_node_box = src_node_box;
             for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(src_d + 1); dh < dim.getValue(); ++dh) {
-               ++trimmed_src_node_box.lower(dh);
-               --trimmed_src_node_box.upper(dh);
+               trimmed_src_node_box.setLower(dh,
+                  trimmed_src_node_box.lower(dh) + 1);
+               trimmed_src_node_box.setUpper(dh,
+                  trimmed_src_node_box.upper(dh) - 1);
             }
 
             hier::Box lo_src_node_box = trimmed_src_node_box;
-            lo_src_node_box.upper(src_d) = lo_src_node_box.lower(src_d);
+            lo_src_node_box.setUpper(src_d, lo_src_node_box.lower(src_d));
 
             hier::Box hi_src_node_box = trimmed_src_node_box;
-            hi_src_node_box.lower(src_d) = hi_src_node_box.upper(src_d);
+            hi_src_node_box.setLower(src_d,  hi_src_node_box.upper(src_d));
 
             hier::Box lo_lo_box(
                lo_src_node_box * msk_node_box * lo_dst_node_box);

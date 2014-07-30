@@ -64,18 +64,18 @@ OuternodeData<TYPE>::OuternodeData(
           *          Y--Y--Y
           *         node box
           */
-         nodebox.lower(dh) += 1;
-         nodebox.upper(dh) -= 1;
+         nodebox.setLower(dh, nodebox.lower(dh) + 1);
+         nodebox.setUpper(dh, nodebox.upper(dh) - 1);
       }
 
       hier::Box outernodebox = nodebox;
-      outernodebox.upper(d) = nodebox.lower(d);
-      outernodebox.lower(d) = nodebox.lower(d);
+      outernodebox.setUpper(d, nodebox.lower(d));
+      outernodebox.setLower(d, nodebox.lower(d));
       d_data[d][0].reset(new ArrayData<TYPE>(outernodebox, depth));
 
       outernodebox = nodebox;
-      outernodebox.lower(d) = nodebox.upper(d);
-      outernodebox.upper(d) = nodebox.upper(d);
+      outernodebox.setLower(d, nodebox.upper(d));
+      outernodebox.setUpper(d, nodebox.upper(d));
       d_data[d][1].reset(new ArrayData<TYPE>(outernodebox, depth));
 
    }
@@ -600,10 +600,10 @@ OuternodeData<TYPE>::getSizeOfData(
    for (tbox::Dimension::dir_t d = 0; d < box.getDim().getValue(); ++d) {
       hier::Box loc0 = NodeGeometry::toNodeBox(box);
       hier::Box loc1 = NodeGeometry::toNodeBox(box);
-      loc0.upper(d) = box.lower(d);
-      loc0.lower(d) = box.lower(d);
-      loc1.lower(d) = box.upper(d);
-      loc1.upper(d) = box.upper(d);
+      loc0.setUpper(d, box.lower(d));
+      loc0.setLower(d, box.lower(d));
+      loc1.setLower(d, box.upper(d));
+      loc1.setUpper(d, box.upper(d));
 
       for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1); dh < box.getDim().getValue(); ++dh) {
 
@@ -611,10 +611,10 @@ OuternodeData<TYPE>::getSizeOfData(
           * For directions higher than d, narrow the box down to avoid
           * representing edge and corner nodes multiple times.
           */
-         loc0.lower(dh) += 1;
-         loc0.upper(dh) -= 1;
-         loc1.lower(dh) += 1;
-         loc1.upper(dh) -= 1;
+         loc0.setLower(dh, loc0.lower(dh) + 1);
+         loc0.setUpper(dh, loc0.upper(dh) - 1);
+         loc1.setLower(dh, loc1.lower(dh) + 1);
+         loc1.setUpper(dh, loc1.upper(dh) - 1);
       }
       size += ArrayData<TYPE>::getSizeOfData(loc0, depth)
          + ArrayData<TYPE>::getSizeOfData(loc1, depth);
@@ -655,18 +655,18 @@ OuternodeData<TYPE>::getDataBox(
        * For directions higher than d, narrow the box down to avoid
        * representing edge and corner nodes multiple times.
        */
-      databox.lower(dh) += 1;
-      databox.upper(dh) -= 1;
+      databox.setLower(dh, databox.lower(dh) + 1);
+      databox.setUpper(dh, databox.upper(dh) - 1);
    }
 
    if (side == 0) {
-      databox.upper(face_normal) = databox.lower(face_normal);
-      databox.lower(face_normal) = databox.lower(face_normal)
-         - ghosts(face_normal);
+      databox.setUpper(face_normal, databox.lower(face_normal));
+      databox.setLower(face_normal,
+         databox.lower(face_normal) - ghosts(face_normal));
    } else { // side == 1
-      databox.lower(face_normal) = databox.upper(face_normal);
-      databox.upper(face_normal) = databox.upper(face_normal)
-         + ghosts(face_normal);
+      databox.setLower(face_normal, databox.upper(face_normal));
+      databox.setUpper(face_normal,
+         databox.upper(face_normal) + ghosts(face_normal));
    }
    return databox;
 }

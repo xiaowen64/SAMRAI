@@ -488,30 +488,22 @@ public:
       const Box& rhs);
 
    /*!
-    * @brief Return a non-const lower index of the box.
-    */
-   Index&
-   lower()
-   {
-      return d_lo;
-   }
-
-   /*!
-    * @brief Return a non-const upper index of the box.
-    */
-   Index&
-   upper()
-   {
-      return d_hi;
-   }
-
-   /*!
     * @brief Return a const lower index of the box.
     */
    const Index&
    lower() const
    {
       return d_lo;
+   }
+
+   /*!
+    * @brief Sets lower index of the box.
+    */
+   void
+   setLower(
+      const Index& new_lower)
+   {
+      d_lo = new_lower;
    }
 
    /*!
@@ -524,23 +516,13 @@ public:
    }
 
    /*!
-    * @brief Return the i'th component (non-const) of the lower index.
+    * @brief Sets upper index of the box.
     */
-   int&
-   lower(
-      const dir_t i)
+   void
+   setUpper(
+      const Index& new_upper)
    {
-      return d_lo(i);
-   }
-
-   /*!
-    * @brief Return the i'th component (non-const) of the upper index.
-    */
-   int&
-   upper(
-      const dir_t i)
-   {
-      return d_hi(i);
+      d_hi = new_upper;
    }
 
    /*!
@@ -548,9 +530,20 @@ public:
     */
    const int&
    lower(
-      const dir_t i) const
+      dir_t i) const
    {
       return d_lo(i);
+   }
+
+   /*!
+    * @brief Sets the i'th component of the lower index.
+    */
+   void
+   setLower(
+      dir_t i,
+      int new_lower)
+   {
+      d_lo(i) = new_lower;
    }
 
    /*!
@@ -558,9 +551,20 @@ public:
     */
    const int&
    upper(
-      const dir_t i) const
+      dir_t i) const
    {
       return d_hi(i);
+   }
+
+   /*!
+    * @brief Sets the i'th component of the upper index.
+    */
+   void
+   setUpper(
+      dir_t i,
+      int new_upper)
+   {
+      d_hi(i) = new_upper;
    }
 
    /*!

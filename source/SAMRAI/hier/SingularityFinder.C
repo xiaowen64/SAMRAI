@@ -477,17 +477,21 @@ SingularityFinder::findCoincidentEdges(
 
    for (int d = 0; d < d_dim.getValue(); ++d) {
       if (a_box.lower() (d) == a_box.upper() (d)) {
-         a_box.lower() (d) -= 1;
-         a_box.upper() (d) += 1;
+         a_box.setLower(static_cast<Box::dir_t>(d),
+            a_box.lower(static_cast<Box::dir_t>(d)) - 1);
+         a_box.setUpper(static_cast<Box::dir_t>(d),
+            a_box.upper(static_cast<Box::dir_t>(d)) + 1);
       }
       if (b_box.lower() (d) == b_box.upper() (d)) {
-         b_box.lower() (d) -= 1;
-         b_box.upper() (d) += 1;
+         b_box.setLower(static_cast<Box::dir_t>(d),
+            b_box.lower(static_cast<Box::dir_t>(d)) - 1);
+         b_box.setUpper(static_cast<Box::dir_t>(d),
+            b_box.upper(static_cast<Box::dir_t>(d)) + 1);
       }
    }
 
    Box b_node_box(b_box);
-   b_node_box.upper() += IntVector::getOne(d_dim);
+   b_node_box.setUpper(b_node_box.upper() + IntVector::getOne(d_dim));
    IntVector b_box_size(b_node_box.numberCells());
    hier::BoxContainer b_edge_boxes;
 
@@ -503,52 +507,52 @@ SingularityFinder::findCoincidentEdges(
       switch (edgea_idx) {
 
          case 0:
-            edge_box.upper() (0) = edge_box.lower(0);
-            edge_box.upper() (1) = edge_box.lower(1);
+            edge_box.setUpper(0, edge_box.lower(0));
+            edge_box.setUpper(1, edge_box.lower(1));
             break;
          case 1:
-            edge_box.lower() (0) = edge_box.upper(0);
-            edge_box.upper() (1) = edge_box.lower(1);
+            edge_box.setLower(0, edge_box.upper(0));
+            edge_box.setUpper(1, edge_box.lower(1));
             break;
          case 2:
-            edge_box.upper() (0) = edge_box.lower(0);
-            edge_box.lower() (1) = edge_box.upper(1);
+            edge_box.setUpper(0, edge_box.lower(0));
+            edge_box.setLower(1, edge_box.upper(1));
             break;
          case 3:
-            edge_box.lower() (0) = edge_box.upper(0);
-            edge_box.lower() (1) = edge_box.upper(1);
+            edge_box.setLower(0, edge_box.upper(0));
+            edge_box.setLower(1, edge_box.upper(1));
             break;
          case 4:
-            edge_box.upper() (0) = edge_box.lower(0);
-            edge_box.upper() (2) = edge_box.lower(2);
+            edge_box.setUpper(0, edge_box.lower(0));
+            edge_box.setUpper(2, edge_box.lower(2));
             break;
          case 5:
-            edge_box.lower() (0) = edge_box.upper(0);
-            edge_box.upper() (2) = edge_box.lower(2);
+            edge_box.setLower(0, edge_box.upper(0));
+            edge_box.setUpper(2, edge_box.lower(2));
             break;
          case 6:
-            edge_box.upper() (0) = edge_box.lower(0);
-            edge_box.lower() (2) = edge_box.upper(2);
+            edge_box.setUpper(0, edge_box.lower(0));
+            edge_box.setLower(2, edge_box.upper(2));
             break;
          case 7:
-            edge_box.lower() (0) = edge_box.upper(0);
-            edge_box.lower() (2) = edge_box.upper(2);
+            edge_box.setLower(0, edge_box.upper(0));
+            edge_box.setLower(2, edge_box.upper(2));
             break;
          case 8:
-            edge_box.upper() (1) = edge_box.lower(1);
-            edge_box.upper() (2) = edge_box.lower(2);
+            edge_box.setUpper(1, edge_box.lower(1));
+            edge_box.setUpper(2, edge_box.lower(2));
             break;
          case 9:
-            edge_box.lower() (1) = edge_box.upper(1);
-            edge_box.upper() (2) = edge_box.lower(2);
+            edge_box.setLower(1, edge_box.upper(1));
+            edge_box.setUpper(2, edge_box.lower(2));
             break;
          case 10:
-            edge_box.upper() (1) = edge_box.lower(1);
-            edge_box.lower() (2) = edge_box.upper(2);
+            edge_box.setUpper(1, edge_box.lower(1));
+            edge_box.setLower(2, edge_box.upper(2));
             break;
          case 11:
-            edge_box.lower() (1) = edge_box.upper(1);
-            edge_box.lower() (2) = edge_box.upper(2);
+            edge_box.setLower(1, edge_box.upper(1));
+            edge_box.setLower(2, edge_box.upper(2));
             break;
          default:
             break;
@@ -564,7 +568,7 @@ SingularityFinder::findCoincidentEdges(
 #endif
          TBOX_ASSERT(transformed);
       }
-      edge_box.upper() += IntVector::getOne(d_dim);
+      edge_box.setUpper(edge_box.upper() + IntVector::getOne(d_dim));
       Box b_edge(edge_box * b_node_box);
 
       IntVector b_edge_dirs(b_edge.numberCells());
@@ -591,57 +595,57 @@ SingularityFinder::findCoincidentEdges(
                int edge_idx = s_face_edges[faceb][e];
 
                Box add_box(b_box);
-               add_box.upper() += IntVector::getOne(d_dim);
+               add_box.setUpper(add_box.upper() + IntVector::getOne(d_dim));
 
                switch (edge_idx) {
 
                   case 0:
-                     add_box.upper() (0) = add_box.lower(0);
-                     add_box.upper() (1) = add_box.lower(1);
+                     add_box.setUpper(0, add_box.lower(0));
+                     add_box.setUpper(1, add_box.lower(1));
                      break;
                   case 1:
-                     add_box.lower() (0) = add_box.upper(0);
-                     add_box.upper() (1) = add_box.lower(1);
+                     add_box.setLower(0, add_box.upper(0));
+                     add_box.setUpper(1, add_box.lower(1));
                      break;
                   case 2:
-                     add_box.upper() (0) = add_box.lower(0);
-                     add_box.lower() (1) = add_box.upper(1);
+                     add_box.setUpper(0, add_box.lower(0));
+                     add_box.setLower(1, add_box.upper(1));
                      break;
                   case 3:
-                     add_box.lower() (0) = add_box.upper(0);
-                     add_box.lower() (1) = add_box.upper(1);
+                     add_box.setLower(0, add_box.upper(0));
+                     add_box.setLower(1, add_box.upper(1));
                      break;
                   case 4:
-                     add_box.upper() (0) = add_box.lower(0);
-                     add_box.upper() (2) = add_box.lower(2);
+                     add_box.setUpper(0, add_box.lower(0));
+                     add_box.setUpper(2, add_box.lower(2));
                      break;
                   case 5:
-                     add_box.lower() (0) = add_box.upper(0);
-                     add_box.upper() (2) = add_box.lower(2);
+                     add_box.setLower(0, add_box.upper(0));
+                     add_box.setUpper(2, add_box.lower(2));
                      break;
                   case 6:
-                     add_box.upper() (0) = add_box.lower(0);
-                     add_box.lower() (2) = add_box.upper(2);
+                     add_box.setUpper(0, add_box.lower(0));
+                     add_box.setLower(2, add_box.upper(2));
                      break;
                   case 7:
-                     add_box.lower() (0) = add_box.upper(0);
-                     add_box.lower() (2) = add_box.upper(2);
+                     add_box.setLower(0, add_box.upper(0));
+                     add_box.setLower(2, add_box.upper(2));
                      break;
                   case 8:
-                     add_box.upper() (1) = add_box.lower(1);
-                     add_box.upper() (2) = add_box.lower(2);
+                     add_box.setUpper(1, add_box.lower(1));
+                     add_box.setUpper(2, add_box.lower(2));
                      break;
                   case 9:
-                     add_box.lower() (1) = add_box.upper(1);
-                     add_box.upper() (2) = add_box.lower(2);
+                     add_box.setLower(1, add_box.upper(1));
+                     add_box.setUpper(2, add_box.lower(2));
                      break;
                   case 10:
-                     add_box.upper() (1) = add_box.lower(1);
-                     add_box.lower() (2) = add_box.upper(2);
+                     add_box.setUpper(1, add_box.lower(1));
+                     add_box.setLower(2, add_box.upper(2));
                      break;
                   case 11:
-                     add_box.lower() (1) = add_box.upper(1);
-                     add_box.lower() (2) = add_box.upper(2);
+                     add_box.setLower(1, add_box.upper(1));
+                     add_box.setLower(2, add_box.upper(2));
                      break;
                   default:
                      break;
@@ -758,17 +762,21 @@ SingularityFinder::findCoincidentPoints(
 
    for (int d = 0; d < d_dim.getValue(); ++d) {
       if (a_box.lower() (d) == a_box.upper() (d)) {
-         a_box.lower() (d) -= 1;
-         a_box.upper() (d) += 1;
+         a_box.setLower(static_cast<Box::dir_t>(d),
+            a_box.lower(static_cast<Box::dir_t>(d)) - 1);
+         a_box.setUpper(static_cast<Box::dir_t>(d),
+            a_box.upper(static_cast<Box::dir_t>(d)) + 1);
       }
       if (b_box.lower() (d) == b_box.upper() (d)) {
-         b_box.lower() (d) -= 1;
-         b_box.upper() (d) += 1;
+         b_box.setLower(static_cast<Box::dir_t>(d),
+            b_box.lower(static_cast<Box::dir_t>(d)) - 1);
+         b_box.setUpper(static_cast<Box::dir_t>(d),
+            b_box.upper(static_cast<Box::dir_t>(d)) + 1);
       }
    }
 
    Box b_node_box(b_box);
-   b_node_box.upper() += IntVector::getOne(d_dim);
+   b_node_box.setUpper(b_node_box.upper() + IntVector::getOne(d_dim));
    IntVector b_box_size(b_node_box.numberCells());
 
    int npoints_per_face = 1 << (d_dim.getValue() - 1);
@@ -791,9 +799,9 @@ SingularityFinder::findCoincidentPoints(
       for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
          TBOX_ASSERT(corner_dirs[d] == -1 || corner_dirs[d] == 1);
          if (corner_dirs[d] == -1) {
-            point_box.upper() (d) = point_box.lower(d);
+            point_box.setUpper(d, point_box.lower(d));
          } else {
-            point_box.lower() (d) = point_box.upper(d);
+            point_box.setLower(d, point_box.upper(d));
          }
       }
 
@@ -808,7 +816,7 @@ SingularityFinder::findCoincidentPoints(
          TBOX_ASSERT(transformed);
       }
 
-      point_box.upper() += IntVector::getOne(d_dim);
+      point_box.setUpper(point_box.upper() + IntVector::getOne(d_dim));
       Box b_point(point_box * b_node_box);
 
       IntVector b_point_dirs(d_dim, 0);

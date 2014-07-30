@@ -2258,12 +2258,10 @@ BergerRigoutsosNode::getBoxFromBuffer(
    hier::Box& box,
    int* buffer) const
 {
-   hier::IntVector& l = box.lower();
-   hier::IntVector& u = box.upper();
    int dim_val = d_common->getDim().getValue();
    for (int d = 0; d < dim_val; ++d) {
-      l(d) = *(buffer++);
-      u(d) = *(buffer++);
+      box.setLower(static_cast<hier::Box::dir_t>(d), *(buffer++));
+      box.setUpper(static_cast<hier::Box::dir_t>(d), *(buffer++));
    }
    return buffer;
 }

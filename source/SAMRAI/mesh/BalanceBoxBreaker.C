@@ -399,7 +399,7 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
           d_pparams->getMinBoxSize() (brk_dir)) {
 
          hier::Box brk_box(trial.d_whole_box);
-         brk_box.upper() (brk_dir) = lo_lower_cut_plane - 1;
+         brk_box.setUpper(brk_dir, lo_lower_cut_plane - 1);
          trial1.computeBreakData(brk_box);
          if (trial1.improvesOver(trial)) {
             trial.swap(trial1);
@@ -417,8 +417,9 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
           hi_lower_cut_plane >= trial.d_whole_box.upper() (brk_dir) + 1) {
 
          hier::Box brk_box(trial.d_whole_box);
-         brk_box.upper() (brk_dir) = tbox::MathUtilities<int>::Min(hi_lower_cut_plane - 1,
-               trial1.d_whole_box.upper() (brk_dir));
+         brk_box.setUpper(brk_dir,
+            tbox::MathUtilities<int>::Min(hi_lower_cut_plane - 1,
+               trial1.d_whole_box.upper(brk_dir)));
          trial1.computeBreakData(brk_box);
          if (trial1.improvesOver(trial)) {
             trial.swap(trial1);
@@ -436,8 +437,9 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
           lo_upper_cut_plane <= trial.d_whole_box.lower() (brk_dir)) {
 
          hier::Box brk_box(trial.d_whole_box);
-         brk_box.lower() (brk_dir) = tbox::MathUtilities<int>::Max(lo_upper_cut_plane,
-               trial1.d_whole_box.lower() (brk_dir));
+         brk_box.setLower(brk_dir,
+            tbox::MathUtilities<int>::Max(lo_upper_cut_plane,
+               trial1.d_whole_box.lower(brk_dir)));
          trial1.computeBreakData(brk_box);
          if (trial1.improvesOver(trial)) {
             trial.swap(trial1);
@@ -454,7 +456,7 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
           d_pparams->getMinBoxSize() (brk_dir)) {
 
          hier::Box brk_box(trial.d_whole_box);
-         brk_box.lower() (brk_dir) = hi_upper_cut_plane;
+         brk_box.setLower(brk_dir, hi_upper_cut_plane);
          trial1.computeBreakData(brk_box);
          if (trial1.improvesOver(trial)) {
             trial.swap(trial1);
@@ -665,17 +667,21 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
          int touches_upper_side = bn & (1 << d);
 
          if (touches_upper_side) {
-            corner_box.lower() (d) = upper_intersection(d);
-            if (corner_box.lower() (d) - trial.d_whole_box.lower() (d) <
+            corner_box.setLower(static_cast<hier::Box::dir_t>(d),
+               upper_intersection(d));
+            if (corner_box.lower(static_cast<hier::Box::dir_t>(d)) - trial.d_whole_box.lower(static_cast<hier::Box::dir_t>(d)) <
                 d_pparams->getMinBoxSize() (d)) {
-               corner_box.lower() (d) = trial.d_whole_box.lower() (d);
+               corner_box.setLower(static_cast<hier::Box::dir_t>(d),
+                  trial.d_whole_box.lower(static_cast<hier::Box::dir_t>(d)));
             }
             expansion_rate(d) = -d_pparams->getCutFactor() (d);
          } else {
-            corner_box.upper() (d) = lower_intersection(d) - 1;
+            corner_box.setUpper(static_cast<hier::Box::dir_t>(d),
+               lower_intersection(d) - 1);
             if (trial.d_whole_box.upper() (d) - corner_box.upper() (d) <
                 d_pparams->getMinBoxSize() (d)) {
-               corner_box.upper() (d) = trial.d_whole_box.upper() (d);
+               corner_box.setUpper(static_cast<hier::Box::dir_t>(d),
+                  trial.d_whole_box.upper(static_cast<hier::Box::dir_t>(d)));
             }
             expansion_rate(d) = d_pparams->getCutFactor() (d);
          }
@@ -745,21 +751,25 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
           * prevent remainder from violating min size.  Update growability.
           */
          if (expansion_rate(inc_dir) > 0) {
-            corner_box.upper() (inc_dir) = tbox::MathUtilities<int>::Min(
-                  corner_box.upper() (inc_dir) + expansion_rate(inc_dir),
-                  trial.d_whole_box.upper() (inc_dir));
+            corner_box.setUpper(static_cast<hier::Box::dir_t>(inc_dir),
+               tbox::MathUtilities<int>::Min(
+                  corner_box.upper(static_cast<hier::Box::dir_t>(inc_dir)) + expansion_rate(inc_dir),
+                  trial.d_whole_box.upper(static_cast<hier::Box::dir_t>(inc_dir))));
             if (trial.d_whole_box.upper() (inc_dir) - corner_box.upper() (inc_dir) <
                 d_pparams->getMinBoxSize() (inc_dir)) {
-               corner_box.upper() (inc_dir) = trial.d_whole_box.upper() (inc_dir);
+               corner_box.setUpper(static_cast<hier::Box::dir_t>(inc_dir),
+                  trial.d_whole_box.upper(static_cast<hier::Box::dir_t>(inc_dir)));
             }
             growable(inc_dir) = corner_box.upper() (inc_dir) < trial.d_whole_box.upper() (inc_dir);
          } else {
-            corner_box.lower() (inc_dir) = tbox::MathUtilities<int>::Max(
-                  corner_box.lower() (inc_dir) + expansion_rate(inc_dir),
-                  trial.d_whole_box.lower() (inc_dir));
+            corner_box.setLower(static_cast<hier::Box::dir_t>(inc_dir),
+               tbox::MathUtilities<int>::Max(
+                  corner_box.lower(static_cast<hier::Box::dir_t>(inc_dir)) + expansion_rate(inc_dir),
+                  trial.d_whole_box.lower(static_cast<hier::Box::dir_t>(inc_dir))));
             if (corner_box.lower() (inc_dir) - trial.d_whole_box.lower() (inc_dir) <
                 d_pparams->getMinBoxSize() (inc_dir)) {
-               corner_box.lower() (inc_dir) = trial.d_whole_box.lower() (inc_dir);
+               corner_box.setLower(static_cast<hier::Box::dir_t>(inc_dir),
+                  trial.d_whole_box.lower(static_cast<hier::Box::dir_t>(inc_dir)));
             }
             growable(inc_dir) = corner_box.lower() (inc_dir) > trial.d_whole_box.lower() (inc_dir);
          }
@@ -889,11 +899,15 @@ BalanceBoxBreaker::burstBox(
 
       hier::Box removeme = cutme;
       if (cut_above_solid) {
-         cutme.upper() (cut_dir) = solid.upper() (cut_dir);
-         removeme.lower() (cut_dir) = solid.upper() (cut_dir) + 1;
+         cutme.setUpper(static_cast<hier::Box::dir_t>(cut_dir),
+            solid.upper(static_cast<hier::Box::dir_t>(cut_dir)));
+         removeme.setLower(static_cast<hier::Box::dir_t>(cut_dir),
+            solid.upper(static_cast<hier::Box::dir_t>(cut_dir)) + 1);
       } else {
-         cutme.lower() (cut_dir) = solid.lower() (cut_dir);
-         removeme.upper() (cut_dir) = solid.lower() (cut_dir) - 1;
+         cutme.setLower(static_cast<hier::Box::dir_t>(cut_dir),
+            solid.lower(static_cast<hier::Box::dir_t>(cut_dir)));
+         removeme.setUpper(static_cast<hier::Box::dir_t>(cut_dir),
+            solid.lower(static_cast<hier::Box::dir_t>(cut_dir)) - 1);
       }
 
       boxes.push_back(removeme);

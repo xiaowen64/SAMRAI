@@ -774,9 +774,12 @@ operator >> (
    Box& box)
 {
    while (s.get() != '[') ;
-   s >> box.lower();
+   Index tmp(box.getDim());
+   s >> tmp;
+   box.setLower(tmp);
    while (s.get() != ',') NULL_STATEMENT;
-   s >> box.upper();
+   s >> tmp;
+   box.setUpper(tmp);
    while (s.get() != ']') NULL_STATEMENT;
    return s;
 }

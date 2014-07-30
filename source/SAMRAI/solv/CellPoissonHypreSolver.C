@@ -481,8 +481,10 @@ CellPoissonHypreSolver::allocateHypreData()
       hier::Box domain_bound(level_domain.front());
       for (hier::BoxContainer::const_iterator i = level_domain.begin();
            i != level_domain.end(); ++i) {
-         domain_bound.lower().min(i->lower());
-         domain_bound.upper().max(i->upper());
+         domain_bound.setLower(
+            hier::Index::min(domain_bound.lower(), i->lower()));
+         domain_bound.setUpper(
+            hier::Index::min(domain_bound.upper(), i->upper()));
       }
       for (d = 0; d < d_dim.getValue(); ++d) {
          if (periodic_flag[d] == true) {

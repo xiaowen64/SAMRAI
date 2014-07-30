@@ -441,7 +441,7 @@ BalanceUtilities::privateFindBestCutDimension(
       int ncells = in_box.numberCells(id);
       if ((ncells < 2 * min_size(id)) ||
           (ncells % cut_factor(id))) {
-         size_test_box.lower(id) = size_test_box.upper(id);
+         size_test_box.setLower(id, size_test_box.upper(id));
       }
    }
 
@@ -485,7 +485,7 @@ BalanceUtilities::privateFindBestCutDimension(
          }
 
          if (!found_cut_point) {
-            test_box.lower(cutdim) = test_box.upper(cutdim);
+            test_box.setLower(cutdim, test_box.upper(cutdim));
          }
 
          cutdim = test_box.longestDirection();
@@ -621,10 +621,10 @@ BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
    const tbox::Dimension& dim(box_lo.getDim());
 
    box_lo = in_box;
-   box_lo.upper(cutdim) = cut_index - 1;
+   box_lo.setUpper(cutdim, cut_index - 1);
 
    box_hi = in_box;
-   box_hi.lower(cutdim) = cut_index;
+   box_hi.setLower(cutdim, cut_index);
 
    int i;
    for (tbox::Dimension::dir_t id = 0; id < dim.getValue(); ++id) {
@@ -857,7 +857,7 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
           */
 
          hier::Box slice_box = in_box;
-         slice_box.upper(cut_dim) = slice_box.lower(cut_dim);
+         slice_box.setUpper(cut_dim, slice_box.lower(cut_dim));
 
          std::vector<double> work_in_slices(numcells);
          for (i = 0; i < numcells; ++i) {
@@ -865,8 +865,8 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
                BalanceUtilities::computeNonUniformWorkload(patch,
                   work_data_index,
                   slice_box);
-            slice_box.lower(cut_dim) += 1;
-            slice_box.upper(cut_dim) = slice_box.lower(cut_dim);
+            slice_box.setLower(cut_dim, slice_box.lower(cut_dim) + 1);
+            slice_box.setUpper(cut_dim, slice_box.lower(cut_dim));
 
          }
 

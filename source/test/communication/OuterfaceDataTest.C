@@ -553,7 +553,7 @@ bool OuterfaceDataTest::verifyResults(
 
             for (tbox::Dimension::dir_t id = 0; id < d_dim.getValue(); ++id) {
                hier::Box dbox_lo(dbox);
-               dbox_lo.upper(id) = dbox_lo.lower(id);
+               dbox_lo.setUpper(id, dbox_lo.lower(id));
                hier::BoxIterator loend(dbox_lo.end());
                for (hier::BoxIterator si(dbox_lo.begin()); si != loend; ++si) {
                   pdat::FaceIndex fndx(*si, id, 0);
@@ -575,7 +575,7 @@ bool OuterfaceDataTest::verifyResults(
                }
 
                hier::Box dbox_hi(dbox);
-               dbox_hi.lower(id) = dbox_hi.upper(id);
+               dbox_hi.setLower(id, dbox_hi.upper(id));
                hier::BoxIterator hiend(dbox_hi.end());
                for (hier::BoxIterator si(dbox_hi.begin()); si != hiend; ++si) {
                   pdat::FaceIndex fndx(*si, id, 1);

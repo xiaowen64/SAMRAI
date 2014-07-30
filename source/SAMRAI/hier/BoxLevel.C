@@ -666,8 +666,10 @@ BoxLevel::cacheGlobalReducedData() const
          int tmpi = -1;
          for (int bn = 0; bn < nblocks; ++bn) {
             for (int i = 0; i < dim.getValue(); ++i) {
-               d_global_bounding_box[bn].lower()[i] = -recv_mesg[++tmpi];
-               d_global_bounding_box[bn].upper()[i] = recv_mesg[++tmpi];
+               d_global_bounding_box[bn].setLower(static_cast<Box::dir_t>(i),
+                  -recv_mesg[++tmpi]);
+               d_global_bounding_box[bn].setUpper(static_cast<Box::dir_t>(i),
+                  recv_mesg[++tmpi]);
                d_global_min_box_size[bn][i] = -recv_mesg[++tmpi];
                d_global_max_box_size[bn][i] = recv_mesg[++tmpi];
             }

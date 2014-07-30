@@ -1199,7 +1199,8 @@ RefineSchedule::makeNodeCenteredUnfilledBoxLevel(
       const hier::Box& dst_box = *dst_box_level.getBox(dst_box_id);
       const hier::BlockId& dst_block = dst_box.getBlockId();
       hier::Box dst_node_box(dst_box);
-      dst_node_box.upper() += hier::IntVector::getOne(dim);
+      dst_node_box.setUpper(
+         dst_node_box.upper() + hier::IntVector::getOne(dim));
 
       for (hier::Connector::ConstNeighborIterator ni = dst_to_unfilled.begin(cf);
            ni != dst_to_unfilled.end(cf); ++ni) {
@@ -1207,7 +1208,8 @@ RefineSchedule::makeNodeCenteredUnfilledBoxLevel(
          const hier::Box& unfilled_box = *ni;
 
          hier::BoxContainer unfilled_node_boxes(unfilled_box);
-         unfilled_node_boxes.begin()->upper() += hier::IntVector::getOne(dim);
+         unfilled_node_boxes.begin()->setUpper(
+            unfilled_node_boxes.begin()->upper() + hier::IntVector::getOne(dim));
 
          if (d_src_level && dst_to_src->hasNeighborSet(dst_box_id)) {
 
@@ -1222,14 +1224,16 @@ RefineSchedule::makeNodeCenteredUnfilledBoxLevel(
                const hier::BlockId& src_block = src_box.getBlockId();
                hier::Box src_node_box(src_box);
                if (src_block == dst_block) {
-                  src_node_box.upper() += hier::IntVector::getOne(dim);
+                  src_node_box.setUpper(
+                     src_node_box.upper() + hier::IntVector::getOne(dim));
                } else if (grid_geometry->areNeighbors(src_block, dst_block)) {
                   grid_geometry->transformBox(
                      src_node_box,
                      d_dst_level->getRatioToLevelZero(),
                      dst_block,
                      src_block);
-                  src_node_box.upper() += hier::IntVector::getOne(dim);
+                  src_node_box.setUpper(
+                     src_node_box.upper() + hier::IntVector::getOne(dim));
                }
                if (!(src_node_box * dst_node_box).empty()) {
                   unfilled_node_boxes.removeIntersections(src_node_box);
