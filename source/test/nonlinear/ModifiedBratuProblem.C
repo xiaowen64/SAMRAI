@@ -2788,11 +2788,11 @@ void ModifiedBratuProblem::getLevelEdges(
    hier::Box box = patch->getBox();
    hier::Box boundary = box;
    if (face == 0) {
-      boundary.lower(dim) = box.lower(dim) - 1;
-      boundary.upper(dim) = box.lower(dim) - 1;
+      boundary.setLower(dim, box.lower(dim) - 1);
+      boundary.setUpper(dim, box.lower(dim) - 1);
    } else {
-      boundary.lower(dim) = box.upper(dim) + 1;
-      boundary.upper(dim) = box.upper(dim) + 1;
+      boundary.setLower(dim, box.upper(dim) + 1);
+      boundary.setUpper(dim, box.upper(dim) + 1);
    }
 
    /*
