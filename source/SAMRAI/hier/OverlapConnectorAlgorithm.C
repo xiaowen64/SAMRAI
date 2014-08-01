@@ -179,11 +179,20 @@ OverlapConnectorAlgorithm::extractNeighbors(
          if (grid_geom->getNumberBlocks() == 1) {
             Box grown_box = box;
             grown_box.grow(width);
-            if (connector.getHeadCoarserFlag() == false) {
-               grown_box.refine(connector.getRatio());
+            if (connector.getHeadCoarserFlag()) {
+               grown_box.coarsen(connector.getRatio());
             }
             grown_boxes.pushBack(grown_box);
          } else {
+            bool head_is_finer = false;
+            bool base_is_finer = false;
+            if (!connector.getRatio().isOne()) {
+               if (connector.getHeadCoarserFlag()) {
+                  base_is_finer = true;
+               } else {
+                  head_is_finer = true;
+               }
+            }
             connector.growBaseBoxForMultiblock(
                grown_boxes,
                box,
@@ -191,8 +200,8 @@ OverlapConnectorAlgorithm::extractNeighbors(
                connector.getBase().getRefinementRatio(),
                connector.getRatio(),
                width, 
-               !connector.getHeadCoarserFlag(),
-               false);
+               head_is_finer,
+               base_is_finer);
          }
          for (BoxContainer::iterator g_itr = grown_boxes.begin();
               g_itr != grown_boxes.end(); ++g_itr) {
@@ -212,9 +221,6 @@ OverlapConnectorAlgorithm::extractNeighbors(
                         neighbor.getBlockId());
                }
                if (do_intersect) {
-                  if (connector.getHeadCoarserFlag() == true) {
-                     nabr_box.refine(connector.getRatio());
-                  }
                   if (g_box.intersects(nabr_box)) {
                      neighbors.insert(neighbors.end(), neighbor);
                   }
@@ -301,11 +307,20 @@ OverlapConnectorAlgorithm::extractNeighbors(
          if (grid_geom->getNumberBlocks() == 1) {
             Box grown_box = box;
             grown_box.grow(width);
-            if (connector.getHeadCoarserFlag() == false) {
-               grown_box.refine(connector.getRatio());
+            if (connector.getHeadCoarserFlag()) {
+               grown_box.coarsen(connector.getRatio());
             }
             grown_boxes.pushBack(grown_box);
          } else {
+            bool head_is_finer = false;
+            bool base_is_finer = false;
+            if (!connector.getRatio().isOne()) {
+               if (connector.getHeadCoarserFlag()) {
+                  base_is_finer = true;
+               } else {
+                  head_is_finer = true;
+               }
+            }
             connector.growBaseBoxForMultiblock(
                grown_boxes,
                box,
@@ -313,8 +328,8 @@ OverlapConnectorAlgorithm::extractNeighbors(
                connector.getBase().getRefinementRatio(),
                connector.getRatio(),
                width,
-               !connector.getHeadCoarserFlag(),
-               false);
+               head_is_finer,
+               base_is_finer);
          }
          for (BoxContainer::iterator g_itr = grown_boxes.begin();
               g_itr != grown_boxes.end(); ++g_itr) {
@@ -332,9 +347,6 @@ OverlapConnectorAlgorithm::extractNeighbors(
                      neighbor.getBlockId());
                }
                if (do_intersect) {
-                  if (connector.getHeadCoarserFlag() == true) {
-                     nabr_box.refine(connector.getRatio());
-                  }
                   if (g_box.intersects(nabr_box)) {
                      other.insertLocalNeighbor(neighbor, base_box_itr);
                   }

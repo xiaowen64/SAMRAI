@@ -3215,8 +3215,8 @@ BaseGridGeometry::setUpFineLevelMultiblockData(
 
             Transformation new_transformation(rotation,
                                               final_shift,
-                                              block_id,
-                                              nbr_block);
+                                              nbr_block,
+                                              block_id);
 
             ni->second.addTransformation(new_transformation, ln);
            

@@ -278,6 +278,9 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       }
    }
 
+   const int nblocks = balance_box_level.getGridGeometry()->getNumberBlocks();
+   hier::IntVector effective_cut_factor(cut_factor, nblocks);
+
    t_get_global_boxes->barrierAndStart();
    hier::BoxLevel globalized_input_box_level(balance_box_level);
    globalized_input_box_level.setParallelState(hier::BoxLevel::GLOBALIZED);
@@ -290,6 +293,8 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
         bi != globalized_input_boxes.realEnd(); ++bi) {
       in_boxes.pushBack(*bi);
    }
+
+
 
    hier::BoxContainer physical_domain;
    domain_box_level.getGlobalBoxes(physical_domain);
@@ -307,7 +312,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       balance_box_level.getRefinementRatio(),
       min_size,
       actual_max_size,
-      cut_factor,
+      effective_cut_factor,
       bad_interval);
 
    // Build up balance_box_level from old-style data.

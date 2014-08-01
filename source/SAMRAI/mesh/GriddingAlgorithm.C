@@ -4184,7 +4184,7 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
       const hier::Box& omb = *ni;
       TBOX_ASSERT(!omb.isPeriodicImage());
 
-      if (omb.numberCells() <= min_size) {
+      if (omb.numberCells() >= min_size.getBlockVector(omb.getBlockId())) {
          // This box does not need growing.
          grown_box_level.addBox(omb);
          continue;
@@ -4211,7 +4211,7 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
       hier::BoxUtilities::growBoxWithinDomain(
          grown_box,
          nesting_domain,
-         min_size);
+         min_size.getBlockVector(omb.getBlockId()));
 
       /*
        * If the box is grown, generate the mapping for it.  If not,

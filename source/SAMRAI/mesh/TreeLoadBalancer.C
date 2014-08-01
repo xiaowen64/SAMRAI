@@ -234,13 +234,23 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    const int nblocks = balance_box_level.getGridGeometry()->getNumberBlocks();
    hier::IntVector effective_cut_factor(cut_factor, nblocks);
    if ( d_tile_size != hier::IntVector::getOne(d_dim) ) {
-      for (int b = 0; b < nblocks; ++b) {
-         for ( int d=0; d<d_dim.getValue(); ++d ) {
-            while ( effective_cut_factor(b,d)/d_tile_size[d]*d_tile_size[d] != effective_cut_factor(b,d) ) {
-               effective_cut_factor(b,d) += cut_factor[d];
+      if (cut_factor.size() == 1) {
+         for (int b = 0; b < nblocks; ++b) {
+            for ( int d=0; d<d_dim.getValue(); ++d ) {
+               while ( effective_cut_factor(b,d)/d_tile_size[d]*d_tile_size[d] != effective_cut_factor(b,d) ) {
+                  effective_cut_factor(b,d) += cut_factor[d];
+               }
             }
          }
-      } 
+      }  else {
+         for (int b = 0; b < nblocks; ++b) {
+            for ( int d=0; d<d_dim.getValue(); ++d ) {
+               while ( effective_cut_factor(b,d)/d_tile_size[d]*d_tile_size[d] != effective_cut_factor(b,d) ) {
+                  effective_cut_factor(b,d) += cut_factor(b,d);
+               }
+            }
+         }
+      }
       if (d_print_steps) {
          tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel effective_cut_factor = "
                     << effective_cut_factor << std::endl;

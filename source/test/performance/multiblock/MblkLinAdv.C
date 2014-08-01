@@ -445,7 +445,7 @@ MblkLinAdv::MblkLinAdv(
    d_mblk_geometry(new MblkGeometry("MblkGeometry",
                                     dim,
                                     input_db,
-                                    *grid_geoms))
+                                    grid_geoms))
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
@@ -737,11 +737,18 @@ void MblkLinAdv::initializeDataOnPatch(
    int level_number = patch.getPatchLevelNumber();
    setMappedGridOnPatch(patch, level_number, block_number);
 
+   hier::BoxContainer domain;
+   d_grid_geometry->computePhysicalDomain(domain,
+      patch.getPatchGeometry()->getRatio(),
+      patch.getBox().getBlockId()); 
+
+   TBOX_ASSERT(domain.size() == 1);
+
    /*
     * Set the dx in the operators
     */
    double dx[SAMRAI::MAX_DIM_VAL];
-   d_mblk_geometry->getDx(level_number, dx);
+   d_mblk_geometry->getDx(level_number, block_number, dx);
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
@@ -759,7 +766,7 @@ void MblkLinAdv::initializeDataOnPatch(
 
    for (int ln = 0; ln <= level_number; ++ln) {
       double level_dx[SAMRAI::MAX_DIM_VAL];
-      d_mblk_geometry->getDx(ln, level_dx);
+      d_mblk_geometry->getDx(domain.front(), ln, block_number, level_dx);
       d_cell_cons_linear_refine_op->setDx(ln, level_dx);
       d_cell_cons_coarsen_op->setDx(ln, level_dx);
       d_side_cons_coarsen_op->setDx(ln, level_dx);
@@ -921,7 +928,8 @@ double MblkLinAdv::computeStableDtOnPatch(
    const hier::Index ilast = patch.getBox().upper();
 
    double dx[SAMRAI::MAX_DIM_VAL];
-   d_mblk_geometry->getDx(level_number, dx);
+   d_mblk_geometry->getDx(level_number,
+      patch.getBox().getBlockId().getBlockValue(), dx);
 
    boost::shared_ptr<pdat::CellData<double> > uval(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
@@ -992,7 +1000,8 @@ void MblkLinAdv::computeFluxesOnPatch(
       TBOX_ASSERT(CELLG == FACEG);
 
       double dx[SAMRAI::MAX_DIM_VAL];
-      d_mblk_geometry->getDx(level_number, dx);
+      d_mblk_geometry->getDx(level_number,
+         patch.getBox().getBlockId().getBlockValue(), dx);
 
       hier::Box pbox = patch.getBox();
       const hier::Index ifirst = patch.getBox().lower();
@@ -1169,7 +1178,8 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport1(
     * Set the dx in the operators
     */
    double dx[SAMRAI::MAX_DIM_VAL];
-   d_mblk_geometry->getDx(level_number, dx);
+   d_mblk_geometry->getDx(level_number,
+         patch.getBox().getBlockId().getBlockValue(), dx);
 
    hier::Box pbox = patch.getBox();
    const hier::Index ifirst = patch.getBox().lower();
@@ -1471,7 +1481,8 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport2(
     * Set the dx in the operators
     */
    double dx[SAMRAI::MAX_DIM_VAL];
-   d_mblk_geometry->getDx(level_number, dx);
+   d_mblk_geometry->getDx(level_number,
+         patch.getBox().getBlockId().getBlockValue(), dx);
 
    hier::Box pbox = patch.getBox();
    const hier::Index ifirst = patch.getBox().lower();
@@ -1709,7 +1720,8 @@ void MblkLinAdv::conservativeDifferenceOnPatch(
     * Set the dx in the operators
     */
    double dx[SAMRAI::MAX_DIM_VAL];
-   d_mblk_geometry->getDx(level_number, dx);
+   d_mblk_geometry->getDx(level_number,
+         patch.getBox().getBlockId().getBlockValue(), dx);
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
@@ -1867,8 +1879,8 @@ void MblkLinAdv::preprocessRefine(
 
    double fdx[SAMRAI::MAX_DIM_VAL];
    double cdx[SAMRAI::MAX_DIM_VAL];
-   d_mblk_geometry->getDx(fln, fdx);
-   d_mblk_geometry->getDx(cln, cdx);
+   d_mblk_geometry->getDx(fln, block_number, fdx);
+   d_mblk_geometry->getDx(cln, block_number, cdx);
 
    d_cell_cons_linear_refine_op->setDx(fln, fdx);
    d_cell_cons_linear_refine_op->setDx(cln, cdx);
@@ -1919,8 +1931,8 @@ void MblkLinAdv::preprocessCoarsen(
 
    double fdx[SAMRAI::MAX_DIM_VAL];
    double cdx[SAMRAI::MAX_DIM_VAL];
-   d_mblk_geometry->getDx(fln, fdx);
-   d_mblk_geometry->getDx(cln, cdx);
+   d_mblk_geometry->getDx(fln, block_number, fdx);
+   d_mblk_geometry->getDx(cln, block_number, cdx);
 
    d_cell_cons_coarsen_op->setDx(fln, fdx);
    d_side_cons_coarsen_op->setDx(fln, fdx);
@@ -1973,7 +1985,8 @@ void MblkLinAdv::tagGradientDetectorCells(
     * Set the dx in the operators
     */
    double dx[SAMRAI::MAX_DIM_VAL];
-   d_mblk_geometry->getDx(level_number, dx);
+   d_mblk_geometry->getDx(level_number,
+      patch.getBox().getBlockId().getBlockValue(), dx);
 
    boost::shared_ptr<pdat::CellData<int> > tags(
       BOOST_CAST<pdat::CellData<int>, hier::PatchData>(

@@ -1104,6 +1104,8 @@ private:
     */
    boost::shared_ptr<hier::PatchLevel> d_encon_level;
 
+   boost::shared_ptr<hier::PatchLevel> d_nbr_blk_fill_level;
+
    /*!
     * @brief Describes remaining unfilled boxes after attempting to
     * fill from the source level.  These remaining boxes must be
@@ -1133,6 +1135,9 @@ private:
    std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >
    d_encon_refine_overlaps;
 
+   std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >
+   d_nbr_blk_copy_overlaps;
+
    /*!
     * @brief Connector from the destination level to the coarse interpolation.
     */
@@ -1153,10 +1158,15 @@ private:
    boost::shared_ptr<hier::Connector> d_coarse_interp_to_unfilled;
 
    boost::shared_ptr<hier::Connector> d_coarse_interp_encon_to_unfilled_encon;
+   boost::shared_ptr<hier::Connector> d_coarse_interp_to_nbr_fill;
+   boost::shared_ptr<hier::Connector> d_nbr_fill_to_dst;
 
    boost::shared_ptr<hier::Connector> d_dst_to_encon;
    boost::shared_ptr<hier::Connector> d_encon_to_src;
    const hier::Connector* d_dst_to_src;
+
+   std::map<hier::BoxId, hier::IntVector> d_nbr_refine_ratio;
+   std::map<hier::BoxId, hier::IntVector> d_encon_nbr_refine_ratio;
 
    //@{
 

@@ -329,7 +329,10 @@ CoarsenSchedule::generateTemporaryLevel()
    d_temp_crse_level->setNextCoarserHierarchyLevelNumber(
       d_crse_level->getLevelNumber());
 
-   const hier::IntVector min_width(getMaxGhostsToGrow());
+   const hier::IntVector min_width(
+      (d_fine_level->getBoxLevel()->getRefinementRatio() /
+      d_crse_level->getBoxLevel()->getRefinementRatio()) *
+      getMaxGhostsToGrow());
    const hier::IntVector transpose_width =
       hier::Connector::convertHeadWidthToBase(
          d_crse_level->getBoxLevel()->getRefinementRatio(),

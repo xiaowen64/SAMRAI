@@ -2104,6 +2104,22 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
    // Create an expanded box for intersection check.
    hier::Box grown_box = d_box;
    grown_box.grow(d_common->d_tag_to_new_width);
+   hier::BoxContainer grown_boxes;
+   if (d_common->d_tag_level->getGridGeometry()->getNumberBlocks() == 1) {
+      hier::Box grown_box = d_box;
+      grown_box.grow(d_common->d_tag_to_new_width);
+      grown_boxes.pushBack(grown_box);
+   } else {
+      d_common->d_tag_to_new->growBaseBoxForMultiblock(
+         grown_boxes,
+         d_box,
+         d_common->d_tag_level->getGridGeometry(),
+         d_common->d_tag_to_new->getBase().getRefinementRatio(),
+         d_common->d_tag_to_new->getRatio(),
+         d_common->d_tag_to_new_width,
+         false,
+         false);
+   }
 
    /*
     * On the owner process, we store the neighbors of the new node.
@@ -2146,23 +2162,15 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
 
       const hier::Box& tag_box = *ni;
 
-      hier::Box intersection(d_common->getDim());
-      if (tag_box.getBlockId() == d_box.getBlockId()) {
-         intersection = tag_box * grown_box;
-      } else {
-         hier::Box transform_box(tag_box);
-         bool transformed =
-            d_common->d_tag_level->getGridGeometry()->transformBox(
-               transform_box,
-               d_common->d_tag_level->getLevelNumber(),
-               d_box.getBlockId(),
-               tag_box.getBlockId());
-         if (transformed) {
-            intersection = transform_box * grown_box;
+      bool intersection = false;
+      for (hier::BoxContainer::const_iterator b_itr = grown_boxes.begin();
+           !intersection && b_itr != grown_boxes.end(); ++b_itr) {
+         if (tag_box.getBlockId() == b_itr->getBlockId()) {
+            intersection = tag_box.intersects(*b_itr);
          }
       }
 
-      if (!intersection.empty()) {
+      if (intersection) {
 
          // Add d_box as a neighbor of tag_box.
          d_common->d_tag_to_new->insertLocalNeighbor(d_box,

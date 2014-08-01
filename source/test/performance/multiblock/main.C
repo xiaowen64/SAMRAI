@@ -35,7 +35,7 @@ using namespace std;
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
-#include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/mesh/CascadePartitioner.h"
 #include "SAMRAI/algs/TimeRefinementIntegrator.h"
 
 // Header for application-specific algorithm/data structure object
@@ -375,10 +375,10 @@ int main(
          new mesh::BergerRigoutsos(dim,
             input_db->getDatabase("BergerRigoutsos")));
 
-      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
-         new mesh::TreeLoadBalancer(
+      boost::shared_ptr<mesh::CascadePartitioner> load_balancer(
+         new mesh::CascadePartitioner(
             dim,
-            "TreeLoadBalancer",
+            "CascadePartitioner",
             input_db->getDatabaseWithDefault("TreeLoadBalancer",
                boost::shared_ptr<tbox::Database>())));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());

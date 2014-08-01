@@ -35,8 +35,9 @@
 MblkGeometry::MblkGeometry(
    const std::string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> input_db,
-   const hier::BaseGridGeometry& grid_geom):
+   boost::shared_ptr<tbox::Database>& input_db,
+   boost::shared_ptr<hier::BaseGridGeometry>& grid_geom):
+   d_grid_geom(grid_geom),
    d_dim(dim)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -45,11 +46,14 @@ MblkGeometry::MblkGeometry(
    d_object_name = object_name;
    //tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 
-   d_nblocks = grid_geom.getNumberBlocks();
+   d_nblocks = grid_geom->getNumberBlocks();
 
    d_metrics_set.resize(10);
    for (int i = 0; i < 10; ++i) {
-      d_metrics_set[i] = false;
+      d_metrics_set[i].resize(d_nblocks);
+      for (int b = 0; b < d_nblocks; ++b) {
+         d_metrics_set[i][b] = false;
+      }
    }
 
    /*
@@ -61,27 +65,30 @@ MblkGeometry::MblkGeometry(
    }
    getFromInput(input_db, is_from_restart);
 
-   hier::BoxContainer domain_boxes;
-   grid_geom.computePhysicalDomain(domain_boxes,
-      hier::IntVector::getOne(dim),
-      hier::BlockId(0));
-
-   TBOX_ASSERT(domain_boxes.size() == 1);
+   std::vector<hier::BoxContainer> domain_boxes(d_nblocks);
+   for (int b = 0; b < d_nblocks; ++b) {
+      grid_geom->computePhysicalDomain(domain_boxes[b],
+         hier::IntVector::getOne(dim),
+         hier::BlockId(b));
+      TBOX_ASSERT(domain_boxes[b].size() == 1);
+   }
 
    if (d_geom_problem == "CARTESIAN") {
-      if (!d_metrics_set[0]) {
-         setCartesianMetrics(domain_boxes.front(), 0);
+      for (int b = 0; b < d_nblocks; ++b) {
+         if (!d_metrics_set[0][b]) {
+            setCartesianMetrics(domain_boxes[b].front(), 0, b);
+         }
       }
    }
 
    if (d_geom_problem == "WEDGE") {
-      if (!d_metrics_set[0]) {
-         setWedgeMetrics(domain_boxes.front(), 0);
+      if (!d_metrics_set[0][0]) {
+         setWedgeMetrics(domain_boxes[0].front(), 0);
       }
    }
    if (d_geom_problem == "SPHERICAL_SHELL") {
-      if (!d_metrics_set[0]) {
-         setSShellMetrics(domain_boxes.front(), 0);
+      if (!d_metrics_set[0][0]) {
+         setSShellMetrics(domain_boxes[0].front(), 0);
       }
    }
 
@@ -429,9 +436,10 @@ void MblkGeometry::buildGridOnPatch(
 {
 
    if (d_geom_problem == "CARTESIAN") {
-      if (!d_metrics_set[level_number]) {
+      if (!d_metrics_set[level_number][block_number]) {
          setCartesianMetrics(domain,
-            level_number);
+            level_number,
+            block_number);
       }
       buildCartesianGridOnPatch(patch,
          xyz_id,
@@ -440,7 +448,7 @@ void MblkGeometry::buildGridOnPatch(
    }
 
    if (d_geom_problem == "WEDGE") {
-      if (!d_metrics_set[level_number]) {
+      if (!d_metrics_set[level_number][block_number]) {
          setWedgeMetrics(domain,
             level_number);
       }
@@ -451,7 +459,7 @@ void MblkGeometry::buildGridOnPatch(
    }
 
    if (d_geom_problem == "SPHERICAL_SHELL") {
-      if (!d_metrics_set[level_number]) {
+      if (!d_metrics_set[level_number][block_number]) {
          setSShellMetrics(domain,
             level_number);
       }
@@ -475,41 +483,45 @@ void MblkGeometry::buildGridOnPatch(
 void MblkGeometry::getDx(
    const hier::Box& domain,
    const int level_number,
+   const int block_number,
    double* dx)
 
 {
    if (d_geom_problem == "CARTESIAN") {
-      if (!d_metrics_set[level_number]) {
+      if (!d_metrics_set[level_number][block_number]) {
          setCartesianMetrics(domain,
-            level_number);
+            level_number, 
+            block_number);
       }
    }
 
    if (d_geom_problem == "WEDGE") {
-      if (!d_metrics_set[level_number]) {
+      if (!d_metrics_set[level_number][block_number]) {
          setWedgeMetrics(domain,
             level_number);
       }
    }
 
    if (d_geom_problem == "SPHERICAL_SHELL") {
-      if (!d_metrics_set[level_number]) {
+      if (!d_metrics_set[level_number][block_number]) {
          setSShellMetrics(domain,
             level_number);
       }
    }
 
    getDx(level_number,
+      block_number,
       dx);
 
 }
 
 void MblkGeometry::getDx(
    const int level_number,
+   const int block_number,
    double* dx)
 
 {
-   if (!d_metrics_set[level_number]) {
+   if (!d_metrics_set[level_number][block_number]) {
       TBOX_ERROR(
          d_object_name << ":metrics have not been set.\n"
                        << "Use the alternative 'getDx()' method call that "
@@ -517,7 +529,7 @@ void MblkGeometry::getDx(
    }
 
    for (int i = 0; i < d_dim.getValue(); ++i) {
-      dx[i] = d_dx[level_number][i];
+      dx[i] = d_dx[level_number][block_number][i];
    }
 
 }
@@ -547,8 +559,11 @@ int MblkGeometry::getBlockRotation(
 
 void MblkGeometry::setCartesianMetrics(
    const hier::Box& domain,
-   const int level_number)
+   const int level_number,
+   const int block_number)
 {
+   if (d_metrics_set[level_number][block_number]) return;
+
    hier::Index lower(domain.lower());
    hier::Index upper(domain.upper());
    hier::Index diff(upper - lower + hier::Index(lower.getDim(), 1));
@@ -556,20 +571,19 @@ void MblkGeometry::setCartesianMetrics(
    if (static_cast<int>(d_dx.size()) < (level_number + 1)) {
       d_dx.resize(level_number + 1);
    }
-   if (static_cast<int>(d_dx[level_number].size()) < d_dim.getValue()) {
-      d_dx[level_number].resize(d_dim.getValue());
+   if (static_cast<int>(d_dx[level_number].size()) < d_nblocks) {
+      d_dx[level_number].resize(d_nblocks);
+   }
+   if (static_cast<int>(d_dx[level_number][block_number].size()) < d_dim.getValue()) {
+      d_dx[level_number][block_number].resize(d_dim.getValue());
    }
 
-   /*
-    * Compute dx from first grid geometry block only.  Its assumed
-    * to be uniform across the multiple blocks.
-    */
    for (int i = 0; i < d_dim.getValue(); ++i) {
-      d_dx[level_number][i] =
-         (d_cart_xhi[0][i] - d_cart_xlo[0][i]) / (double)diff(i);
+      d_dx[level_number][block_number][i] =
+         (d_cart_xhi[block_number][i] - d_cart_xlo[block_number][i]) / (double)diff(i);
    }
 
-   d_metrics_set[level_number] = true;
+   d_metrics_set[level_number][block_number] = true;
 
 }
 
@@ -601,23 +615,23 @@ void MblkGeometry::buildCartesianGridOnPatch(
       if (d_block_rotation[block_number] == 0) {
 
          (*xyz)(node, 0) =
-            d_cart_xlo[block_number][0] + node(0) * d_dx[level_number][0];
+            d_cart_xlo[block_number][0] + node(0) * d_dx[level_number][block_number][0];
          (*xyz)(node, 1) =
-            d_cart_xlo[block_number][1] + node(1) * d_dx[level_number][1];
+            d_cart_xlo[block_number][1] + node(1) * d_dx[level_number][block_number][1];
          if (d_dim == tbox::Dimension(3)) {
             (*xyz)(node, 2) =
-               d_cart_xlo[block_number][2] + node(2) * d_dx[level_number][2];
+               d_cart_xlo[block_number][2] + node(2) * d_dx[level_number][block_number][2];
          }
       }
       if (d_block_rotation[block_number] == 1) { // I sideways, J down
 
          (*xyz)(node, 0) =
-            d_cart_xlo[block_number][0] - node(0) * d_dx[level_number][0];
+            d_cart_xlo[block_number][0] - node(0) * d_dx[level_number][block_number][0];
          (*xyz)(node, 1) =
-            d_cart_xlo[block_number][1] + node(1) * d_dx[level_number][1];
+            d_cart_xlo[block_number][1] + node(1) * d_dx[level_number][block_number][1];
          if (d_dim == tbox::Dimension(3)) {
             (*xyz)(node, 2) =
-               d_cart_xlo[block_number][2] + node(2) * d_dx[level_number][2];
+               d_cart_xlo[block_number][2] + node(2) * d_dx[level_number][block_number][2];
          }
       }
 
@@ -637,24 +651,25 @@ void MblkGeometry::setWedgeMetrics(
    const hier::Box& domain,
    const int level_number)
 {
-
+   int b = domain.getBlockId().getBlockValue();
    //
    // Set dx (dr, dth, dz) for the level
    //
    d_dx.resize(level_number + 1);
-   d_dx[level_number].resize(d_dim.getValue());
+   d_dx[level_number].resize(d_nblocks);
+   d_dx[level_number][b].resize(d_dim.getValue());
 
    double nr = (domain.upper(0) - domain.lower(0) + 1);
    double nth = (domain.upper(1) - domain.lower(1) + 1);
-   d_dx[level_number][0] = (d_wedge_rmax[0] - d_wedge_rmin[0]) / nr;
-   d_dx[level_number][1] = (d_wedge_thmax - d_wedge_thmin) / nth;
+   d_dx[level_number][b][0] = (d_wedge_rmax[0] - d_wedge_rmin[0]) / nr;
+   d_dx[level_number][b][1] = (d_wedge_thmax - d_wedge_thmin) / nth;
 
    if (d_dim == tbox::Dimension(3)) {
       double nz = (domain.upper(2) - domain.lower(2) + 1);
-      d_dx[level_number][2] = (d_wedge_zmax - d_wedge_zmin) / nz;
+      d_dx[level_number][b][2] = (d_wedge_zmax - d_wedge_zmin) / nz;
    }
 
-   d_metrics_set[level_number] = true;
+   d_metrics_set[level_number][b] = true;
 }
 
 /*
@@ -693,20 +708,20 @@ void MblkGeometry::buildWedgeGridOnPatch(
    //int nd_nel  = nd_nx*nd_ny*nd_nz;
 
    double dx[SAMRAI::MAX_DIM_VAL];
-   dx[0] = d_dx[level_number][0];
-   dx[1] = d_dx[level_number][1];
+   dx[0] = d_dx[level_number][block_number][0];
+   dx[1] = d_dx[level_number][block_number][1];
 
    double* x = xyz->getPointer(0);
    double* y = xyz->getPointer(1);
 
    int nd_kmin;
    int nd_kmax;
-   dx[2] = d_dx[level_number][2];
+   dx[2] = d_dx[level_number][block_number][2];
    double* z = 0;
    if (d_dim == tbox::Dimension(3)) {
       nd_kmin = ifirst(2) - nghost_cells(2);
       nd_kmax = ilast(2) + 1 + nghost_cells(2);
-      dx[2] = d_dx[level_number][2];
+      dx[2] = d_dx[level_number][block_number][2];
       z = xyz->getPointer(2);
    } else {
       nd_kmin = 0;
@@ -753,12 +768,13 @@ void MblkGeometry::setSShellMetrics(
    const hier::Box& domain,
    const int level_number)
 {
-
+   int b = domain.getBlockId().getBlockValue();
    //
    // Set dx (drad, dth, dphi) for the level
    //
    d_dx.resize(level_number + 1);
-   d_dx[level_number].resize(d_dim.getValue());
+   d_dx[level_number].resize(d_nblocks);
+   d_dx[level_number][b].resize(d_dim.getValue());
 
    double nrad = (domain.upper(0) - domain.lower(0) + 1);
    double nth = (domain.upper(1) - domain.lower(1) + 1);
@@ -772,18 +788,18 @@ void MblkGeometry::setSShellMetrics(
     */
    if (d_sshell_type == "SOLID") {
 
-      d_dx[level_number][0] = (d_sshell_rmax - d_sshell_rmin) / nrad;
-      d_dx[level_number][1] =
+      d_dx[level_number][b][0] = (d_sshell_rmax - d_sshell_rmin) / nrad;
+      d_dx[level_number][b][1] =
          2.0 * tbox::MathUtilities<double>::Abs(d_sangle_thmin) / nth;
       if (d_dim == tbox::Dimension(3)) {
-         d_dx[level_number][2] =
+         d_dx[level_number][b][2] =
             2.0 * tbox::MathUtilities<double>::Abs(d_sangle_thmin) / nphi;
       }
    } else {
-      d_dx[level_number][0] = 0.0001;
-      d_dx[level_number][1] = 0.0001;
+      d_dx[level_number][b][0] = 0.0001;
+      d_dx[level_number][b][1] = 0.0001;
       if (d_dim == tbox::Dimension(3)) {
-         d_dx[level_number][2] = 0.0001;
+         d_dx[level_number][b][2] = 0.0001;
       }
    }
 
@@ -792,7 +808,7 @@ void MblkGeometry::setSShellMetrics(
     * computeUnitSphereOctant() method so all we do here is allocate
     * space for d_dx.
     */
-   d_metrics_set[level_number] = true;
+   d_metrics_set[level_number][0] = true;
 }
 
 /*
@@ -864,11 +880,11 @@ void MblkGeometry::buildSShellGridOnPatch(
        */
       if (d_sshell_type == "SOLID") {
 
-         d_dx[level_number][0] = (d_sshell_rmax - d_sshell_rmin) / (double)nrad;
-         d_dx[level_number][1] =
+         d_dx[level_number][block_number][0] = (d_sshell_rmax - d_sshell_rmin) / (double)nrad;
+         d_dx[level_number][block_number][1] =
             2.0 * tbox::MathUtilities<double>::Abs(d_sangle_thmin)
             / (double)nth;
-         d_dx[level_number][2] =
+         d_dx[level_number][block_number][2] =
             2.0 * tbox::MathUtilities<double>::Abs(d_sangle_thmin)
             / (double)nphi;
 
@@ -879,8 +895,8 @@ void MblkGeometry::buildSShellGridOnPatch(
          for (int k = nd_kmin; k <= nd_kmax; ++k) {
             for (int j = nd_jmin; j <= nd_jmax; ++j) {
 
-               double theta = d_sangle_thmin + j * d_dx[level_number][1]; // dx used for dth
-               double phi = d_sangle_thmin + k * d_dx[level_number][2];
+               double theta = d_sangle_thmin + j * d_dx[level_number][block_number][1]; // dx used for dth
+               double phi = d_sangle_thmin + k * d_dx[level_number][block_number][2];
 
                double xface = cos(theta) * cos(phi);
                double yface = sin(theta) * cos(phi);
@@ -897,7 +913,7 @@ void MblkGeometry::buildSShellGridOnPatch(
                         nd_nx,
                         nd_nxny);
 
-                  double r = d_sshell_rmin + d_dx[level_number][0] * (i);
+                  double r = d_sshell_rmin + d_dx[level_number][block_number][0] * (i);
 
                   double xx = r * xface;
                   double yy = r * yface;

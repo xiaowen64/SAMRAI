@@ -39,8 +39,8 @@ public:
    MblkGeometry(
       const std::string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database> input_db,
-      const hier::BaseGridGeometry& grid_geom);
+      boost::shared_ptr<tbox::Database>& input_db,
+      boost::shared_ptr<hier::BaseGridGeometry>& grid_geom);
 
    ~MblkGeometry();
 
@@ -81,11 +81,13 @@ public:
    getDx(
       const hier::Box& domain,
       const int level_number,
+      const int block_number,
       double* dx);
 
    void
    getDx(
       const int level_number,
+      const int block_number,
       double* dx);
 
    /*!
@@ -121,7 +123,8 @@ private:
    void
    setCartesianMetrics(
       const hier::Box& domain,
-      const int level_number);
+      const int level_number,
+      const int block_number);
 
    void
    buildCartesianGridOnPatch(
@@ -184,6 +187,8 @@ private:
    std::string d_geom_problem;
    std::string d_object_name;
 
+   boost::shared_ptr<hier::BaseGridGeometry> d_grid_geom;
+
    const tbox::Dimension d_dim;
 
    /*
@@ -191,13 +196,13 @@ private:
     * up a multiblock mesh.
     */
    int d_nblocks;
-   std::vector<bool> d_metrics_set;
+   std::vector<std::vector<bool> > d_metrics_set;
 
    /*
     * The grid spacing.  For cartesian, d_dx = (dx,dy,dz).  For wedge,
     * d_dx = (dr, dth, dz). For spherical shell, d_dx = (dr, dth, dphi)
     */
-   std::vector<std::vector<double> > d_dx;
+   std::vector<std::vector<std::vector<double> > > d_dx;
 
    /*
     * Cartesian inputs

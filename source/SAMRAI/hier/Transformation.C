@@ -697,7 +697,7 @@ Transformation::rotateIndex(
          index[0] = -index[0] - 1;
       }
    } else if (dim.getValue() == 2) {
-      int num_rotations = (int)rotation;
+      int num_rotations = static_cast<int>(rotation);
 
       for (int j = 0; j < num_rotations; ++j) {
          int tmp_in[2];
@@ -775,6 +775,145 @@ Transformation::rotateIndex(
    } else {
       TBOX_ERROR("Transformation::rotateIndex : DIM > 3 not implemented");
    }
+
+}
+
+void
+Transformation::rotateIntVector(
+   IntVector& vector,
+   const RotationIdentifier rotation)
+{
+   TBOX_ASSERT(vector.size() == 1);
+   const tbox::Dimension& dim = vector.getDim();
+
+   if (dim.getValue() == 1) {
+      return;
+   } else if (dim.getValue() == 2) {
+      int num_rotations = static_cast<int>(rotation);
+
+      if (num_rotations % 2) {
+         IntVector tmp_vec(vector);
+         vector[0] = tmp_vec[1];
+         vector[1] = tmp_vec[2];
+      }
+   } else if (dim.getValue() == 3) {
+      if (rotation == IUP_JUP_KUP) {
+         return;
+      } else if (rotation == KUP_IUP_JUP) {
+         IntVector tmp_vec(vector);
+         vector[1] = tmp_vec[2];
+         vector[2] = tmp_vec[1];
+         tmp_vec = vector;
+         vector[0] = tmp_vec[1];
+         vector[1] = tmp_vec[0]; 
+      } else if (rotation == JUP_KUP_IUP) {
+         IntVector tmp_vec(vector);
+         vector[0] = tmp_vec[2];
+         vector[2] = tmp_vec[0];
+         tmp_vec = vector;
+         vector[0] = tmp_vec[1];
+         vector[1] = tmp_vec[0];
+      } else if (rotation == IDOWN_KUP_JUP) {
+         IntVector tmp_vec(vector);
+         vector[1] = tmp_vec[2];
+         vector[2] = tmp_vec[1];
+      } else if (rotation == KUP_JUP_IDOWN) {
+         IntVector tmp_vec(vector);
+         vector[0] = tmp_vec[2];
+         vector[2] = tmp_vec[0];
+      } else if (rotation == JUP_IDOWN_KUP) {
+         IntVector tmp_vec(vector);
+         vector[0] = tmp_vec[1];
+         vector[1] = tmp_vec[0];
+      } else if (rotation == KDOWN_JUP_IUP) {
+         IntVector tmp_vec(vector);
+         vector[0] = tmp_vec[2];
+         vector[2] = tmp_vec[0];
+      } else if (rotation == IUP_KDOWN_JUP) {
+         IntVector tmp_vec(vector);
+         vector[1] = tmp_vec[2];
+         vector[2] = tmp_vec[1];
+      } else if (rotation == JUP_IUP_KDOWN) {
+         IntVector tmp_vec(vector);
+         vector[0] = tmp_vec[1];
+         vector[1] = tmp_vec[0];
+      } else if (rotation == KDOWN_IDOWN_JUP) {
+         IntVector tmp_vec(vector);
+         vector[1] = tmp_vec[2];
+         vector[2] = tmp_vec[1];
+         tmp_vec = vector;
+         vector[0] = tmp_vec[1];
+         vector[1] = tmp_vec[0];
+      } else if (rotation == IDOWN_JUP_KDOWN) {
+         return;
+      } else if (rotation == JUP_KDOWN_IDOWN) {
+         IntVector tmp_vec(vector);
+         vector[1] = tmp_vec[2];
+         vector[2] = tmp_vec[1];
+         tmp_vec = vector;
+         vector[0] = tmp_vec[2];
+         vector[2] = tmp_vec[0];
+      } else if (rotation == JDOWN_IUP_KUP) {
+         IntVector tmp_vec(vector);
+         vector[0] = tmp_vec[1];
+         vector[1] = tmp_vec[0];
+      } else if (rotation == IUP_KUP_JDOWN) {
+         IntVector tmp_vec(vector);
+         vector[1] = tmp_vec[2];
+         vector[2] = tmp_vec[1];
+      } else if (rotation == KUP_JDOWN_IUP) {
+         IntVector tmp_vec(vector);
+         vector[0] = tmp_vec[2];
+         vector[2] = tmp_vec[0];
+      } else if (rotation == JDOWN_KUP_IDOWN) {
+         IntVector tmp_vec(vector);
+         vector[1] = tmp_vec[2];
+         vector[2] = tmp_vec[1];
+         tmp_vec = vector;
+         vector[0] = tmp_vec[2];
+         vector[2] = tmp_vec[0];
+      } else if (rotation == IDOWN_JDOWN_KUP) {
+         return;
+      } else if (rotation == KUP_IDOWN_JDOWN) {
+         IntVector tmp_vec(vector);
+         vector[1] = tmp_vec[2];
+         vector[2] = tmp_vec[1];
+         tmp_vec = vector;
+         vector[0] = tmp_vec[1];
+         vector[1] = tmp_vec[0];
+      } else if (rotation == JDOWN_KDOWN_IUP) {
+         IntVector tmp_vec(vector);
+         vector[1] = tmp_vec[2];
+         vector[2] = tmp_vec[1];
+         tmp_vec = vector;
+         vector[0] = tmp_vec[2];
+         vector[2] = tmp_vec[0];
+      } else if (rotation == KDOWN_IUP_JDOWN) {
+         IntVector tmp_vec(vector);
+         vector[1] = tmp_vec[2];
+         vector[2] = tmp_vec[1];
+         tmp_vec = vector;
+         vector[0] = tmp_vec[1];
+         vector[1] = tmp_vec[0];
+      } else if (rotation == IUP_JDOWN_KDOWN) {
+         return;
+      } else if (rotation == JDOWN_IDOWN_KDOWN) {
+         IntVector tmp_vec(vector);
+         vector[0] = tmp_vec[1];
+         vector[1] = tmp_vec[0];
+      } else if (rotation == KDOWN_JDOWN_IDOWN) {
+         IntVector tmp_vec(vector);
+         vector[0] = tmp_vec[2];
+         vector[2] = tmp_vec[0];
+      } else if (rotation == IDOWN_KDOWN_JDOWN) {
+         IntVector tmp_vec(vector);
+         vector[1] = tmp_vec[2];
+         vector[2] = tmp_vec[1];
+      }
+   } else {
+      TBOX_ERROR("Transformation::rotateIntVector : DIM > 3 not implemented");
+   }
+
 
 }
 

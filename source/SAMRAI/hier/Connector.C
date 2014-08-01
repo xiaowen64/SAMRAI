@@ -178,6 +178,7 @@ Connector::Connector(
       }
    }
 
+
    setBase(base_box_level);
    setHead(head_box_level);
    setWidth(tmp_base_width, true);
@@ -415,31 +416,73 @@ Connector::shrinkWidth(
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom(
       getBase().getGridGeometry());
 
-   for (NeighborhoodIterator ei = begin(); ei != end(); ++ei) {
-      const BoxId& box_id = *ei;
-      const Box& box = *getBase().getBoxStrict(box_id);
-      Box box_box = box;
-      const BlockId& block_id = box_box.getBlockId();
-      box_box.grow(shrink_width);
-      if (base_coarser) {
-         box_box.refine(getRatio());
+   if (grid_geom->getNumberBlocks() == 1) {
+      for (NeighborhoodIterator ei = begin(); ei != end(); ++ei) {
+         const BoxId& box_id = *ei;
+         const Box& box = *getBase().getBoxStrict(box_id);
+         Box box_box = box;
+         box_box.grow(shrink_width);
+         if (base_coarser) {
+            box_box.refine(getRatio());
+         }
+         for (NeighborIterator na = begin(ei);
+              na != end(ei); /* incremented in loop */) {
+            const Box& nabr = *na;
+            Box nabr_box = nabr;
+            if (nabr.getBlockId() != box.getBlockId()) {
+               grid_geom->transformBox(nabr_box,
+                  getHead().getRefinementRatio(),
+                  box.getBlockId(),
+                  nabr.getBlockId());
+            }
+            if (head_coarser) {
+               nabr_box.refine(getRatio());
+            }
+            ++na;
+            if (!box_box.intersects(nabr_box)) {
+               d_relationships.erase(ei, nabr);
+            }
+         }
       }
-      for (NeighborIterator na = begin(ei);
-           na != end(ei); /* incremented in loop */) {
-         const Box& nabr = *na;
-         Box nabr_box = nabr;
-         if (nabr.getBlockId() != box.getBlockId()) {
-            grid_geom->transformBox(nabr_box,
-               getHead().getRefinementRatio(),
-               box.getBlockId(),
-               nabr.getBlockId());
-         }
-         if (head_coarser) {
-            nabr_box.refine(getRatio());
-         }
-         ++na;
-         if (!box_box.intersects(nabr_box)) {
-            d_relationships.erase(ei, nabr);
+   } else {
+      for (NeighborhoodIterator ei = begin(); ei != end(); ++ei) {
+         const BoxId& box_id = *ei;
+         const Box& box = *getBase().getBoxStrict(box_id);
+         BoxContainer grown_boxes;
+         growBaseBoxForMultiblock(grown_boxes,
+            box,
+            grid_geom,
+            getBase().getRefinementRatio(),
+            getRatio(),
+            shrink_width,
+            base_coarser,
+            head_coarser);
+
+         for (NeighborIterator na = begin(ei);
+              na != end(ei); /* incremented in loop */) {
+
+            const Box& nabr = *na;
+            bool intersection = false;
+
+            for (BoxContainer::iterator b_itr = grown_boxes.begin();
+                 b_itr != grown_boxes.end(); ++b_itr) {
+
+               if (nabr.getBlockId() == b_itr->getBlockId()) {
+                  Box nabr_box = nabr;
+
+                  if (head_coarser) {
+                     nabr_box.refine(getRatio());
+                  }
+                  if (b_itr->intersects(nabr_box)) {
+                     intersection = true;
+                     break;
+                  }
+               }
+            }
+            ++na;
+            if (!intersection) {
+               d_relationships.erase(ei, nabr);
+            }
          }
       }
    }
@@ -2316,26 +2359,44 @@ Connector::growBaseBoxForMultiblock(
    const BlockId& base_block = base_box.getBlockId();
 
    Box grow_box(base_box);
-   grow_box.grow(grow_width); 
+   if (base_is_finer) {
+      grow_box.coarsen(connector_ratio);
+   }
+
+   IntVector compare_ratio(ratio_to_level_zero);
+   IntVector tmp_grow_width(grow_width);
+   if (base_is_finer) {
+      compare_ratio /= connector_ratio;
+      tmp_grow_width /= connector_ratio;
+   }
+
+   grow_box.grow(tmp_grow_width); 
+
+   std::vector<BoxContainer> domain_boxes(nblocks);
+   grid_geom->computePhysicalDomain(
+      domain_boxes[base_block.getBlockValue()],
+      compare_ratio,
+      base_block);
 
    /*
     * Grow within base block
     */
-   BoxContainer base_block_boxes;
-   grid_geom->computePhysicalDomain(
-      base_block_boxes,
-      ratio_to_level_zero,
-      base_block);
+   BoxContainer base_block_boxes(domain_boxes[base_block.getBlockValue()]);
    base_block_boxes.unorder();
    base_block_boxes.intersectBoxes(grow_box);
 
    if (head_is_finer) {
       base_block_boxes.refine(connector_ratio);
    } else if (base_is_finer) {
-      base_block_boxes.coarsen(connector_ratio);
+//      base_block_boxes.coarsen(connector_ratio);
    }
 
    grown_boxes.spliceBack(base_block_boxes);
+
+   bool constant_width = true;
+   if (tmp_grow_width.min() != tmp_grow_width.max()) {
+      constant_width = false; 
+   }
 
    /*
     * Grow into neighbors.
@@ -2347,32 +2408,71 @@ Connector::growBaseBoxForMultiblock(
       const BaseGridGeometry::Neighbor& neighbor(ni->second);
       const BlockId& nbr_block = neighbor.getBlockId();
 
-      BoxContainer nbr_block_boxes;
       grid_geom->computePhysicalDomain(
-         nbr_block_boxes,
-         ratio_to_level_zero,
+         domain_boxes[nbr_block.getBlockValue()],
+         compare_ratio,
          nbr_block);
 
-      Box nbr_grow_box(grow_box);
+      Box nbr_grow_box(base_box);
+      if (base_is_finer) {
+         nbr_grow_box.coarsen(connector_ratio);
+      }
       grid_geom->transformBox(nbr_grow_box,
-                              ratio_to_level_zero,
+                              compare_ratio,
                               nbr_block,
                               base_block);
+      nbr_grow_box.grow(tmp_grow_width);
 
+      BoxContainer nbr_block_boxes(domain_boxes[nbr_block.getBlockValue()]);
       nbr_block_boxes.unorder();
       nbr_block_boxes.intersectBoxes(nbr_grow_box);
 
+      BoxContainer nbr_grown_boxes;
       if (!nbr_block_boxes.isEmpty()) {
          if (head_is_finer) {
             nbr_block_boxes.refine(connector_ratio);
          } else if (base_is_finer) {
-            nbr_block_boxes.coarsen(connector_ratio);
+//            nbr_block_boxes.coarsen(connector_ratio);
          }
 
-         grown_boxes.spliceBack(nbr_block_boxes);
+         nbr_grown_boxes.spliceBack(nbr_block_boxes);
+      }
+
+      if (!constant_width) {
+         nbr_block_boxes = domain_boxes[nbr_block.getBlockValue()];
+
+         nbr_grow_box = base_box;
+         if (base_is_finer) {
+            nbr_grow_box.coarsen(connector_ratio);
+         }
+         nbr_grow_box.grow(tmp_grow_width);
+         grid_geom->transformBox(nbr_grow_box,
+                                 compare_ratio,
+                                 nbr_block,
+                                 base_block);
+
+         nbr_block_boxes.unorder();
+         nbr_block_boxes.intersectBoxes(nbr_grow_box);
+
+         if (!nbr_block_boxes.isEmpty()) {
+            if (head_is_finer) {
+               nbr_block_boxes.refine(connector_ratio);
+            } else if (base_is_finer) {
+//               nbr_block_boxes.coarsen(connector_ratio);
+            }
+
+            nbr_grown_boxes.spliceBack(nbr_block_boxes);
+            nbr_grown_boxes.coalesce();
+            if (nbr_grown_boxes.size() > 1) {
+               nbr_grown_boxes.simplify();
+            }
+         }
+      }
+
+      if (!nbr_grown_boxes.isEmpty()) {
+         grown_boxes.spliceBack(nbr_grown_boxes);
       }
    }
-
 }
 
 

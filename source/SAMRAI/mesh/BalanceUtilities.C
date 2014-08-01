@@ -1291,6 +1291,13 @@ BalanceUtilities::recursiveBisectionUniform(
             bad_interval,
             physical_domain);
 
+         hier::IntVector box_cut_factor(cut_factor.getDim());
+         if (cut_factor.size() == 1) {
+            box_cut_factor = cut_factor;
+         } else {
+            box_cut_factor = cut_factor.getBlockVector(box2chop.getBlockId());
+         }
+
          hier::BoxContainer tempboxes;
          std::list<double> temploads;
          privateRecursiveBisectionUniformSingleBox(
@@ -1301,7 +1308,7 @@ BalanceUtilities::recursiveBisectionUniform(
             ideal_workload,
             workload_tolerance,
             min_size,
-            cut_factor,
+            box_cut_factor,
             bad_cut_points);
 
          out_boxes.spliceBack(tempboxes);
