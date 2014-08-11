@@ -1092,7 +1092,7 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
    NeighborSet& visible_west_nabrs,
    NeighborSet& visible_east_nabrs) const
 {
-   if (visible_west_nabrs.isEmpty() && visible_east_nabrs.isEmpty()) {
+   if (visible_west_nabrs.empty() && visible_east_nabrs.empty()) {
       return;
    }
 
@@ -1489,7 +1489,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
          //BoxContainerUtils::recursivePrintBoxVector(found_nabrs, tbox::plog, "\n ");
          tbox::plog << std::endl;
       }
-      if (!found_nabrs.isEmpty()) {
+      if (!found_nabrs.empty()) {
          if (visible_base_nabrs_box.isPeriodicImage()) {
             privateBridge_unshiftOverlappingNeighbors(
                visible_base_nabrs_box,
@@ -1526,7 +1526,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
                   PeriodicId::zero());
             }
             // Add found neighbors for visible_base_nabrs_box.
-            if (!found_nabrs.isEmpty()) {
+            if (!found_nabrs.empty()) {
                Connector::NeighborhoodIterator base_box_itr =
                   bridging_connector.makeEmptyLocalNeighborhood(
                      unshifted_base_box_id);

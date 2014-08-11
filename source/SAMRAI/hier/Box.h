@@ -588,25 +588,30 @@ public:
    /*!
     * @brief Return whether the box is ``empty''.
     *
-    * isEmpty() is preferred to match "is" standard syntax for
-    * boolean methods.
+    * Archaic syntax.  Synonymous with empty().  Retained for backward
+    * compatibility.
     *
-    * @see isEmpty()
+    * @see empty()
     */
+   DEPRECATED(
    bool
-   empty() const
+   isEmpty() const)
    {
-      return isEmpty();
+      return empty();
    }
 
    /*!
     * @brief Return whether the box is ``empty''.
     *
+    * This version follows the naming standards used in STL.
+    *
     * A box is empty if any of the lower bounds is greater than the
     * corresponding upper bound.  An empty box has a size of zero.
+    *
+    * @return True if the box is empty.
     */
    bool
-   isEmpty() const
+   empty() const
    {
       if (d_empty_flag) {
          return true;

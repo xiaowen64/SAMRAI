@@ -125,7 +125,7 @@ TileClustering::findBoxesContainingTags(
    NULL_USE(min_box);
    NULL_USE(max_gcw);
 
-   TBOX_ASSERT(!bound_boxes.isEmpty());
+   TBOX_ASSERT(!bound_boxes.empty());
    TBOX_ASSERT_OBJDIM_EQUALITY4(
       *tag_level,
       *(bound_boxes.begin()),
@@ -701,7 +701,7 @@ TileClustering::removeDuplicateTiles(
     * the first in sorted order.  An alternative is to choose one from
     * the process with most overlap.
     */
-   while (!tiles_crossing_patch_boundaries.isEmpty()) {
+   while (!tiles_crossing_patch_boundaries.empty()) {
 
       hier::BoxContainer similar_tiles(tiles_crossing_patch_boundaries.front(), true);
       tiles_crossing_patch_boundaries.popFront();
@@ -895,7 +895,7 @@ TileClustering::shearTilesAtBlockBoundaries(
       const hier::Box tile = *ti;
 
       hier::BoxContainer& block_boxes = domain_blocks[tile.getBlockId()];
-      if (block_boxes.isEmpty()) {
+      if (block_boxes.empty()) {
          grid_geom->computePhysicalDomain(block_boxes,
             tile_box_level.getRefinementRatio(),
             tile.getBlockId());
@@ -1170,7 +1170,7 @@ TileClustering::coalesceClusters(
       pre_boxes.findOverlapBoxes(tmp_overlap_boxes, *post_itr,
          tile_box_level.getRefinementRatio());
 
-      TBOX_ASSERT(!tmp_overlap_boxes.isEmpty());
+      TBOX_ASSERT(!tmp_overlap_boxes.empty());
       if (tmp_overlap_boxes.size() == 1) {
          // pre- and post-box are the same.  No mapping edge.
          TBOX_ASSERT(tmp_overlap_boxes.front().isSpatiallyEqual(*post_itr));
@@ -1231,7 +1231,7 @@ TileClustering::coalesceClusters(
     * Try to coalesce the boxes in tile_box_level.
     */
    std::vector<hier::Box> box_vector;
-   if (!tile_box_level.getBoxes().isEmpty()) {
+   if (!tile_box_level.getBoxes().empty()) {
 
       d_object_timers->t_coalesce->start();
 
@@ -1244,7 +1244,7 @@ TileClustering::coalesceClusters(
 
          hier::BoxContainer block_boxes(tile_box_level.getBoxes(), block_id);
 
-         if (!block_boxes.isEmpty()) {
+         if (!block_boxes.empty()) {
             block_boxes.unorder();
             block_boxes.coalesce();
             TBOX_omp_set_lock(&l_outputs);

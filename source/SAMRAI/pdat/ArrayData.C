@@ -1001,7 +1001,7 @@ template<class TYPE>
 bool
 ArrayData<TYPE>::isValid()
 {
-   return !d_box.isEmpty();
+   return !d_box.empty();
 }
 
 /*

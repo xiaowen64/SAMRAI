@@ -417,7 +417,7 @@ OuterfaceData<TYPE>::packStream(
    for (int d = 0; d < getDim().getValue(); ++d) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
 
-      if (!boxes.isEmpty()) {
+      if (!boxes.empty()) {
          hier::IntVector face_offset(offset);
          if (d > 0) {
             for (int i = 0; i < getDim().getValue(); ++i) {

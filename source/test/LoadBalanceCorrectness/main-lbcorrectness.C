@@ -1646,7 +1646,7 @@ int checkBalanceCorrectness(
       box_container.removeIntersections(
          prebalance.getRefinementRatio(),
          globalized_postbalance_box_tree);
-      if (!box_container.isEmpty()) {
+      if (!box_container.empty()) {
          tbox::plog << "Prebalance Box " << *bi << " has " << box_container.size()
                     << " parts absent in postbalance:\n";
          for (hier::BoxContainer::iterator bj = box_container.begin();
@@ -1665,7 +1665,7 @@ int checkBalanceCorrectness(
       box_container.removeIntersections(
          postbalance.getRefinementRatio(),
          globalized_prebalance_box_tree);
-      if (!box_container.isEmpty()) {
+      if (!box_container.empty()) {
          tbox::plog << "Postbalance Box " << *bi << " has " << box_container.size()
                     << " parts absent in prebalance:\n";
          for (hier::BoxContainer::iterator bj = box_container.begin();

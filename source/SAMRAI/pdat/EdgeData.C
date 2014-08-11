@@ -420,7 +420,7 @@ EdgeData<TYPE>::packStream(
       const hier::Transformation& transformation = t_overlap->getTransformation();
       for (int d = 0; d < getDim().getValue(); ++d) {
          const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-         if (!boxes.isEmpty()) {
+         if (!boxes.empty()) {
             d_data[d]->packStream(stream, boxes, transformation);
          }
       }
@@ -511,7 +511,7 @@ EdgeData<TYPE>::unpackStream(
    const hier::IntVector& offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); ++d) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-      if (!boxes.isEmpty()) {
+      if (!boxes.empty()) {
          d_data[d]->unpackStream(stream, boxes, offset);
       }
    }

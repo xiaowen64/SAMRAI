@@ -258,7 +258,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
 
    vertloctab.push_back(0);
 
-   if (!boxes.isEmpty()) {
+   if (!boxes.empty()) {
       const hier::BoxId& back_id = boxes.back().getBoxId();
 
       for (hier::Connector::ConstNeighborhoodIterator ei = balance_to_balance->begin();
@@ -379,7 +379,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
 
    int nlocvert = vertloctab.size(); //-1;
    if (nlocvert < 0) nlocvert = 0;
-   if (boxes.isEmpty()) nlocvert = 0;
+   if (boxes.empty()) nlocvert = 0;
 
    SCOTCH_dgraphBuild(graph,
       baseval,
@@ -431,7 +431,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (!boxes.isEmpty()) {
+   if (!boxes.empty()) {
       TBOX_ASSERT(start_box == boxes.begin()->getLocalId().getValue());
    }
 #endif
@@ -748,7 +748,7 @@ GraphLoadBalancer::coalesceBoxLevel(
                                              coalesced,
                                              hier::IntVector::getZero(d_dim));
 
-   if (!level_boxes.isEmpty()) {
+   if (!level_boxes.empty()) {
 
       const int my_rank = level_boxes.begin()->getOwnerRank();
 
@@ -760,7 +760,7 @@ GraphLoadBalancer::coalesceBoxLevel(
 
          hier::BoxContainer block_boxes(level_boxes, block_id);
 
-         if (!block_boxes.isEmpty()) {
+         if (!block_boxes.empty()) {
             block_boxes.unorder();
             block_boxes.coalesce();
 
@@ -879,7 +879,7 @@ GraphLoadBalancer::chopBoxes(
             d_cut_factor,
             d_bad_interval,
             d_block_domain_boxes[box.getBlockId().getBlockValue()]);
-         TBOX_ASSERT(!chopped.isEmpty());
+         TBOX_ASSERT(!chopped.empty());
 
          if (chopped.size() != 1) {
 

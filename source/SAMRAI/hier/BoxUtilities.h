@@ -223,7 +223,7 @@ struct BoxUtilities {
     * @pre max_size >= min_size
     * @pre cut_factor > IntVector::getZero(min_size.getDim())
     * @pre bad_interval >= IntVector::getZero(min_size.getDim())
-    * @pre !physical_boxes.isEmpty()
+    * @pre !physical_boxes.empty()
     * @pre !boxes.isOrdered()
     */
    static void
@@ -316,7 +316,7 @@ struct BoxUtilities {
     *      far as it can, but will not remedy these degenerate situations
     *      in general.
     *
-    * @pre !domain.isEmpty()
+    * @pre !domain.empty()
     * @pre ext_ghosts >= IntVector::getZero(ext_ghosts.getDim())
     */
    static bool
@@ -333,7 +333,7 @@ struct BoxUtilities {
     * and thus is changed by the routine.  Otherwise, the return value
     * is false.
     *
-    * @pre !domain.isEmpty()
+    * @pre !domain.empty()
     * @pre ext_ghosts >= IntVector::getZero(ext_ghosts.getDim())
     */
    static bool

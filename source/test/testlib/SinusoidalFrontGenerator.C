@@ -167,7 +167,7 @@ void SinusoidalFrontGenerator::setDomain(
    const tbox::SAMRAI_MPI& mpi)
 {
    TBOX_ASSERT(autoscale_base_nprocs <= mpi.getSize());
-   TBOX_ASSERT(!domain.isEmpty());
+   TBOX_ASSERT(!domain.empty());
 
    hier::BoxContainer::const_iterator ii = domain.begin();
    ii->getDim();

@@ -331,7 +331,7 @@ BalanceUtilities::privateBadCutPointsExist(
            domain_by_blocks.begin(); m_itr != domain_by_blocks.end(); ++m_itr) {
       hier::BoxContainer bounding_box(m_itr->second.getBoundingBox());
       bounding_box.removeIntersections(m_itr->second);
-      if (!bounding_box.isEmpty()) {
+      if (!bounding_box.empty()) {
          bad_cuts_exist = true;
       }
    }
@@ -374,7 +374,7 @@ BalanceUtilities::privateInitializeBadCutPointsForBox(
       hier::BoxContainer bdry_list(box);
       bdry_list.grow(tmp_max_gcw);
       bdry_list.removeIntersections(physical_domain);
-      if (!bdry_list.isEmpty()) {
+      if (!bdry_list.empty()) {
          set_dummy_cut_points = false;
       }
 
@@ -1261,7 +1261,7 @@ BalanceUtilities::recursiveBisectionUniform(
    TBOX_ASSERT(min_size > hier::IntVector::getZero(dim));
    TBOX_ASSERT(cut_factor > hier::IntVector::getZero(dim));
    TBOX_ASSERT(bad_interval >= hier::IntVector::getZero(dim));
-   TBOX_ASSERT(!physical_domain.isEmpty());
+   TBOX_ASSERT(!physical_domain.empty());
 
    out_boxes.clear();
    out_workloads.clear();
@@ -1348,7 +1348,7 @@ BalanceUtilities::recursiveBisectionNonuniform(
    TBOX_ASSERT(min_size > hier::IntVector::getZero(dim));
    TBOX_ASSERT(cut_factor > hier::IntVector::getZero(dim));
    TBOX_ASSERT(bad_interval >= hier::IntVector::getZero(dim));
-   TBOX_ASSERT(!physical_domain.isEmpty());
+   TBOX_ASSERT(!physical_domain.empty());
 
    out_boxes.clear();
    out_workloads.clear();
@@ -2141,7 +2141,7 @@ BalanceUtilities::constrainMaxBoxSizes(
             pparams.getCutFactor(),
             pparams.getBadInterval(),
             pparams.getDomainBoxes(box.getBlockId()));
-         TBOX_ASSERT(!chopped.isEmpty());
+         TBOX_ASSERT(!chopped.empty());
 
          if (chopped.size() != 1) {
 

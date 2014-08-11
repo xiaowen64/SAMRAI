@@ -489,7 +489,7 @@ private:
     *      (ratio_to_hierarchy_level_zero.getDim() == bad_interval.getDim())
     * @pre hierarchy
     * @pre level_number >= 0
-    * @pre !physical_domain.isEmpty()
+    * @pre !physical_domain.empty()
     * @pre min_size > hier::IntVector::getZero(d_dim)
     * @pre max_size >= min_size
     * @pre cut_factor > hier::IntVector::getZero(d_dim)

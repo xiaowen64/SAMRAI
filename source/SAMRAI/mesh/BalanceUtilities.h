@@ -135,7 +135,7 @@ struct BalanceUtilities {
     * @pre min_size > hier::IntVector::getZero(min_size.getDim())
     * @pre cut_factor > hier::IntVector::getZero(min_size.getDim())
     * @pre bad_interval >= hier::IntVector::getZero(min_size.getDim())
-    * @pre !physical_domain.isEmpty()
+    * @pre !physical_domain.empty()
     */
    static void
    recursiveBisectionUniform(
@@ -201,7 +201,7 @@ struct BalanceUtilities {
     * @pre min_size > hier::IntVector::getZero(min_size.getDim())
     * @pre cut_factor > hier::IntVector::getZero(min_size.getDim())
     * @pre bad_interval >= hier::IntVector::getZero(min_size.getDim())
-    * @pre !physical_domain.isEmpty()
+    * @pre !physical_domain.empty()
     */
    static void
    recursiveBisectionNonuniform(

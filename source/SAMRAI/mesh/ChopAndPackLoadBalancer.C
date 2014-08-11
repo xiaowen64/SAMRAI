@@ -414,7 +414,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
 
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
-   TBOX_ASSERT(!physical_domain.isEmpty());
+   TBOX_ASSERT(!physical_domain.empty());
    TBOX_ASSERT(min_size > hier::IntVector::getZero(d_dim));
    TBOX_ASSERT(max_size >= min_size);
    TBOX_ASSERT(cut_factor > hier::IntVector::getZero(d_dim));
@@ -424,7 +424,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
     * This method assumes in_boxes is not empty and will fail
     * if it is.  So shortcut it for empty in_boxes.
     */
-   if (in_boxes.isEmpty()) {
+   if (in_boxes.empty()) {
       out_boxes = hier::BoxContainer();
       return;
    }
@@ -455,7 +455,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
          difference.removeIntersections(in_boxes);
          t_load_balance_boxes_remove_intersection->stop();
 
-         if (difference.isEmpty()) {
+         if (difference.empty()) {
 
             t_chop_boxes->start();
             chopUniformSingleBox(out_boxes,

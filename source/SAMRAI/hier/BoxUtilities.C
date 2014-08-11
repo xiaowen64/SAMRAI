@@ -182,7 +182,7 @@ BoxUtilities::checkBoxConstraints(
          << "  Box violates cut factor restriction" << std::endl);
    }
 
-   if (!physical_boxes.isEmpty()) {
+   if (!physical_boxes.empty()) {
 
       std::vector<bool> cut_is_bad(dim.getValue());
       for (id = 0; id < dim.getValue(); ++id) {
@@ -201,7 +201,7 @@ BoxUtilities::checkBoxConstraints(
       BoxContainer border_boxes(test_border);
       border_boxes.removeIntersections(physical_boxes);
 
-      if (!border_boxes.isEmpty()) {
+      if (!border_boxes.empty()) {
 
          /*
           * Test individual box faces in each direction for bad cuts.
@@ -334,7 +334,7 @@ BoxUtilities::chopBoxes(
    TBOX_ASSERT(max_size >= min_size);
    TBOX_ASSERT(cut_factor > IntVector::getZero(min_size.getDim()));
    TBOX_ASSERT(bad_interval >= IntVector::getZero(min_size.getDim()));
-   TBOX_ASSERT(!physical_boxes.isEmpty());
+   TBOX_ASSERT(!physical_boxes.empty());
    TBOX_ASSERT(!boxes.isOrdered());
 
    const tbox::Dimension& dim(max_size.getDim());
@@ -342,7 +342,7 @@ BoxUtilities::chopBoxes(
    BoxContainer in_boxes(boxes);
    boxes.clear();
 
-   while (!in_boxes.isEmpty()) {
+   while (!in_boxes.empty()) {
 
       Box box = in_boxes.front();
       in_boxes.popFront();
@@ -428,7 +428,7 @@ BoxUtilities::chopBox(
 
          tmp_boxes.clear();
 
-         while (!boxes.isEmpty()) {
+         while (!boxes.empty()) {
 
             Box chop_box = boxes.front();
             boxes.popFront();
@@ -503,14 +503,14 @@ BoxUtilities::extendBoxesToDomainBoundary(
    const BoxContainer& domain,
    const IntVector& ext_ghosts)
 {
-   TBOX_ASSERT(!domain.isEmpty());
+   TBOX_ASSERT(!domain.empty());
    TBOX_ASSERT(ext_ghosts >= IntVector::getZero(ext_ghosts.getDim()));
 
    bool out_val = false;
 
    BoxContainer out_boxes;
 
-   while (!boxes.isEmpty()) {
+   while (!boxes.empty()) {
 
       Box try_box = boxes.front();
       boxes.popFront();
@@ -534,7 +534,7 @@ BoxUtilities::extendBoxToDomainBoundary(
    const IntVector& ext_ghosts)
 {
 
-   TBOX_ASSERT(!domain.isEmpty());
+   TBOX_ASSERT(!domain.empty());
    TBOX_ASSERT(ext_ghosts >= IntVector::getZero(ext_ghosts.getDim()));
 
    const tbox::Dimension& dim(box.getDim());
@@ -550,7 +550,7 @@ BoxUtilities::extendBoxToDomainBoundary(
       BoxContainer outside_domain(test_ghost_box);
       outside_domain.removeIntersections(domain);
 
-      if (!outside_domain.isEmpty()) {
+      if (!outside_domain.empty()) {
 
          for (id = 0; id < dim.getValue(); ++id) {
             BoxContainer outside_boxes;
@@ -625,12 +625,12 @@ BoxUtilities::growBoxesWithinDomain(
 
    TBOX_ASSERT(min_size > IntVector::getZero(dim));
 
-   if (!boxes.isEmpty()) {
+   if (!boxes.empty()) {
 
       BoxContainer out_boxes;
 
       BoxContainer outside_domain;
-      if (domain.isEmpty()) {
+      if (domain.empty()) {
          Box big_box(boxes.getBoundingBox());
          big_box.grow(min_size);
          outside_domain.pushBack(big_box);
@@ -643,7 +643,7 @@ BoxUtilities::growBoxesWithinDomain(
          outside_domain.removeIntersections(domain);
       }
 
-      while (!boxes.isEmpty()) {
+      while (!boxes.empty()) {
 
          Box try_box = boxes.front();
          boxes.popFront();
@@ -1197,7 +1197,7 @@ BoxUtilities::checkBoxForBadCutPointsInDirection(
 
    bool found_bad = false;
 
-   if (!physical_boxes.isEmpty()) {
+   if (!physical_boxes.empty()) {
 
       int bad = bad_interval(id);
 
@@ -1340,7 +1340,7 @@ BoxUtilities::findBadCutPointsForDirection(
       bad_cuts[ic] = false;
    }
 
-   if (physical_boxes.isEmpty()) {
+   if (physical_boxes.empty()) {
       return; // Avoid the code below, which may crash for zero boxes.
    }
 
@@ -1387,7 +1387,7 @@ BoxUtilities::findBadCutPointsForDirection(
             border_boxes.removeIntersections(physical_boxes);
          }
 
-         if (!border_boxes.isEmpty()) {
+         if (!border_boxes.empty()) {
             border_boxes.simplify();
 
             for (BoxContainer::iterator bbox = border_boxes.begin();
@@ -1427,7 +1427,7 @@ BoxUtilities::findBadCutPointsForDirection(
             border_boxes.removeIntersections(physical_boxes);
          }
 
-         if (!border_boxes.isEmpty()) {
+         if (!border_boxes.empty()) {
             border_boxes.simplify();
             for (BoxContainer::iterator bbox = border_boxes.begin();
                  bbox != border_boxes.end(); ++bbox) {

@@ -142,7 +142,7 @@ EdgeGeometry::computeDestinationBoxes(
 
          }  // if (!together.empty())
 
-         if (!dst_restrict_boxes.isEmpty() && !dst_boxes[d].isEmpty()) {
+         if (!dst_restrict_boxes.empty() && !dst_boxes[d].empty()) {
             hier::BoxContainer edge_restrict_boxes;
             for (hier::BoxContainer::const_iterator b = dst_restrict_boxes.begin();
                  b != dst_restrict_boxes.end(); ++b) {

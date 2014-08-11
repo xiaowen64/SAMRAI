@@ -144,7 +144,7 @@ void SphericalShellGenerator::setDomain(
    int autoscale_base_nprocs,
    const tbox::SAMRAI_MPI& mpi)
 {
-   TBOX_ASSERT(!domain.isEmpty());
+   TBOX_ASSERT(!domain.empty());
    NULL_USE(xlo);
    NULL_USE(xhi);
 

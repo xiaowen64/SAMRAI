@@ -102,7 +102,7 @@ public:
     *                         space for a block.
     *
     * @pre !object_name.empty()
-    * @pre !domain.isEmpty()
+    * @pre !domain.empty()
     */
    BaseGridGeometry(
       const std::string& object_name,
@@ -319,7 +319,7 @@ public:
     * @param[in]     domain The input array of BoxContainer
     * @param[in]     number_blocks
     *
-    * @pre !domain.isEmpty()
+    * @pre !domain.empty()
     * @pre for each box in domain: box.getBlockId().isValid() &&
     *      (box.getBlockId().getBlockValue() < number_blocks)
     */
@@ -936,7 +936,7 @@ private:
     * @param[out] chopped_domain  Container to hold chopped representation of
     *                             the domain.
     *
-    * @pre chopped_domain.isEmpty();
+    * @pre chopped_domain.empty();
     */
    void
    chopDomain(
@@ -1184,7 +1184,7 @@ protected:
     * @param[in]  op_reg
     *
     * @pre !object_name.empty()
-    * @pre !domain.isEmpty()
+    * @pre !domain.empty()
     */
    BaseGridGeometry(
       const std::string& object_name,

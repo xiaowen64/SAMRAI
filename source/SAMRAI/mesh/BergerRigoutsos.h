@@ -236,7 +236,7 @@ public:
     * Each box will be at least as large as the given minimum
     * size and the tolerances will be met.
     *
-    * @pre !bound_boxes.isEmpty()
+    * @pre !bound_boxes.empty()
     * @pre (tag_level->getDim() == (*(bound_boxes.begin())).getDim()) &&
     *      (tag_level->getDim() == min_box.getDim()) &&
     *      (tag_level->getDim() == tag_to_new_width.getDim())

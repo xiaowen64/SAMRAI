@@ -662,7 +662,7 @@ RETURN:
       TBOX_ASSERT(d_common->d_comm_stage.hasPendingRequests());
    }
    if (d_wait_phase == run_children) {
-      // TBOX_ASSERT( ! d_relaunch_queue.isEmpty() );
+      // TBOX_ASSERT( ! d_relaunch_queue.empty() );
       TBOX_ASSERT(!d_common->d_relaunch_queue.empty());
    }
 #endif
@@ -1815,7 +1815,7 @@ BergerRigoutsosNode::createBox()
 {
    TBOX_ASSERT(d_common->d_mpi.getRank() == d_box.getOwnerRank());
    hier::LocalId last_index =
-      d_common->d_new_box_level->getBoxes().isEmpty() ? hier::LocalId(-1) :
+      d_common->d_new_box_level->getBoxes().empty() ? hier::LocalId(-1) :
       d_common->d_new_box_level->getBoxes().back().getLocalId();
 
    hier::Box new_box(d_box, last_index + 1, d_common->d_mpi.getRank());
