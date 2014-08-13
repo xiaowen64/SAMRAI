@@ -67,7 +67,7 @@ FaceData<TYPE>::getDepth() const
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 FaceData<TYPE>::getPointer(
    int face_normal,
    int depth)
@@ -79,7 +79,7 @@ FaceData<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 FaceData<TYPE>::getPointer(
    int face_normal,
    int depth) const
@@ -461,7 +461,7 @@ FaceData<TYPE>::packStream(
                                         transformation.getEndBlock());
 
          const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-         if (!boxes.isEmpty()) {
+         if (!boxes.empty()) {
             d_data[d]->packStream(stream, boxes, transform);
          }
       }
@@ -492,7 +492,6 @@ FaceData<TYPE>::packWithRotation(
 
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
-
 
    hier::Box rotatebox(getGhostBox());
    overlap.getTransformation().transform(rotatebox);
@@ -560,7 +559,7 @@ FaceData<TYPE>::unpackStream(
       }
 
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-      if (!boxes.isEmpty()) {
+      if (!boxes.empty()) {
          d_data[d]->unpackStream(stream, boxes, face_offset);
       }
    }

@@ -34,8 +34,8 @@ PatchFaceDataNormOpsComplex::~PatchFaceDataNormOpsComplex()
 
 int
 PatchFaceDataNormOpsComplex::numberOfEntries(
-      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
-      const hier::Box& box) const
+   const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
+   const hier::Box& box) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);

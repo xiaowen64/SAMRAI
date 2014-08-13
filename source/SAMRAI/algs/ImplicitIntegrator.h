@@ -124,8 +124,8 @@ public:
    ImplicitIntegrator(
       const std::string& object_name,
       const boost::shared_ptr<tbox::Database>& input_db,
-      ImplicitEquationStrategy * implicit_equations,
-      solv::NonlinearSolverStrategy * nonlinear_solver,
+      ImplicitEquationStrategy* implicit_equations,
+      solv::NonlinearSolverStrategy* nonlinear_solver,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
    /**

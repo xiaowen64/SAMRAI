@@ -102,7 +102,6 @@ AsyncCommStage::privateStageMember(
    d_members.push_back(member);
    ++d_member_count;
 
-
    const size_t cur_total_request_count = d_member_to_req[d_members.size() - 1];
    const size_t new_total_request_count = cur_total_request_count + nreq;
    d_member_to_req.push_back(new_total_request_count);
@@ -218,7 +217,7 @@ AsyncCommStage::assertDataConsistency() const
             TBOX_ERROR("d_members[" << i << "] has bad d_nreq="
                                     << d_members[i]->d_nreq << ", stage value is "
                                     << (d_member_to_req[i + 1] - d_member_to_req[i])
-                                     << std::endl);
+                                    << std::endl);
          }
       }
    }
@@ -251,33 +250,28 @@ AsyncCommStage::assertDataConsistency() const
    }
 }
 
-
-
 /*
  ***********************************************************************
  ***********************************************************************
  */
 
 void
-AsyncCommStage::privatePushToCompletionQueue( Member &member )
+AsyncCommStage::privatePushToCompletionQueue(Member& member)
 {
-   TBOX_ASSERT( member.isDone() );
+   TBOX_ASSERT(member.isDone());
    /*
     * Push member onto d_completed_members, but be sure to avoid
     * duplicating.
     */
    std::list<size_t>::iterator li;
-   for ( li=d_completed_members.begin();
-         li!=d_completed_members.end(); ++li ) {
-      if ( member.d_index_on_stage == *li ) break;
+   for (li = d_completed_members.begin();
+        li != d_completed_members.end(); ++li) {
+      if (member.d_index_on_stage == *li) break;
    }
-   if ( li == d_completed_members.end() ) {
+   if (li == d_completed_members.end()) {
       d_completed_members.push_back(member.d_index_on_stage);
    }
-   return;
 }
-
-
 
 /*
  ***********************************************************************
@@ -285,44 +279,43 @@ AsyncCommStage::privatePushToCompletionQueue( Member &member )
  */
 
 void
-AsyncCommStage::privateYankFromCompletionQueue( Member &member )
+AsyncCommStage::privateYankFromCompletionQueue(Member& member)
 {
    /*
     * Remove member from d_completed_members.
     */
    std::list<size_t>::iterator li;
-   for ( li=d_completed_members.begin();
-         li!=d_completed_members.end(); ++li ) {
-      if ( member.d_index_on_stage == *li ) {
+   for (li = d_completed_members.begin();
+        li != d_completed_members.end(); ++li) {
+      if (member.d_index_on_stage == *li) {
          d_completed_members.erase(li);
          break;
       }
    }
-   return;
 }
 
 /*
  ***********************************************************************
  ***********************************************************************
  */
-AsyncCommStage::Member*
+AsyncCommStage::Member *
 AsyncCommStage::popCompletionQueue()
 {
    if (!hasCompletedMembers()) {
       TBOX_ERROR("AsyncCommStage::popCompletionQueue(): There is no\n"
-                 << "completed member.  You cannot call this method\n"
-                 << "when hasCompletedMembers()." << std::endl);
+         << "completed member.  You cannot call this method\n"
+         << "when hasCompletedMembers()." << std::endl);
    }
    if (!firstCompletedMember()->isDone()) {
       TBOX_ERROR("AsyncCommStage::popCompletionQueue error:\n"
-                 << "You asked for a completed AsyncCommStage Member\n"
-                 << "but its stage has changed to pending since the\n"
-                 << "stage last identified it as being completed.\n"
-                 << "This is likely caused by some code re-using the\n"
-                 << "Member for another operation before poping it\n"
-                 << "using this method." << std::endl);
+         << "You asked for a completed AsyncCommStage Member\n"
+         << "but its stage has changed to pending since the\n"
+         << "stage last identified it as being completed.\n"
+         << "This is likely caused by some code re-using the\n"
+         << "Member for another operation before poping it\n"
+         << "using this method." << std::endl);
    }
-   Member *completed = d_members[d_completed_members.front()];
+   Member* completed = d_members[d_completed_members.front()];
    d_completed_members.pop_front();
    return completed;
 }
@@ -590,8 +583,7 @@ AsyncCommStage::advanceAny()
 
    } while (member_done == false);
 
-
-   if ( member_index_on_stage >= 0 ) {
+   if (member_index_on_stage >= 0) {
       privatePushToCompletionQueue(*d_members[member_index_on_stage]);
    }
 
@@ -670,7 +662,7 @@ AsyncCommStage::numberOfPendingMembers() const
  * allocated by this object.
  ****************************************************************
  */
-SAMRAI_MPI::Request*
+SAMRAI_MPI::Request *
 AsyncCommStage::lookupRequestPointer(
    const size_t imember) const
 {
@@ -685,7 +677,7 @@ AsyncCommStage::lookupRequestPointer(
  * allocated by this object.
  ****************************************************************
  */
-SAMRAI_MPI::Status*
+SAMRAI_MPI::Status *
 AsyncCommStage::lookupStatusPointer(
    const size_t imember) const
 {
@@ -817,15 +809,15 @@ AsyncCommStage::Member::numberOfPendingRequests() const
  ***********************************************************************
  ***********************************************************************
  */
-SAMRAI_MPI::Request*
+SAMRAI_MPI::Request *
 AsyncCommStage::Member::getRequestPointer() const
 {
    if (!hasStage()) {
       TBOX_ERROR("AssyncCommStage::Member::getRequestPointer():\n"
-                 << "Empty stage encountered!\n"
-                 << "This probably means the stage Member has not been placed on a stage.\n"
-                 << "See documentation for the Membmber's concrete implementation for how\n"
-                 << "to place the Member on the stage.");
+         << "Empty stage encountered!\n"
+         << "This probably means the stage Member has not been placed on a stage.\n"
+         << "See documentation for the Membmber's concrete implementation for how\n"
+         << "to place the Member on the stage.");
 
    }
    return d_stage->lookupRequestPointer(d_index_on_stage);
@@ -835,15 +827,15 @@ AsyncCommStage::Member::getRequestPointer() const
  ***********************************************************************
  ***********************************************************************
  */
-SAMRAI_MPI::Status*
+SAMRAI_MPI::Status *
 AsyncCommStage::Member::getStatusPointer() const
 {
    if (!hasStage()) {
       TBOX_ERROR("AssyncCommStage::Member::getStatusPointer():\n"
-                 << "Empty stage encountered!\n"
-                 << "This probably means the stage Member has not been placed on a stage.\n"
-                 << "See documentation for the Membmber's concrete implementation for how\n"
-                 << "to place the Member on the stage.");
+         << "Empty stage encountered!\n"
+         << "This probably means the stage Member has not been placed on a stage.\n"
+         << "See documentation for the Membmber's concrete implementation for how\n"
+         << "to place the Member on the stage.");
 
    }
    return d_stage->lookupStatusPointer(d_index_on_stage);
@@ -856,14 +848,13 @@ AsyncCommStage::Member::getStatusPointer() const
 void
 AsyncCommStage::Member::pushToCompletionQueue()
 {
-   if ( ! isDone() ) {
+   if (!isDone()) {
       TBOX_ERROR("AsyncCommStage::Member::pushToCompletionQueue error:\n"
-                 << "This method may not be called by Members that have not\n"
-                 << "completed their operation (and returns true from isDone()."
-                 << std::endl);
+         << "This method may not be called by Members that have not\n"
+         << "completed their operation (and returns true from isDone()."
+         << std::endl);
    }
    d_stage->privatePushToCompletionQueue(*this);
-   return;
 }
 
 /*

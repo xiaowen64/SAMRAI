@@ -67,8 +67,8 @@ PatchEdgeDataNormOpsComplex::sumControlVolumes(
    double retval = 0.0;
    for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
       retval += d_array_ops.sumControlVolumes(data->getArrayData(d),
-         cvol->getArrayData(d),
-         pdat::EdgeGeometry::toEdgeBox(box, d));
+            cvol->getArrayData(d),
+            pdat::EdgeGeometry::toEdgeBox(box, d));
    }
    return retval;
 }

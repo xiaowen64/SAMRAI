@@ -202,7 +202,7 @@ CartesianBoundaryUtilities3::fillFaceBoundaryData(
    TBOX_ASSERT(vardata);
    TBOX_ASSERT(static_cast<int>(bdry_face_conds.size()) == NUM_3D_FACES);
    TBOX_ASSERT(static_cast<int>(bdry_face_values.size()) ==
-               NUM_3D_FACES * (vardata->getDepth()));
+      NUM_3D_FACES * (vardata->getDepth()));
 
    TBOX_DIM_ASSERT(ghost_fill_width.getDim() == tbox::Dimension(3));
    TBOX_ASSERT_OBJDIM_EQUALITY3(*vardata, patch, ghost_fill_width);
@@ -287,7 +287,7 @@ CartesianBoundaryUtilities3::fillEdgeBoundaryData(
    TBOX_ASSERT(vardata);
    TBOX_ASSERT(static_cast<int>(bdry_edge_conds.size()) == NUM_3D_EDGES);
    TBOX_ASSERT(static_cast<int>(bdry_face_values.size()) ==
-               NUM_3D_FACES * (vardata->getDepth()));
+      NUM_3D_FACES * (vardata->getDepth()));
 
    TBOX_DIM_ASSERT(ghost_fill_width.getDim() == tbox::Dimension(3));
    TBOX_ASSERT_OBJDIM_EQUALITY3(*vardata, patch, ghost_fill_width);
@@ -372,7 +372,7 @@ CartesianBoundaryUtilities3::fillNodeBoundaryData(
    TBOX_ASSERT(vardata);
    TBOX_ASSERT(static_cast<int>(bdry_node_conds.size()) == NUM_3D_NODES);
    TBOX_ASSERT(static_cast<int>(bdry_face_values.size()) ==
-               NUM_3D_FACES * (vardata->getDepth()));
+      NUM_3D_FACES * (vardata->getDepth()));
 
    TBOX_DIM_ASSERT(ghost_fill_width.getDim() == tbox::Dimension(3));
    TBOX_ASSERT_OBJDIM_EQUALITY3(*vardata, patch, ghost_fill_width);
@@ -783,15 +783,15 @@ CartesianBoundaryUtilities3::checkBdryData(
    hier::Index ilast(vardata->getBox().upper());
 
    if (offsign == -1) {
-      cbox.lower(idir) = ifirst(idir) - 1;
-      cbox.upper(idir) = ifirst(idir) - 1;
-      dbox.lower(idir) = ifirst(idir);
-      dbox.upper(idir) = ifirst(idir);
+      cbox.setLower(idir, ifirst(idir) - 1);
+      cbox.setUpper(idir, ifirst(idir) - 1);
+      dbox.setLower(idir, ifirst(idir));
+      dbox.setUpper(idir, ifirst(idir));
    } else {
-      cbox.lower(idir) = ilast(idir) + 1;
-      cbox.upper(idir) = ilast(idir) + 1;
-      dbox.lower(idir) = ilast(idir);
-      dbox.upper(idir) = ilast(idir);
+      cbox.setLower(idir, ilast(idir) + 1);
+      cbox.setUpper(idir, ilast(idir) + 1);
+      dbox.setLower(idir, ilast(idir));
+      dbox.setUpper(idir, ilast(idir));
    }
 
    pdat::CellIterator id(pdat::CellGeometry::begin(dbox));
@@ -1145,7 +1145,7 @@ CartesianBoundaryUtilities3::read3dBdryEdges(
                        bdry_cond_str == "YDIRICHLET" ||
                        bdry_cond_str == "YNEUMANN" ||
                        bdry_cond_str == "YREFLECT") {
-               if (s == EdgeBdyLoc3D::XLO_ZLO ||
+               if (s == EdgeBdyLoc3D::YLO_ZLO ||
                    s == EdgeBdyLoc3D::YLO_ZHI ||
                    s == EdgeBdyLoc3D::XLO_YLO ||
                    s == EdgeBdyLoc3D::XHI_YLO) {
@@ -1199,7 +1199,7 @@ CartesianBoundaryUtilities3::read3dBdryEdges(
                        bdry_cond_str == "ZREFLECT") {
                if (s == EdgeBdyLoc3D::XLO_ZLO ||
                    s == EdgeBdyLoc3D::YHI_ZLO ||
-                   s == EdgeBdyLoc3D::XLO_ZLO ||
+                   s == EdgeBdyLoc3D::YLO_ZLO ||
                    s == EdgeBdyLoc3D::XHI_ZLO) {
                   proper_face = "ZLO";
                   if (bdry_cond_str == "ZFLOW" &&
@@ -1255,7 +1255,7 @@ CartesianBoundaryUtilities3::read3dBdryEdges(
                                     << proper_face_data
                                     << " data found for face "
                                     << proper_face << std::endl);
-               }
+            }
 
          } // if (need_data_read)
 
@@ -1692,7 +1692,8 @@ CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues(
    } else {
       TBOX_ERROR(
          "Unknown boundary type " << btype
-                                  << " passed to CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues()"
+                                  <<
+         " passed to CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues()"
                                   << "\n for " << bdry_type_str
                                   << " at location " << bloc
                                   << std::endl);

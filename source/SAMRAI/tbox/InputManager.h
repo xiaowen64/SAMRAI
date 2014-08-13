@@ -69,7 +69,7 @@ public:
     */
    static void
    setManager(
-      InputManager * manager);
+      InputManager* manager);
 
    /**
     * Return whether or not the manager has read an input database.  If
@@ -78,7 +78,7 @@ public:
    static bool
    inputDatabaseExists()
    {
-      return s_input_db;
+      return s_input_db.get();
    }
 
    /**

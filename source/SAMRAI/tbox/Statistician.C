@@ -46,7 +46,7 @@ Statistician::s_finalize_handler(
  *************************************************************************
  */
 
-Statistician*
+Statistician *
 Statistician::createStatistician(
    bool read_from_restart)
 {
@@ -54,7 +54,7 @@ Statistician::createStatistician(
    return s_statistician_instance;
 }
 
-Statistician*
+Statistician *
 Statistician::getStatistician()
 {
    /* Should have instance constructed in initializeCallback */
@@ -1169,7 +1169,7 @@ Statistician::getGlobalPatchStatProcessorSum(
       TBOX_ASSERT(processor_id >= 0 &&
          processor_id < mpi.getSize());
       TBOX_ASSERT(seq_num >= 0 &&
-        seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size()));
+         seq_num < static_cast<int>(d_global_patch_stat_proc_data[patch_stat_id].size()));
       sum =
          d_global_patch_stat_proc_data[patch_stat_id][seq_num][processor_id];
    }
@@ -1936,8 +1936,8 @@ Statistician::finalize(
             for (ip = 0; ip < nnodes; ++ip) {
 
                boost::shared_ptr<Statistic> stat(((ip == 0) ?
-                                          d_proc_statistics[is] :
-                                          global_proc_stats[is][ip]));
+                                                  d_proc_statistics[is] :
+                                                  global_proc_stats[is][ip]));
 
                for (ipsl = 0; ipsl < stat->getStatSequenceLength(); ++ipsl) {
                   sdata[ipsl][ip] = stat->getProcStatSeqArray()[ipsl].value;
@@ -1957,8 +1957,8 @@ Statistician::finalize(
             for (ip = 0; ip < nnodes; ++ip) {
 
                boost::shared_ptr<Statistic> stat(((ip == 0) ?
-                                          d_patch_statistics[is] :
-                                          global_patch_stats[is][ip]));
+                                                  d_patch_statistics[is] :
+                                                  global_patch_stats[is][ip]));
 
                for (ipsl = 0; ipsl < stat->getStatSequenceLength(); ++ipsl) {
                   const std::list<Statistic::PatchStatRecord>& psrl =
@@ -2248,7 +2248,7 @@ Statistician::checkStatsForConsistency(
          for (ip = 0; ip < d_patch_statistics[is]->getStatSequenceLength();
               ++ip) {
             total_patches[ipsl] = static_cast<int>(
-               d_patch_statistics[is]->getPatchStatSeqArray()[ip].patch_records.size());
+                  d_patch_statistics[is]->getPatchStatSeqArray()[ip].patch_records.size());
             ++ipsl;
          }
       }
@@ -2558,8 +2558,8 @@ Statistician::printSpreadSheetOutputForProcessor(
 
 StatisticRestartDatabase::StatisticRestartDatabase(
    const std::string& object_name,
-   bool read_from_restart) :
-  d_object_name(object_name)
+   bool read_from_restart):
+   d_object_name(object_name)
 {
    TBOX_ASSERT(!object_name.empty());
 

@@ -81,7 +81,7 @@ public:
     * Extract a pointer to the side index corresponding to the iterator
     * position in the box.
     */
-   const SideIndex*
+   const SideIndex *
    operator -> () const
    {
       return &d_index;

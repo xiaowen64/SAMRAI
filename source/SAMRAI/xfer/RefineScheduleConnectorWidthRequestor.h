@@ -83,7 +83,7 @@ public:
     * @brief Compute fine Connector width needed at each coarser level
     * for recursive refinement starting with destination level ln.
     *
-    * @param fine_connector_width [in/out] On input, contains width
+    * @param fine_connector_width [in,out] On input, contains width
     * requirement from other conditions, if any.  This method computes
     * the fine connector width for each level coarser than
     * initial_dst_ln, for recursive refinement with initial

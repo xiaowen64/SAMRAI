@@ -28,32 +28,32 @@ namespace tbox {
 class DatabaseFactory
 {
 public:
-  /**
-   * Default constructor
-   */
-  DatabaseFactory();
+   /**
+    * Default constructor
+    */
+   DatabaseFactory();
 
-  /**
+   /**
     * Destructor
     */
-  virtual ~DatabaseFactory();
+   virtual ~DatabaseFactory();
 
-  /**
+   /**
     * Build a new Database instance.
     */
-  virtual boost::shared_ptr<Database>
-  allocate(
-     const std::string& name) = 0;
+   virtual boost::shared_ptr<Database>
+   allocate(
+      const std::string& name) = 0;
 
 private:
-  // Unimplemented copy constructor.
-  DatabaseFactory(
-     const DatabaseFactory& other);
+   // Unimplemented copy constructor.
+   DatabaseFactory(
+      const DatabaseFactory& other);
 
-  // Unimplemented assignment operator.
-  DatabaseFactory&
-  operator = (
-     const DatabaseFactory& rhs);
+   // Unimplemented assignment operator.
+   DatabaseFactory&
+   operator = (
+      const DatabaseFactory& rhs);
 };
 
 }

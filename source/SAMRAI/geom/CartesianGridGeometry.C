@@ -129,7 +129,7 @@ CartesianGridGeometry::CartesianGridGeometry(
    const double* x_lo,
    const double* x_up,
    hier::BoxContainer& domain):
-   GridGeometry(object_name, domain), 
+   GridGeometry(object_name, domain),
    d_domain_box(domain.front().getDim())
 {
    TBOX_ASSERT(!object_name.empty());
@@ -147,7 +147,7 @@ CartesianGridGeometry::CartesianGridGeometry(
    const double* x_lo,
    const double* x_up,
    hier::BoxContainer& domain,
-   const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg) :
+   const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg):
    GridGeometry(object_name, domain, op_reg),
    d_domain_box(domain.front().getDim())
 {
@@ -295,7 +295,7 @@ CartesianGridGeometry::setGeometryData(
       d_x_up[id] = x_up[id];
    }
 
-   if (getPhysicalDomain().isEmpty()) {
+   if (getPhysicalDomain().empty()) {
       setPhysicalDomain(domain, 1);
    }
 
@@ -385,8 +385,8 @@ CartesianGridGeometry::setGeometryDataOnPatch(
 
    boost::shared_ptr<CartesianPatchGeometry> geom(
       boost::make_shared<CartesianPatchGeometry>(ratio_to_level_zero,
-         touches_regular_bdry,
-         dx, x_lo, x_up));
+                                                 touches_regular_bdry,
+                                                 dx, x_lo, x_up));
 
    patch.setPatchGeometry(geom);
 
@@ -598,8 +598,7 @@ CartesianGridGeometry::getFromInput(
 
       setGeometryData(x_lo, x_up, getPhysicalDomain());
 
-   }
-   else if (input_db) {
+   } else if (input_db) {
       bool read_on_restart =
          input_db->getBoolWithDefault("read_on_restart", false);
       int num_keys = static_cast<int>(input_db->getAllKeys().size());

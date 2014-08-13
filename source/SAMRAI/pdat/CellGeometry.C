@@ -123,7 +123,7 @@ CellGeometry::computeDestinationBoxes(
       }
    }
 
-   if (!dst_boxes.isEmpty() && !dst_restrict_boxes.isEmpty()) {
+   if (!dst_boxes.empty() && !dst_restrict_boxes.empty()) {
       dst_boxes.intersectBoxes(dst_restrict_boxes);
    }
 }
@@ -178,8 +178,7 @@ CellGeometry::transform(
          CellIndex tmp_index(index);
          index(0) = -tmp_index(0) - 1;
       }
-   }
-   else if (dim.getValue() == 2) {
+   } else if (dim.getValue() == 2) {
       const int rotation_num = static_cast<int>(rotation);
       if (rotation_num > 3) {
          TBOX_ERROR("CellGeometry::transform invalid 2D RotationIdentifier.");

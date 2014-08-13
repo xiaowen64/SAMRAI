@@ -23,6 +23,7 @@
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include "boost/logic/tribool.hpp"
 #include <iostream>
 
 namespace SAMRAI {
@@ -90,7 +91,7 @@ public:
       const BlockId& block_id);
 
    /*!
-    * @brief Copy constructor 
+    * @brief Copy constructor
     */
    Box(
       const Box& box);
@@ -260,15 +261,17 @@ public:
       const int owner_rank,
       const PeriodicId& periodic_id = PeriodicId::zero())
    {
-      if ( &box != this ) {
+      if (&box != this) {
          d_lo = box.d_lo;
          d_hi = box.d_hi;
          d_block_id = box.d_block_id;
+         d_empty_flag = box.d_empty_flag;
       }
       if (!idLocked()) {
          d_id.initialize(local_id, owner_rank, periodic_id);
       } else {
-         TBOX_ERROR("Attempted to change BoxId that is locked in an ordered BoxContainer." << std::endl);
+         TBOX_ERROR(
+            "Attempted to change BoxId that is locked in an ordered BoxContainer." << std::endl);
       }
    }
 
@@ -332,7 +335,7 @@ public:
 
    //! @brief Set the LocalId.
    void
-   setLocalId(const LocalId &local_id)
+   setLocalId(const LocalId& local_id)
    {
       return d_id.initialize(local_id, d_id.getOwnerRank(), d_id.getPeriodicId());
    }
@@ -459,7 +462,7 @@ public:
     */
    void
    putToMessageStream(
-      tbox::MessageStream &msg) const;
+      tbox::MessageStream& msg) const;
 
    /*!
     * @brief Set attributes according to data in MessageStream.
@@ -470,7 +473,7 @@ public:
     */
    void
    getFromMessageStream(
-      tbox::MessageStream &msg);
+      tbox::MessageStream& msg);
 
    //@}
 
@@ -487,30 +490,23 @@ public:
       const Box& rhs);
 
    /*!
-    * @brief Return a non-const lower index of the box.
-    */
-   Index&
-   lower()
-   {
-      return d_lo;
-   }
-
-   /*!
-    * @brief Return a non-const upper index of the box.
-    */
-   Index&
-   upper()
-   {
-      return d_hi;
-   }
-
-   /*!
     * @brief Return a const lower index of the box.
     */
    const Index&
    lower() const
    {
       return d_lo;
+   }
+
+   /*!
+    * @brief Sets lower index of the box.
+    */
+   void
+   setLower(
+      const Index& new_lower)
+   {
+      d_lo = new_lower;
+      d_empty_flag = boost::logic::indeterminate;
    }
 
    /*!
@@ -523,23 +519,14 @@ public:
    }
 
    /*!
-    * @brief Return the i'th component (non-const) of the lower index.
+    * @brief Sets upper index of the box.
     */
-   int&
-   lower(
-      const dir_t i)
+   void
+   setUpper(
+      const Index& new_upper)
    {
-      return d_lo(i);
-   }
-
-   /*!
-    * @brief Return the i'th component (non-const) of the upper index.
-    */
-   int&
-   upper(
-      const dir_t i)
-   {
-      return d_hi(i);
+      d_hi = new_upper;
+      d_empty_flag = boost::logic::indeterminate;
    }
 
    /*!
@@ -547,9 +534,21 @@ public:
     */
    const int&
    lower(
-      const dir_t i) const
+      dir_t i) const
    {
       return d_lo(i);
+   }
+
+   /*!
+    * @brief Sets the i'th component of the lower index.
+    */
+   void
+   setLower(
+      dir_t i,
+      int new_lower)
+   {
+      d_lo(i) = new_lower;
+      d_empty_flag = boost::logic::indeterminate;
    }
 
    /*!
@@ -557,9 +556,21 @@ public:
     */
    const int&
    upper(
-      const dir_t i) const
+      dir_t i) const
    {
       return d_hi(i);
+   }
+
+   /*!
+    * @brief Sets the i'th component of the upper index.
+    */
+   void
+   setUpper(
+      dir_t i,
+      int new_upper)
+   {
+      d_hi(i) = new_upper;
+      d_empty_flag = boost::logic::indeterminate;
    }
 
    /*!
@@ -571,37 +582,53 @@ public:
       const tbox::Dimension& dim(getDim());
       d_lo = Index(dim, tbox::MathUtilities<int>::getMax());
       d_hi = Index(dim, tbox::MathUtilities<int>::getMin());
+      d_empty_flag = true;
    }
 
    /*!
     * @brief Return whether the box is ``empty''.
     *
-    * isEmpty() is preferred to match "is" standard syntax for
-    * boolean methods.
+    * Archaic syntax.  Synonymous with empty().  Retained for backward
+    * compatibility.
     *
-    * @see isEmpty()
+    * @see empty()
+    */
+   DEPRECATED(
+   bool
+   isEmpty() const)
+   {
+      return empty();
+   }
+
+   /*!
+    * @brief Return whether the box is ``empty''.
+    *
+    * This version follows the naming standards used in STL.
+    *
+    * A box is empty if any of the lower bounds is greater than the
+    * corresponding upper bound.  An empty box has a size of zero.
+    *
+    * @return True if the box is empty.
     */
    bool
    empty() const
    {
-      return isEmpty();
-   }
-
-   /*!
-    * @brief Return whether the box is ``empty''.
-    *
-    * A box is empty if any of the lower bounds is greater than the
-    * corresponding upper bound.  An empty box has a size of zero.
-    */
-   bool
-   isEmpty() const
-   {
-      for (dir_t i = 0; i < getDim().getValue(); ++i) {
-         if (d_hi(i) < d_lo(i)) {
-            return true;
-         }
+      if (d_empty_flag) {
+         return true;
       }
-      return false;
+      else if (!d_empty_flag) {
+         return false;
+      }
+      else {
+         for (dir_t i = 0; i < getDim().getValue(); ++i) {
+            if (d_hi(i) < d_lo(i)) {
+               d_empty_flag = true;
+               return true;
+            }
+         }
+         d_empty_flag = false;
+         return false;
+      }
    }
 
    /*!
@@ -635,7 +662,7 @@ public:
 
    /*!
     * @brief Calculate the number of indices represented by the box.
-    * 
+    *
     * If the box is empty, then the number of index points within the box is
     * zero.
     */
@@ -784,12 +811,13 @@ public:
     * @pre (getBlockId() == box.getBlockId()) || empty() || box.empty()
     */
    Box
-   &operator *= (
+   &
+   operator *= (
       const Box& box);
 
    /*!
     * @brief Box intersection.
-    * 
+    *
     * Calculate the intersection of the index spaces of two boxes.  The
     * intersection with an empty box always yields an empty box.
     *
@@ -857,7 +885,7 @@ public:
    /*!
     * @brief Return true if this box can be coalesced with the argument box,
     * and set this box to the union of the boxes.
-    * 
+    *
     * Otherwise, return false and leave boxes as is.  Two boxes may be
     * coalesced if their union is a box (recall that index set union is not
     * closed over boxes).  If one box is empty and the other is non-empty, then
@@ -893,6 +921,7 @@ public:
       if (!empty()) {
          d_lo -= ghosts;
          d_hi += ghosts;
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -918,6 +947,7 @@ public:
       if (!empty()) {
          d_lo(direction) -= ghosts;
          d_hi(direction) += ghosts;
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -936,6 +966,7 @@ public:
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
       if (!empty()) {
          d_lo -= ghosts;
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -956,6 +987,7 @@ public:
       TBOX_ASSERT((direction < getDim().getValue()));
       if (!empty()) {
          d_lo(direction) -= ghosts;
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -974,6 +1006,7 @@ public:
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
       if (!empty()) {
          d_hi += ghosts;
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -994,6 +1027,7 @@ public:
       TBOX_ASSERT((direction < getDim().getValue()));
       if (!empty()) {
          d_hi(direction) += ghosts;
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -1280,7 +1314,7 @@ public:
     * @brief Returns true if the BoxId of this Box is locked.
     */
    bool
-   idLocked()
+   idLocked() const
    {
       return d_id_locked;
    }
@@ -1368,7 +1402,6 @@ private:
       const dir_t axis,
       const int num_rotations);
 
-
    /*!
     * @brief Initialize static objects and register shutdown routine.
     *
@@ -1390,6 +1423,7 @@ private:
    BlockId d_block_id;
    BoxId d_id;
    bool d_id_locked;
+   mutable boost::tribool d_empty_flag;
 
    /*
     * Array of empty boxes for each dimension.  Preallocated
@@ -1432,7 +1466,7 @@ private:
 
 class BoxIterator
 {
-friend class Box;
+   friend class Box;
 
 public:
    typedef tbox::Dimension::dir_t dir_t;
@@ -1473,7 +1507,7 @@ public:
     * Return a pointer to the current index in the box.  This operation is
     * undefined if the iterator is past the last Index in the box.
     */
-   const Index*
+   const Index *
    operator -> () const
    {
       return &d_index;
@@ -1557,6 +1591,5 @@ private:
 
 }
 }
-
 
 #endif

@@ -115,7 +115,7 @@ OuterfaceComplexConstantRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-OuterfaceComplexConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
+OuterfaceComplexConstantRefine::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }
@@ -165,11 +165,15 @@ OuterfaceComplexConstantRefine::refine(
 
          hier::Box fine_box(dim);
          for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
-            fine_box.lower( static_cast<tbox::Dimension::dir_t>( (axis + i) % dim.getValue()) ) = face_box.lower(i);
-            fine_box.upper( static_cast<tbox::Dimension::dir_t>( (axis + i) % dim.getValue()) ) = face_box.upper(i);
+            fine_box.setLower(
+               static_cast<tbox::Dimension::dir_t>((axis + i) % dim.getValue()),
+               face_box.lower(i));
+            fine_box.setUpper(
+               static_cast<tbox::Dimension::dir_t>((axis + i) % dim.getValue()),
+               face_box.upper(i));
          }
 
-         fine_box.upper(axis) -= 1;
+         fine_box.setUpper(axis, fine_box.upper(axis) - 1);
 
          const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
          const hier::Index ifirstc = coarse_box.lower();

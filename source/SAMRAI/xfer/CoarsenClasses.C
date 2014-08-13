@@ -121,7 +121,7 @@ CoarsenClasses::itemIsValid(
    if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
-   const tbox::Dimension &dim = pd->getPatchDataFactory(data_item.d_dst)->getDim();
+   const tbox::Dimension& dim = pd->getPatchDataFactory(data_item.d_dst)->getDim();
 
    const int dst_id = data_item.d_dst;
    const int src_id = data_item.d_src;
@@ -252,7 +252,7 @@ CoarsenClasses::itemsAreEquivalent(
    if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
-   const tbox::Dimension &dim = pd->getPatchDataFactory(data1.d_dst)->getDim();
+   const tbox::Dimension& dim = pd->getPatchDataFactory(data1.d_dst)->getDim();
 
    equivalent = patchDataMatch(data1.d_dst, data2.d_dst, pd);
 
@@ -338,7 +338,8 @@ CoarsenClasses::printCoarsenItem(
              << data.d_opcoarsen->getOperatorPriority()
              << std::endl;
       stream << "operator stencil width: "
-             << data.d_opcoarsen->getStencilWidth(hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataDim(data.d_dst))
+             << data.d_opcoarsen->getStencilWidth(
+         hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataDim(data.d_dst))
              << std::endl;
    }
    stream << std::endl;

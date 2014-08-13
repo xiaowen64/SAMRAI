@@ -67,7 +67,7 @@ EdgeData<TYPE>::getDepth() const
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 EdgeData<TYPE>::getPointer(
    int axis,
    int depth)
@@ -79,7 +79,7 @@ EdgeData<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 EdgeData<TYPE>::getPointer(
    int axis,
    int depth) const
@@ -301,7 +301,6 @@ EdgeData<TYPE>::copyWithRotation(
                                    rotatebox.getBlockId(),
                                    getBox().getBlockId());
 
-
    for (int i = 0; i < dim.getValue(); ++i) {
       const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
@@ -421,7 +420,7 @@ EdgeData<TYPE>::packStream(
       const hier::Transformation& transformation = t_overlap->getTransformation();
       for (int d = 0; d < getDim().getValue(); ++d) {
          const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-         if (!boxes.isEmpty()) {
+         if (!boxes.empty()) {
             d_data[d]->packStream(stream, boxes, transformation);
          }
       }
@@ -512,7 +511,7 @@ EdgeData<TYPE>::unpackStream(
    const hier::IntVector& offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); ++d) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-      if (!boxes.isEmpty()) {
+      if (!boxes.empty()) {
          d_data[d]->unpackStream(stream, boxes, offset);
       }
    }

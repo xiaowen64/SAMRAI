@@ -126,7 +126,7 @@ SideGeometry::computeDestinationBoxes(
    const hier::Transformation& transformation,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS 
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const hier::IntVector& src_offset = transformation.getOffset();
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 #endif
@@ -146,8 +146,8 @@ SideGeometry::computeDestinationBoxes(
    const hier::IntVector one_vector(dim, 1);
 
    const hier::Box quick_check(
-      hier::Box::grow(src_shift, one_vector) *
-      hier::Box::grow(dst_ghost, one_vector));
+      hier::Box::grow(src_shift, one_vector)
+      * hier::Box::grow(dst_ghost, one_vector));
 
    if (!quick_check.empty()) {
 
@@ -168,7 +168,7 @@ SideGeometry::computeDestinationBoxes(
             }  // if (!together.empty())
          } // if (dirs(d))
 
-         if (!dst_restrict_boxes.isEmpty() && !dst_boxes[d].isEmpty()) {
+         if (!dst_restrict_boxes.empty() && !dst_boxes[d].empty()) {
             hier::BoxContainer side_restrict_boxes;
             for (hier::BoxContainer::const_iterator b = dst_restrict_boxes.begin();
                  b != dst_restrict_boxes.end(); ++b) {
@@ -204,7 +204,7 @@ SideGeometry::toSideBox(
 
    if (!box.empty()) {
       side_box = box;
-      side_box.upper(side_normal) += 1;
+      side_box.setUpper(side_normal, side_box.upper(side_normal) + 1);
    }
 
    return side_box;
@@ -234,7 +234,7 @@ SideGeometry::doOverlap(
    const hier::Transformation& transformation,
    const hier::BoxContainer& dst_restrict_boxes)
 {
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS 
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const hier::IntVector& src_offset = transformation.getOffset();
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 #endif
@@ -318,7 +318,8 @@ SideGeometry::transform(
 
       } else {
 
-         box.upper() (normal_direction) -= 1;
+         box.setUpper(static_cast<hier::Box::dir_t>(normal_direction),
+            box.upper(static_cast<hier::Box::dir_t>(normal_direction)) - 1);
          transformation.transform(box);
          if (dim.getValue() == 2) {
             const int rotation_num = static_cast<int>(rotation);
@@ -431,7 +432,8 @@ SideGeometry::transform(
             }
          }
 
-         box.upper() (normal_direction) += 1;
+         box.setUpper(static_cast<hier::Box::dir_t>(normal_direction),
+            box.upper(static_cast<hier::Box::dir_t>(normal_direction)) + 1);
       }
    }
 }
@@ -617,8 +619,8 @@ SideGeometry::transform(
 
 void
 SideGeometry::rotateAboutAxis(SideIndex& index,
-   const tbox::Dimension::dir_t axis,
-   const int num_rotations)
+                              const tbox::Dimension::dir_t axis,
+                              const int num_rotations)
 {
    const tbox::Dimension& dim = index.getDim();
    const int a = (axis + 1) % dim.getValue();

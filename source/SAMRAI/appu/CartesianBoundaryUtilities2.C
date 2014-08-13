@@ -164,7 +164,7 @@ CartesianBoundaryUtilities2::fillEdgeBoundaryData(
    TBOX_ASSERT(vardata);
    TBOX_ASSERT(static_cast<int>(bdry_edge_conds.size()) == NUM_2D_EDGES);
    TBOX_ASSERT(static_cast<int>(bdry_edge_values.size()) ==
-               NUM_2D_EDGES * (vardata->getDepth()));
+      NUM_2D_EDGES * (vardata->getDepth()));
 
    TBOX_DIM_ASSERT(ghost_fill_width.getDim() == tbox::Dimension(2));
    TBOX_ASSERT_OBJDIM_EQUALITY3(*vardata, patch, ghost_fill_width);
@@ -247,7 +247,7 @@ CartesianBoundaryUtilities2::fillNodeBoundaryData(
    TBOX_ASSERT(vardata);
    TBOX_ASSERT(static_cast<int>(bdry_node_conds.size()) == NUM_2D_NODES);
    TBOX_ASSERT(static_cast<int>(bdry_edge_values.size()) ==
-               NUM_2D_EDGES * (vardata->getDepth()));
+      NUM_2D_EDGES * (vardata->getDepth()));
 
    TBOX_DIM_ASSERT(ghost_fill_width.getDim() == tbox::Dimension(2));
    TBOX_ASSERT_OBJDIM_EQUALITY3(*vardata, patch, ghost_fill_width);
@@ -507,15 +507,15 @@ CartesianBoundaryUtilities2::checkBdryData(
    hier::Index ilast(vardata->getBox().upper());
 
    if (offsign == -1) {
-      cbox.lower(idir) = ifirst(idir) - 1;
-      cbox.upper(idir) = ifirst(idir) - 1;
-      dbox.lower(idir) = ifirst(idir);
-      dbox.upper(idir) = ifirst(idir);
+      cbox.setLower(idir, ifirst(idir) - 1);
+      cbox.setUpper(idir, ifirst(idir) - 1);
+      dbox.setLower(idir, ifirst(idir));
+      dbox.setUpper(idir, ifirst(idir));
    } else {
-      cbox.lower(idir) = ilast(idir) + 1;
-      cbox.upper(idir) = ilast(idir) + 1;
-      dbox.lower(idir) = ilast(idir);
-      dbox.upper(idir) = ilast(idir);
+      cbox.setLower(idir, ilast(idir) + 1);
+      cbox.setUpper(idir, ilast(idir) + 1);
+      dbox.setLower(idir, ilast(idir));
+      dbox.setUpper(idir, ilast(idir));
    }
 
    pdat::CellIterator id(pdat::CellGeometry::begin(dbox));

@@ -122,7 +122,7 @@ std::vector<std::vector<int> > PatchBoundaryNodeSum::s_onode_dst_id_array =
  */
 
 PatchBoundaryNodeSum::PatchBoundaryNodeSum(
-   const std::string& object_name) :
+   const std::string& object_name):
    d_setup_called(false),
    d_num_reg_sum(0),
    d_coarsest_level(-1),
@@ -291,8 +291,8 @@ PatchBoundaryNodeSum::registerSum(
    if (!d_tmp_onode_src_variable[reg_sum_id]) {
       d_tmp_onode_src_variable[reg_sum_id].reset(
          new pdat::OuternodeVariable<double>(dim,
-                                             tonode_src_var_name,
-                                             data_depth));
+            tonode_src_var_name,
+            data_depth));
    }
 
    std::string tonode_dst_var_name = tmp_onode_dst_variable_name + var_suffix;
@@ -301,8 +301,8 @@ PatchBoundaryNodeSum::registerSum(
    if (!d_tmp_onode_dst_variable[reg_sum_id]) {
       d_tmp_onode_dst_variable[reg_sum_id].reset(
          new pdat::OuternodeVariable<double>(dim,
-                                             tonode_dst_var_name,
-                                             data_depth));
+            tonode_dst_var_name,
+            data_depth));
    }
 
    if (s_onode_src_id_array[data_depth][data_depth_id] < 0) {
@@ -483,8 +483,8 @@ PatchBoundaryNodeSum::setupSum(
 
          d_cfbdry_tmp_level[fine_level_num].reset(new hier::PatchLevel(dim));
          d_cfbdry_tmp_level[fine_level_num]->
-            setCoarsenedPatchLevel(fine_level,
-               fine_level->getRatioToCoarserLevel());
+         setCoarsenedPatchLevel(fine_level,
+            fine_level->getRatioToCoarserLevel());
          hier::IntVector crse_tmp_gcw =
             d_hierarchy->getPatchLevel(crse_level_num)->findConnector(
                *d_hierarchy->getPatchLevel(fine_level_num),
@@ -494,17 +494,17 @@ PatchBoundaryNodeSum::setupSum(
          // Create persistent overlap Connectors for use in schedule construction.
          // TODO: There are faster ways to get these edges.  BTNG.
          d_cfbdry_tmp_level[fine_level_num]->createConnectorWithTranspose(
-               *crse_level,
-               crse_tmp_gcw,
-               crse_tmp_gcw);
+            *crse_level,
+            crse_tmp_gcw,
+            crse_tmp_gcw);
          const hier::Connector& crse_to_domain =
             d_cfbdry_tmp_level[fine_level_num]->getBoxLevel()->createConnector(
-                  d_hierarchy->getDomainBoxLevel(),
-                  hier::IntVector::getZero(dim));
+               d_hierarchy->getDomainBoxLevel(),
+               hier::IntVector::getZero(dim));
          const hier::Connector& crse_to_crse =
             d_cfbdry_tmp_level[fine_level_num]->createConnector(
-                  *d_cfbdry_tmp_level[fine_level_num],
-                  hier::IntVector::getOne(dim));
+               *d_cfbdry_tmp_level[fine_level_num],
+               hier::IntVector::getOne(dim));
 
          d_cfbdry_copy_schedule[fine_level_num] =
             cfbdry_copy_algorithm.createSchedule(
@@ -630,9 +630,9 @@ PatchBoundaryNodeSum::computeSum(
       }
 
       d_hierarchy->getPatchLevel(d_coarsest_level)->
-         deallocatePatchData(d_onode_src_data_set);
+      deallocatePatchData(d_onode_src_data_set);
       d_hierarchy->getPatchLevel(d_coarsest_level)->
-         deallocatePatchData(d_onode_dst_data_set);
+      deallocatePatchData(d_onode_dst_data_set);
 
    }  // if d_hierarchy_setup_called
 
@@ -921,30 +921,26 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
 
             if ((dim == tbox::Dimension(2))) {
 
-               double *tmp_onode_data_ptr00, *tmp_onode_data_ptr01,
-                      *tmp_onode_data_ptr10, *tmp_onode_data_ptr11;
+               double* tmp_onode_data_ptr00, * tmp_onode_data_ptr01,
+               * tmp_onode_data_ptr10, * tmp_onode_data_ptr11;
                if (tmp_onode_data.getArrayData(0, 0).isInitialized()) {
                   tmp_onode_data_ptr00 = tmp_onode_data.getPointer(0, 0);
-               }
-               else {
+               } else {
                   tmp_onode_data_ptr00 = 0;
                }
                if (tmp_onode_data.getArrayData(0, 1).isInitialized()) {
                   tmp_onode_data_ptr01 = tmp_onode_data.getPointer(0, 1);
-               }
-               else {
+               } else {
                   tmp_onode_data_ptr01 = 0;
                }
                if (tmp_onode_data.getArrayData(1, 0).isInitialized()) {
                   tmp_onode_data_ptr10 = tmp_onode_data.getPointer(1, 0);
-               }
-               else {
+               } else {
                   tmp_onode_data_ptr10 = 0;
                }
                if (tmp_onode_data.getArrayData(1, 1).isInitialized()) {
                   tmp_onode_data_ptr11 = tmp_onode_data.getPointer(1, 1);
-               }
-               else {
+               } else {
                   tmp_onode_data_ptr11 = 0;
                }
 
@@ -966,43 +962,37 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
 
             if ((dim == tbox::Dimension(3))) {
 
-               double *tmp_onode_data_ptr00, *tmp_onode_data_ptr01,
-                      *tmp_onode_data_ptr10, *tmp_onode_data_ptr11,
-                      *tmp_onode_data_ptr20, *tmp_onode_data_ptr21;
+               double* tmp_onode_data_ptr00, * tmp_onode_data_ptr01,
+               * tmp_onode_data_ptr10, * tmp_onode_data_ptr11,
+               * tmp_onode_data_ptr20, * tmp_onode_data_ptr21;
                if (tmp_onode_data.getArrayData(0, 0).isInitialized()) {
                   tmp_onode_data_ptr00 = tmp_onode_data.getPointer(0, 0);
-               }
-               else {
+               } else {
                   tmp_onode_data_ptr00 = 0;
                }
                if (tmp_onode_data.getArrayData(0, 1).isInitialized()) {
                   tmp_onode_data_ptr01 = tmp_onode_data.getPointer(0, 1);
-               }
-               else {
+               } else {
                   tmp_onode_data_ptr01 = 0;
                }
                if (tmp_onode_data.getArrayData(1, 0).isInitialized()) {
                   tmp_onode_data_ptr10 = tmp_onode_data.getPointer(1, 0);
-               }
-               else {
+               } else {
                   tmp_onode_data_ptr10 = 0;
                }
                if (tmp_onode_data.getArrayData(1, 1).isInitialized()) {
                   tmp_onode_data_ptr11 = tmp_onode_data.getPointer(1, 1);
-               }
-               else {
+               } else {
                   tmp_onode_data_ptr11 = 0;
                }
                if (tmp_onode_data.getArrayData(2, 0).isInitialized()) {
                   tmp_onode_data_ptr20 = tmp_onode_data.getPointer(2, 0);
-               }
-               else {
+               } else {
                   tmp_onode_data_ptr20 = 0;
                }
                if (tmp_onode_data.getArrayData(2, 1).isInitialized()) {
                   tmp_onode_data_ptr21 = tmp_onode_data.getPointer(2, 1);
-               }
-               else {
+               } else {
                   tmp_onode_data_ptr21 = 0;
                }
 

@@ -24,7 +24,7 @@ namespace tbox {
 MessageStream::MessageStream(
    const size_t num_bytes,
    const StreamMode mode,
-   const void *data_to_read,
+   const void* data_to_read,
    bool deep_copy):
    d_mode(mode),
    d_write_buffer(),
@@ -36,43 +36,39 @@ MessageStream::MessageStream(
 {
    TBOX_ASSERT(num_bytes >= 1);
 
-   if ( mode == Read ) {
-      if ( data_to_read == 0 ) {
+   if (mode == Read) {
+      if (data_to_read == 0) {
          TBOX_ERROR("MessageStream::MessageStream: error:\n"
-                    <<"No data_to_read was given to a Read-mode MessageStream.\n");
+            << "No data_to_read was given to a Read-mode MessageStream.\n");
       }
-      if ( deep_copy ) {
-         d_read_buffer = new char [num_bytes];
-         memcpy(const_cast<char*>(d_read_buffer), data_to_read, num_bytes);
-      }
-      else {
-         d_read_buffer = static_cast<const char*>(data_to_read);
+      if (deep_copy) {
+         d_read_buffer = new char[num_bytes];
+         memcpy(const_cast<char *>(d_read_buffer), data_to_read, num_bytes);
+      } else {
+         d_read_buffer = static_cast<const char *>(data_to_read);
       }
       d_buffer_size = num_bytes;
-   }
-   else {
+   } else {
       d_write_buffer.reserve(num_bytes);
    }
-   return;
 }
 
-MessageStream::MessageStream()
-   : d_mode(Write),
-     d_write_buffer(),
-     d_read_buffer(0),
-     d_buffer_size(0),
-     d_buffer_index(0),
-     d_grow_as_needed(true),
-     d_deep_copy_read(false)
+MessageStream::MessageStream():
+   d_mode(Write),
+   d_write_buffer(),
+   d_read_buffer(0),
+   d_buffer_size(0),
+   d_buffer_index(0),
+   d_grow_as_needed(true),
+   d_deep_copy_read(false)
 {
    d_write_buffer.reserve(10);
-   return;
 }
 
 MessageStream::~MessageStream()
 {
    if (d_mode == Read && d_deep_copy_read) {
-      delete [] d_read_buffer;
+      delete[] d_read_buffer;
    }
    d_read_buffer = 0;
 }

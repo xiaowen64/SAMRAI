@@ -180,7 +180,7 @@ OuteredgeGeometry::doOverlap(
 
          }  // if source and destination edge boxes overlap in axis direction
 
-         if (!dst_restrict_boxes.isEmpty() && !dst_boxes[axis].isEmpty()) {
+         if (!dst_restrict_boxes.empty() && !dst_boxes[axis].empty()) {
             hier::BoxContainer edge_restrict_boxes;
             for (hier::BoxContainer::const_iterator b = dst_restrict_boxes.begin();
                  b != dst_restrict_boxes.end(); ++b) {
@@ -332,7 +332,7 @@ OuteredgeGeometry::doOverlap(
             dst_boxes[axis].removeIntersections(interior_edges);
          }
 
-         if (!dst_restrict_boxes.isEmpty() && !dst_boxes[axis].isEmpty()) {
+         if (!dst_restrict_boxes.empty() && !dst_boxes[axis].empty()) {
             hier::BoxContainer edge_restrict_boxes;
             for (hier::BoxContainer::const_iterator b = dst_restrict_boxes.begin();
                  b != dst_restrict_boxes.end(); ++b) {
@@ -396,8 +396,8 @@ OuteredgeGeometry::toOuteredgeBox(
                if (dh != axis && dh != face_normal) {
                   // do not trim in axis or face_normal direction
 
-                  ++oedge_box.lower(dh);
-                  --oedge_box.upper(dh);
+                  oedge_box.setLower(dh, oedge_box.lower(dh) + 1);
+                  oedge_box.setUpper(dh, oedge_box.upper(dh) - 1);
 
                }
 
@@ -408,9 +408,9 @@ OuteredgeGeometry::toOuteredgeBox(
       }
 
       if (side == 0) {   // lower side in face normal direction
-         oedge_box.upper(face_normal) = oedge_box.lower(face_normal);
+         oedge_box.setUpper(face_normal, oedge_box.lower(face_normal));
       } else {  // side == 1; upper side in face normal direction
-         oedge_box.lower(face_normal) = oedge_box.upper(face_normal);
+         oedge_box.setLower(face_normal, oedge_box.upper(face_normal));
       }
 
    }

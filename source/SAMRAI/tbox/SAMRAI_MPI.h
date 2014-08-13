@@ -137,6 +137,7 @@ public:
       int MPI_TAG;
       int MPI_ERROR;
    };
+
 #endif
 
    // Obsolete and should be removed.
@@ -397,7 +398,7 @@ public:
 
    static int
    Request_free(
-      Request *request);
+      Request* request);
 
    static int
    Test(
@@ -610,10 +611,19 @@ public:
       int dest,
       int tag) const;
 
-   int Sendrecv(
-      void *sendbuf, int sendcount, Datatype sendtype, int dest, int sendtag,
-      void *recvbuf, int recvcount, Datatype recvtype, int source, int recvtag,
-      Status *status ) const;
+   int
+   Sendrecv(
+      void* sendbuf,
+      int sendcount,
+      Datatype sendtype,
+      int dest,
+      int sendtag,
+      void* recvbuf,
+      int recvcount,
+      Datatype recvtype,
+      int source,
+      int recvtag,
+      Status* status) const;
 
    int Scan(
       void *sendbuf, void *recvbuf, int count,

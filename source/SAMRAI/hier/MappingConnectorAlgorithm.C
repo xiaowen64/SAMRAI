@@ -22,8 +22,10 @@
 namespace SAMRAI {
 namespace hier {
 
-const std::string MappingConnectorAlgorithm::s_default_timer_prefix("hier::MappingConnectorAlgorithm");
-std::map<std::string, MappingConnectorAlgorithm::TimerStruct> MappingConnectorAlgorithm::s_static_timers;
+const std::string MappingConnectorAlgorithm::s_default_timer_prefix(
+   "hier::MappingConnectorAlgorithm");
+std::map<std::string,
+         MappingConnectorAlgorithm::TimerStruct> MappingConnectorAlgorithm::s_static_timers;
 char MappingConnectorAlgorithm::s_ignore_external_timer_prefix('n');
 
 char MappingConnectorAlgorithm::s_print_steps = '\0';
@@ -119,7 +121,7 @@ MappingConnectorAlgorithm::getFromInput()
             }
             s_ignore_external_timer_prefix =
                mca_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
-                                          'n');
+                  'n');
             if (!(s_ignore_external_timer_prefix == 'n' ||
                   s_ignore_external_timer_prefix == 'y')) {
                INPUT_VALUE_ERROR("DEV_ignore_external_timer_prefix");
@@ -146,8 +148,7 @@ MappingConnectorAlgorithm::modify(
    Connector* old_to_anchor = 0;
    if (anchor_to_mapped.hasTranspose()) {
       old_to_anchor = &anchor_to_mapped.getTranspose();
-   }
-   else {
+   } else {
       old_to_anchor = anchor_to_mapped.createLocalTranspose();
    }
    Connector& mapped_to_anchor = *old_to_anchor;
@@ -155,7 +156,7 @@ MappingConnectorAlgorithm::modify(
    const MappingConnector* new_to_old = 0;
    if (old_to_new.hasTranspose()) {
       new_to_old =
-         static_cast<MappingConnector*>(&old_to_new.getTranspose());
+         static_cast<MappingConnector *>(&old_to_new.getTranspose());
    }
 
    /*
@@ -188,8 +189,7 @@ MappingConnectorAlgorithm::modify(
             << "new_to_old is  TO  " << &new_to_old->getHead()
             << "\n"
             << "old_to_anchor is FROM " << &old_to_anchor->getBase() << "\n");
-      }
-      else {
+      } else {
          TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
             << "Given Connectors to base and head of modify are not incident\n"
             << "from the same old in MappingConnectorAlgorithm::modify:\n"
@@ -271,9 +271,9 @@ MappingConnectorAlgorithm::modify(
             true) == 0);
       TBOX_ASSERT(old_to_new.checkOverlapCorrectness(true, false) == 0);
       TBOX_ASSERT(!new_to_old ||
-                  new_to_old->checkOverlapCorrectness(true, false) == 0);
+         new_to_old->checkOverlapCorrectness(true, false) == 0);
       TBOX_ASSERT(!new_to_old ||
-                  old_to_new.checkTransposeCorrectness(*new_to_old, true) == 0);
+         old_to_new.checkTransposeCorrectness(*new_to_old, true) == 0);
    }
 
    d_object_timers->t_modify_public->stop();
@@ -715,8 +715,7 @@ MappingConnectorAlgorithm::privateModify_checkParameters(
             << "new_to_old is  TO  " << &new_to_old->getHead()
             << "\n"
             << "mapped_to_anchor is FROM " << &mapped_to_anchor.getBase() << "\n");
-      }
-      else {
+      } else {
          TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
             << "Given Connectors to anchor and new of modify are not incident\n"
             << "from the same old in MappingConnectorAlgorithm::modify:\n"
@@ -788,11 +787,11 @@ MappingConnectorAlgorithm::privateModify_checkParameters(
       size_t nerrs = old_to_new.findMappingErrors();
       if (nerrs != 0) {
          TBOX_ERROR("MappingConnectorUtil::privateModify: found errors in\n"
-                    << "mapping Connector.\n"
-                    << "old:\n" << old_to_new.getBase().format("OLD: ")
-                    << "new:\n" << old_to_new.getHead().format("NEW: ")
-                    << "old_to_new:\n" << old_to_new.format("O->N: ")
-                    << std::endl);
+            << "mapping Connector.\n"
+            << "old:\n" << old_to_new.getBase().format("OLD: ")
+            << "new:\n" << old_to_new.getHead().format("NEW: ")
+            << "old_to_new:\n" << old_to_new.format("O->N: ")
+            << std::endl);
       }
    }
 }
@@ -849,7 +848,7 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
          }
 
          for (Connector::ConstNeighborIterator ianchor =
-              new_to_anchor->begin(affected_anchor_nbrhd);
+                 new_to_anchor->begin(affected_anchor_nbrhd);
               ianchor != new_to_anchor->end(affected_anchor_nbrhd); /* incremented in loop */) {
 
             if (s_print_steps == 'y') {
@@ -876,13 +875,13 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
                      tbox::plog << std::endl;
                   }
                   if (anchor_to_new.hasLocalNeighbor(ianchor->getBoxId(),
-                                                     old_box_gone)) {
+                         old_box_gone)) {
                      if (s_print_steps == 'y') {
                         tbox::plog << "    Removing neighbor " << old_box_gone
                                    << " from list for " << *ianchor << std::endl;
                      }
                      anchor_to_new.eraseNeighbor(old_box_gone,
-                                                 ianchor->getBoxId());
+                        ianchor->getBoxId());
                   }
 
                   ++ianchor;
@@ -949,7 +948,7 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
    Connector* new_to_anchor,
    const std::set<int>& incoming_ranks,
    const std::set<int>& outgoing_ranks,
-   tbox::AsyncCommPeer<int> all_comms[],
+   tbox::AsyncCommPeer<int>* all_comms,
    BoxContainer& visible_new_nabrs,
    BoxContainer& visible_anchor_nabrs,
    const InvertedNeighborhoodSet& anchor_eto_old,
@@ -958,7 +957,7 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
    const Connector& anchor_to_old,
    const MappingConnector& old_to_new) const
 {
-   if (visible_anchor_nabrs.isEmpty() && visible_new_nabrs.isEmpty()) {
+   if (visible_anchor_nabrs.empty() && visible_new_nabrs.empty()) {
       return;
    }
 
@@ -1001,14 +1000,12 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
    BoxContainer::iterator new_ni =
       visible_new_nabrs.lowerBound(this_proc_start);
    while (anchor_ni != visible_anchor_nabrs.end() &&
-          anchor_ni->getOwnerRank() == rank)
-   {
+          anchor_ni->getOwnerRank() == rank) {
       visible_local_anchor_nabrs.insert(*anchor_ni);
       visible_anchor_nabrs.erase(anchor_ni++);
    }
    while (new_ni != visible_new_nabrs.end() &&
-          new_ni->getOwnerRank() == rank)
-   {
+          new_ni->getOwnerRank() == rank) {
       visible_local_new_nabrs.insert(*new_ni);
       visible_new_nabrs.erase(new_ni++);
    }
@@ -1023,7 +1020,7 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
    }
 #ifdef HAVE_OPENMP
 #pragma omp parallel private(i) num_threads(4)
-{
+   {
 #pragma omp for schedule(dynamic) nowait
 #endif
    for (i = 0; i < imax; ++i) {
@@ -1068,12 +1065,12 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
    int num_incoming_ranks = static_cast<int>(incoming_ranks.size());
    int num_comms = num_outgoing_ranks + num_incoming_ranks;
    std::set<int>::const_iterator outgoing_ranks_itr(
-      outgoing_ranks.lower_bound(rank+1));
+      outgoing_ranks.lower_bound(rank + 1));
    if (outgoing_ranks_itr == outgoing_ranks.end()) {
       outgoing_ranks_itr = outgoing_ranks.begin();
    }
    int comm_offset = num_incoming_ranks;
-   for (; comm_offset < num_comms; ++comm_offset) {
+   for ( ; comm_offset < num_comms; ++comm_offset) {
       if (all_comms[comm_offset].getPeerRank() == *outgoing_ranks_itr) {
          break;
       }
@@ -1089,7 +1086,7 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
       ++comm_offset;
       ++outgoing_ranks_itr;
       TBOX_ASSERT((outgoing_ranks_itr == outgoing_ranks.end()) ==
-                  (comm_offset == num_comms));
+         (comm_offset == num_comms));
       if (outgoing_ranks_itr == outgoing_ranks.end()) {
          outgoing_ranks_itr = outgoing_ranks.begin();
       }
@@ -1123,7 +1120,7 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
       anchor_to_old,
       old_to_new);
 
-    d_object_timers->t_modify_discover_and_send->stop();
+   d_object_timers->t_modify_discover_and_send->stop();
 }
 
 /*
@@ -1321,8 +1318,7 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
       compare_box.grow(mapped_connector.getConnectorWidth());
       if (unmapped_connector.getHeadCoarserFlag()) {
          compare_box.coarsen(unmapped_connector.getRatio());
-      }
-      else if (unmapped_connector_transpose.getHeadCoarserFlag()) {
+      } else if (unmapped_connector_transpose.getHeadCoarserFlag()) {
          compare_box.refine(unmapped_connector_transpose.getRatio());
       }
 
@@ -1345,7 +1341,7 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
                 * the old Box identified by *na.
                 */
                for (Connector::ConstNeighborIterator naa =
-                    mapping_connector.begin(nbrhd);
+                       mapping_connector.begin(nbrhd);
                     naa != mapping_connector.end(nbrhd); ++naa) {
                   const Box& new_nabr(*naa);
                   if (compare_box_block_id != new_nabr.getBlockId()) {
@@ -1379,8 +1375,8 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
          if (base_box.getOwnerRank() != rank) {
             // Pack up info for sending.
             ++send_mesg[remote_box_counter_index];
-            const int subsize = 3 +
-               BoxId::commBufferSize() * static_cast<int>(found_nabrs.size());
+            const int subsize = 3
+               + BoxId::commBufferSize() * static_cast<int>(found_nabrs.size());
             send_mesg.insert(send_mesg.end(), subsize, -1);
             int* submesg = &send_mesg[send_mesg.size() - subsize];
             *(submesg++) = base_box.getLocalId().getValue();
@@ -1393,8 +1389,7 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
                nabr.getBoxId().putToIntBuffer(submesg);
                submesg += BoxId::commBufferSize();
             }
-         }
-         else {
+         } else {
             /*
              * Save neighbor info locally.
              *
@@ -1418,8 +1413,7 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
       if (s_print_steps == 'y') {
          if (base_ni == visible_base_nabrs.end()) {
             tbox::plog << "Next base nabr: end" << std::endl;
-         }
-         else {
+         } else {
             tbox::plog << "Next base nabr: " << *base_ni << std::endl;
          }
       }
@@ -1436,7 +1430,7 @@ MappingConnectorAlgorithm::initializeCallback()
 {
    // Initialize timers with default prefix.
    getAllTimers(s_default_timer_prefix,
-                s_static_timers[s_default_timer_prefix]);
+      s_static_timers[s_default_timer_prefix]);
 
 }
 
@@ -1464,8 +1458,7 @@ MappingConnectorAlgorithm::setTimerPrefix(
    std::string timer_prefix_used;
    if (s_ignore_external_timer_prefix == 'y') {
       timer_prefix_used = s_default_timer_prefix;
-   }
-   else {
+   } else {
       timer_prefix_used = timer_prefix;
    }
    std::map<std::string, TimerStruct>::iterator ti(

@@ -119,10 +119,10 @@ BoundaryBoxUtils::stretchBoxToGhostWidth(
        */
       if (d_outward(d) == -1) {
          if (ghost_cell_width(d) > 1) box.growLower(d, ghost_cell_width(d) - 1);
-         else box.lower() (d) = box.upper() (d) - (ghost_cell_width(d) - 1);
+         else box.setLower(d, box.upper(d) - (ghost_cell_width(d) - 1));
       } else if (d_outward(d) == 1) {
          if (ghost_cell_width(d) > 1) box.growUpper(d, ghost_cell_width(d) - 1);
-         else box.upper() (d) = box.lower() (d) + (ghost_cell_width(d) - 1);
+         else box.setUpper(d, box.lower(d) + (ghost_cell_width(d) - 1));
       }
    }
 }

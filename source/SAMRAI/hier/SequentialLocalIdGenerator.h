@@ -35,8 +35,10 @@ public:
     *
     * Construct an object generating sequential values starting with zero.
     */
-   SequentialLocalIdGenerator() :
-      d_last_value(-1), d_increment(1) {}
+   SequentialLocalIdGenerator():
+      d_last_value(-1),
+      d_increment(1) {
+   }
 
    /*!
     * @brief Constructor.
@@ -44,15 +46,17 @@ public:
     * Construct an object with user-defined last value and increment.
     */
    SequentialLocalIdGenerator(
-      const LocalId &last_value,
-      const LocalId &increment=LocalId(1) ) :
+      const LocalId& last_value,
+      const LocalId& increment = LocalId(1)):
       d_last_value(last_value),
-      d_increment(increment) {}
+      d_increment(increment) {
+   }
 
    /*!
     * @brief Destructor.
     */
-   ~SequentialLocalIdGenerator() {}
+   ~SequentialLocalIdGenerator() {
+   }
 
    /*!
     * @brief Return a LocalId that is greater than the previous
@@ -68,7 +72,7 @@ public:
     *
     * @param [in] value
     */
-   void setLastValue( const LocalId &last_value ) {
+   void setLastValue(const LocalId& last_value) {
       d_last_value = last_value;
    }
 
@@ -77,30 +81,29 @@ public:
     *
     * @param [in] increment
     */
-   void setIncrement( const LocalId &increment ) {
+   void setIncrement(const LocalId& increment) {
       d_increment = increment;
    }
 
    //! @brief Pack into a MessageStream.
-   friend tbox::MessageStream &operator << (
-      tbox::MessageStream &msg,
-      const SequentialLocalIdGenerator &id_gen )
-      {
-         msg << id_gen.d_last_value << id_gen.d_increment;
-         return msg;
-      }
+   friend tbox::MessageStream& operator << (
+      tbox::MessageStream& msg,
+      const SequentialLocalIdGenerator& id_gen)
+   {
+      msg << id_gen.d_last_value << id_gen.d_increment;
+      return msg;
+   }
 
    //! @brief Unpack from a MessageStream.
-   friend tbox::MessageStream &operator >> (
-      tbox::MessageStream &msg,
-      SequentialLocalIdGenerator &id_gen )
-      {
-         msg >> id_gen.d_last_value >> id_gen.d_increment;
-         return msg;
-      }
+   friend tbox::MessageStream& operator >> (
+      tbox::MessageStream& msg,
+      SequentialLocalIdGenerator& id_gen)
+   {
+      msg >> id_gen.d_last_value >> id_gen.d_increment;
+      return msg;
+   }
 
 private:
-
    LocalId d_last_value;
    LocalId d_increment;
 

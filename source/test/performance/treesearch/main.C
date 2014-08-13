@@ -143,8 +143,8 @@ int main(
        */
       BoxVec boxes;
       generateBoxesUniform(dim,
-                           boxes,
-                           main_db->getDatabase("UniformBoxGen"));
+         boxes,
+         main_db->getDatabase("UniformBoxGen"));
       tbox::plog << "\n\n\nGenerated boxes (" << boxes.size() << "):\n";
       for (size_t i = 0; i < boxes.size(); ++i) {
          tbox::plog << '\t' << i << '\t' << boxes[i] << '\n';
@@ -195,10 +195,10 @@ int main(
             for (size_t i = 0; i < old_size; ++i) {
                boxes[i].shift(shift_dir, shift_distance);
             }
-            bounding_box.upper() (shift_dir) += shift_distance;
+            bounding_box.setUpper(shift_dir, shift_distance);
          }
 
-         if ( mpi.getRank() == 0 ) {
+         if (mpi.getRank() == 0) {
             tbox::pout << "Repetition " << iscale << std::endl;
          }
          tbox::plog << "Repetition " << iscale << " has "

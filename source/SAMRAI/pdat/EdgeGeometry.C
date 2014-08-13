@@ -119,8 +119,8 @@ EdgeGeometry::computeDestinationBoxes(
    const hier::IntVector one_vector(dim, 1);
 
    const hier::Box quick_check(
-      hier::Box::grow(src_shift, one_vector) *
-      hier::Box::grow(dst_ghost, one_vector));
+      hier::Box::grow(src_shift, one_vector)
+      * hier::Box::grow(dst_ghost, one_vector));
 
    if (!quick_check.empty()) {
 
@@ -142,7 +142,7 @@ EdgeGeometry::computeDestinationBoxes(
 
          }  // if (!together.empty())
 
-         if (!dst_restrict_boxes.isEmpty() && !dst_boxes[d].isEmpty()) {
+         if (!dst_restrict_boxes.empty() && !dst_boxes[d].empty()) {
             hier::BoxContainer edge_restrict_boxes;
             for (hier::BoxContainer::const_iterator b = dst_restrict_boxes.begin();
                  b != dst_restrict_boxes.end(); ++b) {
@@ -180,7 +180,7 @@ EdgeGeometry::toEdgeBox(
       edge_box = box;
       for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
          if (axis != i) {
-            edge_box.upper(i) += 1;
+            edge_box.setUpper(i, edge_box.upper(i) + 1);
          }
       }
    }
@@ -289,7 +289,8 @@ EdgeGeometry::transform(
 
          for (int d = 0; d < dim.getValue(); ++d) {
             if (d != axis_direction) {
-               box.upper() (d) -= 1;
+               box.setUpper(static_cast<hier::Box::dir_t>(d),
+                  box.upper(static_cast<hier::Box::dir_t>(d)) - 1);
             }
          }
          transformation.transform(box);
@@ -303,7 +304,7 @@ EdgeGeometry::transform(
             if (axis_direction == 0) {
 
                switch (rotation) {
-   
+
                   case hier::Transformation::IUP_JUP_KUP:
                   case hier::Transformation::IDOWN_KUP_JUP:
                   case hier::Transformation::IUP_KDOWN_JUP:
@@ -406,7 +407,8 @@ EdgeGeometry::transform(
 
          for (int d = 0; d < dim.getValue(); ++d) {
             if (d != axis_direction) {
-               box.upper() (d) += 1;
+               box.setUpper(static_cast<hier::Box::dir_t>(d),
+                  box.upper(static_cast<hier::Box::dir_t>(d)) + 1);
             }
          }
       }

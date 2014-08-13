@@ -88,9 +88,9 @@ CellDataFactory<TYPE>::allocate(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
    return boost::make_shared<CellData<TYPE> >(
-      patch.getBox(),
-      d_depth,
-      d_ghosts);
+             patch.getBox(),
+             d_depth,
+             d_ghosts);
 }
 
 /*

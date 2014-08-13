@@ -68,7 +68,7 @@ protected:
       Connector& new_base_to_new_head,
       Connector* new_head_to_new_base,
       const std::set<int>& incoming_ranks,
-      tbox::AsyncCommPeer<int> all_comms[],
+      tbox::AsyncCommPeer<int>* all_comms,
       tbox::AsyncCommStage& comm_stage,
       const boost::shared_ptr<tbox::Timer>& receive_and_unpack_timer,
       bool print_steps) const;

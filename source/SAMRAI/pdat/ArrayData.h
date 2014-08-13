@@ -29,11 +29,11 @@
 namespace SAMRAI {
 namespace pdat {
 
-template <class TYPE>
+template<class TYPE>
 class OuteredgeData;
-template <class TYPE>
+template<class TYPE>
 class OuternodeData;
-template <class TYPE>
+template<class TYPE>
 class SideData;
 
 /*!

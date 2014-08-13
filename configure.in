@@ -16,8 +16,8 @@ AH_TOP([
 #define INCLUDED_SAMRAI_CONFIG_H
 
 #define SAMRAI_VERSION_MAJOR 3
-#define SAMRAI_VERSION_MINOR 7
-#define SAMRAI_VERSION_PATCHLEVEL 3
+#define SAMRAI_VERSION_MINOR 8
+#define SAMRAI_VERSION_PATCHLEVEL 0
 ])
 AH_BOTTOM([
 
@@ -627,6 +627,7 @@ AC_ARG_ENABLE([opt],
 [case "$enable_opt" in
    no) opt_switches= ;;
    yes)
+      AC_DEFINE([OPT_BUILD],[1],[Optimized build])
       case $CXX_ID in
          gnu)   opt_switches="-O2" ;;
          intel) opt_switches="-O3" ;;
@@ -1051,11 +1052,11 @@ fi
 dnl dnl
 dnl dnl Set up the Fortran libraries.
 dnl dnl
-AC_F77_LIBRARY_LDFLAGS
-SAMRAI_SPLIT_LIBS_STRING(FLIBS,FLIBS_PATH,FLIBS_NAME)
-LIB_NAME="${LIB_NAME} ${FLIBS_NAME}"
-LIB_PATH="${LIB_PATH} ${FLIBS_PATH}"
-CASC_AC_LOG_VAR([FLIBS FLIBS_PATH FLIBS_NAME], [after using ac_f77_library_ldflags])
+dnl AC_F77_LIBRARY_LDFLAGS
+dnl SAMRAI_SPLIT_LIBS_STRING(FLIBS,FLIBS_PATH,FLIBS_NAME)
+dnl LIB_NAME="${LIB_NAME} ${FLIBS_NAME}"
+dnl LIB_PATH="${LIB_PATH} ${FLIBS_PATH}"
+dnl CASC_AC_LOG_VAR([FLIBS FLIBS_PATH FLIBS_NAME], [after using ac_f77_library_ldflags])
 dnl dnl
 dnl dnl Set fortran library.
 dnl dnl
@@ -1122,26 +1123,37 @@ dnl
 AC_ARG_WITH([mpi],
    [AS_HELP_STRING([--without-mpi],[Compile without MPI library.])])
 if test "$with_mpi" = no; then
-   AC_MSG_NOTICE([NOTIFICATION: SAMRAI configured without the MPI library])
-   AC_DEFINE([LACKS_MPI],[1],[MPI library is missing])
+   if test -z "`echo $CXX:t | grep mpi`" ; then
+      AC_MSG_NOTICE([NOTIFICATION: SAMRAI configured without the MPI library])
+      AC_DEFINE([LACKS_MPI],[1],[MPI library is missing])
+   else
+      AC_MSG_ERROR([You have specified a non-mpi build but are using an mpi compiler wrapper with is contradictory.])
+   fi
 else
 
-   case $ARCH in
-      alpha)
-         CASC_FIND_MPI_ALPHA
-      ;;
-      *)
-         CASC_FIND_MPI
-      ;;
-   esac
+   if test -z "`echo $CXX:t | grep mpi`" ; then
+      case $ARCH in
+         alpha)
+            CASC_FIND_MPI_ALPHA
+         ;;
+         *)
+            CASC_FIND_MPI
+         ;;
+      esac
 
-   if test -n "$MPIINCLUDE" -o -n "$MPILIBS" -o -n "$MPILIBDIRS"; then
+      if test -n "$MPIINCLUDE" -o -n "$MPILIBS" -o -n "$MPILIBDIRS"; then
+         with_mpi=yes
+         AC_DEFINE([HAVE_MPI],[1],[MPI library is present])
+         INC_PATH="$MPIINCLUDE $INC_PATH"
+         LIB_NAME="$MPILIBS $LIB_NAME"
+         LIB_PATH="$MPILIBDIRS $LIB_PATH"
+         CASC_AC_LOG_VAR(MPIINCLUDE MPILIBS MPILIBDIRS, After successfully finding MPI using casc_find_mpi)
+         CONFIGURED_WITH_MPI="with_mpi"
+         AC_SUBST(CONFIGURED_WITH_MPI)
+      fi
+   else
       with_mpi=yes
       AC_DEFINE([HAVE_MPI],[1],[MPI library is present])
-      INC_PATH="$MPIINCLUDE $INC_PATH"
-      LIB_NAME="$MPILIBS $LIB_NAME"
-      LIB_PATH="$MPILIBDIRS $LIB_PATH"
-      CASC_AC_LOG_VAR(MPIINCLUDE MPILIBS MPILIBDIRS, After successfully finding MPI using casc_find_mpi)
       CONFIGURED_WITH_MPI="with_mpi"
       AC_SUBST(CONFIGURED_WITH_MPI)
    fi
@@ -1203,7 +1215,7 @@ CASC_AC_LOG_VAR(
 
 # Defines ptscotch_PREFIX ptscotch_INCLUDES and ptscotch_LIBS.
 AC_ARG_WITH(ptscotch,
-[ --with-ptscotch[=PATH]  Use PT-SCOTCH and specify where PT-SCOTCH is installed.],
+[  --with-ptscotch[=PATH]  Use PT-SCOTCH and specify where PT-SCOTCH is installed.],
 , with_ptscotch=no)
 
 case "$with_ptscotch" in

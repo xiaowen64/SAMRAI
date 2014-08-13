@@ -20,7 +20,6 @@
 namespace SAMRAI {
 namespace mesh {
 
-
 /*!
  * @brief A Box moving around during load balancing.
  *
@@ -36,17 +35,19 @@ struct BoxInTransit {
     *
     * @param[in] dim
     */
-   explicit BoxInTransit(const tbox::Dimension& dim) :
+   explicit BoxInTransit(
+      const tbox::Dimension& dim):
       d_box(dim),
-      d_orig_box(dim) {}
-
+      d_orig_box(dim) {
+   }
 
    /*!
     * @brief Construct a new BoxInTransit from an originating box.
     *
     * @param[in] origin
     */
-   BoxInTransit( const hier::Box& origin ):
+   BoxInTransit(
+      const hier::Box& origin):
       d_box(origin),
       d_orig_box(origin),
       d_boxload(static_cast<double>(origin.size())) {}
@@ -66,7 +67,7 @@ struct BoxInTransit {
       const hier::Box& box,
       int rank,
       hier::LocalId local_id,
-      double load = -1. ) :
+      double load = -1.):
       d_box(box, local_id, rank),
       d_orig_box(other.d_orig_box),
       d_boxload(load >=0 ? load : static_cast<double>(d_box.size())) {}
@@ -119,7 +120,7 @@ struct BoxInTransit {
    }
 
    //! @brief Return the Box load.
-   void setLoad( double boxload ) {
+   void setLoad(double boxload) {
       d_boxload = boxload;
    }
 
@@ -129,35 +130,32 @@ struct BoxInTransit {
    }
 
    //! @brief Put self into a MessageStream.
-   void putToMessageStream(tbox::MessageStream &mstream) const {
+   void putToMessageStream(tbox::MessageStream& mstream) const {
       d_box.putToMessageStream(mstream);
       d_orig_box.putToMessageStream(mstream);
       mstream << d_boxload;
-      return;
    }
 
    //! @brief Set attributes according to data in a MessageStream.
-   void getFromMessageStream(tbox::MessageStream &mstream) {
+   void getFromMessageStream(tbox::MessageStream& mstream) {
       d_box.getFromMessageStream(mstream);
       d_orig_box.getFromMessageStream(mstream);
       mstream >> d_boxload;
-      return;
    }
 
    /*!
     * @brief Insert BoxInTransit into an output stream.
     */
-   friend std::ostream& operator << ( std::ostream& co,
-                                      const BoxInTransit& r) {
+   friend std::ostream& operator << (std::ostream& co,
+                                     const BoxInTransit& r) {
       co << r.d_box
-         << r.d_box.numberCells() << '|' << r.d_box.size() << '-'
-         << r.d_orig_box
-         << r.d_orig_box.numberCells() << '|' << r.d_orig_box.size();
+      << r.d_box.numberCells() << '|' << r.d_box.size() << '-'
+      << r.d_orig_box
+      << r.d_orig_box.numberCells() << '|' << r.d_orig_box.size();
       return co;
    }
 
 private:
-
    hier::Box d_box;
 
    //! @brief Originating Box (the oldest one leading to this one).
@@ -166,7 +164,6 @@ private:
    //! @brief Work load in this d_box.
    double d_boxload;
 };
-
 
 }
 }

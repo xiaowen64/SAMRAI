@@ -32,7 +32,6 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/MessageStream.h"
 
-
 #include "boost/shared_ptr.hpp"
 #include <string>
 #include <vector>
@@ -234,7 +233,8 @@ public:
     * Return stencil width of conservative linear interpolation operations.
     */
    hier::IntVector
-   getRefineOpStencilWidth( const tbox::Dimension &dim ) const;
+   getRefineOpStencilWidth(
+      const tbox::Dimension& dim) const;
 
    void
    preprocessRefine(
@@ -274,7 +274,8 @@ public:
     * Return stencil width of conservative averaging operations.
     */
    hier::IntVector
-   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const;
+   getCoarsenOpStencilWidth(
+      const tbox::Dimension& dim) const;
 
    void
    preprocessCoarsen(

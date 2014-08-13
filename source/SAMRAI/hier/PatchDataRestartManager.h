@@ -35,7 +35,7 @@ public:
     * users of this class do not explicitly allocate or deallocate the
     * Singleton instance.
     */
-   static PatchDataRestartManager*
+   static PatchDataRestartManager *
    getManager();
 
    /**

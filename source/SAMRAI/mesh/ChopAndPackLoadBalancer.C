@@ -194,7 +194,7 @@ ChopAndPackLoadBalancer::setUniformWorkload(
    int level_number)
 {
    if (level_number >= 0) {
-     int asize = static_cast<int>(d_workload_data_id.size());
+      int asize = static_cast<int>(d_workload_data_id.size());
       if (asize < level_number + 1) {
          d_workload_data_id.resize(level_number + 1);
          for (int i = asize; i < level_number - 1; ++i) {
@@ -415,7 +415,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
 
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
-   TBOX_ASSERT(!physical_domain.isEmpty());
+   TBOX_ASSERT(!physical_domain.empty());
    TBOX_ASSERT(min_size > hier::IntVector::getZero(d_dim));
    TBOX_ASSERT(max_size >= min_size);
    TBOX_ASSERT(cut_factor > hier::IntVector::getZero(d_dim));
@@ -425,7 +425,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
     * This method assumes in_boxes is not empty and will fail
     * if it is.  So shortcut it for empty in_boxes.
     */
-   if (in_boxes.isEmpty()) {
+   if (in_boxes.empty()) {
       out_boxes = hier::BoxContainer();
       return;
    }
@@ -448,14 +448,15 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
 
    if ((wrk_indx < 0) || (hierarchy->getNumberOfLevels() == 0)) {
 
-      if (!d_ignore_level_box_union_is_single_box && hierarchy->getGridGeometry()->getNumberBlocks() == 1) {
+      if (!d_ignore_level_box_union_is_single_box &&
+          hierarchy->getGridGeometry()->getNumberBlocks() == 1) {
          hier::Box bbox = in_boxes.getBoundingBox();
          hier::BoxContainer difference(bbox);
          t_load_balance_boxes_remove_intersection->start();
          difference.removeIntersections(in_boxes);
          t_load_balance_boxes_remove_intersection->stop();
 
-         if (difference.isEmpty()) {
+         if (difference.empty()) {
 
             t_chop_boxes->start();
             chopUniformSingleBox(out_boxes,
@@ -866,20 +867,18 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
 
    boost::shared_ptr<hier::PatchLevel> tmp_level(
       boost::make_shared<hier::PatchLevel>(*tmp_box_level,
-         hierarchy->getGridGeometry(),
-         hierarchy->getPatchDescriptor()));
+                                           hierarchy->getGridGeometry(),
+                                           hierarchy->getPatchDescriptor()));
 
    const hier::PatchLevel& hiercoarse =
-      *hierarchy->getPatchLevel(level_number-1);
+      *hierarchy->getPatchLevel(level_number - 1);
 
-   const hier::Connector* tmp_to_hiercoarse = 0;
    if (level_number != 0) {
-      tmp_to_hiercoarse =
-         &tmp_level->findConnectorWithTranspose(hiercoarse,
-            hierarchy->getRequiredConnectorWidth(level_number,level_number-1),
-            hierarchy->getRequiredConnectorWidth(level_number-1,level_number),
-            hier::CONNECTOR_CREATE,
-            true);
+      tmp_level->findConnectorWithTranspose(hiercoarse,
+         hierarchy->getRequiredConnectorWidth(level_number, level_number - 1),
+         hierarchy->getRequiredConnectorWidth(level_number - 1, level_number),
+         hier::CONNECTOR_CREATE,
+         true);
    }
 
    tmp_level->allocatePatchData(wrk_indx);
@@ -991,7 +990,6 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
 {
    TBOX_ASSERT(box_list_in.size() == static_cast<int>(weights_in.size()));
 
-
    /*
     * allocate send and receive buffers, and set array sizes
     * for the output arrays.
@@ -1068,7 +1066,7 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
    }
    TBOX_ASSERT(weights_out.size() == total_count);
 
-   mpi.Allgatherv(static_cast<void*>(wgts_in_ptr),
+   mpi.Allgatherv(static_cast<void *>(wgts_in_ptr),
       size_in,
       MPI_DOUBLE,
       wgts_out_ptr,
@@ -1090,8 +1088,8 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
    for (hier::BoxContainer::iterator b = box_list_out.begin();
         b != box_list_out.end(); ++b) {
       for (tbox::Dimension::dir_t j = 0; j < d_dim.getValue(); ++j) {
-         b->lower(j) = buf_out_ptr[offset++];
-         b->upper(j) = buf_out_ptr[offset++];
+         b->setLower(j, buf_out_ptr[offset++]);
+         b->setUpper(j, buf_out_ptr[offset++]);
       }
       b->setBlockId(hier::BlockId(buf_out_ptr[offset++]));
    }
@@ -1182,7 +1180,7 @@ ChopAndPackLoadBalancer::getFromInput(
          d_max_workload_factor =
             input_db->getDoubleVector("max_workload_factor");
          for (int i = 0; i < static_cast<int>(d_max_workload_factor.size()); ++i) {
-            if (!(d_max_workload_factor[i] >=0)) {
+            if (!(d_max_workload_factor[i] >= 0)) {
                INPUT_RANGE_ERROR("max_workload_factor");
             }
          }

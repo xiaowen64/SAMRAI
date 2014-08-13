@@ -696,7 +696,7 @@ private:
       int success = 0;
       // SGS why no error condition?
       ((KINSOLSolver *)my_solver)->getKINSOLFunctions()->
-         evaluateNonlinearFunction(SABSVEC_CAST(soln), SABSVEC_CAST(fval));
+      evaluateNonlinearFunction(SABSVEC_CAST(soln), SABSVEC_CAST(fval));
       return success;
    }
 

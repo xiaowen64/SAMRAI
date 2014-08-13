@@ -27,7 +27,8 @@ CoarsenOperator::s_finalize_handler(
    CoarsenOperator::finalizeCallback,
    tbox::StartupShutdownManager::priorityList);
 
-CoarsenOperator::CoarsenOperator(const std::string& name):
+CoarsenOperator::CoarsenOperator(
+   const std::string& name):
    d_name(name)
 {
    registerInLookupTable(name);
@@ -37,8 +38,6 @@ CoarsenOperator::~CoarsenOperator()
 {
    removeFromLookupTable(d_name);
 }
-
-
 
 void
 CoarsenOperator::registerInLookupTable(
@@ -103,7 +102,7 @@ CoarsenOperator::getMaxCoarsenOpStencilWidth(
  *************************************************************************
  */
 void
-   CoarsenOperator::initializeCallback()
+CoarsenOperator::initializeCallback()
 {
    TBOX_omp_init_lock(&l_lookup_table);
 }

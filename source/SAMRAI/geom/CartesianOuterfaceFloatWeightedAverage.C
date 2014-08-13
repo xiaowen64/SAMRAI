@@ -109,7 +109,7 @@ CartesianOuterfaceFloatWeightedAverage::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianOuterfaceFloatWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const
+CartesianOuterfaceFloatWeightedAverage::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }
@@ -132,7 +132,7 @@ CartesianOuterfaceFloatWeightedAverage::coarsen(
          fine.getPatchData(src_component)));
    boost::shared_ptr<pdat::OuterfaceData<float> > cdata(
       BOOST_CAST<pdat::OuterfaceData<float>, hier::PatchData>(
-        coarse.getPatchData(dst_component)));
+         coarse.getPatchData(dst_component)));
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());

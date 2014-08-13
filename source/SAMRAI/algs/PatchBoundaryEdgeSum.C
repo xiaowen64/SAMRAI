@@ -48,7 +48,7 @@ std::vector<std::vector<int> > PatchBoundaryEdgeSum::s_oedge_dst_id_array =
  */
 
 PatchBoundaryEdgeSum::PatchBoundaryEdgeSum(
-   const std::string& object_name) :
+   const std::string& object_name):
    d_setup_called(false),
    d_num_reg_sum(0),
    d_sum_transaction_factory(boost::make_shared<OuteredgeSumTransactionFactory>())
@@ -209,8 +209,8 @@ PatchBoundaryEdgeSum::registerSum(
    if (!d_tmp_oedge_src_variable[reg_sum_id]) {
       d_tmp_oedge_src_variable[reg_sum_id].reset(
          new pdat::OuteredgeVariable<double>(dim,
-                                             toedge_src_var_name,
-                                             data_depth));
+            toedge_src_var_name,
+            data_depth));
    }
 
    std::string toedge_dst_var_name = tmp_oedge_dst_variable_name + var_suffix;
@@ -219,8 +219,8 @@ PatchBoundaryEdgeSum::registerSum(
    if (!d_tmp_oedge_dst_variable[reg_sum_id]) {
       d_tmp_oedge_dst_variable[reg_sum_id].reset(
          new pdat::OuteredgeVariable<double>(dim,
-                                             toedge_dst_var_name,
-                                             data_depth));
+            toedge_dst_var_name,
+            data_depth));
    }
 
    if (s_oedge_src_id_array[data_depth][data_depth_id] < 0) {

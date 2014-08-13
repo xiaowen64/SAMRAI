@@ -1326,7 +1326,7 @@ private:
    initializeCallback()
    {
       t_write_plot_data = tbox::TimerManager::getManager()->getTimer(
-         "appu:VisItDataWriter::writePlotData()");
+            "appu:VisItDataWriter::writePlotData()");
    }
 
    /*!

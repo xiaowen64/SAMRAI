@@ -55,7 +55,6 @@ public:
       std::vector<hier::IntVector>& fine_connector_widths,
       const hier::PatchHierarchy& patch_hierarchy) const;
 
-
    /*!
     * @brief Plan to specify enough Connector width to support the
     * given width between tag and cluster levels.
@@ -64,7 +63,7 @@ public:
     */
    void
    setTagToClusterWidth(
-      std::vector<hier::IntVector> &tag_to_cluster_width);
+      std::vector<hier::IntVector>& tag_to_cluster_width);
 
 private:
    /*!
@@ -109,7 +108,6 @@ private:
       const hier::IntVector& nesting_buffer_at_fine,
       const hier::IntVector& max_stencil_width_at_coarse,
       const hier::IntVector& max_ghost_width_at_coarse) const;
-
 
    std::vector<hier::IntVector> d_tag_to_cluster_width;
 

@@ -23,7 +23,6 @@
 #include <set>
 #include <vector>
 
-
 namespace SAMRAI {
 namespace hier {
 
@@ -80,11 +79,10 @@ class RealBoxConstIterator;
  */
 class BoxContainer
 {
-friend class BoxContainerIterator;
-friend class BoxContainerConstIterator;
+   friend class BoxContainerIterator;
+   friend class BoxContainerConstIterator;
 
 public:
-
    class BoxContainerIterator;
 
    /*!
@@ -103,11 +101,11 @@ public:
       friend class BoxContainer;
       friend class BoxContainerIterator;
 
-   public:
+public:
       typedef std::bidirectional_iterator_tag iterator_category;
       typedef const Box value_type;
       typedef ptrdiff_t difference_type;
-      typedef const Box* pointer;
+      typedef const Box * pointer;
       typedef const Box& reference;
 
       /*!
@@ -138,8 +136,7 @@ public:
             d_ordered = rhs.d_ordered;
             if (d_ordered) {
                d_set_iter = rhs.d_set_iter;
-            }
-            else {
+            } else {
                d_list_iter = rhs.d_list_iter;
             }
          }
@@ -167,7 +164,7 @@ public:
        *
        * @return Const pointer to the current box.
        */
-      const Box*
+      const Box *
       operator -> () const
       {
          return d_ordered ? *d_set_iter : &(*d_list_iter);
@@ -257,7 +254,7 @@ public:
          const BoxContainerConstIterator& other) const
       {
          return d_ordered ? d_set_iter == other.d_set_iter :
-                            d_list_iter == other.d_list_iter;
+                d_list_iter == other.d_list_iter;
       }
 
       /*!
@@ -272,10 +269,10 @@ public:
          const BoxContainerConstIterator& other) const
       {
          return d_ordered ? d_set_iter != other.d_set_iter :
-                            d_list_iter != other.d_list_iter;
+                d_list_iter != other.d_list_iter;
       }
 
-   private:
+private:
       /*!
        * @brief Default constructor is defined but accessible only by friends.
        */
@@ -303,7 +300,7 @@ public:
       /*
        * Underlying iterator to be used when ordered.
        */
-      std::set<Box*, Box::id_less>::const_iterator d_set_iter;
+      std::set<Box *, Box::id_less>::const_iterator d_set_iter;
 
       bool d_ordered;
    };
@@ -324,11 +321,11 @@ public:
       friend class BoxContainer;
       friend class BoxContainerConstIterator;
 
-   public:
+public:
       typedef std::bidirectional_iterator_tag iterator_category;
       typedef Box value_type;
       typedef ptrdiff_t difference_type;
-      typedef Box* pointer;
+      typedef Box * pointer;
       typedef Box& reference;
 
       /*!
@@ -352,8 +349,7 @@ public:
             d_ordered = rhs.d_ordered;
             if (d_ordered) {
                d_set_iter = rhs.d_set_iter;
-            }
-            else {
+            } else {
                d_list_iter = rhs.d_list_iter;
             }
          }
@@ -380,8 +376,8 @@ public:
        * @brief Get pointer to box at iterator's position in container.
        *
        * @return Pointer to the current box.
-       */ 
-      Box*
+       */
+      Box *
       operator -> () const
       {
          return d_ordered ? *d_set_iter : &(*d_list_iter);
@@ -393,7 +389,7 @@ public:
        * @return Iterator at the position in the container before the
        * increment.
        */
-      BoxContainerIterator 
+      BoxContainerIterator
       operator ++ (
          int)
       {
@@ -442,7 +438,6 @@ public:
          return return_iter;
       }
 
-
       /*!
        * @brief Pre-decrement iterator to point to next box in the container.
        *
@@ -460,7 +455,6 @@ public:
          return *this;
       }
 
-
       /*!
        * @brief Equality operators
        *
@@ -473,7 +467,7 @@ public:
          const BoxContainerIterator& other) const
       {
          return d_ordered ? d_set_iter == other.d_set_iter :
-                            d_list_iter == other.d_list_iter;
+                d_list_iter == other.d_list_iter;
       }
 
       bool
@@ -481,7 +475,7 @@ public:
          const BoxContainerConstIterator& other) const
       {
          return d_ordered ? d_set_iter == other.d_set_iter :
-                            d_list_iter == other.d_list_iter;
+                d_list_iter == other.d_list_iter;
       }
 
       /*!
@@ -496,7 +490,7 @@ public:
          const BoxContainerIterator& other) const
       {
          return d_ordered ? d_set_iter != other.d_set_iter :
-                            d_list_iter != other.d_list_iter;
+                d_list_iter != other.d_list_iter;
       }
 
       bool
@@ -504,11 +498,10 @@ public:
          const BoxContainerConstIterator& other) const
       {
          return d_ordered ? d_set_iter != other.d_set_iter :
-                            d_list_iter != other.d_list_iter;
+                d_list_iter != other.d_list_iter;
       }
 
-   private:
-
+private:
       /*!
        * @brief Default constructor is defined but accessible only by friends.
        */
@@ -536,7 +529,7 @@ public:
       /*
        * Underlying iterator to be used when ordered.
        */
-      std::set<Box*, Box::id_less>::iterator d_set_iter;
+      std::set<Box *, Box::id_less>::iterator d_set_iter;
 
       bool d_ordered;
 
@@ -676,18 +669,22 @@ public:
    }
 
    /*!
-    * @brief Returns true if there are no boxes in the container
+    * @brief Returns true if there are no boxes in the container.
     *
-    * @return True if the container is empty.
+    * Archaic syntax.  Synonymous with empty().  Retained for backward
+    * compatibility.
+    *
+    * @see empty()
     */
+   DEPRECATED(
    bool
-   isEmpty() const
+   isEmpty() const)
    {
-      return d_list.empty();
+      return empty();
    }
 
    /*!
-    * @brief Returns true if there are no boxes in the container
+    * @brief Returns true if there are no boxes in the container.
     *
     * This version follows the naming standards used in STL.
     *
@@ -969,7 +966,7 @@ public:
    /*!
     * @brief  Returns the bounding box for all the boxes in the container.
     *
-    * @pre !isEmpty()
+    * @pre !empty()
     * @pre each Box in container has same BlockId
     */
    Box
@@ -981,7 +978,7 @@ public:
     *
     * @param[in] block_id
     *
-    * @pre !isEmpty()
+    * @pre !empty()
     */
    Box
    getBoundingBox(
@@ -1041,7 +1038,7 @@ public:
     *
     * @param[in] item
     *
-    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre empty() || (front().getDim() == item.getDim())
     * @pre !isOrdered()
     */
    void
@@ -1049,7 +1046,7 @@ public:
       const Box& item)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (!isEmpty()) {
+      if (!empty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), item);
       }
 #endif
@@ -1071,7 +1068,7 @@ public:
     *
     * @param[in] item
     *
-    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre empty() || (front().getDim() == item.getDim())
     * @pre !isOrdered()
     */
    void
@@ -1079,7 +1076,7 @@ public:
       const Box& item)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (!isEmpty()) {
+      if (!empty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), item);
       }
 #endif
@@ -1122,7 +1119,7 @@ public:
     * @param[in] iter Location to add item before.
     * @param[in] item Box to add to container.
     *
-    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre empty() || (front().getDim() == item.getDim())
     * @pre !isOrdered()
     */
    void
@@ -1131,7 +1128,7 @@ public:
       const Box& item)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (!isEmpty()) {
+      if (!empty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), item);
       }
 #endif
@@ -1154,7 +1151,7 @@ public:
     * @param[in] iter Location to add item after.
     * @param[in] item Box to add to container.
     *
-    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre empty() || (front().getDim() == item.getDim())
     * @pre !isOrdered()
     */
    void
@@ -1185,17 +1182,17 @@ public:
     *
     * @param[in] boxes
     *
-    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre empty() || (front().getDim() == item.getDim())
     * @pre !isOrdered()
     *
-    * @post boxes.isEmpty()
+    * @post boxes.empty()
     */
    void
    spliceFront(
       BoxContainer& boxes)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (!isEmpty() && !boxes.isEmpty()) {
+      if (!empty() && !boxes.empty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), boxes.front());
       }
 #endif
@@ -1216,17 +1213,17 @@ public:
     *
     * @param[in] boxes
     *
-    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre empty() || (front().getDim() == item.getDim())
     * @pre !isOrdered()
     *
-    * @post boxes.isEmpty()
+    * @post boxes.empty()
     */
    void
    spliceBack(
       BoxContainer& boxes)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (!isEmpty() && !boxes.isEmpty()) {
+      if (!empty() && !boxes.empty()) {
          TBOX_ASSERT_OBJDIM_EQUALITY2(front(), boxes.front());
       }
 #endif
@@ -1292,7 +1289,7 @@ public:
     * coalesce(), which is not guaranteed to produce a canonical ordering.
     *
     * @pre !isOrdered()
-    * @pre isEmpty() || all Boxes in container have same BlockId
+    * @pre empty() || all Boxes in container have same BlockId
     */
    void
    simplify();
@@ -1313,7 +1310,7 @@ public:
     * before others.
     *
     * @pre !isOrdered()
-    * @pre isEmpty() || all Boxes in container have same BlockId
+    * @pre empty() || all Boxes in container have same BlockId
     */
    void
    coalesce();
@@ -1373,7 +1370,7 @@ public:
     * across block boundaries if needed.
     *
     * @param[in] refinement_ratio  All boxes in this BoxContainer
-    * are assumed to exist in index space that has this refinement ratio 
+    * are assumed to exist in index space that has this refinement ratio
     * relative to the coarse-level domain.
     *
     * @param[in] takeaway  The boxes to take away from this BoxContainer.  An
@@ -1408,7 +1405,7 @@ public:
     * @param[in] takeaway
     *
     * @pre !isOrdered()
-    * @pre isEmpty()
+    * @pre empty()
     * @pre box.getBlockId() == takeaway.getBlockId()
     */
    void
@@ -1438,7 +1435,7 @@ public:
     * \f$O(N^2)\f$ time for containers with \f$N\f$ boxes.  The complement
     * of removeIntersections.
     *
-    * This only works if all boxes in this BoxContainer and the keep 
+    * This only works if all boxes in this BoxContainer and the keep
     * BoxContainer have the same BlockId.  An error will occur otherwise.
     *
     * @param[in] keep
@@ -1456,7 +1453,7 @@ public:
     * across block boundaries if needed.
     *
     * @param[in]  refinement_ratio  All boxes in this BoxContainer
-    * are assumed to exist in index space that has this refinement ratio 
+    * are assumed to exist in index space that has this refinement ratio
     * relative to the coarse-level domain.
     *
     * @param[in] keep  The boxes to intersect with this BoxContainer.  An
@@ -1501,9 +1498,9 @@ public:
     * @param[in]  box Box to attempt to insert into the container.
     *
     * @pre box.getBoxId().isValid()
-    * @pre isEmpty() || (front().getDim() == box.getDim())
-    * @pre isEmpty() || isOrdered()
-    */ 
+    * @pre empty() || (front().getDim() == box.getDim())
+    * @pre empty() || isOrdered()
+    */
    bool
    insert(
       const Box& box);
@@ -1535,13 +1532,13 @@ public:
     *
     * @pre box.getBoxId().isValid()
     * @pre box.getBlockId() != BlockId::invalidId()
-    * @pre isEmpty() || (front().getDim() == box.getDim())
-    * @pre isEmpty() || isOrdered()
+    * @pre empty() || (front().getDim() == box.getDim())
+    * @pre empty() || isOrdered()
     */
    iterator
    insert(
       iterator position,
-      const Box& box );
+      const Box& box);
 
    /*!
     * @brief  Insert all Boxes within a range.
@@ -1553,16 +1550,16 @@ public:
     * @param[in] first
     * @param[in] last
     *
-    * @pre isEmpty() || isOrdered()
+    * @pre empty() || isOrdered()
     * @pre for each box in [first, last), box.getBoxId().isValid() &&
-    *      (isEmpty || front().getDim() == box.getDim())
+    *      (empty || front().getDim() == box.getDim())
     */
    void
    insert(
       const_iterator first,
-      const_iterator last );
+      const_iterator last);
 
-   //@} 
+   //@}
 
    //@{ @name Methods that may only be called on an ordered container
 
@@ -1577,7 +1574,7 @@ public:
     *          end() for this container is returned.
     *
     * @param[in]  box  Box serving as key for the find operation.  Only
-    *                  its BoxId is compared to members of this container. 
+    *                  its BoxId is compared to members of this container.
     *
     * @pre isOrdered()
     */
@@ -1589,7 +1586,7 @@ public:
          TBOX_ERROR("find attempted on unordered BoxContainer." << std::endl);
       }
       iterator iter;
-      iter.d_set_iter = d_set.find(const_cast<Box*>(&box));
+      iter.d_set_iter = d_set.find(const_cast<Box *>(&box));
       iter.d_ordered = true;
       return iter;
    }
@@ -1615,7 +1612,7 @@ public:
          TBOX_ERROR("lowerBound attempted on unordered BoxContainer." << std::endl);
       }
       iterator iter;
-      iter.d_set_iter = d_set.lower_bound(const_cast<Box*>(&box));
+      iter.d_set_iter = d_set.lower_bound(const_cast<Box *>(&box));
       iter.d_ordered = true;
       return iter;
    }
@@ -1640,7 +1637,7 @@ public:
          TBOX_ERROR("upperBound attempted on unordered BoxContainer." << std::endl);
       }
       iterator iter;
-      iter.d_set_iter = d_set.upper_bound(const_cast<Box*>(&box));
+      iter.d_set_iter = d_set.upper_bound(const_cast<Box *>(&box));
       iter.d_ordered = true;
       return iter;
    }
@@ -1687,7 +1684,7 @@ public:
     * @brief  Any members of this container that are periodic images will
     *         be erased.
     *
-    * @pre isEmpty() || isOrdered()
+    * @pre empty() || isOrdered()
     */
    void
    removePeriodicImageBoxes();
@@ -1722,7 +1719,7 @@ public:
     * If the container is ordered, then this checks if all boxes have
     * identical BoxIds and are spatially equal to the boxes in rhs.  If
     * unordered, then this checks only the spatial equality of the boxes.
-    * 
+    *
     * Addtionally to be considered equal, both containers must contain the
     * same number of boxes and have the same ordered/unordered state.
     *
@@ -1737,7 +1734,7 @@ public:
    /*!
     * @brief  Check for equality of BoxIds in ordered containers.
     *
-    * An error will occur if this operator is called with either BoxContainer 
+    * An error will occur if this operator is called with either BoxContainer
     * in unordered state.
     *
     * @return  true if both containers are the same size and the boxes
@@ -1899,9 +1896,9 @@ private:
     * @note The grid_geometry argument is required for multiblock.  It must
     * be the GridGeometry from which the Boxes stored in the container came
     * from.
-    * 
+    *
     * @param[in]  grid_geometry  To handle multiblock transformations if
-    *                            needed.  
+    *                            needed.
     * @param[in]  min_number
     *
     * @pre min_number > 0
@@ -1917,7 +1914,7 @@ private:
    bool
    hasTree() const
    {
-      return (d_tree.get() != 0);
+      return d_tree.get() != 0;
    }
 
    /*!
@@ -1972,7 +1969,7 @@ private:
     */
    void
    findOverlapBoxes(
-      std::vector<const Box*>& overlap_boxes,
+      std::vector<const Box *>& overlap_boxes,
       const Box& box) const;
 
    /*!
@@ -1993,7 +1990,7 @@ private:
     * @param[in]  box
     *
     * @param[in]  refinement_ratio  All boxes in this BoxContainer
-    * are assumed to exist in index space that has this refinement ratio 
+    * are assumed to exist in index space that has this refinement ratio
     * relative to the coarse-level domain.
     *
     * @param[in]  include_singularity_block_neighbors  If true, intersections
@@ -2012,7 +2009,7 @@ private:
 
    void
    findOverlapBoxes(
-      std::vector<const Box*>& overlap_boxes,
+      std::vector<const Box *>& overlap_boxes,
       const Box& box,
       const IntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
@@ -2026,7 +2023,7 @@ private:
     *
     * This only works if all boxes in this BoxContainer have the same BlockId,
     * and the argument box also has that same BlockId.  An error will occur if
-    * these conditions are not met. 
+    * these conditions are not met.
     *
     * @return  True if box intersects with any member of the BoxContainer,
     *          false otherwise.
@@ -2038,7 +2035,6 @@ private:
       const Box& box) const;
 
 private:
-
    /*
     * Static integer constant describing class's version number.
     */
@@ -2146,7 +2142,7 @@ private:
     * Set of Box* used for ordered containers.  Each Box* in the set
     * points to a member of d_list.
     */
-   std::set<Box*, Box::id_less> d_set;
+   std::set<Box *, Box::id_less> d_set;
 
    bool d_ordered;
 

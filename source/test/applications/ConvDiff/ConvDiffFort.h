@@ -45,9 +45,9 @@ void SAMRAI_F77_FUNC(computerhs2d, COMPUTERHS2D) (
    const double *, // d_convection_coeff
    const double&,  // d_diffusion_coeff
    const double&,  // d_source_coeff
-   double *,      // prim_var_updated
-   double *,      // function_eval
-   const int&);   // NEQU
+   const double *, // prim_var_updated
+   double *,       // function_eval
+   const int&);    // NEQU
 
 void SAMRAI_F77_FUNC(computerhs3d, COMPUTERHS3D) (
    const int&, const int&, const int&, const int&,
@@ -58,9 +58,9 @@ void SAMRAI_F77_FUNC(computerhs3d, COMPUTERHS3D) (
    const double *, // d_convection_coeff
    const double&,  // d_diffusion_coeff
    const double&,  // d_source_coeff
-   double *,      // prim_var_updated
-   double *,      // function_eval
-   const int&);   // NEQU
+   const double *, // prim_var_updated
+   double *,       // function_eval
+   const int&);    // NEQU
 
 void SAMRAI_F77_FUNC(rkstep2d, RKSTEP2D) (
    const int&, const int&, const int&, const int&,

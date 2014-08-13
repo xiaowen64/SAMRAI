@@ -43,7 +43,6 @@ namespace algs {
 class OuteredgeSumTransaction:public tbox::Transaction
 {
 public:
-
    /*!
     * Construct a transaction with the specified source and destination
     * levels, patches, and patch data components found in the refine class
@@ -82,7 +81,7 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_node,
       const hier::Box& src_node,
-      const xfer::RefineClasses::Data** refine_data,
+      const xfer::RefineClasses::Data ** refine_data,
       int item_id);
 
    /*!

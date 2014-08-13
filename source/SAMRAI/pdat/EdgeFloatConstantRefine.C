@@ -105,7 +105,7 @@ EdgeFloatConstantRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-EdgeFloatConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
+EdgeFloatConstantRefine::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }
@@ -155,7 +155,7 @@ EdgeFloatConstantRefine::refine(
 
          for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
             if (i != axis) {
-               fine_box.upper(i) -= 1;
+               fine_box.setUpper(i, fine_box.upper(i) - 1);
             }
          }
 

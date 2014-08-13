@@ -507,7 +507,7 @@ private:
    int d_coarsest_level;
    int d_finest_level;
    std::vector<std::vector<hier::BoxContainer> >
-      d_nonoverlapping_edge_boxes[SAMRAI::MAX_DIM_VAL];
+   d_nonoverlapping_edge_boxes[SAMRAI::MAX_DIM_VAL];
 
    PatchEdgeDataOpsComplex d_patch_ops;
 

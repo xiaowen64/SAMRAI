@@ -20,10 +20,6 @@ default: check
 include $(OBJECT)/config/Makefile.config
 
 library:
-lib1d:
-lib2d:
-lib3d:
-libXd:
 
 check:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
@@ -35,7 +31,7 @@ check3d:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 
 checkcompile:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
 
 checktest:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
@@ -47,7 +43,7 @@ perf:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 
 everything:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
 
 clean:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done

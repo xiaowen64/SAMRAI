@@ -125,7 +125,7 @@ BoxTree::BoxTree(
     * Compute the bounding box for the set of boxes.  Also get
     * BlockId from the given boxes.
     */
-   if (!boxes.isEmpty()) {
+   if (!boxes.empty()) {
       TBOX_ASSERT(boxes.begin()->getBlockId() != BlockId::invalidId());
       d_block_id = boxes.begin()->getBlockId();
    }
@@ -143,7 +143,7 @@ BoxTree::BoxTree(
     */
    if (boxes.size() <= min_number) {
       for (BoxContainer::const_iterator ni = boxes.begin();
-        ni != boxes.end(); ++ni) {
+           ni != boxes.end(); ++ni) {
          d_boxes.push_back(&(*ni));
       }
    } else {
@@ -174,7 +174,7 @@ BoxTree::BoxTree(
          (d_bounding_box.lower(d_partition_dir)
           + d_bounding_box.upper(d_partition_dir)) / 2;
 
-      std::list<const Box*> left_boxes, right_boxes;
+      std::list<const Box *> left_boxes, right_boxes;
       for (BoxContainer::const_iterator ni = boxes.begin();
            ni != boxes.end(); ++ni) {
          const Box& box = *ni;
@@ -203,11 +203,11 @@ BoxTree::BoxTree(
 }
 
 BoxTree::BoxTree(
-   const std::list<const Box*> boxes,
-   int min_number)
-: d_dim((*(boxes.begin()))->getDim()),
-  d_bounding_box(d_dim),
-  d_boxes(boxes)
+   const std::list<const Box *> boxes,
+   int min_number):
+   d_dim((*(boxes.begin()))->getDim()),
+   d_bounding_box(d_dim),
+   d_boxes(boxes)
 {
    ++s_num_build[d_dim.getValue() - 1];
    s_num_sorted_box[d_dim.getValue() - 1] +=
@@ -226,7 +226,6 @@ BoxTree::BoxTree(
    t_build_tree[d_dim.getValue() - 1]->stop();
 #endif
 }
-
 
 /*
  *************************************************************************
@@ -270,7 +269,7 @@ BoxTree::privateGenerateTree(
     * Compute this tree's domain, which is the bounding box for the
     * constituent boxes.
     */
-   for (std::list<const Box*>::const_iterator ni = d_boxes.begin();
+   for (std::list<const Box *>::const_iterator ni = d_boxes.begin();
         ni != d_boxes.end(); ++ni) {
       d_bounding_box += **ni;
    }
@@ -281,7 +280,7 @@ BoxTree::privateGenerateTree(
     * live here.  In this case, there is no left child,
     * no right child, and no recursive d_center_child.
     */
-   if (d_boxes.size() > static_cast<std::list<const Box*>::size_type>(min_number)) {
+   if (d_boxes.size() > static_cast<std::list<const Box *>::size_type>(min_number)) {
       /*
        * Partition the boxes into three sets, using the midpoint of
        * the longest direction of the bounding box:
@@ -308,18 +307,18 @@ BoxTree::privateGenerateTree(
          (d_bounding_box.lower(d_partition_dir)
           + d_bounding_box.upper(d_partition_dir)) / 2;
 
-      std::list<const Box*> left_boxes, right_boxes;
-      for (std::list<const Box*>::iterator ni = d_boxes.begin();
+      std::list<const Box *> left_boxes, right_boxes;
+      for (std::list<const Box *>::iterator ni = d_boxes.begin();
            ni != d_boxes.end(); ) {
          const Box* box = *ni;
          if (box->upper(d_partition_dir) <= midpoint) {
             left_boxes.push_back(box);
-            std::list<const Box*>::iterator curr = ni;
+            std::list<const Box *>::iterator curr = ni;
             ++ni;
             d_boxes.erase(curr);
          } else if (box->lower(d_partition_dir) > midpoint) {
             right_boxes.push_back(box);
-            std::list<const Box*>::iterator curr = ni;
+            std::list<const Box *>::iterator curr = ni;
             ++ni;
             d_boxes.erase(curr);
          } else {
@@ -349,13 +348,13 @@ BoxTree::privateGenerateTree(
 void
 BoxTree::setupChildren(
    const int min_number,
-   std::list<const Box*>& left_boxes,
-   std::list<const Box*>& right_boxes)
+   std::list<const Box *>& left_boxes,
+   std::list<const Box *>& right_boxes)
 {
    const int total_size = static_cast<int>(
-      left_boxes.size() +
-      right_boxes.size() +
-      d_boxes.size());
+         left_boxes.size()
+         + right_boxes.size()
+         + d_boxes.size());
 
    /*
     * If all Boxes are in a single child, the child is just as
@@ -363,9 +362,9 @@ BoxTree::setupChildren(
     * everything into d_boxes so the check below will prevent
     * recursion.
     */
-   if (left_boxes.size() == static_cast<std::list<const Box*>::size_type>(total_size)) {
+   if (left_boxes.size() == static_cast<std::list<const Box *>::size_type>(total_size)) {
       left_boxes.swap(d_boxes);
-   } else if (right_boxes.size() == static_cast<std::list<const Box*>::size_type>(total_size)) {
+   } else if (right_boxes.size() == static_cast<std::list<const Box *>::size_type>(total_size)) {
       right_boxes.swap(d_boxes);
    }
 
@@ -380,8 +379,10 @@ BoxTree::setupChildren(
    /*
     * If d_boxes is big enough, generate a center child for it.
     */
-   if (d_boxes.size() > static_cast<std::list<const Box*>::size_type>(min_number) /* recursion criterion */ &&
-       d_boxes.size() < static_cast<std::list<const Box*>::size_type>(total_size) /* avoid infinite recursion */) {
+   if (d_boxes.size() >
+       static_cast<std::list<const Box *>::size_type>(min_number) /* recursion criterion */ &&
+       d_boxes.size() <
+       static_cast<std::list<const Box *>::size_type>(total_size) /* avoid infinite recursion */) {
       d_center_child.reset(new BoxTree(d_dim));
       d_boxes.swap(d_center_child->d_boxes);
       d_center_child->privateGenerateTree(min_number);
@@ -420,7 +421,7 @@ BoxTree::hasOverlap(
       if (d_center_child) {
          has_overlap = d_center_child->hasOverlap(box);
       } else {
-         for (std::list<const Box*>::const_iterator ni = d_boxes.begin();
+         for (std::list<const Box *>::const_iterator ni = d_boxes.begin();
               ni != d_boxes.end(); ++ni) {
             if (box.intersects(**ni)) {
                has_overlap = true;
@@ -468,7 +469,7 @@ BoxTree::findOverlapBoxes(
       if (d_center_child) {
          d_center_child->findOverlapBoxes(overlap_boxes, box, true);
       } else {
-         for (std::list<const Box*>::const_iterator ni = d_boxes.begin();
+         for (std::list<const Box *>::const_iterator ni = d_boxes.begin();
               ni != d_boxes.end(); ++ni) {
             const Box* my_box = *ni;
             if (box.intersects(*my_box)) {
@@ -528,7 +529,7 @@ BoxTree::findOverlapBoxes(
          d_center_child->findOverlapBoxes(overlap_boxes, box, true);
       } else {
          if (overlap_boxes.isOrdered()) {
-            for (std::list<const Box*>::const_iterator ni = d_boxes.begin();
+            for (std::list<const Box *>::const_iterator ni = d_boxes.begin();
                  ni != d_boxes.end(); ++ni) {
                const Box* this_box = *ni;
                if (box.intersects(*this_box)) {
@@ -536,7 +537,7 @@ BoxTree::findOverlapBoxes(
                }
             }
          } else {
-            for (std::list<const Box*>::const_iterator ni = d_boxes.begin();
+            for (std::list<const Box *>::const_iterator ni = d_boxes.begin();
                  ni != d_boxes.end(); ++ni) {
                const Box* this_box = *ni;
                if (box.intersects(*this_box)) {
@@ -554,7 +555,6 @@ BoxTree::findOverlapBoxes(
          d_right_child->findOverlapBoxes(overlap_boxes, box, true);
       }
    }
-
 
    if (!recursive_call) {
 #ifndef _OPENMP
@@ -640,23 +640,23 @@ BoxTree::printStatistics(
 
    tbox::Statistician* st = tbox::Statistician::getStatistician();
    boost::shared_ptr<tbox::Statistic> bdstat(st->getStatistic("num_build",
-         "PROC_STAT"));
+                                                "PROC_STAT"));
    boost::shared_ptr<tbox::Statistic> gnstat(st->getStatistic("num_generate",
-         "PROC_STAT"));
+                                                "PROC_STAT"));
    boost::shared_ptr<tbox::Statistic> dpstat(st->getStatistic("num_duplicate",
-         "PROC_STAT"));
+                                                "PROC_STAT"));
    boost::shared_ptr<tbox::Statistic> srstat(st->getStatistic("num_search",
-         "PROC_STAT"));
+                                                "PROC_STAT"));
    boost::shared_ptr<tbox::Statistic> sbstat(st->getStatistic("num_sorted_box",
-         "PROC_STAT"));
+                                                "PROC_STAT"));
    boost::shared_ptr<tbox::Statistic> fbstat(st->getStatistic("num_found_box",
-         "PROC_STAT"));
+                                                "PROC_STAT"));
    boost::shared_ptr<tbox::Statistic> msbstat(st->getStatistic("max_sorted_box",
-         "PROC_STAT"));
+                                                 "PROC_STAT"));
    boost::shared_ptr<tbox::Statistic> mfbstat(st->getStatistic("max_found_box",
-         "PROC_STAT"));
+                                                 "PROC_STAT"));
    boost::shared_ptr<tbox::Statistic> lsstat(st->getStatistic("max_lin_search",
-         "PROC_STAT"));
+                                                "PROC_STAT"));
 
    static int seq_num = 0;
    bdstat->recordProcStat(s_num_build[dim.getValue() - 1], seq_num);

@@ -33,8 +33,6 @@
 namespace SAMRAI {
 namespace mesh {
 
-
-
 /*!
  * @brief Provides load balancing routines for AMR hierarchy by
  * implemementing the LoadBalancerStrategy using the cascade partitioning algorithm.
@@ -135,9 +133,6 @@ public:
     * parameters from input file.  This pointer may be null indicating
     * no input is used.
     *
-    * @param[in] rank_tree How to arange a contiguous range of MPI ranks
-    * into a tree.  If omitted, we use a tbox::CenteredRankTree.
-    *
     * @pre !name.empty()
     */
    CascadePartitioner(
@@ -193,8 +188,8 @@ public:
     * Note: This implementation does not yet support non-uniform load
     * balancing.
     *
-    * @pre !balance_to_reference || balance_to_reference->hasTranspose()
-    * @pre !balance_to_reference || balance_to_reference->isTransposeOf(balance_to_reference->getTranspose())
+    * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
+    * @pre !balance_to_anchor || balance_to_anchor->isTransposeOf(balance_to_anchor->getTranspose())
     * @pre (d_dim == balance_box_level.getDim()) &&
     *      (d_dim == min_size.getDim()) && (d_dim == max_size.getDim()) &&
     *      (d_dim == domain_box_level.getDim()) &&
@@ -206,7 +201,7 @@ public:
    void
    loadBalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
-      hier::Connector* balance_to_reference,
+      hier::Connector* balance_to_anchor,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::IntVector& min_size,
@@ -225,7 +220,6 @@ public:
    void
    printStatistics(
       std::ostream& output_stream = tbox::plog) const;
-
 
    /*!
     * @brief Get the name of this object.
@@ -274,9 +268,7 @@ public:
       int level_number) const;
 
 private:
-
    typedef double LoadType;
-
 
    /*
     * Static integer constants.  Tags are for isolating messages
@@ -295,7 +287,6 @@ private:
    void
    operator = (
       const CascadePartitioner&);
-
 
    /*
     * @brief Check if there is any pending messages for the private
@@ -319,9 +310,9 @@ private:
       int level_number) const
    {
       TBOX_ASSERT(level_number >= 0);
-      return (level_number < static_cast<int>(d_workload_data_id.size()) ?
-         d_workload_data_id[level_number] :
-         d_master_workload_data_id);
+      return level_number < static_cast<int>(d_workload_data_id.size()) ?
+             d_workload_data_id[level_number] :
+             d_master_workload_data_id;
    }
 
    /*
@@ -332,12 +323,12 @@ private:
       const hier::BoxLevel& box_level) const;
 
    /*!
-    *@brief Implements the cascade partitioner algorithm.
+    * *@brief Implements the cascade partitioner algorithm.
     */
    void
    partitionByCascade(
       hier::BoxLevel& balance_box_level,
-      hier::Connector* balance_to_reference ) const;
+      hier::Connector* balance_to_reference) const;
 
    /*!
     * @brief Update Connectors balance_box_level<==>reference.
@@ -353,7 +344,9 @@ private:
       bool has_any_load ) const;
 
    //! @brief Compute log-base-2 of integer, rounded up.
-   static int lgInt(int s);
+   static int
+   lgInt(
+      int s);
 
    /*!
     * @brief Set up timers for the object.
@@ -447,9 +440,9 @@ private:
    mutable size_t d_num_initial_owners;
 
    //! @brief Local load subject to change.
-   mutable TransitLoad *d_local_load;
+   mutable TransitLoad* d_local_load;
    //! @brief Load shipment for sending and receiving.
-   mutable TransitLoad *d_shipment;
+   mutable TransitLoad* d_shipment;
    //! @brief High-level communication stage.
    mutable tbox::AsyncCommStage d_comm_stage;
    //! @brief High-level peer-to-peer communication object (2 receives, 2 sends).

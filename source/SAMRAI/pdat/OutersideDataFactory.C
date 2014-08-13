@@ -64,8 +64,8 @@ OutersideDataFactory<TYPE>::cloneFactory(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
    return boost::make_shared<OutersideDataFactory<TYPE> >(
-      ghosts.getDim(),
-      d_depth);
+             ghosts.getDim(),
+             d_depth);
 }
 
 /*

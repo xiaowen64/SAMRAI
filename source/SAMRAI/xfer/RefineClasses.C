@@ -78,7 +78,8 @@ RefineClasses::insertEquivalenceClassItem(
 
       data.d_class_index = eq_index;
 
-      d_equivalence_class_indices[eq_index].push_back(static_cast<int>(d_refine_classes_data_items.size()));
+      d_equivalence_class_indices[eq_index].push_back(static_cast<int>(d_refine_classes_data_items.
+                                                                       size()));
       d_refine_classes_data_items.push_back(data);
 
    }
@@ -139,7 +140,7 @@ RefineClasses::itemIsValid(
    boost::shared_ptr<hier::PatchDataFactory> scratch_fact(
       pd->getPatchDataFactory(scratch_id));
 
-   const tbox::Dimension &dim = dst_fact->getDim();
+   const tbox::Dimension& dim = dst_fact->getDim();
 
    if (item_good && !(src_fact->validCopyTo(scratch_fact))) {
       item_good = false;
@@ -335,7 +336,7 @@ RefineClasses::itemsAreEquivalent(
    if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
-   const tbox::Dimension &dim = pd->getPatchDataFactory(data1.d_dst)->getDim();
+   const tbox::Dimension& dim = pd->getPatchDataFactory(data1.d_dst)->getDim();
 
    equivalent = patchDataMatch(data1.d_dst, data2.d_dst, pd);
 
@@ -427,7 +428,8 @@ RefineClasses::printRefineItem(
              << data.d_oprefine->getOperatorPriority()
              << std::endl;
       stream << "operator stencil width: "
-             << data.d_oprefine->getStencilWidth(hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataDim(data.d_dst))
+             << data.d_oprefine->getStencilWidth(
+         hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataDim(data.d_dst))
              << std::endl;
    }
    if (!data.d_time_interpolate) {
@@ -504,7 +506,7 @@ RefineClasses::getEquivalenceClassIndex(
    const RefineClasses::Data& data,
    const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
-  NULL_USE(descriptor);
+   NULL_USE(descriptor);
 
    int eq_index = -1;
 

@@ -50,10 +50,10 @@ OuterfaceData<TYPE>::OuterfaceData(
       const hier::Box& ghosts = getGhostBox();
       const hier::Box facebox = FaceGeometry::toFaceBox(ghosts, d);
       hier::Box outerfacebox = facebox;
-      outerfacebox.upper(0) = facebox.lower(0);
+      outerfacebox.setUpper(0, facebox.lower(0));
       d_data[d][0].reset(new ArrayData<TYPE>(outerfacebox, depth));
-      outerfacebox.lower(0) = facebox.upper(0);
-      outerfacebox.upper(0) = facebox.upper(0);
+      outerfacebox.setLower(0, facebox.upper(0));
+      outerfacebox.setUpper(0, facebox.upper(0));
       d_data[d][1].reset(new ArrayData<TYPE>(outerfacebox, depth));
    }
 }
@@ -71,7 +71,7 @@ OuterfaceData<TYPE>::getDepth() const
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 OuterfaceData<TYPE>::getPointer(
    int face_normal,
    int side,
@@ -85,7 +85,7 @@ OuterfaceData<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 OuterfaceData<TYPE>::getPointer(
    int face_normal,
    int side,
@@ -218,11 +218,42 @@ OuterfaceData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
-   NULL_USE(src);
-   NULL_USE(overlap);
+   const FaceOverlap* t_overlap = CPP_CAST<const FaceOverlap *>(&overlap);
 
-   TBOX_ERROR("Copy with outerface as destination is not defined yet...");
+   TBOX_ASSERT(t_overlap != 0);
+
+   const OuterfaceData<TYPE>* t_oface_src =
+      dynamic_cast<const OuterfaceData<TYPE> *>(&src);
+   const FaceData<TYPE>* t_face_src =
+      dynamic_cast<const FaceData<TYPE> *>(&src);
+
+   TBOX_ASSERT(t_oface_src == 0 || t_face_src == 0);
+   TBOX_ASSERT(t_oface_src != 0 || t_face_src != 0);
+
+   const hier::IntVector& src_offset = t_overlap->getSourceOffset();
+   if (t_oface_src != 0) {
+      for (int d = 0; d < getDim().getValue(); ++d) {
+         const hier::BoxContainer& box_list =
+            t_overlap->getDestinationBoxContainer(d);
+         d_data[d][0]->copy(t_oface_src->getArrayData(d, 0), box_list, src_offset);
+         d_data[d][0]->copy(t_oface_src->getArrayData(d, 1), box_list, src_offset);
+         d_data[d][1]->copy(t_oface_src->getArrayData(d, 0), box_list, src_offset);
+         d_data[d][1]->copy(t_oface_src->getArrayData(d, 1), box_list, src_offset);
+      }
+   } else if (t_face_src != 0) {
+      for (int d = 0; d < getDim().getValue(); ++d) {
+         const hier::BoxContainer& box_list =
+            t_overlap->getDestinationBoxContainer(d);
+         d_data[d][0]->copy(t_face_src->getArrayData(d), box_list, src_offset);
+         d_data[d][1]->copy(t_face_src->getArrayData(d), box_list, src_offset);
+      }
+   } else {
+      TBOX_ERROR("OuterfaceData<TYPE>::copy error...\n"
+         << " : Cannot copy from type other than FaceData or OuterfaceData " << std::endl);
+   }
+
 }
 
 template<class TYPE>
@@ -254,7 +285,7 @@ OuterfaceData<TYPE>::copy2(
                                           face_offset,
                                           getBox().getBlockId(),
                                           t_dst->getBox().getBlockId());
- 
+
       const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer(d);
       t_dst->getArrayData(d).copy(*(d_data[d][0]), box_list, face_transform);
       t_dst->getArrayData(d).copy(*(d_data[d][1]), box_list, face_transform);
@@ -386,7 +417,7 @@ OuterfaceData<TYPE>::packStream(
    for (int d = 0; d < getDim().getValue(); ++d) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
 
-      if (!boxes.isEmpty()) {
+      if (!boxes.empty()) {
          hier::IntVector face_offset(offset);
          if (d > 0) {
             for (int i = 0; i < getDim().getValue(); ++i) {
@@ -406,7 +437,7 @@ OuterfaceData<TYPE>::packStream(
             for (int f = 0; f < 2; ++f) {
                hier::Box intersect(src_box * d_data[d][f]->getBox());
                if (!intersect.empty()) {
-                  face_transform.transform(intersect); 
+                  face_transform.transform(intersect);
                   d_data[d][f]->packStream(stream,
                      intersect,
                      face_transform);
@@ -471,8 +502,8 @@ OuterfaceData<TYPE>::getSizeOfData(
    for (tbox::Dimension::dir_t d = 0; d < box.getDim().getValue(); ++d) {
       hier::Box lower = FaceGeometry::toFaceBox(box, d);
       hier::Box upper = FaceGeometry::toFaceBox(box, d);
-      lower.upper(d) = box.lower(d);
-      upper.lower(d) = box.upper(d);
+      lower.setUpper(d, box.lower(d));
+      upper.setLower(d, box.upper(d));
       size += ArrayData<TYPE>::getSizeOfData(lower, depth);
       size += ArrayData<TYPE>::getSizeOfData(upper, depth);
    }

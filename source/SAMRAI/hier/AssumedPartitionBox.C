@@ -191,12 +191,13 @@ AssumedPartitionBox::getBox(int box_index) const
    int box_index_diff = box_index - d_index_begin;
    for ( int d=d_box.getDim().getValue()-1; d>=0; --d ) {
       int dir = d_major[d];
-      part.lower()[dir] = box_index_diff/d_index_stride[dir];
+      part.setLower( dir, box_index_diff/d_index_stride[dir] );
       box_index_diff -= part.lower()[dir]*d_index_stride[dir];
    }
-   part.lower() *= d_uniform_partition_size;
-   part.lower() += d_box.lower();
-   part.upper() = part.lower() + d_uniform_partition_size - IntVector::getOne(d_box.getDim());
+
+   part.setLower( part.lower() * d_uniform_partition_size );
+   part.setLower( part.lower() + d_box.lower() );
+   part.setUpper( part.lower() + d_uniform_partition_size - IntVector::getOne(d_box.getDim()) );
    part *= d_box;
 
    const int owner = getOwner(box_index);

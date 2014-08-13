@@ -125,13 +125,13 @@ FirstLayerCellNoCornersVariableFillPattern::computeStencilBoxes(
 
    for (unsigned short i = 0; i < dim.getValue(); ++i) {
       hier::Box low_box(dst_box);
-      low_box.lower(i) = dst_box.lower(i) - 1;
-      low_box.upper(i) = low_box.lower(i);
+      low_box.setLower(i, dst_box.lower(i) - 1);
+      low_box.setUpper(i, low_box.lower(i));
       stencil_boxes.pushFront(low_box);
 
       hier::Box high_box(dst_box);
-      high_box.lower(i) = dst_box.upper(i) + 1;
-      high_box.upper(i) = high_box.lower(i);
+      high_box.setLower(i, dst_box.upper(i) + 1);
+      high_box.setUpper(i, high_box.lower(i));
       stencil_boxes.pushFront(high_box);
    }
 }
@@ -163,8 +163,8 @@ FirstLayerCellNoCornersVariableFillPattern::computeFillBoxesOverlap(
    overlap_boxes.intersectBoxes(stencil_boxes);
 
    return boost::make_shared<CellOverlap>(
-         overlap_boxes,
-         hier::Transformation(hier::IntVector::getZero(patch_box.getDim())));
+             overlap_boxes,
+             hier::Transformation(hier::IntVector::getZero(patch_box.getDim())));
 }
 
 }

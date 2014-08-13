@@ -60,7 +60,6 @@ class AsyncCommPeer:public AsyncCommStage::Member
 {
 
 private:
-
    //! @brief Operations users would want to do.
    enum BaseOp { undefined,
                  send,
@@ -282,7 +281,7 @@ public:
    beginSend(
       const TYPE* buffer,
       int size,
-      bool automatic_push_to_completion_queue = false );
+      bool automatic_push_to_completion_queue = false);
 
    /*!
     * @brief Check the current broadcast communication and complete
@@ -298,7 +297,7 @@ public:
     */
    bool
    checkSend(
-      bool automatic_push_to_completion_queue = false );
+      bool automatic_push_to_completion_queue = false);
 
    /*!
     * @brief Begin a receive communication.
@@ -328,7 +327,7 @@ public:
     */
    bool
    beginRecv(
-      bool automatic_push_to_completion_queue = false );
+      bool automatic_push_to_completion_queue = false);
 
    /*!
     * @brief Check the current receive communication and complete the
@@ -342,7 +341,7 @@ public:
     */
    bool
    checkRecv(
-      bool automatic_push_to_completion_queue = false );
+      bool automatic_push_to_completion_queue = false);
 
    /*!
     * @brief Return the size of received data.
@@ -416,7 +415,6 @@ public:
 
    //@}
 
-
    //@{
    //! @name Timers for MPI calls
 
@@ -431,7 +429,7 @@ public:
     */
    void
    setSendTimer(
-      const boost::shared_ptr<Timer> &send_timer );
+      const boost::shared_ptr<Timer>& send_timer);
 
    /*!
     * @brief Set the receive-timer.
@@ -444,7 +442,7 @@ public:
     */
    void
    setRecvTimer(
-      const boost::shared_ptr<Timer> &recv_timer );
+      const boost::shared_ptr<Timer>& recv_timer);
 
    /*!
     * @brief Set the wait-timer.
@@ -461,7 +459,7 @@ public:
     */
    void
    setWaitTimer(
-      const boost::shared_ptr<Timer> &wait_timer );
+      const boost::shared_ptr<Timer>& wait_timer);
 
    //@}
 

@@ -8,10 +8,10 @@
 ##
 #########################################################################
 
-SAMRAI	      =	@top_srcdir@
+SAMRAI        = @top_srcdir@
 SRCDIR        = @srcdir@
 SUBDIR        = source/test/performance/LinAdv
-VPATH         = @top_srcdir@/$(SUBDIR)
+VPATH         = @srcdir@
 OBJECT        = ../../../..
 REPORT        = $(OBJECT)/report.xml
 TESTINCLUDE   = $(SAMRAI)/source/test/testlib
@@ -81,7 +81,7 @@ perf:	main
 	done
 
 everything:
-	$(MAKE) checkcompile
+	$(MAKE) checkcompile || exit 1
 	$(MAKE) checktest
 	$(MAKE) examples
 	$(MAKE) perf

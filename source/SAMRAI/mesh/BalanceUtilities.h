@@ -135,7 +135,7 @@ struct BalanceUtilities {
     * @pre min_size > hier::IntVector::getZero(min_size.getDim())
     * @pre cut_factor > hier::IntVector::getZero(min_size.getDim())
     * @pre bad_interval >= hier::IntVector::getZero(min_size.getDim())
-    * @pre !physical_domain.isEmpty()
+    * @pre !physical_domain.empty()
     */
    static void
    recursiveBisectionUniform(
@@ -201,7 +201,7 @@ struct BalanceUtilities {
     * @pre min_size > hier::IntVector::getZero(min_size.getDim())
     * @pre cut_factor > hier::IntVector::getZero(min_size.getDim())
     * @pre bad_interval >= hier::IntVector::getZero(min_size.getDim())
-    * @pre !physical_domain.isEmpty()
+    * @pre !physical_domain.empty()
     */
    static void
    recursiveBisectionNonuniform(
@@ -307,20 +307,21 @@ struct BalanceUtilities {
     *
     * @param border Left border in report output
     *
-    * @param [i] post_to_pre
+    * @param [in] post_to_pre
     *
-    * @param [i] min_width Report post-balance boxes smaller than
+    * @param [in] min_width Report post-balance boxes smaller than
     * min_width in any direction.
     *
-    * @param [i] min_vol Report post-balance boxes with fewer cells
+    * @param [in] min_vol Report post-balance boxes with fewer cells
     * than this.
     */
-   static void findSmallBoxesInPostbalance(
-      std::ostream &co,
-      const std::string &border,
-      const hier::MappingConnector &post_to_pre,
-      const hier::IntVector &min_width,
-      size_t min_vol );
+   static void
+   findSmallBoxesInPostbalance(
+      std::ostream& co,
+      const std::string& border,
+      const hier::MappingConnector& post_to_pre,
+      const hier::IntVector& min_width,
+      size_t min_vol);
 
    /*!
     * @brief Find small boxes in a post-balance BoxLevel that are not
@@ -333,23 +334,24 @@ struct BalanceUtilities {
     *
     * @param border Left border in report output
     *
-    * @param [i] pre Pre-balance BoxLevel
+    * @param [in] pre Pre-balance BoxLevel
     *
-    * @param [i] post Post-balance BoxLevel
+    * @param [in] post Post-balance BoxLevel
     *
-    * @param [i] min_width Report post-balance boxes smaller than
+    * @param [in] min_width Report post-balance boxes smaller than
     * min_width in any direction.
     *
-    * @param [i] min_vol Report post-balance boxes with fewer cells
+    * @param [in] min_vol Report post-balance boxes with fewer cells
     * than this.
     */
-   static void findSmallBoxesInPostbalance(
-      std::ostream &co,
-      const std::string &border,
-      const hier::BoxLevel &pre,
-      const hier::BoxLevel &post,
-      const hier::IntVector &min_width,
-      size_t min_vol );
+   static void
+   findSmallBoxesInPostbalance(
+      std::ostream& co,
+      const std::string& border,
+      const hier::BoxLevel& pre,
+      const hier::BoxLevel& post,
+      const hier::IntVector& min_width,
+      size_t min_vol);
 
    /*!
     * @brief Evaluate whether a new load is an improvement over a
@@ -363,7 +365,7 @@ struct BalanceUtilities {
     * - [0]: -1, 0 or 1: degrades, leave-alone or improves in-range
     * - [1]: -1, 0 or 1: degrades, leave-alone or improves balance
     * - [2]: -1, 0 or 1: degrades, leave-alone or improves overall
-    * - [3]: 0 or 1: whether new within the range of [low, high]
+    * - [3]: 0 or 1: whether new_load is within the range of [low, high]
     *
     * Return whether new_load is an improvement over current_load.
     */
@@ -429,17 +431,17 @@ struct BalanceUtilities {
 
    //@}
 
-
    /*
     * Constrain maximum box sizes in the given BoxLevel and
     * update given Connectors to the changed BoxLevel.
     *
     * @pre !anchor_to_level || anchor_to_level->hasTranspose()
     */
-   static void constrainMaxBoxSizes(
+   static void
+   constrainMaxBoxSizes(
       hier::BoxLevel& box_level,
       hier::Connector* anchor_to_level,
-      const PartitioningParams &pparams );
+      const PartitioningParams& pparams);
 
    static const int BalanceUtilities_PREBALANCE0 = 5;
    static const int BalanceUtilities_PREBALANCE1 = 6;
@@ -459,9 +461,7 @@ struct BalanceUtilities {
       hier::Connector* balance_to_anchor,
       const tbox::RankGroup& rank_group);
 
-
 private:
-
    struct RankAndLoad {
       int rank;
       double load;

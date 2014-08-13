@@ -46,7 +46,7 @@ namespace solv {
  */
 
 template<class TYPE>
-int SAMRAIVectorReal<TYPE>::s_instance_counter[SAMRAI::MAX_DIM_VAL] = {0};
+int SAMRAIVectorReal<TYPE>::s_instance_counter[SAMRAI::MAX_DIM_VAL] = { 0 };
 
 template<class TYPE>
 boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> > SAMRAIVectorReal<TYPE>::
@@ -463,8 +463,8 @@ SAMRAIVectorReal<TYPE>::setComponent(
          if (!SAMRAIVectorReal<TYPE>::s_cell_ops[dim.getValue() - 1]) {
             SAMRAIVectorReal<TYPE>::s_cell_ops[dim.getValue() - 1].reset(
                new math::HierarchyCellDataOpsReal<TYPE>(d_hierarchy,
-                                                        d_coarsest_level,
-                                                        d_finest_level));
+                  d_coarsest_level,
+                  d_finest_level));
          }
          d_component_operations[comp_id] =
             SAMRAIVectorReal<TYPE>::s_cell_ops[dim.getValue() - 1];
@@ -472,8 +472,8 @@ SAMRAIVectorReal<TYPE>::setComponent(
          if (!SAMRAIVectorReal<TYPE>::s_edge_ops[dim.getValue() - 1]) {
             SAMRAIVectorReal<TYPE>::s_edge_ops[dim.getValue() - 1].reset(
                new math::HierarchyEdgeDataOpsReal<TYPE>(d_hierarchy,
-                                                        d_coarsest_level,
-                                                        d_finest_level));
+                  d_coarsest_level,
+                  d_finest_level));
          }
          d_component_operations[comp_id] =
             SAMRAIVectorReal<TYPE>::s_edge_ops[dim.getValue() - 1];
@@ -481,8 +481,8 @@ SAMRAIVectorReal<TYPE>::setComponent(
          if (!SAMRAIVectorReal<TYPE>::s_face_ops[dim.getValue() - 1]) {
             SAMRAIVectorReal<TYPE>::s_face_ops[dim.getValue() - 1].reset(
                new math::HierarchyFaceDataOpsReal<TYPE>(d_hierarchy,
-                                                        d_coarsest_level,
-                                                        d_finest_level));
+                  d_coarsest_level,
+                  d_finest_level));
          }
          d_component_operations[comp_id] =
             SAMRAIVectorReal<TYPE>::s_face_ops[dim.getValue() - 1];
@@ -490,8 +490,8 @@ SAMRAIVectorReal<TYPE>::setComponent(
          if (!SAMRAIVectorReal<TYPE>::s_node_ops[dim.getValue() - 1]) {
             SAMRAIVectorReal<TYPE>::s_node_ops[dim.getValue() - 1].reset(
                new math::HierarchyNodeDataOpsReal<TYPE>(d_hierarchy,
-                                                        d_coarsest_level,
-                                                        d_finest_level));
+                  d_coarsest_level,
+                  d_finest_level));
          }
          d_component_operations[comp_id] =
             SAMRAIVectorReal<TYPE>::s_node_ops[dim.getValue() - 1];
@@ -499,8 +499,8 @@ SAMRAIVectorReal<TYPE>::setComponent(
          if (!SAMRAIVectorReal<TYPE>::s_side_ops[dim.getValue() - 1]) {
             SAMRAIVectorReal<TYPE>::s_side_ops[dim.getValue() - 1].reset(
                new math::HierarchySideDataOpsReal<TYPE>(d_hierarchy,
-                                                        d_coarsest_level,
-                                                        d_finest_level));
+                  d_coarsest_level,
+                  d_finest_level));
          }
          d_component_operations[comp_id] =
             SAMRAIVectorReal<TYPE>::s_side_ops[dim.getValue() - 1];

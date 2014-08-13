@@ -570,7 +570,7 @@ void CommTester::setPhysicalBoundaryConditions(
       gcw);
 }
 
-hier::IntVector CommTester::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
+hier::IntVector CommTester::getRefineOpStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getOne(dim);
 }
@@ -593,7 +593,7 @@ void CommTester::postprocessRefine(
    d_data_test_strategy->postprocessRefine(fine, coarse, fine_box, ratio);
 }
 
-hier::IntVector CommTester::getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
+hier::IntVector CommTester::getCoarsenOpStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }
@@ -639,7 +639,7 @@ void CommTester::setupHierarchy(
 
    boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
       new mesh::BergerRigoutsos(d_dim,
-                                main_input_db->getDatabase("BergerRigoutsos")));
+         main_input_db->getDatabase("BergerRigoutsos")));
 
    boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
       new mesh::TreeLoadBalancer(

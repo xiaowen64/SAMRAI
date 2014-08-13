@@ -1037,7 +1037,7 @@ AC_DEFUN([CASC_SUPPORT_HDF5],[
 # Begin CASC_SUPPORT_HDF5
 # Defines hdf5_PREFIX hdf5_INCLUDES and hdf5_LIBS if with-hdf5 is specified.
 AC_ARG_WITH(hdf5,
-[ --with-hdf5[=PATH]  Use HDF5 and optionally specify where HDF5 is installed.],
+[  --with-hdf5[=PATH]  Use HDF5 and optionally specify where HDF5 is installed.],
 , with_hdf5=no)
 
 case "$with_hdf5" in
@@ -2827,7 +2827,7 @@ AC_DEFUN([CASC_SUPPORT_SILO],[
 # Begin CASC_SUPPORT_SILO
 # Defines silo_PREFIX silo_INCLUDES and silo_LIBS if with-silo is specified.
 AC_ARG_WITH(silo,
-[ --with-silo[=PATH]  Use SILO and optionally specify where SILO is installed.],
+[  --with-silo[=PATH]  Use SILO and optionally specify where SILO is installed.],
 , with_silo=no)
 
 case "$with_silo" in
@@ -2890,7 +2890,7 @@ AC_DEFUN([CASC_SUPPORT_VALGRIND],[
 # Begin CASC_SUPPORT_VALGRIND
 # Defines valgrind_EXE
 AC_ARG_WITH(valgrind,
-[ --with-valgrind[=PATH]  Use VALGRIND and optionally specify where VALGRIND is installed.],
+[  --with-valgrind[=PATH]  Use VALGRIND and optionally specify where VALGRIND is installed.],
 , with_valgrind=no)
 
 case "$with_valgrind" in
@@ -4058,7 +4058,7 @@ AC_DEFUN([CASC_SUPPORT_BOOST],[
 # Begin CASC_SUPPORT_BOOST
 # Defines boost_PREFIX boost_INCLUDES and boost_LIBS.
 AC_ARG_WITH(boost,
-[ --with-boost[=PATH]  Use BOOST and specify where BOOST is installed.],
+[  --with-boost[=PATH]  Use BOOST and specify where BOOST is installed.],
 , with_boost=no)
 
 case "$with_boost" in

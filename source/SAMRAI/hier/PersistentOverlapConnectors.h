@@ -21,8 +21,7 @@ namespace hier {
 /*!
  * @brief Action to take when Connectors between BoxLevels are not found.
  */
-enum ConnectorNotFoundAction
-{
+enum ConnectorNotFoundAction {
    CONNECTOR_ERROR,                 // If the Connector is not found then error
    CONNECTOR_CREATE,                // If the Connector is not found silently
                                     // create it
@@ -94,7 +93,6 @@ class PersistentOverlapConnectors
 {
 
 public:
-
    /*!
     * @brief Set whether to create empty neighbor containers when a
     * base Box has no neighbor.
@@ -105,7 +103,8 @@ public:
     * The default is false.
     */
    static void
-   setCreateEmptyNeighborContainers( bool create_empty_neighbor_containers );
+   setCreateEmptyNeighborContainers(
+      bool create_empty_neighbor_containers);
 
 private:
    /*!

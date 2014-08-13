@@ -22,7 +22,7 @@ namespace SAMRAI {
 namespace hier {
 
 BoundaryLookupTable *
-BoundaryLookupTable::s_lookup_table_instance[SAMRAI::MAX_DIM_VAL] = {0};
+BoundaryLookupTable::s_lookup_table_instance[SAMRAI::MAX_DIM_VAL] = { 0 };
 
 tbox::StartupShutdownManager::Handler
 BoundaryLookupTable::s_finalize_handler(

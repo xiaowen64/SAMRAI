@@ -21,14 +21,6 @@ SUBDIRS = treesearch multiblock TreeCommunication MeshGeneration LinAdv Euler
 
 library:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
-lib1d:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
-lib2d:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
-lib3d:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
-libXd:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 check:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 check2d:
@@ -37,7 +29,7 @@ check3d:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 checkcompile:
 	(cd $(OBJECT)/source/test/testlib && $(MAKE) $@)
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
 checktest:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 examples:
@@ -45,7 +37,7 @@ examples:
 perf:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 everything:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
 clean:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 checkclean:

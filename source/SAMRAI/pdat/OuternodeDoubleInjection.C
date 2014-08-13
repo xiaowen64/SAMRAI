@@ -107,7 +107,7 @@ OuternodeDoubleInjection::getOperatorPriority() const
 }
 
 hier::IntVector
-OuternodeDoubleInjection::getStencilWidth( const tbox::Dimension &dim ) const
+OuternodeDoubleInjection::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }

@@ -141,11 +141,11 @@ RefineScheduleConnectorWidthRequestor::computeRequiredFineConnectorWidthsForRecu
    const hier::PatchHierarchy& patch_hierarchy,
    int initial_dst_ln) const
 {
-   if ( static_cast<int>(fine_connector_widths.size()) < initial_dst_ln ) {
+   if (static_cast<int>(fine_connector_widths.size()) < initial_dst_ln) {
       fine_connector_widths.insert(
          fine_connector_widths.end(),
          initial_dst_ln - fine_connector_widths.size(),
-         hier::IntVector::getZero(patch_hierarchy.getDim()) );
+         hier::IntVector::getZero(patch_hierarchy.getDim()));
    }
 
    hier::IntVector width_for_refining_recursively = data_gcw_on_initial_dst_ln * d_gcw_factor;

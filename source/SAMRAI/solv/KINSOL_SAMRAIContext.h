@@ -379,7 +379,7 @@ public:
    void
    getFromInput(
       const boost::shared_ptr<tbox::Database>& input_db,
-       bool is_from_restart);
+      bool is_from_restart);
 
    /**
     * Retrieve solver parameters from restart database matching object name.

@@ -106,12 +106,12 @@ FaceGeometry::toFaceBox(
 
    if (!box.empty()) {
       const tbox::Dimension::dir_t x = face_normal;
-      face_box.lower(0) = box.lower(x);
-      face_box.upper(0) = box.upper(x) + 1;
+      face_box.setLower(0, box.lower(x));
+      face_box.setUpper(0, box.upper(x) + 1);
       for (tbox::Dimension::dir_t i = 1; i < dim.getValue(); ++i) {
          const tbox::Dimension::dir_t y = static_cast<tbox::Dimension::dir_t>((face_normal + i) % dim.getValue());
-         face_box.lower(i) = box.lower(y);
-         face_box.upper(i) = box.upper(y);
+         face_box.setLower(i, box.lower(y));
+         face_box.setUpper(i, box.upper(y));
       }
       face_box.setBlockId(box.getBlockId());
    }
@@ -137,7 +137,7 @@ FaceGeometry::computeDestinationBoxes(
    const hier::Transformation& transformation,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS 
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const hier::IntVector& src_offset = transformation.getOffset();
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 #endif
@@ -147,7 +147,7 @@ FaceGeometry::computeDestinationBoxes(
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
    const hier::Box src_box(
-   hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
+      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
    hier::Box src_shift(src_box);
    transformation.transform(src_shift);
    const hier::Box dst_ghost(
@@ -176,18 +176,17 @@ FaceGeometry::computeDestinationBoxes(
             }
          }  // if (!together.empty())
 
-         if (!dst_restrict_boxes.isEmpty() && !dst_boxes[d].isEmpty()) {
+         if (!dst_restrict_boxes.empty() && !dst_boxes[d].empty()) {
             hier::BoxContainer face_restrict_boxes;
             for (hier::BoxContainer::const_iterator b = dst_restrict_boxes.begin();
-                  b != dst_restrict_boxes.end(); ++b) {
-              face_restrict_boxes.pushBack(toFaceBox(*b, d));
+                 b != dst_restrict_boxes.end(); ++b) {
+               face_restrict_boxes.pushBack(toFaceBox(*b, d));
             }
             dst_boxes[d].intersectBoxes(face_restrict_boxes);
          }
       }  // loop over dim
    }  // !quick_check.empty()
 }
-
 
 /*
  *************************************************************************
@@ -286,10 +285,13 @@ FaceGeometry::transform(
       hier::Box cell_box(dim);
       for (int d = 0; d < dim.getValue(); ++d) {
          int cell_dim = (normal_direction + d) % dim.getValue();
-         cell_box.lower() (cell_dim) = box.lower() (d);
-         cell_box.upper() (cell_dim) = box.upper() (d);
+         cell_box.setLower(static_cast<hier::Box::dir_t>(cell_dim),
+            box.lower(static_cast<hier::Box::dir_t>(d)));
+         cell_box.setUpper(static_cast<hier::Box::dir_t>(cell_dim),
+            box.upper(static_cast<hier::Box::dir_t>(d)));
       }
-      cell_box.upper() (normal_direction) -= 1;
+      cell_box.setUpper(static_cast<hier::Box::dir_t>(normal_direction),
+         cell_box.upper(static_cast<hier::Box::dir_t>(normal_direction)) - 1);
       cell_box.setBlockId(box.getBlockId());
       transformation.transform(cell_box);
 
@@ -409,11 +411,13 @@ FaceGeometry::transform(
 
       for (int d = 0; d < dim.getValue(); ++d) {
          int cell_dim = (normal_direction + d) % dim.getValue();
-         box.lower() (d) = cell_box.lower() (cell_dim);
-         box.upper() (d) = cell_box.upper() (cell_dim);
+         box.setLower(static_cast<hier::Box::dir_t>(d),
+            cell_box.lower(static_cast<hier::Box::dir_t>(cell_dim)));
+         box.setUpper(static_cast<hier::Box::dir_t>(d),
+            cell_box.upper(static_cast<hier::Box::dir_t>(cell_dim)));
       }
 
-      box.upper() (0) += 1;
+      box.setUpper(0, box.upper(0) + 1);
       box.setBlockId(cell_box.getBlockId());
    }
 }

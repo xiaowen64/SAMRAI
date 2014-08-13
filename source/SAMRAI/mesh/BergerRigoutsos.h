@@ -236,7 +236,7 @@ public:
     * Each box will be at least as large as the given minimum
     * size and the tolerances will be met.
     *
-    * @pre !bound_boxes.isEmpty()
+    * @pre !bound_boxes.empty()
     * @pre (tag_level->getDim() == (*(bound_boxes.begin())).getDim()) &&
     *      (tag_level->getDim() == min_box.getDim()) &&
     *      (tag_level->getDim() == tag_to_new_width.getDim())
@@ -311,12 +311,12 @@ public:
    {
       TBOX_ASSERT(level_number >= 0);
       TBOX_ASSERT((efficiency_tolerance >= 0) &&
-                  (efficiency_tolerance <= 1.0));
+         (efficiency_tolerance <= 1.0));
       int size = static_cast<int>(d_efficiency_tolerance.size());
       if (level_number >= size) {
-         d_efficiency_tolerance.resize(level_number+1);
+         d_efficiency_tolerance.resize(level_number + 1);
          for (int i = size; i < level_number; ++i) {
-            d_efficiency_tolerance[i] = d_efficiency_tolerance[size-1];
+            d_efficiency_tolerance[i] = d_efficiency_tolerance[size - 1];
          }
       }
       d_efficiency_tolerance[level_number] = efficiency_tolerance;
@@ -336,8 +336,8 @@ public:
       TBOX_ASSERT(level_number >= 0);
       int size = static_cast<int>(d_efficiency_tolerance.size());
       return (level_number < size) ?
-         d_efficiency_tolerance[level_number] :
-         d_efficiency_tolerance[size - 1];
+             d_efficiency_tolerance[level_number] :
+             d_efficiency_tolerance[size - 1];
    }
 
    /*!
@@ -358,9 +358,9 @@ public:
       TBOX_ASSERT((combine_efficiency >= 0) && (combine_efficiency <= 1.0));
       int size = static_cast<int>(d_combine_efficiency.size());
       if (level_number >= size) {
-         d_combine_efficiency.resize(level_number+1);
+         d_combine_efficiency.resize(level_number + 1);
          for (int i = size; i < level_number; ++i) {
-            d_combine_efficiency[i] = d_combine_efficiency[size-1];
+            d_combine_efficiency[i] = d_combine_efficiency[size - 1];
          }
       }
       d_combine_efficiency[level_number] = combine_efficiency;
@@ -380,13 +380,11 @@ public:
       TBOX_ASSERT(level_number >= 0);
       int size = static_cast<int>(d_combine_efficiency.size());
       return (level_number < size) ?
-         d_combine_efficiency[level_number] :
-         d_combine_efficiency[size - 1];
+             d_combine_efficiency[level_number] :
+             d_combine_efficiency[size - 1];
    }
 
-
 protected:
-
    /*!
     * @brief Read parameters from input database.
     *
@@ -396,9 +394,7 @@ protected:
    getFromInput(
       const boost::shared_ptr<tbox::Database>& input_db);
 
-
 private:
-
    /*
     * BergerRigoutsos and BergerRigoutsosNode are tightly coupled.
     * Technically, BergerRigoutsosNode can be made a private subclass
@@ -496,13 +492,15 @@ private:
    /*!
     * @brief Check the congruency between d_mpi and d_tag_level's MPI.
     */
-   bool checkMPICongruency() const;
+   bool
+   checkMPICongruency() const;
 
    /*!
     * @brief Set up data that depend on the MPI communicator being
     * used.
     */
-   void setupMPIDependentData();
+   void
+   setupMPIDependentData();
 
    /*!
     * @brief Run the clustering algorithm to generate the new BoxLevel
@@ -514,12 +512,12 @@ private:
    clusterAndComputeRelationships();
 
    //! @brief Participants send new relationship data to node owners.
-   void shareNewNeighborhoodSetsWithOwners();
+   void
+   shareNewNeighborhoodSetsWithOwners();
 
-   const tbox::Dimension &getDim() const {
+   const tbox::Dimension& getDim() const {
       return d_tag_level->getDim();
    }
-
 
    /*!
     * @brief Relationship computation flag.
@@ -553,15 +551,18 @@ private:
    void
    assertNoMessageForPrivateCommunicator() const;
 
-
    //@{
    //! @name Counter methods.
    // TODO: Should lock counters while changing them.
 
-   void resetCounters();
-   void writeCounters();
+   void
+   resetCounters();
+   void
+   writeCounters();
 
-   void incNumNodesConstructed() { ++d_num_nodes_constructed; }
+   void incNumNodesConstructed() {
+      ++d_num_nodes_constructed;
+   }
 
    void incNumNodesExisting() {
       ++d_num_nodes_existing;
@@ -592,25 +593,34 @@ private:
          tbox::MathUtilities<int>::Max(d_max_conts_to_complete, num_continues);
    }
 
-   void decNumNodesConstructed() { --d_num_nodes_constructed; }
-   void decNumNodesExisting() { --d_num_nodes_existing; }
-   void decNumNodesActive() { --d_num_nodes_active; }
-   void decNumNodesOwned() { --d_num_nodes_owned; }
-   void decNumNodesCommWait() { --d_num_nodes_commwait; }
+   void decNumNodesConstructed() {
+      --d_num_nodes_constructed;
+   }
+   void decNumNodesExisting() {
+      --d_num_nodes_existing;
+   }
+   void decNumNodesActive() {
+      --d_num_nodes_active;
+   }
+   void decNumNodesOwned() {
+      --d_num_nodes_owned;
+   }
+   void decNumNodesCommWait() {
+      --d_num_nodes_commwait;
+   }
 
    //@}
 
-   void prependQueue( BergerRigoutsosNode *nodea,
-                      BergerRigoutsosNode *nodeb = 0 )
-      {
-         TBOX_omp_set_lock(&l_relaunch_queue);
-         d_relaunch_queue.push_front(nodea);
-         if ( nodeb ) {
-            d_relaunch_queue.push_front(nodeb);
-         }
-         TBOX_omp_unset_lock(&l_relaunch_queue);
+   void prependQueue(BergerRigoutsosNode* nodea,
+                     BergerRigoutsosNode* nodeb = 0)
+   {
+      TBOX_omp_set_lock(&l_relaunch_queue);
+      d_relaunch_queue.push_front(nodea);
+      if (nodeb) {
+         d_relaunch_queue.push_front(nodeb);
       }
-
+      TBOX_omp_unset_lock(&l_relaunch_queue);
+   }
 
    const tbox::Dimension d_dim;
 
@@ -748,7 +758,6 @@ private:
    int d_available_mpi_tag;
    //@}
 
-
    //@{
    //! @name Auxiliary data for analysis and debugging.
 
@@ -813,13 +822,11 @@ private:
 
    //@}
 
-
    //@{
    //! @name Used for evaluating performance;
    bool d_barrier_before;
    bool d_barrier_after;
    //@}
-
 
    //@{
    //! @name Performance timer data for this class.
@@ -886,7 +893,6 @@ private:
    TimerStruct* d_object_timers;
 
    //@}
-
 
 };
 

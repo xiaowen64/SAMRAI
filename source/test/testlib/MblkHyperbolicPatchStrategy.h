@@ -354,7 +354,7 @@ public:
     * dummy implementation here so that users may ignore it when
     * inheriting from this class.
     */
-   virtual hier::IntVector getRefineOpStencilWidth( const tbox::Dimension &dim ) const
+   virtual hier::IntVector getRefineOpStencilWidth(const tbox::Dimension& dim) const
    {
       return hier::IntVector(dim, 0);
    }
@@ -420,7 +420,7 @@ public:
     * dummy implementation here so that users may ignore it when
     * inheriting from this class.
     */
-   virtual hier::IntVector getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
+   virtual hier::IntVector getCoarsenOpStencilWidth(const tbox::Dimension& dim) const
    {
       return hier::IntVector(dim, 0);
    }

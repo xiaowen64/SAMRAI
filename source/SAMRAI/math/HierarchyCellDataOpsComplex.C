@@ -1046,8 +1046,7 @@ HierarchyCellDataOpsComplex::dot(
       mpi.Allreduce(&imag_part, &global_imag_part, 1, MPI_DOUBLE, MPI_SUM);
       dcomplex global_dot(global_real_part, global_imag_part);
       return global_dot;
-   }
-   else {
+   } else {
       return dprod;
    }
 }
@@ -1102,8 +1101,7 @@ HierarchyCellDataOpsComplex::integral(
       mpi.Allreduce(&imag_part, &global_imag_part, 1, MPI_DOUBLE, MPI_SUM);
       dcomplex global_integral(global_real_part, global_imag_part);
       return global_integral;
-   }
-   else {
+   } else {
       return local_integral;
    }
 }

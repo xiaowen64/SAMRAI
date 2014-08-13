@@ -129,7 +129,6 @@ public:
       return d_vector[i];
    }
 
-
    /**
     * @brief Return the specified component of the vector.  No bounds checking.
     *
@@ -364,8 +363,8 @@ public:
           * - Round remainder to 1 if numerator and denominator has same sign.
           * - Round remainder to -1 if numerator and denominator has opposite sign.
           */
-         d_vector[i] = (d_vector[i] / denominator[i]) +
-            ((d_vector[i] % denominator[i]) ?
+         d_vector[i] = (d_vector[i] / denominator[i])
+            + ((d_vector[i] % denominator[i]) ?
                ((d_vector[i] > 0) == (denominator[i] > 0) ? 1 : -1) : 0);
       }
    }
@@ -395,8 +394,8 @@ public:
           * - Round remainder to 1 if numerator and denominator has same sign.
           * - Round remainder to -1 if numerator and denominator has opposite sign.
           */
-         rval[i] = (numerator[i] / denominator[i]) +
-            ((numerator[i] % denominator[i]) ?
+         rval[i] = (numerator[i] / denominator[i])
+            + ((numerator[i] % denominator[i]) ?
                ((numerator[i] > 0) == (denominator[i] > 0) ? 1 : -1) : 0);
       }
       return rval;

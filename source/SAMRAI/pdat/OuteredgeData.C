@@ -98,7 +98,7 @@ OuteredgeData<TYPE>::dataExists(
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 OuteredgeData<TYPE>::getPointer(
    int axis,
    int face_normal,
@@ -114,7 +114,7 @@ OuteredgeData<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 OuteredgeData<TYPE>::getPointer(
    int axis,
    int face_normal,

@@ -576,7 +576,7 @@ private:
 
    int d_depth;
 
-   boost::shared_ptr<ArrayData<TYPE> > d_data [SAMRAI::MAX_DIM_VAL][2];
+   boost::shared_ptr<ArrayData<TYPE> > d_data[SAMRAI::MAX_DIM_VAL][2];
 };
 
 }

@@ -322,7 +322,6 @@ BoxLevel::finalize()
    }
 
    computeLocalRedundantData();
-   return;
 }
 
 void
@@ -435,7 +434,7 @@ BoxLevel::removePeriodicImageBoxes()
    if (isInitialized()) {
       clearForBoxChanges();
       d_boxes.removePeriodicImageBoxes();
-      if ( d_parallel_state == GLOBALIZED ) {
+      if (d_parallel_state == GLOBALIZED) {
          d_global_boxes.removePeriodicImageBoxes();
       }
    }
@@ -670,9 +669,9 @@ BoxLevel::cacheGlobalReducedData() const
 
       d_global_bounding_box = d_local_bounding_box;
       d_max_number_of_boxes = d_min_number_of_boxes =
-	 static_cast<int>(getLocalNumberOfBoxes());
+            static_cast<int>(getLocalNumberOfBoxes());
       d_max_number_of_cells = d_min_number_of_cells =
-	 static_cast<int>(getLocalNumberOfCells());
+            static_cast<int>(getLocalNumberOfCells());
       d_global_max_box_size = d_local_max_box_size;
       d_global_min_box_size = d_local_min_box_size;
 
@@ -707,8 +706,10 @@ BoxLevel::cacheGlobalReducedData() const
          int tmpi = -1;
          for (int bn = 0; bn < nblocks; ++bn) {
             for (int i = 0; i < dim.getValue(); ++i) {
-               d_global_bounding_box[bn].lower()[i] = -recv_mesg[++tmpi];
-               d_global_bounding_box[bn].upper()[i] = recv_mesg[++tmpi];
+               d_global_bounding_box[bn].setLower(static_cast<Box::dir_t>(i),
+                  -recv_mesg[++tmpi]);
+               d_global_bounding_box[bn].setUpper(static_cast<Box::dir_t>(i),
+                  recv_mesg[++tmpi]);
                d_global_min_box_size[bn][i] = -recv_mesg[++tmpi];
                d_global_max_box_size[bn][i] = recv_mesg[++tmpi];
             }
@@ -1054,7 +1055,7 @@ BoxLevel::addBox(
 
    BoxContainer::iterator new_iterator = d_boxes.begin();
 
-   if (d_boxes.isEmpty()) {
+   if (d_boxes.empty()) {
       Box new_box(
          box,
          LocalId::getZero(),
@@ -1151,7 +1152,7 @@ void
 BoxLevel::addBox(
    const Box& box)
 {
-   TBOX_ASSERT( box.getLocalId().isValid() );
+   TBOX_ASSERT(box.getLocalId().isValid());
    if (locked()) {
       TBOX_ERROR("BoxLevel::addBox(): operating on locked BoxLevel."
          << std::endl);
@@ -1345,7 +1346,7 @@ BoxLevel::getFirstLocalId() const
    TBOX_ASSERT(isInitialized());
 
    const BoxContainer& boxes = getBoxes();
-   if (boxes.isEmpty()) {
+   if (boxes.empty()) {
       return s_negative_one_local_id;
    }
    BoxContainer::const_iterator ni = boxes.begin();
@@ -1362,7 +1363,7 @@ BoxLevel::getLastLocalId() const
    TBOX_ASSERT(isInitialized());
 
    const BoxContainer& boxes = getBoxes();
-   if (boxes.isEmpty()) {
+   if (boxes.empty()) {
       return s_negative_one_local_id;
    }
    LocalId last_local_id(0);
@@ -1451,7 +1452,7 @@ BoxLevel::getBoxStrict(
    if (box_id.getOwnerRank() != d_mpi.getRank() && d_parallel_state != GLOBALIZED) {
       TBOX_ERROR(
          "BoxLevel::getBoxStrict: cannot get remote box " << box_id
-                                                                 <<
+                                                          <<
          " without being in globalized state." << std::endl);
    }
 #endif
@@ -1530,7 +1531,7 @@ BoxLevel::getFromRestart(
 {
    TBOX_ASSERT(restart_db.isInteger("dim"));
    const tbox::Dimension dim(static_cast<unsigned short>(
-      restart_db.getInteger("dim")));
+                                restart_db.getInteger("dim")));
    TBOX_ASSERT(getDim() == dim);
 
    IntVector ratio(dim);
@@ -1588,11 +1589,10 @@ operator << (
    std::ostream& s,
    const BoxLevel::Outputter& format)
 {
-   if ( format.d_output_statistics ) {
+   if (format.d_output_statistics) {
       BoxLevelStatistics bls(format.d_level);
       bls.printBoxStats(s, format.d_border);
-   }
-   else {
+   } else {
       format.d_level.recursivePrint(s, format.d_border, format.d_detail_depth);
    }
    return s;

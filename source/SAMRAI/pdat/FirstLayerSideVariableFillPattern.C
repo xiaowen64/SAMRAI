@@ -199,8 +199,8 @@ FirstLayerSideVariableFillPattern::computeFillBoxesOverlap(
    }
 
    return boost::make_shared<SideOverlap>(
-      overlap_boxes,
-      hier::Transformation(hier::IntVector::getZero(dim)));
+             overlap_boxes,
+             hier::Transformation(hier::IntVector::getZero(dim)));
 }
 
 }

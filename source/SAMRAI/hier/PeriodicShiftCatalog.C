@@ -40,7 +40,7 @@ PeriodicShiftCatalog::s_finalize_handler(
  ***********************************************************************
  */
 
-PeriodicShiftCatalog*
+PeriodicShiftCatalog *
 PeriodicShiftCatalog::getCatalog(
    const tbox::Dimension& dim)
 {

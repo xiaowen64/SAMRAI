@@ -136,7 +136,7 @@ HierarchyNodeDataOpsInteger::numberOfEntries(
          const int npatches = level->getNumberOfPatches();
 
          TBOX_ASSERT(npatches ==
-                     static_cast<int>(d_nonoverlapping_node_boxes[ln].size()));
+            static_cast<int>(d_nonoverlapping_node_boxes[ln].size()));
 
          for (int il = 0; il < npatches; ++il) {
             hier::BoxContainer::const_iterator lb =

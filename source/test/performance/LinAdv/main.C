@@ -388,7 +388,6 @@ int main(
             hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
-
       // Set up the clustering.
 
       const std::string clustering_type =
@@ -396,7 +395,7 @@ int main(
 
       boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator;
 
-      if ( clustering_type == "BergerRigoutsos" ) {
+      if (clustering_type == "BergerRigoutsos") {
 
          boost::shared_ptr<Database> abr_db(
             input_db->getDatabase("BergerRigoutsos"));
@@ -404,8 +403,7 @@ int main(
             new mesh::BergerRigoutsos(dim, abr_db));
          box_generator = berger_rigoutsos;
 
-      }
-      else if ( clustering_type == "TileClustering" ) {
+      } else if (clustering_type == "TileClustering") {
 
          boost::shared_ptr<Database> tc_db(
             input_db->getDatabase("TileClustering"));
@@ -415,9 +413,6 @@ int main(
 
       }
 
-
-
-
       // Set up the load balancer.
 
       boost::shared_ptr<mesh::LoadBalanceStrategy> load_balancer;
@@ -426,7 +421,7 @@ int main(
       const std::string load_balancer_type =
          main_db->getStringWithDefault("load_balancer_type", "TreeLoadBalancer");
 
-      if ( load_balancer_type == "TreeLoadBalancer" ) {
+      if (load_balancer_type == "TreeLoadBalancer") {
 
          boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer(
             new mesh::TreeLoadBalancer(
@@ -446,8 +441,7 @@ int main(
 
          load_balancer = tree_load_balancer;
          load_balancer0 = tree_load_balancer0;
-      }
-      else if ( load_balancer_type == "CascadePartitioner" ) {
+      } else if (load_balancer_type == "CascadePartitioner") {
 
          boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner(
             new mesh::CascadePartitioner(
@@ -465,8 +459,7 @@ int main(
 
          load_balancer = cascade_partitioner;
          load_balancer0 = cascade_partitioner0;
-      }
-      else if ( load_balancer_type == "ChopAndPackLoadBalancer" ) {
+      } else if (load_balancer_type == "ChopAndPackLoadBalancer") {
 
          boost::shared_ptr<mesh::ChopAndPackLoadBalancer> cap_load_balancer(
             new mesh::ChopAndPackLoadBalancer(
@@ -477,7 +470,6 @@ int main(
          load_balancer = cap_load_balancer;
          load_balancer0 = cap_load_balancer;
       }
-
 
       boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
@@ -630,7 +622,7 @@ int main(
       gridding_algorithm->printStatistics(tbox::plog);
 #endif
 
-      if ( load_balancer_type == "TreeLoadBalancer" ) {
+      if (load_balancer_type == "TreeLoadBalancer") {
          /*
           * Output load balancing results for TreeLoadBalancer.
           */
@@ -641,7 +633,7 @@ int main(
          tbox::plog << "\n\nLoad balancing results:\n";
          tree_load_balancer->printStatistics(tbox::plog);
       }
-      if ( load_balancer_type == "CascadePartitioner" ) {
+      if (load_balancer_type == "CascadePartitioner") {
          /*
           * Output load balancing results for CascadePartitioner.
           */

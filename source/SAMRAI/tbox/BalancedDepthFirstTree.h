@@ -47,11 +47,10 @@ namespace tbox {
  * subtree is composed nodes with contiguous natural ordering.  This
  * again benefits communication.
  */
-   class BalancedDepthFirstTree : public RankTreeStrategy
+class BalancedDepthFirstTree:public RankTreeStrategy
 {
 
 public:
-
    /*!
     * @brief Constructor.
     */
@@ -93,7 +92,7 @@ public:
     */
    void
    setupTree(
-      const RankGroup &rank_group,
+      const RankGroup& rank_group,
       int my_rank);
 
    /*!
@@ -118,8 +117,8 @@ public:
     */
    int
    getChildRank(unsigned int child_number) const {
-      return ( child_number < d_num_children ) ?
-         d_children[child_number] : getInvalidRank();
+      return (child_number < d_num_children) ?
+             d_children[child_number] : getInvalidRank();
    }
 
    /*!
@@ -176,12 +175,11 @@ public:
     */
    void
    setLeftLeafSwitching(bool do_left_leaf_switch) {
-      TBOX_ASSERT( d_rank == getInvalidRank() );
+      TBOX_ASSERT(d_rank == getInvalidRank());
       d_do_left_leaf_switch = do_left_leaf_switch;
    }
 
 private:
-
    // Unimplemented copy constructor.
    BalancedDepthFirstTree(
       const BalancedDepthFirstTree& other);

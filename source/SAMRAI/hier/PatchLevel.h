@@ -142,7 +142,7 @@ public:
       bool defer_boundary_box_creation = false);
 
    /*!
-    * @brief Construct a new patch level from the specified PatchLevel 
+    * @brief Construct a new patch level from the specified PatchLevel
     * restart database.
     *
     * The box, mapping, and ratio to level zero data which are normally
@@ -333,8 +333,8 @@ public:
       PatchContainer::const_iterator it = d_patches.find(mbid);
       if (it == d_patches.end()) {
          TBOX_ERROR("PatchLevel::getPatch error: GlobalId "
-                    << gid << " does not exist locally.\n"
-                    << "You must specify the GlobalId of a current local patch.");
+            << gid << " does not exist locally.\n"
+            << "You must specify the GlobalId of a current local patch.");
       }
       return it->second;
    }
@@ -355,9 +355,9 @@ public:
       const PatchContainer::const_iterator mi = d_patches.find(mbid);
       if (mi == d_patches.end()) {
          TBOX_ERROR("PatchLevel::getPatch error: BoxId "
-                    << mbid << " does not exist locally.\n"
-                    << "You must specify the BoxId of a current local box"
-                    << " that is not a periodic image.");
+            << mbid << " does not exist locally.\n"
+            << "You must specify the BoxId of a current local box"
+            << " that is not a periodic image.");
       }
       return (*mi).second;
    }
@@ -368,15 +368,15 @@ public:
     * The index specifies the position of the patch as would be
     * encountered when iterating through the patches.
     */
-   const boost::shared_ptr<Patch> &getPatch( size_t index ) const
-      {
-         if ( index >= d_patch_vector.size() ) {
-            TBOX_ERROR("PatchLevel::getPatch error: index "
-                       << index << " is too big.\n"
-                       << "There are only " << d_patch_vector.size() << " patches.");
-         }
-         return d_patch_vector[index];
+   const boost::shared_ptr<Patch>& getPatch(size_t index) const
+   {
+      if (index >= d_patch_vector.size()) {
+         TBOX_ERROR("PatchLevel::getPatch error: index "
+            << index << " is too big.\n"
+            << "There are only " << d_patch_vector.size() << " patches.");
       }
+      return d_patch_vector[index];
+   }
 
    /*!
     * @brief Get the PatchDescriptor
@@ -1141,7 +1141,7 @@ public:
     */
    class Iterator
    {
-friend class PatchLevel;
+      friend class PatchLevel;
 
 public:
       /*!

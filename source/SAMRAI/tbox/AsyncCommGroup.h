@@ -107,8 +107,8 @@ public:
     */
    AsyncCommGroup(
       const size_t nchild,
-      AsyncCommStage * stage,
-      AsyncCommStage::Handler * handler = 0);
+      AsyncCommStage* stage,
+      AsyncCommStage::Handler* handler = 0);
 
    /*!
     * @brief Destructor.
@@ -135,8 +135,8 @@ public:
    void
    initialize(
       const int nchild,
-      AsyncCommStage * stage,
-      AsyncCommStage::Handler * handler = 0);
+      AsyncCommStage* stage,
+      AsyncCommStage::Handler* handler = 0);
 
    //@{
    //! @name Define the communication group
@@ -153,7 +153,7 @@ public:
    void
    setGroupAndRootIndex(
       const SAMRAI_MPI& mpi,
-      const int * group_ranks,
+      const int* group_ranks,
       const int group_size,
       const int root_index);
 
@@ -167,7 +167,7 @@ public:
    void
    setGroupAndRootRank(
       const SAMRAI_MPI& mpi,
-      const int * group_ranks,
+      const int* group_ranks,
       const int group_size,
       const int root_rank);
 
@@ -300,7 +300,7 @@ public:
     */
    bool
    beginBcast(
-      int * buffer,
+      int* buffer,
       int size);
 
    /*!
@@ -348,7 +348,7 @@ public:
     */
    bool
    beginGather(
-      int * buffer,
+      int* buffer,
       int size);
 
    /*!
@@ -379,7 +379,7 @@ public:
     */
    bool
    beginSumReduce(
-      int * buffer,
+      int* buffer,
       int size);
 
    /*!
@@ -542,9 +542,9 @@ private:
    void
    resetStatus()
    {
-      d_mpi_status.MPI_TAG=
-         d_mpi_status.MPI_SOURCE=
-            d_mpi_status.MPI_ERROR= -1;
+      d_mpi_status.MPI_TAG =
+         d_mpi_status.MPI_SOURCE =
+            d_mpi_status.MPI_ERROR = -1;
    }
 
    //@{

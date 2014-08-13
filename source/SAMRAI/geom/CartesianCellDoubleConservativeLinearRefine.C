@@ -96,7 +96,7 @@ CartesianCellDoubleConservativeLinearRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianCellDoubleConservativeLinearRefine::getStencilWidth( const tbox::Dimension &dim ) const
+CartesianCellDoubleConservativeLinearRefine::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getOne(dim);
 }

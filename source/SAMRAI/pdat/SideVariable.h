@@ -69,7 +69,7 @@ public:
     * all coordinate directions.
     *
     * Constructs a SideVariable the same as the first constructor, except
-    * there is no directions argument, meaning that data is expected to 
+    * there is no directions argument, meaning that data is expected to
     * exist on the sides in all coordinate directions.
     */
    SideVariable(

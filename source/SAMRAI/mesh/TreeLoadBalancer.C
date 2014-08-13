@@ -51,7 +51,6 @@ const int TreeLoadBalancer::TreeLoadBalancer_FIRSTDATALEN;
 
 const int TreeLoadBalancer::s_default_data_id = -1;
 
-
 /*
  *************************************************************************
  * TreeLoadBalancer constructor.
@@ -62,7 +61,7 @@ TreeLoadBalancer::TreeLoadBalancer(
    const tbox::Dimension& dim,
    const std::string& name,
    const boost::shared_ptr<tbox::Database>& input_db,
-   const boost::shared_ptr<tbox::RankTreeStrategy> &rank_tree):
+   const boost::shared_ptr<tbox::RankTreeStrategy>& rank_tree):
    d_dim(dim),
    d_object_name(name),
    d_mpi(tbox::SAMRAI_MPI::commNull),
@@ -71,7 +70,8 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_max_spread_procs(500),
    d_voucher_mode(false),
    d_allow_box_breaking(true),
-   d_rank_tree(rank_tree ? rank_tree : boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::CenteredRankTree) ),
+   d_rank_tree(rank_tree ? rank_tree : boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::
+                                                                                 CenteredRankTree)),
    d_comm_graph_writer(),
    d_master_workload_data_id(s_default_data_id),
    d_flexible_load_tol(0.05),
@@ -91,8 +91,6 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_mca.setTimerPrefix(d_object_name);
 }
 
-
-
 /*
  *************************************************************************
  * TreeLoadBalancer constructor.
@@ -103,8 +101,6 @@ TreeLoadBalancer::~TreeLoadBalancer()
 {
    freeMPICommunicator();
 }
-
-
 
 /*
  *************************************************************************
@@ -119,12 +115,10 @@ TreeLoadBalancer::getLoadBalanceDependsOnPatchData(
    return getWorkloadDataId(level_number) < 0 ? false : true;
 }
 
-
-
 /*
-**************************************************************************
-**************************************************************************
-*/
+ **************************************************************************
+ **************************************************************************
+ */
 void
 TreeLoadBalancer::setWorkloadPatchDataIndex(
    int data_id,
@@ -154,8 +148,6 @@ TreeLoadBalancer::setWorkloadPatchDataIndex(
    }
 }
 
-
-
 /*
  *************************************************************************
  * This method implements the abstract LoadBalanceStrategy interface.
@@ -182,10 +174,14 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    const hier::IntVector& cut_factor,
    const tbox::RankGroup& rank_group) const
 {
+#ifndef DEBUG_CHECK_DIM_ASSERTIONS
+   NULL_USE(domain_box_level);
+#endif
    NULL_USE(hierarchy);
    NULL_USE(level_number);
    TBOX_ASSERT(!balance_to_reference || balance_to_reference->hasTranspose());
-   TBOX_ASSERT(!balance_to_reference || balance_to_reference->isTransposeOf(balance_to_reference->getTranspose()));
+   TBOX_ASSERT(!balance_to_reference ||
+      balance_to_reference->isTransposeOf(balance_to_reference->getTranspose()));
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY6(d_dim,
       balance_box_level,
       min_size,
@@ -197,8 +193,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
    }
 
-
-   if ( d_mpi_is_dupe ) {
+   if (d_mpi_is_dupe) {
       /*
        * If user has set the duplicate communicator, make sure it is
        * compatible with the BoxLevel involved.
@@ -214,8 +209,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
                     << "a BoxLevel with an incongruent SAMRAI_MPI.");
       }
 #endif
-   }
-   else {
+   } else {
       d_mpi = balance_box_level.getMPI();
    }
 
@@ -229,12 +223,12 @@ TreeLoadBalancer::loadBalanceBoxLevel(
                  << balance_box_level.format("  ", 2);
    }
 
-
    // Set effective_cut_factor to least common multiple of cut_factor and d_tile_size.
    hier::IntVector effective_cut_factor = cut_factor;
-   if ( d_tile_size != hier::IntVector::getOne(d_dim) ) {
-      for ( int d=0; d<d_dim.getValue(); ++d ) {
-         while ( effective_cut_factor[d]/d_tile_size[d]*d_tile_size[d] != effective_cut_factor[d] ) {
+   if (d_tile_size != hier::IntVector::getOne(d_dim)) {
+      for (int d = 0; d < d_dim.getValue(); ++d) {
+         while (effective_cut_factor[d] / d_tile_size[d] * d_tile_size[d] !=
+                effective_cut_factor[d]) {
             effective_cut_factor[d] += cut_factor[d];
          }
       }
@@ -243,7 +237,6 @@ TreeLoadBalancer::loadBalanceBoxLevel(
                     << effective_cut_factor << std::endl;
       }
    }
-
 
    /*
     * Periodic image Box should be ignored during load balancing
@@ -267,7 +260,6 @@ TreeLoadBalancer::loadBalanceBoxLevel(
 
    }
 
-
    if (d_barrier_before) {
       t_barrier_before->start();
       d_mpi.Barrier();
@@ -284,10 +276,10 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    t_load_balance_box_level->start();
 
    d_pparams = boost::make_shared<PartitioningParams>(
-      *balance_box_level.getGridGeometry(),
-      balance_box_level.getRefinementRatio(),
-      min_size, max_size, bad_interval, effective_cut_factor,
-      d_flexible_load_tol);
+         *balance_box_level.getGridGeometry(),
+         balance_box_level.getRefinementRatio(),
+         min_size, max_size, bad_interval, effective_cut_factor,
+         d_flexible_load_tol);
 
    /*
     * We expect the domain box_level to be in globalized state.
@@ -304,7 +296,6 @@ TreeLoadBalancer::loadBalanceBoxLevel(
 
    size_t nproc_with_initial_load =
       balance_box_level.getLocalNumberOfBoxes() > 0;
-
 
    /*
     * Determine the total load and number of processes that has any
@@ -328,7 +319,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    t_compute_global_load->stop();
 
    if (d_print_steps) {
-      tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
+      tbox::plog.setf(std::ios_base::fmtflags(0), std::ios_base::floatfield);
       tbox::plog.precision(6);
       tbox::plog << d_object_name << "::loadBalanceBoxLevel"
                  << " max_local_load=" << max_local_load
@@ -341,9 +332,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
                  << "^" << d_dim << " per proc." << std::endl;
    }
 
-
    d_global_avg_load = global_sum_load / rank_group.size();
-
 
    /*
     * Compute how many balancing cycles to use based on severity of
@@ -363,7 +352,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
     * to support such a request and multi-cycling simultaneously.
     */
    const double fanout_size = d_global_avg_load > d_pparams->getLoadComparisonTol() ?
-      max_local_load/d_global_avg_load : 1.0;
+      max_local_load / d_global_avg_load : 1.0;
    const int number_of_cycles = !rank_group.containsAllRanks() ? 1 :
       int(ceil( log(fanout_size)/log(static_cast<double>(d_max_spread_procs)) ));
    if (d_print_steps) {
@@ -382,10 +371,10 @@ TreeLoadBalancer::loadBalanceBoxLevel(
     * across all processes.
     */
 
-   for (int icycle = number_of_cycles-1; icycle >= 0; --icycle) {
+   for (int icycle = number_of_cycles - 1; icycle >= 0; --icycle) {
 
       // If not the first cycle, local_load needs updating.
-      if (icycle != number_of_cycles-1) {
+      if (icycle != number_of_cycles - 1) {
          local_load = computeLocalLoad(balance_box_level);
       }
 
@@ -399,9 +388,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
             balance_box_level.getMPI());
       }
 
-
       const bool last_cycle = (icycle == 0);
-
 
       /*
        * Determine whether to use rank_group as is or subgroup it for
@@ -414,14 +401,13 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       int group_num = 0;
 
       tbox::RankGroup cycle_rank_group(d_mpi);
-      if ( !last_cycle ) {
+      if (!last_cycle) {
          createBalanceRankGroupBasedOnCycles(
             cycle_rank_group,
             number_of_groups,
             group_num,
-            1 - double(icycle)/number_of_cycles );
+            1 - double(icycle) / number_of_cycles);
       }
-
 
       /*
        * Compute the group's load.
@@ -448,8 +434,8 @@ TreeLoadBalancer::loadBalanceBoxLevel(
          group_loads[group_num] = local_load;
          if (d_mpi.getSize() > 1) {
             d_mpi.AllReduce(&group_loads[0],
-                            static_cast<int>(group_loads.size()),
-                            MPI_SUM);
+               static_cast<int>(group_loads.size()),
+               MPI_SUM);
          }
          group_sum_load = group_loads[group_num];
 
@@ -475,7 +461,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
          balance_box_level,
          balance_to_reference,
          cycle_rank_group,
-         group_sum_load );
+         group_sum_load);
       t_load_balance_for_cycle[icycle]->stop();
 
       if (d_barrier_after) {
@@ -485,7 +471,6 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       }
 
    }
-
 
    /*
     * If max_size is given (positive), constrain boxes to the given
@@ -500,7 +485,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       BalanceUtilities::constrainMaxBoxSizes(
          balance_box_level,
          balance_to_reference ? &balance_to_reference->getTranspose() : 0,
-         *d_pparams );
+         *d_pparams);
       t_constrain_size->stop();
 
       if (d_print_steps) {
@@ -509,7 +494,6 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       }
 
    }
-
 
    /*
     * Finished load balancing.  Clean up and wrap up.
@@ -575,8 +559,6 @@ TreeLoadBalancer::loadBalanceBoxLevel(
 
 }
 
-
-
 /*
  *************************************************************************
  * Given an "unbalanced" BoxLevel, load balance it within the given
@@ -589,7 +571,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
    hier::BoxLevel& balance_box_level,
    hier::Connector* balance_to_reference,
    const tbox::RankGroup& rank_group,
-   const double group_sum_load ) const
+   const double group_sum_load) const
 {
    TBOX_ASSERT(!balance_to_reference || balance_to_reference->hasTranspose());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, balance_box_level);
@@ -603,17 +585,16 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       balance_box_level.getGridGeometry(),
       balance_box_level.getMPI());
    hier::MappingConnector balanced_to_unbalanced(balanced_box_level,
-         balance_box_level,
-         hier::IntVector::getZero(d_dim));
+                                                 balance_box_level,
+                                                 hier::IntVector::getZero(d_dim));
    hier::MappingConnector unbalanced_to_balanced(balance_box_level,
-         balanced_box_level,
-         hier::IntVector::getZero(d_dim));
+                                                 balanced_box_level,
+                                                 hier::IntVector::getZero(d_dim));
    unbalanced_to_balanced.setTranspose(&balanced_to_unbalanced, false);
-
 
    t_get_map->start();
 
-   if ( !rank_group.isMember(d_mpi.getRank()) ) {
+   if (!rank_group.isMember(d_mpi.getRank())) {
       /*
        * If the local process is not a member of the RankGroup, it
        * does not participate in the work and just sets the output
@@ -623,25 +604,23 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
        * to prebalanceBoxLevel.  Having boxes without being in the
        * given rank group leads to undefined results.
        */
-      TBOX_ASSERT( balance_box_level.getLocalNumberOfBoxes() == 0 );
+      TBOX_ASSERT(balance_box_level.getLocalNumberOfBoxes() == 0);
 
       t_post_load_distribution_barrier->start();
       d_mpi.Barrier();
       t_post_load_distribution_barrier->stop();
 
-   }
-   else {
+   } else {
 
       /*
        * Create a concrete TransitLoad container to hold the work
        * being redistributed.
        */
       boost::shared_ptr<TransitLoad> balanced_work;
-      if ( d_voucher_mode ) {
+      if (d_voucher_mode) {
          balanced_work = boost::make_shared<VoucherTransitLoad>(*d_pparams);
          balanced_work->setTimerPrefix(d_object_name + "::VoucherTransitLoad");
-      }
-      else {
+      } else {
          balanced_work = boost::make_shared<BoxTransitSet>(*d_pparams);
          balanced_work->setTimerPrefix(d_object_name + "::BoxTransitSet");
       }
@@ -650,7 +629,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
          *balanced_work,
          balance_box_level,
          rank_group,
-         group_sum_load );
+         group_sum_load);
 
       t_post_load_distribution_barrier->start();
       d_mpi.Barrier();
@@ -708,7 +687,6 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
                  << '\n';
    }
 
-
    if (balance_to_reference && balance_to_reference->hasTranspose()) {
       t_use_map->barrierAndStart();
       d_mca.modify(
@@ -725,11 +703,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       tbox::plog << d_object_name << "::LoadBalanceWithinRankGroup: returning"
                  << std::endl;
    }
-
-   return;
 }
-
-
 
 /*
  *************************************************************************
@@ -739,10 +713,10 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
  */
 void
 TreeLoadBalancer::distributeLoadAcrossRankGroup(
-   TransitLoad &balanced_work,
-   const hier::BoxLevel &unbalanced_box_level,
+   TransitLoad& balanced_work,
+   const hier::BoxLevel& unbalanced_box_level,
    const tbox::RankGroup& rank_group,
-   double group_sum_load ) const
+   double group_sum_load) const
 {
    t_distribute_load_across_rank_group->start();
 
@@ -752,7 +726,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
    double group_avg_load = group_sum_load / rank_group.size();
 
    if (d_print_steps) {
-      tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
+      tbox::plog.setf(std::ios_base::fmtflags(0), std::ios_base::floatfield);
       tbox::plog.precision(6);
       tbox::plog << d_object_name << "::LoadBalanceWithinRankGroup balancing "
                  << group_sum_load << " units in group of "
@@ -763,7 +737,6 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
                  << " times min size of " << d_pparams->getMinBoxSize()
                  << std::endl;
    }
-
 
    /*
     * Before the last cycle, it is possible for the group average load
@@ -777,7 +750,6 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
    group_avg_load =
       tbox::MathUtilities<double>::Max(group_avg_load, d_global_avg_load);
 
-
    // Set parameters governing box breaking.
    balanced_work.setAllowBoxBreaking(d_allow_box_breaking);
    const double ideal_box_width = pow(group_avg_load, 1.0/d_dim.getValue());
@@ -788,13 +760,12 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
                  << std::endl;
    }
 
-
    /*
     * Arrange the group ranks in a rank tree in order to get
     * the parent/children in the group.
     */
-   d_rank_tree->setupTree( rank_group, d_mpi.getRank() );
-   if ( d_print_steps ) {
+   d_rank_tree->setupTree(rank_group, d_mpi.getRank());
+   if (d_print_steps) {
       // Write local part of tree to log.
       tbox::plog << "TreeLoadBalancer tree:\n"
                  << "  Root rank: " << d_rank_tree->getRootRank() << '\n'
@@ -802,15 +773,15 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
                  << "  Generation number: " << d_rank_tree->getGenerationNumber() << '\n'
                  << "  Number of children: " << d_rank_tree->getNumberOfChildren() << '\n'
                  << "  Local relatives: "
-                 << "  " << d_rank_tree->getParentRank() << " <- [" << d_rank_tree->getRank() << "] -> {";
-      for ( unsigned int i=0; i<d_rank_tree->getNumberOfChildren(); ++i ) {
+                 << "  " << d_rank_tree->getParentRank() << " <- [" << d_rank_tree->getRank()
+                 << "] -> {";
+      for (unsigned int i = 0; i < d_rank_tree->getNumberOfChildren(); ++i) {
          tbox::plog << ' ' << d_rank_tree->getChildRank(i);
       }
       tbox::plog << " }" << std::endl;
    }
 
    const int num_children = d_rank_tree->getNumberOfChildren();
-
 
    /*
     * Communication objects for sending to/receiving from
@@ -829,7 +800,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
       child_sends,
       parent_send_stage,
       parent_send,
-      rank_group );
+      rank_group);
    child_send_stage.setCommunicationWaitTimer(t_child_send_wait);
    parent_send_stage.setCommunicationWaitTimer(t_parent_send_wait);
 
@@ -843,11 +814,9 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
       child_recvs,
       parent_recv_stage,
       parent_recv,
-      rank_group );
+      rank_group);
    child_recv_stage.setCommunicationWaitTimer(t_child_recv_wait);
    parent_recv_stage.setCommunicationWaitTimer(t_parent_recv_wait);
-
-
 
    /*
     * Essential outline of the tree load balancing algorithm as implemented:
@@ -887,13 +856,11 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
    }
    t_get_load_from_children->stop();
 
-
    // State of the tree, as seen by local process.
    BranchData my_branch(*d_pparams, balanced_work);
    my_branch.setTimerPrefix(d_object_name);
    my_branch.setPrintSteps(d_print_steps);
    std::vector<BranchData> child_branches(num_children, my_branch);
-
 
    /*
     * Step 2, local part:
@@ -908,26 +875,24 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
     * of the algorithm, everything left unassigned is actually the
     * balanced load.
     */
-   TransitLoad &unassigned(balanced_work);
+   TransitLoad& unassigned(balanced_work);
 
    t_local_load_moves->start();
    unassigned.insertAll(unbalanced_box_level.getBoxes());
    t_local_load_moves->stop();
 
-   my_branch.setStartingLoad( group_avg_load,
-                              unassigned.getSumLoad(),
-                              group_avg_load*(1+d_flexible_load_tol) );
+   my_branch.setStartingLoad(group_avg_load,
+      unassigned.getSumLoad(),
+      group_avg_load * (1 + d_flexible_load_tol));
 
    if (d_print_steps) {
-      tbox::plog.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
+      tbox::plog.setf(std::ios_base::fmtflags(0), std::ios_base::floatfield);
       tbox::plog.precision(6);
       tbox::plog << "Initial local load: ";
       unassigned.recursivePrint(tbox::plog, "", 1);
       my_branch.recursivePrint(tbox::plog, "", 0);
       tbox::plog << std::endl;
    }
-
-
 
    /*
     * Step 2, remote part:
@@ -936,8 +901,8 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
     * its data and add any imported work to unassigned bin.
     */
    t_get_load_from_children->start();
-   while ( child_recv_stage.hasCompletedMembers() ||
-           child_recv_stage.advanceSome() ) {
+   while (child_recv_stage.hasCompletedMembers() ||
+          child_recv_stage.advanceSome()) {
 
       tbox::AsyncCommPeer<char>* child_recv =
          CPP_CAST<tbox::AsyncCommPeer<char> *>(child_recv_stage.popCompletionQueue());
@@ -961,7 +926,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
       child_branches[cindex].unpackDataFromChild(mstream);
 
       t_local_load_moves->start();
-      my_branch.incorporateChild( child_branches[cindex] );
+      my_branch.incorporateChild(child_branches[cindex]);
       child_branches[cindex].moveInboundLoadToReserve(unassigned);
       t_local_load_moves->stop();
 
@@ -986,7 +951,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
     * unbalance observed at 1M procs.  There should be a corresponding
     * change to computeSurplusPerEffectiveDescendent().
     */
-   if ( my_branch.effDeficit() > 0 && !d_rank_tree->isRoot() ) {
+   if (my_branch.effDeficit() > 0 && !d_rank_tree->isRoot()) {
       my_branch.setWantsWorkFromParent();
    }
 
@@ -996,16 +961,15 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
          tbox::plog << "Child "
                     << c << ':' << d_rank_tree->getChildRank(c)
                     << " branch:\n";
-         child_branches[c].recursivePrint( tbox::plog, "  " );
+         child_branches[c].recursivePrint(tbox::plog, "  ");
       }
       tbox::plog << "Initial branch:\n";
-      my_branch.recursivePrint( tbox::plog, "  " );
+      my_branch.recursivePrint(tbox::plog, "  ");
       tbox::plog << "unassigned: ";
       unassigned.recursivePrint(tbox::plog, "  ", 1);
    }
 
    t_get_load_from_children->stop();
-
 
    /*
     * Step 3:
@@ -1015,7 +979,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
    t_send_load_to_parent->start();
    if (parent_send != 0) {
 
-      if ( my_branch.effExcess() > 0 ) {
+      if (my_branch.effExcess() > 0) {
 
          /*
           * Try to send work in the range of [effective excess,surplus].
@@ -1030,7 +994,8 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
           * overloaded.  Keeping the overload in the branch also
           * maintains some data locality.
           */
-         const LoadType export_load_low = tbox::MathUtilities<double>::Min(my_branch.effExcess(), my_branch.surplus());
+         const LoadType export_load_low = tbox::MathUtilities<double>::Min(
+               my_branch.effExcess(), my_branch.surplus());
          const LoadType export_load_high = my_branch.surplus();
          const LoadType export_load_ideal = my_branch.surplus();
 
@@ -1046,7 +1011,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
             unassigned,
             export_load_ideal,
             export_load_low,
-            export_load_high );
+            export_load_high);
          t_local_load_moves->stop();
 
       }
@@ -1055,13 +1020,11 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
       my_branch.packDataToParent(mstream);
       parent_send->setSendTimer(t_parent_send_wait);
       parent_send->setWaitTimer(t_parent_send_wait);
-      parent_send->beginSend(static_cast<const char*>(mstream.getBufferStart()),
-                             static_cast<int>(mstream.getCurrentSize()));
+      parent_send->beginSend(static_cast<const char *>(mstream.getBufferStart()),
+         static_cast<int>(mstream.getCurrentSize()));
 
    }
    t_send_load_to_parent->stop();
-
-
 
    /*
     * Step 4:
@@ -1092,13 +1055,12 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
       my_branch.moveInboundLoadToReserve(unassigned);
       t_local_load_moves->stop();
 
-      if ( unassigned_highwater < unassigned.getNumberOfItems() ) {
+      if (unassigned_highwater < unassigned.getNumberOfItems()) {
          unassigned_highwater = unassigned.getNumberOfItems();
       }
 
       t_get_load_from_parent->stop();
-   }
-   else {
+   } else {
       if (d_print_steps) {
          tbox::plog << "Did not request work from parent.\n";
       }
@@ -1106,12 +1068,10 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
 
    if (d_print_steps) {
       tbox::plog << "Postparent branch:\n";
-      my_branch.recursivePrint( tbox::plog, "  " );
+      my_branch.recursivePrint(tbox::plog, "  ");
       tbox::plog << "unassigned: ";
       unassigned.recursivePrint(tbox::plog, "  ", 1);
    }
-
-
 
    /*
     * Step 5:
@@ -1132,18 +1092,18 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
                unassigned.getSumLoad(),
                group_avg_load,
                child_branches,
-               ichild );
+               ichild);
 
          const LoadType export_load_ideal = recip_branch.effDeficit()
             + (surplus_per_eff_des < 0.0 ? 0.0 :
-               surplus_per_eff_des*recip_branch.numProcsEffective());
+               surplus_per_eff_des * recip_branch.numProcsEffective());
 
          const LoadType export_load_low = recip_branch.effDeficit()
-            + surplus_per_eff_des*recip_branch.numProcsEffective();
+            + surplus_per_eff_des * recip_branch.numProcsEffective();
 
          const LoadType export_load_high =
             tbox::MathUtilities<double>::Max(export_load_ideal,
-                                             recip_branch.effMargin());
+               recip_branch.effMargin());
 
          if (d_print_steps) {
             tbox::plog << "Pushing to child " << ichild << " ("
@@ -1157,7 +1117,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
             unassigned,
             export_load_ideal,
             export_load_low,
-            export_load_high );
+            export_load_high);
          t_local_load_moves->stop();
 
          if (d_print_steps) {
@@ -1169,8 +1129,8 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
          recip_branch.packDataToChild(mstream);
          child_sends[ichild].setSendTimer(t_child_send_wait);
          child_sends[ichild].setWaitTimer(t_child_send_wait);
-         child_sends[ichild].beginSend(static_cast<const char*>(mstream.getBufferStart()),
-                                       static_cast<int>(mstream.getCurrentSize()));
+         child_sends[ichild].beginSend(static_cast<const char *>(mstream.getBufferStart()),
+            static_cast<int>(mstream.getCurrentSize()));
 
       }
 
@@ -1178,26 +1138,25 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
 
    t_send_load_to_children->stop();
 
-
    if (d_print_steps) {
       tbox::plog << "After settling parent and children, unassigned is: ";
       unassigned.recursivePrint(tbox::plog, "  ", 1);
       tbox::plog << "Final local load (normalized) is "
-                 << (balanced_work.getSumLoad()/group_avg_load)
-                 << ", surplus = " << (balanced_work.getSumLoad()-group_avg_load)
-                 << ", excess = " << (balanced_work.getSumLoad()-(1+d_flexible_load_tol)*group_avg_load)
+                 << (balanced_work.getSumLoad() / group_avg_load)
+                 << ", surplus = " << (balanced_work.getSumLoad() - group_avg_load)
+                 << ", excess = "
+                 << (balanced_work.getSumLoad() - (1 + d_flexible_load_tol) * group_avg_load)
                  << std::endl;
       tbox::plog << "Final branch:\n";
-      my_branch.recursivePrint( tbox::plog, "  " );
+      my_branch.recursivePrint(tbox::plog, "  ");
 
       for (int ichild = 0; ichild < num_children; ++ichild) {
          tbox::plog << "Final child "
                     << ichild << ":" << d_rank_tree->getChildRank(ichild)
                     << " branch:\n";
-         child_branches[ichild].recursivePrint(tbox::plog, "  " );
+         child_branches[ichild].recursivePrint(tbox::plog, "  ");
       }
    }
-
 
    /*
     * Finish messages before starting edge info exchange.
@@ -1229,8 +1188,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
       tbox::plog << d_object_name << "::loadBalanceWithinRankGroup: completed sends.\n";
    }
 
-
-   if ( d_comm_graph_writer ) {
+   if (d_comm_graph_writer) {
       /*
        * To evaluate performance of the algorithm, record these edges:
        * - Two edges to parent: load shipped, and items shipped.
@@ -1239,7 +1197,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
        * Record these nodes:
        * - Number of final boxes:
        */
-      d_comm_graph_writer->addRecord( d_mpi, size_t(10), size_t(7) );
+      d_comm_graph_writer->addRecord(d_mpi, size_t(10), size_t(7));
 
       const int prank = (d_rank_tree->isRoot() ? -1 : d_rank_tree->getParentRank());
 
@@ -1248,105 +1206,105 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
          "load up",
          double(my_branch.getWantsWorkFromParent() ? 0 : my_branch.getShipmentLoad()),
          tbox::CommGraphWriter::TO,
-         prank );
+         prank);
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(1),
          "items up",
          double(my_branch.getWantsWorkFromParent() ? 0 : my_branch.getShipmentPackageCount()),
          tbox::CommGraphWriter::TO,
-         prank );
+         prank);
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(2),
          "origins up",
          double(my_branch.getWantsWorkFromParent() ? 0 : my_branch.getShipmentOriginatorCount()),
          tbox::CommGraphWriter::TO,
-         prank );
+         prank);
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(3),
          "load down",
          double(my_branch.getWantsWorkFromParent() ? my_branch.getShipmentLoad() : 0),
          tbox::CommGraphWriter::FROM,
-         (my_branch.getWantsWorkFromParent() ? prank : -1) );
+         (my_branch.getWantsWorkFromParent() ? prank : -1));
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(4),
          "items down",
          double(my_branch.getWantsWorkFromParent() ? my_branch.getShipmentPackageCount() : 0),
          tbox::CommGraphWriter::FROM,
-         (my_branch.getWantsWorkFromParent() ? prank : -1) );
+         (my_branch.getWantsWorkFromParent() ? prank : -1));
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(5),
          "origins down",
          double(my_branch.getWantsWorkFromParent() ? my_branch.getShipmentOriginatorCount() : 0),
          tbox::CommGraphWriter::FROM,
-         (my_branch.getWantsWorkFromParent() ? prank : -1) );
+         (my_branch.getWantsWorkFromParent() ? prank : -1));
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(6),
          "bytes down",
          double(my_branch.getWantsWorkFromParent() ? parent_recv->getRecvSize() : int(0)),
          tbox::CommGraphWriter::FROM,
-         (my_branch.getWantsWorkFromParent() ? prank : -1) );
+         (my_branch.getWantsWorkFromParent() ? prank : -1));
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(7),
          "child wait",
          t_child_recv_wait->getTotalWallclockTime(),
          tbox::CommGraphWriter::FROM,
-         d_rank_tree->getChildRank(0) );
+         d_rank_tree->getChildRank(0));
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(8),
          "child wait",
          t_child_recv_wait->getTotalWallclockTime(),
          tbox::CommGraphWriter::FROM,
-         d_rank_tree->getChildRank(1) );
+         d_rank_tree->getChildRank(1));
 
       d_comm_graph_writer->setEdgeInCurrentRecord(
          size_t(9),
          "parent wait",
          t_parent_recv_wait->getTotalWallclockTime(),
          tbox::CommGraphWriter::FROM,
-         (my_branch.getWantsWorkFromParent() ? prank : -1) );
+         (my_branch.getWantsWorkFromParent() ? prank : -1));
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(0),
          "initial box count",
-         double(unbalanced_box_level.getLocalNumberOfBoxes()) );
+         double(unbalanced_box_level.getLocalNumberOfBoxes()));
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(1),
          "initial load",
-         double(unbalanced_box_level.getLocalNumberOfCells())/group_avg_load );
+         double(unbalanced_box_level.getLocalNumberOfCells()) / group_avg_load);
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(2),
          "final box count",
-         double(balanced_work.getNumberOfItems()) );
+         double(balanced_work.getNumberOfItems()));
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(3),
          "final load",
-         double(balanced_work.getSumLoad())/group_avg_load );
+         double(balanced_work.getSumLoad()) / group_avg_load);
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(4),
          "final surplus",
-         double(balanced_work.getSumLoad())-group_avg_load );
+         double(balanced_work.getSumLoad()) - group_avg_load);
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(5),
          "branch surplus",
-         double(my_branch.surplus()) );
+         double(my_branch.surplus()));
 
       d_comm_graph_writer->setNodeValueInCurrentRecord(
          size_t(6),
          "unassigned highwater",
-         double(unassigned_highwater) );
+         double(unassigned_highwater));
 
    }
 
@@ -1354,11 +1312,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
    destroyAsyncCommObjects(child_recvs, parent_recv);
 
    t_distribute_load_across_rank_group->stop();
-
-   return;
 }
-
-
 
 /*
  *************************************************************************
@@ -1372,19 +1326,19 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
  */
 TreeLoadBalancer::LoadType
 TreeLoadBalancer::computeSurplusPerEffectiveDescendent(
-   const LoadType &unassigned_load,
-   const LoadType &group_avg_load,
-   const std::vector<BranchData> &child_branches,
-   int first_child ) const
+   const LoadType& unassigned_load,
+   const LoadType& group_avg_load,
+   const std::vector<BranchData>& child_branches,
+   int first_child) const
 {
-   const LoadType load_for_me = group_avg_load*(1 + d_flexible_load_tol);
+   const LoadType load_for_me = group_avg_load * (1 + d_flexible_load_tol);
 
    const LoadType load_for_descendents = unassigned_load - load_for_me;
 
    LoadType ideal_export_to_children = 0.0;
    int num_effective_des = 0;
    for (size_t ichild = first_child; ichild < child_branches.size(); ++ichild) {
-      if ( child_branches[ichild].getWantsWorkFromParent() ) {
+      if (child_branches[ichild].getWantsWorkFromParent()) {
          ideal_export_to_children += child_branches[ichild].effDeficit();
          num_effective_des += child_branches[ichild].numProcsEffective();
       }
@@ -1393,7 +1347,7 @@ TreeLoadBalancer::computeSurplusPerEffectiveDescendent(
    const LoadType surplus_per_effective_descendent =
       (load_for_descendents - ideal_export_to_children) / num_effective_des;
 
-   if ( d_print_steps ) {
+   if (d_print_steps) {
       tbox::plog << "load_for_me = " << load_for_me
                  << ",  load_for_descendents = " << load_for_descendents
                  << ",  num_effective_des = " << num_effective_des
@@ -1404,8 +1358,6 @@ TreeLoadBalancer::computeSurplusPerEffectiveDescendent(
 
    return surplus_per_effective_descendent;
 }
-
-
 
 /*
  *************************************************************************
@@ -1423,7 +1375,7 @@ TreeLoadBalancer::setSAMRAI_MPI(
          << "communicator is invalid.");
    }
 
-   if ( d_mpi_is_dupe ) {
+   if (d_mpi_is_dupe) {
       d_mpi.freeCommunicator();
    }
 
@@ -1434,8 +1386,6 @@ TreeLoadBalancer::setSAMRAI_MPI(
    d_mca.setSAMRAI_MPI(d_mpi, true);
 }
 
-
-
 /*
  *************************************************************************
  * Set the MPI commuicator.
@@ -1444,7 +1394,7 @@ TreeLoadBalancer::setSAMRAI_MPI(
 void
 TreeLoadBalancer::freeMPICommunicator()
 {
-   if ( d_mpi_is_dupe ) {
+   if (d_mpi_is_dupe && d_mpi.getCommunicator() != MPI_COMM_NULL) {
       // Free the private communicator (if MPI has not been finalized).
       int flag;
       tbox::SAMRAI_MPI::Finalized(&flag);
@@ -1455,8 +1405,6 @@ TreeLoadBalancer::freeMPICommunicator()
    d_mpi.setCommunicator(tbox::SAMRAI_MPI::commNull);
    d_mpi_is_dupe = false;
 }
-
-
 
 /*
  *************************************************************************
@@ -1477,14 +1425,14 @@ TreeLoadBalancer::freeMPICommunicator()
  */
 void
 TreeLoadBalancer::createBalanceRankGroupBasedOnCycles(
-   tbox::RankGroup &rank_group,
-   int &number_of_groups,
-   int &group_num,
+   tbox::RankGroup& rank_group,
+   int& number_of_groups,
+   int& group_num,
    double cycle_fraction) const
 {
    number_of_groups =
       static_cast<int>(pow(static_cast<double>(d_mpi.getSize()),
-                           1.0 - cycle_fraction));
+                          1.0 - cycle_fraction));
 
    /*
     * All groups will have a base population count of
@@ -1503,26 +1451,22 @@ TreeLoadBalancer::createBalanceRankGroupBasedOnCycles(
 
       group_num = d_mpi.getRank() / (1 + base_group_size);
 
-      const int group_first_rank = group_num * (1 +base_group_size);
+      const int group_first_rank = group_num * (1 + base_group_size);
 
-      rank_group.setMinMax( group_first_rank,
-                            group_first_rank + base_group_size );
+      rank_group.setMinMax(group_first_rank,
+         group_first_rank + base_group_size);
    } else {
 
       group_num = first_base_sized_group
          + (d_mpi.getRank() - first_rank_in_base_sized_group) / base_group_size;
 
-      const int group_first_rank = first_rank_in_base_sized_group +
-         (group_num - first_base_sized_group)*base_group_size;
+      const int group_first_rank = first_rank_in_base_sized_group
+         + (group_num - first_base_sized_group) * base_group_size;
 
-      rank_group.setMinMax( group_first_rank,
-                            group_first_rank + base_group_size - 1 );
+      rank_group.setMinMax(group_first_rank,
+         group_first_rank + base_group_size - 1);
    }
-
-   return;
 }
-
-
 
 /*
  *************************************************************************
@@ -1541,14 +1485,14 @@ TreeLoadBalancer::setupAsyncCommObjects(
    tbox::AsyncCommPeer<char> *& child_comms,
    tbox::AsyncCommStage& parent_stage,
    tbox::AsyncCommPeer<char> *& parent_comm,
-   const tbox::RankGroup &rank_group ) const
+   const tbox::RankGroup& rank_group) const
 {
 
    child_comms = parent_comm = 0;
 
    const int num_children = d_rank_tree->getNumberOfChildren();
 
-   if ( num_children > 0 ) {
+   if (num_children > 0) {
 
       child_comms = new tbox::AsyncCommPeer<char>[num_children];
 
@@ -1561,7 +1505,7 @@ TreeLoadBalancer::setupAsyncCommObjects(
          child_comms[child_num].setPeerRank(child_true_rank);
          child_comms[child_num].setMPI(d_mpi);
          child_comms[child_num].setMPITag(TreeLoadBalancer_LOADTAG0,
-                                          TreeLoadBalancer_LOADTAG1);
+            TreeLoadBalancer_LOADTAG1);
          child_comms[child_num].limitFirstDataLength(
             TreeLoadBalancer_FIRSTDATALEN);
       }
@@ -1582,11 +1526,7 @@ TreeLoadBalancer::setupAsyncCommObjects(
          TreeLoadBalancer_FIRSTDATALEN);
 
    }
-
-   return;
 }
-
-
 
 /*
  *************************************************************************
@@ -1601,17 +1541,15 @@ TreeLoadBalancer::destroyAsyncCommObjects(
       TBOX_ASSERT(child_comms == 0);
       TBOX_ASSERT(parent_comm == 0);
    } else {
-      if ( child_comms != 0 ) {
+      if (child_comms != 0) {
          delete[] child_comms;
       }
-      if ( parent_comm != 0 ) {
+      if (parent_comm != 0) {
          delete parent_comm;
       }
       child_comms = parent_comm = 0;
    }
 }
-
-
 
 /*
  *************************************************************************
@@ -1633,8 +1571,6 @@ TreeLoadBalancer::computeLocalLoad(
    t_compute_local_load->stop();
    return static_cast<LoadType>(load);
 }
-
-
 
 /*
  *************************************************************************
@@ -1658,14 +1594,14 @@ TreeLoadBalancer::getFromInput(
          input_db->getBoolWithDefault("DEV_check_map", d_check_map);
 
       d_summarize_map = input_db->getBoolWithDefault("DEV_summarize_map",
-         d_summarize_map);
+            d_summarize_map);
 
       d_report_load_balance = input_db->getBoolWithDefault(
-         "DEV_report_load_balance", d_report_load_balance);
+            "DEV_report_load_balance", d_report_load_balance);
       d_barrier_before = input_db->getBoolWithDefault("DEV_barrier_before",
-         d_barrier_before);
+            d_barrier_before);
       d_barrier_after = input_db->getBoolWithDefault("DEV_barrier_after",
-         d_barrier_after);
+            d_barrier_after);
 
       d_max_spread_procs =
          input_db->getIntegerWithDefault("max_spread_procs",
@@ -1677,13 +1613,13 @@ TreeLoadBalancer::getFromInput(
 
       d_allow_box_breaking =
          input_db->getBoolWithDefault("DEV_allow_box_breaking",
-                                      d_allow_box_breaking);
+            d_allow_box_breaking);
 
       d_voucher_mode =
          input_db->getBoolWithDefault("DEV_voucher_mode",
-                                      d_voucher_mode);
+            d_voucher_mode);
 
-      if ( input_db->isInteger("tile_size") ) {
+      if (input_db->isInteger("tile_size")) {
          input_db->getIntegerArray("tile_size", &d_tile_size[0], d_tile_size.getDim().getValue());
          for (int i = 0; i < d_dim.getValue(); ++i) {
             if ( !(d_tile_size[i] >= 1) ) {
@@ -1695,8 +1631,6 @@ TreeLoadBalancer::getFromInput(
 
    }
 }
-
-
 
 /*
  ***************************************************************************
@@ -1744,8 +1678,6 @@ TreeLoadBalancer::assertNoMessageForPrivateCommunicator() const
    }
 }
 
-
-
 /*
  ***********************************************************************
  ***********************************************************************
@@ -1783,15 +1715,15 @@ TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::compute_tree_load");
 
       const int max_cycles_to_time = 5;
-      t_compute_tree_load_for_cycle.resize( max_cycles_to_time, boost::shared_ptr<tbox::Timer>() );
-      t_load_balance_for_cycle.resize( max_cycles_to_time, boost::shared_ptr<tbox::Timer>() );
-      for ( int i=0; i<max_cycles_to_time; ++i ) {
+      t_compute_tree_load_for_cycle.resize(max_cycles_to_time, boost::shared_ptr<tbox::Timer>());
+      t_load_balance_for_cycle.resize(max_cycles_to_time, boost::shared_ptr<tbox::Timer>());
+      for (int i = 0; i < max_cycles_to_time; ++i) {
          t_compute_tree_load_for_cycle[i] = tbox::TimerManager::getManager()->
             getTimer(d_object_name + "::compute_tree_load_for_cycle["
-                     + tbox::Utilities::intToString(i) + "]");
+               + tbox::Utilities::intToString(i) + "]");
          t_load_balance_for_cycle[i] = tbox::TimerManager::getManager()->
             getTimer(d_object_name + "::load_balance_for_cycle["
-                     + tbox::Utilities::intToString(i) + "]");
+               + tbox::Utilities::intToString(i) + "]");
       }
 
       t_local_load_moves = tbox::TimerManager::getManager()->
@@ -1831,14 +1763,13 @@ TreeLoadBalancer::setTimers()
    }
 }
 
-
 /*
  *************************************************************************
  *************************************************************************
  */
 TreeLoadBalancer::BranchData::BranchData(
-   const PartitioningParams &pparams,
-   const TransitLoad &transit_load_prototype ) :
+   const PartitioningParams& pparams,
+   const TransitLoad& transit_load_prototype):
    d_num_procs(0),
    d_branch_load_current(0),
    d_branch_load_ideal(-1),
@@ -1854,12 +1785,12 @@ TreeLoadBalancer::BranchData::BranchData(
 {
 }
 
-
 /*
  *************************************************************************
  *************************************************************************
  */
-TreeLoadBalancer::BranchData::BranchData( const BranchData &other ):
+TreeLoadBalancer::BranchData::BranchData(
+   const BranchData& other):
    d_num_procs(other.d_num_procs),
    d_branch_load_current(other.d_branch_load_current),
    d_branch_load_ideal(other.d_branch_load_ideal),
@@ -1877,8 +1808,6 @@ TreeLoadBalancer::BranchData::BranchData( const BranchData &other ):
 {
 }
 
-
-
 /*
  *************************************************************************
  * Set the starting load, which includes only the local processor's
@@ -1889,7 +1818,7 @@ TreeLoadBalancer::BranchData::BranchData( const BranchData &other ):
 void TreeLoadBalancer::BranchData::setStartingLoad(
    LoadType ideal,
    LoadType current,
-   LoadType upperlimit )
+   LoadType upperlimit)
 {
    d_num_procs = 1;
    d_branch_load_ideal = ideal;
@@ -1902,8 +1831,6 @@ void TreeLoadBalancer::BranchData::setStartingLoad(
    d_eff_load_upperlimit = d_branch_load_upperlimit;
 }
 
-
-
 /*
  *************************************************************************
  * Incorporate a child branch's data into this branch.
@@ -1911,14 +1838,14 @@ void TreeLoadBalancer::BranchData::setStartingLoad(
  */
 void
 TreeLoadBalancer::BranchData::incorporateChild(
-   const BranchData &child )
+   const BranchData& child)
 {
    d_num_procs += child.d_num_procs;
    d_branch_load_current += child.d_branch_load_current;
    d_branch_load_upperlimit += child.d_branch_load_upperlimit;
    d_branch_load_ideal += child.d_branch_load_ideal;
 
-   if ( child.d_wants_work_from_parent ) {
+   if (child.d_wants_work_from_parent) {
       d_eff_num_procs += child.d_eff_num_procs;
       d_eff_load_current += child.d_eff_load_current;
       d_eff_load_upperlimit += child.d_eff_load_upperlimit;
@@ -1929,8 +1856,6 @@ TreeLoadBalancer::BranchData::incorporateChild(
    d_eff_load_current += child.d_shipment->getSumLoad();
 }
 
-
-
 /*
  *************************************************************************
  * Incorporate a child branch's data into this branch.
@@ -1940,11 +1865,11 @@ TreeLoadBalancer::LoadType TreeLoadBalancer::BranchData::adjustOutboundLoad(
    TransitLoad& reserve,
    LoadType ideal_load,
    LoadType low_load,
-   LoadType high_load )
+   LoadType high_load)
 {
    LoadType actual_transfer = 0;
 
-   if ( low_load > d_pparams->getLoadComparisonTol() ) {
+   if (low_load > d_pparams->getLoadComparisonTol()) {
 
       if (d_print_steps) {
          tbox::plog << "BranchData::adjustOutboundLoad adjusting shipment to "
@@ -1957,7 +1882,7 @@ TreeLoadBalancer::LoadType TreeLoadBalancer::BranchData::adjustOutboundLoad(
          reserve,
          ideal_load,
          low_load,
-         high_load );
+         high_load);
 
       actual_transfer = d_shipment->getSumLoad() - actual_transfer;
 
@@ -1976,8 +1901,6 @@ TreeLoadBalancer::LoadType TreeLoadBalancer::BranchData::adjustOutboundLoad(
    return actual_transfer;
 }
 
-
-
 /*
  *************************************************************************
  * We could empty d_shipment at the end of this method, because it
@@ -1985,12 +1908,10 @@ TreeLoadBalancer::LoadType TreeLoadBalancer::BranchData::adjustOutboundLoad(
  *************************************************************************
  */
 void TreeLoadBalancer::BranchData::moveInboundLoadToReserve(
-   TransitLoad& reserve )
+   TransitLoad& reserve)
 {
-   reserve.insertAll( *d_shipment );
+   reserve.insertAll(*d_shipment);
 }
-
-
 
 /*
  *************************************************************************
@@ -2014,15 +1935,13 @@ TreeLoadBalancer::BranchData::packDataToParent(
    t_pack_load->stop();
 }
 
-
-
 /*
  *************************************************************************
  *************************************************************************
  */
 void
 TreeLoadBalancer::BranchData::unpackDataFromChild(
-   tbox::MessageStream &msg )
+   tbox::MessageStream& msg)
 {
    t_unpack_load->start();
    msg >> d_num_procs;
@@ -2038,8 +1957,6 @@ TreeLoadBalancer::BranchData::unpackDataFromChild(
    t_unpack_load->stop();
 }
 
-
-
 /*
  *************************************************************************
  *************************************************************************
@@ -2053,15 +1970,13 @@ TreeLoadBalancer::BranchData::packDataToChild(
    t_pack_load->stop();
 }
 
-
-
 /*
  *************************************************************************
  *************************************************************************
  */
 void
 TreeLoadBalancer::BranchData::unpackDataFromParentAndIncorporate(
-   tbox::MessageStream &msg )
+   tbox::MessageStream& msg)
 {
    t_unpack_load->start();
    d_shipment->getFromMessageStream(msg);
@@ -2069,8 +1984,6 @@ TreeLoadBalancer::BranchData::unpackDataFromParentAndIncorporate(
    d_eff_load_current += d_shipment->getSumLoad();
    t_unpack_load->stop();
 }
-
-
 
 /*
  ***********************************************************************
@@ -2086,8 +1999,6 @@ TreeLoadBalancer::BranchData::setTimerPrefix(
       getTimer(timer_prefix + "::unpack_load");
 }
 
-
-
 /*
  ***********************************************************************
  ***********************************************************************
@@ -2102,25 +2013,23 @@ TreeLoadBalancer::printStatistics(
       output_stream);
 }
 
-
-
 /*
  ***********************************************************************
  ***********************************************************************
  */
 void
 TreeLoadBalancer::BranchData::recursivePrint(
-   std::ostream &os,
-   const std::string &border,
-   int detail_depth ) const
+   std::ostream& os,
+   const std::string& border,
+   int detail_depth) const
 {
-   os.setf(std::ios_base::fmtflags(0),std::ios_base::floatfield);
+   os.setf(std::ios_base::fmtflags(0), std::ios_base::floatfield);
    os.precision(6);
    os << border
       << "Full nproc = " << d_num_procs
       << "   current = " << d_branch_load_current
       << "   ideal = " << d_branch_load_ideal
-      << "   ratio = " << (d_branch_load_current/d_branch_load_ideal)
+      << "   ratio = " << (d_branch_load_current / d_branch_load_ideal)
       << "   avg = " << (d_branch_load_current / d_num_procs)
       << "   upperlimit = " << d_branch_load_upperlimit
       << "   surplus = " << surplus()
@@ -2129,7 +2038,7 @@ TreeLoadBalancer::BranchData::recursivePrint(
       << "Effective nproc = " << d_eff_num_procs
       << "   current = " << d_eff_load_current
       << "   ideal = " << d_eff_load_ideal
-      << "   ratio = " << (d_eff_load_current/d_eff_load_ideal)
+      << "   ratio = " << (d_eff_load_current / d_eff_load_ideal)
       << "   avg = " << (d_eff_load_current / d_eff_num_procs)
       << "   upperlimit = " << d_eff_load_upperlimit
       << "   surplus = " << effSurplus()
@@ -2138,8 +2047,7 @@ TreeLoadBalancer::BranchData::recursivePrint(
       << "   wants work from parent = " << d_wants_work_from_parent
       << '\n' << border
       << "   shipment: ";
-   d_shipment->recursivePrint(os, border + "   ", detail_depth-1);
-   return;
+   d_shipment->recursivePrint(os, border + "   ", detail_depth - 1);
 }
 
 }

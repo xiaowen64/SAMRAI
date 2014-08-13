@@ -105,7 +105,7 @@ EdgeDoubleConstantRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-EdgeDoubleConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
+EdgeDoubleConstantRefine::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }
@@ -155,7 +155,7 @@ EdgeDoubleConstantRefine::refine(
 
          for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
             if (i != axis) {
-               fine_box.upper(i) -= 1;
+               fine_box.setUpper(i, fine_box.upper(i) -1);
             }
          }
 

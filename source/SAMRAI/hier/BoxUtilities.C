@@ -9,7 +9,7 @@
  ************************************************************************/
 #include "SAMRAI/hier/BoxUtilities.h"
 
-#include "SAMRAI/hier/BoxContainer.h" 
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -17,7 +17,6 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #include <vector>
-
 
 namespace SAMRAI {
 namespace hier {
@@ -183,7 +182,7 @@ BoxUtilities::checkBoxConstraints(
          << "  Box violates cut factor restriction" << std::endl);
    }
 
-   if (!physical_boxes.isEmpty()) {
+   if (!physical_boxes.empty()) {
 
       std::vector<bool> cut_is_bad(dim.getValue());
       for (id = 0; id < dim.getValue(); ++id) {
@@ -202,7 +201,7 @@ BoxUtilities::checkBoxConstraints(
       BoxContainer border_boxes(test_border);
       border_boxes.removeIntersections(physical_boxes);
 
-      if (!border_boxes.isEmpty()) {
+      if (!border_boxes.empty()) {
 
          /*
           * Test individual box faces in each direction for bad cuts.
@@ -222,7 +221,7 @@ BoxUtilities::checkBoxConstraints(
             Box test_box = box;
             test_box.grow(bad_interval);
 
-            test_box.upper(id) = box.lower(id) - 1;
+            test_box.setUpper(id, box.lower(id) - 1);
 
             BoxContainer test_boxes(test_box);
             test_boxes.intersectBoxes(border_boxes);
@@ -247,9 +246,9 @@ BoxUtilities::checkBoxConstraints(
                test_box = box;
                test_box.grow(bad_interval);
 
-               test_box.lower(id) = box.upper(id) + 1;
+               test_box.setLower(id, box.upper(id) + 1);
 
-               test_boxes = BoxContainer(test_box); 
+               test_boxes = BoxContainer(test_box);
                test_boxes.intersectBoxes(border_boxes);
                test_boxes.simplify();
 
@@ -335,7 +334,7 @@ BoxUtilities::chopBoxes(
    TBOX_ASSERT(max_size >= min_size);
    TBOX_ASSERT(cut_factor > IntVector::getZero(min_size.getDim()));
    TBOX_ASSERT(bad_interval >= IntVector::getZero(min_size.getDim()));
-   TBOX_ASSERT(!physical_boxes.isEmpty());
+   TBOX_ASSERT(!physical_boxes.empty());
    TBOX_ASSERT(!boxes.isOrdered());
 
    const tbox::Dimension& dim(max_size.getDim());
@@ -343,7 +342,7 @@ BoxUtilities::chopBoxes(
    BoxContainer in_boxes(boxes);
    boxes.clear();
 
-   while (!in_boxes.isEmpty()) {
+   while (!in_boxes.empty()) {
 
       Box box = in_boxes.front();
       in_boxes.popFront();
@@ -429,7 +428,7 @@ BoxUtilities::chopBox(
 
          tmp_boxes.clear();
 
-         while (!boxes.isEmpty()) {
+         while (!boxes.empty()) {
 
             Box chop_box = boxes.front();
             boxes.popFront();
@@ -504,14 +503,14 @@ BoxUtilities::extendBoxesToDomainBoundary(
    const BoxContainer& domain,
    const IntVector& ext_ghosts)
 {
-   TBOX_ASSERT(!domain.isEmpty());
+   TBOX_ASSERT(!domain.empty());
    TBOX_ASSERT(ext_ghosts >= IntVector::getZero(ext_ghosts.getDim()));
 
    bool out_val = false;
 
    BoxContainer out_boxes;
 
-   while (!boxes.isEmpty()) {
+   while (!boxes.empty()) {
 
       Box try_box = boxes.front();
       boxes.popFront();
@@ -535,7 +534,7 @@ BoxUtilities::extendBoxToDomainBoundary(
    const IntVector& ext_ghosts)
 {
 
-   TBOX_ASSERT(!domain.isEmpty());
+   TBOX_ASSERT(!domain.empty());
    TBOX_ASSERT(ext_ghosts >= IntVector::getZero(ext_ghosts.getDim()));
 
    const tbox::Dimension& dim(box.getDim());
@@ -551,14 +550,14 @@ BoxUtilities::extendBoxToDomainBoundary(
       BoxContainer outside_domain(test_ghost_box);
       outside_domain.removeIntersections(domain);
 
-      if (!outside_domain.isEmpty()) {
+      if (!outside_domain.empty()) {
 
          for (id = 0; id < dim.getValue(); ++id) {
             BoxContainer outside_boxes;
 
             // Test whether lower end of ghost box extends outside domain
             Box test_region = test_ghost_box;
-            test_region.upper(id) = box.lower(id) - 1;
+            test_region.setUpper(id, box.lower(id) - 1);
 
             outside_boxes = outside_domain;
             outside_boxes.intersectBoxes(test_region);
@@ -572,7 +571,7 @@ BoxUtilities::extendBoxToDomainBoundary(
 
             // Test whether upper end of ghost box extends outside domain
             test_region = test_ghost_box;
-            test_region.lower(id) = box.upper(id) + 1;
+            test_region.setLower(id, box.upper(id) + 1);
 
             outside_boxes = outside_domain;
             outside_boxes.intersectBoxes(test_region);
@@ -589,8 +588,8 @@ BoxUtilities::extendBoxToDomainBoundary(
             }
 
             // Adjust box sizes as necessary
-            box.lower(id) = box_lo;
-            box.upper(id) = box_hi;
+            box.setLower(id, box_lo);
+            box.setUpper(id, box_hi);
 
          }
 
@@ -626,12 +625,12 @@ BoxUtilities::growBoxesWithinDomain(
 
    TBOX_ASSERT(min_size > IntVector::getZero(dim));
 
-   if (!boxes.isEmpty()) {
+   if (!boxes.empty()) {
 
       BoxContainer out_boxes;
 
       BoxContainer outside_domain;
-      if (domain.isEmpty()) {
+      if (domain.empty()) {
          Box big_box(boxes.getBoundingBox());
          big_box.grow(min_size);
          outside_domain.pushBack(big_box);
@@ -644,7 +643,7 @@ BoxUtilities::growBoxesWithinDomain(
          outside_domain.removeIntersections(domain);
       }
 
-      while (!boxes.isEmpty()) {
+      while (!boxes.empty()) {
 
          Box try_box = boxes.front();
          boxes.popFront();
@@ -660,8 +659,8 @@ BoxUtilities::growBoxesWithinDomain(
 
                // How far may box be grown within domain in lower direction?
                test_region = try_box;
-               test_region.lower(id) -= grow;
-               test_region.upper(id) = try_box.lower(id) - 1;
+               test_region.setLower(id, test_region.lower(id) - grow);
+               test_region.setUpper(id, try_box.lower(id) - 1);
 
                outside_boxes = outside_domain;
                outside_boxes.intersectBoxes(test_region);
@@ -675,8 +674,8 @@ BoxUtilities::growBoxesWithinDomain(
 
                // How far may box be grown within domain in upper direction?
                test_region = try_box;
-               test_region.upper(id) += grow;
-               test_region.lower(id) = try_box.upper(id) + 1;
+               test_region.setUpper(id, test_region.upper(id) + grow);
+               test_region.setLower(id, try_box.upper(id) + 1);
 
                outside_boxes = outside_domain;
                outside_boxes.intersectBoxes(test_region);
@@ -689,21 +688,23 @@ BoxUtilities::growBoxesWithinDomain(
 
                // Adjust box sizes as necessary
                if ((grow_up - grow_lo + 1) < min_size(id)) {
-                  try_box.lower(id) = grow_lo;
-                  try_box.upper(id) = grow_up;
+                  try_box.setLower(id, grow_lo);
+                  try_box.setUpper(id, grow_up);
                } else {
                   int left = try_box.lower(id) - grow_lo;
                   int right = grow_up - try_box.upper(id);
                   int grow_half = grow / 2;
 
                   if (left < right) {
-                     try_box.lower(id) -= ((left < grow_half) ? left
-                                           : grow_half);
-                     try_box.upper(id) = try_box.lower(id) + min_size(id) - 1;
+                     try_box.setLower(id,
+                        try_box.lower(id) - ((left < grow_half) ? left : grow_half));
+                     try_box.setUpper(id,
+                        try_box.lower(id) + min_size(id) - 1);
                   } else {
-                     try_box.upper(id) += ((right < grow_half) ? right
-                                           : grow_half);
-                     try_box.lower(id) = try_box.upper(id) - min_size(id) + 1;
+                     try_box.setUpper(id,
+                        try_box.upper(id) + ((right < grow_half) ? right : grow_half));
+                     try_box.setLower(id,
+                        try_box.upper(id) - min_size(id) + 1);
                   }
                }
 
@@ -755,14 +756,14 @@ BoxUtilities::growBoxWithinDomain(
 
          // How far may box be grown within domain in lower direction?
          test_region = try_box;
-         test_region.lower(id) -= grow;
-         test_region.upper(id) = try_box.lower(id) - 1;
+         test_region.setLower(id, test_region.lower(id) - grow);
+         test_region.setUpper(id, try_box.lower(id) - 1);
 
          outside_boxes = local_domain_complement;
          outside_boxes.unorder();
          outside_boxes.intersectBoxes(test_region);
 
-         BoxContainer::iterator lb = outside_boxes.begin(); 
+         BoxContainer::iterator lb = outside_boxes.begin();
          int grow_lo = try_box.lower(id) - grow;
          for ( ; lb != outside_boxes.end(); ++lb) {
             grow_lo =
@@ -771,8 +772,8 @@ BoxUtilities::growBoxWithinDomain(
 
          // How far may box be grown within domain in upper direction?
          test_region = try_box;
-         test_region.upper(id) += grow;
-         test_region.lower(id) = try_box.upper(id) + 1;
+         test_region.setUpper(id, test_region.upper(id) + grow);
+         test_region.setLower(id, try_box.upper(id) + 1);
 
          outside_boxes = local_domain_complement;
          outside_boxes.unorder();
@@ -786,21 +787,21 @@ BoxUtilities::growBoxWithinDomain(
 
          // Adjust box sizes as necessary
          if ((grow_up - grow_lo + 1) < min_size(id)) {
-            try_box.lower(id) = grow_lo;
-            try_box.upper(id) = grow_up;
+            try_box.setLower(id, grow_lo);
+            try_box.setUpper(id, grow_up);
          } else {
             int left = try_box.lower(id) - grow_lo;
             int right = grow_up - try_box.upper(id);
             int grow_half = grow / 2;
 
             if (left < right) {
-               try_box.lower(id) -= ((left < grow_half) ? left
-                                     : grow_half);
-               try_box.upper(id) = try_box.lower(id) + min_size(id) - 1;
+               try_box.setLower(id,
+                  try_box.lower(id) - ((left < grow_half) ? left : grow_half));
+               try_box.setUpper(id, try_box.lower(id) + min_size(id) - 1);
             } else {
-               try_box.upper(id) += ((right < grow_half) ? right
-                                     : grow_half);
-               try_box.lower(id) = try_box.upper(id) - min_size(id) + 1;
+               try_box.setUpper(id,
+                  try_box.upper(id) + (right < grow_half) ? right : grow_half);
+               try_box.setLower(id, try_box.upper(id) - min_size(id) + 1);
             }
          }
 
@@ -1196,7 +1197,7 @@ BoxUtilities::checkBoxForBadCutPointsInDirection(
 
    bool found_bad = false;
 
-   if (!physical_boxes.isEmpty()) {
+   if (!physical_boxes.empty()) {
 
       int bad = bad_interval(id);
 
@@ -1213,7 +1214,7 @@ BoxUtilities::checkBoxForBadCutPointsInDirection(
 
             Box border = box;
             border.grow(bad_interval);
-            border.upper(id2) = box.lower(id2) - 1;
+            border.setUpper(id2, box.lower(id2) - 1);
 
             BoxContainer border_boxes(border);
             border_boxes.removeIntersections(physical_boxes);
@@ -1234,7 +1235,7 @@ BoxUtilities::checkBoxForBadCutPointsInDirection(
 
                border = box;
                border.grow(bad_interval);
-               border.lower(id2) = box.upper(id2) + 1;
+               border.setLower(id2, box.upper(id2) + 1);
 
                border_boxes.clear();
                border_boxes.pushBack(border);
@@ -1339,7 +1340,7 @@ BoxUtilities::findBadCutPointsForDirection(
       bad_cuts[ic] = false;
    }
 
-   if (physical_boxes.isEmpty()) {
+   if (physical_boxes.empty()) {
       return; // Avoid the code below, which may crash for zero boxes.
    }
 
@@ -1366,15 +1367,15 @@ BoxUtilities::findBadCutPointsForDirection(
 
          Box border = box;
          border.grow(bad_interval);
-         border.upper(id2) = box.lower(id2) - 1;
+         border.setUpper(id2, box.lower(id2) - 1);
 
          /*
           * limit the width of the border box to the width of the
           * domain to ensure that bad cut points near the boundary
           * of the box are not missed.
           */
-         border.upper(id) = level_bounding_box.upper(id);
-         border.lower(id) = level_bounding_box.lower(id);
+         border.setUpper(id, level_bounding_box.upper(id));
+         border.setLower(id, level_bounding_box.lower(id));
 
          BoxContainer border_boxes(border);
 
@@ -1386,7 +1387,7 @@ BoxUtilities::findBadCutPointsForDirection(
             border_boxes.removeIntersections(physical_boxes);
          }
 
-         if (!border_boxes.isEmpty()) {
+         if (!border_boxes.empty()) {
             border_boxes.simplify();
 
             for (BoxContainer::iterator bbox = border_boxes.begin();
@@ -1405,15 +1406,15 @@ BoxUtilities::findBadCutPointsForDirection(
 
          border = box;
          border.grow(bad_interval);
-         border.lower(id2) = box.upper(id2) + 1;
+         border.setLower(id2, box.upper(id2) + 1);
 
          /*
           * limit the width of the border box to the width of the
           * domain to ensure that bad cut points near the boundary
           * of the box are not missed.
           */
-         border.upper(id) = level_bounding_box.upper(id);
-         border.lower(id) = level_bounding_box.lower(id);
+         border.setUpper(id, level_bounding_box.upper(id));
+         border.setLower(id, level_bounding_box.lower(id));
 
          border_boxes.clear();
          border_boxes.pushBack(border);
@@ -1426,7 +1427,7 @@ BoxUtilities::findBadCutPointsForDirection(
             border_boxes.removeIntersections(physical_boxes);
          }
 
-         if (!border_boxes.isEmpty()) {
+         if (!border_boxes.empty()) {
             border_boxes.simplify();
             for (BoxContainer::iterator bbox = border_boxes.begin();
                  bbox != border_boxes.end(); ++bbox) {

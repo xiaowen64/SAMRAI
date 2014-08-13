@@ -666,8 +666,7 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
    if (level_number > 0) {
       d_step_level[level_number] = 0;
       d_max_steps_level[level_number] = 1;
-   }
-   else {
+   } else {
       d_level_0_advanced = false;
       d_hierarchy_advanced = false;
    }
@@ -781,8 +780,7 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
 
       if (level_number == 0) {
          d_level_0_advanced = true;
-      }
-      else {
+      } else {
          ++d_step_level[level_number];
       }
 
@@ -1109,8 +1107,8 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
       tbox::plog << "\nSynchronizing levels " << coarse_level_number
                  << " to " << finest_level_number << std::endl;
 #endif
-      std::vector<double> old_times(finest_level_number+1,
-                                    d_integrator_time-dt);
+      std::vector<double> old_times(finest_level_number + 1,
+                                    d_integrator_time - dt);
 
       d_refine_level_integrator->standardLevelSynchronization(
          d_patch_hierarchy,
@@ -1378,8 +1376,7 @@ TimeRefinementIntegrator::findNextDtAndStepsRemaining(
 
       if (level_number == 0) {
          d_dt_actual_level[level_number] = time_remaining;
-      }
-      else {
+      } else {
          d_dt_actual_level[level_number] =
             time_remaining / double(d_max_steps_level[level_number]
                                     - d_step_level[level_number]);
@@ -1390,9 +1387,8 @@ TimeRefinementIntegrator::findNextDtAndStepsRemaining(
    }
 
    if (level_number == 0) {
-     return true;
-   }
-   else {
+      return true;
+   } else {
       return (d_max_steps_level[level_number]
               - d_step_level[level_number]) <= 1;
    }
@@ -1426,12 +1422,10 @@ TimeRefinementIntegrator::atRegridPoint(
       // step number.
       if (d_hierarchy_advanced) {
          step_number = d_step_level[0];
-      }
-      else {
+      } else {
          step_number = d_step_level[0] + 1;
       }
-   }
-   else {
+   } else {
       step_number = d_step_level[level_number];
    }
 
@@ -1589,8 +1583,7 @@ TimeRefinementIntegrator::getFromInput(
             INPUT_RANGE_ERROR("regrid_interval");
          }
          setRegridInterval(regrid_interval);
-      }
-      else if (input_db->keyExists("regrid_interval")) {
+      } else if (input_db->keyExists("regrid_interval")) {
          TBOX_WARNING("TimeRefinementIntegrator::getFromInput() warning...\n"
             << "regrid_interval input parameter not applicable with\n"
             << "refined timestepping and will be ignored." << std::endl);
@@ -1656,8 +1649,7 @@ TimeRefinementIntegrator::getFromInput(
                   << "regrid_interval must be >=1." << std::endl);
             }
             setRegridInterval(regrid_interval);
-         }
-         else if (input_db->keyExists("regrid_interval")) {
+         } else if (input_db->keyExists("regrid_interval")) {
             TBOX_WARNING("TimeRefinementIntegrator::getFromInput() warning...\n"
                << "regrid_interval input parameter not applicable with\n"
                << "refined timestepping and will be ignored." << std::endl);
@@ -1689,8 +1681,7 @@ TimeRefinementIntegrator::getFromInput(
          if (d_max_steps_level[0] < 0) {
             TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
                << "max_integrator_steps must be >= 0." << std::endl);
-         }
-         else if (d_max_steps_level[0] < d_step_level[0]) {
+         } else if (d_max_steps_level[0] < d_step_level[0]) {
             TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
                << "max_integrator_steps must be >= current integrator step."
                << std::endl);

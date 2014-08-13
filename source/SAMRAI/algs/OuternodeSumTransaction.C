@@ -99,8 +99,8 @@ OuternodeSumTransaction::computeIncomingMessageSize()
 {
    d_incoming_bytes =
       d_dst_level->getPatch(d_dst_node.getGlobalId())->
-         getPatchData(d_refine_data[d_item_id]->d_scratch)->
-            getDataStreamSize(*d_overlap);
+      getPatchData(d_refine_data[d_item_id]->d_scratch)->
+      getDataStreamSize(*d_overlap);
    return d_incoming_bytes;
 }
 
@@ -109,8 +109,8 @@ OuternodeSumTransaction::computeOutgoingMessageSize()
 {
    d_outgoing_bytes =
       d_src_level->getPatch(d_src_node.getGlobalId())->
-         getPatchData(d_refine_data[d_item_id]->d_src)->
-            getDataStreamSize(*d_overlap);
+      getPatchData(d_refine_data[d_item_id]->d_src)->
+      getDataStreamSize(*d_overlap);
    return d_outgoing_bytes;
 }
 
@@ -131,8 +131,8 @@ OuternodeSumTransaction::packStream(
    tbox::MessageStream& stream)
 {
    d_src_level->getPatch(d_src_node.getGlobalId())->
-      getPatchData(d_refine_data[d_item_id]->d_src)->
-         packStream(stream, *d_overlap);
+   getPatchData(d_refine_data[d_item_id]->d_src)->
+   packStream(stream, *d_overlap);
 }
 
 void

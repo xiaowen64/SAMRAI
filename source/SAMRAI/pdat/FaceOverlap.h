@@ -82,14 +82,14 @@ public:
     * @param[out] src_boxes
     * @param[in,out] normal_direction
     *
-    * @pre src_boxes.isEmpty()
+    * @pre src_boxes.empty()
     * @pre normal_direction >= 0 && normal_direction < d_dst_boxes.size()
     * @post normal_direction >= 0 && normal_direction < d_dst_boxes.size()
     */
    virtual void
-   getSourceBoxContainer(hier::BoxContainer& src_boxes,
-                         int& normal_direction) const;
-
+   getSourceBoxContainer(
+      hier::BoxContainer& src_boxes,
+      int& normal_direction) const;
 
    /**
     * Return the offset between the destination and source index spaces.

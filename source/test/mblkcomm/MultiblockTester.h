@@ -196,7 +196,8 @@ public:
       const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
 
    hier::IntVector
-   getRefineOpStencilWidth( const tbox::Dimension &dim ) const;
+   getRefineOpStencilWidth(
+      const tbox::Dimension& dim) const;
 
    void
    preprocessRefine(

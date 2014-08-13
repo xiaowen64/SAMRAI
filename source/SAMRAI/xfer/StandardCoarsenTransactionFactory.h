@@ -69,7 +69,7 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_box,
       const hier::Box& src_box,
-      const CoarsenClasses::Data** coarsen_data,
+      const CoarsenClasses::Data ** coarsen_data,
       int item_id) const;
 
 private:
@@ -79,7 +79,6 @@ private:
    StandardCoarsenTransactionFactory&
    operator = (
       const StandardCoarsenTransactionFactory&);
-
 
 };
 

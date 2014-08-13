@@ -88,7 +88,8 @@ public:
     * zero.
     */
    virtual hier::IntVector
-   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const = 0;
+   getCoarsenOpStencilWidth(
+      const tbox::Dimension& dim) const = 0;
 
    /*!
     * @brief Perform user-defined patch data coarsening operations.

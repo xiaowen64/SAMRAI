@@ -81,7 +81,7 @@ public:
     * Extract a pointer to the face index corresponding to the iterator
     * position in the box.
     */
-   const FaceIndex*
+   const FaceIndex *
    operator -> () const
    {
       return &d_index;

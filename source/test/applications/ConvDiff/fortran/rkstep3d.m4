@@ -31,7 +31,7 @@ c variables in 2d cell indexed
       REAL
      &     soln_updated(CELL3dVECG(ifirst,ilast,gcw),0:nequ-1),
      &     soln_fixed(CELL3d(ifirst,ilast,0),0:nequ-1),
-     &     rhs(CELL3d(ifirst,ilast,0),0:nequ-1)
+     &     rhs(CELL3dVECG(ifirst,ilast,gcw),0:nequ-1)
 c
 c*********************************************************************** 
       integer ic0,ic1,ic2,ineq

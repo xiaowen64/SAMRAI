@@ -226,13 +226,13 @@ int main(
 
       /*
        * 2D getSourceBoxContainer tests
-       */ 
+       */
       {
-         hier::Index index_lo_a(28,17);
-         hier::Index index_hi_a(33,66);
-         hier::Index index_lo_b(34,44);
-         hier::Index index_hi_b(44,49);
-         hier::Box dst_box_a(index_lo_a, index_hi_a, block_zero); 
+         hier::Index index_lo_a(28, 17);
+         hier::Index index_hi_a(33, 66);
+         hier::Index index_lo_b(34, 44);
+         hier::Index index_hi_b(44, 49);
+         hier::Box dst_box_a(index_lo_a, index_hi_a, block_zero);
          hier::Box dst_box_b(index_lo_b, index_hi_b, block_zero);
 
          hier::BoxContainer dst_boxes;
@@ -280,7 +280,7 @@ int main(
             }
 
             /*
-             * NodeOverlap test 
+             * NodeOverlap test
              */
 
             hier::BoxContainer dst_node_boxes;
@@ -297,7 +297,7 @@ int main(
             hier::BoxContainer node_ov_src;
             node_overlap.getSourceBoxContainer(node_ov_src);
 
-            /* 
+            /*
              * node_ov_src is node_ov_dst inverse-transformed to source
              * space.  Transform back to dst space and the boxes should
              * be equal to those in node_ov_dst.
@@ -317,7 +317,7 @@ int main(
             }
 
             /*
-             * SideOverlap test 
+             * SideOverlap test
              */
             std::vector<hier::BoxContainer> dst_side_boxes(dim2.getValue());
             for (tbox::Dimension::dir_t normal = 0; normal < dim2.getValue(); ++normal) {
@@ -328,19 +328,19 @@ int main(
                      pdat::SideGeometry::toSideBox(*di, normal));
                }
             }
-   
+
             pdat::SideOverlap side_overlap(dst_side_boxes, trans);
 
             for (tbox::Dimension::dir_t normal = 0; normal < dim2.getValue(); ++normal) {
 
                const hier::BoxContainer& side_ov_dst =
                   side_overlap.getDestinationBoxContainer(normal);
-   
+
                hier::BoxContainer side_ov_src;
                int src_normal = normal;
                side_overlap.getSourceBoxContainer(side_ov_src, src_normal);
-   
-               /* 
+
+               /*
                 * side_ov_src is side_ov_dst inverse-transformed to source
                 * space.  Transform back to dst space and the boxes should
                 * be equal to those in side_ov_dst.
@@ -363,7 +363,7 @@ int main(
             }
 
             /*
-             * FaceOverlap test 
+             * FaceOverlap test
              */
             std::vector<hier::BoxContainer> dst_face_boxes(dim2.getValue());
             for (tbox::Dimension::dir_t normal = 0; normal < dim2.getValue(); ++normal) {
@@ -374,19 +374,19 @@ int main(
                      pdat::FaceGeometry::toFaceBox(*di, normal));
                }
             }
-   
+
             pdat::FaceOverlap face_overlap(dst_face_boxes, trans);
 
             for (tbox::Dimension::dir_t normal = 0; normal < dim2.getValue(); ++normal) {
 
                const hier::BoxContainer& face_ov_dst =
                   face_overlap.getDestinationBoxContainer(normal);
-   
+
                hier::BoxContainer face_ov_src;
                int src_normal = normal;
                face_overlap.getSourceBoxContainer(face_ov_src, src_normal);
-   
-               /* 
+
+               /*
                 * face_ov_src is face_ov_dst inverse-transformed to source
                 * space.  Transform back to dst space and the boxes should
                 * be equal to those in face_ov_dst.
@@ -409,7 +409,7 @@ int main(
             }
 
             /*
-             * EdgeOverlap test 
+             * EdgeOverlap test
              */
             std::vector<hier::BoxContainer> dst_edge_boxes(dim2.getValue());
             for (int axis = 0; axis < dim2.getValue(); ++axis) {
@@ -420,19 +420,19 @@ int main(
                      pdat::EdgeGeometry::toEdgeBox(*di, axis));
                }
             }
-   
+
             pdat::EdgeOverlap edge_overlap(dst_edge_boxes, trans);
 
             for (int axis = 0; axis < dim2.getValue(); ++axis) {
- 
+
                const hier::BoxContainer& edge_ov_dst =
                   edge_overlap.getDestinationBoxContainer(axis);
-   
+
                hier::BoxContainer edge_ov_src;
                int src_axis = axis;
                edge_overlap.getSourceBoxContainer(edge_ov_src, src_axis);
-   
-               /* 
+
+               /*
                 * edge_ov_src is edge_ov_dst inverse-transformed to source
                 * space.  Transform back to dst space and the boxes should
                 * be equal to those in edge_ov_dst.
@@ -459,13 +459,13 @@ int main(
 
       /*
        * 3D getSourceBoxContainer tests
-       */ 
+       */
       {
-         hier::Index index_lo_a(19,15,26);
-         hier::Index index_hi_a(24,43,74);
-         hier::Index index_lo_b(25,19,48);
-         hier::Index index_hi_b(73,59,64);
-         hier::Box dst_box_a(index_lo_a, index_hi_a, block_zero); 
+         hier::Index index_lo_a(19, 15, 26);
+         hier::Index index_hi_a(24, 43, 74);
+         hier::Index index_lo_b(25, 19, 48);
+         hier::Index index_hi_b(73, 59, 64);
+         hier::Box dst_box_a(index_lo_a, index_hi_a, block_zero);
          hier::Box dst_box_b(index_lo_b, index_hi_b, block_zero);
 
          hier::BoxContainer dst_boxes;
@@ -479,7 +479,7 @@ int main(
             hier::IntVector offset(dim3);
             offset[0] = 46 + i;
             offset[1] = 50 - i;
-            offset[2] = -17 + 4*i;
+            offset[2] = -17 + 4 * i;
 
             hier::Transformation trans(rotate, offset, block_one, block_zero);
 
@@ -514,7 +514,7 @@ int main(
             }
 
             /*
-             * NodeOverlap test 
+             * NodeOverlap test
              */
 
             hier::BoxContainer dst_node_boxes;
@@ -531,7 +531,7 @@ int main(
             hier::BoxContainer node_ov_src;
             node_overlap.getSourceBoxContainer(node_ov_src);
 
-            /* 
+            /*
              * node_ov_src is node_ov_dst inverse-transformed to source
              * space.  Transform back to dst space and the boxes should
              * be equal to those in node_ov_dst.
@@ -551,7 +551,7 @@ int main(
             }
 
             /*
-             * SideOverlap test 
+             * SideOverlap test
              */
             std::vector<hier::BoxContainer> dst_side_boxes(dim3.getValue());
             for (tbox::Dimension::dir_t normal = 0; normal < dim3.getValue(); ++normal) {
@@ -574,7 +574,7 @@ int main(
                int src_normal = normal;
                side_overlap.getSourceBoxContainer(side_ov_src, src_normal);
 
-               /* 
+               /*
                 * side_ov_src is side_ov_dst inverse-transformed to source
                 * space.  Transform back to dst space and the boxes should
                 * be equal to those in side_ov_dst.
@@ -597,7 +597,7 @@ int main(
             }
 
             /*
-             * FaceOverlap test 
+             * FaceOverlap test
              */
             std::vector<hier::BoxContainer> dst_face_boxes(dim3.getValue());
             for (tbox::Dimension::dir_t normal = 0; normal < dim3.getValue(); ++normal) {
@@ -620,7 +620,7 @@ int main(
                int src_normal = normal;
                face_overlap.getSourceBoxContainer(face_ov_src, src_normal);
 
-               /* 
+               /*
                 * face_ov_src is face_ov_dst inverse-transformed to source
                 * space.  Transform back to dst space and the boxes should
                 * be equal to those in face_ov_dst.
@@ -643,7 +643,7 @@ int main(
             }
 
             /*
-             * EdgeOverlap test 
+             * EdgeOverlap test
              */
             std::vector<hier::BoxContainer> dst_edge_boxes(dim3.getValue());
             for (int axis = 0; axis < dim3.getValue(); ++axis) {
@@ -666,7 +666,7 @@ int main(
                int src_axis = axis;
                edge_overlap.getSourceBoxContainer(edge_ov_src, src_axis);
 
-               /* 
+               /*
                 * edge_ov_src is edge_ov_dst inverse-transformed to source
                 * space.  Transform back to dst space and the boxes should
                 * be equal to those in edge_ov_dst.

@@ -157,7 +157,6 @@ public:
       return d_data.d_hi[i];
    }
 
-
    /**
     * Check whether two boxes represent the same portion of index space.
     */

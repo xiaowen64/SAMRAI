@@ -232,7 +232,7 @@ RefineTimeTransaction::timeInterpolate(
 
    if (tbox::MathUtilities<double>::equalEps(pd_old->getTime(), s_time)) {
       d_refine_data[d_item_id]->
-         d_optime->timeInterpolate(*pd_dst, d_box, *pd_old, *pd_old);
+      d_optime->timeInterpolate(*pd_dst, d_box, *pd_old, *pd_old);
    } else {
 
       TBOX_ASSERT(pd_new);
@@ -241,7 +241,7 @@ RefineTimeTransaction::timeInterpolate(
       TBOX_ASSERT(pd_new->getTime() >= s_time);
 
       d_refine_data[d_item_id]->
-         d_optime->timeInterpolate(*pd_dst, d_box, *pd_old, *pd_new);
+      d_optime->timeInterpolate(*pd_dst, d_box, *pd_old, *pd_new);
    }
 }
 

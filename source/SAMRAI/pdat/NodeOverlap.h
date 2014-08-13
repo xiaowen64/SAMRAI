@@ -76,10 +76,11 @@ public:
     *
     * @param[out] src_boxes
     *
-    * @pre src_boxes.isEmpty()
+    * @pre src_boxes.empty()
     */
    virtual void
-   getSourceBoxContainer(hier::BoxContainer& src_boxes) const;
+   getSourceBoxContainer(
+      hier::BoxContainer& src_boxes) const;
 
    /**
     * Return the offset between the destination and source index spaces.

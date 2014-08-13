@@ -149,7 +149,7 @@ dcomplex
 MathUtilities<dcomplex>::getSignalingNaN()
 {
    return dcomplex(std::numeric_limits<double>::signaling_NaN(),
-                   std::numeric_limits<double>::signaling_NaN());
+      std::numeric_limits<double>::signaling_NaN());
 }
 
 template<>
@@ -333,8 +333,12 @@ round_internal(
    }
 }
 
-template float round_internal<float>(float x);
-template double round_internal<double>(double x);
+template float round_internal<float
+                              >(
+   float x);
+template double round_internal<double
+                               >(
+   double x);
 
 template<>
 float

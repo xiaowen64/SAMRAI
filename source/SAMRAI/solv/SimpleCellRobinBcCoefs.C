@@ -250,7 +250,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
                                      << d_flux_id << ") does not exist.");
          }
          flux_data_ptr =
-            BOOST_CAST<pdat::OuterfaceData<double>,hier::PatchData>(patch_data);
+            BOOST_CAST<pdat::OuterfaceData<double>, hier::PatchData>(patch_data);
          TBOX_ASSERT(flux_data_ptr);
          if (d_diffusion_coef_id != -1) {
             patch_data = patch.getPatchData(d_diffusion_coef_id);
@@ -273,7 +273,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
                                      << d_flag_id << ") does not exist.");
          }
          flag_data_ptr = BOOST_CAST<pdat::OuterfaceData<int>, hier::PatchData>(
-            patch.getPatchData(d_flag_id));
+               patch.getPatchData(d_flag_id));
          TBOX_ASSERT(flag_data_ptr);
       }
    }
@@ -376,7 +376,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
       const int axis = location_index / 2;
       const int face = location_index % 2;
       flag_data_ptr = BOOST_CAST<pdat::OuterfaceData<int>, hier::PatchData>(
-         patch.getPatchData(d_flag_id));
+            patch.getPatchData(d_flag_id));
       TBOX_ASSERT(flag_data_ptr);
       pdat::OuterfaceData<int>& flag_data(*flag_data_ptr);
       hier::Index offset_to_inside(d_dim, 0);
@@ -560,7 +560,7 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
                patch.getPatchData(dirichlet_data_id)));
          boost::shared_ptr<geom::CartesianPatchGeometry> pg(
             BOOST_CAST<geom::CartesianPatchGeometry,
-               hier::PatchGeometry>(patch.getPatchGeometry()));
+                       hier::PatchGeometry>(patch.getPatchGeometry()));
 
          TBOX_ASSERT(cell_data);
          TBOX_ASSERT(pg);

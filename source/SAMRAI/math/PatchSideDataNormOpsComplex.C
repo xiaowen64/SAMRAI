@@ -34,8 +34,8 @@ PatchSideDataNormOpsComplex::~PatchSideDataNormOpsComplex()
 
 int
 PatchSideDataNormOpsComplex::numberOfEntries(
-      const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
-      const hier::Box& box) const
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
+   const hier::Box& box) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -366,9 +366,9 @@ PatchSideDataNormOpsComplex::integral(
    for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          retval += d_array_ops.integral(
-            data->getArrayData(d),
-            vol->getArrayData(d),
-            pdat::SideGeometry::toSideBox(box, d));
+               data->getArrayData(d),
+               vol->getArrayData(d),
+               pdat::SideGeometry::toSideBox(box, d));
       }
    }
    return retval;

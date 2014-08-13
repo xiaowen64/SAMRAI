@@ -343,7 +343,7 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
    for (int iv = 0; iv < static_cast<int>(d_variable_name.size()); ++iv) {
       d_variables[iv].reset(
          new pdat::CellVariable<double>(d_dim, d_variable_name[iv],
-                                        d_variable_depth[iv]));
+            d_variable_depth[iv]));
 
       int datid =
          variable_db->registerVariableAndContext(d_variables[iv],

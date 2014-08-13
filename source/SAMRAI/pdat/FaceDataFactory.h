@@ -119,13 +119,15 @@ public:
     * constructor.  See the FaceVariable<TYPE> class header file for more
     * information.
     */
-   bool fineBoundaryRepresentsVariable() const;
+   bool
+   fineBoundaryRepresentsVariable() const;
 
    /**
     * Return true since the face data index space extends beyond the interior
     * of patches.  That is, face data lives on patch borders.
     */
-   bool dataLivesOnPatchBorder() const;
+   bool
+   dataLivesOnPatchBorder() const;
 
    /**
     * Return whether it is valid to copy this FaceDataFactory to the

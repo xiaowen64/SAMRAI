@@ -60,13 +60,13 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
    TBOX_ASSERT_OBJDIM_EQUALITY2(dst_box_level, fill_ghost_width);
 
    fill_box_level.reset(new hier::BoxLevel(
-      dst_box_level.getRefinementRatio(),
-      dst_box_level.getGridGeometry(),
-      dst_box_level.getMPI()));
+         dst_box_level.getRefinementRatio(),
+         dst_box_level.getGridGeometry(),
+         dst_box_level.getMPI()));
 
    dst_to_fill.reset(new hier::Connector(dst_box_level,
-                                         *fill_box_level,
-                                         fill_ghost_width));
+         *fill_box_level,
+         fill_ghost_width));
 
    boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
       dst_box_level.getGridGeometry());
@@ -81,7 +81,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
       hier::BoxContainer fill_boxes(
          hier::Box::grow(dst_box, fill_ghost_width));
 
-      const std::map<hier::BlockId,hier::BaseGridGeometry::Neighbor>& neighbors =
+      const std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>& neighbors =
          grid_geometry->getNeighbors(dst_box.getBlockId());
 
       hier::BoxContainer constructed_fill_boxes;
@@ -90,8 +90,8 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
          dst_to_fill->findLocal(dst_box_id);
       bool has_base_box = base_box_itr != dst_to_fill->end();
 
-      for (std::map<hier::BlockId,hier::BaseGridGeometry::Neighbor>::const_iterator ni =
-           neighbors.begin();
+      for (std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::const_iterator ni =
+              neighbors.begin();
            ni != neighbors.end(); ++ni) {
 
          if (ni->second.isSingularity()) {
@@ -105,7 +105,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
 
                if (!has_base_box) {
                   base_box_itr = dst_to_fill->makeEmptyLocalNeighborhood(
-                     dst_box_id);
+                        dst_box_id);
                   has_base_box = true;
                }
                for (hier::BoxContainer::iterator ei = encon_boxes.begin();

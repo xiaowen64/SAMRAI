@@ -31,7 +31,7 @@
 #include "SAMRAI/algs/PatchBoundaryEdgeSum.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/VariableContext.h"
-#include "SAMRAI/appu/VisItDataWriter.h"\
+#include "SAMRAI/appu/VisItDataWriter.h" \
 
 #include "boost/shared_ptr.hpp"
 #include <vector>

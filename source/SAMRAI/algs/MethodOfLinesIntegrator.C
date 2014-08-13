@@ -37,7 +37,7 @@ const int MethodOfLinesIntegrator::ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION = 2;
 MethodOfLinesIntegrator::MethodOfLinesIntegrator(
    const std::string& object_name,
    const boost::shared_ptr<tbox::Database>& input_db,
-   MethodOfLinesPatchStrategy* patch_strategy) :
+   MethodOfLinesPatchStrategy* patch_strategy):
    d_object_name(object_name),
    d_order(3),
    d_patch_strategy(patch_strategy),
@@ -353,7 +353,7 @@ MethodOfLinesIntegrator::registerVariable(
 
    tbox::Dimension dim(ghosts.getDim());
 
-   if ( !d_bdry_fill_advance ) {
+   if (!d_bdry_fill_advance) {
       /*
        * One-time set-up for communication algorithms.
        * We wait until this point to do this because we need a dimension.
@@ -395,7 +395,7 @@ MethodOfLinesIntegrator::registerVariable(
           * Register variable and context needed for restart.
           */
          hier::PatchDataRestartManager::getManager()->
-            registerPatchDataForRestart(current);
+         registerPatchDataForRestart(current);
 
          /*
           * Ask the geometry for the appropriate refinement operator and

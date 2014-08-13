@@ -33,7 +33,7 @@ namespace hier {
  * OverlapConnectorAlgorithm objects create, check and operate on overlap
  * Connectors.
  */
-class OverlapConnectorAlgorithm : public BaseConnectorAlgorithm
+class OverlapConnectorAlgorithm:public BaseConnectorAlgorithm
 {
 
 public:
@@ -602,7 +602,7 @@ private:
       Connector* east_to_west,
       const std::set<int>& incoming_ranks,
       const std::set<int>& outgoing_ranks,
-      tbox::AsyncCommPeer<int> all_comms[],
+      tbox::AsyncCommPeer<int>* all_comms,
       NeighborSet& visible_west_nabrs,
       NeighborSet& visible_east_nabrs) const;
 
@@ -704,7 +704,6 @@ private:
     * class but may not be necessary anymore.
     */
    static int s_operation_mpi_tag;
-
 
    //@{
    //! @name Timer data for this class.

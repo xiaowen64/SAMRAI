@@ -20,8 +20,6 @@
 namespace SAMRAI {
 namespace mesh {
 
-
-
 /*!
  * @brief Light weight class holding parameters generally used
  * in partitioning.
@@ -30,59 +28,61 @@ namespace mesh {
 class PartitioningParams
 {
 public:
+   PartitioningParams(
+      const hier::BaseGridGeometry& grid_geometry,
+      const hier::IntVector& ratio_to_level_zero,
+      const hier::IntVector& min_size,
+      const hier::IntVector& max_size,
+      const hier::IntVector& bad_interval,
+      const hier::IntVector& cut_factor,
+      double flexible_load_tol);
 
    PartitioningParams(
-      const hier::BaseGridGeometry &grid_geometry,
-      const hier::IntVector &ratio_to_level_zero,
-      const hier::IntVector &min_size,
-      const hier::IntVector &max_size,
-      const hier::IntVector &bad_interval,
-      const hier::IntVector &cut_factor,
-      double flexible_load_tol );
-
-   PartitioningParams( const PartitioningParams &other );
+      const PartitioningParams& other);
 
    double getMinLoad() const {
       return static_cast<double>(d_min_size.getProduct());
    }
 
-   const hier::IntVector &getMinBoxSize() const {
+   const hier::IntVector& getMinBoxSize() const {
       return d_min_size;
    }
 
-   const hier::IntVector &getMaxBoxSize() const {
+   const hier::IntVector& getMaxBoxSize() const {
       return d_max_size;
    }
 
-   const hier::BoxContainer &getDomainBoxes( const hier::BlockId &bid ) const {
+   const hier::BoxContainer& getDomainBoxes(const hier::BlockId& bid) const {
       return d_block_domain_boxes.find(bid)->second;
    }
 
-   const hier::IntVector &getBadInterval() const {
+   const hier::IntVector& getBadInterval() const {
       return d_bad_interval;
    }
 
-   const hier::IntVector &getCutFactor() const {
+   const hier::IntVector& getCutFactor() const {
       return d_cut_factor;
    }
 
-   const tbox::Dimension &getDim() const {
+   const tbox::Dimension& getDim() const {
       return d_min_size.getDim();
    }
 
-   const double &getFlexibleLoadTol() const {
+   const double& getFlexibleLoadTol() const {
       return d_flexible_load_tol;
    }
 
-   const double &getLoadComparisonTol() const {
+   const double& getLoadComparisonTol() const {
       return d_load_comparison_tol;
    }
 
-   friend std::ostream &operator<<( std::ostream &os, const PartitioningParams &pp );
+   friend std::ostream&
+   operator << (
+      std::ostream& os,
+      const PartitioningParams& pp);
 
 private:
-
-   std::map<hier::BlockId,hier::BoxContainer> d_block_domain_boxes;
+   std::map<hier::BlockId, hier::BoxContainer> d_block_domain_boxes;
    hier::IntVector d_min_size;
    hier::IntVector d_max_size;
    hier::IntVector d_bad_interval;

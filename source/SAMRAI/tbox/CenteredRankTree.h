@@ -65,11 +65,10 @@ namespace tbox {
  * subtree is composed nodes with contiguous natural ordering.  This
  * again benefits communication.
  */
-   class CenteredRankTree : public RankTreeStrategy
+class CenteredRankTree:public RankTreeStrategy
 {
 
 public:
-
    /*!
     * @brief Constructor.
     */
@@ -123,7 +122,7 @@ public:
     */
    void
    setupTree(
-      const RankGroup &rank_group,
+      const RankGroup& rank_group,
       int my_rank);
 
    /*!
@@ -147,8 +146,8 @@ public:
     */
    int
    getChildRank(unsigned int child_number) const {
-      return ( child_number < d_num_children ) ?
-         d_children[child_number] : getInvalidRank();
+      return (child_number < d_num_children) ?
+             d_children[child_number] : getInvalidRank();
    }
 
    /*!
@@ -196,12 +195,11 @@ public:
     * be made before setupTree().
     */
    void makeFirstRankTheRoot(bool make_first_rank_the_root) {
-      TBOX_ASSERT( d_rank == getInvalidRank() );
+      TBOX_ASSERT(d_rank == getInvalidRank());
       d_make_first_rank_the_root = make_first_rank_the_root;
    }
 
 private:
-
    // Unimplemented copy constructor.
    CenteredRankTree(
       const CenteredRankTree& other);

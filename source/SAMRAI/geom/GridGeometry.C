@@ -197,7 +197,7 @@ GridGeometry::makeCoarsenedGridGeometry(
          d_transfer_operator_registry));
 
    coarse_geometry->initializePeriodicShift(getPeriodicShift(
-      hier::IntVector::getOne(dim)));
+         hier::IntVector::getOne(dim)));
 
    return coarse_geometry;
 }
@@ -233,7 +233,7 @@ GridGeometry::makeRefinedGridGeometry(
          d_transfer_operator_registry));
 
    fine_geometry->initializePeriodicShift(getPeriodicShift(
-      hier::IntVector::getOne(dim)));
+         hier::IntVector::getOne(dim)));
 
    return fine_geometry;
 }

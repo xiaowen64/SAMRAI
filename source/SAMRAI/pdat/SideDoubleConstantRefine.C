@@ -107,7 +107,7 @@ SideDoubleConstantRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-SideDoubleConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
+SideDoubleConstantRefine::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }
@@ -161,7 +161,7 @@ SideDoubleConstantRefine::refine(
          hier::Box fine_box(*b);
          TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, fine_box);
 
-         fine_box.upper(axis) -= 1;
+         fine_box.setUpper(axis, fine_box.upper(axis) - 1);
 
          const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
          const hier::Index ifirstc = coarse_box.lower();

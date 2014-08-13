@@ -226,10 +226,10 @@ public:
        *
        */
       Handler(
-         void(*initialize)(),
-         void(*startup)(),
-         void(*shutdown)(),
-         void(*finalize)(),
+         void(* initialize)(),
+         void(* startup)(),
+         void(* shutdown)(),
+         void(* finalize)(),
          unsigned char priority);
 
       /*!
@@ -363,7 +363,7 @@ private:
     */
    static void
    registerHandler(
-      AbstractHandler* handler);
+      AbstractHandler * handler);
 
    /*!
     * @brief Invoke the registered initialization handlers.
@@ -451,7 +451,8 @@ public:
       ListElement();
 
       // Unimplemented copy constructor.
-      ListElement(const ListElement& other);
+      ListElement(
+         const ListElement& other);
 
       // Unimplemented assignment operator.
       ListElement&

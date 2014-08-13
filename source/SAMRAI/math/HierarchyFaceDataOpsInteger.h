@@ -392,7 +392,7 @@ private:
    int d_coarsest_level;
    int d_finest_level;
    std::vector<std::vector<hier::BoxContainer> >
-      d_nonoverlapping_face_boxes[SAMRAI::MAX_DIM_VAL];
+   d_nonoverlapping_face_boxes[SAMRAI::MAX_DIM_VAL];
 
    PatchFaceDataOpsInteger d_patch_ops;
 

@@ -178,12 +178,12 @@ RefineAlgorithm::createSchedule(
       boost::make_shared<PatchLevelFullFillPattern>());
 
    return boost::make_shared<RefineSchedule>(
-      fill_pattern,
-      level,
-      level,
-      d_refine_classes,
-      trans_factory,
-      patch_strategy);
+             fill_pattern,
+             level,
+             level,
+             d_refine_classes,
+             trans_factory,
+             patch_strategy);
 }
 
 /*
@@ -215,12 +215,12 @@ RefineAlgorithm::createSchedule(
    }
 
    return boost::make_shared<RefineSchedule>(
-      fill_pattern,
-      level,
-      level,
-      d_refine_classes,
-      trans_factory,
-      patch_strategy);
+             fill_pattern,
+             level,
+             level,
+             d_refine_classes,
+             trans_factory,
+             patch_strategy);
 }
 
 /*
@@ -260,13 +260,13 @@ RefineAlgorithm::createSchedule(
       boost::make_shared<PatchLevelFullFillPattern>());
 
    return boost::make_shared<RefineSchedule>(
-      fill_pattern,
-      dst_level,
-      src_level,
-      d_refine_classes,
-      trans_factory,
-      patch_strategy,
-      use_time_refinement);
+             fill_pattern,
+             dst_level,
+             src_level,
+             d_refine_classes,
+             trans_factory,
+             patch_strategy,
+             use_time_refinement);
 }
 
 /*
@@ -302,13 +302,13 @@ RefineAlgorithm::createSchedule(
    }
 
    return boost::make_shared<RefineSchedule>(
-      fill_pattern,
-      dst_level,
-      src_level,
-      d_refine_classes,
-      trans_factory,
-      patch_strategy,
-      use_time_refinement);
+             fill_pattern,
+             dst_level,
+             src_level,
+             d_refine_classes,
+             trans_factory,
+             patch_strategy,
+             use_time_refinement);
 }
 
 /*
@@ -353,15 +353,15 @@ RefineAlgorithm::createSchedule(
       boost::make_shared<PatchLevelFullFillPattern>());
 
    return boost::make_shared<RefineSchedule>(
-      fill_pattern,
-      level,
-      level,
-      next_coarser_level,
-      hierarchy,
-      d_refine_classes,
-      trans_factory,
-      patch_strategy,
-      use_time_refinement);
+             fill_pattern,
+             level,
+             level,
+             next_coarser_level,
+             hierarchy,
+             d_refine_classes,
+             trans_factory,
+             patch_strategy,
+             use_time_refinement);
 }
 
 /*
@@ -404,15 +404,15 @@ RefineAlgorithm::createSchedule(
    }
 
    return boost::make_shared<RefineSchedule>(
-      fill_pattern,
-      level,
-      level,
-      next_coarser_level,
-      hierarchy,
-      d_refine_classes,
-      trans_factory,
-      patch_strategy,
-      use_time_refinement);
+             fill_pattern,
+             level,
+             level,
+             next_coarser_level,
+             hierarchy,
+             d_refine_classes,
+             trans_factory,
+             patch_strategy,
+             use_time_refinement);
 }
 
 /*
@@ -467,15 +467,15 @@ RefineAlgorithm::createSchedule(
       boost::make_shared<PatchLevelFullFillPattern>());
 
    return boost::make_shared<RefineSchedule>(
-      fill_pattern,
-      dst_level,
-      src_level,
-      next_coarser_level,
-      hierarchy,
-      d_refine_classes,
-      trans_factory,
-      patch_strategy,
-      false);
+             fill_pattern,
+             dst_level,
+             src_level,
+             next_coarser_level,
+             hierarchy,
+             d_refine_classes,
+             trans_factory,
+             patch_strategy,
+             false);
 }
 
 /*
@@ -528,15 +528,15 @@ RefineAlgorithm::createSchedule(
    }
 
    return boost::make_shared<RefineSchedule>(
-      fill_pattern,
-      dst_level,
-      src_level,
-      next_coarser_level,
-      hierarchy,
-      d_refine_classes,
-      trans_factory,
-      patch_strategy,
-      false);
+             fill_pattern,
+             dst_level,
+             src_level,
+             next_coarser_level,
+             hierarchy,
+             d_refine_classes,
+             trans_factory,
+             patch_strategy,
+             false);
 }
 
 /*

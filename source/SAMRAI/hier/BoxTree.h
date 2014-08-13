@@ -47,10 +47,9 @@ class BoxContainer;
 
 class BoxTree
 {
-friend class MultiblockBoxTree;
+   friend class MultiblockBoxTree;
 
 public:
-
    /*!
     * @brief Print statistics on number of constructor calls, tree
     * builds, tree searches, etc.
@@ -77,9 +76,8 @@ public:
    ~BoxTree();
 
 private:
-
    BoxTree(
-      const std::list<const Box*> boxes,
+      const std::list<const Box *> boxes,
       int min_number = 10);
 
    /*!
@@ -187,7 +185,7 @@ private:
    /*!
     * @brief Find all boxes that overlap the given \b box.
     *
-    * Analogous to findOverlapBoxes returning a BoxContainer 
+    * Analogous to findOverlapBoxes returning a BoxContainer
     * but avoids the copies.  If the returned overlap_boxes are used
     * in a context in which the BoxTree is constant there is no point
     * in incurring the cost of copying the tree's Boxes.  Just return
@@ -270,8 +268,8 @@ private:
    void
    setupChildren(
       const int min_number,
-      std::list<const Box*>& left_boxes,
-      std::list<const Box*>& right_boxes);
+      std::list<const Box *>& left_boxes,
+      std::list<const Box *>& right_boxes);
 
    /*!
     * @brief Set up static class members.
@@ -322,7 +320,7 @@ private:
     * that this tree represents.  When we have a small number of boxes
     * that do not warant the overhead of a child tree, the boxes go here.
     */
-   std::list<const Box*> d_boxes;
+   std::list<const Box *> d_boxes;
 
    /*!
     * @brief Dimension along which the input box triples are

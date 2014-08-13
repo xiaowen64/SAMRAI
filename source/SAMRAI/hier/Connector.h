@@ -79,7 +79,6 @@ public:
     */
    typedef BoxNeighborhoodCollection::NeighborIterator NeighborIterator;
 
-
    /*!
     * @brief Creates an uninitialized Connector object in the
     * distributed state.
@@ -170,7 +169,7 @@ public:
    void
    clear()
    {
-      if ( d_base_handle ) {
+      if (d_base_handle) {
          d_relationships.clear();
          d_global_relationships.clear();
          d_mpi.setCommunicator(MPI_COMM_NULL);
@@ -189,7 +188,6 @@ public:
    {
       d_relationships.clear();
       d_global_relationships.clear();
-      return;
    }
 
    /*!
@@ -259,7 +257,7 @@ public:
       NeighborhoodIterator& nbrhd)
    {
       BoxNeighborhoodCollection* tmp =
-         const_cast<BoxNeighborhoodCollection*>(nbrhd.d_collection);
+         const_cast<BoxNeighborhoodCollection *>(nbrhd.d_collection);
       return tmp->begin(nbrhd);
    }
 
@@ -285,7 +283,7 @@ public:
       NeighborhoodIterator& nbrhd)
    {
       BoxNeighborhoodCollection* tmp =
-         const_cast<BoxNeighborhoodCollection*>(nbrhd.d_collection);
+         const_cast<BoxNeighborhoodCollection *>(nbrhd.d_collection);
       return tmp->end(nbrhd);
    }
 
@@ -402,7 +400,7 @@ public:
       const BoxId& box_id,
       const Box& neighbor) const
    {
-      TBOX_ASSERT( box_id.getOwnerRank() == d_mpi.getRank() );
+      TBOX_ASSERT(box_id.getOwnerRank() == d_mpi.getRank());
       return d_relationships.hasNeighbor(box_id, neighbor);
    }
 
@@ -437,7 +435,6 @@ public:
       BoxContainer& neighbors) const
    {
       d_relationships.getNeighbors(neighbors);
-      return;
    }
 
    /*!
@@ -450,7 +447,6 @@ public:
       std::map<BlockId, BoxContainer>& neighbors) const
    {
       d_relationships.getNeighbors(neighbors);
-      return;
    }
 
    /*!
@@ -499,7 +495,6 @@ public:
       std::set<int>& owners) const
    {
       d_relationships.getOwners(owners);
-      return;
    }
 
    /*!
@@ -515,7 +510,6 @@ public:
       std::set<int>& owners) const
    {
       d_relationships.getOwners(base_boxes_itr, owners);
-      return;
    }
 
    //@{
@@ -566,7 +560,7 @@ public:
       const Box& neighbor,
       const BoxId& box_id)
    {
-      TBOX_ASSERT( box_id.getOwnerRank() == d_mpi.getRank() );
+      TBOX_ASSERT(box_id.getOwnerRank() == d_mpi.getRank());
       d_relationships.insert(box_id, neighbor);
    }
 
@@ -583,7 +577,7 @@ public:
       const Box& neighbor,
       NeighborhoodIterator& base_box_itr)
    {
-      TBOX_ASSERT( base_box_itr->getOwnerRank() == d_mpi.getRank() );
+      TBOX_ASSERT(base_box_itr->getOwnerRank() == d_mpi.getRank());
       d_relationships.insert(base_box_itr, neighbor);
    }
 
@@ -598,7 +592,7 @@ public:
    eraseLocalNeighborhood(
       const BoxId& box_id)
    {
-      TBOX_ASSERT( box_id.getOwnerRank() == d_mpi.getRank() );
+      TBOX_ASSERT(box_id.getOwnerRank() == d_mpi.getRank());
       d_relationships.erase(box_id);
    }
 
@@ -612,7 +606,6 @@ public:
       if (d_parallel_state == BoxLevel::GLOBALIZED) {
          d_global_relationships.erasePeriodicNeighbors();
       }
-      return;
    }
 
    /*!
@@ -622,7 +615,6 @@ public:
    removePeriodicLocalNeighbors()
    {
       d_relationships.erasePeriodicNeighbors();
-      return;
    }
 
    /*!
@@ -654,7 +646,7 @@ public:
    makeEmptyLocalNeighborhood(
       const BoxId& box_id)
    {
-      TBOX_ASSERT( box_id.getOwnerRank() == d_mpi.getRank() );
+      TBOX_ASSERT(box_id.getOwnerRank() == d_mpi.getRank());
       return d_relationships.insert(box_id).first;
    }
 
@@ -666,7 +658,6 @@ public:
    {
       d_relationships.eraseEmptyNeighborhoods();
       d_global_data_up_to_date = false;
-      return;
    }
 
    /*!
@@ -691,7 +682,6 @@ public:
       const IntVector& ratio)
    {
       d_relationships.coarsenNeighbors(ratio);
-      return;
    }
 
    /*!
@@ -704,7 +694,6 @@ public:
       const IntVector& ratio)
    {
       d_relationships.refineNeighbors(ratio);
-      return;
    }
 
    /*!
@@ -717,7 +706,6 @@ public:
       const IntVector& growth)
    {
       d_relationships.growNeighbors(growth);
-      return;
    }
 
    //@}
@@ -865,7 +853,7 @@ public:
     * base neighbor.  This is because all relationships must be incident from a
     * real (unshifted) Box.
     */
-   virtual Connector*
+   virtual Connector *
    createLocalTranspose() const;
 
    /*!
@@ -875,7 +863,7 @@ public:
     * non-local edges.  Global data is required, so this method
     * is not scalable.
     */
-   virtual Connector*
+   virtual Connector *
    createTranspose() const;
 
    /*!
@@ -1189,7 +1177,6 @@ public:
       }
    }
 
-
    /*!
     * @brief Check that the relationships are a correct transpose of another
     * Connector and return the number of erroneous relationships.
@@ -1385,7 +1372,6 @@ public:
       const boost::shared_ptr<tbox::Database>& restart_db)
    {
       d_relationships.putToRestart(restart_db);
-      return;
    }
 
    /*!
@@ -1435,7 +1421,7 @@ public:
     */
    void
    writeNeighborhoodToStream(
-      std::ostream &os,
+      std::ostream& os,
       const BoxId& box_id) const;
 
    /*!
@@ -1602,7 +1588,7 @@ private:
     *
     * @pre other.getParallelState() != BoxLevel::GLOBALIZED
     */
-   Connector*
+   Connector *
    makeGlobalizedCopy(
       const Connector& other) const;
 
@@ -1667,7 +1653,6 @@ private:
       tbox::Database& restart_db)
    {
       d_relationships.getFromRestart(restart_db);
-      return;
    }
 
    /*!

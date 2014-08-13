@@ -27,7 +27,7 @@ HierarchyNodeDataOpsComplex::HierarchyNodeDataOpsComplex(
    const int coarsest_level,
    const int finest_level):
    HierarchyDataOpsComplex(),
-   d_hierarchy (hierarchy)
+   d_hierarchy(hierarchy)
 {
    TBOX_ASSERT(hierarchy);
 
@@ -748,7 +748,7 @@ HierarchyNodeDataOpsComplex::numberOfEntries(
          const int npatches = level->getNumberOfPatches();
 
          TBOX_ASSERT(npatches ==
-                     static_cast<int>(d_nonoverlapping_node_boxes[ln].size()));
+            static_cast<int>(d_nonoverlapping_node_boxes[ln].size()));
 
          for (int il = 0; il < npatches; ++il) {
             hier::BoxContainer::const_iterator lb =
@@ -1090,8 +1090,7 @@ HierarchyNodeDataOpsComplex::dot(
       mpi.Allreduce(&imag_part, &global_imag_part, 1, MPI_DOUBLE, MPI_SUM);
       dcomplex global_dot(global_real_part, global_imag_part);
       return global_dot;
-   }
-   else {
+   } else {
       return dprod;
    }
 }
@@ -1146,8 +1145,7 @@ HierarchyNodeDataOpsComplex::integral(
       mpi.Allreduce(&imag_part, &global_imag_part, 1, MPI_DOUBLE, MPI_SUM);
       dcomplex global_integral(global_real_part, global_imag_part);
       return global_integral;
-   }
-   else {
+   } else {
       return local_integral;
    }
 }

@@ -49,7 +49,7 @@ MultiblockTester::MultiblockTester(
    d_fake_time(0.0),
    d_fake_cycle(0),
    d_source(
-     hier::VariableDatabase::getDatabase()->getContext("SOURCE")),
+      hier::VariableDatabase::getDatabase()->getContext("SOURCE")),
    d_destination(
       hier::VariableDatabase::getDatabase()->getContext("DESTINATION")),
    d_refine_scratch(
@@ -255,13 +255,10 @@ void MultiblockTester::resetRefineSchedule(
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
 
-
    d_reset_refine_algorithm.resetSchedule(d_refine_schedule[level_number]);
-
 
    d_is_reset = true;
 }
-
 
 /*
  *************************************************************************
@@ -481,7 +478,7 @@ void MultiblockTester::fillSingularityBoundaryConditions(
    d_data_test_strategy->setDataContext(save_context);
 }
 
-hier::IntVector MultiblockTester::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
+hier::IntVector MultiblockTester::getRefineOpStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector(dim, 0);
 }
@@ -524,7 +521,7 @@ void MultiblockTester::setupHierarchy(
 
    boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
       new mesh::BergerRigoutsos(d_dim,
-                                main_input_db->getDatabase("BergerRigoutsos")));
+         main_input_db->getDatabase("BergerRigoutsos")));
 
    boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
       new mesh::TreeLoadBalancer(d_dim,

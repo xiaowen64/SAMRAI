@@ -489,7 +489,7 @@ private:
     *      (ratio_to_hierarchy_level_zero.getDim() == bad_interval.getDim())
     * @pre hierarchy
     * @pre level_number >= 0
-    * @pre !physical_domain.isEmpty()
+    * @pre !physical_domain.empty()
     * @pre min_size > hier::IntVector::getZero(d_dim)
     * @pre max_size >= min_size
     * @pre cut_factor > hier::IntVector::getZero(d_dim)
@@ -598,9 +598,9 @@ private:
       int level_number) const
    {
       TBOX_ASSERT(level_number >= 0);
-      return (level_number < static_cast<int>(d_workload_data_id.size()) ?
-              d_workload_data_id[level_number] :
-              d_master_workload_data_id);
+      return level_number < static_cast<int>(d_workload_data_id.size()) ?
+             d_workload_data_id[level_number] :
+             d_master_workload_data_id;
    }
 
    double
@@ -608,9 +608,9 @@ private:
       int level_number) const
    {
       TBOX_ASSERT(level_number >= 0);
-      return (level_number < static_cast<int>(d_max_workload_factor.size()) ?
-              d_max_workload_factor[level_number] :
-              d_master_max_workload_factor);
+      return level_number < static_cast<int>(d_max_workload_factor.size()) ?
+             d_max_workload_factor[level_number] :
+             d_master_max_workload_factor;
    }
 
    double
@@ -618,9 +618,9 @@ private:
       int level_number) const
    {
       TBOX_ASSERT(level_number >= 0);
-      return (level_number < static_cast<int>(d_workload_tolerance.size()) ?
-              d_workload_tolerance[level_number] :
-              d_master_workload_tolerance);
+      return level_number < static_cast<int>(d_workload_tolerance.size()) ?
+             d_workload_tolerance[level_number] :
+             d_master_workload_tolerance;
    }
 
    std::string
@@ -628,9 +628,9 @@ private:
       int level_number) const
    {
       TBOX_ASSERT(level_number >= 0);
-      return (level_number < static_cast<int>(d_bin_pack_method.size()) ?
-              d_bin_pack_method[level_number] :
-              d_master_bin_pack_method);
+      return level_number < static_cast<int>(d_bin_pack_method.size()) ?
+             d_bin_pack_method[level_number] :
+             d_master_bin_pack_method;
    }
 
    /*!

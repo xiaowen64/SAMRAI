@@ -246,7 +246,7 @@ HierarchyNodeDataOpsReal<TYPE>::setToScalar(
 
          boost::shared_ptr<pdat::NodeData<TYPE> > d(
             BOOST_CAST<pdat::NodeData<TYPE>, hier::PatchData>(
-                p->getPatchData(data_id)));
+               p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
 
@@ -760,9 +760,9 @@ HierarchyNodeDataOpsReal<TYPE>::numberOfEntries(
 
    if (interior_only) {
 
-     boost::shared_ptr<pdat::NodeDataFactory<TYPE> > dfact(
-        BOOST_CAST<pdat::NodeDataFactory<TYPE>, hier::PatchDataFactory>(
-           d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id)));
+      boost::shared_ptr<pdat::NodeDataFactory<TYPE> > dfact(
+         BOOST_CAST<pdat::NodeDataFactory<TYPE>, hier::PatchDataFactory>(
+            d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id)));
 
       TBOX_ASSERT(dfact);
 
@@ -772,7 +772,7 @@ HierarchyNodeDataOpsReal<TYPE>::numberOfEntries(
          const int npatches = level->getNumberOfPatches();
 
          TBOX_ASSERT(npatches ==
-                     static_cast<int>(d_nonoverlapping_node_boxes[ln].size()));
+            static_cast<int>(d_nonoverlapping_node_boxes[ln].size()));
 
          for (int il = 0; il < npatches; ++il) {
             hier::BoxContainer::const_iterator lb =

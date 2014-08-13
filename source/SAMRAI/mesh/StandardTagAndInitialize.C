@@ -95,16 +95,16 @@ StandardTagAndInitialize::StandardTagAndInitialize(
    const std::string& object_name,
    StandardTagAndInitStrategy* tag_strategy,
    const boost::shared_ptr<tbox::Database>& input_db):
-  TagAndInitializeStrategy(object_name),
-  d_tag_strategy(tag_strategy),
-  d_error_coarsen_ratio(1),
-  d_use_cycle_criteria(false),
-  d_use_time_criteria(false),
-  d_ever_uses_richardson_extrapolation(false),
-  d_ever_uses_gradient_detector(false),
-  d_ever_uses_refine_boxes(false),
-  d_boxes_changed(false),
-  d_old_cycle(-1)
+   TagAndInitializeStrategy(object_name),
+   d_tag_strategy(tag_strategy),
+   d_error_coarsen_ratio(1),
+   d_use_cycle_criteria(false),
+   d_use_time_criteria(false),
+   d_ever_uses_richardson_extrapolation(false),
+   d_ever_uses_gradient_detector(false),
+   d_ever_uses_refine_boxes(false),
+   d_boxes_changed(false),
+   d_old_cycle(-1)
 {
    TBOX_ASSERT(!object_name.empty());
 
@@ -887,7 +887,7 @@ bool
 StandardTagAndInitialize::coarsestLevelBoxesOK(
    const hier::BoxContainer& boxes) const
 {
-   TBOX_ASSERT(!boxes.isEmpty());
+   TBOX_ASSERT(!boxes.empty());
 
    bool boxes_ok = true;
    if (everUsesRichardsonExtrapolation()) {
@@ -993,7 +993,7 @@ StandardTagAndInitialize::checkCoarsenRatios(
 bool
 StandardTagAndInitialize::everUsesTimeIntegration() const
 {
-  return everUsesRichardsonExtrapolation();
+   return everUsesRichardsonExtrapolation();
 }
 
 /*
@@ -1007,7 +1007,7 @@ StandardTagAndInitialize::usesTimeIntegration(
    int cycle,
    double time)
 {
-  return usesRichardsonExtrapolation(cycle, time);
+   return usesRichardsonExtrapolation(cycle, time);
 }
 
 /*
@@ -1045,8 +1045,7 @@ StandardTagAndInitialize::usesRichardsonExtrapolation(
             break;
          }
       }
-   }
-   else if (d_use_time_criteria) {
+   } else if (d_use_time_criteria) {
       for (std::vector<TagCriteria>::const_iterator i = d_cur_time_criteria->d_tag_criteria.begin();
            i != d_cur_time_criteria->d_tag_criteria.end(); ++i) {
          if (i->d_tagging_method == "RICHARDSON_EXTRAPOLATION") {
@@ -1093,11 +1092,10 @@ StandardTagAndInitialize::usesGradientDetector(
             break;
          }
       }
-   }
-   else if (d_use_time_criteria) {
+   } else if (d_use_time_criteria) {
       for (std::vector<TagCriteria>::const_iterator i = d_cur_time_criteria->d_tag_criteria.begin();
            i != d_cur_time_criteria->d_tag_criteria.end(); ++i) {
-          if (i->d_tagging_method == "GRADIENT_DETECTOR") {
+         if (i->d_tagging_method == "GRADIENT_DETECTOR") {
             result = true;
             break;
          }
@@ -1141,8 +1139,7 @@ StandardTagAndInitialize::usesRefineBoxes(
             break;
          }
       }
-   }
-   else if (d_use_time_criteria) {
+   } else if (d_use_time_criteria) {
       for (std::vector<TagCriteria>::const_iterator i = d_cur_time_criteria->d_tag_criteria.begin();
            i != d_cur_time_criteria->d_tag_criteria.end(); ++i) {
          if (i->d_tagging_method == "REFINE_BOXES") {
@@ -1253,8 +1250,7 @@ StandardTagAndInitialize::getFromInput(
                      b->setBlockId(hier::BlockId(0));
                   }
                   level_boxes.spliceBack(boxes);
-               }
-               else {
+               } else {
                   for (int l = 0; l < n_block_keys; ++l) {
                      if (block_keys[l].find("block_") != 0) {
                         TBOX_ERROR(
@@ -1280,14 +1276,11 @@ StandardTagAndInitialize::getFromInput(
                   std::make_pair(level, level_boxes));
                level_boxes.clear();
             }
-         }
-         else if (tagging_method == "RICHARDSON_EXTRAPOLATION") {
+         } else if (tagging_method == "RICHARDSON_EXTRAPOLATION") {
             d_ever_uses_richardson_extrapolation = true;
-         }
-         else if (tagging_method == "GRADIENT_DETECTOR") {
+         } else if (tagging_method == "GRADIENT_DETECTOR") {
             d_ever_uses_gradient_detector = true;
-         }
-         else {
+         } else {
             TBOX_WARNING(
                getObjectName() << "::getFromInput\n"
                                << "NO METHOD IS SPECIFIED TO TAG CELLS FOR\n"
@@ -1296,8 +1289,7 @@ StandardTagAndInitialize::getFromInput(
          }
          this_cycle_crit.d_tag_criteria.push_back(this_tag_crit);
          d_cycle_criteria.insert(this_cycle_crit);
-      }
-      else {
+      } else {
          // Complete syntax read here.
 
          // Read the set of criteria for each cycle or time having tagging
@@ -1328,8 +1320,7 @@ StandardTagAndInitialize::getFromInput(
                }
                this_cycle_crit.d_cycle = cycle;
                is_cycle = true;
-            }
-            else if (at_db->keyExists("time")) {
+            } else if (at_db->keyExists("time")) {
                /*
                 * Read time tagging criteria.
                 */
@@ -1338,8 +1329,7 @@ StandardTagAndInitialize::getFromInput(
                   INPUT_RANGE_ERROR("time");
                }
                this_time_crit.d_time = time;
-            }
-            else {
+            } else {
                TBOX_ERROR(
                   getObjectName() << "::getFromInput \n"
                                   << "Invalid tagging period, must be 'cycle' or 'time'."
@@ -1428,8 +1418,7 @@ StandardTagAndInitialize::getFromInput(
                            b->setBlockId(hier::BlockId(0));
                         }
                         level_boxes.spliceBack(boxes);
-                     }
-                     else {
+                     } else {
                         for (int l = 0; l < n_block_keys; ++l) {
                            if (block_keys[l].find("block_") != 0) {
                               TBOX_ERROR(
@@ -1455,14 +1444,11 @@ StandardTagAndInitialize::getFromInput(
                         std::make_pair(level, level_boxes));
                      level_boxes.clear();
                   }
-               }
-               else if (tagging_method == "RICHARDSON_EXTRAPOLATION") {
+               } else if (tagging_method == "RICHARDSON_EXTRAPOLATION") {
                   d_ever_uses_richardson_extrapolation = true;
-               }
-               else if (tagging_method == "GRADIENT_DETECTOR"){
+               } else if (tagging_method == "GRADIENT_DETECTOR") {
                   d_ever_uses_gradient_detector = true;
-               }
-               else if (n_tag_keys != 1) {
+               } else if (n_tag_keys != 1) {
                   TBOX_ERROR(
                      getObjectName() << "::getFromInput \n"
                                      << "A tagging method of NONE has been specified \n"
@@ -1473,8 +1459,7 @@ StandardTagAndInitialize::getFromInput(
                // Add the tagging criteria to the vector of criteria.
                if (is_cycle) {
                   this_cycle_crit.d_tag_criteria.push_back(this_tag_crit);
-               }
-               else {
+               } else {
                   this_time_crit.d_tag_criteria.push_back(this_tag_crit);
                }
 
@@ -1487,8 +1472,7 @@ StandardTagAndInitialize::getFromInput(
             // the appropriate set.
             if (is_cycle) {
                d_cycle_criteria.insert(this_cycle_crit);
-            }
-            else {
+            } else {
                d_time_criteria.insert(this_time_crit);
             }
 
@@ -1505,8 +1489,7 @@ StandardTagAndInitialize::getFromInput(
                             << "REFINEMENT so no tagging is performed."
                             << std::endl);
       }
-   }
-   else {
+   } else {
       TBOX_WARNING(
          getObjectName() << "::getFromInput\n"
                          << "no input database specified - NO METHOD IS SPECIFIED TO TAG\n"
@@ -1537,7 +1520,7 @@ StandardTagAndInitialize::getUserSuppliedRefineBoxes(
    const int cycle,
    const double time)
 {
-   TBOX_ASSERT(refine_boxes.isEmpty());
+   TBOX_ASSERT(refine_boxes.empty());
    TBOX_ASSERT(level_num >= 0);
    TBOX_ASSERT(time >= 0.);
    TBOX_ASSERT(!d_use_cycle_criteria || !d_use_time_criteria);
@@ -1560,8 +1543,7 @@ StandardTagAndInitialize::getUserSuppliedRefineBoxes(
             break;
          }
       }
-   }
-   else if (d_use_time_criteria) {
+   } else if (d_use_time_criteria) {
       for (std::vector<TagCriteria>::const_iterator i = d_cur_time_criteria->d_tag_criteria.begin();
            i != d_cur_time_criteria->d_tag_criteria.end(); ++i) {
          if (i->d_tagging_method == "REFINE_BOXES") {
@@ -1588,7 +1570,7 @@ StandardTagAndInitialize::getUserSuppliedRefineBoxes(
       }
    }
 
-   if (refine_boxes.isEmpty()) {
+   if (refine_boxes.empty()) {
       TBOX_WARNING(
          getObjectName() << ": getRefineBoxes\n"
                          << "No refine boxes specified on level " << level_num
@@ -1653,8 +1635,7 @@ StandardTagAndInitialize::turnOnRefineBoxes(
       this_time_crit.d_time = time;
       this_time_crit.d_tag_criteria.push_back(this_tag_crit);
       d_cur_time_criteria = d_time_criteria.insert(this_time_crit).first;
-   }
-   else {
+   } else {
       bool refine_boxes_already_on = false;
       for (std::vector<TagCriteria>::const_iterator i = existing->d_tag_criteria.begin();
            i != existing->d_tag_criteria.end(); ++i) {
@@ -1667,7 +1648,7 @@ StandardTagAndInitialize::turnOnRefineBoxes(
          TagCriteria this_tag_crit;
          this_tag_crit.d_tagging_method = "REFINE_BOXES";
          std::vector<TagCriteria>& this_tag_criteria =
-            const_cast<std::vector<TagCriteria>& >(existing->d_tag_criteria);
+            const_cast<std::vector<TagCriteria>&>(existing->d_tag_criteria);
          this_tag_criteria.push_back(this_tag_crit);
       }
    }
@@ -1681,11 +1662,13 @@ StandardTagAndInitialize::turnOffRefineBoxes(
         i != d_time_criteria.end(); ++i) {
       if (i->d_time <= time) {
          std::vector<TagCriteria>& tag_crits =
-            const_cast<std::vector<TagCriteria>& >(i->d_tag_criteria);
-         for (std::vector<TagCriteria>::iterator j = tag_crits.begin();
-              j != tag_crits.end(); ++j) {
-            if (j->d_tagging_method == "REFINE_BOXES") {;
+            const_cast<std::vector<TagCriteria>&>(i->d_tag_criteria);
+         std::vector<TagCriteria>::iterator j = tag_crits.begin();
+         while (j != tag_crits.end()) {
+            if (j->d_tagging_method == "REFINE_BOXES") {
                tag_crits.erase(j);
+            } else {
+               ++j;
             }
          }
          break;
@@ -1698,8 +1681,8 @@ StandardTagAndInitialize::turnOnGradientDetector(
    double time)
 {
    if (!d_tag_strategy) {
-      TBOX_ERROR("StandardTagAndInitialize::turnOnGradientDetector\n" <<
-         "A tagging strategy must be defined if graient detector is used.\n");
+      TBOX_ERROR("StandardTagAndInitialize::turnOnGradientDetector\n"
+         << "A tagging strategy must be defined if graient detector is used.\n");
    }
 
    TimeTagCriteria search_for;
@@ -1713,8 +1696,7 @@ StandardTagAndInitialize::turnOnGradientDetector(
       this_time_crit.d_time = time;
       this_time_crit.d_tag_criteria.push_back(this_tag_crit);
       d_cur_time_criteria = d_time_criteria.insert(this_time_crit).first;
-   }
-   else {
+   } else {
       bool grad_detect_already_on = false;
       for (std::vector<TagCriteria>::const_iterator i = existing->d_tag_criteria.begin();
            i != existing->d_tag_criteria.end(); ++i) {
@@ -1727,7 +1709,7 @@ StandardTagAndInitialize::turnOnGradientDetector(
          TagCriteria this_tag_crit;
          this_tag_crit.d_tagging_method = "GRADIENT_DETECTOR";
          std::vector<TagCriteria>& this_tag_criteria =
-            const_cast<std::vector<TagCriteria>& >(existing->d_tag_criteria);
+            const_cast<std::vector<TagCriteria>&>(existing->d_tag_criteria);
          this_tag_criteria.push_back(this_tag_crit);
       }
    }
@@ -1741,11 +1723,13 @@ StandardTagAndInitialize::turnOffGradientDetector(
         i != d_time_criteria.end(); ++i) {
       if (i->d_time <= time) {
          std::vector<TagCriteria>& tag_crits =
-            const_cast<std::vector<TagCriteria>& >(i->d_tag_criteria);
-         for (std::vector<TagCriteria>::iterator j = tag_crits.begin();
-              j != tag_crits.end(); ++j) {
+            const_cast<std::vector<TagCriteria>&>(i->d_tag_criteria);
+         std::vector<TagCriteria>::iterator j = tag_crits.begin();
+         while (j != tag_crits.end()) {
             if (j->d_tagging_method == "GRADIENT_DETECTOR") {
                tag_crits.erase(j);
+            } else {
+               ++j;
             }
          }
          break;
@@ -1758,9 +1742,9 @@ StandardTagAndInitialize::turnOnRichardsonExtrapolation(
    double time)
 {
    if (!d_tag_strategy) {
-      TBOX_ERROR("StandardTagAndInitialize::turnOnRichardsonExtrapolation\n" <<
-         "A tagging strategy must be defined if\n" <<
-         "Richardson extrapolation is used.\n");
+      TBOX_ERROR("StandardTagAndInitialize::turnOnRichardsonExtrapolation\n"
+         << "A tagging strategy must be defined if\n"
+         << "Richardson extrapolation is used.\n");
    }
 
    TimeTagCriteria search_for;
@@ -1774,8 +1758,7 @@ StandardTagAndInitialize::turnOnRichardsonExtrapolation(
       this_time_crit.d_time = time;
       this_time_crit.d_tag_criteria.push_back(this_tag_crit);
       d_cur_time_criteria = d_time_criteria.insert(this_time_crit).first;
-   }
-   else {
+   } else {
       bool rich_extrap_already_on = false;
       for (std::vector<TagCriteria>::const_iterator i = existing->d_tag_criteria.begin();
            i != existing->d_tag_criteria.end(); ++i) {
@@ -1788,7 +1771,7 @@ StandardTagAndInitialize::turnOnRichardsonExtrapolation(
          TagCriteria this_tag_crit;
          this_tag_crit.d_tagging_method = "RICHARDSON_EXTRAPOLATION";
          std::vector<TagCriteria>& this_tag_criteria =
-            const_cast<std::vector<TagCriteria>& >(existing->d_tag_criteria);
+            const_cast<std::vector<TagCriteria>&>(existing->d_tag_criteria);
          this_tag_criteria.push_back(this_tag_crit);
       }
    }
@@ -1802,11 +1785,13 @@ StandardTagAndInitialize::turnOffRichardsonExtrapolation(
         i != d_time_criteria.end(); ++i) {
       if (i->d_time <= time) {
          std::vector<TagCriteria>& tag_crits =
-            const_cast<std::vector<TagCriteria>& >(i->d_tag_criteria);
-         for (std::vector<TagCriteria>::iterator j = tag_crits.begin();
-              j != tag_crits.end(); ++j) {
+            const_cast<std::vector<TagCriteria>&>(i->d_tag_criteria);
+         std::vector<TagCriteria>::iterator j = tag_crits.begin();
+         while (j != tag_crits.end()) {
             if (j->d_tagging_method == "RICHARDSON_EXTRAPOLATION") {
                tag_crits.erase(j);
+            } else {
+               ++j;
             }
          }
          break;
@@ -1847,29 +1832,26 @@ StandardTagAndInitialize::setCurrentTaggingCriteria(
       bool old_use_gd = false;
       bool old_use_rb = false;
       if (d_use_cycle_criteria) {
-         for (std::vector<TagCriteria>::const_iterator i = d_cur_cycle_criteria->d_tag_criteria.begin();
+         for (std::vector<TagCriteria>::const_iterator i =
+                 d_cur_cycle_criteria->d_tag_criteria.begin();
               i != d_cur_cycle_criteria->d_tag_criteria.end(); ++i) {
             if (i->d_tagging_method == "RICHARDSON_EXTRAPOLATION") {
                old_use_re = true;
-            }
-            else if (i->d_tagging_method == "GRADIENT_DETECTOR") {
+            } else if (i->d_tagging_method == "GRADIENT_DETECTOR") {
                old_use_gd = true;
-            }
-            else if (i->d_tagging_method == "REFINE_BOXES") {
+            } else if (i->d_tagging_method == "REFINE_BOXES") {
                old_use_rb = true;
             }
          }
-      }
-      else if (d_use_time_criteria) {
-         for (std::vector<TagCriteria>::const_iterator i = d_cur_time_criteria->d_tag_criteria.begin();
+      } else if (d_use_time_criteria) {
+         for (std::vector<TagCriteria>::const_iterator i =
+                 d_cur_time_criteria->d_tag_criteria.begin();
               i != d_cur_time_criteria->d_tag_criteria.end(); ++i) {
             if (i->d_tagging_method == "RICHARDSON_EXTRAPOLATION") {
                old_use_re = true;
-            }
-            else if (i->d_tagging_method == "GRADIENT_DETECTOR") {
+            } else if (i->d_tagging_method == "GRADIENT_DETECTOR") {
                old_use_gd = true;
-            }
-            else if (i->d_tagging_method == "REFINE_BOXES") {
+            } else if (i->d_tagging_method == "REFINE_BOXES") {
                old_use_rb = true;
             }
          }
@@ -1880,8 +1862,8 @@ StandardTagAndInitialize::setCurrentTaggingCriteria(
       // precedence.
       if (!d_cycle_criteria.empty()) {
          // Find the cycle criteria for the supplied cycle, if any.
-         for (; d_cur_cycle_criteria != d_cycle_criteria.end();
-              ++d_cur_cycle_criteria) {
+         for ( ; d_cur_cycle_criteria != d_cycle_criteria.end();
+               ++d_cur_cycle_criteria) {
             std::set<CycleTagCriteria, cycle_tag_criteria_less>::iterator next_cycle_criteria =
                d_cur_cycle_criteria;
             ++next_cycle_criteria;
@@ -1893,16 +1875,14 @@ StandardTagAndInitialize::setCurrentTaggingCriteria(
                   d_use_time_criteria = false;
                }
                break;
-            }
-            else if (cycle >= d_cur_cycle_criteria->d_cycle &&
-                     cycle < next_cycle_criteria->d_cycle) {
+            } else if (cycle >= d_cur_cycle_criteria->d_cycle &&
+                       cycle < next_cycle_criteria->d_cycle) {
                // This is not the last cycle criteria so see if it's valid and
                // the next one isn't at this cycle.  If so then quit.
                d_use_cycle_criteria = true;
                d_use_time_criteria = false;
                break;
-            }
-            else if (cycle < d_cur_cycle_criteria->d_cycle) {
+            } else if (cycle < d_cur_cycle_criteria->d_cycle) {
                // If this cycle criteria isn't valid yet then none of the
                // others will be either so just quit looking.
                break;
@@ -1912,8 +1892,8 @@ StandardTagAndInitialize::setCurrentTaggingCriteria(
 
       if (!d_time_criteria.empty()) {
          // Find the time criteria for the supplied time, if any.
-         for (; d_cur_time_criteria != d_time_criteria.end();
-              ++d_cur_time_criteria) {
+         for ( ; d_cur_time_criteria != d_time_criteria.end();
+               ++d_cur_time_criteria) {
             std::set<TimeTagCriteria, time_tag_criteria_less>::iterator next_time_criteria =
                d_cur_time_criteria;
             ++next_time_criteria;
@@ -1925,16 +1905,14 @@ StandardTagAndInitialize::setCurrentTaggingCriteria(
                   d_use_cycle_criteria = false;
                }
                break;
-            }
-            else if (time >= d_cur_time_criteria->d_time &&
-                     time < next_time_criteria->d_time) {
+            } else if (time >= d_cur_time_criteria->d_time &&
+                       time < next_time_criteria->d_time) {
                // This is not the last time criteria so see if it's valid
                // and the next one isn't at this time.  If so then quit.
                d_use_time_criteria = true;
                d_use_cycle_criteria = false;
                break;
-            }
-            else if (time < d_cur_time_criteria->d_time) {
+            } else if (time < d_cur_time_criteria->d_time) {
                // If this time criteria isn't valid yet then none of the
                // others will be either so just quit looking.
                break;
@@ -1949,29 +1927,26 @@ StandardTagAndInitialize::setCurrentTaggingCriteria(
       bool new_use_gd = false;
       bool new_use_rb = false;
       if (d_use_cycle_criteria) {
-         for (std::vector<TagCriteria>::const_iterator i = d_cur_cycle_criteria->d_tag_criteria.begin();
+         for (std::vector<TagCriteria>::const_iterator i =
+                 d_cur_cycle_criteria->d_tag_criteria.begin();
               i != d_cur_cycle_criteria->d_tag_criteria.end(); ++i) {
             if (i->d_tagging_method == "RICHARDSON_EXTRAPOLATION") {
                new_use_re = true;
-            }
-            else if (i->d_tagging_method == "GRADIENT_DETECTOR") {
+            } else if (i->d_tagging_method == "GRADIENT_DETECTOR") {
                new_use_gd = true;
-            }
-            else if (i->d_tagging_method == "REFINE_BOXES") {
+            } else if (i->d_tagging_method == "REFINE_BOXES") {
                new_use_rb = true;
             }
          }
-      }
-      else if (d_use_time_criteria) {
-         for (std::vector<TagCriteria>::const_iterator i = d_cur_time_criteria->d_tag_criteria.begin();
+      } else if (d_use_time_criteria) {
+         for (std::vector<TagCriteria>::const_iterator i =
+                 d_cur_time_criteria->d_tag_criteria.begin();
               i != d_cur_time_criteria->d_tag_criteria.end(); ++i) {
             if (i->d_tagging_method == "RICHARDSON_EXTRAPOLATION") {
                new_use_re = true;
-            }
-            else if (i->d_tagging_method == "GRADIENT_DETECTOR") {
+            } else if (i->d_tagging_method == "GRADIENT_DETECTOR") {
                new_use_gd = true;
-            }
-            else if (i->d_tagging_method == "REFINE_BOXES") {
+            } else if (i->d_tagging_method == "REFINE_BOXES") {
                new_use_rb = true;
             }
          }
@@ -1984,39 +1959,33 @@ StandardTagAndInitialize::setCurrentTaggingCriteria(
          // If one of the tagging methods which was used is now not used or
          // vice-versa, then the tagged boxes have changed.
          d_boxes_changed = true;
-      }
-      else {
+      } else {
          // The tagging methods are the same as they were last cycle.
          if (new_use_re || new_use_gd) {
             // If we're using either Richardson extrapolation or gradient
             // detector we must assume that the boxes have changed.
             d_boxes_changed = true;
-         }
-         else if ((old_use_cycle_criteria != d_use_cycle_criteria) ||
-                  (old_use_time_criteria != d_use_time_criteria)) {
+         } else if ((old_use_cycle_criteria != d_use_cycle_criteria) ||
+                    (old_use_time_criteria != d_use_time_criteria)) {
             // Assume that switching from a cycle to a time criteria or a time
             // to a cycle criteria results in different boxes.
             d_boxes_changed = true;
-         }
-         else if (d_use_cycle_criteria) {
+         } else if (d_use_cycle_criteria) {
             // We're still using a cycle tagging criteria.  If we're using a
             // different cycle tagging criteria assume that the boxes have
             // changed.
             if (d_cur_cycle_criteria != old_cur_cycle_criteria) {
                d_boxes_changed = true;
-            }
-            else {
+            } else {
                d_boxes_changed = false;
             }
-         }
-         else if (d_use_time_criteria) {
+         } else if (d_use_time_criteria) {
             // We're still using a time tagging criteria.  If we're using a
             // different time tagging criteria assume that the boxes have
             // changed.
             if (d_cur_time_criteria != old_cur_time_criteria) {
                d_boxes_changed = true;
-            }
-            else {
+            } else {
                d_boxes_changed = false;
             }
          }
@@ -2034,8 +2003,6 @@ StandardTagAndInitialize::processHierarchyBeforeAddingNewLevel(
       level_number,
       new_box_level);
 }
-
-
 
 void
 StandardTagAndInitialize::processLevelBeforeRemoval(

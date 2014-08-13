@@ -26,8 +26,8 @@ namespace solv {
  */
 
 bool CellPoissonFACSolver::s_initialized = 0;
-int CellPoissonFACSolver::s_weight_id[SAMRAI::MAX_DIM_VAL] = {0};
-int CellPoissonFACSolver::s_instance_counter[SAMRAI::MAX_DIM_VAL] = {0};
+int CellPoissonFACSolver::s_weight_id[SAMRAI::MAX_DIM_VAL] = { 0 };
+int CellPoissonFACSolver::s_instance_counter[SAMRAI::MAX_DIM_VAL] = { 0 };
 
 /*
  *************************************************************************
@@ -401,10 +401,10 @@ CellPoissonFACSolver::createVectorWrappers(
    boost::shared_ptr<hier::Variable> variable;
 
    if (!d_uv || d_uv->getComponentDescriptorIndex(0) != u) {
-     d_uv.reset(new SAMRAIVectorReal<double>(d_object_name + "::uv",
-                                             d_hierarchy,
-                                             d_ln_min,
-                                             d_ln_max));
+      d_uv.reset(new SAMRAIVectorReal<double>(d_object_name + "::uv",
+            d_hierarchy,
+            d_ln_min,
+            d_ln_max));
       vdb.mapIndexToVariable(u, variable);
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (!variable) {
@@ -420,9 +420,9 @@ CellPoissonFACSolver::createVectorWrappers(
 
    if (!d_fv || d_fv->getComponentDescriptorIndex(0) != f) {
       d_fv.reset(new SAMRAIVectorReal<double>(d_object_name + "::fv",
-                                              d_hierarchy,
-                                              d_ln_min,
-                                              d_ln_max));
+            d_hierarchy,
+            d_ln_min,
+            d_ln_max));
       vdb.mapIndexToVariable(f, variable);
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (!variable) {

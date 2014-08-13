@@ -243,7 +243,7 @@ public:
     *
     * @param [in] flag
     */
-   void setDeterministicUnpackOrderingFlag( bool flag )
+   void setDeterministicUnpackOrderingFlag(bool flag)
    {
       d_unpack_in_deterministic_order = flag;
    }

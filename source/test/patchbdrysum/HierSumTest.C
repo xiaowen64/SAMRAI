@@ -876,7 +876,7 @@ void HierSumTest::initializeLevelData(
       std::vector<BoundaryBox> empty_vector(0, BoundaryBox(d_dim));
       const std::vector<BoundaryBox>& face_bdry =
          d_dim == tbox::Dimension(3) ?
-            patch_geom->getCodimensionBoundaries(1) : empty_vector;
+         patch_geom->getCodimensionBoundaries(1) : empty_vector;
       // node cell values
       setBoundaryConditions(*patch,
          node_bdry,
@@ -907,7 +907,7 @@ void HierSumTest::initializeLevelData(
       fine_level_boxes.coarsen(ratio);
 
       for (PatchLevel::iterator p1(coarser_level->begin());
-      p1 != coarser_level->end(); ++p1) {
+           p1 != coarser_level->end(); ++p1) {
          const boost::shared_ptr<Patch>& cpatch = *p1;
 
          boost::shared_ptr<CellData<double> > ucell_node(
@@ -954,7 +954,7 @@ void HierSumTest::initializeLevelData(
          std::vector<BoundaryBox> empty_vector(0, BoundaryBox(d_dim));
          const std::vector<BoundaryBox>& face_bdry =
             d_dim == tbox::Dimension(3) ?
-               cfbdry.getFaceBoundaries(global_id) : empty_vector;
+            cfbdry.getFaceBoundaries(global_id) : empty_vector;
 
          setBoundaryConditions(*patch,
             node_bdry,
@@ -1220,7 +1220,7 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
    std::vector<BoundaryBox> empty_vector(0, BoundaryBox(d_dim));
    const std::vector<BoundaryBox>& face_bdry =
       d_dim == tbox::Dimension(3) ?
-         patch_geom->getCodimensionBoundaries(1) : empty_vector;
+      patch_geom->getCodimensionBoundaries(1) : empty_vector;
    const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
    /*

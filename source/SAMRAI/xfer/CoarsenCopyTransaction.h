@@ -43,7 +43,6 @@ namespace xfer {
 class CoarsenCopyTransaction:public tbox::Transaction
 {
 public:
-
    /*!
     * Construct a transaction with the specified source and destination
     * levels, patches, and patch data components found in the coarsen class
@@ -81,7 +80,7 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_box,
       const hier::Box& src_box,
-      const CoarsenClasses::Data** coarsen_data,
+      const CoarsenClasses::Data ** coarsen_data,
       int item_id);
 
    /*!

@@ -144,7 +144,7 @@ MblkEuler::MblkEuler(
    d_state.reset(new pdat::CellVariable<double>(dim, "state", d_nState));
    d_vol.reset(new pdat::CellVariable<double>(dim, "vol", 1));
    d_flux.reset(new pdat::SideVariable<double>(dim, "flux",
-      hier::IntVector::getOne(dim), d_nState));
+         hier::IntVector::getOne(dim), d_nState));
    d_xyz.reset(new pdat::NodeVariable<double>(dim, "xyz", d_dim.getValue()));
 
    //

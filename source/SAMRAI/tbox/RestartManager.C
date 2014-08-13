@@ -43,7 +43,7 @@ RestartManager::s_shutdown_handler(
  *************************************************************************
  */
 
-RestartManager*
+RestartManager *
 RestartManager::getManager()
 {
    if (!s_manager_instance) {
@@ -71,7 +71,7 @@ RestartManager::shutdownCallback()
  *************************************************************************
  */
 
-RestartManager::RestartManager() :
+RestartManager::RestartManager():
    d_database_root(boost::make_shared<NullDatabase>()),
 #ifdef HAVE_HDF5
    d_database_factory(boost::make_shared<HDFDatabaseFactory>()),
@@ -129,7 +129,7 @@ RestartManager::openRestartFile(
    if (hasDatabaseFactory()) {
 
       boost::shared_ptr<Database> database(d_database_factory->allocate(
-         restart_filename));
+                                              restart_filename));
 
       if (!database->open(restart_filename)) {
          TBOX_ERROR(
@@ -277,7 +277,7 @@ RestartManager::writeRestartFile(
    if (hasDatabaseFactory()) {
 
       boost::shared_ptr<Database> new_restartDB(d_database_factory->allocate(
-         restart_filename));
+                                                   restart_filename));
 
       new_restartDB->create(restart_filename);
 

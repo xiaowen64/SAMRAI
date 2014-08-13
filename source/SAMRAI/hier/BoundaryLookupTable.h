@@ -58,7 +58,7 @@ public:
    getLookupTable(
       const tbox::Dimension& dim)
    {
-     int idx = dim.getValue() - 1;
+      int idx = dim.getValue() - 1;
       if (!s_lookup_table_instance[idx]) {
          s_lookup_table_instance[idx] = new BoundaryLookupTable(dim);
       }

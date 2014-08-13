@@ -511,7 +511,7 @@ public:
     */
    virtual bool
    attachToFile(
-      DBfile * file,
+      DBfile* file,
       const std::string& directory);
 
    /**

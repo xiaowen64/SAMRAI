@@ -238,7 +238,7 @@ public:
    virtual void
    getBoolArray(
       const std::string& key,
-      bool * data,
+      bool* data,
       const size_t nelements);
 
    /**
@@ -323,7 +323,7 @@ public:
    virtual void
    getDatabaseBoxArray(
       const std::string& key,
-      DatabaseBox * data,
+      DatabaseBox* data,
       const size_t nelements);
 
    /**
@@ -406,7 +406,7 @@ public:
    virtual void
    getCharArray(
       const std::string& key,
-      char * data,
+      char* data,
       const size_t nelements);
 
    /**
@@ -494,7 +494,7 @@ public:
    virtual void
    getComplexArray(
       const std::string& key,
-      dcomplex * data,
+      dcomplex* data,
       const size_t nelements);
 
    /**
@@ -581,7 +581,7 @@ public:
    virtual void
    getDoubleArray(
       const std::string& key,
-      double * data,
+      double* data,
       const size_t nelements);
 
    /**
@@ -670,7 +670,7 @@ public:
    virtual void
    getFloatArray(
       const std::string& key,
-      float * data,
+      float* data,
       const size_t nelements);
 
    /**
@@ -753,7 +753,7 @@ public:
    virtual void
    getIntegerArray(
       const std::string& key,
-      int * data,
+      int* data,
       const size_t nelements);
 
    /**
@@ -836,7 +836,7 @@ public:
    virtual void
    getStringArray(
       const std::string& key,
-      std::string * data,
+      std::string* data,
       const size_t nelements);
 
    /**

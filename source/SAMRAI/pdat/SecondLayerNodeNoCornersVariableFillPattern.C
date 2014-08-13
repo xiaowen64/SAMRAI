@@ -143,13 +143,13 @@ SecondLayerNodeNoCornersVariableFillPattern::computeStencilBoxes(
 
    for (unsigned short i = 0; i < dim.getValue(); ++i) {
       hier::Box low_box(dst_node_box);
-      low_box.lower(i) = dst_node_box.lower(i) - 1;
-      low_box.upper(i) = low_box.lower(i);
+      low_box.setLower(i, dst_node_box.lower(i) - 1);
+      low_box.setUpper(i, low_box.lower(i));
       stencil_boxes.pushFront(low_box);
 
       hier::Box high_box(dst_node_box);
-      high_box.lower(i) = dst_node_box.upper(i) + 1;
-      high_box.upper(i) = high_box.lower(i);
+      high_box.setLower(i, dst_node_box.upper(i) + 1);
+      high_box.setUpper(i, high_box.lower(i));
       stencil_boxes.pushFront(high_box);
    }
 }
@@ -197,8 +197,8 @@ SecondLayerNodeNoCornersVariableFillPattern::computeFillBoxesOverlap(
    overlap_boxes.coalesce();
 
    return boost::make_shared<NodeOverlap>(
-      overlap_boxes,
-      hier::Transformation(hier::IntVector::getZero(dim)));
+             overlap_boxes,
+             hier::Transformation(hier::IntVector::getZero(dim)));
 }
 
 }

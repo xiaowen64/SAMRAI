@@ -188,8 +188,8 @@ SecondLayerNodeVariableFillPattern::computeFillBoxesOverlap(
    overlap_boxes.coalesce();
 
    return boost::make_shared<NodeOverlap>(
-      overlap_boxes,
-      hier::Transformation(hier::IntVector::getZero(dim)));
+             overlap_boxes,
+             hier::Transformation(hier::IntVector::getZero(dim)));
 }
 
 }

@@ -600,8 +600,8 @@ public:
       **********************************************************************/
       void
       add(
-         const double* dvals,
-         const int* ivals);
+         const double * dvals,
+         const int * ivals);
       void
       add(
          const std::vector<double>& dvals,
@@ -610,9 +610,9 @@ public:
       /**********************************************************************
       * non-modifying operations
       **********************************************************************/
-      const double*
+      const double *
       getDoubleAttributes() const;
-      const int*
+      const int *
       getIntAttributes() const;
 
       /**********************************************************************

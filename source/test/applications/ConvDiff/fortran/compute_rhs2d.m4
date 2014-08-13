@@ -29,7 +29,7 @@ c
 c variables in 2d cell indexed
       REAL
      &     var(CELL2dVECG(ifirst,ilast,gcw),0:nequ-1),
-     &     rhs(CELL2d(ifirst,ilast,0),0:nequ-1)
+     &     rhs(CELL2dVECG(ifirst,ilast,gcw),0:nequ-1)
 c
 c***********************************************************************
 c***********************************************************************     

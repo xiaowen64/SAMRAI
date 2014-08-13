@@ -27,7 +27,7 @@ namespace hier {
  *
  * MappingConnectorAlgorithm objects check and apply mappings.
  */
-class MappingConnectorAlgorithm : public BaseConnectorAlgorithm
+class MappingConnectorAlgorithm:public BaseConnectorAlgorithm
 {
 
 public:
@@ -309,7 +309,7 @@ private:
       Connector* new_to_anchor,
       const std::set<int>& incoming_ranks,
       const std::set<int>& outoing_ranks,
-      tbox::AsyncCommPeer<int> all_comms[],
+      tbox::AsyncCommPeer<int>* all_comms,
       BoxContainer& visible_new_nabrs,
       BoxContainer& visible_anchor_nabrs,
       const InvertedNeighborhoodSet& anchor_eto_old,
@@ -317,7 +317,6 @@ private:
       const Connector& old_to_anchor,
       const Connector& anchor_to_old,
       const MappingConnector& old_to_new) const;
-
 
    /*!
     * @brief Discover new relationships formed by mapping.
@@ -404,7 +403,6 @@ private:
     * class but may not be necessary anymore.
     */
    static int s_operation_mpi_tag;
-
 
    //@{
    //! @name Timer data for this class.

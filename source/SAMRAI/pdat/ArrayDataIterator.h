@@ -89,7 +89,7 @@ public:
     * Extract pointer to the index corresponding to the iterator position in
     * the box.
     */
-   const hier::Index*
+   const hier::Index *
    operator -> () const
    {
       return &d_index;

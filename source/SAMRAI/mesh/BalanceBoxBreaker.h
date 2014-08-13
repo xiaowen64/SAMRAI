@@ -26,16 +26,24 @@ namespace mesh {
  * @brief Utilities for breaking up boxes during partitioning.
  */
 
-class BalanceBoxBreaker {
+class BalanceBoxBreaker
+{
 
 public:
-
+   /*!
+    * @brief Constructor.
+    *
+    * @param[in] pparams
+    *
+    * @param[in] print_break_steps Flag for debugging this class.
+    */
    BalanceBoxBreaker(
-      const PartitioningParams &pparams,
-      bool print_break_steps = false );
+      const PartitioningParams& pparams,
+      bool print_break_steps = false);
 
-   BalanceBoxBreaker( const BalanceBoxBreaker &other );
-
+   //! @brief Copy constructor.
+   BalanceBoxBreaker(
+      const BalanceBoxBreaker& other);
 
    /*!
     * @brief Break off a given load size from a given Box.
@@ -72,14 +80,15 @@ public:
       const hier::Box& box,
       double ideal_load,
       double low_load,
-      double high_load ,
-      double threshold_width ) const;
+      double high_load,
+      double threshold_width) const;
 
-
-   void setPrintBreakSteps( bool print_break_steps ) {
+   /*!
+    * @brief Set whether to print box breaking steps for debugging.
+    */
+   void setPrintBreakSteps(bool print_break_steps) {
       d_print_break_steps = print_break_steps;
    }
-
 
    /*!
     * @brief Break up box bursty against box solid and adds the pieces
@@ -92,8 +101,11 @@ public:
    burstBox(
       hier::BoxContainer& boxes,
       const hier::Box& bursty,
-      const hier::Box& solid );
+      const hier::Box& solid);
 
+   /*!
+    * @brief Compute the penalty associated with an imbalance.
+    */
    static double
    computeBalancePenalty(double imbalance)
    {
@@ -104,69 +116,85 @@ public:
     * @brief Compute a score that is low for box widths smaller than
     * some threshold_width.
     */
-   static double computeWidthScore(
-      const hier::IntVector &box_size,
-      double threshold_width );
+   static double
+   computeWidthScore(
+      const hier::IntVector& box_size,
+      double threshold_width);
 
    /*!
     * @brief Compute a combined width score for multiple boxes.
     */
-   static double computeWidthScore(
+   static double
+   computeWidthScore(
       const hier::BoxContainer& boxes,
-      double threshold_width );
+      double threshold_width);
 
-
+private:
+   //! @brief Information regarding a potential way to break a box.
    struct TrialBreak {
-      TrialBreak( const PartitioningParams &pparams,
-                  double threshold_width,
-                  const hier::Box &whole_box,
-                  const std::vector<std::vector<bool> > &bad_cuts,
-                  double ideal_load, double low_load, double high_load );
+      TrialBreak(
+         const PartitioningParams& pparams,
+         double threshold_width,
+         const hier::Box& whole_box,
+         const std::vector<std::vector<bool> >& bad_cuts,
+         double ideal_load,
+         double low_load,
+         double high_load);
       //! @brief Construct TrialBreak where breakoff and leftover are reversed.
-      TrialBreak( const TrialBreak &orig, bool make_reverse );
+      TrialBreak(
+         const TrialBreak& orig,
+         bool make_reverse);
       //! @brief Compute data for breaking box from whole and store results.
-      void computeBreakData( const hier::Box &box );
-      void swapWithReversedTrial( TrialBreak &reversed );
+      void
+      computeBreakData(
+         const hier::Box& box);
+      void
+      swapWithReversedTrial(
+         TrialBreak& reversed);
       //! @brief Compute merits vs doing nothing and return improvement flag.
-      bool computeMerits();
+      bool
+      computeMerits();
       //! @brief Whether this improves over another (or degrades or leaves alone).
-      int improvesOver( const TrialBreak &other ) const;
+      int
+      improvesOver(
+         const TrialBreak& other) const;
 
       //! @brief Swap this object with another.
-      void swap( TrialBreak &other );
+      void
+      swap(
+         TrialBreak& other);
 
-      friend std::ostream &operator << (
-         std::ostream &os,
-         const TrialBreak &tb );
-
-      double d_breakoff_load; // Should change to int d_breakoff_cells.  This class doesn't deal in arbitrary load types.
+      double d_breakoff_load;
       hier::BoxContainer d_breakoff;
       hier::BoxContainer d_leftover;
       const double d_ideal_load;
+      //! Part of the target break-off range [d_low_load,d_high_load]
       const double d_low_load;
-      const double  d_high_load;
+      //! Part of the target break-off range [d_low_load,d_high_load]
+      const double d_high_load;
       double d_width_score;
       double d_balance_penalty;
       //! @brief Flags from comparing this trial vs doing nothing.
       int d_flags[4];
-      const PartitioningParams *d_pparams;
+      const PartitioningParams* d_pparams;
       const double d_threshold_width;
-      const hier::Box &d_whole_box;
-      const std::vector<std::vector<bool> > &d_bad_cuts;
+      const hier::Box& d_whole_box;
+      const std::vector<std::vector<bool> >& d_bad_cuts;
    };
 
-
 private:
+   bool
+   breakOffLoad_planar(
+      TrialBreak& trial) const;
 
    bool
-   breakOffLoad_planar( TrialBreak &trial ) const;
+   breakOffLoad_cubic(
+      TrialBreak& trial) const;
 
-   bool
-   breakOffLoad_cubic( TrialBreak &trial ) const;
+   void
+   setTimers();
 
-   void setTimers();
-
-   const PartitioningParams *d_pparams;
+   const PartitioningParams * d_pparams;
 
    //@{
    //! @name Debugging and diagnostic data
@@ -176,6 +204,12 @@ private:
    boost::shared_ptr<tbox::Timer> t_find_bad_cuts;
 
    //@}
+
+public:
+   friend std::ostream&
+   operator << (
+      std::ostream& os,
+      const TrialBreak& tb);
 
 };
 

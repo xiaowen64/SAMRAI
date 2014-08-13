@@ -8,10 +8,10 @@
 ##
 #########################################################################
 
-SAMRAI	      =	@top_srcdir@
-SRCDIR	      =	@srcdir@
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
 SUBDIR        = source/test/performance/MeshGeneration
-VPATH	      =	@srcdir@
+VPATH         = @srcdir@
 OBJECT        = ../../../..
 REPORT        = $(OBJECT)/report.xml
 TESTINCLUDE   = $(SAMRAI)/source/test/testlib
@@ -22,7 +22,7 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
-NUM_TESTS = 40
+NUM_TESTS = 39
 CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
 
 TEST_NPROCS = @TEST_NPROCS@
@@ -45,7 +45,6 @@ INPUTS2D =	test_inputs/small_spread.2d.tile.input	\
 		test_inputs/lump.2d.treelb.input	\
 		test_inputs/lump.2d.voucher.input	\
 		test_inputs/lump.2d.tilevoucher.input	\
-		test_inputs/lump.3d.tile.input
 
 
 INPUTS3D =	test_inputs/spreadby10.3d.treelb.input		\
@@ -123,7 +122,7 @@ examples:
 perf:	main
 
 everything:
-	$(MAKE) checkcompile
+	$(MAKE) checkcompile || exit 1
 	$(MAKE) checktest
 	$(MAKE) examples
 	$(MAKE) perf

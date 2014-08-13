@@ -150,8 +150,8 @@ FirstLayerCellVariableFillPattern::computeFillBoxesOverlap(
    overlap_boxes.intersectBoxes(stencil_boxes);
 
    return boost::make_shared<CellOverlap>(
-         overlap_boxes,
-         hier::Transformation(hier::IntVector::getZero(patch_box.getDim())));
+             overlap_boxes,
+             hier::Transformation(hier::IntVector::getZero(patch_box.getDim())));
 }
 
 }

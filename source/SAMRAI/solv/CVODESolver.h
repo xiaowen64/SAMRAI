@@ -348,8 +348,7 @@ public:
       if (log_fname != d_cvode_log_file_name) {
          if (log_fname.empty()) {
             d_cvode_log_file_name = "cvode.log";
-         }
-         else {
+         } else {
             d_cvode_log_file_name = log_fname;
          }
          d_CVODE_needs_initialization = true;
@@ -1274,7 +1273,7 @@ private:
       void* my_solver)
    {
       return ((CVODESolver *)my_solver)->getCVODEFunctions()->
-              evaluateRHSFunction(t, SABSVEC_CAST(y), SABSVEC_CAST(y_dot));
+             evaluateRHSFunction(t, SABSVEC_CAST(y), SABSVEC_CAST(y_dot));
    }
 
    /*

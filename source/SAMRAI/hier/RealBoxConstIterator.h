@@ -17,7 +17,6 @@
 namespace SAMRAI {
 namespace hier {
 
-
 /*
  * TODO: Do we really need a separate class for this?  Couldn't we just
  *       add an argument to the BoxContainer iterator construction that
@@ -45,7 +44,7 @@ namespace hier {
  */
 class RealBoxConstIterator
 {
-friend class BoxContainer;
+   friend class BoxContainer;
 
 public:
    /*!

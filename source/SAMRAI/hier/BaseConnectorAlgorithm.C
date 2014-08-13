@@ -129,7 +129,7 @@ BaseConnectorAlgorithm::packReferencedNeighbors(
     * that have been referenced.
     */
    const int offset = send_mesg[idx_offset_to_ref] =
-      static_cast<int>(send_mesg.size());
+         static_cast<int>(send_mesg.size());
    const int n_referenced_nabrs = static_cast<int>(
          referenced_new_head_nabrs.size() + referenced_new_base_nabrs.size());
    const int reference_section_size =
@@ -175,7 +175,7 @@ BaseConnectorAlgorithm::receiveAndUnpack(
    Connector& new_base_to_new_head,
    Connector* new_head_to_new_base,
    const std::set<int>& incoming_ranks,
-   tbox::AsyncCommPeer<int> all_comms[],
+   tbox::AsyncCommPeer<int>* all_comms,
    tbox::AsyncCommStage& comm_stage,
    const boost::shared_ptr<tbox::Timer>& receive_and_unpack_timer,
    bool print_steps) const
@@ -184,7 +184,7 @@ BaseConnectorAlgorithm::receiveAndUnpack(
    /*
     * Receive and unpack messages.
     */
-   while ( comm_stage.hasCompletedMembers() || comm_stage.advanceSome() ) {
+   while (comm_stage.hasCompletedMembers() || comm_stage.advanceSome()) {
 
       tbox::AsyncCommPeer<int>* peer =
          CPP_CAST<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
@@ -202,8 +202,7 @@ BaseConnectorAlgorithm::receiveAndUnpack(
             new_base_to_new_head,
             new_head_to_new_base,
             print_steps);
-      }
-      else {
+      } else {
          // Sent to this peer.  No follow-up needed.
          if (print_steps) {
             tbox::plog << "Sent to " << peer->getPeerRank() << std::endl;
@@ -286,8 +285,8 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
                        << std::endl;
          }
          TBOX_ASSERT(new_base_to_new_head.hasLocalNeighbor(
-            affected_nbrhd,
-            box_gone));
+               affected_nbrhd,
+               box_gone));
          new_base_to_new_head.eraseNeighbor(box_gone, affected_nbrhd);
       }
       TBOX_ASSERT(ptr != ptr_end);

@@ -231,10 +231,9 @@ public:
    }
 
 private:
-
    /*!
     * @brief Perform node sum across single level.
-    * 
+    *
     * Called from computeSum().
     *
     * @pre level
@@ -370,17 +369,17 @@ private:
    boost::shared_ptr<xfer::RefineTransactionFactory> d_sum_transaction_factory;
 
    std::vector<boost::shared_ptr<xfer::RefineSchedule> >
-      d_single_level_sum_schedule;
+   d_single_level_sum_schedule;
    std::vector<boost::shared_ptr<xfer::RefineSchedule> >
-      d_cfbdry_copy_schedule;
+   d_cfbdry_copy_schedule;
    std::vector<boost::shared_ptr<xfer::CoarsenSchedule> >
-      d_sync_coarsen_schedule;
+   d_sync_coarsen_schedule;
 
    // A coarsened version of each fine level.
    std::vector<boost::shared_ptr<hier::PatchLevel> > d_cfbdry_tmp_level;
 
    std::vector<boost::shared_ptr<hier::CoarseFineBoundary> >
-      d_coarse_fine_boundary;
+   d_coarse_fine_boundary;
 
 };
 

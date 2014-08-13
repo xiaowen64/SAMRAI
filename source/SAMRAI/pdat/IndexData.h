@@ -641,14 +641,14 @@ public:
    /**
     * Return a pointer to the current item in the irregular index set.
     */
-   TYPE*
+   TYPE *
    operator -> ();
 
    /**
     * Return a const pointer to the current item in the irregular
     * index set.
     */
-   const TYPE*
+   const TYPE *
    operator -> () const;
 
    /**
@@ -706,7 +706,8 @@ private:
       IndexData<TYPE, BOX_GEOMETRY>* index_data,
       IndexDataNode<TYPE, BOX_GEOMETRY>* node);
 
-   IndexDataNode<TYPE, BOX_GEOMETRY>& getNode();
+   IndexDataNode<TYPE, BOX_GEOMETRY>&
+   getNode();
 
    IndexData<TYPE, BOX_GEOMETRY>* d_index_data;
 

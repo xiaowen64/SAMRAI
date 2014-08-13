@@ -29,7 +29,7 @@ c
 c variables in 3d cell indexed         
       REAL
      &     var(CELL3dVECG(ifirst,ilast,gcw),0:nequ-1),
-     &     rhs(CELL3d(ifirst,ilast,0),0:nequ-1)
+     &     rhs(CELL3dVECG(ifirst,ilast,gcw),0:nequ-1)
 c
 c***********************************************************************     
 c
