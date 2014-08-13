@@ -668,7 +668,7 @@ CascadePartitionerTree::recomputeLeafData()
 void
 CascadePartitionerTree::resetObligation(double avg_load)
 {
-   d_obligation = avg_load * size();
+   d_obligation = avg_load * static_cast<double>(size());
    d_group_may_supply = estimatedSurplus() > d_common->d_pparams->getLoadComparisonTol();
 
    if (d_children[0]) {
@@ -692,9 +692,9 @@ CascadePartitionerTree::printClassData(std::ostream& co, const std::string& bord
       << "  near=" << d_near << "  far=" << d_far
       << '\n' << indent
       << "contact=" << d_contact[0] << ',' << d_contact[1]
-      << "  work=" << d_work << '/' << d_obligation << " (" << size() * d_common->d_global_load_avg
+      << "  work=" << d_work << '/' << d_obligation << " (" << static_cast<double>(size()) * d_common->d_global_load_avg
       << ")  estimated surplus=" << estimatedSurplus()
-      << " (" << d_work - (size() * d_common->d_global_load_avg)
+      << " (" << d_work - (static_cast<double>(size()) * d_common->d_global_load_avg)
       << ")  local_load=" << d_common->d_local_load->getSumLoad()
       << '\n' << indent
       << "group_may_supply=" << d_group_may_supply

@@ -37,19 +37,19 @@ void SAMRAI_F77_FUNC(cpfdat2buf3d, CPFDAT2BUF3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
-   float *, double *, const int&);
+   const float *, double *, const int&);
 void SAMRAI_F77_FUNC(cpddat2buf3d, CPDDAT2BUF3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
-   double *, double *, const int&);
+   const double *, double *, const int&);
 void SAMRAI_F77_FUNC(cpidat2buf3d, CPIDAT2BUF3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
-   int *, double *, const int&);
+   const int *, double *, const int&);
 }
 extern "C" {
 void SAMRAI_F77_FUNC(cpfdat2buf2d, CPFDAT2BUF2D) (
@@ -57,19 +57,19 @@ void SAMRAI_F77_FUNC(cpfdat2buf2d, CPFDAT2BUF2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
-   float *, double *, const int&);
+   const float *, double *, const int&);
 void SAMRAI_F77_FUNC(cpddat2buf2d, CPDDAT2BUF2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
-   double *, double *, const int&);
+   const double *, double *, const int&);
 void SAMRAI_F77_FUNC(cpidat2buf2d, CPIDAT2BUF2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
-   int *, double *, const int&);
+   const int *, double *, const int&);
 }
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -3942,10 +3942,10 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
    switch (data_type) {
 
       case VISIT_FLOAT: {
-         float* dat_ptr = 0;
+         const float* dat_ptr = 0;
          if (centering == VISIT_CELL) {
-            const boost::shared_ptr<pdat::CellData<float> > fpdata(
-               BOOST_CAST<pdat::CellData<float>, hier::PatchData>(pdata));
+            boost::shared_ptr<const pdat::CellData<float> > fpdata(
+               BOOST_CAST<const pdat::CellData<float>, hier::PatchData>(pdata));
 
             TBOX_ASSERT(fpdata);
 
@@ -3957,8 +3957,8 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
             pdata->copy2(cell_copy);
             dat_ptr = cell_copy.getPointer();
          } else if (centering == VISIT_NODE) {
-            const boost::shared_ptr<pdat::NodeData<float> > fpdata(
-               BOOST_CAST<pdat::NodeData<float>, hier::PatchData>(pdata));
+            boost::shared_ptr<const pdat::NodeData<float> > fpdata(
+               BOOST_CAST<const pdat::NodeData<float>, hier::PatchData>(pdata));
 
             TBOX_ASSERT(fpdata);
 
@@ -3989,10 +3989,10 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
       }
 
       case VISIT_DOUBLE: {
-         double* dat_ptr = 0;
+         const double* dat_ptr = 0;
          if (centering == VISIT_CELL) {
-            const boost::shared_ptr<pdat::CellData<double> > dpdata(
-               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(pdata));
+            boost::shared_ptr<const pdat::CellData<double> > dpdata(
+               BOOST_CAST<const pdat::CellData<double>, hier::PatchData>(pdata));
             TBOX_ASSERT(dpdata);
 
             dat_ptr = dpdata->getPointer(depth_index);
@@ -4003,8 +4003,8 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
             pdata->copy2(cell_copy);
             dat_ptr = cell_copy.getPointer();
          } else if (centering == VISIT_NODE) {
-            const boost::shared_ptr<pdat::NodeData<double> > dpdata(
-               BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(pdata));
+            boost::shared_ptr<const pdat::NodeData<double> > dpdata(
+               BOOST_CAST<const pdat::NodeData<double>, hier::PatchData>(pdata));
             TBOX_ASSERT(dpdata);
 
             dat_ptr = dpdata->getPointer(depth_index);
@@ -4034,10 +4034,10 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
       }
 
       case VISIT_INT: {
-         int* dat_ptr = 0;
+         const int* dat_ptr = 0;
          if (centering == VISIT_CELL) {
-            const boost::shared_ptr<pdat::CellData<int> > ipdata(
-               BOOST_CAST<pdat::CellData<int>, hier::PatchData>(pdata));
+            boost::shared_ptr<const pdat::CellData<int> > ipdata(
+               BOOST_CAST<const pdat::CellData<int>, hier::PatchData>(pdata));
 
             TBOX_ASSERT(ipdata);
 
@@ -4048,8 +4048,8 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
             pdata->copy2(cell_copy);
             dat_ptr = cell_copy.getPointer();
          } else if (centering == VISIT_NODE) {
-            const boost::shared_ptr<pdat::NodeData<int> > ipdata(
-               BOOST_CAST<pdat::NodeData<int>, hier::PatchData>(pdata));
+            boost::shared_ptr<const pdat::NodeData<int> > ipdata(
+               BOOST_CAST<const pdat::NodeData<int>, hier::PatchData>(pdata));
 
             TBOX_ASSERT(ipdata);
 
@@ -4110,7 +4110,8 @@ VisItDataWriter::HDFputIntegerArray2D(
 
    herr_t errf;
    if ((nelements0 > 0) && (nelements1 > 0)) {
-      hsize_t dim[] = { nelements0, nelements1 };
+      hsize_t dim[] = { static_cast<hsize_t>(nelements0),
+                        static_cast<hsize_t>(nelements1) };
       hid_t space = H5Screate_simple(2, dim, 0);
 
       TBOX_ASSERT(space >= 0);
@@ -4181,7 +4182,8 @@ VisItDataWriter::HDFputDoubleArray2D(
 
    herr_t errf;
    if ((nelements0 > 0) && (nelements1 > 0)) {
-      hsize_t dim[] = { nelements0, nelements1 };
+      hsize_t dim[] = { static_cast<hsize_t>(nelements0),
+                        static_cast<hsize_t>(nelements1) };
       hid_t space = H5Screate_simple(2, dim, 0);
 
       TBOX_ASSERT(space >= 0);

@@ -408,7 +408,7 @@ public:
    writeData1dPencil(
       const boost::shared_ptr<hier::Patch> patch,
       const hier::Box& pencil_box,
-      const int idir,
+      const tbox::Dimension::dir_t idir,
       ostream& file);
 
 private:

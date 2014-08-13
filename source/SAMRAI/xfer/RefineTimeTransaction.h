@@ -195,8 +195,8 @@ private:
    hier::Box d_box;
    const RefineClasses::Data** d_refine_data;
    int d_item_id;
-   int d_incoming_bytes;
-   int d_outgoing_bytes;
+   size_t d_incoming_bytes;
+   size_t d_outgoing_bytes;
 
 };
 

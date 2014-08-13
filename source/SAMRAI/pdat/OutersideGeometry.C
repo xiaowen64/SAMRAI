@@ -150,7 +150,7 @@ OutersideGeometry::doOverlap(
       hier::Box mask_shift(src_mask);
       transformation.transform(mask_shift);
 
-      for (int d = 0; d < dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
          const hier::Box dst_side(
             SideGeometry::toSideBox(dst_ghost, d));
@@ -169,7 +169,7 @@ OutersideGeometry::doOverlap(
 
             // Add lower side intersection (if any) to the box list
             hier::Box low_side(src_side);
-            low_side.upper(d) = low_side.lower(d); //+ghosts;
+            low_side.setUpper(d, low_side.lower(d)); //+ghosts;
 
             hier::Box low_overlap(low_side * msk_side * dst_side * fill_side);
             if (!low_overlap.empty()) {
@@ -178,7 +178,7 @@ OutersideGeometry::doOverlap(
 
             // Add upper side intersection (if any) to the box list
             hier::Box hig_side(src_side);
-            hig_side.lower(d) = hig_side.upper(d); //-ghosts;
+            hig_side.setLower(d, hig_side.upper(d)); //-ghosts;
 
             hier::Box hig_overlap(hig_side * msk_side * dst_side * fill_side);
             if (!hig_overlap.empty()) {
@@ -263,7 +263,7 @@ OutersideGeometry::doOverlap(
       hier::Box mask_shift(src_mask);
       transformation.transform(mask_shift);
 
-      for (int d = 0; d < dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
          const hier::Box dst_side(
             SideGeometry::toSideBox(dst_geometry.getBox(), d));
@@ -281,13 +281,13 @@ OutersideGeometry::doOverlap(
                SideGeometry::toSideBox(fill_box, d));
 
             hier::Box low_dst_side(dst_side);
-            low_dst_side.upper(d) = low_dst_side.lower(d);
+            low_dst_side.setUpper(d, low_dst_side.lower(d));
             hier::Box hig_dst_side(dst_side);
-            hig_dst_side.lower(d) = hig_dst_side.upper(d);
+            hig_dst_side.setLower(d, hig_dst_side.upper(d));
 
             // Add lower side intersection (if any) to the box list
             hier::Box low_src_side(src_side);
-            low_src_side.upper(d) = low_src_side.lower(d);
+            low_src_side.setUpper(d, low_src_side.lower(d));
 
             hier::Box low_low_overlap(low_src_side * msk_side
                                       * low_dst_side * fill_side);
@@ -303,7 +303,7 @@ OutersideGeometry::doOverlap(
 
             // Add upper side intersection (if any) to the box list
             hier::Box hig_src_side(src_side);
-            hig_src_side.lower(d) = hig_src_side.upper(d);
+            hig_src_side.setLower(d, hig_src_side.upper(d));
 
             hier::Box hig_low_overlap(hig_src_side * msk_side
                                       * low_dst_side * fill_side);
@@ -362,7 +362,7 @@ OutersideGeometry::setUpOverlap(
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
-      for (int d = 0; d < dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
          hier::Box side_box(SideGeometry::toSideBox(*b, d));
          dst_boxes[d].pushBack(side_box);
       }

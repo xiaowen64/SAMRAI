@@ -447,7 +447,7 @@ GriddingAlgorithm::makeCoarsestLevel(
 
    boost::shared_ptr<hier::Connector> new_to_new;
    if (domain_box_level.getLocalNumberOfBoxes(0) ==
-       (size_t)domain_box_level.getGlobalNumberOfBoxes()) {
+       domain_box_level.getGlobalNumberOfBoxes()) {
       /*
        * If proc 0 owns all new boxes, it is faster find new<==>new by
        * globalizing the new boxes.
@@ -461,6 +461,9 @@ GriddingAlgorithm::makeCoarsestLevel(
          t_find_new_to_new->barrierAndStart();
       }
 
+      if (d_print_steps) {
+         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: finding new<==>new.\n";
+      }
       d_oca0.findOverlaps(new_to_new,
          *new_box_level,
          *new_box_level,
@@ -2101,7 +2104,7 @@ GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes) cons
         itr != domain_boxes.end(); ++itr, ++i) {
 
       hier::Box test_box = *itr;
-      for (int dir = 0; dir < dim.getValue(); ++dir) {
+      for (tbox::Dimension::dir_t dir = 0; dir < dim.getValue(); ++dir) {
 
          if (test_box.numberCells(dir) < smallest_patch(dir)) {
 

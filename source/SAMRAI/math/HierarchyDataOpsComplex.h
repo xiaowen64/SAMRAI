@@ -254,7 +254,7 @@ public:
     * is false, all elements will be counted (including ghost values)
     * over all patches.
     */
-   virtual int
+   virtual size_t
    numberOfEntries(
       const int data_id,
       const bool interior_only = true) const = 0;

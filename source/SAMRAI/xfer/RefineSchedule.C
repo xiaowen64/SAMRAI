@@ -1200,7 +1200,8 @@ RefineSchedule::makeNodeCenteredUnfilledBoxLevel(
       const hier::Box& dst_box = *dst_box_level.getBox(dst_box_id);
       const hier::BlockId& dst_block = dst_box.getBlockId();
       hier::Box dst_node_box(dst_box);
-      dst_node_box.upper() += hier::IntVector::getOne(dim);
+      dst_node_box.setUpper(
+         dst_node_box.upper() + hier::IntVector::getOne(dim));
 
       for (hier::Connector::ConstNeighborIterator ni = dst_to_unfilled.begin(cf);
            ni != dst_to_unfilled.end(cf); ++ni) {
@@ -1208,7 +1209,8 @@ RefineSchedule::makeNodeCenteredUnfilledBoxLevel(
          const hier::Box& unfilled_box = *ni;
 
          hier::BoxContainer unfilled_node_boxes(unfilled_box);
-         unfilled_node_boxes.begin()->upper() += hier::IntVector::getOne(dim);
+         unfilled_node_boxes.begin()->setUpper(
+            unfilled_node_boxes.begin()->upper() + hier::IntVector::getOne(dim));
 
          if (d_src_level && dst_to_src->hasNeighborSet(dst_box_id)) {
 
@@ -1223,14 +1225,16 @@ RefineSchedule::makeNodeCenteredUnfilledBoxLevel(
                const hier::BlockId& src_block = src_box.getBlockId();
                hier::Box src_node_box(src_box);
                if (src_block == dst_block) {
-                  src_node_box.upper() += hier::IntVector::getOne(dim);
+                  src_node_box.setUpper(
+                     src_node_box.upper() + hier::IntVector::getOne(dim));
                } else if (grid_geometry->areNeighbors(src_block, dst_block)) {
                   grid_geometry->transformBox(
                      src_node_box,
                      d_dst_level->getLevelNumber(),
                      dst_block,
                      src_block);
-                  src_node_box.upper() += hier::IntVector::getOne(dim);
+                  src_node_box.setUpper(
+                     src_node_box.upper() + hier::IntVector::getOne(dim));
                }
                if (!(src_node_box * dst_node_box).empty()) {
                   unfilled_node_boxes.removeIntersections(src_node_box);
@@ -1459,6 +1463,8 @@ RefineSchedule::setupCoarseInterpBoxLevel(
                sheared_coarse_interp_boxes[cblock_id.getBlockValue()].
                   pushBack(*ci);
             }
+         } else {
+            sheared_coarse_interp_boxes[0].spliceBack(coarse_interp_boxes);
          }
 
 //         hier::BoxContainer sheared_coarse_interp_boxes(coarse_interp_boxes);
@@ -2849,7 +2855,7 @@ RefineSchedule::computeRefineOverlaps(
                hier::Box scratch_space(nbr_fill_patch->getBox());
 
                refine_overlaps[ne] =
-                  rep_item.d_var_fill_pattern->computeFillBoxesOverlap(
+                  bg_fill_pattern->computeFillBoxesOverlap(
                      fill_boxes,
                      node_fill_boxes,
                      nbr_fill_patch->getBox(),
@@ -2860,7 +2866,7 @@ RefineSchedule::computeRefineOverlaps(
                   rep_item.d_var_fill_pattern->calculateOverlap(
                      *fine_pdf->getBoxGeometry(fine_patch->getBox()),
                      *fine_pdf->getBoxGeometry(nbr_fill_patch->getBox()),
-                     unfilled_nabr,
+                     fine_patch->getBox(),
                      unfilled_nabr,
                      dst_fill_box,
                      true,
@@ -3887,7 +3893,8 @@ RefineSchedule::communicateFillBoxes(
    mesg_number = mesg_number > 0 ? mesg_number - 1 : num_incoming_comms - 1;
 
    // Set iterator si corresponds to comms[mesg_number].
-   std::set<int>::const_iterator si =
+   std::set<int>::const_iterator si = num_comms == 0 ?
+      dst_owners.end() :
       dst_owners.find(comms[mesg_number].getPeerRank());
 
    /*
@@ -4405,10 +4412,10 @@ RefineSchedule::constructScheduleTransactions(
             transaction_dst_box.setEmpty();
             transaction_dst_box.setBlockId(src_box.getBlockId());
          } else {
-            int max_nbr_size = 0;
+            size_t max_nbr_size = 0;
             for (hier::BoxContainer::iterator en = encon_nbr_choices.begin();
                  en != encon_nbr_choices.end(); ++en) {
-               const int box_size = en->size();
+               const size_t box_size = en->size();
                if (box_size > max_nbr_size) {
                   max_nbr_size = box_size;
                   transaction_dst_box = *en;

@@ -434,7 +434,7 @@ private:
       hier::BoxContainer& boxes,
       boost::shared_ptr<hier::Patch> patch,
       boost::shared_ptr<hier::PatchLevel> level,
-      const int dim,
+      const tbox::Dimension::dir_t dim,
       const int face);
 
    void

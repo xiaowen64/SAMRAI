@@ -31,7 +31,7 @@ c variables in 2d cell indexed
       REAL
      &     soln_updated(CELL2dVECG(ifirst,ilast,gcw),0:nequ-1),
      &     soln_fixed(CELL2d(ifirst,ilast,0),0:nequ-1),
-     &     rhs(CELL2d(ifirst,ilast,0),0:nequ-1)
+     &     rhs(CELL2dVECG(ifirst,ilast,gcw),0:nequ-1)
 c
 c***********************************************************************
 c***********************************************************************

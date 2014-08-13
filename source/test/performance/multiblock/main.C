@@ -32,10 +32,10 @@ using namespace std;
 
 // Headers for major algorithm/data structure objects
 
-#include "SAMRAI/mesh/BergerRigoutsos.h"
+#include "SAMRAI/mesh/TileClustering.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
-#include "SAMRAI/mesh/CascadePartitioner.h"
+#include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 #include "SAMRAI/algs/TimeRefinementIntegrator.h"
 
 // Header for application-specific algorithm/data structure object
@@ -371,17 +371,17 @@ int main(
             mblk_hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
-      boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
-         new mesh::BergerRigoutsos(dim,
+      boost::shared_ptr<mesh::TileClustering> box_generator(
+         new mesh::TileClustering(dim,
             input_db->getDatabase("BergerRigoutsos")));
 
-      boost::shared_ptr<mesh::CascadePartitioner> load_balancer(
-         new mesh::CascadePartitioner(
+      boost::shared_ptr<mesh::ChopAndPackLoadBalancer> load_balancer(
+         new mesh::ChopAndPackLoadBalancer(
             dim,
             "CascadePartitioner",
             input_db->getDatabaseWithDefault("TreeLoadBalancer",
                boost::shared_ptr<tbox::Database>())));
-      load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+//      load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       boost::shared_ptr<mesh::GriddingAlgorithm> mblk_gridding_algorithm(
          new mesh::GriddingAlgorithm(

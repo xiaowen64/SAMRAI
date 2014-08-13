@@ -744,7 +744,7 @@ VoucherTransitLoad::adjustLoad(
       tbox::plog << "  adjustLoad point_miss=" << point_miss
                  << "  range_miss="
                  << (range_miss > 0 ? " " : "") // Add space if missed range
-                 << (range_miss > 0.5 * d_pparams->getMinBoxSize().getProduct() ? " " : "") // Add space if missed range by a lot
+                 << (range_miss > 0.5 * static_cast<double>(d_pparams->getMinBoxSize().getProduct()) ? " " : "") // Add space if missed range by a lot
                  << range_miss
                  << "  " << main_bin.getSumLoad() << '/'
                  << ideal_load << " [" << low_load << ',' << high_load << ']'

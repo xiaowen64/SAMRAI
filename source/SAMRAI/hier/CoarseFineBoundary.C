@@ -57,11 +57,26 @@ CoarseFineBoundary::CoarseFineBoundary(
 
    int number_blocks = hierarchy.getGridGeometry()->getNumberBlocks();
    const PatchLevel& level = *hierarchy.getPatchLevel(level_num);
-   IntVector connector_width(max_ghost_width);
+   const hier::IntVector& ratio_to_zero =
+      level.getRatioToLevelZero();
+
+   IntVector connector_width(max_ghost_width, ratio_to_zero.size());
    connector_width.max(IntVector::getOne(d_dim));
    const Connector& level_to_level = level.findConnector(level,
          connector_width,
          CONNECTOR_CREATE);
+   if (level_num != 0) {
+      for (int b = 0; b < connector_width.size(); ++b) {
+         for (int d = 0; d < d_dim.getValue(); ++d) {
+            if (connector_width(b,d) % ratio_to_zero(b,d) != 0) {
+               connector_width(b,d) = 
+                  (connector_width(b,d) / ratio_to_zero(b,d)) +
+                  ratio_to_zero(b,d);
+            }
+         }
+      }
+   }
+
    const Connector& level_to_domain =
       level.getBoxLevel()->findConnector(hierarchy.getDomainBoxLevel(),
          connector_width,

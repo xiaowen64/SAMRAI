@@ -1649,12 +1649,13 @@ void MblkEuler::setPhysicalBoundaryConditions(
    int nd_kmin = nghost_box.lower(2);
    int nd_kmax = nghost_box.upper(2);
 
-   for (int dir = 0; dir < d_dim.getValue(); ++dir) {
+   for (tbox::Dimension::dir_t dir = 0; dir < d_dim.getValue(); ++dir) {
       if (!periodic(dir)) {
 
          if ((ghost_box.lower(dir) < domain_box.lower(dir)) &&
              (d_dom_local_blocks[dir] == block_number)) {
             int iside = 0;
+            int intdir = dir;
             SAMRAI_F77_FUNC(bcmultiblock, BCMULTIBLOCK) (
                &nd_imin, &nd_imax, &nd_jmin, &nd_jmax, &nd_kmin, &nd_kmax,
                position_ptr,
@@ -1666,12 +1667,13 @@ void MblkEuler::setPhysicalBoundaryConditions(
                &ghost_box.upper()[0],
                &patch_box.lower()[0],
                &patch_box.upper()[0],
-               &dir, &iside);
+               &intdir, &iside);
          }
 
          if ((ghost_box.upper(dir) > domain_box.upper(dir)) &&
              (d_dom_local_blocks[d_dim.getValue() + dir] == block_number)) {
             int iside = 1;
+            int intdir = dir;
             SAMRAI_F77_FUNC(bcmultiblock, BCMULTIBLOCK) (
                &nd_imin, &nd_imax, &nd_jmin, &nd_jmax, &nd_kmin, &nd_kmax,
                position_ptr,
@@ -1683,7 +1685,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
                &ghost_box.upper()[0],
                &patch_box.lower()[0],
                &patch_box.upper()[0],
-               &dir, &iside);
+               &intdir, &iside);
          }
 
       } // end of periodic check

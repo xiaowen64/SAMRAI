@@ -45,10 +45,10 @@ PatchSideDataNormOpsComplex::numberOfEntries(
    const hier::Box ibox = box * data->getGhostBox();
    const hier::IntVector& directions = data->getDirectionVector();
    const int data_depth = data->getDepth();
-   for (int d = 0; d < dimVal; ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          retval +=
-            ((pdat::SideGeometry::toSideBox(ibox, d).size()) * data_depth);
+            static_cast<int>((pdat::SideGeometry::toSideBox(ibox, d).size()) * data_depth);
       }
    }
    return retval;
@@ -77,7 +77,7 @@ PatchSideDataNormOpsComplex::sumControlVolumes(
       hier::IntVector::min(directions, cvol->getDirectionVector()));
 
    int dimVal = box.getDim().getValue();
-   for (int d = 0; d < dimVal; ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          retval += d_array_ops.sumControlVolumes(data->getArrayData(d),
                cvol->getArrayData(d),
@@ -99,7 +99,7 @@ PatchSideDataNormOpsComplex::abs(
 
    int dimVal = box.getDim().getValue();
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          d_array_ops.abs(dst->getArrayData(d),
             src->getArrayData(d),
@@ -122,7 +122,7 @@ PatchSideDataNormOpsComplex::L1Norm(
    double retval = 0.0;
    const hier::IntVector& directions = data->getDirectionVector();
    if (!cvol) {
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             retval += d_array_ops.L1Norm(data->getArrayData(d), side_box);
@@ -133,7 +133,7 @@ PatchSideDataNormOpsComplex::L1Norm(
          hier::IntVector::min(directions, cvol->getDirectionVector()));
       TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             retval += d_array_ops.L1NormWithControlVolume(data->getArrayData(d),
@@ -159,7 +159,7 @@ PatchSideDataNormOpsComplex::L2Norm(
    double retval = 0.0;
    const hier::IntVector& directions = data->getDirectionVector();
    if (!cvol) {
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             double aval = d_array_ops.L2Norm(data->getArrayData(d), side_box);
@@ -171,7 +171,7 @@ PatchSideDataNormOpsComplex::L2Norm(
          hier::IntVector::min(directions, cvol->getDirectionVector()));
       TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             double aval = d_array_ops.L2NormWithControlVolume(
@@ -204,7 +204,7 @@ PatchSideDataNormOpsComplex::weightedL2Norm(
       hier::IntVector::min(directions, weight->getDirectionVector()));
 
    if (!cvol) {
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             double aval = d_array_ops.weightedL2Norm(data->getArrayData(d),
@@ -218,7 +218,7 @@ PatchSideDataNormOpsComplex::weightedL2Norm(
          hier::IntVector::min(directions, cvol->getDirectionVector()));
       TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             double aval = d_array_ops.weightedL2NormWithControlVolume(
@@ -281,7 +281,7 @@ PatchSideDataNormOpsComplex::maxNorm(
    double retval = 0.0;
    const hier::IntVector& directions = data->getDirectionVector();
    if (!cvol) {
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -293,7 +293,7 @@ PatchSideDataNormOpsComplex::maxNorm(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -322,7 +322,7 @@ PatchSideDataNormOpsComplex::dot(
    dcomplex retval = dcomplex(0.0, 0.0);
    const hier::IntVector& directions = data1->getDirectionVector();
    if (!cvol) {
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             retval += d_array_ops.dot(data1->getArrayData(d),
@@ -334,7 +334,7 @@ PatchSideDataNormOpsComplex::dot(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
-      for (int d = 0; d < dimVal; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             retval += d_array_ops.dotWithControlVolume(
@@ -363,7 +363,7 @@ PatchSideDataNormOpsComplex::integral(
    TBOX_ASSERT(directions ==
       hier::IntVector::min(directions, vol->getDirectionVector()));
 
-   for (int d = 0; d < dimVal; ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          retval += d_array_ops.integral(
                data->getArrayData(d),

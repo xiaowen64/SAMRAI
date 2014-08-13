@@ -327,7 +327,7 @@ public:
     *
     * @pre dynamic_cast<const FaceOverlap *>(&overlap) != 0
     */
-   virtual int
+   virtual size_t
    getDataStreamSize(
       const hier::BoxOverlap& overlap) const;
 
@@ -464,7 +464,7 @@ public:
     */
    void
    printAxis(
-      int face_normal,
+      tbox::Dimension::dir_t face_normal,
       const hier::Box& box,
       std::ostream& os = tbox::plog,
       int prec = 12) const;
@@ -494,7 +494,7 @@ public:
     */
    void
    printAxis(
-      int face_normal,
+      tbox::Dimension::dir_t face_normal,
       const hier::Box& box,
       int depth,
       std::ostream& os = tbox::plog,

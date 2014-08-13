@@ -361,7 +361,7 @@ BalanceUtilities::privateInitializeBadCutPointsForBox(
 
    const tbox::Dimension dim(box.getDim());
 
-   int ic, id;
+   tbox::Dimension::dir_t ic, id;
 
    bool set_dummy_cut_points = true;
 
@@ -414,7 +414,7 @@ BalanceUtilities::privateInitializeBadCutPointsForBox(
  * value is true if some direction can be cut; false, otherwise.
  * If the box can be cut along some direction, then cut_dim_out is
  * set to the longest box direction that can be cut; otherwise,
- * cut_dim_out is set to -1 (an invalid box direction).
+ * cut_dim_out is set to the invalid value of SAMRAI::MAX_DIM_VAL.
  * Note no error checking is done.
  *
  *************************************************************************
@@ -422,7 +422,7 @@ BalanceUtilities::privateInitializeBadCutPointsForBox(
 
 bool
 BalanceUtilities::privateFindBestCutDimension(
-   int& cut_dim_out,
+   tbox::Dimension::dir_t& cut_dim_out,
    const hier::Box& in_box,
    const hier::IntVector& min_size,
    const hier::IntVector& cut_factor,
@@ -433,15 +433,15 @@ BalanceUtilities::privateFindBestCutDimension(
    const tbox::Dimension& dim(in_box.getDim());
 
    bool can_cut_box = false;
-   cut_dim_out = -1;
+   cut_dim_out = SAMRAI::MAX_DIM_VAL;
 
    hier::Box size_test_box(in_box);
 
-   for (int id = 0; id < dim.getValue(); ++id) {
+   for (   tbox::Dimension::dir_t id = 0; id < dim.getValue(); ++id) {
       int ncells = in_box.numberCells(id);
       if ((ncells < 2 * min_size(id)) ||
           (ncells % cut_factor(id))) {
-         size_test_box.lower(id) = size_test_box.upper(id);
+         size_test_box.setLower(id, size_test_box.upper(id));
       }
    }
 
@@ -453,7 +453,7 @@ BalanceUtilities::privateFindBestCutDimension(
        */
 
       hier::Box test_box(size_test_box);
-      int cutdim = test_box.longestDirection();
+      tbox::Dimension::dir_t cutdim = test_box.longestDirection();
       int numcells = test_box.numberCells(cutdim);
       int cutfact = cut_factor(cutdim);
       int mincut = tbox::MathUtilities<int>::Max(min_size(cutdim), cutfact);
@@ -485,7 +485,7 @@ BalanceUtilities::privateFindBestCutDimension(
          }
 
          if (!found_cut_point) {
-            test_box.lower(cutdim) = test_box.upper(cutdim);
+            test_box.setLower(cutdim, test_box.upper(cutdim));
          }
 
          cutdim = test_box.longestDirection();
@@ -611,7 +611,7 @@ BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
    hier::Box& box_hi,
    std::vector<std::vector<bool> >& bad_cut_points_for_boxhi,
    const hier::Box& in_box,
-   int cutdim,
+   tbox::Dimension::dir_t cutdim,
    int cut_index,
    const std::vector<std::vector<bool> >& bad_cut_points)
 {
@@ -621,13 +621,13 @@ BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
    const tbox::Dimension& dim(box_lo.getDim());
 
    box_lo = in_box;
-   box_lo.upper(cutdim) = cut_index - 1;
+   box_lo.setUpper(cutdim, cut_index - 1);
 
    box_hi = in_box;
-   box_hi.lower(cutdim) = cut_index;
+   box_hi.setLower(cutdim, cut_index);
 
    int i;
-   for (int id = 0; id < dim.getValue(); ++id) {
+   for (tbox::Dimension::dir_t id = 0; id < dim.getValue(); ++id) {
 
       const std::vector<bool>& arr_ref_in = bad_cut_points[id];
 
@@ -696,12 +696,13 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
       /*
        * Determine best direction to chop box.
        */
-      int cut_dim;
-      bool can_cut_box = privateFindBestCutDimension(cut_dim,
-            in_box,
-            min_size,
-            cut_factor,
-            bad_cut_points);
+      tbox::Dimension::dir_t cut_dim;
+      bool can_cut_box = privateFindBestCutDimension(
+         cut_dim,
+         in_box,
+         min_size,
+         cut_factor,
+         bad_cut_points);
 
       if (can_cut_box) {
 
@@ -716,7 +717,7 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
           */
 
          double work_in_single_slice = 1.0;
-         for (int id = 0; id < dim.getValue(); ++id) {
+         for (tbox::Dimension::dir_t id = 0; id < dim.getValue(); ++id) {
             if (id != cut_dim) {
                work_in_single_slice *= (double)in_box.numberCells(id);
             }
@@ -835,12 +836,13 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
       /*
        * Determine best direction to chop box.
        */
-      int cut_dim;
-      bool can_cut_box = privateFindBestCutDimension(cut_dim,
-            in_box,
-            min_size,
-            cut_factor,
-            bad_cut_points);
+      tbox::Dimension::dir_t cut_dim;
+      bool can_cut_box = privateFindBestCutDimension(
+         cut_dim,
+         in_box,
+         min_size,
+         cut_factor,
+         bad_cut_points);
 
       if (can_cut_box) {
 
@@ -855,7 +857,7 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
           */
 
          hier::Box slice_box = in_box;
-         slice_box.upper(cut_dim) = slice_box.lower(cut_dim);
+         slice_box.setUpper(cut_dim, slice_box.lower(cut_dim));
 
          std::vector<double> work_in_slices(numcells);
          for (i = 0; i < numcells; ++i) {
@@ -863,8 +865,8 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
                BalanceUtilities::computeNonUniformWorkload(patch,
                   work_data_index,
                   slice_box);
-            slice_box.lower(cut_dim) += 1;
-            slice_box.upper(cut_dim) = slice_box.lower(cut_dim);
+            slice_box.setLower(cut_dim, slice_box.lower(cut_dim) + 1);
+            slice_box.setUpper(cut_dim, slice_box.lower(cut_dim));
 
          }
 
@@ -1434,7 +1436,7 @@ BalanceUtilities::computeDomainDependentProcessorLayout(
 
    const tbox::Dimension& dim(proc_dist.getDim());
 
-   int i;
+   tbox::Dimension::dir_t i;
    TBOX_ASSERT(num_procs > 0);
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (i = 0; i < dim.getValue(); ++i) {
@@ -1482,7 +1484,7 @@ BalanceUtilities::computeDomainDependentProcessorLayout(
          //  determine i - direction in which d is largest
          i = 0;
          int nx = d[i];
-         for (int j = 0; j < dim.getValue(); ++j) {
+         for (tbox::Dimension::dir_t j = 0; j < dim.getValue(); ++j) {
             if (d[j] > nx) i = j;
          }
 
@@ -1543,7 +1545,7 @@ BalanceUtilities::computeDomainIndependentProcessorLayout(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(proc_dist, box);
 
-   int i;
+   tbox::Dimension::dir_t i;
    const tbox::Dimension& dim(proc_dist.getDim());
 
    TBOX_ASSERT(num_procs > 0);
@@ -1590,7 +1592,7 @@ BalanceUtilities::computeDomainIndependentProcessorLayout(
       //  determine i - direction in which d is largest
       i = 0;
       int nx = d[i];
-      for (int j = 0; j < dim.getValue(); ++j) {
+      for (tbox::Dimension::dir_t j = 0; j < dim.getValue(); ++j) {
          if (d[j] > nx) i = j;
       }
 
@@ -1735,7 +1737,7 @@ BalanceUtilities::computeLoadBalanceEfficiency(
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          work[mapping.getProcessorAssignment(ip->getLocalId().getValue())] +=
-            (*ip)->getBox().size();
+            static_cast<double>((*ip)->getBox().size());
       }
 
    } else {

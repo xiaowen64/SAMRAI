@@ -80,7 +80,7 @@ HierarchyFaceDataOpsInteger::resetLevels(
    d_coarsest_level = coarsest_level;
    d_finest_level = finest_level;
 
-   for (int d = 0; d < dimVal; ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
       d_nonoverlapping_face_boxes[d].resize(d_finest_level + 1);
    }
 
@@ -89,7 +89,7 @@ HierarchyFaceDataOpsInteger::resetLevels(
          d_hierarchy->getPatchLevel(ln));
       hier::BoxContainer face_boxes;
 
-      for (int nd = 0; nd < dimVal; ++nd) {
+      for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
          face_boxes = level->getBoxes();
          for (hier::BoxContainer::iterator i = face_boxes.begin();
               i != face_boxes.end(); ++i) {
@@ -116,7 +116,7 @@ HierarchyFaceDataOpsInteger::getPatchHierarchy() const
  *************************************************************************
  */
 
-int
+size_t
 HierarchyFaceDataOpsInteger::numberOfEntries(
    const int data_id,
    const bool interior_only) const
@@ -129,7 +129,7 @@ HierarchyFaceDataOpsInteger::numberOfEntries(
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
    int dimVal = d_hierarchy->getDim().getValue();
 
-   int entries = 0;
+   size_t entries = 0;
 
    if (interior_only) {
 
@@ -149,7 +149,7 @@ HierarchyFaceDataOpsInteger::numberOfEntries(
          }
 #endif
          for (int il = 0; il < npatches; ++il) {
-            for (int eb = 0; eb < dimVal; ++eb) {
+            for (tbox::Dimension::dir_t eb = 0; eb < dimVal; ++eb) {
                hier::BoxContainer::const_iterator lb =
                   ((d_nonoverlapping_face_boxes[eb][ln])[il]).begin();
                for ( ; lb != ((d_nonoverlapping_face_boxes[eb][ln])[il]).end();
@@ -179,9 +179,9 @@ HierarchyFaceDataOpsInteger::numberOfEntries(
          }
       }
 
-      int global_entries = entries;
+      unsigned long int global_entries = entries;
       if (mpi.getSize() > 1) {
-         mpi.Allreduce(&global_entries, &entries, 1, MPI_INT, MPI_SUM);
+         mpi.Allreduce(&global_entries, &entries, 1, MPI_UNSIGNED_LONG, MPI_SUM);
       }
       entries = global_entries;
 

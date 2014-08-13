@@ -7,7 +7,6 @@ include(FORTDIR/m4flux3d.i)dnl
       subroutine fluxcorrec2d(dt,
      &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
      &  dx,advecspeed,idir,
-     &  uval,
      &  flux0,flux1,flux2,
      &  tracelft0,tracelft1,tracelft2,
      &  tracergt0,tracergt1,tracergt2,
@@ -30,7 +29,6 @@ c
 c variables in 2d cell indexed         
       REAL
      &     advecspeed(0:NDIM-1),
-     &     uval(CELL3d(ifirst,ilast,CELLG)),
 c
      &     flux0(FACE3d0(ifirst,ilast,FLUXG)),
      &     flux1(FACE3d1(ifirst,ilast,FLUXG)), 
@@ -91,7 +89,7 @@ c***********************************************************************
       subroutine fluxcorrec3d(dt,
      &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
      &  dx,
-     &  advecspeed,uval,
+     &  advecspeed,
      &  fluxa0,fluxa1,fluxa2,
      &  fluxb0,fluxb1,fluxb2,
      &  tracelft0,tracelft1,tracelft2,
@@ -112,7 +110,6 @@ c
 c variables in 2d cell indexed         
       REAL
      &     advecspeed(0:NDIM-1),
-     &     uval(CELL3d(ifirst,ilast,CELLG)),
      &     fluxa0(FACE3d0(ifirst,ilast,FLUXG)),
      &     fluxa1(FACE3d1(ifirst,ilast,FLUXG)), 
      &     fluxa2(FACE3d2(ifirst,ilast,FLUXG)), 
@@ -151,7 +148,6 @@ c***********************************************************************
       subroutine fluxcalculation3d(dt,xcell0,xcell1,visco,dx,
      &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
      &  advecspeed,
-     &  uval,
      &  flux0,flux1,flux2,
      &  trlft0,trlft1,trlft2,
      &  trrgt0,trrgt1,trrgt2)
@@ -170,8 +166,7 @@ c input arrays:
      &     dx(0:NDIM-1)
 c variables in 2d cell indexed         
       REAL
-     &     advecspeed(0:NDIM-1),
-     &     uval(CELL3d(ifirst,ilast,CELLG))
+     &     advecspeed(0:NDIM-1)
 c variables in 2d side indexed         
       REAL
      &     flux0(FACE3d0(ifirst,ilast,FLUXG)),

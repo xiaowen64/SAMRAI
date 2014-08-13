@@ -562,7 +562,7 @@ CascadePartitioner::computeLocalLoad(
    for (hier::BoxContainer::const_iterator ni = boxes.begin();
         ni != boxes.end();
         ++ni) {
-      double box_load = double(ni->size());
+      double box_load = static_cast<double>(ni->size());
       load += box_load;
    }
    return static_cast<LoadType>(load);

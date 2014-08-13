@@ -475,7 +475,7 @@ void AdaptivePoisson::applyGradientDetector(
    hier::PatchHierarchy& hierarchy = *hierarchy_;
    hier::PatchLevel& level =
       (hier::PatchLevel &) * hierarchy.getPatchLevel(ln);
-   int ntag = 0, ntotal = 0;
+   size_t ntag = 0, ntotal = 0;
    double maxestimate = 0;
    for (hier::PatchLevel::iterator pi(level.begin());
         pi != level.end(); ++pi) {
@@ -596,8 +596,7 @@ bool AdaptivePoisson::packDerivedDataIntoDoubleBuffer(
       memcpy(buffer, estimate_data.getPointer(), sizeof(double) * region.size());
    } else if (variable_name == "Patch level number") {
       double pln = patch.getPatchLevelNumber();
-      int i, size = region.size();
-      for (i = 0; i < size; ++i) buffer[i] = pln;
+      for (size_t i = 0; i < region.size(); ++i) buffer[i] = pln;
    } else {
       // Did not register this name.
       TBOX_ERROR(

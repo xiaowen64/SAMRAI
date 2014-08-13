@@ -78,7 +78,7 @@ public:
    static bool
    inputDatabaseExists()
    {
-      return s_input_db;
+      return s_input_db.get();
    }
 
    /**

@@ -75,7 +75,7 @@ BaseGridGeometry::BaseGridGeometry(
    d_object_name(object_name),
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
-   d_ratio_to_level_zero(1, IntVector(d_dim, 1)),
+   d_ratio_to_level_zero(1, IntVector::getOne(d_dim)),
    d_has_enhanced_connectivity(false)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -114,7 +114,7 @@ BaseGridGeometry::BaseGridGeometry(
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
-   d_ratio_to_level_zero(1, IntVector(d_dim, 1)),
+   d_ratio_to_level_zero(1, IntVector::getOne(d_dim)),
    d_has_enhanced_connectivity(false)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -152,7 +152,7 @@ BaseGridGeometry::BaseGridGeometry(
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
-   d_ratio_to_level_zero(1, IntVector(d_dim, 1)),
+   d_ratio_to_level_zero(1, IntVector::getOne(d_dim)),
    d_has_enhanced_connectivity(false)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -373,7 +373,7 @@ BaseGridGeometry::computeBoxTouchingBoundaries(
       }
    } else {
       bool bdry_located = false;
-      for (int nd = 0; nd < d_dim.getValue(); ++nd) {
+      for (tbox::Dimension::dir_t nd = 0; nd < d_dim.getValue(); ++nd) {
          BoxContainer lower_list(bdry_list);
          BoxContainer upper_list(bdry_list);
 
@@ -409,7 +409,7 @@ BaseGridGeometry::computeBoxTouchingBoundaries(
        * concave corner of an L-shaped domain.
        */
       if (!bdry_located) {
-         for (int nd = 0; nd < d_dim.getValue(); ++nd) {
+         for (tbox::Dimension::dir_t nd = 0; nd < d_dim.getValue(); ++nd) {
             touches_periodic_bdry(nd, 0) = touches_periodic_bdry(nd, 1) = false;
 
             bool lower_side = false;
@@ -938,13 +938,13 @@ BaseGridGeometry::computeShiftsForBox(
       const std::vector<int>& location_index_max =
          blut->getMaxLocationIndices();
 
-      for (int d = 0; d < num_periodic_dirs; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < num_periodic_dirs; ++d) {
 
-         const int codim = d + 1;
+         const tbox::Dimension::dir_t codim = static_cast<tbox::Dimension::dir_t>(d + 1);
 
          for (int loc = 0; loc < location_index_max[d]; ++loc) {
 
-            const std::vector<int>& dirs = blut->getDirections(loc, codim);
+            const std::vector<tbox::Dimension::dir_t>& dirs = blut->getDirections(loc, codim);
 
             bool need_to_test = true;
             for (int k = 0; k < static_cast<int>(dirs.size()); ++k) {
@@ -960,15 +960,15 @@ BaseGridGeometry::computeShiftsForBox(
                IntVector border_shift(d_dim, 0);
 
                std::vector<bool> is_upper(codim);
-               for (int j = 0; j < codim; ++j) {
+               for (tbox::Dimension::dir_t j = 0; j < codim; ++j) {
                   if (blut->isUpper(loc, codim, j)) {
-                     border.lower(dirs[j]) = box.upper(dirs[j]);
-                     border.upper(dirs[j]) = box.upper(dirs[j]);
+                     border.setLower(dirs[j], box.upper(dirs[j]));
+                     border.setUpper(dirs[j], box.upper(dirs[j]));
                      border_shift(dirs[j]) = 1;
                      is_upper[j] = true;
                   } else {
-                     border.lower(dirs[j]) = box.lower(dirs[j]);
-                     border.upper(dirs[j]) = box.lower(dirs[j]);
+                     border.setLower(dirs[j], box.lower(dirs[j]));
+                     border.setUpper(dirs[j], box.lower(dirs[j]));
                      border_shift(dirs[j]) = -1;
                      is_upper[j] = false;
                   }
@@ -1093,15 +1093,15 @@ BaseGridGeometry::getBoundaryBoxes(
          blut->getMaxLocationIndices();
       std::vector<BoxContainer> codim_boxlist(d_dim.getValue());
 
-      for (int d = 0; d < d_dim.getValue() - num_per_dirs; ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue() - num_per_dirs; ++d) {
 
-         int codim = d + 1;
+         tbox::Dimension::dir_t codim = static_cast<tbox::Dimension::dir_t>(d + 1);
 
          for (int loc = 0; loc < location_index_max[d]; ++loc) {
-            const std::vector<int>& dirs = blut->getDirections(loc, codim);
+            const std::vector<tbox::Dimension::dir_t>& dirs = blut->getDirections(loc, codim);
 
             bool all_is_per = true;
-            for (int p = 0; p < codim; ++p) {
+            for (tbox::Dimension::dir_t p = 0; p < codim; ++p) {
                if (periodic_shift(dirs[p]) == 0) {
                   all_is_per = false;
                }
@@ -1111,30 +1111,30 @@ BaseGridGeometry::getBoundaryBoxes(
                Box border(box);
                IntVector border_shift(d_dim, 0);
 
-               for (int i = 0; i < codim; ++i) {
+               for (tbox::Dimension::dir_t i = 0; i < codim; ++i) {
                   if (blut->isUpper(loc, codim, i)) {
-                     border.lower(dirs[i]) = box.upper(dirs[i]);
-                     border.upper(dirs[i]) = box.upper(dirs[i]);
+                     border.setLower(dirs[i], box.upper(dirs[i]));
+                     border.setUpper(dirs[i], box.upper(dirs[i]));
                      border_shift(dirs[i]) = 1;
                   } else {
-                     border.lower(dirs[i]) = box.lower(dirs[i]);
-                     border.upper(dirs[i]) = box.lower(dirs[i]);
+                     border.setLower(dirs[i], box.lower(dirs[i]));
+                     border.setUpper(dirs[i], box.lower(dirs[i]));
                      border_shift(dirs[i]) = -1;
                   }
                }
 
                // grow in non-dirs directions
-               for (int j = 0; j < d_dim.getValue(); ++j) {
+               for (tbox::Dimension::dir_t j = 0; j < d_dim.getValue(); ++j) {
                   bool dir_used = false;
-                  for (int du = 0; du < codim; ++du) {
+                  for (tbox::Dimension::dir_t du = 0; du < codim; ++du) {
                      if (dirs[du] == j) {
                         dir_used = true;
                         break;
                      }
                   }
                   if (!dir_used) {
-                     border.upper(j) = ilast(j) + ghosts(j);
-                     border.lower(j) = ifirst(j) - ghosts(j);
+                     border.setUpper(j, ilast(j) + ghosts(j));
+                     border.setLower(j, ifirst(j) - ghosts(j));
                   }
                }
 
@@ -1511,7 +1511,7 @@ BaseGridGeometry::setPhysicalDomain(
 
             Box bounding_box(d_physical_domain.getBoundingBox());
 
-            for (int id = 0; id < d_dim.getValue(); ++id) {
+            for (tbox::Dimension::dir_t id = 0; id < d_dim.getValue(); ++id) {
                d_periodic_shift(id) *= bounding_box.numberCells(id);
             }
 
@@ -1690,7 +1690,7 @@ BaseGridGeometry::checkPeriodicValidity(
 
    Box domain_box = dup_domain.getBoundingBox();
    domain_box.grow(grow_direction);
-   int i;
+   tbox::Dimension::dir_t i;
    Index min_index(d_dim, 0), max_index(d_dim, 0);
    for (i = 0; i < d_dim.getValue(); ++i) {
       //set min/max of the bounding box
@@ -1770,7 +1770,7 @@ BaseGridGeometry::checkBoundaryBox(
     */
    IntVector box_size(d_dim);
 
-   for (int i = 0; i < d_dim.getValue(); ++i) {
+   for (tbox::Dimension::dir_t i = 0; i < d_dim.getValue(); ++i) {
       box_size(i) = bbox.numberCells(i);
    }
 
@@ -1791,22 +1791,22 @@ BaseGridGeometry::checkBoundaryBox(
    if (!grow_patch_box.isSpatiallyEqual((grow_patch_box + bbox))) {
       bool valid_box = false;
       grow_patch_box = patch_box;
-      for (int j = 0; j < d_dim.getValue(); ++j) {
+      for (tbox::Dimension::dir_t j = 0; j < d_dim.getValue(); ++j) {
          if (num_per_dirs == 0) {
 
-            for (int k = 1; k < d_dim.getValue(); ++k) {
+            for (tbox::Dimension::dir_t k = 1; k < d_dim.getValue(); ++k) {
 
-               grow_patch_box.grow((j + k) % d_dim.getValue(),
-                  max_data_ghost_width((j + k) % d_dim.getValue()));
+               grow_patch_box.grow( static_cast<tbox::Dimension::dir_t>((j + k) % d_dim.getValue()),
+                                   max_data_ghost_width((j + k) % d_dim.getValue()));
 
             }
 
          } else {
 
-            for (int k = 1; k < d_dim.getValue(); ++k) {
+            for (tbox::Dimension::dir_t k = 1; k < d_dim.getValue(); ++k) {
 
-               grow_patch_box.grow((j + k) % d_dim.getValue(),
-                  2 * max_data_ghost_width((j + k) % d_dim.getValue()));
+               grow_patch_box.grow( static_cast<tbox::Dimension::dir_t>((j + k) % d_dim.getValue()),
+                                   2 * max_data_ghost_width((j + k) % d_dim.getValue()));
 
             }
 
@@ -2041,7 +2041,7 @@ BaseGridGeometry::readBlockDataFromInput(
                BoxContainer cur_domain_nodal(cur_domain);
                for (BoxContainer::iterator cdn = cur_domain_nodal.begin();
                     cdn != cur_domain_nodal.end(); ++cdn) {
-                  cdn->upper() += IntVector::getOne(d_dim);
+                  cdn->setUpper(cdn->upper() + IntVector::getOne(d_dim));
                }
 
                for (std::map<BlockId, Neighbor>::iterator nei = nbr_map.begin();
@@ -2055,7 +2055,7 @@ BaseGridGeometry::readBlockDataFromInput(
                         nei->second.getTransformedDomain());
                      for (BoxContainer::iterator nbn = nbr_block_nodal.begin();
                           nbn != nbr_block_nodal.end(); ++nbn) {
-                        nbn->upper() += IntVector::getOne(d_dim);
+                        nbn->setUpper(nbn->upper() + IntVector::getOne(d_dim));
                      }
 
                      cur_domain_nodal.intersectBoxes(nbr_block_nodal);
@@ -2076,7 +2076,7 @@ BaseGridGeometry::readBlockDataFromInput(
                   Box sing_box(d_dim);
                   sing_box.setBlockId(cur_block_id);
 
-                  int sing_size = sing_node_box.size();
+                  size_t sing_size = sing_node_box.size();
 
                   if (sing_size == 1) {
 
@@ -2097,15 +2097,15 @@ BaseGridGeometry::readBlockDataFromInput(
 
                         const hier::Box& domain_box = *cd;
 
-                        for (int d = 0; d < d_dim.getValue(); ++d) {
+                        for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
 
                            if (sing_node(d) == domain_box.lower(d)) {
-                              sing_box.lower() (d) = sing_node(d) - 1;
-                              sing_box.upper() (d) = sing_node(d) - 1;
+                              sing_box.setLower(d, sing_node(d) - 1);
+                              sing_box.setUpper(d, sing_node(d) - 1);
                               found_corner[d] = true;
                            } else if (sing_node(d) == domain_box.upper(d) + 1) {
-                              sing_box.lower() (d) = sing_node(d);
-                              sing_box.upper() (d) = sing_node(d);
+                              sing_box.setLower(d, sing_node(d));
+                              sing_box.setUpper(d, sing_node(d));
                               found_corner[d] = true;
                            }
                         }
@@ -2164,21 +2164,21 @@ BaseGridGeometry::readBlockDataFromInput(
 
                         const hier::Box& domain_box = *cd;
 
-                        for (int d = 0; d < d_dim.getValue(); ++d) {
+                        for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
 
                            if (d != long_dir) {
                               if (sing_node(d) == domain_box.lower(d)) {
-                                 sing_box.lower() (d) = sing_node(d) - 1;
-                                 sing_box.upper() (d) = sing_node(d) - 1;
+                                 sing_box.setLower(d, sing_node(d) - 1);
+                                 sing_box.setUpper(d, sing_node(d) - 1);
                                  found_corner[d] = true;
                               } else if (sing_node(d) == domain_box.upper(d) + 1) {
-                                 sing_box.lower() (d) = sing_node(d);
-                                 sing_box.upper() (d) = sing_node(d);
+                                 sing_box.setLower(d, sing_node(d));
+                                 sing_box.setUpper(d, sing_node(d));
                                  found_corner[d] = true;
                               }
                            } else {
-                              sing_box.lower() (d) = sing_node_box.lower() (d);
-                              sing_box.upper() (d) = sing_node_box.upper() (d) - 1;
+                              sing_box.setLower(d, sing_node_box.lower() (d));
+                              sing_box.setUpper(d, sing_node_box.upper() (d) - 1);
                            }
                         }
 
@@ -2367,7 +2367,8 @@ void BaseGridGeometry::findSingularities(
          }
 
          Box base_node_box(base_box);
-         base_node_box.upper() += IntVector::getOne(d_dim);
+         base_node_box.setUpper(
+            base_node_box.upper() + IntVector::getOne(d_dim));
 
          Box transformed_nbr_box(nbr_box);
          if (nbr_block != base_block) {
@@ -2378,7 +2379,8 @@ void BaseGridGeometry::findSingularities(
          }
 
          Box& nbr_node_box = transformed_nbr_box;
-         nbr_node_box.upper() += IntVector::getOne(d_dim); 
+         nbr_node_box.setUpper(
+            nbr_node_box.upper() + IntVector::getOne(d_dim));
 
          hier::Box face_box(base_node_box * nbr_node_box);
 
@@ -2420,10 +2422,12 @@ void BaseGridGeometry::findSingularities(
                             base_block);
             }
 
-            transformed_base_box.upper() += IntVector::getOne(d_dim);
+            transformed_base_box.setUpper(
+               transformed_base_box.upper() + IntVector::getOne(d_dim));
 
             nbr_node_box = nbr_box;
-            nbr_node_box.upper() += IntVector::getOne(d_dim);
+            nbr_node_box.setUpper(
+               nbr_node_box.upper() + IntVector::getOne(d_dim));
 
             face_box = transformed_base_box * nbr_node_box;
 
@@ -2506,7 +2510,8 @@ BaseGridGeometry::chopDomain(
             const Box& base_box = *bi;
             const BoxId& base_id = base_box.getBoxId();
             Box base_node_box(base_box);
-            base_node_box.upper() += IntVector::getOne(d_dim);
+            base_node_box.setUpper(
+               base_node_box.upper() + IntVector::getOne(d_dim));
             IntVector base_node_size(base_node_box.numberCells());
 
             BoxContainerSingleBlockIterator si(
@@ -2517,14 +2522,15 @@ BaseGridGeometry::chopDomain(
                if (base_id != other_id) {
                   if (dont_chop[base_id].find(other_id) == dont_chop[base_id].end()) {
                      Box nbr_node_box(*si);
-                     nbr_node_box.upper() += IntVector::getOne(d_dim);
+                     nbr_node_box.setUpper(
+                        nbr_node_box.upper() + IntVector::getOne(d_dim));
 
                      Box intersect(base_node_box * nbr_node_box);
                      if (!intersect.empty()) {
                         neighbors[base_id].insert(other_id);
                         neighbors[other_id].insert(base_id);
                         IntVector intersect_size(intersect.numberCells());
-                        for (int d = 0; d < d_dim.getValue(); ++d) {
+                        for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
                            if (intersect_size[d] != 1) {
                               if (intersect_size[d] != base_node_size[d]) {
                                  bool chop_low;
@@ -2545,11 +2551,11 @@ BaseGridGeometry::chopDomain(
                                  LocalId local_id(chopped_domain.size());
                                  Box new_box(base_box, local_id, 0);
                                  if (chop_low == true) {
-                                    new_box.lower() (d) = chop;
-                                    box_itr->upper() (d) = chop - 1;
+                                    new_box.setLower(d, chop);
+                                    box_itr->setUpper(d, chop - 1);
                                  } else {
-                                    new_box.upper() (d) = chop;
-                                    box_itr->lower() (d) = chop + 1;
+                                    new_box.setUpper(d, chop);
+                                    box_itr->setLower(d, chop + 1);
                                  }
                                  chopped_domain.insert(chopped_domain.end(),
                                     new_box);
@@ -2599,14 +2605,15 @@ BaseGridGeometry::chopDomain(
                                   base_block,
                                   nbr_block);
                      Box nbr_node_box(nbr_box);
-                     nbr_node_box.upper() += IntVector::getOne(d_dim);
+                     nbr_node_box.setUpper(
+                        nbr_node_box.upper() + IntVector::getOne(d_dim));
 
                      Box intersect(base_node_box * nbr_node_box);
                      if (!intersect.empty()) {
                         neighbors[base_id].insert(other_id);
                         neighbors[other_id].insert(base_id);
                         IntVector intersect_size(intersect.numberCells());
-                        for (int d = 0; d < d_dim.getValue(); ++d) {
+                        for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
                            if (intersect_size[d] != 1) {
                               if (intersect_size[d] != base_node_size[d]) {
                                  bool chop_low;
@@ -2627,11 +2634,11 @@ BaseGridGeometry::chopDomain(
                                  LocalId local_id(chopped_domain.size());
                                  Box new_box(base_box, local_id, 0);
                                  if (chop_low == true) {
-                                    new_box.lower() (d) = chop;
-                                    box_itr->upper() (d) = chop - 1;
+                                    new_box.setLower(d, chop);
+                                    box_itr->setUpper(d, chop - 1);
                                  } else {
-                                    new_box.upper() (d) = chop;
-                                    box_itr->lower() (d) = chop + 1;
+                                    new_box.setUpper(d, chop);
+                                    box_itr->setLower(d, chop + 1);
                                  }
 
                                  chopped_domain.insert(chopped_domain.end(),
@@ -3054,9 +3061,9 @@ BaseGridGeometry::setUpFineLevelMultiblockData(
             const Box& nbr_box = nbr_domain.front();
 
             Box base_node_box(domain_box);
-            base_node_box.upper() += IntVector::getOne(d_dim); 
+            base_node_box.setUpper(base_node_box.upper() + IntVector::getOne(d_dim)); 
             Box nbr_node_box(nbr_box);
-            nbr_node_box.upper() += IntVector::getOne(d_dim);
+            nbr_node_box.setUpper(nbr_node_box.upper() + IntVector::getOne(d_dim));
 
             Box shared_base_nodes(base_node_box*nbr_node_box);
             IntVector shared_size(shared_base_nodes.numberCells());
@@ -3085,9 +3092,9 @@ BaseGridGeometry::setUpFineLevelMultiblockData(
                          block_id);
 
             Box tran_base_node(transformed_base_box);
-            tran_base_node.upper() += IntVector::getOne(d_dim);
+            tran_base_node.setUpper(tran_base_node.upper() + IntVector::getOne(d_dim));
             Box true_nbr_node(true_nbr_box);
-            true_nbr_node.upper() += IntVector::getOne(d_dim);
+            true_nbr_node.setUpper(true_nbr_node.upper() +  IntVector::getOne(d_dim));
             Box shared_nbr_nodes(tran_base_node * true_nbr_node);
 
             shared_size = shared_nbr_nodes.numberCells();
@@ -3109,9 +3116,9 @@ BaseGridGeometry::setUpFineLevelMultiblockData(
             refined_nbr.refine(current_ratio);
 
             Box refined_base_node(refined_base);
-            refined_base_node.upper() += IntVector::getOne(d_dim);
+            refined_base_node.setUpper(refined_base_node.upper() + IntVector::getOne(d_dim));
             Box refined_nbr_node(refined_nbr);
-            refined_nbr_node.upper() += IntVector::getOne(d_dim);
+            refined_nbr_node.setUpper(refined_nbr_node.upper() + IntVector::getOne(d_dim));
 
             shared_base_nodes.refine(current_ratio);
             shared_nbr_nodes.refine(current_ratio);
@@ -3162,12 +3169,12 @@ BaseGridGeometry::setUpFineLevelMultiblockData(
             test_box.shift(test_shift);
             test_box.setBlockId(block_id);
             Box test_box_node(test_box);
-            test_box_node.upper() += IntVector::getOne(d_dim);
+            test_box_node.setUpper(test_box_node.upper() + IntVector::getOne(d_dim));
             IntVector sh_num_cells(shared_nbr_nodes.numberCells());
             for (int d = 0; d < d_dim.getValue(); ++d) {
                if (sh_num_cells[d] ==
                    current_ratio(shared_nbr_nodes.getBlockId().getBlockValue(),d)) {
-                  shared_nbr_nodes.lower(d) = shared_nbr_nodes.upper(d);
+                  shared_nbr_nodes.setLower(d, shared_nbr_nodes.upper(d));
                } else {
 //                  shared_nbr_nodes.upper(d) -=
 //                  current_ratio(shared_nbr_nodes.getBlockId().getBlockValue(),d);
@@ -3188,7 +3195,7 @@ BaseGridGeometry::setUpFineLevelMultiblockData(
                   test_box_node.rotate(rotation);
                   test_box_node.shift(adj_shift);
                   test_box_node.setBlockId(block_id);
-                  test_box_node.upper() += IntVector::getOne(d_dim);
+                  test_box_node.setUpper(test_box_node.upper() + IntVector::getOne(d_dim));
                    
                   if ((test_box_node * refined_base_node).size() == sh_size) {
                      final_shift = adj_shift;

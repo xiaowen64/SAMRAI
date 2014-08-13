@@ -464,7 +464,8 @@ void SinusoidalFrontTagger::computeFrontsData(
    hier::Box front_box = fill_box;
    front_box.grow(tag_buffer);
    front_box.growUpper(hier::IntVector(d_dim, 1));
-   front_box.upper(0) = front_box.lower(0) = pbox.lower(0);
+   front_box.setUpper(0, pbox.lower(0));
+   front_box.setLower(0, pbox.lower(0));
 
    const int ifront = front_box.lower(0);
 

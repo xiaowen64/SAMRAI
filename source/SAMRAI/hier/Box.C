@@ -410,9 +410,8 @@ Box::initialize(
 
 Index
 Box::index(
-   const int offset) const
+   const size_t offset) const
 {
-   TBOX_ASSERT(offset >= 0);
    TBOX_ASSERT(offset <= size());
 
    IntVector n(getDim());
@@ -420,7 +419,7 @@ Box::index(
 
    n = numberCells();
 
-   int remainder = offset;
+   size_t remainder = offset;
 
    for (int d = getDim().getValue() - 1; d > -1; --d) {
       /* Compute the stride for indexing */
@@ -430,11 +429,11 @@ Box::index(
       }
 
       /* Compute the local index */
-      index[d] = remainder / stride;
+      index[d] = static_cast<int>(remainder / stride);
       remainder -= index[d] * stride;
 
       /* Compute the global index */
-      index[d] += lower(d);
+      index[d] += lower(static_cast<tbox::Dimension::dir_t>(d));
    }
 
    return Index(index);
@@ -541,7 +540,7 @@ Box::intersects(
       }
    }
 
-   for (int i = 0; i < getDim().getValue(); ++i) {
+   for (dir_t i = 0; i < getDim().getValue(); ++i) {
       if (tbox::MathUtilities<int>::Max(d_lo(i), box.d_lo(i)) >
           tbox::MathUtilities<int>::Min(d_hi(i), box.d_hi(i))) {
          return false;
@@ -590,10 +589,10 @@ Box::operator += (
 
 void
 Box::lengthen(
-   const int direction,
+   const dir_t direction,
    const int ghosts)
 {
-   TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+   TBOX_ASSERT((direction < getDim().getValue()));
 
    if (!empty()) {
       if (ghosts > 0) {
@@ -606,10 +605,10 @@ Box::lengthen(
 
 void
 Box::shorten(
-   const int direction,
+   const dir_t direction,
    const int ghosts)
 {
-   TBOX_ASSERT((direction >= 0) && (direction < getDim().getValue()));
+   TBOX_ASSERT((direction < getDim().getValue()));
 
    if (!empty()) {
       if (ghosts > 0) {
@@ -662,13 +661,13 @@ Box::refine(
  *************************************************************************
  */
 
-int
+Box::dir_t
 Box::longestDirection() const
 {
    int max = upper(0) - lower(0);
-   int dim = 0;
+   dir_t dim = 0;
 
-   for (int i = 1; i < getDim().getValue(); ++i)
+   for (dir_t i = 1; i < getDim().getValue(); ++i)
       if ((upper(i) - lower(i)) > max) {
          max = upper(i) - lower(i);
          dim = i;
@@ -691,7 +690,7 @@ Box::DatabaseBox_from_Box() const
 
    new_Box.setDim(getDim());
 
-   for (int i = 0; i < getDim().getValue(); ++i) {
+   for (dir_t i = 0; i < getDim().getValue(); ++i) {
       new_Box.lower(i) = d_lo(i);
       new_Box.upper(i) = d_hi(i);
    }
@@ -703,7 +702,7 @@ void
 Box::set_Box_from_DatabaseBox(
    const tbox::DatabaseBox& box)
 {
-   for (int i = 0; i < box.getDimVal(); ++i) {
+   for (dir_t i = 0; i < box.getDimVal(); ++i) {
       d_lo(i) = box.lower(i);
       d_hi(i) = box.upper(i);
    }
@@ -719,8 +718,8 @@ Box::putToIntBuffer(
    d_id.putToIntBuffer(buffer);
    buffer += BoxId::commBufferSize();
 
-   const int dim(d_lo.getDim().getValue());
-   for (int d = 0; d < dim; ++d) {
+   const dir_t dim(d_lo.getDim().getValue());
+   for (dir_t d = 0; d < dim; ++d) {
       buffer[d] = d_lo(d);
       buffer[dim + d] = d_hi(d);
    }
@@ -737,8 +736,8 @@ Box::getFromIntBuffer(
    d_id.getFromIntBuffer(buffer);
    buffer += BoxId::commBufferSize();
 
-   const int dim(d_lo.getDim().getValue());
-   for (int d = 0; d < dim; ++d) {
+   const dir_t dim(d_lo.getDim().getValue());
+   for (dir_t d = 0; d < dim; ++d) {
       d_lo(d) = buffer[d];
       d_hi(d) = buffer[dim + d];
    }
@@ -781,9 +780,12 @@ operator >> (
    Box& box)
 {
    while (s.get() != '[') ;
-   s >> box.lower();
+   Index tmp(box.getDim());
+   s >> tmp;
+   box.setLower(tmp);
    while (s.get() != ',') NULL_STATEMENT;
-   s >> box.upper();
+   s >> tmp;
+   box.setUpper(tmp);
    while (s.get() != ']') NULL_STATEMENT;
    return s;
 }
@@ -834,9 +836,9 @@ Box::coalesceIntervals(
          return retval;
       }
    } else {
-      for (int id = 0; id < dim; ++id) {
+      for (dir_t id = 0; id < dim; ++id) {
          if ((lo1[id] == lo2[id]) && (hi1[id] == hi2[id])) {
-            int id2;
+            dir_t id2;
             int low1[SAMRAI::MAX_DIM_VAL];
             int high1[SAMRAI::MAX_DIM_VAL];
             int low2[SAMRAI::MAX_DIM_VAL];
@@ -847,8 +849,8 @@ Box::coalesceIntervals(
                low2[id2] = lo2[id2];
                high2[id2] = hi2[id2];
             }
-            for (id2 = id + 1; id2 < dim; ++id2) {
-               int id1 = id2 - 1;
+            for (id2 = static_cast<tbox::Dimension::dir_t>(id + 1); id2 < dim; ++id2) {
+               dir_t id1 = static_cast<tbox::Dimension::dir_t>(id2 - 1);
                low1[id1] = lo1[id2];
                high1[id1] = hi1[id2];
                low2[id1] = lo2[id2];
@@ -889,7 +891,7 @@ Box::coalesceWith(
       retval = true;
       *this += box;
    } else if (d_block_id == box.d_block_id) {
-      int id;
+      dir_t id;
       const int* box_lo = &box.lower()[0];
       const int* box_hi = &box.upper()[0];
       int me_lo[SAMRAI::MAX_DIM_VAL];
@@ -938,7 +940,7 @@ Box::coalesceWith(
 
 void
 Box::rotateAboutAxis(
-   const int axis,
+   const dir_t axis,
    const int num_rotations)
 {
    TBOX_ASSERT(axis < getDim().getValue());
@@ -1140,8 +1142,8 @@ BoxIterator::BoxIterator(
    d_box(box)
 {
    if (!d_box.empty() && !begin) {
-      d_index(d_box.getDim().getValue() - 1) =
-         d_box.upper(d_box.getDim().getValue() - 1) + 1;
+      d_index(d_box.getDim().getValue()-1) =
+         d_box.upper(static_cast<tbox::Dimension::dir_t>(d_box.getDim().getValue()-1)) + 1;
    }
 }
 

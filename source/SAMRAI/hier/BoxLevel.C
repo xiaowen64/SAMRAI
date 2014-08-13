@@ -58,14 +58,14 @@ BoxLevel::BoxLevel(
    d_ratio(IntVector::getZero(dim)),
 
    d_local_number_of_cells(0),
-   d_global_number_of_cells(-1),
+   d_global_number_of_cells(0),
    d_local_number_of_boxes(0),
-   d_global_number_of_boxes(-1),
+   d_global_number_of_boxes(0),
 
-   d_max_number_of_boxes(-1),
-   d_min_number_of_boxes(-1),
-   d_max_number_of_cells(-1),
-   d_min_number_of_cells(-1),
+   d_max_number_of_boxes(0),
+   d_min_number_of_boxes(0),
+   d_max_number_of_cells(0),
+   d_min_number_of_cells(0),
 
    d_local_max_box_size(),
    d_global_max_box_size(),
@@ -133,14 +133,14 @@ BoxLevel::BoxLevel(
    d_ratio(ratio),
 
    d_local_number_of_cells(0),
-   d_global_number_of_cells(-1),
+   d_global_number_of_cells(0),
    d_local_number_of_boxes(0),
-   d_global_number_of_boxes(-1),
+   d_global_number_of_boxes(0),
 
-   d_max_number_of_boxes(-1),
-   d_min_number_of_boxes(-1),
-   d_max_number_of_cells(-1),
-   d_min_number_of_cells(-1),
+   d_max_number_of_boxes(0),
+   d_min_number_of_boxes(0),
+   d_max_number_of_cells(0),
+   d_min_number_of_cells(0),
 
    d_local_max_box_size(),
    d_global_max_box_size(),
@@ -330,8 +330,12 @@ BoxLevel::initializePrivate(
    }
 
    d_parallel_state = parallel_state;
-   d_global_number_of_cells = -1;
-   d_global_number_of_boxes = -1;
+   d_global_number_of_cells = 0;
+   d_global_number_of_boxes = 0;
+   d_max_number_of_boxes = 0;
+   d_min_number_of_boxes = 0;
+   d_max_number_of_cells = 0;
+   d_min_number_of_cells = 0;
    d_local_bounding_box_up_to_date = false;
    d_global_data_up_to_date = false;
    computeLocalRedundantData();
@@ -431,9 +435,13 @@ BoxLevel::clear()
       d_global_boxes.clear();
       d_ratio(0,0) = 0;
       d_local_number_of_cells = 0;
-      d_global_number_of_cells = -1;
+      d_global_number_of_cells = 0;
       d_local_number_of_boxes = 0;
-      d_global_number_of_boxes = -1;
+      d_global_number_of_boxes = 0;
+      d_max_number_of_boxes = 0;
+      d_min_number_of_boxes = 0;
+      d_max_number_of_cells = 0;
+      d_min_number_of_cells = 0;
       d_local_bounding_box.clear();
       d_local_bounding_box_up_to_date = false;
       d_global_bounding_box.clear();
@@ -603,29 +611,20 @@ BoxLevel::cacheGlobalReducedData() const
       }
    } else {
       if (d_mpi.getSize() > 1) {
-         long int tmpa[2], tmpb[2];
+         unsigned long int tmpa[2], tmpb[2];
          tmpa[0] = getLocalNumberOfBoxes();
          tmpa[1] = getLocalNumberOfCells();
-
-         TBOX_ASSERT(tmpa[0] >= 0);
-         TBOX_ASSERT(tmpa[1] >= 0);
-
          d_mpi.Allreduce(tmpa,
             tmpb,                        // Better to use MPI_IN_PLACE, but not some MPI's do not support.
             2,
             MPI_LONG,
             MPI_SUM);
-         d_global_number_of_boxes = (int)tmpb[0];
-         d_global_number_of_cells = tmpb[1];
+         d_global_number_of_boxes = static_cast<int>(tmpb[0]);
+         d_global_number_of_cells = static_cast<size_t>(tmpb[1]);
       } else {
-         d_global_number_of_boxes =
-            static_cast<int>(getLocalNumberOfBoxes());
-         d_global_number_of_cells =
-            static_cast<int>(getLocalNumberOfCells());
+         d_global_number_of_boxes = getLocalNumberOfBoxes();
+         d_global_number_of_cells = getLocalNumberOfCells();
       }
-
-      TBOX_ASSERT(d_global_number_of_boxes >= 0);
-      TBOX_ASSERT(d_global_number_of_cells >= 0);
    }
 
    if (int(d_global_bounding_box.size()) != nblocks) {
@@ -679,8 +678,10 @@ BoxLevel::cacheGlobalReducedData() const
          int tmpi = -1;
          for (int bn = 0; bn < nblocks; ++bn) {
             for (int i = 0; i < dim.getValue(); ++i) {
-               d_global_bounding_box[bn].lower()[i] = -recv_mesg[++tmpi];
-               d_global_bounding_box[bn].upper()[i] = recv_mesg[++tmpi];
+               d_global_bounding_box[bn].setLower(static_cast<Box::dir_t>(i),
+                  -recv_mesg[++tmpi]);
+               d_global_bounding_box[bn].setUpper(static_cast<Box::dir_t>(i),
+                  recv_mesg[++tmpi]);
                d_global_min_box_size[bn][i] = -recv_mesg[++tmpi];
                d_global_max_box_size[bn][i] = recv_mesg[++tmpi];
             }
@@ -702,7 +703,7 @@ BoxLevel::cacheGlobalReducedData() const
    t_cache_global_reduced_data->stop();
 }
 
-size_t
+int
 BoxLevel::getLocalNumberOfBoxes(
    int rank) const
 {
@@ -719,7 +720,7 @@ BoxLevel::getLocalNumberOfBoxes(
    if (rank == d_mpi.getRank()) {
       return d_local_number_of_boxes;
    } else {
-      size_t count = 0;
+      int count = 0;
       BoxContainerSingleOwnerIterator mbi(d_global_boxes.begin(rank));
       for ( ; mbi != d_global_boxes.end(rank); ++mbi) {
          if (!(*mbi).isPeriodicImage()) {

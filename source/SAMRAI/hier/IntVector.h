@@ -38,6 +38,8 @@ class Index;
 class IntVector
 {
 public:
+   typedef tbox::Dimension::dir_t dir_t;
+
    /**
     * @brief Creates an uninitialized vector.
     */
@@ -883,12 +885,12 @@ public:
    /**
     * @brief Return the product of the entries in the integer vector.
     */
-   int
+   long int
    getProduct() const
    {
-      TBOX_ASSERT(d_size == 1); 
-      int prod = 1;
-      for (int i = 0; i < d_dim.getValue(); ++i) {
+      TBOX_ASSERT(d_size == 1);
+      long int prod = 1;
+      for (int i = 0; i < getDim().getValue(); ++i) {
          prod *= d_vector[i];
       }
       return prod;

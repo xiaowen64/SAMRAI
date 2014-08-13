@@ -82,7 +82,6 @@ c
      &  mc,
      &  dx,
      &  advecspeed,igdnv,
-     &  uval,
      &  tracelft,tracergt,
      &  ttcelslp,ttedgslp,
      &  ttraclft,ttracrgt)
@@ -97,9 +96,8 @@ c input arrays:
 c variables in 1d axis indexed
       REAL 
      &     dx,advecspeed
-c variables in 2d axis indexed         
+c variables in 2d axis indexed
       REAL
-     &     uval(CELL3d(ifirst,ilast,CELLG)),
      &     tracelft(FACE3d0(ifirst,ilast,FACEG)),
      &     tracergt(FACE3d0(ifirst,ilast,FACEG))
 c  side variables ifirst0 to ifirst0+mc plus ghost cells
@@ -128,7 +126,6 @@ c***********************************************************************
      &  mc,
      &  dx,
      &  advecspeed,igdnv,
-     &  uval,
      &  tracelft,tracergt,
      &  ttcelslp,ttedgslp,
      &  ttraclft,ttracrgt)
@@ -143,9 +140,8 @@ c input arrays:
 c variables in 1d axis indexed
       REAL 
      &     dx,advecspeed
-c variables in 2d axis indexed         
+c variables in 2d axis indexed
       REAL
-     &     uval(CELL3d(ifirst,ilast,CELLG)),
      &     tracelft(FACE3d1(ifirst,ilast,FACEG)),
      &     tracergt(FACE3d1(ifirst,ilast,FACEG))
       REAL
@@ -174,7 +170,6 @@ c***********************************************************************
      &  mc,
      &  dx,
      &  advecspeed,igdnv,
-     &  uval,
      &  tracelft,tracergt,
      &  ttcelslp,ttedgslp,
      &  ttraclft,ttracrgt)
@@ -189,9 +184,8 @@ c input arrays:
 c variables in 1d axis indexed
       REAL 
      &     dx,advecspeed
-c variables in 2d axis indexed         
+c variables in 2d axis indexed
       REAL
-     &     uval(CELL3d(ifirst,ilast,CELLG)),
      &     tracelft(FACE3d2(ifirst,ilast,FACEG)),
      &     tracergt(FACE3d2(ifirst,ilast,FACEG))
       REAL

@@ -263,7 +263,7 @@ int main(
 
          }
 
-         assert(idx_data.getNumberOfItems() == box1.size());
+         assert(static_cast<size_t>(idx_data.getNumberOfItems()) == box1.size());
 
          idx_data.removeInsideBox(box1);
 
@@ -291,7 +291,7 @@ int main(
 
          }
 
-         assert(idx_data.getNumberOfItems() == box1.size());
+         assert(static_cast<size_t>(idx_data.getNumberOfItems()) == box1.size());
 
          idx_data.removeAllItems();
 
@@ -318,8 +318,8 @@ int main(
             src.addItemPointer(*bi, new Item);
          }
 
-         assert(src.getNumberOfItems() == box1.size());
-         assert(dst.getNumberOfItems() == 0);
+         assert(static_cast<size_t>(src.getNumberOfItems()) == box1.size());
+         assert(static_cast<size_t>(dst.getNumberOfItems()) == 0);
 
          dst.copy(src);
 
@@ -575,7 +575,7 @@ int main(
             }
          }
 
-         int numberOfItems = idx_data.getNumberOfItems();
+         size_t numberOfItems = idx_data.getNumberOfItems();
          timer->stop();
 
          tbox::plog << numberOfItems << endl;
@@ -654,7 +654,7 @@ int main(
             idx_data.appendItem(idx, new_item);
          }
 
-         int numberOfItems = idx_data.getNumberOfItems();
+         size_t numberOfItems = idx_data.getNumberOfItems();
          timer->stop();
 
          tbox::plog << numberOfItems << endl;

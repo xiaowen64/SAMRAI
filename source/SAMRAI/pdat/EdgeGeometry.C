@@ -178,9 +178,9 @@ EdgeGeometry::toEdgeBox(
 
    if (!box.empty()) {
       edge_box = box;
-      for (int i = 0; i < dim.getValue(); ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
          if (axis != i) {
-            edge_box.upper(i) += 1;
+            edge_box.setUpper(i, edge_box.upper(i) + 1);
          }
       }
    }
@@ -289,7 +289,8 @@ EdgeGeometry::transform(
 
          for (int d = 0; d < dim.getValue(); ++d) {
             if (d != axis_direction) {
-               box.upper() (d) -= 1;
+               box.setUpper(static_cast<hier::Box::dir_t>(d),
+                  box.upper(static_cast<hier::Box::dir_t>(d)) - 1);
             }
          }
          transformation.transform(box);
@@ -406,7 +407,8 @@ EdgeGeometry::transform(
 
          for (int d = 0; d < dim.getValue(); ++d) {
             if (d != axis_direction) {
-               box.upper() (d) += 1;
+               box.setUpper(static_cast<hier::Box::dir_t>(d),
+                  box.upper(static_cast<hier::Box::dir_t>(d)) + 1);
             }
          }
       }

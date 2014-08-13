@@ -137,7 +137,7 @@ public:
    bool
    hasRootDatabase()
    {
-      return d_database_root;
+      return d_database_root.get();
    }
 
    /**
@@ -174,7 +174,7 @@ public:
    bool
    hasDatabaseFactory()
    {
-      return d_database_factory;
+      return d_database_factory.get();
    }
 
    /**

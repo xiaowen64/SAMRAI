@@ -413,7 +413,7 @@ int main(
        * Create hierarchy.
        */
 
-      tbox::plog << "Building domain with boxes " << domain_boxes.format() << std::endl;
+      tbox::plog << "Building domain with boxes:\n" << domain_boxes.format("\t") << std::endl;
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             "GridGeometry",
@@ -1551,7 +1551,7 @@ void enforceNesting(
 
    const hier::BoxLevel& L0 = L1_to_L0.getHead();
 
-   const long int cell_count = L1.getGlobalNumberOfCells();
+   const size_t cell_count = L1.getGlobalNumberOfCells();
 
    /*
     * Make L1 nest inside L0 by nesting_width.

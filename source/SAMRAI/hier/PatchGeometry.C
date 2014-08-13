@@ -106,7 +106,7 @@ PatchGeometry::getBoundaryFillBox(
    if (!fill_box.empty()) {
 
       // Loop over codimension (a.k.a. boundary type)
-      for (int codim = 1; codim <= d_dim.getValue(); ++codim) {
+      for (tbox::Dimension::dir_t codim = 1; codim <= d_dim.getValue(); ++codim) {
 
          // When we get a match on the boundary type
          if (bdry_type == codim) {
@@ -115,11 +115,11 @@ PatchGeometry::getBoundaryFillBox(
 
             // Get the directions involved in this boundary type from the
             // lookup table.
-            const std::vector<int>& dir =
+            const std::vector<tbox::Dimension::dir_t>& dir =
                blut->getDirections(location_index, codim);
 
             // For each direction, identify this as an upper or lower boundary.
-            for (int i = 0; i < codim; ++i) {
+            for (tbox::Dimension::dir_t i = 0; i < codim; ++i) {
                if (blut->isUpper(location_index, codim, i)) {
                   fill_box.growUpper(dir[i], gcw(dir[i]) - 1);
                } else {

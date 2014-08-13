@@ -675,7 +675,7 @@ CartesianBoundaryUtilities3::checkBdryData(
    tbox::plog << "btype, bloc, bcase = "
               << btype << ", = " << bloc << ", = " << bcase << std::endl;
 
-   int idir;
+   tbox::Dimension::dir_t idir;
    double valfact = 0.0, constval = 0.0, dxfact = 0.0;
    int offsign;
 
@@ -783,15 +783,15 @@ CartesianBoundaryUtilities3::checkBdryData(
    hier::Index ilast(vardata->getBox().upper());
 
    if (offsign == -1) {
-      cbox.lower(idir) = ifirst(idir) - 1;
-      cbox.upper(idir) = ifirst(idir) - 1;
-      dbox.lower(idir) = ifirst(idir);
-      dbox.upper(idir) = ifirst(idir);
+      cbox.setLower(idir, ifirst(idir) - 1);
+      cbox.setUpper(idir, ifirst(idir) - 1);
+      dbox.setLower(idir, ifirst(idir));
+      dbox.setUpper(idir, ifirst(idir));
    } else {
-      cbox.lower(idir) = ilast(idir) + 1;
-      cbox.upper(idir) = ilast(idir) + 1;
-      dbox.lower(idir) = ilast(idir);
-      dbox.upper(idir) = ilast(idir);
+      cbox.setLower(idir, ilast(idir) + 1);
+      cbox.setUpper(idir, ilast(idir) + 1);
+      dbox.setLower(idir, ilast(idir));
+      dbox.setUpper(idir, ilast(idir));
    }
 
    pdat::CellIterator id(pdat::CellGeometry::begin(dbox));
@@ -1145,7 +1145,7 @@ CartesianBoundaryUtilities3::read3dBdryEdges(
                        bdry_cond_str == "YDIRICHLET" ||
                        bdry_cond_str == "YNEUMANN" ||
                        bdry_cond_str == "YREFLECT") {
-               if (s == EdgeBdyLoc3D::XLO_ZLO ||
+               if (s == EdgeBdyLoc3D::YLO_ZLO ||
                    s == EdgeBdyLoc3D::YLO_ZHI ||
                    s == EdgeBdyLoc3D::XLO_YLO ||
                    s == EdgeBdyLoc3D::XHI_YLO) {
@@ -1199,7 +1199,7 @@ CartesianBoundaryUtilities3::read3dBdryEdges(
                        bdry_cond_str == "ZREFLECT") {
                if (s == EdgeBdyLoc3D::XLO_ZLO ||
                    s == EdgeBdyLoc3D::YHI_ZLO ||
-                   s == EdgeBdyLoc3D::XLO_ZLO ||
+                   s == EdgeBdyLoc3D::YLO_ZLO ||
                    s == EdgeBdyLoc3D::XHI_ZLO) {
                   proper_face = "ZLO";
                   if (bdry_cond_str == "ZFLOW" &&
@@ -1545,7 +1545,7 @@ CartesianBoundaryUtilities3::read3dBdryNodes(
 
 void
 CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues(
-   int& idir,
+   tbox::Dimension::dir_t& idir,
    int& offsign,
    int btype,
    int bloc,

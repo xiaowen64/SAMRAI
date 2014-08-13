@@ -152,7 +152,7 @@ SideGeometry::computeDestinationBoxes(
    if (!quick_check.empty()) {
 
       const hier::IntVector& dirs = src_geometry.getDirectionVector();
-      for (int d = 0; d < dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
          if (dirs(d)) {
             const hier::Box dst_side(toSideBox(dst_ghost, d));
             const hier::Box src_side(toSideBox(src_shift, d));
@@ -194,17 +194,17 @@ SideGeometry::computeDestinationBoxes(
 hier::Box
 SideGeometry::toSideBox(
    const hier::Box& box,
-   int side_normal)
+   tbox::Dimension::dir_t side_normal)
 {
    const tbox::Dimension& dim(box.getDim());
 
-   TBOX_ASSERT((side_normal >= 0) && (side_normal < dim.getValue()));
+   TBOX_ASSERT((side_normal < dim.getValue()));
 
    hier::Box side_box(dim);
 
    if (!box.empty()) {
       side_box = box;
-      side_box.upper(side_normal) += 1;
+      side_box.setUpper(side_normal, side_box.upper(side_normal) + 1);
    }
 
    return side_box;
@@ -275,7 +275,7 @@ SideGeometry::setUpOverlap(
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
-      for (int d = 0; d < dim.getValue(); ++d) {
+      for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
          hier::Box side_box(SideGeometry::toSideBox(*b, d));
          dst_boxes[d].pushBack(side_box);
       }
@@ -318,7 +318,8 @@ SideGeometry::transform(
 
       } else {
 
-         box.upper() (normal_direction) -= 1;
+         box.setUpper(static_cast<hier::Box::dir_t>(normal_direction),
+            box.upper(static_cast<hier::Box::dir_t>(normal_direction)) - 1);
          transformation.transform(box);
          if (dim.getValue() == 2) {
             const int rotation_num = static_cast<int>(rotation);
@@ -431,7 +432,8 @@ SideGeometry::transform(
             }
          }
 
-         box.upper() (normal_direction) += 1;
+         box.setUpper(static_cast<hier::Box::dir_t>(normal_direction),
+            box.upper(static_cast<hier::Box::dir_t>(normal_direction)) + 1);
       }
    }
 }
@@ -617,7 +619,7 @@ SideGeometry::transform(
 
 void
 SideGeometry::rotateAboutAxis(SideIndex& index,
-                              const int axis,
+                              const tbox::Dimension::dir_t axis,
                               const int num_rotations)
 {
    const tbox::Dimension& dim = index.getDim();
@@ -643,7 +645,7 @@ SideGeometry::rotateAboutAxis(SideIndex& index,
 SideIterator
 SideGeometry::begin(
    const hier::Box& box,
-   int axis)
+   tbox::Dimension::dir_t axis)
 {
    return SideIterator(box, axis, true);
 }
@@ -651,7 +653,7 @@ SideGeometry::begin(
 SideIterator
 SideGeometry::end(
    const hier::Box& box,
-   int axis)
+   tbox::Dimension::dir_t axis)
 {
    return SideIterator(box, axis, false);
 }

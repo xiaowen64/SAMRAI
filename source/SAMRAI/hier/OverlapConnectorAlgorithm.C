@@ -179,8 +179,8 @@ OverlapConnectorAlgorithm::extractNeighbors(
          if (grid_geom->getNumberBlocks() == 1) {
             Box grown_box = box;
             grown_box.grow(width);
-            if (connector.getHeadCoarserFlag()) {
-               grown_box.coarsen(connector.getRatio());
+            if (connector.getHeadCoarserFlag() == false) {
+               grown_box.refine(connector.getRatio());
             }
             grown_boxes.pushBack(grown_box);
          } else {
@@ -309,6 +309,8 @@ OverlapConnectorAlgorithm::extractNeighbors(
             grown_box.grow(width);
             if (connector.getHeadCoarserFlag()) {
                grown_box.coarsen(connector.getRatio());
+            } else {
+               grown_box.refine(connector.getRatio());
             }
             grown_boxes.pushBack(grown_box);
          } else {

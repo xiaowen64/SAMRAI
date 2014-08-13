@@ -53,20 +53,20 @@ ArrayDataNormOpsInteger::abs(
       int dst_w[SAMRAI::MAX_DIM_VAL];
       int src_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dimVal; ++i) {
+      for (tbox::Dimension::dir_t i = 0; i < dimVal; ++i) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src_w[i] = src_box.numberCells(i);
          dim_counter[i] = 0;
       }
 
-      const int dst_offset = dst.getOffset();
-      const int src_offset = src.getOffset();
+      const size_t dst_offset = dst.getOffset();
+      const size_t src_offset = src.getOffset();
 
-      const int num_d0_blocks = ibox.size() / box_w[0];
+      const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      int dst_begin = dst_box.offset(ibox.lower());
-      int src_begin = src_box.offset(ibox.lower());
+      size_t dst_begin = dst_box.offset(ibox.lower());
+      size_t src_begin = src_box.offset(ibox.lower());
 
       int* dd = dst.getPointer();
       const int* sd = src.getPointer();
@@ -74,14 +74,14 @@ ArrayDataNormOpsInteger::abs(
       const int ddepth = dst.getDepth();
       for (int d = 0; d < ddepth; ++d) {
 
-         int dst_counter = dst_begin;
-         int src_counter = src_begin;
+         size_t dst_counter = dst_begin;
+         size_t src_counter = src_begin;
 
          int dst_b[SAMRAI::MAX_DIM_VAL];
          int src_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; ++nd) {
-            dst_b[nd] = dst_counter;
-            src_b[nd] = src_counter;
+            dst_b[nd] = static_cast<int>(dst_counter);
+            src_b[nd] = static_cast<int>(src_counter);
          }
 
          for (int nb = 0; nb < num_d0_blocks; ++nb) {
@@ -114,8 +114,8 @@ ArrayDataNormOpsInteger::abs(
                src_counter = src_b[dim_jump - 1] + src_step;
 
                for (int m = 0; m < dim_jump; ++m) {
-                  dst_b[m] = dst_counter;
-                  src_b[m] = src_counter;
+                  dst_b[m] = static_cast<int>(dst_counter);
+                  src_b[m] = static_cast<int>(src_counter);
                }
             }
          }

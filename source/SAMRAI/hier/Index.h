@@ -14,6 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/IntVector.h"
+#include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
@@ -34,6 +35,9 @@ namespace hier {
 class Index
 {
 public:
+
+   typedef tbox::Dimension::dir_t dir_t;
+
    /**
     * @brief Creates an uninitialized index.
     */
@@ -448,6 +452,7 @@ public:
    }
 
    /**
+<<<<<<< HEAD
     * @brief Return the specified component of the index.
     *
     * @pre (i >= 0) && (i < getDim().getValue())
@@ -542,11 +547,11 @@ public:
    }
 
    /**
- *     * @brief Returns true if each integer in vector is greater or equal to
- *         *        corresponding integer in comparison vector.
- *             *
- *                 * @pre getDim() == rhs.getDim()
- *                     */
+    * @brief Returns true if each integer in vector is greater or equal to
+    *        corresponding integer in comparison vector.
+    *
+    * @pre getDim() == rhs.getDim()
+    */
    bool
    operator <= (
       const Index& rhs) const
@@ -559,12 +564,17 @@ public:
       return result;
    }
 
+   /**
+    * @brief Return the component-wise minimum of two integer vector objects.
+    *
+    * @pre getDim() == rhs.getDim()
+    */
    void
    min(
       const Index& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (dir_t i = 0; i < getDim().getValue(); ++i) {
          if (rhs.d_index[i] < d_index[i]) {
             d_index[i] = rhs.d_index[i];
          }
@@ -686,14 +696,30 @@ public:
       Index& rhs);
 
    /**
- *     * @brief Write an integer index into an output stream.  The format for
- *         *        the output is (i0,...,in) for an n-dimensional index.
- *             */
+    * @brief Write an integer index into an output stream.  The format for
+    *        the output is (i0,...,in) for an n-dimensional index.
+    */
    friend std::ostream&
    operator << (
       std::ostream& s,
       const Index& rhs);
 
+
+   /**
+    * @brief Utility function to take the minimum of two Index objects.
+    *
+    * @pre a.getDim() == b.getDim()
+    */
+   static Index
+   min(
+      const Index& a,
+      const Index& b)
+   {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(a, b);
+      Index tmp = a;
+      tmp.min(b);
+      return tmp;
+   }
 
 private:
    /*

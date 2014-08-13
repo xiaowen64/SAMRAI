@@ -88,10 +88,10 @@ PatchSideDataOpsReal<TYPE>::copyData(
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
    TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
-   int dimVal = box.getDim().getValue();
+   tbox::Dimension::dir_t dimVal = box.getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; ++d) {
+   for (   tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          (dst->getArrayData(d)).copy(src->getArrayData(d), side_box);

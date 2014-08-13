@@ -179,7 +179,7 @@ public:
     */
    hier::Box
    getDataBox(
-      int face_normal,
+      tbox::Dimension::dir_t face_normal,
       int side);
 
    /*!
@@ -422,7 +422,7 @@ public:
     *
     * @pre dynamic_cast<const NodeOverlap *>(&overlap) != 0
     */
-   virtual int
+   virtual size_t
    getDataStreamSize(
       const hier::BoxOverlap& overlap) const;
 

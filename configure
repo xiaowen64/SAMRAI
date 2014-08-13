@@ -1542,7 +1542,7 @@ Optional Packages:
   --with-extra-cxx-flags=STRING
                           Specify additional flags for the c++ compiler.
   --with-x                use the X Window System
- --with-valgrind=PATH  Use VALGRIND and optionally specify where VALGRIND is installed.
+  --with-valgrind=PATH  Use VALGRIND and optionally specify where VALGRIND is installed.
   --with-doxygen=PATH	Specify path to doxygen program
 			(equivalent to setting DOXYGEN_BIN in environment)
   --with-dot-dir=DIR      Specify bin directory where dot binaries live.
@@ -1612,9 +1612,9 @@ Optional Packages:
   --with-szlib=DIR root directory path of szlib installation DIR defaults to
                     /usr/local or /usr if not found in /usr/local
   --without-szlib to disable szlib usage completely the default
- --with-hdf5=PATH  Use HDF5 and optionally specify where HDF5 is installed.
- --with-boost=PATH  Use BOOST and specify where BOOST is installed.
- --with-ptscotch=PATH  Use PT-SCOTCH and specify where PT-SCOTCH is installed.
+  --with-hdf5=PATH  Use HDF5 and optionally specify where HDF5 is installed.
+  --with-boost=PATH  Use BOOST and specify where BOOST is installed.
+  --with-ptscotch=PATH  Use PT-SCOTCH and specify where PT-SCOTCH is installed.
   --with-tbb              Use Thread Building Blocks
   --with-tbb-include=DIR  tbb.h is in DIR
   --with-tbb-lib-dirs=DIRS
@@ -1624,7 +1624,7 @@ Optional Packages:
   --with-tbb-libs=LIBS    LIBS is a space-separated list of library names
                           needed for Thread Building Blocks, e.g., \"tbb
                           tbbmalloc\"
- --with-silo=PATH  Use SILO and optionally specify where SILO is installed.
+  --with-silo=PATH  Use SILO and optionally specify where SILO is installed.
   --with-hypre=PATH	Use HYPRE and optionally specify where it is installed.
   --with-superlu-lib=LIB  LIB is the library archive file for the SuperLU
                           package.

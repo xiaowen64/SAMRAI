@@ -394,7 +394,7 @@ int main(
 
       const hier::Connector& small_to_big(
          small_box_level->createConnectorWithTranspose(big_box_level,
-            shrinkage,
+            refinement_ratios.back() * shrinkage,
             shrinkage));
       small_to_big.cacheGlobalReducedData();
 

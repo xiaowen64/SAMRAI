@@ -320,7 +320,7 @@ int main(
              * SideOverlap test
              */
             std::vector<hier::BoxContainer> dst_side_boxes(dim2.getValue());
-            for (int normal = 0; normal < dim2.getValue(); ++normal) {
+            for (tbox::Dimension::dir_t normal = 0; normal < dim2.getValue(); ++normal) {
 
                for (hier::BoxContainer::iterator di = dst_boxes.begin();
                     di != dst_boxes.end(); ++di) {
@@ -331,7 +331,7 @@ int main(
 
             pdat::SideOverlap side_overlap(dst_side_boxes, trans);
 
-            for (int normal = 0; normal < dim2.getValue(); ++normal) {
+            for (tbox::Dimension::dir_t normal = 0; normal < dim2.getValue(); ++normal) {
 
                const hier::BoxContainer& side_ov_dst =
                   side_overlap.getDestinationBoxContainer(normal);
@@ -366,7 +366,7 @@ int main(
              * FaceOverlap test
              */
             std::vector<hier::BoxContainer> dst_face_boxes(dim2.getValue());
-            for (int normal = 0; normal < dim2.getValue(); ++normal) {
+            for (tbox::Dimension::dir_t normal = 0; normal < dim2.getValue(); ++normal) {
 
                for (hier::BoxContainer::iterator di = dst_boxes.begin();
                     di != dst_boxes.end(); ++di) {
@@ -377,7 +377,7 @@ int main(
 
             pdat::FaceOverlap face_overlap(dst_face_boxes, trans);
 
-            for (int normal = 0; normal < dim2.getValue(); ++normal) {
+            for (tbox::Dimension::dir_t normal = 0; normal < dim2.getValue(); ++normal) {
 
                const hier::BoxContainer& face_ov_dst =
                   face_overlap.getDestinationBoxContainer(normal);
@@ -554,7 +554,7 @@ int main(
              * SideOverlap test
              */
             std::vector<hier::BoxContainer> dst_side_boxes(dim3.getValue());
-            for (int normal = 0; normal < dim3.getValue(); ++normal) {
+            for (tbox::Dimension::dir_t normal = 0; normal < dim3.getValue(); ++normal) {
 
                for (hier::BoxContainer::iterator di = dst_boxes.begin();
                     di != dst_boxes.end(); ++di) {
@@ -565,7 +565,7 @@ int main(
 
             pdat::SideOverlap side_overlap(dst_side_boxes, trans);
 
-            for (int normal = 0; normal < dim3.getValue(); ++normal) {
+            for (tbox::Dimension::dir_t normal = 0; normal < dim3.getValue(); ++normal) {
 
                const hier::BoxContainer& side_ov_dst =
                   side_overlap.getDestinationBoxContainer(normal);
@@ -600,7 +600,7 @@ int main(
              * FaceOverlap test
              */
             std::vector<hier::BoxContainer> dst_face_boxes(dim3.getValue());
-            for (int normal = 0; normal < dim3.getValue(); ++normal) {
+            for (tbox::Dimension::dir_t normal = 0; normal < dim3.getValue(); ++normal) {
 
                for (hier::BoxContainer::iterator di = dst_boxes.begin();
                     di != dst_boxes.end(); ++di) {
@@ -611,7 +611,7 @@ int main(
 
             pdat::FaceOverlap face_overlap(dst_face_boxes, trans);
 
-            for (int normal = 0; normal < dim3.getValue(); ++normal) {
+            for (tbox::Dimension::dir_t normal = 0; normal < dim3.getValue(); ++normal) {
 
                const hier::BoxContainer& face_ov_dst =
                   face_overlap.getDestinationBoxContainer(normal);
@@ -762,7 +762,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
    /*
     * Side test
     */
-   for (int d = 0; d < dim.getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
       hier::Box ref_side_box(pdat::SideGeometry::toSideBox(box, d));
       hier::Box trans_side_box(ref_side_box);
       int direction = d;
@@ -812,7 +812,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
    /*
     * Face test
     */
-   for (int d = 0; d < dim.getValue(); ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
       hier::Box ref_face_box(pdat::FaceGeometry::toFaceBox(box, d));
       hier::Box trans_face_box(ref_face_box);
       int direction = d;

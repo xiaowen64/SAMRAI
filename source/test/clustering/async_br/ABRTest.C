@@ -98,7 +98,7 @@ bool ABRTest::packDerivedDataIntoDoubleBuffer(
 
    if (variable_name == "Patch level number") {
       double pln = patch.getPatchLevelNumber();
-      int i, size = region.size();
+      size_t i, size = region.size();
       for (i = 0; i < size; ++i) buffer[i] = pln;
    } else {
       // Did not register this name.

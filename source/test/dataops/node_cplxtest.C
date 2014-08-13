@@ -789,9 +789,9 @@ int main(
 
       // Test #2: math::HierarchyNodeDataOpsComplex::numberOfEntries()
       // Expected: num_data_points = 121
-      int num_data_points = node_ops->numberOfEntries(nvindx[0]);
+      size_t num_data_points = node_ops->numberOfEntries(nvindx[0]);
       {
-         int compare;
+         size_t compare;
          if (dim.getValue() == 2) {
             compare = 121;
          } else {

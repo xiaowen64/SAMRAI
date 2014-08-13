@@ -279,7 +279,7 @@ void OutersideDataTest::checkPatchInteriorData(
 
    const int depth = data->getDepth();
 
-   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
       const pdat::SideIndex loweri(interior.lower(), axis, 0);
       pdat::SideIterator siend(pdat::SideGeometry::end(interior, axis));
       for (pdat::SideIterator si(pdat::SideGeometry::begin(interior, axis));
@@ -358,7 +358,7 @@ void OutersideDataTest::setLinearData(
 
    hier::IntVector directions(data->getDirectionVector());
 
-   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
       if (directions(axis)) {
          const pdat::SideIndex loweri(patch.getBox().lower(), axis, 0);
          pdat::SideIterator eiend(pdat::SideGeometry::end(sbox, axis));
@@ -517,7 +517,7 @@ bool OutersideDataTest::verifyResults(
 
             hier::IntVector directions(side_data->getDirectionVector());
 
-            for (int id = 0; id < d_dim.getValue(); ++id) {
+            for (tbox::Dimension::dir_t id = 0; id < d_dim.getValue(); ++id) {
                if (directions(id)) {
                   pdat::SideIterator siend(pdat::SideGeometry::end(dbox, id));
                   for (pdat::SideIterator si(pdat::SideGeometry::begin(dbox, id));
@@ -548,9 +548,9 @@ bool OutersideDataTest::verifyResults(
             int depth = oside_data->getDepth();
             hier::Box dbox = oside_data->getGhostBox();
 
-            for (int id = 0; id < d_dim.getValue(); ++id) {
+            for (tbox::Dimension::dir_t id = 0; id < d_dim.getValue(); ++id) {
                hier::Box dbox_lo(dbox);
-               dbox_lo.upper(id) = dbox_lo.lower(id);
+               dbox_lo.setUpper(id, dbox_lo.lower(id));
                hier::BoxIterator loend(dbox_lo.end());
                for (hier::BoxIterator si(dbox_lo.begin()); si != loend; ++si) {
                   pdat::SideIndex sndx(*si, id, 0);
@@ -572,7 +572,7 @@ bool OutersideDataTest::verifyResults(
                }
 
                hier::Box dbox_hi(dbox);
-               dbox_hi.lower(id) = dbox_hi.upper(id);
+               dbox_hi.setLower(id, dbox_hi.upper(id));
                hier::BoxIterator hiend(dbox_hi.end());
                for (hier::BoxIterator si(dbox_hi.begin()); si != hiend; ++si) {
                   pdat::SideIndex sndx(*si, id, 1);

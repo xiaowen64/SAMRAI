@@ -46,9 +46,9 @@ OuteredgeData<TYPE>::OuteredgeData(
 {
    TBOX_ASSERT(depth > 0);
 
-   for (int axis = 0; axis < getDim().getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < getDim().getValue(); ++axis) {
 
-      for (int face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
+      for (tbox::Dimension::dir_t face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
 
          if (face_normal != axis) {
 
@@ -544,7 +544,7 @@ OuteredgeData<TYPE>::canEstimateStreamSizeFromBox() const
 }
 
 template<class TYPE>
-int
+size_t
 OuteredgeData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
@@ -552,16 +552,16 @@ OuteredgeData<TYPE>::getDataStreamSize(
 
    TBOX_ASSERT(t_overlap != 0);
 
-   int size = 0;
+   size_t size = 0;
 
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
 
-   for (int axis = 0; axis < getDim().getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < getDim().getValue(); ++axis) {
 
       const hier::BoxContainer& boxlist =
          t_overlap->getDestinationBoxContainer(axis);
 
-      for (int face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
+      for (tbox::Dimension::dir_t face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
 
          if (face_normal != axis) {
 
@@ -775,9 +775,9 @@ OuteredgeData<TYPE>::getSizeOfData(
 
    size_t size = 0;
 
-   for (int axis = 0; axis < box.getDim().getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < box.getDim().getValue(); ++axis) {
 
-      for (int face_normal = 0; face_normal < box.getDim().getValue(); ++face_normal) {
+      for (tbox::Dimension::dir_t face_normal = 0; face_normal < box.getDim().getValue(); ++face_normal) {
 
          if (face_normal != axis) {
 
