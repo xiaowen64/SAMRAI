@@ -345,8 +345,8 @@ int main(
          hier::Connector* anchor_to_domain = &domain_to_anchor->getTranspose();
 
          tbox::plog << "\n\n\ninitial anchor loads:\n";
-         mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)anchor_box_level->getLocalNumberOfCells(),
+         mesh::BalanceUtilities::reduceAndReportLoadBalance(
+            std::vector<double>(1,anchor_box_level->getLocalNumberOfCells()),
             anchor_box_level->getMPI());
 
          const int nnodes = mpi.getSize();
@@ -387,8 +387,8 @@ int main(
          anchor_box_level->cacheGlobalReducedData();
 
          tbox::plog << "\n\n\nfinal anchor loads:\n";
-         mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)anchor_box_level->getLocalNumberOfCells(),
+         mesh::BalanceUtilities::reduceAndReportLoadBalance(
+            std::vector<double>(1,anchor_box_level->getLocalNumberOfCells()),
             anchor_box_level->getMPI());
       }
 
@@ -427,8 +427,8 @@ int main(
           */
          balance_box_level->cacheGlobalReducedData();
          tbox::plog << "\n\n\nBefore:\n";
-         mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)balance_box_level->getLocalNumberOfCells(),
+         mesh::BalanceUtilities::reduceAndReportLoadBalance(
+            std::vector<double>(1,balance_box_level->getLocalNumberOfCells()),
             balance_box_level->getMPI());
 
          hier::BoxLevelStatistics anchor_stats(*anchor_box_level);
@@ -505,8 +505,8 @@ int main(
           */
          balance_box_level->cacheGlobalReducedData();
          tbox::plog << "\n\n\nAfter:\n";
-         mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)balance_box_level->getLocalNumberOfCells(),
+         mesh::BalanceUtilities::reduceAndReportLoadBalance(
+            std::vector<double>(1,balance_box_level->getLocalNumberOfCells()),
             balance_box_level->getMPI());
 
          hier::BoxLevelStatistics balance_stats(*balance_box_level);
@@ -534,8 +534,8 @@ int main(
          anchor_to_balance->recursivePrint(tbox::plog, "AB-> ");
 
          // Dump summary statistics to output.
-         mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)balance_box_level->getLocalNumberOfCells(),
+         mesh::BalanceUtilities::reduceAndReportLoadBalance(
+            std::vector<double>(1,balance_box_level->getLocalNumberOfCells()),
             balance_box_level->getMPI(),
             tbox::plog);
       }
