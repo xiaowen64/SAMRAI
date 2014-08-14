@@ -2007,10 +2007,15 @@ void
 TreeLoadBalancer::printStatistics(
    std::ostream& output_stream) const
 {
-   BalanceUtilities::reduceAndReportLoadBalance(
-      d_load_stat,
-      tbox::SAMRAI_MPI::getSAMRAIWorld(),
-      output_stream);
+   if ( d_load_stat.empty() ) {
+      output_stream << "No statistics for TreeLoadBalancer.\n";
+   }
+   else {
+      BalanceUtilities::reduceAndReportLoadBalance(
+         d_load_stat,
+         tbox::SAMRAI_MPI::getSAMRAIWorld(),
+         output_stream);
+   }
 }
 
 /*
