@@ -1568,7 +1568,8 @@ void enforceNesting(
       L1.findConnectorWithTranspose(L0,
          nesting_width,
          nesting_width_transpose,
-         hier::CONNECTOR_CREATE),
+         hier::CONNECTOR_CREATE,
+         true),
       -nesting_width,
       hierarchy->getGridGeometry()->getDomainSearchTree());
    hier::MappingConnectorAlgorithm mca;
