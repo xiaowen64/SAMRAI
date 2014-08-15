@@ -515,9 +515,10 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    if (d_report_load_balance) {
       t_report_loads->start();
       tbox::plog
-      << d_object_name << "::loadBalanceBoxLevel results after "
-      << number_of_cycles << " cycles:" << std::endl;
-      BalanceUtilities::reduceAndReportLoadBalance(std::vector<double>(1,local_load),
+         << d_object_name << "::loadBalanceBoxLevel results after "
+         << number_of_cycles << " cycles:" << std::endl;
+      BalanceUtilities::reduceAndReportLoadBalance(
+         std::vector<double>(1,local_load),
          balance_box_level.getMPI());
       t_report_loads->stop();
    }
