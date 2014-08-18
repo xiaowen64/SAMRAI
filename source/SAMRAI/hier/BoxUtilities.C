@@ -9,6 +9,7 @@
  ************************************************************************/
 #include "SAMRAI/hier/BoxUtilities.h"
 
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
@@ -1792,6 +1793,137 @@ BoxUtilities::makeNonOverlappingBoxContainers(
       box_list.removeIntersections(remove);
    }
 }
+
+void
+BoxUtilities::growAndChopAtBlockBoundary(
+   BoxContainer& grown_boxes,
+   const Box& box,
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+   const IntVector& ratio_to_level_zero,
+   const IntVector& change_ratio,
+   const IntVector& grow_width,
+   bool do_refine,
+   bool do_coarsen)
+{
+   TBOX_ASSERT(do_refine != do_coarsen || (!do_refine && !do_coarsen));
+
+   const int nblocks = grid_geom->getNumberBlocks();
+   const BlockId& base_block = box.getBlockId();
+
+   Box grow_box(box);
+   if (do_coarsen) {
+      grow_box.coarsen(change_ratio);
+   }
+
+   IntVector compare_ratio(ratio_to_level_zero);
+   IntVector tmp_grow_width(grow_width);
+   if (do_coarsen) {
+      compare_ratio /= change_ratio;
+      tmp_grow_width /= change_ratio;
+   }
+
+   grow_box.grow(tmp_grow_width);
+
+   std::vector<BoxContainer> domain_boxes(nblocks);
+   grid_geom->computePhysicalDomain(
+      domain_boxes[base_block.getBlockValue()],
+      compare_ratio,
+      base_block);
+
+   /*
+    * Grow within base block
+    */
+   BoxContainer base_block_boxes(domain_boxes[base_block.getBlockValue()]);
+   base_block_boxes.unorder();
+   base_block_boxes.intersectBoxes(grow_box);
+
+   if (do_refine) {
+      base_block_boxes.refine(change_ratio);
+   }
+
+   grown_boxes.spliceBack(base_block_boxes);
+
+   bool constant_width = true;
+   if (tmp_grow_width.min() != tmp_grow_width.max()) {
+      constant_width = false;
+   }
+
+   /*
+    * Grow into neighbors.
+    */
+   const std::map<BlockId, BaseGridGeometry::Neighbor>& neighbors =
+      grid_geom->getNeighbors(base_block);
+   for (std::map<BlockId,BaseGridGeometry::Neighbor>::const_iterator ni =
+        neighbors.begin(); ni != neighbors.end(); ++ni) {
+      const BaseGridGeometry::Neighbor& neighbor(ni->second);
+      const BlockId& nbr_block = neighbor.getBlockId();
+
+      grid_geom->computePhysicalDomain(
+         domain_boxes[nbr_block.getBlockValue()],
+         compare_ratio,
+         nbr_block);
+
+      Box nbr_grow_box(box);
+      if (do_coarsen) {
+         nbr_grow_box.coarsen(change_ratio);
+      }
+      grid_geom->transformBox(nbr_grow_box,
+                              compare_ratio,
+                              nbr_block,
+                              base_block);
+      nbr_grow_box.grow(tmp_grow_width);
+
+      BoxContainer nbr_block_boxes(domain_boxes[nbr_block.getBlockValue()]);
+      nbr_block_boxes.unorder();
+      nbr_block_boxes.intersectBoxes(nbr_grow_box);
+
+      BoxContainer nbr_grown_boxes;
+      if (!nbr_block_boxes.isEmpty()) {
+         if (do_refine) {
+            nbr_block_boxes.refine(change_ratio);
+         }
+
+         nbr_grown_boxes.spliceBack(nbr_block_boxes);
+      }
+
+      if (!constant_width) {
+         nbr_block_boxes = domain_boxes[nbr_block.getBlockValue()];
+
+         nbr_grow_box = box;
+         if (do_coarsen) {
+            nbr_grow_box.coarsen(change_ratio);
+         }
+         nbr_grow_box.grow(tmp_grow_width);
+         grid_geom->transformBox(nbr_grow_box,
+                                 compare_ratio,
+                                 nbr_block,
+                                 base_block);
+
+         nbr_block_boxes.unorder();
+         nbr_block_boxes.intersectBoxes(nbr_grow_box);
+
+         if (!nbr_block_boxes.isEmpty()) {
+            if (do_refine) {
+               nbr_block_boxes.refine(change_ratio);
+            }
+
+            nbr_grown_boxes.spliceBack(nbr_block_boxes);
+            nbr_grown_boxes.coalesce();
+            if (nbr_grown_boxes.size() > 1) {
+               nbr_grown_boxes.simplify();
+            }
+         }
+      }
+
+      if (!nbr_grown_boxes.isEmpty()) {
+         grown_boxes.spliceBack(nbr_grown_boxes);
+      }
+   }
+}
+
+
+
+
 
 }
 }

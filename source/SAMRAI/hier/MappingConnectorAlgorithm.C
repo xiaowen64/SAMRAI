@@ -8,6 +8,7 @@
  *
  ************************************************************************/
 #include "SAMRAI/hier/BoxContainerUtils.h"
+#include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
@@ -1275,7 +1276,7 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
       } else {
          TBOX_ASSERT(unmapped_connector.getRatio() ==
                      unmapped_connector_transpose.getRatio());
-         unmapped_connector.growBaseBoxForMultiblock(
+         BoxUtilities::growAndChopAtBlockBoundary(
             compare_boxes,
             compare_box,
             grid_geometry,

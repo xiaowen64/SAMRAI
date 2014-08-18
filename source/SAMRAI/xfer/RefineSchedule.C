@@ -1432,7 +1432,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
          if (nblocks == 1) {
             coarse_interp_boxes.pushBack(coarse_interp_box);
          } else {
-            dst_to_coarse_interp->growBaseBoxForMultiblock(
+            hier::BoxUtilities::growAndChopAtBlockBoundary(
                coarse_interp_boxes,
                coarse_interp_box,
                grid_geometry,

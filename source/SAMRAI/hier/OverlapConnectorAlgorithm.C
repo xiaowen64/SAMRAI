@@ -10,6 +10,7 @@
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxContainerUtils.h"
+#include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
@@ -193,7 +194,7 @@ OverlapConnectorAlgorithm::extractNeighbors(
                   head_is_finer = true;
                }
             }
-            connector.growBaseBoxForMultiblock(
+            BoxUtilities::growAndChopAtBlockBoundary(
                grown_boxes,
                box,
                grid_geom,
@@ -323,7 +324,7 @@ OverlapConnectorAlgorithm::extractNeighbors(
                   head_is_finer = true;
                }
             }
-            connector.growBaseBoxForMultiblock(
+            BoxUtilities::growAndChopAtBlockBoundary(
                grown_boxes,
                box,
                grid_geom,
@@ -1560,7 +1561,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
          }
          grown_boxes.pushBack(base_box);
       } else {
-         bridging_connector.growBaseBoxForMultiblock(
+         BoxUtilities::growAndChopAtBlockBoundary(
             grown_boxes,
             visible_base_nabrs_box,
             bridging_connector.getBase().getGridGeometry(),

@@ -11,6 +11,7 @@
 #include "SAMRAI/hier/Connector.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/ConnectorStatistics.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
@@ -449,7 +450,7 @@ Connector::shrinkWidth(
          const BoxId& box_id = *ei;
          const Box& box = *getBase().getBoxStrict(box_id);
          BoxContainer grown_boxes;
-         growBaseBoxForMultiblock(grown_boxes,
+         BoxUtilities::growAndChopAtBlockBoundary(grown_boxes,
             box,
             grid_geom,
             getBase().getRefinementRatio(),
@@ -2306,7 +2307,7 @@ Connector::findOverlaps_rbbt(
             true);
       } else {
          BoxContainer grown_boxes;
-         growBaseBoxForMultiblock(grown_boxes,
+         BoxUtilities::growAndChopAtBlockBoundary(grown_boxes,
             box,
             base.getGridGeometry(),
             base.getRefinementRatio(),
@@ -2344,6 +2345,7 @@ Connector::findOverlaps_rbbt(
    t_find_overlaps_rbbt->stop();
 }
 
+#if 0
 void
 Connector::growBaseBoxForMultiblock(
    BoxContainer& grown_boxes,
@@ -2474,7 +2476,7 @@ Connector::growBaseBoxForMultiblock(
       }
    }
 }
-
+#endif
 
 }
 }

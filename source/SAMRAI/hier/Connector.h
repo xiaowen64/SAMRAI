@@ -1350,7 +1350,7 @@ public:
    {
       d_relationships.putToRestart(restart_db);
    }
-
+#if 0
 void growBaseBoxForMultiblock(
    BoxContainer& grown_boxes,
    const Box& base_box,
@@ -1360,7 +1360,7 @@ void growBaseBoxForMultiblock(
    const IntVector& grow_width,
    bool head_is_finer,
    bool base_is_finer) const;
-
+#endif
 
    /*!
     *

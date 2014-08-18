@@ -887,6 +887,17 @@ struct BoxUtilities {
       std::vector<BoxContainer>& box_list_array,
       const BoxContainer& boxes);
 
+static void growAndChopAtBlockBoundary(
+   BoxContainer& grown_boxes,
+   const Box& box,
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+   const IntVector& ratio_to_level_zero,
+   const IntVector& ratio_to_connected_level,
+   const IntVector& grow_width,
+   bool do_refine,
+   bool do_coarsen);
+
+
 };
 
 }

@@ -14,6 +14,7 @@
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/OpenMPUtilities.h"
@@ -2109,7 +2110,7 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
       grown_box.grow(d_common->d_tag_to_new_width);
       grown_boxes.pushBack(grown_box);
    } else {
-      d_common->d_tag_to_new->growBaseBoxForMultiblock(
+      hier::BoxUtilities::growAndChopAtBlockBoundary(
          grown_boxes,
          d_box,
          d_common->d_tag_level->getGridGeometry(),
