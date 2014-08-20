@@ -7787,7 +7787,7 @@ done
 
 
 if test -n "$with_F77"; then
-      if test -f $with_F77; then
+      if test -f "$with_F77"; then
       F77=$with_F77
    else
       for ac_prog in $with_F77
