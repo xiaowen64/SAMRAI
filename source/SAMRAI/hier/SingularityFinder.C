@@ -589,7 +589,7 @@ SingularityFinder::findCoincidentEdges(
       }
 
       if (num_zero_dirs != 1) {
-         if (b_edge_boxes.isEmpty()) {
+         if (b_edge_boxes.empty()) {
             for (int e = 0; e < nedges_per_face; ++e) {
 
                int edge_idx = s_face_edges[faceb][e];

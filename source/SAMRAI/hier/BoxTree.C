@@ -125,7 +125,7 @@ BoxTree::BoxTree(
     * Compute the bounding box for the set of boxes.  Also get
     * BlockId from the given boxes.
     */
-   if (!boxes.isEmpty()) {
+   if (!boxes.empty()) {
       TBOX_ASSERT(boxes.begin()->getBlockId() != BlockId::invalidId());
       d_block_id = boxes.begin()->getBlockId();
    }

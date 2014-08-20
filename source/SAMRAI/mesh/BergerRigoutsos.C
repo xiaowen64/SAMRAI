@@ -258,7 +258,7 @@ BergerRigoutsos::findBoxesContainingTags(
    const hier::IntVector& min_box,
    const hier::IntVector& tag_to_new_width)
 {
-   TBOX_ASSERT(!bound_boxes.isEmpty());
+   TBOX_ASSERT(!bound_boxes.empty());
    TBOX_ASSERT_OBJDIM_EQUALITY4(*tag_level,
       *(bound_boxes.begin()),
       min_box,

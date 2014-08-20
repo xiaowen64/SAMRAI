@@ -126,7 +126,7 @@ PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
          }
       }
 
-      if (!fill_boxes.isEmpty()) {
+      if (!fill_boxes.empty()) {
          d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
                fill_boxes.size());
          hier::Connector::NeighborhoodIterator base_box_itr =

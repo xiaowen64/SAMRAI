@@ -616,7 +616,7 @@ private:
     * @param[in]   fill_boxes_list
     * @param[in]   dst_block_id
     *
-    * @pre encon_fill_boxes.isEmpty()
+    * @pre encon_fill_boxes.empty()
     */
    void
    findEnconFillBoxes(

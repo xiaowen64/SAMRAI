@@ -345,7 +345,8 @@ CoarsenSchedule::generateTemporaryLevel()
          (-d_crse_level->getBoxLevel()->getRefinementRatio() /
          d_fine_level->getBoxLevel()->getRefinementRatio()) *
          max_ghosts;
-   } 
+   }
+
    const hier::IntVector transpose_width =
       hier::Connector::convertHeadWidthToBase(
          d_crse_level->getBoxLevel()->getRefinementRatio(),
@@ -354,10 +355,10 @@ CoarsenSchedule::generateTemporaryLevel()
 
    const hier::Connector& coarse_to_fine =
       d_crse_level->findConnectorWithTranspose(*d_fine_level,
-            transpose_width,
-            min_width,
-            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
-            true);
+         transpose_width,
+         min_width,
+         hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+         true);
 
    /*
     * Generate temporary BoxLevel and Connectors.

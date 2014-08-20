@@ -2330,7 +2330,7 @@ Connector::findOverlaps_rbbt(
          nabrs_for_box.order();
          nabrs_for_box.erase(base_box);
       }
-      if (!nabrs_for_box.isEmpty()) {
+      if (!nabrs_for_box.empty()) {
          insertNeighbors(nabrs_for_box, base_box.getBoxId());
          nabrs_for_box.clear();
       }

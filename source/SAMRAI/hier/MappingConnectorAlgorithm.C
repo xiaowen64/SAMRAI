@@ -907,7 +907,7 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
    const Connector& anchor_to_old,
    const MappingConnector& old_to_new) const
 {
-   if (visible_anchor_nabrs.isEmpty() && visible_new_nabrs.isEmpty()) {
+   if (visible_anchor_nabrs.empty() && visible_new_nabrs.empty()) {
       return;
    }
 

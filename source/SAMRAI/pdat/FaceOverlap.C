@@ -25,7 +25,7 @@ FaceOverlap::FaceOverlap(
 
    for (int d = 0; d < dim.getValue(); ++d) {
       d_dst_boxes[d] = boxes[d];
-      if (!d_dst_boxes[d].isEmpty()) d_is_overlap_empty = false;
+      if (!d_dst_boxes[d].empty()) d_is_overlap_empty = false;
    }
 
 }
@@ -53,13 +53,13 @@ void
 FaceOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
                                    int& normal_direction) const
 {
-   TBOX_ASSERT(src_boxes.isEmpty());
+   TBOX_ASSERT(src_boxes.empty());
    TBOX_ASSERT(normal_direction >= 0 &&
       normal_direction < static_cast<int>(d_dst_boxes.size()));
 
    src_boxes = d_dst_boxes[normal_direction];
    int transform_normal = normal_direction;
-   if (!src_boxes.isEmpty()) {
+   if (!src_boxes.empty()) {
 
       hier::Transformation inverse_transform =
          d_transformation.getInverseTransformation();

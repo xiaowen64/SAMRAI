@@ -297,7 +297,7 @@ CartesianGridGeometry::setGeometryData(
       d_x_up[id] = x_up[id];
    }
 
-   if (getPhysicalDomain().isEmpty()) {
+   if (getPhysicalDomain().empty()) {
       setPhysicalDomain(domain, 1);
    }
 

@@ -2619,7 +2619,7 @@ GriddingAlgorithm::readLevelBoxes(
     */
 
    if (d_load_balancer->getLoadBalanceDependsOnPatchData(fine_level_number)
-       && !boxes_to_refine.isEmpty()) {
+       && !boxes_to_refine.empty()) {
       compute_load_balanced_level_boxes = true;
       remove_old_fine_level = true;
    }
@@ -2630,7 +2630,7 @@ GriddingAlgorithm::readLevelBoxes(
     * constructed.  In this case, avoid load balance steps and
     * specify that we want to remove the old fine level.
     */
-   if (boxes_to_refine.isEmpty()) {
+   if (boxes_to_refine.empty()) {
       compute_load_balanced_level_boxes = false;
       remove_old_fine_level = true;
    }
@@ -3042,7 +3042,7 @@ GriddingAlgorithm::findRefinementBoxes(
 
    hier::LocalId first_local_id(0);
 
-   if (!bounding_container.isEmpty()) {
+   if (!bounding_container.empty()) {
       d_box_generator->findBoxesContainingTags(
          new_box_level,
          tag_to_new,
@@ -3852,7 +3852,7 @@ GriddingAlgorithm::computeNestingViolator(
       addl_violators.removeIntersections(
          candidate.getRefinementRatio(),
          refined_domain_search_tree);
-      if (!addl_violators.isEmpty()) {
+      if (!addl_violators.empty()) {
          /*
           * Non-periodic BoxId needed for NeighborhoodSet::find()
           */
@@ -3871,11 +3871,11 @@ GriddingAlgorithm::computeNestingViolator(
                candidate_to_violator->find(cmb_non_per_id);
             for (hier::Connector::ConstNeighborIterator na =
                     candidate_to_violator->begin(current_violators);
-                 na != candidate_to_violator->end(current_violators) && !addl_violators.isEmpty();
+                 na != candidate_to_violator->end(current_violators) && !addl_violators.empty();
                  ++na) {
                addl_violators.removeIntersections(*na);
             }
-            if (!addl_violators.isEmpty()) {
+            if (!addl_violators.empty()) {
                for (hier::BoxContainer::iterator bi = addl_violators.begin();
                     bi != addl_violators.end(); ++bi) {
                   hier::BoxContainer::const_iterator new_violator = violator->addBox(

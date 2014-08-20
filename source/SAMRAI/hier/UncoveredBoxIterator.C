@@ -190,7 +190,7 @@ UncoveredBoxIterator::findNextFinestUncoveredBoxes()
 
    // Continue through this loop until a level with uncovered boxes if found or
    // the finest level is reached.
-   while (d_uncovered_boxes.isEmpty()) {
+   while (d_uncovered_boxes.empty()) {
       // Move to the next level and get its boxes.  We'll check and see if any
       // of them are not covered by the next finer level.
       ++d_level_num;
@@ -307,7 +307,7 @@ UncoveredBoxIterator::findOverlappedPatch()
             BoxContainer cur(cur_box);
             BoxContainer fut(*future);
             cur.removeIntersections(fut);
-            if (cur.isEmpty()) {
+            if (cur.empty()) {
                skip_box = true;
                break;
             } else if (cur.size() == 1) {

@@ -397,7 +397,7 @@ BoxLevelConnectorUtils::makeSortingMap(
 
    std::vector<Box> real_box_vector;
    std::vector<Box> periodic_image_box_vector;
-   if (!cur_boxes.isEmpty()) {
+   if (!cur_boxes.empty()) {
       /*
        * Bypass qsort if we have no boxes (else there is a memory warning).
        */
@@ -688,7 +688,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
          false);
       // ... reference_boundary is now ( (R^1) \ R )
 
-      if (!domain.isEmpty()) {
+      if (!domain.empty()) {
 
          if (input.getRefinementRatio().isOne()) {
             reference_box_list.intersectBoxes(
@@ -837,7 +837,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
    } // Loop through input_boxes
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (parts->getBoxes().isEmpty()) {
+   if (parts->getBoxes().empty()) {
       /*
        * If there are no parts, then all in input
        * should be mapped to empty neighbor containers according
@@ -987,8 +987,8 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
             }
          }
 
-         if (!reduced_connectivity_singularity_boxes.isEmpty()) {
-            if (!refinement_ratio.isOne()) {
+         if (!reduced_connectivity_singularity_boxes.empty()) {
+            if (refinement_ratio != one_vec) {
                reduced_connectivity_singularity_boxes.refine(refinement_ratio);
             }
             bi->second.removeIntersections(
@@ -1508,7 +1508,7 @@ BoxLevelConnectorUtils::computeNonIntersectingParts(
    const BoxContainer& input_boxes =
       input_to_takeaway.getBase().getBoxes();
 
-   if (!remainder_boxes.isEmpty() && !input_boxes.isEmpty()) {
+   if (!remainder_boxes.empty() && !input_boxes.empty()) {
 
       for (BoxContainer::const_iterator bi = remainder_boxes.begin();
            bi != remainder_boxes.end(); ++bi) {

@@ -23,6 +23,7 @@
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include "boost/logic/tribool.hpp"
 #include <iostream>
 
 namespace SAMRAI {
@@ -264,6 +265,7 @@ public:
          d_lo = box.d_lo;
          d_hi = box.d_hi;
          d_block_id = box.d_block_id;
+         d_empty_flag = box.d_empty_flag;
       }
       if (!idLocked()) {
          d_id.initialize(local_id, owner_rank, periodic_id);
@@ -504,6 +506,7 @@ public:
       const Index& new_lower)
    {
       d_lo = new_lower;
+      d_empty_flag = boost::logic::indeterminate;
    }
 
    /*!
@@ -523,6 +526,7 @@ public:
       const Index& new_upper)
    {
       d_hi = new_upper;
+      d_empty_flag = boost::logic::indeterminate;
    }
 
    /*!
@@ -544,6 +548,7 @@ public:
       int new_lower)
    {
       d_lo(i) = new_lower;
+      d_empty_flag = boost::logic::indeterminate;
    }
 
    /*!
@@ -565,6 +570,7 @@ public:
       int new_upper)
    {
       d_hi(i) = new_upper;
+      d_empty_flag = boost::logic::indeterminate;
    }
 
    /*!
@@ -576,37 +582,53 @@ public:
       const tbox::Dimension& dim(getDim());
       d_lo = Index(dim, tbox::MathUtilities<int>::getMax());
       d_hi = Index(dim, tbox::MathUtilities<int>::getMin());
+      d_empty_flag = true;
    }
 
    /*!
     * @brief Return whether the box is ``empty''.
     *
-    * isEmpty() is preferred to match "is" standard syntax for
-    * boolean methods.
+    * Archaic syntax.  Synonymous with empty().  Retained for backward
+    * compatibility.
     *
-    * @see isEmpty()
+    * @see empty()
+    */
+   DEPRECATED(
+   bool
+   isEmpty() const)
+   {
+      return empty();
+   }
+
+   /*!
+    * @brief Return whether the box is ``empty''.
+    *
+    * This version follows the naming standards used in STL.
+    *
+    * A box is empty if any of the lower bounds is greater than the
+    * corresponding upper bound.  An empty box has a size of zero.
+    *
+    * @return True if the box is empty.
     */
    bool
    empty() const
    {
-      return isEmpty();
-   }
-
-   /*!
-    * @brief Return whether the box is ``empty''.
-    *
-    * A box is empty if any of the lower bounds is greater than the
-    * corresponding upper bound.  An empty box has a size of zero.
-    */
-   bool
-   isEmpty() const
-   {
-      for (dir_t i = 0; i < getDim().getValue(); ++i) {
-         if (d_hi(i) < d_lo(i)) {
-            return true;
-         }
+      if (d_empty_flag) {
+         return true;
       }
-      return false;
+      else if (!d_empty_flag) {
+         return false;
+      }
+      else {
+         for (dir_t i = 0; i < getDim().getValue(); ++i) {
+            if (d_hi(i) < d_lo(i)) {
+               d_empty_flag = true;
+               return true;
+            }
+         }
+         d_empty_flag = false;
+         return false;
+      }
    }
 
    /*!
@@ -907,6 +929,7 @@ public:
             d_lo -= ghosts;
             d_hi += ghosts;
          }
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -932,6 +955,7 @@ public:
       if (!empty()) {
          d_lo(direction) -= ghosts;
          d_hi(direction) += ghosts;
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -950,6 +974,7 @@ public:
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
       if (!empty()) {
          d_lo -= ghosts;
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -970,6 +995,7 @@ public:
       TBOX_ASSERT((direction < getDim().getValue()));
       if (!empty()) {
          d_lo(direction) -= ghosts;
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -988,6 +1014,7 @@ public:
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
       if (!empty()) {
          d_hi += ghosts;
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -1008,6 +1035,7 @@ public:
       TBOX_ASSERT((direction < getDim().getValue()));
       if (!empty()) {
          d_hi(direction) += ghosts;
+         d_empty_flag = boost::logic::indeterminate;
       }
    }
 
@@ -1303,7 +1331,7 @@ public:
     * @brief Returns true if the BoxId of this Box is locked.
     */
    bool
-   idLocked()
+   idLocked() const
    {
       return d_id_locked;
    }
@@ -1412,6 +1440,7 @@ private:
    BlockId d_block_id;
    BoxId d_id;
    bool d_id_locked;
+   mutable boost::tribool d_empty_flag;
 
    /*
     * Array of empty boxes for each dimension.  Preallocated

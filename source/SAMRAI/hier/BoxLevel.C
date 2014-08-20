@@ -1027,7 +1027,7 @@ BoxLevel::addBox(
 
    BoxContainer::iterator new_iterator = d_boxes.begin();
 
-   if (d_boxes.isEmpty()) {
+   if (d_boxes.empty()) {
       Box new_box(
          box,
          LocalId::getZero(),
@@ -1318,7 +1318,7 @@ BoxLevel::getFirstLocalId() const
    TBOX_ASSERT(isInitialized());
 
    const BoxContainer& boxes = getBoxes();
-   if (boxes.isEmpty()) {
+   if (boxes.empty()) {
       return s_negative_one_local_id;
    }
    BoxContainer::const_iterator ni = boxes.begin();
@@ -1335,7 +1335,7 @@ BoxLevel::getLastLocalId() const
    TBOX_ASSERT(isInitialized());
 
    const BoxContainer& boxes = getBoxes();
-   if (boxes.isEmpty()) {
+   if (boxes.empty()) {
       return s_negative_one_local_id;
    }
    LocalId last_local_id(0);

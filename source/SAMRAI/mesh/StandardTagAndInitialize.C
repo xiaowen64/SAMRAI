@@ -887,7 +887,7 @@ bool
 StandardTagAndInitialize::coarsestLevelBoxesOK(
    const hier::BoxContainer& boxes) const
 {
-   TBOX_ASSERT(!boxes.isEmpty());
+   TBOX_ASSERT(!boxes.empty());
 
    bool boxes_ok = true;
    if (everUsesRichardsonExtrapolation()) {
@@ -1520,7 +1520,7 @@ StandardTagAndInitialize::getUserSuppliedRefineBoxes(
    const int cycle,
    const double time)
 {
-   TBOX_ASSERT(refine_boxes.isEmpty());
+   TBOX_ASSERT(refine_boxes.empty());
    TBOX_ASSERT(level_num >= 0);
    TBOX_ASSERT(time >= 0.);
    TBOX_ASSERT(!d_use_cycle_criteria || !d_use_time_criteria);
@@ -1570,7 +1570,7 @@ StandardTagAndInitialize::getUserSuppliedRefineBoxes(
       }
    }
 
-   if (refine_boxes.isEmpty()) {
+   if (refine_boxes.empty()) {
       TBOX_WARNING(
          getObjectName() << ": getRefineBoxes\n"
                          << "No refine boxes specified on level " << level_num

@@ -44,7 +44,8 @@ Box::Box(
    d_hi(dim, tbox::MathUtilities<int>::getMin()),
    d_block_id(BlockId::invalidId()),
    d_id(GlobalId(), PeriodicId::zero()),
-   d_id_locked(false)
+   d_id_locked(false),
+   d_empty_flag(true)
 {
 #ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active box count and reset
@@ -65,7 +66,8 @@ Box::Box(
    d_hi(upper),
    d_block_id(block_id),
    d_id(GlobalId(), PeriodicId::zero()),
-   d_id_locked(false)
+   d_id_locked(false),
+   d_empty_flag(boost::logic::indeterminate)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(lower, upper);
    TBOX_ASSERT(block_id != BlockId::invalidId());
@@ -86,7 +88,8 @@ Box::Box(
    d_hi(box.d_hi),
    d_block_id(box.d_block_id),
    d_id(box.d_id),
-   d_id_locked(false)
+   d_id_locked(false),
+   d_empty_flag(box.d_empty_flag)
 {
 #ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active box count and reset
@@ -131,7 +134,8 @@ Box::Box(
    d_hi(upper),
    d_block_id(block_id),
    d_id(local_id, owner_rank, periodic_id),
-   d_id_locked(false)
+   d_id_locked(false),
+   d_empty_flag(boost::logic::indeterminate)
 {
    TBOX_ASSERT(periodic_id.isValid());
    TBOX_ASSERT(periodic_id.getPeriodicValue() <
@@ -156,7 +160,8 @@ Box::Box(
    d_hi(box.d_hi),
    d_block_id(box.d_block_id),
    d_id(local_id, owner, periodic_id),
-   d_id_locked(false)
+   d_id_locked(false),
+   d_empty_flag(box.d_empty_flag)
 {
    TBOX_ASSERT(periodic_id.isValid());
    TBOX_ASSERT(periodic_id.getPeriodicValue() <
@@ -176,11 +181,12 @@ Box::Box(
    const tbox::Dimension& dim,
    const GlobalId& global_id,
    const PeriodicId& periodic_id):
-   d_lo(dim),
-   d_hi(dim),
+   d_lo(dim, tbox::MathUtilities<int>::getMax()),
+   d_hi(dim, tbox::MathUtilities<int>::getMin()),
    d_block_id(BlockId::invalidId()),
    d_id(global_id, periodic_id),
-   d_id_locked(false)
+   d_id_locked(false),
+   d_empty_flag(true)
 {
    TBOX_ASSERT(periodic_id.isValid());
    TBOX_ASSERT(periodic_id.getPeriodicValue() < PeriodicShiftCatalog::getCatalog(
@@ -199,10 +205,11 @@ Box::Box(
 Box::Box(
    const tbox::Dimension& dim,
    const BoxId& box_id):
-   d_lo(dim),
-   d_hi(dim),
+   d_lo(dim, tbox::MathUtilities<int>::getMax()),
+   d_hi(dim, tbox::MathUtilities<int>::getMin()),
    d_id(box_id),
-   d_id_locked(false)
+   d_id_locked(false),
+   d_empty_flag(true)
 {
    TBOX_ASSERT(box_id.getPeriodicId().isValid());
    TBOX_ASSERT(
@@ -220,10 +227,10 @@ Box::Box(
 }
 
 /*
- *******************************************************************************
+ ******************************************************************************
  * Construct Box from the components of a reference Box
  * and possibly changing the periodic shift.
- *******************************************************************************
+ ******************************************************************************
  */
 Box::Box(
    const Box& other,
@@ -234,7 +241,8 @@ Box::Box(
    d_block_id(other.getBlockId()),
    d_id(other.getLocalId(), other.getOwnerRank(),
         periodic_id),
-   d_id_locked(false)
+   d_id_locked(false),
+   d_empty_flag(other.d_empty_flag)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, other, refinement_ratio);
 #ifdef BOX_TELEMETRY
@@ -311,6 +319,7 @@ Box::operator = (
 
       d_lo = rhs.d_lo;
       d_hi = rhs.d_hi;
+      d_empty_flag = rhs.d_empty_flag;
       if (!d_id_locked) {
          d_block_id = rhs.d_block_id;
          d_id = rhs.d_id;
@@ -358,6 +367,7 @@ Box::initialize(
 
    d_lo = other.d_lo;
    d_hi = other.d_hi;
+   d_empty_flag = other.d_empty_flag;
 
    if (refinement_ratio > IntVector::getZero(dim)) {
 
@@ -481,6 +491,7 @@ Box::operator * (
    } else {
       both.d_lo.max(box.d_lo);
       both.d_hi.min(box.d_hi);
+      both.d_empty_flag = boost::logic::indeterminate;
    }
 
    return both;
@@ -501,6 +512,7 @@ Box::operator *= (
    } else {
       d_lo.max(box.d_lo);
       d_hi.min(box.d_hi);
+      d_empty_flag = boost::logic::indeterminate;
    }
 
    return *this;
@@ -523,6 +535,7 @@ Box::intersect(
    } else {
       result.d_lo.max(other.d_lo);
       result.d_hi.min(other.d_hi);
+      result.d_empty_flag = boost::logic::indeterminate;
    }
 }
 
@@ -556,14 +569,13 @@ Box::operator + (
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   Box bbox(*this);
-
    if (d_block_id != box.d_block_id) {
       if (!(empty()) || !(box.empty())) {
          TBOX_ERROR("Attempted bounding box of Boxes from different blocks.");
       }
    }
 
+   Box bbox(*this);
    bbox += box;
    return bbox;
 }
@@ -580,6 +592,7 @@ Box::operator += (
       } else if (d_block_id == box.d_block_id) {
          d_lo.min(box.d_lo);
          d_hi.max(box.d_hi);
+         d_empty_flag = boost::logic::indeterminate;
       } else {
          TBOX_ERROR("Attempted bounding box of Boxes from different blocks.");
       }
@@ -616,6 +629,7 @@ Box::shorten(
       } else {
          d_lo(direction) -= ghosts;
       }
+      d_empty_flag = boost::logic::indeterminate;
    }
 }
 
@@ -706,6 +720,7 @@ Box::set_Box_from_DatabaseBox(
       d_lo(i) = box.lower(i);
       d_hi(i) = box.upper(i);
    }
+   d_empty_flag = boost::logic::indeterminate;
 }
 
 void
@@ -741,6 +756,7 @@ Box::getFromIntBuffer(
       d_lo(d) = buffer[d];
       d_hi(d) = buffer[dim + d];
    }
+   d_empty_flag = boost::logic::indeterminate;
 
 }
 
@@ -764,6 +780,7 @@ Box::getFromMessageStream(
    d_id.getFromMessageStream(msg);
    msg.unpack(&d_lo[0], d_lo.getDim().getValue());
    msg.unpack(&d_hi[0], d_hi.getDim().getValue());
+   d_empty_flag = boost::logic::indeterminate;
 }
 
 /*
@@ -932,8 +949,8 @@ Box::coalesceWith(
 /*
  *************************************************************************
  *                                                                       *
- * Rotates a 3-Dimensional box 45*num_rotations degrees around the given *
- * and set this box to the union of the boxes.                           *
+ * Rotates a 3-Dimensional box 90*num_rotations degrees around the given *
+ * axis.                                                                 *
  *                                                                       *
  *************************************************************************
  */

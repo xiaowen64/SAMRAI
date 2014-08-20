@@ -331,7 +331,7 @@ BalanceUtilities::privateBadCutPointsExist(
            domain_by_blocks.begin(); m_itr != domain_by_blocks.end(); ++m_itr) {
       hier::BoxContainer bounding_box(m_itr->second.getBoundingBox());
       bounding_box.removeIntersections(m_itr->second);
-      if (!bounding_box.isEmpty()) {
+      if (!bounding_box.empty()) {
          bad_cuts_exist = true;
       }
    }
@@ -374,7 +374,7 @@ BalanceUtilities::privateInitializeBadCutPointsForBox(
       hier::BoxContainer bdry_list(box);
       bdry_list.grow(tmp_max_gcw);
       bdry_list.removeIntersections(physical_domain);
-      if (!bdry_list.isEmpty()) {
+      if (!bdry_list.empty()) {
          set_dummy_cut_points = false;
       }
 
@@ -1261,7 +1261,7 @@ BalanceUtilities::recursiveBisectionUniform(
    TBOX_ASSERT(min_size > hier::IntVector::getZero(dim));
    TBOX_ASSERT(cut_factor > hier::IntVector::getZero(dim));
    TBOX_ASSERT(bad_interval >= hier::IntVector::getZero(dim));
-   TBOX_ASSERT(!physical_domain.isEmpty());
+   TBOX_ASSERT(!physical_domain.empty());
 
    out_boxes.clear();
    out_workloads.clear();
@@ -1355,7 +1355,7 @@ BalanceUtilities::recursiveBisectionNonuniform(
    TBOX_ASSERT(min_size > hier::IntVector::getZero(dim));
    TBOX_ASSERT(cut_factor > hier::IntVector::getZero(dim));
    TBOX_ASSERT(bad_interval >= hier::IntVector::getZero(dim));
-   TBOX_ASSERT(!physical_domain.isEmpty());
+   TBOX_ASSERT(!physical_domain.empty());
 
    out_boxes.clear();
    out_workloads.clear();
@@ -1893,76 +1893,14 @@ BalanceUtilities::compareLoads(
 
 /*
  *************************************************************************
- * Gather and report load balance for a single balancing.
  *************************************************************************
  */
 void
-BalanceUtilities::gatherAndReportLoadBalance(
-   double local_load,
+BalanceUtilities::reduceAndReportLoadBalance(
+   const std::vector<double> &loads,
    const tbox::SAMRAI_MPI& mpi,
    std::ostream& os)
 {
-   int nproc = mpi.getSize();
-   std::vector<double> workloads(nproc);
-   if (mpi.getSize() > 1) {
-      mpi.Allgather(&local_load,
-         1,
-         MPI_DOUBLE,
-         &workloads[0],
-         1,
-         MPI_DOUBLE);
-   } else {
-      workloads[0] = local_load;
-   }
-   reportLoadBalance(workloads, os);
-}
-
-/*
- *************************************************************************
- * Gather and report load balance for multiple balancings.
- *************************************************************************
- */
-void
-BalanceUtilities::gatherAndReportLoadBalance(
-   const std::vector<double>& local_loads,
-   const tbox::SAMRAI_MPI& mpi,
-   std::ostream& os)
-{
-   if (mpi.getSize() > 1) {
-      int nproc = mpi.getSize();
-      std::vector<double> mutable_local_loads(local_loads);
-      std::vector<double> global_workloads(nproc * local_loads.size());
-      mpi.Allgather(&mutable_local_loads[0],
-         static_cast<int>(local_loads.size()),
-         MPI_DOUBLE,
-         &global_workloads[0],
-         static_cast<int>(local_loads.size()),
-         MPI_DOUBLE);
-      std::vector<double> workloads_at_seq_i(nproc);
-      for (size_t i = 0; i < local_loads.size(); ++i) {
-         for (int n = 0; n < nproc; ++n) {
-            workloads_at_seq_i[n] = global_workloads[i + n * local_loads.size()];
-         }
-         os << "================ Sequence " << i << " ===============\n";
-         reportLoadBalance(workloads_at_seq_i, os);
-      }
-   } else {
-      std::vector<double> workloads(1);
-      workloads[0] = local_loads[0];
-      reportLoadBalance(workloads, os);
-   }
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void
-BalanceUtilities::reportLoadBalance(
-   const std::vector<double>& workloads,
-   std::ostream& os)
-{
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    const int nproc = mpi.getSize();
 
    const double demarks[] = { 0.50,
@@ -1978,75 +1916,81 @@ BalanceUtilities::reportLoadBalance(
                               2.00 };
    const int ndemarks = 11;
 
-   TBOX_ASSERT((int)workloads.size() == nproc);
+   // Compute total, avg, min and max loads.
 
-   RankAndLoad* rank_and_load = new RankAndLoad[nproc];
+   std::vector<double> min_loads(loads);
+   std::vector<int> min_ranks(loads.size());
+   mpi.AllReduce( &min_loads[0], static_cast<int>(min_loads.size()), MPI_MINLOC, &min_ranks[0] );
 
-   double total_load = 0.0;
+   std::vector<double> max_loads(loads);
+   std::vector<int> max_ranks(loads.size());
+   mpi.AllReduce( &max_loads[0], static_cast<int>(max_loads.size()), MPI_MAXLOC, &max_ranks[0] );
 
-   for (int i = 0; i < nproc; ++i) {
-      rank_and_load[i].rank = i;
-      rank_and_load[i].load = workloads[i];
-      total_load += workloads[i];
+   std::vector<double> total_loads(loads);
+   mpi.AllReduce( &total_loads[0], static_cast<int>(total_loads.size()), MPI_SUM );
+
+   const int n_population_zones = ndemarks + 1;
+   std::vector<int> population( loads.size() * n_population_zones, 0 );
+   for ( size_t iload=0; iload<loads.size(); ++iload ) {
+      for ( int izone=0; izone<n_population_zones; ++izone ) {
+         if ( loads[iload]/total_loads[iload]*mpi.getSize() < demarks[izone] ) {
+            population[ iload*n_population_zones + izone ] = 1;
+            break;
+         }
+      }
    }
-   qsort((void *)rank_and_load,
-      nproc,
-      sizeof(RankAndLoad),
-      qsortRankAndLoadCompareAscending);
+   mpi.AllReduce( &population[0], static_cast<int>(population.size()), MPI_SUM );
 
-   const double avg_load = total_load / nproc;
-   const double min_load = rank_and_load[0].load;
-   const int r_min_load = rank_and_load[0].rank;
-   const double max_load = rank_and_load[nproc - 1].load;
-   const int r_max_load = rank_and_load[nproc - 1].rank;
 
-   os << "total/avg loads: "
-      << total_load << " / "
-      << avg_load << "\n";
+   for ( size_t iload=0; iload<loads.size(); ++iload ) {
+
+      const double total_load = total_loads[iload];
+      const double avg_load = total_loads[iload] / mpi.getSize();
+      const double min_load = min_loads[iload];
+      const int r_min_load = min_ranks[iload];
+      const double max_load = max_loads[iload];
+      const int r_max_load = max_ranks[iload];
+
+      os << "================ Sequence " << iload << " ===============\n";
+      os << "total/avg loads: "
+         << total_load << " / "
+         << avg_load << "\n";
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:1572)
 #endif
-   os << std::setprecision(6)
-      << "min/max loads: "
-      << min_load << " @ P" << r_min_load << " / "
-      << max_load << " @ P" << r_max_load << "   "
-      << "diffs: "
-      << min_load - avg_load << " / "
-      << max_load - avg_load << "   "
-      << std::setprecision(4)
-      << "normalized: "
-      << (avg_load != 0 ? min_load / avg_load : 0.0) << " / "
-      << (avg_load != 0 ? max_load / avg_load : 0.0) << "\n";
+      os << std::setprecision(6)
+         << "min/max loads: "
+         << min_load << " @ P" << r_min_load << " / "
+         << max_load << " @ P" << r_max_load << "   "
+         << "diffs: "
+         << min_load - avg_load << " / "
+         << max_load - avg_load << "   "
+         << std::setprecision(4)
+         << "normalized: "
+         << (avg_load != 0 ? min_load / avg_load : 0.0) << " / "
+         << (avg_load != 0 ? max_load / avg_load : 0.0) << "\n";
 
-   const char bars[] = "----";
-   const char space[] = "   ";
-   os.setf(std::ios_base::fixed);
-   os << bars;
-   for (int n = 0; n < ndemarks; ++n) {
-      os << std::setw(4) << std::setprecision(2) << demarks[n] << bars;
-   }
-   os << '\n';
+      const char bars[] = "----";
+      const char space[] = "   ";
+      os.setf(std::ios_base::fixed);
+      os << bars;
+      for (int izone = 0; izone<ndemarks; ++izone) {
+         os << std::setw(4) << std::setprecision(2) << demarks[izone] << bars;
+      }
+      os << '\n';
 
-   double population;
-   int irank = 0;
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:1572)
 #endif
-   for (int n = 0; n < ndemarks; ++n) {
-      double top = demarks[n];
-      int old_irank = irank;
-      for ( ; irank < nproc; ++irank)
-         if (avg_load == 0 ||
-             rank_and_load[irank].load / avg_load > top) break;
-      int nrank = irank - old_irank;
-      population = 100.0 * nrank / nproc;
-      os << std::setw(5) << population << space;
-   }
-   population = 100.0 * (nproc - irank) / nproc;
-   os << population << space;
-   os << '\n';
+      for (int izone=0; izone<n_population_zones; ++izone) {
+         const int nrank = population[iload*n_population_zones + izone];
+         const double percentage = 100.0 * nrank / nproc;
+         os << std::setw(5) << percentage << space;
+      }
+      os << '\n';
 
-   delete[] rank_and_load;
+   }
+
 }
 
 /*
@@ -2148,7 +2092,7 @@ BalanceUtilities::constrainMaxBoxSizes(
             pparams.getCutFactor(),
             pparams.getBadInterval(),
             pparams.getDomainBoxes(box.getBlockId()));
-         TBOX_ASSERT(!chopped.isEmpty());
+         TBOX_ASSERT(!chopped.empty());
 
          if (chopped.size() != 1) {
 

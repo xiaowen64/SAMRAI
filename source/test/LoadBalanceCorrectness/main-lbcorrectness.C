@@ -587,8 +587,8 @@ int main(
             createLoadBalancer(input_db, load_balancer_type, rank_tree_type, 0, dim);
 
          tbox::plog << "\n\tL0 prebalance loads:\n";
-         mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L0.getLocalNumberOfCells(),
+         mesh::BalanceUtilities::reduceAndReportLoadBalance(
+            std::vector<double>(1,L0.getLocalNumberOfCells()),
             L0.getMPI());
 
          outputPrebalance(L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0, 0), "L0: ");
@@ -675,8 +675,8 @@ int main(
          L0.cacheGlobalReducedData();
 
          tbox::plog << "\n\tL0 postbalance loads:\n";
-         mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L0.getLocalNumberOfCells(),
+         mesh::BalanceUtilities::reduceAndReportLoadBalance(
+            std::vector<double>(1,L0.getLocalNumberOfCells()),
             L0.getMPI());
 
          outputPostbalance(L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0, 0), "L0: ");
@@ -777,8 +777,8 @@ int main(
             createLoadBalancer(input_db, load_balancer_type, rank_tree_type, 1, dim);
 
          tbox::plog << "\n\tL1 prebalance loads:\n";
-         mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L1->getLocalNumberOfCells(),
+         mesh::BalanceUtilities::reduceAndReportLoadBalance(
+            std::vector<double>(1,L1->getLocalNumberOfCells()),
             L1->getMPI());
 
          outputPrebalance(*L1, L0, required_connector_width, "L1: ");
@@ -864,8 +864,8 @@ int main(
             true);
 
          tbox::plog << "\n\tL1 postbalance loads:\n";
-         mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L1->getLocalNumberOfCells(),
+         mesh::BalanceUtilities::reduceAndReportLoadBalance(
+            std::vector<double>(1,L1->getLocalNumberOfCells()),
             L1->getMPI());
 
          outputPostbalance(*L1, L0, required_connector_width, "L1: ");
@@ -968,8 +968,8 @@ int main(
             createLoadBalancer(input_db, load_balancer_type, rank_tree_type, 2, dim);
 
          tbox::plog << "\n\tL2 prebalance loads:\n";
-         mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L2->getLocalNumberOfCells(),
+         mesh::BalanceUtilities::reduceAndReportLoadBalance(
+            std::vector<double>(1,L2->getLocalNumberOfCells()),
             L2->getMPI());
 
          outputPrebalance(*L2, L1, required_connector_width, "L2: ");
@@ -1055,8 +1055,8 @@ int main(
             true);
 
          tbox::plog << "\n\tL2 postbalance loads:\n";
-         mesh::BalanceUtilities::gatherAndReportLoadBalance(
-            (double)L2->getLocalNumberOfCells(),
+         mesh::BalanceUtilities::reduceAndReportLoadBalance(
+            std::vector<double>(1,L2->getLocalNumberOfCells()),
             L2->getMPI());
 
          outputPostbalance(*L2, L1, required_connector_width, "L2: ");
@@ -1569,7 +1569,8 @@ void enforceNesting(
       L1.findConnectorWithTranspose(L0,
          nesting_width,
          nesting_width_transpose,
-         hier::CONNECTOR_CREATE),
+         hier::CONNECTOR_CREATE,
+         true),
       -nesting_width,
       hierarchy->getGridGeometry()->getDomainSearchTree());
    hier::MappingConnectorAlgorithm mca;
@@ -1647,7 +1648,7 @@ int checkBalanceCorrectness(
       box_container.removeIntersections(
          prebalance.getRefinementRatio(),
          globalized_postbalance_box_tree);
-      if (!box_container.isEmpty()) {
+      if (!box_container.empty()) {
          tbox::plog << "Prebalance Box " << *bi << " has " << box_container.size()
                     << " parts absent in postbalance:\n";
          for (hier::BoxContainer::iterator bj = box_container.begin();
@@ -1666,7 +1667,7 @@ int checkBalanceCorrectness(
       box_container.removeIntersections(
          postbalance.getRefinementRatio(),
          globalized_prebalance_box_tree);
-      if (!box_container.isEmpty()) {
+      if (!box_container.empty()) {
          tbox::plog << "Postbalance Box " << *bi << " has " << box_container.size()
                     << " parts absent in prebalance:\n";
          for (hier::BoxContainer::iterator bj = box_container.begin();

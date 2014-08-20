@@ -79,7 +79,7 @@ public:
     *
     * @param[out] src_boxes
     *
-    * @pre src_boxes.isEmpty()
+    * @pre src_boxes.empty()
     */
    virtual void
    getSourceBoxContainer(

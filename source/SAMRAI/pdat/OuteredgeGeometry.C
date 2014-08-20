@@ -180,7 +180,7 @@ OuteredgeGeometry::doOverlap(
 
          }  // if source and destination edge boxes overlap in axis direction
 
-         if (!dst_restrict_boxes.isEmpty() && !dst_boxes[axis].isEmpty()) {
+         if (!dst_restrict_boxes.empty() && !dst_boxes[axis].empty()) {
             hier::BoxContainer edge_restrict_boxes;
             for (hier::BoxContainer::const_iterator b = dst_restrict_boxes.begin();
                  b != dst_restrict_boxes.end(); ++b) {
@@ -332,7 +332,7 @@ OuteredgeGeometry::doOverlap(
             dst_boxes[axis].removeIntersections(interior_edges);
          }
 
-         if (!dst_restrict_boxes.isEmpty() && !dst_boxes[axis].isEmpty()) {
+         if (!dst_restrict_boxes.empty() && !dst_boxes[axis].empty()) {
             hier::BoxContainer edge_restrict_boxes;
             for (hier::BoxContainer::const_iterator b = dst_restrict_boxes.begin();
                  b != dst_restrict_boxes.end(); ++b) {

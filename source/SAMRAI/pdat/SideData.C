@@ -488,7 +488,7 @@ SideData<TYPE>::packStream(
       for (int d = 0; d < getDim().getValue(); ++d) {
          if (d_directions(d)) {
             const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-            if (!boxes.isEmpty()) {
+            if (!boxes.empty()) {
                d_data[d]->packStream(stream, boxes, transformation);
             }
          }
@@ -583,7 +583,7 @@ SideData<TYPE>::unpackStream(
    for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       if (d_directions(d)) {
          const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-         if (!boxes.isEmpty()) {
+         if (!boxes.empty()) {
             d_data[d]->unpackStream(stream, boxes, offset);
          }
       }

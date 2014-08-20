@@ -83,7 +83,7 @@ public:
     * @param[out] src_boxes
     * @param[in,out] axis_direction
     *
-    * @pre src_boxes.isEmpty()
+    * @pre src_boxes.empty()
     * @pre axis_direction >= 0 && axis_direction < d_dst_boxes.size()
     * @post axis_direction >= 0 && axis_direction < d_dst_boxes.size()
     */
