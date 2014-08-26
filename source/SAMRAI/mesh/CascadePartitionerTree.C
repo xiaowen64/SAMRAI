@@ -196,17 +196,18 @@ void CascadePartitionerTree::distributeLoad()
 
    CascadePartitionerTree *top_group = this;
 
-   for ( int top_gen_number = 0; top_gen_number < tree_depth-1; ++top_gen_number ) {
+   for ( int top_gen_number = 0; top_gen_number < tree_depth; ++top_gen_number ) {
 
       /*
        * This block combines and balances child branches and, for
        * certain top groups, update Connectors.  Only non-leaf nodes
        * combine and balance children but all nodes must participate
-       * in updating Connectors (or the step will hang).
+       * in updating Connectors (or the step will hang when diagnostic
+       * barriers are used).
        */
-      TBOX_ASSERT( top_group->d_gen_num == top_gen_number || top_group == d_leaf );
+      TBOX_ASSERT( top_group->d_gen_num == top_gen_number );
 
-      if ( top_group->d_gen_num == top_gen_number ) {
+      if ( top_group != d_leaf ) {
 
          if ( d_common->d_print_steps ) {
             tbox::plog << d_common->d_object_name << "::distributeLoad balancing outer top_group "
