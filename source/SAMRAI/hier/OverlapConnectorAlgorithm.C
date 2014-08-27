@@ -44,8 +44,6 @@ int OverlapConnectorAlgorithm::s_operation_mpi_tag = 0;
  * with reused tags anyway.
  */
 
-tbox::SAMRAI_MPI OverlapConnectorAlgorithm::s_class_mpi(MPI_COMM_NULL);
-
 tbox::StartupShutdownManager::Handler
 OverlapConnectorAlgorithm::s_initialize_finalize_handler(
    OverlapConnectorAlgorithm::initializeCallback,
@@ -60,6 +58,8 @@ OverlapConnectorAlgorithm::s_initialize_finalize_handler(
  */
 
 OverlapConnectorAlgorithm::OverlapConnectorAlgorithm():
+   d_mpi(MPI_COMM_NULL),
+   d_mpi_is_exclusive(false),
    d_object_timers(NULL),
    d_print_steps(s_print_steps == 'y'),
    d_barrier_before_communication(false),
@@ -77,6 +77,31 @@ OverlapConnectorAlgorithm::OverlapConnectorAlgorithm():
 
 OverlapConnectorAlgorithm::~OverlapConnectorAlgorithm()
 {
+   if ( d_mpi_is_exclusive ) {
+      d_mpi.freeCommunicator();
+      d_mpi_is_exclusive = false;
+   }
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void OverlapConnectorAlgorithm::setSAMRAI_MPI(
+   const tbox::SAMRAI_MPI &mpi,
+   bool make_duplicate )
+{
+   if ( d_mpi_is_exclusive ) {
+      d_mpi.freeCommunicator();
+      d_mpi_is_exclusive = false;
+   }
+   if ( make_duplicate ) {
+      d_mpi.dupCommunicator(mpi);
+      d_mpi_is_exclusive = true;
+   }
+   else {
+      d_mpi = mpi;
+   }
 }
 
 /*
@@ -400,8 +425,10 @@ OverlapConnectorAlgorithm::bridgeWithNesting(
    const IntVector& connector_width_limit,
    bool compute_transpose) const
 {
-   if (d_barrier_before_communication) {
-      west_to_cent.getBase().getMPI().Barrier();
+   const tbox::SAMRAI_MPI& mpi = d_mpi.hasNullCommunicator() ? west_to_cent.getBase().getMPI() : d_mpi;
+
+   if ( d_barrier_before_communication ) {
+      mpi.Barrier();
    }
    d_object_timers->t_bridge->start();
 
@@ -469,8 +496,10 @@ OverlapConnectorAlgorithm::bridge(
    const IntVector& connector_width_limit,
    bool compute_transpose) const
 {
-   if (d_barrier_before_communication) {
-      west_to_cent.getBase().getMPI().Barrier();
+   const tbox::SAMRAI_MPI& mpi = d_mpi.hasNullCommunicator() ? west_to_cent.getBase().getMPI() : d_mpi;
+
+   if ( d_barrier_before_communication ) {
+      mpi.Barrier();
    }
    d_object_timers->t_bridge->start();
 
@@ -538,8 +567,10 @@ OverlapConnectorAlgorithm::bridge(
    const Connector& cent_to_east,
    bool compute_transpose) const
 {
-   if (d_barrier_before_communication) {
-      west_to_cent.getBase().getMPI().Barrier();
+   const tbox::SAMRAI_MPI& mpi = d_mpi.hasNullCommunicator() ? west_to_cent.getBase().getMPI() : d_mpi;
+
+   if ( d_barrier_before_communication ) {
+      mpi.Barrier();
    }
    d_object_timers->t_bridge->start();
 
@@ -607,8 +638,10 @@ OverlapConnectorAlgorithm::bridge(
    const Connector& cent_to_east,
    const IntVector& connector_width_limit) const
 {
-   if (d_barrier_before_communication) {
-      west_to_cent.getBase().getMPI().Barrier();
+   const tbox::SAMRAI_MPI& mpi = d_mpi.hasNullCommunicator() ? cent_to_east.getBase().getMPI() : d_mpi;
+
+   if ( d_barrier_before_communication ) {
+      mpi.Barrier();
    }
    d_object_timers->t_bridge->start();
 
@@ -714,7 +747,6 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
    const IntVector& east_refinement_ratio = east.getRefinementRatio();
 
    const tbox::Dimension& dim(connector_width_limit.getDim());
-   const tbox::SAMRAI_MPI& mpi(cent.getMPI());
 
    const IntVector& zero_vector(IntVector::getZero(dim));
 
@@ -799,7 +831,7 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
          output_width_in_finest_refinement_ratio,
          finest_refinement_ratio / east_refinement_ratio);
 
-   const int rank = mpi.getRank();
+   const int rank = cent.getMPI().getRank();
 
    /*
     * Owners we have to exchange information with are the ones
@@ -891,7 +923,19 @@ OverlapConnectorAlgorithm::privateBridge(
    d_object_timers->t_bridge_share->start();
    d_object_timers->t_bridge_setup_comm->start();
 
-   const tbox::SAMRAI_MPI& mpi(west_to_east.getBase().getMPI());
+   if ( d_sanity_check_method_preconditions ) {
+      if ( !d_mpi.hasNullCommunicator() && !d_mpi.isCongruentWith(west_to_east.getBase().getMPI()) ) {
+         TBOX_ERROR("OverlapConnectorAlgorithm::findOverlaps_assumedPartition input error: Input\n"
+                    <<"has SAMRAI_MPI that is incongruent with OverlapConnectorAlgorithm's.\n"
+                    <<"See OverlapConnectorAlgorithm::setSAMRAI_MPI.\n");
+      }
+   }
+
+   const tbox::SAMRAI_MPI& mpi = d_mpi.hasNullCommunicator() ? west_to_east.getBase().getMPI() : d_mpi;
+   if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+      TBOX_ERROR("Errant message detected.");
+   }
+
    setupCommunication(
       all_comms,
       comm_stage,
@@ -959,6 +1003,10 @@ OverlapConnectorAlgorithm::privateBridge(
          east_to_west->assertConsistencyWithHead();
          east_to_west->assertTransposeCorrectness(west_to_east, true);
       }
+   }
+
+   if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+      TBOX_ERROR("Errant message detected.");
    }
 }
 
@@ -1123,8 +1171,10 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
    const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
       east.getGridGeometry());
 
+   const tbox::SAMRAI_MPI& mpi = d_mpi.hasNullCommunicator() ? east.getMPI() : d_mpi;
+
    const tbox::Dimension& dim(east.getDim());
-   const int rank = east.getMPI().getRank();
+   const int rank = mpi.getRank();
 
    d_object_timers->t_bridge_discover_form_rbbt->start();
    const BoxContainer east_rbbt(visible_east_nabrs);
@@ -1601,20 +1651,6 @@ OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
 void
 OverlapConnectorAlgorithm::initializeCallback()
 {
-   /*
-    * While we figure out how to use multiple communicators in SAMRAI,
-    * we are still assuming that all communications use congruent
-    * communicators.  This class just makes a duplicate communicator
-    * to protect itself from unrelated communications in shared
-    * communicators.
-    */
-   if (s_class_mpi.getCommunicator() == MPI_COMM_NULL) {
-      if (tbox::SAMRAI_MPI::usingMPI()) {
-         const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-         s_class_mpi.dupCommunicator(mpi);
-      }
-   }
-
    // Initialize timers with default prefix.
    getAllTimers(s_default_timer_prefix,
       s_static_timers[s_default_timer_prefix]);
@@ -1630,10 +1666,7 @@ OverlapConnectorAlgorithm::initializeCallback()
 void
 OverlapConnectorAlgorithm::finalizeCallback()
 {
-   if (s_class_mpi.getCommunicator() != MPI_COMM_NULL) {
-      s_class_mpi.freeCommunicator();
-   }
-
+   s_static_timers.clear();
 }
 
 /*

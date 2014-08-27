@@ -12,6 +12,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/BaseConnectorAlgorithm.h"
+#include "SAMRAI/tbox/SAMRAI_MPI.h"
 
 #include <map>
 #include <set>
@@ -447,6 +448,24 @@ public:
    }
 
    /*!
+    * @brief Set the SAMRAI_MPI to use.
+    *
+    * If set, communication will use the specified SAMRAI_MPI instead
+    * of the SAMRAI_MPI from BoxLevels.  This protects communication
+    * operations from accidentally interacting with unrelated
+    * communications, but it limits operations to work only with
+    * metadata objects with comptatible (congruent) SAMRAI_MPI
+    * objects.
+    *
+    * If make_duplicate is true, the specified SAMRAI_MPI will be
+    * duplicated for exclusise use.  The duplicate will be freed upon
+    * object destruction.
+    */
+   void setSAMRAI_MPI(
+      const tbox::SAMRAI_MPI &mpi,
+      bool make_duplicate = true );
+
+   /*!
     * @brief When @c print_steps is true, print what the code is
     * doing.
     *
@@ -644,20 +663,14 @@ private:
    static void
    finalizeCallback();
 
+   //! @brief SAMRAI_MPI for internal communications.
+   tbox::SAMRAI_MPI d_mpi;
+
+   //! @brief Whether d_mpi was duplicated for exclusive use.
+   bool d_mpi_is_exclusive;
+
    // Extra checks independent of optimization/debug.
    static char s_print_steps;
-
-   /*!
-    * @brief Private communicator object shared by all objects in class,
-    * protecting internal communication from mixing with external.
-    *
-    * For communication, we usually use the SAMRAI_MPI of the
-    * Connectors, and this object is mainly for debugging.  If we
-    * suspect interference from unrelated communication calls, we
-    * resort to this exclusive SAMRAI_MPI object to rule out that
-    * possibility.
-    */
-   static tbox::SAMRAI_MPI s_class_mpi;
 
    /*!
     * @brief Tag to use (and increment) at begining of operations that
