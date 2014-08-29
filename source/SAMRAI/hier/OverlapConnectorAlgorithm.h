@@ -684,18 +684,6 @@ private:
    static char s_print_steps;
 
    /*!
-    * @brief Private communicator object shared by all objects in class,
-    * protecting internal communication from mixing with external.
-    *
-    * For communication, we usually use the SAMRAI_MPI of the
-    * Connectors, and this object is mainly for debugging.  If we
-    * suspect interference from unrelated communication calls, we
-    * resort to this exclusive SAMRAI_MPI object to rule out that
-    * possibility.
-    */
-   static tbox::SAMRAI_MPI s_class_mpi;
-
-   /*!
     * @brief Tag to use (and increment) at begining of operations that
     * require nearest-neighbor communication, to aid in eliminating
     * mixing of messages from different internal operations.
