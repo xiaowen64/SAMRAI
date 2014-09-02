@@ -346,7 +346,7 @@ int main(
 
          tbox::plog << "\n\n\ninitial anchor loads:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(1,anchor_box_level->getLocalNumberOfCells()),
+            std::vector<double>(1, static_cast<double>(anchor_box_level->getLocalNumberOfCells())),
             anchor_box_level->getMPI());
 
          const int nnodes = mpi.getSize();
@@ -388,7 +388,7 @@ int main(
 
          tbox::plog << "\n\n\nfinal anchor loads:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(1,anchor_box_level->getLocalNumberOfCells()),
+            std::vector<double>(1, static_cast<double>(anchor_box_level->getLocalNumberOfCells())),
             anchor_box_level->getMPI());
       }
 
@@ -428,7 +428,7 @@ int main(
          balance_box_level->cacheGlobalReducedData();
          tbox::plog << "\n\n\nBefore:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(1,balance_box_level->getLocalNumberOfCells()),
+            std::vector<double>(1, static_cast<double>(balance_box_level->getLocalNumberOfCells())),
             balance_box_level->getMPI());
 
          hier::BoxLevelStatistics anchor_stats(*anchor_box_level);
@@ -506,7 +506,7 @@ int main(
          balance_box_level->cacheGlobalReducedData();
          tbox::plog << "\n\n\nAfter:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(1,balance_box_level->getLocalNumberOfCells()),
+            std::vector<double>(1, static_cast<double>(balance_box_level->getLocalNumberOfCells())),
             balance_box_level->getMPI());
 
          hier::BoxLevelStatistics balance_stats(*balance_box_level);
@@ -535,7 +535,7 @@ int main(
 
          // Dump summary statistics to output.
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(1,balance_box_level->getLocalNumberOfCells()),
+            std::vector<double>(1, static_cast<double>(balance_box_level->getLocalNumberOfCells())),
             balance_box_level->getMPI(),
             tbox::plog);
       }
