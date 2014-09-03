@@ -636,7 +636,8 @@ int main(
          outputPostcluster(*Lnew, Ltag, required_connector_width, "Lnew: ");
 
          if (Lnew->getGlobalNumberOfBoxes() == 0) {
-            TBOX_ERROR("Level " << new_ln << " box generator resulted in no boxes.");
+            TBOX_WARNING("Level " << new_ln << " box generator resulted in no boxes.  Stopping.");
+            break;
          }
 
          /*

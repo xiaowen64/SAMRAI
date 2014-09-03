@@ -22,7 +22,7 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
-NUM_TESTS = 39
+NUM_TESTS = 40
 CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
 
 TEST_NPROCS = @TEST_NPROCS@
@@ -45,6 +45,7 @@ INPUTS2D =	test_inputs/small_spread.2d.tile.input	\
 		test_inputs/lump.2d.treelb.input	\
 		test_inputs/lump.2d.voucher.input	\
 		test_inputs/lump.2d.tilevoucher.input	\
+		test_inputs/box_deep.2d.cascade.input
 
 
 INPUTS3D =	test_inputs/spreadby10.3d.treelb.input		\
