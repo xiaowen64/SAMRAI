@@ -2394,6 +2394,8 @@ GriddingAlgorithm::printStatistics(
          }
       }
    }
+#else
+   s << "GriddingAlgorithm statistics is disabled.  See GA_RECORD_STATS in GriddingAlgorithm.h\n";
 #endif
 }
 
