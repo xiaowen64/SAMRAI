@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
- * Description:   Input file for SAMRAI Euler example problem (3d sphere) 
+ * Description:   Input file for SAMRAI Euler example problem (3d sphere)
  *
  ************************************************************************/
 Euler {
@@ -30,18 +30,18 @@ Euler {
       pressure_inside   = 1140.35
 
       density_outside    = 1.0
-      velocity_outside   = 0.0 , 0.0, 0.0 
+      velocity_outside   = 0.0 , 0.0, 0.0
       pressure_outside   = 0.00001
 
    }
 
    Refinement_data {
       refine_criteria = "PRESSURE_GRADIENT"
- 
+
       PRESSURE_GRADIENT {
          grad_tol = 100.0
       }
- 
+
       PRESSURE_SHOCK {
          shock_tol = 10.0
          shock_onset = 0.85
@@ -143,33 +143,63 @@ Euler {
 
 
 BergerRigoutsos {
+   sort_output_nodes = TRUE
+   max_box_size = 100, 100, 100
+   combine_efficiency = 0.90
+   efficiency_tolerance = 0.90
    DEV_algo_advance_mode = "ADVANCE_SOME"
    DEV_owner_mode = "MOST_OVERLAP"
+   DEV_inflection_cut_threshold_ar = 4
    DEV_log_node_history = FALSE
-   sort_output_nodes = TRUE
-   efficiency_tolerance   = 0.90e0    // min % of tag cells in new patch level
-   combine_efficiency     = 0.90e0    // chop box if sum of volumes of smaller
-                                      // boxes < efficiency * vol of large box
-   // DEV_log_cluster_summary = TRUE
+   DEV_log_cluster_summary = TRUE
+   DEV_log_cluster = FALSE
+   DEV_barrier_before = TRUE
+   DEV_barrier_after = TRUE
 }
 
-// BaselineMain is used only by the baseline code.
-BaselineMain {
-   dim = 3
-   base_name = "spbsl-2l8x"
-   log_all_nodes = TRUE
-
-// visualization dump parameters 
-   viz_dump_interval     = 0          // zero to turn off
-   visit_number_procs_per_file = 1
-
-// restart dump parameters 
-   restart_interval        = 0        // zero to turn off
-   restart_write_dirname   = "restart_sphere3d"
-
-   // which_br: 'o' = old, 'n' = new
-   which_br = 'o'
+TileClustering {
+   tile_size = 3,3,3
+   DEV_log_cluster_summary = TRUE
+   DEV_log_cluster = FALSE
+   DEV_barrier_and_time = TRUE
 }
+
+ChopAndPackLoadBalancer{
+  // bin_pack_method = "GREEDY"
+  bin_pack_method = "SPATIAL"
+  ignore_level_box_union_is_single_box = TRUE
+}
+
+CascadePartitioner {
+  tile_size = 12,12,12
+  flexible_load_tolerance = 0.05
+  max_spread_procs = 500
+  DEV_reset_obligations = TRUE
+  // Debugging options
+  DEV_check_map = FALSE
+  DEV_check_connectivity = FALSE
+  DEV_print_steps = FALSE
+  DEV_print_child_steps = FALSE
+  DEV_summarize_map = FALSE
+}
+
+TreeLoadBalancer {
+  tile_size = 12,12,12
+  flexible_load_tolerance = 0.05
+  max_cycle_spread_procs = 1000
+  DEV_voucher_mode = FALSE
+  DEV_report_load_balance = TRUE
+  DEV_allow_box_breaking = TRUE
+  // Debugging options
+  DEV_check_map = FALSE
+  DEV_check_connectivity = FALSE
+  DEV_print_steps = FALSE
+  DEV_print_swap_steps = FALSE
+  DEV_print_break_steps = FALSE
+  DEV_print_edge_steps = FALSE
+  DEV_summarize_map = FALSE
+}
+
 
 // Main is used only by the new code.
 Main {
@@ -177,11 +207,14 @@ Main {
    base_name = "sphere-2l8x"
    log_all_nodes = TRUE
 
-// visualization dump parameters 
-   viz_dump_interval     = 0          // zero to turn off
+   clustering_type = "TileClustering" // TileClustering || BergerRigoutsos
+   partitioner_type = "CascadePartitioner" // CascadePartitioner || TreeLoadBalancer || ChopAndPackLoadBalancer
+
+// visualization dump parameters
+   viz_dump_interval     = 1          // zero to turn off
    visit_number_procs_per_file = 1
 
-// restart dump parameters 
+// restart dump parameters
    restart_interval        = 0        // zero to turn off
    restart_write_dirname   = "restart_sphere3d"
 }
@@ -214,19 +247,20 @@ StandardTagAndInitialize {
 PatchHierarchy {
    max_levels             = 2        // Maximum number of levels in hierarchy.
    ratio_to_coarser {            // vector ratio to next coarser level
-      level_1             = 4 , 4 , 4 
-      level_2             = 4 , 4 , 4 
-      level_3             = 4 , 4 , 4 
+      level_1             = 4 , 4 , 4
+      level_2             = 4 , 4 , 4
+      level_3             = 4 , 4 , 4
    }
 
    largest_patch_size {
-      level_0 =  19, 19, 19  // largest patch allowed in hierarchy
+      // level_0 =  32, 32, 32  // largest patch allowed in hierarchy
+      level_0 =  -1, -1, -1  // No limit on largest patch.
            // all finer levels will use same values as level_0...
    }
 
    smallest_patch_size {
-      level_0 =  8, 8, 8 
-      level_1 =  8, 8, 8 
+      level_0 =  8, 8, 8
+      level_1 =  8, 8, 8
       // all finer levels will use same values as level_0...
    }
 
@@ -234,7 +268,7 @@ PatchHierarchy {
 }
 
 GriddingAlgorithm {
-   sequentialize_patch_indices = FALSE
+   sequentialize_patch_indices = TRUE
    check_nonrefined_tags = "IGNORE"
 }
 
@@ -252,10 +286,4 @@ TimeRefinementIntegrator {
    grow_dt               = 1.1e0    // growth factor for timesteps
    max_integrator_steps  = 100     // max number of simulation timesteps
    // max_integrator_steps  = 1     // max number of simulation timesteps
-}
-
-TreeLoadBalancer {
-   // DEV_report_load_balance = FALSE
-   // DEV_barrier_before = TRUE
-   // DEV_barrier_after = TRUE
 }
