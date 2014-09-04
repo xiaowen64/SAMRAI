@@ -298,7 +298,7 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
    const tbox::Dimension dim(trial.d_whole_box.getDim());
 
    if (d_print_break_steps) {
-      tbox::plog << "      breakOffLoad_planar attempting to break "
+      tbox::plog << "        breakOffLoad_planar attempting to break "
                  << trial.d_ideal_load << " from Box "
                  << trial.d_whole_box << trial.d_whole_box.numberCells() << '|'
                  << trial.d_whole_box.size()
@@ -308,7 +308,7 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
    trial.d_breakoff.clear();
    trial.d_leftover.clear();
 
-   const hier::IntVector& box_dims = trial.d_whole_box.numberCells();
+   const hier::IntVector box_dims = trial.d_whole_box.numberCells();
 
    const size_t box_vol = box_dims.getProduct();
 
@@ -391,6 +391,17 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
       while (hi_lower_cut_plane < trial.d_whole_box.upper() (brk_dir) + 1 &&
              bad[hi_lower_cut_plane - trial.d_whole_box.lower() (brk_dir)]) {
          hi_lower_cut_plane += d_pparams->getCutFactor() (brk_dir);
+      }
+
+      if (d_print_break_steps) {
+         tbox::plog << "breakOffLoad_planar considering cuts along " << d << ": "
+                    << "  ideal_cut_length=" << ideal_cut_length
+                    << "  ideal_upper_cut_offset=" << ideal_upper_cut_offset
+                    << "  lo_lower_cut_plane=" << lo_lower_cut_plane
+                    << "  hi_lower_cut_plane=" << hi_lower_cut_plane
+                    << "  lo_upper_cut_plane=" << lo_upper_cut_plane
+                    << "  hi_upper_cut_plane=" << hi_upper_cut_plane
+                    << std::endl;
       }
 
       if (lo_lower_cut_plane - trial.d_whole_box.lower() (brk_dir) >
@@ -509,7 +520,7 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
    }
 #endif
    if (d_print_break_steps) {
-      tbox::plog << "breakOffLoad_planar returning." << std::endl;
+      tbox::plog << "        breakOffLoad_planar returning." << std::endl;
    }
 
    return !trial.d_breakoff.empty();
