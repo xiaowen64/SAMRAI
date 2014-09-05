@@ -1932,12 +1932,13 @@ BalanceUtilities::reduceAndReportLoadBalance(
    const int n_population_zones = ndemarks + 1;
    std::vector<int> population( loads.size() * n_population_zones, 0 );
    for ( size_t iload=0; iload<loads.size(); ++iload ) {
-      for ( int izone=0; izone<n_population_zones; ++izone ) {
+      int izone;
+      for ( izone=0; izone<ndemarks; ++izone ) {
          if ( loads[iload]/total_loads[iload]*mpi.getSize() < demarks[izone] ) {
-            population[ iload*n_population_zones + izone ] = 1;
             break;
          }
       }
+      population[ iload*n_population_zones + izone ] = 1;
    }
    mpi.AllReduce( &population[0], static_cast<int>(population.size()), MPI_SUM );
 

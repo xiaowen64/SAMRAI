@@ -58,6 +58,13 @@ namespace mesh {
  *   Tile size when using tile mode.  Tile mode restricts box cuts
  *   to tile boundaries.  Default is 1, which is equivalent to no restriction.
  *
+ *   - \b max_spread_procs
+ *   This parameter limits how many processes may receive the load of one
+ *   process before updating Connectors.  If a process has too much
+ *   initial load, this limit causes the Connector to be updated gradually,
+ *   alleviating the bottle-neck of one process doing an excessive amount
+ *   of Connector updates.
+ *
  * <b> Details: </b> <br>
  * <table>
  *   <tr>
@@ -84,6 +91,14 @@ namespace mesh {
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
+ *   <tr>
+ *     <td>max_spread_procs</td>
+ *     <td>int</td>
+ *     <td>500</td>
+ *     <td> > 1</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
  * </table>
  *
  * @internal The following are developer inputs.  Defaults listed
@@ -92,11 +107,6 @@ namespace mesh {
  * @internal DEV_reset_obligations (true)
  * bool
  * Whether to reset load obligations within groups that cannot change its load average.
- *
- * @internal DEV_balance_intermediate_groups (false)
- * bool
- * Whether to balance intermediate groups instead of balancing just the top groups
- * in each cycle.
  *
  * @internal DEV_limit_supply_to_surplus (true)
  * bool
@@ -321,15 +331,17 @@ private:
       hier::Connector* balance_to_reference) const;
 
    /*!
-    * @brief Executes a single cascade cycle.
+    * @brief Update Connectors balance_box_level<==>reference.
     */
    void
-   cascadeCycle(
-      double& group_surplus,
-      hier::BoxLevel& balance_box_level,
-      hier::Connector* balance_to_reference,
-      int outerCycle,
-      int innerCycle) const;
+   updateConnectors() const;
+
+   /*!
+    * @brief Determine globally reduced work parameters.
+    */
+   void globalWorkReduction(
+      LoadType local_work,
+      bool has_any_load ) const;
 
    //! @brief Compute log-base-2 of integer, rounded up.
    static int
@@ -382,20 +394,15 @@ private:
    hier::IntVector d_tile_size;
 
    /*!
+    * @brief Max number of processes the a single process may spread
+    * load before updating Connectors.
+    */
+   int d_max_spread_procs;
+
+   /*!
     * @brief Whether to limit what a process can give to its surplus.
     */
    bool d_limit_supply_to_surplus;
-
-   /*!
-    * @brief Whether to balance intermediate groups (vs balancing only the top
-    * group of each outer cycle).
-    *
-    * There may be performance and data locality benefits when
-    * skipping intermediate groups.  I'm exploring this.
-    *
-    * See input parameter "DEV_balance_intermediate_groups".
-    */
-   bool d_balance_intermediate_groups;
 
    /*!
     * @brief Whether to reset load obligations within groups that
@@ -422,10 +429,15 @@ private:
    hier::MappingConnectorAlgorithm d_mca;
 
    //@{
-   //! @name Shared temporaries during balancing.
+   //! @name Shared temporaries, used only when actively partitioning.
+   mutable hier::BoxLevel *d_balance_box_level;
+   mutable hier::Connector *d_balance_to_reference;
    mutable boost::shared_ptr<PartitioningParams> d_pparams;
-   mutable LoadType d_global_load_avg;
+   mutable LoadType d_global_work_sum;
+   mutable LoadType d_global_work_avg;
+   mutable LoadType d_local_work_max;
    mutable LoadType d_min_load;
+   mutable size_t d_num_initial_owners;
 
    //! @brief Local load subject to change.
    mutable TransitLoad* d_local_load;
@@ -461,11 +473,11 @@ private:
     */
    boost::shared_ptr<tbox::Timer> t_load_balance_box_level;
    boost::shared_ptr<tbox::Timer> t_assign_to_local_and_populate_maps;
-   boost::shared_ptr<tbox::Timer> t_get_map;
    boost::shared_ptr<tbox::Timer> t_use_map;
-   boost::shared_ptr<tbox::Timer> t_get_global_load;
    boost::shared_ptr<tbox::Timer> t_communication_wait;
    boost::shared_ptr<tbox::Timer> t_distribute_load;
+   boost::shared_ptr<tbox::Timer> t_update_connectors;
+   boost::shared_ptr<tbox::Timer> t_global_work_reduction;
    boost::shared_ptr<tbox::Timer> t_combine_children;
    boost::shared_ptr<tbox::Timer> t_balance_children;
    boost::shared_ptr<tbox::Timer> t_supply_work;
@@ -476,6 +488,7 @@ private:
 
    // Extra checks independent of optimization/debug.
    char d_print_steps;
+   char d_print_child_steps;
    char d_check_connectivity;
    char d_check_map;
 
