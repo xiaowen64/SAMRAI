@@ -142,7 +142,8 @@ public:
 
 
    /*
-    * @brief Find overlaps using the assumed partition algorithm.
+    * @brief Find and populate overlap relationships for the given
+    * Connector by using the assumed partition algorithm.
     *
     * For the assumed partition algorithm, see Allison Baker's paper.
     */
