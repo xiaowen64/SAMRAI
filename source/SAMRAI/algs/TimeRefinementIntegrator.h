@@ -523,14 +523,7 @@ public:
     */
    void
    setRegridInterval(
-      const int regrid_interval)
-   {
-      TBOX_ASSERT(!d_use_refined_timestepping);
-      int array_size = static_cast<int>(d_regrid_interval.size());
-      for (int i = 0; i < array_size; ++i) {
-         d_regrid_interval[i] = regrid_interval;
-      }
-   }
+      const int regrid_interval);
 
    /**
     * Print data representation of this object to given output stream.
