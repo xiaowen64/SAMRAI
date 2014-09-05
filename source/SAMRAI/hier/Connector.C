@@ -416,17 +416,23 @@ Connector::shrinkWidth(
 
 /*
 ***********************************************************************
-* Base owners tell head owners about relationships.
+* Set this Connector to the transpose of the other Connector.  The
+* other's base owners tell its head owners about relationships, and
+* head owners (base owners of this Connector) populate the this
+* Connector.
+*
+* This method uses the termination message technique of the assumed
+* partition algorithm.
 *
 * Two communication patterns executed simultaneously: edge info and
-* termination messages.  For edge info, head box owners send edge data
-* to base box owners, who responds with an acknowledgement message.
-* Termination messages are propagated up then down a rank tree.
-* Upward messages inform processes that their descendents have
+* termination messages.  For edge info, other's base box owners send
+* data to this's base box owners, who respond with an acknowledgement
+* message.  Termination messages are propagated up then down a rank
+* tree.  Upward messages inform processes that their descendents have
 * received all needed acknowledgements.  Downward messages inform
-* processes that the entire tree completed its acknowledgements.  They
-* can stop receiving edge messages because there are no more in
-* transit.
+* processes that the entire tree completed its acknowledgements,
+* indicating that there are no messages in transit and the process
+* can stop checking for incoming edge messages.
 ***********************************************************************
 */
 void
@@ -521,7 +527,7 @@ Connector::setToTransposeOf( const Connector &other,
    size_t child_term_needed = rank_tree.getNumberOfChildren();
    bool send_upward_term_msg = mpi1.getSize() > 1;
 
-   if ( send_upward_term_msg && ack_needed.empty() && child_term_needed == 0 ) {
+   if ( ack_needed.empty() && child_term_needed == 0 && send_upward_term_msg ) {
       // Leaves of the tree initiate upward termination message if no edge communication.
       requests.push_back(tbox::SAMRAI_MPI::Request());
       mpi_err = mpi1.Isend( &upward_term_msg_type, 1, MPI_CHAR,
@@ -533,7 +539,7 @@ Connector::setToTransposeOf( const Connector &other,
 
 
    /*
-    * Receive edge messages and propgating termination messages: Both
+    * Receive edge messages and propgate termination messages: Both
     * communications must occur simultaneously.  Don't know where the
     * next message will come from, so must receive from any source.
     * Process messages based on the embedded msg_type.  Stop when
@@ -605,7 +611,7 @@ Connector::setToTransposeOf( const Connector &other,
       }
       TBOX_ASSERT( mstream.endOfData() );
 
-      if ( send_upward_term_msg && ack_needed.empty() && child_term_needed == 0 ) {
+      if ( ack_needed.empty() && child_term_needed == 0 && send_upward_term_msg ) {
          if ( rank_tree.isRoot() ) {
             // Initiate downward termination message.
             for ( unsigned int ci=0; ci<rank_tree.getNumberOfChildren(); ++ci ) {
@@ -632,7 +638,7 @@ Connector::setToTransposeOf( const Connector &other,
    }
 
    if ( !requests.empty() ) {
-      // Compete sends before allowing memory deallocation.
+      // Complete sends before allowing memory deallocation.
       std::vector<tbox::SAMRAI_MPI::Status> statuses(requests.size());
       tbox::SAMRAI_MPI::Waitall( static_cast<int>(requests.size()), &requests[0], &statuses[0] );
    }

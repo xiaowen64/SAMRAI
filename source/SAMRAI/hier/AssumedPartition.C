@@ -23,8 +23,8 @@ namespace hier {
 
 
 /*
-***************************************************************************************
-***************************************************************************************
+********************************************************************************
+********************************************************************************
 */
 AssumedPartition::AssumedPartition() :
    d_parted_boxes(),
@@ -37,8 +37,8 @@ AssumedPartition::AssumedPartition() :
 
 
 /*
-***************************************************************************************
-***************************************************************************************
+********************************************************************************
+********************************************************************************
 */
 AssumedPartition::AssumedPartition(
    const BoxContainer& boxes,
@@ -58,9 +58,13 @@ AssumedPartition::AssumedPartition(
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Partition the given boxes.
-***************************************************************************************
+*
+* Partition the rank space into intervals roughly proportional to the
+* given boxes then partition each box across its corresponding rank
+* space interval.
+********************************************************************************
 */
 void
 AssumedPartition::partition(
@@ -97,6 +101,8 @@ AssumedPartition::partition(
 
       int box_rank_begin = static_cast<int>(rank_space_cut_lo * num_ranks + 0.5);
       int box_rank_end   = static_cast<int>(rank_space_cut_hi * num_ranks + 0.5);
+
+      // Ensure at least one rank is assigned to this box.
       if ( box_rank_end == box_rank_begin ) {
          const double midpoint = 0.5*(rank_space_cut_lo + rank_space_cut_hi);
          box_rank_begin = static_cast<int>(midpoint * num_ranks + 0.5);
@@ -115,9 +121,9 @@ AssumedPartition::partition(
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Return index of first box assigned to given rank.
-***************************************************************************************
+********************************************************************************
 */
 int
 AssumedPartition::beginOfRank(int rank) const
@@ -125,6 +131,7 @@ AssumedPartition::beginOfRank(int rank) const
    for ( size_t i=0; i<d_parted_boxes.size(); ++i ) {
       const int begin = d_parted_boxes[i].beginOfRank(rank);
       const int end = d_parted_boxes[i].endOfRank(rank);
+      // If end <= begin, rank owns nothing in this assumed partition.
       if ( end > begin ) {
          return begin;
       }
@@ -135,9 +142,9 @@ AssumedPartition::beginOfRank(int rank) const
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Return one past index of last box assigned to given rank.
-***************************************************************************************
+********************************************************************************
 */
 int
 AssumedPartition::endOfRank(int rank) const
@@ -145,6 +152,7 @@ AssumedPartition::endOfRank(int rank) const
    for ( PartedBoxes::const_reverse_iterator pi=d_parted_boxes.rbegin(); pi!=d_parted_boxes.rend(); ++pi ) {
       const int begin = pi->beginOfRank(rank);
       const int end = pi->endOfRank(rank);
+      // If end <= begin, rank owns nothing in this assumed partition.
       if ( end > begin ) {
          return end;
       }
@@ -155,9 +163,9 @@ AssumedPartition::endOfRank(int rank) const
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Compute the box with the given index.
-***************************************************************************************
+********************************************************************************
 */
 int
 AssumedPartition::getOwner(int box_index) const
@@ -179,9 +187,9 @@ AssumedPartition::getOwner(int box_index) const
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Compute the box with the given index.
-***************************************************************************************
+********************************************************************************
 */
 Box
 AssumedPartition::getBox(int box_index) const
@@ -203,9 +211,9 @@ AssumedPartition::getBox(int box_index) const
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Compute the box with the given index.
-***************************************************************************************
+********************************************************************************
 */
 void
 AssumedPartition::getAllBoxes(BoxContainer &all_boxes) const
@@ -219,9 +227,9 @@ AssumedPartition::getAllBoxes(BoxContainer &all_boxes) const
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Compute the box with the given index.
-***************************************************************************************
+********************************************************************************
 */
 void
 AssumedPartition::getAllBoxes(BoxContainer &all_boxes, int rank) const
@@ -237,9 +245,9 @@ AssumedPartition::getAllBoxes(BoxContainer &all_boxes, int rank) const
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Find all boxes intersecting the given box.  Return whether any boxes overlap.
-***************************************************************************************
+********************************************************************************
 */
 bool
 AssumedPartition::findOverlaps(
@@ -269,9 +277,9 @@ AssumedPartition::findOverlaps(
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Find all boxes intersecting the given box.  Return whether any boxes overlap.
-***************************************************************************************
+********************************************************************************
 */
 bool
 AssumedPartition::findOverlaps(
@@ -292,14 +300,14 @@ AssumedPartition::findOverlaps(
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Check the assumed partition for errors and inconsistencies.  Write
 * error diagnostics to plog.
 *
 * Return number of errors found.  This class should prevent (or at
 * least catch) user errors, so any error found here indicates a bug in
 * the class.
-***************************************************************************************
+********************************************************************************
 */
 size_t
 AssumedPartition::selfCheck() const
@@ -323,8 +331,8 @@ AssumedPartition::selfCheck() const
 
 
 /*
-***************************************************************************************
-***************************************************************************************
+********************************************************************************
+********************************************************************************
 */
 void
 AssumedPartition::recursivePrint(

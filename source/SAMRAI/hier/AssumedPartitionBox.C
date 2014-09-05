@@ -22,8 +22,8 @@ namespace hier {
 
 
 /*
-***************************************************************************************
-***************************************************************************************
+********************************************************************************
+********************************************************************************
 */
 AssumedPartitionBox::AssumedPartitionBox(
    const Box& box,
@@ -50,8 +50,8 @@ AssumedPartitionBox::AssumedPartitionBox(
 
 
 /*
-***************************************************************************************
-***************************************************************************************
+********************************************************************************
+********************************************************************************
 */
 AssumedPartitionBox::AssumedPartitionBox(
    const tbox::Dimension& dim):
@@ -71,9 +71,9 @@ AssumedPartitionBox::AssumedPartitionBox(
 
 
 /*
-***************************************************************************************
-* Partition the given box.
-***************************************************************************************
+********************************************************************************
+* Partition the given box, discarding the current state.
+********************************************************************************
 */
 void
 AssumedPartitionBox::partition(
@@ -97,9 +97,9 @@ AssumedPartitionBox::partition(
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Return index of first box assigned to given rank.
-***************************************************************************************
+********************************************************************************
 */
 int
 AssumedPartitionBox::beginOfRank(int rank) const
@@ -111,18 +111,20 @@ AssumedPartitionBox::beginOfRank(int rank) const
    }
    int index =
       rank < d_rank_begin ? d_index_begin :
-      rank < d_first_rank_with_1 ? d_first_index_with_2 + (rank-d_rank_begin       )*(1+d_parts_per_rank) :
-      rank < d_first_rank_with_0 ? d_first_index_with_1 + (rank-d_first_rank_with_1)*d_parts_per_rank :
-      static_cast<int>(d_index_end);
+      rank < d_first_rank_with_1 ?
+      d_first_index_with_2 + (rank-d_rank_begin       )*(1+d_parts_per_rank) :
+      rank < d_first_rank_with_0 ?
+      d_first_index_with_1 + (rank-d_first_rank_with_1)*d_parts_per_rank :
+      d_index_end;
    return index;
 }
 
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Return one past index of last box assigned to given rank.
-***************************************************************************************
+********************************************************************************
 */
 int
 AssumedPartitionBox::endOfRank(int rank) const
@@ -134,8 +136,10 @@ AssumedPartitionBox::endOfRank(int rank) const
    }
    int index =
       rank < d_rank_begin ? d_index_begin :
-      rank < d_first_rank_with_1 ? d_first_index_with_2 + (1+rank-d_rank_begin       )*(1+d_parts_per_rank) :
-      rank < d_first_rank_with_0 ? d_first_index_with_1 + (1+rank-d_first_rank_with_1)*d_parts_per_rank :
+      rank < d_first_rank_with_1 ?
+      d_first_index_with_2 + (1+rank-d_rank_begin       )*(1+d_parts_per_rank) :
+      rank < d_first_rank_with_0 ?
+      d_first_index_with_1 + (1+rank-d_first_rank_with_1)*d_parts_per_rank :
       d_index_end;
    return index;
 }
@@ -143,9 +147,9 @@ AssumedPartitionBox::endOfRank(int rank) const
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Compute the owner of the given index.
-***************************************************************************************
+********************************************************************************
 */
 int
 AssumedPartitionBox::getOwner(int box_index) const
@@ -162,7 +166,7 @@ AssumedPartitionBox::getOwner(int box_index) const
    }
    else {
       if ( box_index < d_index_begin || box_index >= d_index_end ) {
-         // Not an index in this object.  Return invalid owner.
+         // Not an index in this object ==> invalid owner.
       }
       else if ( box_index < d_first_index_with_1 ) {
          owner = d_rank_begin + (box_index - d_first_index_with_2)/(1+d_parts_per_rank);
@@ -177,9 +181,9 @@ AssumedPartitionBox::getOwner(int box_index) const
 
 
 /*
-***************************************************************************************
-* Compute the box with the given index.
-***************************************************************************************
+********************************************************************************
+* Compute the partition box with the given index.
+********************************************************************************
 */
 Box
 AssumedPartitionBox::getBox(int box_index) const
@@ -187,6 +191,7 @@ AssumedPartitionBox::getBox(int box_index) const
    TBOX_ASSERT( box_index >= d_index_begin );
    TBOX_ASSERT( box_index < d_index_begin + d_partition_grid_size.getProduct() );
 
+   // Set lower corner in partition grid resolution, based on the box_index.
    Box part(d_box);
    int box_index_diff = box_index - d_index_begin;
    for ( int d=d_box.getDim().getValue()-1; d>=0; --d ) {
@@ -195,6 +200,7 @@ AssumedPartitionBox::getBox(int box_index) const
       box_index_diff -= part.lower()[dir]*d_index_stride[dir];
    }
 
+   // Refine lower corner and set upper corner.
    part.setLower( part.lower() * d_uniform_partition_size );
    part.setLower( part.lower() + d_box.lower() );
    part.setUpper( part.lower() + d_uniform_partition_size - IntVector::getOne(d_box.getDim()) );
@@ -209,9 +215,9 @@ AssumedPartitionBox::getBox(int box_index) const
 
 
 /*
-***************************************************************************************
-* Compute the box with the given position in the grid of partitions.
-***************************************************************************************
+********************************************************************************
+* Compute the partition box with the given position in the grid of partitions.
+********************************************************************************
 */
 Box
 AssumedPartitionBox::getBox(const IntVector &position) const
@@ -225,23 +231,23 @@ AssumedPartitionBox::getBox(const IntVector &position) const
    }
    const int owner = getOwner(box_index);
    const Index tmp_index(position);
-   Box box( tmp_index,
-            tmp_index,
-            d_box.getBlockId(),
-            LocalId(box_index),
-            owner );
-   box.refine(d_uniform_partition_size);
-   box.shift(d_box.lower());
-   box *= d_box;
-   return box;
+   Box part( tmp_index,
+             tmp_index,
+             d_box.getBlockId(),
+             LocalId(box_index),
+             owner );
+   part.refine(d_uniform_partition_size);
+   part.shift(d_box.lower());
+   part *= d_box;
+   return part;
 }
 
 
 
 /*
-***************************************************************************************
-* Compute the box with the given index.
-***************************************************************************************
+********************************************************************************
+* Compute all partition boxes.
+********************************************************************************
 */
 void
 AssumedPartitionBox::getAllBoxes(BoxContainer &all_boxes) const
@@ -257,9 +263,9 @@ AssumedPartitionBox::getAllBoxes(BoxContainer &all_boxes) const
 
 
 /*
-***************************************************************************************
-* Compute the box with the given index.
-***************************************************************************************
+********************************************************************************
+* Compute all partition boxes owned by the given rank.
+********************************************************************************
 */
 void
 AssumedPartitionBox::getAllBoxes(BoxContainer &all_boxes, int rank) const
@@ -275,9 +281,9 @@ AssumedPartitionBox::getAllBoxes(BoxContainer &all_boxes, int rank) const
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Find all boxes intersecting the given box.  Return whether any boxes overlap.
-***************************************************************************************
+********************************************************************************
 */
 bool
 AssumedPartitionBox::findOverlaps(
@@ -298,14 +304,14 @@ AssumedPartitionBox::findOverlaps(
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Check the assumed partition for errors and inconsistencies.  Write
 * error diagnostics to plog.
 *
 * Return number of errors found.  This class should prevent (or at
 * least catch) user errors, so any error found here indicates a bug in
 * the class.
-***************************************************************************************
+********************************************************************************
 */
 size_t
 AssumedPartitionBox::selfCheck() const
@@ -433,13 +439,13 @@ AssumedPartitionBox::selfCheck() const
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Compute the partition lay-out.  We use a grid of uniform sized
 * partitions whose union covers d_box and as little else as possible.
 *
 * TODO: experiment with other layouts that minimize overflowing d_box
 * and have minimum aspect ratio in the uniform partition size.
-***************************************************************************************
+********************************************************************************
 */
 void
 AssumedPartitionBox::computeLayout( double avg_parts_per_rank )
@@ -509,9 +515,9 @@ AssumedPartitionBox::computeLayout( double avg_parts_per_rank )
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Compute rank assignment for the partition lay-out.
-***************************************************************************************
+********************************************************************************
 */
 void
 AssumedPartitionBox::assignToRanks()
@@ -529,11 +535,14 @@ AssumedPartitionBox::assignToRanks()
 
 
 /*
-***************************************************************************************
+********************************************************************************
 * Compute rank assignment for the partition lay-out where each rank in
 * [d_rank_begin,d_rank_end) gets a contiguous set of box indices in
 * [d_index_begin,d_index_end).
-***************************************************************************************
+*
+* Each rank has 0, d_parts_per_rank or 1+d_parts_per_rank partitions.
+* Lower ranks have more partitions than higher ranks do.
+********************************************************************************
 */
 void
 AssumedPartitionBox::assignToRanks_contiguous()
@@ -552,16 +561,20 @@ AssumedPartitionBox::assignToRanks_contiguous()
     *    i0 |                ......
     *       |             .
     *       |          .
-    *       |       .    (r2,i2) = first rank with 1+d_parts_per_rank  parts, its first index
-    *    i1 |    .       (r1,i1) = first rank with d_parts_per_rank  parts, its first index
-    *       |   .        (r0,i0) = first rank with 0 parts, d_index_end
-    *       |  .         if r1==r2, no rank has 1+d_parts_per_rank parts
-    *       | .          if r0==r1, no rank has d_parts_per_rank parts
+    *       |       .
+    *    i1 |    .
+    *       |   .
+    *       |  .
+    *       | .
     *       |.
     *    i2 +-----------------------> rank
-    *       r2   r1       r0
+    *       r2   r1          r0
     *
-    * (In the first case, the figure degenerates with r2=r1 and i2=i1.)
+    *    (r2,i2) = first rank with 1+d_parts_per_rank parts, its first index
+    *    (r1,i1) = first rank with d_parts_per_rank parts, its first index
+    *    (r0,i0) = first rank with 0 parts, d_index_end
+    *    if r1==r2, no rank has 1+d_parts_per_rank parts (more ranks than parts)
+    *    if r0==r1, no rank has d_parts_per_rank parts
     */
    if ( d_index_end-d_index_begin <= d_rank_end-d_rank_begin ) {
       d_parts_per_rank = 1;
@@ -583,8 +596,8 @@ AssumedPartitionBox::assignToRanks_contiguous()
 
 
 /*
-***************************************************************************************
-***************************************************************************************
+********************************************************************************
+********************************************************************************
 */
 void
 AssumedPartitionBox::recursivePrint(

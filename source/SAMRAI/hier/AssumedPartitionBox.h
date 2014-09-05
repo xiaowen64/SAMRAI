@@ -42,7 +42,7 @@ public:
     *
     * @param[in] rank_end One past last rank
     *
-    * @param[in] index_begin
+    * @param[in] index_begin First index
     *
     * @param[in] avg_parts_per_rank See partition()
     *
@@ -62,7 +62,7 @@ public:
    AssumedPartitionBox( const tbox::Dimension &dim );
 
    /*!
-    * @brief Partition the given box.
+    * @brief Partition the given box, discarding the current state.
     *
     * The partition should degerate correctly if the box is empty, i.e.,
     * the partition size and count should be zero.
@@ -94,8 +94,9 @@ public:
    ~AssumedPartitionBox() {}
 
    //! @brief Return the original unpartitioned box.
-   const Box &getUnpartitionedBox() const
-      { return d_box; }
+   const Box &getUnpartitionedBox() const {
+      return d_box;
+   }
 
    //! @brief Number of box partitions.
    int getNumberOfParts() const {
@@ -111,46 +112,50 @@ public:
    //! @brief Return box for given partition's position in the partition grid.
    Box getBox(const IntVector &position) const;
 
-   //! @brief Get all boxes.
+   //! @brief Get all partition boxes.
    void getAllBoxes( BoxContainer &all_boxes ) const;
 
-   //! @brief Get all boxes for a given rank.
+   //! @brief Get all partition boxes owned by a given rank.
    void getAllBoxes( BoxContainer &all_boxes, int rank ) const;
 
-   //! @brief Return index of first box.
+   //! @brief Return index of first partition box.
    int begin() const {
       return d_index_begin;
    }
 
-   //! @brief Return one past index of last box.
+   //! @brief Return one past index of last partition box.
    int end() const {
       return d_index_end;
    }
 
    /*!
-    * @brief Return index of first box in the contiguous index range assigned to given rank.
+    * @brief Return index of first box in the contiguous index range
+    * assigned to given rank.
     *
-    * This method should not be used for objects when the ranks are interleaved.
+    * This method should not be used for objects when the ranks are
+    * interleaved.
+    *
+    * If rank is lower than ranks in partitioning, return first index.
+    * If rank is higher than ranks in partitioning, return one past
+    * last index.
     */
    int beginOfRank(int rank) const;
 
    /*!
-    * @brief Return one past index of last box in the contiguous index range assigned to given rank.
+    * @brief Return one past index of last box in the contiguous index
+    * range assigned to given rank.
     *
-    * This method should not be used for objects when the ranks are interleaved.
+    * This method should not be used for objects when the ranks are
+    * interleaved.
+    *
+    * If rank is lower than ranks in partitioning, return first index.
+    * If rank is higher than ranks in partitioning, return one past
+    * last index.
     */
    int endOfRank(int rank) const;
 
    /*!
-    * @brief Check the assumed partition for errors and
-    * inconsistencies.  Write error diagnostics to plog.
-    *
-    * Failure indicates a bug in this class.
-    */
-   size_t selfCheck() const;
-
-   /*!
-    * @brief Find partitions overlapping the given box.
+    * @brief Find box partitions overlapping the given box.
     *
     * The search cost is proportional to number of overlapping boxes
     * found, NOT the total number of partitions.
@@ -163,6 +168,15 @@ public:
    bool findOverlaps(
       BoxContainer &overlapping_boxes,
       const Box &box ) const;
+
+   /*!
+    * @brief Check the assumed partition for errors and
+    * inconsistencies.  Write error diagnostics to plog.
+    *
+    * @return Number of errors found.  (Errors indicate
+    * a bug in this class.)
+    */
+   size_t selfCheck() const;
 
    /*!
     * @brief Print info from this object
@@ -186,7 +200,10 @@ private:
    //! @brief Compute rank assignment for the partition lay-out.
    void assignToRanks();
 
-   //! @brief Compute rank assignment for the partition lay-out, using contiguous index assignments.
+   /*!
+    * @brief Compute rank assignment for the partition lay-out, using
+    * contiguous index assignments.
+    */
    void assignToRanks_contiguous();
 
    //! @brief Box partitioned.
@@ -195,9 +212,9 @@ private:
    int d_rank_begin;
    //! @brief One past last rank.
    int d_rank_end;
-   //! @brief Index for first box.
+   //! @brief Index for first partition box.
    int d_index_begin;
-   //! @brief One past index of last box.
+   //! @brief One past index of last partition box.
    int d_index_end;
 
    //! @brief Size of each uniform partition.
@@ -207,33 +224,31 @@ private:
 
    //! @brief Directions sorted from small to big, in d_partition_grid_size.
    IntVector d_major;
-   //! @brief Box index stride in each direction.
+   //! @brief Stride of box index in each direction of the partition grid.
    IntVector d_index_stride;
 
-   //! @brief Whether box assignments are interleaved using round-robin assignment.
+   //! @brief Whether to interleave box assignments using round-robin.
    bool d_interleave;
 
    //@{
    //! @name Parameters for partition assignment in non-interleaved mode
 
-   //@ @brief Min (or max) parts per rank when there are more (fewer) parts than ranks.
-   int d_parts_per_rank;
-   /*
-    * Each rank has 0, 1 or 2 partitions.  Lower ranks have more than higher ranks.
-    * Ranks in [d_rank_begin,d_first_rank_with_1) have 2 partitions each.
-    * Ranks in [d_first_rank_with_1,d_first_rank_with_0) have 1 partition each.
-    * Ranks in [d_first_rank_with_0,d_rank_end) have 0 partition.
+   /*!
+    * @brief Min (or max) parts per rank when there are more (fewer)
+    * parts than ranks.
     */
-   //! @brief First rank with 1 partition each.  Ranks < d_first_rank_with_1 has 2 partitions each.
+   int d_parts_per_rank;
+
+   //! @see assignToRanks_contiguous()
    int d_first_rank_with_1;
 
-   //! @brief First rank with 0 partition.  Ranks >= d_first_rank_with_0 has 0 partition.
+   //! @see assignToRanks_contiguous()
    int d_first_rank_with_0;
 
-   //! @brief First index for ranks that own 2 partitions each
+   //! @see assignToRanks_contiguous()
    int d_first_index_with_2;
 
-   //! @brief First index for ranks that own 1 partition each
+   //! @see assignToRanks_contiguous()
    int d_first_index_with_1;
 
    //@}

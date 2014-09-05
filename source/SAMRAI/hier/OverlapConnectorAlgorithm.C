@@ -427,9 +427,9 @@ OverlapConnectorAlgorithm::findOverlaps(
  * 2. Create a reasonably balanced center BoxLevel from an
  * AssumedPartition of the bounding boxes.
  *
- * 3. Compute head--->center and base--->center.
+ * 3. Populate head--->center and base--->center.
  *
- * 4. Compute transposes center--->head and center--->base.  This is
+ * 4. Get transposes center--->head and center--->base.  This is
  * implemented in the Connector's setToTransposeOf() method.
  *
  * 5. Bridge base<==>center<==>head.
@@ -471,6 +471,8 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
       }
    }
 
+
+   // Set up center BoxLevel.
    BoxContainer base_bounding_boxes, head_bounding_boxes;
    size_t base_cell_count=0, head_cell_count=0;
    for ( int bn=0; bn<geom->getNumberBlocks(); ++bn ) {
@@ -486,10 +488,13 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    const AssumedPartition center_ap( bounding_boxes, 0, mpi.getSize() );
    base_bounding_boxes.clear();
    head_bounding_boxes.clear();
+
    BoxContainer center_boxes;
    center_ap.getAllBoxes(center_boxes, mpi.getRank());
    const BoxLevel center( center_boxes, center_refinement_ratio, geom, mpi );
 
+
+   // Set up base<==>center
    Connector base_to_center( base, center, width_in_base_resolution );
    BoxContainer base_boxes_mod(base_boxes);
    base_boxes_mod.grow(width_in_base_resolution);
@@ -514,6 +519,7 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    center_to_base.setToTransposeOf(base_to_center, mpi);
 
 
+   // Set up head<==>center
    Connector head_to_center( head, center, width_in_head_resolution );
    BoxContainer head_boxes_mod(head_boxes);
    head_boxes_mod.grow(width_in_head_resolution);
@@ -538,6 +544,7 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    center_to_head.setToTransposeOf(head_to_center, mpi);
 
 
+   // Bridge for base<==>head
    base_to_center.setTranspose(&center_to_base, false);
    head_to_center.setTranspose(&center_to_head, false);
    const IntVector center_growth_to_nest_base(

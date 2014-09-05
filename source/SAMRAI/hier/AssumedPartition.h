@@ -68,7 +68,7 @@ public:
    ~AssumedPartition() {}
 
    /*!
-    * @brief Partition a set of boxes.
+    * @brief Partition a set of boxes, discarding the current state.
     *
     * @param[in] boxes Incoming boxes
     *
@@ -97,36 +97,36 @@ public:
       return d_index_end - d_index_begin;
    }
 
-   //! @brief Return the owner for a box.
+   //! @brief Return the owner for a partition box.
    int getOwner(int box_index) const;
 
-   //! @brief Return box for given index.
+   //! @brief Return partition box for given index.
    Box getBox(int box_index) const;
 
-   //! @brief Get all boxes.
+   //! @brief Get all partition boxes.
    void getAllBoxes( BoxContainer &all_boxes ) const;
 
-   //! @brief Get all boxes for a given rank.
+   //! @brief Get all partition boxes for a given rank.
    void getAllBoxes( BoxContainer &all_boxes, int rank ) const;
 
-   //! @brief Return index of first box.
+   //! @brief Return index of first partition box.
    int begin() const {
       return d_index_begin;
    }
 
-   //! @brief Return one past index of last box.
+   //! @brief Return one past index of last partition box.
    int end() const {
       return d_index_end;
    }
 
-   //! @brief Return index of first box assigned to given rank.
+   //! @brief Return index of first partition box assigned to given rank.
    int beginOfRank(int rank) const;
 
-   //! @brief Return one past index of last box assigned to given rank.
+   //! @brief Return one past index of last partition box assigned to given rank.
    int endOfRank(int rank) const;
 
    /*!
-    * @brief Find partitions overlapping the given box.
+    * @brief Find box partitions overlapping the given box.
     *
     * @param[o] overlapping_boxes
     * @param[i] box
@@ -161,7 +161,8 @@ public:
     * @brief Check the assumed partition for errors and
     * inconsistencies.  Write error diagnostics to plog.
     *
-    * Failure indicates a bug in this class.
+    * @return Number of errors found.  (Errors indicate
+    * a bug in this class.)
     */
    size_t selfCheck() const;
 
