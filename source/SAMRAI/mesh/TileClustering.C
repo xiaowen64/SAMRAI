@@ -306,7 +306,7 @@ TileClustering::findBoxesContainingTags(
       for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
            bi != bound_boxes.end(); ++bi) {
          const int bn = bi->getBlockId().getBlockValue();
-         tbox::plog << "Block " << bn
+         tbox::plog << "\tBlock " << bn
                     << " initial bounding box = " << *bi << ", "
                     << bi->size() << " cells, "
                     << "final global bounding box = "

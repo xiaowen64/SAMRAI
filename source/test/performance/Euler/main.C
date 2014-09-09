@@ -212,9 +212,9 @@ int main(
          }
       }
 
-      tbox::plog << "input_filename = " << input_filename << endl;
-      tbox::plog << "restart_read_dirname = " << restart_read_dirname << endl;
-      tbox::plog << "restore_num = " << restore_num << endl;
+      tbox::pout << "input_filename = " << input_filename << endl;
+      tbox::pout << "restart_read_dirname = " << restart_read_dirname << endl;
+      tbox::pout << "restore_num = " << restore_num << endl;
 
       /*
        * Create input database and parse all data in input file.
@@ -259,9 +259,7 @@ int main(
       if (!case_name.empty()) {
          base_name_ext = base_name_ext + '-' + case_name;
       }
-      base_name_ext = base_name_ext + '-' + tbox::Utilities::intToString(
-            mpi.getSize(),
-            5);
+      base_name_ext = base_name_ext + '-' + tbox::Utilities::nodeToString(scale_size);
       tbox::pout << "Added case name (" << case_name << ") and nprocs ("
                  << mpi.getSize() << ") to base name -> '"
                  << base_name_ext << "'\n";
@@ -565,7 +563,7 @@ int main(
          loop_time += dt_now;
          dt_now = dt_new;
 
-         if (1) {
+         if (0) {
             /*
              * Logging can be very slow on I/O limited machines (such as
              * BlueGene).
