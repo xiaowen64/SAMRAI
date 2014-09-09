@@ -268,6 +268,12 @@ private:
       hier::BoxLevel& tile_box_level,
       boost::shared_ptr<hier::Connector>& tag_to_tile);
 
+   /*!
+    * @brief Special coalesce for boxes that are tiles.
+    */
+   void
+   coalesceTiles( hier::BoxContainer &tiles );
+
    const tbox::Dimension d_dim;
 
    //! @brief Tile size constraint.
@@ -295,6 +301,12 @@ private:
     * tile size.
     */
    bool d_coalesce_boxes_from_same_patch;
+
+   /*!
+    * @brief Number of boxes at which to use recursive, instead of
+    * simple, coalesce.
+    */
+   int d_recursive_coalesce_limit;
 
    /*!
     * @brief Thread locker for modifying clustering outputs with multi-threads.

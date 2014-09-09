@@ -41,6 +41,7 @@ TileClustering::TileClustering(
    d_allow_remote_tile_extent(true),
    d_coalesce_boxes(true),
    d_coalesce_boxes_from_same_patch(false),
+   d_recursive_coalesce_limit(20),
    d_debug_checks(false),
    d_log_cluster_summary(false),
    d_log_cluster(false),
@@ -88,6 +89,10 @@ TileClustering::getFromInput(
       d_barrier_and_time =
          input_db->getBoolWithDefault("DEV_barrier_and_time",
             d_barrier_and_time);
+
+      d_recursive_coalesce_limit =
+         input_db->getBoolWithDefault("DEV_recursive_coalesce_limit",
+            d_recursive_coalesce_limit);
 
       d_log_cluster =
          input_db->getBoolWithDefault("DEV_log_cluster",
@@ -1085,6 +1090,9 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int>& tag_data,
    return coarsened_tag_data;
 }
 
+
+
+
 /*
  ***********************************************************************
  * Coalesce tile clusters and update tag<==>tile.
@@ -1124,11 +1132,16 @@ TileClustering::coalesceClusters(
         bi != pre_boxes.end(); ++bi) {
       post_boxes_by_block[bi->getBlockId()].pushBack(*bi);
    }
+
    hier::LocalId last_used_id(tile_box_level.getLastLocalId());
    d_object_timers->t_coalesce->start();
    for (std::map<hier::BlockId, hier::BoxContainer>::iterator mi = post_boxes_by_block.begin();
         mi != post_boxes_by_block.end(); ++mi) {
+#if 1
+      coalesceTiles(mi->second);
+#else
       mi->second.coalesce();
+#endif
       for (hier::BoxContainer::iterator bi = mi->second.begin();
            bi != mi->second.end(); ++bi) {
          bi->setId(hier::BoxId(++last_used_id, tile_box_level.getMPI().getRank()));
@@ -1209,6 +1222,67 @@ TileClustering::coalesceClusters(
    }
 }
 
+
+
+
+/*
+ ***********************************************************************
+ * Coalesce tiles, which must be boxes whose boundaries coincide with
+ * tile boundaries.  This method specializes to tiles and uses a
+ * recursive bi-section algorithm to reduce the number of boxes given
+ * to the O(N^3) BoxContainer::coalesce method, which is very slow for
+ * large N.
+ *
+ * tiles must contain tiles with matching BlockId.
+ ***********************************************************************
+ */
+void
+TileClustering::coalesceTiles( hier::BoxContainer &tiles )
+{
+   if ( tiles.size() < d_recursive_coalesce_limit ) {
+      tiles.coalesce();
+      return;
+   }
+
+   // Compute mid-plane of the longest direction for splitting.
+   const hier::Box bounding_box = tiles.getBoundingBox();
+   const tbox::Dimension::dir_t split_dir = bounding_box.longestDirection();
+   int split_idx = (bounding_box.lower()(split_dir) + bounding_box.upper()(split_dir))/2;
+
+   // Split tiles across the split_dir, into upper and lower groups.
+   hier::BoxContainer upper_tiles, lower_tiles;
+   for ( hier::BoxContainer::const_iterator bi=tiles.begin(); bi!=tiles.end(); ++bi ) {
+      bi->upper()(split_dir) < split_idx ?
+         lower_tiles.push_back(*bi) : upper_tiles.push_back(*bi);
+
+   }
+
+   // Recursively coalesce each group.
+   tiles.clear();
+   coalesceTiles( upper_tiles );
+   coalesceTiles( lower_tiles );
+
+   /*
+    * Put lower_tiles and upper_tiles back into tiles, except for
+    * tiles that touch split_idx.  Those can may coalesce with each
+    * other.
+    */
+   hier::BoxContainer coalescible;
+   for ( hier::BoxContainer::const_iterator bi=lower_tiles.begin(); bi!=lower_tiles.end(); ++bi ) {
+      bi->upper()(split_dir) < split_idx-1 ? tiles.push_back(*bi) : coalescible.push_back(*bi);
+   }
+   for ( hier::BoxContainer::const_iterator bi=upper_tiles.begin(); bi!=upper_tiles.end(); ++bi ) {
+      bi->lower()(split_dir) > split_idx ? tiles.push_back(*bi) : coalescible.push_back(*bi);
+   }
+   coalescible.coalesce();
+   tiles.spliceBack(coalescible);
+
+   return;
+}
+
+
+
+
 /*
  ***********************************************************************
  * This method does no communication but requires that tiles don't
@@ -1244,7 +1318,11 @@ TileClustering::coalesceClusters(
 
          if (!block_boxes.empty()) {
             block_boxes.unorder();
+#if 1
+            coalesceTiles(block_boxes);
+#else
             block_boxes.coalesce();
+#endif
             TBOX_omp_set_lock(&l_outputs);
             box_vector.insert(box_vector.end(), block_boxes.begin(), block_boxes.end());
             TBOX_omp_unset_lock(&l_outputs);
@@ -1339,6 +1417,9 @@ TileClustering::coalesceClusters(
       tbox::plog << "TileClustering::coalesceClusters: leaving without remote extent." << std::endl;
    }
 }
+
+
+
 
 /*
  ***********************************************************************
