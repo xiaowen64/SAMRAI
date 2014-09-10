@@ -40,7 +40,7 @@ TileClustering::TileClustering(
    d_tile_size(hier::IntVector(d_dim, 8)),
    d_allow_remote_tile_extent(true),
    d_coalesce_boxes(true),
-   d_coalesce_boxes_from_same_patch(false),
+   d_coalesce_boxes_from_same_patch(true),
    d_recursive_coalesce_limit(20),
    d_debug_checks(false),
    d_log_cluster_summary(false),
@@ -91,7 +91,7 @@ TileClustering::getFromInput(
             d_barrier_and_time);
 
       d_recursive_coalesce_limit =
-         input_db->getBoolWithDefault("DEV_recursive_coalesce_limit",
+         input_db->getIntegerWithDefault("DEV_recursive_coalesce_limit",
             d_recursive_coalesce_limit);
 
       d_log_cluster =
@@ -569,6 +569,8 @@ TileClustering::clusterWholeTiles(
                whole_tile,
                tag_box_level.getRefinementRatio());
 
+            // Leave overlapping multiple patches to be resolved by removeDuplicateTiles.
+            // Other tiles mby be coalesced.
             if (overlapping_tag_boxes.size() == 1) {
                coalescibles.pushBack(whole_tile);
             } else {
@@ -605,7 +607,11 @@ TileClustering::clusterWholeTiles(
             tbox::plog << "TileClustering::clusterWholeTiles: coalesce tiles." << std::endl;
          }
          d_object_timers->t_coalesce->start();
+#if 1
+         coalesceTiles(coalescibles);
+#else
          coalescibles.coalesce();
+#endif
          d_object_timers->t_coalesce->stop();
       }
 
@@ -1028,7 +1034,11 @@ TileClustering::findTilesContainingTags(
       hier::LocalId last_used_id = tiles.back().getLocalId();
       // Coalesce the tiles in this patch and assign ids if they changed.
       hier::BoxContainer unordered_tiles(tiles.begin(), tiles.end(), false);
+#if 1
+      coalesceTiles(unordered_tiles);
+#else
       unordered_tiles.coalesce();
+#endif
       if (unordered_tiles.size() != num_coarse_tags) {
          tiles.clear();
          tiles.order();
