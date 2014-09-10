@@ -608,7 +608,7 @@ TileClustering::clusterWholeTiles(
          }
          d_object_timers->t_coalesce->start();
 #if 1
-         coalesceTiles(coalescibles);
+         coalesceTiles(coalescibles, coalescibles.getBoundingBox());
 #else
          coalescibles.coalesce();
 #endif
@@ -1035,7 +1035,7 @@ TileClustering::findTilesContainingTags(
       // Coalesce the tiles in this patch and assign ids if they changed.
       hier::BoxContainer unordered_tiles(tiles.begin(), tiles.end(), false);
 #if 1
-      coalesceTiles(unordered_tiles);
+      coalesceTiles(unordered_tiles, unordered_tiles.getBoundingBox());
 #else
       unordered_tiles.coalesce();
 #endif
@@ -1148,7 +1148,7 @@ TileClustering::coalesceClusters(
    for (std::map<hier::BlockId, hier::BoxContainer>::iterator mi = post_boxes_by_block.begin();
         mi != post_boxes_by_block.end(); ++mi) {
 #if 1
-      coalesceTiles(mi->second);
+      coalesceTiles(mi->second, mi->second.getBoundingBox());
 #else
       mi->second.coalesce();
 #endif
@@ -1247,42 +1247,50 @@ TileClustering::coalesceClusters(
  ***********************************************************************
  */
 void
-TileClustering::coalesceTiles( hier::BoxContainer &tiles )
+TileClustering::coalesceTiles(
+   hier::BoxContainer &tiles,
+   const hier::Box &bounding_box )
 {
    if ( tiles.size() < d_recursive_coalesce_limit ) {
       tiles.coalesce();
       return;
    }
 
-   // Compute mid-plane of the longest direction for splitting.
-   const hier::Box bounding_box = tiles.getBoundingBox();
+   // Compute midpoint of the longest direction for splitting.
    const tbox::Dimension::dir_t split_dir = bounding_box.longestDirection();
    int split_idx = (bounding_box.lower()(split_dir) + bounding_box.upper()(split_dir))/2;
 
    // Split tiles across the split_dir, into upper and lower groups.
    hier::BoxContainer upper_tiles, lower_tiles;
+   hier::Box upper_bounding_box(tiles.front().getDim()), lower_bounding_box(tiles.front().getDim());
    for ( hier::BoxContainer::const_iterator bi=tiles.begin(); bi!=tiles.end(); ++bi ) {
-      (split_idx - bi->lower()(split_dir)) > (bi->upper()(split_dir) + 1 - split_idx) ?
-         lower_tiles.push_back(*bi) : upper_tiles.push_back(*bi);
-
+      if ( (split_idx - bi->lower()(split_dir)) > (bi->upper()(split_dir) + 1 - split_idx) ) {
+         lower_tiles.push_back(*bi);
+         lower_bounding_box += *bi;
+      } else {
+         upper_tiles.push_back(*bi);
+         upper_bounding_box += *bi;
+      }
    }
 
    // Recursively coalesce each group.
    tiles.clear();
-   coalesceTiles( upper_tiles );
-   coalesceTiles( lower_tiles );
+   coalesceTiles( upper_tiles, upper_bounding_box );
+   coalesceTiles( lower_tiles, lower_bounding_box );
 
    /*
     * Put lower_tiles and upper_tiles back into tiles, except for
-    * tiles that touch split_idx.  Try to coalesce those before
-    * placing in tiles.
+    * tiles that touch the opposite bounding box.  Try to coalesce
+    * those before placing in tiles.
     */
    hier::BoxContainer coalescible;
    for ( hier::BoxContainer::const_iterator bi=lower_tiles.begin(); bi!=lower_tiles.end(); ++bi ) {
-      bi->upper()(split_dir) < split_idx-1 ? tiles.push_back(*bi) : coalescible.push_back(*bi);
+      bi->upper()(split_dir) < upper_bounding_box.lower()(split_dir)-1 ?
+         tiles.push_back(*bi) : coalescible.push_back(*bi);
    }
    for ( hier::BoxContainer::const_iterator bi=upper_tiles.begin(); bi!=upper_tiles.end(); ++bi ) {
-      bi->lower()(split_dir) > split_idx ? tiles.push_back(*bi) : coalescible.push_back(*bi);
+      bi->lower()(split_dir) > lower_bounding_box.upper()(split_dir)+1 ?
+         tiles.push_back(*bi) : coalescible.push_back(*bi);
    }
    coalescible.coalesce();
    tiles.spliceBack(coalescible);
@@ -1329,7 +1337,7 @@ TileClustering::coalesceClusters(
          if (!block_boxes.empty()) {
             block_boxes.unorder();
 #if 1
-            coalesceTiles(block_boxes);
+            coalesceTiles(block_boxes, block_boxes.getBoundingBox());
 #else
             block_boxes.coalesce();
 #endif

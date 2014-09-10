@@ -269,10 +269,13 @@ private:
       boost::shared_ptr<hier::Connector>& tag_to_tile);
 
    /*!
-    * @brief Special coalesce for boxes that are tiles.
+    * @brief Recursive bi-section version of BoxContainer::coalesce,
+    * having O(N lg N) expected complexity.
     */
    void
-   coalesceTiles( hier::BoxContainer &tiles );
+   coalesceTiles(
+      hier::BoxContainer &tiles,
+      const hier::Box &bounding_box );
 
    const tbox::Dimension d_dim;
 
