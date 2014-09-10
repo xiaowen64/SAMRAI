@@ -1262,7 +1262,7 @@ TileClustering::coalesceTiles( hier::BoxContainer &tiles )
    // Split tiles across the split_dir, into upper and lower groups.
    hier::BoxContainer upper_tiles, lower_tiles;
    for ( hier::BoxContainer::const_iterator bi=tiles.begin(); bi!=tiles.end(); ++bi ) {
-      bi->upper()(split_dir) < split_idx ?
+      (split_idx - bi->lower()(split_dir)) > (bi->upper()(split_dir) + 1 - split_idx) ?
          lower_tiles.push_back(*bi) : upper_tiles.push_back(*bi);
 
    }
@@ -1274,8 +1274,8 @@ TileClustering::coalesceTiles( hier::BoxContainer &tiles )
 
    /*
     * Put lower_tiles and upper_tiles back into tiles, except for
-    * tiles that touch split_idx.  Those can may coalesce with each
-    * other.
+    * tiles that touch split_idx.  Try to coalesce those before
+    * placing in tiles.
     */
    hier::BoxContainer coalescible;
    for ( hier::BoxContainer::const_iterator bi=lower_tiles.begin(); bi!=lower_tiles.end(); ++bi ) {
