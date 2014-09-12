@@ -14,6 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/algs/TimeRefinementLevelStrategy.h"
+#include "SAMRAI/algs/TimeRefinementIntegratorConnectorWidthRequestor.h"
 #include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/tbox/Database.h"
@@ -735,6 +736,8 @@ private:
    bool d_hierarchy_advanced;
 
    double d_dt;
+
+   TimeRefinementIntegratorConnectorWidthRequestor d_connector_width_requestor;
 
    bool d_barrier_and_time;
 

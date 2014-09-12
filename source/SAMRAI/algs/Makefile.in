@@ -23,6 +23,7 @@ SUBDIRS = fortran
 
 OBJS = 	\
 	TimeRefinementIntegrator.o \
+	TimeRefinementIntegratorConnectorWidthRequestor.o \
 	TimeRefinementLevelStrategy.o \
 	HyperbolicPatchStrategy.o \
 	HyperbolicLevelIntegrator.o \

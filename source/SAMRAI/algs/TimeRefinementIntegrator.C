@@ -74,6 +74,7 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
    d_just_regridded(false),
    d_level_0_advanced(false),
    d_hierarchy_advanced(false),
+   d_connector_width_requestor(),
    d_barrier_and_time(false)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -165,6 +166,10 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
    }
    getFromInput(input_db, is_from_restart);
 
+   d_connector_width_requestor.setTagBuffer(d_tag_buffer);
+   hierarchy->registerConnectorWidthRequestor(
+      d_connector_width_requestor);
+
    /*
     * Initialize remaining integrator data members.
     */
@@ -175,7 +180,7 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
       d_last_finest_level = 0;
    }
 
-   tbox::plog << "TimeRefinementIntegrator setting regrid intervals:";
+   tbox::plog << "TimeRefinementIntegrator constructor setting regrid intervals:";
    for ( size_t i=0; i<d_regrid_interval.size(); ++i ) {
       tbox::plog << "  [" << i << "]=" << d_regrid_interval[i];
    }
@@ -1472,7 +1477,7 @@ TimeRefinementIntegrator::setRegridInterval(
       d_regrid_interval[i] = regrid_interval;
    }
 
-   tbox::plog << "TimeRefinementIntegrator setting regrid intervals:";
+   tbox::plog << "TimeRefinementIntegrator::setRegridInterval setting regrid intervals:";
    for ( size_t i=0; i<d_regrid_interval.size(); ++i ) {
       tbox::plog << "  [" << i << "]=" << d_regrid_interval[i];
    }
