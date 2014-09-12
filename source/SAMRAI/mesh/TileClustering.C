@@ -602,7 +602,7 @@ TileClustering::clusterWholeTiles(
 
       }
 
-      if (d_coalesce_boxes_from_same_patch) {
+      if (d_coalesce_boxes_from_same_patch && !coalescibles.empty()) {
          if (d_print_steps) {
             tbox::plog << "TileClustering::clusterWholeTiles: coalesce tiles." << std::endl;
          }
@@ -1030,7 +1030,7 @@ TileClustering::findTilesContainingTags(
 
    tiles.order();
 
-   if (d_coalesce_boxes_from_same_patch && tiles.size() > 1) {
+   if ( d_coalesce_boxes_from_same_patch && !tiles.empty() ) {
       hier::LocalId last_used_id = tiles.back().getLocalId();
       // Coalesce the tiles in this patch and assign ids if they changed.
       hier::BoxContainer unordered_tiles(tiles.begin(), tiles.end(), false);
