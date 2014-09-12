@@ -16,7 +16,7 @@
 Main {
    dim = 2
 
-   base_name = "lump.2d.cascade"
+   base_name = "lump.2d.tilecascade"
 
    write_visit = TRUE
 
@@ -30,9 +30,9 @@ Main {
 
    autoscale_base_nprocs = 4
 
-   box_generator_type = "BergerRigoutsos"
+   box_generator_type = "TileClustering"
 
-   load_balancer_type = "CascadePartitioner"
+   load_balancer_type = "CascadePartitioner", "CascadePartitioner"
 
    load_balance = TRUE, TRUE, TRUE
 
@@ -54,6 +54,7 @@ TileClustering {
   tile_size = 7, 7
   allow_remote_tile_extent = TRUE
   coalesce_boxes = TRUE
+  coalesce_boxes_from_same_patch = TRUE
   DEV_print_steps = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
@@ -80,7 +81,7 @@ BergerRigoutsos {
 
 
 CascadePartitioner {
-  // tile_size = 21, 21
+  tile_size = 21, 21
   flexible_load_tolerance = 0.05
   // max_spread_procs = 8
   DEV_allow_box_breaking = TRUE
@@ -93,15 +94,15 @@ CascadePartitioner {
 
 
 TreeLoadBalancer {
+  tile_size = 21, 21
   flexible_load_tolerance = 0.05
   // max_spread_procs = 8
   DEV_voucher_mode = FALSE
-  DEV_report_load_balance = TRUE // Reported in main
-
+  DEV_allow_box_breaking = TRUE
   // Debugging options
-  DEV_print_steps = TRUE
   DEV_check_map = TRUE
-  DEV_check_connectivity = TRUE
+  DEV_check_connectivity = FALSE
+  DEV_print_steps = FALSE
   DEV_summarize_map = TRUE
 }
 
