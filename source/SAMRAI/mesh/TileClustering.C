@@ -1273,6 +1273,12 @@ TileClustering::coalesceTiles(
       }
    }
 
+   // If simple splitting doesn't work, end the recursion.
+   if ( lower_tiles.empty() || upper_tiles.empty() ) {
+      tiles.coalesce();
+      return;
+   }
+
    // Recursively coalesce each group.
    tiles.clear();
    coalesceTiles( upper_tiles, upper_bounding_box );
