@@ -3260,15 +3260,15 @@ GriddingAlgorithm::findRefinementBoxes(
             int errs = 0;
             if (tag_to_new->getTranspose().checkOverlapCorrectness(false, true, true)) {
                ++errs;
-               tbox::perr << "Error found in new_to_tag!\n";
+               tbox::perr << "Overlap error found in new_to_tag!\n";
             }
             if (tag_to_new->checkOverlapCorrectness(false, true, true)) {
                ++errs;
-               tbox::perr << "Error found in tag_to_new!\n";
+               tbox::perr << "Overlap error found in tag_to_new!\n";
             }
-            if (tag_to_new->getTranspose().checkTransposeCorrectness(*tag_to_new)) {
+            if (tag_to_new->getTranspose().checkTransposeCorrectness(*tag_to_new, true)) {
                ++errs;
-               tbox::perr << "Error found in new-tag transpose!\n";
+               tbox::perr << "Transpose error found in new-tag transpose!\n";
             }
             if (errs != 0) {
                TBOX_ERROR(
@@ -3390,9 +3390,7 @@ GriddingAlgorithm::renumberBoxes(
       hier::BoxLevel::swap(new_box_level,*seq_box_level);
    }
    else if ( &ref_to_new->getBase() != &d_hierarchy->getDomainBoxLevel() ) {
-      mca->modify(*ref_to_new,
-                  *sorting_map,
-                  &new_box_level);
+      mca->modify(*ref_to_new, *sorting_map, &new_box_level);
    } else {
       hier::BoxLevel::swap(new_box_level,*seq_box_level);
       ref_to_new->clearNeighborhoods();
