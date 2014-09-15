@@ -334,6 +334,8 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       hier::OverlapConnectorAlgorithm oca;
       oca.findOverlaps(*balance_to_anchor);
       oca.findOverlaps(anchor_to_balance, balance_box_level);
+      balance_to_anchor->removePeriodicRelationships();
+      anchor_to_balance.removePeriodicRelationships();
    }
 
    balance_box_level.setParallelState(hier::BoxLevel::DISTRIBUTED);
