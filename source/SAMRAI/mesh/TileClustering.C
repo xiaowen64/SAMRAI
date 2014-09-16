@@ -1273,10 +1273,30 @@ TileClustering::coalesceTiles(
       }
    }
 
-   // If simple splitting doesn't work, end the recursion.
+   /*
+    * Heuristic fix-up used when all boxes went into one side.
+    * (This logic is rarely needed but critical for avoiding infinte recursions.)
+    * Move boxes crossing split_idx into the side with no box.
+    * If that doesn't help, end the recursion.
+    */
    if ( lower_tiles.empty() || upper_tiles.empty() ) {
-      tiles.coalesce();
-      return;
+      hier::BoxContainer &empty = lower_tiles.empty() ? lower_tiles : upper_tiles;
+      hier::BoxContainer &full = lower_tiles.empty() ? upper_tiles : lower_tiles;
+      for ( hier::BoxContainer::iterator bi=full.begin(); bi!=full.end(); /* incremented in loop */ ) {
+         if ( bi->upper()(split_dir) >= split_idx &&
+              bi->lower()(split_dir) <  split_idx ) {
+            empty.push_back(*bi);
+            full.erase(bi++);
+         } else {
+            ++bi;
+         }
+      }
+      if ( lower_tiles.empty() || upper_tiles.empty() ) {
+         tiles.coalesce();
+         return;
+      }
+      lower_bounding_box = lower_tiles.getBoundingBox();
+      upper_bounding_box = upper_tiles.getBoundingBox();
    }
 
    // Recursively coalesce each group.
