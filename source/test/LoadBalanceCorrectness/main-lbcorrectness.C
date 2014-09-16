@@ -1399,7 +1399,7 @@ createLoadBalancer(
    } else if (lb_type == "ChopAndPackLoadBalancer") {
 
       const boost::shared_ptr<tbox::Database> db =
-         input_db->getDatabaseWithDefault("ChopAndPackackLoadBalancer",
+         input_db->getDatabaseWithDefault("ChopAndPackLoadBalancer",
             boost::shared_ptr<tbox::Database>());
       boost::shared_ptr<mesh::ChopAndPackLoadBalancer>
       cap_lb(new mesh::ChopAndPackLoadBalancer(
