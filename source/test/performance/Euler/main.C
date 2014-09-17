@@ -179,9 +179,8 @@ int main(
 
    {
       string input_filename;
-      string restart_read_dirname;
-      int restore_num = 0;
       string case_name;
+      int scale_size = mpi.getSize();
 
       bool is_from_restart = false;
 
@@ -191,30 +190,23 @@ int main(
                     << "or\n"
                     << argv[0] << " <input filename> <case name>"
                     << "or\n"
-                    << argv[0] << " <input filename> "
-                    << "  <restart dir> <restore number> [options]\n"
-                    << "  options:\n"
-                    << "  none at this time"
+                    << argv[0] << " <input filename> <case name> <scale size> "
                     << endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       } else {
          input_filename = argv[1];
-
-         if (argc == 3) {
+         if (argc > 2) {
             case_name = argv[2];
          }
-         if (argc == 4) {
-            restart_read_dirname = argv[2];
-            restore_num = atoi(argv[3]);
-
-            is_from_restart = true;
+         if (argc > 3) {
+            scale_size = atoi(argv[3]);
          }
       }
 
       tbox::pout << "input_filename = " << input_filename << endl;
-      tbox::pout << "restart_read_dirname = " << restart_read_dirname << endl;
-      tbox::pout << "restore_num = " << restore_num << endl;
+      tbox::pout << "case_name = " << case_name << std::endl;
+      tbox::pout << "scale_size = " << scale_size << std::endl;
 
       /*
        * Create input database and parse all data in input file.
@@ -259,7 +251,7 @@ int main(
       if (!case_name.empty()) {
          base_name_ext = base_name_ext + '-' + case_name;
       }
-      base_name_ext = base_name_ext + '-' + tbox::Utilities::nodeToString(mpi.getSize());
+      base_name_ext = base_name_ext + '-' + tbox::Utilities::nodeToString(scale_size);
       tbox::pout << "Added case name (" << case_name << ") and nprocs ("
                  << mpi.getSize() << ") to base name -> '"
                  << base_name_ext << "'\n";
@@ -333,19 +325,6 @@ int main(
 
       const bool write_restart = (restart_interval > 0)
          && !(restart_write_dirname.empty());
-
-      /*
-       * Get restart manager and root restart database.  If run is from
-       * restart, open the restart file.
-       */
-
-      tbox::RestartManager* restart_manager = tbox::RestartManager::getManager();
-
-      if (is_from_restart) {
-         restart_manager->
-         openRestartFile(restart_read_dirname, restore_num,
-            mpi.getSize());
-      }
 
       /*
        * Create major algorithm and data objects which comprise application.

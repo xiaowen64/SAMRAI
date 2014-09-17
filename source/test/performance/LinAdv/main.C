@@ -259,6 +259,9 @@ int main(
          base_name_ext = base_name_ext + '-' + case_name;
       }
       base_name_ext = base_name_ext + '-' + tbox::Utilities::nodeToString(scale_size);
+      tbox::pout << "Added case name (" << case_name << ") and nprocs ("
+                 << mpi.getSize() << ") to base name -> '"
+                 << base_name_ext << "'\n";
 
       /*
        * Logging.
