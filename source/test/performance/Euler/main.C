@@ -465,7 +465,18 @@ int main(
                input_db->getDatabase("ChopAndPackLoadBalancer")));
 
          load_balancer = cap_load_balancer;
-         load_balancer0 = cap_load_balancer;
+
+         /*
+          * ChopAndPackLoadBalancer has trouble on L0 for some reason.
+          * Work around by using the CascadePartitioner for L0.
+          */
+         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner0(
+            new mesh::CascadePartitioner(
+               dim,
+               "mesh::CascadePartitioner0",
+               input_db->getDatabase("CascadePartitioner")));
+         cascade_partitioner0->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+         load_balancer0 = cascade_partitioner0;
       }
 
       boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
