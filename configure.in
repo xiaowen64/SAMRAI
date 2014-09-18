@@ -385,6 +385,25 @@ case "$with_extra_ld_flags" in
 esac
 
 dnl
+dnl A way to manually add flags to the c compiler command.
+dnl
+AC_ARG_WITH([extra-cc-flags],
+[AS_HELP_STRING([--with-extra-cc-flags=STRING],
+   [Specify additional flags for the c compiler.])],
+,with_extra_cc_flags='no')
+case "$with_extra_cc_flags" in
+  no)
+    : No op
+  ;;
+  yes)
+    : No op
+  ;;
+  *)
+    C_FLAGS="$C_FLAGS $with_extra_cc_flags"
+  ;;
+esac
+
+dnl
 dnl A way to manually add flags to the c++ compiler command.
 dnl
 AC_ARG_WITH([extra-cxx-flags],
@@ -403,6 +422,24 @@ case "$with_extra_cxx_flags" in
   ;;
 esac
 
+dnl
+dnl A way to manually add flags to the f77 compiler command.
+dnl
+AC_ARG_WITH([extra-f77-flags],
+[AS_HELP_STRING([--with-extra-f77-flags=STRING],
+   [Specify additional flags for the f77 compiler.])],
+,with_extra_f77_flags='no')
+case "$with_extra_f77_flags" in
+  no)
+    : No op
+  ;;
+  yes)
+    : No op
+  ;;
+  *)
+    F77_FLAGS="$F77_FLAGS $with_extra_f77_flags"
+  ;;
+esac
 
 dnl
 dnl Find ar for archiving
