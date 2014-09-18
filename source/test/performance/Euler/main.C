@@ -465,7 +465,8 @@ int main(
             input_db->getDatabase("GriddingAlgorithm"),
             error_detector,
             box_generator,
-            load_balancer));
+            load_balancer,
+            load_balancer0));
 
       boost::shared_ptr<algs::TimeRefinementIntegrator> time_integrator(
          new algs::TimeRefinementIntegrator(
