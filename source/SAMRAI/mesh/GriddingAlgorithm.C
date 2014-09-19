@@ -1846,6 +1846,42 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    new_box_level->cacheConnector(new_to_new);
    tag_level->cacheConnector(tag_to_new);
 
+   boost::shared_ptr<hier::Connector> old_to_new;
+   if (old_box_level) {
+
+      /*
+       * Connect old to new by bridging.
+       *
+       * Cache these Connectors for use when creating schedules to
+       * transfer data from old to new.
+       */
+
+      if (d_print_steps) {
+         tbox::plog
+         <<
+         "GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel: bridging for new<==>old\n";
+      }
+
+      t_bridge_new_to_old->start();
+      d_oca.bridgeWithNesting(
+         old_to_new,
+         *old_to_tag,
+         d_hierarchy->getPatchLevel(tag_ln)->getBoxLevel()->findConnectorWithTranspose(
+            *new_box_level,
+            d_hierarchy->getRequiredConnectorWidth(tag_ln, tag_ln + 1, true),
+            d_hierarchy->getRequiredConnectorWidth(tag_ln + 1, tag_ln),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+            false),
+         zero_vector,
+         zero_vector,
+         d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln, true),
+         true);
+      t_bridge_new_to_old->stop();
+
+      old_fine_level->cacheConnector(old_to_new);
+
+   }
+
    if (d_hierarchy->levelExists(new_ln + 1)) {
       /*
        * There is a level finer than new_ln.  Connect the new level to
@@ -1858,15 +1894,21 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
          "GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel: bridging for new<==>finer\n";
       }
 
+      const hier::Connector &old_to_finer =
+         d_hierarchy->getPatchLevel(new_ln)->getBoxLevel()->findConnectorWithTranspose(
+            *d_hierarchy->getPatchLevel(new_ln+1)->getBoxLevel(),
+            d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln+1),
+            d_hierarchy->getRequiredConnectorWidth(new_ln+1, new_ln),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE );
       boost::shared_ptr<hier::Connector> new_to_finer;
 
       t_bridge_new_to_finer->start();
       d_oca.bridgeWithNesting(
          new_to_finer,
-         new_to_tag,
-         *tag_to_finer,
-         zero_vector,
+         old_to_new->getTranspose(),
+         old_to_finer,
          -hier::IntVector::getOne(dim),
+         zero_vector,
          d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln + 1, true),
          true);
       t_bridge_new_to_finer->stop();
@@ -1891,42 +1933,6 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
          d_hierarchy->getPatchLevel(new_ln + 1));
 
       new_box_level->cacheConnector(new_to_finer);
-   }
-
-   if (old_box_level) {
-
-      /*
-       * Connect old to new by bridging.
-       *
-       * Cache these Connectors for use when creating schedules to
-       * transfer data from old to new.
-       */
-
-      if (d_print_steps) {
-         tbox::plog
-         <<
-         "GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel: bridging for new<==>old\n";
-      }
-
-      boost::shared_ptr<hier::Connector> old_to_new;
-      t_bridge_new_to_old->start();
-      d_oca.bridgeWithNesting(
-         old_to_new,
-         *old_to_tag,
-         d_hierarchy->getPatchLevel(tag_ln)->getBoxLevel()->findConnectorWithTranspose(
-            *new_box_level,
-            d_hierarchy->getRequiredConnectorWidth(tag_ln, tag_ln + 1, true),
-            d_hierarchy->getRequiredConnectorWidth(tag_ln + 1, tag_ln),
-            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
-            false),
-         zero_vector,
-         zero_vector,
-         d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln, true),
-         true);
-      t_bridge_new_to_old->stop();
-
-      old_fine_level->cacheConnector(old_to_new);
-
    }
 
    d_tag_init_strategy->processHierarchyBeforeAddingNewLevel(d_hierarchy,
