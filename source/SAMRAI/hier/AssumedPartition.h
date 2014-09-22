@@ -37,7 +37,7 @@ public:
    /*!
     * @brief Construct AssumedPartition of a set of boxes.
     *
-    * @param[in] boxes Incoming boxes
+    * @param[in] unpartitioned_boxes Incoming unpartitioned boxes
     *
     * @param[in] rank_begin First rank
     *
@@ -50,7 +50,7 @@ public:
     * @param[in] interleave See partition()
     */
    AssumedPartition(
-      const BoxContainer& boxes,
+      const BoxContainer& unpartitioned_boxes,
       int rank_begin,
       int rank_end,
       int index_begin = 0,
@@ -70,7 +70,7 @@ public:
    /*!
     * @brief Partition a set of boxes, discarding the current state.
     *
-    * @param[in] boxes Incoming boxes
+    * @param[in] boxes Incoming unpartitioned boxes
     *
     * @param[in] rank_begin First rank
     *
@@ -85,7 +85,7 @@ public:
     * (round-robin) the box assignments.
     */
    void partition(
-      const BoxContainer& boxes,
+      const BoxContainer& unpartitioned_boxes,
       int rank_begin,
       int rank_end,
       int index_begin = 0,
@@ -142,9 +142,8 @@ public:
       const IntVector &refinement_ratio ) const;
 
    /*!
-    * @brief Find partitions overlapping the given box, when there is
-    * at most one original box, assuming all boxes are in the same
-    * block.
+    * @brief Find partitions overlapping the given box, when all boxes
+    * are in the same block.
     *
     * An unrecoverable error will be thrown if there are multiple blocks.
     *

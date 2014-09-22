@@ -206,10 +206,7 @@ AssumedPartitionBox::getBox(int box_index) const
    part.setUpper( part.lower() + d_uniform_partition_size - IntVector::getOne(d_box.getDim()) );
    part *= d_box;
 
-   const int owner = getOwner(box_index);
-   part.initialize( part, LocalId(box_index), owner );
-
-   return part;
+   return Box( part, LocalId(box_index), getOwner(box_index) );
 }
 
 
@@ -282,7 +279,8 @@ AssumedPartitionBox::getAllBoxes(BoxContainer &all_boxes, int rank) const
 
 /*
 ********************************************************************************
-* Find all boxes intersecting the given box.  Return whether any boxes overlap.
+* Find all partition boxes overlapping the given box.  Return whether
+* any boxes were found.
 ********************************************************************************
 */
 bool
@@ -442,10 +440,6 @@ AssumedPartitionBox::selfCheck() const
 ********************************************************************************
 * Compute the partition lay-out.  We use a grid of uniform sized
 * partitions whose union covers d_box and as little else as possible.
-*
-* TODO: experiment with other layouts that minimize overflowing d_box
-* and have minimum aspect ratio in the uniform partition size.
-********************************************************************************
 */
 void
 AssumedPartitionBox::computeLayout( double avg_parts_per_rank )

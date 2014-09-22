@@ -36,7 +36,7 @@ public:
    /*!
     * @brief Construct AssumedPartition from a box.
     *
-    * @param[in] box Incoming box
+    * @param[in] unpartitioned_box Incoming unpartitioned box
     *
     * @param[in] rank_begin First rank
     *
@@ -49,7 +49,7 @@ public:
     * @param[in] interleave See partition()
     */
    AssumedPartitionBox(
-      const Box& box,
+      const Box& unpartitioned_box,
       int rank_begin,
       int rank_end,
       int index_begin = 0,
@@ -67,7 +67,7 @@ public:
     * The partition should degerate correctly if the box is empty, i.e.,
     * the partition size and count should be zero.
     *
-    * @param[in] box Incoming box
+    * @param[in] unpartitioned_box Incoming unpartitioned box
     * @param[in] rank_begin First rank
     * @param[in] rank_end One past last rank
     * @param[in] index_begin
@@ -81,7 +81,7 @@ public:
     * (round-robin) the box assignments.
     */
    void partition(
-      const Box& box,
+      const Box& unpartitioned_box,
       int rank_begin,
       int rank_end,
       int index_begin = 0,

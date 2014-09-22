@@ -539,13 +539,14 @@ Connector::setToTransposeOf( const Connector &other,
 
 
    /*
-    * Receive edge messages and propgate termination messages: Both
-    * communications must occur simultaneously.  Don't know where the
-    * next message will come from, so must receive from any source.
-    * Process messages based on the embedded msg_type.  Stop when
-    * there are no edge messages are in transit, indicated by the
-    * downward termination message.  Single process execution bypasses
-    * communication by setting msg_type to downward termination.
+    * Receive/acknowledge edge messages and propgate termination
+    * messages: Both communications must occur simultaneously.  Don't
+    * know where the next message will come from, so must receive from
+    * any source.  Process messages based on the embedded msg_type.
+    * Stop when there are no edge messages in transit, indicated by
+    * the downward termination message.  Single-process execution
+    * bypasses communication by setting msg_type to downward
+    * termination.
    */
    int msg_length = 0;
    std::vector<char> recv_buffer;

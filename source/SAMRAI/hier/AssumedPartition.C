@@ -41,7 +41,7 @@ AssumedPartition::AssumedPartition() :
 ********************************************************************************
 */
 AssumedPartition::AssumedPartition(
-   const BoxContainer& boxes,
+   const BoxContainer& unpartitioned_boxes,
    int rank_begin,
    int rank_end,
    int index_begin,
@@ -53,7 +53,8 @@ AssumedPartition::AssumedPartition(
    d_index_begin(index_begin),
    d_index_end(index_begin)
 {
-   partition(boxes, rank_begin, rank_end, index_begin, avg_parts_per_rank, interleave);
+   partition(unpartitioned_boxes, rank_begin, rank_end, index_begin,
+             avg_parts_per_rank, interleave);
 }
 
 
@@ -68,7 +69,7 @@ AssumedPartition::AssumedPartition(
 */
 void
 AssumedPartition::partition(
-   const BoxContainer& boxes,
+   const BoxContainer& unpartitioned_boxes,
    int rank_begin,
    int rank_end,
    int index_begin,
@@ -83,17 +84,19 @@ AssumedPartition::partition(
    d_index_end = index_begin;
 
    size_t num_cells = 0;
-   for ( BoxContainer::const_iterator bi=boxes.begin(); bi!=boxes.end(); ++bi ) {
+   for ( BoxContainer::const_iterator bi=unpartitioned_boxes.begin();
+         bi!=unpartitioned_boxes.end(); ++bi ) {
       num_cells += bi->size();
    }
 
-   d_parted_boxes.reserve(boxes.size());
+   d_parted_boxes.reserve(unpartitioned_boxes.size());
 
    const int num_ranks = rank_end - rank_begin;
    double rank_space_cut_lo = 0.0;
    double rank_space_cut_hi = 0.0;
    size_t cell_count = 0;
-   for ( BoxContainer::const_iterator bi=boxes.begin(); bi!=boxes.end(); ++bi ) {
+   for ( BoxContainer::const_iterator bi=unpartitioned_boxes.begin();
+         bi!=unpartitioned_boxes.end(); ++bi ) {
       cell_count += bi->size();
 
       rank_space_cut_lo = rank_space_cut_hi;
@@ -286,15 +289,19 @@ AssumedPartition::findOverlaps(
    BoxContainer &overlapping_boxes,
    const Box &box ) const
 {
-   if ( d_parted_boxes.size() > 1 ) {
-      TBOX_ERROR("AssumedPartition::findOverlaps: This method may be used only\n"
-                 <<"for AssumedPartitions with just one block.  For multiple blocks,\n"
-                 <<"use the version that requires a BaseGridGeometry.\n");
+   int old_count = overlapping_boxes.size();
+
+   for ( PartedBoxes::const_iterator pi=d_parted_boxes.begin(); pi!=d_parted_boxes.end(); ++pi ) {
+      if ( pi->getUnpartitionedBox().getBlockId() !=
+           d_parted_boxes[0].getUnpartitionedBox().getBlockId() ) {
+         TBOX_ERROR("AssumedPartition::findOverlaps: This method may be used only\n"
+                    <<"for AssumedPartitions the same BlockId.  For multiple blocks,\n"
+                    <<"use the version that requires a BaseGridGeometry.\n");
+      }
+      pi->findOverlaps(overlapping_boxes, box);
    }
-   if ( !d_parted_boxes.empty() ) {
-      return d_parted_boxes[0].findOverlaps(overlapping_boxes, box);
-   }
-   return false;
+
+   return overlapping_boxes.size() > old_count;
 }
 
 
