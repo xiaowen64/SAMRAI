@@ -45,6 +45,8 @@ HierarchyTester::HierarchyTester(
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(hier_test_db);
 
+   hier::PersistentOverlapConnectors::setCreateEmptyNeighborContainers(true);
+
    d_object_name = object_name;
 
    d_do_refine_test = false;
