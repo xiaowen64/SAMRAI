@@ -1394,14 +1394,13 @@ public:
       bool& ratio_is_exact);
 
    /*!
-    * @brief Utility to unshift neighbors of a periodic image so they
-    * become the neighbors of the unshifted box.
+    * @brief Utility to unshift neighbors of a periodic image box so
+    * they become the neighbors of the unshifted box.
     */
    static void
-   unshiftOverlappingNeighbors(
+   unshiftNeighbors(
       const Box& box,
       BoxContainer& neighbors,
-      BoxContainer& scratch_space,
       const IntVector& neighbor_refinement_ratio);
 
    /*!

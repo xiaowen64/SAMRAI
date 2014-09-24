@@ -140,16 +140,15 @@ public:
       const bool ignore_self_overlap = false) const;
 
 
-
    /*
-    * @brief Find and populate overlap relationships for the given
-    * Connector by using the assumed partition algorithm.
+    * @brief Populate overlap relationships for the given Connector by
+    * using the assumed partition algorithm to find overlaps.
     *
     * For the assumed partition algorithm, see Allison Baker's paper.
     */
    void
-   findOverlaps_assumedPartition(
-      Connector& connector) const;
+   findOverlaps_assumedPartition(Connector& connector) const;
+
 
    /*!
     * @brief For a given Connector, get the subset of overlapping neighbors

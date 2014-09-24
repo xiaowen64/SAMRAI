@@ -416,10 +416,10 @@ OverlapConnectorAlgorithm::findOverlaps(
 
 /*
  ***********************************************************************
- * Find and populate overlap relationships using the assumed partition
- * algorithm.  In SAMRAI terms, we create a center BoxLevel from an
- * assumed partition, connect the base and head BoxLevels to it, then
- * bridge across the assumed partition center to get base<==>head.
+ * Find overlaps using the assumed partition algorithm.  In SAMRAI
+ * terms, we create a center BoxLevel from the assumed partition,
+ * connect the base and head BoxLevels to it, then bridge across the
+ * assumed partition center to get base<==>head.
  *
  * 1. Get bounding boxes for base or head, which ever has smaller
  * bounding boxes.
@@ -473,28 +473,28 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
 
 
    /*
-    * Set up center BoxLevel.  We use the smaller of the base and head
-    * to construct the center.  We don't need to cover a bigger
-    * region, because there are no overlaps away from the smaller
-    * BoxLevel anyway.
+    * Set up center BoxLevel.  We can use either the base or head to
+    * construct the center.  We choose the smaller one because we
+    * don't need to cover the bigger region.  There are no overlaps
+    * away from the smaller BoxLevel anyway.
     */
    BoxContainer base_bounding_boxes, head_bounding_boxes;
-   size_t base_cell_count=0, head_cell_count=0;
+   size_t base_bounding_cell_count=0, head_bounding_cell_count=0;
    for ( int bn=0; bn<geom->getNumberBlocks(); ++bn ) {
       base_bounding_boxes.push_back( base.getGlobalBoundingBox(bn) );
       head_bounding_boxes.push_back( head.getGlobalBoundingBox(bn) );
-      base_cell_count += base_bounding_boxes.back().size();
-      head_cell_count += head_bounding_boxes.back().size();
+      base_bounding_cell_count += base_bounding_boxes.back().size();
+      head_bounding_cell_count += head_bounding_boxes.back().size();
    }
    const AssumedPartition center_ap(
-      head_cell_count < base_cell_count ? head_bounding_boxes : base_bounding_boxes,
+      head_bounding_cell_count < base_bounding_cell_count ? head_bounding_boxes : base_bounding_boxes,
       0, mpi.getSize() );
    base_bounding_boxes.clear();
    head_bounding_boxes.clear();
 
    BoxContainer center_boxes;
    center_ap.getAllBoxes(center_boxes, mpi.getRank());
-   const IntVector &center_refinement_ratio =  head_cell_count < base_cell_count ?
+   const IntVector &center_refinement_ratio =  head_bounding_cell_count < base_bounding_cell_count ?
       head.getRefinementRatio() : base.getRefinementRatio();
    const BoxLevel center( center_boxes, center_refinement_ratio, geom, mpi );
 
@@ -553,13 +553,13 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    base_to_center.setTranspose(&center_to_base, false);
    head_to_center.setTranspose(&center_to_head, false);
    const IntVector center_growth_to_nest_base(
-      dim, head_cell_count < base_cell_count ? tbox::MathUtilities<int>::getMax() : 0 );
+      dim, head_bounding_cell_count < base_bounding_cell_count ? tbox::MathUtilities<int>::getMax() : 0 );
    const IntVector center_growth_to_nest_head(
-      dim, head_cell_count < base_cell_count ? 0 : tbox::MathUtilities<int>::getMax() );
+      dim, head_bounding_cell_count < base_bounding_cell_count ? 0 : tbox::MathUtilities<int>::getMax() );
+   boost::shared_ptr<Connector> tmp_conn;
    if ( d_print_steps ) {
       tbox::plog << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: bridging.\n";
    }
-   boost::shared_ptr<Connector> tmp_conn;
    bridgeWithNesting( tmp_conn,
                       base_to_center,
                       center_to_head,

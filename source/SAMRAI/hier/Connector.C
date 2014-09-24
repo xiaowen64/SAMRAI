@@ -414,9 +414,10 @@ Connector::shrinkWidth(
 }
 
 
+
 /*
 ***********************************************************************
-* Set this Connector to the transpose of the other Connector.  The
+* Set this Connector to the transpose of another Connector.  The
 * other's base owners tell its head owners about relationships, and
 * head owners (base owners of this Connector) populate the this
 * Connector.
@@ -427,12 +428,13 @@ Connector::shrinkWidth(
 * Two communication patterns executed simultaneously: edge info and
 * termination messages.  For edge info, other's base box owners send
 * data to this's base box owners, who respond with an acknowledgement
-* message.  Termination messages are propagated up then down a rank
+* message.  Termination messages let the processes know when to stop
+* checking for edge messages.  They are propagated up then down a rank
 * tree.  Upward messages inform processes that their descendents have
 * received all needed acknowledgements.  Downward messages inform
 * processes that the entire tree completed its acknowledgements,
-* indicating that there are no messages in transit and the process
-* can stop checking for incoming edge messages.
+* indicating that there are no messages in transit and the process can
+* stop.
 ***********************************************************************
 */
 void
@@ -473,7 +475,7 @@ Connector::setToTransposeOf( const Connector &other,
 
    // Send edge messages and remember to get receivers' acknowledgements.
    std::set<int> ack_needed;
-   BoxContainer unshifted_head_nabrs, scratch_space;
+   BoxContainer unshifted_head_nabrs;
    for ( FullNeighborhoodSet::iterator rr=reordered_relationships.begin();
          rr!=reordered_relationships.end(); ++rr ) {
 
@@ -481,10 +483,9 @@ Connector::setToTransposeOf( const Connector &other,
       const BoxContainer &head_nabrs = rr->second;
       if ( base_box.isPeriodicImage() ) {
          unshifted_head_nabrs = head_nabrs;
-         unshiftOverlappingNeighbors( base_box,
-                                      unshifted_head_nabrs,
-                                      scratch_space,
-                                      getHead().getRefinementRatio() );
+         unshiftNeighbors( base_box,
+                           unshifted_head_nabrs,
+                           getHead().getRefinementRatio() );
       }
       const BoxContainer &nabrs = base_box.isPeriodicImage() ? unshifted_head_nabrs : head_nabrs;
 
@@ -539,14 +540,13 @@ Connector::setToTransposeOf( const Connector &other,
 
 
    /*
-    * Receive/acknowledge edge messages and propgate termination
-    * messages: Both communications must occur simultaneously.  Don't
-    * know where the next message will come from, so must receive from
-    * any source.  Process messages based on the embedded msg_type.
-    * Stop when there are no edge messages in transit, indicated by
-    * the downward termination message.  Single-process execution
-    * bypasses communication by setting msg_type to downward
-    * termination.
+    * Receive edge messages and propgate termination messages: Both
+    * communications must occur simultaneously.  Don't know where the
+    * next message will come from, so must receive from any source.
+    * Process messages based on the embedded msg_type.  Stop when
+    * there are no edge messages are in transit, indicated by the
+    * downward termination message.  Single process execution bypasses
+    * communication by setting msg_type to downward termination.
    */
    int msg_length = 0;
    std::vector<char> recv_buffer;
@@ -651,17 +651,19 @@ Connector::setToTransposeOf( const Connector &other,
    return;
 }
 
+
+
 /*
  ***********************************************************************
- * This method does 2 important things to the edges:
+ * This method does 2 important things with the edges:
  *
  * 1. It puts the edge data in head-major order so the base owners can
- * easily loop through the head-base edges in the same order that head
- * owners see them.
+ * easily loop through the head--->base edges in the same order that
+ * head owners see them.
  *
- * 2. It shifts periodic image head Boxes back to the zero-shift position,
- * and applies a similar shift to base Boxes so that the overlap is
- * unchanged.
+ * 2. It shifts periodic image head Boxes back to the zero-shift
+ * position, and applies a similar shift to base Boxes so that the
+ * overlap is unchanged.
  ***********************************************************************
  */
 void
@@ -711,10 +713,9 @@ Connector::reorderRelationshipsByHead(
 ***********************************************************************
 */
 void
-Connector::unshiftOverlappingNeighbors(
+Connector::unshiftNeighbors(
    const Box& box,
    BoxContainer& neighbors,
-   BoxContainer& scratch_space,
    const IntVector& neighbor_refinement_ratio)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(box, neighbor_refinement_ratio);
@@ -722,8 +723,7 @@ Connector::unshiftOverlappingNeighbors(
    const PeriodicShiftCatalog* shift_catalog =
       PeriodicShiftCatalog::getCatalog(box.getDim());
 
-   scratch_space.clear();
-//   scratch_space.reserve(neighbors.size());
+   BoxContainer scratch_space;
    for (BoxContainer::iterator na = neighbors.begin();
         na != neighbors.end(); ++na) {
       Box& nabr = *na;
@@ -743,6 +743,8 @@ Connector::unshiftOverlappingNeighbors(
       neighbors.swap(scratch_space);
    }
 }
+
+
 
 
 /*
