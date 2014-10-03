@@ -1105,6 +1105,7 @@ private:
    boost::shared_ptr<hier::PatchLevel> d_encon_level;
 
    boost::shared_ptr<hier::PatchLevel> d_nbr_blk_fill_level;
+   boost::shared_ptr<xfer::RefineSchedule> d_nbr_blk_prefill_schedule;
 
    /*!
     * @brief Describes remaining unfilled boxes after attempting to

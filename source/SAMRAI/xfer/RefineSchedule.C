@@ -10,6 +10,7 @@
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/BoxGeometryVariableFillPattern.h"
 #include "SAMRAI/xfer/PatchLevelFullFillPattern.h"
+#include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
 #include "SAMRAI/xfer/RefineCopyTransaction.h"
 #include "SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.h"
 #include "SAMRAI/xfer/RefineTimeTransaction.h"
@@ -674,6 +675,9 @@ RefineSchedule::reset(
    if (d_coarse_interp_encon_schedule) {
       d_coarse_interp_encon_schedule->reset(refine_classes);
    }
+   if (d_nbr_blk_prefill_schedule) {
+      d_nbr_blk_prefill_schedule->reset(refine_classes);
+   }
 }
 
 /*
@@ -971,6 +975,18 @@ RefineSchedule::finishScheduleConstruction(
             d_transaction_factory,
             d_refine_patch_strategy,
             d_top_refine_schedule));
+
+      if (d_nbr_blk_fill_level.get()) {
+
+         d_nbr_blk_prefill_schedule.reset(
+            new RefineSchedule(boost::make_shared<PatchLevelInteriorFillPattern>(),
+                               d_nbr_blk_fill_level,
+                               d_dst_level,
+                               coarse_schedule_refine_classes,
+                               d_transaction_factory,
+                               0));
+
+      }
 
    } else {
       if (t_finish_sched_const->isRunning()) {
@@ -2093,6 +2109,11 @@ RefineSchedule::recursiveFill(
             d_coarse_interp_schedule->d_nbr_blk_fill_level, fill_time);
       }
 
+      hier::ComponentSelector nbr_prefill_allocate_vector;
+      if (d_nbr_blk_prefill_schedule.get()) {
+         allocateScratchSpace(nbr_fill_allocate_vector,
+            d_nbr_blk_prefill_schedule->d_dst_level, fill_time);
+      }
 
       /*
        * Recursively call the fill routine to fill the required coarse fill
@@ -2100,6 +2121,10 @@ RefineSchedule::recursiveFill(
        */
 
       d_coarse_interp_schedule->recursiveFill(fill_time, do_physical_boundary_fill);
+
+      if (d_nbr_blk_prefill_schedule.get()) {
+         d_nbr_blk_prefill_schedule->fillData(fill_time);
+      }
 
       /*
        * d_coarse_interp_level should now be filled.  Now interpolate
@@ -2129,6 +2154,10 @@ RefineSchedule::recursiveFill(
             nbr_fill_allocate_vector);
       }
 
+      if (d_nbr_blk_prefill_schedule.get()) {
+         d_nbr_blk_prefill_schedule->d_dst_level->deallocatePatchData(
+            nbr_prefill_allocate_vector);
+      }
 
    }
 
@@ -2835,6 +2864,15 @@ RefineSchedule::computeRefineOverlaps(
 
          hier::Box dst_fill_box(unfilled_nabr);
          transformation.transform(dst_fill_box);
+
+         hier::IntVector fill_ghost_width(
+            this == d_top_refine_schedule ?
+            d_boundary_fill_ghost_width : d_max_stencil_width);
+
+         fill_ghost_width.max(hier::IntVector::getOne(fine_box.getDim()));
+         hier::Box fill_fine_box(fine_box);
+         fill_fine_box.grow(fill_ghost_width);
+         dst_fill_box *= fill_fine_box;
 
          overlaps.push_back(std::vector<boost::shared_ptr<hier::BoxOverlap> >(0));
          d_nbr_blk_copy_overlaps.push_back(std::vector<boost::shared_ptr<hier::BoxOverlap> >(0));
