@@ -357,23 +357,6 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
    }
 }
 
-void CellMultiblockTest::postprocessRefine(
-   hier::Patch& fine,
-   const hier::Patch& coarse,
-   const boost::shared_ptr<hier::VariableContext>& context,
-   const hier::Box& fine_box,
-   const hier::IntVector& ratio) const
-{
-   pdat::CellDoubleConstantRefine ref_op;
-
-   for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
-
-      int id = hier::VariableDatabase::getDatabase()->
-         mapVariableAndContextToIndex(d_variables[i], context);
-
-      ref_op.refine(fine, coarse, id, id, fine_box, ratio);
-   }
-}
 /*
  *************************************************************************
  *

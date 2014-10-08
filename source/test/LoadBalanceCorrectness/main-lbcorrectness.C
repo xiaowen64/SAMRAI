@@ -588,7 +588,7 @@ int main(
 
          tbox::plog << "\n\tL0 prebalance loads:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(1,L0.getLocalNumberOfCells()),
+            std::vector<double>(1, static_cast<double>(L0.getLocalNumberOfCells())),
             L0.getMPI());
 
          outputPrebalance(L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0, 0), "L0: ");
@@ -676,7 +676,7 @@ int main(
 
          tbox::plog << "\n\tL0 postbalance loads:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(1,L0.getLocalNumberOfCells()),
+            std::vector<double>(1, static_cast<double>(L0.getLocalNumberOfCells())),
             L0.getMPI());
 
          outputPostbalance(L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0, 0), "L0: ");
@@ -778,7 +778,7 @@ int main(
 
          tbox::plog << "\n\tL1 prebalance loads:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(1,L1->getLocalNumberOfCells()),
+            std::vector<double>(1, static_cast<double>(L1->getLocalNumberOfCells())),
             L1->getMPI());
 
          outputPrebalance(*L1, L0, required_connector_width, "L1: ");
@@ -865,7 +865,7 @@ int main(
 
          tbox::plog << "\n\tL1 postbalance loads:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(1,L1->getLocalNumberOfCells()),
+            std::vector<double>(1, static_cast<double>(L1->getLocalNumberOfCells())),
             L1->getMPI());
 
          outputPostbalance(*L1, L0, required_connector_width, "L1: ");
@@ -969,7 +969,7 @@ int main(
 
          tbox::plog << "\n\tL2 prebalance loads:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(1,L2->getLocalNumberOfCells()),
+            std::vector<double>(1, static_cast<double>(L2->getLocalNumberOfCells())),
             L2->getMPI());
 
          outputPrebalance(*L2, L1, required_connector_width, "L2: ");
@@ -1056,7 +1056,7 @@ int main(
 
          tbox::plog << "\n\tL2 postbalance loads:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(1,L2->getLocalNumberOfCells()),
+            std::vector<double>(1, static_cast<double>(L2->getLocalNumberOfCells())),
             L2->getMPI());
 
          outputPostbalance(*L2, L1, required_connector_width, "L2: ");
@@ -1400,7 +1400,7 @@ createLoadBalancer(
    } else if (lb_type == "ChopAndPackLoadBalancer") {
 
       const boost::shared_ptr<tbox::Database> db =
-         input_db->getDatabaseWithDefault("ChopAndPackackLoadBalancer",
+         input_db->getDatabaseWithDefault("ChopAndPackLoadBalancer",
             boost::shared_ptr<tbox::Database>());
       boost::shared_ptr<mesh::ChopAndPackLoadBalancer>
       cap_lb(new mesh::ChopAndPackLoadBalancer(

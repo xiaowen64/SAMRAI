@@ -106,6 +106,10 @@ namespace mesh {
  *       be ignored and boxes obeying the patch size constrint will
  *       result.
  *
+ *   - \b tile_size
+ *   Tile size when using tile mode.  Tile mode restricts box cuts
+ *   to tile boundaries.
+ *
  * <b> Details: </b> <br>
  * <table>
  *   <tr>
@@ -155,6 +159,14 @@ namespace mesh {
  *     <td>N/A</td>
  *     <td>opt</td>
  *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>tile_size</td>
+ *     <td>IntVector</td>
+ *     <td>1</td>
+ *     <td>1-</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
  * </table>
  *
@@ -690,6 +702,12 @@ private:
    std::vector<std::string> d_bin_pack_method;
 
    bool d_opt_for_single_box;
+
+   /*!
+    * @brief Tile size, when restricting cuts to tile boundaries,
+    * Set to 1 when not restricting.
+    */
+   hier::IntVector d_tile_size;
 
    /*
     * Performance timers.

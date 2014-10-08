@@ -106,15 +106,6 @@ public:
       const int level_number,
       const hier::BlockId& block_id);
 
-   ///
-   void
-   postprocessRefine(
-      hier::Patch& fine,
-      const hier::Patch& coarse,
-      const boost::shared_ptr<hier::VariableContext>& context,
-      const hier::Box& fine_box,
-      const hier::IntVector& ratio) const;
-
 private:
    /**
     * Function for reading test data from input file.

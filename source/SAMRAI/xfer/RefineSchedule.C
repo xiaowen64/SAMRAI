@@ -1487,13 +1487,13 @@ RefineSchedule::setupCoarseInterpBoxLevel(
          bool sheared_boxes_exist = false;
          for (int blk = 0; blk < nblocks; ++blk) {
             if (do_coarse_shearing[blk] &&
-                !sheared_coarse_interp_boxes[blk].isEmpty() &&
+                !sheared_coarse_interp_boxes[blk].empty() &&
                 (d_dst_level->patchTouchesRegularBoundary(dst_box_id))) {
                sheared_coarse_interp_boxes[blk].intersectBoxes(coarser_shear_domain[blk]);
                sheared_coarse_interp_boxes[blk].simplify();
             }
 
-            if (!sheared_coarse_interp_boxes[blk].isEmpty()) { 
+            if (!sheared_coarse_interp_boxes[blk].empty()) { 
                (void)hier::BoxUtilities::extendBoxesToDomainBoundary(
                   sheared_coarse_interp_boxes[blk],
                   coarser_physical_domain[blk],
@@ -1510,9 +1510,11 @@ RefineSchedule::setupCoarseInterpBoxLevel(
                has_base_box = true;
             }
 
-            for (int blk = 0; blk < nblocks; ++blk) { 
-               for (hier::BoxContainer::iterator bi = sheared_coarse_interp_boxes[blk].begin();
-                    bi != sheared_coarse_interp_boxes[blk].end(); ++bi) {
+            int dst_blk = dst_blk_id.getBlockValue(); 
+            for (int blk = dst_blk; blk < nblocks + dst_blk; ++blk) {
+               int cur_blk = blk % nblocks;
+               for (hier::BoxContainer::iterator bi = sheared_coarse_interp_boxes[cur_blk].begin();
+                    bi != sheared_coarse_interp_boxes[cur_blk].end(); ++bi) {
                   const hier::Box& coarse_interp_level_box =
                      *coarse_interp_box_level->addBox(*bi, bi->getBlockId());
                   dst_to_coarse_interp->insertLocalNeighbor(
@@ -2005,10 +2007,12 @@ RefineSchedule::fillData(
       allocateScratchSpace(encon_allocate_vector, d_encon_level, fill_time);
    }
 
-   hier::ComponentSelector nbr_fill_allocate_vector;
+   hier::ComponentSelector nbr_fill_scratch_vector;
+   hier::ComponentSelector nbr_fill_dst_vector;
    if (d_dst_level->getGridGeometry()->getNumberBlocks() > 1 && 
        d_nbr_blk_fill_level.get()) {
-      allocateScratchSpace(nbr_fill_allocate_vector, d_nbr_blk_fill_level, fill_time);
+      allocateScratchSpace(nbr_fill_scratch_vector, d_nbr_blk_fill_level, fill_time);
+      allocateDestinationSpace(nbr_fill_dst_vector, d_nbr_blk_fill_level, fill_time);
    }
 
    /*
@@ -2040,7 +2044,8 @@ RefineSchedule::fillData(
    }
    if (d_dst_level->getGridGeometry()->getNumberBlocks() > 1 &&
        d_nbr_blk_fill_level.get()) {
-      d_nbr_blk_fill_level->deallocatePatchData(nbr_fill_allocate_vector);
+      d_nbr_blk_fill_level->deallocatePatchData(nbr_fill_scratch_vector);
+      d_nbr_blk_fill_level->deallocatePatchData(nbr_fill_dst_vector);
    }
 
    t_fill_data_nonrecursive->stop();
@@ -2109,9 +2114,12 @@ RefineSchedule::recursiveFill(
             d_coarse_interp_schedule->d_nbr_blk_fill_level, fill_time);
       }
 
-      hier::ComponentSelector nbr_prefill_allocate_vector;
+      hier::ComponentSelector nbr_prefill_scratch_vector;
+      hier::ComponentSelector nbr_prefill_dst_vector;
       if (d_nbr_blk_prefill_schedule.get()) {
-         allocateScratchSpace(nbr_fill_allocate_vector,
+         allocateScratchSpace(nbr_prefill_scratch_vector,
+            d_nbr_blk_prefill_schedule->d_dst_level, fill_time);
+         allocateDestinationSpace(nbr_prefill_dst_vector,
             d_nbr_blk_prefill_schedule->d_dst_level, fill_time);
       }
 
@@ -2156,7 +2164,9 @@ RefineSchedule::recursiveFill(
 
       if (d_nbr_blk_prefill_schedule.get()) {
          d_nbr_blk_prefill_schedule->d_dst_level->deallocatePatchData(
-            nbr_prefill_allocate_vector);
+            nbr_prefill_scratch_vector);
+         d_nbr_blk_prefill_schedule->d_dst_level->deallocatePatchData(
+            nbr_prefill_dst_vector);
       }
 
    }
@@ -2417,6 +2427,30 @@ RefineSchedule::allocateScratchSpace(
          fill_time,
          preprocess_vector);
    }
+}
+
+void
+RefineSchedule::allocateDestinationSpace(
+   hier::ComponentSelector& allocate_vector,
+   const boost::shared_ptr<hier::PatchLevel>& level,
+   double fill_time) const
+{
+   TBOX_ASSERT(level);
+
+   allocate_vector.clrAllFlags();
+
+   hier::ComponentSelector preprocess_vector;
+
+   for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
+      const int dst_id = d_refine_items[iri]->d_dst;
+      if (!level->checkAllocated(dst_id)) {
+         allocate_vector.setFlag(dst_id);
+      }
+      preprocess_vector.setFlag(dst_id);
+   }
+
+   level->allocatePatchData(allocate_vector, fill_time);
+
 }
 
 /*

@@ -73,7 +73,8 @@ ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    d_master_workload_data_id(-1),
    d_master_max_workload_factor(1.0),
    d_master_workload_tolerance(0.0),
-   d_master_bin_pack_method("SPATIAL")
+   d_master_bin_pack_method("SPATIAL"),
+   d_tile_size(dim,1)
 {
    TBOX_ASSERT(!name.empty());
    getFromInput(input_db);
@@ -90,7 +91,8 @@ ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    d_master_workload_data_id(-1),
    d_master_max_workload_factor(1.0),
    d_master_workload_tolerance(0.0),
-   d_master_bin_pack_method("SPATIAL")
+   d_master_bin_pack_method("SPATIAL"),
+   d_tile_size(dim,1)
 
 {
    getFromInput(input_db);
@@ -279,7 +281,19 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
    }
 
    const int nblocks = balance_box_level.getGridGeometry()->getNumberBlocks();
+
+   // Set effective_cut_factor to least common multiple of cut_factor and d_tile_size.
    hier::IntVector effective_cut_factor(cut_factor, nblocks);
+   if (d_tile_size != hier::IntVector::getOne(d_dim)) {
+      for (int b = 0; b < nblocks; ++b) {
+         for (int d = 0; d < d_dim.getValue(); ++d) {
+            while (effective_cut_factor(b,d) / d_tile_size[d] * d_tile_size[d] !=
+                   effective_cut_factor(b,d)) {
+               effective_cut_factor(b,d) += cut_factor[d];
+            }
+         }
+      }
+   }
 
    t_get_global_boxes->barrierAndStart();
    hier::BoxLevel globalized_input_box_level(balance_box_level);
@@ -1236,6 +1250,16 @@ ChopAndPackLoadBalancer::getFromInput(
                d_processor_layout(n) = temp_processor_layout[n];
             }
             d_processor_layout_specified = true;
+         }
+      }
+
+      if (input_db->isInteger("tile_size")) {
+         input_db->getIntegerArray("tile_size", &d_tile_size[0], d_tile_size.getDim().getValue());
+         for (int i = 0; i < d_dim.getValue(); ++i) {
+            if (!(d_tile_size[i] >= 1)) {
+               TBOX_ERROR("CascadePartitioner tile_size must be >= 1 in all directions.\n"
+                  << "Input tile_size is " << d_tile_size);
+            }
          }
       }
 
