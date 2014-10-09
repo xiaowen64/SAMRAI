@@ -203,8 +203,7 @@ CartesianGridGeometry::makeRefinedGridGeometry(
          fine_domain,
          d_transfer_operator_registry));
 
-   fine_geometry->initializePeriodicShift(getPeriodicShift(hier::
-         IntVector::getOne(dim)));
+   fine_geometry->initializePeriodicShift(getPeriodicShift(refine_ratio));
 
    return fine_geometry;
 }
@@ -265,8 +264,7 @@ CartesianGridGeometry::makeCoarsenedGridGeometry(
          coarse_domain,
          d_transfer_operator_registry));
 
-   coarse_geometry->initializePeriodicShift(getPeriodicShift(hier::
-         IntVector::getOne(dim)));
+   coarse_geometry->initializePeriodicShift(getPeriodicShift(-coarsen_ratio));
 
    return coarse_geometry;
 }

@@ -1175,6 +1175,23 @@ public:
       if (d_transpose && d_transpose != this) {
          d_transpose->d_transpose = this;
          d_transpose->d_owns_transpose = false;
+
+         if (d_ratio != hier::IntVector::getOne(d_ratio.getDim())) {
+            if ((d_ratio * d_base_width) != d_transpose->d_base_width &&
+                d_base_width != (d_ratio * d_transpose->d_base_width)) {
+
+               TBOX_ERROR("Connector::setTranspose: Base width for \n"
+                  "this Connector and its transpose are inconsistent.\n");
+
+            }
+         } else {
+            if (d_base_width != d_transpose->d_base_width) {
+
+               TBOX_ERROR("Connector::setTranspose: Base width for \n"
+                  "this Connector and its transpose are inconsistent.\n");
+
+            }
+         }
       }
    }
 

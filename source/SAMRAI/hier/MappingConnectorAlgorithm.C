@@ -344,7 +344,7 @@ MappingConnectorAlgorithm::privateModify(
    BoxLevel* mutable_new,
    BoxLevel* mutable_old) const
 {
-   const tbox::SAMRAI_MPI& mpi = d_mpi.getCommunicator() == MPI_COMM_NULL ?
+   const tbox::SAMRAI_MPI& mpi = d_mpi.hasNullCommunicator() ?
       old_to_new.getBase().getMPI() : d_mpi;
 
    if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {

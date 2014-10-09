@@ -45,6 +45,8 @@ HierarchyTester::HierarchyTester(
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(hier_test_db);
 
+   hier::PersistentOverlapConnectors::setCreateEmptyNeighborContainers(true);
+
    d_object_name = object_name;
 
    d_do_refine_test = false;
@@ -195,7 +197,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
    hier::IntVector one_vector(d_dim, 1);
 
    // Test #0a:
-   if (init_geometry->getPeriodicShift(one_vector) !=
+   if (init_geometry->getPeriodicShift(d_do_refine_test ? d_ratio : -d_ratio) !=
        test_geometry->getPeriodicShift(one_vector)) {
       ++fail_count;
       tbox::perr << "FAILED: - Test #0a: initial hierarchy has periodic shift "

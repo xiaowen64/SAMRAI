@@ -20,7 +20,7 @@ Main {
 
    baseline_dirname = "test_inputs"
 
-   baseline_action = "GENERATE" // "GENERATE" or "COMPARE"
+   baseline_action = "COMPARE" // "GENERATE" or "COMPARE"
 
    write_visit = TRUE
 

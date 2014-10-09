@@ -517,7 +517,7 @@ int main(
 
          tbox::plog << "\n\tL0 prebalance loads:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(1,L0->getLocalNumberOfCells()),
+            std::vector<double>(1, static_cast<double>(L0->getLocalNumberOfCells())),
             L0->getMPI());
 
          outputPrebalance(*L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0, 0), "L0: ");
@@ -544,7 +544,7 @@ int main(
 
          tbox::plog << "\n\tL0 postbalance loads:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(1,L0->getLocalNumberOfCells()),
+            std::vector<double>(1, static_cast<double>(L0->getLocalNumberOfCells())),
             L0->getMPI());
 
          outputPostbalance(*L0, domain_box_level, hierarchy->getRequiredConnectorWidth(0,
@@ -913,7 +913,7 @@ void outputPostbalance(
          true);
 
    const hier::Connector& post_to_ref = post.findConnectorWithTranspose(ref,
-         post_width,
+         (post.getRefinementRatio() / ref.getRefinementRatio()) * ref_width,
          ref_width,
          hier::CONNECTOR_CREATE,
          true);
@@ -1192,7 +1192,8 @@ void enforceNesting(
       L1.findConnectorWithTranspose(L0,
          nesting_width,
          nesting_width_transpose,
-         hier::CONNECTOR_CREATE),
+         hier::CONNECTOR_CREATE,
+         true),
       -nesting_width,
       hierarchy->getGridGeometry()->getDomainSearchTree());
    hier::MappingConnectorAlgorithm mca;
