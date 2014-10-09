@@ -425,21 +425,21 @@ Connector::shrinkWidth(
 * This method uses the termination message technique of the assumed
 * partition algorithm.
 *
-* Two communication patterns executed simultaneously: edge info and
-* termination messages.  For edge info, other's base box owners send
-* data to this's base box owners, who respond with an acknowledgement
-* message.  Termination messages let the processes know when to stop
-* checking for edge messages.  They are propagated up then down a rank
-* tree.  Upward messages inform processes that their descendents have
-* received all needed acknowledgements.  Downward messages inform
-* processes that the entire tree completed its acknowledgements,
-* indicating that there are no messages in transit and the process can
-* stop.
+* Two communication patterns are executed simultaneously: edge info
+* and termination messages.  For edge info, other's base box owners
+* send data to this's base box owners, who respond with
+* acknowledgement messages.  Termination messages let the processes
+* know when to stop checking for edge messages.  They are propagated
+* up then down a rank tree.  Upward messages inform processes that
+* their descendents have received all needed acknowledgements.
+* Downward messages inform processes that the entire tree completed
+* its acknowledgements, indicating that there are no messages in
+* transit and the process can stop.
 ***********************************************************************
 */
 void
-Connector::setToTransposeOf( const Connector &other,
-                             const tbox::SAMRAI_MPI &mpi )
+Connector::computeTransposeOf( const Connector &other,
+                               const tbox::SAMRAI_MPI &mpi )
 {
    *this = Connector( other.getHead(), other.getBase(),
                       convertHeadWidthToBase( other.getHead().getRefinementRatio(),
@@ -465,7 +465,7 @@ Connector::setToTransposeOf( const Connector &other,
    char downward_term_msg_type = 'd';
 
    if ( mpi1.hasReceivableMessage(0, MPI_ANY_SOURCE, mpi_tag) ) {
-      TBOX_ERROR("Connector::setToTransposeOf: not starting clean of receivable MPI messages.");
+      TBOX_ERROR("Connector::computeTransposeOf: not starting clean of receivable MPI messages.");
    }
 
    std::map<int,boost::shared_ptr<tbox::MessageStream> > messages;
@@ -481,20 +481,14 @@ Connector::setToTransposeOf( const Connector &other,
 
       const Box &base_box = rr->first;
       const BoxContainer &head_nabrs = rr->second;
-      if ( base_box.isPeriodicImage() ) {
-         unshifted_head_nabrs = head_nabrs;
-         unshiftNeighbors( base_box,
-                           unshifted_head_nabrs,
-                           getHead().getRefinementRatio() );
-      }
-      const BoxContainer &nabrs = base_box.isPeriodicImage() ? unshifted_head_nabrs : head_nabrs;
+      TBOX_ASSERT(!base_box.isPeriodicImage());
 
       /*
        * If base_box is local, store the neighbors.
-       * Else, send the neighbors to its owner to store.
+       * Else, send neighbors to base_box's owner to store.
        */
       if ( base_box.getOwnerRank() == mpi1.getRank() ) {
-         insertNeighbors( nabrs, base_box.getBoxId() );
+         insertNeighbors( head_nabrs, base_box.getBoxId() );
       }
       else {
          boost::shared_ptr<tbox::MessageStream> &mstream = messages[base_box.getOwnerRank()];
@@ -502,8 +496,8 @@ Connector::setToTransposeOf( const Connector &other,
             mstream.reset( new tbox::MessageStream );
             *mstream << edge_msg_type;
          }
-         *mstream << base_box.getLocalId() << static_cast<size_t>(nabrs.size());
-         for ( BoxContainer::const_iterator bi=nabrs.begin(); bi!=nabrs.end(); ++bi ) {
+         *mstream << base_box.getLocalId() << static_cast<size_t>(head_nabrs.size());
+         for ( BoxContainer::const_iterator bi=head_nabrs.begin(); bi!=head_nabrs.end(); ++bi ) {
             *mstream << *bi;
          }
 
@@ -523,7 +517,7 @@ Connector::setToTransposeOf( const Connector &other,
    }
 
 
-   // Data for propgating termination messages on the rank tree.
+   // Data for propagating termination messages on the rank tree.
    tbox::CenteredRankTree rank_tree(mpi1);
    size_t child_term_needed = rank_tree.getNumberOfChildren();
    bool send_upward_term_msg = mpi1.getSize() > 1;
@@ -607,7 +601,7 @@ Connector::setToTransposeOf( const Connector &other,
          }
       }
       else {
-         TBOX_ERROR("Connector::setToTransposeOf: Library error: msg_type " << static_cast<int>(msg_type)
+         TBOX_ERROR("Connector::computeTransposeOf: Library error: msg_type " << static_cast<int>(msg_type)
                     << " unrecognized,\npossibly due to receiving unrelated message.");
       }
       TBOX_ASSERT( mstream.endOfData() );
@@ -645,7 +639,7 @@ Connector::setToTransposeOf( const Connector &other,
    }
 
    if ( mpi1.hasReceivableMessage(0, MPI_ANY_SOURCE, mpi_tag) ) {
-      TBOX_ERROR("Connector::setToTransposeOf: not finishing clean of receivable MPI messages.");
+      TBOX_ERROR("Connector::computeTransposeOf: not finishing clean of receivable MPI messages.");
    }
 
    return;

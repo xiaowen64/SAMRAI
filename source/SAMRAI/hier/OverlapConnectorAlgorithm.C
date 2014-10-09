@@ -430,7 +430,7 @@ OverlapConnectorAlgorithm::findOverlaps(
  * 3. Populate head--->center and base--->center.
  *
  * 4. Get transposes center--->head and center--->base.  This is
- * implemented in the Connector's setToTransposeOf() method.
+ * implemented in the Connector's computeTransposeOf() method.
  *
  * 5. Bridge base<==>center<==>head.
  ***********************************************************************
@@ -521,7 +521,7 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    if ( d_print_steps ) {
       tbox::plog << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: getting center_to_base.\n";
    }
-   center_to_base.setToTransposeOf(base_to_center, mpi);
+   center_to_base.computeTransposeOf(base_to_center, mpi);
 
 
    // Set up head<==>center
@@ -546,7 +546,7 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    if ( d_print_steps ) {
       tbox::plog << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: getting center_to_head.\n";
    }
-   center_to_head.setToTransposeOf(head_to_center, mpi);
+   center_to_head.computeTransposeOf(head_to_center, mpi);
 
 
    // Bridge for base<==>head

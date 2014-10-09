@@ -261,7 +261,7 @@ int main(
                        << std::endl;
 
             hier::Connector reverse(forward.getHead(), forward.getBase(), connector_width);
-            reverse.setToTransposeOf(forward);
+            reverse.computeTransposeOf(forward);
             tbox::plog << "Computed:\nreverse:\n" << reverse.format("\t")
                        << std::endl;
 
