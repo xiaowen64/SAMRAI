@@ -607,11 +607,7 @@ TileClustering::clusterWholeTiles(
             tbox::plog << "TileClustering::clusterWholeTiles: coalesce tiles." << std::endl;
          }
          d_object_timers->t_coalesce->start();
-#if 1
          coalesceTiles(coalescibles, coalescibles.getBoundingBox());
-#else
-         coalescibles.coalesce();
-#endif
          d_object_timers->t_coalesce->stop();
       }
 
@@ -1034,11 +1030,7 @@ TileClustering::findTilesContainingTags(
       hier::LocalId last_used_id = tiles.back().getLocalId();
       // Coalesce the tiles in this patch and assign ids if they changed.
       hier::BoxContainer unordered_tiles(tiles.begin(), tiles.end(), false);
-#if 1
       coalesceTiles(unordered_tiles, unordered_tiles.getBoundingBox());
-#else
-      unordered_tiles.coalesce();
-#endif
       if (unordered_tiles.size() != num_coarse_tags) {
          tiles.clear();
          tiles.order();
@@ -1147,11 +1139,7 @@ TileClustering::coalesceClusters(
    d_object_timers->t_coalesce->start();
    for (std::map<hier::BlockId, hier::BoxContainer>::iterator mi = post_boxes_by_block.begin();
         mi != post_boxes_by_block.end(); ++mi) {
-#if 1
       coalesceTiles(mi->second, mi->second.getBoundingBox());
-#else
-      mi->second.coalesce();
-#endif
       for (hier::BoxContainer::iterator bi = mi->second.begin();
            bi != mi->second.end(); ++bi) {
          bi->setId(hier::BoxId(++last_used_id, tile_box_level.getMPI().getRank()));
@@ -1362,11 +1350,7 @@ TileClustering::coalesceClusters(
 
          if (!block_boxes.empty()) {
             block_boxes.unorder();
-#if 1
             coalesceTiles(block_boxes, block_boxes.getBoundingBox());
-#else
-            block_boxes.coalesce();
-#endif
             TBOX_omp_set_lock(&l_outputs);
             box_vector.insert(box_vector.end(), block_boxes.begin(), block_boxes.end());
             TBOX_omp_unset_lock(&l_outputs);

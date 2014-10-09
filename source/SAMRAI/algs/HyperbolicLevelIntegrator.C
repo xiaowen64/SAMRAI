@@ -580,7 +580,6 @@ HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
          hier_level->getRatioToLevelZero());
    }
 
-#if 1
    /*
     * Compute the width needed for Connectors.  The peer width for
     * coarse<==>fine can be equivalent to the width for fine<==>fine in
@@ -603,7 +602,6 @@ HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
       c_to_f_width,
       f_to_c_width,
       hier::CONNECTOR_CREATE);
-#endif
 
    if (before_advance) {
 
