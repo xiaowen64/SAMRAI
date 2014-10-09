@@ -809,7 +809,8 @@ operator << (
    if (box.empty()) {
       s << "[(),()]";
    } else {
-      s << box.getBoxId() << " [" << box.lower() << "," << box.upper() << "]";
+      s << box.getBoxId() << ' ' << box.getBlockId()
+        << '[' << box.lower() << ',' << box.upper() << ']';
    }
    return s;
 }

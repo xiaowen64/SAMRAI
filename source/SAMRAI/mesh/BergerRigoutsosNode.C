@@ -1953,33 +1953,33 @@ BergerRigoutsosNode::formChildGroups()
    int* lft_criteria = 0;
    int* rht_criteria = 0;
    switch (d_common->d_owner_mode) {
-      case BergerRigoutsos::SINGLE_OWNER:
-         lft_criteria = &d_recv_msg[0];
-         rht_criteria = &d_recv_msg[1];
-         lft_criteria[imyself * 4] = tbox::MathUtilities<int>::getMax();
-         rht_criteria[imyself * 4] = tbox::MathUtilities<int>::getMax();
-         break;
-      case BergerRigoutsos::MOST_OVERLAP:
-         lft_criteria = &d_recv_msg[0];
-         rht_criteria = &d_recv_msg[1];
-         lft_criteria[imyself * 4] = static_cast<int>(d_lft_child->d_overlap);
-         rht_criteria[imyself * 4] = static_cast<int>(d_rht_child->d_overlap);
-         break;
-      case BergerRigoutsos::FEWEST_OWNED:
-         lft_criteria = &d_recv_msg[2];
-         rht_criteria = &d_recv_msg[2];
-         lft_criteria[imyself * 4] = -d_common->d_num_nodes_owned;
-         rht_criteria[imyself * 4] = -d_common->d_num_nodes_owned;
-         break;
-      case BergerRigoutsos::LEAST_ACTIVE:
-         lft_criteria = &d_recv_msg[3];
-         rht_criteria = &d_recv_msg[3];
-         lft_criteria[imyself * 4] = -d_common->d_num_nodes_active;
-         rht_criteria[imyself * 4] = -d_common->d_num_nodes_active;
-         break;
-      default:
-         TBOX_ERROR("LIBRARY error" << std::endl);
-         break;
+   case BergerRigoutsos::SINGLE_OWNER:
+      lft_criteria = &d_recv_msg[0];
+      rht_criteria = &d_recv_msg[1];
+      lft_criteria[imyself * 4] = tbox::MathUtilities<int>::getMax();
+      rht_criteria[imyself * 4] = tbox::MathUtilities<int>::getMax();
+      break;
+   case BergerRigoutsos::MOST_OVERLAP:
+      lft_criteria = &d_recv_msg[0];
+      rht_criteria = &d_recv_msg[1];
+      lft_criteria[imyself * 4] = static_cast<int>(d_lft_child->d_overlap);
+      rht_criteria[imyself * 4] = static_cast<int>(d_rht_child->d_overlap);
+      break;
+   case BergerRigoutsos::FEWEST_OWNED:
+      lft_criteria = &d_recv_msg[2];
+      rht_criteria = &d_recv_msg[2];
+      lft_criteria[imyself * 4] = -d_common->d_num_nodes_owned;
+      rht_criteria[imyself * 4] = -d_common->d_num_nodes_owned;
+      break;
+   case BergerRigoutsos::LEAST_ACTIVE:
+      lft_criteria = &d_recv_msg[3];
+      rht_criteria = &d_recv_msg[3];
+      lft_criteria[imyself * 4] = -d_common->d_num_nodes_active;
+      rht_criteria[imyself * 4] = -d_common->d_num_nodes_active;
+      break;
+   default:
+      TBOX_ERROR("LIBRARY error" << std::endl);
+      break;
    }
 
    int n_lft = 0;

@@ -844,7 +844,7 @@ private:
    void
    renumberBoxes(
       hier::BoxLevel& new_box_level,
-      hier::Connector& ref_to_new,
+      hier::Connector* ref_to_new,
       bool sort_by_corners,
       bool sequentialize_global_indices) const;
 
@@ -1057,6 +1057,13 @@ private:
     */
    void
    allocateTimers();
+
+   /*!
+    * @brief Assert that the given SAMRAI_MPI has no message waiting
+    * to be received.
+    */
+   void
+   assertNoMessageForCommunicator( const tbox::SAMRAI_MPI &mpi ) const;
 
    /*!
     * @brief Initialize static objects and register shutdown routine.

@@ -30,6 +30,7 @@
 #include "SAMRAI/tbox/HDFDatabase.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Database.h"
+#include "SAMRAI/tbox/SAMRAI_MPI.h"
 
 #include "boost/shared_ptr.hpp"
 #include <string>
@@ -1195,6 +1196,11 @@ private:
     * Dimension of object
     */
    const tbox::Dimension d_dim;
+
+   /*!
+    * @brief Exclusive SAMRAI_MPI duplicated for this object.
+    */
+   tbox::SAMRAI_MPI d_mpi;
 
    /*
     * Name of this VisIt data writer object

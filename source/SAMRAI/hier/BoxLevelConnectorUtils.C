@@ -346,16 +346,11 @@ BoxLevelConnectorUtils::baseNestsInHead(
  * If sequentialize_global_indices is true, the indices are changed
  * such that they become globally sequential, with processor n
  * starting where processor n-1 ended.  In order to determine what the
- * global indices should be, an allgather communication is used to
- * determine how many boxes each processor has.  This is a
- * utility function for resetting Box indices to correspond to
- * patch indices while we try to be backward compatible with non-DLBG
- * parts of SAMRAI.
+ * global indices should be, a scan communication is used.
  *
- * If sort_boxes_by_corner is true, the local Boxes are
- * sorted by their corner indices.  This helps to de-randomize
- * Boxes that may be randomly ordered by non-deterministic
- * algorithms.
+ * If sort_boxes_by_corner is true, the local Boxes are sorted by
+ * their corner indices.  This helps to de-randomize Boxes that may be
+ * randomly ordered by non-deterministic algorithms.
  ***********************************************************************
  */
 void
@@ -387,12 +382,20 @@ BoxLevelConnectorUtils::makeSortingMap(
    if (sequentialize_global_indices) {
       // Increase last_index by the box count of all lower MPI ranks.
 
-      int box_count =
+      int local_box_count =
          static_cast<int>(unsorted_box_level.getLocalNumberOfBoxes());
-      unsorted_box_level.getMPI().parallelPrefixSum(&box_count, 1, 0);
-      box_count -= static_cast<int>(unsorted_box_level.getLocalNumberOfBoxes());
+      int scanned_box_count = -1;
+      if ( tbox::SAMRAI_MPI::usingMPI() ) {
+         unsorted_box_level.getMPI().Scan(&local_box_count,
+                                          &scanned_box_count,
+                                          1, MPI_INT, MPI_SUM);
+      }
+      else {
+         scanned_box_count = local_box_count; // Scan result for 1 proc.
+      }
+      scanned_box_count -= static_cast<int>(local_box_count);
 
-      last_index += box_count;
+      last_index += scanned_box_count;
    }
 
    std::vector<Box> real_box_vector;

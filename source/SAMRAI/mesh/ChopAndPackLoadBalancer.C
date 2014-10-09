@@ -37,22 +37,6 @@
 namespace SAMRAI {
 namespace mesh {
 
-tbox::StartupShutdownManager::Handler
-ChopAndPackLoadBalancer::s_initialize_handler(
-   ChopAndPackLoadBalancer::initializeCallback,
-   0,
-   0,
-   ChopAndPackLoadBalancer::finalizeCallback,
-   tbox::StartupShutdownManager::priorityTimers);
-
-boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_load_balance_boxes;
-boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_load_balance_boxes_remove_intersection;
-boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_get_global_boxes;
-boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_bin_pack_boxes;
-boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_bin_pack_boxes_sort;
-boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_bin_pack_boxes_pack;
-boost::shared_ptr<tbox::Timer> ChopAndPackLoadBalancer::t_chop_boxes;
-
 /*
  *************************************************************************
  *
@@ -78,6 +62,7 @@ ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
 {
    TBOX_ASSERT(!name.empty());
    getFromInput(input_db);
+   setupTimers();
 }
 
 ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
@@ -96,6 +81,7 @@ ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
 
 {
    getFromInput(input_db);
+   setupTimers();
 }
 
 ChopAndPackLoadBalancer::~ChopAndPackLoadBalancer()
@@ -273,6 +259,8 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       cut_factor);
    NULL_USE(rank_group);
 
+   t_load_balance_box_level->start();
+
    hier::IntVector actual_max_size = max_size;
    for (int d = 0; d < d_dim.getValue(); ++d) {
       if (actual_max_size(d) < 0) {
@@ -325,6 +313,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
 
    // Build up balance_box_level from old-style data.
    balance_box_level.initialize(
+      hier::BoxContainer(),
       balance_box_level.getRefinementRatio(),
       balance_box_level.getGridGeometry(),
       balance_box_level.getMPI(),
@@ -346,9 +335,13 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       hier::OverlapConnectorAlgorithm oca;
       oca.findOverlaps(*balance_to_anchor);
       oca.findOverlaps(anchor_to_balance, balance_box_level);
+      balance_to_anchor->removePeriodicRelationships();
+      anchor_to_balance.removePeriodicRelationships();
    }
 
    balance_box_level.setParallelState(hier::BoxLevel::DISTRIBUTED);
+
+   t_load_balance_box_level->stop();
 }
 
 /*
@@ -1326,39 +1319,25 @@ ChopAndPackLoadBalancer::binPackBoxes(
  *************************************************************************
  */
 void
-ChopAndPackLoadBalancer::initializeCallback()
+ChopAndPackLoadBalancer::setupTimers()
 {
-   t_load_balance_boxes = tbox::TimerManager::getManager()->
-      getTimer("mesh::ChopAndPackLoadBalancer::loadBalanceBoxes()");
-   t_load_balance_boxes_remove_intersection =
-      tbox::TimerManager::getManager()->
-      getTimer(
-         "mesh::ChopAndPackLoadBalancer::loadBalanceBoxes()_remove_intersection");
-   t_get_global_boxes = tbox::TimerManager::getManager()->
-      getTimer("mesh::ChopAndPackLoadBalancer::get_global_boxes");
-   t_bin_pack_boxes = tbox::TimerManager::getManager()->
-      getTimer("mesh::ChopAndPackLoadBalancer::binPackBoxes()");
-   t_bin_pack_boxes_sort = tbox::TimerManager::getManager()->
-      getTimer("mesh::ChopAndPackLoadBalancer::binPackBoxes()_sort");
-   t_bin_pack_boxes_pack = tbox::TimerManager::getManager()->
-      getTimer("mesh::ChopAndPackLoadBalancer::binPackBoxes()_pack");
-   t_chop_boxes = tbox::TimerManager::getManager()->
-      getTimer("mesh::ChopAndPackLoadBalancer::chop_boxes");
-}
+   t_load_balance_box_level = tbox::TimerManager::getManager()->
+      getTimer(d_object_name + "::loadBalanceBoxLevel()");
 
-/*
- *************************************************************************
- *************************************************************************
- */
-void
-ChopAndPackLoadBalancer::finalizeCallback()
-{
-   t_load_balance_boxes.reset();
-   t_load_balance_boxes_remove_intersection.reset();
-   t_bin_pack_boxes.reset();
-   t_bin_pack_boxes_sort.reset();
-   t_bin_pack_boxes_pack.reset();
-   t_chop_boxes.reset();
+   t_load_balance_boxes = tbox::TimerManager::getManager()->
+      getTimer(d_object_name + "::loadBalanceBoxes()");
+   t_load_balance_boxes_remove_intersection = tbox::TimerManager::getManager()->
+      getTimer(d_object_name + "::loadBalanceBoxes()_remove_intersection");
+   t_get_global_boxes = tbox::TimerManager::getManager()->
+      getTimer(d_object_name + "::get_global_boxes");
+   t_bin_pack_boxes = tbox::TimerManager::getManager()->
+      getTimer(d_object_name + "::binPackBoxes()");
+   t_bin_pack_boxes_sort = tbox::TimerManager::getManager()->
+      getTimer(d_object_name + "::binPackBoxes()_sort");
+   t_bin_pack_boxes_pack = tbox::TimerManager::getManager()->
+      getTimer(d_object_name + "::binPackBoxes()_pack");
+   t_chop_boxes = tbox::TimerManager::getManager()->
+      getTimer(d_object_name + "::chop_boxes");
 }
 
 }

@@ -271,7 +271,7 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
                  << std::endl;
    }
 
-   const tbox::SAMRAI_MPI &mpi = alt_mpi.getCommunicator() == MPI_COMM_NULL ?
+   const tbox::SAMRAI_MPI &mpi = alt_mpi.hasNullCommunicator() ?
       unbalanced_box_level.getMPI() : alt_mpi;
 
 
