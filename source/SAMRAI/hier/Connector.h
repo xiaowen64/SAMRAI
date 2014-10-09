@@ -1412,16 +1412,6 @@ public:
       bool& ratio_is_exact);
 
    /*!
-    * @brief Utility to unshift neighbors of a periodic image box so
-    * they become the neighbors of the unshifted box.
-    */
-   static void
-   unshiftNeighbors(
-      const Box& box,
-      BoxContainer& neighbors,
-      const IntVector& neighbor_refinement_ratio);
-
-   /*!
     * @brief Writes the neighborhoods to tbox::perr.
     *
     * @param[in] border Left border of the output.

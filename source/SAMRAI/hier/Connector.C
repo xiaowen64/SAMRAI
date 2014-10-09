@@ -700,48 +700,6 @@ Connector::reorderRelationshipsByHead(
 
 
 /*
-***********************************************************************
-* Shift neighbors by amount equal and opposite of a Box's shift so that
-* they become neighbors of the unshifed box.  If this results in a
-* neighbor shift that is not in the shift catalog, discard the neighbor.
-***********************************************************************
-*/
-void
-Connector::unshiftNeighbors(
-   const Box& box,
-   BoxContainer& neighbors,
-   const IntVector& neighbor_refinement_ratio)
-{
-   TBOX_ASSERT_OBJDIM_EQUALITY2(box, neighbor_refinement_ratio);
-
-   const PeriodicShiftCatalog* shift_catalog =
-      PeriodicShiftCatalog::getCatalog(box.getDim());
-
-   BoxContainer scratch_space;
-   for (BoxContainer::iterator na = neighbors.begin();
-        na != neighbors.end(); ++na) {
-      Box& nabr = *na;
-      IntVector sum_shift =
-         shift_catalog->shiftNumberToShiftDistance(nabr.getPeriodicId())
-         - shift_catalog->shiftNumberToShiftDistance(box.getPeriodicId());
-      const PeriodicId new_shift_number =
-         shift_catalog->shiftDistanceToShiftNumber(sum_shift);
-      if (new_shift_number.getPeriodicValue() !=
-          shift_catalog->getInvalidShiftNumber()) {
-         nabr.initialize(nabr, new_shift_number, neighbor_refinement_ratio);
-         scratch_space.pushBack(nabr);
-      }
-   }
-   if (scratch_space.size() != neighbors.size()) {
-      // We have discarded some neighbors due to invalid shift.
-      neighbors.swap(scratch_space);
-   }
-}
-
-
-
-
-/*
  ***********************************************************************
  ***********************************************************************
  */
