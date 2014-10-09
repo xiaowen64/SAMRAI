@@ -193,7 +193,7 @@ private:
     * given tag data.
     *
     * The coarse cell values are set to tag_data if any corresponding
-    * fine cell value is tag_data.  Otherwise, the coarse cell value
+    * fine cell value is tag_value.  Otherwise, the coarse cell value
     * is set to zero.
     */
    boost::shared_ptr<pdat::CellData<int> >
