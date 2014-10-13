@@ -196,7 +196,8 @@ AssumedPartitionBox::getBox(int box_index) const
    int box_index_diff = box_index - d_index_begin;
    for ( int d=d_box.getDim().getValue()-1; d>=0; --d ) {
       int dir = d_major[d];
-      part.setLower( dir, box_index_diff/d_index_stride[dir] );
+      part.setLower( static_cast<Box::dir_t>(dir),
+         box_index_diff/d_index_stride[dir] );
       box_index_diff -= part.lower()[dir]*d_index_stride[dir];
    }
 

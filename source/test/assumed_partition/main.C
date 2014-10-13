@@ -165,7 +165,7 @@ int main(
                test_fail_count = apb.selfCheck();
             }
 
-            fail_count += test_fail_count;
+            fail_count += static_cast<int>(test_fail_count);
             if ( test_fail_count ) {
                tbox::pout << "FAILED: selfCheck found " << fail_count << " problems in test "
                           << test_name << " (" << nickname << ')' << std::endl;
@@ -198,7 +198,8 @@ int main(
  */
 CommonTestParams getTestParametersFromDatabase( tbox::Database &test_db )
 {
-   const tbox::Dimension dim(test_db.getInteger("dim"));
+   const tbox::Dimension dim(
+      static_cast<unsigned short>(test_db.getInteger("dim")));
    CommonTestParams ctp( dim );
    if ( test_db.isDatabaseBox("box") ) {
       ctp.box = test_db.getDatabaseBox("box");
