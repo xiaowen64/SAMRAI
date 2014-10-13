@@ -1468,14 +1468,6 @@ RefineSchedule::setupCoarseInterpBoxLevel(
             for (hier::BoxContainer::iterator ci = coarse_interp_boxes.begin();
                  ci != coarse_interp_boxes.end(); ++ci) {
                const hier::BlockId& cblock_id = ci->getBlockId(); 
-// put back to make things "work"
-//               if (cblock_id != dst_blk_id) {
-//                 grid_geometry->transformBox(
-//                     *ci,
-//                     d_dst_level->getLevelNumber()-1,
-//                     dst_blk_id, 
-//                     cblock_id);
-//               }
                sheared_coarse_interp_boxes[cblock_id.getBlockValue()].
                   pushBack(*ci);
             }
@@ -1483,7 +1475,6 @@ RefineSchedule::setupCoarseInterpBoxLevel(
             sheared_coarse_interp_boxes[0].spliceBack(coarse_interp_boxes);
          }
 
-//         hier::BoxContainer sheared_coarse_interp_boxes(coarse_interp_boxes);
          bool sheared_boxes_exist = false;
          for (int blk = 0; blk < nblocks; ++blk) {
             if (do_coarse_shearing[blk] &&
@@ -1525,7 +1516,8 @@ RefineSchedule::setupCoarseInterpBoxLevel(
                      unfilled_box,
                      coarse_interp_level_box.getBoxId());
 
-                  if (bi->getBlockId() != dst_blk_id) {
+                  if (bi->getBlockId() != dst_blk_id &&
+                      !grid_geometry->hasIsotropicRatios()) {
                      hier::Box fill_box(coarse_interp_level_box);
                      fill_box.refine(dst_hiercoarse_ratio);
                      nbr_blk_fill_box_level->addBoxWithoutUpdate(fill_box);
@@ -1543,7 +1535,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
    }
 
    nbr_blk_fill_box_level->finalize();
-   if (nblocks > 1) {
+   if (nblocks > 1 && !grid_geometry->hasIsotropicRatios()) {
       d_nbr_blk_fill_level.reset(new hier::PatchLevel(
          nbr_blk_fill_box_level,
          d_dst_level->getGridGeometry(),
@@ -1563,10 +1555,6 @@ RefineSchedule::setupCoarseInterpBoxLevel(
    dst_to_coarse_interp->setTranspose(
       dst_to_coarse_interp->createLocalTranspose(),
       true);
-
-//   coarse_interp_to_unfilled->setTranspose(
-//      coarse_interp_to_unfilled->createLocalTranspose(),
-//      true);
 
    t_setup_coarse_interp_box_level->stop();
 }
@@ -2599,6 +2587,7 @@ RefineSchedule::refineScratchData(
       } else {
 
          TBOX_ASSERT(!is_encon);
+         TBOX_ASSERT(!d_dst_level->getGridGeometry()->hasIsotropicRatios());
          TBOX_ASSERT(d_coarse_interp_to_nbr_fill->numLocalNeighbors(crse_box.getBoxId()) == 1);
          hier::Connector::ConstNeighborhoodIterator unfilled_nabrs =
             d_coarse_interp_to_nbr_fill->find(crse_box.getBoxId());
@@ -2708,70 +2697,6 @@ RefineSchedule::computeRefineOverlaps(
    std::map<hier::BoxId, hier::IntVector>& nbr_refine_ratio =
       is_encon ? d_encon_nbr_refine_ratio : d_nbr_refine_ratio;
 
-   if (false) {
-      std::map<hier::BlockId, hier::BoxContainer> block_domains;
-
-      for (hier::PatchLevel::iterator crse_itr(coarse_level->begin());
-           crse_itr != coarse_level->end(); ++crse_itr) {
-         const hier::Box& coarse_box = crse_itr->getBox();
-         const hier::BlockId& block_id = coarse_box.getBlockId();
-
-         if (block_domains.find(block_id) == block_domains.end()) {
-            grid_geom->computePhysicalDomain(
-               block_domains[block_id],
-               coarse_level->getRatioToLevelZero(),
-               block_id);
-         }
-
-         hier::BoxContainer test_crse_boxes(coarse_box);
-         test_crse_boxes.removeIntersections(block_domains[block_id]);
-         if (!test_crse_boxes.empty()) {
-            const std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>&
-               neighbors = grid_geom->getNeighbors(block_id);
-
-            for (std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::const_iterator
-                 ni = neighbors.begin(); ni != neighbors.end(); ++ni) {
-
-               const hier::BlockId& nbr_blk = ni->second.getBlockId();
-               if (block_domains.find(nbr_blk) == block_domains.end()) {
-                  grid_geom->computePhysicalDomain(
-                     block_domains[nbr_blk],
-                     coarse_level->getRatioToLevelZero(),
-                     nbr_blk);
-               }
-
-               test_crse_boxes.clear();
-               test_crse_boxes.pushBack(coarse_box);
-               grid_geom->transformBoxContainer(
-                  test_crse_boxes,
-                  coarse_level->getRatioToLevelZero(),
-                  nbr_blk,
-                  block_id);
-
-               test_crse_boxes.intersectBoxes(block_domains[nbr_blk]);
-               if (!test_crse_boxes.empty()) {
-                  TBOX_ASSERT(test_crse_boxes.size() == 1);
-                  const hier::Box& trans_crse_box = test_crse_boxes.front();
-                  TBOX_ASSERT(trans_crse_box.size() == coarse_box.size());
-
-                  hier::IntVector ratio(coarse_to_unfilled.getRatio().getBlockVector(nbr_blk));
-                  const hier::Transformation& trans =
-                     ni->second.getTransformation(coarse_level->getLevelNumber());
-
-                  hier::Transformation::rotateIntVector(ratio,
-                     trans.getRotation());
-
-                  std::pair<hier::BoxId, hier::IntVector> ratio_pair(
-                     coarse_box.getBoxId(), ratio);
-
-                  nbr_refine_ratio.insert(ratio_pair); 
-
-               }
-            }
-         }
-      } 
-   }
-
    /*
     * Loop over all the coarse patches and find the corresponding
     * destination patch and destination fill boxes.
@@ -2868,6 +2793,7 @@ RefineSchedule::computeRefineOverlaps(
          }
       } else {
          TBOX_ASSERT(!is_encon);
+         TBOX_ASSERT(!grid_geom->hasIsotropicRatios()); 
          TBOX_ASSERT(d_coarse_interp_to_nbr_fill->numLocalNeighbors(coarse_box.getBoxId()) == 1);
          hier::Connector::ConstNeighborhoodIterator fill_nabrs =
             d_coarse_interp_to_nbr_fill->find(coarse_box.getBoxId());
