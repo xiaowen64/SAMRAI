@@ -2105,10 +2105,10 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
    hier::Box grown_box = d_box;
    grown_box.grow(d_common->d_tag_to_new_width);
    hier::BoxContainer grown_boxes;
-   if (d_common->d_tag_level->getGridGeometry()->getNumberBlocks() == 1) {
-      hier::Box grown_box = d_box;
-      grown_box.grow(d_common->d_tag_to_new_width);
-      grown_boxes.pushBack(grown_box);
+   if (d_common->d_tag_level->getGridGeometry()->getNumberBlocks() == 1 ||
+       d_common->d_tag_level->getGridGeometry()->hasIsotropicRatios()) {
+      grown_boxes.pushBack(d_box);
+      grown_boxes.grow(d_common->d_tag_to_new_width);
    } else {
       hier::BoxUtilities::growAndChopAtBlockBoundary(
          grown_boxes,
@@ -2167,6 +2167,17 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
            !intersection && b_itr != grown_boxes.end(); ++b_itr) {
          if (tag_box.getBlockId() == b_itr->getBlockId()) {
             intersection = tag_box.intersects(*b_itr);
+         } else {
+            hier::Box transform_box(tag_box);
+            bool transformed =
+               d_common->d_tag_level->getGridGeometry()->transformBox(
+                  transform_box,
+                  d_common->d_tag_level->getRatioToLevelZero(),
+                  b_itr->getBlockId(),
+                  tag_box.getBlockId());
+            if (transformed) {
+               intersection = transform_box.intersects(*b_itr);
+            }
          }
       }
 

@@ -76,6 +76,7 @@ BaseGridGeometry::BaseGridGeometry(
    d_periodic_shift(IntVector::getZero(d_dim)),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_ratio_to_level_zero(1, IntVector::getOne(d_dim)),
+   d_ratios_are_isotropic(true),
    d_has_enhanced_connectivity(false)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -115,6 +116,7 @@ BaseGridGeometry::BaseGridGeometry(
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
    d_ratio_to_level_zero(1, IntVector::getOne(d_dim)),
+   d_ratios_are_isotropic(true),
    d_has_enhanced_connectivity(false)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -153,6 +155,7 @@ BaseGridGeometry::BaseGridGeometry(
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
    d_ratio_to_level_zero(1, IntVector::getOne(d_dim)),
+   d_ratios_are_isotropic(true),
    d_has_enhanced_connectivity(false)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -3021,6 +3024,17 @@ BaseGridGeometry::setUpRatios(
       d_ratio_to_level_zero[ln] = d_ratio_to_level_zero[ln-1] *
                                   ratio_to_coarser[ln];
    }
+
+   if (d_number_blocks > 1) {
+      for (int ln = 1; ln < max_levels; ++ln) {
+         if (d_ratio_to_level_zero[ln].min() !=
+             d_ratio_to_level_zero[ln].max()) {
+            d_ratios_are_isotropic = false;
+            break;
+         }
+      }
+   }
+
 }
 
 void
@@ -3316,6 +3330,7 @@ BaseGridGeometry::setUpFineLevelMultiblockData(
       }
 
    }
+
 }
 
 

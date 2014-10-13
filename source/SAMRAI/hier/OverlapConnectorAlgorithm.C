@@ -202,7 +202,8 @@ OverlapConnectorAlgorithm::extractNeighbors(
       }
       else {
          BoxContainer grown_boxes;
-         if (grid_geom->getNumberBlocks() == 1) {
+         if (grid_geom->getNumberBlocks() == 1 ||
+             grid_geom->hasIsotropicRatios()) {
             Box grown_box = box;
             grown_box.grow(width);
             if (connector.getHeadCoarserFlag() == false) {
@@ -328,9 +329,10 @@ OverlapConnectorAlgorithm::extractNeighbors(
             other.insertLocalNeighbor(*si, base_box_itr);
          }
       } else {
-//         Box grown_box = box;
          BoxContainer grown_boxes;
-         if (grid_geom->getNumberBlocks() == 1) {
+         if (grid_geom->getNumberBlocks() == 1 ||
+             grid_geom->hasIsotropicRatios()) {
+
             Box grown_box = box;
             grown_box.grow(width);
             if (connector.getHeadCoarserFlag()) {
@@ -1566,6 +1568,9 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
    const IntVector& head_refinement_ratio(
       bridging_connector.getHead().getRefinementRatio());
 
+   const hier::BaseGridGeometry& grid_geom = 
+      *bridging_connector.getBase().getGridGeometry();
+
    bool refine_base = false;
    bool coarsen_base = false;
    if (bridging_connector.getHead().getRefinementRatio() ==
@@ -1599,7 +1604,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
                     << visible_base_nabrs_box << std::endl;
       }
       BoxContainer grown_boxes;
-      if (bridging_connector.getBase().getGridGeometry()->getNumberBlocks() == 1) {
+      if (grid_geom.getNumberBlocks() == 1 || grid_geom.hasIsotropicRatios()) {
          Box base_box = visible_base_nabrs_box;
          const BlockId& block_id = base_box.getBlockId();
          base_box.grow(bridging_connector.getConnectorWidth());

@@ -1445,7 +1445,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
 
          hier::Box coarse_interp_box(unfilled_box);
          hier::BoxContainer coarse_interp_boxes; 
-         if (nblocks == 1) {
+         if (nblocks == 1 || grid_geometry->hasIsotropicRatios()) {
             coarse_interp_boxes.pushBack(coarse_interp_box);
          } else {
             hier::BoxUtilities::growAndChopAtBlockBoundary(

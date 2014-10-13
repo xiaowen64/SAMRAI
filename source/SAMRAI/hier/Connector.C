@@ -417,7 +417,7 @@ Connector::shrinkWidth(
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom(
       getBase().getGridGeometry());
 
-   if (grid_geom->getNumberBlocks() == 1) {
+   if (grid_geom->getNumberBlocks() == 1 || grid_geom->hasIsotropicRatios()) {
       for (NeighborhoodIterator ei = begin(); ei != end(); ++ei) {
          const BoxId& box_id = *ei;
          const Box& box = *getBase().getBoxStrict(box_id);
@@ -2289,9 +2289,10 @@ Connector::findOverlaps_rbbt(
 
       // Grow the base_box and put it in the head refinement ratio.
       Box box = base_box;
+      BoxContainer grown_boxes;
 
-      if (base.getGridGeometry()->getNumberBlocks() == 1) {
-         const BlockId& block_id = box.getBlockId();
+      if (base.getGridGeometry()->getNumberBlocks() == 1 ||
+          base.getGridGeometry()->hasIsotropicRatios()) {
          box.grow(getConnectorWidth());
 
          if (head_is_finer) {
@@ -2299,32 +2300,26 @@ Connector::findOverlaps_rbbt(
          } else if (base_is_finer) {
             box.coarsen(getRatio());
          }
-
-         // Add found overlaps to neighbor set for box.
-         rbbt.findOverlapBoxes(nabrs_for_box,
-            box,
-            head.getRefinementRatio(),
-            true);
+         grown_boxes.pushBack(box);
       } else {
-         BoxContainer grown_boxes;
          BoxUtilities::growAndChopAtBlockBoundary(grown_boxes,
             box,
             base.getGridGeometry(),
             base.getRefinementRatio(),
             getRatio(),
-            getConnectorWidth(), 
+            getConnectorWidth(),
             head_is_finer,
             base_is_finer);
+      }
 
-         for (BoxContainer::iterator b_itr = grown_boxes.begin();
-              b_itr != grown_boxes.end(); ++b_itr) {
+      for (BoxContainer::iterator b_itr = grown_boxes.begin();
+           b_itr != grown_boxes.end(); ++b_itr) {
 
-            // Add found overlaps to neighbor set for box.
-            rbbt.findOverlapBoxes(nabrs_for_box,
-               *b_itr,
-               head.getRefinementRatio(),
-               true);
-         }
+         // Add found overlaps to neighbor set for box.
+         rbbt.findOverlapBoxes(nabrs_for_box,
+            *b_itr,
+            head.getRefinementRatio(),
+            true);
       }
       if (discard_self_overlap) {
          nabrs_for_box.order();

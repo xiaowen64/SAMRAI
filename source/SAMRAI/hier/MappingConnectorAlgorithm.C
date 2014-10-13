@@ -1318,7 +1318,8 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
       Box compare_box = base_box;
       BoxContainer compare_boxes;
 
-      if (grid_geometry->getNumberBlocks() == 1) {
+      if (grid_geometry->getNumberBlocks() == 1 ||
+          grid_geometry->hasIsotropicRatios()) {
          compare_box.grow(mapped_connector.getConnectorWidth());
          if (unmapped_connector.getHeadCoarserFlag()) {
             compare_box.coarsen(unmapped_connector.getRatio());

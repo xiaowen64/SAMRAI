@@ -1168,6 +1168,12 @@ private:
       return d_has_enhanced_connectivity;
    }
 
+   bool
+   hasIsotropicRatios() const
+   {
+      return d_ratios_are_isotropic; 
+   }
+
    void
    setUpRatios(
       const std::vector<IntVector>& ratio_to_coarser);
@@ -1447,6 +1453,8 @@ private:
    std::vector<BoxContainer> d_singularity;
 
    std::vector<IntVector> d_ratio_to_level_zero;
+
+   bool d_ratios_are_isotropic;
 
    /*!
     * @brief Tell whether there is enhanced connectivity anywhere in the
