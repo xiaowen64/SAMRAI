@@ -611,22 +611,22 @@ int main(
 #endif
             }
          }
+
+#ifdef RECORD_STATS
+         /*
+          * Output statistics.
+          */
+         tbox::plog << "HyperbolicLevelIntegrator statistics:" << endl;
+         hyp_level_integrator->printStatistics(tbox::plog);
+         tbox::plog << "\nGriddingAlgorithm statistics:" << endl;
+         gridding_algorithm->printStatistics(tbox::plog);
+#endif
       } // End time-stepping loop.
 
       /*
        * Output timer results.
        */
       tbox::TimerManager::getManager()->print(tbox::plog);
-
-#ifdef RECORD_STATS
-      /*
-       * Output statistics.
-       */
-      tbox::plog << "HyperbolicLevelIntegrator statistics:" << endl;
-      hyp_level_integrator->printStatistics(tbox::plog);
-      tbox::plog << "\nGriddingAlgorithm statistics:" << endl;
-      gridding_algorithm->printStatistics(tbox::plog);
-#endif
 
       if (load_balancer_type == "TreeLoadBalancer") {
          /*

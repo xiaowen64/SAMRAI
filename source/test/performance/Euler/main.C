@@ -603,6 +603,14 @@ int main(
          }
          t_write_viz->stop();
 
+         /*
+          * Output statistics.
+          */
+         tbox::plog << "HyperbolicLevelIntegrator statistics:" << endl;
+         hyp_level_integrator->printStatistics(tbox::plog);
+         tbox::plog << "\nGriddingAlgorithm statistics:" << endl;
+         gridding_algorithm->printStatistics(tbox::plog);
+
       } // End time-stepping loop.
 
       t_all->stop();
@@ -616,14 +624,6 @@ int main(
        */
       tbox::TimerManager::getManager()->print(tbox::plog);
 
-
-      /*
-       * Output statistics.
-       */
-      tbox::plog << "HyperbolicLevelIntegrator statistics:" << endl;
-      hyp_level_integrator->printStatistics(tbox::plog);
-      tbox::plog << "\nGriddingAlgorithm statistics:" << endl;
-      gridding_algorithm->printStatistics(tbox::plog);
 
       if (partitioner_type == "TreeLoadBalancer") {
          /*
