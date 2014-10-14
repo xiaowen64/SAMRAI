@@ -457,8 +457,8 @@ void SinusoidalFrontTagger::computeFrontsData(
 
    /*
     * Compute box to contain the nodes' front position.  The box
-    * should be big enough for computing data in fill_box.
-    * Squash the front box to a single i-plane because front position
+    * should be big enough for computing data in fill_box.  Squash the
+    * front box to a single i-plane because reference front position
     * is indepenent of i.
     */
    hier::Box front_box = fill_box;
