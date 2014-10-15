@@ -410,9 +410,17 @@ void SinusoidalFrontGenerator::computePatchData(
 
    t_setup->stop();
 
-   computeFrontsData(dist_data, uval_data, tag_data,
-                     patch.getBox(),
-                     d_buffer_distance[patch.getPatchLevelNumber()], xlo, dx, time);
+   if ( tag_data ) {
+      computeFrontsData(dist_data, uval_data, tag_data,
+                        patch.getBox(),
+                        d_buffer_distance[patch.getPatchLevelNumber()], xlo, dx, time);
+   }
+   else {
+      // Not computing tag => no tag buffer needed.
+      computeFrontsData(dist_data, uval_data, tag_data,
+                        patch.getBox(),
+                        std::vector<double>(d_dim.getValue(),0.0), xlo, dx, time);
+   }
 }
 
 

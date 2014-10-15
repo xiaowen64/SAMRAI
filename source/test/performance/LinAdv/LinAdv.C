@@ -1225,9 +1225,7 @@ void LinAdv::setPhysicalBoundaryConditions(
                patch.getBox(),
                ghost_width_to_fill);
 
-         d_sine_wall->computeFrontsData(
-            0, uval.get(), 0,
-            fill_box, std::vector<double>(d_dim.getValue(),0.0), xlo, dx, fill_time);
+         d_sine_wall->computePatchData( patch, fill_time, 0, uval.get(), 0 );
 
       }
 
