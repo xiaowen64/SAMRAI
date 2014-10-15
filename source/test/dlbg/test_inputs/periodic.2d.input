@@ -30,12 +30,17 @@ Main {
 
 DLBGTest {
   sine_tagger {
-    allocate_data = FALSE
-    period = 1
+    period = 1.0, 1.0
     amplitude = .3
     init_disp = -0.42, 0.0
     // init_disp = -0.00, 0.25
-    velocity = 0.018, 0.005
+    velocity = 0.015, 0.010
+
+    // Tagging buffer, in physical space units.
+    buffer_distance_0 = 0.2, 0.2
+    buffer_distance_1 = 0.1, 0.1
+    buffer_distance_2 = 0.05, 0.05
+    buffer_distance_3 = 0.00, 0.00
   }
 }
 

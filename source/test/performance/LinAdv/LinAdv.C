@@ -120,11 +120,11 @@ LinAdv::LinAdv(
    const tbox::Dimension& dim,
    boost::shared_ptr<tbox::Database> input_db,
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geom,
-   SinusoidalFrontTagger* analytical_tagger):
+   SinusoidalFrontGenerator* sine_wall):
    algs::HyperbolicPatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
-   d_analytical_tagger(analytical_tagger),
+   d_sine_wall(sine_wall),
    d_grid_geometry(grid_geom),
    d_use_nonuniform_workload(false),
    d_uval(new pdat::CellVariable<double>(dim, "uval", 1)),
@@ -227,8 +227,8 @@ void LinAdv::registerModelVariables(
          "SCALAR",
          vardb->mapVariableAndContextToIndex(
             d_uval, integrator->getPlotContext()));
-      if (d_analytical_tagger) {
-         d_analytical_tagger->registerVariablesWithPlotter(*d_visit_writer);
+      if (d_sine_wall) {
+         d_sine_wall->registerVariablesWithPlotter(*d_visit_writer);
       }
    }
 #endif
@@ -324,7 +324,7 @@ void LinAdv::initializeDataOnPatch(
 
       TBOX_ASSERT(uval);
 
-      d_analytical_tagger->computePatchData(
+      d_sine_wall->computePatchData(
          patch,
          data_time,
          0, uval.get(), 0);
@@ -343,8 +343,8 @@ void LinAdv::initializeDataOnPatch(
       workload_data->fillAll(1.0);
    }
 
-   if (d_analytical_tagger) {
-      d_analytical_tagger->initializePatchData(patch,
+   if (d_sine_wall) {
+      d_sine_wall->initializePatchData(patch,
          data_time,
          initial_time,
          true);
@@ -1225,9 +1225,9 @@ void LinAdv::setPhysicalBoundaryConditions(
                patch.getBox(),
                ghost_width_to_fill);
 
-         d_analytical_tagger->computeFrontsData(
+         d_sine_wall->computeFrontsData(
             0, uval.get(), 0,
-            fill_box, hier::IntVector::getZero(d_dim), xlo, dx, fill_time);
+            fill_box, std::vector<double>(d_dim.getValue(),0.0), xlo, dx, fill_time);
 
       }
 
@@ -1462,9 +1462,9 @@ void LinAdv::tagGradientDetectorCells(
       new pdat::CellData<int>(pbox, 1, d_nghosts));
    temp_tags->fillAll(not_refine_tag_val);
 
-   if (d_analytical_tagger) {
+   if (d_sine_wall) {
       t_analytical_tag->start();
-      d_analytical_tagger->computePatchData(patch,
+      d_sine_wall->computePatchData(patch,
          regrid_time,
          0,
          0,
@@ -2239,7 +2239,7 @@ void LinAdv::readStateDataEntry(
 
 void LinAdv::setAnalyticalTaggerTime(
    double time) {
-   if (d_analytical_tagger) {
-      d_analytical_tagger->setTime(time);
+   if (d_sine_wall) {
+      d_sine_wall->setTime(time);
    }
 }

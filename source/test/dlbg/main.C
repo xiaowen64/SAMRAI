@@ -89,7 +89,7 @@ int main(
    {
       tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      tbox::plog << "Input file is " << input_filename << std::endl;
+      tbox::pout << "Input file is " << input_filename << std::endl;
 
       std::string case_name;
       if (argc >= 2) {
@@ -153,7 +153,7 @@ int main(
          base_name = base_name + '-'
             + tbox::Utilities::intToString(mpi.getSize(), 5);
       }
-      tbox::plog << "Added case name (" << case_name << ") and nprocs ("
+      tbox::pout << "Added case name (" << case_name << ") and nprocs ("
                  << mpi.getSize() << ") to base name -> '"
                  << base_name << "'\n";
 
@@ -178,11 +178,11 @@ int main(
       }
 
       if (!case_name.empty()) {
-         tbox::plog << "Added case name (" << case_name << ") and nprocs ("
+         tbox::pout << "Added case name (" << case_name << ") and nprocs ("
                     << mpi.getSize() << ") to base name -> '"
                     << base_name << "'\n";
       }
-      tbox::plog << "Running on " << mpi.getSize()
+      tbox::pout << "Running on " << mpi.getSize()
                  << " processes.\n";
 
       int ln;
@@ -365,7 +365,7 @@ int main(
 
       for (int istep = 0; istep < num_steps; ++istep) {
 
-         tbox::plog << "Adaption number " << istep << std::endl;
+         tbox::pout << "Adaption number " << istep << std::endl;
          if (verbose > 0 && mpi.getRank() == 0) {
             tbox::pout << "Adaption number " << istep << std::endl;
          }

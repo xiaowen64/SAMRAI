@@ -59,7 +59,7 @@ using namespace std;
 // Header for application-specific algorithm/data structure object
 
 #include "LinAdv.h"
-#include "SinusoidalFrontTagger.h"
+#include "SinusoidalFrontGenerator.h"
 
 #include "boost/shared_ptr.hpp"
 
@@ -336,13 +336,13 @@ int main(
             input_db->getDatabase("PatchHierarchy")));
 
       const bool use_analytical_tagger =
-         input_db->isDatabase("SinusoidalFrontTagger");
+         input_db->isDatabase("SinusoidalFrontGenerator");
 
-      SinusoidalFrontTagger analytical_tagger(
-         "SinusoidalFrontTagger",
+      SinusoidalFrontGenerator analytical_tagger(
+         "SinusoidalFrontGenerator",
          dim,
-         input_db->getDatabaseWithDefault("SinusoidalFrontTagger",
-            boost::shared_ptr<tbox::Database>()).get());
+         input_db->getDatabaseWithDefault("SinusoidalFrontGenerator",
+            boost::shared_ptr<tbox::Database>()));
       analytical_tagger.resetHierarchyConfiguration(patch_hierarchy, 0, 3);
 
       LinAdv* linear_advection_model = new LinAdv(

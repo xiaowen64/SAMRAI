@@ -26,7 +26,7 @@ using namespace std;
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/solv/CartesianRobinBcHelper.h"
 #include "SAMRAI/solv/RobinBcCoefStrategy.h"
-#include "SinusoidalFrontTagger.h"
+#include "SinusoidalFrontGenerator.h"
 
 using namespace SAMRAI;
 
@@ -103,7 +103,7 @@ private:
 
    boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
-   SinusoidalFrontTagger d_tagger;
+   SinusoidalFrontGenerator d_sine_wall;
 
    /*!
     * @brief Front time.

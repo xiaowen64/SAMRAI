@@ -23,7 +23,6 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/mesh/StandardTagAndInitStrategy.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/NodeData.h"
@@ -97,13 +96,6 @@ public:
       int autoscale_base_nprocs,
       const tbox::SAMRAI_MPI & mpi);
 
-   virtual void
-   resetHierarchyConfiguration(
-      /*! New hierarchy */
-      const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
-      /*! Coarsest level */ const int coarsest_level,
-      /*! Finest level */ const int finest_level);
-
    //@}
 
    void
@@ -111,14 +103,7 @@ public:
       hier::Patch& patch,
       const double init_data_time,
       const bool initial_time,
-      const bool allocate_data)
-   {
-      NULL_USE(patch);
-      NULL_USE(init_data_time);
-      NULL_USE(initial_time);
-      NULL_USE(allocate_data);
-      TBOX_ERROR("Should not be here.");
-   }
+      const bool allocate_data);
 
    bool
    packDerivedDataIntoDoubleBuffer(
@@ -156,15 +141,30 @@ public:
       const double dx[],
       const double time) const;
 
-   /*!
-    * @brief Set the independent time variable in the front equation.
+   /*
+    * Compute patch data allocated by this class, on a hierarchy.
     */
    void
-   setTime( double time ) {
+   computeHierarchyData(
+      hier::PatchHierarchy& hierarchy,
+      double time) {
+      NULL_USE(hierarchy);
       d_time = time;
    }
 
-private:
+   /*!
+    * @brief Compute distance and tag data for a level.
+    */
+   void
+   computeLevelData(
+      const hier::PatchHierarchy& hierarchy,
+      const int ln,
+      const double time,
+      const int dist_id,
+      const int tag_id,
+      const boost::shared_ptr<hier::PatchLevel>& old_level =
+         boost::shared_ptr<hier::PatchLevel>()) const;
+
    /*!
     * @brief Compute distance and tag data for a patch.
     */
@@ -176,6 +176,84 @@ private:
       pdat::CellData<double>* uval_data,
       pdat::CellData<int>* tag_data) const;
 
+   /*!
+    * @brief Deallocate internally managed patch data on level.
+    */
+   void
+   deallocatePatchData(
+      hier::PatchLevel& level) {
+      NULL_USE(level);
+   }
+
+   /*!
+    * @brief Deallocate internally managed patch data on hierarchy.
+    */
+   void
+   deallocatePatchData(
+      hier::PatchHierarchy& hierarchy) {
+      NULL_USE(hierarchy);
+   }
+
+   //@{ @name SAMRAI::mesh::StandardTagAndInitStrategy virtuals
+
+   virtual void
+   resetHierarchyConfiguration(
+      /*! New hierarchy */
+      const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
+      /*! Coarsest level */ const int coarsest_level,
+      /*! Finest level */ const int finest_level);
+
+   /*!
+    * @brief Allocate and initialize data for a new level
+    * in the patch hierarchy.
+    *
+    * @see SAMRAI::mesh::StandardTagAndInitStrategy::initializeLevelData()
+    */
+   void
+   initializeLevelData(
+      /*! Hierarchy to initialize */
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      /*! Level to initialize */
+      const int level_number,
+      const double init_data_time,
+      const bool can_be_refined,
+      /*! Whether level is being introduced for the first time */
+      const bool initial_time,
+      /*! Level to copy data from */
+      const boost::shared_ptr<hier::PatchLevel>& old_level =
+         boost::shared_ptr<hier::PatchLevel>(),
+      /*! Whether data on new patch needs to be allocated */
+      const bool allocate_data = true)
+   {
+      NULL_USE(hierarchy);
+      NULL_USE(level_number);
+      NULL_USE(init_data_time);
+      NULL_USE(can_be_refined);
+      NULL_USE(initial_time);
+      NULL_USE(old_level);
+      NULL_USE(allocate_data);
+   }
+
+   virtual void
+   applyGradientDetector(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const int level_number,
+      const double error_data_time,
+      const int tag_index,
+      const bool initial_time,
+      const bool uses_richardson_extrapolation);
+
+   //@}
+
+   /*!
+    * @brief Set the independent time variable in the front equation.
+    */
+   void
+   setTime( double time ) {
+      d_time = time;
+   }
+
+private:
    std::string d_name;
 
    const tbox::Dimension d_dim;

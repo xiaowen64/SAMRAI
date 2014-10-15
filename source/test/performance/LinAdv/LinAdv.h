@@ -33,7 +33,7 @@ using namespace std;
 #include "SAMRAI/appu/VisItDataWriter.h"
 #include "SAMRAI/appu/VisDerivedDataStrategy.h"
 
-#include "SinusoidalFrontTagger.h"
+#include "SinusoidalFrontGenerator.h"
 
 #include "boost/shared_ptr.hpp"
 
@@ -80,7 +80,7 @@ public:
       const tbox::Dimension& dim,
       boost::shared_ptr<tbox::Database> input_db,
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geom,
-      SinusoidalFrontTagger* analytical_tagger = 0);
+      SinusoidalFrontGenerator* sine_wall = 0);
 
    /**
     * The destructor for LinAdv does nothing.
@@ -394,7 +394,7 @@ private:
 
    const tbox::Dimension d_dim;
 
-   SinusoidalFrontTagger* d_analytical_tagger;
+   SinusoidalFrontGenerator* d_sine_wall;
 
    /*
     * We cache pointers to the grid geometry
