@@ -487,7 +487,7 @@ GriddingAlgorithm::makeCoarsestLevel(
       }
 
       if (d_print_steps) {
-         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: finding new<==>new.\n";
+         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: finding new<==>new." << std::endl;
       }
       new_to_new.reset(new hier::Connector( *new_box_level, *new_box_level,
                                             d_hierarchy->getRequiredConnectorWidth(0, 0, true) ) );
@@ -822,9 +822,9 @@ GriddingAlgorithm::makeFinerLevel(
             tag_to_new,
             tag_ln);
 
-         new_to_tag = &tag_to_new->getTranspose();
-
          if (new_box_level && new_box_level->isInitialized()) {
+
+            new_to_tag = &tag_to_new->getTranspose();
 
             if (d_check_proper_nesting) {
                /*
