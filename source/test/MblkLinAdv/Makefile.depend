@@ -316,6 +316,7 @@ FILE_3=main.o
 DEPENDS_3:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/algs/TimeRefinementIntegrator.h		\
+	$(INCLUDE_SAM)/SAMRAI/algs/TimeRefinementIntegratorConnectorWidthRequestor.h\
 	$(INCLUDE_SAM)/SAMRAI/algs/TimeRefinementLevelStrategy.h	\
 	$(INCLUDE_SAM)/SAMRAI/appu/BoundaryUtilityStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisDerivedDataStrategy.h		\

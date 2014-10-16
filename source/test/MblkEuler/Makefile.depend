@@ -243,6 +243,7 @@ FILE_4=main.o
 DEPENDS_4:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/algs/TimeRefinementIntegrator.h		\
+	$(INCLUDE_SAM)/SAMRAI/algs/TimeRefinementIntegratorConnectorWidthRequestor.h\
 	$(INCLUDE_SAM)/SAMRAI/algs/TimeRefinementLevelStrategy.h	\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisDerivedDataStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisItDataWriter.h			\
