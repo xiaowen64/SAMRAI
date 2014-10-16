@@ -1021,8 +1021,8 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
     * neither is known, we assume that both east and west nest in
     * center, and just to do something reasonable.
     */
-   IntVector output_width1(IntVector::getZero(dim));
-   IntVector output_width2(IntVector::getZero(dim));
+   IntVector output_width1(IntVector::getMultiZero(dim));
+   IntVector output_width2(IntVector::getMultiZero(dim));
    if (west_nesting_is_known || east_nesting_is_known) {
       if (west_nesting_is_known) {
          output_width1 =

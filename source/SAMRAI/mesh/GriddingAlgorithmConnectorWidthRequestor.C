@@ -137,8 +137,8 @@ GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFrom
 {
    NULL_USE(max_stencil_width_at_coarse);
 
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const tbox::Dimension& dim(fine_to_fine_width.getDim());
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY7(dim,
       coarse_to_fine_width,
       coarse_to_coarse_width,
