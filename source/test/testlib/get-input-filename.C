@@ -10,7 +10,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include <string>
 
-#include "get-input-filename.h"
+#include "test/testlib/get-input-filename.h"
 
 int get_input_filename(
    int* argc,

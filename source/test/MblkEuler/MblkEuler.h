@@ -26,8 +26,8 @@ using namespace std;
 #define included_String
 
 #include "MblkGeometry.h"
-#include "MblkHyperbolicLevelIntegrator.h"
-#include "MblkHyperbolicPatchStrategy.h"
+#include "test/testlib/MblkHyperbolicLevelIntegrator.h"
+#include "test/testlib/MblkHyperbolicPatchStrategy.h"
 
 // ----------------------------------------------------------------------
 

@@ -14,6 +14,7 @@ SUBDIR        = source/test/testlib
 VPATH         = @srcdir@
 TESTTOOLS     = ../../testtools
 OBJECT        = ../../..
+TESTLIBDIR    = $(OBJECT)/source/test/testlib
 
 default: check	
 

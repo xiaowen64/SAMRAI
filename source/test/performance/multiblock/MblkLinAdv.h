@@ -23,8 +23,8 @@
 #include "SAMRAI/pdat/FaceVariable.h"
 #include "SAMRAI/appu/BoundaryUtilityStrategy.h"
 
-#include "SkeletonCellDoubleConservativeLinearRefine.h"
-#include "SkeletonCellDoubleWeightedAverage.h"
+#include "test/testlib/SkeletonCellDoubleConservativeLinearRefine.h"
+#include "test/testlib/SkeletonCellDoubleWeightedAverage.h"
 #include "SkeletonOutersideDoubleWeightedAverage.h"
 #include <string>
 #include <vector>
@@ -36,8 +36,8 @@ using namespace std;
 
 // Local classes used for this application
 #include "MblkGeometry.h"
-#include "MblkHyperbolicLevelIntegrator.h"
-#include "MblkHyperbolicPatchStrategy.h"
+#include "test/testlib/MblkHyperbolicLevelIntegrator.h"
+#include "test/testlib/MblkHyperbolicPatchStrategy.h"
 
 #include "boost/shared_ptr.hpp"
 

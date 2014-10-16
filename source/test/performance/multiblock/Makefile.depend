@@ -97,6 +97,7 @@ ${FILE_0}: ${DEPENDS_0}
 FILE_1=MblkLinAdv.o
 DEPENDS_1:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
+	$(INCLUDE_SAM)/SAMRAI/algs/TimeRefinementLevelStrategy.h	\
 	$(INCLUDE_SAM)/SAMRAI/appu/BoundaryUtilityStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/appu/CartesianBoundaryDefines.h		\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisDerivedDataStrategy.h		\
@@ -147,8 +148,11 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
+	$(INCLUDE_SAM)/SAMRAI/mesh/GriddingAlgorithmStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/LoadBalanceStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/PartitioningParams.h			\
+	$(INCLUDE_SAM)/SAMRAI/mesh/StandardTagAndInitStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/mesh/TagAndInitializeStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TransitLoad.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TreeLoadBalancer.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
@@ -219,13 +223,25 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h MblkGeometry.h	\
+	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
+	$(TESTLIBDIR)/MblkHyperbolicLevelIntegrator.h			\
+	$(TESTLIBDIR)/MblkHyperbolicPatchStrategy.h			\
+	$(TESTLIBDIR)/SkeletonBoundaryUtilities2.h			\
+	$(TESTLIBDIR)/SkeletonBoundaryUtilities3.h			\
+	$(TESTLIBDIR)/SkeletonCellDoubleConservativeLinearRefine.h	\
+	$(TESTLIBDIR)/SkeletonCellDoubleWeightedAverage.h MblkGeometry.h\
 	MblkLinAdv.C MblkLinAdv.h					\
 	SkeletonOutersideDoubleWeightedAverage.h
 
@@ -335,6 +351,7 @@ FILE_3=main.o
 DEPENDS_3:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/algs/TimeRefinementIntegrator.h		\
+	$(INCLUDE_SAM)/SAMRAI/algs/TimeRefinementIntegratorConnectorWidthRequestor.h\
 	$(INCLUDE_SAM)/SAMRAI/algs/TimeRefinementLevelStrategy.h	\
 	$(INCLUDE_SAM)/SAMRAI/appu/BoundaryUtilityStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisDerivedDataStrategy.h		\
@@ -469,6 +486,11 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenAlgorithm.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenPatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/CoarsenTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
@@ -476,7 +498,11 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h MblkGeometry.h	\
+	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
+	$(TESTLIBDIR)/MblkHyperbolicLevelIntegrator.h			\
+	$(TESTLIBDIR)/MblkHyperbolicPatchStrategy.h			\
+	$(TESTLIBDIR)/SkeletonCellDoubleConservativeLinearRefine.h	\
+	$(TESTLIBDIR)/SkeletonCellDoubleWeightedAverage.h MblkGeometry.h\
 	MblkLinAdv.h SkeletonOutersideDoubleWeightedAverage.h main.C
 
 DEPENDS_3 +=\

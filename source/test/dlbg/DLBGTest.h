@@ -25,7 +25,7 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/solv/CartesianRobinBcHelper.h"
 #include "SAMRAI/solv/RobinBcCoefStrategy.h"
-#include "SinusoidalFrontTagger.h"
+#include "test/testlib/SinusoidalFrontTagger.h"
 
 using namespace SAMRAI;
 
