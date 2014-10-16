@@ -761,27 +761,7 @@ void shrinkBoxLevel(
       }
    }
 
-#if 1
    hier::BoxContainer boundary_boxes = visible_boxes;
-#else
-   std::map<hier::BlockId, hier::BoxContainer> boundary_boxes;
-   for (hier::BoxContainer::const_iterator si = visible_boxes.begin();
-        si != visible_boxes.end(); ++si) {
-
-      std::map<hier::BlockId, hier::BoxContainer>::iterator bdry_iter =
-         boundary_boxes.find(si->getBlockId());
-
-      if (bdry_iter != boundary_boxes.end()) {
-         bdry_iter->second.pushBack(*si);
-      } else {
-         hier::BoxContainer bdry_list(*si);
-         boundary_boxes.insert(
-            std::pair<hier::BlockId, hier::BoxContainer>(si->getBlockId(),
-               bdry_list));
-      }
-
-   }
-#endif
 
    hier::BoxLevelConnectorUtils mblcu;
 
@@ -790,20 +770,8 @@ void shrinkBoxLevel(
       big_box_level.getRefinementRatio(),
       big_box_level.getGridGeometry());
 
-#if 1
    tbox::plog << "shrinkBoxLevel: Boundary plain boxes:\n"
               << boundary_boxes.format("\n", 2);
-#else
-   tbox::plog << "shrinkBoxLevel: Boundary plain boxes:\n";
-   for (std::map<hier::BlockId, hier::BoxContainer>::iterator mi = boundary_boxes.begin();
-        mi != boundary_boxes.end(); ++mi) {
-      tbox::plog << "Block " << mi->first << '\n';
-      for (hier::BoxContainer::iterator bi = mi->second.begin();
-           bi != mi->second.end(); ++bi) {
-         tbox::plog << "  " << *bi << '\t' << bi->numberCells() << '\n';
-      }
-   }
-#endif
 
    /*
     * Construct the complement of the small_box_level by
@@ -813,7 +781,6 @@ void shrinkBoxLevel(
    hier::BoxContainer complement_boxes;
 
    hier::LocalId last_local_id(-1);
-#if 1
    for (hier::BoxContainer::const_iterator bi = boundary_boxes.begin();
         bi != boundary_boxes.end(); ++bi) {
       hier::Box box(*bi);
@@ -822,25 +789,6 @@ void shrinkBoxLevel(
          box, ++last_local_id, local_rank);
       complement_boxes.insert(complement_box);
    }
-#else
-   for (std::map<hier::BlockId, hier::BoxContainer>::iterator mi = boundary_boxes.begin();
-        mi != boundary_boxes.end(); ++mi) {
-
-      hier::BlockId block_id(mi->first);
-      hier::BoxContainer& boundary_for_block(mi->second);
-
-      for (hier::BoxContainer::iterator bi = boundary_for_block.begin();
-           bi != boundary_for_block.end(); ++bi) {
-         hier::Box box(*bi);
-         assert(box.getBlockId() == block_id);
-         box.grow(shrinkage);
-         hier::Box complement_box(
-            box, ++last_local_id, local_rank);
-         complement_boxes.insert(complement_box);
-      }
-
-   }
-#endif
 
    complement_boxes.makeTree(grid_geometry.get());
 

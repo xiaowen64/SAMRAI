@@ -142,6 +142,29 @@ public:
    virtual ~Connector();
 
    /*!
+    * @brief Set this to the transpose of another Connector and
+    * populate its edges with the other's transposed edges.
+    *
+    * This method uses communication to acquire the transpose edges.
+    *
+    * @param other [i]
+    *
+    * @param mpi SAMRAI_MPI to use for communication.  If omitted, use
+    * the other.getBase().getMPI() by default.  If specified, must be
+    * congruent with the default.
+    */
+   void computeTransposeOf( const Connector &other,
+                            const tbox::SAMRAI_MPI &mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL) );
+
+   /*!
+    * @brief Transpose the visible relationships so that they point from
+    * each visible head box to a set of local base boxes.
+    */
+   void
+   reorderRelationshipsByHead(
+      std::map<Box, BoxContainer, Box::id_less>& relationships_by_head) const;
+
+   /*!
     * @brief Clear the Connector, putting it into an uninitialized state.
     */
    void

@@ -646,20 +646,9 @@ private:
    }
 
    /*!
-    * @brief Initialize static objects and register shutdown routine.
-    *
-    * Only called by StartupShutdownManager.
+    * @brief Set up timers.
     */
-   static void
-   initializeCallback();
-
-   /*!
-    * @brief Method registered with ShutdownRegister to cleanup statics.
-    *
-    * Only called by StartupShutdownManager.
-    */
-   static void
-   finalizeCallback();
+   void setupTimers();
 
    /*
     * Object dimension.
@@ -712,20 +701,14 @@ private:
    /*
     * Performance timers.
     */
-   static boost::shared_ptr<tbox::Timer> t_load_balance_boxes;
-   static boost::shared_ptr<tbox::Timer> t_load_balance_boxes_remove_intersection;
-   static boost::shared_ptr<tbox::Timer> t_get_global_boxes;
-   static boost::shared_ptr<tbox::Timer> t_bin_pack_boxes;
-   static boost::shared_ptr<tbox::Timer> t_bin_pack_boxes_sort;
-   static boost::shared_ptr<tbox::Timer> t_bin_pack_boxes_pack;
-   static boost::shared_ptr<tbox::Timer> t_chop_boxes;
-
-   /*
-    * Static initialization and cleanup handler.
-    */
-
-   static tbox::StartupShutdownManager::Handler
-      s_initialize_handler;
+   boost::shared_ptr<tbox::Timer> t_load_balance_box_level;
+   boost::shared_ptr<tbox::Timer> t_load_balance_boxes;
+   boost::shared_ptr<tbox::Timer> t_load_balance_boxes_remove_intersection;
+   boost::shared_ptr<tbox::Timer> t_get_global_boxes;
+   boost::shared_ptr<tbox::Timer> t_bin_pack_boxes;
+   boost::shared_ptr<tbox::Timer> t_bin_pack_boxes_sort;
+   boost::shared_ptr<tbox::Timer> t_bin_pack_boxes_pack;
+   boost::shared_ptr<tbox::Timer> t_chop_boxes;
 };
 
 }

@@ -139,6 +139,17 @@ public:
       const BoxLevel& globalized_head,
       const bool ignore_self_overlap = false) const;
 
+
+   /*
+    * @brief Populate overlap relationships for the given Connector by
+    * using the assumed partition algorithm to find overlaps.
+    *
+    * For the assumed partition algorithm, see Allison Baker's paper.
+    */
+   void
+   findOverlaps_assumedPartition(Connector& connector) const;
+
+
    /*!
     * @brief For a given Connector, get the subset of overlapping neighbors
     * defined by the given Connector width.
@@ -694,6 +705,7 @@ private:
     */
    struct TimerStruct {
       boost::shared_ptr<tbox::Timer> t_find_overlaps_rbbt;
+      boost::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition;
 
       boost::shared_ptr<tbox::Timer> t_bridge;
       boost::shared_ptr<tbox::Timer> t_bridge_setup_comm;

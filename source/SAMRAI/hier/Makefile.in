@@ -57,6 +57,8 @@ OBJS = 	\
 	BoxContainerSingleOwnerIterator.o \
 	BoxTree.o \
 	MultiblockBoxTree.o \
+	AssumedPartitionBox.o \
+	AssumedPartition.o \
 	BoxLevel.o \
 	BoxLevelStatistics.o \
 	PersistentOverlapConnectors.o \

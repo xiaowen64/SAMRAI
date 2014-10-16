@@ -79,12 +79,22 @@ public:
     *
     * @see setupTree()
     *
+    * @param[in] mpi
+    * @param[in] make_first_rank_the_root See makeFirstRankTheRoot()
+    */
+   CenteredRankTree(
+      const SAMRAI_MPI &mpi,
+      bool make_first_rank_the_root = true);
+
+   /*!
+    * @brief Initializing constructor.
+    *
+    * @see setupTree()
+    *
     * @param[in] first_rank
     * @param[in] last_rank
     * @param[in] rank
     * @param[in] make_first_rank_the_root See makeFirstRankTheRoot()
-    *
-    * @see initialize().
     */
    CenteredRankTree(
       int first_rank,
@@ -172,9 +182,6 @@ public:
 
    /*!
     * @brief Return the rank of the root of the tree.
-    *
-    * In this implementation, the root is the first_rank argument of
-    * initialize().
     */
    int getRootRank() const {
       return d_root_rank;
@@ -223,8 +230,6 @@ private:
 
    /*!
     * @brief Initialized rank.
-    *
-    * @see initialize();
     */
    int d_rank;
 

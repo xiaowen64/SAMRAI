@@ -66,8 +66,8 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_object_name(name),
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_mpi_is_dupe(false),
-   d_tile_size(dim, 1),
-   d_max_cycle_spread_procs(500),
+   d_tile_size(dim,1),
+   d_max_spread_procs(500),
    d_voucher_mode(false),
    d_allow_box_breaking(true),
    d_rank_tree(rank_tree ? rank_tree : boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::
@@ -201,19 +201,12 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       TBOX_ASSERT(d_mpi.getSize() == balance_box_level.getMPI().getSize());
       TBOX_ASSERT(d_mpi.getRank() == balance_box_level.getMPI().getRank());
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (d_mpi.getSize() > 1) {
-         int compare_result;
-         tbox::SAMRAI_MPI::Comm_compare(
-            d_mpi.getCommunicator(),
-            balance_box_level.getMPI().getCommunicator(),
-            &compare_result);
-         if (compare_result != MPI_CONGRUENT) {
-            TBOX_ERROR("TreeLoadBalancer::loadBalanceBoxLevel:\n"
-               << "The input balance_box_level has a SAMRAI_MPI that is\n"
-               << "not congruent with the one set with setSAMRAI_MPI().\n"
-               << "You must use freeMPICommunicator() before balancing\n"
-               << "a BoxLevel with an incongruent SAMRAI_MPI.");
-         }
+      if ( !d_mpi.isCongruentWith(balance_box_level.getMPI()) ) {
+         TBOX_ERROR("TreeLoadBalancer::loadBalanceBoxLevel:\n"
+                    << "The input balance_box_level has a SAMRAI_MPI that is\n"
+                    << "not congruent with the one set with setSAMRAI_MPI().\n"
+                    << "You must use freeMPICommunicator() before balancing\n"
+                    << "a BoxLevel with an incongruent SAMRAI_MPI.");
       }
 #endif
    } else {
@@ -221,7 +214,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    }
 
    if (d_print_steps) {
-      tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel called with:"
+      tbox::plog << d_object_name << "::loadBalanceBoxLevel called with:"
                  << "\n  min_size = " << min_size
                  << "\n  max_size = " << max_size
                  << "\n  bad_interval = " << bad_interval
@@ -252,7 +245,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
          }
       }
       if (d_print_steps) {
-         tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel effective_cut_factor = "
+         tbox::plog << d_object_name << "::loadBalanceBoxLevel effective_cut_factor = "
                     << effective_cut_factor << std::endl;
       }
    }
@@ -340,7 +333,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    if (d_print_steps) {
       tbox::plog.setf(std::ios_base::fmtflags(0), std::ios_base::floatfield);
       tbox::plog.precision(6);
-      tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel"
+      tbox::plog << d_object_name << "::loadBalanceBoxLevel"
                  << " max_local_load=" << max_local_load
                  << " global_sum_load=" << global_sum_load
                  << " (initially born on "
@@ -356,7 +349,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    /*
     * Compute how many balancing cycles to use based on severity of
     * imbalance, using formula
-    * d_max_cycle_spread_procs^number_of_cycles >= fanout_size.
+    * d_max_spread_procs^number_of_cycles >= fanout_size.
     *
     * The objective of balancing over multiple cycles is to avoid
     * unscalable performance in cases where just a few processes own
@@ -373,14 +366,16 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    const double fanout_size = d_global_avg_load > d_pparams->getLoadComparisonTol() ?
       max_local_load / d_global_avg_load : 1.0;
    const int number_of_cycles = !rank_group.containsAllRanks() ? 1 :
-      int(ceil(log(fanout_size) / log(static_cast<double>(d_max_cycle_spread_procs))));
+      int(ceil( log(fanout_size)/log(static_cast<double>(d_max_spread_procs)) ));
    if (d_print_steps) {
-      tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel"
-                 << " max_cycle_spread_procs=" << d_max_cycle_spread_procs
+      tbox::plog << d_object_name << "::loadBalanceBoxLevel"
+                 << " max_spread_procs=" << d_max_spread_procs
                  << " fanout_size=" << fanout_size
                  << " number_of_cycles=" << number_of_cycles
                  << std::endl;
    }
+
+
 
    /*
     * The icycle loop spreads out the work each time through.  If
@@ -398,7 +393,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       if (d_report_load_balance) {
          // Debugging: check overall load balance at intermediate cycles.
          tbox::plog
-         << "TreeLoadBalancer::loadBalanceBoxLevel results before cycle "
+         << d_object_name << "::loadBalanceBoxLevel results before cycle "
          << icycle << ":" << std::endl;
          BalanceUtilities::reduceAndReportLoadBalance(
             std::vector<double>(1,local_load),
@@ -463,7 +458,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       t_compute_tree_load->stop();
 
       if (d_print_steps) {
-         tbox::plog << "TreeLoadBalancer::loadBalanceBoxLevel"
+         tbox::plog << d_object_name << "::loadBalanceBoxLevel"
                     << " cycle number=" << icycle
                     << " number_of_groups=" << number_of_groups
                     << " my group_num=" << group_num
@@ -532,8 +527,8 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    if (d_report_load_balance) {
       t_report_loads->start();
       tbox::plog
-      << "TreeLoadBalancer::loadBalanceBoxLevel results after "
-      << number_of_cycles << " cycles:" << std::endl;
+         << d_object_name << "::loadBalanceBoxLevel results after "
+         << number_of_cycles << " cycles:" << std::endl;
       BalanceUtilities::reduceAndReportLoadBalance(
          std::vector<double>(1,local_load),
          balance_box_level.getMPI());
@@ -653,33 +648,31 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
       d_mpi.Barrier();
       t_post_load_distribution_barrier->stop();
 
-      if (d_print_steps) {
-         tbox::plog
-         << "TreeLoadBalancer::loadBalanceWithinRankGroup constructing unbalanced<==>balanced.\n";
+      if ( d_print_steps ) {
+         tbox::plog << d_object_name << "::loadBalanceWithinRankGroup constructing unbalanced<==>balanced.\n";
       }
       t_assign_to_local_and_populate_maps->start();
       balanced_work->assignToLocalAndPopulateMaps(
          balanced_box_level,
          balanced_to_unbalanced,
          unbalanced_to_balanced,
-         d_flexible_load_tol);
+         d_flexible_load_tol,
+         d_mpi );
       t_assign_to_local_and_populate_maps->stop();
-      if (d_print_steps) {
-         tbox::plog
-         <<
-         "TreeLoadBalancer::loadBalanceWithinRankGroup finished constructing unbalanced<==>balanced.\n";
+      if ( d_print_steps ) {
+         tbox::plog << d_object_name << "::loadBalanceWithinRankGroup finished constructing unbalanced<==>balanced.\n";
       }
 
    }
 
    t_get_map->stop();
 
-   if (d_summarize_map) {
-      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup unbalanced--->balanced map:\n"
-                 << unbalanced_to_balanced.format("\t", 0)
+   if ( d_summarize_map ) {
+      tbox::plog << d_object_name << "::loadBalanceWithinRankGroup unbalanced--->balanced map:\n"
+                 << unbalanced_to_balanced.format("\t",0)
                  << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
-                 << "TreeLoadBalancer::loadBalanceWithinRankGroup balanced--->unbalanced map:\n"
-                 << balanced_to_unbalanced.format("\t", 0)
+                 << d_object_name << "::loadBalanceWithinRankGroup balanced--->unbalanced map:\n"
+                 << balanced_to_unbalanced.format("\t",0)
                  << "Map statistics:\n" << balanced_to_unbalanced.formatStatistics("\t")
                  << '\n';
    }
@@ -687,21 +680,22 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
    if (d_check_map) {
       if (unbalanced_to_balanced.findMappingErrors() != 0) {
          TBOX_ERROR(
-            "TreeLoadBalancer::loadBalanceWithinRankGroup Mapping errors found in unbalanced_to_balanced!");
+            d_object_name << "::loadBalanceWithinRankGroup Mapping errors found in unbalanced_to_balanced!");
       }
       if (unbalanced_to_balanced.checkTransposeCorrectness(
              balanced_to_unbalanced)) {
          TBOX_ERROR(
-            "TreeLoadBalancer::loadBalanceWithinRankGroup Transpose errors found!");
+            d_object_name << "::loadBalanceWithinRankGroup Transpose errors found!");
       }
    }
 
-   if (d_summarize_map) {
-      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup: unbalanced--->balanced map:\n"
-                 << unbalanced_to_balanced.format("\t", 0)
+
+   if ( d_summarize_map ) {
+      tbox::plog << d_object_name << "::loadBalanceWithinRankGroup: unbalanced--->balanced map:\n"
+                 << unbalanced_to_balanced.format("\t",0)
                  << "Map statistics:\n" << unbalanced_to_balanced.formatStatistics("\t")
-                 << "TreeLoadBalancer::loadBalanceWithinRankGroup: balanced--->unbalanced map:\n"
-                 << balanced_to_unbalanced.format("\t", 0)
+                 << d_object_name << "::loadBalanceWithinRankGroup: balanced--->unbalanced map:\n"
+                 << balanced_to_unbalanced.format("\t",0)
                  << "Map statistics:\n" << balanced_to_unbalanced.formatStatistics("\t")
                  << '\n';
    }
@@ -719,7 +713,7 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
    }
 
    if (d_print_steps) {
-      tbox::plog << "TreeLoadBalancer::LoadBalanceWithinRankGroup: returning"
+      tbox::plog << d_object_name << "::LoadBalanceWithinRankGroup: returning"
                  << std::endl;
    }
 }
@@ -747,7 +741,7 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
    if (d_print_steps) {
       tbox::plog.setf(std::ios_base::fmtflags(0), std::ios_base::floatfield);
       tbox::plog.precision(6);
-      tbox::plog << "TreeLoadBalancer::LoadBalanceWithinRankGroup balancing "
+      tbox::plog << d_object_name << "::LoadBalanceWithinRankGroup balancing "
                  << group_sum_load << " units in group of "
                  << rank_group.size() << " procs, averaging " << group_avg_load
                  << " or " << pow(group_avg_load, 1.0 / d_dim.getValue())
@@ -771,11 +765,10 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
 
    // Set parameters governing box breaking.
    balanced_work.setAllowBoxBreaking(d_allow_box_breaking);
-   const double ideal_box_width = pow(group_avg_load, 1.0 / d_dim.getValue());
-   balanced_work.setThresholdWidth(1.0 * ideal_box_width);
-   if (d_print_steps) {
-      tbox::plog << "TreeLoadBalancer::distributeLoadAcrossRankGroup: ideal_box_width = "
-                 << ideal_box_width
+   const double ideal_box_width = pow(group_avg_load, 1.0/d_dim.getValue());
+   balanced_work.setThresholdWidth( 1.0*ideal_box_width );
+   if ( d_print_steps ) {
+      tbox::plog << d_object_name << "::distributeLoadAcrossRankGroup: ideal_box_width = " << ideal_box_width
                  << "\n  Set threshold width to " << balanced_work.getThresholdWidth()
                  << std::endl;
    }
@@ -1183,9 +1176,8 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
     * We have only sends to complete, so it should not take
     * long to advance them all to completion.
     */
-   if (d_print_steps) {
-      tbox::plog
-      << "TreeLoadBalancer::loadBalanceWithinRankGroup: waiting for sends to complete.\n";
+   if ( d_print_steps ) {
+      tbox::plog << d_object_name << "::loadBalanceWithinRankGroup: waiting for sends to complete.\n";
    }
 
    t_finish_sends->start();
@@ -1205,8 +1197,8 @@ TreeLoadBalancer::distributeLoadAcrossRankGroup(
       TBOX_ASSERT(parent_recv->isDone());
    }
 #endif
-   if (d_print_steps) {
-      tbox::plog << "TreeLoadBalancer::loadBalanceWithinRankGroup: completed sends.\n";
+   if ( d_print_steps ) {
+      tbox::plog << d_object_name << "::loadBalanceWithinRankGroup: completed sends.\n";
    }
 
    if (d_comm_graph_writer) {
@@ -1392,7 +1384,7 @@ TreeLoadBalancer::setSAMRAI_MPI(
    const tbox::SAMRAI_MPI& samrai_mpi)
 {
    if (samrai_mpi.getCommunicator() == tbox::SAMRAI_MPI::commNull) {
-      TBOX_ERROR("TreeLoadBalancer::setSAMRAI_MPI error: Given\n"
+      TBOX_ERROR(d_object_name << "::setSAMRAI_MPI error: Given\n"
          << "communicator is invalid.");
    }
 
@@ -1403,6 +1395,8 @@ TreeLoadBalancer::setSAMRAI_MPI(
    // Enable private communicator.
    d_mpi.dupCommunicator(samrai_mpi);
    d_mpi_is_dupe = true;
+
+   d_mca.setSAMRAI_MPI(d_mpi, true);
 }
 
 /*
@@ -1622,9 +1616,9 @@ TreeLoadBalancer::getFromInput(
       d_barrier_after = input_db->getBoolWithDefault("DEV_barrier_after",
             d_barrier_after);
 
-      d_max_cycle_spread_procs =
-         input_db->getIntegerWithDefault("max_cycle_spread_procs",
-            d_max_cycle_spread_procs);
+      d_max_spread_procs =
+         input_db->getIntegerWithDefault("max_spread_procs",
+            d_max_spread_procs);
 
       d_flexible_load_tol =
          input_db->getDoubleWithDefault("flexible_load_tolerance",
@@ -1641,9 +1635,9 @@ TreeLoadBalancer::getFromInput(
       if (input_db->isInteger("tile_size")) {
          input_db->getIntegerArray("tile_size", &d_tile_size[0], d_tile_size.getDim().getValue());
          for (int i = 0; i < d_dim.getValue(); ++i) {
-            if (!(d_tile_size[i] >= 1)) {
+            if ( !(d_tile_size[i] >= 1) ) {
                TBOX_ERROR("TreeLoadBalancer tile_size must be >= 1 in all directions.\n"
-                  << "Input tile_size is " << d_tile_size);
+                          << "Input tile_size is " << d_tile_size );
             }
          }
       }

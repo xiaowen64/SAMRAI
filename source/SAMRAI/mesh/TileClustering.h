@@ -193,7 +193,7 @@ private:
     * given tag data.
     *
     * The coarse cell values are set to tag_data if any corresponding
-    * fine cell value is tag_data.  Otherwise, the coarse cell value
+    * fine cell value is tag_value.  Otherwise, the coarse cell value
     * is set to zero.
     */
    boost::shared_ptr<pdat::CellData<int> >
@@ -268,6 +268,15 @@ private:
       hier::BoxLevel& tile_box_level,
       boost::shared_ptr<hier::Connector>& tag_to_tile);
 
+   /*!
+    * @brief Recursive bi-section version of BoxContainer::coalesce,
+    * having O(N lg N) expected complexity.
+    */
+   void
+   coalesceTiles(
+      hier::BoxContainer &tiles,
+      const hier::Box &bounding_box );
+
    const tbox::Dimension d_dim;
 
    //! @brief Tile size constraint.
@@ -295,6 +304,12 @@ private:
     * tile size.
     */
    bool d_coalesce_boxes_from_same_patch;
+
+   /*!
+    * @brief Number of boxes at which to use recursive, instead of
+    * simple, coalesce.
+    */
+   int d_recursive_coalesce_limit;
 
    /*!
     * @brief Thread locker for modifying clustering outputs with multi-threads.

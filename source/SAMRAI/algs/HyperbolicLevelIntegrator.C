@@ -580,7 +580,6 @@ HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
          hier_level->getRatioToLevelZero());
    }
 
-#if 1
    /*
     * Compute the width needed for Connectors.  The peer width for
     * coarse<==>fine can be equivalent to the width for fine<==>fine in
@@ -603,7 +602,6 @@ HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
       c_to_f_width,
       f_to_c_width,
       hier::CONNECTOR_CREATE);
-#endif
 
    if (before_advance) {
 
@@ -2467,7 +2465,7 @@ HyperbolicLevelIntegrator::printStatistics(
          }
          s
          <<
-         " Seq#  SimTime       C-Sum      C-Avg      C-Min   ->    C-Max  C-MaxNorm   B-Sum B-Avg B-Min -> B-Max B-MaxNorm  C/B-Avg\n";
+         "Seq#   SimTime           C-Sum   C-Avg   C-Min ->      C-Max  C-Max/Avg     B-Sum    B-Avg B-Min -> B-Max B-Max/Avg  C/B-Avg\n";
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:1572)
 #endif
@@ -2479,7 +2477,7 @@ HyperbolicLevelIntegrator::printStatistics(
             const double cmin = statn->getGlobalProcStatMin(cstat.getInstanceId(
                      ), sn);
             const double cavg = csum / mpi.getSize();
-            const double cmaxnorm = cavg != 0 ? cmax / cavg - 1 : 0;
+            const double cmaxnorm = cavg != 0 ? cmax / cavg : 1;
             const double bsum = statn->getGlobalProcStatSum(bstat.getInstanceId(
                      ), sn);
             const double bmax = statn->getGlobalProcStatMax(bstat.getInstanceId(
@@ -2487,29 +2485,26 @@ HyperbolicLevelIntegrator::printStatistics(
             const double bmin = statn->getGlobalProcStatMin(bstat.getInstanceId(
                      ), sn);
             const double bavg = bsum / mpi.getSize();
-            const double bmaxnorm = bavg != 0 ? bmax / bavg - 1 : 0;
+            const double bmaxnorm = bavg != 0 ? bmax / bavg : 1;
             const double stime = statn->getGlobalProcStatMin(
                   tstat.getInstanceId(),
                   sn);
-            s << std::setw(3) << sn << "  "
-              << std::scientific << std::setprecision(6) << std::setw(12)
-              << stime
-              << " "
-              << std::fixed << std::setprecision(0)
-              << std::setw(10) << csum << " "
-              << std::setw(10) << csum / mpi.getSize() << " "
-              << std::setw(10) << cmin << " -> "
-              << std::setw(10) << cmax
-              << "  " << std::setw(4) << std::setprecision(4) << cmaxnorm
-              << "  "
-              << std::fixed << std::setprecision(0)
-              << std::setw(6) << bsum << " "
-              << std::setw(5) << bsum / mpi.getSize() << " "
-              << std::setw(5) << bmin << "  ->"
-              << std::setw(5) << bmax
-              << "   " << std::setw(4) << std::setprecision(4) << bmaxnorm
-              << std::setw(10) << std::setprecision(0)
-              << (bsum != 0 ? csum / bsum : 0)
+            s << std::setw(4) << sn
+              << " " << std::scientific << std::setprecision(6) << std::setw(12) << stime
+              << " " << std::fixed << std::setprecision(0) << std::setw(12) << csum
+              << " " << std::setw(7) << cavg
+              << " " << std::setw(7) << cmin
+              << " -> " << std::setw(10) << cmax
+              << "  " << std::setw(9) << std::setprecision(2) << cmaxnorm
+              << " " << std::fixed << std::setprecision(0)
+              << std::setw(9) << bsum
+              << "  " << std::fixed << std::setprecision(2)
+              << std::setw(7) << bavg
+              << "   " << std::fixed << std::setprecision(0)
+              << std::setw(3) << bmin
+              << " -> " << std::setw(5) << bmax
+              << "  " << std::setw(8) << std::setprecision(2) << bmaxnorm
+              << "   " << std::setw(6) << std::setprecision(0) << (bsum != 0 ? csum / bsum : 0)
               << std::endl;
             n_cell_updates += csum;
             n_patch_updates += bsum;

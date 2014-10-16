@@ -1684,9 +1684,7 @@ void LinAdv::registerVisItDataWriter(
    TBOX_ASSERT(viz_writer);
 
    d_visit_writer = viz_writer;
-   d_visit_writer->registerDerivedPlotQuantity("Owner",
-      "SCALAR",
-      this);
+   d_visit_writer->registerDerivedPlotQuantity("Owner", "SCALAR", this);
 }
 #endif
 

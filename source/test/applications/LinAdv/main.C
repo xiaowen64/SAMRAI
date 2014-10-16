@@ -370,6 +370,7 @@ int main(
                input_db->getDatabaseWithDefault(
                   "BergerRigoutsos",
                   boost::shared_ptr<tbox::Database>())));
+         box_generator->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
          boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
             new mesh::TreeLoadBalancer(

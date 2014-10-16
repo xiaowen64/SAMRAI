@@ -82,7 +82,7 @@ BergerRigoutsos {
 TreeLoadBalancer {
   flexible_load_tolerance = 0.05
   tile_size = 21, 21
-  // max_cycle_spread_procs = 8
+  // max_spread_procs = 8
   DEV_voucher_mode = TRUE
   DEV_allow_box_breaking = TRUE
   // Debugging options

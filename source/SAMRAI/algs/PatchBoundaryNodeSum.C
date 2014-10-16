@@ -522,11 +522,6 @@ PatchBoundaryNodeSum::setupSum(
                crse_to_domain,
                crse_to_crse,
                hier::IntVector::getOne(dim)));
-#if 1
-         tbox::plog << "PatchBoundaryNodeSum::d_coarse_fine_boundary["
-                    << fine_level_num << "]:" << std::endl;
-         d_coarse_fine_boundary[fine_level_num]->printClassData(tbox::plog);
-#endif
 
       }
 

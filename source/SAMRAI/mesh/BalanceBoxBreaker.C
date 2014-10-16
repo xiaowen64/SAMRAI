@@ -793,6 +793,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
          corner_box_size = corner_box.numberCells();
          corner_box_load = static_cast<double>(corner_box.size());
 
+
          const bool accept_break = BalanceUtilities::compareLoads(
                break_acceptance_flags, best_breakoff_load, corner_box_load,
                trial.d_ideal_load, trial.d_low_load, trial.d_high_load, *d_pparams);
