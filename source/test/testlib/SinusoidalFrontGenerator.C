@@ -392,20 +392,12 @@ void SinusoidalFrontGenerator::computePatchData(
 {
    t_setup->start();
 
-   TBOX_ASSERT(d_hierarchy);
-   TBOX_ASSERT(patch.inHierarchy());
-
-   const int ln = patch.getPatchLevelNumber();
-   const boost::shared_ptr<hier::PatchLevel> level =
-      d_hierarchy->getPatchLevel(ln);
-
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
 
    const double* xlo = patch_geom->getXLower();
-
    const double* dx = patch_geom->getDx();
 
    t_setup->stop();
