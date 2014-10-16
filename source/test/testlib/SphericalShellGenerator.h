@@ -141,9 +141,19 @@ private:
    boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    /*!
-    * @brief Radii of shells.
+    * @brief Simulation time.
     */
-   double d_center[SAMRAI::MAX_DIM_VAL];
+   double d_time;
+
+   /*!
+    * @brief Center of shells at time zero.
+    */
+   double d_init_center[SAMRAI::MAX_DIM_VAL];
+
+   /*!
+    * @brief Shell velocity.
+    */
+   double d_velocity[SAMRAI::MAX_DIM_VAL];
 
    /*!
     * @brief Radii of shells.
@@ -154,11 +164,6 @@ private:
     * @brief Buffer distances for generating tags.
     */
    std::vector<std::vector<double> > d_buffer_distance;
-
-   /*!
-    * @brief Whether to allocate data on the mesh.
-    */
-   bool d_allocate_data;
 
 };
 

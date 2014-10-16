@@ -32,10 +32,13 @@ SphericalShellGenerator::SphericalShellGenerator(
    d_name(object_name),
    d_dim(dim),
    d_hierarchy(),
-   d_radii(0)
+   d_time(0.0),
+   d_radii(0),
+   d_buffer_distance(0)
 {
    for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
-      d_center[i] = 0.0;
+      d_init_center[i] = 0.0;
+      d_velocity[i] = 0.0;
    }
 
    if (database) {
@@ -54,10 +57,16 @@ SphericalShellGenerator::SphericalShellGenerator(
          }
       }
 
-      if (database->isDouble("center")) {
-         std::vector<double> tmpa = database->getDoubleVector("center");
+      if (database->isDouble("init_center")) {
+         std::vector<double> tmpa = database->getDoubleVector("init_center");
          for (int d = 0; d < d_dim.getValue(); ++d) {
-            d_center[d] = tmpa[d];
+            d_init_center[d] = tmpa[d];
+         }
+      }
+      if (database->isDouble("velocity")) {
+         std::vector<double> tmpa = database->getDoubleVector("velocity");
+         for (int d = 0; d < d_dim.getValue(); ++d) {
+            d_velocity[d] = tmpa[d];
          }
       }
 
@@ -187,7 +196,7 @@ void SphericalShellGenerator::resetHierarchyConfiguration(
 }
 
 /*
- * Compute the various data due to the fronts.
+ * Compute the various data due to the shells.
  */
 void SphericalShellGenerator::tagShells(
    pdat::CellData<int>& tag_data,
@@ -222,7 +231,9 @@ void SphericalShellGenerator::tagShells(
       double r[SAMRAI::MAX_DIM_VAL];
       double rr = 0;
       for (int d = 0; d < dim.getValue(); ++d) {
-         r[d] = xlo[d] + dx[d] * (idx(d) - pbox.lower() (d)) - d_center[d];
+         r[d] = xlo[d]
+            + dx[d] * ( idx(d) - pbox.lower()(d) )
+            - ( d_init_center[d] - d_time*d_velocity[d] );
          rr += r[d] * r[d];
       }
       rr = sqrt(rr);
