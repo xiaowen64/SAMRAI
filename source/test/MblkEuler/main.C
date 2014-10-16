@@ -41,7 +41,7 @@ using namespace std;
 
 // Header for application-specific algorithm/data structure object
 
-#include "MblkHyperbolicLevelIntegrator.h"
+#include "test/testlib/MblkHyperbolicLevelIntegrator.h"
 #include "MblkEuler.h"
 
 #ifdef _OPENMP

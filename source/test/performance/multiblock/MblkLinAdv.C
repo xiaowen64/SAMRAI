@@ -64,8 +64,8 @@ using namespace std;
 #define BOGUS_BDRY_DATA (-9999)
 
 // routines for managing boundary data
-#include "SkeletonBoundaryUtilities2.h"
-#include "SkeletonBoundaryUtilities3.h"
+#include "test/testlib/SkeletonBoundaryUtilities2.h"
+#include "test/testlib/SkeletonBoundaryUtilities3.h"
 
 // Depth of the advected variable
 #define DEPTH (1)

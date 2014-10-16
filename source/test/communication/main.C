@@ -16,7 +16,7 @@ using namespace std;
 #include "SAMRAI/tbox/SAMRAIManager.h"
 
 #include "CommTester.h"
-#include "DerivedVisOwnerData.h"
+#include "test/testlib/DerivedVisOwnerData.h"
 
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"

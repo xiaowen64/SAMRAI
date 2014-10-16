@@ -14,7 +14,6 @@ SUBDIR        = source/test/performance/MeshGeneration
 VPATH         = @srcdir@
 OBJECT        = ../../../..
 REPORT        = $(OBJECT)/report.xml
-TESTINCLUDE   = $(SAMRAI)/source/test/testlib
 TESTLIBDIR    = $(OBJECT)/source/test/testlib
 TESTLIB       = $(TESTLIBDIR)/libSAMRAI_test$(LIB_SUFFIX)
 
@@ -23,7 +22,7 @@ default: check
 include $(OBJECT)/config/Makefile.config
 
 NUM_TESTS = 41
-CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
+CPPFLAGS_EXTRA= -DTESTING=1
 
 TEST_NPROCS = @TEST_NPROCS@
 QUOTE = \"

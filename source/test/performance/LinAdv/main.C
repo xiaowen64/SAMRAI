@@ -59,7 +59,7 @@ using namespace std;
 // Header for application-specific algorithm/data structure object
 
 #include "LinAdv.h"
-#include "SinusoidalFrontGenerator.h"
+#include "test/testlib/SinusoidalFrontGenerator.h"
 
 #include "boost/shared_ptr.hpp"
 

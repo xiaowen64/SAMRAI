@@ -26,7 +26,7 @@ using namespace std;
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/solv/CartesianRobinBcHelper.h"
 #include "SAMRAI/solv/RobinBcCoefStrategy.h"
-#include "SinusoidalFrontGenerator.h"
+#include "test/testlib/SinusoidalFrontGenerator.h"
 
 using namespace SAMRAI;
 

@@ -33,7 +33,7 @@ using namespace std;
 #include "SAMRAI/appu/VisItDataWriter.h"
 #include "SAMRAI/appu/VisDerivedDataStrategy.h"
 
-#include "SinusoidalFrontGenerator.h"
+#include "test/testlib/SinusoidalFrontGenerator.h"
 
 #include "boost/shared_ptr.hpp"
 
