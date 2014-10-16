@@ -98,13 +98,6 @@ public:
 
    //@}
 
-   void
-   initializePatchData(
-      hier::Patch& patch,
-      const double init_data_time,
-      const bool initial_time,
-      const bool allocate_data);
-
    bool
    packDerivedDataIntoDoubleBuffer(
       double* buffer,

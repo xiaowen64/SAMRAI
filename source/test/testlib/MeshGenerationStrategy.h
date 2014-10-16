@@ -165,12 +165,6 @@ public:
 
    //@}
 
-   virtual void
-   initializePatchData(
-      hier::Patch& patch,
-      const double init_data_time,
-      const bool initial_time,
-      const bool allocate_data) = 0;
 
    virtual bool
    packDerivedDataIntoDoubleBuffer(

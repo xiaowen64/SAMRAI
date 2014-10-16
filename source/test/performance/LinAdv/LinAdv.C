@@ -343,13 +343,6 @@ void LinAdv::initializeDataOnPatch(
       workload_data->fillAll(1.0);
    }
 
-   if (d_sine_wall) {
-      d_sine_wall->initializePatchData(patch,
-         data_time,
-         initial_time,
-         true);
-   }
-
    t_init->stop();
 }
 

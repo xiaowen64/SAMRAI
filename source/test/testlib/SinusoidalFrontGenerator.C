@@ -143,50 +143,6 @@ SinusoidalFrontGenerator::~SinusoidalFrontGenerator()
  ***********************************************************************
  ***********************************************************************
  */
-void SinusoidalFrontGenerator::initializePatchData(
-   hier::Patch& patch,
-   const double init_data_time,
-   const bool initial_time,
-   const bool allocate_data)
-{
-   NULL_USE(patch);
-   NULL_USE(init_data_time);
-   NULL_USE(initial_time);
-   NULL_USE(allocate_data);
-
-#if 0
-   /*
-    * If instructed, allocate all patch data on the level.
-    * Allocate only persistent data.  Scratch data will
-    * generally be allocated and deallocated as needed.
-    */
-   if (allocate_data) {
-      if (!patch.checkAllocated(d_dist_id)) {
-         patch.allocatePatchData(d_dist_id);
-      }
-      if (!patch.checkAllocated(d_tag_id)) {
-         patch.allocatePatchData(d_tag_id);
-      }
-      boost::shared_ptr<pdat::NodeData<double> > dist_data(
-         BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
-            patch.getPatchData(d_dist_id)));
-      boost::shared_ptr<pdat::CellData<int> > tag_data(
-         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
-            patch.getPatchData(d_tag_id)));
-      TBOX_ASSERT(dist_data);
-      TBOX_ASSERT(tag_data);
-      computePatchData(patch, init_data_time,
-                       dist_data.get(), 0, tag_data.get());
-   }
-#endif
-}
-
-
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
 void SinusoidalFrontGenerator::applyGradientDetector(
    const boost::shared_ptr<hier::PatchHierarchy>& base_hierarchy_,
    const int ln,
