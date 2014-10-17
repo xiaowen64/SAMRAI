@@ -31,6 +31,8 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Timer.h"
 
+#include "DerivedVisOwnerData.h"
+
 #include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
@@ -47,6 +49,8 @@ using namespace SAMRAI;
  * buffer_distance_0, buffer_distance_1, ...:
  * buffer_distance[ln] is the buffer distance when tagging ON
  * level ln.  We tag the shells and buffer the tags by this amount.
+ * Missing buffer distances will use the last values given.
+ * Default is zero buffering.
  */
 class SphericalShellGenerator:
    public MeshGenerationStrategy
@@ -164,6 +168,8 @@ private:
     * @brief Buffer distances for generating tags.
     */
    std::vector<std::vector<double> > d_buffer_distance;
+
+   DerivedVisOwnerData d_vis_owner_data;
 
 };
 

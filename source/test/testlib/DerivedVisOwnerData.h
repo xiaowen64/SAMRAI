@@ -20,6 +20,7 @@
 /*
  * SAMRAI classes
  */
+#include "SAMRAI/appu/VisItDataWriter.h"
 #include "SAMRAI/appu/VisDerivedDataStrategy.h"
 
 #include "boost/shared_ptr.hpp"
@@ -40,6 +41,15 @@ public:
    DerivedVisOwnerData();
 
    ~DerivedVisOwnerData();
+
+#ifdef HAVE_HDF5
+   /*!
+    * @brief Tell a VisIt plotter which data to write for this class.
+    */
+   int
+   registerVariablesWithPlotter(
+      appu::VisItDataWriter& writer);
+#endif
 
    //@{ @name SAMRAI::appu::VisDerivedDataStrategy virtuals
 

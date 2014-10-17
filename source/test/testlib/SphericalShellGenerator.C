@@ -280,6 +280,7 @@ int SphericalShellGenerator::registerVariablesWithPlotter(
    appu::VisItDataWriter& writer)
 {
    writer.registerDerivedPlotQuantity("Tag value", "SCALAR", this);
+   d_vis_owner_data.registerVariablesWithPlotter(writer);
    return 0;
 }
 #endif

@@ -21,6 +21,21 @@ DerivedVisOwnerData::~DerivedVisOwnerData()
 {
 }
 
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+#ifdef HAVE_HDF5
+int DerivedVisOwnerData::registerVariablesWithPlotter(
+   appu::VisItDataWriter& writer)
+{
+   writer.registerDerivedPlotQuantity("Owner", "SCALAR", this);
+   return 0;
+}
+#endif
+
 bool DerivedVisOwnerData::packDerivedDataIntoDoubleBuffer(
    double* buffer,
    const hier::Patch& patch,

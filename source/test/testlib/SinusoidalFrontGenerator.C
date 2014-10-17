@@ -543,15 +543,10 @@ int SinusoidalFrontGenerator::registerVariablesWithPlotter(
    /*
     * Register variables with plotter.
     */
-   writer.registerDerivedPlotQuantity("Distance to front", "SCALAR", this,
-                                      // hier::IntVector(0),
-                                      1.0,
-                                      "NODE");
-   writer.registerDerivedPlotQuantity("U_Sinusoid", "SCALAR", this,
-                                      // hier::IntVector(0),
-                                      1.0,
-                                      "CELL");
+   writer.registerDerivedPlotQuantity("Distance to front", "SCALAR", this, 1.0, "NODE");
+   writer.registerDerivedPlotQuantity("U_Sinusoid", "SCALAR", this);
    writer.registerDerivedPlotQuantity("Tag value", "SCALAR", this);
+   d_vis_owner_data.registerVariablesWithPlotter(writer);
    return 0;
 }
 #endif
@@ -590,7 +585,7 @@ bool SinusoidalFrontGenerator::packDerivedDataIntoDoubleBuffer(
          *(buffer++) = dist_data(*ci);
       }
    }
-   if (variable_name == "U_exact") {
+   else if (variable_name == "U_Sinusoid") {
       pdat::CellData<double> u_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
       computeFrontsData( 0, &u_data, 0, region,
                          std::vector<double>(d_dim.getValue(),0.0),
