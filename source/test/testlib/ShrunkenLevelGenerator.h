@@ -25,6 +25,8 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Timer.h"
 
+#include "DerivedVisOwnerData.h"
+
 #include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
@@ -95,6 +97,24 @@ public:
 
    //@}
 
+   bool
+   packDerivedDataIntoDoubleBuffer(
+      double* buffer,
+      const hier::Patch& patch,
+      const hier::Box& region,
+      const std::string& variable_name,
+      int depth_index) const;
+
+public:
+#ifdef HAVE_HDF5
+   /*!
+    * @brief Tell a VisIt plotter which data to write for this class.
+    */
+   int
+   registerVariablesWithPlotter(
+      appu::VisItDataWriter& writer);
+#endif
+
 private:
    /*!
     * @brief Set tags by shrinking the level at its coarse-fine
@@ -133,6 +153,8 @@ private:
     * @brief Whether to allocate data on the mesh.
     */
    bool d_allocate_data;
+
+   DerivedVisOwnerData d_vis_owner_data;
 
 };
 

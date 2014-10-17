@@ -137,9 +137,13 @@ void SphericalShellGenerator::setTags(
       TBOX_ASSERT(patch_geom);
       TBOX_ASSERT(tag_data);
 
-      tagShells( *tag_data, *patch_geom,
-                 (tag_ln < d_buffer_distance.size() ?
-                  d_buffer_distance[tag_ln] : d_buffer_distance.back()) );
+      computeShellsData( 0, tag_data.get(),
+                         tag_data->getBox(),
+                         (tag_ln < d_buffer_distance.size() ?
+                          d_buffer_distance[tag_ln] : d_buffer_distance.back()),
+                         patch_geom->getXLower(),
+                         patch_geom->getDx(),
+                         d_time);
 
    }
 
@@ -198,71 +202,109 @@ void SphericalShellGenerator::resetHierarchyConfiguration(
 /*
  * Compute the various data due to the shells.
  */
-void SphericalShellGenerator::tagShells(
-   pdat::CellData<int>& tag_data,
-   const geom::CartesianPatchGeometry& patch_geom,
-   const std::vector<double>& buffer_distance) const
+void SphericalShellGenerator::computeShellsData(
+   pdat::CellData<double>* uval_data,
+   pdat::CellData<int>* tag_data,
+   const hier::Box& fill_box,
+   const std::vector<double>& buffer_distance,
+   const double xlo[],
+   const double dx[],
+   const double time) const
 {
-   const tbox::Dimension& dim(tag_data.getDim());
-
-   const hier::Box& pbox = tag_data.getBox();
-   const hier::BlockId& block_id = pbox.getBlockId();
    const int tag_val = 1;
 
-   const double* dx = patch_geom.getDx();
-   const double* xlo = patch_geom.getXLower();
-
    // Compute the buffer in terms of cells.
-   hier::IntVector buffer_cells(dim);
-   for (int i = 0; i < dim.getValue(); ++i) {
-      buffer_cells(i) = static_cast<int>(0.5 + buffer_distance[i] / dx[i]);
+   hier::IntVector buffer_cells(d_dim);
+   for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
+      buffer_cells(d) = static_cast<int>(0.5 + buffer_distance[d] / dx[d]);
    }
 
-   /*
-    * Compute radii of the nodes.  Tag cell if it has nodes farther than
-    * the inner shell radius and nodes closer than the shell outer radius.
-    */
-   pdat::NodeData<double> node_radius_data(pbox, 1, tag_data.getGhostCellWidth() + buffer_cells);
-
-   pdat::NodeData<int>::iterator niend(pdat::NodeGeometry::end(node_radius_data.getGhostBox()));
-   for (pdat::NodeData<int>::iterator ni(pdat::NodeGeometry::begin(node_radius_data.getGhostBox()));
-        ni != niend; ++ni) {
-      const pdat::NodeIndex& idx = *ni;
-      double r[SAMRAI::MAX_DIM_VAL];
-      double rr = 0;
-      for (int d = 0; d < dim.getValue(); ++d) {
-         r[d] = xlo[d]
-            + dx[d] * ( idx(d) - pbox.lower()(d) )
-            - ( d_init_center[d] - d_time*d_velocity[d] );
-         rr += r[d] * r[d];
-      }
-      rr = sqrt(rr);
-      node_radius_data(idx) = rr;
+   hier::Box pbox(d_dim), gbox(d_dim);
+   if (tag_data != 0) {
+      pbox = tag_data->getBox();
+      gbox = tag_data->getGhostBox();
+   } else if (uval_data != 0) {
+      pbox = uval_data->getBox();
+      gbox = uval_data->getGhostBox();
    }
 
-   tag_data.getArrayData().fillAll(0);
+   if ( tag_data != 0 ) {
+      /*
+       * Compute radii of the nodes.  Tag cell if it has nodes farther than
+       * the inner shell radius and nodes closer than the shell outer radius.
+       */
+      hier::Box radius_data_box = fill_box * gbox;
+      pdat::NodeData<double> radius_data(radius_data_box, 1, buffer_cells);
 
-   pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(tag_data.getGhostBox()));
-   for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(tag_data.getGhostBox()));
-        ci != ciend; ++ci) {
-      const pdat::CellIndex& cid = *ci;
-
-      hier::Box check_box(cid, cid, block_id);
-      check_box.grow(buffer_cells);
-      pdat::NodeIterator node_itr_end(pdat::NodeGeometry::end(check_box));
-      double min_node_radius = 1e20;
-      double max_node_radius = 0;
-      for (pdat::NodeIterator node_itr(pdat::NodeGeometry::begin(check_box));
-           node_itr != node_itr_end; ++node_itr) {
-         min_node_radius =
-            tbox::MathUtilities<double>::Min(min_node_radius, node_radius_data(*node_itr));
-         max_node_radius =
-            tbox::MathUtilities<double>::Max(min_node_radius, node_radius_data(*node_itr));
+      pdat::NodeData<int>::iterator niend(pdat::NodeGeometry::end(radius_data.getGhostBox()));
+      for (pdat::NodeData<int>::iterator ni(pdat::NodeGeometry::begin(radius_data.getGhostBox()));
+           ni != niend; ++ni) {
+         const pdat::NodeIndex& idx = *ni;
+         double r[SAMRAI::MAX_DIM_VAL];
+         double rr = 0;
+         for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
+            r[d] = xlo[d]
+               + dx[d] * ( idx(d) - pbox.lower()(d) )
+               - ( d_init_center[d] - d_time*d_velocity[d] );
+            rr += r[d] * r[d];
+         }
+         rr = sqrt(rr);
+         radius_data(idx) = rr;
       }
-      for (int i = 0; i < static_cast<int>(d_radii.size()); i += 2) {
-         if (d_radii[i] <= max_node_radius && min_node_radius < d_radii[i + 1]) {
-            tag_data(cid) = tag_val;
-            break;
+
+      tag_data->getArrayData().fillAll(0);
+
+      hier::Box fbox = tag_data->getGhostBox() * gbox;
+      pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(fbox));
+      for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(fbox));
+           ci != ciend; ++ci) {
+         const pdat::CellIndex& cid = *ci;
+
+         hier::Box check_box(cid, cid, pbox.getBlockId());
+         check_box.grow(buffer_cells);
+         pdat::NodeIterator node_itr_end(pdat::NodeGeometry::end(check_box));
+         double min_node_radius = 1e20;
+         double max_node_radius = 0;
+         for (pdat::NodeIterator node_itr(pdat::NodeGeometry::begin(check_box));
+              node_itr != node_itr_end; ++node_itr) {
+            min_node_radius =
+               tbox::MathUtilities<double>::Min(min_node_radius, radius_data(*node_itr));
+            max_node_radius =
+               tbox::MathUtilities<double>::Max(min_node_radius, radius_data(*node_itr));
+         }
+         for (int i = 0; i < static_cast<int>(d_radii.size()); i += 2) {
+            if (d_radii[i] <= max_node_radius && min_node_radius < d_radii[i + 1]) {
+               (*tag_data)(cid) = tag_val;
+               break;
+            }
+         }
+      }
+   }
+
+   if ( uval_data != 0 ) {
+      uval_data->getArrayData().fillAll(0);
+
+      hier::Box fbox = uval_data->getGhostBox() * gbox;
+      pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(fbox));
+      for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(fbox));
+           ci != ciend; ++ci) {
+         const pdat::CellIndex& cid = *ci;
+
+         double r[SAMRAI::MAX_DIM_VAL];
+         double rr = 0;
+         for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
+            r[d] = xlo[d]
+               + dx[d] * ( cid(d) - pbox.lower()(d) + 0.5 )
+               - ( d_init_center[d] - d_time*d_velocity[d] );
+            rr += r[d] * r[d];
+         }
+         rr = sqrt(rr);
+
+         for (int i = 0; i < static_cast<int>(d_radii.size()); ++i ) {
+            if ( rr < d_radii[i] ) {
+               (*uval_data)(cid) = static_cast<double>(i);
+               break;
+            }
          }
       }
    }
@@ -280,6 +322,7 @@ int SphericalShellGenerator::registerVariablesWithPlotter(
    appu::VisItDataWriter& writer)
 {
    writer.registerDerivedPlotQuantity("Tag value", "SCALAR", this);
+   writer.registerDerivedPlotQuantity("U_Shells", "SCALAR", this);
    d_vis_owner_data.registerVariablesWithPlotter(writer);
    return 0;
 }
@@ -301,17 +344,39 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
    (void)region;
    (void)depth_index;
 
-   if (variable_name == "Tag value") {
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
+   TBOX_ASSERT(patch_geom);
+
+   const double* xlo = patch_geom->getXLower();
+   const double* dx = patch_geom->getDx();
+
+   if (variable_name == "U_Shells") {
+      pdat::CellData<double> u_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
+      computeShellsData( &u_data, 0, region,
+                         std::vector<double>(d_dim.getValue(),0.0),
+                         xlo, dx, d_time );
+      pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
+      for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
+           ci != ciend; ++ci) {
+         *(buffer++) = u_data(*ci);
+      }
+   }
+   else if (variable_name == "Tag value") {
 
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(patch_geom);
 
-      pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
-      tagShells( tag_data, *patch_geom,
-                 (patch.getPatchLevelNumber() < d_buffer_distance.size() ?
-                  d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()) );
+      pdat::CellData<int> tag_data(region, 1, hier::IntVector(d_dim, 0));
+      computeShellsData(
+         0, &tag_data,
+         region,
+         (patch.getPatchLevelNumber() < d_buffer_distance.size() ?
+          d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
+         xlo, dx, d_time );
       pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
       for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {

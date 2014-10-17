@@ -109,6 +109,16 @@ public:
 
    //@}
 
+   /*!
+    * @brief Compute shell-dependent data for a patch.
+    */
+   void
+   computePatchData(
+      const hier::Patch& patch,
+      const double time,
+      pdat::CellData<double>* uval_data,
+      pdat::CellData<int>* tag_data) const;
+
    bool
    packDerivedDataIntoDoubleBuffer(
       double* buffer,
@@ -129,10 +139,14 @@ public:
 
 private:
    void
-   tagShells(
-      pdat::CellData<int>& tag_data,
-      const geom::CartesianPatchGeometry& patch_geom,
-      const std::vector<double>& buffer_distance) const;
+   computeShellsData(
+      pdat::CellData<double> *uval_data,
+      pdat::CellData<int> *tag_data,
+      const hier::Box& fill_box,
+      const std::vector<double>& buffer_distance,
+      const double xlo[],
+      const double dx[],
+      const double time) const;
 
    std::string d_name;
 
