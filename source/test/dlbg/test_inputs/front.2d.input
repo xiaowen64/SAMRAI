@@ -35,7 +35,7 @@ Main {
   log_hierarchy = TRUE
 
   // Number of time steps.
-  num_steps = 100
+  num_steps = 50
 
   // 
   build_cross_edge = TRUE

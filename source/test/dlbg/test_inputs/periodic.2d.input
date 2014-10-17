@@ -18,7 +18,7 @@ Main {
   log_all = TRUE
   plot_step = 1
   log_hierarchy = TRUE
-  num_steps = 100
+  num_steps = 50
   // num_steps = 10
   build_cross_edge = TRUE
   build_peer_edge = TRUE
