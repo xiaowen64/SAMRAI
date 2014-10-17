@@ -547,6 +547,10 @@ int SinusoidalFrontGenerator::registerVariablesWithPlotter(
                                       // hier::IntVector(0),
                                       1.0,
                                       "NODE");
+   writer.registerDerivedPlotQuantity("U_Sinusoid", "SCALAR", this,
+                                      // hier::IntVector(0),
+                                      1.0,
+                                      "CELL");
    writer.registerDerivedPlotQuantity("Tag value", "SCALAR", this);
    return 0;
 }

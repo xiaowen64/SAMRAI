@@ -269,6 +269,27 @@ void SphericalShellGenerator::tagShells(
 
 }
 
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+#ifdef HAVE_HDF5
+int SphericalShellGenerator::registerVariablesWithPlotter(
+   appu::VisItDataWriter& writer)
+{
+   writer.registerDerivedPlotQuantity("Tag value", "SCALAR", this);
+   return 0;
+}
+#endif
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
 bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
    double* buffer,
    const hier::Patch& patch,

@@ -165,6 +165,16 @@ public:
 
    //@}
 
+#ifdef HAVE_HDF5
+   /*!
+    * @brief Tell a VisIt plotter which data to write for this class.
+    */
+   virtual int
+   registerVariablesWithPlotter(
+      appu::VisItDataWriter& writer) {
+      return 0;
+   }
+#endif
 
    virtual bool
    packDerivedDataIntoDoubleBuffer(
