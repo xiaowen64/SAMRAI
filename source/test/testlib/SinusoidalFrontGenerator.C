@@ -455,7 +455,7 @@ void SinusoidalFrontGenerator::computeFrontsData(
          min_distance_to_front -= d_period[0];
          max_distance_to_front -= d_period[0];
       }
-      tbox::plog << "shifted ..........: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
+      // tbox::plog << "shifted ..........: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
       if (min_distance_to_front <= 0 && max_distance_to_front >= 0) {
          // This cell has nodes on both sides of the front.  Tag it and the buffer_cells around it.
          hier::Box cell_and_buffer(cell_index, cell_index, blk0);
