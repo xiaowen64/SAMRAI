@@ -173,7 +173,6 @@ void SinusoidalFrontGenerator::applyGradientDetector(
       computePatchData(patch,
                        error_data_time,
                        0,
-                       0,
                        tag_cell_data_.get());
 
    }
@@ -297,7 +296,6 @@ void SinusoidalFrontGenerator::resetHierarchyConfiguration(
 void SinusoidalFrontGenerator::computePatchData(
    const hier::Patch& patch,
    const double time,
-   pdat::NodeData<double>* dist_data,
    pdat::CellData<double>* uval_data,
    pdat::CellData<int>* tag_data) const
 {
@@ -314,13 +312,13 @@ void SinusoidalFrontGenerator::computePatchData(
    t_setup->stop();
 
    if ( tag_data ) {
-      computeFrontsData(dist_data, uval_data, tag_data,
+      computeFrontsData(0, uval_data, tag_data,
                         patch.getBox(),
                         d_buffer_distance[patch.getPatchLevelNumber()], xlo, dx, time);
    }
    else {
       // Not computing tag => no tag buffer needed.
-      computeFrontsData(dist_data, uval_data, tag_data,
+      computeFrontsData(0, uval_data, tag_data,
                         patch.getBox(),
                         std::vector<double>(d_dim.getValue(),0.0), xlo, dx, time);
    }
@@ -567,27 +565,50 @@ bool SinusoidalFrontGenerator::packDerivedDataIntoDoubleBuffer(
    const std::string& variable_name,
    int depth_index) const
 {
-   (void)region;
    (void)depth_index;
 
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
+   TBOX_ASSERT(patch_geom);
+
+   const double* xlo = patch_geom->getXLower();
+   const double* dx = patch_geom->getDx();
+
    if (variable_name == "Distance to front") {
-      pdat::NodeData<double> dist_data(patch.getBox(), 1, hier::IntVector(d_dim,
-                                          0));
-      computePatchData(patch, d_time, &dist_data, 0, 0);
+      pdat::NodeData<double> dist_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
+      computeFrontsData( &dist_data, 0, 0, region,
+                         std::vector<double>(d_dim.getValue(),0.0),
+                         xlo, dx, d_time );
       pdat::NodeData<double>::iterator ciend(pdat::NodeGeometry::end(patch.getBox()));
       for (pdat::NodeData<double>::iterator ci(pdat::NodeGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {
          *(buffer++) = dist_data(*ci);
       }
-   } else if (variable_name == "Tag value") {
+   }
+   if (variable_name == "U_exact") {
+      pdat::CellData<double> u_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
+      computeFrontsData( 0, &u_data, 0, region,
+                         std::vector<double>(d_dim.getValue(),0.0),
+                         xlo, dx, d_time );
+      pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
+      for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
+           ci != ciend; ++ci) {
+         *(buffer++) = u_data(*ci);
+      }
+   }
+   else if (variable_name == "Tag value") {
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
-      computePatchData(patch, d_time, 0, 0, &tag_data);
+      computeFrontsData( 0, 0, &tag_data, region,
+                         d_buffer_distance[patch.getPatchLevelNumber()],
+                         xlo, dx, d_time );
       pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
       for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {
          *(buffer++) = tag_data(*ci);
       }
-   } else {
+   }
+   else {
       TBOX_ERROR("Unrecognized name " << variable_name);
    }
    return true;

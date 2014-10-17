@@ -152,7 +152,6 @@ public:
    computePatchData(
       const hier::Patch& patch,
       const double time,
-      pdat::NodeData<double>* dist_data,
       pdat::CellData<double>* uval_data,
       pdat::CellData<int>* tag_data) const;
 

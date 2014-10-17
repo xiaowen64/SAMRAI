@@ -327,7 +327,7 @@ void LinAdv::initializeDataOnPatch(
       d_sine_wall->computePatchData(
          patch,
          data_time,
-         0, uval.get(), 0);
+         uval.get(), 0);
 
       t_init_first_time->stop();
    }
@@ -1218,7 +1218,7 @@ void LinAdv::setPhysicalBoundaryConditions(
                patch.getBox(),
                ghost_width_to_fill);
 
-         d_sine_wall->computePatchData( patch, fill_time, 0, uval.get(), 0 );
+         d_sine_wall->computePatchData( patch, fill_time, uval.get(), 0 );
 
       }
 
@@ -1457,7 +1457,6 @@ void LinAdv::tagGradientDetectorCells(
       t_analytical_tag->start();
       d_sine_wall->computePatchData(patch,
          regrid_time,
-         0,
          0,
          tags.get());
       t_analytical_tag->stop();
