@@ -49,6 +49,7 @@ Main {
 
       buffer_distance_0 = 0.07, 0.07
       buffer_distance_1 = 0.02, 0.02
+      buffer_distance_2 = 0.00, 0.00
    }
 
 }

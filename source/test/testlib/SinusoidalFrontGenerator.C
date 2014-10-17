@@ -39,7 +39,8 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
    d_dim(dim),
    d_hierarchy(),
    d_time(0.5),
-   d_amplitude(0.2)
+   d_amplitude(0.2),
+   d_buffer_distance(1, std::vector<double>(dim.getValue(),0.0))
 {
    TBOX_ASSERT(hier::VariableDatabase::getDatabase() != 0);
 
@@ -93,10 +94,8 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
          }
 
          if (!tmpa.empty()) {
-            d_buffer_distance.resize(d_buffer_distance.size() + 1);
-            d_buffer_distance.back().insert(d_buffer_distance.back().end(),
-               &tmpa[0],
-               &tmpa[0] + static_cast<int>(tmpa.size()));
+            d_buffer_distance.resize(ln+1);
+            d_buffer_distance.back().swap(tmpa);
          } else {
             break;
          }
