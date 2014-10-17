@@ -215,7 +215,7 @@ void SinusoidalFrontGenerator::setTags(
          0 /* uval data */,
          tag_data.get(),
          tag_data->getBox(),
-         d_buffer_distance[tag_ln],
+         (tag_ln < d_buffer_distance.size() ? d_buffer_distance[tag_ln] : d_buffer_distance.back()),
          patch_geom->getXLower(),
          patch_geom->getDx(),
          0.0);
@@ -314,13 +314,16 @@ void SinusoidalFrontGenerator::computePatchData(
    if ( tag_data ) {
       computeFrontsData(0, uval_data, tag_data,
                         patch.getBox(),
-                        d_buffer_distance[patch.getPatchLevelNumber()], xlo, dx, time);
+                        (patch.getPatchLevelNumber() < d_buffer_distance.size() ?
+                         d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
+                        xlo, dx, time);
    }
    else {
       // Not computing tag => no tag buffer needed.
       computeFrontsData(0, uval_data, tag_data,
                         patch.getBox(),
-                        std::vector<double>(d_dim.getValue(),0.0), xlo, dx, time);
+                        std::vector<double>(d_dim.getValue(),0.0),
+                        xlo, dx, time);
    }
 }
 
@@ -599,7 +602,8 @@ bool SinusoidalFrontGenerator::packDerivedDataIntoDoubleBuffer(
    else if (variable_name == "Tag value") {
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
       computeFrontsData( 0, 0, &tag_data, region,
-                         d_buffer_distance[patch.getPatchLevelNumber()],
+                         (patch.getPatchLevelNumber() < d_buffer_distance.size() ?
+                          d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
                          xlo, dx, d_time );
       pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
       for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));

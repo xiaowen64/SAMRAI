@@ -139,7 +139,9 @@ void SphericalShellGenerator::setTags(
       TBOX_ASSERT(patch_geom);
       TBOX_ASSERT(tag_data);
 
-      tagShells(*tag_data, *patch_geom, d_buffer_distance[tag_ln]);
+      tagShells( *tag_data, *patch_geom,
+                 (tag_ln < d_buffer_distance.size() ?
+                  d_buffer_distance[tag_ln] : d_buffer_distance.back()) );
 
    }
 
@@ -309,7 +311,9 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
       TBOX_ASSERT(patch_geom);
 
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
-      tagShells(tag_data, *patch_geom, d_buffer_distance[patch.getPatchLevelNumber()]);
+      tagShells( tag_data, *patch_geom,
+                 (patch.getPatchLevelNumber() < d_buffer_distance.size() ?
+                  d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()) );
       pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
       for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {
