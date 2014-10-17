@@ -84,9 +84,6 @@ int DLBGTest::registerVariablesWithPlotter(
 {
    if (writer) {
       d_sine_wall.registerVariablesWithPlotter(*writer);
-      writer->registerDerivedPlotQuantity("Owner",
-         "SCALAR",
-         this);
    }
    return 0;
 }
