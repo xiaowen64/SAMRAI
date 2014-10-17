@@ -218,30 +218,6 @@ void LinAdv::registerModelVariables(
       "CONSERVATIVE_COARSEN",
       "NO_REFINE");
 
-   hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
-
-#ifdef HAVE_HDF5
-   if (d_visit_writer) {
-      d_visit_writer->
-      registerPlotQuantity("U",
-         "SCALAR",
-         vardb->mapVariableAndContextToIndex(
-            d_uval, integrator->getPlotContext()));
-      if (d_sine_wall) {
-         d_sine_wall->registerVariablesWithPlotter(*d_visit_writer);
-      }
-   }
-#endif
-
-#ifdef HAVE_HDF5
-   if (!d_visit_writer) {
-      TBOX_WARNING(d_object_name << ": registerModelVariables()"
-                                 << "\nVisIt data writer was not registered.\n"
-                                 << "Consequently, no plot data will"
-                                 << "\nbe written." << endl);
-   }
-#endif
-
 }
 
 /*
@@ -1673,8 +1649,19 @@ void LinAdv::registerVisItDataWriter(
 {
    TBOX_ASSERT(viz_writer);
 
-   d_visit_writer = viz_writer;
-   d_visit_writer->registerDerivedPlotQuantity("Owner", "SCALAR", this);
+   d_sine_wall->registerVariablesWithPlotter(*viz_writer);
+
+   hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
+
+#ifdef HAVE_HDF5
+   if (viz_writer) {
+      viz_writer->
+      registerPlotQuantity("U",
+         "SCALAR",
+         vardb->mapVariableAndContextToIndex(
+            d_uval, vardb->getContext("CURRENT")) );
+   }
+#endif
 }
 #endif
 
@@ -1685,20 +1672,12 @@ bool LinAdv::packDerivedDataIntoDoubleBuffer(
    const string& variable_name,
    int depth_id) const
 {
+   NULL_USE(buffer);
    NULL_USE(patch);
+   NULL_USE(region);
+   NULL_USE(variable_name);
    NULL_USE(depth_id);
-   if (variable_name == "Owner") {
-      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-      double owner = mpi.getRank();
-      size_t i, size = region.size();
-      for (i = 0; i < size; ++i) buffer[i] = owner;
-   } else {
-      // Did not register this name.
-      TBOX_ERROR(
-         "Unregistered variable name '" << variable_name << "' in\n"
-                                        << "LinAdv::packDerivedPatchDataIntoDoubleBuffer");
-   }
-
+   TBOX_ERROR("Should not be here.  This object didn't register any derived plot variables.");
    return true;
 }
 

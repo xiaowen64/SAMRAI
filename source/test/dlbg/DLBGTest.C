@@ -96,19 +96,11 @@ bool DLBGTest::packDerivedDataIntoDoubleBuffer(
    const std::string& variable_name,
    int depth_id) const
 {
+   NULL_USE(buffer);
    NULL_USE(patch);
+   NULL_USE(region);
+   NULL_USE(variable_name);
    NULL_USE(depth_id);
-   if (variable_name == "Owner") {
-      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-      double owner = mpi.getRank();
-      size_t i, size = region.size();
-      for (i = 0; i < size; ++i) buffer[i] = owner;
-   } else {
-      // Did not register this name.
-      TBOX_ERROR(
-         "Unregistered variable name '" << variable_name << "' in\n"
-                                        << "DLBGTest::packDerivedPatchDataIntoDoubleBuffer");
-   }
-
+   TBOX_ERROR("Should not be here.  This object didn't register any derived plot variables.");
    return true;
 }

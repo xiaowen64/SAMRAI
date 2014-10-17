@@ -403,10 +403,6 @@ private:
     */
    boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
 
-#ifdef HAVE_HDF5
-   boost::shared_ptr<appu::VisItDataWriter> d_visit_writer;
-#endif
-
    /*
     * Data items used for nonuniform load balance, if used.
     */

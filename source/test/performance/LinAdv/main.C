@@ -480,6 +480,14 @@ int main(
             hyp_level_integrator,
             gridding_algorithm));
 
+      /*
+       * Initialize hierarchy configuration and data on all patches.
+       * Then, close restart file and write initial state for visualization.
+       */
+
+      tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier(); // For timing.
+      double dt_now = time_integrator->initializeHierarchy();
+
       // VisItDataWriter is only present if HDF is available
 #ifdef HAVE_HDF5
       boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
@@ -491,14 +499,6 @@ int main(
       linear_advection_model->
       registerVisItDataWriter(visit_data_writer);
 #endif
-
-      /*
-       * Initialize hierarchy configuration and data on all patches.
-       * Then, close restart file and write initial state for visualization.
-       */
-
-      tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier(); // For timing.
-      double dt_now = time_integrator->initializeHierarchy();
 
       RestartManager::getManager()->closeRestartFile();
 
