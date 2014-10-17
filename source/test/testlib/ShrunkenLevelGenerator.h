@@ -95,20 +95,6 @@ public:
 
    //@}
 
-   void
-   initializePatchData(
-      hier::Patch& patch,
-      const double init_data_time,
-      const bool initial_time,
-      const bool allocate_data)
-   {
-      NULL_USE(patch);
-      NULL_USE(init_data_time);
-      NULL_USE(initial_time);
-      NULL_USE(allocate_data);
-      TBOX_ERROR("Should not be here.");
-   }
-
 private:
    /*!
     * @brief Set tags by shrinking the level at its coarse-fine

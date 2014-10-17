@@ -292,51 +292,6 @@ void SinusoidalFrontGenerator::resetHierarchyConfiguration(
 
 
 /*
- * Compute the solution data for a level.
- * Can copy data from old level (if any) to support
- * initializeLevelData().
- */
-void SinusoidalFrontGenerator::computeLevelData(
-   const hier::PatchHierarchy& hierarchy,
-   const int ln,
-   const double time,
-   const int dist_id,
-   const int tag_id,
-   const boost::shared_ptr<hier::PatchLevel>& old_level) const
-{
-   NULL_USE(old_level);
-
-   const boost::shared_ptr<hier::PatchLevel> level(
-      hierarchy.getPatchLevel(ln));
-
-   /*
-    * Initialize data in all patches in the level.
-    */
-   for (hier::PatchLevel::iterator pi(level->begin());
-        pi != level->end(); ++pi) {
-      hier::Patch& patch = **pi;
-      boost::shared_ptr<pdat::NodeData<double> > dist_data;
-      if (dist_id >= 0) {
-         dist_data =
-            boost::dynamic_pointer_cast<pdat::NodeData<double>, hier::PatchData>(
-               patch.getPatchData(dist_id));
-      }
-      boost::shared_ptr<pdat::CellData<int> > tag_data;
-      if (tag_id >= 0) {
-         tag_data =
-            boost::dynamic_pointer_cast<pdat::CellData<int>, hier::PatchData>(
-               patch.getPatchData(tag_id));
-      }
-      computePatchData(patch, time,
-         dist_data.get(),
-         0,
-         tag_data.get());
-   }
-}
-
-
-
-/*
  * Compute the solution data for a patch.
  */
 void SinusoidalFrontGenerator::computePatchData(

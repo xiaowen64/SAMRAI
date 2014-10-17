@@ -146,20 +146,7 @@ public:
    }
 
    /*!
-    * @brief Compute distance and tag data for a level.
-    */
-   void
-   computeLevelData(
-      const hier::PatchHierarchy& hierarchy,
-      const int ln,
-      const double time,
-      const int dist_id,
-      const int tag_id,
-      const boost::shared_ptr<hier::PatchLevel>& old_level =
-         boost::shared_ptr<hier::PatchLevel>()) const;
-
-   /*!
-    * @brief Compute distance and tag data for a patch.
+    * @brief Compute front-dependent data for a patch.
     */
    void
    computePatchData(
