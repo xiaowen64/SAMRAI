@@ -182,13 +182,15 @@ public:
       const hier::Patch& patch,
       const hier::Box& region,
       const std::string& variable_name,
-      int depth_index) const
+      int depth_index,
+      double simulation_time) const
    {
       NULL_USE(buffer);
       NULL_USE(patch);
       NULL_USE(region);
       NULL_USE(variable_name);
       NULL_USE(depth_index);
+      NULL_USE(simulation_time);
       TBOX_ERROR("Should not be here");
       return false;
    }

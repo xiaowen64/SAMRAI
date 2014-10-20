@@ -564,7 +564,8 @@ bool SinusoidalFrontGenerator::packDerivedDataIntoDoubleBuffer(
    const hier::Patch& patch,
    const hier::Box& region,
    const std::string& variable_name,
-   int depth_index) const
+   int depth_index,
+   double simulation_time ) const
 {
    (void)depth_index;
 
@@ -580,7 +581,7 @@ bool SinusoidalFrontGenerator::packDerivedDataIntoDoubleBuffer(
       pdat::NodeData<double> dist_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
       computeFrontsData( &dist_data, 0, 0, region,
                          std::vector<double>(d_dim.getValue(),0.0),
-                         xlo, dx, d_time );
+                         xlo, dx, simulation_time );
       pdat::NodeData<double>::iterator ciend(pdat::NodeGeometry::end(patch.getBox()));
       for (pdat::NodeData<double>::iterator ci(pdat::NodeGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {
@@ -591,7 +592,7 @@ bool SinusoidalFrontGenerator::packDerivedDataIntoDoubleBuffer(
       pdat::CellData<double> u_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
       computeFrontsData( 0, &u_data, 0, region,
                          std::vector<double>(d_dim.getValue(),0.0),
-                         xlo, dx, d_time );
+                         xlo, dx, simulation_time );
       pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
       for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {
@@ -603,7 +604,7 @@ bool SinusoidalFrontGenerator::packDerivedDataIntoDoubleBuffer(
       computeFrontsData( 0, 0, &tag_data, region,
                          (patch.getPatchLevelNumber() < d_buffer_distance.size() ?
                           d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
-                         xlo, dx, d_time );
+                         xlo, dx, simulation_time );
       pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
       for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {

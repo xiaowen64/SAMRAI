@@ -41,10 +41,12 @@ bool DerivedVisOwnerData::packDerivedDataIntoDoubleBuffer(
    const hier::Patch& patch,
    const hier::Box& region,
    const std::string& variable_name,
-   int depth_id) const
+   int depth_id,
+   double simulation_time) const
 {
    NULL_USE(patch);
    NULL_USE(depth_id);
+   NULL_USE(simulation_time);
 
    if (variable_name == "Owner") {
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());

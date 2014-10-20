@@ -301,12 +301,14 @@ bool ShrunkenLevelGenerator::packDerivedDataIntoDoubleBuffer(
    const hier::Patch& patch,
    const hier::Box& region,
    const std::string& variable_name,
-   int depth_index) const
+   int depth_index,
+   double simulation_time) const
 {
    (void)buffer;
    (void)patch;
    (void)region;
    (void)variable_name;
    (void)depth_index;
+   (void)simulation_time;
    return true;
 }

@@ -108,7 +108,8 @@ public:
       const hier::Patch& patch,
       const hier::Box& region,
       const std::string& variable_name,
-      int depth_index) const;
+      int depth_index,
+      double simulation_time ) const;
 
 public:
 #ifdef HAVE_HDF5

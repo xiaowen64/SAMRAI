@@ -1670,13 +1670,15 @@ bool LinAdv::packDerivedDataIntoDoubleBuffer(
    const hier::Patch& patch,
    const hier::Box& region,
    const string& variable_name,
-   int depth_id) const
+   int depth_id,
+   double simulation_time) const
 {
    NULL_USE(buffer);
    NULL_USE(patch);
    NULL_USE(region);
    NULL_USE(variable_name);
    NULL_USE(depth_id);
+   NULL_USE(simulation_time);
    TBOX_ERROR("Should not be here.  This object didn't register any derived plot variables.");
    return true;
 }
