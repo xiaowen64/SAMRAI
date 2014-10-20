@@ -163,10 +163,10 @@ void SinusoidalFrontGenerator::applyGradientDetector(
          BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
             patch.getPatchData(tag_index)));
       TBOX_ASSERT(tag_cell_data_);
+      assert(tag_cell_data_->getTime() == error_data_time);
 
       // Compute tag data for patch.
       computePatchData(patch,
-                       error_data_time,
                        0,
                        tag_cell_data_.get());
 
@@ -289,7 +289,6 @@ void SinusoidalFrontGenerator::resetHierarchyConfiguration(
  */
 void SinusoidalFrontGenerator::computePatchData(
    const hier::Patch& patch,
-   const double time,
    pdat::CellData<double>* uval_data,
    pdat::CellData<int>* tag_data) const
 {
@@ -298,7 +297,7 @@ void SinusoidalFrontGenerator::computePatchData(
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
-   TBOX_ASSERT(patch_geom);
+   TBOX_ASSERT(patch_geom.get() != 0);
 
    const double* xlo = patch_geom->getXLower();
    const double* dx = patch_geom->getDx();
@@ -374,7 +373,7 @@ void SinusoidalFrontGenerator::computeFrontsData(
    t_node_pos->start();
    hier::Box front_box = fill_box;
    front_box.grow(buffer_cells);
-   front_box.growUpper(hier::IntVector(d_dim, 1));
+   front_box.growUpper(hier::IntVector::getOne(d_dim));
    // Squash front_box to a single plane.
    front_box.setUpper(0, pbox.lower(0));
    front_box.setLower(0, pbox.lower(0));

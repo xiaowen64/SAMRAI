@@ -200,6 +200,42 @@ void SphericalShellGenerator::resetHierarchyConfiguration(
    TBOX_ASSERT(d_hierarchy);
 }
 
+
+
+/*
+ * Compute the solution data for a patch.
+ */
+void SphericalShellGenerator::computePatchData(
+   const hier::Patch& patch,
+   pdat::CellData<double>* uval_data,
+   pdat::CellData<int>* tag_data) const
+{
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
+   TBOX_ASSERT(patch_geom.get() != 0);
+
+   const double* xlo = patch_geom->getXLower();
+   const double* dx = patch_geom->getDx();
+
+   if ( tag_data ) {
+      computeShellsData(uval_data, tag_data,
+                        patch.getBox(),
+                        (patch.getPatchLevelNumber() < d_buffer_distance.size() ?
+                         d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
+                        xlo, dx);
+   }
+   else {
+      // Not computing tag => no tag buffer needed.
+      computeShellsData(uval_data, tag_data,
+                        patch.getBox(),
+                        std::vector<double>(d_dim.getValue(),0.0),
+                        xlo, dx);
+   }
+}
+
+
+
 /*
  * Compute the various data due to the shells.
  */

@@ -120,11 +120,11 @@ LinAdv::LinAdv(
    const tbox::Dimension& dim,
    boost::shared_ptr<tbox::Database> input_db,
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geom,
-   SinusoidalFrontGenerator* sine_wall):
+   const boost::shared_ptr<MeshGenerationStrategy> &sine_wall):
    algs::HyperbolicPatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
-   d_sine_wall(sine_wall),
+   d_mesh_gen(sine_wall),
    d_grid_geometry(grid_geom),
    d_use_nonuniform_workload(false),
    d_uval(new pdat::CellVariable<double>(dim, "uval", 1)),
@@ -300,9 +300,8 @@ void LinAdv::initializeDataOnPatch(
 
       TBOX_ASSERT(uval);
 
-      d_sine_wall->computePatchData(
+      d_mesh_gen->computePatchData(
          patch,
-         data_time,
          uval.get(), 0);
 
       t_init_first_time->stop();
@@ -1175,6 +1174,7 @@ void LinAdv::setPhysicalBoundaryConditions(
 
    TBOX_ASSERT(uval);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(uval->getTime() == fill_time);
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
@@ -1194,7 +1194,7 @@ void LinAdv::setPhysicalBoundaryConditions(
                patch.getBox(),
                ghost_width_to_fill);
 
-         d_sine_wall->computePatchData( patch, fill_time, uval.get(), 0 );
+         d_mesh_gen->computePatchData( patch, uval.get(), 0 );
 
       }
 
@@ -1411,6 +1411,7 @@ void LinAdv::tagGradientDetectorCells(
       BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_indx)));
    TBOX_ASSERT(tags);
+   TBOX_ASSERT( tags->getTime() == regrid_time );
 
    hier::Box pbox = patch.getBox();
 
@@ -1427,12 +1428,12 @@ void LinAdv::tagGradientDetectorCells(
     */
    boost::shared_ptr<pdat::CellData<int> > temp_tags(
       new pdat::CellData<int>(pbox, 1, d_nghosts));
+   temp_tags->setTime(regrid_time);
    temp_tags->fillAll(not_refine_tag_val);
 
-   if (d_sine_wall) {
+   if (d_mesh_gen) {
       t_analytical_tag->start();
-      d_sine_wall->computePatchData(patch,
-         regrid_time,
+      d_mesh_gen->computePatchData(patch,
          0,
          tags.get());
       t_analytical_tag->stop();
@@ -1649,7 +1650,7 @@ void LinAdv::registerVisItDataWriter(
 {
    TBOX_ASSERT(viz_writer);
 
-   d_sine_wall->registerVariablesWithPlotter(*viz_writer);
+   d_mesh_gen->registerVariablesWithPlotter(*viz_writer);
 
    hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
 
@@ -2206,11 +2207,4 @@ void LinAdv::readStateDataEntry(
                                << " input database. " << endl);
    }
 
-}
-
-void LinAdv::setAnalyticalTaggerTime(
-   double time) {
-   if (d_sine_wall) {
-      d_sine_wall->setTime(time);
-   }
 }

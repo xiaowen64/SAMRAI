@@ -165,6 +165,15 @@ public:
 
    //@}
 
+   /*!
+    * @brief Compute tag and/or scalar solution on a patch.
+    */
+   virtual void
+   computePatchData(
+      const hier::Patch& patch,
+      pdat::CellData<double>* uval_data,
+      pdat::CellData<int>* tag_data) const = 0;
+
 #ifdef HAVE_HDF5
    /*!
     * @brief Tell a VisIt plotter which data to write for this class.

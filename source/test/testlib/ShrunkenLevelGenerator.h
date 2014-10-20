@@ -97,6 +97,20 @@ public:
 
    //@}
 
+   /*!
+    * @brief Compute shell-dependent data for a patch.
+    */
+   void
+   computePatchData(
+      const hier::Patch& patch,
+      pdat::CellData<double>* uval_data,
+      pdat::CellData<int>* tag_data) const {
+      NULL_USE(patch);
+      NULL_USE(uval_data);
+      NULL_USE(patch);
+      TBOX_ERROR("Shrunken Level generator doesn't yet support computePatchData.");
+   }
+
    bool
    packDerivedDataIntoDoubleBuffer(
       double* buffer,

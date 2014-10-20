@@ -115,7 +115,6 @@ public:
    void
    computePatchData(
       const hier::Patch& patch,
-      const double time,
       pdat::CellData<double>* uval_data,
       pdat::CellData<int>* tag_data) const;
 

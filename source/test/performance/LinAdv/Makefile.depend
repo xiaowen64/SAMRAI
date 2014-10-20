@@ -158,7 +158,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
-	$(TESTLIBDIR)/SinusoidalFrontGenerator.h LinAdv.C LinAdv.h	\
+	$(TESTLIBDIR)/MeshGenerationStrategy.h LinAdv.C LinAdv.h	\
 	LinAdvFort.h
 
 DEPENDS_0 +=\
@@ -346,6 +346,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
+	$(TESTLIBDIR)/MeshGenerationStrategy.h				\
 	$(TESTLIBDIR)/SinusoidalFrontGenerator.h LinAdv.h main.C
 
 DEPENDS_2 +=\
