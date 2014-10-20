@@ -146,8 +146,7 @@ private:
       const hier::Box& fill_box,
       const std::vector<double>& buffer_distance,
       const double xlo[],
-      const double dx[],
-      const double time) const;
+      const double dx[]) const;
 
    std::string d_name;
 
@@ -160,9 +159,9 @@ private:
    boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    /*!
-    * @brief Simulation time.
+    * @brief Constant time shift to be added to simulation time.
     */
-   double d_time;
+   double d_time_shift;
 
    /*!
     * @brief Center of shells at time zero.

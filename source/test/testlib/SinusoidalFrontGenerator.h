@@ -136,8 +136,7 @@ public:
       const hier::Box& fill_box,
       const std::vector<double>& buffer_distance,
       const double xlo[],
-      const double dx[],
-      const double time) const;
+      const double dx[]) const;
 
    /*
     * Compute patch data allocated by this class, on a hierarchy.
@@ -147,7 +146,7 @@ public:
       hier::PatchHierarchy& hierarchy,
       double time) {
       NULL_USE(hierarchy);
-      d_time = time;
+      d_time_shift = time;
    }
 
    /*!
@@ -234,7 +233,7 @@ public:
     */
    void
    setTime( double time ) {
-      d_time = time;
+      d_time_shift = time;
    }
 
 private:
@@ -264,9 +263,9 @@ private:
    double d_velocity[SAMRAI::MAX_DIM_VAL];
 
    /*!
-    * @brief Front time.
+    * @brief Constant time shift to be added to simulation time.
     */
-   double d_time;
+   double d_time_shift;
 
    /*!
     * @brief Amplitude of sinusoid.

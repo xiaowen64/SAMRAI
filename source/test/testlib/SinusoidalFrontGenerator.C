@@ -38,7 +38,7 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
    d_name(object_name),
    d_dim(dim),
    d_hierarchy(),
-   d_time(0.5),
+   d_time_shift(0.0),
    d_amplitude(0.2),
    d_buffer_distance(1, std::vector<double>(dim.getValue(),0.0))
 {
@@ -67,12 +67,8 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
       if (database->isDouble("velocity")) {
          velocity = database->getDoubleVector("velocity");
       }
-      d_amplitude =
-         database->getDoubleWithDefault("amplitude",
-            d_amplitude);
-      d_time =
-         database->getDoubleWithDefault("init_time",
-            d_time);
+      d_amplitude = database->getDoubleWithDefault("amplitude", d_amplitude);
+      d_time_shift = database->getDoubleWithDefault("time_shift", d_time_shift);
 
       /*
        * Input parameters to determine whether to tag by buffering
@@ -216,8 +212,7 @@ void SinusoidalFrontGenerator::setTags(
          tag_data->getBox(),
          (tag_ln < d_buffer_distance.size() ? d_buffer_distance[tag_ln] : d_buffer_distance.back()),
          patch_geom->getXLower(),
-         patch_geom->getDx(),
-         0.0);
+         patch_geom->getDx());
 
    }
 
@@ -315,14 +310,14 @@ void SinusoidalFrontGenerator::computePatchData(
                         patch.getBox(),
                         (patch.getPatchLevelNumber() < d_buffer_distance.size() ?
                          d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
-                        xlo, dx, time);
+                        xlo, dx);
    }
    else {
       // Not computing tag => no tag buffer needed.
       computeFrontsData(0, uval_data, tag_data,
                         patch.getBox(),
                         std::vector<double>(d_dim.getValue(),0.0),
-                        xlo, dx, time);
+                        xlo, dx);
    }
 }
 
@@ -338,8 +333,7 @@ void SinusoidalFrontGenerator::computeFrontsData(
    const hier::Box& fill_box,
    const std::vector<double>& buffer_distance,
    const double xlo[],
-   const double dx[],
-   const double time) const
+   const double dx[]) const
 {
    t_setup->start();
 
@@ -354,17 +348,17 @@ void SinusoidalFrontGenerator::computeFrontsData(
    }
 
    hier::Box pbox(d_dim);
+   double time = 0;
    if (tag_data != 0) {
       pbox = tag_data->getBox();
+      time = tag_data->getTime() + d_time_shift;
    } else if (uval_data != 0) {
       pbox = uval_data->getBox();
+      time = uval_data->getTime() + d_time_shift;
    } else {
       pbox = dist_data->getBox();
+      time = dist_data->getTime() + d_time_shift;
    }
-
-   /*
-    * Determine what x-cell-index contains the sinusoidal front.
-    */
 
    double wave_number[SAMRAI::MAX_DIM_VAL];
    for (int idim = 0; idim < d_dim.getValue(); ++idim) {
@@ -390,19 +384,19 @@ void SinusoidalFrontGenerator::computeFrontsData(
         ai != aiend; ++ai) {
 
       const hier::Index& index = *ai;
-      double y = 0.0, siny = 0.0, z = 0.0, sinz = 1.0;
+      double y = 0.0, cosy = 0.0, z = 0.0, cosz = 1.0;
 
       y = xlo[1] + dx[1] * (index(1) - pbox.lower()[1]);
-      siny = cos(wave_number[1] * (y + d_init_disp[1] - d_velocity[1] * time));
+      cosy = cos(wave_number[1] * (y + d_init_disp[1] - d_velocity[1] * time));
 
       if (d_dim.getValue() > 2) {
          z = xlo[2] + dx[2] * (index(2) - pbox.lower()[2]);
-         sinz = cos(wave_number[2] * (z + d_init_disp[2] - d_velocity[2] * time));
+         cosz = cos(wave_number[2] * (z + d_init_disp[2] - d_velocity[2] * time));
       }
 
       front_x(index, 0) = d_velocity[0] * time + d_init_disp[0]
-         + d_amplitude * siny * sinz;
-      // tbox::plog << "index=" << index << "   y=" << y << "   siny=" << siny << "   z=" << z << "   sinz=" << sinz << "   front_x = " << front_x(index,0) << std::endl;
+         + d_amplitude * cosy * cosz;
+      // tbox::plog << "index=" << index << "   y=" << y << "   cosy=" << cosy << "   z=" << z << "   cosz=" << cosz << "   front_x = " << front_x(index,0) << std::endl;
    }
    t_node_pos->stop();
 
@@ -579,9 +573,10 @@ bool SinusoidalFrontGenerator::packDerivedDataIntoDoubleBuffer(
 
    if (variable_name == "Distance to front") {
       pdat::NodeData<double> dist_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
+      dist_data.setTime(simulation_time);
       computeFrontsData( &dist_data, 0, 0, region,
                          std::vector<double>(d_dim.getValue(),0.0),
-                         xlo, dx, simulation_time );
+                         xlo, dx );
       pdat::NodeData<double>::iterator ciend(pdat::NodeGeometry::end(patch.getBox()));
       for (pdat::NodeData<double>::iterator ci(pdat::NodeGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {
@@ -590,9 +585,10 @@ bool SinusoidalFrontGenerator::packDerivedDataIntoDoubleBuffer(
    }
    else if (variable_name == "U_Sinusoid") {
       pdat::CellData<double> u_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
+      u_data.setTime(simulation_time);
       computeFrontsData( 0, &u_data, 0, region,
                          std::vector<double>(d_dim.getValue(),0.0),
-                         xlo, dx, simulation_time );
+                         xlo, dx );
       pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
       for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {
@@ -601,10 +597,11 @@ bool SinusoidalFrontGenerator::packDerivedDataIntoDoubleBuffer(
    }
    else if (variable_name == "Tag value") {
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
+      tag_data.setTime(simulation_time);
       computeFrontsData( 0, 0, &tag_data, region,
                          (patch.getPatchLevelNumber() < d_buffer_distance.size() ?
                           d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
-                         xlo, dx, simulation_time );
+                         xlo, dx );
       pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
       for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {

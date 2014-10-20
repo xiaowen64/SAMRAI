@@ -32,7 +32,7 @@ SphericalShellGenerator::SphericalShellGenerator(
    d_name(object_name),
    d_dim(dim),
    d_hierarchy(),
-   d_time(0.0),
+   d_time_shift(0.0),
    d_radii(0),
    d_buffer_distance(1, std::vector<double>(dim.getValue(),0.0))
 {
@@ -69,6 +69,8 @@ SphericalShellGenerator::SphericalShellGenerator(
             d_velocity[d] = tmpa[d];
          }
       }
+
+      d_time_shift = database->getDoubleWithDefault("time_shift", d_time_shift);
 
       /*
        * Input parameters to determine whether to tag by buffering
@@ -142,8 +144,7 @@ void SphericalShellGenerator::setTags(
                          (tag_ln < d_buffer_distance.size() ?
                           d_buffer_distance[tag_ln] : d_buffer_distance.back()),
                          patch_geom->getXLower(),
-                         patch_geom->getDx(),
-                         d_time);
+                         patch_geom->getDx());
 
    }
 
@@ -208,8 +209,7 @@ void SphericalShellGenerator::computeShellsData(
    const hier::Box& fill_box,
    const std::vector<double>& buffer_distance,
    const double xlo[],
-   const double dx[],
-   const double time) const
+   const double dx[]) const
 {
    const int tag_val = 1;
 
@@ -220,12 +220,15 @@ void SphericalShellGenerator::computeShellsData(
    }
 
    hier::Box pbox(d_dim), gbox(d_dim);
+   double time = 0.0;
    if (tag_data != 0) {
       pbox = tag_data->getBox();
       gbox = tag_data->getGhostBox();
+      time = tag_data->getTime() + d_time_shift;
    } else if (uval_data != 0) {
       pbox = uval_data->getBox();
       gbox = uval_data->getGhostBox();
+      time = uval_data->getTime() + d_time_shift;
    }
 
    if ( tag_data != 0 ) {
@@ -245,7 +248,7 @@ void SphericalShellGenerator::computeShellsData(
          for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
             r[d] = xlo[d]
                + dx[d] * ( idx(d) - pbox.lower()(d) )
-               - ( d_init_center[d] - d_time*d_velocity[d] );
+               - ( d_init_center[d] - time*d_velocity[d] );
             rr += r[d] * r[d];
          }
          rr = sqrt(rr);
@@ -295,7 +298,7 @@ void SphericalShellGenerator::computeShellsData(
          for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
             r[d] = xlo[d]
                + dx[d] * ( cid(d) - pbox.lower()(d) + 0.5 )
-               - ( d_init_center[d] - d_time*d_velocity[d] );
+               - ( d_init_center[d] - time*d_velocity[d] );
             rr += r[d] * r[d];
          }
          rr = sqrt(rr);
@@ -354,9 +357,10 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
 
    if (variable_name == "U_Shells") {
       pdat::CellData<double> u_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
+      u_data.setTime(simulation_time);
       computeShellsData( &u_data, 0, region,
                          std::vector<double>(d_dim.getValue(),0.0),
-                         xlo, dx, simulation_time );
+                         xlo, dx );
       pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
       for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {
@@ -371,12 +375,13 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
       TBOX_ASSERT(patch_geom);
 
       pdat::CellData<int> tag_data(region, 1, hier::IntVector(d_dim, 0));
+      tag_data.setTime(simulation_time);
       computeShellsData(
          0, &tag_data,
          region,
          (patch.getPatchLevelNumber() < d_buffer_distance.size() ?
           d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
-         xlo, dx, simulation_time );
+         xlo, dx );
       pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
       for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {
