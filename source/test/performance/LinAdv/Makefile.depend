@@ -204,6 +204,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisItDataWriter.h			\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisMaterialsDataStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.h		\
+	$(INCLUDE_SAM)/SAMRAI/geom/CartesianPatchGeometry.h		\
 	$(INCLUDE_SAM)/SAMRAI/geom/GridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
@@ -347,7 +348,8 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	$(TESTLIBDIR)/MeshGenerationStrategy.h				\
-	$(TESTLIBDIR)/SinusoidalFrontGenerator.h LinAdv.h main.C
+	$(TESTLIBDIR)/SinusoidalFrontGenerator.h			\
+	$(TESTLIBDIR)/SphericalShellGenerator.h LinAdv.h main.C
 
 DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
