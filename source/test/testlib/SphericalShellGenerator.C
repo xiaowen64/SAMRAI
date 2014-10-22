@@ -285,16 +285,16 @@ void SphericalShellGenerator::computeShellsData(
          for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
             r[d] = xlo[d]
                + dx[d] * ( idx(d) - pbox.lower()(d) )
-               - ( d_init_center[d] - time*d_velocity[d] );
+               - ( d_init_center[d] + time*d_velocity[d] );
             rr += r[d] * r[d];
          }
          rr = sqrt(rr);
          radius_data(idx) = rr;
       }
 
-      tag_data->getArrayData().fillAll(0);
+      hier::Box fbox = tag_data->getGhostBox() * fill_box;
+      tag_data->getArrayData().fill(0, fill_box);
 
-      hier::Box fbox = tag_data->getGhostBox() * gbox;
       pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(fbox));
       for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(fbox));
            ci != ciend; ++ci) {
@@ -322,9 +322,9 @@ void SphericalShellGenerator::computeShellsData(
    }
 
    if ( uval_data != 0 ) {
-      uval_data->getArrayData().fillAll(0);
+      hier::Box fbox = uval_data->getGhostBox() * fill_box;
+      uval_data->fill( static_cast<double>(d_radii.size()), fbox );
 
-      hier::Box fbox = uval_data->getGhostBox() * gbox;
       pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(fbox));
       for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(fbox));
            ci != ciend; ++ci) {
@@ -335,7 +335,7 @@ void SphericalShellGenerator::computeShellsData(
          for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
             r[d] = xlo[d]
                + dx[d] * ( cid(d) - pbox.lower()(d) + 0.5 )
-               - ( d_init_center[d] - time*d_velocity[d] );
+               - ( d_init_center[d] + time*d_velocity[d] );
             rr += r[d] * r[d];
          }
          rr = sqrt(rr);
