@@ -50,7 +50,7 @@
 #include "SAMRAI/solv/FACPreconditioner.h"
 #include "ABRTest.h"
 
-#include "get-input-filename.h"
+#include "test/testlib/get-input-filename.h"
 
 #include "boost/shared_ptr.hpp"
 

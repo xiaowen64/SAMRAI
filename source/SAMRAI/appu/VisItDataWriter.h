@@ -986,7 +986,8 @@ private:
       const boost::shared_ptr<tbox::Database>& processor_HDFGroup,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int coarsest_level,
-      int finest_level);
+      int finest_level,
+      double simulation_time);
 
    /*
     * Pack regular (i.e. NOT materials or species) and derived data into
@@ -997,7 +998,8 @@ private:
       const boost::shared_ptr<tbox::Database>& patch_HDFGroup,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
-      hier::Patch& patch);
+      hier::Patch& patch,
+      double simulation_time);
 
    /*
     * Pack the materials data into the supplied database for output.

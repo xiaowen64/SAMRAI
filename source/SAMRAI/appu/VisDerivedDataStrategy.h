@@ -105,6 +105,8 @@ public:
     * @param depth_index For scalar quantities index will be zero.
     *  For vector data, index varies between 0 and DIM-1.  For tensor
     *  data, index varies from 0 (DIM*DIM)-1.
+    * @param simulation_time Optional argument specifying the double
+    *    precision simulation time. Default is 0.0.
     * @return Boolean value indicating if derived data defined on this
     *  patch.
     */
@@ -114,7 +116,8 @@ public:
       const hier::Patch& patch,
       const hier::Box& region,
       const std::string& variable_name,
-      int depth_index) const = 0;
+      int depth_index,
+      double simulation_time = 0.0) const = 0;
 
    /*!
     * @brief This function calculates and packs derived

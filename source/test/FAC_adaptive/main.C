@@ -14,7 +14,7 @@
 // using namespace std;
 
 #include "AdaptivePoisson.h"
-#include "get-input-filename.h"
+#include "test/testlib/get-input-filename.h"
 
 /*
  * Headers for basic SAMRAI objects used in this code.

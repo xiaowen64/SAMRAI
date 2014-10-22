@@ -548,7 +548,8 @@ private:
    regridFinerLevel_doTaggingAfterRecursiveRegrid(
       boost::shared_ptr<hier::Connector>& tag_to_finer,
       const int tag_ln,
-      const std::vector<int>& tag_buffer);
+      const std::vector<int>& tag_buffer,
+      double regrid_time);
 
    /*!
     * @brief Given the metadata describing the new level, this method

@@ -737,7 +737,7 @@ GriddingAlgorithm::makeFinerLevel(
          /*
           * Initialize integer tag arrays on level to false.
           */
-         tag_level->allocatePatchData(d_tag_indx);
+         tag_level->allocatePatchData(d_tag_indx, level_time);
          fillTags(d_false_tag, tag_level, d_tag_indx);
 
          /*
@@ -801,7 +801,7 @@ GriddingAlgorithm::makeFinerLevel(
             d_bdry_fill_tags->createSchedule(tag_level, d_mb_tagger_strategy);
          t_bdry_fill_tags_create->stop();
 
-         tag_level->allocatePatchData(d_buf_tag_indx);
+         tag_level->allocatePatchData(d_buf_tag_indx, level_time);
          bufferTagsOnLevel(d_true_tag, tag_level, tag_buffer);
          tag_level->deallocatePatchData(d_buf_tag_indx);
 
@@ -1304,7 +1304,8 @@ GriddingAlgorithm::regridFinerLevel(
          regridFinerLevel_doTaggingAfterRecursiveRegrid(
             tag_to_finer,
             tag_ln,
-            tag_buffer);
+            tag_buffer,
+            regrid_time);
 
          /*
           * Determine boxes containing cells on level with a true tag
@@ -1442,7 +1443,7 @@ GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
     * false.
     */
 
-   tag_level->allocatePatchData(d_tag_indx);
+   tag_level->allocatePatchData(d_tag_indx, regrid_time);
    fillTags(d_false_tag, tag_level, d_tag_indx);
 
    /*
@@ -1537,7 +1538,8 @@ void
 GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
    boost::shared_ptr<hier::Connector>& tag_to_finer,
    const int tag_ln,
-   const std::vector<int>& tag_buffer)
+   const std::vector<int>& tag_buffer,
+   double regrid_time)
 {
    if (d_print_steps) {
       tbox::plog
@@ -1576,7 +1578,7 @@ GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
       d_bdry_fill_tags->createSchedule(tag_level, d_mb_tagger_strategy);
    t_bdry_fill_tags_create->stop();
 
-   tag_level->allocatePatchData(d_buf_tag_indx);
+   tag_level->allocatePatchData(d_buf_tag_indx, regrid_time);
    bufferTagsOnLevel(d_true_tag, tag_level, tag_buffer[tag_ln]);
 
    /*

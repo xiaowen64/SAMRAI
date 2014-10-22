@@ -74,7 +74,7 @@ using namespace std;
 //
 // inline geometry functions
 //
-#include "GeomUtilsAMR.h"
+#include "test/testlib/GeomUtilsAMR.h"
 
 // ================================= MblkEuler::Initialization =============================
 

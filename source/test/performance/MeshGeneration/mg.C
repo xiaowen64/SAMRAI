@@ -44,10 +44,9 @@
 #include "SAMRAI/tbox/TimerManager.h"
 #include <vector>
 
-#include "DerivedVisOwnerData.h"
-#include "SinusoidalFrontGenerator.h"
-#include "SphericalShellGenerator.h"
-#include "ShrunkenLevelGenerator.h"
+#include "test/testlib/SinusoidalFrontGenerator.h"
+#include "test/testlib/SphericalShellGenerator.h"
+#include "test/testlib/ShrunkenLevelGenerator.h"
 
 using namespace SAMRAI;
 using namespace tbox;
@@ -744,14 +743,11 @@ int main(
              * Create the VisIt data writer.
              * Write the plot file.
              */
-            DerivedVisOwnerData owner_writer;
             const std::string visit_filename = base_name_ext + ".visit";
             appu::VisItDataWriter visit_data_writer(dim,
                                                     "VisIt Writer",
                                                     visit_filename);
-            visit_data_writer.registerDerivedPlotQuantity("Owner",
-               "SCALAR",
-               &owner_writer);
+            mesh_gen->registerVariablesWithPlotter(visit_data_writer);
             visit_data_writer.writePlotData(hierarchy, 0);
          }
 #else

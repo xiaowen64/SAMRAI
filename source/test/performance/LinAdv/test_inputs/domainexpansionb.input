@@ -222,11 +222,15 @@ GriddingAlgorithm {
    DEV_log_metadata_statistics = TRUE
 }
 
-SinusoidalFrontTagger {
+SinusoidalFrontGenerator {
    init_disp = 1.0, 1.0, 1.0
    period = 8.0, 4.0, 4.0
    velocity = 2.0e0 , 0.01e0, 0.01e0
    amplitude = 0.5
+
+   buffer_distance_0 = 0.07, 0.07, 0.07
+   buffer_distance_1 = 0.02, 0.02, 0.02
+   buffer_distance_2 = 0.00, 0.00, 0.00
 }
 
 StandardTagAndInitialize {

@@ -1115,10 +1115,11 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
-	AdaptivePoisson.h GaussianFcn.h					\
-	PoissonGaussianDiffcoefSolution.h PoissonGaussianSolution.h	\
-	PoissonMultigaussianSolution.h PoissonPolynomialSolution.h	\
-	PoissonSineSolution.h QuarticFcn.h SinusoidFcn.h main.C
+	$(TESTLIBDIR)/get-input-filename.h AdaptivePoisson.h		\
+	GaussianFcn.h PoissonGaussianDiffcoefSolution.h			\
+	PoissonGaussianSolution.h PoissonMultigaussianSolution.h	\
+	PoissonPolynomialSolution.h PoissonSineSolution.h QuarticFcn.h	\
+	SinusoidFcn.h main.C
 
 DEPENDS_9 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\

@@ -14,7 +14,6 @@ SUBDIR        = source/test/LoadBalanceCorrectness
 VPATH         = @srcdir@
 OBJECT        = ../../..
 REPORT        = $(OBJECT)/report.xml
-TESTINCLUDE   = $(SAMRAI)/source/test/testlib
 TESTLIBDIR    = $(OBJECT)/source/test/testlib
 TESTLIB       = $(TESTLIBDIR)/libSAMRAI_test$(LIB_SUFFIX)
 
@@ -22,7 +21,7 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
+CPPFLAGS_EXTRA= -DTESTING=1
 
 NUM_TESTS = 34
 
@@ -38,6 +37,9 @@ main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)
 	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
+
+testlib:
+	cd $(TESTLIBDIR) && $(MAKE) library
 
 # Prevents "No rule to make target" error.  Built in the rule for main.
 $(TESTLIB):

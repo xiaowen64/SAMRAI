@@ -120,11 +120,11 @@ LinAdv::LinAdv(
    const tbox::Dimension& dim,
    boost::shared_ptr<tbox::Database> input_db,
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geom,
-   SinusoidalFrontTagger* analytical_tagger):
+   const boost::shared_ptr<MeshGenerationStrategy> &sine_wall):
    algs::HyperbolicPatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
-   d_analytical_tagger(analytical_tagger),
+   d_mesh_gen(sine_wall),
    d_grid_geometry(grid_geom),
    d_use_nonuniform_workload(false),
    d_uval(new pdat::CellVariable<double>(dim, "uval", 1)),
@@ -218,30 +218,6 @@ void LinAdv::registerModelVariables(
       "CONSERVATIVE_COARSEN",
       "NO_REFINE");
 
-   hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
-
-#ifdef HAVE_HDF5
-   if (d_visit_writer) {
-      d_visit_writer->
-      registerPlotQuantity("U",
-         "SCALAR",
-         vardb->mapVariableAndContextToIndex(
-            d_uval, integrator->getPlotContext()));
-      if (d_analytical_tagger) {
-         d_analytical_tagger->registerVariablesWithPlotter(*d_visit_writer);
-      }
-   }
-#endif
-
-#ifdef HAVE_HDF5
-   if (!d_visit_writer) {
-      TBOX_WARNING(d_object_name << ": registerModelVariables()"
-                                 << "\nVisIt data writer was not registered.\n"
-                                 << "Consequently, no plot data will"
-                                 << "\nbe written." << endl);
-   }
-#endif
-
 }
 
 /*
@@ -324,10 +300,10 @@ void LinAdv::initializeDataOnPatch(
 
       TBOX_ASSERT(uval);
 
-      d_analytical_tagger->computePatchData(
+      d_mesh_gen->computePatchData(
          patch,
-         data_time,
-         0, uval.get(), 0);
+         uval.get(), 0,
+         patch.getBox());
 
       t_init_first_time->stop();
    }
@@ -341,13 +317,6 @@ void LinAdv::initializeDataOnPatch(
             patch.getPatchData(d_workload_data_id)));
       TBOX_ASSERT(workload_data);
       workload_data->fillAll(1.0);
-   }
-
-   if (d_analytical_tagger) {
-      d_analytical_tagger->initializePatchData(patch,
-         data_time,
-         initial_time,
-         true);
    }
 
    t_init->stop();
@@ -1206,6 +1175,7 @@ void LinAdv::setPhysicalBoundaryConditions(
 
    TBOX_ASSERT(uval);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
+   TBOX_ASSERT(uval->getTime() == fill_time);
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
@@ -1225,9 +1195,7 @@ void LinAdv::setPhysicalBoundaryConditions(
                patch.getBox(),
                ghost_width_to_fill);
 
-         d_analytical_tagger->computeFrontsData(
-            0, uval.get(), 0,
-            fill_box, hier::IntVector::getZero(d_dim), xlo, dx, fill_time);
+         d_mesh_gen->computePatchData( patch, uval.get(), 0, fill_box );
 
       }
 
@@ -1444,6 +1412,7 @@ void LinAdv::tagGradientDetectorCells(
       BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_indx)));
    TBOX_ASSERT(tags);
+   TBOX_ASSERT( tags->getTime() == regrid_time );
 
    hier::Box pbox = patch.getBox();
 
@@ -1460,15 +1429,15 @@ void LinAdv::tagGradientDetectorCells(
     */
    boost::shared_ptr<pdat::CellData<int> > temp_tags(
       new pdat::CellData<int>(pbox, 1, d_nghosts));
+   temp_tags->setTime(regrid_time);
    temp_tags->fillAll(not_refine_tag_val);
 
-   if (d_analytical_tagger) {
+   if (d_mesh_gen) {
       t_analytical_tag->start();
-      d_analytical_tagger->computePatchData(patch,
-         regrid_time,
-         0,
-         0,
-         tags.get());
+      d_mesh_gen->computePatchData(patch,
+                                   0,
+                                   tags.get(),
+                                   patch.getBox());
       t_analytical_tag->stop();
    } else {
       /*
@@ -1683,8 +1652,19 @@ void LinAdv::registerVisItDataWriter(
 {
    TBOX_ASSERT(viz_writer);
 
-   d_visit_writer = viz_writer;
-   d_visit_writer->registerDerivedPlotQuantity("Owner", "SCALAR", this);
+   d_mesh_gen->registerVariablesWithPlotter(*viz_writer);
+
+   hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
+
+#ifdef HAVE_HDF5
+   if (viz_writer) {
+      viz_writer->
+      registerPlotQuantity("U",
+         "SCALAR",
+         vardb->mapVariableAndContextToIndex(
+            d_uval, vardb->getContext("CURRENT")) );
+   }
+#endif
 }
 #endif
 
@@ -1693,22 +1673,16 @@ bool LinAdv::packDerivedDataIntoDoubleBuffer(
    const hier::Patch& patch,
    const hier::Box& region,
    const string& variable_name,
-   int depth_id) const
+   int depth_id,
+   double simulation_time) const
 {
+   NULL_USE(buffer);
    NULL_USE(patch);
+   NULL_USE(region);
+   NULL_USE(variable_name);
    NULL_USE(depth_id);
-   if (variable_name == "Owner") {
-      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-      double owner = mpi.getRank();
-      size_t i, size = region.size();
-      for (i = 0; i < size; ++i) buffer[i] = owner;
-   } else {
-      // Did not register this name.
-      TBOX_ERROR(
-         "Unregistered variable name '" << variable_name << "' in\n"
-                                        << "LinAdv::packDerivedPatchDataIntoDoubleBuffer");
-   }
-
+   NULL_USE(simulation_time);
+   TBOX_ERROR("Should not be here.  This object didn't register any derived plot variables.");
    return true;
 }
 
@@ -2235,11 +2209,4 @@ void LinAdv::readStateDataEntry(
                                << " input database. " << endl);
    }
 
-}
-
-void LinAdv::setAnalyticalTaggerTime(
-   double time) {
-   if (d_analytical_tagger) {
-      d_analytical_tagger->setTime(time);
-   }
 }

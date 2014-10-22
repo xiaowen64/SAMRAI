@@ -48,10 +48,10 @@
 
 #include <cmath>
 
-#include "DerivedVisOwnerData.h"
-#include "SinusoidalFrontGenerator.h"
-#include "SphericalShellGenerator.h"
-#include "ShrunkenLevelGenerator.h"
+#include "test/testlib/DerivedVisOwnerData.h"
+#include "test/testlib/SinusoidalFrontGenerator.h"
+#include "test/testlib/SphericalShellGenerator.h"
+#include "test/testlib/ShrunkenLevelGenerator.h"
 
 using namespace SAMRAI;
 using namespace tbox;

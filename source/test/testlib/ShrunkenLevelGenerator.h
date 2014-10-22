@@ -25,6 +25,8 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Timer.h"
 
+#include "DerivedVisOwnerData.h"
+
 #include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
@@ -95,19 +97,40 @@ public:
 
    //@}
 
+   /*!
+    * @brief Compute shell-dependent data for a patch.
+    */
    void
-   initializePatchData(
-      hier::Patch& patch,
-      const double init_data_time,
-      const bool initial_time,
-      const bool allocate_data)
-   {
+   computePatchData(
+      const hier::Patch& patch,
+      pdat::CellData<double>* uval_data,
+      pdat::CellData<int>* tag_data,
+      const hier::Box &fill_box) const {
       NULL_USE(patch);
-      NULL_USE(init_data_time);
-      NULL_USE(initial_time);
-      NULL_USE(allocate_data);
-      TBOX_ERROR("Should not be here.");
+      NULL_USE(uval_data);
+      NULL_USE(patch);
+      NULL_USE(fill_box);
+      TBOX_ERROR("Shrunken Level generator doesn't yet support computePatchData.");
    }
+
+   bool
+   packDerivedDataIntoDoubleBuffer(
+      double* buffer,
+      const hier::Patch& patch,
+      const hier::Box& region,
+      const std::string& variable_name,
+      int depth_index,
+      double simulation_time) const;
+
+public:
+#ifdef HAVE_HDF5
+   /*!
+    * @brief Tell a VisIt plotter which data to write for this class.
+    */
+   int
+   registerVariablesWithPlotter(
+      appu::VisItDataWriter& writer);
+#endif
 
 private:
    /*!
@@ -147,6 +170,8 @@ private:
     * @brief Whether to allocate data on the mesh.
     */
    bool d_allocate_data;
+
+   DerivedVisOwnerData d_vis_owner_data;
 
 };
 

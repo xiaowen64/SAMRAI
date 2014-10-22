@@ -374,7 +374,8 @@ public:
       const hier::Patch& patch,
       const hier::Box& region,
       const string& variable_name,
-      int depth_id) const;
+      int depth_id,
+      double simulation_time) const;
 
    ///
    ///  The following routines are specific to the Euler class and

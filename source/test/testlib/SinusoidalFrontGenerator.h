@@ -23,12 +23,13 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/mesh/StandardTagAndInitStrategy.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/NodeData.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Timer.h"
+
+#include "DerivedVisOwnerData.h"
 
 #include "boost/shared_ptr.hpp"
 
@@ -48,6 +49,8 @@ using namespace SAMRAI;
  * buffer_distance_0, buffer_distance_1, ...:
  * buffer_distance[ln] is the buffer distance when tagging ON
  * level ln.  We tag the fronts and buffer the tags by this amount.
+ * Missing buffer distances will use the last values given.
+ * Default is zero buffering.
  */
 class SinusoidalFrontGenerator:
    public MeshGenerationStrategy
@@ -97,28 +100,7 @@ public:
       int autoscale_base_nprocs,
       const tbox::SAMRAI_MPI & mpi);
 
-   virtual void
-   resetHierarchyConfiguration(
-      /*! New hierarchy */
-      const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
-      /*! Coarsest level */ const int coarsest_level,
-      /*! Finest level */ const int finest_level);
-
    //@}
-
-   void
-   initializePatchData(
-      hier::Patch& patch,
-      const double init_data_time,
-      const bool initial_time,
-      const bool allocate_data)
-   {
-      NULL_USE(patch);
-      NULL_USE(init_data_time);
-      NULL_USE(initial_time);
-      NULL_USE(allocate_data);
-      TBOX_ERROR("Should not be here.");
-   }
 
    bool
    packDerivedDataIntoDoubleBuffer(
@@ -126,7 +108,8 @@ public:
       const hier::Patch& patch,
       const hier::Box& region,
       const std::string& variable_name,
-      int depth_index) const;
+      int depth_index,
+      double simulation_time ) const;
 
 public:
 #ifdef HAVE_HDF5
@@ -148,23 +131,112 @@ public:
    void
    computeFrontsData(
       pdat::NodeData<double>* dist_data,
+      pdat::CellData<double>* uval_data,
       pdat::CellData<int>* tag_data,
+      const hier::Box& fill_box,
       const std::vector<double>& buffer_distance,
       const double xlo[],
-      const double dx[],
-      const double time) const;
+      const double dx[]) const;
 
-private:
+   /*
+    * Compute patch data allocated by this class, on a hierarchy.
+    */
+   void
+   computeHierarchyData(
+      hier::PatchHierarchy& hierarchy,
+      double time) {
+      NULL_USE(hierarchy);
+      d_time_shift = time;
+   }
+
    /*!
-    * @brief Compute distance and tag data for a patch.
+    * @brief Compute front-dependent data for a patch.
     */
    void
    computePatchData(
       const hier::Patch& patch,
-      const double time,
-      pdat::NodeData<double>* dist_data,
-      pdat::CellData<int>* tag_data) const;
+      pdat::CellData<double>* uval_data,
+      pdat::CellData<int>* tag_data,
+      const hier::Box &fill_box) const;
 
+   /*!
+    * @brief Deallocate internally managed patch data on level.
+    */
+   void
+   deallocatePatchData(
+      hier::PatchLevel& level) {
+      NULL_USE(level);
+   }
+
+   /*!
+    * @brief Deallocate internally managed patch data on hierarchy.
+    */
+   void
+   deallocatePatchData(
+      hier::PatchHierarchy& hierarchy) {
+      NULL_USE(hierarchy);
+   }
+
+   //@{ @name SAMRAI::mesh::StandardTagAndInitStrategy virtuals
+
+   virtual void
+   resetHierarchyConfiguration(
+      /*! New hierarchy */
+      const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
+      /*! Coarsest level */ const int coarsest_level,
+      /*! Finest level */ const int finest_level);
+
+   /*!
+    * @brief Allocate and initialize data for a new level
+    * in the patch hierarchy.
+    *
+    * @see SAMRAI::mesh::StandardTagAndInitStrategy::initializeLevelData()
+    */
+   void
+   initializeLevelData(
+      /*! Hierarchy to initialize */
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      /*! Level to initialize */
+      const int level_number,
+      const double init_data_time,
+      const bool can_be_refined,
+      /*! Whether level is being introduced for the first time */
+      const bool initial_time,
+      /*! Level to copy data from */
+      const boost::shared_ptr<hier::PatchLevel>& old_level =
+         boost::shared_ptr<hier::PatchLevel>(),
+      /*! Whether data on new patch needs to be allocated */
+      const bool allocate_data = true)
+   {
+      NULL_USE(hierarchy);
+      NULL_USE(level_number);
+      NULL_USE(init_data_time);
+      NULL_USE(can_be_refined);
+      NULL_USE(initial_time);
+      NULL_USE(old_level);
+      NULL_USE(allocate_data);
+   }
+
+   virtual void
+   applyGradientDetector(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const int level_number,
+      const double error_data_time,
+      const int tag_index,
+      const bool initial_time,
+      const bool uses_richardson_extrapolation);
+
+   //@}
+
+   /*!
+    * @brief Set the independent time variable in the front equation.
+    */
+   void
+   setTime( double time ) {
+      d_time_shift = time;
+   }
+
+private:
    std::string d_name;
 
    const tbox::Dimension d_dim;
@@ -191,6 +263,11 @@ private:
    double d_velocity[SAMRAI::MAX_DIM_VAL];
 
    /*!
+    * @brief Constant time shift to be added to simulation time.
+    */
+   double d_time_shift;
+
+   /*!
     * @brief Amplitude of sinusoid.
     */
    double d_amplitude;
@@ -200,9 +277,12 @@ private:
     */
    std::vector<std::vector<double> > d_buffer_distance;
 
+   DerivedVisOwnerData d_vis_owner_data;
+
    boost::shared_ptr<tbox::Timer> t_setup;
    boost::shared_ptr<tbox::Timer> t_node_pos;
    boost::shared_ptr<tbox::Timer> t_distance;
+   boost::shared_ptr<tbox::Timer> t_uval;
    boost::shared_ptr<tbox::Timer> t_tag_cells;
    boost::shared_ptr<tbox::Timer> t_copy;
 

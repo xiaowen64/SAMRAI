@@ -25,7 +25,6 @@ CXX_OBJS      = AutoTester.o \
 		DerivedVisOwnerData.o \
 		MblkHyperbolicLevelIntegrator.o \
 		MblkHyperbolicPatchStrategy.o \
-		SinusoidalFrontTagger.o \
 		SkeletonBoundaryUtilities2.o \
 		SkeletonBoundaryUtilities3.o \
 		SkeletonCellDoubleConservativeLinearRefine.o \
