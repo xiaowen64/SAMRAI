@@ -110,7 +110,6 @@ private:
    bool d_is_overlap_empty;
    hier::Transformation d_transformation;
    hier::BoxContainer d_dst_boxes;
-   int d_count;
 
 };
 

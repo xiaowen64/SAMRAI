@@ -33,8 +33,7 @@ ShrunkenLevelGenerator::ShrunkenLevelGenerator(
    d_dim(dim),
    d_hierarchy(),
    d_domain_scale_method('r'),
-   d_shrink_distance(0),
-   d_allocate_data(false)
+   d_shrink_distance(0)
 {
    if (database) {
 

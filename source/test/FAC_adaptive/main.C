@@ -214,7 +214,6 @@ int main(
                                        fac_ops,
                                        fac_precond,
                                        *(input_db->getDatabase("AdaptivePoisson")),
-                                       &tbox::pout,
                                        &tbox::plog);
 
       /*

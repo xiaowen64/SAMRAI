@@ -63,7 +63,6 @@ AdaptivePoisson::AdaptivePoisson(
    boost::shared_ptr<solv::CellPoissonFACOps>& fac_ops,
    boost::shared_ptr<solv::FACPreconditioner>& fac_precond,
    tbox::Database& database,
-   /*! Standard output stream */ std::ostream* out_stream,
    /*! Log output stream */ std::ostream* log_stream):
    d_name(object_name),
    d_dim(dim),
@@ -84,7 +83,6 @@ AdaptivePoisson::AdaptivePoisson(
    d_exact(new pdat::CellVariable<double>(d_dim, "solution:exact", 1)),
    d_resid(new pdat::CellVariable<double>(d_dim, object_name + "residual")),
    d_weight(new pdat::CellVariable<double>(d_dim, "vector weight", 1)),
-   d_ostream(out_stream),
    d_lstream(log_stream),
    d_problem_name("sine"),
    d_sps(object_name + "Poisson solver specifications"),

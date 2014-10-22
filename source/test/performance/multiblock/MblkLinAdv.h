@@ -399,7 +399,6 @@ private:
     * boost::shared_ptr to grid - [xyz]
     */
    boost::shared_ptr<pdat::NodeVariable<double> > d_xyz;
-   int d_xyz_id;
 
    /**
     * linear advection velocity vector

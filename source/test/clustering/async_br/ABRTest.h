@@ -105,11 +105,6 @@ private:
 
    SinusoidalFrontTagger d_tagger;
 
-   /*!
-    * @brief Front time.
-    */
-   double d_time;
-
 };
 
 #endif  // included_ABRTest

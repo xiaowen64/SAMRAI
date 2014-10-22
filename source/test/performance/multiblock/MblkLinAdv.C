@@ -774,7 +774,7 @@ void MblkLinAdv::initializeDataOnPatch(
       const hier::Index ifirst = patch.getBox().lower();
       const hier::Index ilast = patch.getBox().upper();
 
-      if ((d_data_problem_int == SPHERE)) {
+      if (d_data_problem_int == SPHERE) {
 
          if (d_dim == tbox::Dimension(2)) {
             SAMRAI_F77_FUNC(initsphere2d, INITSPHERE2D) (d_data_problem_int, dx, xlo,

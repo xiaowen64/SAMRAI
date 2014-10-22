@@ -48,6 +48,10 @@ TileClustering::TileClustering(
    d_barrier_and_time(false),
    d_print_steps(false)
 {
+#ifndef _OPENMP
+   l_outputs = 0;
+   l_interm = 0;
+#endif
    TBOX_omp_init_lock(&l_outputs);
    TBOX_omp_init_lock(&l_interm);
    getFromInput(input_db);

@@ -327,10 +327,6 @@ private:
     */
    int d_flag_id;
    /*!
-    * @brief patch index for Dirichlet values.
-    */
-   int d_dirichlet_data_id;
-   /*!
     * @brief patch index for diffusion coefficients if it is variable.
     */
    int d_diffusion_coef_id;

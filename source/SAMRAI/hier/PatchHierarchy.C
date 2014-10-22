@@ -183,7 +183,7 @@ PatchHierarchy::getFromInput(
                      &d_smallest_patch_size[ln][0],
                      d_dim.getValue());
                   for (int i = 0; i < d_dim.getValue(); ++i) {
-                     if (!d_smallest_patch_size[ln][i] > 0) {
+                     if (d_smallest_patch_size[ln][i] <= 0) {
                         INPUT_RANGE_ERROR("smallest_patch_size");
                      }
                   }

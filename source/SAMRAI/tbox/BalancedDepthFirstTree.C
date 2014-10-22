@@ -99,7 +99,7 @@ BalancedDepthFirstTree::setupTreeForContiguousRanks(
    int up = getInvalidRank();  // Temporary guess for parent.
    int upp = getInvalidRank(); // Temporary guess for grandparent.
    int cl, cr;         // Temporary guesses for children.
-   int parents_child_number = getInvalidChildNumber();
+   unsigned int parents_child_number = getInvalidChildNumber();
    bool is_switchable = false;  // Part of a left-leaf switchable trio.
 
    size_t nr;           // Number of nodes on right branch
@@ -113,7 +113,7 @@ BalancedDepthFirstTree::setupTreeForContiguousRanks(
        */
 
       int node = rbeg; // Node being examined
-      size_t nrem = rend - rbeg;  // Number or nodes remaining, excluding node.
+      size_t nrem = static_cast<size_t>(rend - rbeg);  // Number or nodes remaining, excluding node.
 
       nr = nrem / 2;      // Number on right branch
       nl = nrem - nr;     // Number on left branch

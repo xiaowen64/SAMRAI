@@ -144,10 +144,9 @@ MemoryDatabase::keyExists(
 std::vector<std::string>
 MemoryDatabase::getAllKeys()
 {
-   const int n = static_cast<int>(d_keyvalues.size());
-   std::vector<std::string> keys(n);
+   std::vector<std::string> keys(d_keyvalues.size());
 
-   int k = 0;
+   std::vector<std::string>::size_type k = 0;
    for (std::list<KeyData>::iterator i = d_keyvalues.begin();
         i != d_keyvalues.end(); ++i) {
       keys[k++] = i->d_key;
@@ -374,7 +373,7 @@ MemoryDatabase::putDatabaseBoxVector(
    const std::string& key,
    const std::vector<DatabaseBox>& data)
 {
-   putDatabaseBoxArray(key, &data[0], static_cast<int>(data.size()));
+   putDatabaseBoxArray(key, &data[0], data.size());
 }
 
 void
@@ -487,7 +486,7 @@ MemoryDatabase::putCharVector(
    const std::string& key,
    const std::vector<char>& data)
 {
-   putCharArray(key, &data[0], static_cast<int>(data.size()));
+   putCharArray(key, &data[0], data.size());
 }
 
 void
@@ -605,7 +604,7 @@ MemoryDatabase::putComplexVector(
    const std::string& key,
    const std::vector<dcomplex>& data)
 {
-   putComplexArray(key, &data[0], static_cast<int>(data.size()));
+   putComplexArray(key, &data[0], data.size());
 }
 
 void
@@ -684,21 +683,24 @@ MemoryDatabase::getComplexVector(
    switch (keydata->d_type) {
       case Database::SAMRAI_INT: {
          array = std::vector<dcomplex>(keydata->d_integer.size());
-         for (int i = 0; i < static_cast<int>(keydata->d_integer.size()); ++i) {
+         for (std::vector<dcomplex>::size_type i = 0;
+              i < keydata->d_integer.size(); ++i) {
             array[i] = dcomplex((double)keydata->d_integer[i], 0.0);
          }
          break;
       }
       case Database::SAMRAI_FLOAT: {
          array = std::vector<dcomplex>(keydata->d_float.size());
-         for (int i = 0; i < static_cast<int>(keydata->d_float.size()); ++i) {
+         for (std::vector<dcomplex>::size_type i = 0;
+              i < keydata->d_float.size(); ++i) {
             array[i] = dcomplex((double)keydata->d_float[i], 0.0);
          }
          break;
       }
       case Database::SAMRAI_DOUBLE: {
          array = std::vector<dcomplex>(keydata->d_double.size());
-         for (int i = 0; i < static_cast<int>(keydata->d_double.size()); ++i) {
+         for (std::vector<dcomplex>::size_type i = 0;
+              i < keydata->d_double.size(); ++i) {
             array[i] = dcomplex(keydata->d_double[i], 0.0);
          }
          break;
@@ -766,7 +768,7 @@ MemoryDatabase::putDoubleVector(
    const std::string& key,
    const std::vector<double>& data)
 {
-   putDoubleArray(key, &data[0], static_cast<int>(data.size()));
+   putDoubleArray(key, &data[0], data.size());
 }
 
 void
@@ -919,7 +921,7 @@ MemoryDatabase::putFloatVector(
    const std::string& key,
    const std::vector<float>& data)
 {
-   putFloatArray(key, &data[0], static_cast<int>(data.size()));
+   putFloatArray(key, &data[0], data.size());
 }
 
 void
@@ -1073,7 +1075,7 @@ MemoryDatabase::putIntegerVector(
    const std::string& key,
    const std::vector<int>& data)
 {
-   putIntegerArray(key, &data[0], static_cast<int>(data.size()));
+   putIntegerArray(key, &data[0], data.size());
 }
 
 void
@@ -1186,7 +1188,7 @@ MemoryDatabase::putStringVector(
    const std::string& key,
    const std::vector<std::string>& data)
 {
-   putStringArray(key, &data[0], static_cast<int>(data.size()));
+   putStringArray(key, &data[0], data.size());
 }
 
 void
@@ -1434,8 +1436,8 @@ MemoryDatabase::printDatabase(
                sstream << i->d_key;
                indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
-               const int n = static_cast<int>(i->d_boolean.size());
-               for (int j = 0; j < n; ++j) {
+               const std::vector<bool>::size_type n = i->d_boolean.size();
+               for (std::vector<bool>::size_type j = 0; j < n; ++j) {
                   sstream << (i->d_boolean[j] ? "TRUE" : "FALSE");
                   if (j < n - 1) {
                      sstream << ", ";
@@ -1449,8 +1451,8 @@ MemoryDatabase::printDatabase(
                sstream << i->d_key;
                indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
-               const int n = static_cast<int>(i->d_box.size());
-               for (int j = 0; j < n; ++j) {
+               const std::vector<DatabaseBox>::size_type n = i->d_box.size();
+               for (std::vector<DatabaseBox>::size_type j = 0; j < n; ++j) {
                   const int m = i->d_box[j].getDimVal();
                   sstream << "[(";
                   for (int k = 0; k < m; ++k) {
@@ -1479,8 +1481,8 @@ MemoryDatabase::printDatabase(
                sstream << i->d_key;
                indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
-               const int n = static_cast<int>(i->d_char.size());
-               for (int j = 0; j < n; ++j) {
+               const std::vector<char>::size_type n = i->d_char.size();
+               for (std::vector<char>::size_type j = 0; j < n; ++j) {
                   sstream << "'" << i->d_char[j] << "'";
                   if (j < n - 1) {
                      sstream << ", ";
@@ -1494,8 +1496,8 @@ MemoryDatabase::printDatabase(
                sstream << i->d_key;
                indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
-               const int n = static_cast<int>(i->d_complex.size());
-               for (int j = 0; j < n; ++j) {
+               const std::vector<dcomplex>::size_type n = i->d_complex.size();
+               for (std::vector<dcomplex>::size_type j = 0; j < n; ++j) {
                   sstream << i->d_complex[j];
                   if (j < n - 1) {
                      sstream << ", ";
@@ -1509,8 +1511,8 @@ MemoryDatabase::printDatabase(
                sstream << i->d_key;
                indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
-               const int n = static_cast<int>(i->d_double.size());
-               for (int j = 0; j < n; ++j) {
+               const std::vector<double>::size_type n = i->d_double.size();
+               for (std::vector<double>::size_type j = 0; j < n; ++j) {
                   sstream << i->d_double[j];
                   if (j < n - 1) {
                      sstream << ", ";
@@ -1524,8 +1526,8 @@ MemoryDatabase::printDatabase(
                sstream << i->d_key;
                indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
-               const int n = static_cast<int>(i->d_float.size());
-               for (int j = 0; j < n; ++j) {
+               const std::vector<float>::size_type n = i->d_float.size();
+               for (std::vector<float>::size_type j = 0; j < n; ++j) {
                   sstream << i->d_float[j];
                   if (j < n - 1) {
                      sstream << ", ";
@@ -1539,8 +1541,8 @@ MemoryDatabase::printDatabase(
                sstream << i->d_key;
                indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
-               const int n = static_cast<int>(i->d_integer.size());
-               for (int j = 0; j < n; ++j) {
+               const std::vector<int>::size_type n = i->d_integer.size();
+               for (std::vector<int>::size_type j = 0; j < n; ++j) {
                   sstream << i->d_integer[j];
                   if (j < n - 1) {
                      sstream << ", ";
@@ -1554,8 +1556,8 @@ MemoryDatabase::printDatabase(
                sstream << i->d_key;
                indentStream(sstream, width - static_cast<int>(i->d_key.length()));
                sstream << " = ";
-               const int n = static_cast<int>(i->d_string.size());
-               for (int j = 0; j < n; ++j) {
+               const std::vector<std::string>::size_type n = i->d_string.size();
+               for (std::vector<std::string>::size_type j = 0; j < n; ++j) {
                   sstream << "\"" << i->d_string[j] << "\"";
                   if (j < n - 1) {
                      sstream << ", ";

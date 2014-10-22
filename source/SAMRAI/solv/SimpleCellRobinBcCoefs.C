@@ -45,7 +45,6 @@ SimpleCellRobinBcCoefs::SimpleCellRobinBcCoefs(
    d_ln_max(-1),
    d_flux_id(-1),
    d_flag_id(-1),
-   d_dirichlet_data_id(-1),
    d_diffusion_coef_id(-1)
 {
    t_set_bc_coefs = tbox::TimerManager::getManager()->

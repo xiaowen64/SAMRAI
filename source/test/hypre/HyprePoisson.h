@@ -12,8 +12,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-using namespace std;
-
 #if !defined(HAVE_HYPRE)
 
 /*
@@ -45,6 +43,8 @@ using namespace std;
 #include "SAMRAI/appu/VisItDataWriter.h"
 
 #include "boost/shared_ptr.hpp"
+
+using namespace std;
 
 namespace SAMRAI {
 

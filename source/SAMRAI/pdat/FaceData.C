@@ -287,7 +287,7 @@ FaceData<TYPE>::copyOnBox(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, src, box);
 
-   for (int axis = 0; axis < getDim().getValue(); ++axis) {
+   for (tbox::Dimension::dir_t axis = 0; axis < getDim().getValue(); ++axis) {
       const hier::Box face_box = FaceGeometry::toFaceBox(box, axis);
       d_data[axis]->copy(src.getArrayData(axis), face_box);
    }

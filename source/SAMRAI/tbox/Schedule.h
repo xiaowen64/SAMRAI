@@ -201,7 +201,7 @@ public:
       int first_message_length)
    {
       TBOX_ASSERT(first_message_length > 0);
-      d_first_message_length = first_message_length;
+      d_first_message_length = static_cast<size_t>(first_message_length);
    }
 
    /*!
