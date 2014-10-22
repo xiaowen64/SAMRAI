@@ -168,7 +168,8 @@ void SinusoidalFrontGenerator::applyGradientDetector(
       // Compute tag data for patch.
       computePatchData(patch,
                        0,
-                       tag_cell_data_.get());
+                       tag_cell_data_.get(),
+                       patch.getBox() );
 
    }
 }
@@ -290,7 +291,8 @@ void SinusoidalFrontGenerator::resetHierarchyConfiguration(
 void SinusoidalFrontGenerator::computePatchData(
    const hier::Patch& patch,
    pdat::CellData<double>* uval_data,
-   pdat::CellData<int>* tag_data) const
+   pdat::CellData<int>* tag_data,
+   const hier::Box &fill_box ) const
 {
    t_setup->start();
 
@@ -306,7 +308,7 @@ void SinusoidalFrontGenerator::computePatchData(
 
    if ( tag_data ) {
       computeFrontsData(0, uval_data, tag_data,
-                        patch.getBox(),
+                        fill_box,
                         (patch.getPatchLevelNumber() < d_buffer_distance.size() ?
                          d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
                         xlo, dx);
@@ -314,7 +316,7 @@ void SinusoidalFrontGenerator::computePatchData(
    else {
       // Not computing tag => no tag buffer needed.
       computeFrontsData(0, uval_data, tag_data,
-                        patch.getBox(),
+                        fill_box,
                         std::vector<double>(d_dim.getValue(),0.0),
                         xlo, dx);
    }

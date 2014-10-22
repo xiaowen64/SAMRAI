@@ -208,7 +208,8 @@ void SphericalShellGenerator::resetHierarchyConfiguration(
 void SphericalShellGenerator::computePatchData(
    const hier::Patch& patch,
    pdat::CellData<double>* uval_data,
-   pdat::CellData<int>* tag_data) const
+   pdat::CellData<int>* tag_data,
+   const hier::Box &fill_box) const
 {
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
@@ -220,7 +221,7 @@ void SphericalShellGenerator::computePatchData(
 
    if ( tag_data ) {
       computeShellsData(uval_data, tag_data,
-                        patch.getBox(),
+                        fill_box,
                         (patch.getPatchLevelNumber() < d_buffer_distance.size() ?
                          d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
                         xlo, dx);
@@ -228,7 +229,7 @@ void SphericalShellGenerator::computePatchData(
    else {
       // Not computing tag => no tag buffer needed.
       computeShellsData(uval_data, tag_data,
-                        patch.getBox(),
+                        fill_box,
                         std::vector<double>(d_dim.getValue(),0.0),
                         xlo, dx);
    }

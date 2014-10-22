@@ -302,7 +302,8 @@ void LinAdv::initializeDataOnPatch(
 
       d_mesh_gen->computePatchData(
          patch,
-         uval.get(), 0);
+         uval.get(), 0,
+         patch.getBox());
 
       t_init_first_time->stop();
    }
@@ -1194,7 +1195,7 @@ void LinAdv::setPhysicalBoundaryConditions(
                patch.getBox(),
                ghost_width_to_fill);
 
-         d_mesh_gen->computePatchData( patch, uval.get(), 0 );
+         d_mesh_gen->computePatchData( patch, uval.get(), 0, fill_box );
 
       }
 
@@ -1434,8 +1435,9 @@ void LinAdv::tagGradientDetectorCells(
    if (d_mesh_gen) {
       t_analytical_tag->start();
       d_mesh_gen->computePatchData(patch,
-         0,
-         tags.get());
+                                   0,
+                                   tags.get(),
+                                   patch.getBox());
       t_analytical_tag->stop();
    } else {
       /*

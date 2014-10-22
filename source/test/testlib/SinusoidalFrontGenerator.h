@@ -156,7 +156,8 @@ public:
    computePatchData(
       const hier::Patch& patch,
       pdat::CellData<double>* uval_data,
-      pdat::CellData<int>* tag_data) const;
+      pdat::CellData<int>* tag_data,
+      const hier::Box &fill_box) const;
 
    /*!
     * @brief Deallocate internally managed patch data on level.
