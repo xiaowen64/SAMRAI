@@ -493,8 +493,13 @@ TileClustering::clusterWholeTiles(
    }
 
    const hier::BoxLevel& tag_box_level = *tag_level->getBoxLevel();
+   // Possible bug: TileClustering should register a ConnectorWidthRequestorStrategy
+   // to make sure it can find a Connector with sufficient width without implicitly
+   // creating one.
    const hier::Connector& tag_to_tag = tag_box_level.findConnector(
-         tag_box_level, d_tile_size, hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
+         tag_box_level,
+         d_tile_size - hier::IntVector::getOne(d_dim),
+         hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
 
    hier::BoxContainer visible_tag_boxes(true); // Ordering is precondition for removePeriodicImageBoxes.
    tag_to_tag.getLocalNeighbors(visible_tag_boxes);
@@ -828,7 +833,9 @@ TileClustering::detectSemilocalEdges(
 
    const hier::BoxLevel& tag_box_level = tag_to_tile->getBase();
    hier::Connector tag_to_tag = tag_box_level.findConnector(
-         tag_box_level, d_tile_size, hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
+         tag_box_level,
+         d_tile_size - hier::IntVector::getOne(d_dim),
+         hier::CONNECTOR_IMPLICIT_CREATION_RULE, true);
    /*
     * We don't want to introduce periodic relationships yet, so remove
     * them from the tag<==>tag leg of the bridge.  tag_to_tag doesn't
