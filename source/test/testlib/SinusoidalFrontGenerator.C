@@ -490,10 +490,9 @@ void SinusoidalFrontGenerator::computeFrontsData(
                   + front_x(pdat::NodeIndex(squashed_cindex, pdat::NodeIndex::LLU), 0)
                   + front_x(pdat::NodeIndex(squashed_cindex, pdat::NodeIndex::LUU), 0));
          }
-         while (dist_from_front > 0) {
-            dist_from_front -= d_period[0];
-            uval(cindex) += 1.0;
-         }
+         const int k = (dist_from_front < 0 ? static_cast<int>(-dist_from_front/d_period[0] + 1) : 0);
+         const int front_count = static_cast<int>(dist_from_front/d_period[0] + k) - k;
+         uval(cindex) += front_count;
       }
 
       t_uval->stop();
