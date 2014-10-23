@@ -504,6 +504,11 @@ private:
    //@{
 
    /*!
+    * @brief Flag that turns on barrier calls for use in performance analysis.
+    */
+   static bool s_barrier_and_time;
+
+   /*!
     * @name Timer objects for performance measurement.
     */
    static boost::shared_ptr<tbox::Timer> t_coarsen_schedule;
