@@ -175,8 +175,6 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
                offset = itr->second.getShift(encon_level.getLevelNumber());
             }
 
-//            offset *= patch.getPatchGeometry()->getRatio().getBlockVector(patch_blk_id);
-
             hier::Transformation transformation(
                rotation, offset, encon_blk_id, patch_blk_id);
             hier::Box encon_patch_box(encon_patch->getBox());

@@ -1294,7 +1294,7 @@ BalanceUtilities::recursiveBisectionUniform(
             physical_domain);
 
          hier::IntVector box_cut_factor(cut_factor.getDim());
-         if (cut_factor.size() == 1) {
+         if (cut_factor.getBlockSize() == 1) {
             box_cut_factor = cut_factor;
          } else {
             box_cut_factor = cut_factor.getBlockVector(box2chop.getBlockId());
@@ -2054,7 +2054,7 @@ BalanceUtilities::constrainMaxBoxSizes(
 {
    TBOX_ASSERT(!anchor_to_level || anchor_to_level->hasTranspose());
 
-   hier::IntVector zero_vector(hier::IntVector::getZero(box_level.getDim()));
+   const hier::IntVector& zero_vector(hier::IntVector::getZero(box_level.getDim()));
 
    hier::BoxLevel constrained(box_level.getRefinementRatio(),
                               box_level.getGridGeometry(),
@@ -2270,7 +2270,7 @@ BalanceUtilities::prebalanceBoxLevel(
     * so that on return from this method, they will be correct for the new
     * balance_box_level.
     */
-   hier::IntVector zero_vector(hier::IntVector::getZero(balance_box_level.getDim()));
+   const hier::IntVector& zero_vector(hier::IntVector::getZero(balance_box_level.getDim()));
    hier::MappingConnector balance_to_tmp(
       balance_box_level,
       tmp_box_level,

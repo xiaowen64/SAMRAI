@@ -110,10 +110,10 @@ PersistentOverlapConnectors::createConnector(
    TBOX_ASSERT(head.isInitialized());
 
    IntVector width(connector_width);
-   if (width.size() == 1 &&
-       IntVector::getMultiZero(width.getDim()).size() != 1) {
+   if (width.getBlockSize() == 1 &&
+       IntVector::getMultiZero(width.getDim()).getBlockSize() != 1) {
       if (width.max() == width.min()) {
-         int new_size = IntVector::getMultiZero(width.getDim()).size();
+         int new_size = IntVector::getMultiZero(width.getDim()).getBlockSize();
          width = IntVector(width, new_size);
       } else {
          TBOX_ERROR("Anisotropic head width argument for PersistentOverlapConnectors::createConnector must be of size equal to the number of blocks." << std::endl);
@@ -275,10 +275,10 @@ PersistentOverlapConnectors::hasConnector(
    bool exact_width_only) const
 {
    IntVector min_width(min_connector_width);
-   if (min_width.size() == 1 &&
-       IntVector::getMultiZero(min_width.getDim()).size() != 1) {
+   if (min_width.getBlockSize() == 1 &&
+       IntVector::getMultiZero(min_width.getDim()).getBlockSize() != 1) {
       if (min_width.max() == min_width.min()) {
-         int new_size = IntVector::getMultiZero(min_width.getDim()).size();
+         int new_size = IntVector::getMultiZero(min_width.getDim()).getBlockSize();
          min_width = IntVector(min_width, new_size);
       } else {
          TBOX_ERROR("Anisotropic head width argument for PersistentOverlapConnectors::doFindConnectorWork must be of size equal to the number of blocks." << std::endl);
@@ -392,10 +392,10 @@ PersistentOverlapConnectors::doFindConnectorWork(
    bool exact_width_only)
 {
    IntVector min_width(min_connector_width);
-   if (min_width.size() == 1 &&
-       IntVector::getMultiZero(min_width.getDim()).size() != 1) {
+   if (min_width.getBlockSize() == 1 &&
+       IntVector::getMultiZero(min_width.getDim()).getBlockSize() != 1) {
       if (min_width.max() == min_width.min()) {
-         int new_size = IntVector::getMultiZero(min_width.getDim()).size();
+         int new_size = IntVector::getMultiZero(min_width.getDim()).getBlockSize();
          min_width = IntVector(min_width, new_size);
       } else {
          TBOX_ERROR("Anisotropic head width argument for PersistentOverlapConnectors::doFindConnectorWork must be of size equal to the number of blocks." << std::endl);
@@ -425,7 +425,7 @@ PersistentOverlapConnectors::doFindConnectorWork(
                   d_cons_from_me[i]->getConnectorWidth()
                   - found->getConnectorWidth();
 
-               TBOX_ASSERT(!vdiff.isZero());
+               TBOX_ASSERT(vdiff != 0);
 
                int nblocks = head.getGridGeometry()->getNumberBlocks();
                int diff = 0;

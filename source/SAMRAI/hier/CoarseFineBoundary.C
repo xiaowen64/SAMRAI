@@ -60,13 +60,13 @@ CoarseFineBoundary::CoarseFineBoundary(
    const hier::IntVector& ratio_to_zero =
       level.getRatioToLevelZero();
 
-   IntVector connector_width(max_ghost_width, ratio_to_zero.size());
+   IntVector connector_width(max_ghost_width, ratio_to_zero.getBlockSize());
    connector_width.max(IntVector::getOne(d_dim));
    const Connector& level_to_level = level.findConnector(level,
          connector_width,
          CONNECTOR_CREATE);
    if (level_num != 0) {
-      for (int b = 0; b < connector_width.size(); ++b) {
+      for (int b = 0; b < connector_width.getBlockSize(); ++b) {
          for (int d = 0; d < d_dim.getValue(); ++d) {
             if (connector_width(b,d) % ratio_to_zero(b,d) != 0) {
                connector_width(b,d) = 

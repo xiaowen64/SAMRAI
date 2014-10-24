@@ -378,7 +378,7 @@ RefineSchedule::RefineSchedule(
 #ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT( expansion_ratio * d_dst_level->getRatioToLevelZero() == hierarchy->getPatchLevel(next_coarser_ln+1)->getRatioToLevelZero() );
             // All values in expansion_ratio must be identical.
-            TBOX_ASSERT( hier::IntVector(dim,expansion_ratio(0,0),expansion_ratio.size()) == expansion_ratio );
+            TBOX_ASSERT( hier::IntVector(dim,expansion_ratio(0,0),expansion_ratio.getBlockSize()) == expansion_ratio );
 #endif
             rscwr.setGhostCellWidthFactor(expansion_ratio(0,0));
          }
@@ -1595,8 +1595,8 @@ RefineSchedule::createCoarseInterpPatchLevel(
    const hier::BoxLevel& hiercoarse_box_level(
       *hiercoarse_level->getBoxLevel());
 
-   hier::IntVector zero_vec(hier::IntVector::getZero(dim));
-   hier::IntVector one_vec(hier::IntVector::getOne(dim));
+   const hier::IntVector& zero_vec(hier::IntVector::getZero(dim));
+   const hier::IntVector& one_vec(hier::IntVector::getOne(dim));
 
    /*
     * To compute coarse_interp<==>hiercoarse, we will perform this bridge:
@@ -3570,7 +3570,7 @@ RefineSchedule::setDefaultFillBoxLevel(
           * This part assumes src-dst ratio is one.
           * Should be modified if the assumption does not hold.
           */
-         TBOX_ASSERT(d_dst_to_src->getRatio().isOne());
+         TBOX_ASSERT(d_dst_to_src->getRatio() == 1);
 
          /*
           * For these fill_pattern, the src owner could not compute fill boxes
@@ -3788,7 +3788,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
     */
    encon_box_level->finalize();
 
-   hier::IntVector one_vec(hier::IntVector::getOne(dim)); 
+   const hier::IntVector& one_vec(hier::IntVector::getOne(dim)); 
 
    d_encon_level.reset(new hier::PatchLevel(encon_box_level,
          grid_geometry,

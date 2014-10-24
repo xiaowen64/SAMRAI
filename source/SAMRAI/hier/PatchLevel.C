@@ -111,7 +111,7 @@ PatchLevel::PatchLevel(
     * All components of ratio must be nonzero.  Additionally, all components
     * of ratio not equal to 1 must have the same sign.
     */
-   TBOX_ASSERT(!box_level.getRefinementRatio().isZero());
+   TBOX_ASSERT(box_level.getRefinementRatio() != 0);
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim.getValue() > 1) {
       for (int b = 0; b < d_number_blocks; ++b) {
@@ -223,7 +223,7 @@ PatchLevel::PatchLevel(
     * All components of ratio must be nonzero.  Additionally, all components
     * of ratio not equal to 1 must have the same sign.
     */
-   TBOX_ASSERT(!box_level->getRefinementRatio().isZero());
+   TBOX_ASSERT(box_level->getRefinementRatio() != 0);
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim.getValue() > 1) {
       for (int b = 0; b < d_number_blocks; ++b) {
@@ -381,7 +381,7 @@ PatchLevel::setRefinedPatchLevel(
    bool defer_boundary_box_creation)
 {
    TBOX_ASSERT(coarse_level);
-   TBOX_ASSERT(!refine_ratio.isZero());
+   TBOX_ASSERT(refine_ratio != 0);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, *coarse_level, refine_ratio);
    if (fine_grid_geometry) {
@@ -542,7 +542,7 @@ PatchLevel::setCoarsenedPatchLevel(
    bool defer_boundary_box_creation)
 {
    TBOX_ASSERT(fine_level);
-   TBOX_ASSERT(!coarsen_ratio.isZero());
+   TBOX_ASSERT(coarsen_ratio != 0);
 
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, *fine_level, coarsen_ratio);

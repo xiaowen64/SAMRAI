@@ -1824,28 +1824,37 @@ BoxUtilities::growAndChopAtBlockBoundary(
 
    grow_box.grow(tmp_grow_width);
 
-   std::vector<BoxContainer> domain_boxes(nblocks);
+   BoxContainer domain_boxes;
    grid_geom->computePhysicalDomain(
-      domain_boxes[base_block.getBlockValue()],
+      domain_boxes,
       compare_ratio,
       base_block);
 
    /*
     * Grow within base block
     */
-   BoxContainer base_block_boxes(domain_boxes[base_block.getBlockValue()]);
-   base_block_boxes.unorder();
-   base_block_boxes.intersectBoxes(grow_box);
+   domain_boxes.unorder();
+   domain_boxes.intersectBoxes(grow_box);
 
    if (do_refine) {
-      base_block_boxes.refine(change_ratio);
+      domain_boxes.refine(change_ratio);
    }
 
-   grown_boxes.spliceBack(base_block_boxes);
+   grown_boxes.spliceBack(domain_boxes);
 
    bool constant_width = true;
    if (tmp_grow_width.min() != tmp_grow_width.max()) {
       constant_width = false;
+   }
+
+   bool check_neighbors = true;
+   if (grown_boxes.size() == 1 &&
+       grown_boxes.front().isSpatiallyEqual(grow_box)) {
+      check_neighbors = false;
+   }
+
+   if (!check_neighbors) {
+      return;
    }
 
    /*
@@ -1855,13 +1864,17 @@ BoxUtilities::growAndChopAtBlockBoundary(
       grid_geom->getNeighbors(base_block);
    for (std::map<BlockId,BaseGridGeometry::Neighbor>::const_iterator ni =
         neighbors.begin(); ni != neighbors.end(); ++ni) {
+
+      domain_boxes.clear(); 
+
       const BaseGridGeometry::Neighbor& neighbor(ni->second);
       const BlockId& nbr_block = neighbor.getBlockId();
 
       grid_geom->computePhysicalDomain(
-         domain_boxes[nbr_block.getBlockValue()],
+         domain_boxes,
          compare_ratio,
          nbr_block);
+      domain_boxes.unorder();
 
       Box nbr_grow_box(box);
       if (do_coarsen) {
@@ -1873,7 +1886,7 @@ BoxUtilities::growAndChopAtBlockBoundary(
                               base_block);
       nbr_grow_box.grow(tmp_grow_width);
 
-      BoxContainer nbr_block_boxes(domain_boxes[nbr_block.getBlockValue()]);
+      BoxContainer nbr_block_boxes(domain_boxes);
       nbr_block_boxes.unorder();
       nbr_block_boxes.intersectBoxes(nbr_grow_box);
 
@@ -1887,7 +1900,7 @@ BoxUtilities::growAndChopAtBlockBoundary(
       }
 
       if (!constant_width) {
-         nbr_block_boxes = domain_boxes[nbr_block.getBlockValue()];
+         nbr_block_boxes.spliceBack(domain_boxes);
 
          nbr_grow_box = box;
          if (do_coarsen) {

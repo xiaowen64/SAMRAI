@@ -214,7 +214,7 @@ OverlapConnectorAlgorithm::extractNeighbors(
          } else {
             bool head_is_finer = false;
             bool base_is_finer = false;
-            if (!connector.getRatio().isOne()) {
+            if (connector.getRatio() != 1) {
                if (connector.getHeadCoarserFlag()) {
                   base_is_finer = true;
                } else {
@@ -345,7 +345,7 @@ OverlapConnectorAlgorithm::extractNeighbors(
          } else {
             bool head_is_finer = false;
             bool base_is_finer = false;
-            if (!connector.getRatio().isOne()) {
+            if (connector.getRatio() != 1) {
                if (connector.getHeadCoarserFlag()) {
                   base_is_finer = true;
                } else {
@@ -994,7 +994,7 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
 
    const tbox::Dimension& dim(connector_width_limit.getDim());
 
-   const IntVector zero_vector(IntVector::getZero(dim));
+   const IntVector& zero_vector(IntVector::getZero(dim));
 
    const IntVector finest_refinement_ratio =
       IntVector::max(
@@ -1002,10 +1002,10 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
          IntVector::max(west_refinement_ratio, east_refinement_ratio));
 
    IntVector width_limit(connector_width_limit);
-   if (width_limit.size() == 1 &&
-       IntVector::getMultiZero(dim).size() != 1) {
+   if (width_limit.getBlockSize() == 1 &&
+       IntVector::getMultiZero(dim).getBlockSize() != 1) {
       if (width_limit.max() == width_limit.min()) {
-         int new_size = IntVector::getMultiZero(dim).size();
+         int new_size = IntVector::getMultiZero(dim).getBlockSize();
          width_limit = IntVector(width_limit, new_size);
       } else {
          TBOX_ERROR("Anisotropic width limit argument for bridge must be of size equal to the number of blocks." << std::endl);

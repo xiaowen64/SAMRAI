@@ -1539,7 +1539,7 @@ CellPoissonFACOps::ewingFixFlux(
    const hier::Index& pupper = patch_box.upper();
 
    hier::IntVector block_ratio(ratio_to_coarser);
-   if (block_ratio.size() != 1) {
+   if (block_ratio.getBlockSize() != 1) {
       block_ratio = hier::IntVector(d_dim);
       int b = patch_box.getBlockId().getBlockValue();
       for (int d = 0; d < d_dim.getValue(); ++d) {

@@ -97,10 +97,6 @@ PatchHierarchy::PatchHierarchy(
    getFromInput(input_db, is_from_restart);
 
    d_grid_geometry->setUpRatios(d_ratio_to_coarser);
-   if (d_number_blocks > 1 && d_max_levels > 1) {
-      d_grid_geometry->setUpFineLevelMultiblockData(
-         d_ratio_to_coarser);
-   }
 
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 }
@@ -701,12 +697,7 @@ PatchHierarchy::makeRefinedPatchHierarchy(
       d_allow_patches_smaller_than_ghostwidth;
    fine_hierarchy->d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps =
       d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps;
-
-   if (d_number_blocks > 1 && d_max_levels > 1) {
-      fine_hierarchy->d_grid_geometry->setUpFineLevelMultiblockData(
-         d_ratio_to_coarser);
-   }
-
+   fine_hierarchy->d_grid_geometry->setUpRatios(d_ratio_to_coarser);
 
    for (int ln = 0; ln < d_number_levels; ++ln) {
       BoxContainer refined_boxes(d_patch_levels[ln]->getBoxLevel()->getBoxes());
@@ -766,11 +757,7 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
    coarse_hierarchy->d_largest_patch_size = d_largest_patch_size;
    coarse_hierarchy->d_individual_cwrs = d_individual_cwrs;
    coarse_hierarchy->d_proper_nesting_buffer = d_proper_nesting_buffer;
-
-   if (d_number_blocks > 1 && d_max_levels > 1) {
-      coarse_hierarchy->d_grid_geometry->setUpFineLevelMultiblockData(
-         d_ratio_to_coarser);
-   }
+   coarse_hierarchy->d_grid_geometry->setUpRatios(d_ratio_to_coarser);
 
    for (int ln = 0; ln < d_number_levels; ++ln) {
       BoxContainer coarsened_boxes(d_patch_levels[ln]->getBoxLevel()->getBoxes());

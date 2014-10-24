@@ -109,7 +109,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
    TBOX_ASSERT(head.getMPI() == base.getMPI());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   IntVector zero_vector(IntVector::getZero(dim));
+   const IntVector& zero_vector = IntVector::getZero(dim);
    TBOX_ASSERT(base_swell >= zero_vector);
    TBOX_ASSERT(head_swell >= zero_vector);
    TBOX_ASSERT(head_nesting_margin >= zero_vector);
@@ -219,7 +219,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
     */
 
    boost::shared_ptr<BoxLevel> swelledbase;
-   if (base_swell.isZero()) {
+   if (base_swell == 0) {
       swelledbase.reset(new BoxLevel(base));
    } else {
       const BoxContainer& base_boxes = base.getBoxes();
@@ -237,7 +237,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
    }
 
    boost::shared_ptr<BoxLevel> swelledhead;
-   if (head_swell.isZero()) {
+   if (head_swell == 0) {
       swelledhead.reset(new BoxLevel(head));
    } else {
       const BoxContainer& head_boxes = head.getBoxes();
@@ -267,7 +267,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
    swelledbase_to_swelledhead.growLocalNeighbors(head_swell);
 
    if (d_sanity_check_precond &&
-       head_swell.isZero()) {
+       head_swell == 0) {
       /*
        * If head was swelled, it may generate undetected overlaps that
        * cannot be compensated for by shrinking the connector width.
@@ -581,8 +581,8 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
       input.getGridGeometry());
 
    const tbox::Dimension& dim(input.getDim());
-   const IntVector zero_vec(IntVector::getZero(input.getDim()));
-   IntVector one_vec(IntVector::getOne(dim));
+   const IntVector& zero_vec = IntVector::getZero(input.getDim());
+   const IntVector& one_vec = IntVector::getOne(dim);
 
    const bool nonnegative_nesting_width = nesting_width >= zero_vec;
 
@@ -644,7 +644,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
     * Bring reference_box_list into refinement ratio of input
     * (for intersection checks).
     */
-   if (!input_to_reference.getRatio().isOne()) {
+   if (input_to_reference.getRatio() != 1) {
       if (input_to_reference.getHeadCoarserFlag()) {
          reference_box_list.refine(input_to_reference.getRatio());
       } else {
@@ -693,7 +693,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
       if (!domain.empty()) {
 
-         if (input.getRefinementRatio().isOne()) {
+         if (input.getRefinementRatio() == 1) {
             reference_box_list.intersectBoxes(
                input.getRefinementRatio(),
                domain);
@@ -1008,7 +1008,7 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
           */
          BoxContainer singularity_boxes(
             grid_geometry->getSingularityBoxContainer(block_id));
-         if (!refinement_ratio.isOne()) {
+         if (refinement_ratio != 1) {
             singularity_boxes.refine(refinement_ratio);
          }
 

@@ -60,8 +60,8 @@ Connector::Connector(
    const tbox::Dimension& dim):
    d_base_handle(),
    d_head_handle(),
-   d_base_width(IntVector(dim)),
-   d_ratio(IntVector(dim)),
+   d_base_width(dim),
+   d_ratio(dim),
    d_ratio_is_exact(false),
    d_head_coarser(false),
    d_relationships(),
@@ -87,8 +87,8 @@ Connector::Connector(
    tbox::Database& restart_db):
    d_base_handle(),
    d_head_handle(),
-   d_base_width(IntVector(dim)),
-   d_ratio(IntVector(dim)),
+   d_base_width(dim),
+   d_ratio(dim),
    d_ratio_is_exact(false),
    d_head_coarser(false),
    d_relationships(),
@@ -129,13 +129,13 @@ Connector::Connector(
    d_transpose(other.d_transpose),
    d_owns_transpose(false)
 {
-   TBOX_ASSERT(d_ratio.size() ==
-               IntVector::getMultiZero(d_ratio.getDim()).size());
+   TBOX_ASSERT(d_ratio.getBlockSize() ==
+               IntVector::getMultiZero(d_ratio.getDim()).getBlockSize());
 
-   if (d_base_width.size() == 1 &&
-       IntVector::getMultiZero(d_ratio.getDim()).size() != 1) {
+   if (d_base_width.getBlockSize() == 1 &&
+       IntVector::getMultiZero(d_ratio.getDim()).getBlockSize() != 1) {
       if (d_base_width.max() == d_base_width.min()) {
-         int new_size = IntVector::getMultiZero(d_ratio.getDim()).size();
+         int new_size = IntVector::getMultiZero(d_ratio.getDim()).getBlockSize();
          d_base_width = IntVector(d_base_width, new_size);
       } else {
          TBOX_ERROR("Anisotropic base width argument for Connector must be of size equal to the number of blocks." << std::endl);
@@ -172,10 +172,10 @@ Connector::Connector(
       head_box_level,
       base_width);
    IntVector tmp_base_width(base_width);
-   if (tmp_base_width.size() == 1 &&
-       IntVector::getMultiZero(d_ratio.getDim()).size() != 1) {
+   if (tmp_base_width.getBlockSize() == 1 &&
+       IntVector::getMultiZero(d_ratio.getDim()).getBlockSize() != 1) {
       if (tmp_base_width.max() == tmp_base_width.min()) {
-         int new_size = IntVector::getMultiZero(d_ratio.getDim()).size();
+         int new_size = IntVector::getMultiZero(d_ratio.getDim()).getBlockSize();
          tmp_base_width = IntVector(tmp_base_width, new_size);
       } else {
          TBOX_ERROR("Anisotropic base width argument for Connector must be of size equal to the number of blocks." << std::endl);
@@ -383,17 +383,17 @@ Connector::shrinkWidth(
    const IntVector& new_width)
 {
    IntVector shrink_width(new_width);
-   if (shrink_width.size() == 1 &&
-       IntVector::getMultiZero(new_width.getDim()).size() != 1) {
+   if (shrink_width.getBlockSize() == 1 &&
+       IntVector::getMultiZero(new_width.getDim()).getBlockSize() != 1) {
       if (shrink_width.max() == shrink_width.min()) {
-         int new_size = IntVector::getMultiZero(new_width.getDim()).size();
+         int new_size = IntVector::getMultiZero(new_width.getDim()).getBlockSize();
          shrink_width = IntVector(shrink_width, new_size);
       } else {
          TBOX_ERROR("Anisotropic shrink width argument for Connector must be of size equal to the number of blocks." << std::endl);
       }
    }
 
-   TBOX_ASSERT(shrink_width.size() == d_base_width.size()); 
+   TBOX_ASSERT(shrink_width.getBlockSize() == d_base_width.getBlockSize()); 
    if (!(shrink_width <= getConnectorWidth())) {
       TBOX_ERROR("Connector::shrinkWidth: new ghost cell\n"
          << "width " << shrink_width << " involves an\n"
@@ -1058,11 +1058,11 @@ Connector::setWidth(
    d_finalized = false;
    d_base_width = new_width;
 
-   if (d_base_width.size() == 1 &&
-       IntVector::getMultiZero(new_width.getDim()).size() != 1) {
+   if (d_base_width.getBlockSize() == 1 &&
+       IntVector::getMultiZero(new_width.getDim()).getBlockSize() != 1) {
       if (d_base_width.max() == d_base_width.min()) {
-         int new_size = IntVector::getMultiZero(new_width.getDim()).size();
-         d_base_width = IntVector(d_base_width, new_size);
+         int new_getBlockSize = IntVector::getMultiZero(new_width.getDim()).getBlockSize();
+         d_base_width = IntVector(d_base_width, new_getBlockSize);
       } else {
          TBOX_ERROR("Anisotropic base width argument for Connector must be of size equal to the number of blocks." << std::endl);
       }
@@ -1414,10 +1414,10 @@ Connector::convertHeadWidthToBase(
    tbox::Dimension dim(head_refinement_ratio.getDim());
 
    IntVector tmp_head_width(head_width);
-   if (tmp_head_width.size() == 1 &&
-       IntVector::getMultiZero(dim).size() != 1) {
+   if (tmp_head_width.getBlockSize() == 1 &&
+       IntVector::getMultiZero(dim).getBlockSize() != 1) {
       if (tmp_head_width.max() == tmp_head_width.min()) {
-         int new_size = IntVector::getMultiZero(dim).size();
+         int new_size = IntVector::getMultiZero(dim).getBlockSize();
          tmp_head_width = IntVector(tmp_head_width, new_size);
       } else {
          TBOX_ERROR("Anisotropic head width argument for Connector::convertHeadWidthToBase must be of size equal to the number of blocks." << std::endl);
@@ -1530,7 +1530,7 @@ Connector::recursivePrint(
                      if (head_coarser) {
                         ovlap.refine(d_ratio);
                      }
-                     else if (!d_ratio.isOne()) {
+                     else if (d_ratio != 1) {
                         ovlap.coarsen(d_ratio);
                      }
                      Box ghost_box = (*ni);
@@ -2278,7 +2278,7 @@ Connector::checkOverlapCorrectness(
                const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio());
-               } else if (!getRatio().isOne()) {
+               } else if (getRatio() != 1) {
                   nabr_box.coarsen(getRatio());
                }
                if (nabr_box.getBlockId() != box.getBlockId()) {
@@ -2306,7 +2306,7 @@ Connector::checkOverlapCorrectness(
                const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio());
-               } else if (!getRatio().isOne()) {
+               } else if (getRatio() != 1) {
                   nabr_box.coarsen(getRatio());
                }
                if (nabr_box.getBlockId() != box.getBlockId()) {
@@ -2334,7 +2334,7 @@ Connector::checkOverlapCorrectness(
                const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio());
-               } else if (!getRatio().isOne()) {
+               } else if (getRatio() != 1) {
                   nabr_box.coarsen(getRatio());
                }
                if (nabr_box.getBlockId() != box.getBlockId()) {
@@ -2380,7 +2380,7 @@ Connector::checkOverlapCorrectness(
                const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio());
-               } else if (!getRatio().isOne()) {
+               } else if (getRatio() != 1) {
                   nabr_box.coarsen(getRatio());
                }
                Box ovlap = nabr_box * ghost_box;
@@ -2402,7 +2402,7 @@ Connector::checkOverlapCorrectness(
                const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio());
-               } else if (!getRatio().isOne()) {
+               } else if (getRatio() != 1) {
                   nabr_box.coarsen(getRatio());
                }
                if (nabr_box.getBlockId() != box.getBlockId()) {
@@ -2446,7 +2446,7 @@ Connector::checkOverlapCorrectness(
                const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio());
-               } else if (!getRatio().isOne()) {
+               } else if (getRatio() != 1) {
                   nabr_box.coarsen(getRatio());
                }
                if (nabr_box.getBlockId() != box.getBlockId()) {
@@ -2474,7 +2474,7 @@ Connector::checkOverlapCorrectness(
                const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio());
-               } else if (!getRatio().isOne()) {
+               } else if (getRatio() != 1) {
                   nabr_box.coarsen(getRatio());
                }
                if (nabr_box.getBlockId() != box.getBlockId()) {
@@ -2639,139 +2639,6 @@ Connector::findOverlaps_rbbt(
 
    t_find_overlaps_rbbt->stop();
 }
-
-#if 0
-void
-Connector::growBaseBoxForMultiblock(
-   BoxContainer& grown_boxes,
-   const Box& base_box,
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
-   const IntVector& ratio_to_level_zero,
-   const IntVector& connector_ratio,
-   const IntVector& grow_width,
-   bool head_is_finer,
-   bool base_is_finer) const
-{
-   const int nblocks = grid_geom->getNumberBlocks();
-   const BlockId& base_block = base_box.getBlockId();
-
-   Box grow_box(base_box);
-   if (base_is_finer) {
-      grow_box.coarsen(connector_ratio);
-   }
-
-   IntVector compare_ratio(ratio_to_level_zero);
-   IntVector tmp_grow_width(grow_width);
-   if (base_is_finer) {
-      compare_ratio /= connector_ratio;
-      tmp_grow_width /= connector_ratio;
-   }
-
-   grow_box.grow(tmp_grow_width); 
-
-   std::vector<BoxContainer> domain_boxes(nblocks);
-   grid_geom->computePhysicalDomain(
-      domain_boxes[base_block.getBlockValue()],
-      compare_ratio,
-      base_block);
-
-   /*
-    * Grow within base block
-    */
-   BoxContainer base_block_boxes(domain_boxes[base_block.getBlockValue()]);
-   base_block_boxes.unorder();
-   base_block_boxes.intersectBoxes(grow_box);
-
-   if (head_is_finer) {
-      base_block_boxes.refine(connector_ratio);
-   } else if (base_is_finer) {
-//      base_block_boxes.coarsen(connector_ratio);
-   }
-
-   grown_boxes.spliceBack(base_block_boxes);
-
-   bool constant_width = true;
-   if (tmp_grow_width.min() != tmp_grow_width.max()) {
-      constant_width = false; 
-   }
-
-   /*
-    * Grow into neighbors.
-    */
-   const std::map<BlockId, BaseGridGeometry::Neighbor>& neighbors =
-      grid_geom->getNeighbors(base_block);
-   for (std::map<BlockId,BaseGridGeometry::Neighbor>::const_iterator ni =
-        neighbors.begin(); ni != neighbors.end(); ++ni) {
-      const BaseGridGeometry::Neighbor& neighbor(ni->second);
-      const BlockId& nbr_block = neighbor.getBlockId();
-
-      grid_geom->computePhysicalDomain(
-         domain_boxes[nbr_block.getBlockValue()],
-         compare_ratio,
-         nbr_block);
-
-      Box nbr_grow_box(base_box);
-      if (base_is_finer) {
-         nbr_grow_box.coarsen(connector_ratio);
-      }
-      grid_geom->transformBox(nbr_grow_box,
-                              compare_ratio,
-                              nbr_block,
-                              base_block);
-      nbr_grow_box.grow(tmp_grow_width);
-
-      BoxContainer nbr_block_boxes(domain_boxes[nbr_block.getBlockValue()]);
-      nbr_block_boxes.unorder();
-      nbr_block_boxes.intersectBoxes(nbr_grow_box);
-
-      BoxContainer nbr_grown_boxes;
-      if (!nbr_block_boxes.isEmpty()) {
-         if (head_is_finer) {
-            nbr_block_boxes.refine(connector_ratio);
-         } else if (base_is_finer) {
-//            nbr_block_boxes.coarsen(connector_ratio);
-         }
-
-         nbr_grown_boxes.spliceBack(nbr_block_boxes);
-      }
-
-      if (!constant_width) {
-         nbr_block_boxes = domain_boxes[nbr_block.getBlockValue()];
-
-         nbr_grow_box = base_box;
-         if (base_is_finer) {
-            nbr_grow_box.coarsen(connector_ratio);
-         }
-         nbr_grow_box.grow(tmp_grow_width);
-         grid_geom->transformBox(nbr_grow_box,
-                                 compare_ratio,
-                                 nbr_block,
-                                 base_block);
-
-         nbr_block_boxes.unorder();
-         nbr_block_boxes.intersectBoxes(nbr_grow_box);
-
-         if (!nbr_block_boxes.isEmpty()) {
-            if (head_is_finer) {
-               nbr_block_boxes.refine(connector_ratio);
-            } else if (base_is_finer) {
-//               nbr_block_boxes.coarsen(connector_ratio);
-            }
-
-            nbr_grown_boxes.spliceBack(nbr_block_boxes);
-            nbr_grown_boxes.coalesce();
-            if (nbr_grown_boxes.size() > 1) {
-               nbr_grown_boxes.simplify();
-            }
-         }
-      }
-
-      if (!nbr_grown_boxes.isEmpty()) {
-         grown_boxes.spliceBack(nbr_grown_boxes);
-      }
-   }
-}
-#endif
 
 }
 }

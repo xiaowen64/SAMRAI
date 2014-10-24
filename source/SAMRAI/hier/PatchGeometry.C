@@ -41,7 +41,7 @@ PatchGeometry::PatchGeometry(
     * All components of ratio must be nonzero.  Additionally, all components
     * of ratio not equal to 1 must have the same sign.
     */
-   TBOX_ASSERT(!ratio_to_level_zero.isZero());
+   TBOX_ASSERT(ratio_to_level_zero != 0);
    if (d_dim.getValue() > 1) {
       int b = block_id.getBlockValue();
       for (int i = 0; i < d_dim.getValue(); ++i) {

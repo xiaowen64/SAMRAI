@@ -1390,17 +1390,6 @@ public:
    {
       d_relationships.putToRestart(restart_db);
    }
-#if 0
-void growBaseBoxForMultiblock(
-   BoxContainer& grown_boxes,
-   const Box& base_box,
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
-   const IntVector& ratio_to_level_zero,
-   const IntVector& connector_ratio,
-   const IntVector& grow_width,
-   bool head_is_finer,
-   bool base_is_finer) const;
-#endif
 
    /*!
     *

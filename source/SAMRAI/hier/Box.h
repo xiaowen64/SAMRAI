@@ -919,7 +919,7 @@ public:
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
       if (!empty()) {
-         if (ghosts.size() > 1) {
+         if (ghosts.getBlockSize() > 1) {
             int b = d_block_id.getBlockValue();
             for (int i = 0; i < getDim().getValue(); ++i) {
                d_lo(i) -= ghosts(b,i);
@@ -1156,7 +1156,7 @@ public:
       const IntVector& ratio)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
-      if (ratio.size() > 1) {
+      if (ratio.getBlockSize() > 1) {
          int b = d_block_id.getBlockValue();
          for (dir_t i = 0; i < getDim().getValue(); ++i) {
             d_lo(i) = coarsen(d_lo(i), ratio(b,i));

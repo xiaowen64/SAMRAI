@@ -3519,9 +3519,9 @@ GriddingAlgorithm::enforceProperNesting(
             &locally_nests,
             new_box_level,
             tag_to_new.getBase(),
-            hier::IntVector(required_nesting),
-            hier::IntVector(d_hierarchy->getDim(), 0),
-            hier::IntVector(d_hierarchy->getDim(), 0),
+            required_nesting,
+            hier::IntVector::getZero(d_hierarchy->getDim()),
+            hier::IntVector::getZero(d_hierarchy->getDim()),
             &d_hierarchy->getGridGeometry()->getPeriodicDomainSearchTree());
       if (!new_nests_in_tag) {
          tbox::perr << "GriddingAlgorithm" "enforceProperNesting: new BoxLevel\n"
@@ -3847,8 +3847,8 @@ GriddingAlgorithm::computeNestingViolator(
    hier::IntVector zero_vector(hier::IntVector::getZero(dim));
 
    // Check requirements on arguments.
-   TBOX_ASSERT(candidate_to_hierarchy.getRatio().isOne());
-   TBOX_ASSERT(candidate_to_hierarchy.getTranspose().getRatio().isOne());
+   TBOX_ASSERT(candidate_to_hierarchy.getRatio() == 1);
+   TBOX_ASSERT(candidate_to_hierarchy.getTranspose().getRatio() == 1);
 
    const hier::BaseGridGeometry& grid_geometry(
       *d_hierarchy->getGridGeometry());

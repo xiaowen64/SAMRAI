@@ -1168,20 +1168,37 @@ private:
       return d_has_enhanced_connectivity;
    }
 
+   /*!
+    * @brief Query if the the refinement ratios used in this geometry are
+    * isotropic
+    *
+    * All ratios must be isotropic for this to return true.
+    *
+    */
    bool
    hasIsotropicRatios() const
    {
       return d_ratios_are_isotropic; 
    }
 
+   /*!
+    * @brief Set the relative refinement ratios between each level and its
+    * next coarser level
+    *
+    * @param ratio_to_coarser  Vector of refinement ratios.
+    */
    void
    setUpRatios(
       const std::vector<IntVector>& ratio_to_coarser);
 
-   void
-   setUpFineLevelMultiblockData(
-      const std::vector<IntVector>& ratio_to_coarser);
-
+   /*!
+    * @brief Get a level number based on a refinement ratio.
+    *
+    * An error will occur if the given ratio is not equal to one of the ratios
+    * stored in this geometry.
+    *
+    * @param ratio_to_level_zero  
+    */
    int
    getEquivalentLevelNumber(const IntVector& ratio_to_level_zero) const
    {
@@ -1189,10 +1206,14 @@ private:
       for (int i = 0; i < d_ratio_to_level_zero.size(); ++i) {
          if (d_ratio_to_level_zero[i] == ratio_to_level_zero) {
             level_num = i;
+            break; 
          }
       }
       if (level_num == -1) {
-         TBOX_ERROR(" ");
+         TBOX_ERROR(
+            getObjectName() << ":  "
+                            << ratio_to_level_zero << " is not a valid"
+                            << " ratio in this geometry." << std::endl);
       }
 
       return level_num;
@@ -1329,13 +1350,16 @@ private:
     *
     * @pre (getDim() == patch.getDim()) && (getDim() == gcw.getDim())
     */
-
    void
    adjustBoundaryBoxesOnPatch(
       const Patch& patch,
       const BoxContainer& pseudo_domain,
       const IntVector& gcw,
       const BoxContainer& singularity);
+
+   void
+   setUpFineLevelMultiblockData(
+      const std::vector<IntVector>& ratio_to_coarser);
 
    /*!
     * @brief Reads in data from the specified input database.

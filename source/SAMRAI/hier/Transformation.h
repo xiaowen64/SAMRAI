@@ -337,11 +337,6 @@ public:
       rotateIndex(&index[0], index.getDim(), rotation);
    }
 
-   static void
-   rotateIntVector(
-      IntVector& vector,
-      const RotationIdentifier rotation);
-
 private:
    /*!
     * @brief private routine to rotate a cell centered index around an axis

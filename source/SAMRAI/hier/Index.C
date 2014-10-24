@@ -91,6 +91,7 @@ Index::Index(
    const std::vector<int>& a):
    d_dim(static_cast<unsigned short>(a.size()))
 {
+   TBOX_ASSERT(a.size() > 0);
    for (int i = 0; i < d_dim.getValue(); ++i) {
       d_index[i] = a[i];
    }
@@ -125,7 +126,7 @@ Index::Index(
    const IntVector& rhs):
    d_dim(rhs.getDim())
 {
-   TBOX_ASSERT(rhs.size() == 1);
+   TBOX_ASSERT(rhs.getBlockSize() == 1);
    for (int i = 0; i < d_dim.getValue(); ++i) {
       d_index[i] = rhs[i];
    }

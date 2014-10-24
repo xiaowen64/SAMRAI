@@ -335,7 +335,7 @@ BoxLevel::initializePrivate(
    t_initialize_private->start();
 
    d_ratio = ratio;
-   if (d_ratio.size() != grid_geom->getNumberBlocks())
+   if (d_ratio.getBlockSize() != grid_geom->getNumberBlocks())
    {
       if (d_ratio.max() == d_ratio.min()) {
          int new_size = grid_geom->getNumberBlocks();

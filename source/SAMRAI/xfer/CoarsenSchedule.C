@@ -331,7 +331,7 @@ CoarsenSchedule::generateTemporaryLevel()
 
    const hier::IntVector max_ghosts = getMaxGhostsToGrow();
    hier::IntVector min_width(dim);
-   TBOX_ASSERT(!d_crse_level->getBoxLevel()->getRefinementRatio().isZero());
+   TBOX_ASSERT(d_crse_level->getBoxLevel()->getRefinementRatio() != 0);
    if (d_crse_level->getBoxLevel()->getRefinementRatio() >
        hier::IntVector::getZero(dim)) {
       min_width = 
