@@ -471,6 +471,7 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
       }
    }
 
+   d_object_timers->t_find_overlaps_assumed_partition_connect_to_ap->barrierAndStart();
 
    /*
     * Set up center BoxLevel.  We can use either the base or head to
@@ -517,11 +518,6 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
       base_to_center.insertNeighbors( neighbors, bi->getBoxId() );
    }
    base_boxes_mod.clear();
-   Connector center_to_base(dim);
-   if ( d_print_steps ) {
-      tbox::plog << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: getting center_to_base.\n";
-   }
-   center_to_base.computeTransposeOf(base_to_center, mpi);
 
 
    // Set up head<==>center
@@ -542,12 +538,17 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
       head_to_center.insertNeighbors( neighbors, bi->getBoxId() );
    }
    head_boxes_mod.clear();
-   Connector center_to_head(dim);
-   if ( d_print_steps ) {
-      tbox::plog << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: getting center_to_head.\n";
-   }
-   center_to_head.computeTransposeOf(head_to_center, mpi);
 
+   d_object_timers->t_find_overlaps_assumed_partition_connect_to_ap->barrierAndStop();
+
+   d_object_timers->t_find_overlaps_assumed_partition_transpose->start();
+   if ( d_print_steps ) {
+      tbox::plog << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: getting transposes.\n";
+   }
+   Connector center_to_base(dim), center_to_head(dim);
+   center_to_base.computeTransposeOf(base_to_center, mpi);
+   center_to_head.computeTransposeOf(head_to_center, mpi);
+   d_object_timers->t_find_overlaps_assumed_partition_transpose->barrierAndStop();
 
    // Bridge for base<==>head
    base_to_center.setTranspose(&center_to_base, false);
@@ -1884,8 +1885,14 @@ OverlapConnectorAlgorithm::getAllTimers(
 {
    timers.t_find_overlaps_rbbt = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::findOverlaps_rbbt()");
+
    timers.t_find_overlaps_assumed_partition = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::findOverlaps_assumedPartition()");
+   timers.t_find_overlaps_assumed_partition_connect_to_ap = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::findOverlaps_assumedPartition()_connect_to_ap");
+   timers.t_find_overlaps_assumed_partition_transpose = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::findOverlaps_assumedPartition()_transpose");
+
    timers.t_bridge = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::privateBridge()");
    timers.t_bridge_setup_comm = tbox::TimerManager::getManager()->
