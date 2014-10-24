@@ -443,6 +443,17 @@ void SinusoidalFrontGenerator::computeFrontsData(
 
       }
       // tbox::plog << "distances to front: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
+
+      // Compute shifts needed to put distances in the range [ -.5*d_period[0], .5*d_period[0] ]
+#if 1
+      const double cycles_up = min_distance_to_front > 0.5*d_period[0] ?
+         0.0 : static_cast<int>(0.5 - min_distance_to_front/d_period[0]);
+      const double cycles_dn = max_distance_to_front < 0.5*d_period[0] ?
+         0.0 : static_cast<int>(0.5 + max_distance_to_front/d_period[0]);
+      min_distance_to_front += (cycles_up - cycles_dn)*d_period[0];
+      max_distance_to_front += (cycles_up - cycles_dn)*d_period[0];
+#else
+      // This is more readable than the above, but the short innner loop is too slow.
       while (min_distance_to_front < -0.5 * d_period[0]) {
          min_distance_to_front += d_period[0];
          max_distance_to_front += d_period[0];
@@ -451,6 +462,7 @@ void SinusoidalFrontGenerator::computeFrontsData(
          min_distance_to_front -= d_period[0];
          max_distance_to_front -= d_period[0];
       }
+#endif
       // tbox::plog << "shifted ..........: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
       if (min_distance_to_front <= 0 && max_distance_to_front >= 0) {
          // This cell has nodes on both sides of the front.  Tag it and the buffer_cells around it.
