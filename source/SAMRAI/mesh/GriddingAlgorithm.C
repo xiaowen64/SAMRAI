@@ -1682,6 +1682,9 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    boost::shared_ptr<const hier::Connector> tag_to_finer,
    boost::shared_ptr<hier::BoxLevel> new_box_level)
 {
+#ifndef DEBUG_CHECK_ASSERTIONS
+   NULL_USE(tag_to_finer);
+#endif
    TBOX_ASSERT(tag_to_new && tag_to_new->hasTranspose());
    TBOX_ASSERT(new_box_level);
 

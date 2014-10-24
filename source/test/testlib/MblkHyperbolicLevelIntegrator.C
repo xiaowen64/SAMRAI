@@ -2405,7 +2405,7 @@ void MblkHyperbolicLevelIntegrator::getFromInput(
    } else {
       if (!is_from_restart) {
          d_lag_dt_computation =
-            input_db->getDoubleWithDefault("lag_dt_computation",
+            input_db->getBoolWithDefault("lag_dt_computation",
                d_lag_dt_computation);
       }
    }
@@ -2415,7 +2415,7 @@ void MblkHyperbolicLevelIntegrator::getFromInput(
    } else {
       if (!is_from_restart) {
          d_use_ghosts_for_dt =
-            input_db->getDoubleWithDefault("use_ghosts_for_dt",
+            input_db->getBoolWithDefault("use_ghosts_for_dt",
                d_use_ghosts_for_dt);
          TBOX_WARNING(
             d_object_name << ":  "

@@ -24,8 +24,8 @@ access(
 {
    MDA_Access<double, DIM, MDA_OrderColMajor<DIM> > r(
       array_data.getPointer(depth),
-      (const int *)array_data.getBox().lower(),
-      (const int *)array_data.getBox().upper());
+      &array_data.getBox().lower()[0],
+      &array_data.getBox().upper()[0]);
    return r;
 }
 
@@ -37,8 +37,8 @@ access(
 {
    MDA_AccessConst<double, DIM, MDA_OrderColMajor<DIM> > r(
       array_data.getPointer(depth),
-      (const int *)array_data.getBox().lower(),
-      (const int *)array_data.getBox().upper());
+      &array_data.getBox().lower()[0],
+      &array_data.getBox().upper()[0]);
    return r;
 }
 

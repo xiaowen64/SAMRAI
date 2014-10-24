@@ -408,6 +408,10 @@ double LinAdv::computeStableDtOnPatch(
          uval->getPointer(),
          stabdt);
    }
+   else {
+      TBOX_ERROR("Only 2D or 3D allowed in LinAdv::computeStableDtOnPatch");
+      stabdt = 0;
+   }
 
    return stabdt;
 }

@@ -557,7 +557,7 @@ private:
     * public.  This friendship is safe because Member is an integral
     * part of the stage code.
     */
-   friend class Member;
+   friend struct Member;
 
    // Unimplemented copy constructor.
    AsyncCommStage(

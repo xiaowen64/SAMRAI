@@ -53,7 +53,7 @@ using namespace std;
 
 // Classes for autotesting.
 #if (TESTING == 1)
-#include "AutoTester.h"
+#include "test/testlib/AutoTester.h"
 #endif
 
 #include "boost/shared_ptr.hpp"

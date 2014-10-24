@@ -59,7 +59,7 @@ using namespace std;
 // Header for application-specific algorithm/data structure object
 
 #include "LinAdv.h"
-#include "SinusoidalFrontTagger.h"
+#include "test/testlib/SinusoidalFrontTagger.h"
 
 #include "boost/shared_ptr.hpp"
 

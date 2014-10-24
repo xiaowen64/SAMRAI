@@ -34,8 +34,7 @@ ABRTest::ABRTest(
    d_tagger(object_name + ":tagger",
             dim,
             database->isDatabase("sine_tagger") ?
-            database->getDatabase("sine_tagger").get() : 0),
-   d_time(0.5)
+            database->getDatabase("sine_tagger").get() : 0)
 {
    d_tagger.resetHierarchyConfiguration(d_hierarchy, 0, 0);
 }

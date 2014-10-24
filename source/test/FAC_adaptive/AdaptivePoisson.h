@@ -90,7 +90,6 @@ public:
       boost::shared_ptr<solv::CellPoissonFACOps>& fac_ops,
       boost::shared_ptr<solv::FACPreconditioner>& fac_precond,
       tbox::Database& database,
-      /*! Standard output stream */ std::ostream* out_stream = 0,
       /*! Log output stream */ std::ostream* log_stream = 0);
 
    //@{ @name mesh::StandardTagAndInitStrategy virtuals
@@ -322,13 +321,6 @@ private:
    /*!
     * @name Output streams.
     */
-   /*!
-    * @brief Output stream pointer.
-    *
-    * If set to NULL, no output.
-    */
-   std::ostream* d_ostream;
-
    /*!
     * @brief Log stream pointer.
     *

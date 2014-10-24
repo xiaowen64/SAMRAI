@@ -37,13 +37,39 @@ using namespace tbox;
  *************************************************************************
  */
 
+struct CommonTestSwitches {
+   std::string tree_name;
+   std::string message_pattern;
+   int msg_length;
+   int first_data_length;
+   int processing_cost[2];
+   bool randomize_processing_cost;
+   bool verify_data;
+   int repetition;
+   bool barrier_after_each_repetition;
+   int mpi_tags[2];
+   CommonTestSwitches():
+      tree_name(),
+      message_pattern(),
+      msg_length(1024),
+      first_data_length(1),
+      randomize_processing_cost(false),
+      verify_data(false),
+      repetition(1),
+      barrier_after_each_repetition(false)
+   {
+      processing_cost[0] = 0;
+      processing_cost[1] = 0;
+      mpi_tags[0] = 0;
+      mpi_tags[1] = 1;
+   }
+};
+
 boost::shared_ptr<RankTreeStrategy>
 getTreeForTesting(
    const std::string& tree_name,
    Database& test_db,
    const SAMRAI_MPI& mpi);
-
-class CommonTestSwitches;
 
 void
 setupAsyncComms(
@@ -97,33 +123,6 @@ int
 verifyReceivedData(
    const AsyncCommPeer<int>& peer_comm);
 
-struct CommonTestSwitches {
-   std::string tree_name;
-   std::string message_pattern;
-   int msg_length;
-   int first_data_length;
-   int processing_cost[2];
-   bool randomize_processing_cost;
-   bool verify_data;
-   int repetition;
-   bool barrier_after_each_repetition;
-   int mpi_tags[2];
-   CommonTestSwitches():
-      tree_name(),
-      message_pattern(),
-      msg_length(1024),
-      first_data_length(1),
-      randomize_processing_cost(false),
-      verify_data(false),
-      repetition(1),
-      barrier_after_each_repetition(false)
-   {
-      processing_cost[0] = 0;
-      processing_cost[1] = 0;
-      mpi_tags[0] = 0;
-      mpi_tags[1] = 1;
-   }
-};
 void
 getCommonTestSwitchesFromDatabase(
    CommonTestSwitches& cts,

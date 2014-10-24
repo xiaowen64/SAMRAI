@@ -440,7 +440,7 @@ Schedule::processCompletedCommunications()
          completed_comm.yankFromCompletionQueue();
 
          MessageStream incoming_stream(
-            completed_comm.getRecvSize() * sizeof(char),
+            static_cast<size_t>(completed_comm.getRecvSize()) * sizeof(char),
             MessageStream::Read,
             completed_comm.getRecvData(),
             false /* don't use deep copy */);
@@ -478,7 +478,7 @@ Schedule::processCompletedCommunications()
             const int sender = completed_comm->getPeerRank();
 
             MessageStream incoming_stream(
-               completed_comm->getRecvSize() * sizeof(char),
+               static_cast<size_t>(completed_comm->getRecvSize()) * sizeof(char),
                MessageStream::Read,
                completed_comm->getRecvData(),
                false /* don't use deep copy */);

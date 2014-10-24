@@ -63,7 +63,7 @@ AsyncCommGroup::s_initialize_finalize_handler(
  */
 AsyncCommGroup::AsyncCommGroup():
    AsyncCommStage::Member(),
-   d_nchild(MathUtilities<int>::getMax()),
+   d_nchild(MathUtilities<size_t>::getMax()),
    d_idx(-1),
    d_root_idx(-1),
    d_parent_rank(-1),

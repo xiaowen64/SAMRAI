@@ -499,7 +499,7 @@ public:
     */
    void
    printAxisFace(
-      int face_normal,
+      tbox::Dimension::dir_t face_normal,
       int side,
       const hier::Box& box,
       std::ostream& os = tbox::plog,
@@ -532,7 +532,7 @@ public:
     */
    void
    printAxisFace(
-      int face_normal,
+      tbox::Dimension::dir_t face_normal,
       int side,
       const hier::Box& box,
       int depth,

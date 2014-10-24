@@ -1075,7 +1075,7 @@ GraphLoadBalancer::getFromInput(
             d_dim.getValue());
          d_target_box_size = hier::IntVector(d_dim, target_box_size);
          for (int i = 0; i < d_dim.getValue(); ++i) {
-            if (!d_target_box_size[i] > 0) {
+            if (d_target_box_size[i] <= 0) {
                INPUT_RANGE_ERROR("target_box_size");
             }
          }

@@ -466,7 +466,7 @@ void LinAdv::initializeDataOnPatch(
       const hier::Index ifirst = patch.getBox().lower();
       const hier::Index ilast = patch.getBox().upper();
 
-      if ((d_data_problem_int == SPHERE)) {
+      if (d_data_problem_int == SPHERE) {
 
          if (d_dim == tbox::Dimension(2)) {
             SAMRAI_F77_FUNC(initsphere2d, INITSPHERE2D) (d_data_problem_int, dx, xlo,
@@ -626,7 +626,7 @@ double LinAdv::computeStableDtOnPatch(
          &d_advection_velocity[0],
          stabdt);
    }
-   if (d_dim == tbox::Dimension(3)) {
+   else if (d_dim == tbox::Dimension(3)) {
       SAMRAI_F77_FUNC(stabledt3d, STABLEDT3D) (dx,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
@@ -636,6 +636,10 @@ double LinAdv::computeStableDtOnPatch(
          ghost_cells(2),
          &d_advection_velocity[0],
          stabdt);
+   }
+   else {
+      TBOX_ERROR("Only 2D or 3D allowed in LinAdv::computeStableDtOnPatch");
+      stabdt = 0;
    }
 
    return stabdt;

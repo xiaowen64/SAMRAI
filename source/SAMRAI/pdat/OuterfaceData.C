@@ -606,7 +606,8 @@ OuterfaceData<TYPE>::print(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
-   for (int face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
+   for (tbox::Dimension::dir_t face_normal = 0;
+        face_normal < getDim().getValue(); ++face_normal) {
       os << "Array face normal = " << face_normal << std::endl;
       for (int side = 0; side < 2; ++side) {
          os << "side = " << ((side == 0) ? "lower" : "upper") << std::endl;
@@ -618,14 +619,14 @@ OuterfaceData<TYPE>::print(
 template<class TYPE>
 void
 OuterfaceData<TYPE>::printAxisFace(
-   int face_normal,
+   tbox::Dimension::dir_t face_normal,
    int side,
    const hier::Box& box,
    std::ostream& os,
    int prec) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
-   TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
+   TBOX_ASSERT(face_normal < getDim().getValue());
    TBOX_ASSERT((side == 0) || (side == 1));
 
    for (int d = 0; d < d_depth; ++d) {
@@ -637,7 +638,7 @@ OuterfaceData<TYPE>::printAxisFace(
 template<class TYPE>
 void
 OuterfaceData<TYPE>::printAxisFace(
-   int face_normal,
+   tbox::Dimension::dir_t face_normal,
    int side,
    const hier::Box& box,
    int depth,
@@ -646,7 +647,7 @@ OuterfaceData<TYPE>::printAxisFace(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
-   TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
+   TBOX_ASSERT(face_normal < getDim().getValue());
    TBOX_ASSERT((side == 0) || (side == 1));
 
    const hier::Box facebox =

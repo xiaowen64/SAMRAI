@@ -222,11 +222,9 @@ CartesianGridGeometry::makeCoarsenedGridGeometry(
    const std::string& coarse_geom_name,
    const hier::IntVector& coarsen_ratio) const
 {
-   const tbox::Dimension& dim(getDim());
-
    TBOX_ASSERT(!coarse_geom_name.empty());
    TBOX_ASSERT(coarse_geom_name != getObjectName());
-   TBOX_ASSERT(coarsen_ratio > hier::IntVector::getZero(dim));
+   TBOX_ASSERT(coarsen_ratio > hier::IntVector::getZero(getDim()));
 
    hier::BoxContainer coarse_domain(getPhysicalDomain());
    coarse_domain.coarsen(coarsen_ratio);

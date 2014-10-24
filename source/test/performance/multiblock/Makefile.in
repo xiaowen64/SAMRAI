@@ -15,7 +15,6 @@ VPATH         = @srcdir@
 TESTTOOLS     = ../../testtools
 OBJECT        = ../../../..
 REPORT        = $(OBJECT)/report.xml
-TESTINCLUDE   = $(SAMRAI)/source/test/testlib
 TESTLIBDIR    = $(OBJECT)/source/test/testlib
 TESTLIB       = $(TESTLIBDIR)/libSAMRAI_test$(LIB_SUFFIX)
 
@@ -23,7 +22,7 @@ default:      check
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA= -I$(TESTINCLUDE)
+CPPFLAGS_EXTRA= 
 
 NUM_TESTS     = 0
 

@@ -1087,13 +1087,14 @@ ArrayDataNormOpsReal<TYPE>::integral(
          dim_counter[i] = 0;
       }
 
-      const int d_offset = data.getOffset();
-      const int v_offset = ((vdepth == 1) ? 0 : vol.getOffset());
+      const int d_offset = static_cast<int>(data.getOffset());
+      const int v_offset =
+         ((vdepth == 1) ? 0 : static_cast<int>(vol.getOffset()));
 
       const int num_d0_blocks = static_cast<int>(ibox.size() / box_w[0]);
 
-      int d_begin = d_box.offset(ibox.lower());
-      int v_begin = v_box.offset(ibox.lower());
+      int d_begin = static_cast<int>(d_box.offset(ibox.lower()));
+      int v_begin = static_cast<int>(v_box.offset(ibox.lower()));
 
       const TYPE* dd = data.getPointer();
       const double* vd = vol.getPointer();

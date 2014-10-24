@@ -135,6 +135,7 @@ for $cfile (@FILES) {
     }
 
     @deps = sort(keys %dset);
+    print "file $cfile depends on:  ", join("  ",@deps), "\n" if $debug;
     for (@deps) { $_ = &fixName($_); }
     print "$cfile depends on @deps\n" if $debug;
     # Add SAMRAI_config.h because everything should depend on it,
@@ -175,9 +176,13 @@ sub getFullPath {
    my $FILE    = shift(@_);
 
    for (@INCPATH) {
-       print "checking if $_/$FILE is in SAMRAI source\n" if $debug;
+       print "checking if $_/$FILE is in SAMRAI source ... " if $debug;
       if (-r "$_/$FILE") {
+         print "yes.\n" if $debug;
          return( $_ ne '.' ? "$_/$FILE" : $FILE );
+      }
+      else {
+         print "no.\n" if $debug;
       }
    }
 
@@ -287,13 +292,20 @@ sub printTabbedFiles {
 
 sub fixName {
    $_ = shift(@_);
-   print "Fixing name $_\n" if $debug;
+   print "Fixing name $_ -> " if $debug;
    if ( m|(.*)/SAMRAI/(.*)$|o ) {
+      print "\$(INCLUDE_SAM)/SAMRAI/$2\n" if $debug;
       return("\$(INCLUDE_SAM)/SAMRAI/$2");
    }
+   if ( m|(.*)/test/testlib/(.*)$|o ) {
+      print "\$(TESTLIBDIR)/$2\n" if $debug;
+      return("\$(TESTLIBDIR)/$2");
+   }
    if ( m|/([^/]*)$|o ) {
+      print "$1\n" if $debug;
       return($1);
    } else {
+      print "$_\n" if $debug;
       return($_);
    }
 }

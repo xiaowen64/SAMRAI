@@ -280,7 +280,7 @@ SiloDatabase::attachToFile(
       d_directory = directory;
 
       std::string path = nameMangle(d_directory);
-      if (!DBInqVarType(d_file, path.c_str()) == DB_DIR) {
+      if (DBInqVarType(d_file, path.c_str()) != DB_DIR) {
          int err = DBMkdir(d_file, path.c_str());
          if (err < 0) {
             TBOX_ERROR(
@@ -500,7 +500,7 @@ SiloDatabase::getArraySize(
       // Unrecognized type return 0
    }
 
-   return array_size;
+   return static_cast<size_t>(array_size);
 }
 
 /*
@@ -1008,7 +1008,7 @@ SiloDatabase::getComplexVector(
 
    for (int i = 0; i < ca->elemlengths[0]; ++i) {
       complexArray[i] = dcomplex(static_cast<double *>(ca->values)[i],
-            static_cast<double *>(ca->values)[i + ca->elemlengths[0]]);
+         static_cast<double *>(ca->values)[i + ca->elemlengths[0]]);
    }
 
    DBFreeCompoundarray(ca);

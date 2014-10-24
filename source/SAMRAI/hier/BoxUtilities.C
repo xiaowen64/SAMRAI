@@ -801,11 +801,11 @@ BoxUtilities::growBoxWithinDomain(
 
             if (left < right) {
                try_box.setLower(id,
-                  try_box.lower(id) - ((left < grow_half) ? left : grow_half));
+                  (try_box.lower(id) - (left < grow_half)) ? left : grow_half);
                try_box.setUpper(id, try_box.lower(id) + min_size(id) - 1);
             } else {
                try_box.setUpper(id,
-                  try_box.upper(id) + (right < grow_half) ? right : grow_half);
+                  (try_box.upper(id) + (right < grow_half)) ? right : grow_half);
                try_box.setLower(id, try_box.upper(id) - min_size(id) + 1);
             }
          }

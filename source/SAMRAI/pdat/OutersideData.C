@@ -561,7 +561,8 @@ OutersideData<TYPE>::print(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
-   for (int side_normal = 0; side_normal < getDim().getValue(); ++side_normal) {
+   for (tbox::Dimension::dir_t side_normal = 0;
+        side_normal < getDim().getValue(); ++side_normal) {
       os << "Array side normal  = " << side_normal << std::endl;
       for (int side = 0; side < 2; ++side) {
          os << "side = " << ((side == 0) ? "lower" : "upper") << std::endl;
@@ -573,14 +574,14 @@ OutersideData<TYPE>::print(
 template<class TYPE>
 void
 OutersideData<TYPE>::printAxisSide(
-   int side_normal,
+   tbox::Dimension::dir_t side_normal,
    int side,
    const hier::Box& box,
    std::ostream& os,
    int prec) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
-   TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
+   TBOX_ASSERT(side_normal < getDim().getValue());
    TBOX_ASSERT((side == 0) || (side == 1));
 
    for (int d = 0; d < d_depth; ++d) {
@@ -592,7 +593,7 @@ OutersideData<TYPE>::printAxisSide(
 template<class TYPE>
 void
 OutersideData<TYPE>::printAxisSide(
-   int side_normal,
+   tbox::Dimension::dir_t side_normal,
    int side,
    const hier::Box& box,
    int depth,
@@ -601,7 +602,7 @@ OutersideData<TYPE>::printAxisSide(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
-   TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
+   TBOX_ASSERT(side_normal < getDim().getValue());
    TBOX_ASSERT((side == 0) || (side == 1));
 
    const hier::Box sidebox =
