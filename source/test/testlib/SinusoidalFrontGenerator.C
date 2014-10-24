@@ -401,6 +401,7 @@ void SinusoidalFrontGenerator::computeFrontsData(
    }
    t_node_pos->stop();
 
+   if ( tag_data ) {
    /*
     * Initialize tmp_tag to zero then tag specific cells.
     *
@@ -459,6 +460,10 @@ void SinusoidalFrontGenerator::computeFrontsData(
       }
 
    }
+   t_copy->start();
+   tag_data->copy(tmp_tag);
+   t_copy->stop();
+   }
 
    /*
     * Initialize U-value data.
@@ -492,7 +497,7 @@ void SinusoidalFrontGenerator::computeFrontsData(
          }
          const int k = (dist_from_front < 0 ? static_cast<int>(-dist_from_front/d_period[0] + 1) : 0);
          const int front_count = static_cast<int>(dist_from_front/d_period[0] + k) - k;
-         uval(cindex) += front_count;
+         uval(cindex) = front_count;
       }
 
       t_uval->stop();
@@ -519,11 +524,6 @@ void SinusoidalFrontGenerator::computeFrontsData(
       t_distance->stop();
    }
 
-   if ( tag_data ) {
-      t_copy->start();
-      tag_data->copy(tmp_tag);
-      t_copy->stop();
-   }
 }
 
 
