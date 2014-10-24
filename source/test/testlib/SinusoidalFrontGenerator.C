@@ -118,8 +118,6 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
       getTimer("apps::SinusoidalFrontGenerator::uval");
    t_tag_cells = tbox::TimerManager::getManager()->
       getTimer("apps::SinusoidalFrontGenerator::tag_cells");
-   t_copy = tbox::TimerManager::getManager()->
-      getTimer("apps::SinusoidalFrontGenerator::copy");
 }
 
 
@@ -402,79 +400,73 @@ void SinusoidalFrontGenerator::computeFrontsData(
    t_node_pos->stop();
 
    if ( tag_data ) {
-   /*
-    * Initialize tmp_tag to zero then tag specific cells.
-    *
-    * We need at least buffer_cells ghost cells to compute
-    * the tags, but the data may not have as many ghost cells.
-    * So we create temporary patch data with the required
-    * buffer_cells for computing tag values.  (We could give the real
-    * data the required ghost cells, but that may affect the
-    * regridding algorithm I'm testing.)
-    */
-   pdat::CellData<int> tmp_tag(fill_box, 1, buffer_cells);
-   tmp_tag.fill(0);
-   hier::BlockId blk0(0);
-   pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(tmp_tag.getGhostBox()));
-   for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(tmp_tag.getGhostBox()));
-        ci != ciend; ++ci) {
+      /*
+       * Initialize tags to zero then tag specific cells.
+       */
+      tag_data->fill(0, fill_box);
+      hier::Box buffered_box(fill_box);
+      buffered_box.grow(buffer_cells);
+      hier::BlockId blk0(0);
+      pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(buffered_box));
+      for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(buffered_box));
+           ci != ciend; ++ci) {
 
-      const pdat::CellIndex& cell_index = *ci;
-      const hier::Box cell_box(cell_index, cell_index, blk0);
+         const pdat::CellIndex& cell_index = *ci;
+         const hier::Box cell_box(cell_index, cell_index, blk0);
 
-      double min_distance_to_front = tbox::MathUtilities<double>::getMax();
-      double max_distance_to_front = -tbox::MathUtilities<double>::getMax();
-      // tbox::plog << "initial distances to front: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
-      pdat::NodeIterator niend(pdat::NodeGeometry::end(cell_box));
-      for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(cell_box)); ni != niend; ++ni) {
+         double min_distance_to_front = tbox::MathUtilities<double>::getMax();
+         double max_distance_to_front = -tbox::MathUtilities<double>::getMax();
+         // tbox::plog << "initial distances to front: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
+         pdat::NodeIterator niend(pdat::NodeGeometry::end(cell_box));
+         for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(cell_box)); ni != niend; ++ni) {
 
-         const pdat::NodeIndex& node_index = *ni;
-         hier::Index front_index = node_index;
-         front_index(0) = pbox.lower(0);
+            const pdat::NodeIndex& node_index = *ni;
+            hier::Index front_index = node_index;
+            front_index(0) = pbox.lower(0);
 
-         double node_x = xlo[0] + dx[0] * (node_index(0) - pbox.lower() (0));
+            double node_x = xlo[0] + dx[0] * (node_index(0) - pbox.lower() (0));
 
-         double distance_to_front = node_x - front_x(front_index, 0);
-         min_distance_to_front = tbox::MathUtilities<double>::Min(min_distance_to_front,
-               distance_to_front);
-         max_distance_to_front = tbox::MathUtilities<double>::Max(max_distance_to_front,
-               distance_to_front);
-         // tbox::plog << "cell_index = " << cell_index << "   node_index = " << node_index << "   node_x = " << node_x << "   front_index = " << front_index << "   front_x = " << front_x(front_index,0) << "   distance to front(" << node_x << ") = " << distance_to_front << std::endl;
+            double distance_to_front = node_x - front_x(front_index, 0);
+            min_distance_to_front = tbox::MathUtilities<double>::Min(
+               min_distance_to_front, distance_to_front);
+            max_distance_to_front = tbox::MathUtilities<double>::Max(
+               max_distance_to_front, distance_to_front);
+            // tbox::plog << "cell_index = " << cell_index << "   node_index = " << node_index << "   node_x = " << node_x << "   front_index = " << front_index << "   front_x = " << front_x(front_index,0) << "   distance to front(" << node_x << ") = " << distance_to_front << std::endl;
 
-      }
-      // tbox::plog << "distances to front: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
+         }
+         // tbox::plog << "distances to front: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
 
-      // Compute shifts needed to put distances in the range [ -.5*d_period[0], .5*d_period[0] ]
+         /*
+          * Compute shifts needed to put distances in the range [ -.5*d_period[0], .5*d_period[0] ]
+          * This makes the distances relative to the nearest front instead of front 0.
+          */
 #if 1
-      const double cycles_up = min_distance_to_front > 0.5*d_period[0] ?
-         0.0 : static_cast<int>(0.5 - min_distance_to_front/d_period[0]);
-      const double cycles_dn = max_distance_to_front < 0.5*d_period[0] ?
-         0.0 : static_cast<int>(0.5 + max_distance_to_front/d_period[0]);
-      min_distance_to_front += (cycles_up - cycles_dn)*d_period[0];
-      max_distance_to_front += (cycles_up - cycles_dn)*d_period[0];
+         const double cycles_up = min_distance_to_front > 0.5*d_period[0] ?
+            0.0 : static_cast<int>(0.5 - min_distance_to_front/d_period[0]);
+         const double cycles_dn = max_distance_to_front < 0.5*d_period[0] ?
+            0.0 : static_cast<int>(0.5 + max_distance_to_front/d_period[0]);
+         min_distance_to_front += (cycles_up - cycles_dn)*d_period[0];
+         max_distance_to_front += (cycles_up - cycles_dn)*d_period[0];
 #else
-      // This is more readable than the above, but the short innner loop is too slow.
-      while (min_distance_to_front < -0.5 * d_period[0]) {
-         min_distance_to_front += d_period[0];
-         max_distance_to_front += d_period[0];
-      }
-      while (max_distance_to_front > 0.5 * d_period[0]) {
-         min_distance_to_front -= d_period[0];
-         max_distance_to_front -= d_period[0];
-      }
+         // This is more readable than the above, but the short innner loop is too slow.
+         while (min_distance_to_front < -0.5 * d_period[0]) {
+            min_distance_to_front += d_period[0];
+            max_distance_to_front += d_period[0];
+         }
+         while (max_distance_to_front > 0.5 * d_period[0]) {
+            min_distance_to_front -= d_period[0];
+            max_distance_to_front -= d_period[0];
+         }
 #endif
-      // tbox::plog << "shifted ..........: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
-      if (min_distance_to_front <= 0 && max_distance_to_front >= 0) {
-         // This cell has nodes on both sides of the front.  Tag it and the buffer_cells around it.
-         hier::Box cell_and_buffer(cell_index, cell_index, blk0);
-         cell_and_buffer.grow(buffer_cells);
-         tmp_tag.fill(1, cell_and_buffer);
-      }
+         // tbox::plog << "shifted ..........: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
+         if (min_distance_to_front <= 0 && max_distance_to_front >= 0) {
+            // This cell has nodes on both sides of the front.  Tag it and the buffer_cells around it.
+            hier::Box cell_and_buffer(cell_index, cell_index, blk0);
+            cell_and_buffer.grow(buffer_cells);
+            tag_data->fill(1, cell_and_buffer);
+         }
 
-   }
-   t_copy->start();
-   tag_data->copy(tmp_tag);
-   t_copy->stop();
+      }
    }
 
    /*

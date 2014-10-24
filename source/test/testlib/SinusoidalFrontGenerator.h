@@ -284,7 +284,6 @@ private:
    boost::shared_ptr<tbox::Timer> t_distance;
    boost::shared_ptr<tbox::Timer> t_uval;
    boost::shared_ptr<tbox::Timer> t_tag_cells;
-   boost::shared_ptr<tbox::Timer> t_copy;
 
 };
 
