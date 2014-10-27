@@ -887,15 +887,42 @@ struct BoxUtilities {
       std::vector<BoxContainer>& box_list_array,
       const BoxContainer& boxes);
 
-static void growAndChopAtBlockBoundary(
-   BoxContainer& grown_boxes,
-   const Box& box,
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
-   const IntVector& ratio_to_level_zero,
-   const IntVector& ratio_to_connected_level,
-   const IntVector& grow_width,
-   bool do_refine,
-   bool do_coarsen);
+   /*!
+    * @brief Grow a box and chop it at block boundaries.
+    *
+    * If growing a box will cause it to extend across a block boundary, this
+    * method will chop it into distinct parts that are stored in the output
+    * BoxContainer.
+    *
+    * The output may be coarsened or refined from the input's index space,
+    * controlled by the do_refine and do_coarsen arguments.  These arguments
+    * may both be false, but at most one may be true.
+    *
+    * The boxes in the output container that are intersections with neighboring
+    * blocks will be defined in the index space of those neighboring blocks
+    *
+    * @pre (do_refine != do_coarsen || (!do_refine && !do_coarsen))
+    * @pre ratio_to_level_zero.getBlockSize() == grid_geom.getNumberBlocks()
+    * @pre refine_coarsen_ratio.getBlockSize() == grid_geom.getNumberBlocks()
+    *
+    * @param[out] grown_boxes  Container to hold the results
+    * @param[in]  box          Input box
+    * @param[in]  grid_geom    Grid Geometry
+    * @param[in]  ratio_to_level_zero  Ratio from input box to level 0
+    * @param[in]  refine_coarsen_ratio Ratio to refine or coarsen output
+    * @param[in]  grow_width   Width to grow before chopping
+    * @param[in]  do_refine
+    * @param[in]  do_coarsen
+    */
+   static void growAndChopAtBlockBoundary(
+      BoxContainer& grown_boxes,
+      const Box& box,
+      const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+      const IntVector& ratio_to_level_zero,
+      const IntVector& ratio_to_connected_level,
+      const IntVector& grow_width,
+      bool do_refine,
+      bool do_coarsen);
 
 
 };

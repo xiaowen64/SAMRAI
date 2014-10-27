@@ -1794,13 +1794,22 @@ BoxUtilities::makeNonOverlappingBoxContainers(
    }
 }
 
+
+/*
+ *************************************************************************
+ *
+ * Grow a box by a given width and chop it at block boundaries.
+ *
+ *************************************************************************
+ */
+
 void
 BoxUtilities::growAndChopAtBlockBoundary(
    BoxContainer& grown_boxes,
    const Box& box,
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
    const IntVector& ratio_to_level_zero,
-   const IntVector& change_ratio,
+   const IntVector& refine_coarsen_ratio,
    const IntVector& grow_width,
    bool do_refine,
    bool do_coarsen)
@@ -1808,21 +1817,36 @@ BoxUtilities::growAndChopAtBlockBoundary(
    TBOX_ASSERT(do_refine != do_coarsen || (!do_refine && !do_coarsen));
 
    const int nblocks = grid_geom->getNumberBlocks();
+
+   if (nblocks == 1) {
+      return;
+   }
+
+   TBOX_ASSERT(ratio_to_level_zero.getBlockSize() == nblocks);
+   TBOX_ASSERT(refine_coarsen_ratio.getBlockSize() == nblocks);
+
    const BlockId& base_block = box.getBlockId();
 
    Box grow_box(box);
+
+   /*
+    * If coarsening, change everything to the coarsened index space.
+    */
    if (do_coarsen) {
-      grow_box.coarsen(change_ratio);
+      grow_box.coarsen(refine_coarsen_ratio);
    }
 
    IntVector compare_ratio(ratio_to_level_zero);
-   IntVector tmp_grow_width(grow_width);
+   IntVector effective_grow_width(grow_width);
    if (do_coarsen) {
-      compare_ratio /= change_ratio;
-      tmp_grow_width /= change_ratio;
+      compare_ratio /= refine_coarsen_ratio;
+      effective_grow_width.ceilingDivide(refine_coarsen_ratio);
    }
 
-   grow_box.grow(tmp_grow_width);
+   /*
+    * Grow and intersect with the domain on base block.
+    */
+   grow_box.grow(effective_grow_width);
 
    BoxContainer domain_boxes;
    grid_geom->computePhysicalDomain(
@@ -1830,23 +1854,19 @@ BoxUtilities::growAndChopAtBlockBoundary(
       compare_ratio,
       base_block);
 
-   /*
-    * Grow within base block
-    */
    domain_boxes.unorder();
    domain_boxes.intersectBoxes(grow_box);
 
    if (do_refine) {
-      domain_boxes.refine(change_ratio);
+      domain_boxes.refine(refine_coarsen_ratio);
    }
 
    grown_boxes.spliceBack(domain_boxes);
 
-   bool constant_width = true;
-   if (tmp_grow_width.min() != tmp_grow_width.max()) {
-      constant_width = false;
-   }
-
+   /*
+    * If grow_box is contained within its own block, there is no need to
+    * check neighboring blocks, so we are done.
+    */
    bool check_neighbors = true;
    if (grown_boxes.size() == 1 &&
        grown_boxes.front().isSpatiallyEqual(grow_box)) {
@@ -1855,6 +1875,16 @@ BoxUtilities::growAndChopAtBlockBoundary(
 
    if (!check_neighbors) {
       return;
+   }
+
+   /*
+    * Uniform width means the same value of grow width for all directions on
+    * all blocks.  The intersections with neighbor blocks are simpler if there
+    * is constant width
+    */
+   bool uniform_width = true;
+   if (effective_grow_width.min() != effective_grow_width.max()) {
+      uniform_width = false;
    }
 
    /*
@@ -1870,6 +1900,10 @@ BoxUtilities::growAndChopAtBlockBoundary(
       const BaseGridGeometry::Neighbor& neighbor(ni->second);
       const BlockId& nbr_block = neighbor.getBlockId();
 
+      /*
+       * First step:  Grow into neighbor block by transforming and then
+       * growing, using the neighbor block's portion of effective_grow_width.
+       */
       grid_geom->computePhysicalDomain(
          domain_boxes,
          compare_ratio,
@@ -1878,35 +1912,41 @@ BoxUtilities::growAndChopAtBlockBoundary(
 
       Box nbr_grow_box(box);
       if (do_coarsen) {
-         nbr_grow_box.coarsen(change_ratio);
+         nbr_grow_box.coarsen(refine_coarsen_ratio);
       }
       grid_geom->transformBox(nbr_grow_box,
                               compare_ratio,
                               nbr_block,
                               base_block);
-      nbr_grow_box.grow(tmp_grow_width);
+      nbr_grow_box.grow(effective_grow_width);
 
       BoxContainer nbr_block_boxes(domain_boxes);
       nbr_block_boxes.unorder();
       nbr_block_boxes.intersectBoxes(nbr_grow_box);
 
       BoxContainer nbr_grown_boxes;
-      if (!nbr_block_boxes.isEmpty()) {
+      if (!nbr_block_boxes.empty()) {
          if (do_refine) {
-            nbr_block_boxes.refine(change_ratio);
+            nbr_block_boxes.refine(refine_coarsen_ratio);
          }
 
          nbr_grown_boxes.spliceBack(nbr_block_boxes);
       }
 
-      if (!constant_width) {
+      if (!uniform_width) {
+
+         /*
+          * When width is not uniform, we do a second step of growing the
+          * box using the base block's grow width and then transforming.
+          */
+
          nbr_block_boxes.spliceBack(domain_boxes);
 
          nbr_grow_box = box;
          if (do_coarsen) {
-            nbr_grow_box.coarsen(change_ratio);
+            nbr_grow_box.coarsen(refine_coarsen_ratio);
          }
-         nbr_grow_box.grow(tmp_grow_width);
+         nbr_grow_box.grow(effective_grow_width);
          grid_geom->transformBox(nbr_grow_box,
                                  compare_ratio,
                                  nbr_block,
@@ -1915,9 +1955,16 @@ BoxUtilities::growAndChopAtBlockBoundary(
          nbr_block_boxes.unorder();
          nbr_block_boxes.intersectBoxes(nbr_grow_box);
 
-         if (!nbr_block_boxes.isEmpty()) {
+         /*
+          * nbr_grown_boxes will have the intersection results from both steps.
+          * Coalesce nbr_grown_boxes, which in most cases will reduce
+          * to one box.  In cases where it does not reduce to one, call
+          * simplify to guarantee that there is no overlapping index space in
+          * the container.
+          */
+         if (!nbr_block_boxes.empty()) {
             if (do_refine) {
-               nbr_block_boxes.refine(change_ratio);
+               nbr_block_boxes.refine(refine_coarsen_ratio);
             }
 
             nbr_grown_boxes.spliceBack(nbr_block_boxes);
@@ -1928,7 +1975,11 @@ BoxUtilities::growAndChopAtBlockBoundary(
          }
       }
 
-      if (!nbr_grown_boxes.isEmpty()) {
+      /*
+       * Splice the intersecting boxes for this neighbor onto the output
+       * container.
+       */
+      if (!nbr_grown_boxes.empty()) {
          grown_boxes.spliceBack(nbr_grown_boxes);
       }
    }

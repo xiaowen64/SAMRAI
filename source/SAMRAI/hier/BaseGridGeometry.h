@@ -1358,7 +1358,7 @@ private:
       const BoxContainer& singularity);
 
    void
-   setUpFineLevelMultiblockData(
+   setUpFineLevelTransformations(
       const std::vector<IntVector>& ratio_to_coarser);
 
    /*!

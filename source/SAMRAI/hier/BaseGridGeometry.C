@@ -3036,12 +3036,12 @@ BaseGridGeometry::setUpRatios(
    }
 
    if (d_number_blocks > 1 && max_levels > 1) {
-      setUpFineLevelMultiblockData(ratio_to_coarser);
+      setUpFineLevelTransformations(ratio_to_coarser);
    }
 }
 
 void
-BaseGridGeometry::setUpFineLevelMultiblockData(
+BaseGridGeometry::setUpFineLevelTransformations(
    const std::vector<IntVector>& ratio_to_coarser)
 {
    int max_levels = ratio_to_coarser.size();
@@ -3223,7 +3223,12 @@ BaseGridGeometry::setUpFineLevelMultiblockData(
                      } else if ((test_shift[i]+1) % coarse_shift[i] == 0) {
                         final_shift[i] = test_shift[i]+1;
                      } else {
-                        TBOX_ERROR(" "); 
+                        TBOX_ERROR("BaseGridGeometry error...\n"
+                           << " Could not compute Level " << ln
+                           << " shift between blocks "
+                           << block_id.getBlockValue() 
+                           << " and " << nbr_block.getBlockValue()
+                           << std::endl);
                      }
                   }
                }
