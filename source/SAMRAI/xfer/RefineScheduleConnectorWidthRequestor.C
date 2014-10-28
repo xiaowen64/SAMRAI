@@ -83,7 +83,8 @@ RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
    max_stencil_width.max(
       RefinePatchStrategy::getMaxRefineOpStencilWidth(dim));
 
-   const hier::IntVector& zero_vector(hier::IntVector::getMultiZero(dim));
+   hier::IntVector zero_vector(hier::IntVector::getZero(dim),
+                               patch_hierarchy.getNumberBlocks());
 
    /*
     * Compute the Connector width needed to ensure all edges are found
@@ -103,10 +104,10 @@ RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
     *   it.
     */
 
+   hier::IntVector self_width(max_data_gcw * d_gcw_factor,
+                              patch_hierarchy.getNumberBlocks()); 
    self_connector_widths.clear();
-   self_connector_widths.resize(max_levels,
-                                hier::IntVector::getMultiOne(dim) *
-                                   (max_data_gcw * d_gcw_factor));
+   self_connector_widths.resize(max_levels, self_width);
 
    fine_connector_widths.clear();
    if (max_levels > 1) {
@@ -147,7 +148,8 @@ RefineScheduleConnectorWidthRequestor::computeRequiredFineConnectorWidthsForRecu
       fine_connector_widths.insert(
          fine_connector_widths.end(),
          initial_dst_ln - fine_connector_widths.size(),
-         hier::IntVector::getMultiZero(patch_hierarchy.getDim()) );
+         hier::IntVector(patch_hierarchy.getDim(), 0,
+            patch_hierarchy.getGridGeometry()->getNumberBlocks()) );
    }
 
    const int nblocks = patch_hierarchy.getGridGeometry()->getNumberBlocks();

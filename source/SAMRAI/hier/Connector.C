@@ -129,14 +129,11 @@ Connector::Connector(
    d_transpose(other.d_transpose),
    d_owns_transpose(false)
 {
-   TBOX_ASSERT(d_ratio.getBlockSize() ==
-               IntVector::getMultiZero(d_ratio.getDim()).getBlockSize());
+   int num_blocks = d_ratio.getBlockSize();
 
-   if (d_base_width.getBlockSize() == 1 &&
-       IntVector::getMultiZero(d_ratio.getDim()).getBlockSize() != 1) {
+   if (d_base_width.getBlockSize() == 1 && num_blocks != 1) {
       if (d_base_width.max() == d_base_width.min()) {
-         int new_size = IntVector::getMultiZero(d_ratio.getDim()).getBlockSize();
-         d_base_width = IntVector(d_base_width, new_size);
+         d_base_width = IntVector(d_base_width, num_blocks);
       } else {
          TBOX_ERROR("Anisotropic base width argument for Connector must be of size equal to the number of blocks." << std::endl);
       }
@@ -154,8 +151,8 @@ Connector::Connector(
    const BoxLevel& head_box_level,
    const IntVector& base_width,
    const BoxLevel::ParallelState parallel_state):
-   d_base_width(IntVector::getMultiZero(base_width.getDim())),
-   d_ratio(IntVector::getMultiZero(base_width.getDim())),
+   d_base_width(IntVector::getZero(base_width.getDim())),
+   d_ratio(IntVector::getZero(base_width.getDim())),
    d_head_coarser(false),
    d_relationships(),
    d_global_relationships(),
@@ -172,16 +169,14 @@ Connector::Connector(
       head_box_level,
       base_width);
    IntVector tmp_base_width(base_width);
-   if (tmp_base_width.getBlockSize() == 1 &&
-       IntVector::getMultiZero(d_ratio.getDim()).getBlockSize() != 1) {
+   int num_blocks = base_box_level.getRefinementRatio().getBlockSize();
+   if (tmp_base_width.getBlockSize() == 1 && num_blocks != 1) {
       if (tmp_base_width.max() == tmp_base_width.min()) {
-         int new_size = IntVector::getMultiZero(d_ratio.getDim()).getBlockSize();
-         tmp_base_width = IntVector(tmp_base_width, new_size);
+         tmp_base_width = IntVector(tmp_base_width, num_blocks);
       } else {
          TBOX_ERROR("Anisotropic base width argument for Connector must be of size equal to the number of blocks." << std::endl);
       }
    }
-
 
    setBase(base_box_level);
    setHead(head_box_level);
@@ -384,9 +379,9 @@ Connector::shrinkWidth(
 {
    IntVector shrink_width(new_width);
    if (shrink_width.getBlockSize() == 1 &&
-       IntVector::getMultiZero(new_width.getDim()).getBlockSize() != 1) {
+       d_base_width.getBlockSize() != 1) {
       if (shrink_width.max() == shrink_width.min()) {
-         int new_size = IntVector::getMultiZero(new_width.getDim()).getBlockSize();
+         int new_size = d_base_width.getBlockSize();
          shrink_width = IntVector(shrink_width, new_size);
       } else {
          TBOX_ERROR("Anisotropic shrink width argument for Connector must be of size equal to the number of blocks." << std::endl);
@@ -1057,12 +1052,12 @@ Connector::setWidth(
 
    d_finalized = false;
    d_base_width = new_width;
+   int num_blocks =
+      d_base_handle->getBoxLevel().getRefinementRatio().getBlockSize();
 
-   if (d_base_width.getBlockSize() == 1 &&
-       IntVector::getMultiZero(new_width.getDim()).getBlockSize() != 1) {
+   if (d_base_width.getBlockSize() == 1 && num_blocks != 1) {
       if (d_base_width.max() == d_base_width.min()) {
-         int new_getBlockSize = IntVector::getMultiZero(new_width.getDim()).getBlockSize();
-         d_base_width = IntVector(d_base_width, new_getBlockSize);
+         d_base_width = IntVector(d_base_width, num_blocks);
       } else {
          TBOX_ERROR("Anisotropic base width argument for Connector must be of size equal to the number of blocks." << std::endl);
       }
@@ -1412,13 +1407,12 @@ Connector::convertHeadWidthToBase(
    }
 
    tbox::Dimension dim(head_refinement_ratio.getDim());
+   const int num_blocks = base_refinement_ratio.getBlockSize();
 
    IntVector tmp_head_width(head_width);
-   if (tmp_head_width.getBlockSize() == 1 &&
-       IntVector::getMultiZero(dim).getBlockSize() != 1) {
+   if (tmp_head_width.getBlockSize() == 1 && num_blocks != 1) { 
       if (tmp_head_width.max() == tmp_head_width.min()) {
-         int new_size = IntVector::getMultiZero(dim).getBlockSize();
-         tmp_head_width = IntVector(tmp_head_width, new_size);
+         tmp_head_width = IntVector(tmp_head_width, num_blocks);
       } else {
          TBOX_ERROR("Anisotropic head width argument for Connector::convertHeadWidthToBase must be of size equal to the number of blocks." << std::endl);
       }

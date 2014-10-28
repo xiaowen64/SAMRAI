@@ -134,8 +134,10 @@ BaseGridGeometry::BaseGridGeometry(
       itr->setId(box_id);
    }
    d_number_blocks = static_cast<int>(block_numbers.size());
-   IntVector::setNumberBlocks(d_number_blocks);
-   d_ratio_to_level_zero[0] = IntVector::getMultiOne(d_dim);
+   if (d_ratio_to_level_zero[0].getBlockSize() != d_number_blocks) {
+      d_ratio_to_level_zero[0] =
+         IntVector(IntVector::getOne(d_dim), d_number_blocks);
+   }
 
    d_block_neighbors.resize(d_number_blocks);
 
@@ -173,8 +175,10 @@ BaseGridGeometry::BaseGridGeometry(
       itr->setId(box_id);
    }
    d_number_blocks = static_cast<int>(block_numbers.size());
-   IntVector::setNumberBlocks(d_number_blocks);
-   d_ratio_to_level_zero[0] = IntVector::getMultiOne(d_dim);
+   if (d_ratio_to_level_zero[0].getBlockSize() != d_number_blocks) {
+      d_ratio_to_level_zero[0] = 
+         IntVector(IntVector::getOne(d_dim), d_number_blocks);
+   }
    d_block_neighbors.resize(d_number_blocks);
 
    setPhysicalDomain(domain, d_number_blocks);
@@ -620,8 +624,10 @@ BaseGridGeometry::getFromRestart()
    }
 
    d_number_blocks = db->getInteger("num_blocks");
-   IntVector::setNumberBlocks(d_number_blocks);
-   d_ratio_to_level_zero[0] = IntVector::getMultiOne(d_dim);
+   if (d_ratio_to_level_zero[0].getBlockSize() != d_number_blocks) {
+      d_ratio_to_level_zero[0] = 
+         IntVector(IntVector::getOne(d_dim), d_number_blocks);
+   }
    d_singularity.resize(d_number_blocks);
    d_block_neighbors.resize(d_number_blocks);
 
@@ -736,8 +742,10 @@ BaseGridGeometry::getFromInput(
             << std::endl);
       }
 
-      IntVector::setNumberBlocks(d_number_blocks); 
-      d_ratio_to_level_zero[0] = IntVector::getMultiOne(d_dim);
+      if (d_ratio_to_level_zero[0].getBlockSize() != d_number_blocks) {
+         d_ratio_to_level_zero[0] = 
+            IntVector(IntVector::getOne(d_dim), d_number_blocks);
+      }
 
       std::string domain_name;
       BoxContainer domain;
@@ -1466,8 +1474,10 @@ BaseGridGeometry::setPhysicalDomain(
 
    d_domain_is_single_box.resize(number_blocks);
    d_number_blocks = number_blocks;
-   IntVector::setNumberBlocks(d_number_blocks);
-   d_ratio_to_level_zero[0] = IntVector::getMultiOne(d_dim);
+   if (d_ratio_to_level_zero[0].getBlockSize() != d_number_blocks) {
+      d_ratio_to_level_zero[0] = 
+         IntVector(IntVector::getOne(d_dim), d_number_blocks);
+   }
 
    LocalId local_id(0);
 
@@ -3018,8 +3028,8 @@ BaseGridGeometry::setUpRatios(
    int max_levels = ratio_to_coarser.size();
    TBOX_ASSERT(max_levels > 0);
 
-   d_ratio_to_level_zero.resize(max_levels, IntVector::getMultiOne(d_dim));
-   d_ratio_to_level_zero[0] = IntVector::getMultiOne(d_dim); 
+   d_ratio_to_level_zero.resize(max_levels,
+      IntVector(IntVector::getOne(d_dim), d_number_blocks));
    for (int ln = 1; ln < max_levels; ++ln) {
       d_ratio_to_level_zero[ln] = d_ratio_to_level_zero[ln-1] *
                                   ratio_to_coarser[ln];
@@ -3053,7 +3063,7 @@ BaseGridGeometry::setUpFineLevelTransformations(
       BlockId block_id(b);
 
       BoxContainer grow_domain;
-      computePhysicalDomain(grow_domain, IntVector::getMultiOne(d_dim), block_id);
+      computePhysicalDomain(grow_domain, IntVector::getOne(d_dim), block_id);
       TBOX_ASSERT(d_number_blocks == 1 || grow_domain.size() == 1);
       Box domain_box(grow_domain.front());
       grow_domain.unorder();

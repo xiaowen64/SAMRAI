@@ -53,14 +53,14 @@ PatchHierarchy::PatchHierarchy(
    d_patch_factory(new PatchFactory),
    d_patch_level_factory(new PatchLevelFactory),
    d_max_levels(1),
-   d_ratio_to_coarser(1, IntVector::getMultiOne(d_dim)),
+   d_ratio_to_coarser(1, IntVector(IntVector::getOne(d_dim), geometry->getNumberBlocks())),
    d_proper_nesting_buffer(d_max_levels - 1, 1),
    d_smallest_patch_size(1, IntVector(d_dim, 1)),
    d_largest_patch_size(1, IntVector(d_dim, tbox::MathUtilities<int>::getMax())),
    d_allow_patches_smaller_than_ghostwidth(false),
    d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps(false),
-   d_self_connector_widths(1, IntVector::getMultiOne(d_dim)),
-   d_fine_connector_widths(1, IntVector::getMultiOne(d_dim)),
+   d_self_connector_widths(1, IntVector(IntVector::getOne(d_dim), geometry->getNumberBlocks())),
+   d_fine_connector_widths(1, IntVector(IntVector::getOne(d_dim), geometry->getNumberBlocks())),
    d_connector_widths_committed(false),
    d_individual_cwrs()
 {
@@ -76,12 +76,12 @@ PatchHierarchy::PatchHierarchy(
     * grid geometry and set up domain data dependent on it.
     */
    d_domain_box_level.reset(new BoxLevel(
-      IntVector::getMultiOne(d_dim),
+      d_ratio_to_coarser[0],
       getGridGeometry(),
       tbox::SAMRAI_MPI::getSAMRAIWorld(),
       BoxLevel::GLOBALIZED));
    d_grid_geometry->computePhysicalDomain(*d_domain_box_level,
-      IntVector::getMultiOne(d_dim));
+      d_ratio_to_coarser[0]);
    d_domain_box_level->finalize();
 
    d_individual_cwrs = s_class_cwrs;
@@ -601,7 +601,7 @@ PatchHierarchy::getRequiredConnectorWidth(
 void
 PatchHierarchy::computeRequiredConnectorWidths() const
 {
-   const IntVector& zero_vector = IntVector::getMultiZero(d_dim);
+   IntVector zero_vector(d_dim, 0, d_number_blocks);
    d_self_connector_widths.clear();
    d_self_connector_widths.resize(d_max_levels, zero_vector);
    for (int ln = 0; ln < d_max_levels; ++ln) {

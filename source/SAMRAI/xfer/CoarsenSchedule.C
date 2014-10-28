@@ -104,7 +104,9 @@ CoarsenSchedule::CoarsenSchedule(
    d_fine_level(fine_level),
    d_coarsen_patch_strategy(patch_strategy),
    d_transaction_factory(transaction_factory),
-   d_ratio_between_levels(hier::IntVector::getMultiZero(crse_level->getDim())),
+   d_ratio_between_levels(crse_level->getDim(),
+                          0,
+                          crse_level->getGridGeometry()->getNumberBlocks()),
    d_fill_coarse_data(fill_coarse_data)
 {
    TBOX_ASSERT(crse_level);

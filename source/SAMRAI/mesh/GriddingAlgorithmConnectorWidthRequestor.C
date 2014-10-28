@@ -149,6 +149,8 @@ GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFrom
       max_ghost_width_at_coarse);
 #endif
 
+   const int num_blocks = fine_to_coarse_ratio.getBlockSize();
+
    /*
     * Coarse-to-fine width must be big enough to cover the width at the
     * finer level.  For example, the coarse level is used to bridge for
@@ -187,7 +189,7 @@ GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFrom
     */
    coarse_to_fine_width.max(
       hier::IntVector::ceilingDivide(
-         hier::IntVector::getMultiOne(dim) * nesting_buffer_at_fine,
+         hier::IntVector(nesting_buffer_at_fine, num_blocks),
          fine_to_coarse_ratio));
 
    /*

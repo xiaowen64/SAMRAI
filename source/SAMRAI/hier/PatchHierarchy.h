@@ -542,6 +542,12 @@ public:
       return getNumberOfLevels() - 1;
    }
 
+   int
+   getNumberBlocks() const
+   {
+      return d_number_blocks;
+   } 
+
    /*!
     * @brief Check whether specified level can be refined.
     *
@@ -1104,6 +1110,9 @@ private:
     */
    int d_number_levels;
 
+   /*!
+    * @brief Number of blocks in the mesh.
+    */
    int d_number_blocks;
 
    /*!

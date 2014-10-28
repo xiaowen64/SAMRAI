@@ -1117,19 +1117,6 @@ public:
    }
 
    /*!
-    * @brief Return an IntVector of zeros with a potentially larger block size.
-    *
-    * Can be used to avoid object creation overheads.  The block size of the
-    * returned IntVector is set by the static method setNumberBlocks().
-    */
-   static const IntVector&
-   getMultiZero(
-      const tbox::Dimension& dim)
-   {
-      return *(s_mb_zeros[dim.getValue() - 1]);
-   }
-
-   /*!
     * @brief Return an IntVector of ones of the specified dimension.
     *
     * Can be used to avoid object creation overheads.  The block size of the
@@ -1140,32 +1127,6 @@ public:
       const tbox::Dimension& dim)
    {
       return *(s_ones[dim.getValue() - 1]);
-   }
-
-   /*!
-    * @brief Return an IntVector of ones of the specified dimension.
-    *
-    * Can be used to avoid object creation overheads.  The block size of the
-    * returned IntVector is set by the static method setNumberBlocks().
-    */
-   static const IntVector&
-   getMultiOne(
-      const tbox::Dimension& dim)
-   {
-      return *(s_mb_ones[dim.getValue() - 1]);
-   }
-
-   /*!
-    * Set a static number of blocks for use in static IntVector methods
-    */
-   static void
-   setNumberBlocks(int block_size)
-   {
-      for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
-         tbox::Dimension dim(d+1);
-         *(s_mb_zeros[d]) = IntVector(dim, 0, block_size);
-         *(s_mb_ones[d]) = IntVector(dim, 1, block_size);
-      }
    }
 
    /*!
@@ -1230,8 +1191,6 @@ private:
 
    static IntVector* s_zeros[SAMRAI::MAX_DIM_VAL];
    static IntVector* s_ones[SAMRAI::MAX_DIM_VAL];
-   static IntVector* s_mb_zeros[SAMRAI::MAX_DIM_VAL];
-   static IntVector* s_mb_ones[SAMRAI::MAX_DIM_VAL];
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

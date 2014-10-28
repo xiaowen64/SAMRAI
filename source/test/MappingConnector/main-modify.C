@@ -209,7 +209,6 @@ int main(
        * test does not use PatchHierarchy.
        */
       grid_geometry->setUpRatios(refinement_ratios);
-      grid_geometry->setUpFineLevelMultiblockData(refinement_ratios);
 
       /*
        * Generate Connector A<==>B, to be modified by the mapping

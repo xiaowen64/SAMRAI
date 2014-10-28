@@ -1823,7 +1823,8 @@ BoxUtilities::growAndChopAtBlockBoundary(
    }
 
    TBOX_ASSERT(ratio_to_level_zero.getBlockSize() == nblocks);
-   TBOX_ASSERT(refine_coarsen_ratio.getBlockSize() == nblocks);
+   TBOX_ASSERT(refine_coarsen_ratio.getBlockSize() == nblocks ||
+               refine_coarsen_ratio == 1);
 
    const BlockId& base_block = box.getBlockId();
 
@@ -1837,7 +1838,7 @@ BoxUtilities::growAndChopAtBlockBoundary(
    }
 
    IntVector compare_ratio(ratio_to_level_zero);
-   IntVector effective_grow_width(grow_width);
+   IntVector effective_grow_width(grow_width, nblocks);
    if (do_coarsen) {
       compare_ratio /= refine_coarsen_ratio;
       effective_grow_width.ceilingDivide(refine_coarsen_ratio);

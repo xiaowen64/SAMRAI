@@ -1453,8 +1453,8 @@ RefineSchedule::setupCoarseInterpBoxLevel(
                coarse_interp_box,
                grid_geometry,
                d_dst_level->getBoxLevel()->getRefinementRatio(),
-               hier::IntVector::getMultiOne(dim),
-               hier::IntVector::getMultiZero(dim),
+               hier::IntVector::getOne(dim),
+               hier::IntVector::getZero(dim),
                false,
                false);
          }

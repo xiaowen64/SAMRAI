@@ -18,8 +18,6 @@ namespace hier {
 
 IntVector * IntVector::s_zeros[SAMRAI::MAX_DIM_VAL];
 IntVector * IntVector::s_ones[SAMRAI::MAX_DIM_VAL];
-IntVector * IntVector::s_mb_zeros[SAMRAI::MAX_DIM_VAL];
-IntVector * IntVector::s_mb_ones[SAMRAI::MAX_DIM_VAL];
 
 tbox::StartupShutdownManager::Handler
 IntVector::s_initialize_finalize_handler(
@@ -299,8 +297,6 @@ IntVector::initializeCallback()
    for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       s_zeros[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 0);
       s_ones[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 1);
-      s_mb_zeros[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 0);
-      s_mb_ones[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 1);
    }
 }
 
@@ -310,8 +306,6 @@ IntVector::finalizeCallback()
    for (int d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       delete s_zeros[d];
       delete s_ones[d];
-      delete s_mb_zeros[d];
-      delete s_mb_ones[d];
    }
 }
 

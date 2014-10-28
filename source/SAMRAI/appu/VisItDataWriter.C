@@ -143,7 +143,7 @@ VisItDataWriter::VisItDataWriter(
    d_my_rank_in_file_cluster = VISIT_UNDEFINED_INDEX;
    d_number_files_this_file_cluster = VISIT_UNDEFINED_INDEX;
 
-   d_scaling_ratios.resize(1, hier::IntVector::getMultiOne(dim));
+   d_scaling_ratios.resize(1, hier::IntVector::getOne(dim));
 
    d_number_visit_variables = 0;
    d_number_visit_variables_plus_depth = 0;
@@ -1398,9 +1398,8 @@ VisItDataWriter::writePlotData(
 
    d_number_levels = hierarchy->getNumberOfLevels();
 
-   if (d_number_levels > static_cast<int>(d_scaling_ratios.size())) {
-      d_scaling_ratios.resize(d_number_levels, hier::IntVector::getMultiOne(d_dim));
-   }
+   d_scaling_ratios.resize(d_number_levels,
+      hier::IntVector(d_dim, 1, hierarchy->getNumberBlocks()));
 
    for (int ln = 1; ln <= hierarchy->getFinestLevelNumber(); ++ln) {
       d_scaling_ratios[ln] =

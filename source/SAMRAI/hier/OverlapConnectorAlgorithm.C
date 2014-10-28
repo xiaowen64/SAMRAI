@@ -1001,12 +1001,12 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
          cent_refinement_ratio,
          IntVector::max(west_refinement_ratio, east_refinement_ratio));
 
+   const int num_blocks = cent_refinement_ratio.getBlockSize();
+
    IntVector width_limit(connector_width_limit);
-   if (width_limit.getBlockSize() == 1 &&
-       IntVector::getMultiZero(dim).getBlockSize() != 1) {
+   if (width_limit.getBlockSize() == 1 && num_blocks != 1) {
       if (width_limit.max() == width_limit.min()) {
-         int new_size = IntVector::getMultiZero(dim).getBlockSize();
-         width_limit = IntVector(width_limit, new_size);
+         width_limit = IntVector(width_limit, num_blocks);
       } else {
          TBOX_ERROR("Anisotropic width limit argument for bridge must be of size equal to the number of blocks." << std::endl);
       }
@@ -1021,8 +1021,8 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
     * neither is known, we assume that both east and west nest in
     * center, and just to do something reasonable.
     */
-   IntVector output_width1(IntVector::getMultiZero(dim));
-   IntVector output_width2(IntVector::getMultiZero(dim));
+   IntVector output_width1(zero_vector, num_blocks);
+   IntVector output_width2(zero_vector, num_blocks);
    if (west_nesting_is_known || east_nesting_is_known) {
       if (west_nesting_is_known) {
          output_width1 =

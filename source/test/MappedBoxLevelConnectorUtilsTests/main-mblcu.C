@@ -315,7 +315,7 @@ int main(
       hier::BoxLevel small_domain_level = *small_box_level;
 
       std::vector<hier::IntVector> refinement_ratios(
-         1, hier::IntVector::getMultiOne(dim));
+         1, hier::IntVector(dim, 1, grid_geometry->getNumberBlocks()));
 
       /*
        * Refine Boxlevels as user specified.
@@ -346,7 +346,6 @@ int main(
        * test does not use PatchHierarchy.
        */
       grid_geometry->setUpRatios(refinement_ratios);
-      grid_geometry->setUpFineLevelMultiblockData(refinement_ratios);
 
       /*
        * Partition the big and small BoxLevels.
