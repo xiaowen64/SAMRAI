@@ -378,7 +378,7 @@ RefineSchedule::RefineSchedule(
 #ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT( expansion_ratio * d_dst_level->getRatioToLevelZero() == hierarchy->getPatchLevel(next_coarser_ln+1)->getRatioToLevelZero() );
             // All values in expansion_ratio must be identical.
-            TBOX_ASSERT( hier::IntVector(dim,expansion_ratio(0,0),expansion_ratio.getBlockSize()) == expansion_ratio );
+            TBOX_ASSERT( hier::IntVector(dim,expansion_ratio(0,0),expansion_ratio.getNumBlocks()) == expansion_ratio );
 #endif
             rscwr.setGhostCellWidthFactor(expansion_ratio(0,0));
          }

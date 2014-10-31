@@ -149,7 +149,7 @@ GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFrom
       max_ghost_width_at_coarse);
 #endif
 
-   const int num_blocks = fine_to_coarse_ratio.getBlockSize();
+   const int num_blocks = fine_to_coarse_ratio.getNumBlocks();
 
    /*
     * Coarse-to-fine width must be big enough to cover the width at the

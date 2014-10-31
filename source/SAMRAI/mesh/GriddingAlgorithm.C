@@ -4407,7 +4407,7 @@ GriddingAlgorithm::getGriddingParameters(
     * Determine number of cells box may be extended to physical
     * domain boundary to accomodate ghost cells.
     */
-   if (extend_ghosts.getBlockSize() == 1 &&
+   if (extend_ghosts.getNumBlocks() == 1 &&
        d_hierarchy->getNumberBlocks() > 1) {
       extend_ghosts = hier::IntVector(max_ghosts,
                                       d_hierarchy->getNumberBlocks());

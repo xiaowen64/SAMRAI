@@ -638,8 +638,8 @@ Box::refine(
    const IntVector& ratio)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
-   int b = ratio.getBlockSize() > 1 ? d_block_id.getBlockValue() : 0;
-   TBOX_ASSERT(b < ratio.getBlockSize());
+   int b = ratio.getNumBlocks() > 1 ? d_block_id.getBlockValue() : 0;
+   TBOX_ASSERT(b < ratio.getNumBlocks());
 
    bool negative_ratio = false;
    for (int d = 0; d < getDim().getValue(); ++d) {

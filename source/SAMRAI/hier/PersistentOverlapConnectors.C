@@ -109,9 +109,9 @@ PersistentOverlapConnectors::createConnector(
    TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
-   const int num_blocks = head.getRefinementRatio().getBlockSize();
+   const int num_blocks = head.getRefinementRatio().getNumBlocks();
    IntVector width(connector_width);
-   if (width.getBlockSize() == 1 && num_blocks != 1) {
+   if (width.getNumBlocks() == 1 && num_blocks != 1) {
       if (width.max() == width.min()) {
          width = IntVector(width, num_blocks);
       } else {
@@ -273,9 +273,9 @@ PersistentOverlapConnectors::hasConnector(
    const IntVector& min_connector_width,
    bool exact_width_only) const
 {
-   const int num_blocks = head.getRefinementRatio().getBlockSize();
+   const int num_blocks = head.getRefinementRatio().getNumBlocks();
    IntVector min_width(min_connector_width);
-   if (min_width.getBlockSize() == 1 && num_blocks != 1) {
+   if (min_width.getNumBlocks() == 1 && num_blocks != 1) {
       if (min_width.max() == min_width.min()) {
          min_width = IntVector(min_width, num_blocks);
       } else {
@@ -389,9 +389,9 @@ PersistentOverlapConnectors::doFindConnectorWork(
    ConnectorNotFoundAction not_found_action,
    bool exact_width_only)
 {
-   const int num_blocks = head.getRefinementRatio().getBlockSize();
+   const int num_blocks = head.getRefinementRatio().getNumBlocks();
    IntVector min_width(min_connector_width);
-   if (min_width.getBlockSize() == 1 && num_blocks != 1) {
+   if (min_width.getNumBlocks() == 1 && num_blocks != 1) {
       if (min_width.max() == min_width.min()) {
          min_width = IntVector(min_width, num_blocks);
       } else {

@@ -1822,8 +1822,8 @@ BoxUtilities::growAndChopAtBlockBoundary(
       return;
    }
 
-   TBOX_ASSERT(ratio_to_level_zero.getBlockSize() == nblocks);
-   TBOX_ASSERT(refine_coarsen_ratio.getBlockSize() == nblocks ||
+   TBOX_ASSERT(ratio_to_level_zero.getNumBlocks() == nblocks);
+   TBOX_ASSERT(refine_coarsen_ratio.getNumBlocks() == nblocks ||
                refine_coarsen_ratio == 1);
 
    const BlockId& base_block = box.getBlockId();

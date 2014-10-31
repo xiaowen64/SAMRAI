@@ -388,7 +388,7 @@ PatchLevel::setRefinedPatchLevel(
 #endif
 
    d_number_blocks = coarse_level->d_number_blocks;
-   if (d_ratio_to_level_zero.getBlockSize() != d_number_blocks) {
+   if (d_ratio_to_level_zero.getNumBlocks() != d_number_blocks) {
       d_ratio_to_level_zero = IntVector(d_dim, 0, d_number_blocks);
    }
 
@@ -563,7 +563,7 @@ PatchLevel::setCoarsenedPatchLevel(
    // d_mapping.setProcessorMapping( (fine_level->d_mapping).getProcessorMapping() );
 
    d_number_blocks = fine_level->d_number_blocks;
-   if (d_ratio_to_level_zero.getBlockSize() != d_number_blocks) {
+   if (d_ratio_to_level_zero.getNumBlocks() != d_number_blocks) {
       d_ratio_to_level_zero = IntVector(d_dim, 0, d_number_blocks); 
    }
 
@@ -790,7 +790,7 @@ PatchLevel::getFromRestart(
     * Make sure d_ratio_to_coarser_level is of the correct size before
     * initializing values.
     */
-   if (d_ratio_to_coarser_level.getBlockSize() != d_number_blocks) {
+   if (d_ratio_to_coarser_level.getNumBlocks() != d_number_blocks) {
       d_ratio_to_coarser_level = IntVector(d_dim, 0, d_number_blocks);
    }
 

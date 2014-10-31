@@ -1001,10 +1001,10 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
          cent_refinement_ratio,
          IntVector::max(west_refinement_ratio, east_refinement_ratio));
 
-   const int num_blocks = cent_refinement_ratio.getBlockSize();
+   const int num_blocks = cent_refinement_ratio.getNumBlocks();
 
    IntVector width_limit(connector_width_limit);
-   if (width_limit.getBlockSize() == 1 && num_blocks != 1) {
+   if (width_limit.getNumBlocks() == 1 && num_blocks != 1) {
       if (width_limit.max() == width_limit.min()) {
          width_limit = IntVector(width_limit, num_blocks);
       } else {

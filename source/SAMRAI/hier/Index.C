@@ -126,7 +126,7 @@ Index::Index(
    const IntVector& rhs):
    d_dim(rhs.getDim())
 {
-   TBOX_ASSERT(rhs.getBlockSize() == 1);
+   TBOX_ASSERT(rhs.getNumBlocks() == 1);
    for (int i = 0; i < d_dim.getValue(); ++i) {
       d_index[i] = rhs[i];
    }

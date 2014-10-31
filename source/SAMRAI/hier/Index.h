@@ -87,7 +87,7 @@ public:
    /**
     * @brief Construct an Index equal to the argument IntVector.
     *
-    * @pre rhs.getBlockSize() == 1
+    * @pre rhs.getNumBlocks() == 1
     */
    explicit Index(
       const IntVector& rhs);
@@ -120,14 +120,14 @@ public:
     *        IntVector.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre rhs.getBlockSize() == 1
+    * @pre rhs.getNumBlocks() == 1
     */
    Index&
    operator = (
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(rhs.getBlockSize() == 1);
+      TBOX_ASSERT(rhs.getNumBlocks() == 1);
       for (int i = 0; i < d_dim.getValue(); ++i) {
          d_index[i] = rhs[i];
       }
@@ -167,14 +167,14 @@ public:
     * @brief Plus-equals operator for an Index and an integer vector.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre rhs.getBlockSize() == 1
+    * @pre rhs.getNumBlocks() == 1
     */
    Index&
    operator += (
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(rhs.getBlockSize() == 1);
+      TBOX_ASSERT(rhs.getNumBlocks() == 1);
       for (int i = 0; i < d_dim.getValue(); ++i) {
          d_index[i] += rhs[i];
       }
@@ -185,14 +185,14 @@ public:
     * @brief Plus operator for an Index and an integer vector.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre rhs.getBlockSize() == 1
+    * @pre rhs.getNumBlocks() == 1
     */
    Index
    operator + (
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(rhs.getBlockSize() == 1);
+      TBOX_ASSERT(rhs.getNumBlocks() == 1);
       Index tmp = *this;
       tmp += rhs;
       return tmp;
@@ -289,14 +289,14 @@ public:
     * @brief Minus-equals operator for an Index and an integer vector.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre rhs.getBlockSize() == 1
+    * @pre rhs.getNumBlocks() == 1
     */
    Index&
    operator -= (
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(rhs.getBlockSize() == 1);
+      TBOX_ASSERT(rhs.getNumBlocks() == 1);
       for (int i = 0; i < d_dim.getValue(); ++i) {
          d_index[i] -= rhs[i];
       }
@@ -307,14 +307,14 @@ public:
     * @brief Minus operator for an Index and an integer vector.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre rhs.getBlockSize() == 1
+    * @pre rhs.getNumBlocks() == 1
     */
    Index
    operator - (
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(rhs.getBlockSize() == 1);
+      TBOX_ASSERT(rhs.getNumBlocks() == 1);
       Index tmp = *this;
       tmp -= rhs;
       return tmp;
@@ -349,14 +349,14 @@ public:
     * @brief Times-equals operator for an Index and an integer vector.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre rhs.getBlockSize() == 1
+    * @pre rhs.getNumBlocks() == 1
     */
    Index&
    operator *= (
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(rhs.getBlockSize() == 1);
+      TBOX_ASSERT(rhs.getNumBlocks() == 1);
       for (int i = 0; i < getDim().getValue(); ++i) {
          d_index[i] *= rhs[i];
       }
@@ -367,14 +367,14 @@ public:
     * @brief Times operator for an Index and an integer vector.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre rhs.getBlockSize() == 1
+    * @pre rhs.getNumBlocks() == 1
     */ 
    Index
    operator * (
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(rhs.getBlockSize() == 1);
+      TBOX_ASSERT(rhs.getNumBlocks() == 1);
       Index tmp = *this;
       tmp *= rhs;
       return tmp;
@@ -409,14 +409,14 @@ public:
     * @brief Assign-quotient operator for an Index and an integer vector.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre rhs.getBlockSize() == 1
+    * @pre rhs.getNumBlocks() == 1
     */
    Index&
    operator /= (
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(rhs.getBlockSize() == 1);
+      TBOX_ASSERT(rhs.getNumBlocks() == 1);
       for (int i = 0; i < getDim().getValue(); ++i) {
          d_index[i] /= rhs[i];
       }
@@ -427,14 +427,14 @@ public:
     * @brief Quotient operator for an Index and an integer vector.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre rhs.getBlockSize() == 1
+    * @pre rhs.getNumBlocks() == 1
     */
    Index
    operator / (
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(rhs.getBlockSize() == 1);
+      TBOX_ASSERT(rhs.getNumBlocks() == 1);
       Index tmp = *this;
       tmp /= rhs;
       return tmp;
@@ -629,14 +629,14 @@ public:
     * For positive indices, this is the same as dividing by the ratio.
     *
     * @pre getDim() == ratio.getDim()
-    * @pre rhs.getBlockSize() == 1
+    * @pre rhs.getNumBlocks() == 1
     */
    Index&
    coarsen(
       const IntVector& ratio)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
-      TBOX_ASSERT(ratio.getBlockSize() == 1);
+      TBOX_ASSERT(ratio.getNumBlocks() == 1);
       for (int d = 0; d < getDim().getValue(); ++d) {
          (*this)(d) = coarsen((*this)(d), ratio(d));
       }
@@ -699,7 +699,7 @@ public:
     * For positive indices, this is the same as dividing by the ratio.
     *
     * @pre index.getDim() == ratio.getDim()
-    * @pre rhs.getBlockSize() == 1
+    * @pre rhs.getNumBlocks() == 1
     */
    static Index
    coarsen(
@@ -707,7 +707,7 @@ public:
       const IntVector& ratio)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(index, ratio);
-      TBOX_ASSERT(ratio.getBlockSize() == 1);
+      TBOX_ASSERT(ratio.getNumBlocks() == 1);
       tbox::Dimension dim(index.getDim());
       Index tmp(dim);
       for (int d = 0; d < dim.getValue(); ++d) {

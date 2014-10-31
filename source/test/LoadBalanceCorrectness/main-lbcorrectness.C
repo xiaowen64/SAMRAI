@@ -317,7 +317,6 @@ int main(
       }
 
       hier::IntVector bad_interval(dim, 1);
-      hier::IntVector::setNumberBlocks(1);
       hier::IntVector cut_factor(dim, 1);
 
       hier::OverlapConnectorAlgorithm oca;

@@ -37,7 +37,7 @@ IntVector::s_initialize_finalize_handler(
 IntVector::IntVector(
    const tbox::Dimension& dim):
    d_dim(dim),
-   d_block_size(1),
+   d_num_blocks(1),
    d_vector(dim.getValue())
 {
 #ifdef DEBUG_INITIALIZE_UNDEFINED
@@ -48,15 +48,15 @@ IntVector::IntVector(
 }
 
 IntVector::IntVector(
-   int block_size,
+   int num_blocks,
    const tbox::Dimension& dim):
    d_dim(dim),
-   d_block_size(block_size),
-   d_vector(dim.getValue()*block_size)
+   d_num_blocks(num_blocks),
+   d_vector(dim.getValue()*num_blocks)
 {
-   TBOX_ASSERT(block_size >=1);
+   TBOX_ASSERT(num_blocks >=1);
 #ifdef DEBUG_INITIALIZE_UNDEFINED
-   for (int i = 0; i < block_size*dim.getValue(); ++i) {
+   for (int i = 0; i < num_blocks*dim.getValue(); ++i) {
       d_vector[i] = tbox::MathUtilities<int>::getMin();
    }
 #endif
@@ -65,23 +65,23 @@ IntVector::IntVector(
 IntVector::IntVector(
    const tbox::Dimension& dim,
    int value,
-   int block_size):
+   int num_blocks):
    d_dim(dim),
-   d_block_size(block_size),
-   d_vector(dim.getValue()*block_size, value)
+   d_num_blocks(num_blocks),
+   d_vector(dim.getValue()*num_blocks, value)
 {
-   TBOX_ASSERT(block_size >=1);
+   TBOX_ASSERT(num_blocks >=1);
 }
 
 IntVector::IntVector(
    const std::vector<int>& vec,
-   int block_size):
+   int num_blocks):
    d_dim(static_cast<unsigned short>(vec.size())),
-   d_block_size(block_size),
-   d_vector(vec.size()*block_size)
+   d_num_blocks(num_blocks),
+   d_vector(vec.size()*num_blocks)
 {
    TBOX_ASSERT(vec.size() >= 1);
-   for (int b = 0; b < block_size; ++b) {
+   for (int b = 0; b < num_blocks; ++b) {
       int offset = b*d_dim.getValue();
       for (int i = 0; i < d_dim.getValue(); ++i) {
          d_vector[offset + i] = vec[i];
@@ -92,12 +92,12 @@ IntVector::IntVector(
 IntVector::IntVector(
    const tbox::Dimension& dim,
    const int array[],
-   int block_size):
+   int num_blocks):
    d_dim(dim),
-   d_block_size(block_size),
-   d_vector(dim.getValue()*block_size)
+   d_num_blocks(num_blocks),
+   d_vector(dim.getValue()*num_blocks)
 {
-   for (int b = 0; b < block_size; ++b) {
+   for (int b = 0; b < num_blocks; ++b) {
       int offset = b*d_dim.getValue();
       for (int i = 0; i < d_dim.getValue(); ++i) {
          d_vector[offset + i] = array[i];
@@ -108,23 +108,23 @@ IntVector::IntVector(
 IntVector::IntVector(
    const IntVector& rhs):
    d_dim(rhs.getDim()),
-   d_block_size(rhs.d_block_size),
+   d_num_blocks(rhs.d_num_blocks),
    d_vector(rhs.d_vector)
 {
-   TBOX_ASSERT(d_block_size >= 1);
+   TBOX_ASSERT(d_num_blocks >= 1);
 }
 
 IntVector::IntVector(
    const IntVector& rhs,
-   int block_size):
+   int num_blocks):
    d_dim(rhs.getDim()),
-   d_block_size(block_size),
-   d_vector(rhs.getDim().getValue() * block_size)
+   d_num_blocks(num_blocks),
+   d_vector(rhs.getDim().getValue() * num_blocks)
 {
-   TBOX_ASSERT(d_block_size >= 1);
-   TBOX_ASSERT(rhs.d_block_size == d_block_size || rhs.d_block_size == 1); 
-   if (rhs.d_block_size == 1 && d_block_size != 1) {
-      for (int b = 0; b < d_block_size; ++b) {
+   TBOX_ASSERT(d_num_blocks >= 1);
+   TBOX_ASSERT(rhs.d_num_blocks == d_num_blocks || rhs.d_num_blocks == 1); 
+   if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
+      for (int b = 0; b < d_num_blocks; ++b) {
          int offset = b*d_dim.getValue();
          for (int i = 0; i < d_dim.getValue(); ++i) {
             d_vector[offset + i] = rhs.d_vector[i];
@@ -137,13 +137,13 @@ IntVector::IntVector(
 
 IntVector::IntVector(
    const Index& rhs,
-   int block_size):
+   int num_blocks):
    d_dim(rhs.getDim()),
-   d_block_size(block_size),
-   d_vector(rhs.getDim().getValue() * block_size)
+   d_num_blocks(num_blocks),
+   d_vector(rhs.getDim().getValue() * num_blocks)
 {
-   TBOX_ASSERT(d_block_size >= 1);
-   for (int b = 0; b < block_size; ++b) {
+   TBOX_ASSERT(d_num_blocks >= 1);
+   for (int b = 0; b < num_blocks; ++b) {
       int offset = b*d_dim.getValue();
       for (int i = 0; i < d_dim.getValue(); ++i) {
          d_vector[offset + i] = rhs[i];
@@ -170,8 +170,8 @@ IntVector::operator = (
    const Index& rhs)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-   if (d_block_size != 1) {
-      d_block_size = 1;
+   if (d_num_blocks != 1) {
+      d_num_blocks = 1;
       d_vector.resize(d_dim.getValue());
    }
 
@@ -191,7 +191,7 @@ operator >> (
    std::istream& s,
    IntVector& rhs)
 {
-   for (int b = 0; b < rhs.getBlockSize(); ++b) {
+   for (int b = 0; b < rhs.getNumBlocks(); ++b) {
       while (s.get() != '(') ;
       for (int i = 0; i < rhs.getDim().getValue(); ++i) {
          s >> rhs(b,i);
@@ -209,7 +209,7 @@ std::ostream& operator << (
    const IntVector& rhs)
 {
 
-   for (int b = 0; b < rhs.getBlockSize(); ++b) {
+   for (int b = 0; b < rhs.getNumBlocks(); ++b) {
       s << '(';
       for (int i = 0; i < rhs.getDim().getValue(); ++i) {
          s << rhs(b,i);
@@ -234,7 +234,7 @@ IntVector::putToRestart(
 {
    boost::shared_ptr<tbox::Database> intvec_db =
       restart_db.putDatabase(name);
-   intvec_db->putInteger("d_block_size", d_block_size);
+   intvec_db->putInteger("d_num_blocks", d_num_blocks);
    intvec_db->putIntegerVector("d_vector",
                                d_vector);
 
@@ -248,10 +248,10 @@ IntVector::getFromRestart(
    boost::shared_ptr<tbox::Database> intvec_db =
       restart_db.getDatabase(name);
 
-   d_block_size = intvec_db->getInteger("d_block_size");
+   d_num_blocks = intvec_db->getInteger("d_num_blocks");
    d_vector = intvec_db->getIntegerVector("d_vector"); 
 
-   TBOX_ASSERT(d_block_size * d_dim.getValue() == d_vector.size());
+   TBOX_ASSERT(d_num_blocks * d_dim.getValue() == d_vector.size());
 
 }
 
@@ -264,7 +264,7 @@ void
 IntVector::sortIntVector(
    const IntVector& values)
 {
-   for (int b = 0; b < d_block_size; ++b ) {
+   for (int b = 0; b < d_num_blocks; ++b ) {
       int offset = b*d_dim.getValue();
       for (int d = 0; d < d_dim.getValue(); ++d) {
          d_vector[offset + d] = d;

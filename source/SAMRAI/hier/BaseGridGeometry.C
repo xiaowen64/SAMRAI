@@ -134,7 +134,7 @@ BaseGridGeometry::BaseGridGeometry(
       itr->setId(box_id);
    }
    d_number_blocks = static_cast<int>(block_numbers.size());
-   if (d_ratio_to_level_zero[0].getBlockSize() != d_number_blocks) {
+   if (d_ratio_to_level_zero[0].getNumBlocks() != d_number_blocks) {
       d_ratio_to_level_zero[0] =
          IntVector(IntVector::getOne(d_dim), d_number_blocks);
    }
@@ -175,7 +175,7 @@ BaseGridGeometry::BaseGridGeometry(
       itr->setId(box_id);
    }
    d_number_blocks = static_cast<int>(block_numbers.size());
-   if (d_ratio_to_level_zero[0].getBlockSize() != d_number_blocks) {
+   if (d_ratio_to_level_zero[0].getNumBlocks() != d_number_blocks) {
       d_ratio_to_level_zero[0] = 
          IntVector(IntVector::getOne(d_dim), d_number_blocks);
    }
@@ -624,7 +624,7 @@ BaseGridGeometry::getFromRestart()
    }
 
    d_number_blocks = db->getInteger("num_blocks");
-   if (d_ratio_to_level_zero[0].getBlockSize() != d_number_blocks) {
+   if (d_ratio_to_level_zero[0].getNumBlocks() != d_number_blocks) {
       d_ratio_to_level_zero[0] = 
          IntVector(IntVector::getOne(d_dim), d_number_blocks);
    }
@@ -742,7 +742,7 @@ BaseGridGeometry::getFromInput(
             << std::endl);
       }
 
-      if (d_ratio_to_level_zero[0].getBlockSize() != d_number_blocks) {
+      if (d_ratio_to_level_zero[0].getNumBlocks() != d_number_blocks) {
          d_ratio_to_level_zero[0] = 
             IntVector(IntVector::getOne(d_dim), d_number_blocks);
       }
@@ -1474,7 +1474,7 @@ BaseGridGeometry::setPhysicalDomain(
 
    d_domain_is_single_box.resize(number_blocks);
    d_number_blocks = number_blocks;
-   if (d_ratio_to_level_zero[0].getBlockSize() != d_number_blocks) {
+   if (d_ratio_to_level_zero[0].getNumBlocks() != d_number_blocks) {
       d_ratio_to_level_zero[0] = 
          IntVector(IntVector::getOne(d_dim), d_number_blocks);
    }

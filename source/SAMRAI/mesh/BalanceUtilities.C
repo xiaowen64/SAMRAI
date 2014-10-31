@@ -1294,7 +1294,7 @@ BalanceUtilities::recursiveBisectionUniform(
             physical_domain);
 
          hier::IntVector box_cut_factor(cut_factor.getDim());
-         if (cut_factor.getBlockSize() == 1) {
+         if (cut_factor.getNumBlocks() == 1) {
             box_cut_factor = cut_factor;
          } else {
             box_cut_factor = cut_factor.getBlockVector(box2chop.getBlockId());

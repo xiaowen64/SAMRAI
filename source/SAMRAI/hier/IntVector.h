@@ -36,10 +36,14 @@ class Index;
  * or its length is the number of dimension multiplied by a certain number of
  * blocks.
  *
- * The number of blocks associated with an IntVector is called the "block
- * size".  When used in the context of a single-block problem, the block size
- * is always 1.  In a multiblock context, the block size of an IntVector
- * may be either 1 or the number of blocks being used in the problem.
+ * The integers in IntVector are stored first in order of dimension, and then
+ * in order of block number.  For a 3-dimensional IntVector on 4 blocks, the
+ * order would be: { i0, j0, k0, i1, j1, k1, i2, j2, k2, i3, j3, k3 }.
+ *
+ * When used in the context of a single-block problem, the number of blocks
+ * for an IntVector is always 1.  In a multiblock context, the number of
+ * blocks for an IntVector may be either 1 or the number of blocks being used
+ * in the problem.
  */
 
 class IntVector
@@ -48,7 +52,7 @@ public:
    typedef tbox::Dimension::dir_t dir_t;
 
    /*!
-    * @brief Creates an uninitialized IntVector of block size 1.
+    * @brief Creates an uninitialized IntVector for 1 block.
     *
     * @param dim
     */
@@ -56,49 +60,49 @@ public:
       const tbox::Dimension& dim);
 
    /*!
-    * @brief Creates an uninitialized IntVector of a given block size.
+    * @brief Creates an uninitialized IntVector of a given number of blocks.
     *
-    * @pre block_size >=1
+    * @pre num_blocks >=1
     *
-    * @param block_size
+    * @param num_blocks
     * @param dim
     */
    IntVector(
-      int block_size,
+      int num_blocks,
       const tbox::Dimension& dim);
 
    /*!
     * @brief Construct an IntVector with all components equal to the
     * value argument.
     *
-    * @pre block_size >=1
+    * @pre num_blocks >=1
     *
     * @param dim
     * @param value
-    * @param block_size
+    * @param num_blocks
     */
    IntVector(
       const tbox::Dimension& dim,
       int value,
-      int block_size = 1);
+      int num_blocks = 1);
 
    /*!
     * @brief Construct an IntVector with the values provided by
     * an STL vector of ints.
     *
     * The dimension of the constructed IntVector will be the size of the
-    * vec argument.  If block_size has a value greater than 1, then the
+    * vec argument.  If num_blocks has a value greater than 1, then the
     * IntVector will be constructed with the values held by vec duplicated for
     * every block.
     *
     * @pre vec.size() >= 1
     *
     * @param vec Vector of integers with a size equal to the desired dimension
-    * @param block_size
+    * @param num_blocks
     */
    IntVector(
       const std::vector<int>& vec,
-      int block_size = 1);
+      int num_blocks = 1);
 
    /*!
     * @brief Construct an IntVector with values provided by a raw array.
@@ -108,24 +112,24 @@ public:
     * checking that the array is properly allocated and initialized, it is
     * up to the calling code to ensure that the array argument is valid.
     *
-    * If block_size has a value greater than 1, then the IntVector
+    * If num_blocks has a value greater than 1, then the IntVector
     * will be constructed with the values held by array duplicated for every
     * block.
     *
     * @param dim
     * @param array  Array of ints that should be allocated and initialized
     *               at a length equal to dim.getValue()
-    * @param block_size 
+    * @param num_blocks 
     */
    IntVector(
       const tbox::Dimension& dim,
       const int array[],
-      int block_size = 1);
+      int num_blocks = 1);
 
    /*!
     * @brief Copy constructor.
     *
-    * @pre rhs.getBlockSize() >= 1
+    * @pre rhs.getNumBlocks() >= 1
     */
    IntVector(
       const IntVector& rhs);
@@ -133,42 +137,42 @@ public:
    /*!
     * @brief Construct an IntVector from another IntVector.
     *
-    * The main use case for this constructor is to use an IntVector of block
-    * size 1 to construct an IntVector of a larger block size.  When used
-    * in this way, the constructed IntVector will duplicate the contents of 
-    * the argument for every block.
+    * The main use case for this constructor is to use an IntVector sized for
+    * one block to construct an IntVector sized for a larger number of blocks.
+    * When used in this way, the constructed IntVector will duplicate the
+    * contents of the argument for every block.
     * 
-    * If block_size is equal to the rhs argument's block size, then this
+    * If num_blocks is equal to the rhs argument's number of blocks, then this
     * constructor is equivalent to the copy constructor.
     *
-    * @pre block_size >=1
-    * @pre (rhs.getBlockSize() == block_size || rhs.getBlockSize() == 1)
+    * @pre num_blocks >=1
+    * @pre (rhs.getNumBlocks() == num_blocks || rhs.getNumBlocks() == 1)
     *
     * @param rhs
-    * @param block_size
+    * @param num_blocks
     */
    IntVector(
       const IntVector& rhs,
-      int block_size);
+      int num_blocks);
 
    /*!
     * @brief Construct an IntVector from an Index.
     *
     * The constructed IntVector will have the same dimension value as the
-    * Index.  If block_size is greater than 1, the values held by the Index
+    * Index.  If num_blocks is greater than 1, the values held by the Index
     * argument will be duplicated for every block.
     * 
     * @param rhs
-    * @param block_size
+    * @param num_blocks
     *
-    * @pre block_size >=1
+    * @pre num_blocks >=1
     *
     * @param rhs
-    * @param block_size
+    * @param num_blocks
     */
    IntVector(
       const Index& rhs,
-      int block_size = 1);
+      int num_blocks = 1);
 
    /*!
     * @brief The assignment operator sets the IntVector equal to the
@@ -181,7 +185,7 @@ public:
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      d_block_size = rhs.d_block_size;
+      d_num_blocks = rhs.d_num_blocks;
       d_vector = rhs.d_vector;
 
       return *this;
@@ -191,7 +195,7 @@ public:
     * @brief Assignment operator assigning the values of an Index to an
     * IntVector.
     *
-    * The assigned IntVector will have a block size of 1.
+    * The assigned IntVector will be sized for one block.
     *
     * @pre getDim() == rhs.getDim()
     */
@@ -205,31 +209,31 @@ public:
    virtual ~IntVector();
 
    /*!
-    * @brief Return the block size of this IntVector
+    * @brief Return the number of blocks for this IntVector
     */
-   int getBlockSize() const
+   int getNumBlocks() const
    {
-      return d_block_size;
+      return d_num_blocks;
    }
 
    /*!
-    * @brief Return an IntVector of block size 1 extracted from a possibly
+    * @brief Return an IntVector for one block extracted from a possibly
     * larger IntVector
     *
-    * This constructs an IntVector of block size 1 using the int values
+    * This constructs an IntVector sized for one block using the int values
     * associated with a given block.  The constructed IntVector is returned
     * by value.
     *
-    * @pre block_id.getBlockValue() < getBlockSize()
+    * @pre block_id.getBlockValue() < getNumBlocks()
     *
     * @param block_id  BlockId indicates which block is associated with
     *                  the desired integer values.
     *
-    * @return A constructed IntVector of block size 1.
+    * @return A constructed IntVector sized for one block
     */
    IntVector getBlockVector(const BlockId& block_id) const
    {
-      TBOX_ASSERT(block_id.getBlockValue() < d_block_size);
+      TBOX_ASSERT(block_id.getBlockValue() < d_num_blocks);
       IntVector block_vec(d_dim,
                           &(d_vector[block_id.getBlockValue()*d_dim.getValue()]));
 
@@ -237,71 +241,73 @@ public:
    }
 
    /*!
-    * @brief Return the specified component of the vector.
+    * @brief Return reference to the specified component of the vector.  This
+    * can only be used when the number of blocks is 1.
     *
     * @pre (i >= 0) && (i < getDim().getValue())
-    * @pre getBlockSize() == 1
+    * @pre getNumBlocks() == 1
     */
    int&
    operator [] (
       const int i)
    {
       TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
-      TBOX_ASSERT(d_block_size == 1);
+      TBOX_ASSERT(d_num_blocks == 1);
       return d_vector[i];
    }
 
    /*!
     * @brief Return the specified component of the vector as a const integer
-    * reference.
+    * reference.  This can only be used when the number of blocks is 1.
     *
     * @pre (i >= 0) && (i < getDim().getValue())
-    * @pre getBlockSize() == 1
+    * @pre getNumBlocks() == 1
     */
    const int&
    operator [] (
       const int i) const
    {
       TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
-      TBOX_ASSERT(d_block_size == 1);
+      TBOX_ASSERT(d_num_blocks == 1);
       return d_vector[i];
    }
 
    /*!
-    * @brief Return the specified component of the vector.
+    * @brief Return reference to the specified component of the vector.  This
+    * can only be used when the number of blocks is 1.
     *
     * @pre (i >= 0) && (i < getDim().getValue())
-    * @pre getBlockSize() == 1
+    * @pre getNumBlocks() == 1
     */
    int&
    operator () (
       const int i)
    {
       TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
-      TBOX_ASSERT(d_block_size == 1);
+      TBOX_ASSERT(d_num_blocks == 1);
       return d_vector[i];
    }
 
    /*!
     * @brief Return the specified component of the vector as a const integer
-    * reference.
+    * reference.  This can only be used when the number of blocks is 1.
     *
     * @pre (i >= 0) && (i < getDim().getValue())
-    * @pre getBlockSize() == 1
+    * @pre getNumBlocks() == 1
     */
    const int&
    operator () (
       const int i) const
    {
       TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
-      TBOX_ASSERT(d_block_size == 1);
+      TBOX_ASSERT(d_num_blocks == 1);
       return d_vector[i];
    }
 
    /*!
     * @brief Return the specified component of the vector.
     *
-    * @pre (b >= 0) && (b < getBlockSize())
+    * @pre (b >= 0) && (b < getNumBlocks())
     * @pre (i >= 0) && (i < getDim().getValue())
     *
     * The desired component is specified by the pair of the block number b
@@ -312,7 +318,7 @@ public:
       const int b, 
       const int i)
    {
-      TBOX_ASSERT(b >= 0 && b < d_block_size);
+      TBOX_ASSERT(b >= 0 && b < d_num_blocks);
       TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
       return d_vector[b*d_dim.getValue() + i];
    }
@@ -321,7 +327,7 @@ public:
     * @brief Return the specified component of the vector as a const integer
     * reference 
     *
-    * @pre (b >= 0) && (b < getBlockSize())
+    * @pre (b >= 0) && (b < getNumBlocks())
     * @pre (i >= 0) && (i < getDim().getValue())
     *
     * The desired component is specified by the pair of the block number b
@@ -332,53 +338,52 @@ public:
       const int b, 
       const int i) const
    {
-      TBOX_ASSERT(b >= 0 && b < d_block_size);
+      TBOX_ASSERT(b >= 0 && b < d_num_blocks);
       TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
       return d_vector[b*d_dim.getValue() + i];
    }
 
-   //@{
-   /*! @brief Arithmetic operators and related methods
+   /*!
+    * @brief Plus-equals operator for two integer vectors.
+    *
+    * The following comments apply to most of the arithmetic operators and
+    * some related methods:
     *
     * The arithmetic operators and related methods such as ceilingDivide
     * allow both full component-wise operations on IntVectors that have equal
-    * block sizes, as well as operations between multiblock IntVectors and
-    * IntVectors of block size 1.
+    * numbers of blocks, as well as operations between multiblock IntVectors and
+    * single-block IntVectors
     *
     * When an operator is invoked on a multiblock IntVector with a right-hand-
-    * side IntVector of block size 1, the values within the right-hand-side are
+    * side single-block IntVector, the values within the right-hand-side are
     * applied to every block within the "this" IntVector.
     *
     * Assertion failures occur if operations are called using two multiblock
-    * IntVectors that have different block sizes, or if the right-hand-side is
-    * a multiblock IntVector while "this" has a block size of 1.
+    * IntVectors that have different numbers of blocks, or if the
+    * right-hand-side is a multiblock IntVector while "this" is single-block.
     *
     * There also are some operators that take a single integer as a right-
     * hand-side, in which case that integer value is applied in the operation
     * to every component of "this".
-    */
-
-   /*!
-    * @brief Plus-equals operator for two integer vectors.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre getBlockSize() == rhs.getBlockSize() || rhs.getBlockSize() == 1
+    * @pre getNumBlocks() == rhs.getNumBlocks() || rhs.getNumBlocks() == 1
     */
    IntVector&
    operator += (
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(d_block_size == rhs.d_block_size || rhs.d_block_size == 1);
-      if (rhs.d_block_size == 1 && d_block_size != 1) {
-         for (int b = 0; b < d_block_size; ++b) {
+      TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
+      if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
+         for (int b = 0; b < d_num_blocks; ++b) {
             int offset = b*d_dim.getValue();
             for (int i = 0; i < d_dim.getValue(); ++i) {
                d_vector[offset + i] += rhs.d_vector[i];
             }
          }
       } else {
-         int length = d_block_size * d_dim.getValue();
+         int length = d_num_blocks * d_dim.getValue();
          for (int i = 0; i < length; ++i) {
             d_vector[i] += rhs.d_vector[i];
          }
@@ -408,7 +413,7 @@ public:
    operator += (
       const int rhs)
    {
-      int length = d_block_size * d_dim.getValue();
+      int length = d_num_blocks * d_dim.getValue();
       for (int i = 0; i < length; ++i) {
          d_vector[i] += rhs;
       }
@@ -431,7 +436,7 @@ public:
     * @brief Minus-equals operator for two integer vectors.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre getBlockSize() == rhs.getBlockSize() || rhs.getBlockSize() == 1
+    * @pre getNumBlocks() == rhs.getNumBlocks() || rhs.getNumBlocks() == 1
     *
     */
    IntVector&
@@ -439,16 +444,16 @@ public:
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(d_block_size == rhs.d_block_size || rhs.d_block_size == 1);
-      if (rhs.d_block_size == 1 && d_block_size != 1) {
-         for (int b = 0; b < d_block_size; ++b) {
+      TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
+      if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
+         for (int b = 0; b < d_num_blocks; ++b) {
             int offset = b*d_dim.getValue();
             for (int i = 0; i < d_dim.getValue(); ++i) {
                d_vector[offset + i] -= rhs.d_vector[i];
             }
          }
       } else {
-         int length = d_block_size * d_dim.getValue();
+         int length = d_num_blocks * d_dim.getValue();
          for (int i = 0; i < length; ++i) {
             d_vector[i] -= rhs.d_vector[i];
          }
@@ -478,7 +483,7 @@ public:
    operator -= (
       const int rhs)
    {
-      int length = d_block_size * d_dim.getValue();
+      int length = d_num_blocks * d_dim.getValue();
       for (int i = 0; i < length; ++i) {
          d_vector[i] -= rhs;
       }
@@ -501,7 +506,7 @@ public:
     * @brief Times-equals operator for two integer vectors.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre getBlockSize() == rhs.getBlockSize() || rhs.getBlockSize() == 1
+    * @pre getNumBlocks() == rhs.getNumBlocks() || rhs.getNumBlocks() == 1
     *
     */
    IntVector&
@@ -509,16 +514,16 @@ public:
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(d_block_size == rhs.d_block_size || rhs.d_block_size == 1);
-      if (rhs.d_block_size == 1 && d_block_size != 1) {
-         for (int b = 0; b < d_block_size; ++b) {
+      TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
+      if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
+         for (int b = 0; b < d_num_blocks; ++b) {
             int offset = b*d_dim.getValue();
             for (int i = 0; i < d_dim.getValue(); ++i) {
                d_vector[offset + i] *= rhs.d_vector[i];
             }
          }
       } else {
-         int length = d_block_size * d_dim.getValue();
+         int length = d_num_blocks * d_dim.getValue();
          for (int i = 0; i < length; ++i) {
             d_vector[i] *= rhs.d_vector[i];
          }
@@ -548,7 +553,7 @@ public:
    operator *= (
       const int rhs)
    {
-      int length = d_block_size * d_dim.getValue();
+      int length = d_num_blocks * d_dim.getValue();
       for (int i = 0; i < length; ++i) {
          d_vector[i] *= rhs;
       }
@@ -571,93 +576,28 @@ public:
     * @brief Quotient-equals operator for two integer vectors.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre getBlockSize() == rhs.getBlockSize() || rhs.getBlockSize() == 1
+    * @pre getNumBlocks() == rhs.getNumBlocks() || rhs.getNumBlocks() == 1
     */
    IntVector&
    operator /= (
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(d_block_size == rhs.d_block_size || rhs.d_block_size == 1);
-      if (rhs.d_block_size == 1 && d_block_size != 1) {
-         for (int b = 0; b < d_block_size; ++b) {
+      TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
+      if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
+         for (int b = 0; b < d_num_blocks; ++b) {
             int offset = b*d_dim.getValue();
             for (int i = 0; i < d_dim.getValue(); ++i) {
                d_vector[offset + i] /= rhs.d_vector[i];
             }
          }
       } else {
-         int length = d_block_size * d_dim.getValue();
+         int length = d_num_blocks * d_dim.getValue();
          for (int i = 0; i < length; ++i) {
             d_vector[i] /= rhs.d_vector[i];
          }
       }
       return *this;
-   }
-
-   /*!
-    * @brief Component-wise ceilingDivide quotient (integer divide with
-    *        rounding up).
-    *
-    * @pre getDim() == denominator.getDim()
-    * @pre getBlockSize() == denominator.getBlockSize() || denominator.getBlockSize() == 1
-    */
-   void
-   ceilingDivide(
-      const IntVector& denominator)
-   {
-      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, denominator);
-      TBOX_ASSERT(d_block_size == denominator.d_block_size ||
-                  denominator.d_block_size == 1);
-
-      /*
-       * This is the formula for integer divide, rounding away from
-       * zero.  It is meant as an extension of the ceilingDivide quotient of
-       * 2 positive integers.
-       *
-       * The ceilingDivide is the integer divide plus 0, -1 or 1 representing
-       * the results of rounding.
-       * - Add zero if there's no remainder to round.
-       * - Round remainder to 1 if numerator and denominator has same sign.
-       * - Round remainder to -1 if numerator and denominator has opposite sign.
-       */
-      if (denominator.d_block_size == 1 && d_block_size != 1) {
-         for (int b = 0; b < d_block_size; ++b) {
-            int offset = b*d_dim.getValue();
-            for (int i = 0; i < d_dim.getValue(); ++i) {
-               d_vector[offset + i] = (d_vector[offset + i] / denominator[i]) +
-               ((d_vector[offset + i] % denominator[i]) ?
-                  ((d_vector[offset + i] > 0) == (denominator[i] > 0) ? 1 : -1) : 0);
-            }
-         }
-      } else {
-         int length = d_block_size * d_dim.getValue();
-         for (int i = 0; i < length; ++i) {
-            d_vector[i] = (d_vector[i] / denominator.d_vector[i]) +
-               ((d_vector[i] % denominator.d_vector[i]) ?
-               ((d_vector[i] > 0) == (denominator.d_vector[i] > 0) ? 1 : -1) : 0);
-         }
-      }
-   }
-
-   /*!
-    * @brief Component-wise ceilingDivide quotient (integer divide with
-    *        rounding up).
-    *
-    * @pre numerator.getDim() == denominator.getDim()
-    * @pre numerator.getBlockSize() == denominator.getBlockSize() || denominator.getBlockSize() == 1
-    */
-   static IntVector
-   ceilingDivide(
-      const IntVector& numerator,
-      const IntVector& denominator)
-   {
-      TBOX_ASSERT_OBJDIM_EQUALITY2(numerator, denominator);
-      TBOX_ASSERT(numerator.d_block_size == denominator.d_block_size ||
-                  denominator.d_block_size == 1);
-      IntVector rval(numerator);
-      rval.ceilingDivide(denominator);
-      return rval;
    }
 
    /*!
@@ -682,7 +622,7 @@ public:
    operator /= (
       const int rhs)
    {
-      int length = d_block_size * d_dim.getValue();
+      int length = d_num_blocks * d_dim.getValue();
       for (int i = 0; i < length; ++i) {
          d_vector[i] /= rhs;
       }
@@ -699,6 +639,72 @@ public:
       IntVector tmp(*this);
       tmp /= rhs;
       return tmp;
+   }
+
+
+   /*!
+    * @brief Component-wise ceilingDivide quotient (integer divide with
+    *        rounding up).
+    *
+    * @pre getDim() == denominator.getDim()
+    * @pre getNumBlocks() == denominator.getNumBlocks() || denominator.getNumBlocks() == 1
+    */
+   void
+   ceilingDivide(
+      const IntVector& denominator)
+   {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, denominator);
+      TBOX_ASSERT(d_num_blocks == denominator.d_num_blocks ||
+                  denominator.d_num_blocks == 1);
+
+      /*
+       * This is the formula for integer divide, rounding away from
+       * zero.  It is meant as an extension of the ceilingDivide quotient of
+       * 2 positive integers.
+       *
+       * The ceilingDivide is the integer divide plus 0, -1 or 1 representing
+       * the results of rounding.
+       * - Add zero if there's no remainder to round.
+       * - Round remainder to 1 if numerator and denominator has same sign.
+       * - Round remainder to -1 if numerator and denominator has opposite sign.
+       */
+      if (denominator.d_num_blocks == 1 && d_num_blocks != 1) {
+         for (int b = 0; b < d_num_blocks; ++b) {
+            int offset = b*d_dim.getValue();
+            for (int i = 0; i < d_dim.getValue(); ++i) {
+               d_vector[offset + i] = (d_vector[offset + i] / denominator[i]) +
+               ((d_vector[offset + i] % denominator[i]) ?
+                  ((d_vector[offset + i] > 0) == (denominator[i] > 0) ? 1 : -1) : 0);
+            }
+         }
+      } else {
+         int length = d_num_blocks * d_dim.getValue();
+         for (int i = 0; i < length; ++i) {
+            d_vector[i] = (d_vector[i] / denominator.d_vector[i]) +
+               ((d_vector[i] % denominator.d_vector[i]) ?
+               ((d_vector[i] > 0) == (denominator.d_vector[i] > 0) ? 1 : -1) : 0);
+         }
+      }
+   }
+
+   /*!
+    * @brief Component-wise ceilingDivide quotient (integer divide with
+    *        rounding up).
+    *
+    * @pre numerator.getDim() == denominator.getDim()
+    * @pre numerator.getNumBlocks() == denominator.getNumBlocks() || denominator.getNumBlocks() == 1
+    */
+   static IntVector
+   ceilingDivide(
+      const IntVector& numerator,
+      const IntVector& denominator)
+   {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(numerator, denominator);
+      TBOX_ASSERT(numerator.d_num_blocks == denominator.d_num_blocks ||
+                  denominator.d_num_blocks == 1);
+      IntVector rval(numerator);
+      rval.ceilingDivide(denominator);
+      return rval;
    }
 
    /*!
@@ -720,7 +726,7 @@ public:
       int rhs) const
    {
       bool result = true;
-      int length = d_block_size * d_dim.getValue();
+      int length = d_num_blocks * d_dim.getValue();
       for (int i = 0; result && (i < length); ++i) {
          result = d_vector[i] == rhs;
       }
@@ -742,24 +748,24 @@ public:
     *        must be the same for equality.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre getBlockSize() == rhs.getBlockSize() || rhs.getBlockSize() == 1
+    * @pre getNumBlocks() == rhs.getNumBlocks() || rhs.getNumBlocks() == 1
     */
    bool
    operator == (
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(d_block_size == rhs.d_block_size || rhs.d_block_size == 1);
+      TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
       bool result = true;
-      if (rhs.d_block_size == 1 && d_block_size != 1) {
-         for (int b = 0; result && b < d_block_size; ++b) {
+      if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
+         for (int b = 0; result && b < d_num_blocks; ++b) {
             int offset = b*d_dim.getValue();
             for (int i = 0; result && (i < d_dim.getValue()); ++i) {
                result = result && (d_vector[offset + i] == rhs.d_vector[i]);
             }
          }
       } else {
-         int length = d_block_size * d_dim.getValue();
+         int length = d_num_blocks * d_dim.getValue();
          for (int i = 0; result && (i < length); ++i) {
             result = result && (d_vector[i] == rhs.d_vector[i]);
          }
@@ -786,24 +792,24 @@ public:
     *        corresponding integer in comparison vector.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre getBlockSize() == rhs.getBlockSize() || rhs.getBlockSize() == 1
+    * @pre getNumBlocks() == rhs.getNumBlocks() || rhs.getNumBlocks() == 1
     */
    bool
    operator < (
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(d_block_size == rhs.d_block_size || rhs.d_block_size == 1);
+      TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
       bool result = true;
-      if (rhs.d_block_size == 1 && d_block_size != 1) {
-         for (int b = 0; result && b < d_block_size; ++b) {
+      if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
+         for (int b = 0; result && b < d_num_blocks; ++b) {
             int offset = b*d_dim.getValue();
             for (int i = 0; result && (i < d_dim.getValue()); ++i) {
                result = result && (d_vector[offset + i] < rhs.d_vector[i]);
             }
          }
       } else {
-         int length = d_block_size * d_dim.getValue();
+         int length = d_num_blocks * d_dim.getValue();
          for (int i = 0; result && (i < length); ++i) {
             result = result && (d_vector[i] < rhs.d_vector[i]);
          }
@@ -816,24 +822,24 @@ public:
     *        corresponding integer in comparison vector.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre getBlockSize() == rhs.getBlockSize() || rhs.getBlockSize() == 1
+    * @pre getNumBlocks() == rhs.getNumBlocks() || rhs.getNumBlocks() == 1
     */
    bool
    operator <= (
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(d_block_size == rhs.d_block_size || rhs.d_block_size == 1);
+      TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
       bool result = true;
-      if (rhs.d_block_size == 1 && d_block_size != 1) {
-         for (int b = 0; result && b < d_block_size; ++b) {
+      if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
+         for (int b = 0; result && b < d_num_blocks; ++b) {
             int offset = b*d_dim.getValue();
             for (int i = 0; result && (i < d_dim.getValue()); ++i) {
                result = result && (d_vector[offset + i] <= rhs.d_vector[i]);
             }
          }
       } else {
-         int length = d_block_size * d_dim.getValue();
+         int length = d_num_blocks * d_dim.getValue();
          for (int i = 0; result && (i < length); ++i) {
             result = result && (d_vector[i] <= rhs.d_vector[i]);
          }
@@ -846,24 +852,24 @@ public:
     *        corresponding integer in comparison vector.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre getBlockSize() == rhs.getBlockSize() || rhs.getBlockSize() == 1
+    * @pre getNumBlocks() == rhs.getNumBlocks() || rhs.getNumBlocks() == 1
     */
    bool
    operator > (
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(d_block_size == rhs.d_block_size || rhs.d_block_size == 1);
+      TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
       bool result = true;
-      if (rhs.d_block_size == 1 && d_block_size != 1) {
-         for (int b = 0; result && b < d_block_size; ++b) {
+      if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
+         for (int b = 0; result && b < d_num_blocks; ++b) {
             int offset = b*d_dim.getValue();
             for (int i = 0; result && (i < d_dim.getValue()); ++i) {
                result = result && (d_vector[offset + i] > rhs.d_vector[i]);
             }
          }
       } else {
-         int length = d_block_size * d_dim.getValue();
+         int length = d_num_blocks * d_dim.getValue();
          for (int i = 0; result && (i < length); ++i) {
             result = result && (d_vector[i] > rhs.d_vector[i]);
          }
@@ -876,24 +882,24 @@ public:
     *        corresponding integer in comparison vector.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre getBlockSize() == rhs.getBlockSize() || rhs.getBlockSize() == 1
+    * @pre getNumBlocks() == rhs.getNumBlocks() || rhs.getNumBlocks() == 1
     */
    bool
    operator >= (
       const IntVector& rhs) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(d_block_size == rhs.d_block_size || rhs.d_block_size == 1);
+      TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
       bool result = true;
-      if (rhs.d_block_size == 1 && d_block_size != 1) {
-         for (int b = 0; result && b < d_block_size; ++b) {
+      if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
+         for (int b = 0; result && b < d_num_blocks; ++b) {
             int offset = b*d_dim.getValue();
             for (int i = 0; result && (i < d_dim.getValue()); ++i) {
                result = result && (d_vector[offset + i] >= rhs.d_vector[i]);
             }
          }
       } else {
-         int length = d_block_size * d_dim.getValue();
+         int length = d_num_blocks * d_dim.getValue();
          for (int i = 0; result && (i < length); ++i) {
             result = result && (d_vector[i] >= rhs.d_vector[i]);
          }
@@ -905,16 +911,16 @@ public:
     * @brief Return the component-wise minimum of two integer vector objects.
     *
     * @pre getDim() == rhs.getDim()
-    * @pre getBlockSize() == rhs.getBlockSize() || rhs.getBlockSize() == 1
+    * @pre getNumBlocks() == rhs.getNumBlocks() || rhs.getNumBlocks() == 1
     */
    void
    min(
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(d_block_size == rhs.d_block_size || rhs.d_block_size == 1);
-      if (rhs.d_block_size == 1 && d_block_size != 1) {
-         for (int b = 0; b < d_block_size; ++b) {
+      TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
+      if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
+         for (int b = 0; b < d_num_blocks; ++b) {
             int offset = b*d_dim.getValue();
             for (int i = 0; i < d_dim.getValue(); ++i) {
                if (rhs.d_vector[i] < d_vector[offset + i]) {
@@ -923,7 +929,7 @@ public:
             }
          }
       } else {
-         int length = d_block_size * d_dim.getValue();
+         int length = d_num_blocks * d_dim.getValue();
          for (int i = 0; i < length; ++i) {
             if (rhs.d_vector[i] < d_vector[i]) {
                d_vector[i] = rhs.d_vector[i];
@@ -939,7 +945,7 @@ public:
    min() const
    {
       int min = d_vector[0];
-      int length = d_block_size * d_dim.getValue();
+      int length = d_num_blocks * d_dim.getValue();
       for (int i = 0; i < length; ++i) {
          if (d_vector[i] < min) {
             min = d_vector[i];
@@ -956,9 +962,9 @@ public:
       const IntVector& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      TBOX_ASSERT(d_block_size == rhs.d_block_size || rhs.d_block_size == 1);
-      if (rhs.d_block_size == 1 && d_block_size != 1) {
-         for (int b = 0; b < d_block_size; ++b) {
+      TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
+      if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
+         for (int b = 0; b < d_num_blocks; ++b) {
             int offset = b*d_dim.getValue();
             for (int i = 0; i < d_dim.getValue(); ++i) {
                if (rhs.d_vector[i] > d_vector[offset + i]) {
@@ -967,7 +973,7 @@ public:
             }
          }
       } else {
-         int length = d_block_size * d_dim.getValue();
+         int length = d_num_blocks * d_dim.getValue();
          for (int i = 0; i < length; ++i) {
             if (rhs.d_vector[i] > d_vector[i]) {
                d_vector[i] = rhs.d_vector[i];
@@ -976,8 +982,6 @@ public:
       }
    }
 
-   //@}
-
    /*!
     * @brief Return the maximum entry in an integer vector.
     */
@@ -985,7 +989,7 @@ public:
    max() const
    {
       int max = d_vector[0];
-      int length = d_block_size * d_dim.getValue();
+      int length = d_num_blocks * d_dim.getValue();
       for (int i = 0; i < length; ++i) {
          if (d_vector[i] > max) {
             max = d_vector[i];
@@ -1031,45 +1035,58 @@ public:
    /*!
     * @brief Set all block-wise components of an IntVector.
     *
-    * If this IntVector and the argument IntVector are of the same block size,
-    * this is the equivalent of a copy operation.  If this IntVector has a
-    * block size greater than 1 while the argument is of block size 1, then
+    * If this IntVector and the argument IntVector are sized for the same
+    * number of blocks, this is the equivalent of a copy operation.  If this
+    * IntVector is multiblock while the argument is single-block, then
     * the values of the argument are copied to each block-wise component of
     * this IntVector.
     *
-    * An error will occur if the block sizes are unequal and the argument
-    * IntVector does not have a block size of 1.
+    * An error will occur if the numbers of blocks are unequal and the argument
+    * IntVector is not single-block.
     *
     * @param vector  Input IntVector
     */
    void setAll(const IntVector& vector)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, vector);
-      if (vector.d_block_size == d_block_size) {
+      if (vector.d_num_blocks == d_num_blocks) {
          *this = vector;
-      } else if (d_block_size > 1 && vector.d_block_size == 1) {
-         for (int b = 0; b < d_block_size; ++b) {
+      } else if (d_num_blocks > 1 && vector.d_num_blocks == 1) {
+         for (int b = 0; b < d_num_blocks; ++b) {
             int offset = b*d_dim.getValue();
             for (int d = 0; d < d_dim.getValue(); ++d) {
                d_vector[offset + d] = vector[d];
             }
          }
       } else {
-         TBOX_ERROR("IntVector::setAll() attempted with argument of non-compatible block_size." << std::endl);
+         TBOX_ERROR("IntVector::setAll() attempted with argument of non-compatible num_blocks." << std::endl);
       }
    }
 
    /*!
-    * @brief Return the product of the entries in the integer vector.
+    * @brief Return the product of the entries in the integer vector
     *
+    * If a BlockId argument is provided, the product of entries for that
+    * block will be computed.  If no BlockId argument is provided, this
+    * IntVector must be single-block.
+    *
+    * @param block_id  Optional block on which to compute the product.
     */
    long int
-   getProduct() const
+   getProduct(const BlockId& block_id = BlockId::invalidId()) const
    {
-      TBOX_ASSERT(d_block_size == 1);
+#ifdef DEBUG_CHECK_ASSERTIONS
+      TBOX_ASSERT(block_id == BlockId::invalidId() ||
+                  block_id.getBlockValue() < d_num_blocks);
+      if (block_id == BlockId::invalidId()) {
+         TBOX_ASSERT(d_num_blocks == 1);
+      }
+#endif
+      int b = block_id == BlockId::invalidId() ? 0 : block_id.getBlockValue();
+      int offset = b * d_dim.getValue();
       long int prod = 1;
       for (int i = 0; i < getDim().getValue(); ++i) {
-         prod *= d_vector[i];
+         prod *= d_vector[offset + i];
       }
       return prod;
    }
@@ -1106,8 +1123,8 @@ public:
    /*!
     * @brief Return an IntVector of zeros of the specified dimension.
     *
-    * Can be used to avoid object creation overheads.  The block size of the
-    * returned IntVector is 1.
+    * Can be used to avoid object creation overheads.  The
+    * returned IntVector is sized for one block.
     */
    static const IntVector&
    getZero(
@@ -1119,8 +1136,8 @@ public:
    /*!
     * @brief Return an IntVector of ones of the specified dimension.
     *
-    * Can be used to avoid object creation overheads.  The block size of the
-    * returned IntVector is 1.
+    * Can be used to avoid object creation overheads.  The
+    * returned IntVector is sized for one block.
     */
    static const IntVector&
    getOne(
@@ -1130,12 +1147,12 @@ public:
    }
 
    /*!
-    * @brief Sort the given IntVector by value.
+    * @brief Set this IntVector to a sorted version of the given IntVector 
     *
-    * For an IntVector with block size 1, set the ith entry of this to the
-    * position of the ith smallest value in the given IntVector.
+    * For an single-block IntVector, set the ith entry of this to the
+    * position of the ith smallest value in the argument IntVector.
     *
-    * If block size is greater than 1, each section of the IntVector
+    * If the IntVectors are multilbock, each section of the IntVector
     * associated with a block is sorted independently.
     */
    void
@@ -1161,6 +1178,9 @@ public:
       const IntVector& rhs);
 
 private:
+
+   typedef struct MaxIntArray { int d_array[3]; } MaxIntArray;
+
    /*
     * Unimplemented default constructor
     */
@@ -1185,7 +1205,7 @@ private:
 
    tbox::Dimension d_dim;
 
-   int d_block_size;
+   int d_num_blocks;
 
    std::vector<int> d_vector;
 
