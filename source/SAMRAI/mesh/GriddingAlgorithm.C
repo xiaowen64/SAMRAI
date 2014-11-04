@@ -2178,13 +2178,14 @@ GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes) cons
                                 << " in this case."
                                 << std::endl);
             } else {
-               TBOX_ERROR(
+              TBOX_ERROR(
                   d_object_name << ": "
                                 << "\ndomain Box " << i << ", " << test_box
                                 << ", violates the minimum patch size constraints."
                                 << "\nVerify that boxes are larger than"
-                                << "the maximum ghost width and/or"
-                                << "\nthe specified minimum patch size."
+                                << " the maximum ghost width and/or"
+                                << "\nthe specified minimum patch size, "
+                                << smallest_patch << "."
                                 << std::endl);
             }
          }
@@ -4191,7 +4192,7 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
       new_to_nesting_complement,
       new_to_tag,
       tag_to_nesting_complement,
-      hier::IntVector::getZero(dim),
+      min_size - 1,
       false);
 
    /*
@@ -4235,37 +4236,20 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
          continue;
       }
 
-      hier::BoxContainer nesting_domain;
-
-      refined_domain_search_tree.findOverlapBoxes(
-         nesting_domain,
-         omb,
-         new_box_level.getRefinementRatio());
-
       if (new_to_nesting_complement->hasNeighborSet(omb.getBoxId())) {
-         hier::Connector::ConstNeighborhoodIterator neighbors =
-            new_to_nesting_complement->find(omb.getBoxId());
-         for (hier::Connector::ConstNeighborIterator na =
-                 new_to_nesting_complement->begin(neighbors);
-              na != new_to_nesting_complement->end(neighbors); ++na) {
-            nesting_domain.removeIntersections(*na);
-         }
-      }
-
-      hier::Box grown_box = omb;
-      hier::BoxUtilities::growBoxWithinDomain(
-         grown_box,
-         nesting_domain,
-         min_size);
-
-      /*
-       * If the box is grown, generate the mapping for it.  If not,
-       * keep the old box and don't generate a mapping.
-       */
-      if (!omb.isSpatiallyEqual(grown_box)) {
+         // Box omb is near the nesting boundary and may touch it.
+         hier::BoxContainer nearby_nesting_boundary;
+         new_to_nesting_complement->getNeighborBoxes( omb.getBoxId(), nearby_nesting_boundary );
+         hier::Box grown_box = omb;
+         hier::BoxUtilities::growBoxWithinDomain(
+            grown_box,
+            nearby_nesting_boundary,
+            min_size);
          grown_box_level.addBox(grown_box);
          new_to_grown.insertLocalNeighbor(grown_box, omb.getBoxId());
-      } else {
+      }
+      else {
+         // Box omb is not near the nesting boundary and need not be grown.
          grown_box_level.addBox(omb);
       }
 

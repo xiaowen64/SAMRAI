@@ -763,9 +763,8 @@ BoxUtilities::growBoxWithinDomain(
          outside_boxes.unorder();
          outside_boxes.intersectBoxes(test_region);
 
-         BoxContainer::iterator lb = outside_boxes.begin();
          int grow_lo = try_box.lower(id) - grow;
-         for ( ; lb != outside_boxes.end(); ++lb) {
+         for ( BoxContainer::iterator lb=outside_boxes.begin(); lb!=outside_boxes.end(); ++lb) {
             grow_lo =
                tbox::MathUtilities<int>::Max(grow_lo, lb->upper(id) + 1);
          }
@@ -780,7 +779,7 @@ BoxUtilities::growBoxWithinDomain(
          outside_boxes.intersectBoxes(test_region);
 
          int grow_up = try_box.upper(id) + grow;
-         for (lb = outside_boxes.begin(); lb != outside_boxes.end(); ++lb) {
+         for (BoxContainer::iterator lb=outside_boxes.begin(); lb!=outside_boxes.end(); ++lb) {
             grow_up =
                tbox::MathUtilities<int>::Min(grow_up, lb->lower(id) - 1);
          }
