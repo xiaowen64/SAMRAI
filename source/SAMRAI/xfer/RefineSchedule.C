@@ -450,10 +450,11 @@ RefineSchedule::RefineSchedule(
       skip_first_generate_schedule);
    if ( errf ) {
       tbox::perr
-         << "Top RefineSchedule constructor:"
-         << "\n next_coarser_ln: " << next_coarser_ln
-         << "\n hierarchy: " << hierarchy.get()
+         << "Internal error in RefineSchedule constructor..."
+         << "\n dst_to_fill:\n" << dst_to_fill->format("\tDF->", 2)
+         << "\n dst:\n" << d_dst_level->getBoxLevel()->format("\tD->", 2)
          << std::endl;
+      TBOX_ERROR("Top RefineSchedule constructor aborting due to above error.");
       return;
    }
 
@@ -601,9 +602,9 @@ RefineSchedule::RefineSchedule(
       use_time_refinement);
    if ( errf ) {
       tbox::perr
-         << "Next level up:"
+         << "Internal error in private RefineSchedule constructor..."
          << "\n next_coarser_ln: " << next_coarser_ln
-         << "\n hierarchy: " << hierarchy.get()
+         << "\n dst_to_fill:\n" << dst_to_fill->format("\tDF->", 2)
          << std::endl;
       return;
    }
@@ -837,13 +838,10 @@ RefineSchedule::finishScheduleConstruction(
             << "Internal error in RefineSchedule::finishScheduleConstruction..."
             << "\n In finishScheduleConstruction() -- "
             << "\n No coarser levels...will not fill from coarser."
+            << "\n next_coarser_ln: " << next_coarser_ln
             << "\n src_growth_to_nest_dst: " << src_growth_to_nest_dst
-            << "\n dst_box_level:\n" << dst_box_level.format("DST->", 2)
-            << "\n dst_to_fill:\n" << dst_to_fill.format("DF->", 2)
-            << "\n d_unfilled_box_level:\n" << d_unfilled_box_level->format("UF->", 2)
-            << "\n dst_to_unfilled:\n" << dst_to_unfilled->format("DU->", 2)
-            << "\n d_dst_to_src:\n" << d_dst_to_src->format("DS->", 2)
-            << "\n src_to_dst:\n" << d_dst_to_src->getTranspose().format("SD->", 2)
+            << "\n dst_to_unfilled:\n" << dst_to_unfilled->format("\tDU->", 2)
+            << "\n d_unfilled_box_level:\n" << d_unfilled_box_level->format("\tUF->", 2)
             << std::endl;
          return 1;
       } else {
@@ -994,6 +992,13 @@ RefineSchedule::finishScheduleConstruction(
             d_refine_patch_strategy,
             d_top_refine_schedule));
       if ( errf ) {
+         tbox::perr
+            << "In finishScheduleConstruction after failure to generate d_coarse_interp_schedule:"
+            << "\n next_coarser_ln: " << next_coarser_ln
+            << "\n src_growth_to_nest_dst: " << src_growth_to_nest_dst
+            << "\n coarse_interp_level:\n" << d_coarse_interp_level->getBoxLevel()->format("\tCI->", 2)
+            << "\n coarse_interp_to_hiercoarse:\n" << coarse_interp_to_hiercoarse->format("\tCHC->", 2)
+            << std::endl;
          return errf;
       }
 

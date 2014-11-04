@@ -1198,7 +1198,7 @@ private:
     * @brief Connectors from the hierarchy to d_proper_nesting_complement.
     *
     * d_to_nesting_complement[ln] goes from level ln to
-    * d_proper_nesting_complelemt[ln].
+    * d_proper_nesting_complement[ln].
     */
    std::vector<boost::shared_ptr<hier::Connector> > d_to_nesting_complement;
 
