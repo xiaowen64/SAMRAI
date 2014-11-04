@@ -759,8 +759,13 @@ BoxUtilities::growBoxWithinDomain(
          test_region.setLower(id, test_region.lower(id) - grow);
          test_region.setUpper(id, try_box.lower(id) - 1);
 
-         outside_boxes = local_domain_complement;
-         outside_boxes.unorder();
+         // outside_boxes = local_domain_complement;
+         // outside_boxes.unorder();
+         outside_boxes.clear();
+         for ( BoxContainer::const_iterator bi=local_domain_complement.begin();
+               bi!=local_domain_complement.end(); ++bi ) {
+            outside_boxes.push_back(*bi);
+         }
          outside_boxes.intersectBoxes(test_region);
 
          int grow_lo = try_box.lower(id) - grow;
@@ -774,8 +779,13 @@ BoxUtilities::growBoxWithinDomain(
          test_region.setUpper(id, test_region.upper(id) + grow);
          test_region.setLower(id, try_box.upper(id) + 1);
 
-         outside_boxes = local_domain_complement;
-         outside_boxes.unorder();
+         // outside_boxes = local_domain_complement;
+         // outside_boxes.unorder();
+         outside_boxes.clear();
+         for ( BoxContainer::const_iterator bi=local_domain_complement.begin();
+               bi!=local_domain_complement.end(); ++bi ) {
+            outside_boxes.push_back(*bi);
+         }
          outside_boxes.intersectBoxes(test_region);
 
          int grow_up = try_box.upper(id) + grow;
