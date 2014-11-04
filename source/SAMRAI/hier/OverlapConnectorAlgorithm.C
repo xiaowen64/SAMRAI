@@ -988,10 +988,10 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
       if (!(width_limit_in_finest_refinement_ratio <= output_width_in_finest_refinement_ratio)) {
          /*
           * If user specifies a width limit, he is probably assuming
-          * that the bridge's allowable width is bigger.  If that is
-          * not the case, this method won't crash, but it will give
-          * bad results that result in elusive bugs.  Therefore, we
-          * catch it immediately.
+          * that the bridge's allowable width is no smaller.  If that
+          * is not the case, this method will not crash, but it will
+          * give bad results that result in elusive bugs.  Therefore,
+          * we catch it immediately.
           */
          TBOX_ERROR("OverlapConnectorAlgorithm::privateBridge_prologue input error:\n"
             << "The given connector width limit, " << connector_width_limit
