@@ -108,7 +108,7 @@ public:
       const hier::Box &fill_box) const {
       NULL_USE(patch);
       NULL_USE(uval_data);
-      NULL_USE(patch);
+      NULL_USE(tag_data);
       NULL_USE(fill_box);
       TBOX_ERROR("Shrunken Level generator doesn't yet support computePatchData.");
    }

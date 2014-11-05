@@ -182,6 +182,7 @@ public:
    virtual int
    registerVariablesWithPlotter(
       appu::VisItDataWriter& writer) {
+      NULL_USE(writer);
       return 0;
    }
 #endif

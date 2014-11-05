@@ -737,7 +737,6 @@ RefineSchedule::finishScheduleConstruction(
    hier::OverlapConnectorAlgorithm oca;
    oca.setTimerPrefix("xfer::RefineSchedule_build");
 
-   const hier::BoxLevel& dst_box_level = dst_to_fill.getBase();
    if (d_src_level) {
       // Should never have a source without connection from destination.
       TBOX_ASSERT(d_dst_to_src->isFinalized());

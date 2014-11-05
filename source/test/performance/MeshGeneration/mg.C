@@ -669,7 +669,7 @@ int main(
 
          tbox::plog << "\n\tLnew prebalance loads:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(1,Lnew->getLocalNumberOfCells()),
+            std::vector<double>(static_cast<size_t>(1),Lnew->getLocalNumberOfCells()),
             Lnew->getMPI());
 
          if (load_balance[new_ln]) {
@@ -696,7 +696,7 @@ int main(
 
          tbox::plog << "\n\tLnew postbalance loads:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(1,Lnew->getLocalNumberOfCells()),
+            std::vector<double>(static_cast<size_t>(1),Lnew->getLocalNumberOfCells()),
             Lnew->getMPI());
 
          if (comm_graph_writer) {

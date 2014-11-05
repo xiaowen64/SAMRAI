@@ -297,8 +297,8 @@ void LinAdv::initializeDataOnPatch(
       boost::shared_ptr<pdat::CellData<double> > uval(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_uval, getDataContext())));
-
       TBOX_ASSERT(uval);
+      uval->setTime(data_time);
 
       d_mesh_gen->computePatchData(
          patch,
@@ -1180,8 +1180,6 @@ void LinAdv::setPhysicalBoundaryConditions(
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
-   const double* dx = pgeom->getDx();
-   const double* xlo = pgeom->getXLower();
 
    for (int codim = 1; codim <= patch.getDim().getValue(); ++codim) {
 

@@ -209,7 +209,7 @@ void SinusoidalFrontGenerator::setTags(
          0 /* uval data */,
          tag_data.get(),
          tag_data->getBox(),
-         (tag_ln < d_buffer_distance.size() ? d_buffer_distance[tag_ln] : d_buffer_distance.back()),
+         (static_cast<size_t>(tag_ln) < d_buffer_distance.size() ? d_buffer_distance[tag_ln] : d_buffer_distance.back()),
          patch_geom->getXLower(),
          patch_geom->getDx());
 
@@ -307,7 +307,7 @@ void SinusoidalFrontGenerator::computePatchData(
    if ( tag_data ) {
       computeFrontsData(0, uval_data, tag_data,
                         fill_box,
-                        (patch.getPatchLevelNumber() < d_buffer_distance.size() ?
+                        (patch.getPatchLevelNumber() < static_cast<int>(d_buffer_distance.size()) ?
                          d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
                         xlo, dx);
    }
@@ -603,7 +603,7 @@ bool SinusoidalFrontGenerator::packDerivedDataIntoDoubleBuffer(
       pdat::CellData<int> tag_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
       tag_data.setTime(simulation_time);
       computeFrontsData( 0, 0, &tag_data, region,
-                         (patch.getPatchLevelNumber() < d_buffer_distance.size() ?
+                         (static_cast<size_t>(patch.getPatchLevelNumber()) < d_buffer_distance.size() ?
                           d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
                          xlo, dx );
       pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));

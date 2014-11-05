@@ -148,7 +148,7 @@ int main(
 
       {
 
-         const tbox::Dimension dim(main_db->getInteger("dim"));
+         const tbox::Dimension dim(static_cast<tbox::Dimension::dir_t>(main_db->getInteger("dim")));
 
          if ( !input_db->isDatabase("BlockGeometry") ) {
             TBOX_ERROR("getTestParametersFromDatabase: You must specify \"BlockGeometry\" in input database.");
@@ -230,7 +230,7 @@ int main(
                tbox::plog << "PASSED: " << test_name << " (" << nickname << ')' << std::endl;
             }
 
-            fail_count += fail_count_1 + fail_count_2;
+            fail_count += static_cast<int>(fail_count_1 + fail_count_2);
          }
 
       }

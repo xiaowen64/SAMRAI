@@ -166,7 +166,7 @@ int main(
 
       {
 
-         const tbox::Dimension dim(main_db->getInteger("dim"));
+         const tbox::Dimension dim(static_cast<tbox::Dimension::dir_t>(main_db->getInteger("dim")));
 
          const hier::IntVector &refinement_ratio = hier::IntVector::getOne(dim);
 
@@ -197,7 +197,7 @@ int main(
          while (true) {
 
             std::string level_name("PrimitiveBoxGen");
-            level_name += tbox::Utilities::intToString(levels.size(), 1);
+            level_name += tbox::Utilities::intToString(static_cast<int>(levels.size()), 1);
 
             boost::shared_ptr<tbox::Database> level_db =
                input_db->getDatabaseWithDefault(level_name, boost::shared_ptr<tbox::Database>());
@@ -266,7 +266,7 @@ int main(
                        << std::endl;
 
             size_t test_fail_count = forward.checkTransposeCorrectness(reverse);
-            fail_count += test_fail_count;
+            fail_count += static_cast<int>(test_fail_count);
             if ( test_fail_count ) {
                tbox::pout << "FAILED: " << test_name << " (" << testparams.d_nickname << ')' << std::endl;
                tbox::plog << "FAILED: " << test_name << " (" << testparams.d_nickname << ')' << std::endl;
@@ -359,8 +359,6 @@ void PrimitiveBoxGen::getFromInput( tbox::Database &test_db )
  */
 void PrimitiveBoxGen::getBoxes( hier::BoxContainer &boxes )
 {
-   const int rank = tbox::SAMRAI_MPI::getSAMRAIWorld().getRank();
-
    if (d_index_filter == ALL) {
       int idbegin = d_ap.begin();
       int idend = d_ap.end();

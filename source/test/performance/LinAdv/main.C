@@ -189,8 +189,6 @@ int main(
       string case_name;
       int scale_size = mpi.getSize();
 
-      bool is_from_restart = false;
-
       if ((argc != 2) && (argc != 3) && (argc != 4)) {
          tbox::pout << "USAGE:\n"
                     << argv[0] << " <input filename> "
