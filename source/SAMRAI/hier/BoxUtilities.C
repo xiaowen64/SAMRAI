@@ -796,6 +796,7 @@ BoxUtilities::growBoxWithinDomain(
 
          // Adjust box sizes as necessary
          if ((grow_up - grow_lo + 1) < min_size(id)) {
+            // Can't grow to min_size without hitting complement, but grow as much as possible.
             try_box.setLower(id, grow_lo);
             try_box.setUpper(id, grow_up);
          } else {
@@ -809,7 +810,7 @@ BoxUtilities::growBoxWithinDomain(
                try_box.setUpper(id, try_box.lower(id) + min_size(id) - 1);
             } else {
                try_box.setUpper(id,
-                  try_box.upper(id) + (right < grow_half) ? right : grow_half);
+                  try_box.upper(id) + ((right < grow_half) ? right : grow_half));
                try_box.setLower(id, try_box.upper(id) - min_size(id) + 1);
             }
          }
