@@ -106,7 +106,7 @@ public:
     * @pre variable
     * @pre hierarchy
     * @pre variable->getDim() == hierarchy.getDim()
-    * @pre returned value not NULL
+    * @post returned value not NULL
     */
    virtual boost::shared_ptr<HierarchyDataOpsReal<double> >
    getOperationsDouble(
@@ -124,7 +124,7 @@ public:
     * @pre variable
     * @pre hierarchy
     * @pre variable->getDim() == hierarchy.getDim()
-    * @pre returned value not NULL
+    * @post returned value not NULL
     */
    virtual boost::shared_ptr<HierarchyDataOpsReal<float> >
    getOperationsFloat(
@@ -142,7 +142,7 @@ public:
     * @pre variable
     * @pre hierarchy
     * @pre variable->getDim() == hierarchy.getDim()
-    * @pre returned value not NULL
+    * @post returned value not NULL
     */
    virtual boost::shared_ptr<HierarchyDataOpsComplex>
    getOperationsComplex(
@@ -160,7 +160,7 @@ public:
     * @pre variable
     * @pre hierarchy
     * @pre variable->getDim() == hierarchy.getDim()
-    * @pre returned value not NULL
+    * @post returned value not NULL
     */
    virtual boost::shared_ptr<HierarchyDataOpsInteger>
    getOperationsInteger(
@@ -218,7 +218,7 @@ private:
       if (s_pdat_op_manager_instance) {
          delete s_pdat_op_manager_instance;
       }
-      s_pdat_op_manager_instance = ((HierarchyDataOpsManager *)NULL);
+      s_pdat_op_manager_instance = 0;
    }
 
    static HierarchyDataOpsManager* s_pdat_op_manager_instance;

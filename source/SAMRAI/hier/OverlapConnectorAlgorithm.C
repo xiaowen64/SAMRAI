@@ -61,7 +61,7 @@ OverlapConnectorAlgorithm::s_initialize_finalize_handler(
 OverlapConnectorAlgorithm::OverlapConnectorAlgorithm():
    d_mpi(MPI_COMM_NULL),
    d_mpi_is_exclusive(false),
-   d_object_timers(NULL),
+   d_object_timers(0),
    d_print_steps(s_print_steps == 'y'),
    d_barrier_before_communication(false),
    d_sanity_check_method_preconditions(false),

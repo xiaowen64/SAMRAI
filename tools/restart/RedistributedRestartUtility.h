@@ -69,7 +69,7 @@ private:
       std::vector<boost::shared_ptr<tbox::Database> >& output_dbs,
       const std::vector<boost::shared_ptr<tbox::Database> >& input_dbs,
       const string& key,
-      const std::vector<std::vector<int> >* file_mapping = NULL,
+      const std::vector<std::vector<int> >* file_mapping = 0,
       int num_files_written = -1,
       int which_file_mapping = -1,
       int total_input_files = -1,

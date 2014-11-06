@@ -1157,7 +1157,7 @@ void setupAsyncComms(
    const RankTreeStrategy& rank_tree,
    const CommonTestSwitches& cts)
 {
-   child_comms = parent_comm = NULL;
+   child_comms = parent_comm = 0;
 
    const int num_children = rank_tree.getNumberOfChildren();
 
@@ -1216,13 +1216,13 @@ void destroyAsyncComms(
    AsyncCommPeer<int> *& child_comms,
    AsyncCommPeer<int> *& parent_comm)
 {
-   if (child_comms != NULL) {
+   if (child_comms != 0) {
       delete[] child_comms;
    }
-   if (parent_comm != NULL) {
+   if (parent_comm != 0) {
       delete parent_comm;
    }
-   child_comms = parent_comm = NULL;
+   child_comms = parent_comm = 0;
 }
 
 /*
