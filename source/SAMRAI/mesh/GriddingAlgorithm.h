@@ -548,7 +548,8 @@ private:
    regridFinerLevel_doTaggingAfterRecursiveRegrid(
       boost::shared_ptr<hier::Connector>& tag_to_finer,
       const int tag_ln,
-      const std::vector<int>& tag_buffer);
+      const std::vector<int>& tag_buffer,
+      double regrid_time);
 
    /*!
     * @brief Given the metadata describing the new level, this method
@@ -1197,7 +1198,7 @@ private:
     * @brief Connectors from the hierarchy to d_proper_nesting_complement.
     *
     * d_to_nesting_complement[ln] goes from level ln to
-    * d_proper_nesting_complelemt[ln].
+    * d_proper_nesting_complement[ln].
     */
    std::vector<boost::shared_ptr<hier::Connector> > d_to_nesting_complement;
 

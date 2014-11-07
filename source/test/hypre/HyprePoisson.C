@@ -354,10 +354,12 @@ bool HyprePoisson::packDerivedDataIntoDoubleBuffer(
    const hier::Patch& patch,
    const hier::Box& region,
    const std::string& variable_name,
-   int depth_id) const
+   int depth_id,
+   double simulation_time ) const
 {
    NULL_USE(region);
    NULL_USE(depth_id);
+   NULL_USE(simulation_time);
 
    pdat::CellData<double>::iterator icell(pdat::CellGeometry::begin(patch.getBox()));
    pdat::CellData<double>::iterator icellend(pdat::CellGeometry::end(patch.getBox()));

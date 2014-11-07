@@ -31,6 +31,8 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Timer.h"
 
+#include "DerivedVisOwnerData.h"
+
 #include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
@@ -47,6 +49,8 @@ using namespace SAMRAI;
  * buffer_distance_0, buffer_distance_1, ...:
  * buffer_distance[ln] is the buffer distance when tagging ON
  * level ln.  We tag the shells and buffer the tags by this amount.
+ * Missing buffer distances will use the last values given.
+ * Default is zero buffering.
  */
 class SphericalShellGenerator:
    public MeshGenerationStrategy
@@ -105,19 +109,15 @@ public:
 
    //@}
 
+   /*!
+    * @brief Compute shell-dependent data for a patch.
+    */
    void
-   initializePatchData(
-      hier::Patch& patch,
-      const double init_data_time,
-      const bool initial_time,
-      const bool allocate_data)
-   {
-      NULL_USE(patch);
-      NULL_USE(init_data_time);
-      NULL_USE(initial_time);
-      NULL_USE(allocate_data);
-      TBOX_ERROR("Should not be here.");
-   }
+   computePatchData(
+      const hier::Patch& patch,
+      pdat::CellData<double>* uval_data,
+      pdat::CellData<int>* tag_data,
+      const hier::Box &fill_box) const;
 
    bool
    packDerivedDataIntoDoubleBuffer(
@@ -125,7 +125,8 @@ public:
       const hier::Patch& patch,
       const hier::Box& region,
       const std::string& variable_name,
-      int depth_index) const;
+      int depth_index,
+      double simulation_time) const;
 
 public:
 #ifdef HAVE_HDF5
@@ -139,10 +140,13 @@ public:
 
 private:
    void
-   tagShells(
-      pdat::CellData<int>& tag_data,
-      const geom::CartesianPatchGeometry& patch_geom,
-      const std::vector<double>& buffer_distance) const;
+   computeShellsData(
+      pdat::CellData<double> *uval_data,
+      pdat::CellData<int> *tag_data,
+      const hier::Box& fill_box,
+      const std::vector<double>& buffer_distance,
+      const double xlo[],
+      const double dx[]) const;
 
    std::string d_name;
 
@@ -155,9 +159,19 @@ private:
    boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    /*!
-    * @brief Radii of shells.
+    * @brief Constant time shift to be added to simulation time.
     */
-   double d_center[SAMRAI::MAX_DIM_VAL];
+   double d_time_shift;
+
+   /*!
+    * @brief Center of shells at time zero.
+    */
+   double d_init_center[SAMRAI::MAX_DIM_VAL];
+
+   /*!
+    * @brief Shell velocity.
+    */
+   double d_velocity[SAMRAI::MAX_DIM_VAL];
 
    /*!
     * @brief Radii of shells.
@@ -169,10 +183,7 @@ private:
     */
    std::vector<std::vector<double> > d_buffer_distance;
 
-   /*!
-    * @brief Whether to allocate data on the mesh.
-    */
-   bool d_allocate_data;
+   DerivedVisOwnerData d_vis_owner_data;
 
 };
 

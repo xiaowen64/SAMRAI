@@ -440,7 +440,7 @@ RefineSchedule::RefineSchedule(
     * data from source to destination, and sets up recursive schedules to
     * fill whatever cannot be filled by the source.
     */
-   finishScheduleConstruction(
+   int errf = finishScheduleConstruction(
       next_coarser_ln,
       hierarchy,
       dummy_intvector,
@@ -448,6 +448,15 @@ RefineSchedule::RefineSchedule(
       dst_to_fill_on_src_proc,
       use_time_refinement,
       skip_first_generate_schedule);
+   if ( errf ) {
+      tbox::perr
+         << "Internal error in RefineSchedule constructor..."
+         << "\n dst_to_fill:\n" << dst_to_fill->format("\tDF->", 2)
+         << "\n dst:\n" << d_dst_level->getBoxLevel()->format("\tD->", 2)
+         << std::endl;
+      TBOX_ERROR("Top RefineSchedule constructor aborting due to above error.");
+      return;
+   }
 
    /*
     * Compute the BoxOverlap objects that will be used to refine the
@@ -485,6 +494,7 @@ RefineSchedule::RefineSchedule(
  */
 
 RefineSchedule::RefineSchedule(
+   int &errf,
    const boost::shared_ptr<hier::PatchLevel>& dst_level,
    const boost::shared_ptr<hier::PatchLevel>& src_level,
    int next_coarser_ln,
@@ -578,18 +588,26 @@ RefineSchedule::RefineSchedule(
    bool use_time_refinement = true;
 
    /*
-    * finishSchedule construction sets up all transactions to communicate
+    * finishScheduleConstruction sets up all transactions to communicate
     * data from source to destination, and sets up recursive schedules to
     * fill whatever cannot be filled by the source.
     */
 
-   finishScheduleConstruction(
+   errf = finishScheduleConstruction(
       next_coarser_ln,
       hierarchy,
       src_growth_to_nest_dst,
       *dst_to_fill,
       dst_to_fill_on_src_proc,
       use_time_refinement);
+   if ( errf ) {
+      tbox::perr
+         << "Internal error in private RefineSchedule constructor..."
+         << "\n next_coarser_ln: " << next_coarser_ln
+         << "\n dst_to_fill:\n" << dst_to_fill->format("\tDF->", 2)
+         << std::endl;
+      return;
+   }
 
    /*
     * Compute the BoxOverlap objects that will be used to refine the
@@ -694,7 +712,7 @@ RefineSchedule::reset(
  ************************************************************************
  */
 
-void
+int
 RefineSchedule::finishScheduleConstruction(
    int next_coarser_ln,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -719,7 +737,6 @@ RefineSchedule::finishScheduleConstruction(
    hier::OverlapConnectorAlgorithm oca;
    oca.setTimerPrefix("xfer::RefineSchedule_build");
 
-   const hier::BoxLevel& dst_box_level = dst_to_fill.getBase();
    if (d_src_level) {
       // Should never have a source without connection from destination.
       TBOX_ASSERT(d_dst_to_src->isFinalized());
@@ -816,23 +833,24 @@ RefineSchedule::finishScheduleConstruction(
        * up someplace and code execution cannot proceed.
        */
       if (next_coarser_ln < 0) {
-         TBOX_ERROR(
-            "Internal error in RefineSchedule::finishScheduleConstruction..."
+         tbox::perr
+            << "Internal error in RefineSchedule::finishScheduleConstruction..."
             << "\n In finishScheduleConstruction() -- "
             << "\n No coarser levels...will not fill from coarser."
-            << "\n dst_box_level:\n" << dst_box_level.format("DEST->", 2)
-            << "\n dst_to_fill:\n" << dst_to_fill.format("DF->", 2)
-            << "\n d_unfilled_box_level:\n" << d_unfilled_box_level->format("UF->", 2)
-            << "\n dst_to_unfilled:\n" << dst_to_unfilled->format("DU->", 2)
-            << "\n d_dst_to_src:\n" << d_dst_to_src->format("DS->", 2)
-            << "\n src_to_dst:\n" << d_dst_to_src->getTranspose().format("SD->", 2)
-            << std::endl);
+            << "\n next_coarser_ln: " << next_coarser_ln
+            << "\n src_growth_to_nest_dst: " << src_growth_to_nest_dst
+            << "\n dst_to_unfilled:\n" << dst_to_unfilled->format("\tDU->", 2)
+            << "\n d_unfilled_box_level:\n" << d_unfilled_box_level->format("\tUF->", 2)
+            << std::endl;
+         return 1;
       } else {
          if (!hierarchy) {
-            TBOX_ERROR("Internal RefineSchedule error..."
+            tbox::perr
+               << "Internal RefineSchedule error..."
                << "\n In finishScheduleConstruction() -- "
                << "\n Need to fill from coarser hierarchy level and \n"
-               << "hierarchy is unavailable." << std::endl);
+               << "hierarchy is unavailable." << std::endl;
+            return 2;
          }
       }
 
@@ -960,7 +978,9 @@ RefineSchedule::finishScheduleConstruction(
          t_finish_sched_const->stop();
       }
 
-      d_coarse_interp_schedule.reset(new RefineSchedule(d_coarse_interp_level,
+      int errf;
+      d_coarse_interp_schedule.reset(new RefineSchedule(errf,
+            d_coarse_interp_level,
             hiercoarse_level,
             next_coarser_ln - 1,
             hierarchy,
@@ -970,6 +990,16 @@ RefineSchedule::finishScheduleConstruction(
             d_transaction_factory,
             d_refine_patch_strategy,
             d_top_refine_schedule));
+      if ( errf ) {
+         tbox::perr
+            << "In finishScheduleConstruction after failure to generate d_coarse_interp_schedule:"
+            << "\n next_coarser_ln: " << next_coarser_ln
+            << "\n src_growth_to_nest_dst: " << src_growth_to_nest_dst
+            << "\n coarse_interp_level:\n" << d_coarse_interp_level->getBoxLevel()->format("\tCI->", 2)
+            << "\n coarse_interp_to_hiercoarse:\n" << coarse_interp_to_hiercoarse->format("\tCHC->", 2)
+            << std::endl;
+         return errf;
+      }
 
    } else {
       if (t_finish_sched_const->isRunning()) {
@@ -993,6 +1023,7 @@ RefineSchedule::finishScheduleConstruction(
          *encon_to_unfilled_encon);
    }
 
+   return 0;
 }
 
 /*
@@ -1083,7 +1114,9 @@ RefineSchedule::createEnconFillSchedule(
    /*
     * Schedule to fill d_coarse_interp_encon_level
     */
+   int errf;
    d_coarse_interp_encon_schedule.reset(new RefineSchedule(
+         errf,
          d_coarse_interp_encon_level,
          hiercoarse_level,
          next_coarser_ln - 1,
@@ -1094,6 +1127,9 @@ RefineSchedule::createEnconFillSchedule(
          d_transaction_factory,
          d_refine_patch_strategy,
          d_top_refine_schedule));
+   if ( errf ) {
+      TBOX_ERROR("RefineSchedule constructor aborting due to above errors.");
+   }
 
 }
 

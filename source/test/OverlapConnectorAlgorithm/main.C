@@ -148,8 +148,7 @@ int main(
 
       {
 
-         const tbox::Dimension dim(
-            static_cast<unsigned short>(main_db->getInteger("dim")));
+         const tbox::Dimension dim(static_cast<tbox::Dimension::dir_t>(main_db->getInteger("dim")));
 
          if ( !input_db->isDatabase("BlockGeometry") ) {
             TBOX_ERROR("getTestParametersFromDatabase: You must specify \"BlockGeometry\" in input database.");

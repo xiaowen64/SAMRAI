@@ -14,11 +14,11 @@
 Main {
   dim = 3
   check_dlbg_in_main = FALSE
-  base_name = "front3d"
+  base_name = "front.3d"
   log_all = TRUE
   plot_step = 10
   log_hierarchy = TRUE
-  num_steps = 100
+  num_steps = 50
   build_cross_edge = TRUE
   build_peer_edge = TRUE
   node_log_detail = 2
@@ -29,11 +29,16 @@ Main {
 
 DLBGTest {
   sine_tagger {
-    allocate_data = TRUE
-    period = 1
-    amplitude = .3
-    init_disp = -0.5, 0.0, 0.0
-    velocity = 0.02, 0.005, 0.01
+    period = 0.5, 2.0, 2.0
+    amplitude = .25
+    init_disp = 0.25, 0.0, 0.0
+    init_time = 0.0
+    velocity = 0.015, 0.010, 0.007
+
+    buffer_distance_0 = 0.0, 0.0, 0.0
+    buffer_distance_1 = 0.0, 0.0, 0.0
+    buffer_distance_2 = 0.0, 0.0, 0.0
+    buffer_distance_3 = 0.0, 0.0, 0.0
   }
 }
 
@@ -48,16 +53,18 @@ BergerRigoutsos {
   // DEV_owner_mode: "SINGLE_OWNER", "MOST_OVERLAP" (default), "FEWEST_OWNED", "LEAST_ACTIVE"
   DEV_owner_mode = "MOST_OVERLAP"
   // DEV_owner_mode = "SINGLE_OWNER"
-  efficiency_tolerance = 0.88
-  combine_efficiency = 0.88
+  efficiency_tolerance = 0.85
+  combine_efficiency = 0.85
 }
 
 
 CartesianGridGeometry {
+  // domain_boxes = [(0,0,0), (31,63,63)]
+  // domain_boxes = [(0,0,0), (15,31,31)]
   domain_boxes = [(0,0,0), (7,15,15)]
-  // domain_boxes = [(0,0,0), (9,3,3)]
+  // domain_boxes = [(0,0,0), (3,7,7)]
   x_lo         = 0, 0, 0
-  x_up         = 1, 2, 2
+  x_up         = 0.25, 0.5, 0.5
 }
 
 StandardTagAndInitialize {

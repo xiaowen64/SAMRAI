@@ -38,6 +38,9 @@ main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 
+testlib:
+	cd $(TESTLIBDIR) && $(MAKE) library
+
 # Prevents "No rule to make target" error.  Built in the rule for main.
 $(TESTLIB):
 

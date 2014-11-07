@@ -55,7 +55,7 @@ Main {
 
    SphericalShellGenerator {
 
-      center = 0.0, 0.0, 0.0
+      init_center = 0.0, 0.0, 0.0
       radii = 0.3, 0.4
 
       buffer_distance_0 = 0.00, 0.00, 0.00

@@ -759,13 +759,17 @@ BoxUtilities::growBoxWithinDomain(
          test_region.setLower(id, test_region.lower(id) - grow);
          test_region.setUpper(id, try_box.lower(id) - 1);
 
-         outside_boxes = local_domain_complement;
-         outside_boxes.unorder();
+         // outside_boxes = local_domain_complement;
+         // outside_boxes.unorder();
+         outside_boxes.clear();
+         for ( BoxContainer::const_iterator bi=local_domain_complement.begin();
+               bi!=local_domain_complement.end(); ++bi ) {
+            outside_boxes.push_back(*bi);
+         }
          outside_boxes.intersectBoxes(test_region);
 
-         BoxContainer::iterator lb = outside_boxes.begin();
          int grow_lo = try_box.lower(id) - grow;
-         for ( ; lb != outside_boxes.end(); ++lb) {
+         for ( BoxContainer::iterator lb=outside_boxes.begin(); lb!=outside_boxes.end(); ++lb) {
             grow_lo =
                tbox::MathUtilities<int>::Max(grow_lo, lb->upper(id) + 1);
          }
@@ -775,18 +779,24 @@ BoxUtilities::growBoxWithinDomain(
          test_region.setUpper(id, test_region.upper(id) + grow);
          test_region.setLower(id, try_box.upper(id) + 1);
 
-         outside_boxes = local_domain_complement;
-         outside_boxes.unorder();
+         // outside_boxes = local_domain_complement;
+         // outside_boxes.unorder();
+         outside_boxes.clear();
+         for ( BoxContainer::const_iterator bi=local_domain_complement.begin();
+               bi!=local_domain_complement.end(); ++bi ) {
+            outside_boxes.push_back(*bi);
+         }
          outside_boxes.intersectBoxes(test_region);
 
          int grow_up = try_box.upper(id) + grow;
-         for (lb = outside_boxes.begin(); lb != outside_boxes.end(); ++lb) {
+         for (BoxContainer::iterator lb=outside_boxes.begin(); lb!=outside_boxes.end(); ++lb) {
             grow_up =
                tbox::MathUtilities<int>::Min(grow_up, lb->lower(id) - 1);
          }
 
          // Adjust box sizes as necessary
          if ((grow_up - grow_lo + 1) < min_size(id)) {
+            // Can't grow to min_size without hitting complement, but grow as much as possible.
             try_box.setLower(id, grow_lo);
             try_box.setUpper(id, grow_up);
          } else {
@@ -796,11 +806,11 @@ BoxUtilities::growBoxWithinDomain(
 
             if (left < right) {
                try_box.setLower(id,
-                  (try_box.lower(id) - (left < grow_half)) ? left : grow_half);
+                  try_box.lower(id) - ((left < grow_half) ? left : grow_half));
                try_box.setUpper(id, try_box.lower(id) + min_size(id) - 1);
             } else {
                try_box.setUpper(id,
-                  (try_box.upper(id) + (right < grow_half)) ? right : grow_half);
+                  try_box.upper(id) + ((right < grow_half) ? right : grow_half));
                try_box.setLower(id, try_box.upper(id) - min_size(id) + 1);
             }
          }

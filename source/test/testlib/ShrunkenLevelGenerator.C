@@ -273,3 +273,41 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
 
    }
 }
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+#ifdef HAVE_HDF5
+int ShrunkenLevelGenerator::registerVariablesWithPlotter(
+   appu::VisItDataWriter& writer)
+{
+   d_vis_owner_data.registerVariablesWithPlotter(writer);
+   return 0;
+}
+#endif
+
+
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+bool ShrunkenLevelGenerator::packDerivedDataIntoDoubleBuffer(
+   double* buffer,
+   const hier::Patch& patch,
+   const hier::Box& region,
+   const std::string& variable_name,
+   int depth_index,
+   double simulation_time) const
+{
+   (void)buffer;
+   (void)patch;
+   (void)region;
+   (void)variable_name;
+   (void)depth_index;
+   (void)simulation_time;
+   return true;
+}

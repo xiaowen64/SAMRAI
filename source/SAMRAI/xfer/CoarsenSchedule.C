@@ -39,6 +39,7 @@ namespace xfer {
 
 std::string CoarsenSchedule::s_schedule_generation_method = "DLBG";
 bool CoarsenSchedule::s_extra_debug = false;
+bool CoarsenSchedule::s_barrier_and_time = false;
 bool CoarsenSchedule::s_read_static_input = false;
 
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarsen_schedule;
@@ -115,6 +116,11 @@ CoarsenSchedule::CoarsenSchedule(
 
    getFromInput();
 
+   if (s_barrier_and_time) {
+      t_coarsen_schedule->start();
+   }
+
+
    if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::CoarsenSchedule " << this << " entered" << std::endl;
    }
@@ -168,6 +174,10 @@ CoarsenSchedule::CoarsenSchedule(
    if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::CoarsenSchedule " << this << " returning" << std::endl;
    }
+
+   if (s_barrier_and_time) {
+      t_coarsen_schedule->barrierAndStop();
+   }
 }
 
 /*
@@ -202,7 +212,9 @@ CoarsenSchedule::getFromInput()
       if (idb && idb->isDatabase("CoarsenSchedule")) {
          boost::shared_ptr<tbox::Database> csdb(
             idb->getDatabase("CoarsenSchedule"));
-         s_extra_debug = csdb->getBoolWithDefault("DEV_extra_debug", false);
+         s_extra_debug = csdb->getBoolWithDefault("DEV_extra_debug", s_extra_debug);
+         s_barrier_and_time =
+            csdb->getBoolWithDefault("DEV_barrier_and_time", s_barrier_and_time);
       }
    }
 }
@@ -259,7 +271,9 @@ CoarsenSchedule::coarsenData() const
    if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::coarsenData " << this << " entered" << std::endl;
    }
-   t_coarsen_data->barrierAndStart();
+   if (s_barrier_and_time) {
+      t_coarsen_data->barrierAndStart();
+   }
 
    /*
     * Allocate the source data space on the temporary patch level.
@@ -296,10 +310,12 @@ CoarsenSchedule::coarsenData() const
 
    d_temp_crse_level->deallocatePatchData(d_sources);
 
-   t_coarsen_data->stop();
-
    if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::coarsenData " << this << " returning" << std::endl;
+   }
+
+   if (s_barrier_and_time) {
+      t_coarsen_data->stop();
    }
 }
 

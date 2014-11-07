@@ -166,8 +166,7 @@ int main(
 
       {
 
-         const tbox::Dimension dim(
-            static_cast<unsigned short>(main_db->getInteger("dim")));
+         const tbox::Dimension dim(static_cast<tbox::Dimension::dir_t>(main_db->getInteger("dim")));
 
          const hier::IntVector &refinement_ratio = hier::IntVector::getOne(dim);
 
@@ -198,8 +197,7 @@ int main(
          while (true) {
 
             std::string level_name("PrimitiveBoxGen");
-            level_name +=
-               tbox::Utilities::intToString(static_cast<int>(levels.size()), 1);
+            level_name += tbox::Utilities::intToString(static_cast<int>(levels.size()), 1);
 
             boost::shared_ptr<tbox::Database> level_db =
                input_db->getDatabaseWithDefault(level_name, boost::shared_ptr<tbox::Database>());
