@@ -166,11 +166,6 @@ private:
     */
    std::vector<std::vector<double> > d_shrink_distance;
 
-   /*!
-    * @brief Whether to allocate data on the mesh.
-    */
-   bool d_allocate_data;
-
    DerivedVisOwnerData d_vis_owner_data;
 
 };
