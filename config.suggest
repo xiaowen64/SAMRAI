@@ -178,9 +178,10 @@ cat <<-EOF
 EOF
 # Maintained by Bill Arrighi
 ;;
-# With the above configure options, this "use" command must precede the
+# With the above configure options, these "use" commands must precede the
 # use of configure
 # % use clang
+# % use gcc-4.6.1
 
 edge_gcc) # Edge with default GNU GCC compilers
 cat <<-EOF
