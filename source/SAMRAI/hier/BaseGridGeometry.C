@@ -3046,15 +3046,14 @@ BaseGridGeometry::setUpRatios(
    }
 
    if (d_number_blocks > 1 && max_levels > 1) {
-      setUpFineLevelTransformations(ratio_to_coarser);
+      setUpFineLevelTransformations();
    }
 }
 
 void
-BaseGridGeometry::setUpFineLevelTransformations(
-   const std::vector<IntVector>& ratio_to_coarser)
+BaseGridGeometry::setUpFineLevelTransformations()
 {
-   int max_levels = ratio_to_coarser.size();
+   int max_levels = d_ratio_to_level_zero.size();
 
    const IntVector& one_vector = IntVector::getOne(d_dim);
 

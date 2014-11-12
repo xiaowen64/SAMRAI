@@ -1357,9 +1357,16 @@ private:
       const IntVector& gcw,
       const BoxContainer& singularity);
 
+   /*!
+    * @brief Set the transformations between block neighbors for every level
+    *
+    * The transformations between block neighbors are originally received from
+    * input for the coarsest level. This method computes the transformations
+    * for all potential levels after the ratios to level zero for each level
+    * are computed.
+    */
    void
-   setUpFineLevelTransformations(
-      const std::vector<IntVector>& ratio_to_coarser);
+   setUpFineLevelTransformations();
 
    /*!
     * @brief Reads in data from the specified input database.

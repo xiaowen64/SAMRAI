@@ -335,18 +335,17 @@ BoxLevel::initializePrivate(
    t_initialize_private->start();
 
    d_ratio = ratio;
-   if (d_ratio.getNumBlocks() != grid_geom->getNumberBlocks())
-   {
+   if (d_ratio.getNumBlocks() != grid_geom->getNumberBlocks()) {
       if (d_ratio.max() == d_ratio.min()) {
          int new_size = grid_geom->getNumberBlocks();
          d_ratio = IntVector(d_ratio, new_size);
       } else {
-         TBOX_ERROR("BoxLevel::initializePrivate(): Anisotropic refinement ratio IntVector for a multiblock BoxLevel must have a size equal to the number of blocks."
+         TBOX_ERROR("BoxLevel::initializePrivate: anisotropic refinement\n"
+            << "ratio " << ratio << " must be \n"
+            << "defined for " << grid_geom->getNumberBlocks() << " blocks."
             << std::endl);
-      
       }
    }
-
 
    clearForBoxChanges();
 

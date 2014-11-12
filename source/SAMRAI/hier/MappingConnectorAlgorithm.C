@@ -1276,7 +1276,7 @@ MappingConnectorAlgorithm::privateModify_discover(
  * Find overlaps from visible_base_nabrs to head_rbbt.  Find only
  * overlaps for Boxes owned by owner_rank.
  *
- * On input, base_ni points to the first Box in visible_base_nabrs
+ * On entry, base_ni points to the first Box in visible_base_nabrs
  * owned by owner_rank.  Increment base_ni past those Boxes
  * processed and remove them from visible_base_nabrs.
  *
@@ -1331,7 +1331,7 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
       } else {
          TBOX_ASSERT(unmapped_connector.getRatio() ==
                      unmapped_connector_transpose.getRatio());
-         BoxUtilities::growAndChopAtBlockBoundary(
+         BoxUtilities::growAndAdjustAcrossBlockBoundary(
             compare_boxes,
             compare_box,
             grid_geometry,

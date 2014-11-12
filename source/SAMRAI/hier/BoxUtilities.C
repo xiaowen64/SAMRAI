@@ -1804,7 +1804,7 @@ BoxUtilities::makeNonOverlappingBoxContainers(
  */
 
 void
-BoxUtilities::growAndChopAtBlockBoundary(
+BoxUtilities::growAndAdjustAcrossBlockBoundary(
    BoxContainer& grown_boxes,
    const Box& box,
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
@@ -1817,10 +1817,6 @@ BoxUtilities::growAndChopAtBlockBoundary(
    TBOX_ASSERT(do_refine != do_coarsen || (!do_refine && !do_coarsen));
 
    const int nblocks = grid_geom->getNumberBlocks();
-
-   if (nblocks == 1) {
-      return;
-   }
 
    TBOX_ASSERT(ratio_to_level_zero.getNumBlocks() == nblocks);
    TBOX_ASSERT(refine_coarsen_ratio.getNumBlocks() == nblocks ||
@@ -1868,13 +1864,8 @@ BoxUtilities::growAndChopAtBlockBoundary(
     * If grow_box is contained within its own block, there is no need to
     * check neighboring blocks, so we are done.
     */
-   bool check_neighbors = true;
    if (grown_boxes.size() == 1 &&
        grown_boxes.front().isSpatiallyEqual(grow_box)) {
-      check_neighbors = false;
-   }
-
-   if (!check_neighbors) {
       return;
    }
 

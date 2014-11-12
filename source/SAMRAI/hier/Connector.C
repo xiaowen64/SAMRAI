@@ -129,13 +129,16 @@ Connector::Connector(
    d_transpose(other.d_transpose),
    d_owns_transpose(false)
 {
-   int num_blocks = d_ratio.getNumBlocks();
+   int num_blocks = 
+      d_base_handle->getBoxLevel().getGridGeometry()->getNumberBlocks();
 
    if (d_base_width.getNumBlocks() == 1 && num_blocks != 1) {
       if (d_base_width.max() == d_base_width.min()) {
          d_base_width = IntVector(d_base_width, num_blocks);
       } else {
-         TBOX_ERROR("Anisotropic base width argument for Connector must be of size equal to the number of blocks." << std::endl);
+         TBOX_ERROR("Connector::Connector: anisotropic connector\n"
+            << "width " << d_base_width << " must be \n"
+            << "defined for " << num_blocks << " blocks.\n");
       }
    }
 
@@ -169,12 +172,14 @@ Connector::Connector(
       head_box_level,
       base_width);
    IntVector tmp_base_width(base_width);
-   int num_blocks = base_box_level.getRefinementRatio().getNumBlocks();
+   int num_blocks = base_box_level.getGridGeometry()->getNumberBlocks();
    if (tmp_base_width.getNumBlocks() == 1 && num_blocks != 1) {
       if (tmp_base_width.max() == tmp_base_width.min()) {
          tmp_base_width = IntVector(tmp_base_width, num_blocks);
       } else {
-         TBOX_ERROR("Anisotropic base width argument for Connector must be of size equal to the number of blocks." << std::endl);
+         TBOX_ERROR("Connector::Connector: anisotropic connector\n"
+            << "width " << base_width << " must be \n"
+            << "defined for " << num_blocks << " blocks.\n");
       }
    }
 
@@ -384,15 +389,17 @@ Connector::shrinkWidth(
          int new_size = d_base_width.getNumBlocks();
          shrink_width = IntVector(shrink_width, new_size);
       } else {
-         TBOX_ERROR("Anisotropic shrink width argument for Connector must be of size equal to the number of blocks." << std::endl);
+         TBOX_ERROR("Connector::shrinkWidth: new anisotropic connector\n"
+            << "width " << shrink_width << " must be \n"
+            << "defined for " << d_base_width.getNumBlocks() << " blocks.\n");
       }
    }
 
    TBOX_ASSERT(shrink_width.getNumBlocks() == d_base_width.getNumBlocks()); 
    if (!(shrink_width <= getConnectorWidth())) {
-      TBOX_ERROR("Connector::shrinkWidth: new ghost cell\n"
+      TBOX_ERROR("Connector::shrinkWidth: new connector\n"
          << "width " << shrink_width << " involves an\n"
-         << "enlargement of the current cell width "
+         << "enlargement of the current width "
          << getConnectorWidth());
    }
    else if (shrink_width == getConnectorWidth()) {
@@ -448,7 +455,7 @@ Connector::shrinkWidth(
          const BoxId& box_id = *ei;
          const Box& box = *getBase().getBoxStrict(box_id);
          BoxContainer grown_boxes;
-         BoxUtilities::growAndChopAtBlockBoundary(grown_boxes,
+         BoxUtilities::growAndAdjustAcrossBlockBoundary(grown_boxes,
             box,
             grid_geom,
             getBase().getRefinementRatio(),
@@ -1046,20 +1053,22 @@ Connector::setWidth(
 {
    if (!(new_width >= IntVector::getZero(new_width.getDim()))) {
       TBOX_ERROR("Connector::setWidth():\n"
-         << "Invalid ghost cell width: "
+         << "Invalid connector width: "
          << new_width << "\n");
    }
 
    d_finalized = false;
    d_base_width = new_width;
    int num_blocks =
-      d_base_handle->getBoxLevel().getRefinementRatio().getNumBlocks();
+      d_base_handle->getBoxLevel().getGridGeometry()->getNumberBlocks();
 
    if (d_base_width.getNumBlocks() == 1 && num_blocks != 1) {
       if (d_base_width.max() == d_base_width.min()) {
          d_base_width = IntVector(d_base_width, num_blocks);
       } else {
-         TBOX_ERROR("Anisotropic base width argument for Connector must be of size equal to the number of blocks." << std::endl);
+         TBOX_ERROR("Connector::setWidth: new anisotropic connector\n"
+            << "width " << d_base_width << " must be \n"
+            << "defined for " << num_blocks << " blocks.\n");
       }
    }
 
@@ -1414,7 +1423,9 @@ Connector::convertHeadWidthToBase(
       if (tmp_head_width.max() == tmp_head_width.min()) {
          tmp_head_width = IntVector(tmp_head_width, num_blocks);
       } else {
-         TBOX_ERROR("Anisotropic head width argument for Connector::convertHeadWidthToBase must be of size equal to the number of blocks." << std::endl);
+         TBOX_ERROR("Connector::convertHeadWidthToBase: anisotropic connector\n"
+            << "width " << head_width << " must be \n"
+            << "defined for " << num_blocks << " blocks.\n");
       }
    }
 
@@ -2596,7 +2607,7 @@ Connector::findOverlaps_rbbt(
          }
          grown_boxes.pushBack(box);
       } else {
-         BoxUtilities::growAndChopAtBlockBoundary(grown_boxes,
+         BoxUtilities::growAndAdjustAcrossBlockBoundary(grown_boxes,
             box,
             base.getGridGeometry(),
             base.getRefinementRatio(),

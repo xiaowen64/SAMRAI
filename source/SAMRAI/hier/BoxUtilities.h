@@ -914,12 +914,12 @@ struct BoxUtilities {
     * @param[in]  do_refine
     * @param[in]  do_coarsen
     */
-   static void growAndChopAtBlockBoundary(
+   static void growAndAdjustAcrossBlockBoundary(
       BoxContainer& grown_boxes,
       const Box& box,
       const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
       const IntVector& ratio_to_level_zero,
-      const IntVector& ratio_to_connected_level,
+      const IntVector& refine_coarsen_ratio,
       const IntVector& grow_width,
       bool do_refine,
       bool do_coarsen);

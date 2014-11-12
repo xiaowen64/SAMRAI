@@ -2110,7 +2110,7 @@ BergerRigoutsosNode::computeNewNeighborhoodSets()
       grown_boxes.pushBack(d_box);
       grown_boxes.grow(d_common->d_tag_to_new_width);
    } else {
-      hier::BoxUtilities::growAndChopAtBlockBoundary(
+      hier::BoxUtilities::growAndAdjustAcrossBlockBoundary(
          grown_boxes,
          d_box,
          d_common->d_tag_level->getGridGeometry(),

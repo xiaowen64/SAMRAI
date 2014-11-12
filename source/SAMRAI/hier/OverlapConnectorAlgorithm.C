@@ -221,7 +221,7 @@ OverlapConnectorAlgorithm::extractNeighbors(
                   head_is_finer = true;
                }
             }
-            BoxUtilities::growAndChopAtBlockBoundary(
+            BoxUtilities::growAndAdjustAcrossBlockBoundary(
                grown_boxes,
                box,
                grid_geom,
@@ -352,7 +352,7 @@ OverlapConnectorAlgorithm::extractNeighbors(
                   head_is_finer = true;
                }
             }
-            BoxUtilities::growAndChopAtBlockBoundary(
+            BoxUtilities::growAndAdjustAcrossBlockBoundary(
                grown_boxes,
                box,
                grid_geom,
@@ -1722,7 +1722,7 @@ OverlapConnectorAlgorithm::privateBridge_discover(
  * Find overlaps from visible_base_nabrs to head_rbbt.  Find only
  * overlaps for Boxes owned by owner_rank.
  *
- * On input, base_ni points to the first Box in visible_base_nabrs
+ * On entry, base_ni points to the first Box in visible_base_nabrs
  * owned by owner_rank.  Increment base_ni past those Boxes
  * processed and remove them from visible_base_nabrs.
  *
@@ -1796,7 +1796,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
          }
          grown_boxes.pushBack(base_box);
       } else {
-         BoxUtilities::growAndChopAtBlockBoundary(
+         BoxUtilities::growAndAdjustAcrossBlockBoundary(
             grown_boxes,
             visible_base_nabrs_box,
             bridging_connector.getBase().getGridGeometry(),

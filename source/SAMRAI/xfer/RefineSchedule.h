@@ -1165,7 +1165,6 @@ private:
 
    boost::shared_ptr<hier::Connector> d_coarse_interp_encon_to_unfilled_encon;
    boost::shared_ptr<hier::Connector> d_coarse_interp_to_nbr_fill;
-   boost::shared_ptr<hier::Connector> d_nbr_fill_to_dst;
 
    boost::shared_ptr<hier::Connector> d_dst_to_encon;
    boost::shared_ptr<hier::Connector> d_encon_to_src;

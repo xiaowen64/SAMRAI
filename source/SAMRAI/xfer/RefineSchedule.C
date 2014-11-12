@@ -798,9 +798,9 @@ RefineSchedule::finishScheduleConstruction(
     * 2. Connect coarse_interp_box_level to the next coarser level on
     * the hierarchy.
     *
-    * 3: Construct the coarse interpolation PatchLevel (d_coarse_interp_level) and
-    * construct d_coarse_interp_schedule to fill d_coarse_interp_level.  The coarser
-    * level on the hierarchy will be the source for filling
+    * 3: Construct the coarse interpolation PatchLevel (d_coarse_interp_level)
+    * and construct d_coarse_interp_schedule to fill d_coarse_interp_level.
+    * The coarser level on the hierarchy will be the source for filling
     * d_coarse_interp_level, which is why we need step 2..
     *
     * The idea is that once d_coarse_interp_level is filled, we can refine its
@@ -842,8 +842,9 @@ RefineSchedule::finishScheduleConstruction(
 
       /*
        * hiercoarse is the coarse level on the hierarchy.  It is to be
-       * differentiated from the coarse interpolation (coarse_interp) level, which is at
-       * the same resolution and level number but is not on the hierarchy.
+       * differentiated from the coarse interpolation (coarse_interp) level,
+       * which is at the same resolution and level number but is not on the
+       * hierarchy.
        */
       const boost::shared_ptr<hier::PatchLevel> hiercoarse_level(
          hierarchy->getPatchLevel(next_coarser_ln));
@@ -932,9 +933,11 @@ RefineSchedule::finishScheduleConstruction(
           * To nest dst and its fill boxes, hiercoarse just has to grow by
           * the ghost width of the fill.
           */
-         hiercoarse_growth_to_nest_coarse_interp = dst_to_fill.getConnectorWidth();
+         hiercoarse_growth_to_nest_coarse_interp =
+            dst_to_fill.getConnectorWidth();
       }
-      hiercoarse_growth_to_nest_coarse_interp.ceilingDivide(dst_hiercoarse_ratio);
+      hiercoarse_growth_to_nest_coarse_interp.ceilingDivide(
+         dst_hiercoarse_ratio);
 
       t_finish_sched_const_recurse->stop();
 
@@ -979,12 +982,13 @@ RefineSchedule::finishScheduleConstruction(
       if (d_nbr_blk_fill_level.get()) {
 
          d_nbr_blk_prefill_schedule.reset(
-            new RefineSchedule(boost::make_shared<PatchLevelInteriorFillPattern>(),
-                               d_nbr_blk_fill_level,
-                               d_dst_level,
-                               coarse_schedule_refine_classes,
-                               d_transaction_factory,
-                               0));
+            new RefineSchedule(
+               boost::make_shared<PatchLevelInteriorFillPattern>(),
+               d_nbr_blk_fill_level,
+               d_dst_level,
+               coarse_schedule_refine_classes,
+               d_transaction_factory,
+               0));
 
       }
 
@@ -1410,11 +1414,6 @@ RefineSchedule::setupCoarseInterpBoxLevel(
          *nbr_blk_fill_box_level,
          hier::IntVector::getZero(dim)));
 
-   d_nbr_fill_to_dst.reset(new hier::Connector(
-         *nbr_blk_fill_box_level,
-         dst_to_unfilled.getBase(),
-         hier::IntVector::getZero(dim)));
-
    /*
     * This loop builds up coarse_interp_box_level.  It also builds up
     * the neighborhood sets of dst_to_coarse_interp and
@@ -1448,7 +1447,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
          if (nblocks == 1 || grid_geometry->hasIsotropicRatios()) {
             coarse_interp_boxes.pushBack(coarse_interp_box);
          } else {
-            hier::BoxUtilities::growAndChopAtBlockBoundary(
+            hier::BoxUtilities::growAndAdjustAcrossBlockBoundary(
                coarse_interp_boxes,
                coarse_interp_box,
                grid_geometry,
@@ -1480,7 +1479,8 @@ RefineSchedule::setupCoarseInterpBoxLevel(
             if (do_coarse_shearing[blk] &&
                 !sheared_coarse_interp_boxes[blk].empty() &&
                 (d_dst_level->patchTouchesRegularBoundary(dst_box_id))) {
-               sheared_coarse_interp_boxes[blk].intersectBoxes(coarser_shear_domain[blk]);
+               sheared_coarse_interp_boxes[blk].intersectBoxes(
+                  coarser_shear_domain[blk]);
                sheared_coarse_interp_boxes[blk].simplify();
             }
 
@@ -1504,7 +1504,8 @@ RefineSchedule::setupCoarseInterpBoxLevel(
             int dst_blk = dst_blk_id.getBlockValue(); 
             for (int blk = dst_blk; blk < nblocks + dst_blk; ++blk) {
                int cur_blk = blk % nblocks;
-               for (hier::BoxContainer::iterator bi = sheared_coarse_interp_boxes[cur_blk].begin();
+               for (hier::BoxContainer::iterator bi =
+                    sheared_coarse_interp_boxes[cur_blk].begin();
                     bi != sheared_coarse_interp_boxes[cur_blk].end(); ++bi) {
                   const hier::Box& coarse_interp_level_box =
                      *coarse_interp_box_level->addBox(*bi, bi->getBlockId());
@@ -1524,9 +1525,6 @@ RefineSchedule::setupCoarseInterpBoxLevel(
                      d_coarse_interp_to_nbr_fill->insertLocalNeighbor(
                         fill_box,
                         coarse_interp_level_box.getBoxId());
-                     d_nbr_fill_to_dst->insertLocalNeighbor(
-                        dst_box,
-                        fill_box.getBoxId());
                   } 
                }
             }
@@ -1999,8 +1997,12 @@ RefineSchedule::fillData(
    hier::ComponentSelector nbr_fill_dst_vector;
    if (d_dst_level->getGridGeometry()->getNumberBlocks() > 1 && 
        d_nbr_blk_fill_level.get()) {
-      allocateScratchSpace(nbr_fill_scratch_vector, d_nbr_blk_fill_level, fill_time);
-      allocateDestinationSpace(nbr_fill_dst_vector, d_nbr_blk_fill_level, fill_time);
+      allocateScratchSpace(nbr_fill_scratch_vector,
+                           d_nbr_blk_fill_level,
+                           fill_time);
+      allocateDestinationSpace(nbr_fill_dst_vector,
+                               d_nbr_blk_fill_level,
+                               fill_time);
    }
 
    /*
@@ -2095,10 +2097,10 @@ RefineSchedule::recursiveFill(
             fill_time);
       }
 
-      hier::ComponentSelector nbr_fill_allocate_vector;
+      hier::ComponentSelector nbr_prefill_allocate_vector;
       if (d_dst_level->getGridGeometry()->getNumberBlocks() > 1 &&
           d_coarse_interp_schedule->d_nbr_blk_fill_level.get()) {
-         allocateScratchSpace(nbr_fill_allocate_vector,
+         allocateScratchSpace(nbr_prefill_allocate_vector,
             d_coarse_interp_schedule->d_nbr_blk_fill_level, fill_time);
       }
 
@@ -2116,7 +2118,8 @@ RefineSchedule::recursiveFill(
        * boxes on the coarser level.
        */
 
-      d_coarse_interp_schedule->recursiveFill(fill_time, do_physical_boundary_fill);
+      d_coarse_interp_schedule->recursiveFill(fill_time,
+         do_physical_boundary_fill);
 
       if (d_nbr_blk_prefill_schedule.get()) {
          d_nbr_blk_prefill_schedule->fillData(fill_time);
@@ -2147,7 +2150,7 @@ RefineSchedule::recursiveFill(
       if (d_dst_level->getGridGeometry()->getNumberBlocks() > 1 &&
           d_coarse_interp_schedule->d_nbr_blk_fill_level.get()) {
          d_coarse_interp_schedule->d_nbr_blk_fill_level->deallocatePatchData(
-            nbr_fill_allocate_vector);
+            nbr_prefill_allocate_vector);
       }
 
       if (d_nbr_blk_prefill_schedule.get()) {
@@ -2167,7 +2170,9 @@ RefineSchedule::recursiveFill(
        */
 
       hier::ComponentSelector allocate_vector;
-      allocateScratchSpace(allocate_vector, d_coarse_interp_encon_level, fill_time);
+      allocateScratchSpace(allocate_vector,
+                           d_coarse_interp_encon_level,
+                           fill_time);
 
       hier::ComponentSelector encon_allocate_vector;
       if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
@@ -2181,7 +2186,8 @@ RefineSchedule::recursiveFill(
        * boxes on the coarser level.
        */
 
-      d_coarse_interp_encon_schedule->recursiveFill(fill_time, do_physical_boundary_fill);
+      d_coarse_interp_encon_schedule->recursiveFill(fill_time,
+         do_physical_boundary_fill);
 
       /*
        * d_coarse_interp_encon_level should now be filled.  Now interpolate
@@ -2563,7 +2569,6 @@ RefineSchedule::refineScratchData(
 
          for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
             const RefineClasses::Data * const ref_item = d_refine_items[iri];
-            // This if-block can be factored out and put into RefineClasses::Data.
             if (ref_item->d_oprefine) {
 
                boost::shared_ptr<hier::BoxOverlap> refine_overlap =
@@ -2585,6 +2590,12 @@ RefineSchedule::refineScratchData(
                local_ratio);
          }
       } else {
+         /*
+          * This section is only entered when filling ghost regions in
+          * blocks neighboring the fine patch, and there is anisotropic
+          * refinement so that the refinement ratio on the neighboring block
+          * may be different from the ratio on the fine patch's block.
+          */
 
          TBOX_ASSERT(!is_encon);
          TBOX_ASSERT(!d_dst_level->getGridGeometry()->hasIsotropicRatios());
@@ -2597,11 +2608,15 @@ RefineSchedule::refineScratchData(
 
          const hier::BoxId& unfilled_id = unfilled_nabr.getBoxId();
 
+         /*
+          * The refinement operation interpolates data onto nbr_fill_patch.
+          */
+
          boost::shared_ptr<hier::Patch> nbr_fill_patch(
             d_nbr_blk_fill_level->getPatch(unfilled_id));
 
          if (d_refine_patch_strategy) {
-            d_refine_patch_strategy->preprocessRefineBoxes(*nbr_fill_patch,
+		    d_refine_patch_strategy->preprocessRefineBoxes(*nbr_fill_patch,
                *crse_patch,
                fill_boxes,
                local_ratio);
@@ -2631,6 +2646,11 @@ RefineSchedule::refineScratchData(
                local_ratio);
          }
 
+         /*
+          * Post-interpolation loop to copy data from nbr_fill_patch to
+          * fine_patch.
+          */
+
          for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
             const RefineClasses::Data * const ref_item = d_refine_items[iri];
 
@@ -2640,7 +2660,8 @@ RefineSchedule::refineScratchData(
 
                const int scratch_id = ref_item->d_scratch;
 
-               fine_patch->getPatchData(scratch_id)->copy(*nbr_fill_patch->getPatchData(scratch_id), *nbr_copy_overlap);
+               fine_patch->getPatchData(scratch_id)->copy(
+                  *nbr_fill_patch->getPatchData(scratch_id), *nbr_copy_overlap);
 
             }
          }
@@ -2734,7 +2755,8 @@ RefineSchedule::computeRefineOverlaps(
 
       if (unfilled_nabr.getBlockId() == coarse_box.getBlockId()) {
          hier::BoxContainer fill_boxes(unfilled_nabr);
-         fill_boxes.intersectBoxes(hier::Box::refine(coarse_box, coarse_to_fine.getRatio()));
+         fill_boxes.intersectBoxes(
+            hier::Box::refine(coarse_box, coarse_to_fine.getRatio()));
          const hier::BoxId& unfilled_id = unfilled_nabr.getBoxId();
 
          hier::BoxContainer node_fill_boxes;
@@ -2743,18 +2765,19 @@ RefineSchedule::computeRefineOverlaps(
                node_fill_boxes);
          }
 
-      /*
-       * The refine overlap will cover only  the fine fill box regions.
-       * of index space.  Note that we restrict the interpolation range
-       * to the intersection of the fine fill box and the ghost box of
-       * the scratch data component (i.e., the destination of the
-       * interpolation).  This is needed for the case where data
-       * components treated by the schedule have different ghost
-       * cell widths since the fill boxes are generated using the
-       * maximum ghost cell width.
-       */
+         /*
+          * The refine overlap will cover only  the fine fill box regions.
+          * of index space.  Note that we restrict the interpolation range
+          * to the intersection of the fine fill box and the ghost box of
+          * the scratch data component (i.e., the destination of the
+          * interpolation).  This is needed for the case where data
+          * components treated by the schedule have different ghost
+          * cell widths since the fill boxes are generated using the
+          * maximum ghost cell width.
+          */
          overlaps.push_back(std::vector<boost::shared_ptr<hier::BoxOverlap> >(0));
-         std::vector<boost::shared_ptr<hier::BoxOverlap> >& refine_overlaps(overlaps.back());
+         std::vector<boost::shared_ptr<hier::BoxOverlap> >& refine_overlaps(
+            overlaps.back());
          refine_overlaps.resize(num_equiv_classes);
          for (int ne = 0; ne < num_equiv_classes; ++ne) {
 
@@ -2792,25 +2815,39 @@ RefineSchedule::computeRefineOverlaps(
             }
          }
       } else {
+         /*
+          * This section only gets entered if fine patch touches a block
+          * boundary and we need to fill ghost region across that block
+          * boundary, and there is anisotropic refinement so that the
+          * refinement ratio on the neighboring block may be different from
+          * the ratio on the fine patch's block.
+          */
          TBOX_ASSERT(!is_encon);
          TBOX_ASSERT(!grid_geom->hasIsotropicRatios()); 
          TBOX_ASSERT(d_coarse_interp_to_nbr_fill->numLocalNeighbors(coarse_box.getBoxId()) == 1);
+
+         /*
+          * Find the patch on d_nbr_blk_fill_level where data will
+          * be interpolated, and the fill boxes to ensure that data is only
+          * interpolated from space covered by the coarse box.
+          */
          hier::Connector::ConstNeighborhoodIterator fill_nabrs =
             d_coarse_interp_to_nbr_fill->find(coarse_box.getBoxId());
-         const hier::Box& unfilled_nabr =
+         const hier::Box& fill_nabr =
             *d_coarse_interp_to_nbr_fill->begin(fill_nabrs);
 
-         hier::BoxContainer fill_boxes(unfilled_nabr);
+         hier::BoxContainer fill_boxes(fill_nabr);
          fill_boxes.intersectBoxes(hier::Box::refine(coarse_box,
                                       coarse_to_fine.getRatio()));
-         const hier::BoxId& unfilled_id = unfilled_nabr.getBoxId();
+         const hier::BoxId& fill_id = fill_nabr.getBoxId();
 
          boost::shared_ptr<hier::Patch> nbr_fill_patch(
-            d_nbr_blk_fill_level->getPatch(unfilled_id));
+            d_nbr_blk_fill_level->getPatch(fill_id));
 
-         hier::BoxContainer node_fill_boxes;
-         //
-
+         /*
+          * Access the Transformation so that dst_fill_box can be computed
+          * in terms of the fine patch's block's index space.
+          */
          const std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>&
             neighbors = grid_geom->getNeighbors(fine_box.getBlockId());
 
@@ -2822,7 +2859,7 @@ RefineSchedule::computeRefineOverlaps(
          const hier::Transformation& transformation =
             nbr_itr->second.getTransformation(fine_level->getLevelNumber());
 
-         hier::Box dst_fill_box(unfilled_nabr);
+         hier::Box dst_fill_box(fill_nabr);
          transformation.transform(dst_fill_box);
 
          hier::IntVector fill_ghost_width(
@@ -2834,12 +2871,24 @@ RefineSchedule::computeRefineOverlaps(
          fill_fine_box.grow(fill_ghost_width);
          dst_fill_box *= fill_fine_box;
 
-         overlaps.push_back(std::vector<boost::shared_ptr<hier::BoxOverlap> >(0));
-         d_nbr_blk_copy_overlaps.push_back(std::vector<boost::shared_ptr<hier::BoxOverlap> >(0));
-         std::vector<boost::shared_ptr<hier::BoxOverlap> >& refine_overlaps(overlaps.back());
-         std::vector<boost::shared_ptr<hier::BoxOverlap> >& nbr_overlaps(d_nbr_blk_copy_overlaps.back());
+         overlaps.push_back(
+            std::vector<boost::shared_ptr<hier::BoxOverlap> >(0));
+         d_nbr_blk_copy_overlaps.push_back(
+            std::vector<boost::shared_ptr<hier::BoxOverlap> >(0));
+         std::vector<boost::shared_ptr<hier::BoxOverlap> >& refine_overlaps(
+            overlaps.back());
+         std::vector<boost::shared_ptr<hier::BoxOverlap> >& nbr_overlaps(
+            d_nbr_blk_copy_overlaps.back());
          refine_overlaps.resize(num_equiv_classes);
          nbr_overlaps.resize(num_equiv_classes);
+
+         hier::BoxContainer node_fill_boxes; //Unneeded here, so empty.
+
+         /*
+          * The overlaps computed here are refine_overlaps, to control
+          * the interpolation of data onto nbr_fill_patch, and nbr_overlaps,
+          * to control local copies from nbr_fill_patch to fine_patch.
+          */
          for (int ne = 0; ne < num_equiv_classes; ++ne) {
 
             const RefineClasses::Data& rep_item =
@@ -2865,7 +2914,7 @@ RefineSchedule::computeRefineOverlaps(
                      *fine_pdf->getBoxGeometry(fine_patch->getBox()),
                      *fine_pdf->getBoxGeometry(nbr_fill_patch->getBox()),
                      fine_patch->getBox(),
-                     unfilled_nabr,
+                     fill_nabr,
                      dst_fill_box,
                      true,
                      transformation);

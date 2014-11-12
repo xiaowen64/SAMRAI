@@ -222,9 +222,6 @@ PatchHierarchy::getFromInput(
                         block_ratio[ln][b] = block_ratio[ln-1][b];
                      }
                   }
-               } else {
-
-                  TBOX_ERROR(" "); 
                }
             }
             for (int ln = 1; ln < d_max_levels; ++ln) {
@@ -362,31 +359,6 @@ PatchHierarchy::getFromInput(
                                               std::string("level_"));
          for (int ln = 0; ln < d_max_levels; ++ln) {
             level_names[ln] += tbox::Utilities::intToString(ln);
-         }
-
-         // Read in ratio_to_coarser.
-         // TODO NSE: Multiblock-ize
-         if (input_db->isDatabase("ratio_to_coarser")) {
-            const boost::shared_ptr<tbox::Database> tmp_db(
-               input_db->getDatabase("ratio_to_coarser"));
-            int ratio_to_coarser[SAMRAI::MAX_DIM_VAL];
-            bool error = false;
-            for (int ln = 1; !error && ln < d_max_levels; ++ln) {
-               if (tmp_db->isInteger(level_names[ln])) {
-                  tmp_db->getIntegerArray(level_names[ln],
-                     &ratio_to_coarser[0],
-                     d_dim.getValue());
-                  for (int i = 0; i < d_dim.getValue(); ++i) {
-                     if (ratio_to_coarser[i] != d_ratio_to_coarser[ln](0,i)) {
-                        TBOX_WARNING("PatchHierarchy::getFromInput error...\n"
-                           << "ratio_to_coarser may not be changed on restart."
-                           << std::endl);
-                        error = true;
-                        break;
-                     }
-                  }
-               }
-            }
          }
 
          // Read in smallest_patch_size.
