@@ -1541,6 +1541,16 @@ private:
       std::map<BlockId, Neighbor>::const_iterator d_nbr_itr;
    };
 
+   /*!
+    * @brief Create iterator pointing to the first Neighbor of the block with
+    * the supplied block id.
+    *
+    * @param[in] block_id The block id of the block whose Neighbors are of
+    * interest.
+    *
+    * @return Iterator pointing to the first Neighbor of the block with
+    * supplied block id.
+    */
    NeighborIterator
    begin(
       const BlockId& block_id)
@@ -1548,6 +1558,16 @@ private:
       return NeighborIterator(this, block_id);
    }
 
+   /*!
+    * @brief Create iterator pointing one past the last Neighbor of the block
+    * with the supplied block id.
+    *
+    * @param[in] block_id The block id of the block whose Neighbors are of
+    * interest.
+    *
+    * @return Iterator pointing one past the Neighbor of the block with
+    * supplied block id.
+    */
    NeighborIterator
    end(
       const BlockId& block_id)
@@ -1555,6 +1575,16 @@ private:
       return NeighborIterator(this, block_id, false);
    }
 
+   /*!
+    * @brief Create iterator pointing to the Neighbor with block id
+    * nbr_block_id of the block with block id block_id.
+    *
+    * @param[in] block_id The block id of the block whose Neighbors are of
+    * interest.
+    *
+    * @return Iterator pointing to the requested Neighbor of the block with
+    * supplied block id.
+    */
    NeighborIterator
    find(
       const BlockId& block_id,
@@ -1563,6 +1593,16 @@ private:
       return NeighborIterator(this, block_id, nbr_block_id);
    }
 
+   /*!
+    * @brief Create iterator pointing to the first Neighbor of the block with
+    * the supplied block id.
+    *
+    * @param[in] block_id The block id of the block whose Neighbors are of
+    * interest.
+    *
+    * @return Iterator pointing to the first Neighbor of the block with
+    * supplied block id.
+    */
    ConstNeighborIterator
    begin(
       const BlockId& block_id) const
@@ -1570,6 +1610,16 @@ private:
       return ConstNeighborIterator(this, block_id);
    }
 
+   /*!
+    * @brief Create iterator pointing one past the last Neighbor of the block
+    * with the supplied block id.
+    *
+    * @param[in] block_id The block id of the block whose Neighbors are of
+    * interest.
+    *
+    * @return Iterator pointing one past the Neighbor of the block with
+    * supplied block id.
+    */
    ConstNeighborIterator
    end(
       const BlockId& block_id) const
@@ -1577,6 +1627,16 @@ private:
       return ConstNeighborIterator(this, block_id, false);
    }
 
+   /*!
+    * @brief Create iterator pointing to the Neighbor with block id
+    * nbr_block_id of the block with block id block_id.
+    *
+    * @param[in] block_id The block id of the block whose Neighbors are of
+    * interest.
+    *
+    * @return Iterator pointing to the requested Neighbor of the block with
+    * supplied block id.
+    */
    ConstNeighborIterator
    find(
       const BlockId& block_id,
