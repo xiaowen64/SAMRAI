@@ -1582,6 +1582,8 @@ private:
     * @param[in] block_id The block id of the block whose Neighbors are of
     * interest.
     *
+    * @param[in] nbr_block_id The block id of the Neighbor of interest.
+    *
     * @return Iterator pointing to the requested Neighbor of the block with
     * supplied block id.
     */
@@ -1633,6 +1635,8 @@ private:
     *
     * @param[in] block_id The block id of the block whose Neighbors are of
     * interest.
+    *
+    * @param[in] nbr_block_id The block id of the Neighbor of interest.
     *
     * @return Iterator pointing to the requested Neighbor of the block with
     * supplied block id.
