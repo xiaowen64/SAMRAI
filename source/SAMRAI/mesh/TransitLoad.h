@@ -89,7 +89,7 @@ public:
     * Changes to other as an implementation side-effect is allowed.
     * This and other are guaranteed to be the same concrete type.
     *
-    * @param other [i] Other TransitLoad container whose
+    * @param other [in] Other TransitLoad container whose
     * implementation matches this one.
     */
    virtual void
@@ -171,12 +171,14 @@ public:
     *
     * This method may use communication.
     *
-    * @param balanced_box_level [io] Empty BoxLevel to populate with
+    * @param [in,out] balanced_box_level Empty BoxLevel to populate with
     * the contents of this TransitLoad.
     *
-    * @param [i] flexible_load_tol
+    * @param[in] unbalanced_box_level
     *
-    * @param [i] mpi Alternate SAMRAI_MPI to use for communication if
+    * @param [in] flexible_load_tol
+    *
+    * @param [in] alt_mpi Alternate SAMRAI_MPI to use for communication if
     * needed, overriding that in balanced_box_level.
     */
    virtual void
@@ -202,9 +204,9 @@ public:
     * @param [in,out] unbalanced_to_balanced Empty Connector to populate
     * with the unbalanced--->balanced edges.
     *
-    * @param [i] flexible_load_tol
+    * @param [in] flexible_load_tol
     *
-    * @param [i] mpi Alternate SAMRAI_MPI to use for communication if
+    * @param [in] alt_mpi Alternate SAMRAI_MPI to use for communication if
     * needed, overriding that in balanced_box_level.
     */
    virtual void

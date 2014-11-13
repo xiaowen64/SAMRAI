@@ -1799,6 +1799,7 @@ private:
     * @brief Print each box in the container to the specified output stream.
     *
     * @param[in] os
+    * @param[in] border
     */
    void
    print(

@@ -113,7 +113,7 @@ public:
       LoadType high_load);
 
    /*!
-    * @copydoc TransitLoad::assignToLocalAndPopulateMaps()
+    * @copydoc TransitLoad::assignToLocal()
     *
     * This method uses communication to redeem vouchers.
     */

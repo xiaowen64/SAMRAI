@@ -160,8 +160,8 @@ public:
     * The search cost is proportional to number of overlapping boxes
     * found, NOT the total number of partitions.
     *
-    * @param[o] overlapping_boxes
-    * @param[i] box
+    * @param[out] overlapping_boxes
+    * @param[in] box
     *
     * @return Whether any partitions are found.
     */
