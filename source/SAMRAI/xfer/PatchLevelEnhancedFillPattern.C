@@ -81,22 +81,19 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
       hier::BoxContainer fill_boxes(
          hier::Box::grow(dst_box, fill_ghost_width));
 
-      const std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>& neighbors =
-         grid_geometry->getNeighbors(dst_box.getBlockId());
-
       hier::BoxContainer constructed_fill_boxes;
 
       hier::Connector::NeighborhoodIterator base_box_itr =
          dst_to_fill->findLocal(dst_box_id);
       bool has_base_box = base_box_itr != dst_to_fill->end();
 
-      for (std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::const_iterator ni =
-              neighbors.begin();
-           ni != neighbors.end(); ++ni) {
+      for (hier::BaseGridGeometry::ConstNeighborIterator ni =
+              grid_geometry->begin(dst_box.getBlockId());
+           ni != grid_geometry->end(dst_box.getBlockId()); ++ni) {
+         const hier::BaseGridGeometry::Neighbor& nbr = *ni;
+         if (nbr.isSingularity()) {
 
-         if (ni->second.isSingularity()) {
-
-            hier::BoxContainer encon_boxes(ni->second.getTransformedDomain());
+            hier::BoxContainer encon_boxes(nbr.getTransformedDomain());
             encon_boxes.refine(dst_box_level.getRefinementRatio());
             encon_boxes.intersectBoxes(fill_boxes);
             encon_boxes.removeIntersections(constructed_fill_boxes);

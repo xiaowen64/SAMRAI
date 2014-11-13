@@ -2837,14 +2837,12 @@ RefineSchedule::generateCommunicationSchedule(
          for (hier::BoxContainer::iterator bi = unfilled_boxes_for_dst.begin();
               bi != unfilled_boxes_for_dst.end(); ++bi) {
 
-            const std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>& neighbors =
-               grid_geometry->getNeighbors(dst_box.getBlockId());
-
-            for (std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::const_iterator
-                 ni = neighbors.begin(); ni != neighbors.end(); ++ni) {
+            for (hier::BaseGridGeometry::ConstNeighborIterator ni =
+                    grid_geometry->begin(dst_box.getBlockId());
+                 ni != grid_geometry->end(dst_box.getBlockId()); ++ni) {
 
                hier::BoxContainer transformed_domain(
-                  ni->second.getTransformedDomain());
+                  (*ni).getTransformedDomain());
 
                transformed_domain.refine(d_dst_level->getRatioToLevelZero());
 
@@ -2926,16 +2924,15 @@ RefineSchedule::findEnconFillBoxes(
    boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
 
-   const std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>& neighbors =
-      grid_geometry->getNeighbors(dst_block_id);
-
    hier::BoxContainer encon_neighbor_list;
-   for (std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::const_iterator ni =
-           neighbors.begin();
-        ni != neighbors.end(); ++ni) {
+   for (hier::BaseGridGeometry::ConstNeighborIterator ni =
+           grid_geometry->begin(dst_block_id);
+        ni != grid_geometry->end(dst_block_id); ++ni) {
 
-      if (ni->second.isSingularity()) {
-         hier::BoxContainer transformed_domain(ni->second.getTransformedDomain());
+      const hier::BaseGridGeometry::Neighbor& nbr = *ni;
+      if (nbr.isSingularity()) {
+         hier::BoxContainer transformed_domain(
+            nbr.getTransformedDomain());
          encon_fill_boxes.spliceFront(transformed_domain);
       }
 
@@ -2981,17 +2978,15 @@ RefineSchedule::findEnconUnfilledBoxes(
     */
    std::map<hier::BlockId, hier::BoxContainer> unfilled_encon_nbr_boxes;
 
-   const std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>& neighbors =
-      grid_geometry->getNeighbors(dst_block_id);
+   for (hier::BaseGridGeometry::ConstNeighborIterator ni =
+           grid_geometry->begin(dst_block_id);
+        ni != grid_geometry->end(dst_block_id); ++ni) {
 
-   for (std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::const_iterator ni =
-           neighbors.begin();
-        ni != neighbors.end(); ++ni) {
+      const hier::BaseGridGeometry::Neighbor& nbr = *ni;
+      if (nbr.isSingularity()) {
+         const hier::BlockId nbr_block_id(nbr.getBlockId());
 
-      if (ni->second.isSingularity()) {
-         const hier::BlockId nbr_block_id(ni->second.getBlockId());
-
-         hier::BoxContainer neighbor_boxes(ni->second.getTransformedDomain());
+         hier::BoxContainer neighbor_boxes(nbr.getTransformedDomain());
          neighbor_boxes.refine(d_dst_level->getRatioToLevelZero());
          neighbor_boxes.intersectBoxes(encon_fill_boxes);
          unfilled_encon_nbr_boxes[nbr_block_id].spliceFront(neighbor_boxes);
@@ -3371,20 +3366,19 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
             grid_geometry->getSingularityBoxContainer(block_id);
 
          if (!sing_boxes.empty()) {
-            const std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>& neighbors =
-               grid_geometry->getNeighbors(block_id);
 
             /*
              * Loop over neighboring blocks and find the ones that are
              * singularity neighbors.
              */
-            for (std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::const_iterator ni =
-                    neighbors.begin();
-                 ni != neighbors.end(); ++ni) {
+            for (hier::BaseGridGeometry::ConstNeighborIterator ni =
+                    grid_geometry->begin(block_id);
+                 ni != grid_geometry->end(block_id); ++ni) {
 
-               if (ni->second.isSingularity()) {
+               const hier::BaseGridGeometry::Neighbor& nbr = *ni;
+               if (nbr.isSingularity()) {
 
-                  const hier::BlockId& nbr_id = ni->second.getBlockId();
+                  const hier::BlockId& nbr_id = nbr.getBlockId();
 
                   /*
                    * Get the transformation from neighbor block to dst
@@ -3392,8 +3386,8 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                    * domain in coordinate system of dst block.
                    */
                   hier::Transformation::RotationIdentifier rotation =
-                     ni->second.getRotationIdentifier();
-                  hier::IntVector offset(ni->second.getShift());
+                     nbr.getRotationIdentifier();
+                  hier::IntVector offset(nbr.getShift());
                   offset *= (d_dst_level->getRatioToLevelZero());
 
                   hier::Transformation transformation(rotation, offset,

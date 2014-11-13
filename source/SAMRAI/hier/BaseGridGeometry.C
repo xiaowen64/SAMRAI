@@ -2959,13 +2959,12 @@ BaseGridGeometry::printClassData(
       stream << "   Block " << bn << '\n';
 
       const BlockId block_id(bn);
-      const std::map<BlockId, Neighbor>& block_neighbors(getNeighbors(block_id));
+      const BoxContainer& singularity_boxlist(
+         getSingularityBoxContainer(block_id));
 
-      const BoxContainer& singularity_boxlist(getSingularityBoxContainer(block_id));
-
-      for (std::map<BlockId, Neighbor>::const_iterator li = block_neighbors.begin();
-           li != block_neighbors.end(); ++li) {
-         const Neighbor& neighbor(li->second);
+      for (ConstNeighborIterator li = begin(block_id);
+           li != end(block_id); ++li) {
+         const Neighbor& neighbor(*li);
          stream << "      neighbor block " << neighbor.getBlockId() << ':';
          stream << " singularity = " << neighbor.isSingularity() << '\n';
       }
@@ -3039,6 +3038,147 @@ BaseGridGeometry::Neighbor::Neighbor(
    d_transformed_domain(domain),
    d_transformation(transformation),
    d_is_singularity(false)
+{
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+
+BaseGridGeometry::NeighborIterator::NeighborIterator(
+   BaseGridGeometry* grid_geometry,
+   const BlockId& block_id,
+   bool from_start)
+   : d_grid_geom(grid_geometry),
+     d_block_id(block_id)
+{
+   TBOX_ASSERT(grid_geometry != 0);
+
+   if (from_start) {
+      d_nbr_itr =
+         grid_geometry->d_block_neighbors[block_id.getBlockValue()].begin();
+   }
+   else {
+      d_nbr_itr =
+         grid_geometry->d_block_neighbors[block_id.getBlockValue()].end();
+   }
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+
+BaseGridGeometry::NeighborIterator::NeighborIterator(
+   BaseGridGeometry* grid_geometry,
+   const BlockId& block_id,
+   const BlockId& nbr_block_id)
+   : d_grid_geom(grid_geometry),
+     d_block_id(block_id)
+{
+   TBOX_ASSERT(grid_geometry != 0);
+
+   d_nbr_itr =
+      grid_geometry->d_block_neighbors[block_id.getBlockValue()].find(nbr_block_id);
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+
+BaseGridGeometry::NeighborIterator::NeighborIterator(
+   const NeighborIterator& other)
+{
+   d_grid_geom = other.d_grid_geom;
+   d_block_id.setId(other.d_block_id.getBlockValue());
+   d_nbr_itr = other.d_nbr_itr;
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+
+BaseGridGeometry::NeighborIterator::~NeighborIterator()
+{
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+
+BaseGridGeometry::ConstNeighborIterator::ConstNeighborIterator(
+   const BaseGridGeometry* grid_geometry,
+   const BlockId& block_id,
+   bool from_start)
+   : d_grid_geom(grid_geometry),
+     d_block_id(block_id)
+{
+   TBOX_ASSERT(grid_geometry != 0);
+
+   if (from_start) {
+      d_nbr_itr =
+         grid_geometry->d_block_neighbors[block_id.getBlockValue()].begin();
+   }
+   else {
+      d_nbr_itr =
+         grid_geometry->d_block_neighbors[block_id.getBlockValue()].end();
+   }
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+
+BaseGridGeometry::ConstNeighborIterator::ConstNeighborIterator(
+   const BaseGridGeometry* grid_geometry,
+   const BlockId& block_id,
+   const BlockId& nbr_block_id)
+   : d_grid_geom(grid_geometry),
+     d_block_id(block_id)
+{
+   TBOX_ASSERT(grid_geometry != 0);
+
+   d_nbr_itr =
+      grid_geometry->d_block_neighbors[block_id.getBlockValue()].find(nbr_block_id);
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+
+BaseGridGeometry::ConstNeighborIterator::ConstNeighborIterator(
+   const ConstNeighborIterator& other)
+{
+   d_grid_geom = other.d_grid_geom;
+   d_block_id.setId(other.d_block_id.getBlockValue());
+   d_nbr_itr = other.d_nbr_itr;
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+
+BaseGridGeometry::ConstNeighborIterator::ConstNeighborIterator(
+   const NeighborIterator& other)
+{
+   d_grid_geom = other.d_grid_geom;
+   d_block_id.setId(other.d_block_id.getBlockValue());
+   d_nbr_itr = other.d_nbr_itr;
+}
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+
+BaseGridGeometry::ConstNeighborIterator::~ConstNeighborIterator()
 {
 }
 

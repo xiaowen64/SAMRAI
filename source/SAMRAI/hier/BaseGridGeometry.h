@@ -1063,21 +1063,6 @@ private:
       const BlockId& transformed_block);
 
    /*!
-    * @brief Return a map containing Neighbor objects describing all of the
-    * neighbors of the block indicated by the block_id.
-    *
-    * @return The map holding the neighbors
-    *
-    * @param[in] block_id
-    */
-   const std::map<BlockId, Neighbor>&
-   getNeighbors(
-      const BlockId& block_id) const
-   {
-      return d_block_neighbors[block_id.getBlockValue()];
-   }
-
-   /*!
     * @brief Return the number of neighbors a specific block of the Multiblock
     * domain has.
     *
@@ -1173,6 +1158,432 @@ private:
    virtual void
    putToRestart(
       const boost::shared_ptr<tbox::Database>& restart_db) const;
+
+   /*!
+    * @brief Class NeighborIterator iterates over the Neighbors of a block.
+    *
+    * The iterator points to a mutable Neighbor.
+    */
+   class NeighborIterator
+   {
+   friend class BaseGridGeometry;
+   public:
+      /*!
+       * @brief Copy constructor.
+       *
+       * @param[in] other The non-const iterator to copy.
+       */
+      NeighborIterator(
+        const NeighborIterator& other);
+
+      /*!
+       * @brief Destructor.
+       */
+      ~NeighborIterator();
+
+      /*!
+       * @brief Assignment operator.
+       *
+       * @param[in] rhs The non-const iterator being assigned.
+       *
+       * @return This object after the assignment.
+       */
+      NeighborIterator&
+      operator = (
+        const NeighborIterator& rhs)
+      {
+         d_grid_geom = rhs.d_grid_geom;
+         d_block_id.setId(rhs.d_block_id.getBlockValue());
+         d_nbr_itr = rhs.d_nbr_itr;
+         return *this;
+      }
+
+      /*!
+       * @brief Dereference operator.
+       *
+       * @return The Neighbor that the iterator is currently pointing to.
+       */
+      Neighbor&
+      operator * () const
+      {
+         return d_nbr_itr->second;
+      }
+
+      /*!
+       * @brief Post-increment operator.
+       *
+       * @return This iterator prior to having been incremented.
+       */
+      NeighborIterator
+      operator ++ (
+         int)
+      {
+         NeighborIterator tmp = *this;
+         if (d_nbr_itr !=
+             d_grid_geom->d_block_neighbors[d_block_id.getBlockValue()].end()) {
+            ++d_nbr_itr;
+         }
+         return tmp;
+      }
+
+      /*!
+       * @brief Pre-increment operator.
+       *
+       * @return This iterator after having been incremented.
+       */
+      NeighborIterator&
+      operator ++ ()
+      {
+         if (d_nbr_itr !=
+             d_grid_geom->d_block_neighbors[d_block_id.getBlockValue()].end()) {
+            ++d_nbr_itr;
+         }
+         return *this;
+      }
+
+      /*!
+       * @brief Equality operator.
+       *
+       * @param[in] rhs The right hand side of the comparison.
+       *
+       * @return True if this and rhs are pointing to the same Neighbor of the
+       * same block of the same grid geometry.
+       */
+      bool
+      operator == (
+         const NeighborIterator& rhs) const
+      {
+         return (d_grid_geom == rhs.d_grid_geom) &&
+                (d_block_id == rhs.d_block_id) &&
+                (d_nbr_itr == rhs.d_nbr_itr);
+      }
+
+      /*!
+       * @brief Inequality operator.
+       *
+       * @param[in] rhs The right hand side of the comparison.
+       *
+       * @return True if this and rhs are not pointing to different Neighbors
+       * or iterating over different block or different grid geometries.
+       */
+      bool
+      operator != (
+         const NeighborIterator& rhs) const
+      {
+         return !(*this == rhs);
+      }
+
+   private:
+      /*!
+       * @brief Constructor.
+       *
+       * Constructs an iterator that points to the first or one past the last
+       * Neighbor of the block with the supplied BlockId in the supplied
+       * GridGeometry.
+       *
+       * @pre grid_geometry != 0
+       *
+       * @param[in] grid_geometry The grid geometry whose block Neighbors are
+       *                          of iterest.
+       * @param[in] block_id The ID of the block of interest in the grid
+       *                     geometry.
+       * @param[in] from_start If true iterator first points to the first
+       *                       Neighbor.
+       */
+      NeighborIterator(
+         BaseGridGeometry* grid_geometry,
+         const BlockId& block_id,
+         bool from_start = true);
+
+      /*!
+       * @brief Constructor.
+       *
+       * Constructs an iterator that points to the Neighbor block with BlockId
+       * nbr_blk_id of the block with BlockId block_id.  If no such Neighbor
+       * exists the iterator points to end().
+       *
+       * @pre grid_geometry != 0
+       *
+       * @param[in] grid_geometry The grid geometry whose block Neighbor is of
+       *                          iterest.
+       * @param[in] block_id The ID of the block of interest in the grid
+       *                     geometry.
+       * @param[in] nbr_block_id The ID of the Neighbor block of interest in
+       *                         the grid geometry.
+       */
+      NeighborIterator(
+         BaseGridGeometry* grid_geometry,
+         const BlockId& block_id,
+         const BlockId& nbr_block_id);
+
+      /*!
+       * @brief Unimplemented default constructor.
+       */
+      NeighborIterator();
+
+      /*!
+       * @brief The grid geometry whose block neighbors are of interest.
+       */
+      BaseGridGeometry* d_grid_geom;
+
+      /*!
+       * @brief The block id if the block whose Neighors are of interest.
+       */
+      BlockId d_block_id;
+
+      /*!
+       * @brief The underlying iterator.
+       */
+      std::map<BlockId, Neighbor>::iterator d_nbr_itr;
+   };
+
+   /*!
+    * @brief Class ConstNeighborIterator iterates over the Neighbors of a
+    * block.
+    *
+    * The iterator points to a const Neighbor.
+    */
+   class ConstNeighborIterator
+   {
+   friend class BaseGridGeometry;
+   public:
+      /*!
+       * @brief Copy constructor.
+       *
+       * @param[in] other The const iterator to copy.
+       */
+      ConstNeighborIterator(
+        const ConstNeighborIterator& other);
+
+      /*!
+       * @brief Copy constructor.
+       *
+       * @param[in] other The non-const iterator to copy.
+       */
+      ConstNeighborIterator(
+        const NeighborIterator& other);
+
+      /*!
+       * @brief Destructor.
+       */
+      ~ConstNeighborIterator();
+
+      /*!
+       * @brief Assignment operator.
+       *
+       * @param[in] rhs The const iterator being assigned.
+       *
+       * @return This object after the assignment.
+       */
+      ConstNeighborIterator&
+      operator = (
+        const ConstNeighborIterator& rhs)
+      {
+         d_grid_geom = rhs.d_grid_geom;
+         d_block_id.setId(rhs.d_block_id.getBlockValue());
+         d_nbr_itr = rhs.d_nbr_itr;
+         return *this;
+      }
+
+      /*!
+       * @brief Assignment operator.
+       *
+       * @param[in] rhs The non-const iterator being assigned.
+       *
+       * @return This object after the assignment.
+       */
+      ConstNeighborIterator&
+      operator = (
+        const NeighborIterator& rhs)
+      {
+         d_grid_geom = rhs.d_grid_geom;
+         d_block_id.setId(rhs.d_block_id.getBlockValue());
+         d_nbr_itr = rhs.d_nbr_itr;
+         return *this;
+      }
+
+      /*!
+       * @brief Dereference operator.
+       *
+       * @return The Neighbor that the iterator is currently pointing to.
+       */
+      const Neighbor&
+      operator * () const
+      {
+         return d_nbr_itr->second;
+      }
+
+      /*!
+       * @brief Post-increment operator.
+       *
+       * @return This iterator prior to having been incremented.
+       */
+      ConstNeighborIterator
+      operator ++ (
+         int)
+      {
+         ConstNeighborIterator tmp = *this;
+         if (d_nbr_itr !=
+             d_grid_geom->d_block_neighbors[d_block_id.getBlockValue()].end()) {
+            ++d_nbr_itr;
+         }
+         return tmp;
+      }
+
+      /*!
+       * @brief Pre-increment operator.
+       *
+       * @return This iterator after having been incremented.
+       */
+      ConstNeighborIterator&
+      operator ++ ()
+      {
+         if (d_nbr_itr !=
+             d_grid_geom->d_block_neighbors[d_block_id.getBlockValue()].end()) {
+            ++d_nbr_itr;
+         }
+         return *this;
+      }
+
+      /*!
+       * @brief Equality operator.
+       *
+       * @param[in] rhs The right hand side of the comparison.
+       *
+       * @return True if this and rhs are pointing to the same Neighbor of the
+       * same block of the same grid geometry.
+       */
+      bool
+      operator == (
+         const ConstNeighborIterator& rhs) const
+      {
+         return (d_grid_geom == rhs.d_grid_geom) &&
+                (d_block_id == rhs.d_block_id) &&
+                (d_nbr_itr == rhs.d_nbr_itr);
+      }
+
+      /*!
+       * @brief Inequality operator.
+       *
+       * @param[in] rhs The right hand side of the comparison.
+       *
+       * @return True if this and rhs are not pointing to different Neighbors
+       * or iterating over different block or different grid geometries.
+       */
+      bool
+      operator != (
+         const ConstNeighborIterator& rhs) const
+      {
+         return !(*this == rhs);
+      }
+   private:
+      /*!
+       * @brief Constructor.
+       *
+       * Constructs an iterator that points to the first or one past the last
+       * Neighbor of the block with the supplied BlockId in the supplied
+       * GridGeometry.
+       *
+       * @pre grid_geometry != 0
+       *
+       * @param[in] grid_geometry The grid geometry whose block Neighbors are
+       *                          of iterest.
+       * @param[in] block_id The ID of the block of interest in the grid
+       *                     geometry.
+       * @param[in] from_start If true iterator first points to the first
+       *                       Neighbor.
+       */
+      ConstNeighborIterator(
+         const BaseGridGeometry* grid_geometry,
+         const BlockId& block_id,
+         bool from_start = true);
+
+
+      /*!
+       * @brief Constructor.
+       *
+       * Constructs an iterator that points to the Neighbor block with BlockId
+       * nbr_blk_id of the block with BlockId block_id.  If no such Neighbor
+       * exists the iterator points to end().
+       *
+       * @pre grid_geometry != 0
+       *
+       * @param[in] grid_geometry The grid geometry whose block Neighbor is of
+       *                          iterest.
+       * @param[in] block_id The ID of the block of interest in the grid
+       *                     geometry.
+       * @param[in] nbr_block_id The ID of the Neighbor block of interest in
+       *                         the grid geometry.
+       */
+      ConstNeighborIterator(
+         const BaseGridGeometry* grid_geometry,
+         const BlockId& block_id,
+         const BlockId& nbr_block_id);
+
+      /*!
+       * @brief Unimplemented default constructor.
+       */
+      ConstNeighborIterator();
+
+      /*!
+       * @brief The grid geometry whose block neighbors are of interest.
+       */
+      const BaseGridGeometry* d_grid_geom;
+
+      /*!
+       * @brief The block id if the block whose Neighors are of interest.
+       */
+      BlockId d_block_id;
+
+      /*!
+       * @brief The underlying iterator.
+       */
+      std::map<BlockId, Neighbor>::const_iterator d_nbr_itr;
+   };
+
+   NeighborIterator
+   begin(
+      const BlockId& block_id)
+   {
+      return NeighborIterator(this, block_id);
+   }
+
+   NeighborIterator
+   end(
+      const BlockId& block_id)
+   {
+      return NeighborIterator(this, block_id, false);
+   }
+
+   NeighborIterator
+   find(
+      const BlockId& block_id,
+      const BlockId& nbr_block_id)
+   {
+      return NeighborIterator(this, block_id, nbr_block_id);
+   }
+
+   ConstNeighborIterator
+   begin(
+      const BlockId& block_id) const
+   {
+      return ConstNeighborIterator(this, block_id);
+   }
+
+   ConstNeighborIterator
+   end(
+      const BlockId& block_id) const
+   {
+      return ConstNeighborIterator(this, block_id, false);
+   }
+
+   ConstNeighborIterator
+   find(
+      const BlockId& block_id,
+      const BlockId& nbr_block_id) const
+   {
+      return ConstNeighborIterator(this, block_id, nbr_block_id);
+   }
 
 protected:
    /*!

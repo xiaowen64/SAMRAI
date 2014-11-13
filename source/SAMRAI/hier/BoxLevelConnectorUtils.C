@@ -977,13 +977,11 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
           */
          BoxContainer reduced_connectivity_singularity_boxes(
             grid_geometry->getSingularityBoxContainer(block_id));
-         const std::map<BlockId, BaseGridGeometry::Neighbor>& neighbors(
-            grid_geometry->getNeighbors(block_id));
 
-         for (std::map<BlockId, BaseGridGeometry::Neighbor>::const_iterator ni =
-                 neighbors.begin();
-              ni != neighbors.end(); ++ni) {
-            const BaseGridGeometry::Neighbor& neighbor(ni->second);
+         for (BaseGridGeometry::ConstNeighborIterator ni =
+                 grid_geometry->begin(block_id);
+              ni != grid_geometry->end(block_id); ++ni) {
+            const BaseGridGeometry::Neighbor& neighbor(*ni);
             if (neighbor.isSingularity()) {
                reduced_connectivity_singularity_boxes.removeIntersections(
                   neighbor.getTransformedDomain());
@@ -1012,10 +1010,10 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
             singularity_boxes.refine(refinement_ratio);
          }
 
-         for (std::map<BlockId, BaseGridGeometry::Neighbor>::const_iterator ni =
-                 neighbors.begin();
-              ni != neighbors.end(); ++ni) {
-            const BaseGridGeometry::Neighbor& neighbor(ni->second);
+         for (BaseGridGeometry::ConstNeighborIterator ni =
+                 grid_geometry->begin(block_id);
+              ni != grid_geometry->end(block_id); ++ni) {
+            const BaseGridGeometry::Neighbor& neighbor(*ni);
             const BlockId neighbor_block_id(neighbor.getBlockId());
             if (neighbor.isSingularity() &&
                 reference_boxes_tree.hasBoxInBlock(neighbor_block_id)) {
