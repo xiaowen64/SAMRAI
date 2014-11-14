@@ -675,8 +675,8 @@ RefineSchedule::reset(
    if (d_coarse_interp_encon_schedule) {
       d_coarse_interp_encon_schedule->reset(refine_classes);
    }
-   if (d_nbr_blk_prefill_schedule) {
-      d_nbr_blk_prefill_schedule->reset(refine_classes);
+   if (d_nbr_blk_before_interp_schedule) {
+      d_nbr_blk_before_interp_schedule->reset(refine_classes);
    }
 }
 
@@ -981,7 +981,7 @@ RefineSchedule::finishScheduleConstruction(
 
       if (d_nbr_blk_fill_level.get()) {
 
-         d_nbr_blk_prefill_schedule.reset(
+         d_nbr_blk_before_interp_schedule.reset(
             new RefineSchedule(
                boost::make_shared<PatchLevelInteriorFillPattern>(),
                d_nbr_blk_fill_level,
@@ -2097,20 +2097,20 @@ RefineSchedule::recursiveFill(
             fill_time);
       }
 
-      hier::ComponentSelector nbr_prefill_allocate_vector;
+      hier::ComponentSelector nbr_before_interp_allocate_vector;
       if (d_dst_level->getGridGeometry()->getNumberBlocks() > 1 &&
           d_coarse_interp_schedule->d_nbr_blk_fill_level.get()) {
-         allocateScratchSpace(nbr_prefill_allocate_vector,
+         allocateScratchSpace(nbr_before_interp_allocate_vector,
             d_coarse_interp_schedule->d_nbr_blk_fill_level, fill_time);
       }
 
-      hier::ComponentSelector nbr_prefill_scratch_vector;
-      hier::ComponentSelector nbr_prefill_dst_vector;
-      if (d_nbr_blk_prefill_schedule.get()) {
-         allocateScratchSpace(nbr_prefill_scratch_vector,
-            d_nbr_blk_prefill_schedule->d_dst_level, fill_time);
-         allocateDestinationSpace(nbr_prefill_dst_vector,
-            d_nbr_blk_prefill_schedule->d_dst_level, fill_time);
+      hier::ComponentSelector nbr_before_interp_scratch_vector;
+      hier::ComponentSelector nbr_before_interp_dst_vector;
+      if (d_nbr_blk_before_interp_schedule.get()) {
+         allocateScratchSpace(nbr_before_interp_scratch_vector,
+            d_nbr_blk_before_interp_schedule->d_dst_level, fill_time);
+         allocateDestinationSpace(nbr_before_interp_dst_vector,
+            d_nbr_blk_before_interp_schedule->d_dst_level, fill_time);
       }
 
       /*
@@ -2121,8 +2121,8 @@ RefineSchedule::recursiveFill(
       d_coarse_interp_schedule->recursiveFill(fill_time,
          do_physical_boundary_fill);
 
-      if (d_nbr_blk_prefill_schedule.get()) {
-         d_nbr_blk_prefill_schedule->fillData(fill_time);
+      if (d_nbr_blk_before_interp_schedule.get()) {
+         d_nbr_blk_before_interp_schedule->fillData(fill_time);
       }
 
       /*
@@ -2150,14 +2150,14 @@ RefineSchedule::recursiveFill(
       if (d_dst_level->getGridGeometry()->getNumberBlocks() > 1 &&
           d_coarse_interp_schedule->d_nbr_blk_fill_level.get()) {
          d_coarse_interp_schedule->d_nbr_blk_fill_level->deallocatePatchData(
-            nbr_prefill_allocate_vector);
+            nbr_before_interp_allocate_vector);
       }
 
-      if (d_nbr_blk_prefill_schedule.get()) {
-         d_nbr_blk_prefill_schedule->d_dst_level->deallocatePatchData(
-            nbr_prefill_scratch_vector);
-         d_nbr_blk_prefill_schedule->d_dst_level->deallocatePatchData(
-            nbr_prefill_dst_vector);
+      if (d_nbr_blk_before_interp_schedule.get()) {
+         d_nbr_blk_before_interp_schedule->d_dst_level->deallocatePatchData(
+            nbr_before_interp_scratch_vector);
+         d_nbr_blk_before_interp_schedule->d_dst_level->deallocatePatchData(
+            nbr_before_interp_dst_vector);
       }
 
    }

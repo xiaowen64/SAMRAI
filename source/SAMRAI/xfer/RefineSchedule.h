@@ -1109,8 +1109,17 @@ private:
     */
    boost::shared_ptr<hier::PatchLevel> d_encon_level;
 
+   /*!
+    * @brief Intermediate destination level for interpolating ghost data at
+    * block boundaries
+    */
    boost::shared_ptr<hier::PatchLevel> d_nbr_blk_fill_level;
-   boost::shared_ptr<xfer::RefineSchedule> d_nbr_blk_prefill_schedule;
+
+   /*!
+    * @brief Schedule to fill d_nbr_blk_fill_level with current destination
+    * data prior to interpolation.
+    */
+   boost::shared_ptr<xfer::RefineSchedule> d_nbr_blk_before_interp_schedule;
 
    /*!
     * @brief Describes remaining unfilled boxes after attempting to
@@ -1141,6 +1150,10 @@ private:
    std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >
    d_encon_refine_overlaps;
 
+   /*!
+    * @brief Stores the overlaps needed to copy from d_nbr_blk_fill_level
+    * to the destination at block boundaries.
+    */
    std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >
    d_nbr_blk_copy_overlaps;
 
@@ -1164,6 +1177,12 @@ private:
    boost::shared_ptr<hier::Connector> d_coarse_interp_to_unfilled;
 
    boost::shared_ptr<hier::Connector> d_coarse_interp_encon_to_unfilled_encon;
+
+   /*!
+    * @brief Connector from coarse interp level to d_nbr_blk_fill_level,
+    * used to connect coarse and fine patches for interpolation at
+    * block boundaries.
+    */
    boost::shared_ptr<hier::Connector> d_coarse_interp_to_nbr_fill;
 
    boost::shared_ptr<hier::Connector> d_dst_to_encon;
