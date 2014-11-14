@@ -117,7 +117,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
-	$(TESTLIBDIR)/SinusoidalFrontTagger.h DLBGTest.C DLBGTest.h
+	$(TESTLIBDIR)/SinusoidalFrontGenerator.h DLBGTest.C DLBGTest.h
 
 DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
@@ -350,7 +350,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
-	$(TESTLIBDIR)/SinusoidalFrontTagger.h				\
+	$(TESTLIBDIR)/SinusoidalFrontGenerator.h			\
 	$(TESTLIBDIR)/get-input-filename.h DLBGTest.h main.C
 
 DEPENDS_1 +=\

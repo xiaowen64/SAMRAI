@@ -65,7 +65,7 @@ Schedule::Schedule():
    d_second_tag(s_default_second_tag),
    d_first_message_length(s_default_first_message_length),
    d_unpack_in_deterministic_order(false),
-   d_object_timers(NULL)
+   d_object_timers(0)
 {
    getFromInput();
    setTimerPrefix(s_default_timer_prefix);

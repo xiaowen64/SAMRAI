@@ -59,7 +59,9 @@ using namespace std;
 // Header for application-specific algorithm/data structure object
 
 #include "LinAdv.h"
-#include "test/testlib/SinusoidalFrontTagger.h"
+#include "test/testlib/SinusoidalFrontGenerator.h"
+#include "test/testlib/SphericalShellGenerator.h"
+#include "test/testlib/MeshGenerationStrategy.h"
 
 #include "boost/shared_ptr.hpp"
 
@@ -333,22 +335,35 @@ int main(
             grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
-      const bool use_analytical_tagger =
-         input_db->isDatabase("SinusoidalFrontTagger");
 
-      SinusoidalFrontTagger analytical_tagger(
-         "SinusoidalFrontTagger",
-         dim,
-         input_db->getDatabaseWithDefault("SinusoidalFrontTagger",
-            boost::shared_ptr<tbox::Database>()).get());
-      analytical_tagger.resetHierarchyConfiguration(patch_hierarchy, 0, 3);
+      boost::shared_ptr<SinusoidalFrontGenerator> sine_wall;
+      boost::shared_ptr<SphericalShellGenerator> spherical_shell;
+      boost::shared_ptr<MeshGenerationStrategy> mesh_gen;
+
+      if ( input_db->isDatabase("SinusoidalFrontGenerator") ) {
+         sine_wall.reset( new SinusoidalFrontGenerator(
+            "SinusoidalFrontGenerator", dim,
+            input_db->getDatabase("SinusoidalFrontGenerator") ));
+         sine_wall->resetHierarchyConfiguration(
+            patch_hierarchy, 0, patch_hierarchy->getMaxNumberOfLevels()-1 );
+         mesh_gen = sine_wall;
+      }
+      else if ( input_db->isDatabase("SphericalShellGenerator") ) {
+         spherical_shell.reset( new SphericalShellGenerator(
+            "SphericalShellGenerator", dim,
+            input_db->getDatabase("SphericalShellGenerator") ));
+         spherical_shell->resetHierarchyConfiguration(
+            patch_hierarchy, 0, patch_hierarchy->getMaxNumberOfLevels()-1 );
+         mesh_gen = spherical_shell;
+      }
+
 
       LinAdv* linear_advection_model = new LinAdv(
             "LinAdv",
             dim,
             input_db->getDatabase("LinAdv"),
             grid_geometry,
-            use_analytical_tagger ? &analytical_tagger : 0);
+            mesh_gen );
 
       boost::shared_ptr<tbox::Database> hli_db(
          scaled_input_db->isDatabase("HyperbolicLevelIntegrator") ?
@@ -478,6 +493,14 @@ int main(
             hyp_level_integrator,
             gridding_algorithm));
 
+      /*
+       * Initialize hierarchy configuration and data on all patches.
+       * Then, close restart file and write initial state for visualization.
+       */
+
+      tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier(); // For timing.
+      double dt_now = time_integrator->initializeHierarchy();
+
       // VisItDataWriter is only present if HDF is available
 #ifdef HAVE_HDF5
       boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
@@ -489,14 +512,6 @@ int main(
       linear_advection_model->
       registerVisItDataWriter(visit_data_writer);
 #endif
-
-      /*
-       * Initialize hierarchy configuration and data on all patches.
-       * Then, close restart file and write initial state for visualization.
-       */
-
-      tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier(); // For timing.
-      double dt_now = time_integrator->initializeHierarchy();
 
       RestartManager::getManager()->closeRestartFile();
 
@@ -594,22 +609,22 @@ int main(
 #endif
             }
          }
+
+#ifdef RECORD_STATS
+         /*
+          * Output statistics.
+          */
+         tbox::plog << "HyperbolicLevelIntegrator statistics:" << endl;
+         hyp_level_integrator->printStatistics(tbox::plog);
+         tbox::plog << "\nGriddingAlgorithm statistics:" << endl;
+         gridding_algorithm->printStatistics(tbox::plog);
+#endif
       } // End time-stepping loop.
 
       /*
        * Output timer results.
        */
       tbox::TimerManager::getManager()->print(tbox::plog);
-
-#ifdef RECORD_STATS
-      /*
-       * Output statistics.
-       */
-      tbox::plog << "HyperbolicLevelIntegrator statistics:" << endl;
-      hyp_level_integrator->printStatistics(tbox::plog);
-      tbox::plog << "\nGriddingAlgorithm statistics:" << endl;
-      gridding_algorithm->printStatistics(tbox::plog);
-#endif
 
       if (load_balancer_type == "TreeLoadBalancer") {
          /*

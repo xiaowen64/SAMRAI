@@ -70,11 +70,13 @@ public:
    /*!
     * @brief Partition a set of boxes, discarding the current state.
     *
-    * @param[in] boxes Incoming unpartitioned boxes
+    * @param[in] unpartitioned_boxes Incoming unpartitioned boxes
     *
     * @param[in] rank_begin First rank
     *
     * @param[in] rank_end One past last rank
+    *
+    * @param[in] index_begin
     *
     * @param[in] avg_parts_per_rank Algorithm normally tries to
     * average one partition per rank.  This parameter is a request to
@@ -128,10 +130,10 @@ public:
    /*!
     * @brief Find box partitions overlapping the given box.
     *
-    * @param[o] overlapping_boxes
-    * @param[i] box
-    * @param[i] grid_geometry
-    * @param[i] refinement_ratio
+    * @param[out] overlapping_boxes
+    * @param[in] box
+    * @param[in] grid_geometry
+    * @param[in] refinement_ratio
     *
     * @return Whether any partitions are found.
     */
@@ -147,8 +149,8 @@ public:
     *
     * An unrecoverable error will be thrown if there are multiple blocks.
     *
-    * @param[o] overlapping_boxes
-    * @param[i] box
+    * @param[out] overlapping_boxes
+    * @param[in] box
     *
     * @return Whether any partitions are found.
     */

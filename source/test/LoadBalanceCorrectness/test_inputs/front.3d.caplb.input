@@ -52,7 +52,8 @@ Main {
       /*
         Define a set of sinusoidal fronts oriented in perpendicular to the x-axis.
       */
-      init_disp = 1.0, 1.0, 1.0
+      init_time = 0.0
+      init_disp = 1.0, 0.0, 0.0
       period = 2.0, 4.0, 4.0
       amplitude = 0.5
 

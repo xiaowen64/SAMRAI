@@ -2910,8 +2910,11 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
    const hier::Patch& patch,
    const hier::Box& region,
    const string& variable_name,
-   int depth_id) const
+   int depth_id,
+   double simulation_time) const
 {
+   NULL_USE(simulation_time);
+
    TBOX_ASSERT((region * patch.getBox()).isSpatiallyEqual(region));
 
    bool data_on_patch = FALSE;

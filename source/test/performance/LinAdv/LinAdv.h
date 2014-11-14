@@ -33,7 +33,7 @@ using namespace std;
 #include "SAMRAI/appu/VisItDataWriter.h"
 #include "SAMRAI/appu/VisDerivedDataStrategy.h"
 
-#include "test/testlib/SinusoidalFrontTagger.h"
+#include "test/testlib/MeshGenerationStrategy.h"
 
 #include "boost/shared_ptr.hpp"
 
@@ -80,7 +80,7 @@ public:
       const tbox::Dimension& dim,
       boost::shared_ptr<tbox::Database> input_db,
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geom,
-      SinusoidalFrontTagger* analytical_tagger = 0);
+      const boost::shared_ptr<MeshGenerationStrategy> &sine_wall = boost::shared_ptr<MeshGenerationStrategy>());
 
    /**
     * The destructor for LinAdv does nothing.
@@ -333,10 +333,6 @@ public:
    printClassData(
       ostream& os) const;
 
-   void
-   setAnalyticalTaggerTime(
-      double time);
-
    //@{ @name SAMRAI::appu::VisDerivedDataStrategy virtuals
 
    virtual bool
@@ -345,7 +341,8 @@ public:
       const hier::Patch& patch,
       const hier::Box& region,
       const string& variable_name,
-      int depth_id) const;
+      int depth_id,
+      double simulation_time) const;
 
 private:
    /*
@@ -394,7 +391,7 @@ private:
 
    const tbox::Dimension d_dim;
 
-   SinusoidalFrontTagger* d_analytical_tagger;
+   boost::shared_ptr<MeshGenerationStrategy> d_mesh_gen;
 
    /*
     * We cache pointers to the grid geometry
@@ -402,10 +399,6 @@ private:
     * and register plot variables.
     */
    boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
-
-#ifdef HAVE_HDF5
-   boost::shared_ptr<appu::VisItDataWriter> d_visit_writer;
-#endif
 
    /*
     * Data items used for nonuniform load balance, if used.

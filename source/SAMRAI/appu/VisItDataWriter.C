@@ -1666,9 +1666,10 @@ VisItDataWriter::writeHDFFiles(
       boost::shared_ptr<tbox::Database> processor_HDFGroup(
          visit_HDFFilePointer->putDatabase(std::string(temp_buf)));
       writeVisItVariablesToHDFFile(processor_HDFGroup,
-         hierarchy,
-         0,
-         hierarchy->getFinestLevelNumber());
+                                   hierarchy,
+                                   0,
+                                   hierarchy->getFinestLevelNumber(),
+                                   simulation_time );
       visit_HDFFilePointer->close(); // invokes H5FClose
       delete visit_HDFFilePointer; // deletes tbox::HDFDatabase object
    }
@@ -1742,7 +1743,8 @@ VisItDataWriter::writeVisItVariablesToHDFFile(
    const boost::shared_ptr<tbox::Database>& processor_HDFGroup,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarsest_level,
-   int finest_level)
+   int finest_level,
+   double simulation_time)
 {
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(coarsest_level >= 0);
@@ -1783,10 +1785,8 @@ VisItDataWriter::writeVisItVariablesToHDFFile(
          patch_HDFGroup = level_HDFGroup->putDatabase(std::string(temp_buf));
 
          int curr_var_id_ctr = d_var_id_ctr;
-         packRegularAndDerivedData(patch_HDFGroup,
-            hierarchy,
-            ln,
-            *patch);
+         packRegularAndDerivedData(
+            patch_HDFGroup, hierarchy, ln, *patch, simulation_time );
 
          if (d_materials_names.size() > 0) {
             d_var_id_ctr = curr_var_id_ctr;
@@ -1829,7 +1829,8 @@ VisItDataWriter::packRegularAndDerivedData(
    const boost::shared_ptr<tbox::Database>& patch_HDFGroup,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
-   hier::Patch& patch)
+   hier::Patch& patch,
+   double simulation_time)
 {
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
@@ -1877,7 +1878,8 @@ VisItDataWriter::packRegularAndDerivedData(
                         patch,
                         patch.getBox(),
                         ipi->d_var_name,
-                        depth_id);
+                        depth_id,
+                        simulation_time);
 
                } else {
 

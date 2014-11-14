@@ -26,7 +26,7 @@ using namespace std;
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/solv/CartesianRobinBcHelper.h"
 #include "SAMRAI/solv/RobinBcCoefStrategy.h"
-#include "test/testlib/SinusoidalFrontTagger.h"
+#include "test/testlib/SinusoidalFrontGenerator.h"
 
 using namespace SAMRAI;
 
@@ -60,7 +60,8 @@ public:
       const hier::Patch& patch,
       const hier::Box& region,
       const std::string& variable_name,
-      int depth_id) const;
+      int depth_id,
+      double simulation_time) const;
 
    //@}
 
@@ -103,7 +104,7 @@ private:
 
    boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
-   SinusoidalFrontTagger d_tagger;
+   SinusoidalFrontGenerator d_sine_wall;
 
 };
 

@@ -44,7 +44,6 @@
 #include "SAMRAI/tbox/TimerManager.h"
 #include <vector>
 
-#include "test/testlib/DerivedVisOwnerData.h"
 #include "test/testlib/SinusoidalFrontGenerator.h"
 #include "test/testlib/SphericalShellGenerator.h"
 #include "test/testlib/ShrunkenLevelGenerator.h"
@@ -669,7 +668,7 @@ int main(
 
          tbox::plog << "\n\tLnew prebalance loads:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(1, static_cast<double>(Lnew->getLocalNumberOfCells())),
+            std::vector<double>(static_cast<size_t>(1),static_cast<double>(Lnew->getLocalNumberOfCells())),
             Lnew->getMPI());
 
          if (load_balance[new_ln]) {
@@ -696,7 +695,7 @@ int main(
 
          tbox::plog << "\n\tLnew postbalance loads:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(1, static_cast<double>(Lnew->getLocalNumberOfCells())),
+            std::vector<double>(static_cast<size_t>(1),static_cast<double>(Lnew->getLocalNumberOfCells())),
             Lnew->getMPI());
 
          if (comm_graph_writer) {
@@ -743,14 +742,11 @@ int main(
              * Create the VisIt data writer.
              * Write the plot file.
              */
-            DerivedVisOwnerData owner_writer;
             const std::string visit_filename = base_name_ext + ".visit";
             appu::VisItDataWriter visit_data_writer(dim,
                                                     "VisIt Writer",
                                                     visit_filename);
-            visit_data_writer.registerDerivedPlotQuantity("Owner",
-               "SCALAR",
-               &owner_writer);
+            mesh_gen->registerVariablesWithPlotter(visit_data_writer);
             visit_data_writer.writePlotData(hierarchy, 0);
          }
 #else

@@ -254,9 +254,6 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
 
    const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
-   const std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>& neighbors =
-      grid_geometry->getNeighbors(patch_blk_id);
-
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       boost::shared_ptr<pdat::CellData<double> > cell_data(
@@ -289,14 +286,12 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
                   hier::Transformation::NO_ROTATE;
                hier::IntVector offset(dim);
 
-               std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::
-               const_iterator itr = neighbors.find(encon_blk_id);
-               if (itr != neighbors.end()) {
-                  rotation = itr->second.getRotationIdentifier();
-                  offset = itr->second.getShift(encon_level.getLevelNumber());
+               hier::BaseGridGeometry::ConstNeighborIterator itr =
+                  grid_geometry->find(patch_blk_id, encon_blk_id);
+               if (itr != grid_geometry->end(patch_blk_id)) {
+                  rotation = (*itr).getRotationIdentifier();
+                  offset = (*itr).getShift(encon_level.getLevelNumber());
                }
-
-//               offset *= patch.getPatchGeometry()->getRatio().getBlockVector(patch_blk_id);
 
                hier::Transformation transformation(rotation, offset,
                                                    encon_blk_id,
@@ -389,10 +384,10 @@ bool CellMultiblockTest::verifyResults(
    hier::Box tbox(pbox);
    tbox.grow(tgcw);
 
-   const std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>& neighbors =
-      hierarchy->getGridGeometry()->getNeighbors(block_id);
+   boost::shared_ptr<hier::BaseGridGeometry> grid_geom(
+      hierarchy->getGridGeometry());
    hier::BoxContainer singularity(
-      hierarchy->getGridGeometry()->getSingularityBoxContainer(block_id));
+      grid_geom->getSingularityBoxContainer(block_id));
 
    hier::IntVector ratio =
       hierarchy->getPatchLevel(level_number)->getRatioToLevelZero();
@@ -431,16 +426,18 @@ bool CellMultiblockTest::verifyResults(
 
       hier::Box gbox = cell_data->getGhostBox();
 
-      for (std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::const_iterator
-           ne = neighbors.begin(); ne != neighbors.end(); ++ne) {
+      for (hier::BaseGridGeometry::ConstNeighborIterator ne =
+              grid_geom->begin(block_id);
+           ne != grid_geom->end(block_id); ++ne) {
 
-         correct = ne->second.getBlockId().getBlockValue();
+         const hier::BaseGridGeometry::Neighbor& nbr = *ne;
+         correct = nbr.getBlockId().getBlockValue();
 
-         if (ne->second.isSingularity()) {
+         if (nbr.isSingularity()) {
             continue;
          }
 
-         hier::BoxContainer neighbor_ghost(ne->second.getTransformedDomain());
+         hier::BoxContainer neighbor_ghost(nbr.getTransformedDomain());
          neighbor_ghost.refine(ratio);
          neighbor_ghost.intersectBoxes(gbox);
 
@@ -485,16 +482,18 @@ bool CellMultiblockTest::verifyResults(
                correct = 0.0;
 
                int num_sing_neighbors = 0;
-               for (std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::const_iterator ns(
-                       neighbors.begin()); ns != neighbors.end(); ++ns) {
-                  if (ns->second.isSingularity()) {
+               for (hier::BaseGridGeometry::ConstNeighborIterator ns(
+                       grid_geom->begin(block_id));
+                    ns != grid_geom->end(block_id); ++ns) {
+                  const hier::BaseGridGeometry::Neighbor& nbr = *ns;
+                  if (nbr.isSingularity()) {
                      hier::BoxContainer neighbor_ghost(
-                        ns->second.getTransformedDomain());
+                        nbr.getTransformedDomain());
                      neighbor_ghost.refine(ratio);
                      neighbor_ghost.intersectBoxes(fill_box);
                      if (neighbor_ghost.size()) {
                         ++num_sing_neighbors;
-                        correct += ns->second.getBlockId().getBlockValue();
+                        correct += nbr.getBlockId().getBlockValue();
                      }
                   }
                }

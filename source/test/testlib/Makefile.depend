@@ -149,14 +149,21 @@ FILE_1=DerivedVisOwnerData.o
 DEPENDS_1:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisDerivedDataStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/appu/VisItDataWriter.h			\
+	$(INCLUDE_SAM)/SAMRAI/appu/VisMaterialsDataStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSingleBlockIterator.h	\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
@@ -168,26 +175,41 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/PatchHierarchy.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevelFactory.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/PersistentOverlapConnectors.h	\
+	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
+	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/UncoveredBoxIterator.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/HDFDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h DerivedVisOwnerData.C	\
 	DerivedVisOwnerData.h
 
@@ -650,8 +672,9 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h MeshGenerationStrategy.h	\
-	ShrunkenLevelGenerator.C ShrunkenLevelGenerator.h
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h DerivedVisOwnerData.h	\
+	MeshGenerationStrategy.h ShrunkenLevelGenerator.C		\
+	ShrunkenLevelGenerator.h
 
 DEPENDS_5 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
@@ -727,8 +750,6 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/mesh/BergerRigoutsos.h			\
-	$(INCLUDE_SAM)/SAMRAI/mesh/BoxGeneratorStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/StandardTagAndInitStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
@@ -774,8 +795,9 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h MeshGenerationStrategy.h	\
-	SinusoidalFrontGenerator.C SinusoidalFrontGenerator.h
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h DerivedVisOwnerData.h	\
+	MeshGenerationStrategy.h SinusoidalFrontGenerator.C		\
+	SinusoidalFrontGenerator.h
 
 DEPENDS_6 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
@@ -796,140 +818,8 @@ DEPENDS_6 +=\
 
 ${FILE_6}: ${DEPENDS_6}
 
-FILE_7=SinusoidalFrontTagger.o
+FILE_7=SkeletonBoundaryUtilities2.o
 DEPENDS_7:=\
-	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
-	$(INCLUDE_SAM)/SAMRAI/appu/VisDerivedDataStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/appu/VisItDataWriter.h			\
-	$(INCLUDE_SAM)/SAMRAI/appu/VisMaterialsDataStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/geom/CartesianGridGeometry.h		\
-	$(INCLUDE_SAM)/SAMRAI/geom/CartesianPatchGeometry.h		\
-	$(INCLUDE_SAM)/SAMRAI/geom/GridGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainerSingleBlockIterator.h	\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevel.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxLevelHandle.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxOverlap.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/BoxTree.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/CoarsenOperator.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/ComponentSelector.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/GlobalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/LocalId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchDataFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchDescriptor.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchHierarchy.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevel.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PatchLevelFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/PeriodicId.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/PersistentOverlapConnectors.h	\
-	$(INCLUDE_SAM)/SAMRAI/hier/ProcessorMapping.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/RefineOperator.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/TimeInterpolateOperator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/TransferOperatorRegistry.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/Transformation.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/UncoveredBoxIterator.h		\
-	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
-	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
-	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.h			\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.h	\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyCellDataOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataBasicOps.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataMiscellaneousOpsReal.h	\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsReal.h		\
-	$(INCLUDE_SAM)/SAMRAI/mesh/StandardTagAndInitStrategy.h		\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/MDA_Access.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeDataFactory.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIndex.h				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIterator.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeVariable.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeData.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.h		\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeGeometry.h			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Dimension.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/HDFDatabase.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SinusoidalFrontTagger.C	\
-	SinusoidalFrontTagger.h
-
-DEPENDS_7 +=\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataBasicOps.C			\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataMiscellaneousOpsReal.C	\
-	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyCellDataOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/HierarchyDataOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataBasicOps.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataMiscellaneousOpsReal.C	\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataOpsReal.C		\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.C				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CellVariable.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeDataFactory.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/NodeVariable.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeData.C			\
-	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
-	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-
-
-${FILE_7}: ${DEPENDS_7}
-
-FILE_8=SkeletonBoundaryUtilities2.o
-DEPENDS_8:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/appu/BoundaryUtilityStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/appu/CartesianBoundaryDefines.h		\
@@ -987,7 +877,7 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	SkeletonBoundaryUtilities2.C SkeletonBoundaryUtilities2.h
 
-DEPENDS_8 +=\
+DEPENDS_7 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.C				\
@@ -996,10 +886,10 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 
 
-${FILE_8}: ${DEPENDS_8}
+${FILE_7}: ${DEPENDS_7}
 
-FILE_9=SkeletonBoundaryUtilities3.o
-DEPENDS_9:=\
+FILE_8=SkeletonBoundaryUtilities3.o
+DEPENDS_8:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/appu/BoundaryUtilityStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/appu/CartesianBoundaryDefines.h		\
@@ -1057,7 +947,7 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	SkeletonBoundaryUtilities3.C SkeletonBoundaryUtilities3.h
 
-DEPENDS_9 +=\
+DEPENDS_8 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.C				\
@@ -1066,10 +956,10 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 
 
-${FILE_9}: ${DEPENDS_9}
+${FILE_8}: ${DEPENDS_8}
 
-FILE_10=SkeletonCellDoubleConservativeLinearRefine.o
-DEPENDS_10:=\
+FILE_9=SkeletonCellDoubleConservativeLinearRefine.o
+DEPENDS_9:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -1130,7 +1020,7 @@ DEPENDS_10:=\
 	SkeletonCellDoubleConservativeLinearRefine.C			\
 	SkeletonCellDoubleConservativeLinearRefine.h
 
-DEPENDS_10 +=\
+DEPENDS_9 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.C				\
@@ -1141,10 +1031,10 @@ DEPENDS_10 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 
 
-${FILE_10}: ${DEPENDS_10}
+${FILE_9}: ${DEPENDS_9}
 
-FILE_11=SkeletonCellDoubleWeightedAverage.o
-DEPENDS_11:=\
+FILE_10=SkeletonCellDoubleWeightedAverage.o
+DEPENDS_10:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
@@ -1205,7 +1095,7 @@ DEPENDS_11:=\
 	SkeletonCellDoubleWeightedAverage.C				\
 	SkeletonCellDoubleWeightedAverage.h
 
-DEPENDS_11 +=\
+DEPENDS_10 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.C				\
@@ -1216,10 +1106,10 @@ DEPENDS_11 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 
 
-${FILE_11}: ${DEPENDS_11}
+${FILE_10}: ${DEPENDS_10}
 
-FILE_12=SphericalShellGenerator.o
-DEPENDS_12:=\
+FILE_11=SphericalShellGenerator.o
+DEPENDS_11:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisDerivedDataStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisItDataWriter.h			\
@@ -1320,10 +1210,11 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h MeshGenerationStrategy.h	\
-	SphericalShellGenerator.C SphericalShellGenerator.h
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h DerivedVisOwnerData.h	\
+	MeshGenerationStrategy.h SphericalShellGenerator.C		\
+	SphericalShellGenerator.h
 
-DEPENDS_12 +=\
+DEPENDS_11 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.C				\
@@ -1340,16 +1231,16 @@ DEPENDS_12 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 
 
-${FILE_12}: ${DEPENDS_12}
+${FILE_11}: ${DEPENDS_11}
 
-FILE_13=get-input-filename.o
-DEPENDS_13:=\
+FILE_12=get-input-filename.o
+DEPENDS_12:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(TESTLIBDIR)/get-input-filename.h get-input-filename.C
 
-DEPENDS_13 +=\
+DEPENDS_12 +=\
 	
 
 
-${FILE_13}: ${DEPENDS_13}
+${FILE_12}: ${DEPENDS_12}
 

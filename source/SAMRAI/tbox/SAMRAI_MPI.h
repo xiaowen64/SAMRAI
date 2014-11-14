@@ -745,9 +745,9 @@ public:
     * arrived.  The checking includes barriers, making this a
     * collective operation.
     *
-    * @param[i/o] status
-    * @param[i] source
-    * @param[i] tag
+    * @param[in,out] status
+    * @param[in] source
+    * @param[in] tag
     *
     * @return Whether any messages matching the source and tag are
     * waiting to be received.
