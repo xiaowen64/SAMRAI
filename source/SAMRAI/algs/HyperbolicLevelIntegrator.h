@@ -1091,10 +1091,13 @@ private:
    static boost::shared_ptr<tbox::Timer> t_coarsen_rich_extrap;
    static boost::shared_ptr<tbox::Timer> t_get_level_dt;
    static boost::shared_ptr<tbox::Timer> t_get_level_dt_sync;
-   static boost::shared_ptr<tbox::Timer> t_advance_level;
+   static boost::shared_ptr<tbox::Timer> t_advance_level[5];
+   static boost::shared_ptr<tbox::Timer> t_advance_level_integrate;
    static boost::shared_ptr<tbox::Timer> t_new_advance_bdry_fill_comm;
    static boost::shared_ptr<tbox::Timer> t_patch_num_kernel;
-   static boost::shared_ptr<tbox::Timer> t_advance_level_sync;
+   static boost::shared_ptr<tbox::Timer> t_preprocess_flux_data;
+   static boost::shared_ptr<tbox::Timer> t_postprocess_flux_data;
+   static boost::shared_ptr<tbox::Timer> t_advance_level_sync[5];
    static boost::shared_ptr<tbox::Timer> t_std_level_sync;
    static boost::shared_ptr<tbox::Timer> t_sync_new_levels;
    static boost::shared_ptr<tbox::Timer> t_barrier_after_error_bdry_fill_comm;

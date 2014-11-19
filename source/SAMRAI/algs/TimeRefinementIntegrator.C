@@ -968,6 +968,7 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
 
             }
 
+#if 0
             d_gridding_algorithm->
             regridAllFinerLevels(
                level_number,
@@ -976,6 +977,7 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
                d_level_sim_time[level_number],
                regrid_start_time,
                (coarsest_sync_level >= level_number));
+#endif
 
             d_just_regridded = true;
 
@@ -1239,6 +1241,7 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
 
       }
 
+#if 0
       d_gridding_algorithm->
       regridAllFinerLevels(
          coarse_level_number,
@@ -1265,6 +1268,7 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
             d_integrator_time,
             initial_time);
       }
+#endif
 
    }
 
