@@ -153,14 +153,14 @@ boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_tag_cells;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_coarsen_rich_extrap;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_get_level_dt;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_get_level_dt_sync;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level[5];
+boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_integrate;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_pre_integrate;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_post_integrate;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_patch_loop;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_new_advance_bdry_fill_comm;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_patch_num_kernel;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_sync[5];
+boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_sync;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_compute_dt;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_preprocess_flux_data;
 boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_postprocess_flux_data;
@@ -1007,7 +1007,7 @@ HyperbolicLevelIntegrator::advanceLevel(
    recordStatistics(*level, current_time);
 #endif
 
-   t_advance_level[level->getLevelNumber()]->barrierAndStart();
+   t_advance_level->barrierAndStart();
    t_advance_level_pre_integrate->start();
 
    const int level_number = level->getLevelNumber();
@@ -1241,11 +1241,11 @@ HyperbolicLevelIntegrator::advanceLevel(
       last_step);
 
    t_advance_level_post_integrate->barrierAndStop();
-   t_advance_level_sync[level->getLevelNumber()]->start();
+   t_advance_level_sync->start();
 
    if (d_distinguish_mpi_reduction_costs) {
       hierarchy->getMPI().Barrier();
-      t_advance_level_sync[level->getLevelNumber()]->stop();
+      t_advance_level_sync->stop();
       t_mpi_reductions->start();
    }
 
@@ -1259,10 +1259,10 @@ HyperbolicLevelIntegrator::advanceLevel(
    if (d_distinguish_mpi_reduction_costs) {
       t_mpi_reductions->stop();
    } else {
-      t_advance_level_sync[level->getLevelNumber()]->stop();
+      t_advance_level_sync->stop();
    }
 
-   t_advance_level[level->getLevelNumber()]->stop();
+   t_advance_level->stop();
 
    return next_dt;
 }
@@ -2094,8 +2094,6 @@ HyperbolicLevelIntegrator::preprocessFluxData(
    TBOX_ASSERT(level);
    TBOX_ASSERT(cur_time <= new_time);
 
-   t_preprocess_flux_data->start();
-
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 
    const int level_number = level->getLevelNumber();
@@ -2158,7 +2156,6 @@ HyperbolicLevelIntegrator::preprocessFluxData(
 
    } // if ( !regrid_advance && (level_number > 0) )
 
-   t_preprocess_flux_data->stop();
 }
 
 /*
@@ -2193,8 +2190,6 @@ HyperbolicLevelIntegrator::postprocessFluxData(
    const bool last_step)
 {
    NULL_USE(last_step);
-
-   t_postprocess_flux_data->start();
 
    TBOX_ASSERT(level);
 
@@ -2381,7 +2376,6 @@ HyperbolicLevelIntegrator::postprocessFluxData(
 
    }  // if !regrid_advance and level number > 0 ....
 
-   t_postprocess_flux_data->stop();
 }
 
 /*
@@ -2761,10 +2755,8 @@ HyperbolicLevelIntegrator::initializeCallback()
       getTimer("algs::HyperbolicLevelIntegrator::getLevelDt()");
    t_get_level_dt_sync = tbox::TimerManager::getManager()->
       getTimer("algs::HyperbolicLevelIntegrator::getLevelDt()_sync");
-   for ( int i=0; i<5; ++i ) {
-   t_advance_level[i] = tbox::TimerManager::getManager()->
-     getTimer(std::string("algs::HyperbolicLevelIntegrator::advanceLevel()") + tbox::Utilities::intToString(i));
-   }
+   t_advance_level = tbox::TimerManager::getManager()->
+           getTimer("algs::HyperbolicLevelIntegrator::advanceLevel()");
    t_advance_level_integrate = tbox::TimerManager::getManager()->
       getTimer("algs::HyperbolicLevelIntegrator::advanceLevel()_integrate");
    t_advance_level_pre_integrate = tbox::TimerManager::getManager()->
@@ -2777,10 +2769,8 @@ HyperbolicLevelIntegrator::initializeCallback()
       getTimer("algs::HyperbolicLevelIntegrator::new_advance_bdry_fill_comm");
    t_patch_num_kernel = tbox::TimerManager::getManager()->
       getTimer("algs::HyperbolicLevelIntegrator::patch_numerical_kernels");
-   for ( int i=0; i<5; ++i ) {
-   t_advance_level_sync[i] = tbox::TimerManager::getManager()->
-     getTimer(std::string("algs::HyperbolicLevelIntegrator::advanceLevel()_sync") + tbox::Utilities::intToString(i));
-   }
+   t_advance_level_sync = tbox::TimerManager::getManager()->
+      getTimer("algs::HyperbolicLevelIntegrator::advanceLevel()_sync");
    t_advance_level_compute_dt = tbox::TimerManager::getManager()->
       getTimer("algs::HyperbolicLevelIntegrator::advanceLevel()_compute_dt");
    t_copy_time_dependent_data = tbox::TimerManager::getManager()->
@@ -2788,10 +2778,6 @@ HyperbolicLevelIntegrator::initializeCallback()
    t_std_level_sync = tbox::TimerManager::getManager()->
       getTimer(
          "algs::HyperbolicLevelIntegrator::standardLevelSynchronization()");
-   t_preprocess_flux_data = tbox::TimerManager::getManager()->
-      getTimer("algs::HyperbolicLevelIntegrator::preprocessFluxData()");
-   t_postprocess_flux_data = tbox::TimerManager::getManager()->
-      getTimer("algs::HyperbolicLevelIntegrator::postprocessFluxData()");
    t_sync_new_levels = tbox::TimerManager::getManager()->
       getTimer("algs::HyperbolicLevelIntegrator::synchronizeNewLevels()");
    t_sync_initial_create = tbox::TimerManager::getManager()->
@@ -2831,10 +2817,10 @@ HyperbolicLevelIntegrator::finalizeCallback()
    t_coarsen_rich_extrap.reset();
    t_get_level_dt.reset();
    t_get_level_dt_sync.reset();
-   for ( int i=0; i<5; ++i ) t_advance_level[i].reset();
+   t_advance_level.reset();
    t_new_advance_bdry_fill_comm.reset();
    t_patch_num_kernel.reset();
-   for ( int i=0; i<5; ++i ) t_advance_level_sync[i].reset();
+   t_advance_level_sync.reset();
    t_std_level_sync.reset();
    t_sync_new_levels.reset();
    t_sync_initial_create.reset();
