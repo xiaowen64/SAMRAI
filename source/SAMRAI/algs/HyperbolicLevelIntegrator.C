@@ -217,7 +217,8 @@ HyperbolicLevelIntegrator::HyperbolicLevelIntegrator(
    d_new(hier::VariableDatabase::getDatabase()->getContext("NEW")),
    d_plot_context(d_current),
    d_have_flux_on_level_zero(false),
-   d_distinguish_mpi_reduction_costs(false)
+   d_distinguish_mpi_reduction_costs(false),
+   d_barrier_advance_level_sections(false)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(patch_strategy != 0);
@@ -1007,7 +1008,8 @@ HyperbolicLevelIntegrator::advanceLevel(
    recordStatistics(*level, current_time);
 #endif
 
-   t_advance_level->barrierAndStart();
+   if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
+   t_advance_level->start();
    t_advance_level_pre_integrate->start();
 
    const int level_number = level->getLevelNumber();
@@ -1088,7 +1090,8 @@ HyperbolicLevelIntegrator::advanceLevel(
    d_patch_strategy->clearDataContext();
    fill_schedule.reset();
 
-   t_advance_level_pre_integrate->barrierAndStop();
+   if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
+   t_advance_level_pre_integrate->stop();
    t_advance_level_integrate->start();
 
    preprocessFluxData(level,
@@ -1113,8 +1116,10 @@ HyperbolicLevelIntegrator::advanceLevel(
       regrid_advance);
    t_patch_num_kernel->stop();
 
+   if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
+   t_advance_level_patch_loop->start();
+
    d_patch_strategy->setDataContext(d_scratch);
-   t_advance_level_patch_loop->barrierAndStart();
    for (hier::PatchLevel::iterator ip(level->begin());
         ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
@@ -1139,7 +1144,9 @@ HyperbolicLevelIntegrator::advanceLevel(
       patch->deallocatePatchData(d_temp_var_scratch_data);
    }
    d_patch_strategy->clearDataContext();
-   t_advance_level_patch_loop->barrierAndStop();
+
+   if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
+   t_advance_level_patch_loop->stop();
 
    level->setTime(new_time, d_saved_var_scratch_data);
    level->setTime(new_time, d_flux_var_data);
@@ -1155,7 +1162,8 @@ HyperbolicLevelIntegrator::advanceLevel(
       regrid_advance);
    t_patch_num_kernel->stop();
 
-   t_advance_level_integrate->barrierAndStop();
+   if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
+   t_advance_level_integrate->stop();
    t_advance_level_post_integrate->start();
 
    /*
@@ -1240,7 +1248,8 @@ HyperbolicLevelIntegrator::advanceLevel(
       first_step,
       last_step);
 
-   t_advance_level_post_integrate->barrierAndStop();
+   if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
+   t_advance_level_post_integrate->stop();
    t_advance_level_sync->start();
 
    if (d_distinguish_mpi_reduction_costs) {
@@ -1262,6 +1271,7 @@ HyperbolicLevelIntegrator::advanceLevel(
       t_advance_level_sync->stop();
    }
 
+   if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
    t_advance_level->stop();
 
    return next_dt;
@@ -2642,6 +2652,10 @@ HyperbolicLevelIntegrator::getFromInput(
 
       d_distinguish_mpi_reduction_costs =
          input_db->getBoolWithDefault("DEV_distinguish_mpi_reduction_costs", false);
+
+      d_barrier_advance_level_sections =
+         input_db->getBoolWithDefault("DEV_barrier_advance_level_sections",
+                                      d_barrier_advance_level_sections);
    } else if (input_db) {
       bool read_on_restart =
          input_db->getBoolWithDefault("read_on_restart", false);
@@ -2662,6 +2676,10 @@ HyperbolicLevelIntegrator::getFromInput(
          d_distinguish_mpi_reduction_costs =
             input_db->getBoolWithDefault("DEV_distinguish_mpi_reduction_costs",
                d_distinguish_mpi_reduction_costs);
+
+         d_barrier_advance_level_sections =
+            input_db->getBoolWithDefault("DEV_barrier_advance_level_sections",
+                                         d_barrier_advance_level_sections);
       }
    }
 }

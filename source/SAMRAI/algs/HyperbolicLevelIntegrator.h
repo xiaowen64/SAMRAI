@@ -1073,6 +1073,11 @@ private:
 
    static bool s_barrier_after_error_bdry_fill_comm;
 
+   /*!
+    * @brief For diagnostics: whether to separate major advanceLevel sections with MPI barriers.
+    */
+   bool d_barrier_advance_level_sections;
+
    /*
     * Timers interspersed throughout the class.
     */
