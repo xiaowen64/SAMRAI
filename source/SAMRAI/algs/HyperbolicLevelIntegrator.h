@@ -1073,6 +1073,11 @@ private:
 
    static bool s_barrier_after_error_bdry_fill_comm;
 
+   /*!
+    * @brief For diagnostics: whether to separate major advanceLevel sections with MPI barriers.
+    */
+   bool d_barrier_advance_level_sections;
+
    /*
     * Timers interspersed throughout the class.
     */
@@ -1091,7 +1096,7 @@ private:
    static boost::shared_ptr<tbox::Timer> t_coarsen_rich_extrap;
    static boost::shared_ptr<tbox::Timer> t_get_level_dt;
    static boost::shared_ptr<tbox::Timer> t_get_level_dt_sync;
-   static boost::shared_ptr<tbox::Timer> t_advance_level[5];
+   static boost::shared_ptr<tbox::Timer> t_advance_level;
    static boost::shared_ptr<tbox::Timer> t_advance_level_integrate;
    static boost::shared_ptr<tbox::Timer> t_advance_level_pre_integrate;
    static boost::shared_ptr<tbox::Timer> t_advance_level_post_integrate;
@@ -1100,7 +1105,7 @@ private:
    static boost::shared_ptr<tbox::Timer> t_patch_num_kernel;
    static boost::shared_ptr<tbox::Timer> t_preprocess_flux_data;
    static boost::shared_ptr<tbox::Timer> t_postprocess_flux_data;
-   static boost::shared_ptr<tbox::Timer> t_advance_level_sync[5];
+   static boost::shared_ptr<tbox::Timer> t_advance_level_sync;
    static boost::shared_ptr<tbox::Timer> t_advance_level_compute_dt;
    static boost::shared_ptr<tbox::Timer> t_copy_time_dependent_data;
    static boost::shared_ptr<tbox::Timer> t_std_level_sync;
