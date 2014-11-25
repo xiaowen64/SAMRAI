@@ -69,6 +69,12 @@ descriptions of items in the following list are provided below.
 2) BalanceUtilities::gatherAndReportLoadBalance changed to
    BalanceUtilities::reduceAndReportLoadBalance.
 
+3) BaseGridGeometry::getNeighbors() has been replaced by iterators over the
+   neighbors accessed by begin(), end(), and find().
+
+4) The non-const versions of Box::upper() and Box::lower() have been replaced
+   by Box::setUpper() and Box::setLower().
+
 
 *****************************************************************************
 
@@ -92,6 +98,18 @@ descriptions of items in the following list are provided below.
 2) BalanceUtilities::gatherAndReportLoadBalance changed to
    BalanceUtilities::reduceAndReportLoadBalance and uses a reduce instead of
    a gather for faster completion.  The gathered data wasn't useful anyway.
+
+3) BaseGridGeometry::getNeighbors() exposed the implementation of the storage
+   of each block's neighbors.  It has been replaced by NeighborIterator and
+   ConstNeighborIterator which iterate over the neighbors of a block.  The
+   method begin(const BlockId&) returns an iterator pointing to the first
+   Neighbor of the block with the supplied BlockId.  Similarly,
+   end(const BlockId&) returns an iterator pointing one past the last neighbor
+   of the block with the supplied BlockId.  find(const BlockId&, const BlockId&)
+   returns an iterator pointing to the Neighbor with the 2nd BlockId of the the
+   block with the 1st BlockId or end() if there is no such Neighbor.
+
+4) Makes the places where Boxes are being modified explicit.
 
 
 =============================================================================
