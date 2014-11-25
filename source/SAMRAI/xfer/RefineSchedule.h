@@ -1124,12 +1124,6 @@ private:
    boost::shared_ptr<hier::PatchLevel> d_nbr_blk_fill_level;
 
    /*!
-    * @brief Schedule to fill d_nbr_blk_fill_level with current destination
-    * data prior to interpolation.
-    */
-   boost::shared_ptr<xfer::RefineSchedule> d_nbr_blk_before_interp_schedule;
-
-   /*!
     * @brief Describes remaining unfilled boxes after attempting to
     * fill from the source level.  These remaining boxes must be
     * filled using a coarse interpolation schedule, d_coarse_interp_schedule.
