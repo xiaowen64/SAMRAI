@@ -39,9 +39,17 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
 1) Fixed bug in making a refined/coarsened hierarchy when there are periodic
    directions.  The bug led to wrong periodic shifts in the created hierarchy.
 
-2) Fix bug that led to non-nesting or bad levels.  The occurance of this
+2) Fixed bug that led to non-nesting or bad levels.  The occurance of this
    symptom is extremely rare but can happen during GriddingAlgorithm's
    box manipulations.
+
+3) Error checking has been added to ensure that transpose pairs of Connectors
+   have consistent Connector widths.  If both levels connected by the
+   Connectors are at the level of mesh resolution, the transpose
+   Connectors must have identical Connector widths.  If the levels are at
+   different levels of resolution, the Connector widths must be consistent
+   such that refining the width associated with the coarser level will
+   yield the width associated with the finer level.
 
 *****************************************************************************
 
