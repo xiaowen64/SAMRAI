@@ -36,12 +36,10 @@ PatchCellDataOpsInteger::swapData(
 {
    TBOX_ASSERT(patch);
 
-   boost::shared_ptr<pdat::CellData<int> >
-   d1(
+   boost::shared_ptr<pdat::CellData<int> > d1(
       BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
          patch->getPatchData(data1_id)));
-   boost::shared_ptr<pdat::CellData<int> >
-   d2(
+   boost::shared_ptr<pdat::CellData<int> > d2(
       BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 

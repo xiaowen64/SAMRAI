@@ -407,23 +407,19 @@ private:
    /*!
     * @brief How to choose owner for a new box.
     */
-   enum OwnerMode {
-      SINGLE_OWNER = 0,
-      MOST_OVERLAP = 1,
-      FEWEST_OWNED = 2,
-      LEAST_ACTIVE = 3
-   };
+   enum OwnerMode { SINGLE_OWNER = 0,
+                    MOST_OVERLAP = 1,
+                    FEWEST_OWNED = 2,
+                    LEAST_ACTIVE = 3 };
 
    /*!
     * @brief Method for advancing the algorithm.
     *
     * Each corresponds to a choice permitted by setAlgorithmAdvanceMode().
     */
-   enum AlgoAdvanceMode {
-      ADVANCE_ANY,
-      ADVANCE_SOME,
-      SYNCHRONOUS
-   };
+   enum AlgoAdvanceMode { ADVANCE_ANY,
+                          ADVANCE_SOME,
+                          SYNCHRONOUS };
 
    typedef std::set<int> IntSet;
 

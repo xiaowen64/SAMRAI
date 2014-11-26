@@ -130,12 +130,8 @@ FirstLayerNodeVariableFillPattern::computeStencilBoxes(
 {
    TBOX_ASSERT(stencil_boxes.size() == 0);
 
-   hier::Box
-   dst_node_box(
-      NodeGeometry::toNodeBox(dst_box));
-   hier::Box
-   interior_node_box(
-      dst_node_box);
+   hier::Box dst_node_box(NodeGeometry::toNodeBox(dst_box));
+   hier::Box interior_node_box(dst_node_box);
    interior_node_box.grow(hier::IntVector(dst_box.getDim(), -1));
 
    stencil_boxes.removeIntersections(dst_node_box, interior_node_box);
@@ -166,9 +162,7 @@ FirstLayerNodeVariableFillPattern::computeFillBoxesOverlap(
    hier::BoxContainer stencil_boxes;
    computeStencilBoxes(stencil_boxes, patch_box);
 
-   hier::BoxContainer
-   overlap_boxes(
-      fill_boxes);
+   hier::BoxContainer overlap_boxes(fill_boxes);
 
    /*
     * This is the equivalent of converting every box in overlap_boxes

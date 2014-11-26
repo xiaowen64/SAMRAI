@@ -65,9 +65,7 @@ PatchInteriorVariableFillPattern::calculateOverlap(
    NULL_USE(dst_patch_box);
    NULL_USE(overwrite_interior);
    TBOX_ASSERT_OBJDIM_EQUALITY2(dst_patch_box, src_mask);
-   hier::BoxContainer
-   dst_restrict_boxes(
-      dst_patch_box);
+   hier::BoxContainer dst_restrict_boxes(dst_patch_box);
    return dst_geometry.calculateOverlap(src_geometry, src_mask, fill_box,
       true, transformation,
       dst_restrict_boxes);
@@ -95,13 +93,10 @@ PatchInteriorVariableFillPattern::computeFillBoxesOverlap(
     * For this case, the overlap is simply the intersection of
     * fill_boxes, data_box, and patch_box.
     */
-   hier::Transformation
-   transformation(
+   hier::Transformation transformation(
       hier::IntVector::getZero(patch_box.getDim()));
 
-   hier::BoxContainer
-   overlap_boxes(
-      fill_boxes);
+   hier::BoxContainer overlap_boxes(fill_boxes);
    overlap_boxes.intersectBoxes(data_box * patch_box);
 
    return pdf.getBoxGeometry(patch_box)->setUpOverlap(overlap_boxes,

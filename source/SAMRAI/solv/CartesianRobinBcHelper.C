@@ -30,10 +30,7 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void
-SAMRAI_F77_FUNC(
-   settype1cells2d,
-   SETTYPE1CELLS2D) (
+void SAMRAI_F77_FUNC(settype1cells2d, SETTYPE1CELLS2D) (
    double* data,
    const int& difirst, const int& dilast,
    const int& djfirst, const int& djlast,
@@ -44,18 +41,12 @@ SAMRAI_F77_FUNC(
    const int& jbeg, const int& jend,
    const int& face, const int& ghos, const int& inte, const int& location,
    const double& h, const int& zerog);
-void
-SAMRAI_F77_FUNC(
-   settype2cells2d,
-   SETTYPE2CELLS2D) (
+void SAMRAI_F77_FUNC(settype2cells2d, SETTYPE2CELLS2D) (
    double* data,
    const int& difirst, const int& dilast,
    const int& djfirst, const int& djlast,
    const int* lower, const int* upper, const int& location);
-void
-SAMRAI_F77_FUNC(
-   settype1cells3d,
-   SETTYPE1CELLS3D) (
+void SAMRAI_F77_FUNC(settype1cells3d, SETTYPE1CELLS3D) (
    double* data,
    const int& difirst, const int& dilast,
    const int& djfirst, const int& djlast,
@@ -69,19 +60,13 @@ SAMRAI_F77_FUNC(
    const int& kbeg, const int& kend,
    const int& face, const int& ghos, const int& inte, const int& location,
    const double& h, const int& zerog);
-void
-SAMRAI_F77_FUNC(
-   settype2cells3d,
-   SETTYPE2CELLS3D) (
+void SAMRAI_F77_FUNC(settype2cells3d, SETTYPE2CELLS3D) (
    double* data,
    const int& difirst, const int& dilast,
    const int& djfirst, const int& djlast,
    const int& dkfirst, const int& dklast,
    const int* lower, const int* upper, const int& location);
-void
-SAMRAI_F77_FUNC(
-   settype3cells3d,
-   SETTYPE3CELLS3D) (
+void SAMRAI_F77_FUNC(settype3cells3d, SETTYPE3CELLS3D) (
    double* data,
    const int& difirst, const int& dilast,
    const int& djfirst, const int& djlast,
@@ -148,9 +133,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
 
    NULL_USE(fill_time);
 
-   const tbox::Dimension&
-   dim(
-      patch.getDim());
+   const tbox::Dimension& dim(patch.getDim());
 
    t_set_boundary_values_in_cells->start();
 
@@ -176,22 +159,19 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
       TBOX_ERROR(d_object_name << ": No variable for index "
                                << target_data_id);
    }
-   boost::shared_ptr<pdat::CellVariable<double> >
-   cell_variable_ptr(
+   boost::shared_ptr<pdat::CellVariable<double> > cell_variable_ptr(
       BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(variable_ptr));
    TBOX_ASSERT(cell_variable_ptr);
 
    /*
     * Get the data.
     */
-   boost::shared_ptr<hier::PatchData>
-   data_ptr(
+   boost::shared_ptr<hier::PatchData> data_ptr(
       patch.getPatchData(target_data_id));
    if (!data_ptr) {
       TBOX_ERROR(d_object_name << ": No data for index " << target_data_id);
    }
-   boost::shared_ptr<pdat::CellData<double> >
-   cell_data_ptr(
+   boost::shared_ptr<pdat::CellData<double> > cell_data_ptr(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(data_ptr));
    TBOX_ASSERT(cell_data_ptr);
    pdat::CellData<double>& data = *cell_data_ptr;
@@ -212,16 +192,13 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
        * and the uo (the value in the first ghost cell)
        * uo = ...
        */
-      const hier::Box&
-      patch_box(
-         patch.getBox());
+      const hier::Box& patch_box(patch.getBox());
 
       /*
        * These definitions can go in the next block.
        * They are kept her for debugging.
        */
-      boost::shared_ptr<geom::CartesianPatchGeometry>
-      pg(
+      boost::shared_ptr<geom::CartesianPatchGeometry> pg(
          BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
 
@@ -234,9 +211,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
 
       const hier::Box& ghost_box = data.getGhostBox();
       const double* h = pg->getDx();
-      const int
-      num_coefs(
-         homogeneous_bc ? 1 : 2);
+      const int num_coefs(homogeneous_bc ? 1 : 2);
       const int zerog = num_coefs == 1;
 
       for (int n = 0; n < n_codim1_boxes; ++n) {
@@ -247,10 +222,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
             // Zero ghost width to fill for this boundary box.
             continue;
          }
-         hier::IntVector
-         extension_amount(
-            d_dim,
-            1);
+         hier::IntVector extension_amount(d_dim, 1);
          extension_amount(normal_dir) = 0;
          const hier::BoundaryBox boundary_box =
             d_coef_strategy->numberOfExtensionsFillable() >= extension_amount ?
@@ -259,14 +231,11 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
          const hier::Index& lower = boundary_box.getBox().lower();
          const hier::Index& upper = boundary_box.getBox().upper();
          const hier::Box coefbox = makeFaceBoundaryBox(boundary_box);
-         boost::shared_ptr<pdat::ArrayData<double> >
-         acoef_data(
+         boost::shared_ptr<pdat::ArrayData<double> > acoef_data(
             boost::make_shared<pdat::ArrayData<double> >(coefbox, 1));
-         boost::shared_ptr<pdat::ArrayData<double> >
-         bcoef_data(
+         boost::shared_ptr<pdat::ArrayData<double> > bcoef_data(
             boost::make_shared<pdat::ArrayData<double> >(coefbox, 1));
-         boost::shared_ptr<pdat::ArrayData<double> >
-         gcoef_data(
+         boost::shared_ptr<pdat::ArrayData<double> > gcoef_data(
             homogeneous_bc ? 0 :
             new pdat::ArrayData<double>(coefbox, 1));
          t_use_set_bc_coefs->start();
@@ -568,10 +537,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
          for (int n = 0; n < n_edge_boxes; ++n) {
             const int location_index = edge_boxes[n].getLocationIndex();
             const int edge_dir = 2 - (location_index / 4);
-            hier::IntVector
-            extension_amount(
-               d_dim,
-               0);
+            hier::IntVector extension_amount(d_dim, 0);
             extension_amount(edge_dir) = 1;
             const hier::BoundaryBox boundary_box =
                d_coef_strategy->numberOfExtensionsFillable() >= extension_amount ?
@@ -774,9 +740,7 @@ CartesianRobinBcHelper::trimBoundaryBox(
    const hier::Index& pup = limit_box.upper();
    const hier::Index& blo = bbox.lower();
    const hier::Index& bup = bbox.upper();
-   hier::Index
-   newlo(
-      d_dim), newup(d_dim);
+   hier::Index newlo(d_dim), newup(d_dim);
    int key_direction;
    int d;
    switch (boundary_box.getBoundaryType()) {
@@ -812,16 +776,10 @@ CartesianRobinBcHelper::trimBoundaryBox(
          }
          break;
    }
-   const hier::Box
-   newbox(
-      newlo,
-      newup,
-      boundary_box.getBox().getBlockId());
-   const hier::BoundaryBox
-   newbbox(
-      newbox,
-      boundary_box.getBoundaryType(),
-      boundary_box.getLocationIndex());
+   const hier::Box newbox(newlo, newup, boundary_box.getBox().getBlockId());
+   const hier::BoundaryBox newbbox(newbox,
+                                   boundary_box.getBoundaryType(),
+                                   boundary_box.getLocationIndex());
    return newbbox;
 }
 
@@ -882,10 +840,7 @@ CartesianRobinBcHelper::makeNodeBoundaryBox(
     * The node indices range one higher than the cell indices,
     * in the directions parallel to the boundary.
     */
-   hier::IntVector
-   parallel_growth(
-      d_dim,
-      1);
+   hier::IntVector parallel_growth(d_dim, 1);
    parallel_growth(location_index / 2) = 0;
    node_indices.growUpper(parallel_growth);
    return node_indices;

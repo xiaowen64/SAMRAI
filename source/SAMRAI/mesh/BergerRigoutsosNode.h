@@ -139,18 +139,16 @@ private:
     * set by the destructor, just to help find nodes that
     * are deallocated but somehow was referenced.
     */
-   enum WaitPhase {
-      for_data_only,
-      to_be_launched,
-      reduce_histogram,
-      bcast_acceptability,
-      gather_grouping_criteria,
-      bcast_child_groups,
-      run_children,
-      bcast_to_dropouts,
-      completed,
-      deallocated
-   };
+   enum WaitPhase { for_data_only,
+                    to_be_launched,
+                    reduce_histogram,
+                    bcast_acceptability,
+                    gather_grouping_criteria,
+                    bcast_child_groups,
+                    run_children,
+                    bcast_to_dropouts,
+                    completed,
+                    deallocated };
 
    /*!
     * @brief MPI tags identifying messages.
@@ -163,14 +161,12 @@ private:
     * type is just here in case we have to go back to using
     * them.
     */
-   enum PhaseTag {
-      reduce_histogram_tag = 0,
-      bcast_acceptability_tag = 0,
-      gather_grouping_criteria_tag = 0,
-      bcast_child_groups_tag = 0,
-      bcast_to_dropouts_tag = 0,
-      total_phase_tags = 1
-   };
+   enum PhaseTag { reduce_histogram_tag = 0,
+                   bcast_acceptability_tag = 0,
+                   gather_grouping_criteria_tag = 0,
+                   bcast_child_groups_tag = 0,
+                   bcast_to_dropouts_tag = 0,
+                   total_phase_tags = 1 };
 
    /*!
     * @brief Continue the the BR algorithm.
@@ -223,18 +219,16 @@ private:
     *   broadcast
     *    to the dropout group.
     */
-   enum BoxAcceptance {
-      undetermined = -2,
-      hasnotag_by_owner = -1,
-      rejected_by_calculation = 0,
-      accepted_by_calculation = 1,
-      rejected_by_owner = 2,
-      accepted_by_owner = 3,
-      rejected_by_recombination = 4,
-      accepted_by_recombination = 5,
-      rejected_by_dropout_bcast = 6,
-      accepted_by_dropout_bcast = 7
-   };
+   enum BoxAcceptance { undetermined = -2,
+                        hasnotag_by_owner = -1,
+                        rejected_by_calculation = 0,
+                        accepted_by_calculation = 1,
+                        rejected_by_owner = 2,
+                        accepted_by_owner = 3,
+                        rejected_by_recombination = 4,
+                        accepted_by_recombination = 5,
+                        rejected_by_dropout_bcast = 6,
+                        accepted_by_dropout_bcast = 7 };
 
    //@{
    //! @name Delegated tasks for various phases of running algorithm.

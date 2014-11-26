@@ -89,9 +89,7 @@ SAMRAIVectorReal<TYPE>::SAMRAIVectorReal(
       && (finest_level >= coarsest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
 
-   const tbox::Dimension&
-   dim(
-      d_hierarchy->getDim());
+   const tbox::Dimension& dim(d_hierarchy->getDim());
 
    ++SAMRAIVectorReal<TYPE>::s_instance_counter[dim.getValue() - 1];
 
@@ -117,9 +115,7 @@ template<class TYPE>
 SAMRAIVectorReal<TYPE>::~SAMRAIVectorReal()
 {
 
-   const tbox::Dimension&
-   dim(
-      d_hierarchy->getDim());
+   const tbox::Dimension& dim(d_hierarchy->getDim());
 
    --SAMRAIVectorReal<TYPE>::s_instance_counter[dim.getValue() - 1];
 
@@ -201,8 +197,7 @@ SAMRAIVectorReal<TYPE>::cloneVector(
 {
 
    std::string new_name = (name.empty() ? d_vector_name : name);
-   boost::shared_ptr<SAMRAIVectorReal<TYPE> >
-   new_vec(
+   boost::shared_ptr<SAMRAIVectorReal<TYPE> > new_vec(
       boost::make_shared<SAMRAIVectorReal<TYPE> >(
          new_name,
          d_hierarchy,
@@ -284,8 +279,7 @@ SAMRAIVectorReal<TYPE>::addComponent(
 #ifdef DEBUG_CHECK_ASSERTIONS
    hier::VariableDatabase* var_db =
       hier::VariableDatabase::getDatabase();
-   boost::shared_ptr<hier::PatchDescriptor>
-   patch_descriptor(
+   boost::shared_ptr<hier::PatchDescriptor> patch_descriptor(
       var_db->getPatchDescriptor());
    if (!var_db->checkVariablePatchDataIndexType(var, comp_data_id)) {
       TBOX_ERROR("Error in SAMRAIVectorReal::addComponent : "
@@ -350,8 +344,7 @@ SAMRAIVectorReal<TYPE>::allocateVectorData(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel>
-      level(
+      boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (int i = 0; i < d_number_components; ++i) {
          level->allocatePatchData(d_component_data_id[i], timestamp);
@@ -369,8 +362,7 @@ SAMRAIVectorReal<TYPE>::deallocateVectorData()
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel>
-      level(
+      boost::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (int i = 0; i < d_number_components; ++i) {
          level->deallocatePatchData(d_component_data_id[i]);
@@ -443,9 +435,7 @@ SAMRAIVectorReal<TYPE>::setComponent(
 {
    TBOX_ASSERT(comp_id < d_number_components);
 
-   const tbox::Dimension&
-   dim(
-      d_hierarchy->getDim());
+   const tbox::Dimension& dim(d_hierarchy->getDim());
 
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, *var);
 
@@ -453,24 +443,19 @@ SAMRAIVectorReal<TYPE>::setComponent(
    d_component_data_id[comp_id] = data_id;
    if (!vop) {
 
-      const boost::shared_ptr<pdat::CellVariable<TYPE> >
-      cellvar(
+      const boost::shared_ptr<pdat::CellVariable<TYPE> > cellvar(
          boost::dynamic_pointer_cast<pdat::CellVariable<TYPE>, hier::Variable>(
             var));
-      const boost::shared_ptr<pdat::EdgeVariable<TYPE> >
-      edgevar(
+      const boost::shared_ptr<pdat::EdgeVariable<TYPE> > edgevar(
          boost::dynamic_pointer_cast<pdat::EdgeVariable<TYPE>, hier::Variable>(
             var));
-      const boost::shared_ptr<pdat::FaceVariable<TYPE> >
-      facevar(
+      const boost::shared_ptr<pdat::FaceVariable<TYPE> > facevar(
          boost::dynamic_pointer_cast<pdat::FaceVariable<TYPE>, hier::Variable>(
             var));
-      const boost::shared_ptr<pdat::NodeVariable<TYPE> >
-      nodevar(
+      const boost::shared_ptr<pdat::NodeVariable<TYPE> > nodevar(
          boost::dynamic_pointer_cast<pdat::NodeVariable<TYPE>, hier::Variable>(
             var));
-      const boost::shared_ptr<pdat::SideVariable<TYPE> >
-      sidevar(
+      const boost::shared_ptr<pdat::SideVariable<TYPE> > sidevar(
          boost::dynamic_pointer_cast<pdat::SideVariable<TYPE>, hier::Variable>(
             var));
 
@@ -977,9 +962,7 @@ TYPE
 SAMRAIVectorReal<TYPE>::maxPointwiseDivide(
    const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& denom) const
 {
-   const tbox::SAMRAI_MPI&
-   mpi(
-      d_hierarchy->getMPI());
+   const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
    TYPE max = 0.0;
 
    for (int i = 0; i < d_number_components; ++i) {

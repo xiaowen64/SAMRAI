@@ -1064,8 +1064,7 @@ private:
     * to be received.
     */
    void
-   assertNoMessageForCommunicator(
-      const tbox::SAMRAI_MPI& mpi) const;
+   assertNoMessageForCommunicator( const tbox::SAMRAI_MPI &mpi ) const;
 
    /*!
     * @brief Initialize static objects and register shutdown routine.

@@ -32,10 +32,7 @@ extern "C" {
 #endif
 
 // in cartrefine1d.f:
-void
-SAMRAI_F77_FUNC(
-   cartclinreffacedoub1d,
-   CARTCLINREFFACEDOUB1D) (const int&,
+void SAMRAI_F77_FUNC(cartclinreffacedoub1d, CARTCLINREFFACEDOUB1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -44,10 +41,7 @@ SAMRAI_F77_FUNC(
    const double *, double *,
    double *, double *);
 // in cartrefine2d.f:
-void
-SAMRAI_F77_FUNC(
-   cartclinreffacedoub2d0,
-   CARTCLINREFFACEDOUB2D0) (const int&,
+void SAMRAI_F77_FUNC(cartclinreffacedoub2d0, CARTCLINREFFACEDOUB2D0) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -55,10 +49,7 @@ SAMRAI_F77_FUNC(
    const int *, const double *, const double *,
    const double *, double *,
    double *, double *, double *, double *);
-void
-SAMRAI_F77_FUNC(
-   cartclinreffacedoub2d1,
-   CARTCLINREFFACEDOUB2D1) (const int&,
+void SAMRAI_F77_FUNC(cartclinreffacedoub2d1, CARTCLINREFFACEDOUB2D1) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -67,10 +58,7 @@ SAMRAI_F77_FUNC(
    const double *, double *,
    double *, double *, double *, double *);
 // in cartrefine3d.f:
-void
-SAMRAI_F77_FUNC(
-   cartclinreffacedoub3d0,
-   CARTCLINREFFACEDOUB3D0) (const int&,
+void SAMRAI_F77_FUNC(cartclinreffacedoub3d0, CARTCLINREFFACEDOUB3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -83,10 +71,7 @@ SAMRAI_F77_FUNC(
    const double *, double *,
    double *, double *, double *,
    double *, double *, double *);
-void
-SAMRAI_F77_FUNC(
-   cartclinreffacedoub3d1,
-   CARTCLINREFFACEDOUB3D1) (const int&,
+void SAMRAI_F77_FUNC(cartclinreffacedoub3d1, CARTCLINREFFACEDOUB3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -99,10 +84,7 @@ SAMRAI_F77_FUNC(
    const double *, double *,
    double *, double *, double *,
    double *, double *, double *);
-void
-SAMRAI_F77_FUNC(
-   cartclinreffacedoub3d2,
-   CARTCLINREFFACEDOUB3D2) (const int&,
+void SAMRAI_F77_FUNC(cartclinreffacedoub3d2, CARTCLINREFFACEDOUB3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -154,17 +136,13 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
    const hier::BoxOverlap& fine_overlap,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension&
-   dim(
-      fine.getDim());
+   const tbox::Dimension& dim(fine.getDim());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, coarse, ratio);
 
-   boost::shared_ptr<pdat::FaceData<double> >
-   cdata(
+   boost::shared_ptr<pdat::FaceData<double> > cdata(
       BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<pdat::FaceData<double> >
-   fdata(
+   boost::shared_ptr<pdat::FaceData<double> > fdata(
       BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
@@ -177,21 +155,17 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 
-   const hier::Box
-   cgbox(
-      cdata->getGhostBox());
+   const hier::Box cgbox(cdata->getGhostBox());
 
    const hier::Index cilo = cgbox.lower();
    const hier::Index cihi = cgbox.upper();
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   const boost::shared_ptr<CartesianPatchGeometry>
-   cgeom(
+   const boost::shared_ptr<CartesianPatchGeometry> cgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
-   const boost::shared_ptr<CartesianPatchGeometry>
-   fgeom(
+   const boost::shared_ptr<CartesianPatchGeometry> fgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
 
@@ -204,14 +178,10 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
          const hier::Box& face_box = *b;
          TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, face_box);
 
-         hier::Box
-         fine_box(
-            dim);
+         hier::Box fine_box(dim);
          for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
-            fine_box.setLower(static_cast<tbox::Dimension::dir_t>(
-                  (axis + i) % dim.getValue()), face_box.lower(i));
-            fine_box.setUpper(static_cast<tbox::Dimension::dir_t>(
-                  (axis + i) % dim.getValue()), face_box.upper(i));
+            fine_box.setLower(static_cast<tbox::Dimension::dir_t>((axis + i) % dim.getValue()), face_box.lower(i));
+            fine_box.setUpper(static_cast<tbox::Dimension::dir_t>((axis + i) % dim.getValue()), face_box.upper(i));
          }
 
          fine_box.setUpper(axis, fine_box.upper(axis) - 1);
@@ -222,18 +192,9 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
          const hier::Index ifirstf = fine_box.lower();
          const hier::Index ilastf = fine_box.upper();
 
-         const hier::IntVector
-         tmp_ghosts(
-            dim,
-            0);
-         std::vector<double>
-         diff0(
-            cgbox.numberCells(0) + 2);
-         pdat::FaceData<double>
-         slope0(
-            cgbox,
-            1,
-            tmp_ghosts);
+         const hier::IntVector tmp_ghosts(dim, 0);
+         std::vector<double> diff0(cgbox.numberCells(0) + 2);
+         pdat::FaceData<double> slope0(cgbox, 1, tmp_ghosts);
 
          for (int d = 0; d < fdata->getDepth(); ++d) {
             if ((dim == tbox::Dimension(1))) {
@@ -249,14 +210,8 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                   fdata->getPointer(0, d),
                   &diff0[0], slope0.getPointer(0));
             } else if ((dim == tbox::Dimension(2))) {
-               std::vector<double>
-               diff1(
-                  cgbox.numberCells(1) + 2);
-               pdat::FaceData<double>
-               slope1(
-                  cgbox,
-                  1,
-                  tmp_ghosts);
+               std::vector<double> diff1(cgbox.numberCells(1) + 2);
+               pdat::FaceData<double> slope1(cgbox, 1, tmp_ghosts);
 
                if (axis == 0) {
                   SAMRAI_F77_FUNC(cartclinreffacedoub2d0, CARTCLINREFFACEDOUB2D0) (
@@ -286,23 +241,11 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                      &diff0[0], slope0.getPointer(1));
                }
             } else if ((dim == tbox::Dimension(3))) {
-               std::vector<double>
-               diff1(
-                  cgbox.numberCells(1) + 2);
-               pdat::FaceData<double>
-               slope1(
-                  cgbox,
-                  1,
-                  tmp_ghosts);
+               std::vector<double> diff1(cgbox.numberCells(1) + 2);
+               pdat::FaceData<double> slope1(cgbox, 1, tmp_ghosts);
 
-               std::vector<double>
-               diff2(
-                  cgbox.numberCells(2) + 2);
-               pdat::FaceData<double>
-               slope2(
-                  cgbox,
-                  1,
-                  tmp_ghosts);
+               std::vector<double> diff2(cgbox.numberCells(2) + 2);
+               pdat::FaceData<double> slope2(cgbox, 1, tmp_ghosts);
 
                if (axis == 0) {
                   SAMRAI_F77_FUNC(cartclinreffacedoub3d0, CARTCLINREFFACEDOUB3D0) (

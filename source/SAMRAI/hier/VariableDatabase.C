@@ -18,19 +18,11 @@
 namespace SAMRAI {
 namespace hier {
 
-VariableDatabase *
-VariableDatabase::s_variable_database_instance(
-   0);
+VariableDatabase * VariableDatabase::s_variable_database_instance(0);
 
-const int
-VariableDatabase::s_context_array_alloc_size(
-   10);
-const int
-VariableDatabase::s_variable_array_alloc_size(
-   100);
-const int
-VariableDatabase::s_descriptor_array_alloc_size(
-   200);
+const int VariableDatabase::s_context_array_alloc_size(10);
+const int VariableDatabase::s_variable_array_alloc_size(100);
+const int VariableDatabase::s_descriptor_array_alloc_size(200);
 
 tbox::StartupShutdownManager::Handler
 VariableDatabase::s_shutdown_handler(
@@ -52,8 +44,7 @@ VariableDatabase *
 VariableDatabase::getDatabase()
 {
    if (!s_variable_database_instance) {
-      s_variable_database_instance = new
-         VariableDatabase();
+      s_variable_database_instance = new VariableDatabase();
    }
    return s_variable_database_instance;
 }
@@ -278,9 +269,7 @@ VariableDatabase::registerClonedPatchDataIndex(
    if (checkVariablePatchDataIndex(variable, old_id)) {
 
       std::string old_name = d_patch_descriptor->mapIndexToName(old_id);
-      std::string
-      old_id_string(
-         tbox::Utilities::intToString(old_id, 4));
+      std::string old_id_string(tbox::Utilities::intToString(old_id, 4));
 
       std::string new_name;
       if (old_name.find("-clone_of_id=") == std::string::npos) {
@@ -393,9 +382,7 @@ VariableDatabase::removePatchDataIndex(
 
    if ((data_id >= 0) && (data_id <= d_max_descriptor_id)) {
 
-      boost::shared_ptr<Variable>
-      variable(
-         d_index2variable_map[data_id]);
+      boost::shared_ptr<Variable> variable(d_index2variable_map[data_id]);
 
       if (variable) {
 
@@ -489,8 +476,7 @@ VariableDatabase::checkVariablePatchDataIndexType(
 
    if (d_patch_descriptor->getPatchDataFactory(data_id)) {
 
-      boost::shared_ptr<PatchDataFactory>
-      dfact(
+      boost::shared_ptr<PatchDataFactory> dfact(
          d_patch_descriptor->getPatchDataFactory(data_id));
 
       if (dfact &&
@@ -809,9 +795,7 @@ VariableDatabase::removeInternalSAMRAIVariablePatchDataIndex(
 {
    if ((data_id >= 0) && (data_id <= d_max_descriptor_id)) {
 
-      boost::shared_ptr<Variable>
-      variable(
-         d_index2variable_map[data_id]);
+      boost::shared_ptr<Variable> variable(d_index2variable_map[data_id]);
 
       if (variable &&
           !d_is_user_variable[variable->getInstanceIdentifier()]) {
@@ -1107,8 +1091,7 @@ VariableDatabase::registerVariableAndContext_Private(
          // Check the descriptor id. If valid, get the associated
          // PatchDataFactory instance.
          if (desc_id != idUndefined()) {
-            boost::shared_ptr<PatchDataFactory>
-            factory(
+            boost::shared_ptr<PatchDataFactory> factory(
                d_patch_descriptor->getPatchDataFactory(desc_id));
 
             // Ensure the factory is not null and that the ghost
@@ -1136,13 +1119,10 @@ VariableDatabase::registerVariableAndContext_Private(
    // Create the new factory if necessary
    if (make_new_factory) {
 
-      boost::shared_ptr<PatchDataFactory>
-      new_factory(
+      boost::shared_ptr<PatchDataFactory> new_factory(
          variable->getPatchDataFactory()->cloneFactory(ghosts));
 
-      std::string
-      tmp(
-         variable->getName());
+      std::string tmp(variable->getName());
       tmp += separator;
       tmp += context->getName();
       desc_id = d_patch_descriptor->definePatchDataComponent(tmp, new_factory);

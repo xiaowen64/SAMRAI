@@ -37,12 +37,10 @@ PatchNodeDataOpsInteger::swapData(
 {
    TBOX_ASSERT(patch);
 
-   boost::shared_ptr<pdat::NodeData<int> >
-   d1(
+   boost::shared_ptr<pdat::NodeData<int> > d1(
       BOOST_CAST<pdat::NodeData<int>, hier::PatchData>(
          patch->getPatchData(data1_id)));
-   boost::shared_ptr<pdat::NodeData<int> >
-   d2(
+   boost::shared_ptr<pdat::NodeData<int> > d2(
       BOOST_CAST<pdat::NodeData<int>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 

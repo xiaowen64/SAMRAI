@@ -29,30 +29,21 @@ extern "C" {
 #endif
 
 // in refine1d.f:
-void
-SAMRAI_F77_FUNC(
-   conreffaceflot1d,
-   CONREFFACEFLOT1D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot1d, CONREFFACEFLOT1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const float *, float *);
 // in refine2d.f:
-void
-SAMRAI_F77_FUNC(
-   conreffaceflot2d0,
-   CONREFFACEFLOT2D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot2d0, CONREFFACEFLOT2D0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const float *, float *);
-void
-SAMRAI_F77_FUNC(
-   conreffaceflot2d1,
-   CONREFFACEFLOT2D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot2d1, CONREFFACEFLOT2D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -60,10 +51,7 @@ SAMRAI_F77_FUNC(
    const int *,
    const float *, float *);
 // in refine3d.f:
-void
-SAMRAI_F77_FUNC(
-   conreffaceflot3d0,
-   CONREFFACEFLOT3D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot3d0, CONREFFACEFLOT3D0) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -74,10 +62,7 @@ SAMRAI_F77_FUNC(
    const int&, const int&, const int&,
    const int *,
    const float *, float *);
-void
-SAMRAI_F77_FUNC(
-   conreffaceflot3d1,
-   CONREFFACEFLOT3D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot3d1, CONREFFACEFLOT3D1) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -88,10 +73,7 @@ SAMRAI_F77_FUNC(
    const int&, const int&, const int&,
    const int *,
    const float *, float *);
-void
-SAMRAI_F77_FUNC(
-   conreffaceflot3d2,
-   CONREFFACEFLOT3D2) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot3d2, CONREFFACEFLOT3D2) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -137,16 +119,12 @@ FaceFloatConstantRefine::refine(
    const hier::BoxOverlap& fine_overlap,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension&
-   dim(
-      fine.getDim());
+   const tbox::Dimension& dim(fine.getDim());
 
-   boost::shared_ptr<FaceData<float> >
-   cdata(
+   boost::shared_ptr<FaceData<float> > cdata(
       BOOST_CAST<FaceData<float>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<FaceData<float> >
-   fdata(
+   boost::shared_ptr<FaceData<float> > fdata(
       BOOST_CAST<FaceData<float>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
@@ -160,9 +138,7 @@ FaceFloatConstantRefine::refine(
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
    TBOX_ASSERT_OBJDIM_EQUALITY3(fine, coarse, ratio);
 
-   const hier::Box
-   cgbox(
-      cdata->getGhostBox());
+   const hier::Box cgbox(cdata->getGhostBox());
 
    const hier::Index cilo = cgbox.lower();
    const hier::Index cihi = cgbox.upper();
@@ -178,9 +154,7 @@ FaceFloatConstantRefine::refine(
          const hier::Box& face_box = *b;
          TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, face_box);
 
-         hier::Box
-         fine_box(
-            dim);
+         hier::Box fine_box(dim);
          for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
             fine_box.setLower(
                static_cast<tbox::Dimension::dir_t>((axis + i) % dim.getValue()),

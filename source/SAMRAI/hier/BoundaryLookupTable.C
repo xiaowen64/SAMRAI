@@ -59,9 +59,7 @@ BoundaryLookupTable::BoundaryLookupTable(
          d_ncomb[cdm1] = factrl[dim_val]
             / (factrl[codim] * factrl[dim_val - codim]);
 
-         std::vector<int>
-         work(
-            codim* d_ncomb[cdm1]);
+         std::vector<int> work(codim * d_ncomb[cdm1]);
 
          int recursive_work[SAMRAI::MAX_DIM_VAL];
          int recursive_work_lvl = 0;

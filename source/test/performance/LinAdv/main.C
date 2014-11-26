@@ -180,9 +180,7 @@ int main(
    tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::initialize();
    tbox::SAMRAIManager::startup();
-   tbox::SAMRAI_MPI
-   mpi(
-      tbox::SAMRAI_MPI::getSAMRAIWorld());
+   tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    int num_failures = 0;
 
@@ -219,9 +217,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase>
-      input_db(
-         new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
@@ -229,8 +225,7 @@ int main(
          tbox::TimerManager::getManager()->getTimer("appu::main::all");
       t_all->start();
 
-      boost::shared_ptr<tbox::Timer>
-      t_vis_writing(
+      boost::shared_ptr<tbox::Timer> t_vis_writing(
          tbox::TimerManager::getManager()->getTimer("apps::Main::vis_writing"));
 
       /*
@@ -241,13 +236,9 @@ int main(
        * database.
        */
 
-      boost::shared_ptr<Database>
-      main_db(
-         input_db->getDatabase("Main"));
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
-      const tbox::Dimension
-      dim(
-         static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
       bool use_scaled_input = main_db->getBoolWithDefault("use_scaled_input",
             true);
@@ -255,9 +246,7 @@ int main(
       string scaled_input_str =
          string("ScaledInput")
          + (use_scaled_input ? tbox::Utilities::intToString(scale_size) : string());
-      boost::shared_ptr<Database>
-      scaled_input_db(
-         input_db->getDatabase(scaled_input_str));
+      boost::shared_ptr<Database> scaled_input_db(input_db->getDatabase(scaled_input_str));
 
       string base_name = main_db->getStringWithDefault("base_name", "unnamed");
 
@@ -335,61 +324,58 @@ int main(
        * for this application, see comments at top of file.
        */
 
-      boost::shared_ptr<geom::CartesianGridGeometry>
-      grid_geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(dim,
             "CartesianGeometry",
             scaled_input_db->getDatabase("CartesianGeometry")));
 
-      boost::shared_ptr<hier::PatchHierarchy>
-      patch_hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
          new hier::PatchHierarchy(
             "PatchHierarchy",
             grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
+
       boost::shared_ptr<SinusoidalFrontGenerator> sine_wall;
       boost::shared_ptr<SphericalShellGenerator> spherical_shell;
       boost::shared_ptr<MeshGenerationStrategy> mesh_gen;
 
-      if (input_db->isDatabase("SinusoidalFrontGenerator")) {
-         sine_wall.reset(new SinusoidalFrontGenerator(
-               "SinusoidalFrontGenerator", dim,
-               input_db->getDatabase("SinusoidalFrontGenerator")));
+      if ( input_db->isDatabase("SinusoidalFrontGenerator") ) {
+         sine_wall.reset( new SinusoidalFrontGenerator(
+            "SinusoidalFrontGenerator", dim,
+            input_db->getDatabase("SinusoidalFrontGenerator") ));
          sine_wall->resetHierarchyConfiguration(
-            patch_hierarchy, 0, patch_hierarchy->getMaxNumberOfLevels() - 1);
+            patch_hierarchy, 0, patch_hierarchy->getMaxNumberOfLevels()-1 );
          mesh_gen = sine_wall;
-      } else if (input_db->isDatabase("SphericalShellGenerator")) {
-         spherical_shell.reset(new SphericalShellGenerator(
-               "SphericalShellGenerator", dim,
-               input_db->getDatabase("SphericalShellGenerator")));
+      }
+      else if ( input_db->isDatabase("SphericalShellGenerator") ) {
+         spherical_shell.reset( new SphericalShellGenerator(
+            "SphericalShellGenerator", dim,
+            input_db->getDatabase("SphericalShellGenerator") ));
          spherical_shell->resetHierarchyConfiguration(
-            patch_hierarchy, 0, patch_hierarchy->getMaxNumberOfLevels() - 1);
+            patch_hierarchy, 0, patch_hierarchy->getMaxNumberOfLevels()-1 );
          mesh_gen = spherical_shell;
       }
 
-      LinAdv* linear_advection_model = new
-         LinAdv(
+
+      LinAdv* linear_advection_model = new LinAdv(
             "LinAdv",
             dim,
             input_db->getDatabase("LinAdv"),
             grid_geometry,
-            mesh_gen);
+            mesh_gen );
 
-      boost::shared_ptr<tbox::Database>
-      hli_db(
+      boost::shared_ptr<tbox::Database> hli_db(
          scaled_input_db->isDatabase("HyperbolicLevelIntegrator") ?
          scaled_input_db->getDatabase("HyperbolicLevelIntegrator") :
          input_db->getDatabase("HyperbolicLevelIntegrator"));
-      boost::shared_ptr<algs::HyperbolicLevelIntegrator>
-      hyp_level_integrator(
+      boost::shared_ptr<algs::HyperbolicLevelIntegrator> hyp_level_integrator(
          new algs::HyperbolicLevelIntegrator(
             "HyperbolicLevelIntegrator",
             hli_db,
             linear_advection_model, use_refined_timestepping));
 
-      boost::shared_ptr<mesh::StandardTagAndInitialize>
-      error_detector(
+      boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
          new mesh::StandardTagAndInitialize(
             "StandardTagAndInitialize",
             hyp_level_integrator.get(),
@@ -404,21 +390,17 @@ int main(
 
       if (clustering_type == "BergerRigoutsos") {
 
-         boost::shared_ptr<Database>
-         abr_db(
+         boost::shared_ptr<Database> abr_db(
             input_db->getDatabase("BergerRigoutsos"));
-         boost::shared_ptr<mesh::BoxGeneratorStrategy>
-         berger_rigoutsos(
+         boost::shared_ptr<mesh::BoxGeneratorStrategy> berger_rigoutsos(
             new mesh::BergerRigoutsos(dim, abr_db));
          box_generator = berger_rigoutsos;
 
       } else if (clustering_type == "TileClustering") {
 
-         boost::shared_ptr<Database>
-         tc_db(
+         boost::shared_ptr<Database> tc_db(
             input_db->getDatabase("TileClustering"));
-         boost::shared_ptr<mesh::BoxGeneratorStrategy>
-         tile_clustering(
+         boost::shared_ptr<mesh::BoxGeneratorStrategy> tile_clustering(
             new mesh::TileClustering(dim, tc_db));
          box_generator = tile_clustering;
 
@@ -434,8 +416,7 @@ int main(
 
       if (load_balancer_type == "TreeLoadBalancer") {
 
-         boost::shared_ptr<mesh::TreeLoadBalancer>
-         tree_load_balancer(
+         boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer(
             new mesh::TreeLoadBalancer(
                dim,
                "mesh::TreeLoadBalancer",
@@ -443,8 +424,7 @@ int main(
                boost::shared_ptr<tbox::RankTreeStrategy>(new BalancedDepthFirstTree)));
          tree_load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-         boost::shared_ptr<mesh::TreeLoadBalancer>
-         tree_load_balancer0(
+         boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer0(
             new mesh::TreeLoadBalancer(
                dim,
                "mesh::TreeLoadBalancer0",
@@ -456,16 +436,14 @@ int main(
          load_balancer0 = tree_load_balancer0;
       } else if (load_balancer_type == "CascadePartitioner") {
 
-         boost::shared_ptr<mesh::CascadePartitioner>
-         cascade_partitioner(
+         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner(
             new mesh::CascadePartitioner(
                dim,
                "mesh::CascadePartitioner",
                input_db->getDatabase("CascadePartitioner")));
          cascade_partitioner->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-         boost::shared_ptr<mesh::CascadePartitioner>
-         cascade_partitioner0(
+         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner0(
             new mesh::CascadePartitioner(
                dim,
                "mesh::CascadePartitioner0",
@@ -476,8 +454,7 @@ int main(
          load_balancer0 = cascade_partitioner0;
       } else if (load_balancer_type == "ChopAndPackLoadBalancer") {
 
-         boost::shared_ptr<mesh::ChopAndPackLoadBalancer>
-         cap_load_balancer(
+         boost::shared_ptr<mesh::ChopAndPackLoadBalancer> cap_load_balancer(
             new mesh::ChopAndPackLoadBalancer(
                dim,
                "mesh::ChopAndPackLoadBalancer",
@@ -489,8 +466,7 @@ int main(
           * ChopAndPackLoadBalancer has trouble on L0 for some reason.
           * Work around by using the CascadePartitioner for L0.
           */
-         boost::shared_ptr<mesh::CascadePartitioner>
-         cascade_partitioner0(
+         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner0(
             new mesh::CascadePartitioner(
                dim,
                "mesh::CascadePartitioner0",
@@ -499,8 +475,7 @@ int main(
          load_balancer0 = cascade_partitioner0;
       }
 
-      boost::shared_ptr<mesh::GriddingAlgorithm>
-      gridding_algorithm(
+      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
             patch_hierarchy,
             "GriddingAlgorithm",
@@ -510,8 +485,7 @@ int main(
             load_balancer,
             load_balancer0));
 
-      boost::shared_ptr<algs::TimeRefinementIntegrator>
-      time_integrator(
+      boost::shared_ptr<algs::TimeRefinementIntegrator> time_integrator(
          new algs::TimeRefinementIntegrator(
             "TimeRefinementIntegrator",
             input_db->getDatabase("TimeRefinementIntegrator"),
@@ -529,8 +503,7 @@ int main(
 
       // VisItDataWriter is only present if HDF is available
 #ifdef HAVE_HDF5
-      boost::shared_ptr<appu::VisItDataWriter>
-      visit_data_writer(
+      boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
          new appu::VisItDataWriter(
             dim,
             "LinAdv VisIt Writer",
@@ -657,8 +630,7 @@ int main(
          /*
           * Output load balancing results for TreeLoadBalancer.
           */
-         boost::shared_ptr<mesh::TreeLoadBalancer>
-         tree_load_balancer(
+         boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer(
             BOOST_CAST<mesh::TreeLoadBalancer, mesh::LoadBalanceStrategy>(
                load_balancer));
          TBOX_ASSERT(tree_load_balancer);
@@ -669,8 +641,7 @@ int main(
          /*
           * Output load balancing results for CascadePartitioner.
           */
-         boost::shared_ptr<mesh::CascadePartitioner>
-         cascade_partitioner(
+         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner(
             BOOST_CAST<mesh::CascadePartitioner, mesh::LoadBalanceStrategy>(
                load_balancer));
          TBOX_ASSERT(cascade_partitioner);

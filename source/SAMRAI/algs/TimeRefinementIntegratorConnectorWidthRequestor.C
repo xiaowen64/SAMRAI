@@ -52,24 +52,20 @@ TimeRefinementIntegratorConnectorWidthRequestor::computeRequiredConnectorWidths(
    std::vector<hier::IntVector>& fine_connector_widths,
    const hier::PatchHierarchy& patch_hierarchy) const
 {
-   const tbox::Dimension&
-   dim(
-      patch_hierarchy.getDim());
-   const int
-   max_levels(
-      patch_hierarchy.getMaxNumberOfLevels());
+   const tbox::Dimension& dim(patch_hierarchy.getDim());
+   const int max_levels(patch_hierarchy.getMaxNumberOfLevels());
 
    fine_connector_widths.resize(max_levels - 1, hier::IntVector::getZero(dim));
    self_connector_widths.clear();
    self_connector_widths.reserve(max_levels);
-   for (size_t ln = 0; ln < static_cast<size_t>(max_levels); ++ln) {
-      hier::IntVector
-      buffer(
+   for ( size_t ln=0; ln<static_cast<size_t>(max_levels); ++ln ) {
+      hier::IntVector buffer(
          dim,
-         d_tag_buffer.size() > ln ? d_tag_buffer[ln] : d_tag_buffer.back());
+         d_tag_buffer.size() > ln ? d_tag_buffer[ln] : d_tag_buffer.back() );
       self_connector_widths.push_back(buffer);
    }
 }
+
 
 /*
  **************************************************************************

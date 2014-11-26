@@ -32,10 +32,7 @@ extern "C" {
 #endif
 
 // in cartrefine1d.f:
-void
-SAMRAI_F77_FUNC(
-   cartlinrefnodeflot1d,
-   CARTLINREFNODEFLOT1D) (const int&,
+void SAMRAI_F77_FUNC(cartlinrefnodeflot1d, CARTLINREFNODEFLOT1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -43,10 +40,7 @@ SAMRAI_F77_FUNC(
    const int *, const double *, const double *,
    const float *, float *);
 // in cartrefine2d.f:
-void
-SAMRAI_F77_FUNC(
-   cartlinrefnodeflot2d,
-   CARTLINREFNODEFLOT2D) (const int&,
+void SAMRAI_F77_FUNC(cartlinrefnodeflot2d, CARTLINREFNODEFLOT2D) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -54,10 +48,7 @@ SAMRAI_F77_FUNC(
    const int *, const double *, const double *,
    const float *, float *);
 // in cartrefine3d.f:
-void
-SAMRAI_F77_FUNC(
-   cartlinrefnodeflot3d,
-   CARTLINREFNODEFLOT3D) (const int&,
+void SAMRAI_F77_FUNC(cartlinrefnodeflot3d, CARTLINREFNODEFLOT3D) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -111,9 +102,7 @@ CartesianNodeFloatLinearRefine::refine(
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
-      hier::Box
-      fine_box(
-         * b);
+      hier::Box fine_box(*b);
       fine_box.growUpper(hier::IntVector(ratio.getDim(), -1));
       refine(fine,
          coarse,
@@ -133,38 +122,30 @@ CartesianNodeFloatLinearRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension&
-   dim(
-      fine.getDim());
+   const tbox::Dimension& dim(fine.getDim());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, fine_box, ratio);
 
-   boost::shared_ptr<pdat::NodeData<float> >
-   cdata(
+   boost::shared_ptr<pdat::NodeData<float> > cdata(
       BOOST_CAST<pdat::NodeData<float>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<pdat::NodeData<float> >
-   fdata(
+   boost::shared_ptr<pdat::NodeData<float> > fdata(
       BOOST_CAST<pdat::NodeData<float>, hier::PatchData>(
          fine.getPatchData(dst_component)));
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 
-   const hier::Box
-   cgbox(
-      cdata->getGhostBox());
+   const hier::Box cgbox(cdata->getGhostBox());
 
    const hier::Index cilo = cgbox.lower();
    const hier::Index cihi = cgbox.upper();
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   const boost::shared_ptr<CartesianPatchGeometry>
-   cgeom(
+   const boost::shared_ptr<CartesianPatchGeometry> cgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
-   const boost::shared_ptr<CartesianPatchGeometry>
-   fgeom(
+   const boost::shared_ptr<CartesianPatchGeometry> fgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
 

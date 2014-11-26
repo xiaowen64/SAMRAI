@@ -122,8 +122,7 @@ void SideMultiblockTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         boost::shared_ptr<pdat::SideData<double> >
-         side_data(
+         boost::shared_ptr<pdat::SideData<double> > side_data(
             BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(side_data);
@@ -158,18 +157,13 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
 {
    NULL_USE(time);
 
-   boost::shared_ptr<hier::PatchGeometry>
-   pgeom(
-      patch.getPatchGeometry());
+   boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
    const std::vector<hier::BoundaryBox>& node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
    const int num_node_bdry_boxes = static_cast<int>(node_bdry.size());
 
-   std::vector<hier::BoundaryBox>
-   empty_vector(
-      0,
-      hier::BoundaryBox(d_dim));
+   std::vector<hier::BoundaryBox> empty_vector(0, hier::BoundaryBox(d_dim));
    const std::vector<hier::BoundaryBox>& edge_bdry =
       d_dim > tbox::Dimension(1) ?
       pgeom->getCodimensionBoundaries(d_dim.getValue() - 1) : empty_vector;
@@ -182,8 +176,7 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      boost::shared_ptr<pdat::SideData<double> >
-      side_data(
+      boost::shared_ptr<pdat::SideData<double> > side_data(
          BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(side_data);
@@ -201,9 +194,7 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
             hier::Box patch_side_box =
                pdat::SideGeometry::toSideBox(patch.getBox(), axis);
             if (!node_bdry[nb].getIsMultiblockSingularity()) {
-               pdat::SideIterator
-               niend(
-                  pdat::SideGeometry::end(fill_box, axis));
+               pdat::SideIterator niend(pdat::SideGeometry::end(fill_box, axis));
                for (pdat::SideIterator ni(pdat::SideGeometry::begin(fill_box, axis));
                     ni != niend; ++ni) {
                   if (!patch_side_box.contains(*ni)) {
@@ -230,17 +221,11 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
             for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
                hier::Box patch_side_box =
                   pdat::SideGeometry::toSideBox(patch.getBox(), axis);
-               hier::Index
-               plower(
-                  patch_side_box.lower());
-               hier::Index
-               pupper(
-                  patch_side_box.upper());
+               hier::Index plower(patch_side_box.lower());
+               hier::Index pupper(patch_side_box.upper());
 
                if (!edge_bdry[eb].getIsMultiblockSingularity()) {
-                  pdat::SideIterator
-                  niend(
-                     pdat::SideGeometry::end(fill_box, axis));
+                  pdat::SideIterator niend(pdat::SideGeometry::end(fill_box, axis));
                   for (pdat::SideIterator ni(pdat::SideGeometry::begin(fill_box, axis));
                        ni != niend; ++ni) {
                      if (!patch_side_box.contains(*ni)) {
@@ -283,17 +268,11 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
             for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
                hier::Box patch_side_box =
                   pdat::SideGeometry::toSideBox(patch.getBox(), axis);
-               hier::Index
-               plower(
-                  patch_side_box.lower());
-               hier::Index
-               pupper(
-                  patch_side_box.upper());
+               hier::Index plower(patch_side_box.lower());
+               hier::Index pupper(patch_side_box.upper());
 
                if (!face_bdry[fb].getIsMultiblockSingularity()) {
-                  pdat::SideIterator
-                  niend(
-                     pdat::SideGeometry::end(fill_box, axis));
+                  pdat::SideIterator niend(pdat::SideGeometry::end(fill_box, axis));
                   for (pdat::SideIterator ni(pdat::SideGeometry::begin(fill_box, axis));
                        ni != niend; ++ni) {
                      if (!patch_side_box.contains(*ni)) {
@@ -342,33 +321,23 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      boost::shared_ptr<pdat::SideData<double> >
-      side_data(
+      boost::shared_ptr<pdat::SideData<double> > side_data(
          BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(side_data);
 
-      hier::Box
-      sing_fill_box(
-         side_data->getGhostBox()* fill_box);
+      hier::Box sing_fill_box(side_data->getGhostBox() * fill_box);
 
       int depth = side_data->getDepth();
 
       for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
-         hier::Box
-         pbox(
+         hier::Box pbox(
             pdat::SideGeometry::toSideBox(patch.getBox(), axis));
 
-         hier::Index
-         plower(
-            pbox.lower());
-         hier::Index
-         pupper(
-            pbox.upper());
+         hier::Index plower(pbox.lower());
+         hier::Index pupper(pbox.upper());
 
-         pdat::SideIterator
-         niend(
-            pdat::SideGeometry::end(sing_fill_box, axis));
+         pdat::SideIterator niend(pdat::SideGeometry::end(sing_fill_box, axis));
          for (pdat::SideIterator ni(pdat::SideGeometry::begin(sing_fill_box, axis));
               ni != niend; ++ni) {
             bool use_index = true;
@@ -399,17 +368,14 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
             for (hier::Connector::ConstNeighborIterator ei = dst_to_encon->begin(ni);
                  ei != dst_to_encon->end(ni); ++ei) {
 
-               boost::shared_ptr<hier::Patch>
-               encon_patch(
+               boost::shared_ptr<hier::Patch> encon_patch(
                   encon_level.getPatch(ei->getBoxId()));
 
                const hier::BlockId& encon_blk_id = ei->getBlockId();
 
                hier::Transformation::RotationIdentifier rotation =
                   hier::Transformation::NO_ROTATE;
-               hier::IntVector
-               offset(
-                  dim);
+               hier::IntVector offset(dim);
 
                hier::BaseGridGeometry::ConstNeighborIterator itr =
                   grid_geometry->find(patch_blk_id, encon_blk_id);
@@ -420,42 +386,29 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
 
                offset *= patch.getPatchGeometry()->getRatio();
 
-               hier::Transformation
-               transformation(
-                  rotation,
-                  offset,
-                  encon_blk_id,
-                  patch_blk_id);
-               hier::Box
-               encon_patch_box(
-                  encon_patch->getBox());
+               hier::Transformation transformation(rotation, offset,
+                                                   encon_blk_id,
+                                                   patch_blk_id);
+               hier::Box encon_patch_box(encon_patch->getBox());
                transformation.transform(encon_patch_box);
 
-               hier::Box
-               encon_fill_box(
-                  encon_patch_box* sing_fill_box);
+               hier::Box encon_fill_box(encon_patch_box * sing_fill_box);
                if (!encon_fill_box.empty()) {
 
                   const hier::Transformation::RotationIdentifier back_rotate =
                      hier::Transformation::getReverseRotationIdentifier(
                         rotation, dim);
 
-                  hier::IntVector
-                  back_shift(
-                     dim);
+                  hier::IntVector back_shift(dim);
 
                   hier::Transformation::calculateReverseShift(
                      back_shift, offset, rotation);
 
-                  hier::Transformation
-                  back_trans(
-                     back_rotate,
-                     back_shift,
-                     patch_blk_id,
-                     encon_blk_id);
+                  hier::Transformation back_trans(back_rotate, back_shift,
+                                                  patch_blk_id,
+                                                  encon_blk_id);
 
-                  boost::shared_ptr<pdat::SideData<double> >
-                  sing_data(
+                  boost::shared_ptr<pdat::SideData<double> > sing_data(
                      BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
                         encon_patch->getPatchData(
                            d_variables[i], getDataContext())));
@@ -466,16 +419,10 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
                      hier::Box pbox =
                         pdat::SideGeometry::toSideBox(patch.getBox(), axis);
 
-                     hier::Index
-                     plower(
-                        pbox.lower());
-                     hier::Index
-                     pupper(
-                        pbox.upper());
+                     hier::Index plower(pbox.lower());
+                     hier::Index pupper(pbox.upper());
 
-                     pdat::SideIterator
-                     ciend(
-                        pdat::SideGeometry::end(sing_fill_box, axis));
+                     pdat::SideIterator ciend(pdat::SideGeometry::end(sing_fill_box, axis));
                      for (pdat::SideIterator ci(pdat::SideGeometry::begin(sing_fill_box, axis));
                           ci != ciend; ++ci) {
                         bool use_index = true;
@@ -490,9 +437,7 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
 
                         if (use_index) {
 
-                           pdat::SideIndex
-                           src_index(
-                              * ci);
+                           pdat::SideIndex src_index(*ci);
                            pdat::SideGeometry::transform(src_index, back_trans);
 
                            for (int d = 0; d < depth; ++d) {
@@ -514,16 +459,10 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
             hier::Box pbox =
                pdat::SideGeometry::toSideBox(patch.getBox(), axis);
 
-            hier::Index
-            plower(
-               pbox.lower());
-            hier::Index
-            pupper(
-               pbox.upper());
+            hier::Index plower(pbox.lower());
+            hier::Index pupper(pbox.upper());
 
-            pdat::SideIterator
-            ciend(
-               pdat::SideGeometry::end(sing_fill_box, axis));
+            pdat::SideIterator ciend(pdat::SideGeometry::end(sing_fill_box, axis));
             for (pdat::SideIterator ci(pdat::SideGeometry::begin(sing_fill_box, axis));
                  ci != ciend; ++ci) {
                bool use_index = true;
@@ -555,16 +494,10 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
             hier::Box pbox =
                pdat::SideGeometry::toSideBox(patch.getBox(), axis);
 
-            hier::Index
-            plower(
-               pbox.lower());
-            hier::Index
-            pupper(
-               pbox.upper());
+            hier::Index plower(pbox.lower());
+            hier::Index pupper(pbox.upper());
 
-            pdat::SideIterator
-            ciend(
-               pdat::SideGeometry::end(sing_fill_box, axis));
+            pdat::SideIterator ciend(pdat::SideGeometry::end(sing_fill_box, axis));
             for (pdat::SideIterator ci(pdat::SideGeometry::begin(sing_fill_box, axis));
                  ci != ciend; ++ci) {
                bool use_index = true;
@@ -607,31 +540,23 @@ bool SideMultiblockTest::verifyResults(
    tbox::plog << "level_number = " << level_number << endl;
    tbox::plog << "Patch box = " << patch.getBox() << endl;
 
-   hier::IntVector
-   tgcw(
-      d_dim,
-      0);
+   hier::IntVector tgcw(d_dim, 0);
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
       tgcw.max(patch.getPatchData(d_variables[i], getDataContext())->
          getGhostCellWidth());
    }
    hier::Box pbox = patch.getBox();
 
-   boost::shared_ptr<pdat::SideData<double> >
-   solution(
+   boost::shared_ptr<pdat::SideData<double> > solution(
       new pdat::SideData<double>(pbox, 1, tgcw));
 
-   hier::Box
-   tbox(
-      pbox);
+   hier::Box tbox(pbox);
    tbox.grow(tgcw);
 
-   boost::shared_ptr<hier::BaseGridGeometry>
-   grid_geom(
+   boost::shared_ptr<hier::BaseGridGeometry> grid_geom(
       hierarchy->getGridGeometry());
 
-   hier::BoxContainer
-   singularity(
+   hier::BoxContainer singularity(
       grid_geom->getSingularityBoxContainer(block_id));
 
    hier::IntVector ratio =
@@ -645,22 +570,17 @@ bool SideMultiblockTest::verifyResults(
 
       double correct = (double)block_id.getBlockValue();
 
-      boost::shared_ptr<pdat::SideData<double> >
-      side_data(
+      boost::shared_ptr<pdat::SideData<double> > side_data(
          BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(side_data);
       int depth = side_data->getDepth();
 
-      hier::Box
-      interior_box(
-         pbox);
+      hier::Box interior_box(pbox);
       interior_box.grow(hier::IntVector(d_dim, -1));
 
       for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
-         pdat::SideIterator
-         ciend(
-            pdat::SideGeometry::end(interior_box, axis));
+         pdat::SideIterator ciend(pdat::SideGeometry::end(interior_box, axis));
          for (pdat::SideIterator ci(pdat::SideGeometry::begin(interior_box, axis));
               ci != ciend; ++ci) {
             for (int d = 0; d < depth; ++d) {
@@ -698,14 +618,11 @@ bool SideMultiblockTest::verifyResults(
 
             correct = nbr.getBlockId().getBlockValue();
 
-            hier::BoxContainer
-            neighbor_ghost(
-               nbr.getTransformedDomain());
+            hier::BoxContainer neighbor_ghost(nbr.getTransformedDomain());
             hier::BoxContainer neighbor_side_ghost;
             for (hier::BoxContainer::iterator nn = neighbor_ghost.begin();
                  nn != neighbor_ghost.end(); ++nn) {
-               hier::Box
-               neighbor_ghost_interior(
+               hier::Box neighbor_ghost_interior(
                   pdat::SideGeometry::toSideBox(*nn, axis));
                neighbor_ghost_interior.grow(-hier::IntVector::getOne(d_dim));
                neighbor_side_ghost.pushFront(neighbor_ghost_interior);
@@ -720,15 +637,9 @@ bool SideMultiblockTest::verifyResults(
             for (hier::BoxContainer::iterator ng = neighbor_side_ghost.begin();
                  ng != neighbor_side_ghost.end(); ++ng) {
 
-               hier::Box::iterator
-               ciend(
-                  ng->end());
+               hier::Box::iterator ciend(ng->end());
                for (hier::Box::iterator ci(ng->begin()); ci != ciend; ++ci) {
-                  pdat::SideIndex
-                  si(
-                     * ci,
-                     0,
-                     0);
+                  pdat::SideIndex si(*ci, 0, 0);
                   si.setAxis(axis);
                   if (!patch_side_box.contains(si)) {
                      for (int d = 0; d < depth; ++d) {
@@ -753,9 +664,7 @@ bool SideMultiblockTest::verifyResults(
          }
       }
 
-      boost::shared_ptr<hier::PatchGeometry>
-      pgeom(
-         patch.getPatchGeometry());
+      boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
       for (int b = 0; b < d_dim.getValue(); ++b) {
          const std::vector<hier::BoundaryBox>& bdry =
@@ -776,8 +685,7 @@ bool SideMultiblockTest::verifyResults(
                     ns != grid_geom->end(block_id); ++ns) {
                   const hier::BaseGridGeometry::Neighbor& nbr = *ns;
                   if (nbr.isSingularity()) {
-                     hier::BoxContainer
-                     neighbor_ghost(
+                     hier::BoxContainer neighbor_ghost(
                         nbr.getTransformedDomain());
                      neighbor_ghost.refine(ratio);
                      neighbor_ghost.intersectBoxes(fill_box);
@@ -806,9 +714,7 @@ bool SideMultiblockTest::verifyResults(
                hier::Box patch_side_box =
                   pdat::SideGeometry::toSideBox(pbox, axis);
 
-               pdat::SideIterator
-               ciend(
-                  pdat::SideGeometry::end(fill_box, axis));
+               pdat::SideIterator ciend(pdat::SideGeometry::end(fill_box, axis));
                for (pdat::SideIterator ci(pdat::SideGeometry::begin(fill_box, axis));
                     ci != ciend; ++ci) {
 
@@ -874,9 +780,7 @@ void SideMultiblockTest::postprocessRefine(
 {
    pdat::SideDoubleConstantRefine ref_op;
 
-   hier::BoxContainer
-   fine_box_list(
-      fine_box);
+   hier::BoxContainer fine_box_list(fine_box);
    hier::BoxContainer empty_box_list;
 
    xfer::BoxGeometryVariableFillPattern fill_pattern;
@@ -886,8 +790,7 @@ void SideMultiblockTest::postprocessRefine(
       int id = hier::VariableDatabase::getDatabase()->
          mapVariableAndContextToIndex(d_variables[i], context);
 
-      boost::shared_ptr<hier::PatchDataFactory>
-      fine_pdf(
+      boost::shared_ptr<hier::PatchDataFactory> fine_pdf(
          fine.getPatchDescriptor()->getPatchDataFactory(id));
 
       boost::shared_ptr<hier::BoxOverlap> fine_overlap =

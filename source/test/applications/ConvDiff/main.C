@@ -137,9 +137,7 @@ int main(
    tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::initialize();
    tbox::SAMRAIManager::startup();
-   const tbox::SAMRAI_MPI&
-   mpi(
-      tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    int num_failures = 0;
 
@@ -192,8 +190,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<tbox::InputDatabase>
-      input_db(
+      boost::shared_ptr<tbox::InputDatabase> input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -203,8 +200,7 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         boost::shared_ptr<tbox::Database>
-         global_db(
+         boost::shared_ptr<tbox::Database> global_db(
             input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
@@ -220,13 +216,10 @@ int main(
        * interval is non-zero, create a restart database.
        */
 
-      boost::shared_ptr<tbox::Database>
-      main_db(
+      boost::shared_ptr<tbox::Database> main_db(
          input_db->getDatabase("Main"));
 
-      const tbox::Dimension
-      dim(
-         static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
       const std::string base_name =
          main_db->getStringWithDefault("base_name", "unnamed");
@@ -302,8 +295,7 @@ int main(
        * Initialize the MainRestartData object which stores the state of the
        * main program for restart.
        */
-      MainRestartData* main_restart_data = new
-         MainRestartData(
+      MainRestartData* main_restart_data = new MainRestartData(
             "MainRestartData",
             input_db->getDatabase("MainRestartData"));
 
@@ -315,51 +307,43 @@ int main(
        * for this application, see comments at top of file.
        */
 
-      boost::shared_ptr<geom::CartesianGridGeometry>
-      grid_geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             dim,
             "CartesianGeometry",
             input_db->getDatabase("CartesianGeometry")));
 
-      boost::shared_ptr<hier::PatchHierarchy>
-      patch_hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
          new hier::PatchHierarchy(
             "PatchHierarchy",
             grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
-      ConvDiff* convdiff_model = new
-         ConvDiff(
-            "ConvDiff",
+      ConvDiff* convdiff_model = new ConvDiff("ConvDiff",
             dim,
             input_db->getDatabase("ConvDiff"),
             grid_geometry);
 
-      boost::shared_ptr<algs::MethodOfLinesIntegrator>
-      mol_integrator(
+      boost::shared_ptr<algs::MethodOfLinesIntegrator> mol_integrator(
          new algs::MethodOfLinesIntegrator(
             "MethodOfLinesIntegrator",
             input_db->getDatabase("MethodOfLinesIntegrator"),
             convdiff_model));
 
-      boost::shared_ptr<mesh::StandardTagAndInitialize>
-      error_detector(
+      boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
          new mesh::StandardTagAndInitialize(
             "StandardTagAndInitialize",
             mol_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
-      boost::shared_ptr<mesh::BergerRigoutsos>
-      box_generator(
+      boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
          new mesh::BergerRigoutsos(
             dim,
             input_db->getDatabaseWithDefault(
                "BergerRigoutsos",
                boost::shared_ptr<tbox::Database>())));
 
-      boost::shared_ptr<mesh::TreeLoadBalancer>
-      load_balancer(
+      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(
             dim,
             "LoadBalancer",
@@ -367,8 +351,7 @@ int main(
             boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::BalancedDepthFirstTree)));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      boost::shared_ptr<mesh::GriddingAlgorithm>
-      gridding_algorithm(
+      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
             patch_hierarchy,
             "GriddingAlgorithm",
@@ -381,8 +364,7 @@ int main(
        * Set up Visualization plot file writer(s).
        */
 #ifdef HAVE_HDF5
-      boost::shared_ptr<appu::VisItDataWriter>
-      visit_data_writer(
+      boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
          new appu::VisItDataWriter(
             dim,
             "ConvDiff VisIt Writer",
@@ -426,8 +408,7 @@ int main(
       ****************************************************************/
 
       std::vector<int>
-      tag_buffer_array(
-         patch_hierarchy->getMaxNumberOfLevels());
+      tag_buffer_array(patch_hierarchy->getMaxNumberOfLevels());
       for (int il = 0; il < patch_hierarchy->getMaxNumberOfLevels(); ++il) {
          tag_buffer_array[il] = main_restart_data->getTagBuffer();
          tbox::pout << "il = " << il << " tag_buffer = "
@@ -435,8 +416,7 @@ int main(
                     << endl;
       }
 
-      std::vector<double>
-      regrid_start_time(
+      std::vector<double> regrid_start_time(
          patch_hierarchy->getMaxNumberOfLevels());
 
       double loop_time = main_restart_data->getLoopTime();
@@ -477,11 +457,7 @@ int main(
        * of the problem. If no automated testing is done, the object does
        * not get used.
        */
-      AutoTester* autotester = new
-         AutoTester(
-            "AutoTester",
-            dim,
-            input_db);
+      AutoTester* autotester = new AutoTester("AutoTester", dim, input_db);
 #endif
 
       /*******************************************************************

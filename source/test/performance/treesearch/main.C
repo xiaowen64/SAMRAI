@@ -62,9 +62,7 @@ int main(
    SAMRAI_MPI::init(&argc, &argv);
    SAMRAIManager::initialize();
    SAMRAIManager::startup();
-   tbox::SAMRAI_MPI
-   mpi(
-      tbox::SAMRAI_MPI::getSAMRAIWorld());
+   tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    int fail_count = 0;
 
@@ -90,8 +88,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase>
-      input_db(
+      boost::shared_ptr<InputDatabase> input_db(
          new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -109,13 +106,9 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database>
-      main_db(
-         input_db->getDatabase("Main"));
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
-      const tbox::Dimension
-      dim(
-         static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
       std::string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
@@ -136,20 +129,13 @@ int main(
       plog << "Input database after initialization..." << std::endl;
       input_db->printClassData(plog);
 
-      tbox::TimerManager *
-      tm(
-         tbox::TimerManager::getManager());
-      const std::string
-      dim_str(
-         tbox::Utilities::intToString(dim.getValue()));
-      boost::shared_ptr<tbox::Timer>
-      t_build_tree(
+      tbox::TimerManager * tm(tbox::TimerManager::getManager());
+      const std::string dim_str(tbox::Utilities::intToString(dim.getValue()));
+      boost::shared_ptr<tbox::Timer> t_build_tree(
          tm->getTimer("apps::main::build_tree[" + dim_str + "]"));
-      boost::shared_ptr<tbox::Timer>
-      t_search_tree_for_set(
+      boost::shared_ptr<tbox::Timer> t_search_tree_for_set(
          tm->getTimer("apps::main::search_tree_for_set[" + dim_str + "]"));
-      boost::shared_ptr<tbox::Timer>
-      t_search_tree_for_vec(
+      boost::shared_ptr<tbox::Timer> t_search_tree_for_vec(
          tm->getTimer("apps::main::search_tree_for_vec[" + dim_str + "]"));
 
       /*
@@ -172,9 +158,7 @@ int main(
       /*
        * Compute bounding box.
        */
-      hier::Box
-      bounding_box(
-         dim);
+      hier::Box bounding_box(dim);
       for (BoxVec::iterator bi = boxes.begin(); bi != boxes.end(); ++bi) {
          bounding_box += *bi;
       }
@@ -199,8 +183,7 @@ int main(
             /*
              * Scale up the box array.
              */
-            tbox::Dimension::dir_t shift_dir = static_cast<tbox::Dimension::dir_t>(
-                  (iscale - 1) % dim.getValue());
+            tbox::Dimension::dir_t shift_dir = static_cast<tbox::Dimension::dir_t>((iscale - 1) % dim.getValue());
             /*
              * Shift distance is less than number of bounding boxes in shift_dir
              * in order to generate some non-trivial overlaps.
@@ -235,10 +218,7 @@ int main(
          /*
           * Grow the boxes for overlap search.
           */
-         hier::IntVector
-         growth(
-            dim,
-            1);
+         hier::IntVector growth(dim, 1);
          if (main_db->isInteger("growth")) {
             main_db->getIntegerArray("growth", &growth[0], dim.getValue());
          }
@@ -361,10 +341,7 @@ void generateBoxesUniform(
 {
    output.clear();
 
-   hier::IntVector
-   boxsize(
-      dim,
-      1);
+   hier::IntVector boxsize(dim, 1);
    if (db->isInteger("boxsize")) {
       db->getIntegerArray("boxsize", &boxsize[0], dim.getValue());
    } else {
@@ -372,10 +349,7 @@ void generateBoxesUniform(
          << "    box size is absent.");
    }
 
-   hier::IntVector
-   boxrepeat(
-      dim,
-      1);
+   hier::IntVector boxrepeat(dim, 1);
    if (db->isInteger("boxrepeat")) {
       db->getIntegerArray("boxrepeat", &boxrepeat[0], dim.getValue());
    }
@@ -383,17 +357,10 @@ void generateBoxesUniform(
    /*
     * Create an array of boxes by repeating the given box.
     */
-   hier::Index
-   index(
-      dim,
-      0);
+   hier::Index index(dim, 0);
    do {
-      hier::Index
-      lower(
-         index* boxsize);
-      hier::Index
-      upper(
-         lower + boxsize - 1);
+      hier::Index lower(index * boxsize);
+      hier::Index upper(lower + boxsize - 1);
       int& e = index(0);
       for (e = 0; e < boxrepeat(0); ++e) {
          lower(0) = e * boxsize(0);

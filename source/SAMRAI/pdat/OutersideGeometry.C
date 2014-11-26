@@ -122,90 +122,65 @@ OutersideGeometry::doOverlap(
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 #endif
 
-   const tbox::Dimension&
-   dim(
-      src_mask.getDim());
+   const tbox::Dimension& dim(src_mask.getDim());
 
    TBOX_ASSERT(dst_geometry.getDirectionVector() == hier::IntVector::getOne(dim));
 
-   std::vector<hier::BoxContainer>
-   dst_boxes(
-      dim.getValue());
+   std::vector<hier::BoxContainer> dst_boxes(dim.getValue());
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
-   const hier::Box
-   src_box(
-      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts)* src_mask);
-   hier::Box
-   src_shift(
-      src_box);
+   const hier::Box src_box(
+      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
+   hier::Box src_shift(src_box);
    transformation.transform(src_shift);
-   const hier::Box
-   dst_ghost(
+   const hier::Box dst_ghost(
       hier::Box::grow(dst_geometry.getBox(), dst_geometry.getGhosts()));
 
    // Compute the intersection (if any) for each of the side directions
 
    const hier::IntVector& one_vector = hier::IntVector::getOne(dim);
 
-   const hier::Box
-   quick_check(
+   const hier::Box quick_check(
       hier::Box::grow(src_shift, one_vector) * hier::Box::grow(dst_ghost,
          one_vector));
 
    if (!quick_check.empty()) {
 
-      hier::Box
-      mask_shift(
-         src_mask);
+      hier::Box mask_shift(src_mask);
       transformation.transform(mask_shift);
 
       for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
-         const hier::Box
-         dst_side(
+         const hier::Box dst_side(
             SideGeometry::toSideBox(dst_ghost, d));
-         const hier::Box
-         src_side(
+         const hier::Box src_side(
             SideGeometry::toSideBox(src_shift, d));
 
-         const hier::Box
-         together(
-            dst_side* src_side);
+         const hier::Box together(dst_side * src_side);
 
          if (!together.empty()) {
 
-            const hier::Box
-            msk_side(
+            const hier::Box msk_side(
                SideGeometry::toSideBox(mask_shift, d));
 
-            const hier::Box
-            fill_side(
+            const hier::Box fill_side(
                SideGeometry::toSideBox(fill_box, d));
 
             // Add lower side intersection (if any) to the box list
-            hier::Box
-            low_side(
-               src_side);
+            hier::Box low_side(src_side);
             low_side.setUpper(d, low_side.lower(d)); //+ghosts;
 
-            hier::Box
-            low_overlap(
-               low_side * msk_side * dst_side* fill_side);
+            hier::Box low_overlap(low_side * msk_side * dst_side * fill_side);
             if (!low_overlap.empty()) {
                dst_boxes[d].pushBack(low_overlap);
             }
 
             // Add upper side intersection (if any) to the box list
-            hier::Box
-            hig_side(
-               src_side);
+            hier::Box hig_side(src_side);
             hig_side.setLower(d, hig_side.upper(d)); //-ghosts;
 
-            hier::Box
-            hig_overlap(
-               hig_side * msk_side * dst_side* fill_side);
+            hier::Box hig_overlap(hig_side * msk_side * dst_side * fill_side);
             if (!hig_overlap.empty()) {
                dst_boxes[d].pushBack(hig_overlap);
             }
@@ -262,115 +237,82 @@ OutersideGeometry::doOverlap(
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 #endif
 
-   const tbox::Dimension&
-   dim(
-      src_mask.getDim());
+   const tbox::Dimension& dim(src_mask.getDim());
 
-   std::vector<hier::BoxContainer>
-   dst_boxes(
-      dim.getValue());
+   std::vector<hier::BoxContainer> dst_boxes(dim.getValue());
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
-   const hier::Box
-   src_box(
-      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts)* src_mask);
-   hier::Box
-   src_shift(
-      src_box);
+   const hier::Box src_box(
+      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
+   hier::Box src_shift(src_box);
    transformation.transform(src_shift);
-   const hier::Box
-   dst_ghost(
+   const hier::Box dst_ghost(
       hier::Box::grow(dst_geometry.getBox(), dst_geometry.getGhosts()));
 
    // Compute the intersection (if any) for each of the side directions
 
    const hier::IntVector& one_vector = hier::IntVector::getOne(dim);
 
-   const hier::Box
-   quick_check(
+   const hier::Box quick_check(
       hier::Box::grow(src_shift, one_vector) * hier::Box::grow(dst_ghost,
          one_vector));
 
    if (!quick_check.empty()) {
 
-      hier::Box
-      mask_shift(
-         src_mask);
+      hier::Box mask_shift(src_mask);
       transformation.transform(mask_shift);
 
       for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
-         const hier::Box
-         dst_side(
+         const hier::Box dst_side(
             SideGeometry::toSideBox(dst_geometry.getBox(), d));
-         const hier::Box
-         src_side(
+         const hier::Box src_side(
             SideGeometry::toSideBox(src_shift, d));
 
-         const hier::Box
-         together(
-            dst_side* src_side);
+         const hier::Box together(dst_side * src_side);
 
          if (!together.empty()) {
 
-            const hier::Box
-            msk_side(
+            const hier::Box msk_side(
                SideGeometry::toSideBox(mask_shift, d));
 
-            const hier::Box
-            fill_side(
+            const hier::Box fill_side(
                SideGeometry::toSideBox(fill_box, d));
 
-            hier::Box
-            low_dst_side(
-               dst_side);
+            hier::Box low_dst_side(dst_side);
             low_dst_side.setUpper(d, low_dst_side.lower(d));
-            hier::Box
-            hig_dst_side(
-               dst_side);
+            hier::Box hig_dst_side(dst_side);
             hig_dst_side.setLower(d, hig_dst_side.upper(d));
 
             // Add lower side intersection (if any) to the box list
-            hier::Box
-            low_src_side(
-               src_side);
+            hier::Box low_src_side(src_side);
             low_src_side.setUpper(d, low_src_side.lower(d));
 
-            hier::Box
-            low_low_overlap(
-               low_src_side * msk_side
-               * low_dst_side* fill_side);
+            hier::Box low_low_overlap(low_src_side * msk_side
+                                      * low_dst_side * fill_side);
             if (!low_low_overlap.empty()) {
                dst_boxes[d].pushBack(low_low_overlap);
             }
 
-            hier::Box
-            low_hig_overlap(
-               low_src_side * msk_side
-               * hig_dst_side* fill_side);
+            hier::Box low_hig_overlap(low_src_side * msk_side
+                                      * hig_dst_side * fill_side);
             if (!low_hig_overlap.empty()) {
                dst_boxes[d].pushBack(low_hig_overlap);
             }
 
             // Add upper side intersection (if any) to the box list
-            hier::Box
-            hig_src_side(
-               src_side);
+            hier::Box hig_src_side(src_side);
             hig_src_side.setLower(d, hig_src_side.upper(d));
 
-            hier::Box
-            hig_low_overlap(
-               hig_src_side * msk_side
-               * low_dst_side* fill_side);
+            hier::Box hig_low_overlap(hig_src_side * msk_side
+                                      * low_dst_side * fill_side);
             if (!hig_low_overlap.empty()) {
                dst_boxes[d].pushBack(hig_low_overlap);
             }
 
-            hier::Box
-            hig_hig_overlap(
-               hig_src_side * msk_side
-               * hig_dst_side* fill_side);
+            hier::Box hig_hig_overlap(hig_src_side * msk_side
+                                      * hig_dst_side * fill_side);
             if (!hig_hig_overlap.empty()) {
                dst_boxes[d].pushBack(hig_hig_overlap);
             }
@@ -415,19 +357,13 @@ OutersideGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
 {
-   const tbox::Dimension&
-   dim(
-      transformation.getOffset().getDim());
-   std::vector<hier::BoxContainer>
-   dst_boxes(
-      dim.getValue());
+   const tbox::Dimension& dim(transformation.getOffset().getDim());
+   std::vector<hier::BoxContainer> dst_boxes(dim.getValue());
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
       for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
-         hier::Box
-         side_box(
-            SideGeometry::toSideBox(*b, d));
+         hier::Box side_box(SideGeometry::toSideBox(*b, d));
          dst_boxes[d].pushBack(side_box);
       }
    }

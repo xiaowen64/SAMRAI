@@ -49,8 +49,7 @@ template<class TYPE>
 int
 CellVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<CellDataFactory<TYPE> >
-   cell_factory(
+   boost::shared_ptr<CellDataFactory<TYPE> > cell_factory(
       BOOST_CAST<CellDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(cell_factory);

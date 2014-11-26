@@ -63,9 +63,10 @@ public:
     */
    void
    setTagBuffer(
-      const std::vector<int>& tag_buffer);
+      const std::vector<int>& tag_buffer );
 
 private:
+
    std::vector<int> d_tag_buffer;
 
 };

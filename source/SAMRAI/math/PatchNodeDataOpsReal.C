@@ -52,12 +52,10 @@ PatchNodeDataOpsReal<TYPE>::swapData(
 {
    TBOX_ASSERT(patch);
 
-   boost::shared_ptr<pdat::NodeData<TYPE> >
-   d1(
+   boost::shared_ptr<pdat::NodeData<TYPE> > d1(
       BOOST_CAST<pdat::NodeData<TYPE>, hier::PatchData>(
          patch->getPatchData(data1_id)));
-   boost::shared_ptr<pdat::NodeData<TYPE> >
-   d2(
+   boost::shared_ptr<pdat::NodeData<TYPE> > d2(
       BOOST_CAST<pdat::NodeData<TYPE>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 

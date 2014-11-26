@@ -594,8 +594,8 @@ public:
     * @see empty()
     */
    DEPRECATED(
-      bool
-      isEmpty() const)
+   bool
+   isEmpty() const)
    {
       return empty();
    }
@@ -615,9 +615,11 @@ public:
    {
       if (d_empty_flag) {
          return true;
-      } else if (!d_empty_flag) {
+      }
+      else if (!d_empty_flag) {
          return false;
-      } else {
+      }
+      else {
          for (dir_t i = 0; i < getDim().getValue(); ++i) {
             if (d_hi(i) < d_lo(i)) {
                d_empty_flag = true;

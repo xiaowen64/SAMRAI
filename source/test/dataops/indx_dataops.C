@@ -54,9 +54,7 @@ int main(
    const unsigned short d = static_cast<unsigned short>(atoi(argv[1]));
    TBOX_ASSERT(d > 0);
    TBOX_ASSERT(d <= SAMRAI::MAX_DIM_VAL);
-   const tbox::Dimension
-   dim(
-      d);
+   const tbox::Dimension dim(d);
 
    const std::string log_fn = std::string("indx_dataops.")
       + tbox::Utilities::intToString(dim.getValue(), 1) + "d.log";
@@ -79,30 +77,14 @@ int main(
       double lo[SAMRAI::MAX_DIM_VAL];
       double hi[SAMRAI::MAX_DIM_VAL];
 
-      hier::Index
-      clo0(
-         dim);
-      hier::Index
-      chi0(
-         dim);
-      hier::Index
-      clo1(
-         dim);
-      hier::Index
-      chi1(
-         dim);
-      hier::Index
-      flo0(
-         dim);
-      hier::Index
-      fhi0(
-         dim);
-      hier::Index
-      flo1(
-         dim);
-      hier::Index
-      fhi1(
-         dim);
+      hier::Index clo0(dim);
+      hier::Index chi0(dim);
+      hier::Index clo1(dim);
+      hier::Index chi1(dim);
+      hier::Index flo0(dim);
+      hier::Index fhi0(dim);
+      hier::Index flo1(dim);
+      hier::Index fhi1(dim);
 
       for (int i = 0; i < dim.getValue(); ++i) {
          lo[i] = 0.0;
@@ -129,30 +111,11 @@ int main(
          }
       }
 
-      hier::Box
-      coarse0(
-         clo0,
-         chi0,
-         hier::BlockId(0));
-      hier::Box
-      coarse1(
-         clo1,
-         chi1,
-         hier::BlockId(0));
-      hier::Box
-      fine0(
-         flo0,
-         fhi0,
-         hier::BlockId(0));
-      hier::Box
-      fine1(
-         flo1,
-         fhi1,
-         hier::BlockId(0));
-      hier::IntVector
-      ratio(
-         dim,
-         2);
+      hier::Box coarse0(clo0, chi0, hier::BlockId(0));
+      hier::Box coarse1(clo1, chi1, hier::BlockId(0));
+      hier::Box fine0(flo0, fhi0, hier::BlockId(0));
+      hier::Box fine1(flo1, fhi1, hier::BlockId(0));
+      hier::IntVector ratio(dim, 2);
 
       hier::BoxContainer coarse_domain;
       hier::BoxContainer fine_domain;
@@ -161,35 +124,29 @@ int main(
       fine_domain.pushBack(fine0);
       fine_domain.pushBack(fine1);
 
-      boost::shared_ptr<geom::CartesianGridGeometry>
-      geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry> geometry(
          new geom::CartesianGridGeometry(
             "CartesianGeometry",
             lo,
             hi,
             coarse_domain));
 
-      boost::shared_ptr<hier::PatchHierarchy>
-      hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", geometry));
 
       hierarchy->setMaxNumberOfLevels(2);
       hierarchy->setRatioToCoarserLevel(ratio, 1);
 
-      const tbox::SAMRAI_MPI&
-      mpi(
-         tbox::SAMRAI_MPI::getSAMRAIWorld());
+      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
       const int nproc = mpi.getSize();
 
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_domain.size();
 
-      boost::shared_ptr<hier::BoxLevel>
-      layer0(
+      boost::shared_ptr<hier::BoxLevel> layer0(
          boost::make_shared<hier::BoxLevel>(
             hier::IntVector(dim, 1), geometry));
-      boost::shared_ptr<hier::BoxLevel>
-      layer1(
+      boost::shared_ptr<hier::BoxLevel> layer1(
          boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
@@ -224,17 +181,12 @@ int main(
        * the variable database.
        */
       hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-      boost::shared_ptr<hier::VariableContext>
-      cxt(
+      boost::shared_ptr<hier::VariableContext> cxt(
          variable_db->getContext("dummy"));
-      const hier::IntVector
-      no_ghosts(
-         dim,
-         0);
+      const hier::IntVector no_ghosts(dim, 0);
 
       boost::shared_ptr<pdat::IndexVariable<SampleIndexData,
-                                            pdat::CellGeometry> >
-      data(
+                                            pdat::CellGeometry> > data(
          new pdat::IndexVariable<SampleIndexData, pdat::CellGeometry>(
             dim, "sample"));
       int data_id = variable_db->registerVariableAndContext(
@@ -254,8 +206,7 @@ int main(
       int counter = 0;
       std::ostream& os = tbox::plog;
       for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
-         boost::shared_ptr<hier::PatchLevel>
-         level(
+         boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
 
          // allocate "sample" data
@@ -265,15 +216,12 @@ int main(
          // loop over patches on level
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
-            boost::shared_ptr<hier::Patch>
-            patch(
-               * ip);
+            boost::shared_ptr<hier::Patch> patch(*ip);
             os << "Patch: " << patch->getLocalId() << std::endl;
 
             // access sample data from patch
             boost::shared_ptr<pdat::IndexData<SampleIndexData,
-                                              pdat::CellGeometry> >
-            sample(
+                                              pdat::CellGeometry> > sample(
                BOOST_CAST<pdat::IndexData<SampleIndexData, pdat::CellGeometry>,
                           hier::PatchData>(
                   patch->getPatchData(data_id)));
@@ -281,9 +229,7 @@ int main(
 
             // iterate over cells of patch and invoke one "SampleIndexData"
             // instance on each cell (its possible to do more).
-            pdat::CellIterator
-            icend(
-               pdat::CellGeometry::end(patch->getBox()));
+            pdat::CellIterator icend(pdat::CellGeometry::end(patch->getBox()));
             for (pdat::CellIterator ic(pdat::CellGeometry::begin(patch->getBox()));
                  ic != icend; ++ic) {
                SampleIndexData sd;
@@ -295,10 +241,7 @@ int main(
             // iterate over the "SampleIndexData" index data stored on the patch
             // and dump the integer stored on it.
             int currData = counter - 1;
-            pdat::IndexData<SampleIndexData, pdat::CellGeometry>::iterator
-            idend(
-               * sample,
-               false);
+            pdat::IndexData<SampleIndexData, pdat::CellGeometry>::iterator idend(*sample, false);
             for (pdat::IndexData<SampleIndexData,
                                  pdat::CellGeometry>::iterator id(*sample, true);
                  id != idend;

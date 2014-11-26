@@ -74,7 +74,7 @@ int GaussianFcn::getCenter(
    return 0;
 }
 
-double GaussianFcn::operator() (
+double GaussianFcn::operator () (
    double x) const {
    TBOX_ASSERT(d_dim == tbox::Dimension(1));
    double rval;
@@ -82,7 +82,7 @@ double GaussianFcn::operator() (
    rval = exp(d_lambda * rval);
    return rval;
 }
-double GaussianFcn::operator() (
+double GaussianFcn::operator () (
    double x,
    double y) const {
    TBOX_ASSERT(d_dim == tbox::Dimension(2));
@@ -94,7 +94,7 @@ double GaussianFcn::operator() (
    rval = exp(d_lambda * rval);
    return rval;
 }
-double GaussianFcn::operator() (
+double GaussianFcn::operator () (
    double x,
    double y,
    double z) const {
@@ -109,7 +109,7 @@ double GaussianFcn::operator() (
 }
 
 GaussianFcn& GaussianFcn::operator = (
-      const GaussianFcn &r) {
+   const GaussianFcn& r) {
    TBOX_ASSERT(d_dim == r.d_dim);
    d_amp = r.d_amp;
    d_lambda = r.d_lambda;
@@ -125,8 +125,8 @@ GaussianFcn& GaussianFcn::operator = (
             || s.peek() == '\n') { s.get(); } }
 
 std::istream& operator >> (
-   std::istream & ci,
-   GaussianFcn & gf) {
+   std::istream& ci,
+   GaussianFcn& gf) {
    fill_n(gf.d_center, gf.d_dim.getValue(), 0.0)
    gf.d_amp = 1.0;
    gf.d_lambda = -1.0;
@@ -151,11 +151,9 @@ std::istream& operator >> (
          EAT_WS(ci) // ci >> std::noskipws; // ci.ipfx(0);
       } else if (name[0] == 'c') {
          // Expect form c[xyz]=<float>
-         int
-         dim(
-            name[1] == 'x' ? 0 :
-            name[1] == 'y' ? 1 :
-            name[1] == 'z' ? 2 : 3);
+         int dim(name[1] == 'x' ? 0 :
+                 name[1] == 'y' ? 1 :
+                 name[1] == 'z' ? 2 : 3);
          TBOX_ASSERT(dim < gf.d_dim.getValue());
          ci >> dummy;
          TBOX_ASSERT(dummy == '=');
@@ -169,8 +167,8 @@ std::istream& operator >> (
 }
 
 std::ostream& operator << (
-   std::ostream & co,
-   const GaussianFcn &gf) {
+   std::ostream& co,
+   const GaussianFcn& gf) {
    co << "{ amp=" << gf.d_amp << " lambda=" << gf.d_lambda
    << " cx=" << gf.d_center[0];
    if (gf.d_dim >= tbox::Dimension(2)) {

@@ -109,7 +109,7 @@ public:
       const hier::Box& region,
       const std::string& variable_name,
       int depth_index,
-      double simulation_time) const;
+      double simulation_time ) const;
 
 public:
 #ifdef HAVE_HDF5
@@ -157,7 +157,7 @@ public:
       const hier::Patch& patch,
       pdat::CellData<double>* uval_data,
       pdat::CellData<int>* tag_data,
-      const hier::Box& fill_box) const;
+      const hier::Box &fill_box) const;
 
    /*!
     * @brief Deallocate internally managed patch data on level.
@@ -232,7 +232,7 @@ public:
     * @brief Set the independent time variable in the front equation.
     */
    void
-   setTime(double time) {
+   setTime( double time ) {
       d_time_shift = time;
    }
 

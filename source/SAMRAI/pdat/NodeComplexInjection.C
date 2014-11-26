@@ -32,29 +32,20 @@ extern "C" {
 #endif
 
 // in concoarsen1d.f:
-void
-SAMRAI_F77_FUNC(
-   conavgnodecplx1d,
-   CONAVGNODECPLX1D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conavgnodecplx1d, CONAVGNODECPLX1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
 // in concoarsen2d.f:
-void
-SAMRAI_F77_FUNC(
-   conavgnodecplx2d,
-   CONAVGNODECPLX2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conavgnodecplx2d, CONAVGNODECPLX2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
 // in concoarsen3d.f:
-void
-SAMRAI_F77_FUNC(
-   conavgnodecplx3d,
-   CONAVGNODECPLX3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conavgnodecplx3d, CONAVGNODECPLX3D) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -100,12 +91,10 @@ NodeComplexInjection::coarsen(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY4(coarse, fine, coarse_box, ratio);
 
-   boost::shared_ptr<NodeData<dcomplex> >
-   fdata(
+   boost::shared_ptr<NodeData<dcomplex> > fdata(
       BOOST_CAST<NodeData<dcomplex>, hier::PatchData>(
          fine.getPatchData(src_component)));
-   boost::shared_ptr<NodeData<dcomplex> >
-   cdata(
+   boost::shared_ptr<NodeData<dcomplex> > cdata(
       BOOST_CAST<NodeData<dcomplex>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
 

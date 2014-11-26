@@ -122,49 +122,35 @@ OuternodeGeometry::doOverlap(
    const hier::IntVector& src_offset = transformation.getOffset();
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 
-   const tbox::Dimension&
-   dim(
-      src_mask.getDim());
+   const tbox::Dimension& dim(src_mask.getDim());
 
    hier::BoxContainer dst_boxes;
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
-   const hier::Box
-   src_box(
-      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts)* src_mask);
-   hier::Box
-   src_box_shifted(
-      src_box);
+   const hier::Box src_box(
+      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
+   hier::Box src_box_shifted(src_box);
    transformation.transform(src_box_shifted);
-   const hier::Box
-   dst_box(
+   const hier::Box dst_box(
       hier::Box::grow(dst_geometry.getBox(), dst_geometry.getGhosts()));
 
-   const hier::Box
-   dst_node_box(
-      NodeGeometry::toNodeBox(dst_box));
-   const hier::Box
-   src_node_box(
-      NodeGeometry::toNodeBox(src_box_shifted));
+   const hier::Box dst_node_box(NodeGeometry::toNodeBox(dst_box));
+   const hier::Box src_node_box(NodeGeometry::toNodeBox(src_box_shifted));
 
    // Compute the intersection (if any) for each of the side directions
 
    if (dst_node_box.intersects(src_node_box)) {
 
-      const hier::Box
-      msk_node_box(
+      const hier::Box msk_node_box(
          NodeGeometry::toNodeBox(hier::Box::shift(src_mask, src_offset)));
-      const hier::Box
-      fill_node_box(
+      const hier::Box fill_node_box(
          NodeGeometry::toNodeBox(fill_box));
 
       for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
          hier::Box trimmed_src_node_box = src_node_box;
-         for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1);
-              dh < dim.getValue();
-              ++dh) {
+         for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1); dh < dim.getValue(); ++dh) {
             /*
              * For directions higher than d, narrow the box down to avoid
              * representing edge and corner nodes multiple times.
@@ -176,29 +162,21 @@ OuternodeGeometry::doOverlap(
          }
 
          // Add lower side intersection (if any) to the box list
-         hier::Box
-         low_node_box(
-            trimmed_src_node_box);
+         hier::Box low_node_box(trimmed_src_node_box);
          low_node_box.setUpper(d, low_node_box.lower(d));
 
-         hier::Box
-         low_overlap(
-            low_node_box * msk_node_box * dst_node_box
-            * fill_node_box);
+         hier::Box low_overlap(low_node_box * msk_node_box * dst_node_box
+                               * fill_node_box);
          if (!low_overlap.empty()) {
             dst_boxes.pushBack(low_overlap);
          }
 
          // Add upper side intersection (if any) to the box list
-         hier::Box
-         hig_node_box(
-            trimmed_src_node_box);
+         hier::Box hig_node_box(trimmed_src_node_box);
          hig_node_box.setLower(d, hig_node_box.upper(d));
 
-         hier::Box
-         hig_overlap(
-            hig_node_box * msk_node_box * dst_node_box
-            * fill_node_box);
+         hier::Box hig_overlap(hig_node_box * msk_node_box * dst_node_box
+                               * fill_node_box);
          if (!hig_overlap.empty()) {
             dst_boxes.pushBack(hig_overlap);
          }
@@ -252,52 +230,36 @@ OuternodeGeometry::doOverlap(
    const hier::IntVector& src_offset = transformation.getOffset();
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 
-   const tbox::Dimension&
-   dim(
-      src_mask.getDim());
+   const tbox::Dimension& dim(src_mask.getDim());
 
    hier::BoxContainer src_boxes;
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
-   const hier::Box
-   src_box(
+   const hier::Box src_box(
       hier::Box::grow(src_geometry.getBox(),
-                      src_geometry.getGhosts())* src_mask);
-   hier::Box
-   src_box_shifted(
-      src_box);
+         src_geometry.getGhosts()) * src_mask);
+   hier::Box src_box_shifted(src_box);
    transformation.transform(src_box_shifted);
-   const hier::Box
-   dst_box(
+   const hier::Box dst_box(
       hier::Box::grow(dst_geometry.d_box, dst_geometry.d_ghosts));
 
-   const hier::Box
-   dst_node_box(
-      NodeGeometry::toNodeBox(dst_box));
-   const hier::Box
-   src_node_box(
-      NodeGeometry::toNodeBox(src_box_shifted));
+   const hier::Box dst_node_box(NodeGeometry::toNodeBox(dst_box));
+   const hier::Box src_node_box(NodeGeometry::toNodeBox(src_box_shifted));
 
    // Compute the intersection (if any) for each of the side directions
 
    if (dst_node_box.intersects(src_node_box)) {
 
-      const hier::Box
-      msk_node_box(
+      const hier::Box msk_node_box(
          NodeGeometry::toNodeBox(hier::Box::shift(src_mask, src_offset)));
-      const hier::Box
-      fill_node_box(
+      const hier::Box fill_node_box(
          NodeGeometry::toNodeBox(fill_box));
 
       for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
-         hier::Box
-         trimmed_dst_node_box(
-            dst_node_box* fill_node_box);
-         for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1);
-              dh < dim.getValue();
-              ++dh) {
+         hier::Box trimmed_dst_node_box(dst_node_box * fill_node_box);
+         for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1); dh < dim.getValue(); ++dh) {
             /*
              * For directions higher than d, narrow the box down to avoid
              * representing edge and corner nodes multiple times.
@@ -309,27 +271,19 @@ OuternodeGeometry::doOverlap(
          }
 
          // Add lower side intersection (if any) to the box list
-         hier::Box
-         low_node_box(
-            trimmed_dst_node_box);
+         hier::Box low_node_box(trimmed_dst_node_box);
          low_node_box.setUpper(d, low_node_box.lower(d));
 
-         hier::Box
-         low_overlap(
-            low_node_box * msk_node_box* src_node_box);
+         hier::Box low_overlap(low_node_box * msk_node_box * src_node_box);
          if (!low_overlap.empty()) {
             src_boxes.pushBack(low_overlap);
          }
 
          // Add upper side intersection (if any) to the box list
-         hier::Box
-         hig_node_box(
-            trimmed_dst_node_box);
+         hier::Box hig_node_box(trimmed_dst_node_box);
          hig_node_box.setLower(d, hig_node_box.upper(d));
 
-         hier::Box
-         hig_overlap(
-            hig_node_box * msk_node_box* src_node_box);
+         hier::Box hig_overlap(hig_node_box * msk_node_box * src_node_box);
          if (!hig_overlap.empty()) {
             src_boxes.pushBack(hig_overlap);
          }
@@ -383,9 +337,7 @@ OuternodeGeometry::doOverlap(
    const hier::IntVector& src_offset = transformation.getOffset();
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 
-   const tbox::Dimension&
-   dim(
-      src_mask.getDim());
+   const tbox::Dimension& dim(src_mask.getDim());
 
    hier::BoxContainer dst_boxes;
 
@@ -393,9 +345,7 @@ OuternodeGeometry::doOverlap(
 
    const hier::Box src_box =
       hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask;
-   hier::Box
-   src_box_shifted(
-      src_box);
+   hier::Box src_box_shifted(src_box);
    transformation.transform(src_box_shifted);
    const hier::Box dst_box =
       hier::Box::grow(dst_geometry.getBox(), dst_geometry.getGhosts());
@@ -416,12 +366,8 @@ OuternodeGeometry::doOverlap(
 
       for (dst_d = 0; dst_d < dim.getValue(); ++dst_d) {
 
-         hier::Box
-         trimmed_dst_node_box(
-            dst_node_box* fill_node_box);
-         for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(dst_d + 1);
-              dh < dim.getValue();
-              ++dh) {
+         hier::Box trimmed_dst_node_box(dst_node_box * fill_node_box);
+         for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(dst_d + 1); dh < dim.getValue(); ++dh) {
             trimmed_dst_node_box.setLower(dh,
                trimmed_dst_node_box.lower(dh) + 1);
             trimmed_dst_node_box.setUpper(dh,
@@ -437,9 +383,7 @@ OuternodeGeometry::doOverlap(
          for (src_d = 0; src_d < dim.getValue(); ++src_d) {
 
             hier::Box trimmed_src_node_box = src_node_box;
-            for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(src_d + 1);
-                 dh < dim.getValue();
-                 ++dh) {
+            for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(src_d + 1); dh < dim.getValue(); ++dh) {
                trimmed_src_node_box.setLower(dh,
                   trimmed_src_node_box.lower(dh) + 1);
                trimmed_src_node_box.setUpper(dh,
@@ -450,32 +394,28 @@ OuternodeGeometry::doOverlap(
             lo_src_node_box.setUpper(src_d, lo_src_node_box.lower(src_d));
 
             hier::Box hi_src_node_box = trimmed_src_node_box;
-            hi_src_node_box.setLower(src_d, hi_src_node_box.upper(src_d));
+            hi_src_node_box.setLower(src_d,  hi_src_node_box.upper(src_d));
 
-            hier::Box
-            lo_lo_box(
-               lo_src_node_box * msk_node_box* lo_dst_node_box);
+            hier::Box lo_lo_box(
+               lo_src_node_box * msk_node_box * lo_dst_node_box);
             if (!lo_lo_box.empty()) {
                dst_boxes.pushBack(lo_lo_box);
             }
 
-            hier::Box
-            hi_lo_box(
-               hi_src_node_box * msk_node_box* lo_dst_node_box);
+            hier::Box hi_lo_box(
+               hi_src_node_box * msk_node_box * lo_dst_node_box);
             if (!hi_lo_box.empty()) {
                dst_boxes.pushBack(hi_lo_box);
             }
 
-            hier::Box
-            lo_hi_box(
-               lo_src_node_box * msk_node_box* hi_dst_node_box);
+            hier::Box lo_hi_box(
+               lo_src_node_box * msk_node_box * hi_dst_node_box);
             if (!lo_hi_box.empty()) {
                dst_boxes.pushBack(lo_hi_box);
             }
 
-            hier::Box
-            hi_hi_box(
-               hi_src_node_box * msk_node_box* hi_dst_node_box);
+            hier::Box hi_hi_box(
+               hi_src_node_box * msk_node_box * hi_dst_node_box);
             if (!hi_hi_box.empty()) {
                dst_boxes.pushBack(hi_hi_box);
             }
@@ -524,9 +464,7 @@ OuternodeGeometry::setUpOverlap(
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
-      hier::Box
-      node_box(
-         NodeGeometry::toNodeBox(*b));
+      hier::Box node_box(NodeGeometry::toNodeBox(*b));
       dst_boxes.pushBack(node_box);
    }
 

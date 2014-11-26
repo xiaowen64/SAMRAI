@@ -117,7 +117,7 @@ public:
       const hier::Patch& patch,
       pdat::CellData<double>* uval_data,
       pdat::CellData<int>* tag_data,
-      const hier::Box& fill_box) const;
+      const hier::Box &fill_box) const;
 
    bool
    packDerivedDataIntoDoubleBuffer(
@@ -141,8 +141,8 @@ public:
 private:
    void
    computeShellsData(
-      pdat::CellData<double>* uval_data,
-      pdat::CellData<int>* tag_data,
+      pdat::CellData<double> *uval_data,
+      pdat::CellData<int> *tag_data,
       const hier::Box& fill_box,
       const std::vector<double>& buffer_distance,
       const double xlo[],

@@ -32,40 +32,28 @@ extern "C" {
 #endif
 
 // in cartcoarsen1d.f:
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgedgedoub1d,
-   CARTWGTAVGEDGEDOUB1D) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgedgedoub1d, CARTWGTAVGEDGEDOUB1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 // in cartcoarsen2d.f:
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgedgedoub2d0,
-   CARTWGTAVGEDGEDOUB2D0) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgedgedoub2d0, CARTWGTAVGEDGEDOUB2D0) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgedgedoub2d1,
-   CARTWGTAVGEDGEDOUB2D1) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgedgedoub2d1, CARTWGTAVGEDGEDOUB2D1) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 // in cartcoarsen3d.f:
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgedgedoub3d0,
-   CARTWGTAVGEDGEDOUB3D0) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgedgedoub3d0, CARTWGTAVGEDGEDOUB3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -74,10 +62,7 @@ SAMRAI_F77_FUNC(
    const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgedgedoub3d1,
-   CARTWGTAVGEDGEDOUB3D1) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgedgedoub3d1, CARTWGTAVGEDGEDOUB3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -86,10 +71,7 @@ SAMRAI_F77_FUNC(
    const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgedgedoub3d2,
-   CARTWGTAVGEDGEDOUB3D2) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgedgedoub3d2, CARTWGTAVGEDGEDOUB3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -135,18 +117,14 @@ CartesianEdgeDoubleWeightedAverage::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension&
-   dim(
-      fine.getDim());
+   const tbox::Dimension& dim(fine.getDim());
 
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, coarse_box, ratio);
 
-   boost::shared_ptr<pdat::EdgeData<double> >
-   fdata(
+   boost::shared_ptr<pdat::EdgeData<double> > fdata(
       BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
          fine.getPatchData(src_component)));
-   boost::shared_ptr<pdat::EdgeData<double> >
-   cdata(
+   boost::shared_ptr<pdat::EdgeData<double> > cdata(
       BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
    TBOX_ASSERT(fdata);
@@ -158,12 +136,10 @@ CartesianEdgeDoubleWeightedAverage::coarsen(
    const hier::Index cilo = cdata->getGhostBox().lower();
    const hier::Index cihi = cdata->getGhostBox().upper();
 
-   const boost::shared_ptr<CartesianPatchGeometry>
-   fgeom(
+   const boost::shared_ptr<CartesianPatchGeometry> fgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
-   const boost::shared_ptr<CartesianPatchGeometry>
-   cgeom(
+   const boost::shared_ptr<CartesianPatchGeometry> cgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
 

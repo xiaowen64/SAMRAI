@@ -33,10 +33,7 @@ extern "C" {
 #endif
 
 // in lintimint1d.f:
-void
-SAMRAI_F77_FUNC(
-   lintimeintnodecmplx1d,
-   LINTIMEINTNODECMPLX1D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintnodecmplx1d, LINTIMEINTNODECMPLX1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -45,10 +42,7 @@ SAMRAI_F77_FUNC(
    const dcomplex *, const dcomplex *,
    dcomplex *);
 // in lintimint2d.f:
-void
-SAMRAI_F77_FUNC(
-   lintimeintnodecmplx2d,
-   LINTIMEINTNODECMPLX2D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintnodecmplx2d, LINTIMEINTNODECMPLX2D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -61,10 +55,7 @@ SAMRAI_F77_FUNC(
    const dcomplex *, const dcomplex *,
    dcomplex *);
 // in lintimint3d.f:
-void
-SAMRAI_F77_FUNC(
-   lintimeintnodecmplx3d,
-   LINTIMEINTNODECMPLX3D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintnodecmplx3d, LINTIMEINTNODECMPLX3D) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -97,9 +88,7 @@ NodeComplexLinearTimeInterpolateOp::timeInterpolate(
    const hier::PatchData& src_data_old,
    const hier::PatchData& src_data_new) const
 {
-   const tbox::Dimension&
-   dim(
-      where.getDim());
+   const tbox::Dimension& dim(where.getDim());
 
    const NodeData<dcomplex>* old_dat =
       CPP_CAST<const NodeData<dcomplex> *>(&src_data_old);

@@ -342,9 +342,7 @@ void ConvDiff::registerModelVariables(
 
    for (int n = 0; n < NEQU; ++n) {
       sprintf(buffer, "%s%01d", dump_name.c_str(), n);
-      string
-      variable_name(
-         buffer);
+      string variable_name(buffer);
 #ifdef HAVE_HDF5
       if (d_visit_writer) {
          d_visit_writer->
@@ -387,8 +385,7 @@ void ConvDiff::initializeDataOnPatch(
 
    if (initial_time) {
 
-      const boost::shared_ptr<geom::CartesianPatchGeometry>
-      patch_geom(
+      const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(patch_geom);
@@ -397,8 +394,7 @@ void ConvDiff::initializeDataOnPatch(
       const double* xlo = patch_geom->getXLower();
       const double* xhi = patch_geom->getXUpper();
 
-      boost::shared_ptr<pdat::CellData<double> >
-      primitive_vars(
+      boost::shared_ptr<pdat::CellData<double> > primitive_vars(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_primitive_vars, getInteriorContext())));
 
@@ -452,8 +448,7 @@ double ConvDiff::computeStableDtOnPatch(
 {
    NULL_USE(time);
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry>
-   patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
@@ -508,18 +503,15 @@ void ConvDiff::singleStep(
    const double beta) const
 {
 
-   boost::shared_ptr<pdat::CellData<double> >
-   prim_var_updated(
+   boost::shared_ptr<pdat::CellData<double> > prim_var_updated(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext())));
 
-   boost::shared_ptr<pdat::CellData<double> >
-   prim_var_fixed(
+   boost::shared_ptr<pdat::CellData<double> > prim_var_fixed(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_primitive_vars, getInteriorContext())));
 
-   boost::shared_ptr<pdat::CellData<double> >
-   function_eval(
+   boost::shared_ptr<pdat::CellData<double> > function_eval(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_function_eval, getInteriorContext())));
    TBOX_ASSERT(prim_var_updated);
@@ -530,8 +522,7 @@ void ConvDiff::singleStep(
    const hier::Index ifirst = pbox.lower();
    const hier::Index ilast = pbox.upper();
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry>
-   patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
@@ -624,12 +615,10 @@ void ConvDiff::tagGradientDetectorCells(
    NULL_USE(initial_error);
    NULL_USE(uses_richardson_extrapolation_too);
 
-   boost::shared_ptr<pdat::CellData<int> >
-   tags(
+   boost::shared_ptr<pdat::CellData<int> > tags(
       BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_index)));
-   boost::shared_ptr<pdat::CellData<double> >
-   primitive_vars(
+   boost::shared_ptr<pdat::CellData<double> > primitive_vars(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext())));
    TBOX_ASSERT(tags);
@@ -679,8 +668,7 @@ void ConvDiff::setPhysicalBoundaryConditions(
 {
    NULL_USE(fill_time);
 
-   boost::shared_ptr<pdat::CellData<double> >
-   primitive_vars(
+   boost::shared_ptr<pdat::CellData<double> > primitive_vars(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext())));
 
@@ -946,8 +934,7 @@ void ConvDiff::getFromInput(
             d_object_name << ": "
                           << "No `Initial_data' database found in input." << endl);
       }
-      boost::shared_ptr<tbox::Database>
-      init_data_db(
+      boost::shared_ptr<tbox::Database> init_data_db(
          input_db->getDatabase("Initial_data"));
 
       bool found_problem_data = false;
@@ -1002,8 +989,7 @@ void ConvDiff::getFromInput(
       }
 
       if (input_db->keyExists("Boundary_data")) {
-         boost::shared_ptr<tbox::Database>
-         boundary_db(
+         boost::shared_ptr<tbox::Database> boundary_db(
             input_db->getDatabase("Boundary_data"));
 
          if (d_dim == tbox::Dimension(2)) {
@@ -1085,17 +1071,14 @@ void ConvDiff::putToRestart(
 void ConvDiff::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database>
-   root_db(
+   boost::shared_ptr<tbox::Database> root_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in the restart file.");
    }
-   boost::shared_ptr<tbox::Database>
-   db(
-      root_db->getDatabase(d_object_name));
+   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("CONV_DIFF_VERSION");
    if (ver != CONV_DIFF_VERSION) {
@@ -1228,8 +1211,7 @@ void ConvDiff::checkBoundaryData(
    }
 #endif
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry>
-   pgeom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);

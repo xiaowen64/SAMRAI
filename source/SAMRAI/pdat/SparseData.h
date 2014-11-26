@@ -565,7 +565,8 @@ private:
     * The index hash function for adding elements to the boost::unordered_map's
     * buckets.
     */
-   struct index_hash:std::unary_function<hier::Index, std::size_t>{
+   struct index_hash:
+      std::unary_function<hier::Index, std::size_t>{
       std::size_t
       operator () (
          const hier::Index& index) const;
@@ -648,7 +649,7 @@ private:
       // data members
       std::vector<double> d_dbl_attrs;
       std::vector<int> d_int_attrs;
-   }; // end class Attributes
+   };  // end class Attributes
 
 };
 

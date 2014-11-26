@@ -648,8 +648,7 @@ private:
    /*!
     * @brief Set up timers.
     */
-   void
-   setupTimers();
+   void setupTimers();
 
    /*
     * Object dimension.

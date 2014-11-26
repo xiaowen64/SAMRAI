@@ -142,9 +142,7 @@ PatchLevel::PatchLevel(
         ni != boxes.realEnd(); ++ni) {
       const Box& box = *ni;
       const BoxId& ip = box.getBoxId();
-      boost::shared_ptr<Patch>&
-      patch(
-         d_patches[ip]);
+      boost::shared_ptr<Patch>& patch(d_patches[ip]);
       patch = d_factory->allocate(box, d_descriptor);
       patch->setPatchLevelNumber(d_level_number);
       patch->setPatchInHierarchy(d_in_hierarchy);
@@ -255,9 +253,7 @@ PatchLevel::PatchLevel(
         ni != boxes.realEnd(); ++ni) {
       const Box& box = *ni;
       const BoxId& ip = box.getBoxId();
-      boost::shared_ptr<Patch>&
-      patch(
-         d_patches[ip]);
+      boost::shared_ptr<Patch>& patch(d_patches[ip]);
       patch = d_factory->allocate(box, d_descriptor);
       patch->setPatchLevelNumber(d_level_number);
       patch->setPatchInHierarchy(d_in_hierarchy);
@@ -487,14 +483,11 @@ PatchLevel::setRefinedPatchLevel(
    std::map<BoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
 
    for (iterator ip(coarse_level->begin()); ip != coarse_level->end(); ++ip) {
-      boost::shared_ptr<PatchGeometry>
-      coarse_pgeom(
-         (*ip)->getPatchGeometry());
+      boost::shared_ptr<PatchGeometry> coarse_pgeom((*ip)->getPatchGeometry());
 
       /* If map does not contain values create them */
       std::map<BoxId,
-               PatchGeometry::TwoDimBool>::iterator
-      iter_touches_regular_bdry(
+               PatchGeometry::TwoDimBool>::iterator iter_touches_regular_bdry(
          touches_regular_bdry.find(ip->getBox().getBoxId()));
       if (iter_touches_regular_bdry == touches_regular_bdry.end()) {
          iter_touches_regular_bdry = touches_regular_bdry.insert(
@@ -504,8 +497,7 @@ PatchLevel::setRefinedPatchLevel(
       }
 
       PatchGeometry::TwoDimBool&
-      touches_regular_bdry_ip(
-         (*iter_touches_regular_bdry).second);
+      touches_regular_bdry_ip((*iter_touches_regular_bdry).second);
 
       for (int axis = 0; axis < getDim().getValue(); ++axis) {
          for (int side = 0; side < 2; ++side) {
@@ -660,14 +652,11 @@ PatchLevel::setCoarsenedPatchLevel(
    std::map<BoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
 
    for (iterator ip(fine_level->begin()); ip != fine_level->end(); ++ip) {
-      boost::shared_ptr<PatchGeometry>
-      fine_pgeom(
-         (*ip)->getPatchGeometry());
+      boost::shared_ptr<PatchGeometry> fine_pgeom((*ip)->getPatchGeometry());
 
       /* If map does not contain values create them */
       std::map<BoxId,
-               PatchGeometry::TwoDimBool>::iterator
-      iter_touches_regular_bdry(
+               PatchGeometry::TwoDimBool>::iterator iter_touches_regular_bdry(
          touches_regular_bdry.find(ip->getBox().getBoxId()));
       if (iter_touches_regular_bdry == touches_regular_bdry.end()) {
          iter_touches_regular_bdry = touches_regular_bdry.insert(
@@ -677,8 +666,7 @@ PatchLevel::setCoarsenedPatchLevel(
       }
 
       PatchGeometry::TwoDimBool&
-      touches_regular_bdry_ip(
-         (*iter_touches_regular_bdry).second);
+      touches_regular_bdry_ip((*iter_touches_regular_bdry).second);
 
       for (int axis = 0; axis < getDim().getValue(); ++axis) {
          for (int side = 0; side < 2; ++side) {
@@ -786,11 +774,8 @@ PatchLevel::getFromRestart(
     * Put local patches in restart database.
     */
 
-   boost::shared_ptr<const BaseGridGeometry>
-   grid_geometry(
-      getGridGeometry());
-   boost::shared_ptr<tbox::Database>
-   mbl_database(
+   boost::shared_ptr<const BaseGridGeometry> grid_geometry(getGridGeometry());
+   boost::shared_ptr<tbox::Database> mbl_database(
       restart_db->getDatabase("mapped_box_level"));
    d_box_level.reset(new BoxLevel(getDim(), *mbl_database, grid_geometry));
 
@@ -816,9 +801,7 @@ PatchLevel::getFromRestart(
             << " not found in restart database" << std::endl);
       }
 
-      boost::shared_ptr<Patch>&
-      patch(
-         d_patches[box_id]);
+      boost::shared_ptr<Patch>& patch(d_patches[box_id]);
       patch = d_factory->allocate(box, d_descriptor);
       patch->setPatchLevelNumber(d_level_number);
       patch->setPatchInHierarchy(d_in_hierarchy);
@@ -887,8 +870,7 @@ PatchLevel::putToRestart(
     * Put local patches in restart_db.
     */
 
-   boost::shared_ptr<tbox::Database>
-   mbl_database(
+   boost::shared_ptr<tbox::Database> mbl_database(
       restart_db->putDatabase("mapped_box_level"));
    d_box_level->putToRestart(mbl_database);
 
@@ -947,8 +929,7 @@ PatchLevel::initializeGlobalizedBoxLevel() const
 {
    if (!d_has_globalized_data) {
 
-      const BoxLevel&
-      globalized_box_level(
+      const BoxLevel& globalized_box_level(
          d_box_level->getGlobalizedVersion());
 
       const int nboxes = globalized_box_level.getGlobalNumberOfBoxes();

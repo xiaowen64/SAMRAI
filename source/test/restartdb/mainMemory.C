@@ -26,7 +26,7 @@ using namespace SAMRAI;
 
 #include "database_tests.h"
 
-class RestartTester : public tbox::Serializable
+class RestartTester:public tbox::Serializable
 {
 public:
    RestartTester()
@@ -46,8 +46,7 @@ public:
 
    void getFromRestart()
    {
-      boost::shared_ptr<tbox::Database>
-      root_db(
+      boost::shared_ptr<tbox::Database> root_db(
          tbox::RestartManager::getManager()->getRootDatabase());
 
       boost::shared_ptr<tbox::Database> db;
@@ -86,8 +85,7 @@ int main(
 
       setupTestData();
 
-      boost::shared_ptr<tbox::MemoryDatabase>
-      database(
+      boost::shared_ptr<tbox::MemoryDatabase> database(
          new tbox::MemoryDatabase("SAMRAI Restart"));
 
       restart_manager->setRootDatabase(database);

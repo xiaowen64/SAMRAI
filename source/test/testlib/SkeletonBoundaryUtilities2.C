@@ -30,25 +30,16 @@
 
 extern "C" {
 
-void
-SAMRAI_F77_FUNC(
-   stufskelbdryloc2d,
-   STUFSKELBDRYLOC2D) (
+void SAMRAI_F77_FUNC(stufskelbdryloc2d, STUFSKELBDRYLOC2D) (
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&);
 
-void
-SAMRAI_F77_FUNC(
-   stufskelbdrycond2d,
-   STUFSKELBDRYCOND2D) (
+void SAMRAI_F77_FUNC(stufskelbdrycond2d, STUFSKELBDRYCOND2D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&);
 
-void
-SAMRAI_F77_FUNC(
-   getskeledgebdry2d,
-   GETSKELEDGEBDRY2D) (
+void SAMRAI_F77_FUNC(getskeledgebdry2d, GETSKELEDGEBDRY2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -60,10 +51,7 @@ SAMRAI_F77_FUNC(
    double *,
    const int&);
 
-void
-SAMRAI_F77_FUNC(
-   getskelnodebdry2d,
-   GETSKELNODEBDRY2D) (
+void SAMRAI_F77_FUNC(getskelnodebdry2d, GETSKELNODEBDRY2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -172,17 +160,12 @@ void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
       stuff2dBdryFortConst();
    }
 
-   const boost::shared_ptr<hier::PatchGeometry>
-   pgeom(
+   const boost::shared_ptr<hier::PatchGeometry> pgeom(
       patch.getPatchGeometry());
 
    const hier::Box& interior = patch.getBox();
-   const hier::Index&
-   ifirst(
-      interior.lower());
-   const hier::Index&
-   ilast(
-      interior.upper());
+   const hier::Index& ifirst(interior.lower());
+   const hier::Index& ilast(interior.upper());
 
    const hier::IntVector& ghost_cells = vardata->getGhostCellWidth();
 
@@ -196,19 +179,13 @@ void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
 
       int bedge_loc = edge_bdry[i].getLocationIndex();
 
-      hier::Box
-      fill_box(
-         pgeom->getBoundaryFillBox(edge_bdry[i],
-            interior,
-            gcw_to_fill));
+      hier::Box fill_box(pgeom->getBoundaryFillBox(edge_bdry[i],
+                            interior,
+                            gcw_to_fill));
 
       if (!fill_box.empty()) {
-         const hier::Index&
-         ibeg(
-            fill_box.lower());
-         const hier::Index&
-         iend(
-            fill_box.upper());
+         const hier::Index& ibeg(fill_box.lower());
+         const hier::Index& iend(fill_box.upper());
 
          SAMRAI_F77_FUNC(getskeledgebdry2d, GETSKELEDGEBDRY2D) (
             ifirst(0), ilast(0),
@@ -260,19 +237,12 @@ void SkeletonBoundaryUtilities2::fillNodeBoundaryData(
       stuff2dBdryFortConst();
    }
 
-   const boost::shared_ptr<hier::PatchGeometry>
-   pgeom(
+   const boost::shared_ptr<hier::PatchGeometry> pgeom(
       patch.getPatchGeometry());
 
-   const hier::Box&
-   interior(
-      patch.getBox());
-   const hier::Index&
-   ifirst(
-      interior.lower());
-   const hier::Index&
-   ilast(
-      interior.upper());
+   const hier::Box& interior(patch.getBox());
+   const hier::Index& ifirst(interior.lower());
+   const hier::Index& ilast(interior.upper());
 
    const hier::IntVector& ghost_cells = vardata->getGhostCellWidth();
 
@@ -287,19 +257,13 @@ void SkeletonBoundaryUtilities2::fillNodeBoundaryData(
 
       int bnode_loc = node_bdry[i].getLocationIndex();
 
-      hier::Box
-      fill_box(
-         pgeom->getBoundaryFillBox(node_bdry[i],
-            interior,
-            gcw_to_fill));
+      hier::Box fill_box(pgeom->getBoundaryFillBox(node_bdry[i],
+                            interior,
+                            gcw_to_fill));
 
       if (!fill_box.empty()) {
-         const hier::Index&
-         ibeg(
-            fill_box.lower());
-         const hier::Index&
-         iend(
-            fill_box.upper());
+         const hier::Index& ibeg(fill_box.lower());
+         const hier::Index& iend(fill_box.upper());
 
          SAMRAI_F77_FUNC(getskelnodebdry2d, GETSKELNODEBDRY2D) (
             ifirst(0), ilast(0),
@@ -413,12 +377,9 @@ int SkeletonBoundaryUtilities2::checkBdryData(
    int btype = bbox.getBoundaryType();
    int bloc = bbox.getLocationIndex();
 
-   boost::shared_ptr<hier::PatchGeometry>
-   pgeom(
-      patch.getPatchGeometry());
+   boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
-   boost::shared_ptr<pdat::CellData<double> >
-   vardata(
+   boost::shared_ptr<pdat::CellData<double> > vardata(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(data_id)));
    TBOX_ASSERT(vardata);
@@ -495,24 +456,15 @@ int SkeletonBoundaryUtilities2::checkBdryData(
 
    }
 
-   hier::Box
-   gbox_to_check(
+   hier::Box gbox_to_check(
       vardata->getGhostBox() * pgeom->getBoundaryFillBox(bbox,
          patch.getBox(),
          gcw_to_check));
 
-   hier::Box
-   cbox(
-      gbox_to_check);
-   hier::Box
-   dbox(
-      gbox_to_check);
-   hier::Index
-   ifirst(
-      vardata->getBox().lower());
-   hier::Index
-   ilast(
-      vardata->getBox().upper());
+   hier::Box cbox(gbox_to_check);
+   hier::Box dbox(gbox_to_check);
+   hier::Index ifirst(vardata->getBox().lower());
+   hier::Index ilast(vardata->getBox().upper());
 
    if (offsign == -1) {
       cbox.setLower(idir, ifirst(idir) - 1);
@@ -526,12 +478,8 @@ int SkeletonBoundaryUtilities2::checkBdryData(
       dbox.setUpper(idir, ilast(idir));
    }
 
-   pdat::CellIterator
-   id(
-      pdat::CellGeometry::begin(dbox));
-   pdat::CellIterator
-   icend(
-      pdat::CellGeometry::end(cbox));
+   pdat::CellIterator id(pdat::CellGeometry::begin(dbox));
+   pdat::CellIterator icend(pdat::CellGeometry::end(cbox));
    for (pdat::CellIterator ic(pdat::CellGeometry::begin(cbox));
         ic != icend; ++ic) {
       double checkval = valfact * (*vardata)(*id, depth) + constval;
@@ -611,8 +559,7 @@ void SkeletonBoundaryUtilities2::read2dBdryEdges(
 
          if (need_data_read) {
             if (input_db->keyExists(bdry_loc_str)) {
-               boost::shared_ptr<tbox::Database>
-               bdry_loc_db(
+               boost::shared_ptr<tbox::Database> bdry_loc_db(
                   input_db->getDatabase(bdry_loc_str));
                if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
@@ -694,8 +641,7 @@ void SkeletonBoundaryUtilities2::read2dBdryNodes(
          }
 
          if (input_db->keyExists(bdry_loc_str)) {
-            boost::shared_ptr<tbox::Database>
-            bdry_loc_db(
+            boost::shared_ptr<tbox::Database> bdry_loc_db(
                input_db->getDatabase(bdry_loc_str));
             if (bdry_loc_db) {
                if (bdry_loc_db->keyExists("boundary_condition")) {

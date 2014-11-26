@@ -253,9 +253,7 @@ Parser::pushIncludeFile(
    const std::string& filename)
 {
    FILE* fstream = 0;
-   const SAMRAI_MPI&
-   mpi(
-      SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
    std::string filename_with_path;
 
@@ -326,9 +324,7 @@ Parser::yyinput(
    char* buffer,
    const int max_size)
 {
-   const SAMRAI_MPI&
-   mpi(
-      SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    int byte = 0;
    if (mpi.getRank() == 0) {
       byte = static_cast<int>(fread(buffer,

@@ -63,14 +63,10 @@ void PoissonMultigaussianSolution::setFromDatabase(
          "You must have at least " << singlegauss << " defined in the\n"
          "database for PoissonMultigaussianSolution.\n");
    }
-   GaussianFcn
-   gauss(
-      d_dim);
+   GaussianFcn gauss(d_dim);
    do {
       std::string istr = database.getString(singlegauss);
-      std::istringstream
-      ist(
-         istr);
+      std::istringstream ist(istr);
       ist >> gauss;
       d_gauss_append(gauss);
       singlegauss = "GaussianFcnControl_"
@@ -160,8 +156,7 @@ void PoissonMultigaussianSolution::setGridData(
    pdat::CellData<double>& exact_data,
    pdat::CellData<double>& source_data)
 {
-   boost::shared_ptr<geom::CartesianPatchGeometry>
-   patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
@@ -177,12 +172,8 @@ void PoissonMultigaussianSolution::setGridData(
       for (j = 0; j < d_dim.getValue(); ++j) {
          sl[j] = xl[j] + 0.5 * h[j];
       }
-      pdat::CellData<double>::iterator
-      iter(
-         pdat::CellGeometry::begin(patch.getBox()));
-      pdat::CellData<double>::iterator
-      iterend(
-         pdat::CellGeometry::end(patch.getBox()));
+      pdat::CellData<double>::iterator iter(pdat::CellGeometry::begin(patch.getBox()));
+      pdat::CellData<double>::iterator iterend(pdat::CellGeometry::end(patch.getBox()));
       if (d_dim == tbox::Dimension(2)) {
          double x, y;
          for ( ; iter != iterend; ++iter) {
@@ -207,8 +198,8 @@ void PoissonMultigaussianSolution::setGridData(
 }       // End patch loop.
 
 std::ostream& operator << (
-   std::ostream & os,
-   const PoissonMultigaussianSolution &r) {
+   std::ostream& os,
+   const PoissonMultigaussianSolution& r) {
    os << "{\n";
    for (unsigned int i = 0; i < r.d_gauss_size; ++i) {
       os << "GaussianFcnControl_" << i << " " << r.d_gauss[i] << "\n";
@@ -233,17 +224,14 @@ void PoissonMultigaussianSolution::setBcCoefs(
       return;
    }
 
-   boost::shared_ptr<geom::CartesianPatchGeometry>
-   patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    /*
     * Set to an inhomogeneous Dirichlet boundary condition.
     */
-   hier::Box
-   patch_box(
-      patch.getBox());
+   hier::Box patch_box(patch.getBox());
 
    const double* xlo = patch_geom->getXLower();
    const double* xup = patch_geom->getXUpper();
@@ -259,16 +247,12 @@ void PoissonMultigaussianSolution::setBcCoefs(
    hier::Index upper = box.upper();
 
    if (d_dim == tbox::Dimension(2)) {
-      hier::Box::iterator
-      boxit(
-         acoef_data ?
-         acoef_data->getBox().begin() :
-         gcoef_data->getBox().begin());
-      hier::Box::iterator
-      boxitend(
-         acoef_data ?
-         acoef_data->getBox().end() :
-         gcoef_data->getBox().end());
+      hier::Box::iterator boxit(acoef_data ?
+                                acoef_data->getBox().begin() :
+                                gcoef_data->getBox().begin());
+      hier::Box::iterator boxitend(acoef_data ?
+                                   acoef_data->getBox().end() :
+                                   gcoef_data->getBox().end());
       int i, j;
       double x, y;
       switch (bdry_box.getLocationIndex()) {

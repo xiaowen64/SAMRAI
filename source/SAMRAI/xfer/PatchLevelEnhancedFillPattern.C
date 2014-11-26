@@ -68,8 +68,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
          *fill_box_level,
          fill_ghost_width));
 
-   boost::shared_ptr<const hier::BaseGridGeometry>
-   grid_geometry(
+   boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
       dst_box_level.getGridGeometry());
 
    const hier::BoxContainer& dst_boxes = dst_box_level.getBoxes();
@@ -79,8 +78,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
         ni != dst_boxes.realEnd(); ++ni) {
       const hier::Box& dst_box = *ni;
       const hier::BoxId& dst_box_id = dst_box.getBoxId();
-      hier::BoxContainer
-      fill_boxes(
+      hier::BoxContainer fill_boxes(
          hier::Box::grow(dst_box, fill_ghost_width));
 
       hier::BoxContainer constructed_fill_boxes;
@@ -95,9 +93,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
          const hier::BaseGridGeometry::Neighbor& nbr = *ni;
          if (nbr.isSingularity()) {
 
-            hier::BoxContainer
-            encon_boxes(
-               nbr.getTransformedDomain());
+            hier::BoxContainer encon_boxes(nbr.getTransformedDomain());
             encon_boxes.refine(dst_box_level.getRefinementRatio());
             encon_boxes.intersectBoxes(fill_boxes);
             encon_boxes.removeIntersections(constructed_fill_boxes);
@@ -112,9 +108,8 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
                for (hier::BoxContainer::iterator ei = encon_boxes.begin();
                     ei != encon_boxes.end(); ++ei) {
 
-                  hier::Box
-                  fill_box(
-                     * ei,
+                  hier::Box fill_box(
+                     *ei,
                      ++last_id,
                      dst_box.getOwnerRank());
 

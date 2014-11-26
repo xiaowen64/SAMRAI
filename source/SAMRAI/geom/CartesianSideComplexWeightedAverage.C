@@ -33,40 +33,28 @@ extern "C" {
 #endif
 
 // in cartcoarsen1d.f:
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgsidecplx1d,
-   CARTWGTAVGSIDECPLX1D) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgsidecplx1d, CARTWGTAVGSIDECPLX1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 // in cartcoarsen2d.f:
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgsidecplx2d0,
-   CARTWGTAVGSIDECPLX2D0) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgsidecplx2d0, CARTWGTAVGSIDECPLX2D0) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgsidecplx2d1,
-   CARTWGTAVGSIDECPLX2D1) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgsidecplx2d1, CARTWGTAVGSIDECPLX2D1) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 // in cartcoarsen3d.f:
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgsidecplx3d0,
-   CARTWGTAVGSIDECPLX3D0) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgsidecplx3d0, CARTWGTAVGSIDECPLX3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -75,10 +63,7 @@ SAMRAI_F77_FUNC(
    const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgsidecplx3d1,
-   CARTWGTAVGSIDECPLX3D1) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgsidecplx3d1, CARTWGTAVGSIDECPLX3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -87,10 +72,7 @@ SAMRAI_F77_FUNC(
    const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgsidecplx3d2,
-   CARTWGTAVGSIDECPLX3D2) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgsidecplx3d2, CARTWGTAVGSIDECPLX3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -136,18 +118,14 @@ CartesianSideComplexWeightedAverage::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension&
-   dim(
-      fine.getDim());
+   const tbox::Dimension& dim(fine.getDim());
 
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, coarse_box, ratio);
 
-   boost::shared_ptr<pdat::SideData<dcomplex> >
-   fdata(
+   boost::shared_ptr<pdat::SideData<dcomplex> > fdata(
       BOOST_CAST<pdat::SideData<dcomplex>, hier::PatchData>(
          fine.getPatchData(src_component)));
-   boost::shared_ptr<pdat::SideData<dcomplex> >
-   cdata(
+   boost::shared_ptr<pdat::SideData<dcomplex> > cdata(
       BOOST_CAST<pdat::SideData<dcomplex>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
 
@@ -155,9 +133,7 @@ CartesianSideComplexWeightedAverage::coarsen(
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 
-   const hier::IntVector&
-   directions(
-      cdata->getDirectionVector());
+   const hier::IntVector& directions(cdata->getDirectionVector());
 
    TBOX_ASSERT(directions ==
       hier::IntVector::min(directions, fdata->getDirectionVector()));
@@ -167,12 +143,10 @@ CartesianSideComplexWeightedAverage::coarsen(
    const hier::Index cilo = cdata->getGhostBox().lower();
    const hier::Index cihi = cdata->getGhostBox().upper();
 
-   const boost::shared_ptr<CartesianPatchGeometry>
-   fgeom(
+   const boost::shared_ptr<CartesianPatchGeometry> fgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
-   const boost::shared_ptr<CartesianPatchGeometry>
-   cgeom(
+   const boost::shared_ptr<CartesianPatchGeometry> cgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
 

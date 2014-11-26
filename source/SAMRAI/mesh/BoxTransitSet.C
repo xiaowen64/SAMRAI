@@ -33,9 +33,7 @@ const int BoxTransitSet::BoxTransitSet_EDGETAG0;
 const int BoxTransitSet::BoxTransitSet_EDGETAG1;
 const int BoxTransitSet::BoxTransitSet_FIRSTDATALEN;
 
-const std::string
-BoxTransitSet::s_default_timer_prefix(
-   "mesh::BoxTransitSet");
+const std::string BoxTransitSet::s_default_timer_prefix("mesh::BoxTransitSet");
 std::map<std::string, BoxTransitSet::TimerStruct> BoxTransitSet::s_static_timers;
 
 tbox::StartupShutdownManager::Handler
@@ -115,10 +113,7 @@ void BoxTransitSet::initialize()
  */
 BoxTransitSet *BoxTransitSet::clone() const
 {
-   BoxTransitSet* new_object = new
-      BoxTransitSet(
-         * this,
-         false);
+   BoxTransitSet* new_object = new BoxTransitSet(*this, false);
    return new_object;
 }
 
@@ -130,9 +125,7 @@ void BoxTransitSet::insertAll(const hier::BoxContainer& other)
 {
    size_t old_size = d_set.size();
    for (hier::BoxContainer::const_iterator bi = other.begin(); bi != other.end(); ++bi) {
-      BoxInTransit
-      new_box(
-         * bi);
+      BoxInTransit new_box(*bi);
       d_set.insert(new_box);
       d_sumload += new_box.getLoad();
    }
@@ -193,10 +186,10 @@ size_t BoxTransitSet::getNumberOfOriginatingProcesses() const
 void
 BoxTransitSet::assignToLocalAndPopulateMaps(
    hier::BoxLevel& balanced_box_level,
-   hier::MappingConnector& balanced_to_unbalanced,
-   hier::MappingConnector& unbalanced_to_balanced,
+   hier::MappingConnector &balanced_to_unbalanced,
+   hier::MappingConnector &unbalanced_to_balanced,
    double flexible_load_tol,
-   const tbox::SAMRAI_MPI& alt_mpi)
+   const tbox::SAMRAI_MPI &alt_mpi )
 {
    NULL_USE(flexible_load_tol);
 
@@ -206,15 +199,16 @@ BoxTransitSet::assignToLocalAndPopulateMaps(
       tbox::plog << "BoxTransitSet::assignToLocalAndPopulateMaps: entered." << std::endl;
    }
 
-   assignToLocal(balanced_box_level, unbalanced_to_balanced.getBase(), flexible_load_tol);
-   populateMaps(balanced_to_unbalanced, unbalanced_to_balanced, alt_mpi);
+   assignToLocal( balanced_box_level, unbalanced_to_balanced.getBase(), flexible_load_tol );
+   populateMaps(balanced_to_unbalanced, unbalanced_to_balanced, alt_mpi );
 
-   if (d_print_steps || d_print_edge_steps) {
+   if ( d_print_steps || d_print_edge_steps ) {
       tbox::plog << "BoxTransitSet::assignToLocalAndPopulateMaps: exiting." << std::endl;
    }
 
    d_object_timers->t_assign_to_local_process_and_populate_maps->stop();
 }
+
 
 /*
  *************************************************************************
@@ -223,9 +217,9 @@ BoxTransitSet::assignToLocalAndPopulateMaps(
 void
 BoxTransitSet::assignToLocal(
    hier::BoxLevel& balanced_box_level,
-   const hier::BoxLevel& unbalanced_box_level,
+   const hier::BoxLevel &unbalanced_box_level,
    double flexible_load_tol,
-   const tbox::SAMRAI_MPI& alt_mpi)
+   const tbox::SAMRAI_MPI &alt_mpi )
 {
    NULL_USE(flexible_load_tol);
    NULL_USE(alt_mpi);
@@ -233,13 +227,15 @@ BoxTransitSet::assignToLocal(
     * Reassign contents to local process, assigning IDs that don't
     * conflict with current Boxes.
     */
-   hier::SequentialLocalIdGenerator
-   id_gen(
-      unbalanced_box_level.getLastLocalId());
-   reassignOwnership(id_gen, balanced_box_level.getMPI().getRank());
+   hier::SequentialLocalIdGenerator id_gen(
+      unbalanced_box_level.getLastLocalId() );
+   reassignOwnership( id_gen, balanced_box_level.getMPI().getRank() );
 
    putInBoxLevel(balanced_box_level);
+
+   return;
 }
+
 
 /*
  *************************************************************************
@@ -252,24 +248,24 @@ BoxTransitSet::assignToLocal(
  */
 void
 BoxTransitSet::populateMaps(
-   hier::MappingConnector& balanced_to_unbalanced,
-   hier::MappingConnector& unbalanced_to_balanced,
-   const tbox::SAMRAI_MPI& alt_mpi) const
+   hier::MappingConnector &balanced_to_unbalanced,
+   hier::MappingConnector &unbalanced_to_balanced,
+   const tbox::SAMRAI_MPI &alt_mpi ) const
 {
    d_object_timers->t_populate_maps->start();
 
-   if (d_print_steps || d_print_edge_steps) {
+   if ( d_print_steps || d_print_edge_steps ) {
       tbox::plog << "BoxTransitSet::populateMaps: entered." << std::endl;
    }
 
-   generateLocalBasedMapEdges(unbalanced_to_balanced, balanced_to_unbalanced);
+   generateLocalBasedMapEdges( unbalanced_to_balanced, balanced_to_unbalanced );
 
    constructSemilocalUnbalancedToBalanced(
       unbalanced_to_balanced,
       alt_mpi.getCommunicator() == MPI_COMM_NULL ?
-      unbalanced_to_balanced.getBase().getMPI() : alt_mpi);
+      unbalanced_to_balanced.getBase().getMPI() : alt_mpi );
 
-   if (d_print_steps || d_print_edge_steps) {
+   if ( d_print_steps || d_print_edge_steps ) {
       tbox::plog << "BoxTransitSet::populateMaps: exiting." << std::endl;
    }
 
@@ -292,18 +288,18 @@ BoxTransitSet::populateMaps(
  */
 void
 BoxTransitSet::constructSemilocalUnbalancedToBalanced(
-   hier::MappingConnector& unbalanced_to_balanced,
-   const tbox::SAMRAI_MPI& mpi) const
+   hier::MappingConnector &unbalanced_to_balanced,
+   const tbox::SAMRAI_MPI &mpi ) const
 {
    d_object_timers->t_construct_semilocal->start();
 
-   if (d_print_steps || d_print_edge_steps) {
+   if ( d_print_steps || d_print_edge_steps ) {
       tbox::plog << "BoxTransitSet::constructSemilocalUnbalancedToBalanced: entered."
                  << std::endl;
    }
 
-   const hier::BoxLevel& unbalanced_box_level = unbalanced_to_balanced.getBase();
-   const hier::BoxLevel& balanced_box_level = unbalanced_to_balanced.getHead();
+   const hier::BoxLevel &unbalanced_box_level = unbalanced_to_balanced.getBase();
+   const hier::BoxLevel &balanced_box_level = unbalanced_to_balanced.getHead();
 
    size_t num_cells_imported = 0;
 
@@ -341,17 +337,15 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
 
    size_t outgoing_messages_size = static_cast<int>(outgoing_messages.size());
    std::vector<tbox::SAMRAI_MPI::Request>
-   send_requests(
-      outgoing_messages_size,
-      MPI_REQUEST_NULL);
+   send_requests(outgoing_messages_size, MPI_REQUEST_NULL);
 
    d_object_timers->t_construct_semilocal_send_edges->start();
-   for (size_t send_number = 0; send_number < outgoing_messages_size; ++send_number) {
+   for ( size_t send_number = 0; send_number < outgoing_messages_size; ++send_number ) {
 
       int recipient = recip_itr->first;
       tbox::MessageStream& mstream = *recip_itr->second;
 
-      if (d_print_edge_steps) {
+      if ( d_print_edge_steps ) {
          tbox::plog << "Accounting for cells on proc " << recipient << std::endl;
       }
 
@@ -371,15 +365,15 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
    }
    d_object_timers->t_construct_semilocal_send_edges->stop();
 
-   TBOX_ASSERT(unbalanced_box_level.getLocalNumberOfCells() + num_cells_imported
-      >= balanced_box_level.getLocalNumberOfCells());
+   TBOX_ASSERT( unbalanced_box_level.getLocalNumberOfCells() + num_cells_imported
+                >= balanced_box_level.getLocalNumberOfCells() );
 
    size_t num_unaccounted_cells =
       unbalanced_box_level.getLocalNumberOfCells()
       - balanced_box_level.getLocalNumberOfCells()
       + num_cells_imported;
 
-   if (d_print_edge_steps) {
+   if ( d_print_edge_steps ) {
       tbox::plog << num_unaccounted_cells << " unaccounted cells." << std::endl;
    }
 
@@ -390,9 +384,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
     */
 
    std::vector<char> incoming_message;
-   BoxInTransit
-   balanced_box_in_transit(
-      unbalanced_box_level.getDim());
+   BoxInTransit balanced_box_in_transit(unbalanced_box_level.getDim());
 
    while (num_unaccounted_cells > 0) {
 
@@ -414,28 +406,26 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
          &status);
       d_object_timers->t_construct_semilocal_comm_wait->stop();
 
-      tbox::MessageStream
-      msg(
-         incoming_message.size(),
-         tbox::MessageStream::Read,
-         static_cast<void *>(&incoming_message[0]),
-         false);
+      tbox::MessageStream msg( incoming_message.size(),
+                               tbox::MessageStream::Read,
+                               static_cast<void*>(&incoming_message[0]),
+                               false );
       const size_t old_count = num_unaccounted_cells;
       d_object_timers->t_unpack_edge->start();
-      while (!msg.endOfData()) {
+      while ( !msg.endOfData() ) {
          balanced_box_in_transit.getFromMessageStream(msg);
-         TBOX_ASSERT(balanced_box_in_transit.getBox().size() <= num_unaccounted_cells);
+         TBOX_ASSERT( balanced_box_in_transit.getBox().size() <= num_unaccounted_cells );
          unbalanced_to_balanced.insertLocalNeighbor(
             balanced_box_in_transit.getBox(),
             balanced_box_in_transit.getOrigBox().getBoxId());
-         TBOX_ASSERT(num_unaccounted_cells >= balanced_box_in_transit.getBox().size());
+         TBOX_ASSERT( num_unaccounted_cells >= balanced_box_in_transit.getBox().size() );
          num_unaccounted_cells -= balanced_box_in_transit.getBox().size();
       }
       d_object_timers->t_unpack_edge->stop();
 
       if (d_print_edge_steps) {
          tbox::plog << "Process " << source << " accounted for "
-                    << (old_count - num_unaccounted_cells) << " cells, leaving "
+                    << (old_count-num_unaccounted_cells) << " cells, leaving "
                     << num_unaccounted_cells << " unaccounted." << std::endl;
       }
 
@@ -445,9 +435,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
 
    // Wait for the sends to complete before clearing outgoing_messages.
    if (send_requests.size() > 0) {
-      std::vector<tbox::SAMRAI_MPI::Status>
-      status(
-         send_requests.size());
+      std::vector<tbox::SAMRAI_MPI::Status> status(send_requests.size());
       d_object_timers->t_construct_semilocal_comm_wait->start();
       tbox::SAMRAI_MPI::Waitall(
          static_cast<int>(send_requests.size()),
@@ -457,7 +445,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
       outgoing_messages.clear();
    }
 
-   if (d_print_steps || d_print_edge_steps) {
+   if ( d_print_steps || d_print_edge_steps ) {
       tbox::plog << "BoxTransitSet::constructSemilocalUnbalancedToBalanced: exiting."
                  << std::endl;
    }
@@ -482,12 +470,8 @@ BoxTransitSet::reassignOwnership(
    for (const_iterator bi = begin(); bi != end(); ++bi) {
       if (bi->getOwnerRank() != new_owner_rank ||
           !bi->getLocalId().isValid()) {
-         BoxInTransit
-         reassigned_box(
-            * bi,
-            bi->getBox(),
-            new_owner_rank,
-            id_gen.nextValue());
+         BoxInTransit reassigned_box(
+            *bi, bi->getBox(), new_owner_rank, id_gen.nextValue());
          tmp_set.insert(tmp_set.end(), reassigned_box);
       } else {
          tmp_set.insert(tmp_set.end(), *bi);
@@ -516,14 +500,14 @@ BoxTransitSet::putInBoxLevel(
 }
 
 /*
- *************************************************************************
- * Generate all d_box<==>getOrigBox() mapping edges, except for those
- * that cannot be set up without communication.  These semilocal edges
- * have either a remote d_box or a remote getOrigBox().
- *
- * Each d_box must have a valid BoxId.
- *************************************************************************
- */
+*************************************************************************
+* Generate all d_box<==>getOrigBox() mapping edges, except for those
+* that cannot be set up without communication.  These semilocal edges
+* have either a remote d_box or a remote getOrigBox().
+*
+* Each d_box must have a valid BoxId.
+*************************************************************************
+*/
 void
 BoxTransitSet::generateLocalBasedMapEdges(
    hier::MappingConnector& unbalanced_to_balanced,
@@ -587,12 +571,8 @@ BoxTransitSet::adjustLoad(
    LoadType low_load,
    LoadType high_load)
 {
-   BoxTransitSet&
-   main_bin(
-      * this);
-   BoxTransitSet&
-   hold_bin(
-      recastTransitLoad(transit_load_hold_bin));
+   BoxTransitSet& main_bin(*this);
+   BoxTransitSet& hold_bin(recastTransitLoad(transit_load_hold_bin));
 
    if (d_print_steps) {
       tbox::plog << "  BoxTransitSet::adjustLoad attempting to bring main load from "
@@ -753,8 +733,7 @@ BoxTransitSet::adjustLoad(
       tbox::plog << "  adjustLoad point_miss=" << point_miss
                  << "  range_miss="
                  << (range_miss > 0 ? " " : "") // Add space if missed range
-                 << (range_miss > 0.5
-          * static_cast<double>(d_pparams->getMinBoxSize().getProduct()) ? " " : "")                             // Add space if missed range by a lot
+                 << (range_miss > 0.5 * static_cast<double>(d_pparams->getMinBoxSize().getProduct()) ? " " : "") // Add space if missed range by a lot
                  << range_miss
                  << "  " << main_bin.getSumLoad() << '/'
                  << ideal_load << " [" << low_load << ',' << high_load << ']'
@@ -804,9 +783,7 @@ BoxTransitSet::adjustLoadByBreaking(
       return actual_transfer;
    }
 
-   BoxTransitSet&
-   main_bin(
-      * this);
+   BoxTransitSet& main_bin(*this);
 
    TBOX_ASSERT(low_load <= ideal_load);
    TBOX_ASSERT(ideal_load <= high_load);
@@ -833,9 +810,7 @@ BoxTransitSet::adjustLoadByBreaking(
    hier::BoxContainer breakoff;
    hier::BoxContainer leftover;
    double breakoff_amt = 0.0;
-   BoxInTransit
-   breakbox(
-      d_pparams->getMinBoxSize().getDim());
+   BoxInTransit breakbox(d_pparams->getMinBoxSize().getDim());
 
    int break_acceptance_flags[4] = { 0, 0, 0, 0 };
    int& found_breakage = break_acceptance_flags[2];
@@ -925,10 +900,9 @@ BoxTransitSet::adjustLoadByBreaking(
       for (hier::BoxContainer::const_iterator bi = breakoff.begin();
            bi != breakoff.end();
            ++bi) {
-         BoxInTransit
-         give_box_in_transit(
+         BoxInTransit give_box_in_transit(
             breakbox,
-            * bi,
+            *bi,
             breakbox.getOwnerRank(),
             hier::LocalId::getInvalidId());
          give_box_in_transit.setLoad(
@@ -941,10 +915,9 @@ BoxTransitSet::adjustLoadByBreaking(
       for (hier::BoxContainer::const_iterator bi = leftover.begin();
            bi != leftover.end();
            ++bi) {
-         BoxInTransit
-         keep_box_in_transit(
+         BoxInTransit keep_box_in_transit(
             breakbox,
-            * bi,
+            *bi,
             breakbox.getOwnerRank(),
             hier::LocalId::getInvalidId());
          keep_box_in_transit.setLoad(
@@ -990,9 +963,7 @@ BoxTransitSet::adjustLoadBySwapping(
 
    d_object_timers->t_adjust_load_by_swapping->start();
 
-   BoxTransitSet&
-   main_bin(
-      * this);
+   BoxTransitSet& main_bin(*this);
 
    if (d_print_steps) {
       tbox::plog << "  Attempting to bring main_bin from "
@@ -1080,9 +1051,7 @@ BoxTransitSet::adjustLoadByPopping(
 
    d_object_timers->t_adjust_load_by_popping->start();
 
-   BoxTransitSet&
-   main_bin(
-      * this);
+   BoxTransitSet& main_bin(*this);
 
    /*
     * Logic in this method assumes positive transfer from hold_bin
@@ -1140,7 +1109,7 @@ BoxTransitSet::adjustLoadByPopping(
          src->erase(src->begin());
          ++num_boxes_popped;
 
-         if (d_print_pop_steps) {
+         if ( d_print_pop_steps ) {
             tbox::plog << ", main_bin load is " << main_bin.getSumLoad() << std::endl;
          }
       }
@@ -1264,12 +1233,8 @@ BoxTransitSet::swapLoadPair(
    iterator dst_loside = dst.end();
 
    // A dummy BoxInTransit for set searches.
-   hier::Box
-   dummy_box(
-      d_pparams->getMinBoxSize().getDim());
-   BoxInTransit
-   dummy_search_target(
-      d_pparams->getMinBoxSize().getDim());
+   hier::Box dummy_box(d_pparams->getMinBoxSize().getDim());
+   BoxInTransit dummy_search_target(d_pparams->getMinBoxSize().getDim());
 
    // Difference between swap results and ideal, >= 0
    LoadType hiside_transfer = 0.0;
@@ -1557,7 +1522,7 @@ BoxTransitSet::swapLoadPair(
  */
 void
 BoxTransitSet::setPrintFlags(
-   bool steps, bool pop_steps, bool swap_steps, bool break_steps, bool edge_steps)
+   bool steps, bool pop_steps, bool swap_steps, bool break_steps, bool edge_steps )
 {
    d_print_steps = steps;
    d_print_pop_steps = pop_steps;
@@ -1565,6 +1530,8 @@ BoxTransitSet::setPrintFlags(
    d_print_break_steps = break_steps;
    d_print_edge_steps = edge_steps;
 }
+
+
 
 /*
  ***********************************************************************
@@ -1574,8 +1541,7 @@ void
 BoxTransitSet::setTimerPrefix(
    const std::string& timer_prefix)
 {
-   std::map<std::string, TimerStruct>::iterator
-   ti(
+   std::map<std::string, TimerStruct>::iterator ti(
       s_static_timers.find(timer_prefix));
    if (ti == s_static_timers.end()) {
       d_object_timers = &s_static_timers[timer_prefix];
@@ -1650,9 +1616,7 @@ BoxTransitSet::getFromMessageStream(tbox::MessageStream& msg)
     */
    size_t num_boxes = 0;
    msg >> num_boxes;
-   BoxInTransit
-   received_box(
-      d_pparams->getDim());
+   BoxInTransit received_box(d_pparams->getDim());
    for (size_t i = 0; i < num_boxes; ++i) {
       received_box.getFromMessageStream(msg);
       insert(received_box);

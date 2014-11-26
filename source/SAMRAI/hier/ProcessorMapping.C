@@ -21,9 +21,7 @@ ProcessorMapping::ProcessorMapping():
    d_mapping(0),
    d_local_id_count(-1)
 {
-   const tbox::SAMRAI_MPI&
-   mpi(
-      tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    d_my_rank = mpi.getRank();
    d_nodes = mpi.getSize();
 }
@@ -35,9 +33,7 @@ ProcessorMapping::ProcessorMapping(
    d_mapping(n),
    d_local_id_count(-1)
 {
-   const tbox::SAMRAI_MPI&
-   mpi(
-      tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    d_my_rank = mpi.getRank();
    d_nodes = mpi.getSize();
    for (int i = 0; i < n; ++i) {
@@ -52,9 +48,7 @@ ProcessorMapping::ProcessorMapping(
    d_mapping(mapping.d_mapping.size()),
    d_local_id_count(-1)
 {
-   const tbox::SAMRAI_MPI&
-   mpi(
-      tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    d_my_rank = mpi.getRank();
    d_nodes = mpi.getSize();
    const int n = static_cast<int>(d_mapping.size());
@@ -69,9 +63,7 @@ ProcessorMapping::ProcessorMapping(
    d_nodes(-1),
    d_local_id_count(-1)
 {
-   const tbox::SAMRAI_MPI&
-   mpi(
-      tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    d_my_rank = mpi.getRank();
    d_nodes = mpi.getSize();
    setProcessorMapping(mapping);

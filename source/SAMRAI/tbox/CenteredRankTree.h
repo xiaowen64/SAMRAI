@@ -83,7 +83,7 @@ public:
     * @param[in] make_first_rank_the_root See makeFirstRankTheRoot()
     */
    CenteredRankTree(
-      const SAMRAI_MPI& mpi,
+      const SAMRAI_MPI &mpi,
       bool make_first_rank_the_root = true);
 
    /*!

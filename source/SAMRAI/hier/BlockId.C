@@ -18,9 +18,7 @@ namespace hier {
 const BlockId
 BlockId::s_invalid_id(
    tbox::MathUtilities<int>::getMax());
-const BlockId
-BlockId::s_zero_id(
-   0);
+const BlockId BlockId::s_zero_id(0);
 
 /*
  *******************************************************************************

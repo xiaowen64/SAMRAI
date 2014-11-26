@@ -133,28 +133,19 @@ SideGeometry::computeDestinationBoxes(
    TBOX_ASSERT(
       getDirectionVector() == src_geometry.getDirectionVector());
 
-   const tbox::Dimension&
-   dim(
-      src_mask.getDim());
+   const tbox::Dimension& dim(src_mask.getDim());
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
-   hier::Box
-   src_shift(
-      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts)* src_mask);
+   hier::Box src_shift(
+      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
    transformation.transform(src_shift);
-   hier::Box
-   dst_ghost(
-      d_box);
+   hier::Box dst_ghost(d_box);
    dst_ghost.grow(d_ghosts);
 
    // Compute the intersection (if any) for each of the side directions
-   const hier::IntVector
-   one_vector(
-      dim,
-      1);
+   const hier::IntVector one_vector(dim, 1);
 
-   const hier::Box
-   quick_check(
+   const hier::Box quick_check(
       hier::Box::grow(src_shift, one_vector)
       * hier::Box::grow(dst_ghost, one_vector));
 
@@ -163,23 +154,13 @@ SideGeometry::computeDestinationBoxes(
       const hier::IntVector& dirs = src_geometry.getDirectionVector();
       for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
          if (dirs(d)) {
-            const hier::Box
-            dst_side(
-               toSideBox(dst_ghost, d));
-            const hier::Box
-            src_side(
-               toSideBox(src_shift, d));
-            const hier::Box
-            fill_side(
-               toSideBox(fill_box, d));
-            const hier::Box
-            together(
-               dst_side * src_side* fill_side);
+            const hier::Box dst_side(toSideBox(dst_ghost, d));
+            const hier::Box src_side(toSideBox(src_shift, d));
+            const hier::Box fill_side(toSideBox(fill_box, d));
+            const hier::Box together(dst_side * src_side * fill_side);
             if (!together.empty()) {
                if (!overwrite_interior) {
-                  const hier::Box
-                  int_side(
-                     toSideBox(d_box, d));
+                  const hier::Box int_side(toSideBox(d_box, d));
                   dst_boxes[d].removeIntersections(together, int_side);
                } else {
                   dst_boxes[d].pushBack(together);
@@ -215,15 +196,11 @@ SideGeometry::toSideBox(
    const hier::Box& box,
    tbox::Dimension::dir_t side_normal)
 {
-   const tbox::Dimension&
-   dim(
-      box.getDim());
+   const tbox::Dimension& dim(box.getDim());
 
    TBOX_ASSERT((side_normal < dim.getValue()));
 
-   hier::Box
-   side_box(
-      dim);
+   hier::Box side_box(dim);
 
    if (!box.empty()) {
       side_box = box;
@@ -264,13 +241,9 @@ SideGeometry::doOverlap(
    TBOX_ASSERT(
       dst_geometry.getDirectionVector() == src_geometry.getDirectionVector());
 
-   const tbox::Dimension&
-   dim(
-      src_mask.getDim());
+   const tbox::Dimension& dim(src_mask.getDim());
 
-   std::vector<hier::BoxContainer>
-   dst_boxes(
-      dim.getValue());
+   std::vector<hier::BoxContainer> dst_boxes(dim.getValue());
 
    dst_geometry.computeDestinationBoxes(dst_boxes,
       src_geometry,
@@ -297,19 +270,13 @@ SideGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
 {
-   const tbox::Dimension&
-   dim(
-      transformation.getOffset().getDim());
-   std::vector<hier::BoxContainer>
-   dst_boxes(
-      dim.getValue());
+   const tbox::Dimension& dim(transformation.getOffset().getDim());
+   std::vector<hier::BoxContainer> dst_boxes(dim.getValue());
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
       for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
-         hier::Box
-         side_box(
-            SideGeometry::toSideBox(*b, d));
+         hier::Box side_box(SideGeometry::toSideBox(*b, d));
          dst_boxes[d].pushBack(side_box);
       }
    }
@@ -510,9 +477,7 @@ SideGeometry::transform(
 
       if (rotation_num) {
 
-         SideIndex
-         tmp_index(
-            dim);
+         SideIndex tmp_index(dim);
          for (int r = 0; r < rotation_num; ++r) {
             tmp_index = index;
             index(0) = tmp_index(1);
@@ -661,9 +626,7 @@ SideGeometry::rotateAboutAxis(SideIndex& index,
    const int a = (axis + 1) % dim.getValue();
    const int b = (axis + 2) % dim.getValue();
 
-   SideIndex
-   tmp_index(
-      dim);
+   SideIndex tmp_index(dim);
    for (int j = 0; j < num_rotations; ++j) {
       tmp_index = index;
       index(a) = tmp_index(b);

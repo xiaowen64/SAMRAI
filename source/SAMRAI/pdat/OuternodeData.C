@@ -45,17 +45,13 @@ OuternodeData<TYPE>::OuternodeData(
 {
    TBOX_ASSERT(depth > 0);
 
-   const tbox::Dimension&
-   dim(
-      box.getDim());
+   const tbox::Dimension& dim(box.getDim());
 
    for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
       hier::Box nodebox = NodeGeometry::toNodeBox(box);
 
-      for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1);
-           dh < dim.getValue();
-           ++dh) {
+      for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1); dh < dim.getValue(); ++dh) {
 
          /*
           * For directions higher than d, narrow the box down to avoid
@@ -161,8 +157,8 @@ OuternodeData<TYPE>::getArrayData(
 
 template<class TYPE>
 TYPE&
-OuternodeData<TYPE>::operator() (
-   const NodeIndex &i,
+OuternodeData<TYPE>::operator () (
+   const NodeIndex& i,
    int depth)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
@@ -188,8 +184,8 @@ OuternodeData<TYPE>::operator() (
 
 template<class TYPE>
 const TYPE&
-OuternodeData<TYPE>::operator() (
-   const NodeIndex &i,
+OuternodeData<TYPE>::operator () (
+   const NodeIndex& i,
    int depth) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
@@ -609,9 +605,7 @@ OuternodeData<TYPE>::getSizeOfData(
       loc1.setLower(d, box.upper(d));
       loc1.setUpper(d, box.upper(d));
 
-      for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1);
-           dh < box.getDim().getValue();
-           ++dh) {
+      for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1); dh < box.getDim().getValue(); ++dh) {
 
          /*
           * For directions higher than d, narrow the box down to avoid
@@ -655,9 +649,7 @@ OuternodeData<TYPE>::getDataBox(
    hier::Box databox = NodeGeometry::toNodeBox(getBox());
    const hier::IntVector& ghosts = getGhostCellWidth();
 
-   for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(face_normal + 1);
-        dh < getDim().getValue();
-        ++dh) {
+   for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(face_normal + 1); dh < getDim().getValue(); ++dh) {
 
       /*
        * For directions higher than d, narrow the box down to avoid
@@ -1030,9 +1022,7 @@ OuternodeData<TYPE>::printAxisSide(
    const hier::Box nodebox = NodeGeometry::toNodeBox(box);
    const hier::Box region = nodebox * d_data[face_normal][side]->getBox();
    os.precision(prec);
-   hier::Box::iterator
-   iend(
-      region.end());
+   hier::Box::iterator iend(region.end());
    for (hier::Box::iterator i(region.begin()); i != iend; ++i) {
       os << "array" << *i << " = "
          << (*(d_data[face_normal][side]))(*i, depth) << std::endl

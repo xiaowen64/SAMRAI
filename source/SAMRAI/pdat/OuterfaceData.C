@@ -124,8 +124,8 @@ OuterfaceData<TYPE>::getArrayData(
 
 template<class TYPE>
 TYPE&
-OuterfaceData<TYPE>::operator() (
-   const FaceIndex &i,
+OuterfaceData<TYPE>::operator () (
+   const FaceIndex& i,
    int side,
    int depth)
 {
@@ -140,8 +140,8 @@ OuterfaceData<TYPE>::operator() (
 
 template<class TYPE>
 const TYPE&
-OuterfaceData<TYPE>::operator() (
-   const FaceIndex &i,
+OuterfaceData<TYPE>::operator () (
+   const FaceIndex& i,
    int side,
    int depth) const
 {
@@ -275,20 +275,16 @@ OuterfaceData<TYPE>::copy2(
 
    const hier::IntVector& src_offset = transformation.getOffset();
    for (int d = 0; d < getDim().getValue(); ++d) {
-      hier::IntVector
-      face_offset(
-         src_offset);
+      hier::IntVector face_offset(src_offset);
       if (d > 0) {
          for (int i = 0; i < getDim().getValue(); ++i) {
             face_offset(i) = src_offset((d + i) % getDim().getValue());
          }
       }
-      hier::Transformation
-      face_transform(
-         hier::Transformation::NO_ROTATE,
-         face_offset,
-         getBox().getBlockId(),
-         t_dst->getBox().getBlockId());
+      hier::Transformation face_transform(hier::Transformation::NO_ROTATE,
+                                          face_offset,
+                                          getBox().getBlockId(),
+                                          t_dst->getBox().getBlockId());
 
       const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer(d);
       t_dst->getArrayData(d).copy(*(d_data[d][0]), box_list, face_transform);
@@ -386,9 +382,7 @@ OuterfaceData<TYPE>::getDataStreamSize(
    size_t size = 0;
    for (int d = 0; d < getDim().getValue(); ++d) {
       const hier::BoxContainer& boxlist = t_overlap->getDestinationBoxContainer(d);
-      hier::IntVector
-      face_offset(
-         offset);
+      hier::IntVector face_offset(offset);
       if (d > 0) {
          for (int i = 0; i < getDim().getValue(); ++i) {
             face_offset(i) = offset((d + i) % getDim().getValue());
@@ -424,32 +418,24 @@ OuterfaceData<TYPE>::packStream(
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
 
       if (!boxes.empty()) {
-         hier::IntVector
-         face_offset(
-            offset);
+         hier::IntVector face_offset(offset);
          if (d > 0) {
             for (int i = 0; i < getDim().getValue(); ++i) {
                face_offset(i) = offset((d + i) % getDim().getValue());
             }
          }
 
-         hier::Transformation
-         face_transform(
-            hier::Transformation::NO_ROTATE,
-            face_offset,
-            getBox().getBlockId(),
-            boxes.begin()->getBlockId());
+         hier::Transformation face_transform(hier::Transformation::NO_ROTATE,
+                                             face_offset,
+                                             getBox().getBlockId(),
+                                             boxes.begin()->getBlockId());
 
          for (hier::BoxContainer::const_iterator b = boxes.begin();
               b != boxes.end(); ++b) {
-            hier::Box
-            src_box(
-               * b);
+            hier::Box src_box(*b);
             face_transform.inverseTransform(src_box);
             for (int f = 0; f < 2; ++f) {
-               hier::Box
-               intersect(
-                  src_box * d_data[d][f]->getBox());
+               hier::Box intersect(src_box * d_data[d][f]->getBox());
                if (!intersect.empty()) {
                   face_transform.transform(intersect);
                   d_data[d][f]->packStream(stream,
@@ -476,9 +462,7 @@ OuterfaceData<TYPE>::unpackStream(
    const hier::IntVector& offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); ++d) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-      hier::IntVector
-      face_offset(
-         offset);
+      hier::IntVector face_offset(offset);
       if (d > 0) {
          for (int i = 0; i < getDim().getValue(); ++i) {
             face_offset(i) = offset((d + i) % getDim().getValue());
@@ -671,9 +655,7 @@ OuterfaceData<TYPE>::printAxisFace(
    const hier::Box region =
       facebox * d_data[face_normal][side]->getBox();
    os.precision(prec);
-   hier::Box::iterator
-   iend(
-      region.end());
+   hier::Box::iterator iend(region.end());
    for (hier::Box::iterator i(region.begin()); i != iend; ++i) {
       os << "array" << *i << " = "
          << (*(d_data[face_normal][side]))(*i, depth) << std::endl;

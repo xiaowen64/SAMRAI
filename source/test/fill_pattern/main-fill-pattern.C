@@ -140,11 +140,9 @@ void txt2boxes(
                j1 = j0;
                j0 = tmp;
 
-               hier::Box
-               abox(
-                  hier::Index(i0, j0),
-                  hier::Index(i1, j1),
-                  hier::BlockId(0));
+               hier::Box abox(hier::Index(i0, j0),
+                              hier::Index(i1, j1),
+                              hier::BlockId(0));
                boxes_here.push_back(abox);
             }
          }
@@ -153,9 +151,7 @@ void txt2boxes(
       // Find smallest box at this 'x'
       if (boxes_here.size()) {
 
-         hier::Box
-         smallest_box(
-            boxes_here[0]);
+         hier::Box smallest_box(boxes_here[0]);
 
          for (vector<hier::Box>::iterator itb = boxes_here.begin();
               itb != boxes_here.end(); ++itb) {
@@ -219,9 +215,7 @@ bool txt_next_val(
       //
 
       //const hier::Box& ghost_box = data.getGhostBox();
-      hier::Box
-      ghost_box(
-         data.getGhostBox().getDim());
+      hier::Box ghost_box(data.getGhostBox().getDim());
       if (is_node) {
          ghost_box = pdat::NodeGeometry::toNodeBox(data.getGhostBox());
       } else {
@@ -231,13 +225,9 @@ bool txt_next_val(
       int domain_i = idx % ghost_box.numberCells(0);
       int domain_j = idx / ghost_box.numberCells(0);
 
-      tbox::Dimension
-      dim(
-         ghost_box.getDim());
-      hier::Box
-      shifted_box(
-         hier::Box::shift(ghost_box,
-            hier::IntVector(dim, 2)));
+      tbox::Dimension dim(ghost_box.getDim());
+      hier::Box shifted_box(hier::Box::shift(ghost_box,
+                               hier::IntVector(dim, 2)));
       // Translate domain coordinates into grid zone coordintes
       int di = shifted_box.lower() (0);
       int dj = shifted_box.lower() (1);
@@ -274,9 +264,7 @@ bool txt_next_val(
       // Check for non-zero zone data
       if (' ' != txt[txt_zone_idx]) {
 
-         istringstream
-         valstr(
-            & txt[txt_zone_idx]);
+         istringstream valstr(&txt[txt_zone_idx]);
          valstr >> *datapt;
          return true;
       }
@@ -293,9 +281,7 @@ bool txt_next_val(
           '8' == txt[txt_node_idx] ||
           '9' == txt[txt_node_idx]) {
 
-         istringstream
-         valstr(
-            & txt[txt_node_idx]);
+         istringstream valstr(&txt[txt_node_idx]);
          valstr >> *datapt;
          return true;
       }
@@ -342,33 +328,26 @@ bool SingleLevelTestCase(
    boost::shared_ptr<xfer::VariableFillPattern> fill_pattern,
    tbox::Dimension& dim)
 {
-   const tbox::SAMRAI_MPI&
-   mpi(
-      tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    const std::string& pattern_name = fill_pattern->getPatternName();
 
    hier::BoxContainer level_boxes;
    txt2boxes(levelboxes_txt, level_boxes);
 
-   boost::shared_ptr<geom::GridGeometry>
-   geom(
+   boost::shared_ptr<geom::GridGeometry> geom(
       new geom::GridGeometry(
          "GridGeometry",
          level_boxes));
 
-   boost::shared_ptr<hier::PatchHierarchy>
-   hierarchy(
+   boost::shared_ptr<hier::PatchHierarchy> hierarchy(
       new hier::PatchHierarchy("hier", geom));
 
-   boost::shared_ptr<hier::BoxLevel>
-   mblevel(
+   boost::shared_ptr<hier::BoxLevel> mblevel(
       boost::make_shared<hier::BoxLevel>(hier::IntVector(dim, 1), geom));
 
    const int num_nodes = mpi.getSize();
    const int num_boxes = level_boxes.size();
-   hier::LocalId
-   local_id(
-      0);
+   hier::LocalId local_id(0);
    hier::BoxContainer::iterator level_boxes_itr = level_boxes.begin();
    for (int i = 0; i < num_boxes; ++i, ++level_boxes_itr) {
 
@@ -389,22 +368,16 @@ bool SingleLevelTestCase(
    int level_no = 0;
    hierarchy->makeNewPatchLevel(level_no, mblevel);
 
-   boost::shared_ptr<hier::PatchLevel>
-   level(
-      hierarchy->getPatchLevel(0));
+   boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(0));
 
    // There is one variable-context pair with a gcw of 2
 
    xfer::RefineAlgorithm refine_alg;
 
-   boost::shared_ptr<hier::VariableContext>
-   context(
+   boost::shared_ptr<hier::VariableContext> context(
       hier::VariableDatabase::getDatabase()->getContext("CONTEXT"));
 
-   hier::IntVector
-   ghost_cell_width(
-      dim,
-      2);
+   hier::IntVector ghost_cell_width(dim, 2);
 
    int data_id =
       hier::VariableDatabase::getDatabase()->registerVariableAndContext(
@@ -421,11 +394,8 @@ bool SingleLevelTestCase(
       // Loop over each patch and initialize data
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>&
-         patch(
-            * p);
-         boost::shared_ptr<pdat::CellData<int> >
-         cdata(
+         const boost::shared_ptr<hier::Patch>& patch(*p);
+         boost::shared_ptr<pdat::CellData<int> > cdata(
             BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
                patch->getPatchData(data_id)));
          TBOX_ASSERT(cdata);
@@ -443,11 +413,8 @@ bool SingleLevelTestCase(
       // Loop over each patch and initialize data
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>&
-         patch(
-            * p);
-         boost::shared_ptr<pdat::NodeData<int> >
-         ndata(
+         const boost::shared_ptr<hier::Patch>& patch(*p);
+         boost::shared_ptr<pdat::NodeData<int> > ndata(
             BOOST_CAST<pdat::NodeData<int>, hier::PatchData>(
                patch->getPatchData(data_id)));
          TBOX_ASSERT(ndata);
@@ -477,20 +444,15 @@ bool SingleLevelTestCase(
        pattern_name == "FIRST_LAYER_CELL_FILL_PATTERN") {
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>&
-         patch(
-            * p);
-         boost::shared_ptr<pdat::CellData<int> >
-         cdata(
+         const boost::shared_ptr<hier::Patch>& patch(*p);
+         boost::shared_ptr<pdat::CellData<int> > cdata(
             BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
                patch->getPatchData(data_id)));
          TBOX_ASSERT(cdata);
 
-         pdat::CellData<int>
-         expected(
-            cdata->getBox(),
-            cdata->getDepth(),
-            ghost_cell_width);
+         pdat::CellData<int> expected(cdata->getBox(),
+                                      cdata->getDepth(),
+                                      ghost_cell_width);
 
          int data_txt_id = patch->getBox().getLocalId().getValue();
          if (mpi.getRank() == 1) {
@@ -500,9 +462,7 @@ bool SingleLevelTestCase(
          txt2data(finaldata_txt[data_txt_id],
             expected, expected.getPointer(), false, false);
 
-         pdat::CellData<int>::iterator
-         ciend(
-            pdat::CellGeometry::end(cdata->getGhostBox()));
+         pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(cdata->getGhostBox()));
          for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(cdata->getGhostBox()));
               ci != ciend; ++ci) {
             if ((*cdata)(*ci) != expected(*ci)) {
@@ -515,20 +475,15 @@ bool SingleLevelTestCase(
               pattern_name == "SECOND_LAYER_NODE_FILL_PATTERN") {
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>&
-         patch(
-            * p);
-         boost::shared_ptr<pdat::NodeData<int> >
-         ndata(
+         const boost::shared_ptr<hier::Patch>& patch(*p);
+         boost::shared_ptr<pdat::NodeData<int> > ndata(
             BOOST_CAST<pdat::NodeData<int>, hier::PatchData>(
                patch->getPatchData(data_id)));
          TBOX_ASSERT(ndata);
 
-         pdat::NodeData<int>
-         expected(
-            ndata->getBox(),
-            ndata->getDepth(),
-            ghost_cell_width);
+         pdat::NodeData<int> expected(ndata->getBox(),
+                                      ndata->getDepth(),
+                                      ghost_cell_width);
 
          int data_txt_id = patch->getBox().getLocalId().getValue();
          if (mpi.getRank() == 1) {
@@ -538,9 +493,7 @@ bool SingleLevelTestCase(
          txt2data(finaldata_txt[data_txt_id],
             expected, expected.getPointer(), false, true);
 
-         pdat::NodeData<int>::iterator
-         niend(
-            pdat::NodeGeometry::end(ndata->getGhostBox()));
+         pdat::NodeData<int>::iterator niend(pdat::NodeGeometry::end(ndata->getGhostBox()));
          for (pdat::NodeData<int>::iterator ni(pdat::NodeGeometry::begin(ndata->getGhostBox()));
               ni != niend; ++ni) {
             if ((*ndata)(*ni) != expected(*ni)) {
@@ -782,16 +735,12 @@ bool Test_FirstLayerCellNoCornersVariableFillPattern()
                                   initial2_txt, initial3_txt };
    const char* final_txt[4] = { final0_txt, final1_txt,
                                 final2_txt, final3_txt };
-   tbox::Dimension
-   dim(
-      2);
+   tbox::Dimension dim(2);
 
-   boost::shared_ptr<pdat::CellVariable<int> >
-   var(
+   boost::shared_ptr<pdat::CellVariable<int> > var(
       new pdat::CellVariable<int>(dim, "1cellnocorners"));
 
-   boost::shared_ptr<pdat::FirstLayerCellNoCornersVariableFillPattern>
-   fill_pattern(
+   boost::shared_ptr<pdat::FirstLayerCellNoCornersVariableFillPattern> fill_pattern(
       new pdat::FirstLayerCellNoCornersVariableFillPattern(dim));
 
    return SingleLevelTestCase(levelboxes_txt,
@@ -1025,16 +974,12 @@ bool Test_FirstLayerCellVariableFillPattern()
    const char* final_txt[4] = { final0_txt, final1_txt,
                                 final2_txt, final3_txt };
 
-   tbox::Dimension
-   dim(
-      2);
+   tbox::Dimension dim(2);
 
-   boost::shared_ptr<pdat::CellVariable<int> >
-   var(
+   boost::shared_ptr<pdat::CellVariable<int> > var(
       new pdat::CellVariable<int>(dim, "1cell"));
 
-   boost::shared_ptr<pdat::FirstLayerCellVariableFillPattern>
-   fill_pattern(
+   boost::shared_ptr<pdat::FirstLayerCellVariableFillPattern> fill_pattern(
       new pdat::FirstLayerCellVariableFillPattern(dim));
 
    return SingleLevelTestCase(levelboxes_txt,
@@ -1300,12 +1245,9 @@ bool Test_SecondLayerNodeNoCornersVariableFillPattern()
    const char* final_txt[4] = { final0_txt, final1_txt,
                                 final2_txt, final3_txt };
 
-   tbox::Dimension
-   dim(
-      2);
+   tbox::Dimension dim(2);
 
-   boost::shared_ptr<pdat::NodeVariable<int> >
-   var(
+   boost::shared_ptr<pdat::NodeVariable<int> > var(
       new pdat::NodeVariable<int>(
          dim,
          "secondnodenocorners"));
@@ -1577,16 +1519,12 @@ bool Test_SecondLayerNodeVariableFillPattern()
    const char* final_txt[4] = { final0_txt, final1_txt,
                                 final2_txt, final3_txt };
 
-   tbox::Dimension
-   dim(
-      2);
+   tbox::Dimension dim(2);
 
-   boost::shared_ptr<pdat::NodeVariable<int> >
-   var(
+   boost::shared_ptr<pdat::NodeVariable<int> > var(
       new pdat::NodeVariable<int>(dim, "secondnode"));
 
-   boost::shared_ptr<pdat::SecondLayerNodeVariableFillPattern>
-   fill_pattern(
+   boost::shared_ptr<pdat::SecondLayerNodeVariableFillPattern> fill_pattern(
       new pdat::SecondLayerNodeVariableFillPattern(dim));
 
    return SingleLevelTestCase(levelboxes_txt,

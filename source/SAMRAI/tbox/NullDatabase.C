@@ -104,9 +104,7 @@ NullDatabase::keyExists(
 std::vector<std::string>
 NullDatabase::getAllKeys()
 {
-   std::vector<std::string>
-   keys(
-      0);
+   std::vector<std::string> keys(0);
    return keys;
 }
 
@@ -206,9 +204,7 @@ NullDatabase::getBoolVector(
    const std::string& key)
 {
    NULL_USE(key);
-   std::vector<bool>
-   empty(
-      0);
+   std::vector<bool> empty(0);
    return empty;
 }
 
@@ -245,9 +241,7 @@ NullDatabase::getDatabaseBoxVector(
 {
    NULL_USE(key);
 
-   std::vector<DatabaseBox>
-   empty(
-      0);
+   std::vector<DatabaseBox> empty(0);
    return empty;
 }
 
@@ -284,9 +278,7 @@ NullDatabase::getCharVector(
 {
    NULL_USE(key);
 
-   std::vector<char>
-   empty(
-      0);
+   std::vector<char> empty(0);
    return empty;
 }
 
@@ -325,9 +317,7 @@ NullDatabase::getComplexVector(
 {
    NULL_USE(key);
 
-   std::vector<dcomplex>
-   empty(
-      0);
+   std::vector<dcomplex> empty(0);
    return empty;
 }
 
@@ -364,9 +354,7 @@ NullDatabase::getDoubleVector(
    const std::string& key)
 {
    NULL_USE(key);
-   std::vector<double>
-   empty(
-      0);
+   std::vector<double> empty(0);
    return empty;
 }
 
@@ -405,9 +393,7 @@ NullDatabase::getFloatVector(
 {
    NULL_USE(key);
 
-   std::vector<float>
-   empty(
-      0);
+   std::vector<float> empty(0);
    return empty;
 }
 
@@ -444,9 +430,7 @@ NullDatabase::getIntegerVector(
 {
    NULL_USE(key);
 
-   std::vector<int>
-   empty(
-      0);
+   std::vector<int> empty(0);
    return empty;
 }
 
@@ -482,9 +466,7 @@ NullDatabase::getStringVector(
    const std::string& key)
 {
    NULL_USE(key);
-   std::vector<std::string>
-   empty(
-      0);
+   std::vector<std::string> empty(0);
    return empty;
 }
 

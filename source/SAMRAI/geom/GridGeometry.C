@@ -152,9 +152,7 @@ GridGeometry::makeCoarsenedGridGeometry(
    const std::string& coarse_geom_name,
    const hier::IntVector& coarsen_ratio) const
 {
-   const tbox::Dimension&
-   dim(
-      getDim());
+   const tbox::Dimension& dim(getDim());
 
    TBOX_ASSERT(!coarse_geom_name.empty());
    TBOX_ASSERT(coarse_geom_name != getObjectName());
@@ -192,8 +190,7 @@ GridGeometry::makeCoarsenedGridGeometry(
       }
    }
 
-   boost::shared_ptr<hier::BaseGridGeometry>
-   coarse_geometry(
+   boost::shared_ptr<hier::BaseGridGeometry> coarse_geometry(
       new GridGeometry(
          coarse_geom_name,
          coarse_domain,
@@ -219,22 +216,17 @@ GridGeometry::makeRefinedGridGeometry(
    const std::string& fine_geom_name,
    const hier::IntVector& refine_ratio) const
 {
-   const tbox::Dimension&
-   dim(
-      getDim());
+   const tbox::Dimension& dim(getDim());
 
    TBOX_ASSERT(!fine_geom_name.empty());
    TBOX_ASSERT(fine_geom_name != getObjectName());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, refine_ratio);
    TBOX_ASSERT(refine_ratio > hier::IntVector::getZero(dim));
 
-   hier::BoxContainer
-   fine_domain(
-      getPhysicalDomain());
+   hier::BoxContainer fine_domain(getPhysicalDomain());
    fine_domain.refine(refine_ratio);
 
-   boost::shared_ptr<hier::BaseGridGeometry>
-   fine_geometry(
+   boost::shared_ptr<hier::BaseGridGeometry> fine_geometry(
       new GridGeometry(
          fine_geom_name,
          fine_domain,

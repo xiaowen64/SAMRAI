@@ -79,9 +79,7 @@ int main(
    const unsigned short d = static_cast<unsigned short>(atoi(argv[1]));
    TBOX_ASSERT(d > 0);
    TBOX_ASSERT(d <= SAMRAI::MAX_DIM_VAL);
-   const tbox::Dimension
-   dim(
-      d);
+   const tbox::Dimension dim(d);
 
    const std::string log_fn = std::string("cell_cplxtest.")
       + tbox::Utilities::intToString(dim.getValue(), 1) + "d.log";
@@ -98,30 +96,14 @@ int main(
       double lo[SAMRAI::MAX_DIM_VAL];
       double hi[SAMRAI::MAX_DIM_VAL];
 
-      hier::Index
-      clo0(
-         dim);
-      hier::Index
-      chi0(
-         dim);
-      hier::Index
-      clo1(
-         dim);
-      hier::Index
-      chi1(
-         dim);
-      hier::Index
-      flo0(
-         dim);
-      hier::Index
-      fhi0(
-         dim);
-      hier::Index
-      flo1(
-         dim);
-      hier::Index
-      fhi1(
-         dim);
+      hier::Index clo0(dim);
+      hier::Index chi0(dim);
+      hier::Index clo1(dim);
+      hier::Index chi1(dim);
+      hier::Index flo0(dim);
+      hier::Index fhi0(dim);
+      hier::Index flo1(dim);
+      hier::Index fhi1(dim);
 
       for (int i = 0; i < dim.getValue(); ++i) {
          lo[i] = 0.0;
@@ -148,30 +130,11 @@ int main(
          }
       }
 
-      hier::Box
-      coarse0(
-         clo0,
-         chi0,
-         hier::BlockId(0));
-      hier::Box
-      coarse1(
-         clo1,
-         chi1,
-         hier::BlockId(0));
-      hier::Box
-      fine0(
-         flo0,
-         fhi0,
-         hier::BlockId(0));
-      hier::Box
-      fine1(
-         flo1,
-         fhi1,
-         hier::BlockId(0));
-      hier::IntVector
-      ratio(
-         dim,
-         2);
+      hier::Box coarse0(clo0, chi0, hier::BlockId(0));
+      hier::Box coarse1(clo1, chi1, hier::BlockId(0));
+      hier::Box fine0(flo0, fhi0, hier::BlockId(0));
+      hier::Box fine1(flo1, fhi1, hier::BlockId(0));
+      hier::IntVector ratio(dim, 2);
 
       hier::BoxContainer coarse_domain;
       hier::BoxContainer fine_boxes;
@@ -180,35 +143,29 @@ int main(
       fine_boxes.pushBack(fine0);
       fine_boxes.pushBack(fine1);
 
-      boost::shared_ptr<geom::CartesianGridGeometry>
-      geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry> geometry(
          new geom::CartesianGridGeometry(
             "CartesianGeometry",
             lo,
             hi,
             coarse_domain));
 
-      boost::shared_ptr<hier::PatchHierarchy>
-      hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", geometry));
 
       hierarchy->setMaxNumberOfLevels(2);
       hierarchy->setRatioToCoarserLevel(ratio, 1);
 
-      const tbox::SAMRAI_MPI&
-      mpi(
-         tbox::SAMRAI_MPI::getSAMRAIWorld());
+      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
       const int nproc = mpi.getSize();
 
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_boxes.size();
 
-      boost::shared_ptr<hier::BoxLevel>
-      layer0(
+      boost::shared_ptr<hier::BoxLevel> layer0(
          boost::make_shared<hier::BoxLevel>(
             hier::IntVector(dim, 1), geometry));
-      boost::shared_ptr<hier::BoxLevel>
-      layer1(
+      boost::shared_ptr<hier::BoxLevel> layer1(
          boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
@@ -240,13 +197,9 @@ int main(
 
       // Create instance of hier::Variable database
       hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-      boost::shared_ptr<hier::VariableContext>
-      dummy(
+      boost::shared_ptr<hier::VariableContext> dummy(
          variable_db->getContext("dummy"));
-      const hier::IntVector
-      no_ghosts(
-         dim,
-         0);
+      const hier::IntVector no_ghosts(dim, 0);
 
       // Make some dummy variables and register them with hier::VariableDatabase
       boost::shared_ptr<pdat::CellVariable<dcomplex> > cvar[NVARS];
@@ -264,8 +217,7 @@ int main(
       cvindx[3] = variable_db->registerVariableAndContext(
             cvar[3], dummy, no_ghosts);
 
-      boost::shared_ptr<pdat::CellVariable<double> >
-      cwgt(
+      boost::shared_ptr<pdat::CellVariable<double> > cwgt(
          new pdat::CellVariable<double>(dim, "cwgt", 1));
       int cwgt_id = variable_db->registerVariableAndContext(
             cwgt, dummy, no_ghosts);
@@ -278,16 +230,14 @@ int main(
          }
       }
 
-      boost::shared_ptr<math::HierarchyDataOpsComplex>
-      cell_ops(
+      boost::shared_ptr<math::HierarchyDataOpsComplex> cell_ops(
          new math::HierarchyCellDataOpsComplex(
             hierarchy,
             0,
             1));
       TBOX_ASSERT(cell_ops);
 
-      boost::shared_ptr<math::HierarchyDataOpsReal<double> >
-      cwgt_ops(
+      boost::shared_ptr<math::HierarchyDataOpsReal<double> > cwgt_ops(
          new math::HierarchyCellDataOpsReal<double>(
             hierarchy,
             0,
@@ -299,14 +249,12 @@ int main(
       hier::Box coarse_fine = fine0 + fine1;
       coarse_fine.coarsen(ratio);
       for (ln = 0; ln < 2; ++ln) {
-         boost::shared_ptr<hier::PatchLevel>
-         level(
+         boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            boost::shared_ptr<geom::CartesianPatchGeometry>
-            pgeom(
+            boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
                BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
@@ -315,8 +263,7 @@ int main(
             for (int i = 1; i < dim.getValue(); ++i) {
                cell_vol *= dx[i];
             }
-            boost::shared_ptr<pdat::CellData<double> >
-            cvdata(
+            boost::shared_ptr<pdat::CellData<double> > cvdata(
                BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                   patch->getPatchData(cwgt_id)));
             TBOX_ASSERT(cvdata);
@@ -332,22 +279,18 @@ int main(
       // 0.0025 on fine level for 2d.  0.001 and 0.000125 for 3d.
       bool vol_test_passed = true;
       for (ln = 0; ln < 2; ++ln) {
-         boost::shared_ptr<hier::PatchLevel>
-         level(
+         boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            boost::shared_ptr<pdat::CellData<double> >
-            cvdata(
+            boost::shared_ptr<pdat::CellData<double> > cvdata(
                BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                   patch->getPatchData(cwgt_id)));
 
             TBOX_ASSERT(cvdata);
 
-            pdat::CellIterator
-            cend(
-               pdat::CellGeometry::end(cvdata->getBox()));
+            pdat::CellIterator cend(pdat::CellGeometry::end(cvdata->getBox()));
             for (pdat::CellIterator c(pdat::CellGeometry::begin(cvdata->getBox()));
                  c != cend && vol_test_passed; ++c) {
                pdat::CellIndex cell_index = *c;
@@ -442,10 +385,7 @@ int main(
 
       // Test #3b: math::HierarchyCellDataOpsComplex::setToScalar()
       // Expected: v1 = (4.0,3.0)
-      dcomplex
-      val1(
-         4.0,
-         3.0);
+      dcomplex val1(4.0, 3.0);
       cell_ops->setToScalar(cvindx[1], val1);
       if (!complexDataSameAsValue(cvindx[1], val1, hierarchy)) {
          ++num_failures;
@@ -487,10 +427,7 @@ int main(
       // Test #6: math::HierarchyCellDataOpsComplex::scale()
       // Expected: v2 = 0.25 * v2 = (1.0,0.75)
       cell_ops->scale(cvindx[2], 0.25, cvindx[2]);
-      dcomplex
-      val_scale(
-         1.0,
-         0.75);
+      dcomplex val_scale(1.0, 0.75);
       if (!complexDataSameAsValue(cvindx[2], val_scale, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -502,10 +439,7 @@ int main(
       // Test #7: math::HierarchyCellDataOpsComplex::add()
       // Expected: v3 = v0 + v1 = (6.0, 4.5)
       cell_ops->add(cvindx[3], cvindx[0], cvindx[1]);
-      dcomplex
-      val_add(
-         6.0,
-         4.5);
+      dcomplex val_add(6.0, 4.5);
       if (!complexDataSameAsValue(cvindx[3], val_add, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -520,10 +454,7 @@ int main(
       // Test #8: math::HierarchyCellDataOpsComplex::subtract()
       // Expected: v1 = v3 - v0 = (6.0,0.0)
       cell_ops->subtract(cvindx[1], cvindx[3], cvindx[0]);
-      dcomplex
-      val_sub(
-         6.0,
-         0.0);
+      dcomplex val_sub(6.0, 0.0);
       if (!complexDataSameAsValue(cvindx[1], val_sub, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -535,10 +466,7 @@ int main(
       // Test #9a: math::HierarchyCellDataOpsComplex::addScalar()
       // Expected: v1 = v1 + (0.0,-4.0) = (6.0,-4.0)
       cell_ops->addScalar(cvindx[1], cvindx[1], dcomplex(0.0, -4.0));
-      dcomplex
-      val_addScalar(
-         6.0,
-         -4.0);
+      dcomplex val_addScalar(6.0, -4.0);
       if (!complexDataSameAsValue(cvindx[1], val_addScalar, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -577,10 +505,7 @@ int main(
       // Test #10: math::HierarchyCellDataOpsComplex::multiply()
       // Expected:  v1 = v3 * v1 = (3.0,-2.0)
       cell_ops->multiply(cvindx[1], cvindx[3], cvindx[1]);
-      dcomplex
-      val_mult(
-         3.0,
-         -2.0);
+      dcomplex val_mult(3.0, -2.0);
       if (!complexDataSameAsValue(cvindx[1], val_mult, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -592,10 +517,7 @@ int main(
       // Test #11: math::HierarchyCellDataOpsComplex::divide()
       // Expected:  v0 = v2 / v1 = (1.3846153846154,-0.076923076923077)
       cell_ops->divide(cvindx[0], cvindx[2], cvindx[1]);
-      dcomplex
-      val_div(
-         1.3846153846154,
-         -0.076923076923077);
+      dcomplex val_div(1.3846153846154, -0.076923076923077);
       if (!complexDataSameAsValue(cvindx[0], val_div, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -607,10 +529,7 @@ int main(
       // Test #12: math::HierarchyCellDataOpsComplex::reciprocal()
       // Expected:  v1 = 1 / v1 = (0.23076923076923, 0.15384615384615)
       cell_ops->reciprocal(cvindx[1], cvindx[1]);
-      dcomplex
-      val_rec(
-         0.23076923076923,
-         0.15384615384615);
+      dcomplex val_rec(0.23076923076923, 0.15384615384615);
       if (!complexDataSameAsValue(cvindx[1], val_rec, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -623,8 +542,7 @@ int main(
       boost::shared_ptr<pdat::CellData<dcomplex> > cdata;
 
       // set values
-      boost::shared_ptr<hier::PatchLevel>
-      level_zero(
+      boost::shared_ptr<hier::PatchLevel> level_zero(
          hierarchy->getPatchLevel(0));
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
@@ -632,14 +550,8 @@ int main(
          cdata = BOOST_CAST<pdat::CellData<dcomplex>,
                             hier::PatchData>(patch->getPatchData(cvindx[2]));
          TBOX_ASSERT(cdata);
-         hier::Index
-         index0(
-            dim,
-            2);
-         hier::Index
-         index1(
-            dim,
-            3);
+         hier::Index index0(dim, 2);
+         hier::Index index1(dim, 3);
          index1(0) = 5;
          if (patch->getBox().contains(index0)) {
             (*cdata)(pdat::CellIndex(index0), 0) = dcomplex(100.0, -50.0);
@@ -657,19 +569,11 @@ int main(
          cdata = BOOST_CAST<pdat::CellData<dcomplex>,
                             hier::PatchData>(patch->getPatchData(cvindx[2]));
          TBOX_ASSERT(cdata);
-         hier::Index
-         index0(
-            dim,
-            2);
-         hier::Index
-         index1(
-            dim,
-            3);
+         hier::Index index0(dim, 2);
+         hier::Index index1(dim, 3);
          index1(0) = 5;
 
-         pdat::CellIterator
-         cend(
-            pdat::CellGeometry::end(cdata->getBox()));
+         pdat::CellIterator cend(pdat::CellGeometry::end(cdata->getBox()));
          for (pdat::CellIterator c(pdat::CellGeometry::begin(cdata->getBox()));
               c != cend && bogus_value_test_passed; ++c) {
             pdat::CellIndex cell_index = *c;
@@ -784,10 +688,7 @@ int main(
       // Expected:  v3 = (2.0,5.0)
       cell_ops->linearSum(cvindx[3],
          dcomplex(2.0, 0.0), cvindx[1], dcomplex(0.0, -1.0), cvindx[0]);
-      dcomplex
-      val_linearSum(
-         2.0,
-         5.0);
+      dcomplex val_linearSum(2.0, 5.0);
       if (!complexDataSameAsValue(cvindx[3], val_linearSum, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -799,10 +700,7 @@ int main(
       // Test #20: math::HierarchyCellDataOpsComplex::axmy()
       // Expected:  v3 = (6.5,12.0)
       cell_ops->axmy(cvindx[3], 3.0, cvindx[1], cvindx[0]);
-      dcomplex
-      val_axmy(
-         6.5,
-         12.0);
+      dcomplex val_axmy(6.5, 12.0);
       if (!complexDataSameAsValue(cvindx[3], val_axmy, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -814,10 +712,7 @@ int main(
       // Test #21a: math::HierarchyCellDataOpsComplex::dot()
       // Expected:  cdot = (8.75,-10.5)
       dcomplex cdot = cell_ops->dot(cvindx[2], cvindx[1], cwgt_id);
-      dcomplex
-      ans_2_dot_1(
-         8.75,
-         -10.5);
+      dcomplex ans_2_dot_1(8.75, -10.5);
       if (!tbox::MathUtilities<dcomplex>::equalEps(cdot, ans_2_dot_1)) {
          ++num_failures;
          tbox::perr
@@ -829,10 +724,7 @@ int main(
       // Test #21b: math::HierarchyCellDataOpsComplex::dot()
       // Expected:  cdot = (8.75,10.5)
       dcomplex cdot2 = cell_ops->dot(cvindx[1], cvindx[2], cwgt_id);
-      dcomplex
-      ans_1_dot_2(
-         8.75,
-         10.5);
+      dcomplex ans_1_dot_2(8.75, 10.5);
       if (!tbox::MathUtilities<dcomplex>::equalEps(cdot2, ans_1_dot_2)) {
          ++num_failures;
          tbox::perr
@@ -898,22 +790,17 @@ complexDataSameAsValue(
    int ln;
    boost::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ++ln) {
-      boost::shared_ptr<hier::PatchLevel>
-      level(
-         hierarchy->getPatchLevel(ln));
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          patch = *ip;
-         boost::shared_ptr<pdat::CellData<dcomplex> >
-         cvdata(
+         boost::shared_ptr<pdat::CellData<dcomplex> > cvdata(
             BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
                patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(cvdata);
 
-         pdat::CellIterator
-         cend(
-            pdat::CellGeometry::end(cvdata->getBox()));
+         pdat::CellIterator cend(pdat::CellGeometry::end(cvdata->getBox()));
          for (pdat::CellIterator c(pdat::CellGeometry::begin(cvdata->getBox()));
               c != cend && test_passed; ++c) {
             pdat::CellIndex cell_index = *c;
@@ -943,22 +830,17 @@ doubleDataSameAsValue(
    int ln;
    boost::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ++ln) {
-      boost::shared_ptr<hier::PatchLevel>
-      level(
-         hierarchy->getPatchLevel(ln));
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          patch = *ip;
-         boost::shared_ptr<pdat::CellData<double> >
-         cvdata(
+         boost::shared_ptr<pdat::CellData<double> > cvdata(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(cvdata);
 
-         pdat::CellIterator
-         cend(
-            pdat::CellGeometry::end(cvdata->getBox()));
+         pdat::CellIterator cend(pdat::CellGeometry::end(cvdata->getBox()));
          for (pdat::CellIterator c(pdat::CellGeometry::begin(cvdata->getBox()));
               c != cend && test_passed; ++c) {
             pdat::CellIndex cell_index = *c;

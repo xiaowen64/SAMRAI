@@ -105,10 +105,9 @@ public:
     * duplicated for exclusise use.  The duplicate will be freed upon
     * object destruction.
     */
-   void
-   setSAMRAI_MPI(
-      const tbox::SAMRAI_MPI& mpi,
-      bool make_duplicate = true);
+   void setSAMRAI_MPI(
+      const tbox::SAMRAI_MPI &mpi,
+      bool make_duplicate = true );
 
    /*!
     * @brief Most general version for modifying Connectors using

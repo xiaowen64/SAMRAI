@@ -121,8 +121,8 @@ CellData<TYPE>::getPointer(
 
 template<class TYPE>
 TYPE&
-CellData<TYPE>::operator() (
-   const CellIndex &i,
+CellData<TYPE>::operator () (
+   const CellIndex& i,
    int depth)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
@@ -133,8 +133,8 @@ CellData<TYPE>::operator() (
 
 template<class TYPE>
 const TYPE&
-CellData<TYPE>::operator() (
-   const CellIndex &i,
+CellData<TYPE>::operator () (
+   const CellIndex& i,
    int depth) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
@@ -278,26 +278,20 @@ CellData<TYPE>::copyWithRotation(
    TBOX_ASSERT(overlap.getTransformation().getRotation() !=
       hier::Transformation::NO_ROTATE);
 
-   const tbox::Dimension&
-   dim(
-      src.getDim());
+   const tbox::Dimension& dim(src.getDim());
    const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer();
    const hier::Transformation::RotationIdentifier rotate =
       overlap.getTransformation().getRotation();
    const hier::IntVector& shift = overlap.getSourceOffset();
 
-   hier::Box
-   rotatebox(
-      src.getGhostBox());
+   hier::Box rotatebox(src.getGhostBox());
    overlap.getTransformation().transform(rotatebox);
 
    const hier::Transformation::RotationIdentifier back_rotate =
       hier::Transformation::getReverseRotationIdentifier(
          rotate, dim);
 
-   hier::IntVector
-   back_shift(
-      dim);
+   hier::IntVector back_shift(dim);
 
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
@@ -306,24 +300,18 @@ CellData<TYPE>::copyWithRotation(
         bi != overlap_boxes.end(); ++bi) {
       const hier::Box& overlap_box = *bi;
 
-      const hier::Box
-      copybox(
-         rotatebox* overlap_box);
+      const hier::Box copybox(rotatebox * overlap_box);
 
       if (!copybox.empty()) {
          const int depth = ((getDepth() < src.getDepth()) ?
                             getDepth() : src.getDepth());
 
-         CellData<double>::iterator
-         ciend(
-            CellGeometry::end(copybox));
+         CellData<double>::iterator ciend(CellGeometry::end(copybox));
          for (CellData<double>::iterator ci(CellGeometry::begin(copybox));
               ci != ciend; ++ci) {
 
             const CellIndex& dst_index = *ci;
-            CellIndex
-            src_index(
-               dst_index);
+            CellIndex src_index(dst_index);
             hier::Transformation::rotateIndex(src_index, back_rotate);
             src_index += back_shift;
 
@@ -427,26 +415,20 @@ CellData<TYPE>::packWithRotation(
    TBOX_ASSERT(overlap.getTransformation().getRotation() !=
       hier::Transformation::NO_ROTATE);
 
-   const tbox::Dimension&
-   dim(
-      getDim());
+   const tbox::Dimension& dim(getDim());
    const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer();
    const hier::Transformation::RotationIdentifier rotate =
       overlap.getTransformation().getRotation();
    const hier::IntVector& shift = overlap.getSourceOffset();
 
-   hier::Box
-   rotatebox(
-      getGhostBox());
+   hier::Box rotatebox(getGhostBox());
    overlap.getTransformation().transform(rotatebox);
 
    const hier::Transformation::RotationIdentifier back_rotate =
       hier::Transformation::getReverseRotationIdentifier(
          rotate, dim);
 
-   hier::IntVector
-   back_shift(
-      dim);
+   hier::IntVector back_shift(dim);
 
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
@@ -454,31 +436,23 @@ CellData<TYPE>::packWithRotation(
    const int depth = getDepth();
 
    const size_t size = depth * overlap_boxes.getTotalSizeOfBoxes();
-   std::vector<TYPE>
-   buffer(
-      size);
+   std::vector<TYPE> buffer(size);
 
    int i = 0;
    for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
         bi != overlap_boxes.end(); ++bi) {
       const hier::Box& overlap_box = *bi;
 
-      const hier::Box
-      copybox(
-         rotatebox* overlap_box);
+      const hier::Box copybox(rotatebox * overlap_box);
 
       if (!copybox.empty()) {
 
          for (int d = 0; d < depth; ++d) {
-            CellData<double>::iterator
-            ciend(
-               CellGeometry::end(copybox));
+            CellData<double>::iterator ciend(CellGeometry::end(copybox));
             for (CellData<double>::iterator ci(CellGeometry::begin(copybox));
                  ci != ciend; ++ci) {
 
-               CellIndex
-               src_index(
-                  * ci);
+               CellIndex src_index(*ci);
                hier::Transformation::rotateIndex(src_index, back_rotate);
                src_index += back_shift;
 
@@ -541,15 +515,10 @@ void CellData<TYPE>::sum(
          << "of the same dim and TYPE.");
    } else {
 
-      const hier::IntVector&
-      src_offset(
-         t_overlap->getSourceOffset());
-      const hier::BoxContainer&
-      box_container(
+      const hier::IntVector& src_offset(t_overlap->getSourceOffset());
+      const hier::BoxContainer& box_container(
          t_overlap->getDestinationBoxContainer());
-      const ArrayData<TYPE>&
-      src_array(
-         * t_onode_src->d_data);
+      const ArrayData<TYPE>& src_array(*t_onode_src->d_data);
       if (d_data->isInitialized()) {
          d_data->sum(src_array, box_container, src_offset);
       }
@@ -575,17 +544,12 @@ void CellData<TYPE>::unpackStreamAndSum(
 
    TBOX_ASSERT(t_overlap != 0);
 
-   const hier::BoxContainer&
-   dst_boxes(
+   const hier::BoxContainer& dst_boxes(
       t_overlap->getDestinationBoxContainer());
-   const hier::IntVector&
-   src_offset(
-      t_overlap->getSourceOffset());
+   const hier::IntVector& src_offset(t_overlap->getSourceOffset());
    for (hier::BoxContainer::const_iterator dst_box(dst_boxes.begin());
         dst_box != dst_boxes.end(); ++dst_box) {
-      const hier::Box
-      intersect(
-         * dst_box * d_data->getBox());
+      const hier::Box intersect(*dst_box * d_data->getBox());
       if (!intersect.empty()) {
          d_data->unpackStreamAndSum(stream, intersect, src_offset);
       }
@@ -671,9 +635,7 @@ CellData<TYPE>::print(
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    os.precision(prec);
-   CellIterator
-   iend(
-      CellGeometry::end(box));
+   CellIterator iend(CellGeometry::end(box));
    for (CellIterator i(CellGeometry::begin(box)); i != iend; ++i) {
       os << "array" << *i << " = "
          << (*d_data)(*i, depth) << std::endl << std::flush;

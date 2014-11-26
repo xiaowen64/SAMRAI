@@ -68,9 +68,7 @@ int main(
    tbox::SAMRAIManager::initialize();
    tbox::SAMRAIManager::startup();
 
-   const tbox::SAMRAI_MPI&
-   mpi(
-      tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    if (argc < 2) {
       TBOX_ERROR("Usage: " << argv[0] << " [dimension]");
@@ -79,9 +77,7 @@ int main(
    const unsigned short d = static_cast<unsigned short>(atoi(argv[1]));
    TBOX_ASSERT(d > 0);
    TBOX_ASSERT(d <= SAMRAI::MAX_DIM_VAL);
-   const tbox::Dimension
-   dim(
-      d);
+   const tbox::Dimension dim(d);
 
    const std::string log_fn = std::string("face_hiertest.")
       + tbox::Utilities::intToString(dim.getValue(), 1) + "d.log";
@@ -99,30 +95,14 @@ int main(
       double lo[SAMRAI::MAX_DIM_VAL];
       double hi[SAMRAI::MAX_DIM_VAL];
 
-      hier::Index
-      clo0(
-         dim);
-      hier::Index
-      chi0(
-         dim);
-      hier::Index
-      clo1(
-         dim);
-      hier::Index
-      chi1(
-         dim);
-      hier::Index
-      flo0(
-         dim);
-      hier::Index
-      fhi0(
-         dim);
-      hier::Index
-      flo1(
-         dim);
-      hier::Index
-      fhi1(
-         dim);
+      hier::Index clo0(dim);
+      hier::Index chi0(dim);
+      hier::Index clo1(dim);
+      hier::Index chi1(dim);
+      hier::Index flo0(dim);
+      hier::Index fhi0(dim);
+      hier::Index flo1(dim);
+      hier::Index fhi1(dim);
 
       for (int i = 0; i < dim.getValue(); ++i) {
          lo[i] = 0.0;
@@ -149,31 +129,12 @@ int main(
          }
       }
 
-      hier::Box
-      coarse0(
-         clo0,
-         chi0,
-         hier::BlockId(0));
-      hier::Box
-      coarse1(
-         clo1,
-         chi1,
-         hier::BlockId(0));
-      hier::Box
-      fine0(
-         flo0,
-         fhi0,
-         hier::BlockId(0));
-      hier::Box
-      fine1(
-         flo1,
-         fhi1,
-         hier::BlockId(0));
+      hier::Box coarse0(clo0, chi0, hier::BlockId(0));
+      hier::Box coarse1(clo1, chi1, hier::BlockId(0));
+      hier::Box fine0(flo0, fhi0, hier::BlockId(0));
+      hier::Box fine1(flo1, fhi1, hier::BlockId(0));
 
-      hier::IntVector
-      ratio(
-         dim,
-         2);
+      hier::IntVector ratio(dim, 2);
 
       hier::BoxContainer coarse_domain;
       hier::BoxContainer fine_boxes;
@@ -182,16 +143,14 @@ int main(
       fine_boxes.pushBack(fine0);
       fine_boxes.pushBack(fine1);
 
-      boost::shared_ptr<geom::CartesianGridGeometry>
-      geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry> geometry(
          new geom::CartesianGridGeometry(
             "CartesianGeometry",
             lo,
             hi,
             coarse_domain));
 
-      boost::shared_ptr<hier::PatchHierarchy>
-      hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", geometry));
 
       hierarchy->setMaxNumberOfLevels(2);
@@ -202,12 +161,10 @@ int main(
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_boxes.size();
 
-      boost::shared_ptr<hier::BoxLevel>
-      layer0(
+      boost::shared_ptr<hier::BoxLevel> layer0(
          boost::make_shared<hier::BoxLevel>(
             hier::IntVector(dim, 1), geometry));
-      boost::shared_ptr<hier::BoxLevel>
-      layer1(
+      boost::shared_ptr<hier::BoxLevel> layer1(
          boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
@@ -239,13 +196,9 @@ int main(
 
       // Create instance of hier::Variable database
       hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-      boost::shared_ptr<hier::VariableContext>
-      dummy(
+      boost::shared_ptr<hier::VariableContext> dummy(
          variable_db->getContext("dummy"));
-      const hier::IntVector
-      no_ghosts(
-         dim,
-         0);
+      const hier::IntVector no_ghosts(dim, 0);
 
       // Make some dummy variables and data on the hierarchy
       boost::shared_ptr<pdat::FaceVariable<double> > fvar[NVARS];
@@ -263,8 +216,7 @@ int main(
       fvindx[3] = variable_db->registerVariableAndContext(
             fvar[3], dummy, no_ghosts);
 
-      boost::shared_ptr<pdat::FaceVariable<double> >
-      fwgt(
+      boost::shared_ptr<pdat::FaceVariable<double> > fwgt(
          new pdat::FaceVariable<double>(dim, "fwgt", 1));
       int fwgt_id = variable_db->registerVariableAndContext(
             fwgt, dummy, no_ghosts);
@@ -277,16 +229,14 @@ int main(
          }
       }
 
-      boost::shared_ptr<math::HierarchyDataOpsReal<double> >
-      face_ops(
+      boost::shared_ptr<math::HierarchyDataOpsReal<double> > face_ops(
          new math::HierarchyFaceDataOpsReal<double>(
             hierarchy,
             0,
             1));
       TBOX_ASSERT(face_ops);
 
-      boost::shared_ptr<math::HierarchyDataOpsReal<double> >
-      fwgt_ops(
+      boost::shared_ptr<math::HierarchyDataOpsReal<double> > fwgt_ops(
          new math::HierarchyFaceDataOpsReal<double>(
             hierarchy,
             0,
@@ -298,14 +248,12 @@ int main(
       hier::Box coarse_fine = fine0 + fine1;
       coarse_fine.coarsen(ratio);
       for (ln = 0; ln < 2; ++ln) {
-         boost::shared_ptr<hier::PatchLevel>
-         level(
+         boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            boost::shared_ptr<geom::CartesianPatchGeometry>
-            pgeom(
+            boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
                BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
@@ -314,15 +262,12 @@ int main(
             for (int i = 1; i < dim.getValue(); ++i) {
                face_vol *= dx[i];
             }
-            boost::shared_ptr<pdat::FaceData<double> >
-            data(
+            boost::shared_ptr<pdat::FaceData<double> > data(
                BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
                   patch->getPatchData(fwgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(face_vol);
-            pdat::FaceIndex
-            fi(
-               dim);
+            pdat::FaceIndex fi(dim);
 
             if (dim.getValue() == 2) {
                int plo0 = patch->getBox().lower(0);
@@ -901,8 +846,7 @@ int main(
       boost::shared_ptr<pdat::FaceData<double> > fdata;
 
       // set values
-      boost::shared_ptr<hier::PatchLevel>
-      level_zero(
+      boost::shared_ptr<hier::PatchLevel> level_zero(
          hierarchy->getPatchLevel(0));
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
@@ -910,14 +854,8 @@ int main(
          fdata = BOOST_CAST<pdat::FaceData<double>,
                             hier::PatchData>(patch->getPatchData(fvindx[2]));
          TBOX_ASSERT(fdata);
-         hier::Index
-         index0(
-            dim,
-            2);
-         hier::Index
-         index1(
-            dim,
-            3);
+         hier::Index index0(dim, 2);
+         hier::Index index1(dim, 3);
          index1(0) = 5;
          if (patch->getBox().contains(index0)) {
             (*fdata)(pdat::FaceIndex(index0, pdat::FaceIndex::Y,
@@ -938,30 +876,18 @@ int main(
          fdata = BOOST_CAST<pdat::FaceData<double>,
                             hier::PatchData>(patch->getPatchData(fvindx[2]));
          TBOX_ASSERT(fdata);
-         hier::Index
-         idx0(
-            dim,
-            2);
-         hier::Index
-         idx1(
-            dim,
-            3);
+         hier::Index idx0(dim, 2);
+         hier::Index idx1(dim, 3);
          idx1(0) = 5;
-         pdat::FaceIndex
-         index0(
-            idx0,
-            pdat::FaceIndex::Y,
-            pdat::FaceIndex::Lower);
-         pdat::FaceIndex
-         index1(
-            idx1,
-            pdat::FaceIndex::Y,
-            pdat::FaceIndex::Upper);
+         pdat::FaceIndex index0(idx0,
+                                pdat::FaceIndex::Y,
+                                pdat::FaceIndex::Lower);
+         pdat::FaceIndex index1(idx1,
+                                pdat::FaceIndex::Y,
+                                pdat::FaceIndex::Upper);
 
          // check X axis data
-         pdat::FaceIterator
-         cend(
-            pdat::FaceGeometry::end(fdata->getBox(), pdat::FaceIndex::X));
+         pdat::FaceIterator cend(pdat::FaceGeometry::end(fdata->getBox(), pdat::FaceIndex::X));
          for (pdat::FaceIterator c(pdat::FaceGeometry::begin(fdata->getBox(), pdat::FaceIndex::X));
               c != cend && bogus_value_test_passed;
               ++c) {
@@ -974,9 +900,7 @@ int main(
          }
 
          // check Y axis data
-         pdat::FaceIterator
-         ccend(
-            pdat::FaceGeometry::end(fdata->getBox(), pdat::FaceIndex::Y));
+         pdat::FaceIterator ccend(pdat::FaceGeometry::end(fdata->getBox(), pdat::FaceIndex::Y));
          for (pdat::FaceIterator cc(pdat::FaceGeometry::begin(fdata->getBox(), pdat::FaceIndex::Y));
               cc != ccend && bogus_value_test_passed;
               ++cc) {
@@ -1005,9 +929,7 @@ int main(
          if (dim.getValue() == 3) {
 
             // check Z axis data
-            pdat::FaceIterator
-            cend(
-               pdat::FaceGeometry::end(fdata->getBox(), pdat::FaceIndex::Z));
+            pdat::FaceIterator cend(pdat::FaceGeometry::end(fdata->getBox(), pdat::FaceIndex::Z));
             for (pdat::FaceIterator c(pdat::FaceGeometry::begin(fdata->getBox(), pdat::FaceIndex::Z));
                  c != cend && bogus_value_test_passed;
                  ++c) {
@@ -1223,22 +1145,17 @@ doubleDataSameAsValue(
    int ln;
    boost::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ++ln) {
-      boost::shared_ptr<hier::PatchLevel>
-      level(
-         hierarchy->getPatchLevel(ln));
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          patch = *ip;
-         boost::shared_ptr<pdat::FaceData<double> >
-         fvdata(
+         boost::shared_ptr<pdat::FaceData<double> > fvdata(
             BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
                patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(fvdata);
 
-         pdat::FaceIterator
-         cend(
-            pdat::FaceGeometry::end(fvdata->getBox(), 1));
+         pdat::FaceIterator cend(pdat::FaceGeometry::end(fvdata->getBox(), 1));
          for (pdat::FaceIterator c(pdat::FaceGeometry::begin(fvdata->getBox(), 1));
               c != cend && test_passed;
               ++c) {

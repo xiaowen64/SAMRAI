@@ -64,9 +64,7 @@ TimerManager::createManager(
    const boost::shared_ptr<Database>& input_db)
 {
    if (!s_timer_manager_instance) {
-      s_timer_manager_instance = new
-         TimerManager(
-            input_db);
+      s_timer_manager_instance = new TimerManager(input_db);
 
       /*
        * Compute the overheads
@@ -297,9 +295,7 @@ TimerManager::getTimer(
    // since timers aren't active - and we need to still provide
    // pseudo-timer functionality (i.e., a valid timer), we'll
    // create one on the fly, but not track it.
-   boost::shared_ptr<Timer>
-   timer(
-      boost::make_shared<Timer>(name));
+   boost::shared_ptr<Timer> timer(boost::make_shared<Timer>(name));
    timer->setActive(false);
    return timer;
 
@@ -714,9 +710,7 @@ TimerManager::print(
    std::ostream& os)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   const SAMRAI_MPI&
-   mpi(
-      SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    /*
     * There are 18 possible timer values that users may wish to look at.
     * (i.e. User/sys/wallclock time, Total or Exclusive, for individual
@@ -745,9 +739,7 @@ TimerManager::print(
     */
    double(*timer_values)[18] = new double[d_timers.size() + 1][18];
    int(*max_processor_id)[2] = new int[d_timers.size() + 1][2];
-   std::vector<std::string>
-   timer_names(
-      static_cast<int>(d_timers.size()) + 1);
+   std::vector<std::string> timer_names(static_cast<int>(d_timers.size()) + 1);
 
    /*
     * Fill in timer_values and timer_names arrays, based on values of
@@ -809,9 +801,7 @@ TimerManager::print(
    }
 
    std::string table_title;
-   std::vector<std::string>
-   column_titles(
-      4);
+   std::vector<std::string> column_titles(4);
    int column_ids[3] = { 0, 0, 0 };
    int j, k;
 
@@ -1251,7 +1241,7 @@ TimerManager::printTable(
    /*
     * Tack on TOTAL TIME to end of ordered list
     */
-   ordered_list[static_cast < int > (d_timers.size())] =
+   ordered_list[static_cast<int>(d_timers.size())] =
       static_cast<int>(d_timers.size());
 
    /*
@@ -1387,7 +1377,7 @@ TimerManager::printTable(
    /*
     * Tack on TOTAL TIME to end of ordered list
     */
-   ordered_list[static_cast < int > (d_timers.size())] =
+   ordered_list[static_cast<int>(d_timers.size())] =
       static_cast<int>(d_timers.size());
 
    /*
@@ -1716,9 +1706,7 @@ TimerManager::checkConsistencyAcrossProcessors()
     * their MD5 signatures and compare those as integers.
     */
 
-   const SAMRAI_MPI&
-   mpi(
-      SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
    unsigned int max_num_timers = static_cast<unsigned int>(d_timers.size());
    if (mpi.getSize() > 1) {
@@ -1726,13 +1714,8 @@ TimerManager::checkConsistencyAcrossProcessors()
       mpi.Allreduce(&i, &max_num_timers, 1, MPI_INT, MPI_MAX);
    }
 
-   std::vector<int>
-   max_timer_lengths(
-      max_num_timers);
-   std::vector<int>
-   rank_of_max(
-      max_num_timers,
-      mpi.getRank());
+   std::vector<int> max_timer_lengths(max_num_timers);
+   std::vector<int> rank_of_max(max_num_timers, mpi.getRank());
 
    for (unsigned int i = 0; i < max_num_timers; ++i) {
       max_timer_lengths[i] =
@@ -1812,9 +1795,7 @@ TimerManager::buildTimerArrays(
    std::vector<std::string>& timer_names)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   const SAMRAI_MPI&
-   mpi(
-      SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    /*
     * timer_values - 2D array dimensioned [d_timers.size()][18]
     *     For each timer, there are 18 potential values which may be of
@@ -2009,7 +1990,7 @@ TimerManager::buildTimerArrays(
     * time and exclusive time are not determined since these don't really
     * mean anything for an overall measurement of run time.
     */
-   timer_names[static_cast < int > (d_timers.size())] = "TOTAL RUN TIME:";
+   timer_names[static_cast<int>(d_timers.size())] = "TOTAL RUN TIME:";
    if (d_print_user) {
       double main_time = d_main_timer->getTotalUserTime();
       timer_values[d_timers.size()][0] = main_time;
@@ -2070,9 +2051,7 @@ TimerManager::buildOrderedList(
    /*
     * initialize the arrays
     */
-   std::vector<double>
-   timer_vals(
-      array_size);
+   std::vector<double> timer_vals(array_size);
    for (int i = 0; i < array_size; ++i) {
       index[i] = i;
       timer_vals[i] = timer_values[i][column];
@@ -2449,18 +2428,12 @@ TimerManager::computeOverheadConstantActiveOrInactive(
    bool active)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   std::string
-   outer_name(
-      "TimerManger::Outer");
-   boost::shared_ptr<Timer>
-   outer_timer(
+   std::string outer_name("TimerManger::Outer");
+   boost::shared_ptr<Timer> outer_timer(
       TimerManager::getManager()->getTimer(outer_name, true));
 
-   std::string
-   inner_name(
-      "TimerMangerInner");
-   boost::shared_ptr<Timer>
-   inner_timer(
+   std::string inner_name("TimerMangerInner");
+   boost::shared_ptr<Timer> inner_timer(
       TimerManager::getManager()->getTimer(inner_name, active));
 
    const int ntest = 1000;

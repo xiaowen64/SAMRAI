@@ -29,9 +29,7 @@ Sundials_SAMRAIVector::createSundialsVector(
    const boost::shared_ptr<SAMRAIVectorReal<double> >& samrai_vec)
 {
    TBOX_ASSERT(samrai_vec);
-   SundialsAbstractVector* skv = new
-      Sundials_SAMRAIVector(
-         samrai_vec);
+   SundialsAbstractVector* skv = new Sundials_SAMRAIVector(samrai_vec);
 
    return skv;
 }
@@ -41,7 +39,7 @@ Sundials_SAMRAIVector::destroySundialsVector(
    SundialsAbstractVector* sundials_vec)
 {
    if (sundials_vec) {
-      delete(dynamic_cast<Sundials_SAMRAIVector *>(sundials_vec));
+      delete (dynamic_cast<Sundials_SAMRAIVector *>(sundials_vec));
    }
 }
 
@@ -95,9 +93,7 @@ SundialsAbstractVector *
 Sundials_SAMRAIVector::makeNewVector()
 {
    Sundials_SAMRAIVector* out_vec =
-      new
-      Sundials_SAMRAIVector(
-         d_samrai_vector->cloneVector("out_vec"));
+      new Sundials_SAMRAIVector(d_samrai_vector->cloneVector("out_vec"));
    out_vec->getSAMRAIVector()->allocateVectorData();
    return out_vec;
 }

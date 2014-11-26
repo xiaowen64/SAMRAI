@@ -89,8 +89,7 @@ void BoundaryDataTester::setPhysicalBoundaryConditions(
 
    for (int iv = 0; iv < static_cast<int>(d_variables.size()); ++iv) {
 
-      boost::shared_ptr<pdat::CellData<double> >
-      cvdata(
+      boost::shared_ptr<pdat::CellData<double> > cvdata(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[iv], d_variable_context)));
       TBOX_ASSERT(cvdata);
@@ -98,10 +97,8 @@ void BoundaryDataTester::setPhysicalBoundaryConditions(
       tbox::plog << "\n   iv = " << iv << " : " << d_variable_name[iv] << endl;
       tbox::plog << "   depth = " << cvdata->getDepth() << endl;
 
-      hier::IntVector
-      fill_gcw(
-         hier::IntVector::min(cvdata->getGhostCellWidth(),
-            ghost_width_to_fill));
+      hier::IntVector fill_gcw(hier::IntVector::min(cvdata->getGhostCellWidth(),
+                                  ghost_width_to_fill));
 
       if (d_dim == tbox::Dimension(3)) {
          appu::CartesianBoundaryUtilities3::
@@ -180,8 +177,7 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number == 0);
 
-   boost::shared_ptr<hier::PatchLevel>
-   level(
+   boost::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(level);
 
@@ -195,8 +191,7 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       for (int iv = 0; iv < static_cast<int>(d_variables.size()); ++iv) {
-         boost::shared_ptr<pdat::CellData<double> >
-         cvdata(
+         boost::shared_ptr<pdat::CellData<double> > cvdata(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_variables[iv], d_variable_context)));
 
@@ -211,8 +206,7 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       for (int iv = 0; iv < static_cast<int>(d_variables.size()); ++iv) {
-         boost::shared_ptr<pdat::CellData<double> >
-         cvdata(
+         boost::shared_ptr<pdat::CellData<double> > cvdata(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_variables[iv], d_variable_context)));
 
@@ -265,8 +259,7 @@ int BoundaryDataTester::runBoundaryTest(
          boost::shared_ptr<hier::RefineOperator>());
    }
 
-   boost::shared_ptr<hier::PatchLevel>
-   level(
+   boost::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(level);
 
@@ -306,9 +299,7 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
 
    for (int i = 0; i < nkeys; ++i) {
 
-      boost::shared_ptr<tbox::Database>
-      var_db(
-         db->getDatabase(var_keys[i]));
+      boost::shared_ptr<tbox::Database> var_db(db->getDatabase(var_keys[i]));
 
       if (var_keys[i] != "Boundary_data" && var_db->keyExists("name")) {
 
@@ -526,11 +517,9 @@ void BoundaryDataTester::readBoundaryDataInput(
 {
    TBOX_ASSERT(db);
 
-   hier::IntVector
-   periodic(
-      d_grid_geometry->getPeriodicShift(hier::IntVector(
-            d_dim,
-            1)));
+   hier::IntVector periodic(d_grid_geometry->getPeriodicShift(hier::IntVector(
+                                  d_dim,
+                                  1)));
    int num_per_dirs = 0;
    for (int id = 0; id < d_dim.getValue(); ++id) {
       if (periodic(id)) ++num_per_dirs;
@@ -540,8 +529,7 @@ void BoundaryDataTester::readBoundaryDataInput(
 
       if (db->keyExists("Boundary_data")) {
 
-         boost::shared_ptr<tbox::Database>
-         bdry_db(
+         boost::shared_ptr<tbox::Database> bdry_db(
             db->getDatabase("Boundary_data"));
 
          if (d_dim == tbox::Dimension(2)) {
@@ -690,8 +678,7 @@ void BoundaryDataTester::checkBoundaryData(
    }
 #endif
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry>
-   pgeom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
@@ -704,8 +691,7 @@ void BoundaryDataTester::checkBoundaryData(
       int bloc = bbox.getLocationIndex();
 
       for (int iv = 0; iv < static_cast<int>(d_variables.size()); ++iv) {
-         boost::shared_ptr<pdat::CellData<double> >
-         cvdata(
+         boost::shared_ptr<pdat::CellData<double> > cvdata(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[iv], d_variable_context)));
          TBOX_ASSERT(cvdata);

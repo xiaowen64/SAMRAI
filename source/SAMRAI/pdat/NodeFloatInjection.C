@@ -31,29 +31,20 @@ extern "C" {
 #endif
 
 // in concoarsen1d.f:
-void
-SAMRAI_F77_FUNC(
-   conavgnodeflot1d,
-   CONAVGNODEFLOT1D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conavgnodeflot1d, CONAVGNODEFLOT1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const float *, float *);
 // in concoarsen2d.f:
-void
-SAMRAI_F77_FUNC(
-   conavgnodeflot2d,
-   CONAVGNODEFLOT2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conavgnodeflot2d, CONAVGNODEFLOT2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const float *, float *);
 // in concoarsen3d.f:
-void
-SAMRAI_F77_FUNC(
-   conavgnodeflot3d,
-   CONAVGNODEFLOT3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conavgnodeflot3d, CONAVGNODEFLOT3D) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -98,12 +89,10 @@ NodeFloatInjection::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   boost::shared_ptr<NodeData<float> >
-   fdata(
+   boost::shared_ptr<NodeData<float> > fdata(
       BOOST_CAST<NodeData<float>, hier::PatchData>(
          fine.getPatchData(src_component)));
-   boost::shared_ptr<NodeData<float> >
-   cdata(
+   boost::shared_ptr<NodeData<float> > cdata(
       BOOST_CAST<NodeData<float>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
 

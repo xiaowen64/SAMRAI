@@ -32,30 +32,21 @@ extern "C" {
 #endif
 
 // in cartcoarsen1d.f:
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgcelldoub1d,
-   CARTWGTAVGCELLDOUB1D) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgcelldoub1d, CARTWGTAVGCELLDOUB1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 // in cartcoarsen2d.f:
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgcelldoub2d,
-   CARTWGTAVGCELLDOUB2D) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgcelldoub2d, CARTWGTAVGCELLDOUB2D) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 // in cartcoarsen3d.f:
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgcelldoub3d,
-   CARTWGTAVGCELLDOUB3D) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgcelldoub3d, CARTWGTAVGCELLDOUB3D) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -65,10 +56,7 @@ SAMRAI_F77_FUNC(
    const int *, const double *, const double *,
    const double *, double *);
 // in cartcoarsen4d.f:
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgcelldoub4d,
-   CARTWGTAVGCELLDOUB4D) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgcelldoub4d, CARTWGTAVGCELLDOUB4D) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -112,18 +100,14 @@ CartesianCellDoubleWeightedAverage::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension&
-   dim(
-      fine.getDim());
+   const tbox::Dimension& dim(fine.getDim());
 
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, coarse_box, ratio);
 
-   boost::shared_ptr<pdat::CellData<double> >
-   fdata(
+   boost::shared_ptr<pdat::CellData<double> > fdata(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(src_component)));
-   boost::shared_ptr<pdat::CellData<double> >
-   cdata(
+   boost::shared_ptr<pdat::CellData<double> > cdata(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
    TBOX_ASSERT(fdata);
@@ -135,12 +119,10 @@ CartesianCellDoubleWeightedAverage::coarsen(
    const hier::Index cilo = cdata->getGhostBox().lower();
    const hier::Index cihi = cdata->getGhostBox().upper();
 
-   const boost::shared_ptr<CartesianPatchGeometry>
-   fgeom(
+   const boost::shared_ptr<CartesianPatchGeometry> fgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
-   const boost::shared_ptr<CartesianPatchGeometry>
-   cgeom(
+   const boost::shared_ptr<CartesianPatchGeometry> cgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
 

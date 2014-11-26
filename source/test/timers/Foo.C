@@ -28,10 +28,8 @@ Foo::~Foo()
 
 void Foo::timerOff()
 {
-   boost::shared_ptr<tbox::Timer>
-   timer(
-      tbox::TimerManager::getManager()->
-      getTimer("dummy::SomeClassName::shouldBeTurnedOff"));
+   boost::shared_ptr<tbox::Timer> timer(tbox::TimerManager::getManager()->
+                                        getTimer("dummy::SomeClassName::shouldBeTurnedOff"));
    timer->start();
 
    timer->stop();
@@ -39,8 +37,7 @@ void Foo::timerOff()
 
 void Foo::timerOn()
 {
-   boost::shared_ptr<tbox::Timer>
-   timer(
+   boost::shared_ptr<tbox::Timer> timer(
       tbox::TimerManager::getManager()->getTimer("apps::Foo::timerOn()"));
    timer->start();
 
@@ -50,8 +47,7 @@ void Foo::timerOn()
 void Foo::zero(
    int depth)
 {
-   boost::shared_ptr<tbox::Timer>
-   timer(
+   boost::shared_ptr<tbox::Timer> timer(
       tbox::TimerManager::getManager()->getTimer("apps::Foo::zero()"));
    if (depth > 0) {
       timer->start();
@@ -63,8 +59,7 @@ void Foo::zero(
 void Foo::one(
    int depth)
 {
-   boost::shared_ptr<tbox::Timer>
-   timer(
+   boost::shared_ptr<tbox::Timer> timer(
       tbox::TimerManager::getManager()->getTimer("apps::Foo::one()"));
    if (depth > 1) {
       timer->start();
@@ -76,8 +71,7 @@ void Foo::one(
 void Foo::two(
    int depth)
 {
-   boost::shared_ptr<tbox::Timer>
-   timer(
+   boost::shared_ptr<tbox::Timer> timer(
       tbox::TimerManager::getManager()->getTimer("apps::Foo::two()"));
    if (depth > 2) {
       timer->start();
@@ -89,8 +83,7 @@ void Foo::two(
 void Foo::three(
    int depth)
 {
-   boost::shared_ptr<tbox::Timer>
-   timer(
+   boost::shared_ptr<tbox::Timer> timer(
       tbox::TimerManager::getManager()->getTimer("apps::Foo::three()"));
    if (depth > 3) {
       timer->start();
@@ -102,8 +95,7 @@ void Foo::three(
 void Foo::four(
    int depth)
 {
-   boost::shared_ptr<tbox::Timer>
-   timer(
+   boost::shared_ptr<tbox::Timer> timer(
       tbox::TimerManager::getManager()->getTimer("apps::Foo::four()"));
    if (depth > 4) {
       timer->start();
@@ -115,8 +107,7 @@ void Foo::four(
 void Foo::five(
    int depth)
 {
-   boost::shared_ptr<tbox::Timer>
-   timer(
+   boost::shared_ptr<tbox::Timer> timer(
       tbox::TimerManager::getManager()->getTimer("apps::Foo::five()"));
    if (depth > 5) {
       timer->start();
@@ -128,8 +119,7 @@ void Foo::five(
 void Foo::six(
    int depth)
 {
-   boost::shared_ptr<tbox::Timer>
-   timer(
+   boost::shared_ptr<tbox::Timer> timer(
       tbox::TimerManager::getManager()->getTimer("apps::Foo::six()"));
    if (depth > 6) {
       timer->start();
@@ -141,8 +131,7 @@ void Foo::six(
 void Foo::seven(
    int depth)
 {
-   boost::shared_ptr<tbox::Timer>
-   timer(
+   boost::shared_ptr<tbox::Timer> timer(
       tbox::TimerManager::getManager()->getTimer("apps::Foo::seven()"));
 
    NULL_USE(timer);
@@ -156,8 +145,7 @@ void Foo::seven(
 void Foo::startAndStop(
    std::string& name)
 {
-   boost::shared_ptr<tbox::Timer>
-   timer(
+   boost::shared_ptr<tbox::Timer> timer(
       tbox::TimerManager::getManager()->getTimer(name));
    timer->start();
 
@@ -175,8 +163,7 @@ void Foo::start(
 {
    ++d_depth;
 
-   boost::shared_ptr<tbox::Timer>
-   timer(
+   boost::shared_ptr<tbox::Timer> timer(
       tbox::TimerManager::getManager()->getTimer(name));
    timer->start();
 
@@ -195,8 +182,7 @@ void Foo::start(
 void Foo::stop(
    std::string& name)
 {
-   boost::shared_ptr<tbox::Timer>
-   timer(
+   boost::shared_ptr<tbox::Timer> timer(
       tbox::TimerManager::getManager()->getTimer(name));
    timer->stop();
 }

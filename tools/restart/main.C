@@ -246,9 +246,7 @@ int main(
       smaller = num_output_files;
       larger = num_input_files;
    }
-   const tbox::SAMRAI_MPI&
-   mpi(
-      tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    int nprocs = mpi.getSize();
    int rank = mpi.getRank();
    if (nprocs > smaller) {

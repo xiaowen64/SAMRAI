@@ -167,16 +167,14 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory>
-   trans_factory(
+   boost::shared_ptr<RefineTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   boost::shared_ptr<PatchLevelFullFillPattern>
-   fill_pattern(
+   boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
       boost::make_shared<PatchLevelFullFillPattern>());
 
    return boost::make_shared<RefineSchedule>(
@@ -209,8 +207,7 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory>
-   trans_factory(
+   boost::shared_ptr<RefineTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {
@@ -252,16 +249,14 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory>
-   trans_factory(
+   boost::shared_ptr<RefineTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   boost::shared_ptr<PatchLevelFullFillPattern>
-   fill_pattern(
+   boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
       boost::make_shared<PatchLevelFullFillPattern>());
 
    return boost::make_shared<RefineSchedule>(
@@ -299,8 +294,7 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory>
-   trans_factory(
+   boost::shared_ptr<RefineTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {
@@ -348,16 +342,14 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory>
-   trans_factory(
+   boost::shared_ptr<RefineTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   boost::shared_ptr<PatchLevelFullFillPattern>
-   fill_pattern(
+   boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
       boost::make_shared<PatchLevelFullFillPattern>());
 
    return boost::make_shared<RefineSchedule>(
@@ -404,8 +396,7 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory>
-   trans_factory(
+   boost::shared_ptr<RefineTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {
@@ -465,16 +456,14 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory>
-   trans_factory(
+   boost::shared_ptr<RefineTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   boost::shared_ptr<PatchLevelFullFillPattern>
-   fill_pattern(
+   boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
       boost::make_shared<PatchLevelFullFillPattern>());
 
    return boost::make_shared<RefineSchedule>(
@@ -531,8 +520,7 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory>
-   trans_factory(
+   boost::shared_ptr<RefineTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {

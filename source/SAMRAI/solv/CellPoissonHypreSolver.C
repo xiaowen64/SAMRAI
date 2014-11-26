@@ -43,10 +43,7 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void
-SAMRAI_F77_FUNC(
-   compdiagvariablec2d,
-   COMPDIAGVARIABLEC2D) (
+void SAMRAI_F77_FUNC(compdiagvariablec2d, COMPDIAGVARIABLEC2D) (
    double* diag,
    const double* c,
    const double* offdiagi,
@@ -57,10 +54,7 @@ SAMRAI_F77_FUNC(
    const int* jlast,
    const double* cscale,
    const double* dscale);
-void
-SAMRAI_F77_FUNC(
-   compdiagscalarc2d,
-   COMPDIAGSCALARC2D) (
+void SAMRAI_F77_FUNC(compdiagscalarc2d, COMPDIAGSCALARC2D) (
    double* diag,
    const double* c,
    const double* offdiagi,
@@ -71,10 +65,7 @@ SAMRAI_F77_FUNC(
    const int* jlast,
    const double* cscale,
    const double* dscale);
-void
-SAMRAI_F77_FUNC(
-   compdiagzeroc2d,
-   COMPDIAGZEROC2D) (
+void SAMRAI_F77_FUNC(compdiagzeroc2d, COMPDIAGZEROC2D) (
    double* diag,
    const double* offdiagi,
    const double* offdiagj,
@@ -84,10 +75,7 @@ SAMRAI_F77_FUNC(
    const int* jlast,
    const double* cscale,
    const double* dscale);
-void
-SAMRAI_F77_FUNC(
-   adjbdry2d,
-   ADJBDRY2D) (
+void SAMRAI_F77_FUNC(adjbdry2d, ADJBDRY2D) (
    double* diag,
    const double* offdiagi,
    const double* offdiagj,
@@ -103,10 +91,7 @@ SAMRAI_F77_FUNC(
    const int* lower, const int* upper,
    const int* location,
    const double* h);
-void
-SAMRAI_F77_FUNC(
-   adjbdryconstoffdiags2d,
-   ADJBDRYCONSTOFFDIAGS2D) (
+void SAMRAI_F77_FUNC(adjbdryconstoffdiags2d, ADJBDRYCONSTOFFDIAGS2D) (
    double* diag,
    const double* offdiag,
    const int* pifirst,
@@ -126,10 +111,7 @@ SAMRAI_F77_FUNC(
    const int* lower, const int* upper,
    const int* location,
    const double* h);
-void
-SAMRAI_F77_FUNC(
-   adjustrhs2d,
-   ADJUSTRHS2D) (double* rhs,
+void SAMRAI_F77_FUNC(adjustrhs2d, ADJUSTRHS2D) (double* rhs,
    const int* rifirst,
    const int* rilast,
    const int* rjfirst,
@@ -147,10 +129,7 @@ SAMRAI_F77_FUNC(
    const int* lower, const int* upper,
    const int* location);
 
-void
-SAMRAI_F77_FUNC(
-   compdiagvariablec3d,
-   COMPDIAGVARIABLEC3D) (
+void SAMRAI_F77_FUNC(compdiagvariablec3d, COMPDIAGVARIABLEC3D) (
    double* diag,
    const double* c,
    const double* offdiagi,
@@ -164,10 +143,7 @@ SAMRAI_F77_FUNC(
    const int* klast,
    const double* cscale,
    const double* dscale);
-void
-SAMRAI_F77_FUNC(
-   compdiagscalarc3d,
-   COMPDIAGSCALARC3D) (
+void SAMRAI_F77_FUNC(compdiagscalarc3d, COMPDIAGSCALARC3D) (
    double* diag,
    const double* c,
    const double* offdiagi,
@@ -181,10 +157,7 @@ SAMRAI_F77_FUNC(
    const int* klast,
    const double* cscale,
    const double* dscale);
-void
-SAMRAI_F77_FUNC(
-   compdiagzeroc3d,
-   COMPDIAGZEROC3D) (
+void SAMRAI_F77_FUNC(compdiagzeroc3d, COMPDIAGZEROC3D) (
    double* diag,
    const double* offdiagi,
    const double* offdiagj,
@@ -197,10 +170,7 @@ SAMRAI_F77_FUNC(
    const int* klast,
    const double* cscale,
    const double* dscale);
-void
-SAMRAI_F77_FUNC(
-   adjbdry3d,
-   ADJBDRY3D) (
+void SAMRAI_F77_FUNC(adjbdry3d, ADJBDRY3D) (
    double* diag,
    const double* offdiagi,
    const double* offdiagj,
@@ -229,10 +199,7 @@ SAMRAI_F77_FUNC(
    const int* lower, const int* upper,
    const int* location,
    const double* h);
-void
-SAMRAI_F77_FUNC(
-   adjbdryconstoffdiags3d,
-   ADJBDRYCONSTOFFDIAGS3D) (
+void SAMRAI_F77_FUNC(adjbdryconstoffdiags3d, ADJBDRYCONSTOFFDIAGS3D) (
    double* diag,
    const double* offdiag,
    const int* pifirst,
@@ -258,10 +225,7 @@ SAMRAI_F77_FUNC(
    const int* lower, const int* upper,
    const int* location,
    const double* h);
-void
-SAMRAI_F77_FUNC(
-   adjustrhs3d,
-   ADJUSTRHS3D) (double* rhs,
+void SAMRAI_F77_FUNC(adjustrhs3d, ADJUSTRHS3D) (double* rhs,
    const int* rifirst,
    const int* rilast,
    const int* rjfirst,
@@ -293,8 +257,7 @@ namespace solv {
 boost::shared_ptr<pdat::OutersideVariable<double> >
 CellPoissonHypreSolver::s_Ak0_var[SAMRAI::MAX_DIM_VAL];
 
-tbox::StartupShutdownManager::Handler
-CellPoissonHypreSolver::s_finalize_handler(
+tbox::StartupShutdownManager::Handler CellPoissonHypreSolver::s_finalize_handler(
    0,
    0,
    0,
@@ -431,10 +394,7 @@ CellPoissonHypreSolver::initializeSolverState(
    d_hierarchy = hierarchy;
    d_ln = ln;
 
-   hier::IntVector
-   max_gcw(
-      d_dim,
-      1);
+   hier::IntVector max_gcw(d_dim, 1);
    d_cf_boundary.reset(
       new hier::CoarseFineBoundary(*d_hierarchy, d_ln, max_gcw));
 
@@ -443,9 +403,7 @@ CellPoissonHypreSolver::initializeSolverState(
    d_number_iterations = -1;
    d_relative_residual_norm = -1.0;
 
-   boost::shared_ptr<hier::PatchLevel>
-   level(
-      d_hierarchy->getPatchLevel(d_ln));
+   boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
    level->allocatePatchData(d_Ak0_id);
    allocateHypreData();
 }
@@ -464,9 +422,7 @@ CellPoissonHypreSolver::deallocateSolverState()
    }
 
    d_cf_boundary->clear();
-   boost::shared_ptr<hier::PatchLevel>
-   level(
-      d_hierarchy->getPatchLevel(d_ln));
+   boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
    level->deallocatePatchData(d_Ak0_id);
    deallocateHypreData();
    d_hierarchy.reset();
@@ -491,11 +447,8 @@ CellPoissonHypreSolver::allocateHypreData()
     * Set up the grid data - only set grid data for local boxes
     */
 
-   boost::shared_ptr<hier::PatchLevel>
-   level(
-      d_hierarchy->getPatchLevel(d_ln));
-   boost::shared_ptr<geom::CartesianGridGeometry>
-   grid_geometry(
+   boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
+   boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
       BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
          d_hierarchy->getGridGeometry()));
 
@@ -525,9 +478,7 @@ CellPoissonHypreSolver::allocateHypreData()
    if (is_periodic) {
       const hier::BoxContainer& level_domain =
          level->getPhysicalDomain(hier::BlockId::zero());
-      hier::Box
-      domain_bound(
-         level_domain.front());
+      hier::Box domain_bound(level_domain.front());
       for (hier::BoxContainer::const_iterator i = level_domain.begin();
            i != level_domain.end(); ++i) {
          domain_bound.setLower(
@@ -732,9 +683,7 @@ CellPoissonHypreSolver::copyToHypre(
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, src, box);
 
-   pdat::CellIterator
-   cend(
-      pdat::CellGeometry::end(box));
+   pdat::CellIterator cend(pdat::CellGeometry::end(box));
    for (pdat::CellIterator c(pdat::CellGeometry::begin(box)); c != cend; ++c) {
       hier::IntVector ic = *c;
       HYPRE_StructVectorSetValues(vector, &ic[0], src(*c, depth));
@@ -758,9 +707,7 @@ CellPoissonHypreSolver::copyFromHypre(
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, dst, box);
 
-   pdat::CellIterator
-   cend(
-      pdat::CellGeometry::end(box));
+   pdat::CellIterator cend(pdat::CellGeometry::end(box));
    for (pdat::CellIterator c(pdat::CellGeometry::begin(box)); c != cend; ++c) {
       double value;
       hier::IntVector ic = *c;
@@ -820,20 +767,14 @@ CellPoissonHypreSolver::setMatrixCoefficients(
    /*
     * Loop over patches and set matrix entries for each patch.
     */
-   boost::shared_ptr<hier::PatchLevel>
-   level(
-      d_hierarchy->getPatchLevel(d_ln));
-   const hier::IntVector
-   no_ghosts(
-      d_dim,
-      0);
+   boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
+   const hier::IntVector no_ghosts(d_dim, 0);
    for (hier::PatchLevel::iterator pi(level->begin());
         pi != level->end(); ++pi) {
 
       hier::Patch& patch = **pi;
 
-      boost::shared_ptr<geom::CartesianPatchGeometry>
-      pg(
+      boost::shared_ptr<geom::CartesianPatchGeometry> pg(
          BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
 
@@ -863,11 +804,7 @@ CellPoissonHypreSolver::setMatrixCoefficients(
 
       Ak0->fillAll(0.0);
 
-      pdat::CellData<double>
-      diagonal(
-         patch_box,
-         1,
-         no_ghosts);
+      pdat::CellData<double> diagonal(patch_box, 1, no_ghosts);
 
       /*
        * Set diagonals to zero so we can accumulate to it.
@@ -883,11 +820,7 @@ CellPoissonHypreSolver::setMatrixCoefficients(
        * Storage for off-diagonal entries,
        * which can be variable or constant.
        */
-      pdat::SideData<double>
-      off_diagonal(
-         patch_box,
-         1,
-         no_ghosts);
+      pdat::SideData<double> off_diagonal(patch_box, 1, no_ghosts);
 
       /*
        * Compute all off-diagonal entries with no regard to BCs.
@@ -897,16 +830,12 @@ CellPoissonHypreSolver::setMatrixCoefficients(
       if (spec.dIsConstant()) {
          for (tbox::Dimension::dir_t i = 0; i < d_dim.getValue(); ++i) {
             double dhh = spec.getDConstant() / (h[i] * h[i]);
-            pdat::ArrayData<double>&
-            off_diag_array(
-               off_diagonal.getArrayData(i));
+            pdat::ArrayData<double>& off_diag_array(off_diagonal.getArrayData(i));
             off_diag_array.fill(dhh);
          }
       } else {
          for (tbox::Dimension::dir_t i = 0; i < d_dim.getValue(); ++i) {
-            hier::Box
-            sbox(
-               patch_box);
+            hier::Box sbox(patch_box);
             sbox.growUpper(i, 1);
             array_math.scale(off_diagonal.getArrayData(i),
                1.0 / (h[i] * h[i]),
@@ -958,19 +887,15 @@ CellPoissonHypreSolver::setMatrixCoefficients(
                   d_object_name << ": Illegal boundary type in "
                                 << "CellPoissonHypreSolver::setMatrixCoefficients\n");
             }
-            const hier::BoundaryBoxUtils
-            bbu(
-               boundary_box);
+            const hier::BoundaryBoxUtils bbu(boundary_box);
             const int location_index = boundary_box.getLocationIndex();
             const hier::BoundaryBox trimmed_boundary_box =
                bbu.trimBoundaryBox(patch.getBox());
             const hier::Box bccoef_box =
                bbu.getSurfaceBoxFromBoundaryBox();
-            boost::shared_ptr<pdat::ArrayData<double> >
-            acoef_data(
+            boost::shared_ptr<pdat::ArrayData<double> > acoef_data(
                boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
-            boost::shared_ptr<pdat::ArrayData<double> >
-            bcoef_data(
+            boost::shared_ptr<pdat::ArrayData<double> > bcoef_data(
                boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
             boost::shared_ptr<pdat::ArrayData<double> > gcoef_data;
             static const double fill_time = 0.0;
@@ -1005,10 +930,8 @@ CellPoissonHypreSolver::setMatrixCoefficients(
           * There are potentially coarse-fine boundaries to deal with.
           */
 
-         std::vector<hier::BoundaryBox>
-         empty_vector(
-            0,
-            hier::BoundaryBox(d_dim));
+         std::vector<hier::BoundaryBox> empty_vector(0,
+                                                     hier::BoundaryBox(d_dim));
          const std::vector<hier::BoundaryBox>& surface_boxes =
             d_dim == tbox::Dimension(2) ? d_cf_boundary->getEdgeBoundaries(pi->getGlobalId()) :
             (d_dim ==
@@ -1026,18 +949,14 @@ CellPoissonHypreSolver::setMatrixCoefficients(
                                 << "CellPoissonHypreSolver::setMatrixCoefficients\n");
             }
             const int location_index = boundary_box.getLocationIndex();
-            const hier::BoundaryBoxUtils
-            bbu(
-               boundary_box);
+            const hier::BoundaryBoxUtils bbu(boundary_box);
             const hier::BoundaryBox trimmed_boundary_box =
                bbu.trimBoundaryBox(patch.getBox());
             const hier::Box bccoef_box =
                bbu.getSurfaceBoxFromBoundaryBox();
-            boost::shared_ptr<pdat::ArrayData<double> >
-            acoef_data(
+            boost::shared_ptr<pdat::ArrayData<double> > acoef_data(
                boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
-            boost::shared_ptr<pdat::ArrayData<double> >
-            bcoef_data(
+            boost::shared_ptr<pdat::ArrayData<double> > bcoef_data(
                boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
             boost::shared_ptr<pdat::ArrayData<double> > gcoef_data;
             static const double fill_time = 0.0;
@@ -1078,12 +997,8 @@ CellPoissonHypreSolver::setMatrixCoefficients(
 
       for (int i = 0; i < stencil_size; ++i) stencil_indices[i] = i;
 
-      pdat::CellIterator
-      ic(
-         pdat::CellGeometry::begin(patch_box));
-      pdat::CellIterator
-      icend(
-         pdat::CellGeometry::end(patch_box));
+      pdat::CellIterator ic(pdat::CellGeometry::begin(patch_box));
+      pdat::CellIterator icend(pdat::CellGeometry::end(patch_box));
 
       /*
        * To do: This loop uses inefficient high-level syntax.
@@ -1093,28 +1008,22 @@ CellPoissonHypreSolver::setMatrixCoefficients(
       for ( ; ic != icend; ++ic) {
 
          hier::IntVector icell = *ic;
-         pdat::SideIndex
-         ixlower(
-            * ic,
-            pdat::SideIndex::X,
-            pdat::SideIndex::Lower);
+         pdat::SideIndex ixlower(*ic,
+                                 pdat::SideIndex::X,
+                                 pdat::SideIndex::Lower);
          mat_entries[0] = (off_diagonal)(ixlower);
 
          if (d_dim > tbox::Dimension(1)) {
-            pdat::SideIndex
-            iylower(
-               * ic,
-               pdat::SideIndex::Y,
-               pdat::SideIndex::Lower);
+            pdat::SideIndex iylower(*ic,
+                                    pdat::SideIndex::Y,
+                                    pdat::SideIndex::Lower);
             mat_entries[1] = (off_diagonal)(iylower);
          }
 
          if (d_dim > tbox::Dimension(2)) {
-            pdat::SideIndex
-            izlower(
-               * ic,
-               pdat::SideIndex::Z,
-               pdat::SideIndex::Lower);
+            pdat::SideIndex izlower(*ic,
+                                    pdat::SideIndex::Z,
+                                    pdat::SideIndex::Lower);
             // The "funny" indexing prevents a warning when compiling for
             // DIM < 2.  This code is only reached if DIM > 2 when
             // executing.
@@ -1168,8 +1077,7 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
     * and so is moved to the rhs.  Before solving, g*A*k0(a) is added
     * to rhs.
     */
-   boost::shared_ptr<pdat::OutersideData<double> >
-   Ak0(
+   boost::shared_ptr<pdat::OutersideData<double> > Ak0(
       BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
          patch.getPatchData(d_Ak0_id)));
 
@@ -1186,9 +1094,7 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
       }
 #endif
       const int location_index = boundary_box.getLocationIndex();
-      const hier::BoundaryBoxUtils
-      bbu(
-         boundary_box);
+      const hier::BoundaryBoxUtils bbu(boundary_box);
       const hier::BoundaryBox trimmed_boundary_box =
          bbu.trimBoundaryBox(patch.getBox());
       const hier::Index& lower = trimmed_boundary_box.getBox().lower();
@@ -1199,8 +1105,7 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
       const hier::Box bccoef_box = bbu.getSurfaceBoxFromBoundaryBox();
       boost::shared_ptr<pdat::ArrayData<double> > acoef_data;
       boost::shared_ptr<pdat::ArrayData<double> > bcoef_data;
-      boost::shared_ptr<pdat::ArrayData<double> >
-      gcoef_data(
+      boost::shared_ptr<pdat::ArrayData<double> > gcoef_data(
          boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
       static const double fill_time = 0.0;
       robin_bc_coef->setBcCoefs(acoef_data,
@@ -1342,9 +1247,7 @@ CellPoissonHypreSolver::solveSystem(
 
    t_solve_system->start();
 
-   boost::shared_ptr<hier::PatchLevel>
-   level(
-      d_hierarchy->getPatchLevel(d_ln));
+   boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
    TBOX_ASSERT(u >= 0);
    TBOX_ASSERT(
       u < level->getPatchDescriptor()->getMaxNumberRegisteredComponents());
@@ -1367,14 +1270,8 @@ CellPoissonHypreSolver::solveSystem(
     * copy solution and right-hand-side to HYPRE structures.
     */
 
-   const hier::IntVector
-   no_ghosts(
-      d_dim,
-      0);
-   const hier::IntVector
-   ghosts(
-      d_dim,
-      1);
+   const hier::IntVector no_ghosts(d_dim, 0);
+   const hier::IntVector ghosts(d_dim, 1);
 
    /*
     * At coarse-fine boundaries, we expect ghost cells to have correct
@@ -1392,17 +1289,12 @@ CellPoissonHypreSolver::solveSystem(
       /*
        * Set up variable data needed to prepare linear system solver.
        */
-      boost::shared_ptr<pdat::CellData<double> >
-      u_data_(
+      boost::shared_ptr<pdat::CellData<double> > u_data_(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch->getPatchData(u)));
       TBOX_ASSERT(u_data_);
       pdat::CellData<double>& u_data = *u_data_;
-      pdat::CellData<double>
-      rhs_data(
-         box,
-         1,
-         no_ghosts);
+      pdat::CellData<double> rhs_data(box, 1, no_ghosts);
 
       /*
        * Copy rhs and solution from the hierarchy into HYPRE structures.
@@ -1491,8 +1383,7 @@ CellPoissonHypreSolver::solveSystem(
    for (hier::PatchLevel::iterator ip(level->begin());
         ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
-      boost::shared_ptr<pdat::CellData<double> >
-      u_data_(
+      boost::shared_ptr<pdat::CellData<double> > u_data_(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch->getPatchData(u)));
 

@@ -83,7 +83,7 @@ ComponentSelector::_findMaxIndex(
 
 ComponentSelector
 ComponentSelector::operator | (
-   const ComponentSelector &flags) const
+   const ComponentSelector& flags) const
 {
    ComponentSelector tmp;
    for (size_t vi = 0; vi < d_bit_vector.size(); ++vi) {
@@ -96,8 +96,8 @@ ComponentSelector::operator | (
 }
 
 ComponentSelector
-ComponentSelector::operator& (
-   const ComponentSelector &flags) const
+ComponentSelector::operator & (
+   const ComponentSelector& flags) const
 {
    ComponentSelector tmp;
    for (size_t vi = 0; vi < d_bit_vector.size(); ++vi) {
@@ -108,7 +108,7 @@ ComponentSelector::operator& (
 }
 
 ComponentSelector
-ComponentSelector::operator !() const
+ComponentSelector::operator ! () const
 {
    ComponentSelector tmp;
    for (size_t vi = 0; vi < d_bit_vector.size(); ++vi) {
@@ -120,7 +120,7 @@ ComponentSelector::operator !() const
 
 ComponentSelector&
 ComponentSelector::operator |= (
-      const ComponentSelector &flags)
+   const ComponentSelector& flags)
 {
    for (size_t vi = 0; vi < d_bit_vector.size(); ++vi) {
       d_bit_vector[vi] |= flags.d_bit_vector[vi];
@@ -133,7 +133,7 @@ ComponentSelector::operator |= (
 
 ComponentSelector&
 ComponentSelector::operator &= (
-      const ComponentSelector &flags)
+   const ComponentSelector& flags)
 {
    for (size_t vi = 0; vi < d_bit_vector.size(); ++vi) {
       d_bit_vector[vi] &= flags.d_bit_vector[vi];

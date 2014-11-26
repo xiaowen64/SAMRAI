@@ -79,15 +79,9 @@ ConnectorStatistics::computeLocalConnectorStatistics(const Connector& connector)
 
    connector.cacheGlobalReducedData();
 
-   const BoxLevel&
-   base(
-      connector.getBase());
-   const tbox::SAMRAI_MPI&
-   mpi(
-      base.getMPI());
-   const tbox::Dimension&
-   dim(
-      base.getDim());
+   const BoxLevel& base(connector.getBase());
+   const tbox::SAMRAI_MPI& mpi(base.getMPI());
+   const tbox::Dimension& dim(base.getDim());
 
    /*
     * Whether head boxes should be refined or coarsened before box
@@ -128,9 +122,7 @@ ConnectorStatistics::computeLocalConnectorStatistics(const Connector& connector)
    d_sq.d_values[NUMBER_OF_REMOTE_NEIGHBORS] = 0.;
    d_sq.d_values[NUMBER_OF_REMOTE_NEIGHBOR_OWNERS] = 0.;
 
-   BoxContainer
-   visible_neighbors(
-      true);                             // All neighbors of local base boxes.
+   BoxContainer visible_neighbors(true); // All neighbors of local base boxes.
 
    for (Connector::ConstNeighborhoodIterator nbi = connector.begin();
         nbi != connector.end(); ++nbi) {
@@ -170,9 +162,10 @@ ConnectorStatistics::computeLocalConnectorStatistics(const Connector& connector)
          const size_t size = neighbor.size();
 
          d_sq.d_values[OVERLAP_SIZE] += static_cast<double>(size);
-         if (neighbor.getOwnerRank() == mpi.getRank()) {
+         if ( neighbor.getOwnerRank() == mpi.getRank() ) {
             d_sq.d_values[LOCAL_OVERLAP_SIZE] += static_cast<double>(size);
-         } else {
+         }
+         else {
             d_sq.d_values[REMOTE_OVERLAP_SIZE] += static_cast<double>(size);
          }
 

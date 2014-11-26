@@ -168,11 +168,9 @@ public:
       const int rank) const;
 
 private:
-   enum StorageType {
-      USING_ALL,
-      USING_ARRAY,
-      USING_MIN_MAX
-   };
+   enum StorageType { USING_ALL,
+                      USING_ARRAY,
+                      USING_MIN_MAX };
 
    int d_min;
    int d_max;

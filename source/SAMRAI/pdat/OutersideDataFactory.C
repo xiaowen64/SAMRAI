@@ -101,9 +101,7 @@ OutersideDataFactory<TYPE>::getBoxGeometry(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   const hier::IntVector&
-   zero_vector(
-      hier::IntVector::getZero(getDim()));
+   const hier::IntVector& zero_vector(hier::IntVector::getZero(getDim()));
 
    return boost::make_shared<OutersideGeometry>(box, zero_vector);
 }
@@ -157,8 +155,7 @@ OutersideDataFactory<TYPE>::validCopyTo(
     * Valid options are SideData and OutersideData.
     */
    if (!valid_copy) {
-      boost::shared_ptr<SideDataFactory<TYPE> >
-      sdf(
+      boost::shared_ptr<SideDataFactory<TYPE> > sdf(
          boost::dynamic_pointer_cast<SideDataFactory<TYPE>,
                                      hier::PatchDataFactory>(dst_pdf));
       if (sdf) {
@@ -167,8 +164,7 @@ OutersideDataFactory<TYPE>::validCopyTo(
    }
 
    if (!valid_copy) {
-      boost::shared_ptr<OutersideDataFactory<TYPE> >
-      osdf(
+      boost::shared_ptr<OutersideDataFactory<TYPE> > osdf(
          boost::dynamic_pointer_cast<OutersideDataFactory<TYPE>,
                                      hier::PatchDataFactory>(
             dst_pdf));

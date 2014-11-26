@@ -79,7 +79,7 @@ RefineClasses::insertEquivalenceClassItem(
       data.d_class_index = eq_index;
 
       d_equivalence_class_indices[eq_index].push_back(static_cast<int>(d_refine_classes_data_items.
-            size()));
+                                                                       size()));
       d_refine_classes_data_items.push_back(data);
 
    }
@@ -108,9 +108,7 @@ RefineClasses::itemIsValid(
 
    bool item_good = true;
 
-   boost::shared_ptr<hier::PatchDescriptor>
-   pd(
-      descriptor);
+   boost::shared_ptr<hier::PatchDescriptor> pd(descriptor);
    if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
@@ -135,14 +133,11 @@ RefineClasses::itemIsValid(
          << "`Scratch' patch data id invalid (< 0!)" << std::endl);
    }
 
-   boost::shared_ptr<hier::PatchDataFactory>
-   dst_fact(
+   boost::shared_ptr<hier::PatchDataFactory> dst_fact(
       pd->getPatchDataFactory(dst_id));
-   boost::shared_ptr<hier::PatchDataFactory>
-   src_fact(
+   boost::shared_ptr<hier::PatchDataFactory> src_fact(
       pd->getPatchDataFactory(src_id));
-   boost::shared_ptr<hier::PatchDataFactory>
-   scratch_fact(
+   boost::shared_ptr<hier::PatchDataFactory> scratch_fact(
       pd->getPatchDataFactory(scratch_id));
 
    const tbox::Dimension& dim = dst_fact->getDim();
@@ -178,9 +173,7 @@ RefineClasses::itemIsValid(
          << "\n`Scratch' ghost width = " << scratch_gcw << std::endl);
    }
 
-   boost::shared_ptr<hier::RefineOperator>
-   refop(
-      data_item.d_oprefine);
+   boost::shared_ptr<hier::RefineOperator> refop(data_item.d_oprefine);
    if (item_good && refop) {
       if (refop->getStencilWidth(dim) > scratch_gcw) {
          item_good = false;
@@ -193,8 +186,7 @@ RefineClasses::itemIsValid(
       }
    }
 
-   boost::shared_ptr<VariableFillPattern>
-   fill_pattern(
+   boost::shared_ptr<VariableFillPattern> fill_pattern(
       data_item.d_var_fill_pattern);
    if (item_good && fill_pattern) {
       if (fill_pattern->getPatternName() != "BOX_GEOMETRY_FILL_PATTERN") {
@@ -230,11 +222,9 @@ RefineClasses::itemIsValid(
             << std::endl);
       }
 
-      boost::shared_ptr<hier::PatchDataFactory>
-      src_told_fact(
+      boost::shared_ptr<hier::PatchDataFactory> src_told_fact(
          pd->getPatchDataFactory(src_told_id));
-      boost::shared_ptr<hier::PatchDataFactory>
-      src_tnew_fact(
+      boost::shared_ptr<hier::PatchDataFactory> src_tnew_fact(
          pd->getPatchDataFactory(src_tnew_id));
 
       if (item_good && typeid(*src_told_fact) != typeid(*src_fact)) {
@@ -342,9 +332,7 @@ RefineClasses::itemsAreEquivalent(
 {
    bool equivalent = true;
 
-   boost::shared_ptr<hier::PatchDescriptor>
-   pd(
-      descriptor);
+   boost::shared_ptr<hier::PatchDescriptor> pd(descriptor);
    if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
@@ -485,11 +473,9 @@ RefineClasses::patchDataMatch(
 
    if (items_match) {
 
-      boost::shared_ptr<hier::PatchDataFactory>
-      pdf1(
+      boost::shared_ptr<hier::PatchDataFactory> pdf1(
          pd->getPatchDataFactory(item_id1));
-      boost::shared_ptr<hier::PatchDataFactory>
-      pdf2(
+      boost::shared_ptr<hier::PatchDataFactory> pdf2(
          pd->getPatchDataFactory(item_id2));
 
       items_match = (typeid(*pdf1) == typeid(*pdf2));

@@ -19,21 +19,11 @@
 namespace SAMRAI {
 namespace hier {
 
-char
-PersistentOverlapConnectors::s_check_created_connectors(
-   '\0');
-char
-PersistentOverlapConnectors::s_check_accessed_connectors(
-   '\0');
-bool
-PersistentOverlapConnectors::s_create_empty_neighbor_containers(
-   false);
-char
-PersistentOverlapConnectors::s_implicit_connector_creation_rule(
-   'w');
-size_t
-PersistentOverlapConnectors::s_num_implicit_global_searches(
-   0);
+char PersistentOverlapConnectors::s_check_created_connectors('\0');
+char PersistentOverlapConnectors::s_check_accessed_connectors('\0');
+bool PersistentOverlapConnectors::s_create_empty_neighbor_containers(false);
+char PersistentOverlapConnectors::s_implicit_connector_creation_rule('w');
+size_t PersistentOverlapConnectors::s_num_implicit_global_searches(0);
 
 /*
  ************************************************************************
@@ -70,21 +60,17 @@ PersistentOverlapConnectors::getFromInput()
       s_check_created_connectors = 'n';
       s_check_accessed_connectors = 'n';
       if (tbox::InputManager::inputDatabaseExists()) {
-         boost::shared_ptr<tbox::Database>
-         input_db(
+         boost::shared_ptr<tbox::Database> input_db(
             tbox::InputManager::getInputDatabase());
          if (input_db->isDatabase("PersistentOverlapConnectors")) {
-            boost::shared_ptr<tbox::Database>
-            pocdb(
+            boost::shared_ptr<tbox::Database> pocdb(
                input_db->getDatabase("PersistentOverlapConnectors"));
 
-            const bool
-            check_created_connectors(
+            const bool check_created_connectors(
                pocdb->getBoolWithDefault("DEV_check_created_connectors", false));
             s_check_created_connectors = check_created_connectors ? 'y' : 'n';
 
-            const bool
-            check_accessed_connectors(
+            const bool check_accessed_connectors(
                pocdb->getBoolWithDefault("DEV_check_accessed_connectors", false));
             s_check_accessed_connectors =
                check_accessed_connectors ? 'y' : 'n';
@@ -189,9 +175,7 @@ PersistentOverlapConnectors::cacheConnector(
    doCacheConnectorWork(head, connector);
    if (connector->hasTranspose()) {
       if (connector.get() != &connector->getTranspose()) {
-         boost::shared_ptr<Connector>
-         transpose(
-            & connector->getTranspose());
+         boost::shared_ptr<Connector> transpose(&connector->getTranspose());
          head.getPersistentOverlapConnectors().doCacheConnectorWork(
             d_my_box_level,
             transpose);
@@ -484,12 +468,10 @@ PersistentOverlapConnectors::doFindConnectorWork(
        */
 
       OverlapConnectorAlgorithm oca;
-      boost::shared_ptr<Connector>
-      new_connector(
-         boost::make_shared<Connector>(
-            d_my_box_level,
-            head,
-            min_connector_width));
+      boost::shared_ptr<Connector> new_connector(boost::make_shared<Connector>(
+                                                    d_my_box_level,
+                                                    head,
+                                                    min_connector_width));
       oca.extractNeighbors(*new_connector, *found, min_connector_width);
 
       postprocessForEmptyNeighborContainers(*new_connector);

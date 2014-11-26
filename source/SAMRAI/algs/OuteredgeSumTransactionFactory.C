@@ -128,8 +128,7 @@ OuteredgeSumTransactionFactory::preprocessScratchSpace(
       const int ncomponents = preprocess_vector.getSize();
       for (int n = 0; n < ncomponents; ++n) {
          if (preprocess_vector.isSet(n)) {
-            boost::shared_ptr<pdat::OuteredgeData<double> >
-            oedge_data(
+            boost::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
                BOOST_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
                   patch->getPatchData(n)));
             TBOX_ASSERT(oedge_data);

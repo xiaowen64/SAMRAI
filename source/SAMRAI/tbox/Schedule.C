@@ -40,13 +40,9 @@ const int Schedule::s_default_second_tag = 1;
  */
 const size_t Schedule::s_default_first_message_length = 1000;
 
-const std::string
-Schedule::s_default_timer_prefix(
-   "tbox::Schedule");
+const std::string Schedule::s_default_timer_prefix("tbox::Schedule");
 std::map<std::string, Schedule::TimerStruct> Schedule::s_static_timers;
-char
-Schedule::s_ignore_external_timer_prefix(
-   '\0');
+char Schedule::s_ignore_external_timer_prefix('\0');
 
 StartupShutdownManager::Handler
 Schedule::s_initialize_finalize_handler(
@@ -182,7 +178,7 @@ void
 Schedule::communicate()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG)) {
+   if ( d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
       TBOX_ERROR("Schedule::communicate: Errant message detected before beginCommunication().");
    }
 #endif
@@ -193,7 +189,7 @@ Schedule::communicate()
    d_object_timers->t_communicate->stop();
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG)) {
+   if ( d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
       TBOX_ERROR("Schedule::communicate: Errant message detected after finalizeCommunication().");
    }
 #endif
@@ -373,10 +369,7 @@ Schedule::postSends()
       }
 
       // Pack outgoing data into a message.
-      MessageStream
-      outgoing_stream(
-         byte_count,
-         MessageStream::Write);
+      MessageStream outgoing_stream(byte_count, MessageStream::Write);
       d_object_timers->t_pack_stream->start();
       for (ConstIterator pack = transactions.begin();
            pack != transactions.end(); ++pack) {
@@ -446,8 +439,7 @@ Schedule::processCompletedCommunications()
          completed_comm.completeCurrentOperation();
          completed_comm.yankFromCompletionQueue();
 
-         MessageStream
-         incoming_stream(
+         MessageStream incoming_stream(
             static_cast<size_t>(completed_comm.getRecvSize()) * sizeof(char),
             MessageStream::Read,
             completed_comm.getRecvData(),
@@ -485,8 +477,7 @@ Schedule::processCompletedCommunications()
 
             const int sender = completed_comm->getPeerRank();
 
-            MessageStream
-            incoming_stream(
+            MessageStream incoming_stream(
                static_cast<size_t>(completed_comm->getRecvSize()) * sizeof(char),
                MessageStream::Read,
                completed_comm->getRecvData(),
@@ -601,12 +592,10 @@ Schedule::getFromInput()
    if (s_ignore_external_timer_prefix == '\0') {
       s_ignore_external_timer_prefix = 'n';
       if (tbox::InputManager::inputDatabaseExists()) {
-         boost::shared_ptr<tbox::Database>
-         idb(
+         boost::shared_ptr<tbox::Database> idb(
             tbox::InputManager::getInputDatabase());
          if (idb->isDatabase("Schedule")) {
-            boost::shared_ptr<tbox::Database>
-            sched_db(
+            boost::shared_ptr<tbox::Database> sched_db(
                idb->getDatabase("Schedule"));
             s_ignore_external_timer_prefix =
                sched_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
@@ -634,8 +623,7 @@ Schedule::setTimerPrefix(
    } else {
       timer_prefix_used = timer_prefix;
    }
-   std::map<std::string, TimerStruct>::iterator
-   ti(
+   std::map<std::string, TimerStruct>::iterator ti(
       s_static_timers.find(timer_prefix_used));
    if (ti == s_static_timers.end()) {
       d_object_timers = &s_static_timers[timer_prefix_used];

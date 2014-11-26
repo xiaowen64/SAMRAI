@@ -105,7 +105,7 @@ public:
       const hier::Patch& patch,
       pdat::CellData<double>* uval_data,
       pdat::CellData<int>* tag_data,
-      const hier::Box& fill_box) const {
+      const hier::Box &fill_box) const {
       NULL_USE(patch);
       NULL_USE(uval_data);
       NULL_USE(tag_data);

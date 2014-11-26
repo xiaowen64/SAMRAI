@@ -80,9 +80,7 @@ int main(
    const unsigned short d = static_cast<unsigned short>(atoi(argv[1]));
    TBOX_ASSERT(d > 0);
    TBOX_ASSERT(d <= SAMRAI::MAX_DIM_VAL);
-   const tbox::Dimension
-   dim(
-      d);
+   const tbox::Dimension dim(d);
 
    const std::string log_fn = std::string("node_cplxtest.")
       + tbox::Utilities::intToString(dim.getValue(), 1) + "d.log";
@@ -99,30 +97,14 @@ int main(
       double lo[SAMRAI::MAX_DIM_VAL];
       double hi[SAMRAI::MAX_DIM_VAL];
 
-      hier::Index
-      clo0(
-         dim);
-      hier::Index
-      chi0(
-         dim);
-      hier::Index
-      clo1(
-         dim);
-      hier::Index
-      chi1(
-         dim);
-      hier::Index
-      flo0(
-         dim);
-      hier::Index
-      fhi0(
-         dim);
-      hier::Index
-      flo1(
-         dim);
-      hier::Index
-      fhi1(
-         dim);
+      hier::Index clo0(dim);
+      hier::Index chi0(dim);
+      hier::Index clo1(dim);
+      hier::Index chi1(dim);
+      hier::Index flo0(dim);
+      hier::Index fhi0(dim);
+      hier::Index flo1(dim);
+      hier::Index fhi1(dim);
 
       for (int i = 0; i < dim.getValue(); ++i) {
          lo[i] = 0.0;
@@ -149,30 +131,11 @@ int main(
          }
       }
 
-      hier::Box
-      coarse0(
-         clo0,
-         chi0,
-         hier::BlockId(0));
-      hier::Box
-      coarse1(
-         clo1,
-         chi1,
-         hier::BlockId(0));
-      hier::Box
-      fine0(
-         flo0,
-         fhi0,
-         hier::BlockId(0));
-      hier::Box
-      fine1(
-         flo1,
-         fhi1,
-         hier::BlockId(0));
-      hier::IntVector
-      ratio(
-         dim,
-         2);
+      hier::Box coarse0(clo0, chi0, hier::BlockId(0));
+      hier::Box coarse1(clo1, chi1, hier::BlockId(0));
+      hier::Box fine0(flo0, fhi0, hier::BlockId(0));
+      hier::Box fine1(flo1, fhi1, hier::BlockId(0));
+      hier::IntVector ratio(dim, 2);
 
       hier::BoxContainer coarse_domain;
       hier::BoxContainer fine_boxes;
@@ -181,35 +144,29 @@ int main(
       fine_boxes.pushBack(fine0);
       fine_boxes.pushBack(fine1);
 
-      boost::shared_ptr<geom::CartesianGridGeometry>
-      geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry> geometry(
          new geom::CartesianGridGeometry(
             "CartesianGeometry",
             lo,
             hi,
             coarse_domain));
 
-      boost::shared_ptr<hier::PatchHierarchy>
-      hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", geometry));
 
       hierarchy->setMaxNumberOfLevels(2);
       hierarchy->setRatioToCoarserLevel(ratio, 1);
 
-      const tbox::SAMRAI_MPI&
-      mpi(
-         tbox::SAMRAI_MPI::getSAMRAIWorld());
+      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
       const int nproc = mpi.getSize();
 
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_boxes.size();
 
-      boost::shared_ptr<hier::BoxLevel>
-      layer0(
+      boost::shared_ptr<hier::BoxLevel> layer0(
          boost::make_shared<hier::BoxLevel>(
             hier::IntVector(dim, 1), geometry));
-      boost::shared_ptr<hier::BoxLevel>
-      layer1(
+      boost::shared_ptr<hier::BoxLevel> layer1(
          boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
@@ -241,13 +198,9 @@ int main(
 
       // Create instance of hier::Variable database
       hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-      boost::shared_ptr<hier::VariableContext>
-      dummy(
+      boost::shared_ptr<hier::VariableContext> dummy(
          variable_db->getContext("dummy"));
-      const hier::IntVector
-      no_ghosts(
-         dim,
-         0);
+      const hier::IntVector no_ghosts(dim, 0);
 
       // Make some dummy variables and data on the hierarchy
       boost::shared_ptr<pdat::NodeVariable<dcomplex> > nvar[NVARS];
@@ -265,8 +218,7 @@ int main(
       nvindx[3] = variable_db->registerVariableAndContext(
             nvar[3], dummy, no_ghosts);
 
-      boost::shared_ptr<pdat::NodeVariable<double> >
-      nwgt(
+      boost::shared_ptr<pdat::NodeVariable<double> > nwgt(
          new pdat::NodeVariable<double>(dim, "nwgt", 1));
       int nwgt_id = variable_db->registerVariableAndContext(
             nwgt, dummy, no_ghosts);
@@ -279,16 +231,14 @@ int main(
          }
       }
 
-      boost::shared_ptr<math::HierarchyDataOpsComplex>
-      node_ops(
+      boost::shared_ptr<math::HierarchyDataOpsComplex> node_ops(
          new math::HierarchyNodeDataOpsComplex(
             hierarchy,
             0,
             1));
       TBOX_ASSERT(node_ops);
 
-      boost::shared_ptr<math::HierarchyDataOpsReal<double> >
-      nwgt_ops(
+      boost::shared_ptr<math::HierarchyDataOpsReal<double> > nwgt_ops(
          new math::HierarchyNodeDataOpsReal<double>(
             hierarchy,
             0,
@@ -300,14 +250,12 @@ int main(
       hier::Box coarse_fine = fine0 + fine1;
       coarse_fine.coarsen(ratio);
       for (ln = 0; ln < 2; ++ln) {
-         boost::shared_ptr<hier::PatchLevel>
-         level(
+         boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            boost::shared_ptr<geom::CartesianPatchGeometry>
-            pgeom(
+            boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
                BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
@@ -316,15 +264,12 @@ int main(
             for (int i = 1; i < dim.getValue(); ++i) {
                node_vol *= dx[i];
             }
-            boost::shared_ptr<pdat::NodeData<double> >
-            data(
+            boost::shared_ptr<pdat::NodeData<double> > data(
                BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
                   patch->getPatchData(nwgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(node_vol);
-            pdat::NodeIndex
-            ni(
-               dim);
+            pdat::NodeIndex ni(dim);
 
             if (dim.getValue() == 2) {
                int plo0 = patch->getBox().lower(0);
@@ -875,10 +820,7 @@ int main(
 
       // Test #3b: math::HierarchyNodeDataOpsComplex::setToScalar()
       // Expected:  v1 = (4.0, 3.0)
-      dcomplex
-      val1(
-         4.0,
-         3.0);
+      dcomplex val1(4.0, 3.0);
       node_ops->setToScalar(nvindx[1], dcomplex(4.0, 3.0));
       if (!complexDataSameAsValue(nvindx[1], val1, hierarchy)) {
          ++num_failures;
@@ -920,10 +862,7 @@ int main(
       // Test #6: math::HierarchyNodeDataOpsComplex::scale()
       // Expected:  v2 = 0.25 * v2 = (1.0,0.75)
       node_ops->scale(nvindx[2], 0.25, nvindx[2]);
-      dcomplex
-      val_scale(
-         1.0,
-         0.75);
+      dcomplex val_scale(1.0, 0.75);
       if (!complexDataSameAsValue(nvindx[2], val_scale, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -935,10 +874,7 @@ int main(
       // Test #7: math::HierarchyNodeDataOpsComplex::add()
       // Expected: v3 = v0 + v1 = (6.0, 4.5)
       node_ops->add(nvindx[3], nvindx[0], nvindx[1]);
-      dcomplex
-      val_add(
-         6.0,
-         4.5);
+      dcomplex val_add(6.0, 4.5);
       if (!complexDataSameAsValue(nvindx[3], val_add, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -953,10 +889,7 @@ int main(
       // Test #8: math::HierarchyNodeDataOpsComplex::subtract()
       // Expected: v1 = v3 - v0 = (6.0,0.0)
       node_ops->subtract(nvindx[1], nvindx[3], nvindx[0]);
-      dcomplex
-      val_sub(
-         6.0,
-         0.0);
+      dcomplex val_sub(6.0, 0.0);
       if (!complexDataSameAsValue(nvindx[1], val_sub, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -968,10 +901,7 @@ int main(
       // Test #9a: math::HierarchyNodeDataOpsComplex::addScalar()
       // Expected: v1 = v1 + (0.0,-4.0) = (6.0,-4.0)
       node_ops->addScalar(nvindx[1], nvindx[1], dcomplex(0.0, -4.0));
-      dcomplex
-      val_addScalar(
-         6.0,
-         -4.0);
+      dcomplex val_addScalar(6.0, -4.0);
       if (!complexDataSameAsValue(nvindx[1], val_addScalar, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -1010,10 +940,7 @@ int main(
       // Test #10: math::HierarchyNodeDataOpsComplex::multiply()
       // Expected: v1 = v3 * v1 = (3.0,-2.0)
       node_ops->multiply(nvindx[1], nvindx[3], nvindx[1]);
-      dcomplex
-      val_mult(
-         3.0,
-         -2.0);
+      dcomplex val_mult(3.0, -2.0);
       if (!complexDataSameAsValue(nvindx[1], val_mult, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -1025,10 +952,7 @@ int main(
       // Test #11: math::HierarchyNodeDataOpsComplex::divide()
       // Expected: v0 = v2 / v1 = (1.3846153846154,-0.076923076923077)
       node_ops->divide(nvindx[0], nvindx[2], nvindx[1]);
-      dcomplex
-      val_div(
-         1.3846153846154,
-         -0.076923076923077);
+      dcomplex val_div(1.3846153846154, -0.076923076923077);
       if (!complexDataSameAsValue(nvindx[0], val_div, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -1040,10 +964,7 @@ int main(
       // Test #12: math::HierarchyNodeDataOpsComplex::reciprocal()
       // Expected: v1 = 1 / v1 = (0.23076923076923, 0.15384615384615)
       node_ops->reciprocal(nvindx[1], nvindx[1]);
-      dcomplex
-      val_rec(
-         0.23076923076923,
-         0.15384615384615);
+      dcomplex val_rec(0.23076923076923, 0.15384615384615);
       if (!complexDataSameAsValue(nvindx[1], val_rec, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -1055,8 +976,7 @@ int main(
       boost::shared_ptr<pdat::NodeData<dcomplex> > ndata;
 
       // set values
-      boost::shared_ptr<hier::PatchLevel>
-      level_zero(
+      boost::shared_ptr<hier::PatchLevel> level_zero(
          hierarchy->getPatchLevel(0));
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
@@ -1064,14 +984,8 @@ int main(
          ndata = BOOST_CAST<pdat::NodeData<dcomplex>,
                             hier::PatchData>(patch->getPatchData(nvindx[2]));
          TBOX_ASSERT(ndata);
-         hier::Index
-         index0(
-            dim,
-            2);
-         hier::Index
-         index1(
-            dim,
-            3);
+         hier::Index index0(dim, 2);
+         hier::Index index1(dim, 3);
          index1(0) = 5;
          if (dim.getValue() == 2) {
             if (patch->getBox().contains(index0)) {
@@ -1102,14 +1016,8 @@ int main(
          ndata = BOOST_CAST<pdat::NodeData<dcomplex>,
                             hier::PatchData>(patch->getPatchData(nvindx[2]));
          TBOX_ASSERT(ndata);
-         hier::Index
-         idx0(
-            dim,
-            2);
-         hier::Index
-         idx1(
-            dim,
-            3);
+         hier::Index idx0(dim, 2);
+         hier::Index idx1(dim, 3);
          idx1(0) = 5;
          pdat::NodeIndex::Corner corner0;
          pdat::NodeIndex::Corner corner1;
@@ -1120,18 +1028,10 @@ int main(
             corner0 = pdat::NodeIndex::LLL;
             corner1 = pdat::NodeIndex::UUU;
          }
-         pdat::NodeIndex
-         index0(
-            idx0,
-            corner0);
-         pdat::NodeIndex
-         index1(
-            idx1,
-            corner1);
+         pdat::NodeIndex index0(idx0, corner0);
+         pdat::NodeIndex index1(idx1, corner1);
 
-         pdat::NodeIterator
-         cend(
-            pdat::NodeGeometry::end(ndata->getBox()));
+         pdat::NodeIterator cend(pdat::NodeGeometry::end(ndata->getBox()));
          for (pdat::NodeIterator c(pdat::NodeGeometry::begin(ndata->getBox()));
               c != cend && bogus_value_test_passed; ++c) {
             pdat::NodeIndex node_index = *c;
@@ -1237,10 +1137,7 @@ int main(
       // Expected:  v3 = (2.0,5.0)
       node_ops->linearSum(nvindx[3],
          dcomplex(2.0, 0.0), nvindx[1], dcomplex(0.0, -1.0), nvindx[0]);
-      dcomplex
-      val_linearSum(
-         2.0,
-         5.0);
+      dcomplex val_linearSum(2.0, 5.0);
       if (!complexDataSameAsValue(nvindx[3], val_linearSum, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -1252,10 +1149,7 @@ int main(
       // Test #20: math::HierarchyNodeDataOpsComplex::axmy()
       // Expected:  v3 = (6.5,12.0)
       node_ops->axmy(nvindx[3], 3.0, nvindx[1], nvindx[0]);
-      dcomplex
-      val_axmy(
-         6.5,
-         12.0);
+      dcomplex val_axmy(6.5, 12.0);
       if (!complexDataSameAsValue(nvindx[3], val_axmy, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -1267,10 +1161,7 @@ int main(
       // Test #21a: math::HierarchyNodeDataOpsComplex::dot()
       // Expected:  cdot = (8.75,-10.5)
       dcomplex cdot = node_ops->dot(nvindx[2], nvindx[1], nwgt_id);
-      dcomplex
-      ans_2_dot_1(
-         8.75,
-         -10.5);
+      dcomplex ans_2_dot_1(8.75, -10.5);
       if (!tbox::MathUtilities<dcomplex>::equalEps(cdot, ans_2_dot_1)) {
          ++num_failures;
          tbox::perr
@@ -1282,10 +1173,7 @@ int main(
       // Test #21b: math::HierarchyNodeDataOpsComplex::dot()
       // Expected:  cdot = (8.75,10.5)
       dcomplex cdot2 = node_ops->dot(nvindx[1], nvindx[2], nwgt_id);
-      dcomplex
-      ans_1_dot_2(
-         8.75,
-         10.5);
+      dcomplex ans_1_dot_2(8.75, 10.5);
       if (!tbox::MathUtilities<dcomplex>::equalEps(cdot2, ans_1_dot_2)) {
          ++num_failures;
          tbox::perr
@@ -1352,22 +1240,17 @@ complexDataSameAsValue(
    boost::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ++ln) {
 
-      boost::shared_ptr<hier::PatchLevel>
-      level(
-         hierarchy->getPatchLevel(ln));
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          patch = *ip;
-         boost::shared_ptr<pdat::NodeData<dcomplex> >
-         nvdata(
+         boost::shared_ptr<pdat::NodeData<dcomplex> > nvdata(
             BOOST_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(nvdata);
 
-         pdat::NodeIterator
-         cend(
-            pdat::NodeGeometry::end(nvdata->getBox()));
+         pdat::NodeIterator cend(pdat::NodeGeometry::end(nvdata->getBox()));
          for (pdat::NodeIterator c(pdat::NodeGeometry::begin(nvdata->getBox()));
               c != cend && test_passed; ++c) {
             pdat::NodeIndex node_index = *c;
@@ -1397,22 +1280,17 @@ doubleDataSameAsValue(
    int ln;
    boost::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ++ln) {
-      boost::shared_ptr<hier::PatchLevel>
-      level(
-         hierarchy->getPatchLevel(ln));
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          patch = *ip;
-         boost::shared_ptr<pdat::NodeData<double> >
-         nvdata(
+         boost::shared_ptr<pdat::NodeData<double> > nvdata(
             BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
                patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(nvdata);
 
-         pdat::NodeIterator
-         cend(
-            pdat::NodeGeometry::end(nvdata->getBox()));
+         pdat::NodeIterator cend(pdat::NodeGeometry::end(nvdata->getBox()));
          for (pdat::NodeIterator c(pdat::NodeGeometry::begin(nvdata->getBox()));
               c != cend && test_passed; ++c) {
             pdat::NodeIndex node_index = *c;

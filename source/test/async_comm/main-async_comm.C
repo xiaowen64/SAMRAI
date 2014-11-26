@@ -48,9 +48,7 @@ int main(
    SAMRAI_MPI::init(&argc, &argv);
    SAMRAIManager::initialize();
    SAMRAIManager::startup();
-   tbox::SAMRAI_MPI
-   mpi(
-      tbox::SAMRAI_MPI::getSAMRAIWorld());
+   tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    const int rank = mpi.getRank();
    int fail_count = 0;
@@ -85,9 +83,7 @@ int main(
        * to avoid possible interference with other communications
        * by SAMRAI library.
        */
-      tbox::SAMRAI_MPI
-      isolated_mpi(
-         MPI_COMM_NULL);
+      tbox::SAMRAI_MPI isolated_mpi(MPI_COMM_NULL);
       isolated_mpi.dupCommunicator(SAMRAI_MPI::getSAMRAIWorld());
       plog << "Process " << std::setw(5) << rank
            << " duplicated Communicator." << std::endl;
@@ -96,9 +92,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase>
-      input_db(
-         new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -115,9 +109,7 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database>
-      main_db(
-         input_db->getDatabase("Main"));
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
       std::string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
 
@@ -202,19 +194,11 @@ int main(
          plog << "\n\n\n***************** Beginning Cycle Number "
               << count << " *******************\n\n";
 
-         std::vector<std::vector<int> >
-         group_ids(
-            num_groups);
-         std::vector<int>
-         owners(
-            num_groups);
-         std::vector<int>
-         active_flags(
-            num_groups);
+         std::vector<std::vector<int> > group_ids(num_groups);
+         std::vector<int> owners(num_groups);
+         std::vector<int> active_flags(num_groups);
 
-         std::vector<int>
-         active_groups(
-            num_groups);
+         std::vector<int> active_groups(num_groups);
          int num_active_groups = 0;
 
          /*
@@ -277,12 +261,8 @@ int main(
           * Compute the correct sum for comparison.
           */
 
-         std::vector<int>
-         sum(
-            num_active_groups);
-         std::vector<int>
-         correct_sum(
-            num_active_groups);
+         std::vector<int> sum(num_active_groups);
+         std::vector<int> correct_sum(num_active_groups);
 
          for (ai = 0; ai < num_active_groups; ++ai) {
             sum[ai] = 1 + rank;
@@ -297,12 +277,8 @@ int main(
           * Initialize data for broadcast test.
           * Broadcast data is 1001 + the group index.
           */
-         std::vector<int>
-         bcdata(
-            num_active_groups);
-         std::vector<int>
-         correct_bcdata(
-            num_active_groups);
+         std::vector<int> bcdata(num_active_groups);
+         std::vector<int> correct_bcdata(num_active_groups);
          for (ai = 0; ai < num_active_groups; ++ai) {
             gi = active_groups[ai];
             bcdata[ai] = rank == owners[gi] ? 1001 + gi : -1;

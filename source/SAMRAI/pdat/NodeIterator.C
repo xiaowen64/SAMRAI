@@ -19,8 +19,8 @@ NodeIterator::NodeIterator(
    d_box(NodeGeometry::toNodeBox(box))
 {
    if (!d_box.empty() && !begin) {
-      d_index(d_box.getDim().getValue() - 1) =
-         d_box.upper(static_cast<tbox::Dimension::dir_t>(d_box.getDim().getValue() - 1)) + 1;
+      d_index(d_box.getDim().getValue()-1) =
+         d_box.upper( static_cast<tbox::Dimension::dir_t>(d_box.getDim().getValue()-1)) + 1;
    }
 }
 
@@ -36,7 +36,7 @@ NodeIterator::~NodeIterator()
 }
 
 NodeIterator&
-NodeIterator::operator++ ()
+NodeIterator::operator ++ ()
 {
    ++d_index(0);
    for (tbox::Dimension::dir_t i = 0; i < d_box.getDim().getValue() - 1; ++i) {
@@ -51,7 +51,7 @@ NodeIterator::operator++ ()
 }
 
 NodeIterator
-NodeIterator::operator++ (
+NodeIterator::operator ++ (
    int)
 {
    NodeIterator tmp = *this;

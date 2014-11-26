@@ -76,9 +76,7 @@ void PatchMultiblockTestStrategy::readVariableInput(
 
    for (int i = 0; i < nkeys; ++i) {
 
-      boost::shared_ptr<tbox::Database>
-      var_db(
-         db->getDatabase(var_keys[i]));
+      boost::shared_ptr<tbox::Database> var_db(db->getDatabase(var_keys[i]));
 
       if (var_db->keyExists("src_name")) {
          d_variable_src_name[i] = var_db->getString("src_name");
@@ -153,8 +151,7 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
 
    if (level_number < static_cast<int>(d_refine_level_boxes.size())) {
 
-      boost::shared_ptr<pdat::CellData<int> >
-      tags(
+      boost::shared_ptr<pdat::CellData<int> > tags(
          BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
             patch.getPatchData(tag_index)));
       TBOX_ASSERT(tags);

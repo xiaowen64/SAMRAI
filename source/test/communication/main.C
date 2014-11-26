@@ -213,8 +213,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<tbox::InputDatabase>
-      input_db(
+      boost::shared_ptr<tbox::InputDatabase> input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -230,8 +229,7 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         boost::shared_ptr<tbox::Database>
-         global_db(
+         boost::shared_ptr<tbox::Database> global_db(
             input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
@@ -246,13 +244,9 @@ int main(
        * analysis), and read in test information.
        */
 
-      boost::shared_ptr<tbox::Database>
-      main_db(
-         input_db->getDatabase("Main"));
+      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
-      const tbox::Dimension
-      dim(
-         static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
       const string base_name =
          main_db->getStringWithDefault("base_name", "component_test");
@@ -319,9 +313,7 @@ int main(
       PatchDataTestStrategy* patch_data_test = 0;
 
       if (test_to_run == "CellDataTest") {
-         patch_data_test = new
-            CellDataTest(
-               "CellDataTest",
+         patch_data_test = new CellDataTest("CellDataTest",
                dim,
                input_db,
                do_refine,
@@ -329,63 +321,49 @@ int main(
                refine_option);
 
       } else if (test_to_run == "EdgeDataTest") {
-         patch_data_test = new
-            EdgeDataTest(
-               "EdgeDataTest",
+         patch_data_test = new EdgeDataTest("EdgeDataTest",
                dim,
                input_db,
                do_refine,
                do_coarsen,
                refine_option);
       } else if (test_to_run == "FaceDataTest") {
-         patch_data_test = new
-            FaceDataTest(
-               "FaceDataTest",
+         patch_data_test = new FaceDataTest("FaceDataTest",
                dim,
                input_db,
                do_refine,
                do_coarsen,
                refine_option);
       } else if (test_to_run == "OuterfaceDataTest") {
-         patch_data_test = new
-            OuterfaceDataTest(
-               "OuterfaceDataTest",
+         patch_data_test = new OuterfaceDataTest("OuterfaceDataTest",
                dim,
                input_db,
                do_refine,
                do_coarsen,
                refine_option);
       } else if (test_to_run == "NodeDataTest") {
-         patch_data_test = new
-            NodeDataTest(
-               "NodeDataTest",
+         patch_data_test = new NodeDataTest("NodeDataTest",
                dim,
                input_db,
                do_refine,
                do_coarsen,
                refine_option);
       } else if (test_to_run == "OuternodeDataTest") {
-         patch_data_test = new
-            OuternodeDataTest(
-               "OuternodeDataTest",
+         patch_data_test = new OuternodeDataTest("OuternodeDataTest",
                dim,
                input_db,
                do_refine,
                do_coarsen,
                refine_option);
       } else if (test_to_run == "SideDataTest") {
-         patch_data_test = new
-            SideDataTest(
-               "SideDataTest",
+         patch_data_test = new SideDataTest("SideDataTest",
                dim,
                input_db,
                do_refine,
                do_coarsen,
                refine_option);
       } else if (test_to_run == "OutersideDataTest") {
-         patch_data_test = new
-            OutersideDataTest(
-               "OutersideDataTest",
+         patch_data_test = new OutersideDataTest("OutersideDataTest",
                dim,
                input_db,
                do_refine,
@@ -398,8 +376,7 @@ int main(
             "Error in Main input: illegal test = " << test_to_run << endl);
       }
 
-      boost::shared_ptr<CommTester>
-      comm_tester(
+      boost::shared_ptr<CommTester> comm_tester(
          new CommTester(
             "CommTester",
             dim,
@@ -409,8 +386,7 @@ int main(
             do_coarsen,
             refine_option));
 
-      boost::shared_ptr<mesh::StandardTagAndInitialize>
-      cell_tagger(
+      boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger(
          new mesh::StandardTagAndInitialize(
             "StandardTaggingAndInitializer",
             comm_tester.get(),
@@ -428,18 +404,14 @@ int main(
 
       tbox::TimerManager* time_man = tbox::TimerManager::getManager();
 
-      boost::shared_ptr<tbox::Timer>
-      refine_create_time(
+      boost::shared_ptr<tbox::Timer> refine_create_time(
          time_man->getTimer("test::main::createRefineSchedule"));
-      boost::shared_ptr<tbox::Timer>
-      refine_comm_time(
+      boost::shared_ptr<tbox::Timer> refine_comm_time(
          time_man->getTimer("test::main::performRefineOperations"));
 
-      boost::shared_ptr<tbox::Timer>
-      coarsen_create_time(
+      boost::shared_ptr<tbox::Timer> coarsen_create_time(
          time_man->getTimer("test::main::createCoarsenSchedule"));
-      boost::shared_ptr<tbox::Timer>
-      coarsen_comm_time(
+      boost::shared_ptr<tbox::Timer> coarsen_comm_time(
          time_man->getTimer("test::main::performCoarsenOperations"));
 
       const bool plot = main_db->getBoolWithDefault("plot", false);
@@ -448,8 +420,7 @@ int main(
 #ifdef HAVE_HDF5
          const std::string visit_filename = base_name + ".visit";
          /* Create the VisIt data writer. */
-         boost::shared_ptr<appu::VisItDataWriter>
-         visit_data_writer(
+         boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
             new appu::VisItDataWriter(
                dim,
                "VisIt Writer",
@@ -473,8 +444,7 @@ int main(
        * Create communication schedules and perform communication operations.
        */
 
-      boost::shared_ptr<hier::PatchHierarchy>
-      patch_hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
          comm_tester->getPatchHierarchy());
       patch_hierarchy->recursivePrint(tbox::plog,
          "H-> ",

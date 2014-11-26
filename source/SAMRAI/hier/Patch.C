@@ -200,12 +200,8 @@ Patch::getFromRestart(
          << "   Restart file version different than class version" << std::endl);
    }
 
-   Box
-   box(
-      restart_db->getDatabaseBox("d_box"));
-   const LocalId
-   patch_local_id(
-      restart_db->getInteger("d_patch_local_id"));
+   Box box(restart_db->getDatabaseBox("d_box"));
+   const LocalId patch_local_id(restart_db->getInteger("d_patch_local_id"));
    int patch_owner = restart_db->getInteger("d_patch_owner");
    int block_id = restart_db->getInteger("d_block_id");
    box.setBlockId(BlockId(block_id));
@@ -236,16 +232,14 @@ Patch::getFromRestart(
             << "   patch data" << patch_data_name
             << " not found in restart database" << std::endl);
       }
-      boost::shared_ptr<tbox::Database>
-      patch_data_database(
+      boost::shared_ptr<tbox::Database> patch_data_database(
          restart_db->getDatabase(patch_data_name));
 
       patch_data_index = d_descriptor->mapNameToIndex(patch_data_name);
 
       if ((patch_data_index >= 0) &&
           (pdrm->isPatchDataRegisteredForRestart(patch_data_index))) {
-         boost::shared_ptr<PatchDataFactory>
-         patch_data_factory(
+         boost::shared_ptr<PatchDataFactory> patch_data_factory(
             d_descriptor->getPatchDataFactory(patch_data_index));
          d_patch_data[patch_data_index] = patch_data_factory->allocate(*this);
          d_patch_data[patch_data_index]->getFromRestart(patch_data_database);
@@ -305,16 +299,13 @@ Patch::putToRestart(
    }
 
    std::string patch_data_name;
-   std::vector<std::string>
-   patch_data_namelist(
-      namelist_count);
+   std::vector<std::string> patch_data_namelist(namelist_count);
    namelist_count = 0;
    for (i = 0; i < static_cast<int>(d_patch_data.size()); ++i) {
       if (pdrm->isPatchDataRegisteredForRestart(i) && checkAllocated(i)) {
          patch_data_namelist[namelist_count++] =
             patch_data_name = d_descriptor->mapIndexToName(i);
-         boost::shared_ptr<tbox::Database>
-         patch_data_database(
+         boost::shared_ptr<tbox::Database> patch_data_database(
             restart_db->putDatabase(patch_data_name));
          (d_patch_data[i])->putToRestart(patch_data_database);
       }
@@ -342,9 +333,7 @@ Patch::recursivePrint(
 {
    NULL_USE(depth);
 
-   const tbox::Dimension&
-   dim(
-      d_box.getDim());
+   const tbox::Dimension& dim(d_box.getDim());
 
    os << border
       << d_box
@@ -360,8 +349,8 @@ Patch::recursivePrint(
 
 std::ostream&
 operator << (
-   std::ostream & s,
-   const Patch &patch)
+   std::ostream& s,
+   const Patch& patch)
 {
    const int ncomponents = static_cast<int>(patch.d_patch_data.size());
    s << "Patch::box = "

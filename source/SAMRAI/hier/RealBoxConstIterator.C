@@ -37,7 +37,7 @@ RealBoxConstIterator::~RealBoxConstIterator()
  */
 
 RealBoxConstIterator&
-RealBoxConstIterator::operator++ ()
+RealBoxConstIterator::operator ++ ()
 {
    do {
       ++d_ni;
@@ -52,7 +52,7 @@ RealBoxConstIterator::operator++ ()
  */
 
 RealBoxConstIterator
-RealBoxConstIterator::operator++ (
+RealBoxConstIterator::operator ++ (
    int)
 {
    RealBoxConstIterator saved = *this;

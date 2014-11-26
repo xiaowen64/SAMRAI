@@ -27,11 +27,11 @@ NodeIndex::NodeIndex(
    const Corner corner):
    hier::Index(rhs.getDim())
 {
-   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(* this, rhs);
 
    setOffsets();
    hier::IntVector::operator = (
-         rhs + s_offsets[getDim().getValue() - 1][(int)corner]);
+      rhs + s_offsets[getDim().getValue() - 1][(int)corner]);
 }
 
 NodeIndex::NodeIndex(
@@ -48,7 +48,7 @@ NodeIndex::NodeIndex(
 #endif
    setOffsets();
    hier::IntVector::operator = (
-         rhs + corner);
+      rhs + corner);
 }
 
 NodeIndex::NodeIndex(
@@ -67,19 +67,14 @@ NodeIndex::~NodeIndex()
 void
 NodeIndex::setOffsets()
 {
-   const tbox::Dimension&
-   dim(
-      getDim());
+   const tbox::Dimension& dim(getDim());
    int dim_index = dim.getValue() - 1;
    if (!s_offsets_are_set[dim_index]) {
       s_offsets[dim_index] = std::vector<hier::IntVector>(
             2 << SAMRAI::MAX_DIM_VAL,
             hier::IntVector(dim));
       for (int i = 0; i < (1 << dim.getValue()); ++i) {
-         hier::IntVector
-         offset(
-            dim,
-            0);
+         hier::IntVector offset(dim, 0);
 
          offset(0) = i % 2;
          for (int j = 1; j < dim.getValue(); ++j) {

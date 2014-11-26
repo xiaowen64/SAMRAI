@@ -49,9 +49,7 @@ SideData<TYPE>::SideData(
    TBOX_ASSERT(ghosts.min() >= 0);
    TBOX_ASSERT(directions.min() >= 0);
 
-   const tbox::Dimension&
-   dim(
-      box.getDim());
+   const tbox::Dimension& dim(box.getDim());
 
    for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
       if (d_directions(d)) {
@@ -131,8 +129,8 @@ SideData<TYPE>::getPointer(
 
 template<class TYPE>
 TYPE&
-SideData<TYPE>::operator() (
-   const SideIndex &i,
+SideData<TYPE>::operator () (
+   const SideIndex& i,
    int depth)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
@@ -148,8 +146,8 @@ SideData<TYPE>::operator() (
 
 template<class TYPE>
 const TYPE&
-SideData<TYPE>::operator() (
-   const SideIndex &i,
+SideData<TYPE>::operator () (
+   const SideIndex& i,
    int depth) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
@@ -340,9 +338,7 @@ SideData<TYPE>::copyWithRotation(
    TBOX_ASSERT(overlap.getTransformation().getRotation() !=
       hier::Transformation::NO_ROTATE);
 
-   const tbox::Dimension&
-   dim(
-      src.getDim());
+   const tbox::Dimension& dim(src.getDim());
    const hier::Transformation::RotationIdentifier rotate =
       overlap.getTransformation().getRotation();
    const hier::IntVector& shift = overlap.getSourceOffset();
@@ -351,60 +347,41 @@ SideData<TYPE>::copyWithRotation(
       hier::Transformation::getReverseRotationIdentifier(
          rotate, dim);
 
-   hier::IntVector
-   back_shift(
-      dim);
+   hier::IntVector back_shift(dim);
 
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
 
-   hier::Box
-   rotatebox(
-      src.getGhostBox());
+   hier::Box rotatebox(src.getGhostBox());
    overlap.getTransformation().transform(rotatebox);
 
-   hier::Transformation
-   back_trans(
-      back_rotate,
-      back_shift,
-      rotatebox.getBlockId(),
-      getBox().getBlockId());
+   hier::Transformation back_trans(back_rotate, back_shift,
+                                   rotatebox.getBlockId(),
+                                   getBox().getBlockId());
 
    for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
       if (d_directions(i)) {
          const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
-         hier::Box
-         side_rotatebox(
-            SideGeometry::toSideBox(rotatebox, i));
+         hier::Box side_rotatebox(SideGeometry::toSideBox(rotatebox, i));
 
          for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
               bi != overlap_boxes.end(); ++bi) {
             const hier::Box& overlap_box = *bi;
 
-            const hier::Box
-            copybox(
-               side_rotatebox* overlap_box);
+            const hier::Box copybox(side_rotatebox * overlap_box);
 
             if (!copybox.empty()) {
                const int depth = ((getDepth() < src.getDepth()) ?
                                   getDepth() : src.getDepth());
 
-               hier::Box::iterator
-               ciend(
-                  copybox.end());
+               hier::Box::iterator ciend(copybox.end());
                for (hier::Box::iterator ci(copybox.begin());
                     ci != ciend; ++ci) {
 
-                  SideIndex
-                  dst_index(
-                     * ci,
-                     0,
-                     0);
+                  SideIndex dst_index(*ci, 0, 0);
                   dst_index.setAxis(i);
-                  SideIndex
-                  src_index(
-                     dst_index);
+                  SideIndex src_index(dst_index);
                   SideGeometry::transform(src_index, back_trans);
 
                   for (int d = 0; d < depth; ++d) {
@@ -530,9 +507,7 @@ SideData<TYPE>::packWithRotation(
    TBOX_ASSERT(overlap.getTransformation().getRotation() !=
       hier::Transformation::NO_ROTATE);
 
-   const tbox::Dimension&
-   dim(
-      getDim());
+   const tbox::Dimension& dim(getDim());
    const hier::Transformation::RotationIdentifier rotate =
       overlap.getTransformation().getRotation();
    const hier::IntVector& shift = overlap.getSourceOffset();
@@ -541,24 +516,17 @@ SideData<TYPE>::packWithRotation(
       hier::Transformation::getReverseRotationIdentifier(
          rotate, dim);
 
-   hier::IntVector
-   back_shift(
-      dim);
+   hier::IntVector back_shift(dim);
 
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
 
-   hier::Box
-   rotatebox(
-      getGhostBox());
+   hier::Box rotatebox(getGhostBox());
    overlap.getTransformation().transform(rotatebox);
 
-   hier::Transformation
-   back_trans(
-      back_rotate,
-      back_shift,
-      rotatebox.getBlockId(),
-      getBox().getBlockId());
+   hier::Transformation back_trans(back_rotate, back_shift,
+                                   rotatebox.getBlockId(),
+                                   getBox().getBlockId());
 
    const unsigned int depth = getDepth();
 
@@ -567,38 +535,26 @@ SideData<TYPE>::packWithRotation(
          const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
          const size_t size = depth * overlap_boxes.getTotalSizeOfBoxes();
-         std::vector<TYPE>
-         buffer(
-            size);
+         std::vector<TYPE> buffer(size);
 
-         hier::Box
-         side_rotatebox(
-            SideGeometry::toSideBox(rotatebox, i));
+         hier::Box side_rotatebox(SideGeometry::toSideBox(rotatebox, i));
 
          int buf_count = 0;
          for (hier::BoxContainer::const_iterator bi = overlap_boxes.begin();
               bi != overlap_boxes.end(); ++bi) {
             const hier::Box& overlap_box = *bi;
 
-            const hier::Box
-            copybox(
-               side_rotatebox* overlap_box);
+            const hier::Box copybox(side_rotatebox * overlap_box);
 
             if (!copybox.empty()) {
 
                for (unsigned int d = 0; d < depth; ++d) {
 
-                  hier::Box::iterator
-                  ciend(
-                     copybox.end());
+                  hier::Box::iterator ciend(copybox.end());
                   for (hier::Box::iterator ci(copybox.begin());
                        ci != ciend; ++ci) {
 
-                     SideIndex
-                     src_index(
-                        * ci,
-                        0,
-                        0);
+                     SideIndex src_index(*ci, 0, 0);
                      src_index.setAxis(i);
                      SideGeometry::transform(src_index, back_trans);
 
@@ -806,9 +762,7 @@ SideData<TYPE>::printAxis(
 
    os.precision(prec);
    if (d_directions(side_normal)) {
-      SideIterator
-      iend(
-         SideGeometry::end(box, side_normal));
+      SideIterator iend(SideGeometry::end(box, side_normal));
       for (SideIterator i(SideGeometry::begin(box, side_normal));
            i != iend; ++i) {
          os << "array" << *i << " = "

@@ -180,9 +180,7 @@ int main(
        * Initialize SAMRAI, enable logging, and process command line.
        */
       tbox::SAMRAIManager::startup();
-      const tbox::SAMRAI_MPI&
-      mpi(
-         tbox::SAMRAI_MPI::getSAMRAIWorld());
+      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       {
          string input_filename;
@@ -217,8 +215,7 @@ int main(
           * Create input database and parse all data in input file.
           */
 
-         boost::shared_ptr<tbox::InputDatabase>
-         input_db(
+         boost::shared_ptr<tbox::InputDatabase> input_db(
             new tbox::InputDatabase("input_db"));
          tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -228,8 +225,7 @@ int main(
           */
 
          if (input_db->keyExists("GlobalInputs")) {
-            boost::shared_ptr<tbox::Database>
-            global_db(
+            boost::shared_ptr<tbox::Database> global_db(
                input_db->getDatabase("GlobalInputs"));
 #ifdef SGS
             if (global_db->keyExists("tag_clustering_method")) {
@@ -253,13 +249,10 @@ int main(
           * database.
           */
 
-         boost::shared_ptr<tbox::Database>
-         main_db(
+         boost::shared_ptr<tbox::Database> main_db(
             input_db->getDatabase("Main"));
 
-         const tbox::Dimension
-         dim(
-            static_cast<unsigned short>(main_db->getInteger("dim")));
+         const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
          const std::string base_name =
             main_db->getStringWithDefault("base_name", "unnamed");
@@ -340,44 +333,38 @@ int main(
           * for this application, see comments at top of file.
           */
 
-         boost::shared_ptr<geom::CartesianGridGeometry>
-         grid_geometry(
+         boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
             new geom::CartesianGridGeometry(
                dim,
                "CartesianGeometry",
                input_db->getDatabase("CartesianGeometry")));
 
-         boost::shared_ptr<hier::PatchHierarchy>
-         patch_hierarchy(
+         boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
             new hier::PatchHierarchy(
                "PatchHierarchy",
                grid_geometry,
                input_db->getDatabase("PatchHierarchy")));
 
-         LinAdv* linear_advection_model = new
-            LinAdv(
+         LinAdv* linear_advection_model = new LinAdv(
                "LinAdv",
                dim,
                input_db->getDatabase("LinAdv"),
                grid_geometry);
 
-         boost::shared_ptr<algs::HyperbolicLevelIntegrator>
-         hyp_level_integrator(
+         boost::shared_ptr<algs::HyperbolicLevelIntegrator> hyp_level_integrator(
             new algs::HyperbolicLevelIntegrator(
                "HyperbolicLevelIntegrator",
                input_db->getDatabase("HyperbolicLevelIntegrator"),
                linear_advection_model,
                use_refined_timestepping));
 
-         boost::shared_ptr<mesh::StandardTagAndInitialize>
-         error_detector(
+         boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
             new mesh::StandardTagAndInitialize(
                "StandardTagAndInitialize",
                hyp_level_integrator.get(),
                input_db->getDatabase("StandardTagAndInitialize")));
 
-         boost::shared_ptr<mesh::BergerRigoutsos>
-         box_generator(
+         boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
             new mesh::BergerRigoutsos(
                dim,
                input_db->getDatabaseWithDefault(
@@ -385,8 +372,7 @@ int main(
                   boost::shared_ptr<tbox::Database>())));
          box_generator->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-         boost::shared_ptr<mesh::TreeLoadBalancer>
-         load_balancer(
+         boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
             new mesh::TreeLoadBalancer(
                dim,
                "LoadBalancer",
@@ -395,8 +381,7 @@ int main(
          load_balancer->setSAMRAI_MPI(
             tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-         boost::shared_ptr<mesh::GriddingAlgorithm>
-         gridding_algorithm(
+         boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
             new mesh::GriddingAlgorithm(
                patch_hierarchy,
                "GriddingAlgorithm",
@@ -405,8 +390,7 @@ int main(
                box_generator,
                load_balancer));
 
-         boost::shared_ptr<algs::TimeRefinementIntegrator>
-         time_integrator(
+         boost::shared_ptr<algs::TimeRefinementIntegrator> time_integrator(
             new algs::TimeRefinementIntegrator(
                "TimeRefinementIntegrator",
                input_db->getDatabase("TimeRefinementIntegrator"),
@@ -416,8 +400,7 @@ int main(
 
          // VisItDataWriter is only present if HDF is available
 #ifdef HAVE_HDF5
-         boost::shared_ptr<appu::VisItDataWriter>
-         visit_data_writer(
+         boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
             new appu::VisItDataWriter(
                dim,
                "LinAdv VisIt Writer",
@@ -442,11 +425,7 @@ int main(
           * of the problem. If no automated testing is done, the object does
           * not get used.
           */
-         AutoTester
-         autotester(
-            "AutoTester",
-            dim,
-            input_db);
+         AutoTester autotester("AutoTester", dim, input_db);
 #endif
 
          /*

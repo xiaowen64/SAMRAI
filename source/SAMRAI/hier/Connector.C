@@ -182,7 +182,7 @@ Connector::~Connector()
  */
 Connector&
 Connector::operator = (
-      const Connector &rhs)
+   const Connector& rhs)
 {
    if (this != &rhs) {
       d_base_handle = rhs.d_base_handle;
@@ -210,7 +210,7 @@ Connector::operator = (
  */
 bool
 Connector::operator == (
-   const Connector &rhs) const
+   const Connector& rhs) const
 {
    if (this == &rhs) {
       return true;
@@ -251,7 +251,7 @@ Connector::operator == (
  */
 bool
 Connector::operator != (
-   const Connector &rhs) const
+   const Connector& rhs) const
 {
    if (this == &rhs) {
       return false;
@@ -379,8 +379,7 @@ Connector::shrinkWidth(
    const bool base_coarser = !getHeadCoarserFlag() &&
       getBase().getRefinementRatio() != getHead().getRefinementRatio();
 
-   const boost::shared_ptr<const BaseGridGeometry>&
-   grid_geom(
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geom(
       getBase().getGridGeometry());
 
    for (NeighborhoodIterator ei = begin(); ei != end(); ++ei) {
@@ -414,38 +413,40 @@ Connector::shrinkWidth(
    d_base_width = new_width;
 }
 
-/*
- ***********************************************************************
- * Set this Connector to the transpose of another Connector.  The
- * other's base owners tell its head owners about relationships, and
- * head owners (base owners of this Connector) populate the this
- * Connector.
- *
- * This method uses the termination message technique of the assumed
- * partition algorithm.
- *
- * Two communication patterns are executed simultaneously: edge info
- * and termination messages.  For edge info, other's base box owners
- * send data to this's base box owners, who respond with
- * acknowledgement messages.  Termination messages let the processes
- * know when to stop checking for edge messages.  They are propagated
- * up then down a rank tree.  Upward messages inform processes that
- * their descendents have received all needed acknowledgements.
- * Downward messages inform processes that the entire tree completed
- * its acknowledgements, indicating that there are no messages in
- * transit and the process can stop.
- ***********************************************************************
- */
-void
-Connector::computeTransposeOf(const Connector& other,
-                              const tbox::SAMRAI_MPI& mpi)
-{
-   *this = Connector(other.getHead(), other.getBase(),
-         convertHeadWidthToBase(other.getHead().getRefinementRatio(),
-            other.getBase().getRefinementRatio(),
-            other.getConnectorWidth()));
 
-   const tbox::SAMRAI_MPI& mpi1 = mpi.hasNullCommunicator() ? getBase().getMPI() : mpi;
+
+/*
+***********************************************************************
+* Set this Connector to the transpose of another Connector.  The
+* other's base owners tell its head owners about relationships, and
+* head owners (base owners of this Connector) populate the this
+* Connector.
+*
+* This method uses the termination message technique of the assumed
+* partition algorithm.
+*
+* Two communication patterns are executed simultaneously: edge info
+* and termination messages.  For edge info, other's base box owners
+* send data to this's base box owners, who respond with
+* acknowledgement messages.  Termination messages let the processes
+* know when to stop checking for edge messages.  They are propagated
+* up then down a rank tree.  Upward messages inform processes that
+* their descendents have received all needed acknowledgements.
+* Downward messages inform processes that the entire tree completed
+* its acknowledgements, indicating that there are no messages in
+* transit and the process can stop.
+***********************************************************************
+*/
+void
+Connector::computeTransposeOf( const Connector &other,
+                               const tbox::SAMRAI_MPI &mpi )
+{
+   *this = Connector( other.getHead(), other.getBase(),
+                      convertHeadWidthToBase( other.getHead().getRefinementRatio(),
+                                              other.getBase().getRefinementRatio(),
+                                              other.getConnectorWidth() ) );
+
+   const tbox::SAMRAI_MPI &mpi1 = mpi.hasNullCommunicator() ? getBase().getMPI() : mpi;
 
    // Order locally visible edges by owners who need to know about them.
    typedef std::map<hier::Box, hier::BoxContainer, hier::Box::id_less> FullNeighborhoodSet;
@@ -463,11 +464,11 @@ Connector::computeTransposeOf(const Connector& other,
    char upward_term_msg_type = 'u';
    char downward_term_msg_type = 'd';
 
-   if (mpi1.hasReceivableMessage(0, MPI_ANY_SOURCE, mpi_tag)) {
+   if ( mpi1.hasReceivableMessage(0, MPI_ANY_SOURCE, mpi_tag) ) {
       TBOX_ERROR("Connector::computeTransposeOf: not starting clean of receivable MPI messages.");
    }
 
-   std::map<int, boost::shared_ptr<tbox::MessageStream> > messages;
+   std::map<int,boost::shared_ptr<tbox::MessageStream> > messages;
    std::vector<tbox::SAMRAI_MPI::Request> requests;
    tbox::SAMRAI_MPI::Status tmp_status;
    int mpi_err;
@@ -475,61 +476,62 @@ Connector::computeTransposeOf(const Connector& other,
    // Send edge messages and remember to get receivers' acknowledgements.
    std::set<int> ack_needed;
    BoxContainer unshifted_head_nabrs;
-   for (FullNeighborhoodSet::iterator rr = reordered_relationships.begin();
-        rr != reordered_relationships.end(); ++rr) {
+   for ( FullNeighborhoodSet::iterator rr=reordered_relationships.begin();
+         rr!=reordered_relationships.end(); ++rr ) {
 
-      const Box& base_box = rr->first;
-      const BoxContainer& head_nabrs = rr->second;
+      const Box &base_box = rr->first;
+      const BoxContainer &head_nabrs = rr->second;
       TBOX_ASSERT(!base_box.isPeriodicImage());
 
       /*
        * If base_box is local, store the neighbors.
        * Else, send neighbors to base_box's owner to store.
        */
-      if (base_box.getOwnerRank() == mpi1.getRank()) {
-         insertNeighbors(head_nabrs, base_box.getBoxId());
-      } else {
-         boost::shared_ptr<tbox::MessageStream>& mstream = messages[base_box.getOwnerRank()];
-         if (!mstream) {
-            mstream.reset(new tbox::MessageStream);
+      if ( base_box.getOwnerRank() == mpi1.getRank() ) {
+         insertNeighbors( head_nabrs, base_box.getBoxId() );
+      }
+      else {
+         boost::shared_ptr<tbox::MessageStream> &mstream = messages[base_box.getOwnerRank()];
+         if ( !mstream ) {
+            mstream.reset( new tbox::MessageStream );
             *mstream << edge_msg_type;
          }
          *mstream << base_box.getLocalId() << static_cast<size_t>(head_nabrs.size());
-         for (BoxContainer::const_iterator bi = head_nabrs.begin(); bi != head_nabrs.end(); ++bi) {
+         for ( BoxContainer::const_iterator bi=head_nabrs.begin(); bi!=head_nabrs.end(); ++bi ) {
             *mstream << *bi;
          }
 
          FullNeighborhoodSet::iterator nextrr = rr;
          ++nextrr;
-         if (nextrr == reordered_relationships.end() ||
-             nextrr->first.getOwnerRank() != base_box.getOwnerRank()) {
+         if ( nextrr == reordered_relationships.end() ||
+              nextrr->first.getOwnerRank() != base_box.getOwnerRank() ) {
             requests.push_back(tbox::SAMRAI_MPI::Request());
-            mpi_err = mpi1.Isend((void *)mstream->getBufferStart(),
-                  static_cast<int>(mstream->getCurrentSize()), MPI_CHAR,
-                  base_box.getOwnerRank(), mpi_tag,
-                  &requests.back());
-            TBOX_ASSERT(mpi_err == MPI_SUCCESS);
+            mpi_err = mpi1.Isend( (void*)mstream->getBufferStart(),
+                                  static_cast<int>(mstream->getCurrentSize()), MPI_CHAR,
+                                  base_box.getOwnerRank(), mpi_tag,
+                                  &requests.back() );
+            TBOX_ASSERT( mpi_err == MPI_SUCCESS );
             ack_needed.insert(base_box.getOwnerRank());
          }
       }
    }
 
+
    // Data for propagating termination messages on the rank tree.
-   tbox::CenteredRankTree
-   rank_tree(
-      mpi1);
+   tbox::CenteredRankTree rank_tree(mpi1);
    size_t child_term_needed = rank_tree.getNumberOfChildren();
    bool send_upward_term_msg = mpi1.getSize() > 1;
 
-   if (ack_needed.empty() && child_term_needed == 0 && send_upward_term_msg) {
+   if ( ack_needed.empty() && child_term_needed == 0 && send_upward_term_msg ) {
       // Leaves of the tree initiate upward termination message if no edge communication.
       requests.push_back(tbox::SAMRAI_MPI::Request());
-      mpi_err = mpi1.Isend(&upward_term_msg_type, 1, MPI_CHAR,
-            rank_tree.getParentRank(), mpi_tag,
-            &requests.back());
-      TBOX_ASSERT(mpi_err == MPI_SUCCESS);
+      mpi_err = mpi1.Isend( &upward_term_msg_type, 1, MPI_CHAR,
+                            rank_tree.getParentRank(), mpi_tag,
+                            &requests.back() );
+      TBOX_ASSERT( mpi_err == MPI_SUCCESS );
       send_upward_term_msg = false;
    }
+
 
    /*
     * Receive edge messages and propgate termination messages: Both
@@ -539,95 +541,90 @@ Connector::computeTransposeOf(const Connector& other,
     * there are no edge messages are in transit, indicated by the
     * downward termination message.  Single process execution bypasses
     * communication by setting msg_type to downward termination.
-    */
+   */
    int msg_length = 0;
    std::vector<char> recv_buffer;
-   Box
-   tmp_box(
-      getBase().getDim());
+   Box tmp_box(getBase().getDim());
    BoxContainer tmp_boxes;
    char msg_type = mpi1.getSize() == 1 ? downward_term_msg_type : char(0);
 
    while (msg_type != downward_term_msg_type) {
 
-      mpi_err = mpi1.Probe(MPI_ANY_SOURCE, mpi_tag, &tmp_status);
-      TBOX_ASSERT(mpi_err == MPI_SUCCESS);
-      tbox::SAMRAI_MPI::Get_count(&tmp_status, MPI_CHAR, &msg_length);
+      mpi_err = mpi1.Probe( MPI_ANY_SOURCE, mpi_tag, &tmp_status );
+      TBOX_ASSERT( mpi_err == MPI_SUCCESS );
+      tbox::SAMRAI_MPI::Get_count( &tmp_status, MPI_CHAR, &msg_length );
       recv_buffer.resize(msg_length);
-      mpi_err = mpi1.Recv(&recv_buffer[0], msg_length, MPI_CHAR,
-            tmp_status.MPI_SOURCE, mpi_tag, &tmp_status);
-      TBOX_ASSERT(mpi_err == MPI_SUCCESS);
+      mpi_err = mpi1.Recv( &recv_buffer[0], msg_length, MPI_CHAR,
+                           tmp_status.MPI_SOURCE, mpi_tag, &tmp_status );
+      TBOX_ASSERT( mpi_err == MPI_SUCCESS );
 
-      tbox::MessageStream
-      mstream(
-         recv_buffer.size(),
-         tbox::MessageStream::Read,
-         & recv_buffer[0],
-         false);
+      tbox::MessageStream mstream( recv_buffer.size(), tbox::MessageStream::Read,
+                                   &recv_buffer[0], false );
 
       mstream >> msg_type;
-      if (msg_type == edge_msg_type) {
+      if ( msg_type == edge_msg_type ) {
 
          // Edge messages require acknowledgement and unpacking.
          requests.push_back(tbox::SAMRAI_MPI::Request());
-         mpi_err = mpi1.Isend(static_cast<void *>(&ack_msg_type), 1, MPI_CHAR,
-               tmp_status.MPI_SOURCE, mpi_tag, &requests.back());
-         TBOX_ASSERT(mpi_err == MPI_SUCCESS);
+         mpi_err = mpi1.Isend( static_cast<void*>(&ack_msg_type), 1, MPI_CHAR,
+                              tmp_status.MPI_SOURCE, mpi_tag, &requests.back() );
+         TBOX_ASSERT( mpi_err == MPI_SUCCESS );
          do {
-            LocalId lid;
-            size_t num_nabrs;
+            LocalId lid; size_t num_nabrs;
             mstream >> lid >> num_nabrs;
-            for (size_t i = 0; i < num_nabrs; ++i) {
+            for ( size_t i=0; i<num_nabrs; ++i ) {
                mstream >> tmp_box;
                tmp_boxes.insert(tmp_box);
             }
-            insertNeighbors(tmp_boxes, BoxId(lid, mpi1.getRank()));
+            insertNeighbors( tmp_boxes, BoxId( lid, mpi1.getRank() ) );
             tmp_boxes.clear();
-         } while (!mstream.endOfData());
+         } while ( !mstream.endOfData() );
 
-      } else if (msg_type == ack_msg_type) {
-         TBOX_ASSERT(ack_needed.find(tmp_status.MPI_SOURCE) != ack_needed.end());
-         ack_needed.erase(tmp_status.MPI_SOURCE);
-      } else if (msg_type == upward_term_msg_type) {
-         TBOX_ASSERT(child_term_needed > 0);
-         --child_term_needed;
-      } else if (msg_type == downward_term_msg_type) {
-         TBOX_ASSERT(child_term_needed == 0);
-         // Propagate termination message downward.
-         for (unsigned int ci = 0; ci < rank_tree.getNumberOfChildren(); ++ci) {
-            requests.push_back(tbox::SAMRAI_MPI::Request());
-            mpi_err = mpi1.Isend(&downward_term_msg_type, 1, MPI_CHAR,
-                  rank_tree.getChildRank(ci), mpi_tag,
-                  &requests.back());
-            TBOX_ASSERT(mpi_err == MPI_SUCCESS);
-         }
-      } else {
-         TBOX_ERROR("Connector::computeTransposeOf: Library error: msg_type "
-            << static_cast<int>(
-               msg_type)
-            <<
-            " unrecognized,\npossibly due to receiving unrelated message.");
       }
-      TBOX_ASSERT(mstream.endOfData());
+      else if ( msg_type == ack_msg_type ) {
+         TBOX_ASSERT( ack_needed.find(tmp_status.MPI_SOURCE) != ack_needed.end() );
+         ack_needed.erase( tmp_status.MPI_SOURCE );
+      }
+      else if ( msg_type == upward_term_msg_type ) {
+         TBOX_ASSERT( child_term_needed > 0 );
+         --child_term_needed;
+      }
+      else if ( msg_type == downward_term_msg_type ) {
+         TBOX_ASSERT( child_term_needed == 0 );
+         // Propagate termination message downward.
+         for ( unsigned int ci=0; ci<rank_tree.getNumberOfChildren(); ++ci ) {
+            requests.push_back(tbox::SAMRAI_MPI::Request());
+            mpi_err = mpi1.Isend( &downward_term_msg_type, 1, MPI_CHAR,
+                                  rank_tree.getChildRank(ci), mpi_tag,
+                                  &requests.back() );
+            TBOX_ASSERT( mpi_err == MPI_SUCCESS );
+         }
+      }
+      else {
+         TBOX_ERROR("Connector::computeTransposeOf: Library error: msg_type " << static_cast<int>(msg_type)
+                    << " unrecognized,\npossibly due to receiving unrelated message.");
+      }
+      TBOX_ASSERT( mstream.endOfData() );
 
-      if (ack_needed.empty() && child_term_needed == 0 && send_upward_term_msg) {
-         if (rank_tree.isRoot()) {
+      if ( ack_needed.empty() && child_term_needed == 0 && send_upward_term_msg ) {
+         if ( rank_tree.isRoot() ) {
             // Initiate downward termination message.
-            for (unsigned int ci = 0; ci < rank_tree.getNumberOfChildren(); ++ci) {
+            for ( unsigned int ci=0; ci<rank_tree.getNumberOfChildren(); ++ci ) {
                requests.push_back(tbox::SAMRAI_MPI::Request());
-               mpi_err = mpi1.Isend(&downward_term_msg_type, 1, MPI_CHAR,
-                     rank_tree.getChildRank(ci), mpi_tag,
-                     &requests.back());
-               TBOX_ASSERT(mpi_err == MPI_SUCCESS);
+               mpi_err = mpi1.Isend( &downward_term_msg_type, 1, MPI_CHAR,
+                                     rank_tree.getChildRank(ci), mpi_tag,
+                                     &requests.back() );
+               TBOX_ASSERT( mpi_err == MPI_SUCCESS );
             }
             msg_type = downward_term_msg_type;
-         } else {
+         }
+         else {
             // Propagate upward termination message.
             requests.push_back(tbox::SAMRAI_MPI::Request());
-            mpi_err = mpi1.Isend(&upward_term_msg_type, 1, MPI_CHAR,
-                  rank_tree.getParentRank(), mpi_tag,
-                  &requests.back());
-            TBOX_ASSERT(mpi_err == MPI_SUCCESS);
+            mpi_err = mpi1.Isend( &upward_term_msg_type, 1, MPI_CHAR,
+                                  rank_tree.getParentRank(), mpi_tag,
+                                  &requests.back() );
+            TBOX_ASSERT( mpi_err == MPI_SUCCESS );
          }
          send_upward_term_msg = false;
       }
@@ -635,18 +632,20 @@ Connector::computeTransposeOf(const Connector& other,
       recv_buffer.clear();
    }
 
-   if (!requests.empty()) {
+   if ( !requests.empty() ) {
       // Complete sends before allowing memory deallocation.
-      std::vector<tbox::SAMRAI_MPI::Status>
-      statuses(
-         requests.size());
-      tbox::SAMRAI_MPI::Waitall(static_cast<int>(requests.size()), &requests[0], &statuses[0]);
+      std::vector<tbox::SAMRAI_MPI::Status> statuses(requests.size());
+      tbox::SAMRAI_MPI::Waitall( static_cast<int>(requests.size()), &requests[0], &statuses[0] );
    }
 
-   if (mpi1.hasReceivableMessage(0, MPI_ANY_SOURCE, mpi_tag)) {
+   if ( mpi1.hasReceivableMessage(0, MPI_ANY_SOURCE, mpi_tag) ) {
       TBOX_ERROR("Connector::computeTransposeOf: not finishing clean of receivable MPI messages.");
    }
+
+   return;
 }
+
+
 
 /*
  ***********************************************************************
@@ -665,9 +664,7 @@ void
 Connector::reorderRelationshipsByHead(
    std::map<Box, BoxContainer, Box::id_less>& relationships_by_head) const
 {
-   const tbox::Dimension&
-   dim(
-      getBase().getDim());
+   const tbox::Dimension& dim(getBase().getDim());
 
    const hier::PeriodicShiftCatalog* shift_catalog =
       hier::PeriodicShiftCatalog::getCatalog(dim);
@@ -676,9 +673,7 @@ Connector::reorderRelationshipsByHead(
    const hier::IntVector& base_ratio = getBase().getRefinementRatio();
    const hier::IntVector& head_ratio = getHead().getRefinementRatio();
 
-   hier::Box
-   shifted_box(
-      dim), unshifted_nabr(dim);
+   hier::Box shifted_box(dim), unshifted_nabr(dim);
    relationships_by_head.clear();
    for (hier::Connector::ConstNeighborhoodIterator ci = begin(); ci != end(); ++ci) {
       const hier::Box& base_box = *base_box_level.getBoxStrict(*ci);
@@ -701,6 +696,9 @@ Connector::reorderRelationshipsByHead(
    }
 }
 
+
+
+
 /*
  ***********************************************************************
  ***********************************************************************
@@ -709,9 +707,7 @@ Connector::reorderRelationshipsByHead(
 void
 Connector::acquireRemoteNeighborhoods()
 {
-   tbox::SAMRAI_MPI
-   mpi(
-      getMPI());
+   tbox::SAMRAI_MPI mpi(getMPI());
    if (mpi.getSize() == 1) {
       // In single-proc mode, we already have all the relationships already.
       d_global_relationships = d_relationships;
@@ -734,9 +730,7 @@ Connector::acquireRemoteNeighborhoods()
     * Send and receive the data.
     */
 
-   std::vector<int>
-   recv_mesg_size(
-      getMPI().getSize());
+   std::vector<int> recv_mesg_size(getMPI().getSize());
    mpi.Allgather(&send_mesg_size,
       1,
       MPI_INT,
@@ -744,9 +738,7 @@ Connector::acquireRemoteNeighborhoods()
       1,
       MPI_INT);
 
-   std::vector<int>
-   proc_offset(
-      getMPI().getSize());
+   std::vector<int> proc_offset(getMPI().getSize());
    int totl_size = 0;
    for (int n = 0; n < getMPI().getSize(); ++n) {
       proc_offset[n] = totl_size;
@@ -850,7 +842,7 @@ Connector::finalizeContext()
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (!base.getMPI().isCongruentWith(head.getMPI())) {
       TBOX_ERROR("Connector::finalizeContext()\n"
-         "base and head MPI communicators must be congruent.");
+                 "base and head MPI communicators must be congruent.");
    }
 #endif
    if (base.getGridGeometry() != head.getGridGeometry()) {
@@ -1051,10 +1043,7 @@ Connector::writeNeighborhoodToStream(
    const BoxId& box_id) const
 {
    const BoxNeighborhoodCollection& relationships = getRelations(box_id);
-   BoxId
-   non_per_id(
-      box_id.getGlobalId(),
-      PeriodicId::zero());
+   BoxId non_per_id(box_id.getGlobalId(), PeriodicId::zero());
    ConstNeighborhoodIterator ei = relationships.find(non_per_id);
    if (ei == relationships.end()) {
       TBOX_ERROR("Connector::find: No neighbor set exists for\n"
@@ -1080,11 +1069,7 @@ Connector::createLocalTranspose() const
          getBase().getRefinementRatio(),
          getConnectorWidth());
 
-   Connector* transpose = new
-      Connector(
-         getHead(),
-         getBase(),
-         transpose_gcw);
+   Connector* transpose = new Connector(getHead(), getBase(), transpose_gcw);
    doLocalTransposeWork(transpose);
    return transpose;
 }
@@ -1098,9 +1083,7 @@ Connector *
 Connector::createTranspose() const
 {
    Connector* transpose =
-      new
-      Connector(
-         getHead(),
+      new Connector(getHead(),
          getBase(),
          convertHeadWidthToBase(getBase().getRefinementRatio(),
             getHead().getRefinementRatio(),
@@ -1150,15 +1133,13 @@ Connector::doLocalTransposeWork(
                << "Boxes must have only local neighbors in this method.");
          }
          if (my_base_box.isPeriodicImage()) {
-            Box
-            my_shifted_head_box(
+            Box my_shifted_head_box(
                my_head_box,
                shift_catalog->getOppositeShiftNumber(
                   my_base_box.getPeriodicId()),
                transpose->getHead().getRefinementRatio());
             if (transpose->getHead().hasBox(my_shifted_head_box)) {
-               BoxId
-               base_non_per_id(
+               BoxId base_non_per_id(
                   my_base_box.getGlobalId(),
                   PeriodicId::zero());
                transpose->d_relationships.insert(
@@ -1198,9 +1179,7 @@ Connector::doTransposeWork(Connector* transpose) const
    TBOX_ASSERT(transpose);
    TBOX_ASSERT(isTransposeOf(*transpose));
 
-   const tbox::Dimension
-   dim(
-      getBase().getDim());
+   const tbox::Dimension dim(getBase().getDim());
 
    const Connector* globalized =
       (d_parallel_state == BoxLevel::GLOBALIZED) ?
@@ -1282,9 +1261,7 @@ Connector::cacheGlobalReducedData() const
 
    t_cache_global_reduced_data->barrierAndStart();
 
-   tbox::SAMRAI_MPI
-   mpi(
-      getMPI());
+   tbox::SAMRAI_MPI mpi(getMPI());
 
    if (d_parallel_state == BoxLevel::GLOBALIZED) {
       d_global_number_of_relationships =
@@ -1340,13 +1317,9 @@ Connector::convertHeadWidthToBase(
          << "Combined refinement and coarsening not allowed.");
    }
 
-   tbox::Dimension
-   dim(
-      head_refinement_ratio.getDim());
+   tbox::Dimension dim(head_refinement_ratio.getDim());
 
-   IntVector
-   ratio(
-      dim);              // Ratio between head and base.
+   IntVector ratio(dim); // Ratio between head and base.
 
    if (head_refinement_ratio * base_refinement_ratio >
        IntVector::getZero(dim)) {
@@ -1445,12 +1418,14 @@ Connector::recursivePrint(
                         ni->getBlockId(),
                         i_nabr->getBlockId());
                   }
-                  if (ovlap.getBlockId() != ni->getBlockId()) {
+                  if ( ovlap.getBlockId() != ni->getBlockId() ) {
                      os << "\tov undefined (non-touching blocks.";
-                  } else {
+                  }
+                  else {
                      if (head_coarser) {
                         ovlap.refine(d_ratio);
-                     } else if (d_ratio != 1) {
+                     }
+                     else if (d_ratio != 1) {
                         ovlap.coarsen(d_ratio);
                      }
                      Box ghost_box = (*ni);
@@ -1492,13 +1467,11 @@ Connector::Outputter::Outputter(
 
 std::ostream&
 operator << (
-   std::ostream & os,
-   const Connector::Outputter & format)
+   std::ostream& os,
+   const Connector::Outputter& format)
 {
    if (format.d_output_statistics) {
-      ConnectorStatistics
-      cs(
-         format.d_conn);
+      ConnectorStatistics cs(format.d_conn);
       cs.printNeighborStats(os, format.d_border);
    } else {
       format.d_conn.recursivePrint(os, format.d_border, format.d_detail_depth);
@@ -1518,9 +1491,7 @@ Connector::makeGlobalizedCopy(
    // Prevent wasteful accidental use when this method is not needed.
    TBOX_ASSERT(other.getParallelState() != BoxLevel::GLOBALIZED);
 
-   Connector* copy = new
-      Connector(
-         other);
+   Connector* copy = new Connector(other);
    copy->setParallelState(BoxLevel::GLOBALIZED);
    return copy;
 }
@@ -1567,9 +1538,7 @@ Connector::checkTransposeCorrectness(
    const Connector& input_transpose,
    const bool ignore_periodic_relationships) const
 {
-   const tbox::Dimension
-   dim(
-      getBase().getDim());
+   const tbox::Dimension dim(getBase().getDim());
 
    const Connector* transpose =
       (input_transpose.d_parallel_state == BoxLevel::GLOBALIZED) ?
@@ -1584,12 +1553,8 @@ Connector::checkTransposeCorrectness(
     * Check for extraneous relationships.
     * For every relationship in this, there should be reverse relationship in transpose.
     */
-   Box
-   shifted_box(
-      dim);                // Shifted version of an unshifted Box.
-   Box
-   unshifted_box(
-      dim);                // Unhifted version of a shifted Box.
+   Box shifted_box(dim);   // Shifted version of an unshifted Box.
+   Box unshifted_box(dim); // Unhifted version of a shifted Box.
 
    size_t err_count = 0;
 
@@ -1613,10 +1578,8 @@ Connector::checkTransposeCorrectness(
          /*
           * Key for find in NeighborhoodSet must be non-periodic.
           */
-         BoxId
-         non_per_nabr_id(
-            nabr.getGlobalId(),
-            PeriodicId::zero());
+         BoxId non_per_nabr_id(nabr.getGlobalId(),
+                               PeriodicId::zero());
 
          ConstNeighborhoodIterator cn =
             tran_relationships.find(non_per_nabr_id);
@@ -1726,10 +1689,7 @@ Connector::checkTransposeCorrectness(
             /*
              * Non-periodic BoxId needed for NeighborhoodSet::find()
              */
-            BoxId
-            base_non_per_id(
-               base_box.getGlobalId(),
-               PeriodicId::zero());
+            BoxId base_non_per_id(base_box.getGlobalId(), PeriodicId::zero());
 
             if (!d_relationships.isBaseBox(base_non_per_id)) {
                tbox::perr << "\nConnector::checkTransposeCorrectness:\n"
@@ -1748,12 +1708,9 @@ Connector::checkTransposeCorrectness(
                continue;
             }
 
-            const Box
-            nabr_nabr(
-               dim,
-               box_id.getGlobalId(),
-               shift_catalog->getOppositeShiftNumber(
-                  base_box.getPeriodicId()));
+            const Box nabr_nabr(dim, box_id.getGlobalId(),
+                                shift_catalog->getOppositeShiftNumber(
+                                   base_box.getPeriodicId()));
 
             if (!d_relationships.hasNeighbor(base_non_per_id, nabr_nabr)) {
                tbox::perr << "\nConnector::checkTransposeCorrectness:\n"
@@ -1885,19 +1842,10 @@ Connector::computeNeighborhoodDifferences(
           * not implement all features necessary to use
           * set_difference.
           */
-         std::set<Box, Box::id_less>
-         anabrs(
-            left.begin(ai),
-            left.end(ai));
-         std::set<Box, Box::id_less>
-         bnabrs(
-            right.begin(bi),
-            right.end(bi));
+         std::set<Box, Box::id_less> anabrs(left.begin(ai), left.end(ai));
+         std::set<Box, Box::id_less> bnabrs(right.begin(bi), right.end(bi));
          std::set<Box, Box::id_less> diff;
-         std::insert_iterator<std::set<Box, Box::id_less> >
-         ii(
-            diff,
-            diff.begin());
+         std::insert_iterator<std::set<Box, Box::id_less> > ii(diff, diff.begin());
          set_difference(anabrs.begin(),
             anabrs.end(),
             bnabrs.begin(),
@@ -1970,11 +1918,8 @@ Connector::checkConsistencyWithHead() const
       for (ConstNeighborIterator na = begin(ei); na != end(ei); ++na) {
 
          const Box& nabr = *na;
-         const Box
-         unshifted_nabr(
-            nabr,
-            PeriodicId::zero(),
-            head_box_level.getRefinementRatio());
+         const Box unshifted_nabr(
+            nabr, PeriodicId::zero(), head_box_level.getRefinementRatio());
 
          BoxContainer::const_iterator na_in_head =
             head_boxes.find(unshifted_nabr);
@@ -2078,11 +2023,7 @@ Connector::findOverlapErrors(
    /*
     * Rebuild the overlap Connector for checking.
     */
-   Connector
-   rebuilt(
-      getBase(),
-      getHead(),
-      getConnectorWidth());
+   Connector rebuilt(getBase(), getHead(), getConnectorWidth());
    rebuilt.findOverlaps_rbbt(head, ignore_self_overlap);
 
    /*
@@ -2124,9 +2065,7 @@ Connector::assertOverlapCorrectness(
          assert_completeness,
          ignore_periodic_images);
 
-   const tbox::SAMRAI_MPI&
-   mpi(
-      getMPI());
+   const tbox::SAMRAI_MPI& mpi(getMPI());
    int max_error_count = local_error_count;
    int rank_of_max = mpi.getRank();
    if (mpi.getSize() > 1) {
@@ -2461,9 +2400,7 @@ Connector::findOverlaps_rbbt(
    bool ignore_self_overlap,
    bool sanity_check_method_postconditions)
 {
-   const tbox::Dimension
-   dim(
-      head.getDim());
+   const tbox::Dimension dim(head.getDim());
 
    t_find_overlaps_rbbt->start();
 
@@ -2490,9 +2427,7 @@ Connector::findOverlaps_rbbt(
     * The nomenclature "base" refers to the *this box_level
     * and "head" refer to the box_level in the argument.
     */
-   const BoxLevel&
-   base(
-      getBase());
+   const BoxLevel& base(getBase());
 
    /*
     * Determine relationship between base and head index spaces.

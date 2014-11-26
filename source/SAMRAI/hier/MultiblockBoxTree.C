@@ -108,10 +108,8 @@ MultiblockBoxTree::findOverlapBoxes(
     * Search in the index space of block_id for overlaps.
     */
 
-   std::map<BlockId, boost::shared_ptr<BoxTree> >::const_iterator
-   blocki(
-      d_single_block_trees.find(
-         block_id));
+   std::map<BlockId, boost::shared_ptr<BoxTree> >::const_iterator blocki(d_single_block_trees.find(
+                                                                            block_id));
 
    if (blocki != d_single_block_trees.end()) {
       blocki->second->findOverlapBoxes(overlap_boxes, box);
@@ -125,17 +123,13 @@ MultiblockBoxTree::findOverlapBoxes(
            d_grid_geometry->begin(block_id);
         ni != d_grid_geometry->end(block_id); ++ni) {
 
-      const BaseGridGeometry::Neighbor&
-      neighbor(
-         * ni);
+      const BaseGridGeometry::Neighbor& neighbor(*ni);
 
       if (!include_singularity_block_neighbors && neighbor.isSingularity()) {
          continue;
       }
 
-      const BlockId
-      neighbor_block_id(
-         neighbor.getBlockId());
+      const BlockId neighbor_block_id(neighbor.getBlockId());
 
       blocki = d_single_block_trees.find(neighbor_block_id);
 
@@ -143,9 +137,7 @@ MultiblockBoxTree::findOverlapBoxes(
          continue;
       }
 
-      Box
-      transformed_box(
-         box);
+      Box transformed_box(box);
 
       d_grid_geometry->transformBox(transformed_box,
          refinement_ratio,
@@ -179,10 +171,8 @@ MultiblockBoxTree::findOverlapBoxes(
     * Search in the index space of block_id for overlaps.
     */
 
-   std::map<BlockId, boost::shared_ptr<BoxTree> >::const_iterator
-   blocki(
-      d_single_block_trees.find(
-         block_id));
+   std::map<BlockId, boost::shared_ptr<BoxTree> >::const_iterator blocki(d_single_block_trees.find(
+                                                                            block_id));
 
    if (blocki != d_single_block_trees.end()) {
       blocki->second->findOverlapBoxes(overlap_boxes, box);
@@ -196,17 +186,13 @@ MultiblockBoxTree::findOverlapBoxes(
            d_grid_geometry->begin(block_id);
         ni != d_grid_geometry->end(block_id); ++ni) {
 
-      const BaseGridGeometry::Neighbor&
-      neighbor(
-         * ni);
+      const BaseGridGeometry::Neighbor& neighbor(*ni);
 
       if (!include_singularity_block_neighbors && neighbor.isSingularity()) {
          continue;
       }
 
-      const BlockId
-      neighbor_block_id(
-         neighbor.getBlockId());
+      const BlockId neighbor_block_id(neighbor.getBlockId());
 
       blocki = d_single_block_trees.find(neighbor_block_id);
 
@@ -214,9 +200,7 @@ MultiblockBoxTree::findOverlapBoxes(
          continue;
       }
 
-      Box
-      transformed_box(
-         box);
+      Box transformed_box(box);
 
       d_grid_geometry->transformBox(transformed_box,
          refinement_ratio,

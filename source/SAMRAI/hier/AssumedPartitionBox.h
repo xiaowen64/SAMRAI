@@ -16,6 +16,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/IntVector.h"
 
+
 namespace SAMRAI {
 namespace hier {
 
@@ -31,6 +32,7 @@ class AssumedPartitionBox
 {
 
 public:
+
    /*!
     * @brief Construct AssumedPartition from a box.
     *
@@ -52,13 +54,12 @@ public:
       int rank_end,
       int index_begin = 0,
       double avg_parts_per_rank = 1.0,
-      bool interleave = false);
+      bool interleave = false );
 
    /*!
     * @brief Nearly default constructor.
     */
-   AssumedPartitionBox(
-      const tbox::Dimension& dim);
+   AssumedPartitionBox( const tbox::Dimension &dim );
 
    /*!
     * @brief Partition the given box, discarding the current state.
@@ -79,56 +80,43 @@ public:
     * indices to a process.  This flag causes it to interleave
     * (round-robin) the box assignments.
     */
-   void
-   partition(
+   void partition(
       const Box& unpartitioned_box,
       int rank_begin,
       int rank_end,
       int index_begin = 0,
       double avg_parts_per_rank = 1.0,
-      bool interleave = false);
+      bool interleave = false );
 
    /*!
     * @brief Destructor.
     */
-   ~AssumedPartitionBox() {
-   }
+   ~AssumedPartitionBox() {}
 
    //! @brief Return the original unpartitioned box.
-   const Box& getUnpartitionedBox() const {
+   const Box &getUnpartitionedBox() const {
       return d_box;
    }
 
    //! @brief Number of box partitions.
    int getNumberOfParts() const {
-      return d_index_end - d_index_begin;
+      return d_index_end-d_index_begin;
    }
 
    //! @brief Return the owner for a box.
-   int
-   getOwner(
-      int box_index) const;
+   int getOwner(int box_index) const;
 
    //! @brief Return box for given index.
-   Box
-   getBox(
-      int box_index) const;
+   Box getBox(int box_index) const;
 
    //! @brief Return box for given partition's position in the partition grid.
-   Box
-   getBox(
-      const IntVector& position) const;
+   Box getBox(const IntVector &position) const;
 
    //! @brief Get all partition boxes.
-   void
-   getAllBoxes(
-      BoxContainer& all_boxes) const;
+   void getAllBoxes( BoxContainer &all_boxes ) const;
 
    //! @brief Get all partition boxes owned by a given rank.
-   void
-   getAllBoxes(
-      BoxContainer& all_boxes,
-      int rank) const;
+   void getAllBoxes( BoxContainer &all_boxes, int rank ) const;
 
    //! @brief Return index of first partition box.
    int begin() const {
@@ -151,9 +139,7 @@ public:
     * If rank is higher than ranks in partitioning, return one past
     * last index.
     */
-   int
-   beginOfRank(
-      int rank) const;
+   int beginOfRank(int rank) const;
 
    /*!
     * @brief Return one past index of last box in the contiguous index
@@ -166,9 +152,7 @@ public:
     * If rank is higher than ranks in partitioning, return one past
     * last index.
     */
-   int
-   endOfRank(
-      int rank) const;
+   int endOfRank(int rank) const;
 
    /*!
     * @brief Find box partitions overlapping the given box.
@@ -181,10 +165,9 @@ public:
     *
     * @return Whether any partitions are found.
     */
-   bool
-   findOverlaps(
-      BoxContainer& overlapping_boxes,
-      const Box& box) const;
+   bool findOverlaps(
+      BoxContainer &overlapping_boxes,
+      const Box &box ) const;
 
    /*!
     * @brief Check the assumed partition for errors and
@@ -193,8 +176,7 @@ public:
     * @return Number of errors found.  (Errors indicate
     * a bug in this class.)
     */
-   size_t
-   selfCheck() const;
+   size_t selfCheck() const;
 
    /*!
     * @brief Print info from this object
@@ -209,22 +191,20 @@ public:
       const std::string& border,
       int detail_depth = 2) const;
 
+
 private:
+
    //! @brief Compute the partition lay-out.
-   void
-   computeLayout(
-      double avg_parts_per_rank);
+   void computeLayout( double avg_parts_per_rank );
 
    //! @brief Compute rank assignment for the partition lay-out.
-   void
-   assignToRanks();
+   void assignToRanks();
 
    /*!
     * @brief Compute rank assignment for the partition lay-out, using
     * contiguous index assignments.
     */
-   void
-   assignToRanks_contiguous();
+   void assignToRanks_contiguous();
 
    //! @brief Box partitioned.
    Box d_box;

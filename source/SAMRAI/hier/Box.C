@@ -255,9 +255,7 @@ Box::Box(
    }
 #endif
 
-   const tbox::Dimension&
-   dim(
-      d_lo.getDim());
+   const tbox::Dimension& dim(d_lo.getDim());
 
    const PeriodicShiftCatalog* shift_catalog =
       PeriodicShiftCatalog::getCatalog(dim);
@@ -314,7 +312,7 @@ Box::~Box()
 
 Box&
 Box::operator = (
-      const Box &rhs)
+   const Box& rhs)
 {
    if (this != &rhs) {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
@@ -357,9 +355,7 @@ Box::initialize(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, other, refinement_ratio);
 
-   const tbox::Dimension&
-   dim(
-      d_lo.getDim());
+   const tbox::Dimension& dim(d_lo.getDim());
 
    const PeriodicShiftCatalog* shift_catalog =
       PeriodicShiftCatalog::getCatalog(dim);
@@ -426,12 +422,8 @@ Box::index(
 {
    TBOX_ASSERT(offset <= size());
 
-   IntVector
-   n(
-      getDim());
-   IntVector
-   index(
-      getDim());
+   IntVector n(getDim());
+   IntVector index(getDim());
 
    n = numberCells();
 
@@ -482,13 +474,11 @@ Box::contains(
 
 Box
 Box::operator * (
-   const Box &box) const
+   const Box& box) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   Box
-   both(
-      * this);
+   Box both(*this);
 
    if (d_block_id != box.d_block_id) {
       if (empty() || box.empty()) {
@@ -507,7 +497,7 @@ Box::operator * (
 
 Box&
 Box::operator *= (
-      const Box &box)
+   const Box& box)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
@@ -573,7 +563,7 @@ Box::intersects(
 
 Box
 Box::operator + (
-   const Box &box) const
+   const Box& box) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
@@ -583,16 +573,14 @@ Box::operator + (
       }
    }
 
-   Box
-   bbox(
-      * this);
+   Box bbox(*this);
    bbox += box;
    return bbox;
 }
 
 Box&
 Box::operator += (
-      const Box &box)
+   const Box& box)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
@@ -739,9 +727,7 @@ Box::putToIntBuffer(
    d_id.putToIntBuffer(buffer);
    buffer += BoxId::commBufferSize();
 
-   const dir_t
-   dim(
-      d_lo.getDim().getValue());
+   const dir_t dim(d_lo.getDim().getValue());
    for (dir_t d = 0; d < dim; ++d) {
       buffer[d] = d_lo(d);
       buffer[dim + d] = d_hi(d);
@@ -759,9 +745,7 @@ Box::getFromIntBuffer(
    d_id.getFromIntBuffer(buffer);
    buffer += BoxId::commBufferSize();
 
-   const dir_t
-   dim(
-      d_lo.getDim().getValue());
+   const dir_t dim(d_lo.getDim().getValue());
    for (dir_t d = 0; d < dim; ++d) {
       d_lo(d) = buffer[d];
       d_hi(d) = buffer[dim + d];
@@ -803,13 +787,11 @@ Box::getFromMessageStream(
 
 std::istream&
 operator >> (
-   std::istream & s,
-   Box & box)
+   std::istream& s,
+   Box& box)
 {
    while (s.get() != '[') ;
-   Index
-   tmp(
-      box.getDim());
+   Index tmp(box.getDim());
    s >> tmp;
    box.setLower(tmp);
    while (s.get() != ',') NULL_STATEMENT;
@@ -821,14 +803,14 @@ operator >> (
 
 std::ostream&
 operator << (
-   std::ostream & s,
-   const Box &box)
+   std::ostream& s,
+   const Box& box)
 {
    if (box.empty()) {
       s << "[(),()]";
    } else {
       s << box.getBoxId() << ' ' << box.getBlockId()
-      << '[' << box.lower() << ',' << box.upper() << ']';
+        << '[' << box.lower() << ',' << box.upper() << ']';
    }
    return s;
 }
@@ -976,19 +958,13 @@ Box::rotateAboutAxis(
    TBOX_ASSERT(axis < getDim().getValue());
    TBOX_ASSERT(getDim().getValue() == 3);
 
-   const tbox::Dimension&
-   dim(
-      getDim());
+   const tbox::Dimension& dim(getDim());
 
    const int a = (axis + 1) % dim.getValue();
    const int b = (axis + 2) % dim.getValue();
 
-   Index
-   tmp_lo(
-      dim);
-   Index
-   tmp_hi(
-      dim);
+   Index tmp_lo(dim);
+   Index tmp_hi(dim);
 
    for (int j = 0; j < num_rotations; ++j) {
       tmp_lo = d_lo;
@@ -1024,12 +1000,8 @@ Box::rotate(
          TBOX_ERROR("Box::rotate invalid 1D RotationIdentifier.");
       }
       if (rotation_number) {
-         Index
-         tmp_lo(
-            d_lo);
-         Index
-         tmp_hi(
-            d_hi);
+         Index tmp_lo(d_lo);
+         Index tmp_hi(d_hi);
          d_lo(0) = -tmp_hi(0) - 1;
          d_hi(0) = -tmp_lo(0) - 1;
       }
@@ -1039,12 +1011,8 @@ Box::rotate(
          TBOX_ERROR("Box::rotate invalid 2D RotationIdentifier.");
       }
       for (int j = 0; j < rotation_number; ++j) {
-         Index
-         tmp_lo(
-            d_lo);
-         Index
-         tmp_hi(
-            d_hi);
+         Index tmp_lo(d_lo);
+         Index tmp_hi(d_hi);
 
          d_lo(0) = tmp_lo(1);
          d_lo(1) = -tmp_hi(0) - 1;
@@ -1132,19 +1100,14 @@ void
 Box::initializeCallback()
 {
    for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
-      tbox::Dimension
-      dim(
-         static_cast<unsigned short>(d + 1));
-      s_emptys[d] = new
-         Box(
-            dim);
+      tbox::Dimension dim(static_cast<unsigned short>(d + 1));
+      s_emptys[d] = new Box(dim);
 
       /*
        * Note we can't use Index getMin, getMax here as that
        * would create a dependency between static initializers
        */
-      s_universes[d] = new
-         Box(
+      s_universes[d] = new Box(
             Index(dim, tbox::MathUtilities<int>::getMin()),
             Index(dim, tbox::MathUtilities<int>::getMax()),
             BlockId(0));
@@ -1191,8 +1154,8 @@ BoxIterator::BoxIterator(
    d_box(box)
 {
    if (!d_box.empty() && !begin) {
-      d_index(d_box.getDim().getValue() - 1) =
-         d_box.upper(static_cast<tbox::Dimension::dir_t>(d_box.getDim().getValue() - 1)) + 1;
+      d_index(d_box.getDim().getValue()-1) =
+         d_box.upper(static_cast<tbox::Dimension::dir_t>(d_box.getDim().getValue()-1)) + 1;
    }
 }
 

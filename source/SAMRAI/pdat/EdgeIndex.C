@@ -48,12 +48,8 @@ hier::Index
 EdgeIndex::toCell(
    const int edge) const
 {
-   const tbox::Dimension&
-   dim(
-      getDim());
-   hier::Index
-   index(
-      dim);
+   const tbox::Dimension& dim(getDim());
+   hier::Index index(dim);
 
    for (int i = 0; i < dim.getValue(); ++i) {
       index(i) = (*this)(i);

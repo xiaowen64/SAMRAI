@@ -28,30 +28,21 @@
  */
 extern "C" {
 // in cartcoarsen1d.f:
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgcelldoub1d,
-   CARTWGTAVGCELLDOUB1D) (
+void SAMRAI_F77_FUNC(cartwgtavgcelldoub1d, CARTWGTAVGCELLDOUB1D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 // in cartcoarsen2d.f:
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgcelldoub2d,
-   CARTWGTAVGCELLDOUB2D) (
+void SAMRAI_F77_FUNC(cartwgtavgcelldoub2d, CARTWGTAVGCELLDOUB2D) (
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 // in cartcoarsen3d.f:
-void
-SAMRAI_F77_FUNC(
-   cartwgtavgcelldoub3d,
-   CARTWGTAVGCELLDOUB3D) (
+void SAMRAI_F77_FUNC(cartwgtavgcelldoub3d, CARTWGTAVGCELLDOUB3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -93,12 +84,10 @@ void SkeletonCellDoubleWeightedAverage::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   boost::shared_ptr<pdat::CellData<double> >
-   fdata(
+   boost::shared_ptr<pdat::CellData<double> > fdata(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(src_component)));
-   boost::shared_ptr<pdat::CellData<double> >
-   cdata(
+   boost::shared_ptr<pdat::CellData<double> > cdata(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
    TBOX_ASSERT(fdata);

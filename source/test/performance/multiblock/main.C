@@ -167,9 +167,7 @@ int main(
    for (int run = 0; run < 1; ++run) {
 
       tbox::SAMRAIManager::startup();
-      const tbox::SAMRAI_MPI&
-      mpi(
-         tbox::SAMRAI_MPI::getSAMRAIWorld());
+      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       string input_filename;
       string restart_read_dirname;
@@ -203,8 +201,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<tbox::InputDatabase>
-      input_db(
+      boost::shared_ptr<tbox::InputDatabase> input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -228,8 +225,7 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         boost::shared_ptr<tbox::Database>
-         global_db(
+         boost::shared_ptr<tbox::Database> global_db(
             input_db->getDatabase("GlobalInputs"));
 //         if (global_db->keyExists("tag_clustering_method")) {
 //            string tag_clustering_method =
@@ -250,13 +246,10 @@ int main(
        * interval is non-zero, create a restart database.
        */
 
-      boost::shared_ptr<tbox::Database>
-      main_db(
+      boost::shared_ptr<tbox::Database> main_db(
          input_db->getDatabase("Main"));
 
-      const tbox::Dimension
-      dim(
-         static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
       base_name = main_db->getString("base_name");
 
@@ -358,15 +351,12 @@ int main(
          geom,
          mblk_patch_hierarchy);
 
-      MblkLinAdv* linear_advection_model = new
-         MblkLinAdv(
-            "MblkLinAdv",
+      MblkLinAdv* linear_advection_model = new MblkLinAdv("MblkLinAdv",
             dim,
             input_db,
             geom);
 
-      boost::shared_ptr<MblkHyperbolicLevelIntegrator>
-      mblk_hyp_level_integrator(
+      boost::shared_ptr<MblkHyperbolicLevelIntegrator> mblk_hyp_level_integrator(
          new MblkHyperbolicLevelIntegrator(
             "HyperbolicLevelIntegrator",
             dim,
@@ -375,20 +365,17 @@ int main(
             mblk_patch_hierarchy,
             use_refined_timestepping));
 
-      boost::shared_ptr<mesh::StandardTagAndInitialize>
-      error_detector(
+      boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
          new mesh::StandardTagAndInitialize(
             "StandardTagAndInitialize",
             mblk_hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
-      boost::shared_ptr<mesh::BergerRigoutsos>
-      box_generator(
+      boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
          new mesh::BergerRigoutsos(dim,
             input_db->getDatabase("BergerRigoutsos")));
 
-      boost::shared_ptr<mesh::TreeLoadBalancer>
-      load_balancer(
+      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(
             dim,
             "TreeLoadBalancer",
@@ -396,8 +383,7 @@ int main(
                boost::shared_ptr<tbox::Database>())));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      boost::shared_ptr<mesh::GriddingAlgorithm>
-      mblk_gridding_algorithm(
+      boost::shared_ptr<mesh::GriddingAlgorithm> mblk_gridding_algorithm(
          new mesh::GriddingAlgorithm(
             mblk_patch_hierarchy,
             "GriddingAlgorithm",
@@ -407,8 +393,7 @@ int main(
             load_balancer,
             load_balancer));
 
-      boost::shared_ptr<algs::TimeRefinementIntegrator>
-      time_integrator(
+      boost::shared_ptr<algs::TimeRefinementIntegrator> time_integrator(
          new algs::TimeRefinementIntegrator(
             "TimeRefinementIntegrator",
             input_db->getDatabase("TimeRefinementIntegrator"),
@@ -422,8 +407,7 @@ int main(
       // VisItDataWriter is only present if HDF is available
 #ifdef HAVE_HDF5
       bool is_multiblock = true;
-      boost::shared_ptr<appu::VisItDataWriter>
-      visit_data_writer(
+      boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
          new appu::VisItDataWriter(
             dim,
             "MblkLinAdv VisIt Writer",
@@ -588,8 +572,7 @@ void setupHierarchy(
 {
    TBOX_ASSERT(main_input_db);
 
-   boost::shared_ptr<tbox::Database>
-   mult_db(
+   boost::shared_ptr<tbox::Database> mult_db(
       main_input_db->getDatabase("PatchHierarchy"));
 
    char geom_name[32];

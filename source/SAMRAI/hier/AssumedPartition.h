@@ -15,6 +15,7 @@
 #include "SAMRAI/hier/AssumedPartitionBox.h"
 #include "SAMRAI/hier/BoxContainer.h"
 
+
 namespace SAMRAI {
 namespace hier {
 
@@ -32,6 +33,7 @@ class AssumedPartition
 {
 
 public:
+
    /*!
     * @brief Construct AssumedPartition of a set of boxes.
     *
@@ -53,7 +55,7 @@ public:
       int rank_end,
       int index_begin = 0,
       double avg_parts_per_rank = 1.0,
-      bool interleave = false);
+      bool interleave = false );
 
    /*!
     * @brief Construct an empty AssumedPartition.
@@ -63,8 +65,7 @@ public:
    /*!
     * @brief Destructor.
     */
-   ~AssumedPartition() {
-   }
+   ~AssumedPartition() {}
 
    /*!
     * @brief Partition a set of boxes, discarding the current state.
@@ -85,14 +86,13 @@ public:
     * indices to a process.  This flag causes it to interleave
     * (round-robin) the box assignments.
     */
-   void
-   partition(
+   void partition(
       const BoxContainer& unpartitioned_boxes,
       int rank_begin,
       int rank_end,
       int index_begin = 0,
       double avg_parts_per_rank = 1.0,
-      bool interleave = false);
+      bool interleave = false );
 
    //! @brief Number of box partitions.
    size_t getNumberOfParts() const {
@@ -100,25 +100,16 @@ public:
    }
 
    //! @brief Return the owner for a partition box.
-   int
-   getOwner(
-      int box_index) const;
+   int getOwner(int box_index) const;
 
    //! @brief Return partition box for given index.
-   Box
-   getBox(
-      int box_index) const;
+   Box getBox(int box_index) const;
 
    //! @brief Get all partition boxes.
-   void
-   getAllBoxes(
-      BoxContainer& all_boxes) const;
+   void getAllBoxes( BoxContainer &all_boxes ) const;
 
    //! @brief Get all partition boxes for a given rank.
-   void
-   getAllBoxes(
-      BoxContainer& all_boxes,
-      int rank) const;
+   void getAllBoxes( BoxContainer &all_boxes, int rank ) const;
 
    //! @brief Return index of first partition box.
    int begin() const {
@@ -131,14 +122,10 @@ public:
    }
 
    //! @brief Return index of first partition box assigned to given rank.
-   int
-   beginOfRank(
-      int rank) const;
+   int beginOfRank(int rank) const;
 
    //! @brief Return one past index of last partition box assigned to given rank.
-   int
-   endOfRank(
-      int rank) const;
+   int endOfRank(int rank) const;
 
    /*!
     * @brief Find box partitions overlapping the given box.
@@ -150,12 +137,11 @@ public:
     *
     * @return Whether any partitions are found.
     */
-   bool
-   findOverlaps(
-      BoxContainer& overlapping_boxes,
-      const Box& box,
-      const BaseGridGeometry& grid_geometry,
-      const IntVector& refinement_ratio) const;
+   bool findOverlaps(
+      BoxContainer &overlapping_boxes,
+      const Box &box,
+      const BaseGridGeometry &grid_geometry,
+      const IntVector &refinement_ratio ) const;
 
    /*!
     * @brief Find partitions overlapping the given box, when all boxes
@@ -168,10 +154,9 @@ public:
     *
     * @return Whether any partitions are found.
     */
-   bool
-   findOverlaps(
-      BoxContainer& overlapping_boxes,
-      const Box& box) const;
+   bool findOverlaps(
+      BoxContainer &overlapping_boxes,
+      const Box &box ) const;
 
    /*!
     * @brief Check the assumed partition for errors and
@@ -180,8 +165,7 @@ public:
     * @return Number of errors found.  (Errors indicate
     * a bug in this class.)
     */
-   size_t
-   selfCheck() const;
+   size_t selfCheck() const;
 
    /*!
     * @brief Print info from this object
@@ -196,7 +180,9 @@ public:
       const std::string& border,
       int detail_depth = 2) const;
 
+
 private:
+
    //! @brief Shorthand.
    typedef std::vector<AssumedPartitionBox> PartedBoxes;
 

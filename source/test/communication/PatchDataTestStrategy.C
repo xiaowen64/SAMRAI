@@ -80,9 +80,7 @@ void PatchDataTestStrategy::readVariableInput(
 
    for (int i = 0; i < nkeys; ++i) {
 
-      boost::shared_ptr<tbox::Database>
-      var_db(
-         db->getDatabase(var_keys[i]));
+      boost::shared_ptr<tbox::Database> var_db(db->getDatabase(var_keys[i]));
 
       if (var_db->keyExists("src_name")) {
          d_variable_src_name[i] = var_db->getString("src_name");

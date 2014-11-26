@@ -32,10 +32,7 @@ extern "C" {
 #endif
 
 // in lintimint1d.f:
-void
-SAMRAI_F77_FUNC(
-   lintimeintnodedoub1d,
-   LINTIMEINTNODEDOUB1D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintnodedoub1d, LINTIMEINTNODEDOUB1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -44,10 +41,7 @@ SAMRAI_F77_FUNC(
    const double *, const double *,
    double *);
 // in lintimint2d.f:
-void
-SAMRAI_F77_FUNC(
-   lintimeintnodedoub2d,
-   LINTIMEINTNODEDOUB2D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintnodedoub2d, LINTIMEINTNODEDOUB2D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -60,10 +54,7 @@ SAMRAI_F77_FUNC(
    const double *, const double *,
    double *);
 // in lintimint3d.f:
-void
-SAMRAI_F77_FUNC(
-   lintimeintnodedoub3d,
-   LINTIMEINTNODEDOUB3D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintnodedoub3d, LINTIMEINTNODEDOUB3D) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -96,9 +87,7 @@ NodeDoubleLinearTimeInterpolateOp::timeInterpolate(
    const hier::PatchData& src_data_old,
    const hier::PatchData& src_data_new) const
 {
-   const tbox::Dimension&
-   dim(
-      where.getDim());
+   const tbox::Dimension& dim(where.getDim());
 
    const NodeData<double>* old_dat =
       CPP_CAST<const NodeData<double> *>(&src_data_old);

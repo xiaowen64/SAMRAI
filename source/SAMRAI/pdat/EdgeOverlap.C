@@ -20,9 +20,7 @@ EdgeOverlap::EdgeOverlap(
    d_is_overlap_empty(true),
    d_transformation(transformation)
 {
-   const tbox::Dimension
-   dim(
-      transformation.getOffset().getDim());
+   const tbox::Dimension dim(transformation.getOffset().getDim());
    d_dst_boxes.resize(boxes.size());
 
    for (int d = 0; d < static_cast<int>(boxes.size()); ++d) {

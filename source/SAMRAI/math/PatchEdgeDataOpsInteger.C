@@ -63,12 +63,10 @@ PatchEdgeDataOpsInteger::swapData(
 {
    TBOX_ASSERT(patch);
 
-   boost::shared_ptr<pdat::EdgeData<int> >
-   d1(
+   boost::shared_ptr<pdat::EdgeData<int> > d1(
       BOOST_CAST<pdat::EdgeData<int>, hier::PatchData>(
          patch->getPatchData(data1_id)));
-   boost::shared_ptr<pdat::EdgeData<int> >
-   d2(
+   boost::shared_ptr<pdat::EdgeData<int> > d2(
       BOOST_CAST<pdat::EdgeData<int>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 

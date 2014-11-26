@@ -92,8 +92,8 @@ IntVector::~IntVector()
 
 std::istream&
 operator >> (
-   std::istream & s,
-   IntVector & rhs)
+   std::istream& s,
+   IntVector& rhs)
 {
    while (s.get() != '(') ;
 
@@ -109,8 +109,8 @@ operator >> (
 }
 
 std::ostream& operator << (
-   std::ostream & s,
-   const IntVector &rhs)
+   std::ostream& s,
+   const IntVector& rhs)
 {
    s << '(';
 
@@ -176,14 +176,8 @@ void
 IntVector::initializeCallback()
 {
    for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
-      s_zeros[d] = new
-         IntVector(
-            tbox::Dimension(static_cast<unsigned short>(d + 1)),
-            0);
-      s_ones[d] = new
-         IntVector(
-            tbox::Dimension(static_cast<unsigned short>(d + 1)),
-            1);
+      s_zeros[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 0);
+      s_ones[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 1);
    }
 }
 

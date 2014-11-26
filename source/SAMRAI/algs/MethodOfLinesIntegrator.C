@@ -173,9 +173,7 @@ MethodOfLinesIntegrator::getTimestep(
       }
    }
 
-   const tbox::SAMRAI_MPI&
-   mpi(
-      hierarchy->getMPI());
+   const tbox::SAMRAI_MPI& mpi(hierarchy->getMPI());
    if (mpi.getSize() > 1) {
       mpi.AllReduce(&dt, 1, MPI_MIN);
    }
@@ -220,9 +218,7 @@ MethodOfLinesIntegrator::advanceHierarchy(
    const int nlevels = hierarchy->getNumberOfLevels();
 
    for (int ln = 0; ln < nlevels; ++ln) {
-      boost::shared_ptr<hier::PatchLevel>
-      level(
-         hierarchy->getPatchLevel(ln));
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       TBOX_ASSERT(level);
 
@@ -259,8 +255,7 @@ MethodOfLinesIntegrator::advanceHierarchy(
           * Loop through patches in current level and "singleStep" on each
           * patch.
           */
-         boost::shared_ptr<hier::PatchLevel>
-         level(
+         boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
 
          TBOX_ASSERT(level);
@@ -298,9 +293,7 @@ MethodOfLinesIntegrator::advanceHierarchy(
     * dallocate U_scratch and rhs data
     */
    for (int ln = 0; ln < nlevels; ++ln) {
-      boost::shared_ptr<hier::PatchLevel>
-      level(
-         hierarchy->getPatchLevel(ln));
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       level->deallocatePatchData(d_scratch_data);
       level->deallocatePatchData(d_rhs_data);
    }
@@ -358,9 +351,7 @@ MethodOfLinesIntegrator::registerVariable(
    TBOX_ASSERT(transfer_geom);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*variable, ghosts);
 
-   tbox::Dimension
-   dim(
-      ghosts.getDim());
+   tbox::Dimension dim(ghosts.getDim());
 
    if (!d_bdry_fill_advance) {
       /*
@@ -386,10 +377,7 @@ MethodOfLinesIntegrator::registerVariable(
           */
          d_soln_variables.push_back(variable);
 
-         const hier::IntVector
-         no_ghosts(
-            dim,
-            0);
+         const hier::IntVector no_ghosts(dim, 0);
 
          const int current = variable_db->registerVariableAndContext(variable,
                d_current,
@@ -419,8 +407,7 @@ MethodOfLinesIntegrator::registerVariable(
           * fills the current data on the new level.
           */
 
-         boost::shared_ptr<hier::RefineOperator>
-         refine_operator(
+         boost::shared_ptr<hier::RefineOperator> refine_operator(
             transfer_geom->lookupRefineOperator(variable, refine_name));
 
          //  Fill ghosts for a variable using always the "scratch" context
@@ -448,8 +435,7 @@ MethodOfLinesIntegrator::registerVariable(
             scratch,    // temporary work space
             refine_operator);
 
-         boost::shared_ptr<hier::CoarsenOperator>
-         coarsen_operator(
+         boost::shared_ptr<hier::CoarsenOperator> coarsen_operator(
             transfer_geom->lookupCoarsenOperator(variable, coarsen_name));
 
          //  Coarsen solution between levels during RK process so that
@@ -528,8 +514,7 @@ MethodOfLinesIntegrator::initializeLevelData(
    }
 #endif
 
-   boost::shared_ptr<hier::PatchLevel>
-   level(
+   boost::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
 
    /*
@@ -591,9 +576,7 @@ MethodOfLinesIntegrator::resetHierarchyConfiguration(
 
    //  Build coarsen and refine communication schedules.
    for (int ln = coarsest_level; ln <= finest_hiera_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel>
-      level(
-         hierarchy->getPatchLevel(ln));
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       TBOX_ASSERT(level);
 
@@ -606,8 +589,7 @@ MethodOfLinesIntegrator::resetHierarchyConfiguration(
 
       // coarsen schedule only for levels > 0
       if (ln > 0) {
-         boost::shared_ptr<hier::PatchLevel>
-         coarser_level(
+         boost::shared_ptr<hier::PatchLevel> coarser_level(
             hierarchy->getPatchLevel(ln - 1));
          d_coarsen_schedule[ln] =
             d_coarsen_algorithm->createSchedule(
@@ -640,8 +622,7 @@ MethodOfLinesIntegrator::applyGradientDetector(
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(hierarchy->getPatchLevel(ln));
 
-   boost::shared_ptr<hier::PatchLevel>
-   level(
+   boost::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(ln));
 
    level->allocatePatchData(d_scratch_data, time);
@@ -774,16 +755,14 @@ void
 MethodOfLinesIntegrator::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database>
-   root_db(
+   boost::shared_ptr<tbox::Database> root_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file." << std::endl);
    }
-   boost::shared_ptr<tbox::Database>
-   restart_db(
+   boost::shared_ptr<tbox::Database> restart_db(
       root_db->getDatabase(d_object_name));
 
    int ver = restart_db->getInteger("ALGS_METHOD_OF_LINES_INTEGRATOR_VERSION");
@@ -832,12 +811,10 @@ MethodOfLinesIntegrator::copyCurrentToScratch(
          d_soln_variables.begin();
       while (soln_var != d_soln_variables.end()) {
 
-         boost::shared_ptr<hier::PatchData>
-         src_data(
+         boost::shared_ptr<hier::PatchData> src_data(
             patch->getPatchData(*soln_var, d_current));
 
-         boost::shared_ptr<hier::PatchData>
-         dst_data(
+         boost::shared_ptr<hier::PatchData> dst_data(
             patch->getPatchData(*soln_var, d_scratch));
 
          dst_data->copy(*src_data);
@@ -870,12 +847,10 @@ MethodOfLinesIntegrator::copyScratchToCurrent(
          d_soln_variables.begin();
       while (soln_var != d_soln_variables.end()) {
 
-         boost::shared_ptr<hier::PatchData>
-         src_data(
+         boost::shared_ptr<hier::PatchData> src_data(
             patch->getPatchData(*soln_var, d_scratch));
 
-         boost::shared_ptr<hier::PatchData>
-         dst_data(
+         boost::shared_ptr<hier::PatchData> dst_data(
             patch->getPatchData(*soln_var, d_current));
 
          dst_data->copy(*src_data);

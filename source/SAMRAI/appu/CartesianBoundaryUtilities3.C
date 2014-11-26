@@ -34,10 +34,7 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void
-SAMRAI_F77_FUNC(
-   stufcartbdryloc3d,
-   STUFCARTBDRYLOC3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(stufcartbdryloc3d, STUFCARTBDRYLOC3D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -46,10 +43,7 @@ SAMRAI_F77_FUNC(
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&);
 
-void
-SAMRAI_F77_FUNC(
-   stufcartbdrycond3d,
-   STUFCARTBDRYCOND3D) (const int&,
+void SAMRAI_F77_FUNC(stufcartbdrycond3d, STUFCARTBDRYCOND3D) (const int&,
    const int&, const int&, const int&,
    const int&,
    const int&, const int&, const int&,
@@ -58,10 +52,7 @@ SAMRAI_F77_FUNC(
    const int&,
    const int&, const int&, const int&);
 
-void
-SAMRAI_F77_FUNC(
-   getcartfacebdry3d,
-   GETCARTFACEBDRY3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -75,10 +66,7 @@ SAMRAI_F77_FUNC(
    double *,
    const int&);
 
-void
-SAMRAI_F77_FUNC(
-   getcartedgebdry3d,
-   GETCARTEDGEBDRY3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -92,10 +80,7 @@ SAMRAI_F77_FUNC(
    double *,
    const int&);
 
-void
-SAMRAI_F77_FUNC(
-   getcartnodebdry3d,
-   GETCARTNODEBDRY3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(getcartnodebdry3d, GETCARTNODEBDRY3D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -228,31 +213,20 @@ CartesianBoundaryUtilities3::fillFaceBoundaryData(
       stuff3dBdryFortConst();
    }
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry>
-   pgeom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
 
-   const hier::Box&
-   interior(
-      patch.getBox());
-   const hier::Index&
-   ifirst(
-      interior.lower());
-   const hier::Index&
-   ilast(
-      interior.upper());
+   const hier::Box& interior(patch.getBox());
+   const hier::Index& ifirst(interior.lower());
+   const hier::Index& ilast(interior.upper());
 
-   const hier::IntVector&
-   ghost_cells(
-      vardata->getGhostCellWidth());
+   const hier::IntVector& ghost_cells(vardata->getGhostCellWidth());
 
-   hier::IntVector
-   gcw_to_fill(
-      hier::IntVector::min(ghost_cells,
-         ghost_fill_width));
+   hier::IntVector gcw_to_fill(hier::IntVector::min(ghost_cells,
+                                  ghost_fill_width));
 
    const std::vector<hier::BoundaryBox>& face_bdry =
       pgeom->getCodimensionBoundaries(Bdry::FACE3D);
@@ -262,17 +236,11 @@ CartesianBoundaryUtilities3::fillFaceBoundaryData(
 
       int bface_loc = face_bdry[i].getLocationIndex();
 
-      hier::Box
-      fill_box(
-         pgeom->getBoundaryFillBox(face_bdry[i],
-            interior,
-            gcw_to_fill));
-      const hier::Index&
-      ibeg(
-         fill_box.lower());
-      const hier::Index&
-      iend(
-         fill_box.upper());
+      hier::Box fill_box(pgeom->getBoundaryFillBox(face_bdry[i],
+                            interior,
+                            gcw_to_fill));
+      const hier::Index& ibeg(fill_box.lower());
+      const hier::Index& iend(fill_box.upper());
 
       SAMRAI_F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (ifirst(0), ilast(0),
          ifirst(1), ilast(1),
@@ -330,31 +298,20 @@ CartesianBoundaryUtilities3::fillEdgeBoundaryData(
       stuff3dBdryFortConst();
    }
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry>
-   pgeom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
 
-   const hier::Box&
-   interior(
-      patch.getBox());
-   const hier::Index&
-   ifirst(
-      interior.lower());
-   const hier::Index&
-   ilast(
-      interior.upper());
+   const hier::Box& interior(patch.getBox());
+   const hier::Index& ifirst(interior.lower());
+   const hier::Index& ilast(interior.upper());
 
-   const hier::IntVector&
-   ghost_cells(
-      vardata->getGhostCellWidth());
+   const hier::IntVector& ghost_cells(vardata->getGhostCellWidth());
 
-   hier::IntVector
-   gcw_to_fill(
-      hier::IntVector::min(ghost_cells,
-         ghost_fill_width));
+   hier::IntVector gcw_to_fill(hier::IntVector::min(ghost_cells,
+                                  ghost_fill_width));
 
    const std::vector<hier::BoundaryBox>& edge_bdry =
       pgeom->getCodimensionBoundaries(Bdry::EDGE3D);
@@ -362,21 +319,13 @@ CartesianBoundaryUtilities3::fillEdgeBoundaryData(
 
       TBOX_ASSERT(edge_bdry[i].getBoundaryType() == Bdry::EDGE3D);
 
-      int
-      bedge_loc(
-         edge_bdry[i].getLocationIndex());
+      int bedge_loc(edge_bdry[i].getLocationIndex());
 
-      hier::Box
-      fill_box(
-         pgeom->getBoundaryFillBox(edge_bdry[i],
-            interior,
-            gcw_to_fill));
-      const hier::Index&
-      ibeg(
-         fill_box.lower());
-      const hier::Index&
-      iend(
-         fill_box.upper());
+      hier::Box fill_box(pgeom->getBoundaryFillBox(edge_bdry[i],
+                            interior,
+                            gcw_to_fill));
+      const hier::Index& ibeg(fill_box.lower());
+      const hier::Index& iend(fill_box.upper());
 
       SAMRAI_F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (ifirst(0), ilast(0),
          ifirst(1), ilast(1),
@@ -434,31 +383,20 @@ CartesianBoundaryUtilities3::fillNodeBoundaryData(
       stuff3dBdryFortConst();
    }
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry>
-   pgeom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
 
-   const hier::Box&
-   interior(
-      patch.getBox());
-   const hier::Index&
-   ifirst(
-      interior.lower());
-   const hier::Index&
-   ilast(
-      interior.upper());
+   const hier::Box& interior(patch.getBox());
+   const hier::Index& ifirst(interior.lower());
+   const hier::Index& ilast(interior.upper());
 
-   const hier::IntVector&
-   ghost_cells(
-      vardata->getGhostCellWidth());
+   const hier::IntVector& ghost_cells(vardata->getGhostCellWidth());
 
-   hier::IntVector
-   gcw_to_fill(
-      hier::IntVector::min(ghost_cells,
-         ghost_fill_width));
+   hier::IntVector gcw_to_fill(hier::IntVector::min(ghost_cells,
+                                  ghost_fill_width));
 
    const std::vector<hier::BoundaryBox>& node_bdry =
       pgeom->getCodimensionBoundaries(Bdry::NODE3D);
@@ -466,21 +404,13 @@ CartesianBoundaryUtilities3::fillNodeBoundaryData(
 
       TBOX_ASSERT(node_bdry[i].getBoundaryType() == Bdry::NODE3D);
 
-      int
-      bnode_loc(
-         node_bdry[i].getLocationIndex());
+      int bnode_loc(node_bdry[i].getLocationIndex());
 
-      hier::Box
-      fill_box(
-         pgeom->getBoundaryFillBox(node_bdry[i],
-            interior,
-            gcw_to_fill));
-      const hier::Index&
-      ibeg(
-         fill_box.lower());
-      const hier::Index&
-      iend(
-         fill_box.upper());
+      hier::Box fill_box(pgeom->getBoundaryFillBox(node_bdry[i],
+                            interior,
+                            gcw_to_fill));
+      const hier::Index& ibeg(fill_box.lower());
+      const hier::Index& iend(fill_box.upper());
 
       SAMRAI_F77_FUNC(getcartnodebdry3d, GETCARTNODEBDRY3D) (ifirst(0), ilast(0),
          ifirst(1), ilast(1),
@@ -714,14 +644,12 @@ CartesianBoundaryUtilities3::checkBdryData(
    int btype = bbox.getBoundaryType();
    int bloc = bbox.getLocationIndex();
 
-   boost::shared_ptr<geom::CartesianPatchGeometry>
-   pgeom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
 
-   boost::shared_ptr<pdat::CellData<double> >
-   vardata(
+   boost::shared_ptr<pdat::CellData<double> > vardata(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(data_id)));
    TBOX_ASSERT(vardata);
@@ -844,24 +772,15 @@ CartesianBoundaryUtilities3::checkBdryData(
 
    }
 
-   hier::Box
-   gbox_to_check(
+   hier::Box gbox_to_check(
       vardata->getGhostBox() * pgeom->getBoundaryFillBox(bbox,
          patch.getBox(),
          gcw_to_check));
 
-   hier::Box
-   cbox(
-      gbox_to_check);
-   hier::Box
-   dbox(
-      gbox_to_check);
-   hier::Index
-   ifirst(
-      vardata->getBox().lower());
-   hier::Index
-   ilast(
-      vardata->getBox().upper());
+   hier::Box cbox(gbox_to_check);
+   hier::Box dbox(gbox_to_check);
+   hier::Index ifirst(vardata->getBox().lower());
+   hier::Index ilast(vardata->getBox().upper());
 
    if (offsign == -1) {
       cbox.setLower(idir, ifirst(idir) - 1);
@@ -875,12 +794,8 @@ CartesianBoundaryUtilities3::checkBdryData(
       dbox.setUpper(idir, ilast(idir));
    }
 
-   pdat::CellIterator
-   id(
-      pdat::CellGeometry::begin(dbox));
-   pdat::CellIterator
-   icend(
-      pdat::CellGeometry::end(cbox));
+   pdat::CellIterator id(pdat::CellGeometry::begin(dbox));
+   pdat::CellIterator icend(pdat::CellGeometry::end(cbox));
    for (pdat::CellIterator ic(pdat::CellGeometry::begin(cbox));
         ic != icend; ++ic) {
       double checkval = valfact * (*vardata)(*id, depth) + constval;
@@ -967,8 +882,7 @@ CartesianBoundaryUtilities3::read3dBdryFaces(
          }
 
          if (need_data_read) {
-            boost::shared_ptr<tbox::Database>
-            bdry_loc_db(
+            boost::shared_ptr<tbox::Database> bdry_loc_db(
                input_db->getDatabase(bdry_loc_str));
             std::string bdry_cond_str =
                bdry_loc_db->getString("boundary_condition");
@@ -1101,8 +1015,7 @@ CartesianBoundaryUtilities3::read3dBdryEdges(
          }
 
          if (need_data_read) {
-            boost::shared_ptr<tbox::Database>
-            bdry_loc_db(
+            boost::shared_ptr<tbox::Database> bdry_loc_db(
                input_db->getDatabase(bdry_loc_str));
             std::string bdry_cond_str =
                bdry_loc_db->getString("boundary_condition");
@@ -1415,8 +1328,7 @@ CartesianBoundaryUtilities3::read3dBdryNodes(
             default: NULL_STATEMENT;
          }
 
-         boost::shared_ptr<tbox::Database>
-         bdry_loc_db(
+         boost::shared_ptr<tbox::Database> bdry_loc_db(
             input_db->getDatabase(bdry_loc_str));
          std::string bdry_cond_str =
             bdry_loc_db->getString("boundary_condition");

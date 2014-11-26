@@ -56,9 +56,7 @@ CoarseFineBoundary::CoarseFineBoundary(
    TBOX_ASSERT(max_ghost_width > IntVector(d_dim, -1));
 
    const PatchLevel& level = *hierarchy.getPatchLevel(level_num);
-   IntVector
-   connector_width(
-      max_ghost_width);
+   IntVector connector_width(max_ghost_width);
    connector_width.max(IntVector::getOne(d_dim));
    const Connector& level_to_level = level.findConnector(level,
          connector_width,
@@ -127,16 +125,12 @@ CoarseFineBoundary::computeFromLevel(
    const BoxLevel& box_level = *level.getBoxLevel();
    const IntVector& ratio = level.getRatioToLevelZero();
 
-   boost::shared_ptr<BaseGridGeometry>
-   grid_geometry(
-      level.getGridGeometry());
+   boost::shared_ptr<BaseGridGeometry> grid_geometry(level.getGridGeometry());
 
    /*
     * Get the domain's periodic shift.
     */
-   const IntVector
-   periodic_shift(
-      grid_geometry->getPeriodicShift(ratio));
+   const IntVector periodic_shift(grid_geometry->getPeriodicShift(ratio));
 
    bool is_periodic = false;
    for (int i = 0; i < d_dim.getValue(); ++i) {
@@ -167,9 +161,7 @@ CoarseFineBoundary::computeFromLevel(
     * the fake domain be everywhere there is NOT a coarse-fine boundary--or
     * everywhere there IS a physical boundary or a fine-boundary.
     */
-   std::vector<BoxContainer>
-   fake_domain(
-      1);
+   std::vector<BoxContainer> fake_domain(1);
    BoxContainer& fake_domain_list = fake_domain[0];
 
    // Every box should connect to the domain box_level.
@@ -178,9 +170,7 @@ CoarseFineBoundary::computeFromLevel(
       static_cast<int>(box_level.getLocalNumberOfBoxes()));
 
    // Add physical boundaries to the fake domain.
-   IntVector
-   physical_grow_width(
-      max_ghost_width);
+   IntVector physical_grow_width(max_ghost_width);
    physical_grow_width.max(IntVector::getOne(d_dim));
    for (Connector::ConstNeighborhoodIterator ei = level_to_domain.begin();
         ei != level_to_domain.end(); ++ei) {
@@ -191,13 +181,9 @@ CoarseFineBoundary::computeFromLevel(
          refined_domain_nabrs.insert(refined_domain_nabrs.end(), *ni);
       }
       refined_domain_nabrs.refine(ratio);
-      Box
-      grow_box(
-         box);
+      Box grow_box(box);
       grow_box.grow(physical_grow_width);
-      BoxContainer
-      physical_boundary_portion(
-         grow_box);
+      BoxContainer physical_boundary_portion(grow_box);
       physical_boundary_portion.removeIntersections(refined_domain_nabrs);
       fake_domain_list.spliceBack(physical_boundary_portion);
    }
@@ -239,10 +225,7 @@ CoarseFineBoundary::computeFromLevel(
     * of a coarse-fine boundary there.
     */
    bool do_all_patches = true;
-   const IntVector
-   use_periodic_shift(
-      d_dim,
-      0);
+   const IntVector use_periodic_shift(d_dim, 0);
    grid_geometry->computeBoundaryBoxesOnLevel(
       d_boundary_boxes,
       level,
@@ -271,23 +254,17 @@ CoarseFineBoundary::computeFromMultiblockLevel(
    /*
     * Get the number of blocks from the grid geometry.
     */
-   boost::shared_ptr<BaseGridGeometry>
-   grid_geometry(
-      level.getGridGeometry());
+   boost::shared_ptr<BaseGridGeometry> grid_geometry(level.getGridGeometry());
    int nblocks = grid_geometry->getNumberBlocks();
 
-   std::vector<BoxContainer>
-   fake_domain(
-      nblocks);
+   std::vector<BoxContainer> fake_domain(nblocks);
 
    // Every box should connect to the domain box_level.
    TBOX_ASSERT(level_to_domain.getLocalNumberOfNeighborSets() ==
       static_cast<int>(box_level.getLocalNumberOfBoxes()));
 
    // Add physical boundaries to the fake domain.
-   IntVector
-   physical_grow_width(
-      max_ghost_width);
+   IntVector physical_grow_width(max_ghost_width);
    physical_grow_width.max(IntVector::getOne(d_dim));
    for (Connector::ConstNeighborhoodIterator ei = level_to_domain.begin();
         ei != level_to_domain.end(); ++ei) {
@@ -299,9 +276,7 @@ CoarseFineBoundary::computeFromMultiblockLevel(
       for (Connector::ConstNeighborIterator ni = level_to_domain.begin(ei);
            ni != level_to_domain.end(ei); ++ni) {
          if (block_id != ni->getBlockId()) {
-            Box
-            transform_box(
-               * ni);
+            Box transform_box(*ni);
             grid_geometry->transformBox(transform_box,
                IntVector::getOne(d_dim),
                block_id,
@@ -312,9 +287,7 @@ CoarseFineBoundary::computeFromMultiblockLevel(
          }
       }
       refined_domain_nabrs.refine(ratio);
-      BoxContainer
-      physical_boundary_portion(
-         box);
+      BoxContainer physical_boundary_portion(box);
       physical_boundary_portion.grow(physical_grow_width);
       physical_boundary_portion.removeIntersections(refined_domain_nabrs);
       fake_domain_list.spliceBack(physical_boundary_portion);
@@ -330,9 +303,7 @@ CoarseFineBoundary::computeFromMultiblockLevel(
       for (Connector::ConstNeighborIterator ni = level_to_level.begin(ei);
            ni != level_to_level.end(ei); ++ni) {
          if (block_id != ni->getBlockId()) {
-            Box
-            transform_box(
-               * ni);
+            Box transform_box(*ni);
             grid_geometry->transformBox(transform_box,
                ratio,
                block_id,
@@ -375,10 +346,7 @@ CoarseFineBoundary::computeFromMultiblockLevel(
     * of a coarse-fine boundary there.
     */
    bool do_all_patches = true;
-   IntVector
-   use_periodic_shift(
-      d_dim,
-      0);
+   IntVector use_periodic_shift(d_dim, 0);
    grid_geometry->computeBoundaryBoxesOnLevel(
       d_boundary_boxes,
       level,
@@ -400,9 +368,7 @@ CoarseFineBoundary::getBoundaries(
       TBOX_ERROR("The boundary boxes have not been computed.");
    }
 
-   BoxId
-   box_id(
-      global_id);
+   BoxId box_id(global_id);
    std::map<BoxId, PatchBoundaries>::const_iterator
       mi = d_boundary_boxes.find(box_id);
    TBOX_ASSERT(mi != d_boundary_boxes.end());

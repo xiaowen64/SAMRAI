@@ -31,9 +31,7 @@ void
 BoundaryBoxUtils::computeOutwardShift()
 {
 
-   const tbox::Dimension&
-   dim(
-      d_bbox.getDim());
+   const tbox::Dimension& dim(d_bbox.getDim());
    /*
     * Note that d_outward contains information that is redundant
     * with respect to the boundary box.  The values of d_outward
@@ -108,9 +106,7 @@ BoundaryBoxUtils::stretchBoxToGhostWidth(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_bbox, box);
 
-   const tbox::Dimension&
-   dim(
-      d_bbox.getDim());
+   const tbox::Dimension& dim(d_bbox.getDim());
 
    TBOX_ASSERT(ghost_cell_width >= IntVector::getZero(dim));
 
@@ -138,9 +134,7 @@ BoundaryBoxUtils::extendBoxOutward(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_bbox, box);
 
-   const tbox::Dimension&
-   dim(
-      d_bbox.getDim());
+   const tbox::Dimension& dim(d_bbox.getDim());
 
    box = d_bbox.getBox();
    for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
@@ -188,9 +182,7 @@ BoundaryBoxUtils::trimBoundaryBox(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_bbox, limit_box);
 
-   const tbox::Dimension&
-   dim(
-      d_bbox.getDim());
+   const tbox::Dimension& dim(d_bbox.getDim());
 
    TBOX_ASSERT(d_bbox.getBoundaryType() < dim.getValue());
 
@@ -199,9 +191,7 @@ BoundaryBoxUtils::trimBoundaryBox(
    const Index& pup = limit_box.upper();
    const Index& blo = bbox.lower();
    const Index& bup = bbox.upper();
-   Index
-   newlo(
-      dim), newup(dim);
+   Index newlo(dim), newup(dim);
 
    if (d_bbox.getBoundaryType() == 1) {
       /*
@@ -243,16 +233,10 @@ BoundaryBoxUtils::trimBoundaryBox(
       }
    }
 
-   const Box
-   newbox(
-      newlo,
-      newup,
-      d_bbox.getBox().getBlockId());
-   const BoundaryBox
-   newbbox(
-      newbox,
-      d_bbox.getBoundaryType(),
-      d_bbox.getLocationIndex());
+   const Box newbox(newlo, newup, d_bbox.getBox().getBlockId());
+   const BoundaryBox newbbox(newbox,
+                             d_bbox.getBoundaryType(),
+                             d_bbox.getLocationIndex());
 
    return newbbox;
 }

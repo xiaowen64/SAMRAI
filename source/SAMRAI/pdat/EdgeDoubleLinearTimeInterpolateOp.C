@@ -32,10 +32,7 @@ extern "C" {
 #endif
 
 // in lintimint1d.f:
-void
-SAMRAI_F77_FUNC(
-   lintimeintedgedoub1d,
-   LINTIMEINTEDGEDOUB1D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintedgedoub1d, LINTIMEINTEDGEDOUB1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -44,10 +41,7 @@ SAMRAI_F77_FUNC(
    const double *, const double *,
    double *);
 // in lintimint2d.f:
-void
-SAMRAI_F77_FUNC(
-   lintimeintedgedoub2d0,
-   LINTIMEINTEDGEDOUB2D0) (const int&,
+void SAMRAI_F77_FUNC(lintimeintedgedoub2d0, LINTIMEINTEDGEDOUB2D0) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -59,10 +53,7 @@ SAMRAI_F77_FUNC(
    const double&,
    const double *, const double *,
    double *);
-void
-SAMRAI_F77_FUNC(
-   lintimeintedgedoub2d1,
-   LINTIMEINTEDGEDOUB2D1) (const int&,
+void SAMRAI_F77_FUNC(lintimeintedgedoub2d1, LINTIMEINTEDGEDOUB2D1) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -75,10 +66,7 @@ SAMRAI_F77_FUNC(
    const double *, const double *,
    double *);
 // in lintimint3d.f:
-void
-SAMRAI_F77_FUNC(
-   lintimeintedgedoub3d0,
-   LINTIMEINTEDGEDOUB3D0) (const int&,
+void SAMRAI_F77_FUNC(lintimeintedgedoub3d0, LINTIMEINTEDGEDOUB3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -90,10 +78,7 @@ SAMRAI_F77_FUNC(
    const double&,
    const double *, const double *,
    double *);
-void
-SAMRAI_F77_FUNC(
-   lintimeintedgedoub3d1,
-   LINTIMEINTEDGEDOUB3D1) (const int&,
+void SAMRAI_F77_FUNC(lintimeintedgedoub3d1, LINTIMEINTEDGEDOUB3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -105,10 +90,7 @@ SAMRAI_F77_FUNC(
    const double&,
    const double *, const double *,
    double *);
-void
-SAMRAI_F77_FUNC(
-   lintimeintedgedoub3d2,
-   LINTIMEINTEDGEDOUB3D2) (const int&,
+void SAMRAI_F77_FUNC(lintimeintedgedoub3d2, LINTIMEINTEDGEDOUB3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -141,9 +123,7 @@ EdgeDoubleLinearTimeInterpolateOp::timeInterpolate(
    const hier::PatchData& src_data_old,
    const hier::PatchData& src_data_new) const
 {
-   const tbox::Dimension&
-   dim(
-      where.getDim());
+   const tbox::Dimension& dim(where.getDim());
 
    const EdgeData<double>* old_dat =
       CPP_CAST<const EdgeData<double> *>(&src_data_old);

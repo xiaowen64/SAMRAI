@@ -124,8 +124,8 @@ OutersideData<TYPE>::getArrayData(
 
 template<class TYPE>
 TYPE&
-OutersideData<TYPE>::operator() (
-   const SideIndex &i,
+OutersideData<TYPE>::operator () (
+   const SideIndex& i,
    int side,
    int depth)
 {
@@ -140,8 +140,8 @@ OutersideData<TYPE>::operator() (
 
 template<class TYPE>
 const TYPE&
-OutersideData<TYPE>::operator() (
-   const SideIndex &i,
+OutersideData<TYPE>::operator () (
+   const SideIndex& i,
    int side,
    int depth) const
 {
@@ -610,9 +610,7 @@ OutersideData<TYPE>::printAxisSide(
    const hier::Box region =
       sidebox * d_data[side_normal][side]->getBox();
    os.precision(prec);
-   hier::Box::iterator
-   iend(
-      region.end());
+   hier::Box::iterator iend(region.end());
    for (hier::Box::iterator i(region.begin()); i != iend; ++i) {
       os << "array" << *i << " = "
          << (*(d_data[side_normal][side]))(*i, depth) << std::endl;

@@ -101,8 +101,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase>
-      input_db(
+      boost::shared_ptr<InputDatabase> input_db(
          new tbox::InputDatabase("input_db"));
       InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -110,13 +109,9 @@ int main(
        * Retrieve "Main" section of the input database.
        */
 
-      boost::shared_ptr<Database>
-      main_db(
-         input_db->getDatabase("Main"));
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
-      const tbox::Dimension
-      dim(
-         static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
       /*
        * Determine if we are doing node sum tests, edge sum tests,
@@ -172,8 +167,7 @@ int main(
        * support any grid geometry that may be represented as an orthogonal
        * grid.
        */
-      boost::shared_ptr<CartesianGridGeometry>
-      grid_geometry(
+      boost::shared_ptr<CartesianGridGeometry> grid_geometry(
          new CartesianGridGeometry(dim,
             "CartesianGeometry",
             input_db->getDatabase("CartesianGeometry")));
@@ -181,8 +175,7 @@ int main(
       /*
        * The patch hierarchy defines the adaptive grid system.
        */
-      boost::shared_ptr<PatchHierarchy>
-      patch_hierarchy(
+      boost::shared_ptr<PatchHierarchy> patch_hierarchy(
          new PatchHierarchy(
             "PatchHierarchy",
             grid_geometry,
@@ -206,14 +199,12 @@ int main(
       /*
        * This is our problem class.  See the class header for comments on it.
        */
-      HierSumTest* hier_sum_test = new
-         HierSumTest(
+      HierSumTest* hier_sum_test = new HierSumTest(
             "HierSumTest",
             dim,
             input_db->getDatabase("HierSumTest")
 #ifdef HAVE_HDF5
-            ,
-            visit_data_writer
+            , visit_data_writer
 #endif
             );
 
@@ -224,8 +215,7 @@ int main(
        * detector, and methods to reset data after the hierarchy has been
        * regridded.
        */
-      boost::shared_ptr<StandardTagAndInitialize>
-      tag_and_init_ops(
+      boost::shared_ptr<StandardTagAndInitialize> tag_and_init_ops(
          new StandardTagAndInitialize(
             "StandardTagAndInitialize",
             hier_sum_test,
@@ -241,20 +231,17 @@ int main(
        * this, we use the "tag_and_init_ops" above, which references our
        * "wave_eqn_model" problem class to define the user-specific operations.
        */
-      boost::shared_ptr<BergerRigoutsos>
-      box_generator(
+      boost::shared_ptr<BergerRigoutsos> box_generator(
          new BergerRigoutsos(dim,
             input_db->getDatabase("BergerRigoutsos")));
 
-      boost::shared_ptr<TreeLoadBalancer>
-      load_balancer(
+      boost::shared_ptr<TreeLoadBalancer> load_balancer(
          new TreeLoadBalancer(dim,
             "LoadBalancer",
             input_db->getDatabase("LoadBalancer")));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      boost::shared_ptr<GriddingAlgorithm>
-      gridding_algorithm(
+      boost::shared_ptr<GriddingAlgorithm> gridding_algorithm(
          new GriddingAlgorithm(
             patch_hierarchy,
             "GriddingAlgorithm",
@@ -296,9 +283,7 @@ int main(
 
       double loop_time = 0.;
       int loop_cycle = 0;
-      std::vector<int>
-      tag_buffer_array(
-         patch_hierarchy->getMaxNumberOfLevels());
+      std::vector<int> tag_buffer_array(patch_hierarchy->getMaxNumberOfLevels());
       for (int il = 0; il < patch_hierarchy->getMaxNumberOfLevels(); ++il) {
          tag_buffer_array[il] = 1;
       }
@@ -330,8 +315,7 @@ int main(
 
       for (int pln = 0; pln <= patch_hierarchy->getFinestLevelNumber();
            ++pln) {
-         boost::shared_ptr<PatchLevel>
-         level(
+         boost::shared_ptr<PatchLevel> level(
             patch_hierarchy->getPatchLevel(pln));
 
          tbox::plog << "\n PRINTING PATCHES ON LEVEL " << pln << endl;
@@ -381,8 +365,7 @@ int main(
          }
          if (do_edge_sum) {
             for (int ln = 0; ln < nlevels; ++ln) {
-               boost::shared_ptr<PatchLevel>
-               level(
+               boost::shared_ptr<PatchLevel> level(
                   patch_hierarchy->getPatchLevel(ln));
                fail_count += hier_sum_test->setInitialEdgeValues(level);
             }
@@ -422,8 +405,7 @@ int main(
 
       if (do_edge_sum) {
          for (int ln = 0; ln < nlevels; ++ln) {
-            boost::shared_ptr<PatchLevel>
-            level(
+            boost::shared_ptr<PatchLevel> level(
                patch_hierarchy->getPatchLevel(ln));
             fail_count += hier_sum_test->checkEdgeResult(level);
          }

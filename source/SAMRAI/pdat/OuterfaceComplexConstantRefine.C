@@ -29,10 +29,7 @@ extern "C" {
 #endif
 
 // in conrefine1d.f:
-void
-SAMRAI_F77_FUNC(
-   conrefoutfacecplx1d,
-   CONREFOUTFACECPLX1D) (const int&,
+void SAMRAI_F77_FUNC(conrefoutfacecplx1d, CONREFOUTFACECPLX1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -40,10 +37,7 @@ SAMRAI_F77_FUNC(
    const int *,
    const dcomplex *, dcomplex *);
 // in conrefine2d.f:
-void
-SAMRAI_F77_FUNC(
-   conrefoutfacecplx2d0,
-   CONREFOUTFACECPLX2D0) (const int&,
+void SAMRAI_F77_FUNC(conrefoutfacecplx2d0, CONREFOUTFACECPLX2D0) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -54,10 +48,7 @@ SAMRAI_F77_FUNC(
    const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
-void
-SAMRAI_F77_FUNC(
-   conrefoutfacecplx2d1,
-   CONREFOUTFACECPLX2D1) (const int&,
+void SAMRAI_F77_FUNC(conrefoutfacecplx2d1, CONREFOUTFACECPLX2D1) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -69,10 +60,7 @@ SAMRAI_F77_FUNC(
    const int *,
    const dcomplex *, dcomplex *);
 // in conrefine3d.f:
-void
-SAMRAI_F77_FUNC(
-   conrefoutfacecplx3d0,
-   CONREFOUTFACECPLX3D0) (const int&,
+void SAMRAI_F77_FUNC(conrefoutfacecplx3d0, CONREFOUTFACECPLX3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -83,10 +71,7 @@ SAMRAI_F77_FUNC(
    const int&, const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
-void
-SAMRAI_F77_FUNC(
-   conrefoutfacecplx3d1,
-   CONREFOUTFACECPLX3D1) (const int&,
+void SAMRAI_F77_FUNC(conrefoutfacecplx3d1, CONREFOUTFACECPLX3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -97,10 +82,7 @@ SAMRAI_F77_FUNC(
    const int&, const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
-void
-SAMRAI_F77_FUNC(
-   conrefoutfacecplx3d2,
-   CONREFOUTFACECPLX3D2) (const int&,
+void SAMRAI_F77_FUNC(conrefoutfacecplx3d2, CONREFOUTFACECPLX3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -147,16 +129,12 @@ OuterfaceComplexConstantRefine::refine(
    const hier::BoxOverlap& fine_overlap,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension&
-   dim(
-      fine.getDim());
+   const tbox::Dimension& dim(fine.getDim());
 
-   boost::shared_ptr<OuterfaceData<dcomplex> >
-   cdata(
+   boost::shared_ptr<OuterfaceData<dcomplex> > cdata(
       BOOST_CAST<OuterfaceData<dcomplex>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<OuterfaceData<dcomplex> >
-   fdata(
+   boost::shared_ptr<OuterfaceData<dcomplex> > fdata(
       BOOST_CAST<OuterfaceData<dcomplex>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
@@ -169,9 +147,7 @@ OuterfaceComplexConstantRefine::refine(
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
    TBOX_ASSERT_OBJDIM_EQUALITY3(fine, coarse, ratio);
 
-   const hier::Box
-   cgbox(
-      cdata->getGhostBox());
+   const hier::Box cgbox(cdata->getGhostBox());
 
    const hier::Index cilo = cgbox.lower();
    const hier::Index cihi = cgbox.upper();
@@ -187,9 +163,7 @@ OuterfaceComplexConstantRefine::refine(
          const hier::Box& face_box = *b;
          TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, face_box);
 
-         hier::Box
-         fine_box(
-            dim);
+         hier::Box fine_box(dim);
          for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
             fine_box.setLower(
                static_cast<tbox::Dimension::dir_t>((axis + i) % dim.getValue()),

@@ -39,9 +39,7 @@ boost::shared_ptr<tbox::Timer> BoxLevel::t_initialize_private;
 boost::shared_ptr<tbox::Timer> BoxLevel::t_acquire_remote_boxes;
 boost::shared_ptr<tbox::Timer> BoxLevel::t_cache_global_reduced_data;
 
-const LocalId
-BoxLevel::s_negative_one_local_id(
-   -1);
+const LocalId BoxLevel::s_negative_one_local_id(-1);
 
 tbox::StartupShutdownManager::Handler
 BoxLevel::s_initialize_finalize_handler(
@@ -165,7 +163,7 @@ BoxLevel::BoxLevel(
 }
 
 BoxLevel::BoxLevel(
-   const BoxContainer& boxes,
+   const BoxContainer &boxes,
    const IntVector& ratio,
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
@@ -220,7 +218,7 @@ BoxLevel::~BoxLevel()
  */
 BoxLevel&
 BoxLevel::operator = (
-      const BoxLevel &rhs)
+   const BoxLevel& rhs)
 {
    if (locked()) {
       TBOX_ERROR("BoxLevel::operator =: operating on locked BoxLevel."
@@ -374,7 +372,7 @@ BoxLevel::initializePrivate(
 
 bool
 BoxLevel::operator == (
-   const BoxLevel &r) const
+   const BoxLevel& r) const
 {
    if (this == &r) {
       return true;
@@ -397,7 +395,7 @@ BoxLevel::operator == (
 
 bool
 BoxLevel::operator != (
-   const BoxLevel &r) const
+   const BoxLevel& r) const
 {
    if (this == &r) {
       return false;
@@ -517,19 +515,12 @@ BoxLevel::swap(
 
       int tmpint;
       bool tmpbool;
-      IntVector
-      tmpvec(
-         level_a.getDim());
-      Box
-      tmpbox(
-         level_a.getDim());
+      IntVector tmpvec(level_a.getDim());
+      Box tmpbox(level_a.getDim());
       ParallelState tmpstate;
       const BoxLevel* tmpmbl;
-      tbox::SAMRAI_MPI
-      tmpmpi(
-         MPI_COMM_NULL);
-      boost::shared_ptr<const BaseGridGeometry>
-      tmpgridgeom(
+      tbox::SAMRAI_MPI tmpmpi(MPI_COMM_NULL);
+      boost::shared_ptr<const BaseGridGeometry> tmpgridgeom(
          level_a.getGridGeometry());
 
       tmpstate = level_a.d_parallel_state;
@@ -580,10 +571,7 @@ BoxLevel::swap(
 void
 BoxLevel::computeLocalRedundantData()
 {
-   const IntVector
-   max_vec(
-      d_ratio.getDim(),
-      tbox::MathUtilities<int>::getMax());
+   const IntVector max_vec(d_ratio.getDim(), tbox::MathUtilities<int>::getMax());
    const IntVector& zero_vec = IntVector::getZero(d_ratio.getDim());
    const int nblocks = d_grid_geometry->getNumberBlocks();
 
@@ -601,9 +589,7 @@ BoxLevel::computeLocalRedundantData()
         ni != d_boxes.realEnd(); ++ni) {
 
       int block_num = ni->getBlockId().getBlockValue();
-      const IntVector
-      boxdim(
-         ni->numberCells());
+      const IntVector boxdim(ni->numberCells());
       ++d_local_number_of_boxes;
       d_local_number_of_cells += boxdim.getProduct();
       d_local_bounding_box[block_num] += *ni;
@@ -692,9 +678,7 @@ BoxLevel::cacheGlobalReducedData() const
    } else {
 
       if (d_mpi.getSize() > 1) {
-         const tbox::Dimension&
-         dim(
-            getDim());
+         const tbox::Dimension& dim(getDim());
 
          std::vector<int> send_mesg;
          send_mesg.reserve(nblocks * 4 * dim.getValue() + 4);
@@ -711,9 +695,7 @@ BoxLevel::cacheGlobalReducedData() const
          send_mesg.push_back(static_cast<int>(getLocalNumberOfCells()));
          send_mesg.push_back(-static_cast<int>(getLocalNumberOfCells()));
 
-         std::vector<int>
-         recv_mesg(
-            send_mesg.size());
+         std::vector<int> recv_mesg(send_mesg.size());
          d_mpi.Allreduce(
             &send_mesg[0],
             &recv_mesg[0],
@@ -767,9 +749,7 @@ BoxLevel::getLocalNumberOfBoxes(
       return d_local_number_of_boxes;
    } else {
       int count = 0;
-      BoxContainerSingleOwnerIterator
-      mbi(
-         d_global_boxes.begin(rank));
+      BoxContainerSingleOwnerIterator mbi(d_global_boxes.begin(rank));
       for ( ; mbi != d_global_boxes.end(rank); ++mbi) {
          if (!(*mbi).isPeriodicImage()) {
             ++count;
@@ -798,9 +778,7 @@ BoxLevel::getLocalNumberOfCells(
       return d_local_number_of_cells;
    } else {
       size_t count = 0;
-      BoxContainerSingleOwnerIterator
-      mbi(
-         d_global_boxes.begin(rank));
+      BoxContainerSingleOwnerIterator mbi(d_global_boxes.begin(rank));
       for ( ; mbi != d_global_boxes.end(rank); ++mbi) {
          if (!(*mbi).isPeriodicImage()) {
             count += (*mbi).size();
@@ -924,9 +902,7 @@ BoxLevel::acquireRemoteBoxes(
     * Send and receive the data.
     */
 
-   std::vector<int>
-   recv_mesg_size(
-      d_mpi.getSize());
+   std::vector<int> recv_mesg_size(d_mpi.getSize());
    d_mpi.Allgather(&send_mesg_size,
       1,
       MPI_INT,
@@ -934,9 +910,7 @@ BoxLevel::acquireRemoteBoxes(
       1,
       MPI_INT);
 
-   std::vector<int>
-   proc_offset(
-      d_mpi.getSize());
+   std::vector<int> proc_offset(d_mpi.getSize());
    int totl_size = 0;
    for (n = 0; n < d_mpi.getSize(); ++n) {
       proc_offset[n] = totl_size;
@@ -974,9 +948,7 @@ void
 BoxLevel::acquireRemoteBoxes_pack(
    std::vector<int>& send_mesg) const
 {
-   const tbox::Dimension&
-   dim(
-      getDim());
+   const tbox::Dimension& dim(getDim());
    /*
     * Box acquisition occurs during globalization.  Thus, do not
     * rely on current value of d_parallel_state.
@@ -993,9 +965,7 @@ BoxLevel::acquireRemoteBoxes_pack(
     */
    const int box_com_buf_size = Box::commBufferSize(dim);
    const int send_mesg_size = 1 + box_com_buf_size
-      *static_cast<int
-                   >(
-         d_boxes.size());
+      * static_cast<int>(d_boxes.size());
    const int old_size = static_cast<int>(send_mesg.size());
    send_mesg.resize(old_size + send_mesg_size, BAD_INT);
 
@@ -1021,9 +991,7 @@ BoxLevel::acquireRemoteBoxes_unpack(
    const std::vector<int>& recv_mesg,
    std::vector<int>& proc_offset)
 {
-   const tbox::Dimension&
-   dim(
-      getDim());
+   const tbox::Dimension& dim(getDim());
    /*
     * Unpack Box info from recv_mesg into d_global_boxes,
     * starting at the offset location.
@@ -1040,9 +1008,7 @@ BoxLevel::acquireRemoteBoxes_unpack(
          proc_offset[d_mpi.getRank()] += (n_self_boxes) * box_com_buf_size;
 
          int i;
-         Box
-         box(
-            dim);
+         Box box(dim);
 
          for (i = 0; i < n_self_boxes; ++i) {
             box.getFromIntBuffer(ptr);
@@ -1073,9 +1039,7 @@ BoxLevel::addBox(
       TBOX_ERROR("BoxLevel::addBox(): operating on locked BoxLevel."
          << std::endl);
    }
-   const tbox::Dimension&
-   dim(
-      getDim());
+   const tbox::Dimension& dim(getDim());
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != DISTRIBUTED) {
       TBOX_ERROR("Individually adding Boxes is a local process\n"
@@ -1092,8 +1056,7 @@ BoxLevel::addBox(
    BoxContainer::iterator new_iterator = d_boxes.begin();
 
    if (d_boxes.empty()) {
-      Box
-      new_box(
+      Box new_box(
          box,
          LocalId::getZero(),
          d_mpi.getRank(),
@@ -1108,18 +1071,13 @@ BoxLevel::addBox(
          --ni;
       } while (ni->isPeriodicImage());
       LocalId new_index = ni->getLocalId() + 1;
-      Box
-      new_box(
-         box,
-         new_index,
-         d_mpi.getRank());
+      Box new_box(
+         box, new_index, d_mpi.getRank());
       new_box.setBlockId(block_id);
       new_iterator = d_boxes.insert(ni, new_box);
    }
 
-   const IntVector
-   box_size(
-      new_iterator->numberCells());
+   const IntVector box_size(new_iterator->numberCells());
    ++d_local_number_of_boxes;
    d_local_number_of_cells += box.size();
    d_local_bounding_box[block_id.getBlockValue()] += *new_iterator;
@@ -1154,11 +1112,7 @@ BoxLevel::addPeriodicBox(
 
    clearForBoxChanges(false);
 
-   Box
-   image_box(
-      ref_box,
-      shift_number,
-      d_ratio);
+   Box image_box(ref_box, shift_number, d_ratio);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    BoxContainer& boxes =
@@ -1169,12 +1123,10 @@ BoxLevel::addPeriodicBox(
     * - Require that the real version of the reference Box exists
     *   before adding the periodic image Box.
     */
-   Box
-   real_box(
-      getDim(),
-      ref_box.getGlobalId(),
-      PeriodicShiftCatalog::getCatalog(
-         getDim())->getZeroShiftNumber());
+   Box real_box(getDim(),
+                ref_box.getGlobalId(),
+                PeriodicShiftCatalog::getCatalog(
+                   getDim())->getZeroShiftNumber());
    if (boxes.find(real_box) == boxes.end()) {
       TBOX_ERROR(
          "BoxLevel::addPeriodicBox: cannot add periodic image Box "
@@ -1213,12 +1165,10 @@ BoxLevel::addBox(
     * - Require that the real Box exists before adding the periodic image Box.
     */
    if (box.isPeriodicImage()) {
-      Box
-      real_box(
-         getDim(),
-         box.getGlobalId(),
-         PeriodicShiftCatalog::getCatalog(
-            getDim())->getZeroShiftNumber());
+      Box real_box(getDim(),
+                   box.getGlobalId(),
+                   PeriodicShiftCatalog::getCatalog(
+                      getDim())->getZeroShiftNumber());
       BoxContainer& boxes = box.getOwnerRank() ==
          d_mpi.getRank() ? d_boxes : d_global_boxes;
       if (boxes.find(real_box) == boxes.end()) {
@@ -1242,9 +1192,7 @@ BoxLevel::addBox(
    // Update counters.
    if (!box.isPeriodicImage()) {
       if (box.getOwnerRank() == d_mpi.getRank()) {
-         const IntVector
-         box_size(
-            box.numberCells());
+         const IntVector box_size(box.numberCells());
          ++d_local_number_of_boxes;
          d_local_number_of_cells += box.size();
          d_local_bounding_box[box.getBlockId().getBlockValue()] += box;
@@ -1368,9 +1316,7 @@ BoxLevel::getGlobalizedVersion() const
    }
 
    if (d_globalized_version == 0) {
-      BoxLevel* globalized_version = new
-         BoxLevel(
-            * this);
+      BoxLevel* globalized_version = new BoxLevel(*this);
       globalized_version->setParallelState(GLOBALIZED);
       TBOX_ASSERT(globalized_version->getParallelState() == GLOBALIZED);
       d_globalized_version = globalized_version;
@@ -1389,9 +1335,7 @@ PersistentOverlapConnectors&
 BoxLevel::getPersistentOverlapConnectors() const
 {
    if (d_persistent_overlap_connectors == 0) {
-      d_persistent_overlap_connectors = new
-         PersistentOverlapConnectors(
-            * this);
+      d_persistent_overlap_connectors = new PersistentOverlapConnectors(*this);
    }
    return *d_persistent_overlap_connectors;
 }
@@ -1422,9 +1366,7 @@ BoxLevel::getLastLocalId() const
    if (boxes.empty()) {
       return s_negative_one_local_id;
    }
-   LocalId
-   last_local_id(
-      0);
+   LocalId last_local_id(0);
    for (BoxContainer::const_iterator ni = boxes.begin();
         ni != boxes.end(); ++ni) {
       if (last_local_id < ni->getLocalId()) {
@@ -1515,10 +1457,7 @@ BoxLevel::getBoxStrict(
    }
 #endif
 
-   Box
-   box(
-      getDim(),
-      box_id);
+   Box box(getDim(), box_id);
    if (box.getOwnerRank() == d_mpi.getRank()) {
       BoxContainer::const_iterator ni = d_boxes.find(box);
       if (ni == d_boxes.end()) {
@@ -1591,15 +1530,11 @@ BoxLevel::getFromRestart(
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom)
 {
    TBOX_ASSERT(restart_db.isInteger("dim"));
-   const tbox::Dimension
-   dim(
-      static_cast<unsigned short>(
-         restart_db.getInteger("dim")));
+   const tbox::Dimension dim(static_cast<unsigned short>(
+                                restart_db.getInteger("dim")));
    TBOX_ASSERT(getDim() == dim);
 
-   IntVector
-   ratio(
-      dim);
+   IntVector ratio(dim);
    restart_db.getIntegerArray("d_ratio", &ratio[0], dim.getValue());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1651,13 +1586,11 @@ BoxLevel::Outputter::Outputter(
 
 std::ostream&
 operator << (
-   std::ostream & s,
-   const BoxLevel::Outputter & format)
+   std::ostream& s,
+   const BoxLevel::Outputter& format)
 {
    if (format.d_output_statistics) {
-      BoxLevelStatistics
-      bls(
-         format.d_level);
+      BoxLevelStatistics bls(format.d_level);
       bls.printBoxStats(s, format.d_border);
    } else {
       format.d_level.recursivePrint(s, format.d_border, format.d_detail_depth);

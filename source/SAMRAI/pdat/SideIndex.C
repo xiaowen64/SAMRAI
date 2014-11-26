@@ -43,13 +43,9 @@ hier::Index
 SideIndex::toCell(
    const int side) const
 {
-   const tbox::Dimension&
-   dim(
-      getDim());
+   const tbox::Dimension& dim(getDim());
 
-   hier::Index
-   index(
-      dim);
+   hier::Index index(dim);
 
    for (int i = 0; i < dim.getValue(); ++i) {
       index(i) = (*this)(i);

@@ -80,8 +80,7 @@ const hier::IntVector& SideVariable<TYPE>::getDirectionVector() const
 template<class TYPE>
 int SideVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<SideDataFactory<TYPE> >
-   factory(
+   boost::shared_ptr<SideDataFactory<TYPE> > factory(
       BOOST_CAST<SideDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);

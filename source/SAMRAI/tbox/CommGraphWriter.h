@@ -78,10 +78,7 @@ public:
       return d_records.size();
    }
 
-   enum EdgeDirection {
-      FROM = 0,
-      TO = 1
-   };
+   enum EdgeDirection { FROM = 0, TO = 1 };
 
    /*!
     * @brief Set an edge in the current record.

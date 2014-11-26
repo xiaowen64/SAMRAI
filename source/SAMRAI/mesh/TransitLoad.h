@@ -186,7 +186,8 @@ public:
       hier::BoxLevel& balanced_box_level,
       const hier::BoxLevel& unbalanced_box_level,
       double flexible_load_tol = 0.0,
-      const tbox::SAMRAI_MPI& alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL)) = 0;
+      const tbox::SAMRAI_MPI &alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL) ) = 0;
+
 
    /*!
     * @brief Assign contents to local process and populate the
@@ -211,10 +212,11 @@ public:
    virtual void
    assignToLocalAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
-      hier::MappingConnector& balanced_to_unbalanced,
-      hier::MappingConnector& unbalanced_to_balanced,
+      hier::MappingConnector &balanced_to_unbalanced,
+      hier::MappingConnector &unbalanced_to_balanced,
       double flexible_load_tol = 0.0,
-      const tbox::SAMRAI_MPI& alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL)) = 0;
+      const tbox::SAMRAI_MPI &alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL) ) = 0;
+
 
    //@{
    //! @name Parameters in box breaking

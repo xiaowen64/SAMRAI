@@ -68,18 +68,16 @@ public:
     * Note: The SAMRAI_ prefix is needed since some poorly written
     *       packages do "#define CHAR" etc.
     */
-   enum DataType {
-      SAMRAI_INVALID,
-      SAMRAI_DATABASE,
-      SAMRAI_BOOL,
-      SAMRAI_CHAR,
-      SAMRAI_INT,
-      SAMRAI_COMPLEX,
-      SAMRAI_DOUBLE,
-      SAMRAI_FLOAT,
-      SAMRAI_STRING,
-      SAMRAI_BOX
-   };
+   enum DataType { SAMRAI_INVALID,
+                   SAMRAI_DATABASE,
+                   SAMRAI_BOOL,
+                   SAMRAI_CHAR,
+                   SAMRAI_INT,
+                   SAMRAI_COMPLEX,
+                   SAMRAI_DOUBLE,
+                   SAMRAI_FLOAT,
+                   SAMRAI_STRING,
+                   SAMRAI_BOX };
 
    /**
     * The constructor for the database base class does nothing interesting.

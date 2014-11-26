@@ -69,16 +69,13 @@ RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
 {
    int max_levels = patch_hierarchy.getMaxNumberOfLevels();
 
-   const tbox::Dimension&
-   dim(
-      patch_hierarchy.getDim());
+   const tbox::Dimension& dim(patch_hierarchy.getDim());
 
    /*
     * Add one to max data ghost width to create overlaps of data
     * living on patch boundaries.
     */
-   const hier::IntVector
-   max_data_gcw(
+   const hier::IntVector max_data_gcw(
       patch_hierarchy.getPatchDescriptor()->getMaxGhostWidth(dim) + 1);
 
    hier::IntVector max_stencil_width =
@@ -86,9 +83,7 @@ RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
    max_stencil_width.max(
       RefinePatchStrategy::getMaxRefineOpStencilWidth(dim));
 
-   const hier::IntVector&
-   zero_vector(
-      hier::IntVector::getZero(dim));
+   const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
 
    /*
     * Compute the Connector width needed to ensure all edges are found

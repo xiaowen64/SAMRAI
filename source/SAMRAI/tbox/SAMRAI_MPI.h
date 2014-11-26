@@ -286,9 +286,7 @@ public:
     * Performance of this method depends on underlying MPI implementation
     * and may not scale.
     */
-   int
-   compareCommunicator(
-      const SAMRAI_MPI& other) const;
+   int compareCommunicator( const SAMRAI_MPI &other) const;
 
    /*!
     * @brief Whether the communicator is MPI_COMM_NULL.
@@ -304,15 +302,13 @@ public:
     * Performance of this method depends on underlying MPI implementation
     * and may not scale.
     */
-   bool isCongruentWith(const SAMRAI_MPI& other) const
+   bool isCongruentWith( const SAMRAI_MPI &other ) const
    {
 #ifdef HAVE_MPI
       int compare_result = compareCommunicator(other);
       return compare_result == MPI_CONGRUENT || compare_result == MPI_IDENT;
-
 #else
       return d_comm != MPI_COMM_NULL && d_comm == other.d_comm;
-
 #endif
    }
 
@@ -629,13 +625,9 @@ public:
       int recvtag,
       Status* status) const;
 
-   int
-   Scan(
-      void* sendbuf,
-      void* recvbuf,
-      int count,
-      Datatype datatype,
-      Op op) const;
+   int Scan(
+      void *sendbuf, void *recvbuf, int count,
+      Datatype datatype, Op op ) const;
 
    //@}
 
@@ -760,11 +752,10 @@ public:
     * @return Whether any messages matching the source and tag are
     * waiting to be received.
     */
-   bool
-   hasReceivableMessage(
-      Status* status = 0,
+   bool hasReceivableMessage(
+      Status *status = 0,
       int source = MPI_ANY_SOURCE,
-      int tag = MPI_ANY_TAG) const;
+      int tag = MPI_ANY_TAG ) const;
 
    // @}
 
@@ -911,17 +902,14 @@ private:
 
    //@{
    //@name Structs for passing arguments to MPI
-   struct DoubleIntStruct {
-      double d;
-      int i;
+   struct DoubleIntStruct { double d;
+                            int i;
    };
-   struct FloatIntStruct {
-      float f;
-      int i;
+   struct FloatIntStruct { float f;
+                           int i;
    };
-   struct IntIntStruct {
-      int j;
-      int i;
+   struct IntIntStruct { int j;
+                         int i;
    };
    //@}
 

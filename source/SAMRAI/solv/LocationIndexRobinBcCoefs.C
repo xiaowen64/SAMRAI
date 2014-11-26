@@ -170,7 +170,7 @@ LocationIndexRobinBcCoefs::numberOfExtensionsFillable() const
 
 LocationIndexRobinBcCoefs&
 LocationIndexRobinBcCoefs::operator = (
-      const LocationIndexRobinBcCoefs &r)
+   const LocationIndexRobinBcCoefs& r)
 {
    d_object_name = r.d_object_name;
    for (int i = 0; i < 2 * d_dim.getValue(); ++i) {

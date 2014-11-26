@@ -78,9 +78,7 @@ int main(
    }
    tbox::SAMRAIManager::initialize();
    tbox::SAMRAIManager::startup();
-   const tbox::SAMRAI_MPI&
-   mpi(
-      tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    /*
     * Create block to force pointer deallocation.  If this is not done
@@ -99,8 +97,7 @@ int main(
        * Create input database and parse all data in input file into it.
        */
 
-      boost::shared_ptr<tbox::InputDatabase>
-      input_db(
+      boost::shared_ptr<tbox::InputDatabase> input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -110,8 +107,7 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         boost::shared_ptr<tbox::Database>
-         global_db(
+         boost::shared_ptr<tbox::Database> global_db(
             input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
@@ -125,15 +121,12 @@ int main(
        * This database contains information relevant to main.
        */
 
-      boost::shared_ptr<tbox::Database>
-      main_db(
+      boost::shared_ptr<tbox::Database> main_db(
          input_db->getDatabase("Main"));
       tbox::plog << "Main database:" << endl;
       main_db->printClassData(tbox::plog);
 
-      const tbox::Dimension
-      dim(
-         static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
       if (input_db->isDatabase("TimerManager")) {
          tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
@@ -198,16 +191,14 @@ int main(
        * Create a grid geometry required for the
        * hier::PatchHierarchy object.
        */
-      boost::shared_ptr<geom::CartesianGridGeometry>
-      grid_geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             dim,
             "CartesianGridGeometry",
             input_db->getDatabase("CartesianGridGeometry")));
       tbox::plog << "Grid Geometry:" << endl;
       grid_geometry->printClassData(tbox::plog);
-      boost::shared_ptr<hier::PatchHierarchy>
-      patch_hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
          new hier::PatchHierarchy(
             "Patch Hierarchy",
             grid_geometry,
@@ -218,16 +209,13 @@ int main(
        * SAMRAI virtual functions.
        */
       tbox::plog << "Creating abrtest.\n";
-      ABRTest
-      abrtest(
-         "ABRTest",
-         dim,
-         patch_hierarchy,
-         input_db->getDatabase("ABRTest"));
+      ABRTest abrtest("ABRTest",
+                      dim,
+                      patch_hierarchy,
+                      input_db->getDatabase("ABRTest"));
 
       tbox::plog << "Creating box generator.\n";
-      boost::shared_ptr<mesh::BergerRigoutsos>
-      new_br(
+      boost::shared_ptr<mesh::BergerRigoutsos> new_br(
          new mesh::BergerRigoutsos(
             dim,
             input_db->isDatabase("BergerRigoutsos") ?
@@ -240,14 +228,12 @@ int main(
        * Create the tag-and-initializer, box-generator and load-balancer
        * object references required by the gridding_algorithm object.
        */
-      boost::shared_ptr<mesh::StandardTagAndInitialize>
-      tag_and_initializer(
+      boost::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
          new mesh::StandardTagAndInitialize(
             "CellTaggingMethod",
             abrtest.getStandardTagAndInitObject(),
             input_db->getDatabase("StandardTagAndInitialize")));
-      boost::shared_ptr<mesh::TreeLoadBalancer>
-      load_balancer(
+      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(
             dim,
             "tree load balancer",
@@ -258,8 +244,7 @@ int main(
        * Create the gridding algorithm used to generate the SAMR grid
        * and create the grid.
        */
-      boost::shared_ptr<mesh::GriddingAlgorithm>
-      gridding_algorithm(
+      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
             patch_hierarchy,
             "Distributed Gridding Algorithm",
@@ -297,8 +282,7 @@ int main(
        * Make the patch levels.
        */
 
-      boost::shared_ptr<tbox::Timer>
-      t_generate_mesh(
+      boost::shared_ptr<tbox::Timer> t_generate_mesh(
          tbox::TimerManager::getManager()->
          getTimer("apps::main::generate_mesh"));
       t_generate_mesh->start();
@@ -309,8 +293,7 @@ int main(
       for (int ln = 0; patch_hierarchy->levelCanBeRefined(ln) && !done;
            ++ln) {
          tbox::plog << "Adding finer levels with ln = " << ln << endl;
-         boost::shared_ptr<hier::PatchLevel>
-         level_(
+         boost::shared_ptr<hier::PatchLevel> level_(
             patch_hierarchy->getPatchLevel(ln));
          gridding_algorithm->makeFinerLevel(
             /* tag buffer size */ 0,
@@ -321,8 +304,7 @@ int main(
          if (patch_hierarchy->getNumberOfLevels() < ln + 2) {
             tbox::plog << " (no new level!)" << endl;
          } else {
-            boost::shared_ptr<hier::PatchLevel>
-            finer_level_(
+            boost::shared_ptr<hier::PatchLevel> finer_level_(
                patch_hierarchy->getPatchLevel(ln + 1));
             tbox::plog
             << " (" << level_->getNumberOfPatches()
@@ -356,8 +338,7 @@ int main(
       if (plot_step > 0) {
          const string visit_filename = vis_filename + ".visit";
          /* Create the VisIt data writer. */
-         boost::shared_ptr<appu::VisItDataWriter>
-         visit_data_writer(
+         boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
             new appu::VisItDataWriter(
                dim,
                "VisIt Writer",
@@ -372,9 +353,7 @@ int main(
       /*
        * Adapt the grid.
        */
-      std::vector<int>
-      tag_buffer(
-         10);
+      std::vector<int> tag_buffer(10);
       for (int i = 0; i < static_cast<int>(tag_buffer.size()); ++i) {
          tag_buffer[i] = 1;
       }
@@ -387,9 +366,7 @@ int main(
          abrtest.computeHierarchyData(*patch_hierarchy,
             double(istep + 1));
 
-         std::vector<double>
-         regrid_start_time(
-            patch_hierarchy->getMaxNumberOfLevels());
+         std::vector<double> regrid_start_time(patch_hierarchy->getMaxNumberOfLevels());
          for (int i = 0; i < static_cast<int>(regrid_start_time.size()); ++i) {
             regrid_start_time[i] = istep;
          }
@@ -416,8 +393,7 @@ int main(
          if (plot_step > 0 && (istep + 1) % plot_step == 0) {
             const string visit_filename = vis_filename + ".visit";
             /* Create the VisIt data writer. */
-            boost::shared_ptr<appu::VisItDataWriter>
-            visit_data_writer(
+            boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
                new appu::VisItDataWriter(
                   dim,
                   "VisIt Writer",

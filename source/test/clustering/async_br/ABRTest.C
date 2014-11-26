@@ -33,7 +33,7 @@ ABRTest::ABRTest(
    d_hierarchy(patch_hierarchy),
    d_sine_wall(object_name + ":tagger",
                d_dim,
-               database->getDatabaseWithDefault("sine_tagger", boost::shared_ptr<tbox::Database>()))
+               database->getDatabaseWithDefault("sine_tagger", boost::shared_ptr<tbox::Database>() ))
 {
    d_sine_wall.resetHierarchyConfiguration(d_hierarchy, 0, 0);
 }

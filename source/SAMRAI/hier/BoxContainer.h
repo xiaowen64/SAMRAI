@@ -677,8 +677,8 @@ private:
     * @see empty()
     */
    DEPRECATED(
-      bool
-      isEmpty() const)
+   bool
+   isEmpty() const)
    {
       return empty();
    }
@@ -1804,7 +1804,7 @@ private:
    void
    print(
       std::ostream& os = tbox::plog,
-      const std::string& border = std::string()) const;
+      const std::string &border = std::string() ) const;
 
    /*!
     * @brief Intermediary between BoxContainer and output streams,

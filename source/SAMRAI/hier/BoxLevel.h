@@ -101,10 +101,7 @@ public:
    /*!
     * @brief Names of parallel states.
     */
-   enum ParallelState {
-      DISTRIBUTED,
-      GLOBALIZED
-   };
+   enum ParallelState { DISTRIBUTED, GLOBALIZED };
 
    /*!
     * @brief Construct a BoxLevel which will be initialized from the supplied

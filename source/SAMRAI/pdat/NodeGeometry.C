@@ -102,45 +102,29 @@ NodeGeometry::computeDestinationBoxes(
    const hier::BoxContainer& dst_restrict_boxes) const
 {
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   const hier::IntVector&
-   src_offset(
-      transformation.getOffset());
+   const hier::IntVector& src_offset(transformation.getOffset());
 #endif
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 
    // Translate the source box and grow the destination box by the ghost cells
 
-   const hier::Box
-   src_box(
-      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts)* src_mask);
-   hier::Box
-   src_shift(
-      src_box);
+   const hier::Box src_box(
+      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
+   hier::Box src_shift(src_box);
    transformation.transform(src_shift);
-   const hier::Box
-   dst_ghost(
+   const hier::Box dst_ghost(
       hier::Box::grow(d_box, d_ghosts));
 
    // Convert the boxes into node space and compute the intersection
 
-   const hier::Box
-   dst_node(
-      toNodeBox(dst_ghost));
-   const hier::Box
-   src_node(
-      toNodeBox(src_shift));
-   const hier::Box
-   fill_node(
-      toNodeBox(fill_box));
-   const hier::Box
-   together(
-      dst_node * src_node* fill_node);
+   const hier::Box dst_node(toNodeBox(dst_ghost));
+   const hier::Box src_node(toNodeBox(src_shift));
+   const hier::Box fill_node(toNodeBox(fill_box));
+   const hier::Box together(dst_node * src_node * fill_node);
 
    if (!together.empty()) {
       if (!overwrite_interior) {
-         const hier::Box
-         int_node(
-            toNodeBox(d_box));
+         const hier::Box int_node(toNodeBox(d_box));
          dst_boxes.removeIntersections(together, int_node);
       } else {
          dst_boxes.pushBack(together);
@@ -173,9 +157,7 @@ NodeGeometry::setUpOverlap(
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
-      hier::Box
-      node_box(
-         NodeGeometry::toNodeBox(*b));
+      hier::Box node_box(NodeGeometry::toNodeBox(*b));
       dst_boxes.pushBack(node_box);
    }
 
@@ -238,9 +220,7 @@ NodeGeometry::transform(
       }
 
       if (rotation_num) {
-         NodeIndex
-         tmp_index(
-            index);
+         NodeIndex tmp_index(index);
          index(0) = -tmp_index(0);
       }
    } else if (dim.getValue() == 2) {
@@ -250,9 +230,7 @@ NodeGeometry::transform(
       }
 
       if (rotation_num) {
-         NodeIndex
-         tmp_index(
-            dim);
+         NodeIndex tmp_index(dim);
          for (int r = 0; r < rotation_num; ++r) {
             tmp_index = index;
             index(0) = tmp_index(1);
@@ -391,9 +369,7 @@ NodeGeometry::rotateAboutAxis(NodeIndex& index,
    const int a = (axis + 1) % dim.getValue();
    const int b = (axis + 2) % dim.getValue();
 
-   NodeIndex
-   tmp_index(
-      dim);
+   NodeIndex tmp_index(dim);
    for (int j = 0; j < num_rotations; ++j) {
       tmp_index = index;
       index(a) = tmp_index(b);

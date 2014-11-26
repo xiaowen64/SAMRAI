@@ -88,12 +88,9 @@ CellPoissonFACSolver::CellPoissonFACSolver(
     */
    hier::VariableDatabase* var_db = hier::VariableDatabase::getDatabase();
 
-   static std::string
-   weight_variable_name(
-      "CellPoissonFACSolver_weight");
+   static std::string weight_variable_name("CellPoissonFACSolver_weight");
 
-   boost::shared_ptr<pdat::CellVariable<double> >
-   weight(
+   boost::shared_ptr<pdat::CellVariable<double> > weight(
       boost::dynamic_pointer_cast<pdat::CellVariable<double>, hier::Variable>(
          var_db->getVariable(weight_variable_name)));
    if (!weight) {
@@ -400,9 +397,7 @@ CellPoissonFACSolver::createVectorWrappers(
    int u,
    int f)
 {
-   hier::VariableDatabase&
-   vdb(
-      * hier::VariableDatabase::getDatabase());
+   hier::VariableDatabase& vdb(*hier::VariableDatabase::getDatabase());
    boost::shared_ptr<hier::Variable> variable;
 
    if (!d_uv || d_uv->getComponentDescriptorIndex(0) != u) {
@@ -416,8 +411,7 @@ CellPoissonFACSolver::createVectorWrappers(
          TBOX_ERROR(d_object_name << ": No variable for patch data index "
                                   << u << "\n");
       }
-      boost::shared_ptr<pdat::CellVariable<double> >
-      cell_variable(
+      boost::shared_ptr<pdat::CellVariable<double> > cell_variable(
          BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
       TBOX_ASSERT(cell_variable);
 #endif
@@ -435,8 +429,7 @@ CellPoissonFACSolver::createVectorWrappers(
          TBOX_ERROR(d_object_name << ": No variable for patch data index "
                                   << f << "\n");
       }
-      boost::shared_ptr<pdat::CellVariable<double> >
-      cell_variable(
+      boost::shared_ptr<pdat::CellVariable<double> > cell_variable(
          BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
       TBOX_ASSERT(cell_variable);
 #endif

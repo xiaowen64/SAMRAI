@@ -155,7 +155,7 @@ RankGroup::~RankGroup()
  */
 RankGroup&
 RankGroup::operator = (
-      const RankGroup &rhs)
+   const RankGroup& rhs)
 {
    d_min = rhs.d_min;
    d_max = rhs.d_max;

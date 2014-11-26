@@ -31,10 +31,7 @@ hier::IntVector
 CoarsenPatchStrategy::getMaxCoarsenOpStencilWidth(
    const tbox::Dimension& dim)
 {
-   hier::IntVector
-   max_width(
-      dim,
-      0);
+   hier::IntVector max_width(dim, 0);
 
    std::set<CoarsenPatchStrategy *>& current_objects =
       CoarsenPatchStrategy::getCurrentObjects();

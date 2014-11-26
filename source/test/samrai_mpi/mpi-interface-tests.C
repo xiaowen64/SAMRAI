@@ -61,9 +61,7 @@ void mpiInterfaceTests(
 int mpiInterfaceTestBcast(
    int& fail_count)
 {
-   SAMRAI_MPI
-   mpi(
-      tbox::SAMRAI_MPI::getSAMRAIWorld());
+   SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    int rank = mpi.getRank();
    int nproc = mpi.getSize();
 
@@ -86,9 +84,7 @@ int mpiInterfaceTestBcast(
 int mpiInterfaceTestAllreduce(
    int& fail_count)
 {
-   SAMRAI_MPI
-   mpi(
-      tbox::SAMRAI_MPI::getSAMRAIWorld());
+   SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    int nproc = mpi.getSize();
 
    if (nproc != 1) {
@@ -110,9 +106,7 @@ int mpiInterfaceTestAllreduce(
 int mpiInterfaceTestParallelPrefixSum(
    int& fail_count)
 {
-   SAMRAI_MPI
-   mpi(
-      tbox::SAMRAI_MPI::getSAMRAIWorld());
+   SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    int nproc = mpi.getSize();
 
    int rval = 0;

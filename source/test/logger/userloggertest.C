@@ -24,13 +24,12 @@ using namespace SAMRAI;
 /*
  * Simple appender that sends log messages to a file
  */
-class StreamAppender : public tbox::Logger::Appender
+class StreamAppender:public tbox::Logger::Appender
 {
 
 public:
    StreamAppender(
-      ostream * stream)
-   {
+      ostream* stream) {
       d_stream = stream;
    }
 
@@ -63,13 +62,9 @@ int main(
     */
    {
 
-      fstream
-      file(
-         "user.log",
-         fstream::out);
+      fstream file("user.log", fstream::out);
 
-      boost::shared_ptr<tbox::Logger::Appender>
-      appender(
+      boost::shared_ptr<tbox::Logger::Appender> appender(
          new StreamAppender(&file));
 
       tbox::Logger::getInstance()->setWarningAppender(appender);

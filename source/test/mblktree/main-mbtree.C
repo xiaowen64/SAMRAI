@@ -79,9 +79,7 @@ int main(
    SAMRAI_MPI::init(&argc, &argv);
    SAMRAIManager::initialize();
    SAMRAIManager::startup();
-   tbox::SAMRAI_MPI
-   mpi(
-      tbox::SAMRAI_MPI::getSAMRAIWorld());
+   tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getSize() != 1) {
       TBOX_ERROR("mbtree test is intended to run on just one processor.");
    }
@@ -110,9 +108,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase>
-      input_db(
-         new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -129,13 +125,9 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database>
-      main_db(
-         input_db->getDatabase("Main"));
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
-      const tbox::Dimension
-      dim(
-         static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
       std::string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
@@ -163,8 +155,7 @@ int main(
          TBOX_ERROR("Multiblock tree search test: could not find entry GridGeometry"
             << "\nin input.");
       }
-      boost::shared_ptr<const hier::BaseGridGeometry>
-      grid_geometry(
+      boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
          new geom::GridGeometry(
             dim,
             "GridGeometry",
@@ -179,15 +170,12 @@ int main(
 
       const std::string baseline_dirname = main_db->getString("baseline_dirname");
       const std::string baseline_filename = baseline_dirname + "/" + base_name + ".baselinedb";
-      tbox::HDFDatabase
-      basline_db(
-         baseline_filename);
+      tbox::HDFDatabase basline_db(baseline_filename);
 
       const bool generate_baseline =
          main_db->getBoolWithDefault("generate_baseline", false);
 
-      boost::shared_ptr<tbox::HDFDatabase>
-      baseline_db(
+      boost::shared_ptr<tbox::HDFDatabase> baseline_db(
          new tbox::HDFDatabase("mbtree baseline"));
       boost::shared_ptr<tbox::Database> box_level_db;
       boost::shared_ptr<tbox::Database> connector_db;
@@ -207,12 +195,9 @@ int main(
       plog << "Input database after running..." << std::endl;
       input_db->printClassData(plog);
 
-      const hier::IntVector&
-      one_vector(
-         hier::IntVector::getOne(dim));
+      const hier::IntVector& one_vector(hier::IntVector::getOne(dim));
 
-      hier::BoxLevel
-      box_level(
+      hier::BoxLevel box_level(
          one_vector,
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld());
@@ -224,10 +209,7 @@ int main(
       /*
        * Generate boxes from the multiblock domain description.
        */
-      hier::IntVector
-      max_box_size(
-         dim,
-         tbox::MathUtilities<int>::getMax());
+      hier::IntVector max_box_size(dim, tbox::MathUtilities<int>::getMax());
       if (main_db->isInteger("max_box_size")) {
          main_db->getIntegerArray("max_box_size",
             &max_box_size[0],
@@ -249,11 +231,7 @@ int main(
          /*
           * Get the baselined BoxLevel and compare.
           */
-         hier::BoxLevel
-         baseline_box_level(
-            dim,
-            * box_level_db,
-            grid_geometry);
+         hier::BoxLevel baseline_box_level(dim, *box_level_db, grid_geometry);
          if (box_level != baseline_box_level) {
             tbox::perr << "Multiblock Tree test problem:\n"
                        << "the BoxLevel generated is different\n"
@@ -276,36 +254,26 @@ int main(
       /*
        * Find overlaps.
        */
-      hier::IntVector
-      connector_width(
-         dim,
-         1);
+      hier::IntVector connector_width(dim, 1);
       if (main_db->isInteger("connector_width")) {
          main_db->getIntegerArray("connector_width",
             &connector_width[0],
             dim.getValue());
       }
 
-      hier::Connector
-      connector(
+      hier::Connector connector(
          box_level,
          box_level,
          connector_width);
 
-      const hier::IntVector&
-      refinement_ratio(
-         one_vector);
+      const hier::IntVector& refinement_ratio(one_vector);
 
       for (hier::BoxContainer::const_iterator bi = box_level.getBoxes().begin();
            bi != box_level.getBoxes().end(); ++bi) {
 
-         const hier::Box&
-         box(
-            * bi);
+         const hier::Box& box(*bi);
 
-         hier::Box
-         grown_box(
-            box);
+         hier::Box grown_box(box);
          grown_box.grow(connector_width);
 
          hier::BoxContainer overlap_boxes;
@@ -327,8 +295,7 @@ int main(
           * If writing baseline, verify the results against the
           * exhaustive search method first.
           */
-         hier::Connector
-         connector_from_exhaustive_search(
+         hier::Connector connector_from_exhaustive_search(
             box_level,
             box_level,
             connector_width);
@@ -336,13 +303,9 @@ int main(
                  box_level.getBoxes().begin();
               bi != box_level.getBoxes().end(); ++bi) {
 
-            const hier::Box&
-            box(
-               * bi);
+            const hier::Box& box(*bi);
 
-            hier::Box
-            grown_box(
-               box);
+            hier::Box grown_box(box);
             grown_box.grow(connector_width);
 
             exhaustiveFindOverlapBoxes(
@@ -403,10 +366,7 @@ int main(
          /*
           * Get the baseline Connector NeighborhoodSet and compare.
           */
-         hier::Connector
-         baseline_connector(
-            dim,
-            * connector_db);
+         hier::Connector baseline_connector(dim, *connector_db);
          if (!baseline_connector.localNeighborhoodsEqual(connector)) {
             tbox::perr << "Multiblock Tree test problem:\n"
                        << "the NeighborhoodSets generated is different\n"
@@ -464,34 +424,19 @@ void breakUpBoxes(
    hier::BoxLevel& box_level,
    const hier::IntVector& max_box_size) {
 
-   const tbox::Dimension&
-   dim(
-      box_level.getDim());
+   const tbox::Dimension& dim(box_level.getDim());
 
-   hier::BoxLevel
-   domain_box_level(
-      box_level);
+   hier::BoxLevel domain_box_level(box_level);
    domain_box_level.setParallelState(hier::BoxLevel::GLOBALIZED);
 
-   mesh::TreeLoadBalancer
-   load_balancer(
-      box_level.getDim(),
-      "TreeLoadBalancer");
+   mesh::TreeLoadBalancer load_balancer(box_level.getDim(),
+                                        "TreeLoadBalancer");
 
    hier::Connector* dummy_connector = 0;
 
-   const hier::IntVector
-   min_size(
-      dim,
-      2);
-   const hier::IntVector
-   bad_interval(
-      dim,
-      1);
-   const hier::IntVector
-   cut_factor(
-      dim,
-      1);
+   const hier::IntVector min_size(dim, 2);
+   const hier::IntVector bad_interval(dim, 1);
+   const hier::IntVector cut_factor(dim, 1);
 
    load_balancer.loadBalanceBoxLevel(
       box_level,
@@ -519,12 +464,8 @@ void exhaustiveFindOverlapBoxes(
    const hier::BoxContainer& search_boxes)
 {
    const hier::BoxId& box_id = box.getBoxId();
-   hier::Box
-   transformed_box(
-      box);
-   hier::BlockId
-   transformed_block_id(
-      box.getBlockId());
+   hier::Box transformed_box(box);
+   hier::BlockId transformed_block_id(box.getBlockId());
    hier::Connector::NeighborhoodIterator base_box_itr =
       overlap_connector.findLocal(box_id);
    bool has_base_box = base_box_itr != overlap_connector.end();
@@ -532,9 +473,7 @@ void exhaustiveFindOverlapBoxes(
    for (hier::BoxContainer::const_iterator bi = search_boxes.begin();
         bi != search_boxes.end(); ++bi) {
 
-      const hier::Box&
-      search_box(
-         * bi);
+      const hier::Box& search_box(*bi);
 
       /*
        * Get transformed_box in coordinate of search_box, if

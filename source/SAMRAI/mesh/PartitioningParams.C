@@ -49,8 +49,8 @@ PartitioningParams::PartitioningParams(
 }
 
 std::ostream& operator << (
-   std::ostream & os,
-   const PartitioningParams &pp)
+   std::ostream& os,
+   const PartitioningParams& pp)
 {
    os.setf(std::ios_base::fmtflags(0), std::ios_base::floatfield);
    os.precision(6);

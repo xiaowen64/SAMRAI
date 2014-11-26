@@ -28,20 +28,14 @@ extern "C" {
 #endif
 
 // in conrefine1d.f:
-void
-SAMRAI_F77_FUNC(
-   conrefcellflot1d,
-   CONREFCELLFLOT1D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefcellflot1d, CONREFCELLFLOT1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const float *, float *);
 // in conrefine2d.f:
-void
-SAMRAI_F77_FUNC(
-   conrefcellflot2d,
-   CONREFCELLFLOT2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefcellflot2d, CONREFCELLFLOT2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -49,10 +43,7 @@ SAMRAI_F77_FUNC(
    const int *,
    const float *, float *);
 // in conrefine3d.f:
-void
-SAMRAI_F77_FUNC(
-   conrefcellflot3d,
-   CONREFCELLFLOT3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefcellflot3d, CONREFCELLFLOT3D) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -123,12 +114,10 @@ CellFloatConstantRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   boost::shared_ptr<CellData<float> >
-   cdata(
+   boost::shared_ptr<CellData<float> > cdata(
       BOOST_CAST<CellData<float>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<CellData<float> >
-   fdata(
+   boost::shared_ptr<CellData<float> > fdata(
       BOOST_CAST<CellData<float>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
@@ -137,9 +126,7 @@ CellFloatConstantRefine::refine(
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
    TBOX_ASSERT_OBJDIM_EQUALITY4(fine, coarse, fine_box, ratio);
 
-   const hier::Box
-   cgbox(
-      cdata->getGhostBox());
+   const hier::Box cgbox(cdata->getGhostBox());
 
    const hier::Index cilo = cgbox.lower();
    const hier::Index cihi = cgbox.upper();

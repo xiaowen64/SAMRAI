@@ -125,8 +125,7 @@ void OuternodeSumTransactionFactory::preprocessScratchSpace(
       const int ncomponents = preprocess_vector.getSize();
       for (int n = 0; n < ncomponents; ++n) {
          if (preprocess_vector.isSet(n)) {
-            boost::shared_ptr<pdat::OuternodeData<double> >
-            onode_data(
+            boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
                BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(
                   patch->getPatchData(n)));
             TBOX_ASSERT(onode_data);

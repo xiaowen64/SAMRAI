@@ -50,9 +50,7 @@ int main(
 
    tbox::SAMRAIManager::initialize();
    tbox::SAMRAIManager::startup();
-   const tbox::SAMRAI_MPI&
-   mpi(
-      tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    {
 
@@ -72,8 +70,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<tbox::InputDatabase>
-      input_db(
+      boost::shared_ptr<tbox::InputDatabase> input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -83,8 +80,7 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         boost::shared_ptr<tbox::Database>
-         global_db(
+         boost::shared_ptr<tbox::Database> global_db(
             input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
@@ -97,13 +93,9 @@ int main(
        * Read "Main" input data.
        */
 
-      boost::shared_ptr<tbox::Database>
-      main_db(
-         input_db->getDatabase("Main"));
+      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
-      const tbox::Dimension
-      dim(
-         static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
       string log_file_name = "boundary.log";
       if (main_db->keyExists("log_file_name")) {
@@ -111,10 +103,7 @@ int main(
       }
       tbox::PIO::logOnlyNodeZero(log_file_name);
 
-      hier::IntVector
-      num_boxes(
-         dim,
-         1);
+      hier::IntVector num_boxes(dim, 1);
       if (main_db->keyExists("num_domain_boxes")) {
          int* tmp_arr = &num_boxes[0];
          main_db->getIntegerArray("num_domain_boxes", tmp_arr, dim.getValue());
@@ -125,22 +114,19 @@ int main(
        * state of BoundaryDataTester to log file for checking.
        */
 
-      boost::shared_ptr<geom::CartesianGridGeometry>
-      grid_geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             dim,
             "CartesianGridGeometry",
             input_db->getDatabase("CartesianGridGeometry")));
 
-      boost::shared_ptr<hier::PatchHierarchy>
-      patch_hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
          new hier::PatchHierarchy(
             "PatchHierarchy",
             grid_geometry));
 
       BoundaryDataTester* btester =
-         new
-         BoundaryDataTester(
+         new BoundaryDataTester(
             "BoundaryDataTester",
             dim,
             input_db->getDatabase("BoundaryDataTester"),
@@ -158,27 +144,15 @@ int main(
       tbox::plog << "\nBuilding patch hierarchy..." << endl;
 
       const hier::BoxContainer& domain = grid_geometry->getPhysicalDomain();
-      hier::BoxContainer
-      boxes(
-         domain);
+      hier::BoxContainer boxes(domain);
       boxes.unorder();
       if ((domain.size() == 1) &&
           (num_boxes != hier::IntVector(dim, 1))) {
          const hier::Box& dbox = domain.front();
-         hier::IntVector
-         max_size(
-            dbox.numberCells());
-         hier::IntVector
-         min_size(
-            dbox.numberCells() / num_boxes);
-         hier::IntVector
-         cut_factor(
-            dim,
-            1);
-         hier::IntVector
-         bad_interval(
-            dim,
-            1);
+         hier::IntVector max_size(dbox.numberCells());
+         hier::IntVector min_size(dbox.numberCells() / num_boxes);
+         hier::IntVector cut_factor(dim, 1);
+         hier::IntVector bad_interval(dim, 1);
          hier::BoxUtilities::chopBoxes(boxes,
             max_size,
             min_size,
@@ -188,8 +162,7 @@ int main(
       }
 
       hier::BoxLevelConnectorUtils edge_utils;
-      boost::shared_ptr<hier::BoxLevel>
-      layer0(
+      boost::shared_ptr<hier::BoxLevel> layer0(
          boost::make_shared<hier::BoxLevel>(
             hier::IntVector(dim, 1), grid_geometry));
       hier::BoxContainer::const_iterator domain_boxes = domain.begin();
@@ -208,8 +181,7 @@ int main(
       patch_hierarchy->makeNewPatchLevel(0, layer0);
 
       // Add Connector required for schedule construction.
-      boost::shared_ptr<hier::PatchLevel>
-      level0(
+      boost::shared_ptr<hier::PatchLevel> level0(
          patch_hierarchy->getPatchLevel(0));
       level0->createConnector(*level0, hier::IntVector(dim, 2));
 

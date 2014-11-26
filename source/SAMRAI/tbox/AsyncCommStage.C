@@ -367,11 +367,8 @@ AsyncCommStage::advanceSome()
    }
 #endif
 
-   std::vector<int>
-   index(
-      static_cast<int>(d_member_to_req[d_members.size()]));
-   std::vector<SAMRAI_MPI::Status>
-   stat(
+   std::vector<int> index(static_cast<int>(d_member_to_req[d_members.size()]));
+   std::vector<SAMRAI_MPI::Status> stat(
       static_cast<int>(d_member_to_req[d_members.size()]));
 
    size_t n_member_completed = 0;

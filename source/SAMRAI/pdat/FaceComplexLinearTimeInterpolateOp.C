@@ -32,10 +32,7 @@ extern "C" {
 #endif
 
 // in lintimint1d.f:
-void
-SAMRAI_F77_FUNC(
-   lintimeintfacecmplx1d,
-   LINTIMEINTFACECMPLX1D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintfacecmplx1d, LINTIMEINTFACECMPLX1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -44,10 +41,7 @@ SAMRAI_F77_FUNC(
    const dcomplex *, const dcomplex *,
    dcomplex *);
 // in lintimint2d.f:
-void
-SAMRAI_F77_FUNC(
-   lintimeintfacecmplx2d0,
-   LINTIMEINTFACECMPLX2D0) (const int&,
+void SAMRAI_F77_FUNC(lintimeintfacecmplx2d0, LINTIMEINTFACECMPLX2D0) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -59,10 +53,7 @@ SAMRAI_F77_FUNC(
    const double&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
-void
-SAMRAI_F77_FUNC(
-   lintimeintfacecmplx2d1,
-   LINTIMEINTFACECMPLX2D1) (const int&,
+void SAMRAI_F77_FUNC(lintimeintfacecmplx2d1, LINTIMEINTFACECMPLX2D1) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -75,10 +66,7 @@ SAMRAI_F77_FUNC(
    const dcomplex *, const dcomplex *,
    dcomplex *);
 // in lintimint3d.f:
-void
-SAMRAI_F77_FUNC(
-   lintimeintfacecmplx3d0,
-   LINTIMEINTFACECMPLX3D0) (const int&,
+void SAMRAI_F77_FUNC(lintimeintfacecmplx3d0, LINTIMEINTFACECMPLX3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -90,10 +78,7 @@ SAMRAI_F77_FUNC(
    const double&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
-void
-SAMRAI_F77_FUNC(
-   lintimeintfacecmplx3d1,
-   LINTIMEINTFACECMPLX3D1) (const int&,
+void SAMRAI_F77_FUNC(lintimeintfacecmplx3d1, LINTIMEINTFACECMPLX3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -105,10 +90,7 @@ SAMRAI_F77_FUNC(
    const double&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
-void
-SAMRAI_F77_FUNC(
-   lintimeintfacecmplx3d2,
-   LINTIMEINTFACECMPLX3D2) (const int&,
+void SAMRAI_F77_FUNC(lintimeintfacecmplx3d2, LINTIMEINTFACECMPLX3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -141,9 +123,7 @@ FaceComplexLinearTimeInterpolateOp::timeInterpolate(
    const hier::PatchData& src_data_old,
    const hier::PatchData& src_data_new) const
 {
-   const tbox::Dimension&
-   dim(
-      where.getDim());
+   const tbox::Dimension& dim(where.getDim());
 
    const FaceData<dcomplex>* old_dat =
       CPP_CAST<const FaceData<dcomplex> *>(&src_data_old);

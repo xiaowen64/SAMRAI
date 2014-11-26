@@ -34,7 +34,7 @@ MemoryDatabaseFactory::MemoryDatabaseFactory(
 
 MemoryDatabaseFactory&
 MemoryDatabaseFactory::operator = (
-      const MemoryDatabaseFactory &rhs)
+   const MemoryDatabaseFactory& rhs)
 {
    NULL_USE(rhs);
    return *this;

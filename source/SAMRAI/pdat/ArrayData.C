@@ -155,8 +155,8 @@ ArrayData<TYPE>::getPointer(
 
 template<class TYPE>
 TYPE&
-ArrayData<TYPE>::operator() (
-   const hier::Index & i,
+ArrayData<TYPE>::operator () (
+   const hier::Index& i,
    unsigned int d)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
@@ -167,8 +167,8 @@ ArrayData<TYPE>::operator() (
 
 template<class TYPE>
 const TYPE&
-ArrayData<TYPE>::operator() (
-   const hier::Index & i,
+ArrayData<TYPE>::operator () (
+   const hier::Index& i,
    unsigned int d) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
@@ -225,10 +225,7 @@ ArrayData<TYPE>::copy(
          const unsigned int dst_start_depth = 0;
          const unsigned int src_start_depth = 0;
          const unsigned int num_depth = (d_depth < src.d_depth ? d_depth : src.d_depth);
-         const hier::IntVector
-         src_shift(
-            box.getDim(),
-            0);
+         const hier::IntVector src_shift(box.getDim(), 0);
 
          ArrayDataOperationUtilities<TYPE, CopyOperation<TYPE> >::
          doArrayDataOperationOnBox(*this,
@@ -311,13 +308,10 @@ ArrayData<TYPE>::copy(
 
    } else {
 
-      hier::Box
-      transformed_src(
-         src.d_box);
+      hier::Box transformed_src(src.d_box);
       transformation.transform(transformed_src);
-      const hier::Box
-      copybox(
-         box * d_box* transformed_src);
+      const hier::Box copybox(
+         box * d_box * transformed_src);
 
       if (!copybox.empty()) {
 
@@ -427,10 +421,7 @@ ArrayData<TYPE>::copyDepth(
          const unsigned int dst_start_depth = dst_depth;
          const unsigned int src_start_depth = src_depth;
          const unsigned int num_depth = 1;
-         const hier::IntVector
-         src_shift(
-            box.getDim(),
-            0);
+         const hier::IntVector src_shift(box.getDim(), 0);
 
          ArrayDataOperationUtilities<TYPE, CopyOperation<TYPE> >::
          doArrayDataOperationOnBox(*this,
@@ -494,10 +485,7 @@ ArrayData<TYPE>::sum(
          const unsigned int dst_start_depth = 0;
          const unsigned int src_start_depth = 0;
          const unsigned int num_depth = (d_depth < src.d_depth ? d_depth : src.d_depth);
-         const hier::IntVector
-         src_shift(
-            box.getDim(),
-            0);
+         const hier::IntVector src_shift(box.getDim(), 0);
 
          ArrayDataOperationUtilities<TYPE, SumOperation<TYPE> >::
          doArrayDataOperationOnBox(*this,
@@ -640,9 +628,7 @@ ArrayData<TYPE>::packStream(
 {
 
    const size_t size = d_depth * dest_box.size();
-   std::vector<TYPE>
-   buffer(
-      size);
+   std::vector<TYPE> buffer(size);
 
    packBuffer(&buffer[0], hier::Box::shift(dest_box, -src_shift));
 
@@ -659,9 +645,7 @@ ArrayData<TYPE>::packStream(
 {
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   std::vector<TYPE>
-   buffer(
-      size);
+   std::vector<TYPE> buffer(size);
 
    size_t ptr = 0;
    for (hier::BoxContainer::const_iterator b = dest_boxes.begin();
@@ -685,13 +669,9 @@ ArrayData<TYPE>::packStream(
 {
 
    const size_t size = d_depth * dest_box.size();
-   std::vector<TYPE>
-   buffer(
-      size);
+   std::vector<TYPE> buffer(size);
 
-   hier::Box
-   pack_box(
-      dest_box);
+   hier::Box pack_box(dest_box);
    transformation.inverseTransform(pack_box);
    packBuffer(&buffer[0], pack_box);
 //      hier::Box::shift(dest_box, -src_shift));
@@ -709,16 +689,12 @@ ArrayData<TYPE>::packStream(
 {
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   std::vector<TYPE>
-   buffer(
-      size);
+   std::vector<TYPE> buffer(size);
 
    size_t ptr = 0;
    for (hier::BoxContainer::const_iterator b = dest_boxes.begin();
         b != dest_boxes.end(); ++b) {
-      hier::Box
-      pack_box(
-         * b);
+      hier::Box pack_box(*b);
       transformation.inverseTransform(pack_box);
       packBuffer(&buffer[ptr], pack_box);
 //         hier::Box::shift(*b, -src_shift));
@@ -754,9 +730,7 @@ ArrayData<TYPE>::unpackStream(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_box.size();
-   std::vector<TYPE>
-   buffer(
-      size);
+   std::vector<TYPE> buffer(size);
 
    stream.unpack(&buffer[0], size);
    unpackBuffer(&buffer[0], dest_box);
@@ -774,9 +748,7 @@ ArrayData<TYPE>::unpackStream(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   std::vector<TYPE>
-   buffer(
-      size);
+   std::vector<TYPE> buffer(size);
 
    stream.unpack(&buffer[0], size);
 
@@ -813,9 +785,7 @@ ArrayData<TYPE>::unpackStreamAndSum(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_box.size();
-   std::vector<TYPE>
-   buffer(
-      size);
+   std::vector<TYPE> buffer(size);
 
    stream.unpack(&buffer[0], size);
    unpackBufferAndSum(&buffer[0], dest_box);
@@ -833,9 +803,7 @@ ArrayData<TYPE>::unpackStreamAndSum(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   std::vector<TYPE>
-   buffer(
-      size);
+   std::vector<TYPE> buffer(size);
 
    stream.unpack(&buffer[0], size);
 

@@ -88,7 +88,7 @@ MappingConnector::~MappingConnector()
  */
 MappingConnector&
 MappingConnector::operator = (
-      const MappingConnector &rhs)
+   const MappingConnector& rhs)
 {
    Connector::operator = (rhs);
    return *this;
@@ -107,9 +107,7 @@ MappingConnector::createLocalTranspose() const
          getBase().getRefinementRatio(),
          getConnectorWidth());
 
-   MappingConnector* transpose = new
-      MappingConnector(
-         getHead(),
+   MappingConnector* transpose = new MappingConnector(getHead(),
          getBase(),
          transpose_gcw);
    doLocalTransposeWork(transpose);
@@ -125,9 +123,7 @@ MappingConnector *
 MappingConnector::createTranspose() const
 {
    MappingConnector* transpose =
-      new
-      MappingConnector(
-         getHead(),
+      new MappingConnector(getHead(),
          getBase(),
          convertHeadWidthToBase(getBase().getRefinementRatio(),
             getHead().getRefinementRatio(),
@@ -169,9 +165,7 @@ size_t
 MappingConnector::findMappingErrors(
    MappingType map_type) const
 {
-   const tbox::SAMRAI_MPI&
-   mpi(
-      getMPI());
+   const tbox::SAMRAI_MPI& mpi(getMPI());
    const int my_rank = mpi.getRank();
 
    // Need to know whether this is a local map.

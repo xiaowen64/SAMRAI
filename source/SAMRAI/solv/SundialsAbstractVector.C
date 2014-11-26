@@ -48,7 +48,7 @@ SundialsAbstractVector::createVectorOps()
 
    N_Vector_Ops ops;
 
-   ops = (N_Vector_Ops)std::calloc(1, sizeof(struct _generic_N_Vector_Ops));
+   ops = (N_Vector_Ops) std::calloc(1, sizeof(struct _generic_N_Vector_Ops));
 
 // SGS TODO what about missing fns?
    ops->nvclone = SundialsAbstractVector::N_VClone_SAMRAI;

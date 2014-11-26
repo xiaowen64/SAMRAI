@@ -104,30 +104,21 @@ EdgeGeometry::computeDestinationBoxes(
    const hier::Transformation& transformation,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
-   const tbox::Dimension&
-   dim(
-      src_mask.getDim());
+   const tbox::Dimension& dim(src_mask.getDim());
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
-   hier::Box
-   src_shift(
-      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts)* src_mask);
+   hier::Box src_shift(
+      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
    transformation.transform(src_shift);
-   hier::Box
-   dst_ghost(
-      d_box);
+   hier::Box dst_ghost(d_box);
    dst_ghost.grow(d_ghosts);
 
    // Compute the intersection (if any) for each of the edge directions
 
-   const hier::IntVector
-   one_vector(
-      dim,
-      1);
+   const hier::IntVector one_vector(dim, 1);
 
-   const hier::Box
-   quick_check(
+   const hier::Box quick_check(
       hier::Box::grow(src_shift, one_vector)
       * hier::Box::grow(dst_ghost, one_vector));
 
@@ -135,25 +126,15 @@ EdgeGeometry::computeDestinationBoxes(
 
       for (int d = 0; d < dim.getValue(); ++d) {
 
-         const hier::Box
-         dst_edge(
-            toEdgeBox(dst_ghost, d));
-         const hier::Box
-         src_edge(
-            toEdgeBox(src_shift, d));
-         const hier::Box
-         fill_edge(
-            toEdgeBox(fill_box, d));
-         const hier::Box
-         together(
-            dst_edge * src_edge* fill_edge);
+         const hier::Box dst_edge(toEdgeBox(dst_ghost, d));
+         const hier::Box src_edge(toEdgeBox(src_shift, d));
+         const hier::Box fill_edge(toEdgeBox(fill_box, d));
+         const hier::Box together(dst_edge * src_edge * fill_edge);
 
          if (!together.empty()) {
 
             if (!overwrite_interior) {
-               const hier::Box
-               int_edge(
-                  toEdgeBox(d_box, d));
+               const hier::Box int_edge(toEdgeBox(d_box, d));
                dst_boxes[d].removeIntersections(together, int_edge);
             } else {
                dst_boxes[d].pushBack(together);
@@ -189,15 +170,11 @@ EdgeGeometry::toEdgeBox(
    const hier::Box& box,
    int axis)
 {
-   const tbox::Dimension&
-   dim(
-      box.getDim());
+   const tbox::Dimension& dim(box.getDim());
 
    TBOX_ASSERT(0 <= axis && axis < dim.getValue());
 
-   hier::Box
-   edge_box(
-      dim);
+   hier::Box edge_box(dim);
 
    if (!box.empty()) {
       edge_box = box;
@@ -235,13 +212,9 @@ EdgeGeometry::doOverlap(
    const hier::Transformation& transformation,
    const hier::BoxContainer& dst_restrict_boxes)
 {
-   const tbox::Dimension&
-   dim(
-      src_mask.getDim());
+   const tbox::Dimension& dim(src_mask.getDim());
 
-   std::vector<hier::BoxContainer>
-   dst_boxes(
-      dim.getValue());
+   std::vector<hier::BoxContainer> dst_boxes(dim.getValue());
 
    dst_geometry.computeDestinationBoxes(dst_boxes,
       src_geometry,
@@ -266,19 +239,13 @@ EdgeGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
 {
-   const tbox::Dimension&
-   dim(
-      transformation.getOffset().getDim());
-   std::vector<hier::BoxContainer>
-   dst_boxes(
-      dim.getValue());
+   const tbox::Dimension& dim(transformation.getOffset().getDim());
+   std::vector<hier::BoxContainer> dst_boxes(dim.getValue());
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
       for (int d = 0; d < dim.getValue(); ++d) {
-         hier::Box
-         edge_box(
-            EdgeGeometry::toEdgeBox(*b, d));
+         hier::Box edge_box(EdgeGeometry::toEdgeBox(*b, d));
          dst_boxes[d].pushBack(edge_box);
       }
    }
@@ -488,9 +455,7 @@ EdgeGeometry::transform(
 
       if (rotation_num) {
 
-         EdgeIndex
-         tmp_index(
-            dim);
+         EdgeIndex tmp_index(dim);
          for (int r = 0; r < rotation_num; ++r) {
             tmp_index = index;
             index(0) = tmp_index(1);
@@ -642,9 +607,7 @@ EdgeGeometry::rotateAboutAxis(EdgeIndex& index,
    const int a = (axis + 1) % dim.getValue();
    const int b = (axis + 2) % dim.getValue();
 
-   EdgeIndex
-   tmp_index(
-      dim);
+   EdgeIndex tmp_index(dim);
    for (int j = 0; j < num_rotations; ++j) {
       tmp_index = index;
       index(a) = tmp_index(b);

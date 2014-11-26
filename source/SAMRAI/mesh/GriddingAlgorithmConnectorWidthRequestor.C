@@ -47,19 +47,13 @@ GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
          patch_hierarchy.getMaxNumberOfLevels() - 1);
    }
 
-   const tbox::Dimension&
-   dim(
-      patch_hierarchy.getDim());
-   const int
-   max_levels(
-      patch_hierarchy.getMaxNumberOfLevels());
+   const tbox::Dimension& dim(patch_hierarchy.getDim());
+   const int max_levels(patch_hierarchy.getMaxNumberOfLevels());
 
-   const hier::IntVector
-   max_ghost_width(
+   const hier::IntVector max_ghost_width(
       patch_hierarchy.getPatchDescriptor()->getMaxGhostWidth(dim));
 
-   const hier::IntVector
-   max_stencil_width(
+   const hier::IntVector max_stencil_width(
       patch_hierarchy.getGridGeometry()->getMaxTransferOpStencilWidth(dim));
 
    fine_connector_widths.resize(max_levels - 1, hier::IntVector(dim));
@@ -141,9 +135,7 @@ GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFrom
    NULL_USE(max_stencil_width_at_coarse);
 
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   const tbox::Dimension&
-   dim(
-      fine_to_fine_width.getDim());
+   const tbox::Dimension& dim(fine_to_fine_width.getDim());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY7(dim,
       coarse_to_fine_width,
       coarse_to_coarse_width,

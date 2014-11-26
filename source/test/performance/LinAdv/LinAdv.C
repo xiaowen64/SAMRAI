@@ -120,7 +120,7 @@ LinAdv::LinAdv(
    const tbox::Dimension& dim,
    boost::shared_ptr<tbox::Database> input_db,
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geom,
-   const boost::shared_ptr<MeshGenerationStrategy>& sine_wall):
+   const boost::shared_ptr<MeshGenerationStrategy> &sine_wall):
    algs::HyperbolicPatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
@@ -239,8 +239,7 @@ void LinAdv::setupLoadBalancer(
       hier::PatchDataRestartManager::getManager();
 
    if (d_use_nonuniform_workload && gridding_algorithm) {
-      boost::shared_ptr<mesh::TreeLoadBalancer>
-      load_balancer(
+      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          boost::dynamic_pointer_cast<mesh::TreeLoadBalancer, mesh::LoadBalanceStrategy>(
             gridding_algorithm->getLoadBalanceStrategy()));
 
@@ -290,14 +289,12 @@ void LinAdv::initializeDataOnPatch(
    if (initial_time) {
 
       t_init_first_time->start();
-      const boost::shared_ptr<geom::CartesianPatchGeometry>
-      pgeom(
+      const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
          BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(pgeom);
 
-      boost::shared_ptr<pdat::CellData<double> >
-      uval(
+      boost::shared_ptr<pdat::CellData<double> > uval(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_uval, getDataContext())));
       TBOX_ASSERT(uval);
@@ -315,8 +312,7 @@ void LinAdv::initializeDataOnPatch(
       if (!patch.checkAllocated(d_workload_data_id)) {
          patch.allocatePatchData(d_workload_data_id);
       }
-      boost::shared_ptr<pdat::CellData<double> >
-      workload_data(
+      boost::shared_ptr<pdat::CellData<double> > workload_data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_workload_data_id)));
       TBOX_ASSERT(workload_data);
@@ -342,8 +338,7 @@ double LinAdv::computeStableDtOnPatch(
    NULL_USE(initial_time);
    NULL_USE(dt_time);
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry>
-   patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
@@ -352,8 +347,7 @@ double LinAdv::computeStableDtOnPatch(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   boost::shared_ptr<pdat::CellData<double> >
-   uval(
+   boost::shared_ptr<pdat::CellData<double> > uval(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
 
@@ -382,7 +376,8 @@ double LinAdv::computeStableDtOnPatch(
          d_advection_velocity,
          uval->getPointer(),
          stabdt);
-   } else {
+   }
+   else {
       TBOX_ERROR("Only 2D or 3D allowed in LinAdv::computeStableDtOnPatch");
       stabdt = 0;
    }
@@ -421,8 +416,7 @@ void LinAdv::computeFluxesOnPatch(
 
       TBOX_ASSERT(CELLG == FACEG);
 
-      const boost::shared_ptr<geom::CartesianPatchGeometry>
-      patch_geom(
+      const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(patch_geom);
@@ -432,12 +426,10 @@ void LinAdv::computeFluxesOnPatch(
       const hier::Index ifirst = patch.getBox().lower();
       const hier::Index ilast = patch.getBox().upper();
 
-      boost::shared_ptr<pdat::CellData<double> >
-      uval(
+      boost::shared_ptr<pdat::CellData<double> > uval(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_uval, getDataContext())));
-      boost::shared_ptr<pdat::FaceData<double> >
-      flux(
+      boost::shared_ptr<pdat::FaceData<double> > flux(
          BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
             patch.getPatchData(d_flux, getDataContext())));
 
@@ -454,16 +446,8 @@ void LinAdv::computeFluxesOnPatch(
       /*
        * Allocate patch data for temporaries local to this routine.
        */
-      pdat::FaceData<double>
-      traced_left(
-         pbox,
-         1,
-         d_nghosts);
-      pdat::FaceData<double>
-      traced_right(
-         pbox,
-         1,
-         d_nghosts);
+      pdat::FaceData<double> traced_left(pbox, 1, d_nghosts);
+      pdat::FaceData<double> traced_right(pbox, 1, d_nghosts);
 
       if (d_dim == tbox::Dimension(2)) {
          SAMRAI_F77_FUNC(inittraceflux2d, INITTRACEFLUX2D) (ifirst(0), ilast(0),
@@ -489,20 +473,12 @@ void LinAdv::computeFluxesOnPatch(
          }
 
 // Face-centered temporary arrays
-         std::vector<double>
-         ttedgslp(
-            2 * FACEG + 1 + Mcells);
-         std::vector<double>
-         ttraclft(
-            2 * FACEG + 1 + Mcells);
-         std::vector<double>
-         ttracrgt(
-            2 * FACEG + 1 + Mcells);
+         std::vector<double> ttedgslp(2 * FACEG + 1 + Mcells);
+         std::vector<double> ttraclft(2 * FACEG + 1 + Mcells);
+         std::vector<double> ttracrgt(2 * FACEG + 1 + Mcells);
 
 // Cell-centered temporary arrays
-         std::vector<double>
-         ttcelslp(
-            2 * CELLG + Mcells);
+         std::vector<double> ttcelslp(2 * CELLG + Mcells);
 
 /*
  *  Apply characteristic tracing to compute initial estimate of
@@ -613,8 +589,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
 {
    TBOX_ASSERT(CELLG == FACEG);
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry>
-   patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
@@ -624,12 +599,10 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   boost::shared_ptr<pdat::CellData<double> >
-   uval(
+   boost::shared_ptr<pdat::CellData<double> > uval(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
-   boost::shared_ptr<pdat::FaceData<double> >
-   flux(
+   boost::shared_ptr<pdat::FaceData<double> > flux(
       BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
 
@@ -641,31 +614,11 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    /*
     * Allocate patch data for temporaries local to this routine.
     */
-   pdat::FaceData<double>
-   traced_left(
-      pbox,
-      1,
-      d_nghosts);
-   pdat::FaceData<double>
-   traced_right(
-      pbox,
-      1,
-      d_nghosts);
-   pdat::FaceData<double>
-   temp_flux(
-      pbox,
-      1,
-      d_fluxghosts);
-   pdat::FaceData<double>
-   temp_traced_left(
-      pbox,
-      1,
-      d_nghosts);
-   pdat::FaceData<double>
-   temp_traced_right(
-      pbox,
-      1,
-      d_nghosts);
+   pdat::FaceData<double> traced_left(pbox, 1, d_nghosts);
+   pdat::FaceData<double> traced_right(pbox, 1, d_nghosts);
+   pdat::FaceData<double> temp_flux(pbox, 1, d_fluxghosts);
+   pdat::FaceData<double> temp_traced_left(pbox, 1, d_nghosts);
+   pdat::FaceData<double> temp_traced_right(pbox, 1, d_nghosts);
 
    SAMRAI_F77_FUNC(inittraceflux3d, INITTRACEFLUX3D) (
       ifirst(0), ilast(0),
@@ -697,20 +650,12 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
       }
 
       // Face-centered temporary arrays
-      std::vector<double>
-      ttedgslp(
-         2 * FACEG + 1 + Mcells);
-      std::vector<double>
-      ttraclft(
-         2 * FACEG + 1 + Mcells);
-      std::vector<double>
-      ttracrgt(
-         2 * FACEG + 1 + Mcells);
+      std::vector<double> ttedgslp(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttraclft(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttracrgt(2 * FACEG + 1 + Mcells);
 
       // Cell-centered temporary arrays
-      std::vector<double>
-      ttcelslp(
-         2 * CELLG + Mcells);
+      std::vector<double> ttcelslp(2 * CELLG + Mcells);
 
       /*
        *  Apply characteristic tracing to compute initial estimate of
@@ -939,8 +884,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
 {
    TBOX_ASSERT(CELLG == FACEG);
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry>
-   patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
@@ -950,12 +894,10 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   boost::shared_ptr<pdat::CellData<double> >
-   uval(
+   boost::shared_ptr<pdat::CellData<double> > uval(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
-   boost::shared_ptr<pdat::FaceData<double> >
-   flux(
+   boost::shared_ptr<pdat::FaceData<double> > flux(
       BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
 
@@ -967,26 +909,10 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
    /*
     * Allocate patch data for temporaries local to this routine.
     */
-   pdat::FaceData<double>
-   traced_left(
-      pbox,
-      1,
-      d_nghosts);
-   pdat::FaceData<double>
-   traced_right(
-      pbox,
-      1,
-      d_nghosts);
-   pdat::FaceData<double>
-   temp_flux(
-      pbox,
-      1,
-      d_fluxghosts);
-   pdat::CellData<double>
-   third_state(
-      pbox,
-      1,
-      d_nghosts);
+   pdat::FaceData<double> traced_left(pbox, 1, d_nghosts);
+   pdat::FaceData<double> traced_right(pbox, 1, d_nghosts);
+   pdat::FaceData<double> temp_flux(pbox, 1, d_fluxghosts);
+   pdat::CellData<double> third_state(pbox, 1, d_nghosts);
 
    /*
     *  Initialize trace fluxes (w^R and w^L) with cell-centered values.
@@ -1040,20 +966,12 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
       }
 
       // Face-centered temporary arrays
-      std::vector<double>
-      ttedgslp(
-         2 * FACEG + 1 + Mcells);
-      std::vector<double>
-      ttraclft(
-         2 * FACEG + 1 + Mcells);
-      std::vector<double>
-      ttracrgt(
-         2 * FACEG + 1 + Mcells);
+      std::vector<double> ttedgslp(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttraclft(2 * FACEG + 1 + Mcells);
+      std::vector<double> ttracrgt(2 * FACEG + 1 + Mcells);
 
       // Cell-centered temporary arrays
-      std::vector<double>
-      ttcelslp(
-         2 * CELLG + Mcells);
+      std::vector<double> ttcelslp(2 * CELLG + Mcells);
 
       /*
        *  Apply characteristic tracing to update traces w^L and
@@ -1196,8 +1114,7 @@ void LinAdv::conservativeDifferenceOnPatch(
    NULL_USE(dt);
    NULL_USE(at_syncronization);
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry>
-   patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
@@ -1206,12 +1123,10 @@ void LinAdv::conservativeDifferenceOnPatch(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   boost::shared_ptr<pdat::CellData<double> >
-   uval(
+   boost::shared_ptr<pdat::CellData<double> > uval(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
-   boost::shared_ptr<pdat::FaceData<double> >
-   flux(
+   boost::shared_ptr<pdat::FaceData<double> > flux(
       BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
 
@@ -1258,8 +1173,7 @@ void LinAdv::setPhysicalBoundaryConditions(
 {
    NULL_USE(fill_time);
 
-   boost::shared_ptr<pdat::CellData<double> >
-   uval(
+   boost::shared_ptr<pdat::CellData<double> > uval(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
 
@@ -1267,8 +1181,7 @@ void LinAdv::setPhysicalBoundaryConditions(
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(uval->getTime() == fill_time);
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry>
-   pgeom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
 
@@ -1284,7 +1197,7 @@ void LinAdv::setPhysicalBoundaryConditions(
                patch.getBox(),
                ghost_width_to_fill);
 
-         d_mesh_gen->computePatchData(patch, uval.get(), 0, fill_box);
+         d_mesh_gen->computePatchData( patch, uval.get(), 0, fill_box );
 
       }
 
@@ -1316,8 +1229,7 @@ void LinAdv::tagRichardsonExtrapolationCells(
 
    hier::Box pbox = patch.getBox();
 
-   boost::shared_ptr<pdat::CellData<int> >
-   tags(
+   boost::shared_ptr<pdat::CellData<int> > tags(
       BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_index)));
    TBOX_ASSERT(tags);
@@ -1412,9 +1324,7 @@ void LinAdv::tagRichardsonExtrapolationCells(
             double diff = 0.;
             double error = 0.;
 
-            pdat::CellIterator
-            icend(
-               pdat::CellGeometry::end(pbox));
+            pdat::CellIterator icend(pdat::CellGeometry::end(pbox));
             for (pdat::CellIterator ic(pdat::CellGeometry::begin(pbox));
                  ic != icend; ++ic) {
 
@@ -1460,9 +1370,7 @@ void LinAdv::tagRichardsonExtrapolationCells(
     * use this information in the gradient detector.
     */
    if (!uses_gradient_detector_too) {
-      pdat::CellIterator
-      icend(
-         pdat::CellGeometry::end(pbox));
+      pdat::CellIterator icend(pdat::CellGeometry::end(pbox));
       for (pdat::CellIterator ic(pdat::CellGeometry::begin(pbox));
            ic != icend; ++ic) {
          if ((*tags)(*ic, 0) == RICHARDSON_ALREADY_TAGGED ||
@@ -1496,28 +1404,24 @@ void LinAdv::tagGradientDetectorCells(
 
    const int error_level_number = patch.getPatchLevelNumber();
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry>
-   patch_geom(
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
-   boost::shared_ptr<pdat::CellData<int> >
-   tags(
+   boost::shared_ptr<pdat::CellData<int> > tags(
       BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_indx)));
    TBOX_ASSERT(tags);
-   TBOX_ASSERT(tags->getTime() == regrid_time);
+   TBOX_ASSERT( tags->getTime() == regrid_time );
 
    hier::Box pbox = patch.getBox();
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   hier::Index
-   ict(
-      d_dim);
+   hier::Index ict(d_dim);
 
    int not_refine_tag_val = FALSE;
    int refine_tag_val = TRUE;
@@ -1525,8 +1429,7 @@ void LinAdv::tagGradientDetectorCells(
    /*
     * Create a set of temporary tags and set to untagged value.
     */
-   boost::shared_ptr<pdat::CellData<int> >
-   temp_tags(
+   boost::shared_ptr<pdat::CellData<int> > temp_tags(
       new pdat::CellData<int>(pbox, 1, d_nghosts));
    temp_tags->setTime(regrid_time);
    temp_tags->fillAll(not_refine_tag_val);
@@ -1534,9 +1437,9 @@ void LinAdv::tagGradientDetectorCells(
    if (d_mesh_gen) {
       t_analytical_tag->start();
       d_mesh_gen->computePatchData(patch,
-         0,
-         tags.get(),
-         patch.getBox());
+                                   0,
+                                   tags.get(),
+                                   patch.getBox());
       t_analytical_tag->stop();
    } else {
       /*
@@ -1552,19 +1455,14 @@ void LinAdv::tagGradientDetectorCells(
            ncrit < static_cast<int>(d_refinement_criteria.size()); ++ncrit) {
 
          string ref = d_refinement_criteria[ncrit];
-         boost::shared_ptr<pdat::CellData<double> >
-         var(
+         boost::shared_ptr<pdat::CellData<double> > var(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_uval, getDataContext())));
 
          TBOX_ASSERT(var);
 
-         hier::IntVector
-         vghost(
-            var->getGhostCellWidth());
-         hier::IntVector
-         tagghost(
-            tags->getGhostCellWidth());
+         hier::IntVector vghost(var->getGhostCellWidth());
+         hier::IntVector tagghost(tags->getGhostCellWidth());
 
          int size = 0;
          double tol = 0.;
@@ -1598,9 +1496,7 @@ void LinAdv::tagGradientDetectorCells(
                 * RICHARDSON_NEWLY_TAGGED since these were set most recently
                 * by Richardson extrapolation.
                 */
-               pdat::CellIterator
-               icend(
-                  pdat::CellGeometry::end(pbox));
+               pdat::CellIterator icend(pdat::CellGeometry::end(pbox));
                for (pdat::CellIterator ic(pdat::CellGeometry::begin(pbox));
                     ic != icend; ++ic) {
                   double locden = tol;
@@ -1720,9 +1616,7 @@ void LinAdv::tagGradientDetectorCells(
        * to be the designated "refine_tag_val".
        */
       if (uses_richardson_extrapolation_too) {
-         pdat::CellIterator
-         icend(
-            pdat::CellGeometry::end(pbox));
+         pdat::CellIterator icend(pdat::CellGeometry::end(pbox));
          for (pdat::CellIterator ic(pdat::CellGeometry::begin(pbox));
               ic != icend; ++ic) {
             if ((*tags)(*ic, 0) == RICHARDSON_ALREADY_TAGGED ||
@@ -1735,9 +1629,7 @@ void LinAdv::tagGradientDetectorCells(
       /*
        * Update tags.
        */
-      pdat::CellIterator
-      icend(
-         pdat::CellGeometry::end(pbox));
+      pdat::CellIterator icend(pdat::CellGeometry::end(pbox));
       for (pdat::CellIterator ic(pdat::CellGeometry::begin(pbox));
            ic != icend; ++ic) {
          (*tags)(*ic, 0) = (*temp_tags)(*ic, 0);
@@ -1772,7 +1664,7 @@ void LinAdv::registerVisItDataWriter(
       registerPlotQuantity("U",
          "SCALAR",
          vardb->mapVariableAndContextToIndex(
-            d_uval, vardb->getContext("CURRENT")));
+            d_uval, vardb->getContext("CURRENT")) );
    }
 #endif
 }
@@ -1971,8 +1863,7 @@ void LinAdv::getFromInput(
    }
 
    if (input_db->keyExists("Refinement_data")) {
-      boost::shared_ptr<tbox::Database>
-      refine_db(
+      boost::shared_ptr<tbox::Database> refine_db(
          input_db->getDatabase("Refinement_data"));
       std::vector<string> refinement_keys = refine_db->getAllKeys();
       int num_keys = static_cast<int>(refinement_keys.size());
@@ -1987,9 +1878,7 @@ void LinAdv::getFromInput(
                           << " RefinementData. No refinement will occur." << endl);
       }
 
-      std::vector<string>
-      ref_keys_defined(
-         num_keys);
+      std::vector<string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
       boost::shared_ptr<tbox::Database> error_db;
       for (int i = 0; i < num_keys; ++i) {
@@ -2165,8 +2054,7 @@ void LinAdv::getFromInput(
 
    } // refine db entry exists
 
-   hier::IntVector
-   periodic(
+   hier::IntVector periodic(
       d_grid_geometry->getPeriodicShift(hier::IntVector(d_dim, 1)));
    int num_per_dirs = 0;
    for (int id = 0; id < d_dim.getValue(); ++id) {
@@ -2240,17 +2128,14 @@ void LinAdv::putToRestart(
  */
 void LinAdv::getFromRestart()
 {
-   boost::shared_ptr<tbox::Database>
-   root_db(
+   boost::shared_ptr<tbox::Database> root_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file.");
    }
-   boost::shared_ptr<tbox::Database>
-   db(
-      root_db->getDatabase(d_object_name));
+   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("LINADV_VERSION");
    if (ver != LINADV_VERSION) {

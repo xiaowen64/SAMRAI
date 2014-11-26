@@ -96,8 +96,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<tbox::InputDatabase>
-      input_db(
+      boost::shared_ptr<tbox::InputDatabase> input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -115,13 +114,9 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<tbox::Database>
-      main_db(
-         input_db->getDatabase("Main"));
+      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
-      const tbox::Dimension
-      dim(
-         static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
       string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
@@ -147,8 +142,7 @@ int main(
        * for this application, see comments at top of file.
        */
 
-      boost::shared_ptr<geom::CartesianGridGeometry>
-      grid_geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             dim,
             base_name + "CartesianGridGeometry",
@@ -156,8 +150,7 @@ int main(
       tbox::plog << "Cartesian Geometry:" << endl;
       grid_geometry->printClassData(tbox::plog);
 
-      boost::shared_ptr<hier::PatchHierarchy>
-      patch_hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
          new hier::PatchHierarchy(
             base_name + "::PatchHierarchy",
             grid_geometry,
@@ -171,8 +164,7 @@ int main(
       std::string bc_coefs_name = fac_poisson_name + "::bc_coefs";
 
 #ifdef HAVE_HYPRE
-      boost::shared_ptr<solv::CellPoissonHypreSolver>
-      hypre_poisson(
+      boost::shared_ptr<solv::CellPoissonHypreSolver> hypre_poisson(
          new solv::CellPoissonHypreSolver(
             dim,
             hypre_poisson_name,
@@ -180,8 +172,7 @@ int main(
             input_db->getDatabase("hypre_solver") :
             boost::shared_ptr<tbox::Database>()));
 
-      boost::shared_ptr<solv::CellPoissonFACOps>
-      fac_ops(
+      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
          new solv::CellPoissonFACOps(
             hypre_poisson,
             dim,
@@ -190,8 +181,7 @@ int main(
             input_db->getDatabase("fac_ops") :
             boost::shared_ptr<tbox::Database>()));
 #else
-      boost::shared_ptr<solv::CellPoissonFACOps>
-      fac_ops(
+      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
          new solv::CellPoissonFACOps(
             dim,
             fac_ops_name,
@@ -200,8 +190,7 @@ int main(
             boost::shared_ptr<tbox::Database>()));
 #endif
 
-      boost::shared_ptr<solv::FACPreconditioner>
-      fac_precond(
+      boost::shared_ptr<solv::FACPreconditioner> fac_precond(
          new solv::FACPreconditioner(
             fac_precond_name,
             fac_ops,
@@ -209,8 +198,7 @@ int main(
             input_db->getDatabase("fac_precond") :
             boost::shared_ptr<tbox::Database>()));
 
-      boost::shared_ptr<solv::CellPoissonFACSolver>
-      fac_solver(
+      boost::shared_ptr<solv::CellPoissonFACSolver> fac_solver(
          new solv::CellPoissonFACSolver(
             dim,
             fac_solver_name,
@@ -220,8 +208,7 @@ int main(
             input_db->getDatabase("fac_solver") :
             boost::shared_ptr<tbox::Database>()));
 
-      boost::shared_ptr<solv::LocationIndexRobinBcCoefs>
-      bc_coefs(
+      boost::shared_ptr<solv::LocationIndexRobinBcCoefs> bc_coefs(
          new solv::LocationIndexRobinBcCoefs(
             dim,
             bc_coefs_name,
@@ -236,28 +223,23 @@ int main(
        * process that includes making the initial guess, specifying the
        * boundary conditions and call the solver.
        */
-      FACPoisson
-      fac_poisson(
-         fac_poisson_name,
-         dim,
-         fac_solver,
-         bc_coefs);
+      FACPoisson fac_poisson(fac_poisson_name,
+                             dim,
+                             fac_solver,
+                             bc_coefs);
 
       /*
        * Create the tag-and-initializer, box-generator and load-balancer
        * object references required by the gridding_algorithm object.
        */
-      boost::shared_ptr<mesh::StandardTagAndInitialize>
-      tag_and_initializer(
+      boost::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
          new mesh::StandardTagAndInitialize(
             "CellTaggingMethod",
             &fac_poisson,
             input_db->getDatabase("StandardTagAndInitialize")));
-      boost::shared_ptr<mesh::BergerRigoutsos>
-      box_generator(
+      boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
          new mesh::BergerRigoutsos(dim));
-      boost::shared_ptr<mesh::TreeLoadBalancer>
-      load_balancer(
+      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(
             dim,
             "load balancer",
@@ -268,8 +250,7 @@ int main(
        * Create the gridding algorithm used to generate the SAMR grid
        * and create the grid.
        */
-      boost::shared_ptr<mesh::GriddingAlgorithm>
-      gridding_algorithm(
+      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
             patch_hierarchy,
             "Gridding Algorithm",
@@ -306,8 +287,7 @@ int main(
 #ifdef HAVE_HDF5
       string vis_filename =
          main_db->getStringWithDefault("vis_filename", base_name);
-      boost::shared_ptr<appu::VisItDataWriter>
-      visit_writer(
+      boost::shared_ptr<appu::VisItDataWriter> visit_writer(
          boost::make_shared<appu::VisItDataWriter>(dim,
                                                    "VisIt Writer",
                                                    vis_filename + ".visit"));

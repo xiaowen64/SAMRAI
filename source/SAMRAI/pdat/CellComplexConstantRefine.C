@@ -33,20 +33,14 @@ extern "C" {
 #endif
 
 // in conrefine1d.f:
-void
-SAMRAI_F77_FUNC(
-   conrefcellcplx1d,
-   CONREFCELLCPLX1D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefcellcplx1d, CONREFCELLCPLX1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
 // in conrefine2d.f:
-void
-SAMRAI_F77_FUNC(
-   conrefcellcplx2d,
-   CONREFCELLCPLX2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefcellcplx2d, CONREFCELLCPLX2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -54,10 +48,7 @@ SAMRAI_F77_FUNC(
    const int *,
    const dcomplex *, dcomplex *);
 // in conrefine3d.f:
-void
-SAMRAI_F77_FUNC(
-   conrefcellcplx3d,
-   CONREFCELLCPLX3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefcellcplx3d, CONREFCELLCPLX3D) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -129,12 +120,10 @@ CellComplexConstantRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   boost::shared_ptr<CellData<dcomplex> >
-   cdata(
+   boost::shared_ptr<CellData<dcomplex> > cdata(
       BOOST_CAST<CellData<dcomplex>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<CellData<dcomplex> >
-   fdata(
+   boost::shared_ptr<CellData<dcomplex> > fdata(
       BOOST_CAST<CellData<dcomplex>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
@@ -143,9 +132,7 @@ CellComplexConstantRefine::refine(
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
    TBOX_ASSERT_OBJDIM_EQUALITY4(fine, coarse, fine_box, ratio);
 
-   const hier::Box
-   cgbox(
-      cdata->getGhostBox());
+   const hier::Box cgbox(cdata->getGhostBox());
 
    const hier::Index cilo = cgbox.lower();
    const hier::Index cihi = cgbox.upper();

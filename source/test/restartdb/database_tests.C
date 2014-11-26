@@ -42,28 +42,17 @@ void writeTestData(
     * Build database hierarchy and test.
     */
 
-   boost::shared_ptr<tbox::Database>
-   arraydb(
-      db->putDatabase("Array Entries"));
+   boost::shared_ptr<tbox::Database> arraydb(db->putDatabase("Array Entries"));
 
-   boost::shared_ptr<tbox::Database>
-   scalardb(
+   boost::shared_ptr<tbox::Database> scalardb(
       db->putDatabase("Scalar Entries"));
-   boost::shared_ptr<tbox::Database>
-   scalardb_empty(
+   boost::shared_ptr<tbox::Database> scalardb_empty(
       scalardb->putDatabase("Empty"));
-   boost::shared_ptr<tbox::Database>
-   scalardb_full(
+   boost::shared_ptr<tbox::Database> scalardb_full(
       scalardb->putDatabase("Full"));
-   boost::shared_ptr<tbox::Database>
-   defaultdb(
-      db->putDatabase("Default"));
-   boost::shared_ptr<tbox::Database>
-   namesdb(
-      db->putDatabase("Name Entries"));
-   boost::shared_ptr<tbox::Database>
-   vectordb(
-      db->putDatabase("stl_vector"));
+   boost::shared_ptr<tbox::Database> defaultdb(db->putDatabase("Default"));
+   boost::shared_ptr<tbox::Database> namesdb(db->putDatabase("Name Entries"));
+   boost::shared_ptr<tbox::Database> vectordb(db->putDatabase("stl_vector"));
 
    NULL_USE(defaultdb);
 
@@ -95,48 +84,36 @@ void writeTestData(
     * Set array values and write to database hierarchy.
     */
 
-   std::vector<dcomplex>
-   arraydb_dcomplexArray(
-      3);
+   std::vector<dcomplex> arraydb_dcomplexArray(3);
    arraydb_dcomplexArray[0] = arraydb_dcomplexArray0;
    arraydb_dcomplexArray[1] = arraydb_dcomplexArray1;
    arraydb_dcomplexArray[2] = arraydb_dcomplexArray2;
 
-   std::vector<bool>
-   arraydb_boolArray(
-      3);
+   std::vector<bool> arraydb_boolArray(3);
    arraydb_boolArray[0] = arraydb_boolArray0;
    arraydb_boolArray[1] = arraydb_boolArray1;
    arraydb_boolArray[2] = arraydb_boolArray2;
 
-   std::vector<int>
-   arraydb_intArray(
-      5);
+   std::vector<int> arraydb_intArray(5);
    arraydb_intArray[0] = arraydb_intArray0;
    arraydb_intArray[1] = arraydb_intArray1;
    arraydb_intArray[2] = arraydb_intArray2;
    arraydb_intArray[3] = arraydb_intArray3;
    arraydb_intArray[4] = arraydb_intArray4;
 
-   std::vector<string>
-   arraydb_stringArray(
-      3);
+   std::vector<string> arraydb_stringArray(3);
    arraydb_stringArray[0] = arraydb_stringArray0;
    arraydb_stringArray[1] = arraydb_stringArray1;
    arraydb_stringArray[2] = arraydb_stringArray2;
 
-   std::vector<float>
-   arraydb_floatArray(
-      5);
+   std::vector<float> arraydb_floatArray(5);
    arraydb_floatArray[0] = arraydb_floatArray0;
    arraydb_floatArray[1] = arraydb_floatArray1;
    arraydb_floatArray[2] = arraydb_floatArray2;
    arraydb_floatArray[3] = arraydb_floatArray3;
    arraydb_floatArray[4] = arraydb_floatArray4;
 
-   std::vector<double>
-   arraydb_doubleArray(
-      6);
+   std::vector<double> arraydb_doubleArray(6);
    arraydb_doubleArray[0] = arraydb_doubleArray0;
    arraydb_doubleArray[1] = arraydb_doubleArray1;
    arraydb_doubleArray[2] = arraydb_doubleArray2;
@@ -144,15 +121,11 @@ void writeTestData(
    arraydb_doubleArray[4] = arraydb_doubleArray4;
    arraydb_doubleArray[5] = arraydb_doubleArray5;
 
-   std::vector<char>
-   arraydb_charArray(
-      2);
+   std::vector<char> arraydb_charArray(2);
    arraydb_charArray[0] = arraydb_charArray0;
    arraydb_charArray[1] = arraydb_charArray1;
 
-   std::vector<tbox::DatabaseBox>
-   arraydb_boxArray(
-      3);
+   std::vector<tbox::DatabaseBox> arraydb_boxArray(3);
    arraydb_boxArray[0] = arraydb_boxArray0;
    arraydb_boxArray[1] = arraydb_boxArray1;
    arraydb_boxArray[2] = arraydb_boxArray2;
@@ -186,10 +159,7 @@ void writeTestData(
    namesdb->putDouble("Name-with-dashes", scalardb_full_thisDouble);
    namesdb->putDouble("Name-with-!@#$%^&*()_+-=", scalardb_full_thisDouble);
 
-   std::vector<hier::IntVector>
-   vector_IntVector(
-      2,
-      intVector0);
+   std::vector<hier::IntVector> vector_IntVector(2, intVector0);
    vector_IntVector[0] = intVector1;
    vector_IntVector[1] = intVector2;
 
@@ -221,30 +191,19 @@ void testDatabaseContents(
       ++number_of_failures;
    }
 
-   boost::shared_ptr<tbox::Database>
-   arraydb(
-      db->getDatabase("Array Entries"));
+   boost::shared_ptr<tbox::Database> arraydb(db->getDatabase("Array Entries"));
 
-   boost::shared_ptr<tbox::Database>
-   scalardb(
+   boost::shared_ptr<tbox::Database> scalardb(
       db->getDatabase("Scalar Entries"));
-   boost::shared_ptr<tbox::Database>
-   scalardb_empty(
+   boost::shared_ptr<tbox::Database> scalardb_empty(
       scalardb->getDatabase("Empty"));
-   boost::shared_ptr<tbox::Database>
-   scalardb_full(
+   boost::shared_ptr<tbox::Database> scalardb_full(
       scalardb->getDatabase("Full"));
-   boost::shared_ptr<tbox::Database>
-   defaultdb(
-      db->getDatabase("Default"));
+   boost::shared_ptr<tbox::Database> defaultdb(db->getDatabase("Default"));
 
-   boost::shared_ptr<tbox::Database>
-   namesdb(
-      db->getDatabase("Name Entries"));
+   boost::shared_ptr<tbox::Database> namesdb(db->getDatabase("Name Entries"));
 
-   boost::shared_ptr<tbox::Database>
-   vectordb(
-      db->getDatabase("stl_vector"));
+   boost::shared_ptr<tbox::Database> vectordb(db->getDatabase("stl_vector"));
 
    if (!arraydb) {
       tbox::perr << "FAILED: - Test #1a-" << tag
@@ -347,48 +306,36 @@ void testDatabaseContents(
     * Set array values to test database.
     */
 
-   std::vector<dcomplex>
-   arraydb_dcomplexArray(
-      3);
+   std::vector<dcomplex> arraydb_dcomplexArray(3);
    arraydb_dcomplexArray[0] = arraydb_dcomplexArray0;
    arraydb_dcomplexArray[1] = arraydb_dcomplexArray1;
    arraydb_dcomplexArray[2] = arraydb_dcomplexArray2;
 
-   std::vector<bool>
-   arraydb_boolArray(
-      3);
+   std::vector<bool> arraydb_boolArray(3);
    arraydb_boolArray[0] = arraydb_boolArray0;
    arraydb_boolArray[1] = arraydb_boolArray1;
    arraydb_boolArray[2] = arraydb_boolArray2;
 
-   std::vector<int>
-   arraydb_intArray(
-      5);
+   std::vector<int> arraydb_intArray(5);
    arraydb_intArray[0] = arraydb_intArray0;
    arraydb_intArray[1] = arraydb_intArray1;
    arraydb_intArray[2] = arraydb_intArray2;
    arraydb_intArray[3] = arraydb_intArray3;
    arraydb_intArray[4] = arraydb_intArray4;
 
-   std::vector<string>
-   arraydb_stringArray(
-      3);
+   std::vector<string> arraydb_stringArray(3);
    arraydb_stringArray[0] = arraydb_stringArray0;
    arraydb_stringArray[1] = arraydb_stringArray1;
    arraydb_stringArray[2] = arraydb_stringArray2;
 
-   std::vector<float>
-   arraydb_floatArray(
-      5);
+   std::vector<float> arraydb_floatArray(5);
    arraydb_floatArray[0] = arraydb_floatArray0;
    arraydb_floatArray[1] = arraydb_floatArray1;
    arraydb_floatArray[2] = arraydb_floatArray2;
    arraydb_floatArray[3] = arraydb_floatArray3;
    arraydb_floatArray[4] = arraydb_floatArray4;
 
-   std::vector<double>
-   arraydb_doubleArray(
-      6);
+   std::vector<double> arraydb_doubleArray(6);
    arraydb_doubleArray[0] = arraydb_doubleArray0;
    arraydb_doubleArray[1] = arraydb_doubleArray1;
    arraydb_doubleArray[2] = arraydb_doubleArray2;
@@ -396,15 +343,11 @@ void testDatabaseContents(
    arraydb_doubleArray[4] = arraydb_doubleArray4;
    arraydb_doubleArray[5] = arraydb_doubleArray5;
 
-   std::vector<char>
-   arraydb_charArray(
-      2);
+   std::vector<char> arraydb_charArray(2);
    arraydb_charArray[0] = arraydb_charArray0;
    arraydb_charArray[1] = arraydb_charArray1;
 
-   std::vector<tbox::DatabaseBox>
-   arraydb_boxArray(
-      3);
+   std::vector<tbox::DatabaseBox> arraydb_boxArray(3);
    arraydb_boxArray[0] = arraydb_boxArray0;
    arraydb_boxArray[1] = arraydb_boxArray1;
    arraydb_boxArray[2] = arraydb_boxArray2;
@@ -1077,10 +1020,7 @@ void testDatabaseContents(
    /*
     * Tests reading scalar with default
     */
-   dcomplex
-   test_scalar_complex(
-      -9.0,
-      -9.0);
+   dcomplex test_scalar_complex(-9.0, -9.0);
    tscalardb_full_thisComplex = scalardb_full->getComplexWithDefault(
          "thisComplex",
          test_scalar_complex);
@@ -1092,9 +1032,7 @@ void testDatabaseContents(
                  << "  , Expected = " << scalardb_full_thisComplex << endl;
       ++number_of_failures;
    }
-   bool
-   test_scalar_bool(
-      false);
+   bool test_scalar_bool(false);
    tscalardb_full_thisBool = scalardb_full->getBoolWithDefault("thisBool",
          test_scalar_bool);
    if (tscalardb_full_thisBool != scalardb_full_thisBool) {
@@ -1104,9 +1042,7 @@ void testDatabaseContents(
                  << "  , Expected = " << scalardb_full_thisBool << endl;
       ++number_of_failures;
    }
-   int
-   test_scalar_int(
-      -9);
+   int test_scalar_int(-9);
    tscalardb_full_thisInt = scalardb_full->getIntegerWithDefault("thisInt",
          test_scalar_int);
    if (tscalardb_full_thisInt != scalardb_full_thisInt) {
@@ -1116,9 +1052,7 @@ void testDatabaseContents(
                  << "  , Expected = " << scalardb_full_thisInt << endl;
       ++number_of_failures;
    }
-   string
-   test_scalar_string(
-      "A fake string");
+   string test_scalar_string("A fake string");
    tscalardb_full_thisString = scalardb_full->getStringWithDefault("thisString",
          test_scalar_string);
    if (tscalardb_full_thisString != scalardb_full_thisString) {
@@ -1128,9 +1062,7 @@ void testDatabaseContents(
                  << "  , Expected = " << scalardb_full_thisString << endl;
       ++number_of_failures;
    }
-   float
-   test_scalar_float(
-      -9.0);
+   float test_scalar_float(-9.0);
    tscalardb_full_thisFloat = scalardb_full->getFloatWithDefault("thisFloat",
          test_scalar_float);
    if (!tbox::MathUtilities<float>::equalEps(tscalardb_full_thisFloat,
@@ -1141,9 +1073,7 @@ void testDatabaseContents(
                  << "  , Expected = " << scalardb_full_thisFloat << endl;
       ++number_of_failures;
    }
-   double
-   test_scalar_double(
-      -9.0);
+   double test_scalar_double(-9.0);
    tscalardb_full_thisDouble = scalardb_full->getDoubleWithDefault("thisDouble",
          test_scalar_double);
    if (!tbox::MathUtilities<double>::equalEps(tscalardb_full_thisDouble,
@@ -1154,9 +1084,7 @@ void testDatabaseContents(
                  << "  , Expected = " << scalardb_full_thisDouble << endl;
       ++number_of_failures;
    }
-   char
-   test_scalar_char(
-      'h');
+   char test_scalar_char('h');
    tscalardb_full_thisChar = scalardb_full->getCharWithDefault("thisChar",
          test_scalar_char);
    if (tscalardb_full_thisChar != scalardb_full_thisChar) {
@@ -1238,10 +1166,7 @@ void testDatabaseContents(
    /*
     * Tests for reading stl::vector
     */
-   std::vector<hier::IntVector>
-   vector_IntVector(
-      2,
-      intVector0);
+   std::vector<hier::IntVector> vector_IntVector(2, intVector0);
 
    vectordb->getObjectVector("vector_IntVector", vector_IntVector);
 

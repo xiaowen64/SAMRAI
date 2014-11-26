@@ -89,17 +89,14 @@ StandardTagAndInitializeConnectorWidthRequestor::computeRequiredConnectorWidths(
    std::vector<hier::IntVector>& fine_connector_widths,
    const hier::PatchHierarchy& patch_hierarchy) const
 {
-   const tbox::Dimension&
-   dim(
-      patch_hierarchy.getDim());
+   const tbox::Dimension& dim(patch_hierarchy.getDim());
 
    /*
     * Get the refinement ratios on the hierarchy.  This is the ratio
     * by which StandardTagAndInitialize may coarsen a level in the
     * hierarchy.  It is the growth factor for ghost data.
     */
-   std::vector<hier::IntVector>
-   ratios_to_coarser(
+   std::vector<hier::IntVector> ratios_to_coarser(
       patch_hierarchy.getMaxNumberOfLevels(),
       hier::IntVector(dim));
 
@@ -137,9 +134,7 @@ int
 StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
    const std::vector<hier::IntVector>& ratios_to_coarser) const
 {
-   const tbox::Dimension&
-   dim(
-      ratios_to_coarser[0].getDim());
+   const tbox::Dimension& dim(ratios_to_coarser[0].getDim());
    /*
     * Compute GCD on first coordinate direction of level 1
     */

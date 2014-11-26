@@ -66,10 +66,7 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void
-SAMRAI_F77_FUNC(
-   compfluxvardc2d,
-   COMPFLUXVARDC2D) (
+void SAMRAI_F77_FUNC(compfluxvardc2d, COMPFLUXVARDC2D) (
    double* xflux,
    double* yflux,
    const int* fluxgi,
@@ -86,10 +83,7 @@ SAMRAI_F77_FUNC(
    const int* jfirst,
    const int* jlast,
    const double* dx);
-void
-SAMRAI_F77_FUNC(
-   compfluxcondc2d,
-   COMPFLUXCONDC2D) (
+void SAMRAI_F77_FUNC(compfluxcondc2d, COMPFLUXCONDC2D) (
    double* xflux,
    double* yflux,
    const int* fluxgi,
@@ -103,10 +97,7 @@ SAMRAI_F77_FUNC(
    const int* jfirst,
    const int* jlast,
    const double* dx);
-void
-SAMRAI_F77_FUNC(
-   rbgswithfluxmaxvardcvarsf2d,
-   RBGSWITHFLUXMAXVARDCVARSF2D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxvardcvarsf2d, RBGSWITHFLUXMAXVARDCVARSF2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -131,10 +122,7 @@ SAMRAI_F77_FUNC(
    const double* dx,
    const int* offset,
    const double* maxres);
-void
-SAMRAI_F77_FUNC(
-   rbgswithfluxmaxcondcvarsf2d,
-   RBGSWITHFLUXMAXCONDCVARSF2D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxcondcvarsf2d, RBGSWITHFLUXMAXCONDCVARSF2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -156,10 +144,7 @@ SAMRAI_F77_FUNC(
    const double* dx,
    const int* offset,
    const double* maxres);
-void
-SAMRAI_F77_FUNC(
-   rbgswithfluxmaxvardcconsf2d,
-   RBGSWITHFLUXMAXVARDCCONSF2D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxvardcconsf2d, RBGSWITHFLUXMAXVARDCCONSF2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -182,10 +167,7 @@ SAMRAI_F77_FUNC(
    const double* dx,
    const int* offset,
    const double* maxres);
-void
-SAMRAI_F77_FUNC(
-   rbgswithfluxmaxcondcconsf2d,
-   RBGSWITHFLUXMAXCONDCCONSF2D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxcondcconsf2d, RBGSWITHFLUXMAXCONDCCONSF2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -205,10 +187,7 @@ SAMRAI_F77_FUNC(
    const double* dx,
    const int* offset,
    const double* maxres);
-void
-SAMRAI_F77_FUNC(
-   compresvarsca2d,
-   COMPRESVARSCA2D) (
+void SAMRAI_F77_FUNC(compresvarsca2d, COMPRESVARSCA2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -230,10 +209,7 @@ SAMRAI_F77_FUNC(
    const int* jfirst,
    const int* jlast,
    const double* dx);
-void
-SAMRAI_F77_FUNC(
-   compresconsca2d,
-   COMPRESCONSCA2D) (
+void SAMRAI_F77_FUNC(compresconsca2d, COMPRESCONSCA2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -253,10 +229,7 @@ SAMRAI_F77_FUNC(
    const int* jfirst,
    const int* jlast,
    const double* dx);
-void
-SAMRAI_F77_FUNC(
-   ewingfixfluxvardc2d,
-   EWINGFIXFLUXVARDC2D) (
+void SAMRAI_F77_FUNC(ewingfixfluxvardc2d, EWINGFIXFLUXVARDC2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -277,10 +250,7 @@ SAMRAI_F77_FUNC(
    const int* blower,
    const int* bupper,
    const double* dx);
-void
-SAMRAI_F77_FUNC(
-   ewingfixfluxcondc2d,
-   EWINGFIXFLUXCONDC2D) (
+void SAMRAI_F77_FUNC(ewingfixfluxcondc2d, EWINGFIXFLUXCONDC2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -299,10 +269,7 @@ SAMRAI_F77_FUNC(
    const int* bupper,
    const double* dx);
 
-void
-SAMRAI_F77_FUNC(
-   compfluxvardc3d,
-   COMPFLUXVARDC3D) (
+void SAMRAI_F77_FUNC(compfluxvardc3d, COMPFLUXVARDC3D) (
    double* xflux,
    double* yflux,
    double* zflux,
@@ -326,10 +293,7 @@ SAMRAI_F77_FUNC(
    const int* kfirst,
    const int* klast,
    const double* dx);
-void
-SAMRAI_F77_FUNC(
-   compfluxcondc3d,
-   COMPFLUXCONDC3D) (
+void SAMRAI_F77_FUNC(compfluxcondc3d, COMPFLUXCONDC3D) (
    double* xflux,
    double* yflux,
    double* zflux,
@@ -348,10 +312,7 @@ SAMRAI_F77_FUNC(
    const int* kfirst,
    const int* klast,
    const double* dx);
-void
-SAMRAI_F77_FUNC(
-   rbgswithfluxmaxvardcvarsf3d,
-   RBGSWITHFLUXMAXVARDCVARSF3D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxvardcvarsf3d, RBGSWITHFLUXMAXVARDCVARSF3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -385,10 +346,7 @@ SAMRAI_F77_FUNC(
    const double* dx,
    const int* offset,
    const double* maxres);
-void
-SAMRAI_F77_FUNC(
-   rbgswithfluxmaxcondcvarsf3d,
-   RBGSWITHFLUXMAXCONDCVARSF3D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxcondcvarsf3d, RBGSWITHFLUXMAXCONDCVARSF3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -417,10 +375,7 @@ SAMRAI_F77_FUNC(
    const double* dx,
    const int* offset,
    const double* maxres);
-void
-SAMRAI_F77_FUNC(
-   rbgswithfluxmaxvardcconsf3d,
-   RBGSWITHFLUXMAXVARDCCONSF3D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxvardcconsf3d, RBGSWITHFLUXMAXVARDCCONSF3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -451,10 +406,7 @@ SAMRAI_F77_FUNC(
    const double* dx,
    const int* offset,
    const double* maxres);
-void
-SAMRAI_F77_FUNC(
-   rbgswithfluxmaxcondcconsf3d,
-   RBGSWITHFLUXMAXCONDCCONSF3D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxcondcconsf3d, RBGSWITHFLUXMAXCONDCCONSF3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -480,10 +432,7 @@ SAMRAI_F77_FUNC(
    const double* dx,
    const int* offset,
    const double* maxres);
-void
-SAMRAI_F77_FUNC(
-   compresvarsca3d,
-   COMPRESVARSCA3D) (
+void SAMRAI_F77_FUNC(compresvarsca3d, COMPRESVARSCA3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -513,10 +462,7 @@ SAMRAI_F77_FUNC(
    const int* kfirst,
    const int* klast,
    const double* dx);
-void
-SAMRAI_F77_FUNC(
-   compresconsca3d,
-   COMPRESCONSCA3D) (
+void SAMRAI_F77_FUNC(compresconsca3d, COMPRESCONSCA3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -543,10 +489,7 @@ SAMRAI_F77_FUNC(
    const int* kfirst,
    const int* klast,
    const double* dx);
-void
-SAMRAI_F77_FUNC(
-   ewingfixfluxvardc3d,
-   EWINGFIXFLUXVARDC3D) (
+void SAMRAI_F77_FUNC(ewingfixfluxvardc3d, EWINGFIXFLUXVARDC3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -574,10 +517,7 @@ SAMRAI_F77_FUNC(
    const int* blower,
    const int* bupper,
    const double* dx);
-void
-SAMRAI_F77_FUNC(
-   ewingfixfluxcondc3d,
-   EWINGFIXFLUXCONDC3D) (
+void SAMRAI_F77_FUNC(ewingfixfluxcondc3d, EWINGFIXFLUXCONDC3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -864,8 +804,7 @@ CellPoissonFACOps::initializeOperatorState(
          TBOX_ERROR(d_object_name << ": RHS component does not\n"
                                   << "correspond to a variable.\n");
       }
-      boost::shared_ptr<pdat::CellVariable<double> >
-      cell_var(
+      boost::shared_ptr<pdat::CellVariable<double> > cell_var(
          BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(var));
       TBOX_ASSERT(cell_var);
    }
@@ -876,28 +815,24 @@ CellPoissonFACOps::initializeOperatorState(
          TBOX_ERROR(d_object_name << ": Solution component does not\n"
                                   << "correspond to a variable.\n");
       }
-      boost::shared_ptr<pdat::CellVariable<double> >
-      cell_var(
+      boost::shared_ptr<pdat::CellVariable<double> > cell_var(
          BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(var));
       TBOX_ASSERT(cell_var);
    }
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
-      boost::shared_ptr<hier::PatchLevel>
-      level_ptr(
+      boost::shared_ptr<hier::PatchLevel> level_ptr(
          d_hierarchy->getPatchLevel(ln));
       hier::PatchLevel& level = *level_ptr;
       for (hier::PatchLevel::iterator pi(level.begin());
            pi != level.end(); ++pi) {
          hier::Patch& patch = **pi;
-         boost::shared_ptr<hier::PatchData>
-         fd(
+         boost::shared_ptr<hier::PatchData> fd(
             patch.getPatchData(rhs.getComponentDescriptorIndex(0)));
          if (fd) {
             /*
              * Some data checks can only be done if the data already exists.
              */
-            boost::shared_ptr<pdat::CellData<double> >
-            cd(
+            boost::shared_ptr<pdat::CellData<double> > cd(
                BOOST_CAST<pdat::CellData<double>, hier::PatchData>(fd));
             TBOX_ASSERT(cd);
             if (cd->getDepth() > 1) {
@@ -906,15 +841,13 @@ CellPoissonFACOps::initializeOperatorState(
                   << "Solver is for depth 0 only.\n");
             }
          }
-         boost::shared_ptr<hier::PatchData>
-         ud(
+         boost::shared_ptr<hier::PatchData> ud(
             patch.getPatchData(solution.getComponentDescriptorIndex(0)));
          if (ud) {
             /*
              * Some data checks can only be done if the data already exists.
              */
-            boost::shared_ptr<pdat::CellData<double> >
-            cd(
+            boost::shared_ptr<pdat::CellData<double> > cd(
                BOOST_CAST<pdat::CellData<double>, hier::PatchData>(ud));
             TBOX_ASSERT(cd);
             if (cd->getDepth() > 1) {
@@ -948,10 +881,7 @@ CellPoissonFACOps::initializeOperatorState(
     */
    d_cf_boundary.resize(d_hierarchy->getNumberOfLevels());
 
-   hier::IntVector
-   max_gcw(
-      d_dim,
-      1);
+   hier::IntVector max_gcw(d_dim, 1);
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
       d_cf_boundary[ln].reset(
          new hier::CoarseFineBoundary(*d_hierarchy,
@@ -981,8 +911,7 @@ CellPoissonFACOps::initializeOperatorState(
     *   which should be set to either "Ewing" or one of the
     *   acceptable strings for looking up the refine operator.
     */
-   boost::shared_ptr<geom::CartesianGridGeometry>
-   geometry(
+   boost::shared_ptr<geom::CartesianGridGeometry> geometry(
       BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
          d_hierarchy->getGridGeometry()));
    TBOX_ASSERT(geometry);
@@ -1102,8 +1031,7 @@ CellPoissonFACOps::initializeOperatorState(
 
    for (int dest_ln = d_ln_min + 1; dest_ln <= d_ln_max; ++dest_ln) {
 
-      boost::shared_ptr<xfer::PatchLevelFullFillPattern>
-      fill_pattern(
+      boost::shared_ptr<xfer::PatchLevelFullFillPattern> fill_pattern(
          boost::make_shared<xfer::PatchLevelFullFillPattern>());
       d_prolongation_refine_schedules[dest_ln] =
          d_prolongation_refine_algorithm->
@@ -1335,8 +1263,7 @@ CellPoissonFACOps::prolongErrorAndCorrect(
    }
 #endif
 
-   boost::shared_ptr<hier::PatchLevel>
-   fine_level(
+   boost::shared_ptr<hier::PatchLevel> fine_level(
       d_hierarchy->getPatchLevel(dest_ln));
 
    /*
@@ -1363,10 +1290,7 @@ CellPoissonFACOps::prolongErrorAndCorrect(
     * to the error currently residing in the destination level.
     */
    math::HierarchyCellDataOpsReal<double>
-   hierarchy_math_ops(
-      d_hierarchy,
-      dest_ln,
-      dest_ln);
+   hierarchy_math_ops(d_hierarchy, dest_ln, dest_ln);
    const int dst_index = d.getComponentDescriptorIndex(0);
    hierarchy_math_ops.add(dst_index, dst_index, d_cell_scratch_id);
 
@@ -1426,9 +1350,7 @@ CellPoissonFACOps::smoothErrorByRedBlack(
          "internal hierarchy." << std::endl);
    }
 #endif
-   boost::shared_ptr<hier::PatchLevel>
-   level(
-      d_hierarchy->getPatchLevel(ln));
+   boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(ln));
 
    const int data_id = data.getComponentDescriptorIndex(0);
 
@@ -1484,16 +1406,13 @@ CellPoissonFACOps::smoothErrorByRedBlack(
             }
          }
 
-         boost::shared_ptr<pdat::CellData<double> >
-         err_data(
+         boost::shared_ptr<pdat::CellData<double> > err_data(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                data.getComponentPatchData(0, *patch)));
-         boost::shared_ptr<pdat::CellData<double> >
-         residual_data(
+         boost::shared_ptr<pdat::CellData<double> > residual_data(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                residual.getComponentPatchData(0, *patch)));
-         boost::shared_ptr<pdat::SideData<double> >
-         flux_data(
+         boost::shared_ptr<pdat::SideData<double> > flux_data(
             BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(flux_id)));
 
@@ -1539,16 +1458,13 @@ CellPoissonFACOps::smoothErrorByRedBlack(
             }
          }
 
-         boost::shared_ptr<pdat::CellData<double> >
-         err_data(
+         boost::shared_ptr<pdat::CellData<double> > err_data(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                data.getComponentPatchData(0, *patch)));
-         boost::shared_ptr<pdat::CellData<double> >
-         residual_data(
+         boost::shared_ptr<pdat::CellData<double> > residual_data(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                residual.getComponentPatchData(0, *patch)));
-         boost::shared_ptr<pdat::SideData<double> >
-         flux_data(
+         boost::shared_ptr<pdat::SideData<double> > flux_data(
             BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(flux_id)));
 
@@ -1582,9 +1498,7 @@ CellPoissonFACOps::smoothErrorByRedBlack(
           */
          maxres = tbox::MathUtilities<double>::Max(red_maxres, blk_maxres);
          not_converged = maxres > residual_tolerance;
-         const tbox::SAMRAI_MPI&
-         mpi(
-            d_hierarchy->getMPI());
+         const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
          if (mpi.getSize() > 1) {
             mpi.AllReduce(&not_converged, 1, MPI_MAX);
          }
@@ -1615,15 +1529,12 @@ CellPoissonFACOps::ewingFixFlux(
 
    const int patch_ln = patch.getPatchLevelNumber();
    const hier::GlobalId id = patch.getGlobalId();
-   boost::shared_ptr<geom::CartesianPatchGeometry>
-   patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
-   const hier::Box&
-   patch_box(
-      patch.getBox());
+   const hier::Box& patch_box(patch.getBox());
    const hier::Index& plower = patch_box.lower();
    const hier::Index& pupper = patch_box.upper();
 
@@ -1633,8 +1544,7 @@ CellPoissonFACOps::ewingFixFlux(
 
    if (d_poisson_spec.dIsVariable()) {
 
-      boost::shared_ptr<pdat::SideData<double> >
-      diffcoef_data(
+      boost::shared_ptr<pdat::SideData<double> > diffcoef_data(
          BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
             patch.getPatchData(d_poisson_spec.getDPatchDataId())));
 
@@ -1885,9 +1795,7 @@ CellPoissonFACOps::computeCompositeResidualOnLevel(
          "internal hierarchy." << std::endl);
    }
 #endif
-   boost::shared_ptr<hier::PatchLevel>
-   level(
-      d_hierarchy->getPatchLevel(ln));
+   boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(ln));
 
    /*
     * Set up the bc helper so that when we use a refine schedule
@@ -1954,12 +1862,10 @@ CellPoissonFACOps::computeCompositeResidualOnLevel(
         pi != level->end(); ++pi) {
       const boost::shared_ptr<hier::Patch>& patch = *pi;
 
-      boost::shared_ptr<pdat::CellData<double> >
-      soln_data(
+      boost::shared_ptr<pdat::CellData<double> > soln_data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             solution.getComponentPatchData(0, *patch)));
-      boost::shared_ptr<pdat::SideData<double> >
-      flux_data(
+      boost::shared_ptr<pdat::SideData<double> > flux_data(
          BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
             patch->getPatchData(flux_id)));
 
@@ -1988,20 +1894,16 @@ CellPoissonFACOps::computeCompositeResidualOnLevel(
    for (hier::PatchLevel::iterator pi(level->begin());
         pi != level->end(); ++pi) {
       const boost::shared_ptr<hier::Patch>& patch = *pi;
-      boost::shared_ptr<pdat::CellData<double> >
-      soln_data(
+      boost::shared_ptr<pdat::CellData<double> > soln_data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             solution.getComponentPatchData(0, *patch)));
-      boost::shared_ptr<pdat::CellData<double> >
-      rhs_data(
+      boost::shared_ptr<pdat::CellData<double> > rhs_data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             rhs.getComponentPatchData(0, *patch)));
-      boost::shared_ptr<pdat::CellData<double> >
-      residual_data(
+      boost::shared_ptr<pdat::CellData<double> > residual_data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             residual.getComponentPatchData(0, *patch)));
-      boost::shared_ptr<pdat::SideData<double> >
-      flux_data(
+      boost::shared_ptr<pdat::SideData<double> > flux_data(
          BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
             patch->getPatchData(flux_id)));
 
@@ -2024,8 +1926,7 @@ CellPoissonFACOps::computeCompositeResidualOnLevel(
           *  loop through the patches, but we put it here to
           *  avoid writing another loop for it.
           */
-         boost::shared_ptr<pdat::OutersideData<double> >
-         oflux_data(
+         boost::shared_ptr<pdat::OutersideData<double> > oflux_data(
             BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
                patch->getPatchData(d_oflux_scratch_id)));
 
@@ -2113,14 +2014,11 @@ CellPoissonFACOps::computeVectorWeights(
        * On every level, first assign cell volume to vector weight.
        */
 
-      boost::shared_ptr<hier::PatchLevel>
-      level(
-         hierarchy->getPatchLevel(ln));
+      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
          const boost::shared_ptr<hier::Patch>& patch = *p;
-         boost::shared_ptr<geom::CartesianPatchGeometry>
-         patch_geometry(
+         boost::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
             BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch->getPatchGeometry()));
 
@@ -2136,8 +2034,7 @@ CellPoissonFACOps::computeVectorWeights(
             cell_vol *= dx[2];
          }
 
-         boost::shared_ptr<pdat::CellData<double> >
-         w(
+         boost::shared_ptr<pdat::CellData<double> > w(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(weight_id)));
          TBOX_ASSERT(w);
@@ -2157,13 +2054,10 @@ CellPoissonFACOps::computeVectorWeights(
           * at this level.
           */
 
-         boost::shared_ptr<hier::PatchLevel>
-         next_finer_level(
+         boost::shared_ptr<hier::PatchLevel> next_finer_level(
             hierarchy->getPatchLevel(ln + 1));
          hier::BoxContainer coarsened_boxes = next_finer_level->getBoxes();
-         hier::IntVector
-         coarsen_ratio(
-            next_finer_level->getRatioToLevelZero());
+         hier::IntVector coarsen_ratio(next_finer_level->getRatioToLevelZero());
          coarsen_ratio /= level->getRatioToLevelZero();
          coarsened_boxes.coarsen(coarsen_ratio);
 
@@ -2182,8 +2076,7 @@ CellPoissonFACOps::computeVectorWeights(
 
                hier::Box intersection = *i * (patch->getBox());
                if (!intersection.empty()) {
-                  boost::shared_ptr<pdat::CellData<double> >
-                  w(
+                  boost::shared_ptr<pdat::CellData<double> > w(
                      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                         patch->getPatchData(weight_id)));
                   TBOX_ASSERT(w);
@@ -2208,16 +2101,13 @@ CellPoissonFACOps::checkInputPatchDataIndices() const
    /*
     * Check input validity and correctness.
     */
-   hier::VariableDatabase&
-   vdb(
-      * hier::VariableDatabase::getDatabase());
+   hier::VariableDatabase& vdb(*hier::VariableDatabase::getDatabase());
 
    if (!d_poisson_spec.dIsConstant()
        && d_poisson_spec.getDPatchDataId() != -1) {
       boost::shared_ptr<hier::Variable> var;
       vdb.mapIndexToVariable(d_poisson_spec.getDPatchDataId(), var);
-      boost::shared_ptr<pdat::SideVariable<double> >
-      diffcoef_var(
+      boost::shared_ptr<pdat::SideVariable<double> > diffcoef_var(
          BOOST_CAST<pdat::SideVariable<double>, hier::Variable>(var));
 
       TBOX_ASSERT(diffcoef_var);
@@ -2226,8 +2116,7 @@ CellPoissonFACOps::checkInputPatchDataIndices() const
    if (!d_poisson_spec.cIsConstant() && !d_poisson_spec.cIsZero()) {
       boost::shared_ptr<hier::Variable> var;
       vdb.mapIndexToVariable(d_poisson_spec.getCPatchDataId(), var);
-      boost::shared_ptr<pdat::CellVariable<double> >
-      scalar_field_var(
+      boost::shared_ptr<pdat::CellVariable<double> > scalar_field_var(
          BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(var));
 
       TBOX_ASSERT(scalar_field_var);
@@ -2236,8 +2125,7 @@ CellPoissonFACOps::checkInputPatchDataIndices() const
    if (d_flux_id != -1) {
       boost::shared_ptr<hier::Variable> var;
       vdb.mapIndexToVariable(d_flux_id, var);
-      boost::shared_ptr<pdat::SideVariable<double> >
-      flux_var(
+      boost::shared_ptr<pdat::SideVariable<double> > flux_var(
          BOOST_CAST<pdat::SideVariable<double>, hier::Variable>(var));
 
       TBOX_ASSERT(flux_var);
@@ -2266,8 +2154,7 @@ CellPoissonFACOps::computeFluxOnPatch(
    TBOX_ASSERT(w_data.getGhostCellWidth() >=
       hier::IntVector::getOne(ratio_to_coarser_level.getDim()));
 
-   boost::shared_ptr<geom::CartesianPatchGeometry>
-   patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
@@ -2310,8 +2197,7 @@ CellPoissonFACOps::computeFluxOnPatch(
             dx);
       }
    } else {
-      boost::shared_ptr<pdat::SideData<double> >
-      D_data(
+      boost::shared_ptr<pdat::SideData<double> > D_data(
          BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
             patch.getPatchData(d_poisson_spec.getDPatchDataId())));
       TBOX_ASSERT(D_data);
@@ -2379,8 +2265,7 @@ CellPoissonFACOps::computeResidualOnPatch(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY5(d_dim, patch, flux_data, soln_data,
       rhs_data, residual_data);
 
-   boost::shared_ptr<geom::CartesianPatchGeometry>
-   patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
@@ -2391,8 +2276,7 @@ CellPoissonFACOps::computeResidualOnPatch(
 
    double scalar_field_constant;
    if (d_poisson_spec.cIsVariable()) {
-      boost::shared_ptr<pdat::CellData<double> >
-      scalar_field_data(
+      boost::shared_ptr<pdat::CellData<double> > scalar_field_data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_poisson_spec.getCPatchDataId())));
       TBOX_ASSERT(scalar_field_data);
@@ -2548,8 +2432,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
    TBOX_ASSERT(red_or_black == 'r' || red_or_black == 'b');
 
    const int offset = red_or_black == 'r' ? 0 : 1;
-   boost::shared_ptr<geom::CartesianPatchGeometry>
-   patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
@@ -2912,9 +2795,7 @@ CellPoissonFACOps::xeqScheduleURestriction(
       TBOX_ERROR("Expected schedule not found." << std::endl);
    }
 
-   xfer::CoarsenAlgorithm
-   coarsener(
-      d_dim);
+   xfer::CoarsenAlgorithm coarsener(d_dim);
    coarsener.registerCoarsen(dst_id,
       src_id,
       d_urestriction_coarsen_operator);
@@ -2934,9 +2815,7 @@ CellPoissonFACOps::xeqScheduleRRestriction(
       TBOX_ERROR("Expected schedule not found." << std::endl);
    }
 
-   xfer::CoarsenAlgorithm
-   coarsener(
-      d_dim);
+   xfer::CoarsenAlgorithm coarsener(d_dim);
    coarsener.registerCoarsen(dst_id,
       src_id,
       d_rrestriction_coarsen_operator);
@@ -2956,9 +2835,7 @@ CellPoissonFACOps::xeqScheduleFluxCoarsen(
       TBOX_ERROR("Expected schedule not found." << std::endl);
    }
 
-   xfer::CoarsenAlgorithm
-   coarsener(
-      d_dim);
+   xfer::CoarsenAlgorithm coarsener(d_dim);
    coarsener.registerCoarsen(dst_id,
       src_id,
       d_flux_coarsen_operator);

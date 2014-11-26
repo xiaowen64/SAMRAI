@@ -41,13 +41,9 @@ ShrunkenLevelGenerator::ShrunkenLevelGenerator(
        * Input parameters to determine whether to tag by buffering
        * fronts or shrinking level, and by how much.
        */
-      const std::string
-      sname(
-         "shrink_distance_");
+      const std::string sname("shrink_distance_");
       for (int ln = 0; ; ++ln) {
-         const std::string
-         lnstr(
-            tbox::Utilities::intToString(ln));
+         const std::string lnstr(tbox::Utilities::intToString(ln));
 
          // Look for buffer input first, then shrink input.
          const std::string snameln = sname + lnstr;
@@ -200,20 +196,16 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
    const double* shrink_distance)
 {
 
-   const tbox::Dimension
-   dim(
-      hierarchy->getDim());
+   const tbox::Dimension dim(hierarchy->getDim());
 
-   boost::shared_ptr<geom::CartesianGridGeometry>
-   grid_geometry(
+   boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
       BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
          hierarchy->getGridGeometry()));
    TBOX_ASSERT(grid_geometry);
 
    const int tag_val = 1;
 
-   const boost::shared_ptr<hier::PatchLevel>&
-   tag_level(
+   const boost::shared_ptr<hier::PatchLevel>& tag_level(
       hierarchy->getPatchLevel(tag_ln));
 
    const hier::BoxLevel& Ltag = *tag_level->getBoxLevel();
@@ -223,10 +215,7 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
     * the largest of properly converted values for shrink_cells,
     * shrink_distance and nesting width.
     */
-   hier::IntVector
-   shrink_width(
-      dim,
-      hierarchy->getProperNestingBuffer(tag_ln));
+   hier::IntVector shrink_width(dim, hierarchy->getProperNestingBuffer(tag_ln));
    shrink_width.max(shrink_cells);
 
    const double* ref_dx = grid_geometry->getDx();
@@ -255,8 +244,7 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
         pi != tag_level->end(); ++pi) {
 
       boost::shared_ptr<hier::Patch> patch = *pi;
-      boost::shared_ptr<pdat::CellData<int> >
-      tag_data(
+      boost::shared_ptr<pdat::CellData<int> > tag_data(
          BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(tag_data_id)));
       TBOX_ASSERT(tag_data);
@@ -286,6 +274,8 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
    }
 }
 
+
+
 /*
  ***********************************************************************
  ***********************************************************************
@@ -298,6 +288,8 @@ int ShrunkenLevelGenerator::registerVariablesWithPlotter(
    return 0;
 }
 #endif
+
+
 
 /*
  ***********************************************************************

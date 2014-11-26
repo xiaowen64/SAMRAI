@@ -32,10 +32,7 @@ extern "C" {
 #endif
 
 // in lintimint1d.f:
-void
-SAMRAI_F77_FUNC(
-   lintimeintsidefloat1d,
-   LINTIMEINTSIDEFLOAT1D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidefloat1d, LINTIMEINTSIDEFLOAT1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -44,10 +41,7 @@ SAMRAI_F77_FUNC(
    const float *, const float *,
    float *);
 // in lintimint2d.f:
-void
-SAMRAI_F77_FUNC(
-   lintimeintsidefloat2d0,
-   LINTIMEINTSIDEFLOAT2D0) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidefloat2d0, LINTIMEINTSIDEFLOAT2D0) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -59,10 +53,7 @@ SAMRAI_F77_FUNC(
    const double&,
    const float *, const float *,
    float *);
-void
-SAMRAI_F77_FUNC(
-   lintimeintsidefloat2d1,
-   LINTIMEINTSIDEFLOAT2D1) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidefloat2d1, LINTIMEINTSIDEFLOAT2D1) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -75,10 +66,7 @@ SAMRAI_F77_FUNC(
    const float *, const float *,
    float *);
 // in lintimint3d.f:
-void
-SAMRAI_F77_FUNC(
-   lintimeintsidefloat3d0,
-   LINTIMEINTSIDEFLOAT3D0) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidefloat3d0, LINTIMEINTSIDEFLOAT3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -90,10 +78,7 @@ SAMRAI_F77_FUNC(
    const double&,
    const float *, const float *,
    float *);
-void
-SAMRAI_F77_FUNC(
-   lintimeintsidefloat3d1,
-   LINTIMEINTSIDEFLOAT3D1) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidefloat3d1, LINTIMEINTSIDEFLOAT3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -105,10 +90,7 @@ SAMRAI_F77_FUNC(
    const double&,
    const float *, const float *,
    float *);
-void
-SAMRAI_F77_FUNC(
-   lintimeintsidefloat3d2,
-   LINTIMEINTSIDEFLOAT3D2) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidefloat3d2, LINTIMEINTSIDEFLOAT3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -141,9 +123,7 @@ SideFloatLinearTimeInterpolateOp::timeInterpolate(
    const hier::PatchData& src_data_old,
    const hier::PatchData& src_data_new) const
 {
-   const tbox::Dimension&
-   dim(
-      where.getDim());
+   const tbox::Dimension& dim(where.getDim());
 
    const SideData<float>* old_dat =
       CPP_CAST<const SideData<float> *>(&src_data_old);

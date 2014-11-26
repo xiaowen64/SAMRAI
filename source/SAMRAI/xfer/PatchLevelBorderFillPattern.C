@@ -70,9 +70,7 @@ PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
 
    const hier::BoxContainer& dst_boxes = dst_box_level.getBoxes();
 
-   hier::IntVector
-   dst_to_dst_width(
-      fill_ghost_width);
+   hier::IntVector dst_to_dst_width(fill_ghost_width);
    if (data_on_patch_border) {
       dst_to_dst_width += hier::IntVector::getOne(fill_ghost_width.getDim());
    }
@@ -91,8 +89,7 @@ PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
    for (hier::RealBoxConstIterator ni(dst_boxes.realBegin());
         ni != dst_boxes.realEnd(); ++ni) {
       const hier::Box& dst_box = *ni;
-      hier::BoxContainer
-      fill_boxes(
+      hier::BoxContainer fill_boxes(
          hier::Box::grow(dst_box, fill_ghost_width));
       hier::Connector::ConstNeighborhoodIterator nabrs =
          dst_to_dst.find(dst_box.getBoxId());
@@ -101,8 +98,7 @@ PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
          if (dst_box.getBlockId() == na->getBlockId()) {
             fill_boxes.removeIntersections(*na);
          } else {
-            boost::shared_ptr<const hier::BaseGridGeometry>
-            grid_geometry(
+            boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
                dst_box_level.getGridGeometry());
 
             const hier::BlockId& dst_block_id = dst_box.getBlockId();
@@ -114,22 +110,15 @@ PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
             hier::Transformation::RotationIdentifier rotation =
                grid_geometry->getRotationIdentifier(dst_block_id,
                   nbr_block_id);
-            hier::IntVector
-            offset(
+            hier::IntVector offset(
                grid_geometry->getOffset(dst_block_id, nbr_block_id));
 
             offset *= (dst_box_level.getRefinementRatio());
 
-            hier::Transformation
-            transformation(
-               rotation,
-               offset,
-               nbr_block_id,
-               dst_block_id);
+            hier::Transformation transformation(rotation, offset,
+                                                nbr_block_id, dst_block_id);
 
-            hier::Box
-            nbr_box(
-               * na);
+            hier::Box nbr_box(*na);
             transformation.transform(nbr_box);
 
             fill_boxes.removeIntersections(nbr_box);
@@ -143,11 +132,9 @@ PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
             dst_to_fill->makeEmptyLocalNeighborhood(dst_box.getBoxId());
          for (hier::BoxContainer::iterator li = fill_boxes.begin();
               li != fill_boxes.end(); ++li) {
-            hier::Box
-            fill_box(
-               * li,
-               ++last_id,
-               dst_box.getOwnerRank());
+            hier::Box fill_box(*li,
+                               ++last_id,
+                               dst_box.getOwnerRank());
             TBOX_ASSERT(fill_box.getBlockId() == dst_box.getBlockId());
             fill_box_level->addBoxWithoutUpdate(fill_box);
             dst_to_fill->insertLocalNeighbor(fill_box, base_box_itr);

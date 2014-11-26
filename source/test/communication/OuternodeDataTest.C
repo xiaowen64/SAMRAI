@@ -175,15 +175,12 @@ void OuternodeDataTest::setLinearData(
 {
    TBOX_ASSERT(data);
 
-   boost::shared_ptr<geom::CartesianPatchGeometry>
-   pgeom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
-   const pdat::NodeIndex
-   loweri(
-      patch.getBox().lower(),
-      (pdat::NodeIndex::Corner)0);
+   const pdat::NodeIndex loweri(
+      patch.getBox().lower(), (pdat::NodeIndex::Corner)0);
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
    double x, y, z;
@@ -192,9 +189,7 @@ void OuternodeDataTest::setLinearData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   pdat::NodeIterator
-   ciend(
-      pdat::NodeGeometry::end(sbox));
+   pdat::NodeIterator ciend(pdat::NodeGeometry::end(sbox));
    for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(sbox));
         ci != ciend; ++ci) {
 
@@ -236,15 +231,12 @@ void OuternodeDataTest::setLinearData(
    }
 #endif
 
-   boost::shared_ptr<geom::CartesianPatchGeometry>
-   pgeom(
+   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
-   const pdat::NodeIndex
-   loweri(
-      patch.getBox().lower(),
-      (pdat::NodeIndex::Corner)0);
+   const pdat::NodeIndex loweri(
+      patch.getBox().lower(), (pdat::NodeIndex::Corner)0);
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
    double x, y, z;
@@ -254,9 +246,7 @@ void OuternodeDataTest::setLinearData(
    for (tbox::Dimension::dir_t n = 0; n < d_dim.getValue(); ++n) {
       for (int s = 0; s < 2; ++s) {
          const hier::Box databox = data->getDataBox(n, s);
-         hier::Box::iterator
-         biend(
-            databox.end());
+         hier::Box::iterator biend(databox.end());
          for (hier::Box::iterator bi(databox.begin()); bi != biend; ++bi) {
 
             /*
@@ -273,10 +263,7 @@ void OuternodeDataTest::setLinearData(
                z = lowerx[2] + dx[2] * ((*bi)(2) - loweri(2));
             }
 
-            pdat::NodeIndex
-            ni(
-               * bi,
-               (pdat::NodeIndex::Corner)0);
+            pdat::NodeIndex ni(*bi, (pdat::NodeIndex::Corner)0);
             for (int d = 0; d < depth; ++d) {
                (*data)(ni,
                        d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
@@ -298,25 +285,21 @@ void OuternodeDataTest::initializeDataOnPatch(
    NULL_USE(level_number);
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
    variable_db->printClassData();
-   std::vector<boost::shared_ptr<hier::Variable> >&
-   variables(
+   std::vector<boost::shared_ptr<hier::Variable> >& variables(
       src_or_dst == 's' ? d_variables_src : d_variables_dst);
 
    if (d_do_refine) {
 
       for (int i = 0; i < static_cast<int>(variables.size()); ++i) {
 
-         boost::shared_ptr<hier::PatchData>
-         data(
+         boost::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
          TBOX_ASSERT(data);
 
-         boost::shared_ptr<pdat::OuternodeData<double> >
-         onode_data(
+         boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
             boost::dynamic_pointer_cast<pdat::OuternodeData<double>,
                                         hier::PatchData>(data));
-         boost::shared_ptr<pdat::NodeData<double> >
-         node_data(
+         boost::shared_ptr<pdat::NodeData<double> > node_data(
             boost::dynamic_pointer_cast<pdat::NodeData<double>,
                                         hier::PatchData>(data));
 
@@ -335,16 +318,13 @@ void OuternodeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(variables.size()); ++i) {
 
-         boost::shared_ptr<hier::PatchData>
-         data(
+         boost::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
          TBOX_ASSERT(data);
-         boost::shared_ptr<pdat::OuternodeData<double> >
-         onode_data(
+         boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
             boost::dynamic_pointer_cast<pdat::OuternodeData<double>,
                                         hier::PatchData>(data));
-         boost::shared_ptr<pdat::NodeData<double> >
-         node_data(
+         boost::shared_ptr<pdat::NodeData<double> > node_data(
             boost::dynamic_pointer_cast<pdat::NodeData<double>,
                                         hier::PatchData>(data));
 
@@ -370,19 +350,14 @@ void OuternodeDataTest::checkPatchInteriorData(
 {
    TBOX_ASSERT(data);
 
-   const pdat::NodeIndex
-   loweri(
-      interior.lower(),
-      (pdat::NodeIndex::Corner)0);
+   const pdat::NodeIndex loweri(interior.lower(), (pdat::NodeIndex::Corner)0);
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
    double x, y, z;
 
    const int depth = data->getDepth();
 
-   pdat::NodeIterator
-   ciend(
-      pdat::NodeGeometry::end(interior));
+   pdat::NodeIterator ciend(pdat::NodeGeometry::end(interior));
    for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(interior));
         ci != ciend; ++ci) {
 
@@ -448,23 +423,17 @@ bool OuternodeDataTest::verifyResults(
       tbox::plog << "level_number = " << level_number << endl;
       tbox::plog << "Patch box = " << patch.getBox() << endl;
 
-      hier::IntVector
-      tgcw(
-         d_dim,
-         0);
+      hier::IntVector tgcw(d_dim, 0);
       for (int i = 0; i < static_cast<int>(d_variables_dst.size()); ++i) {
          tgcw.max(patch.getPatchData(d_variables_dst[i], getDataContext())->
             getGhostCellWidth());
       }
       hier::Box pbox = patch.getBox();
 
-      boost::shared_ptr<pdat::NodeData<double> >
-      solution(
+      boost::shared_ptr<pdat::NodeData<double> > solution(
          new pdat::NodeData<double>(pbox, 1, tgcw));
 
-      hier::Box
-      tbox(
-         pbox);
+      hier::Box tbox(pbox);
       tbox.grow(tgcw);
 
       if (d_do_refine) {
@@ -476,17 +445,14 @@ bool OuternodeDataTest::verifyResults(
 
       for (int i = 0; i < static_cast<int>(d_variables_dst.size()); ++i) {
 
-         boost::shared_ptr<pdat::NodeData<double> >
-         node_data(
+         boost::shared_ptr<pdat::NodeData<double> > node_data(
             BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
                patch.getPatchData(d_variables_dst[i], getDataContext())));
          TBOX_ASSERT(node_data);
          int depth = node_data->getDepth();
          hier::Box dbox = node_data->getGhostBox();
 
-         pdat::NodeIterator
-         ciend(
-            pdat::NodeGeometry::end(dbox));
+         pdat::NodeIterator ciend(pdat::NodeGeometry::end(dbox));
          for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(dbox));
               ci != ciend; ++ci) {
             double correct = (*solution)(*ci);
