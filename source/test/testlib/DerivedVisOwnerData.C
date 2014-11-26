@@ -21,8 +21,6 @@ DerivedVisOwnerData::~DerivedVisOwnerData()
 {
 }
 
-
-
 /*
  ***********************************************************************
  ***********************************************************************
@@ -49,7 +47,9 @@ bool DerivedVisOwnerData::packDerivedDataIntoDoubleBuffer(
    NULL_USE(simulation_time);
 
    if (variable_name == "Owner") {
-      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      const tbox::SAMRAI_MPI&
+      mpi(
+         tbox::SAMRAI_MPI::getSAMRAIWorld());
       double owner = mpi.getRank();
       size_t i, size = region.size();
       for (i = 0; i < size; ++i) buffer[i] = owner;

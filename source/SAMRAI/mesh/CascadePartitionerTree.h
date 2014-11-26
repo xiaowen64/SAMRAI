@@ -82,7 +82,10 @@ public:
 
 private:
    //! @brief Where a group falls in the next larger group.
-   enum Position { Lower = 0, Upper = 1 };
+   enum Position {
+      Lower = 0,
+      Upper = 1
+   };
 
    /*
     * Static integer constants.  Tags are for distinguishing messages
@@ -163,14 +166,16 @@ private:
     * @brief Reset obligation recursively for all descendents, based
     * on given average load.
     */
-   void resetObligation( double avg_load );
+   void
+   resetObligation(
+      double avg_load);
 
    /*!
     * @brief Compute interval for updating Connector during load
     * distribution.
     */
-   double computeConnectorUpdateInterval() const;
-
+   double
+   computeConnectorUpdateInterval() const;
 
    //! @brief Data the main CascadePartitioner shares with all parts of the tree.
    const CascadePartitioner* d_common;

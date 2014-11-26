@@ -89,7 +89,9 @@ int main(
    SAMRAI_MPI::init(&argc, &argv);
    SAMRAIManager::initialize();
    SAMRAIManager::startup();
-   tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   tbox::SAMRAI_MPI
+   mpi(
+      tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    size_t fail_count = 0;
 
@@ -115,7 +117,9 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase>
+      input_db(
+         new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -125,9 +129,13 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
+      boost::shared_ptr<Database>
+      main_db(
+         input_db->getDatabase("Main"));
 
-      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension
+      dim(
+         static_cast<unsigned short>(main_db->getInteger("dim")));
 
       std::string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
@@ -155,7 +163,8 @@ int main(
          TBOX_ERROR("Multiblock tree search test: could not find entry GridGeometry"
             << "\nin input.");
       }
-      boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
+      boost::shared_ptr<const hier::BaseGridGeometry>
+      grid_geometry(
          new geom::GridGeometry(
             dim,
             "GridGeometry",
@@ -167,10 +176,15 @@ int main(
       plog << "Input database after running..." << std::endl;
       input_db->printClassData(plog);
 
-      const hier::IntVector& one_vector(hier::IntVector::getOne(dim));
-      const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
+      const hier::IntVector&
+      one_vector(
+         hier::IntVector::getOne(dim));
+      const hier::IntVector&
+      zero_vector(
+         hier::IntVector::getZero(dim));
 
-      hier::BoxLevel domain_box_level(
+      hier::BoxLevel
+      domain_box_level(
          one_vector,
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
@@ -184,8 +198,12 @@ int main(
        * Generate BoxLevel A from the multiblock domain description
        * using input database BoxLevelA.
        */
-      hier::BoxLevel box_level_a(domain_box_level);
-      boost::shared_ptr<Database> a_db(main_db->getDatabase("BoxLevelA"));
+      hier::BoxLevel
+      box_level_a(
+         domain_box_level);
+      boost::shared_ptr<Database>
+      a_db(
+         main_db->getDatabase("BoxLevelA"));
       breakUpBoxes(box_level_a, domain_box_level, a_db);
       box_level_a.cacheGlobalReducedData();
 
@@ -193,8 +211,12 @@ int main(
        * Generate BoxLevel B from the multiblock domain description
        * using input database BoxLevelB.
        */
-      hier::BoxLevel box_level_b(domain_box_level);
-      boost::shared_ptr<Database> b_db(main_db->getDatabase("BoxLevelB"));
+      hier::BoxLevel
+      box_level_b(
+         domain_box_level);
+      boost::shared_ptr<Database>
+      b_db(
+         main_db->getDatabase("BoxLevelB"));
       breakUpBoxes(box_level_b, domain_box_level, b_db);
       box_level_b.cacheGlobalReducedData();
 
@@ -203,8 +225,12 @@ int main(
        * operation.
        */
 
-      hier::IntVector base_width_a(zero_vector);
-      hier::IntVector base_width_b(zero_vector);
+      hier::IntVector
+      base_width_a(
+         zero_vector);
+      hier::IntVector
+      base_width_b(
+         zero_vector);
       if (main_db->isInteger("base_width_a")) {
          main_db->getIntegerArray("base_width_a", &base_width_a[0], dim.getValue());
       }
@@ -240,7 +266,8 @@ int main(
 
       boost::shared_ptr<hier::BoxLevel> box_level_c;
       boost::shared_ptr<hier::MappingConnector> b_to_c;
-      boost::shared_ptr<Database> alteration_db(
+      boost::shared_ptr<Database>
+      alteration_db(
          main_db->getDatabase("Alteration"));
 
       alterAndGenerateMapping(
@@ -324,9 +351,13 @@ void breakUpBoxes(
    const hier::BoxLevel& domain_box_level,
    const boost::shared_ptr<tbox::Database>& database) {
 
-   const tbox::Dimension& dim(box_level.getDim());
+   const tbox::Dimension&
+   dim(
+      box_level.getDim());
 
-   hier::IntVector refinement_ratio(hier::IntVector::getOne(dim));
+   hier::IntVector
+   refinement_ratio(
+      hier::IntVector::getOne(dim));
    if (database->isInteger("refinement_ratio")) {
       database->getIntegerArray("refinement_ratio", &refinement_ratio[0], dim.getValue());
    }
@@ -338,25 +369,40 @@ void breakUpBoxes(
       box_level.finalize();
    }
 
-   hier::IntVector max_box_size(dim, tbox::MathUtilities<int>::getMax());
+   hier::IntVector
+   max_box_size(
+      dim,
+      tbox::MathUtilities<int>::getMax());
    if (database->isInteger("max_box_size")) {
       database->getIntegerArray("max_box_size", &max_box_size[0], dim.getValue());
    }
 
-   hier::IntVector min_box_size(hier::IntVector::getOne(dim));
+   hier::IntVector
+   min_box_size(
+      hier::IntVector::getOne(dim));
    if (database->isInteger("min_box_size")) {
       database->getIntegerArray("min_box_size", &min_box_size[0], dim.getValue());
    }
 
-   mesh::TreeLoadBalancer load_balancer(box_level.getDim(),
-                                        "TreeLoadBalancer");
+   mesh::TreeLoadBalancer
+   load_balancer(
+      box_level.getDim(),
+      "TreeLoadBalancer");
 
-   const int level_number(0);
+   const int
+   level_number(
+      0);
 
    hier::Connector* dummy_connector = 0;
 
-   const hier::IntVector bad_interval(dim, 1);
-   const hier::IntVector cut_factor(dim, 1);
+   const hier::IntVector
+   bad_interval(
+      dim,
+      1);
+   const hier::IntVector
+   cut_factor(
+      dim,
+      1);
 
    load_balancer.loadBalanceBoxLevel(
       box_level,
@@ -380,7 +426,9 @@ void alterAndGenerateMapping(
    const hier::BoxLevel& box_level_b,
    const boost::shared_ptr<tbox::Database>& database)
 {
-   const tbox::Dimension dim(box_level_b.getDim());
+   const tbox::Dimension
+   dim(
+      box_level_b.getDim());
 
    /*
     * Increment for changing the LocalIds.
@@ -389,7 +437,9 @@ void alterAndGenerateMapping(
    const int local_id_increment =
       database->getIntegerWithDefault("local_id_increment", 0);
 
-   const hier::BoxContainer boxes_b(box_level_b.getBoxes());
+   const hier::BoxContainer
+   boxes_b(
+      box_level_b.getBoxes());
 
    box_level_c.reset(new hier::BoxLevel(box_level_b.getRefinementRatio(),
          box_level_b.getGridGeometry(),
@@ -399,17 +449,23 @@ void alterAndGenerateMapping(
          *box_level_c,
          hier::IntVector::getZero(dim)));
    hier::MappingConnector* c_to_b =
-      new hier::MappingConnector(*box_level_c,
+      new
+      hier::MappingConnector(
+         * box_level_c,
          box_level_b,
          hier::IntVector::getZero(dim));
    b_to_c->setTranspose(c_to_b, true);
    for (hier::BoxContainer::const_iterator bi = boxes_b.begin();
         bi != boxes_b.end(); ++bi) {
-      const hier::Box& box_b(*bi);
-      hier::Box box_c(box_b,
-                      box_b.getLocalId() + local_id_increment,
-                      box_b.getOwnerRank(),
-                      box_b.getPeriodicId());
+      const hier::Box&
+      box_b(
+         * bi);
+      hier::Box
+      box_c(
+         box_b,
+         box_b.getLocalId() + local_id_increment,
+         box_b.getOwnerRank(),
+         box_b.getPeriodicId());
       box_level_c->addBoxWithoutUpdate(box_c);
       b_to_c->insertLocalNeighbor(box_c, box_b.getBoxId());
       c_to_b->insertLocalNeighbor(box_b, box_c.getBoxId());

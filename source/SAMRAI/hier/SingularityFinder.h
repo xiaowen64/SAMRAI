@@ -76,57 +76,6 @@ public:
       const std::map<BoxId, std::map<BoxId, int> >& face_neighbors);
 
 private:
-   struct Block;
-   struct Face;
-   struct Edge;
-   struct Point;
-
-   /*!
-    * @brief Private struct Block holds inforation about all
-    * the faces, edges, and corner points of a block.
-    */
-   struct Block {
-      Block(
-         const tbox::Dimension& dim) {
-
-         if (dim.getValue() == 1) {
-            d_nfaces = 2;
-            d_nedges = 0;
-            d_npoints = 0;
-         } else if (dim.getValue() == 2) {
-            d_nfaces = 4;
-            d_nedges = 0;
-            d_npoints = 4;
-         } else if (dim.getValue() == 3) {
-            d_nfaces = 6;
-            d_nedges = 12;
-            d_npoints = 8;
-         } else {
-            d_nfaces = 0;
-            d_nedges = 0;
-            d_npoints = 0;
-         }
-
-         if (d_nfaces) {
-            d_face.resize(d_nfaces);
-         }
-         if (d_nedges) {
-            d_edge.resize(d_nedges);
-         }
-         if (d_npoints) {
-            d_point.resize(d_npoints);
-         }
-
-      }
-
-      int d_nfaces;
-      int d_nedges;
-      int d_npoints;
-      std::vector<boost::shared_ptr<Face> > d_face;
-      std::vector<boost::shared_ptr<Edge> > d_edge;
-      std::vector<boost::shared_ptr<Point> > d_point;
-   };
-
    /*!
     * @brief Private struct Face
     *
@@ -178,6 +127,52 @@ private:
       bool d_bdry;
       std::set<int> d_blocks;
       std::map<int, int> d_block_to_point;
+   };
+
+   /*!
+    * @brief Private struct Block holds inforation about all
+    * the faces, edges, and corner points of a block.
+    */
+   struct Block {
+      Block(
+         const tbox::Dimension& dim) {
+
+         if (dim.getValue() == 1) {
+            d_nfaces = 2;
+            d_nedges = 0;
+            d_npoints = 0;
+         } else if (dim.getValue() == 2) {
+            d_nfaces = 4;
+            d_nedges = 0;
+            d_npoints = 4;
+         } else if (dim.getValue() == 3) {
+            d_nfaces = 6;
+            d_nedges = 12;
+            d_npoints = 8;
+         } else {
+            d_nfaces = 0;
+            d_nedges = 0;
+            d_npoints = 0;
+         }
+
+         if (d_nfaces) {
+            d_face.resize(d_nfaces);
+         }
+         if (d_nedges) {
+            d_edge.resize(d_nedges);
+         }
+         if (d_npoints) {
+            d_point.resize(d_npoints);
+         }
+
+      }
+
+      int d_nfaces;
+      int d_nedges;
+      int d_npoints;
+      std::vector<boost::shared_ptr<Face> > d_face;
+      std::vector<boost::shared_ptr<Edge> > d_edge;
+      std::vector<boost::shared_ptr<Point> > d_point;
    };
 
    /*

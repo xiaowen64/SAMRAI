@@ -91,7 +91,8 @@ int main(
        * Create input database and parse all data in input file into it.
        */
 
-      boost::shared_ptr<tbox::InputDatabase> input_db(
+      boost::shared_ptr<tbox::InputDatabase>
+      input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -104,9 +105,13 @@ int main(
        * This database contains information relevant to main.
        */
 
-      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
+      boost::shared_ptr<tbox::Database>
+      main_db(
+         input_db->getDatabase("Main"));
 
-      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension
+      dim(
+         static_cast<unsigned short>(main_db->getInteger("dim")));
 
       tbox::plog << "Main database:" << std::endl;
       main_db->printClassData(tbox::plog);
@@ -149,14 +154,16 @@ int main(
       /*
        * Create a grid geometry required for the patchHierarchy object.
        */
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry>
+      grid_geometry(
          new geom::CartesianGridGeometry(
             dim,
             "CartesianGridGeometry",
             input_db->getDatabase("CartesianGridGeometry")));
       tbox::plog << "Grid Geometry:" << std::endl;
       grid_geometry->printClassData(tbox::plog);
-      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy>
+      patch_hierarchy(
          new hier::PatchHierarchy(
             "Patch Hierarchy",
             grid_geometry,
@@ -175,7 +182,8 @@ int main(
       std::string hypre_poisson_name = fac_ops_name + "::hypre_solver";
 
 #ifdef HAVE_HYPRE
-      boost::shared_ptr<solv::CellPoissonHypreSolver> hypre_poisson(
+      boost::shared_ptr<solv::CellPoissonHypreSolver>
+      hypre_poisson(
          new solv::CellPoissonHypreSolver(
             dim,
             hypre_poisson_name,
@@ -183,7 +191,8 @@ int main(
             input_db->getDatabase("hypre_solver") :
             boost::shared_ptr<tbox::Database>()));
 
-      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+      boost::shared_ptr<solv::CellPoissonFACOps>
+      fac_ops(
          new solv::CellPoissonFACOps(
             hypre_poisson,
             dim,
@@ -192,7 +201,8 @@ int main(
             input_db->getDatabase("fac_ops") :
             boost::shared_ptr<tbox::Database>()));
 #else
-      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+      boost::shared_ptr<solv::CellPoissonFACOps>
+      fac_ops(
          new solv::CellPoissonFACOps(
             dim,
             fac_ops_name,
@@ -201,7 +211,8 @@ int main(
             boost::shared_ptr<tbox::Database>()));
 #endif
 
-      boost::shared_ptr<solv::FACPreconditioner> fac_precond(
+      boost::shared_ptr<solv::FACPreconditioner>
+      fac_precond(
          new solv::FACPreconditioner(
             fac_precond_name,
             fac_ops,
@@ -209,29 +220,34 @@ int main(
             input_db->getDatabase("fac_precond") :
             boost::shared_ptr<tbox::Database>()));
 
-      AdaptivePoisson adaptive_poisson(adaptive_poisson_name,
-                                       dim,
-                                       fac_ops,
-                                       fac_precond,
-                                       *(input_db->getDatabase("AdaptivePoisson")),
-                                       &tbox::plog);
+      AdaptivePoisson
+      adaptive_poisson(
+         adaptive_poisson_name,
+         dim,
+         fac_ops,
+         fac_precond,
+         *(input_db->getDatabase("AdaptivePoisson")),
+         & tbox::plog);
 
       /*
        * Create the tag-and-initializer, box-generator and load-balancer
        * object references required by the gridding_algorithm object.
        */
-      boost::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
+      boost::shared_ptr<mesh::StandardTagAndInitialize>
+      tag_and_initializer(
          new mesh::StandardTagAndInitialize(
             "CellTaggingMethod",
             &adaptive_poisson,
             input_db->getDatabase("StandardTagAndInitialize")));
-      boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
+      boost::shared_ptr<mesh::BergerRigoutsos>
+      box_generator(
          new mesh::BergerRigoutsos(
             dim,
             (input_db->isDatabase("BergerRigoutsos") ?
              input_db->getDatabase("BergerRigoutsos") :
              boost::shared_ptr<tbox::Database>())));
-      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
+      boost::shared_ptr<mesh::TreeLoadBalancer>
+      load_balancer(
          new mesh::TreeLoadBalancer(
             dim,
             "load balancer",
@@ -242,7 +258,8 @@ int main(
        * Create the gridding algorithm used to generate the SAMR grid
        * and create the grid.
        */
-      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
+      boost::shared_ptr<mesh::GriddingAlgorithm>
+      gridding_algorithm(
          new mesh::GriddingAlgorithm(
             patch_hierarchy,
             "Gridding Algorithm",
@@ -298,8 +315,12 @@ int main(
             main_db->getStringWithDefault("initial_u", "0.0");
          adaptive_poisson.solvePoisson(patch_hierarchy,
             adaption_number ? std::string() : initial_u);
-         std::vector<double> l2norms(patch_hierarchy->getNumberOfLevels());
-         std::vector<double> linorms(patch_hierarchy->getNumberOfLevels());
+         std::vector<double>
+         l2norms(
+            patch_hierarchy->getNumberOfLevels());
+         std::vector<double>
+         linorms(
+            patch_hierarchy->getNumberOfLevels());
          adaptive_poisson.computeError(*patch_hierarchy,
             &l2norm,
             &linorm,
@@ -325,7 +346,8 @@ int main(
 
          /* Write the plot file. */
          if (do_plot) {
-            boost::shared_ptr<appu::VisItDataWriter> visit_writer(
+            boost::shared_ptr<appu::VisItDataWriter>
+            visit_writer(
                new appu::VisItDataWriter(
                   dim,
                   "VisIt Writer",
@@ -350,7 +372,9 @@ int main(
             ++adaption_number;
             tbox::plog << "Adaption number " << adaption_number << "\n";
 
-            std::vector<int> tag_buffer(patch_hierarchy->getMaxNumberOfLevels());
+            std::vector<int>
+            tag_buffer(
+               patch_hierarchy->getMaxNumberOfLevels());
             for (ln = 0; ln < static_cast<int>(tag_buffer.size()); ++ln) {
                tag_buffer[ln] = 1;
             }
@@ -363,7 +387,8 @@ int main(
             patch_hierarchy->recursivePrint(tbox::plog, "    ", 1);
             if (0) {
                /* Write post-adapt viz file for debugging */
-               boost::shared_ptr<appu::VisItDataWriter> visit_writer(
+               boost::shared_ptr<appu::VisItDataWriter>
+               visit_writer(
                   new appu::VisItDataWriter(
                      dim,
                      "VisIt Writer",

@@ -143,7 +143,7 @@ AsyncCommGroup::AsyncCommGroup(
  */
 AsyncCommGroup&
 AsyncCommGroup::operator = (
-   const AsyncCommGroup& r) {
+      const AsyncCommGroup &r) {
    NULL_USE(r);
    TBOX_ERROR(
       "Assignment operator disallowed due to primitive internal memory management.");
@@ -1298,7 +1298,7 @@ AsyncCommGroup::computeDependentData(
    const int pos = toPosition(d_idx);
    if (pos > 0) {
       d_parent_rank = group_ranks[toIndex((pos - 1)
-                                     / static_cast<int>(d_nchild))];
+                                     / static_cast < int > (d_nchild))];
    } else d_parent_rank = -1;
    for (ic = 0; ic < d_nchild; ++ic) {
       const int pos_of_child_ic = toChildPosition(pos, ic);

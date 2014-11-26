@@ -117,7 +117,9 @@ CoarsenClasses::itemIsValid(
 
    bool item_good = true;
 
-   boost::shared_ptr<hier::PatchDescriptor> pd(descriptor);
+   boost::shared_ptr<hier::PatchDescriptor>
+   pd(
+      descriptor);
    if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
@@ -137,9 +139,11 @@ CoarsenClasses::itemIsValid(
          << "`Source' patch data id invalid (< 0!)" << std::endl);
    }
 
-   boost::shared_ptr<hier::PatchDataFactory> dfact(
+   boost::shared_ptr<hier::PatchDataFactory>
+   dfact(
       pd->getPatchDataFactory(dst_id));
-   boost::shared_ptr<hier::PatchDataFactory> sfact(
+   boost::shared_ptr<hier::PatchDataFactory>
+   sfact(
       pd->getPatchDataFactory(src_id));
 
    if (item_good && !(sfact->validCopyTo(dfact))) {
@@ -150,7 +154,9 @@ CoarsenClasses::itemIsValid(
          << pd->mapIndexToName(dst_id) << std::endl);
    }
 
-   boost::shared_ptr<hier::CoarsenOperator> coarsop(data_item.d_opcoarsen);
+   boost::shared_ptr<hier::CoarsenOperator>
+   coarsop(
+      data_item.d_opcoarsen);
    if (item_good && coarsop) {
       if (coarsop->getStencilWidth(dim) > sfact->getGhostCellWidth()) {
          item_good = false;
@@ -248,7 +254,9 @@ CoarsenClasses::itemsAreEquivalent(
 {
    bool equivalent = true;
 
-   boost::shared_ptr<hier::PatchDescriptor> pd(descriptor);
+   boost::shared_ptr<hier::PatchDescriptor>
+   pd(
+      descriptor);
    if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
@@ -365,9 +373,11 @@ CoarsenClasses::patchDataMatch(
 
    if (items_match) {
 
-      boost::shared_ptr<hier::PatchDataFactory> pdf1(
+      boost::shared_ptr<hier::PatchDataFactory>
+      pdf1(
          pd->getPatchDataFactory(item_id1));
-      boost::shared_ptr<hier::PatchDataFactory> pdf2(
+      boost::shared_ptr<hier::PatchDataFactory>
+      pdf2(
          pd->getPatchDataFactory(item_id2));
 
       items_match = (typeid(*pdf1) == typeid(*pdf2));

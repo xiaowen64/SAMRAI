@@ -161,7 +161,8 @@ CellDataFactory<TYPE>::validCopyTo(
    /*
     * Only valid option is CellData.
     */
-   boost::shared_ptr<CellDataFactory<TYPE> > cdf(
+   boost::shared_ptr<CellDataFactory<TYPE> >
+   cdf(
       boost::dynamic_pointer_cast<CellDataFactory<TYPE>,
                                   hier::PatchDataFactory>(dst_pdf));
    if (cdf) {

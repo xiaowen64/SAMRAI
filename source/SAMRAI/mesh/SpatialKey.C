@@ -99,7 +99,7 @@ SpatialKey::~SpatialKey()
  */
 bool
 SpatialKey::operator < (
-   const SpatialKey& spatial_key) const
+   const SpatialKey &spatial_key) const
 {
    int i = NUM_COORDS_MIXED_FOR_SPATIAL_KEY - 1;
 
@@ -130,8 +130,8 @@ SpatialKey::operator < (
  */
 std::ostream&
 operator << (
-   std::ostream& s,
-   const SpatialKey& spatial_key)
+   std::ostream & s,
+   const SpatialKey &spatial_key)
 {
    char* buf = new char[spatial_key.d_bits_per_int / SpatialKey::BITS_PER_HEX_CHAR
                         * SpatialKey::NUM_COORDS_MIXED_FOR_SPATIAL_KEY + 1];

@@ -76,7 +76,9 @@ CoarsenAlgorithm::registerCoarsen(
          << std::endl);
    }
 
-   CoarsenClasses::Data data(d_dim);
+   CoarsenClasses::Data
+   data(
+      d_dim);
 
    data.d_dst = dst;
    data.d_src = src;
@@ -117,7 +119,8 @@ CoarsenAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<CoarsenTransactionFactory> trans_factory(
+   boost::shared_ptr<CoarsenTransactionFactory>
+   trans_factory(
       transaction_factory);
 
    if (!trans_factory) {

@@ -120,20 +120,25 @@ CoarsenSchedule::CoarsenSchedule(
       t_coarsen_schedule->start();
    }
 
-
    if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::CoarsenSchedule " << this << " entered" << std::endl;
    }
 
-   const tbox::Dimension& dim(crse_level->getDim());
+   const tbox::Dimension&
+   dim(
+      crse_level->getDim());
 
    /*
     * Compute ratio between fine and coarse levels and then check for
     * correctness.
     */
 
-   const hier::IntVector& fine(d_fine_level->getRatioToLevelZero());
-   const hier::IntVector& crse(d_crse_level->getRatioToLevelZero());
+   const hier::IntVector&
+   fine(
+      d_fine_level->getRatioToLevelZero());
+   const hier::IntVector&
+   crse(
+      d_crse_level->getRatioToLevelZero());
    int i;
    for (i = 0; i < dim.getValue(); ++i) {
       if (fine(i) > 1) {
@@ -207,10 +212,12 @@ CoarsenSchedule::getFromInput()
 {
    if (!s_read_static_input) {
       s_read_static_input = true;
-      boost::shared_ptr<tbox::Database> idb(
+      boost::shared_ptr<tbox::Database>
+      idb(
          tbox::InputManager::getInputDatabase());
       if (idb && idb->isDatabase("CoarsenSchedule")) {
-         boost::shared_ptr<tbox::Database> csdb(
+         boost::shared_ptr<tbox::Database>
+         csdb(
             idb->getDatabase("CoarsenSchedule"));
          s_extra_debug = csdb->getBoolWithDefault("DEV_extra_debug", s_extra_debug);
          s_barrier_and_time =
@@ -332,7 +339,9 @@ CoarsenSchedule::coarsenData() const
 void
 CoarsenSchedule::generateTemporaryLevel()
 {
-   const tbox::Dimension& dim(d_crse_level->getDim());
+   const tbox::Dimension&
+   dim(
+      d_crse_level->getDim());
 
    d_temp_crse_level.reset(new hier::PatchLevel(dim));
    d_temp_crse_level->setCoarsenedPatchLevel(d_fine_level,
@@ -342,22 +351,24 @@ CoarsenSchedule::generateTemporaryLevel()
       d_crse_level->getLevelNumber());
 
    const hier::IntVector max_ghosts = getMaxGhostsToGrow();
-   hier::IntVector min_width(dim);
+   hier::IntVector
+   min_width(
+      dim);
    TBOX_ASSERT(d_crse_level->getBoxLevel()->getRefinementRatio() !=
       hier::IntVector::getZero(dim));
    if (d_crse_level->getBoxLevel()->getRefinementRatio() >
        hier::IntVector::getZero(dim)) {
       min_width =
-         (d_fine_level->getBoxLevel()->getRefinementRatio() /
-         d_crse_level->getBoxLevel()->getRefinementRatio()) *
-         max_ghosts;
+         (d_fine_level->getBoxLevel()->getRefinementRatio()
+          / d_crse_level->getBoxLevel()->getRefinementRatio())
+         * max_ghosts;
    } else {
       TBOX_ASSERT(d_fine_level->getBoxLevel()->getRefinementRatio() >=
-                  hier::IntVector::getOne(dim));
+         hier::IntVector::getOne(dim));
       min_width =
-         (-d_crse_level->getBoxLevel()->getRefinementRatio() /
-         d_fine_level->getBoxLevel()->getRefinementRatio()) *
-         max_ghosts;
+         (-d_crse_level->getBoxLevel()->getRefinementRatio()
+          / d_fine_level->getBoxLevel()->getRefinementRatio())
+         * max_ghosts;
    }
 
    const hier::IntVector transpose_width =
@@ -398,11 +409,16 @@ CoarsenSchedule::generateTemporaryLevel()
     * keeping the neighborhoods that we just set.
     */
    hier::Connector* temp_to_coarse =
-      new hier::Connector(coarse_to_fine.getTranspose());
+      new
+      hier::Connector(
+         coarse_to_fine.getTranspose());
    temp_to_coarse->setBase(*d_temp_crse_level->getBoxLevel());
    temp_to_coarse->setHead(coarse_to_fine.getBase());
    temp_to_coarse->setWidth(coarse_to_fine.getConnectorWidth(), true);
-   const hier::IntVector one_vector(dim, 1);
+   const hier::IntVector
+   one_vector(
+      dim,
+      1);
    d_coarse_to_temp->shrinkWidth(one_vector);
    temp_to_coarse->shrinkWidth(one_vector);
    d_coarse_to_temp->setTranspose(temp_to_coarse, true);
@@ -522,16 +538,19 @@ CoarsenSchedule::generateScheduleNSquared()
       d_crse_level->getBoxes().begin();
    for (int dp = 0; dp < dst_npatches; ++dp, ++crse_itr_dp) {
 
-      const hier::Box dst_box(*crse_itr_dp,
-                              hier::LocalId(dp),
-                              dst_mapping.getProcessorAssignment(dp));
+      const hier::Box
+      dst_box(
+         * crse_itr_dp,
+         hier::LocalId(dp),
+         dst_mapping.getProcessorAssignment(dp));
 
       hier::BoxContainer::const_iterator crse_itr_sp =
          d_temp_crse_level->getBoxes().begin();
       for (int sp = 0; sp < src_npatches; ++sp, ++crse_itr_sp) {
 
-         const hier::Box src_box(
-            *crse_itr_sp,
+         const hier::Box
+         src_box(
+            * crse_itr_sp,
             hier::LocalId(sp),
             src_mapping.getProcessorAssignment(sp));
 
@@ -657,18 +676,26 @@ CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
    FullNeighborhoodSet& full_inverted_edges,
    const hier::Connector& src_to_dst) const
 {
-   const tbox::Dimension& dim(d_crse_level->getDim());
+   const tbox::Dimension&
+   dim(
+      d_crse_level->getDim());
 
    const hier::PeriodicShiftCatalog* shift_catalog =
       hier::PeriodicShiftCatalog::getCatalog(dim);
    const hier::BoxLevel& src_box_level = src_to_dst.getBase();
-   const hier::IntVector& src_ratio(src_to_dst.getBase().getRefinementRatio());
-   const hier::IntVector& dst_ratio(src_to_dst.getHead().getRefinementRatio());
+   const hier::IntVector&
+   src_ratio(
+      src_to_dst.getBase().getRefinementRatio());
+   const hier::IntVector&
+   dst_ratio(
+      src_to_dst.getHead().getRefinementRatio());
 
    /*
     * These are the counterparts to shifted dst boxes and unshifted src boxes.
     */
-   hier::Box shifted_box(dim), unshifted_nabr(dim);
+   hier::Box
+   shifted_box(
+      dim), unshifted_nabr(dim);
    full_inverted_edges.clear();
    for (hier::Connector::ConstNeighborhoodIterator ci = src_to_dst.begin();
         ci != src_to_dst.end();
@@ -705,8 +732,11 @@ CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
 hier::IntVector
 CoarsenSchedule::getMaxGhostsToGrow() const
 {
-   const tbox::Dimension& dim(d_crse_level->getDim());
-   boost::shared_ptr<hier::PatchDescriptor> pd(
+   const tbox::Dimension&
+   dim(
+      d_crse_level->getDim());
+   boost::shared_ptr<hier::PatchDescriptor>
+   pd(
       d_temp_crse_level->getPatchDescriptor());
 
    /*
@@ -714,7 +744,10 @@ CoarsenSchedule::getMaxGhostsToGrow() const
     * the cells do not overlap.  Therefore, we always grow at least one
     * cell catch overlaps of box, face and side elements.
     */
-   hier::IntVector gcw(dim, 1);
+   hier::IntVector
+   gcw(
+      dim,
+      1);
 
    for (size_t ici = 0; ici < d_number_coarsen_items; ++ici) {
 
@@ -751,7 +784,9 @@ CoarsenSchedule::constructScheduleTransactions(
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
 
-   const tbox::Dimension& dim(d_crse_level->getDim());
+   const tbox::Dimension&
+   dim(
+      d_crse_level->getDim());
 
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(dim,
       *dst_level,
@@ -759,8 +794,12 @@ CoarsenSchedule::constructScheduleTransactions(
       dst_box,
       src_box);
 
-   const hier::IntVector& constant_zero_intvector(hier::IntVector::getZero(dim));
-   const hier::IntVector& constant_one_intvector(hier::IntVector::getOne(dim));
+   const hier::IntVector&
+   constant_zero_intvector(
+      hier::IntVector::getZero(dim));
+   const hier::IntVector&
+   constant_one_intvector(
+      hier::IntVector::getOne(dim));
 
    if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::constructScheduleTransactions:"
@@ -773,9 +812,11 @@ CoarsenSchedule::constructScheduleTransactions(
                  << std::endl;
    }
 
-   boost::shared_ptr<hier::PatchDescriptor> dst_patch_descriptor(
+   boost::shared_ptr<hier::PatchDescriptor>
+   dst_patch_descriptor(
       dst_level->getPatchDescriptor());
-   boost::shared_ptr<hier::PatchDescriptor> src_patch_descriptor(
+   boost::shared_ptr<hier::PatchDescriptor>
+   src_patch_descriptor(
       src_level->getPatchDescriptor());
 
    const int num_equiv_classes =
@@ -787,8 +828,14 @@ CoarsenSchedule::constructScheduleTransactions(
    /*
     * Calculate the shift and the shifted source box.
     */
-   hier::IntVector src_shift(dim, 0);
-   hier::IntVector dst_shift(dim, 0);
+   hier::IntVector
+   src_shift(
+      dim,
+      0);
+   hier::IntVector
+   dst_shift(
+      dim,
+      0);
    hier::Box unshifted_src_box = src_box;
    hier::Box unshifted_dst_box = dst_box;
    if (src_box.isPeriodicImage()) {
@@ -811,7 +858,9 @@ CoarsenSchedule::constructScheduleTransactions(
     * It will never be modified in single-block runs, nor in multiblock runs
     * when src_box and dst_box are on the same block.
     */
-   hier::Transformation transformation(src_shift);
+   hier::Transformation
+   transformation(
+      src_shift);
 
    /*
     * When src_box and dst_box are on different blocks
@@ -821,7 +870,9 @@ CoarsenSchedule::constructScheduleTransactions(
     * For all other cases, transformed_src_box is simply a copy of the
     * box from src_box.
     */
-   hier::Box transformed_src_box(src_box);
+   hier::Box
+   transformed_src_box(
+      src_box);
 
    /*
     * When needed, transform the source box and determine if src and
@@ -831,13 +882,15 @@ CoarsenSchedule::constructScheduleTransactions(
       const hier::BlockId& dst_block_id = dst_box.getBlockId();
       const hier::BlockId& src_block_id = src_box.getBlockId();
 
-      boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
+      boost::shared_ptr<hier::BaseGridGeometry>
+      grid_geometry(
          d_crse_level->getGridGeometry());
 
       hier::Transformation::RotationIdentifier rotation =
          grid_geometry->getRotationIdentifier(dst_block_id,
             src_block_id);
-      hier::IntVector offset(
+      hier::IntVector
+      offset(
          grid_geometry->getOffset(dst_block_id, src_block_id));
 
       offset *= d_crse_level->getRatioToLevelZero();
@@ -861,7 +914,8 @@ CoarsenSchedule::constructScheduleTransactions(
    }
 
    const int num_coarsen_items = d_coarsen_classes->getNumberOfCoarsenItems();
-   std::vector<boost::shared_ptr<tbox::Transaction> > transactions(
+   std::vector<boost::shared_ptr<tbox::Transaction> >
+   transactions(
       num_coarsen_items);
 
    for (int nc = 0; nc < num_equiv_classes; ++nc) {
@@ -875,17 +929,25 @@ CoarsenSchedule::constructScheduleTransactions(
       const int rep_item_dst_id = rep_item.d_dst;
       const int rep_item_src_id = rep_item.d_src;
 
-      boost::shared_ptr<hier::PatchDataFactory> src_pdf(
+      boost::shared_ptr<hier::PatchDataFactory>
+      src_pdf(
          src_patch_descriptor->getPatchDataFactory(rep_item_src_id));
-      boost::shared_ptr<hier::PatchDataFactory> dst_pdf(
+      boost::shared_ptr<hier::PatchDataFactory>
+      dst_pdf(
          dst_patch_descriptor->getPatchDataFactory(rep_item_dst_id));
 
-      const hier::IntVector& dst_gcw(dst_pdf->getGhostCellWidth());
+      const hier::IntVector&
+      dst_gcw(
+         dst_pdf->getGhostCellWidth());
 
-      hier::Box dst_fill_box(unshifted_dst_box);
+      hier::Box
+      dst_fill_box(
+         unshifted_dst_box);
       dst_fill_box.grow(dst_gcw);
 
-      hier::Box test_mask(dst_fill_box * transformed_src_box);
+      hier::Box
+      test_mask(
+         dst_fill_box* transformed_src_box);
       if ((dst_gcw == constant_zero_intvector) &&
           dst_pdf->dataLivesOnPatchBorder() &&
           test_mask.empty()) {
@@ -893,7 +955,9 @@ CoarsenSchedule::constructScheduleTransactions(
          test_mask.grow(constant_one_intvector);
          test_mask = test_mask * transformed_src_box;
       }
-      hier::Box src_mask(test_mask);
+      hier::Box
+      src_mask(
+         test_mask);
       transformation.inverseTransform(src_mask);
 
       if (s_extra_debug) {
@@ -919,7 +983,8 @@ CoarsenSchedule::constructScheduleTransactions(
                     << std::endl;
       }
 
-      boost::shared_ptr<hier::BoxOverlap> overlap(
+      boost::shared_ptr<hier::BoxOverlap>
+      overlap(
          rep_item.d_var_fill_pattern->calculateOverlap(
             *dst_pdf->getBoxGeometry(unshifted_dst_box),
             *src_pdf->getBoxGeometry(unshifted_src_box),
@@ -997,7 +1062,8 @@ CoarsenSchedule::coarsenSourceData(
    for (hier::PatchLevel::iterator p(d_fine_level->begin());
         p != d_fine_level->end(); ++p) {
       const boost::shared_ptr<hier::Patch>& fine_patch = *p;
-      boost::shared_ptr<hier::Patch> temp_patch(
+      boost::shared_ptr<hier::Patch>
+      temp_patch(
          d_temp_crse_level->getPatch(fine_patch->getGlobalId()));
 
       const hier::Box& box = temp_patch->getBox();
@@ -1099,12 +1165,18 @@ CoarsenSchedule::setCoarsenItems(
 void
 CoarsenSchedule::initialCheckCoarsenClassItems() const
 {
-   const tbox::Dimension& dim(d_crse_level->getDim());
+   const tbox::Dimension&
+   dim(
+      d_crse_level->getDim());
 
-   boost::shared_ptr<hier::PatchDescriptor> pd(
+   boost::shared_ptr<hier::PatchDescriptor>
+   pd(
       d_crse_level->getPatchDescriptor());
 
-   hier::IntVector user_gcw(dim, 0);
+   hier::IntVector
+   user_gcw(
+      dim,
+      0);
    if (d_coarsen_patch_strategy) {
       user_gcw = d_coarsen_patch_strategy->getCoarsenOpStencilWidth(dim);
    }
@@ -1120,9 +1192,11 @@ CoarsenSchedule::initialCheckCoarsenClassItems() const
       const int dst_id = crs_item->d_dst;
       const int src_id = crs_item->d_src;
 
-      const hier::IntVector& dst_gcw(
+      const hier::IntVector&
+      dst_gcw(
          pd->getPatchDataFactory(dst_id)->getGhostCellWidth());
-      const hier::IntVector& src_gcw(
+      const hier::IntVector&
+      src_gcw(
          pd->getPatchDataFactory(src_id)->getGhostCellWidth());
 
       if (crs_item->d_gcw_to_coarsen > dst_gcw) {

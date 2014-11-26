@@ -124,12 +124,16 @@ FirstLayerCellNoCornersVariableFillPattern::computeStencilBoxes(
    const tbox::Dimension& dim = dst_box.getDim();
 
    for (unsigned short i = 0; i < dim.getValue(); ++i) {
-      hier::Box low_box(dst_box);
+      hier::Box
+      low_box(
+         dst_box);
       low_box.setLower(i, dst_box.lower(i) - 1);
       low_box.setUpper(i, low_box.lower(i));
       stencil_boxes.pushFront(low_box);
 
-      hier::Box high_box(dst_box);
+      hier::Box
+      high_box(
+         dst_box);
       high_box.setLower(i, dst_box.upper(i) + 1);
       high_box.setUpper(i, high_box.lower(i));
       stencil_boxes.pushFront(high_box);
@@ -158,7 +162,9 @@ FirstLayerCellNoCornersVariableFillPattern::computeFillBoxesOverlap(
    hier::BoxContainer stencil_boxes;
    computeStencilBoxes(stencil_boxes, patch_box);
 
-   hier::BoxContainer overlap_boxes(fill_boxes);
+   hier::BoxContainer
+   overlap_boxes(
+      fill_boxes);
    overlap_boxes.intersectBoxes(data_box);
    overlap_boxes.intersectBoxes(stencil_boxes);
 

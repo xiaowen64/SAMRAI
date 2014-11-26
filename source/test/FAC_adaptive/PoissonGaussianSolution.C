@@ -56,7 +56,9 @@ void PoissonGaussianSolution::setFromDatabase(
    {
       // Get the gaussian component.
       istr = database.getStringWithDefault("GaussianFcnControl", "{}");
-      std::istringstream ist(istr);
+      std::istringstream
+      ist(
+         istr);
       ist >> d_gauss;
    }
 }
@@ -121,7 +123,8 @@ void PoissonGaussianSolution::setGridData(
    pdat::CellData<double>& exact_data,
    pdat::CellData<double>& source_data)
 {
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry>
+   patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
@@ -137,8 +140,12 @@ void PoissonGaussianSolution::setGridData(
       for (j = 0; j < d_dim.getValue(); ++j) {
          sl[j] = xl[j] + 0.5 * h[j];
       }
-      pdat::CellData<double>::iterator iter(pdat::CellGeometry::begin(patch.getBox()));
-      pdat::CellData<double>::iterator iterend(pdat::CellGeometry::end(patch.getBox()));
+      pdat::CellData<double>::iterator
+      iter(
+         pdat::CellGeometry::begin(patch.getBox()));
+      pdat::CellData<double>::iterator
+      iterend(
+         pdat::CellGeometry::end(patch.getBox()));
       if (d_dim == tbox::Dimension(2)) {
          double x, y;
          for ( ; iter != iterend; ++iter) {
@@ -163,8 +170,8 @@ void PoissonGaussianSolution::setGridData(
 }       // End patch loop.
 
 std::ostream& operator << (
-   std::ostream& os,
-   const PoissonGaussianSolution& r) {
+   std::ostream & os,
+   const PoissonGaussianSolution &r) {
    os << r.d_gauss << "\n";
    return os;
 }
@@ -181,14 +188,17 @@ void PoissonGaussianSolution::setBcCoefs(
    NULL_USE(variable);
    NULL_USE(fill_time);
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry>
+   patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    /*
     * Set to an inhomogeneous Dirichlet boundary condition.
     */
-   hier::Box patch_box(patch.getBox());
+   hier::Box
+   patch_box(
+      patch.getBox());
 
    const double* xlo = patch_geom->getXLower();
    const double* xup = patch_geom->getXUpper();

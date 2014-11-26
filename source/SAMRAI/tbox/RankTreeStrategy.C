@@ -22,7 +22,9 @@
 namespace SAMRAI {
 namespace tbox {
 
-const int RankTreeStrategy::s_invalid_rank(-1);
+const int
+RankTreeStrategy::s_invalid_rank(
+   -1);
 const unsigned int
 RankTreeStrategy::s_invalid_child_number(
    tbox::MathUtilities<unsigned int>::getMax() / 2);

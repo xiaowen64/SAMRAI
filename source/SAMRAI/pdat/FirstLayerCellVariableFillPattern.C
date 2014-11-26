@@ -117,7 +117,8 @@ FirstLayerCellVariableFillPattern::computeStencilBoxes(
 {
    TBOX_ASSERT(stencil_boxes.size() == 0);
 
-   hier::Box ghost_box(
+   hier::Box
+   ghost_box(
       hier::Box::grow(dst_box,
          hier::IntVector::getOne(dst_box.getDim())));
    stencil_boxes.removeIntersections(ghost_box, dst_box);
@@ -145,7 +146,9 @@ FirstLayerCellVariableFillPattern::computeFillBoxesOverlap(
    hier::BoxContainer stencil_boxes;
    computeStencilBoxes(stencil_boxes, patch_box);
 
-   hier::BoxContainer overlap_boxes(fill_boxes);
+   hier::BoxContainer
+   overlap_boxes(
+      fill_boxes);
    overlap_boxes.intersectBoxes(data_box);
    overlap_boxes.intersectBoxes(stencil_boxes);
 

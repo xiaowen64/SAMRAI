@@ -173,7 +173,9 @@ int main(
    tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::initialize();
    tbox::SAMRAIManager::startup();
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    int num_failures = 0;
 
@@ -210,7 +212,8 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<tbox::InputDatabase> input_db(
+      boost::shared_ptr<tbox::InputDatabase>
+      input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -235,11 +238,15 @@ int main(
        * restart interval is non-zero, create a restart database.
        */
 
-      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
+      boost::shared_ptr<tbox::Database>
+      main_db(
+         input_db->getDatabase("Main"));
 
       string base_name = main_db->getStringWithDefault("base_name", "unnamed");
 
-      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension
+      dim(
+         static_cast<unsigned short>(main_db->getInteger("dim")));
 
       /*
        * Modify basename for this particular run.
@@ -332,31 +339,37 @@ int main(
        * and the roles they play in this application, see comments at top of file.
        */
 
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry>
+      grid_geometry(
          new geom::CartesianGridGeometry(
             dim,
             "CartesianGeometry",
             input_db->getDatabase("CartesianGeometry")));
 
-      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy>
+      patch_hierarchy(
          new hier::PatchHierarchy(
             "PatchHierarchy",
             grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
-      Euler* euler_model = new Euler("Euler",
+      Euler* euler_model = new
+         Euler(
+            "Euler",
             dim,
             input_db->getDatabase("Euler"),
             grid_geometry);
 
-      boost::shared_ptr<algs::HyperbolicLevelIntegrator> hyp_level_integrator(
+      boost::shared_ptr<algs::HyperbolicLevelIntegrator>
+      hyp_level_integrator(
          new algs::HyperbolicLevelIntegrator(
             "HyperbolicLevelIntegrator",
             input_db->getDatabase("HyperbolicLevelIntegrator"),
             euler_model,
             use_refined_timestepping));
 
-      boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
+      boost::shared_ptr<mesh::StandardTagAndInitialize>
+      error_detector(
          new mesh::StandardTagAndInitialize(
             "StandardTagAndInitialize",
             hyp_level_integrator.get(),
@@ -371,17 +384,21 @@ int main(
 
       if (clustering_type == "BergerRigoutsos") {
 
-         boost::shared_ptr<tbox::Database> abr_db(
+         boost::shared_ptr<tbox::Database>
+         abr_db(
             input_db->getDatabase("BergerRigoutsos"));
-         boost::shared_ptr<mesh::BoxGeneratorStrategy> berger_rigoutsos(
+         boost::shared_ptr<mesh::BoxGeneratorStrategy>
+         berger_rigoutsos(
             new mesh::BergerRigoutsos(dim, abr_db));
          box_generator = berger_rigoutsos;
 
       } else if (clustering_type == "TileClustering") {
 
-         boost::shared_ptr<tbox::Database> tc_db(
+         boost::shared_ptr<tbox::Database>
+         tc_db(
             input_db->getDatabase("TileClustering"));
-         boost::shared_ptr<mesh::BoxGeneratorStrategy> tile_clustering(
+         boost::shared_ptr<mesh::BoxGeneratorStrategy>
+         tile_clustering(
             new mesh::TileClustering(dim, tc_db));
          box_generator = tile_clustering;
 
@@ -397,7 +414,8 @@ int main(
 
       if (partitioner_type == "TreeLoadBalancer") {
 
-         boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer(
+         boost::shared_ptr<mesh::TreeLoadBalancer>
+         tree_load_balancer(
             new mesh::TreeLoadBalancer(
                dim,
                "mesh::TreeLoadBalancer",
@@ -405,7 +423,8 @@ int main(
                boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::BalancedDepthFirstTree)));
          tree_load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-         boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer0(
+         boost::shared_ptr<mesh::TreeLoadBalancer>
+         tree_load_balancer0(
             new mesh::TreeLoadBalancer(
                dim,
                "mesh::TreeLoadBalancer0",
@@ -417,14 +436,16 @@ int main(
          load_balancer0 = tree_load_balancer0;
       } else if (partitioner_type == "CascadePartitioner") {
 
-         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner(
+         boost::shared_ptr<mesh::CascadePartitioner>
+         cascade_partitioner(
             new mesh::CascadePartitioner(
                dim,
                "mesh::CascadePartitioner",
                input_db->getDatabase("CascadePartitioner")));
          cascade_partitioner->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner0(
+         boost::shared_ptr<mesh::CascadePartitioner>
+         cascade_partitioner0(
             new mesh::CascadePartitioner(
                dim,
                "mesh::CascadePartitioner0",
@@ -435,7 +456,8 @@ int main(
          load_balancer0 = cascade_partitioner0;
       } else if (partitioner_type == "ChopAndPackLoadBalancer") {
 
-         boost::shared_ptr<mesh::ChopAndPackLoadBalancer> cap_load_balancer(
+         boost::shared_ptr<mesh::ChopAndPackLoadBalancer>
+         cap_load_balancer(
             new mesh::ChopAndPackLoadBalancer(
                dim,
                "mesh::ChopAndPackLoadBalancer",
@@ -447,7 +469,8 @@ int main(
           * ChopAndPackLoadBalancer has trouble on L0 for some reason.
           * Work around by using the CascadePartitioner for L0.
           */
-         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner0(
+         boost::shared_ptr<mesh::CascadePartitioner>
+         cascade_partitioner0(
             new mesh::CascadePartitioner(
                dim,
                "mesh::CascadePartitioner0",
@@ -456,7 +479,8 @@ int main(
          load_balancer0 = cascade_partitioner0;
       }
 
-      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
+      boost::shared_ptr<mesh::GriddingAlgorithm>
+      gridding_algorithm(
          new mesh::GriddingAlgorithm(
             patch_hierarchy,
             "GriddingAlgorithm",
@@ -466,7 +490,8 @@ int main(
             load_balancer,
             load_balancer0));
 
-      boost::shared_ptr<algs::TimeRefinementIntegrator> time_integrator(
+      boost::shared_ptr<algs::TimeRefinementIntegrator>
+      time_integrator(
          new algs::TimeRefinementIntegrator(
             "TimeRefinementIntegrator",
             input_db->getDatabase("TimeRefinementIntegrator"),
@@ -481,7 +506,8 @@ int main(
        * is not necessary.
        */
 #ifdef HAVE_HDF5
-      boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
+      boost::shared_ptr<appu::VisItDataWriter>
+      visit_data_writer(
          new appu::VisItDataWriter(
             dim,
             "Euler VisIt Writer",
@@ -505,9 +531,11 @@ int main(
       /*
        * Create timers for measuring I/O.
        */
-      boost::shared_ptr<tbox::Timer> t_write_viz(
+      boost::shared_ptr<tbox::Timer>
+      t_write_viz(
          tbox::TimerManager::getManager()->getTimer("apps::main::write_viz"));
-      boost::shared_ptr<tbox::Timer> t_write_restart(
+      boost::shared_ptr<tbox::Timer>
+      t_write_restart(
          tbox::TimerManager::getManager()->getTimer("apps::main::write_restart"));
 
       t_write_viz->start();
@@ -613,7 +641,6 @@ int main(
 
       t_all->stop();
 
-
       tbox::plog << "Input database after time-step loop:" << std::endl;
       input_db->printClassData(tbox::plog);
 
@@ -622,12 +649,12 @@ int main(
        */
       tbox::TimerManager::getManager()->print(tbox::plog);
 
-
       if (partitioner_type == "TreeLoadBalancer") {
          /*
           * Output load balancing results for TreeLoadBalancer.
           */
-         boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer(
+         boost::shared_ptr<mesh::TreeLoadBalancer>
+         tree_load_balancer(
             BOOST_CAST<mesh::TreeLoadBalancer, mesh::LoadBalanceStrategy>(
                load_balancer));
          TBOX_ASSERT(tree_load_balancer);
@@ -638,7 +665,8 @@ int main(
          /*
           * Output load balancing results for CascadePartitioner.
           */
-         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner(
+         boost::shared_ptr<mesh::CascadePartitioner>
+         cascade_partitioner(
             BOOST_CAST<mesh::CascadePartitioner, mesh::LoadBalanceStrategy>(
                load_balancer));
          TBOX_ASSERT(cascade_partitioner);

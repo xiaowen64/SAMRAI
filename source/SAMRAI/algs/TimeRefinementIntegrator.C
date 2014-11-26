@@ -124,8 +124,10 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
       if (max_levels > 1) {
 
          for (level_number = 1; level_number < max_levels; ++level_number) {
-            const hier::IntVector ratio(d_patch_hierarchy->
-                                        getRatioToCoarserLevel(level_number));
+            const hier::IntVector
+            ratio(
+               d_patch_hierarchy->
+               getRatioToCoarserLevel(level_number));
 
             if (((ratio.max() % 2) == 0) || (ratio.max() == 1)) {
                d_regrid_interval[level_number] = 2;
@@ -181,7 +183,7 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
    }
 
    tbox::plog << "TimeRefinementIntegrator constructor setting regrid intervals:";
-   for ( size_t i=0; i<d_regrid_interval.size(); ++i ) {
+   for (size_t i = 0; i < d_regrid_interval.size(); ++i) {
       tbox::plog << "  [" << i << "]=" << d_regrid_interval[i];
    }
    tbox::plog << "\n";
@@ -352,7 +354,8 @@ TimeRefinementIntegrator::initializeRefinedTimesteppingLevelData(
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
 
-   const boost::shared_ptr<hier::PatchLevel> patch_level(
+   const boost::shared_ptr<hier::PatchLevel>
+   patch_level(
       d_patch_hierarchy->getPatchLevel(level_number));
 
    /*
@@ -488,7 +491,8 @@ TimeRefinementIntegrator::initializeSynchronizedTimesteppingLevelData(
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
 
-   const boost::shared_ptr<hier::PatchLevel> patch_level(
+   const boost::shared_ptr<hier::PatchLevel>
+   patch_level(
       d_patch_hierarchy->getPatchLevel(level_number));
 
    /*
@@ -664,7 +668,8 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(end_time >= d_integrator_time);
 
-   const boost::shared_ptr<hier::PatchLevel> patch_level(
+   const boost::shared_ptr<hier::PatchLevel>
+   patch_level(
       d_patch_hierarchy->getPatchLevel(level_number));
 
    /*
@@ -1056,7 +1061,8 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
    int level_num;
    for (level_num = 0; level_num <= finest_level_number; ++level_num) {
 
-      boost::shared_ptr<hier::PatchLevel> patch_level(
+      boost::shared_ptr<hier::PatchLevel>
+      patch_level(
          d_patch_hierarchy->getPatchLevel(level_num));
 
       if (level_num > 0) {
@@ -1117,8 +1123,10 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
       tbox::plog << "\nSynchronizing levels " << coarse_level_number
                  << " to " << finest_level_number << std::endl;
 #endif
-      std::vector<double> old_times(finest_level_number + 1,
-                                    d_integrator_time - dt);
+      std::vector<double>
+      old_times(
+         finest_level_number + 1,
+         d_integrator_time - dt);
 
       d_refine_level_integrator->standardLevelSynchronization(
          d_patch_hierarchy,
@@ -1478,7 +1486,7 @@ TimeRefinementIntegrator::setRegridInterval(
    }
 
    tbox::plog << "TimeRefinementIntegrator::setRegridInterval setting regrid intervals:";
-   for ( size_t i=0; i<d_regrid_interval.size(); ++i ) {
+   for (size_t i = 0; i < d_regrid_interval.size(); ++i) {
       tbox::plog << "  [" << i << "]=" << d_regrid_interval[i];
    }
    tbox::plog << "\n";
@@ -1757,14 +1765,16 @@ void
 TimeRefinementIntegrator::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database> restart_db(
+   boost::shared_ptr<tbox::Database>
+   restart_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!restart_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file." << std::endl);
    }
-   boost::shared_ptr<tbox::Database> db(
+   boost::shared_ptr<tbox::Database>
+   db(
       restart_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION");

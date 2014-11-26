@@ -69,7 +69,7 @@ Array<TYPE>::Array(
 
       for (int i = 0; i < d_elements; ++i) {
          void* p = &d_objects[i];
-         (void)new (p)TYPE(default_value);
+         (void)new(p) TYPE(default_value);
       }
    } else {
       d_objects = 0;
@@ -107,7 +107,7 @@ Array<TYPE>::~Array()
 template<class TYPE>
 Array<TYPE>&
 Array<TYPE>::operator = (
-   const Array<TYPE>& rhs)
+      const Array<TYPE>&rhs)
 {
    if (this != &rhs) {
       if (d_counter && d_counter->deleteReference()) {
@@ -130,7 +130,10 @@ Array<TYPE>::resizeArray(
    const TYPE& default_value)
 {
    if (n != d_elements) {
-      Array<TYPE> array(n, default_value);
+      Array<TYPE>
+      array(
+         n,
+         default_value);
       const int s = (d_elements < n ? d_elements : n);
       for (int i = 0; i < s; ++i) {
          array.d_objects[i] = d_objects[i];
@@ -138,7 +141,7 @@ Array<TYPE>::resizeArray(
 
       this->
       operator = (
-         array);
+            array);
    }
 }
 
@@ -151,7 +154,9 @@ Array<TYPE>::erase(
 
    if (d_elements > 1) {
 
-      int new_d_elements(d_elements - 1);
+      int
+      new_d_elements(
+         d_elements - 1);
 
       TYPE* new_d_objects = reinterpret_cast<TYPE *>(
             malloc(sizeof(TYPE) * new_d_elements));
@@ -159,13 +164,13 @@ Array<TYPE>::erase(
       /* copy lower part of array */
       for (int j = 0; j < position; ++j) {
          void* p = &new_d_objects[j];
-         (void)new (p)TYPE(d_objects[j]);
+         (void)new(p) TYPE(d_objects[j]);
       }
 
       /* copy upper part of array */
       for (int j = position + 1; j < d_elements; ++j) {
          void* p = &new_d_objects[j - 1];
-         (void)new (p)TYPE(d_objects[j]);
+         (void)new(p) TYPE(d_objects[j]);
       }
 
       if (d_counter && d_counter->deleteReference()) {
@@ -206,7 +211,7 @@ Array<TYPE>::deleteObjects()
 
 template<class TYPE>
 TYPE&
-Array<TYPE>::operator [] (
+Array<TYPE>::operator[] (
    const int i)
 {
    TBOX_ASSERT((i >= 0) && (i < size()));
@@ -216,8 +221,8 @@ Array<TYPE>::operator [] (
 
 template<class TYPE>
 const TYPE&
-Array<TYPE>::operator [] (
-   const int i) const
+Array<TYPE>::operator[] (
+   const int i)const
 {
    TBOX_ASSERT((i >= 0) && (i < size()));
 

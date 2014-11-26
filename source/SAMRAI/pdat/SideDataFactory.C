@@ -190,7 +190,8 @@ SideDataFactory<TYPE>::validCopyTo(
     * Valid options are SideData and OutersideData.
     */
    if (!valid_copy) {
-      boost::shared_ptr<SideDataFactory<TYPE> > sdf(
+      boost::shared_ptr<SideDataFactory<TYPE> >
+      sdf(
          boost::dynamic_pointer_cast<SideDataFactory<TYPE>,
                                      hier::PatchDataFactory>(dst_pdf));
       if (sdf) {
@@ -199,7 +200,8 @@ SideDataFactory<TYPE>::validCopyTo(
    }
 
    if (!valid_copy) {
-      boost::shared_ptr<OutersideDataFactory<TYPE> > osdf(
+      boost::shared_ptr<OutersideDataFactory<TYPE> >
+      osdf(
          boost::dynamic_pointer_cast<OutersideDataFactory<TYPE>,
                                      hier::PatchDataFactory>(
             dst_pdf));

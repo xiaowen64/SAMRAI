@@ -329,7 +329,9 @@ BalanceUtilities::privateBadCutPointsExist(
    }
    for (std::map<hier::BlockId, hier::BoxContainer>::iterator m_itr =
            domain_by_blocks.begin(); m_itr != domain_by_blocks.end(); ++m_itr) {
-      hier::BoxContainer bounding_box(m_itr->second.getBoundingBox());
+      hier::BoxContainer
+      bounding_box(
+         m_itr->second.getBoundingBox());
       bounding_box.removeIntersections(m_itr->second);
       if (!bounding_box.empty()) {
          bad_cuts_exist = true;
@@ -359,7 +361,9 @@ BalanceUtilities::privateInitializeBadCutPointsForBox(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(box, bad_interval);
 
-   const tbox::Dimension dim(box.getDim());
+   const tbox::Dimension
+   dim(
+      box.getDim());
 
    tbox::Dimension::dir_t ic, id;
 
@@ -371,7 +375,9 @@ BalanceUtilities::privateInitializeBadCutPointsForBox(
          hier::VariableDatabase::getDatabase()->
          getPatchDescriptor()->getMaxGhostWidth(dim);
 
-      hier::BoxContainer bdry_list(box);
+      hier::BoxContainer
+      bdry_list(
+         box);
       bdry_list.grow(tmp_max_gcw);
       bdry_list.removeIntersections(physical_domain);
       if (!bdry_list.empty()) {
@@ -430,14 +436,18 @@ BalanceUtilities::privateFindBestCutDimension(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(in_box, min_size, cut_factor);
 
-   const tbox::Dimension& dim(in_box.getDim());
+   const tbox::Dimension&
+   dim(
+      in_box.getDim());
 
    bool can_cut_box = false;
    cut_dim_out = SAMRAI::MAX_DIM_VAL;
 
-   hier::Box size_test_box(in_box);
+   hier::Box
+   size_test_box(
+      in_box);
 
-   for (   tbox::Dimension::dir_t id = 0; id < dim.getValue(); ++id) {
+   for (tbox::Dimension::dir_t id = 0; id < dim.getValue(); ++id) {
       int ncells = in_box.numberCells(id);
       if ((ncells < 2 * min_size(id)) ||
           (ncells % cut_factor(id))) {
@@ -452,7 +462,9 @@ BalanceUtilities::privateFindBestCutDimension(
        * direction, then trying next longest, etc., until good cut points found.
        */
 
-      hier::Box test_box(size_test_box);
+      hier::Box
+      test_box(
+         size_test_box);
       tbox::Dimension::dir_t cutdim = test_box.longestDirection();
       int numcells = test_box.numberCells(cutdim);
       int cutfact = cut_factor(cutdim);
@@ -618,7 +630,9 @@ BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
 
    TBOX_ASSERT_OBJDIM_EQUALITY3(box_lo, box_hi, in_box);
 
-   const tbox::Dimension& dim(box_lo.getDim());
+   const tbox::Dimension&
+   dim(
+      box_lo.getDim());
 
    box_lo = in_box;
    box_lo.setUpper(cutdim, cut_index - 1);
@@ -684,7 +698,9 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(in_box, min_size, cut_factor);
 
-   const tbox::Dimension dim(in_box.getDim());
+   const tbox::Dimension
+   dim(
+      in_box.getDim());
 
    if (in_box_workload <= ((1. + workload_tolerance) * ideal_workload)) {
 
@@ -698,11 +714,11 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
        */
       tbox::Dimension::dir_t cut_dim;
       bool can_cut_box = privateFindBestCutDimension(
-         cut_dim,
-         in_box,
-         min_size,
-         cut_factor,
-         bad_cut_points);
+            cut_dim,
+            in_box,
+            min_size,
+            cut_factor,
+            bad_cut_points);
 
       if (can_cut_box) {
 
@@ -723,7 +739,9 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
             }
          }
 
-         std::vector<double> work_in_slices(numcells);
+         std::vector<double>
+         work_in_slices(
+            numcells);
          for (i = 0; i < numcells; ++i) {
             work_in_slices[i] = work_in_single_slice;
          }
@@ -742,11 +760,19 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
           * to each new box.
           */
 
-         hier::Box box_lo(dim);
-         hier::Box box_hi(dim);
+         hier::Box
+         box_lo(
+            dim);
+         hier::Box
+         box_hi(
+            dim);
 
-         std::vector<std::vector<bool> > bad_cut_points_for_boxlo(dim.getValue());
-         std::vector<std::vector<bool> > bad_cut_points_for_boxhi(dim.getValue());
+         std::vector<std::vector<bool> >
+         bad_cut_points_for_boxlo(
+            dim.getValue());
+         std::vector<std::vector<bool> >
+         bad_cut_points_for_boxhi(
+            dim.getValue());
 
          privateCutBoxesAndSetBadCutPoints(box_lo,
             bad_cut_points_for_boxlo,
@@ -824,7 +850,9 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
    TBOX_ASSERT(patch);
    TBOX_ASSERT_OBJDIM_EQUALITY4(*patch, in_box, min_size, cut_factor);
 
-   const tbox::Dimension dim(in_box.getDim());
+   const tbox::Dimension
+   dim(
+      in_box.getDim());
 
    if (in_box_workload <= ((1. + workload_tolerance) * ideal_workload)) {
 
@@ -838,11 +866,11 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
        */
       tbox::Dimension::dir_t cut_dim;
       bool can_cut_box = privateFindBestCutDimension(
-         cut_dim,
-         in_box,
-         min_size,
-         cut_factor,
-         bad_cut_points);
+            cut_dim,
+            in_box,
+            min_size,
+            cut_factor,
+            bad_cut_points);
 
       if (can_cut_box) {
 
@@ -859,7 +887,9 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
          hier::Box slice_box = in_box;
          slice_box.setUpper(cut_dim, slice_box.lower(cut_dim));
 
-         std::vector<double> work_in_slices(numcells);
+         std::vector<double>
+         work_in_slices(
+            numcells);
          for (i = 0; i < numcells; ++i) {
             work_in_slices[i] =
                BalanceUtilities::computeNonUniformWorkload(patch,
@@ -884,11 +914,19 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
           * to each new box.
           */
 
-         hier::Box box_lo(dim);
-         hier::Box box_hi(dim);
+         hier::Box
+         box_lo(
+            dim);
+         hier::Box
+         box_hi(
+            dim);
 
-         std::vector<std::vector<bool> > bad_cut_points_for_boxlo(dim.getValue());
-         std::vector<std::vector<bool> > bad_cut_points_for_boxhi(dim.getValue());
+         std::vector<std::vector<bool> >
+         bad_cut_points_for_boxlo(
+            dim.getValue());
+         std::vector<std::vector<bool> >
+         bad_cut_points_for_boxhi(
+            dim.getValue());
 
          privateCutBoxesAndSetBadCutPoints(box_lo,
             bad_cut_points_for_boxlo,
@@ -963,7 +1001,8 @@ BalanceUtilities::computeNonUniformWorkload(
    TBOX_ASSERT(patch);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*patch, box);
 
-   const boost::shared_ptr<pdat::CellData<double> > work_data(
+   const boost::shared_ptr<pdat::CellData<double> >
+   work_data(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch->getPatchData(wrk_indx)));
 
@@ -1006,7 +1045,9 @@ BalanceUtilities::binPack(
    }
    avg_work /= nproc;
 
-   std::vector<double> work(nproc);
+   std::vector<double>
+   work(
+      nproc);
    for (int p = 0; p < nproc; ++p) {
       work[p] = 0.0;
    }
@@ -1080,14 +1121,18 @@ BalanceUtilities::spatialBinPack(
     * compute offset which guarantees that the index space for all boxes
     * is positive.
     */
-   hier::IntVector offset(boxes.front().lower());
+   hier::IntVector
+   offset(
+      boxes.front().lower());
    for (hier::BoxContainer::iterator itr = boxes.begin();
         itr != boxes.end(); ++itr) {
       offset.min(itr->lower());
    }
 
    /* construct array of spatialKeys */
-   std::vector<SpatialKey> spatial_keys(nboxes);
+   std::vector<SpatialKey>
+   spatial_keys(
+      nboxes);
    int i = 0;
 
    if (nboxes > 0) {
@@ -1118,7 +1163,9 @@ BalanceUtilities::spatialBinPack(
     * Sort boxes according to their spatial keys using a heapsort.
     */
 
-   std::vector<int> permutation(nboxes);
+   std::vector<int>
+   permutation(
+      nboxes);
 
    for (i = 0; i < nboxes; ++i) {
       permutation[i] = i;
@@ -1140,8 +1187,13 @@ BalanceUtilities::spatialBinPack(
    if (nboxes > 0) {
       const tbox::Dimension& dim = boxes.front().getDim();
 
-      std::vector<hier::Box> unsorted_boxes(nboxes, hier::Box(dim));
-      std::vector<double> unsorted_weights(nboxes);
+      std::vector<hier::Box>
+      unsorted_boxes(
+         nboxes,
+         hier::Box(dim));
+      std::vector<double>
+      unsorted_weights(
+         nboxes);
 
       i = 0;
       for (hier::BoxContainer::iterator itr = boxes.begin();
@@ -1164,7 +1216,9 @@ BalanceUtilities::spatialBinPack(
        * Verify that the spatial keys are sorted in non-decreasing order
        */
 
-      std::vector<SpatialKey> unsorted_keys(nboxes);
+      std::vector<SpatialKey>
+      unsorted_keys(
+         nboxes);
       for (i = 0; i < nboxes; ++i) {
          unsorted_keys[i] = spatial_keys[i];
       }
@@ -1204,7 +1258,9 @@ BalanceUtilities::spatialBinPack(
    }
 
    /* compute work load for each processor */
-   std::vector<double> work(nproc);
+   std::vector<double>
+   work(
+      nproc);
    for (i = 0; i < nproc; ++i) {
       work[i] = 0.0;
    }
@@ -1254,7 +1310,9 @@ BalanceUtilities::recursiveBisectionUniform(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(min_size, cut_factor, bad_interval);
 
-   const tbox::Dimension dim(min_size.getDim());
+   const tbox::Dimension
+   dim(
+      min_size.getDim());
 
    TBOX_ASSERT(ideal_workload > 0);
    TBOX_ASSERT((workload_tolerance >= 0) && (workload_tolerance < 1.0));
@@ -1285,7 +1343,9 @@ BalanceUtilities::recursiveBisectionUniform(
 
       } else {
 
-         std::vector<std::vector<bool> > bad_cut_points(dim.getValue());
+         std::vector<std::vector<bool> >
+         bad_cut_points(
+            dim.getValue());
 
          privateInitializeBadCutPointsForBox(bad_cut_points,
             box2chop,
@@ -1341,7 +1401,9 @@ BalanceUtilities::recursiveBisectionNonuniform(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(min_size, cut_factor, bad_interval);
 
-   const tbox::Dimension dim(min_size.getDim());
+   const tbox::Dimension
+   dim(
+      min_size.getDim());
 
    TBOX_ASSERT(ideal_workload > 0);
    TBOX_ASSERT((workload_tolerance >= 0) && (workload_tolerance < 1.0));
@@ -1373,7 +1435,9 @@ BalanceUtilities::recursiveBisectionNonuniform(
 
       } else {
 
-         std::vector<std::vector<bool> > bad_cut_points(dim.getValue());
+         std::vector<std::vector<bool> >
+         bad_cut_points(
+            dim.getValue());
 
          privateInitializeBadCutPointsForBox(bad_cut_points,
             box2chop,
@@ -1427,7 +1491,9 @@ BalanceUtilities::computeDomainDependentProcessorLayout(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(proc_dist, box);
 
-   const tbox::Dimension& dim(proc_dist.getDim());
+   const tbox::Dimension&
+   dim(
+      proc_dist.getDim());
 
    tbox::Dimension::dir_t i;
    TBOX_ASSERT(num_procs > 0);
@@ -1539,7 +1605,9 @@ BalanceUtilities::computeDomainIndependentProcessorLayout(
    TBOX_ASSERT_OBJDIM_EQUALITY2(proc_dist, box);
 
    tbox::Dimension::dir_t i;
-   const tbox::Dimension& dim(proc_dist.getDim());
+   const tbox::Dimension&
+   dim(
+      proc_dist.getDim());
 
    TBOX_ASSERT(num_procs > 0);
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1638,7 +1706,9 @@ BalanceUtilities::sortDescendingBoxWorkloads(
     */
 
    const int nboxes = static_cast<int>(workload.size());
-   std::vector<int> permutation(nboxes);
+   std::vector<int>
+   permutation(
+      nboxes);
 
    for (int i = 0; i < nboxes; ++i) {
       permutation[i] = i;
@@ -1662,10 +1732,17 @@ BalanceUtilities::sortDescendingBoxWorkloads(
     * Copy unsorted data into temporaries and permute into sorted order
     */
    if (nboxes > 0) {
-      const tbox::Dimension& dim(boxes.front().getDim());
+      const tbox::Dimension&
+      dim(
+         boxes.front().getDim());
 
-      std::vector<hier::Box> unsorted_boxes(nboxes, hier::Box(dim));
-      std::vector<double> unsorted_workload(nboxes);
+      std::vector<hier::Box>
+      unsorted_boxes(
+         nboxes,
+         hier::Box(dim));
+      std::vector<double>
+      unsorted_workload(
+         nboxes);
 
       int l = 0;
       for (hier::BoxContainer::iterator itr = boxes.begin();
@@ -1712,14 +1789,18 @@ BalanceUtilities::computeLoadBalanceEfficiency(
    TBOX_ASSERT(level);
 
    NULL_USE(os);
-   const tbox::SAMRAI_MPI& mpi(level->getBoxLevel()->getMPI());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      level->getBoxLevel()->getMPI());
 
    int i;
 
    const hier::ProcessorMapping& mapping = level->getProcessorMapping();
 
    const int nprocs = mpi.getSize();
-   std::vector<double> work(nprocs);
+   std::vector<double>
+   work(
+      nprocs);
 
    for (i = 0; i < nprocs; ++i) {
       work[i] = 0.0;
@@ -1738,7 +1819,8 @@ BalanceUtilities::computeLoadBalanceEfficiency(
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& patch = *ip;
-         boost::shared_ptr<pdat::CellData<double> > weight(
+         boost::shared_ptr<pdat::CellData<double> >
+         weight(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(workload_data_id)));
 
@@ -1843,7 +1925,11 @@ BalanceUtilities::findSmallBoxesInPostbalance(
    const hier::IntVector& min_width,
    size_t min_cells)
 {
-   hier::MappingConnector post_to_pre(post, pre, hier::IntVector::getZero(post.getDim()));
+   hier::MappingConnector
+   post_to_pre(
+      post,
+      pre,
+      hier::IntVector::getZero(post.getDim()));
    hier::OverlapConnectorAlgorithm oca;
    oca.findOverlaps(post_to_pre);
    findSmallBoxesInPostbalance(co, border, post_to_pre, min_width, min_cells);
@@ -1890,7 +1976,7 @@ BalanceUtilities::compareLoads(
  */
 void
 BalanceUtilities::reduceAndReportLoadBalance(
-   const std::vector<double> &loads,
+   const std::vector<double>& loads,
    const tbox::SAMRAI_MPI& mpi,
    std::ostream& os)
 {
@@ -1911,32 +1997,44 @@ BalanceUtilities::reduceAndReportLoadBalance(
 
    // Compute total, avg, min and max loads.
 
-   std::vector<double> min_loads(loads);
-   std::vector<int> min_ranks(loads.size());
-   mpi.AllReduce( &min_loads[0], static_cast<int>(min_loads.size()), MPI_MINLOC, &min_ranks[0] );
+   std::vector<double>
+   min_loads(
+      loads);
+   std::vector<int>
+   min_ranks(
+      loads.size());
+   mpi.AllReduce(&min_loads[0], static_cast<int>(min_loads.size()), MPI_MINLOC, &min_ranks[0]);
 
-   std::vector<double> max_loads(loads);
-   std::vector<int> max_ranks(loads.size());
-   mpi.AllReduce( &max_loads[0], static_cast<int>(max_loads.size()), MPI_MAXLOC, &max_ranks[0] );
+   std::vector<double>
+   max_loads(
+      loads);
+   std::vector<int>
+   max_ranks(
+      loads.size());
+   mpi.AllReduce(&max_loads[0], static_cast<int>(max_loads.size()), MPI_MAXLOC, &max_ranks[0]);
 
-   std::vector<double> total_loads(loads);
-   mpi.AllReduce( &total_loads[0], static_cast<int>(total_loads.size()), MPI_SUM );
+   std::vector<double>
+   total_loads(
+      loads);
+   mpi.AllReduce(&total_loads[0], static_cast<int>(total_loads.size()), MPI_SUM);
 
    const int n_population_zones = ndemarks + 1;
-   std::vector<int> population( loads.size() * n_population_zones, 0 );
-   for ( size_t iload=0; iload<loads.size(); ++iload ) {
+   std::vector<int>
+   population(
+      loads.size()* n_population_zones,
+      0);
+   for (size_t iload = 0; iload < loads.size(); ++iload) {
       int izone;
-      for ( izone=0; izone<ndemarks; ++izone ) {
-         if ( loads[iload]/total_loads[iload]*mpi.getSize() < demarks[izone] ) {
+      for (izone = 0; izone < ndemarks; ++izone) {
+         if (loads[iload] / total_loads[iload] * mpi.getSize() < demarks[izone]) {
             break;
          }
       }
-      population[ iload*n_population_zones + izone ] = 1;
+      population[iload * n_population_zones + izone] = 1;
    }
-   mpi.AllReduce( &population[0], static_cast<int>(population.size()), MPI_SUM );
+   mpi.AllReduce(&population[0], static_cast<int>(population.size()), MPI_SUM);
 
-
-   for ( size_t iload=0; iload<loads.size(); ++iload ) {
+   for (size_t iload = 0; iload < loads.size(); ++iload) {
 
       const double total_load = total_loads[iload];
       const double avg_load = total_loads[iload] / mpi.getSize();
@@ -1968,7 +2066,7 @@ BalanceUtilities::reduceAndReportLoadBalance(
       const char space[] = "   ";
       os.setf(std::ios_base::fixed);
       os << bars;
-      for (int izone = 0; izone<ndemarks; ++izone) {
+      for (int izone = 0; izone < ndemarks; ++izone) {
          os << std::setw(4) << std::setprecision(2) << demarks[izone] << bars;
       }
       os << '\n';
@@ -1976,8 +2074,8 @@ BalanceUtilities::reduceAndReportLoadBalance(
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:1572)
 #endif
-      for (int izone=0; izone<n_population_zones; ++izone) {
-         const int nrank = population[iload*n_population_zones + izone];
+      for (int izone = 0; izone < n_population_zones; ++izone) {
+         const int nrank = population[iload * n_population_zones + izone];
          const double percentage = 100.0 * nrank / nproc;
          os << std::setw(5) << percentage << space;
       }
@@ -2047,14 +2145,20 @@ BalanceUtilities::constrainMaxBoxSizes(
 {
    TBOX_ASSERT(!anchor_to_level || anchor_to_level->hasTranspose());
 
-   const hier::IntVector& zero_vector(hier::IntVector::getZero(box_level.getDim()));
+   const hier::IntVector&
+   zero_vector(
+      hier::IntVector::getZero(box_level.getDim()));
 
-   hier::BoxLevel constrained(box_level.getRefinementRatio(),
-                              box_level.getGridGeometry(),
-                              box_level.getMPI());
-   hier::MappingConnector unconstrained_to_constrained(box_level,
-                                                       constrained,
-                                                       zero_vector);
+   hier::BoxLevel
+   constrained(
+      box_level.getRefinementRatio(),
+      box_level.getGridGeometry(),
+      box_level.getMPI());
+   hier::MappingConnector
+   unconstrained_to_constrained(
+      box_level,
+      constrained,
+      zero_vector);
 
    const hier::BoxContainer& unconstrained_boxes = box_level.getBoxes();
 
@@ -2078,7 +2182,9 @@ BalanceUtilities::constrainMaxBoxSizes(
 
       } else {
 
-         hier::BoxContainer chopped(box);
+         hier::BoxContainer
+         chopped(
+            box);
          hier::BoxUtilities::chopBoxes(
             chopped,
             pparams.getMaxBoxSize(),
@@ -2099,9 +2205,11 @@ BalanceUtilities::constrainMaxBoxSizes(
 
                const hier::Box fragment = *li;
 
-               const hier::Box new_box(fragment,
-                                       next_available_index++,
-                                       box_level.getMPI().getRank());
+               const hier::Box
+               new_box(
+                  fragment,
+                  next_available_index++,
+                  box_level.getMPI().getRank());
                TBOX_ASSERT(new_box.getBlockId() == ni->getBlockId());
 
                constrained.addBox(new_box);
@@ -2164,9 +2272,11 @@ BalanceUtilities::prebalanceBoxLevel(
     * balance_box_level, but all will live on the processors
     * specified in rank_group.
     */
-   hier::BoxLevel tmp_box_level(balance_box_level.getRefinementRatio(),
-                                balance_box_level.getGridGeometry(),
-                                balance_box_level.getMPI());
+   hier::BoxLevel
+   tmp_box_level(
+      balance_box_level.getRefinementRatio(),
+      balance_box_level.getGridGeometry(),
+      balance_box_level.getMPI());
 
    /*
     * If a rank is not in rank_group it is called a "sending" rank, as
@@ -2263,12 +2373,14 @@ BalanceUtilities::prebalanceBoxLevel(
     * so that on return from this method, they will be correct for the new
     * balance_box_level.
     */
-   hier::MappingConnector balance_to_tmp(
+   hier::MappingConnector
+   balance_to_tmp(
       balance_box_level,
       tmp_box_level,
       hier::IntVector::getZero(balance_box_level.getDim()));
 
-   hier::MappingConnector tmp_to_balance(
+   hier::MappingConnector
+   tmp_to_balance(
       tmp_box_level,
       balance_box_level,
       hier::IntVector::getZero(balance_box_level.getDim()));
@@ -2332,7 +2444,10 @@ BalanceUtilities::prebalanceBoxLevel(
          box_recv[i].beginRecv();
       }
       int num_completed_recvs = 0;
-      std::vector<bool> completed(num_recvs, false);
+      std::vector<bool>
+      completed(
+         num_recvs,
+         false);
       while (num_completed_recvs < num_recvs) {
          for (int i = 0; i < num_recvs; ++i) {
             if (!completed[i] && box_recv[i].checkRecv()) {
@@ -2346,7 +2461,9 @@ BalanceUtilities::prebalanceBoxLevel(
                }
 
                for (int b = 0; b < num_boxes; ++b) {
-                  hier::Box box(balance_box_level.getDim());
+                  hier::Box
+                  box(
+                     balance_box_level.getDim());
 
                   box.getFromIntBuffer(&buffer[b * buf_size]);
 
@@ -2399,8 +2516,9 @@ BalanceUtilities::prebalanceBoxLevel(
       for (hier::BoxContainer::const_iterator ni = sending_boxes.begin();
            ni != sending_boxes.end(); ++ni) {
 
-         hier::Box new_box(
-            *ni,
+         hier::Box
+         new_box(
+            * ni,
             (hier::LocalId)buffer[box_count],
             rank_group.getMappedRank(balance_box_level.getMPI().getRank() % output_nproc));
 

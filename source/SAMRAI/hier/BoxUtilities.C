@@ -126,14 +126,18 @@ BoxUtilities::checkBoxConstraints(
    TBOX_ASSERT(cut_factor > IntVector::getZero(min_size.getDim()));
    TBOX_ASSERT(bad_interval >= IntVector::getZero(min_size.getDim()));
 
-   const tbox::Dimension& dim(box.getDim());
+   const tbox::Dimension&
+   dim(
+      box.getDim());
 
    tbox::Dimension::dir_t id;
 
    /*
     * Test box against minimum size constraint.
     */
-   std::vector<bool> min_is_bad(dim.getValue());
+   std::vector<bool>
+   min_is_bad(
+      dim.getValue());
    bool min_violation = false;
    for (id = 0; id < dim.getValue(); ++id) {
       if (box.numberCells(id) < min_size(id)) {
@@ -159,7 +163,9 @@ BoxUtilities::checkBoxConstraints(
    /*
     * Test box against cut factor constraint.
     */
-   std::vector<bool> factor_is_bad(dim.getValue());
+   std::vector<bool>
+   factor_is_bad(
+      dim.getValue());
    bool factor_violation = false;
    for (id = 0; id < dim.getValue(); ++id) {
       if ((box.numberCells(id) % cut_factor(id)) != 0) {
@@ -184,7 +190,9 @@ BoxUtilities::checkBoxConstraints(
 
    if (!physical_boxes.empty()) {
 
-      std::vector<bool> cut_is_bad(dim.getValue());
+      std::vector<bool>
+      cut_is_bad(
+         dim.getValue());
       for (id = 0; id < dim.getValue(); ++id) {
          cut_is_bad[id] = false;
       }
@@ -198,7 +206,9 @@ BoxUtilities::checkBoxConstraints(
       Box test_border = box;
       test_border.grow(bad_interval);
 
-      BoxContainer border_boxes(test_border);
+      BoxContainer
+      border_boxes(
+         test_border);
       border_boxes.removeIntersections(physical_boxes);
 
       if (!border_boxes.empty()) {
@@ -223,7 +233,9 @@ BoxUtilities::checkBoxConstraints(
 
             test_box.setUpper(id, box.lower(id) - 1);
 
-            BoxContainer test_boxes(test_box);
+            BoxContainer
+            test_boxes(
+               test_box);
             test_boxes.intersectBoxes(border_boxes);
             test_boxes.simplify();
 
@@ -337,9 +349,13 @@ BoxUtilities::chopBoxes(
    TBOX_ASSERT(!physical_boxes.empty());
    TBOX_ASSERT(!boxes.isOrdered());
 
-   const tbox::Dimension& dim(max_size.getDim());
+   const tbox::Dimension&
+   dim(
+      max_size.getDim());
 
-   BoxContainer in_boxes(boxes);
+   BoxContainer
+   in_boxes(
+      boxes);
    boxes.clear();
 
    while (!in_boxes.empty()) {
@@ -349,7 +365,9 @@ BoxUtilities::chopBoxes(
 
       BoxContainer tmp_boxes;
 
-      std::vector<std::list<int> > cut_points(dim.getValue());
+      std::vector<std::list<int> >
+      cut_points(
+         dim.getValue());
       bool chop_box = findBestCutPointsGivenMax(cut_points,
             box,
             max_size,
@@ -358,7 +376,10 @@ BoxUtilities::chopBoxes(
 
       if (chop_box) {
          TBOX_ASSERT(box.getBlockId().isValid());
-         BoxContainer phys_block_boxes(physical_boxes, box.getBlockId());
+         BoxContainer
+         phys_block_boxes(
+            physical_boxes,
+            box.getBlockId());
 
          for (tbox::Dimension::dir_t id = 0; id < dim.getValue(); ++id) {
 
@@ -414,7 +435,9 @@ BoxUtilities::chopBox(
    const Box& box,
    const std::vector<std::list<int> >& cut_points)
 {
-   const tbox::Dimension& dim(box.getDim());
+   const tbox::Dimension&
+   dim(
+      box.getDim());
 
    TBOX_ASSERT(static_cast<int>(cut_points.size()) == dim.getValue());
 
@@ -454,7 +477,11 @@ BoxUtilities::chopBox(
 #endif
                   ihi(id) = cut_val - 1;
                   if ((ilo(id) < cut_val) && (ihi(id) <= boxhi(id))) {
-                     Box new_box(ilo, ihi, box.getBlockId());
+                     Box
+                     new_box(
+                        ilo,
+                        ihi,
+                        box.getBlockId());
                      tmp_boxes.pushBack(new_box);
                      ilo(id) = cut_val;
                   }
@@ -462,7 +489,11 @@ BoxUtilities::chopBox(
                }
 
                ihi(id) = chop_box.upper(id);
-               Box last_box(ilo, ihi, box.getBlockId());
+               Box
+               last_box(
+                  ilo,
+                  ihi,
+                  box.getBlockId());
                tmp_boxes.pushBack(last_box);
 
             } else {
@@ -537,7 +568,9 @@ BoxUtilities::extendBoxToDomainBoundary(
    TBOX_ASSERT(!domain.empty());
    TBOX_ASSERT(ext_ghosts >= IntVector::getZero(ext_ghosts.getDim()));
 
-   const tbox::Dimension& dim(box.getDim());
+   const tbox::Dimension&
+   dim(
+      box.getDim());
 
    tbox::Dimension::dir_t id;
    bool out_val = false;
@@ -547,7 +580,9 @@ BoxUtilities::extendBoxToDomainBoundary(
       Box test_ghost_box = box;
       test_ghost_box.grow(ext_ghosts);
 
-      BoxContainer outside_domain(test_ghost_box);
+      BoxContainer
+      outside_domain(
+         test_ghost_box);
       outside_domain.removeIntersections(domain);
 
       if (!outside_domain.empty()) {
@@ -619,7 +654,9 @@ BoxUtilities::growBoxesWithinDomain(
    const BoxContainer& domain,
    const IntVector& min_size)
 {
-   const tbox::Dimension& dim(min_size.getDim());
+   const tbox::Dimension&
+   dim(
+      min_size.getDim());
 
    tbox::Dimension::dir_t id;
 
@@ -631,7 +668,9 @@ BoxUtilities::growBoxesWithinDomain(
 
       BoxContainer outside_domain;
       if (domain.empty()) {
-         Box big_box(boxes.getBoundingBox());
+         Box
+         big_box(
+            boxes.getBoundingBox());
          big_box.grow(min_size);
          outside_domain.pushBack(big_box);
          outside_domain.grow(IntVector::getOne(dim));
@@ -655,7 +694,9 @@ BoxUtilities::growBoxesWithinDomain(
             if (grow > 0) {
 
                BoxContainer outside_boxes;
-               Box test_region(dim);
+               Box
+               test_region(
+                  dim);
 
                // How far may box be grown within domain in lower direction?
                test_region = try_box;
@@ -738,7 +779,9 @@ BoxUtilities::growBoxWithinDomain(
    const BoxContainer& local_domain_complement,
    const IntVector& min_size)
 {
-   const tbox::Dimension& dim(min_size.getDim());
+   const tbox::Dimension&
+   dim(
+      min_size.getDim());
    tbox::Dimension::dir_t id;
 
    TBOX_ASSERT(min_size > IntVector::getZero(dim));
@@ -752,7 +795,9 @@ BoxUtilities::growBoxWithinDomain(
       if (grow > 0) {
 
          BoxContainer outside_boxes;
-         Box test_region(dim);
+         Box
+         test_region(
+            dim);
 
          // How far may box be grown within domain in lower direction?
          test_region = try_box;
@@ -762,14 +807,14 @@ BoxUtilities::growBoxWithinDomain(
          // outside_boxes = local_domain_complement;
          // outside_boxes.unorder();
          outside_boxes.clear();
-         for ( BoxContainer::const_iterator bi=local_domain_complement.begin();
-               bi!=local_domain_complement.end(); ++bi ) {
+         for (BoxContainer::const_iterator bi = local_domain_complement.begin();
+              bi != local_domain_complement.end(); ++bi) {
             outside_boxes.push_back(*bi);
          }
          outside_boxes.intersectBoxes(test_region);
 
          int grow_lo = try_box.lower(id) - grow;
-         for ( BoxContainer::iterator lb=outside_boxes.begin(); lb!=outside_boxes.end(); ++lb) {
+         for (BoxContainer::iterator lb = outside_boxes.begin(); lb != outside_boxes.end(); ++lb) {
             grow_lo =
                tbox::MathUtilities<int>::Max(grow_lo, lb->upper(id) + 1);
          }
@@ -782,14 +827,14 @@ BoxUtilities::growBoxWithinDomain(
          // outside_boxes = local_domain_complement;
          // outside_boxes.unorder();
          outside_boxes.clear();
-         for ( BoxContainer::const_iterator bi=local_domain_complement.begin();
-               bi!=local_domain_complement.end(); ++bi ) {
+         for (BoxContainer::const_iterator bi = local_domain_complement.begin();
+              bi != local_domain_complement.end(); ++bi) {
             outside_boxes.push_back(*bi);
          }
          outside_boxes.intersectBoxes(test_region);
 
          int grow_up = try_box.upper(id) + grow;
-         for (BoxContainer::iterator lb=outside_boxes.begin(); lb!=outside_boxes.end(); ++lb) {
+         for (BoxContainer::iterator lb = outside_boxes.begin(); lb != outside_boxes.end(); ++lb) {
             grow_up =
                tbox::MathUtilities<int>::Min(grow_up, lb->lower(id) - 1);
          }
@@ -848,7 +893,9 @@ BoxUtilities::findBestCutPointsGivenMax(
    const IntVector& min_size,
    const IntVector& cut_factor)
 {
-   const tbox::Dimension& dim(max_size.getDim());
+   const tbox::Dimension&
+   dim(
+      max_size.getDim());
 
    TBOX_ASSERT_OBJDIM_EQUALITY3(max_size, min_size, cut_factor);
 
@@ -1007,7 +1054,9 @@ BoxUtilities::findBestCutPointsGivenNumber(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(number_boxes, min_size, cut_factor);
 
-   const tbox::Dimension& dim(number_boxes.getDim());
+   const tbox::Dimension&
+   dim(
+      number_boxes.getDim());
 
    TBOX_ASSERT(!box.empty());
    TBOX_ASSERT(min_size > IntVector::getZero(dim));
@@ -1018,7 +1067,9 @@ BoxUtilities::findBestCutPointsGivenNumber(
 
    cut_points.resize(dim.getValue());
 
-   std::vector<bool> chop_dir(dim.getValue());
+   std::vector<bool>
+   chop_dir(
+      dim.getValue());
    for (id = 0; id < dim.getValue(); ++id) {
       cut_points[id].clear();
       chop_dir[id] = (((number_boxes(id) <= 1)
@@ -1162,7 +1213,9 @@ BoxUtilities::checkBoxForBadCutPoints(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(bad_cut_information, box, bad_interval);
 
-   const tbox::Dimension& dim(box.getDim());
+   const tbox::Dimension&
+   dim(
+      box.getDim());
 
    bool found_bad = false;
 
@@ -1200,7 +1253,9 @@ BoxUtilities::checkBoxForBadCutPointsInDirection(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(box, bad_interval);
 
-   const tbox::Dimension& dim(box.getDim());
+   const tbox::Dimension&
+   dim(
+      box.getDim());
 
    TBOX_ASSERT(!box.empty());
    TBOX_ASSERT(bad_interval >= IntVector::getZero(dim));
@@ -1226,7 +1281,9 @@ BoxUtilities::checkBoxForBadCutPointsInDirection(
             border.grow(bad_interval);
             border.setUpper(id2, box.lower(id2) - 1);
 
-            BoxContainer border_boxes(border);
+            BoxContainer
+            border_boxes(
+               border);
             border_boxes.removeIntersections(physical_boxes);
             border_boxes.simplify();
 
@@ -1291,7 +1348,9 @@ BoxUtilities::findBadCutPoints(
    const BoxContainer& physical_boxes,
    const IntVector& bad_interval)
 {
-   const tbox::Dimension& dim(box.getDim());
+   const tbox::Dimension&
+   dim(
+      box.getDim());
 
    TBOX_ASSERT(!box.empty());
    TBOX_ASSERT(static_cast<int>(bad_cuts.size()) == dim.getValue());
@@ -1334,7 +1393,9 @@ BoxUtilities::findBadCutPointsForDirection(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(box, bad_interval);
 
-   const tbox::Dimension& dim(box.getDim());
+   const tbox::Dimension&
+   dim(
+      box.getDim());
 
    TBOX_ASSERT(!box.empty());
    TBOX_ASSERT(bad_interval >= IntVector::getZero(dim));
@@ -1387,7 +1448,9 @@ BoxUtilities::findBadCutPointsForDirection(
          border.setUpper(id, level_bounding_box.upper(id));
          border.setLower(id, level_bounding_box.lower(id));
 
-         BoxContainer border_boxes(border);
+         BoxContainer
+         border_boxes(
+            border);
 
          if (dim.getValue() > 1) {
             /*
@@ -1471,7 +1534,9 @@ BoxUtilities::fixBadCutPoints(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(box, min_size, cut_factor);
 
-   const tbox::Dimension& dim(box.getDim());
+   const tbox::Dimension&
+   dim(
+      box.getDim());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(static_cast<int>(cuts.size()) == dim.getValue());
@@ -1772,7 +1837,9 @@ BoxUtilities::makeNonOverlappingBoxContainers(
    box_list_array.resize(nb);
 
    // Copy boxes into a list to preserve the original box array.
-   BoxContainer box_list(boxes);
+   BoxContainer
+   box_list(
+      boxes);
 
    // Remove portion of index space represented by array box from list.
    // Keep unique pieces on box list.

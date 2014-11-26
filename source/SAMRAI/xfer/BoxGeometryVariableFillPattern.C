@@ -86,10 +86,13 @@ BoxGeometryVariableFillPattern::computeFillBoxesOverlap(
     * For this (default) case, the overlap is simply the intersection of
     * fill_boxes and data_box.
     */
-   hier::Transformation transformation(
+   hier::Transformation
+   transformation(
       hier::IntVector::getZero(patch_box.getDim()));
 
-   hier::BoxContainer overlap_boxes(fill_boxes);
+   hier::BoxContainer
+   overlap_boxes(
+      fill_boxes);
    overlap_boxes.intersectBoxes(data_box);
 
    return pdf.getBoxGeometry(patch_box)->setUpOverlap(overlap_boxes,

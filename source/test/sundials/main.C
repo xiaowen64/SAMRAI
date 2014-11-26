@@ -127,7 +127,8 @@ int main(
       /*
        * Create input database and parse all data in input file.
        */
-      boost::shared_ptr<tbox::InputDatabase> input_db(
+      boost::shared_ptr<tbox::InputDatabase>
+      input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -138,9 +139,13 @@ int main(
       /*
        * Retreive "Main" section of input db.
        */
-      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
+      boost::shared_ptr<tbox::Database>
+      main_db(
+         input_db->getDatabase("Main"));
 
-      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension
+      dim(
+         static_cast<unsigned short>(main_db->getInteger("dim")));
 
       int max_order = main_db->getInteger("max_order");
       int max_internal_steps = main_db->getInteger("max_internal_steps");
@@ -161,13 +166,15 @@ int main(
       /*
        * Create geometry and hierarchy objects.
        */
-      boost::shared_ptr<geom::CartesianGridGeometry> geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry>
+      geometry(
          new geom::CartesianGridGeometry(
             dim,
             "Geometry",
             input_db->getDatabase("Geometry")));
 
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy>
+      hierarchy(
          new hier::PatchHierarchy(
             "Hierarchy",
             geometry,
@@ -185,7 +192,8 @@ int main(
       std::string hypre_poisson_name = fac_ops_name + "::hypre_solver";
 
 #ifdef HAVE_HYPRE
-      boost::shared_ptr<solv::CellPoissonHypreSolver> hypre_poisson(
+      boost::shared_ptr<solv::CellPoissonHypreSolver>
+      hypre_poisson(
          new solv::CellPoissonHypreSolver(
             dim,
             hypre_poisson_name,
@@ -193,7 +201,8 @@ int main(
             input_db->getDatabase("hypre_solver") :
             boost::shared_ptr<tbox::Database>()));
 
-      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+      boost::shared_ptr<solv::CellPoissonFACOps>
+      fac_ops(
          new solv::CellPoissonFACOps(
             hypre_poisson,
             dim,
@@ -202,7 +211,8 @@ int main(
             input_db->getDatabase("fac_ops") :
             boost::shared_ptr<tbox::Database>()));
 #else
-      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+      boost::shared_ptr<solv::CellPoissonFACOps>
+      fac_ops(
          new solv::CellPoissonFACOps(
             dim,
             fac_ops_name,
@@ -211,7 +221,8 @@ int main(
             boost::shared_ptr<tbox::Database>()));
 #endif
 
-      boost::shared_ptr<solv::FACPreconditioner> fac_precond(
+      boost::shared_ptr<solv::FACPreconditioner>
+      fac_precond(
          new solv::FACPreconditioner(
             fac_precond_name,
             fac_ops,
@@ -219,7 +230,8 @@ int main(
             input_db->getDatabase("fac_precond") :
             boost::shared_ptr<tbox::Database>()));
 
-      boost::shared_ptr<solv::CellPoissonFACSolver> fac_solver(
+      boost::shared_ptr<solv::CellPoissonFACSolver>
+      fac_solver(
          new solv::CellPoissonFACSolver(
             dim,
             fac_solver_name,
@@ -229,7 +241,8 @@ int main(
             input_db->getDatabase("fac_solver") :
             boost::shared_ptr<tbox::Database>()));
 
-      boost::shared_ptr<CVODEModel> cvode_model(
+      boost::shared_ptr<CVODEModel>
+      cvode_model(
          new CVODEModel(
             cvode_model_name,
             dim,
@@ -237,24 +250,28 @@ int main(
             input_db->getDatabase("CVODEModel"),
             geometry));
 
-      boost::shared_ptr<mesh::StandardTagAndInitialize> error_est(
+      boost::shared_ptr<mesh::StandardTagAndInitialize>
+      error_est(
          new mesh::StandardTagAndInitialize(
             "StandardTagAndInitialize",
             cvode_model.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
-      boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
+      boost::shared_ptr<mesh::BergerRigoutsos>
+      box_generator(
          new mesh::BergerRigoutsos(dim,
             input_db->getDatabase("BergerRigoutsos")));
 
-      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
+      boost::shared_ptr<mesh::TreeLoadBalancer>
+      load_balancer(
          new mesh::TreeLoadBalancer(
             dim,
             "LoadBalancer",
             input_db->getDatabase("LoadBalancer")));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
+      boost::shared_ptr<mesh::GriddingAlgorithm>
+      gridding_algorithm(
          new mesh::GriddingAlgorithm(
             hierarchy,
             "GriddingAlgorithm",
@@ -268,7 +285,9 @@ int main(
        */
       gridding_algorithm->makeCoarsestLevel(init_time);
 
-      std::vector<int> tag_buffer_array(hierarchy->getMaxNumberOfLevels());
+      std::vector<int>
+      tag_buffer_array(
+         hierarchy->getMaxNumberOfLevels());
       for (int il = 0; il < hierarchy->getMaxNumberOfLevels(); ++il) {
          tag_buffer_array[il] = 1;
       }
@@ -289,10 +308,12 @@ int main(
        * Setup timer manager for profiling code.
        */
       tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
-      boost::shared_ptr<tbox::Timer> t_cvode_solve(
+      boost::shared_ptr<tbox::Timer>
+      t_cvode_solve(
          tbox::TimerManager::getManager()->
          getTimer("apps::main::cvode_solver"));
-      boost::shared_ptr<tbox::Timer> t_log_dump(
+      boost::shared_ptr<tbox::Timer>
+      t_log_dump(
          tbox::TimerManager::getManager()->
          getTimer("apps::main::Solution log dump"));
       /*
@@ -311,12 +332,15 @@ int main(
       * Setup CVODESolver object.
       **************************************************************************/
       solv::CVODESolver* cvode_solver =
-         new solv::CVODESolver("cvode_solver",
+         new
+         solv::CVODESolver(
+            "cvode_solver",
             cvode_model.get(),
             uses_preconditioning);
 
       size_t neq = 0;
-      boost::shared_ptr<hier::PatchLevel> level_zero(
+      boost::shared_ptr<hier::PatchLevel>
+      level_zero(
          hierarchy->getPatchLevel(0));
       const hier::BoxContainer& level_0_boxes = level_zero->getBoxes();
       for (hier::BoxContainer::const_iterator i = level_0_boxes.begin();
@@ -342,19 +366,22 @@ int main(
       /*
        * Print initial vector (if solution logging is enabled)
        */
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > y_init(
+      boost::shared_ptr<solv::SAMRAIVectorReal<double> >
+      y_init(
          solv::Sundials_SAMRAIVector::getSAMRAIVector(solution_vector));
 
       if (solution_logging) {
 
-         boost::shared_ptr<hier::PatchHierarchy> init_hierarchy(
+         boost::shared_ptr<hier::PatchHierarchy>
+         init_hierarchy(
             y_init->getPatchHierarchy());
 
          tbox::pout << "Initial solution vector y() at initial time: " << endl;
          int ln;
          tbox::pout << "y(" << init_time << "): " << endl;
          for (ln = 0; ln < init_hierarchy->getNumberOfLevels(); ++ln) {
-            boost::shared_ptr<hier::PatchLevel> level(
+            boost::shared_ptr<hier::PatchLevel>
+            level(
                init_hierarchy->getPatchLevel(ln));
             tbox::plog << "level = " << ln << endl;
 
@@ -362,7 +389,8 @@ int main(
                  p != level->end(); ++p) {
                const boost::shared_ptr<hier::Patch>& patch = *p;
 
-               boost::shared_ptr<CellData<double> > y_data(
+               boost::shared_ptr<CellData<double> >
+               y_data(
                   BOOST_CAST<CellData<double>, hier::PatchData>(
                      y_init->getComponentPatchData(0, *patch)));
                TBOX_ASSERT(y_data);
@@ -385,10 +413,18 @@ int main(
       * Start time-stepping.
       **************************************************************************/
 
-      std::vector<double> time(num_print_intervals);
-      std::vector<double> maxnorm(num_print_intervals);
-      std::vector<double> l1norm(num_print_intervals);
-      std::vector<double> l2norm(num_print_intervals);
+      std::vector<double>
+      time(
+         num_print_intervals);
+      std::vector<double>
+      maxnorm(
+         num_print_intervals);
+      std::vector<double>
+      l1norm(
+         num_print_intervals);
+      std::vector<double>
+      l2norm(
+         num_print_intervals);
 
       double final_time = init_time;
       int interval;
@@ -413,9 +449,11 @@ int main(
           * Print statistics
           * Format:  time  max norm   l1 norm   l2 norm
           */
-         boost::shared_ptr<solv::SAMRAIVectorReal<double> > y_result(
+         boost::shared_ptr<solv::SAMRAIVectorReal<double> >
+         y_result(
             solv::Sundials_SAMRAIVector::getSAMRAIVector(solution_vector));
-         boost::shared_ptr<hier::PatchHierarchy> result_hierarchy(
+         boost::shared_ptr<hier::PatchHierarchy>
+         result_hierarchy(
             y_result->getPatchHierarchy());
 
          time[interval - 1] = actual_time;
@@ -435,7 +473,8 @@ int main(
             t_log_dump->start();
             for (int ln = 0; ln < result_hierarchy->getNumberOfLevels();
                  ++ln) {
-               boost::shared_ptr<hier::PatchLevel> level(
+               boost::shared_ptr<hier::PatchLevel>
+               level(
                   result_hierarchy->getPatchLevel(ln));
                tbox::plog << "level = " << ln << endl;
 
@@ -443,7 +482,8 @@ int main(
                     p != level->end(); ++p) {
                   const boost::shared_ptr<hier::Patch>& patch = *p;
 
-                  boost::shared_ptr<CellData<double> > y_data(
+                  boost::shared_ptr<CellData<double> >
+                  y_data(
                      BOOST_CAST<CellData<double>, hier::PatchData>(
                         y_result->getComponentPatchData(0, *patch)));
                   TBOX_ASSERT(y_data);

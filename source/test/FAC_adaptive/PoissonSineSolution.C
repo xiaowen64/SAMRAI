@@ -60,7 +60,9 @@ void PoissonSineSolution::setFromDatabase(
    tbox::Database& database)
 {
    std::string istr = database.getStringWithDefault("SinusoidFcnControl", "{}");
-   std::istringstream ist(istr);
+   std::istringstream
+   ist(
+      istr);
    ist >> d_exact;
    if (database.isBool("neumann_locations")) {
       std::vector<bool> neumann_locations =
@@ -133,8 +135,8 @@ void PoissonSineSolution::setGridData(
 }       // End patch loop.
 
 std::ostream& operator << (
-   std::ostream& os,
-   const PoissonSineSolution& r) {
+   std::ostream & os,
+   const PoissonSineSolution &r) {
    os << r.d_exact << "\n";
    return os;
 }
@@ -169,8 +171,11 @@ void PoissonSineSolution::setBcCoefs(
     * Get geometry information needed to compute coordinates
     * of side centers.
     */
-   hier::Box patch_box(patch.getBox());
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+   hier::Box
+   patch_box(
+      patch.getBox());
+   boost::shared_ptr<geom::CartesianPatchGeometry>
+   patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
@@ -183,8 +188,12 @@ void PoissonSineSolution::setBcCoefs(
 
    if (gcoef_data) {
       if (d_dim == tbox::Dimension(2)) {
-         hier::Box::iterator boxit(gcoef_data->getBox().begin());
-         hier::Box::iterator boxitend(gcoef_data->getBox().end());
+         hier::Box::iterator
+         boxit(
+            gcoef_data->getBox().begin());
+         hier::Box::iterator
+         boxitend(
+            gcoef_data->getBox().end());
          int i, j;
          double x, y;
          switch (location_index) {

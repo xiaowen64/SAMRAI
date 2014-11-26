@@ -32,14 +32,20 @@ extern "C" {
 #endif
 
 // in pdat_concoarsen1d.f:
-void SAMRAI_F77_FUNC(conavgouternodedoub1d, CONAVGOUTERNODEDOUB1D) (const int&,
+void
+SAMRAI_F77_FUNC(
+   conavgouternodedoub1d,
+   CONAVGOUTERNODEDOUB1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const double *, double *);
 // in pdat_concoarsen2d.f:
-void SAMRAI_F77_FUNC(conavgouternodedoub2d0, CONAVGOUTERNODEDOUB2D0) (const int&,
+void
+SAMRAI_F77_FUNC(
+   conavgouternodedoub2d0,
+   CONAVGOUTERNODEDOUB2D0) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -48,7 +54,10 @@ void SAMRAI_F77_FUNC(conavgouternodedoub2d0, CONAVGOUTERNODEDOUB2D0) (const int&
    const int&, const int&,
    const int *,
    const double *, double *);
-void SAMRAI_F77_FUNC(conavgouternodedoub2d1, CONAVGOUTERNODEDOUB2D1) (const int&,
+void
+SAMRAI_F77_FUNC(
+   conavgouternodedoub2d1,
+   CONAVGOUTERNODEDOUB2D1) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -59,7 +68,10 @@ void SAMRAI_F77_FUNC(conavgouternodedoub2d1, CONAVGOUTERNODEDOUB2D1) (const int&
    const double *, double *);
 
 // in pdat_concoarsen3d.f:
-void SAMRAI_F77_FUNC(conavgouternodedoub3d0, CONAVGOUTERNODEDOUB3D0) (const int&,
+void
+SAMRAI_F77_FUNC(
+   conavgouternodedoub3d0,
+   CONAVGOUTERNODEDOUB3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -68,7 +80,10 @@ void SAMRAI_F77_FUNC(conavgouternodedoub3d0, CONAVGOUTERNODEDOUB3D0) (const int&
    const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void SAMRAI_F77_FUNC(conavgouternodedoub3d1, CONAVGOUTERNODEDOUB3D1) (const int&,
+void
+SAMRAI_F77_FUNC(
+   conavgouternodedoub3d1,
+   CONAVGOUTERNODEDOUB3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -77,7 +92,10 @@ void SAMRAI_F77_FUNC(conavgouternodedoub3d1, CONAVGOUTERNODEDOUB3D1) (const int&
    const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void SAMRAI_F77_FUNC(conavgouternodedoub3d2, CONAVGOUTERNODEDOUB3D2) (const int&,
+void
+SAMRAI_F77_FUNC(
+   conavgouternodedoub3d2,
+   CONAVGOUTERNODEDOUB3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -121,12 +139,16 @@ OuternodeDoubleInjection::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(fine.getDim());
+   const tbox::Dimension&
+   dim(
+      fine.getDim());
 
-   boost::shared_ptr<OuternodeData<double> > fdata(
+   boost::shared_ptr<OuternodeData<double> >
+   fdata(
       BOOST_CAST<OuternodeData<double>, hier::PatchData>(
          fine.getPatchData(src_component)));
-   boost::shared_ptr<OuternodeData<double> > cdata(
+   boost::shared_ptr<OuternodeData<double> >
+   cdata(
       BOOST_CAST<OuternodeData<double>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
 

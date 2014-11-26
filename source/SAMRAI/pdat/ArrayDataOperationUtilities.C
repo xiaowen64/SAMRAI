@@ -43,13 +43,19 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
    TBOX_ASSERT((dst_start_depth + num_depth <= dst.getDepth()));
    TBOX_ASSERT((src_start_depth + num_depth <= src.getDepth()));
 
-   const tbox::Dimension& dim(dst.getDim());
+   const tbox::Dimension&
+   dim(
+      dst.getDim());
 
    TYPE * const dst_ptr = dst.getPointer();
    const TYPE * const src_ptr = src.getPointer();
 
-   const hier::Box& dst_box(dst.getBox());
-   const hier::Box& src_box(src.getBox());
+   const hier::Box&
+   dst_box(
+      dst.getBox());
+   const hier::Box&
+   src_box(
+      src.getBox());
 
    int box_w[SAMRAI::MAX_DIM_VAL];
    int dst_w[SAMRAI::MAX_DIM_VAL];
@@ -178,7 +184,9 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
    TBOX_ASSERT(buffer != 0);
    TBOX_ASSERT(opbox.isSpatiallyEqual((opbox * arraydata.getBox())));
 
-   const tbox::Dimension& dim(arraydata.getDim());
+   const tbox::Dimension&
+   dim(
+      arraydata.getDim());
 
    TYPE * const dst_ptr =
       (src_is_buffer ? const_cast<TYPE *>(arraydata.getPointer())
@@ -186,7 +194,9 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
    const TYPE * const src_ptr =
       (src_is_buffer ? buffer : arraydata.getPointer());
 
-   const hier::Box& array_d_box(arraydata.getBox());
+   const hier::Box&
+   array_d_box(
+      arraydata.getBox());
    const unsigned int array_d_depth = arraydata.getDepth();
 
    int box_w[SAMRAI::MAX_DIM_VAL];

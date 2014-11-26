@@ -40,7 +40,7 @@ BoxContainerSingleOwnerIterator::~BoxContainerSingleOwnerIterator()
  */
 
 BoxContainerSingleOwnerIterator&
-BoxContainerSingleOwnerIterator::operator ++ ()
+BoxContainerSingleOwnerIterator::operator++ ()
 {
    do {
       ++d_iter;
@@ -56,7 +56,7 @@ BoxContainerSingleOwnerIterator::operator ++ ()
  */
 
 BoxContainerSingleOwnerIterator
-BoxContainerSingleOwnerIterator::operator ++ (
+BoxContainerSingleOwnerIterator::operator++ (
    int)
 {
    BoxContainerSingleOwnerIterator saved = *this;

@@ -29,21 +29,30 @@ extern "C" {
 #endif
 
 // in conrefine1d.f:
-void SAMRAI_F77_FUNC(conrefedgedoub1d, CONREFEDGEDOUB1D) (const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   conrefedgedoub1d,
+   CONREFEDGEDOUB1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const double *, double *);
 // in conrefine2d.f:
-void SAMRAI_F77_FUNC(conrefedgedoub2d0, CONREFEDGEDOUB2D0) (const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   conrefedgedoub2d0,
+   CONREFEDGEDOUB2D0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void SAMRAI_F77_FUNC(conrefedgedoub2d1, CONREFEDGEDOUB2D1) (const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   conrefedgedoub2d1,
+   CONREFEDGEDOUB2D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -51,7 +60,10 @@ void SAMRAI_F77_FUNC(conrefedgedoub2d1, CONREFEDGEDOUB2D1) (const int&, const in
    const int *,
    const double *, double *);
 // in conrefine3d.f:
-void SAMRAI_F77_FUNC(conrefedgedoub3d0, CONREFEDGEDOUB3D0) (const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   conrefedgedoub3d0,
+   CONREFEDGEDOUB3D0) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -62,7 +74,10 @@ void SAMRAI_F77_FUNC(conrefedgedoub3d0, CONREFEDGEDOUB3D0) (const int&, const in
    const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void SAMRAI_F77_FUNC(conrefedgedoub3d1, CONREFEDGEDOUB3D1) (const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   conrefedgedoub3d1,
+   CONREFEDGEDOUB3D1) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -73,7 +88,10 @@ void SAMRAI_F77_FUNC(conrefedgedoub3d1, CONREFEDGEDOUB3D1) (const int&, const in
    const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void SAMRAI_F77_FUNC(conrefedgedoub3d2, CONREFEDGEDOUB3D2) (const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   conrefedgedoub3d2,
+   CONREFEDGEDOUB3D2) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -119,12 +137,16 @@ EdgeDoubleConstantRefine::refine(
    const hier::BoxOverlap& fine_overlap,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(fine.getDim());
+   const tbox::Dimension&
+   dim(
+      fine.getDim());
 
-   boost::shared_ptr<EdgeData<double> > cdata(
+   boost::shared_ptr<EdgeData<double> >
+   cdata(
       BOOST_CAST<EdgeData<double>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<EdgeData<double> > fdata(
+   boost::shared_ptr<EdgeData<double> >
+   fdata(
       BOOST_CAST<EdgeData<double>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
@@ -137,7 +159,9 @@ EdgeDoubleConstantRefine::refine(
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
    TBOX_ASSERT_OBJDIM_EQUALITY3(fine, coarse, ratio);
 
-   const hier::Box cgbox(cdata->getGhostBox());
+   const hier::Box
+   cgbox(
+      cdata->getGhostBox());
 
    const hier::Index cilo = cgbox.lower();
    const hier::Index cihi = cgbox.upper();
@@ -150,12 +174,14 @@ EdgeDoubleConstantRefine::refine(
       for (hier::BoxContainer::const_iterator b = boxes.begin();
            b != boxes.end(); ++b) {
 
-         hier::Box fine_box(*b);
+         hier::Box
+         fine_box(
+            * b);
          TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, fine_box);
 
          for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
             if (i != axis) {
-               fine_box.setUpper(i, fine_box.upper(i) -1);
+               fine_box.setUpper(i, fine_box.upper(i) - 1);
             }
          }
 

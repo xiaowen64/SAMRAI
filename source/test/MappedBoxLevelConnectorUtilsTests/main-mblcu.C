@@ -124,7 +124,9 @@ int main(
    SAMRAI_MPI::init(&argc, &argv);
    SAMRAIManager::initialize();
    SAMRAIManager::startup();
-   tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   tbox::SAMRAI_MPI
+   mpi(
+      tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    int fail_count = 0;
 
@@ -150,7 +152,9 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase>
+      input_db(
+         new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -160,9 +164,13 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
+      boost::shared_ptr<Database>
+      main_db(
+         input_db->getDatabase("Main"));
 
-      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension
+      dim(
+         static_cast<unsigned short>(main_db->getInteger("dim")));
 
       std::string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
@@ -187,7 +195,8 @@ int main(
          TBOX_ERROR("BoxLevelConnectorUtils test: could not find entry GridGeometry"
             << "\nin input.");
       }
-      boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
+      boost::shared_ptr<const hier::BaseGridGeometry>
+      grid_geometry(
          new geom::GridGeometry(
             dim,
             "GridGeometry",
@@ -214,13 +223,20 @@ int main(
       plog << "Input database after initialization..." << std::endl;
       input_db->printClassData(plog);
 
-      const hier::IntVector& one_vector(hier::IntVector::getOne(dim));
-      const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
+      const hier::IntVector&
+      one_vector(
+         hier::IntVector::getOne(dim));
+      const hier::IntVector&
+      zero_vector(
+         hier::IntVector::getZero(dim));
 
       /*
        * How much to shrink the big BoxLevel to get the small one.
        */
-      const hier::IntVector shrinkage(dim, 1);
+      const hier::IntVector
+      shrinkage(
+         dim,
+         1);
 
       hier::BoxLevelConnectorUtils mblcu;
 
@@ -241,14 +257,19 @@ int main(
        * the domain but without exclude* boxes.
        */
 
-      hier::BoxLevel big_box_level(
+      hier::BoxLevel
+      big_box_level(
          one_vector,
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld());
-      const std::string exclude("exclude");
+      const std::string
+      exclude(
+         "exclude");
       for (int bn = 0; bn < grid_geometry->getNumberBlocks(); ++bn) {
 
-         const hier::BlockId block_id(bn);
+         const hier::BlockId
+         block_id(
+            bn);
 
          const std::string exclude_boxes_name = exclude + tbox::Utilities::intToString(bn);
          if (main_db->keyExists(exclude_boxes_name)) {
@@ -265,7 +286,9 @@ int main(
 
             std::vector<tbox::DatabaseBox> db_box_vector =
                main_db->getDatabaseBoxVector(exclude_boxes_name);
-            hier::BoxContainer exclude_boxes(db_box_vector);
+            hier::BoxContainer
+            exclude_boxes(
+               db_box_vector);
             for (hier::BoxContainer::iterator itr = exclude_boxes.begin();
                  itr != exclude_boxes.end(); ++itr) {
                itr->setBlockId(block_id);
@@ -273,7 +296,9 @@ int main(
             block_domain.unorder();
             block_domain.removeIntersections(exclude_boxes);
 
-            hier::LocalId last_local_id(-1);
+            hier::LocalId
+            last_local_id(
+               -1);
             for (hier::BoxContainer::iterator bi = block_domain.begin();
                  bi != block_domain.end(); ++bi) {
                big_box_level.addBoxWithoutUpdate(
@@ -298,7 +323,9 @@ int main(
       }
       big_box_level.finalize();
 
-      const hier::BoxContainer& big_boxes(big_box_level.getBoxes());
+      const hier::BoxContainer&
+      big_boxes(
+         big_box_level.getBoxes());
 
       hier::BoxLevel big_domain_level = big_box_level;
 
@@ -318,7 +345,9 @@ int main(
        * Refine Boxlevels as user specified.
        */
       if (main_db->isInteger("big_refinement_ratio")) {
-         hier::IntVector big_refinement_ratio(dim);
+         hier::IntVector
+         big_refinement_ratio(
+            dim);
          main_db->getIntegerArray("big_refinement_ratio",
             &big_refinement_ratio[0],
             dim.getValue());
@@ -326,7 +355,9 @@ int main(
       }
 
       if (main_db->isInteger("small_refinement_ratio")) {
-         hier::IntVector small_refinement_ratio(dim);
+         hier::IntVector
+         small_refinement_ratio(
+            dim);
          main_db->getIntegerArray("small_refinement_ratio",
             &small_refinement_ratio[0],
             dim.getValue());
@@ -339,13 +370,19 @@ int main(
        * Limit box sizes to make the configuration more complex than
        * the domain description.  Default is not to limit box size.
        */
-      hier::IntVector max_box_size(dim, tbox::MathUtilities<int>::getMax());
+      hier::IntVector
+      max_box_size(
+         dim,
+         tbox::MathUtilities<int>::getMax());
       if (main_db->isInteger("max_box_size")) {
          main_db->getIntegerArray("max_box_size",
             &max_box_size[0],
             dim.getValue());
       }
-      hier::IntVector min_box_size(dim, 2);
+      hier::IntVector
+      min_box_size(
+         dim,
+         2);
       if (main_db->isInteger("min_box_size")) {
          main_db->getIntegerArray("min_box_size",
             &min_box_size[0],
@@ -367,9 +404,12 @@ int main(
                  << '\n'
       ;
 
-      const hier::BoxContainer& small_boxes(small_box_level->getBoxes());
+      const hier::BoxContainer&
+      small_boxes(
+         small_box_level->getBoxes());
 
-      const hier::BoxContainer small_box_tree(
+      const hier::BoxContainer
+      small_box_tree(
          small_box_level->getGlobalizedVersion().getGlobalBoxes());
       small_box_tree.makeTree(grid_geometry.get());
 
@@ -377,11 +417,12 @@ int main(
        * Connectors between big and small BoxLevels.
        */
 
-      const hier::Connector& small_to_big(
+      const hier::Connector&
+      small_to_big(
          small_box_level->createConnectorWithTranspose(big_box_level,
             shrinkage,
-            (small_box_level->getRefinementRatio() /
-             big_box_level.getRefinementRatio()) *shrinkage));
+            (small_box_level->getRefinementRatio()
+             / big_box_level.getRefinementRatio()) * shrinkage));
       small_to_big.cacheGlobalReducedData();
 
       const hier::Connector& big_to_small = small_to_big.getTranspose();
@@ -468,7 +509,9 @@ int main(
                   }
                }
 
-               hier::BoxContainer tmp_box_list(small_box);
+               hier::BoxContainer
+               tmp_box_list(
+                  small_box);
                tmp_box_list.removeIntersections(neighbor_box_list);
                if (tmp_box_list.size() != 0) {
                   tbox::perr << "Mapping small_to_everything erroneously mapped "
@@ -518,20 +561,25 @@ int main(
             big_to_internal,
             big_to_small,
             zero_vector);
-         const hier::BoxContainer& internal_boxes(internal_box_level->getBoxes());
+         const hier::BoxContainer&
+         internal_boxes(
+            internal_box_level->getBoxes());
          tbox::plog << "internal_box_level:\n"
                     << internal_box_level->format("", 2)
                     << '\n'
                     << "big_to_internal:\n"
                     << big_to_internal->format("", 2);
 
-         hier::BoxContainer internal_box_tree(
+         hier::BoxContainer
+         internal_box_tree(
             internal_box_level->getGlobalizedVersion().getGlobalBoxes());
          internal_box_tree.makeTree(grid_geometry.get());
 
          for (hier::BoxContainer::const_iterator ni = small_boxes.begin();
               ni != small_boxes.end(); ++ni) {
-            hier::BoxContainer tmp_box_list(*ni);
+            hier::BoxContainer
+            tmp_box_list(
+               * ni);
             small_to_big.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(small_to_big.getRatio()) :
             tmp_box_list.refine(small_to_big.getRatio());
@@ -547,7 +595,9 @@ int main(
 
          for (hier::BoxContainer::const_iterator ni = internal_boxes.begin();
               ni != internal_boxes.end(); ++ni) {
-            hier::BoxContainer tmp_box_list(*ni);
+            hier::BoxContainer
+            tmp_box_list(
+               * ni);
             big_to_small.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(big_to_small.getRatio()) :
             tmp_box_list.refine(big_to_small.getRatio());
@@ -586,20 +636,25 @@ int main(
             big_to_small,
             zero_vector,
             hier::BoxContainer());
-         const hier::BoxContainer& external_boxes(external_box_level->getBoxes());
+         const hier::BoxContainer&
+         external_boxes(
+            external_box_level->getBoxes());
          tbox::plog << "\nexternal_box_level:\n"
                     << external_box_level->format("", 2)
                     << '\n'
                     << "big_to_external:\n"
                     << big_to_external->format("", 2);
 
-         hier::BoxContainer external_box_tree(
+         hier::BoxContainer
+         external_box_tree(
             external_box_level->getGlobalizedVersion().getGlobalBoxes());
          external_box_tree.makeTree(grid_geometry.get());
 
          for (hier::BoxContainer::const_iterator ni = external_boxes.begin();
               ni != external_boxes.end(); ++ni) {
-            hier::BoxContainer tmp_box_list(*ni);
+            hier::BoxContainer
+            tmp_box_list(
+               * ni);
             big_to_small.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(big_to_small.getRatio()) :
             tmp_box_list.refine(big_to_small.getRatio());
@@ -618,7 +673,9 @@ int main(
 
          for (hier::BoxContainer::const_iterator ni = small_boxes.begin();
               ni != small_boxes.end(); ++ni) {
-            hier::BoxContainer tmp_box_list(*ni);
+            hier::BoxContainer
+            tmp_box_list(
+               * ni);
             small_to_big.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(small_to_big.getRatio()) :
             tmp_box_list.refine(small_to_big.getRatio());
@@ -637,7 +694,9 @@ int main(
 
          for (hier::BoxContainer::const_iterator ni = big_boxes.begin();
               ni != big_boxes.end(); ++ni) {
-            hier::BoxContainer tmp_box_list(*ni);
+            hier::BoxContainer
+            tmp_box_list(
+               * ni);
             big_to_small.getHeadCoarserFlag() ?
             tmp_box_list.coarsen(big_to_small.getRatio()) :
             tmp_box_list.refine(big_to_small.getRatio());
@@ -698,17 +757,27 @@ void partitionBoxes(
    const hier::IntVector& max_box_size,
    const hier::IntVector& min_box_size) {
 
-   const tbox::Dimension& dim(box_level.getDim());
+   const tbox::Dimension&
+   dim(
+      box_level.getDim());
 
    domain_box_level.setParallelState(hier::BoxLevel::GLOBALIZED);
 
-   mesh::TreeLoadBalancer load_balancer(box_level.getDim(),
-                                        "TreeLoaadBalaancer");
+   mesh::TreeLoadBalancer
+   load_balancer(
+      box_level.getDim(),
+      "TreeLoaadBalaancer");
 
    hier::Connector* dummy_connector = 0;
 
-   const hier::IntVector bad_interval(dim, 1);
-   const hier::IntVector cut_factor(dim, 1);
+   const hier::IntVector
+   bad_interval(
+      dim,
+      1);
+   const hier::IntVector
+   cut_factor(
+      dim,
+      1);
 
    load_balancer.loadBalanceBoxLevel(
       box_level,
@@ -728,17 +797,23 @@ void shrinkBoxLevel(
    const hier::IntVector& shrinkage,
    const std::vector<int>& unshrunken_blocks)
 {
-   const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry(
+   const boost::shared_ptr<const hier::BaseGridGeometry>&
+   grid_geometry(
       big_box_level.getGridGeometry());
 
    const int local_rank = big_box_level.getMPI().getRank();
 
-   const hier::BoxContainer& big_boxes(big_box_level.getBoxes());
+   const hier::BoxContainer&
+   big_boxes(
+      big_box_level.getBoxes());
 
-   const hier::Connector& big_to_big(
+   const hier::Connector&
+   big_to_big(
       big_box_level.createConnector(big_box_level, shrinkage));
 
-   hier::BoxContainer visible_boxes(big_boxes);
+   hier::BoxContainer
+   visible_boxes(
+      big_boxes);
    for (hier::Connector::ConstNeighborhoodIterator mi = big_to_big.begin();
         mi != big_to_big.end(); ++mi) {
       for (hier::Connector::ConstNeighborIterator ni = big_to_big.begin(mi);
@@ -766,13 +841,20 @@ void shrinkBoxLevel(
 
    hier::BoxContainer complement_boxes;
 
-   hier::LocalId last_local_id(-1);
+   hier::LocalId
+   last_local_id(
+      -1);
    for (hier::BoxContainer::const_iterator bi = boundary_boxes.begin();
         bi != boundary_boxes.end(); ++bi) {
-      hier::Box box(*bi);
+      hier::Box
+      box(
+         * bi);
       box.grow(shrinkage);
-      hier::Box complement_box(
-         box, ++last_local_id, local_rank);
+      hier::Box
+      complement_box(
+         box,
+         ++last_local_id,
+         local_rank);
       complement_boxes.insert(complement_box);
    }
 
@@ -806,7 +888,9 @@ void shrinkBoxLevel(
          small_box_level->addBoxWithoutUpdate(box);
       } else {
 
-         hier::BoxContainer shrunken_boxes(box);
+         hier::BoxContainer
+         shrunken_boxes(
+            box);
 
          shrunken_boxes.removeIntersections(
             big_box_level.getRefinementRatio(),
@@ -815,8 +899,9 @@ void shrinkBoxLevel(
 
          for (hier::BoxContainer::iterator li = shrunken_boxes.begin();
               li != shrunken_boxes.end(); ++li) {
-            const hier::Box shrunken_box(
-               *li,
+            const hier::Box
+            shrunken_box(
+               * li,
                ++last_local_id,
                box.getOwnerRank());
             TBOX_ASSERT(shrunken_box.getBlockId() ==

@@ -34,7 +34,7 @@ SiloDatabaseFactory::SiloDatabaseFactory(
 
 SiloDatabaseFactory&
 SiloDatabaseFactory::operator = (
-   const SiloDatabaseFactory& rhs)
+      const SiloDatabaseFactory &rhs)
 {
    NULL_USE(rhs);
    return *this;

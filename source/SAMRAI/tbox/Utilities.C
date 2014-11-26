@@ -47,7 +47,9 @@ Utilities::recursiveMkdir(
    const char seperator = '/';
 #endif
 
-   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI&
+   mpi(
+      SAMRAI_MPI::getSAMRAIWorld());
    if ((!only_node_zero_creates) || (mpi.getRank() == 0)) {
       int length = static_cast<int>(path.length());
       char* path_buf = new char[length + 1];

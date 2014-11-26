@@ -223,7 +223,9 @@ int main(
     * it affects SAMRAI's initial MPI.  Valid values for <string> and
     * what they mean are seen in the if-else blocks below.
     */
-   std::string arg1(argv[1]);
+   std::string
+   arg1(
+      argv[1]);
    std::string arg1value;
    if (arg1.find("--alter_mpi=", 0) < arg1.size()) {
       arg1value = arg1.c_str() + 12;
@@ -275,8 +277,12 @@ int main(
    SAMRAI_MPI::init(communicator);
    SAMRAIManager::initialize();
    SAMRAIManager::startup();
-   tbox::SAMRAI_MPI samrai_mpi(SAMRAI_MPI::getSAMRAIWorld());
-   tbox::SAMRAI_MPI world_mpi(MPI_COMM_WORLD);
+   tbox::SAMRAI_MPI
+   samrai_mpi(
+      SAMRAI_MPI::getSAMRAIWorld());
+   tbox::SAMRAI_MPI
+   world_mpi(
+      MPI_COMM_WORLD);
 
    int fail_count = 0;
 
@@ -319,7 +325,9 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase>
+      input_db(
+         new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -406,7 +414,9 @@ int main(
 
          while (true) {
 
-            std::string test_name("Test");
+            std::string
+            test_name(
+               "Test");
             test_name += Utilities::intToString(test_number, 2);
 
             boost::shared_ptr<Database> test_db =
@@ -585,7 +595,10 @@ int testUp(
    setupAsyncComms(child_stage, child_comms, parent_stage, parent_comm,
       mpi, rank_tree, cts);
 
-   std::vector<int> msg(cts.msg_length, 1);
+   std::vector<int>
+   msg(
+      cts.msg_length,
+      1);
    setMessageData(msg, mpi.getRank());
 
    boost::shared_ptr<Timer> repetitions_timer = TimerManager::getManager()->getTimer(
@@ -640,7 +653,10 @@ int testUp(
     * Run equivalent MPI operations for comparison.
     */
 
-   std::vector<int> msgr(cts.msg_length, 1);
+   std::vector<int>
+   msgr(
+      cts.msg_length,
+      1);
    equiv_mpi_timer->start();
    for (int r = 0; r < cts.repetition; ++r) {
       mpi.Reduce(&msg[0], &msgr[0], cts.msg_length, MPI_INT, MPI_SUM,
@@ -677,7 +693,10 @@ int testDown(
    setupAsyncComms(child_stage, child_comms, parent_stage, parent_comm,
       mpi, rank_tree, cts);
 
-   std::vector<int> msg(cts.msg_length, 1);
+   std::vector<int>
+   msg(
+      cts.msg_length,
+      1);
    setMessageData(msg, mpi.getRank());
 
    boost::shared_ptr<Timer> repetitions_timer = TimerManager::getManager()->getTimer(
@@ -766,7 +785,10 @@ int testUpThenDown(
    setupAsyncComms(child_stage, child_comms, parent_stage, parent_comm,
       mpi, rank_tree, cts);
 
-   std::vector<int> msg(cts.msg_length, 1);
+   std::vector<int>
+   msg(
+      cts.msg_length,
+      1);
    setMessageData(msg, mpi.getRank());
 
    boost::shared_ptr<Timer> repetitions_timer = TimerManager::getManager()->getTimer(
@@ -842,7 +864,10 @@ int testUpThenDown(
     * Run equivalent MPI operations for comparison.
     */
 
-   std::vector<int> msgr(cts.msg_length, 1);
+   std::vector<int>
+   msgr(
+      cts.msg_length,
+      1);
    mpi.Barrier();
    equiv_mpi_timer->start();
    for (int r = 0; r < cts.repetition; ++r) {
@@ -895,7 +920,10 @@ int testTreeLB(
    setupAsyncComms(child_stage, child_comms, parent_stage, parent_comm,
       mpi, rank_tree, cts);
 
-   std::vector<int> msg(cts.msg_length, 1);
+   std::vector<int>
+   msg(
+      cts.msg_length,
+      1);
    setMessageData(msg, mpi.getRank());
 
    boost::shared_ptr<Timer> repetitions_timer = TimerManager::getManager()->getTimer(
@@ -1098,7 +1126,9 @@ boost::shared_ptr<RankTreeStrategy> getTreeForTesting(
 
    if (tree_name == "BalancedDepthFirstTree") {
 
-      BalancedDepthFirstTree * bdfs(new BalancedDepthFirstTree());
+      BalancedDepthFirstTree *
+      bdfs(
+         new BalancedDepthFirstTree());
 
       if (test_db.isDatabase("BalancedDepthFirstTree")) {
          boost::shared_ptr<tbox::Database> tmp_db = test_db.getDatabase("BalancedDepthFirstTree");
@@ -1111,7 +1141,9 @@ boost::shared_ptr<RankTreeStrategy> getTreeForTesting(
 
    } else if (tree_name == "CenteredRankTree") {
 
-      CenteredRankTree * crt(new tbox::CenteredRankTree());
+      CenteredRankTree *
+      crt(
+         new tbox::CenteredRankTree());
 
       if (test_db.isDatabase("CenteredRankTree")) {
          boost::shared_ptr<tbox::Database> tmp_db = test_db.getDatabase("CenteredRankTree");
@@ -1125,7 +1157,9 @@ boost::shared_ptr<RankTreeStrategy> getTreeForTesting(
 
    } else if (tree_name == "BreadthFirstRankTree") {
 
-      BreadthFirstRankTree * dft(new tbox::BreadthFirstRankTree());
+      BreadthFirstRankTree *
+      dft(
+         new tbox::BreadthFirstRankTree());
 
       if (test_db.isDatabase("BreadthFirstRankTree")) {
          boost::shared_ptr<tbox::Database> tmp_db = test_db.getDatabase("BreadthFirstRankTree");

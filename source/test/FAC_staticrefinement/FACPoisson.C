@@ -22,7 +22,10 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 
 extern "C" {
-void SAMRAI_F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (const int& ifirst0,
+void
+SAMRAI_F77_FUNC(
+   setexactandrhs2d,
+   SETEXACTANDRHS2D) (const int& ifirst0,
    const int& ilast0,
    const int& ifirst1,
    const int& ilast1,
@@ -31,7 +34,10 @@ void SAMRAI_F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (const int& ifirst0,
    const double* dx,
    const double* xlower);
 
-void SAMRAI_F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (const int& ifirst0,
+void
+SAMRAI_F77_FUNC(
+   setexactandrhs3d,
+   SETEXACTANDRHS3D) (const int& ifirst0,
    const int& ilast0,
    const int& ifirst1,
    const int& ilast1,
@@ -75,7 +81,8 @@ FACPoisson::FACPoisson(
     * and get the descriptor indices for those variables.
     */
 
-   boost::shared_ptr<pdat::CellVariable<double> > comp_soln(
+   boost::shared_ptr<pdat::CellVariable<double> >
+   comp_soln(
       new pdat::CellVariable<double>(
          dim,
          object_name + ":computed solution",
@@ -86,7 +93,8 @@ FACPoisson::FACPoisson(
          d_context,
          hier::IntVector(dim, 1) /* ghost cell width is 1 for stencil widths */);
 
-   boost::shared_ptr<pdat::CellVariable<double> > exact_solution(
+   boost::shared_ptr<pdat::CellVariable<double> >
+   exact_solution(
       new pdat::CellVariable<double>(
          dim,
          object_name + ":exact solution"));
@@ -96,7 +104,8 @@ FACPoisson::FACPoisson(
          d_context,
          hier::IntVector(dim, 1) /* ghost cell width is 1 in case needed */);
 
-   boost::shared_ptr<pdat::CellVariable<double> > rhs_variable(
+   boost::shared_ptr<pdat::CellVariable<double> >
+   rhs_variable(
       new pdat::CellVariable<double>(
          dim,
          object_name
@@ -148,7 +157,8 @@ void FACPoisson::initializeLevelData(
 
    boost::shared_ptr<hier::PatchHierarchy> hierarchy = patch_hierarchy;
 
-   boost::shared_ptr<hier::PatchLevel> level(
+   boost::shared_ptr<hier::PatchLevel>
+   level(
       hierarchy->getPatchLevel(level_number));
 
    if (allocate_data) {
@@ -169,14 +179,17 @@ void FACPoisson::initializeLevelData(
             << ": Cannot find patch.  Null patch pointer.");
       }
       hier::Box pbox = patch->getBox();
-      boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      boost::shared_ptr<geom::CartesianPatchGeometry>
+      patch_geom(
          BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch->getPatchGeometry()));
 
-      boost::shared_ptr<pdat::CellData<double> > exact_data(
+      boost::shared_ptr<pdat::CellData<double> >
+      exact_data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch->getPatchData(d_exact_id)));
-      boost::shared_ptr<pdat::CellData<double> > rhs_data(
+      boost::shared_ptr<pdat::CellData<double> >
+      rhs_data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch->getPatchData(d_rhs_id)));
       TBOX_ASSERT(patch_geom);
@@ -249,12 +262,14 @@ int FACPoisson::solvePoisson()
     * Fill in the initial guess.
     */
    for (ln = 0; ln <= d_hierarchy->getFinestLevelNumber(); ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& patch = *ip;
-         boost::shared_ptr<pdat::CellData<double> > data(
+         boost::shared_ptr<pdat::CellData<double> >
+         data(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_comp_soln_id)));
          TBOX_ASSERT(data);
@@ -349,14 +364,20 @@ bool FACPoisson::packDerivedDataIntoDoubleBuffer(
    NULL_USE(depth_id);
    NULL_USE(simulation_time);
 
-   pdat::CellData<double>::iterator icell(pdat::CellGeometry::begin(region));
-   pdat::CellData<double>::iterator icellend(pdat::CellGeometry::end(region));
+   pdat::CellData<double>::iterator
+   icell(
+      pdat::CellGeometry::begin(region));
+   pdat::CellData<double>::iterator
+   icellend(
+      pdat::CellGeometry::end(region));
 
    if (variable_name == "Error") {
-      boost::shared_ptr<pdat::CellData<double> > current_solution_(
+      boost::shared_ptr<pdat::CellData<double> >
+      current_solution_(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_comp_soln_id)));
-      boost::shared_ptr<pdat::CellData<double> > exact_solution_(
+      boost::shared_ptr<pdat::CellData<double> >
+      exact_solution_(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_exact_id)));
       TBOX_ASSERT(current_solution_);

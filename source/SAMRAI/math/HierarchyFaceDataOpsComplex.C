@@ -84,7 +84,8 @@ HierarchyFaceDataOpsComplex::resetLevels(
    }
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       hier::BoxContainer face_boxes;
 
@@ -127,16 +128,19 @@ HierarchyFaceDataOpsComplex::copyData(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > s(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         s(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src_id)));
 
@@ -156,11 +160,13 @@ HierarchyFaceDataOpsComplex::swapData(
    const int data2_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   boost::shared_ptr<pdat::FaceDataFactory<dcomplex> > d1fact(
+   boost::shared_ptr<pdat::FaceDataFactory<dcomplex> >
+   d1fact(
       BOOST_CAST<pdat::FaceDataFactory<dcomplex>, hier::PatchDataFactory>(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id)));
    TBOX_ASSERT(d1fact);
-   boost::shared_ptr<pdat::FaceDataFactory<dcomplex> > d2fact(
+   boost::shared_ptr<pdat::FaceDataFactory<dcomplex> >
+   d2fact(
       BOOST_CAST<pdat::FaceDataFactory<dcomplex>, hier::PatchDataFactory>(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id)));
    TBOX_ASSERT(d2fact);
@@ -174,7 +180,8 @@ HierarchyFaceDataOpsComplex::swapData(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
@@ -203,13 +210,15 @@ HierarchyFaceDataOpsComplex::printData(
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
       s << "Level number = " << ln << std::endl;
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
 
@@ -234,13 +243,15 @@ HierarchyFaceDataOpsComplex::setToScalar(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
 
@@ -274,16 +285,19 @@ HierarchyFaceDataOpsComplex::scale(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > dst(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         dst(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > src(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         src(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src_id)));
 
@@ -310,16 +324,19 @@ HierarchyFaceDataOpsComplex::addScalar(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > dst(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         dst(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > src(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         src(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src_id)));
 
@@ -346,19 +363,23 @@ HierarchyFaceDataOpsComplex::add(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > s1(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         s1(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > s2(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         s2(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
@@ -386,19 +407,23 @@ HierarchyFaceDataOpsComplex::subtract(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > s1(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         s1(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > s2(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         s2(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
@@ -426,19 +451,23 @@ HierarchyFaceDataOpsComplex::multiply(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > s1(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         s1(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > s2(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         s2(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
@@ -466,19 +495,23 @@ HierarchyFaceDataOpsComplex::divide(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > s1(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         s1(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > s2(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         s2(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
@@ -505,16 +538,19 @@ HierarchyFaceDataOpsComplex::reciprocal(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > src(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         src(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src_id)));
 
@@ -543,19 +579,23 @@ HierarchyFaceDataOpsComplex::linearSum(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > s1(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         s1(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > s2(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         s2(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
@@ -584,19 +624,23 @@ HierarchyFaceDataOpsComplex::axpy(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > s1(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         s1(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > s2(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         s2(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
@@ -625,19 +669,23 @@ HierarchyFaceDataOpsComplex::axmy(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > s1(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         s1(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > s2(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         s2(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
@@ -664,16 +712,19 @@ HierarchyFaceDataOpsComplex::abs(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<double> > d(
+         boost::shared_ptr<pdat::FaceData<double> >
+         d(
             BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > src(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         src(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(src_id)));
 
@@ -700,13 +751,15 @@ HierarchyFaceDataOpsComplex::setRandomValues(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
 
@@ -736,21 +789,25 @@ HierarchyFaceDataOpsComplex::numberOfEntries(
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-   const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      d_hierarchy->getMPI());
    int dimVal = d_hierarchy->getDim().getValue();
 
    size_t entries = 0;
 
    if (interior_only) {
 
-      boost::shared_ptr<pdat::FaceDataFactory<dcomplex> > dfact(
+      boost::shared_ptr<pdat::FaceDataFactory<dcomplex> >
+      dfact(
          BOOST_CAST<pdat::FaceDataFactory<dcomplex>, hier::PatchDataFactory>(
             d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id)));
 
       TBOX_ASSERT(dfact);
 
       for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level(
+         boost::shared_ptr<hier::PatchLevel>
+         level(
             d_hierarchy->getPatchLevel(ln));
          const int npatches = level->getNumberOfPatches();
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -775,11 +832,13 @@ HierarchyFaceDataOpsComplex::numberOfEntries(
    } else {
 
       for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level(
+         boost::shared_ptr<hier::PatchLevel>
+         level(
             d_hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
-            boost::shared_ptr<pdat::FaceData<dcomplex> > d(
+            boost::shared_ptr<pdat::FaceData<dcomplex> >
+            d(
                BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                   (*ip)->getPatchData(data_id)));
 
@@ -810,21 +869,26 @@ HierarchyFaceDataOpsComplex::sumControlVolumes(
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-   const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      d_hierarchy->getMPI());
 
    double sum = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
-         boost::shared_ptr<pdat::FaceData<double> > cv(
+         boost::shared_ptr<pdat::FaceData<double> >
+         cv(
             BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
                p->getPatchData(vol_id)));
 
@@ -854,18 +918,22 @@ HierarchyFaceDataOpsComplex::L1Norm(
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
-   const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      d_hierarchy->getMPI());
 
    double norm = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
          boost::shared_ptr<hier::PatchData> pd;
@@ -879,7 +947,8 @@ HierarchyFaceDataOpsComplex::L1Norm(
             pd = p->getPatchData(vol_id);
          }
 
-         boost::shared_ptr<pdat::FaceData<double> > cv(
+         boost::shared_ptr<pdat::FaceData<double> >
+         cv(
             boost::dynamic_pointer_cast<pdat::FaceData<double>,
                                         hier::PatchData>(pd));
          norm += d_patch_ops.L1Norm(d, box, cv);
@@ -916,21 +985,26 @@ HierarchyFaceDataOpsComplex::weightedL2Norm(
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
-   const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      d_hierarchy->getMPI());
 
    double norm_squared = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > w(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         w(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(wgt_id)));
          boost::shared_ptr<hier::PatchData> pd;
@@ -945,7 +1019,8 @@ HierarchyFaceDataOpsComplex::weightedL2Norm(
             pd = p->getPatchData(vol_id);
          }
 
-         boost::shared_ptr<pdat::FaceData<double> > cv(
+         boost::shared_ptr<pdat::FaceData<double> >
+         cv(
             boost::dynamic_pointer_cast<pdat::FaceData<double>,
                                         hier::PatchData>(pd));
          double pnorm = d_patch_ops.weightedL2Norm(d, w, box, cv);
@@ -1001,18 +1076,22 @@ HierarchyFaceDataOpsComplex::maxNorm(
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
-   const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      d_hierarchy->getMPI());
 
    double norm = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
          boost::shared_ptr<hier::PatchData> pd;
@@ -1026,7 +1105,8 @@ HierarchyFaceDataOpsComplex::maxNorm(
             pd = p->getPatchData(vol_id);
          }
 
-         boost::shared_ptr<pdat::FaceData<double> > cv(
+         boost::shared_ptr<pdat::FaceData<double> >
+         cv(
             boost::dynamic_pointer_cast<pdat::FaceData<double>,
                                         hier::PatchData>(pd));
          norm = tbox::MathUtilities<double>::Max(norm,
@@ -1052,21 +1132,26 @@ HierarchyFaceDataOpsComplex::dot(
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
-   const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      d_hierarchy->getMPI());
 
    dcomplex dprod = dcomplex(0.0, 0.0);
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d1(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d1(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(data1_id)));
-         boost::shared_ptr<pdat::FaceData<dcomplex> > d2(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         d2(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(data2_id)));
          boost::shared_ptr<hier::PatchData> pd;
@@ -1081,7 +1166,8 @@ HierarchyFaceDataOpsComplex::dot(
             pd = p->getPatchData(vol_id);
          }
 
-         boost::shared_ptr<pdat::FaceData<double> > cv(
+         boost::shared_ptr<pdat::FaceData<double> >
+         cv(
             boost::dynamic_pointer_cast<pdat::FaceData<double>,
                                         hier::PatchData>(pd));
          dprod += d_patch_ops.dot(d1, d2, box, cv);
@@ -1099,7 +1185,10 @@ HierarchyFaceDataOpsComplex::dot(
       double global_imag_part;
       mpi.Allreduce(&real_part, &global_real_part, 1, MPI_DOUBLE, MPI_SUM);
       mpi.Allreduce(&imag_part, &global_imag_part, 1, MPI_DOUBLE, MPI_SUM);
-      dcomplex global_dot(global_real_part, global_imag_part);
+      dcomplex
+      global_dot(
+         global_real_part,
+         global_imag_part);
       return global_dot;
    } else {
       return dprod;
@@ -1116,21 +1205,26 @@ HierarchyFaceDataOpsComplex::integral(
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
-   const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      d_hierarchy->getMPI());
 
    dcomplex local_integral = dcomplex(0.0, 0.0);
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::FaceData<dcomplex> > data(
+         boost::shared_ptr<pdat::FaceData<dcomplex> >
+         data(
             BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
-         boost::shared_ptr<pdat::FaceData<double> > vol(
+         boost::shared_ptr<pdat::FaceData<double> >
+         vol(
             BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
                p->getPatchData(vol_id)));
 
@@ -1154,7 +1248,10 @@ HierarchyFaceDataOpsComplex::integral(
       double global_imag_part;
       mpi.Allreduce(&real_part, &global_real_part, 1, MPI_DOUBLE, MPI_SUM);
       mpi.Allreduce(&imag_part, &global_imag_part, 1, MPI_DOUBLE, MPI_SUM);
-      dcomplex global_integral(global_real_part, global_imag_part);
+      dcomplex
+      global_integral(
+         global_real_part,
+         global_imag_part);
       return global_integral;
    } else {
       return local_integral;

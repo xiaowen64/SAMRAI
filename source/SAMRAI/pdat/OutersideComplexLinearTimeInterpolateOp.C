@@ -33,7 +33,10 @@ extern "C" {
 #endif
 
 // in lintimint1d.f:
-void SAMRAI_F77_FUNC(lintimeintoutsidecmplx1d, LINTIMEINTOUTSIDECMPLX1D) (const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintoutsidecmplx1d,
+   LINTIMEINTOUTSIDECMPLX1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -42,8 +45,10 @@ void SAMRAI_F77_FUNC(lintimeintoutsidecmplx1d, LINTIMEINTOUTSIDECMPLX1D) (const 
    const dcomplex *, const dcomplex *,
    dcomplex *);
 // in lintimint2d.f:
-void SAMRAI_F77_FUNC(lintimeintoutsidecmplx2d0,
-                     LINTIMEINTOUTSIDECMPLX2D0) (const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintoutsidecmplx2d0,
+   LINTIMEINTOUTSIDECMPLX2D0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -54,8 +59,10 @@ void SAMRAI_F77_FUNC(lintimeintoutsidecmplx2d0,
    const double&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
-void SAMRAI_F77_FUNC(lintimeintoutsidecmplx2d1,
-                     LINTIMEINTOUTSIDECMPLX2D1) (const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintoutsidecmplx2d1,
+   LINTIMEINTOUTSIDECMPLX2D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -67,8 +74,10 @@ void SAMRAI_F77_FUNC(lintimeintoutsidecmplx2d1,
    const dcomplex *, const dcomplex *,
    dcomplex *);
 // in lintimint3d.f:
-void SAMRAI_F77_FUNC(lintimeintoutsidecmplx3d0,
-                     LINTIMEINTOUTSIDECMPLX3D0) (const int&, const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintoutsidecmplx3d0,
+   LINTIMEINTOUTSIDECMPLX3D0) (const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -79,8 +88,10 @@ void SAMRAI_F77_FUNC(lintimeintoutsidecmplx3d0,
    const double&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
-void SAMRAI_F77_FUNC(lintimeintoutsidecmplx3d1,
-                     LINTIMEINTOUTSIDECMPLX3D1) (const int&, const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintoutsidecmplx3d1,
+   LINTIMEINTOUTSIDECMPLX3D1) (const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -91,8 +102,10 @@ void SAMRAI_F77_FUNC(lintimeintoutsidecmplx3d1,
    const double&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
-void SAMRAI_F77_FUNC(lintimeintoutsidecmplx3d2,
-                     LINTIMEINTOUTSIDECMPLX3D2) (const int&, const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintoutsidecmplx3d2,
+   LINTIMEINTOUTSIDECMPLX3D2) (const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -126,7 +139,9 @@ OutersideComplexLinearTimeInterpolateOp::timeInterpolate(
    const hier::PatchData& src_data_old,
    const hier::PatchData& src_data_new) const
 {
-   const tbox::Dimension& dim(where.getDim());
+   const tbox::Dimension&
+   dim(
+      where.getDim());
 
    const OutersideData<dcomplex>* old_dat =
       CPP_CAST<const OutersideData<dcomplex> *>(&src_data_old);

@@ -45,7 +45,9 @@ PeriodicShiftCatalog::getCatalog(
    const tbox::Dimension& dim)
 {
    if (s_periodic_shift_catalog_instance[dim.getValue() - 1] == 0) {
-      s_periodic_shift_catalog_instance[dim.getValue() - 1] = new PeriodicShiftCatalog(dim);
+      s_periodic_shift_catalog_instance[dim.getValue() - 1] = new
+         PeriodicShiftCatalog(
+            dim);
    }
    return s_periodic_shift_catalog_instance[dim.getValue() - 1];
 }
@@ -101,12 +103,16 @@ PeriodicShiftCatalog::setShifts(
 {
    getCatalog(dim);  // Causes singleton object creation if it does not yet exist.
 
-   const int dim_index(dim.getValue() - 1);
+   const int
+   dim_index(
+      dim.getValue() - 1);
 
    std::vector<IntVector> tmp_shifts;
    s_periodic_shift_catalog_instance[dim_index]->d_opposite_number.clear();
 
-   const IntVector& zero_shift(IntVector::getZero(dim));
+   const IntVector&
+   zero_shift(
+      IntVector::getZero(dim));
 
    // The first position is the zero-shift and its own opposite.
    s_periodic_shift_catalog_instance[dim_index]->d_opposite_number.push_back(
@@ -131,8 +137,12 @@ PeriodicShiftCatalog::setShifts(
           * Shift *vi doesn't already exists.  Add it, add it's
           * reverse, and note the positions in d_opposite_number.
           */
-         PeriodicId tmpId1(static_cast<int>(tmp_shifts.size()));
-         PeriodicId tmpId2(static_cast<int>(tmp_shifts.size() + 1));
+         PeriodicId
+         tmpId1(
+            static_cast<int>(tmp_shifts.size()));
+         PeriodicId
+         tmpId2(
+            static_cast<int>(tmp_shifts.size() + 1));
          s_periodic_shift_catalog_instance[dim_index]->d_opposite_number.push_back(tmpId2);
          s_periodic_shift_catalog_instance[dim_index]->d_opposite_number.push_back(tmpId1);
          tmp_shifts.push_back(*vi);
@@ -175,7 +185,9 @@ PeriodicShiftCatalog::initializeShiftsByIndexDirections(
    const IntVector& shift_distance_along_index_directions)
 {
 
-   const tbox::Dimension& dim(shift_distance_along_index_directions.getDim());
+   const tbox::Dimension&
+   dim(
+      shift_distance_along_index_directions.getDim());
 
    // Compute the number of shifts, 3^DIM.
    int num_shift = 3;
@@ -183,7 +195,9 @@ PeriodicShiftCatalog::initializeShiftsByIndexDirections(
       num_shift *= 3;
    }
 
-   const IntVector& zero_shift(IntVector::getZero(dim));
+   const IntVector&
+   zero_shift(
+      IntVector::getZero(dim));
 
    std::vector<IntVector> shifts;
    shifts.clear();

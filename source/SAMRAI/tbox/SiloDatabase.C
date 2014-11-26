@@ -87,8 +87,10 @@ SiloDatabase::nameDemangle(
    while (found_index != std::string::npos) {
       int character;
 
-      std::stringstream hex_value(name.substr(
-                                     found_index + mangleID.length(), 2));
+      std::stringstream
+      hex_value(
+         name.substr(
+            found_index + mangleID.length(), 2));
       hex_value >> std::hex >> character;
 
       unmangled_name << (char)character;
@@ -536,7 +538,8 @@ SiloDatabase::putDatabase(
    TBOX_ASSERT(!key.empty());
 
    std::string path = d_directory + "/" + key;
-   boost::shared_ptr<Database> new_database(
+   boost::shared_ptr<Database>
+   new_database(
       boost::make_shared<SiloDatabase>(
          key,
          d_file,
@@ -568,7 +571,8 @@ SiloDatabase::getDatabase(
          << "\n    Key = " << key << " is not a database." << std::endl);
    }
 
-   boost::shared_ptr<Database> new_database(
+   boost::shared_ptr<Database>
+   new_database(
       boost::make_shared<SiloDatabase>(
          key,
          d_file,
@@ -646,7 +650,9 @@ SiloDatabase::getBoolVector(
          << "    Key = " << key << " is not a bool array." << std::endl);
    }
 
-   std::vector<bool> boolArray(getSiloSimpleTypeLength(key));
+   std::vector<bool>
+   boolArray(
+      getSiloSimpleTypeLength(key));
 
    short temp_array[getSiloSimpleTypeLength(key)];
 
@@ -731,7 +737,9 @@ SiloDatabase::putDatabaseBoxArray(
    elemlengths[1] = static_cast<int>(size);
    elemlengths[2] = static_cast<int>(size);
 
-   std::vector<int> values(nelements + size * 2);
+   std::vector<int>
+   values(
+      nelements + size * 2);
 
    size_t offset = nelements;
    for (size_t i = 0; i < nelements; ++i) {
@@ -788,12 +796,14 @@ SiloDatabase::getDatabaseBoxVector(
 
    DBcompoundarray* ca = DBGetCompoundarray(d_file, path.c_str());
 
-   std::vector<DatabaseBox> boxVector(ca->elemlengths[0]);
+   std::vector<DatabaseBox>
+   boxVector(
+      ca->elemlengths[0]);
 
    int* values = static_cast<int *>(ca->values);
    int offset = ca->elemlengths[0];
    for (int i = 0; i < (ca->elemlengths[0]); ++i) {
-      TBOX_ASSERT( values[i] > 0 && values[i] <= SAMRAI::MAX_DIM_VAL );
+      TBOX_ASSERT(values[i] > 0 && values[i] <= SAMRAI::MAX_DIM_VAL);
       boxVector[i].d_data.d_dimension = static_cast<tbox::Dimension::dir_t>(values[i]);
       /*
        * This preserves old behavior where boxes can be different dims but is
@@ -874,7 +884,9 @@ SiloDatabase::getCharVector(
          << "    Key = " << key << " is not a char array." << std::endl);
    }
 
-   std::vector<char> charArray(getSiloSimpleTypeLength(key));
+   std::vector<char>
+   charArray(
+      getSiloSimpleTypeLength(key));
 
    getSiloSimpleType(key, &charArray[0]);
 
@@ -940,7 +952,9 @@ SiloDatabase::putComplexArray(
    TBOX_ASSERT(data != 0);
 
    const char* elemnames[2];
-   std::vector<double> values(nelements * 2);
+   std::vector<double>
+   values(
+      nelements * 2);
    int elemlengths[2];
 
    elemnames[0] = "real";
@@ -1004,11 +1018,13 @@ SiloDatabase::getComplexVector(
 
    DBcompoundarray* ca = DBGetCompoundarray(d_file, path.c_str());
 
-   std::vector<dcomplex> complexArray(ca->elemlengths[0]);
+   std::vector<dcomplex>
+   complexArray(
+      ca->elemlengths[0]);
 
    for (int i = 0; i < ca->elemlengths[0]; ++i) {
       complexArray[i] = dcomplex(static_cast<double *>(ca->values)[i],
-         static_cast<double *>(ca->values)[i + ca->elemlengths[0]]);
+            static_cast<double *>(ca->values)[i + ca->elemlengths[0]]);
    }
 
    DBFreeCompoundarray(ca);
@@ -1078,7 +1094,9 @@ SiloDatabase::getDoubleVector(
          << "\n    Key = " << key << " is not a double array." << std::endl);
    }
 
-   std::vector<double> doubleArray(getSiloSimpleTypeLength(key));
+   std::vector<double>
+   doubleArray(
+      getSiloSimpleTypeLength(key));
 
    getSiloSimpleType(key, &doubleArray[0]);
 
@@ -1147,7 +1165,9 @@ SiloDatabase::getFloatVector(
          << "    Key = " << key << " is not a float array." << std::endl);
    }
 
-   std::vector<float> floatArray(getSiloSimpleTypeLength(key));
+   std::vector<float>
+   floatArray(
+      getSiloSimpleTypeLength(key));
 
    getSiloSimpleType(key, &floatArray[0]);
 
@@ -1217,7 +1237,9 @@ SiloDatabase::getIntegerVector(
          << "    Key = " << key << " is not a integer array." << std::endl);
    }
 
-   std::vector<int> intArray(getSiloSimpleTypeLength(key));
+   std::vector<int>
+   intArray(
+      getSiloSimpleTypeLength(key));
 
    getSiloSimpleType(key, &intArray[0]);
 
@@ -1282,7 +1304,9 @@ SiloDatabase::putStringArray(
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(data != 0);
 
-   std::vector<std::string> strings(nelements);
+   std::vector<std::string>
+   strings(
+      nelements);
    const char* elemnames[nelements];
    std::string values;
    int elemlengths[nelements];
@@ -1348,7 +1372,9 @@ SiloDatabase::getStringVector(
 
    DBcompoundarray* ca = DBGetCompoundarray(d_file, path.c_str());
 
-   std::vector<std::string> stringArray(ca->nelems);
+   std::vector<std::string>
+   stringArray(
+      ca->nelems);
 
    std::string values = static_cast<char *>(ca->values);
 

@@ -49,7 +49,7 @@ DatabaseBox::~DatabaseBox()
 
 DatabaseBox&
 DatabaseBox::operator = (
-   const DatabaseBox& box)
+      const DatabaseBox &box)
 {
    d_data = box.d_data;
    return *this;
@@ -67,7 +67,7 @@ DatabaseBox::empty() const
 
 int
 DatabaseBox::operator == (
-   const DatabaseBox& box) const
+   const DatabaseBox &box) const
 {
    bool equals = (d_data.d_dimension == box.d_data.d_dimension);
    for (int i = 0; i < d_data.d_dimension; i++) {

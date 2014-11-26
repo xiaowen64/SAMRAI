@@ -254,7 +254,10 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
 IntVector
 TransferOperatorRegistry::getMaxTransferOpStencilWidth(const tbox::Dimension& dim)
 {
-   IntVector max_width(dim, 0);
+   IntVector
+   max_width(
+      dim,
+      0);
    if (d_min_stencil_width.getDim() == dim) {
       max_width.max(d_min_stencil_width);
    }

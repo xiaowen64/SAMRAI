@@ -57,7 +57,8 @@ int main(
       /*
        * Create input database and parse all data in input file.
        */
-      boost::shared_ptr<tbox::InputDatabase> input_db(
+      boost::shared_ptr<tbox::InputDatabase>
+      input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -68,9 +69,13 @@ int main(
       /*
        * Retreive "Main" section of input db.
        */
-      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
+      boost::shared_ptr<tbox::Database>
+      main_db(
+         input_db->getDatabase("Main"));
 
-      const tbox::Dimension dim((unsigned short)main_db->getInteger("dim"));
+      const tbox::Dimension
+      dim(
+         (unsigned short)main_db->getInteger("dim"));
 
       const std::string log_fn =
          "iteratortest" + tbox::Utilities::intToString(dim.getValue()) + "d.log";
@@ -80,20 +85,49 @@ int main(
        * Regular pointer tests.
        */
 
-      hier::Index box_lower(dim, 0);
-      hier::Index box_upper(dim);
+      hier::Index
+      box_lower(
+         dim,
+         0);
+      hier::Index
+      box_upper(
+         dim);
 
       for (int d = 0; d < dim.getValue(); ++d) {
          box_upper(d) = (d + 4) * 3;
       }
 
-      hier::Box box(box_lower, box_upper, hier::BlockId(0));
+      hier::Box
+      box(
+         box_lower,
+         box_upper,
+         hier::BlockId(0));
 
-      pdat::CellData<double> cell_data(box, 1, hier::IntVector(dim, 0));
-      pdat::FaceData<double> face_data(box, 1, hier::IntVector(dim, 0));
-      pdat::NodeData<double> node_data(box, 1, hier::IntVector(dim, 0));
-      pdat::EdgeData<double> edge_data(box, 1, hier::IntVector(dim, 0));
-      pdat::SideData<double> side_data(box, 1, hier::IntVector(dim, 0));
+      pdat::CellData<double>
+      cell_data(
+         box,
+         1,
+         hier::IntVector(dim, 0));
+      pdat::FaceData<double>
+      face_data(
+         box,
+         1,
+         hier::IntVector(dim, 0));
+      pdat::NodeData<double>
+      node_data(
+         box,
+         1,
+         hier::IntVector(dim, 0));
+      pdat::EdgeData<double>
+      edge_data(
+         box,
+         1,
+         hier::IntVector(dim, 0));
+      pdat::SideData<double>
+      side_data(
+         box,
+         1,
+         hier::IntVector(dim, 0));
 
       /*
        * The tests of the iterators first fill the patch data by directly
@@ -123,7 +157,9 @@ int main(
       }
 
       int j = 0;
-      pdat::CellIterator ciend(pdat::CellGeometry::end(box));
+      pdat::CellIterator
+      ciend(
+         pdat::CellGeometry::end(box));
       for (pdat::CellIterator ci(pdat::CellGeometry::begin(box));
            ci != ciend; ++ci) {
          if (!tbox::MathUtilities<double>::equalEps(cell_data(*ci),
@@ -154,7 +190,9 @@ int main(
          }
 
          j = 0;
-         pdat::FaceIterator fiend(pdat::FaceGeometry::end(box, axis));
+         pdat::FaceIterator
+         fiend(
+            pdat::FaceGeometry::end(box, axis));
          for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(box, axis));
               fi != fiend; ++fi) {
             if (!tbox::MathUtilities<double>::equalEps(face_data(*fi),
@@ -170,7 +208,9 @@ int main(
        * Test FaceIndex
        */
 
-      pdat::CellIterator ifcend(pdat::CellGeometry::end(box));
+      pdat::CellIterator
+      ifcend(
+         pdat::CellGeometry::end(box));
       for (pdat::CellIterator ifc(pdat::CellGeometry::begin(box));
            ifc != ifcend; ++ifc) {
 
@@ -181,7 +221,11 @@ int main(
             hier::Index fhi = face_box.upper();
             for (int f = 0; f < 2; ++f) {
 
-               pdat::FaceIndex findx(*ifc, a, f);
+               pdat::FaceIndex
+               findx(
+                  * ifc,
+                  a,
+                  f);
 
                int offset = 0;
                for (int i = dim.getValue() - 1; i > 0; --i) {
@@ -217,7 +261,9 @@ int main(
       }
 
       j = 0;
-      pdat::NodeIterator niend(pdat::NodeGeometry::end(box));
+      pdat::NodeIterator
+      niend(
+         pdat::NodeGeometry::end(box));
       for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(box));
            ni != niend; ++ni) {
          if (!tbox::MathUtilities<double>::equalEps(node_data(*ni),
@@ -232,17 +278,25 @@ int main(
        * Test NodeIndex
        */
 
-      pdat::CellIterator incend(pdat::CellGeometry::end(box));
+      pdat::CellIterator
+      incend(
+         pdat::CellGeometry::end(box));
       for (pdat::CellIterator inc(pdat::CellGeometry::begin(box));
            inc != incend; ++inc) {
 
-         hier::IntVector corner(dim, 0);
+         hier::IntVector
+         corner(
+            dim,
+            0);
 
          bool all_corners_complete = false;
 
          while (!all_corners_complete) {
 
-            pdat::NodeIndex nindx(*inc, corner);
+            pdat::NodeIndex
+            nindx(
+               * inc,
+               corner);
 
             int offset = 0;
             for (int i = dim.getValue() - 1; i > 0; --i) {
@@ -291,7 +345,9 @@ int main(
          }
 
          j = 0;
-         pdat::EdgeIterator eiend(pdat::EdgeGeometry::end(box, axis));
+         pdat::EdgeIterator
+         eiend(
+            pdat::EdgeGeometry::end(box, axis));
          for (pdat::EdgeIterator ei(pdat::EdgeGeometry::begin(box, axis));
               ei != eiend; ++ei) {
             if (!tbox::MathUtilities<double>::equalEps(edge_data(*ei),
@@ -307,7 +363,9 @@ int main(
        * Test EdgeIndex
        */
 
-      pdat::CellIterator iecend(pdat::CellGeometry::end(box));
+      pdat::CellIterator
+      iecend(
+         pdat::CellGeometry::end(box));
       for (pdat::CellIterator iec(pdat::CellGeometry::begin(box));
            iec != iecend; ++iec) {
          for (int a = 0; a < dim.getValue(); ++a) {
@@ -318,7 +376,11 @@ int main(
             hier::Index ehi = edge_box.upper();
 
             for (int f = 0; f < (1 << (dim.getValue() - 1)); ++f) {
-               pdat::EdgeIndex eindx(*iec, a, f);
+               pdat::EdgeIndex
+               eindx(
+                  * iec,
+                  a,
+                  f);
 
                int offset = 0;
                for (int i = dim.getValue() - 1; i > 0; --i) {
@@ -354,7 +416,9 @@ int main(
          }
 
          j = 0;
-         pdat::SideIterator siend(pdat::SideGeometry::end(box, axis));
+         pdat::SideIterator
+         siend(
+            pdat::SideGeometry::end(box, axis));
          for (pdat::SideIterator si(pdat::SideGeometry::begin(box, axis));
               si != siend; ++si) {
             if (!tbox::MathUtilities<double>::equalEps(side_data(*si),
@@ -370,7 +434,9 @@ int main(
        * Test SideIndex
        */
 
-      pdat::CellIterator iscend(pdat::CellGeometry::end(box));
+      pdat::CellIterator
+      iscend(
+         pdat::CellGeometry::end(box));
       for (pdat::CellIterator isc(pdat::CellGeometry::begin(box));
            isc != iscend; ++isc) {
          for (tbox::Dimension::dir_t a = 0; a < dim.getValue(); ++a) {
@@ -380,7 +446,11 @@ int main(
             hier::Index shi = side_box.upper();
 
             for (int f = 0; f < 2; ++f) {
-               pdat::SideIndex sindx(*isc, a, f);
+               pdat::SideIndex
+               sindx(
+                  * isc,
+                  a,
+                  f);
 
                int offset = 0;
                for (int i = dim.getValue() - 1; i > 0; --i) {

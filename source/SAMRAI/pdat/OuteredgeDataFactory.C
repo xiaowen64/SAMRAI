@@ -101,7 +101,9 @@ OuteredgeDataFactory<TYPE>::getBoxGeometry(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   const hier::IntVector& zero_vector(hier::IntVector::getZero(getDim()));
+   const hier::IntVector&
+   zero_vector(
+      hier::IntVector::getZero(getDim()));
 
    return boost::make_shared<OuteredgeGeometry>(box, zero_vector);
 }
@@ -186,7 +188,8 @@ OuteredgeDataFactory<TYPE>::validCopyTo(
     * Valid options are EdgeData and OuteredgeData.
     */
    if (!valid_copy) {
-      boost::shared_ptr<EdgeDataFactory<TYPE> > edf(
+      boost::shared_ptr<EdgeDataFactory<TYPE> >
+      edf(
          boost::dynamic_pointer_cast<EdgeDataFactory<TYPE>,
                                      hier::PatchDataFactory>(dst_pdf));
       if (edf) {
@@ -195,7 +198,8 @@ OuteredgeDataFactory<TYPE>::validCopyTo(
    }
 
    if (!valid_copy) {
-      boost::shared_ptr<OuteredgeDataFactory<TYPE> > oedf(
+      boost::shared_ptr<OuteredgeDataFactory<TYPE> >
+      oedf(
          boost::dynamic_pointer_cast<OuteredgeDataFactory<TYPE>,
                                      hier::PatchDataFactory>(
             dst_pdf));

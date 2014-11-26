@@ -32,9 +32,9 @@ CopyOperation<TYPE>::~CopyOperation()
 
 template<class TYPE>
 void
-CopyOperation<TYPE>::operator () (
-   TYPE& vdst,
-   const TYPE& vsrc) const
+CopyOperation<TYPE>::operator() (
+   TYPE & vdst,
+   const TYPE &vsrc) const
 {
    vdst = vsrc;
 }

@@ -31,7 +31,10 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 // in lintimint1d.f:
-void SAMRAI_F77_FUNC(lintimeintcellcmplx1d, LINTIMEINTCELLCMPLX1D) (const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintcellcmplx1d,
+   LINTIMEINTCELLCMPLX1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -40,7 +43,10 @@ void SAMRAI_F77_FUNC(lintimeintcellcmplx1d, LINTIMEINTCELLCMPLX1D) (const int&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
 // in lintimint2d.f:
-void SAMRAI_F77_FUNC(lintimeintcellcmplx2d, LINTIMEINTCELLCMPLX2D) (const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintcellcmplx2d,
+   LINTIMEINTCELLCMPLX2D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -53,7 +59,10 @@ void SAMRAI_F77_FUNC(lintimeintcellcmplx2d, LINTIMEINTCELLCMPLX2D) (const int&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
 // in lintimint3d.f:
-void SAMRAI_F77_FUNC(lintimeintcellcmplx3d, LINTIMEINTCELLCMPLX3D) (const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintcellcmplx3d,
+   LINTIMEINTCELLCMPLX3D) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -86,7 +95,9 @@ CellComplexLinearTimeInterpolateOp::timeInterpolate(
    const hier::PatchData& src_data_old,
    const hier::PatchData& src_data_new) const
 {
-   const tbox::Dimension& dim(where.getDim());
+   const tbox::Dimension&
+   dim(
+      where.getDim());
 
    const CellData<dcomplex>* old_dat =
       CPP_CAST<const CellData<dcomplex> *>(&src_data_old);

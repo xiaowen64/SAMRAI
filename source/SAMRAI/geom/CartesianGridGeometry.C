@@ -187,16 +187,21 @@ CartesianGridGeometry::makeRefinedGridGeometry(
    const std::string& fine_geom_name,
    const hier::IntVector& refine_ratio) const
 {
-   const tbox::Dimension dim(getDim());
+   const tbox::Dimension
+   dim(
+      getDim());
 
    TBOX_ASSERT(!fine_geom_name.empty());
    TBOX_ASSERT(fine_geom_name != getObjectName());
    TBOX_ASSERT(refine_ratio > hier::IntVector::getZero(dim));
 
-   hier::BoxContainer fine_domain(getPhysicalDomain());
+   hier::BoxContainer
+   fine_domain(
+      getPhysicalDomain());
    fine_domain.refine(refine_ratio);
 
-   boost::shared_ptr<hier::BaseGridGeometry> fine_geometry(
+   boost::shared_ptr<hier::BaseGridGeometry>
+   fine_geometry(
       new CartesianGridGeometry(fine_geom_name,
          d_x_lo,
          d_x_up,
@@ -226,7 +231,9 @@ CartesianGridGeometry::makeCoarsenedGridGeometry(
    TBOX_ASSERT(coarse_geom_name != getObjectName());
    TBOX_ASSERT(coarsen_ratio > hier::IntVector::getZero(getDim()));
 
-   hier::BoxContainer coarse_domain(getPhysicalDomain());
+   hier::BoxContainer
+   coarse_domain(
+      getPhysicalDomain());
    coarse_domain.coarsen(coarsen_ratio);
 
    /*
@@ -255,7 +262,8 @@ CartesianGridGeometry::makeCoarsenedGridGeometry(
       }
    }
 
-   boost::shared_ptr<hier::BaseGridGeometry> coarse_geometry(
+   boost::shared_ptr<hier::BaseGridGeometry>
+   coarse_geometry(
       new CartesianGridGeometry(coarse_geom_name,
          d_x_lo,
          d_x_up,
@@ -281,7 +289,9 @@ CartesianGridGeometry::setGeometryData(
    const double* x_up,
    const hier::BoxContainer& domain)
 {
-   const tbox::Dimension& dim(getDim());
+   const tbox::Dimension&
+   dim(
+      getDim());
 
    TBOX_ASSERT(x_lo != 0);
    TBOX_ASSERT(x_up != 0);
@@ -295,7 +305,9 @@ CartesianGridGeometry::setGeometryData(
       setPhysicalDomain(domain, 1);
    }
 
-   hier::Box bigbox(dim);
+   hier::Box
+   bigbox(
+      dim);
    const hier::BoxContainer& block_domain = getPhysicalDomain();
    for (hier::BoxContainer::const_iterator k = block_domain.begin();
         k != block_domain.end(); ++k) {
@@ -326,7 +338,9 @@ CartesianGridGeometry::setGeometryDataOnPatch(
    const hier::IntVector& ratio_to_level_zero,
    const TwoDimBool& touches_regular_bdry) const
 {
-   const tbox::Dimension& dim(getDim());
+   const tbox::Dimension&
+   dim(
+      getDim());
 
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, patch, ratio_to_level_zero);
 
@@ -379,7 +393,8 @@ CartesianGridGeometry::setGeometryDataOnPatch(
       x_up[id5] = x_lo[id5] + ((double)box.numberCells(id5)) * dx[id5];
    }
 
-   boost::shared_ptr<CartesianPatchGeometry> geom(
+   boost::shared_ptr<CartesianPatchGeometry>
+   geom(
       boost::make_shared<CartesianPatchGeometry>(ratio_to_level_zero,
                                                  touches_regular_bdry,
                                                  dx, x_lo, x_up));
@@ -501,7 +516,9 @@ void
 CartesianGridGeometry::printClassData(
    std::ostream& os) const
 {
-   const tbox::Dimension& dim(getDim());
+   const tbox::Dimension&
+   dim(
+      getDim());
 
    os << "Printing CartesianGridGeometry data: this = "
       << (CartesianGridGeometry *)this << std::endl;
@@ -545,7 +562,9 @@ CartesianGridGeometry::putToRestart(
 
    hier::BaseGridGeometry::putToRestart(restart_db);
 
-   const tbox::Dimension& dim(getDim());
+   const tbox::Dimension&
+   dim(
+      getDim());
 
    restart_db->putInteger("GEOM_CARTESIAN_GRID_GEOMETRY_VERSION",
       GEOM_CARTESIAN_GRID_GEOMETRY_VERSION);
@@ -577,7 +596,9 @@ CartesianGridGeometry::getFromInput(
          << "no input database supplied" << std::endl);
    }
 
-   const tbox::Dimension& dim(getDim());
+   const tbox::Dimension&
+   dim(
+      getDim());
 
    if (!is_from_restart) {
 
@@ -621,7 +642,8 @@ CartesianGridGeometry::getFromInput(
 void
 CartesianGridGeometry::getFromRestart()
 {
-   boost::shared_ptr<tbox::Database> restart_db(
+   boost::shared_ptr<tbox::Database>
+   restart_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!restart_db->isDatabase(getObjectName())) {
@@ -629,10 +651,13 @@ CartesianGridGeometry::getFromRestart()
          << "    database with name " << getObjectName()
          << " not found in the restart file" << std::endl);
    }
-   boost::shared_ptr<tbox::Database> db(
+   boost::shared_ptr<tbox::Database>
+   db(
       restart_db->getDatabase(getObjectName()));
 
-   const tbox::Dimension& dim(getDim());
+   const tbox::Dimension&
+   dim(
+      getDim());
 
    int ver = db->getInteger("GEOM_CARTESIAN_GRID_GEOMETRY_VERSION");
    if (ver != GEOM_CARTESIAN_GRID_GEOMETRY_VERSION) {

@@ -137,7 +137,9 @@ void CommGraphWriter::writeGraphSummaryToTextStream(
    }
 
    if (values.size() > 0) {
-      std::vector<double> tmpvalues(values);
+      std::vector<double>
+      tmpvalues(
+         values);
       record.d_mpi.Reduce(
          (void *)&tmpvalues[0],
          (void *)&values[0],
@@ -150,8 +152,12 @@ void CommGraphWriter::writeGraphSummaryToTextStream(
    os.setf(std::ios_base::fmtflags(0), std::ios_base::floatfield);
    os.precision(8);
 
-   std::vector<NodeValue> max_nodev(record.d_node_values.size());
-   std::vector<Edge> max_edge(record.d_edges.size());
+   std::vector<NodeValue>
+   max_nodev(
+      record.d_node_values.size());
+   std::vector<Edge>
+   max_edge(
+      record.d_edges.size());
 
    if (record.d_mpi.getRank() == d_root_rank) {
 
@@ -197,8 +203,10 @@ void CommGraphWriter::writeFullGraphToTextStream(
       ostr << edge.d_value << edge.d_dir << edge.d_other_node;
    }
 
-   std::vector<char> tmpbuf(record.d_mpi.getRank() == d_root_rank ?
-                            ostr.getCurrentSize() * record.d_mpi.getSize() : 0);
+   std::vector<char>
+   tmpbuf(
+      record.d_mpi.getRank() == d_root_rank ?
+      ostr.getCurrentSize() * record.d_mpi.getSize() : 0);
 
    if (ostr.getCurrentSize() > 0) {
       record.d_mpi.Gather(
@@ -214,8 +222,12 @@ void CommGraphWriter::writeFullGraphToTextStream(
    os.setf(std::ios_base::fmtflags(0), std::ios_base::floatfield);
    os.precision(8);
 
-   std::vector<NodeValue> max_nodev(record.d_node_values.size());
-   std::vector<Edge> max_edge(record.d_edges.size());
+   std::vector<NodeValue>
+   max_nodev(
+      record.d_node_values.size());
+   std::vector<Edge>
+   max_edge(
+      record.d_edges.size());
 
    if (record.d_mpi.getRank() == d_root_rank) {
 
@@ -223,10 +235,12 @@ void CommGraphWriter::writeFullGraphToTextStream(
       os << "# proc" << '\t' << "dir" << '\t' << "remote" << '\t' << "value" << '\t' << "label\n";
 
       if (!tmpbuf.empty()) {
-         tbox::MessageStream istr(tmpbuf.size(),
-                                  tbox::MessageStream::Read,
-                                  &tmpbuf[0],
-                                  false);
+         tbox::MessageStream
+         istr(
+            tmpbuf.size(),
+            tbox::MessageStream::Read,
+            & tmpbuf[0],
+            false);
 
          for (int src_rank = 0; src_rank < record.d_mpi.getSize(); ++src_rank) {
 

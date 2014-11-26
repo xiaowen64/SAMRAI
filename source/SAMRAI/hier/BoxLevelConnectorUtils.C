@@ -26,9 +26,13 @@
 namespace SAMRAI {
 namespace hier {
 
-const std::string BoxLevelConnectorUtils::s_default_timer_prefix("hier::BoxLevelConnectorUtils");
+const std::string
+BoxLevelConnectorUtils::s_default_timer_prefix(
+   "hier::BoxLevelConnectorUtils");
 std::map<std::string, BoxLevelConnectorUtils::TimerStruct> BoxLevelConnectorUtils::s_static_timers;
-char BoxLevelConnectorUtils::s_ignore_external_timer_prefix('\0');
+char
+BoxLevelConnectorUtils::s_ignore_external_timer_prefix(
+   '\0');
 
 tbox::StartupShutdownManager::Handler
 BoxLevelConnectorUtils::s_initialize_handler(
@@ -68,10 +72,12 @@ BoxLevelConnectorUtils::getFromInput()
    if (s_ignore_external_timer_prefix == '\0') {
       s_ignore_external_timer_prefix = 'n';
       if (tbox::InputManager::inputDatabaseExists()) {
-         boost::shared_ptr<tbox::Database> idb(
+         boost::shared_ptr<tbox::Database>
+         idb(
             tbox::InputManager::getInputDatabase());
          if (idb->isDatabase("BoxLevelConnectorUtils")) {
-            boost::shared_ptr<tbox::Database> blcu_db(
+            boost::shared_ptr<tbox::Database>
+            blcu_db(
                idb->getDatabase("BoxLevelConnectorUtils"));
             s_ignore_external_timer_prefix =
                blcu_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
@@ -102,14 +108,18 @@ BoxLevelConnectorUtils::baseNestsInHead(
    const BoxContainer* domain) const
 {
 
-   tbox::Dimension dim(head.getDim());
+   tbox::Dimension
+   dim(
+      head.getDim());
 
    TBOX_ASSERT_OBJDIM_EQUALITY2(head_nesting_margin, base_swell);
 
    TBOX_ASSERT(head.getMPI() == base.getMPI());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   const IntVector& zero_vector(IntVector::getZero(dim));
+   const IntVector&
+   zero_vector(
+      IntVector::getZero(dim));
    TBOX_ASSERT(base_swell >= zero_vector);
    TBOX_ASSERT(head_swell >= zero_vector);
    TBOX_ASSERT(head_nesting_margin >= zero_vector);
@@ -179,7 +189,9 @@ BoxLevelConnectorUtils::baseNestsInHead(
    TBOX_ASSERT_OBJDIM_EQUALITY3(
       connector.getBase(), base_swell, head_nesting_margin);
    TBOX_ASSERT(connector.isFinalized());
-   const tbox::Dimension& dim(connector.getBase().getDim());
+   const tbox::Dimension&
+   dim(
+      connector.getBase().getDim());
    TBOX_ASSERT(base_swell >= IntVector::getZero(dim));
    TBOX_ASSERT(head_nesting_margin >= IntVector::getZero(dim));
 
@@ -205,7 +217,8 @@ BoxLevelConnectorUtils::baseNestsInHead(
 
    const BoxLevel& base = connector.getBase();
    const BoxLevel& head = connector.getHead();
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geom(
+   const boost::shared_ptr<const BaseGridGeometry>&
+   grid_geom(
       base.getGridGeometry());
 
    /*
@@ -229,7 +242,9 @@ BoxLevelConnectorUtils::baseNestsInHead(
             base.getMPI()));
       for (BoxContainer::const_iterator ni = base_boxes.begin();
            ni != base_boxes.end(); ++ni) {
-         Box swelledbase_box(*ni);
+         Box
+         swelledbase_box(
+            * ni);
          swelledbase_box.grow(base_swell);
          swelledbase->addBoxWithoutUpdate(swelledbase_box);
       }
@@ -249,7 +264,9 @@ BoxLevelConnectorUtils::baseNestsInHead(
 
       for (BoxContainer::const_iterator ni = head_boxes.begin();
            ni != head_boxes.end(); ++ni) {
-         Box swelledhead_box(*ni);
+         Box
+         swelledhead_box(
+            * ni);
 
          swelledhead_box.grow(head_swell);
          swelledhead->addBoxWithoutUpdate(swelledhead_box);
@@ -257,7 +274,9 @@ BoxLevelConnectorUtils::baseNestsInHead(
       swelledhead->finalize();
    }
 
-   Connector swelledbase_to_swelledhead(connector);
+   Connector
+   swelledbase_to_swelledhead(
+      connector);
    swelledbase_to_swelledhead.setBase(*swelledbase);
    swelledbase_to_swelledhead.setHead(*swelledhead);
    swelledbase_to_swelledhead.setWidth(
@@ -302,7 +321,8 @@ BoxLevelConnectorUtils::baseNestsInHead(
        * the domain and we want to ignore those parts.
        */
       MappingConnectorAlgorithm mca;
-      BoxLevel domain_box_level(
+      BoxLevel
+      domain_box_level(
          IntVector::getOne(dim),
          grid_geom,
          connector.getMPI(),
@@ -362,7 +382,9 @@ BoxLevelConnectorUtils::makeSortingMap(
    bool sequentialize_global_indices,
    LocalId initial_sequential_index) const
 {
-   const tbox::Dimension& dim(unsorted_box_level.getDim());
+   const tbox::Dimension&
+   dim(
+      unsorted_box_level.getDim());
 
    if (!sort_boxes_by_corner && !sequentialize_global_indices) {
       // Make a blank map.
@@ -385,12 +407,11 @@ BoxLevelConnectorUtils::makeSortingMap(
       int local_box_count =
          static_cast<int>(unsorted_box_level.getLocalNumberOfBoxes());
       int scanned_box_count = -1;
-      if ( tbox::SAMRAI_MPI::usingMPI() ) {
+      if (tbox::SAMRAI_MPI::usingMPI()) {
          unsorted_box_level.getMPI().Scan(&local_box_count,
-                                          &scanned_box_count,
-                                          1, MPI_INT, MPI_SUM);
-      }
-      else {
+            &scanned_box_count,
+            1, MPI_INT, MPI_SUM);
+      } else {
          scanned_box_count = local_box_count; // Scan result for 1 proc.
       }
       scanned_box_count -= static_cast<int>(local_box_count);
@@ -427,10 +448,12 @@ BoxLevelConnectorUtils::makeSortingMap(
         ni != real_box_vector.end(); ++ni) {
 
       const Box& cur_box = *ni;
-      const Box new_box(cur_box,
-                        ++last_index,
-                        cur_box.getOwnerRank(),
-                        cur_box.getPeriodicId());
+      const Box
+      new_box(
+         cur_box,
+         ++last_index,
+         cur_box.getOwnerRank(),
+         cur_box.getPeriodicId());
       sorted_box_level->addBoxWithoutUpdate(new_box);
 
       /*
@@ -445,11 +468,13 @@ BoxLevelConnectorUtils::makeSortingMap(
       while (ini != cur_boxes.end() &&
              ini->getGlobalId() == cur_box.getGlobalId()) {
          const Box& image_box = *ini;
-         const Box new_image_box(image_box,
-                                 new_box.getLocalId(),
-                                 new_box.getOwnerRank(),
-                                 image_box.
-                                 getPeriodicId());
+         const Box
+         new_image_box(
+            image_box,
+            new_box.getLocalId(),
+            new_box.getOwnerRank(),
+            image_box.
+            getPeriodicId());
          TBOX_ASSERT(new_image_box.getBlockId() == cur_box.getBlockId());
          sorted_box_level->addBoxWithoutUpdate(new_image_box);
          ++ini;
@@ -480,14 +505,20 @@ BoxLevelConnectorUtils::qsortBoxCompare(
    const void* v,
    const void* w)
 {
-   const Box& box_v(*(const Box *)v);
-   const Box& box_w(*(const Box *)w);
+   const Box&
+   box_v(
+      *(const Box *)v);
+   const Box&
+   box_w(
+      *(const Box *)w);
 
    if (box_v.getBlockId() > box_w.getBlockId()) return 1;
 
    if (box_v.getBlockId() < box_w.getBlockId()) return -1;
 
-   const tbox::Dimension& dim(box_v.getDim());
+   const tbox::Dimension&
+   dim(
+      box_v.getDim());
 
    const IntVector& lowv = box_v.lower();
    const IntVector& loww = box_w.lower();
@@ -577,12 +608,19 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
    const BoxLevel& input = input_to_reference.getBase();
 
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
+   const boost::shared_ptr<const BaseGridGeometry>&
+   grid_geometry(
       input.getGridGeometry());
 
-   const tbox::Dimension& dim(input.getDim());
-   const IntVector& zero_vec(IntVector::getZero(input.getDim()));
-   const IntVector& one_vec(IntVector::getOne(dim));
+   const tbox::Dimension&
+   dim(
+      input.getDim());
+   const IntVector&
+   zero_vec(
+      IntVector::getZero(input.getDim()));
+   const IntVector&
+   one_vec(
+      IntVector::getOne(dim));
 
    const bool nonnegative_nesting_width = nesting_width >= zero_vec;
 
@@ -698,7 +736,9 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
                input.getRefinementRatio(),
                domain);
          } else {
-            BoxContainer refined_domain(domain);
+            BoxContainer
+            refined_domain(
+               domain);
             refined_domain.refine(input.getRefinementRatio());
             refined_domain.makeTree(grid_geometry.get());
             reference_box_list.intersectBoxes(input.getRefinementRatio(),
@@ -769,7 +809,9 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
       } else {
 
-         BoxContainer parts_list(input_box);
+         BoxContainer
+         parts_list(
+            input_box);
          /*
           * Compute parts of input_box either overlapping
           * or nor overlapping the reference_box_list.
@@ -823,9 +865,11 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
                input_to_parts->makeEmptyLocalNeighborhood(input_box_id);
             for (BoxContainer::iterator bi = parts_list.begin();
                  bi != parts_list.end(); ++bi) {
-               const Box parts_box((*bi),
-                                   ++last_used_index,
-                                   input_box.getOwnerRank());
+               const Box
+               parts_box(
+                  (*bi),
+                  ++last_used_index,
+                  input_box.getOwnerRank());
                TBOX_ASSERT(parts_box.getBlockId() == input_box.getBlockId());
                parts->addBox(parts_box);
 
@@ -885,10 +929,16 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
 {
    d_object_timers->t_compute_boxes_around_boundary->start();
 
-   const tbox::Dimension& dim(grid_geometry->getDim());
-   const IntVector& one_vec(IntVector::getOne(dim));
+   const tbox::Dimension&
+   dim(
+      grid_geometry->getDim());
+   const IntVector&
+   one_vec(
+      IntVector::getOne(dim));
 
-   BoxContainer reference_boxes_tree(boundary);
+   BoxContainer
+   reference_boxes_tree(
+      boundary);
    reference_boxes_tree.makeTree(grid_geometry.get());
 
    std::map<BlockId, BoxContainer> single_block_reference;
@@ -965,7 +1015,9 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
       for (std::map<BlockId, BoxContainer>::iterator bi = boundary_by_blocks.begin();
            bi != boundary_by_blocks.end(); ++bi) {
 
-         const BlockId& block_id(bi->first);
+         const BlockId&
+         block_id(
+            bi->first);
 
          /*
           * Compute a version of singularity boxes for reduced
@@ -975,13 +1027,16 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
           * description, because they do not live in a valid index
           * space.
           */
-         BoxContainer reduced_connectivity_singularity_boxes(
+         BoxContainer
+         reduced_connectivity_singularity_boxes(
             grid_geometry->getSingularityBoxContainer(block_id));
 
          for (BaseGridGeometry::ConstNeighborIterator ni =
                  grid_geometry->begin(block_id);
               ni != grid_geometry->end(block_id); ++ni) {
-            const BaseGridGeometry::Neighbor& neighbor(*ni);
+            const BaseGridGeometry::Neighbor&
+            neighbor(
+               * ni);
             if (neighbor.isSingularity()) {
                reduced_connectivity_singularity_boxes.removeIntersections(
                   neighbor.getTransformedDomain());
@@ -1004,7 +1059,8 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
           * not touch the singularity, overriding what the (R^1)\R
           * formula says.
           */
-         BoxContainer singularity_boxes(
+         BoxContainer
+         singularity_boxes(
             grid_geometry->getSingularityBoxContainer(block_id));
          if (refinement_ratio != one_vec) {
             singularity_boxes.refine(refinement_ratio);
@@ -1013,8 +1069,12 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
          for (BaseGridGeometry::ConstNeighborIterator ni =
                  grid_geometry->begin(block_id);
               ni != grid_geometry->end(block_id); ++ni) {
-            const BaseGridGeometry::Neighbor& neighbor(*ni);
-            const BlockId neighbor_block_id(neighbor.getBlockId());
+            const BaseGridGeometry::Neighbor&
+            neighbor(
+               * ni);
+            const BlockId
+            neighbor_block_id(
+               neighbor.getBlockId());
             if (neighbor.isSingularity() &&
                 reference_boxes_tree.hasBoxInBlock(neighbor_block_id)) {
 
@@ -1056,7 +1116,9 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
    // Set correct box ids.
    for (std::map<BlockId, BoxContainer>::iterator bi = boundary_by_blocks.begin();
         bi != boundary_by_blocks.end(); ++bi) {
-      BoxContainer& boxes(bi->second);
+      BoxContainer&
+      boxes(
+         bi->second);
       for (BoxContainer::iterator bj = boxes.begin(); bj != boxes.end(); ++bj) {
          bj->setId(BoxId(bj->getLocalId(), bj->getOwnerRank(),
                bj->getPeriodicId()));
@@ -1089,7 +1151,9 @@ BoxLevelConnectorUtils::makeRemainderMap(
 {
    TBOX_ASSERT(orig_to_rejection.isLocal());
 
-   const tbox::Dimension& dim(orig_to_rejection.getBase().getDim());
+   const tbox::Dimension&
+   dim(
+      orig_to_rejection.getBase().getDim());
 
    /*
     * remainder_nodes starts as a copy of orig codes.
@@ -1157,7 +1221,9 @@ BoxLevelConnectorUtils::makeRemainderMap(
 
          remainder->eraseBoxWithoutUpdate(orig_node);
 
-         BoxContainer remaining_parts_list(orig_node);
+         BoxContainer
+         remaining_parts_list(
+            orig_node);
 
          for (Connector::ConstNeighborIterator vi = orig_to_rejection.begin(ci);
               vi != orig_to_rejection.end(ci); ++vi) {
@@ -1183,9 +1249,11 @@ BoxLevelConnectorUtils::makeRemainderMap(
          for (BoxContainer::iterator bi = remaining_parts_list.begin();
               bi != remaining_parts_list.end(); ++bi) {
             Box new_box = (*bi);
-            Box new_node(new_box,
-                         ++last_used_index,
-                         rank);
+            Box
+            new_node(
+               new_box,
+               ++last_used_index,
+               rank);
             TBOX_ASSERT(new_node.getBlockId() == orig_node.getBlockId());
             remainder->addBoxWithoutUpdate(new_node);
             orig_to_remainder->insertLocalNeighbor(new_node, base_box_itr);
@@ -1220,7 +1288,8 @@ BoxLevelConnectorUtils::addPeriodicImages(
       return; // No-op.
    }
 
-   boost::shared_ptr<BoxContainer> domain_tree_for_box_level(
+   boost::shared_ptr<BoxContainer>
+   domain_tree_for_box_level(
       boost::make_shared<BoxContainer>(domain_search_tree));
    domain_tree_for_box_level->refine(box_level.getRefinementRatio());
    domain_tree_for_box_level->makeTree(0);
@@ -1229,13 +1298,17 @@ BoxLevelConnectorUtils::addPeriodicImages(
 
    const IntVector& box_level_growth = threshold_distance;
 
-   const BoxContainer& level_boxes(box_level.getBoxes());
+   const BoxContainer&
+   level_boxes(
+      box_level.getBoxes());
    for (RealBoxConstIterator ni(level_boxes.realBegin());
         ni != level_boxes.realEnd(); ++ni) {
 
       const Box& level_box = *ni;
       for (int s = 1; s < shift_catalog->getNumberOfShifts(); ++s) {
-         PeriodicId id(s);
+         PeriodicId
+         id(
+            s);
          const IntVector try_shift =
             shift_catalog->shiftNumberToShiftDistance(id) * box_level.getRefinementRatio();
          Box box = level_box;
@@ -1320,7 +1393,9 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
 
    const BoxLevel& anchor = anchor_to_box_level.getBase();
 
-   BoxContainer domain_tree_for_box_level(domain_search_tree);
+   BoxContainer
+   domain_tree_for_box_level(
+      domain_search_tree);
    domain_tree_for_box_level.refine(box_level.getRefinementRatio());
    domain_tree_for_box_level.makeTree(0);
 
@@ -1341,16 +1416,22 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
 
       const IntVector& box_level_growth = box_level_to_anchor.getConnectorWidth();
 
-      const BoxContainer& level_boxes(box_level.getBoxes());
+      const BoxContainer&
+      level_boxes(
+         box_level.getBoxes());
       for (RealBoxConstIterator ni(level_boxes.realBegin());
            ni != level_boxes.realEnd(); ++ni) {
 
          const Box& level_box = *ni;
          Box grown_box = level_box;
          grown_box.grow(box_level_growth);
-         bool images_added(false);
+         bool
+         images_added(
+            false);
          for (int s = 1; s < shift_catalog->getNumberOfShifts(); ++s) {
-            PeriodicId id(s);
+            PeriodicId
+            id(
+               s);
             const IntVector try_shift =
                shift_catalog->shiftNumberToShiftDistance(id) * box_level.getRefinementRatio();
             Box box = grown_box;
@@ -1553,7 +1634,8 @@ BoxLevelConnectorUtils::setTimerPrefix(
    } else {
       timer_prefix_used = timer_prefix;
    }
-   std::map<std::string, TimerStruct>::iterator ti(
+   std::map<std::string, TimerStruct>::iterator
+   ti(
       s_static_timers.find(timer_prefix_used));
    if (ti == s_static_timers.end()) {
       d_object_timers = &s_static_timers[timer_prefix_used];

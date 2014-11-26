@@ -48,7 +48,8 @@ OuteredgeData<TYPE>::OuteredgeData(
 
    for (tbox::Dimension::dir_t axis = 0; axis < getDim().getValue(); ++axis) {
 
-      for (tbox::Dimension::dir_t face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
+      for (tbox::Dimension::dir_t face_normal = 0; face_normal < getDim().getValue();
+           ++face_normal) {
 
          if (face_normal != axis) {
 
@@ -131,8 +132,8 @@ OuteredgeData<TYPE>::getPointer(
 
 template<class TYPE>
 TYPE&
-OuteredgeData<TYPE>::operator () (
-   const EdgeIndex& i,
+OuteredgeData<TYPE>::operator() (
+   const EdgeIndex &i,
    int depth)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
@@ -165,8 +166,8 @@ OuteredgeData<TYPE>::operator () (
 
 template<class TYPE>
 const TYPE&
-OuteredgeData<TYPE>::operator () (
-   const EdgeIndex& i,
+OuteredgeData<TYPE>::operator() (
+   const EdgeIndex &i,
    int depth) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
@@ -561,7 +562,8 @@ OuteredgeData<TYPE>::getDataStreamSize(
       const hier::BoxContainer& boxlist =
          t_overlap->getDestinationBoxContainer(axis);
 
-      for (tbox::Dimension::dir_t face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
+      for (tbox::Dimension::dir_t face_normal = 0; face_normal < getDim().getValue();
+           ++face_normal) {
 
          if (face_normal != axis) {
 
@@ -777,7 +779,9 @@ OuteredgeData<TYPE>::getSizeOfData(
 
    for (tbox::Dimension::dir_t axis = 0; axis < box.getDim().getValue(); ++axis) {
 
-      for (tbox::Dimension::dir_t face_normal = 0; face_normal < box.getDim().getValue(); ++face_normal) {
+      for (tbox::Dimension::dir_t face_normal = 0;
+           face_normal < box.getDim().getValue();
+           ++face_normal) {
 
          if (face_normal != axis) {
 
@@ -1352,7 +1356,9 @@ OuteredgeData<TYPE>::printAxisSide(
       const hier::Box edgebox = EdgeGeometry::toEdgeBox(box, axis);
       const hier::Box region =
          edgebox * d_data[axis][face_normal][side]->getBox();
-      hier::Box::iterator iiend(region.end());
+      hier::Box::iterator
+      iiend(
+         region.end());
       for (hier::Box::iterator ii(region.begin()); ii != iiend; ++ii) {
          os << "array" << *ii << " = "
             << (*(d_data[axis][face_normal][side]))(*ii, depth) << std::endl;

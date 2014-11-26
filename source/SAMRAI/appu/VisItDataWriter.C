@@ -32,19 +32,28 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void SAMRAI_F77_FUNC(cpfdat2buf3d, CPFDAT2BUF3D) (
+void
+SAMRAI_F77_FUNC(
+   cpfdat2buf3d,
+   CPFDAT2BUF3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const float *, double *, const int&);
-void SAMRAI_F77_FUNC(cpddat2buf3d, CPDDAT2BUF3D) (
+void
+SAMRAI_F77_FUNC(
+   cpddat2buf3d,
+   CPDDAT2BUF3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const double *, double *, const int&);
-void SAMRAI_F77_FUNC(cpidat2buf3d, CPIDAT2BUF3D) (
+void
+SAMRAI_F77_FUNC(
+   cpidat2buf3d,
+   CPIDAT2BUF3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -52,19 +61,28 @@ void SAMRAI_F77_FUNC(cpidat2buf3d, CPIDAT2BUF3D) (
    const int *, double *, const int&);
 }
 extern "C" {
-void SAMRAI_F77_FUNC(cpfdat2buf2d, CPFDAT2BUF2D) (
+void
+SAMRAI_F77_FUNC(
+   cpfdat2buf2d,
+   CPFDAT2BUF2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const float *, double *, const int&);
-void SAMRAI_F77_FUNC(cpddat2buf2d, CPDDAT2BUF2D) (
+void
+SAMRAI_F77_FUNC(
+   cpddat2buf2d,
+   CPDDAT2BUF2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const double *, double *, const int&);
-void SAMRAI_F77_FUNC(cpidat2buf2d, CPIDAT2BUF2D) (
+void
+SAMRAI_F77_FUNC(
+   cpidat2buf2d,
+   CPIDAT2BUF2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -373,7 +391,8 @@ VisItDataWriter::resetLevelPlotQuantity(
     * Verify the supplied patch data index has the same type and centering
     * as the plot item its replacing.
     */
-   boost::shared_ptr<hier::PatchDataFactory> factory(
+   boost::shared_ptr<hier::PatchDataFactory>
+   factory(
       hier::VariableDatabase::getDatabase()->
       getPatchDescriptor()->
       getPatchDataFactory(patch_data_index));
@@ -383,7 +402,8 @@ VisItDataWriter::resetLevelPlotQuantity(
    variable_centering vc = VISIT_CENTERING_BAD;
 
    if (!found_type) {
-      boost::shared_ptr<pdat::CellDataFactory<float> > ffactory(
+      boost::shared_ptr<pdat::CellDataFactory<float> >
+      ffactory(
          boost::dynamic_pointer_cast<pdat::CellDataFactory<float>, hier::PatchDataFactory>(
             factory));
       if (ffactory) {
@@ -393,7 +413,8 @@ VisItDataWriter::resetLevelPlotQuantity(
       }
    }
    if (!found_type) {
-      boost::shared_ptr<pdat::NodeDataFactory<float> > ffactory(
+      boost::shared_ptr<pdat::NodeDataFactory<float> >
+      ffactory(
          boost::dynamic_pointer_cast<pdat::NodeDataFactory<float>, hier::PatchDataFactory>(
             factory));
       if (ffactory) {
@@ -404,7 +425,8 @@ VisItDataWriter::resetLevelPlotQuantity(
    }
 
    if (!found_type) {
-      boost::shared_ptr<pdat::CellDataFactory<double> > dfactory(
+      boost::shared_ptr<pdat::CellDataFactory<double> >
+      dfactory(
          boost::dynamic_pointer_cast<pdat::CellDataFactory<double>, hier::PatchDataFactory>(
             factory));
       if (dfactory) {
@@ -414,7 +436,8 @@ VisItDataWriter::resetLevelPlotQuantity(
       }
    }
    if (!found_type) {
-      boost::shared_ptr<pdat::NodeDataFactory<double> > dfactory(
+      boost::shared_ptr<pdat::NodeDataFactory<double> >
+      dfactory(
          boost::dynamic_pointer_cast<pdat::NodeDataFactory<double>, hier::PatchDataFactory>(
             factory));
       if (dfactory) {
@@ -424,7 +447,8 @@ VisItDataWriter::resetLevelPlotQuantity(
       }
    }
    if (!found_type) {
-      boost::shared_ptr<pdat::CellDataFactory<int> > ifactory(
+      boost::shared_ptr<pdat::CellDataFactory<int> >
+      ifactory(
          boost::dynamic_pointer_cast<pdat::CellDataFactory<int>, hier::PatchDataFactory>(
             factory));
       if (ifactory) {
@@ -434,7 +458,8 @@ VisItDataWriter::resetLevelPlotQuantity(
       }
    }
    if (!found_type) {
-      boost::shared_ptr<pdat::NodeDataFactory<int> > ifactory(
+      boost::shared_ptr<pdat::NodeDataFactory<int> >
+      ifactory(
          boost::dynamic_pointer_cast<pdat::NodeDataFactory<int>, hier::PatchDataFactory>(
             factory));
       if (ifactory) {
@@ -528,7 +553,8 @@ VisItDataWriter::registerNodeCoordinates(
     * Verify the supplied patch data index is a valid NODE-centered
     * float or double and has a depth of at least d_dim
     */
-   boost::shared_ptr<hier::PatchDataFactory> factory(
+   boost::shared_ptr<hier::PatchDataFactory>
+   factory(
       hier::VariableDatabase::getDatabase()->
       getPatchDescriptor()->
       getPatchDataFactory(patch_data_index));
@@ -537,7 +563,8 @@ VisItDataWriter::registerNodeCoordinates(
    int var_depth = VISIT_UNDEFINED_INDEX;
    if (!found_type) {
 
-      boost::shared_ptr<pdat::NodeDataFactory<float> > ffactory(
+      boost::shared_ptr<pdat::NodeDataFactory<float> >
+      ffactory(
          boost::dynamic_pointer_cast<pdat::NodeDataFactory<float>, hier::PatchDataFactory>(
             factory));
       if (ffactory) {
@@ -546,7 +573,8 @@ VisItDataWriter::registerNodeCoordinates(
       }
    }
    if (!found_type) {
-      boost::shared_ptr<pdat::NodeDataFactory<double> > dfactory(
+      boost::shared_ptr<pdat::NodeDataFactory<double> >
+      dfactory(
          boost::dynamic_pointer_cast<pdat::NodeDataFactory<double>, hier::PatchDataFactory>(
             factory));
       if (dfactory) {
@@ -642,14 +670,16 @@ VisItDataWriter::registerSingleNodeCoordinate(
     * Verify the supplied patch data index is a valid NODE-centered
     * float or double
     */
-   boost::shared_ptr<hier::PatchDataFactory> factory(
+   boost::shared_ptr<hier::PatchDataFactory>
+   factory(
       hier::VariableDatabase::getDatabase()->
       getPatchDescriptor()->
       getPatchDataFactory(patch_data_index));
 
    bool found_type = false;
    if (!found_type) {
-      boost::shared_ptr<pdat::NodeDataFactory<float> > ffactory(
+      boost::shared_ptr<pdat::NodeDataFactory<float> >
+      ffactory(
          boost::dynamic_pointer_cast<pdat::NodeDataFactory<float>, hier::PatchDataFactory>(
             factory));
       if (ffactory) {
@@ -657,7 +687,8 @@ VisItDataWriter::registerSingleNodeCoordinate(
       }
    }
    if (!found_type) {
-      boost::shared_ptr<pdat::NodeDataFactory<double> > dfactory(
+      boost::shared_ptr<pdat::NodeDataFactory<double> >
+      dfactory(
          boost::dynamic_pointer_cast<pdat::NodeDataFactory<double>, hier::PatchDataFactory>(
             factory));
       if (dfactory) {
@@ -1110,7 +1141,8 @@ VisItDataWriter::initializePlotItem(
    int var_depth = 0;
    if (patch_data_index >= 0) {
 
-      boost::shared_ptr<hier::PatchDataFactory> factory(
+      boost::shared_ptr<hier::PatchDataFactory>
+      factory(
          hier::VariableDatabase::getDatabase()->
          getPatchDescriptor()->
          getPatchDataFactory(patch_data_index));
@@ -1122,7 +1154,8 @@ VisItDataWriter::initializePlotItem(
       } else {
 
          if (!found_type) {
-            boost::shared_ptr<pdat::CellDataFactory<float> > ffactory(
+            boost::shared_ptr<pdat::CellDataFactory<float> >
+            ffactory(
                boost::dynamic_pointer_cast<pdat::CellDataFactory<float>,
                                            hier::PatchDataFactory>(factory));
             if (ffactory) {
@@ -1133,7 +1166,8 @@ VisItDataWriter::initializePlotItem(
             }
          }
          if (!found_type) {
-            boost::shared_ptr<pdat::CellDataFactory<double> > dfactory(
+            boost::shared_ptr<pdat::CellDataFactory<double> >
+            dfactory(
                boost::dynamic_pointer_cast<pdat::CellDataFactory<double>,
                                            hier::PatchDataFactory>(factory));
             if (dfactory) {
@@ -1144,7 +1178,8 @@ VisItDataWriter::initializePlotItem(
             }
          }
          if (!found_type) {
-            boost::shared_ptr<pdat::CellDataFactory<int> > ifactory(
+            boost::shared_ptr<pdat::CellDataFactory<int> >
+            ifactory(
                boost::dynamic_pointer_cast<pdat::CellDataFactory<int>,
                                            hier::PatchDataFactory>(factory));
             if (ifactory) {
@@ -1155,7 +1190,8 @@ VisItDataWriter::initializePlotItem(
             }
          }
          if (!found_type) {
-            boost::shared_ptr<pdat::NodeDataFactory<float> > ffactory(
+            boost::shared_ptr<pdat::NodeDataFactory<float> >
+            ffactory(
                boost::dynamic_pointer_cast<pdat::NodeDataFactory<float>,
                                            hier::PatchDataFactory>(factory));
             if (ffactory) {
@@ -1166,7 +1202,8 @@ VisItDataWriter::initializePlotItem(
             }
          }
          if (!found_type) {
-            boost::shared_ptr<pdat::NodeDataFactory<double> > dfactory(
+            boost::shared_ptr<pdat::NodeDataFactory<double> >
+            dfactory(
                boost::dynamic_pointer_cast<pdat::NodeDataFactory<double>,
                                            hier::PatchDataFactory>(factory));
             if (dfactory) {
@@ -1177,7 +1214,8 @@ VisItDataWriter::initializePlotItem(
             }
          }
          if (!found_type) {
-            boost::shared_ptr<pdat::NodeDataFactory<int> > ifactory(
+            boost::shared_ptr<pdat::NodeDataFactory<int> >
+            ifactory(
                boost::dynamic_pointer_cast<pdat::NodeDataFactory<int>,
                                            hier::PatchDataFactory>(factory));
             if (ifactory) {
@@ -1302,11 +1340,11 @@ VisItDataWriter::dumpWriteBarrierBegin()
       if (d_mpi.getSize() > 1) {
          tbox::SAMRAI_MPI::Status status;
          d_mpi.Recv(x,
-                    len,
-                    MPI_INT,
-                    proc_before_me,
-                    VISIT_FILE_CLUSTER_WRITE_BATON,
-                    &status);
+            len,
+            MPI_INT,
+            proc_before_me,
+            VISIT_FILE_CLUSTER_WRITE_BATON,
+            &status);
       }
    }
 }
@@ -1322,10 +1360,10 @@ VisItDataWriter::dumpWriteBarrierEnd()
    if (proc_after_me < num_procs) {
       if (d_mpi.getSize() > 1) {
          d_mpi.Send(x,
-                    1,
-                    MPI_INT,
-                    proc_after_me,
-                    VISIT_FILE_CLUSTER_WRITE_BATON);
+            1,
+            MPI_INT,
+            proc_after_me,
+            VISIT_FILE_CLUSTER_WRITE_BATON);
       }
    }
 }
@@ -1457,7 +1495,8 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
    int tot_number_of_patches = 0;
 
    for (int ln = 0; ln <= hierarchy->getFinestLevelNumber(); ++ln) {
-      boost::shared_ptr<hier::PatchLevel> patch_level(
+      boost::shared_ptr<hier::PatchLevel>
+      patch_level(
          hierarchy->getPatchLevel(ln));
       tot_number_of_patches += patch_level->getGlobalNumberOfPatches();
       for (hier::PatchLevel::iterator ip(patch_level->begin());
@@ -1641,9 +1680,13 @@ VisItDataWriter::writeHDFFiles(
       // cluster_leader guaranteed to enter this section before anyone else
       sprintf(temp_buf, "/processor_cluster.%05d.samrai",
          d_my_file_cluster_number);
-      std::string database_name(temp_buf);
+      std::string
+      database_name(
+         temp_buf);
       std::string visit_HDFFilename = dump_dirname + database_name;
-      visit_HDFFilePointer = new tbox::HDFDatabase(database_name);
+      visit_HDFFilePointer = new
+         tbox::HDFDatabase(
+            database_name);
       if (d_file_cluster_leader) {
 
          // creates the HDF file:
@@ -1653,7 +1696,9 @@ VisItDataWriter::writeHDFFiles(
 
       } else {
          // file already created other procs just need to open it
-         const bool read_write_mode(true);
+         const bool
+         read_write_mode(
+            true);
          if (!visit_HDFFilePointer->open(visit_HDFFilename, read_write_mode)) {
             TBOX_ERROR("VisItDataWriter::writeHDFFiles"
                << "\n    data writer with name " << d_object_name
@@ -1664,13 +1709,14 @@ VisItDataWriter::writeHDFFiles(
 
       // create group for this proc
       sprintf(temp_buf, "processor.%05d", my_proc);
-      boost::shared_ptr<tbox::Database> processor_HDFGroup(
+      boost::shared_ptr<tbox::Database>
+      processor_HDFGroup(
          visit_HDFFilePointer->putDatabase(std::string(temp_buf)));
       writeVisItVariablesToHDFFile(processor_HDFGroup,
-                                   hierarchy,
-                                   0,
-                                   hierarchy->getFinestLevelNumber(),
-                                   simulation_time );
+         hierarchy,
+         0,
+         hierarchy->getFinestLevelNumber(),
+         simulation_time);
       visit_HDFFilePointer->close(); // invokes H5FClose
       delete visit_HDFFilePointer; // deletes tbox::HDFDatabase object
    }
@@ -1769,10 +1815,13 @@ VisItDataWriter::writeVisItVariablesToHDFFile(
       sprintf(temp_buf, "level.%05d", ln);
       level_HDFGroup = processor_HDFGroup->putDatabase(std::string(temp_buf));
 
-      boost::shared_ptr<hier::PatchLevel> patch_level(
+      boost::shared_ptr<hier::PatchLevel>
+      patch_level(
          hierarchy->getPatchLevel(ln));
 
-      hier::IntVector coarsen_ratio(patch_level->getRatioToCoarserLevel());
+      hier::IntVector
+      coarsen_ratio(
+         patch_level->getRatioToCoarserLevel());
 
       for (hier::PatchLevel::iterator ip(patch_level->begin());
            ip != patch_level->end(); ++ip) {
@@ -1787,7 +1836,7 @@ VisItDataWriter::writeVisItVariablesToHDFFile(
 
          int curr_var_id_ctr = d_var_id_ctr;
          packRegularAndDerivedData(
-            patch_HDFGroup, hierarchy, ln, *patch, simulation_time );
+            patch_HDFGroup, hierarchy, ln, *patch, simulation_time);
 
          if (d_materials_names.size() > 0) {
             d_var_id_ctr = curr_var_id_ctr;
@@ -2784,7 +2833,8 @@ VisItDataWriter::writeSummaryToHDFFile(
       //sprintf(temp_buf, "/summary.samrai");
       //string summary_HDFFilename = dump_dirname + temp_buf;
       std::string summary_HDFFilename = dump_dirname + "/" + d_summary_filename;
-      boost::shared_ptr<tbox::Database> summary_HDFFilePointer(
+      boost::shared_ptr<tbox::Database>
+      summary_HDFFilePointer(
          boost::make_shared<tbox::HDFDatabase>("root"));
       summary_HDFFilePointer->create(summary_HDFFilename);
 
@@ -2805,10 +2855,12 @@ VisItDataWriter::writeSummaryToHDFFile(
        */
 
       sprintf(temp_buf, "BASIC_INFO");
-      boost::shared_ptr<tbox::Database> basic_HDFGroup(
+      boost::shared_ptr<tbox::Database>
+      basic_HDFGroup(
          summary_HDFFilePointer->putDatabase(std::string(temp_buf)));
 
-      boost::shared_ptr<tbox::HDFDatabase> hdf_database(
+      boost::shared_ptr<tbox::HDFDatabase>
+      hdf_database(
          BOOST_CAST<tbox::HDFDatabase, tbox::Database>(basic_HDFGroup));
       TBOX_ASSERT(hdf_database);
       hid_t basic_group_id = hdf_database->getGroupId();
@@ -2852,7 +2904,9 @@ VisItDataWriter::writeSummaryToHDFFile(
       basic_HDFGroup->putInteger(key_string, num_levels);
 
       key_string = "number_patches_at_level";
-      std::vector<int> num_patches_per_level(num_levels);
+      std::vector<int>
+      num_patches_per_level(
+         num_levels);
       for (ln = coarsest_plot_level; ln <= finest_plot_level; ++ln) {
          num_patches_per_level[ln] =
             hierarchy->getPatchLevel(ln)->getGlobalNumberOfPatches();
@@ -2906,13 +2960,23 @@ VisItDataWriter::writeSummaryToHDFFile(
       key_string = "number_visit_variables";
       basic_HDFGroup->putInteger(key_string, d_number_visit_variables);
 
-      std::vector<std::string> var_names(d_number_visit_variables);
-      std::vector<int> var_centering(d_number_visit_variables);
-      std::vector<double> var_scale_factors(d_number_visit_variables);
-      std::vector<int> var_depths(d_number_visit_variables);
+      std::vector<std::string>
+      var_names(
+         d_number_visit_variables);
+      std::vector<int>
+      var_centering(
+         d_number_visit_variables);
+      std::vector<double>
+      var_scale_factors(
+         d_number_visit_variables);
+      std::vector<int>
+      var_depths(
+         d_number_visit_variables);
 
       // SGS propose adding array indicating clean/mixed
-      std::vector<int> var_material_state_variable(d_number_visit_variables);
+      std::vector<int>
+      var_material_state_variable(
+         d_number_visit_variables);
 
       int* var_ghosts = new int[d_number_visit_variables * VISIT_FIXED_DIM];
       for (i = 0; i < d_number_visit_variables * VISIT_FIXED_DIM; ++i) {
@@ -2969,7 +3033,9 @@ VisItDataWriter::writeSummaryToHDFFile(
          var_material_state_variable);
 
       if (d_grid_type == VISIT_DEFORMED) {
-         std::vector<double> coord_scaling(VISIT_FIXED_DIM);
+         std::vector<double>
+         coord_scaling(
+            VISIT_FIXED_DIM);
          for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
               ipi != d_plot_items.end(); ++ipi) {
             if (ipi->d_is_deformed_coords) {
@@ -3003,11 +3069,18 @@ VisItDataWriter::writeSummaryToHDFFile(
             (d_visit_expressions.size() == d_visit_expression_types.size()));
 
          std::string expdbname = "visit_expressions";
-         boost::shared_ptr<tbox::Database> expression_HDFGroup(
+         boost::shared_ptr<tbox::Database>
+         expression_HDFGroup(
             summary_HDFFilePointer->putDatabase(expdbname));
-         std::string expression_keys("expression_keys");
-         std::string expressions("expressions");
-         std::string expression_types("expression_types");
+         std::string
+         expression_keys(
+            "expression_keys");
+         std::string
+         expressions(
+            "expressions");
+         std::string
+         expression_types(
+            "expression_types");
          expression_HDFGroup->putStringVector(expression_keys,
             d_visit_expression_keys);
          expression_HDFGroup->putStringVector(expressions,
@@ -3052,7 +3125,8 @@ VisItDataWriter::writeSummaryToHDFFile(
        */
       if (d_materials_names.size() > 0) {
          sprintf(temp_buf, "materials");
-         boost::shared_ptr<tbox::Database> materials_HDFGroup(
+         boost::shared_ptr<tbox::Database>
+         materials_HDFGroup(
             summary_HDFFilePointer->putDatabase(std::string(temp_buf)));
 
          key_string = "material_names";
@@ -3074,7 +3148,8 @@ VisItDataWriter::writeSummaryToHDFFile(
             VISIT_FIXED_DIM);
 
          sprintf(temp_buf, "species");
-         boost::shared_ptr<tbox::Database> species_HDFGroup(
+         boost::shared_ptr<tbox::Database>
+         species_HDFGroup(
             materials_HDFGroup->putDatabase(std::string(temp_buf)));
 
          for (i = 0; i < static_cast<int>(d_materials_names.size()); ++i) {
@@ -3119,7 +3194,8 @@ VisItDataWriter::writeSummaryToHDFFile(
       }
       if (d_grid_type != VISIT_DEFORMED) {
          //This is never entered in multiblock case
-         const boost::shared_ptr<geom::CartesianGridGeometry> ggeom(
+         const boost::shared_ptr<geom::CartesianGridGeometry>
+         ggeom(
             BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
                hierarchy->getGridGeometry()));
          TBOX_ASSERT(ggeom);
@@ -3170,7 +3246,8 @@ VisItDataWriter::writeSummaryToHDFFile(
        */
 
       sprintf(temp_buf, "extents");
-      boost::shared_ptr<tbox::Database> extents_HDFGroup(
+      boost::shared_ptr<tbox::Database>
+      extents_HDFGroup(
          summary_HDFFilePointer->putDatabase(std::string(temp_buf)));
       hdf_database =
          BOOST_CAST<tbox::HDFDatabase, tbox::Database>(extents_HDFGroup);
@@ -3183,7 +3260,8 @@ VisItDataWriter::writeSummaryToHDFFile(
       patchMapStruct* pms = new patchMapStruct[tot_number_of_patches];
 
       for (ln = coarsest_plot_level; ln <= finest_plot_level; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> patch_level(
+         boost::shared_ptr<hier::PatchLevel>
+         patch_level(
             hierarchy->getPatchLevel(ln));
          const std::vector<int>& proc_mapping =
             patch_level->getProcessorMapping().getProcessorMapping();
@@ -3238,7 +3316,8 @@ VisItDataWriter::writeSummaryToHDFFile(
        */
       if (d_grid_type != VISIT_DEFORMED) {
          //This is never entered in multiblock case
-         const boost::shared_ptr<geom::CartesianGridGeometry> ggeom(
+         const boost::shared_ptr<geom::CartesianGridGeometry>
+         ggeom(
             BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
                hierarchy->getGridGeometry()));
          TBOX_ASSERT(ggeom);
@@ -3346,7 +3425,8 @@ VisItDataWriter::writeSummaryToHDFFile(
                   // Sparse Format does not need additional group
                   extents_material_name_HDFGroup = extents_materials_HDFGroup;
                }
-               boost::shared_ptr<tbox::HDFDatabase> extents_database(
+               boost::shared_ptr<tbox::HDFDatabase>
+               extents_database(
                   BOOST_CAST<tbox::HDFDatabase, tbox::Database>(
                      extents_material_name_HDFGroup));
                TBOX_ASSERT(extents_database);
@@ -3369,7 +3449,8 @@ VisItDataWriter::writeSummaryToHDFFile(
 
                // species
                key_string = ipi->d_species_name;
-               boost::shared_ptr<tbox::HDFDatabase> extents_database(
+               boost::shared_ptr<tbox::HDFDatabase>
+               extents_database(
                   BOOST_CAST<tbox::HDFDatabase, tbox::Database>(
                      ipi->d_parent_material_pointer->d_extents_species_HDFGroup));
                TBOX_ASSERT(extents_database);
@@ -3429,11 +3510,17 @@ VisItDataWriter::writeSummaryToHDFFile(
        */
       if (!s_summary_file_opened) {
          s_summary_file_opened = true;
-         std::ofstream sfile(path.c_str(), std::ios::out);
+         std::ofstream
+         sfile(
+            path.c_str(),
+            std::ios::out);
          sfile << file << "\n";
          sfile.close();
       } else {
-         std::ofstream sfile(path.c_str(), std::ios::app);
+         std::ofstream
+         sfile(
+            path.c_str(),
+            std::ios::app);
          sfile << file << "\n";
          sfile.close();
       }
@@ -3471,7 +3558,8 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
    int tot_number_of_patches = 0;
 
    for (ln = coarsest_plot_level; ln <= finest_plot_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> patch_level(
+      boost::shared_ptr<hier::PatchLevel>
+      patch_level(
          hierarchy->getPatchLevel(ln));
       tot_number_of_patches += patch_level->getGlobalNumberOfPatches();
       for (hier::PatchLevel::iterator ip(patch_level->begin());
@@ -3502,10 +3590,10 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
       if (number_local_patches > 0) {
          if (d_mpi.getSize() > 1) {
             d_mpi.Send(d_worker_min_max,
-                       message_size,
-                       MPI_BYTE,
-                       VISIT_MASTER,
-                       0);
+               message_size,
+               MPI_BYTE,
+               VISIT_MASTER,
+               0);
          }
       }
 
@@ -3536,11 +3624,11 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
          if (d_mpi.getSize() > 1) {
             tbox::SAMRAI_MPI::Status status;
             d_mpi.Recv(buf,
-                       message_size,
-                       MPI_BYTE,
-                       MPI_ANY_SOURCE,
-                       MPI_ANY_TAG,
-                       &status);
+               message_size,
+               MPI_BYTE,
+               MPI_ANY_SOURCE,
+               MPI_ANY_TAG,
+               &status);
             sending_proc = status.MPI_SOURCE;
          }
          ++number_msgs_recvd;
@@ -3637,10 +3725,13 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
          hierarchy->getPatchLevel(ln)->getBoxLevel()->getGlobalizedVersion().getGlobalBoxes();
 
       boost::shared_ptr<hier::BoxContainer> child_box_tree;
-      hier::IntVector ratio(d_dim);
+      hier::IntVector
+      ratio(
+         d_dim);
 
       if (ln != finest_level) {
-         boost::shared_ptr<hier::PatchLevel> child_patch_level(
+         boost::shared_ptr<hier::PatchLevel>
+         child_patch_level(
             hierarchy->getPatchLevel(ln + 1));
          ratio = child_patch_level->getRatioToCoarserLevel();
 
@@ -3683,8 +3774,12 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
             child_ptrs[child_ptrs_idx].u.number_children = 0;
             child_ptrs[child_ptrs_idx++].offset = VISIT_UNDEFINED_INDEX;
          } else {
-            hier::BlockId block_id(bi->getBlockId());
-            hier::Box compare_box(*bi);
+            hier::BlockId
+            block_id(
+               bi->getBlockId());
+            hier::Box
+            compare_box(
+               * bi);
             compare_box.refine(ratio);
 
             hier::BoxContainer overlap_boxes;
@@ -3800,7 +3895,8 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
    basic_HDFGroup->putInteger(key_string, child_array_length);
    key_string = "parent_array_length";
    basic_HDFGroup->putInteger(key_string, parent_array_length);
-   boost::shared_ptr<tbox::HDFDatabase> hdf_database(
+   boost::shared_ptr<tbox::HDFDatabase>
+   hdf_database(
       BOOST_CAST<tbox::HDFDatabase, tbox::Database>(basic_HDFGroup));
    TBOX_ASSERT(hdf_database);
    hid_t basic_group_id = hdf_database->getGroupId();
@@ -3932,29 +4028,35 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
       case VISIT_FLOAT: {
          const float* dat_ptr = 0;
          if (centering == VISIT_CELL) {
-            boost::shared_ptr<const pdat::CellData<float> > fpdata(
+            boost::shared_ptr<const pdat::CellData<float> >
+            fpdata(
                BOOST_CAST<const pdat::CellData<float>, hier::PatchData>(pdata));
 
             TBOX_ASSERT(fpdata);
 
             dat_ptr = fpdata->getPointer(depth_index);
          } else if (centering == VISIT_UNKNOWN_CELL) {
-            pdat::CellData<float> cell_copy(plot_box,
-                                            1,
-                                            hier::IntVector::getZero(d_dim));
+            pdat::CellData<float>
+            cell_copy(
+               plot_box,
+               1,
+               hier::IntVector::getZero(d_dim));
             pdata->copy2(cell_copy);
             dat_ptr = cell_copy.getPointer();
          } else if (centering == VISIT_NODE) {
-            boost::shared_ptr<const pdat::NodeData<float> > fpdata(
+            boost::shared_ptr<const pdat::NodeData<float> >
+            fpdata(
                BOOST_CAST<const pdat::NodeData<float>, hier::PatchData>(pdata));
 
             TBOX_ASSERT(fpdata);
 
             dat_ptr = fpdata->getPointer(depth_index);
          } else if (centering == VISIT_UNKNOWN_NODE) {
-            pdat::NodeData<float> node_copy(plot_box,
-                                            1,
-                                            hier::IntVector::getZero(d_dim));
+            pdat::NodeData<float>
+            node_copy(
+               plot_box,
+               1,
+               hier::IntVector::getZero(d_dim));
             pdata->copy2(node_copy);
             dat_ptr = node_copy.getPointer();
          }
@@ -3979,27 +4081,33 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
       case VISIT_DOUBLE: {
          const double* dat_ptr = 0;
          if (centering == VISIT_CELL) {
-            boost::shared_ptr<const pdat::CellData<double> > dpdata(
+            boost::shared_ptr<const pdat::CellData<double> >
+            dpdata(
                BOOST_CAST<const pdat::CellData<double>, hier::PatchData>(pdata));
             TBOX_ASSERT(dpdata);
 
             dat_ptr = dpdata->getPointer(depth_index);
          } else if (centering == VISIT_UNKNOWN_CELL) {
-            pdat::CellData<double> cell_copy(plot_box,
-                                             1,
-                                             hier::IntVector::getZero(d_dim));
+            pdat::CellData<double>
+            cell_copy(
+               plot_box,
+               1,
+               hier::IntVector::getZero(d_dim));
             pdata->copy2(cell_copy);
             dat_ptr = cell_copy.getPointer();
          } else if (centering == VISIT_NODE) {
-            boost::shared_ptr<const pdat::NodeData<double> > dpdata(
+            boost::shared_ptr<const pdat::NodeData<double> >
+            dpdata(
                BOOST_CAST<const pdat::NodeData<double>, hier::PatchData>(pdata));
             TBOX_ASSERT(dpdata);
 
             dat_ptr = dpdata->getPointer(depth_index);
          } else if (centering == VISIT_UNKNOWN_NODE) {
-            pdat::NodeData<double> node_copy(plot_box,
-                                             1,
-                                             hier::IntVector::getZero(d_dim));
+            pdat::NodeData<double>
+            node_copy(
+               plot_box,
+               1,
+               hier::IntVector::getZero(d_dim));
             pdata->copy2(node_copy);
             dat_ptr = node_copy.getPointer();
          }
@@ -4024,27 +4132,37 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
       case VISIT_INT: {
          const int* dat_ptr = 0;
          if (centering == VISIT_CELL) {
-            boost::shared_ptr<const pdat::CellData<int> > ipdata(
+            boost::shared_ptr<const pdat::CellData<int> >
+            ipdata(
                BOOST_CAST<const pdat::CellData<int>, hier::PatchData>(pdata));
 
             TBOX_ASSERT(ipdata);
 
             dat_ptr = ipdata->getPointer(depth_index);
          } else if (centering == VISIT_UNKNOWN_CELL) {
-            pdat::CellData<int> cell_copy(plot_box, 1, hier::IntVector::getZero(
-                                             d_dim));
+            pdat::CellData<int>
+            cell_copy(
+               plot_box,
+               1,
+               hier::IntVector::getZero(
+                  d_dim));
             pdata->copy2(cell_copy);
             dat_ptr = cell_copy.getPointer();
          } else if (centering == VISIT_NODE) {
-            boost::shared_ptr<const pdat::NodeData<int> > ipdata(
+            boost::shared_ptr<const pdat::NodeData<int> >
+            ipdata(
                BOOST_CAST<const pdat::NodeData<int>, hier::PatchData>(pdata));
 
             TBOX_ASSERT(ipdata);
 
             dat_ptr = ipdata->getPointer(depth_index);
          } else if (centering == VISIT_UNKNOWN_NODE) {
-            pdat::NodeData<int> node_copy(plot_box, 1, hier::IntVector::getZero(
-                                             d_dim));
+            pdat::NodeData<int>
+            node_copy(
+               plot_box,
+               1,
+               hier::IntVector::getZero(
+                  d_dim));
             pdata->copy2(node_copy);
             dat_ptr = node_copy.getPointer();
          }

@@ -73,18 +73,22 @@ class AsyncCommGroup:public AsyncCommStage::Member
 
 private:
    //! @brief Operations user would want to do.
-   enum BaseOp { undefined,
-                 gather,
-                 bcast,
-                 max_reduce,
-                 min_reduce,
-                 sum_reduce };
+   enum BaseOp {
+      undefined,
+      gather,
+      bcast,
+      max_reduce,
+      min_reduce,
+      sum_reduce
+   };
    //! @brief Tasks, executed in order, to complete a base operation.
-   enum TaskOp { recv_start,
-                 recv_check,
-                 send_start,
-                 send_check,
-                 none };
+   enum TaskOp {
+      recv_start,
+      recv_check,
+      send_start,
+      send_check,
+      none
+   };
 
 public:
    /*!

@@ -63,7 +63,9 @@ int main(
       tbox::plog << "\n Starting hierarchy refine/coarsen test..." << std::endl;
       tbox::plog << "Specified input file is: " << input_filename << std::endl;
 
-      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase>
+      input_db(
+         new InputDatabase("input_db"));
       InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -72,7 +74,8 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         boost::shared_ptr<tbox::Database> global_db(
+         boost::shared_ptr<tbox::Database>
+         global_db(
             input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
@@ -81,9 +84,13 @@ int main(
          }
       }
 
-      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
+      boost::shared_ptr<Database>
+      main_db(
+         input_db->getDatabase("Main"));
 
-      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension
+      dim(
+         static_cast<unsigned short>(main_db->getInteger("dim")));
 
       std::string log_file_name = "hierarchy_test.log";
       if (main_db->keyExists("log_file_name")) {
@@ -99,7 +106,8 @@ int main(
          PIO::logOnlyNodeZero(log_file_name);
       }
 
-      boost::shared_ptr<HierarchyTester> hierarchy_tester(
+      boost::shared_ptr<HierarchyTester>
+      hierarchy_tester(
          new HierarchyTester(
             "HierarchyTester",
             dim,

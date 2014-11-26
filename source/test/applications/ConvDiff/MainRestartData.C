@@ -174,14 +174,16 @@ void MainRestartData::getFromInput(
 
 void MainRestartData::getFromRestart()
 {
-   boost::shared_ptr<tbox::Database> root_db(
+   boost::shared_ptr<tbox::Database>
+   root_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in the restart file.");
    }
-   boost::shared_ptr<tbox::Database> restart_db(
+   boost::shared_ptr<tbox::Database>
+   restart_db(
       root_db->getDatabase(d_object_name));
 
    d_max_timesteps = restart_db->getInteger("d_max_timesteps");

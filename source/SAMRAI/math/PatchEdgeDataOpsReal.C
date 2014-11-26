@@ -51,10 +51,12 @@ PatchEdgeDataOpsReal<TYPE>::swapData(
 {
    TBOX_ASSERT(patch);
 
-   boost::shared_ptr<pdat::EdgeData<TYPE> > d1(
+   boost::shared_ptr<pdat::EdgeData<TYPE> >
+   d1(
       BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
          patch->getPatchData(data1_id)));
-   boost::shared_ptr<pdat::EdgeData<TYPE> > d2(
+   boost::shared_ptr<pdat::EdgeData<TYPE> >
+   d2(
       BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 

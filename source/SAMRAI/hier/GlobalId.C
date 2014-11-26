@@ -57,8 +57,8 @@ GlobalId::~GlobalId()
 
 std::ostream&
 operator << (
-   std::ostream& co,
-   const GlobalId& r)
+   std::ostream & co,
+   const GlobalId &r)
 {
    co << r.d_owner_rank << '#' << r.d_local_id;
    return co;

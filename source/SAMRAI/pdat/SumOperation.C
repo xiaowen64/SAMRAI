@@ -37,9 +37,9 @@ SumOperation<TYPE>::~SumOperation()
 
 template<class TYPE>
 void
-SumOperation<TYPE>::operator () (
-   TYPE& vdst,
-   const TYPE& vsrc) const
+SumOperation<TYPE>::operator() (
+   TYPE & vdst,
+   const TYPE &vsrc) const
 {
 // Disable Intel warning about conversions
 #ifdef __INTEL_COMPILER

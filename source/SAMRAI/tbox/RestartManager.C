@@ -108,7 +108,9 @@ RestartManager::openRestartFile(
    const int restore_num,
    const int num_nodes)
 {
-   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI&
+   mpi(
+      SAMRAI_MPI::getSAMRAIWorld());
    int proc_num = mpi.getRank();
 
    /* create the intermediate parts of the full path name of restart file */
@@ -128,8 +130,10 @@ RestartManager::openRestartFile(
 
    if (hasDatabaseFactory()) {
 
-      boost::shared_ptr<Database> database(d_database_factory->allocate(
-                                              restart_filename));
+      boost::shared_ptr<Database>
+      database(
+         d_database_factory->allocate(
+            restart_filename));
 
       if (!database->open(restart_filename)) {
          TBOX_ERROR(
@@ -261,7 +265,9 @@ RestartManager::writeRestartFile(
    const std::string& root_dirname,
    int restore_num)
 {
-   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI&
+   mpi(
+      SAMRAI_MPI::getSAMRAIWorld());
    /* Create necessary directories and cd proper directory for writing */
    std::string restart_dirname = createDirs(root_dirname, restore_num);
 
@@ -276,8 +282,10 @@ RestartManager::writeRestartFile(
 
    if (hasDatabaseFactory()) {
 
-      boost::shared_ptr<Database> new_restartDB(d_database_factory->allocate(
-                                                   restart_filename));
+      boost::shared_ptr<Database>
+      new_restartDB(
+         d_database_factory->allocate(
+            restart_filename));
 
       new_restartDB->create(restart_filename);
 
@@ -309,7 +317,8 @@ RestartManager::writeRestartFile(
    std::list<RestartManager::RestartItem>::iterator i =
       d_restart_items_list.begin();
    for ( ; i != d_restart_items_list.end(); ++i) {
-      boost::shared_ptr<Database> obj_db(
+      boost::shared_ptr<Database>
+      obj_db(
          database->putDatabase(i->name));
       (i->obj)->putToRestart(obj_db);
    }
@@ -347,7 +356,9 @@ RestartManager::createDirs(
    const std::string& root_dirname,
    int restore_num)
 {
-   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI&
+   mpi(
+      SAMRAI_MPI::getSAMRAIWorld());
    int num_procs = mpi.getSize();
 
    std::string restore_buf = "/restore." + Utilities::intToString(

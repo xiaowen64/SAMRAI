@@ -126,7 +126,8 @@ void CellMultiblockTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         boost::shared_ptr<pdat::CellData<double> > cell_data(
+         boost::shared_ptr<pdat::CellData<double> >
+         cell_data(
             BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(cell_data);
@@ -161,13 +162,18 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
 {
    NULL_USE(time);
 
-   boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
+   boost::shared_ptr<hier::PatchGeometry>
+   pgeom(
+      patch.getPatchGeometry());
 
    const std::vector<hier::BoundaryBox>& node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
    const int num_node_bdry_boxes = static_cast<int>(node_bdry.size());
 
-   std::vector<hier::BoundaryBox> empty_vector(0, hier::BoundaryBox(d_dim));
+   std::vector<hier::BoundaryBox>
+   empty_vector(
+      0,
+      hier::BoundaryBox(d_dim));
    const std::vector<hier::BoundaryBox>& edge_bdry =
       d_dim > tbox::Dimension(1) ?
       pgeom->getCodimensionBoundaries(d_dim.getValue() - 1) : empty_vector;
@@ -180,7 +186,8 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      boost::shared_ptr<pdat::CellData<double> > cell_data(
+      boost::shared_ptr<pdat::CellData<double> >
+      cell_data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
@@ -256,12 +263,15 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      boost::shared_ptr<pdat::CellData<double> > cell_data(
+      boost::shared_ptr<pdat::CellData<double> >
+      cell_data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
 
-      hier::Box sing_fill_box(cell_data->getGhostBox() * fill_box);
+      hier::Box
+      sing_fill_box(
+         cell_data->getGhostBox()* fill_box);
       cell_data->fillAll(0.0, sing_fill_box);
 
       int depth = cell_data->getDepth();
@@ -277,14 +287,17 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
             for (hier::Connector::ConstNeighborIterator ei = dst_to_encon->begin(ni);
                  ei != dst_to_encon->end(ni); ++ei) {
 
-               boost::shared_ptr<hier::Patch> encon_patch(
+               boost::shared_ptr<hier::Patch>
+               encon_patch(
                   encon_level.getPatch(ei->getBoxId()));
 
                const hier::BlockId& encon_blk_id = ei->getBlockId();
 
                hier::Transformation::RotationIdentifier rotation =
                   hier::Transformation::NO_ROTATE;
-               hier::IntVector offset(dim);
+               hier::IntVector
+               offset(
+                  dim);
 
                hier::BaseGridGeometry::ConstNeighborIterator itr =
                   grid_geometry->find(patch_blk_id, encon_blk_id);
@@ -295,38 +308,55 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
 
                offset *= patch.getPatchGeometry()->getRatio();
 
-               hier::Transformation transformation(rotation, offset,
-                                                   encon_blk_id,
-                                                   patch_blk_id);
-               hier::Box encon_patch_box(encon_patch->getBox());
+               hier::Transformation
+               transformation(
+                  rotation,
+                  offset,
+                  encon_blk_id,
+                  patch_blk_id);
+               hier::Box
+               encon_patch_box(
+                  encon_patch->getBox());
                transformation.transform(encon_patch_box);
 
-               hier::Box encon_fill_box(encon_patch_box * sing_fill_box);
+               hier::Box
+               encon_fill_box(
+                  encon_patch_box* sing_fill_box);
                if (!encon_fill_box.empty()) {
 
                   const hier::Transformation::RotationIdentifier back_rotate =
                      hier::Transformation::getReverseRotationIdentifier(
                         rotation, dim);
 
-                  hier::IntVector back_shift(dim);
+                  hier::IntVector
+                  back_shift(
+                     dim);
 
                   hier::Transformation::calculateReverseShift(
                      back_shift, offset, rotation);
 
-                  hier::Transformation back_trans(back_rotate, back_shift,
-                                                  patch_blk_id,
-                                                  encon_blk_id);
+                  hier::Transformation
+                  back_trans(
+                     back_rotate,
+                     back_shift,
+                     patch_blk_id,
+                     encon_blk_id);
 
-                  boost::shared_ptr<pdat::CellData<double> > sing_data(
+                  boost::shared_ptr<pdat::CellData<double> >
+                  sing_data(
                      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
                         encon_patch->getPatchData(
                            d_variables[i], getDataContext())));
                   TBOX_ASSERT(sing_data);
 
-                  pdat::CellIterator ciend(pdat::CellGeometry::end(encon_fill_box));
+                  pdat::CellIterator
+                  ciend(
+                     pdat::CellGeometry::end(encon_fill_box));
                   for (pdat::CellIterator ci(pdat::CellGeometry::begin(encon_fill_box));
                        ci != ciend; ++ci) {
-                     pdat::CellIndex src_index(*ci);
+                     pdat::CellIndex
+                     src_index(
+                        * ci);
                      pdat::CellGeometry::transform(src_index, back_trans);
                      for (int d = 0; d < depth; ++d) {
                         (*cell_data)(*ci, d) += (*sing_data)(src_index, d);
@@ -340,7 +370,9 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
       }
 
       if (num_encon_used) {
-         pdat::CellIterator ciend(pdat::CellGeometry::end(sing_fill_box));
+         pdat::CellIterator
+         ciend(
+            pdat::CellGeometry::end(sing_fill_box));
          for (pdat::CellIterator ci(pdat::CellGeometry::begin(sing_fill_box));
               ci != ciend; ++ci) {
             for (int d = 0; d < depth; ++d) {
@@ -390,22 +422,30 @@ bool CellMultiblockTest::verifyResults(
    tbox::plog << "level_number = " << level_number << endl;
    tbox::plog << "Patch box = " << patch.getBox() << endl;
 
-   hier::IntVector tgcw(d_dim, 0);
+   hier::IntVector
+   tgcw(
+      d_dim,
+      0);
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
       tgcw.max(patch.getPatchData(d_variables[i], getDataContext())->
          getGhostCellWidth());
    }
    hier::Box pbox = patch.getBox();
 
-   boost::shared_ptr<pdat::CellData<double> > solution(
+   boost::shared_ptr<pdat::CellData<double> >
+   solution(
       new pdat::CellData<double>(pbox, 1, tgcw));
 
-   hier::Box tbox(pbox);
+   hier::Box
+   tbox(
+      pbox);
    tbox.grow(tgcw);
 
-   boost::shared_ptr<hier::BaseGridGeometry> grid_geom(
+   boost::shared_ptr<hier::BaseGridGeometry>
+   grid_geom(
       hierarchy->getGridGeometry());
-   hier::BoxContainer singularity(
+   hier::BoxContainer
+   singularity(
       grid_geom->getSingularityBoxContainer(block_id));
 
    hier::IntVector ratio =
@@ -419,13 +459,16 @@ bool CellMultiblockTest::verifyResults(
 
       double correct = (double)block_id.getBlockValue();
 
-      boost::shared_ptr<pdat::CellData<double> > cell_data(
+      boost::shared_ptr<pdat::CellData<double> >
+      cell_data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
       int depth = cell_data->getDepth();
 
-      pdat::CellIterator ciend(pdat::CellGeometry::end(pbox));
+      pdat::CellIterator
+      ciend(
+         pdat::CellGeometry::end(pbox));
       for (pdat::CellIterator ci(pdat::CellGeometry::begin(pbox));
            ci != ciend; ++ci) {
          for (int d = 0; d < depth; ++d) {
@@ -456,14 +499,18 @@ bool CellMultiblockTest::verifyResults(
             continue;
          }
 
-         hier::BoxContainer neighbor_ghost(nbr.getTransformedDomain());
+         hier::BoxContainer
+         neighbor_ghost(
+            nbr.getTransformedDomain());
          neighbor_ghost.refine(ratio);
          neighbor_ghost.intersectBoxes(gbox);
 
          for (hier::BoxContainer::iterator ng = neighbor_ghost.begin();
               ng != neighbor_ghost.end(); ++ng) {
 
-            pdat::CellIterator ciend(pdat::CellGeometry::end(*ng));
+            pdat::CellIterator
+            ciend(
+               pdat::CellGeometry::end(*ng));
             for (pdat::CellIterator ci(pdat::CellGeometry::begin(*ng));
                  ci != ciend; ++ci) {
                for (int d = 0; d < depth; ++d) {
@@ -506,7 +553,8 @@ bool CellMultiblockTest::verifyResults(
                     ns != grid_geom->end(block_id); ++ns) {
                   const hier::BaseGridGeometry::Neighbor& nbr = *ns;
                   if (nbr.isSingularity()) {
-                     hier::BoxContainer neighbor_ghost(
+                     hier::BoxContainer
+                     neighbor_ghost(
                         nbr.getTransformedDomain());
                      neighbor_ghost.refine(ratio);
                      neighbor_ghost.intersectBoxes(fill_box);
@@ -531,7 +579,9 @@ bool CellMultiblockTest::verifyResults(
                correct = (double)(bdry[k].getLocationIndex() + 100);
             }
 
-            pdat::CellIterator ciend(pdat::CellGeometry::end(fill_box));
+            pdat::CellIterator
+            ciend(
+               pdat::CellGeometry::end(fill_box));
             for (pdat::CellIterator ci(pdat::CellGeometry::begin(fill_box));
                  ci != ciend; ++ci) {
                for (int d = 0; d < depth; ++d) {

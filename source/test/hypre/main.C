@@ -105,7 +105,8 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<tbox::InputDatabase> input_db(
+      boost::shared_ptr<tbox::InputDatabase>
+      input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -116,10 +117,13 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<tbox::Database> main_db(
+      boost::shared_ptr<tbox::Database>
+      main_db(
          input_db->getDatabase("Main"));
 
-      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension
+      dim(
+         static_cast<unsigned short>(main_db->getInteger("dim")));
 
       string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
@@ -145,7 +149,8 @@ int main(
        * for this application, see comments at top of file.
        */
 
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry>
+      grid_geometry(
          new geom::CartesianGridGeometry(
             dim,
             base_name + "CartesianGeometry",
@@ -153,7 +158,8 @@ int main(
       tbox::plog << "Cartesian Geometry:" << endl;
       grid_geometry->printClassData(tbox::plog);
 
-      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy>
+      patch_hierarchy(
          new hier::PatchHierarchy(
             base_name + "::PatchHierarchy",
             grid_geometry,
@@ -171,7 +177,8 @@ int main(
       std::string hypre_solver_name = hypre_poisson_name + "::poisson_hypre";
       std::string bc_coefs_name = hypre_poisson_name + "::bc_coefs";
 
-      boost::shared_ptr<solv::CellPoissonHypreSolver> hypre_solver(
+      boost::shared_ptr<solv::CellPoissonHypreSolver>
+      hypre_solver(
          new solv::CellPoissonHypreSolver(
             dim,
             hypre_poisson_name,
@@ -179,7 +186,8 @@ int main(
             input_db->getDatabase("hypre_solver") :
             boost::shared_ptr<tbox::Database>()));
 
-      boost::shared_ptr<solv::LocationIndexRobinBcCoefs> bc_coefs(
+      boost::shared_ptr<solv::LocationIndexRobinBcCoefs>
+      bc_coefs(
          new solv::LocationIndexRobinBcCoefs(
             dim,
             bc_coefs_name,
@@ -187,7 +195,8 @@ int main(
             input_db->getDatabase("bc_coefs") :
             boost::shared_ptr<tbox::Database>()));
 
-      HyprePoisson hypre_poisson(
+      HyprePoisson
+      hypre_poisson(
          hypre_poisson_name,
          dim,
          hypre_solver,
@@ -197,16 +206,19 @@ int main(
        * Create the tag-and-initializer, box-generator and load-balancer
        * object references required by the gridding_algorithm object.
        */
-      boost::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
+      boost::shared_ptr<mesh::StandardTagAndInitialize>
+      tag_and_initializer(
          new mesh::StandardTagAndInitialize(
             "CellTaggingMethod",
             &hypre_poisson,
             input_db->getDatabase("StandardTagAndInitialize")));
-      boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
+      boost::shared_ptr<mesh::BergerRigoutsos>
+      box_generator(
          new mesh::BergerRigoutsos(
             dim,
             input_db->getDatabase("BergerRigoutsos")));
-      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
+      boost::shared_ptr<mesh::TreeLoadBalancer>
+      load_balancer(
          new mesh::TreeLoadBalancer(
             dim,
             "load balancer",
@@ -217,7 +229,8 @@ int main(
        * Create the gridding algorithm used to generate the SAMR grid
        * and create the grid.
        */
-      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
+      boost::shared_ptr<mesh::GriddingAlgorithm>
+      gridding_algorithm(
          new mesh::GriddingAlgorithm(
             patch_hierarchy,
             "DistributedGridding Algorithm",
@@ -242,7 +255,8 @@ int main(
 #ifdef HAVE_HDF5
       string vis_filename =
          main_db->getStringWithDefault("vis_filename", base_name);
-      boost::shared_ptr<appu::VisItDataWriter> visit_writer(
+      boost::shared_ptr<appu::VisItDataWriter>
+      visit_writer(
          boost::make_shared<appu::VisItDataWriter>(dim,
                                                    "VisIt Writer",
                                                    vis_filename + ".visit"));

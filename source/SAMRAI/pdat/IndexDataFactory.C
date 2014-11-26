@@ -141,7 +141,8 @@ IndexDataFactory<TYPE, BOX_GEOMETRY>::validCopyTo(
     * and type.
     */
    if (!valid_copy) {
-      boost::shared_ptr<IndexDataFactory<TYPE, BOX_GEOMETRY> > idf(
+      boost::shared_ptr<IndexDataFactory<TYPE, BOX_GEOMETRY> >
+      idf(
          boost::dynamic_pointer_cast<IndexDataFactory<TYPE, BOX_GEOMETRY>,
                                      hier::PatchDataFactory>(dst_pdf));
       if (idf) {

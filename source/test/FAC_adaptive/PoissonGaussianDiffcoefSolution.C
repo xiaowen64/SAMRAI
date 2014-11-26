@@ -63,14 +63,18 @@ void PoissonGaussianDiffcoefSolution::setFromDatabase(
    {
       // Get the gaussian component.
       istr = database.getStringWithDefault("GaussianFcnControl", "{}");
-      std::istringstream ist(istr);
+      std::istringstream
+      ist(
+         istr);
       ist >> d_gcomp;
       d_lambda = d_gcomp.getLambda();
    }
    {
       // Get the sine-sine component.
       istr = database.getStringWithDefault("SinusoidFcnControl", "{}");
-      std::istringstream ist(istr);
+      std::istringstream
+      ist(
+         istr);
       ist >> d_sscomp;
       d_sscomp.getWaveNumbers(d_k);
       d_sscomp.getPhaseAngles(d_p);
@@ -179,7 +183,8 @@ void PoissonGaussianDiffcoefSolution::setGridData(
    pdat::CellData<double>& exact_data,
    pdat::CellData<double>& source_data)
 {
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry>
+   patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
@@ -196,8 +201,12 @@ void PoissonGaussianDiffcoefSolution::setGridData(
          for (j = 0; j < d_dim.getValue(); ++j) {
             sl[j] = j != axis ? xl[j] + 0.5 * h[j] : xl[j];
          }
-         pdat::SideData<double>::iterator iter(pdat::SideGeometry::begin(patch.getBox(), axis));
-         pdat::SideData<double>::iterator iterend(pdat::SideGeometry::end(patch.getBox(), axis));
+         pdat::SideData<double>::iterator
+         iter(
+            pdat::SideGeometry::begin(patch.getBox(), axis));
+         pdat::SideData<double>::iterator
+         iterend(
+            pdat::SideGeometry::end(patch.getBox(), axis));
          if (d_dim == tbox::Dimension(2)) {
             double x, y;
             for ( ; iter != iterend; ++iter) {
@@ -225,8 +234,12 @@ void PoissonGaussianDiffcoefSolution::setGridData(
       for (j = 0; j < d_dim.getValue(); ++j) {
          sl[j] = xl[j] + 0.5 * h[j];
       }
-      pdat::CellData<double>::iterator iter(pdat::CellGeometry::begin(patch.getBox()));
-      pdat::CellData<double>::iterator iterend(pdat::CellGeometry::end(patch.getBox()));
+      pdat::CellData<double>::iterator
+      iter(
+         pdat::CellGeometry::begin(patch.getBox()));
+      pdat::CellData<double>::iterator
+      iterend(
+         pdat::CellGeometry::end(patch.getBox()));
       if (d_dim == tbox::Dimension(2)) {
          double x, y;
          for ( ; iter != iterend; ++iter) {
@@ -251,8 +264,8 @@ void PoissonGaussianDiffcoefSolution::setGridData(
 }       // End patch loop.
 
 std::ostream& operator << (
-   std::ostream& os,
-   const PoissonGaussianDiffcoefSolution& r) {
+   std::ostream & os,
+   const PoissonGaussianDiffcoefSolution &r) {
    os << r.d_gcomp << "\n";
    os << r.d_sscomp << "\n";
    os << r.d_cscomp << "\n";
@@ -272,14 +285,17 @@ void PoissonGaussianDiffcoefSolution::setBcCoefs(
    NULL_USE(variable);
    NULL_USE(fill_time);
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry>
+   patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    /*
     * Set to an inhomogeneous Dirichlet boundary condition.
     */
-   hier::Box patch_box(patch.getBox());
+   hier::Box
+   patch_box(
+      patch.getBox());
 
    const double* xlo = patch_geom->getXLower();
    const double* xup = patch_geom->getXUpper();

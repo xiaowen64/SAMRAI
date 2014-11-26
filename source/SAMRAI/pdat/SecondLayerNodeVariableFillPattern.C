@@ -68,10 +68,16 @@ SecondLayerNodeVariableFillPattern::calculateOverlap(
    TBOX_ASSERT_OBJDIM_EQUALITY2(dst_patch_box, src_mask);
    NULL_USE(overwrite_interior);
 
-   const tbox::Dimension dim(dst_patch_box.getDim());
+   const tbox::Dimension
+   dim(
+      dst_patch_box.getDim());
 
-   hier::Box dst_node_box(NodeGeometry::toNodeBox(dst_patch_box));
-   hier::Box src_node_mask(NodeGeometry::toNodeBox(src_mask));
+   hier::Box
+   dst_node_box(
+      NodeGeometry::toNodeBox(dst_patch_box));
+   hier::Box
+   src_node_mask(
+      NodeGeometry::toNodeBox(src_mask));
 
    hier::BoxContainer stencil_boxes;
    computeStencilBoxes(stencil_boxes, dst_patch_box);
@@ -136,9 +142,13 @@ SecondLayerNodeVariableFillPattern::computeStencilBoxes(
 {
    TBOX_ASSERT(stencil_boxes.size() == 0);
 
-   hier::Box dst_node_box(NodeGeometry::toNodeBox(dst_box));
+   hier::Box
+   dst_node_box(
+      NodeGeometry::toNodeBox(dst_box));
 
-   hier::Box ghost_box(dst_node_box);
+   hier::Box
+   ghost_box(
+      dst_node_box);
    ghost_box.grow(hier::IntVector::getOne(dst_box.getDim()));
    stencil_boxes.removeIntersections(ghost_box, dst_node_box);
    stencil_boxes.coalesce();
@@ -168,7 +178,9 @@ SecondLayerNodeVariableFillPattern::computeFillBoxesOverlap(
    hier::BoxContainer stencil_boxes;
    computeStencilBoxes(stencil_boxes, patch_box);
 
-   hier::BoxContainer overlap_boxes(fill_boxes);
+   hier::BoxContainer
+   overlap_boxes(
+      fill_boxes);
 
    /*
     * This is the equivalent of converting every box in overlap_boxes

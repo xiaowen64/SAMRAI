@@ -32,7 +32,10 @@ extern "C" {
 #endif
 
 // in lintimint1d.f:
-void SAMRAI_F77_FUNC(lintimeintcellfloat1d, LINTIMEINTCELLFLOAT1D) (const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintcellfloat1d,
+   LINTIMEINTCELLFLOAT1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -41,7 +44,10 @@ void SAMRAI_F77_FUNC(lintimeintcellfloat1d, LINTIMEINTCELLFLOAT1D) (const int&,
    const float *, const float *,
    float *);
 // in lintimint2d.f:
-void SAMRAI_F77_FUNC(lintimeintcellfloat2d, LINTIMEINTCELLFLOAT2D) (const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintcellfloat2d,
+   LINTIMEINTCELLFLOAT2D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -54,7 +60,10 @@ void SAMRAI_F77_FUNC(lintimeintcellfloat2d, LINTIMEINTCELLFLOAT2D) (const int&,
    const float *, const float *,
    float *);
 // in lintimint3d.f:
-void SAMRAI_F77_FUNC(lintimeintcellfloat3d, LINTIMEINTCELLFLOAT3D) (const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintcellfloat3d,
+   LINTIMEINTCELLFLOAT3D) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -87,7 +96,9 @@ CellFloatLinearTimeInterpolateOp::timeInterpolate(
    const hier::PatchData& src_data_old,
    const hier::PatchData& src_data_new) const
 {
-   const tbox::Dimension& dim(where.getDim());
+   const tbox::Dimension&
+   dim(
+      where.getDim());
 
    const CellData<float>* old_dat =
       CPP_CAST<const CellData<float> *>(&src_data_old);

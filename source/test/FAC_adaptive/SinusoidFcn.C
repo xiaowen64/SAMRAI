@@ -59,7 +59,7 @@ int SinusoidFcn::getPhaseAngles(
    return 0;
 }
 
-double SinusoidFcn::operator () (
+double SinusoidFcn::operator() (
    double x) const {
    TBOX_ASSERT(d_dim == tbox::Dimension(1));
    double rval;
@@ -67,7 +67,7 @@ double SinusoidFcn::operator () (
       * sin(M_PI * (d_npi[0] * x + d_ppi[0]));
    return rval;
 }
-double SinusoidFcn::operator () (
+double SinusoidFcn::operator() (
    double x,
    double y) const {
    TBOX_ASSERT(d_dim == tbox::Dimension(2));
@@ -77,7 +77,7 @@ double SinusoidFcn::operator () (
       * sin(M_PI * (d_npi[1] * y + d_ppi[1]));
    return rval;
 }
-double SinusoidFcn::operator () (
+double SinusoidFcn::operator() (
    double x,
    double y,
    double z) const {
@@ -151,7 +151,9 @@ SinusoidFcn SinusoidFcn::differentiate(
    ,
    unsigned short int y) const
 {
-   SinusoidFcn rval(*this);
+   SinusoidFcn
+   rval(
+      * this);
    rval.differentiateSelf(x, y);
    return rval;
 }
@@ -163,7 +165,9 @@ SinusoidFcn SinusoidFcn::differentiate(
    ,
    unsigned short int z) const
 {
-   SinusoidFcn rval(*this);
+   SinusoidFcn
+   rval(
+      * this);
    rval.differentiateSelf(x, y, z);
    return rval;
 }
@@ -174,8 +178,8 @@ SinusoidFcn SinusoidFcn::differentiate(
             || s.peek() == '\n') { s.get(); } }
 
 std::istream& operator >> (
-   std::istream& ci,
-   SinusoidFcn& sf) {
+   std::istream & ci,
+   SinusoidFcn & sf) {
    fill_n(sf.d_npi, sf.d_dim.getValue(), 0.0)
    fill_n(sf.d_ppi, sf.d_dim.getValue(), 0.0)
    char dummy, name[2];
@@ -194,10 +198,14 @@ std::istream& operator >> (
       } else {
          ci >> dummy;
          TBOX_ASSERT(dummy == '=');
-         double * data(name[0] == 'n' ? sf.d_npi : sf.d_ppi);
-         int dim(name[1] == 'x' ? 0 :
-                 name[1] == 'y' ? 1 :
-                 name[1] == 'z' ? 2 : 3);
+         double *
+         data(
+            name[0] == 'n' ? sf.d_npi : sf.d_ppi);
+         int
+         dim(
+            name[1] == 'x' ? 0 :
+            name[1] == 'y' ? 1 :
+            name[1] == 'z' ? 2 : 3);
          TBOX_ASSERT(dim < sf.d_dim.getValue());
          ci >> data[dim];
       }
@@ -207,7 +215,7 @@ std::istream& operator >> (
 }
 
 SinusoidFcn& SinusoidFcn::operator = (
-   const SinusoidFcn& r) {
+      const SinusoidFcn &r) {
    TBOX_ASSERT(d_dim == r.d_dim);
    d_amp = r.d_amp;
    for (int i = 0; i < d_dim.getValue(); ++i) {
@@ -218,8 +226,8 @@ SinusoidFcn& SinusoidFcn::operator = (
 }
 
 std::ostream& operator << (
-   std::ostream& co,
-   const SinusoidFcn& sf) {
+   std::ostream & co,
+   const SinusoidFcn &sf) {
    co << "{ amp=" << sf.d_amp;
    co << " nx=" << sf.d_npi[0] << " px=" << sf.d_npi[0];
    if (sf.d_dim >= tbox::Dimension(2)) {

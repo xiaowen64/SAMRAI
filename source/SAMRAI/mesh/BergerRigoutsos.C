@@ -23,9 +23,13 @@
 namespace SAMRAI {
 namespace mesh {
 
-const std::string BergerRigoutsos::s_default_timer_prefix("mesh::BergerRigoutsos");
+const std::string
+BergerRigoutsos::s_default_timer_prefix(
+   "mesh::BergerRigoutsos");
 std::map<std::string, BergerRigoutsos::TimerStruct> BergerRigoutsos::s_static_timers;
-char BergerRigoutsos::s_ignore_external_timer_prefix('n');
+char
+BergerRigoutsos::s_ignore_external_timer_prefix(
+   'n');
 
 /*
  ************************************************************************
@@ -265,7 +269,9 @@ BergerRigoutsos::findBoxesContainingTags(
       tag_to_new_width);
    TBOX_ASSERT(tag_to_new_width >= hier::IntVector::getZero(tag_to_new_width.getDim()));
 
-   tbox::SAMRAI_MPI mpi(tag_level->getBoxLevel()->getMPI());
+   tbox::SAMRAI_MPI
+   mpi(
+      tag_level->getBoxLevel()->getMPI());
 
    for (hier::BoxContainer::const_iterator bb_itr = bound_boxes.begin();
         bb_itr != bound_boxes.end(); ++bb_itr) {
@@ -498,8 +504,10 @@ BergerRigoutsos::clusterAndComputeRelationships()
    }
    if (d_compute_relationships >= 2) {
       hier::Connector* new_to_tag =
-         new hier::Connector(*d_new_box_level,
-            *d_tag_level->getBoxLevel(),
+         new
+         hier::Connector(
+            * d_new_box_level,
+            * d_tag_level->getBoxLevel(),
             d_tag_to_new_width);
       d_tag_to_new->setTranspose(new_to_tag, true);
    }
@@ -538,7 +546,9 @@ BergerRigoutsos::clusterAndComputeRelationships()
        * assume its id is properly set, because the interface did not
        * guarantee they would be.
        */
-      hier::LocalId root_box_local_id(0);
+      hier::LocalId
+      root_box_local_id(
+         0);
       int root_box_owner = 0;
       std::list<boost::shared_ptr<BergerRigoutsosNode> > block_nodes_to_delete;
       for (hier::BoxContainer::const_iterator rb = d_root_boxes.begin();
@@ -546,11 +556,14 @@ BergerRigoutsos::clusterAndComputeRelationships()
          if (rb->empty()) continue;
 
          // TODO: can build block_box in the node instead of here!
-         const hier::Box block_box(*rb,
-                                   root_box_local_id,
-                                   root_box_owner);
+         const hier::Box
+         block_box(
+            * rb,
+            root_box_local_id,
+            root_box_owner);
 
-         BergerRigoutsosNode * block_node(
+         BergerRigoutsosNode *
+         block_node(
             new BergerRigoutsosNode(this, block_box));
 
          d_relaunch_queue.push_back(block_node);
@@ -684,7 +697,9 @@ BergerRigoutsos::clusterAndComputeRelationships()
 void
 BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
 {
-   tbox::SAMRAI_MPI mpi(d_mpi);
+   tbox::SAMRAI_MPI
+   mpi(
+      d_mpi);
    if (mpi.getSize() == 1) {
       return;
    }
@@ -698,7 +713,8 @@ BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
 
    // Nonblocking send of relationship data.
    d_object_timers->t_share_new_relationships_send->start();
-   std::vector<tbox::SAMRAI_MPI::Request> mpi_request(
+   std::vector<tbox::SAMRAI_MPI::Request>
+   mpi_request(
       d_relationship_messages.size());
    std::map<int, VectorOfInts>::iterator send_i;
    int nsend = 0;
@@ -756,7 +772,9 @@ BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
       TBOX_ASSERT(recved_from.find(sender) == recved_from.end());
       TBOX_ASSERT(mesg_size >= 0);
 
-      std::vector<int> buf(static_cast<size_t>(mesg_size));
+      std::vector<int>
+      buf(
+         static_cast<size_t>(mesg_size));
       int* ptr = &buf[0];
       ierr = mpi.Recv(ptr,
             mesg_size,
@@ -770,15 +788,22 @@ BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
       d_object_timers->t_share_new_relationships_unpack->start();
       int consumed = 0;
       while (ptr < &buf[0] + buf.size()) {
-         const hier::LocalId new_local_id(*(ptr++));
-         hier::BoxId box_id(new_local_id, d_mpi.getRank());
+         const hier::LocalId
+         new_local_id(
+            *(ptr++));
+         hier::BoxId
+         box_id(
+            new_local_id,
+            d_mpi.getRank());
          int n_new_relationships = *(ptr++);
          TBOX_ASSERT(d_tag_to_new->getTranspose().hasNeighborSet(box_id));
          if (n_new_relationships > 0) {
             hier::Connector::NeighborhoodIterator base_box_itr =
                d_tag_to_new->getTranspose().makeEmptyLocalNeighborhood(box_id);
             for (int n = 0; n < n_new_relationships; ++n) {
-               hier::Box node(getDim());
+               hier::Box
+               node(
+                  getDim());
                node.getFromIntBuffer(ptr);
                ptr += ints_per_box;
                d_tag_to_new->getTranspose().insertLocalNeighbor(node, base_box_itr);
@@ -793,7 +818,8 @@ BergerRigoutsos::shareNewNeighborhoodSetsWithOwners()
    if (nsend > 0) {
       // Make sure all nonblocking sends completed.
       d_object_timers->t_share_new_relationships_send->start();
-      std::vector<tbox::SAMRAI_MPI::Status> mpi_statuses(
+      std::vector<tbox::SAMRAI_MPI::Status>
+      mpi_statuses(
          static_cast<int>(d_relationship_messages.size()));
       ierr = tbox::SAMRAI_MPI::Waitall(static_cast<int>(d_relationship_messages.size()),
             &mpi_request[0],
@@ -980,7 +1006,9 @@ BergerRigoutsos::setupMPIDependentData()
             &flag);
       }
       if (tag_upper_bound_ptr == 0) {
-         tbox::SAMRAI_MPI mpi1(MPI_COMM_WORLD);
+         tbox::SAMRAI_MPI
+         mpi1(
+            MPI_COMM_WORLD);
          mpi1.Attr_get(
             MPI_TAG_UB,
             &tag_upper_bound_ptr,
@@ -1044,9 +1072,9 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
     * messages that have arrived but not received.
     */
    if (d_mpi.getCommunicator() != MPI_COMM_NULL &&
-       d_mpi != d_tag_level->getBoxLevel()->getMPI() ) {
+       d_mpi != d_tag_level->getBoxLevel()->getMPI()) {
       tbox::SAMRAI_MPI::Status mpi_status;
-      if ( d_mpi.hasReceivableMessage(&mpi_status) ) {
+      if (d_mpi.hasReceivableMessage(&mpi_status)) {
          int count = -1;
          tbox::SAMRAI_MPI::Get_count(&mpi_status, MPI_INT, &count);
          TBOX_ERROR("Library error!\n"
@@ -1077,7 +1105,8 @@ BergerRigoutsos::setTimerPrefix(
    } else {
       timer_prefix_used = timer_prefix;
    }
-   std::map<std::string, TimerStruct>::iterator ti(
+   std::map<std::string, TimerStruct>::iterator
+   ti(
       s_static_timers.find(timer_prefix_used));
 
    if (ti != s_static_timers.end()) {

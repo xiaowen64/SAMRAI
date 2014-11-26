@@ -61,16 +61,20 @@ class AsyncCommPeer:public AsyncCommStage::Member
 
 private:
    //! @brief Operations users would want to do.
-   enum BaseOp { undefined,
-                 send,
-                 recv };
+   enum BaseOp {
+      undefined,
+      send,
+      recv
+   };
    //! @brief Tasks used to complete a base operation.
-   enum TaskOp { send_start,
-                 send_check,
-                 recv_start,
-                 recv_check0,
-                 recv_check1,
-                 none };
+   enum TaskOp {
+      send_start,
+      send_check,
+      recv_start,
+      recv_check0,
+      recv_check1,
+      none
+   };
 
 public:
    /*!

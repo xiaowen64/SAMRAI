@@ -54,8 +54,12 @@ const SAMRAI_MPI::Comm SAMRAI_MPI::commWorld = MPI_COMM_WORLD;
 const SAMRAI_MPI::Comm SAMRAI_MPI::commNull = MPI_COMM_NULL;
 
 bool SAMRAI_MPI::s_mpi_is_initialized = false;
-bool SAMRAI_MPI::s_we_started_mpi(false);
-SAMRAI_MPI SAMRAI_MPI::s_samrai_world(MPI_COMM_NULL);
+bool
+SAMRAI_MPI::s_we_started_mpi(
+   false);
+SAMRAI_MPI
+SAMRAI_MPI::s_samrai_world(
+   MPI_COMM_NULL);
 
 bool SAMRAI_MPI::s_call_abort_in_serial_instead_of_exit = false;
 bool SAMRAI_MPI::s_call_abort_in_parallel_instead_of_mpiabort = false;
@@ -111,7 +115,9 @@ SAMRAI_MPI::abort()
 {
 
 #ifdef HAVE_MPI
-   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI&
+   mpi(
+      SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getSize() > 1) {
       if (s_call_abort_in_parallel_instead_of_mpiabort) {
          ::abort();
@@ -1300,7 +1306,9 @@ SAMRAI_MPI::AllReduce(
       ranks_of_extrema != 0 && (op == MPI_MIN || op == MPI_MAX);
 
    if (!get_ranks_of_extrema) {
-      std::vector<int> recv_buf(count);
+      std::vector<int>
+      recv_buf(
+         count);
       rval = Allreduce(x, &recv_buf[0], count, MPI_INT, op);
       for (int c = 0; c < count; ++c) {
          x[c] = recv_buf[c];
@@ -1369,7 +1377,9 @@ SAMRAI_MPI::AllReduce(
       ranks_of_extrema != 0 && (op == MPI_MIN || op == MPI_MAX);
 
    if (!get_ranks_of_extrema) {
-      std::vector<double> recv_buf(count);
+      std::vector<double>
+      recv_buf(
+         count);
       rval = Allreduce(x, &recv_buf[0], count, MPI_DOUBLE, op);
       for (int c = 0; c < count; ++c) {
          x[c] = recv_buf[c];
@@ -1438,7 +1448,9 @@ SAMRAI_MPI::AllReduce(
       ranks_of_extrema != 0 && (op == MPI_MIN || op == MPI_MAX);
 
    if (!get_ranks_of_extrema) {
-      std::vector<float> recv_buf(count);
+      std::vector<float>
+      recv_buf(
+         count);
       rval = Allreduce(x, &recv_buf[0], count, MPI_FLOAT, op);
       for (int c = 0; c < count; ++c) {
          x[c] = recv_buf[c];
@@ -1492,7 +1504,9 @@ SAMRAI_MPI::parallelPrefixSum(
 #endif
 
    // Scratch data.
-   std::vector<int> send_scr(count), recv_scr(count);
+   std::vector<int>
+   send_scr(
+      count), recv_scr(count);
 
    Request send_req, recv_req;
    Status send_stat, recv_stat;
@@ -1542,28 +1556,28 @@ SAMRAI_MPI::parallelPrefixSum(
 }
 
 /*
-**************************************************************************
-* Check whether there is a receivable message, for use in guarding
-* against errant messages (message from an unrelated communication)
-* that may be mistakenly received.  This check is imperfect; it can
-* detect messages that have arrived but it can't detect messages that
-* has not arrived.
-*
-* The barriers prevent processes from starting or finishing the check
-* too early.  Early start may miss recently sent errant messages from
-* slower processes.  Early finishes can allow the process to get ahead
-* and send a valid message that may be mistaken as an errant message
-* by the receiver doing the Iprobe.
-**************************************************************************
-*/
+ **************************************************************************
+ * Check whether there is a receivable message, for use in guarding
+ * against errant messages (message from an unrelated communication)
+ * that may be mistakenly received.  This check is imperfect; it can
+ * detect messages that have arrived but it can't detect messages that
+ * has not arrived.
+ *
+ * The barriers prevent processes from starting or finishing the check
+ * too early.  Early start may miss recently sent errant messages from
+ * slower processes.  Early finishes can allow the process to get ahead
+ * and send a valid message that may be mistaken as an errant message
+ * by the receiver doing the Iprobe.
+ **************************************************************************
+ */
 bool
 SAMRAI_MPI::hasReceivableMessage(
-   Status *status,
+   Status* status,
    int source,
-   int tag ) const
+   int tag) const
 {
    int flag = false;
-   if ( s_mpi_is_initialized ) {
+   if (s_mpi_is_initialized) {
       tbox::SAMRAI_MPI::Status tmp_status;
       Barrier();
       int mpi_err = Iprobe(source, tag, &flag, status ? status : &tmp_status);
@@ -1631,16 +1645,18 @@ SAMRAI_MPI::compareCommunicator(
 #ifdef HAVE_MPI
    int compare_result;
    int mpi_err = Comm_compare(
-      d_comm,
-      r.d_comm,
-      &compare_result);
-   if ( mpi_err != MPI_SUCCESS ) {
+         d_comm,
+         r.d_comm,
+         &compare_result);
+   if (mpi_err != MPI_SUCCESS) {
       TBOX_ERROR("SAMRAI_MPI::compareCommunicator: Error comparing two communicators.");
    }
    return compare_result;
+
 #else
    NULL_USE(r);
    return d_comm == r.d_comm ? MPI_IDENT : MPI_CONGRUENT;
+
 #endif
 }
 

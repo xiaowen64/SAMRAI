@@ -212,7 +212,10 @@ SingularityFinder::findSingularities(
          std::set<BlockId> sing_set;
          for (std::set<int>::iterator s_itr = (**e_itr).d_blocks.begin();
               s_itr != (**e_itr).d_blocks.end(); ++s_itr) {
-            BoxId box_id(LocalId(*s_itr), 0);
+            BoxId
+            box_id(
+               LocalId(*s_itr),
+               0);
             const BlockId& block_id =
                domain_boxes.find(Box(d_dim, box_id))->getBlockId();
             sing_set.insert(block_id);
@@ -237,7 +240,10 @@ SingularityFinder::findSingularities(
          std::set<BlockId> sing_set;
          for (std::set<int>::iterator s_itr = (**p_itr).d_blocks.begin();
               s_itr != (**p_itr).d_blocks.end(); ++s_itr) {
-            BoxId box_id(LocalId(*s_itr), 0);
+            BoxId
+            box_id(
+               LocalId(*s_itr),
+               0);
             const BlockId& block_id =
                domain_boxes.find(Box(d_dim, box_id))->getBlockId();
             sing_set.insert(block_id);
@@ -490,9 +496,13 @@ SingularityFinder::findCoincidentEdges(
       }
    }
 
-   Box b_node_box(b_box);
+   Box
+   b_node_box(
+      b_box);
    b_node_box.setUpper(b_node_box.upper() + IntVector::getOne(d_dim));
-   IntVector b_box_size(b_node_box.numberCells());
+   IntVector
+   b_box_size(
+      b_node_box.numberCells());
    hier::BoxContainer b_edge_boxes;
 
    int nedges_per_face = 4;
@@ -502,7 +512,9 @@ SingularityFinder::findCoincidentEdges(
       int edgea_idx = s_face_edges[facea][i];
       int edgeb_idx = -1;
 
-      Box edge_box(a_box);
+      Box
+      edge_box(
+         a_box);
 
       switch (edgea_idx) {
 
@@ -569,9 +581,13 @@ SingularityFinder::findCoincidentEdges(
          TBOX_ASSERT(transformed);
       }
       edge_box.setUpper(edge_box.upper() + IntVector::getOne(d_dim));
-      Box b_edge(edge_box * b_node_box);
+      Box
+      b_edge(
+         edge_box* b_node_box);
 
-      IntVector b_edge_dirs(b_edge.numberCells());
+      IntVector
+      b_edge_dirs(
+         b_edge.numberCells());
       int num_zero_dirs = 0;
       for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
          TBOX_ASSERT(b_edge_dirs[d] >= 1);
@@ -594,7 +610,9 @@ SingularityFinder::findCoincidentEdges(
 
                int edge_idx = s_face_edges[faceb][e];
 
-               Box add_box(b_box);
+               Box
+               add_box(
+                  b_box);
                add_box.setUpper(add_box.upper() + IntVector::getOne(d_dim));
 
                switch (edge_idx) {
@@ -656,7 +674,9 @@ SingularityFinder::findCoincidentEdges(
             }
          }
 
-         BoxContainer b_edge_cntnr(b_edge);
+         BoxContainer
+         b_edge_cntnr(
+            b_edge);
          b_edge_cntnr.intersectBoxes(b_edge_boxes);
          b_edge_cntnr.coalesce();
          TBOX_ASSERT(b_edge_cntnr.size() == 1);
@@ -775,9 +795,13 @@ SingularityFinder::findCoincidentPoints(
       }
    }
 
-   Box b_node_box(b_box);
+   Box
+   b_node_box(
+      b_box);
    b_node_box.setUpper(b_node_box.upper() + IntVector::getOne(d_dim));
-   IntVector b_box_size(b_node_box.numberCells());
+   IntVector
+   b_box_size(
+      b_node_box.numberCells());
 
    int npoints_per_face = 1 << (d_dim.getValue() - 1);
 
@@ -785,9 +809,14 @@ SingularityFinder::findCoincidentPoints(
 
       int pointa_idx = s_face_nodes[facea][i];
 
-      Box point_box(a_box);
+      Box
+      point_box(
+         a_box);
 
-      IntVector corner_dirs(d_dim, 0);
+      IntVector
+      corner_dirs(
+         d_dim,
+         0);
       corner_dirs[0] = (pointa_idx % 2 == 0) ? -1 : 1;
       if (d_dim.getValue() > 1) {
          corner_dirs[1] = ((pointa_idx / 2) % 2 == 0) ? -1 : 1;
@@ -817,9 +846,14 @@ SingularityFinder::findCoincidentPoints(
       }
 
       point_box.setUpper(point_box.upper() + IntVector::getOne(d_dim));
-      Box b_point(point_box * b_node_box);
+      Box
+      b_point(
+         point_box* b_node_box);
 
-      IntVector b_point_dirs(d_dim, 0);
+      IntVector
+      b_point_dirs(
+         d_dim,
+         0);
       for (int d = 0; d < d_dim.getValue(); ++d) {
          if (b_point.lower() (d) == b_node_box.lower() (d)) {
             b_point_dirs[d] = -1;

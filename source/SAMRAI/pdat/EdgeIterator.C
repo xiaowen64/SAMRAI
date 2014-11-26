@@ -20,8 +20,8 @@ EdgeIterator::EdgeIterator(
    d_box(EdgeGeometry::toEdgeBox(box, axis))
 {
    if (!d_box.empty() && !begin) {
-      d_index(d_box.getDim().getValue()-1) =
-         d_box.upper(static_cast<tbox::Dimension::dir_t>(d_box.getDim().getValue()-1)) + 1;
+      d_index(d_box.getDim().getValue() - 1) =
+         d_box.upper(static_cast<tbox::Dimension::dir_t>(d_box.getDim().getValue() - 1)) + 1;
    }
 }
 
@@ -37,7 +37,7 @@ EdgeIterator::~EdgeIterator()
 }
 
 EdgeIterator&
-EdgeIterator::operator ++ ()
+EdgeIterator::operator++ ()
 {
    ++d_index(0);
    for (tbox::Dimension::dir_t i = 0; i < d_box.getDim().getValue() - 1; ++i) {
@@ -52,7 +52,7 @@ EdgeIterator::operator ++ ()
 }
 
 EdgeIterator
-EdgeIterator::operator ++ (
+EdgeIterator::operator++ (
    int)
 {
    EdgeIterator tmp = *this;

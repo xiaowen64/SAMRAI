@@ -58,7 +58,7 @@ ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    d_master_max_workload_factor(1.0),
    d_master_workload_tolerance(0.0),
    d_master_bin_pack_method("SPATIAL"),
-   d_tile_size(dim,1)
+   d_tile_size(dim, 1)
 {
    TBOX_ASSERT(!name.empty());
    getFromInput(input_db);
@@ -77,7 +77,7 @@ ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    d_master_max_workload_factor(1.0),
    d_master_workload_tolerance(0.0),
    d_master_bin_pack_method("SPATIAL"),
-   d_tile_size(dim,1)
+   d_tile_size(dim, 1)
 
 {
    getFromInput(input_db);
@@ -154,7 +154,8 @@ ChopAndPackLoadBalancer::setWorkloadPatchDataIndex(
    int data_id,
    int level_number)
 {
-   boost::shared_ptr<pdat::CellDataFactory<double> > datafact(
+   boost::shared_ptr<pdat::CellDataFactory<double> >
+   datafact(
       BOOST_CAST<pdat::CellDataFactory<double>, hier::PatchDataFactory>(
          hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
          getPatchDataFactory(data_id)));
@@ -280,12 +281,15 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
    }
 
    t_get_global_boxes->barrierAndStart();
-   hier::BoxLevel globalized_input_box_level(balance_box_level);
+   hier::BoxLevel
+   globalized_input_box_level(
+      balance_box_level);
    globalized_input_box_level.setParallelState(hier::BoxLevel::GLOBALIZED);
    t_get_global_boxes->stop();
 
    hier::BoxContainer in_boxes;
-   const hier::BoxContainer globalized_input_boxes(
+   const hier::BoxContainer
+   globalized_input_boxes(
       globalized_input_box_level.getGlobalBoxes());
    for (hier::RealBoxConstIterator bi(globalized_input_boxes.realBegin());
         bi != globalized_input_boxes.realEnd(); ++bi) {
@@ -321,8 +325,11 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
    int i = 0;
    for (hier::BoxContainer::iterator itr = out_boxes.begin();
         itr != out_boxes.end(); ++itr, ++i) {
-      hier::Box node(*itr, hier::LocalId(i),
-                     mapping.getProcessorAssignment(i));
+      hier::Box
+      node(
+         * itr,
+         hier::LocalId(i),
+         mapping.getProcessorAssignment(i));
       balance_box_level.addBox(node);
    }
    // Reinitialize Connectors due to changed balance_box_level.
@@ -435,7 +442,9 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
       return;
    }
 
-   const tbox::SAMRAI_MPI& mpi(hierarchy->getMPI());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      hierarchy->getMPI());
 
    /*
     * If uniform load balancing is used and the level domain can be
@@ -456,7 +465,9 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
       if (!d_ignore_level_box_union_is_single_box &&
           hierarchy->getGridGeometry()->getNumberBlocks() == 1) {
          hier::Box bbox = in_boxes.getBoundingBox();
-         hier::BoxContainer difference(bbox);
+         hier::BoxContainer
+         difference(
+            bbox);
          t_load_balance_boxes_remove_intersection->start();
          difference.removeIntersections(in_boxes);
          t_load_balance_boxes_remove_intersection->stop();
@@ -565,7 +576,9 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
     * For debugging, output load balance statistics
     * (assuming uniform load).
     */
-   std::vector<double> procloads(tbox::SAMRAI_MPI::getNodes());
+   std::vector<double>
+   procloads(
+      tbox::SAMRAI_MPI::getNodes());
    for (int i = 0; i < static_cast<int>(procloads.size()); ++i) {
       procloads[i] = 0;
    }
@@ -630,7 +643,9 @@ ChopAndPackLoadBalancer::chopUniformSingleBox(
     * Determine processor layout that corresponds to box size.
     */
 
-   hier::IntVector processor_distribution(d_dim);
+   hier::IntVector
+   processor_distribution(
+      d_dim);
    if (d_processor_layout_specified) {
       processor_distribution = d_processor_layout;
    } else {
@@ -647,7 +662,9 @@ ChopAndPackLoadBalancer::chopUniformSingleBox(
     * constraints.
     */
 
-   hier::IntVector ideal_box_size(d_dim);
+   hier::IntVector
+   ideal_box_size(
+      d_dim);
    for (tbox::Dimension::dir_t i = 0; i < d_dim.getValue(); ++i) {
       ideal_box_size(i) = (int)ceil((double)in_box.numberCells(
                i) / (double)processor_distribution(i));
@@ -663,7 +680,9 @@ ChopAndPackLoadBalancer::chopUniformSingleBox(
     * ideal_box_size as the maximum size of each of the smaller boxes.
     */
 
-   hier::BoxContainer tmp_box_list(in_box);
+   hier::BoxContainer
+   tmp_box_list(
+      in_box);
 
    hier::BoxUtilities::chopBoxes(tmp_box_list,
       ideal_box_size,
@@ -726,7 +745,9 @@ ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
     * Create copy of input box list to prevent changing it.
     */
 
-   hier::BoxContainer tmp_in_boxes_list(in_boxes);
+   hier::BoxContainer
+   tmp_in_boxes_list(
+      in_boxes);
 
    /*
     * Chop any boxes in input box list that are larger than max box size
@@ -822,7 +843,9 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
     * Create copy of input box list to prevent changing it.
     */
 
-   hier::BoxContainer tmp_in_boxes_list(in_boxes);
+   hier::BoxContainer
+   tmp_in_boxes_list(
+      in_boxes);
 
    hier::BoxUtilities::chopBoxes(tmp_in_boxes_list,
       max_size,
@@ -838,10 +861,14 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
     * the total work for the set of boxes.
     */
 
-   hier::BoxContainer tmp_level_boxes(tmp_in_boxes_list);
+   hier::BoxContainer
+   tmp_level_boxes(
+      tmp_in_boxes_list);
 
    const int num_tmp_patches = tmp_level_boxes.size();
-   std::vector<double> tmp_level_workloads(num_tmp_patches);
+   std::vector<double>
+   tmp_level_workloads(
+      num_tmp_patches);
    int idx = 0;
    for (hier::BoxContainer::iterator i = tmp_level_boxes.begin();
         i != tmp_level_boxes.end();
@@ -856,7 +883,8 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
       tmp_level_workloads,
       "GREEDY");
 
-   boost::shared_ptr<hier::BoxLevel> tmp_box_level(
+   boost::shared_ptr<hier::BoxLevel>
+   tmp_box_level(
       boost::make_shared<hier::BoxLevel>(
          ratio_to_hierarchy_level_zero,
          hierarchy->getGridGeometry(),
@@ -865,12 +893,16 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    idx = 0;
    for (hier::BoxContainer::iterator i = tmp_level_boxes.begin();
         i != tmp_level_boxes.end(); ++i, ++idx) {
-      hier::Box node(*i, hier::LocalId(idx),
-                     tmp_level_mapping.getProcessorAssignment(idx));
+      hier::Box
+      node(
+         * i,
+         hier::LocalId(idx),
+         tmp_level_mapping.getProcessorAssignment(idx));
       tmp_box_level->addBox(node);
    }
 
-   boost::shared_ptr<hier::PatchLevel> tmp_level(
+   boost::shared_ptr<hier::PatchLevel>
+   tmp_level(
       boost::make_shared<hier::PatchLevel>(*tmp_box_level,
                                            hierarchy->getGridGeometry(),
                                            hierarchy->getPatchDescriptor()));
@@ -890,7 +922,8 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
 
    xfer::RefineAlgorithm fill_work_algorithm;
 
-   boost::shared_ptr<hier::RefineOperator> work_refine_op(
+   boost::shared_ptr<hier::RefineOperator>
+   work_refine_op(
       boost::make_shared<pdat::CellDoubleConstantRefine>());
 
    fill_work_algorithm.registerRefine(wrk_indx,
@@ -956,9 +989,13 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
     * Set local box array to list of chopped boxes and set local workload array.
     */
 
-   hier::BoxContainer local_out_boxes(tmp_box_list);
+   hier::BoxContainer
+   local_out_boxes(
+      tmp_box_list);
 
-   std::vector<double> local_out_workloads(local_out_boxes.size());
+   std::vector<double>
+   local_out_workloads(
+      local_out_boxes.size());
 
    int i = 0;
    for (std::list<double>::const_iterator il(tmp_work_list.begin());
@@ -1027,8 +1064,12 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
    }
    weights_out.resize(size_out);
 
-   std::vector<int> buf_in(buf_size_in);
-   std::vector<int> buf_out(buf_size_out);
+   std::vector<int>
+   buf_in(
+      buf_size_in);
+   std::vector<int>
+   buf_out(
+      buf_size_out);
 
    int* buf_in_ptr = 0;
    int* buf_out_ptr = 0;
@@ -1060,9 +1101,13 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
    /*
     * exchange the data
     */
-   std::vector<int> counts(mpi.getSize());
+   std::vector<int>
+   counts(
+      mpi.getSize());
    mpi.Allgather(&size_in, 1, MPI_INT, &counts[0], 1, MPI_INT);
-   std::vector<int> displs(mpi.getSize());
+   std::vector<int>
+   displs(
+      mpi.getSize());
    displs[0] = 0;
    size_t total_count = counts[0];
    for (size_t i = 1; i < counts.size(); ++i) {
@@ -1172,7 +1217,9 @@ ChopAndPackLoadBalancer::getFromInput(
 
    if (input_db) {
 
-      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      const tbox::SAMRAI_MPI&
+      mpi(
+         tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       d_master_bin_pack_method =
          input_db->getStringWithDefault("bin_pack_method", "SPATIAL");
@@ -1270,7 +1317,9 @@ ChopAndPackLoadBalancer::binPackBoxes(
    std::vector<double>& workloads,
    const std::string& bin_pack_method) const
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      tbox::SAMRAI_MPI::getSAMRAIWorld());
    t_bin_pack_boxes->start();
    /*
     * Sort boxes in order of highest to lowest workload and assign

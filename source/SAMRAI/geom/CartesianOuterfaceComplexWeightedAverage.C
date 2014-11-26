@@ -33,14 +33,20 @@ extern "C" {
 #endif
 
 // in cartcoarsen1d.f:
-void SAMRAI_F77_FUNC(cartwgtavgoutfacecplx1d, CARTWGTAVGOUTFACECPLX1D) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartwgtavgoutfacecplx1d,
+   CARTWGTAVGOUTFACECPLX1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 // in cartcoarsen2d.f:
-void SAMRAI_F77_FUNC(cartwgtavgoutfacecplx2d0, CARTWGTAVGOUTFACECPLX2D0) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartwgtavgoutfacecplx2d0,
+   CARTWGTAVGOUTFACECPLX2D0) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -50,7 +56,10 @@ void SAMRAI_F77_FUNC(cartwgtavgoutfacecplx2d0, CARTWGTAVGOUTFACECPLX2D0) (const 
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 
-void SAMRAI_F77_FUNC(cartwgtavgoutfacecplx2d1, CARTWGTAVGOUTFACECPLX2D1) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartwgtavgoutfacecplx2d1,
+   CARTWGTAVGOUTFACECPLX2D1) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -60,7 +69,10 @@ void SAMRAI_F77_FUNC(cartwgtavgoutfacecplx2d1, CARTWGTAVGOUTFACECPLX2D1) (const 
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 // in cartcoarsen3d.f:
-void SAMRAI_F77_FUNC(cartwgtavgoutfacecplx3d0, CARTWGTAVGOUTFACECPLX3D0) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartwgtavgoutfacecplx3d0,
+   CARTWGTAVGOUTFACECPLX3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -69,7 +81,10 @@ void SAMRAI_F77_FUNC(cartwgtavgoutfacecplx3d0, CARTWGTAVGOUTFACECPLX3D0) (const 
    const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
-void SAMRAI_F77_FUNC(cartwgtavgoutfacecplx3d1, CARTWGTAVGOUTFACECPLX3D1) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartwgtavgoutfacecplx3d1,
+   CARTWGTAVGOUTFACECPLX3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -78,7 +93,10 @@ void SAMRAI_F77_FUNC(cartwgtavgoutfacecplx3d1, CARTWGTAVGOUTFACECPLX3D1) (const 
    const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
-void SAMRAI_F77_FUNC(cartwgtavgoutfacecplx3d2, CARTWGTAVGOUTFACECPLX3D2) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartwgtavgoutfacecplx3d2,
+   CARTWGTAVGOUTFACECPLX3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -126,14 +144,18 @@ CartesianOuterfaceComplexWeightedAverage::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(fine.getDim());
+   const tbox::Dimension&
+   dim(
+      fine.getDim());
 
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, coarse_box, ratio);
 
-   boost::shared_ptr<pdat::OuterfaceData<dcomplex> > fdata(
+   boost::shared_ptr<pdat::OuterfaceData<dcomplex> >
+   fdata(
       BOOST_CAST<pdat::OuterfaceData<dcomplex>, hier::PatchData>(
          fine.getPatchData(src_component)));
-   boost::shared_ptr<pdat::OuterfaceData<dcomplex> > cdata(
+   boost::shared_ptr<pdat::OuterfaceData<dcomplex> >
+   cdata(
       BOOST_CAST<pdat::OuterfaceData<dcomplex>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
    TBOX_ASSERT(fdata);
@@ -145,10 +167,12 @@ CartesianOuterfaceComplexWeightedAverage::coarsen(
    const hier::Index cilo = cdata->getGhostBox().lower();
    const hier::Index cihi = cdata->getGhostBox().upper();
 
-   const boost::shared_ptr<CartesianPatchGeometry> fgeom(
+   const boost::shared_ptr<CartesianPatchGeometry>
+   fgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
-   const boost::shared_ptr<CartesianPatchGeometry> cgeom(
+   const boost::shared_ptr<CartesianPatchGeometry>
+   cgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
 

@@ -68,10 +68,14 @@ FirstLayerSideVariableFillPattern::calculateOverlap(
    TBOX_ASSERT_OBJDIM_EQUALITY2(dst_patch_box, src_mask);
 
    const tbox::Dimension& dim = dst_patch_box.getDim();
-   std::vector<hier::BoxContainer> stencil_boxes(dim.getValue());
+   std::vector<hier::BoxContainer>
+   stencil_boxes(
+      dim.getValue());
    computeStencilBoxes(stencil_boxes, dst_patch_box);
 
-   std::vector<hier::BoxContainer> dst_boxes(dim.getValue());
+   std::vector<hier::BoxContainer>
+   dst_boxes(
+      dim.getValue());
 
    const SideGeometry* t_dst =
       dynamic_cast<const SideGeometry *>(&dst_geometry);
@@ -137,9 +141,16 @@ FirstLayerSideVariableFillPattern::computeStencilBoxes(
    TBOX_ASSERT(static_cast<int>(stencil_boxes.size()) == dim.getValue());
 
    for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
-      hier::Box dst_side_box(SideGeometry::toSideBox(dst_box, d));
-      hier::Box interior_side_box(dst_side_box);
-      hier::IntVector shrink_vector(dim, 0);
+      hier::Box
+      dst_side_box(
+         SideGeometry::toSideBox(dst_box, d));
+      hier::Box
+      interior_side_box(
+         dst_side_box);
+      hier::IntVector
+      shrink_vector(
+         dim,
+         0);
       shrink_vector[d] = -1;
       interior_side_box.grow(shrink_vector);
 
@@ -169,11 +180,15 @@ FirstLayerSideVariableFillPattern::computeFillBoxesOverlap(
 
    const tbox::Dimension& dim = patch_box.getDim();
 
-   std::vector<hier::BoxContainer> stencil_boxes(dim.getValue());
+   std::vector<hier::BoxContainer>
+   stencil_boxes(
+      dim.getValue());
    computeStencilBoxes(stencil_boxes, patch_box);
 
-   std::vector<hier::BoxContainer> overlap_boxes(dim.getValue());
-   for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {  
+   std::vector<hier::BoxContainer>
+   overlap_boxes(
+      dim.getValue());
+   for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
       /*
        * This is the equivalent of converting every box in overlap_boxes

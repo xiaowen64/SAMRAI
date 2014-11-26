@@ -139,7 +139,6 @@ public:
       const BoxLevel& globalized_head,
       const bool ignore_self_overlap = false) const;
 
-
    /*
     * @brief Populate overlap relationships for the given Connector by
     * using the assumed partition algorithm to find overlaps.
@@ -147,8 +146,8 @@ public:
     * For the assumed partition algorithm, see Allison Baker's paper.
     */
    void
-   findOverlaps_assumedPartition(Connector& connector) const;
-
+   findOverlaps_assumedPartition(
+      Connector& connector) const;
 
    /*!
     * @brief For a given Connector, get the subset of overlapping neighbors
@@ -472,9 +471,10 @@ public:
     * duplicated for exclusise use.  The duplicate will be freed upon
     * object destruction.
     */
-   void setSAMRAI_MPI(
-      const tbox::SAMRAI_MPI &mpi,
-      bool make_duplicate = true );
+   void
+   setSAMRAI_MPI(
+      const tbox::SAMRAI_MPI& mpi,
+      bool make_duplicate = true);
 
    /*!
     * @brief When @c print_steps is true, print what the code is

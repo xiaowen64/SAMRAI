@@ -34,7 +34,7 @@ SphericalShellGenerator::SphericalShellGenerator(
    d_hierarchy(),
    d_time_shift(0.0),
    d_radii(0),
-   d_buffer_distance(1, std::vector<double>(dim.getValue(),0.0))
+   d_buffer_distance(1, std::vector<double>(dim.getValue(), 0.0))
 {
    for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
       d_init_center[i] = 0.0;
@@ -76,9 +76,13 @@ SphericalShellGenerator::SphericalShellGenerator(
        * Input parameters to determine whether to tag by buffering
        * fronts, and by how much.
        */
-      const std::string bname("buffer_distance_");
+      const std::string
+      bname(
+         "buffer_distance_");
       for (int ln = 0; ; ++ln) {
-         const std::string lnstr(tbox::Utilities::intToString(ln));
+         const std::string
+         lnstr(
+            tbox::Utilities::intToString(ln));
 
          const std::string bnameln = bname + lnstr;
 
@@ -92,7 +96,7 @@ SphericalShellGenerator::SphericalShellGenerator(
          }
 
          if (!tmpa.empty()) {
-            d_buffer_distance.resize(ln+1);
+            d_buffer_distance.resize(ln + 1);
             d_buffer_distance.back().swap(tmpa);
          } else {
             break;
@@ -118,7 +122,8 @@ void SphericalShellGenerator::setTags(
    int tag_ln,
    int tag_data_id)
 {
-   const boost::shared_ptr<hier::PatchLevel>& tag_level(
+   const boost::shared_ptr<hier::PatchLevel>&
+   tag_level(
       hierarchy->getPatchLevel(tag_ln));
 
    resetHierarchyConfiguration(hierarchy, 0, 1);
@@ -128,23 +133,25 @@ void SphericalShellGenerator::setTags(
 
       boost::shared_ptr<hier::Patch> patch = *pi;
 
-      boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      boost::shared_ptr<geom::CartesianPatchGeometry>
+      patch_geom(
          BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch->getPatchGeometry()));
 
-      boost::shared_ptr<pdat::CellData<int> > tag_data(
+      boost::shared_ptr<pdat::CellData<int> >
+      tag_data(
          BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(tag_data_id)));
 
       TBOX_ASSERT(patch_geom);
       TBOX_ASSERT(tag_data);
 
-      computeShellsData( 0, tag_data.get(),
-                         tag_data->getBox(),
-                         (static_cast<size_t>(tag_ln) < d_buffer_distance.size() ?
-                          d_buffer_distance[tag_ln] : d_buffer_distance.back()),
-                         patch_geom->getXLower(),
-                         patch_geom->getDx());
+      computeShellsData(0, tag_data.get(),
+         tag_data->getBox(),
+         (static_cast<size_t>(tag_ln) < d_buffer_distance.size() ?
+          d_buffer_distance[tag_ln] : d_buffer_distance.back()),
+         patch_geom->getXLower(),
+         patch_geom->getDx());
 
    }
 
@@ -200,8 +207,6 @@ void SphericalShellGenerator::resetHierarchyConfiguration(
    TBOX_ASSERT(d_hierarchy);
 }
 
-
-
 /*
  * Compute the solution data for a patch.
  */
@@ -209,9 +214,10 @@ void SphericalShellGenerator::computePatchData(
    const hier::Patch& patch,
    pdat::CellData<double>* uval_data,
    pdat::CellData<int>* tag_data,
-   const hier::Box &fill_box) const
+   const hier::Box& fill_box) const
 {
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry>
+   patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom.get() != 0);
@@ -219,23 +225,20 @@ void SphericalShellGenerator::computePatchData(
    const double* xlo = patch_geom->getXLower();
    const double* dx = patch_geom->getDx();
 
-   if ( tag_data ) {
+   if (tag_data) {
       computeShellsData(uval_data, tag_data,
-                        fill_box,
-                        (static_cast<size_t>(patch.getPatchLevelNumber()) < d_buffer_distance.size() ?
-                         d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
-                        xlo, dx);
-   }
-   else {
+         fill_box,
+         (static_cast<size_t>(patch.getPatchLevelNumber()) < d_buffer_distance.size() ?
+          d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
+         xlo, dx);
+   } else {
       // Not computing tag => no tag buffer needed.
       computeShellsData(uval_data, tag_data,
-                        fill_box,
-                        std::vector<double>(d_dim.getValue(),0.0),
-                        xlo, dx);
+         fill_box,
+         std::vector<double>(d_dim.getValue(), 0.0),
+         xlo, dx);
    }
 }
-
-
 
 /*
  * Compute the various data due to the shells.
@@ -251,12 +254,16 @@ void SphericalShellGenerator::computeShellsData(
    const int tag_val = 1;
 
    // Compute the buffer in terms of cells.
-   hier::IntVector buffer_cells(d_dim);
+   hier::IntVector
+   buffer_cells(
+      d_dim);
    for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
       buffer_cells(d) = static_cast<int>(0.5 + buffer_distance[d] / dx[d]);
    }
 
-   hier::Box pbox(d_dim), gbox(d_dim);
+   hier::Box
+   pbox(
+      d_dim), gbox(d_dim);
    double time = 0.0;
    if (tag_data != 0) {
       pbox = tag_data->getBox();
@@ -268,15 +275,21 @@ void SphericalShellGenerator::computeShellsData(
       time = uval_data->getTime() + d_time_shift;
    }
 
-   if ( tag_data != 0 ) {
+   if (tag_data != 0) {
       /*
        * Compute radii of the nodes.  Tag cell if it has nodes farther than
        * the inner shell radius and nodes closer than the shell outer radius.
        */
       hier::Box radius_data_box = fill_box * gbox;
-      pdat::NodeData<double> radius_data(radius_data_box, 1, buffer_cells);
+      pdat::NodeData<double>
+      radius_data(
+         radius_data_box,
+         1,
+         buffer_cells);
 
-      pdat::NodeData<int>::iterator niend(pdat::NodeGeometry::end(radius_data.getGhostBox()));
+      pdat::NodeData<int>::iterator
+      niend(
+         pdat::NodeGeometry::end(radius_data.getGhostBox()));
       for (pdat::NodeData<int>::iterator ni(pdat::NodeGeometry::begin(radius_data.getGhostBox()));
            ni != niend; ++ni) {
          const pdat::NodeIndex& idx = *ni;
@@ -284,8 +297,8 @@ void SphericalShellGenerator::computeShellsData(
          double rr = 0;
          for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
             r[d] = xlo[d]
-               + dx[d] * ( idx(d) - pbox.lower()(d) )
-               - ( d_init_center[d] + time*d_velocity[d] );
+               + dx[d] * (idx(d) - pbox.lower() (d))
+               - (d_init_center[d] + time * d_velocity[d]);
             rr += r[d] * r[d];
          }
          rr = sqrt(rr);
@@ -295,14 +308,22 @@ void SphericalShellGenerator::computeShellsData(
       hier::Box fbox = tag_data->getGhostBox() * fill_box;
       tag_data->getArrayData().fill(0, fill_box);
 
-      pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(fbox));
+      pdat::CellData<int>::iterator
+      ciend(
+         pdat::CellGeometry::end(fbox));
       for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(fbox));
            ci != ciend; ++ci) {
          const pdat::CellIndex& cid = *ci;
 
-         hier::Box check_box(cid, cid, pbox.getBlockId());
+         hier::Box
+         check_box(
+            cid,
+            cid,
+            pbox.getBlockId());
          check_box.grow(buffer_cells);
-         pdat::NodeIterator node_itr_end(pdat::NodeGeometry::end(check_box));
+         pdat::NodeIterator
+         node_itr_end(
+            pdat::NodeGeometry::end(check_box));
          double min_node_radius = 1e20;
          double max_node_radius = 0;
          for (pdat::NodeIterator node_itr(pdat::NodeGeometry::begin(check_box));
@@ -321,11 +342,13 @@ void SphericalShellGenerator::computeShellsData(
       }
    }
 
-   if ( uval_data != 0 ) {
+   if (uval_data != 0) {
       hier::Box fbox = uval_data->getGhostBox() * fill_box;
-      uval_data->fill( static_cast<double>(d_radii.size()), fbox );
+      uval_data->fill(static_cast<double>(d_radii.size()), fbox);
 
-      pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(fbox));
+      pdat::CellData<int>::iterator
+      ciend(
+         pdat::CellGeometry::end(fbox));
       for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(fbox));
            ci != ciend; ++ci) {
          const pdat::CellIndex& cid = *ci;
@@ -334,14 +357,14 @@ void SphericalShellGenerator::computeShellsData(
          double rr = 0;
          for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
             r[d] = xlo[d]
-               + dx[d] * ( cid(d) - pbox.lower()(d) + 0.5 )
-               - ( d_init_center[d] + time*d_velocity[d] );
+               + dx[d] * (cid(d) - pbox.lower() (d) + 0.5)
+               - (d_init_center[d] + time * d_velocity[d]);
             rr += r[d] * r[d];
          }
          rr = sqrt(rr);
 
-         for (int i = 0; i < static_cast<int>(d_radii.size()); ++i ) {
-            if ( rr < d_radii[i] ) {
+         for (int i = 0; i < static_cast<int>(d_radii.size()); ++i) {
+            if (rr < d_radii[i]) {
                (*uval_data)(cid) = static_cast<double>(i);
                break;
             }
@@ -350,8 +373,6 @@ void SphericalShellGenerator::computeShellsData(
    }
 
 }
-
-
 
 /*
  ***********************************************************************
@@ -368,8 +389,6 @@ int SphericalShellGenerator::registerVariablesWithPlotter(
 }
 #endif
 
-
-
 /*
  ***********************************************************************
  ***********************************************************************
@@ -384,7 +403,8 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
 {
    (void)depth_index;
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry>
+   patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
@@ -393,33 +413,45 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
    const double* dx = patch_geom->getDx();
 
    if (variable_name == "U_Shells") {
-      pdat::CellData<double> u_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
+      pdat::CellData<double>
+      u_data(
+         patch.getBox(),
+         1,
+         hier::IntVector(d_dim, 0));
       u_data.setTime(simulation_time);
-      computeShellsData( &u_data, 0, region,
-                         std::vector<double>(d_dim.getValue(),0.0),
-                         xlo, dx );
-      pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
+      computeShellsData(&u_data, 0, region,
+         std::vector<double>(d_dim.getValue(), 0.0),
+         xlo, dx);
+      pdat::CellData<double>::iterator
+      ciend(
+         pdat::CellGeometry::end(patch.getBox()));
       for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {
          *(buffer++) = u_data(*ci);
       }
-   }
-   else if (variable_name == "Tag value") {
+   } else if (variable_name == "Tag value") {
 
-      boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      boost::shared_ptr<geom::CartesianPatchGeometry>
+      patch_geom(
          BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(patch_geom);
 
-      pdat::CellData<int> tag_data(region, 1, hier::IntVector(d_dim, 0));
+      pdat::CellData<int>
+      tag_data(
+         region,
+         1,
+         hier::IntVector(d_dim, 0));
       tag_data.setTime(simulation_time);
       computeShellsData(
          0, &tag_data,
          region,
          (static_cast<size_t>(patch.getPatchLevelNumber()) < d_buffer_distance.size() ?
           d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
-         xlo, dx );
-      pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
+         xlo, dx);
+      pdat::CellData<double>::iterator
+      ciend(
+         pdat::CellGeometry::end(patch.getBox()));
       for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {
          *(buffer++) = tag_data(*ci);

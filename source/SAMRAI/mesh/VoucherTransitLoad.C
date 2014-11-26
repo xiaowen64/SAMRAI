@@ -31,7 +31,9 @@ namespace mesh {
 const int VoucherTransitLoad::VoucherTransitLoad_DEMANDTAG;
 const int VoucherTransitLoad::VoucherTransitLoad_SUPPLYTAG;
 
-const std::string VoucherTransitLoad::s_default_timer_prefix("mesh::VoucherTransitLoad");
+const std::string
+VoucherTransitLoad::s_default_timer_prefix(
+   "mesh::VoucherTransitLoad");
 std::map<std::string, VoucherTransitLoad::TimerStruct> VoucherTransitLoad::s_static_timers;
 
 tbox::StartupShutdownManager::Handler
@@ -106,7 +108,10 @@ void VoucherTransitLoad::initialize()
  */
 VoucherTransitLoad *VoucherTransitLoad::clone() const
 {
-   VoucherTransitLoad* new_object = new VoucherTransitLoad(*this, false);
+   VoucherTransitLoad* new_object = new
+      VoucherTransitLoad(
+         * this,
+         false);
    return new_object;
 }
 
@@ -192,7 +197,7 @@ VoucherTransitLoad::assignToLocal(
    hier::BoxLevel& balanced_box_level,
    const hier::BoxLevel& unbalanced_box_level,
    double flexible_load_tol,
-   const tbox::SAMRAI_MPI &alt_mpi )
+   const tbox::SAMRAI_MPI& alt_mpi)
 {
    d_object_timers->t_assign_to_local->start();
    // Delegate to assignToLocalAndPopulateMap but give it no map to work with.
@@ -201,10 +206,9 @@ VoucherTransitLoad::assignToLocal(
       0, 0,
       unbalanced_box_level,
       flexible_load_tol,
-      alt_mpi );
+      alt_mpi);
    d_object_timers->t_assign_to_local->stop();
 }
-
 
 /*
  *************************************************************************
@@ -214,10 +218,10 @@ VoucherTransitLoad::assignToLocal(
 void
 VoucherTransitLoad::assignToLocalAndPopulateMaps(
    hier::BoxLevel& balanced_box_level,
-   hier::MappingConnector &balanced_to_unbalanced,
-   hier::MappingConnector &unbalanced_to_balanced,
+   hier::MappingConnector& balanced_to_unbalanced,
+   hier::MappingConnector& unbalanced_to_balanced,
    double flexible_load_tol,
-   const tbox::SAMRAI_MPI &alt_mpi )
+   const tbox::SAMRAI_MPI& alt_mpi)
 {
    // Delegate to the more general assignToLocalAndPopulateMap.
    assignToLocalAndPopulateMaps(
@@ -226,9 +230,8 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
       &unbalanced_to_balanced,
       unbalanced_to_balanced.getBase(),
       flexible_load_tol,
-      alt_mpi );
+      alt_mpi);
 }
-
 
 /*
  *************************************************************************
@@ -255,11 +258,11 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
 void
 VoucherTransitLoad::assignToLocalAndPopulateMaps(
    hier::BoxLevel& balanced_box_level,
-   hier::MappingConnector *balanced_to_unbalanced,
-   hier::MappingConnector *unbalanced_to_balanced,
+   hier::MappingConnector* balanced_to_unbalanced,
+   hier::MappingConnector* unbalanced_to_balanced,
    const hier::BoxLevel& unbalanced_box_level,
    double flexible_load_tol,
-   const tbox::SAMRAI_MPI &alt_mpi )
+   const tbox::SAMRAI_MPI& alt_mpi)
 {
    d_object_timers->t_assign_to_local_and_populate_maps->start();
 
@@ -271,9 +274,8 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
                  << std::endl;
    }
 
-   const tbox::SAMRAI_MPI &mpi = alt_mpi.hasNullCommunicator() ?
+   const tbox::SAMRAI_MPI& mpi = alt_mpi.hasNullCommunicator() ?
       unbalanced_box_level.getMPI() : alt_mpi;
-
 
    /*
     * unaccounted_work is amount of work we started with, minus what
@@ -294,10 +296,15 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
    std::map<int, VoucherRedemption> redemptions_to_fulfill;
 
    hier::LocalId local_id_offset = unbalanced_box_level.getLastLocalId();
-   const hier::LocalId local_id_inc(static_cast<int>(d_vouchers.size()));
+   const hier::LocalId
+   local_id_inc(
+      static_cast<int>(d_vouchers.size()));
 
    for (const_iterator si = d_vouchers.begin(); si != d_vouchers.end(); ++si) {
-      hier::SequentialLocalIdGenerator id_gen(++local_id_offset, local_id_inc);
+      hier::SequentialLocalIdGenerator
+      id_gen(
+         ++local_id_offset,
+         local_id_inc);
       if (si->d_issuer_rank != mpi.getRank()) {
          if (d_print_edge_steps) {
             tbox::plog << "VoucherTransitLoad::assignToLocalAndPopulateMaps:"
@@ -370,7 +377,7 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
          for (std::map<int, VoucherRedemption>::const_iterator mi = redemptions_to_fulfill.begin();
               mi != redemptions_to_fulfill.end(); ++mi) {
             mi->second.d_box_shipment->putInBoxLevel(balanced_box_level);
-            if ( unbalanced_to_balanced ) {
+            if (unbalanced_to_balanced) {
                mi->second.d_box_shipment->generateLocalBasedMapEdges(
                   *unbalanced_to_balanced,
                   *balanced_to_unbalanced);
@@ -392,16 +399,15 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
                           << std::endl;
             }
 
-            if ( unbalanced_to_balanced ) {
+            if (unbalanced_to_balanced) {
                vr.d_box_shipment->generateLocalBasedMapEdges(
                   *unbalanced_to_balanced,
                   *balanced_to_unbalanced);
             }
-         }
-         else {
-            vr.fulfillLocalRedemption( d_reserve, *d_pparams, false );
+         } else {
+            vr.fulfillLocalRedemption(d_reserve, *d_pparams, false);
             vr.d_box_shipment->putInBoxLevel(balanced_box_level);
-            if ( unbalanced_to_balanced ) {
+            if (unbalanced_to_balanced) {
                vr.d_box_shipment->generateLocalBasedMapEdges(
                   *unbalanced_to_balanced,
                   *balanced_to_unbalanced);
@@ -410,7 +416,10 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
       }
 
       // Anything left in d_reserve is kept locally.
-      hier::SequentialLocalIdGenerator id_gen(unbalanced_box_level.getLastLocalId(), local_id_inc);
+      hier::SequentialLocalIdGenerator
+      id_gen(
+         unbalanced_box_level.getLastLocalId(),
+         local_id_inc);
       d_reserve.reassignOwnership(
          id_gen,
          balanced_box_level.getMPI().getRank());
@@ -424,7 +433,7 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
    }
 
    d_reserve.putInBoxLevel(balanced_box_level);
-   if ( unbalanced_to_balanced ) {
+   if (unbalanced_to_balanced) {
       d_reserve.generateLocalBasedMapEdges(
          *unbalanced_to_balanced,
          *balanced_to_unbalanced);
@@ -445,7 +454,7 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
       vr.recvWorkSupply(count, *d_pparams);
 
       vr.d_box_shipment->putInBoxLevel(balanced_box_level);
-      if ( unbalanced_to_balanced ) {
+      if (unbalanced_to_balanced) {
          vr.d_box_shipment->generateLocalBasedMapEdges(
             *unbalanced_to_balanced,
             *balanced_to_unbalanced);
@@ -524,7 +533,10 @@ void VoucherTransitLoad::recursiveSendWorkSupply(
          }
       }
 
-      BoxTransitSet left_reserve(reserve, false);
+      BoxTransitSet
+      left_reserve(
+         reserve,
+         false);
       double upper_lim = left_load * (1 + d_flexible_load_tol);
       double lower_lim = left_load * (1 - d_flexible_load_tol);
       lower_lim = tbox::MathUtilities<double>::Max(
@@ -595,7 +607,9 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkDemand(
    d_mpi = mpi;
    d_demander_rank = demander_rank;
 
-   std::vector<char> incoming_message(message_length);
+   std::vector<char>
+   incoming_message(
+      message_length);
    tbox::SAMRAI_MPI::Status status;
    d_mpi.Recv(
       static_cast<void *>(&incoming_message[0]),
@@ -669,7 +683,9 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkSupply(
    int message_length,
    const PartitioningParams& pparams)
 {
-   std::vector<char> incoming_message(message_length);
+   std::vector<char>
+   incoming_message(
+      message_length);
    tbox::SAMRAI_MPI::Status status;
    d_mpi.Recv(static_cast<void *>(&incoming_message[0]),
       message_length,
@@ -731,9 +747,9 @@ void VoucherTransitLoad::VoucherRedemption::fulfillLocalRedemption(
  */
 void VoucherTransitLoad::VoucherRedemption::finishSendRequest()
 {
-   if ( d_mpi_request != MPI_REQUEST_NULL ) {
+   if (d_mpi_request != MPI_REQUEST_NULL) {
       tbox::SAMRAI_MPI::Status status;
-      tbox::SAMRAI_MPI::Wait( &d_mpi_request, &status );
+      tbox::SAMRAI_MPI::Wait(&d_mpi_request, &status);
    }
    TBOX_ASSERT(d_mpi_request == MPI_REQUEST_NULL);
 }
@@ -765,7 +781,9 @@ VoucherTransitLoad::adjustLoad(
    LoadType low_load,
    LoadType high_load)
 {
-   VoucherTransitLoad& main_bin(*this);
+   VoucherTransitLoad&
+   main_bin(
+      * this);
 
    if (d_print_steps) {
       tbox::plog << "  adjustLoad attempting to bring main load from "
@@ -810,7 +828,8 @@ VoucherTransitLoad::adjustLoad(
       tbox::plog << "  adjustLoad point_miss=" << point_miss
                  << "  range_miss="
                  << (range_miss > 0 ? " " : "") // Add space if missed range
-                 << (range_miss > 0.5 * static_cast<double>(d_pparams->getMinBoxSize().getProduct()) ? " " : "") // Add space if missed range by a lot
+                 << (range_miss > 0.5
+          * static_cast<double>(d_pparams->getMinBoxSize().getProduct()) ? " " : "")                             // Add space if missed range by a lot
                  << range_miss
                  << "  " << main_bin.getSumLoad() << '/'
                  << ideal_load << " [" << low_load << ',' << high_load << ']'
@@ -882,7 +901,10 @@ VoucherTransitLoad::raiseDstLoad(
           (ideal_dst_load - dst.getSumLoad() + dst.d_pparams->getLoadComparisonTol())) {
          dst.insert(free_voucher);
       } else {
-         Voucher partial_voucher((ideal_dst_load - dst.getSumLoad()), free_voucher);
+         Voucher
+         partial_voucher(
+            (ideal_dst_load - dst.getSumLoad()),
+            free_voucher);
          dst.insert(partial_voucher);
          src.insert(free_voucher);
          /*
@@ -905,7 +927,10 @@ VoucherTransitLoad::raiseDstLoad(
 bool
 VoucherTransitLoad::eraseIssuer(int issuer_rank)
 {
-   Voucher tmp_voucher(0.0, issuer_rank);
+   Voucher
+   tmp_voucher(
+      0.0,
+      issuer_rank);
    const_iterator vi = d_vouchers.lower_bound(tmp_voucher);
    if (vi != d_vouchers.end() && vi->d_issuer_rank == issuer_rank) {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -927,7 +952,10 @@ VoucherTransitLoad::eraseIssuer(int issuer_rank)
 VoucherTransitLoad::Voucher
 VoucherTransitLoad::findVoucher(int issuer_rank) const
 {
-   Voucher tmp_voucher(0.0, issuer_rank);
+   Voucher
+   tmp_voucher(
+      0.0,
+      issuer_rank);
    const_iterator vi = d_vouchers.lower_bound(tmp_voucher);
    if (vi != d_vouchers.end() && vi->d_issuer_rank == issuer_rank) {
       tmp_voucher.d_load = vi->d_load;
@@ -942,7 +970,10 @@ VoucherTransitLoad::findVoucher(int issuer_rank) const
 VoucherTransitLoad::Voucher
 VoucherTransitLoad::yankVoucher(int issuer_rank)
 {
-   Voucher tmp_voucher(0.0, issuer_rank);
+   Voucher
+   tmp_voucher(
+      0.0,
+      issuer_rank);
    const_iterator vi = d_vouchers.lower_bound(tmp_voucher);
    if (vi != d_vouchers.end() && vi->d_issuer_rank == issuer_rank) {
       tmp_voucher.d_load = vi->d_load;
@@ -959,7 +990,8 @@ void
 VoucherTransitLoad::setTimerPrefix(
    const std::string& timer_prefix)
 {
-   std::map<std::string, TimerStruct>::iterator ti(
+   std::map<std::string, TimerStruct>::iterator
+   ti(
       s_static_timers.find(timer_prefix));
    if (ti == s_static_timers.end()) {
       d_object_timers = &s_static_timers[timer_prefix];

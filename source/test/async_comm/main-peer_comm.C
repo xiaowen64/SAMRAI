@@ -91,7 +91,9 @@ void TypeIndependentTester<TYPE>::runTest(
    int group_rel_first,
    int group_rel_last)
 {
-   tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   tbox::SAMRAI_MPI
+   mpi(
+      tbox::SAMRAI_MPI::getSAMRAIWorld());
    const int nproc = mpi.getSize();
    const int iproc = mpi.getRank();
 
@@ -126,7 +128,9 @@ void TypeIndependentTester<TYPE>::runTest(
    AsyncCommStage stage;
 
    // Counter for number of completions of each communication group.
-   std::vector<int> completion_counter(2 * group_size);
+   std::vector<int>
+   completion_counter(
+      2* group_size);
 
    for (int i = 0; i < 2 * group_size; ++i) {
       peer_comms[i].initialize(&stage);
@@ -345,7 +349,9 @@ int main(
    SAMRAI_MPI::init(&argc, &argv);
    SAMRAIManager::initialize();
    SAMRAIManager::startup();
-   tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   tbox::SAMRAI_MPI
+   mpi(
+      tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    const int iproc = mpi.getRank();
    int total_fail_count = 0;
@@ -380,11 +386,15 @@ int main(
        * to avoid possible interference with other communications
        * by SAMRAI library.
        */
-      tbox::SAMRAI_MPI::Comm isolated_communicator(MPI_COMM_NULL);
+      tbox::SAMRAI_MPI::Comm
+      isolated_communicator(
+         MPI_COMM_NULL);
       if (tbox::SAMRAI_MPI::usingMPI()) {
          tbox::SAMRAI_MPI::getSAMRAIWorld().Comm_dup(&isolated_communicator);
       }
-      tbox::SAMRAI_MPI isolated_mpi(isolated_communicator);
+      tbox::SAMRAI_MPI
+      isolated_mpi(
+         isolated_communicator);
       plog << "Process " << std::setw(5) << isolated_mpi.getRank()
            << " duplicated Communicator." << std::endl;
 
@@ -392,7 +402,9 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase>
+      input_db(
+         new InputDatabase("input_db"));
       InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*

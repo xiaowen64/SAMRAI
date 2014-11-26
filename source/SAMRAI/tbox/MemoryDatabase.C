@@ -144,7 +144,9 @@ MemoryDatabase::keyExists(
 std::vector<std::string>
 MemoryDatabase::getAllKeys()
 {
-   std::vector<std::string> keys(d_keyvalues.size());
+   std::vector<std::string>
+   keys(
+      d_keyvalues.size());
 
    std::vector<std::string>::size_type k = 0;
    for (std::list<KeyData>::iterator i = d_keyvalues.begin();
@@ -633,7 +635,10 @@ dcomplex
 MemoryDatabase::getComplex(
    const std::string& key)
 {
-   dcomplex value(0.0, 0.0);
+   dcomplex
+   value(
+      0.0,
+      0.0);
    KeyData* keydata = findKeyDataOrExit(key);
 
    if (keydata->d_array_size != 1) {
@@ -1418,7 +1423,10 @@ MemoryDatabase::printDatabase(
          std::ostringstream sstream;
 #else
          char sstream_buffer[SSTREAM_BUFFER];
-         std::ostrstream sstream(sstream_buffer, SSTREAM_BUFFER);
+         std::ostrstream
+         sstream(
+            sstream_buffer,
+            SSTREAM_BUFFER);
 #endif
 
          switch (i->d_type) {
@@ -1602,7 +1610,8 @@ MemoryDatabase::printDatabase(
    for (std::list<KeyData>::const_iterator j = d_keyvalues.begin();
         j != d_keyvalues.end(); ++j) {
       if (j->d_type == Database::SAMRAI_DATABASE) {
-         boost::shared_ptr<MemoryDatabase> db(
+         boost::shared_ptr<MemoryDatabase>
+         db(
             BOOST_CAST<MemoryDatabase, Database>(j->d_database));
          db->printDatabase(os, indent + 3, toprint);
       }

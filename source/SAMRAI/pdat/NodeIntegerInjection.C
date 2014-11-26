@@ -31,20 +31,29 @@ extern "C" {
 #endif
 
 // in concoarsen1d.f:
-void SAMRAI_F77_FUNC(conavgnodeintg1d, CONAVGNODEINTG1D) (const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   conavgnodeintg1d,
+   CONAVGNODEINTG1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const int *, int *);
 // in concoarsen2d.f:
-void SAMRAI_F77_FUNC(conavgnodeintg2d, CONAVGNODEINTG2D) (const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   conavgnodeintg2d,
+   CONAVGNODEINTG2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const int *, int *);
 // in concoarsen3d.f:
-void SAMRAI_F77_FUNC(conavgnodeintg3d, CONAVGNODEINTG3D) (const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   conavgnodeintg3d,
+   CONAVGNODEINTG3D) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -88,10 +97,12 @@ NodeIntegerInjection::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   boost::shared_ptr<NodeData<int> > fdata(
+   boost::shared_ptr<NodeData<int> >
+   fdata(
       BOOST_CAST<NodeData<int>, hier::PatchData>(
          fine.getPatchData(src_component)));
-   boost::shared_ptr<NodeData<int> > cdata(
+   boost::shared_ptr<NodeData<int> >
+   cdata(
       BOOST_CAST<NodeData<int>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
 

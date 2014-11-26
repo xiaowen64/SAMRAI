@@ -46,7 +46,7 @@ double QuarticFcn::getPolynomialCoef(
    return d_coefs[type];
 }
 
-double QuarticFcn::operator () (
+double QuarticFcn::operator() (
    double x) const {
    TBOX_ASSERT(d_dim == tbox::Dimension(1));
    double rval;
@@ -57,7 +57,7 @@ double QuarticFcn::operator () (
       + d_coefs[co_xxxx] * x * x * x * x;
    return rval;
 }
-double QuarticFcn::operator () (
+double QuarticFcn::operator() (
    double x,
    double y) const {
    TBOX_ASSERT(d_dim == tbox::Dimension(2));
@@ -73,7 +73,7 @@ double QuarticFcn::operator () (
    ;
    return rval;
 }
-double QuarticFcn::operator () (
+double QuarticFcn::operator() (
    double x,
    double y,
    double z) const {
@@ -99,8 +99,10 @@ double QuarticFcn::operator () (
 }
 
 QuarticFcn QuarticFcn::operator + (
-   const QuarticFcn& r) const {
-   QuarticFcn v(d_dim);
+   const QuarticFcn &r) const {
+   QuarticFcn
+   v(
+      d_dim);
    size_t i;
    for (i = 0; i < NUMBER_OF_3D_COEF; ++i) {
       v.d_coefs[i] = d_coefs[i] + r.d_coefs[i];
@@ -109,8 +111,10 @@ QuarticFcn QuarticFcn::operator + (
 }
 
 QuarticFcn QuarticFcn::operator - (
-   const QuarticFcn& r) const {
-   QuarticFcn v(d_dim);
+   const QuarticFcn &r) const {
+   QuarticFcn
+   v(
+      d_dim);
    size_t i;
    for (i = 0; i < NUMBER_OF_3D_COEF; ++i) {
       v.d_coefs[i] = d_coefs[i] - r.d_coefs[i];
@@ -119,7 +123,7 @@ QuarticFcn QuarticFcn::operator - (
 }
 
 QuarticFcn& QuarticFcn::operator = (
-   const QuarticFcn& r) {
+      const QuarticFcn &r) {
    size_t i;
    for (i = 0; i < NUMBER_OF_3D_COEF; ++i) {
       d_coefs[i] = r.d_coefs[i];
@@ -304,7 +308,9 @@ QuarticFcn QuarticFcn::differentiate(
    unsigned short int y) const
 {
    TBOX_ASSERT(d_dim == tbox::Dimension(2));
-   QuarticFcn rval(*this);
+   QuarticFcn
+   rval(
+      * this);
    rval.differentiateSelf(x, y);
    return rval;
 }
@@ -317,14 +323,16 @@ QuarticFcn QuarticFcn::differentiate(
    unsigned short int z) const
 {
    TBOX_ASSERT(d_dim == tbox::Dimension(3));
-   QuarticFcn rval(*this);
+   QuarticFcn
+   rval(
+      * this);
    rval.differentiateSelf(x, y, z);
    return rval;
 }
 
 std::ostream& operator << (
-   std::ostream& co,
-   const QuarticFcn& qf) {
+   std::ostream & co,
+   const QuarticFcn &qf) {
    unsigned short int i;
    co << '{' << 0 << '=' << qf.d_coefs[0];
    switch (qf.d_dim.getValue()) {
@@ -354,8 +362,8 @@ std::ostream& operator << (
             || s.peek() == '\n') { s.get(); } }
 
 std::istream& operator >> (
-   std::istream& ci,
-   QuarticFcn& qf) {
+   std::istream & ci,
+   QuarticFcn & qf) {
    fill_n(qf.d_coefs, NUMBER_OF_3D_COEF, 0.0);
    int number_of_coefs = 0;
    switch (qf.d_dim.getValue()) {

@@ -37,10 +37,12 @@ PatchFaceDataOpsComplex::swapData(
 {
    TBOX_ASSERT(patch);
 
-   boost::shared_ptr<pdat::FaceData<dcomplex> > d1(
+   boost::shared_ptr<pdat::FaceData<dcomplex> >
+   d1(
       BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
          patch->getPatchData(data1_id)));
-   boost::shared_ptr<pdat::FaceData<dcomplex> > d2(
+   boost::shared_ptr<pdat::FaceData<dcomplex> >
+   d2(
       BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 

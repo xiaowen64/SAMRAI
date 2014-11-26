@@ -37,10 +37,12 @@ PatchSideDataOpsComplex::swapData(
 {
    TBOX_ASSERT(patch);
 
-   boost::shared_ptr<pdat::SideData<dcomplex> > d1(
+   boost::shared_ptr<pdat::SideData<dcomplex> >
+   d1(
       BOOST_CAST<pdat::SideData<dcomplex>, hier::PatchData>(
          patch->getPatchData(data1_id)));
-   boost::shared_ptr<pdat::SideData<dcomplex> > d2(
+   boost::shared_ptr<pdat::SideData<dcomplex> >
+   d2(
       BOOST_CAST<pdat::SideData<dcomplex>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 

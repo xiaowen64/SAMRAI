@@ -21,8 +21,8 @@ SideIterator::SideIterator(
    d_box(SideGeometry::toSideBox(box, axis))
 {
    if (!d_box.empty() && !begin) {
-      d_index(d_box.getDim().getValue()-1) =
-         d_box.upper( static_cast<tbox::Dimension::dir_t>(d_box.getDim().getValue()-1) ) + 1;
+      d_index(d_box.getDim().getValue() - 1) =
+         d_box.upper(static_cast<tbox::Dimension::dir_t>(d_box.getDim().getValue() - 1)) + 1;
    }
 }
 
@@ -38,7 +38,7 @@ SideIterator::~SideIterator()
 }
 
 SideIterator&
-SideIterator::operator ++ ()
+SideIterator::operator++ ()
 {
    ++d_index(0);
    for (tbox::Dimension::dir_t i = 0; i < d_box.getDim().getValue() - 1; ++i) {
@@ -53,7 +53,7 @@ SideIterator::operator ++ ()
 }
 
 SideIterator
-SideIterator::operator ++ (
+SideIterator::operator++ (
    int)
 {
    SideIterator tmp = *this;

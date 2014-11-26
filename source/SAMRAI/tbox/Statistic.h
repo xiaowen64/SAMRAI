@@ -308,7 +308,10 @@ private:
    /*
     * The enumerated type maps statistic types to integers.
     */
-   enum STATISTIC_RECORD_TYPE { PROC_STAT = 0, PATCH_STAT = 1 };
+   enum STATISTIC_RECORD_TYPE {
+      PROC_STAT = 0,
+      PATCH_STAT = 1
+   };
 
    /*
     * Name, instance id, and type identifier for this statistic object.

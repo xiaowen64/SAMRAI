@@ -80,7 +80,9 @@ BoxContainer::BoxContainer(
    const BlockId& block_id):
    d_ordered(false)
 {
-   BoxContainerSingleBlockIterator itr(other.begin(block_id));
+   BoxContainerSingleBlockIterator
+   itr(
+      other.begin(block_id));
    while (itr != other.end(block_id)) {
       const Box& box = *itr;
       pushBack(box);
@@ -146,7 +148,7 @@ BoxContainer::~BoxContainer()
 
 BoxContainer&
 BoxContainer::operator = (
-   const BoxContainer& rhs)
+      const BoxContainer &rhs)
 {
    if (this != &rhs) {
       clear();
@@ -162,7 +164,7 @@ BoxContainer::operator = (
 
 BoxContainer&
 BoxContainer::operator = (
-   const std::vector<tbox::DatabaseBox>& rhs)
+      const std::vector<tbox::DatabaseBox>&rhs)
 {
    clear();
 
@@ -183,7 +185,7 @@ BoxContainer::operator = (
 
 bool
 BoxContainer::operator == (
-   const BoxContainer& rhs) const
+   const BoxContainer &rhs) const
 {
    bool is_equal = (d_ordered == rhs.d_ordered);
    if (is_equal) {
@@ -311,7 +313,9 @@ BoxContainer::insert(
    }
 
    const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), box);
-   Box * box_ptr(&(*iter));
+   Box *
+   box_ptr(
+      & (*iter));
    if (d_set.insert(box_ptr).second) {
       box_ptr->lockId();
       return true;
@@ -421,7 +425,9 @@ BoxContainer::simplify()
    // While there are non-canonical boxes, pick somebody out of the container.
 
    if (!empty()) {
-      const tbox::Dimension dim(d_list.front().getDim());
+      const tbox::Dimension
+      dim(
+         d_list.front().getDim());
 
       BoxContainer notCanonical;
       for (int d = dim.getValue() - 1; d >= 0; --d) {
@@ -495,7 +501,11 @@ BoxContainer::simplify()
                   if (bh(d) > ih(d)) {
                      ih(d) = bh(d);
                   }
-                  Box intersection(il, ih, tryMe.getBlockId());
+                  Box
+                  intersection(
+                     il,
+                     ih,
+                     tryMe.getBlockId());
                   notCanonical.pushFront(intersection);
                   if (d > 0) {
                      notCanonical.burstBoxes(tryMe, intersection, d);
@@ -614,11 +624,15 @@ BoxContainer::separatePeriodicImages(
 
    if (!empty()) {
 
-      const Box& first_element(*begin());
+      const Box&
+      first_element(
+         * begin());
 
-      const PeriodicId zero_shift_number(PeriodicShiftCatalog::getCatalog(
-                                            first_element.getDim())->
-                                         getZeroShiftNumber());
+      const PeriodicId
+      zero_shift_number(
+         PeriodicShiftCatalog::getCatalog(
+            first_element.getDim())->
+         getZeroShiftNumber());
 
       real_box_vector.reserve(real_box_vector.size() + size());
       for (const_iterator ni = begin(); ni != end(); ++ni) {
@@ -683,7 +697,9 @@ BoxContainer::getBoundingBox() const
       TBOX_ERROR("Bounding box container is empty" << std::endl);
    }
    const_iterator i = begin();
-   Box bbox(*i);
+   Box
+   bbox(
+      * i);
    const BlockId& block_id = bbox.getBlockId();
    ++i;
    for ( ; i != end(); ++i) {
@@ -707,7 +723,9 @@ BoxContainer::getBoundingBox(
    }
 
    const tbox::Dimension& dim = d_list.front().getDim();
-   Box bbox(dim);
+   Box
+   bbox(
+      dim);
 
    /*
     * First find the first box with the given BlockId
@@ -884,7 +902,9 @@ BoxContainer::removeIntersections(
          << std::endl);
    }
 
-   const BaseGridGeometry& grid_geometry(*takeaway.d_tree->getGridGeometry());
+   const BaseGridGeometry&
+   grid_geometry(
+      * takeaway.d_tree->getGridGeometry());
 
    std::vector<const Box *> overlap_boxes;
    iterator itr = begin();
@@ -1068,7 +1088,9 @@ BoxContainer::intersectBoxes(
    }
 
    iterator i = begin();
-   Box overlap(i->getDim());
+   Box
+   overlap(
+      i->getDim());
    while (i != end()) {
       Box& tryMe = *i;
       tryMe.intersect(keep, overlap);
@@ -1104,7 +1126,9 @@ BoxContainer::intersectBoxes(
       intersectBoxes(*(keep.d_tree));
    } else {
       iterator insertion_pt = begin();
-      Box overlap(insertion_pt->getDim());
+      Box
+      overlap(
+         insertion_pt->getDim());
       while (insertion_pt != end()) {
          iterator tmp = insertion_pt;
          const Box& tryme = *insertion_pt;
@@ -1139,7 +1163,9 @@ BoxContainer::intersectBoxes(
    }
 
    std::vector<const Box *> overlap_boxes;
-   Box overlap(front().getDim());
+   Box
+   overlap(
+      front().getDim());
    iterator itr = begin();
    iterator insertion_pt = itr;
    while (itr != end()) {
@@ -1189,10 +1215,14 @@ BoxContainer::intersectBoxes(
          << std::endl);
    }
 
-   const BaseGridGeometry& grid_geometry(*keep.d_tree->getGridGeometry());
+   const BaseGridGeometry&
+   grid_geometry(
+      * keep.d_tree->getGridGeometry());
 
    std::vector<const Box *> overlap_boxes;
-   Box overlap(front().getDim());
+   Box
+   overlap(
+      front().getDim());
    iterator itr = begin();
    iterator insertion_pt = itr;
    while (itr != end()) {
@@ -1239,7 +1269,9 @@ BoxContainer::intersectBoxes(
  */
 BoxContainer::operator std::vector<tbox::DatabaseBox>() const
 {
-   std::vector<tbox::DatabaseBox> new_vector(size());
+   std::vector<tbox::DatabaseBox>
+   new_vector(
+      size());
 
    int j = 0;
    for (const_iterator i = begin(); i != end(); ++i) {
@@ -1390,15 +1422,23 @@ BoxContainer::unshiftPeriodicImageBoxes(
    iterator hint = output_boxes.begin();
 
    if (!empty()) {
-      const Box& first_element(*begin());
+      const Box&
+      first_element(
+         * begin());
 
-      const PeriodicId zero_shift_number(PeriodicShiftCatalog::getCatalog(
-                                            first_element.getDim())->
-                                         getZeroShiftNumber());
+      const PeriodicId
+      zero_shift_number(
+         PeriodicShiftCatalog::getCatalog(
+            first_element.getDim())->
+         getZeroShiftNumber());
 
       for (const_iterator na = begin(); na != end(); ++na) {
          if (na->isPeriodicImage()) {
-            const Box unshifted_box(*na, zero_shift_number, refinement_ratio);
+            const Box
+            unshifted_box(
+               * na,
+               zero_shift_number,
+               refinement_ratio);
             hint = output_boxes.insert(hint, unshifted_box);
          } else {
             hint = output_boxes.insert(hint, *na);
@@ -1663,7 +1703,9 @@ BoxContainer::putToRestart(
       block_ids.reserve(mbs_size);
       periodic_ids.reserve(mbs_size);
 
-      std::vector<tbox::DatabaseBox> db_box_array(mbs_size);
+      std::vector<tbox::DatabaseBox>
+      db_box_array(
+         mbs_size);
 
       int counter = -1;
       for (BoxContainer::const_iterator ni = begin(); ni != end(); ++ni) {
@@ -1713,11 +1755,15 @@ BoxContainer::getFromRestart(
          restart_db.getDatabaseBoxVector("boxes");
 
       for (unsigned int i = 0; i < mbs_size; ++i) {
-         Box array_box(db_box_array[i]);
+         Box
+         array_box(
+            db_box_array[i]);
          array_box.setBlockId(BlockId(block_ids[i]));
-         BoxId box_id(LocalId(local_ids[i]),
-                      ranks[i],
-                      PeriodicId(periodic_ids[i]));
+         BoxId
+         box_id(
+            LocalId(local_ids[i]),
+            ranks[i],
+            PeriodicId(periodic_ids[i]));
          array_box.setId(box_id);
          insert(end(), array_box);
       }
@@ -1732,11 +1778,13 @@ BoxContainer::getFromRestart(
 void
 BoxContainer::print(
    std::ostream& co,
-   const std::string &border ) const
+   const std::string& border) const
 {
    co << size() << " boxes, " << (d_ordered ? "ordered" : "unordered") << '\n';
    for (const_iterator bi = begin(); bi != end(); ++bi) {
-      const Box &box(*bi);
+      const Box&
+      box(
+         * bi);
       co << border << "    "
          << box << "   "
          << box.numberCells() << '|'
@@ -1768,8 +1816,8 @@ BoxContainer::Outputter::Outputter(
 
 std::ostream&
 operator << (
-   std::ostream& s,
-   const BoxContainer::Outputter& format)
+   std::ostream & s,
+   const BoxContainer::Outputter & format)
 {
    format.d_set.print(s, format.d_border);
    return s;

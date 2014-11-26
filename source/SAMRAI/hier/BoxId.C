@@ -68,8 +68,8 @@ BoxId::~BoxId()
  */
 std::ostream&
 operator << (
-   std::ostream& co,
-   const BoxId& r)
+   std::ostream & co,
+   const BoxId &r)
 {
    co << r.d_global_id.getOwnerRank()
    << '#' << r.d_global_id.getLocalId()

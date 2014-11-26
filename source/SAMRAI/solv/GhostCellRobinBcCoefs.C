@@ -82,7 +82,8 @@ GhostCellRobinBcCoefs::setGhostDataId(
          TBOX_ERROR(d_object_name << ": hier::Index " << ghost_data_id
                                   << " does not correspond to any variable.");
       }
-      boost::shared_ptr<pdat::CellVariable<double> > cell_variable_ptr(
+      boost::shared_ptr<pdat::CellVariable<double> >
+      cell_variable_ptr(
          BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(variable_ptr));
       TBOX_ASSERT(cell_variable_ptr);
    }
@@ -115,7 +116,8 @@ GhostCellRobinBcCoefs::setBcCoefs(
 
    t_set_bc_coefs->start();
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry>
+   patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
 
@@ -155,13 +157,15 @@ GhostCellRobinBcCoefs::setBcCoefs(
        * and a pdat::CellData<TYPE> object in that order.  Data from the
        * first place with allocated storage is used.
        */
-      boost::shared_ptr<hier::PatchData> patch_data(
+      boost::shared_ptr<hier::PatchData>
+      patch_data(
          patch.getPatchData(d_ghost_data_id));
       if (!patch_data) {
          TBOX_ERROR(d_object_name << ": hier::Patch data for index "
                                   << d_ghost_data_id << " does not exist.");
       }
-      boost::shared_ptr<pdat::CellData<double> > cell_data(
+      boost::shared_ptr<pdat::CellData<double> >
+      cell_data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(patch_data));
 
       TBOX_ASSERT(cell_data);
@@ -176,7 +180,10 @@ GhostCellRobinBcCoefs::setBcCoefs(
       }
       const pdat::ArrayData<double>& cell_array_data =
          cell_data->getArrayData();
-      hier::IntVector shift_amount(d_dim, 0);
+      hier::IntVector
+      shift_amount(
+         d_dim,
+         0);
       if (location_index % 2 == 0) shift_amount[location_index / 2] = 1;
       gcoef_data->copy(cell_array_data,
          makeSideBoundaryBox(bdry_box),

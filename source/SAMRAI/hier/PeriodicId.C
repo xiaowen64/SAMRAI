@@ -14,8 +14,12 @@
 namespace SAMRAI {
 namespace hier {
 
-const PeriodicId PeriodicId::s_invalid_id(-1);
-const PeriodicId PeriodicId::s_zero_id(0);
+const PeriodicId
+PeriodicId::s_invalid_id(
+   -1);
+const PeriodicId
+PeriodicId::s_zero_id(
+   0);
 
 /*
  ******************************************************************************
@@ -60,8 +64,8 @@ PeriodicId::~PeriodicId()
  */
 std::ostream&
 operator << (
-   std::ostream& co,
-   const PeriodicId& r)
+   std::ostream & co,
+   const PeriodicId &r)
 {
    co << r.d_value;
    return co;

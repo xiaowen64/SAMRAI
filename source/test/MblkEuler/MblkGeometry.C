@@ -113,7 +113,8 @@ void MblkGeometry::getFromInput(
 {
    TBOX_ASSERT(input_db);
 
-   boost::shared_ptr<tbox::Database> db(
+   boost::shared_ptr<tbox::Database>
+   db(
       input_db->getDatabase("MblkGeometry"));
 
    d_geom_problem = db->getString("problem_type");
@@ -128,7 +129,8 @@ void MblkGeometry::getFromInput(
    //
    if (d_geom_problem == "CARTESIAN") {
 
-      boost::shared_ptr<tbox::Database> cart_db(
+      boost::shared_ptr<tbox::Database>
+      cart_db(
          db->getDatabase("CartesianGeometry"));
 
       d_cart_xlo.resize(d_nblocks);
@@ -173,7 +175,8 @@ void MblkGeometry::getFromInput(
    //
    if (d_geom_problem == "WEDGE") {
 
-      boost::shared_ptr<tbox::Database> wedge_db(
+      boost::shared_ptr<tbox::Database>
+      wedge_db(
          db->getDatabase("WedgeGeometry"));
 
       d_wedge_rmin.resize(d_nblocks);
@@ -220,7 +223,8 @@ void MblkGeometry::getFromInput(
    //
    if (d_geom_problem == "TRILINEAR") {
 
-      boost::shared_ptr<tbox::Database> tri_db(
+      boost::shared_ptr<tbox::Database>
+      tri_db(
          db->getDatabase("TrilinearGeometry"));
 
       d_tri_mesh_filename = tri_db->getString("mesh_filename");
@@ -312,7 +316,8 @@ void MblkGeometry::getFromInput(
                                   << "only works in 3D." << std::endl);
       }
 
-      boost::shared_ptr<tbox::Database> sshell_db(
+      boost::shared_ptr<tbox::Database>
+      sshell_db(
          db->getDatabase("ShellGeometry"));
 
       d_sshell_rmin = sshell_db->getDouble("rmin");
@@ -529,9 +534,15 @@ void MblkGeometry::buildCartesianGridOnPatch(
    //
    // compute dx
    //
-   hier::Index lower(domain.lower());
-   hier::Index upper(domain.upper());
-   hier::Index diff(upper - lower + hier::Index(lower.getDim(), 1));
+   hier::Index
+   lower(
+      domain.lower());
+   hier::Index
+   upper(
+      domain.upper());
+   hier::Index
+   diff(
+      upper - lower + hier::Index(lower.getDim(), 1));
 
    double dx[SAMRAI::MAX_DIM_VAL];
    double xlo[SAMRAI::MAX_DIM_VAL];
@@ -543,7 +554,8 @@ void MblkGeometry::buildCartesianGridOnPatch(
    //
    // get the coordinates array information
    //
-   boost::shared_ptr<pdat::NodeData<double> > xyz(
+   boost::shared_ptr<pdat::NodeData<double> >
+   xyz(
       BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(xyz_id)));
 
@@ -615,7 +627,8 @@ void MblkGeometry::buildWedgeGridOnPatch(
       dx[2] = 0.0;
    }
 
-   boost::shared_ptr<pdat::NodeData<double> > xyz(
+   boost::shared_ptr<pdat::NodeData<double> >
+   xyz(
       BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(xyz_id)));
 
@@ -685,7 +698,8 @@ void MblkGeometry::buildTrilinearGridOnPatch(
    double ny = (domain.upper(1) - domain.lower(1) + 1);
    double nz = (domain.upper(2) - domain.lower(2) + 1);
 
-   boost::shared_ptr<pdat::NodeData<double> > xyz(
+   boost::shared_ptr<pdat::NodeData<double> >
+   xyz(
       BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(xyz_id)));
 
@@ -813,7 +827,8 @@ void MblkGeometry::buildSShellGridOnPatch(
       //patch.allocatePatchData(xyz_id);
    }
 
-   boost::shared_ptr<pdat::NodeData<double> > xyz(
+   boost::shared_ptr<pdat::NodeData<double> >
+   xyz(
       BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(xyz_id)));
 

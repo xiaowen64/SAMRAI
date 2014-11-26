@@ -191,7 +191,9 @@ ImplicitIntegrator::getNextDt(
          solver_retcode);
 
    double global_dt_next = dt_next;
-   const tbox::SAMRAI_MPI& mpi(d_patch_hierarchy->getMPI());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      d_patch_hierarchy->getMPI());
    if (mpi.getSize() > 1) {
       mpi.AllReduce(&global_dt_next, 1, MPI_MIN);
    }
@@ -222,7 +224,9 @@ ImplicitIntegrator::checkNewSolution(
 
    int good = (good_solution ? 1 : 0);
    int global_good = good;
-   const tbox::SAMRAI_MPI& mpi(d_patch_hierarchy->getMPI());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      d_patch_hierarchy->getMPI());
    if (mpi.getSize() > 1) {
       mpi.AllReduce(&global_good, 1, MPI_MIN);
    }
@@ -364,14 +368,17 @@ void
 ImplicitIntegrator::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database> root_db(
+   boost::shared_ptr<tbox::Database>
+   root_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file" << std::endl);
    }
-   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
+   boost::shared_ptr<tbox::Database>
+   db(
+      root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("ALGS_IMPLICIT_INTEGRATOR_VERSION");
    if (ver != ALGS_IMPLICIT_INTEGRATOR_VERSION) {

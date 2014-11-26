@@ -19,8 +19,8 @@ ArrayDataIterator::ArrayDataIterator(
    d_box(box)
 {
    if (!d_box.empty() && !begin) {
-      d_index(d_box.getDim().getValue()-1) =
-         d_box.upper(static_cast<tbox::Dimension::dir_t>(d_box.getDim().getValue()-1)) + 1;
+      d_index(d_box.getDim().getValue() - 1) =
+         d_box.upper(static_cast<tbox::Dimension::dir_t>(d_box.getDim().getValue() - 1)) + 1;
    }
 }
 
@@ -36,9 +36,11 @@ ArrayDataIterator::~ArrayDataIterator()
 }
 
 ArrayDataIterator&
-ArrayDataIterator::operator ++ ()
+ArrayDataIterator::operator++ ()
 {
-   const tbox::Dimension& dim(d_box.getDim());
+   const tbox::Dimension&
+   dim(
+      d_box.getDim());
    ++d_index(0);
    for (tbox::Dimension::dir_t i = 0; i < dim.getValue() - 1; ++i) {
       if (d_index(i) > d_box.upper(i)) {
@@ -52,11 +54,13 @@ ArrayDataIterator::operator ++ ()
 }
 
 ArrayDataIterator
-ArrayDataIterator::operator ++ (
+ArrayDataIterator::operator++ (
    int)
 {
    ArrayDataIterator tmp = *this;
-   const tbox::Dimension& dim(d_box.getDim());
+   const tbox::Dimension&
+   dim(
+      d_box.getDim());
    ++d_index(0);
    for (tbox::Dimension::dir_t i = 0; i < dim.getValue() - 1; ++i) {
       if (d_index(i) > d_box.upper(i)) {

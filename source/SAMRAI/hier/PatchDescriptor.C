@@ -215,7 +215,9 @@ IntVector
 PatchDescriptor::getMaxGhostWidth(
    const tbox::Dimension& dim) const
 {
-   IntVector max_gcw(d_min_gcw[dim.getValue() - 1]);
+   IntVector
+   max_gcw(
+      d_min_gcw[dim.getValue() - 1]);
    for (int i = 0; i < d_max_number_registered_components; ++i) {
       if (d_factories[i] && (d_factories[i]->getDim() == dim)) {
          max_gcw.max(d_factories[i]->getGhostCellWidth());

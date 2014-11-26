@@ -185,7 +185,8 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<tbox::InputDatabase> input_db(
+      boost::shared_ptr<tbox::InputDatabase>
+      input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -194,9 +195,13 @@ int main(
        * dump information, which is used for writing plot files.
        */
 
-      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
+      boost::shared_ptr<tbox::Database>
+      main_db(
+         input_db->getDatabase("Main"));
 
-      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension
+      dim(
+         static_cast<unsigned short>(main_db->getInteger("dim")));
 
       string base_name = "default";
       base_name = main_db->getStringWithDefault("base_name", base_name);
@@ -271,13 +276,15 @@ int main(
                visit_number_procs_per_file));
       }
 
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry>
+      grid_geometry(
          new geom::CartesianGridGeometry(
             dim,
             "CartesianGeometry",
             input_db->getDatabase("CartesianGeometry")));
 
-      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy>
+      patch_hierarchy(
          new hier::PatchHierarchy(
             "PatchHierarchy",
             grid_geometry,
@@ -290,7 +297,8 @@ int main(
       std::string hypre_poisson_name = fac_ops_name + "::hypre_solver";
 
 #ifdef HAVE_HYPRE
-      boost::shared_ptr<solv::CellPoissonHypreSolver> hypre_poisson(
+      boost::shared_ptr<solv::CellPoissonHypreSolver>
+      hypre_poisson(
          new solv::CellPoissonHypreSolver(
             dim,
             hypre_poisson_name,
@@ -298,7 +306,8 @@ int main(
             input_db->getDatabase("hypre_solver") :
             boost::shared_ptr<tbox::Database>()));
 
-      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+      boost::shared_ptr<solv::CellPoissonFACOps>
+      fac_ops(
          new solv::CellPoissonFACOps(
             hypre_poisson,
             dim,
@@ -307,7 +316,8 @@ int main(
             input_db->getDatabase("fac_ops") :
             boost::shared_ptr<tbox::Database>()));
 #else
-      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+      boost::shared_ptr<solv::CellPoissonFACOps>
+      fac_ops(
          new solv::CellPoissonFACOps(
             dim,
             fac_ops_name,
@@ -316,7 +326,8 @@ int main(
             boost::shared_ptr<tbox::Database>()));
 #endif
 
-      boost::shared_ptr<solv::FACPreconditioner> fac_precond(
+      boost::shared_ptr<solv::FACPreconditioner>
+      fac_precond(
          new solv::FACPreconditioner(
             fac_precond_name,
             fac_ops,
@@ -324,7 +335,8 @@ int main(
             input_db->getDatabase("fac_precond") :
             boost::shared_ptr<tbox::Database>()));
 
-      boost::shared_ptr<solv::CellPoissonFACSolver> fac_solver(
+      boost::shared_ptr<solv::CellPoissonFACSolver>
+      fac_solver(
          new solv::CellPoissonFACSolver(
             dim,
             fac_solver_name,
@@ -334,7 +346,8 @@ int main(
             input_db->getDatabase("fac_solver") :
             boost::shared_ptr<tbox::Database>()));
 
-      ModifiedBratuProblem* bratu_model = new ModifiedBratuProblem(
+      ModifiedBratuProblem* bratu_model = new
+         ModifiedBratuProblem(
             mod_bratu_prob_name,
             dim,
             fac_solver,
@@ -348,7 +361,9 @@ int main(
 
 #ifdef HAVE_PETSC
          nonlinear_solver =
-            new solv::SNES_SAMRAIContext("SNESSolver",
+            new
+            solv::SNES_SAMRAIContext(
+               "SNESSolver",
                bratu_model,
                input_db->getDatabase("SNESSolver"));
 #else
@@ -360,7 +375,9 @@ int main(
 
 #ifdef HAVE_SUNDIALS
          nonlinear_solver =
-            new solv::KINSOL_SAMRAIContext("KINSOLSolver",
+            new
+            solv::KINSOL_SAMRAIContext(
+               "KINSOLSolver",
                bratu_model,
                input_db->getDatabase("KINSOLSolver"));
 #else
@@ -375,31 +392,36 @@ int main(
             << " found in input file is not recognized.");
       }
 
-      algs::ImplicitIntegrator* imp_integrator = new algs::ImplicitIntegrator(
+      algs::ImplicitIntegrator* imp_integrator = new
+         algs::ImplicitIntegrator(
             "ImplicitIntegrator",
             input_db->getDatabase("ImplicitIntegrator"),
             bratu_model,
             nonlinear_solver,
             patch_hierarchy);
 
-      boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
+      boost::shared_ptr<mesh::StandardTagAndInitialize>
+      error_detector(
          new mesh::StandardTagAndInitialize(
             "CellTaggingMethod",
             bratu_model,
             input_db->getDatabase("StandardTagAndInitialize")));
 
-      boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
+      boost::shared_ptr<mesh::BergerRigoutsos>
+      box_generator(
          new mesh::BergerRigoutsos(dim,
             input_db->getDatabase("BergerRigoutsos")));
 
-      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
+      boost::shared_ptr<mesh::TreeLoadBalancer>
+      load_balancer(
          new mesh::TreeLoadBalancer(
             dim,
             "LoadBalancer",
             input_db->getDatabase("LoadBalancer")));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
+      boost::shared_ptr<mesh::GriddingAlgorithm>
+      gridding_algorithm(
          new mesh::GriddingAlgorithm(
             patch_hierarchy,
             "GriddingAlgorithm",
@@ -412,7 +434,9 @@ int main(
        * Tag buffers are passed to the gridding algorithm for buffering
        * tagged cells before new levels are created.
        */
-      std::vector<int> tag_buffer(patch_hierarchy->getMaxNumberOfLevels());
+      std::vector<int>
+      tag_buffer(
+         patch_hierarchy->getMaxNumberOfLevels());
       for (int ln = 0; ln < patch_hierarchy->getMaxNumberOfLevels(); ++ln) {
          tag_buffer[ln] = 0;
       }
@@ -454,9 +478,11 @@ int main(
        * simulation part of the main program.
        */
 
-      boost::shared_ptr<tbox::Timer> main_timer(
+      boost::shared_ptr<tbox::Timer>
+      main_timer(
          tbox::TimerManager::getManager()->getTimer("apps::main::main"));
-      boost::shared_ptr<tbox::Timer> solve_timer(
+      boost::shared_ptr<tbox::Timer>
+      solve_timer(
          tbox::TimerManager::getManager()->getTimer("apps::main::solve"));
 
       main_timer->start();

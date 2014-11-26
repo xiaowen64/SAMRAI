@@ -35,7 +35,10 @@ extern "C" {
 #endif
 
 // in cartrefine1d.f:
-void SAMRAI_F77_FUNC(cartlinrefcellcplx1d, CARTLINREFCELLCPLX1D) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartlinrefcellcplx1d,
+   CARTLINREFCELLCPLX1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -43,7 +46,10 @@ void SAMRAI_F77_FUNC(cartlinrefcellcplx1d, CARTLINREFCELLCPLX1D) (const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 // in cartrefine2d.f:
-void SAMRAI_F77_FUNC(cartlinrefcellcplx2d, CARTLINREFCELLCPLX2D) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartlinrefcellcplx2d,
+   CARTLINREFCELLCPLX2D) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -51,7 +57,10 @@ void SAMRAI_F77_FUNC(cartlinrefcellcplx2d, CARTLINREFCELLCPLX2D) (const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 // in cartrefine3d.f:
-void SAMRAI_F77_FUNC(cartlinrefcellcplx3d, CARTLINREFCELLCPLX3D) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartlinrefcellcplx3d,
+   CARTLINREFCELLCPLX3D) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -125,13 +134,17 @@ CartesianCellComplexLinearRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(fine.getDim());
+   const tbox::Dimension&
+   dim(
+      fine.getDim());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, fine_box, ratio);
 
-   boost::shared_ptr<pdat::CellData<dcomplex> > cdata(
+   boost::shared_ptr<pdat::CellData<dcomplex> >
+   cdata(
       BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<pdat::CellData<dcomplex> > fdata(
+   boost::shared_ptr<pdat::CellData<dcomplex> >
+   fdata(
       BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
@@ -139,17 +152,21 @@ CartesianCellComplexLinearRefine::refine(
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 
-   const hier::Box cgbox(cdata->getGhostBox());
+   const hier::Box
+   cgbox(
+      cdata->getGhostBox());
 
    const hier::Index cilo = cgbox.lower();
    const hier::Index cihi = cgbox.upper();
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   const boost::shared_ptr<CartesianPatchGeometry> cgeom(
+   const boost::shared_ptr<CartesianPatchGeometry>
+   cgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
-   const boost::shared_ptr<CartesianPatchGeometry> fgeom(
+   const boost::shared_ptr<CartesianPatchGeometry>
+   fgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
 

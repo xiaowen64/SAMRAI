@@ -67,7 +67,7 @@ UncoveredBoxIterator::~UncoveredBoxIterator()
 
 UncoveredBoxIterator&
 UncoveredBoxIterator::operator = (
-   const UncoveredBoxIterator& rhs)
+      const UncoveredBoxIterator &rhs)
 {
    if (this != &rhs) {
       d_hierarchy = rhs.d_hierarchy;
@@ -92,14 +92,14 @@ UncoveredBoxIterator::operator * () const
 }
 
 const std::pair<boost::shared_ptr<Patch>, Box> *
-UncoveredBoxIterator::operator -> () const
+UncoveredBoxIterator::operator->() const
 {
    return d_item;
 }
 
 bool
 UncoveredBoxIterator::operator == (
-   const UncoveredBoxIterator& rhs) const
+   const UncoveredBoxIterator &rhs) const
 {
    // Frist check and see if the iterators are working on the same hierarchies
    // and levels.  If not then they are not equal.
@@ -129,24 +129,26 @@ UncoveredBoxIterator::operator == (
 
 bool
 UncoveredBoxIterator::operator != (
-   const UncoveredBoxIterator& rhs) const
+   const UncoveredBoxIterator &rhs) const
 {
    return !(*this == rhs);
 }
 
 UncoveredBoxIterator&
-UncoveredBoxIterator::operator ++ ()
+UncoveredBoxIterator::operator++ ()
 {
    incrementIterator();
    return *this;
 }
 
 UncoveredBoxIterator
-UncoveredBoxIterator::operator ++ (
+UncoveredBoxIterator::operator++ (
    int)
 {
    // Save the state of the iterator.
-   UncoveredBoxIterator tmp(*this);
+   UncoveredBoxIterator
+   tmp(
+      * this);
 
    incrementIterator();
 
@@ -205,7 +207,10 @@ UncoveredBoxIterator::findNextFinestUncoveredBoxes()
 
       // Get the next level and the connector between the current level and the
       // next.  Use a width of 0 to get actual overlaps.
-      IntVector width(d_hierarchy->getDim(), 0);
+      IntVector
+      width(
+         d_hierarchy->getDim(),
+         0);
       boost::shared_ptr<PatchLevel> next_level =
          d_hierarchy->getPatchLevel(d_level_num + 1);
       const Connector& this_to_next =
@@ -222,7 +227,8 @@ UncoveredBoxIterator::findNextFinestUncoveredBoxes()
            ln_itr != d_uncovered_boxes.end(); ++ln_itr) {
          const BoxId& ln_box_id = ln_itr->getBoxId();
          if (this_to_next.hasNeighborSet(ln_box_id)) {
-            Connector::ConstNeighborhoodIterator ln_nbrhd(
+            Connector::ConstNeighborhoodIterator
+            ln_nbrhd(
                this_to_next.findLocal(ln_box_id));
             for (Connector::ConstNeighborIterator overlap_itr(this_to_next.begin(ln_nbrhd));
                  overlap_itr != this_to_next.end(ln_nbrhd); ++overlap_itr) {
@@ -273,7 +279,9 @@ UncoveredBoxIterator::findOverlappedPatch()
    if (num_overlapping_level_boxes > 1) {
       // We want the patches associated with any overlapping level box that
       // contains the current box.
-      BoxContainer::iterator first(d_overlapping_level_boxes.begin());
+      BoxContainer::iterator
+      first(
+         d_overlapping_level_boxes.begin());
       for (BoxContainer::iterator itr(d_overlapping_level_boxes.begin());
            itr != d_overlapping_level_boxes.end(); ++itr) {
          if (itr->contains(cur_box)) {
@@ -304,8 +312,12 @@ UncoveredBoxIterator::findOverlappedPatch()
             skip_box = true;
             break;
          } else if (future->intersects(cur_box)) {
-            BoxContainer cur(cur_box);
-            BoxContainer fut(*future);
+            BoxContainer
+            cur(
+               cur_box);
+            BoxContainer
+            fut(
+               * future);
             cur.removeIntersections(fut);
             if (cur.empty()) {
                skip_box = true;
@@ -330,7 +342,9 @@ UncoveredBoxIterator::findOverlappedPatch()
          // Move d_cur_overlapping_level_box to just before the end so that
          // when incrementIterator bumps it up it is at the end and we skip
          // cur_box.
-         BoxContainer::const_iterator next(d_cur_overlapping_level_box);
+         BoxContainer::const_iterator
+         next(
+            d_cur_overlapping_level_box);
          ++next;
          while (true) {
             if (next == d_end_overlapping_level_boxes) {
@@ -358,7 +372,8 @@ UncoveredBoxIterator::findOverlappedPatch()
       d_item->second = cur_box;
    } else {
       d_item =
-         new std::pair<boost::shared_ptr<Patch>, Box>(
+         new std::pair<boost::shared_ptr<Patch>, Box
+                       >(
             this_level->getPatch(d_cur_overlapping_level_box->getBoxId()),
             cur_box);
    }

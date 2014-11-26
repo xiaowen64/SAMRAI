@@ -162,7 +162,8 @@ FaceDataFactory<TYPE>::validCopyTo(
     * Valid options are FaceData and OuterfaceData.
     */
    if (!valid_copy) {
-      boost::shared_ptr<FaceDataFactory<TYPE> > fdf(
+      boost::shared_ptr<FaceDataFactory<TYPE> >
+      fdf(
          boost::dynamic_pointer_cast<FaceDataFactory<TYPE>,
                                      hier::PatchDataFactory>(dst_pdf));
       if (fdf) {
@@ -171,7 +172,8 @@ FaceDataFactory<TYPE>::validCopyTo(
    }
 
    if (!valid_copy) {
-      boost::shared_ptr<OuterfaceDataFactory<TYPE> > ofdf(
+      boost::shared_ptr<OuterfaceDataFactory<TYPE> >
+      ofdf(
          boost::dynamic_pointer_cast<OuterfaceDataFactory<TYPE>,
                                      hier::PatchDataFactory>(
             dst_pdf));

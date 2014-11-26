@@ -83,7 +83,7 @@ SparseData<BOX_GEOMETRY>::Attributes::~Attributes()
 template<typename BOX_GEOMETRY>
 typename SparseData<BOX_GEOMETRY>::Attributes&
 SparseData<BOX_GEOMETRY>::Attributes::operator = (
-   const typename SparseData<BOX_GEOMETRY>::Attributes& rhs)
+      const typename SparseData<BOX_GEOMETRY>::Attributes & rhs)
 {
    if (this != &rhs) {
       d_dbl_attrs = rhs.d_dbl_attrs;
@@ -133,7 +133,7 @@ SparseData<BOX_GEOMETRY>::Attributes::getIntAttributes() const {
  *********************************************************************/
 template<typename BOX_GEOMETRY>
 double&
-SparseData<BOX_GEOMETRY>::Attributes::operator [] (const DoubleAttributeId& id)
+SparseData<BOX_GEOMETRY>::Attributes::operator[] (const DoubleAttributeId &id)
 {
    return d_dbl_attrs[id()];
 }
@@ -143,7 +143,7 @@ SparseData<BOX_GEOMETRY>::Attributes::operator [] (const DoubleAttributeId& id)
  *********************************************************************/
 template<typename BOX_GEOMETRY>
 const double&
-SparseData<BOX_GEOMETRY>::Attributes::operator [] (const DoubleAttributeId& id) const
+SparseData<BOX_GEOMETRY>::Attributes::operator[] (const DoubleAttributeId &id) const
 {
    return d_dbl_attrs[id()];
 }
@@ -153,7 +153,7 @@ SparseData<BOX_GEOMETRY>::Attributes::operator [] (const DoubleAttributeId& id) 
  *********************************************************************/
 template<typename BOX_GEOMETRY>
 int&
-SparseData<BOX_GEOMETRY>::Attributes::operator [] (const IntegerAttributeId& id)
+SparseData<BOX_GEOMETRY>::Attributes::operator[] (const IntegerAttributeId &id)
 {
    return d_int_attrs[id()];
 }
@@ -163,7 +163,7 @@ SparseData<BOX_GEOMETRY>::Attributes::operator [] (const IntegerAttributeId& id)
  *********************************************************************/
 template<typename BOX_GEOMETRY>
 const int&
-SparseData<BOX_GEOMETRY>::Attributes::operator [] (const IntegerAttributeId& id) const
+SparseData<BOX_GEOMETRY>::Attributes::operator[] (const IntegerAttributeId &id) const
 {
    return d_int_attrs[id()];
 }
@@ -174,7 +174,7 @@ SparseData<BOX_GEOMETRY>::Attributes::operator [] (const IntegerAttributeId& id)
 template<typename BOX_GEOMETRY>
 bool
 SparseData<BOX_GEOMETRY>::Attributes::operator == (
-   const Attributes& rhs) const
+   const Attributes &rhs) const
 {
    return d_dbl_attrs == rhs.d_dbl_attrs &&
           d_int_attrs == rhs.d_int_attrs;
@@ -188,8 +188,12 @@ void
 SparseData<BOX_GEOMETRY>::Attributes::printAttributes(
    std::ostream & out) const
 {
-   dbl_iterator diter(d_dbl_attrs.begin()), diterend(d_dbl_attrs.end());
-   int_iterator iiter(d_int_attrs.begin()), iiterend(d_int_attrs.end());
+   dbl_iterator
+   diter(
+      d_dbl_attrs.begin()), diterend(d_dbl_attrs.end());
+   int_iterator
+   iiter(
+      d_int_attrs.begin()), iiterend(d_int_attrs.end());
 
    out << "Double Attributes ( ";
    for ( ; diter != diterend; ++diter) {
@@ -210,8 +214,8 @@ SparseData<BOX_GEOMETRY>::Attributes::printAttributes(
  *********************************************************************/
 template<typename BOX_GEOMETRY>
 std::size_t
-SparseData<BOX_GEOMETRY>::index_hash::operator () (
-   const hier::Index& index) const
+SparseData<BOX_GEOMETRY>::index_hash::operator() (
+   const hier::Index & index) const
 {
    std::size_t seed = 0;
    int dim = index.getDim().getValue();
@@ -239,7 +243,9 @@ SparseData<BOX_GEOMETRY>::SparseData(
    TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
 
    std::vector<std::string>::const_iterator name_iter;
-   int val(0);
+   int
+   val(
+      0);
    std::string tmp;
    for (name_iter = dbl_names.begin(); name_iter != dbl_names.end();
         ++name_iter, ++val) {
@@ -322,13 +328,15 @@ SparseData<BOX_GEOMETRY>::copy(
    const SparseData<BOX_GEOMETRY>* tmp_src =
       CPP_CAST<const SparseData<BOX_GEOMETRY> *>(&src);
 
-   const typename BOX_GEOMETRY::Overlap * tmp_overlap =
+   const typename BOX_GEOMETRY::Overlap* tmp_overlap =
       CPP_CAST<const typename BOX_GEOMETRY::Overlap *>(&overlap);
 
    TBOX_ASSERT(tmp_src != 0);
    TBOX_ASSERT(tmp_overlap != 0);
 
-   const hier::IntVector& src_offset(tmp_overlap->getSourceOffset());
+   const hier::IntVector&
+   src_offset(
+      tmp_overlap->getSourceOffset());
    const hier::BoxContainer& box_list = tmp_overlap->getDestinationBoxContainer();
    const hier::Box& src_ghost_box = tmp_src->getGhostBox();
 
@@ -336,7 +344,9 @@ SparseData<BOX_GEOMETRY>::copy(
         overlap_box != box_list.end(); ++overlap_box) {
 
       const hier::Box& dst_box = *overlap_box;
-      const hier::Box src_box(hier::Box::shift(*overlap_box, -src_offset));
+      const hier::Box
+      src_box(
+         hier::Box::shift(*overlap_box, -src_offset));
       _removeInsideBox(dst_box);
 
       typename IndexMap::const_iterator src_index_map_iter =
@@ -387,7 +397,7 @@ size_t
 SparseData<BOX_GEOMETRY>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
-   const typename BOX_GEOMETRY::Overlap * tmp_overlap =
+   const typename BOX_GEOMETRY::Overlap* tmp_overlap =
       CPP_CAST<const typename BOX_GEOMETRY::Overlap *>(&overlap);
 
    TBOX_ASSERT(tmp_overlap != 0);
@@ -483,7 +493,7 @@ SparseData<BOX_GEOMETRY>::packStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap) const
 {
-   const typename BOX_GEOMETRY::Overlap * tmp_overlap =
+   const typename BOX_GEOMETRY::Overlap* tmp_overlap =
       CPP_CAST<const typename BOX_GEOMETRY::Overlap *>(&overlap);
    TBOX_ASSERT(tmp_overlap != 0);
 
@@ -529,7 +539,9 @@ SparseData<BOX_GEOMETRY>::packStream(
          // key size plus the key itself and it's mapped value
          key_size = static_cast<int>(dbl_name_iter->first.size());
          stream << key_size;
-         std::string key(dbl_name_iter->first);
+         std::string
+         key(
+            dbl_name_iter->first);
          for (int i = 0; i < key_size; ++i) {
             stream.pack<char>(&key[i], 1);
          }
@@ -548,7 +560,9 @@ SparseData<BOX_GEOMETRY>::packStream(
          // key size plus the key itself and it's mapped value
          key_size = static_cast<int>(int_name_iter->first.size());
          stream << key_size;
-         std::string key(int_name_iter->first);
+         std::string
+         key(
+            int_name_iter->first);
          for (int i = 0; i < key_size; ++i) {
             stream.pack<char>(&key[i], 1);
          }
@@ -590,10 +604,10 @@ SparseData<BOX_GEOMETRY>::packStream(
 
             //typename std::list<Attributes>::const_iterator list_iter =
             typename SparseData<BOX_GEOMETRY>::AttributeList::const_iterator
-            list_iter = index_map_iter->second.begin();
+               list_iter = index_map_iter->second.begin();
             //typename std::list<Attributes>::const_iterator list_end =
             typename SparseData<BOX_GEOMETRY>::AttributeList::const_iterator
-            list_end = index_map_iter->second.end();
+               list_end = index_map_iter->second.end();
 
             for ( ; list_iter != list_end; ++list_iter) {
                Attributes tmp = *list_iter;
@@ -618,7 +632,7 @@ SparseData<BOX_GEOMETRY>::unpackStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
-   const typename BOX_GEOMETRY::Overlap * tmp_overlap =
+   const typename BOX_GEOMETRY::Overlap* tmp_overlap =
       CPP_CAST<const typename BOX_GEOMETRY::Overlap *>(&overlap);
    TBOX_ASSERT(tmp_overlap != 0);
 
@@ -689,7 +703,9 @@ SparseData<BOX_GEOMETRY>::unpackStream(
       int index_buf[d_dim.getValue()];
       stream.unpack<int>(index_buf, d_dim.getValue());
 
-      hier::Index index(d_dim);
+      hier::Index
+      index(
+         d_dim);
       for (int j = 0; j < d_dim.getValue(); ++j) {
          index(j) = index_buf[j];
       }
@@ -698,8 +714,8 @@ SparseData<BOX_GEOMETRY>::unpackStream(
 
       // unpack the number of attributes
       stream >> num_attrs;
-      double dvals[static_cast<unsigned int>(d_dbl_attr_size)];
-      int ivals[static_cast<unsigned int>(d_int_attr_size)];
+      double dvals[static_cast < unsigned int > (d_dbl_attr_size)];
+      int ivals[static_cast < unsigned int > (d_int_attr_size)];
       for (int count = 0; count < num_attrs; ++count) {
          stream.unpack<double>(dvals, d_dbl_attr_size);
          stream.unpack<int>(ivals, d_int_attr_size);
@@ -791,13 +807,16 @@ SparseData<BOX_GEOMETRY>::getFromRestart(
 
       // get the next item
       if (restart_db->isDatabase(index_keyword)) {
-         boost::shared_ptr<tbox::Database> item_db(
+         boost::shared_ptr<tbox::Database>
+         item_db(
             restart_db->getDatabase(index_keyword));
 
          // unpack the index
          std::vector<int> index_array =
             item_db->getIntegerVector(index_keyword);
-         hier::Index index(d_dim);
+         hier::Index
+         index(
+            d_dim);
          for (int j = 0; j < d_dim.getValue(); ++j) {
             index(j) = index_array[j];
          }
@@ -818,28 +837,34 @@ SparseData<BOX_GEOMETRY>::getFromRestart(
             + tbox::Utilities::intToString(curr_item, 6);
 
          int dbl_ary_size = d_dbl_attr_size * list_size;
-         double dvalues[static_cast<unsigned int>(dbl_ary_size)];
+         double dvalues[static_cast < unsigned int > (dbl_ary_size)];
 
          int int_ary_size = d_int_attr_size * list_size;
-         int ivalues[static_cast<unsigned int>(int_ary_size)];
+         int ivalues[static_cast < unsigned int > (int_ary_size)];
 
          item_db->getDoubleArray(dvalues_keyword, dvalues,
             (dbl_ary_size));
          item_db->getIntegerArray(ivalues_keyword, ivalues,
             (int_ary_size));
 
-         int doffset(0), ioffset(0);
+         int
+         doffset(
+            0), ioffset(0);
          for (int curr_list = 0; curr_list < list_size; ++curr_list) {
 
             // unpack the double attributes
-            std::vector<double> dbl_ary(d_dbl_attr_size);
+            std::vector<double>
+            dbl_ary(
+               d_dbl_attr_size);
 
             for (int i = doffset; i < doffset + d_dbl_attr_size; ++i) {
                dbl_ary[i - doffset] = dvalues[i];
             }
 
             // unpack the integer attributes
-            std::vector<int> int_ary(d_int_attr_size);
+            std::vector<int>
+            int_ary(
+               d_int_attr_size);
 
             for (int k = ioffset; k < ioffset + d_int_attr_size; ++k) {
                int_ary[k - ioffset] = ivalues[k];
@@ -886,7 +911,7 @@ SparseData<BOX_GEOMETRY>::putToRestart(
       ids = new int[d_dbl_attr_size];
    }
    typename DoubleAttrNameMap::const_iterator
-   dbl_name_iter = d_dbl_names.begin();
+      dbl_name_iter = d_dbl_names.begin();
 
    for (int i = 0; i < d_dbl_attr_size; ++i, ++dbl_name_iter) {
       keys[i] = dbl_name_iter->first;
@@ -928,7 +953,9 @@ SparseData<BOX_GEOMETRY>::putToRestart(
    }
 
    // record the actual data for each element
-   int curr_item(0);
+   int
+   curr_item(
+      0);
    typename IndexMap::iterator index_iter =
       const_cast<IndexMap&>(d_index_to_attribute_map).begin();
    typename IndexMap::iterator index_iter_end =
@@ -941,33 +968,42 @@ SparseData<BOX_GEOMETRY>::putToRestart(
 
       // First deal with the Index
       const hier::Index& index = index_iter->first;
-      std::vector<int> index_array(d_dim.getValue());
+      std::vector<int>
+      index_array(
+         d_dim.getValue());
       for (int i = 0; i < d_dim.getValue(); ++i) {
          index_array[i] = index(i);
       }
 
-      boost::shared_ptr<tbox::Database> item_db(
+      boost::shared_ptr<tbox::Database>
+      item_db(
          restart_db->putDatabase(index_keyword));
 
       item_db->putIntegerVector(index_keyword, index_array);
 
       // Next get the node and record the double attribute data
-      typename SparseData<BOX_GEOMETRY>::AttributeIterator attributes(
-         index_iter->second, index_iter->second.begin());
+      typename SparseData<BOX_GEOMETRY>::AttributeIterator
+      attributes(
+         index_iter->second,
+         index_iter->second.begin());
 
-      typename SparseData<BOX_GEOMETRY>::AttributeIterator attr_end(
-         index_iter->second, index_iter->second.end());
+      typename SparseData<BOX_GEOMETRY>::AttributeIterator
+      attr_end(
+         index_iter->second,
+         index_iter->second.end());
 
       int list_size = static_cast<int>(index_iter->second.size());
       std::string list_size_keyword = "attr_list_size_"
          + tbox::Utilities::intToString(curr_item, 6);
       item_db->putInteger(list_size_keyword, list_size);
 
-      double dvalues[static_cast<unsigned int>(d_dbl_attr_size * list_size)];
-      int ivalues[static_cast<unsigned int>(d_int_attr_size * list_size)];
+      double dvalues[static_cast < unsigned int > (d_dbl_attr_size * list_size)];
+      int ivalues[static_cast < unsigned int > (d_int_attr_size * list_size)];
 
       // pack all the data together.
-      int doffset(0), ioffset(0);
+      int
+      doffset(
+         0), ioffset(0);
       for ( ; attributes != attr_end; ++attributes) {
 
          // Record the double attribute data
@@ -1005,7 +1041,9 @@ const DoubleAttributeId
 SparseData<BOX_GEOMETRY>::getDblAttributeId(
    const std::string& attribute) const
 {
-   DoubleAttributeId id(-1);
+   DoubleAttributeId
+   id(
+      -1);
 // stupid need
 #ifdef GNUC_VERSION_412
    DoubleAttrNameMap::const_iterator iter = d_dbl_names.find(attribute);
@@ -1016,7 +1054,8 @@ SparseData<BOX_GEOMETRY>::getDblAttributeId(
    try
    {
       id = d_dbl_names.at(attribute);
-   } catch (std::out_of_range e) {
+   } catch(std::out_of_range e)
+   {
       //TBOX_ASSERT(id != DoubleAttributeId::INVALID_DOUBLE_ID);
    }
 #endif
@@ -1031,7 +1070,9 @@ const IntegerAttributeId
 SparseData<BOX_GEOMETRY>::getIntAttributeId(
    const std::string& attribute) const
 {
-   IntegerAttributeId id(-1);
+   IntegerAttributeId
+   id(
+      -1);
 #ifdef GNUC_VERSION_412
    IntAttrNameMap::const_iterator iter = d_int_names.find(attribute);
    if (iter != d_int_names.end()) {
@@ -1041,7 +1082,8 @@ SparseData<BOX_GEOMETRY>::getIntAttributeId(
    try
    {
       id = d_int_names.at(attribute);
-   } catch (std::out_of_range e) {
+   } catch(std::out_of_range e)
+   {
       //TBOX_ASSERT(id != IntegerAttributeId::INVALID_INT_ID);
    }
 #endif
@@ -1180,11 +1222,11 @@ SparseData<BOX_GEOMETRY>::printNames(std::ostream& out) const
 {
    typename boost::unordered_map<
       std::string, DoubleAttributeId>::const_iterator
-   dbl_iter = d_dbl_names.begin();
+      dbl_iter = d_dbl_names.begin();
 
    typename boost::unordered_map<
       std::string, IntegerAttributeId>::const_iterator
-   int_iter = d_int_names.begin();
+      int_iter = d_int_names.begin();
 
    for ( ; dbl_iter != d_dbl_names.end(); ++dbl_iter) {
       out << dbl_iter->first << ": "
@@ -1225,7 +1267,7 @@ SparseData<BOX_GEOMETRY>::printAttributes(
 template<typename BOX_GEOMETRY>
 bool
 SparseData<BOX_GEOMETRY>::operator == (
-   const SparseData<BOX_GEOMETRY>& other) const
+   const SparseData<BOX_GEOMETRY>&other) const
 {
    return d_index_to_attribute_map == other.d_index_to_attribute_map;
 }
@@ -1236,7 +1278,7 @@ SparseData<BOX_GEOMETRY>::operator == (
 template<typename BOX_GEOMETRY>
 bool
 SparseData<BOX_GEOMETRY>::operator != (
-   const SparseData<BOX_GEOMETRY>& other) const
+   const SparseData<BOX_GEOMETRY>&other) const
 {
    return d_index_to_attribute_map != other.d_index_to_attribute_map;
 }
@@ -1246,11 +1288,12 @@ typename SparseData<BOX_GEOMETRY>::AttributeList
 & SparseData<BOX_GEOMETRY>::_get(
    const hier::Index & index) const
 {
-   typename SparseData<BOX_GEOMETRY>::AttributeList * list = 0;
+   typename SparseData<BOX_GEOMETRY>::AttributeList* list = 0;
    try
    {
       list = &d_index_to_attribute_map.at(index);
-   } catch (std::out_of_range e) {
+   } catch(std::out_of_range e)
+   {
       TBOX_ASSERT_MSG(list != 0,
          "The index was not found in this sparse data object");
    }
@@ -1367,7 +1410,7 @@ SparseDataIterator<BOX_GEOMETRY>::~SparseDataIterator()
 template<typename BOX_GEOMETRY>
 SparseDataIterator<BOX_GEOMETRY>&
 SparseDataIterator<BOX_GEOMETRY>::operator = (
-   const SparseDataIterator<BOX_GEOMETRY>& rhs)
+      const SparseDataIterator<BOX_GEOMETRY>&rhs)
 {
    if (this != &rhs) {
       d_data = 0;
@@ -1383,7 +1426,7 @@ SparseDataIterator<BOX_GEOMETRY>::operator = (
 template<typename BOX_GEOMETRY>
 bool
 SparseDataIterator<BOX_GEOMETRY>::operator == (
-   const SparseDataIterator<BOX_GEOMETRY>& rhs) const
+   const SparseDataIterator<BOX_GEOMETRY>&rhs) const
 {
    return d_iterator == rhs.d_iterator;
 }
@@ -1394,7 +1437,7 @@ SparseDataIterator<BOX_GEOMETRY>::operator == (
 template<typename BOX_GEOMETRY>
 bool
 SparseDataIterator<BOX_GEOMETRY>::operator != (
-   const SparseDataIterator<BOX_GEOMETRY>& rhs) const
+   const SparseDataIterator<BOX_GEOMETRY>&rhs) const
 {
    return !this->operator == (rhs);
 }
@@ -1404,7 +1447,7 @@ SparseDataIterator<BOX_GEOMETRY>::operator != (
  *********************************************************************/
 template<typename BOX_GEOMETRY>
 SparseDataIterator<BOX_GEOMETRY>&
-SparseDataIterator<BOX_GEOMETRY>::operator ++ ()
+SparseDataIterator<BOX_GEOMETRY>::operator++ ()
 {
    ++d_iterator;
    return *this;
@@ -1415,7 +1458,7 @@ SparseDataIterator<BOX_GEOMETRY>::operator ++ ()
  *********************************************************************/
 template<typename BOX_GEOMETRY>
 SparseDataIterator<BOX_GEOMETRY>
-SparseDataIterator<BOX_GEOMETRY>::operator ++ (int)
+SparseDataIterator<BOX_GEOMETRY>::operator++ (int)
 {
    SparseDataIterator<BOX_GEOMETRY> tmp = *this;
    ++d_iterator;
@@ -1441,7 +1484,9 @@ SparseDataIterator<BOX_GEOMETRY>::insert(
    const double* dvalues, const int* ivalues)
 {
    typename SparseData<BOX_GEOMETRY>::Attributes
-   tmp(d_data->d_dbl_attr_size, d_data->d_int_attr_size);
+   tmp(
+      d_data->d_dbl_attr_size,
+      d_data->d_int_attr_size);
    tmp.add(dvalues, ivalues);
    d_iterator->second.push_back(tmp);
 }
@@ -1456,7 +1501,9 @@ SparseDataIterator<BOX_GEOMETRY>::insert(
    const std::vector<int>& ivalues)
 {
    typename SparseData<BOX_GEOMETRY>::Attributes
-   tmp(d_data->d_dbl_attr_size, d_data->d_int_attr_size);
+   tmp(
+      d_data->d_dbl_attr_size,
+      d_data->d_int_attr_size);
    tmp.add(dvalues, ivalues);
    d_iterator->second.push_back(tmp);
 }
@@ -1565,7 +1612,7 @@ SparseDataAttributeIterator<BOX_GEOMETRY>::SparseDataAttributeIterator(
 template<typename BOX_GEOMETRY>
 bool
 SparseDataAttributeIterator<BOX_GEOMETRY>::operator == (
-   const SparseDataAttributeIterator<BOX_GEOMETRY>& rhs) const
+   const SparseDataAttributeIterator<BOX_GEOMETRY>&rhs) const
 {
    return d_list_iterator == rhs.d_list_iterator;
 }
@@ -1576,7 +1623,7 @@ SparseDataAttributeIterator<BOX_GEOMETRY>::operator == (
 template<typename BOX_GEOMETRY>
 bool
 SparseDataAttributeIterator<BOX_GEOMETRY>::operator != (
-   const SparseDataAttributeIterator<BOX_GEOMETRY>& rhs) const
+   const SparseDataAttributeIterator<BOX_GEOMETRY>&rhs) const
 {
    return !this->operator == (rhs);
 }
@@ -1586,7 +1633,7 @@ SparseDataAttributeIterator<BOX_GEOMETRY>::operator != (
  *********************************************************************/
 template<typename BOX_GEOMETRY>
 SparseDataAttributeIterator<BOX_GEOMETRY>&
-SparseDataAttributeIterator<BOX_GEOMETRY>::operator ++ ()
+SparseDataAttributeIterator<BOX_GEOMETRY>::operator++ ()
 {
    ++d_list_iterator;
    return *this;
@@ -1597,7 +1644,7 @@ SparseDataAttributeIterator<BOX_GEOMETRY>::operator ++ ()
  *********************************************************************/
 template<typename BOX_GEOMETRY>
 SparseDataAttributeIterator<BOX_GEOMETRY>
-SparseDataAttributeIterator<BOX_GEOMETRY>::operator ++ (int)
+SparseDataAttributeIterator<BOX_GEOMETRY>::operator++ (int)
 {
    SparseDataAttributeIterator<BOX_GEOMETRY> tmp = *this;
    ++d_list_iterator;
@@ -1609,8 +1656,8 @@ SparseDataAttributeIterator<BOX_GEOMETRY>::operator ++ (int)
  *********************************************************************/
 template<typename BOX_GEOMETRY>
 double&
-SparseDataAttributeIterator<BOX_GEOMETRY>::operator [] (
-   const DoubleAttributeId& id)
+SparseDataAttributeIterator<BOX_GEOMETRY>::operator[] (
+   const DoubleAttributeId &id)
 {
    return (*d_list_iterator)[id];
 }
@@ -1620,8 +1667,8 @@ SparseDataAttributeIterator<BOX_GEOMETRY>::operator [] (
  *********************************************************************/
 template<typename BOX_GEOMETRY>
 const double&
-SparseDataAttributeIterator<BOX_GEOMETRY>::operator [] (
-   const DoubleAttributeId& id) const
+SparseDataAttributeIterator<BOX_GEOMETRY>::operator[] (
+   const DoubleAttributeId &id) const
 {
    return (*d_list_iterator)[id];
 }
@@ -1631,8 +1678,8 @@ SparseDataAttributeIterator<BOX_GEOMETRY>::operator [] (
  *********************************************************************/
 template<typename BOX_GEOMETRY>
 int&
-SparseDataAttributeIterator<BOX_GEOMETRY>::operator [] (
-   const IntegerAttributeId& id)
+SparseDataAttributeIterator<BOX_GEOMETRY>::operator[] (
+   const IntegerAttributeId &id)
 {
    return (*d_list_iterator)[id];
 }
@@ -1642,8 +1689,8 @@ SparseDataAttributeIterator<BOX_GEOMETRY>::operator [] (
  *********************************************************************/
 template<typename BOX_GEOMETRY>
 const int&
-SparseDataAttributeIterator<BOX_GEOMETRY>::operator [] (
-   const IntegerAttributeId& id) const
+SparseDataAttributeIterator<BOX_GEOMETRY>::operator[] (
+   const IntegerAttributeId &id) const
 {
    return (*d_list_iterator)[id];
 }
@@ -1663,16 +1710,16 @@ SparseDataAttributeIterator<BOX_GEOMETRY>::printAttribute(
 * output operators for SparseDataIterator and SparseDataAttributeIterator
 **********************************************************************/
 template<typename BOX_GEOMETRY>
-std::ostream& operator << (std::ostream& out,
-                           SparseDataIterator<BOX_GEOMETRY>& sparse_data_iterator)
+std::ostream& operator << (std::ostream & out,
+                           SparseDataIterator<BOX_GEOMETRY>&sparse_data_iterator)
 {
    sparse_data_iterator.printIterator(out);
    return out;
 }
 
 template<typename BOX_GEOMETRY>
-std::ostream& operator << (std::ostream& out,
-                           SparseDataAttributeIterator<BOX_GEOMETRY>& attr_iterator)
+std::ostream& operator << (std::ostream & out,
+                           SparseDataAttributeIterator<BOX_GEOMETRY>&attr_iterator)
 {
    attr_iterator.printAttribute(out);
    return out;

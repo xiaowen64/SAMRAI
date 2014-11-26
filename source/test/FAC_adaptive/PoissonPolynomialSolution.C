@@ -56,7 +56,9 @@ void PoissonPolynomialSolution::setFromDatabase(
    tbox::Database& database)
 {
    std::string istr = database.getStringWithDefault("QuarticFcnControl", "{}");
-   std::istringstream ist(istr);
+   std::istringstream
+   ist(
+      istr);
    ist >> d_exact;
    /*
     * Set the source to u_xx + u_yy + u_zz
@@ -100,8 +102,8 @@ void PoissonPolynomialSolution::setGridData(
 }       // End patch loop.
 
 std::ostream& operator << (
-   std::ostream& os,
-   const PoissonPolynomialSolution& r) {
+   std::ostream & os,
+   const PoissonPolynomialSolution &r) {
    os << r.d_exact << "\n";
    os << r.d_source << "\n";
    return os;
@@ -119,14 +121,17 @@ void PoissonPolynomialSolution::setBcCoefs(
    NULL_USE(variable);
    NULL_USE(fill_time);
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+   boost::shared_ptr<geom::CartesianPatchGeometry>
+   patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    /*
     * Set to an inhomogeneous Dirichlet boundary condition.
     */
-   hier::Box patch_box(patch.getBox());
+   hier::Box
+   patch_box(
+      patch.getBox());
 
    const double* xlo = patch_geom->getXLower();
    const double* xup = patch_geom->getXUpper();

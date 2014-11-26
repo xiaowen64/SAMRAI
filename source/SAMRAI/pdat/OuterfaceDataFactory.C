@@ -101,7 +101,9 @@ OuterfaceDataFactory<TYPE>::getBoxGeometry(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   const hier::IntVector zero_vector(hier::IntVector::getZero(getDim()));
+   const hier::IntVector
+   zero_vector(
+      hier::IntVector::getZero(getDim()));
 
    return boost::make_shared<OuterfaceGeometry>(box, zero_vector);
 }
@@ -186,7 +188,8 @@ OuterfaceDataFactory<TYPE>::validCopyTo(
     * Valid options are FaceData and OuterfaceData.
     */
    if (!valid_copy) {
-      boost::shared_ptr<FaceDataFactory<TYPE> > fdf(
+      boost::shared_ptr<FaceDataFactory<TYPE> >
+      fdf(
          boost::dynamic_pointer_cast<FaceDataFactory<TYPE>,
                                      hier::PatchDataFactory>(dst_pdf));
       if (fdf) {
@@ -195,7 +198,8 @@ OuterfaceDataFactory<TYPE>::validCopyTo(
    }
 
    if (!valid_copy) {
-      boost::shared_ptr<OuterfaceDataFactory<TYPE> > ofdf(
+      boost::shared_ptr<OuterfaceDataFactory<TYPE> >
+      ofdf(
          boost::dynamic_pointer_cast<OuterfaceDataFactory<TYPE>,
                                      hier::PatchDataFactory>(
             dst_pdf));

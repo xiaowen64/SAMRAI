@@ -152,7 +152,8 @@ void MblkGeometry::tagOctantCells(
       d_sshell_type == "OCTANT");
    TBOX_ASSERT(temp_tags);
 
-   boost::shared_ptr<pdat::NodeData<double> > xyz(
+   boost::shared_ptr<pdat::NodeData<double> >
+   xyz(
       BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(xyz_id)));
    TBOX_ASSERT(xyz);
@@ -170,10 +171,23 @@ void MblkGeometry::tagOctantCells(
       for (int k = pbox.lower(2); k <= pbox.upper(2) + 1; ++k) {
          for (int j = pbox.lower(1); j <= pbox.upper(1) + 1; ++j) {
             for (int i = pbox.lower(0); i <= pbox.upper(0) + 1; ++i) {
-               hier::Index ic(i, j, k);
-               pdat::NodeIndex node(ic, pdat::NodeIndex::LLL);
-               hier::Index icm1(i - 1, j - 1, k - 1);
-               pdat::CellIndex cell(icm1);
+               hier::Index
+               ic(
+                  i,
+                  j,
+                  k);
+               pdat::NodeIndex
+               node(
+                  ic,
+                  pdat::NodeIndex::LLL);
+               hier::Index
+               icm1(
+                  i - 1,
+                  j - 1,
+                  k - 1);
+               pdat::CellIndex
+               cell(
+                  icm1);
 
                double node_x_loc = (*xyz)(node, 0);
 
@@ -204,7 +218,9 @@ void MblkGeometry::getFromInput(
 
    TBOX_ASSERT(input_db);
 
-   boost::shared_ptr<tbox::Database> db(input_db->getDatabase("MblkGeometry"));
+   boost::shared_ptr<tbox::Database>
+   db(
+      input_db->getDatabase("MblkGeometry"));
 
    d_geom_problem = db->getString("problem_type");
 
@@ -218,7 +234,8 @@ void MblkGeometry::getFromInput(
     */
    if (d_geom_problem == "CARTESIAN") {
 
-      boost::shared_ptr<tbox::Database> cart_db(
+      boost::shared_ptr<tbox::Database>
+      cart_db(
          db->getDatabase("CartesianGeometry"));
 
       d_cart_xlo.resize(d_nblocks);
@@ -263,7 +280,8 @@ void MblkGeometry::getFromInput(
     */
    if (d_geom_problem == "WEDGE") {
 
-      boost::shared_ptr<tbox::Database> wedge_db(
+      boost::shared_ptr<tbox::Database>
+      wedge_db(
          db->getDatabase("WedgeGeometry"));
 
       d_wedge_rmin.resize(d_nblocks);
@@ -320,7 +338,8 @@ void MblkGeometry::getFromInput(
                                   << "only works in 3D." << std::endl);
       }
 
-      boost::shared_ptr<tbox::Database> sshell_db(
+      boost::shared_ptr<tbox::Database>
+      sshell_db(
          db->getDatabase("ShellGeometry"));
 
       d_sshell_rmin = sshell_db->getDouble("rmin");
@@ -549,9 +568,15 @@ void MblkGeometry::setCartesianMetrics(
    const hier::Box& domain,
    const int level_number)
 {
-   hier::Index lower(domain.lower());
-   hier::Index upper(domain.upper());
-   hier::Index diff(upper - lower + hier::Index(lower.getDim(), 1));
+   hier::Index
+   lower(
+      domain.lower());
+   hier::Index
+   upper(
+      domain.upper());
+   hier::Index
+   diff(
+      upper - lower + hier::Index(lower.getDim(), 1));
 
    if (static_cast<int>(d_dx.size()) < (level_number + 1)) {
       d_dx.resize(level_number + 1);
@@ -588,13 +613,16 @@ void MblkGeometry::buildCartesianGridOnPatch(
    const int block_number)
 {
 
-   boost::shared_ptr<pdat::NodeData<double> > xyz(
+   boost::shared_ptr<pdat::NodeData<double> >
+   xyz(
       BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(xyz_id)));
 
    TBOX_ASSERT(xyz);
 
-   pdat::NodeIterator niend(pdat::NodeGeometry::end(patch.getBox()));
+   pdat::NodeIterator
+   niend(
+      pdat::NodeGeometry::end(patch.getBox()));
    for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(patch.getBox()));
         ni != niend; ++ni) {
       pdat::NodeIndex node = *ni;
@@ -672,7 +700,8 @@ void MblkGeometry::buildWedgeGridOnPatch(
    const int block_number)
 {
 
-   boost::shared_ptr<pdat::NodeData<double> > xyz(
+   boost::shared_ptr<pdat::NodeData<double> >
+   xyz(
       BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(xyz_id)));
 
@@ -817,7 +846,8 @@ void MblkGeometry::buildSShellGridOnPatch(
       //patch.allocatePatchData(xyz_id);
    }
 
-   boost::shared_ptr<pdat::NodeData<double> > xyz(
+   boost::shared_ptr<pdat::NodeData<double> >
+   xyz(
       BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(xyz_id)));
 

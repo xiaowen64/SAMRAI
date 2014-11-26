@@ -30,7 +30,8 @@ PatchLevelFactory::allocate(
    const boost::shared_ptr<PatchFactory>& factory) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(box_level, *grid_geometry);
-   boost::shared_ptr<PatchLevel> pl(
+   boost::shared_ptr<PatchLevel>
+   pl(
       boost::make_shared<PatchLevel>(
          box_level,
          grid_geometry,
@@ -47,7 +48,8 @@ PatchLevelFactory::allocate(
    const boost::shared_ptr<PatchFactory>& factory) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*box_level, *grid_geometry);
-   boost::shared_ptr<PatchLevel> pl(
+   boost::shared_ptr<PatchLevel>
+   pl(
       boost::make_shared<PatchLevel>(
          box_level,
          grid_geometry,
@@ -64,7 +66,8 @@ PatchLevelFactory::allocate(
    const boost::shared_ptr<PatchFactory>& factory,
    const bool defer_boundary_box_creation) const
 {
-   boost::shared_ptr<PatchLevel> pl(
+   boost::shared_ptr<PatchLevel>
+   pl(
       boost::make_shared<PatchLevel>(
          database,
          grid_geometry,

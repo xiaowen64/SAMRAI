@@ -84,10 +84,18 @@ void setArrayDataTo(
    ,
    const double* coef) {
    if (dim == 2) {
-      MDA_Access<double, 2, MDA_OrderColMajor<2> > s(ptr, lower, upper);
+      MDA_Access<double, 2, MDA_OrderColMajor<2> >
+      s(
+         ptr,
+         lower,
+         upper);
       setArrayDataTo(s, lower, upper, xlo, xhi, h, coef);
    } else if (dim == 3) {
-      MDA_Access<double, 3, MDA_OrderColMajor<3> > s(ptr, lower, upper);
+      MDA_Access<double, 3, MDA_OrderColMajor<3> >
+      s(
+         ptr,
+         lower,
+         upper);
       setArrayDataTo(s, lower, upper, xlo, xhi, h, coef);
    }
 }
@@ -220,9 +228,17 @@ void setArrayDataToSinusoidalGradient(
    NULL_USE(h);
    if (dim == 2) {
       double* gx_ptr = g_ptr[0];
-      MDA_Access<double, 2, MDA_OrderColMajor<2> > gx(gx_ptr, lower, upper);
+      MDA_Access<double, 2, MDA_OrderColMajor<2> >
+      gx(
+         gx_ptr,
+         lower,
+         upper);
       double* gy_ptr = g_ptr[1];
-      MDA_Access<double, 2, MDA_OrderColMajor<2> > gy(gy_ptr, lower, upper);
+      MDA_Access<double, 2, MDA_OrderColMajor<2> >
+      gy(
+         gy_ptr,
+         lower,
+         upper);
       for (int j = lower[1]; j <= upper[1]; ++j) {
          double y = xlo[1] + h[1] * (j - lower[1] + 0.5);
          double siny = sin(2 * M_PI * y);
@@ -237,11 +253,23 @@ void setArrayDataToSinusoidalGradient(
       }
    } else if (dim == 3) {
       double* gx_ptr = g_ptr[0];
-      MDA_Access<double, 3, MDA_OrderColMajor<3> > gx(gx_ptr, lower, upper);
+      MDA_Access<double, 3, MDA_OrderColMajor<3> >
+      gx(
+         gx_ptr,
+         lower,
+         upper);
       double* gy_ptr = g_ptr[1];
-      MDA_Access<double, 3, MDA_OrderColMajor<3> > gy(gy_ptr, lower, upper);
+      MDA_Access<double, 3, MDA_OrderColMajor<3> >
+      gy(
+         gy_ptr,
+         lower,
+         upper);
       double* gz_ptr = g_ptr[2];
-      MDA_Access<double, 3, MDA_OrderColMajor<3> > gz(gz_ptr, lower, upper);
+      MDA_Access<double, 3, MDA_OrderColMajor<3> >
+      gz(
+         gz_ptr,
+         lower,
+         upper);
       for (int k = lower[2]; k <= upper[2]; ++k) {
          double z = xlo[2] + h[2] * (k - lower[2] + 0.5);
          double sinz = sin(2 * M_PI * z);

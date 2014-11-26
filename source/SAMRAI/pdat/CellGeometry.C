@@ -104,16 +104,22 @@ CellGeometry::computeDestinationBoxes(
 
    // Translate the source box and grow the destination box by the ghost cells
 
-   hier::Box src_box(src_geometry.d_box);
+   hier::Box
+   src_box(
+      src_geometry.d_box);
    src_box.grow(src_geometry.d_ghosts);
    src_box = src_box * src_mask;
    transformation.transform(src_box);
-   hier::Box dst_ghost(d_box);
+   hier::Box
+   dst_ghost(
+      d_box);
    dst_ghost.grow(d_ghosts);
 
    // Convert the boxes into cell space and compute the intersection
 
-   const hier::Box together(dst_ghost * src_box * fill_box);
+   const hier::Box
+   together(
+      dst_ghost * src_box* fill_box);
 
    if (!together.empty()) {
       if (!overwrite_interior) {
@@ -175,7 +181,9 @@ CellGeometry::transform(
       }
 
       if (rotation_num) {
-         CellIndex tmp_index(index);
+         CellIndex
+         tmp_index(
+            index);
          index(0) = -tmp_index(0) - 1;
       }
    } else if (dim.getValue() == 2) {
@@ -185,7 +193,9 @@ CellGeometry::transform(
       }
 
       if (rotation_num) {
-         CellIndex tmp_index(dim);
+         CellIndex
+         tmp_index(
+            dim);
          for (int r = 0; r < rotation_num; ++r) {
             tmp_index = index;
             index(0) = tmp_index(1);
@@ -326,7 +336,9 @@ CellGeometry::rotateAboutAxis(CellIndex& index,
    const int a = (axis + 1) % dim.getValue();
    const int b = (axis + 2) % dim.getValue();
 
-   CellIndex tmp_index(dim);
+   CellIndex
+   tmp_index(
+      dim);
    for (int j = 0; j < num_rotations; ++j) {
       tmp_index = index;
       index(a) = tmp_index(b);

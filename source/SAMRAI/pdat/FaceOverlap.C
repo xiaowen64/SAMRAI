@@ -66,7 +66,9 @@ FaceOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
 
       const tbox::Dimension& dim = src_boxes.begin()->getDim();
 
-      hier::IntVector face_inverse_offset(dim);
+      hier::IntVector
+      face_inverse_offset(
+         dim);
       if (d_transformation.getRotation() == 0) {
          const hier::IntVector& inverse_offset =
             inverse_transform.getOffset();

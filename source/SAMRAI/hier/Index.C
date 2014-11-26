@@ -106,12 +106,22 @@ void
 Index::initializeCallback()
 {
    for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
-      s_zeros[d] = new Index(tbox::Dimension(static_cast<unsigned short>(d + 1)), 0);
-      s_ones[d] = new Index(tbox::Dimension(static_cast<unsigned short>(d + 1)), 1);
+      s_zeros[d] = new
+         Index(
+            tbox::Dimension(static_cast<unsigned short>(d + 1)),
+            0);
+      s_ones[d] = new
+         Index(
+            tbox::Dimension(static_cast<unsigned short>(d + 1)),
+            1);
 
-      s_mins[d] = new Index(tbox::Dimension(static_cast<unsigned short>(d + 1)),
+      s_mins[d] = new
+         Index(
+            tbox::Dimension(static_cast<unsigned short>(d + 1)),
             tbox::MathUtilities<int>::getMin());
-      s_maxs[d] = new Index(tbox::Dimension(static_cast<unsigned short>(d + 1)),
+      s_maxs[d] = new
+         Index(
+            tbox::Dimension(static_cast<unsigned short>(d + 1)),
             tbox::MathUtilities<int>::getMax());
    }
 }

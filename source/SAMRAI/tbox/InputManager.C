@@ -26,7 +26,8 @@ InputManager * InputManager::s_manager_instance = 0;
 
 boost::shared_ptr<Database> InputManager::s_input_db;
 
-StartupShutdownManager::Handler InputManager::s_finalize_handler(
+StartupShutdownManager::Handler
+InputManager::s_finalize_handler(
    0,
    0,
    0,
@@ -101,7 +102,8 @@ boost::shared_ptr<InputDatabase>
 InputManager::parseInputFile(
    const std::string& filename)
 {
-   boost::shared_ptr<InputDatabase> db(
+   boost::shared_ptr<InputDatabase>
+   db(
       boost::make_shared<InputDatabase>("main"));
    parseInputFile(filename, db);
    return db;
@@ -121,7 +123,9 @@ InputManager::parseInputFile(
    const boost::shared_ptr<InputDatabase>& db)
 {
    FILE* fstream = 0;
-   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI&
+   mpi(
+      SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getRank() == 0) {
       fstream = fopen(filename.c_str(), "r");
    }
@@ -135,7 +139,8 @@ InputManager::parseInputFile(
    /*
     * Parse input file.
     */
-   Parser* parser = new Parser();
+   Parser* parser = new
+      Parser();
    const int errors = parser->parse(filename, fstream, db);
    const int warnings = parser->getNumberWarnings();
 

@@ -157,7 +157,8 @@ SNES_SAMRAIContext::initialize(
    d_solution_vector =
       PETSc_SAMRAIVectorReal<double>::createPETScVector(solution);
 
-   boost::shared_ptr<SAMRAIVectorReal<double> > residual(
+   boost::shared_ptr<SAMRAIVectorReal<double> >
+   residual(
       solution->cloneVector("residual"));
    residual->allocateVectorData();
    d_residual_vector =
@@ -179,13 +180,15 @@ SNES_SAMRAIContext::resetSolver(
    const int coarsest_level,
    const int finest_level)
 {
-   boost::shared_ptr<SAMRAIVectorReal<double> > solution_vector(
+   boost::shared_ptr<SAMRAIVectorReal<double> >
+   solution_vector(
       PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(d_solution_vector));
    solution_vector->deallocateVectorData();
    solution_vector->resetLevels(coarsest_level, finest_level);
    solution_vector->allocateVectorData();
 
-   boost::shared_ptr<SAMRAIVectorReal<double> > residual_vector(
+   boost::shared_ptr<SAMRAIVectorReal<double> >
+   residual_vector(
       PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(d_residual_vector));
    residual_vector->deallocateVectorData();
    residual_vector->resetLevels(coarsest_level, finest_level);
@@ -392,7 +395,7 @@ SNES_SAMRAIContext::initializePetscObjects()
 
       ierr = MatShellSetOperation(d_jacobian,
             MATOP_MULT,
-            (void (*)()) SNES_SAMRAIContext::
+            (void (*)())SNES_SAMRAIContext::
             SNESJacobianTimesVector);
       PETSC_SAMRAI_ERROR(ierr);
 
@@ -741,14 +744,17 @@ void
 SNES_SAMRAIContext::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database> root_db(
+   boost::shared_ptr<tbox::Database>
+   root_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file");
    }
-   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
+   boost::shared_ptr<tbox::Database>
+   db(
+      root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("SOLV_SNES_SAMRAI_CONTEXT_VERSION");
    if (ver != SOLV_SNES_SAMRAI_CONTEXT_VERSION) {

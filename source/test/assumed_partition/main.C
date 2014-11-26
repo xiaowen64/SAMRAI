@@ -25,7 +25,6 @@ using namespace std;
 
 using namespace SAMRAI;
 
-
 struct CommonTestParams {
    hier::Box box;
    boost::shared_ptr<hier::BaseGridGeometry> geometry;
@@ -33,25 +32,28 @@ struct CommonTestParams {
    int rank_end;
    int index_begin;
    double avg_parts_per_rank;
-   CommonTestParams( const tbox::Dimension &dim ) :
+   CommonTestParams(const tbox::Dimension & dim):
       box(dim),
       rank_begin(0),
       rank_end(tbox::SAMRAI_MPI::getSAMRAIWorld().getSize()),
       index_begin(0),
-      avg_parts_per_rank(1.0) {}
-   CommonTestParams( const CommonTestParams &other ) :
+      avg_parts_per_rank(1.0)
+   {
+   }
+   CommonTestParams(const CommonTestParams &other):
       box(other.box),
       geometry(other.geometry),
       rank_begin(other.rank_begin),
       rank_end(other.rank_end),
       index_begin(other.index_begin),
-      avg_parts_per_rank(other.avg_parts_per_rank)  {}
+      avg_parts_per_rank(other.avg_parts_per_rank)
+   {
+   }
 };
 
 CommonTestParams
 getTestParametersFromDatabase(
-   tbox::Database &test_db);
-
+   tbox::Database& test_db);
 
 int
 main(
@@ -62,7 +64,7 @@ main(
    tbox::SAMRAIManager::initialize();
    tbox::SAMRAIManager::startup();
 
-   const tbox::SAMRAI_MPI &mpi = tbox::SAMRAI_MPI::getSAMRAIWorld();
+   const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld();
 
    int fail_count = 0;
 
@@ -90,9 +92,10 @@ main(
       /*
        * Create input database and parse all data in input file.
        */
-      boost::shared_ptr<tbox::MemoryDatabase> input_db(new tbox::MemoryDatabase("input_db"));
+      boost::shared_ptr<tbox::MemoryDatabase>
+      input_db(
+         new tbox::MemoryDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
-
 
       boost::shared_ptr<tbox::Database> main_db = input_db->getDatabase("Main");
 
@@ -104,8 +107,8 @@ main(
        * Add the number of processes and the case name.
        */
       std::string base_name_ext = base_name;
-      base_name_ext = base_name_ext + '-' +
-           tbox::Utilities::nodeToString(mpi.getSize());
+      base_name_ext = base_name_ext + '-'
+         + tbox::Utilities::nodeToString(mpi.getSize());
 
       /*
        * Start logging.
@@ -126,13 +129,15 @@ main(
 
          while (true) {
 
-            std::string test_name("Test");
+            std::string
+            test_name(
+               "Test");
             test_name += tbox::Utilities::intToString(test_number, 2);
 
             boost::shared_ptr<tbox::Database> test_db =
                input_db->getDatabaseWithDefault(test_name, boost::shared_ptr<tbox::Database>());
 
-            if ( !test_db ) {
+            if (!test_db) {
                break;
             }
 
@@ -142,34 +147,37 @@ main(
             tbox::plog << "\n\n";
             tbox::pout << "Running " << test_name << " (" << nickname << ")\n";
 
-            CommonTestParams ctp = getTestParametersFromDatabase( *test_db );
+            CommonTestParams ctp = getTestParametersFromDatabase(*test_db);
 
             size_t test_fail_count = 0;
-            if ( ctp.geometry ) {
+            if (ctp.geometry) {
                // Test multi-box assumed partitions.
-               hier::AssumedPartition ap( ctp.geometry->getPhysicalDomain(),
-                                          ctp.rank_begin,
-                                          ctp.rank_end,
-                                          ctp.index_begin,
-                                          ctp.avg_parts_per_rank );
+               hier::AssumedPartition
+               ap(
+                  ctp.geometry->getPhysicalDomain(),
+                  ctp.rank_begin,
+                  ctp.rank_end,
+                  ctp.index_begin,
+                  ctp.avg_parts_per_rank);
                tbox::plog << "AssumedPartition:\n";
                ap.recursivePrint(tbox::plog, "\t");
                test_fail_count = ap.selfCheck();
-            }
-            else {
+            } else {
                // Test single-box assumed partitions.
-               hier::AssumedPartitionBox apb( ctp.box,
-                                              ctp.rank_begin,
-                                              ctp.rank_end,
-                                              ctp.index_begin,
-                                              ctp.avg_parts_per_rank  );
+               hier::AssumedPartitionBox
+               apb(
+                  ctp.box,
+                  ctp.rank_begin,
+                  ctp.rank_end,
+                  ctp.index_begin,
+                  ctp.avg_parts_per_rank);
                tbox::plog << "AssumedPartitionBox:\n";
                apb.recursivePrint(tbox::plog, "\t");
                test_fail_count = apb.selfCheck();
             }
 
             fail_count += static_cast<int>(test_fail_count);
-            if ( test_fail_count ) {
+            if (test_fail_count) {
                tbox::pout << "FAILED: selfCheck found " << fail_count << " problems in test "
                           << test_name << " (" << nickname << ')' << std::endl;
             }
@@ -178,7 +186,6 @@ main(
 
          }
       }
-
 
    }
 
@@ -192,37 +199,38 @@ main(
    return fail_count;
 }
 
-
-
-
 /*
  *************************************************************************
  *************************************************************************
  */
 CommonTestParams
 getTestParametersFromDatabase(
-   tbox::Database &test_db)
+   tbox::Database& test_db)
 {
-   const tbox::Dimension dim(static_cast<tbox::Dimension::dir_t>(test_db.getInteger("dim")));
-   CommonTestParams ctp( dim );
-   if ( test_db.isDatabaseBox("box") ) {
+   const tbox::Dimension
+   dim(
+      static_cast<tbox::Dimension::dir_t>(test_db.getInteger("dim")));
+   CommonTestParams
+   ctp(
+      dim);
+   if (test_db.isDatabaseBox("box")) {
       ctp.box = test_db.getDatabaseBox("box");
       ctp.box.setBlockId(hier::BlockId(0));
-   } else if ( test_db.isDatabase("BlockGeometry") ) {
+   } else if (test_db.isDatabase("BlockGeometry")) {
       // Note: Using GridGeometry only because BaseGridGeometry can't be instanstiated.
       ctp.geometry.reset(
          new geom::GridGeometry(
             dim,
             "BlockGeometry",
             test_db.getDatabase("BlockGeometry")));
-   }
-   else {
+   } else {
       TBOX_ERROR("getTestParametersFromDatabase: You must specify either \"box\"\n"
-                 <<"or \"BlockGeometry\" in each test.");
+         << "or \"BlockGeometry\" in each test.");
    }
    ctp.rank_begin = test_db.getIntegerWithDefault("rank_begin", ctp.rank_begin);
    ctp.rank_end = test_db.getIntegerWithDefault("rank_end", ctp.rank_end);
    ctp.index_begin = test_db.getIntegerWithDefault("index_begin", ctp.index_begin);
-   ctp.avg_parts_per_rank = test_db.getDoubleWithDefault("avg_parts_per_rank", ctp.avg_parts_per_rank);
+   ctp.avg_parts_per_rank = test_db.getDoubleWithDefault("avg_parts_per_rank",
+         ctp.avg_parts_per_rank);
    return ctp;
 }

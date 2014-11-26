@@ -18,7 +18,9 @@ int get_input_filename(
    std::string& input_filename) {
 
    int rval = 0;
-   std::string argv0(argv[0]);
+   std::string
+   argv0(
+      argv[0]);
    if (*argc > 1) {
       // Input file is the first argument.  Shift other arguments down.
       input_filename = argv[1];

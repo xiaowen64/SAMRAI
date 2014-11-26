@@ -38,7 +38,9 @@ int main(
    tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::initialize();
    tbox::SAMRAIManager::startup();
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    /*
     * Create block to force pointer deallocation.  If this is not done
@@ -86,7 +88,8 @@ int main(
             mpi.getSize());
       }
 
-      boost::shared_ptr<tbox::Database> restart_db(
+      boost::shared_ptr<tbox::Database>
+      restart_db(
          tbox::RestartManager::getManager()->getRootDatabase());
       NULL_USE(restart_db);
 
@@ -105,19 +108,25 @@ int main(
        * Create statistics.
        */
 
-      boost::shared_ptr<tbox::Statistic> procstat1(
+      boost::shared_ptr<tbox::Statistic>
+      procstat1(
          statistician->getStatistic("procstat1", "PROC_STAT"));
-      boost::shared_ptr<tbox::Statistic> procstat2(
+      boost::shared_ptr<tbox::Statistic>
+      procstat2(
          statistician->getStatistic("procstat2", "PROC_STAT"));
-      boost::shared_ptr<tbox::Statistic> procstat3(
+      boost::shared_ptr<tbox::Statistic>
+      procstat3(
          statistician->getStatistic("procstat3", "PROC_STAT"));
       NULL_USE(procstat3);
 
-      boost::shared_ptr<tbox::Statistic> patchstat1(
+      boost::shared_ptr<tbox::Statistic>
+      patchstat1(
          statistician->getStatistic("patchstat1", "PATCH_STAT"));
-      boost::shared_ptr<tbox::Statistic> patchstat2(
+      boost::shared_ptr<tbox::Statistic>
+      patchstat2(
          statistician->getStatistic("patchstat2", "PATCH_STAT"));
-      boost::shared_ptr<tbox::Statistic> patchstat3(
+      boost::shared_ptr<tbox::Statistic>
+      patchstat3(
          statistician->getStatistic("patchstat3", "PATCH_STAT"));
       NULL_USE(patchstat3);
 

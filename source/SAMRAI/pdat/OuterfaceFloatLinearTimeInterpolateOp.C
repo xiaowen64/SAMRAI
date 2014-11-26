@@ -32,7 +32,10 @@ extern "C" {
 #endif
 
 // in lintimint1d.f:
-void SAMRAI_F77_FUNC(lintimeintoutfacefloat1d, LINTIMEINTOUTFACEFLOAT1D) (const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintoutfacefloat1d,
+   LINTIMEINTOUTFACEFLOAT1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -41,8 +44,10 @@ void SAMRAI_F77_FUNC(lintimeintoutfacefloat1d, LINTIMEINTOUTFACEFLOAT1D) (const 
    const float *, const float *,
    float *);
 // in lintimint2d.f:
-void SAMRAI_F77_FUNC(lintimeintoutfacefloat2d0,
-                     LINTIMEINTOUTFACEFLOAT2D0) (const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintoutfacefloat2d0,
+   LINTIMEINTOUTFACEFLOAT2D0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -53,8 +58,10 @@ void SAMRAI_F77_FUNC(lintimeintoutfacefloat2d0,
    const double&,
    const float *, const float *,
    float *);
-void SAMRAI_F77_FUNC(lintimeintoutfacefloat2d1,
-                     LINTIMEINTOUTFACEFLOAT2D1) (const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintoutfacefloat2d1,
+   LINTIMEINTOUTFACEFLOAT2D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -66,8 +73,10 @@ void SAMRAI_F77_FUNC(lintimeintoutfacefloat2d1,
    const float *, const float *,
    float *);
 // in lintimint3d.f:
-void SAMRAI_F77_FUNC(lintimeintoutfacefloat3d0,
-                     LINTIMEINTOUTFACEFLOAT3D0) (const int&, const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintoutfacefloat3d0,
+   LINTIMEINTOUTFACEFLOAT3D0) (const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -78,8 +87,10 @@ void SAMRAI_F77_FUNC(lintimeintoutfacefloat3d0,
    const double&,
    const float *, const float *,
    float *);
-void SAMRAI_F77_FUNC(lintimeintoutfacefloat3d1,
-                     LINTIMEINTOUTFACEFLOAT3D1) (const int&, const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintoutfacefloat3d1,
+   LINTIMEINTOUTFACEFLOAT3D1) (const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -90,8 +101,10 @@ void SAMRAI_F77_FUNC(lintimeintoutfacefloat3d1,
    const double&,
    const float *, const float *,
    float *);
-void SAMRAI_F77_FUNC(lintimeintoutfacefloat3d2,
-                     LINTIMEINTOUTFACEFLOAT3D2) (const int&, const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   lintimeintoutfacefloat3d2,
+   LINTIMEINTOUTFACEFLOAT3D2) (const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -123,7 +136,9 @@ OuterfaceFloatLinearTimeInterpolateOp::timeInterpolate(
    const hier::PatchData& src_data_old,
    const hier::PatchData& src_data_new) const
 {
-   const tbox::Dimension& dim(where.getDim());
+   const tbox::Dimension&
+   dim(
+      where.getDim());
 
    const OuterfaceData<float>* old_dat =
       CPP_CAST<const OuterfaceData<float> *>(&src_data_old);

@@ -44,7 +44,8 @@ public:
    PTimer():
       d_accesses(0),
       d_total_time(0.0),
-      d_last_start_time(0.0) {
+      d_last_start_time(0.0)
+   {
    }
 
    ~PTimer() {
@@ -77,10 +78,10 @@ public:
 
 private:
    PTimer(
-      const PTimer&);
+      const PTimer &);
    PTimer&
    operator = (
-      const PTimer&);
+         const PTimer &);
 
    int d_accesses;
    double d_total_time;
@@ -99,7 +100,9 @@ int main(
    tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::initialize();
    tbox::SAMRAIManager::startup();
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    /*
     * Create block to force pointer deallocation.  If this is not done
@@ -143,7 +146,8 @@ int main(
        * Create an input database "input_db" and parse input file (specified
        * on the command line.
        */
-      boost::shared_ptr<tbox::InputDatabase> input_db(
+      boost::shared_ptr<tbox::InputDatabase>
+      input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(
          input_filename, input_db);
@@ -153,7 +157,9 @@ int main(
        * which is the number of times the functions are called, and
        * depth, which is the depth of the exclusive timer tree.
        */
-      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
+      boost::shared_ptr<tbox::Database>
+      main_db(
+         input_db->getDatabase("Main"));
 
       int ntimes = 1;
       if (main_db->keyExists("ntimes")) {
@@ -176,7 +182,8 @@ int main(
             mpi.getSize());
       }
 
-      boost::shared_ptr<tbox::Database> restart_db(
+      boost::shared_ptr<tbox::Database>
+      restart_db(
          tbox::RestartManager::getManager()->getRootDatabase());
       NULL_USE(restart_db);
 
@@ -188,7 +195,8 @@ int main(
       /*
        * Add a timer "manually" (that is, not thru the input file).
        */
-      boost::shared_ptr<tbox::Timer> timer(
+      boost::shared_ptr<tbox::Timer>
+      timer(
          tbox::TimerManager::getManager()->getTimer("apps::main::main"));
       timer->start();
 
@@ -200,13 +208,15 @@ int main(
       /*
        * Class Foo contains the functions we want to call.
        */
-      Foo* foo = new Foo();
+      Foo* foo = new
+         Foo();
 
       /*
        * Check time to call function with timer name that is NOT
        * registered.  That is, time a NULL timer call.
        */
-      boost::shared_ptr<tbox::Timer> timer_off(
+      boost::shared_ptr<tbox::Timer>
+      timer_off(
          tbox::TimerManager::getManager()->getTimer("apps::main::timer_off"));
       timer_off->start();
       for (i = 0; i < ntimes; ++i) {
@@ -218,9 +228,11 @@ int main(
        * Check time to call function with timer name that IS
        * registered.
        */
-      boost::shared_ptr<tbox::Timer> timer_on(
+      boost::shared_ptr<tbox::Timer>
+      timer_on(
          tbox::TimerManager::getManager()->getTimer("apps::main::timer_on"));
-      boost::shared_ptr<tbox::Timer> dummy_timer(
+      boost::shared_ptr<tbox::Timer>
+      dummy_timer(
          tbox::TimerManager::getManager()->getTimer("apps::Foo::timerOn()"));
       NULL_USE(dummy_timer);
       timer_on->start();
@@ -234,7 +246,8 @@ int main(
        * Foo->zero() calls Foo->one(), which calls Foo->two(), ...
        * and so forth until we reach specified "exclusive_tree_depth.
        */
-      boost::shared_ptr<tbox::Timer> timer_excl(
+      boost::shared_ptr<tbox::Timer>
+      timer_excl(
          tbox::TimerManager::getManager()->getTimer("apps::main::exclusive_timer"));
       timer_excl->start();
       for (i = 0; i < ntimes; ++i) {
@@ -322,13 +335,19 @@ int main(
          for (int i = 0; i < tcnt; ++i) {
             mfactor *= 10;
          }
-         string suffix(tbox::Utilities::intToString(mfactor, testit));
+         string
+         suffix(
+            tbox::Utilities::intToString(mfactor, testit));
 
-         string t1name("ttest1-" + suffix);
+         string
+         t1name(
+            "ttest1-" + suffix);
          tarray1[tcnt] = tbox::TimerManager::getManager()->getTimer(t1name,
                true);
 
-         string t2name("ttest2-" + suffix);
+         string
+         t2name(
+            "ttest2-" + suffix);
          tarray2[tcnt] = tbox::TimerManager::getManager()->getTimer(t2name,
                true);
       }

@@ -43,67 +43,97 @@ using namespace std;
 extern "C" {
 // in upfluxsum.m4:
 
-void SAMRAI_F77_FUNC(upfluxsumface2d0, UPFLUXSUMFACE2D0) (
+void
+SAMRAI_F77_FUNC(
+   upfluxsumface2d0,
+   UPFLUXSUMFACE2D0) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&,
    const double *, double *);
-void SAMRAI_F77_FUNC(upfluxsumface2d1, UPFLUXSUMFACE2D1) (
+void
+SAMRAI_F77_FUNC(
+   upfluxsumface2d1,
+   UPFLUXSUMFACE2D1) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&,
    const double *, double *);
-void SAMRAI_F77_FUNC(upfluxsumside2d0, UPFLUXSUMSIDE2D0) (
+void
+SAMRAI_F77_FUNC(
+   upfluxsumside2d0,
+   UPFLUXSUMSIDE2D0) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&,
    const double *, double *);
-void SAMRAI_F77_FUNC(upfluxsumside2d1, UPFLUXSUMSIDE2D1) (
+void
+SAMRAI_F77_FUNC(
+   upfluxsumside2d1,
+   UPFLUXSUMSIDE2D1) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&,
    const double *, double *);
 
-void SAMRAI_F77_FUNC(upfluxsumface3d0, UPFLUXSUMFACE3D0) (
+void
+SAMRAI_F77_FUNC(
+   upfluxsumface3d0,
+   UPFLUXSUMFACE3D0) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&,
    const double *, double *);
-void SAMRAI_F77_FUNC(upfluxsumface3d1, UPFLUXSUMFACE3D1) (
+void
+SAMRAI_F77_FUNC(
+   upfluxsumface3d1,
+   UPFLUXSUMFACE3D1) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&,
    const double *, double *);
-void SAMRAI_F77_FUNC(upfluxsumface3d2, UPFLUXSUMFACE3D2) (
+void
+SAMRAI_F77_FUNC(
+   upfluxsumface3d2,
+   UPFLUXSUMFACE3D2) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&,
    const double *, double *);
-void SAMRAI_F77_FUNC(upfluxsumside3d0, UPFLUXSUMSIDE3D0) (
+void
+SAMRAI_F77_FUNC(
+   upfluxsumside3d0,
+   UPFLUXSUMSIDE3D0) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&,
    const double *, double *);
-void SAMRAI_F77_FUNC(upfluxsumside3d1, UPFLUXSUMSIDE3D1) (
+void
+SAMRAI_F77_FUNC(
+   upfluxsumside3d1,
+   UPFLUXSUMSIDE3D1) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&,
    const double *, double *);
-void SAMRAI_F77_FUNC(upfluxsumside3d2, UPFLUXSUMSIDE3D2) (
+void
+SAMRAI_F77_FUNC(
+   upfluxsumside3d2,
+   UPFLUXSUMSIDE3D2) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -277,7 +307,8 @@ void MblkHyperbolicLevelIntegrator::initializeLevelData(
 
    t_initialize_level_data->start();
 
-   boost::shared_ptr<hier::PatchLevel> mblk_level(
+   boost::shared_ptr<hier::PatchLevel>
+   mblk_level(
       hierarchy->getPatchLevel(level_number));
 
    /*
@@ -300,7 +331,8 @@ void MblkHyperbolicLevelIntegrator::initializeLevelData(
    if ((level_number > 0) || old_level) {
       t_fill_new_level_create->start();
 
-      boost::shared_ptr<xfer::RefineSchedule> sched(
+      boost::shared_ptr<xfer::RefineSchedule>
+      sched(
          d_mblk_fill_new_level->createSchedule(mblk_level,
             old_level,
             level_number - 1,
@@ -402,7 +434,8 @@ MblkHyperbolicLevelIntegrator::resetHierarchyConfiguration(
    d_mblk_bdry_sched_advance_new.resize(finest_hiera_level + 1);
 
    for (int ln = coarsest_level; ln <= finest_hiera_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> mblk_level(
+      boost::shared_ptr<hier::PatchLevel>
+      mblk_level(
          hierarchy->getPatchLevel(ln));
 
       t_advance_bdry_fill_create->start();
@@ -451,7 +484,8 @@ void MblkHyperbolicLevelIntegrator::applyGradientDetector(
 
    t_apply_gradient_detector->start();
 
-   boost::shared_ptr<hier::PatchLevel> mblk_level(
+   boost::shared_ptr<hier::PatchLevel>
+   mblk_level(
       hierarchy->getPatchLevel(level_number));
 
    mblk_level->allocatePatchData(d_saved_var_scratch_data, error_data_time);
@@ -770,7 +804,9 @@ MblkHyperbolicLevelIntegrator::getLevelDt(
     */
 
    double global_dt = dt;
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      tbox::SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getSize() > 1) {
       mpi.AllReduce(&global_dt, 1, MPI_MIN);
    }
@@ -904,40 +940,52 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
    TBOX_ASSERT(current_time <= new_time);
 
 #ifdef RECORD_STATS
-   boost::shared_ptr<tbox::Statistic> num_boxes_l0(
+   boost::shared_ptr<tbox::Statistic>
+   num_boxes_l0(
       tbox::Statistician::getStatistician()->
       getStatistic("NumberBoxesL0", "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> num_boxes_l1(
+   boost::shared_ptr<tbox::Statistic>
+   num_boxes_l1(
       tbox::Statistician::getStatistician()->
       getStatistic("NumberBoxesL1", "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> num_boxes_l2(
+   boost::shared_ptr<tbox::Statistic>
+   num_boxes_l2(
       tbox::Statistician::getStatistician()->
       getStatistic("NumberBoxesL2", "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> num_boxes_l3(
+   boost::shared_ptr<tbox::Statistic>
+   num_boxes_l3(
       tbox::Statistician::getStatistician()->
       getStatistic("NumberBoxesL3", "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> num_gridcells_l0(
+   boost::shared_ptr<tbox::Statistic>
+   num_gridcells_l0(
       tbox::Statistician::getStatistician()->
       getStatistic("NumberGridcellsL0", "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> num_gridcells_l1(
+   boost::shared_ptr<tbox::Statistic>
+   num_gridcells_l1(
       tbox::Statistician::getStatistician()->
       getStatistic("NumberGridcellsL1", "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> num_gridcells_l2(
+   boost::shared_ptr<tbox::Statistic>
+   num_gridcells_l2(
       tbox::Statistician::getStatistician()->
       getStatistic("NumberGridcellsL2", "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> num_gridcells_l3(
+   boost::shared_ptr<tbox::Statistic>
+   num_gridcells_l3(
       tbox::Statistician::getStatistician()->
       getStatistic("NumberGridcellsL3", "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> timestamp_l0(
+   boost::shared_ptr<tbox::Statistic>
+   timestamp_l0(
       tbox::Statistician::getStatistician()->
       getStatistic("TimeStampL0", "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> timestamp_l1(
+   boost::shared_ptr<tbox::Statistic>
+   timestamp_l1(
       tbox::Statistician::getStatistician()->
       getStatistic("TimeStampL1", "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> timestamp_l2(
+   boost::shared_ptr<tbox::Statistic>
+   timestamp_l2(
       tbox::Statistician::getStatistician()->
       getStatistic("TimeStampL2", "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> timestamp_l3(
+   boost::shared_ptr<tbox::Statistic>
+   timestamp_l3(
       tbox::Statistician::getStatistician()->
       getStatistic("TimeStampL3", "PROC_STAT"));
 
@@ -1192,7 +1240,9 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
    }
 
    double next_dt = dt_next;
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      tbox::SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getSize() > 1) {
       mpi.AllReduce(&next_dt, 1, MPI_MIN);
    }
@@ -1224,7 +1274,9 @@ MblkHyperbolicLevelIntegrator::standardLevelSynchronization(
    const double sync_time,
    const double old_time)
 {
-   std::vector<double> old_times(finest_level - coarsest_level + 1);
+   std::vector<double>
+   old_times(
+      finest_level - coarsest_level + 1);
    for (int i = coarsest_level; i <= finest_level; ++i) {
       old_times[i] = old_time;
    }
@@ -1260,9 +1312,11 @@ MblkHyperbolicLevelIntegrator::standardLevelSynchronization(
 
       TBOX_ASSERT(sync_time >= old_times[coarse_ln]);
 
-      boost::shared_ptr<hier::PatchLevel> mblk_fine_level(
+      boost::shared_ptr<hier::PatchLevel>
+      mblk_fine_level(
          hierarchy->getPatchLevel(fine_ln));
-      boost::shared_ptr<hier::PatchLevel> mblk_coarse_level(
+      boost::shared_ptr<hier::PatchLevel>
+      mblk_coarse_level(
          hierarchy->getPatchLevel(coarse_ln));
 
       synchronizeLevelWithCoarser(mblk_fine_level,
@@ -1325,10 +1379,12 @@ void MblkHyperbolicLevelIntegrator::synchronizeNewLevels(
    }
 #endif
 
-   boost::shared_ptr<tbox::Timer> t_sync_initial_create(
+   boost::shared_ptr<tbox::Timer>
+   t_sync_initial_create(
       tbox::TimerManager::getManager()->
       getTimer("algs::MblkHyperbolicLevelIntegrator::sync_initial_create"));
-   boost::shared_ptr<tbox::Timer> t_sync_initial_comm(
+   boost::shared_ptr<tbox::Timer>
+   t_sync_initial_comm(
       tbox::TimerManager::getManager()->
       getTimer("algs::MblkHyperbolicLevelIntegrator::sync_initial_comm"));
 
@@ -1341,15 +1397,18 @@ void MblkHyperbolicLevelIntegrator::synchronizeNewLevels(
       for (int fine_ln = finest_level; fine_ln > coarsest_level; --fine_ln) {
          const int coarse_ln = fine_ln - 1;
 
-         boost::shared_ptr<hier::PatchLevel> fine_level(
+         boost::shared_ptr<hier::PatchLevel>
+         fine_level(
             hierarchy->getPatchLevel(fine_ln));
 
-         boost::shared_ptr<hier::PatchLevel> coarse_level(
+         boost::shared_ptr<hier::PatchLevel>
+         coarse_level(
             hierarchy->getPatchLevel(coarse_ln));
 
          if (d_do_coarsening) {
             t_sync_initial_create->start();
-            boost::shared_ptr<xfer::CoarsenSchedule> sched(
+            boost::shared_ptr<xfer::CoarsenSchedule>
+            sched(
                d_mblk_sync_initial_data->createSchedule(coarse_level,
                   fine_level,
                   d_patch_strategy));
@@ -1411,16 +1470,20 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
    TBOX_ASSERT(mblk_coarse_level->getLevelNumber() ==
       (mblk_fine_level->getLevelNumber() - 1));
 
-   boost::shared_ptr<tbox::Timer> t_coarsen_fluxsum_create(
+   boost::shared_ptr<tbox::Timer>
+   t_coarsen_fluxsum_create(
       tbox::TimerManager::getManager()->
       getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_fluxsum_create"));
-   boost::shared_ptr<tbox::Timer> t_coarsen_fluxsum_comm(
+   boost::shared_ptr<tbox::Timer>
+   t_coarsen_fluxsum_comm(
       tbox::TimerManager::getManager()->
       getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_fluxsum_comm"));
-   boost::shared_ptr<tbox::Timer> t_coarsen_sync_create(
+   boost::shared_ptr<tbox::Timer>
+   t_coarsen_sync_create(
       tbox::TimerManager::getManager()->
       getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_sync_create"));
-   boost::shared_ptr<tbox::Timer> t_coarsen_sync_comm(
+   boost::shared_ptr<tbox::Timer>
+   t_coarsen_sync_comm(
       tbox::TimerManager::getManager()->
       getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_sync_comm"));
 
@@ -1685,7 +1748,10 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
 
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 
-   const hier::IntVector zero_ghosts(d_dim, 0);
+   const hier::IntVector
+   zero_ghosts(
+      d_dim,
+      0);
 
    d_all_variables.push_back(var);
 
@@ -1882,10 +1948,12 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
           * a corresponding "fluxsum" variable is created to manage
           * synchronization of data betweeen patch levels in the hierarchy.
           */
-         const boost::shared_ptr<pdat::FaceVariable<double> > face_var(
+         const boost::shared_ptr<pdat::FaceVariable<double> >
+         face_var(
             boost::dynamic_pointer_cast<pdat::FaceVariable<double>,
                                         hier::Variable>(var));
-         const boost::shared_ptr<pdat::SideVariable<double> > side_var(
+         const boost::shared_ptr<pdat::SideVariable<double> >
+         side_var(
             boost::dynamic_pointer_cast<pdat::SideVariable<double>,
                                         hier::Variable>(var));
 
@@ -1933,7 +2001,8 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
          boost::shared_ptr<hier::Variable> fluxsum;
 
          if (d_flux_is_face) {
-            boost::shared_ptr<pdat::FaceDataFactory<double> > fdf(
+            boost::shared_ptr<pdat::FaceDataFactory<double> >
+            fdf(
                BOOST_CAST<pdat::FaceDataFactory<double>,
                           hier::PatchDataFactory>(var->getPatchDataFactory()));
             TBOX_ASSERT(fdf);
@@ -1943,7 +2012,8 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
                   fdf->getDepth()));
             d_flux_face_registered = true;
          } else {
-            boost::shared_ptr<pdat::SideDataFactory<double> > sdf(
+            boost::shared_ptr<pdat::SideDataFactory<double> >
+            sdf(
                BOOST_CAST<pdat::SideDataFactory<double>,
                           hier::PatchDataFactory>(var->getPatchDataFactory()));
             TBOX_ASSERT(sdf);
@@ -2053,14 +2123,16 @@ void MblkHyperbolicLevelIntegrator::preprocessFluxData(
                      d_scratch);
 
                if (d_flux_is_face) {
-                  boost::shared_ptr<pdat::OuterfaceData<double> > fsum_data(
+                  boost::shared_ptr<pdat::OuterfaceData<double> >
+                  fsum_data(
                      BOOST_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
                         (*mi)->getPatchData(fsum_id)));
 
                   TBOX_ASSERT(fsum_data);
                   fsum_data->fillAll(0.0);
                } else {
-                  boost::shared_ptr<pdat::OutersideData<double> > fsum_data(
+                  boost::shared_ptr<pdat::OutersideData<double> >
+                  fsum_data(
                      BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
                         (*mi)->getPatchData(fsum_id)));
 
@@ -2132,9 +2204,11 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
 
          while (flux_var != d_flux_variables.end()) {
 
-            boost::shared_ptr<hier::PatchData> flux_data(
+            boost::shared_ptr<hier::PatchData>
+            flux_data(
                (*mi)->getPatchData(*flux_var, d_scratch));
-            boost::shared_ptr<hier::PatchData> fsum_data(
+            boost::shared_ptr<hier::PatchData>
+            fsum_data(
                (*mi)->getPatchData(*fluxsum_var, d_scratch));
 
             boost::shared_ptr<pdat::FaceData<double> > fflux_data;
@@ -2144,7 +2218,9 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
             boost::shared_ptr<pdat::OutersideData<double> > sfsum_data;
 
             int ddepth;
-            hier::IntVector flux_ghosts(d_dim);
+            hier::IntVector
+            flux_ghosts(
+               d_dim);
 
             if (d_flux_is_face) {
                fflux_data = BOOST_CAST<pdat::FaceData<double>,
@@ -2454,14 +2530,17 @@ void MblkHyperbolicLevelIntegrator::getFromInput(
 void MblkHyperbolicLevelIntegrator::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database> root_db(
+   boost::shared_ptr<tbox::Database>
+   root_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file" << endl);
    }
-   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
+   boost::shared_ptr<tbox::Database>
+   db(
+      root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION");
    if (ver != ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION) {

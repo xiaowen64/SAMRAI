@@ -34,7 +34,7 @@ HDFDatabaseFactory::HDFDatabaseFactory(
 
 HDFDatabaseFactory&
 HDFDatabaseFactory::operator = (
-   const HDFDatabaseFactory& rhs)
+      const HDFDatabaseFactory &rhs)
 {
    NULL_USE(rhs);
    return *this;
@@ -47,7 +47,8 @@ boost::shared_ptr<Database>
 HDFDatabaseFactory::allocate(
    const std::string& name) {
 #ifdef HAVE_HDF5
-   boost::shared_ptr<HDFDatabase> database(
+   boost::shared_ptr<HDFDatabase>
+   database(
       boost::make_shared<HDFDatabase>(name));
    return database;
 

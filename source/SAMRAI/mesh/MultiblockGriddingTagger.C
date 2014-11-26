@@ -69,7 +69,8 @@ MultiblockGriddingTagger::setScratchTagPatchDataIndex(
          << " is not in VariableDatabase."
          << std::endl);
    } else {
-      boost::shared_ptr<pdat::CellVariable<int> > t_check_var(
+      boost::shared_ptr<pdat::CellVariable<int> >
+      t_check_var(
          BOOST_CAST<pdat::CellVariable<int>, hier::Variable>(check_var));
       TBOX_ASSERT(t_check_var);
    }
@@ -87,7 +88,8 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
 
    const tbox::Dimension& dim = patch.getDim();
 
-   const boost::shared_ptr<pdat::CellData<int> > tag_data(
+   const boost::shared_ptr<pdat::CellData<int> >
+   tag_data(
       BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(d_buf_tag_indx)));
 
@@ -97,7 +99,9 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
       hier::IntVector::min(ghost_width_to_fill,
          tag_data->getGhostCellWidth());
 
-   boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
+   boost::shared_ptr<hier::PatchGeometry>
+   pgeom(
+      patch.getPatchGeometry());
 
    for (int d = 0; d < dim.getValue(); ++d) {
 
@@ -137,13 +141,16 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
    const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
-   const boost::shared_ptr<pdat::CellData<int> > tag_data(
+   const boost::shared_ptr<pdat::CellData<int> >
+   tag_data(
       BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(d_buf_tag_indx)));
 
    TBOX_ASSERT(tag_data);
 
-   hier::Box sing_fill_box(tag_data->getGhostBox() * fill_box);
+   hier::Box
+   sing_fill_box(
+      tag_data->getGhostBox()* fill_box);
    tag_data->fillAll(0, sing_fill_box);
 
    if (grid_geometry->hasEnhancedConnectivity()) {
@@ -156,14 +163,17 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
          for (hier::Connector::ConstNeighborIterator ei = dst_to_encon->begin(ni);
               ei != dst_to_encon->end(ni); ++ei) {
 
-            boost::shared_ptr<hier::Patch> encon_patch(
+            boost::shared_ptr<hier::Patch>
+            encon_patch(
                encon_level.getPatch(ei->getBoxId()));
 
             const hier::BlockId& encon_blk_id = ei->getBlockId();
 
             hier::Transformation::RotationIdentifier rotation =
                hier::Transformation::NO_ROTATE;
-            hier::IntVector offset(dim);
+            hier::IntVector
+            offset(
+               dim);
 
             hier::BaseGridGeometry::ConstNeighborIterator itr =
                grid_geometry->find(patch_blk_id, encon_blk_id);
@@ -174,37 +184,55 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
             offset *= patch.getPatchGeometry()->getRatio();
 
-            hier::Transformation transformation(
-               rotation, offset, encon_blk_id, patch_blk_id);
-            hier::Box encon_patch_box(encon_patch->getBox());
+            hier::Transformation
+            transformation(
+               rotation,
+               offset,
+               encon_blk_id,
+               patch_blk_id);
+            hier::Box
+            encon_patch_box(
+               encon_patch->getBox());
             transformation.transform(encon_patch_box);
 
-            hier::Box encon_fill_box(encon_patch_box * sing_fill_box);
+            hier::Box
+            encon_fill_box(
+               encon_patch_box* sing_fill_box);
             if (!encon_fill_box.empty()) {
 
                const hier::Transformation::RotationIdentifier back_rotate =
                   hier::Transformation::getReverseRotationIdentifier(
                      rotation, dim);
 
-               hier::IntVector back_shift(dim);
+               hier::IntVector
+               back_shift(
+                  dim);
 
                hier::Transformation::calculateReverseShift(
                   back_shift, offset, rotation);
 
-               hier::Transformation back_trans(back_rotate, back_shift,
-                                               encon_fill_box.getBlockId(),
-                                               encon_patch->getBox().getBlockId());
+               hier::Transformation
+               back_trans(
+                  back_rotate,
+                  back_shift,
+                  encon_fill_box.getBlockId(),
+                  encon_patch->getBox().getBlockId());
 
-               boost::shared_ptr<pdat::CellData<int> > sing_data(
+               boost::shared_ptr<pdat::CellData<int> >
+               sing_data(
                   BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
                      encon_patch->getPatchData(d_buf_tag_indx)));
 
                TBOX_ASSERT(sing_data);
 
-               pdat::CellIterator ciend(pdat::CellGeometry::end(encon_fill_box));
+               pdat::CellIterator
+               ciend(
+                  pdat::CellGeometry::end(encon_fill_box));
                for (pdat::CellIterator ci(pdat::CellGeometry::begin(encon_fill_box));
                     ci != ciend; ++ci) {
-                  pdat::CellIndex src_index(*ci);
+                  pdat::CellIndex
+                  src_index(
+                     * ci);
                   pdat::CellGeometry::transform(src_index, back_trans);
 
                   int sing_val = (*sing_data)(src_index);

@@ -308,7 +308,9 @@ double
 Timer::computeLoadBalanceEfficiency()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI&
+   mpi(
+      SAMRAI_MPI::getSAMRAIWorld());
    double wall_time = d_wallclock_total;
    double sum = wall_time;
    if (mpi.getSize() > 1) {
@@ -332,7 +334,9 @@ void
 Timer::computeMaxWallclock()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI&
+   mpi(
+      SAMRAI_MPI::getSAMRAIWorld());
    double wall_time = d_wallclock_total;
    if (mpi.getSize() > 1) {
       mpi.Allreduce(

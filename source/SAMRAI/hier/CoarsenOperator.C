@@ -84,7 +84,10 @@ IntVector
 CoarsenOperator::getMaxCoarsenOpStencilWidth(
    const tbox::Dimension& dim)
 {
-   IntVector max_width(dim, 0);
+   IntVector
+   max_width(
+      dim,
+      0);
 
    TBOX_omp_set_lock(&l_lookup_table);
    for (std::multimap<std::string, CoarsenOperator *>::const_iterator

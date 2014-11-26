@@ -68,10 +68,14 @@ FirstLayerEdgeVariableFillPattern::calculateOverlap(
    TBOX_ASSERT_OBJDIM_EQUALITY2(dst_patch_box, src_mask);
 
    const tbox::Dimension& dim = dst_patch_box.getDim();
-   std::vector<hier::BoxContainer> stencil_boxes(dim.getValue());
+   std::vector<hier::BoxContainer>
+   stencil_boxes(
+      dim.getValue());
    computeStencilBoxes(stencil_boxes, dst_patch_box);
 
-   std::vector<hier::BoxContainer> dst_boxes(dim.getValue());
+   std::vector<hier::BoxContainer>
+   dst_boxes(
+      dim.getValue());
 
    const EdgeGeometry* t_dst =
       dynamic_cast<const EdgeGeometry *>(&dst_geometry);
@@ -137,9 +141,16 @@ FirstLayerEdgeVariableFillPattern::computeStencilBoxes(
    TBOX_ASSERT(static_cast<int>(stencil_boxes.size()) == dim.getValue());
 
    for (int d = 0; d < dim.getValue(); ++d) {
-      hier::Box dst_edge_box(EdgeGeometry::toEdgeBox(dst_box, d));
-      hier::Box interior_edge_box(dst_edge_box);
-      hier::IntVector shrink_vector(dim, -1);
+      hier::Box
+      dst_edge_box(
+         EdgeGeometry::toEdgeBox(dst_box, d));
+      hier::Box
+      interior_edge_box(
+         dst_edge_box);
+      hier::IntVector
+      shrink_vector(
+         dim,
+         -1);
       shrink_vector[d] = 0;
       interior_edge_box.grow(shrink_vector);
 
@@ -169,10 +180,14 @@ FirstLayerEdgeVariableFillPattern::computeFillBoxesOverlap(
 
    const tbox::Dimension& dim = patch_box.getDim();
 
-   std::vector<hier::BoxContainer> stencil_boxes(dim.getValue());
+   std::vector<hier::BoxContainer>
+   stencil_boxes(
+      dim.getValue());
    computeStencilBoxes(stencil_boxes, patch_box);
 
-   std::vector<hier::BoxContainer> overlap_boxes(dim.getValue());
+   std::vector<hier::BoxContainer>
+   overlap_boxes(
+      dim.getValue());
    for (int d = 0; d < dim.getValue(); ++d) {
 
       /*

@@ -24,7 +24,9 @@
 #if (PROFILING_ON || TRACING_ON)
 #include "Profile/Profiler.h"
 /* Register an "event" with Tau to track memory usage. */
-TAU_PROFILE_STMT(TauUserEvent ue("memory use"))
+TAU_PROFILE_STMT(TauUserEvent
+   ue(
+      "memory use"))
 #endif
 #endif
 
@@ -163,7 +165,9 @@ void
 MemoryUtilities::printMaxMemory(
    std::ostream& os)
 {
-   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI&
+   mpi(
+      SAMRAI_MPI::getSAMRAIWorld());
    /*
     * Step through all nodes (>0) and send max memory to processor 0,
     * which subsequently writes it out.

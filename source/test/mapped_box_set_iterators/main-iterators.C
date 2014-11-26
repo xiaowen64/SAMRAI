@@ -41,7 +41,9 @@ int main(
        * Iterator tests.
        */
 
-      const tbox::Dimension dim(2);
+      const tbox::Dimension
+      dim(
+         2);
 
       hier::BoxContainer mboxes;
 
@@ -52,12 +54,24 @@ int main(
       // Build the BoxContainer.
       for (int i = 0; i < num_boxes; ++i) {
 
-         int owner(i % num_owners);
-         hier::BlockId bid(i / num_blocks);
-         hier::LocalId lid(i);
-         hier::BoxId mbid(lid, owner);
+         int
+         owner(
+            i % num_owners);
+         hier::BlockId
+         bid(
+            i / num_blocks);
+         hier::LocalId
+         lid(
+            i);
+         hier::BoxId
+         mbid(
+            lid,
+            owner);
 
-         hier::Box mb(dim, mbid);
+         hier::Box
+         mb(
+            dim,
+            mbid);
          mb.setBlockId(bid);
          mboxes.insert(mb);
 
@@ -67,7 +81,9 @@ int main(
 
       for (int b = 0; b < num_blocks; ++b) {
 
-         const hier::BlockId bid(b);
+         const hier::BlockId
+         bid(
+            b);
 
          for (hier::BoxContainerSingleBlockIterator bi(mboxes.begin(hier::BlockId(b)));
               bi != mboxes.end(hier::BlockId(b)); ++bi) {

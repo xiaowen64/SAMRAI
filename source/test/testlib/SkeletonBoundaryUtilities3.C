@@ -30,7 +30,10 @@
 
 extern "C" {
 
-void SAMRAI_F77_FUNC(stufcartbdryloc3d, STUFCARTBDRYLOC3D) (
+void
+SAMRAI_F77_FUNC(
+   stufcartbdryloc3d,
+   STUFCARTBDRYLOC3D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -40,7 +43,10 @@ void SAMRAI_F77_FUNC(stufcartbdryloc3d, STUFCARTBDRYLOC3D) (
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&);
 
-void SAMRAI_F77_FUNC(stufcartbdrycond3d, STUFCARTBDRYCOND3D) (
+void
+SAMRAI_F77_FUNC(
+   stufcartbdrycond3d,
+   STUFCARTBDRYCOND3D) (
    const int&,
    const int&, const int&, const int&,
    const int&,
@@ -50,7 +56,10 @@ void SAMRAI_F77_FUNC(stufcartbdrycond3d, STUFCARTBDRYCOND3D) (
    const int&,
    const int&, const int&, const int&);
 
-void SAMRAI_F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (
+void
+SAMRAI_F77_FUNC(
+   getcartfacebdry3d,
+   GETCARTFACEBDRY3D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -65,7 +74,10 @@ void SAMRAI_F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (
    double *,
    const int&);
 
-void SAMRAI_F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (
+void
+SAMRAI_F77_FUNC(
+   getcartedgebdry3d,
+   GETCARTEDGEBDRY3D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -80,7 +92,10 @@ void SAMRAI_F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (
    double *,
    const int&);
 
-void SAMRAI_F77_FUNC(getcartnodebdry3d, GETCARTNODEBDRY3D) (
+void
+SAMRAI_F77_FUNC(
+   getcartnodebdry3d,
+   GETCARTNODEBDRY3D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -198,14 +213,21 @@ void SkeletonBoundaryUtilities3::fillFaceBoundaryData(
       stuff3dBdryFortConst();
    }
 
-   const boost::shared_ptr<hier::PatchGeometry> pgeom(
+   const boost::shared_ptr<hier::PatchGeometry>
+   pgeom(
       patch.getPatchGeometry());
    //const double* dx = pgeom->getDx();
    const double dx[3] = { 0., 0., 0. };
 
-   const hier::Box& interior(patch.getBox());
-   const hier::Index& ifirst(interior.lower());
-   const hier::Index& ilast(interior.upper());
+   const hier::Box&
+   interior(
+      patch.getBox());
+   const hier::Index&
+   ifirst(
+      interior.lower());
+   const hier::Index&
+   ilast(
+      interior.upper());
 
    const hier::IntVector& ghost_cells = vardata->getGhostCellWidth();
 
@@ -218,11 +240,17 @@ void SkeletonBoundaryUtilities3::fillFaceBoundaryData(
 
       int bface_loc = face_bdry[i].getLocationIndex();
 
-      hier::Box fill_box(pgeom->getBoundaryFillBox(face_bdry[i],
-                            interior,
-                            gcw_to_fill));
-      const hier::Index& ibeg(fill_box.lower());
-      const hier::Index& iend(fill_box.upper());
+      hier::Box
+      fill_box(
+         pgeom->getBoundaryFillBox(face_bdry[i],
+            interior,
+            gcw_to_fill));
+      const hier::Index&
+      ibeg(
+         fill_box.lower());
+      const hier::Index&
+      iend(
+         fill_box.upper());
 
       SAMRAI_F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (
          ifirst(0), ilast(0),
@@ -276,14 +304,21 @@ void SkeletonBoundaryUtilities3::fillEdgeBoundaryData(
       stuff3dBdryFortConst();
    }
 
-   const boost::shared_ptr<hier::PatchGeometry> pgeom(
+   const boost::shared_ptr<hier::PatchGeometry>
+   pgeom(
       patch.getPatchGeometry());
    //const double* dx = pgeom->getDx();
    const double dx[3] = { 0., 0., 0. };
 
-   const hier::Box& interior(patch.getBox());
-   const hier::Index& ifirst(interior.lower());
-   const hier::Index& ilast(interior.upper());
+   const hier::Box&
+   interior(
+      patch.getBox());
+   const hier::Index&
+   ifirst(
+      interior.lower());
+   const hier::Index&
+   ilast(
+      interior.upper());
 
    const hier::IntVector& ghost_cells = vardata->getGhostCellWidth();
 
@@ -297,11 +332,17 @@ void SkeletonBoundaryUtilities3::fillEdgeBoundaryData(
 
       int bedge_loc = edge_bdry[i].getLocationIndex();
 
-      hier::Box fill_box(pgeom->getBoundaryFillBox(edge_bdry[i],
-                            interior,
-                            gcw_to_fill));
-      const hier::Index& ibeg(fill_box.lower());
-      const hier::Index& iend(fill_box.upper());
+      hier::Box
+      fill_box(
+         pgeom->getBoundaryFillBox(edge_bdry[i],
+            interior,
+            gcw_to_fill));
+      const hier::Index&
+      ibeg(
+         fill_box.lower());
+      const hier::Index&
+      iend(
+         fill_box.upper());
 
       SAMRAI_F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (
          ifirst(0), ilast(0),
@@ -355,14 +396,21 @@ void SkeletonBoundaryUtilities3::fillNodeBoundaryData(
       stuff3dBdryFortConst();
    }
 
-   const boost::shared_ptr<hier::PatchGeometry> pgeom(
+   const boost::shared_ptr<hier::PatchGeometry>
+   pgeom(
       patch.getPatchGeometry());
    //const double* dx = pgeom->getDx();
    const double dx[3] = { 0., 0., 0. };
 
-   const hier::Box& interior(patch.getBox());
-   const hier::Index& ifirst(interior.lower());
-   const hier::Index& ilast(interior.upper());
+   const hier::Box&
+   interior(
+      patch.getBox());
+   const hier::Index&
+   ifirst(
+      interior.lower());
+   const hier::Index&
+   ilast(
+      interior.upper());
 
    const hier::IntVector& ghost_cells = vardata->getGhostCellWidth();
 
@@ -376,11 +424,17 @@ void SkeletonBoundaryUtilities3::fillNodeBoundaryData(
 
       int bnode_loc = node_bdry[i].getLocationIndex();
 
-      hier::Box fill_box(pgeom->getBoundaryFillBox(node_bdry[i],
-                            interior,
-                            gcw_to_fill));
-      const hier::Index& ibeg(fill_box.lower());
-      const hier::Index& iend(fill_box.upper());
+      hier::Box
+      fill_box(
+         pgeom->getBoundaryFillBox(node_bdry[i],
+            interior,
+            gcw_to_fill));
+      const hier::Index&
+      ibeg(
+         fill_box.lower());
+      const hier::Index&
+      iend(
+         fill_box.upper());
 
       SAMRAI_F77_FUNC(getcartnodebdry3d, GETCARTNODEBDRY3D) (
          ifirst(0), ilast(0),
@@ -603,10 +657,12 @@ int SkeletonBoundaryUtilities3::checkBdryData(
    int btype = bbox.getBoundaryType();
    int bloc = bbox.getLocationIndex();
 
-   boost::shared_ptr<hier::PatchGeometry> pgeom(
+   boost::shared_ptr<hier::PatchGeometry>
+   pgeom(
       patch.getPatchGeometry());
 
-   boost::shared_ptr<pdat::CellData<double> > vardata(
+   boost::shared_ptr<pdat::CellData<double> >
+   vardata(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(data_id)));
    TBOX_ASSERT(vardata);
@@ -712,15 +768,25 @@ int SkeletonBoundaryUtilities3::checkBdryData(
 
    }
 
-   hier::Box gbox_to_check(vardata->getGhostBox() * pgeom->getBoundaryFillBox(
-                              bbox,
-                              patch.getBox(),
-                              gcw_to_check));
+   hier::Box
+   gbox_to_check(
+      vardata->getGhostBox() * pgeom->getBoundaryFillBox(
+         bbox,
+         patch.getBox(),
+         gcw_to_check));
 
-   hier::Box cbox(gbox_to_check);
-   hier::Box dbox(gbox_to_check);
-   hier::Index ifirst(vardata->getBox().lower());
-   hier::Index ilast(vardata->getBox().upper());
+   hier::Box
+   cbox(
+      gbox_to_check);
+   hier::Box
+   dbox(
+      gbox_to_check);
+   hier::Index
+   ifirst(
+      vardata->getBox().lower());
+   hier::Index
+   ilast(
+      vardata->getBox().upper());
 
    if (offsign == -1) {
       cbox.setLower(idir, ifirst(idir) - 1);
@@ -734,8 +800,12 @@ int SkeletonBoundaryUtilities3::checkBdryData(
       dbox.setUpper(idir, ilast(idir));
    }
 
-   pdat::CellIterator id(pdat::CellGeometry::begin(dbox));
-   pdat::CellIterator icend(pdat::CellGeometry::end(cbox));
+   pdat::CellIterator
+   id(
+      pdat::CellGeometry::begin(dbox));
+   pdat::CellIterator
+   icend(
+      pdat::CellGeometry::end(cbox));
    for (pdat::CellIterator ic(pdat::CellGeometry::begin(cbox));
         ic != icend; ++ic) {
       double checkval = valfact * (*vardata)(*id, depth) + constval;
@@ -818,7 +888,8 @@ void SkeletonBoundaryUtilities3::read3dBdryFaces(
 
          if (need_data_read) {
             if (input_db->keyExists(bdry_loc_str)) {
-               boost::shared_ptr<tbox::Database> bdry_loc_db(
+               boost::shared_ptr<tbox::Database>
+               bdry_loc_db(
                   input_db->getDatabase(bdry_loc_str));
                if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
@@ -956,7 +1027,8 @@ void SkeletonBoundaryUtilities3::read3dBdryEdges(
 
          if (need_data_read) {
             if (input_db->keyExists(bdry_loc_str)) {
-               boost::shared_ptr<tbox::Database> bdry_loc_db(
+               boost::shared_ptr<tbox::Database>
+               bdry_loc_db(
                   input_db->getDatabase(bdry_loc_str));
                if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
@@ -1266,7 +1338,8 @@ void SkeletonBoundaryUtilities3::read3dBdryNodes(
          }
 
          if (input_db->keyExists(bdry_loc_str)) {
-            boost::shared_ptr<tbox::Database> bdry_loc_db(
+            boost::shared_ptr<tbox::Database>
+            bdry_loc_db(
                input_db->getDatabase(bdry_loc_str));
             if (bdry_loc_db) {
                if (bdry_loc_db->keyExists("boundary_condition")) {

@@ -46,8 +46,11 @@ PETSc_SAMRAIVectorReal<TYPE>::createPETScVector(
 
    static const bool vector_created_via_duplicate = false;
 
-   PETSc_SAMRAIVectorReal<TYPE>* psv = new PETSc_SAMRAIVectorReal<TYPE>(
-         samrai_vec, vector_created_via_duplicate, comm);
+   PETSc_SAMRAIVectorReal<TYPE>* psv = new PETSc_SAMRAIVectorReal<TYPE
+                                                                  >(
+         samrai_vec,
+         vector_created_via_duplicate,
+         comm);
 
    return psv->getPETScVector();
 }
@@ -129,14 +132,17 @@ PETSc_SAMRAIVectorReal<TYPE>::makeNewVector()
          &comm);
    PETSC_SAMRAI_ERROR(ierr);
 
-   boost::shared_ptr<SAMRAIVectorReal<TYPE> > sam_vec(
+   boost::shared_ptr<SAMRAIVectorReal<TYPE> >
+   sam_vec(
       d_samrai_vector->cloneVector(d_samrai_vector->getName()));
    sam_vec->allocateVectorData();
    const bool vector_created_via_duplicate = true;
    PETSc_SAMRAIVectorReal<TYPE>* out_vec =
-      new PETSc_SAMRAIVectorReal<TYPE>(sam_vec,
-                                       vector_created_via_duplicate,
-                                       comm);
+      new PETSc_SAMRAIVectorReal<TYPE
+                                 >(
+         sam_vec,
+         vector_created_via_duplicate,
+         comm);
    return out_vec;
 }
 
@@ -153,7 +159,7 @@ PETSc_SAMRAIVectorReal<TYPE>::freeVector()
 #ifdef DEBUG_CHECK_TBOX_ASSERTIONS
       TBOX_ASSERT(petsc_vec != 0);
 #endif
-      delete ((PETSc_SAMRAIVectorReal<TYPE> *)(petsc_vec->data));
+      delete((PETSc_SAMRAIVectorReal<TYPE> *)(petsc_vec->data));
    }
 }
 

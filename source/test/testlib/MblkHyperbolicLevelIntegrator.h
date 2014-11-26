@@ -152,11 +152,13 @@ public:
     *
     *
     */
-   enum HYP_VAR_TYPE { TIME_DEP = 0,
-                       INPUT = 1,
-                       NO_FILL = 2,
-                       FLUX = 3,
-                       TEMPORARY = 4 };
+   enum HYP_VAR_TYPE {
+      TIME_DEP = 0,
+      INPUT = 1,
+      NO_FILL = 2,
+      FLUX = 3,
+      TEMPORARY = 4
+   };
 
    /**
     * Constructor for MblkHyperbolicLevelIntegrator initializes

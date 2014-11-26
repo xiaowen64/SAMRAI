@@ -33,9 +33,15 @@ static ParallelBuffer pout_buffer;
 static ParallelBuffer perr_buffer;
 static ParallelBuffer plog_buffer;
 
-std::ostream pout(&pout_buffer);
-std::ostream perr(&perr_buffer);
-std::ostream plog(&plog_buffer);
+std::ostream
+pout(
+   & pout_buffer);
+std::ostream
+perr(
+   & perr_buffer);
+std::ostream
+plog(
+   & plog_buffer);
 
 /*
  *************************************************************************
@@ -50,7 +56,9 @@ std::ostream plog(&plog_buffer);
 void
 PIO::initialize()
 {
-   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI&
+   mpi(
+      SAMRAI_MPI::getSAMRAIWorld());
    mpi.Comm_rank(&s_rank);
    s_filestream = 0;
 
@@ -152,7 +160,9 @@ PIO::logOnlyNodeZero(
     */
 
    if (s_rank == 0) {
-      s_filestream = new std::ofstream(filename.c_str());
+      s_filestream = new
+         std::ofstream(
+            filename.c_str());
       if (!(*s_filestream)) {
          delete s_filestream;
          s_filestream = 0;
@@ -193,7 +203,9 @@ PIO::logAllNodes(
 
    std::string full_filename = filename + "."
       + Utilities::processorToString(s_rank);
-   s_filestream = new std::ofstream(full_filename.c_str());
+   s_filestream = new
+      std::ofstream(
+         full_filename.c_str());
 
    if (!(*s_filestream)) {
       delete s_filestream;

@@ -145,14 +145,18 @@ void
 RefineTimeTransaction::packStream(
    tbox::MessageStream& stream)
 {
-   hier::Box temporary_box(d_box.getDim());
+   hier::Box
+   temporary_box(
+      d_box.getDim());
    temporary_box.initialize(d_box, hier::LocalId(-1), tbox::SAMRAI_MPI::getInvalidRank());
 
-   hier::Patch temporary_patch(
+   hier::Patch
+   temporary_patch(
       temporary_box,
       d_src_patch->getPatchDescriptor());
 
-   boost::shared_ptr<hier::PatchData> temporary_patch_data(
+   boost::shared_ptr<hier::PatchData>
+   temporary_patch_data(
       d_src_patch->getPatchDescriptor()
       ->getPatchDataFactory(d_refine_data[d_item_id]->d_src_told)
       ->allocate(temporary_patch));
@@ -193,14 +197,18 @@ RefineTimeTransaction::copyLocalData()
 
    } else {
 
-      hier::Box temporary_box(d_box.getDim());
+      hier::Box
+      temporary_box(
+         d_box.getDim());
       temporary_box.initialize(d_box, hier::LocalId(-1), tbox::SAMRAI_MPI::getInvalidRank());
 
-      hier::Patch temporary_patch(
+      hier::Patch
+      temporary_patch(
          temporary_box,
          d_src_patch->getPatchDescriptor());
 
-      boost::shared_ptr<hier::PatchData> temp(
+      boost::shared_ptr<hier::PatchData>
+      temp(
          d_src_patch->getPatchDescriptor()
          ->getPatchDataFactory(d_refine_data[d_item_id]->d_src_told)
          ->allocate(temporary_patch));

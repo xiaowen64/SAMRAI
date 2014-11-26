@@ -75,7 +75,9 @@ int main(
    const unsigned short d = static_cast<unsigned short>(atoi(argv[1]));
    TBOX_ASSERT(d > 0);
    TBOX_ASSERT(d <= SAMRAI::MAX_DIM_VAL);
-   const tbox::Dimension dim(d);
+   const tbox::Dimension
+   dim(
+      d);
 
    const std::string log_fn = std::string("edge_hiertest.")
       + tbox::Utilities::intToString(dim.getValue(), 1) + "d.log";
@@ -92,14 +94,30 @@ int main(
       double lo[SAMRAI::MAX_DIM_VAL];
       double hi[SAMRAI::MAX_DIM_VAL];
 
-      hier::Index clo0(dim);
-      hier::Index chi0(dim);
-      hier::Index clo1(dim);
-      hier::Index chi1(dim);
-      hier::Index flo0(dim);
-      hier::Index fhi0(dim);
-      hier::Index flo1(dim);
-      hier::Index fhi1(dim);
+      hier::Index
+      clo0(
+         dim);
+      hier::Index
+      chi0(
+         dim);
+      hier::Index
+      clo1(
+         dim);
+      hier::Index
+      chi1(
+         dim);
+      hier::Index
+      flo0(
+         dim);
+      hier::Index
+      fhi0(
+         dim);
+      hier::Index
+      flo1(
+         dim);
+      hier::Index
+      fhi1(
+         dim);
 
       for (int i = 0; i < dim.getValue(); ++i) {
          lo[i] = 0.0;
@@ -126,11 +144,30 @@ int main(
          }
       }
 
-      hier::Box coarse0(clo0, chi0, hier::BlockId(0));
-      hier::Box coarse1(clo1, chi1, hier::BlockId(0));
-      hier::Box fine0(flo0, fhi0, hier::BlockId(0));
-      hier::Box fine1(flo1, fhi1, hier::BlockId(0));
-      hier::IntVector ratio(dim, 2);
+      hier::Box
+      coarse0(
+         clo0,
+         chi0,
+         hier::BlockId(0));
+      hier::Box
+      coarse1(
+         clo1,
+         chi1,
+         hier::BlockId(0));
+      hier::Box
+      fine0(
+         flo0,
+         fhi0,
+         hier::BlockId(0));
+      hier::Box
+      fine1(
+         flo1,
+         fhi1,
+         hier::BlockId(0));
+      hier::IntVector
+      ratio(
+         dim,
+         2);
 
       hier::BoxContainer coarse_domain;
       hier::BoxContainer fine_boxes;
@@ -139,29 +176,35 @@ int main(
       fine_boxes.pushBack(fine0);
       fine_boxes.pushBack(fine1);
 
-      boost::shared_ptr<geom::CartesianGridGeometry> geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry>
+      geometry(
          new geom::CartesianGridGeometry(
             "CartesianGeometry",
             lo,
             hi,
             coarse_domain));
 
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy>
+      hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", geometry));
 
       hierarchy->setMaxNumberOfLevels(2);
       hierarchy->setRatioToCoarserLevel(ratio, 1);
 
-      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      const tbox::SAMRAI_MPI&
+      mpi(
+         tbox::SAMRAI_MPI::getSAMRAIWorld());
       const int nproc = mpi.getSize();
 
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_boxes.size();
 
-      boost::shared_ptr<hier::BoxLevel> layer0(
+      boost::shared_ptr<hier::BoxLevel>
+      layer0(
          boost::make_shared<hier::BoxLevel>(
             hier::IntVector(dim, 1), geometry));
-      boost::shared_ptr<hier::BoxLevel> layer1(
+      boost::shared_ptr<hier::BoxLevel>
+      layer1(
          boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
@@ -193,9 +236,13 @@ int main(
 
       // Create instance of hier::Variable database
       hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-      boost::shared_ptr<hier::VariableContext> dummy(
+      boost::shared_ptr<hier::VariableContext>
+      dummy(
          variable_db->getContext("dummy"));
-      const hier::IntVector no_ghosts(dim, 0);
+      const hier::IntVector
+      no_ghosts(
+         dim,
+         0);
 
       // Make some dummy variables and data on the hierarchy
       boost::shared_ptr<pdat::EdgeVariable<double> > fvar[NVARS];
@@ -213,7 +260,8 @@ int main(
       svindx[3] = variable_db->registerVariableAndContext(
             fvar[3], dummy, no_ghosts);
 
-      boost::shared_ptr<pdat::EdgeVariable<double> > swgt(
+      boost::shared_ptr<pdat::EdgeVariable<double> >
+      swgt(
          new pdat::EdgeVariable<double>(dim, "swgt", 1));
       int swgt_id = variable_db->registerVariableAndContext(
             swgt, dummy, no_ghosts);
@@ -226,14 +274,16 @@ int main(
          }
       }
 
-      boost::shared_ptr<math::HierarchyDataOpsReal<double> > edge_ops(
+      boost::shared_ptr<math::HierarchyDataOpsReal<double> >
+      edge_ops(
          new math::HierarchyEdgeDataOpsReal<double>(
             hierarchy,
             0,
             1));
       TBOX_ASSERT(edge_ops);
 
-      boost::shared_ptr<math::HierarchyDataOpsReal<double> > swgt_ops(
+      boost::shared_ptr<math::HierarchyDataOpsReal<double> >
+      swgt_ops(
          new math::HierarchyEdgeDataOpsReal<double>(
             hierarchy,
             0,
@@ -245,12 +295,14 @@ int main(
       hier::Box coarse_fine = fine0 + fine1;
       coarse_fine.coarsen(ratio);
       for (ln = 0; ln < 2; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level(
+         boost::shared_ptr<hier::PatchLevel>
+         level(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+            boost::shared_ptr<geom::CartesianPatchGeometry>
+            pgeom(
                BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
@@ -259,12 +311,15 @@ int main(
             for (int i = 1; i < dim.getValue(); ++i) {
                edge_vol *= dx[i];
             }
-            boost::shared_ptr<pdat::EdgeData<double> > data(
+            boost::shared_ptr<pdat::EdgeData<double> >
+            data(
                BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
                   patch->getPatchData(swgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(edge_vol);
-            pdat::EdgeIndex fi(dim);
+            pdat::EdgeIndex
+            fi(
+               dim);
 
             if (dim.getValue() == 2) {
                int plo0 = patch->getBox().lower(0);
@@ -1343,7 +1398,8 @@ int main(
       boost::shared_ptr<pdat::EdgeData<double> > cdata;
 
       // set values
-      boost::shared_ptr<hier::PatchLevel> level_zero(
+      boost::shared_ptr<hier::PatchLevel>
+      level_zero(
          hierarchy->getPatchLevel(0));
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
@@ -1351,8 +1407,14 @@ int main(
          cdata = BOOST_CAST<pdat::EdgeData<double>,
                             hier::PatchData>(patch->getPatchData(svindx[2]));
          TBOX_ASSERT(cdata);
-         hier::Index index0(dim, 2);
-         hier::Index index1(dim, 3);
+         hier::Index
+         index0(
+            dim,
+            2);
+         hier::Index
+         index1(
+            dim,
+            3);
          index1(0) = 5;
          if (dim.getValue() == 2) {
             if (patch->getBox().contains(index0)) {
@@ -1383,8 +1445,14 @@ int main(
          cdata = BOOST_CAST<pdat::EdgeData<double>,
                             hier::PatchData>(patch->getPatchData(svindx[2]));
          TBOX_ASSERT(cdata);
-         hier::Index idx0(dim, 2);
-         hier::Index idx1(dim, 3);
+         hier::Index
+         idx0(
+            dim,
+            2);
+         hier::Index
+         idx1(
+            dim,
+            3);
          idx1(0) = 5;
          int corner0, corner1;
          if (dim.getValue() == 2) {
@@ -1394,11 +1462,21 @@ int main(
             corner0 = pdat::EdgeIndex::LowerRight;
             corner1 = pdat::EdgeIndex::UpperRight;
          }
-         pdat::EdgeIndex index0(idx0, pdat::EdgeIndex::Y, corner0);
-         pdat::EdgeIndex index1(idx1, pdat::EdgeIndex::Y, corner1);
+         pdat::EdgeIndex
+         index0(
+            idx0,
+            pdat::EdgeIndex::Y,
+            corner0);
+         pdat::EdgeIndex
+         index1(
+            idx1,
+            pdat::EdgeIndex::Y,
+            corner1);
 
          // check X axis data
-         pdat::EdgeIterator cend(pdat::EdgeGeometry::end(cdata->getBox(), pdat::EdgeIndex::X));
+         pdat::EdgeIterator
+         cend(
+            pdat::EdgeGeometry::end(cdata->getBox(), pdat::EdgeIndex::X));
          for (pdat::EdgeIterator c(pdat::EdgeGeometry::begin(cdata->getBox(), pdat::EdgeIndex::X));
               c != cend && bogus_value_test_passed;
               ++c) {
@@ -1411,7 +1489,9 @@ int main(
          }
 
          // check Y axis data
-         pdat::EdgeIterator ccend(pdat::EdgeGeometry::end(cdata->getBox(), pdat::EdgeIndex::Y));
+         pdat::EdgeIterator
+         ccend(
+            pdat::EdgeGeometry::end(cdata->getBox(), pdat::EdgeIndex::Y));
          for (pdat::EdgeIterator cc(pdat::EdgeGeometry::begin(cdata->getBox(), pdat::EdgeIndex::Y));
               cc != ccend && bogus_value_test_passed;
               ++cc) {
@@ -1439,7 +1519,9 @@ int main(
 
          if (dim.getValue() == 3) {
             // check Z axis data
-            pdat::EdgeIterator cend(pdat::EdgeGeometry::end(cdata->getBox(), pdat::EdgeIndex::Z));
+            pdat::EdgeIterator
+            cend(
+               pdat::EdgeGeometry::end(cdata->getBox(), pdat::EdgeIndex::Z));
             for (pdat::EdgeIterator c(pdat::EdgeGeometry::begin(cdata->getBox(), pdat::EdgeIndex::Z));
                  c != cend && bogus_value_test_passed;
                  ++c) {
@@ -1655,17 +1737,22 @@ doubleDataSameAsValue(
    int ln;
    boost::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
+      boost::shared_ptr<hier::PatchLevel>
+      level(
+         hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          patch = *ip;
-         boost::shared_ptr<pdat::EdgeData<double> > cvdata(
+         boost::shared_ptr<pdat::EdgeData<double> >
+         cvdata(
             BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
                patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(cvdata);
 
-         pdat::EdgeIterator cend(pdat::EdgeGeometry::end(cvdata->getBox(), 1));
+         pdat::EdgeIterator
+         cend(
+            pdat::EdgeGeometry::end(cvdata->getBox(), 1));
          for (pdat::EdgeIterator c(pdat::EdgeGeometry::begin(cvdata->getBox(), 1));
               c != cend && test_passed; ++c) {
             pdat::EdgeIndex edge_index = *c;

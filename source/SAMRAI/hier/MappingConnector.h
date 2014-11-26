@@ -126,7 +126,11 @@ public:
     * @brief Types of mappings for use in findMappingErrors() and
     *        assertMappingValidity().
     */
-   enum MappingType { LOCAL, NOT_LOCAL, UNKNOWN };
+   enum MappingType {
+      LOCAL,
+      NOT_LOCAL,
+      UNKNOWN
+   };
 
    /*!
     * @brief Check if the MappingConnector has a valid mapping.

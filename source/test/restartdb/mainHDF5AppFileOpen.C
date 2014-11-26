@@ -26,7 +26,7 @@ using namespace SAMRAI;
 
 #include "database_tests.h"
 
-class RestartTester:public tbox::Serializable
+class RestartTester : public tbox::Serializable
 {
 public:
    RestartTester()
@@ -46,7 +46,8 @@ public:
 
    void getFromRestart()
    {
-      boost::shared_ptr<tbox::Database> root_db(
+      boost::shared_ptr<tbox::Database>
+      root_db(
          tbox::RestartManager::getManager()->getRootDatabase());
 
       boost::shared_ptr<tbox::Database> db;
@@ -66,7 +67,9 @@ int main(
    tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::initialize();
    tbox::SAMRAIManager::startup();
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      tbox::SAMRAI_MPI::getSAMRAIWorld());
 
    /*
     * Create block to force pointer deallocation.  If this is not done
@@ -88,7 +91,8 @@ int main(
 
       setupTestData();
 
-      boost::shared_ptr<tbox::HDFDatabase> database(
+      boost::shared_ptr<tbox::HDFDatabase>
+      database(
          new tbox::HDFDatabase("SAMRAI Restart"));
       std::string name = "./restart." + tbox::Utilities::processorToString(
             mpi.getRank()) + ".hdf5";

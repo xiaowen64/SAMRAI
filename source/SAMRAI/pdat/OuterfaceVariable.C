@@ -46,7 +46,8 @@ OuterfaceVariable<TYPE>::~OuterfaceVariable()
 template<class TYPE>
 int OuterfaceVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<OuterfaceDataFactory<TYPE> > factory(
+   boost::shared_ptr<OuterfaceDataFactory<TYPE> >
+   factory(
       BOOST_CAST<OuterfaceDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);

@@ -24,8 +24,12 @@ int main(
    SAMRAIManager::initialize();
    SAMRAIManager::startup();
 
-   SAMRAI_MPI mpi(SAMRAI_MPI::getSAMRAIWorld());
-   const Dimension dim(2);
+   SAMRAI_MPI
+   mpi(
+      SAMRAI_MPI::getSAMRAIWorld());
+   const Dimension
+   dim(
+      2);
 
    //if (argc < 2) {
    //   TBOX_ERROR("Usage: " << argv[0] << " [input file]");
@@ -48,7 +52,9 @@ int main(
    // Need scope for tester object so it will be destroyed
    // and cleaned up before SAMRAI finalize is called.
    {
-      SparseDataTester tester(dim);
+      SparseDataTester
+      tester(
+         dim);
 
       bool success = true;
       if (is_restart) {

@@ -46,7 +46,9 @@ hier::Index
 FaceIndex::toCell(
    const int face) const
 {
-   hier::Index index(getDim());
+   hier::Index
+   index(
+      getDim());
    index(d_axis) = (*this)(0) + face - 1;
    for (int i = 1; i < getDim().getValue(); ++i) {
       index((d_axis + i) % getDim().getValue()) = (*this)(i);

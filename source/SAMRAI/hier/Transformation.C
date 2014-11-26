@@ -99,7 +99,9 @@ Transformation::inverseTransform(
 {
    TBOX_ASSERT(box.getBlockId() == d_end_block ||
       d_end_block == BlockId::invalidId());
-   IntVector reverse_offset(d_offset.getDim());
+   IntVector
+   reverse_offset(
+      d_offset.getDim());
    calculateReverseShift(reverse_offset, d_offset, d_rotation);
 
    box.rotate(getReverseRotationIdentifier(d_rotation, d_offset.getDim()));
@@ -120,7 +122,9 @@ Transformation
 Transformation::getInverseTransformation() const
 {
    const tbox::Dimension& dim = d_offset.getDim();
-   IntVector inv_offset(dim);
+   IntVector
+   inv_offset(
+      dim);
    calculateReverseShift(inv_offset, d_offset, d_rotation);
 
    RotationIdentifier inv_rotate =
@@ -537,7 +541,9 @@ Transformation::calculateReverseShift(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(back_shift, shift);
 
-   const tbox::Dimension& dim(back_shift.getDim());
+   const tbox::Dimension&
+   dim(
+      back_shift.getDim());
 
    if (rotation == NO_ROTATE) {
       back_shift = -shift;

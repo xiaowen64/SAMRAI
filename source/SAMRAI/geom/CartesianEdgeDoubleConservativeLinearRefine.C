@@ -32,7 +32,10 @@ extern "C" {
 #endif
 
 // in cartrefine1d.f:
-void SAMRAI_F77_FUNC(cartclinrefedgedoub1d, CARTCLINREFEDGEDOUB1D) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartclinrefedgedoub1d,
+   CARTCLINREFEDGEDOUB1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -41,7 +44,10 @@ void SAMRAI_F77_FUNC(cartclinrefedgedoub1d, CARTCLINREFEDGEDOUB1D) (const int&,
    const double *, double *,
    double *, double *);
 // in cartrefine2d.f:
-void SAMRAI_F77_FUNC(cartclinrefedgedoub2d0, CARTCLINREFEDGEDOUB2D0) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartclinrefedgedoub2d0,
+   CARTCLINREFEDGEDOUB2D0) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -49,7 +55,10 @@ void SAMRAI_F77_FUNC(cartclinrefedgedoub2d0, CARTCLINREFEDGEDOUB2D0) (const int&
    const int *, const double *, const double *,
    const double *, double *,
    double *, double *, double *, double *);
-void SAMRAI_F77_FUNC(cartclinrefedgedoub2d1, CARTCLINREFEDGEDOUB2D1) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartclinrefedgedoub2d1,
+   CARTCLINREFEDGEDOUB2D1) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -58,7 +67,10 @@ void SAMRAI_F77_FUNC(cartclinrefedgedoub2d1, CARTCLINREFEDGEDOUB2D1) (const int&
    const double *, double *,
    double *, double *, double *, double *);
 // in cartrefine3d.f:
-void SAMRAI_F77_FUNC(cartclinrefedgedoub3d0, CARTCLINREFEDGEDOUB3D0) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartclinrefedgedoub3d0,
+   CARTCLINREFEDGEDOUB3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -71,7 +83,10 @@ void SAMRAI_F77_FUNC(cartclinrefedgedoub3d0, CARTCLINREFEDGEDOUB3D0) (const int&
    const double *, double *,
    double *, double *, double *,
    double *, double *, double *);
-void SAMRAI_F77_FUNC(cartclinrefedgedoub3d1, CARTCLINREFEDGEDOUB3D1) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartclinrefedgedoub3d1,
+   CARTCLINREFEDGEDOUB3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -84,7 +99,10 @@ void SAMRAI_F77_FUNC(cartclinrefedgedoub3d1, CARTCLINREFEDGEDOUB3D1) (const int&
    const double *, double *,
    double *, double *, double *,
    double *, double *, double *);
-void SAMRAI_F77_FUNC(cartclinrefedgedoub3d2, CARTCLINREFEDGEDOUB3D2) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartclinrefedgedoub3d2,
+   CARTCLINREFEDGEDOUB3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -136,13 +154,17 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
    const hier::BoxOverlap& fine_overlap,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(fine.getDim());
+   const tbox::Dimension&
+   dim(
+      fine.getDim());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, coarse, ratio);
 
-   boost::shared_ptr<pdat::EdgeData<double> > cdata(
+   boost::shared_ptr<pdat::EdgeData<double> >
+   cdata(
       BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<pdat::EdgeData<double> > fdata(
+   boost::shared_ptr<pdat::EdgeData<double> >
+   fdata(
       BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
@@ -155,17 +177,21 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 
-   const hier::Box cgbox(cdata->getGhostBox());
+   const hier::Box
+   cgbox(
+      cdata->getGhostBox());
 
    const hier::Index cilo = cgbox.lower();
    const hier::Index cihi = cgbox.upper();
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   const boost::shared_ptr<CartesianPatchGeometry> cgeom(
+   const boost::shared_ptr<CartesianPatchGeometry>
+   cgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
-   const boost::shared_ptr<CartesianPatchGeometry> fgeom(
+   const boost::shared_ptr<CartesianPatchGeometry>
+   fgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
 
@@ -178,7 +204,9 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
       for (hier::BoxContainer::const_iterator b = boxes.begin();
            b != boxes.end(); ++b) {
 
-         hier::Box fine_box(*b);
+         hier::Box
+         fine_box(
+            * b);
          TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, fine_box);
 
          for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
@@ -193,9 +221,18 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
          const hier::Index ifirstf = fine_box.lower();
          const hier::Index ilastf = fine_box.upper();
 
-         const hier::IntVector tmp_ghosts(dim, 0);
-         std::vector<double> diff0(cgbox.numberCells(0) + 2);
-         pdat::EdgeData<double> slope0(cgbox, 1, tmp_ghosts);
+         const hier::IntVector
+         tmp_ghosts(
+            dim,
+            0);
+         std::vector<double>
+         diff0(
+            cgbox.numberCells(0) + 2);
+         pdat::EdgeData<double>
+         slope0(
+            cgbox,
+            1,
+            tmp_ghosts);
 
          for (int d = 0; d < fdata->getDepth(); ++d) {
             if ((dim == tbox::Dimension(1))) {
@@ -211,8 +248,14 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
                   fdata->getPointer(0, d),
                   &diff0[0], slope0.getPointer(0));
             } else if ((dim == tbox::Dimension(2))) {
-               std::vector<double> diff1(cgbox.numberCells(1) + 2);
-               pdat::EdgeData<double> slope1(cgbox, 1, tmp_ghosts);
+               std::vector<double>
+               diff1(
+                  cgbox.numberCells(1) + 2);
+               pdat::EdgeData<double>
+               slope1(
+                  cgbox,
+                  1,
+                  tmp_ghosts);
 
                if (axis == 0) {
                   SAMRAI_F77_FUNC(cartclinrefedgedoub2d0, CARTCLINREFEDGEDOUB2D0) (
@@ -242,11 +285,23 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
                      &diff0[0], slope0.getPointer(1));
                }
             } else if ((dim == tbox::Dimension(3))) {
-               std::vector<double> diff1(cgbox.numberCells(1) + 2);
-               pdat::EdgeData<double> slope1(cgbox, 1, tmp_ghosts);
+               std::vector<double>
+               diff1(
+                  cgbox.numberCells(1) + 2);
+               pdat::EdgeData<double>
+               slope1(
+                  cgbox,
+                  1,
+                  tmp_ghosts);
 
-               std::vector<double> diff2(cgbox.numberCells(2) + 2);
-               pdat::EdgeData<double> slope2(cgbox, 1, tmp_ghosts);
+               std::vector<double>
+               diff2(
+                  cgbox.numberCells(2) + 2);
+               pdat::EdgeData<double>
+               slope2(
+                  cgbox,
+                  1,
+                  tmp_ghosts);
 
                if (axis == 0) {
                   SAMRAI_F77_FUNC(cartclinrefedgedoub3d0, CARTCLINREFEDGEDOUB3D0) (

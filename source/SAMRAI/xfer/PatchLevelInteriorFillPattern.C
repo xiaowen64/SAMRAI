@@ -111,8 +111,12 @@ PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
    NULL_USE(fill_ghost_width);
    TBOX_ASSERT_OBJDIM_EQUALITY2(dst_box_level, fill_ghost_width);
 
-   const tbox::Dimension& dim(fill_ghost_width.getDim());
-   const hier::IntVector& ratio(dst_box_level.getRefinementRatio());
+   const tbox::Dimension&
+   dim(
+      fill_ghost_width.getDim());
+   const hier::IntVector&
+   ratio(
+      dst_box_level.getRefinementRatio());
 
    bool is_periodic = false;
    if (dst_box_level.getGridGeometry()->getPeriodicShift(ratio) !=
@@ -130,9 +134,13 @@ PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
     * stored in dst_fill_boxes_on_src_proc.
     */
    bool ordered = true;
-   hier::BoxContainer all_dst_nabrs(ordered);
+   hier::BoxContainer
+   all_dst_nabrs(
+      ordered);
    if (is_periodic) {
-      hier::BoxContainer tmp_nabrs(ordered);
+      hier::BoxContainer
+      tmp_nabrs(
+         ordered);
       src_to_dst.getLocalNeighbors(tmp_nabrs);
       tmp_nabrs.unshiftPeriodicImageBoxes(
          all_dst_nabrs,
@@ -147,7 +155,7 @@ PatchLevelInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
       dst_fill_boxes_on_src_proc.insert(dst_fill_boxes_iter, *na);
       d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
             static_cast<int>(dst_fill_boxes_on_src_proc.numNeighbors(
-                                dst_fill_boxes_iter)));
+                  dst_fill_boxes_iter)));
    }
 }
 

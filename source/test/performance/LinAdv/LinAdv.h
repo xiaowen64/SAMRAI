@@ -80,7 +80,8 @@ public:
       const tbox::Dimension& dim,
       boost::shared_ptr<tbox::Database> input_db,
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geom,
-      const boost::shared_ptr<MeshGenerationStrategy> &sine_wall = boost::shared_ptr<MeshGenerationStrategy>());
+      const boost::shared_ptr<MeshGenerationStrategy>& sine_wall =
+         boost::shared_ptr<MeshGenerationStrategy>());
 
    /**
     * The destructor for LinAdv does nothing.

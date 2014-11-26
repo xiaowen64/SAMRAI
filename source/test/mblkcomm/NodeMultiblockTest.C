@@ -118,7 +118,8 @@ void NodeMultiblockTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         boost::shared_ptr<pdat::NodeData<double> > node_data(
+         boost::shared_ptr<pdat::NodeData<double> >
+         node_data(
             BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(node_data);
@@ -153,13 +154,18 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
 {
    NULL_USE(time);
 
-   boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
+   boost::shared_ptr<hier::PatchGeometry>
+   pgeom(
+      patch.getPatchGeometry());
 
    const std::vector<hier::BoundaryBox>& node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
    const int num_node_bdry_boxes = static_cast<int>(node_bdry.size());
 
-   std::vector<hier::BoundaryBox> empty_vector(0, hier::BoundaryBox(d_dim));
+   std::vector<hier::BoundaryBox>
+   empty_vector(
+      0,
+      hier::BoundaryBox(d_dim));
    const std::vector<hier::BoundaryBox>& edge_bdry =
       d_dim > tbox::Dimension(1) ?
       pgeom->getCodimensionBoundaries(d_dim.getValue() - 1) : empty_vector;
@@ -172,7 +178,8 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      boost::shared_ptr<pdat::NodeData<double> > node_data(
+      boost::shared_ptr<pdat::NodeData<double> >
+      node_data(
          BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(node_data);
@@ -189,7 +196,9 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
          hier::Box patch_node_box =
             pdat::NodeGeometry::toNodeBox(patch.getBox());
          if (!node_bdry[nb].getIsMultiblockSingularity()) {
-            pdat::NodeIterator niend(pdat::NodeGeometry::end(fill_box));
+            pdat::NodeIterator
+            niend(
+               pdat::NodeGeometry::end(fill_box));
             for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(fill_box));
                  ni != niend; ++ni) {
                if (!patch_node_box.contains(*ni)) {
@@ -214,11 +223,17 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
 
             hier::Box patch_node_box =
                pdat::NodeGeometry::toNodeBox(patch.getBox());
-            hier::Index plower(patch_node_box.lower());
-            hier::Index pupper(patch_node_box.upper());
+            hier::Index
+            plower(
+               patch_node_box.lower());
+            hier::Index
+            pupper(
+               patch_node_box.upper());
 
             if (!edge_bdry[eb].getIsMultiblockSingularity()) {
-               pdat::NodeIterator niend(pdat::NodeGeometry::end(fill_box));
+               pdat::NodeIterator
+               niend(
+                  pdat::NodeGeometry::end(fill_box));
                for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(fill_box));
                     ni != niend; ++ni) {
                   if (!patch_node_box.contains(*ni)) {
@@ -257,11 +272,17 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
 
             hier::Box patch_node_box =
                pdat::NodeGeometry::toNodeBox(patch.getBox());
-            hier::Index plower(patch_node_box.lower());
-            hier::Index pupper(patch_node_box.upper());
+            hier::Index
+            plower(
+               patch_node_box.lower());
+            hier::Index
+            pupper(
+               patch_node_box.upper());
 
             if (!face_bdry[fb].getIsMultiblockSingularity()) {
-               pdat::NodeIterator niend(pdat::NodeGeometry::end(fill_box));
+               pdat::NodeIterator
+               niend(
+                  pdat::NodeGeometry::end(fill_box));
                for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(fill_box));
                     ni != niend; ++ni) {
                   if (!patch_node_box.contains(*ni)) {
@@ -307,21 +328,32 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      boost::shared_ptr<pdat::NodeData<double> > node_data(
+      boost::shared_ptr<pdat::NodeData<double> >
+      node_data(
          BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(node_data);
 
-      hier::Box sing_fill_box(node_data->getGhostBox() * fill_box);
+      hier::Box
+      sing_fill_box(
+         node_data->getGhostBox()* fill_box);
 
       int depth = node_data->getDepth();
 
-      hier::Box pbox(pdat::NodeGeometry::toNodeBox(patch.getBox()));
+      hier::Box
+      pbox(
+         pdat::NodeGeometry::toNodeBox(patch.getBox()));
 
-      hier::Index plower(pbox.lower());
-      hier::Index pupper(pbox.upper());
+      hier::Index
+      plower(
+         pbox.lower());
+      hier::Index
+      pupper(
+         pbox.upper());
 
-      pdat::NodeIterator niend(pdat::NodeGeometry::end(sing_fill_box));
+      pdat::NodeIterator
+      niend(
+         pdat::NodeGeometry::end(sing_fill_box));
       for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(sing_fill_box));
            ni != niend; ++ni) {
          bool use_index = true;
@@ -353,12 +385,15 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                  ei != dst_to_encon->end(ni); ++ei) {
 
                const hier::BlockId& encon_blk_id = ei->getBlockId();
-               boost::shared_ptr<hier::Patch> encon_patch(
+               boost::shared_ptr<hier::Patch>
+               encon_patch(
                   encon_level.getPatch(ei->getBoxId()));
 
                hier::Transformation::RotationIdentifier rotation =
                   hier::Transformation::NO_ROTATE;
-               hier::IntVector offset(dim);
+               hier::IntVector
+               offset(
+                  dim);
 
                hier::BaseGridGeometry::ConstNeighborIterator itr =
                   grid_geometry->find(patch_blk_id, encon_blk_id);
@@ -369,35 +404,50 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
 
                offset *= patch.getPatchGeometry()->getRatio();
 
-               hier::Transformation transformation(rotation, offset,
-                                                   encon_blk_id,
-                                                   patch_blk_id);
-               hier::Box encon_patch_box(encon_patch->getBox());
+               hier::Transformation
+               transformation(
+                  rotation,
+                  offset,
+                  encon_blk_id,
+                  patch_blk_id);
+               hier::Box
+               encon_patch_box(
+                  encon_patch->getBox());
                transformation.transform(encon_patch_box);
 
-               hier::Box encon_fill_box(encon_patch_box * sing_fill_box);
+               hier::Box
+               encon_fill_box(
+                  encon_patch_box* sing_fill_box);
                if (!encon_fill_box.empty()) {
 
                   const hier::Transformation::RotationIdentifier back_rotate =
                      hier::Transformation::getReverseRotationIdentifier(
                         rotation, dim);
 
-                  hier::IntVector back_shift(dim);
+                  hier::IntVector
+                  back_shift(
+                     dim);
 
                   hier::Transformation::calculateReverseShift(
                      back_shift, offset, rotation);
 
-                  hier::Transformation back_trans(back_rotate, back_shift,
-                                                  patch_blk_id,
-                                                  encon_blk_id);
+                  hier::Transformation
+                  back_trans(
+                     back_rotate,
+                     back_shift,
+                     patch_blk_id,
+                     encon_blk_id);
 
-                  boost::shared_ptr<pdat::NodeData<double> > sing_data(
+                  boost::shared_ptr<pdat::NodeData<double> >
+                  sing_data(
                      BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
                         encon_patch->getPatchData(
                            d_variables[i], getDataContext())));
                   TBOX_ASSERT(sing_data);
 
-                  pdat::NodeIterator ciend(pdat::NodeGeometry::end(sing_fill_box));
+                  pdat::NodeIterator
+                  ciend(
+                     pdat::NodeGeometry::end(sing_fill_box));
                   for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(sing_fill_box));
                        ci != ciend; ++ci) {
                      bool use_index = true;
@@ -410,7 +460,9 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                         }
                      }
                      if (use_index) {
-                        pdat::NodeIndex src_index(*ci);
+                        pdat::NodeIndex
+                        src_index(
+                           * ci);
                         pdat::NodeGeometry::transform(src_index, back_trans);
                         for (int d = 0; d < depth; ++d) {
                            (*node_data)(*ci, d) += (*sing_data)(src_index, d);
@@ -424,7 +476,9 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
       }
 
       if (num_encon_used) {
-         pdat::NodeIterator ciend(pdat::NodeGeometry::end(sing_fill_box));
+         pdat::NodeIterator
+         ciend(
+            pdat::NodeGeometry::end(sing_fill_box));
          for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(sing_fill_box));
               ci != ciend; ++ci) {
             bool use_index = true;
@@ -450,7 +504,9 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
           * from which to acquire data.
           */
 
-         pdat::NodeIterator ciend(pdat::NodeGeometry::end(sing_fill_box));
+         pdat::NodeIterator
+         ciend(
+            pdat::NodeGeometry::end(sing_fill_box));
          for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(sing_fill_box));
               ci != ciend; ++ci) {
             bool use_index = true;
@@ -492,23 +548,31 @@ bool NodeMultiblockTest::verifyResults(
    tbox::plog << "level_number = " << level_number << endl;
    tbox::plog << "Patch box = " << patch.getBox() << endl;
 
-   hier::IntVector tgcw(d_dim, 0);
+   hier::IntVector
+   tgcw(
+      d_dim,
+      0);
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
       tgcw.max(patch.getPatchData(d_variables[i], getDataContext())->
          getGhostCellWidth());
    }
    hier::Box pbox = patch.getBox();
 
-   boost::shared_ptr<pdat::NodeData<double> > solution(
+   boost::shared_ptr<pdat::NodeData<double> >
+   solution(
       new pdat::NodeData<double>(pbox, 1, tgcw));
 
-   hier::Box tbox(pbox);
+   hier::Box
+   tbox(
+      pbox);
    tbox.grow(tgcw);
 
-   boost::shared_ptr<hier::BaseGridGeometry> grid_geom(
+   boost::shared_ptr<hier::BaseGridGeometry>
+   grid_geom(
       hierarchy->getGridGeometry());
 
-   hier::BoxContainer singularity(
+   hier::BoxContainer
+   singularity(
       grid_geom->getSingularityBoxContainer(block_id));
 
    hier::IntVector ratio =
@@ -522,16 +586,21 @@ bool NodeMultiblockTest::verifyResults(
 
       double correct = (double)block_id.getBlockValue();
 
-      boost::shared_ptr<pdat::NodeData<double> > node_data(
+      boost::shared_ptr<pdat::NodeData<double> >
+      node_data(
          BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(node_data);
       int depth = node_data->getDepth();
 
-      hier::Box interior_box(pbox);
+      hier::Box
+      interior_box(
+         pbox);
       interior_box.grow(hier::IntVector(d_dim, -1));
 
-      pdat::NodeIterator ciend(pdat::NodeGeometry::end(interior_box));
+      pdat::NodeIterator
+      ciend(
+         pdat::NodeGeometry::end(interior_box));
       for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(interior_box));
            ci != ciend; ++ci) {
          for (int d = 0; d < depth; ++d) {
@@ -549,7 +618,9 @@ bool NodeMultiblockTest::verifyResults(
          }
       }
 
-      boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
+      boost::shared_ptr<hier::PatchGeometry>
+      pgeom(
+         patch.getPatchGeometry());
 
       hier::Box gbox = node_data->getGhostBox();
 
@@ -571,12 +642,15 @@ bool NodeMultiblockTest::verifyResults(
          const hier::BaseGridGeometry::Neighbor& nbr = *ne;
          correct = nbr.getBlockId().getBlockValue();
 
-         hier::BoxContainer neighbor_ghost(nbr.getTransformedDomain());
+         hier::BoxContainer
+         neighbor_ghost(
+            nbr.getTransformedDomain());
 
          hier::BoxContainer neighbor_node_ghost;
          for (hier::BoxContainer::iterator nn = neighbor_ghost.begin();
               nn != neighbor_ghost.end(); ++nn) {
-            hier::Box neighbor_ghost_interior(
+            hier::Box
+            neighbor_ghost_interior(
                pdat::NodeGeometry::toNodeBox(*nn));
             neighbor_ghost_interior.grow(-hier::IntVector::getOne(d_dim));
             neighbor_node_ghost.pushFront(neighbor_ghost_interior);
@@ -593,9 +667,14 @@ bool NodeMultiblockTest::verifyResults(
          for (hier::BoxContainer::iterator ng = neighbor_node_ghost.begin();
               ng != neighbor_node_ghost.end(); ++ng) {
 
-            hier::Box::iterator ciend(ng->end());
+            hier::Box::iterator
+            ciend(
+               ng->end());
             for (hier::Box::iterator ci(ng->begin()); ci != ciend; ++ci) {
-               pdat::NodeIndex ni(*ci, hier::IntVector(d_dim, 0));
+               pdat::NodeIndex
+               ni(
+                  * ci,
+                  hier::IntVector(d_dim, 0));
                if (!patch_node_box.contains(ni)) {
                   for (int d = 0; d < depth; ++d) {
                      double result = (*node_data)(ni, d);
@@ -636,7 +715,8 @@ bool NodeMultiblockTest::verifyResults(
                     ns != grid_geom->end(block_id); ++ns) {
                   const hier::BaseGridGeometry::Neighbor& nbr = *ns;
                   if (nbr.isSingularity()) {
-                     hier::BoxContainer neighbor_ghost(
+                     hier::BoxContainer
+                     neighbor_ghost(
                         nbr.getTransformedDomain());
                      neighbor_ghost.refine(ratio);
                      neighbor_ghost.intersectBoxes(fill_box);
@@ -661,7 +741,9 @@ bool NodeMultiblockTest::verifyResults(
                correct = (double)(bdry[k].getLocationIndex() + 100);
             }
 
-            pdat::NodeIterator ciend(pdat::NodeGeometry::end(fill_box));
+            pdat::NodeIterator
+            ciend(
+               pdat::NodeGeometry::end(fill_box));
             for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(fill_box));
                  ci != ciend; ++ci) {
 

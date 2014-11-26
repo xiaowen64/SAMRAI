@@ -32,7 +32,10 @@ extern "C" {
 #endif
 
 // in cartrefine1d.f:
-void SAMRAI_F77_FUNC(cartlinrefcelldoub1d, CARTLINREFCELLDOUB1D) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartlinrefcelldoub1d,
+   CARTLINREFCELLDOUB1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -40,7 +43,10 @@ void SAMRAI_F77_FUNC(cartlinrefcelldoub1d, CARTLINREFCELLDOUB1D) (const int&,
    const int *, const double *, const double *,
    const double *, double *);
 // in cartrefine2d.f:
-void SAMRAI_F77_FUNC(cartlinrefcelldoub2d, CARTLINREFCELLDOUB2D) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartlinrefcelldoub2d,
+   CARTLINREFCELLDOUB2D) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -48,7 +54,10 @@ void SAMRAI_F77_FUNC(cartlinrefcelldoub2d, CARTLINREFCELLDOUB2D) (const int&,
    const int *, const double *, const double *,
    const double *, double *);
 // in cartrefine3d.f:
-void SAMRAI_F77_FUNC(cartlinrefcelldoub3d, CARTLINREFCELLDOUB3D) (const int&,
+void
+SAMRAI_F77_FUNC(
+   cartlinrefcelldoub3d,
+   CARTLINREFCELLDOUB3D) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -122,30 +131,38 @@ CartesianCellDoubleLinearRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(fine.getDim());
+   const tbox::Dimension&
+   dim(
+      fine.getDim());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, fine_box, ratio);
 
-   boost::shared_ptr<pdat::CellData<double> > cdata(
+   boost::shared_ptr<pdat::CellData<double> >
+   cdata(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<pdat::CellData<double> > fdata(
+   boost::shared_ptr<pdat::CellData<double> >
+   fdata(
       BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(dst_component)));
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 
-   const hier::Box cgbox(cdata->getGhostBox());
+   const hier::Box
+   cgbox(
+      cdata->getGhostBox());
 
    const hier::Index cilo = cgbox.lower();
    const hier::Index cihi = cgbox.upper();
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   const boost::shared_ptr<CartesianPatchGeometry> cgeom(
+   const boost::shared_ptr<CartesianPatchGeometry>
+   cgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
-   const boost::shared_ptr<CartesianPatchGeometry> fgeom(
+   const boost::shared_ptr<CartesianPatchGeometry>
+   fgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
 

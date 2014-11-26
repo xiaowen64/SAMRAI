@@ -576,7 +576,9 @@ void
 BoxTree::initializeCallback()
 {
    for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
-      const std::string dim_str(tbox::Utilities::intToString(i + 1));
+      const std::string
+      dim_str(
+         tbox::Utilities::intToString(i + 1));
       t_build_tree[i] = tbox::TimerManager::getManager()->
          getTimer(std::string("hier::BoxTree::build_tree[") + dim_str + "]");
       t_search[i] = tbox::TimerManager::getManager()->
@@ -639,24 +641,42 @@ BoxTree::printStatistics(
               << std::endl;
 
    tbox::Statistician* st = tbox::Statistician::getStatistician();
-   boost::shared_ptr<tbox::Statistic> bdstat(st->getStatistic("num_build",
-                                                "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> gnstat(st->getStatistic("num_generate",
-                                                "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> dpstat(st->getStatistic("num_duplicate",
-                                                "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> srstat(st->getStatistic("num_search",
-                                                "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> sbstat(st->getStatistic("num_sorted_box",
-                                                "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> fbstat(st->getStatistic("num_found_box",
-                                                "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> msbstat(st->getStatistic("max_sorted_box",
-                                                 "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> mfbstat(st->getStatistic("max_found_box",
-                                                 "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> lsstat(st->getStatistic("max_lin_search",
-                                                "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic>
+   bdstat(
+      st->getStatistic("num_build",
+         "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic>
+   gnstat(
+      st->getStatistic("num_generate",
+         "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic>
+   dpstat(
+      st->getStatistic("num_duplicate",
+         "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic>
+   srstat(
+      st->getStatistic("num_search",
+         "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic>
+   sbstat(
+      st->getStatistic("num_sorted_box",
+         "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic>
+   fbstat(
+      st->getStatistic("num_found_box",
+         "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic>
+   msbstat(
+      st->getStatistic("max_sorted_box",
+         "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic>
+   mfbstat(
+      st->getStatistic("max_found_box",
+         "PROC_STAT"));
+   boost::shared_ptr<tbox::Statistic>
+   lsstat(
+      st->getStatistic("max_lin_search",
+         "PROC_STAT"));
 
    static int seq_num = 0;
    bdstat->recordProcStat(s_num_build[dim.getValue() - 1], seq_num);
@@ -668,12 +688,16 @@ BoxTree::printStatistics(
    lsstat->recordProcStat(s_max_lin_search[dim.getValue() - 1], seq_num);
 
    st->finalize(false);
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const tbox::SAMRAI_MPI&
+   mpi(
+      tbox::SAMRAI_MPI::getSAMRAIWorld());
    const int nproc = mpi.getSize();
 
    double avg;
    double min, max;
-   int rmin(0), rmax(0);
+   int
+   rmin(
+      0), rmax(0);
 
    int doublewidth = 6;
    int intwidth = 6;

@@ -399,7 +399,8 @@ HDFDatabase::getAllKeys()
 {
    performKeySearch();
 
-   std::vector<std::string> tmp_keys(
+   std::vector<std::string>
+   tmp_keys(
       static_cast<std::vector<std::string>::size_type>(d_keydata.size()));
 
    size_t k = 0;
@@ -626,7 +627,8 @@ HDFDatabase::putDatabase(
 
    TBOX_ASSERT(this_group >= 0);
 
-   boost::shared_ptr<Database> new_database(
+   boost::shared_ptr<Database>
+   new_database(
       boost::make_shared<HDFDatabase>(key, this_group));
 
    return new_database;
@@ -659,7 +661,8 @@ HDFDatabase::getDatabase(
 #endif
    TBOX_ASSERT(this_group >= 0);
 
-   boost::shared_ptr<Database> database(
+   boost::shared_ptr<Database>
+   database(
       boost::make_shared<HDFDatabase>(key, this_group));
 
    return database;
@@ -742,7 +745,9 @@ HDFDatabase::putBoolArray(
        * shortest integer type we can find, the H5T_SAMRAI_BOOL
        * type.
        */
-      std::vector<int> data1(nelements);
+      std::vector<int>
+      data1(
+         nelements);
       for (size_t i = 0; i < nelements; ++i) data1[i] = data[i];
 
 #if (H5_VERS_MAJOR > 1) || ((H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 6))
@@ -815,7 +820,8 @@ HDFDatabase::getBoolVector(
 
    nsel = H5Sget_select_npoints(dspace);
 
-   std::vector<bool> bool_array(
+   std::vector<bool>
+   bool_array(
       static_cast<std::vector<bool>::size_type>(nsel));
 
    if (nsel > 0) {
@@ -826,7 +832,9 @@ HDFDatabase::getBoolVector(
        * type.  So we read bools into native integer memory
        * then convert.
        */
-      std::vector<int> data1(static_cast<std::vector<int>::size_type>(nsel));
+      std::vector<int>
+      data1(
+         static_cast<std::vector<int>::size_type>(nsel));
       int* locPtr = &data1[0];
       errf = H5Dread(dset,
             H5T_NATIVE_INT,
@@ -999,7 +1007,8 @@ HDFDatabase::getDatabaseBoxVector(
 
    nsel = H5Sget_select_npoints(dspace);
 
-   std::vector<DatabaseBox> boxVector(
+   std::vector<DatabaseBox>
+   boxVector(
       static_cast<std::vector<DatabaseBox>::size_type>(nsel));
 
    if (nsel > 0) {
@@ -1227,7 +1236,8 @@ HDFDatabase::getCharVector(
 
    nsel = H5Tget_size(dtype);
 
-   std::vector<char> charArray(
+   std::vector<char>
+   charArray(
       static_cast<std::vector<char>::size_type>(nsel));
 
    if (nsel > 0) {
@@ -1402,7 +1412,8 @@ HDFDatabase::getComplexVector(
 
    nsel = H5Sget_select_npoints(dspace);
 
-   std::vector<dcomplex> complexArray(
+   std::vector<dcomplex>
+   complexArray(
       static_cast<std::vector<dcomplex>::size_type>(nsel));
 
    if (nsel > 0) {
@@ -1596,7 +1607,8 @@ HDFDatabase::getDoubleVector(
 
    nsel = H5Sget_select_npoints(dspace);
 
-   std::vector<double> doubleArray(
+   std::vector<double>
+   doubleArray(
       static_cast<std::vector<double>::size_type>(nsel));
 
    if (nsel > 0) {
@@ -1754,7 +1766,8 @@ HDFDatabase::getFloatVector(
    TBOX_ASSERT(dspace >= 0);
    nsel = H5Sget_select_npoints(dspace);
 
-   std::vector<float> floatArray(
+   std::vector<float>
+   floatArray(
       static_cast<std::vector<float>::size_type>(nsel));
 
    if (nsel > 0) {
@@ -1913,7 +1926,9 @@ HDFDatabase::getIntegerVector(
 
    nsel = H5Sget_select_npoints(dspace);
 
-   std::vector<int> intArray(static_cast<std::vector<int>::size_type>(nsel));
+   std::vector<int>
+   intArray(
+      static_cast<std::vector<int>::size_type>(nsel));
 
    if (nsel > 0) {
       int* locPtr = &intArray[0];
@@ -2107,7 +2122,8 @@ HDFDatabase::getStringVector(
    dsize = H5Tget_size(dtype);
    nsel = H5Sget_select_npoints(dspace);
 
-   std::vector<std::string> stringArray(
+   std::vector<std::string>
+   stringArray(
       static_cast<std::vector<std::string>::size_type>(nsel));
 
    if (nsel > 0) {

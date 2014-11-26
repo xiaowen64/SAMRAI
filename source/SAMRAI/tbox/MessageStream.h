@@ -44,7 +44,10 @@ public:
     * @brief Enumeration to identify if a buffer is being used to read or
     * write data.
     */
-   enum StreamMode { Read, Write };
+   enum StreamMode {
+      Read,
+      Write
+   };
 
    /*!
     * @brief Create a message stream of the specified size and mode

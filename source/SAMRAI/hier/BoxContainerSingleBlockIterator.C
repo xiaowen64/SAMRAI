@@ -40,7 +40,7 @@ BoxContainerSingleBlockIterator::~BoxContainerSingleBlockIterator()
  */
 
 BoxContainerSingleBlockIterator&
-BoxContainerSingleBlockIterator::operator ++ ()
+BoxContainerSingleBlockIterator::operator++ ()
 {
    do {
       ++d_iter;
@@ -56,7 +56,7 @@ BoxContainerSingleBlockIterator::operator ++ ()
  */
 
 BoxContainerSingleBlockIterator
-BoxContainerSingleBlockIterator::operator ++ (
+BoxContainerSingleBlockIterator::operator++ (
    int)
 {
    BoxContainerSingleBlockIterator saved = *this;
@@ -71,7 +71,9 @@ int
 BoxContainerSingleBlockIterator::count() const
 {
    int ct = 0;
-   BoxContainerSingleBlockIterator iter(d_boxes->begin(d_block_id));
+   BoxContainerSingleBlockIterator
+   iter(
+      d_boxes->begin(d_block_id));
    while (iter != d_boxes->end(d_block_id)) {
       ++ct;
       ++iter;

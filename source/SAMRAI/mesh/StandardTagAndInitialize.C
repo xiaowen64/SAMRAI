@@ -38,20 +38,29 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 // in coarsentags1d.f:
-void SAMRAI_F77_FUNC(coarsentags1d, COARSENTAGS1D) (const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   coarsentags1d,
+   COARSENTAGS1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const int *, int *);
 // in coarsentags2d.f:
-void SAMRAI_F77_FUNC(coarsentags2d, COARSENTAGS2D) (const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   coarsentags2d,
+   COARSENTAGS2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const int *, int *);
 // in coarsentags3d.f:
-void SAMRAI_F77_FUNC(coarsentags3d, COARSENTAGS3D) (const int&, const int&,
+void
+SAMRAI_F77_FUNC(
+   coarsentags3d,
+   COARSENTAGS3D) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -286,14 +295,16 @@ StandardTagAndInitialize::tagCellsForRefinement(
          regrid_cycle,
          regrid_time);
 
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          hierarchy->getPatchLevel(level_number));
 
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          const boost::shared_ptr<hier::Patch>& patch = *ip;
 
-         boost::shared_ptr<pdat::CellData<int> > tag_data(
+         boost::shared_ptr<pdat::CellData<int> >
+         tag_data(
             BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
                patch->getPatchData(tag_index)));
 
@@ -390,7 +401,8 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
 
    const tbox::Dimension& dim = hierarchy->getDim();
 
-   boost::shared_ptr<hier::PatchLevel> patch_level(
+   boost::shared_ptr<hier::PatchLevel>
+   patch_level(
       hierarchy->getPatchLevel(level_number));
 
    /*
@@ -469,7 +481,8 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
       start_time = end_time;
    }
 
-   boost::shared_ptr<hier::PatchLevel> coarser_level(
+   boost::shared_ptr<hier::PatchLevel>
+   coarser_level(
       d_rich_extrap_coarsened_levels[level_number]);
 
    /*
@@ -487,16 +500,22 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
    /*
     * Coarsen tags from level to coarser level.
     */
-   hier::IntVector coarsen_ratio(dim, d_error_coarsen_ratio);
+   hier::IntVector
+   coarsen_ratio(
+      dim,
+      d_error_coarsen_ratio);
    for (hier::PatchLevel::iterator ip(coarser_level->begin());
         ip != coarser_level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& coarse_patch = *ip;
-      boost::shared_ptr<hier::Patch> fine_patch(
+      boost::shared_ptr<hier::Patch>
+      fine_patch(
          patch_level->getPatch(coarse_patch->getGlobalId()));
-      boost::shared_ptr<pdat::CellData<int> > ftags(
+      boost::shared_ptr<pdat::CellData<int> >
+      ftags(
          BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
             fine_patch->getPatchData(tag_index)));
-      boost::shared_ptr<pdat::CellData<int> > ctags(
+      boost::shared_ptr<pdat::CellData<int> >
+      ctags(
          BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
             coarse_patch->getPatchData(tag_index)));
 
@@ -568,7 +587,8 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
         ip != coarser_level->end(); ++ip) {
 
       const boost::shared_ptr<hier::Patch>& coarse_patch = *ip;
-      boost::shared_ptr<hier::Patch> fine_patch(
+      boost::shared_ptr<hier::Patch>
+      fine_patch(
          patch_level->getPatch(coarse_patch->getGlobalId()));
       copytags.refine(*fine_patch, *coarse_patch,
          tag_index, tag_index,
@@ -672,7 +692,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
 
    const tbox::Dimension& dim = hierarchy->getDim();
 
-   boost::shared_ptr<hier::PatchLevel> patch_level(
+   boost::shared_ptr<hier::PatchLevel>
+   patch_level(
       hierarchy->getPatchLevel(level_number));
 
    /*
@@ -726,9 +747,13 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
     * so user routines can use this information.
     */
 
-   boost::shared_ptr<hier::PatchLevel> coarsened_level(
+   boost::shared_ptr<hier::PatchLevel>
+   coarsened_level(
       boost::make_shared<hier::PatchLevel>(dim));
-   hier::IntVector coarsen_ratio(dim, d_error_coarsen_ratio);
+   hier::IntVector
+   coarsen_ratio(
+      dim,
+      d_error_coarsen_ratio);
    coarsened_level->setCoarsenedPatchLevel(patch_level, coarsen_ratio);
 
    if ((level_number > 0)
@@ -753,7 +778,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
          level_to_level_width,
          hier::CONNECTOR_IMPLICIT_CREATION_RULE);
 
-   boost::shared_ptr<hier::Connector> tmp_coarsened(
+   boost::shared_ptr<hier::Connector>
+   tmp_coarsened(
       boost::make_shared<hier::Connector>(level_to_level));
    tmp_coarsened->setBase(*coarsened_level->getBoxLevel());
    tmp_coarsened->setHead(*coarsened_level->getBoxLevel());
@@ -762,7 +788,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
    tmp_coarsened->coarsenLocalNeighbors(coarsen_ratio);
    tmp_coarsened->setTranspose(0, false);
 
-   boost::shared_ptr<hier::Connector> level_to_coarsened(
+   boost::shared_ptr<hier::Connector>
+   level_to_coarsened(
       boost::make_shared<hier::Connector>(*tmp_coarsened));
    level_to_coarsened->setBase(*patch_level->getBoxLevel());
    level_to_coarsened->setHead(*coarsened_level->getBoxLevel());
@@ -777,7 +804,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
        * refinement filling of the coarsened level's ghosts.
        */
       boost::shared_ptr<hier::Connector> coarser_to_coarsened;
-      boost::shared_ptr<hier::PatchLevel> coarser_level(
+      boost::shared_ptr<hier::PatchLevel>
+      coarser_level(
          hierarchy->getPatchLevel(level_number - 1));
       const hier::Connector& coarser_to_level =
          coarser_level->findConnectorWithTranspose(*patch_level,
@@ -791,7 +819,9 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
       // call to bridge.  When it is cached later we don't want to also cache
       // its transpose which is why the tranpose is set to a null shared_ptr a
       // few lines below.
-      hier::Connector coarsened_to_level(level_to_level);
+      hier::Connector
+      coarsened_to_level(
+         level_to_level);
       coarsened_to_level.setBase(*coarsened_level->getBoxLevel());
       coarsened_to_level.setHead(*patch_level->getBoxLevel());
       coarsened_to_level.setWidth(
@@ -1231,7 +1261,8 @@ StandardTagAndInitialize::getFromInput(
                                      << std::endl);
                }
                int level = atoi(level_keys[k].substr(6).c_str());
-               boost::shared_ptr<tbox::Database> level_db(
+               boost::shared_ptr<tbox::Database>
+               level_db(
                   input_db->getDatabase(level_keys[k]));
                std::vector<std::string> block_keys = level_db->getAllKeys();
                int n_block_keys = static_cast<int>(block_keys.size());
@@ -1244,7 +1275,9 @@ StandardTagAndInitialize::getFromInput(
                if ((n_block_keys == 1) && (block_keys[0] == "boxes")) {
                   std::vector<tbox::DatabaseBox> db_box_vector =
                      level_db->getDatabaseBoxVector("boxes");
-                  hier::BoxContainer boxes(db_box_vector);
+                  hier::BoxContainer
+                  boxes(
+                     db_box_vector);
                   for (hier::BoxContainer::iterator b = boxes.begin();
                        b != boxes.end(); ++b) {
                      b->setBlockId(hier::BlockId(0));
@@ -1259,11 +1292,14 @@ StandardTagAndInitialize::getFromInput(
                                            << std::endl);
                      }
                      int block = atoi(block_keys[l].substr(6).c_str());
-                     boost::shared_ptr<tbox::Database> block_db(
+                     boost::shared_ptr<tbox::Database>
+                     block_db(
                         level_db->getDatabase(block_keys[l]));
                      std::vector<tbox::DatabaseBox> db_box_vector =
                         block_db->getDatabaseBoxVector("boxes");
-                     hier::BoxContainer boxes(db_box_vector);
+                     hier::BoxContainer
+                     boxes(
+                        db_box_vector);
                      for (hier::BoxContainer::iterator b = boxes.begin();
                           b != boxes.end(); ++b) {
                         b->setBlockId(hier::BlockId(block));
@@ -1303,7 +1339,8 @@ StandardTagAndInitialize::getFromInput(
                                   << "Missing tagging criteria " << i << "."
                                   << std::endl);
             }
-            boost::shared_ptr<tbox::Database> at_db(
+            boost::shared_ptr<tbox::Database>
+            at_db(
                input_db->getDatabase(at_name));
 
             // Read information specific to a cycle or a time criteria.
@@ -1357,7 +1394,8 @@ StandardTagAndInitialize::getFromInput(
                      getObjectName() << "::getFromInput \n"
                                      << "Missing tag criteria." << std::endl);
                }
-               boost::shared_ptr<tbox::Database> this_tag_db(
+               boost::shared_ptr<tbox::Database>
+               this_tag_db(
                   at_db->getDatabase(tag_name));
                std::string tagging_method =
                   this_tag_db->getString("tagging_method");
@@ -1398,7 +1436,8 @@ StandardTagAndInitialize::getFromInput(
                                            << std::endl);
                      }
                      int level = atoi(level_keys[k].substr(6).c_str());
-                     boost::shared_ptr<tbox::Database> level_db(
+                     boost::shared_ptr<tbox::Database>
+                     level_db(
                         this_tag_db->getDatabase(level_keys[k]));
                      std::vector<std::string> block_keys =
                         level_db->getAllKeys();
@@ -1412,7 +1451,9 @@ StandardTagAndInitialize::getFromInput(
                      if ((n_block_keys == 1) && (block_keys[0] == "boxes")) {
                         std::vector<tbox::DatabaseBox> db_box_vector =
                            level_db->getDatabaseBoxVector("boxes");
-                        hier::BoxContainer boxes(db_box_vector);
+                        hier::BoxContainer
+                        boxes(
+                           db_box_vector);
                         for (hier::BoxContainer::iterator b = boxes.begin();
                              b != boxes.end(); ++b) {
                            b->setBlockId(hier::BlockId(0));
@@ -1427,11 +1468,14 @@ StandardTagAndInitialize::getFromInput(
                                                  << std::endl);
                            }
                            int block = atoi(block_keys[l].substr(6).c_str());
-                           boost::shared_ptr<tbox::Database> block_db(
+                           boost::shared_ptr<tbox::Database>
+                           block_db(
                               level_db->getDatabase(block_keys[l]));
                            std::vector<tbox::DatabaseBox> db_box_vector =
                               block_db->getDatabaseBoxVector("boxes");
-                           hier::BoxContainer boxes(db_box_vector);
+                           hier::BoxContainer
+                           boxes(
+                              db_box_vector);
                            for (hier::BoxContainer::iterator b = boxes.begin();
                                 b != boxes.end(); ++b) {
                               b->setBlockId(hier::BlockId(block));

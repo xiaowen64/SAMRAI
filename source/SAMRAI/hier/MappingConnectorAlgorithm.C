@@ -22,11 +22,14 @@
 namespace SAMRAI {
 namespace hier {
 
-const std::string MappingConnectorAlgorithm::s_default_timer_prefix(
+const std::string
+MappingConnectorAlgorithm::s_default_timer_prefix(
    "hier::MappingConnectorAlgorithm");
 std::map<std::string,
          MappingConnectorAlgorithm::TimerStruct> MappingConnectorAlgorithm::s_static_timers;
-char MappingConnectorAlgorithm::s_ignore_external_timer_prefix('n');
+char
+MappingConnectorAlgorithm::s_ignore_external_timer_prefix(
+   'n');
 
 char MappingConnectorAlgorithm::s_print_steps = '\0';
 
@@ -71,7 +74,7 @@ MappingConnectorAlgorithm::MappingConnectorAlgorithm():
 
 MappingConnectorAlgorithm::~MappingConnectorAlgorithm()
 {
-   if ( d_mpi_is_exclusive ) {
+   if (d_mpi_is_exclusive) {
       d_mpi.freeCommunicator();
       d_mpi_is_exclusive = false;
    }
@@ -82,18 +85,17 @@ MappingConnectorAlgorithm::~MappingConnectorAlgorithm()
  ***********************************************************************
  */
 void MappingConnectorAlgorithm::setSAMRAI_MPI(
-   const tbox::SAMRAI_MPI &mpi,
-   bool make_duplicate )
+   const tbox::SAMRAI_MPI& mpi,
+   bool make_duplicate)
 {
-   if ( d_mpi_is_exclusive ) {
+   if (d_mpi_is_exclusive) {
       d_mpi.freeCommunicator();
       d_mpi_is_exclusive = false;
    }
-   if ( make_duplicate ) {
+   if (make_duplicate) {
       d_mpi.dupCommunicator(mpi);
       d_mpi_is_exclusive = true;
-   }
-   else {
+   } else {
       d_mpi = mpi;
    }
 }
@@ -109,10 +111,12 @@ MappingConnectorAlgorithm::getFromInput()
    if (s_print_steps == '\0') {
       s_print_steps = 'n';
       if (tbox::InputManager::inputDatabaseExists()) {
-         boost::shared_ptr<tbox::Database> idb(
+         boost::shared_ptr<tbox::Database>
+         idb(
             tbox::InputManager::getInputDatabase());
          if (idb->isDatabase("MappingConnectorAlgorithm")) {
-            boost::shared_ptr<tbox::Database> mca_db(
+            boost::shared_ptr<tbox::Database>
+            mca_db(
                idb->getDatabase("MappingConnectorAlgorithm"));
             s_print_steps =
                mca_db->getCharWithDefault("DEV_print_modify_steps", 'n');
@@ -167,12 +171,11 @@ MappingConnectorAlgorithm::modify(
 
    const BoxLevel* old = &old_to_new.getBase();
 
-
-   if ( d_sanity_check_inputs ) {
-      if ( !d_mpi.hasNullCommunicator() && !d_mpi.isCongruentWith(old->getMPI()) ) {
+   if (d_sanity_check_inputs) {
+      if (!d_mpi.hasNullCommunicator() && !d_mpi.isCongruentWith(old->getMPI())) {
          TBOX_ERROR("MappingConnectorAlgorithm::modify input error: Input BoxLevel\n"
-                    <<"has SAMRAI_MPI that is incongruent with MappingConnectorAlgorithm's.\n"
-                    <<"See MappingConnectorAlgorithm::setSAMRAI_MPI.\n");
+            << "has SAMRAI_MPI that is incongruent with MappingConnectorAlgorithm's.\n"
+            << "See MappingConnectorAlgorithm::setSAMRAI_MPI.\n");
       }
    }
 
@@ -347,11 +350,11 @@ MappingConnectorAlgorithm::privateModify(
    const tbox::SAMRAI_MPI& mpi = d_mpi.hasNullCommunicator() ?
       old_to_new.getBase().getMPI() : d_mpi;
 
-   if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+   if (mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG)) {
       TBOX_ERROR("Errant message detected.");
    }
 
-   if ( d_barrier_before_communication ) {
+   if (d_barrier_before_communication) {
       mpi.Barrier();
    }
    d_object_timers->t_modify->start();
@@ -407,7 +410,9 @@ MappingConnectorAlgorithm::privateModify(
    const IntVector& anchor_ratio = anchor.getRefinementRatio();
    const IntVector& new_ratio = new_level.getRefinementRatio();
 
-   const tbox::Dimension dim(old.getDim());
+   const tbox::Dimension
+   dim(
+      old.getDim());
 
    /*
     * The width of old-->new indicates the maximum amount of box
@@ -496,7 +501,9 @@ MappingConnectorAlgorithm::privateModify(
     * achieve this ordering.
     */
    bool ordered = true;
-   BoxContainer visible_anchor_nabrs(ordered), visible_new_nabrs(ordered);
+   BoxContainer
+   visible_anchor_nabrs(
+      ordered), visible_new_nabrs(ordered);
    InvertedNeighborhoodSet anchor_eto_old, new_eto_old;
    for (Connector::ConstNeighborhoodIterator ei = old_to_anchor.begin();
         ei != old_to_anchor.end(); ++ei) {
@@ -528,7 +535,9 @@ MappingConnectorAlgorithm::privateModify(
     * Object for communicating relationship changes.
     */
    tbox::AsyncCommStage comm_stage;
-   tbox::AsyncCommPeer<int> * all_comms(0);
+   tbox::AsyncCommPeer<int> *
+   all_comms(
+      0);
 
    d_object_timers->t_modify_misc->stop();
 
@@ -677,7 +686,7 @@ MappingConnectorAlgorithm::privateModify(
 
    d_object_timers->t_modify->stop();
 
-   if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+   if (mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG)) {
       TBOX_ERROR("Errant message detected.");
    }
 }
@@ -811,10 +820,14 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
 {
    d_object_timers->t_modify_remove_and_cache->start();
 
-   const tbox::Dimension& dim(old_to_new.getBase().getDim());
+   const tbox::Dimension&
+   dim(
+      old_to_new.getBase().getDim());
    const tbox::SAMRAI_MPI& mpi = d_mpi.getCommunicator() == MPI_COMM_NULL ?
       old_to_new.getBase().getMPI() : d_mpi;
-   const int rank(mpi.getRank());
+   const int
+   rank(
+      mpi.getRank());
 
    /*
     * Remove relationships with old boxes (because
@@ -834,7 +847,10 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
         iold != old_to_new.end(); ++iold) {
 
       const BoxId& old_gid_gone = *iold;
-      const Box old_box_gone(dim, old_gid_gone);
+      const Box
+      old_box_gone(
+         dim,
+         old_gid_gone);
 
       if (new_to_anchor->hasNeighborSet(old_gid_gone)) {
          // old_gid_gone exists in new_to_anchor.  Remove it.
@@ -968,9 +984,13 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
 
    d_object_timers->t_modify_discover_and_send->start();
 
-   const BoxLevel& old(old_to_new.getBase());
+   const BoxLevel&
+   old(
+      old_to_new.getBase());
 
-   const tbox::Dimension& dim(old.getDim());
+   const tbox::Dimension&
+   dim(
+      old.getDim());
    const tbox::SAMRAI_MPI& mpi = d_mpi.getCommunicator() == MPI_COMM_NULL ?
       old_to_new.getBase().getMPI() : d_mpi;
    const int rank = mpi.getRank();
@@ -992,9 +1012,16 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
     * visible_new_nabrs.
     */
    bool ordered = true;
-   BoxContainer visible_local_anchor_nabrs(ordered);
-   BoxContainer visible_local_new_nabrs(ordered);
-   const Box this_proc_start(dim, GlobalId(LocalId::getZero(), rank));
+   BoxContainer
+   visible_local_anchor_nabrs(
+      ordered);
+   BoxContainer
+   visible_local_new_nabrs(
+      ordered);
+   const Box
+   this_proc_start(
+      dim,
+      GlobalId(LocalId::getZero(), rank));
    BoxContainer::iterator anchor_ni =
       visible_anchor_nabrs.lowerBound(this_proc_start);
    BoxContainer::iterator new_ni =
@@ -1013,7 +1040,9 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
    // Discover all non-local overlaps.
    int i = 0;
    int imax = static_cast<int>(outgoing_ranks.size());
-   std::vector<int> another_outgoing_ranks(outgoing_ranks.size());
+   std::vector<int>
+   another_outgoing_ranks(
+      outgoing_ranks.size());
    for (std::set<int>::const_iterator outgoing_ranks_itr(outgoing_ranks.begin());
         outgoing_ranks_itr != outgoing_ranks.end(); ++outgoing_ranks_itr) {
       another_outgoing_ranks[i++] = *outgoing_ranks_itr;
@@ -1024,10 +1053,14 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
 #pragma omp for schedule(dynamic) nowait
 #endif
    for (i = 0; i < imax; ++i) {
-      BoxId outgoing_proc_start_id(
+      BoxId
+      outgoing_proc_start_id(
          LocalId::getZero(),
          another_outgoing_ranks[i]);
-      Box outgoing_proc_start(dim, outgoing_proc_start_id);
+      Box
+      outgoing_proc_start(
+         dim,
+         outgoing_proc_start_id);
       BoxContainer::const_iterator thread_anchor_ni =
          visible_anchor_nabrs.lowerBound(outgoing_proc_start);
       BoxContainer::const_iterator thread_new_ni =
@@ -1064,7 +1097,8 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
    int num_outgoing_ranks = static_cast<int>(outgoing_ranks.size());
    int num_incoming_ranks = static_cast<int>(incoming_ranks.size());
    int num_comms = num_outgoing_ranks + num_incoming_ranks;
-   std::set<int>::const_iterator outgoing_ranks_itr(
+   std::set<int>::const_iterator
+   outgoing_ranks_itr(
       outgoing_ranks.lower_bound(rank + 1));
    if (outgoing_ranks_itr == outgoing_ranks.end()) {
       outgoing_ranks_itr = outgoing_ranks.begin();
@@ -1302,7 +1336,8 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const IntVector& head_refinement_ratio) const
 {
    const BoxLevel& old = mapping_connector.getBase();
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
+   const boost::shared_ptr<const BaseGridGeometry>&
+   grid_geometry(
       old.getGridGeometry());
    const tbox::SAMRAI_MPI& mpi = d_mpi.getCommunicator() == MPI_COMM_NULL ? old.getMPI() : d_mpi;
    const int rank = mpi.getRank();
@@ -1322,8 +1357,12 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
          compare_box.refine(unmapped_connector_transpose.getRatio());
       }
 
-      BlockId compare_box_block_id(base_box.getBlockId());
-      Box transformed_compare_box(compare_box);
+      BlockId
+      compare_box_block_id(
+         base_box.getBlockId());
+      Box
+      transformed_compare_box(
+         compare_box);
 
       std::vector<Box> found_nabrs;
       InvertedNeighborhoodSet::const_iterator ini =
@@ -1343,7 +1382,9 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
                for (Connector::ConstNeighborIterator naa =
                        mapping_connector.begin(nbrhd);
                     naa != mapping_connector.end(nbrhd); ++naa) {
-                  const Box& new_nabr(*naa);
+                  const Box&
+                  new_nabr(
+                     * naa);
                   if (compare_box_block_id != new_nabr.getBlockId()) {
                      // Re-transform compare_box and note its new BlockId.
                      transformed_compare_box = compare_box;
@@ -1461,7 +1502,8 @@ MappingConnectorAlgorithm::setTimerPrefix(
    } else {
       timer_prefix_used = timer_prefix;
    }
-   std::map<std::string, TimerStruct>::iterator ti(
+   std::map<std::string, TimerStruct>::iterator
+   ti(
       s_static_timers.find(timer_prefix_used));
    if (ti == s_static_timers.end()) {
       d_object_timers = &s_static_timers[timer_prefix_used];

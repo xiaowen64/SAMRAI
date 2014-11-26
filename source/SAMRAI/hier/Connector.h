@@ -153,8 +153,10 @@ public:
     * the other.getBase().getMPI() by default.  If specified, must be
     * congruent with the default.
     */
-   void computeTransposeOf( const Connector &other,
-                            const tbox::SAMRAI_MPI &mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL) );
+   void
+   computeTransposeOf(
+      const Connector& other,
+      const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL));
 
    /*!
     * @brief Transpose the visible relationships so that they point from
@@ -1542,8 +1544,9 @@ private:
    static const int HIER_CONNECTOR_VERSION;
 
    //! @brief Data structure for MPI reductions.
-   struct IntIntStruct { int i;
-                         int rank;
+   struct IntIntStruct {
+      int i;
+      int rank;
    };
 
    /*

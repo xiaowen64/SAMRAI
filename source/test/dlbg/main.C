@@ -87,7 +87,9 @@ int main(
     * then there will be memory leaks reported.
     */
    {
-      tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      tbox::SAMRAI_MPI
+      mpi(
+         tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       tbox::pout << "Input file is " << input_filename << std::endl;
 
@@ -100,7 +102,8 @@ int main(
        * Create input database and parse all data in input file into it.
        */
 
-      boost::shared_ptr<tbox::InputDatabase> input_db(
+      boost::shared_ptr<tbox::InputDatabase>
+      input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -110,7 +113,8 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         boost::shared_ptr<tbox::Database> global_db(
+         boost::shared_ptr<tbox::Database>
+         global_db(
             input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
@@ -124,9 +128,13 @@ int main(
        * This database contains information relevant to main.
        */
 
-      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
+      boost::shared_ptr<tbox::Database>
+      main_db(
+         input_db->getDatabase("Main"));
 
-      const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
+      const tbox::Dimension
+      dim(
+         static_cast<unsigned short>(main_db->getInteger("dim")));
       tbox::plog << "Main database:" << std::endl;
       main_db->printClassData(tbox::plog);
 
@@ -197,14 +205,16 @@ int main(
        * Create a grid geometry required for the
        * hier::PatchHierarchy object.
        */
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry>
+      grid_geometry(
          new geom::CartesianGridGeometry(
             dim,
             std::string("CartesianGridGeometry"),
             input_db->getDatabase("CartesianGridGeometry")));
       tbox::plog << "Grid Geometry:" << std::endl;
       grid_geometry->printClassData(tbox::plog);
-      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+      boost::shared_ptr<hier::PatchHierarchy>
+      patch_hierarchy(
          new hier::PatchHierarchy(
             "Patch Hierarchy",
             grid_geometry,
@@ -215,13 +225,16 @@ int main(
        * SAMRAI virtual functions.
        */
       tbox::plog << "Creating dlbgtest.\n";
-      DLBGTest dlbgtest("DLBGTest",
-                        dim,
-                        patch_hierarchy,
-                        input_db->getDatabase("DLBGTest"));
+      DLBGTest
+      dlbgtest(
+         "DLBGTest",
+         dim,
+         patch_hierarchy,
+         input_db->getDatabase("DLBGTest"));
 
       tbox::plog << "Creating box generator.\n";
-      boost::shared_ptr<mesh::BergerRigoutsos> new_br(
+      boost::shared_ptr<mesh::BergerRigoutsos>
+      new_br(
          new mesh::BergerRigoutsos(
             dim,
             input_db->isDatabase("BergerRigoutsos") ?
@@ -234,13 +247,15 @@ int main(
        * Create the tag-and-initializer, box-generator and load-balancer
        * object references required by the gridding_algorithm object.
        */
-      boost::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
+      boost::shared_ptr<mesh::StandardTagAndInitialize>
+      tag_and_initializer(
          new mesh::StandardTagAndInitialize(
             "CellTaggingMethod",
             dlbgtest.getStandardTagAndInitObject(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
-      boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer(
+      boost::shared_ptr<mesh::TreeLoadBalancer>
+      tree_load_balancer(
          new mesh::TreeLoadBalancer(
             dim,
             "load balancer",
@@ -251,7 +266,8 @@ int main(
        * Create the gridding algorithm used to generate the SAMR grid
        * and create the grid.
        */
-      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
+      boost::shared_ptr<mesh::GriddingAlgorithm>
+      gridding_algorithm(
          new mesh::GriddingAlgorithm(
             patch_hierarchy,
             "Distributed Gridding Algorithm",
@@ -282,7 +298,9 @@ int main(
       tbox::plog << "\nVariable database..." << std::endl;
       hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
 
-      std::vector<int> tag_buffer(10);
+      std::vector<int>
+      tag_buffer(
+         10);
       for (int i = 0; i < static_cast<int>(tag_buffer.size()); ++i) {
          tag_buffer[i] = 0;
       }
@@ -294,7 +312,8 @@ int main(
        * Make the patch levels.
        */
 
-      boost::shared_ptr<tbox::Timer> t_generate_mesh(
+      boost::shared_ptr<tbox::Timer>
+      t_generate_mesh(
          tbox::TimerManager::getManager()->
          getTimer("apps::main::generate_mesh"));
       t_generate_mesh->start();
@@ -302,7 +321,8 @@ int main(
       bool done = false;
       for (ln = 0; patch_hierarchy->levelCanBeRefined(ln) && !done; ++ln) {
          tbox::plog << "Adding finer levels with ln = " << ln << std::endl;
-         boost::shared_ptr<hier::PatchLevel> level_(
+         boost::shared_ptr<hier::PatchLevel>
+         level_(
             patch_hierarchy->getPatchLevel(ln));
          gridding_algorithm->makeFinerLevel(
             /* tag buffer size */ tag_buffer[ln],
@@ -313,7 +333,8 @@ int main(
          if (patch_hierarchy->getNumberOfLevels() < ln + 2) {
             tbox::plog << " (no new level!)" << std::endl;
          } else {
-            boost::shared_ptr<hier::PatchLevel> finer_level_(
+            boost::shared_ptr<hier::PatchLevel>
+            finer_level_(
                patch_hierarchy->getPatchLevel(ln + 1));
             tbox::plog
             << " (" << level_->getGlobalNumberOfPatches()
@@ -344,7 +365,8 @@ int main(
 #ifdef HAVE_HDF5
          const std::string visit_filename = vis_filename + ".visit";
          /* Create the VisIt data writer. */
-         boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
+         boost::shared_ptr<appu::VisItDataWriter>
+         visit_data_writer(
             new appu::VisItDataWriter(
                dim,
                "VisIt Writer",
@@ -374,7 +396,8 @@ int main(
          dlbgtest.computeHierarchyData(*patch_hierarchy,
             double(istep + 1));
 
-         std::vector<double> regrid_start_time(
+         std::vector<double>
+         regrid_start_time(
             patch_hierarchy->getMaxNumberOfLevels());
          for (int i = 0; i < static_cast<int>(regrid_start_time.size()); ++i)
             regrid_start_time[i] = istep;
@@ -405,7 +428,8 @@ int main(
 #ifdef HAVE_HDF5
             const std::string visit_filename = vis_filename + ".visit";
             /* Create the VisIt data writer. */
-            boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
+            boost::shared_ptr<appu::VisItDataWriter>
+            visit_data_writer(
                new appu::VisItDataWriter(
                   dim,
                   "VisIt Writer",
@@ -469,14 +493,16 @@ static int createAndTestDLBG(
 
    int ln;
 
-   std::vector<boost::shared_ptr<BoxLevel> > box_levels(
+   std::vector<boost::shared_ptr<BoxLevel> >
+   box_levels(
       patch_hierarchy.getNumberOfLevels());
 
    /*
     * Set the box_level nodes.
     */
    for (ln = 0; ln < patch_hierarchy.getNumberOfLevels(); ++ln) {
-      boost::shared_ptr<PatchLevel> level_ptr(
+      boost::shared_ptr<PatchLevel>
+      level_ptr(
          patch_hierarchy.getPatchLevel(ln));
       PatchLevel& level = *level_ptr;
       box_levels[ln].reset(new BoxLevel(*level.getBoxLevel()));
@@ -499,7 +525,8 @@ static int createAndTestDLBG(
       crse_connectors.resize(patch_hierarchy.getNumberOfLevels());
       fine_connectors.resize(patch_hierarchy.getNumberOfLevels());
       for (ln = 0; ln < patch_hierarchy.getNumberOfLevels(); ++ln) {
-         boost::shared_ptr<PatchLevel> level_ptr(
+         boost::shared_ptr<PatchLevel>
+         level_ptr(
             patch_hierarchy.getPatchLevel(ln));
          PatchLevel& level = *level_ptr;
          if (ln < patch_hierarchy.getNumberOfLevels() - 1) {

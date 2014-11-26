@@ -29,7 +29,7 @@ Logger::s_finalize_handler(
  * Default Appender to print abort message and calling location to perr stream.
  */
 
-class AbortAppender:public Logger::Appender
+class AbortAppender : public Logger::Appender
 {
 
    void
@@ -42,7 +42,7 @@ class AbortAppender:public Logger::Appender
 /*
  * Default Appender to print a warning message and calling location to log stream.
  */
-class WarningAppender:public Logger::Appender
+class WarningAppender : public Logger::Appender
 {
 
    void
@@ -55,7 +55,7 @@ class WarningAppender:public Logger::Appender
 /*
  * Default Appender to print a debug message and calling location to log stream.
  */
-class DebugAppender:public Logger::Appender
+class DebugAppender : public Logger::Appender
 {
 
    void
@@ -139,7 +139,8 @@ Logger *
 Logger::getInstance()
 {
    if (s_instance == 0) {
-      s_instance = new Logger();
+      s_instance = new
+         Logger();
    }
 
    return s_instance;
@@ -157,7 +158,7 @@ Logger::Appender::Appender(
 
 Logger::Appender&
 Logger::Appender::operator = (
-   const Appender& rhs)
+      const Appender &rhs)
 {
    NULL_USE(rhs);
    return *this;

@@ -26,7 +26,7 @@ using namespace SAMRAI;
 
 #include "database_tests.h"
 
-class RestartTester:public tbox::Serializable
+class RestartTester : public tbox::Serializable
 {
 public:
    RestartTester()
@@ -46,7 +46,8 @@ public:
 
    void getFromRestart()
    {
-      boost::shared_ptr<tbox::Database> root_db(
+      boost::shared_ptr<tbox::Database>
+      root_db(
          tbox::RestartManager::getManager()->getRootDatabase());
 
       boost::shared_ptr<tbox::Database> db;
@@ -72,7 +73,9 @@ int main(
     * then there will be memory leaks reported.
     */
    {
-      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      const tbox::SAMRAI_MPI&
+      mpi(
+         tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       tbox::PIO::logAllNodes("Silotest.log");
 
@@ -88,7 +91,8 @@ int main(
 
       setupTestData();
 
-      boost::shared_ptr<tbox::SiloDatabase> database(
+      boost::shared_ptr<tbox::SiloDatabase>
+      database(
          new tbox::SiloDatabase("SAMRAI Restart"));
       std::string name = "./restart." + tbox::Utilities::processorToString(
             mpi.getRank()) + ".silo";

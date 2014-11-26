@@ -23,7 +23,10 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 
 extern "C" {
-void SAMRAI_F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (const int& ifirst0,
+void
+SAMRAI_F77_FUNC(
+   setexactandrhs2d,
+   SETEXACTANDRHS2D) (const int& ifirst0,
    const int& ilast0,
    const int& ifirst1,
    const int& ilast1,
@@ -31,7 +34,10 @@ void SAMRAI_F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (const int& ifirst0,
    double* rhs,
    const double* dx,
    const double* xlower);
-void SAMRAI_F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (const int& ifirst0,
+void
+SAMRAI_F77_FUNC(
+   setexactandrhs3d,
+   SETEXACTANDRHS3D) (const int& ifirst0,
    const int& ilast0,
    const int& ifirst1,
    const int& ilast1,
@@ -73,7 +79,8 @@ HyprePoisson::HyprePoisson(
     * Register variables with hier::VariableDatabase
     * and get the descriptor indices for those variables.
     */
-   boost::shared_ptr<pdat::CellVariable<double> > comp_soln(
+   boost::shared_ptr<pdat::CellVariable<double> >
+   comp_soln(
       new pdat::CellVariable<double>(
          d_dim,
          object_name + ":computed solution",
@@ -83,7 +90,8 @@ HyprePoisson::HyprePoisson(
          comp_soln,
          d_context,
          hier::IntVector(d_dim, 1) /* ghost cell width is 1 for stencil widths */);
-   boost::shared_ptr<pdat::CellVariable<double> > exact_solution(
+   boost::shared_ptr<pdat::CellVariable<double> >
+   exact_solution(
       new pdat::CellVariable<double>(
          d_dim,
          object_name + ":exact solution"));
@@ -92,7 +100,8 @@ HyprePoisson::HyprePoisson(
          exact_solution,
          d_context,
          hier::IntVector(d_dim, 1) /* ghost cell width is 1 in case needed */);
-   boost::shared_ptr<pdat::CellVariable<double> > rhs_variable(
+   boost::shared_ptr<pdat::CellVariable<double> >
+   rhs_variable(
       new pdat::CellVariable<double>(
          d_dim,
          object_name
@@ -136,12 +145,14 @@ void HyprePoisson::initializeLevelData(
    NULL_USE(old_level);
 
    boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy = hierarchy;
-   boost::shared_ptr<geom::CartesianGridGeometry> grid_geom(
+   boost::shared_ptr<geom::CartesianGridGeometry>
+   grid_geom(
       BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
          patch_hierarchy->getGridGeometry()));
    TBOX_ASSERT(grid_geom);
 
-   boost::shared_ptr<hier::PatchLevel> level(
+   boost::shared_ptr<hier::PatchLevel>
+   level(
       hierarchy->getPatchLevel(level_number));
 
    /*
@@ -165,14 +176,17 @@ void HyprePoisson::initializeLevelData(
             << ": Cannot find patch.  Null patch pointer.");
       }
       hier::Box pbox = patch->getBox();
-      boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      boost::shared_ptr<geom::CartesianPatchGeometry>
+      patch_geom(
          BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch->getPatchGeometry()));
 
-      boost::shared_ptr<pdat::CellData<double> > exact_data(
+      boost::shared_ptr<pdat::CellData<double> >
+      exact_data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch->getPatchData(d_exact_id)));
-      boost::shared_ptr<pdat::CellData<double> > rhs_data(
+      boost::shared_ptr<pdat::CellData<double> >
+      rhs_data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch->getPatchData(d_rhs_id)));
       TBOX_ASSERT(patch_geom);
@@ -245,12 +259,15 @@ bool HyprePoisson::solvePoisson()
     * The easiest way to do this is to just write 0 everywhere,
     * simultaneous setting the boundary values and initial guess.
     */
-   boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(
-                                                level_number));
+   boost::shared_ptr<hier::PatchLevel>
+   level(
+      d_hierarchy->getPatchLevel(
+         level_number));
    for (hier::PatchLevel::iterator ip(level->begin());
         ip != level->end(); ++ip) {
       const boost::shared_ptr<hier::Patch>& patch = *ip;
-      boost::shared_ptr<pdat::CellData<double> > data(
+      boost::shared_ptr<pdat::CellData<double> >
+      data(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch->getPatchData(d_comp_soln_id)));
       TBOX_ASSERT(data);
@@ -267,7 +284,9 @@ bool HyprePoisson::solvePoisson()
     */
    d_poisson_hypre->initializeSolverState(d_hierarchy,
       level_number);
-   solv::PoissonSpecifications sps("Hypre Poisson solver");
+   solv::PoissonSpecifications
+   sps(
+      "Hypre Poisson solver");
    sps.setCZero();
    sps.setDConstant(1.0);
    d_poisson_hypre->setMatrixCoefficients(sps);
@@ -355,20 +374,26 @@ bool HyprePoisson::packDerivedDataIntoDoubleBuffer(
    const hier::Box& region,
    const std::string& variable_name,
    int depth_id,
-   double simulation_time ) const
+   double simulation_time) const
 {
    NULL_USE(region);
    NULL_USE(depth_id);
    NULL_USE(simulation_time);
 
-   pdat::CellData<double>::iterator icell(pdat::CellGeometry::begin(patch.getBox()));
-   pdat::CellData<double>::iterator icellend(pdat::CellGeometry::end(patch.getBox()));
+   pdat::CellData<double>::iterator
+   icell(
+      pdat::CellGeometry::begin(patch.getBox()));
+   pdat::CellData<double>::iterator
+   icellend(
+      pdat::CellGeometry::end(patch.getBox()));
 
    if (variable_name == "Error") {
-      boost::shared_ptr<pdat::CellData<double> > current_solution_(
+      boost::shared_ptr<pdat::CellData<double> >
+      current_solution_(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_comp_soln_id)));
-      boost::shared_ptr<pdat::CellData<double> > exact_solution_(
+      boost::shared_ptr<pdat::CellData<double> >
+      exact_solution_(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_exact_id)));
       TBOX_ASSERT(current_solution_);

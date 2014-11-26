@@ -133,7 +133,9 @@ BaseConnectorAlgorithm::packReferencedNeighbors(
    const int n_referenced_nabrs = static_cast<int>(
          referenced_new_head_nabrs.size() + referenced_new_base_nabrs.size());
    const int reference_section_size =
-      2 + n_referenced_nabrs * Box::commBufferSize(dim);
+      2 + n_referenced_nabrs *
+      Box::commBufferSize(
+         dim);
    send_mesg.insert(
       send_mesg.end(),
       reference_section_size,
@@ -234,9 +236,13 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
 #endif
    const int rank = new_base_to_new_head.getMPI().getRank();
 
-   const tbox::Dimension& dim(new_base_to_new_head.getRatio().getDim());
+   const tbox::Dimension&
+   dim(
+      new_base_to_new_head.getRatio().getDim());
 
-   Box tmp_box(dim);
+   Box
+   tmp_box(
+      dim);
 
    const int box_com_buffer_size = Box::commBufferSize(dim);
    /*
@@ -265,10 +271,17 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
    // Unpack neighbor-removal section.
    const int num_removed_boxes = *(ptr++);
    for (int ii = 0; ii < num_removed_boxes; ++ii) {
-      const LocalId id_gone(*(ptr++));
-      const BlockId block_id_gone(*(ptr++));
+      const LocalId
+      id_gone(
+         *(ptr++));
+      const BlockId
+      block_id_gone(
+         *(ptr++));
       const int number_affected = *(ptr++);
-      const Box box_gone(dim, GlobalId(id_gone, sender));
+      const Box
+      box_gone(
+         dim,
+         GlobalId(id_gone, sender));
       if (print_steps) {
          tbox::plog << "Box " << box_gone
                     << " removed, affecting " << number_affected
@@ -276,9 +289,16 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
       }
 //TODO: Is BoxId usage in this method correct regarding block id?
       for (int iii = 0; iii < number_affected; ++iii) {
-         const LocalId id_affected(*(ptr++));
-         const BlockId block_id_affected(*(ptr++));
-         BoxId affected_nbrhd(id_affected, rank);
+         const LocalId
+         id_affected(
+            *(ptr++));
+         const BlockId
+         block_id_affected(
+            *(ptr++));
+         BoxId
+         affected_nbrhd(
+            id_affected,
+            rank);
          if (print_steps) {
             tbox::plog << " Removing " << box_gone
                        << " from nabr list for " << id_affected
@@ -294,8 +314,12 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
 
    // Get the referenced neighbor Boxes.
    bool ordered = true;
-   BoxContainer referenced_new_base_nabrs(ordered);
-   BoxContainer referenced_new_head_nabrs(ordered);
+   BoxContainer
+   referenced_new_base_nabrs(
+      ordered);
+   BoxContainer
+   referenced_new_head_nabrs(
+      ordered);
    const int offset = *(ptr++);
    const int n_new_base_boxes = *(ptr++);
    const int n_new_head_boxes = *(ptr++);
@@ -346,9 +370,16 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
     * reference data to get the box info.
     */
    for (int ii = 0; ii < n_new_base_boxes; ++ii) {
-      const LocalId local_id(*(ptr++));
-      const BlockId block_id(*(ptr++));
-      const BoxId new_base_box_id(local_id, rank);
+      const LocalId
+      local_id(
+         *(ptr++));
+      const BlockId
+      block_id(
+         *(ptr++));
+      const BoxId
+      new_base_box_id(
+         local_id,
+         rank);
       const int n_new_head_nabrs_found = *(ptr++);
       // Add received neighbors to Box new_base_box_id.
       if (n_new_head_nabrs_found > 0) {
@@ -370,9 +401,16 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
       }
    }
    for (int ii = 0; ii < n_new_head_boxes; ++ii) {
-      const LocalId local_id(*(ptr++));
-      const BlockId block_id(*(ptr++));
-      const BoxId new_head_box_id(local_id, rank);
+      const LocalId
+      local_id(
+         *(ptr++));
+      const BlockId
+      block_id(
+         *(ptr++));
+      const BoxId
+      new_head_box_id(
+         local_id,
+         rank);
       const int n_new_base_nabrs_found = *(ptr++);
       // Add received neighbors to Box new_head_box_id.
       if (n_new_base_nabrs_found > 0) {

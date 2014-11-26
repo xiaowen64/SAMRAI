@@ -221,7 +221,8 @@ void MultiblockTester::createRefineSchedule(
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
 
-   boost::shared_ptr<hier::PatchLevel> level(
+   boost::shared_ptr<hier::PatchLevel>
+   level(
       d_patch_hierarchy->getPatchLevel(level_number));
 
    d_refine_schedule.resize(
@@ -300,7 +301,8 @@ bool MultiblockTester::verifyCommunicationResults() const
    }
    for (int ln = 0;
         ln <= d_patch_hierarchy->getFinestLevelNumber(); ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      boost::shared_ptr<hier::PatchLevel>
+      level(
          d_patch_hierarchy->getPatchLevel(ln));
 
       for (hier::PatchLevel::iterator mi(level->begin());
@@ -345,9 +347,12 @@ void MultiblockTester::initializeLevelData(
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(level_number >= 0);
 
-   boost::shared_ptr<hier::PatchHierarchy> mblk_hierarchy(hierarchy);
+   boost::shared_ptr<hier::PatchHierarchy>
+   mblk_hierarchy(
+      hierarchy);
 
-   boost::shared_ptr<hier::PatchLevel> level(
+   boost::shared_ptr<hier::PatchLevel>
+   level(
       hierarchy->getPatchLevel(level_number));
 
    level->allocatePatchData(d_patch_data_components, time);
@@ -402,7 +407,8 @@ void MultiblockTester::applyGradientDetector(
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
 
-   boost::shared_ptr<hier::PatchLevel> level(
+   boost::shared_ptr<hier::PatchLevel>
+   level(
       hierarchy->getPatchLevel(level_number));
 
    d_data_test_strategy->setDataContext(d_source);
@@ -437,7 +443,8 @@ void MultiblockTester::setPhysicalBoundaryConditions(
    const hier::IntVector& gcw)
 {
    NULL_USE(time);
-   boost::shared_ptr<hier::VariableContext> save_context(
+   boost::shared_ptr<hier::VariableContext>
+   save_context(
       d_data_test_strategy->getDataContext());
 
    d_data_test_strategy->setDataContext(d_refine_scratch);
@@ -458,7 +465,8 @@ void MultiblockTester::fillSingularityBoundaryConditions(
    const hier::BoundaryBox& boundary_box,
    const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
 {
-   boost::shared_ptr<hier::VariableContext> save_context(
+   boost::shared_ptr<hier::VariableContext>
+   save_context(
       d_data_test_strategy->getDataContext());
 
 //   if (d_filling_coarse_scratch) {
@@ -519,17 +527,20 @@ void MultiblockTester::setupHierarchy(
 {
    TBOX_ASSERT(main_input_db);
 
-   boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
+   boost::shared_ptr<mesh::BergerRigoutsos>
+   box_generator(
       new mesh::BergerRigoutsos(d_dim,
          main_input_db->getDatabase("BergerRigoutsos")));
 
-   boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
+   boost::shared_ptr<mesh::TreeLoadBalancer>
+   load_balancer(
       new mesh::TreeLoadBalancer(d_dim,
          "TreeLoadBalancer",
          main_input_db->getDatabase("TreeLoadBalancer")));
    load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-   boost::shared_ptr<mesh::GriddingAlgorithm> gridding_alg(
+   boost::shared_ptr<mesh::GriddingAlgorithm>
+   gridding_alg(
       new mesh::GriddingAlgorithm(
          d_patch_hierarchy,
          "GriddingAlgorithm",
@@ -557,7 +568,10 @@ void MultiblockTester::setupHierarchy(
    d_patch_hierarchy->recursivePrint(tbox::plog, "", 2);
 
    for (int ln = 1; ln < d_patch_hierarchy->getNumberOfLevels(); ++ln) {
-      hier::CoarseFineBoundary cf_bndry(*d_patch_hierarchy, ln,
-                                        hier::IntVector::getOne(d_dim));
+      hier::CoarseFineBoundary
+      cf_bndry(
+         * d_patch_hierarchy,
+         ln,
+         hier::IntVector::getOne(d_dim));
    }
 }

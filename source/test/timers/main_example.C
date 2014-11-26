@@ -54,7 +54,8 @@ int main(
        * Create an input database "input_db" and parse input file (specified
        * on the command line.
        */
-      boost::shared_ptr<tbox::InputDatabase> input_db(
+      boost::shared_ptr<tbox::InputDatabase>
+      input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -70,7 +71,8 @@ int main(
        * looked up the first time).
        */
       string name = "main::test";
-      boost::shared_ptr<tbox::Timer> timer(
+      boost::shared_ptr<tbox::Timer>
+      timer(
          tbox::TimerManager::getManager()->getTimer(name));
 
       /*

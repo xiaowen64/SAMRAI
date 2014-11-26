@@ -162,7 +162,8 @@ EdgeDataFactory<TYPE>::validCopyTo(
     * Valid options are EdgeData and OuteredgeData.
     */
    if (!valid_copy) {
-      boost::shared_ptr<EdgeDataFactory<TYPE> > edf(
+      boost::shared_ptr<EdgeDataFactory<TYPE> >
+      edf(
          boost::dynamic_pointer_cast<EdgeDataFactory<TYPE>,
                                      hier::PatchDataFactory>(dst_pdf));
       if (edf) {
@@ -171,7 +172,8 @@ EdgeDataFactory<TYPE>::validCopyTo(
    }
 
    if (!valid_copy) {
-      boost::shared_ptr<OuteredgeDataFactory<TYPE> > oedf(
+      boost::shared_ptr<OuteredgeDataFactory<TYPE> >
+      oedf(
          boost::dynamic_pointer_cast<OuteredgeDataFactory<TYPE>,
                                      hier::PatchDataFactory>(
             dst_pdf));

@@ -52,7 +52,8 @@ EdgeVariable<TYPE>::~EdgeVariable()
 template<class TYPE>
 int EdgeVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<EdgeDataFactory<TYPE> > factory(
+   boost::shared_ptr<EdgeDataFactory<TYPE> >
+   factory(
       BOOST_CAST<EdgeDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);

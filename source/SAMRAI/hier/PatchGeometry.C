@@ -85,9 +85,13 @@ PatchGeometry::getBoundaryFillBox(
       TBOX_ASSERT(gcw(i) >= 0);
    }
 #endif
-   Box tmp_box(patch_box);
+   Box
+   tmp_box(
+      patch_box);
    tmp_box.grow(gcw);
-   Box fill_box(bbox.getBox() * tmp_box);
+   Box
+   fill_box(
+      bbox.getBox()* tmp_box);
 
    int bdry_type = bbox.getBoundaryType();
    int location_index = bbox.getLocationIndex();

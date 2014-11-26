@@ -232,7 +232,9 @@ void
 Statistic::packStream(
    MessageStream& stream)
 {
-   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI&
+   mpi(
+      SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getRank() == 0) {
       TBOX_ERROR("Statistic::packStream error...\n"
          << "    Processor zero should not pack stat data" << std::endl);
@@ -247,8 +249,12 @@ Statistic::packStream(
       num_int += d_seq_counter + d_total_patch_entries;
       num_double = d_total_patch_entries;
    }
-   std::vector<int> idata(num_int);
-   std::vector<double> ddata(num_double);
+   std::vector<int>
+   idata(
+      num_int);
+   std::vector<double>
+   ddata(
+      num_double);
 
    idata[0] = mpi.getRank();
    idata[1] = d_instance_id;
@@ -294,7 +300,9 @@ void
 Statistic::unpackStream(
    MessageStream& stream)
 {
-   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI&
+   mpi(
+      SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getRank() != 0) {
       TBOX_ERROR("Statistic::unpackStream error...\n"
          << "    Only processor zero should unpack stat data" << std::endl);
@@ -323,7 +331,9 @@ Statistic::unpackStream(
    int is;
    if (d_stat_type == PROC_STAT) {
 
-      std::vector<double> ddata(seq_len);
+      std::vector<double>
+      ddata(
+         seq_len);
 
       if (seq_len > 0) {
          stream.unpack(&ddata[0], seq_len);
@@ -335,7 +345,9 @@ Statistic::unpackStream(
    } else { // d_stat_type == PATCH_STAT
 
       if (seq_len > 0) {
-         std::vector<int> inum_patches_data(seq_len);
+         std::vector<int>
+         inum_patches_data(
+            seq_len);
          stream.unpack(&inum_patches_data[0], seq_len);
 
          int total_seq_items = 0;
@@ -343,8 +355,12 @@ Statistic::unpackStream(
             total_seq_items += inum_patches_data[is];
          }
 
-         std::vector<int> ipatch_num_data(total_seq_items);
-         std::vector<double> ddata(total_seq_items);
+         std::vector<int>
+         ipatch_num_data(
+            total_seq_items);
+         std::vector<double>
+         ddata(
+            total_seq_items);
 
          stream.unpack(&ipatch_num_data[0], total_seq_items);
          stream.unpack(&ddata[0], total_seq_items);
@@ -366,7 +382,9 @@ Statistic::printClassData(
    std::ostream& stream,
    int precision) const
 {
-   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI&
+   mpi(
+      SAMRAI_MPI::getSAMRAIWorld());
    TBOX_ASSERT(precision > 0);
 
    stream.precision(precision);
@@ -452,7 +470,9 @@ Statistic::putToRestart(
    int i;
 
    if (d_stat_type == PROC_STAT) {
-      std::vector<double> ddata(d_seq_counter);
+      std::vector<double>
+      ddata(
+         d_seq_counter);
       for (i = 0; i < d_seq_counter; ++i) {
          ddata[i] = d_proc_array[i].value;
       }
@@ -464,8 +484,12 @@ Statistic::putToRestart(
    }
 
    if (d_stat_type == PATCH_STAT) {
-      std::vector<int> idata(d_seq_counter + d_total_patch_entries);
-      std::vector<double> ddata(d_total_patch_entries);
+      std::vector<int>
+      idata(
+         d_seq_counter + d_total_patch_entries);
+      std::vector<double>
+      ddata(
+         d_total_patch_entries);
 
       int il = 0;
       int mark = d_seq_counter;
@@ -528,7 +552,9 @@ Statistic::getFromRestart(
       if (seq_entries > 0) {
          std::vector<int> idata = restart_db->getIntegerVector("idata");
 
-         std::vector<int> inum_patches(seq_entries);
+         std::vector<int>
+         inum_patches(
+            seq_entries);
          for (i = 0; i < seq_entries; ++i) {
             inum_patches[i] = idata[i];
          }

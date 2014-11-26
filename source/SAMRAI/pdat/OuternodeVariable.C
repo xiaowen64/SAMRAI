@@ -46,7 +46,8 @@ OuternodeVariable<TYPE>::~OuternodeVariable()
 template<class TYPE>
 int OuternodeVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<OuternodeDataFactory<TYPE> > factory(
+   boost::shared_ptr<OuternodeDataFactory<TYPE> >
+   factory(
       BOOST_CAST<OuternodeDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);

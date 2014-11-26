@@ -25,8 +25,8 @@ Dimension::Dimension(
 
 std::ostream&
 operator << (
-   std::ostream& s,
-   const Dimension& dim)
+   std::ostream & s,
+   const Dimension &dim)
 {
    s << dim.getValue() << 'D';
    return s;

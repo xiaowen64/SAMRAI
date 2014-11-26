@@ -42,7 +42,10 @@ hier::IntVector
 RefinePatchStrategy::getMaxRefineOpStencilWidth(
    const tbox::Dimension& dim)
 {
-   hier::IntVector max_width(dim, 0);
+   hier::IntVector
+   max_width(
+      dim,
+      0);
 
    std::set<RefinePatchStrategy *>& current_objects =
       RefinePatchStrategy::getCurrentObjects();
