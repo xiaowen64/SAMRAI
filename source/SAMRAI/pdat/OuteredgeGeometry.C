@@ -149,7 +149,9 @@ OuteredgeGeometry::doOverlap(
             const hier::Box fill_edge_box(
                EdgeGeometry::toEdgeBox(fill_box, axis));
 
-            for (tbox::Dimension::dir_t face_normal = 0; face_normal < dim.getValue(); ++face_normal) {
+            for (tbox::Dimension::dir_t face_normal = 0;
+                 face_normal < dim.getValue();
+                 ++face_normal) {
 
                if (face_normal != axis) {
 
@@ -391,7 +393,9 @@ OuteredgeGeometry::toOuteredgeBox(
 
          if (d != axis) {    // do not trim in axis direction
 
-            for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1); dh < dim.getValue(); ++dh) { // trim higher directions
+            for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1);
+                 dh < dim.getValue();
+                 ++dh) {                                                                                              // trim higher directions
 
                if (dh != axis && dh != face_normal) {
                   // do not trim in axis or face_normal direction

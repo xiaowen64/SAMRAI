@@ -58,7 +58,7 @@ ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    d_master_max_workload_factor(1.0),
    d_master_workload_tolerance(0.0),
    d_master_bin_pack_method("SPATIAL"),
-   d_tile_size(dim,1)
+   d_tile_size(dim, 1)
 {
    TBOX_ASSERT(!name.empty());
    getFromInput(input_db);
@@ -77,7 +77,7 @@ ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    d_master_max_workload_factor(1.0),
    d_master_workload_tolerance(0.0),
    d_master_bin_pack_method("SPATIAL"),
-   d_tile_size(dim,1)
+   d_tile_size(dim, 1)
 
 {
    getFromInput(input_db);

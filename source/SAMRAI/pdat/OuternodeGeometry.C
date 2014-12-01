@@ -150,7 +150,9 @@ OuternodeGeometry::doOverlap(
       for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
          hier::Box trimmed_src_node_box = src_node_box;
-         for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1); dh < dim.getValue(); ++dh) {
+         for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1);
+              dh < dim.getValue();
+              ++dh) {
             /*
              * For directions higher than d, narrow the box down to avoid
              * representing edge and corner nodes multiple times.
@@ -259,7 +261,9 @@ OuternodeGeometry::doOverlap(
       for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
          hier::Box trimmed_dst_node_box(dst_node_box * fill_node_box);
-         for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1); dh < dim.getValue(); ++dh) {
+         for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1);
+              dh < dim.getValue();
+              ++dh) {
             /*
              * For directions higher than d, narrow the box down to avoid
              * representing edge and corner nodes multiple times.
@@ -367,7 +371,9 @@ OuternodeGeometry::doOverlap(
       for (dst_d = 0; dst_d < dim.getValue(); ++dst_d) {
 
          hier::Box trimmed_dst_node_box(dst_node_box * fill_node_box);
-         for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(dst_d + 1); dh < dim.getValue(); ++dh) {
+         for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(dst_d + 1);
+              dh < dim.getValue();
+              ++dh) {
             trimmed_dst_node_box.setLower(dh,
                trimmed_dst_node_box.lower(dh) + 1);
             trimmed_dst_node_box.setUpper(dh,
@@ -383,7 +389,9 @@ OuternodeGeometry::doOverlap(
          for (src_d = 0; src_d < dim.getValue(); ++src_d) {
 
             hier::Box trimmed_src_node_box = src_node_box;
-            for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(src_d + 1); dh < dim.getValue(); ++dh) {
+            for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(src_d + 1);
+                 dh < dim.getValue();
+                 ++dh) {
                trimmed_src_node_box.setLower(dh,
                   trimmed_src_node_box.lower(dh) + 1);
                trimmed_src_node_box.setUpper(dh,
@@ -394,7 +402,7 @@ OuternodeGeometry::doOverlap(
             lo_src_node_box.setUpper(src_d, lo_src_node_box.lower(src_d));
 
             hier::Box hi_src_node_box = trimmed_src_node_box;
-            hi_src_node_box.setLower(src_d,  hi_src_node_box.upper(src_d));
+            hi_src_node_box.setLower(src_d, hi_src_node_box.upper(src_d));
 
             hier::Box lo_lo_box(
                lo_src_node_box * msk_node_box * lo_dst_node_box);

@@ -178,7 +178,7 @@ void
 Schedule::communicate()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if ( d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+   if (d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG)) {
       TBOX_ERROR("Schedule::communicate: Errant message detected before beginCommunication().");
    }
 #endif
@@ -189,7 +189,7 @@ Schedule::communicate()
    d_object_timers->t_communicate->stop();
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if ( d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+   if (d_mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG)) {
       TBOX_ERROR("Schedule::communicate: Errant message detected after finalizeCommunication().");
    }
 #endif

@@ -163,7 +163,7 @@ BoxLevel::BoxLevel(
 }
 
 BoxLevel::BoxLevel(
-   const BoxContainer &boxes,
+   const BoxContainer& boxes,
    const IntVector& ratio,
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,

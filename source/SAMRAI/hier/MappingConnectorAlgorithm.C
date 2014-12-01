@@ -71,7 +71,7 @@ MappingConnectorAlgorithm::MappingConnectorAlgorithm():
 
 MappingConnectorAlgorithm::~MappingConnectorAlgorithm()
 {
-   if ( d_mpi_is_exclusive ) {
+   if (d_mpi_is_exclusive) {
       d_mpi.freeCommunicator();
       d_mpi_is_exclusive = false;
    }
@@ -82,18 +82,17 @@ MappingConnectorAlgorithm::~MappingConnectorAlgorithm()
  ***********************************************************************
  */
 void MappingConnectorAlgorithm::setSAMRAI_MPI(
-   const tbox::SAMRAI_MPI &mpi,
-   bool make_duplicate )
+   const tbox::SAMRAI_MPI& mpi,
+   bool make_duplicate)
 {
-   if ( d_mpi_is_exclusive ) {
+   if (d_mpi_is_exclusive) {
       d_mpi.freeCommunicator();
       d_mpi_is_exclusive = false;
    }
-   if ( make_duplicate ) {
+   if (make_duplicate) {
       d_mpi.dupCommunicator(mpi);
       d_mpi_is_exclusive = true;
-   }
-   else {
+   } else {
       d_mpi = mpi;
    }
 }
@@ -167,12 +166,11 @@ MappingConnectorAlgorithm::modify(
 
    const BoxLevel* old = &old_to_new.getBase();
 
-
-   if ( d_sanity_check_inputs ) {
-      if ( !d_mpi.hasNullCommunicator() && !d_mpi.isCongruentWith(old->getMPI()) ) {
+   if (d_sanity_check_inputs) {
+      if (!d_mpi.hasNullCommunicator() && !d_mpi.isCongruentWith(old->getMPI())) {
          TBOX_ERROR("MappingConnectorAlgorithm::modify input error: Input BoxLevel\n"
-                    <<"has SAMRAI_MPI that is incongruent with MappingConnectorAlgorithm's.\n"
-                    <<"See MappingConnectorAlgorithm::setSAMRAI_MPI.\n");
+            << "has SAMRAI_MPI that is incongruent with MappingConnectorAlgorithm's.\n"
+            << "See MappingConnectorAlgorithm::setSAMRAI_MPI.\n");
       }
    }
 
@@ -347,11 +345,11 @@ MappingConnectorAlgorithm::privateModify(
    const tbox::SAMRAI_MPI& mpi = d_mpi.hasNullCommunicator() ?
       old_to_new.getBase().getMPI() : d_mpi;
 
-   if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+   if (mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG)) {
       TBOX_ERROR("Errant message detected.");
    }
 
-   if ( d_barrier_before_communication ) {
+   if (d_barrier_before_communication) {
       mpi.Barrier();
    }
    d_object_timers->t_modify->start();
@@ -677,7 +675,7 @@ MappingConnectorAlgorithm::privateModify(
 
    d_object_timers->t_modify->stop();
 
-   if ( mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG) ) {
+   if (mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG)) {
       TBOX_ERROR("Errant message detected.");
    }
 }

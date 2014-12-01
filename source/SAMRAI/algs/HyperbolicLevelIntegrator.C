@@ -592,7 +592,7 @@ HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
          level_number,
          level_number, true);
 
-   const hier::IntVector c_to_f_width = 
+   const hier::IntVector c_to_f_width =
       hier::IntVector::ceilingDivide(peer_connector_width, coarsen_ratio);
 
    const hier::IntVector f_to_c_width(c_to_f_width * coarsen_ratio);

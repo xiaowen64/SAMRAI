@@ -762,14 +762,14 @@ BoxUtilities::growBoxWithinDomain(
          // outside_boxes = local_domain_complement;
          // outside_boxes.unorder();
          outside_boxes.clear();
-         for ( BoxContainer::const_iterator bi=local_domain_complement.begin();
-               bi!=local_domain_complement.end(); ++bi ) {
+         for (BoxContainer::const_iterator bi = local_domain_complement.begin();
+              bi != local_domain_complement.end(); ++bi) {
             outside_boxes.push_back(*bi);
          }
          outside_boxes.intersectBoxes(test_region);
 
          int grow_lo = try_box.lower(id) - grow;
-         for ( BoxContainer::iterator lb=outside_boxes.begin(); lb!=outside_boxes.end(); ++lb) {
+         for (BoxContainer::iterator lb = outside_boxes.begin(); lb != outside_boxes.end(); ++lb) {
             grow_lo =
                tbox::MathUtilities<int>::Max(grow_lo, lb->upper(id) + 1);
          }
@@ -782,14 +782,14 @@ BoxUtilities::growBoxWithinDomain(
          // outside_boxes = local_domain_complement;
          // outside_boxes.unorder();
          outside_boxes.clear();
-         for ( BoxContainer::const_iterator bi=local_domain_complement.begin();
-               bi!=local_domain_complement.end(); ++bi ) {
+         for (BoxContainer::const_iterator bi = local_domain_complement.begin();
+              bi != local_domain_complement.end(); ++bi) {
             outside_boxes.push_back(*bi);
          }
          outside_boxes.intersectBoxes(test_region);
 
          int grow_up = try_box.upper(id) + grow;
-         for (BoxContainer::iterator lb=outside_boxes.begin(); lb!=outside_boxes.end(); ++lb) {
+         for (BoxContainer::iterator lb = outside_boxes.begin(); lb != outside_boxes.end(); ++lb) {
             grow_up =
                tbox::MathUtilities<int>::Min(grow_up, lb->lower(id) - 1);
          }

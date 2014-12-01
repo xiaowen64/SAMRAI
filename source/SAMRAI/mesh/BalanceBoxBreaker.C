@@ -333,7 +333,7 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
 
    TrialBreak trial1(trial);
 
-   for (tbox::Dimension::dir_t d1 = 1; d1 <= dim.getValue() && !sufficient_brk_load; ++d1 ) {
+   for (tbox::Dimension::dir_t d1 = 1; d1 <= dim.getValue() && !sufficient_brk_load; ++d1) {
       const tbox::Dimension::dir_t d = static_cast<tbox::Dimension::dir_t>(dim.getValue() - d1);
 
       /*
@@ -680,7 +680,8 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
          if (touches_upper_side) {
             corner_box.setLower(static_cast<hier::Box::dir_t>(d),
                upper_intersection(d));
-            if (corner_box.lower(static_cast<hier::Box::dir_t>(d)) - trial.d_whole_box.lower(static_cast<hier::Box::dir_t>(d)) <
+            if (corner_box.lower(static_cast<hier::Box::dir_t>(d))
+                - trial.d_whole_box.lower(static_cast<hier::Box::dir_t>(d)) <
                 d_pparams->getMinBoxSize() (d)) {
                corner_box.setLower(static_cast<hier::Box::dir_t>(d),
                   trial.d_whole_box.lower(static_cast<hier::Box::dir_t>(d)));
@@ -786,7 +787,6 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
          }
          corner_box_size = corner_box.numberCells();
          corner_box_load = static_cast<double>(corner_box.size());
-
 
          const bool accept_break = BalanceUtilities::compareLoads(
                break_acceptance_flags, best_breakoff_load, corner_box_load,

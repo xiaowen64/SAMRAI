@@ -181,7 +181,7 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
    }
 
    tbox::plog << "TimeRefinementIntegrator constructor setting regrid intervals:";
-   for ( size_t i=0; i<d_regrid_interval.size(); ++i ) {
+   for (size_t i = 0; i < d_regrid_interval.size(); ++i) {
       tbox::plog << "  [" << i << "]=" << d_regrid_interval[i];
    }
    tbox::plog << "\n";
@@ -1478,7 +1478,7 @@ TimeRefinementIntegrator::setRegridInterval(
    }
 
    tbox::plog << "TimeRefinementIntegrator::setRegridInterval setting regrid intervals:";
-   for ( size_t i=0; i<d_regrid_interval.size(); ++i ) {
+   for (size_t i = 0; i < d_regrid_interval.size(); ++i) {
       tbox::plog << "  [" << i << "]=" << d_regrid_interval[i];
    }
    tbox::plog << "\n";

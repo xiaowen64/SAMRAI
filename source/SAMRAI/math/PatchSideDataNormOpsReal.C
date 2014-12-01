@@ -109,10 +109,10 @@ PatchSideDataNormOpsReal<TYPE>::abs(
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
    TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
-      tbox::Dimension::dir_t dimVal = dst->getDim().getValue();
+   tbox::Dimension::dir_t dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (   tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
+   for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          d_array_ops.abs(dst->getArrayData(d),

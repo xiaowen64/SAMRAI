@@ -1736,8 +1736,8 @@ BaseGridGeometry::checkBoundaryBox(
 
             for (tbox::Dimension::dir_t k = 1; k < d_dim.getValue(); ++k) {
 
-               grow_patch_box.grow( static_cast<tbox::Dimension::dir_t>((j + k) % d_dim.getValue()),
-                                   max_data_ghost_width((j + k) % d_dim.getValue()));
+               grow_patch_box.grow(static_cast<tbox::Dimension::dir_t>((j + k) % d_dim.getValue()),
+                  max_data_ghost_width((j + k) % d_dim.getValue()));
 
             }
 
@@ -1745,8 +1745,8 @@ BaseGridGeometry::checkBoundaryBox(
 
             for (tbox::Dimension::dir_t k = 1; k < d_dim.getValue(); ++k) {
 
-               grow_patch_box.grow( static_cast<tbox::Dimension::dir_t>((j + k) % d_dim.getValue()),
-                                   2 * max_data_ghost_width((j + k) % d_dim.getValue()));
+               grow_patch_box.grow(static_cast<tbox::Dimension::dir_t>((j + k) % d_dim.getValue()),
+                  2 * max_data_ghost_width((j + k) % d_dim.getValue()));
 
             }
 
@@ -3049,17 +3049,16 @@ BaseGridGeometry::Neighbor::Neighbor(
 BaseGridGeometry::NeighborIterator::NeighborIterator(
    BaseGridGeometry* grid_geometry,
    const BlockId& block_id,
-   bool from_start)
-   : d_grid_geom(grid_geometry),
-     d_block_id(block_id)
+   bool from_start):
+   d_grid_geom(grid_geometry),
+   d_block_id(block_id)
 {
    TBOX_ASSERT(grid_geometry != 0);
 
    if (from_start) {
       d_nbr_itr =
          grid_geometry->d_block_neighbors[block_id.getBlockValue()].begin();
-   }
-   else {
+   } else {
       d_nbr_itr =
          grid_geometry->d_block_neighbors[block_id.getBlockValue()].end();
    }
@@ -3073,9 +3072,9 @@ BaseGridGeometry::NeighborIterator::NeighborIterator(
 BaseGridGeometry::NeighborIterator::NeighborIterator(
    BaseGridGeometry* grid_geometry,
    const BlockId& block_id,
-   const BlockId& nbr_block_id)
-   : d_grid_geom(grid_geometry),
-     d_block_id(block_id)
+   const BlockId& nbr_block_id):
+   d_grid_geom(grid_geometry),
+   d_block_id(block_id)
 {
    TBOX_ASSERT(grid_geometry != 0);
 
@@ -3113,17 +3112,16 @@ BaseGridGeometry::NeighborIterator::~NeighborIterator()
 BaseGridGeometry::ConstNeighborIterator::ConstNeighborIterator(
    const BaseGridGeometry* grid_geometry,
    const BlockId& block_id,
-   bool from_start)
-   : d_grid_geom(grid_geometry),
-     d_block_id(block_id)
+   bool from_start):
+   d_grid_geom(grid_geometry),
+   d_block_id(block_id)
 {
    TBOX_ASSERT(grid_geometry != 0);
 
    if (from_start) {
       d_nbr_itr =
          grid_geometry->d_block_neighbors[block_id.getBlockValue()].begin();
-   }
-   else {
+   } else {
       d_nbr_itr =
          grid_geometry->d_block_neighbors[block_id.getBlockValue()].end();
    }
@@ -3137,9 +3135,9 @@ BaseGridGeometry::ConstNeighborIterator::ConstNeighborIterator(
 BaseGridGeometry::ConstNeighborIterator::ConstNeighborIterator(
    const BaseGridGeometry* grid_geometry,
    const BlockId& block_id,
-   const BlockId& nbr_block_id)
-   : d_grid_geom(grid_geometry),
-     d_block_id(block_id)
+   const BlockId& nbr_block_id):
+   d_grid_geom(grid_geometry),
+   d_block_id(block_id)
 {
    TBOX_ASSERT(grid_geometry != 0);
 

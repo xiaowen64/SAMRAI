@@ -1542,28 +1542,28 @@ SAMRAI_MPI::parallelPrefixSum(
 }
 
 /*
-**************************************************************************
-* Check whether there is a receivable message, for use in guarding
-* against errant messages (message from an unrelated communication)
-* that may be mistakenly received.  This check is imperfect; it can
-* detect messages that have arrived but it can't detect messages that
-* has not arrived.
-*
-* The barriers prevent processes from starting or finishing the check
-* too early.  Early start may miss recently sent errant messages from
-* slower processes.  Early finishes can allow the process to get ahead
-* and send a valid message that may be mistaken as an errant message
-* by the receiver doing the Iprobe.
-**************************************************************************
-*/
+ **************************************************************************
+ * Check whether there is a receivable message, for use in guarding
+ * against errant messages (message from an unrelated communication)
+ * that may be mistakenly received.  This check is imperfect; it can
+ * detect messages that have arrived but it can't detect messages that
+ * has not arrived.
+ *
+ * The barriers prevent processes from starting or finishing the check
+ * too early.  Early start may miss recently sent errant messages from
+ * slower processes.  Early finishes can allow the process to get ahead
+ * and send a valid message that may be mistaken as an errant message
+ * by the receiver doing the Iprobe.
+ **************************************************************************
+ */
 bool
 SAMRAI_MPI::hasReceivableMessage(
-   Status *status,
+   Status* status,
    int source,
-   int tag ) const
+   int tag) const
 {
    int flag = false;
-   if ( s_mpi_is_initialized ) {
+   if (s_mpi_is_initialized) {
       tbox::SAMRAI_MPI::Status tmp_status;
       Barrier();
       int mpi_err = Iprobe(source, tag, &flag, status ? status : &tmp_status);
@@ -1631,16 +1631,18 @@ SAMRAI_MPI::compareCommunicator(
 #ifdef HAVE_MPI
    int compare_result;
    int mpi_err = Comm_compare(
-      d_comm,
-      r.d_comm,
-      &compare_result);
-   if ( mpi_err != MPI_SUCCESS ) {
+         d_comm,
+         r.d_comm,
+         &compare_result);
+   if (mpi_err != MPI_SUCCESS) {
       TBOX_ERROR("SAMRAI_MPI::compareCommunicator: Error comparing two communicators.");
    }
    return compare_result;
+
 #else
    NULL_USE(r);
    return d_comm == r.d_comm ? MPI_IDENT : MPI_CONGRUENT;
+
 #endif
 }
 

@@ -793,7 +793,7 @@ SiloDatabase::getDatabaseBoxVector(
    int* values = static_cast<int *>(ca->values);
    int offset = ca->elemlengths[0];
    for (int i = 0; i < (ca->elemlengths[0]); ++i) {
-      TBOX_ASSERT( values[i] > 0 && values[i] <= SAMRAI::MAX_DIM_VAL );
+      TBOX_ASSERT(values[i] > 0 && values[i] <= SAMRAI::MAX_DIM_VAL);
       boxVector[i].d_data.d_dimension = static_cast<tbox::Dimension::dir_t>(values[i]);
       /*
        * This preserves old behavior where boxes can be different dims but is
@@ -1008,7 +1008,7 @@ SiloDatabase::getComplexVector(
 
    for (int i = 0; i < ca->elemlengths[0]; ++i) {
       complexArray[i] = dcomplex(static_cast<double *>(ca->values)[i],
-         static_cast<double *>(ca->values)[i + ca->elemlengths[0]]);
+            static_cast<double *>(ca->values)[i + ca->elemlengths[0]]);
    }
 
    DBFreeCompoundarray(ca);

@@ -724,7 +724,8 @@ BergerRigoutsosNode::runChildren_check()
    }
 
    const double combine_reduction =
-      double(d_lft_child->d_box.size() + d_rht_child->d_box.size()) / static_cast<double>(d_box.size());
+      double(d_lft_child->d_box.size()
+             + d_rht_child->d_box.size()) / static_cast<double>(d_box.size());
    if (d_lft_child->boxAccepted() &&
        d_rht_child->boxAccepted() &&
        d_box.numberCells() <= d_common->d_max_box_size &&
@@ -1410,7 +1411,9 @@ BergerRigoutsosNode::acceptOrSplitBox()
          sorted_margins(dim) = dim;
       }
       for (tbox::Dimension::dir_t d0 = 0; d0 < d_common->getDim().getValue() - 1; ++d0) {
-         for (tbox::Dimension::dir_t d1 = static_cast<tbox::Dimension::dir_t>(d0 + 1); d1 < d_common->getDim().getValue(); ++d1) {
+         for (tbox::Dimension::dir_t d1 = static_cast<tbox::Dimension::dir_t>(d0 + 1);
+              d1 < d_common->getDim().getValue();
+              ++d1) {
             if (cut_margin(sorted_margins(d0)) <
                 cut_margin(sorted_margins(d1))) {
                int tmp_dim = sorted_margins(d0);
@@ -1953,33 +1956,33 @@ BergerRigoutsosNode::formChildGroups()
    int* lft_criteria = 0;
    int* rht_criteria = 0;
    switch (d_common->d_owner_mode) {
-   case BergerRigoutsos::SINGLE_OWNER:
-      lft_criteria = &d_recv_msg[0];
-      rht_criteria = &d_recv_msg[1];
-      lft_criteria[imyself * 4] = tbox::MathUtilities<int>::getMax();
-      rht_criteria[imyself * 4] = tbox::MathUtilities<int>::getMax();
-      break;
-   case BergerRigoutsos::MOST_OVERLAP:
-      lft_criteria = &d_recv_msg[0];
-      rht_criteria = &d_recv_msg[1];
-      lft_criteria[imyself * 4] = static_cast<int>(d_lft_child->d_overlap);
-      rht_criteria[imyself * 4] = static_cast<int>(d_rht_child->d_overlap);
-      break;
-   case BergerRigoutsos::FEWEST_OWNED:
-      lft_criteria = &d_recv_msg[2];
-      rht_criteria = &d_recv_msg[2];
-      lft_criteria[imyself * 4] = -d_common->d_num_nodes_owned;
-      rht_criteria[imyself * 4] = -d_common->d_num_nodes_owned;
-      break;
-   case BergerRigoutsos::LEAST_ACTIVE:
-      lft_criteria = &d_recv_msg[3];
-      rht_criteria = &d_recv_msg[3];
-      lft_criteria[imyself * 4] = -d_common->d_num_nodes_active;
-      rht_criteria[imyself * 4] = -d_common->d_num_nodes_active;
-      break;
-   default:
-      TBOX_ERROR("LIBRARY error" << std::endl);
-      break;
+      case BergerRigoutsos::SINGLE_OWNER:
+         lft_criteria = &d_recv_msg[0];
+         rht_criteria = &d_recv_msg[1];
+         lft_criteria[imyself * 4] = tbox::MathUtilities<int>::getMax();
+         rht_criteria[imyself * 4] = tbox::MathUtilities<int>::getMax();
+         break;
+      case BergerRigoutsos::MOST_OVERLAP:
+         lft_criteria = &d_recv_msg[0];
+         rht_criteria = &d_recv_msg[1];
+         lft_criteria[imyself * 4] = static_cast<int>(d_lft_child->d_overlap);
+         rht_criteria[imyself * 4] = static_cast<int>(d_rht_child->d_overlap);
+         break;
+      case BergerRigoutsos::FEWEST_OWNED:
+         lft_criteria = &d_recv_msg[2];
+         rht_criteria = &d_recv_msg[2];
+         lft_criteria[imyself * 4] = -d_common->d_num_nodes_owned;
+         rht_criteria[imyself * 4] = -d_common->d_num_nodes_owned;
+         break;
+      case BergerRigoutsos::LEAST_ACTIVE:
+         lft_criteria = &d_recv_msg[3];
+         rht_criteria = &d_recv_msg[3];
+         lft_criteria[imyself * 4] = -d_common->d_num_nodes_active;
+         rht_criteria[imyself * 4] = -d_common->d_num_nodes_active;
+         break;
+      default:
+         TBOX_ERROR("LIBRARY error" << std::endl);
+         break;
    }
 
    int n_lft = 0;

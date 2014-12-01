@@ -48,7 +48,8 @@ OuteredgeData<TYPE>::OuteredgeData(
 
    for (tbox::Dimension::dir_t axis = 0; axis < getDim().getValue(); ++axis) {
 
-      for (tbox::Dimension::dir_t face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
+      for (tbox::Dimension::dir_t face_normal = 0; face_normal < getDim().getValue();
+           ++face_normal) {
 
          if (face_normal != axis) {
 
@@ -561,7 +562,8 @@ OuteredgeData<TYPE>::getDataStreamSize(
       const hier::BoxContainer& boxlist =
          t_overlap->getDestinationBoxContainer(axis);
 
-      for (tbox::Dimension::dir_t face_normal = 0; face_normal < getDim().getValue(); ++face_normal) {
+      for (tbox::Dimension::dir_t face_normal = 0; face_normal < getDim().getValue();
+           ++face_normal) {
 
          if (face_normal != axis) {
 
@@ -777,7 +779,9 @@ OuteredgeData<TYPE>::getSizeOfData(
 
    for (tbox::Dimension::dir_t axis = 0; axis < box.getDim().getValue(); ++axis) {
 
-      for (tbox::Dimension::dir_t face_normal = 0; face_normal < box.getDim().getValue(); ++face_normal) {
+      for (tbox::Dimension::dir_t face_normal = 0;
+           face_normal < box.getDim().getValue();
+           ++face_normal) {
 
          if (face_normal != axis) {
 

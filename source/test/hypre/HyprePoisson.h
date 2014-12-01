@@ -140,7 +140,7 @@ public:
       const hier::Box& region,
       const std::string& variable_name,
       int depth_id,
-      double simulation_time = 0.0 ) const;
+      double simulation_time = 0.0) const;
 
    //@}
 

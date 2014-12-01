@@ -625,8 +625,7 @@ double LinAdv::computeStableDtOnPatch(
          ghost_cells(1),
          &d_advection_velocity[0],
          stabdt);
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       SAMRAI_F77_FUNC(stabledt3d, STABLEDT3D) (dx,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
@@ -636,8 +635,7 @@ double LinAdv::computeStableDtOnPatch(
          ghost_cells(2),
          &d_advection_velocity[0],
          stabdt);
-   }
-   else {
+   } else {
       TBOX_ERROR("Only 2D or 3D allowed in LinAdv::computeStableDtOnPatch");
       stabdt = 0;
    }

@@ -34,7 +34,7 @@ SphericalShellGenerator::SphericalShellGenerator(
    d_hierarchy(),
    d_time_shift(0.0),
    d_radii(0),
-   d_buffer_distance(1, std::vector<double>(dim.getValue(),0.0))
+   d_buffer_distance(1, std::vector<double>(dim.getValue(), 0.0))
 {
    for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
       d_init_center[i] = 0.0;
@@ -92,7 +92,7 @@ SphericalShellGenerator::SphericalShellGenerator(
          }
 
          if (!tmpa.empty()) {
-            d_buffer_distance.resize(ln+1);
+            d_buffer_distance.resize(ln + 1);
             d_buffer_distance.back().swap(tmpa);
          } else {
             break;
@@ -139,12 +139,12 @@ void SphericalShellGenerator::setTags(
       TBOX_ASSERT(patch_geom);
       TBOX_ASSERT(tag_data);
 
-      computeShellsData( 0, tag_data.get(),
-                         tag_data->getBox(),
-                         (static_cast<size_t>(tag_ln) < d_buffer_distance.size() ?
-                          d_buffer_distance[tag_ln] : d_buffer_distance.back()),
-                         patch_geom->getXLower(),
-                         patch_geom->getDx());
+      computeShellsData(0, tag_data.get(),
+         tag_data->getBox(),
+         (static_cast<size_t>(tag_ln) < d_buffer_distance.size() ?
+          d_buffer_distance[tag_ln] : d_buffer_distance.back()),
+         patch_geom->getXLower(),
+         patch_geom->getDx());
 
    }
 
@@ -200,8 +200,6 @@ void SphericalShellGenerator::resetHierarchyConfiguration(
    TBOX_ASSERT(d_hierarchy);
 }
 
-
-
 /*
  * Compute the solution data for a patch.
  */
@@ -209,7 +207,7 @@ void SphericalShellGenerator::computePatchData(
    const hier::Patch& patch,
    pdat::CellData<double>* uval_data,
    pdat::CellData<int>* tag_data,
-   const hier::Box &fill_box) const
+   const hier::Box& fill_box) const
 {
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
@@ -219,23 +217,20 @@ void SphericalShellGenerator::computePatchData(
    const double* xlo = patch_geom->getXLower();
    const double* dx = patch_geom->getDx();
 
-   if ( tag_data ) {
+   if (tag_data) {
       computeShellsData(uval_data, tag_data,
-                        fill_box,
-                        (static_cast<size_t>(patch.getPatchLevelNumber()) < d_buffer_distance.size() ?
-                         d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
-                        xlo, dx);
-   }
-   else {
+         fill_box,
+         (static_cast<size_t>(patch.getPatchLevelNumber()) < d_buffer_distance.size() ?
+          d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
+         xlo, dx);
+   } else {
       // Not computing tag => no tag buffer needed.
       computeShellsData(uval_data, tag_data,
-                        fill_box,
-                        std::vector<double>(d_dim.getValue(),0.0),
-                        xlo, dx);
+         fill_box,
+         std::vector<double>(d_dim.getValue(), 0.0),
+         xlo, dx);
    }
 }
-
-
 
 /*
  * Compute the various data due to the shells.
@@ -268,7 +263,7 @@ void SphericalShellGenerator::computeShellsData(
       time = uval_data->getTime() + d_time_shift;
    }
 
-   if ( tag_data != 0 ) {
+   if (tag_data != 0) {
       /*
        * Compute radii of the nodes.  Tag cell if it has nodes farther than
        * the inner shell radius and nodes closer than the shell outer radius.
@@ -284,8 +279,8 @@ void SphericalShellGenerator::computeShellsData(
          double rr = 0;
          for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
             r[d] = xlo[d]
-               + dx[d] * ( idx(d) - pbox.lower()(d) )
-               - ( d_init_center[d] + time*d_velocity[d] );
+               + dx[d] * (idx(d) - pbox.lower() (d))
+               - (d_init_center[d] + time * d_velocity[d]);
             rr += r[d] * r[d];
          }
          rr = sqrt(rr);
@@ -321,9 +316,9 @@ void SphericalShellGenerator::computeShellsData(
       }
    }
 
-   if ( uval_data != 0 ) {
+   if (uval_data != 0) {
       hier::Box fbox = uval_data->getGhostBox() * fill_box;
-      uval_data->fill( static_cast<double>(d_radii.size()), fbox );
+      uval_data->fill(static_cast<double>(d_radii.size()), fbox);
 
       pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(fbox));
       for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(fbox));
@@ -334,14 +329,14 @@ void SphericalShellGenerator::computeShellsData(
          double rr = 0;
          for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
             r[d] = xlo[d]
-               + dx[d] * ( cid(d) - pbox.lower()(d) + 0.5 )
-               - ( d_init_center[d] + time*d_velocity[d] );
+               + dx[d] * (cid(d) - pbox.lower() (d) + 0.5)
+               - (d_init_center[d] + time * d_velocity[d]);
             rr += r[d] * r[d];
          }
          rr = sqrt(rr);
 
-         for (int i = 0; i < static_cast<int>(d_radii.size()); ++i ) {
-            if ( rr < d_radii[i] ) {
+         for (int i = 0; i < static_cast<int>(d_radii.size()); ++i) {
+            if (rr < d_radii[i]) {
                (*uval_data)(cid) = static_cast<double>(i);
                break;
             }
@@ -350,8 +345,6 @@ void SphericalShellGenerator::computeShellsData(
    }
 
 }
-
-
 
 /*
  ***********************************************************************
@@ -367,8 +360,6 @@ int SphericalShellGenerator::registerVariablesWithPlotter(
    return 0;
 }
 #endif
-
-
 
 /*
  ***********************************************************************
@@ -395,16 +386,15 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
    if (variable_name == "U_Shells") {
       pdat::CellData<double> u_data(patch.getBox(), 1, hier::IntVector(d_dim, 0));
       u_data.setTime(simulation_time);
-      computeShellsData( &u_data, 0, region,
-                         std::vector<double>(d_dim.getValue(),0.0),
-                         xlo, dx );
+      computeShellsData(&u_data, 0, region,
+         std::vector<double>(d_dim.getValue(), 0.0),
+         xlo, dx);
       pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
       for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {
          *(buffer++) = u_data(*ci);
       }
-   }
-   else if (variable_name == "Tag value") {
+   } else if (variable_name == "Tag value") {
 
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
@@ -418,7 +408,7 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
          region,
          (static_cast<size_t>(patch.getPatchLevelNumber()) < d_buffer_distance.size() ?
           d_buffer_distance[patch.getPatchLevelNumber()] : d_buffer_distance.back()),
-         xlo, dx );
+         xlo, dx);
       pdat::CellData<double>::iterator ciend(pdat::CellGeometry::end(patch.getBox()));
       for (pdat::CellData<double>::iterator ci(pdat::CellGeometry::begin(patch.getBox()));
            ci != ciend; ++ci) {

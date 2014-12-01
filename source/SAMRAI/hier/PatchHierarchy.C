@@ -915,18 +915,18 @@ PatchHierarchy::logMetadataStatistics(
             getRequiredConnectorWidth(ln, ln + 1),
             hier::CONNECTOR_CREATE,
             true);
-      tbox::plog << "\tL" << ln << "->L" << ln+1
+      tbox::plog << "\tL" << ln << "->L" << ln + 1
                  << " Connector:\n" << to_fine.format("\t\t", 0)
-                 << "\tL" << ln << "->L" << ln+1
+                 << "\tL" << ln << "->L" << ln + 1
                  << " Connector statistics:\n" << to_fine.formatStatistics("\t\t");
       const hier::Connector& from_fine =
          getPatchLevel(ln + 1)->findConnector(*level,
             getRequiredConnectorWidth(ln + 1, ln),
             hier::CONNECTOR_CREATE,
             true);
-      tbox::plog << "\tL" << ln+1 << "->L" << ln
+      tbox::plog << "\tL" << ln + 1 << "->L" << ln
                  << " Connector:\n" << from_fine.format("\t\t", 0)
-                 << "\tL" << ln+1 << "->L" << ln
+                 << "\tL" << ln + 1 << "->L" << ln
                  << " Connector statistics:\n" << from_fine.formatStatistics("\t\t");
    }
 
@@ -936,18 +936,18 @@ PatchHierarchy::logMetadataStatistics(
             getRequiredConnectorWidth(ln, ln - 1),
             hier::CONNECTOR_CREATE,
             true);
-      tbox::plog << "\tL" << ln << "->L" << ln-1
+      tbox::plog << "\tL" << ln << "->L" << ln - 1
                  << " Connector:\n" << to_crse.format("\t\t", 0)
-                 << "\tL" << ln << "->L" << ln-1
+                 << "\tL" << ln << "->L" << ln - 1
                  << " Connector statistics:\n" << to_crse.formatStatistics("\t\t");
       const hier::Connector& from_crse =
          getPatchLevel(ln - 1)->findConnector(*level,
             getRequiredConnectorWidth(ln - 1, ln),
             hier::CONNECTOR_CREATE,
             true);
-      tbox::plog << "\tL" << ln-1 << "->L" << ln
+      tbox::plog << "\tL" << ln - 1 << "->L" << ln
                  << " Connector:\n" << from_crse.format("\t\t", 0)
-                 << "\tL" << ln-1 << "->L" << ln
+                 << "\tL" << ln - 1 << "->L" << ln
                  << " Connector statistics:\n" << from_crse.formatStatistics("\t\t");
    }
 }

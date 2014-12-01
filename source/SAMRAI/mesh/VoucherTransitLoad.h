@@ -122,8 +122,7 @@ public:
       hier::BoxLevel& balanced_box_level,
       const hier::BoxLevel& unbalanced_box_level,
       double flexible_load_tol = 0.0,
-      const tbox::SAMRAI_MPI &alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL) );
-
+      const tbox::SAMRAI_MPI& alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL));
 
    /*!
     * @copydoc TransitLoad::assignToLocalAndPopulateMaps()
@@ -133,10 +132,10 @@ public:
    void
    assignToLocalAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
-      hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced,
+      hier::MappingConnector& balanced_to_unbalanced,
+      hier::MappingConnector& unbalanced_to_balanced,
       double flexible_load_tol = 0.0,
-      const tbox::SAMRAI_MPI &alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL) );
+      const tbox::SAMRAI_MPI& alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL));
 
    //@}
 
@@ -161,8 +160,6 @@ public:
       int detail_depth = 1) const;
 
 private:
-
-
    /*!
     * @brief Real implementation of assignToLocalAndPopulateMaps, with
     * slightly modified interface.
@@ -170,11 +167,11 @@ private:
    void
    assignToLocalAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
-      hier::MappingConnector *balanced_to_unbalanced,
-      hier::MappingConnector *unbalanced_to_balanced,
+      hier::MappingConnector* balanced_to_unbalanced,
+      hier::MappingConnector* unbalanced_to_balanced,
       const hier::BoxLevel& unbalanced_box_level,
       double flexible_load_tol,
-      const tbox::SAMRAI_MPI &alt_mpi );
+      const tbox::SAMRAI_MPI& alt_mpi);
 
    //! @brief MPI tag for demand communication.
    static const int VoucherTransitLoad_DEMANDTAG = 3;

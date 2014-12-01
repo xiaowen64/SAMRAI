@@ -466,7 +466,6 @@ int main(
       plog << "Input database after initialization..." << std::endl;
       input_db->printClassData(plog);
 
-
       /*
        * Build L0.
        */
@@ -565,12 +564,12 @@ int main(
          hierarchy->makeNewPatchLevel(0, L0);
       }
 
-
-      for ( int new_ln=1; new_ln<max_levels; ++new_ln ) {
+      for (int new_ln = 1; new_ln < max_levels; ++new_ln) {
          /*
           * Build level new_ln.
           */
-         tbox::pout << "\n==================== Generating L" << new_ln << " ====================" << std::endl;
+         tbox::pout << "\n==================== Generating L" << new_ln
+                    << " ====================" << std::endl;
 
          const int tag_ln = new_ln - 1;
 
@@ -620,7 +619,8 @@ int main(
                   required_connector_width,
                   hier::CONNECTOR_IMPLICIT_CREATION_RULE);
             hier::OverlapConnectorAlgorithm timed_oca;
-            timed_oca.setTimerPrefix(std::string("apps::fix_zero_width")+tbox::Utilities::intToString(new_ln));
+            timed_oca.setTimerPrefix(std::string(
+                  "apps::fix_zero_width") + tbox::Utilities::intToString(new_ln));
             tbox::SAMRAI_MPI::getSAMRAIWorld().Barrier();
             timed_oca.bridgeWithNesting(
                Ltag_to_Lnew,
@@ -669,7 +669,8 @@ int main(
 
          tbox::plog << "\n\tLnew prebalance loads:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(static_cast<size_t>(1),static_cast<double>(Lnew->getLocalNumberOfCells())),
+            std::vector<double>(static_cast<size_t>(1),
+               static_cast<double>(Lnew->getLocalNumberOfCells())),
             Lnew->getMPI());
 
          if (load_balance[new_ln]) {
@@ -696,7 +697,8 @@ int main(
 
          tbox::plog << "\n\tLnew postbalance loads:\n";
          mesh::BalanceUtilities::reduceAndReportLoadBalance(
-            std::vector<double>(static_cast<size_t>(1),static_cast<double>(Lnew->getLocalNumberOfCells())),
+            std::vector<double>(static_cast<size_t>(1),
+               static_cast<double>(Lnew->getLocalNumberOfCells())),
             Lnew->getMPI());
 
          if (comm_graph_writer) {
@@ -720,8 +722,6 @@ int main(
          hierarchy->makeNewPatchLevel(new_ln, Lnew);
 
       } // end new_ln loop
-
-
 
       tbox::plog << "\n==================== Final hierarchy ====================" << std::endl;
       for (int ln = 0; ln < hierarchy->getNumberOfLevels(); ++ln) {

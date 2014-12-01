@@ -1044,9 +1044,9 @@ BergerRigoutsos::assertNoMessageForPrivateCommunicator() const
     * messages that have arrived but not received.
     */
    if (d_mpi.getCommunicator() != MPI_COMM_NULL &&
-       d_mpi != d_tag_level->getBoxLevel()->getMPI() ) {
+       d_mpi != d_tag_level->getBoxLevel()->getMPI()) {
       tbox::SAMRAI_MPI::Status mpi_status;
-      if ( d_mpi.hasReceivableMessage(&mpi_status) ) {
+      if (d_mpi.hasReceivableMessage(&mpi_status)) {
          int count = -1;
          tbox::SAMRAI_MPI::Get_count(&mpi_status, MPI_INT, &count);
          TBOX_ERROR("Library error!\n"
