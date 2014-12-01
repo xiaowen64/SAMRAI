@@ -293,18 +293,18 @@ private:
     */
    void
    privateModify_removeAndCache(
-      std::map<int, std::vector<int> >& send_mesgs,
+      std::map<int, std::vector<int> >& neighbor_removal_mesg,
       Connector& anchor_to_new,
       Connector* new_to_anchor,
       const MappingConnector& old_to_new) const;
 
    /*!
-    * @brief Discover new relationships formed by mapping and send outgoing
-    * information.
+    * @brief Remove relationships made obsolete by mapping and send
+    * outgoing information.
     */
    void
    privateModify_discoverAndSend(
-      std::map<int, std::vector<int> >& send_mesgs,
+      std::map<int, std::vector<int> >& neighbor_removal_mesg,
       Connector& anchor_to_new,
       Connector* new_to_anchor,
       const std::set<int>& incoming_ranks,
@@ -319,35 +319,14 @@ private:
       const MappingConnector& old_to_new) const;
 
    /*!
-    * @brief Discover new relationships formed by mapping.
-    */
-   void
-   privateModify_discover(
-      std::vector<int>& send_mesg,
-      Connector& anchor_to_new,
-      Connector* new_to_anchor,
-      const BoxContainer& visible_anchor_nabrs,
-      const BoxContainer& visible_new_nabrs,
-      BoxContainer::const_iterator& anchor_ni,
-      BoxContainer::const_iterator& new_ni,
-      int curr_owner,
-      const tbox::Dimension& dim,
-      int rank,
-      const InvertedNeighborhoodSet& anchor_eto_old,
-      const InvertedNeighborhoodSet& new_eto_old,
-      const Connector& old_to_anchor,
-      const Connector& anchor_to_old,
-      const MappingConnector& old_to_new) const;
-
-   /*!
     * @brief Find overlap and save in mapping connector or pack
     * into send message, used in privateModify().
     */
    void
    privateModify_findOverlapsForOneProcess(
       const int owner_rank,
-      const BoxContainer& visible_base_nabrs,
-      BoxContainer::const_iterator& base_ni,
+      BoxContainer& visible_base_nabrs,
+      BoxContainer::iterator& base_ni,
       std::vector<int>& send_mesg,
       int remote_box_counter_index,
       Connector& mapped_connector,
@@ -404,6 +383,7 @@ private:
     */
    static int s_operation_mpi_tag;
 
+
    //@{
    //! @name Timer data for this class.
 
@@ -418,10 +398,10 @@ private:
     */
    struct TimerStruct {
       boost::shared_ptr<tbox::Timer> t_modify;
-      boost::shared_ptr<tbox::Timer> t_modify_public;
       boost::shared_ptr<tbox::Timer> t_modify_setup_comm;
       boost::shared_ptr<tbox::Timer> t_modify_remove_and_cache;
       boost::shared_ptr<tbox::Timer> t_modify_discover_and_send;
+      boost::shared_ptr<tbox::Timer> t_modify_find_overlaps_for_one_process;
       boost::shared_ptr<tbox::Timer> t_modify_receive_and_unpack;
       boost::shared_ptr<tbox::Timer> t_modify_MPI_wait;
       boost::shared_ptr<tbox::Timer> t_modify_misc;

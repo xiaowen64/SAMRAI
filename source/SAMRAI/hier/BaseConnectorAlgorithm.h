@@ -47,16 +47,14 @@ protected:
       int& operation_mpi_tag,
       bool print_steps) const;
 
-   /*!
-    * @brief Pack referenced neighbors discovered during privateBridge/Modify
-    * into message for one processor.
-    */
+   //! @brief Send discovery to one processor during privateBridge/Modify.
    void
-   packReferencedNeighbors(
+   sendDiscoveryToOneProcess(
       std::vector<int>& send_mesg,
-      int idx_offset_to_ref,
-      const BoxContainer& referenced_new_head_nabrs,
-      const BoxContainer& referenced_new_base_nabrs,
+      const int idx_offset_to_ref,
+      BoxContainer& referenced_new_head_nabrs,
+      BoxContainer& referenced_new_base_nabrs,
+      tbox::AsyncCommPeer<int>& outgoing_comm,
       const tbox::Dimension& dim,
       bool print_steps) const;
 

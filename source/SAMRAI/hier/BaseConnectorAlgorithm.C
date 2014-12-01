@@ -107,20 +107,22 @@ BaseConnectorAlgorithm::setupCommunication(
 /*
  ***********************************************************************
  * privateBridge/Modify_findOverlapsForOneProcess() cached some discovered
- * remote neighbors into send_mesg.  packReferencedNeighbors() packs the
- * message with this information.
+ * remote neighbors into send_mesg.  sendDiscoveryToOneProcess() sends
+ * the message.
  *
  * privateBridge/Modify_findOverlapsForOneProcess() placed neighbor data
  * in referenced_new_head_nabrs and referenced_new_base_nabrs rather than
- * directly into send_mesg.  This method packs the referenced neighbors.
+ * directly into send_mesg.  This method packs the referenced neighbors
+ * and send them.
  ***********************************************************************
  */
 void
-BaseConnectorAlgorithm::packReferencedNeighbors(
+BaseConnectorAlgorithm::sendDiscoveryToOneProcess(
    std::vector<int>& send_mesg,
-   int idx_offset_to_ref,
-   const BoxContainer& referenced_new_head_nabrs,
-   const BoxContainer& referenced_new_base_nabrs,
+   const int idx_offset_to_ref,
+   BoxContainer& referenced_new_head_nabrs,
+   BoxContainer& referenced_new_base_nabrs,
+   tbox::AsyncCommPeer<int>& outgoing_comm,
    const tbox::Dimension& dim,
    bool print_steps) const
 {
@@ -129,7 +131,7 @@ BaseConnectorAlgorithm::packReferencedNeighbors(
     * that have been referenced.
     */
    const int offset = send_mesg[idx_offset_to_ref] =
-         static_cast<int>(send_mesg.size());
+      static_cast<int>(send_mesg.size());
    const int n_referenced_nabrs = static_cast<int>(
          referenced_new_head_nabrs.size() + referenced_new_base_nabrs.size());
    const int reference_section_size =
@@ -163,6 +165,14 @@ BaseConnectorAlgorithm::packReferencedNeighbors(
    }
 
    TBOX_ASSERT(ptr == &send_mesg[send_mesg.size() - 1] + 1);
+
+   /*
+    * Send message.
+    */
+   outgoing_comm.beginSend(&send_mesg[0], static_cast<int>(send_mesg.size()));
+   if (print_steps) {
+      tbox::plog << "Sent to " << outgoing_comm.getPeerRank() << std::endl;
+   }
 }
 
 /*
@@ -242,7 +252,7 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
    /*
     * Content of send_mesg, constructed largely in
     * privateBridge/Modify_findOverlapsForOneProcess() and
-    * packReferencedNeighbors():
+    * sendDiscoveryToOneProcess():
     *
     * -neighbor-removal section cached in neighbor_removal_mesg.
     * - offset to the reference section (see below)
