@@ -708,6 +708,7 @@ private:
    struct TimerStruct {
       boost::shared_ptr<tbox::Timer> t_find_overlaps_rbbt;
       boost::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition;
+      boost::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition_get_ap;
       boost::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition_connect_to_ap;
       boost::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition_transpose;
 
