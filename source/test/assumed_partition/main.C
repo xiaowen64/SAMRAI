@@ -41,6 +41,7 @@ struct CommonTestParams {
       avg_parts_per_rank(1.0) {}
    CommonTestParams( const CommonTestParams &other ) :
       box(other.box),
+      geometry(other.geometry),
       rank_begin(other.rank_begin),
       rank_end(other.rank_end),
       index_begin(other.index_begin),
