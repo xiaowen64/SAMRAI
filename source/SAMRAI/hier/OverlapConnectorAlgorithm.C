@@ -460,13 +460,18 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
       }
    }
 
-   d_object_timers->t_find_overlaps_assumed_partition_connect_to_ap->barrierAndStart();
+   d_object_timers->t_find_overlaps_assumed_partition_get_ap->barrierAndStart();
 
    /*
     * Set up center BoxLevel.  We can use either the base or head to
     * construct the center.  We choose the smaller one because we
     * don't need to cover the bigger region.  There are no overlaps
     * away from the smaller BoxLevel anyway.
+    *
+    * As an optimization, try to make an AssumedPartition with about
+    * 1 partition per rank, or fewer if the base or head have fewer boxes.
+    * This avoids having more many more assumed partitions than boxes,
+    * which can scale poorly.
     */
    BoxContainer base_bounding_boxes, head_bounding_boxes;
    size_t base_bounding_cell_count=0, head_bounding_cell_count=0;
@@ -476,9 +481,12 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
       base_bounding_cell_count += base_bounding_boxes.back().size();
       head_bounding_cell_count += head_bounding_boxes.back().size();
    }
+   size_t num_parts = head.getGlobalNumberOfBoxes() < base.getGlobalNumberOfBoxes() ?
+      head.getGlobalNumberOfBoxes() : base.getGlobalNumberOfBoxes();
+   num_parts = mpi.getSize() < num_parts ? mpi.getSize() : num_parts;
    const AssumedPartition center_ap(
       head_bounding_cell_count < base_bounding_cell_count ? head_bounding_boxes : base_bounding_boxes,
-      0, mpi.getSize() );
+      0, mpi.getSize(), 0, static_cast<double>(num_parts)/mpi.getSize() );
    base_bounding_boxes.clear();
    head_bounding_boxes.clear();
 
@@ -488,6 +496,9 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
       head.getRefinementRatio() : base.getRefinementRatio();
    const BoxLevel center( center_boxes, center_refinement_ratio, geom, mpi );
 
+   d_object_timers->t_find_overlaps_assumed_partition_get_ap->barrierAndStop();
+
+   d_object_timers->t_find_overlaps_assumed_partition_connect_to_ap->barrierAndStart();
 
    // Set up base<==>center
    Connector base_to_center( base, center, width_in_base_resolution );
@@ -1841,6 +1852,8 @@ OverlapConnectorAlgorithm::getAllTimers(
       getTimer(timer_prefix + "::findOverlaps_assumedPartition()");
    timers.t_find_overlaps_assumed_partition_connect_to_ap = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::findOverlaps_assumedPartition()_connect_to_ap");
+   timers.t_find_overlaps_assumed_partition_get_ap = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::findOverlaps_assumedPartition()_get_ap");
    timers.t_find_overlaps_assumed_partition_transpose = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::findOverlaps_assumedPartition()_transpose");
 
