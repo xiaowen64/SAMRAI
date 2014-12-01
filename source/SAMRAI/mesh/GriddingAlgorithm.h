@@ -1318,7 +1318,6 @@ private:
    boost::shared_ptr<tbox::Timer> t_find_refinement;
    boost::shared_ptr<tbox::Timer> t_bridge_new_to_new;
    boost::shared_ptr<tbox::Timer> t_find_new_to_new;
-   boost::shared_ptr<tbox::Timer> t_bridge_new_to_coarser;
    boost::shared_ptr<tbox::Timer> t_bridge_new_to_finer;
    boost::shared_ptr<tbox::Timer> t_bridge_new_to_old;
    boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;

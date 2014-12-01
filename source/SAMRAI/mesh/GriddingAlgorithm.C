@@ -4817,8 +4817,6 @@ GriddingAlgorithm::allocateTimers()
       getTimer("mesh::GriddingAlgorithm::find_new_to_new");
    t_bridge_new_to_new = tbox::TimerManager::getManager()->
       getTimer("mesh::GriddingAlgorithm::bridge_new_to_new");
-   t_bridge_new_to_coarser = tbox::TimerManager::getManager()->
-      getTimer("mesh::GriddingAlgorithm::bridge_new_to_coarser");
    t_bridge_new_to_finer = tbox::TimerManager::getManager()->
       getTimer("mesh::GriddingAlgorithm::bridge_new_to_finer");
    t_bridge_new_to_old = tbox::TimerManager::getManager()->
