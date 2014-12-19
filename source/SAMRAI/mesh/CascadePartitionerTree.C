@@ -250,39 +250,41 @@ void CascadePartitionerTree::distributeLoad()
                current_group->d_children[1]->printClassData( tbox::plog, "\t" );
             }
 
-            if ( d_common->d_reset_obligations &&
-                 current_group == top_group && top_group->d_gen_num != 0 ) {
-               const double old_obligation = top_group->d_obligation;
-               top_group->resetObligation( top_group->d_work/static_cast<double>(top_group->size()) );
-               if ( d_common->d_print_steps ) {
-                  tbox::plog << d_common->d_object_name << "::distributeLoad generation "
-                             << top_group->d_gen_num << " reset obligation from "
-                             << old_obligation << " to " << top_group->d_obligation
-                             << std::endl;
-               }
-            }
-
-            /*
-             * Balance the children is needed only for top_group, but we
-             * optionally also balance intermediate children.
-             */
-            if ( current_group == top_group ) {
-               current_group->balanceChildren();
-               if ( d_common->d_print_steps ) {
-                  tbox::plog << d_common->d_object_name << "::distributeLoad outer top_group "
-                             << top_group->d_gen_num << "  shuffled generation "
-                             << top_group->d_gen_num << ".  d_work is exact, but childrens' are estimates."
-                             << std::endl;
-                  tbox::plog << "\ttop_group:" << std::endl;
-                  top_group->printClassData( tbox::plog, "\t" );
-                  tbox::plog << "\tchild 0:" << std::endl;
-                  top_group->d_children[0]->printClassData( tbox::plog, "\t" );
-                  tbox::plog << "\tchild 1:" << std::endl;
-                  top_group->d_children[1]->printClassData( tbox::plog, "\t" );
-               }
-            }
-
          } // Inner loop, current_group
+
+         /*
+          * Non-root groups may have average weights different than the
+          * global average.  Reset the obligation to the group average
+          * if option is on.
+          */
+         if ( d_common->d_reset_obligations && top_group->d_gen_num != 0 ) {
+            const double old_obligation = top_group->d_obligation;
+            top_group->resetObligation( top_group->d_work/static_cast<double>(top_group->size()) );
+            if ( d_common->d_print_steps ) {
+               tbox::plog << d_common->d_object_name << "::distributeLoad generation "
+                          << top_group->d_gen_num << " reset obligation from "
+                          << old_obligation << " to " << top_group->d_obligation
+                          << std::endl;
+            }
+         }
+
+         /*
+          * Balance between children of the top_group.
+          */
+         top_group->balanceChildren();
+         if ( d_common->d_print_steps ) {
+            tbox::plog << d_common->d_object_name << "::distributeLoad outer top_group "
+                       << top_group->d_gen_num << "  shuffled generation "
+                       << top_group->d_gen_num << ".  d_work is exact, but childrens' are estimates."
+                       << std::endl;
+            tbox::plog << "\ttop_group:" << std::endl;
+            top_group->printClassData( tbox::plog, "\t" );
+            tbox::plog << "\tchild 0:" << std::endl;
+            top_group->d_children[0]->printClassData( tbox::plog, "\t" );
+            tbox::plog << "\tchild 1:" << std::endl;
+            top_group->d_children[1]->printClassData( tbox::plog, "\t" );
+         }
+
          if ( d_common->d_print_steps ) {
             tbox::plog << d_common->d_object_name << "::distributeLoad completed inner loop for generation "
                        << top_group->d_gen_num << std::endl;
