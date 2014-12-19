@@ -199,11 +199,15 @@ void CascadePartitionerTree::distributeLoad()
    for ( int top_gen_number = 0; top_gen_number < tree_depth; ++top_gen_number ) {
 
       /*
-       * This block combines and balances child branches and, for
-       * certain top groups, update Connectors.  Only non-leaf nodes
-       * combine and balance children but all nodes must participate
-       * in updating Connectors (or the step will hang when diagnostic
-       * barriers are used).
+       * This block combines and balances child branches.  Each time through:
+       * - Compute group weight by combining descendant group weights.
+       * - Reset obligations of processes based on group weight.
+       * - Balance the two children group.
+       *
+       * For certain top groups, update Connectors.  Only non-leaf
+       * groups combine and balance children but all nodes must
+       * participate in updating Connectors (or the step will hang
+       * when diagnostic barriers are used).
        */
       TBOX_ASSERT( top_group->d_gen_num == top_gen_number );
 
@@ -224,6 +228,10 @@ void CascadePartitionerTree::distributeLoad()
 
          d_leaf->recomputeLeafData();
 
+         /*
+          * Loop from leaf's parent toward current_group, combining
+          * group weights.
+          */
          for ( CascadePartitionerTree *current_group = d_leaf->d_parent;
                current_group != 0 && current_group->d_near != top_group;
                current_group = current_group->d_parent ) {
@@ -538,8 +546,8 @@ CascadePartitionerTree::balanceChildren()
  * This method recurses into descendent groups, estimating changes
  * needed to supply the work_requested.  Estimation is necessary
  * because most of the changes take place remotely.  If the recursion
- * reaches the leaf group of the local process, it sets aside the work
- * that the local process supplies.
+ * reaches the leaf group containing the local process, it sets aside
+ * the work that the local process supplies.
  *************************************************************************
  */
 double
@@ -567,7 +575,7 @@ CascadePartitionerTree::supplyWork(double work_requested, int taker)
       TBOX_ASSERT(allowed_supply >= 0.0);
 
       if (d_children[0] != 0) {
-         // Near group and not a leaf: Recursively supply load from children.
+         // This is a near group but not a leaf: Recursively supply load from children.
          const int priority = taker >= d_begin;
          est_work_supplied = d_children[priority]->supplyWork(allowed_supply, taker);
          if (est_work_supplied < allowed_supply) {
@@ -575,7 +583,7 @@ CascadePartitionerTree::supplyWork(double work_requested, int taker)
                d_children[!priority]->supplyWork(allowed_supply - est_work_supplied, taker);
          }
       } else {
-         // A leaf and/or a far group.  No children, and no recursion.
+         // This is a leaf and/or a far group.  No children, and no recursion.
          est_work_supplied = allowed_supply;
 
          if (containsRank(d_common->d_mpi.getRank())) {

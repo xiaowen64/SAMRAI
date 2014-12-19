@@ -1270,7 +1270,7 @@ TileClustering::coalesceTiles(
 
    /*
     * Heuristic fix-up used when all boxes went into one side.
-    * (This logic is rarely needed but critical for avoiding infinte recursions.)
+    * (This logic is rarely needed but critical for avoiding infinite recursions.)
     * Move boxes crossing split_idx into the side with no box.
     * If that doesn't help, end the recursion.
     */
