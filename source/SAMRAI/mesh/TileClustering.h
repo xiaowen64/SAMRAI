@@ -274,8 +274,7 @@ private:
     */
    void
    coalesceTiles(
-      hier::BoxContainer &tiles,
-      const hier::Box &bounding_box );
+      hier::BoxContainer &tiles );
 
    const tbox::Dimension d_dim;
 
