@@ -1248,15 +1248,42 @@ TileClustering::coalesceBoxes(
       return;
    }
 
-   // Compute midpoint of the longest direction for splitting.
+#if 1
+   /*
+    * Choose splitting direction to be that with largest ratio of
+    * bounding box size to average box size.  This is intended to, on
+    * average, reduce the number of boxes that cross the splitting
+    * plane and favor generating low aspect ratio boxes.
+    */
+   hier::Box bounding_box(boxes.front().getDim());
+   hier::IntVector sum_box_size(boxes.front().getDim(), 0);
+   for ( hier::BoxContainer::const_iterator bi=boxes.begin(); bi!=boxes.end(); ++bi ) {
+      bounding_box += *bi;
+      sum_box_size += bi->numberCells();
+   }
+   const hier::IntVector bounding_box_size = bounding_box.numberCells();
+   double avg_box_size[SAMRAI::MAX_DIM_VAL];
+   double ratio[SAMRAI::MAX_DIM_VAL];
+   tbox::Dimension::dir_t split_dir = 0;
+   for ( tbox::Dimension::dir_t d=0; d<sum_box_size.getDim().getValue(); ++d ) {
+      avg_box_size[d] = static_cast<double>(sum_box_size[d])/boxes.size();
+      ratio[d] = bounding_box_size(d)/avg_box_size[d];
+      if ( ratio[split_dir] < ratio[d] ) split_dir = d;
+   }
+#else
+
+   // Choose the longest direction for splitting.
    const hier::Box bounding_box = boxes.getBoundingBox();
    const tbox::Dimension::dir_t split_dir = bounding_box.longestDirection();
-   int split_idx = (bounding_box.lower()(split_dir) + bounding_box.upper()(split_dir))/2;
+#endif
 
+   int split_idx = (bounding_box.lower()(split_dir) + bounding_box.upper()(split_dir))/2;
+   size_t old_size = 0;
    // Split boxes across the split_dir, into upper and lower groups.
    hier::BoxContainer upper_boxes, lower_boxes;
    hier::Box upper_bounding_box(boxes.front().getDim()), lower_bounding_box(boxes.front().getDim());
    for ( hier::BoxContainer::const_iterator bi=boxes.begin(); bi!=boxes.end(); ++bi ) {
+      ++old_size;
       if ( (split_idx - bi->lower()(split_dir)) > (bi->upper()(split_dir) + 1 - split_idx) ) {
          lower_boxes.push_back(*bi);
          lower_bounding_box += *bi;
@@ -1292,17 +1319,18 @@ TileClustering::coalesceBoxes(
       upper_bounding_box = upper_boxes.getBoundingBox();
    }
 
-   const size_t old_size = boxes.size();
-   boxes.clear();
-
    // Recursively coalesce each group.
    coalesceBoxes(upper_boxes);
    coalesceBoxes(lower_boxes);
 
+   boxes.clear();
+
    /*
     * Put lower_boxes and upper_boxes back into boxes, except for
     * boxes that touch the opposite bounding box.  Try to coalesce
-    * those before placing in boxes.
+    * those before placing in boxes.  If coalescible.size() == boxes.size(),
+    * then the two are identical and we avoid using coalesceBoxes to
+    * prevent endless recursion.
     */
    hier::BoxContainer coalescible;
    for ( hier::BoxContainer::const_iterator bi=lower_boxes.begin(); bi!=lower_boxes.end(); ++bi ) {

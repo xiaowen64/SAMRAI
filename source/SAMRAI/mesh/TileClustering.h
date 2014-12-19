@@ -273,8 +273,8 @@ private:
     * having O(N lg N) expected complexity.
     */
    void
-   coalesceTiles(
-      hier::BoxContainer &tiles );
+   coalesceBoxes(
+      hier::BoxContainer &boxes );
 
    const tbox::Dimension d_dim;
 
