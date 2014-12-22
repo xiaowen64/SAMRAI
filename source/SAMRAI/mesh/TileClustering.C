@@ -14,6 +14,7 @@
 
 #include "SAMRAI/mesh/TileClustering.h"
 
+#include "SAMRAI/hier/SequentialLocalIdGenerator.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -508,7 +509,7 @@ TileClustering::clusterWholeTiles(
 
    hier::Connector& tile_to_tag = tag_to_tile->getTranspose();
 
-   hier::LocalId last_used_local_id(-1);
+   hier::SequentialLocalIdGenerator id_gen;
 
    /*
     * Generate tile_box_level.  To reduce box count and box aspect
@@ -580,7 +581,7 @@ TileClustering::clusterWholeTiles(
                coalescibles.pushBack(whole_tile);
             } else {
 
-               whole_tile.initialize(whole_tile, ++last_used_local_id,
+               whole_tile.initialize(whole_tile, id_gen.nextValue(),
                   patch_box.getOwnerRank());
                tile_box_level.addBox(whole_tile);
 
@@ -624,7 +625,7 @@ TileClustering::clusterWholeTiles(
            bi != coalescibles.end(); ++bi) {
 
          hier::Box& tile = *bi;
-         tile.initialize(tile, ++last_used_local_id, patch_box.getOwnerRank());
+         tile.initialize(tile, id_gen.nextValue(), patch_box.getOwnerRank());
          tile_box_level.addBox(tile);
 
          hier::BoxContainer overlapping_tag_boxes;
