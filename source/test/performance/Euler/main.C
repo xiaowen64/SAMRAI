@@ -613,7 +613,6 @@ int main(
 
       t_all->stop();
 
-
       tbox::plog << "Input database after time-step loop:" << std::endl;
       input_db->printClassData(tbox::plog);
 
@@ -621,7 +620,6 @@ int main(
        * Output timer results.
        */
       tbox::TimerManager::getManager()->print(tbox::plog);
-
 
       if (partitioner_type == "TreeLoadBalancer") {
          /*

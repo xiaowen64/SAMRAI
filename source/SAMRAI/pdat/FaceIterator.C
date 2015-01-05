@@ -20,8 +20,8 @@ FaceIterator::FaceIterator(
    d_box(FaceGeometry::toFaceBox(box, axis))
 {
    if (!d_box.empty() && !begin) {
-      d_index(d_box.getDim().getValue()-1) =
-         d_box.upper( static_cast<tbox::Dimension::dir_t>( d_box.getDim().getValue()-1) ) + 1;
+      d_index(d_box.getDim().getValue() - 1) =
+         d_box.upper(static_cast<tbox::Dimension::dir_t>(d_box.getDim().getValue() - 1)) + 1;
    }
 }
 

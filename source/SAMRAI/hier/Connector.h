@@ -153,8 +153,10 @@ public:
     * the other.getBase().getMPI() by default.  If specified, must be
     * congruent with the default.
     */
-   void computeTransposeOf( const Connector &other,
-                            const tbox::SAMRAI_MPI &mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL) );
+   void
+   computeTransposeOf(
+      const Connector& other,
+      const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL));
 
    /*!
     * @brief Transpose the visible relationships so that they point from

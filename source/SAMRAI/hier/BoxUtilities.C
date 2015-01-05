@@ -767,14 +767,14 @@ BoxUtilities::growBoxWithinDomain(
          // outside_boxes = local_domain_complement;
          // outside_boxes.unorder();
          outside_boxes.clear();
-         for ( BoxContainer::const_iterator bi=local_domain_complement.begin();
-               bi!=local_domain_complement.end(); ++bi ) {
+         for (BoxContainer::const_iterator bi = local_domain_complement.begin();
+              bi != local_domain_complement.end(); ++bi) {
             outside_boxes.push_back(*bi);
          }
          outside_boxes.intersectBoxes(test_region);
 
          int grow_lo = try_box.lower(id) - grow;
-         for ( BoxContainer::iterator lb=outside_boxes.begin(); lb!=outside_boxes.end(); ++lb) {
+         for (BoxContainer::iterator lb = outside_boxes.begin(); lb != outside_boxes.end(); ++lb) {
             grow_lo =
                tbox::MathUtilities<int>::Max(grow_lo, lb->upper(id) + 1);
          }
@@ -787,14 +787,14 @@ BoxUtilities::growBoxWithinDomain(
          // outside_boxes = local_domain_complement;
          // outside_boxes.unorder();
          outside_boxes.clear();
-         for ( BoxContainer::const_iterator bi=local_domain_complement.begin();
-               bi!=local_domain_complement.end(); ++bi ) {
+         for (BoxContainer::const_iterator bi = local_domain_complement.begin();
+              bi != local_domain_complement.end(); ++bi) {
             outside_boxes.push_back(*bi);
          }
          outside_boxes.intersectBoxes(test_region);
 
          int grow_up = try_box.upper(id) + grow;
-         for (BoxContainer::iterator lb=outside_boxes.begin(); lb!=outside_boxes.end(); ++lb) {
+         for (BoxContainer::iterator lb = outside_boxes.begin(); lb != outside_boxes.end(); ++lb) {
             grow_up =
                tbox::MathUtilities<int>::Min(grow_up, lb->lower(id) - 1);
          }
@@ -1871,22 +1871,23 @@ BoxUtilities::growAndAdjustAcrossBlockBoundary(
    grown_boxes.spliceBack(domain_boxes);
 
    /*
-    * If grow_box is contained within its own block, there is no need to
-    * check neighboring blocks, so we are done.
-    */
-   if (grown_boxes.size() == 1 &&
-       grown_boxes.front().isSpatiallyEqual(grow_box)) {
-      return;
-   }
-
-   /*
     * Uniform width means the same value of grow width for all directions on
     * all blocks.  The intersections with neighbor blocks are simpler if there
-    * is constant width
+    * is uniform width
     */
    bool uniform_width = true;
    if (effective_grow_width.min() != effective_grow_width.max()) {
       uniform_width = false;
+   }
+
+
+   /*
+    * If grow_box is contained within its own block, there is no need to
+    * check neighboring blocks, so we are done.
+    */
+   if (uniform_width && grown_boxes.size() == 1 &&
+       grown_boxes.front().isSpatiallyEqual(grow_box)) {
+      return;
    }
 
    /*

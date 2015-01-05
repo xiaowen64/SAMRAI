@@ -1232,15 +1232,15 @@ private:
     */
    class NeighborIterator
    {
-   friend class BaseGridGeometry;
-   public:
+      friend class BaseGridGeometry;
+public:
       /*!
        * @brief Copy constructor.
        *
        * @param[in] other The non-const iterator to copy.
        */
       NeighborIterator(
-        const NeighborIterator& other);
+         const NeighborIterator& other);
 
       /*!
        * @brief Destructor.
@@ -1256,7 +1256,7 @@ private:
        */
       NeighborIterator&
       operator = (
-        const NeighborIterator& rhs)
+         const NeighborIterator& rhs)
       {
          d_grid_geom = rhs.d_grid_geom;
          d_block_id.setId(rhs.d_block_id.getBlockValue());
@@ -1339,7 +1339,7 @@ private:
          return !(*this == rhs);
       }
 
-   private:
+private:
       /*!
        * @brief Constructor.
        *
@@ -1411,15 +1411,15 @@ private:
     */
    class ConstNeighborIterator
    {
-   friend class BaseGridGeometry;
-   public:
+      friend class BaseGridGeometry;
+public:
       /*!
        * @brief Copy constructor.
        *
        * @param[in] other The const iterator to copy.
        */
       ConstNeighborIterator(
-        const ConstNeighborIterator& other);
+         const ConstNeighborIterator& other);
 
       /*!
        * @brief Copy constructor.
@@ -1427,7 +1427,7 @@ private:
        * @param[in] other The non-const iterator to copy.
        */
       ConstNeighborIterator(
-        const NeighborIterator& other);
+         const NeighborIterator& other);
 
       /*!
        * @brief Destructor.
@@ -1443,7 +1443,7 @@ private:
        */
       ConstNeighborIterator&
       operator = (
-        const ConstNeighborIterator& rhs)
+         const ConstNeighborIterator& rhs)
       {
          d_grid_geom = rhs.d_grid_geom;
          d_block_id.setId(rhs.d_block_id.getBlockValue());
@@ -1460,7 +1460,7 @@ private:
        */
       ConstNeighborIterator&
       operator = (
-        const NeighborIterator& rhs)
+         const NeighborIterator& rhs)
       {
          d_grid_geom = rhs.d_grid_geom;
          d_block_id.setId(rhs.d_block_id.getBlockValue());
@@ -1542,7 +1542,7 @@ private:
       {
          return !(*this == rhs);
       }
-   private:
+private:
       /*!
        * @brief Constructor.
        *
@@ -1563,7 +1563,6 @@ private:
          const BaseGridGeometry* grid_geometry,
          const BlockId& block_id,
          bool from_start = true);
-
 
       /*!
        * @brief Constructor.

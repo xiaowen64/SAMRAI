@@ -122,7 +122,6 @@ CoarsenSchedule::CoarsenSchedule(
       t_coarsen_schedule->start();
    }
 
-
    if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::CoarsenSchedule " << this << " entered" << std::endl;
    }
@@ -352,17 +351,17 @@ CoarsenSchedule::generateTemporaryLevel()
    TBOX_ASSERT(d_crse_level->getBoxLevel()->getRefinementRatio() != 0);
    if (d_crse_level->getBoxLevel()->getRefinementRatio() >
        hier::IntVector::getZero(dim)) {
-      min_width = 
-         (d_fine_level->getBoxLevel()->getRefinementRatio() /
-         d_crse_level->getBoxLevel()->getRefinementRatio()) *
-         max_ghosts;
+      min_width =
+         (d_fine_level->getBoxLevel()->getRefinementRatio()
+          / d_crse_level->getBoxLevel()->getRefinementRatio())
+         * max_ghosts;
    } else {
       TBOX_ASSERT(d_fine_level->getBoxLevel()->getRefinementRatio() >=
-                  hier::IntVector::getOne(dim));
+         hier::IntVector::getOne(dim));
       min_width =
-         (-d_crse_level->getBoxLevel()->getRefinementRatio() /
-         d_fine_level->getBoxLevel()->getRefinementRatio()) *
-         max_ghosts;
+         (-d_crse_level->getBoxLevel()->getRefinementRatio()
+          / d_fine_level->getBoxLevel()->getRefinementRatio())
+         * max_ghosts;
    }
 
    const hier::IntVector transpose_width =

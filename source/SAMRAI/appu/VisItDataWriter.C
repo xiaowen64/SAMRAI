@@ -1302,11 +1302,11 @@ VisItDataWriter::dumpWriteBarrierBegin()
       if (d_mpi.getSize() > 1) {
          tbox::SAMRAI_MPI::Status status;
          d_mpi.Recv(x,
-                    len,
-                    MPI_INT,
-                    proc_before_me,
-                    VISIT_FILE_CLUSTER_WRITE_BATON,
-                    &status);
+            len,
+            MPI_INT,
+            proc_before_me,
+            VISIT_FILE_CLUSTER_WRITE_BATON,
+            &status);
       }
    }
 }
@@ -1322,10 +1322,10 @@ VisItDataWriter::dumpWriteBarrierEnd()
    if (proc_after_me < num_procs) {
       if (d_mpi.getSize() > 1) {
          d_mpi.Send(x,
-                    1,
-                    MPI_INT,
-                    proc_after_me,
-                    VISIT_FILE_CLUSTER_WRITE_BATON);
+            1,
+            MPI_INT,
+            proc_after_me,
+            VISIT_FILE_CLUSTER_WRITE_BATON);
       }
    }
 }
@@ -1666,10 +1666,10 @@ VisItDataWriter::writeHDFFiles(
       boost::shared_ptr<tbox::Database> processor_HDFGroup(
          visit_HDFFilePointer->putDatabase(std::string(temp_buf)));
       writeVisItVariablesToHDFFile(processor_HDFGroup,
-                                   hierarchy,
-                                   0,
-                                   hierarchy->getFinestLevelNumber(),
-                                   simulation_time );
+         hierarchy,
+         0,
+         hierarchy->getFinestLevelNumber(),
+         simulation_time);
       visit_HDFFilePointer->close(); // invokes H5FClose
       delete visit_HDFFilePointer; // deletes tbox::HDFDatabase object
    }
@@ -1786,7 +1786,7 @@ VisItDataWriter::writeVisItVariablesToHDFFile(
 
          int curr_var_id_ctr = d_var_id_ctr;
          packRegularAndDerivedData(
-            patch_HDFGroup, hierarchy, ln, *patch, simulation_time );
+            patch_HDFGroup, hierarchy, ln, *patch, simulation_time);
 
          if (d_materials_names.size() > 0) {
             d_var_id_ctr = curr_var_id_ctr;
@@ -3505,10 +3505,10 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
       if (number_local_patches > 0) {
          if (d_mpi.getSize() > 1) {
             d_mpi.Send(d_worker_min_max,
-                       message_size,
-                       MPI_BYTE,
-                       VISIT_MASTER,
-                       0);
+               message_size,
+               MPI_BYTE,
+               VISIT_MASTER,
+               0);
          }
       }
 
@@ -3539,11 +3539,11 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
          if (d_mpi.getSize() > 1) {
             tbox::SAMRAI_MPI::Status status;
             d_mpi.Recv(buf,
-                       message_size,
-                       MPI_BYTE,
-                       MPI_ANY_SOURCE,
-                       MPI_ANY_TAG,
-                       &status);
+               message_size,
+               MPI_BYTE,
+               MPI_ANY_SOURCE,
+               MPI_ANY_TAG,
+               &status);
             sending_proc = status.MPI_SOURCE;
          }
          ++number_msgs_recvd;

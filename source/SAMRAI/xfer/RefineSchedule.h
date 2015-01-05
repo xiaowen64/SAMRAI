@@ -359,7 +359,7 @@ private:
     * @pre src_to_dst.getHead() == *dst_level->getBoxLevel()
     */
    RefineSchedule(
-      int &errf,
+      int& errf,
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
       const boost::shared_ptr<hier::PatchLevel>& src_level,
       int next_coarser_level,

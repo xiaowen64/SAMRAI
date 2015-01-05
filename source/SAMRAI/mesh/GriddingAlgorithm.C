@@ -384,7 +384,7 @@ GriddingAlgorithm::makeCoarsestLevel(
 
    const hier::BoxLevel& domain_box_level(d_hierarchy->getDomainBoxLevel());
 
-   TBOX_ASSERT( ! domain_box_level.getMPI().hasReceivableMessage() ); // Check errant messages.
+   TBOX_ASSERT(!domain_box_level.getMPI().hasReceivableMessage());    // Check errant messages.
 
    t_make_domain->stop();
 
@@ -435,7 +435,7 @@ GriddingAlgorithm::makeCoarsestLevel(
       tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: partitioning domain.\n";
    }
 
-   TBOX_ASSERT( ! new_box_level->getMPI().hasReceivableMessage() ); // Check errant messages.
+   TBOX_ASSERT(!new_box_level->getMPI().hasReceivableMessage());    // Check errant messages.
 
    d_load_balancer0->loadBalanceBoxLevel(
       *new_box_level,
@@ -469,7 +469,7 @@ GriddingAlgorithm::makeCoarsestLevel(
          d_hierarchy->getRequiredConnectorWidth(0, 0, true),
          hier::IntVector::getOne(dim)));
 
-   TBOX_ASSERT( ! new_box_level->getMPI().hasReceivableMessage() ); // Check errant messages.
+   TBOX_ASSERT(!new_box_level->getMPI().hasReceivableMessage());    // Check errant messages.
 
    boost::shared_ptr<hier::Connector> new_to_new;
    if (domain_box_level.getLocalNumberOfBoxes(0) ==
@@ -490,8 +490,8 @@ GriddingAlgorithm::makeCoarsestLevel(
       if (d_print_steps) {
          tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: finding new<==>new." << std::endl;
       }
-      new_to_new.reset(new hier::Connector( *new_box_level, *new_box_level,
-                                            d_hierarchy->getRequiredConnectorWidth(0, 0, true) ) );
+      new_to_new.reset(new hier::Connector(*new_box_level, *new_box_level,
+            d_hierarchy->getRequiredConnectorWidth(0, 0, true)));
       d_oca0.findOverlaps_assumedPartition(*new_to_new);
 
       if (d_barrier_and_time) {
@@ -542,8 +542,8 @@ GriddingAlgorithm::makeCoarsestLevel(
        * Add computed Connectors to new level's collection of
        * persistent overlap Connectors.
        */
-      if ( !new_box_level->hasConnector( new_to_new->getHead(),
-                                         new_to_new->getConnectorWidth() ) ) {
+      if (!new_box_level->hasConnector(new_to_new->getHead(),
+             new_to_new->getConnectorWidth())) {
          new_box_level->cacheConnector(new_to_new);
       }
 
@@ -1901,12 +1901,12 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
          "GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel: bridging for new<==>finer\n";
       }
 
-      const hier::Connector &old_to_finer =
+      const hier::Connector& old_to_finer =
          d_hierarchy->getPatchLevel(new_ln)->getBoxLevel()->findConnectorWithTranspose(
-            *d_hierarchy->getPatchLevel(new_ln+1)->getBoxLevel(),
-            d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln+1),
-            d_hierarchy->getRequiredConnectorWidth(new_ln+1, new_ln),
-            hier::CONNECTOR_IMPLICIT_CREATION_RULE );
+            *d_hierarchy->getPatchLevel(new_ln + 1)->getBoxLevel(),
+            d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln + 1),
+            d_hierarchy->getRequiredConnectorWidth(new_ln + 1, new_ln),
+            hier::CONNECTOR_IMPLICIT_CREATION_RULE);
       boost::shared_ptr<hier::Connector> new_to_finer;
 
       t_bridge_new_to_finer->start();
@@ -2188,7 +2188,7 @@ GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes) cons
                                 << " in this case."
                                 << std::endl);
             } else {
-              TBOX_ERROR(
+               TBOX_ERROR(
                   d_object_name << ": "
                                 << "\ndomain Box " << i << ", " << test_box
                                 << ", violates the minimum patch size constraints."
@@ -3377,7 +3377,7 @@ GriddingAlgorithm::findRefinementBoxes(
 void
 GriddingAlgorithm::renumberBoxes(
    hier::BoxLevel& new_box_level,
-   hier::Connector *ref_to_new,
+   hier::Connector* ref_to_new,
    bool sort_by_corners,
    bool sequentialize_global_indices) const
 {
@@ -3388,10 +3388,10 @@ GriddingAlgorithm::renumberBoxes(
 
    t_renumber_boxes->barrierAndStart();
 
-   const hier::OverlapConnectorAlgorithm *oca = &d_oca;
-   const hier::MappingConnectorAlgorithm *mca = &d_mca;
-   const hier::BoxLevelConnectorUtils *blcu = &d_blcu;
-   if ( ref_to_new && &ref_to_new->getBase() == &d_hierarchy->getDomainBoxLevel() ) {
+   const hier::OverlapConnectorAlgorithm* oca = &d_oca;
+   const hier::MappingConnectorAlgorithm* mca = &d_mca;
+   const hier::BoxLevelConnectorUtils* blcu = &d_blcu;
+   if (ref_to_new && &ref_to_new->getBase() == &d_hierarchy->getDomainBoxLevel()) {
       oca = &d_oca0;
       mca = &d_mca0;
       blcu = &d_blcu0;
@@ -3411,25 +3411,24 @@ GriddingAlgorithm::renumberBoxes(
     * domain its cost is O(N^2).  In such a case, recompute instead
     * of modify.
     */
-   if ( ref_to_new == 0 ) {
-      hier::BoxLevel::swap(new_box_level,*seq_box_level);
-   }
-   else if ( &ref_to_new->getBase() != &d_hierarchy->getDomainBoxLevel() ) {
+   if (ref_to_new == 0) {
+      hier::BoxLevel::swap(new_box_level, *seq_box_level);
+   } else if (&ref_to_new->getBase() != &d_hierarchy->getDomainBoxLevel()) {
       mca->modify(*ref_to_new, *sorting_map, &new_box_level);
    } else {
-      hier::BoxLevel::swap(new_box_level,*seq_box_level);
+      hier::BoxLevel::swap(new_box_level, *seq_box_level);
       ref_to_new->clearNeighborhoods();
       ref_to_new->getTranspose().clearNeighborhoods();
       ref_to_new->setHead(new_box_level, true);
       ref_to_new->getTranspose().setBase(new_box_level, true);
       oca->findOverlaps_assumedPartition(*ref_to_new);
       ref_to_new->removePeriodicRelationships();
-      hier::Connector *new_to_ref = new hier::Connector(ref_to_new->getHead(),
-                                                        ref_to_new->getBase(),
-                                                        hier::Connector::convertHeadWidthToBase(
-                                                           ref_to_new->getHead().getRefinementRatio(),
-                                                           ref_to_new->getBase().getRefinementRatio(),
-                                                           ref_to_new->getConnectorWidth() ));
+      hier::Connector* new_to_ref = new hier::Connector(ref_to_new->getHead(),
+            ref_to_new->getBase(),
+            hier::Connector::convertHeadWidthToBase(
+               ref_to_new->getHead().getRefinementRatio(),
+               ref_to_new->getBase().getRefinementRatio(),
+               ref_to_new->getConnectorWidth()));
       oca->findOverlaps(*new_to_ref);
       ref_to_new->setTranspose(new_to_ref, true);
    }
@@ -4256,7 +4255,7 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
       if (new_to_nesting_complement->hasNeighborSet(omb.getBoxId())) {
          // Box omb is near the nesting boundary and may touch it.
          hier::BoxContainer nearby_nesting_boundary;
-         new_to_nesting_complement->getNeighborBoxes( omb.getBoxId(), nearby_nesting_boundary );
+         new_to_nesting_complement->getNeighborBoxes(omb.getBoxId(), nearby_nesting_boundary);
          hier::Box grown_box = omb;
          hier::BoxUtilities::growBoxWithinDomain(
             grown_box,
@@ -4264,8 +4263,7 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
             min_size.getBlockVector(omb.getBlockId()));
          grown_box_level.addBox(grown_box);
          new_to_grown.insertLocalNeighbor(grown_box, omb.getBoxId());
-      }
-      else {
+      } else {
          // Box omb is not near the nesting boundary and need not be grown.
          grown_box_level.addBox(omb);
       }

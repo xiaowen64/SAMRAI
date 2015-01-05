@@ -173,7 +173,7 @@ FirstLayerSideVariableFillPattern::computeFillBoxesOverlap(
    computeStencilBoxes(stencil_boxes, patch_box);
 
    std::vector<hier::BoxContainer> overlap_boxes(dim.getValue());
-   for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {  
+   for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
 
       /*
        * This is the equivalent of converting every box in overlap_boxes

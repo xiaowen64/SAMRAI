@@ -42,7 +42,9 @@ PatchFaceDataOpsInteger::numberOfEntries(
    const hier::Box ibox = box * data->getGhostBox();
    const int data_depth = data->getDepth();
    for (tbox::Dimension::dir_t d = 0; d < dimVal; ++d) {
-      retval += static_cast<tbox::Dimension::dir_t>((pdat::FaceGeometry::toFaceBox(ibox, d).size()) * data_depth);
+      retval +=
+         static_cast<tbox::Dimension::dir_t>((pdat::FaceGeometry::toFaceBox(ibox,
+                                                 d).size()) * data_depth);
    }
    return retval;
 }

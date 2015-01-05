@@ -339,9 +339,10 @@ private:
    /*!
     * @brief Determine globally reduced work parameters.
     */
-   void globalWorkReduction(
+   void
+   globalWorkReduction(
       LoadType local_work,
-      bool has_any_load ) const;
+      bool has_any_load) const;
 
    //! @brief Compute log-base-2 of integer, rounded up.
    static int
@@ -430,8 +431,8 @@ private:
 
    //@{
    //! @name Shared temporaries, used only when actively partitioning.
-   mutable hier::BoxLevel *d_balance_box_level;
-   mutable hier::Connector *d_balance_to_reference;
+   mutable hier::BoxLevel* d_balance_box_level;
+   mutable hier::Connector* d_balance_to_reference;
    mutable boost::shared_ptr<PartitioningParams> d_pparams;
    mutable LoadType d_global_work_sum;
    mutable LoadType d_global_work_avg;

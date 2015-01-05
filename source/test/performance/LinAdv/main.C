@@ -335,35 +335,32 @@ int main(
             grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
-
       boost::shared_ptr<SinusoidalFrontGenerator> sine_wall;
       boost::shared_ptr<SphericalShellGenerator> spherical_shell;
       boost::shared_ptr<MeshGenerationStrategy> mesh_gen;
 
-      if ( input_db->isDatabase("SinusoidalFrontGenerator") ) {
-         sine_wall.reset( new SinusoidalFrontGenerator(
-            "SinusoidalFrontGenerator", dim,
-            input_db->getDatabase("SinusoidalFrontGenerator") ));
+      if (input_db->isDatabase("SinusoidalFrontGenerator")) {
+         sine_wall.reset(new SinusoidalFrontGenerator(
+               "SinusoidalFrontGenerator", dim,
+               input_db->getDatabase("SinusoidalFrontGenerator")));
          sine_wall->resetHierarchyConfiguration(
-            patch_hierarchy, 0, patch_hierarchy->getMaxNumberOfLevels()-1 );
+            patch_hierarchy, 0, patch_hierarchy->getMaxNumberOfLevels() - 1);
          mesh_gen = sine_wall;
-      }
-      else if ( input_db->isDatabase("SphericalShellGenerator") ) {
-         spherical_shell.reset( new SphericalShellGenerator(
-            "SphericalShellGenerator", dim,
-            input_db->getDatabase("SphericalShellGenerator") ));
+      } else if (input_db->isDatabase("SphericalShellGenerator")) {
+         spherical_shell.reset(new SphericalShellGenerator(
+               "SphericalShellGenerator", dim,
+               input_db->getDatabase("SphericalShellGenerator")));
          spherical_shell->resetHierarchyConfiguration(
-            patch_hierarchy, 0, patch_hierarchy->getMaxNumberOfLevels()-1 );
+            patch_hierarchy, 0, patch_hierarchy->getMaxNumberOfLevels() - 1);
          mesh_gen = spherical_shell;
       }
-
 
       LinAdv* linear_advection_model = new LinAdv(
             "LinAdv",
             dim,
             input_db->getDatabase("LinAdv"),
             grid_geometry,
-            mesh_gen );
+            mesh_gen);
 
       boost::shared_ptr<tbox::Database> hli_db(
          scaled_input_db->isDatabase("HyperbolicLevelIntegrator") ?

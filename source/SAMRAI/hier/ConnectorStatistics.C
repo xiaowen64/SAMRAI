@@ -162,10 +162,9 @@ ConnectorStatistics::computeLocalConnectorStatistics(const Connector& connector)
          const size_t size = neighbor.size();
 
          d_sq.d_values[OVERLAP_SIZE] += static_cast<double>(size);
-         if ( neighbor.getOwnerRank() == mpi.getRank() ) {
+         if (neighbor.getOwnerRank() == mpi.getRank()) {
             d_sq.d_values[LOCAL_OVERLAP_SIZE] += static_cast<double>(size);
-         }
-         else {
+         } else {
             d_sq.d_values[REMOTE_OVERLAP_SIZE] += static_cast<double>(size);
          }
 

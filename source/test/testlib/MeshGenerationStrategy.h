@@ -173,7 +173,7 @@ public:
       const hier::Patch& patch,
       pdat::CellData<double>* uval_data,
       pdat::CellData<int>* tag_data,
-      const hier::Box &fill_box) const = 0;
+      const hier::Box& fill_box) const = 0;
 
 #ifdef HAVE_HDF5
    /*!

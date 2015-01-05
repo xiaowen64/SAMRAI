@@ -192,7 +192,7 @@ VoucherTransitLoad::assignToLocal(
    hier::BoxLevel& balanced_box_level,
    const hier::BoxLevel& unbalanced_box_level,
    double flexible_load_tol,
-   const tbox::SAMRAI_MPI &alt_mpi )
+   const tbox::SAMRAI_MPI& alt_mpi)
 {
    d_object_timers->t_assign_to_local->start();
    // Delegate to assignToLocalAndPopulateMap but give it no map to work with.
@@ -201,10 +201,9 @@ VoucherTransitLoad::assignToLocal(
       0, 0,
       unbalanced_box_level,
       flexible_load_tol,
-      alt_mpi );
+      alt_mpi);
    d_object_timers->t_assign_to_local->stop();
 }
-
 
 /*
  *************************************************************************
@@ -214,10 +213,10 @@ VoucherTransitLoad::assignToLocal(
 void
 VoucherTransitLoad::assignToLocalAndPopulateMaps(
    hier::BoxLevel& balanced_box_level,
-   hier::MappingConnector &balanced_to_unbalanced,
-   hier::MappingConnector &unbalanced_to_balanced,
+   hier::MappingConnector& balanced_to_unbalanced,
+   hier::MappingConnector& unbalanced_to_balanced,
    double flexible_load_tol,
-   const tbox::SAMRAI_MPI &alt_mpi )
+   const tbox::SAMRAI_MPI& alt_mpi)
 {
    // Delegate to the more general assignToLocalAndPopulateMap.
    assignToLocalAndPopulateMaps(
@@ -226,9 +225,8 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
       &unbalanced_to_balanced,
       unbalanced_to_balanced.getBase(),
       flexible_load_tol,
-      alt_mpi );
+      alt_mpi);
 }
-
 
 /*
  *************************************************************************
@@ -255,11 +253,11 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
 void
 VoucherTransitLoad::assignToLocalAndPopulateMaps(
    hier::BoxLevel& balanced_box_level,
-   hier::MappingConnector *balanced_to_unbalanced,
-   hier::MappingConnector *unbalanced_to_balanced,
+   hier::MappingConnector* balanced_to_unbalanced,
+   hier::MappingConnector* unbalanced_to_balanced,
    const hier::BoxLevel& unbalanced_box_level,
    double flexible_load_tol,
-   const tbox::SAMRAI_MPI &alt_mpi )
+   const tbox::SAMRAI_MPI& alt_mpi)
 {
    d_object_timers->t_assign_to_local_and_populate_maps->start();
 
@@ -271,9 +269,8 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
                  << std::endl;
    }
 
-   const tbox::SAMRAI_MPI &mpi = alt_mpi.hasNullCommunicator() ?
+   const tbox::SAMRAI_MPI& mpi = alt_mpi.hasNullCommunicator() ?
       unbalanced_box_level.getMPI() : alt_mpi;
-
 
    /*
     * unaccounted_work is amount of work we started with, minus what
@@ -370,7 +367,7 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
          for (std::map<int, VoucherRedemption>::const_iterator mi = redemptions_to_fulfill.begin();
               mi != redemptions_to_fulfill.end(); ++mi) {
             mi->second.d_box_shipment->putInBoxLevel(balanced_box_level);
-            if ( unbalanced_to_balanced ) {
+            if (unbalanced_to_balanced) {
                mi->second.d_box_shipment->generateLocalBasedMapEdges(
                   *unbalanced_to_balanced,
                   *balanced_to_unbalanced);
@@ -392,16 +389,15 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
                           << std::endl;
             }
 
-            if ( unbalanced_to_balanced ) {
+            if (unbalanced_to_balanced) {
                vr.d_box_shipment->generateLocalBasedMapEdges(
                   *unbalanced_to_balanced,
                   *balanced_to_unbalanced);
             }
-         }
-         else {
-            vr.fulfillLocalRedemption( d_reserve, *d_pparams, false );
+         } else {
+            vr.fulfillLocalRedemption(d_reserve, *d_pparams, false);
             vr.d_box_shipment->putInBoxLevel(balanced_box_level);
-            if ( unbalanced_to_balanced ) {
+            if (unbalanced_to_balanced) {
                vr.d_box_shipment->generateLocalBasedMapEdges(
                   *unbalanced_to_balanced,
                   *balanced_to_unbalanced);
@@ -424,7 +420,7 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
    }
 
    d_reserve.putInBoxLevel(balanced_box_level);
-   if ( unbalanced_to_balanced ) {
+   if (unbalanced_to_balanced) {
       d_reserve.generateLocalBasedMapEdges(
          *unbalanced_to_balanced,
          *balanced_to_unbalanced);
@@ -445,7 +441,7 @@ VoucherTransitLoad::assignToLocalAndPopulateMaps(
       vr.recvWorkSupply(count, *d_pparams);
 
       vr.d_box_shipment->putInBoxLevel(balanced_box_level);
-      if ( unbalanced_to_balanced ) {
+      if (unbalanced_to_balanced) {
          vr.d_box_shipment->generateLocalBasedMapEdges(
             *unbalanced_to_balanced,
             *balanced_to_unbalanced);
@@ -731,9 +727,9 @@ void VoucherTransitLoad::VoucherRedemption::fulfillLocalRedemption(
  */
 void VoucherTransitLoad::VoucherRedemption::finishSendRequest()
 {
-   if ( d_mpi_request != MPI_REQUEST_NULL ) {
+   if (d_mpi_request != MPI_REQUEST_NULL) {
       tbox::SAMRAI_MPI::Status status;
-      tbox::SAMRAI_MPI::Wait( &d_mpi_request, &status );
+      tbox::SAMRAI_MPI::Wait(&d_mpi_request, &status);
    }
    TBOX_ASSERT(d_mpi_request == MPI_REQUEST_NULL);
 }
@@ -810,7 +806,8 @@ VoucherTransitLoad::adjustLoad(
       tbox::plog << "  adjustLoad point_miss=" << point_miss
                  << "  range_miss="
                  << (range_miss > 0 ? " " : "") // Add space if missed range
-                 << (range_miss > 0.5 * static_cast<double>(d_pparams->getMinBoxSize().getProduct()) ? " " : "") // Add space if missed range by a lot
+                 << (range_miss > 0.5
+          * static_cast<double>(d_pparams->getMinBoxSize().getProduct()) ? " " : "")                             // Add space if missed range by a lot
                  << range_miss
                  << "  " << main_bin.getSumLoad() << '/'
                  << ideal_load << " [" << low_load << ',' << high_load << ']'

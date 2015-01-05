@@ -163,14 +163,16 @@ private:
     * @brief Reset obligation recursively for all descendents, based
     * on given average load.
     */
-   void resetObligation( double avg_load );
+   void
+   resetObligation(
+      double avg_load);
 
    /*!
     * @brief Compute interval for updating Connector during load
     * distribution.
     */
-   double computeConnectorUpdateInterval() const;
-
+   double
+   computeConnectorUpdateInterval() const;
 
    //! @brief Data the main CascadePartitioner shares with all parts of the tree.
    const CascadePartitioner* d_common;

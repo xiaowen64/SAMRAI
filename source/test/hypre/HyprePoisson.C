@@ -355,7 +355,7 @@ bool HyprePoisson::packDerivedDataIntoDoubleBuffer(
    const hier::Box& region,
    const std::string& variable_name,
    int depth_id,
-   double simulation_time ) const
+   double simulation_time) const
 {
    NULL_USE(region);
    NULL_USE(depth_id);

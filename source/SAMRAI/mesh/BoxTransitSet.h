@@ -119,8 +119,7 @@ public:
       hier::BoxLevel& balanced_box_level,
       const hier::BoxLevel& unbalanced_box_level,
       double flexible_load_tol = 0.0,
-      const tbox::SAMRAI_MPI &alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL) );
-
+      const tbox::SAMRAI_MPI& alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL));
 
    /*!
     * @copydoc TransitLoad::assignToLocalAndPopulateMaps()
@@ -130,10 +129,10 @@ public:
    void
    assignToLocalAndPopulateMaps(
       hier::BoxLevel& balanced_box_level,
-      hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced,
+      hier::MappingConnector& balanced_to_unbalanced,
+      hier::MappingConnector& unbalanced_to_balanced,
       double flexible_load_tol = 0.0,
-      const tbox::SAMRAI_MPI &alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL) );
+      const tbox::SAMRAI_MPI& alt_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL));
 
    //@}
 
@@ -186,12 +185,18 @@ public:
     * @brief Set print flags for individual object.
     */
    void
-   setPrintFlags( bool steps, bool pop_steps, bool swap_steps, bool break_steps, bool edge_steps );
+   setPrintFlags(
+      bool steps,
+      bool pop_steps,
+      bool swap_steps,
+      bool break_steps,
+      bool edge_steps);
 
-   void recursivePrint(
-      std::ostream &co=tbox::plog,
-      const std::string &border=std::string(),
-      int detail_depth=1 ) const;
+   void
+   recursivePrint(
+      std::ostream& co = tbox::plog,
+      const std::string& border = std::string(),
+      int detail_depth = 1) const;
 
    /*!
     * @brief Intermediary between BoxTransitSet and output streams,
@@ -258,12 +263,11 @@ private:
    //@}
 
 private:
-
    void
    populateMaps(
-      hier::MappingConnector &balanced_to_unbalanced,
-      hier::MappingConnector &unbalanced_to_balanced,
-      const tbox::SAMRAI_MPI &alt_mpi  ) const;
+      hier::MappingConnector& balanced_to_unbalanced,
+      hier::MappingConnector& unbalanced_to_balanced,
+      const tbox::SAMRAI_MPI& alt_mpi) const;
 
    static const int BoxTransitSet_EDGETAG0 = 3;
    static const int BoxTransitSet_EDGETAG1 = 4;
@@ -296,11 +300,11 @@ private:
          }
          return a.getOrigBox().getBoxId() < b.getOrigBox().getBoxId();
       }
-   private:
-      bool lexicalIndexLessThan( const hier::Index &a,
-                                 const hier::Index &b ) const {
-         for ( hier::Index::dir_t i=0; i<a.getDim().getValue(); ++i ) {
-            if ( a(i) != b(i) ) return a(i) < b(i);
+private:
+      bool lexicalIndexLessThan(const hier::Index& a,
+                                const hier::Index& b) const {
+         for (hier::Index::dir_t i = 0; i < a.getDim().getValue(); ++i) {
+            if (a(i) != b(i)) return a(i) < b(i);
          }
          return false;
       }
@@ -490,10 +494,10 @@ private:
     *
     * @param [out] unbalanced_to_balanced
     */
-   void constructSemilocalUnbalancedToBalanced(
-      hier::MappingConnector &unbalanced_to_balanced,
-      const tbox::SAMRAI_MPI &mpi ) const;
-
+   void
+   constructSemilocalUnbalancedToBalanced(
+      hier::MappingConnector& unbalanced_to_balanced,
+      const tbox::SAMRAI_MPI& mpi) const;
 
    /*!
     * @brief Re-cast a TransitLoad object to a BoxTransitSet.
@@ -533,7 +537,7 @@ private:
    }
 
    //! @brief Compute the load for a Box.
-   double computeLoad( const hier::Box& box) const {
+   double computeLoad(const hier::Box& box) const {
       return static_cast<double>(box.size());
    }
 

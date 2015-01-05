@@ -58,14 +58,13 @@ TimeRefinementIntegratorConnectorWidthRequestor::computeRequiredConnectorWidths(
    fine_connector_widths.resize(max_levels - 1, hier::IntVector::getZero(dim));
    self_connector_widths.clear();
    self_connector_widths.reserve(max_levels);
-   for ( size_t ln=0; ln<static_cast<size_t>(max_levels); ++ln ) {
+   for (size_t ln = 0; ln < static_cast<size_t>(max_levels); ++ln) {
       hier::IntVector buffer(
          dim,
-         d_tag_buffer.size() > ln ? d_tag_buffer[ln] : d_tag_buffer.back() );
+         d_tag_buffer.size() > ln ? d_tag_buffer[ln] : d_tag_buffer.back());
       self_connector_widths.push_back(buffer);
    }
 }
-
 
 /*
  **************************************************************************

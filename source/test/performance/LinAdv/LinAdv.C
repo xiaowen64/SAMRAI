@@ -120,7 +120,7 @@ LinAdv::LinAdv(
    const tbox::Dimension& dim,
    boost::shared_ptr<tbox::Database> input_db,
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geom,
-   const boost::shared_ptr<MeshGenerationStrategy> &sine_wall):
+   const boost::shared_ptr<MeshGenerationStrategy>& sine_wall):
    algs::HyperbolicPatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
@@ -376,8 +376,7 @@ double LinAdv::computeStableDtOnPatch(
          d_advection_velocity,
          uval->getPointer(),
          stabdt);
-   }
-   else {
+   } else {
       TBOX_ERROR("Only 2D or 3D allowed in LinAdv::computeStableDtOnPatch");
       stabdt = 0;
    }
@@ -1197,7 +1196,7 @@ void LinAdv::setPhysicalBoundaryConditions(
                patch.getBox(),
                ghost_width_to_fill);
 
-         d_mesh_gen->computePatchData( patch, uval.get(), 0, fill_box );
+         d_mesh_gen->computePatchData(patch, uval.get(), 0, fill_box);
 
       }
 
@@ -1414,7 +1413,7 @@ void LinAdv::tagGradientDetectorCells(
       BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_indx)));
    TBOX_ASSERT(tags);
-   TBOX_ASSERT( tags->getTime() == regrid_time );
+   TBOX_ASSERT(tags->getTime() == regrid_time);
 
    hier::Box pbox = patch.getBox();
 
@@ -1437,9 +1436,9 @@ void LinAdv::tagGradientDetectorCells(
    if (d_mesh_gen) {
       t_analytical_tag->start();
       d_mesh_gen->computePatchData(patch,
-                                   0,
-                                   tags.get(),
-                                   patch.getBox());
+         0,
+         tags.get(),
+         patch.getBox());
       t_analytical_tag->stop();
    } else {
       /*
@@ -1664,7 +1663,7 @@ void LinAdv::registerVisItDataWriter(
       registerPlotQuantity("U",
          "SCALAR",
          vardb->mapVariableAndContextToIndex(
-            d_uval, vardb->getContext("CURRENT")) );
+            d_uval, vardb->getContext("CURRENT")));
    }
 #endif
 }

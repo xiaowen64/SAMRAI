@@ -66,7 +66,7 @@ operator << (
    std::ostream& co,
    const LocalId& r)
 {
-   if ( r.isValid() ) {
+   if (r.isValid()) {
       co << r.d_value;
    } else {
       co << 'X';

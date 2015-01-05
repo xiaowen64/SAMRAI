@@ -125,8 +125,14 @@ public:
    }
 
 private:
-   friend SideIterator SideGeometry::begin(const hier::Box& box, tbox::Dimension::dir_t axis);
-   friend SideIterator SideGeometry::end(const hier::Box& box, tbox::Dimension::dir_t axis);
+   friend SideIterator
+   SideGeometry::begin(
+      const hier::Box& box,
+      tbox::Dimension::dir_t axis);
+   friend SideIterator
+   SideGeometry::end(
+      const hier::Box& box,
+      tbox::Dimension::dir_t axis);
 
    /**
     * Constructor for the side iterator.  The iterator will enumerate

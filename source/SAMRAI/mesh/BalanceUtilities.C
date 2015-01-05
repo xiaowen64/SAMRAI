@@ -437,7 +437,7 @@ BalanceUtilities::privateFindBestCutDimension(
 
    hier::Box size_test_box(in_box);
 
-   for (   tbox::Dimension::dir_t id = 0; id < dim.getValue(); ++id) {
+   for (tbox::Dimension::dir_t id = 0; id < dim.getValue(); ++id) {
       int ncells = in_box.numberCells(id);
       if ((ncells < 2 * min_size(id)) ||
           (ncells % cut_factor(id))) {
@@ -698,11 +698,11 @@ BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
        */
       tbox::Dimension::dir_t cut_dim;
       bool can_cut_box = privateFindBestCutDimension(
-         cut_dim,
-         in_box,
-         min_size,
-         cut_factor,
-         bad_cut_points);
+            cut_dim,
+            in_box,
+            min_size,
+            cut_factor,
+            bad_cut_points);
 
       if (can_cut_box) {
 
@@ -838,11 +838,11 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
        */
       tbox::Dimension::dir_t cut_dim;
       bool can_cut_box = privateFindBestCutDimension(
-         cut_dim,
-         in_box,
-         min_size,
-         cut_factor,
-         bad_cut_points);
+            cut_dim,
+            in_box,
+            min_size,
+            cut_factor,
+            bad_cut_points);
 
       if (can_cut_box) {
 
@@ -1897,7 +1897,7 @@ BalanceUtilities::compareLoads(
  */
 void
 BalanceUtilities::reduceAndReportLoadBalance(
-   const std::vector<double> &loads,
+   const std::vector<double>& loads,
    const tbox::SAMRAI_MPI& mpi,
    std::ostream& os)
 {
@@ -1920,30 +1920,29 @@ BalanceUtilities::reduceAndReportLoadBalance(
 
    std::vector<double> min_loads(loads);
    std::vector<int> min_ranks(loads.size());
-   mpi.AllReduce( &min_loads[0], static_cast<int>(min_loads.size()), MPI_MINLOC, &min_ranks[0] );
+   mpi.AllReduce(&min_loads[0], static_cast<int>(min_loads.size()), MPI_MINLOC, &min_ranks[0]);
 
    std::vector<double> max_loads(loads);
    std::vector<int> max_ranks(loads.size());
-   mpi.AllReduce( &max_loads[0], static_cast<int>(max_loads.size()), MPI_MAXLOC, &max_ranks[0] );
+   mpi.AllReduce(&max_loads[0], static_cast<int>(max_loads.size()), MPI_MAXLOC, &max_ranks[0]);
 
    std::vector<double> total_loads(loads);
-   mpi.AllReduce( &total_loads[0], static_cast<int>(total_loads.size()), MPI_SUM );
+   mpi.AllReduce(&total_loads[0], static_cast<int>(total_loads.size()), MPI_SUM);
 
    const int n_population_zones = ndemarks + 1;
-   std::vector<int> population( loads.size() * n_population_zones, 0 );
-   for ( size_t iload=0; iload<loads.size(); ++iload ) {
+   std::vector<int> population(loads.size() * n_population_zones, 0);
+   for (size_t iload = 0; iload < loads.size(); ++iload) {
       int izone;
-      for ( izone=0; izone<ndemarks; ++izone ) {
-         if ( loads[iload]/total_loads[iload]*mpi.getSize() < demarks[izone] ) {
+      for (izone = 0; izone < ndemarks; ++izone) {
+         if (loads[iload] / total_loads[iload] * mpi.getSize() < demarks[izone]) {
             break;
          }
       }
-      population[ iload*n_population_zones + izone ] = 1;
+      population[iload * n_population_zones + izone] = 1;
    }
-   mpi.AllReduce( &population[0], static_cast<int>(population.size()), MPI_SUM );
+   mpi.AllReduce(&population[0], static_cast<int>(population.size()), MPI_SUM);
 
-
-   for ( size_t iload=0; iload<loads.size(); ++iload ) {
+   for (size_t iload = 0; iload < loads.size(); ++iload) {
 
       const double total_load = total_loads[iload];
       const double avg_load = total_loads[iload] / mpi.getSize();
@@ -1975,7 +1974,7 @@ BalanceUtilities::reduceAndReportLoadBalance(
       const char space[] = "   ";
       os.setf(std::ios_base::fixed);
       os << bars;
-      for (int izone = 0; izone<ndemarks; ++izone) {
+      for (int izone = 0; izone < ndemarks; ++izone) {
          os << std::setw(4) << std::setprecision(2) << demarks[izone] << bars;
       }
       os << '\n';
@@ -1983,8 +1982,8 @@ BalanceUtilities::reduceAndReportLoadBalance(
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:1572)
 #endif
-      for (int izone=0; izone<n_population_zones; ++izone) {
-         const int nrank = population[iload*n_population_zones + izone];
+      for (int izone = 0; izone < n_population_zones; ++izone) {
+         const int nrank = population[iload * n_population_zones + izone];
          const double percentage = 100.0 * nrank / nproc;
          os << std::setw(5) << percentage << space;
       }
