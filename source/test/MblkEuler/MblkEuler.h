@@ -382,7 +382,7 @@ private:
    int d_dom_current_nboxes;
 
    /// the blocks bounding the current patch
-   int d_dom_local_blocks[6];
+   hier::BlockId::block_t d_dom_local_blocks[6];
 
    //
    // ====================== Refinement Data (private) =======================

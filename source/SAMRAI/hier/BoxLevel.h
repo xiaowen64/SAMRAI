@@ -768,9 +768,9 @@ public:
     */
    const Box&
    getLocalBoundingBox(
-      int block_number) const
+      const BlockId& block_id) const
    {
-      return d_local_bounding_box[block_number];
+      return d_local_bounding_box[block_id.getBlockValue()];
    }
 
    /*!
@@ -783,10 +783,10 @@ public:
     */
    const Box&
    getGlobalBoundingBox(
-      int block_number) const
+      const BlockId& block_id) const
    {
       cacheGlobalReducedData();
-      return d_global_bounding_box[block_number];
+      return d_global_bounding_box[block_id.getBlockValue()];
    }
 
    /*!
@@ -794,9 +794,9 @@ public:
     */
    const IntVector&
    getLocalMaxBoxSize(
-      int block_number) const
+      const BlockId& block_id) const
    {
-      return d_local_max_box_size[block_number];
+      return d_local_max_box_size[block_id.getBlockValue()];
    }
 
    /*!
@@ -804,9 +804,9 @@ public:
     */
    const IntVector&
    getLocalMinBoxSize(
-      int block_number) const
+      const BlockId& block_id) const
    {
-      return d_local_min_box_size[block_number];
+      return d_local_min_box_size[block_id.getBlockValue()];
    }
 
    /*!
@@ -819,10 +819,10 @@ public:
     */
    const IntVector&
    getGlobalMaxBoxSize(
-      int block_number) const
+      const BlockId& block_id) const
    {
       cacheGlobalReducedData();
-      return d_global_max_box_size[block_number];
+      return d_global_max_box_size[block_id.getBlockValue()];
    }
 
    /*!
@@ -835,10 +835,10 @@ public:
     */
    const IntVector&
    getGlobalMinBoxSize(
-      int block_number) const
+      const BlockId& block_id) const
    {
       cacheGlobalReducedData();
-      return d_global_min_box_size[block_number];
+      return d_global_min_box_size[block_id.getBlockValue()];
    }
 
    /*!

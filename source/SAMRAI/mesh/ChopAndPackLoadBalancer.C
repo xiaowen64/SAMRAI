@@ -1054,7 +1054,7 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
          buf_in_ptr[offset++] = x->lower(i);
          buf_in_ptr[offset++] = x->upper(i);
       }
-      buf_in_ptr[offset++] = x->getBlockId().getBlockValue();
+      buf_in_ptr[offset++] = static_cast<int>(x->getBlockId().getBlockValue());
    }
 
    /*

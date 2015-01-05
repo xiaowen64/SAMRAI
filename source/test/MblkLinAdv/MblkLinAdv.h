@@ -245,7 +245,7 @@ public:
    setMappedGridOnPatch(
       const hier::Patch& patch,
       const int level_number,
-      const int block_number);
+      const hier::BlockId::block_t block_number);
 
    /**
     * Write state of MblkLinAdv object to the given database for restart.

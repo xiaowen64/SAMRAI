@@ -314,14 +314,14 @@ TileClustering::findBoxesContainingTags(
 
       for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
            bi != bound_boxes.end(); ++bi) {
-         const int bn = bi->getBlockId().getBlockValue();
-         tbox::plog << "\tBlock " << bn
+         const hier::BlockId& bid = bi->getBlockId();
+         tbox::plog << "\tBlock " << static_cast<int>(bid.getBlockValue())
                     << " initial bounding box = " << *bi << ", "
                     << bi->size() << " cells, "
                     << "final global bounding box = "
-                    << new_box_level->getGlobalBoundingBox(bn)
+                    << new_box_level->getGlobalBoundingBox(bid)
                     << ", "
-                    << new_box_level->getGlobalBoundingBox(bn).size()
+                    << new_box_level->getGlobalBoundingBox(bid).size()
                     << " cells.\n\t";
       }
 
@@ -1344,7 +1344,8 @@ TileClustering::coalesceClusters(
 
       hier::LocalId local_id(0);
 
-      const int nblocks = tile_box_level.getGridGeometry()->getNumberBlocks();
+      const int nblocks =
+         static_cast<int>(tile_box_level.getGridGeometry()->getNumberBlocks());
 
       for (int b = 0; b < nblocks; ++b) {
          hier::BlockId block_id(b);

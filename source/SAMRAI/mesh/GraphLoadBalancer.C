@@ -99,7 +99,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
    d_bad_interval = bad_interval;
    d_cut_factor = effective_cut_factor;
    d_block_domain_boxes.clear();
-   int nblocks =
+   size_t nblocks =
       domain_box_level.getGridGeometry()->getNumberBlocks();
    d_block_domain_boxes.resize(nblocks);
 
@@ -752,10 +752,10 @@ GraphLoadBalancer::coalesceBoxLevel(
 
       const int my_rank = level_boxes.begin()->getOwnerRank();
 
-      int nblocks = level.getGridGeometry()->getNumberBlocks();
+      size_t nblocks = level.getGridGeometry()->getNumberBlocks();
       hier::LocalId local_id(0);
 
-      for (int b = 0; b < nblocks; ++b) {
+      for (hier::BlockId::block_t b = 0; b < nblocks; ++b) {
          hier::BlockId block_id(b);
 
          hier::BoxContainer block_boxes(level_boxes, block_id);

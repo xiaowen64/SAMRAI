@@ -326,7 +326,7 @@ public:
    void
    setPhysicalDomain(
       const BoxContainer& domain,
-      const int number_blocks);
+      const size_t number_blocks);
 
    /*!
     * @brief Get the physical domain description on level zero.
@@ -425,7 +425,7 @@ public:
    /*!
     * @brief Get the number of blocks in the geometry.
     */
-   int
+   size_t
    getNumberBlocks() const
    {
       return d_number_blocks;
@@ -1859,10 +1859,10 @@ private:
    /*!
     * The number of blocks represented in the BaseGridGeometry.
     */
-   int d_number_blocks;
+   size_t d_number_blocks;
 
    /*!
-    * The number of blocks singularities in the block configuration.
+    * The number of block singularities in the block configuration.
     */
    int d_number_of_block_singularities;
 

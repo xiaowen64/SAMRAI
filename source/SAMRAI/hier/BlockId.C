@@ -9,6 +9,7 @@
  ************************************************************************/
 #include "SAMRAI/hier/BlockId.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <iostream>
 
@@ -44,9 +45,20 @@ BlockId::BlockId(
  *******************************************************************************
  */
 BlockId::BlockId(
-   const int& value):
+   const unsigned int& value):
    d_value(value)
 {
+}
+
+/*
+ *******************************************************************************
+ *******************************************************************************
+ */
+BlockId::BlockId(
+   const int& value):
+   d_value(static_cast<int>(value))
+{
+   TBOX_ASSERT(value >=0);
 }
 
 /*

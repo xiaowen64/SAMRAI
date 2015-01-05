@@ -1348,7 +1348,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
    const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry(
       dst_to_unfilled.getBase().getGridGeometry());
 
-   const int nblocks(grid_geometry->getNumberBlocks());
+   const size_t nblocks = grid_geometry->getNumberBlocks();
 
    hier::IntVector big_grow_vector(dim, 0);
    if (d_num_periodic_directions > 0) {
@@ -1362,7 +1362,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
    std::vector<hier::BoxContainer> coarser_physical_domain(nblocks);
    std::vector<hier::BoxContainer> coarser_shear_domain(nblocks);
    std::vector<bool> do_coarse_shearing(nblocks);
-   for (int b = 0; b < nblocks; ++b) {
+   for (hier::BlockId::block_t b = 0; b < nblocks; ++b) {
       grid_geometry->computePhysicalDomain(
          coarser_physical_domain[b],
          hiercoarse_box_level.getRefinementRatio(),
@@ -1441,7 +1441,8 @@ RefineSchedule::setupCoarseInterpBoxLevel(
           * restrictions.
           */
          const hier::Box& unfilled_box = *ni;
-         const int dst_blk = unfilled_box.getBlockId().getBlockValue();
+         const hier::BlockId::block_t& dst_blk =
+            unfilled_box.getBlockId().getBlockValue();
 
          hier::Box coarse_interp_box(unfilled_box);
          coarse_interp_box.coarsen(dst_hiercoarse_ratio);
@@ -2180,7 +2181,7 @@ RefineSchedule::fillSingularityBoundaries(
 
       if (d_singularity_patch_strategy) {
 
-         for (int bn = 0; bn < grid_geometry->getNumberBlocks(); ++bn) {
+         for (hier::BlockId::block_t bn = 0; bn < grid_geometry->getNumberBlocks(); ++bn) {
 
             hier::BlockId block_id(bn);
 
@@ -3312,7 +3313,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
 
    boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
-   const int num_blocks = grid_geometry->getNumberBlocks();
+   const size_t num_blocks = grid_geometry->getNumberBlocks();
 
    /*
     * Create encon_box_level and associated Connectors.
@@ -3340,7 +3341,7 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
        * Loop over blocks to find destination patches on each block
        * that touch enhanced connectivity.
        */
-      for (int bn = 0; bn < num_blocks; ++bn) {
+      for (hier::BlockId::block_t bn = 0; bn < num_blocks; ++bn) {
 
          hier::BlockId block_id(bn);
 
@@ -4404,7 +4405,7 @@ RefineSchedule::initializeDomainAndGhostInformation()
    const hier::IntVector& ratio_to_level_zero =
       d_dst_level->getRatioToLevelZero();
 
-   for (int b = 0; b < grid_geom->getNumberBlocks(); ++b) {
+   for (hier::BlockId::block_t b = 0; b < grid_geom->getNumberBlocks(); ++b) {
       d_domain_is_one_box[b] = grid_geom->getDomainIsSingleBox(hier::BlockId(b));
    }
 

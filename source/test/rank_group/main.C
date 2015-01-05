@@ -701,7 +701,7 @@ void generatePrebalanceByUserShells(
       tag_level,
       tag_id,
       tag_val,
-      hier::BoxContainer(anchor_box_level->getGlobalBoundingBox(0)),
+      hier::BoxContainer(anchor_box_level->getGlobalBoundingBox(hier::BlockId(0))),
       min_size,
       max_gcw);
 

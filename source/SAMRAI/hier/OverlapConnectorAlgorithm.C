@@ -478,9 +478,10 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
     */
    BoxContainer base_bounding_boxes, head_bounding_boxes;
    size_t base_bounding_cell_count = 0, head_bounding_cell_count = 0;
-   for (int bn = 0; bn < geom->getNumberBlocks(); ++bn) {
-      base_bounding_boxes.push_back(base.getGlobalBoundingBox(bn));
-      head_bounding_boxes.push_back(head.getGlobalBoundingBox(bn));
+   for (BlockId::block_t bn = 0; bn < geom->getNumberBlocks(); ++bn) {
+      hier::BlockId block_id(bn);
+      base_bounding_boxes.push_back(base.getGlobalBoundingBox(block_id));
+      head_bounding_boxes.push_back(head.getGlobalBoundingBox(block_id));
       base_bounding_cell_count += base_bounding_boxes.back().size();
       head_bounding_cell_count += head_bounding_boxes.back().size();
    }
@@ -1742,7 +1743,8 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
             send_mesg.insert(send_mesg.end(), subsize, -1);
             int* submesg = &send_mesg[send_mesg.size() - subsize];
             *(submesg++) = visible_base_nabrs_box.getLocalId().getValue();
-            *(submesg++) = visible_base_nabrs_box.getBlockId().getBlockValue();
+            *(submesg++) = static_cast<int>(
+               visible_base_nabrs_box.getBlockId().getBlockValue());
             *(submesg++) = static_cast<int>(found_nabrs.size());
             for (BoxContainer::const_iterator na = found_nabrs.begin();
                  na != found_nabrs.end(); ++na) {

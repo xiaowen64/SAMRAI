@@ -255,7 +255,7 @@ CoarseFineBoundary::computeFromMultiblockLevel(
     * Get the number of blocks from the grid geometry.
     */
    boost::shared_ptr<BaseGridGeometry> grid_geometry(level.getGridGeometry());
-   int nblocks = grid_geometry->getNumberBlocks();
+   size_t nblocks = grid_geometry->getNumberBlocks();
 
    std::vector<BoxContainer> fake_domain(nblocks);
 
@@ -316,7 +316,7 @@ CoarseFineBoundary::computeFromMultiblockLevel(
       fake_domain_list.spliceBack(level_nabrs);
    }
 
-   for (int i = 0; i < nblocks; ++i) {
+   for (BlockId::block_t i = 0; i < nblocks; ++i) {
       d_initialized[i] = true;
    }
 
@@ -363,7 +363,7 @@ CoarseFineBoundary::getBoundaries(
    const int boundary_type,
    const BlockId& block_id) const
 {
-   const int& block_num = block_id.getBlockValue();
+   const BlockId::block_t& block_num = block_id.getBlockValue();
    if (!d_initialized[block_num]) {
       TBOX_ERROR("The boundary boxes have not been computed.");
    }

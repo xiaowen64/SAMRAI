@@ -607,7 +607,7 @@ int main(
             hierarchy->getPatchLevel(tag_ln),
             tag_data_id,
             1 /* tag_val */,
-            hier::BoxContainer(Ltag.getGlobalBoundingBox(0)),
+            hier::BoxContainer(Ltag.getGlobalBoundingBox(hier::BlockId(0))),
             min_size,
             required_connector_width);
 

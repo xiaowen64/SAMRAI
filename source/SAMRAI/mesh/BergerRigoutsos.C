@@ -373,7 +373,7 @@ BergerRigoutsos::findBoxesContainingTags(
    d_new_box_level->getGlobalNumberOfCells();
    for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
         bi != bound_boxes.end(); ++bi) {
-      d_new_box_level->getGlobalBoundingBox(bi->getBlockId().getBlockValue());
+      d_new_box_level->getGlobalBoundingBox(bi->getBlockId());
    }
    d_object_timers->t_global_reductions->stop();
 
@@ -404,14 +404,14 @@ BergerRigoutsos::findBoxesContainingTags(
 
       for (hier::BoxContainer::const_iterator bi = bound_boxes.begin();
            bi != bound_boxes.end(); ++bi) {
-         const int bn = bi->getBlockId().getBlockValue();
-         tbox::plog << "Block " << bn
+         const hier::BlockId bid = bi->getBlockId();
+         tbox::plog << "Block " << static_cast<int>(bid.getBlockValue())
                     << " initial bounding box = " << *bi << ", "
                     << bi->size() << " cells, "
                     << "final global bounding box = "
-                    << d_new_box_level->getGlobalBoundingBox(bn)
+                    << d_new_box_level->getGlobalBoundingBox(bid)
                     << ", "
-                    << d_new_box_level->getGlobalBoundingBox(bn).size()
+                    << d_new_box_level->getGlobalBoundingBox(bid).size()
                     << " cells.\n\t";
       }
 

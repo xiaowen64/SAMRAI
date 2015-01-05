@@ -263,10 +263,12 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
     */
 
    // Unpack neighbor-removal section.
+   // TODO: Get rid of dummy_val and block_id_affected, making sure
+   //       adjustments in message sizes are correct. 
    const int num_removed_boxes = *(ptr++);
    for (int ii = 0; ii < num_removed_boxes; ++ii) {
       const LocalId id_gone(*(ptr++));
-      const BlockId block_id_gone(*(ptr++));
+      int dummy_val = (*(ptr++));
       const int number_affected = *(ptr++);
       const Box box_gone(dim, GlobalId(id_gone, sender));
       if (print_steps) {
@@ -274,7 +276,6 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
                     << " removed, affecting " << number_affected
                     << " boxes." << std::endl;
       }
-//TODO: Is BoxId usage in this method correct regarding block id?
       for (int iii = 0; iii < number_affected; ++iii) {
          const LocalId id_affected(*(ptr++));
          const BlockId block_id_affected(*(ptr++));

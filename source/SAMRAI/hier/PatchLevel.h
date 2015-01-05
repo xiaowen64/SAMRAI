@@ -1305,7 +1305,7 @@ private:
    /*!
     * @brief Number of blocks that can be represented by this level.
     */
-   int d_number_blocks;
+   size_t d_number_blocks;
 
    /*!
     * Primary metadata describing the PatchLevel.

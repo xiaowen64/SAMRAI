@@ -739,7 +739,7 @@ int main(
             hierarchy->getPatchLevel(coarser_ln),
             tag_data_id,
             1 /* tag_val */,
-            hier::BoxContainer(L0.getGlobalBoundingBox(0)),
+            hier::BoxContainer(L0.getGlobalBoundingBox(hier::BlockId(0))),
             min_size,
             required_connector_width);
          L0_to_L1->assertOverlapCorrectness();
@@ -932,7 +932,7 @@ int main(
             hierarchy->getPatchLevel(coarser_ln),
             tag_data_id,
             1 /* tag_val */,
-            hier::BoxContainer(L1.getGlobalBoundingBox(0)),
+            hier::BoxContainer(L1.getGlobalBoundingBox(hier::BlockId(0))),
             min_size,
             required_connector_width);
 
