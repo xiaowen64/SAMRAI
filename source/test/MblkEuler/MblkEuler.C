@@ -1585,7 +1585,8 @@ void MblkEuler::setPhysicalBoundaryConditions(
 {
    NULL_USE(fill_time);
 
-   const int block_number = patch.getBox().getBlockId().getBlockValue();
+   const hier::BlockId::block_t block_number =
+      patch.getBox().getBlockId().getBlockValue();
 
    markPhysicalBoundaryConditions(patch, ghost_width_to_fill);
 
@@ -2692,13 +2693,11 @@ void MblkEuler::registerVisItDataWriter(
 void MblkEuler::printClassData(
    ostream& os) const
 {
-   int j;
-
    os << "\nMblkEuler::printClassData..." << endl;
    os << "MblkEuler: this = " << (MblkEuler *)this << endl;
    os << "d_object_name = " << d_object_name << endl;
    os << "d_grid_geometry = " << endl;
-   for (j = 0; j < d_grid_geometry->getNumberBlocks(); ++j) {
+   for (hier::BlockId::block_t j = 0; j < d_grid_geometry->getNumberBlocks(); ++j) {
 //      os << (geom::GridGeometry*)d_grid_geometry[j] << endl;
    }
 
@@ -2706,7 +2705,7 @@ void MblkEuler::printClassData(
 
    os << "Parameters for numerical method ..." << endl;
    os << "   d_advection_velocity = ";
-   for (j = 0; j < d_dim.getValue(); ++j) os << d_advection_velocity[j] << " ";
+   for (tbox::Dimension::dir_t j = 0; j < d_dim.getValue(); ++j) os << d_advection_velocity[j] << " ";
    os << endl;
 
    os << "   d_nghosts    = " << d_nghosts << endl;

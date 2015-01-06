@@ -448,7 +448,8 @@ void MblkLinAdv::initializeDataOnPatch(
    /*
     * Build the mapped grid on the patch.
     */
-   int block_number = patch.getBox().getBlockId().getBlockValue();
+   hier::BlockId::block_t block_number =
+      patch.getBox().getBlockId().getBlockValue();
    int level_number = patch.getPatchLevelNumber();
    setMappedGridOnPatch(patch, level_number, block_number);
 
@@ -624,7 +625,8 @@ double MblkLinAdv::computeStableDtOnPatch(
    /*
     * Build the mapped grid on the patch.
     */
-   int block_number = patch.getBox().getBlockId().getBlockValue();
+   hier::BlockId::block_t block_number =
+      patch.getBox().getBlockId().getBlockValue();
    int level_number = patch.getPatchLevelNumber();
    setMappedGridOnPatch(patch, level_number, block_number);
 
@@ -790,7 +792,8 @@ void MblkLinAdv::computeFluxesOnPatch(
 
    //return;
 
-   int block_number = patch.getBox().getBlockId().getBlockValue();
+   hier::BlockId::block_t block_number =
+      patch.getBox().getBlockId().getBlockValue();
    int level_number = patch.getPatchLevelNumber();
    setMappedGridOnPatch(patch, level_number, block_number);
 
@@ -1189,7 +1192,8 @@ void MblkLinAdv::preprocessRefine(
                                   << "\ncoarse xyz data not allocated" << endl);
       }
    }
-   int block_number = coarse.getBox().getBlockId().getBlockValue();
+   hier::BlockId::block_t block_number =
+      coarse.getBox().getBlockId().getBlockValue();
    setMappedGridOnPatch(coarse, cln, block_number);
    setMappedGridOnPatch(fine, fln, block_number);
 
@@ -1450,7 +1454,8 @@ void MblkLinAdv::preprocessCoarsen(
                                   << "\ncoarse xyz data not allocated" << endl);
       }
    }
-   int block_number = coarse.getBox().getBlockId().getBlockValue();
+   hier::BlockId::block_t block_number =
+      coarse.getBox().getBlockId().getBlockValue();
    setMappedGridOnPatch(coarse, cln, block_number);
    setMappedGridOnPatch(fine, fln, block_number);
 
@@ -1652,7 +1657,8 @@ void MblkLinAdv::tagGradientDetectorCells(
 
    NULL_USE(initial_error);
 
-   int block_number = patch.getBox().getBlockId().getBlockValue();
+   hier::BlockId::block_t block_number =
+      patch.getBox().getBlockId().getBlockValue();
    int level_number = patch.getPatchLevelNumber();
    setMappedGridOnPatch(patch, level_number, block_number);
 
@@ -1921,7 +1927,8 @@ void MblkLinAdv::tagGradientDetectorCells(
           * For user-defined, access refine box data from the MblkGeometry
           * class.
           */
-         int block_number = patch.getBox().getBlockId().getBlockValue();
+         hier::BlockId::block_t block_number =
+            patch.getBox().getBlockId().getBlockValue();
          int level_number = patch.getPatchLevelNumber();
          hier::BoxContainer refine_boxes;
          if (d_mblk_geometry->getRefineBoxes(refine_boxes,
@@ -1988,7 +1995,7 @@ void MblkLinAdv::fillSingularityBoundaryConditions(
 void MblkLinAdv::setMappedGridOnPatch(
    const hier::Patch& patch,
    const int level_number,
-   const int block_number)
+   const hier::BlockId::block_t block_number)
 {
    TBOX_ASSERT(level_number >= 0);
 

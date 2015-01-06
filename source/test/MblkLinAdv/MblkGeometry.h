@@ -36,7 +36,7 @@ public:
       const std::string& object_name,
       const tbox::Dimension& dim,
       boost::shared_ptr<tbox::Database> input_db,
-      const int nblocks);
+      const size_t nblocks);
 
    ~MblkGeometry();
 
@@ -53,7 +53,7 @@ public:
    bool
    getRefineBoxes(
       hier::BoxContainer& refine_boxes,
-      const int block_number,
+      const hier::BlockId::block_t block_number,
       const int level_number);
 
    /*!
@@ -67,7 +67,7 @@ public:
       const hier::Box& domain,
       const int xyz_id,
       const int level_number,
-      const int block_number);
+      const hier::BlockId::block_t block_number);
 
    /*!
     * Access the stored dx
@@ -89,7 +89,7 @@ public:
     */
    int
    getBlockRotation(
-      const int block_number);
+      const hier::BlockId::block_t block_number);
 
    /*!
     * Tag cells for the octant problem.
@@ -124,7 +124,7 @@ private:
       const hier::Patch& patch,
       const int xyz_id,
       const int level_number,
-      const int block_number);
+      const hier::BlockId::block_t block_number);
 
    /*
     * Wedge grid construction.
@@ -139,7 +139,7 @@ private:
       const hier::Patch& patch,
       const int xyz_id,
       const int level_number,
-      const int block_number);
+      const hier::BlockId::block_t block_number);
 
    /*
     * Spherical shell grid construction
@@ -155,7 +155,7 @@ private:
       const hier::Box& domain,
       const int xyz_id,
       const int level_number,
-      const int block_number);
+      const hier::BlockId::block_t block_number);
 
    /*
     * For the spherical shell construction, i always points in the r direction
@@ -166,7 +166,7 @@ private:
     */
    void
    computeUnitSphereOctant(
-      int nblock,
+      hier::BlockId::block_t nblock,
       int nth,
       int j,
       int k,
@@ -186,7 +186,7 @@ private:
     * The number of blocks and the set of skelton grid geometries that make
     * up a multiblock mesh.
     */
-   int d_nblocks;
+   size_t d_nblocks;
    std::vector<bool> d_metrics_set;
 
    /*

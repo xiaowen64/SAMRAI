@@ -31,7 +31,7 @@ PartitioningParams::PartitioningParams(
    d_flexible_load_tol(flexible_load_tol),
    d_load_comparison_tol(1e-6)
 {
-   for (int bid(0); bid < grid_geometry.getNumberBlocks(); ++bid) {
+   for (hier::BlockId::block_t bid(0); bid < grid_geometry.getNumberBlocks(); ++bid) {
       grid_geometry.computePhysicalDomain(
          d_block_domain_boxes[hier::BlockId(bid)], ratio_to_level_zero, hier::BlockId(bid));
    }

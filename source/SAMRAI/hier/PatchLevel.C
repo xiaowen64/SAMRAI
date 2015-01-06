@@ -153,7 +153,7 @@ PatchLevel::PatchLevel(
    t_constructor_setup->stop();
 
    t_constructor_phys_domain->start();
-   for (int nb = 0; nb < d_number_blocks; ++nb) {
+   for (BlockId::block_t nb = 0; nb < d_number_blocks; ++nb) {
       grid_geometry->computePhysicalDomain(d_physical_domain[nb],
          d_ratio_to_level_zero, BlockId(nb));
    }
@@ -264,7 +264,7 @@ PatchLevel::PatchLevel(
    t_constructor_setup->stop();
 
    t_constructor_phys_domain->start();
-   for (int nb = 0; nb < d_number_blocks; ++nb) {
+   for (BlockId::block_t nb = 0; nb < d_number_blocks; ++nb) {
       grid_geometry->computePhysicalDomain(d_physical_domain[nb],
          d_ratio_to_level_zero, BlockId(nb));
    }
@@ -465,7 +465,7 @@ PatchLevel::setRefinedPatchLevel(
    d_local_number_patches = coarse_level->getLocalNumberOfPatches();
 
    d_physical_domain.resize(d_number_blocks);
-   for (int nb = 0; nb < d_number_blocks; ++nb) {
+   for (BlockId::block_t nb = 0; nb < d_number_blocks; ++nb) {
       d_physical_domain[nb] = coarse_level->d_physical_domain[nb];
       d_physical_domain[nb].refine(refine_ratio);
    }
@@ -637,7 +637,7 @@ PatchLevel::setCoarsenedPatchLevel(
    d_local_number_patches = fine_level->getNumberOfPatches();
 
    d_physical_domain.resize(d_number_blocks);
-   for (int nb = 0; nb < d_number_blocks; ++nb) {
+   for (BlockId::block_t nb = 0; nb < d_number_blocks; ++nb) {
       d_physical_domain[nb] = fine_level->d_physical_domain[nb];
       d_physical_domain[nb].coarsen(coarsen_ratio);
    }
@@ -762,12 +762,13 @@ PatchLevel::getFromRestart(
       }
    } 
 
-   d_number_blocks = restart_db->getInteger("d_number_blocks");
+   d_number_blocks =
+      static_cast<size_t>(restart_db->getInteger("d_number_blocks"));
 
    d_physical_domain.resize(d_number_blocks);
-   for (int nb = 0; nb < d_number_blocks; ++nb) {
+   for (BlockId::block_t nb = 0; nb < d_number_blocks; ++nb) {
       std::string domain_name = "d_physical_domain_"
-         + tbox::Utilities::blockToString(nb);
+         + tbox::Utilities::blockToString(static_cast<int>(nb));
       std::vector<tbox::DatabaseBox> db_box_vector =
          restart_db->getDatabaseBoxVector(domain_name);
       d_physical_domain[nb] = db_box_vector;
@@ -827,7 +828,8 @@ PatchLevel::getFromRestart(
          + "-patch_"
          + tbox::Utilities::patchToString(local_id.getValue())
          + "-block_"
-         + tbox::Utilities::blockToString(box.getBlockId().getBlockValue());
+         + tbox::Utilities::blockToString(
+              static_cast<int>(box.getBlockId().getBlockValue()));
       if (!(restart_db->isDatabase(patch_name))) {
          TBOX_ERROR("PatchLevel::getFromRestart() error...\n"
             << "   patch name " << patch_name
@@ -890,12 +892,12 @@ PatchLevel::putToRestart(
    restart_db->putIntegerVector("d_ratio_to_level_zero",
       temp_ratio_to_level_zero);
 
-   restart_db->putInteger("d_number_blocks", d_number_blocks);
+   restart_db->putInteger("d_number_blocks", static_cast<int>(d_number_blocks));
 
-   for (int nb = 0; nb < d_number_blocks; ++nb) {
+   for (BlockId::block_t nb = 0; nb < d_number_blocks; ++nb) {
       std::vector<tbox::DatabaseBox> temp_domain = d_physical_domain[nb];
       std::string domain_name = "d_physical_domain_"
-         + tbox::Utilities::blockToString(nb);
+         + tbox::Utilities::blockToString(static_cast<int>(nb));
       restart_db->putDatabaseBoxVector(domain_name, temp_domain);
    }
    restart_db->putInteger("d_level_number", d_level_number);
@@ -931,7 +933,7 @@ PatchLevel::putToRestart(
          + tbox::Utilities::patchToString(ip->getLocalId().getValue())
          + "-block_"
          + tbox::Utilities::blockToString(
-            ip->getBox().getBlockId().getBlockValue());
+            static_cast<int>(ip->getBox().getBlockId().getBlockValue()));
 
       ip->putToRestart(restart_db->putDatabase(patch_name));
    }

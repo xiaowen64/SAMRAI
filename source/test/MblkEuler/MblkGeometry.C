@@ -38,7 +38,7 @@ MblkGeometry::MblkGeometry(
    const std::string& object_name,
    const tbox::Dimension& dim,
    boost::shared_ptr<tbox::Database> input_db,
-   const int nblocks):
+   const size_t nblocks):
    d_dim(dim)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -87,11 +87,11 @@ std::string MblkGeometry::getGeometryType()
  */
 bool MblkGeometry::getRefineBoxes(
    hier::BoxContainer& refine_boxes,
-   const int block_number,
+   const hier::BlockId::block_t block_number,
    const int level_number)
 {
    bool boxes_exist = false;
-   if (block_number < static_cast<int>(d_refine_boxes.size())) {
+   if (block_number < d_refine_boxes.size()) {
       if (level_number < static_cast<int>(d_refine_boxes[level_number].size())) {
          boxes_exist = true;
          refine_boxes = d_refine_boxes[block_number][level_number];
@@ -119,7 +119,7 @@ void MblkGeometry::getFromInput(
    d_geom_problem = db->getString("problem_type");
 
    bool found = false;
-   int i, nb;
+   int i;
    char block_name[128];
    double temp_domain[SAMRAI::MAX_DIM_VAL];
 
@@ -134,7 +134,7 @@ void MblkGeometry::getFromInput(
       d_cart_xlo.resize(d_nblocks);
       d_cart_xhi.resize(d_nblocks);
 
-      for (nb = 0; nb < d_nblocks; ++nb) {
+      for (hier::BlockId::block_t nb = 0; nb < d_nblocks; ++nb) {
 
          // xlo
          sprintf(block_name, "domain_xlo_%d", nb);
@@ -179,7 +179,7 @@ void MblkGeometry::getFromInput(
       d_wedge_rmin.resize(d_nblocks);
       d_wedge_rmax.resize(d_nblocks);
 
-      for (nb = 0; nb < d_nblocks; ++nb) {
+      for (hier::BlockId::block_t nb = 0; nb < d_nblocks; ++nb) {
 
          // rmin
          sprintf(block_name, "rmin_%d", nb);
@@ -237,7 +237,7 @@ void MblkGeometry::getFromInput(
       d_tri_nyp = new int[d_tri_nblocks];
       d_tri_nzp = new int[d_tri_nblocks];
 
-      d_tri_nbr = new int *[d_tri_nblocks];
+      d_tri_nbr = new hier::BlockId::block_t *[d_tri_nblocks];
       d_tri_x = new double *[d_tri_nblocks];
       d_tri_y = new double *[d_tri_nblocks];
       d_tri_z = new double *[d_tri_nblocks];
@@ -260,7 +260,7 @@ void MblkGeometry::getFromInput(
 
          int nsize = d_tri_nxp[ib] * d_tri_nyp[ib] * d_tri_nzp[ib];
          d_tri_node_size[ib] = nsize;
-         d_tri_nbr[ib] = new int[6];
+         d_tri_nbr[ib] = new hier::BlockId::block_t[6];
          d_tri_x[ib] = new double[nsize];
          d_tri_y[ib] = new double[nsize];
          d_tri_z[ib] = new double[nsize];
@@ -364,7 +364,7 @@ void MblkGeometry::getFromInput(
     *
     */
    d_refine_boxes.resize(d_nblocks);
-   for (nb = 0; nb < d_nblocks; ++nb) {
+   for (hier::BlockId::block_t nb = 0; nb < d_nblocks; ++nb) {
 
       // see what the max number of levels is
       int max_ln = 0;
@@ -405,8 +405,8 @@ void MblkGeometry::getFromInput(
 void MblkGeometry::buildLocalBlocks(
    const hier::Box& pbox,                                     // the patch box
    const hier::Box& domain,                                   // the block box
-   const int block_number,
-   int* dom_local_blocks)                                     // this returns the blocks neighboring this patch
+   const hier::BlockId::block_t block_number,
+   hier::BlockId::block_t* dom_local_blocks)                                     // this returns the blocks neighboring this patch
 {
    // by default single block simulation
    for (int i = 0; i < 6; ++i) {
@@ -480,8 +480,8 @@ void MblkGeometry::buildGridOnPatch(
    const hier::Patch& patch,
    const hier::Box& domain,
    const int xyz_id,
-   const int block_number,
-   int* dom_local_blocks)                                    // this returns the blocks neighboring this patch
+   const hier::BlockId::block_t block_number,
+   hier::BlockId::block_t* dom_local_blocks)                                    // this returns the blocks neighboring this patch
 {
    buildLocalBlocks(patch.getBox(), domain, block_number, dom_local_blocks);
 
@@ -597,7 +597,7 @@ void MblkGeometry::buildWedgeGridOnPatch(
    const hier::Patch& patch,
    const hier::Box& domain,
    const int xyz_id,
-   const int block_number)
+   const hier::BlockId::block_t block_number)
 {
    //
    // Set dx (dr, dth, dz) for the level
@@ -676,7 +676,7 @@ void MblkGeometry::buildTrilinearGridOnPatch(
    const hier::Patch& patch,
    const hier::Box& domain,
    const int xyz_id,
-   const int block_number)
+   const hier::BlockId::block_t block_number)
 {
    //
    // Set dx (dr, dth, dz) for the level
@@ -804,7 +804,7 @@ void MblkGeometry::buildSShellGridOnPatch(
    const hier::Patch& patch,
    const hier::Box& domain,
    const int xyz_id,
-   const int block_number)
+   const hier::BlockId::block_t block_number)
 {
 
    bool xyz_allocated = patch.checkAllocated(xyz_id);
@@ -973,7 +973,7 @@ void MblkGeometry::buildSShellGridOnPatch(
  *************************************************************************
  */
 void MblkGeometry::computeUnitSphereOctant(
-   int nblock,
+   hier::BlockId::block_t nblock,
    int nth,
    int j,
    int k,
@@ -1037,7 +1037,7 @@ void MblkGeometry::computeUnitSphereOctant(
    //
    // nblock = 1, xface = 2, yface, = 3, zface
 
-   int tb = nblock;
+   int tb = static_cast<int>(nblock);
    int tj = j;
    int tk = k;
 

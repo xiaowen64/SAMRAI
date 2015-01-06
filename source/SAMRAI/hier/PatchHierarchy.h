@@ -1111,9 +1111,9 @@ private:
    int d_number_levels;
 
    /*!
-    * @brief Number of blocks in the mesh.
+    * @brief Number of blocks in the grid represented by the hierarchy.
     */
-   int d_number_blocks;
+   size_t d_number_blocks;
 
    /*!
     * @brief Array of pointers to PatchLevels that make up the hierarchy

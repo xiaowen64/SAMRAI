@@ -1669,7 +1669,7 @@ BoxContainer::putToRestart(
       for (BoxContainer::const_iterator ni = begin(); ni != end(); ++ni) {
          local_ids.push_back(ni->getLocalId().getValue());
          ranks.push_back(ni->getOwnerRank());
-         block_ids.push_back(ni->getBlockId().getBlockValue());
+         block_ids.push_back(static_cast<int>(ni->getBlockId().getBlockValue()));
          periodic_ids.push_back(ni->getPeriodicId().getPeriodicValue());
          db_box_array[++counter] = *ni;
       }

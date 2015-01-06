@@ -584,7 +584,7 @@ BoxLevel::computeLocalRedundantData()
 {
    const IntVector max_vec(d_ratio.getDim(), tbox::MathUtilities<int>::getMax());
    const IntVector& zero_vec = IntVector::getZero(d_ratio.getDim());
-   const int nblocks = d_grid_geometry->getNumberBlocks();
+   const size_t nblocks = d_grid_geometry->getNumberBlocks();
 
    d_local_number_of_boxes = 0;
    d_local_number_of_cells = 0;
@@ -599,7 +599,7 @@ BoxLevel::computeLocalRedundantData()
    for (RealBoxConstIterator ni(d_boxes.realBegin());
         ni != d_boxes.realEnd(); ++ni) {
 
-      int block_num = ni->getBlockId().getBlockValue();
+      const BlockId::block_t& block_num = ni->getBlockId().getBlockValue();
       const IntVector boxdim(ni->numberCells());
       ++d_local_number_of_boxes;
       d_local_number_of_cells += boxdim.getProduct();
@@ -633,7 +633,7 @@ BoxLevel::cacheGlobalReducedData() const
 
    t_cache_global_reduced_data->barrierAndStart();
 
-   const int nblocks = d_grid_geometry->getNumberBlocks();
+   const size_t nblocks = d_grid_geometry->getNumberBlocks();
 
    /*
     * Sum reduction is used to compute the global sums of box count
@@ -666,7 +666,7 @@ BoxLevel::cacheGlobalReducedData() const
       }
    }
 
-   if (int(d_global_bounding_box.size()) != nblocks) {
+   if (d_global_bounding_box.size() != nblocks) {
       d_global_bounding_box.resize(nblocks, Box(getDim()));
       d_global_min_box_size.resize(nblocks, IntVector(getDim()));
       d_global_max_box_size.resize(nblocks, IntVector(getDim()));
@@ -693,7 +693,7 @@ BoxLevel::cacheGlobalReducedData() const
 
          std::vector<int> send_mesg;
          send_mesg.reserve(nblocks * 4 * dim.getValue() + 4);
-         for (int bn = 0; bn < nblocks; ++bn) {
+         for (BlockId::block_t bn = 0; bn < nblocks; ++bn) {
             for (int i = 0; i < dim.getValue(); ++i) {
                send_mesg.push_back(-d_local_bounding_box[bn].lower()[i]);
                send_mesg.push_back(d_local_bounding_box[bn].upper()[i]);
@@ -715,7 +715,7 @@ BoxLevel::cacheGlobalReducedData() const
             MPI_MAX);
 
          int tmpi = -1;
-         for (int bn = 0; bn < nblocks; ++bn) {
+         for (BlockId::block_t bn = 0; bn < nblocks; ++bn) {
             for (int i = 0; i < dim.getValue(); ++i) {
                d_global_bounding_box[bn].setLower(static_cast<Box::dir_t>(i),
                   -recv_mesg[++tmpi]);
@@ -1680,8 +1680,8 @@ BoxLevel::recursivePrint(
    << d_global_number_of_boxes << '\n'
    << border << "Cell count     : " << d_local_number_of_cells << ", "
    << d_global_number_of_cells << '\n'
-   << border << "Bounding box   : " << getLocalBoundingBox(0) << ", "
-   << (d_global_data_up_to_date ? getGlobalBoundingBox(0) : Box(getDim()))
+   << border << "Bounding box   : " << getLocalBoundingBox(BlockId(0)) << ", "
+   << (d_global_data_up_to_date ? getGlobalBoundingBox(BlockId(0)) : Box(getDim()))
    << '\n'
    << border << "Comm,rank,nproc: " << d_mpi.getCommunicator() << ", " << d_mpi.getRank()
    << ", " << d_mpi.getSize() << '\n'

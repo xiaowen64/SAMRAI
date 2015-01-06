@@ -727,7 +727,7 @@ void
 Box::putToIntBuffer(
    int* buffer) const
 {
-   buffer[0] = d_block_id.getBlockValue();
+   buffer[0] = static_cast<int>(d_block_id.getBlockValue());
    ++buffer;
 
    d_id.putToIntBuffer(buffer);

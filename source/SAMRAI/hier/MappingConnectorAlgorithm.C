@@ -908,7 +908,8 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
                mesg.insert(mesg.end(), 0);
                do {
                   mesg.insert(mesg.end(), ianchor->getLocalId().getValue());
-                  mesg.insert(mesg.end(), ianchor->getBlockId().getBlockValue());
+                  mesg.insert(mesg.end(), 
+                     static_cast<int>(ianchor->getBlockId().getBlockValue()));
                   ++mesg[i_count];
                   if (s_print_steps == 'y') tbox::plog
                      << "    Request change " << mesg[i_count]
@@ -1403,7 +1404,8 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
             send_mesg.insert(send_mesg.end(), subsize, -1);
             int* submesg = &send_mesg[send_mesg.size() - subsize];
             *(submesg++) = base_box.getLocalId().getValue();
-            *(submesg++) = base_box.getBlockId().getBlockValue();
+            *(submesg++) = static_cast<int>(
+               base_box.getBlockId().getBlockValue());
             *(submesg++) = static_cast<int>(found_nabrs.size());
             for (std::vector<Box>::const_iterator na = found_nabrs.begin();
                  na != found_nabrs.end(); ++na) {

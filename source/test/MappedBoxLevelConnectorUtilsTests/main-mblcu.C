@@ -51,7 +51,7 @@ shrinkBoxLevel(
    boost::shared_ptr<hier::BoxLevel>& small_box_level,
    const hier::BoxLevel& big_box_level,
    const hier::IntVector& shrinkage,
-   const std::vector<int>& unshrunken_blocks);
+   const std::vector<hier::BlockId::block_t>& unshrunken_blocks);
 
 /*
  * Refine a BoxLevel by the given ratio.
@@ -206,9 +206,15 @@ int main(
        * Unshrunken blocks are blocks in which the small BoxLevel
        * has the same index space as the big BoxLevel.
        */
-      std::vector<int> unshrunken_blocks;
+      std::vector<hier::BlockId::block_t> unshrunken_blocks;
       if (main_db->isInteger("unshrunken_blocks")) {
-         unshrunken_blocks = main_db->getIntegerVector("unshrunken_blocks");
+         std::vector<int> input_unshrunken =
+            main_db->getIntegerVector("unshrunken_blocks");
+         for (std::vector<int>::const_iterator itr = input_unshrunken.begin();
+              itr != input_unshrunken.end(); ++itr) {
+            unshrunken_blocks.push_back(
+               static_cast<hier::BlockId::block_t>(*itr));
+         }
       }
 
       plog << "Input database after initialization..." << std::endl;
@@ -246,11 +252,11 @@ int main(
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld());
       const std::string exclude("exclude");
-      for (int bn = 0; bn < grid_geometry->getNumberBlocks(); ++bn) {
+      for (hier::BlockId::block_t bn = 0; bn < grid_geometry->getNumberBlocks(); ++bn) {
 
          const hier::BlockId block_id(bn);
 
-         const std::string exclude_boxes_name = exclude + tbox::Utilities::intToString(bn);
+         const std::string exclude_boxes_name = exclude + tbox::Utilities::intToString(static_cast<int>(bn));
          if (main_db->keyExists(exclude_boxes_name)) {
 
             /*
@@ -739,7 +745,7 @@ void shrinkBoxLevel(
    boost::shared_ptr<hier::BoxLevel>& small_box_level,
    const hier::BoxLevel& big_box_level,
    const hier::IntVector& shrinkage,
-   const std::vector<int>& unshrunken_blocks)
+   const std::vector<hier::BlockId::block_t>& unshrunken_blocks)
 {
    const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry(
       big_box_level.getGridGeometry());
