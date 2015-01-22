@@ -46,7 +46,7 @@ MblkGeometry::MblkGeometry(
    d_object_name = object_name;
    //tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 
-   d_nblocks = grid_geom->getNumberBlocks();
+   d_nblocks = static_cast<int>(grid_geom.getNumberBlocks());
 
    d_metrics_set.resize(10);
    for (int i = 0; i < 10; ++i) {

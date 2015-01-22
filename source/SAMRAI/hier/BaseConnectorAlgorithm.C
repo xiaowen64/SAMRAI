@@ -263,12 +263,13 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
     */
 
    // Unpack neighbor-removal section.
-   // TODO: Get rid of dummy_val and block_id_affected, making sure
-   //       adjustments in message sizes are correct. 
+   // TODO: Get rid of 2 unused values, making sure adjustments in message sizes
+   // is correct.
    const int num_removed_boxes = *(ptr++);
    for (int ii = 0; ii < num_removed_boxes; ++ii) {
       const LocalId id_gone(*(ptr++));
-      int dummy_val = (*(ptr++));
+      // Skip unneeded value.
+      ++ptr;
       const int number_affected = *(ptr++);
       const Box box_gone(dim, GlobalId(id_gone, sender));
       if (print_steps) {
@@ -278,7 +279,8 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
       }
       for (int iii = 0; iii < number_affected; ++iii) {
          const LocalId id_affected(*(ptr++));
-         const BlockId block_id_affected(*(ptr++));
+         // Skip unneeded block id.
+         ++ptr;
          BoxId affected_nbrhd(id_affected, rank);
          if (print_steps) {
             tbox::plog << " Removing " << box_gone
