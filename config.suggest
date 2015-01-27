@@ -119,7 +119,7 @@ cat <<-EOF
 	--with-zlib
 	--with-hdf5=/usr/local/tools/hdf5-intel-parallel-1.8.5
 	--with-silo=/usr/gapps/silo/4.8/chaos_5_x86_64_ib
-	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
+	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.10.0b.opt
 	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.55.0
 	--without-tbb
 EOF
@@ -141,7 +141,7 @@ cat <<-EOF
 	--with-zlib
 	--with-hdf5=/collab/usr/gapps/samrai/apps/chaos/hdf5/1.8.5p1-serial
 	--with-silo=/usr/gapps/silo/4.8/chaos_5_x86_64_ib
-	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
+	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.10.0b.opt
 	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.55.0
 	--without-tbb
 EOF
@@ -193,7 +193,7 @@ cat <<-EOF
 	--with-szlib=/usr/gapps/silo/szip/2.1/chaos_4_x86_64
 	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.55.0
 	--with-zlib
-	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
+	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.10.0b.opt
 EOF
 # Maintained by Steven Smith
 ;;
@@ -238,7 +238,7 @@ cat <<-EOF
 	--with-mpi-lib-dirs=/usr/apps/mpich2/1.3.2/lib
 	--with-mpi-libs="mpich mpl rt pthread"
 	--with-parallel-run-bin=/usr/apps/mpich2/1.3.2/bin/mpirun
-	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.6.0b.gcc.4.1.2.opt
+	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.10.0b.gcc.4.1.2.opt
 	--with-lapack=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
 	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -llapack"
 	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
@@ -264,7 +264,7 @@ cat <<-EOF
 	--with-mpi-lib-dirs=/usr/apps/mpich2/1.3.2/lib
 	--with-mpi-libs="mpich mpl rt pthread"
 	--with-parallel-run-bin=/usr/apps/mpich2/1.3.2/bin/mpirun
-	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.6.0b.insure
+	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.10.0b.gcc.4.1.2.opt
 	--with-lapack=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
 	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -llapack"
 	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
@@ -309,7 +309,7 @@ cat <<-EOF
 	--with-mpi-lib-dirs=/nfs/casc/samrai/apps/rh5/openmpi/1.5-gcc-4.5.0.opt/lib
 	--with-mpi-libs="mpi rt"
 	--with-parallel-run-bin=/nfs/casc/samrai/apps/rh5/openmpi/1.5-gcc-4.5.0.opt/bin/mpirun
-	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.6.0b.opt
+	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.10.0b.opt
 	--with-lapack=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.5.0
 	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.5.0/lib -llapack"
 	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.5.0
@@ -333,7 +333,7 @@ cat <<-EOF
 	--with-mpi-lib-dirs=/nfs/casc/samrai/apps/rh5/openmpi/1.5-gcc-4.5.0.opt/lib
 	--with-mpi-libs="mpi rt"
 	--with-parallel-run-bin=/nfs/casc/samrai/apps/rh5/openmpi/1.5-gcc-4.5.0.opt/bin/mpirun
-	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.6.0b.opt
+	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.10.0b.opt
 	--with-lapack=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.5.0
 	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.5.0/lib -llapack"
 	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.5.0
@@ -357,7 +357,7 @@ cat <<-EOF
 	--with-mpi-lib-dirs=/nfs/casc/samrai/apps/rh5/openmpi/1.5-gcc-4.5.0.opt/lib
 	--with-parallel-run-bin=/nfs/casc/samrai/apps/rh5/openmpi/1.5-gcc-4.5.0.opt/bin/mpirun
 	--with-mpi-libs="mpi rt"
-	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.6.0b.opt
+	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.10.0b.opt
 	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-3.2-p7
 	--with-lapack=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.5.0
 	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.5.0/lib -llapack"
@@ -385,7 +385,7 @@ cat <<-EOF
 	--with-mpi-lib-dirs=/usr/apps/mpich2/latest/lib
 	--with-mpi-libs="mpich mpl rt pthread"
 	--with-parallel-run-bin=/usr/apps/mpich2/latest/bin/mpirun
-	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.6.0b.gcc.4.1.2.opt
+	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.10.0b.gcc.4.1.2.opt
 	--with-lapack=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
 	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -llapack"
 	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
@@ -411,7 +411,7 @@ cat <<-EOF
 	--with-mpi-lib-dirs=/usr/apps/mpich2/latest/lib
 	--with-mpi-libs="mpich mpl rt pthread"
 	--with-parallel-run-bin=/usr/apps/mpich2/latest/bin/mpirun
-	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.6.0b.gcc.4.1.2.opt
+	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.10.0b.gcc.4.1.2.opt
 	--with-lapack=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
 	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -llapack"
 	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
