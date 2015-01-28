@@ -55,18 +55,18 @@ CoarseFineBoundary::CoarseFineBoundary(
 {
    TBOX_ASSERT(max_ghost_width > IntVector(d_dim, -1));
 
-   int number_blocks = hierarchy.getGridGeometry()->getNumberBlocks();
+   size_t number_blocks = hierarchy.getGridGeometry()->getNumberBlocks();
    const PatchLevel& level = *hierarchy.getPatchLevel(level_num);
    const hier::IntVector& ratio_to_zero =
       level.getRatioToLevelZero();
 
-   IntVector connector_width(max_ghost_width, ratio_to_zero.getNumBlocks());
+   IntVector connector_width(max_ghost_width, number_blocks);
    connector_width.max(IntVector::getOne(d_dim));
    const Connector& level_to_level = level.findConnector(level,
          connector_width,
          CONNECTOR_CREATE);
    if (level_num != 0) {
-      for (int b = 0; b < connector_width.getNumBlocks(); ++b) {
+      for (BlockId::block_t b = 0; b < connector_width.getNumBlocks(); ++b) {
          for (int d = 0; d < d_dim.getValue(); ++d) {
             if (connector_width(b,d) % ratio_to_zero(b,d) != 0) {
                connector_width(b,d) = 
@@ -206,7 +206,7 @@ CoarseFineBoundary::computeFromLevel(
 
    // Add fine-fine boundaries to the fake domain.
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int b = 0; b < grid_geometry->getNumberBlocks(); ++b) {
+   for (BlockId::block_t b = 0; b < grid_geometry->getNumberBlocks(); ++b) {
       TBOX_ASSERT(level_to_level.getConnectorWidth()
          >= IntVector::getOne(d_dim));
    }

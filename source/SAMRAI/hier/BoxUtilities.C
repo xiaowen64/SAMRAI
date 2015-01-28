@@ -126,7 +126,7 @@ BoxUtilities::checkBoxConstraints(
    TBOX_ASSERT(min_size > IntVector::getZero(min_size.getDim()));
    TBOX_ASSERT(cut_factor > IntVector::getZero(min_size.getDim()));
    TBOX_ASSERT(bad_interval >= IntVector::getZero(min_size.getDim()));
-   int b = box.getBlockId().getBlockValue();
+   BlockId::block_t b = box.getBlockId().getBlockValue();
 
    const tbox::Dimension& dim(box.getDim());
 
@@ -1211,7 +1211,7 @@ BoxUtilities::checkBoxForBadCutPointsInDirection(
 
    TBOX_ASSERT(!box.empty());
    TBOX_ASSERT(bad_interval >= IntVector::getZero(dim));
-   int b = box.getBlockId().getBlockValue();
+   BlockId::block_t b = box.getBlockId().getBlockValue();
 
    bool found_bad = false;
 
@@ -1347,7 +1347,7 @@ BoxUtilities::findBadCutPointsForDirection(
    TBOX_ASSERT(!box.empty());
    TBOX_ASSERT(bad_interval >= IntVector::getZero(dim));
 
-   int b = box.getBlockId().getBlockValue();
+   hier::BlockId::block_t b = box.getBlockId().getBlockValue();
 
    int ic;
 
@@ -1826,7 +1826,7 @@ BoxUtilities::growAndAdjustAcrossBlockBoundary(
 {
    TBOX_ASSERT(do_refine != do_coarsen || (!do_refine && !do_coarsen));
 
-   const int nblocks = grid_geom->getNumberBlocks();
+   const size_t nblocks = grid_geom->getNumberBlocks();
 
    TBOX_ASSERT(ratio_to_level_zero.getNumBlocks() == nblocks);
    TBOX_ASSERT(refine_coarsen_ratio.getNumBlocks() == nblocks ||

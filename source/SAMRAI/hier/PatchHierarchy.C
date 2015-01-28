@@ -185,9 +185,9 @@ PatchHierarchy::getFromInput(
             for (int ln = 1; ln < d_max_levels; ++ln) {
                block_ratio[ln].resize(d_number_blocks, IntVector::getZero(d_dim));
             }
-            for (int b = 0; b < d_number_blocks; ++b) {
+            for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
                std::string ratio_name("ratio_to_coarser_");
-               ratio_name += tbox::Utilities::intToString(b);
+               ratio_name += tbox::Utilities::intToString(static_cast<int>(b));
                if (input_db->isDatabase(ratio_name)) {
                   const boost::shared_ptr<tbox::Database> tmp_db(
                      input_db->getDatabase(ratio_name));
@@ -225,7 +225,7 @@ PatchHierarchy::getFromInput(
                }
             }
             for (int ln = 1; ln < d_max_levels; ++ln) {
-               for (int b = 0; b < d_number_blocks; ++b) {
+               for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
                   for (int i = 0; i < d_dim.getValue(); ++i) {
                      d_ratio_to_coarser[ln](b,i) = block_ratio[ln][b][i];
                   }
@@ -606,7 +606,7 @@ PatchHierarchy::computeRequiredConnectorWidths() const
          d_self_connector_widths[ln].max(self_connector_widths[ln]);
       }
       for (int ln = 0; ln < d_max_levels - 1; ++ln) {
-         for (int b = 0; b < d_number_blocks; ++b) {
+         for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
             d_fine_connector_widths[ln].max(fine_connector_widths[ln]);
          }
       }
@@ -1038,14 +1038,14 @@ PatchHierarchy::putToRestart(
    boost::shared_ptr<tbox::Database> ratio_to_coarser_db(
       restart_db->putDatabase("ratio_to_coarser"));
    for (int ln = 0; ln < d_max_levels; ++ln) {
-      for (int b = 0; b < d_number_blocks; ++b) {
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          std::vector<int> ratio_vec(d_dim.getValue());
          for (int d = 0; d < d_dim.getValue(); ++d) {
             ratio_vec[d] = (d_ratio_to_coarser[ln](b,d));
          }
          std::string level_block_name(level_names[ln]);
          level_block_name += "_";
-         level_block_name += tbox::Utilities::intToString(b);
+         level_block_name += tbox::Utilities::intToString(static_cast<int>(b));
          ratio_to_coarser_db->putIntegerArray(level_block_name,
             &ratio_vec[0],
             d_dim.getValue());
@@ -1086,7 +1086,7 @@ PatchHierarchy::putToRestart(
 
       std::vector<int> put_self_widths(d_number_blocks * d_dim.getValue());
       int ic = 0;
-      for (int b = 0; b < d_number_blocks; ++b) {
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          for (int d = 0; d < d_dim.getValue(); ++d) {
             put_self_widths[ic] = d_self_connector_widths[ln](b,d);
             ++ic;
@@ -1103,7 +1103,7 @@ PatchHierarchy::putToRestart(
 
       std::vector<int> put_fine_widths(d_number_blocks * d_dim.getValue());
       int ic = 0;
-      for (int b = 0; b < d_number_blocks; ++b) {
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          for (int d = 0; d < d_dim.getValue(); ++d) {
             put_fine_widths[ic] = d_self_connector_widths[ln](b,d);
             ++ic;
@@ -1178,10 +1178,10 @@ PatchHierarchy::getFromRestart()
       database->getDatabase("ratio_to_coarser"));
    d_ratio_to_coarser.resize(d_max_levels, d_ratio_to_coarser.back());
    for (int ln = 0; ln < d_max_levels; ++ln) {
-      for (int b = 0; b < d_number_blocks; ++b) {
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          std::string level_block_name(level_names[ln]);
          level_block_name += "_";
-         level_block_name += tbox::Utilities::intToString(b);
+         level_block_name += tbox::Utilities::intToString(static_cast<int>(b));
          std::vector<int> ratio_vec(d_dim.getValue());
          ratio_to_coarser_db->getIntegerArray(level_block_name,
             &ratio_vec[0],
@@ -1240,7 +1240,7 @@ PatchHierarchy::getFromRestart()
 
       d_self_connector_widths[ln] = IntVector(d_dim, 0, d_number_blocks);
       int ic = 0;
-      for (int b = 0; b < d_number_blocks; ++b) {
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          for (int d = 0; d < d_dim.getValue(); ++d) {
             d_self_connector_widths[ln](b,d) = get_self_widths[ic];
             ++ic;
@@ -1257,7 +1257,7 @@ PatchHierarchy::getFromRestart()
 
       d_fine_connector_widths[ln] = IntVector(d_dim, 0, d_number_blocks);
       int ic = 0;
-      for (int b = 0; b < d_number_blocks; ++b) {
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          for (int d = 0; d < d_dim.getValue(); ++d) {
             d_fine_connector_widths[ln](b,d) = get_fine_widths[ic];
             ++ic;

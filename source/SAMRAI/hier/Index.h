@@ -109,7 +109,7 @@ public:
       const Index& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      for (int i = 0; i < d_dim.getValue(); ++i) {
+      for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
          d_index[i] = rhs.d_index[i];
       }
       return *this;
@@ -128,7 +128,7 @@ public:
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       TBOX_ASSERT(rhs.getNumBlocks() == 1);
-      for (int i = 0; i < d_dim.getValue(); ++i) {
+      for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
          d_index[i] = rhs[i];
       }
       return *this;
@@ -147,7 +147,7 @@ public:
       const Index& rhs) const
    {
       bool result = true;
-      for (int i = 0; result && (i < getDim().getValue()); ++i) {
+      for (unsigned int i = 0; result && (i < getDim().getValue()); ++i) {
          result = d_index[i] == rhs.d_index[i];
       }
       return result;
@@ -175,7 +175,7 @@ public:
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       TBOX_ASSERT(rhs.getNumBlocks() == 1);
-      for (int i = 0; i < d_dim.getValue(); ++i) {
+      for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
          d_index[i] += rhs[i];
       }
       return *this;
@@ -208,7 +208,7 @@ public:
       const Index& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      for (int i = 0; i < d_dim.getValue(); ++i) {
+      for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
          d_index[i] += rhs.d_index[i];
       }
       return *this;
@@ -236,7 +236,7 @@ public:
    operator += (
       const int rhs)
    {
-      for (int i = 0; i < d_dim.getValue(); ++i) {
+      for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
          d_index[i] += rhs;
       }
       return *this;
@@ -264,7 +264,7 @@ public:
       const Index& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      for (int i = 0; i < d_dim.getValue(); ++i) {
+      for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
          d_index[i] -= rhs.d_index[i];
       }
       return *this;
@@ -297,7 +297,7 @@ public:
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       TBOX_ASSERT(rhs.getNumBlocks() == 1);
-      for (int i = 0; i < d_dim.getValue(); ++i) {
+      for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
          d_index[i] -= rhs[i];
       }
       return *this;
@@ -327,7 +327,7 @@ public:
    operator -= (
       const int rhs)
    {
-      for (int i = 0; i < d_dim.getValue(); ++i) {
+      for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
          d_index[i] -= rhs;
       }
       return *this;
@@ -357,7 +357,7 @@ public:
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       TBOX_ASSERT(rhs.getNumBlocks() == 1);
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (unsigned int i = 0; i < getDim().getValue(); ++i) {
          d_index[i] *= rhs[i];
       }
       return *this;
@@ -387,7 +387,7 @@ public:
    operator *= (
       const int rhs)
    {
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (unsigned int i = 0; i < getDim().getValue(); ++i) {
          d_index[i] *= rhs;
       }
       return *this;
@@ -417,7 +417,7 @@ public:
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       TBOX_ASSERT(rhs.getNumBlocks() == 1);
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (unsigned int i = 0; i < getDim().getValue(); ++i) {
          d_index[i] /= rhs[i];
       }
       return *this;
@@ -447,7 +447,7 @@ public:
    operator /= (
       const int rhs)
    {
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (unsigned int i = 0; i < getDim().getValue(); ++i) {
          d_index[i] /= rhs;
       }
       return *this;
@@ -472,7 +472,7 @@ public:
     */
    int&
    operator [] (
-      const int i)
+      const unsigned int i)
    {
       TBOX_ASSERT(i >= 0 && i < getDim().getValue());
       return d_index[i];
@@ -485,7 +485,7 @@ public:
     */
    const int&
    operator [] (
-      const int i) const
+      const unsigned int i) const
    {
       TBOX_ASSERT(i >= 0 && i < getDim().getValue());
       return d_index[i];
@@ -498,7 +498,7 @@ public:
     */
    int&
    operator () (
-      const int i)
+      const unsigned int i)
    {
       TBOX_ASSERT(i >= 0 && i < getDim().getValue());
       return d_index[i];
@@ -511,7 +511,7 @@ public:
     */
    const int&
    operator () (
-      const int i) const
+      const unsigned int i) const
    {
       TBOX_ASSERT(i >= 0 && i < getDim().getValue());
       return d_index[i];
@@ -529,7 +529,7 @@ public:
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       bool result = true;
-      for (int i = 0; result && (i < getDim().getValue()); ++i) {
+      for (unsigned int i = 0; result && (i < getDim().getValue()); ++i) {
          result = result && (d_index[i] > rhs.d_index[i]);
       }
       return result;
@@ -547,7 +547,7 @@ public:
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       bool result = true;
-      for (int i = 0; result && (i < getDim().getValue()); ++i) {
+      for (unsigned int i = 0; result && (i < getDim().getValue()); ++i) {
          result = result && (d_index[i] >= rhs.d_index[i]);
       }
       return result;
@@ -565,7 +565,7 @@ public:
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       bool result = true;
-      for (int i = 0; result && (i < getDim().getValue()); ++i) {
+      for (unsigned int i = 0; result && (i < getDim().getValue()); ++i) {
          result = result && (d_index[i] < rhs.d_index[i]);
       }
       return result;
@@ -583,7 +583,7 @@ public:
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       bool result = true;
-      for (int i = 0; result && (i < getDim().getValue()); ++i) {
+      for (unsigned int i = 0; result && (i < getDim().getValue()); ++i) {
          result = result && (d_index[i] <= rhs.d_index[i]);
       }
       return result;
@@ -616,7 +616,7 @@ public:
       const Index& rhs)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (unsigned int i = 0; i < getDim().getValue(); ++i) {
          if (rhs.d_index[i] > d_index[i]) {
             d_index[i] = rhs.d_index[i];
          }
@@ -637,7 +637,7 @@ public:
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
       TBOX_ASSERT(ratio.getNumBlocks() == 1);
-      for (int d = 0; d < getDim().getValue(); ++d) {
+      for (unsigned int d = 0; d < getDim().getValue(); ++d) {
          (*this)(d) = coarsen((*this)(d), ratio(d));
       }
       return *this;
@@ -710,7 +710,7 @@ public:
       TBOX_ASSERT(ratio.getNumBlocks() == 1);
       tbox::Dimension dim(index.getDim());
       Index tmp(dim);
-      for (int d = 0; d < dim.getValue(); ++d) {
+      for (unsigned int d = 0; d < dim.getValue(); ++d) {
          tmp(d) = coarsen(index(d), ratio(d));
       }
       return tmp;

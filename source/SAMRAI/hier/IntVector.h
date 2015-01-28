@@ -68,7 +68,7 @@ public:
     * @param dim
     */
    IntVector(
-      int num_blocks,
+      size_t num_blocks,
       const tbox::Dimension& dim);
 
    /*!
@@ -84,7 +84,7 @@ public:
    IntVector(
       const tbox::Dimension& dim,
       int value,
-      int num_blocks = 1);
+      size_t num_blocks = 1);
 
    /*!
     * @brief Construct an IntVector with the values provided by
@@ -102,7 +102,7 @@ public:
     */
    IntVector(
       const std::vector<int>& vec,
-      int num_blocks = 1);
+      size_t num_blocks = 1);
 
    /*!
     * @brief Construct an IntVector with values provided by a raw array.
@@ -124,7 +124,7 @@ public:
    IntVector(
       const tbox::Dimension& dim,
       const int array[],
-      int num_blocks = 1);
+      size_t num_blocks = 1);
 
    /*!
     * @brief Copy constructor.
@@ -153,7 +153,7 @@ public:
     */
    IntVector(
       const IntVector& rhs,
-      int num_blocks);
+      size_t num_blocks);
 
    /*!
     * @brief Construct an IntVector from an Index.
@@ -172,7 +172,7 @@ public:
     */
    IntVector(
       const Index& rhs,
-      int num_blocks = 1);
+      size_t num_blocks = 1);
 
    /*!
     * @brief The assignment operator sets the IntVector equal to the
@@ -211,7 +211,7 @@ public:
    /*!
     * @brief Return the number of blocks for this IntVector
     */
-   int getNumBlocks() const
+   size_t getNumBlocks() const
    {
       return d_num_blocks;
    }
@@ -249,7 +249,7 @@ public:
     */
    int&
    operator [] (
-      const int i)
+      const unsigned int i)
    {
       TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
       TBOX_ASSERT(d_num_blocks == 1);
@@ -265,7 +265,7 @@ public:
     */
    const int&
    operator [] (
-      const int i) const
+      const unsigned int i) const
    {
       TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
       TBOX_ASSERT(d_num_blocks == 1);
@@ -281,7 +281,7 @@ public:
     */
    int&
    operator () (
-      const int i)
+      const unsigned int i)
    {
       TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
       TBOX_ASSERT(d_num_blocks == 1);
@@ -297,7 +297,7 @@ public:
     */
    const int&
    operator () (
-      const int i) const
+      const unsigned int i) const
    {
       TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
       TBOX_ASSERT(d_num_blocks == 1);
@@ -315,8 +315,8 @@ public:
     */
    int&
    operator () (
-      const int b, 
-      const int i)
+      const BlockId::block_t b, 
+      const unsigned int i)
    {
       TBOX_ASSERT(b >= 0 && b < d_num_blocks);
       TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
@@ -335,8 +335,8 @@ public:
     */
    const int&
    operator () (
-      const int b, 
-      const int i) const
+      const BlockId::block_t b, 
+      const unsigned int i) const
    {
       TBOX_ASSERT(b >= 0 && b < d_num_blocks);
       TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
@@ -376,15 +376,15 @@ public:
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
       if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
-         for (int b = 0; b < d_num_blocks; ++b) {
-            int offset = b*d_dim.getValue();
-            for (int i = 0; i < d_dim.getValue(); ++i) {
+         for (BlockId::block_t b = 0; b < d_num_blocks; ++b) {
+            unsigned int offset = b*d_dim.getValue();
+            for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
                d_vector[offset + i] += rhs.d_vector[i];
             }
          }
       } else {
-         int length = d_num_blocks * d_dim.getValue();
-         for (int i = 0; i < length; ++i) {
+         size_t length = d_num_blocks * d_dim.getValue();
+         for (unsigned int i = 0; i < length; ++i) {
             d_vector[i] += rhs.d_vector[i];
          }
       }
@@ -413,8 +413,8 @@ public:
    operator += (
       const int rhs)
    {
-      int length = d_num_blocks * d_dim.getValue();
-      for (int i = 0; i < length; ++i) {
+      size_t length = d_num_blocks * d_dim.getValue();
+      for (unsigned int i = 0; i < length; ++i) {
          d_vector[i] += rhs;
       }
       return *this;
@@ -446,15 +446,15 @@ public:
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
       if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
-         for (int b = 0; b < d_num_blocks; ++b) {
-            int offset = b*d_dim.getValue();
-            for (int i = 0; i < d_dim.getValue(); ++i) {
+         for (BlockId::block_t b = 0; b < d_num_blocks; ++b) {
+            unsigned int offset = b*d_dim.getValue();
+            for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
                d_vector[offset + i] -= rhs.d_vector[i];
             }
          }
       } else {
-         int length = d_num_blocks * d_dim.getValue();
-         for (int i = 0; i < length; ++i) {
+         size_t length = d_num_blocks * d_dim.getValue();
+         for (unsigned int i = 0; i < length; ++i) {
             d_vector[i] -= rhs.d_vector[i];
          }
       }
@@ -483,8 +483,8 @@ public:
    operator -= (
       const int rhs)
    {
-      int length = d_num_blocks * d_dim.getValue();
-      for (int i = 0; i < length; ++i) {
+      size_t length = d_num_blocks * d_dim.getValue();
+      for (unsigned int i = 0; i < length; ++i) {
          d_vector[i] -= rhs;
       }
       return *this;
@@ -516,15 +516,15 @@ public:
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
       if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
-         for (int b = 0; b < d_num_blocks; ++b) {
-            int offset = b*d_dim.getValue();
-            for (int i = 0; i < d_dim.getValue(); ++i) {
+         for (BlockId::block_t b = 0; b < d_num_blocks; ++b) {
+            unsigned int offset = b*d_dim.getValue();
+            for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
                d_vector[offset + i] *= rhs.d_vector[i];
             }
          }
       } else {
-         int length = d_num_blocks * d_dim.getValue();
-         for (int i = 0; i < length; ++i) {
+         size_t length = d_num_blocks * d_dim.getValue();
+         for (unsigned int i = 0; i < length; ++i) {
             d_vector[i] *= rhs.d_vector[i];
          }
       }
@@ -553,8 +553,8 @@ public:
    operator *= (
       const int rhs)
    {
-      int length = d_num_blocks * d_dim.getValue();
-      for (int i = 0; i < length; ++i) {
+      size_t length = d_num_blocks * d_dim.getValue();
+      for (unsigned int i = 0; i < length; ++i) {
          d_vector[i] *= rhs;
       }
       return *this;
@@ -585,15 +585,15 @@ public:
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
       if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
-         for (int b = 0; b < d_num_blocks; ++b) {
-            int offset = b*d_dim.getValue();
-            for (int i = 0; i < d_dim.getValue(); ++i) {
+         for (BlockId::block_t b = 0; b < d_num_blocks; ++b) {
+            unsigned int offset = b*d_dim.getValue();
+            for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
                d_vector[offset + i] /= rhs.d_vector[i];
             }
          }
       } else {
-         int length = d_num_blocks * d_dim.getValue();
-         for (int i = 0; i < length; ++i) {
+         size_t length = d_num_blocks * d_dim.getValue();
+         for (unsigned int i = 0; i < length; ++i) {
             d_vector[i] /= rhs.d_vector[i];
          }
       }
@@ -622,8 +622,8 @@ public:
    operator /= (
       const int rhs)
    {
-      int length = d_num_blocks * d_dim.getValue();
-      for (int i = 0; i < length; ++i) {
+      size_t length = d_num_blocks * d_dim.getValue();
+      for (unsigned int i = 0; i < length; ++i) {
          d_vector[i] /= rhs;
       }
       return *this;
@@ -669,17 +669,17 @@ public:
        * - Round remainder to -1 if numerator and denominator has opposite sign.
        */
       if (denominator.d_num_blocks == 1 && d_num_blocks != 1) {
-         for (int b = 0; b < d_num_blocks; ++b) {
-            int offset = b*d_dim.getValue();
-            for (int i = 0; i < d_dim.getValue(); ++i) {
+         for (BlockId::block_t b = 0; b < d_num_blocks; ++b) {
+            unsigned int offset = b*d_dim.getValue();
+            for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
                d_vector[offset + i] = (d_vector[offset + i] / denominator[i]) +
                ((d_vector[offset + i] % denominator[i]) ?
                   ((d_vector[offset + i] > 0) == (denominator[i] > 0) ? 1 : -1) : 0);
             }
          }
       } else {
-         int length = d_num_blocks * d_dim.getValue();
-         for (int i = 0; i < length; ++i) {
+         size_t length = d_num_blocks * d_dim.getValue();
+         for (unsigned int i = 0; i < length; ++i) {
             d_vector[i] = (d_vector[i] / denominator.d_vector[i]) +
                ((d_vector[i] % denominator.d_vector[i]) ?
                ((d_vector[i] > 0) == (denominator.d_vector[i] > 0) ? 1 : -1) : 0);
@@ -726,8 +726,8 @@ public:
       int rhs) const
    {
       bool result = true;
-      int length = d_num_blocks * d_dim.getValue();
-      for (int i = 0; result && (i < length); ++i) {
+      size_t length = d_num_blocks * d_dim.getValue();
+      for (unsigned int i = 0; result && (i < length); ++i) {
          result = d_vector[i] == rhs;
       }
       return result;
@@ -758,15 +758,15 @@ public:
       TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
       bool result = true;
       if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
-         for (int b = 0; result && b < d_num_blocks; ++b) {
-            int offset = b*d_dim.getValue();
-            for (int i = 0; result && (i < d_dim.getValue()); ++i) {
+         for (BlockId::block_t b = 0; result && b < d_num_blocks; ++b) {
+            unsigned int offset = b*d_dim.getValue();
+            for (unsigned int i = 0; result && (i < d_dim.getValue()); ++i) {
                result = result && (d_vector[offset + i] == rhs.d_vector[i]);
             }
          }
       } else {
-         int length = d_num_blocks * d_dim.getValue();
-         for (int i = 0; result && (i < length); ++i) {
+         size_t length = d_num_blocks * d_dim.getValue();
+         for (unsigned int i = 0; result && (i < length); ++i) {
             result = result && (d_vector[i] == rhs.d_vector[i]);
          }
       }
@@ -802,15 +802,15 @@ public:
       TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
       bool result = true;
       if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
-         for (int b = 0; result && b < d_num_blocks; ++b) {
-            int offset = b*d_dim.getValue();
-            for (int i = 0; result && (i < d_dim.getValue()); ++i) {
+         for (BlockId::block_t b = 0; result && b < d_num_blocks; ++b) {
+            unsigned int offset = b*d_dim.getValue();
+            for (unsigned int i = 0; result && (i < d_dim.getValue()); ++i) {
                result = result && (d_vector[offset + i] < rhs.d_vector[i]);
             }
          }
       } else {
-         int length = d_num_blocks * d_dim.getValue();
-         for (int i = 0; result && (i < length); ++i) {
+         size_t length = d_num_blocks * d_dim.getValue();
+         for (unsigned int i = 0; result && (i < length); ++i) {
             result = result && (d_vector[i] < rhs.d_vector[i]);
          }
       }
@@ -832,15 +832,15 @@ public:
       TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
       bool result = true;
       if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
-         for (int b = 0; result && b < d_num_blocks; ++b) {
-            int offset = b*d_dim.getValue();
-            for (int i = 0; result && (i < d_dim.getValue()); ++i) {
+         for (BlockId::block_t b = 0; result && b < d_num_blocks; ++b) {
+            unsigned int offset = b*d_dim.getValue();
+            for (unsigned int i = 0; result && (i < d_dim.getValue()); ++i) {
                result = result && (d_vector[offset + i] <= rhs.d_vector[i]);
             }
          }
       } else {
-         int length = d_num_blocks * d_dim.getValue();
-         for (int i = 0; result && (i < length); ++i) {
+         size_t length = d_num_blocks * d_dim.getValue();
+         for (unsigned int i = 0; result && (i < length); ++i) {
             result = result && (d_vector[i] <= rhs.d_vector[i]);
          }
       }
@@ -862,15 +862,15 @@ public:
       TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
       bool result = true;
       if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
-         for (int b = 0; result && b < d_num_blocks; ++b) {
-            int offset = b*d_dim.getValue();
-            for (int i = 0; result && (i < d_dim.getValue()); ++i) {
+         for (BlockId::block_t b = 0; result && b < d_num_blocks; ++b) {
+            unsigned int offset = b*d_dim.getValue();
+            for (unsigned int i = 0; result && (i < d_dim.getValue()); ++i) {
                result = result && (d_vector[offset + i] > rhs.d_vector[i]);
             }
          }
       } else {
-         int length = d_num_blocks * d_dim.getValue();
-         for (int i = 0; result && (i < length); ++i) {
+         size_t length = d_num_blocks * d_dim.getValue();
+         for (unsigned int i = 0; result && (i < length); ++i) {
             result = result && (d_vector[i] > rhs.d_vector[i]);
          }
       }
@@ -892,15 +892,15 @@ public:
       TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
       bool result = true;
       if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
-         for (int b = 0; result && b < d_num_blocks; ++b) {
-            int offset = b*d_dim.getValue();
-            for (int i = 0; result && (i < d_dim.getValue()); ++i) {
+         for (BlockId::block_t b = 0; result && b < d_num_blocks; ++b) {
+            unsigned int offset = b*d_dim.getValue();
+            for (unsigned int i = 0; result && (i < d_dim.getValue()); ++i) {
                result = result && (d_vector[offset + i] >= rhs.d_vector[i]);
             }
          }
       } else {
-         int length = d_num_blocks * d_dim.getValue();
-         for (int i = 0; result && (i < length); ++i) {
+         size_t length = d_num_blocks * d_dim.getValue();
+         for (unsigned int i = 0; result && (i < length); ++i) {
             result = result && (d_vector[i] >= rhs.d_vector[i]);
          }
       }
@@ -920,17 +920,17 @@ public:
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
       if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
-         for (int b = 0; b < d_num_blocks; ++b) {
-            int offset = b*d_dim.getValue();
-            for (int i = 0; i < d_dim.getValue(); ++i) {
+         for (BlockId::block_t b = 0; b < d_num_blocks; ++b) {
+            unsigned int offset = b*d_dim.getValue();
+            for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
                if (rhs.d_vector[i] < d_vector[offset + i]) {
                   d_vector[offset + i] = rhs.d_vector[i];
                }
             }
          }
       } else {
-         int length = d_num_blocks * d_dim.getValue();
-         for (int i = 0; i < length; ++i) {
+         size_t length = d_num_blocks * d_dim.getValue();
+         for (unsigned int i = 0; i < length; ++i) {
             if (rhs.d_vector[i] < d_vector[i]) {
                d_vector[i] = rhs.d_vector[i];
             }
@@ -945,8 +945,8 @@ public:
    min() const
    {
       int min = d_vector[0];
-      int length = d_num_blocks * d_dim.getValue();
-      for (int i = 0; i < length; ++i) {
+      size_t length = d_num_blocks * d_dim.getValue();
+      for (unsigned int i = 0; i < length; ++i) {
          if (d_vector[i] < min) {
             min = d_vector[i];
          }
@@ -964,17 +964,17 @@ public:
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       TBOX_ASSERT(d_num_blocks == rhs.d_num_blocks || rhs.d_num_blocks == 1);
       if (rhs.d_num_blocks == 1 && d_num_blocks != 1) {
-         for (int b = 0; b < d_num_blocks; ++b) {
-            int offset = b*d_dim.getValue();
-            for (int i = 0; i < d_dim.getValue(); ++i) {
+         for (BlockId::block_t b = 0; b < d_num_blocks; ++b) {
+            unsigned int offset = b*d_dim.getValue();
+            for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
                if (rhs.d_vector[i] > d_vector[offset + i]) {
                   d_vector[offset + i] = rhs.d_vector[i];
                }
             }
          }
       } else {
-         int length = d_num_blocks * d_dim.getValue();
-         for (int i = 0; i < length; ++i) {
+         size_t length = d_num_blocks * d_dim.getValue();
+         for (unsigned int i = 0; i < length; ++i) {
             if (rhs.d_vector[i] > d_vector[i]) {
                d_vector[i] = rhs.d_vector[i];
             }
@@ -989,8 +989,8 @@ public:
    max() const
    {
       int max = d_vector[0];
-      int length = d_num_blocks * d_dim.getValue();
-      for (int i = 0; i < length; ++i) {
+      size_t length = d_num_blocks * d_dim.getValue();
+      for (unsigned int i = 0; i < length; ++i) {
          if (d_vector[i] > max) {
             max = d_vector[i];
          }
@@ -1052,9 +1052,9 @@ public:
       if (vector.d_num_blocks == d_num_blocks) {
          *this = vector;
       } else if (d_num_blocks > 1 && vector.d_num_blocks == 1) {
-         for (int b = 0; b < d_num_blocks; ++b) {
-            int offset = b*d_dim.getValue();
-            for (int d = 0; d < d_dim.getValue(); ++d) {
+         for (BlockId::block_t b = 0; b < d_num_blocks; ++b) {
+            unsigned int offset = b*d_dim.getValue();
+            for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
                d_vector[offset + d] = vector[d];
             }
          }
@@ -1082,10 +1082,10 @@ public:
          TBOX_ASSERT(d_num_blocks == 1);
       }
 #endif
-      int b = block_id == BlockId::invalidId() ? 0 : block_id.getBlockValue();
-      int offset = b * d_dim.getValue();
+      BlockId::block_t b = block_id == BlockId::invalidId() ? 0 : block_id.getBlockValue();
+      unsigned int offset = b * d_dim.getValue();
       long int prod = 1;
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (unsigned int i = 0; i < getDim().getValue(); ++i) {
          prod *= d_vector[offset + i];
       }
       return prod;
@@ -1205,7 +1205,7 @@ private:
 
    tbox::Dimension d_dim;
 
-   int d_num_blocks;
+   size_t d_num_blocks;
 
    std::vector<int> d_vector;
 

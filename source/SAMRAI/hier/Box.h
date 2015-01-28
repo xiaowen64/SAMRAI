@@ -669,9 +669,9 @@ public:
    {
       size_t mysize = 0;
       if (!empty()) {
-         mysize = (d_hi(0) - d_lo(0) + 1);
+         mysize = static_cast<size_t>((d_hi(0) - d_lo(0) + 1));
          for (dir_t i = 1; i < getDim().getValue(); ++i) {
-            mysize *= (d_hi(i) - d_lo(i) + 1);
+            mysize *= static_cast<size_t>((d_hi(i) - d_lo(i) + 1));
          }
       }
       return mysize;
@@ -695,10 +695,11 @@ public:
       const Index& p) const
    {
       size_t myoffset = 0;
-      for (int i = getDim().getValue() - 1; i > 0; --i) {
-         myoffset = (d_hi(i - 1) - d_lo(i - 1) + 1) * (p(i) - d_lo(i) + myoffset);
+      for (unsigned int i = getDim().getValue() - 1; i > 0; --i) {
+         myoffset = static_cast<size_t>(
+            (d_hi(i - 1) - d_lo(i - 1) + 1) * (p(i) - d_lo(i) + myoffset));
       }
-      myoffset += p(0) - d_lo(0);
+      myoffset += static_cast<size_t>(p(0) - d_lo(0));
       return myoffset;
    }
 
@@ -918,8 +919,8 @@ public:
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
       if (!empty()) {
          if (ghosts.getNumBlocks() > 1) {
-            int b = d_block_id.getBlockValue();
-            for (int i = 0; i < getDim().getValue(); ++i) {
+            BlockId::block_t b = d_block_id.getBlockValue();
+            for (unsigned int i = 0; i < getDim().getValue(); ++i) {
                d_lo(i) -= ghosts(b,i);
                d_hi(i) += ghosts(b,i);
             }
@@ -1155,7 +1156,7 @@ public:
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
       if (ratio.getNumBlocks() > 1) {
-         int b = d_block_id.getBlockValue();
+         BlockId::block_t b = d_block_id.getBlockValue();
          for (dir_t i = 0; i < getDim().getValue(); ++i) {
             d_lo(i) = coarsen(d_lo(i), ratio(b,i));
             d_hi(i) = coarsen(d_hi(i), ratio(b,i));

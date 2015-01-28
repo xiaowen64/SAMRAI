@@ -2002,7 +2002,7 @@ GriddingAlgorithm::computeTagToClusterWidths()
    d_tag_to_cluster_width.resize(d_hierarchy->getMaxNumberOfLevels() - 1,
       hier::IntVector::getZero(dim));
 
-   const int nblocks = d_hierarchy->getGridGeometry()->getNumberBlocks();
+   const size_t nblocks = d_hierarchy->getGridGeometry()->getNumberBlocks();
 
    for (int ln = d_hierarchy->getMaxNumberOfLevels() - 2; ln >= 0; --ln) {
       /*
@@ -2141,7 +2141,7 @@ void
 GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes) const {
    const tbox::Dimension& dim = d_hierarchy->getDim();
 
-   const int nblocks = d_hierarchy->getGridGeometry()->getNumberBlocks();
+   const size_t nblocks = d_hierarchy->getGridGeometry()->getNumberBlocks();
 
    hier::IntVector smallest_patch(dim);
    hier::IntVector largest_patch(dim);
@@ -2283,7 +2283,7 @@ GriddingAlgorithm::checkBoundaryProximityViolation(
    const int tag_ln,
    const hier::BoxLevel& new_box_level) const
 {
-   const int nblocks = d_hierarchy->getGridGeometry()->getNumberBlocks();
+   const size_t nblocks = d_hierarchy->getGridGeometry()->getNumberBlocks();
 
    const tbox::Dimension& dim = d_hierarchy->getDim();
    hier::IntVector extend_ghosts(dim);
@@ -2726,7 +2726,7 @@ GriddingAlgorithm::readLevelBoxes(
 
       hier::Connector& new_to_coarser = coarser_to_new->getTranspose();
 
-      int num_blocks = new_box_level->getGridGeometry()->getNumberBlocks();
+      size_t num_blocks = new_box_level->getGridGeometry()->getNumberBlocks();
       hier::IntVector smallest_patch(dim);
       hier::IntVector largest_patch(dim);
       hier::IntVector extend_ghosts(dim);

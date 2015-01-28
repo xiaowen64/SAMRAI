@@ -1541,8 +1541,8 @@ CellPoissonFACOps::ewingFixFlux(
    hier::IntVector block_ratio(ratio_to_coarser);
    if (block_ratio.getNumBlocks() != 1) {
       block_ratio = hier::IntVector(d_dim);
-      int b = patch_box.getBlockId().getBlockValue();
-      for (int d = 0; d < d_dim.getValue(); ++d) {
+      hier::BlockId::block_t b = patch_box.getBlockId().getBlockValue();
+      for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
          block_ratio[d] = ratio_to_coarser(b,d);
       }
    }

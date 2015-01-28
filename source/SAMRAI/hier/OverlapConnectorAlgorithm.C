@@ -189,7 +189,6 @@ OverlapConnectorAlgorithm::extractNeighbors(
       connector.getBase().getGridGeometry());
 
    const Box& box(*connector.getBase().getBox(Box(dim, box_id)));
-   const BlockId& block_id = box.getBlockId();
    Connector::ConstNeighborhoodIterator ins =
       connector.findLocal(box_id);
    neighbors.clear();
@@ -1007,7 +1006,7 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
          cent_refinement_ratio,
          IntVector::max(west_refinement_ratio, east_refinement_ratio));
 
-   const int num_blocks = cent_refinement_ratio.getNumBlocks();
+   const size_t num_blocks = cent_refinement_ratio.getNumBlocks();
 
    IntVector width_limit(connector_width_limit);
    if (width_limit.getNumBlocks() == 1 && num_blocks != 1) {
@@ -1794,7 +1793,6 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
       BoxContainer grown_boxes;
       if (grid_geom.getNumberBlocks() == 1 || grid_geom.hasIsotropicRatios()) {
          Box base_box = visible_base_nabrs_box;
-         const BlockId& block_id = base_box.getBlockId();
          base_box.grow(bridging_connector.getConnectorWidth());
          if (refine_base) {
             base_box.refine(bridging_connector.getRatio());

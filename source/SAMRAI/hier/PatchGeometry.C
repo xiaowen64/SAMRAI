@@ -43,8 +43,8 @@ PatchGeometry::PatchGeometry(
     */
    TBOX_ASSERT(ratio_to_level_zero != 0);
    if (d_dim.getValue() > 1) {
-      int b = block_id.getBlockValue();
-      for (int i = 0; i < d_dim.getValue(); ++i) {
+      BlockId::block_t b = block_id.getBlockValue();
+      for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
          TBOX_ASSERT((d_ratio_to_level_zero(b,i) *
                      d_ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0)
             || (d_ratio_to_level_zero(b,i) == 1)

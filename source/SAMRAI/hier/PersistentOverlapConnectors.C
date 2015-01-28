@@ -109,7 +109,7 @@ PersistentOverlapConnectors::createConnector(
    TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
-   const int num_blocks = head.getRefinementRatio().getNumBlocks();
+   const size_t num_blocks = head.getRefinementRatio().getNumBlocks();
    IntVector width(connector_width);
    if (width.getNumBlocks() == 1 && num_blocks != 1) {
       if (width.max() == width.min()) {
@@ -273,7 +273,7 @@ PersistentOverlapConnectors::hasConnector(
    const IntVector& min_connector_width,
    bool exact_width_only) const
 {
-   const int num_blocks = head.getRefinementRatio().getNumBlocks();
+   const size_t num_blocks = head.getRefinementRatio().getNumBlocks();
    IntVector min_width(min_connector_width);
    if (min_width.getNumBlocks() == 1 && num_blocks != 1) {
       if (min_width.max() == min_width.min()) {
@@ -389,7 +389,7 @@ PersistentOverlapConnectors::doFindConnectorWork(
    ConnectorNotFoundAction not_found_action,
    bool exact_width_only)
 {
-   const int num_blocks = head.getRefinementRatio().getNumBlocks();
+   const size_t num_blocks = head.getRefinementRatio().getNumBlocks();
    IntVector min_width(min_connector_width);
    if (min_width.getNumBlocks() == 1 && num_blocks != 1) {
       if (min_width.max() == min_width.min()) {
@@ -424,10 +424,10 @@ PersistentOverlapConnectors::doFindConnectorWork(
 
                TBOX_ASSERT(vdiff != 0);
 
-               int nblocks = head.getGridGeometry()->getNumberBlocks();
+               size_t nblocks = head.getGridGeometry()->getNumberBlocks();
                int diff = 0;
-               for (int b = 0; b < nblocks; ++b) {
-                  for (int j = 0; j < vdiff.getDim().getValue(); ++j) {
+               for (BlockId::block_t b = 0; b < nblocks; ++b) {
+                  for (unsigned int j = 0; j < vdiff.getDim().getValue(); ++j) {
                      diff += vdiff(b,j);
                   }
                }

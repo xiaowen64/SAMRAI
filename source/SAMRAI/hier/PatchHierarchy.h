@@ -542,7 +542,7 @@ public:
       return getNumberOfLevels() - 1;
    }
 
-   int
+   size_t
    getNumberBlocks() const
    {
       return d_number_blocks;

@@ -129,7 +129,7 @@ Connector::Connector(
    d_transpose(other.d_transpose),
    d_owns_transpose(false)
 {
-   int num_blocks = 
+   size_t num_blocks = 
       d_base_handle->getBoxLevel().getGridGeometry()->getNumberBlocks();
 
    if (d_base_width.getNumBlocks() == 1 && num_blocks != 1) {
@@ -172,7 +172,7 @@ Connector::Connector(
       head_box_level,
       base_width);
    IntVector tmp_base_width(base_width);
-   int num_blocks = base_box_level.getGridGeometry()->getNumberBlocks();
+   size_t num_blocks = base_box_level.getGridGeometry()->getNumberBlocks();
    if (tmp_base_width.getNumBlocks() == 1 && num_blocks != 1) {
       if (tmp_base_width.max() == tmp_base_width.min()) {
          tmp_base_width = IntVector(tmp_base_width, num_blocks);
@@ -386,7 +386,7 @@ Connector::shrinkWidth(
    if (shrink_width.getNumBlocks() == 1 &&
        d_base_width.getNumBlocks() != 1) {
       if (shrink_width.max() == shrink_width.min()) {
-         int new_size = d_base_width.getNumBlocks();
+         size_t new_size = d_base_width.getNumBlocks();
          shrink_width = IntVector(shrink_width, new_size);
       } else {
          TBOX_ERROR("Connector::shrinkWidth: new anisotropic connector\n"
@@ -1046,7 +1046,7 @@ Connector::setWidth(
 
    d_finalized = false;
    d_base_width = new_width;
-   int num_blocks =
+   size_t num_blocks =
       d_base_handle->getBoxLevel().getGridGeometry()->getNumberBlocks();
 
    if (d_base_width.getNumBlocks() == 1 && num_blocks != 1) {
@@ -1403,7 +1403,7 @@ Connector::convertHeadWidthToBase(
    }
 
    tbox::Dimension dim(head_refinement_ratio.getDim());
-   const int num_blocks = base_refinement_ratio.getNumBlocks();
+   const size_t num_blocks = base_refinement_ratio.getNumBlocks();
 
    IntVector tmp_head_width(head_width);
    if (tmp_head_width.getNumBlocks() == 1 && num_blocks != 1) { 
@@ -2265,7 +2265,6 @@ Connector::checkOverlapCorrectness(
                  na != end(it); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
-               const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio());
                } else if (getRatio() != 1) {
@@ -2293,7 +2292,6 @@ Connector::checkOverlapCorrectness(
                  na != missing->end(im); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
-               const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio());
                } else if (getRatio() != 1) {
@@ -2321,7 +2319,6 @@ Connector::checkOverlapCorrectness(
                  na != extra->end(ie); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
-               const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio());
                } else if (getRatio() != 1) {
@@ -2367,7 +2364,6 @@ Connector::checkOverlapCorrectness(
                  na != end(it); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
-               const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio());
                } else if (getRatio() != 1) {
@@ -2389,7 +2385,6 @@ Connector::checkOverlapCorrectness(
                  na != missing->end(im); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
-               const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio());
                } else if (getRatio() != 1) {
@@ -2433,7 +2428,6 @@ Connector::checkOverlapCorrectness(
                  na != end(it); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
-               const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio());
                } else if (getRatio() != 1) {
@@ -2461,7 +2455,6 @@ Connector::checkOverlapCorrectness(
                  na != extra->end(ie); ++na) {
                const Box& nabr = *na;
                Box nabr_box = nabr;
-               const BlockId& block_id = nabr_box.getBlockId();
                if (getHeadCoarserFlag()) {
                   nabr_box.refine(getRatio());
                } else if (getRatio() != 1) {

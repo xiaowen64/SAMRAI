@@ -333,7 +333,7 @@ CartesianGridGeometry::setGeometryDataOnPatch(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, patch, ratio_to_level_zero);
 
    const hier::BlockId& block_id = patch.getBox().getBlockId();
-   int blk = block_id.getBlockValue();
+   hier::BlockId::block_t blk = block_id.getBlockValue();
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    /*
@@ -343,7 +343,7 @@ CartesianGridGeometry::setGeometryDataOnPatch(
    TBOX_ASSERT(ratio_to_level_zero != 0);
 
    if (dim > tbox::Dimension(1)) {
-      for (int i = 0; i < dim.getValue(); ++i) {
+      for (unsigned int i = 0; i < dim.getValue(); ++i) {
          TBOX_ASSERT((ratio_to_level_zero(blk,i)
                       * ratio_to_level_zero(blk,(i + 1) % dim.getValue()) > 0)
             || (ratio_to_level_zero(blk,i) == 1)

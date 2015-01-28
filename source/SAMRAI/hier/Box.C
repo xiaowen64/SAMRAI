@@ -638,11 +638,11 @@ Box::refine(
    const IntVector& ratio)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
-   int b = ratio.getNumBlocks() > 1 ? d_block_id.getBlockValue() : 0;
+   BlockId::block_t b = ratio.getNumBlocks() > 1 ? d_block_id.getBlockValue() : 0;
    TBOX_ASSERT(b < ratio.getNumBlocks());
 
    bool negative_ratio = false;
-   for (int d = 0; d < getDim().getValue(); ++d) {
+   for (unsigned int d = 0; d < getDim().getValue(); ++d) {
       if (ratio(b,d) < 0) {
          negative_ratio = true;
          break;
@@ -650,12 +650,12 @@ Box::refine(
    }
 
    if (!negative_ratio) {
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (unsigned int i = 0; i < getDim().getValue(); ++i) {
          d_lo(i) *= ratio(b,i);
          d_hi(i) = d_hi(i) * ratio(b,i) + (ratio(b,i) - 1);
       }
    } else {
-      for (int i = 0; i < getDim().getValue(); ++i) {
+      for (unsigned int i = 0; i < getDim().getValue(); ++i) {
          if (ratio(b,i) > 0) {
             d_lo(i) *= ratio(b,i);
             d_hi(i) = d_hi(i) * ratio(b,i) + (ratio(b,i) - 1);

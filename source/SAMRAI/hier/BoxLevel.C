@@ -337,7 +337,7 @@ BoxLevel::initializePrivate(
    d_ratio = ratio;
    if (d_ratio.getNumBlocks() != grid_geom->getNumberBlocks()) {
       if (d_ratio.max() == d_ratio.min()) {
-         int new_size = grid_geom->getNumberBlocks();
+         size_t new_size = grid_geom->getNumberBlocks();
          d_ratio = IntVector(d_ratio, new_size);
       } else {
          TBOX_ERROR("BoxLevel::initializePrivate: anisotropic refinement\n"
@@ -1523,11 +1523,12 @@ BoxLevel::putToRestart(
    restart_db->putInteger("d_nproc", d_mpi.getSize());
    restart_db->putInteger("d_rank", d_mpi.getRank());
    restart_db->putInteger("dim", d_ratio.getDim().getValue());
-   const int nblocks = d_grid_geometry->getNumberBlocks();
-   for (int b =0; b < nblocks; ++b) {
-      std::string ratio_name = "d_ratio_" + tbox::Utilities::intToString(b); 
+   const size_t nblocks = d_grid_geometry->getNumberBlocks();
+   for (BlockId::block_t b =0; b < nblocks; ++b) {
+      std::string ratio_name = "d_ratio_" +
+         tbox::Utilities::intToString(static_cast<int>(b)); 
       std::vector<int> tmp_ratio(d_ratio.getDim().getValue());
-      for (int d = 0; d < d_ratio.getDim().getValue(); ++d) {
+      for (unsigned int d = 0; d < d_ratio.getDim().getValue(); ++d) {
          tmp_ratio[d] = d_ratio(b,d);
       }
       restart_db->putIntegerArray(ratio_name,
@@ -1553,11 +1554,12 @@ BoxLevel::getFromRestart(
                                 restart_db.getInteger("dim")));
    TBOX_ASSERT(getDim() == dim);
 
-   const int nblocks = grid_geom->getNumberBlocks();
+   const size_t nblocks = grid_geom->getNumberBlocks();
 
    IntVector ratio(nblocks, dim);
-   for (int b = 0; b < nblocks; ++b) {
-      std::string ratio_name = "d_ratio_" + tbox::Utilities::intToString(b);
+   for (BlockId::block_t b = 0; b < nblocks; ++b) {
+      std::string ratio_name = "d_ratio_" +
+         tbox::Utilities::intToString(static_cast<int>(b));
       std::vector<int> tmp_ratio(dim.getValue());
       restart_db.getIntegerArray(ratio_name, &tmp_ratio[0], dim.getValue());
       for (int d = 0; d < dim.getValue(); ++d) {

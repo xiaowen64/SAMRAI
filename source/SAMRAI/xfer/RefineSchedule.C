@@ -1495,7 +1495,7 @@ RefineSchedule::setupCoarseInterpBoxLevel(
          }
 
          bool sheared_boxes_exist = false;
-         for (int blk = 0; blk < nblocks; ++blk) {
+         for (hier::BlockId::block_t blk = 0; blk < nblocks; ++blk) {
             if (do_coarse_shearing[blk] &&
                 !sheared_coarse_interp_boxes[blk].empty() &&
                 (d_dst_level->patchTouchesRegularBoundary(dst_box_id))) {
@@ -1521,8 +1521,9 @@ RefineSchedule::setupCoarseInterpBoxLevel(
                has_base_box = true;
             }
 
-            for (int blk = dst_blk; blk < nblocks + dst_blk; ++blk) {
-               int cur_blk = blk % nblocks;
+            for (hier::BlockId::block_t blk = dst_blk;
+                 blk < nblocks + dst_blk; ++blk) {
+               hier::BlockId::block_t cur_blk = blk % nblocks;
                for (hier::BoxContainer::iterator bi =
                     sheared_coarse_interp_boxes[cur_blk].begin();
                     bi != sheared_coarse_interp_boxes[cur_blk].end(); ++bi) {
@@ -2518,8 +2519,6 @@ RefineSchedule::refineScratchData(
 
    bool is_encon = (fine_level == d_encon_level);
    int nbr_blk_copies = 0;
-   const std::map<hier::BoxId, hier::IntVector>& nbr_refine_ratio =
-      is_encon ? d_encon_nbr_refine_ratio : d_nbr_refine_ratio;
 
    if (d_refine_patch_strategy) {
       d_refine_patch_strategy->preprocessRefineLevel(
@@ -2728,10 +2727,6 @@ RefineSchedule::computeRefineOverlaps(
 
    boost::shared_ptr<hier::BaseGridGeometry> grid_geom(
       d_dst_level->getGridGeometry());
-
-   int nblocks = grid_geom->getNumberBlocks();
-   std::map<hier::BoxId, hier::IntVector>& nbr_refine_ratio =
-      is_encon ? d_encon_nbr_refine_ratio : d_nbr_refine_ratio;
 
    /*
     * Loop over all the coarse patches and find the corresponding

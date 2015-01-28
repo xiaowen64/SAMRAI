@@ -467,7 +467,7 @@ BaseGridGeometry::setGeometryOnPatches(
    TBOX_ASSERT(ratio_to_level_zero != 0);
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim.getValue() > 1) {
-      for (int b = 0; b < d_number_blocks; ++b) {
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          int i;
          for (i = 0; i < d_dim.getValue(); ++i) {
             TBOX_ASSERT((ratio_to_level_zero(b,i) *
@@ -570,7 +570,7 @@ BaseGridGeometry::setGeometryDataOnPatch(
     */
    TBOX_ASSERT(ratio_to_level_zero != 0); 
    if (d_dim.getValue() > 1) {
-      for (int b = 0; b < d_number_blocks; ++b) {
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          int i;
          for (i = 0; i < d_dim.getValue(); ++i) {
             TBOX_ASSERT((ratio_to_level_zero(b,i) *
@@ -1228,7 +1228,7 @@ BaseGridGeometry::computePhysicalDomain(
    const BlockId& block_id) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio_to_level_zero);
-   const int b = block_id.getBlockValue();
+   const BlockId::block_t b = block_id.getBlockValue();
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    /*
@@ -1291,7 +1291,7 @@ BaseGridGeometry::computePhysicalDomain(
    const BlockId& block_id) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio_to_level_zero);
-   const int b = block_id.getBlockValue();
+   const BlockId::block_t b = block_id.getBlockValue();
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    /*
@@ -1362,7 +1362,7 @@ BaseGridGeometry::computePhysicalDomain(
        * All components of ratio must be nonzero.  Additionally, all components
        * of ratio not equal to 1 must have the same sign.
        */
-      for (int b = 0; b < d_number_blocks; ++b) {
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          int i;
          for (i = 0; i < d_dim.getValue(); ++i) {
             TBOX_ASSERT(ratio_to_level_zero(b,i) != 0);
@@ -1384,7 +1384,7 @@ BaseGridGeometry::computePhysicalDomain(
    if (ratio_to_level_zero != 1) {
       bool coarsen = false;
       IntVector tmp_rat = ratio_to_level_zero;
-      for (int b = 0; b < d_number_blocks; ++b) {
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          for (int id = 0; id < d_dim.getValue(); ++id) {
             if (ratio_to_level_zero(b,id) < 0) {
                coarsen = true;
@@ -1414,7 +1414,7 @@ BaseGridGeometry::computePhysicalDomain(
     * of ratio not equal to 1 must have the same sign.
     */
    if (ratio_to_level_zero != 1) {
-      for (int b = 0; b < d_number_blocks; ++b) {
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          int i;
          for (i = 0; i < d_dim.getValue(); ++i) {
             TBOX_ASSERT(ratio_to_level_zero(b,i) != 0);
@@ -1436,7 +1436,7 @@ BaseGridGeometry::computePhysicalDomain(
    if (ratio_to_level_zero != 1) {
       bool coarsen = false;
       IntVector tmp_rat = ratio_to_level_zero;
-      for (int b = 0; b < d_number_blocks; ++b) {
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          for (int id = 0; id < d_dim.getValue(); ++id) {
             if (ratio_to_level_zero(b,id) < 0) {
                coarsen = true;
@@ -3069,7 +3069,7 @@ BaseGridGeometry::setUpFineLevelTransformations()
 
    const IntVector& one_vector = IntVector::getOne(d_dim);
 
-   for (int b = 0; b < d_number_blocks; ++b) {
+   for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
 
       BlockId block_id(b);
 
@@ -3205,7 +3205,7 @@ BaseGridGeometry::setUpFineLevelTransformations()
             Box test_box_node(test_box);
             test_box_node.setUpper(test_box_node.upper() + IntVector::getOne(d_dim));
             IntVector sh_num_cells(shared_nbr_nodes.numberCells());
-            for (int d = 0; d < d_dim.getValue(); ++d) {
+            for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
                if (sh_num_cells[d] ==
                    current_ratio(shared_nbr_nodes.getBlockId().getBlockValue(),d)) {
                   shared_nbr_nodes.setLower(d, shared_nbr_nodes.upper(d));

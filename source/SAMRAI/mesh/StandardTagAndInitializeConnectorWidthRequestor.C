@@ -100,7 +100,6 @@ StandardTagAndInitializeConnectorWidthRequestor::computeRequiredConnectorWidths(
       patch_hierarchy.getMaxNumberOfLevels(),
       hier::IntVector::getZero(dim));
 
-   int nblocks = patch_hierarchy.getGridGeometry()->getNumberBlocks();
    for (int ln = 0; ln < patch_hierarchy.getMaxNumberOfLevels(); ++ln) {
       ratios_to_coarser[ln] = patch_hierarchy.getRatioToCoarserLevel(ln);
    } 

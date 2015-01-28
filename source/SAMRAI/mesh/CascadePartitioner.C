@@ -224,11 +224,11 @@ CascadePartitioner::loadBalanceBoxLevel(
    }
 
    // Set effective_cut_factor to least common multiple of cut_factor and d_tile_size.
-   const int nblocks = hierarchy->getGridGeometry()->getNumberBlocks();
+   const size_t nblocks = hierarchy->getGridGeometry()->getNumberBlocks();
    hier::IntVector effective_cut_factor(cut_factor, nblocks);
    if ( d_tile_size != hier::IntVector::getOne(d_dim) ) {
       if (cut_factor.getNumBlocks() == 1) {
-         for (int b = 0; b < nblocks; ++b) {
+         for (hier::BlockId::block_t b = 0; b < nblocks; ++b) {
             for ( int d=0; d<d_dim.getValue(); ++d ) {
                while ( effective_cut_factor(b,d)/d_tile_size[d]*d_tile_size[d] != effective_cut_factor(b,d) ) {
                   effective_cut_factor(b,d) += cut_factor[d];
@@ -236,7 +236,7 @@ CascadePartitioner::loadBalanceBoxLevel(
             }
          }
       }  else {
-         for (int b = 0; b < nblocks; ++b) {
+         for (hier::BlockId::block_t b = 0; b < nblocks; ++b) {
             for ( int d=0; d<d_dim.getValue(); ++d ) {
                while ( effective_cut_factor(b,d)/d_tile_size[d]*d_tile_size[d] != effective_cut_factor(b,d) ) {
                   effective_cut_factor(b,d) += cut_factor(b,d);

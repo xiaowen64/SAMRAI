@@ -56,7 +56,7 @@ BlockId::BlockId(
  */
 BlockId::BlockId(
    const int& value):
-   d_value(static_cast<int>(value))
+   d_value(static_cast<unsigned int>(value))
 {
    TBOX_ASSERT(value >=0);
 }

@@ -136,10 +136,10 @@ CoarsenSchedule::CoarsenSchedule(
    const hier::IntVector& fine(d_fine_level->getRatioToLevelZero());
    const hier::IntVector& crse(d_crse_level->getRatioToLevelZero());
 
-   const int nblocks = d_crse_level->getGridGeometry()->getNumberBlocks();
+   const size_t nblocks = d_crse_level->getGridGeometry()->getNumberBlocks();
 
-   for (int b = 0; b < nblocks; ++b) {
-      for (int i = 0; i < dim.getValue(); ++i) {
+   for (hier::BlockId::block_t b = 0; b < nblocks; ++b) {
+      for (unsigned int i = 0; i < dim.getValue(); ++i) {
          if (fine(b,i) > 1) {
             d_ratio_between_levels(b,i) = fine(b,i) / crse(b,i);
          } else {
@@ -151,8 +151,8 @@ CoarsenSchedule::CoarsenSchedule(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (dim > tbox::Dimension(1)) {
-      for (int b = 0; b < nblocks; ++b) {
-         for (int i = 0; i < dim.getValue(); ++i) {
+      for (hier::BlockId::block_t b = 0; b < nblocks; ++b) {
+         for (unsigned int i = 0; i < dim.getValue(); ++i) {
             if (d_ratio_between_levels(b,i)
                 * d_ratio_between_levels(b,(i + 1) % dim.getValue()) < 0) {
                TBOX_ASSERT((d_ratio_between_levels(b,i) == 1) ||

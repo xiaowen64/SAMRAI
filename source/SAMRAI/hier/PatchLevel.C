@@ -113,7 +113,7 @@ PatchLevel::PatchLevel(
    TBOX_ASSERT(box_level.getRefinementRatio() != 0);
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim.getValue() > 1) {
-      for (int b = 0; b < d_number_blocks; ++b) {
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          int i;
          for (i = 0; i < d_dim.getValue(); ++i) {
             TBOX_ASSERT((d_ratio_to_level_zero(b,i) *
@@ -224,7 +224,7 @@ PatchLevel::PatchLevel(
    TBOX_ASSERT(box_level->getRefinementRatio() != 0);
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim.getValue() > 1) {
-      for (int b = 0; b < d_number_blocks; ++b) {
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          int i;
          for (i = 0; i < d_dim.getValue(); ++i) {
             TBOX_ASSERT((d_ratio_to_level_zero(b,i) * 
@@ -417,7 +417,7 @@ PatchLevel::setRefinedPatchLevel(
       d_geometry = coarse_level->d_geometry;
 
       const IntVector& coarse_ratio = coarse_level->getRatioToLevelZero();
-      for (int b = 0; b < d_number_blocks; ++b) {
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          for (int i = 0; i < getDim().getValue(); ++i) {
             int coarse_rat = coarse_ratio(b,i);
             int refine_rat = refine_ratio(b,i);
@@ -583,7 +583,7 @@ PatchLevel::setCoarsenedPatchLevel(
 
       const IntVector& fine_ratio =
          fine_level->d_ratio_to_level_zero;
-      for (int b = 0; b < d_number_blocks; ++b) {
+      for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          for (int i = 0; i < getDim().getValue(); ++i) {
             int fine_rat = fine_ratio(b,i);
             int coarsen_rat = coarsen_ratio(b,i);
@@ -755,7 +755,7 @@ PatchLevel::getFromRestart(
    TBOX_ASSERT(temp_ratio.size() == d_number_blocks * d_dim.getValue());
 
    int i = 0;
-   for (int b = 0; b < d_number_blocks; ++b) {
+   for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
       for (int d = 0; d < d_dim.getValue(); ++d) {
          d_ratio_to_level_zero(b,d) = temp_ratio[i];
          ++i;
@@ -796,7 +796,7 @@ PatchLevel::getFromRestart(
    }
 
    i = 0;
-   for (int b = 0; b < d_number_blocks; ++b) {
+   for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
       for (int d = 0; d < d_dim.getValue(); ++d) {
          d_ratio_to_coarser_level(b,d) = temp_ratio[i];
          ++i;
@@ -883,7 +883,7 @@ PatchLevel::putToRestart(
    std::vector<int> temp_ratio_to_level_zero(
       d_number_blocks * getDim().getValue());
    int i = 0;
-   for (int b = 0; b < d_number_blocks; ++b) {
+   for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
       for (int d = 0; d < d_dim.getValue(); ++d) {
          temp_ratio_to_level_zero[i] = d_ratio_to_level_zero(b,d);
          ++i;
@@ -908,7 +908,7 @@ PatchLevel::putToRestart(
    std::vector<int> temp_ratio_to_coarser_level(
       d_number_blocks * getDim().getValue());
    i = 0;
-   for (int b = 0; b < d_number_blocks; ++b) {
+   for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
       for (int d = 0; d < d_dim.getValue(); ++d) {
          temp_ratio_to_coarser_level[i] = d_ratio_to_coarser_level(b,d);
          ++i;

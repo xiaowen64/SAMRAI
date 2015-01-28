@@ -31,7 +31,7 @@ NodeIndex::NodeIndex(
 
    setOffsets();
    hier::Index::operator = (
-      rhs + s_offsets[getDim().getValue() - 1][(int)corner]);
+      rhs + s_offsets[getDim().getValue() - 1][static_cast<size_t>(corner)]);
 }
 
 NodeIndex::NodeIndex(

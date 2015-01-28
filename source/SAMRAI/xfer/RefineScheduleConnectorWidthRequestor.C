@@ -152,7 +152,7 @@ RefineScheduleConnectorWidthRequestor::computeRequiredFineConnectorWidthsForRecu
             patch_hierarchy.getGridGeometry()->getNumberBlocks()) );
    }
 
-   const int nblocks = patch_hierarchy.getGridGeometry()->getNumberBlocks();
+   const size_t nblocks = patch_hierarchy.getGridGeometry()->getNumberBlocks();
 
    hier::IntVector width_for_refining_recursively(
       data_gcw_on_initial_dst_ln * d_gcw_factor, nblocks);
