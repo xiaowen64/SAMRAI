@@ -107,7 +107,7 @@ flux3d.o:	$(FORTRAN)/flux3d.m4
 	$(F77) $(FFLAGS) -c flux3d.f -o $@
 
 fluxcorner3d.o:	$(FORTRAN)/fluxcorner3d.m4
-	$(M4) -B8096 $(M4DIRS) $(FORTRAN)/fluxcorner3d.m4 > fluxcorner3d.f
+	$(M4) $(M4DIRS) $(FORTRAN)/fluxcorner3d.m4 > fluxcorner3d.f
 	$(F77) $(FFLAGS) -c fluxcorner3d.f -o $@
 
 grad2d.o:	$(FORTRAN)/grad2d.m4
