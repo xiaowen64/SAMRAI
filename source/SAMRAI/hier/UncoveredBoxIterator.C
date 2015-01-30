@@ -205,7 +205,7 @@ UncoveredBoxIterator::findNextFinestUncoveredBoxes()
 
       // Get the next level and the connector between the current level and the
       // next.  Use a width of 0 to get actual overlaps.
-      IntVector width(d_hierarchy->getDim(), 0);
+      IntVector width(IntVector::getZero(d_hierarchy->getDim()));
       boost::shared_ptr<PatchLevel> next_level =
          d_hierarchy->getPatchLevel(d_level_num + 1);
       const Connector& this_to_next =

@@ -1538,6 +1538,15 @@ CellPoissonFACOps::ewingFixFlux(
    const hier::Index& plower = patch_box.lower();
    const hier::Index& pupper = patch_box.upper();
 
+   hier::IntVector block_ratio(ratio_to_coarser);
+   if (block_ratio.getNumBlocks() != 1) {
+      block_ratio = hier::IntVector(d_dim);
+      hier::BlockId::block_t b = patch_box.getBlockId().getBlockValue();
+      for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
+         block_ratio[d] = ratio_to_coarser(b,d);
+      }
+   }
+
    const std::vector<hier::BoundaryBox>& bboxes =
       d_cf_boundary[patch_ln]->getBoundaries(id, 1);
    int bn, nboxes = static_cast<int>(bboxes.size());
@@ -1572,7 +1581,7 @@ CellPoissonFACOps::ewingFixFlux(
                &soln_data.getGhostCellWidth()[1],
                &plower[0], &pupper[0], &plower[1], &pupper[1],
                &location_index,
-               &ratio_to_coarser[0],
+               &block_ratio[0],
                &blower[0], &bupper[0],
                dx);
          } else if (d_dim == tbox::Dimension(3)) {
@@ -1597,7 +1606,7 @@ CellPoissonFACOps::ewingFixFlux(
                &plower[1], &pupper[1],
                &plower[2], &pupper[2],
                &location_index,
-               &ratio_to_coarser[0],
+               &block_ratio[0],
                &blower[0], &bupper[0],
                dx);
          } else {
@@ -1630,7 +1639,7 @@ CellPoissonFACOps::ewingFixFlux(
                &plower[0], &pupper[0],
                &plower[1], &pupper[1],
                &location_index,
-               &ratio_to_coarser[0],
+               &block_ratio[0],
                &blower[0], &bupper[0],
                dx);
          } else if (d_dim == tbox::Dimension(3)) {
@@ -1650,7 +1659,7 @@ CellPoissonFACOps::ewingFixFlux(
                &plower[1], &pupper[1],
                &plower[2], &pupper[2],
                &location_index,
-               &ratio_to_coarser[0],
+               &block_ratio[0],
                &blower[0], &bupper[0],
                dx);
          }

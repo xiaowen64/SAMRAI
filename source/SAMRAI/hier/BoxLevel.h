@@ -247,7 +247,7 @@ public:
    bool
    isInitialized() const
    {
-      return d_ratio(0) != 0;
+      return d_ratio(0,0) != 0;
    }
 
    /*!

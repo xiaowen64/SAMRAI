@@ -164,9 +164,9 @@ public:
     * @param[out] neighbors
     * @param[in] connector
     * @param[in] box_id
-    * @param[in] gcw
+    * @param[in] width
     *
-    * @pre gcw <= connector.getConnectorWidth()
+    * @pre width <= connector.getConnectorWidth()
     * @pre (connector.getParallelState() == BoxLevel::GLOBALIZED) ||
     *      (box_id.getOwnerRank() == connector.getMPI().getRank())
     * @pre connector.getBase().hasBox(box_id)
@@ -176,7 +176,7 @@ public:
       Connector::NeighborSet& neighbors,
       const Connector& connector,
       const BoxId& box_id,
-      const IntVector& gcw) const;
+      const IntVector& width) const;
 
    /*!
     * @brief Like extractNeighbors above except that it computes all
@@ -184,9 +184,9 @@ public:
     *
     * @param[out] other
     * @param[in] connector
-    * @param[in] gcw
+    * @param[in] width
     *
-    * @pre gcw <= connector.getConnectorWidth()
+    * @pre width <= connector.getConnectorWidth()
     * @pre for the box_id of each neighborhood base box in connector,
     *      (connector.getParallelState() == BoxLevel::GLOBALIZED) ||
     *      (box_id.getOwnerRank() == connector.getMPI().getRank())
@@ -197,7 +197,7 @@ public:
    extractNeighbors(
       Connector& other,
       const Connector& connector,
-      const IntVector& gcw) const;
+      const IntVector& width) const;
 
    /*!
     * @brief Compute the overlap Connectors between BoxLevels
@@ -648,8 +648,6 @@ private:
       const Box& box,
       BoxContainer& neighbors,
       BoxContainer& scratch_space,
-      //std::vector<Box>& neighbors,
-      //std::vector<Box>& scratch_space,
       const IntVector& neighbor_refinement_ratio) const;
 
    /*!

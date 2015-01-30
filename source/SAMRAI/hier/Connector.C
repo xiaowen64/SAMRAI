@@ -11,6 +11,7 @@
 #include "SAMRAI/hier/Connector.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/ConnectorStatistics.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
@@ -128,6 +129,19 @@ Connector::Connector(
    d_transpose(other.d_transpose),
    d_owns_transpose(false)
 {
+   size_t num_blocks = 
+      d_base_handle->getBoxLevel().getGridGeometry()->getNumberBlocks();
+
+   if (d_base_width.getNumBlocks() == 1 && num_blocks != 1) {
+      if (d_base_width.max() == d_base_width.min()) {
+         d_base_width = IntVector(d_base_width, num_blocks);
+      } else {
+         TBOX_ERROR("Connector::Connector: anisotropic connector\n"
+            << "width " << d_base_width << " must be \n"
+            << "defined for " << num_blocks << " blocks.\n");
+      }
+   }
+
 }
 
 /*
@@ -140,8 +154,8 @@ Connector::Connector(
    const BoxLevel& head_box_level,
    const IntVector& base_width,
    const BoxLevel::ParallelState parallel_state):
-   d_base_width(base_width.getDim(), 0),
-   d_ratio(base_width.getDim(), 0),
+   d_base_width(IntVector::getZero(base_width.getDim())),
+   d_ratio(IntVector::getZero(base_width.getDim())),
    d_head_coarser(false),
    d_relationships(),
    d_global_relationships(),
@@ -157,10 +171,21 @@ Connector::Connector(
    TBOX_ASSERT_OBJDIM_EQUALITY3(base_box_level,
       head_box_level,
       base_width);
+   IntVector tmp_base_width(base_width);
+   size_t num_blocks = base_box_level.getGridGeometry()->getNumberBlocks();
+   if (tmp_base_width.getNumBlocks() == 1 && num_blocks != 1) {
+      if (tmp_base_width.max() == tmp_base_width.min()) {
+         tmp_base_width = IntVector(tmp_base_width, num_blocks);
+      } else {
+         TBOX_ERROR("Connector::Connector: anisotropic connector\n"
+            << "width " << base_width << " must be \n"
+            << "defined for " << num_blocks << " blocks.\n");
+      }
+   }
 
    setBase(base_box_level);
    setHead(head_box_level);
-   setWidth(base_width, true);
+   setWidth(tmp_base_width, true);
 }
 
 /*
@@ -357,12 +382,27 @@ void
 Connector::shrinkWidth(
    const IntVector& new_width)
 {
-   if (!(new_width <= getConnectorWidth())) {
-      TBOX_ERROR("Connector::shrinkWidth: new ghost cell\n"
-         << "width " << new_width << " involves an\n"
-         << "enlargement of the current cell width "
+   IntVector shrink_width(new_width);
+   if (shrink_width.getNumBlocks() == 1 &&
+       d_base_width.getNumBlocks() != 1) {
+      if (shrink_width.max() == shrink_width.min()) {
+         size_t new_size = d_base_width.getNumBlocks();
+         shrink_width = IntVector(shrink_width, new_size);
+      } else {
+         TBOX_ERROR("Connector::shrinkWidth: new anisotropic connector\n"
+            << "width " << shrink_width << " must be \n"
+            << "defined for " << d_base_width.getNumBlocks() << " blocks.\n");
+      }
+   }
+
+   TBOX_ASSERT(shrink_width.getNumBlocks() == d_base_width.getNumBlocks()); 
+   if (!(shrink_width <= getConnectorWidth())) {
+      TBOX_ERROR("Connector::shrinkWidth: new connector\n"
+         << "width " << shrink_width << " involves an\n"
+         << "enlargement of the current width "
          << getConnectorWidth());
-   } else if (new_width == getConnectorWidth()) {
+   }
+   else if (shrink_width == getConnectorWidth()) {
       // This is a no-op.
       return;
    }
@@ -382,35 +422,79 @@ Connector::shrinkWidth(
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom(
       getBase().getGridGeometry());
 
-   for (NeighborhoodIterator ei = begin(); ei != end(); ++ei) {
-      const BoxId& box_id = *ei;
-      const Box& box = *getBase().getBoxStrict(box_id);
-      Box box_box = box;
-      box_box.grow(new_width);
-      if (base_coarser) {
-         box_box.refine(getRatio());
+   if (grid_geom->getNumberBlocks() == 1 || grid_geom->hasIsotropicRatios()) {
+      for (NeighborhoodIterator ei = begin(); ei != end(); ++ei) {
+         const BoxId& box_id = *ei;
+         const Box& box = *getBase().getBoxStrict(box_id);
+         Box box_box = box;
+         box_box.grow(shrink_width);
+         if (base_coarser) {
+            box_box.refine(getRatio());
+         }
+         for (NeighborIterator na = begin(ei);
+              na != end(ei); /* incremented in loop */) {
+            const Box& nabr = *na;
+            Box nabr_box = nabr;
+            if (nabr.getBlockId() != box.getBlockId()) {
+               grid_geom->transformBox(nabr_box,
+                  getHead().getRefinementRatio(),
+                  box.getBlockId(),
+                  nabr.getBlockId());
+            }
+            if (head_coarser) {
+               nabr_box.refine(getRatio());
+            }
+            ++na;
+            if (!box_box.intersects(nabr_box)) {
+               d_relationships.erase(ei, nabr);
+            }
+         }
       }
-      for (NeighborIterator na = begin(ei);
-           na != end(ei); /* incremented in loop */) {
-         const Box& nabr = *na;
-         Box nabr_box = nabr;
-         if (nabr.getBlockId() != box.getBlockId()) {
-            grid_geom->transformBox(nabr_box,
-               getHead().getRefinementRatio(),
-               box.getBlockId(),
-               nabr.getBlockId());
-         }
-         if (head_coarser) {
-            nabr_box.refine(getRatio());
-         }
-         ++na;
-         if (!box_box.intersects(nabr_box)) {
-            d_relationships.erase(ei, nabr);
+   } else {
+      for (NeighborhoodIterator ei = begin(); ei != end(); ++ei) {
+         const BoxId& box_id = *ei;
+         const Box& box = *getBase().getBoxStrict(box_id);
+         BoxContainer grown_boxes;
+         BoxUtilities::growAndAdjustAcrossBlockBoundary(grown_boxes,
+            box,
+            grid_geom,
+            getBase().getRefinementRatio(),
+            getRatio(),
+            shrink_width,
+            base_coarser,
+            head_coarser);
+
+         for (NeighborIterator na = begin(ei);
+              na != end(ei); /* incremented in loop */) {
+
+            const Box& nabr = *na;
+            bool intersection = false;
+
+            for (BoxContainer::iterator b_itr = grown_boxes.begin();
+                 b_itr != grown_boxes.end(); ++b_itr) {
+
+               if (nabr.getBlockId() == b_itr->getBlockId()) {
+                  Box nabr_box = nabr;
+
+                  if (head_coarser) {
+                     nabr_box.refine(getRatio());
+                  }
+                  if (b_itr->intersects(nabr_box)) {
+                     intersection = true;
+                     break;
+                  }
+               }
+            }
+            ++na;
+            if (!intersection) {
+               d_relationships.erase(ei, nabr);
+            }
          }
       }
    }
 
-   d_base_width = new_width;
+   d_base_width = shrink_width;
+   return;
 }
 
 /*
@@ -956,11 +1040,25 @@ Connector::setWidth(
 {
    if (!(new_width >= IntVector::getZero(new_width.getDim()))) {
       TBOX_ERROR("Connector::setWidth():\n"
-         << "Invalid ghost cell width: "
+         << "Invalid connector width: "
          << new_width << "\n");
    }
+
    d_finalized = false;
    d_base_width = new_width;
+   size_t num_blocks =
+      d_base_handle->getBoxLevel().getGridGeometry()->getNumberBlocks();
+
+   if (d_base_width.getNumBlocks() == 1 && num_blocks != 1) {
+      if (d_base_width.max() == d_base_width.min()) {
+         d_base_width = IntVector(d_base_width, num_blocks);
+      } else {
+         TBOX_ERROR("Connector::setWidth: new anisotropic connector\n"
+            << "width " << d_base_width << " must be \n"
+            << "defined for " << num_blocks << " blocks.\n");
+      }
+   }
+
    if (finalize_context) {
       finalizeContext();
    }
@@ -1051,12 +1149,12 @@ Connector::writeNeighborhoodToStream(
 Connector *
 Connector::createLocalTranspose() const
 {
-   const IntVector transpose_gcw = convertHeadWidthToBase(
+   const IntVector transpose_width = convertHeadWidthToBase(
          getHead().getRefinementRatio(),
          getBase().getRefinementRatio(),
          getConnectorWidth());
 
-   Connector* transpose = new Connector(getHead(), getBase(), transpose_gcw);
+   Connector* transpose = new Connector(getHead(), getBase(), transpose_width);
    doLocalTransposeWork(transpose);
    return transpose;
 }
@@ -1294,7 +1392,7 @@ IntVector
 Connector::convertHeadWidthToBase(
    const IntVector& base_refinement_ratio,
    const IntVector& head_refinement_ratio,
-   const IntVector& head_gcw)
+   const IntVector& head_width)
 {
    if (!(base_refinement_ratio >= head_refinement_ratio ||
          base_refinement_ratio <= head_refinement_ratio)) {
@@ -1305,6 +1403,18 @@ Connector::convertHeadWidthToBase(
    }
 
    tbox::Dimension dim(head_refinement_ratio.getDim());
+   const size_t num_blocks = base_refinement_ratio.getNumBlocks();
+
+   IntVector tmp_head_width(head_width);
+   if (tmp_head_width.getNumBlocks() == 1 && num_blocks != 1) { 
+      if (tmp_head_width.max() == tmp_head_width.min()) {
+         tmp_head_width = IntVector(tmp_head_width, num_blocks);
+      } else {
+         TBOX_ERROR("Connector::convertHeadWidthToBase: anisotropic connector\n"
+            << "width " << head_width << " must be \n"
+            << "defined for " << num_blocks << " blocks.\n");
+      }
+   }
 
    IntVector ratio(dim); // Ratio between head and base.
 
@@ -1324,7 +1434,7 @@ Connector::convertHeadWidthToBase(
 
    const IntVector base_width =
       (base_refinement_ratio >= head_refinement_ratio) ?
-      (head_gcw * ratio) : IntVector::ceilingDivide(head_gcw, ratio);
+      (tmp_head_width * ratio) : IntVector::ceilingDivide(tmp_head_width, ratio);
 
    return base_width;
 }
@@ -1349,7 +1459,7 @@ Connector::recursivePrint(
       return;
    }
    bool head_coarser = d_head_coarser;
-   const IntVector head_gcw =
+   const IntVector head_width =
       convertHeadWidthToBase(
          getHead().getRefinementRatio(),
          getBase().getRefinementRatio(),
@@ -1369,7 +1479,7 @@ Connector::recursivePrint(
       << getHead().getRefinementRatio() << ", "
       << d_ratio << (d_head_coarser ? " (head coarser)" : "") << '\n'
       << border << "Base,head widths   : " << d_base_width << ", "
-      << head_gcw << '\n'
+      << head_width << '\n'
       << border << "Box count    : " << getBase().getLocalNumberOfBoxes()
       << " (" << getLocalNumberOfNeighborSets() << " with neighbor lists)\n"
    ;
@@ -2108,6 +2218,8 @@ Connector::checkOverlapCorrectness(
       missing->eraseEmptyNeighborSets();
    }
 
+   const tbox::Dimension& dim(d_ratio.getDim());
+
    const BoxId dummy_box_id;
 
    /*
@@ -2460,19 +2572,38 @@ Connector::findOverlaps_rbbt(
 
       // Grow the base_box and put it in the head refinement ratio.
       Box box = base_box;
-      box.grow(getConnectorWidth());
-      if (head_is_finer) {
-         box.refine(getRatio());
-      } else if (base_is_finer) {
-         box.coarsen(getRatio());
+      BoxContainer grown_boxes;
+
+      if (base.getGridGeometry()->getNumberBlocks() == 1 ||
+          base.getGridGeometry()->hasIsotropicRatios()) {
+         box.grow(getConnectorWidth());
+
+         if (head_is_finer) {
+            box.refine(getRatio());
+         } else if (base_is_finer) {
+            box.coarsen(getRatio());
+         }
+         grown_boxes.pushBack(box);
+      } else {
+         BoxUtilities::growAndAdjustAcrossBlockBoundary(grown_boxes,
+            box,
+            base.getGridGeometry(),
+            base.getRefinementRatio(),
+            getRatio(),
+            getConnectorWidth(),
+            head_is_finer,
+            base_is_finer);
       }
 
-      // Add found overlaps to neighbor set for box.
-      rbbt.findOverlapBoxes(nabrs_for_box,
-         box,
-         // base_box.getBlockId(),
-         head.getRefinementRatio(),
-         true);
+      for (BoxContainer::iterator b_itr = grown_boxes.begin();
+           b_itr != grown_boxes.end(); ++b_itr) {
+
+         // Add found overlaps to neighbor set for box.
+         rbbt.findOverlapBoxes(nabrs_for_box,
+            *b_itr,
+            head.getRefinementRatio(),
+            true);
+      }
       if (discard_self_overlap) {
          nabrs_for_box.order();
          nabrs_for_box.erase(base_box);

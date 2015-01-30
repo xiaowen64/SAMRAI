@@ -26,11 +26,13 @@ namespace geom {
 CartesianPatchGeometry::CartesianPatchGeometry(
    const hier::IntVector& ratio_to_level_zero,
    const TwoDimBool& touches_regular_bdry,
+   const hier::BlockId& block_id,
    const double* dx,
    const double* x_lo,
    const double* x_up):
    hier::PatchGeometry(ratio_to_level_zero,
-                       touches_regular_bdry)
+                       touches_regular_bdry,
+                       block_id)
 {
    TBOX_ASSERT(dx != 0);
    TBOX_ASSERT(x_lo != 0);

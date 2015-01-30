@@ -552,12 +552,12 @@ HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
 
    t_coarsen_rich_extrap->start();
 
-   const hier::IntVector& zero_vector(hier::IntVector::getZero(hierarchy->getDim()));
+   hier::IntVector zero_vector(hier::IntVector::getZero(hierarchy->getDim()));
 
    boost::shared_ptr<hier::PatchLevel> hier_level(
       hierarchy->getPatchLevel(level_number));
 
-   hier::IntVector coarsen_ratio(hierarchy->getDim());
+   hier::IntVector coarsen_ratio(zero_vector);
    if (coarse_level->getRatioToLevelZero() < zero_vector) {
       if (hier_level->getRatioToLevelZero() < zero_vector) {
          coarsen_ratio = coarse_level->getRatioToLevelZero()
@@ -895,11 +895,7 @@ HyperbolicLevelIntegrator::getMaxFinerLevelDt(
 {
    NULL_USE(finer_level_number);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   for (int id = 0; id < ratio.getDim().getValue(); ++id) {
-      TBOX_ASSERT(ratio(id) > 0);
-   }
-#endif
+   TBOX_ASSERT(ratio.min() > 0);
    return coarse_dt / double(ratio.max());
 }
 

@@ -178,7 +178,6 @@ public:
          d_mpi.setCommunicator(MPI_COMM_NULL);
          d_base_handle.reset();
          d_head_handle.reset();
-         d_base_width(0) = d_ratio(0) = 0;
          d_parallel_state = BoxLevel::DISTRIBUTED;
       }
    }
@@ -1051,7 +1050,7 @@ public:
     *
     * @param[in] base_refinement_ratio
     * @param[in] head_refinement_ratio
-    * @param[in] head_gcw The connector width in the head index space.
+    * @param[in] head_width The connector width in the head index space.
     *
     * @return A copy of the connector width converted to the base index
     * space.
@@ -1063,7 +1062,7 @@ public:
    convertHeadWidthToBase(
       const IntVector& base_refinement_ratio,
       const IntVector& head_refinement_ratio,
-      const IntVector& head_gcw);
+      const IntVector& head_width);
 
    // TODO: refactor use of size_t as return type.  This could be
    // problematic.

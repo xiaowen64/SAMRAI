@@ -55,12 +55,28 @@ CoarseFineBoundary::CoarseFineBoundary(
 {
    TBOX_ASSERT(max_ghost_width > IntVector(d_dim, -1));
 
+   size_t number_blocks = hierarchy.getGridGeometry()->getNumberBlocks();
    const PatchLevel& level = *hierarchy.getPatchLevel(level_num);
-   IntVector connector_width(max_ghost_width);
+   const hier::IntVector& ratio_to_zero =
+      level.getRatioToLevelZero();
+
+   IntVector connector_width(max_ghost_width, number_blocks);
    connector_width.max(IntVector::getOne(d_dim));
    const Connector& level_to_level = level.findConnector(level,
          connector_width,
          CONNECTOR_CREATE);
+   if (level_num != 0) {
+      for (BlockId::block_t b = 0; b < connector_width.getNumBlocks(); ++b) {
+         for (int d = 0; d < d_dim.getValue(); ++d) {
+            if (connector_width(b,d) % ratio_to_zero(b,d) != 0) {
+               connector_width(b,d) = 
+                  (connector_width(b,d) / ratio_to_zero(b,d)) +
+                  ratio_to_zero(b,d);
+            }
+         }
+      }
+   }
+
    const Connector& level_to_domain =
       level.getBoxLevel()->findConnector(hierarchy.getDomainBoxLevel(),
          connector_width,
@@ -189,8 +205,12 @@ CoarseFineBoundary::computeFromLevel(
    }
 
    // Add fine-fine boundaries to the fake domain.
-   TBOX_ASSERT(level_to_level.getConnectorWidth() >=
-      IntVector::getOne(d_dim));
+#ifdef DEBUG_CHECK_ASSERTIONS
+   for (BlockId::block_t b = 0; b < grid_geometry->getNumberBlocks(); ++b) {
+      TBOX_ASSERT(level_to_level.getConnectorWidth()
+         >= IntVector::getOne(d_dim));
+   }
+#endif
    SAMRAI::hier::BoxContainer level_neighbors;
    level_neighbors.order();
    level_to_level.getLocalNeighbors(level_neighbors);
@@ -250,6 +270,7 @@ CoarseFineBoundary::computeFromMultiblockLevel(
 
    const BoxLevel& box_level = *level.getBoxLevel();
    const IntVector& ratio = level.getRatioToLevelZero();
+   const int level_number = level.getLevelNumber();
 
    /*
     * Get the number of blocks from the grid geometry.
@@ -278,9 +299,9 @@ CoarseFineBoundary::computeFromMultiblockLevel(
          if (block_id != ni->getBlockId()) {
             Box transform_box(*ni);
             grid_geometry->transformBox(transform_box,
-               IntVector::getOne(d_dim),
-               block_id,
-               ni->getBlockId());
+                                        0,
+                                        block_id,
+                                        ni->getBlockId());
             refined_domain_nabrs.pushBack(transform_box);
          } else {
             refined_domain_nabrs.pushBack(*ni);
@@ -305,9 +326,9 @@ CoarseFineBoundary::computeFromMultiblockLevel(
          if (block_id != ni->getBlockId()) {
             Box transform_box(*ni);
             grid_geometry->transformBox(transform_box,
-               ratio,
-               block_id,
-               ni->getBlockId());
+                                        level_number,
+                                        block_id,
+                                        ni->getBlockId());
             level_nabrs.pushBack(transform_box);
          } else {
             level_nabrs.pushBack(*ni);

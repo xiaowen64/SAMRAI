@@ -290,10 +290,8 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
                   grid_geometry->find(patch_blk_id, encon_blk_id);
                if (itr != grid_geometry->end(patch_blk_id)) {
                   rotation = (*itr).getRotationIdentifier();
-                  offset = (*itr).getShift();
+                  offset = (*itr).getShift(encon_level.getLevelNumber());
                }
-
-               offset *= patch.getPatchGeometry()->getRatio();
 
                hier::Transformation transformation(rotation, offset,
                                                    encon_blk_id,
@@ -354,23 +352,6 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
    }
 }
 
-void CellMultiblockTest::postprocessRefine(
-   hier::Patch& fine,
-   const hier::Patch& coarse,
-   const boost::shared_ptr<hier::VariableContext>& context,
-   const hier::Box& fine_box,
-   const hier::IntVector& ratio) const
-{
-   pdat::CellDoubleConstantRefine ref_op;
-
-   for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
-
-      int id = hier::VariableDatabase::getDatabase()->
-         mapVariableAndContextToIndex(d_variables[i], context);
-
-      ref_op.refine(fine, coarse, id, id, fine_box, ratio);
-   }
-}
 /*
  *************************************************************************
  *

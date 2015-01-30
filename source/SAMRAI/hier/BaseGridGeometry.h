@@ -790,7 +790,7 @@ public:
       Neighbor(
          const BlockId& block_id,
          const BoxContainer& domain,
-         const Transformation& transformation);
+         const std::vector<Transformation>& transformation);
 
       /*!
        * @brief Get the block number of the neighboring block.
@@ -815,9 +815,9 @@ public:
        * @brief Get the Transformation for the neighbor relationship.
        */
       const Transformation&
-      getTransformation() const
+      getTransformation(const int level_num) const
       {
-         return d_transformation;
+         return d_transformation[level_num];
       }
 
       /*!
@@ -826,16 +826,24 @@ public:
       Transformation::RotationIdentifier
       getRotationIdentifier() const
       {
-         return d_transformation.getRotation();
+         return d_transformation[0].getRotation();
       }
 
       /*!
        * @brief Get the shift for the neighbor relationship.
        */
       const IntVector&
-      getShift() const
+      getShift(const int level_num) const
       {
-         return d_transformation.getOffset();
+         return d_transformation[level_num].getOffset();
+      }
+
+      void
+      addTransformation(const Transformation& transformation,
+                        int level_num)
+      {
+         TBOX_ASSERT(level_num == d_transformation.size());
+         d_transformation.push_back(transformation);
       }
 
       /*!
@@ -874,7 +882,7 @@ private:
        * @brief The transformation to transform the neighboring block's
        * coordinate system into the current coordinate system.
        */
-      Transformation d_transformation;
+      std::vector<Transformation> d_transformation;
 
       /*!
        * True if the current block and the neighboring block abut at a
@@ -1016,6 +1024,12 @@ private:
       const IntVector& ratio,
       const BlockId& output_block,
       const BlockId& input_block) const;
+   bool
+   transformBox(
+      Box& box,
+      int level_number,
+      const BlockId& output_block,
+      const BlockId& input_block) const;
 
    /*!
     * @brief Modify boxes by rotating and shifting from the index space of
@@ -1127,7 +1141,8 @@ private:
    const IntVector&
    getOffset(
       const BlockId& dst,
-      const BlockId& src) const;
+      const BlockId& src,
+      int level_num) const;
 
    /*!
     * @brief Query if the geometry has enhanced connectivity.
@@ -1138,6 +1153,57 @@ private:
       return d_has_enhanced_connectivity;
    }
 
+   /*!
+    * @brief Query if the the refinement ratios used in this geometry are
+    * isotropic
+    *
+    * All ratios must be isotropic for this to return true.
+    *
+    */
+   bool
+   hasIsotropicRatios() const
+   {
+      return d_ratios_are_isotropic; 
+   }
+
+   /*!
+    * @brief Set the relative refinement ratios between each level and its
+    * next coarser level
+    *
+    * @param ratio_to_coarser  Vector of refinement ratios.
+    */
+   void
+   setUpRatios(
+      const std::vector<IntVector>& ratio_to_coarser);
+
+   /*!
+    * @brief Get a level number based on a refinement ratio.
+    *
+    * An error will occur if the given ratio is not equal to one of the ratios
+    * stored in this geometry.
+    *
+    * @param ratio_to_level_zero  
+    */
+   int
+   getEquivalentLevelNumber(const IntVector& ratio_to_level_zero) const
+   {
+      int level_num = -1;
+      for (int i = 0; i < d_ratio_to_level_zero.size(); ++i) {
+         if (d_ratio_to_level_zero[i] == ratio_to_level_zero) {
+            level_num = i;
+            break; 
+         }
+      }
+      if (level_num == -1) {
+         TBOX_ERROR(
+            getObjectName() << ":  "
+                            << ratio_to_level_zero << " is not a valid"
+                            << " ratio in this geometry." << std::endl);
+      }
+
+      return level_num;
+   }
+       
    /*!
     * @brief Print object data to the specified output stream.
     *
@@ -1758,13 +1824,23 @@ private:
     *
     * @pre (getDim() == patch.getDim()) && (getDim() == gcw.getDim())
     */
-
    void
    adjustBoundaryBoxesOnPatch(
       const Patch& patch,
       const BoxContainer& pseudo_domain,
       const IntVector& gcw,
       const BoxContainer& singularity);
+
+   /*!
+    * @brief Set the transformations between block neighbors for every level
+    *
+    * The transformations between block neighbors are originally received from
+    * input for the coarsest level. This method computes the transformations
+    * for all potential levels after the ratios to level zero for each level
+    * are computed.
+    */
+   void
+   setUpFineLevelTransformations();
 
    /*!
     * @brief Reads in data from the specified input database.
@@ -1880,6 +1956,10 @@ private:
     * block touches.
     */
    std::vector<BoxContainer> d_singularity;
+
+   std::vector<IntVector> d_ratio_to_level_zero;
+
+   bool d_ratios_are_isotropic;
 
    /*!
     * @brief Tell whether there is enhanced connectivity anywhere in the

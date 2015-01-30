@@ -802,6 +802,7 @@ ${FILE_12}: ${DEPENDS_12}
 FILE_13=CellIndex.o
 DEPENDS_13:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
@@ -1708,6 +1709,7 @@ ${FILE_28}: ${DEPENDS_28}
 FILE_29=EdgeIndex.o
 DEPENDS_29:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeIndex.h				\
@@ -2599,6 +2601,7 @@ ${FILE_42}: ${DEPENDS_42}
 FILE_43=FaceIndex.o
 DEPENDS_43:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceIndex.h				\
@@ -3880,6 +3883,7 @@ ${FILE_65}: ${DEPENDS_65}
 FILE_66=NodeIndex.o
 DEPENDS_66:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIndex.h				\
@@ -6692,6 +6696,7 @@ ${FILE_108}: ${DEPENDS_108}
 FILE_109=SideIndex.o
 DEPENDS_109:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/Index.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/IntVector.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideIndex.h				\

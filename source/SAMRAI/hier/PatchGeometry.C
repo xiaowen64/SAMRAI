@@ -24,11 +24,13 @@ namespace hier {
 
 PatchGeometry::PatchGeometry(
    const IntVector& ratio_to_level_zero,
-   const TwoDimBool& touches_regular_bdry):
+   const TwoDimBool& touches_regular_bdry,
+   const BlockId& block_id):
    d_dim(ratio_to_level_zero.getDim()),
    d_ratio_to_level_zero(ratio_to_level_zero),
    d_patch_boundaries(ratio_to_level_zero.getDim()),
-   d_touches_regular_bdry(ratio_to_level_zero.getDim())
+   d_touches_regular_bdry(ratio_to_level_zero.getDim()),
+   d_block_id(block_id)
 
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(ratio_to_level_zero, touches_regular_bdry);
@@ -39,16 +41,14 @@ PatchGeometry::PatchGeometry(
     * All components of ratio must be nonzero.  Additionally, all components
     * of ratio not equal to 1 must have the same sign.
     */
-   int i;
-   for (i = 0; i < d_dim.getValue(); ++i) {
-      TBOX_ASSERT(ratio_to_level_zero(i) != 0);
-   }
+   TBOX_ASSERT(ratio_to_level_zero != 0);
    if (d_dim.getValue() > 1) {
-      for (i = 0; i < d_dim.getValue(); ++i) {
-         TBOX_ASSERT((ratio_to_level_zero(i)
-                      * ratio_to_level_zero((i + 1) % d_dim.getValue()) > 0)
-            || (ratio_to_level_zero(i) == 1)
-            || (ratio_to_level_zero((i + 1) % d_dim.getValue()) == 1));
+      BlockId::block_t b = block_id.getBlockValue();
+      for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
+         TBOX_ASSERT((d_ratio_to_level_zero(b,i) *
+                     d_ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0)
+            || (d_ratio_to_level_zero(b,i) == 1)
+            || (d_ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) == 1));
       }
    }
 #endif

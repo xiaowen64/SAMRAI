@@ -11,6 +11,7 @@
 #include "SAMRAI/hier/AssumedPartition.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxContainerUtils.h"
+#include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
@@ -147,12 +148,12 @@ OverlapConnectorAlgorithm::extractNeighbors(
    NeighborSet& neighbors,
    const Connector& connector,
    const BoxId& box_id,
-   const IntVector& gcw) const
+   const IntVector& width) const
 {
-   const tbox::Dimension& dim(gcw.getDim());
+   const tbox::Dimension& dim(width.getDim());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (!(gcw <= connector.getConnectorWidth())) {
+   if (!(width <= connector.getConnectorWidth())) {
       TBOX_ERROR("OverlapConnectorAlgorithm::extractNeighbors cannot provide\n"
          << "neighbors for a wider ghost cell width that used to initialize it.\n");
    }
@@ -192,32 +193,64 @@ OverlapConnectorAlgorithm::extractNeighbors(
       connector.findLocal(box_id);
    neighbors.clear();
    if (ins != connector.end()) {
-      if (gcw == connector.getConnectorWidth()) {
+      if (width == connector.getConnectorWidth()) {
          for (Connector::ConstNeighborIterator ni = connector.begin(ins);
               ni != connector.end(ins); ++ni) {
             neighbors.insert(neighbors.end(), *ni);
          }
-      } else {
-         Box grown_box = box;
-         grown_box.grow(gcw);
-         if (connector.getHeadCoarserFlag() == false) {
-            grown_box.refine(connector.getRatio());
+      }
+      else {
+         BoxContainer grown_boxes;
+         if (grid_geom->getNumberBlocks() == 1 ||
+             grid_geom->hasIsotropicRatios()) {
+            Box grown_box = box;
+            grown_box.grow(width);
+            if (connector.getHeadCoarserFlag() == false) {
+               grown_box.refine(connector.getRatio());
+            }
+            grown_boxes.pushBack(grown_box);
+         } else {
+            bool head_is_finer = false;
+            bool base_is_finer = false;
+            if (connector.getRatio() != 1) {
+               if (connector.getHeadCoarserFlag()) {
+                  base_is_finer = true;
+               } else {
+                  head_is_finer = true;
+               }
+            }
+            BoxUtilities::growAndAdjustAcrossBlockBoundary(
+               grown_boxes,
+               box,
+               grid_geom,
+               connector.getBase().getRefinementRatio(),
+               connector.getRatio(),
+               width, 
+               head_is_finer,
+               base_is_finer);
          }
-         for (Connector::ConstNeighborIterator ni = connector.begin(ins);
-              ni != connector.end(ins); ++ni) {
-            const Box& neighbor(*ni);
-            Box nabr_box(neighbor);
-            if (neighbor.getBlockId() != box.getBlockId()) {
-               grid_geom->transformBox(nabr_box,
-                  connector.getHead().getRefinementRatio(),
-                  box.getBlockId(),
-                  neighbor.getBlockId());
-            }
-            if (connector.getHeadCoarserFlag() == true) {
-               nabr_box.refine(connector.getRatio());
-            }
-            if (grown_box.intersects(nabr_box)) {
-               neighbors.insert(neighbors.end(), neighbor);
+         for (BoxContainer::iterator g_itr = grown_boxes.begin();
+              g_itr != grown_boxes.end(); ++g_itr) {
+
+            const Box& g_box = *g_itr;
+            const BlockId& g_block_id = g_box.getBlockId();
+            for (Connector::ConstNeighborIterator ni = connector.begin(ins);
+                 ni != connector.end(ins); ++ni) {
+               const Box& neighbor(*ni);
+               Box nabr_box(neighbor);
+               bool do_intersect = true;
+               if (neighbor.getBlockId() != g_block_id) {
+                  do_intersect =
+                     grid_geom->transformBox(nabr_box,
+                        connector.getHead().getRefinementRatio(),
+                        g_block_id,
+                        neighbor.getBlockId());
+               }
+               if (do_intersect) {
+                  if (g_box.intersects(nabr_box)) {
+                     neighbors.insert(neighbors.end(), neighbor);
+                  }
+               }
             }
          }
       }
@@ -233,10 +266,10 @@ void
 OverlapConnectorAlgorithm::extractNeighbors(
    Connector& other,
    const Connector& connector,
-   const IntVector& gcw) const
+   const IntVector& width) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (!(gcw <= connector.getConnectorWidth())) {
+   if (!(width <= connector.getConnectorWidth())) {
       TBOX_ERROR("OverlapConnectorAlgorithm::extractNeighbors cannot provide\n"
          << "neighbors for a wider ghost cell width that used to initialize it.\n");
    }
@@ -250,7 +283,7 @@ OverlapConnectorAlgorithm::extractNeighbors(
       Connector::NeighborhoodIterator base_box_itr =
          other.makeEmptyLocalNeighborhood(box_id);
 
-      const tbox::Dimension& dim(gcw.getDim());
+      const tbox::Dimension& dim(width.getDim());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (connector.getParallelState() != BoxLevel::GLOBALIZED &&
@@ -289,32 +322,64 @@ OverlapConnectorAlgorithm::extractNeighbors(
 
       const Box& box = *connector.getBase().getBox(Box(dim, box_id));
 
-      if (gcw == connector.getConnectorWidth()) {
+      if (width == connector.getConnectorWidth()) {
          for (Connector::ConstNeighborIterator si = connector.begin(ni);
               si != connector.end(ni); ++si) {
             other.insertLocalNeighbor(*si, base_box_itr);
          }
       } else {
-         Box grown_box = box;
-         grown_box.grow(gcw);
-         if (connector.getHeadCoarserFlag() == false) {
-            grown_box.refine(connector.getRatio());
+         BoxContainer grown_boxes;
+         if (grid_geom->getNumberBlocks() == 1 ||
+             grid_geom->hasIsotropicRatios()) {
+
+            Box grown_box = box;
+            grown_box.grow(width);
+            if (connector.getHeadCoarserFlag()) {
+               grown_box.coarsen(connector.getRatio());
+            } else {
+               grown_box.refine(connector.getRatio());
+            }
+            grown_boxes.pushBack(grown_box);
+         } else {
+            bool head_is_finer = false;
+            bool base_is_finer = false;
+            if (connector.getRatio() != 1) {
+               if (connector.getHeadCoarserFlag()) {
+                  base_is_finer = true;
+               } else {
+                  head_is_finer = true;
+               }
+            }
+            BoxUtilities::growAndAdjustAcrossBlockBoundary(
+               grown_boxes,
+               box,
+               grid_geom,
+               connector.getBase().getRefinementRatio(),
+               connector.getRatio(),
+               width,
+               head_is_finer,
+               base_is_finer);
          }
-         for (Connector::ConstNeighborIterator si = connector.begin(ni);
-              si != connector.end(ni); ++si) {
-            const Box& neighbor = *si;
-            Box nabr_box(neighbor);
-            if (neighbor.getBlockId() != box.getBlockId()) {
-               grid_geom->transformBox(nabr_box,
-                  connector.getHead().getRefinementRatio(),
-                  box.getBlockId(),
-                  neighbor.getBlockId());
-            }
-            if (connector.getHeadCoarserFlag() == true) {
-               nabr_box.refine(connector.getRatio());
-            }
-            if (grown_box.intersects(nabr_box)) {
-               other.insertLocalNeighbor(neighbor, base_box_itr);
+         for (BoxContainer::iterator g_itr = grown_boxes.begin();
+              g_itr != grown_boxes.end(); ++g_itr) {
+            const Box& g_box = *g_itr;
+            const BlockId& g_block_id = g_box.getBlockId();
+            for (Connector::ConstNeighborIterator si = connector.begin(ni);
+                 si != connector.end(ni); ++si) {
+               const Box& neighbor = *si;
+               Box nabr_box(neighbor);
+               bool do_intersect = true;
+               if (neighbor.getBlockId() != g_block_id) {
+                  do_intersect = grid_geom->transformBox(nabr_box,
+                     connector.getHead().getRefinementRatio(),
+                     g_block_id,
+                     neighbor.getBlockId());
+               }
+               if (do_intersect) {
+                  if (g_box.intersects(nabr_box)) {
+                     other.insertLocalNeighbor(neighbor, base_box_itr);
+                  }
+               }
             }
          }
       }
@@ -941,6 +1006,17 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
          cent_refinement_ratio,
          IntVector::max(west_refinement_ratio, east_refinement_ratio));
 
+   const size_t num_blocks = cent_refinement_ratio.getNumBlocks();
+
+   IntVector width_limit(connector_width_limit);
+   if (width_limit.getNumBlocks() == 1 && num_blocks != 1) {
+      if (width_limit.max() == width_limit.min()) {
+         width_limit = IntVector(width_limit, num_blocks);
+      } else {
+         TBOX_ERROR("Anisotropic width limit argument for bridge must be of size equal to the number of blocks." << std::endl);
+      }
+   }
+
    /*
     * Using the bridge theorem, compute the largest bridge width for
     * which we can guarantee discovering all the overlaps (when
@@ -950,7 +1026,8 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
     * neither is known, we assume that both east and west nest in
     * center, and just to do something reasonable.
     */
-   IntVector output_width1(dim, 0), output_width2(dim, 0);
+   IntVector output_width1(zero_vector, num_blocks);
+   IntVector output_width2(zero_vector, num_blocks);
    if (west_nesting_is_known || east_nesting_is_known) {
       if (west_nesting_is_known) {
          output_width1 =
@@ -985,11 +1062,11 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
     * that the width limit is specified in the coarser of the east and
     * west refinement ratios.
     */
-   if (connector_width_limit >= IntVector::getZero(dim)) {
+   if (width_limit >= zero_vector) {
       const IntVector coarser_refinement_ratio =
          IntVector::min(west_refinement_ratio, east_refinement_ratio);
       const IntVector width_limit_in_finest_refinement_ratio(
-         connector_width_limit * finest_refinement_ratio / coarser_refinement_ratio);
+         width_limit * finest_refinement_ratio / coarser_refinement_ratio);
       if (!(width_limit_in_finest_refinement_ratio <= output_width_in_finest_refinement_ratio)) {
          /*
           * If user specifies a width limit, he is probably assuming
@@ -999,7 +1076,7 @@ OverlapConnectorAlgorithm::privateBridge_prologue(
           * we catch it immediately.
           */
          TBOX_ERROR("OverlapConnectorAlgorithm::privateBridge_prologue input error:\n"
-            << "The given connector width limit, " << connector_width_limit
+            << "The given connector width limit, " << width_limit
             << " (" << width_limit_in_finest_refinement_ratio
             << " in finest index space)\n"
             << "is not <= the maximum width of the bridge, "
@@ -1652,7 +1729,7 @@ OverlapConnectorAlgorithm::privateBridge_discover(
  * Find overlaps from visible_base_nabrs to head_rbbt.  Find only
  * overlaps for Boxes owned by owner_rank.
  *
- * On input, base_ni points to the first Box in visible_base_nabrs
+ * On entry, base_ni points to the first Box in visible_base_nabrs
  * owned by owner_rank.  Increment base_ni past those Boxes
  * processed and remove them from visible_base_nabrs.
  *
@@ -1677,6 +1754,9 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
 {
    const IntVector& head_refinement_ratio(
       bridging_connector.getHead().getRefinementRatio());
+
+   const hier::BaseGridGeometry& grid_geom = 
+      *bridging_connector.getBase().getGridGeometry();
 
    bool refine_base = false;
    bool coarsen_base = false;
@@ -1710,17 +1790,37 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
          tbox::plog << "Finding neighbors for non-periodic visible_base_nabrs_box "
                     << visible_base_nabrs_box << std::endl;
       }
-      Box base_box = visible_base_nabrs_box;
-      base_box.grow(bridging_connector.getConnectorWidth());
-      if (refine_base) {
-         base_box.refine(bridging_connector.getRatio());
-      } else if (coarsen_base) {
-         base_box.coarsen(bridging_connector.getRatio());
+      BoxContainer grown_boxes;
+      if (grid_geom.getNumberBlocks() == 1 || grid_geom.hasIsotropicRatios()) {
+         Box base_box = visible_base_nabrs_box;
+         base_box.grow(bridging_connector.getConnectorWidth());
+         if (refine_base) {
+            base_box.refine(bridging_connector.getRatio());
+         }
+         else if (coarsen_base) {
+            base_box.coarsen(bridging_connector.getRatio());
+         }
+         grown_boxes.pushBack(base_box);
+      } else {
+         BoxUtilities::growAndAdjustAcrossBlockBoundary(
+            grown_boxes,
+            visible_base_nabrs_box,
+            bridging_connector.getBase().getGridGeometry(),
+            bridging_connector.getBase().getRefinementRatio(),
+            bridging_connector.getRatio(),
+            bridging_connector.getConnectorWidth(),
+            refine_base,
+            coarsen_base);
       }
+
       found_nabrs.clear();
-      head_rbbt.findOverlapBoxes(found_nabrs, base_box, // base_box.getBlockId(),
-         head_refinement_ratio,
-         true /* include singularity block neighbors */);
+      for (BoxContainer::iterator g_itr = grown_boxes.begin();
+           g_itr != grown_boxes.end(); ++g_itr) {
+
+         head_rbbt.findOverlapBoxes(found_nabrs, *g_itr,
+                                    head_refinement_ratio,
+                                    true /* include singularity block neighbors */ );
+      }
       if (d_print_steps) {
          tbox::plog << "Found " << found_nabrs.size() << " neighbors:";
          found_nabrs.print(tbox::plog);

@@ -55,7 +55,7 @@ BoxLevel::BoxLevel(
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom):
 
    d_mpi(tbox::SAMRAI_MPI::getSAMRAIWorld()),
-   d_ratio(dim, 0),
+   d_ratio(IntVector::getZero(dim)),
 
    d_local_number_of_cells(0),
    d_global_number_of_cells(0),
@@ -334,6 +334,19 @@ BoxLevel::initializePrivate(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
    t_initialize_private->start();
 
+   d_ratio = ratio;
+   if (d_ratio.getNumBlocks() != grid_geom->getNumberBlocks()) {
+      if (d_ratio.max() == d_ratio.min()) {
+         size_t new_size = grid_geom->getNumberBlocks();
+         d_ratio = IntVector(d_ratio, new_size);
+      } else {
+         TBOX_ERROR("BoxLevel::initializePrivate: anisotropic refinement\n"
+            << "ratio " << ratio << " must be \n"
+            << "defined for " << grid_geom->getNumberBlocks() << " blocks."
+            << std::endl);
+      }
+   }
+
    clearForBoxChanges();
 
    d_mpi = mpi;
@@ -355,7 +368,6 @@ BoxLevel::initializePrivate(
       }
    }
 
-   d_ratio = ratio;
    d_parallel_state = parallel_state;
    d_global_number_of_cells = 0;
    d_global_number_of_boxes = 0;
@@ -460,7 +472,7 @@ BoxLevel::clear()
       d_mpi = tbox::SAMRAI_MPI(MPI_COMM_NULL);
       d_boxes.clear();
       d_global_boxes.clear();
-      d_ratio(0) = 0;
+      d_ratio(0,0) = 0;
       d_local_number_of_cells = 0;
       d_global_number_of_cells = 0;
       d_local_number_of_boxes = 0;
@@ -515,7 +527,6 @@ BoxLevel::swap(
 
       int tmpint;
       bool tmpbool;
-      IntVector tmpvec(level_a.getDim());
       Box tmpbox(level_a.getDim());
       ParallelState tmpstate;
       const BoxLevel* tmpmbl;
@@ -531,7 +542,7 @@ BoxLevel::swap(
       level_a.d_mpi = level_b.d_mpi;
       level_b.d_mpi = tmpmpi;
 
-      tmpvec = level_a.d_ratio;
+      IntVector tmpvec = level_a.d_ratio;
       level_a.d_ratio = level_b.d_ratio;
       level_b.d_ratio = tmpvec;
 
@@ -1512,9 +1523,18 @@ BoxLevel::putToRestart(
    restart_db->putInteger("d_nproc", d_mpi.getSize());
    restart_db->putInteger("d_rank", d_mpi.getRank());
    restart_db->putInteger("dim", d_ratio.getDim().getValue());
-   restart_db->putIntegerArray("d_ratio",
-      &d_ratio[0],
-      d_ratio.getDim().getValue());
+   const size_t nblocks = d_grid_geometry->getNumberBlocks();
+   for (BlockId::block_t b =0; b < nblocks; ++b) {
+      std::string ratio_name = "d_ratio_" +
+         tbox::Utilities::intToString(static_cast<int>(b)); 
+      std::vector<int> tmp_ratio(d_ratio.getDim().getValue());
+      for (unsigned int d = 0; d < d_ratio.getDim().getValue(); ++d) {
+         tmp_ratio[d] = d_ratio(b,d);
+      }
+      restart_db->putIntegerArray(ratio_name,
+         &(tmp_ratio[0]),
+         d_ratio.getDim().getValue());
+   }
    getBoxes().putToRestart(restart_db->putDatabase("mapped_boxes"));
 }
 
@@ -1534,9 +1554,19 @@ BoxLevel::getFromRestart(
                                 restart_db.getInteger("dim")));
    TBOX_ASSERT(getDim() == dim);
 
-   IntVector ratio(dim);
-   restart_db.getIntegerArray("d_ratio", &ratio[0], dim.getValue());
+   const size_t nblocks = grid_geom->getNumberBlocks();
 
+   IntVector ratio(nblocks, dim);
+   for (BlockId::block_t b = 0; b < nblocks; ++b) {
+      std::string ratio_name = "d_ratio_" +
+         tbox::Utilities::intToString(static_cast<int>(b));
+      std::vector<int> tmp_ratio(dim.getValue());
+      restart_db.getIntegerArray(ratio_name, &tmp_ratio[0], dim.getValue());
+      for (int d = 0; d < dim.getValue(); ++d) {
+         ratio(b,d) = tmp_ratio[d];
+      }
+   }
+ 
 #ifdef DEBUG_CHECK_ASSERTIONS
    const int version = restart_db.getInteger("HIER_MAPPED_BOX_LEVEL_VERSION");
    const int nproc = restart_db.getInteger("d_nproc");

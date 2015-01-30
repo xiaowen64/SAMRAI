@@ -199,8 +199,9 @@ GriddingAlgorithm::GriddingAlgorithm(
    getFromInput(input_db, is_from_restart);
 
    if (d_hierarchy->getMaxNumberOfLevels() > 1) {
-      std::vector<hier::IntVector> ratio_to_coarser(d_hierarchy->getMaxNumberOfLevels(),
-                                                    hier::IntVector::getOne(dim));
+      std::vector<hier::IntVector> ratio_to_coarser(
+         d_hierarchy->getMaxNumberOfLevels(),
+         hier::IntVector(dim,1));
       for (int ln = 0; ln < d_hierarchy->getMaxNumberOfLevels(); ++ln) {
          ratio_to_coarser[ln] = d_hierarchy->getRatioToCoarserLevel(ln);
       }
@@ -338,6 +339,7 @@ GriddingAlgorithm::makeCoarsestLevel(
    }
 
    const hier::IntVector& zero_vec(hier::IntVector::getZero(dim));
+   const size_t num_blocks = d_hierarchy->getGridGeometry()->getNumberBlocks();
 
    TBOX_ASSERT(d_hierarchy->getMaxNumberOfLevels() > 0);
 
@@ -356,7 +358,7 @@ GriddingAlgorithm::makeCoarsestLevel(
    hier::IntVector largest_patch(dim);
    hier::IntVector extend_ghosts(dim);
    {
-      hier::IntVector smallest_box_to_refine(dim);
+      hier::IntVector smallest_box_to_refine(dim, 0, num_blocks);
       // "false" argument: for_building_finer level = false
       getGriddingParameters(
          smallest_patch,
@@ -372,9 +374,7 @@ GriddingAlgorithm::makeCoarsestLevel(
     * for violations of user constraints.
     */
    if (!level_zero_exists) {
-      const int nblocks =
-         static_cast<int>(d_hierarchy->getGridGeometry()->getNumberBlocks());
-      for (int b = 0; b < nblocks; ++b) {
+      for (unsigned int b = 0; b < num_blocks; ++b) {
          hier::BoxContainer domain_boxes(
             d_hierarchy->getGridGeometry()->getPhysicalDomain(),
             hier::BlockId(b));
@@ -405,8 +405,8 @@ GriddingAlgorithm::makeCoarsestLevel(
       domain_box_level,
       domain_box_level,
       hier::IntVector::max(
-         hier::IntVector::getOne(dim),
-         d_hierarchy->getRequiredConnectorWidth(0, 0, true)));
+         d_hierarchy->getRequiredConnectorWidth(0, 0, true), 
+         hier::IntVector::getOne(dim)));
 
    if (d_barrier_and_time) {
       t_load_balance0->barrierAndStart();
@@ -466,8 +466,8 @@ GriddingAlgorithm::makeCoarsestLevel(
       *new_box_level,
       d_hierarchy->getGridGeometry()->getDomainSearchTree(),
       hier::IntVector::max(
-         hier::IntVector::getOne(dim),
-         d_hierarchy->getRequiredConnectorWidth(0, 0, true)));
+         d_hierarchy->getRequiredConnectorWidth(0, 0, true),
+         hier::IntVector::getOne(dim)));
 
    TBOX_ASSERT(!new_box_level->getMPI().hasReceivableMessage());    // Check errant messages.
 
@@ -1787,7 +1787,8 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
           * level (new_ln+1).
           */
 
-         hier::IntVector required_nesting(dim, d_hierarchy->getProperNestingBuffer(new_ln));
+         hier::IntVector required_nesting(
+            dim, d_hierarchy->getProperNestingBuffer(new_ln));
          required_nesting *= d_hierarchy->getRatioToCoarserLevel(new_ln + 1);
 
          bool locally_nests = false;
@@ -2001,6 +2002,8 @@ GriddingAlgorithm::computeTagToClusterWidths()
    d_tag_to_cluster_width.resize(d_hierarchy->getMaxNumberOfLevels() - 1,
       hier::IntVector::getZero(dim));
 
+   const size_t nblocks = d_hierarchy->getGridGeometry()->getNumberBlocks();
+
    for (int ln = d_hierarchy->getMaxNumberOfLevels() - 2; ln >= 0; --ln) {
       /*
        * Construct list of boxes covering the true tags on the level.
@@ -2012,7 +2015,7 @@ GriddingAlgorithm::computeTagToClusterWidths()
        */
 
       hier::IntVector smallest_patch(dim);
-      hier::IntVector smallest_box_to_refine(dim);
+      hier::IntVector smallest_box_to_refine(dim, 0, nblocks);
       hier::IntVector largest_patch(dim);
       hier::IntVector extend_ghosts(dim);
       // "true" argument: for_building_finer level = true
@@ -2093,7 +2096,6 @@ GriddingAlgorithm::checkBoundaryProximityViolation(
    size_t nerr(0);
 
    const tbox::Dimension& dim = d_hierarchy->getDim();
-
    for (hier::RealBoxConstIterator bi(box_level.getBoxes().realBegin());
         bi != box_level.getBoxes().realEnd(); ++bi) {
 
@@ -2106,17 +2108,19 @@ GriddingAlgorithm::checkBoundaryProximityViolation(
       for (hier::BoxContainer::iterator bli = external_parts.begin();
            bli != external_parts.end();
            ++bli) {
-         hier::IntVector leftover_size((*bli).numberCells());
+         hier::IntVector extend(
+            extend_ghosts.getBlockVector(bli->getBlockId()));
+         hier::IntVector leftover_size(bli->numberCells());
          for (int d = 0; d < dim.getValue(); ++d) {
-            if (leftover_size(d) != 0 && leftover_size(d) < extend_ghosts(d)) {
+            if (leftover_size(d) != 0 && leftover_size(d) < extend(d)) {
                ++nerr;
                TBOX_WARNING("GriddingAlgorithm::checkBoundaryProximityViolation:\n"
                   << "User-specified box (refined) " << *bi
                   << " violates boundary proximity.\n"
                   << "In direction " << d << ", it is "
-                  << extend_ghosts(d) - leftover_size(d)
+                  << extend(d) - leftover_size(d)
                   << " cells from a physical domain boundary.\n"
-                  << "All boxes must be at least " << extend_ghosts
+                  << "All boxes must be at least " << extend
                   << " from physical boundaries or touching the physical boundary."
                   << std::endl);
             }
@@ -2137,11 +2141,13 @@ void
 GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes) const {
    const tbox::Dimension& dim = d_hierarchy->getDim();
 
+   const size_t nblocks = d_hierarchy->getGridGeometry()->getNumberBlocks();
+
    hier::IntVector smallest_patch(dim);
    hier::IntVector largest_patch(dim);
    hier::IntVector extend_ghosts(dim);
    {
-      hier::IntVector smallest_box_to_refine(dim);
+      hier::IntVector smallest_box_to_refine(dim, 0, nblocks);
       // "false" argument: for_building_finer level = false
       getGriddingParameters(
          smallest_patch,
@@ -2277,10 +2283,12 @@ GriddingAlgorithm::checkBoundaryProximityViolation(
    const int tag_ln,
    const hier::BoxLevel& new_box_level) const
 {
+   const size_t nblocks = d_hierarchy->getGridGeometry()->getNumberBlocks();
+
    const tbox::Dimension& dim = d_hierarchy->getDim();
    hier::IntVector extend_ghosts(dim);
    hier::IntVector smallest_patch(dim);
-   hier::IntVector smallest_box_to_refine(dim);
+   hier::IntVector smallest_box_to_refine(dim, 0, nblocks);
    hier::IntVector largest_patch(dim);
    getGriddingParameters(smallest_patch,
       smallest_box_to_refine,
@@ -2718,11 +2726,12 @@ GriddingAlgorithm::readLevelBoxes(
 
       hier::Connector& new_to_coarser = coarser_to_new->getTranspose();
 
+      size_t num_blocks = new_box_level->getGridGeometry()->getNumberBlocks();
       hier::IntVector smallest_patch(dim);
       hier::IntVector largest_patch(dim);
       hier::IntVector extend_ghosts(dim);
       {
-         hier::IntVector smallest_box_to_refine(dim);
+         hier::IntVector smallest_box_to_refine(dim, 0, num_blocks);
          // "false" argument: for_building_finer level = false
          getGriddingParameters(smallest_patch,
             smallest_box_to_refine,
@@ -2736,7 +2745,10 @@ GriddingAlgorithm::readLevelBoxes(
          *coarser_to_new,
          ratio);
 
-      hier::IntVector patch_cut_factor(dim, d_tag_init_strategy->getErrorCoarsenRatio());
+      hier::IntVector patch_cut_factor(
+         dim,
+         d_tag_init_strategy->getErrorCoarsenRatio(),
+         num_blocks);
       patch_cut_factor.max(ratio);
 
       t_load_balance0->start();
@@ -2834,9 +2846,10 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
 
    const hier::IntVector& ratio = tag_level_to_fill_box_level.getRatio();
 
-   const hier::IntVector growth_in_tag_resolution =
-      hier::IntVector::ceilingDivide(fill_box_growth,
-         tag_level_to_fill_box_level.getRatio());
+   hier::IntVector growth_in_tag_resolution(fill_box_growth,
+                                            grid_geom->getNumberBlocks());
+   growth_in_tag_resolution.ceilingDivide(
+      tag_level_to_fill_box_level.getRatio());
 
    for (hier::PatchLevel::iterator ip(tag_level->begin());
         ip != tag_level->end(); ++ip) {
@@ -2866,7 +2879,7 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
          box.coarsen(ratio);
          if (neighbor.getBlockId() != patch->getBox().getBlockId()) {
             grid_geom->transformBox(box,
-               tag_level->getRatioToLevelZero(),
+               tag_level->getLevelNumber(),
                patch->getBox().getBlockId(),
                neighbor.getBlockId());
          }
@@ -3052,9 +3065,10 @@ GriddingAlgorithm::findRefinementBoxes(
     * nesting boxes.  Note that this may produce boxes which are too
     * small.  Thus, boxes are regrown later.
     */
+   const size_t nblocks = d_hierarchy->getGridGeometry()->getNumberBlocks();
 
    hier::IntVector smallest_patch(dim);
-   hier::IntVector smallest_box_to_refine(dim);
+   hier::IntVector smallest_box_to_refine(dim, 0, nblocks);
    hier::IntVector largest_patch(dim);
    hier::IntVector extend_ghosts(dim);
    // "true" argument: for_building_finer level = true
@@ -3066,7 +3080,8 @@ GriddingAlgorithm::findRefinementBoxes(
       true);
 
    const hier::IntVector extend_ghosts_in_tag_space =
-      hier::IntVector::ceilingDivide(extend_ghosts,
+      hier::IntVector::ceilingDivide(
+         extend_ghosts,
          d_hierarchy->getRatioToCoarserLevel(new_ln));
 
    boost::shared_ptr<hier::PatchLevel> level(
@@ -3078,9 +3093,6 @@ GriddingAlgorithm::findRefinementBoxes(
 
    t_find_boxes_containing_tags->barrierAndStart();
    hier::IntVector ratio = d_hierarchy->getRatioToCoarserLevel(new_ln);
-
-   const size_t nblocks =
-      d_hierarchy->getGridGeometry()->getNumberBlocks();
 
    hier::BoxContainer bounding_container;
    for (hier::BlockId::block_t bn = 0; bn < nblocks; ++bn) {
@@ -3196,7 +3208,8 @@ GriddingAlgorithm::findRefinementBoxes(
          for (int i = 0; i < dim.getValue(); ++i) {
             if (periodic_dirs(i)) {
                need_to_grow = true;
-               min_size(i) = smallest_box_to_refine(i);
+               min_size(i) =
+                  smallest_box_to_refine(0,i);
             }
          }
 
@@ -3217,7 +3230,8 @@ GriddingAlgorithm::findRefinementBoxes(
             tag_to_new->shrinkWidth(
                tag_to_new->getConnectorWidth() - smallest_box_to_refine);
             tag_to_new->getTranspose().shrinkWidth(
-               tag_to_new->getTranspose().getConnectorWidth() - smallest_box_to_refine);
+               tag_to_new->getTranspose().getConnectorWidth() -
+                  smallest_box_to_refine);
          }
       }
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -3442,7 +3456,7 @@ GriddingAlgorithm::refineNewBoxLevel(
       new_box_level.getRefinementRatio() * ratio);
    new_box_level.finalize();
 
-   const hier::IntVector& new_to_tag_width =
+   hier::IntVector new_to_tag_width =
       ratio * new_to_tag.getConnectorWidth();
    new_to_tag.setBase(new_box_level);
    new_to_tag.setWidth(new_to_tag_width, true);
@@ -3842,13 +3856,11 @@ GriddingAlgorithm::computeNestingViolator(
    TBOX_ASSERT(candidate_to_hierarchy.hasTranspose());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, candidate);
 
-   const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
+   hier::IntVector zero_vector(hier::IntVector::getZero(dim));
 
    // Check requirements on arguments.
-   TBOX_ASSERT(candidate_to_hierarchy.getRatio() ==
-      hier::IntVector::getOne(dim));
-   TBOX_ASSERT(candidate_to_hierarchy.getTranspose().getRatio() ==
-      hier::IntVector::getOne(dim));
+   TBOX_ASSERT(candidate_to_hierarchy.getRatio() == 1);
+   TBOX_ASSERT(candidate_to_hierarchy.getTranspose().getRatio() == 1);
 
    const hier::BaseGridGeometry& grid_geometry(
       *d_hierarchy->getGridGeometry());
@@ -4166,7 +4178,7 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
       current_min_size.min(new_box_level.getGlobalMinBoxSize(hier::BlockId(bn)));
    }
 
-   if (current_min_size >= min_size) {
+   if (min_size <= current_min_size) {
       /*
        * No box growing is needed.  Just shrink the Connector widths
        * to mimic expected the side-effect of applying a map with a
@@ -4235,7 +4247,7 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
       const hier::Box& omb = *ni;
       TBOX_ASSERT(!omb.isPeriodicImage());
 
-      if (omb.numberCells() <= min_size) {
+      if (omb.numberCells() >= min_size.getBlockVector(omb.getBlockId())) {
          // This box does not need growing.
          grown_box_level.addBox(omb);
          continue;
@@ -4249,7 +4261,7 @@ GriddingAlgorithm::growBoxesWithinNestingDomain(
          hier::BoxUtilities::growBoxWithinDomain(
             grown_box,
             nearby_nesting_boundary,
-            min_size);
+            min_size.getBlockVector(omb.getBlockId()));
          grown_box_level.addBox(grown_box);
          new_to_grown.insertLocalNeighbor(grown_box, omb.getBoxId());
       } else {
@@ -4307,8 +4319,8 @@ GriddingAlgorithm::getGriddingParameters(
       smallest_patch.max(max_ghosts);
    } else {
       const hier::IntVector periodic_dirs(
-         d_hierarchy->getGridGeometry()->getPeriodicShift(hier::IntVector::getOne(
-               dim)));
+         d_hierarchy->getGridGeometry()->getPeriodicShift(
+            hier::IntVector::getOne(dim)));
 
       for (int i = 0; i < dim.getValue(); ++i) {
          if (periodic_dirs(i)) {
@@ -4344,7 +4356,7 @@ GriddingAlgorithm::getGriddingParameters(
     */
    if (for_building_finer) {
 
-      smallest_box_to_refine = smallest_patch;
+      smallest_box_to_refine.setAll(smallest_patch);
 
       /*
        * Shouldn't this division be rounded up because it
@@ -4363,12 +4375,16 @@ GriddingAlgorithm::getGriddingParameters(
        * sz = max ghosts on Richardson-coarsened level_number+1, as
        * seen on level_number.
        */
-      const hier::IntVector sz(hier::IntVector::ceilingDivide(max_ghosts, den));
+      hier::IntVector multi_max_ghosts(max_ghosts,
+                                       d_hierarchy->getNumberBlocks());
+ 
+      const hier::IntVector sz(hier::IntVector::ceilingDivide(
+                                  multi_max_ghosts, den));
       smallest_box_to_refine.max(sz);
 
    } else {
 
-      smallest_box_to_refine = hier::IntVector(dim, -1);
+      smallest_box_to_refine.setAll(hier::IntVector(dim, -1));
 
    }
 
@@ -4376,8 +4392,13 @@ GriddingAlgorithm::getGriddingParameters(
     * Determine number of cells box may be extended to physical
     * domain boundary to accomodate ghost cells.
     */
-   extend_ghosts = max_ghosts;
-
+   if (extend_ghosts.getNumBlocks() == 1 &&
+       d_hierarchy->getNumberBlocks() > 1) {
+      extend_ghosts = hier::IntVector(max_ghosts,
+                                      d_hierarchy->getNumberBlocks());
+   } else {
+      extend_ghosts.setAll(max_ghosts);
+   }
 }
 
 /*
@@ -4413,7 +4434,7 @@ GriddingAlgorithm::warnIfDomainTooSmallInPeriodicDir() const
          hier::IntVector smallest_patch_size(dim);
          hier::IntVector largest_patch_size(dim);
          hier::IntVector extend_ghosts(dim);
-         hier::IntVector smallest_box_to_refine(dim);
+         hier::IntVector smallest_box_to_refine(dim, 0);
          // "false" argument: for_building_finer level = false
          getGriddingParameters(
             smallest_patch_size,

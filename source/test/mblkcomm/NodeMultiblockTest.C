@@ -364,10 +364,8 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                   grid_geometry->find(patch_blk_id, encon_blk_id);
                if (itr != grid_geometry->end(patch_blk_id)) {
                   rotation = (*itr).getRotationIdentifier();
-                  offset = (*itr).getShift();
+                  offset = (*itr).getShift(encon_level.getLevelNumber());
                }
-
-               offset *= patch.getPatchGeometry()->getRatio();
 
                hier::Transformation transformation(rotation, offset,
                                                    encon_blk_id,

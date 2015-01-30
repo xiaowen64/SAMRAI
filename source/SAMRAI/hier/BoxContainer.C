@@ -1398,7 +1398,8 @@ BoxContainer::unshiftPeriodicImageBoxes(
 
       for (const_iterator na = begin(); na != end(); ++na) {
          if (na->isPeriodicImage()) {
-            const Box unshifted_box(*na, zero_shift_number, refinement_ratio);
+            const Box unshifted_box(*na, zero_shift_number,
+                                    refinement_ratio);
             hint = output_boxes.insert(hint, unshifted_box);
          } else {
             hint = output_boxes.insert(hint, *na);
@@ -1560,7 +1561,6 @@ BoxContainer::contains(
  * Spatial manipulation of Boxes
  ************************************************************************
  */
-
 void
 BoxContainer::grow(
    const IntVector& ghosts)

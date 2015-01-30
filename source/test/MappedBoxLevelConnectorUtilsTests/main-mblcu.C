@@ -187,7 +187,7 @@ int main(
          TBOX_ERROR("BoxLevelConnectorUtils test: could not find entry GridGeometry"
             << "\nin input.");
       }
-      boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
+      boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
          new geom::GridGeometry(
             dim,
             "GridGeometry",
@@ -220,13 +220,13 @@ int main(
       plog << "Input database after initialization..." << std::endl;
       input_db->printClassData(plog);
 
-      const hier::IntVector& one_vector(hier::IntVector::getOne(dim));
-      const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
+      hier::IntVector one_vector(hier::IntVector::getOne(dim));
+      hier::IntVector zero_vector(hier::IntVector::getZero(dim));
 
       /*
        * How much to shrink the big BoxLevel to get the small one.
        */
-      const hier::IntVector shrinkage(dim, 1);
+      const hier::IntVector shrinkage(hier::IntVector::getOne(dim));
 
       hier::BoxLevelConnectorUtils mblcu;
 
@@ -320,6 +320,9 @@ int main(
 
       hier::BoxLevel small_domain_level = *small_box_level;
 
+      std::vector<hier::IntVector> refinement_ratios(
+         1, hier::IntVector(dim, 1, grid_geometry->getNumberBlocks()));
+
       /*
        * Refine Boxlevels as user specified.
        */
@@ -330,6 +333,7 @@ int main(
             dim.getValue());
          refineBoxLevel(big_box_level, big_refinement_ratio);
       }
+      refinement_ratios.push_back(big_box_level.getRefinementRatio());
 
       if (main_db->isInteger("small_refinement_ratio")) {
          hier::IntVector small_refinement_ratio(dim);
@@ -338,6 +342,16 @@ int main(
             dim.getValue());
          refineBoxLevel(*small_box_level, small_refinement_ratio);
       }
+      TBOX_ASSERT(small_box_level->getRefinementRatio() >
+                  big_box_level.getRefinementRatio());
+      refinement_ratios.push_back(small_box_level->getRefinementRatio() /
+                                  big_box_level.getRefinementRatio());
+
+      /*
+       * These steps are usually handled by PatchHierarchy, but this
+       * test does not use PatchHierarchy.
+       */
+      grid_geometry->setUpRatios(refinement_ratios);
 
       /*
        * Partition the big and small BoxLevels.
@@ -385,9 +399,8 @@ int main(
 
       const hier::Connector& small_to_big(
          small_box_level->createConnectorWithTranspose(big_box_level,
-            shrinkage,
-            (small_box_level->getRefinementRatio()
-             / big_box_level.getRefinementRatio()) * shrinkage));
+            refinement_ratios.back() * shrinkage,
+            shrinkage));
       small_to_big.cacheGlobalReducedData();
 
       const hier::Connector& big_to_small = small_to_big.getTranspose();
@@ -714,7 +727,7 @@ void partitionBoxes(
    hier::Connector* dummy_connector = 0;
 
    const hier::IntVector bad_interval(dim, 1);
-   const hier::IntVector cut_factor(dim, 1);
+   const hier::IntVector cut_factor(hier::IntVector::getOne(dim));
 
    load_balancer.loadBalanceBoxLevel(
       box_level,

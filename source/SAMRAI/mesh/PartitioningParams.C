@@ -26,7 +26,7 @@ PartitioningParams::PartitioningParams(
    double flexible_load_tol):
    d_min_size(min_size),
    d_max_size(max_size),
-   d_bad_interval(bad_interval),
+   d_bad_interval(bad_interval, grid_geometry.getNumberBlocks()),
    d_cut_factor(cut_factor),
    d_flexible_load_tol(flexible_load_tol),
    d_load_comparison_tol(1e-6)

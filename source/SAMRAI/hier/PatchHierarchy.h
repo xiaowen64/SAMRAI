@@ -542,6 +542,12 @@ public:
       return getNumberOfLevels() - 1;
    }
 
+   size_t
+   getNumberBlocks() const
+   {
+      return d_number_blocks;
+   } 
+
    /*!
     * @brief Check whether specified level can be refined.
     *
@@ -1105,7 +1111,7 @@ private:
    int d_number_levels;
 
    /*!
-    * @brief Number of blocks in the grid represent by the hierarchy.
+    * @brief Number of blocks in the grid represented by the hierarchy.
     */
    size_t d_number_blocks;
 
@@ -1210,7 +1216,7 @@ private:
     *
     * This is mutable because it may have to be updated by
     * getRequiredConnectorWidth(), which is a const method.
-    *
+    * 
     * See registerConnectorWidthRequestor() and getRequiredConnectorWidth().
     */
    mutable std::vector<IntVector> d_self_connector_widths;

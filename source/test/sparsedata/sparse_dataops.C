@@ -116,7 +116,6 @@ int main(
       ********************************************************************/
       hier::BoxContainer coarse_domain;
       hier::BoxContainer fine_domain;
-      hier::IntVector ratio(dim, 2);
 
       boost::shared_ptr<geom::CartesianGridGeometry> geometry(
          getGeometry(coarse_domain, fine_domain, dim));
@@ -124,6 +123,7 @@ int main(
       boost::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", geometry));
 
+      hier::IntVector ratio(dim, 2);
       hierarchy->setMaxNumberOfLevels(2);
       hierarchy->setRatioToCoarserLevel(ratio, 1);
 

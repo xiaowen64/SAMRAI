@@ -224,12 +224,24 @@ CascadePartitioner::loadBalanceBoxLevel(
    }
 
    // Set effective_cut_factor to least common multiple of cut_factor and d_tile_size.
-   hier::IntVector effective_cut_factor = cut_factor;
-   if (d_tile_size != hier::IntVector::getOne(d_dim)) {
-      for (int d = 0; d < d_dim.getValue(); ++d) {
-         while (effective_cut_factor[d] / d_tile_size[d] * d_tile_size[d] !=
-                effective_cut_factor[d]) {
-            effective_cut_factor[d] += cut_factor[d];
+   const size_t nblocks = hierarchy->getGridGeometry()->getNumberBlocks();
+   hier::IntVector effective_cut_factor(cut_factor, nblocks);
+   if ( d_tile_size != hier::IntVector::getOne(d_dim) ) {
+      if (cut_factor.getNumBlocks() == 1) {
+         for (hier::BlockId::block_t b = 0; b < nblocks; ++b) {
+            for ( int d=0; d<d_dim.getValue(); ++d ) {
+               while ( effective_cut_factor(b,d)/d_tile_size[d]*d_tile_size[d] != effective_cut_factor(b,d) ) {
+                  effective_cut_factor(b,d) += cut_factor[d];
+               }
+            }
+         }
+      }  else {
+         for (hier::BlockId::block_t b = 0; b < nblocks; ++b) {
+            for ( int d=0; d<d_dim.getValue(); ++d ) {
+               while ( effective_cut_factor(b,d)/d_tile_size[d]*d_tile_size[d] != effective_cut_factor(b,d) ) {
+                  effective_cut_factor(b,d) += cut_factor(b,d);
+               }
+            }
          }
       }
       if (d_print_steps) {
@@ -407,6 +419,7 @@ void CascadePartitioner::updateConnectors() const
     * Initialize empty balanced_box_level and mappings so they are
     * ready to be populated.
     */
+   hier::IntVector zero_vector(hier::IntVector::getZero(d_dim));
    hier::BoxLevel balanced_box_level(
       d_balance_box_level->getRefinementRatio(),
       d_balance_box_level->getGridGeometry(),

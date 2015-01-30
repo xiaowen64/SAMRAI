@@ -115,7 +115,8 @@ private:
     */
    PatchGeometry(
       const IntVector& ratio_to_level_zero,
-      const TwoDimBool& touches_regular_bdry);
+      const TwoDimBool& touches_regular_bdry,
+      const BlockId& block_id);
 
    /**
     * The virtual destructor for the patch geometry base class.
@@ -349,6 +350,7 @@ private:
    PatchBoundaries d_patch_boundaries;
 
    TwoDimBool d_touches_regular_bdry;
+   BlockId d_block_id;
 };
 
 }

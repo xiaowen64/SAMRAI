@@ -404,7 +404,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
     * between the regrid_start_time and the regrid_time.
     */
    double dt = (regrid_time - regrid_start_time)
-      / (double)(d_error_coarsen_ratio - 1);
+      / static_cast<double>(d_error_coarsen_ratio - 1);
 
    /*
     * Determine number of advance steps for time integration on the level.
@@ -686,7 +686,7 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
     * between the regrid_start_time and the regrid_time.
     */
    double dt = (regrid_time - regrid_start_time)
-      / (double)(d_error_coarsen_ratio - 1);
+      / static_cast<double>(d_error_coarsen_ratio - 1);
 
    /*
     * Determine start and end times for integration on the coarsened level.
@@ -937,7 +937,7 @@ StandardTagAndInitialize::checkCoarsenRatios(
        * Compute GCD on first coordinate direction of level 1
        */
       int error_coarsen_ratio = 0;
-      int gcd_level1 = ratio_to_coarser[1](0);
+      int gcd_level1 = ratio_to_coarser[1](0,0);
       if ((gcd_level1 % 2) == 0) {
          error_coarsen_ratio = 2;
       } else if ((gcd_level1 % 3) == 0) {
@@ -956,9 +956,9 @@ StandardTagAndInitialize::checkCoarsenRatios(
       for (int ln = 1; ln < static_cast<int>(ratio_to_coarser.size()); ++ln) {
 
          for (int d = 0; d < dim.getValue(); ++d) {
-            int gcd = GCD(error_coarsen_ratio, ratio_to_coarser[ln](d));
+            int gcd = GCD(error_coarsen_ratio, ratio_to_coarser[ln](0,d));
             if ((gcd % error_coarsen_ratio) != 0) {
-               gcd = ratio_to_coarser[ln](d);
+               gcd = ratio_to_coarser[ln](0,d);
                TBOX_ERROR(
                   getObjectName() << "\n"
                                   << "Unable to perform Richardson extrapolation because\n"

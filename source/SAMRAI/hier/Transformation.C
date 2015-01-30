@@ -697,7 +697,7 @@ Transformation::rotateIndex(
          index[0] = -index[0] - 1;
       }
    } else if (dim.getValue() == 2) {
-      int num_rotations = (int)rotation;
+      int num_rotations = static_cast<int>(rotation);
 
       for (int j = 0; j < num_rotations; ++j) {
          int tmp_in[2];

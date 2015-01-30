@@ -85,11 +85,13 @@ GraphLoadBalancer::loadBalanceBoxLevel(
 
    // Set effective_cut_factor to least common multiple of cut_factor and d_tile_size.
    hier::IntVector effective_cut_factor = cut_factor;
-   if (d_tile_size != hier::IntVector::getOne(d_dim)) {
-      for (int d = 0; d < d_dim.getValue(); ++d) {
-         while (effective_cut_factor[d] / d_tile_size[d] * d_tile_size[d] !=
-                effective_cut_factor[d]) {
-            effective_cut_factor[d] += cut_factor[d];
+   if ( d_tile_size != hier::IntVector::getOne(d_dim) ) {
+      const size_t nblocks = hierarchy->getGridGeometry()->getNumberBlocks();
+      for (hier::BlockId::block_t b = 0; b < nblocks; ++b) {
+         for ( unsigned int d=0; d<d_dim.getValue(); ++d ) {
+            while ( effective_cut_factor(b,d)/d_tile_size[d]*d_tile_size[d] != effective_cut_factor(b,d) ) {
+               effective_cut_factor(b,d) += cut_factor[d];
+            }
          }
       }
    }

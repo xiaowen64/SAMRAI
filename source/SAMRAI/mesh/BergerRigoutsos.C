@@ -42,8 +42,8 @@ BergerRigoutsos::BergerRigoutsos(
    // Parameters from clustering algorithm interface ...
    d_tag_data_index(-1),
    d_tag_val(1),
-   d_min_box(dim),
-   d_tag_to_new_width(dim, 1),
+   d_min_box(hier::IntVector::getZero(dim)),
+   d_tag_to_new_width(hier::IntVector::getZero(dim)),
 
    d_tag_level(),
    d_new_box_level(),
@@ -269,7 +269,8 @@ BergerRigoutsos::findBoxesContainingTags(
 
    for (hier::BoxContainer::const_iterator bb_itr = bound_boxes.begin();
         bb_itr != bound_boxes.end(); ++bb_itr) {
-      if (!(bb_itr->numberCells() >= min_box)) {
+      if (!(bb_itr->numberCells() >=
+          min_box.getBlockVector(bb_itr->getBlockId()))) {
          if (d_check_min_box_size == 'e') {
             TBOX_ERROR("BergerRigoutsos::findBoxesContainingTags input error:\n"
                << "Input box " << *bb_itr << " has size " << bb_itr->numberCells()
@@ -317,7 +318,8 @@ BergerRigoutsos::findBoxesContainingTags(
    d_level_number = tag_level->getLevelNumber();
 
    d_tag_to_new_width = d_build_zero_width_connector ?
-      hier::IntVector::getZero(tag_to_new_width.getDim()) : tag_to_new_width;
+      hier::IntVector::getZero(tag_to_new_width.getDim())
+      : tag_to_new_width;
 
    setComputeRelationships("BIDIRECTIONAL");
 

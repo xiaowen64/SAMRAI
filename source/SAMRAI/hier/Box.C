@@ -323,6 +323,8 @@ Box::operator = (
       if (!d_id_locked) {
          d_block_id = rhs.d_block_id;
          d_id = rhs.d_id;
+      } else if (d_block_id == rhs.d_block_id && d_id == rhs.d_id) {
+         //No operation needed, the id objects were already equal. 
       } else {
          TBOX_ERROR("Attempted to change BoxId that is locked in an ordered BoxContainer.");
       }
@@ -636,26 +638,30 @@ Box::refine(
    const IntVector& ratio)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
+   BlockId::block_t b = ratio.getNumBlocks() > 1 ? d_block_id.getBlockValue() : 0;
+   TBOX_ASSERT(b < ratio.getNumBlocks());
 
    bool negative_ratio = false;
-   for (dir_t d = 0; d < getDim().getValue(); ++d) {
-      if (ratio(d) < 0) {
+   for (unsigned int d = 0; d < getDim().getValue(); ++d) {
+      if (ratio(b,d) < 0) {
          negative_ratio = true;
          break;
       }
    }
 
    if (!negative_ratio) {
-      d_lo *= ratio;
-      d_hi = d_hi * ratio + (ratio - 1);
+      for (unsigned int i = 0; i < getDim().getValue(); ++i) {
+         d_lo(i) *= ratio(b,i);
+         d_hi(i) = d_hi(i) * ratio(b,i) + (ratio(b,i) - 1);
+      }
    } else {
-      for (dir_t i = 0; i < getDim().getValue(); ++i) {
-         if (ratio(i) > 0) {
-            d_lo(i) *= ratio(i);
-            d_hi(i) = d_hi(i) * ratio(i) + (ratio(i) - 1);
+      for (unsigned int i = 0; i < getDim().getValue(); ++i) {
+         if (ratio(b,i) > 0) {
+            d_lo(i) *= ratio(b,i);
+            d_hi(i) = d_hi(i) * ratio(b,i) + (ratio(b,i) - 1);
          } else {
-            d_lo(i) = coarsen(d_lo(i), -ratio(i));
-            d_hi(i) = coarsen(d_hi(i), -ratio(i));
+            d_lo(i) = coarsen(d_lo(i), -ratio(b,i));
+            d_hi(i) = coarsen(d_hi(i), -ratio(b,i));
          }
       }
    }

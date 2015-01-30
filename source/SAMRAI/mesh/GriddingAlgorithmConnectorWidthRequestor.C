@@ -56,8 +56,11 @@ GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
    const hier::IntVector max_stencil_width(
       patch_hierarchy.getGridGeometry()->getMaxTransferOpStencilWidth(dim));
 
-   fine_connector_widths.resize(max_levels - 1, hier::IntVector(dim));
-   self_connector_widths.resize(max_levels, hier::IntVector(dim));
+   fine_connector_widths.resize(max_levels - 1,
+      hier::IntVector::getZero(dim));
+   self_connector_widths.resize(max_levels,
+      hier::IntVector::getZero(dim));
+
 
    /*
     * Compute the Connector width needed to ensure all edges are found
@@ -71,7 +74,7 @@ GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
     * computeCoarserLevelConnectorWidthsFromFines() once the finer
     * level's Connector widths are computed.
     */
-   self_connector_widths[max_levels - 1] = max_ghost_width;
+   self_connector_widths[max_levels - 1].setAll(max_ghost_width);
    for (int ln = max_levels - 2; ln > -1; --ln) {
 
       computeCoarserLevelConnectorWidthsFromFines(
@@ -134,8 +137,8 @@ GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFrom
 {
    NULL_USE(max_stencil_width_at_coarse);
 
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const tbox::Dimension& dim(fine_to_fine_width.getDim());
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY7(dim,
       coarse_to_fine_width,
       coarse_to_coarse_width,
@@ -145,6 +148,8 @@ GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFrom
       max_stencil_width_at_coarse,
       max_ghost_width_at_coarse);
 #endif
+
+   const size_t num_blocks = fine_to_coarse_ratio.getNumBlocks();
 
    /*
     * Coarse-to-fine width must be big enough to cover the width at the
@@ -183,7 +188,9 @@ GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFrom
     * be have at least a 2-cell GCW (in L2 index space).
     */
    coarse_to_fine_width.max(
-      hier::IntVector::ceilingDivide(nesting_buffer_at_fine, fine_to_coarse_ratio));
+      hier::IntVector::ceilingDivide(
+         hier::IntVector(nesting_buffer_at_fine, num_blocks),
+         fine_to_coarse_ratio));
 
    /*
     * Coarse-to-coarse Connectors must cover all data that the finer

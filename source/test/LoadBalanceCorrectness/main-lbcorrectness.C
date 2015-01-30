@@ -1340,7 +1340,7 @@ void refineHead(
       head.getRefinementRatio() * refinement_ratio);
    head.finalize();
 
-   const hier::IntVector& head_to_ref_width =
+   hier::IntVector head_to_ref_width =
       refinement_ratio * head_to_ref.getConnectorWidth();
    head_to_ref.setBase(head);
    head_to_ref.setWidth(head_to_ref_width, true);

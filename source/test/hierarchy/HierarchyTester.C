@@ -40,7 +40,7 @@ HierarchyTester::HierarchyTester(
    const tbox::Dimension& dim,
    boost::shared_ptr<Database> hier_test_db):
    d_dim(dim),
-   d_ratio(dim, 0)
+   d_ratio(hier::IntVector::getZero(dim))
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(hier_test_db);
@@ -57,9 +57,10 @@ HierarchyTester::HierarchyTester(
       if (d_do_refine_test) {
          tbox::plog << "\nPerforming hierarchy refine test..." << std::endl;
          if (hier_test_db->keyExists("ratio")) {
-            int* tmp_ratio = &d_ratio[0];
-            hier_test_db->getIntegerArray("ratio", tmp_ratio, d_dim.getValue());
-            tbox::plog << "with ratio = " << d_ratio << std::endl;
+            std::vector<int> tmp_ratio =
+               hier_test_db->getIntegerVector("ratio");
+            tbox::plog << "with ratio = " << hier::IntVector(tmp_ratio) << std::endl;
+            d_ratio.setAll(hier::IntVector(tmp_ratio));
          } else {
             TBOX_ERROR(
                "HierarchyTester input error: no 'ratio' found in input"
@@ -75,9 +76,10 @@ HierarchyTester::HierarchyTester(
       if (d_do_coarsen_test) {
          tbox::plog << "\nPerforming hierarchy coarsen test..." << std::endl;
          if (hier_test_db->keyExists("ratio")) {
-            int* tmp_ratio = &d_ratio[0];
-            hier_test_db->getIntegerArray("ratio", tmp_ratio, d_dim.getValue());
-            tbox::plog << "with ratio = " << d_ratio << std::endl;
+            std::vector<int> tmp_ratio =
+               hier_test_db->getIntegerVector("ratio");
+            tbox::plog << "with ratio = " << hier::IntVector(tmp_ratio) << std::endl;
+            d_ratio.setAll(hier::IntVector(tmp_ratio));
          } else {
             TBOX_ERROR(
                "HierarchyTester input error: no 'ratio' found in input"
@@ -194,7 +196,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
    boost::shared_ptr<BaseGridGeometry> test_geometry(
       d_test_patch_hierarchy->getGridGeometry());
 
-   hier::IntVector one_vector(d_dim, 1);
+   const hier::IntVector& one_vector(hier::IntVector::getOne(d_dim));
 
    // Test #0a:
    if (init_geometry->getPeriodicShift(d_do_refine_test ? d_ratio : -d_ratio) !=
@@ -211,12 +213,14 @@ int HierarchyTester::runHierarchyTestAndVerify()
 
    const int npdboxes = init_phys_domain.size();
 
+   const hier::IntVector& block_ratio = d_ratio.getBlockVector(BlockId(0));
+
    // Test #0b:
    hier::BoxContainer::const_iterator ipditr = init_phys_domain.begin();
    hier::BoxContainer::const_iterator tpditr = test_phys_domain.begin();
    if (d_do_refine_test) {
       for (int ib = 0; ib < npdboxes; ++ib, ++ipditr, ++tpditr) {
-         if (!Box::refine(*ipditr, d_ratio).isSpatiallyEqual(*tpditr)) {
+         if (!Box::refine(*ipditr, block_ratio).isSpatiallyEqual(*tpditr)) {
             ++fail_count;
             tbox::perr << "FAILED: - Test #0b: test hierarchy physical domain"
                        << " box with array index " << ib
@@ -227,7 +231,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
    }
    if (d_do_coarsen_test) {
       for (int ib = 0; ib < npdboxes; ++ib, ++ipditr, ++tpditr) {
-         if (!Box::coarsen(*ipditr, d_ratio).isSpatiallyEqual(*tpditr)) {
+         if (!Box::coarsen(*ipditr, block_ratio).isSpatiallyEqual(*tpditr)) {
             ++fail_count;
             tbox::perr << "FAILED: - Test #0b: test hierarchy physical domain"
                        << " box with array index " << ib
@@ -347,7 +351,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
       hier::BoxContainer::const_iterator tditr = test_domain.begin();
       if (d_do_refine_test) {
          for (int ib = 0; ib < nboxes; ++ib, ++iditr, ++tditr) {
-            if (!Box::refine(*iditr, d_ratio).isSpatiallyEqual(*tditr)) {
+            if (!Box::refine(*iditr, block_ratio).isSpatiallyEqual(*tditr)) {
                ++fail_count;
                tbox::perr << "FAILED: - Test #8: for level number " << ln
                           << " refined domain box with array index " << ib
@@ -358,7 +362,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
       }
       if (d_do_coarsen_test) {
          for (int ib = 0; ib < nboxes; ++ib, ++iditr, ++tditr) {
-            if (!Box::coarsen(*iditr, d_ratio).isSpatiallyEqual(*tditr)) {
+            if (!Box::coarsen(*iditr, block_ratio).isSpatiallyEqual(*tditr)) {
                ++fail_count;
                tbox::perr << "FAILED: - Test #8: for level number " << ln
                           << " coarsened domain box with array index " << ib
@@ -402,7 +406,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
          // Test #9:
          if (d_do_refine_test) {
             if (!Box::refine(init_level->getBoxForPatch(box_id),
-                   d_ratio).isSpatiallyEqual(test_level->getBoxForPatch(box_id))) {
+                   block_ratio).isSpatiallyEqual(test_level->getBoxForPatch(box_id))) {
                ++fail_count;
                tbox::perr << "FAILED: - Test #9: for level number " << ln
                           << " refined patch box with array index " << box_id
@@ -412,7 +416,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
          }
 
          if (d_do_coarsen_test) {
-            if (!Box::coarsen(init_level->getBoxForPatch(box_id), d_ratio).isSpatiallyEqual(
+            if (!Box::coarsen(init_level->getBoxForPatch(box_id), block_ratio).isSpatiallyEqual(
                    test_level->getBoxForPatch(box_id))) {
                ++fail_count;
                tbox::perr << "FAILED: - Test #9: for level number " << ln
@@ -465,7 +469,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
 
          // Test #13:
          if (d_do_refine_test) {
-            if (!Box::refine(init_patch->getBox(), d_ratio).isSpatiallyEqual(
+            if (!Box::refine(init_patch->getBox(), block_ratio).isSpatiallyEqual(
                    test_patch->getBox())) {
                ++fail_count;
                tbox::perr << "FAILED: - Test #13: for level number " << ln
@@ -476,7 +480,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
             }
          }
          if (d_do_coarsen_test) {
-            if (!Box::coarsen(init_patch->getBox(), d_ratio).isSpatiallyEqual(
+            if (!Box::coarsen(init_patch->getBox(), block_ratio).isSpatiallyEqual(
                    test_patch->getBox())) {
                ++fail_count;
                tbox::perr << "FAILED: - Test #13: for level number " << ln

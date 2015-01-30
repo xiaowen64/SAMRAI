@@ -268,13 +268,17 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       }
    }
 
+   const size_t nblocks = balance_box_level.getGridGeometry()->getNumberBlocks();
+
    // Set effective_cut_factor to least common multiple of cut_factor and d_tile_size.
-   hier::IntVector effective_cut_factor = cut_factor;
+   hier::IntVector effective_cut_factor(cut_factor, nblocks);
    if (d_tile_size != hier::IntVector::getOne(d_dim)) {
-      for (int d = 0; d < d_dim.getValue(); ++d) {
-         while (effective_cut_factor[d] / d_tile_size[d] * d_tile_size[d] !=
-                effective_cut_factor[d]) {
-            effective_cut_factor[d] += cut_factor[d];
+      for (hier::BlockId::block_t b = 0; b < nblocks; ++b) {
+         for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
+            while (effective_cut_factor(b,d) / d_tile_size[d] * d_tile_size[d] !=
+                   effective_cut_factor(b,d)) {
+               effective_cut_factor(b,d) += cut_factor[d];
+            }
          }
       }
    }
@@ -291,6 +295,8 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
         bi != globalized_input_boxes.realEnd(); ++bi) {
       in_boxes.pushBack(*bi);
    }
+
+
 
    hier::BoxContainer physical_domain;
    domain_box_level.getGlobalBoxes(physical_domain);
@@ -423,7 +429,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
    TBOX_ASSERT(!physical_domain.empty());
    TBOX_ASSERT(min_size > hier::IntVector::getZero(d_dim));
    TBOX_ASSERT(max_size >= min_size);
-   TBOX_ASSERT(cut_factor > hier::IntVector::getZero(d_dim));
+   TBOX_ASSERT(cut_factor > hier::IntVector(d_dim,0));
    TBOX_ASSERT(bad_interval >= hier::IntVector::getZero(d_dim));
 
    /*

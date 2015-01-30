@@ -237,7 +237,9 @@ CartesianGridGeometry::makeCoarsenedGridGeometry(
    hier::BoxContainer::const_iterator fine_domain_itr = fine_domain.begin();
    hier::BoxContainer::iterator coarse_domain_itr = coarse_domain.begin();
    for (int ib = 0; ib < nboxes; ++ib, ++fine_domain_itr, ++coarse_domain_itr) {
-      hier::Box testbox = hier::Box::refine(*coarse_domain_itr, coarsen_ratio);
+      hier::Box testbox =
+         hier::Box::refine(*coarse_domain_itr,
+                           coarsen_ratio);
       if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
 #ifdef DEBUG_CHECK_ASSERTIONS
          tbox::plog
@@ -330,19 +332,22 @@ CartesianGridGeometry::setGeometryDataOnPatch(
 
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, patch, ratio_to_level_zero);
 
+   const hier::BlockId& block_id = patch.getBox().getBlockId();
+   hier::BlockId::block_t blk = block_id.getBlockValue();
+
 #ifdef DEBUG_CHECK_ASSERTIONS
    /*
     * All components of ratio must be nonzero.  Additionally,
     * all components not equal to 1 must have the same sign.
     */
-   TBOX_ASSERT(ratio_to_level_zero != hier::IntVector::getZero(dim));
+   TBOX_ASSERT(ratio_to_level_zero != 0);
 
    if (dim > tbox::Dimension(1)) {
-      for (int i = 0; i < dim.getValue(); ++i) {
-         TBOX_ASSERT((ratio_to_level_zero(i)
-                      * ratio_to_level_zero((i + 1) % dim.getValue()) > 0)
-            || (ratio_to_level_zero(i) == 1)
-            || (ratio_to_level_zero((i + 1) % dim.getValue()) == 1));
+      for (unsigned int i = 0; i < dim.getValue(); ++i) {
+         TBOX_ASSERT((ratio_to_level_zero(blk,i)
+                      * ratio_to_level_zero(blk,(i + 1) % dim.getValue()) > 0)
+            || (ratio_to_level_zero(blk,i) == 1)
+            || (ratio_to_level_zero(blk,(i + 1) % dim.getValue()) == 1));
       }
    }
 #endif
@@ -352,10 +357,10 @@ CartesianGridGeometry::setGeometryDataOnPatch(
    double x_up[SAMRAI::MAX_DIM_VAL];
 
    bool coarsen = false;
-   if (ratio_to_level_zero(0) < 0) coarsen = true;
-   hier::IntVector tmp_rat = (ratio_to_level_zero);
+   if (ratio_to_level_zero(blk,0) < 0) coarsen = true;
+   hier::IntVector tmp_rat = ratio_to_level_zero;
    for (int id2 = 0; id2 < dim.getValue(); ++id2) {
-      tmp_rat(id2) = abs(ratio_to_level_zero(id2));
+      tmp_rat(blk,id2) = abs(ratio_to_level_zero(blk,id2));
    }
 
    hier::Box index_box = d_domain_box;
@@ -381,8 +386,9 @@ CartesianGridGeometry::setGeometryDataOnPatch(
 
    boost::shared_ptr<CartesianPatchGeometry> geom(
       boost::make_shared<CartesianPatchGeometry>(ratio_to_level_zero,
-                                                 touches_regular_bdry,
-                                                 dx, x_lo, x_up));
+         touches_regular_bdry,
+         block_id,
+         dx, x_lo, x_up));
 
    patch.setPatchGeometry(geom);
 

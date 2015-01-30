@@ -8,6 +8,7 @@
  *
  ************************************************************************/
 #include "SAMRAI/hier/BoxContainerUtils.h"
+#include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
@@ -1274,7 +1275,7 @@ MappingConnectorAlgorithm::privateModify_discover(
  * Find overlaps from visible_base_nabrs to head_rbbt.  Find only
  * overlaps for Boxes owned by owner_rank.
  *
- * On input, base_ni points to the first Box in visible_base_nabrs
+ * On entry, base_ni points to the first Box in visible_base_nabrs
  * owned by owner_rank.  Increment base_ni past those Boxes
  * processed and remove them from visible_base_nabrs.
  *
@@ -1314,49 +1315,73 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
                     << base_box << std::endl;
       }
       Box compare_box = base_box;
-      compare_box.grow(mapped_connector.getConnectorWidth());
-      if (unmapped_connector.getHeadCoarserFlag()) {
-         compare_box.coarsen(unmapped_connector.getRatio());
-      } else if (unmapped_connector_transpose.getHeadCoarserFlag()) {
-         compare_box.refine(unmapped_connector_transpose.getRatio());
+      BoxContainer compare_boxes;
+
+      if (grid_geometry->getNumberBlocks() == 1 ||
+          grid_geometry->hasIsotropicRatios()) {
+         compare_box.grow(mapped_connector.getConnectorWidth());
+         if (unmapped_connector.getHeadCoarserFlag()) {
+            compare_box.coarsen(unmapped_connector.getRatio());
+         }
+         else if (unmapped_connector_transpose.getHeadCoarserFlag()) {
+            compare_box.refine(unmapped_connector_transpose.getRatio());
+         }
+         compare_boxes.push_back(compare_box);
+      } else {
+         TBOX_ASSERT(unmapped_connector.getRatio() ==
+                     unmapped_connector_transpose.getRatio());
+         BoxUtilities::growAndAdjustAcrossBlockBoundary(
+            compare_boxes,
+            compare_box,
+            grid_geometry,
+            mapped_connector.getBase().getRefinementRatio(),
+            unmapped_connector.getRatio(),
+            mapped_connector.getConnectorWidth(), 
+            unmapped_connector_transpose.getHeadCoarserFlag(),
+            unmapped_connector.getHeadCoarserFlag());
       }
 
-      BlockId compare_box_block_id(base_box.getBlockId());
-      Box transformed_compare_box(compare_box);
-
       std::vector<Box> found_nabrs;
-      InvertedNeighborhoodSet::const_iterator ini =
-         inverted_nbrhd.find(base_box);
-      if (ini != inverted_nbrhd.end()) {
-         const BoxIdSet& old_indices = ini->second;
+      for (BoxContainer::iterator c_itr = compare_boxes.begin();
+           c_itr != compare_boxes.end(); ++c_itr) {
+         const Box& comp_box = *c_itr;
+         BlockId compare_box_block_id(comp_box.getBlockId());
+         Box transformed_compare_box(comp_box);
 
-         for (BoxIdSet::const_iterator na = old_indices.begin();
-              na != old_indices.end(); ++na) {
-            Connector::ConstNeighborhoodIterator nbrhd =
-               mapping_connector.findLocal(*na);
-            if (nbrhd != mapping_connector.end()) {
-               /*
-                * There are anchor Boxes with relationships to
-                * the old Box identified by *na.
-                */
-               for (Connector::ConstNeighborIterator naa =
+         InvertedNeighborhoodSet::const_iterator ini =
+            inverted_nbrhd.find(base_box);
+         if (ini != inverted_nbrhd.end()) {
+            const BoxIdSet& old_indices = ini->second;
+
+            for (BoxIdSet::const_iterator na = old_indices.begin();
+                 na != old_indices.end(); ++na) {
+               Connector::ConstNeighborhoodIterator nbrhd =
+                  mapping_connector.findLocal(*na);
+               if (nbrhd != mapping_connector.end()) {
+                  /*
+                   * There are anchor Boxes with relationships to
+                   * the old Box identified by *na.
+                   */
+                  for (Connector::ConstNeighborIterator naa =
                        mapping_connector.begin(nbrhd);
-                    naa != mapping_connector.end(nbrhd); ++naa) {
-                  const Box& new_nabr(*naa);
-                  if (compare_box_block_id != new_nabr.getBlockId()) {
-                     // Re-transform compare_box and note its new BlockId.
-                     transformed_compare_box = compare_box;
-                     compare_box_block_id = new_nabr.getBlockId();
-                     if (compare_box_block_id != base_box.getBlockId()) {
-                        grid_geometry->transformBox(
-                           transformed_compare_box,
-                           head_refinement_ratio,
-                           new_nabr.getBlockId(),
-                           base_box.getBlockId());
+                       naa != mapping_connector.end(nbrhd); ++naa) {
+                     const Box& new_nabr(*naa);
+                     transformed_compare_box = comp_box;
+                     bool do_intersect = true;
+                     if (compare_box_block_id != new_nabr.getBlockId()) {
+                        // Re-transform compare_box and note its new BlockId.
+                        do_intersect = 
+                           grid_geometry->transformBox(
+                              transformed_compare_box,
+                              head_refinement_ratio,
+                              new_nabr.getBlockId(),
+                              compare_box_block_id);
                      }
-                  }
-                  if (transformed_compare_box.intersects(new_nabr)) {
-                     found_nabrs.insert(found_nabrs.end(), *naa);
+                     if (do_intersect) {
+                        if (transformed_compare_box.intersects(new_nabr)) {
+                           found_nabrs.insert(found_nabrs.end(), *naa);
+                        }
+                     }
                   }
                }
             }

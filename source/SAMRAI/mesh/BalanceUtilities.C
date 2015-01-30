@@ -1080,7 +1080,7 @@ BalanceUtilities::spatialBinPack(
     * compute offset which guarantees that the index space for all boxes
     * is positive.
     */
-   hier::IntVector offset(boxes.front().lower());
+   hier::Index offset(boxes.front().lower());
    for (hier::BoxContainer::iterator itr = boxes.begin();
         itr != boxes.end(); ++itr) {
       offset.min(itr->lower());
@@ -1097,7 +1097,7 @@ BalanceUtilities::spatialBinPack(
            itr != boxes.end(); ++itr) {
 
          /* compute center of box */
-         hier::IntVector center = (itr->upper() + itr->lower()) / 2;
+         hier::Index center = (itr->upper() + itr->lower()) / 2;
 
          if (dim == tbox::Dimension(1)) {
             spatial_keys[i].setKey(center(0) - offset(0));
@@ -1276,7 +1276,7 @@ BalanceUtilities::recursiveBisectionUniform(
 
       TBOX_ASSERT(!box2chop.empty());
 
-      double boxwork = (double)box2chop.size();
+      double boxwork = static_cast<double>(box2chop.size());
 
       if (boxwork <= ((1.0 + workload_tolerance) * ideal_workload)) {
 
@@ -1293,6 +1293,13 @@ BalanceUtilities::recursiveBisectionUniform(
             bad_interval,
             physical_domain);
 
+         hier::IntVector box_cut_factor(cut_factor.getDim());
+         if (cut_factor.getNumBlocks() == 1) {
+            box_cut_factor = cut_factor;
+         } else {
+            box_cut_factor = cut_factor.getBlockVector(box2chop.getBlockId());
+         }
+
          hier::BoxContainer tempboxes;
          std::list<double> temploads;
          privateRecursiveBisectionUniformSingleBox(
@@ -1303,7 +1310,7 @@ BalanceUtilities::recursiveBisectionUniform(
             ideal_workload,
             workload_tolerance,
             min_size,
-            cut_factor,
+            box_cut_factor,
             bad_cut_points);
 
          out_boxes.spliceBack(tempboxes);
@@ -1381,6 +1388,13 @@ BalanceUtilities::recursiveBisectionNonuniform(
             bad_interval,
             physical_domain);
 
+         hier::IntVector box_cut_factor(cut_factor.getDim());
+         if (cut_factor.getNumBlocks() == 1) {
+            box_cut_factor = cut_factor;
+         } else {
+            box_cut_factor = cut_factor.getBlockVector(box2chop.getBlockId());
+         }
+
          hier::BoxContainer tempboxes;
          std::list<double> temploads;
          privateRecursiveBisectionNonuniformSingleBox(
@@ -1393,7 +1407,7 @@ BalanceUtilities::recursiveBisectionNonuniform(
             ideal_workload,
             workload_tolerance,
             min_size,
-            cut_factor,
+            box_cut_factor,
             bad_cut_points);
 
          out_boxes.spliceBack(tempboxes);
@@ -2262,15 +2276,16 @@ BalanceUtilities::prebalanceBoxLevel(
     * so that on return from this method, they will be correct for the new
     * balance_box_level.
     */
+   const hier::IntVector& zero_vector(hier::IntVector::getZero(balance_box_level.getDim()));
    hier::MappingConnector balance_to_tmp(
       balance_box_level,
       tmp_box_level,
-      hier::IntVector::getZero(balance_box_level.getDim()));
+      zero_vector);
 
    hier::MappingConnector tmp_to_balance(
       tmp_box_level,
       balance_box_level,
-      hier::IntVector::getZero(balance_box_level.getDim()));
+      zero_vector);
 
    balance_to_tmp.setTranspose(&tmp_to_balance, false);
 
