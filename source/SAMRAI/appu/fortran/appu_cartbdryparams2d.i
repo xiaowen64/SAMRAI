@@ -1,7 +1,7 @@
 c
 c  File:        $URL$
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2014 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2015 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Description: m4 include file for 2d boundary constant common blocks
 c

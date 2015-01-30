@@ -1,7 +1,7 @@
 c
 c  File:        $URL$
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2014 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2015 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Description: F77 routines for debugging 2d patch data types.
 c
