@@ -251,7 +251,7 @@ public:
    operator [] (
       const unsigned int i)
    {
-      TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
+      TBOX_ASSERT(i < d_dim.getValue());
       TBOX_ASSERT(d_num_blocks == 1);
       return d_vector[i];
    }
@@ -267,7 +267,7 @@ public:
    operator [] (
       const unsigned int i) const
    {
-      TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
+      TBOX_ASSERT(i < d_dim.getValue());
       TBOX_ASSERT(d_num_blocks == 1);
       return d_vector[i];
    }
@@ -283,7 +283,7 @@ public:
    operator () (
       const unsigned int i)
    {
-      TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
+      TBOX_ASSERT(i < d_dim.getValue());
       TBOX_ASSERT(d_num_blocks == 1);
       return d_vector[i];
    }
@@ -299,7 +299,7 @@ public:
    operator () (
       const unsigned int i) const
    {
-      TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
+      TBOX_ASSERT(i < d_dim.getValue());
       TBOX_ASSERT(d_num_blocks == 1);
       return d_vector[i];
    }
@@ -318,8 +318,8 @@ public:
       const BlockId::block_t b, 
       const unsigned int i)
    {
-      TBOX_ASSERT(b >= 0 && b < d_num_blocks);
-      TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
+      TBOX_ASSERT(b < d_num_blocks);
+      TBOX_ASSERT(i < d_dim.getValue());
       return d_vector[b*d_dim.getValue() + i];
    }
 
@@ -338,8 +338,8 @@ public:
       const BlockId::block_t b, 
       const unsigned int i) const
    {
-      TBOX_ASSERT(b >= 0 && b < d_num_blocks);
-      TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
+      TBOX_ASSERT(b < d_num_blocks);
+      TBOX_ASSERT(i < d_dim.getValue());
       return d_vector[b*d_dim.getValue() + i];
    }
 

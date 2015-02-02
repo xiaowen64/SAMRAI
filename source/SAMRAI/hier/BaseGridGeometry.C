@@ -3037,7 +3037,7 @@ void
 BaseGridGeometry::setUpRatios(
    const std::vector<IntVector>& ratio_to_coarser)
 {
-   int max_levels = ratio_to_coarser.size();
+   int max_levels = static_cast<int>(ratio_to_coarser.size());
    TBOX_ASSERT(max_levels > 0);
 
    d_ratio_to_level_zero.resize(max_levels,
@@ -3065,7 +3065,7 @@ BaseGridGeometry::setUpRatios(
 void
 BaseGridGeometry::setUpFineLevelTransformations()
 {
-   int max_levels = d_ratio_to_level_zero.size();
+   int max_levels = static_cast<int>(d_ratio_to_level_zero.size());
 
    const IntVector& one_vector = IntVector::getOne(d_dim);
 
@@ -3105,9 +3105,11 @@ BaseGridGeometry::setUpFineLevelTransformations()
             IntVector base_bdry_dir(IntVector::getZero(d_dim));
             for (int d = 0; d < d_dim.getValue(); ++d) {
                if (shared_size[d] == 1) {
-                  if (shared_base_nodes.upper(d) == base_node_box.lower(d)) {
+                  if (shared_base_nodes.upper(static_cast<Box::dir_t>(d)) ==
+                      base_node_box.lower(static_cast<Box::dir_t>(d))) {
                      base_bdry_dir[d] = -1;
-                  } else if (shared_base_nodes.lower(d) == base_node_box.upper(d)) {
+                  } else if (shared_base_nodes.lower(static_cast<Box::dir_t>(d)) ==
+                             base_node_box.upper(static_cast<Box::dir_t>(d))) {
                      base_bdry_dir[d] = 1;
                   }
                }
@@ -3136,9 +3138,11 @@ BaseGridGeometry::setUpFineLevelTransformations()
             IntVector nbr_bdry_dir(IntVector::getZero(d_dim));
             for (int d = 0; d < d_dim.getValue(); ++d) {
                if (shared_size[d] == 1) {
-                  if (shared_nbr_nodes.upper(d) == true_nbr_node.lower(d)) {
+                  if (shared_nbr_nodes.upper(static_cast<Box::dir_t>(d)) ==
+                      true_nbr_node.lower(static_cast<Box::dir_t>(d))) {
                      nbr_bdry_dir[d] = -1;
-                  } else if (shared_nbr_nodes.lower(d) == true_nbr_node.upper(d)) {
+                  } else if (shared_nbr_nodes.lower(static_cast<Box::dir_t>(d)) ==
+                             true_nbr_node.upper(static_cast<Box::dir_t>(d))) {
                      nbr_bdry_dir[d] = 1;
                   }
                }
@@ -3164,20 +3168,26 @@ BaseGridGeometry::setUpFineLevelTransformations()
             Index nbr_cell(refined_nbr.lower());
             for (int d = 0; d < d_dim.getValue(); ++d) {
                if (base_bdry_dir[d] == -1) {
-                  base_cell[d] = refined_base.lower(d);
+                  base_cell[d] =
+                     refined_base.lower(static_cast<Box::dir_t>(d));
                } else if (base_bdry_dir[d] == 1) {
-                  base_cell[d] = refined_base.upper(d);
+                  base_cell[d] =
+                     refined_base.upper(static_cast<Box::dir_t>(d));
                } else {
-                  base_cell[d] = shared_base_nodes.lower(d) +
-                     ((shared_base_nodes.upper(d) - shared_base_nodes.lower(d)) / 2);
+                  base_cell[d] =
+                     shared_base_nodes.lower(static_cast<Box::dir_t>(d)) +
+                     ((shared_base_nodes.upper(static_cast<Box::dir_t>(d)) -
+                       shared_base_nodes.lower(static_cast<Box::dir_t>(d)))/2);
                }
                if (nbr_bdry_dir[d] == -1) {
-                  nbr_cell[d] = refined_nbr.lower(d);
+                  nbr_cell[d] = refined_nbr.lower(static_cast<Box::dir_t>(d));
                } else if (nbr_bdry_dir[d] == 1) {
-                  nbr_cell[d] = refined_nbr.upper(d);
+                  nbr_cell[d] = refined_nbr.upper(static_cast<Box::dir_t>(d));
                } else {
-                  nbr_cell[d] = shared_nbr_nodes.lower(d) +
-                     ((shared_nbr_nodes.upper(d) - shared_nbr_nodes.lower(d)) / 2);
+                  nbr_cell[d] =
+                     shared_nbr_nodes.lower(static_cast<Box::dir_t>(d)) +
+                     ((shared_nbr_nodes.upper(static_cast<Box::dir_t>(d)) -
+                       shared_nbr_nodes.lower(static_cast<Box::dir_t>(d)))/2);
                }
             }
 
@@ -3195,9 +3205,6 @@ BaseGridGeometry::setUpFineLevelTransformations()
 
             IntVector final_shift (d_dim);
 
-            int nbr_size = refined_nbr.size();
-            int base_size = refined_base.size();
-
             Box test_box(refined_nbr);
             test_box.rotate(rotation);
             test_box.shift(test_shift);
@@ -3208,10 +3215,11 @@ BaseGridGeometry::setUpFineLevelTransformations()
             for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
                if (sh_num_cells[d] ==
                    current_ratio(shared_nbr_nodes.getBlockId().getBlockValue(),d)) {
-                  shared_nbr_nodes.setLower(d, shared_nbr_nodes.upper(d));
+                  shared_nbr_nodes.setLower(static_cast<Box::dir_t>(d),
+                     shared_nbr_nodes.upper(static_cast<Box::dir_t>(d)));
                }
             }
-            int sh_size = shared_nbr_nodes.size();
+            size_t sh_size = shared_nbr_nodes.size();
 
             if ((test_box_node * refined_base_node).size() == sh_size) {
                final_shift = test_shift;

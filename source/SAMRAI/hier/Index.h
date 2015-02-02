@@ -474,7 +474,7 @@ public:
    operator [] (
       const unsigned int i)
    {
-      TBOX_ASSERT(i >= 0 && i < getDim().getValue());
+      TBOX_ASSERT(i < getDim().getValue());
       return d_index[i];
    }
 
@@ -487,7 +487,7 @@ public:
    operator [] (
       const unsigned int i) const
    {
-      TBOX_ASSERT(i >= 0 && i < getDim().getValue());
+      TBOX_ASSERT(i < getDim().getValue());
       return d_index[i];
    }
 
@@ -500,7 +500,7 @@ public:
    operator () (
       const unsigned int i)
    {
-      TBOX_ASSERT(i >= 0 && i < getDim().getValue());
+      TBOX_ASSERT(i < getDim().getValue());
       return d_index[i];
    }
 
@@ -513,7 +513,7 @@ public:
    operator () (
       const unsigned int i) const
    {
-      TBOX_ASSERT(i >= 0 && i < getDim().getValue());
+      TBOX_ASSERT(i < getDim().getValue());
       return d_index[i];
    }
 

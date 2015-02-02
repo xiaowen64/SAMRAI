@@ -2218,8 +2218,6 @@ Connector::checkOverlapCorrectness(
       missing->eraseEmptyNeighborSets();
    }
 
-   const tbox::Dimension& dim(d_ratio.getDim());
-
    const BoxId dummy_box_id;
 
    /*

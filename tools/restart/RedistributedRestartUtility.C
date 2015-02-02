@@ -779,7 +779,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
       level_out_dbs[i]->putBool("d_is_mapped_box_level", is_mapped_box_level);
       level_out_dbs[i]->putInteger("HIER_MAPPED_BOX_LEVEL_VERSION", version);
       level_out_dbs[i]->putInteger("dim", dim);
-      for (int nb = 0; nb < ratio.size(); ++nb) {
+      for (int nb = 0; nb < static_cast<int>(ratio.size()); ++nb) {
          string ratio_name = "d_ratio_" + tbox::Utilities::intToString(nb);
          level_out_dbs[i]->putIntegerVector(ratio_name, ratio[nb]);
       }

@@ -215,7 +215,8 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
     * the largest of properly converted values for shrink_cells,
     * shrink_distance and nesting width.
     */
-   const int nblocks = hierarchy->getGridGeometry()->getNumberBlocks();
+   const int nblocks =
+      static_cast<int>(hierarchy->getGridGeometry()->getNumberBlocks());
    hier::IntVector shrink_width(dim, hierarchy->getProperNestingBuffer(tag_ln), nblocks);
    shrink_width.max(shrink_cells);
 

@@ -195,7 +195,7 @@ operator >> (
       while (s.get() != '(') ;
       for (unsigned int i = 0; i < rhs.getDim().getValue(); ++i) {
          s >> rhs(b,i);
-         if (i < rhs.getDim().getValue() - 1)
+         if (static_cast<int>(i) < rhs.getDim().getValue() - 1)
             while (s.get() != ',') ;
       }
       while (s.get() != ')') ;
@@ -213,7 +213,7 @@ std::ostream& operator << (
       s << '(';
       for (unsigned int i = 0; i < rhs.getDim().getValue(); ++i) {
          s << rhs(b,i);
-         if (i < rhs.getDim().getValue() - 1)
+         if (static_cast<int>(i) < rhs.getDim().getValue() - 1)
             s << ",";
       }
       s << ')';
@@ -269,7 +269,8 @@ IntVector::sortIntVector(
       for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
          d_vector[offset + d] = static_cast<int>(d);
       }
-      for (unsigned int d0 = 0; d0 < d_dim.getValue() - 1; ++d0) {
+      for (unsigned int d0 = 0;
+           d0 < static_cast<unsigned int>(d_dim.getValue() - 1); ++d0) {
          for (unsigned int d1 = d0 + 1; d1 < d_dim.getValue(); ++d1) {
             unsigned int v0 = static_cast<unsigned int>(d_vector[offset + d0]);
             unsigned int v1 = static_cast<unsigned int>(d_vector[offset + d1]);
@@ -281,7 +282,8 @@ IntVector::sortIntVector(
          }
       }
 #ifdef DEBUG_CHECK_ASSERTIONS
-      for (unsigned int d = 0; d < d_dim.getValue() - 1; ++d) {
+      for (unsigned int d = 0;
+           d < static_cast<unsigned int>(d_dim.getValue() - 1); ++d) {
          unsigned int v0 = static_cast<unsigned int>(d_vector[offset + d]);
          unsigned int v1 = static_cast<unsigned int>(d_vector[offset + d + 1]);
          TBOX_ASSERT(values(v0) <= values(v1));

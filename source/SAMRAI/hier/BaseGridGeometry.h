@@ -842,7 +842,10 @@ public:
       addTransformation(const Transformation& transformation,
                         int level_num)
       {
-         TBOX_ASSERT(level_num == d_transformation.size());
+#ifndef DEBUG_CHECK_ASSERTIONS
+         NULL_USE(level_num);
+#endif
+         TBOX_ASSERT(static_cast<unsigned int>(level_num) == d_transformation.size());
          d_transformation.push_back(transformation);
       }
 
@@ -1188,7 +1191,7 @@ private:
    getEquivalentLevelNumber(const IntVector& ratio_to_level_zero) const
    {
       int level_num = -1;
-      for (int i = 0; i < d_ratio_to_level_zero.size(); ++i) {
+      for (int i = 0; i < static_cast<int>(d_ratio_to_level_zero.size()); ++i) {
          if (d_ratio_to_level_zero[i] == ratio_to_level_zero) {
             level_num = i;
             break; 

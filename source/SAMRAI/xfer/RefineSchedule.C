@@ -1443,7 +1443,6 @@ RefineSchedule::setupCoarseInterpBoxLevel(
         ei != dst_to_unfilled.end(); ++ei) {
 
       const hier::BoxId& dst_box_id = *ei;
-      const hier::Box& dst_box = *dst_to_unfilled.getBase().getBox(dst_box_id);
 
       hier::Connector::NeighborhoodIterator dst_base_box_itr =
          dst_to_coarse_interp->findLocal(dst_box_id);
@@ -1523,7 +1522,8 @@ RefineSchedule::setupCoarseInterpBoxLevel(
 
             for (hier::BlockId::block_t blk = dst_blk;
                  blk < nblocks + dst_blk; ++blk) {
-               hier::BlockId::block_t cur_blk = blk % nblocks;
+               hier::BlockId::block_t cur_blk =
+                  static_cast<hier::BlockId::block_t>(blk % nblocks);
                for (hier::BoxContainer::iterator bi =
                     sheared_coarse_interp_boxes[cur_blk].begin();
                     bi != sheared_coarse_interp_boxes[cur_blk].end(); ++bi) {
@@ -2517,7 +2517,9 @@ RefineSchedule::refineScratchData(
 {
    t_refine_scratch_data->start();
 
+#ifdef DEBUG_CHECK_ASSERTIONS
    bool is_encon = (fine_level == d_encon_level);
+#endif
    int nbr_blk_copies = 0;
 
    if (d_refine_patch_strategy) {
