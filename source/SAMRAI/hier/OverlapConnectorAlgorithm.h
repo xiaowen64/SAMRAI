@@ -648,9 +648,8 @@ private:
       const Box& box,
       BoxContainer& neighbors,
       BoxContainer& scratch_space,
-      //std::vector<Box>& neighbors,
-      //std::vector<Box>& scratch_space,
-      const IntVector& neighbor_refinement_ratio) const;
+      const IntVector& neighbor_refinement_ratio,
+      const PeriodicShiftCatalog& shift_catalog) const;
 
    /*!
     * @brief Read extra debugging flag from input database.

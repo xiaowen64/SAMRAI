@@ -1698,6 +1698,8 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
    }
 #endif
 
+   const PeriodicShiftCatalog& shift_catalog =
+      bridging_connector.getHead().getGridGeometry()->getPeriodicShiftCatalog(); 
    // Should be made a member to avoid repetitive alloc/dealloc.
    // Reserve in privateBridge and used here.
    BoxContainer found_nabrs, scratch_found_nabrs;
@@ -1732,7 +1734,8 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
                visible_base_nabrs_box,
                found_nabrs,
                scratch_found_nabrs,
-               bridging_connector.getHead().getRefinementRatio());
+               bridging_connector.getHead().getRefinementRatio(),
+               shift_catalog);
          }
          if (owner_rank != bridging_connector.getMPI().getRank()) {
             // Pack up info for sending.
@@ -1802,12 +1805,10 @@ OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
    const Box& box,
    BoxContainer& neighbors,
    BoxContainer& scratch_space,
-   const IntVector& neighbor_refinement_ratio) const
+   const IntVector& neighbor_refinement_ratio,
+   const PeriodicShiftCatalog& shift_catalog) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(box, neighbor_refinement_ratio);
-
-   const PeriodicShiftCatalog* shift_catalog =
-      PeriodicShiftCatalog::getCatalog(box.getDim());
 
    scratch_space.clear();
 //   scratch_space.reserve(neighbors.size());
@@ -1815,13 +1816,16 @@ OverlapConnectorAlgorithm::privateBridge_unshiftOverlappingNeighbors(
         na != neighbors.end(); ++na) {
       Box& nabr = *na;
       IntVector sum_shift =
-         shift_catalog->shiftNumberToShiftDistance(nabr.getPeriodicId())
-         - shift_catalog->shiftNumberToShiftDistance(box.getPeriodicId());
+         shift_catalog.shiftNumberToShiftDistance(nabr.getPeriodicId())
+         - shift_catalog.shiftNumberToShiftDistance(box.getPeriodicId());
       const PeriodicId new_shift_number =
-         shift_catalog->shiftDistanceToShiftNumber(sum_shift);
+         shift_catalog.shiftDistanceToShiftNumber(sum_shift);
       if (new_shift_number.getPeriodicValue() !=
-          shift_catalog->getInvalidShiftNumber()) {
-         nabr.initialize(nabr, new_shift_number, neighbor_refinement_ratio);
+          shift_catalog.getInvalidShiftNumber()) {
+         nabr.initialize(nabr,
+                         new_shift_number,
+                         neighbor_refinement_ratio,
+                         shift_catalog);
          scratch_space.pushBack(nabr);
       }
    }

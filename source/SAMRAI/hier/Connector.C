@@ -656,12 +656,12 @@ Connector::reorderRelationshipsByHead(
 {
    const tbox::Dimension& dim(getBase().getDim());
 
-   const hier::PeriodicShiftCatalog* shift_catalog =
-      hier::PeriodicShiftCatalog::getCatalog(dim);
-
    const hier::BoxLevel& base_box_level = getBase();
    const hier::IntVector& base_ratio = getBase().getRefinementRatio();
    const hier::IntVector& head_ratio = getHead().getRefinementRatio();
+
+   const PeriodicShiftCatalog& shift_catalog =
+      base_box_level.getGridGeometry()->getPeriodicShiftCatalog();
 
    hier::Box shifted_box(dim), unshifted_nabr(dim);
    relationships_by_head.clear();
@@ -672,12 +672,14 @@ Connector::reorderRelationshipsByHead(
          if (nabr.isPeriodicImage()) {
             shifted_box.initialize(
                base_box,
-               shift_catalog->getOppositeShiftNumber(nabr.getPeriodicId()),
-               base_ratio);
+               shift_catalog.getOppositeShiftNumber(nabr.getPeriodicId()),
+               base_ratio,
+               shift_catalog);
             unshifted_nabr.initialize(
                nabr,
-               shift_catalog->getZeroShiftNumber(),
-               head_ratio);
+               shift_catalog.getZeroShiftNumber(),
+               head_ratio,
+               shift_catalog);
             relationships_by_head[unshifted_nabr].insert(shifted_box);
          } else {
             relationships_by_head[nabr].insert(base_box);
@@ -1092,8 +1094,8 @@ Connector::doLocalTransposeWork(
    TBOX_ASSERT(transpose);
    TBOX_ASSERT(isTransposeOf(*transpose));
 
-   const PeriodicShiftCatalog* shift_catalog =
-      PeriodicShiftCatalog::getCatalog(getConnectorWidth().getDim());
+   const PeriodicShiftCatalog& shift_catalog =
+      getBase().getGridGeometry()->getPeriodicShiftCatalog();
 
    for (ConstNeighborhoodIterator ci = begin(); ci != end(); ++ci) {
 
@@ -1122,9 +1124,10 @@ Connector::doLocalTransposeWork(
          if (my_base_box.isPeriodicImage()) {
             Box my_shifted_head_box(
                my_head_box,
-               shift_catalog->getOppositeShiftNumber(
+               shift_catalog.getOppositeShiftNumber(
                   my_base_box.getPeriodicId()),
-               transpose->getHead().getRefinementRatio());
+               transpose->getHead().getRefinementRatio(),
+               shift_catalog);
             if (transpose->getHead().hasBox(my_shifted_head_box)) {
                BoxId base_non_per_id(
                   my_base_box.getGlobalId(),
@@ -1531,8 +1534,8 @@ Connector::checkTransposeCorrectness(
 
    const BoxLevel& head = getHead().getGlobalizedVersion();
 
-   const PeriodicShiftCatalog* shift_catalog =
-      PeriodicShiftCatalog::getCatalog(dim);
+   const PeriodicShiftCatalog& shift_catalog =
+      head.getGridGeometry()->getPeriodicShiftCatalog();
 
    /*
     * Check for extraneous relationships.
@@ -1584,8 +1587,9 @@ Connector::checkTransposeCorrectness(
          if (nabr.isPeriodicImage()) {
             shifted_box.initialize(
                box,
-               shift_catalog->getOppositeShiftNumber(nabr.getPeriodicId()),
-               getBase().getRefinementRatio());
+               shift_catalog.getOppositeShiftNumber(nabr.getPeriodicId()),
+               getBase().getRefinementRatio(),
+               shift_catalog);
             nabr_has_box =
                tran_relationships.hasNeighbor(cn, shifted_box);
          } else {
@@ -1694,7 +1698,7 @@ Connector::checkTransposeCorrectness(
             }
 
             const Box nabr_nabr(dim, box_id.getGlobalId(),
-                                shift_catalog->getOppositeShiftNumber(
+                                shift_catalog.getOppositeShiftNumber(
                                    base_box.getPeriodicId()));
 
             if (!d_relationships.hasNeighbor(base_non_per_id, nabr_nabr)) {
@@ -1716,8 +1720,9 @@ Connector::checkTransposeCorrectness(
                if (nabr.isPeriodicImage()) {
                   unshifted_box.initialize(
                      nabr,
-                     shift_catalog->getZeroShiftNumber(),
-                     getBase().getRefinementRatio());
+                     shift_catalog.getZeroShiftNumber(),
+                     getBase().getRefinementRatio(),
+                     shift_catalog);
                   tbox::perr << unshifted_box;
                }
                tbox::perr << ":" << std::endl;
@@ -1887,6 +1892,9 @@ Connector::checkConsistencyWithHead() const
 
    TBOX_ASSERT(head_box_level.getParallelState() == BoxLevel::GLOBALIZED);
 
+   const PeriodicShiftCatalog& shift_catalog =
+      head_box_level.getGridGeometry()->getPeriodicShiftCatalog();
+
    const BoxContainer& head_boxes = head_box_level.getGlobalBoxes();
 
    size_t number_of_inconsistencies = 0;
@@ -1904,7 +1912,10 @@ Connector::checkConsistencyWithHead() const
 
          const Box& nabr = *na;
          const Box unshifted_nabr(
-            nabr, PeriodicId::zero(), head_box_level.getRefinementRatio());
+            nabr,
+            PeriodicId::zero(),
+            head_box_level.getRefinementRatio(),
+            shift_catalog);
 
          BoxContainer::const_iterator na_in_head =
             head_boxes.find(unshifted_nabr);
