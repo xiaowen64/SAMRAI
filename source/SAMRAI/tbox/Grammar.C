@@ -2107,7 +2107,7 @@ yyreduce:
          Parser::getParser()->error("Box dimension too large (> SAMRAI::MAX_DIM_VAL)");
       } else {
          const int n = (yyvsp[(2) - (5)].u_keydata)->d_array_size;
-	 const tbox::Dimension dim(static_cast<unsigned short>(n));
+	 const Dimension dim(static_cast<unsigned short>(n));
          (yyval.u_keydata)->d_box.setDim(dim);
 
          KeyData* list_lower = (yyvsp[(2) - (5)].u_keydata);

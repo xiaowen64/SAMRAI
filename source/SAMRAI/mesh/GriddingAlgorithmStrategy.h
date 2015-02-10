@@ -31,7 +31,7 @@ namespace mesh {
  * hierarchies.  The interfaces imply that the implementation of this
  * strategy class works on some hierarchy.
  *
- * @see mesh::GriddingAlgorithm
+ * @see GriddingAlgorithm
  */
 
 class GriddingAlgorithmStrategy

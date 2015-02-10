@@ -166,10 +166,10 @@ namespace hier {
  * </ul>
  *
  *
- * @see hier::PatchDescriptor
- * @see hier::VariableContext
- * @see hier::Variable
- * @see hier::Patch
+ * @see PatchDescriptor
+ * @see VariableContext
+ * @see Variable
+ * @see Patch
  */
 
 class VariableDatabase

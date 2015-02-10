@@ -116,7 +116,7 @@ namespace mesh {
  * Whether to allow box-breaking.  Set to false when boxes have
  * been pre-cut.
  *
- * @see mesh::LoadBalanceStrategy
+ * @see LoadBalanceStrategy
  */
 
 class TreeLoadBalancer:

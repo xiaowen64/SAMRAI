@@ -50,8 +50,8 @@ namespace tbox {
  * Additionally this class manages static data that controls the maximum
  * number of patch data components that can be allowed.
  *
- * @see tbox::SAMRAI_MPI
- * @see tbox::StartupShutdownManager
+ * @see SAMRAI_MPI
+ * @see StartupShutdownManager
  */
 
 class SAMRAIManager

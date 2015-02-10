@@ -213,9 +213,9 @@ namespace mesh {
  * database values.  If no new input database value is given, the restart
  * database value is used.
  *
- * @see mesh::TagAndInitializeStrategy
- * @see mesh::LoadBalanceStrategy
- * @see mesh::BoxGeneratorStrategy
+ * @see TagAndInitializeStrategy
+ * @see LoadBalanceStrategy
+ * @see BoxGeneratorStrategy
  */
 
 class GriddingAlgorithm:

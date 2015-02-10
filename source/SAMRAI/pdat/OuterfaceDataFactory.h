@@ -31,8 +31,8 @@ namespace pdat {
  * the factory and data classes are templated on the type of the contained
  * object (e.g., double or int).
  *
- * @see pdat::OuterfaceData
- * @see pdat::PatchDataFactory
+ * @see OuterfaceData
+ * @see PatchDataFactory
  */
 
 template<class TYPE>

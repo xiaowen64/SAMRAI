@@ -37,8 +37,8 @@ class EdgeGeometry;
  * description of the data layout.
  *
  * @see hier::BoxGeometry
- * @see pdat::EdgeGeometry
- * @see pdat::EdgeOverlap
+ * @see EdgeGeometry
+ * @see EdgeOverlap
  */
 
 class OuteredgeGeometry:public hier::BoxGeometry

@@ -36,9 +36,9 @@ namespace pdat {
  * except that the individual array indices are permuted in the outerface
  * data type.
  *
- * @see pdat::SideData
- * @see pdat::OutersideData
- * @see pdat::OutersideDataFactory
+ * @see SideData
+ * @see OutersideData
+ * @see OutersideDataFactory
  * @see hier::Variable
  */
 

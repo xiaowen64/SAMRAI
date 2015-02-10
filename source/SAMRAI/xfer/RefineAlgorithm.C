@@ -563,7 +563,7 @@ void RefineAlgorithm::resetSchedule(
       schedule->reset(d_refine_classes);
    } else {
       TBOX_ERROR("RefineAlgorithm::resetSchedule error..."
-         << "\n Items in xfer::RefineClasses object passed to reset"
+         << "\n Items in RefineClasses object passed to reset"
          << "\n routine does not match that in existing schedule."
          << std::endl);
    }

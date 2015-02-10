@@ -45,7 +45,7 @@ namespace mesh {
  * implementations of these methods.  The constraints are discussed in
  * the method descriptions below.
  *
- * @see mesh::GriddingAlgorithm
+ * @see GriddingAlgorithm
  */
 
 class TagAndInitializeStrategy
@@ -312,8 +312,8 @@ public:
     *                     removed.
     * @param old_level The level in hierarchy about to be removed.
     *
-    * @see mesh::GriddingAlgorithm
-    * @see mesh::StandardTagAndInitStrategy
+    * @see GriddingAlgorithm
+    * @see StandardTagAndInitStrategy
     */
    virtual void
    processLevelBeforeRemoval(

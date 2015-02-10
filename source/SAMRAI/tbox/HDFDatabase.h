@@ -44,7 +44,7 @@ namespace tbox {
  * It is assumed that all processors will access the database in the same
  * manner.  Error reporting is done using the SAMRAI error reporting macros.
  *
- * @see tbox::Database
+ * @see Database
  */
 
 class HDFDatabase:public Database

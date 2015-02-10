@@ -46,7 +46,7 @@ namespace hier {
  *
  * \endverbatim
  *
- * @see hier::VariableDatabase
+ * @see VariableDatabase
  */
 
 class VariableContext

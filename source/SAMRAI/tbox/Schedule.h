@@ -48,7 +48,7 @@ namespace tbox {
  * order of transaction execution matters.  The transactions will be
  * executed in the order in which they appear in the list.
  *
- * @see tbox::Transaction
+ * @see Transaction
  */
 
 class Schedule

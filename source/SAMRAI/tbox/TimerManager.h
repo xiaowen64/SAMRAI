@@ -242,7 +242,7 @@ namespace tbox {
  * may lead to memory problems.  We recommend {\em not to use timers
  * to time recursive function calls}.
  *
- * @see tbox::Timer
+ * @see Timer
  */
 
 class TimerManager

@@ -70,7 +70,7 @@ class Statistician;
  * on level zero, level 1, etc.  In this case, one can cimply create a
  * separate statistic object for each level.
  *
- * @see tbox::Statistician
+ * @see Statistician
  */
 
 class Statistic

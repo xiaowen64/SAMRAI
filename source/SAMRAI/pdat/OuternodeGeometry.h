@@ -37,8 +37,8 @@ class NodeGeometry;
  * description of the data layout.
  *
  * @see hier::BoxGeometry
- * @see pdat::NodeGeometry
- * @see pdat::NodeOverlap
+ * @see NodeGeometry
+ * @see NodeOverlap
  */
 
 class OuternodeGeometry:public hier::BoxGeometry

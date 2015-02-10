@@ -51,7 +51,7 @@ namespace math {
  * HierarchyFaceDataOpsReal and HierarchyFaceDataOpsComplex,
  * respectively.
  *
- * @see math::PatchFaceDataOpsInteger
+ * @see PatchFaceDataOpsInteger
  */
 
 class HierarchyFaceDataOpsInteger:public HierarchyDataOpsInteger

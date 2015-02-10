@@ -56,7 +56,7 @@ class TimerManager;
  * Note that the constructor is protected so that timer objects can only
  * be created by the TimerManager class.
  *
- * @see tbox::TimerManager
+ * @see TimerManager
  */
 
 class Timer

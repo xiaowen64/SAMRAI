@@ -544,7 +544,7 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    BoxContainer base_bounding_boxes, head_bounding_boxes;
    size_t base_bounding_cell_count = 0, head_bounding_cell_count = 0;
    for (BlockId::block_t bn = 0; bn < geom->getNumberBlocks(); ++bn) {
-      hier::BlockId block_id(bn);
+      BlockId block_id(bn);
       base_bounding_boxes.push_back(base.getGlobalBoundingBox(block_id));
       head_bounding_boxes.push_back(head.getGlobalBoundingBox(block_id));
       base_bounding_cell_count += base_bounding_boxes.back().size();
@@ -1755,7 +1755,7 @@ OverlapConnectorAlgorithm::privateBridge_findOverlapsForOneProcess(
    const IntVector& head_refinement_ratio(
       bridging_connector.getHead().getRefinementRatio());
 
-   const hier::BaseGridGeometry& grid_geom = 
+   const BaseGridGeometry& grid_geom = 
       *bridging_connector.getBase().getGridGeometry();
 
    bool refine_base = false;

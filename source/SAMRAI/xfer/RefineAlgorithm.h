@@ -112,9 +112,9 @@ namespace xfer {
  * as long as the patches involved in the communication process do not change;
  * thus, they can be used for multiple data communication cycles.
  *
- * @see xfer::RefineSchedule
- * @see xfer::RefinePatchStrategy
- * @see xfer::RefineClasses
+ * @see RefineSchedule
+ * @see RefinePatchStrategy
+ * @see RefineClasses
  */
 
 class RefineAlgorithm

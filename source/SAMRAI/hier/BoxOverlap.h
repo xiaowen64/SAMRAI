@@ -38,7 +38,7 @@ namespace hier {
  * type-safe type casting should be used to access the subclass and its
  * member functions.
  *
- * @see hier::BoxGeometry
+ * @see BoxGeometry
  */
 
 class BoxOverlap

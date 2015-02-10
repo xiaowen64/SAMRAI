@@ -108,7 +108,7 @@ namespace appu {
  * inconsistencies between C++ and FORTRAN usage.  Please see the
  * FORTRAN include file cartbdryparams3d.i for details.
  *
- * @see appu::BoundaryUtilityStrategy3
+ * @see BoundaryUtilityStrategy3
  */
 
 struct CartesianBoundaryUtilities3 {

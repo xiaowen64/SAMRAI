@@ -39,8 +39,8 @@ namespace xfer {
  * near a patch boundary.
  *
  * @see hier::BoxOverlap
- * @see xfer::RefineAlgorithm
- * @see xfer::RefineSchedule
+ * @see RefineAlgorithm
+ * @see RefineSchedule
  */
 
 class VariableFillPattern

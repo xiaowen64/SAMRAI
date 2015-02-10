@@ -30,8 +30,8 @@ namespace pdat {
  * See header file for EdgeData<TYPE> class for a more detailed
  * description of the data layout.
  *
- * @see pdat::EdgeData
- * @see pdat::EdgeDataFactory
+ * @see EdgeData
+ * @see EdgeDataFactory
  * @see hier::Variable
  */
 

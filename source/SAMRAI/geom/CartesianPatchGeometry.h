@@ -30,7 +30,7 @@ namespace geom {
  *
  * @see hier::BoundaryBox
  * @see hier::PatchGeometry
- * @see geom::CartesianGridGeometry
+ * @see CartesianGridGeometry
  */
 
 class CartesianPatchGeometry:

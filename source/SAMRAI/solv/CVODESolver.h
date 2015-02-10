@@ -188,8 +188,8 @@ namespace solv {
  * "CVODE User Guide", UCRL-MA-118618, Lawrence Livermore National
  * Laboratory, 1994.
  *
- * @see solv::CVODEAbstractFunctions
- * @see solv::SundialsAbstractVector
+ * @see CVODEAbstractFunctions
+ * @see SundialsAbstractVector
  */
 
 class CVODESolver

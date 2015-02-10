@@ -1564,7 +1564,7 @@ SAMRAI_MPI::hasReceivableMessage(
 {
    int flag = false;
    if (s_mpi_is_initialized) {
-      tbox::SAMRAI_MPI::Status tmp_status;
+      SAMRAI_MPI::Status tmp_status;
       Barrier();
       int mpi_err = Iprobe(source, tag, &flag, status ? status : &tmp_status);
       if (mpi_err != MPI_SUCCESS) {

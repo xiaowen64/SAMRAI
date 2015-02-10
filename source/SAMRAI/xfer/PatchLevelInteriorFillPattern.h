@@ -21,13 +21,13 @@ namespace xfer {
 /*!
  * @brief PatchLevelFillPattern implementation for patch interior filling.
  *
- * For documentation on this interface see @ref xfer::PatchLevelFillPattern
+ * For documentation on this interface see @ref PatchLevelFillPattern
  *
  * Those fill boxes for this PatchLevelFillPattern will consist of the
  * patch interiors on the destination level only.
  *
- * @see xfer::RefineAlgorithm
- * @see xfer::RefineSchedule
+ * @see RefineAlgorithm
+ * @see RefineSchedule
  */
 
 class PatchLevelInteriorFillPattern:public PatchLevelFillPattern

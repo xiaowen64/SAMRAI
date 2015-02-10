@@ -23,7 +23,7 @@ namespace xfer {
  * fills the entire region the destination level, both interior and
  * ghost.
  *
- * For documentation on this interface see @ref xfer::PatchLevelFillPattern
+ * For documentation on this interface see @ref PatchLevelFillPattern
  *
  * The fill boxes for this PatchLevelFillPattern will consist of
  * the entire region of the destination level that can be filled, both
@@ -34,8 +34,8 @@ namespace xfer {
  * PatchLevelFillPattern argument, this class will be used as the
  * default PatchLevelFillPattern.
  *
- * @see xfer::RefineAlgorithm
- * @see xfer::RefineSchedule
+ * @see RefineAlgorithm
+ * @see RefineSchedule
  */
 
 class PatchLevelFullFillPattern:public PatchLevelFillPattern

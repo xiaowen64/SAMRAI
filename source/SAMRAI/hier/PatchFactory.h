@@ -30,7 +30,7 @@ namespace hier {
  * be no direct calls to the patch constructor (other than through the
  * patch factory).
  *
- * @see hier::Patch
+ * @see Patch
  */
 
 class PatchFactory

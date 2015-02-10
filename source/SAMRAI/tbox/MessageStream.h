@@ -34,7 +34,7 @@ namespace tbox {
  * mode.  It should be rewritten as two classes, like std::cin and
  * std::cout are.  BTNG.
  *
- * @see tbox::Schedule
+ * @see Schedule
  */
 
 class MessageStream

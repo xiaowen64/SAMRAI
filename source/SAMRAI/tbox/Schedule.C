@@ -591,11 +591,11 @@ Schedule::getFromInput()
     */
    if (s_ignore_external_timer_prefix == '\0') {
       s_ignore_external_timer_prefix = 'n';
-      if (tbox::InputManager::inputDatabaseExists()) {
-         boost::shared_ptr<tbox::Database> idb(
-            tbox::InputManager::getInputDatabase());
+      if (InputManager::inputDatabaseExists()) {
+         boost::shared_ptr<Database> idb(
+            InputManager::getInputDatabase());
          if (idb->isDatabase("Schedule")) {
-            boost::shared_ptr<tbox::Database> sched_db(
+            boost::shared_ptr<Database> sched_db(
                idb->getDatabase("Schedule"));
             s_ignore_external_timer_prefix =
                sched_db->getCharWithDefault("DEV_ignore_external_timer_prefix",

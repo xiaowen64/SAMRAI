@@ -62,9 +62,9 @@ namespace hier {
  * then data will be copied only into the ghost cell values and not the
  * interior values of the patch.
  *
- * @see hier::BoxOverlap
- * @see hier::PatchDataFactory
- * @see hier::PatchData
+ * @see BoxOverlap
+ * @see PatchDataFactory
+ * @see PatchData
  */
 
 class BoxGeometry

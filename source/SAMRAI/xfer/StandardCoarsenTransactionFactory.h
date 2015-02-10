@@ -29,7 +29,7 @@ namespace xfer {
  * @brief Concrete subclass of CoarsenTransactionFactory base class that
  * allocates CoarsenCopyTransaction objects for a CoarsenSchedule object.
  *
- * @see xfer::CoarsenCopyTransaction
+ * @see CoarsenCopyTransaction
  */
 
 class StandardCoarsenTransactionFactory:public CoarsenTransactionFactory

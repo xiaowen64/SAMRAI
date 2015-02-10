@@ -27,8 +27,8 @@ namespace tbox {
  * transaction between two processors for sending and gathering statistic
  * information generated on different processors.
  *
- * @see tbox::Schedule
- * @see tbox::Transaction
+ * @see Schedule
+ * @see Transaction
  */
 
 class StatTransaction:public Transaction

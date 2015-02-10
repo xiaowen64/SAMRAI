@@ -50,8 +50,8 @@ namespace solv {
  * Finally, we remark that this class provides vectors of type <TT>double</TT>,
  * which is the default for Sundials.
  *
- * @see solv::SundialsAbstractVector
- * @see solv::SAMRAIVectorReal
+ * @see SundialsAbstractVector
+ * @see SAMRAIVectorReal
  */
 
 class Sundials_SAMRAIVector:public SundialsAbstractVector

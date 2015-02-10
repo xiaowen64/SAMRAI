@@ -50,12 +50,11 @@ namespace hier {
  * patch data components that live on the patch.  Individual components or sets
  * of components can be created or destroyed via patch member functions.
  *
- * @see hier::Box
- * @see hier::Box
- * @see hier::PatchDescriptor
- * @see hier::PatchData
- * @see hier::PatchDataFactory
- * @see hier::PatchGeometry
+ * @see Box
+ * @see PatchDescriptor
+ * @see PatchData
+ * @see PatchDataFactory
+ * @see PatchGeometry
  */
 class Patch
 {

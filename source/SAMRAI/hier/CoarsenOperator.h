@@ -59,7 +59,7 @@ namespace hier {
  * and data type as well as the mesh coordinate system, they are defined
  * in the <EM>geometry</EM> package.
  *
- * @see hier::TransferOperatorRegistry
+ * @see TransferOperatorRegistry
  */
 
 class CoarsenOperator
@@ -67,11 +67,11 @@ class CoarsenOperator
 public:
    /*!
     * @brief Construct the object with a name to allow the
-    * hier::TransferOperatorRegistry class to look up the object using a
+    * TransferOperatorRegistry class to look up the object using a
     * string.
     *
     * The constructor must be given a name.  The object will be
-    * registered under this name with the hier::TransferOperatorRegistry class.
+    * registered under this name with the TransferOperatorRegistry class.
     * The name must be unique, as duplicate names are not allowed.
     */
    CoarsenOperator(

@@ -136,7 +136,7 @@ public:
    virtual ~TileClustering();
 
    /*!
-    * @brief Implement the mesh::BoxGeneratorStrategy interface
+    * @brief Implement the BoxGeneratorStrategy interface
     * method of the same name.
     *
     * Create a set of boxes that covers all integer tags on

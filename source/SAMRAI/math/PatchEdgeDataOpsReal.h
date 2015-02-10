@@ -43,9 +43,9 @@ namespace math {
  * PatchEdgeDataOpsComplex and PatchEdgeDataOpsInteger,
  * repsectively.
  *
- * @see math::PatchEdgeDataBasicOps
- * @see math::PatchEdgeDataMiscellaneousOpsReal
- * @see math::PatchEdgeDataNormOpsReal
+ * @see PatchEdgeDataBasicOps
+ * @see PatchEdgeDataMiscellaneousOpsReal
+ * @see PatchEdgeDataNormOpsReal
  */
 
 template<class TYPE>

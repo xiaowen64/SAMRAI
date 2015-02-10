@@ -30,9 +30,9 @@ namespace pdat {
  * the mapping between the AMR index space and the node indices.
  *
  * @see hier::Index
- * @see pdat::NodeData
- * @see pdat::NodeGeometry
- * @see pdat::NodeIterator
+ * @see NodeData
+ * @see NodeGeometry
+ * @see NodeIterator
  */
 
 class NodeIndex:public hier::Index

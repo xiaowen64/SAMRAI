@@ -158,9 +158,9 @@ namespace algs {
  *    use_ghosts_to_compute_dt = TRUE
  * @endcode
  *
- * @see algs::TimeRefinementIntegrator
+ * @see TimeRefinementIntegrator
  * @see mesh::StandardTagAndInitStrategy
- * @see algs::HyperbolicPatchStrategy
+ * @see HyperbolicPatchStrategy
  */
 
 class HyperbolicLevelIntegrator:

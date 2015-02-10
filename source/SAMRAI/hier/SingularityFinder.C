@@ -493,7 +493,7 @@ SingularityFinder::findCoincidentEdges(
    Box b_node_box(b_box);
    b_node_box.setUpper(b_node_box.upper() + IntVector::getOne(d_dim));
    IntVector b_box_size(b_node_box.numberCells());
-   hier::BoxContainer b_edge_boxes;
+   BoxContainer b_edge_boxes;
 
    int nedges_per_face = 4;
 

@@ -28,9 +28,9 @@ namespace pdat {
  * about the mapping between the AMR index space and the face indices.
  *
  * @see hier::Index
- * @see pdat::FaceData
- * @see pdat::FaceGeometry
- * @see pdat::FaceIterator
+ * @see FaceData
+ * @see FaceGeometry
+ * @see FaceIterator
  */
 
 class FaceIndex:public hier::Index

@@ -53,7 +53,7 @@ namespace math {
  * HierarchySideDataOpsComplex and HierarchySideDataOpsInteger,
  * respectively.
  *
- * @see math::PatchSideDataOpsReal
+ * @see PatchSideDataOpsReal
  */
 
 template<class TYPE>

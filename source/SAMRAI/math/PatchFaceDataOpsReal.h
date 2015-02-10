@@ -44,9 +44,9 @@ namespace math {
  * PatchFaceDataOpsComplex and PatchFaceDataOpsInteger,
  * repsectively.
  *
- * @see math::PatchFaceDataBasicOps
- * @see math::PatchFaceDataMiscellaneousOpsReal
- * @see math::PatchFaceDataNormOpsReal
+ * @see PatchFaceDataBasicOps
+ * @see PatchFaceDataMiscellaneousOpsReal
+ * @see PatchFaceDataNormOpsReal
  */
 
 template<class TYPE>

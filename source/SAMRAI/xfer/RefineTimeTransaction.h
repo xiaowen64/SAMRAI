@@ -36,8 +36,8 @@ namespace xfer {
  * scratch data, all as defined in the RefineClasses class.  This transaction
  * is used by the refine schedule.
  *
- * @see xfer::RefineSchedule
- * @see xfer::RefineClasses
+ * @see RefineSchedule
+ * @see RefineClasses
  * @see tbox::Schedule
  * @see tbox::Transaction
  */

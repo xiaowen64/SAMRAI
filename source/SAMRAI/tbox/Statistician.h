@@ -58,7 +58,7 @@ class StatisticRestartDatabase;
  * For more information about data that can be recorded with statistics,
  * consult the header file for the Statistic class.
  *
- * @see tbox::Statistic
+ * @see Statistic
  */
 
 class Statistician

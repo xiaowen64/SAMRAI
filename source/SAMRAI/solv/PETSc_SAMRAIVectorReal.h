@@ -66,8 +66,8 @@ namespace solv {
  * (i.e., data of type <TT>double</TT> or <TT>float</TT>.  The class
  * PETSc_SAMRAIVectorComplex must be used for complex data.
  *
- * @see solv::PETScAbstractVectorReal
- * @see solv::SAMRAIVectorReal
+ * @see PETScAbstractVectorReal
+ * @see SAMRAIVectorReal
  */
 
 template<class TYPE>

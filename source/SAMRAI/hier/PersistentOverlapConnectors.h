@@ -87,7 +87,7 @@ class BoxLevel;
  * are unsure if the Connector has been created.
  *
  * @see findConnector()
- * @see hier::Connector
+ * @see Connector
  */
 class PersistentOverlapConnectors
 {
@@ -119,8 +119,8 @@ private:
     * The base will be the BoxLevel that owns this object.
     * Find Connector relationships using a (non-scalable) global search.
     *
-    * @see hier::Connector
-    * @see hier::Connector::initialize()
+    * @see Connector
+    * @see Connector::initialize()
     *
     * @param[in] head
     * @param[in] connector_width
@@ -142,8 +142,8 @@ private:
     * The base will be the BoxLevel that owns this object.
     * Find Connector relationships using a (non-scalable) global search.
     *
-    * @see hier::Connector
-    * @see hier::Connector::initialize()
+    * @see Connector
+    * @see Connector::initialize()
     *
     * @param[in] head
     * @param[in] connector_width

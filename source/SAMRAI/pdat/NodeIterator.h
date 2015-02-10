@@ -37,9 +37,9 @@ namespace pdat {
  * on your compiler.  Many compilers are not smart enough to optimize the
  * looping constructs and indexing operations.
  *
- * @see pdat::NodeData
- * @see pdat::NodeGeometry
- * @see pdat::NodeIndex
+ * @see NodeData
+ * @see NodeGeometry
+ * @see NodeIndex
  */
 
 class NodeIterator

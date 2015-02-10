@@ -28,7 +28,7 @@ namespace xfer {
  * It is intended for users who wish to handle the filling of data at these
  * singularities separately from the filling of all other data.
  *
- * @see xfer::RefineSchedule
+ * @see RefineSchedule
  */
 
 class PatchLevelEnhancedFillPattern:public PatchLevelFillPattern

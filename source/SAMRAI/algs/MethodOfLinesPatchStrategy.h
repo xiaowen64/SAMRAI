@@ -40,7 +40,7 @@ class MethodOfLinesIntegrator;
  * interlevel data refining and coarsening operations and the specification
  * of physical boundary conditions.
  *
- * @see algs::MethodOfLinesIntegrator
+ * @see MethodOfLinesIntegrator
  * @see xfer::RefinePatchStrategy
  * @see xfer::CoarsenPatchStrategy
  */

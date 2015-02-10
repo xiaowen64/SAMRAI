@@ -33,7 +33,7 @@ namespace solv {
  * or FACPreconditioner::initializeSolverState()
  * or vectors cloned from them.
  *
- * @see solv::FACPreconditioner
+ * @see FACPreconditioner
  */
 
 class FACOperatorStrategy

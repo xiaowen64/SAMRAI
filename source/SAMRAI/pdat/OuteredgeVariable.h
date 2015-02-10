@@ -29,9 +29,9 @@ namespace pdat {
  * array sections provided by the edge data implementation.  See header file for
  * the OuteredgeData<TYPE> class for a more detailed description of the data layout.
  *
- * @see pdat::EdgeData
- * @see pdat::OuteredgeData
- * @see pdat::OuteredgeDataFactory
+ * @see EdgeData
+ * @see OuteredgeData
+ * @see OuteredgeDataFactory
  * @see hier::Variable
  */
 

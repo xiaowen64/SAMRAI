@@ -39,7 +39,7 @@ namespace algs {
  * a concrete implementation of this base class by passing the concrete
  * object into the to the time refinement integrator constructor.
  *
- * @see algs::TimeRefinementIntegrator
+ * @see TimeRefinementIntegrator
  */
 
 class TimeRefinementLevelStrategy

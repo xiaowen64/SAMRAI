@@ -48,7 +48,7 @@ namespace math {
  * Note that a similar set of norm operations is implemented for real
  * patch data (double and float) in the class PatchSideDataNormOpsReal.
  *
- * @see math::ArrayDataNormOpsComplex
+ * @see ArrayDataNormOpsComplex
  */
 
 class PatchSideDataNormOpsComplex

@@ -28,9 +28,9 @@ namespace pdat {
  * about the mapping between the AMR index space and the edge indices.
  *
  * @see hier::Index
- * @see pdat::EdgeData
- * @see pdat::EdgeGeometry
- * @see pdat::EdgeIterator
+ * @see EdgeData
+ * @see EdgeGeometry
+ * @see EdgeIterator
  */
 
 class EdgeIndex:public hier::Index

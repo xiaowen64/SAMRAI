@@ -117,12 +117,12 @@ namespace pdat {
  * The data type TYPE must define a default constructor (that takes no
  * arguments) and also the assignment operator.
  *
- * @see pdat::ArrayData
+ * @see ArrayData
  * @see hier::PatchData
- * @see pdat::OuteredgeDataFactory
- * @see pdat::OuteredgeGeometry
- * @see pdat::EdgeIterator
- * @see pdat::EdgeIndex
+ * @see OuteredgeDataFactory
+ * @see OuteredgeGeometry
+ * @see EdgeIterator
+ * @see EdgeIndex
  */
 
 template<class TYPE>

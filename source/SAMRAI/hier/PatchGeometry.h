@@ -35,8 +35,8 @@ namespace hier {
  * spaces.  The boundary information for patches is actually computed by
  * the BaseGridGeometry class.
  *
- * @see hier::BoundaryBox
- * @see hier::BaseGridGeometry
+ * @see BoundaryBox
+ * @see BaseGridGeometry
  */
 
 class PatchGeometry

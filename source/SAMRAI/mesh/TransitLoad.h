@@ -43,7 +43,7 @@ namespace mesh {
  * the implementation alone knows how the work is represented.  See
  * assignToLocalAndPopulateMaps().
  *
- * For usage examples, see mesh::TreeLoadBalancer.
+ * For usage examples, see TreeLoadBalancer.
  */
 
 class TransitLoad

@@ -4814,7 +4814,7 @@ RefineSchedule::setRefineItems(
  * In particular, each scratch data entry must have at least as many
  * ghost cells as the user-defined refine operator stencil width.
  * Other checks are performed in the
- * xfer::RefineClasses::itemIsValid() routine.
+ * RefineClasses::itemIsValid() routine.
  *
  *************************************************************************
  */

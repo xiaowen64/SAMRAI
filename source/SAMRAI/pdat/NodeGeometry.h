@@ -38,7 +38,7 @@ class NodeIterator;
  * description of the data layout.
  *
  * @see hier::BoxGeometry
- * @see pdat::NodeOverlap
+ * @see NodeOverlap
  */
 
 class NodeGeometry:public hier::BoxGeometry

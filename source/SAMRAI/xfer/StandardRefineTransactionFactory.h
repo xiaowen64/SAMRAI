@@ -30,9 +30,9 @@ namespace xfer {
  * allocates RefineCopyTransaction and RefineTimeTransaction objects for a
  * RefineSchedule object.
  *
- * @see xfer::RefineCopyTransaction
- * @see xfer::RefineTimeTransaction
- * @see xfer::RefineTransactionFactory
+ * @see RefineCopyTransaction
+ * @see RefineTimeTransaction
+ * @see RefineTransactionFactory
  */
 
 class StandardRefineTransactionFactory:public RefineTransactionFactory

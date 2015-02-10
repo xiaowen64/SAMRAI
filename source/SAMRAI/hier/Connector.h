@@ -1177,7 +1177,7 @@ public:
          d_transpose->d_transpose = this;
          d_transpose->d_owns_transpose = false;
 
-         if (d_ratio != hier::IntVector::getOne(d_ratio.getDim())) {
+         if (d_ratio != IntVector::getOne(d_ratio.getDim())) {
             if ((d_ratio * d_base_width) != d_transpose->d_base_width &&
                 d_base_width != (d_ratio * d_transpose->d_base_width)) {
 

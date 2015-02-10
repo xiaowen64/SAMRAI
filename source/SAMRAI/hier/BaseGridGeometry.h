@@ -55,7 +55,7 @@ class SingularityFinder;
  * for patches which describe how the patch touches the domain boundary
  * (useful for filling ghost cell data for physical boundary conditions).
  *
- * @see hier::BoundaryBox
+ * @see BoundaryBox
  */
 
 class BaseGridGeometry:
@@ -1138,6 +1138,7 @@ private:
     *
     * @param dst
     * @param src
+    * @param level_num
     *
     * @pre areNeighbors(dst, src)
     */

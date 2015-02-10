@@ -97,7 +97,7 @@ namespace algs {
  * max_integrator_steps = 100
  * @endcode
  *
- * @see algs::ImplicitEquationStrategy
+ * @see ImplicitEquationStrategy
  * @see solv::NonlinearSolverStrategy
  */
 class ImplicitIntegrator:

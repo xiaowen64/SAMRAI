@@ -35,8 +35,8 @@ namespace pdat {
  * and manage data for cell sides associated with a single coordinate
  * direction only.  See the constructor for more information.
  *
- * @see pdat::SideData
- * @see pdat::PatchDataFactory
+ * @see SideData
+ * @see PatchDataFactory
  */
 
 template<class TYPE>

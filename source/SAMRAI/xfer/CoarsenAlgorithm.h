@@ -89,9 +89,9 @@ namespace xfer {
  * as long as the levels involved in the communication process do not change;
  * thus, they can be used for multiple data communication cycles.
  *
- * @see xfer::CoarsenSchedule
- * @see xfer::CoarsenPatchStrategy
- * @see xfer::CoarsenClasses
+ * @see CoarsenSchedule
+ * @see CoarsenPatchStrategy
+ * @see CoarsenClasses
  */
 
 class CoarsenAlgorithm

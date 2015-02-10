@@ -36,14 +36,14 @@ namespace tbox {
  *            SAMRAIManager::startup() routine.
  *
  * Note that all operations provided by this class (except for setting
- * up exception handling) are implemented in @see tbox::MathUtilities.
+ * up exception handling) are implemented in @see MathUtilities.
  * Operations are provided by this class since it is not templated on
  * data type and so calling the operations provided here may be easier
  * in some cases, such as in codes built based on earlier versions
- * of SAMRAI.  See the tbox::MathUtilities header file for details
+ * of SAMRAI.  See the MathUtilities header file for details
  * about the routines.
  *
- * @see tbox::MathUtilities
+ * @see MathUtilities
  */
 
 struct IEEE {

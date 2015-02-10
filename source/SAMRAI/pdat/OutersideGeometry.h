@@ -37,8 +37,8 @@ class SideGeometry;
  * description of the data layout.
  *
  * @see hier::BoxGeometry
- * @see pdat::SideGeometry
- * @see pdat::SideOverlap
+ * @see SideGeometry
+ * @see SideOverlap
  */
 
 class OutersideGeometry:public hier::BoxGeometry

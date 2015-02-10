@@ -30,7 +30,7 @@ namespace pdat {
  * with face centered geometry.
  *
  * @see hier::BoxOverlap
- * @see pdat::FaceOverlap
+ * @see FaceOverlap
  */
 
 class FaceOverlap:public hier::BoxOverlap

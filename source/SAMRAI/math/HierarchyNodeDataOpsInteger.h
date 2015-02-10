@@ -51,7 +51,7 @@ namespace math {
  * HierarchyNodeDataOpsReal and HierarchyNodeDataOpsComplex,
  * respectively.
  *
- * @see math::PatchNodeDataOpsInteger
+ * @see PatchNodeDataOpsInteger
  */
 
 class HierarchyNodeDataOpsInteger:public HierarchyDataOpsInteger

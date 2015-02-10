@@ -43,8 +43,8 @@ namespace solv {
  * via boolean arguments to the constructor of the KINSOLSolver
  * class, or using the setKINSOLFunctions() member function of that class.
  *
- * @see solv::KINSOLSolver
- * @see solv::SundialsAbstractVector
+ * @see KINSOLSolver
+ * @see SundialsAbstractVector
  */
 
 class KINSOLAbstractFunctions

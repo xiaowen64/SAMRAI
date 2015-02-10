@@ -39,7 +39,7 @@ namespace math {
  * float) and complex patch data in the classes PatchNodeDataOpsReal
  * and PatchNodeDataOpsComplex, repsectively.
  *
- * @see math::PatchNodeDataBasicOps
+ * @see PatchNodeDataBasicOps
  */
 
 class PatchNodeDataOpsInteger:

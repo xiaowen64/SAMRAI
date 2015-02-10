@@ -44,7 +44,7 @@ namespace appu {
  * which calculates the derived data and writes it into the double
  * precision buffer passed in to it.
  *
- * @see appu::VisItDataWriter
+ * @see VisItDataWriter
  */
 
 class VisDerivedDataStrategy

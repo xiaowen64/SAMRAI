@@ -90,8 +90,8 @@ namespace solv {
  * parallel computers", UCRL-ID-131185, Lawrence Livermore National
  * Laboratory, 1998.
  *
- * @see solv::KINSOLAbstractFunctions
- * @see solv::SundialsAbstractVector
+ * @see KINSOLAbstractFunctions
+ * @see SundialsAbstractVector
  */
 
 class KINSOLSolver

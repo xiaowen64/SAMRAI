@@ -37,9 +37,9 @@ namespace pdat {
  * define the same storage as this side variable class, except that the
  * individual array indices are permuted in the face data type.
  *
- * @see pdat::SideData
- * @see pdat::SideDataFactory
- * @see pdat::SideGeometry
+ * @see SideData
+ * @see SideDataFactory
+ * @see SideGeometry
  * @see hier::Variable
  */
 

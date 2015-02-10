@@ -933,9 +933,9 @@ PatchHierarchy::logMetadataStatistics(
    bool log_coarse_connector) const
 {
    const std::string name("L" + tbox::Utilities::levelToString(ln));
-   const boost::shared_ptr<hier::PatchLevel> level =
+   const boost::shared_ptr<PatchLevel> level =
       getPatchLevel(ln);
-   const hier::BoxLevel& box_level = *level->getBoxLevel();
+   const BoxLevel& box_level = *level->getBoxLevel();
 
    tbox::plog << "PatchHierarchy metadata statistics '"
               << note << "', at cycle " << cycle
@@ -945,10 +945,10 @@ PatchHierarchy::logMetadataStatistics(
               << '\t' << name << " statistics:\n"
               << box_level.formatStatistics("\t\t");
 
-   const hier::Connector& peer_conn =
+   const Connector& peer_conn =
       level->findConnector(*level,
          getRequiredConnectorWidth(ln, ln),
-         hier::CONNECTOR_CREATE,
+         CONNECTOR_CREATE,
          true);
    tbox::plog << "\tL" << ln
               << " Peer connector:\n" << peer_conn.format("\t\t", 0)
@@ -956,19 +956,19 @@ PatchHierarchy::logMetadataStatistics(
               << ln << " peer Connector statistics:\n" << peer_conn.formatStatistics("\t\t");
 
    if (log_fine_connector) {
-      const hier::Connector& to_fine =
+      const Connector& to_fine =
          level->findConnector(*getPatchLevel(ln + 1),
             getRequiredConnectorWidth(ln, ln + 1),
-            hier::CONNECTOR_CREATE,
+            CONNECTOR_CREATE,
             true);
       tbox::plog << "\tL" << ln << "->L" << ln + 1
                  << " Connector:\n" << to_fine.format("\t\t", 0)
                  << "\tL" << ln << "->L" << ln + 1
                  << " Connector statistics:\n" << to_fine.formatStatistics("\t\t");
-      const hier::Connector& from_fine =
+      const Connector& from_fine =
          getPatchLevel(ln + 1)->findConnector(*level,
             getRequiredConnectorWidth(ln + 1, ln),
-            hier::CONNECTOR_CREATE,
+            CONNECTOR_CREATE,
             true);
       tbox::plog << "\tL" << ln + 1 << "->L" << ln
                  << " Connector:\n" << from_fine.format("\t\t", 0)
@@ -977,19 +977,19 @@ PatchHierarchy::logMetadataStatistics(
    }
 
    if (log_coarse_connector) {
-      const hier::Connector& to_crse =
+      const Connector& to_crse =
          level->findConnector(*getPatchLevel(ln - 1),
             getRequiredConnectorWidth(ln, ln - 1),
-            hier::CONNECTOR_CREATE,
+            CONNECTOR_CREATE,
             true);
       tbox::plog << "\tL" << ln << "->L" << ln - 1
                  << " Connector:\n" << to_crse.format("\t\t", 0)
                  << "\tL" << ln << "->L" << ln - 1
                  << " Connector statistics:\n" << to_crse.formatStatistics("\t\t");
-      const hier::Connector& from_crse =
+      const Connector& from_crse =
          getPatchLevel(ln - 1)->findConnector(*level,
             getRequiredConnectorWidth(ln - 1, ln),
-            hier::CONNECTOR_CREATE,
+            CONNECTOR_CREATE,
             true);
       tbox::plog << "\tL" << ln - 1 << "->L" << ln
                  << " Connector:\n" << from_crse.format("\t\t", 0)

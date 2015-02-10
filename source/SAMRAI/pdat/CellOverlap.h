@@ -33,7 +33,7 @@ namespace pdat {
  * represent an overlap previously computed.
  *
  * @see hier::BoxOverlap
- * @see pdat::CellOverlap
+ * @see CellOverlap
  */
 
 class CellOverlap:public hier::BoxOverlap

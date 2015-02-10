@@ -62,9 +62,9 @@ namespace xfer {
  * - @c PatchLevelBorderAndInteriorFillPattern - Fill interior and
  *      ghosts on level borders.
  *
- * @see xfer::RefineAlgorithm
- * @see xfer::RefinePatchStrategy
- * @see xfer::RefineClasses
+ * @see RefineAlgorithm
+ * @see RefinePatchStrategy
+ * @see RefineClasses
  */
 
 class RefineSchedule

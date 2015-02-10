@@ -30,8 +30,8 @@ namespace pdat {
  * See header file for NodeData<TYPE> class for a more detailed
  * description of the data layout.
  *
- * @see pdat::NodeData
- * @see pdat::NodeDataFactory
+ * @see NodeData
+ * @see NodeDataFactory
  * @see hier::Variable
  */
 

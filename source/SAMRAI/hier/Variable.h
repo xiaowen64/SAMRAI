@@ -62,7 +62,7 @@ namespace hier {
  * by the fineBoundaryRepresentsVariable() function.  Each concrete variable subclass
  * defines the behavior of this function.
  *
- * @see hier::PatchDataFactory
+ * @see PatchDataFactory
  */
 
 class Variable

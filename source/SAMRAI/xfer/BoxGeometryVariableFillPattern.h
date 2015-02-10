@@ -27,7 +27,7 @@ namespace xfer {
  * no VariableFillPattern object is provided when a refine operation is
  * registered with a RefineAlgorithm, this class is used by default.
  *
- * @see xfer::RefineAlgorithm
+ * @see RefineAlgorithm
  */
 
 class BoxGeometryVariableFillPattern:

@@ -531,7 +531,7 @@ Connector::computeTransposeOf(const Connector& other,
    const tbox::SAMRAI_MPI& mpi1 = mpi.hasNullCommunicator() ? getBase().getMPI() : mpi;
 
    // Order locally visible edges by owners who need to know about them.
-   typedef std::map<hier::Box, hier::BoxContainer, hier::Box::id_less> FullNeighborhoodSet;
+   typedef std::map<Box, BoxContainer, Box::id_less> FullNeighborhoodSet;
    FullNeighborhoodSet reordered_relationships;
    other.reorderRelationshipsByHead(reordered_relationships);
 
@@ -740,19 +740,19 @@ Connector::reorderRelationshipsByHead(
 {
    const tbox::Dimension& dim(getBase().getDim());
 
-   const hier::PeriodicShiftCatalog* shift_catalog =
-      hier::PeriodicShiftCatalog::getCatalog(dim);
+   const PeriodicShiftCatalog* shift_catalog =
+      PeriodicShiftCatalog::getCatalog(dim);
 
-   const hier::BoxLevel& base_box_level = getBase();
-   const hier::IntVector& base_ratio = getBase().getRefinementRatio();
-   const hier::IntVector& head_ratio = getHead().getRefinementRatio();
+   const BoxLevel& base_box_level = getBase();
+   const IntVector& base_ratio = getBase().getRefinementRatio();
+   const IntVector& head_ratio = getHead().getRefinementRatio();
 
-   hier::Box shifted_box(dim), unshifted_nabr(dim);
+   Box shifted_box(dim), unshifted_nabr(dim);
    relationships_by_head.clear();
-   for (hier::Connector::ConstNeighborhoodIterator ci = begin(); ci != end(); ++ci) {
-      const hier::Box& base_box = *base_box_level.getBoxStrict(*ci);
-      for (hier::Connector::ConstNeighborIterator na = begin(ci); na != end(ci); ++na) {
-         const hier::Box& nabr = *na;
+   for (Connector::ConstNeighborhoodIterator ci = begin(); ci != end(); ++ci) {
+      const Box& base_box = *base_box_level.getBoxStrict(*ci);
+      for (Connector::ConstNeighborIterator na = begin(ci); na != end(ci); ++na) {
+         const Box& nabr = *na;
          if (nabr.isPeriodicImage()) {
             shifted_box.initialize(
                base_box,

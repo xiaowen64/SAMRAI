@@ -55,9 +55,9 @@ namespace math {
  * See the Design Patterns book by Gamma {\em et al.} for more information
  * about the singleton pattern.
  *
- * @see math::HierarchyDataOpsComplex
- * @see math::HierarchyDataOpsInteger
- * @see math::HierarchyDataOpsReal
+ * @see HierarchyDataOpsComplex
+ * @see HierarchyDataOpsInteger
+ * @see HierarchyDataOpsReal
  */
 
 class HierarchyDataOpsManager

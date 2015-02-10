@@ -42,8 +42,8 @@ namespace math {
  * integer patch data in the classes PatchSideDataOpsReal and
  * PatchSideDataOpsInteger, repsectively.
  *
- * @see math::PatchSideDataBasicOps
- * @see math::PatchSideDataNormOpsComplex
+ * @see PatchSideDataBasicOps
+ * @see PatchSideDataNormOpsComplex
  */
 
 class PatchSideDataOpsComplex:

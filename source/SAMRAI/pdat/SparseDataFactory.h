@@ -34,8 +34,8 @@ namespace pdat {
 /*!
  * @brief Factory class used to allocate new instances of SparseData objects.
  *
- * @see pdat::SparseData
- * @see pdat::SparseDataVariable
+ * @see SparseData
+ * @see SparseDataVariable
  * @see hier::PatchDataFactory
  */
 template<typename BOX_GEOMETRY>

@@ -637,7 +637,7 @@ private:
    static boost::shared_ptr<Timer> t_default_recv_timer;
    static boost::shared_ptr<Timer> t_default_wait_timer;
 
-   static tbox::StartupShutdownManager::Handler
+   static StartupShutdownManager::Handler
       s_initialize_finalize_handler;
 
 };

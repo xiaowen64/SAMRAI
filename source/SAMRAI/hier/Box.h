@@ -47,11 +47,11 @@ class BoxIterator;
  * SAMRAI, the BlockId and the PeriodicId associated with a Box cannot both be
  * nonzero.
  *
- * @see hier::BoxIterator
- * @see hier::Index
- * @see hier::BlockId
- * @see hier::BoxId
- * @see hier::PeriodicId
+ * @see BoxIterator
+ * @see Index
+ * @see BlockId
+ * @see BoxId
+ * @see PeriodicId
  */
 
 class Box
@@ -1476,8 +1476,8 @@ private:
  * on your compiler.  Many compilers are not smart enough to optimize the
  * looping constructs and indexing operations.
  *
- * @see hier::Index
- * @see hier::Box
+ * @see Index
+ * @see Box
  */
 
 class BoxIterator

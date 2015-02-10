@@ -29,7 +29,7 @@ namespace SAMRAI {
 namespace solv {
 
 /**
- * Class solv::SundialsAbstractVector is an abstract base class that declares
+ * Class SundialsAbstractVector is an abstract base class that declares
  * operations provided by any <TT>C++</TT> class that may be used as the
  * vector kernel by the Sundials nonlinear solver package.  Sundials allows
  * arbitrarily defined vectors to be used within it as long as the proper
@@ -66,14 +66,14 @@ namespace solv {
  *
  *
  *
- * @see solv::SundialsSolver
+ * @see SundialsSolver
  */
 
 class SundialsAbstractVector
 {
 public:
    /**
-    * Uninteresting constructor and destructor for solv::SundialsAbstractVector.
+    * Uninteresting constructor and destructor for SundialsAbstractVector.
     */
    SundialsAbstractVector();
    virtual ~SundialsAbstractVector();

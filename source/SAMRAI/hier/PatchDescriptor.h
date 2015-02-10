@@ -54,9 +54,9 @@ namespace hier {
  * changing this maximum value.
  *
  * @see tbox::SAMRAIManager
- * @see hier::PatchDataFactory
- * @see hier::PatchDataData
- * @see hier::Patch
+ * @see PatchDataFactory
+ * @see PatchDataData
+ * @see Patch
  */
 
 class PatchDescriptor

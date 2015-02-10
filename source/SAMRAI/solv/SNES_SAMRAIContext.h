@@ -367,8 +367,8 @@ namespace solv {
  * settings/changes will NOT be cached in the solver context, and so
  * will not be written to restart.
  *
- * @see solv::SNESAbstractFunctions
- * @see solv::NonlinearSolverStrategy
+ * @see SNESAbstractFunctions
+ * @see NonlinearSolverStrategy
  */
 
 class SNES_SAMRAIContext:

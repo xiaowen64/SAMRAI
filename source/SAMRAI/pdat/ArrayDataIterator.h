@@ -38,7 +38,7 @@ namespace pdat {
  * depending on your compiler.  Many compilers are not smart enough to
  * optimize the looping constructs and indexing operations.
  *
- * @see pdat::ArrayData
+ * @see ArrayData
  * @see hier::Index
  */
 

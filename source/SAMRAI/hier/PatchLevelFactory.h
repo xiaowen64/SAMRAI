@@ -30,7 +30,7 @@ namespace hier {
  * New types of patch level objects can be introduced into SAMRAI by deriving
  * from PatchLevelFactory and re-defining allocate.
  *
- * @see hier::PatchLevel
+ * @see PatchLevel
  */
 class PatchLevelFactory
 {

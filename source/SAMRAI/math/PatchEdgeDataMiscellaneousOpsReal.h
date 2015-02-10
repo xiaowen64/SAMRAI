@@ -51,7 +51,7 @@ namespace math {
  * to include other operations, the member functions must be specialized or the
  * new operations must be added.
  *
- * @see math::ArrayDataMiscellaneousOpsReal
+ * @see ArrayDataMiscellaneousOpsReal
  */
 
 template<class TYPE>

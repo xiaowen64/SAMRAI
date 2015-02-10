@@ -38,7 +38,7 @@ class SideIterator;
  * description of the data layout.
  *
  * @see hier::BoxGeometry
- * @see pdat::SideOverlap
+ * @see SideOverlap
  */
 
 class SideGeometry:public hier::BoxGeometry

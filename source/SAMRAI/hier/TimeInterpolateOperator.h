@@ -51,7 +51,7 @@ namespace hier {
  * centering and data type and not the mesh coordinate system, they are
  * defined in the @em geometry package.
  *
- * @see hier::TransferOperatorRegistry
+ * @see TransferOperatorRegistry
  */
 
 class TimeInterpolateOperator

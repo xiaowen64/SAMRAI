@@ -60,9 +60,9 @@ namespace xfer {
  *       CoarsenSchedule::setScheduleGenerationMethod(), which
  *       sets the option for all instances of the class.
  *
- * @see xfer::CoarsenAlgorithm
- * @see xfer::CoarsenPatchStrategy
- * @see xfer::CoarsenClasses
+ * @see CoarsenAlgorithm
+ * @see CoarsenPatchStrategy
+ * @see CoarsenClasses
  */
 
 class CoarsenSchedule

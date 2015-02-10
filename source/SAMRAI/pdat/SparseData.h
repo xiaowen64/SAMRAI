@@ -125,8 +125,8 @@ operator << (
  * SparseDataFactory.
  *
  * @see hier::PatchData
- * @see pdat::SparseDataFactory
- * @see pdat::SparseDataVariable
+ * @see SparseDataFactory
+ * @see SparseDataVariable
  */
 template<typename BOX_GEOMETRY>
 class SparseData:public hier::PatchData

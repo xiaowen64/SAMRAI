@@ -30,7 +30,7 @@ namespace pdat {
  * with edge centered geometry.
  *
  * @see hier::BoxOverlap
- * @see pdat::EdgeOverlap
+ * @see EdgeOverlap
  */
 
 class EdgeOverlap:public hier::BoxOverlap

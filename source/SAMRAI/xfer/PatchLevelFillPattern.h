@@ -31,7 +31,7 @@ namespace xfer {
  * boxes to be filled as well as BoxNeighborhoodCollection information that
  * will be later used in the communications that fill those boxes.
  *
- * @see xfer::RefineSchedule
+ * @see RefineSchedule
  * @see hier::BoxNeighborhoodCollection
  */
 

@@ -29,8 +29,8 @@ namespace pdat {
  * allocate new instances of IndexData<TYPE, BOX_GEOMETRY> objects.  It is a
  * subclass of the hier::PatchDataFactory base class.
  *
- * @see pdat::IndexData
- * @see pdat::IndexVariable
+ * @see IndexData
+ * @see IndexVariable
  * @see hier::PatchDataFactory
  */
 

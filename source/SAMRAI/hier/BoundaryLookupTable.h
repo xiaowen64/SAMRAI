@@ -35,9 +35,9 @@ namespace hier {
  * of using this class is that such calculations can be programmed in
  * a dimension-independent way.
  *
- * @see hier::BoundaryBox
- * @see hier::BaseGridGeometry
- * @see hier::PatchGeometry
+ * @see BoundaryBox
+ * @see BaseGridGeometry
+ * @see PatchGeometry
  */
 
 class BoundaryLookupTable

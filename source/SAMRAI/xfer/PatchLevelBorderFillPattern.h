@@ -22,7 +22,7 @@ namespace xfer {
  * @brief PatchLevelFillPattern implementation for filling at PatchLevel
  * boundaries.
  *
- * For documentation on this interface see @ref xfer::PatchLevelFillPattern
+ * For documentation on this interface see @ref PatchLevelFillPattern
  *
  * The fill boxes will consist of the ghost regions lying outside of
  * the level interior--in other words the ghost regions at physical

@@ -32,8 +32,8 @@ namespace solv {
  * In a few cases, some arguments do not appear in the function signatures
  * below since they are superfluous via this interface.
  *
- * @see solv::CVODESolver
- * @see solv::SundialsAbstractVector
+ * @see CVODESolver
+ * @see SundialsAbstractVector
  */
 
 class CVODEAbstractFunctions

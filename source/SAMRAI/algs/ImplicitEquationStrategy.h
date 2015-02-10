@@ -35,7 +35,7 @@ namespace algs {
  * in the interface are provided in a user-supplied concrete equation class
  * derived from this base class.
  *
- * @see algs::ImplicitIntegrator
+ * @see ImplicitIntegrator
  */
 class ImplicitEquationStrategy
 {

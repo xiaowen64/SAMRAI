@@ -60,7 +60,7 @@ namespace solv {
  * Note that the virtual members of this class are all protected.  They should
  * not be used outside of a subclass of this class.
  *
- * @see solv::SNES_SAMRAIContext
+ * @see SNES_SAMRAIContext
  */
 
 class SNESAbstractFunctions

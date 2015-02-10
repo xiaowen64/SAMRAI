@@ -37,9 +37,9 @@ namespace pdat {
  * on your compiler.  Many compilers are not smart enough to optimize the
  * looping constructs and indexing operations.
  *
- * @see pdat::EdgeData
- * @see pdat::EdgeGeometry
- * @see pdat::EdgeIndex
+ * @see EdgeData
+ * @see EdgeGeometry
+ * @see EdgeIndex
  */
 
 class EdgeIterator

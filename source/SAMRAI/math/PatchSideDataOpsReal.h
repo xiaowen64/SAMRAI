@@ -44,9 +44,9 @@ namespace math {
  * PatchSideDataOpsComplex and PatchSideDataOpsInteger,
  * repsectively.
  *
- * @see math::PatchSideDataBasicOps
- * @see math::PatchSideDataMiscellaneousOpsReal
- * @see math::PatchSideDataNormOpsReal
+ * @see PatchSideDataBasicOps
+ * @see PatchSideDataMiscellaneousOpsReal
+ * @see PatchSideDataNormOpsReal
  */
 
 template<class TYPE>

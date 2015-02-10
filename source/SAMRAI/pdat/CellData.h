@@ -55,12 +55,12 @@ namespace pdat {
  * The data type TYPE must define a default constructor (i.e., taking no
  * arguments) and also the copy assignment operator.
  *
- * @see pdat::ArrayData
+ * @see ArrayData
  * @see hier::PatchData
- * @see pdat::CellDataFactory
- * @see pdat::CellIndex
- * @see pdat::CellIterator
- * @see pdat::CellGeometry
+ * @see CellDataFactory
+ * @see CellIndex
+ * @see CellIterator
+ * @see CellGeometry
  */
 
 template<class TYPE>

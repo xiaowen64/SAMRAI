@@ -196,8 +196,8 @@ namespace hier {
  *   proper_nesting_buffer = 1
  * @endcode
  *
- * @see hier::PatchLevel
- * @see hier::PatchDescriptor
+ * @see PatchLevel
+ * @see PatchDescriptor
  */
 
 class PatchHierarchy:public tbox::Serializable

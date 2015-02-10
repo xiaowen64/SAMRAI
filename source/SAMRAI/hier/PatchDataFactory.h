@@ -61,9 +61,9 @@ class MultiblockDataTranslator;
  * processors independent of the mapping of patches to processors.  Patch
  * data is guaranteed to exist only on those patches local to a processor.
  *
- * @see hier::BoxGeometry
- * @see hier::PatchData
- * @see hier::PatchDescriptor
+ * @see BoxGeometry
+ * @see PatchData
+ * @see PatchDescriptor
  */
 
 class PatchDataFactory

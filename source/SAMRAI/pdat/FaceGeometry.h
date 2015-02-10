@@ -38,7 +38,7 @@ class FaceIterator;
  * description of the data layout.
  *
  * @see hier::BoxGeometry
- * @see pdat::FaceOverlap
+ * @see FaceOverlap
  */
 
 class FaceGeometry:public hier::BoxGeometry

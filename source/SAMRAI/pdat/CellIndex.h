@@ -26,9 +26,9 @@ namespace pdat {
  * index location in AMR index space and are identical to the AMR indices.
  *
  * @see hier::Index
- * @see pdat::CellData
- * @see pdat::CellGeometry
- * @see pdat::CellIterator
+ * @see CellData
+ * @see CellGeometry
+ * @see CellIterator
  */
 
 class CellIndex:public hier::Index

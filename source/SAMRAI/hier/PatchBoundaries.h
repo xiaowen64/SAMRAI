@@ -34,7 +34,7 @@ namespace hier {
  * @brief Class PatchBoundaries is a container class for storing
  * BoundaryBox objects for a single patch.
  *
- * @see hier::BoundaryBox
+ * @see BoundaryBox
  */
 
 class PatchBoundaries

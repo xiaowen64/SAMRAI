@@ -52,7 +52,7 @@ namespace math {
  * HierarchyFaceDataOpsComplex and HierarchyFaceDataOpsInteger,
  * respectively.
  *
- * @see math::PatchFaceDataOpsReal
+ * @see PatchFaceDataOpsReal
  */
 
 template<class TYPE>

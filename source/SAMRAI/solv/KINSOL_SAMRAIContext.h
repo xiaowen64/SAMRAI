@@ -310,7 +310,7 @@ namespace solv {
  *   KINSOL_print_flag        =  3   // print all output KINSOL has to offer
  * @endcode
  *
- * @see solv::NonlinearSolverStrategy
+ * @see NonlinearSolverStrategy
  */
 class KINSOL_SAMRAIContext:
    public NonlinearSolverStrategy,

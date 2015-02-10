@@ -37,8 +37,8 @@ namespace appu {
  * definitions that apply for the various boundary types, locations,
  * and boundary conditions.
  *
- * @see appu::CartesianBoundaryUtilities2
- * @see appu::CartesianBoundaryUtilities3
+ * @see CartesianBoundaryUtilities2
+ * @see CartesianBoundaryUtilities3
  */
 
 class BoundaryUtilityStrategy

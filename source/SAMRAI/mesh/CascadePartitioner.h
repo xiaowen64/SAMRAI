@@ -113,7 +113,7 @@ namespace mesh {
  * Whether limit work a process can supply to its surplus.  The effects on partitioning
  * speed and quality are not yet known.
  *
- * @see mesh::LoadBalanceStrategy
+ * @see LoadBalanceStrategy
  */
 
 class CascadePartitioner:

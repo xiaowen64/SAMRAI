@@ -165,9 +165,9 @@ namespace mesh {
  * are performed in the StandardTagAndInitStrategy
  * data member, for which methods are specified in a derived subclass.
  *
- * @see mesh::TagAndInitializeStrategy
- * @see mesh::GriddingAlgorithm
- * @see mesh::StandardTagAndInitStrategy
+ * @see TagAndInitializeStrategy
+ * @see GriddingAlgorithm
+ * @see StandardTagAndInitStrategy
  */
 
 class StandardTagAndInitialize:
@@ -529,8 +529,8 @@ public:
     *                     removed.
     * @param old_level The level in hierarchy about to be removed.
     *
-    * @see mesh::GriddingAlgorithm
-    * @see mesh::StandardTagAndInitStrategy
+    * @see GriddingAlgorithm
+    * @see StandardTagAndInitStrategy
     */
    void
    processLevelBeforeRemoval(

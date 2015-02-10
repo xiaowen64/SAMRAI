@@ -123,8 +123,8 @@ namespace hier {
  * than in the box, box list, box array classes to avoid circular dependencies
  * among these classes.
  *
- * @see hier::Box
- * @see hier::BoxContainer
+ * @see Box
+ * @see BoxContainer
  */
 
 struct BoxUtilities {

@@ -76,12 +76,12 @@ namespace pdat {
  * as this face data class, except that the coordinate directions of the
  * individual arrays are not permuted.
  *
- * @see pdat::ArrayData
+ * @see ArrayData
  * @see hier::PatchData
- * @see pdat::FaceDataFactory
- * @see pdat::FaceIndex
- * @see pdat::FaceIterator
- * @see pdat::FaceGeometry
+ * @see FaceDataFactory
+ * @see FaceIndex
+ * @see FaceIterator
+ * @see FaceGeometry
  */
 
 template<class TYPE>

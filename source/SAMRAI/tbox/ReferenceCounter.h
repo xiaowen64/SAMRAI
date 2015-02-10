@@ -30,7 +30,7 @@ namespace tbox {
  * object will cause my simple memory allocation mechanism to break in
  * horrible and disgusting ways.
  *
- * @see tbox::Array
+ * @see Array
  */
 
 class ReferenceCounter

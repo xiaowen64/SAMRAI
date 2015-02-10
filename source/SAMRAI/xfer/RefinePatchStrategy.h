@@ -55,8 +55,8 @@ namespace xfer {
  * For operations on a mesh with block-singularities, implementations of this
  * class must also inherit and implement SingularityPatchStrategy.
  *
- * @see xfer::RefineAlgorithm
- * @see xfer::RefineSchedule
+ * @see RefineAlgorithm
+ * @see RefineSchedule
  */
 
 class RefinePatchStrategy

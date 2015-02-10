@@ -44,9 +44,9 @@ namespace math {
  * PatchCellDataOpsComplex and PatchCellDataOpsInteger,
  * respectively.
  *
- * @see math::PatchCellDataBasicOps
- * @see math::PatchCellDataMiscellaneousOpsReal
- * @see math::PatchCellDataNormOpsReal
+ * @see PatchCellDataBasicOps
+ * @see PatchCellDataMiscellaneousOpsReal
+ * @see PatchCellDataNormOpsReal
  */
 
 template<class TYPE>

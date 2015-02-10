@@ -37,9 +37,9 @@ namespace pdat {
  * on your compiler.  Many compilers are not smart enough to optimize the
  * looping constructs and indexing operations.
  *
- * @see pdat::CellData
- * @see pdat::CellGeometry
- * @see pdat::CellIndex
+ * @see CellData
+ * @see CellGeometry
+ * @see CellIndex
  */
 
 class CellIterator

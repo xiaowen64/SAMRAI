@@ -1434,8 +1434,8 @@ public:
     * The base will be this BoxLevel.
     * Find Connector relationships using a (non-scalable) global search.
     *
-    * @see hier::Connector
-    * @see hier::Connector::initialize()
+    * @see Connector
+    * @see Connector::initialize()
     *
     * @param[in] head This BoxLevel will be the head.
     * @param[in] connector_width
@@ -1461,8 +1461,8 @@ public:
     * The base will be this BoxLevel.
     * Find Connector relationships using a (non-scalable) global search.
     *
-    * @see hier::Connector
-    * @see hier::Connector::initialize()
+    * @see Connector
+    * @see Connector::initialize()
     *
     * @param[in] head This BoxLevel will be the head.
     * @param[in] connector_width

@@ -37,9 +37,9 @@ namespace pdat {
  * on your compiler.  Many compilers are not smart enough to optimize the
  * looping constructs and indexing operations.
  *
- * @see pdat::SideData
- * @see pdat::SideGeometry
- * @see pdat::SideIndex
+ * @see SideData
+ * @see SideGeometry
+ * @see SideIndex
  */
 
 class SideIterator

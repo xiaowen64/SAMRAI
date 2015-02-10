@@ -38,7 +38,7 @@ class CellIterator;
  * description of the data layout.
  *
  * @see hier::BoxGeometry
- * @see pdat::CellOverlap
+ * @see CellOverlap
  */
 
 class CellGeometry:public hier::BoxGeometry

@@ -1980,7 +1980,7 @@ BaseGridGeometry::readBlockDataFromInput(
             for (std::map<BlockId, Neighbor>::iterator nei = nbr_map.begin();
                  nei != nbr_map.end(); ++nei) {
 
-               const hier::BlockId& nbr_blk = nei->second.getBlockId();
+               const BlockId& nbr_blk = nei->second.getBlockId();
 
                if (si->find(nbr_blk) != si->end()) {
 
@@ -2037,7 +2037,7 @@ BaseGridGeometry::readBlockDataFromInput(
                for (std::map<BlockId, Neighbor>::iterator nei = nbr_map.begin();
                     nei != nbr_map.end(); ++nei) {
 
-                  const hier::BlockId& nbr_blk = nei->second.getBlockId();
+                  const BlockId& nbr_blk = nei->second.getBlockId();
                   if (encon_nbrs.find(nbr_blk.getBlockValue()) !=
                       encon_nbrs.end()) {
 
@@ -2072,7 +2072,7 @@ BaseGridGeometry::readBlockDataFromInput(
                for (std::map<BlockId, Neighbor>::iterator nei = nbr_map.begin();
                     nei != nbr_map.end(); ++nei) {
 
-                  const hier::BlockId& nbr_blk = nei->second.getBlockId();
+                  const BlockId& nbr_blk = nei->second.getBlockId();
 
                   if (si->find(nbr_blk) != si->end()) {
 
@@ -2108,7 +2108,7 @@ BaseGridGeometry::readBlockDataFromInput(
                      /*
                       * single point singularity.
                       */
-                     const hier::Index& sing_node = sing_node_box.lower();
+                     const Index& sing_node = sing_node_box.lower();
 
                      bool found_corner[d_dim.getValue()];
                      for (int d = 0; d < d_dim.getValue(); ++d) {
@@ -2120,7 +2120,7 @@ BaseGridGeometry::readBlockDataFromInput(
                      for (BoxContainer::iterator cd = cur_domain.begin();
                           cd != cur_domain.end(); ++cd) {
 
-                        const hier::Box& domain_box = *cd;
+                        const Box& domain_box = *cd;
 
                         for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
 
@@ -2175,7 +2175,7 @@ BaseGridGeometry::readBlockDataFromInput(
                         TBOX_ERROR("The computed singularity boundary between ");
                      }
 
-                     const hier::Index& sing_node = sing_node_box.lower();
+                     const Index& sing_node = sing_node_box.lower();
 
                      bool found_corner[d_dim.getValue()];
                      for (int d = 0; d < d_dim.getValue(); ++d) {
@@ -2187,7 +2187,7 @@ BaseGridGeometry::readBlockDataFromInput(
                      for (BoxContainer::iterator cd = cur_domain.begin();
                           cd != cur_domain.end(); ++cd) {
 
-                        const hier::Box& domain_box = *cd;
+                        const Box& domain_box = *cd;
 
                         for (tbox::Dimension::dir_t d = 0; d < d_dim.getValue(); ++d) {
 
@@ -2358,7 +2358,7 @@ void BaseGridGeometry::findSingularities(
       const BlockId& base_block = base_box.getBlockId();
       const BoxId& base_id = base_box.getBoxId();
 
-      hier::Box grow_base(base_box);
+      Box grow_base(base_box);
       grow_base.grow(IntVector::getOne(d_dim));
 
       std::vector<const Box *> nbr_boxes;
@@ -2407,7 +2407,7 @@ void BaseGridGeometry::findSingularities(
          nbr_node_box.setUpper(
             nbr_node_box.upper() + IntVector::getOne(d_dim));
 
-         hier::Box face_box(base_node_box * nbr_node_box);
+         Box face_box(base_node_box * nbr_node_box);
 
          bool is_face = false;
          int face_num = -1;
@@ -2523,7 +2523,7 @@ BaseGridGeometry::chopDomain(
    bool chopped = false;
    while (breaking_needed) {
       for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
-         hier::BlockId base_block(b);
+         BlockId base_block(b);
 
          const std::map<BlockId, Neighbor>& nbrs_of_base = d_block_neighbors[b];
 
@@ -2613,7 +2613,7 @@ BaseGridGeometry::chopDomain(
                  itr = nbrs_of_base.begin();
                  itr != nbrs_of_base.end(); ++itr) {
 
-               const hier::BlockId& nbr_block = itr->second.getBlockId();
+               const BlockId& nbr_block = itr->second.getBlockId();
 
                BoxContainerSingleBlockIterator ni(
                   chopped_domain.begin(nbr_block));

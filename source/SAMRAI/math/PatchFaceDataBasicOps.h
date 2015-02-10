@@ -42,7 +42,7 @@ namespace math {
  * types as the template parameter.  None of the operations are implemented
  * for any other type.
  *
- * @see math::ArrayDataBasicOps
+ * @see ArrayDataBasicOps
  */
 
 template<class TYPE>

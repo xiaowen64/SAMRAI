@@ -40,8 +40,8 @@ namespace xfer {
  * coarsening using CoarsenOperators and the postprocess member function is
  * called afterwards.
  *
- * @see xfer::CoarsenAlgorithm
- * @see xfer::CoarsenSchedule
+ * @see CoarsenAlgorithm
+ * @see CoarsenSchedule
  */
 
 class CoarsenPatchStrategy

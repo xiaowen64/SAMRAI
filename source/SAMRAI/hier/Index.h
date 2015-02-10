@@ -27,9 +27,9 @@ namespace hier {
  * Index is essentially an integer vector but it carries along the
  * notion of indexing into AMR's abstract index space.
  *
- * @see hier::Box
- * @see hier::BoxIterator
- * @see hier::IntVector
+ * @see Box
+ * @see BoxIterator
+ * @see IntVector
  */
 
 class Index

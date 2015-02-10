@@ -37,9 +37,9 @@ namespace pdat {
  * on your compiler.  Many compilers are not smart enough to optimize the
  * looping constructs and indexing operations.
  *
- * @see pdat::FaceData
- * @see pdat::FaceGeometry
- * @see pdat::FaceIndex
+ * @see FaceData
+ * @see FaceGeometry
+ * @see FaceIndex
  */
 
 class FaceIterator

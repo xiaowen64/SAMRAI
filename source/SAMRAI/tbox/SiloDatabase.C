@@ -794,7 +794,7 @@ SiloDatabase::getDatabaseBoxVector(
    int offset = ca->elemlengths[0];
    for (int i = 0; i < (ca->elemlengths[0]); ++i) {
       TBOX_ASSERT(values[i] > 0 && values[i] <= SAMRAI::MAX_DIM_VAL);
-      boxVector[i].d_data.d_dimension = static_cast<tbox::Dimension::dir_t>(values[i]);
+      boxVector[i].d_data.d_dimension = static_cast<Dimension::dir_t>(values[i]);
       /*
        * This preserves old behavior where boxes can be different dims but is
        * likely not supported anywhere else in the library.

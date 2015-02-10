@@ -184,7 +184,7 @@ namespace mesh {
  * However, you can probably use this load balancer on up to 1K
  * processors before its performance degrades noticably.
  *
- * @see mesh::LoadBalanceStrategy
+ * @see LoadBalanceStrategy
  */
 
 class ChopAndPackLoadBalancer:

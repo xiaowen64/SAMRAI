@@ -128,7 +128,7 @@ InputManager::parseInputFile(
    int worked = (fstream ? 1 : 0);
    mpi.Bcast(&worked, 1, MPI_INT, 0);
    if (!worked) {
-      TBOX_ERROR("tbox::InputManager: Could not open input file``"
+      TBOX_ERROR("InputManager: Could not open input file``"
          << filename.c_str() << "''\n");
    }
 

@@ -39,12 +39,12 @@ class BaseGridGeometry;
  * To iterate over the local patches in a patch level, use the patch
  * level iterator class (PatchLevel::Iterator).
  *
- * @see hier::BasePatchLevel
- * @see hier::Patch
- * @see hier::PatchDescriptor
- * @see hier::PatchFactory
- * @see hier::PatchLevelFactory
- * @see hier::PatchLevel::Iterator
+ * @see BasePatchLevel
+ * @see Patch
+ * @see PatchDescriptor
+ * @see PatchFactory
+ * @see PatchLevelFactory
+ * @see PatchLevel::Iterator
  */
 
 class PatchLevel
@@ -970,8 +970,8 @@ public:
     * The base will be this PatchLevel's BoxLevel.
     * Find Connector relationships using a (non-scalable) global search.
     *
-    * @see hier::Connector
-    * @see hier::Connector::initialize()
+    * @see Connector
+    * @see Connector::initialize()
     *
     * @param[in] head This PatchLevel's BoxLevel will be the head.
     * @param[in] connector_width
@@ -997,8 +997,8 @@ public:
     * The base will be this PatchLevel's BoxLevel.
     * Find Connector relationships using a (non-scalable) global search.
     *
-    * @see hier::Connector
-    * @see hier::Connector::initialize()
+    * @see Connector
+    * @see Connector::initialize()
     *
     * @param[in] head This PatchLevel's BoxLevel will be the head.
     * @param[in] connector_width

@@ -53,7 +53,7 @@ class HyperbolicLevelIntegrator;
  * context.  The concrete patch strategy subclass can access the appropriate
  * context via the getDataContext() method.
  *
- * @see algs::HyperbolicLevelIntegrator
+ * @see HyperbolicLevelIntegrator
  * @see xfer::RefinePatchStrategy
  * @see xfer::CoarsenPatchStrategy
  */

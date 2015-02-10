@@ -36,9 +36,9 @@ namespace pdat {
  * instructions on using this class to provide other irregular index set
  * types.
  *
- * @see pdat::IndexData
- * @see pdat::IndexDataFactory
- * @see pdat::Variable
+ * @see IndexData
+ * @see IndexDataFactory
+ * @see Variable
  */
 
 template<class TYPE, class BOX_GEOMETRY>

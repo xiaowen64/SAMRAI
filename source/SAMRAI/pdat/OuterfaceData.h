@@ -76,12 +76,12 @@ namespace pdat {
  * individual arrays are not permuted; i.e., OutersideData is consistent
  * with the SideData implementation.
  *
- * @see pdat::ArrayData
+ * @see ArrayData
  * @see hier::PatchData
- * @see pdat::OuterfaceDataFactory
- * @see pdat::OuterfaceGeometry
- * @see pdat::FaceIterator
- * @see pdat::FaceIndex
+ * @see OuterfaceDataFactory
+ * @see OuterfaceGeometry
+ * @see FaceIterator
+ * @see FaceIndex
  */
 
 template<class TYPE>

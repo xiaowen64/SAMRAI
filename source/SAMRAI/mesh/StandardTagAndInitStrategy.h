@@ -46,7 +46,7 @@ namespace mesh {
  * coarsenDataForRichardsonExtrapolation(), getLevelDt(), advanceLevel(),
  * resetTimeDependentData(), and resetDataToPreadvanceState().
  *
- * @see mesh::StandardTagAndInitialize.
+ * @see StandardTagAndInitialize.
  */
 
 class StandardTagAndInitStrategy
@@ -374,8 +374,8 @@ public:
     *                     removed.
     * @param old_level The level in hierarchy about to be removed.
     *
-    * @see mesh::GriddingAlgorithm
-    * @see mesh::StandardTagAndInitStrategy
+    * @see GriddingAlgorithm
+    * @see StandardTagAndInitStrategy
     */
    virtual void
    processLevelBeforeRemoval(

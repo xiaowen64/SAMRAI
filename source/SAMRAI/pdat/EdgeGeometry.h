@@ -39,7 +39,7 @@ class EdgeIterator;
  * description of the data layout.
  *
  * @see hier::BoxGeometry
- * @see pdat::EdgeOverlap
+ * @see EdgeOverlap
  */
 
 class EdgeGeometry:public hier::BoxGeometry

@@ -1347,7 +1347,7 @@ BoxUtilities::findBadCutPointsForDirection(
    TBOX_ASSERT(!box.empty());
    TBOX_ASSERT(bad_interval >= IntVector::getZero(dim));
 
-   hier::BlockId::block_t b = box.getBlockId().getBlockValue();
+   BlockId::block_t b = box.getBlockId().getBlockValue();
 
    int ic;
 

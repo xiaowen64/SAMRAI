@@ -186,7 +186,7 @@ namespace algs {
  *    tag_buffer            = 1,1,1,1   // a max of 4 finer levels in hierarchy
  * @endcode
  *
- * @see algs::TimeRefinementLevelStrategy
+ * @see TimeRefinementLevelStrategy
  * @see mesh::GriddingAlgorithmStrategy
  */
 

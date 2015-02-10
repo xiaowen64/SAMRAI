@@ -94,9 +94,9 @@ class IndexIterator;
  * IndexData objects are created by the IndexDataFactory
  * factory object just as all other patch data types.
  *
- * @see pdat::IndexData
+ * @see IndexData
  * @see hier::PatchData
- * @see pdat::IndexDataFactory
+ * @see IndexDataFactory
  */
 
 template<class TYPE, class BOX_GEOMETRY>
@@ -591,8 +591,8 @@ private:
  * }
  * \endverbatim
  *
- * @see pdat::IndexData
- * @see pdat::IndexIterator
+ * @see IndexData
+ * @see IndexIterator
  */
 
 template<class TYPE, class BOX_GEOMETRY>

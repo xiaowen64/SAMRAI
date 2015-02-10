@@ -28,9 +28,9 @@ namespace pdat {
  * about the mapping between the AMR index space and the side indices.
  *
  * @see hier::Index
- * @see pdat::SideData
- * @see pdat::SideGeometry
- * @see pdat::SideIterator
+ * @see SideData
+ * @see SideGeometry
+ * @see SideIterator
  */
 
 class SideIndex:public hier::Index

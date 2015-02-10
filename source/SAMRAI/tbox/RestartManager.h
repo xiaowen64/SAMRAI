@@ -73,7 +73,7 @@ namespace tbox {
  * both a restart directory name and a restore number for its arguments.
  * See comments for member functions for more details.
  *
- * @see tbox::Database
+ * @see Database
  */
 
 class RestartManager

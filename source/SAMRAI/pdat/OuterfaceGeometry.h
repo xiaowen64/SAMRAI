@@ -37,8 +37,8 @@ class FaceGeometry;
  * description of the data layout.
  *
  * @see hier::BoxGeometry
- * @see pdat::FaceGeometry
- * @see pdat::FaceOverlap
+ * @see FaceGeometry
+ * @see FaceOverlap
  */
 
 class OuterfaceGeometry:public hier::BoxGeometry

@@ -57,7 +57,7 @@ CoarseFineBoundary::CoarseFineBoundary(
 
    size_t number_blocks = hierarchy.getGridGeometry()->getNumberBlocks();
    const PatchLevel& level = *hierarchy.getPatchLevel(level_num);
-   const hier::IntVector& ratio_to_zero =
+   const IntVector& ratio_to_zero =
       level.getRatioToLevelZero();
 
    IntVector connector_width(max_ghost_width, number_blocks);
@@ -211,7 +211,7 @@ CoarseFineBoundary::computeFromLevel(
          >= IntVector::getOne(d_dim));
    }
 #endif
-   SAMRAI::hier::BoxContainer level_neighbors;
+   BoxContainer level_neighbors;
    level_neighbors.order();
    level_to_level.getLocalNeighbors(level_neighbors);
    level_neighbors.unorder();

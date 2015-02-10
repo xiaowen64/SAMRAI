@@ -51,7 +51,7 @@ namespace math {
  * implemented for complex patch data in the class
  * PatchCellDataNormOpsComplex.
  *
- * @see math::ArrayDataNormOpsReal
+ * @see ArrayDataNormOpsReal
  */
 
 template<class TYPE>

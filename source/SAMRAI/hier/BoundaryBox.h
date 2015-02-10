@@ -31,9 +31,9 @@ namespace hier {
  * See the getBoundaryType() and getLocationIndex() methods for more
  * information.
  *
- * @see hier::Box
- * @see hier::PatchGeometry
- * @see hier::BoundaryLookupTable
+ * @see Box
+ * @see PatchGeometry
+ * @see BoundaryLookupTable
  */
 
 class BoundaryBox

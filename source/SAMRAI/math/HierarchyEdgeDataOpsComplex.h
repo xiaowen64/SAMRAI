@@ -53,7 +53,7 @@ namespace math {
  * HierarchyEdgeDataOpsReal and HierarchyEdgeDataOpsInteger,
  * respectively.
  *
- * @see math::PatchEdgeDataOpsComplex
+ * @see PatchEdgeDataOpsComplex
  */
 
 class HierarchyEdgeDataOpsComplex:public HierarchyDataOpsComplex

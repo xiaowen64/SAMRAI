@@ -45,7 +45,7 @@ namespace appu {
  * be implemented.  If material state variables are used,
  * packMaterialStateVariableIntoDoubleBuffer() must be implemented.
  *
- * @see appu::VisItDataWriter
+ * @see VisItDataWriter
  */
 
 class VisMaterialsDataStrategy

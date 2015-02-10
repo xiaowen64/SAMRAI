@@ -32,7 +32,7 @@ namespace mesh {
  * implemented are the interfaces for xfer::RefinePatchStrategy, needed
  * primarily for physical boundary filling.
  *
- * @see mesh::GriddingAlgorithm
+ * @see GriddingAlgorithm
  * @see xfer::RefineSchedule
  * @see xfer::RefinePatchStrategy
  */

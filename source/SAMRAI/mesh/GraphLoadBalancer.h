@@ -111,7 +111,7 @@ namespace mesh {
  *   </tr>
  * </table>
  *
- * @see mesh::LoadBalanceStrategy
+ * @see LoadBalanceStrategy
  */
 
 class GraphLoadBalancer:
