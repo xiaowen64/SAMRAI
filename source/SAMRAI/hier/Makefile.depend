@@ -251,7 +251,11 @@ DEPENDS_4:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
-	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h BlockId.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/IOStream.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Logger.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h BlockId.C
 
 DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
