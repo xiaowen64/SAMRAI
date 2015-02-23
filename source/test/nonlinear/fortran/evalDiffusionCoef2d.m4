@@ -1,5 +1,5 @@
 define(NDIM,2)dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim2d.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim2d.i)dnl
 
       subroutine evalDiffusionCoef2d(
      & lo0, hi0, lo1, hi1,

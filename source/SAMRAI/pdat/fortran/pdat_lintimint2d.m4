@@ -6,7 +6,7 @@ c  Revision:    $LastChangedRevision$
 c  Description: FORTRAN routines for standard linear time interpolation 
 c               of 2d patch data types.
 c
-include(pdat_m4lintimeintops2d.i)dnl
+include(PDAT_FORTDIR/pdat_m4lintimeintops2d.i)dnl
 c
 c***********************************************************************
 c Linear time interpolation for 2d cell-centered double data

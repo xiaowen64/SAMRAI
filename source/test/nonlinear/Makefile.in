@@ -158,10 +158,6 @@ FACjacobian2d.o:	$(FORTRAN)/FACjacobian2d.m4
 	$(M4) $(M4DIRS) $(FORTRAN)/FACjacobian2d.m4 > FACjacobian2d.f
 	$(F77) $(FFLAGS) -c FACjacobian2d.f -o $@
 
-adjcrsfineoffdiag2d.o:	$(FORTRAN)/adjcrsfineoffdiag2d.m4
-	$(M4) $(M4DIRS) $(FORTRAN)/adjcrsfineoffdiag2d.m4 > adjcrsfineoffdiag2d.f
-	$(F77) $(FFLAGS) -c adjcrsfineoffdiag2d.f -o $@
-
 bcFluxCopy2d.o:	$(FORTRAN)/bcFluxCopy2d.m4
 	$(M4) $(M4DIRS) $(FORTRAN)/bcFluxCopy2d.m4 > bcFluxCopy2d.f
 	$(F77) $(FFLAGS) -c bcFluxCopy2d.f -o $@
@@ -214,10 +210,6 @@ setbc2d.o:	$(FORTRAN)/setbc2d.m4
 FACjacobian3d.o:	$(FORTRAN)/FACjacobian3d.m4
 	$(M4) $(M4DIRS) $(FORTRAN)/FACjacobian3d.m4 > FACjacobian3d.f
 	$(F77) $(FFLAGS) -c FACjacobian3d.f -o $@
-
-adjcrsfineoffdiag3d.o:	$(FORTRAN)/adjcrsfineoffdiag3d.m4
-	$(M4) $(M4DIRS) $(FORTRAN)/adjcrsfineoffdiag3d.m4 > adjcrsfineoffdiag3d.f
-	$(F77) $(FFLAGS) -c adjcrsfineoffdiag3d.f -o $@
 
 bcFluxCopy3d.o:	$(FORTRAN)/bcFluxCopy3d.m4
 	$(M4) $(M4DIRS) $(FORTRAN)/bcFluxCopy3d.m4 > bcFluxCopy3d.f

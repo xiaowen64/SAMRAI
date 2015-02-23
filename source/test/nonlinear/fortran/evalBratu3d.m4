@@ -1,5 +1,5 @@
 define(NDIM,3)dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim3d.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim3d.i)dnl
 
       subroutine evalbratu3d(
      & lo0, hi0, lo1, hi1, lo2, hi2, ghostcells,

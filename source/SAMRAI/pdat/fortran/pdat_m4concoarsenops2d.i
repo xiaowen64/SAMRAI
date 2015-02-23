@@ -6,8 +6,7 @@ c  Revision:    $LastChangedRevision$
 c  Description: m4 include file for 2d Cartesian coarsen operators
 c
 define(NDIM,2)dnl
-define(SAMRAI_FORTDIR,../../pdat/fortran)dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim2d.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim2d.i)dnl
 define(con_coarsen_op_subroutine_head_2d,`dnl
      &  ifirstc0,ifirstc1,ilastc0,ilastc1,
      &  filo0,filo1,fihi0,fihi1,

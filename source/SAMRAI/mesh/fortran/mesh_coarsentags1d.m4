@@ -8,8 +8,7 @@ c  Modified:
 c  Description: F77 routines for coarsening 1d integer tag values.
 c
 define(NDIM,1)dnl
-define(SAMRAI_FORTDIR,../../pdat/fortran)dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim1d.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim1d.i)dnl
 c
 c***********************************************************************
 c Constant averaging for 1d cell-centered int tag data. The operation

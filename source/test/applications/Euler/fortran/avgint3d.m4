@@ -8,7 +8,7 @@ c               and pressure for 3d euler equations.
 c
 define(NDIM,3)dnl
 define(REAL,`double precision')dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim3d.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim3d.i)dnl
 include(FORTDIR/amrflaten3d.i)dnl
 c
 define(coarsen_index,`dnl

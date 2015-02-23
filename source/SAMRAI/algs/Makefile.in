@@ -38,10 +38,40 @@ OBJS = 	\
 	OuteredgeSumTransactionFactory.o \
 	PatchBoundaryEdgeSum.o
 
-library: $(OBJS)
+F_OBJS = \
+	algs_upfluxsum1d.o \
+	algs_upfluxsum2d.o \
+	algs_upfluxsum3d.o \
+	algs_nodeouternodeops2d.o \
+	algs_nodeouternodeops3d.o
+
+library: $(OBJS) $(F_OBJS)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 clean:
 	$(CLEAN_COMMON_LIB_FILES)
+	$(RM) *.f
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 
 include $(SRCDIR)/Makefile.depend
+
+M4DIRS = -DFORTDIR=$(SRCDIR)/fortran $(SAMRAI_M4_FLAGS)
+
+algs_upfluxsum1d.o : fortran/algs_upfluxsum1d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/algs_upfluxsum1d.m4 > algs_upfluxsum1d.f
+	$(F77) $(FFLAGS) -c algs_upfluxsum1d.f -o $@
+
+algs_upfluxsum2d.o : fortran/algs_upfluxsum2d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/algs_upfluxsum2d.m4 > algs_upfluxsum2d.f
+	$(F77) $(FFLAGS) -c algs_upfluxsum2d.f -o $@
+
+algs_upfluxsum3d.o : fortran/algs_upfluxsum3d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/algs_upfluxsum3d.m4 > algs_upfluxsum3d.f
+	$(F77) $(FFLAGS) -c algs_upfluxsum3d.f -o $@
+
+algs_nodeouternodeops2d.o : fortran/algs_nodeouternodeops2d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/algs_nodeouternodeops2d.m4 > algs_nodeouternodeops2d.f
+	$(F77) $(FFLAGS) -c algs_nodeouternodeops2d.f -o $@
+
+algs_nodeouternodeops3d.o : fortran/algs_nodeouternodeops3d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/algs_nodeouternodeops3d.m4 > algs_nodeouternodeops3d.f
+	$(F77) $(FFLAGS) -c algs_nodeouternodeops3d.f -o $@

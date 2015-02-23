@@ -5,7 +5,7 @@ c  Copyright:   (c) 1997-2015 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Description: F77 routines for debugging 2d patch data types.
 c
-include(pdat_dbugstuff2d.i)dnl
+include(PDAT_FORTDIR/pdat_dbugstuff2d.i)dnl
 c
 c***********************************************************************
 c Debugging routines for 2d cell-centered data

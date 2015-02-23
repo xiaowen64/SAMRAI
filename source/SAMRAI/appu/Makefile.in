@@ -29,10 +29,25 @@ OBJS = 	\
 	CartesianBoundaryUtilities2.o \
 	CartesianBoundaryUtilities3.o
 
-library: $(OBJS) $(OBJSXD)
+F_OBJS = \
+	appu_cartbdry2d.o \
+	appu_cartbdry3d.o
+
+library: $(OBJS) $(F_OBJS)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 clean:
 	$(CLEAN_COMMON_LIB_FILES)
+	$(RM) *.f
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 
 include $(SRCDIR)/Makefile.depend
+
+M4DIRS = -DFORTDIR=$(SRCDIR)/fortran $(SAMRAI_M4_FLAGS)
+
+appu_cartbdry2d.o : fortran/appu_cartbdry2d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/appu_cartbdry2d.m4  >appu_cartbdry2d.f
+	$(F77) $(FFLAGS) -c appu_cartbdry2d.f -o $@
+
+appu_cartbdry3d.o : fortran/appu_cartbdry3d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/appu_cartbdry3d.m4 > appu_cartbdry3d.f
+	$(F77) $(FFLAGS) -c appu_cartbdry3d.f -o $@

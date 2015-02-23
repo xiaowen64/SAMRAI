@@ -48,10 +48,30 @@ OBJS = 	\
 	TileClustering.o \
 	PartitioningParams.o
 
-library: $(OBJS)
+F_OBJS = \
+	mesh_coarsentags1d.o \
+	mesh_coarsentags2d.o \
+	mesh_coarsentags3d.o
+
+library: $(OBJS) $(F_OBJS)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 clean:
 	$(CLEAN_COMMON_LIB_FILES)
+	$(RM) *.f
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 
 include $(SRCDIR)/Makefile.depend
+
+M4DIRS = -DFORTDIR=$(SRCDIR)/fortran $(SAMRAI_M4_FLAGS)
+
+mesh_coarsentags1d.o : fortran/mesh_coarsentags1d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/mesh_coarsentags1d.m4 > mesh_coarsentags1d.f
+	$(F77) $(FFLAGS) -c mesh_coarsentags1d.f -o $@
+
+mesh_coarsentags2d.o : fortran/mesh_coarsentags2d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/mesh_coarsentags2d.m4 > mesh_coarsentags2d.f
+	$(F77) $(FFLAGS) -c mesh_coarsentags2d.f -o $@
+
+mesh_coarsentags3d.o : fortran/mesh_coarsentags3d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/mesh_coarsentags3d.m4 > mesh_coarsentags3d.f
+	$(F77) $(FFLAGS) -c mesh_coarsentags3d.f -o $@

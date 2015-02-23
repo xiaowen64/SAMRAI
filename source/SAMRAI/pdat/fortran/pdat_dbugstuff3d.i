@@ -5,8 +5,7 @@ c  Copyright:   (c) 1997-2015 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Description: m4 include file for 3d patchdata debugging routines
 c
-define(SAMRAI_FORTDIR,../../pdat/fortran)dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim3d.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim3d.i)dnl
 c
 define(pdat_debug_subroutine_head_3d,`dnl
      &  fi0,la0,fi1,la1,fi2,la2,ng,

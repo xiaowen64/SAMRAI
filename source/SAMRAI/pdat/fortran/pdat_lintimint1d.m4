@@ -6,7 +6,7 @@ c  Revision:    $LastChangedRevision$
 c  Description: FORTRAN routines for standard linear time interpolation 
 c               of 1d patch data types.
 c
-include(pdat_m4lintimeintops1d.i)dnl
+include(PDAT_FORTDIR/pdat_m4lintimeintops1d.i)dnl
 c
 c***********************************************************************
 c Linear time interpolation for 1d cell-centered double data

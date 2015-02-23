@@ -57,10 +57,50 @@ OBJS = 	\
 	CartesianOuterfaceComplexWeightedAverage.o \
 	CartesianFaceComplexWeightedAverage.o
 
-library: $(OBJS)
+F_OBJS = \
+	geom_cartcoarsen1d.o \
+	geom_cartcoarsen2d.o \
+	geom_cartcoarsen3d.o \
+	geom_cartcoarsen4d.o \
+	geom_cartrefine1d.o \
+	geom_cartrefine2d.o \
+	geom_cartrefine3d.o
+
+library: $(OBJS) $(F_OBJS)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 clean:
 	$(CLEAN_COMMON_LIB_FILES)
+	$(RM) *.f
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 
 include $(SRCDIR)/Makefile.depend
+
+M4DIRS = -DFORTDIR=$(SRCDIR)/fortran $(SAMRAI_M4_FLAGS)
+
+geom_cartcoarsen1d.o : fortran/geom_cartcoarsen1d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/geom_cartcoarsen1d.m4 > geom_cartcoarsen1d.f
+	$(F77) $(FFLAGS) -c geom_cartcoarsen1d.f -o $@
+
+geom_cartcoarsen2d.o : fortran/geom_cartcoarsen2d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/geom_cartcoarsen2d.m4 > geom_cartcoarsen2d.f
+	$(F77) $(FFLAGS) -c geom_cartcoarsen2d.f -o $@
+
+geom_cartcoarsen3d.o : fortran/geom_cartcoarsen3d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/geom_cartcoarsen3d.m4 > geom_cartcoarsen3d.f
+	$(F77) $(FFLAGS) -c geom_cartcoarsen3d.f -o $@
+
+geom_cartcoarsen4d.o : fortran/geom_cartcoarsen4d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/geom_cartcoarsen4d.m4 > geom_cartcoarsen4d.f
+	$(F77) $(FFLAGS) -c geom_cartcoarsen4d.f -o $@
+
+geom_cartrefine1d.o : fortran/geom_cartrefine1d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/geom_cartrefine1d.m4 > geom_cartrefine1d.f
+	$(F77) $(FFLAGS) -c geom_cartrefine1d.f -o $@
+
+geom_cartrefine2d.o : fortran/geom_cartrefine2d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/geom_cartrefine2d.m4 > geom_cartrefine2d.f
+	$(F77) $(FFLAGS) -c geom_cartrefine2d.f -o $@
+
+geom_cartrefine3d.o : fortran/geom_cartrefine3d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/geom_cartrefine3d.m4 > geom_cartrefine3d.f
+	$(F77) $(FFLAGS) -c geom_cartrefine3d.f -o $@

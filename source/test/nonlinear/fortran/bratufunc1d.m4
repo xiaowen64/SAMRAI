@@ -1,5 +1,5 @@
 define(NDIM,1)dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim1d.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim1d.i)dnl
 
 c
 c The following macro definitions are used in the routines below to

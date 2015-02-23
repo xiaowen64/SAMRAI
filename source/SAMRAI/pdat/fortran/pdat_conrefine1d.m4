@@ -6,7 +6,7 @@ c  Revision:    $LastChangedRevision$
 c  Description: FORTRAN routines for spatial refining of 1d patch data
 c               on a regular Cartesian mesh.
 c
-include(pdat_m4conrefineops1d.i)dnl
+include(PDAT_FORTDIR/pdat_m4conrefineops1d.i)dnl
 c
 c***********************************************************************
 c Constant interpolation for 1d cell-centered double data

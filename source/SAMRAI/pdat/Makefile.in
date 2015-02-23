@@ -106,11 +106,76 @@ OBJS = 	\
 	IntegerAttributeId.o \
 	DoubleAttributeId.o
 
-library: $(OBJS)
+F_OBJS = \
+	pdat_concoarsen1d.o \
+	pdat_concoarsen2d.o \
+	pdat_concoarsen3d.o \
+	pdat_conrefine1d.o \
+	pdat_conrefine2d.o \
+	pdat_conrefine3d.o \
+	pdat_dbugfort1d.o \
+	pdat_dbugfort2d.o \
+	pdat_dbugfort3d.o \
+	pdat_lintimint1d.o \
+	pdat_lintimint2d.o \
+	pdat_lintimint3d.o
+
+library: $(OBJS) $(F_OBJS)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 
 clean:
 	$(CLEAN_COMMON_LIB_FILES)
+	$(RM) *.f
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 
 include $(SRCDIR)/Makefile.depend
+
+M4DIRS = -DFORTDIR=$(SRCDIR)/fortran $(SAMRAI_M4_FLAGS)
+
+pdat_concoarsen1d.o : fortran/pdat_concoarsen1d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/pdat_concoarsen1d.m4 > pdat_concoarsen1d.f
+	$(F77) $(FFLAGS) -c pdat_concoarsen1d.f -o $@
+
+pdat_concoarsen2d.o : fortran/pdat_concoarsen2d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/pdat_concoarsen2d.m4 > pdat_concoarsen2d.f
+	$(F77) $(FFLAGS) -c pdat_concoarsen2d.f -o $@
+
+pdat_concoarsen3d.o : fortran/pdat_concoarsen3d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/pdat_concoarsen3d.m4 > pdat_concoarsen3d.f
+	$(F77) $(FFLAGS) -c pdat_concoarsen3d.f -o $@
+
+pdat_conrefine1d.o : fortran/pdat_conrefine1d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/pdat_conrefine1d.m4 > pdat_conrefine1d.f
+	$(F77) $(FFLAGS) -c pdat_conrefine1d.f -o $@
+
+pdat_conrefine2d.o : fortran/pdat_conrefine2d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/pdat_conrefine2d.m4 > pdat_conrefine2d.f
+	$(F77) $(FFLAGS) -c pdat_conrefine2d.f -o $@
+
+pdat_conrefine3d.o : fortran/pdat_conrefine3d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/pdat_conrefine3d.m4 > pdat_conrefine3d.f
+	$(F77) $(FFLAGS) -c pdat_conrefine3d.f -o $@
+
+pdat_dbugfort1d.o : fortran/pdat_dbugfort1d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/pdat_dbugfort1d.m4 > pdat_dbugfort1d.f
+	$(F77) $(FFLAGS) -c pdat_dbugfort1d.f -o $@
+
+pdat_dbugfort2d.o : fortran/pdat_dbugfort1d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/pdat_dbugfort1d.m4 > pdat_dbugfort1d.f
+	$(F77) $(FFLAGS) -c pdat_dbugfort1d.f -o $@
+
+pdat_dbugfort3d.o : fortran/pdat_dbugfort3d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/pdat_dbugfort3d.m4 > pdat_dbugfort3d.f
+	$(F77) $(FFLAGS) -c pdat_dbugfort3d.f -o $@
+
+pdat_lintimint1d.o : fortran/pdat_lintimint1d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/pdat_lintimint1d.m4 > pdat_lintimint1d.f
+	$(F77) $(FFLAGS) -c pdat_lintimint1d.f -o $@
+
+pdat_lintimint2d.o : fortran/pdat_lintimint2d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/pdat_lintimint2d.m4 > pdat_lintimint2d.f
+	$(F77) $(FFLAGS) -c pdat_lintimint2d.f -o $@
+
+pdat_lintimint3d.o : fortran/pdat_lintimint3d.m4
+	$(M4) $(M4DIRS) $(SRCDIR)/fortran/pdat_lintimint3d.m4 > pdat_lintimint3d.f
+	$(F77) $(FFLAGS) -c pdat_lintimint3d.f -o $@

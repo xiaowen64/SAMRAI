@@ -1,5 +1,5 @@
 define(NDIM,1)dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim1d.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim1d.i)dnl
 
       subroutine adjcrsfineoffdiag1d(
      & flo0, fhi0,

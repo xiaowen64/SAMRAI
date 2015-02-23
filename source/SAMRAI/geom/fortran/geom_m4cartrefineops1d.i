@@ -6,9 +6,8 @@ c  Revision:    $LastChangedRevision$
 c  Description: m4 include file for 1d Cartesian refine operators
 c
 define(NDIM,1)dnl
-define(SAMRAI_FORTDIR,../../pdat/fortran)dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim1d.i)dnl
-include(geom_m4cartopstuff.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim1d.i)dnl
+include(FORTDIR/geom_m4cartopstuff.i)dnl
 c
 define(cart_refine_op_subroutine_head_1d,`dnl
      &  ifirstc0,ilastc0,

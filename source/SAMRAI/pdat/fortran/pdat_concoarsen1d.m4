@@ -6,7 +6,7 @@ c  Revision:    $LastChangedRevision$
 c  Description: FORTRAN routines for spatial coarsening of 1d patch data
 c               on a regular Cartesian mesh.
 c
-include(pdat_m4concoarsenops1d.i)dnl
+include(PDAT_FORTDIR/pdat_m4concoarsenops1d.i)dnl
 c
 c***********************************************************************
 c Constant coarsening for 1d node-centered double data

@@ -5,9 +5,8 @@ c  Copyright:   (c) 1997-2015 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Description: F77 routines for updating 3d flux sums from fluxes.
 c
-define(SAMRAI_FORTDIR,../../pdat/fortran)dnl
 define(REAL,`double precision')dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim3d.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim3d.i)dnl
 c
 c***********************************************************************
 c Add flux integrals to fluxsums

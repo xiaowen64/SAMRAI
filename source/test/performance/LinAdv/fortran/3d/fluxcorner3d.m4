@@ -1,6 +1,6 @@
 define(NDIM,3)dnl
 define(REAL,`double precision')dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim3d.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim3d.i)dnl
 include(FORTDIR/3d/m4fluxcorner3d.i)dnl
 
       subroutine onethirdstate3d(dt,dx,idir,

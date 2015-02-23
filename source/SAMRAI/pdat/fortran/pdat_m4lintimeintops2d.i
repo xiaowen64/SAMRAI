@@ -5,8 +5,7 @@ c  Copyright:   (c) 1997-2015 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Description: m4 include file for 2d std linear time interpolation operators.
 c
-define(SAMRAI_FORTDIR,../../pdat/fortran)dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim2d.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim2d.i)dnl
 define(lin_time_int_subroutine_head_2d,`dnl
      &  ifirst0,ifirst1,ilast0,ilast1,
      &  oilo0,oilo1,oihi0,oihi1,

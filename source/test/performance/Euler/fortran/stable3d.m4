@@ -1,7 +1,8 @@
 define(NDIM,3)dnl
 define(NEQU,5)dnl
 define(REAL,`double precision')dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim3d.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim3d.i)dnl
+
       subroutine stabledt3d(dx,
      &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
      &  ngc0,ngc1,ngc2,

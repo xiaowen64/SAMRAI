@@ -1,7 +1,6 @@
 define(NDIM,2)dnl
 define(REAL,`double precision')dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim2d.i)dnl
-
+include(PDAT_FORTDIR/pdat_m4arrdim2d.i)dnl
 
       subroutine detectgrad2d(
      &  ifirst0,ilast0,ifirst1,ilast1,

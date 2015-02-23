@@ -8,8 +8,7 @@ c  Description:    F77 routines for summing outernode data with
 c                  other node or outernode data
 c
 define(NDIM,2)dnl
-define(SAMRAI_FORTDIR,../../pdat/fortran)dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim2d.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim2d.i)dnl
 
 define(do_cfsum_along_patch_side,`dnl
       do id = 1, depth

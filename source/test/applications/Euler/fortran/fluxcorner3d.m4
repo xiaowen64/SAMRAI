@@ -1,7 +1,7 @@
 define(NDIM,3)dnl
 define(NEQU,5)dnl
 define(REAL,`double precision')dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim3d.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim3d.i)dnl
 include(FORTDIR/m4fluxcorner3d.i)dnl
 
       subroutine onethirdstate(dt,dx,idir,

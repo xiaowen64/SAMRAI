@@ -5,8 +5,7 @@ c  Copyright:   (c) 1997-2015 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Description: m4 include file for standard 1d time interpolation operators.
 c
-define(SAMRAI_FORTDIR,../../pdat/fortran)dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim1d.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim1d.i)dnl
 define(lin_time_int_subroutine_head_1d,`dnl
      &  ifirst0,ilast0,
      &  oilo0,oihi0,

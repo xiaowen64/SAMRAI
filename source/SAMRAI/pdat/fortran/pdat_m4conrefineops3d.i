@@ -6,9 +6,8 @@ c  Revision:    $LastChangedRevision$
 c  Description: m4 include file for 3d Cartesian refine operators
 c
 define(NDIM,3)dnl
-define(SAMRAI_FORTDIR,../../pdat/fortran)dnl
-include(SAMRAI_FORTDIR/pdat_m4arrdim3d.i)dnl
-include(pdat_m4conopstuff.i)dnl
+include(PDAT_FORTDIR/pdat_m4arrdim3d.i)dnl
+include(PDAT_FORTDIR/pdat_m4conopstuff.i)dnl
 c
 define(con_refine_op_subroutine_head_3d,`dnl
      &  ifirstc0,ifirstc1,ifirstc2,ilastc0,ilastc1,ilastc2,

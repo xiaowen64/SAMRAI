@@ -6,7 +6,7 @@ c  Revision:    $LastChangedRevision$
 c  Description: FORTRAN routines for spatial coarsening of 3d patch data
 c               on a regular Cartesian mesh.
 c
-include(geom_m4cartcoarsenops3d.i)dnl
+include(FORTDIR/geom_m4cartcoarsenops3d.i)dnl
 c
 c***********************************************************************
 c Weighted averaging for 3d cell-centered double data
