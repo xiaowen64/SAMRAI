@@ -31,6 +31,6 @@ tools: restart-redistribute
 
 clean:
 	$(CLEAN_COMMON_TEST_FILES)
-	$(RM) restart-resdistribute
+	$(RM) restart-redistribute
 
 include $(SRCDIR)/Makefile.depend
