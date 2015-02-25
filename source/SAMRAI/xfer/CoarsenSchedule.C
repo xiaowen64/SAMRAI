@@ -663,11 +663,12 @@ CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
 {
    const tbox::Dimension& dim(d_crse_level->getDim());
 
-   const hier::PeriodicShiftCatalog* shift_catalog =
-      hier::PeriodicShiftCatalog::getCatalog(dim);
    const hier::BoxLevel& src_box_level = src_to_dst.getBase();
    const hier::IntVector& src_ratio(src_to_dst.getBase().getRefinementRatio());
    const hier::IntVector& dst_ratio(src_to_dst.getHead().getRefinementRatio());
+
+   const hier::PeriodicShiftCatalog& shift_catalog =
+      src_box_level.getGridGeometry()->getPeriodicShiftCatalog();
 
    /*
     * These are the counterparts to shifted dst boxes and unshifted src boxes.
@@ -684,12 +685,14 @@ CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
          if (nabr.isPeriodicImage()) {
             shifted_box.initialize(
                box,
-               shift_catalog->getOppositeShiftNumber(nabr.getPeriodicId()),
-               src_ratio);
+               shift_catalog.getOppositeShiftNumber(nabr.getPeriodicId()),
+               src_ratio,
+               shift_catalog);
             unshifted_nabr.initialize(
                nabr,
-               shift_catalog->getZeroShiftNumber(),
-               dst_ratio);
+               shift_catalog.getZeroShiftNumber(),
+               dst_ratio,
+               shift_catalog);
 
             full_inverted_edges[unshifted_nabr].insert(shifted_box);
          } else {
@@ -785,8 +788,8 @@ CoarsenSchedule::constructScheduleTransactions(
    const int num_equiv_classes =
       d_coarsen_classes->getNumberOfEquivalenceClasses();
 
-   const hier::PeriodicShiftCatalog* shift_catalog =
-      hier::PeriodicShiftCatalog::getCatalog(dim);
+   const hier::PeriodicShiftCatalog& shift_catalog =
+      src_level->getGridGeometry()->getPeriodicShiftCatalog();
 
    /*
     * Calculate the shift and the shifted source box.
@@ -799,14 +802,14 @@ CoarsenSchedule::constructScheduleTransactions(
    const hier::BlockId& src_block_id = src_box.getBlockId();
    if (src_box.isPeriodicImage()) {
       TBOX_ASSERT(!dst_box.isPeriodicImage());
-      src_shift = shift_catalog->shiftNumberToShiftDistance(
+      src_shift = shift_catalog.shiftNumberToShiftDistance(
             src_box.getPeriodicId());
       src_shift *= src_level->getRatioToLevelZero();
       unshifted_src_box.shift(-src_shift);
    }
    if (dst_box.isPeriodicImage()) {
       TBOX_ASSERT(!src_box.isPeriodicImage());
-      dst_shift = shift_catalog->shiftNumberToShiftDistance(
+      dst_shift = shift_catalog.shiftNumberToShiftDistance(
             dst_box.getPeriodicId());
       dst_shift *= dst_level->getRatioToLevelZero();
       unshifted_dst_box.shift(-dst_shift);

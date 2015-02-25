@@ -405,7 +405,8 @@ BoxLevelConnectorUtils::makeSortingMap(
        */
       cur_boxes.separatePeriodicImages(
          real_box_vector,
-         periodic_image_box_vector);
+         periodic_image_box_vector,
+         unsorted_box_level.getGridGeometry()->getPeriodicShiftCatalog());
       if (sort_boxes_by_corner) {
          qsort((void *)&real_box_vector[0],
             real_box_vector.size(),
@@ -1212,10 +1213,10 @@ BoxLevelConnectorUtils::addPeriodicImages(
    const BoxContainer& domain_search_tree,
    const IntVector& threshold_distance) const
 {
-   const PeriodicShiftCatalog* shift_catalog =
-      PeriodicShiftCatalog::getCatalog(box_level.getDim());
+   const PeriodicShiftCatalog& shift_catalog =
+      box_level.getGridGeometry()->getPeriodicShiftCatalog();
 
-   if (!shift_catalog->isPeriodic()) {
+   if (!shift_catalog.isPeriodic()) {
       return; // No-op.
    }
 
@@ -1233,10 +1234,10 @@ BoxLevelConnectorUtils::addPeriodicImages(
         ni != level_boxes.realEnd(); ++ni) {
 
       const Box& level_box = *ni;
-      for (int s = 1; s < shift_catalog->getNumberOfShifts(); ++s) {
+      for (int s = 1; s < shift_catalog.getNumberOfShifts(); ++s) {
          PeriodicId id(s);
          const IntVector try_shift =
-            shift_catalog->shiftNumberToShiftDistance(id) * box_level.getRefinementRatio();
+            shift_catalog.shiftNumberToShiftDistance(id) * box_level.getRefinementRatio();
          Box box = level_box;
          box.shift(try_shift);
          box.grow(box_level_growth);
@@ -1309,11 +1310,10 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
          << anchor_to_box_level.getConnectorWidth() << ".\n");
    }
 
-   const PeriodicShiftCatalog* shift_catalog =
-      PeriodicShiftCatalog::getCatalog(anchor_to_anchor.getConnectorWidth(
-            ).getDim());
+   const PeriodicShiftCatalog& shift_catalog =
+      box_level.getGridGeometry()->getPeriodicShiftCatalog();
 
-   if (!shift_catalog->isPeriodic()) {
+   if (!shift_catalog.isPeriodic()) {
       return; // No-op.
    }
 
@@ -1348,10 +1348,10 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
          Box grown_box = level_box;
          grown_box.grow(box_level_growth);
          bool images_added(false);
-         for (int s = 1; s < shift_catalog->getNumberOfShifts(); ++s) {
+         for (int s = 1; s < shift_catalog.getNumberOfShifts(); ++s) {
             PeriodicId id(s);
             const IntVector try_shift =
-               shift_catalog->shiftNumberToShiftDistance(id) * box_level.getRefinementRatio();
+               shift_catalog.shiftNumberToShiftDistance(id) * box_level.getRefinementRatio();
             Box box = grown_box;
             box.shift(try_shift);
             if (domain_tree.hasOverlap(box)) {

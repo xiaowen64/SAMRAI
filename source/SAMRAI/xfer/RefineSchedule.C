@@ -3469,11 +3469,12 @@ RefineSchedule::reorderNeighborhoodSetsByDstNodes(
 
    const tbox::Dimension& dim(d_dst_level->getDim());
 
-   const hier::PeriodicShiftCatalog* shift_catalog =
-      hier::PeriodicShiftCatalog::getCatalog(dim);
    const hier::BoxLevel& src_box_level = src_to_dst.getBase();
    const hier::IntVector& src_ratio = src_box_level.getRefinementRatio();
    const hier::IntVector& dst_ratio = src_to_dst.getHead().getRefinementRatio();
+
+   const hier::PeriodicShiftCatalog& shift_catalog =
+      src_box_level.getGridGeometry()->getPeriodicShiftCatalog();
 
    /*
     * These are the counterparts to shifted dst boxes and unshifted src boxes.
@@ -3490,12 +3491,14 @@ RefineSchedule::reorderNeighborhoodSetsByDstNodes(
          if (nabr.isPeriodicImage()) {
             shifted_box.initialize(
                src_box,
-               shift_catalog->getOppositeShiftNumber(nabr.getPeriodicId()),
-               src_ratio);
+               shift_catalog.getOppositeShiftNumber(nabr.getPeriodicId()),
+               src_ratio,
+               shift_catalog);
             unshifted_nabr.initialize(
                nabr,
-               shift_catalog->getZeroShiftNumber(),
-               dst_ratio);
+               shift_catalog.getZeroShiftNumber(),
+               dst_ratio,
+               shift_catalog);
             full_inverted_edges[unshifted_nabr].insert(shifted_box);
          } else {
             full_inverted_edges[nabr].insert(src_box);
@@ -4302,8 +4305,8 @@ RefineSchedule::constructScheduleTransactions(
    const int num_equiv_classes =
       d_refine_classes->getNumberOfEquivalenceClasses();
 
-   const hier::PeriodicShiftCatalog* shift_catalog =
-      hier::PeriodicShiftCatalog::getCatalog(dim);
+   const hier::PeriodicShiftCatalog& shift_catalog =
+      d_dst_level->getGridGeometry()->getPeriodicShiftCatalog();
 
    /*
     * Calculate the shift and the shifted source box.
@@ -4319,7 +4322,7 @@ RefineSchedule::constructScheduleTransactions(
       TBOX_ASSERT(!dst_box.isPeriodicImage());
       const hier::IntVector& src_ratio =
          d_src_level->getRatioToLevelZero();
-      src_shift = shift_catalog->shiftNumberToShiftDistance(
+      src_shift = shift_catalog.shiftNumberToShiftDistance(
             src_box.getPeriodicId());
       src_shift = (src_ratio > constant_zero_intvector) ?
          (src_shift * src_ratio) :
@@ -4330,7 +4333,7 @@ RefineSchedule::constructScheduleTransactions(
       TBOX_ASSERT(!src_box.isPeriodicImage());
       const hier::IntVector& dst_ratio =
          d_dst_level->getRatioToLevelZero();
-      dst_shift = shift_catalog->shiftNumberToShiftDistance(
+      dst_shift = shift_catalog.shiftNumberToShiftDistance(
             dst_box.getPeriodicId());
       dst_shift = (dst_ratio > constant_zero_intvector) ?
          (dst_shift * dst_ratio) :

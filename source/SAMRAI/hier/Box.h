@@ -16,6 +16,7 @@
 #include "SAMRAI/hier/BoxId.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
+#include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/Transformation.h"
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
@@ -121,8 +122,6 @@ public:
     * periodic_id corresponds to the zero-shift.
     *
     * @pre periodic_id.isValid()
-    * @pre periodic_id.getPeriodicValue() <
-    *      PeriodicShiftCatalog::getCatalog(box.getDim())->getNumberOfShifts()
     */
    Box(
       const Index& lower,
@@ -147,8 +146,6 @@ public:
     * periodic_id corresponds to the zero-shift.
     *
     * @pre periodic_id.isValid()
-    * @pre periodic_id.getPeriodicValue() <
-    *      PeriodicShiftCatalog::getCatalog(box.getDim())->getNumberOfShifts()
     */
    Box(
       const Box& box,
@@ -169,8 +166,6 @@ public:
     * @param[in] periodic_id
     *
     * @pre periodic_id.isValid()
-    * @pre periodic_id.getPeriodicValue() <
-    *      PeriodicShiftCatalog::getCatalog(dim)->getNumberOfShifts()
     */
    /*
     * TODO: Constructors initializing boxes are only used to construct
@@ -194,8 +189,6 @@ public:
     * @param[in] box_id
     *
     * @pre box_id.getPeriodicId().isValid()
-    * @pre box_id.getPeriodicId().getPeriodicValue() <
-    *      PeriodicShiftCatalog::getCatalog(dim)->getNumberOfShifts()
     */
    /*
     * TODO: Constructors initializing boxes are only used to construct
@@ -219,10 +212,12 @@ public:
     *
     * @param[in] refinement_ratio The index space where the Box lives.
     *
+    * @param[in] shift_catalog PeriodicShiftCatalog object that maps the
+    * PeriodicId to a specific shift.
+    *
     * @pre other.getDim() == refinement_ratio.getDim()
     * @pre periodic_id.isValid()
-    * @pre periodic_id.getPeriodicValue() <
-    *      PeriodicShiftCatalog::getCatalog(other.getDim())->getNumberOfShifts()
+    * @pre periodic_id.getPeriodicValue() < shift_catalog.getNumberOfShifts()
     * @pre (refinement_ratio > IntVector::getZero(other.getDim())) ||
     *      (refinement_ratio < IntVector::getZero(other.getDim()))
     *
@@ -231,7 +226,8 @@ public:
    Box(
       const Box& other,
       const PeriodicId& periodic_id,
-      const IntVector& refinement_ratio);
+      const IntVector& refinement_ratio,
+      const PeriodicShiftCatalog& shift_catalog);
 
    /*!
     * @brief The destructor for Box.
@@ -288,11 +284,13 @@ public:
     *
     * @param[in] refinement_ratio The index space where the Box lives.
     *
+    * @param[in] shift_catalog PeriodicShiftCatalog object that maps the
+    * PeriodicId to a specific shift.
+    *
     * @pre (getDim() == other.getDim()) &&
     *      (getDim() == refinement_ratio.getDim())
     * @pre periodic_id.isValid()
-    * @pre periodic_id.getPeriodicValue() <
-    *      PeriodicShiftCatalog::getCatalog(getDim())->getNumberOfShifts()
+    * @pre periodic_id.getPeriodicValue() < shift_catalog.getNumberOfShifts()
     * @pre (refinement_ratio > IntVector::getZero(getDim())) ||
     *      (refinement_ratio < IntVector::getZero(getDim()))
     * @pre !idLocked()
@@ -301,7 +299,8 @@ public:
    initialize(
       const Box& other,
       const PeriodicId& periodic_id,
-      const IntVector& refinement_ratio);
+      const IntVector& refinement_ratio,
+      const PeriodicShiftCatalog& shift_catalog);
 
    //! @brief Set the BoxId.
    void

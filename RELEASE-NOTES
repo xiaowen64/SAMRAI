@@ -51,6 +51,16 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
    such that refining the width associated with the coarser level will
    yield the width associated with the finer level.
 
+Bug fix in v. 3.9.1:
+
+4) A bug has been fixed that caused incorrect computations of periodic shifts
+   when different grid geometries of different sizes were used in the same
+   application.  Now periodic shifts are computed using a PeriodicShiftCatalog
+   object that is unique to each grid geometry and can be retrieved using
+   BaseGridGeometry::getPeriodicShiftCatalog().  This bug fix required a change
+   to the interfaces of one constructor of class Box and one overloaded
+   version of Box::initialize().
+
 *****************************************************************************
 
 ----------------------------------------------------------------------------

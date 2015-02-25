@@ -138,8 +138,6 @@ Box::Box(
    d_empty_flag(boost::logic::indeterminate)
 {
    TBOX_ASSERT(periodic_id.isValid());
-   TBOX_ASSERT(periodic_id.getPeriodicValue() <
-      PeriodicShiftCatalog::getCatalog(d_lo.getDim())->getNumberOfShifts());
 #ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active box count and
    // reset the high water mark of active boxes if necessary.
@@ -164,8 +162,6 @@ Box::Box(
    d_empty_flag(box.d_empty_flag)
 {
    TBOX_ASSERT(periodic_id.isValid());
-   TBOX_ASSERT(periodic_id.getPeriodicValue() <
-      PeriodicShiftCatalog::getCatalog(box.getDim())->getNumberOfShifts());
 #ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active box count and
    // reset the high water mark of active boxes if necessary.
@@ -189,8 +185,6 @@ Box::Box(
    d_empty_flag(true)
 {
    TBOX_ASSERT(periodic_id.isValid());
-   TBOX_ASSERT(periodic_id.getPeriodicValue() < PeriodicShiftCatalog::getCatalog(
-         dim)->getNumberOfShifts());
 #ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active box count and
    // reset the high water mark of active boxes if necessary.
@@ -212,9 +206,6 @@ Box::Box(
    d_empty_flag(true)
 {
    TBOX_ASSERT(box_id.getPeriodicId().isValid());
-   TBOX_ASSERT(
-      box_id.getPeriodicId().getPeriodicValue() <
-      PeriodicShiftCatalog::getCatalog(dim)->getNumberOfShifts());
 #ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active box count and
    // reset the high water mark of active boxes if necessary.
@@ -235,7 +226,8 @@ Box::Box(
 Box::Box(
    const Box& other,
    const PeriodicId& periodic_id,
-   const IntVector& refinement_ratio):
+   const IntVector& refinement_ratio,
+   const PeriodicShiftCatalog& shift_catalog):
    d_lo(other.d_lo),
    d_hi(other.d_hi),
    d_block_id(other.getBlockId()),
@@ -257,38 +249,35 @@ Box::Box(
 
    const tbox::Dimension& dim(d_lo.getDim());
 
-   const PeriodicShiftCatalog* shift_catalog =
-      PeriodicShiftCatalog::getCatalog(dim);
-
    TBOX_ASSERT(periodic_id.isValid());
-   TBOX_ASSERT(periodic_id.getPeriodicValue() < shift_catalog->getNumberOfShifts());
+   TBOX_ASSERT(periodic_id.getPeriodicValue() < shift_catalog.getNumberOfShifts());
 
    if (refinement_ratio > IntVector::getZero(dim)) {
 
-      if (other.getPeriodicId() != shift_catalog->getZeroShiftNumber()) {
+      if (other.getPeriodicId() != shift_catalog.getZeroShiftNumber()) {
          // Undo the shift that existed in other's Box.
-         shift(-shift_catalog->shiftNumberToShiftDistance(other.
+         shift(-shift_catalog.shiftNumberToShiftDistance(other.
                getPeriodicId())
             * refinement_ratio);
       }
 
-      if (periodic_id != shift_catalog->getZeroShiftNumber()) {
+      if (periodic_id != shift_catalog.getZeroShiftNumber()) {
          // Apply the shift for this Box.
-         shift(shift_catalog->shiftNumberToShiftDistance(periodic_id)
+         shift(shift_catalog.shiftNumberToShiftDistance(periodic_id)
             * refinement_ratio);
       }
 
    } else if (refinement_ratio < IntVector::getZero(dim)) {
 
-      if (other.getPeriodicId() != shift_catalog->getZeroShiftNumber()) {
+      if (other.getPeriodicId() != shift_catalog.getZeroShiftNumber()) {
          // Undo the shift that existed in other's Box.
-         shift(shift_catalog->shiftNumberToShiftDistance(other.getPeriodicId())
+         shift(shift_catalog.shiftNumberToShiftDistance(other.getPeriodicId())
             / refinement_ratio);
       }
 
-      if (periodic_id != shift_catalog->getZeroShiftNumber()) {
+      if (periodic_id != shift_catalog.getZeroShiftNumber()) {
          // Apply the shift for this Box.
-         shift(-shift_catalog->shiftNumberToShiftDistance(periodic_id)
+         shift(-shift_catalog.shiftNumberToShiftDistance(periodic_id)
             / refinement_ratio);
       }
 
@@ -353,17 +342,15 @@ void
 Box::initialize(
    const Box& other,
    const PeriodicId& periodic_id,
-   const IntVector& refinement_ratio)
+   const IntVector& refinement_ratio,
+   const PeriodicShiftCatalog& shift_catalog)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, other, refinement_ratio);
 
    const tbox::Dimension& dim(d_lo.getDim());
 
-   const PeriodicShiftCatalog* shift_catalog =
-      PeriodicShiftCatalog::getCatalog(dim);
-
    TBOX_ASSERT(periodic_id.isValid());
-   TBOX_ASSERT(periodic_id.getPeriodicValue() < shift_catalog->getNumberOfShifts());
+   TBOX_ASSERT(periodic_id.getPeriodicValue() < shift_catalog.getNumberOfShifts());
 
    d_lo = other.d_lo;
    d_hi = other.d_hi;
@@ -371,30 +358,30 @@ Box::initialize(
 
    if (refinement_ratio > IntVector::getZero(dim)) {
 
-      if (other.getPeriodicId() != shift_catalog->getZeroShiftNumber()) {
+      if (other.getPeriodicId() != shift_catalog.getZeroShiftNumber()) {
          // Undo the shift that existed in r's Box.
-         shift(-shift_catalog->shiftNumberToShiftDistance(other.
+         shift(-shift_catalog.shiftNumberToShiftDistance(other.
                getPeriodicId())
             * refinement_ratio);
       }
 
-      if (periodic_id != shift_catalog->getZeroShiftNumber()) {
+      if (periodic_id != shift_catalog.getZeroShiftNumber()) {
          // Apply the shift for this Box.
-         shift(shift_catalog->shiftNumberToShiftDistance(periodic_id)
+         shift(shift_catalog.shiftNumberToShiftDistance(periodic_id)
             * refinement_ratio);
       }
 
    } else if (refinement_ratio < IntVector::getZero(dim)) {
 
-      if (other.getPeriodicId() != shift_catalog->getZeroShiftNumber()) {
+      if (other.getPeriodicId() != shift_catalog.getZeroShiftNumber()) {
          // Undo the shift that existed in r's Box.
-         shift(shift_catalog->shiftNumberToShiftDistance(other.getPeriodicId())
+         shift(shift_catalog.shiftNumberToShiftDistance(other.getPeriodicId())
             / refinement_ratio);
       }
 
-      if (periodic_id != shift_catalog->getZeroShiftNumber()) {
+      if (periodic_id != shift_catalog.getZeroShiftNumber()) {
          // Apply the shift for this Box.
-         shift(-shift_catalog->shiftNumberToShiftDistance(periodic_id)
+         shift(-shift_catalog.shiftNumberToShiftDistance(periodic_id)
             / refinement_ratio);
       }
 

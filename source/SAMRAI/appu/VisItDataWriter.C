@@ -183,6 +183,7 @@ VisItDataWriter::~VisItDataWriter()
             delete[] ipi->d_master_min_max[comp];
       }
    }
+   d_mpi.freeCommunicator();
 }
 
 /*

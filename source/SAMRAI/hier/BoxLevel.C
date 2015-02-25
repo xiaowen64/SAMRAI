@@ -1064,6 +1064,9 @@ BoxLevel::addBox(
 
    clearForBoxChanges(false);
 
+   const PeriodicShiftCatalog& shift_catalog =
+      getGridGeometry()->getPeriodicShiftCatalog(); 
+
    BoxContainer::iterator new_iterator = d_boxes.begin();
 
    if (d_boxes.empty()) {
@@ -1071,7 +1074,7 @@ BoxLevel::addBox(
          box,
          LocalId::getZero(),
          d_mpi.getRank(),
-         PeriodicShiftCatalog::getCatalog(dim)->getZeroShiftNumber());
+         shift_catalog.getZeroShiftNumber());
       new_box.setBlockId(block_id);
       new_iterator = d_boxes.insert(d_boxes.end(), new_box);
    } else {
@@ -1112,9 +1115,12 @@ BoxLevel::addPeriodicBox(
       TBOX_ERROR("BoxLevel::addPeriodicBox(): operating on locked BoxLevel."
          << std::endl);
    }
+
+   const PeriodicShiftCatalog& shift_catalog =
+      getGridGeometry()->getPeriodicShiftCatalog();
+
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (shift_number ==
-       PeriodicShiftCatalog::getCatalog(getDim())->getZeroShiftNumber()) {
+   if (shift_number == shift_catalog.getZeroShiftNumber()) {
       TBOX_ERROR(
          "BoxLevel::addPeriodicBox cannot be used to add regular box."
          << std::endl);
@@ -1123,7 +1129,7 @@ BoxLevel::addPeriodicBox(
 
    clearForBoxChanges(false);
 
-   Box image_box(ref_box, shift_number, d_ratio);
+   Box image_box(ref_box, shift_number, d_ratio, shift_catalog);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    BoxContainer& boxes =
@@ -1136,8 +1142,7 @@ BoxLevel::addPeriodicBox(
     */
    Box real_box(getDim(),
                 ref_box.getGlobalId(),
-                PeriodicShiftCatalog::getCatalog(
-                   getDim())->getZeroShiftNumber());
+                shift_catalog.getZeroShiftNumber()); 
    if (boxes.find(real_box) == boxes.end()) {
       TBOX_ERROR(
          "BoxLevel::addPeriodicBox: cannot add periodic image Box "
@@ -1178,8 +1183,8 @@ BoxLevel::addBox(
    if (box.isPeriodicImage()) {
       Box real_box(getDim(),
                    box.getGlobalId(),
-                   PeriodicShiftCatalog::getCatalog(
-                      getDim())->getZeroShiftNumber());
+                   getGridGeometry()->getPeriodicShiftCatalog().
+                      getZeroShiftNumber());
       BoxContainer& boxes = box.getOwnerRank() ==
          d_mpi.getRank() ? d_boxes : d_global_boxes;
       if (boxes.find(real_box) == boxes.end()) {
