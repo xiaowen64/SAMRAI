@@ -54,24 +54,25 @@ clean:
 
 include $(SRCDIR)/Makefile.depend
 
-M4DIRS = -DFORTDIR=$(SRCDIR)/fortran $(SAMRAI_M4_FLAGS)
+FORTRAN = $(SRCDIR)/fortran
+M4DIRS = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
 
-algs_upfluxsum1d.o : fortran/algs_upfluxsum1d.m4
-	$(M4) $(M4DIRS) $(SRCDIR)/fortran/algs_upfluxsum1d.m4 > algs_upfluxsum1d.f
+algs_upfluxsum1d.o : $(FORTRAN)/algs_upfluxsum1d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim1d.i
+	$(M4) $(M4DIRS) $(FORTRAN)/algs_upfluxsum1d.m4 > algs_upfluxsum1d.f
 	$(F77) $(FFLAGS) -c algs_upfluxsum1d.f -o $@
 
-algs_upfluxsum2d.o : fortran/algs_upfluxsum2d.m4
-	$(M4) $(M4DIRS) $(SRCDIR)/fortran/algs_upfluxsum2d.m4 > algs_upfluxsum2d.f
+algs_upfluxsum2d.o : $(FORTRAN)/algs_upfluxsum2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i
+	$(M4) $(M4DIRS) $(FORTRAN)/algs_upfluxsum2d.m4 > algs_upfluxsum2d.f
 	$(F77) $(FFLAGS) -c algs_upfluxsum2d.f -o $@
 
-algs_upfluxsum3d.o : fortran/algs_upfluxsum3d.m4
-	$(M4) $(M4DIRS) $(SRCDIR)/fortran/algs_upfluxsum3d.m4 > algs_upfluxsum3d.f
+algs_upfluxsum3d.o : $(FORTRAN)/algs_upfluxsum3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i
+	$(M4) $(M4DIRS) $(FORTRAN)/algs_upfluxsum3d.m4 > algs_upfluxsum3d.f
 	$(F77) $(FFLAGS) -c algs_upfluxsum3d.f -o $@
 
-algs_nodeouternodeops2d.o : fortran/algs_nodeouternodeops2d.m4
-	$(M4) $(M4DIRS) $(SRCDIR)/fortran/algs_nodeouternodeops2d.m4 > algs_nodeouternodeops2d.f
+algs_nodeouternodeops2d.o : $(FORTRAN)/algs_nodeouternodeops2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i
+	$(M4) $(M4DIRS) $(FORTRAN)/algs_nodeouternodeops2d.m4 > algs_nodeouternodeops2d.f
 	$(F77) $(FFLAGS) -c algs_nodeouternodeops2d.f -o $@
 
-algs_nodeouternodeops3d.o : fortran/algs_nodeouternodeops3d.m4
-	$(M4) $(M4DIRS) $(SRCDIR)/fortran/algs_nodeouternodeops3d.m4 > algs_nodeouternodeops3d.f
+algs_nodeouternodeops3d.o : $(FORTRAN)/algs_nodeouternodeops3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i
+	$(M4) $(M4DIRS) $(FORTRAN)/algs_nodeouternodeops3d.m4 > algs_nodeouternodeops3d.f
 	$(F77) $(FFLAGS) -c algs_nodeouternodeops3d.f -o $@

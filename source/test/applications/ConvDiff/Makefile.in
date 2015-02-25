@@ -115,36 +115,36 @@ AutoTester.o:	$(AUTOTEST)/AutoTester.C
 FORTRAN		= $(SRCDIR)/fortran
 M4DIRS		= -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
 
-compute_rhs2d.o:	$(FORTRAN)/compute_rhs2d.m4
+compute_rhs2d.o:	$(FORTRAN)/compute_rhs2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/compute_rhs2d.m4 > compute_rhs2d.f
 	$(F77) $(FFLAGS) -c compute_rhs2d.f -o $@
 
-init2d.o:	$(FORTRAN)/init2d.m4
+init2d.o:	$(FORTRAN)/init2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/init2d.m4 > init2d.f
 	$(F77) $(FFLAGS) -c init2d.f -o $@
 
-tag_cells2d.o:	$(FORTRAN)/tag_cells2d.m4
+tag_cells2d.o:	$(FORTRAN)/tag_cells2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i
 	$(M4) $(M4DIRS) $(FORTRAN)/tag_cells2d.m4 > tag_cells2d.f
 	$(F77) $(FFLAGS) -c tag_cells2d.f -o $@
 
-rkstep2d.o:	$(FORTRAN)/rkstep2d.m4
+rkstep2d.o:	$(FORTRAN)/rkstep2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/rkstep2d.m4 > rkstep2d.f
 	$(F77) $(FFLAGS) -c rkstep2d.f -o $@
 
 
-compute_rhs3d.o:	$(FORTRAN)/compute_rhs3d.m4
+compute_rhs3d.o:	$(FORTRAN)/compute_rhs3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/compute_rhs3d.m4 > compute_rhs3d.f
 	$(F77) $(FFLAGS) -c compute_rhs3d.f -o $@
 
-init3d.o:	$(FORTRAN)/init3d.m4
+init3d.o:	$(FORTRAN)/init3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/init3d.m4 > init3d.f
 	$(F77) $(FFLAGS) -c init3d.f -o $@
 
-tag_cells3d.o:	$(FORTRAN)/tag_cells3d.m4
+tag_cells3d.o:	$(FORTRAN)/tag_cells3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i
 	$(M4) $(M4DIRS) $(FORTRAN)/tag_cells3d.m4 > tag_cells3d.f
 	$(F77) $(FFLAGS) -c tag_cells3d.f -o $@
 
-rkstep3d.o:	$(FORTRAN)/rkstep3d.m4
+rkstep3d.o:	$(FORTRAN)/rkstep3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/rkstep3d.m4 > rkstep3d.f
 	$(F77) $(FFLAGS) -c rkstep3d.f -o $@
 

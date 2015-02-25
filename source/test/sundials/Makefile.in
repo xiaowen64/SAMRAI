@@ -90,11 +90,11 @@ include $(SRCDIR)/Makefile.depend
 FORTRAN       = $(SRCDIR)
 M4DIRS        = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
 
-FACjacobian2d.o:	$(FORTRAN)/FACjacobian2d.m4
+FACjacobian2d.o:	$(FORTRAN)/FACjacobian2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i
 	$(M4) $(M4DIRS) $(FORTRAN)/FACjacobian2d.m4 > FACjacobian2d.f
 	$(F77) $(FFLAGS) -c FACjacobian2d.f -o $@
 
-FACjacobian3d.o:	$(FORTRAN)/FACjacobian3d.m4
+FACjacobian3d.o:	$(FORTRAN)/FACjacobian3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i
 	$(M4) $(M4DIRS) $(FORTRAN)/FACjacobian3d.m4 > FACjacobian3d.f
 	$(F77) $(FFLAGS) -c FACjacobian3d.f -o $@
 

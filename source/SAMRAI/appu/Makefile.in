@@ -42,12 +42,13 @@ clean:
 
 include $(SRCDIR)/Makefile.depend
 
-M4DIRS = -DFORTDIR=$(SRCDIR)/fortran $(SAMRAI_M4_FLAGS)
+FORTRAN = $(SRCDIR)/fortran
+M4DIRS = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
 
-appu_cartbdry2d.o : fortran/appu_cartbdry2d.m4
-	$(M4) $(M4DIRS) $(SRCDIR)/fortran/appu_cartbdry2d.m4  >appu_cartbdry2d.f
+appu_cartbdry2d.o : $(FORTRAN)/appu_cartbdry2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/appu_cartbdryparams2d.i
+	$(M4) $(M4DIRS) $(FORTRAN)/appu_cartbdry2d.m4  >appu_cartbdry2d.f
 	$(F77) $(FFLAGS) -c appu_cartbdry2d.f -o $@
 
-appu_cartbdry3d.o : fortran/appu_cartbdry3d.m4
-	$(M4) $(M4DIRS) $(SRCDIR)/fortran/appu_cartbdry3d.m4 > appu_cartbdry3d.f
+appu_cartbdry3d.o : $(FORTRAN)/appu_cartbdry3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/appu_cartbdryparams3d.i
+	$(M4) $(M4DIRS) $(FORTRAN)/appu_cartbdry3d.m4 > appu_cartbdry3d.f
 	$(F77) $(FFLAGS) -c appu_cartbdry3d.f -o $@

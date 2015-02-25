@@ -93,62 +93,62 @@ include $(SRCDIR)/Makefile.depend
 FORTRAN       = @srcdir@/fortran
 M4DIRS        = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
 
-flux2d.o:	$(FORTRAN)/2d/flux2d.m4
+flux2d.o:	$(FORTRAN)/2d/flux2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/2d/m4flux2d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/2d/flux2d.m4 > flux2d.f
 	$(F77) $(FFLAGS) -c flux2d.f -o $@
 
-grad2d.o:	$(FORTRAN)/2d/grad2d.m4
+grad2d.o:	$(FORTRAN)/2d/grad2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/2d/grad2d.m4 > grad2d.f
 	$(F77) $(FFLAGS) -c grad2d.f -o $@
 
-init2d.o:	$(FORTRAN)/2d/init2d.m4
+init2d.o:	$(FORTRAN)/2d/init2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/2d/init2d.m4 > init2d.f
 	$(F77) $(FFLAGS) -c init2d.f -o $@
 
-stable2d.o:	$(FORTRAN)/2d/stable2d.m4
+stable2d.o:	$(FORTRAN)/2d/stable2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/2d/stable2d.m4 > stable2d.f
 	$(F77) $(FFLAGS) -c stable2d.f -o $@
 
-stufprobc2d.o:	$(FORTRAN)/2d/stufprobc2d.m4
+stufprobc2d.o:	$(FORTRAN)/2d/stufprobc2d.m4 $(FORTRAN)/probparams.i
 	$(M4) $(M4DIRS) $(FORTRAN)/2d/stufprobc2d.m4 > stufprobc2d.f
 	$(F77) $(FFLAGS) -c stufprobc2d.f -o $@
 
-trace2d.o:	$(FORTRAN)/2d/trace2d.m4
+trace2d.o:	$(FORTRAN)/2d/trace2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/2d/m4trace2d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/2d/trace2d.m4 > trace2d.f
 	$(F77) $(FFLAGS) -c trace2d.f -o $@
 
-trace1d2d.o:	$(FORTRAN)/2d/trace1d2d.m4
+trace1d2d.o:	$(FORTRAN)/2d/trace1d2d.m4 $(FORTRAN)/probparams.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/2d/trace1d2d.m4 > trace1d2d.f
 	$(F77) $(FFLAGS) -c trace1d2d.f -o $@
 
-flux3d.o:	$(FORTRAN)/3d/flux3d.m4
+flux3d.o:	$(FORTRAN)/3d/flux3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/3d/m4flux3d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/3d/flux3d.m4 > flux3d.f
 	$(F77) $(FFLAGS) -c flux3d.f -o $@
 
-fluxcorner3d.o:	$(FORTRAN)/3d/fluxcorner3d.m4
+fluxcorner3d.o:	$(FORTRAN)/3d/fluxcorner3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/3d/m4fluxcorner3d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/3d/fluxcorner3d.m4 > fluxcorner3d.f
 	$(F77) $(FFLAGS) -c fluxcorner3d.f -o $@
 
-grad3d.o:	$(FORTRAN)/3d/grad3d.m4
+grad3d.o:	$(FORTRAN)/3d/grad3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/3d/grad3d.m4 > grad3d.f
 	$(F77) $(FFLAGS) -c grad3d.f -o $@
 
-init3d.o:	$(FORTRAN)/3d/init3d.m4
+init3d.o:	$(FORTRAN)/3d/init3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/3d/init3d.m4 > init3d.f
 	$(F77) $(FFLAGS) -c init3d.f -o $@
 
-stable3d.o:	$(FORTRAN)/3d/stable3d.m4
+stable3d.o:	$(FORTRAN)/3d/stable3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/3d/stable3d.m4 > stable3d.f
 	$(F77) $(FFLAGS) -c stable3d.f -o $@
 
-stufprobc3d.o:	$(FORTRAN)/3d/stufprobc3d.m4
+stufprobc3d.o:	$(FORTRAN)/3d/stufprobc3d.m4 $(FORTRAN)/probparams.i
 	$(M4) $(M4DIRS) $(FORTRAN)/3d/stufprobc3d.m4 > stufprobc3d.f
 	$(F77) $(FFLAGS) -c stufprobc3d.f -o $@
 
-trace3d.o:	$(FORTRAN)/3d/trace3d.m4
+trace3d.o:	$(FORTRAN)/3d/trace3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/3d/m4trace3d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/3d/trace3d.m4 > trace3d.f
 	$(F77) $(FFLAGS) -c trace3d.f -o $@
 
-trace1d3d.o:	$(FORTRAN)/3d/trace1d3d.m4
+trace1d3d.o:	$(FORTRAN)/3d/trace1d3d.m4 $(FORTRAN)/probparams.i $(FORTRAN)/const.i
 	$(M4) $(M4DIRS) $(FORTRAN)/3d/trace1d3d.m4 > trace1d3d.f
 	$(F77) $(FFLAGS) -c trace1d3d.f -o $@

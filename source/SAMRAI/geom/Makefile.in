@@ -75,32 +75,33 @@ clean:
 
 include $(SRCDIR)/Makefile.depend
 
-M4DIRS = -DFORTDIR=$(SRCDIR)/fortran $(SAMRAI_M4_FLAGS)
+FORTRAN = $(SRCDIR)/fortran
+M4DIRS = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
 
-geom_cartcoarsen1d.o : fortran/geom_cartcoarsen1d.m4
-	$(M4) $(M4DIRS) $(SRCDIR)/fortran/geom_cartcoarsen1d.m4 > geom_cartcoarsen1d.f
+geom_cartcoarsen1d.o : $(FORTRAN)/geom_cartcoarsen1d.m4 $(FORTRAN)/geom_m4cartcoarsenops1d.i $(PDAT_FORTDIR)/pdat_m4arrdim1d.i
+	$(M4) $(M4DIRS) $(FORTRAN)/geom_cartcoarsen1d.m4 > geom_cartcoarsen1d.f
 	$(F77) $(FFLAGS) -c geom_cartcoarsen1d.f -o $@
 
-geom_cartcoarsen2d.o : fortran/geom_cartcoarsen2d.m4
-	$(M4) $(M4DIRS) $(SRCDIR)/fortran/geom_cartcoarsen2d.m4 > geom_cartcoarsen2d.f
+geom_cartcoarsen2d.o : $(FORTRAN)/geom_cartcoarsen2d.m4 $(FORTRAN)/geom_m4cartcoarsenops2d.i $(PDAT_FORTDIR)/pdat_m4arrdim2d.i
+	$(M4) $(M4DIRS) $(FORTRAN)/geom_cartcoarsen2d.m4 > geom_cartcoarsen2d.f
 	$(F77) $(FFLAGS) -c geom_cartcoarsen2d.f -o $@
 
-geom_cartcoarsen3d.o : fortran/geom_cartcoarsen3d.m4
-	$(M4) $(M4DIRS) $(SRCDIR)/fortran/geom_cartcoarsen3d.m4 > geom_cartcoarsen3d.f
+geom_cartcoarsen3d.o : $(FORTRAN)/geom_cartcoarsen3d.m4 $(FORTRAN)/geom_m4cartcoarsenops3d.i $(PDAT_FORTDIR)/pdat_m4arrdim3d.i
+	$(M4) $(M4DIRS) $(FORTRAN)/geom_cartcoarsen3d.m4 > geom_cartcoarsen3d.f
 	$(F77) $(FFLAGS) -c geom_cartcoarsen3d.f -o $@
 
-geom_cartcoarsen4d.o : fortran/geom_cartcoarsen4d.m4
-	$(M4) $(M4DIRS) $(SRCDIR)/fortran/geom_cartcoarsen4d.m4 > geom_cartcoarsen4d.f
+geom_cartcoarsen4d.o : $(FORTRAN)/geom_cartcoarsen4d.m4 $(FORTRAN)/geom_m4cartcoarsenops4d.i $(PDAT_FORTDIR)/pdat_m4arrdim4d.i
+	$(M4) $(M4DIRS) $(FORTRAN)/geom_cartcoarsen4d.m4 > geom_cartcoarsen4d.f
 	$(F77) $(FFLAGS) -c geom_cartcoarsen4d.f -o $@
 
-geom_cartrefine1d.o : fortran/geom_cartrefine1d.m4
-	$(M4) $(M4DIRS) $(SRCDIR)/fortran/geom_cartrefine1d.m4 > geom_cartrefine1d.f
+geom_cartrefine1d.o : $(FORTRAN)/geom_cartrefine1d.m4 $(FORTRAN)/geom_m4cartrefineops1d.i $(PDAT_FORTDIR)/pdat_m4arrdim1d.i $(FORTRAN)/geom_m4cartopstuff.i
+	$(M4) $(M4DIRS) $(FORTRAN)/geom_cartrefine1d.m4 > geom_cartrefine1d.f
 	$(F77) $(FFLAGS) -c geom_cartrefine1d.f -o $@
 
-geom_cartrefine2d.o : fortran/geom_cartrefine2d.m4
-	$(M4) $(M4DIRS) $(SRCDIR)/fortran/geom_cartrefine2d.m4 > geom_cartrefine2d.f
+geom_cartrefine2d.o : $(FORTRAN)/geom_cartrefine2d.m4 $(FORTRAN)/geom_m4cartrefineops2d.i $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/geom_m4cartopstuff.i
+	$(M4) $(M4DIRS) $(FORTRAN)/geom_cartrefine2d.m4 > geom_cartrefine2d.f
 	$(F77) $(FFLAGS) -c geom_cartrefine2d.f -o $@
 
-geom_cartrefine3d.o : fortran/geom_cartrefine3d.m4
-	$(M4) $(M4DIRS) $(SRCDIR)/fortran/geom_cartrefine3d.m4 > geom_cartrefine3d.f
+geom_cartrefine3d.o : $(FORTRAN)/geom_cartrefine3d.m4 $(FORTRAN)/geom_m4cartrefineops3d.i $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/geom_m4cartopstuff.i
+	$(M4) $(M4DIRS) $(FORTRAN)/geom_cartrefine3d.m4 > geom_cartrefine3d.f
 	$(F77) $(FFLAGS) -c geom_cartrefine3d.f -o $@

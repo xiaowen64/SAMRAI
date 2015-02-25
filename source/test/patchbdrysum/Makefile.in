@@ -92,10 +92,10 @@ include $(SRCDIR)/Makefile.depend
 FORTRAN       = $(SRCDIR)
 M4DIRS        = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
 
-edgeops2d.o:	$(FORTRAN)/edgeops2d.m4
+edgeops2d.o:	$(FORTRAN)/edgeops2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i
 	$(M4) $(M4DIRS) $(FORTRAN)/edgeops2d.m4 > edgeops2d.f
 	$(F77) $(FFLAGS) -c edgeops2d.f -o $@
 
-edgeops3d.o:	$(FORTRAN)/edgeops3d.m4
+edgeops3d.o:	$(FORTRAN)/edgeops3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i
 	$(M4) $(M4DIRS) $(FORTRAN)/edgeops3d.m4 > edgeops3d.f
 	$(F77) $(FFLAGS) -c edgeops3d.f -o $@
