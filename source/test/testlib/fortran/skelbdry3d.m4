@@ -1,4 +1,11 @@
 c
+c This file is part of the SAMRAI distribution.  For full copyright
+c information, see COPYRIGHT and COPYING.LESSER.
+c
+c Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+c Description:   FORTRAN routines for general 3d boundary condition cases,
+c                node boundary conditions, and edge boundary conditions
+c
 c***********************************************************************
 c***********************************************************************
       subroutine getskelfacebdry3d(
@@ -14,12 +21,7 @@ c***********************************************************************
 c***********************************************************************
       implicit none
 c
-c  File:        appu_cartbdryparams3d.i
-c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2015 Lawrence Livermore National Security, LLC
-c  Revision:    
-c  Modified:    
-c  Description: m4 include file for 3d boundary constant common blocks
+c  3d boundary constant common blocks
 c
       common/skelbdrylocparams3d/
      &  XLEFT,XRIGHT,YLEFT,YRIGHT,ZLEFT,ZRIGHT, 
@@ -295,12 +297,7 @@ c***********************************************************************
 c***********************************************************************
       implicit none
 c
-c  File:        appu_skelbdryparams3d.i
-c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2015 Lawrence Livermore National Security, LLC
-c  Revision:    
-c  Modified:    
-c  Description: m4 include file for 3d boundary constant common blocks
+c  3d boundary constant common blocks
 c
       common/skelbdrylocparams3d/
      &  XLEFT,XRIGHT,YLEFT,YRIGHT,ZLEFT,ZRIGHT, 
@@ -947,12 +944,7 @@ c***********************************************************************
 c***********************************************************************
       implicit none
 c
-c  File:        appu_skelbdryparams3d.i
-c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2015 Lawrence Livermore National Security, LLC
-c  Revision:    
-c  Modified:    
-c  Description: m4 include file for 3d boundary constant common blocks
+c  3d boundary constant common blocks
 c
       common/skelbdrylocparams3d/
      &  XLEFT,XRIGHT,YLEFT,YRIGHT,ZLEFT,ZRIGHT, 
@@ -1274,12 +1266,7 @@ c***********************************************************************
      &  X0Y0Z0in, X1Y0Z0in, X0Y1Z0in, X1Y1Z0in,
      &  X0Y0Z1in, X1Y0Z1in, X0Y1Z1in, X1Y1Z1in
 c
-c  File:        appu_skelbdryparams3d.i
-c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2015 Lawrence Livermore National Security, LLC
-c  Revision:    
-c  Modified:    
-c  Description: m4 include file for 3d boundary constant common blocks
+c  3d boundary constant common blocks
 c
       common/skelbdrylocparams3d/
      &  XLEFT,XRIGHT,YLEFT,YRIGHT,ZLEFT,ZRIGHT, 
@@ -1356,12 +1343,7 @@ c***********************************************************************
      &  DIRICHLETin, XDIRICHLETin, YDIRICHLETin, ZDIRICHLETin,
      &  NEUMANNin, XNEUMANNin, YNEUMANNin, ZNEUMANNin
 c
-c  File:        appu_skelbdryparams3d.i
-c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2015 Lawrence Livermore National Security, LLC
-c  Revision:    
-c  Modified:    
-c  Description: m4 include file for 3d boundary constant common blocks
+c  3d boundary constant common blocks
 c
       common/skelbdrylocparams3d/
      &  XLEFT,XRIGHT,YLEFT,YRIGHT,ZLEFT,ZRIGHT, 

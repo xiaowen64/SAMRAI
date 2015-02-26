@@ -1,3 +1,11 @@
+c
+c This file is part of the SAMRAI distribution.  For full copyright
+c information, see COPYRIGHT and COPYING.LESSER.
+c
+c Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+c Description:   F77 routine to evaluate exponential term in modified Bratu
+c                problem in 2d.
+c
 define(NDIM,2)dnl
 include(PDAT_FORTDIR/pdat_m4arrdim2d.i)dnl
 

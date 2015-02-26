@@ -1,9 +1,10 @@
 c
-c  File:        $URL$
-c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2015 Lawrence Livermore National Security, LLC
-c  Revision:    $LastChangedRevision$
-c  Description: m4 include file for 2d std linear time interpolation operators.
+c This file is part of the SAMRAI distribution.  For full copyright
+c information, see COPYRIGHT and COPYING.LESSER.
+c
+c Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+c Description:   m4 include file for 2d standard linear time interpolation
+c                operators.
 c
 include(PDAT_FORTDIR/pdat_m4arrdim2d.i)dnl
 define(lin_time_int_subroutine_head_2d,`dnl

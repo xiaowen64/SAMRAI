@@ -1,3 +1,10 @@
+c
+c This file is part of the SAMRAI distribution.  For full copyright
+c information, see COPYRIGHT and COPYING.LESSER.
+c
+c Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+c Description:   m4 include file for 3d corner flux calculation.
+c
 define(st_third,`dnl
       do ic$3=ifirst$3-FLUXG,ilast$3+FLUXG
          do ic$2=ifirst$2-FLUXG,ilast$2+FLUXG

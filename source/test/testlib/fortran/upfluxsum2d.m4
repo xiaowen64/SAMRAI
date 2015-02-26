@@ -1,9 +1,9 @@
 c
-c  File:        algs_upfluxsum2d.m4
-c  Package:     SAMRAI algorithms
-c  Copyright:   (c) 1997-2015 Lawrence Livermore National Security, LLC
-c  Revision:    $LastChangedRevision$
-c  Description: F77 routines for updating 2d flux sums from fluxes.
+c This file is part of the SAMRAI distribution.  For full copyright
+c information, see COPYRIGHT and COPYING.LESSER.
+c
+c Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+c Description:   F77 routines for updating 2d flux sums from fluxes.
 c
 define(REAL,`double precision')dnl
 include(PDAT_FORTDIR/pdat_m4arrdim2d.i)dnl
