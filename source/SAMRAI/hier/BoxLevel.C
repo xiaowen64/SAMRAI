@@ -1050,7 +1050,6 @@ BoxLevel::addBox(
       TBOX_ERROR("BoxLevel::addBox(): operating on locked BoxLevel."
          << std::endl);
    }
-   const tbox::Dimension& dim(getDim());
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != DISTRIBUTED) {
       TBOX_ERROR("Individually adding Boxes is a local process\n"

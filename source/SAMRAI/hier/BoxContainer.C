@@ -614,9 +614,6 @@ BoxContainer::separatePeriodicImages(
    }
 
    if (!empty()) {
-
-      const Box& first_element(*begin());
-
       const PeriodicId zero_shift_number(shift_catalog.getZeroShiftNumber());
 
       real_box_vector.reserve(real_box_vector.size() + size());
@@ -1390,8 +1387,6 @@ BoxContainer::unshiftPeriodicImageBoxes(
    iterator hint = output_boxes.begin();
 
    if (!empty()) {
-      const Box& first_element(*begin());
-
       const PeriodicId zero_shift_number(shift_catalog.getZeroShiftNumber());
 
       for (const_iterator na = begin(); na != end(); ++na) {
