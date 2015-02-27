@@ -142,6 +142,7 @@ TileClustering::findBoxesContainingTags(
       d_object_timers->t_find_boxes_containing_tags->barrierAndStart();
    }
 
+   d_object_timers->t_cluster->start();
    d_object_timers->t_cluster_setup->start();
 
    const hier::IntVector& zero_vector = hier::IntVector::getZero(tag_level->getDim());
@@ -278,12 +279,14 @@ TileClustering::findBoxesContainingTags(
       }
    }
 
+   d_object_timers->t_cluster->barrierAndStop();
+
    /*
     * Get some global parameters.  Do it before logging to prevent the
     * logging flag from having a side-effect on performance timers.
     */
 
-   d_object_timers->t_cluster_wrapup->barrierAndStart();
+   d_object_timers->t_cluster_wrapup->start();
 
    if (d_barrier_and_time) {
       d_object_timers->t_global_reductions->start();
@@ -393,7 +396,7 @@ TileClustering::clusterWithinProcessBoundaries(
    int tag_data_index,
    int tag_val)
 {
-   d_object_timers->t_cluster->start();
+   d_object_timers->t_cluster_local->start();
 
    // Determine max number of tiles any local patch can generate.
    int max_tiles_for_any_patch = 0;
@@ -454,7 +457,7 @@ TileClustering::clusterWithinProcessBoundaries(
 
    new_box_level.finalize();
 
-   d_object_timers->t_cluster->stop();
+   d_object_timers->t_cluster_local->stop();
 }
 
 /*
@@ -475,6 +478,15 @@ TileClustering::clusterWithinProcessBoundaries(
  * and removeDuplicateTiles().
  *
  * This method does no communication.
+ *
+ * TODO: The algorithm used can produce boxes violating mininum patch
+ * size if the minimum patch size is bigger than the refinement ratio.
+ * This happens when there is a tile boundary within 1 coarse cell of
+ * the domain boundary.  The box generated would be tile-sized, but
+ * when it's sheared off at the boundary (see
+ * shearTilesAtBlockBoundaries()), it would be 1 coarse-cell wide.  If
+ * the minimum patch size is set larger than the refinement ratio then
+ * the 1 coarse-cell box would end up violating minimum box size.
  ***********************************************************************
  */
 void
@@ -487,7 +499,7 @@ TileClustering::clusterWholeTiles(
    int tag_data_index,
    int tag_val)
 {
-   d_object_timers->t_cluster->start();
+   d_object_timers->t_cluster_local->start();
 
    if (d_print_steps) {
       tbox::plog << "TileClustering::clusterWholeTiles: entered." << std::endl;
@@ -653,7 +665,7 @@ TileClustering::clusterWholeTiles(
       tbox::plog << "TileClustering::clusterWholeTiles: leaving." << std::endl;
    }
 
-   d_object_timers->t_cluster->stop();
+   d_object_timers->t_cluster_local->stop();
 }
 
 /*
@@ -1519,6 +1531,8 @@ TileClustering::setTimerPrefix(
             timer_prefix + "::findBoxesContainingTags()");
       d_object_timers->t_cluster = tm->getTimer(
             timer_prefix + "::findBoxesContainingTags()_cluster");
+      d_object_timers->t_cluster_local = tm->getTimer(
+            timer_prefix + "::findBoxesContainingTags()_cluster_local");
       d_object_timers->t_coalesce = tm->getTimer(
             timer_prefix + "::findBoxesContainingTags()_coalesce");
       d_object_timers->t_coalesce_adjustment = tm->getTimer(
