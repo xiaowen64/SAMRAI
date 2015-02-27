@@ -20348,6 +20348,7 @@ source/test/nonlinear
 source/test/nonlinear/fortran
 source/test/OverlapConnectorAlgorithm
 source/test/patchbdrysum
+source/test/patchbdrysum/fortran
 source/test/performance
 source/test/performance/Euler
 source/test/performance/Euler/fortran
@@ -20363,6 +20364,7 @@ source/test/restartdb
 source/test/samrai_mpi
 source/test/sparsedata
 source/test/sundials
+source/test/sundials/fortran
 source/test/testlib
 source/test/testlib/fortran
 source/test/timers
@@ -20385,7 +20387,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20388:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20390:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20399,7 +20401,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20402:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20404:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
