@@ -1,0 +1,65 @@
+#########################################################################
+##
+## This file is part of the SAMRAI distribution.  For full copyright 
+## information, see COPYRIGHT and COPYING.LESSER. 
+##
+## Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+## Description:   makefile for fortran files for geom directory 
+##
+#########################################################################
+
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
+SUBDIR        = source/SAMRAI/geom/fortran
+VPATH         = @srcdir@
+OBJECT        = ../../../..
+
+default: library
+
+include $(OBJECT)/config/Makefile.config
+
+OBJS= 	geom_cartcoarsen1d.o \
+	geom_cartcoarsen2d.o \
+	geom_cartcoarsen3d.o \
+	geom_cartcoarsen4d.o \
+	geom_cartrefine1d.o \
+	geom_cartrefine2d.o \
+	geom_cartrefine3d.o
+
+library:	$(OBJS)
+
+clean:
+	$(CLEAN_COMMON_LIB_FILES)
+	$(RM) *.f
+
+#include $(SRCDIR)/Makefile.depend
+
+M4DIRS = -DFORTDIR=$(SRCDIR) $(SAMRAI_M4_FLAGS)
+
+geom_cartcoarsen1d.o : $(SRCDIR)/geom_cartcoarsen1d.m4 $(SRCDIR)/geom_m4cartcoarsenops1d.i $(PDAT_FORTDIR)/pdat_m4arrdim1d.i
+	$(M4) $(M4DIRS) $(SRCDIR)/geom_cartcoarsen1d.m4 > geom_cartcoarsen1d.f
+	$(F77) $(FFLAGS) -c geom_cartcoarsen1d.f -o $@
+
+geom_cartcoarsen2d.o : $(SRCDIR)/geom_cartcoarsen2d.m4 $(SRCDIR)/geom_m4cartcoarsenops2d.i $(PDAT_FORTDIR)/pdat_m4arrdim2d.i
+	$(M4) $(M4DIRS) $(SRCDIR)/geom_cartcoarsen2d.m4 > geom_cartcoarsen2d.f
+	$(F77) $(FFLAGS) -c geom_cartcoarsen2d.f -o $@
+
+geom_cartcoarsen3d.o : $(SRCDIR)/geom_cartcoarsen3d.m4 $(SRCDIR)/geom_m4cartcoarsenops3d.i $(PDAT_FORTDIR)/pdat_m4arrdim3d.i
+	$(M4) $(M4DIRS) $(SRCDIR)/geom_cartcoarsen3d.m4 > geom_cartcoarsen3d.f
+	$(F77) $(FFLAGS) -c geom_cartcoarsen3d.f -o $@
+
+geom_cartcoarsen4d.o : $(SRCDIR)/geom_cartcoarsen4d.m4 $(SRCDIR)/geom_m4cartcoarsenops4d.i $(PDAT_FORTDIR)/pdat_m4arrdim4d.i
+	$(M4) $(M4DIRS) $(SRCDIR)/geom_cartcoarsen4d.m4 > geom_cartcoarsen4d.f
+	$(F77) $(FFLAGS) -c geom_cartcoarsen4d.f -o $@
+
+geom_cartrefine1d.o : $(SRCDIR)/geom_cartrefine1d.m4 $(SRCDIR)/geom_m4cartrefineops1d.i $(PDAT_FORTDIR)/pdat_m4arrdim1d.i $(SRCDIR)/geom_m4cartopstuff.i
+	$(M4) $(M4DIRS) $(SRCDIR)/geom_cartrefine1d.m4 > geom_cartrefine1d.f
+	$(F77) $(FFLAGS) -c geom_cartrefine1d.f -o $@
+
+geom_cartrefine2d.o : $(SRCDIR)/geom_cartrefine2d.m4 $(SRCDIR)/geom_m4cartrefineops2d.i $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(SRCDIR)/geom_m4cartopstuff.i
+	$(M4) $(M4DIRS) $(SRCDIR)/geom_cartrefine2d.m4 > geom_cartrefine2d.f
+	$(F77) $(FFLAGS) -c geom_cartrefine2d.f -o $@
+
+geom_cartrefine3d.o : $(SRCDIR)/geom_cartrefine3d.m4 $(SRCDIR)/geom_m4cartrefineops3d.i $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(SRCDIR)/geom_m4cartopstuff.i
+	$(M4) $(M4DIRS) $(SRCDIR)/geom_cartrefine3d.m4 > geom_cartrefine3d.f
+	$(F77) $(FFLAGS) -c geom_cartrefine3d.f -o $@
