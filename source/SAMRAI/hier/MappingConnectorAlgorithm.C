@@ -271,9 +271,9 @@ MappingConnectorAlgorithm::modify(
             true) == 0);
       TBOX_ASSERT(old_to_new.checkOverlapCorrectness(true, false) == 0);
       TBOX_ASSERT(!new_to_old ||
-         new_to_old->checkOverlapCorrectness(true, false) == 0);
+                  new_to_old->checkOverlapCorrectness(true, false) == 0);
       TBOX_ASSERT(!new_to_old ||
-         old_to_new.checkTransposeCorrectness(*new_to_old, true) == 0);
+                  old_to_new.checkTransposeCorrectness(*new_to_old, true) == 0);
    }
 
    d_object_timers->t_modify_public->stop();
@@ -875,13 +875,13 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
                      tbox::plog << std::endl;
                   }
                   if (anchor_to_new.hasLocalNeighbor(ianchor->getBoxId(),
-                         old_box_gone)) {
+                                                     old_box_gone)) {
                      if (s_print_steps == 'y') {
                         tbox::plog << "    Removing neighbor " << old_box_gone
                                    << " from list for " << *ianchor << std::endl;
                      }
                      anchor_to_new.eraseNeighbor(old_box_gone,
-                        ianchor->getBoxId());
+                                                 ianchor->getBoxId());
                   }
 
                   ++ianchor;
@@ -1301,6 +1301,8 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const InvertedNeighborhoodSet& inverted_nbrhd,
    const IntVector& head_refinement_ratio) const
 {
+   d_object_timers->t_modify_find_overlaps_for_one_process->start();
+
    const BoxLevel& old = mapping_connector.getBase();
    const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
       old.getGridGeometry());
@@ -1375,8 +1377,8 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
          if (base_box.getOwnerRank() != rank) {
             // Pack up info for sending.
             ++send_mesg[remote_box_counter_index];
-            const int subsize = 3
-               + BoxId::commBufferSize() * static_cast<int>(found_nabrs.size());
+            const int subsize = 3 +
+               BoxId::commBufferSize() * static_cast<int>(found_nabrs.size());
             send_mesg.insert(send_mesg.end(), subsize, -1);
             int* submesg = &send_mesg[send_mesg.size() - subsize];
             *(submesg++) = base_box.getLocalId().getValue();
@@ -1418,6 +1420,8 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
          }
       }
    }
+
+   d_object_timers->t_modify_find_overlaps_for_one_process->stop();
 }
 
 /*
@@ -1490,6 +1494,8 @@ MappingConnectorAlgorithm::getAllTimers(
       getTimer(timer_prefix + "::privateModify_removeAndCache()");
    timers.t_modify_discover_and_send = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::privateModify_discoverAndSend()");
+   timers.t_modify_find_overlaps_for_one_process = tbox::TimerManager::getManager()->
+      getTimer(timer_prefix + "::privateModify_findOverlapsForOneProcess()");
    timers.t_modify_receive_and_unpack = tbox::TimerManager::getManager()->
       getTimer(timer_prefix + "::receiveAndUnpack()");
    timers.t_modify_MPI_wait = tbox::TimerManager::getManager()->

@@ -134,8 +134,8 @@ namespace mesh {
  *
  *   - \b    sequentialize_patch_indices
  *      whether patch indices will be globally sequentialized.
- *      This is not scalable, but is required for writing correct VisIt files.
- *      Due to the current VisIt requirement, this is currently true by
+ *      This is required for writing correct VisIt files, and
+ *      due to the current VisIt requirement, this is currently true by
  *      default.  It will evetually be set back to false after we remove the
  *      VisIt requirement.
  *

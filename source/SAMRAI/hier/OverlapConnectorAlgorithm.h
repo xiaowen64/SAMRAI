@@ -48,6 +48,12 @@ public:
    virtual ~OverlapConnectorAlgorithm();
 
    /*!
+    * @brief Read extra debugging flag from input database.
+    */
+   void
+   getFromInput();
+
+   /*!
     * @brief Create overlap Connector then discover and add overlaps from base
     * to head to it.
     *
@@ -653,12 +659,6 @@ private:
       const IntVector& neighbor_refinement_ratio) const;
 
    /*!
-    * @brief Read extra debugging flag from input database.
-    */
-   void
-   getFromInput();
-
-   /*!
     * @brief Set up things for the entire class.
     *
     * Only called by StartupShutdownManager.
@@ -692,6 +692,7 @@ private:
     * class but may not be necessary anymore.
     */
    static int s_operation_mpi_tag;
+
 
    //@{
    //! @name Timer data for this class.

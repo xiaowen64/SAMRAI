@@ -273,9 +273,8 @@ private:
     * having O(N lg N) expected complexity.
     */
    void
-   coalesceTiles(
-      hier::BoxContainer &tiles,
-      const hier::Box &bounding_box );
+   coalesceBoxes(
+      hier::BoxContainer &boxes );
 
    const tbox::Dimension d_dim;
 
@@ -347,6 +346,7 @@ private:
    struct TimerStruct {
       boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
       boost::shared_ptr<tbox::Timer> t_cluster;
+      boost::shared_ptr<tbox::Timer> t_cluster_local;
       boost::shared_ptr<tbox::Timer> t_coalesce;
       boost::shared_ptr<tbox::Timer> t_coalesce_adjustment;
       boost::shared_ptr<tbox::Timer> t_global_reductions;
