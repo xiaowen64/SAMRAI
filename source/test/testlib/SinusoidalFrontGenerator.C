@@ -209,7 +209,8 @@ void SinusoidalFrontGenerator::setTags(
          0 /* uval data */,
          tag_data.get(),
          tag_data->getBox(),
-         (static_cast<size_t>(tag_ln) < d_buffer_distance.size() ? d_buffer_distance[tag_ln] : d_buffer_distance.back()),
+         (static_cast<size_t>(tag_ln) < d_buffer_distance.size() ?
+          d_buffer_distance[tag_ln] : d_buffer_distance.back()),
          patch_geom->getXLower(),
          patch_geom->getDx());
 
