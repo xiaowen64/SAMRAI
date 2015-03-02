@@ -37,54 +37,54 @@ clean:
 	$(CLEAN_COMMON_LIB_FILES)
 	$(RM) *.f
 
-#include $(SRCDIR)/Makefile.depend
+include $(SRCDIR)/Makefile.depend
 
 M4DIRS = -DFORTDIR=$(SRCDIR) $(SAMRAI_M4_FLAGS)
 
-pdat_concoarsen1d.o : $(SRCDIR)/pdat_concoarsen1d.m4 $(SRCDIR)/pdat_m4concoarsenops1d.i $(SRCDIR)/pdat_m4arrdim1d.i
+pdat_concoarsen1d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/pdat_concoarsen1d.m4 > pdat_concoarsen1d.f
 	$(F77) $(FFLAGS) -c pdat_concoarsen1d.f -o $@
 
-pdat_concoarsen2d.o : $(SRCDIR)/pdat_concoarsen2d.m4 $(SRCDIR)/pdat_m4concoarsenops2d.i $(SRCDIR)/pdat_m4arrdim2d.i
+pdat_concoarsen2d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/pdat_concoarsen2d.m4 > pdat_concoarsen2d.f
 	$(F77) $(FFLAGS) -c pdat_concoarsen2d.f -o $@
 
-pdat_concoarsen3d.o : $(SRCDIR)/pdat_concoarsen3d.m4 $(SRCDIR)/pdat_m4concoarsenops3d.i $(SRCDIR)/pdat_m4arrdim3d.i
+pdat_concoarsen3d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/pdat_concoarsen3d.m4 > pdat_concoarsen3d.f
 	$(F77) $(FFLAGS) -c pdat_concoarsen3d.f -o $@
 
-pdat_conrefine1d.o : $(SRCDIR)/pdat_conrefine1d.m4 $(SRCDIR)/pdat_m4conrefineops1d.i $(SRCDIR)/pdat_m4arrdim1d.i $(SRCDIR)/pdat_m4conopstuff.i
+pdat_conrefine1d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/pdat_conrefine1d.m4 > pdat_conrefine1d.f
 	$(F77) $(FFLAGS) -c pdat_conrefine1d.f -o $@
 
-pdat_conrefine2d.o : $(SRCDIR)/pdat_conrefine2d.m4 $(SRCDIR)/pdat_m4conrefineops2d.i $(SRCDIR)/pdat_m4arrdim2d.i $(SRCDIR)/pdat_m4conopstuff.i
+pdat_conrefine2d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/pdat_conrefine2d.m4 > pdat_conrefine2d.f
 	$(F77) $(FFLAGS) -c pdat_conrefine2d.f -o $@
 
-pdat_conrefine3d.o : $(SRCDIR)/pdat_conrefine3d.m4 $(SRCDIR)/pdat_m4conrefineops3d.i $(SRCDIR)/pdat_m4arrdim3d.i $(SRCDIR)/pdat_m4conopstuff.i
+pdat_conrefine3d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/pdat_conrefine3d.m4 > pdat_conrefine3d.f
 	$(F77) $(FFLAGS) -c pdat_conrefine3d.f -o $@
 
-pdat_dbugfort1d.o : $(SRCDIR)/pdat_dbugfort1d.m4 $(SRCDIR)/pdat_dbugstuff1d.i $(SRCDIR)/pdat_m4arrdim1d.i
+pdat_dbugfort1d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/pdat_dbugfort1d.m4 > pdat_dbugfort1d.f
 	$(F77) $(FFLAGS) -c pdat_dbugfort1d.f -o $@
 
-pdat_dbugfort2d.o : $(SRCDIR)/pdat_dbugfort2d.m4 $(SRCDIR)/pdat_dbugstuff2d.i $(SRCDIR)/pdat_m4arrdim2d.i
+pdat_dbugfort2d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/pdat_dbugfort2d.m4 > pdat_dbugfort2d.f
 	$(F77) $(FFLAGS) -c pdat_dbugfort2d.f -o $@
 
-pdat_dbugfort3d.o : $(SRCDIR)/pdat_dbugfort3d.m4 $(SRCDIR)/pdat_dbugstuff3d.i $(SRCDIR)/pdat_m4arrdim3d.i
+pdat_dbugfort3d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/pdat_dbugfort3d.m4 > pdat_dbugfort3d.f
 	$(F77) $(FFLAGS) -c pdat_dbugfort3d.f -o $@
 
-pdat_lintimint1d.o : $(SRCDIR)/pdat_lintimint1d.m4 $(SRCDIR)/pdat_m4lintimeintops1d.i $(SRCDIR)/pdat_m4arrdim1d.i
+pdat_lintimint1d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/pdat_lintimint1d.m4 > pdat_lintimint1d.f
 	$(F77) $(FFLAGS) -c pdat_lintimint1d.f -o $@
 
-pdat_lintimint2d.o : $(SRCDIR)/pdat_lintimint2d.m4 $(SRCDIR)/pdat_m4lintimeintops2d.i $(SRCDIR)/pdat_m4arrdim2d.i
+pdat_lintimint2d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/pdat_lintimint2d.m4 > pdat_lintimint2d.f
 	$(F77) $(FFLAGS) -c pdat_lintimint2d.f -o $@
 
-pdat_lintimint3d.o : $(SRCDIR)/pdat_lintimint3d.m4 $(SRCDIR)/pdat_m4lintimeintops3d.i $(SRCDIR)/pdat_m4arrdim3d.i
+pdat_lintimint3d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/pdat_lintimint3d.m4 > pdat_lintimint3d.f
 	$(F77) $(FFLAGS) -c pdat_lintimint3d.f -o $@

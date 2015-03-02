@@ -9,7 +9,7 @@ define(NDIM,3)dnl
 define(NEQU,1)dnl
 define(REAL,`double precision')dnl
 include(PDAT_FORTDIR/pdat_m4arrdim3d.i)dnl
-include(FORTDIR/3d/m4flux3d.i)dnl
+include(FORTDIR/m4flux3d.i)dnl
 
       subroutine fluxcorrec3d2d(dt,
      &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,

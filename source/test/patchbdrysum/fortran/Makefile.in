@@ -26,14 +26,14 @@ main:	$(OBJS)
 clean:
 	$(CLEAN_COMMON_TEST_FILES)
 
-#include $(SRCDIR)/Makefile.depend
+include $(SRCDIR)/Makefile.depend
 
 M4DIRS = -DFORTDIR=$(SRCDIR) $(SAMRAI_M4_FLAGS)
 
-edgeops2d.o:	$(SRCDIR)/edgeops2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i
+edgeops2d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/edgeops2d.m4 > edgeops2d.f
 	$(F77) $(FFLAGS) -c edgeops2d.f -o $@
 
-edgeops3d.o:	$(SRCDIR)/edgeops3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i
+edgeops3d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/edgeops3d.m4 > edgeops3d.f
 	$(F77) $(FFLAGS) -c edgeops3d.f -o $@

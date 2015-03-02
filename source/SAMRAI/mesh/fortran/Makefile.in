@@ -28,18 +28,18 @@ clean:
 	$(CLEAN_COMMON_LIB_FILES)
 	$(RM) *.f
 
-#include $(SRCDIR)/Makefile.depend
+include $(SRCDIR)/Makefile.depend
 
 M4DIRS = -DFORTDIR=$(SRCDIR) $(SAMRAI_M4_FLAGS)
 
-mesh_coarsentags1d.o : $(SRCDIR)/mesh_coarsentags1d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim1d.i
+mesh_coarsentags1d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/mesh_coarsentags1d.m4 > mesh_coarsentags1d.f
 	$(F77) $(FFLAGS) -c mesh_coarsentags1d.f -o $@
 
-mesh_coarsentags2d.o : $(SRCDIR)/mesh_coarsentags2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i
+mesh_coarsentags2d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/mesh_coarsentags2d.m4 > mesh_coarsentags2d.f
 	$(F77) $(FFLAGS) -c mesh_coarsentags2d.f -o $@
 
-mesh_coarsentags3d.o : $(SRCDIR)/mesh_coarsentags3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i
+mesh_coarsentags3d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/mesh_coarsentags3d.m4 > mesh_coarsentags3d.f
 	$(F77) $(FFLAGS) -c mesh_coarsentags3d.f -o $@

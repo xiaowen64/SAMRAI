@@ -27,39 +27,39 @@ main:	$(OBJS)
 clean:
 	$(CLEAN_COMMON_TEST_FILES)
 
-#include $(SRCDIR)/Makefile.depend
+include $(SRCDIR)/Makefile.depend
 
 M4DIRS = -DFORTDIR=$(SRCDIR) $(SAMRAI_M4_FLAGS)
 
-compute_rhs2d.o:	$(SRCDIR)/compute_rhs2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(SRCDIR)/const.i
+compute_rhs2d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/compute_rhs2d.m4 > compute_rhs2d.f
 	$(F77) $(FFLAGS) -c compute_rhs2d.f -o $@
 
-init2d.o:	$(SRCDIR)/init2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(SRCDIR)/const.i
+init2d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/init2d.m4 > init2d.f
 	$(F77) $(FFLAGS) -c init2d.f -o $@
 
-tag_cells2d.o:	$(SRCDIR)/tag_cells2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i
+tag_cells2d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/tag_cells2d.m4 > tag_cells2d.f
 	$(F77) $(FFLAGS) -c tag_cells2d.f -o $@
 
-rkstep2d.o:	$(SRCDIR)/rkstep2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(SRCDIR)/const.i
+rkstep2d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/rkstep2d.m4 > rkstep2d.f
 	$(F77) $(FFLAGS) -c rkstep2d.f -o $@
 
 
-compute_rhs3d.o:	$(SRCDIR)/compute_rhs3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(SRCDIR)/const.i
+compute_rhs3d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/compute_rhs3d.m4 > compute_rhs3d.f
 	$(F77) $(FFLAGS) -c compute_rhs3d.f -o $@
 
-init3d.o:	$(SRCDIR)/init3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(SRCDIR)/const.i
+init3d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/init3d.m4 > init3d.f
 	$(F77) $(FFLAGS) -c init3d.f -o $@
 
-tag_cells3d.o:	$(SRCDIR)/tag_cells3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i
+tag_cells3d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/tag_cells3d.m4 > tag_cells3d.f
 	$(F77) $(FFLAGS) -c tag_cells3d.f -o $@
 
-rkstep3d.o:	$(SRCDIR)/rkstep3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(SRCDIR)/const.i
+rkstep3d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/rkstep3d.m4 > rkstep3d.f
 	$(F77) $(FFLAGS) -c rkstep3d.f -o $@

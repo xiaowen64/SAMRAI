@@ -25,22 +25,22 @@ libSAMRAI_test$(LIB_SUFFIX):	$(OBJS)
 clean:
 	$(CLEAN_COMMON_TEST_FILES)
 
-#include $(SRCDIR)/Makefile.depend
+include $(SRCDIR)/Makefile.depend
 
 M4DIRS = -DFORTDIR=$(SRCDIR) $(SAMRAI_M4_FLAGS)
 
-skelbdry2d.o:   $(SRCDIR)/skelbdry2d.m4
+skelbdry2d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/skelbdry2d.m4 > skelbdry2d.f
 	$(F77) $(FFLAGS) -c skelbdry2d.f -o $@
 
-skelbdry3d.o:   $(SRCDIR)/skelbdry3d.m4
+skelbdry3d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/skelbdry3d.m4 > skelbdry3d.f
 	$(F77) $(FFLAGS) -c skelbdry3d.f -o $@
 
-upfluxsum2d.o:  $(SRCDIR)/upfluxsum2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i
+upfluxsum2d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/upfluxsum2d.m4 > upfluxsum2d.f
 	$(F77) $(FFLAGS) -c upfluxsum2d.f -o $@
 
-upfluxsum3d.o:  $(SRCDIR)/upfluxsum3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i
+upfluxsum3d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/upfluxsum3d.m4 > upfluxsum3d.f
 	$(F77) $(FFLAGS) -c upfluxsum3d.f -o $@

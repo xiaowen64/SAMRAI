@@ -26,14 +26,14 @@ main:	$(OBJS)
 clean:
 	$(CLEAN_COMMON_TEST_FILES)
 
-#include $(SRCDIR)/Makefile.depend
+include $(SRCDIR)/Makefile.depend
 
 M4DIRS = -DFORTDIR=$(SRCDIR) $(SAMRAI_M4_FLAGS)
 
-facpoisson2d.o:	$(SRCDIR)/facpoisson2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i
+facpoisson2d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/facpoisson2d.m4 > facpoisson2d.f
 	$(F77) $(FFLAGS) -c facpoisson2d.f -o $@
 
-facpoisson3d.o:	$(SRCDIR)/facpoisson3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i
+facpoisson3d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/facpoisson3d.m4 > facpoisson3d.f
 	$(F77) $(FFLAGS) -c facpoisson3d.f -o $@

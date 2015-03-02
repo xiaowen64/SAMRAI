@@ -33,10 +33,10 @@ include $(SRCDIR)/Makefile.depend
 
 M4DIRS = -DFORTDIR=$(SRCDIR) $(SAMRAI_M4_FLAGS)
 
-appu_cartbdry2d.o : $(SRCDIR)/appu_cartbdry2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(SRCDIR)/appu_cartbdryparams2d.i
+appu_cartbdry2d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/appu_cartbdry2d.m4 > appu_cartbdry2d.f
 	$(F77) $(FFLAGS) -c appu_cartbdry2d.f -o $@
 
-appu_cartbdry3d.o : $(SRCDIR)/appu_cartbdry3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(SRCDIR)/appu_cartbdryparams3d.i
+appu_cartbdry3d.o:
 	$(M4) $(M4DIRS) $(SRCDIR)/appu_cartbdry3d.m4 > appu_cartbdry3d.f
 	$(F77) $(FFLAGS) -c appu_cartbdry3d.f -o $@
