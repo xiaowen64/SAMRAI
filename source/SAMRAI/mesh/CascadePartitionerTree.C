@@ -204,8 +204,7 @@ void CascadePartitionerTree::distributeLoad()
        * - Reset obligations of processes based on group weight.
        * - Balance the two children group.
        *
-       * For certain top groups, update Connectors.  Only non-leaf
-       * groups combine and balance children but all nodes must
+       * For certain top groups, update Connectors.  All nodes must
        * participate in updating Connectors (or the step will hang
        * when diagnostic barriers are used).
        */
@@ -292,10 +291,13 @@ void CascadePartitionerTree::distributeLoad()
 
       }
 
+      /*
+       * Update Connectors at appropriate intervals or if this is the
+       * last time through the loop.
+       */
       if ( static_cast<int>(top_gen_number/connector_update_interval) !=
            static_cast<int>((top_gen_number+1)/connector_update_interval) ||
            top_gen_number == tree_depth-2 ) {
-         // Update Connectors.
          if ( d_common->d_print_steps ) {
             tbox::plog << d_common->d_object_name << "::distributeLoad updating Connectors after balancing generation "
                        << top_group->d_gen_num << std::endl;

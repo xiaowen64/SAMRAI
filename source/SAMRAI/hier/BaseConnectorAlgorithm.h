@@ -52,8 +52,8 @@ protected:
    sendDiscoveryToOneProcess(
       std::vector<int>& send_mesg,
       const int idx_offset_to_ref,
-      BoxContainer& referenced_new_head_nabrs,
-      BoxContainer& referenced_new_base_nabrs,
+      const BoxContainer& referenced_new_head_nabrs,
+      const BoxContainer& referenced_new_base_nabrs,
       tbox::AsyncCommPeer<int>& outgoing_comm,
       const tbox::Dimension& dim,
       bool print_steps) const;
