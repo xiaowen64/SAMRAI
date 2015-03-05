@@ -4,13 +4,13 @@
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
 ## Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
-## Description:   makefile for fortran files for appu directory 
+## Description:   makefile for fortran files for mesh directory 
 ##
 #########################################################################
 
 SAMRAI        = @top_srcdir@
 SRCDIR        = @srcdir@
-SUBDIR        = source/SAMRAI/appu/fortran
+SUBDIR        = source/SAMRAI/mesh/fortran
 VPATH         = @srcdir@
 OBJECT        = ../../../..
 
@@ -18,10 +18,9 @@ default: library
 
 include $(OBJECT)/config/Makefile.config
 
-OBJS= 	appu_cpdat2buf2d.o \
-	appu_cpdat2buf3d.o \
-	appu_cartbdry2d.o \
-	appu_cartbdry3d.o
+OBJS= 	mesh_coarsentags1d.o \
+	mesh_coarsentags2d.o \
+	mesh_coarsentags3d.o
 
 library:	$(OBJS)
 
@@ -33,10 +32,14 @@ include $(SRCDIR)/Makefile.depend
 
 M4DIRS = -DFORTDIR=$(SRCDIR) $(SAMRAI_M4_FLAGS)
 
-appu_cartbdry2d.o:
-	$(M4) $(M4DIRS) $(SRCDIR)/appu_cartbdry2d.m4 > appu_cartbdry2d.f
-	$(F77) $(FFLAGS) -c appu_cartbdry2d.f -o $@
+mesh_coarsentags1d.o:
+	$(M4) $(M4DIRS) $(SRCDIR)/mesh_coarsentags1d.m4 > mesh_coarsentags1d.f
+	$(F77) $(FFLAGS) -c mesh_coarsentags1d.f -o $@
 
-appu_cartbdry3d.o:
-	$(M4) $(M4DIRS) $(SRCDIR)/appu_cartbdry3d.m4 > appu_cartbdry3d.f
-	$(F77) $(FFLAGS) -c appu_cartbdry3d.f -o $@
+mesh_coarsentags2d.o:
+	$(M4) $(M4DIRS) $(SRCDIR)/mesh_coarsentags2d.m4 > mesh_coarsentags2d.f
+	$(F77) $(FFLAGS) -c mesh_coarsentags2d.f -o $@
+
+mesh_coarsentags3d.o:
+	$(M4) $(M4DIRS) $(SRCDIR)/mesh_coarsentags3d.m4 > mesh_coarsentags3d.f
+	$(F77) $(FFLAGS) -c mesh_coarsentags3d.f -o $@

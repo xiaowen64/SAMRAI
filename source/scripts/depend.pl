@@ -35,7 +35,7 @@ if ( @ARGV ) {
 }
 else {
     opendir( SRCDIR, $src_dir ) || die "Cannot open directory $src_dir";
-    @FILES = sort grep( /.*\.[fCc]$/, (readdir SRCDIR) );
+    @FILES = sort grep( /.*\.[mfCc]$/, (readdir SRCDIR) );
     closedir SRCDIR;
 }
 $DEPEND  = "Makefile.depend.tmp";
@@ -159,6 +159,20 @@ sub getMoreDeps {
 		 ) {
 		push( @deps, $_ )
 		}
+            elsif ( s/^include\(([^\"]+)\)dnl\s*/\1/o
+                 && /[^\s]/o
+                 ) {
+                if ( s/^PDAT_FORTDIR/SAMRAI\/pdat\/fortran/o
+                     && /[^\s]/o
+                     ) {
+                   push( @deps, $_ )
+                }
+                elsif ( s/^FORTDIR\///o
+                     && /[^\s]/o
+                     ) {
+                   push( @deps, $_ )
+                }
+	      }
 	}
 	close DEPFILE;
 	if ( $debug ) {
@@ -206,6 +220,7 @@ sub printDependencies {
    
    my $LIBLINE = $SRC_FILE;
    $LIBLINE =~ s/^(.*)\.[Cfc]/$1.o/o;
+   $LIBLINE =~ s/^(.*)\.m4/$1.o/o;
    print OUTFILE "FILE_$FILENUMBER=$LIBLINE\n";
 
 

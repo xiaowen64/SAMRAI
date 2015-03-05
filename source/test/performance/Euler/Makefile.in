@@ -20,6 +20,8 @@ default:	main
 
 include $(OBJECT)/config/Makefile.config
 
+SUBDIRS = fortran
+
 CPPFLAGS_EXTRA=
 
 NUM_TESTS = 0
@@ -29,29 +31,57 @@ PERF_NPROCS = 16,32,64
 
 CXX_OBJS      = main.o Euler.o 
 F_OBJS      = \
-		  avgint2d.o flaten1d2d.o flux2d.o grad2d.o init2d.o stable2d.o \
-		  stufprobc.o trace2d.o trace1d2d.o \
-		  avgint3d.o flaten1d3d.o flux3d.o grad3d.o init3d.o stable3d.o \
-		  trace3d.o trace1d3d.o fluxcorner3d.o
+		fortran/avgint2d.o fortran/flaten1d2d.o fortran/flux2d.o \
+		fortran/grad2d.o fortran/init2d.o fortran/stable2d.o \
+		fortran/stufprobc.o fortran/trace2d.o fortran/trace1d2d.o \
+		fortran/avgint3d.o fortran/flaten1d3d.o fortran/flux3d.o \
+		fortran/grad3d.o fortran/init3d.o fortran/stable3d.o \
+		fortran/trace3d.o fortran/trace1d3d.o fortran/fluxcorner3d.o
 
 main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS)     \
 	$(LIBSAMRAI) $(LDLIBS) -o main
 
+# Prevents "No rule to make target" error.  Built in the rule for main.
+fortran/avgint2d.o:
+
+fortran/flaten1d2d.o:
+
+fortran/flux2d.o:
+
+fortran/grad2d.o:
+
+fortran/init2d.o:
+
+fortran/stable2d.o:
+
+fortran/stufprobc.o:
+
+fortran/trace2d.o:
+
+fortran/trace1d2d.o:
+
+fortran/avgint3d.o:
+
+fortran/flaten1d3d.o:
+
+fortran/flux3d.o:
+
+fortran/grad3d.o:
+
+fortran/init3d.o:
+
+fortran/stable3d.o:
+
+fortran/trace3d.o:
+
+fortran/trace1d3d.o:
+
+fortran/fluxcorner3d.o:
+
 testlib:
 	cd $(TESTLIBDIR) && $(MAKE) library
-
-checkclean:
-	$(CLEAN_COMMON_CHECK_FILES)
-	$(RM) *.timing*
-
-clean: checkclean
-	$(CLEAN_COMMON_TEST_FILES)
-	$(RM) main
-
-redo:
-	$(RM) main core *.ii *.int.c
-	$(RM) ti_files ii_files
 
 check:
 
@@ -77,79 +107,17 @@ everything:
 	$(MAKE) examples
 	$(MAKE) perf
 
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
+	$(RM) *.timing*
+
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) main
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
+
+redo:
+	$(RM) main core *.ii *.int.c
+	$(RM) ti_files ii_files
+
 include $(SRCDIR)/Makefile.depend
-
-FORTRAN       = $(SRCDIR)/fortran
-M4DIRS        = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
-
-avgint2d.o:	$(FORTRAN)/avgint2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/amrflaten2d.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/avgint2d.m4 > avgint2d.f
-	$(F77) $(FFLAGS) -c avgint2d.f -o $@
-
-avgint3d.o:	$(FORTRAN)/avgint3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/amrflaten3d.i
-	$(M4) $(M4DIRS) $(FORTRAN)/avgint3d.m4 > avgint3d.f
-	$(F77) $(FFLAGS) -c avgint3d.f -o $@
-
-flaten1d2d.o:	$(FORTRAN)/flaten1d2d.m4 $(FORTRAN)/flaten2d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/flaten1d2d.m4 > flaten1d2d.f
-	$(F77) $(FFLAGS) -c flaten1d2d.f -o $@
-
-flaten1d3d.o:	$(FORTRAN)/flaten1d3d.m4 $(FORTRAN)/flaten3d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/flaten1d3d.m4 > flaten1d3d.f
-	$(F77) $(FFLAGS) -c flaten1d3d.f -o $@
-
-flux2d.o:	$(FORTRAN)/flux2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/m4flux2d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i $(FORTRAN)/gas1d_approxrp2d.i $(FORTRAN)/gas1d_exactrp2d.i
-	$(M4) $(M4DIRS) $(FORTRAN)/flux2d.m4 > flux2d.f
-	$(F77) $(FFLAGS) -c flux2d.f -o $@
-
-flux3d.o:	$(FORTRAN)/flux3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/m4flux3d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i $(FORTRAN)/gas1d_approxrp3d.i $(FORTRAN)/gas1d_exactrp3d.i
-	$(M4) $(M4DIRS) $(FORTRAN)/flux3d.m4 > flux3d.f
-	$(F77) $(FFLAGS) -c flux3d.f -o $@
-
-fluxcorner3d.o:	$(FORTRAN)/fluxcorner3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/m4fluxcorner3d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/fluxcorner3d.m4 > fluxcorner3d.f
-	$(F77) $(FFLAGS) -c fluxcorner3d.f -o $@
-
-grad2d.o:	$(FORTRAN)/grad2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/grad2d.m4 > grad2d.f
-	$(F77) $(FFLAGS) -c grad2d.f -o $@
-
-grad3d.o:	$(FORTRAN)/grad3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/grad3d.m4 > grad3d.f
-	$(F77) $(FFLAGS) -c grad3d.f -o $@
-
-init2d.o:	$(FORTRAN)/init2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/init2d.m4 > init2d.f
-	$(F77) $(FFLAGS) -c init2d.f -o $@
-
-init3d.o:	$(FORTRAN)/init3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/init3d.m4 > init3d.f
-	$(F77) $(FFLAGS) -c init3d.f -o $@
-
-stable2d.o:	$(FORTRAN)/stable2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/stable2d.m4 > stable2d.f
-	$(F77) $(FFLAGS) -c stable2d.f -o $@
-
-stable3d.o:	$(FORTRAN)/stable3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/stable3d.m4 > stable3d.f
-	$(F77) $(FFLAGS) -c stable3d.f -o $@
-
-stufprobc.o:	$(FORTRAN)/stufprobc.m4 $(FORTRAN)/probparams.i
-	$(M4) $(M4DIRS) $(FORTRAN)/stufprobc.m4 > stufprobc.f
-	$(F77) $(FFLAGS) -c stufprobc.f -o $@
-
-trace2d.o:	$(FORTRAN)/trace2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/m4trace2d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/trace2d.m4 > trace2d.f
-	$(F77) $(FFLAGS) -c trace2d.f -o $@
-
-trace3d.o:	$(FORTRAN)/trace3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/m4trace3d.i $(FORTRAN)/probparams.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/trace3d.m4 > trace3d.f
-	$(F77) $(FFLAGS) -c trace3d.f -o $@
-
-trace1d2d.o:	$(FORTRAN)/trace1d2d.m4 $(FORTRAN)/probparams.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/trace1d2d.m4 > trace1d2d.f
-	$(F77) $(FFLAGS) -c trace1d2d.f -o $@
-
-trace1d3d.o:	$(FORTRAN)/trace1d3d.m4 $(FORTRAN)/probparams.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/trace1d3d.m4 > trace1d3d.f
-	$(F77) $(FFLAGS) -c trace1d3d.f -o $@

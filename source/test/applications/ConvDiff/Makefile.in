@@ -22,6 +22,8 @@ default: check
 
 include $(OBJECT)/config/Makefile.config
 
+SUBDIRS = fortran
+
 CPPFLAGS_EXTRA = -DTESTING=1
 
 NUM_TESTS = 2
@@ -30,17 +32,40 @@ TEST_NPROCS = @TEST_NPROCS@
 QUOTE = \"
 
 CXX_OBJS      = main.o ConvDiff.o MainRestartData.o
-F77_OBJS      = compute_rhs2d.o init2d.o rkstep2d.o tag_cells2d.o \
-		compute_rhs3d.o init3d.o rkstep3d.o tag_cells3d.o
+F77_OBJS      = fortran/compute_rhs2d.o \
+		fortran/init2d.o \
+		fortran/rkstep2d.o \
+		fortran/tag_cells2d.o \
+		fortran/compute_rhs3d.o \
+		fortran/init3d.o \
+		fortran/rkstep3d.o \
+		fortran/tag_cells3d.o
 
 
 main:	$(CXX_OBJS) $(F77_OBJS) $(LIBSAMRAIDEPEND) $(TESTLIB)
-	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1 
+	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F77_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main
 
 # Prevents "No rule to make target" error.  Built in the rule for main.
 $(TESTLIB):
+
+fortran/compute_rhs2d.o:
+
+fortran/init2d.o:
+
+fortran/rkstep2d.o:
+
+fortran/tag_cells2d.o:
+
+fortran/compute_rhs3d.o:
+
+fortran/init3d.o:
+
+fortran/rkstep3d.o:
+
+fortran/tag_cells3d.o:
 
 check:
 	$(MAKE) check2d
@@ -103,6 +128,7 @@ checkclean:
 clean: checkclean
 	$(CLEAN_COMMON_TEST_FILES)
 	$(RM) main
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 
 redo:
 	$(RM) core main*d
@@ -111,40 +137,4 @@ include $(SRCDIR)/Makefile.depend
 
 AutoTester.o:	$(AUTOTEST)/AutoTester.C
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $(AUTOTEST)/AutoTester.C -o $@
-
-FORTRAN		= $(SRCDIR)/fortran
-M4DIRS		= -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
-
-compute_rhs2d.o:	$(FORTRAN)/compute_rhs2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/compute_rhs2d.m4 > compute_rhs2d.f
-	$(F77) $(FFLAGS) -c compute_rhs2d.f -o $@
-
-init2d.o:	$(FORTRAN)/init2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/init2d.m4 > init2d.f
-	$(F77) $(FFLAGS) -c init2d.f -o $@
-
-tag_cells2d.o:	$(FORTRAN)/tag_cells2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i
-	$(M4) $(M4DIRS) $(FORTRAN)/tag_cells2d.m4 > tag_cells2d.f
-	$(F77) $(FFLAGS) -c tag_cells2d.f -o $@
-
-rkstep2d.o:	$(FORTRAN)/rkstep2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/rkstep2d.m4 > rkstep2d.f
-	$(F77) $(FFLAGS) -c rkstep2d.f -o $@
-
-
-compute_rhs3d.o:	$(FORTRAN)/compute_rhs3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/compute_rhs3d.m4 > compute_rhs3d.f
-	$(F77) $(FFLAGS) -c compute_rhs3d.f -o $@
-
-init3d.o:	$(FORTRAN)/init3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/init3d.m4 > init3d.f
-	$(F77) $(FFLAGS) -c init3d.f -o $@
-
-tag_cells3d.o:	$(FORTRAN)/tag_cells3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i
-	$(M4) $(M4DIRS) $(FORTRAN)/tag_cells3d.m4 > tag_cells3d.f
-	$(F77) $(FFLAGS) -c tag_cells3d.f -o $@
-
-rkstep3d.o:	$(FORTRAN)/rkstep3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i $(FORTRAN)/const.i
-	$(M4) $(M4DIRS) $(FORTRAN)/rkstep3d.m4 > rkstep3d.f
-	$(F77) $(FFLAGS) -c rkstep3d.f -o $@
 

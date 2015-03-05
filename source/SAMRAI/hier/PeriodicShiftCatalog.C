@@ -57,8 +57,6 @@ PeriodicShiftCatalog::setShifts(
    const tbox::Dimension& dim,
    const std::vector<IntVector>& shifts)
 {
-   const int dim_index(dim.getValue() - 1);
-
    std::vector<IntVector> tmp_shifts;
    d_opposite_number.clear();
 

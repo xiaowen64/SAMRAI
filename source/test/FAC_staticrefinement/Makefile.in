@@ -20,6 +20,8 @@ default:      check
 
 include $(OBJECT)/config/Makefile.config
 
+SUBDIRS = fortran
+
 CPPFLAGS_EXTRA= -DTESTING=0
 
 NUM_TESTS = 2
@@ -28,11 +30,17 @@ TEST_NPROCS = @TEST_NPROCS@
 QUOTE = \"
 
 CXX_OBJS      = main.o FACPoisson.o
-F_OBJS        = facpoisson2d.o facpoisson3d.o
+F_OBJS        = fortran/facpoisson2d.o fortran/facpoisson3d.o
 
 main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) \
 	$(LIBSAMRAI3D) $(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main
+
+# Prevents "No rule to make target" error.  Built in the rule for main.
+fortran/facpoisson2d.o:
+
+fortran/facpoisson3d.o:
 
 check:
 	$(MAKE) check2d
@@ -96,19 +104,9 @@ checkclean:
 clean: checkclean
 	$(CLEAN_COMMON_TEST_FILES)
 	$(RM) main
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 
 redo:
 	$(RM) core main
 
 include $(SRCDIR)/Makefile.depend
-
-FORTRAN       = $(SRCDIR)/fortran
-M4DIRS        = -DFORTDIR=$(FORTRAN) $(SAMRAI_M4_FLAGS)
-
-facpoisson2d.o:	$(FORTRAN)/facpoisson2d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim2d.i
-	$(M4) $(M4DIRS) $(FORTRAN)/facpoisson2d.m4 > facpoisson2d.f
-	$(F77) $(FFLAGS) -c facpoisson2d.f -o $@
-
-facpoisson3d.o:	$(FORTRAN)/facpoisson3d.m4 $(PDAT_FORTDIR)/pdat_m4arrdim3d.i
-	$(M4) $(M4DIRS) $(FORTRAN)/facpoisson3d.m4 > facpoisson3d.f
-	$(F77) $(FFLAGS) -c facpoisson3d.f -o $@

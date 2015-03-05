@@ -8,7 +8,7 @@ c
 define(NDIM,3)dnl
 define(REAL,`double precision')dnl
 include(PDAT_FORTDIR/pdat_m4arrdim3d.i)dnl
-include(FORTDIR/3d/m4trace3d.i)dnl
+include(FORTDIR/m4trace3d.i)dnl
 
       subroutine inittraceflux3d(
      &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,

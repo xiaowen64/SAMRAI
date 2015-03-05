@@ -20292,13 +20292,17 @@ subdirs="${subdirs} source"
 subdirs="${subdirs} source
 source/SAMRAI
 source/SAMRAI/algs
+source/SAMRAI/algs/fortran
 source/SAMRAI/appu
 source/SAMRAI/appu/fortran
 source/SAMRAI/geom
+source/SAMRAI/geom/fortran
 source/SAMRAI/hier
 source/SAMRAI/math
 source/SAMRAI/mesh
+source/SAMRAI/mesh/fortran
 source/SAMRAI/pdat
+source/SAMRAI/pdat/fortran
 source/SAMRAI/solv
 source/SAMRAI/solv/fortran
 source/SAMRAI/tbox
@@ -20306,8 +20310,11 @@ source/SAMRAI/xfer
 source/test
 source/test/applications
 source/test/applications/ConvDiff
+source/test/applications/ConvDiff/fortran
 source/test/applications/Euler
+source/test/applications/Euler/fortran
 source/test/applications/LinAdv
+source/test/applications/LinAdv/fortran
 source/test/assumed_partition
 source/test/async_comm
 source/test/boundary
@@ -20321,9 +20328,11 @@ source/test/dimension
 source/test/dlbg
 source/test/FAC_adaptive
 source/test/FAC_staticrefinement
+source/test/FAC_staticrefinement/fortran
 source/test/fill_pattern
 source/test/hierarchy
 source/test/hypre
+source/test/hypre/fortran
 source/test/indexdata
 source/test/inputdb
 source/test/LoadBalanceCorrectness
@@ -20336,13 +20345,18 @@ source/test/MblkEuler
 source/test/MblkLinAdv
 source/test/mblktree
 source/test/nonlinear
+source/test/nonlinear/fortran
 source/test/OverlapConnectorAlgorithm
 source/test/patchbdrysum
+source/test/patchbdrysum/fortran
 source/test/performance
 source/test/performance/Euler
+source/test/performance/Euler/fortran
 source/test/performance/LinAdv
+source/test/performance/LinAdv/fortran
 source/test/performance/MeshGeneration
 source/test/performance/multiblock
+source/test/performance/multiblock/fortran
 source/test/performance/TreeCommunication
 source/test/performance/treesearch
 source/test/rank_group
@@ -20350,7 +20364,9 @@ source/test/restartdb
 source/test/samrai_mpi
 source/test/sparsedata
 source/test/sundials
+source/test/sundials/fortran
 source/test/testlib
+source/test/testlib/fortran
 source/test/timers
 source/test/transformation
 source/test/variables
@@ -20371,7 +20387,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20374:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20390:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -20385,7 +20401,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:20388:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:20404:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
