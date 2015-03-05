@@ -322,6 +322,66 @@ public:
       const boost::shared_ptr<hier::PatchLevel>& old_level =
          boost::shared_ptr<hier::PatchLevel>()) = 0;
 
+   /*!
+    * @brief Check the tags on a tagged level.
+    *
+    * This virtual interface provides application code a callback that
+    * allows for checking the values held in user tag PatchData.  The
+    * tag data will contain the tags created by application code in
+    * tagCellsForRefinement as well as any tags added internally by
+    * the GriddingAlgorithm (for example, buffering).
+    *
+    * A no-op implementation is provided so that only applications that
+    * want to use this method need to implement it.
+    *
+    * @param[in] hierarchy
+    * @param[in] level_number  Level number of the tagged level
+    * @param[in] regrid_cycle
+    * @param[in] regrid_time
+    * @param[in] tag_index     Patch data index for user tags
+    */
+   virtual void
+   checkUserTagData(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const int level_number,
+      const int regrid_cycle,
+      const double regrid_time,
+      const int tag_index)
+   {
+      NULL_USE(hierarchy);
+      NULL_USE(level_number);
+      NULL_USE(regrid_cycle);
+      NULL_USE(regrid_time);
+      NULL_USE(tag_index);
+   } 
+
+   /*!
+    * @brief Check the tags on a newly-created level.
+    *
+    * This virtual interface provides application code a callback that
+    * allow for checking tag values that have been saved on a new level
+    * that has been created during initialization or regridding.  The
+    * tag values will be the values of the user tags on the coarser level,
+    * constant-refined onto the cells of the new level.
+    *
+    * A no-op implementation is provided so that only applications that
+    * want to use this method need to implement it.
+    *
+    * @param[in] hierarchy
+    * @param[in] level_number   Level number of the new level
+    * @param[in] tag_index      Patch data index for the new tags.
+    */
+   virtual void
+   checkNewLevelTagData(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const int level_number,
+      const int tag_index)
+   {
+      NULL_USE(hierarchy);
+      NULL_USE(level_number);
+      NULL_USE(tag_index);
+   } 
+
 private:
    std::string d_object_name;
 

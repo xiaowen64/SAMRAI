@@ -384,6 +384,63 @@ public:
       const boost::shared_ptr<hier::PatchLevel>& old_level =
          boost::shared_ptr<hier::PatchLevel>());
 
+   /*!
+    * @brief Check the tags on a tagged level.
+    *
+    * This virtual method provides an interface for a callback into
+    * application code to check the values held in user tag PatchData
+    * The tag data will contain the tags created by application code
+    * using the gradient detector or Richardson extrapolation methods,
+    * plus any tags added internally by the GriddingAlgorithm (for
+    * example, buffering).
+    *
+    * This is a virtual method with a no-op implementation provided, so that
+    * users who do not need this callback need not implement anything.
+    *
+    * @param[in] hierarchy
+    * @param[in] level_number  Level number of the tagged level
+    * @param[in] tag_index     Patch data index for user tags
+    */
+   virtual void
+   checkUserTagData(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const int level_number,
+      const int tag_index) const
+   {
+      NULL_USE(hierarchy);
+      NULL_USE(level_number);
+      NULL_USE(tag_index);
+   }
+
+   /*!
+    * @brief Check the tags on a newly-created level.
+    *
+    * This virtual method provides an interface for a callback into
+    * application code to check the tag values that have been saved on
+    * a new level that has been created during intitialization or
+    * regridding.  The tag values will be the values of the user tags
+    * on the coarser level, constant refined onto the cells of the new
+    * level.
+    *
+    * This is a virtual method with a no-op implementation provided, so that
+    * users who do not need this callback need not implement anything.
+    *
+    * @param[in] hierarchy
+    * @param[in] level_number   Level number of the new level
+    * @param[in] tag_index      Patch data index for the new tags.
+    */
+   virtual void
+   checkNewLevelTagData(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const int level_number,
+      const int tag_index) const
+   {
+      NULL_USE(hierarchy);
+      NULL_USE(level_number);
+      NULL_USE(tag_index);
+   }
+
+
 private:
 };
 

@@ -140,6 +140,10 @@ namespace mesh {
  *      VisIt requirement.
  *
  *   - \b    enforce_proper_nesting
+ * 
+ *   - \b    save_tag_data
+ *      This is an option to save the tags that are used to create a new
+ *      fine level in CellData on that level.
  *
  * <b> Details: </b> <br>
  * <table>
@@ -207,6 +211,14 @@ namespace mesh {
  *     <td>opt</td>
  *     <td>Parameter read from restart db may be overridden by input db</td>
  *   </tr>
+ *   <tr>
+ *     <td>save_tag_data</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db will not be overridden by input db</td>
+ *   </tr>
  * </table>
  *
  * All values read in from a restart database may be overriden by input
@@ -223,6 +235,37 @@ class GriddingAlgorithm:
    public tbox::Serializable
 {
 public:
+
+   /*!
+    * @brief Get the static tag value that is placed in cells covered by
+    * patches of an existing finer level before calling user tagging methods.
+    */
+   static int getExistingFinePatchesTagValue()
+   {
+      return s_existing_fine_patches_tag_value;
+   }
+
+   /*!
+    * @brief Get the static tag value that is added to tag data in cells
+    * that are covered by patches of a new fine level.
+    *
+    * This value is added after calling user tagging methods in order to 
+    * ensure nesting of finer levels within coarser levels.
+    */
+   static int getNewFinePatchesTagValue()
+   {
+      return s_new_fine_patches_tag_value;
+   }
+
+   /*!
+    * @brief Get the static tag value that identifies cells that are tagged
+    * due to buffering around user-defined tags.
+    */
+   static int getBufferTagValue()
+   {
+      return s_buffer_tag_value;
+   }
+
    /*!
     * @brief The constructor for GriddingAlgorithm configures the
     * gridding algorithm with the patch hierarchy and concrete algorithm
@@ -427,6 +470,12 @@ public:
    boost::shared_ptr<hier::PatchHierarchy>
    getPatchHierarchy() const;
 
+   int
+   getSavedTagPatchDataIndex() const
+   {
+      return d_saved_tag_indx;
+   }
+
    /*!
     * @brief Print all data members of the class instance to given output stream.
     */
@@ -464,6 +513,14 @@ private:
     * Static integer constant describing this class's version number.
     */
    static const int ALGS_GRIDDING_ALGORITHM_VERSION;
+
+   /*
+    * Static integers for reserved values added to user tags by the
+    * GriddingAlgorithm
+    */
+   static const int s_existing_fine_patches_tag_value;
+   static const int s_new_fine_patches_tag_value;
+   static const int s_buffer_tag_value;
 
    //! @brief Shorthand typedef.
    typedef hier::Connector::NeighborSet NeighborSet;
@@ -608,8 +665,13 @@ private:
     *
     * @param[in] interior_only
     *
-    * @param fill_box_growth How much to grow fill boxes before using
+    * @param[in] fill_box_growth How much to grow fill boxes before using
     * them to tag.  Must be in index space of level holding fill boxes.
+    *
+    * @param[in] preserve_existing_tags If set to true, only cells that
+    * have a value of d_false_tag on input will be changed to tag_value. If
+    * false, then all cells intersecting by the fill BoxLevel will be set to
+    * tag_value. 
     *
     * @pre (tag_value == d_true_tag) || (tag_value == d_false_tag)
     * @pre tag_level
@@ -623,7 +685,8 @@ private:
       const int index,
       const hier::Connector& tag_level_to_fill_box_level,
       const bool interior_only,
-      const hier::IntVector& fill_box_growth) const;
+      const hier::IntVector& fill_box_growth,
+      const bool preserve_existing_tags) const;
 
    /*!
     * @brief Enforce proper nesting.
@@ -1001,6 +1064,39 @@ private:
       const hier::BoxLevel& new_box_level) const;
 
    /*!
+    * @brief Set tag data that will be only have the values expected by
+    * the algorithms for box generation.
+    *
+    * Algorithmic tag data should have only values of d_true_tag or
+    * d_false_tag.  This method interprets user tag data to set
+    * algorithmic tag data to these values
+    *
+    * @param[in] tag_level  Level being tagged
+    * @param[in] preserve_existing_tags  If set to true, any cells already
+    * set to d_true_tag in the algorthmic tag data will be guaranteed to
+    * remain so.  If false, no current values of the algorithmic tag data
+    * will be guaranteed to be preserved.
+    */
+   void
+   setAlgorithmicTagData(
+      const boost::shared_ptr<hier::PatchLevel>& tag_level,
+      bool preserve_existing_tags) const;
+
+   /*!
+    * @brief Identifies cells that have been tagged only due to buffering
+    * around user tags, and sets user tag data to a special value on those
+    * cells.
+    *
+    * The user tag data will have the value obtained by the static method
+    * getBufferTagValue() on the buffered cells.
+    *
+    * @param[in] tag_level  Level being tagged
+    */
+   void
+   setBufferTagData(
+      const boost::shared_ptr<hier::PatchLevel>& tag_level) const;
+
+   /*!
     * @brief Check for user tags that violate proper nesting.
     *
     * @param tag_level  Tag level
@@ -1075,7 +1171,13 @@ private:
    static void
    startupCallback()
    {
-      s_tag_indx = new std::vector<int>(
+      s_user_tag_indx = new std::vector<int>(
+            SAMRAI::MAX_DIM_VAL,
+            -1);
+      s_saved_tag_indx = new std::vector<int>(
+            SAMRAI::MAX_DIM_VAL,
+            -1);
+      s_alg_tag_indx = new std::vector<int>(
             SAMRAI::MAX_DIM_VAL,
             -1);
       s_buf_tag_indx = new std::vector<int>(
@@ -1091,7 +1193,9 @@ private:
    static void
    shutdownCallback()
    {
-      delete s_tag_indx;
+      delete s_user_tag_indx;
+      delete s_saved_tag_indx;
+      delete s_alg_tag_indx;
       delete s_buf_tag_indx;
    }
 
@@ -1117,7 +1221,9 @@ private:
     * Static members for managing shared tag data among multiple
     * GriddingAlgorithm objects.
     */
-   static std::vector<int> * s_tag_indx;
+   static std::vector<int> * s_user_tag_indx;
+   static std::vector<int> * s_saved_tag_indx;
+   static std::vector<int> * s_alg_tag_indx;
    static std::vector<int> * s_buf_tag_indx;
 
    hier::IntVector d_buf_tag_ghosts;
@@ -1155,13 +1261,20 @@ private:
     * distributed across processors.  The refine algorithm and schedule are
     * used for interprocessor communication.
     */
-   boost::shared_ptr<pdat::CellVariable<int> > d_tag;
+   boost::shared_ptr<pdat::CellVariable<int> > d_user_tag;
+   boost::shared_ptr<pdat::CellVariable<int> > d_saved_tag;
+   boost::shared_ptr<pdat::CellVariable<int> > d_alg_tag;
    boost::shared_ptr<pdat::CellVariable<int> > d_buf_tag;
-   int d_tag_indx;
+   int d_user_tag_indx;
+   int d_saved_tag_indx;
+   int d_alg_tag_indx;
    int d_buf_tag_indx;
 
    boost::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_tags;
    std::vector<boost::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_tags;
+
+   boost::shared_ptr<xfer::RefineAlgorithm> d_fill_user_tags;
+   boost::shared_ptr<xfer::RefineSchedule> d_user_tags_sched;
 
    /*
     * True and false integer tag values set in constructor and used to
@@ -1171,6 +1284,9 @@ private:
     */
    const int d_true_tag;
    const int d_false_tag;
+   const int d_from_fine_pretag;
+   const int d_from_fine_tag;
+   const int d_buffer_tag;
 
    /*!
     * @brief Finest level not changed during regrid.
@@ -1290,6 +1406,11 @@ private:
    bool d_enforce_proper_nesting;
    bool d_extend_to_domain_boundary;
    bool d_load_balance;
+
+   /*
+    * Flag to save tag data on new fine levels.
+    */
+   bool d_save_tag_data; 
 
    //@{
    //! @name Used for evaluating peformance.

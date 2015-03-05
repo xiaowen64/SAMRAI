@@ -18,6 +18,9 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/math/PatchCellDataBasicOps.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
+#include "SAMRAI/pdat/CellIntegerConstantRefine.h"
+#include "SAMRAI/xfer/PatchInteriorVariableFillPattern.h"
+#include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,7 +48,13 @@ const int GriddingAlgorithm::ALGS_GRIDDING_ALGORITHM_VERSION = 3;
  *************************************************************************
  */
 
-std::vector<int> * GriddingAlgorithm::s_tag_indx = 0;
+const int GriddingAlgorithm::s_existing_fine_patches_tag_value = 1;
+const int GriddingAlgorithm::s_new_fine_patches_tag_value = 999;
+const int GriddingAlgorithm::s_buffer_tag_value = 1000;
+
+std::vector<int> * GriddingAlgorithm::s_user_tag_indx = 0;
+std::vector<int> * GriddingAlgorithm::s_saved_tag_indx = 0;
+std::vector<int> * GriddingAlgorithm::s_alg_tag_indx = 0;
 std::vector<int> * GriddingAlgorithm::s_buf_tag_indx = 0;
 
 tbox::StartupShutdownManager::Handler
@@ -83,6 +92,9 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_mb_tagger_strategy(0),
    d_true_tag(1),
    d_false_tag(0),
+   d_from_fine_pretag(s_existing_fine_patches_tag_value),
+   d_from_fine_tag(s_new_fine_patches_tag_value),
+   d_buffer_tag(s_buffer_tag_value),
    d_base_ln(-1),
    d_tag_to_cluster_width(),
    d_check_nonrefined_tags('w'),
@@ -132,19 +144,37 @@ GriddingAlgorithm::GriddingAlgorithm(
    hier::VariableDatabase* var_db = hier::VariableDatabase::getDatabase();
 
    std::string tag_interior_variable_name("GriddingAlgorithm__tag-interior");
+   std::string tag_saved_variable_name("GriddingAlgorithm__tag-saved");
+   std::string tag_algorithm_variable_name("GriddingAlgorithm__tag-algorithm");
    std::string tag_buffer_variable_name("GriddingAlgorithm__tag-buffer");
 
    std::ostringstream dim_extension;
    dim_extension << "_" << dim.getValue();
 
    tag_interior_variable_name += dim_extension.str();
+   tag_saved_variable_name += dim_extension.str();
+   tag_algorithm_variable_name += dim_extension.str();
    tag_buffer_variable_name += dim_extension.str();
 
-   d_tag = boost::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
+   d_user_tag = boost::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
          var_db->getVariable(tag_interior_variable_name));
-   if (!d_tag) {
-      d_tag.reset(
+   if (!d_user_tag) {
+      d_user_tag.reset(
          new pdat::CellVariable<int>(dim, tag_interior_variable_name, 1));
+   }
+
+   d_saved_tag = boost::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
+         var_db->getVariable(tag_saved_variable_name));
+   if (!d_saved_tag) {
+      d_saved_tag.reset(
+         new pdat::CellVariable<int>(dim, tag_saved_variable_name, 1));
+   }
+
+   d_alg_tag = boost::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
+         var_db->getVariable(tag_algorithm_variable_name));
+   if (!d_alg_tag) {
+      d_alg_tag.reset(
+         new pdat::CellVariable<int>(dim, tag_algorithm_variable_name, 1));
    }
 
    d_buf_tag = boost::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
@@ -155,9 +185,19 @@ GriddingAlgorithm::GriddingAlgorithm(
             1));
    }
 
-   if ((*s_tag_indx)[dim.getValue() - 1] < 0) {
-      (*s_tag_indx)[dim.getValue() - 1] =
-         var_db->registerInternalSAMRAIVariable(d_tag,
+   if ((*s_user_tag_indx)[dim.getValue() - 1] < 0) {
+      (*s_user_tag_indx)[dim.getValue() - 1] =
+         var_db->registerInternalSAMRAIVariable(d_user_tag,
+            hier::IntVector::getZero(dim));
+   }
+   if ((*s_saved_tag_indx)[dim.getValue() - 1] < 0) {
+      (*s_saved_tag_indx)[dim.getValue() - 1] =
+         var_db->registerInternalSAMRAIVariable(d_user_tag,
+            hier::IntVector::getZero(dim));
+   }
+   if ((*s_alg_tag_indx)[dim.getValue() - 1] < 0) {
+      (*s_alg_tag_indx)[dim.getValue() - 1] =
+         var_db->registerInternalSAMRAIVariable(d_alg_tag,
             hier::IntVector::getZero(dim));
    }
    if ((*s_buf_tag_indx)[dim.getValue() - 1] < 0) {
@@ -167,7 +207,9 @@ GriddingAlgorithm::GriddingAlgorithm(
       d_buf_tag_ghosts = hier::IntVector::getOne(dim);
    }
 
-   d_tag_indx = (*s_tag_indx)[dim.getValue() - 1];
+   d_user_tag_indx = (*s_user_tag_indx)[dim.getValue() - 1];
+   d_saved_tag_indx = (*s_saved_tag_indx)[dim.getValue() - 1];
+   d_alg_tag_indx = (*s_alg_tag_indx)[dim.getValue() - 1];
    d_buf_tag_indx = (*s_buf_tag_indx)[dim.getValue() - 1];
 
    if (d_hierarchy->getGridGeometry()->getNumberBlocks() > 1) {
@@ -184,6 +226,14 @@ GriddingAlgorithm::GriddingAlgorithm(
       d_buf_tag_indx,
       d_buf_tag_indx,
       boost::shared_ptr<hier::RefineOperator>());
+
+   d_fill_user_tags.reset(new xfer::RefineAlgorithm());
+
+   d_fill_user_tags->registerRefine(d_user_tag_indx,
+      d_saved_tag_indx,
+      d_saved_tag_indx,
+      boost::shared_ptr<hier::RefineOperator>(new pdat::CellIntegerConstantRefine()),
+      boost::shared_ptr<xfer::VariableFillPattern>(new xfer::PatchInteriorVariableFillPattern(dim)));
 
    d_proper_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels());
    d_to_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels());
@@ -604,6 +654,13 @@ GriddingAlgorithm::makeCoarsestLevel(
       old_level.reset();
 
    }
+
+   boost::shared_ptr<hier::PatchLevel> new_level(
+      d_hierarchy->getPatchLevel(ln));
+ 
+   new_level->allocatePatchData(d_saved_tag_indx);
+   fillTags(d_false_tag, new_level, d_saved_tag_indx);
+
    if (d_print_steps) {
       tbox::plog << "GriddingAlgorithm::makeCoarsestLevel: made level 0.\n";
    }
@@ -738,8 +795,8 @@ GriddingAlgorithm::makeFinerLevel(
          /*
           * Initialize integer tag arrays on level to false.
           */
-         tag_level->allocatePatchData(d_tag_indx, level_time);
-         fillTags(d_false_tag, tag_level, d_tag_indx);
+         tag_level->allocatePatchData(d_user_tag_indx, level_time);
+         fillTags(d_false_tag, tag_level, d_user_tag_indx);
 
          /*
           * Perform pre-processing of error estimation data.
@@ -761,11 +818,14 @@ GriddingAlgorithm::makeFinerLevel(
             tag_ln,
             cycle,
             level_time,
-            d_tag_indx,
+            d_user_tag_indx,
             initial_cycle,
             coarsest_sync_level,
             d_hierarchy->levelCanBeRefined(tag_ln),
             regrid_start_time);
+
+         tag_level->allocatePatchData(d_alg_tag_indx, level_time);
+         setAlgorithmicTagData(tag_level, false);
 
          /*
           * Check for user-tagged cells that violate proper nesting.
@@ -822,6 +882,12 @@ GriddingAlgorithm::makeFinerLevel(
          findRefinementBoxes(new_box_level,
             tag_to_new,
             tag_ln);
+
+         d_tag_init_strategy->checkUserTagData(d_hierarchy,
+            tag_ln,
+            cycle,
+            level_time,
+            d_user_tag_indx);
 
          if (new_box_level && new_box_level->isInitialized()) {
 
@@ -896,7 +962,7 @@ GriddingAlgorithm::makeFinerLevel(
          /*
           * Deallocate tag arrays and schedule -- no longer needed.
           */
-         tag_level->deallocatePatchData(d_tag_indx);
+         tag_level->deallocatePatchData(d_alg_tag_indx);
          d_bdry_sched_tags[tag_ln].reset();
 
       } else { /* do_tagging == false */
@@ -981,10 +1047,38 @@ GriddingAlgorithm::makeFinerLevel(
             new_ln);
          t_reset_hier->stop();
 
+         if (new_ln > 0 && do_tagging && d_save_tag_data) {
+
+            boost::shared_ptr<hier::PatchLevel> new_level(
+               d_hierarchy->getPatchLevel(new_ln));
+
+            new_level->allocatePatchData(d_saved_tag_indx);
+
+            d_user_tags_sched =
+               d_fill_user_tags->createSchedule(
+                  boost::shared_ptr<xfer::PatchLevelFillPattern>(
+                     new xfer::PatchLevelInteriorFillPattern()),
+                  new_level,
+                  boost::shared_ptr<hier::PatchLevel>(),
+                  new_ln-1,
+                  d_hierarchy);
+
+            d_user_tags_sched->fillData(level_time, false);
+
+            d_tag_init_strategy->checkNewLevelTagData(d_hierarchy,
+               new_ln,
+               d_saved_tag_indx);
+
+         }
+
          if (d_log_metadata_statistics) {
             d_hierarchy->logMetadataStatistics("makeFinerLevel",
                d_hierarchy->getFinestLevelNumber(), cycle, level_time, false, true);
          }
+      }
+
+      if (do_tagging) {
+         tag_level->deallocatePatchData(d_user_tag_indx);
       }
 
       d_base_ln = -1;
@@ -1317,6 +1411,12 @@ GriddingAlgorithm::regridFinerLevel(
             tag_to_new,
             tag_ln);
 
+         d_tag_init_strategy->checkUserTagData(d_hierarchy,
+            tag_ln,
+            regrid_cycle,
+            regrid_time,
+            d_user_tag_indx);
+
          if (d_print_steps) {
             if (new_box_level && new_box_level->isInitialized()) {
                tbox::plog
@@ -1332,7 +1432,7 @@ GriddingAlgorithm::regridFinerLevel(
           * level.
           */
 
-         tag_level->deallocatePatchData(d_tag_indx);
+         tag_level->deallocatePatchData(d_alg_tag_indx);
          d_bdry_sched_tags[tag_ln].reset();
 
       } else { /* do_tagging == false */
@@ -1408,6 +1508,11 @@ GriddingAlgorithm::regridFinerLevel(
 
       } // if we are not re-regenerating level new_ln.
 
+      if (do_tagging) {
+         tag_level->deallocatePatchData(d_user_tag_indx);
+      }
+
+
    } //  if level cannot be refined, the routine drops through...
 
 }
@@ -1444,8 +1549,8 @@ GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
     * false.
     */
 
-   tag_level->allocatePatchData(d_tag_indx, regrid_time);
-   fillTags(d_false_tag, tag_level, d_tag_indx);
+   tag_level->allocatePatchData(d_user_tag_indx, regrid_time);
+   fillTags(d_false_tag, tag_level, d_user_tag_indx);
 
    /*
     * Set tags to true for cells that currently cover next finer level.
@@ -1462,16 +1567,17 @@ GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
 
    if (d_hierarchy->finerLevelExists(tag_ln)) {
       fillTagsFromBoxLevel(
-         d_true_tag,
+         d_from_fine_pretag,
          tag_level,
-         d_tag_indx,
+         d_user_tag_indx,
          d_hierarchy->getPatchLevel(tag_ln)->findConnector(
             *d_hierarchy->getPatchLevel(tag_ln + 1),
             d_hierarchy->getRequiredConnectorWidth(tag_ln, tag_ln + 1, true),
             hier::CONNECTOR_IMPLICIT_CREATION_RULE,
             false),
          true,
-         zero_vec);
+         zero_vec,
+         false);
    }
 
    /*
@@ -1510,7 +1616,7 @@ GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
       tag_ln,
       regrid_cycle,
       regrid_time,
-      d_tag_indx,
+      d_user_tag_indx,
       initial_time,
       coarsest_sync_level,
       d_hierarchy->levelCanBeRefined(tag_ln),
@@ -1526,6 +1632,9 @@ GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
    if (d_check_nonrefined_tags != 'i') {
       checkNonrefinedTags(*tag_level, tag_ln, d_oca);
    }
+
+   tag_level->allocatePatchData(d_alg_tag_indx, regrid_time);
+   setAlgorithmicTagData(tag_level, false);
 
    t_regrid_finer_do_tagging_before->stop();
 }
@@ -1652,12 +1761,15 @@ GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
             false));
 
       fillTagsFromBoxLevel(
-         d_true_tag,
+         d_from_fine_tag,
          tag_level,
-         d_tag_indx,
+         d_user_tag_indx,
          *tag_to_finer,
          true,
-         nesting_buffer);
+         nesting_buffer,
+         true);
+
+      setAlgorithmicTagData(tag_level, true);
 
       if (d_barrier_and_time) {
          t_second_finer_tagging->stop();
@@ -1973,6 +2085,29 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
       old_fine_level);
    if (d_barrier_and_time) {
       t_initialize_level_data->barrierAndStop();
+   }
+
+   if (new_ln > 0 && d_save_tag_data) {
+      boost::shared_ptr<hier::PatchLevel> new_level(
+         d_hierarchy->getPatchLevel(new_ln));
+
+      new_level->allocatePatchData(d_saved_tag_indx);
+
+      d_user_tags_sched =
+         d_fill_user_tags->createSchedule(
+            boost::shared_ptr<xfer::PatchLevelFillPattern>(
+               new xfer::PatchLevelInteriorFillPattern()),
+            d_hierarchy->getPatchLevel(new_ln),
+            boost::shared_ptr<hier::PatchLevel>(),
+            new_ln-1,
+            d_hierarchy);
+
+      d_user_tags_sched->fillData(regrid_time, false);
+
+      d_tag_init_strategy->checkNewLevelTagData(d_hierarchy,
+         new_ln,
+         d_saved_tag_indx);
+
    }
 
    /*
@@ -2467,7 +2602,7 @@ GriddingAlgorithm::checkNonrefinedTags(
       const hier::BoxId& box_id = *ei;
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
-            level.getPatch(box_id)->getPatchData(d_tag_indx)));
+            level.getPatch(box_id)->getPatchData(d_user_tag_indx)));
       TBOX_ASSERT(tag_data);
       for (hier::Connector::ConstNeighborIterator na = tag_to_violator->begin(ei);
            na != tag_to_violator->end(ei); ++na) {
@@ -2792,7 +2927,8 @@ GriddingAlgorithm::fillTags(
 {
    TBOX_ASSERT((tag_value == d_true_tag) || (tag_value == d_false_tag));
    TBOX_ASSERT(tag_level);
-   TBOX_ASSERT(tag_index == d_tag_indx || tag_index == d_buf_tag_indx);
+   TBOX_ASSERT(tag_index == d_user_tag_indx || tag_index == d_buf_tag_indx
+               || tag_index == d_alg_tag_indx);
 
    t_fill_tags->start();
 
@@ -2827,11 +2963,14 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
    const int tag_index,
    const hier::Connector& tag_level_to_fill_box_level,
    const bool interior_only,
-   const hier::IntVector& fill_box_growth) const
+   const hier::IntVector& fill_box_growth,
+   const bool preserve_existing_tags) const
 {
-   TBOX_ASSERT((tag_value == d_true_tag) || (tag_value == d_false_tag));
+   TBOX_ASSERT((tag_value == d_from_fine_tag) ||
+               (tag_value == d_from_fine_pretag));
    TBOX_ASSERT(tag_level);
-   TBOX_ASSERT(tag_index == d_tag_indx || tag_index == d_buf_tag_indx);
+   TBOX_ASSERT(tag_index == d_user_tag_indx || tag_index == d_buf_tag_indx ||
+               tag_index == d_alg_tag_indx);
 
    /*
     * This method assumes fill is finer than tag, but that is easy to
@@ -2884,14 +3023,104 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
                neighbor.getBlockId());
          }
          if (interior_only) {
-            box = box * tag_data->getBox();
+            box *= tag_data->getBox();
          }
-         tag_data->fill(tag_value, box);
+         if (!preserve_existing_tags) {
+            tag_data->fill(tag_value, box);
+         } else {
+            pdat::CellIterator icend(pdat::CellGeometry::end(box));
+            for (pdat::CellIterator ic(pdat::CellGeometry::begin(box));
+                 ic != icend; ++ic) {
+               if ((*tag_data)(*ic) == d_false_tag) {
+                  (*tag_data)(*ic) = tag_value;
+               }
+            }
+         }
       }
 
    }
    t_fill_tags->stop();
 }
+
+
+/*
+ *************************************************************************
+ * Interprets user tags and sets up algorithmic tags, which will have only
+ * values of d_false_tag or d_true_tag, as required by box generator
+ * algorithms.
+ *************************************************************************
+ */
+void GriddingAlgorithm::setAlgorithmicTagData(
+   const boost::shared_ptr<hier::PatchLevel>& tag_level,
+   bool preserve_existing_tags) const
+{
+   for (hier::PatchLevel::iterator ip(tag_level->begin());
+        ip != tag_level->end(); ++ip) {
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      const hier::Box& pbox = patch->getBox();
+
+      boost::shared_ptr<pdat::CellData<int> > user_tag_data(
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            patch->getPatchData(d_user_tag_indx)));
+      boost::shared_ptr<pdat::CellData<int> > alg_tag_data(
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            patch->getPatchData(d_alg_tag_indx)));
+
+      if (!preserve_existing_tags) { 
+         alg_tag_data->fillAll(d_false_tag);
+      }
+
+      size_t data_length = alg_tag_data->getGhostBox().size();
+      TBOX_ASSERT(data_length == user_tag_data->getGhostBox().size());
+
+      const int* user_tag_ptr = user_tag_data->getPointer();
+      int* alg_tag_ptr = alg_tag_data->getPointer();
+
+      for (unsigned int i = 0; i < data_length; ++i) {
+         if (user_tag_ptr[i] != d_false_tag) {
+            alg_tag_ptr[i] = d_true_tag;
+         } 
+      }
+   }
+} 
+
+/*
+ *************************************************************************
+ * If algorithmic tag is true at a cell while the user tag is false, that
+ * is interpreted to mean that the algorithmic tag was set by buffering.
+ * Here we set the user tag on those cells to a special value indicating
+ * buffering.
+ *************************************************************************
+ */
+void GriddingAlgorithm::setBufferTagData(
+   const boost::shared_ptr<hier::PatchLevel>& tag_level) const
+{
+   for (hier::PatchLevel::iterator ip(tag_level->begin());
+        ip != tag_level->end(); ++ip) {
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      const hier::Box& pbox = patch->getBox();
+
+      boost::shared_ptr<pdat::CellData<int> > user_tag_data(
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            patch->getPatchData(d_user_tag_indx)));
+      boost::shared_ptr<pdat::CellData<int> > alg_tag_data(
+         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            patch->getPatchData(d_alg_tag_indx)));
+
+      size_t data_length = alg_tag_data->getGhostBox().size();
+      TBOX_ASSERT(data_length == user_tag_data->getGhostBox().size());
+
+      int* user_tag_ptr = user_tag_data->getPointer();
+      const int* alg_tag_ptr = alg_tag_data->getPointer();
+
+      for (unsigned int i = 0; i < data_length; ++i) {
+         if (alg_tag_ptr[i] == d_true_tag && user_tag_ptr[i] == d_false_tag) {
+            user_tag_ptr[i] = d_buffer_tag;
+         }
+      }
+   }
+} 
+
 
 /*
  *************************************************************************
@@ -2943,7 +3172,7 @@ GriddingAlgorithm::bufferTagsOnLevel(
             patch->getPatchData(d_buf_tag_indx)));
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
-            patch->getPatchData(d_tag_indx)));
+            patch->getPatchData(d_alg_tag_indx)));
 
       TBOX_ASSERT(buf_tag_data);
       TBOX_ASSERT(tag_data);
@@ -2983,7 +3212,7 @@ GriddingAlgorithm::bufferTagsOnLevel(
             patch->getPatchData(d_buf_tag_indx)));
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
-            patch->getPatchData(d_tag_indx)));
+            patch->getPatchData(d_alg_tag_indx)));
 
       TBOX_ASSERT(buf_tag_data);
       TBOX_ASSERT(tag_data);
@@ -3007,6 +3236,8 @@ GriddingAlgorithm::bufferTagsOnLevel(
       }
 
    }
+
+   setBufferTagData(level);
 
    t_buffer_tags->stop();
 }
@@ -3111,7 +3342,7 @@ GriddingAlgorithm::findRefinementBoxes(
       d_box_generator->findBoxesContainingTags(
          new_box_level,
          tag_to_new,
-         level, d_tag_indx, d_true_tag, bounding_container,
+         level, d_alg_tag_indx, d_true_tag, bounding_container,
          smallest_box_to_refine,
          d_tag_to_cluster_width[tag_ln]);
    }
@@ -4480,8 +4711,12 @@ GriddingAlgorithm::printClassData(
    os << "\nGriddingAlgorithm::printClassData..." << std::endl;
    os << "   static data members:" << std::endl;
    for (int d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
-      os << "      (*s_tag_indx)[" << d << "] = "
-         << (*s_tag_indx)[d] << std::endl;
+      os << "      (*s_user_tag_indx)[" << d << "] = "
+         << (*s_user_tag_indx)[d] << std::endl;
+      os << "      (*s_saved_tag_indx)[" << d << "] = "
+         << (*s_saved_tag_indx)[d] << std::endl;
+      os << "      (*s_alg_tag_indx)[" << d << "] = "
+         << (*s_alg_tag_indx)[d] << std::endl;
       os << "      (*s_buf_tag_indx)[" << d << "] = "
          << (*s_buf_tag_indx)[d] << std::endl;
    }
@@ -4496,8 +4731,12 @@ GriddingAlgorithm::printClassData(
       << d_load_balancer.get() << std::endl;
    os << "d_load_balancer0 = "
       << d_load_balancer0.get() << std::endl;
-   os << "d_tag = " << d_tag.get() << std::endl;
-   os << "d_tag_indx = " << d_tag_indx << std::endl;
+   os << "d_user_tag = " << d_user_tag.get() << std::endl;
+   os << "d_user_tag_indx = " << d_user_tag_indx << std::endl;
+   os << "d_saved_tag = " << d_user_tag.get() << std::endl;
+   os << "d_saved_tag_indx = " << d_user_tag_indx << std::endl;
+   os << "d_alg_tag = " << d_alg_tag.get() << std::endl;
+   os << "d_alg_tag_indx = " << d_alg_tag_indx << std::endl;
    os << "d_buf_tag_indx = " << d_buf_tag_indx << std::endl;
    os << "d_true_tag = " << d_true_tag << std::endl;
    os << "d_false_tag = " << d_false_tag << std::endl;
@@ -4543,6 +4782,8 @@ GriddingAlgorithm::putToRestart(
    restart_db->putBool("DEV_load_balance", d_load_balance);
 
    restart_db->putBool("DEV_barrier_and_time", d_barrier_and_time);
+
+   restart_db->putBool("save_tag_data", d_save_tag_data);
 }
 
 /*
@@ -4617,6 +4858,10 @@ GriddingAlgorithm::getFromInput(
 
          d_barrier_and_time =
             input_db->getBoolWithDefault("DEV_barrier_and_time", false);
+
+         d_save_tag_data =
+            input_db->getBoolWithDefault("save_tag_data", true);
+
       } else {
          bool read_on_restart =
             input_db->getBoolWithDefault("read_on_restart", false);
@@ -4711,6 +4956,9 @@ GriddingAlgorithm::getFromInput(
          d_barrier_and_time =
             input_db->getBoolWithDefault("DEV_barrier_and_time",
                d_barrier_and_time);
+
+         d_save_tag_data =
+            input_db->getBoolWithDefault("save_tag_data", true);
       }
    }
 }
@@ -4766,6 +5014,8 @@ GriddingAlgorithm::getFromRestart()
    d_load_balance = db->getBool("DEV_load_balance");
 
    d_barrier_and_time = db->getBool("DEV_barrier_and_time");
+
+   d_save_tag_data = db->getBool("save_tag_data");
 }
 
 /*

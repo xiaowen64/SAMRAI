@@ -2015,6 +2015,65 @@ StandardTagAndInitialize::processLevelBeforeRemoval(
       old_level);
 }
 
+
+/*
+ *************************************************************************
+ * Pass to StandardTagAndInitStrategy to check user tags on a tagged
+ * level.  Only calls into the strategy if using gradient detector or
+ * Richardson extrapolation at the curren time and cycle.
+ *************************************************************************
+ */
+void
+StandardTagAndInitialize::checkUserTagData(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const int level_number,
+   const int regrid_cycle,
+   const double regrid_time,
+   const int tag_index)
+{
+   TBOX_ASSERT(hierarchy);
+   TBOX_ASSERT((level_number >= 0)
+      && (level_number <= hierarchy->getFinestLevelNumber()));
+   TBOX_ASSERT(tag_index >= 0);
+
+   if (usesGradientDetector(regrid_cycle, regrid_time) ||
+       usesRichardsonExtrapolation(regrid_cycle, regrid_time)) {
+
+      TBOX_ASSERT(d_tag_strategy != 0);
+
+      d_tag_strategy->checkUserTagData(hierarchy,
+         level_number,
+         tag_index);
+
+   }
+}
+
+/*
+ *************************************************************************
+ * Pass to StandardTagAndInitStrategy to check saved tags on a new level.
+ *************************************************************************
+ */
+void
+StandardTagAndInitialize::checkNewLevelTagData(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const int level_number,
+   const int tag_index)
+{
+   TBOX_ASSERT(hierarchy);
+   TBOX_ASSERT((level_number >= 0)
+      && (level_number <= hierarchy->getFinestLevelNumber()));
+   TBOX_ASSERT(tag_index >= 0);
+   TBOX_ASSERT(d_tag_strategy != 0);
+
+   d_tag_strategy->checkNewLevelTagData(hierarchy,
+      level_number,
+      tag_index);
+
+}
+
+
+
+
 static int GCD(
    const int a,
    const int b)

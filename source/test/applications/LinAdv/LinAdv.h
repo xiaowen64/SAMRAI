@@ -337,6 +337,16 @@ public:
       string& db_name,
       int bdry_location_index);
 
+   void
+   checkUserTagData(
+      hier::Patch& patch,
+      const int tag_index) const;
+
+   void
+   checkNewPatchTagData(
+      hier::Patch& patch,
+      const int tag_index) const;
+
 #ifdef HAVE_HDF5
    /**
     * Register a VisIt data writer so this class will write

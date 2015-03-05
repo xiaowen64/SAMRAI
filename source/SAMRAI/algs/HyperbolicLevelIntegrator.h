@@ -860,6 +860,44 @@ protected:
       const double sync_time,
       const double coarse_sim_time);
 
+   /*!
+    * @brief Check the tags on a tagged level.
+    *
+    * This is a callback method that is used to check the values held in
+    * user tag PatchData.  The tag data will contain the tags created
+    * by either a gradient detector or Richardson extrapolation as well as
+    * any tags added internally by the GriddingAlgorithm (for
+    * example, buffering).
+    *
+    * @param[in] hierarchy
+    * @param[in] level_number  Level number of the tagged level
+    * @param[in] tag_index     Patch data index for user tags
+    */
+   virtual void
+   checkUserTagData(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const int level_number,
+      const int tag_index) const;
+
+   /*!
+    * @brief Check the tags on a newly-created level.
+    *
+    * This is a callback method that allow for checking tag values that
+    * have been saved on a new level that has been created during
+    * initialization or regridding.  The tag values will be the values
+    * of the user tags on the coarser level, constant-refined onto the
+    * cells of the new level.
+    *
+    * @param[in] hierarchy
+    * @param[in] level_number   Level number of the new level
+    * @param[in] tag_index      Patch data index for the new tags.
+    */
+   virtual void
+   checkNewLevelTagData(
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const int level_number,
+      const int tag_index) const;
+
 private:
    /*
     * Static integer constant describing class's version number.

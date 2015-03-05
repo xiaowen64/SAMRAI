@@ -2388,6 +2388,63 @@ HyperbolicLevelIntegrator::copyTimeDependentData(
 
 /*
  *************************************************************************
+ * Pass to HyperbolicPatchStrategy to check user tags on a tagged
+ * level.
+ *************************************************************************
+ */
+void
+HyperbolicLevelIntegrator::checkUserTagData(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const int level_number,
+   const int tag_index) const
+{
+   TBOX_ASSERT(hierarchy);
+   TBOX_ASSERT((level_number >= 0)
+      && (level_number <= hierarchy->getFinestLevelNumber()));
+
+   boost::shared_ptr<hier::PatchLevel> level(
+      hierarchy->getPatchLevel(level_number));
+
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      d_patch_strategy->checkUserTagData(*patch,
+         tag_index);
+   }
+
+}
+
+/*
+ *************************************************************************
+ * Pass to StandardTagAndInitStrategy to check saved tags on a new level.
+ *************************************************************************
+ */
+void
+HyperbolicLevelIntegrator::checkNewLevelTagData(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const int level_number,
+   const int tag_index) const
+{
+   TBOX_ASSERT(hierarchy);
+   TBOX_ASSERT((level_number >= 0)
+      && (level_number <= hierarchy->getFinestLevelNumber()));
+
+   boost::shared_ptr<hier::PatchLevel> level(
+      hierarchy->getPatchLevel(level_number));
+
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      d_patch_strategy->checkNewPatchTagData(*patch,
+         tag_index);
+   }
+
+}
+
+
+
+/*
+ *************************************************************************
  *
  *
  *************************************************************************

@@ -3078,3 +3078,26 @@ void LinAdv::checkBoundaryData(
    }
 
 }
+
+void
+LinAdv::checkUserTagData(
+   hier::Patch& patch,
+   const int tag_index) const
+{
+   boost::shared_ptr<pdat::CellData<int> > tags(
+      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+         patch.getPatchData(tag_index)));
+   TBOX_ASSERT(tags);
+}
+
+void
+LinAdv::checkNewPatchTagData(
+   hier::Patch& patch,
+   const int tag_index) const
+{
+   boost::shared_ptr<pdat::CellData<int> > tags(
+      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+         patch.getPatchData(tag_index)));
+   TBOX_ASSERT(tags);
+}
+
