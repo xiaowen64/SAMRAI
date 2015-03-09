@@ -470,6 +470,9 @@ public:
    boost::shared_ptr<hier::PatchHierarchy>
    getPatchHierarchy() const;
 
+   /*!
+    * @brief Return patch data index for tag data saved in the hierarchy.
+    */
    int
    getSavedTagPatchDataIndex() const
    {
@@ -1255,11 +1258,13 @@ private:
 
    /*
     * Cell-centered integer variables use to tag cells for refinement.
-    * The descriptor index d_tag_indx is used to obtain tag information
+    * The descriptor index d_user_tag_indx is used to obtain tag information
     * from user-defined routines on patch interiors.  The descriptor index
     * d_buf_tag_indx is used to buffer tags on patches that may be
-    * distributed across processors.  The refine algorithm and schedule are
-    * used for interprocessor communication.
+    * distributed across processors.  d_alg_tag_indx is used to put tag
+    * values in a standard format that will be understood by box generator
+    * implementations, and d_saved_tag_indx is used to preserve tag values
+    * on new levels after gridding operations are completed.
     */
    boost::shared_ptr<pdat::CellVariable<int> > d_user_tag;
    boost::shared_ptr<pdat::CellVariable<int> > d_saved_tag;
@@ -1273,12 +1278,15 @@ private:
    boost::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_tags;
    std::vector<boost::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_tags;
 
-   boost::shared_ptr<xfer::RefineAlgorithm> d_fill_user_tags;
-   boost::shared_ptr<xfer::RefineSchedule> d_user_tags_sched;
+   /*
+    * Refine algorithm and schedule for filling saved tag data on new levels.
+    */
+   boost::shared_ptr<xfer::RefineAlgorithm> d_fill_saved_tags;
+   boost::shared_ptr<xfer::RefineSchedule> d_saved_tags_sched;
 
    /*
-    * True and false integer tag values set in constructor and used to
-    * set and compare integer tag values on the patch hierarchy.  Generally,
+    * Tag values defined in the constructor and used to set and compare
+    * integer tag values on the patch hierarchy.  Generally, these
     * these variables are easier to read in the code than integer constants,
     * such as 0 and 1.
     */

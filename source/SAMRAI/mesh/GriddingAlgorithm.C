@@ -227,9 +227,9 @@ GriddingAlgorithm::GriddingAlgorithm(
       d_buf_tag_indx,
       boost::shared_ptr<hier::RefineOperator>());
 
-   d_fill_user_tags.reset(new xfer::RefineAlgorithm());
+   d_fill_saved_tags.reset(new xfer::RefineAlgorithm());
 
-   d_fill_user_tags->registerRefine(d_user_tag_indx,
+   d_fill_saved_tags->registerRefine(d_user_tag_indx,
       d_saved_tag_indx,
       d_saved_tag_indx,
       boost::shared_ptr<hier::RefineOperator>(new pdat::CellIntegerConstantRefine()),
@@ -824,6 +824,10 @@ GriddingAlgorithm::makeFinerLevel(
             d_hierarchy->levelCanBeRefined(tag_ln),
             regrid_start_time);
 
+         /*
+          * Set algorithmic tags to false/true values that will be understood
+          * in the buffering and clustering steps.
+          */
          tag_level->allocatePatchData(d_alg_tag_indx, level_time);
          setAlgorithmicTagData(tag_level, false);
 
@@ -883,6 +887,9 @@ GriddingAlgorithm::makeFinerLevel(
             tag_to_new,
             tag_ln);
 
+         /*
+          * Callback to user code to check user tags on the tag level.
+          */
          d_tag_init_strategy->checkUserTagData(d_hierarchy,
             tag_ln,
             cycle,
@@ -960,7 +967,7 @@ GriddingAlgorithm::makeFinerLevel(
          }
 
          /*
-          * Deallocate tag arrays and schedule -- no longer needed.
+          * Deallocate algorithm tag arrays and schedule--no longer needed.
           */
          tag_level->deallocatePatchData(d_alg_tag_indx);
          d_bdry_sched_tags[tag_ln].reset();
@@ -1047,6 +1054,9 @@ GriddingAlgorithm::makeFinerLevel(
             new_ln);
          t_reset_hier->stop();
 
+         /*
+          * Optionally refine and store user tag values on the new level.
+          */
          if (new_ln > 0 && do_tagging && d_save_tag_data) {
 
             boost::shared_ptr<hier::PatchLevel> new_level(
@@ -1054,8 +1064,8 @@ GriddingAlgorithm::makeFinerLevel(
 
             new_level->allocatePatchData(d_saved_tag_indx);
 
-            d_user_tags_sched =
-               d_fill_user_tags->createSchedule(
+            d_saved_tags_sched =
+               d_fill_saved_tags->createSchedule(
                   boost::shared_ptr<xfer::PatchLevelFillPattern>(
                      new xfer::PatchLevelInteriorFillPattern()),
                   new_level,
@@ -1063,7 +1073,7 @@ GriddingAlgorithm::makeFinerLevel(
                   new_ln-1,
                   d_hierarchy);
 
-            d_user_tags_sched->fillData(level_time, false);
+            d_saved_tags_sched->fillData(level_time, false);
 
             d_tag_init_strategy->checkNewLevelTagData(d_hierarchy,
                new_ln,
@@ -1768,7 +1778,11 @@ GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
          true,
          nesting_buffer,
          true);
-
+      /*
+       * New tags may have been added to user tags via the above step.
+       * Here we set algorithmic tags at those new locations without
+       * overwriting any algorithmic tags that already exist.
+       */
       setAlgorithmicTagData(tag_level, true);
 
       if (d_barrier_and_time) {
@@ -2093,8 +2107,8 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
 
       new_level->allocatePatchData(d_saved_tag_indx);
 
-      d_user_tags_sched =
-         d_fill_user_tags->createSchedule(
+      d_saved_tags_sched =
+         d_fill_saved_tags->createSchedule(
             boost::shared_ptr<xfer::PatchLevelFillPattern>(
                new xfer::PatchLevelInteriorFillPattern()),
             d_hierarchy->getPatchLevel(new_ln),
@@ -2102,7 +2116,7 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
             new_ln-1,
             d_hierarchy);
 
-      d_user_tags_sched->fillData(regrid_time, false);
+      d_saved_tags_sched->fillData(regrid_time, false);
 
       d_tag_init_strategy->checkNewLevelTagData(d_hierarchy,
          new_ln,
