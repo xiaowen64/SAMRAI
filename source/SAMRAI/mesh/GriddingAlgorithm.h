@@ -237,34 +237,32 @@ class GriddingAlgorithm:
 public:
 
    /*!
-    * @brief Get the static tag value that is placed in cells covered by
-    * patches of an existing finer level before calling user tagging methods.
-    */
-   static int getExistingFinePatchesTagValue()
-   {
-      return s_existing_fine_patches_tag_value;
-   }
-
-   /*!
-    * @brief Get the static tag value that is added to tag data in cells
-    * that are covered by patches of a new fine level.
+    * @brief static symbols to hold special tag values for user tags
     *
-    * This value is added after calling user tagging methods in order to 
-    * ensure nesting of finer levels within coarser levels.
+    * These symbols are used to hold special values that are added to the
+    * user tag data when the GriddingAlgorithm adds tags for algorithmic
+    * reasons.
+    *
+    * EXISTING_FINE_PATCHES_TAG_VAL:  This value is placed in all cells
+    * of the tag level than intersect the existing next finest level.
+    * This value is added before calling the application's tagging methods,
+    * so that the application code can take into account the location
+    * of an existing finer level if it is relevant to its tagging criteria.
+    *
+    * NEW_FINE_PATCHES_TAG_VAL:  This value is placed in all cells of the
+    * tag level that intersect the level that is two levels finer, if such
+    * a level exists.  This value is added after the application's tagging
+    * methods are invoked, and is used to ensure that all finer levels of
+    * a hierarchy are nested inside coarser levels.
+    *
+    * BUFFER_TAG_VAL:  This value is added to cells that are tagged due to
+    * the buffering operation of the GriddingAlgorithm, according to the
+    * tag buffer arguments that are passed into certain methods of this
+    * class.
     */
-   static int getNewFinePatchesTagValue()
-   {
-      return s_new_fine_patches_tag_value;
-   }
-
-   /*!
-    * @brief Get the static tag value that identifies cells that are tagged
-    * due to buffering around user-defined tags.
-    */
-   static int getBufferTagValue()
-   {
-      return s_buffer_tag_value;
-   }
+   static const int EXISTING_FINE_PATCHES_TAG_VAL;
+   static const int NEW_FINE_PATCHES_TAG_VAL;
+   static const int BUFFER_TAG_VAL;
 
    /*!
     * @brief The constructor for GriddingAlgorithm configures the
@@ -516,14 +514,6 @@ private:
     * Static integer constant describing this class's version number.
     */
    static const int ALGS_GRIDDING_ALGORITHM_VERSION;
-
-   /*
-    * Static integers for reserved values added to user tags by the
-    * GriddingAlgorithm
-    */
-   static const int s_existing_fine_patches_tag_value;
-   static const int s_new_fine_patches_tag_value;
-   static const int s_buffer_tag_value;
 
    //! @brief Shorthand typedef.
    typedef hier::Connector::NeighborSet NeighborSet;
@@ -1070,34 +1060,24 @@ private:
     * @brief Set tag data that will be only have the values expected by
     * the algorithms for box generation.
     *
-    * Algorithmic tag data should have only values of d_true_tag or
+    * Boolean tag data should have only values of d_true_tag or
     * d_false_tag.  This method interprets user tag data to set
-    * algorithmic tag data to these values
+    * boolean tag data to these values.
+    *
+    * Note that the use of the term "boolean" does not mean that the bool
+    * type is used, but that the integer data will have only two possible
+    * values.
     *
     * @param[in] tag_level  Level being tagged
     * @param[in] preserve_existing_tags  If set to true, any cells already
     * set to d_true_tag in the algorthmic tag data will be guaranteed to
-    * remain so.  If false, no current values of the algorithmic tag data
+    * remain so.  If false, no current values of the boolean tag data
     * will be guaranteed to be preserved.
     */
    void
-   setAlgorithmicTagData(
+   setBooleanTagData(
       const boost::shared_ptr<hier::PatchLevel>& tag_level,
       bool preserve_existing_tags) const;
-
-   /*!
-    * @brief Identifies cells that have been tagged only due to buffering
-    * around user tags, and sets user tag data to a special value on those
-    * cells.
-    *
-    * The user tag data will have the value obtained by the static method
-    * getBufferTagValue() on the buffered cells.
-    *
-    * @param[in] tag_level  Level being tagged
-    */
-   void
-   setBufferTagData(
-      const boost::shared_ptr<hier::PatchLevel>& tag_level) const;
 
    /*!
     * @brief Check for user tags that violate proper nesting.
@@ -1180,7 +1160,7 @@ private:
       s_saved_tag_indx = new std::vector<int>(
             SAMRAI::MAX_DIM_VAL,
             -1);
-      s_alg_tag_indx = new std::vector<int>(
+      s_boolean_tag_indx = new std::vector<int>(
             SAMRAI::MAX_DIM_VAL,
             -1);
       s_buf_tag_indx = new std::vector<int>(
@@ -1198,7 +1178,7 @@ private:
    {
       delete s_user_tag_indx;
       delete s_saved_tag_indx;
-      delete s_alg_tag_indx;
+      delete s_boolean_tag_indx;
       delete s_buf_tag_indx;
    }
 
@@ -1226,7 +1206,7 @@ private:
     */
    static std::vector<int> * s_user_tag_indx;
    static std::vector<int> * s_saved_tag_indx;
-   static std::vector<int> * s_alg_tag_indx;
+   static std::vector<int> * s_boolean_tag_indx;
    static std::vector<int> * s_buf_tag_indx;
 
    hier::IntVector d_buf_tag_ghosts;
@@ -1256,35 +1236,42 @@ private:
     */
    MultiblockGriddingTagger * d_mb_tagger_strategy;
 
-   /*
+   /*!
+    * @brief Variables and patch data indices for tags.
+    *
     * Cell-centered integer variables use to tag cells for refinement.
     * The descriptor index d_user_tag_indx is used to obtain tag information
     * from user-defined routines on patch interiors.  The descriptor index
     * d_buf_tag_indx is used to buffer tags on patches that may be
-    * distributed across processors.  d_alg_tag_indx is used to put tag
+    * distributed across processors.  d_boolean_tag_indx is used to put tag
     * values in a standard format that will be understood by box generator
     * implementations, and d_saved_tag_indx is used to preserve tag values
-    * on new levels after gridding operations are completed.
+    * on new levels after gridding operations are completed.  Note that
+    * d_boolean_tag does not use the bool type, but rather its associated
+    * integer data is treated as a boolean with only two possible values.
     */
    boost::shared_ptr<pdat::CellVariable<int> > d_user_tag;
    boost::shared_ptr<pdat::CellVariable<int> > d_saved_tag;
-   boost::shared_ptr<pdat::CellVariable<int> > d_alg_tag;
+   boost::shared_ptr<pdat::CellVariable<int> > d_boolean_tag;
    boost::shared_ptr<pdat::CellVariable<int> > d_buf_tag;
    int d_user_tag_indx;
    int d_saved_tag_indx;
-   int d_alg_tag_indx;
+   int d_boolean_tag_indx;
    int d_buf_tag_indx;
 
    boost::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_tags;
    std::vector<boost::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_tags;
 
-   /*
-    * Refine algorithm and schedule for filling saved tag data on new levels.
+   /*!
+    * @brief Refine algorithm and schedule for filling saved tag data on new
+    * levels.
     */
    boost::shared_ptr<xfer::RefineAlgorithm> d_fill_saved_tags;
    boost::shared_ptr<xfer::RefineSchedule> d_saved_tags_sched;
 
-   /*
+   /*!
+    * @brief Tag values defined in the constructor.
+    * 
     * Tag values defined in the constructor and used to set and compare
     * integer tag values on the patch hierarchy.  Generally, these
     * these variables are easier to read in the code than integer constants,
