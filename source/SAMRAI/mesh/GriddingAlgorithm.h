@@ -1067,34 +1067,6 @@ private:
    assertNoMessageForCommunicator(
       const tbox::SAMRAI_MPI& mpi) const;
 
-   /*!
-    * @brief Initialize static objects and register shutdown routine.
-    *
-    * Only called by StartupShutdownManager.
-    */
-   static void
-   startupCallback()
-   {
-      s_tag_indx = new std::vector<int>(
-            SAMRAI::MAX_DIM_VAL,
-            -1);
-      s_buf_tag_indx = new std::vector<int>(
-            SAMRAI::MAX_DIM_VAL,
-            -1);
-   }
-
-   /*!
-    * @brief Method registered with ShutdownRegister to cleanup statics.
-    *
-    * Only called by StartupShutdownManager.
-    */
-   static void
-   shutdownCallback()
-   {
-      delete s_tag_indx;
-      delete s_buf_tag_indx;
-   }
-
    /*
     * @brief Record statistics on how many patches and cells were generated.
     */
@@ -1112,13 +1084,6 @@ private:
     * hierarchy what width the GriddingAlgorithm will be requesting.
     */
    GriddingAlgorithmConnectorWidthRequestor d_connector_width_requestor;
-
-   /*
-    * Static members for managing shared tag data among multiple
-    * GriddingAlgorithm objects.
-    */
-   static std::vector<int> * s_tag_indx;
-   static std::vector<int> * s_buf_tag_indx;
 
    hier::IntVector d_buf_tag_ghosts;
 
@@ -1363,12 +1328,6 @@ private:
    bool d_check_proper_nesting;
    bool d_check_connectors;
    bool d_print_steps;
-
-   /*
-    * Static startup and shutdown handler.
-    */
-   static tbox::StartupShutdownManager::Handler
-      s_startup_shutdown_handler;
 
 };
 

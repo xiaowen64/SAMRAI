@@ -40,25 +40,6 @@ const int GriddingAlgorithm::ALGS_GRIDDING_ALGORITHM_VERSION = 3;
 /*
  *************************************************************************
  *
- * Initialize the static data members.
- *
- *************************************************************************
- */
-
-std::vector<int> * GriddingAlgorithm::s_tag_indx = 0;
-std::vector<int> * GriddingAlgorithm::s_buf_tag_indx = 0;
-
-tbox::StartupShutdownManager::Handler
-GriddingAlgorithm::s_startup_shutdown_handler(
-   0,
-   GriddingAlgorithm::startupCallback,
-   GriddingAlgorithm::shutdownCallback,
-   0,
-   tbox::StartupShutdownManager::priorityListElements);
-
-/*
- *************************************************************************
- *
  * Constructor and destructor for GriddingAlgorithm.
  *
  *************************************************************************
@@ -74,7 +55,7 @@ GriddingAlgorithm::GriddingAlgorithm(
    GriddingAlgorithmStrategy(),
    d_hierarchy(hierarchy),
    d_connector_width_requestor(),
-   d_buf_tag_ghosts(hierarchy->getDim(), 0),
+   d_buf_tag_ghosts(hierarchy->getDim(), 1),
    d_object_name(object_name),
    d_tag_init_strategy(tag_init_strategy),
    d_box_generator(generator),
@@ -155,20 +136,10 @@ GriddingAlgorithm::GriddingAlgorithm(
             1));
    }
 
-   if ((*s_tag_indx)[dim.getValue() - 1] < 0) {
-      (*s_tag_indx)[dim.getValue() - 1] =
-         var_db->registerInternalSAMRAIVariable(d_tag,
+   d_tag_indx = var_db->registerInternalSAMRAIVariable(d_tag,
             hier::IntVector::getZero(dim));
-   }
-   if ((*s_buf_tag_indx)[dim.getValue() - 1] < 0) {
-      (*s_buf_tag_indx)[dim.getValue() - 1] =
-         var_db->registerInternalSAMRAIVariable(d_buf_tag,
+   d_buf_tag_indx = var_db->registerInternalSAMRAIVariable(d_buf_tag,
             hier::IntVector::getOne(dim));
-      d_buf_tag_ghosts = hier::IntVector::getOne(dim);
-   }
-
-   d_tag_indx = (*s_tag_indx)[dim.getValue() - 1];
-   d_buf_tag_indx = (*s_buf_tag_indx)[dim.getValue() - 1];
 
    if (d_hierarchy->getGridGeometry()->getNumberBlocks() > 1) {
       d_mb_tagger_strategy = new MultiblockGriddingTagger();
@@ -2522,11 +2493,8 @@ void GriddingAlgorithm::resetTagBufferingData(const int tag_buffer)
     */
    var_db->removeInternalSAMRAIVariablePatchDataIndex(d_buf_tag_indx);
 
-   (*s_buf_tag_indx)[dim.getValue() - 1] =
-      var_db->registerInternalSAMRAIVariable(d_buf_tag,
+   d_buf_tag_indx = var_db->registerInternalSAMRAIVariable(d_buf_tag,
          d_buf_tag_ghosts);
-
-   d_buf_tag_indx = (*s_buf_tag_indx)[dim.getValue() - 1];
 
    if (d_hierarchy->getGridGeometry()->getNumberBlocks() > 1) {
       TBOX_ASSERT(d_mb_tagger_strategy);
@@ -4478,13 +4446,6 @@ GriddingAlgorithm::printClassData(
    std::ostream& os) const
 {
    os << "\nGriddingAlgorithm::printClassData..." << std::endl;
-   os << "   static data members:" << std::endl;
-   for (int d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
-      os << "      (*s_tag_indx)[" << d << "] = "
-         << (*s_tag_indx)[d] << std::endl;
-      os << "      (*s_buf_tag_indx)[" << d << "] = "
-         << (*s_buf_tag_indx)[d] << std::endl;
-   }
    os << "GriddingAlgorithm: this = "
       << (GriddingAlgorithm *)this << std::endl;
    os << "d_object_name = " << d_object_name << std::endl;
