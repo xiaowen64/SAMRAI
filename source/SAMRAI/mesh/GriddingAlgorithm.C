@@ -49,8 +49,8 @@ const int GriddingAlgorithm::ALGS_GRIDDING_ALGORITHM_VERSION = 3;
  */
 
 const int GriddingAlgorithm::EXISTING_FINE_PATCHES_TAG_VAL = 1;
-const int GriddingAlgorithm::NEW_FINE_PATCHES_TAG_VAL = -999;
-const int GriddingAlgorithm::BUFFER_TAG_VAL = -1000;
+const int GriddingAlgorithm::NEW_FINE_PATCHES_TAG_VAL = -4;
+const int GriddingAlgorithm::BUFFER_TAG_VAL = -9;
 
 std::vector<int> * GriddingAlgorithm::s_user_tag_indx = 0;
 std::vector<int> * GriddingAlgorithm::s_saved_tag_indx = 0;
