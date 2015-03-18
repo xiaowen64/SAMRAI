@@ -12,7 +12,6 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/BoxOverlap.h"
-#include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/hier/PatchDescriptor.h"

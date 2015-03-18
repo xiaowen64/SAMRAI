@@ -48,6 +48,12 @@ public:
    virtual ~OverlapConnectorAlgorithm();
 
    /*!
+    * @brief Read extra debugging flag from input database.
+    */
+   void
+   getFromInput();
+
+   /*!
     * @brief Create overlap Connector then discover and add overlaps from base
     * to head to it.
     *
@@ -652,12 +658,6 @@ private:
       const PeriodicShiftCatalog& shift_catalog) const;
 
    /*!
-    * @brief Read extra debugging flag from input database.
-    */
-   void
-   getFromInput();
-
-   /*!
     * @brief Set up things for the entire class.
     *
     * Only called by StartupShutdownManager.
@@ -692,6 +692,7 @@ private:
     */
    static int s_operation_mpi_tag;
 
+
    //@{
    //! @name Timer data for this class.
 
@@ -707,6 +708,7 @@ private:
    struct TimerStruct {
       boost::shared_ptr<tbox::Timer> t_find_overlaps_rbbt;
       boost::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition;
+      boost::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition_get_ap;
       boost::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition_connect_to_ap;
       boost::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition_transpose;
 

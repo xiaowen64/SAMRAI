@@ -912,7 +912,9 @@ GriddingAlgorithm::makeFinerLevel(
           */
 
          // Bridge for new<==>new.
-         t_bridge_new_to_new->start();
+         if (d_barrier_and_time) {
+            t_bridge_new_to_new->barrierAndStart();
+         }
          boost::shared_ptr<hier::Connector> new_to_new;
          d_oca.bridgeWithNesting(
             new_to_new,
@@ -922,7 +924,9 @@ GriddingAlgorithm::makeFinerLevel(
             zero_vector,
             d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln, true),
             false);
-         t_bridge_new_to_new->stop();
+         if (d_barrier_and_time) {
+            t_bridge_new_to_new->barrierAndStop();
+         }
 
          new_box_level->cacheConnector(new_to_new);
          tag_level->cacheConnector(tag_to_new);
@@ -1691,8 +1695,9 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
       << "GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel: bridging for new<==>new\n";
    }
 
-   t_bridge_new_to_new->start();
-
+   if (d_barrier_and_time) {
+      t_bridge_new_to_new->barrierAndStart();
+   }
    d_oca.bridgeWithNesting(
       new_to_new,
       new_to_tag,
@@ -1701,8 +1706,9 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
       zero_vector,
       d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln, true),
       false);
-
-   t_bridge_new_to_new->stop();
+   if (d_barrier_and_time) {
+      t_bridge_new_to_new->barrierAndStop();
+   }
 
    TBOX_ASSERT(new_to_new->getConnectorWidth() ==
       d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln));
@@ -1749,33 +1755,30 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
 
    }
 
-   if (d_hierarchy->levelExists(new_ln + 1)) {
 
-      if (d_check_proper_nesting) {
+   if (d_check_proper_nesting && d_hierarchy->levelExists(new_ln + 1)) {
+      /*
+       * Check that the new_box_level nests the next finer
+       * level (new_ln+1).
+       */
 
-         /*
-          * Check that the new_box_level nests the next finer
-          * level (new_ln+1).
-          */
+      hier::IntVector required_nesting(dim, d_hierarchy->getProperNestingBuffer(new_ln));
+      required_nesting *= d_hierarchy->getRatioToCoarserLevel(new_ln + 1);
 
-         hier::IntVector required_nesting(
-            dim, d_hierarchy->getProperNestingBuffer(new_ln));
-         required_nesting *= d_hierarchy->getRatioToCoarserLevel(new_ln + 1);
+      bool locally_nests = false;
+      const bool finer_nests_in_new =
+         d_blcu.baseNestsInHead(
+            &locally_nests,
+            *d_hierarchy->getBoxLevel(new_ln + 1),
+            *new_box_level,
+            required_nesting,
+            zero_vector,
+            zero_vector,
+            &d_hierarchy->getGridGeometry()->getPeriodicDomainSearchTree());
 
-         bool locally_nests = false;
-         const bool finer_nests_in_new =
-            d_blcu.baseNestsInHead(
-               &locally_nests,
-               *d_hierarchy->getBoxLevel(new_ln + 1),
-               *new_box_level,
-               required_nesting,
-               zero_vector,
-               zero_vector,
-               &d_hierarchy->getGridGeometry()->getPeriodicDomainSearchTree());
+      if (!finer_nests_in_new) {
 
-         if (!finer_nests_in_new) {
-
-            tbox::perr
+         tbox::perr
             << "GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel: new box_level\n"
             << "at ln=" << new_ln
             << " does not properly nest\n"
@@ -1786,37 +1789,35 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
             << "Local nestingness: " << locally_nests
             << ".\nWriting BoxLevels out to log file."
             << std::endl;
-            tbox::plog
+         tbox::plog
             << "Proper nesting violation with new_box_level of\n"
             << new_box_level->format("N->", 2)
             << "Proper nesting violation with finer box_level of\n"
             << d_hierarchy->getBoxLevel(new_ln + 1)->format("F->", 2);
 
-            boost::shared_ptr<hier::BoxLevel> external;
-            boost::shared_ptr<hier::MappingConnector> finer_to_external;
-            boost::shared_ptr<hier::Connector> finer_to_new;
-            d_oca.findOverlaps(finer_to_new,
-               *d_hierarchy->getBoxLevel(new_ln + 1),
-               *new_box_level,
-               required_nesting);
-            tbox::plog << "Finer to new:\n" << finer_to_new->format("FN->", 3);
-            d_blcu.computeExternalParts(
-               external,
-               finer_to_external,
-               *finer_to_new,
-               -required_nesting,
-               d_hierarchy->getGridGeometry()->getDomainSearchTree());
-            tbox::plog << "External parts:\n" << finer_to_external->format("FE->", 3);
+         boost::shared_ptr<hier::BoxLevel> external;
+         boost::shared_ptr<hier::MappingConnector> finer_to_external;
+         boost::shared_ptr<hier::Connector> finer_to_new;
+         d_oca.findOverlaps(finer_to_new,
+                            *d_hierarchy->getBoxLevel(new_ln + 1),
+                            *new_box_level,
+                            required_nesting);
+         tbox::plog << "Finer to new:\n" << finer_to_new->format("FN->", 3);
+         d_blcu.computeExternalParts(
+            external,
+            finer_to_external,
+            *finer_to_new,
+            -required_nesting,
+            d_hierarchy->getGridGeometry()->getDomainSearchTree());
+         tbox::plog << "External parts:\n" << finer_to_external->format("FE->", 3);
 
-            TBOX_ERROR(
-               "Internal library error: Failed to produce proper nesting."
-               << std::endl);
+         TBOX_ERROR(
+            "Internal library error: Failed to produce proper nesting."
+            << std::endl);
 
-         } /* !finer_nests_in_new */
+      } /* !finer_nests_in_new */
 
-      } /* d_check_proper_nesting */
-
-   } /* d_hierarchy->levelExists(new_ln + 1) */
+   } /* d_check_proper_nesting */
 
    /*
     * Cache Connectors for new level.
@@ -1840,7 +1841,9 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
          "GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel: bridging for new<==>old\n";
       }
 
-      t_bridge_new_to_old->start();
+      if (d_barrier_and_time) {
+         t_bridge_new_to_old->barrierAndStart();
+      }
       d_oca.bridgeWithNesting(
          old_to_new,
          *old_to_tag,
@@ -1854,7 +1857,9 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
          zero_vector,
          d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln, true),
          true);
-      t_bridge_new_to_old->stop();
+      if (d_barrier_and_time) {
+         t_bridge_new_to_old->barrierAndStop();
+      }
 
       old_fine_level->cacheConnector(old_to_new);
 
@@ -1880,7 +1885,9 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
             hier::CONNECTOR_IMPLICIT_CREATION_RULE);
       boost::shared_ptr<hier::Connector> new_to_finer;
 
-      t_bridge_new_to_finer->start();
+      if (d_barrier_and_time) {
+         t_bridge_new_to_finer->barrierAndStart();
+      }
       d_oca.bridgeWithNesting(
          new_to_finer,
          old_to_new->getTranspose(),
@@ -1889,7 +1896,9 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
          zero_vector,
          d_hierarchy->getRequiredConnectorWidth(new_ln, new_ln + 1, true),
          true);
-      t_bridge_new_to_finer->stop();
+      if (d_barrier_and_time) {
+         t_bridge_new_to_finer->barrierAndStop();
+      }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       hier::Connector& finer_to_new = new_to_finer->getTranspose();
@@ -4806,8 +4815,6 @@ GriddingAlgorithm::allocateTimers()
       getTimer("mesh::GriddingAlgorithm::find_new_to_new");
    t_bridge_new_to_new = tbox::TimerManager::getManager()->
       getTimer("mesh::GriddingAlgorithm::bridge_new_to_new");
-   t_bridge_new_to_coarser = tbox::TimerManager::getManager()->
-      getTimer("mesh::GriddingAlgorithm::bridge_new_to_coarser");
    t_bridge_new_to_finer = tbox::TimerManager::getManager()->
       getTimer("mesh::GriddingAlgorithm::bridge_new_to_finer");
    t_bridge_new_to_old = tbox::TimerManager::getManager()->
