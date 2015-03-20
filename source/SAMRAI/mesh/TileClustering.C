@@ -1352,7 +1352,7 @@ TileClustering::coalesceBoxes(
       bi->lower()(split_dir) > lower_bounding_box.upper()(split_dir)+1 ?
          boxes.push_back(*bi) : coalescible.push_back(*bi);
    }
-   if ( coalescible.size() == old_size ) {
+   if ( coalescible.size() == static_cast<int>(old_size) ) {
       coalescible.coalesce();
    }
    else {

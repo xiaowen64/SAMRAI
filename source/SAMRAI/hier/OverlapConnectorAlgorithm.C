@@ -546,7 +546,8 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    }
    size_t num_parts = head.getGlobalNumberOfBoxes() < base.getGlobalNumberOfBoxes() ?
       head.getGlobalNumberOfBoxes() : base.getGlobalNumberOfBoxes();
-   num_parts = mpi.getSize() < num_parts ? mpi.getSize() : num_parts;
+   num_parts = static_cast<size_t>(mpi.getSize()) < num_parts ?
+      static_cast<size_t>(mpi.getSize()) : num_parts;
    const AssumedPartition center_ap(
       head_bounding_cell_count < base_bounding_cell_count ? head_bounding_boxes : base_bounding_boxes,
       0, mpi.getSize(), 0, static_cast<double>(num_parts)/mpi.getSize() );
